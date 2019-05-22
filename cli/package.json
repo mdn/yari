@@ -1,8 +1,8 @@
 {
-  "name": "server",
+  "name": "cli",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MPL2",
+  "license": "MPL-2.0",
   "scripts": {
     "build": "webpack --config webpack.config.js --mode=development",
     "start": "node dist/cli.js",
@@ -12,6 +12,7 @@
   "dependencies": {
     "dotenv": "8.0.0",
     "escape-html": "1.0.3",
+    "js-yaml": "3.13.1",
     "minimist": "1.2.0",
     "react": "16.8.6",
     "react-dom": "16.8.6",

@@ -15,6 +15,10 @@ function App(appProps) {
             path="/:locale/docs/:slug*"
             render={props => <Document {...props} {...appProps} />}
           />
+          <Route
+            path="/docs/:slug*"
+            render={props => <Document {...props} {...appProps} />}
+          />
           <Route path="/search" component={Search} />
           <Route component={NoMatch} />
         </Switch>
@@ -148,7 +152,8 @@ class Document extends React.Component {
         <div className="main">
           <div className="sidebar">SIDE BAR</div>
           <div className="content">
-            <div dangerouslySetInnerHTML={{ __html: document.body_html }} />
+            {/* <div dangerouslySetInnerHTML={{ __html: document.body_html }} /> */}
+            <DocumentFromRecipe document={document} />
           </div>
         </div>
       </div>
@@ -156,21 +161,115 @@ class Document extends React.Component {
   }
 }
 
-// function Document({ document }) {
-//   return (
-//     <div>
-//       <div>
-//         <h2>{document.title}</h2>
-//       </div>
-//       <div className="main">
-//         <div className="sidebar">SIDE BAR</div>
-//         <div className="content">
-//           <div dangerouslySetInnerHTML={{ __html: document.body_html }} />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
+function DocumentFromRecipe({ document }) {
+  const sections = [];
+  console.log(document);
+
+  // Sanity check
+  if (!document.prose) {
+    throw new Error("Document does not have a .prose");
+  }
+
+  const recipe = document.__recipe__;
+  console.log("RECIPE:", recipe);
+  const explicitProse = Object.values(recipe.body)
+    .filter(value => {
+      return (
+        typeof value === "string" &&
+        value.startsWith("prose.") &&
+        value !== "prose.*"
+      );
+    })
+    .map(value => value.replace(/\?$/, "").replace(/^prose\./, ""));
+
+  console.log({ explicitProse });
+  Object.values(recipe.body).forEach(value => {
+    if (typeof value === "string" && value.startsWith("prose.")) {
+      if (value === "prose.*") {
+        // Gather all that are not mentioned in explicitProse
+        Object.entries(document.prose)
+          .filter(([key, value]) => {
+            // XXX sets?
+            return !explicitProse.includes(key);
+          })
+          .forEach(([key, values]) => {
+            if (key in document.prose) {
+              if (!Array.isArray(values)) {
+                values = [values];
+              }
+              values.forEach((value, i) => {
+                sections.push(
+                  <Prose key={value + i} name={key} content={value} />
+                );
+              });
+            }
+          });
+      } else {
+        const optional = value.endsWith("?");
+        const name = value.replace(/\?$/, "").replace(/^prose\./, "");
+        if (name in document.prose) {
+          // Great! Insert it now.
+          sections.push(
+            <Prose key={value} name={name} content={document.prose[name]} />
+          );
+        } else if (!optional) {
+          throw new Error(
+            `prose section '${name}' is not optional and not present in document.prose`
+          );
+        }
+        // sections.push(<Prose key={value}, )
+      }
+    } else if (value === "meta.browser-compatibility") {
+      if (!document.browser_compatibility) {
+        throw new Error("Expecting document to have 'browser_compatibility'");
+      }
+      sections.push(
+        <BrowserCompatibility
+          key={value}
+          content={document.browser_compatibility}
+        />
+      );
+    } else {
+      console.warn(`Not sure what to do with ${JSON.stringify(value)}`);
+    }
+  });
+  return sections;
+}
+
+function Prose({ content }) {
+  return <div dangerouslySetInnerHTML={{ __html: content }} />;
+}
+
+function BrowserCompatibility({ content }) {
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th rowSpan={2} />
+          <th colSpan={2}>Desktop</th>
+          <th colSpan={2}>Mobile</th>
+        </tr>
+        <tr>
+          <th>Chrome</th>
+          <th>Edge</th>
+          <th>Chrome</th>
+          <th>Edge</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <code>video</code>
+          </td>
+          <td style={{ backgroundColor: "#e4f8e1" }}>3</td>
+          <td style={{ backgroundColor: "#e4f8e1" }}>Yes</td>
+          <td>?</td>
+          <td style={{ backgroundColor: "#f8e1e1" }}>No</td>
+        </tr>
+      </tbody>
+    </table>
+  );
+}
 
 function LoadingError({ error }) {
   return (

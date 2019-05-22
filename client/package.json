@@ -2,7 +2,7 @@
   "name": "mdn2",
   "version": "0.1.0",
   "private": true,
-  "license": "MPL2",
+  "license": "MPL-2.0",
   "dependencies": {
     "node-sass": "4.12.0",
     "react": "16.8.6",

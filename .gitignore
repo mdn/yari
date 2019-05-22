@@ -25,5 +25,5 @@ server/node_modules/
 client/node_modules/
 client/build/
 server/dist/
-cli2/node_modules/
-cli2/dist/
+cli/node_modules/
+cli/dist/

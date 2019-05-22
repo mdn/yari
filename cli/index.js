@@ -1,12 +1,16 @@
 import React from "react";
 const fs = require("fs");
+const url = require("url");
+const path = require("path");
+
+// const crypto = require("crypto");
 
 // This is necessary because the server.js is in server/dist/server.js
 // and we need to reach the .env this way.
-const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, "../../.env") });
 
-const minimist = require("minimist");
+import yaml from "js-yaml";
+import minimist from "minimist";
 import { StaticRouter as Router, matchPath } from "react-router";
 import sourceMapSupport from "source-map-support";
 import App from "../client/src/App";
@@ -16,42 +20,32 @@ const ROUTES = [
   { path: "", exact: true },
   { path: "/:locale", exact: true },
   { path: "/:locale/docs/:slug*" },
+  { path: "/docs/:slug*" },
   { path: "/search", exact: true }
 ];
 
 sourceMapSupport.install();
 
-function rsplit(s, sep, maxsplit) {
-  var split = s.split(sep);
-  return maxsplit
-    ? [split.slice(0, -maxsplit).join(sep)].concat(split.slice(-maxsplit))
-    : split;
-}
 /* Return a absolute path that is the correct URI for the website */
-function mapToURI({ filePath, document }) {
-  // XXX read from `document['mdn-url']`??
-  // For example, the file in stumptown is called
-  // "<stumptown build>/html/elements/video.json"
-  // but on MDN it's called "Web/HTML/Element/video"
+function mapToURI({ document }) {
+  return url.parse(document.mdn_url).pathname;
+}
 
-  const locale = "en-US";
-  // XXX gross but will work for now
-  let slug = filePath
-    .replace(/\.json$/g, "")
-    .split("/")
-    .slice(-3)
-    .join("/");
-  if (slug.startsWith("html/elements")) {
-    // These we know how to deal with
-    const split = slug.split("/");
-    return `/${locale}/docs/Web/HTML/Element/${split.pop()}`;
-  }
-  console.warn(`Guesswork with converting ${slug} to a web URI`);
-  return `/${locale}/docs/${slug}`;
+function getRecipe({ document }) {
+  // XXX this needs to get smarter!
+  const recipe = yaml.safeLoad(
+    fs.readFileSync("../stumptown/recipes/html-element.yaml", "utf8")
+  );
+  return recipe;
 }
 
 function buildHtmlAndJson({ filePath, output }) {
-  const data = fs.readFileSync(filePath, "utf-8");
+  const data = fs.readFileSync(filePath, "utf8");
+  // const buildHash = crypto
+  //   .createHash("md5")
+  //   .update(data)
+  //   .digest("hex");
+
   const jsonData = JSON.parse(data);
 
   const baseNameSans = path.basename(filePath).replace(/\.json/g, "");
@@ -59,28 +53,40 @@ function buildHtmlAndJson({ filePath, output }) {
     // XXX this is weird and ugly
     document: jsonData.html.elements[baseNameSans]
   };
-  const url = mapToURI({ filePath, document: options.document });
+  options.document.__recipe__ = getRecipe(jsonData);
+
+  const uri = mapToURI({ filePath, document: options.document });
+
+  const destination = path.join(output, uri);
+  const outfileHtml = path.join(destination, "index.html");
+  const outfileJson = path.join(destination, "index.json");
+  // const outfileHash = path.join(destination, "index.hash");
+
+  // let previousHash = "";
+  // try {
+  //   previousHash = fs.readFileSync(outfileHash, "utf8");
+  // } catch (ex) {
+  //   // That's fine
+  // }
+  // console.log("PREVIOUS HASH", [previousHash, buildHash]);
+
   const match = ROUTES.reduce((acc, route) => {
-    return matchPath(url, route) || acc;
+    return matchPath(uri, route) || acc;
   }, null);
 
   if (!match) {
-    throw new Error(`Urecognized URL pattern ${url}`);
+    throw new Error(`Urecognized URL pattern ${uri}`);
   }
-
   const rendered = render(
-    <Router context={{}} location={url}>
+    <Router context={{}} location={uri}>
       <App {...options} />
     </Router>,
     options
   );
-  const destination = path.join(output, url);
-  const outfileHtml = path.join(destination, "index.html");
-  const outfileJson = path.join(destination, "index.json");
-
   fs.mkdirSync(destination, { recursive: true });
   fs.writeFileSync(outfileHtml, rendered);
   fs.writeFileSync(outfileJson, JSON.stringify(options, null, 2));
+  // fs.writeFileSync(outfileHash, buildHash);
   console.log(`Wrote ${outfileHtml} and ${outfileJson}`);
 }
 
