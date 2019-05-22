@@ -1,0 +1,6 @@
+[submodule "kumascript"]
+	path = kumascript
+	url = https://github.com/mdn/kumascript.git
+[submodule "stumptown"]
+	path = stumptown
+	url = https://github.com/mdn/stumptown-experiment.git
