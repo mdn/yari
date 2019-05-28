@@ -61,13 +61,13 @@ class Homepage extends React.Component {
         <h2>Welcome to MDN</h2>
         <ul>
           <li>
-            <Link to="/en-US/docs/Web/HTML/Element/audio">HTML/audio</Link>
+            <Link to="/docs/Web/HTML/Element/audio">HTML/audio</Link>
           </li>
           <li>
-            <Link to="/en-US/docs/Web/HTML/Element/video">HTML/video</Link>
+            <Link to="/docs/Web/HTML/Element/video">HTML/video</Link>
           </li>
           <li>
-            <Link to="/en-US/docs/Web/HTML/Element/canvas">HTML/canvas</Link>
+            <Link to="/docs/Web/HTML/Element/canvas">HTML/canvas</Link>
           </li>
         </ul>
       </div>
@@ -163,7 +163,7 @@ class Document extends React.Component {
 
 function DocumentFromRecipe({ document }) {
   const sections = [];
-  console.log(document);
+  // console.log(document);
 
   // Sanity check
   if (!document.prose) {
@@ -171,7 +171,7 @@ function DocumentFromRecipe({ document }) {
   }
 
   const recipe = document.__recipe__;
-  console.log("RECIPE:", recipe);
+  // console.log("RECIPE:", recipe);
   const explicitProse = Object.values(recipe.body)
     .filter(value => {
       return (
@@ -182,7 +182,7 @@ function DocumentFromRecipe({ document }) {
     })
     .map(value => value.replace(/\?$/, "").replace(/^prose\./, ""));
 
-  console.log({ explicitProse });
+  // console.log({ explicitProse });
   Object.values(recipe.body).forEach(value => {
     if (typeof value === "string" && value.startsWith("prose.")) {
       if (value === "prose.*") {
