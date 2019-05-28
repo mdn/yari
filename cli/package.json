@@ -20,7 +20,7 @@
     "source-map-support": "0.5.12"
   },
   "devDependencies": {
-    "@babel/core": "7.4.4",
+    "@babel/core": "7.4.5",
     "@babel/plugin-proposal-class-properties": "7.4.4",
     "@babel/plugin-proposal-export-namespace-from": "7.2.0",
     "@babel/plugin-proposal-function-sent": "7.2.0",
@@ -29,12 +29,12 @@
     "@babel/plugin-proposal-throw-expressions": "7.2.0",
     "@babel/plugin-syntax-dynamic-import": "7.2.0",
     "@babel/plugin-syntax-import-meta": "7.2.0",
-    "@babel/preset-env": "7.4.4",
+    "@babel/preset-env": "7.4.5",
     "@babel/preset-react": "7.0.0",
     "babel-loader": "8.0.6",
     "ignore-loader": "0.1.2",
-    "serve": "11.0.0",
-    "webpack": "4.31.0",
+    "serve": "11.0.1",
+    "webpack": "4.32.2",
     "webpack-cli": "3.3.2",
     "webpack-node-externals": "1.7.2"
   }
