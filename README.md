@@ -1,6 +1,6 @@
 # mdn2
 
-**THIS IS HIGHLY EXPERIMENTAL AND LIKELY TO CHANGE _BEYOND_ DRASTICALLY**
+**THIS IS HIGHLY EXPERIMENTAL AND LIKELY TO CHANGE DRASTICALLY**
 
 ## Overview
 
@@ -24,8 +24,7 @@ couple of things:
 
 What this project does is;
 
-**Given a path(s) of content from stumptown, produce a block of HTML
-using React components.**
+**From content in stumptown, produce a block of HTML using React components.**
 
 But this project also attempts to make those pages ready for viewing
 in a browser. It uses `create-react-app` to define a HTML template and
@@ -39,6 +38,16 @@ the React components within are used in two different ways:
    browser too. For every produced `<page>/index.html` file there's also
    a `<page>/index.json` which contains all the information to be able to
    render it client-side after an XHR request gathers the information.
+
+## Installing
+
+If you haven't already done so, run:
+
+    cd where/you/want/to/clone/it
+    git clone --recursive https://github.com/peterbe/mdn2.git
+    cd mdn2
+
+You need a decent version of `node`, `yarn`, and `npm`.
 
 ## Contributing
 
@@ -72,6 +81,22 @@ run:
 
     make clean
 
+## Server-Sider Rendering
+
+Usually, when doing local development work you don't need server-side
+rendering. But it's a luxury to have for these reasons:
+
+1. It's faster for the sake of SEO and will work in any non-JavaScript
+enabled browser.
+
+2. When all possible URLs are pre-generated and uploaded as static files
+you don't need a clever server that knows to "reroute" all (non-static) URLs to
+`/index.html` (where the `react-router` and `XHR` kicks in).
+
+3. If you can, with the `cli`, generate every single possible file ready for
+static serving there's an opportunity to do expensive post-processing such
+as extracting critical CSS or calculating nonce for CSP headers.
+
 ## Deployment
 
 Deployment means that you prepare one whole single directory that is
@@ -84,6 +109,7 @@ What it does is a mix of `make run-server` and `make run-dev` but without
 starting a server. It also, builds a `index.html` file for every document
 found and processed by the `cli`. This whole directory is ready to be
 uploaded to S3 or Netlify.
+
 
 ## Goals and Not-Goals
 
