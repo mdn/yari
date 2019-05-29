@@ -49,6 +49,11 @@ If you haven't already done so, run:
 
 You need a decent version of `node`, `yarn`, and `npm`.
 
+After you have cloned the repo and want to pull in upstream changes run:
+
+    git pull origin master
+    git submodule update
+
 ## Contributing
 
 **THIS IS EXPERIMENTAL, HACKY, AND WORK-IN-PROGRESS.**
@@ -87,15 +92,15 @@ Usually, when doing local development work you don't need server-side
 rendering. But it's a luxury to have for these reasons:
 
 1. It's faster for the sake of SEO and will work in any non-JavaScript
-enabled browser.
+   enabled browser.
 
 2. When all possible URLs are pre-generated and uploaded as static files
-you don't need a clever server that knows to "reroute" all (non-static) URLs to
-`/index.html` (where the `react-router` and `XHR` kicks in).
+   you don't need a clever server that knows to "reroute" all (non-static) URLs to
+   `/index.html` (where the `react-router` and `XHR` kicks in).
 
 3. If you can, with the `cli`, generate every single possible file ready for
-static serving there's an opportunity to do expensive post-processing such
-as extracting critical CSS or calculating nonce for CSP headers.
+   static serving there's an opportunity to do expensive post-processing such
+   as extracting critical CSS or calculating nonce for CSP headers.
 
 ## Deployment
 
@@ -109,7 +114,6 @@ What it does is a mix of `make run-server` and `make run-dev` but without
 starting a server. It also, builds a `index.html` file for every document
 found and processed by the `cli`. This whole directory is ready to be
 uploaded to S3 or Netlify.
-
 
 ## Goals and Not-Goals
 
