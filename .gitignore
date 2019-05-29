@@ -27,3 +27,5 @@ client/build/
 server/dist/
 cli/node_modules/
 cli/dist/
+.make.built
+.make.installed

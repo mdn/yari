@@ -1,11 +1,12 @@
 {
   "name": "cli",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "index.js",
   "license": "MPL-2.0",
   "scripts": {
     "build": "webpack --config webpack.config.js --mode=development",
     "start": "node dist/cli.js",
+    "run": "yarn run build && yarn run start",
     "build:watch": "webpack --config webpack.config.js --watch --mode=development",
     "dev:run": "NODE_ENV=development nodemon dist/cli.js --watch dist/cli.js"
   },
@@ -14,6 +15,7 @@
     "escape-html": "1.0.3",
     "js-yaml": "3.13.1",
     "minimist": "1.2.0",
+    "minimist-options": "4.0.1",
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "react-router-dom": "5.0.0",

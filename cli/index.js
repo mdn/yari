@@ -1,20 +1,24 @@
 import React from "react";
-const fs = require("fs");
-const url = require("url");
-const path = require("path");
+import fs from "fs";
+import url from "url";
+import path from "path";
 
 // const crypto = require("crypto");
 
-// This is necessary because the server.js is in server/dist/server.js
+// This is necessary because the cli.js is in dist/cli.js
 // and we need to reach the .env this way.
 require("dotenv").config({ path: path.join(__dirname, "../../.env") });
 
 import yaml from "js-yaml";
 import minimist from "minimist";
+import buildOptions from "minimist-options";
 import { StaticRouter as Router, matchPath } from "react-router";
 import sourceMapSupport from "source-map-support";
+
 import App from "../client/src/App";
 import render from "./render";
+
+const STATIC_ROOT = path.join(__dirname, "../../client/build");
 
 const ROUTES = [
   { path: "", exact: true },
@@ -39,7 +43,7 @@ function getRecipe({ document }) {
   return recipe;
 }
 
-function buildHtmlAndJson({ filePath, output }) {
+function buildHtmlAndJson({ filePath, output, buildHtml }) {
   const data = fs.readFileSync(filePath, "utf8");
   // const buildHash = crypto
   //   .createHash("md5")
@@ -50,7 +54,7 @@ function buildHtmlAndJson({ filePath, output }) {
 
   const baseNameSans = path.basename(filePath).replace(/\.json/g, "");
   const options = {
-    // XXX this is weird and ugly
+    // XXX this is weird
     document: jsonData.html.elements[baseNameSans]
   };
   options.document.__recipe__ = getRecipe(jsonData);
@@ -70,65 +74,112 @@ function buildHtmlAndJson({ filePath, output }) {
   // }
   // console.log("PREVIOUS HASH", [previousHash, buildHash]);
 
-  const match = ROUTES.reduce((acc, route) => {
-    return matchPath(uri, route) || acc;
-  }, null);
+  let rendered = null;
+  if (buildHtml) {
+    const match = ROUTES.reduce((acc, route) => {
+      return matchPath(uri, route) || acc;
+    }, null);
 
-  if (!match) {
-    throw new Error(`Urecognized URL pattern ${uri}`);
+    if (!match) {
+      throw new Error(`Urecognized URL pattern ${uri}`);
+    }
+    rendered = render(
+      <Router context={{}} location={uri}>
+        <App {...options} />
+      </Router>,
+      options
+    );
   }
-  const rendered = render(
-    <Router context={{}} location={uri}>
-      <App {...options} />
-    </Router>,
-    options
-  );
+
   fs.mkdirSync(destination, { recursive: true });
-  fs.writeFileSync(outfileHtml, rendered);
-  fs.writeFileSync(outfileJson, JSON.stringify(options, null, 2));
+  if (rendered) {
+    fs.writeFileSync(outfileHtml, rendered);
+  }
+  fs.writeFileSync(
+    outfileJson,
+    process.env.NODE_ENV === "development"
+      ? JSON.stringify(options, null, 2)
+      : JSON.stringify(options)
+  );
   // fs.writeFileSync(outfileHash, buildHash);
-  console.log(`Wrote ${outfileHtml} and ${outfileJson}`);
+  if (rendered) {
+    console.log(`Wrote ${outfileHtml} and ${outfileJson}`);
+  } else {
+    console.log(`Wrote ${outfileJson}`);
+  }
 }
 
-const args = process.argv.slice(2);
-const argv = minimist(args, {
-  boolean: ["help", "version", "verbose", "debug"],
-  string: ["output"],
-  default: {
-    output: "../client/build"
+const options = buildOptions({
+  help: {
+    type: "boolean",
+    alias: ["h"],
+    default: false
   },
-  alias: {
-    debug: "d",
-    help: "h",
-    version: "v",
-    output: "o"
+
+  output: {
+    type: "string",
+    alias: "o",
+    default: STATIC_ROOT
   },
-  unknown: param => {
-    if (param.startsWith("-")) {
-      console.warn("Ignored unknown option: " + param + "\n");
-      return false;
-    }
-  }
+
+  version: {
+    type: "boolean",
+    alias: ["v"],
+    default: false
+  },
+
+  debug: "boolean",
+
+  "build-html": {
+    type: "boolean",
+    alias: ["b"],
+    default: JSON.parse(process.env.CLI_BUILD_HTML || "false")
+  },
+
+  // Special option for positional arguments (`_` in minimist)
+  arguments: "string"
 });
 
-if (argv["help"]) {
-  console.log(
-    "Usage: build [opts] path [path2 ...]\n\n" +
-      "Available options:\n" +
-      "  .... " +
-      ""
-  );
+const args = minimist(process.argv.slice(2), options);
+
+if (args["help"]) {
+  console.log(`
+  Usage:
+    yarn run run [options] FILES
+
+  Options:
+    -h, --help         print usage information
+    -v, --version      show version info and exit
+    -d, --debug        with more verbose output (currently not supported!)
+    -o, --output       root directory to store built files (default ${STATIC_ROOT})
+    -b, --build-html   also generate fully formed index.html files (or env var $CLI_BUILD_HTML)
+  `);
   process.exit(0);
 }
 
-const paths = argv["_"];
+if (args["version"]) {
+  console.log(require("./package.json").version);
+  process.exit(0);
+}
+
+if (args["debug"]) {
+  console.warn("--debug is not yet supported");
+  process.exit(1);
+}
+
+const paths = args["_"];
+if (!paths.length) {
+  console.warn("Building for ALL files is currently not supported");
+  process.exit(1);
+}
+
 paths.forEach(filePath => {
-  const output = argv.output;
+  const output = args.output;
   fs.access(filePath, fs.constants.R_OK, err => {
     if (err) {
       console.error(err.toString());
       process.exit(1);
     }
-    buildHtmlAndJson({ filePath, output });
+    buildHtmlAndJson({ filePath, output, buildHtml: args["build-html"] });
   });
 });
