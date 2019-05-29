@@ -1,4 +1,4 @@
-# stumptown-builder
+# mdn2
 
 **THIS IS HIGHLY EXPERIMENTAL AND LIKELY TO CHANGE _BEYOND_ DRASTICALLY**
 
@@ -8,19 +8,19 @@
 couple of things:
 
 1. It's the source of truth. The content comes in the form of `.md` files and
-associated `.yaml` files that supplies the required metadata. These files
-are what's expected to be edited, with pull requests, by people who want to
-improve the content.
+   associated `.yaml` files that supplies the required metadata. These files
+   are what's expected to be edited, with pull requests, by people who want to
+   improve the content.
 
 2. Recipe definitions. It's a bit like a template if you like. Each section
-of content is broken up into pieces, by keys, such as `prose.short_description`.
-What the recipes do is they dictate how these pieces are supposed to be put
-together in a final block of HTML.
+   of content is broken up into pieces, by keys, such as `prose.short_description`.
+   What the recipes do is they dictate how these pieces are supposed to be put
+   together in a final block of HTML.
 
 3. Scripts that convert `.md` files (with their respective `.yaml` file)
-into blocks of HTML strings. These are put into `.json` files keyed by the
-pieces for each content page. Once transformed from `.md` to `.json`,
-together with the recipe, you can construct a final block of HTML
+   into blocks of HTML strings. These are put into `.json` files keyed by the
+   pieces for each content page. Once transformed from `.md` to `.json`,
+   together with the recipe, you can construct a final block of HTML
 
 What this project does is;
 
@@ -32,56 +32,58 @@ in a browser. It uses `create-react-app` to define a HTML template and
 the React components within are used in two different ways:
 
 1. You execute the command line program to produce ready-to-statically-serve
-`.html` files that can be opened without an application server. (e.g. Nginx
-or Netlify)
+   `.html` files that can be opened without an application server. (e.g. Nginx
+   or Netlify)
 
 2. All the React components that are used by the cli are usable in the
-browser too. For every produced `<page>/index.html` file there's also
-a `<page>/index.json` which contains all the information to be able to
-render it client-side after an XHR request gathers the information.
+   browser too. For every produced `<page>/index.html` file there's also
+   a `<page>/index.json` which contains all the information to be able to
+   render it client-side after an XHR request gathers the information.
 
-## Usage
+## Contributing
 
 **THIS IS EXPERIMENTAL, HACKY, AND WORK-IN-PROGRESS.**
 
-1. Generate the build template:
+Open two terminals. In one, run (this will take a little time the first time):
 
-    cd client
-    yarn
-    yarn run build
+    make run-server
 
-2. Compile the cli:
+In another terminal:
 
-    cd cli
-    yarn
-    yarn run build  # optionally 'yarn run build:watch'
+    make run-dev
 
-3. Execute the cli:
+Now you should have two servers:
 
-    cd cli
-    yarn run start ../stumptown/packaged/html/elements/video.json
+1. [http://localhost:3000](http://localhost:3000) (open this in your browser)
 
-This will create, for example:
+2. [http://localhost:5000](http://localhost:5000)
 
-* `client/build/docs/Web/HTML/Element/video/index.html`
+Note that when you run the `React` dev server (on `localhost:3000`) it
+depends on the files built by `stumptown` and consequently built by
+the `cli`. You can now hack on the key `React` components and just refresh
+the browser to see the effect immediately. If you want re-build the
+content made available to the `React` components, open another terminal
+and run:
 
-* `client/build/docs/Web/HTML/Element/video/index.json`
+    make build-content
 
-Now all you need to do is point a static web server to `client/build`.
-The server-side rendered HTML is made so it should be fully functional
-without JavaScript enabled. If viewed with JavaScript enabled, React
-knows to hydrate the DOM for these built pages. And if you click
-to another page, the content will be rebuilt after an XHR request
-has loaded each equivalent `index.json` URL.
+To re-run any of the installation and build steps you can, at any time,
+run:
 
-To view the built `.html` files you can start serving with `serve`. It's
-a dev dependency inside `./client/`:
+    make clean
 
-    cd client
-    serve -s build
-    open http://localhost:5000/docs/Web/HTML/Element/video
+## Deployment
 
-Imagine that instead of `serve -s` we use something like Nginx instead.
+Deployment means that you prepare one whole single directory that is
+all that is needed. This build directory is ready to ship to wherever you
+host your static site. Build everything with:
+
+    make deployment-build
+
+What it does is a mix of `make run-server` and `make run-dev` but without
+starting a server. It also, builds a `index.html` file for every document
+found and processed by the `cli`. This whole directory is ready to be
+uploaded to S3 or Netlify.
 
 ## Goals and Not-Goals
 

@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "INLINE_RUNTIME_CHUNK=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -32,7 +32,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "serve": "11.0.1"
-  }
+  "devDependencies": {}
 }

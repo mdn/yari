@@ -152,7 +152,6 @@ class Document extends React.Component {
         <div className="main">
           <div className="sidebar">SIDE BAR</div>
           <div className="content">
-            {/* <div dangerouslySetInnerHTML={{ __html: document.body_html }} /> */}
             <DocumentFromRecipe document={document} />
           </div>
         </div>
@@ -163,7 +162,6 @@ class Document extends React.Component {
 
 function DocumentFromRecipe({ document }) {
   const sections = [];
-  // console.log(document);
 
   // Sanity check
   if (!document.prose) {
@@ -171,7 +169,6 @@ function DocumentFromRecipe({ document }) {
   }
 
   const recipe = document.__recipe__;
-  // console.log("RECIPE:", recipe);
   const explicitProse = Object.values(recipe.body)
     .filter(value => {
       return (
@@ -182,7 +179,6 @@ function DocumentFromRecipe({ document }) {
     })
     .map(value => value.replace(/\?$/, "").replace(/^prose\./, ""));
 
-  // console.log({ explicitProse });
   Object.values(recipe.body).forEach(value => {
     if (typeof value === "string" && value.startsWith("prose.")) {
       if (value === "prose.*") {
@@ -217,7 +213,6 @@ function DocumentFromRecipe({ document }) {
             `prose section '${name}' is not optional and not present in document.prose`
           );
         }
-        // sections.push(<Prose key={value}, )
       }
     } else if (value === "meta.browser-compatibility") {
       if (!document.browser_compatibility) {
@@ -233,11 +228,32 @@ function DocumentFromRecipe({ document }) {
       console.warn(`Not sure what to do with ${JSON.stringify(value)}`);
     }
   });
+
+  sections.push(<hr key="metadata-break" />);
+  // Metadata stuff
+
+  // The recipe doesn't include to put the contributors so let's add it last
+  // if the document has it.
+  if (document.contributors) {
+    sections.push(
+      <Contributors key="contributors" contributors={document.contributors} />
+    );
+  }
+
   return sections;
 }
 
 function Prose({ content }) {
   return <div dangerouslySetInnerHTML={{ __html: content }} />;
+}
+
+function Contributors({ contributors }) {
+  return (
+    <div>
+      <b>Contributors to this page:</b>
+      <span dangerouslySetInnerHTML={{ __html: contributors }} />
+    </div>
+  );
 }
 
 function BrowserCompatibility({ content }) {
