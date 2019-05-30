@@ -14,11 +14,10 @@ function renderValues(values) {
 function renderAttribute(attribute) {
     let rendered = '<dt>';
 
-    rendered += `<code>${attribute.name}</code>`
+    rendered += `<code>${attribute.name}</code> : <i>${attribute.type}</i>`
     rendered += '</dt>';
 
     rendered += '<dd>';
-    rendered += `<strong>${attribute.type}</strong>`;
     rendered += attribute.description;
     if (attribute.values) {
         rendered += renderValues(attribute.values);
