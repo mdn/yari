@@ -1,41 +1,55 @@
 import React from "react";
 
-function renderValues(values) {
-    let rendered = '<ul>';
-
-    for (let value of values) {
-        rendered += `<li><code>${value.value}</code>: ${value.description}</li>`;
-    }
-    rendered += '</ul>';
-
-    return rendered;
+function RenderValues({ values }) {
+  return (
+    <ul>
+      {values.map(value => {
+        return (
+          <li key={value.value}>
+            <code>{value.value}</code>:{" "}
+            <div dangerouslySetInnerHTML={{ __html: value.description }} />
+          </li>
+        );
+      })}
+    </ul>
+  );
 }
 
-function renderAttribute(attribute) {
-    let rendered = '<dt>';
+function RenderAttributes({ attributes }) {
+  return (
+    <dl>
+      {attributes.map(attribute => {
+        return (
+          <React.Fragment key={attribute.name}>
+            <dt>
+              <code>{attribute.name}</code>
+            </dt>
+            <dd>
+              <strong>{attribute.type}</strong>
 
-    rendered += `<code>${attribute.name}</code>`
-    rendered += '</dt>';
+              {/* XXX a div tag in the middle of a dd tag!
+              See https://github.com/peterbe/mdn2/issues/5
+              */}
+              <div
+                dangerouslySetInnerHTML={{ __html: attribute.description }}
+              />
 
-    rendered += '<dd>';
-    rendered += `<strong>${attribute.type}</strong>`;
-    rendered += attribute.description;
-    if (attribute.values) {
-        rendered += renderValues(attribute.values);
-    }
-    rendered += '</dd>';
-
-    return rendered;
+              {attribute.values && attribute.values.length && (
+                <RenderValues values={attribute.values} />
+              )}
+            </dd>
+          </React.Fragment>
+        );
+      })}
+    </dl>
+  );
 }
 
-export function Attributes(name, documentJSON) {
-  let rendered = '<h2>Attributes</h2>';
-
-  rendered += '<dl>';
-  for (let attribute of documentJSON.attributes) {
-      rendered += renderAttribute(attribute);
-  }
-  rendered += '</dl>';
-
-  return <div dangerouslySetInnerHTML={{ __html: rendered }} />;
+export function Attributes({ document }) {
+  return (
+    <>
+      <h2>Attributes</h2>
+      <RenderAttributes attributes={document.attributes} />
+    </>
+  );
 }
