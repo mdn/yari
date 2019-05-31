@@ -173,7 +173,7 @@ class Document extends React.Component {
   }
 }
 
-const renderers = {
+const RENDERERS = {
   "interactive-example": InteractiveExample,
   attributes: Attributes,
   examples: Examples,
@@ -202,7 +202,7 @@ function RenderIngredient({ fullName, document }) {
     }
     return <Prose name={ingredientName} content={proseSection} />;
   } else {
-    const Renderer = renderers[ingredientName];
+    const Renderer = RENDERERS[ingredientName];
     if (Renderer) {
       return <Renderer name={ingredientName} document={document} />;
     } else {
@@ -251,7 +251,7 @@ function Prose({ name, content }) {
   const headingText = HEADINGS[name];
   return (
     <>
-      <h2>{headingText}</h2>
+      <h2 id={name}>{headingText}</h2>
       <div dangerouslySetInnerHTML={{ __html: content }} />
     </>
   );

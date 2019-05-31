@@ -1,10 +1,13 @@
 import React from "react";
 
+function slugifyTitle(title) {
+    return title.toLowerCase().replace(/ /gi, "_")
+}
+
 function RenderSources({ sources }) {
   return (
     <>
       {sources.html && <h4>HTML</h4>}
-      {/* <code> inside a <pre>?? Is that necessary? */}
       {sources.html && (
         <pre>
           <code>{sources.html}</code>
@@ -43,15 +46,14 @@ function RenderLiveSample({ example }) {
     <>
       <h4>Result</h4>
       <iframe
-        className="live-sample-frame sample-code-frame"
+        className="live-sample-frame"
         srcDoc={srcdoc}
         title={example.description.title}
-        id="frame_Live_example"
+        id={slugifyTitle(example.description.title)}
         width={example.description.width}
         height={example.description.height}
         frameBorder={0}
       >
-        >
       </iframe>
     </>
   );
@@ -70,7 +72,8 @@ function RenderExample({ example }) {
 
       <RenderSources sources={example.sources} />
 
-      {/* XXX this is an odd condition */}
+      {/* At the moment the author implicitly signals that an example is live
+        by including width and height values for the iframe */}
       {example.description.width && <RenderLiveSample example={example} />}
     </>
   );

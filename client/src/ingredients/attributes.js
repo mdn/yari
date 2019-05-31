@@ -6,7 +6,7 @@ function RenderValues({ values }) {
       {values.map(value => {
         return (
           <li key={value.value}>
-            <code>{value.value}</code>
+            <p><code>{value.value}</code></p>
             <div dangerouslySetInnerHTML={{ __html: value.description }} />
           </li>
         );
@@ -22,7 +22,7 @@ function RenderAttributes({ attributes }) {
         return (
           <React.Fragment key={attribute.name}>
             <dt>
-              <code>{attribute.name}</code>: <i>{attribute.type}</i>
+              <p><code>{attribute.name}</code>: <i>{attribute.type}</i></p>
             </dt>
             <dd>
               {/* XXX a div tag in the middle of a dd tag!

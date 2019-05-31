@@ -5,7 +5,7 @@ export function InteractiveExample({ document }) {
     <div>
       <iframe
         title={`Interactive example for ${document.title}`}
-        className="interactive tabbed-standard"
+        className="interactive-example"
         frameBorder={0}
         height={450}
         src={document.interactive_example_url}
