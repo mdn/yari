@@ -9,12 +9,12 @@ const LOCALES = ["en-US"];
 
 // Eventually these should be available directly from the documentJSON
 const HEADINGS = {
-    'short-description': 'Short description',
-    'overview': 'Overview',
-    'usage-notes': 'Usage notes',
-    'accessibility-concerns': 'Accessibility concerns',
-    'see-also': 'See also'
-}
+  "short-description": "Short description",
+  overview: "Overview",
+  "usage-notes": "Usage notes",
+  "accessibility-concerns": "Accessibility concerns",
+  "see-also": "See also"
+};
 
 function App(appProps) {
   return (
@@ -174,52 +174,67 @@ class Document extends React.Component {
 }
 
 const renderers = {
-   'interactive-example': InteractiveExample,
-   'attributes': Attributes,
-   'examples': Examples,
-//   'browser-compatibility': BrowserCompatibility
-}
+  "interactive-example": InteractiveExample,
+  attributes: Attributes,
+  examples: Examples,
+  "browser-compatibility": BrowserCompatibility
+};
 
-function RenderIngredient(ingredientFullName, documentJSON) {
-    // one of the ingredients is not a string, and we don't handle it yet
-    if (typeof ingredientFullName !== "string") {
-        return '';
-    }
-    let parts = ingredientFullName.split('.');
-    if (parts.length !== 2) {
-        throw new Error(
-            `ingredient name '${ingredientFullName}' should be 2 strings separated by a period`
-        );
-    }
+function RenderIngredient({ fullName, document }) {
+  let parts = fullName.split(".");
+  if (parts.length !== 2) {
+    throw new Error(
+      `ingredient name '${fullName}' should be 2 strings separated by a period`
+    );
+  }
 
-    let ingredientType = parts[0];
-    let ingredientName = parts[1];
-    // we're not checking for missing mandatory sections here (yet?)
-    if (ingredientName.endsWith('?')) {
-        ingredientName = ingredientName.slice(0, -1);
-    }
+  let ingredientType = parts[0];
+  let ingredientName = parts[1];
+  // we're not checking for missing mandatory sections here (yet?)
+  if (ingredientName.endsWith("?")) {
+    ingredientName = ingredientName.slice(0, -1);
+  }
 
-    if (ingredientType === 'prose') {
-        let proseSection = documentJSON.prose[ingredientName];
-        if (!proseSection) {
-            return;
-        }
-        return <Prose name={ingredientName} content={proseSection} />;
+  if (ingredientType === "prose") {
+    let proseSection = document.prose[ingredientName];
+    if (!proseSection) {
+      return null;
+    }
+    return <Prose name={ingredientName} content={proseSection} />;
+  } else {
+    const Renderer = renderers[ingredientName];
+    if (Renderer) {
+      return <Renderer name={ingredientName} document={document} />;
     } else {
-        const renderer = renderers[ingredientName];
-        if (renderer) {
-            return renderer(ingredientName, documentJSON)
-        }
+      throw new Error(`No available renderer for '${ingredientName}`);
     }
+  }
 }
 
 function DocumentFromRecipe({ document }) {
   const sections = [];
   const recipe = document.__recipe__;
 
-  for (let ingredient of Object.values(recipe.body)) {
-      sections.push(RenderIngredient(ingredient, document));
-  }
+  const ingredientSections = Object.values(recipe.body).map(ingredient => {
+    // one of the ingredients is not a string, and we don't handle it yet
+    if (typeof ingredient !== "string") {
+      console.warn(
+        `Not sure how to deal with non-string ingredients '${JSON.stringify(
+          ingredient
+        )}'`
+      );
+      return null;
+    }
+    return (
+      <RenderIngredient
+        key={ingredient}
+        fullName={ingredient}
+        document={document}
+      />
+    );
+  });
+
+  sections.push(...ingredientSections);
 
   // The recipe doesn't include to put the contributors so let's add it last
   // if the document has it.
@@ -234,8 +249,12 @@ function DocumentFromRecipe({ document }) {
 
 function Prose({ name, content }) {
   const headingText = HEADINGS[name];
-  content = `<h2>${headingText}</h2>` + content;
-  return <div dangerouslySetInnerHTML={{ __html: content }} />;
+  return (
+    <>
+      <h2>{headingText}</h2>
+      <div dangerouslySetInnerHTML={{ __html: content }} />
+    </>
+  );
 }
 
 function Contributors({ contributors }) {
