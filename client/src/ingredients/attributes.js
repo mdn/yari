@@ -22,11 +22,9 @@ function RenderAttributes({ attributes }) {
         return (
           <React.Fragment key={attribute.name}>
             <dt>
-              <code>{attribute.name}</code>
+              <code>{attribute.name}</code>: <i>{attribute.type}</i>
             </dt>
             <dd>
-              <strong>{attribute.type}</strong>
-
               {/* XXX a div tag in the middle of a dd tag!
               See https://github.com/peterbe/mdn2/issues/5
               */}
