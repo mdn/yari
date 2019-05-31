@@ -6,7 +6,7 @@ function RenderValues({ values }) {
       {values.map(value => {
         return (
           <li key={value.value}>
-            <code>{value.value}</code>:{" "}
+            <code>{value.value}</code>
             <div dangerouslySetInnerHTML={{ __html: value.description }} />
           </li>
         );
