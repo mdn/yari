@@ -86,6 +86,15 @@ run:
 
     make clean
 
+### Security Auditing
+
+To check that all node modules are up to date to secure versions you can run
+
+    make yarn-audit-all
+
+It will execute `yarn audit` in each directory where possible. To remedy
+`yarn` auditing warnings, refer to the official `yarn` documentation.
+
 ## Server-Sider Rendering
 
 Usually, when doing local development work you don't need server-side
