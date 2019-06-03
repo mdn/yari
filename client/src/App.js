@@ -7,15 +7,6 @@ import { Examples } from "./ingredients/examples";
 
 const LOCALES = ["en-US"];
 
-// Eventually these should be available directly from the documentJSON
-const HEADINGS = {
-  "short-description": "Short description",
-  overview: "Overview",
-  "usage-notes": "Usage notes",
-  "accessibility-concerns": "Accessibility concerns",
-  "see-also": "See also"
-};
-
 function App(appProps) {
   return (
     <div>
@@ -174,10 +165,10 @@ class Document extends React.Component {
 }
 
 const RENDERERS = {
-  "interactive-example": InteractiveExample,
+  "interactive_example": InteractiveExample,
   attributes: Attributes,
   examples: Examples,
-  "browser-compatibility": BrowserCompatibility
+  "browser_compatibility": BrowserCompatibility
 };
 
 function RenderIngredient({ fullName, document }) {
@@ -200,7 +191,7 @@ function RenderIngredient({ fullName, document }) {
     if (!proseSection) {
       return null;
     }
-    return <Prose name={ingredientName} content={proseSection} />;
+    return <Prose id={ingredientName} section={proseSection} />;
   } else {
     const Renderer = RENDERERS[ingredientName];
     if (Renderer) {
@@ -247,12 +238,11 @@ function DocumentFromRecipe({ document }) {
   return sections;
 }
 
-function Prose({ name, content }) {
-  const headingText = HEADINGS[name];
+function Prose({ id, section }) {
   return (
     <>
-      <h2 id={name}>{headingText}</h2>
-      <div dangerouslySetInnerHTML={{ __html: content }} />
+      <h2 id={id}>{section.title}</h2>
+      <div dangerouslySetInnerHTML={{ __html: section.content }} />
     </>
   );
 }
