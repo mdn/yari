@@ -32,5 +32,10 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "resolutions": {
+    "fstream": ">=1.0.12",
+    "js-yaml": ">=3.13.1",
+    "tar": ">=2.2.2"
+  }
 }

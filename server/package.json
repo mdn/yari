@@ -17,5 +17,8 @@
     "babel-loader": "8.0.6",
     "babel-preset-env": "1.7.0",
     "nodemon": "1.19.1"
+  },
+  "resolutions": {
+    "braces": ">=2.3.1"
   }
 }
