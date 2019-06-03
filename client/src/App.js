@@ -1,7 +1,20 @@
 import React from "react";
 import { Redirect, Route, Switch, Link } from "react-router-dom";
 
+import { InteractiveExample } from "./ingredients/interactive-example";
+import { Attributes } from "./ingredients/attributes";
+import { Examples } from "./ingredients/examples";
+
 const LOCALES = ["en-US"];
+
+// Eventually these should be available directly from the documentJSON
+const HEADINGS = {
+  "short-description": "Short description",
+  overview: "Overview",
+  "usage-notes": "Usage notes",
+  "accessibility-concerns": "Accessibility concerns",
+  "see-also": "See also"
+};
 
 function App(appProps) {
   return (
@@ -160,77 +173,68 @@ class Document extends React.Component {
   }
 }
 
-function DocumentFromRecipe({ document }) {
-  const sections = [];
+const RENDERERS = {
+  "interactive-example": InteractiveExample,
+  attributes: Attributes,
+  examples: Examples,
+  "browser-compatibility": BrowserCompatibility
+};
 
-  // Sanity check
-  if (!document.prose) {
-    throw new Error("Document does not have a .prose");
+function RenderIngredient({ fullName, document }) {
+  let parts = fullName.split(".");
+  if (parts.length !== 2) {
+    throw new Error(
+      `ingredient name '${fullName}' should be 2 strings separated by a period`
+    );
   }
 
-  const recipe = document.__recipe__;
-  const explicitProse = Object.values(recipe.body)
-    .filter(value => {
-      return (
-        typeof value === "string" &&
-        value.startsWith("prose.") &&
-        value !== "prose.*"
-      );
-    })
-    .map(value => value.replace(/\?$/, "").replace(/^prose\./, ""));
+  let ingredientType = parts[0];
+  let ingredientName = parts[1];
+  // we're not checking for missing mandatory sections here (yet?)
+  if (ingredientName.endsWith("?")) {
+    ingredientName = ingredientName.slice(0, -1);
+  }
 
-  Object.values(recipe.body).forEach(value => {
-    if (typeof value === "string" && value.startsWith("prose.")) {
-      if (value === "prose.*") {
-        // Gather all that are not mentioned in explicitProse
-        Object.entries(document.prose)
-          .filter(([key, value]) => {
-            // XXX sets?
-            return !explicitProse.includes(key);
-          })
-          .forEach(([key, values]) => {
-            if (key in document.prose) {
-              if (!Array.isArray(values)) {
-                values = [values];
-              }
-              values.forEach((value, i) => {
-                sections.push(
-                  <Prose key={value + i} name={key} content={value} />
-                );
-              });
-            }
-          });
-      } else {
-        const optional = value.endsWith("?");
-        const name = value.replace(/\?$/, "").replace(/^prose\./, "");
-        if (name in document.prose) {
-          // Great! Insert it now.
-          sections.push(
-            <Prose key={value} name={name} content={document.prose[name]} />
-          );
-        } else if (!optional) {
-          throw new Error(
-            `prose section '${name}' is not optional and not present in document.prose`
-          );
-        }
-      }
-    } else if (value === "meta.browser-compatibility") {
-      if (!document.browser_compatibility) {
-        throw new Error("Expecting document to have 'browser_compatibility'");
-      }
-      sections.push(
-        <BrowserCompatibility
-          key={value}
-          content={document.browser_compatibility}
-        />
-      );
-    } else {
-      console.warn(`Not sure what to do with ${JSON.stringify(value)}`);
+  if (ingredientType === "prose") {
+    let proseSection = document.prose[ingredientName];
+    if (!proseSection) {
+      return null;
     }
+    return <Prose name={ingredientName} content={proseSection} />;
+  } else {
+    const Renderer = RENDERERS[ingredientName];
+    if (Renderer) {
+      return <Renderer name={ingredientName} document={document} />;
+    } else {
+      throw new Error(`No available renderer for '${ingredientName}`);
+    }
+  }
+}
+
+function DocumentFromRecipe({ document }) {
+  const sections = [];
+  const recipe = document.__recipe__;
+
+  const ingredientSections = Object.values(recipe.body).map(ingredient => {
+    // one of the ingredients is not a string, and we don't handle it yet
+    if (typeof ingredient !== "string") {
+      console.warn(
+        `Not sure how to deal with non-string ingredients '${JSON.stringify(
+          ingredient
+        )}'`
+      );
+      return null;
+    }
+    return (
+      <RenderIngredient
+        key={ingredient}
+        fullName={ingredient}
+        document={document}
+      />
+    );
   });
 
-  sections.push(<hr key="metadata-break" />);
-  // Metadata stuff
+  sections.push(...ingredientSections);
 
   // The recipe doesn't include to put the contributors so let's add it last
   // if the document has it.
@@ -243,8 +247,14 @@ function DocumentFromRecipe({ document }) {
   return sections;
 }
 
-function Prose({ content }) {
-  return <div dangerouslySetInnerHTML={{ __html: content }} />;
+function Prose({ name, content }) {
+  const headingText = HEADINGS[name];
+  return (
+    <>
+      <h2 id={name}>{headingText}</h2>
+      <div dangerouslySetInnerHTML={{ __html: content }} />
+    </>
+  );
 }
 
 function Contributors({ contributors }) {
