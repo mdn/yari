@@ -83,12 +83,19 @@ function buildHtmlAndJson({ filePath, output, buildHtml }) {
     if (!match) {
       throw new Error(`Urecognized URL pattern ${uri}`);
     }
-    rendered = render(
-      <Router context={{}} location={uri}>
-        <App {...options} />
-      </Router>,
-      options
-    );
+    try {
+      rendered = render(
+        <Router context={{}} location={uri}>
+          <App {...options} />
+        </Router>,
+        options
+      );
+    } catch (ex) {
+      console.error(`Rendering HTML failed!
+      uri=${uri}
+      filePath=${filePath}`);
+      throw ex;
+    }
   }
 
   fs.mkdirSync(destination, { recursive: true });
