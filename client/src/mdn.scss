@@ -1,11 +1,52 @@
+div.page-title {
+  background-color: #f5f9fa;
+  padding: 10px;
+}
+
+div.sidebar {
+  float: left;
+}
+
 div.content {
 
+  margin-left: 22.75%;
+
+  h2::before {
+    border-top: 3px solid #3d7e9a;
+    content: '';
+    display: block;
+    margin: 40px 0 40px 0;
+    width: 100%;
+  }
+
   h3 {
-      display: inline-block;
-    padding: 0 4px 0 40px;
+    padding: 2px 4px 2px 40px;
     background-color: #333;
     color: #fff;
     font-weight: 400;
     line-height: 1.25;
+    max-width: -moz-fit-content;
+  }
+
+  h3 {
+    max-width: fit-content;
+  }
+
+  .interactive-example {
+    box-sizing: border-box;
+    background-color: #f5f9fa;
+    color: #333;
+    padding: 10px;
+    border: 1px solid #eaf2f4;
+    width: 100%;
+    max-width: 70rem;
+  }
+
+  p,
+  dl,
+  ul,
+  ol,
+  pre {
+    max-width: 42rem;
   }
 }

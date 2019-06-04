@@ -1,6 +1,20 @@
 h1 {
-  font-size: 2.2em;
+  font-size: 2.8em;
+  font-weight: 700;
   margin-top: 0;
+}
+
+h2 {
+  font-size: 2.3rem;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 1.4rem;
+}
+
+h4 {
+  font-size: 1.2rem;
 }
 
 h1,
@@ -9,7 +23,7 @@ h3,
 h4,
 h5,
 h6 {
-  margin-bottom: 12px;
+  margin-bottom: 0;
 }
 
 h1,
@@ -22,7 +36,6 @@ strong {
   color: $text-bright;
 }
 
-h1,
 h2,
 h3,
 h4,
@@ -32,6 +45,15 @@ b,
 strong,
 th {
   font-weight: 600;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Zilla Slab', Arial, sans-serif;
 }
 
 blockquote {
