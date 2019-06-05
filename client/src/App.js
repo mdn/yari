@@ -200,6 +200,9 @@ function Prose({ section }) {
 }
 
 function ProseWithHeading({ id, section }) {
+  if (!section) {
+    return null;
+  }
   return (
     <>
       <h2 id={id}>{section.title}</h2>
