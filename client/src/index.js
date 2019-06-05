@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
-// import './index.css';
 import "./index.scss";
+import "typeface-zilla-slab";
 import App from "./App";
 // import * as serviceWorker from './serviceWorker';
 
