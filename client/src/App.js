@@ -156,7 +156,7 @@ class Document extends React.Component {
         <div className="main">
           <div className="sidebar">SIDE BAR</div>
           <div className="content">
-            <DocumentFromRecipe document={document} />
+            <RenderHTMLElementDocument document={document} />
           </div>
         </div>
       </div>
@@ -164,71 +164,21 @@ class Document extends React.Component {
   }
 }
 
-const RENDERERS = {
-  "interactive_example": InteractiveExample,
-  attributes: Attributes,
-  examples: Examples,
-  "browser_compatibility": BrowserCompatibility
-};
+function RenderHTMLElementDocument({ document }) {
+  let sections = [];
 
-function RenderIngredient({ fullName, document }) {
-  let parts = fullName.split(".");
-  if (parts.length !== 2) {
-    throw new Error(
-      `ingredient name '${fullName}' should be 2 strings separated by a period`
-    );
-  }
+  sections.push(<Prose section={document.prose.short_description} />);
+  sections.push(<InteractiveExample document={document} />);
+  sections.push(<Prose section={document.prose.overview} />);
+  sections.push(<Attributes document={document} />);
+  sections.push(<ProseWithHeading section={document.prose.usage_notes} />);
+  sections.push(<ProseWithHeading section={document.prose.accessibility_concerns} />);
+  sections.push(<Examples document={document} />);
+  sections.push(<BrowserCompatibility document={document} />);
+  sections.push(<ProseWithHeading section={document.prose.see_also} />);
 
-  let ingredientType = parts[0];
-  let ingredientName = parts[1];
-  // we're not checking for missing mandatory sections here (yet?)
-  if (ingredientName.endsWith("?")) {
-    ingredientName = ingredientName.slice(0, -1);
-  }
+  sections = sections.filter(s => !!s);
 
-  if (ingredientType === "prose") {
-    let proseSection = document.prose[ingredientName];
-    if (!proseSection) {
-      return null;
-    }
-    return <Prose id={ingredientName} section={proseSection} />;
-  } else {
-    const Renderer = RENDERERS[ingredientName];
-    if (Renderer) {
-      return <Renderer name={ingredientName} document={document} />;
-    } else {
-      throw new Error(`No available renderer for '${ingredientName}`);
-    }
-  }
-}
-
-function DocumentFromRecipe({ document }) {
-  const sections = [];
-  const recipe = document.__recipe__;
-
-  const ingredientSections = Object.values(recipe.body).map(ingredient => {
-    // one of the ingredients is not a string, and we don't handle it yet
-    if (typeof ingredient !== "string") {
-      console.warn(
-        `Not sure how to deal with non-string ingredients '${JSON.stringify(
-          ingredient
-        )}'`
-      );
-      return null;
-    }
-    return (
-      <RenderIngredient
-        key={ingredient}
-        fullName={ingredient}
-        document={document}
-      />
-    );
-  });
-
-  sections.push(...ingredientSections);
-
-  // The recipe doesn't include to put the contributors so let's add it last
-  // if the document has it.
   if (document.contributors) {
     sections.push(
       <Contributors key="contributors" contributors={document.contributors} />
@@ -238,7 +188,18 @@ function DocumentFromRecipe({ document }) {
   return sections;
 }
 
-function Prose({ id, section }) {
+function Prose({ section }) {
+  if (!section) {
+    return null;
+  }
+  return (
+    <>
+      <div dangerouslySetInnerHTML={{ __html: section.content }} />
+    </>
+  );
+}
+
+function ProseWithHeading({ id, section }) {
   return (
     <>
       <h2 id={id}>{section.title}</h2>

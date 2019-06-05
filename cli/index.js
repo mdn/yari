@@ -35,14 +35,6 @@ function mapToURI({ document }) {
   return url.parse(document.mdn_url).pathname;
 }
 
-function getRecipe({ document }) {
-  // XXX this needs to get smarter!
-  const recipe = yaml.safeLoad(
-    fs.readFileSync("../stumptown/recipes/html-element.yaml", "utf8")
-  );
-  return recipe;
-}
-
 function buildHtmlAndJson({ filePath, output, buildHtml }) {
   const data = fs.readFileSync(filePath, "utf8");
   // const buildHash = crypto
@@ -57,7 +49,6 @@ function buildHtmlAndJson({ filePath, output, buildHtml }) {
     // XXX this is weird
     document: jsonData.html.elements[baseNameSans]
   };
-  options.document.__recipe__ = getRecipe(jsonData);
 
   const uri = mapToURI({ filePath, document: options.document });
 
