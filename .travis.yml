@@ -13,6 +13,4 @@ matrix:
     - name: client
       cache: yarn
       script:
-        - set -e
-        - cd client && yarn run test
-        - cd client && yarn run build
+        - ./scripts/ci-client.sh
