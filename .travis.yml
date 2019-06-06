@@ -8,6 +8,11 @@ branches:
 language: node_js
 node_js: stable
 
+# Because https://github.com/travis-ci/travis-ci/issues/9445
+before_install:
+  - npm install -g yarn
+  - yarn --version
+
 matrix:
   include:
     - name: client
