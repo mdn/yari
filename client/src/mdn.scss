@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 h1.page-title {
   background-color: #f5f9fa;
   padding: 10px;
@@ -42,11 +46,18 @@ div.content {
     max-width: 70rem;
   }
 
+  .live-sample-frame {
+    border: 1px solid #3d7e9a;
+    border-width: 1px 1px 1px 5px;
+    padding: 10px;
+  }
+
   p,
   dl,
   ul,
   ol,
-  pre {
+  pre,
+  .live-sample-frame {
     max-width: 42rem;
   }
 }
