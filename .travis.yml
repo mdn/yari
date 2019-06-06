@@ -1,0 +1,10 @@
+language: node_js
+node_js: stable
+
+matrix:
+  include:
+    - name: client
+      script:
+        - set -e
+        - cd client && yarn run test
+        - cd client && yarn run build

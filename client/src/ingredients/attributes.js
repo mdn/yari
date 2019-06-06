@@ -16,31 +16,41 @@ function RenderValues({ values }) {
 }
 
 function RenderAttributes({ attributes }) {
-  return (
-    <dl>
-      {attributes.map(attribute => {
-        return (
-          <React.Fragment key={attribute.name}>
-            <dt>
-              <p><code>{attribute.name}</code>: <i>{attribute.type}</i></p>
-            </dt>
-            <dd>
-              {/* XXX a div tag in the middle of a dd tag!
-              See https://github.com/peterbe/mdn2/issues/5
-              */}
-              <div
-                dangerouslySetInnerHTML={{ __html: attribute.description }}
-              />
-
-              {attribute.values && attribute.values.length && (
-                <RenderValues values={attribute.values} />
-              )}
-            </dd>
-          </React.Fragment>
-        );
-      })}
-    </dl>
-  );
+  if (attributes.length === 0) {
+    return (
+      <p>This element only supports the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes">
+        global attributes</a>.</p>
+    )
+  } else {
+    return (
+      <>
+        <p>This element supports the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes">
+          global attributes</a> as well as the following element-specific attributes:</p>
+        <dl>
+          {attributes.map(attribute => {
+            return (
+              <React.Fragment key={attribute.name}>
+                <dt>
+                  <p><code>{attribute.name}</code>: <i>{attribute.type}</i></p>
+                </dt>
+                <dd>
+                  {/* XXX a div tag in the middle of a dd tag!
+                  See https://github.com/peterbe/mdn2/issues/5
+                  */}
+                  <div
+                    dangerouslySetInnerHTML={{ __html: attribute.description }}
+                  />
+                  {attribute.values && attribute.values.length && (
+                    <RenderValues values={attribute.values} />
+                  )}
+                </dd>
+              </React.Fragment>
+            );
+          })}
+        </dl>
+      </>
+    );
+  }
 }
 
 export function Attributes({ document }) {
