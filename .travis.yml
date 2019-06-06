@@ -11,6 +11,7 @@ node_js: stable
 matrix:
   include:
     - name: client
+      cache: yarn
       script:
         - set -e
         - cd client && yarn run test
