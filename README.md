@@ -157,3 +157,17 @@ This has advantages that we can prepare every single page in something
 like a deployment script or a build step in CI. But we could also start
 a Node ExpressJS server and do the same thing there. The URL is the input
 instead of the file path on disk.
+
+## Upgrading Packages
+
+First, to find out which applications have out-of-date packages, run:
+
+    ./bin/yarn-outdated-all.sh
+
+It won't stop if any one app has outdated packages. It will go through
+all of them. Suppose that it mentions outdated packages, go into the app
+folder and run something like this:
+
+    cd cli
+    yarn outdated  # optional if you already know from ./bin/yarn-outdated-all.sh
+    yarn upgrade react-router-dom webpack --latest
