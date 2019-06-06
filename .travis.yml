@@ -14,3 +14,13 @@ matrix:
       cache: yarn
       script:
         - ./scripts/ci-client.sh
+    - end-to-end:
+      cache: yarn
+      script:
+        - make build-content
+        # Commented out June 6 because at the moment 'make deployment-build' will fail
+        # - make deployment-build
+    - yarn-audit:
+      cache: yarn
+      script:
+        - make yarn-audit-all
