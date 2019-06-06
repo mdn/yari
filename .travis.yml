@@ -1,3 +1,10 @@
+
+# Ideally nobody should push PRs to the "origin" repo.
+# Remove this once the repo is moved to the 'mdn' org.
+branches:
+  only:
+    - master
+
 language: node_js
 node_js: stable
 
