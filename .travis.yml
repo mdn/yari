@@ -8,10 +8,19 @@ branches:
 language: node_js
 node_js: stable
 
+cache:
+  yarn: true
+  directories:
+    - client/node_modules
+    - server/node_modules
+    - cli/node_modules
+
 # Because https://github.com/travis-ci/travis-ci/issues/9445
 before_install:
   - npm install -g yarn
   - yarn --version
+  # All nodes of the matrix will
+  - make install
 
 matrix:
   include:
