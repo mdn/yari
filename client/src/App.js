@@ -150,9 +150,7 @@ class Document extends React.Component {
     }
     return (
       <div>
-        <div className="page-title">
-          <h1>{document.title}</h1>
-        </div>
+        <h1 className="page-title">{document.title}</h1>
         <div className="main">
           <div className="sidebar">SIDE BAR</div>
           <div className="content">
