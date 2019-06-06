@@ -157,6 +157,8 @@ class Document extends React.Component {
           <div className="sidebar">SIDE BAR</div>
           <div className="content">
             <RenderHTMLElementDocument document={document} />
+            <hr/>
+            {document.contributors && <Contributors contributors={document.contributors}/>}
           </div>
         </div>
       </div>
@@ -167,23 +169,15 @@ class Document extends React.Component {
 function RenderHTMLElementDocument({ document }) {
   let sections = [];
 
-  sections.push(<Prose section={document.prose.short_description} />);
-  sections.push(<InteractiveExample document={document} />);
-  sections.push(<Prose section={document.prose.overview} />);
-  sections.push(<Attributes document={document} />);
-  sections.push(<ProseWithHeading section={document.prose.usage_notes} />);
-  sections.push(<ProseWithHeading section={document.prose.accessibility_concerns} />);
-  sections.push(<Examples document={document} />);
-  sections.push(<BrowserCompatibility document={document} />);
-  sections.push(<ProseWithHeading section={document.prose.see_also} />);
-
-  sections = sections.filter(s => !!s);
-
-  if (document.contributors) {
-    sections.push(
-      <Contributors key="contributors" contributors={document.contributors} />
-    );
-  }
+  sections.push(<Prose key="short_description" section={document.prose.short_description} />);
+  sections.push(<InteractiveExample key="interactive_example" document={document} />);
+  sections.push(<Prose key="overview" section={document.prose.overview} />);
+  sections.push(<Attributes key="attributes" document={document} />);
+  sections.push(<ProseWithHeading key="usage_notes" section={document.prose.usage_notes} />);
+  sections.push(<ProseWithHeading key="accessibility_concerns" section={document.prose.accessibility_concerns} />);
+  sections.push(<Examples key="examples" document={document} />);
+  sections.push(<BrowserCompatibility key="browser_compatibility" document={document} />);
+  sections.push(<ProseWithHeading key="see_also" section={document.prose.see_also} />);
 
   return sections;
 }
@@ -193,9 +187,7 @@ function Prose({ section }) {
     return null;
   }
   return (
-    <>
-      <div dangerouslySetInnerHTML={{ __html: section.content }} />
-    </>
+    <div dangerouslySetInnerHTML={{ __html: section.content }} />
   );
 }
 
