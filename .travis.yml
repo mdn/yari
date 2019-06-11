@@ -1,10 +1,40 @@
+
+# Ideally nobody should push PRs to the "origin" repo.
+# Remove this once the repo is moved to the 'mdn' org.
+branches:
+  only:
+    - master
+
 language: node_js
 node_js: stable
+
+cache:
+  yarn: true
+  directories:
+    - client/node_modules
+    - server/node_modules
+    - cli/node_modules
+
+# Because https://github.com/travis-ci/travis-ci/issues/9445
+before_install:
+  - npm install -g yarn
+  - yarn --version
+  # All nodes of the matrix will
+  - make install
 
 matrix:
   include:
     - name: client
+      cache: yarn
       script:
-        - set -e
-        - cd client && yarn run test
-        - cd client && yarn run build
+        - ./scripts/ci-client.sh
+    - name: end-to-end
+      cache: yarn
+      script:
+        - make build-content
+        # Commented out June 6 because at the moment 'make deployment-build' will fail
+        # - make deployment-build
+    - name: yarn-audit
+      cache: yarn
+      script:
+        - make yarn-audit-all

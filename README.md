@@ -1,5 +1,7 @@
 # mdn2
 
+[![Build Status](https://travis-ci.org/peterbe/mdn2.svg?branch=master)](https://travis-ci.org/peterbe/mdn2)
+
 **THIS IS HIGHLY EXPERIMENTAL AND LIKELY TO CHANGE DRASTICALLY**
 
 ## Overview
