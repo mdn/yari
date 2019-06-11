@@ -1,7 +1,7 @@
 import React from "react";
 
 function slugifyTitle(title) {
-    return title.toLowerCase().replace(/ /gi, "_")
+  return title.toLowerCase().replace(/ /gi, "_");
 }
 
 function RenderSources({ sources }) {
@@ -48,13 +48,16 @@ function RenderLiveSample({ example }) {
       <iframe
         className="live-sample-frame"
         srcDoc={srcdoc}
-        title={example.description.title}
-        id={slugifyTitle(example.description.title)}
+        title={example.description.title || null}
+        id={
+          example.description.title
+            ? slugifyTitle(example.description.title)
+            : null
+        }
         width={example.description.width}
         height={example.description.height}
         frameBorder={0}
-      >
-      </iframe>
+      />
     </>
   );
 }
