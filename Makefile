@@ -15,6 +15,10 @@ build:
 	cd cli && yarn run run ../stumptown/packaged/html/elements/*.json && cd -
 	touch .make.built
 
+run-cli-build:
+	ls .make.built || make build
+	cd cli && yarn run build:watch
+
 run-server:
 	ls .make.built || make build
 	cd server && yarn run start

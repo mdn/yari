@@ -97,6 +97,24 @@ To check that all node modules are up to date to secure versions you can run
 It will execute `yarn audit` in each directory where possible. To remedy
 `yarn` auditing warnings, refer to the official `yarn` documentation.
 
+### Hacking on the CLI
+
+The above mentioned `Makefile` targets uses the CLI to build `.html` pages
+from the `.json` files in Stumptown. It only runs once and it depends on the
+the template generated once from the `client`. However, if you keep making
+changes to CLI functionality there are better ways. For example, follow
+these steps to work on one single page with the cli.
+
+    # In one terminal
+    make clean  # optional
+    make run-cli-build
+
+    # In another terminal
+    cd cli
+    yarn run start ../stumptown/packaged/html/elements/video.json
+    # or...
+    yarn run start --build-html ../stumptown/packaged/html/elements/video.json
+
 ## Server-Sider Rendering
 
 Usually, when doing local development work you don't need server-side
@@ -125,6 +143,38 @@ What it does is a mix of `make run-server` and `make run-dev` but without
 starting a server. It also, builds a `index.html` file for every document
 found and processed by the `cli`. This whole directory is ready to be
 uploaded to S3 or Netlify.
+
+## Trees
+
+The CLI will build a tree of all documents that are available. This produces
+a file in the build directory called `tree.json`. It contains the title,
+URI, and hash of every piece of content found in Stumptown. In the client,
+you can reach this with:
+
+    fetch('/tree.json').then(r => r.json()).then(tree => {
+      console.log('All documents:', tree);
+    })
+
+This is handy for tasks, during building, such as finding siblings. For
+example, if you're on `/docs/Web/HTML/elements/video` you can get a list
+of all other titles available under the parent `/docs/Web/HTML/elements`.
+
+Additionally, another auxilliary file is created based on this called
+`titles.json` which is an object that looks like this:
+
+    {
+        "/docs/Web/HTML/Element/abbr": "<abbr>: The Abbreviation element",
+        "/docs/Web/HTML/Element/address": "<address>: The Contact Address element",
+        "/docs/Web/HTML/Element/article": "<article>: The Article Contents element",
+        ...
+
+A usecase of having this tree is the ability to make an autocomplete
+search widget. When you have loaded all possible titles you can generate a
+search by knowing all other possible titles.
+
+Note that the CLI, when building each document's `index.json` or
+`index.html`, you supply a search pattern. The tree might thus
+contain more URIs than were generated.
 
 ## Goals and Not-Goals
 

@@ -7,8 +7,7 @@
     "build": "webpack --config webpack.config.js --mode=development",
     "start": "node dist/cli.js",
     "run": "yarn run build && yarn run start",
-    "build:watch": "webpack --config webpack.config.js --watch --mode=development",
-    "dev:run": "NODE_ENV=development nodemon dist/cli.js --watch dist/cli.js"
+    "build:watch": "webpack --config webpack.config.js --watch --mode=development"
   },
   "dependencies": {
     "dotenv": "8.0.0",
