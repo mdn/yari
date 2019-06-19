@@ -48,12 +48,7 @@ function RenderLiveSample({ example }) {
       <iframe
         className="live-sample-frame"
         srcDoc={srcdoc}
-        title={example.description.title || null}
-        id={
-          example.description.title
-            ? slugifyTitle(example.description.title)
-            : null
-        }
+        title={example.description.title || "Live sample"}
         width={example.description.width}
         height={example.description.height}
         frameBorder={0}
@@ -67,7 +62,7 @@ function RenderExample({ example }) {
     <>
       {example.description.title && <h3>{example.description.title}</h3>}
 
-      {example.description.title && (
+      {example.description.content && (
         <div
           dangerouslySetInnerHTML={{ __html: example.description.content }}
         />
