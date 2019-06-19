@@ -1,9 +1,5 @@
 import React from "react";
 
-function slugifyTitle(title) {
-    return title.toLowerCase().replace(/ /gi, "_")
-}
-
 function RenderSources({ sources }) {
   return (
     <>
@@ -48,13 +44,11 @@ function RenderLiveSample({ example }) {
       <iframe
         className="live-sample-frame"
         srcDoc={srcdoc}
-        title={example.description.title}
-        id={slugifyTitle(example.description.title)}
+        title={example.description.title || "Live sample"}
         width={example.description.width}
         height={example.description.height}
         frameBorder={0}
-      >
-      </iframe>
+      />
     </>
   );
 }
@@ -64,7 +58,7 @@ function RenderExample({ example }) {
     <>
       {example.description.title && <h3>{example.description.title}</h3>}
 
-      {example.description.title && (
+      {example.description.content && (
         <div
           dangerouslySetInnerHTML={{ __html: example.description.content }}
         />
@@ -84,7 +78,7 @@ export function Examples({ document }) {
     <>
       <h2>Examples</h2>
       {document.examples.map((example, i) => (
-        <RenderExample key={example.description.title + i} example={example} />
+        <RenderExample key={i} example={example} />
       ))}
     </>
   );

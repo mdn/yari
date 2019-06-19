@@ -32,8 +32,7 @@ matrix:
       cache: yarn
       script:
         - make build-content
-        # Commented out June 6 because at the moment 'make deployment-build' will fail
-        # - make deployment-build
+        - make deployment-build
     - name: yarn-audit
       cache: yarn
       script:
