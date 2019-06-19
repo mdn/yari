@@ -82,7 +82,7 @@ export function Examples({ document }) {
     <>
       <h2>Examples</h2>
       {document.examples.map((example, i) => (
-        <RenderExample key={example.description.title + i} example={example} />
+        <RenderExample key={i} example={example} />
       ))}
     </>
   );
