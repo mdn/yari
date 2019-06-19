@@ -1,9 +1,5 @@
 import React from "react";
 
-function slugifyTitle(title) {
-  return title.toLowerCase().replace(/ /gi, "_");
-}
-
 function RenderSources({ sources }) {
   return (
     <>
