@@ -1,0 +1,13 @@
+{
+  "name": "deployment",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@octokit/rest": "16.28.2",
+    "dotenv": "8.0.0",
+    "gitclone": "2.0.0",
+    "netlify-cli": "2.11.23",
+    "simple-git": "1.115.0"
+  }
+}

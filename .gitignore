@@ -29,3 +29,5 @@ cli/node_modules/
 cli/dist/
 .make.built
 .make.installed
+deployment/.repo/
+deployment/node_modules/
