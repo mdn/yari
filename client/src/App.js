@@ -1,11 +1,9 @@
 import React from "react";
-import { Redirect, Route, Switch, Link } from "react-router-dom";
+import { Route, Switch, Link } from "react-router-dom";
 
 import { InteractiveExample } from "./ingredients/interactive-example";
 import { Attributes } from "./ingredients/attributes";
 import { Examples } from "./ingredients/examples";
-
-const LOCALES = ["en-US"];
 
 function App(appProps) {
   return (
@@ -14,11 +12,6 @@ function App(appProps) {
       <section className="section">
         <Switch>
           <Route path="/" exact component={Homepage} />
-          <Route path="/:locale" exact component={Homepage} />
-          <Route
-            path="/:locale/docs/:slug*"
-            render={props => <Document {...props} {...appProps} />}
-          />
           <Route
             path="/docs/:slug*"
             render={props => <Document {...props} {...appProps} />}
@@ -46,20 +39,6 @@ function Header(props) {
 
 class Homepage extends React.Component {
   render() {
-    const { location, match } = this.props;
-    const { locale } = match.params;
-    if (!locale) {
-      return <Redirect to={LOCALES[0]} />;
-    } else if (!LOCALES.includes(locale)) {
-      const found = LOCALES.find(
-        each => each.toLowerCase() === locale.toLowerCase()
-      );
-      if (found) {
-        return <Redirect to={found} />;
-      } else {
-        return <NoMatch location={location} message="Locale not found" />;
-      }
-    }
     return (
       <div>
         <h2>Welcome to MDN</h2>
@@ -89,25 +68,21 @@ class Document extends React.Component {
 
   componentDidMount() {
     const { match } = this.props;
-    const { locale, slug } = match.params;
+    const { slug } = match.params;
     if (!this.state.document) {
-      this.fetchDocument(locale, slug);
+      this.fetchDocument();
     }
   }
 
   componentDidUpdate(prevProps) {
     const { match } = this.props;
     const prevMatch = prevProps.match;
-    if (
-      prevMatch.params.locale !== match.params.locale ||
-      prevMatch.params.slug !== match.params.slug
-    ) {
-      console.log("New locale+slug:", [match.params.locale, match.params.slug]);
-      this.fetchDocument(match.params.locale, match.params.slug);
+    if (prevMatch.params.slug !== match.params.slug) {
+      this.fetchDocument();
     }
   }
 
-  fetchDocument = (locale, slug) => {
+  fetchDocument = () => {
     this.setState({ loading: true }, async () => {
       let url = document.location.pathname;
       if (!url.endsWith("/")) url += "/";
@@ -115,8 +90,6 @@ class Document extends React.Component {
       console.log("OPENING", url);
       let response;
       try {
-        // response = await fetch(`/api/v0/documents/${locale}/${slug}`);
-        // response = await fetch(`index.json`);
         response = await fetch(url);
       } catch (ex) {
         return this.setState({ loading: false, loadingError: ex });
@@ -134,7 +107,6 @@ class Document extends React.Component {
 
   render() {
     const { document, loadingError, loading, notFound } = this.state;
-    // console.log("RENDERING DOCUMENT:", document);
     const { location } = this.props;
     if (notFound) {
       return <NoMatch location={location} message="Document not found" />;
@@ -155,8 +127,10 @@ class Document extends React.Component {
           <div className="sidebar">SIDE BAR</div>
           <div className="content">
             <RenderHTMLElementDocument document={document} />
-            <hr/>
-            {document.contributors && <Contributors contributors={document.contributors}/>}
+            <hr />
+            {document.contributors && (
+              <Contributors contributors={document.contributors} />
+            )}
           </div>
         </div>
       </div>
@@ -167,15 +141,30 @@ class Document extends React.Component {
 function RenderHTMLElementDocument({ document }) {
   let sections = [];
 
-  sections.push(<Prose key="short_description" section={document.prose.short_description} />);
-  sections.push(<InteractiveExample key="interactive_example" document={document} />);
+  sections.push(
+    <Prose key="short_description" section={document.prose.short_description} />
+  );
+  sections.push(
+    <InteractiveExample key="interactive_example" document={document} />
+  );
   sections.push(<Prose key="overview" section={document.prose.overview} />);
   sections.push(<Attributes key="attributes" document={document} />);
-  sections.push(<ProseWithHeading key="usage_notes" section={document.prose.usage_notes} />);
-  sections.push(<ProseWithHeading key="accessibility_concerns" section={document.prose.accessibility_concerns} />);
+  sections.push(
+    <ProseWithHeading key="usage_notes" section={document.prose.usage_notes} />
+  );
+  sections.push(
+    <ProseWithHeading
+      key="accessibility_concerns"
+      section={document.prose.accessibility_concerns}
+    />
+  );
   sections.push(<Examples key="examples" document={document} />);
-  sections.push(<BrowserCompatibility key="browser_compatibility" document={document} />);
-  sections.push(<ProseWithHeading key="see_also" section={document.prose.see_also} />);
+  sections.push(
+    <BrowserCompatibility key="browser_compatibility" document={document} />
+  );
+  sections.push(
+    <ProseWithHeading key="see_also" section={document.prose.see_also} />
+  );
 
   return sections;
 }
@@ -184,9 +173,7 @@ function Prose({ section }) {
   if (!section) {
     return null;
   }
-  return (
-    <div dangerouslySetInnerHTML={{ __html: section.content }} />
-  );
+  return <div dangerouslySetInnerHTML={{ __html: section.content }} />;
 }
 
 function ProseWithHeading({ id, section }) {
