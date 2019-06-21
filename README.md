@@ -97,7 +97,7 @@ To check that all node modules are up to date to secure versions you can run
 It will execute `yarn audit` in each directory where possible. To remedy
 `yarn` auditing warnings, refer to the official `yarn` documentation.
 
-### Linting
+### Linting (formatting)
 
 Linting is done with Prettier. It's checked in CI but also installed as a
 git hook. The configuration (i.e. our choices) are deliberately omitted
@@ -117,7 +117,18 @@ To only check the files you have touched in the current git stage:
     yarn run prettier-dev
 
 Note that when you run `yarn` the first time it will install a git hook
-that effectively runs the `yarn run prettier-dev` command.
+that effectively runs the `yarn run prettier-dev` command. **It does
+not complain, it fixes**. Meaning, if you make an edit to a `.js` file and accidentally violate the Prettier rules, simply running
+this will *fix* the violation. For example:
+
+    emacs client/src/App.js
+    git add client/src/App.js
+    git commit -m "making a change"
+
+To do the same, but independent of git staging run:
+
+    yarn  # once
+    yarn run prettier
 
 ## Server-Sider Rendering
 
