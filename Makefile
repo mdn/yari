@@ -2,6 +2,7 @@ clean:
 	rm -fr .make.built .make.installed
 
 install:
+	yarn
 	cd stumptown && npm install && cd -
 	cd client && yarn && cd -
 	cd server && yarn && cd -

@@ -24,6 +24,10 @@ before_install:
 
 matrix:
   include:
+    - name: linting
+      cache: yarn
+      script:
+        - ./scripts/ci-lint.sh
     - name: client
       cache: yarn
       script:
