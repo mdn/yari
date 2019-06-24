@@ -67,8 +67,6 @@ class Document extends React.Component {
   };
 
   componentDidMount() {
-    const { match } = this.props;
-    const { slug } = match.params;
     if (!this.state.document) {
       this.fetchDocument();
     }
