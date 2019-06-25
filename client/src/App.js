@@ -32,7 +32,6 @@ function Header(props) {
       <h1>
         <Link to="/">MDN Web Docs</Link>
       </h1>
-      <p>Breadcrumbs here...</p>
     </header>
   );
 }
