@@ -1,6 +1,6 @@
-# mdn2
+# stumptown-renderer
 
-[![Build Status](https://travis-ci.org/peterbe/mdn2.svg?branch=master)](https://travis-ci.org/peterbe/mdn2)
+[![Build Status](https://travis-ci.org/mdn/stumptown-renderer.svg?branch=master)](https://travis-ci.org/mdn/stumptown-renderer)
 
 **THIS IS HIGHLY EXPERIMENTAL AND LIKELY TO CHANGE DRASTICALLY**
 
@@ -46,8 +46,8 @@ the React components within are used in two different ways:
 If you haven't already done so, run:
 
     cd where/you/want/to/clone/it
-    git clone --recursive https://github.com/peterbe/mdn2.git
-    cd mdn2
+    git clone --recursive https://github.com/mdn/stumptown-renderer.git
+    cd stumptown-renderer
 
 You need a decent version of `node`, `yarn`, and `npm`.
 
