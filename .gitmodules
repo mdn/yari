@@ -1,3 +1,3 @@
 [submodule "stumptown"]
 	path = stumptown
-	url = https://github.com/mdn/stumptown-experiment.git
+	url = https://github.com/mdn/stumptown-content.git
