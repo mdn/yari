@@ -1,0 +1,25 @@
+.search-widget .search-results {
+  position: absolute;
+  z-index: 2;
+  background-color: white;
+  opacity: 0.98;
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  width: 400px;
+
+  div {
+    padding: 5px;
+    border-bottom: 1px solid #efefef;
+  }
+  div:hover {
+      background-color: #efefef;
+      cursor: pointer;
+  }
+  div:last-child {
+    border-bottom: none;
+  }
+  a {
+    text-overflow: ellipsis;
+  }
+}
