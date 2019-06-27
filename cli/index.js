@@ -66,7 +66,7 @@ function buildTree({ filePath, tree }) {
   // about the document.
 }
 
-function buildHtmlAndJson({ filePath, output, buildHtml }) {
+function buildHtmlAndJson({ filePath, output, buildHtml, tree }) {
   const data = fs.readFileSync(filePath, "utf8");
   // const buildHash = crypto
   //   .createHash("md5")
@@ -176,12 +176,13 @@ function buildJsonFlatTitles({ output, tree }) {
       }
     });
   }
-  findLeafs(tree);
+  findLeafs(tree.tree);
+  const titlesAndMeta = { titles, date: tree.date };
   fs.writeFileSync(
     outfileJson,
     process.env.NODE_ENV === "development"
-      ? JSON.stringify(titles, null, 2)
-      : JSON.stringify(titles)
+      ? JSON.stringify(titlesAndMeta, null, 2)
+      : JSON.stringify(titlesAndMeta)
   );
 
   console.log(`Wrote titles in ${outfileJson}`);
@@ -287,12 +288,14 @@ paths.forEach(filePath => {
       console.error(err.toString());
       process.exit(1);
     }
-    buildHtmlAndJson({ filePath, output, buildHtml: args["build-html"] });
+    buildHtmlAndJson({ filePath, output, buildHtml: args["build-html"], tree });
   });
 });
 
-buildJsonTree({ output, tree });
-buildJsonFlatTitles({ output, tree });
+// The tree as an object has been fully used.
+// Now record it to disk.
+buildJsonTree({ output, tree: { tree, date: new Date().toISOString() } });
+buildJsonFlatTitles({ output, tree: { tree, date: new Date().toISOString() } });
 
 // Commented out but left as an exercise for a future feature
 // buildSitemap({ output, tree });
