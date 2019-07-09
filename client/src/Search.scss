@@ -1,28 +1,53 @@
-.search-widget {
+@import "include-media/dist/_include-media.scss";
+
+form.search-widget {
+  position: relative;
+
+  input { width: 400px; margin-bottom: 0; }
+
+  // @include media(">phone", "<=tablet") {
+  //   input { width: 100%; }
+  // }
+
+  p.server-error {
+    margin: 0;
+    color: red;
+    font-size: 80%;
+  }
+
   .search-results {
-  position: absolute;
-  z-index: 2;
-  background-color: white;
-  opacity: 0.98;
-  border-bottom: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  border-left: 1px solid #ccc;
-  width: 400px;
+    position: absolute;
+    z-index: 2;
+    background-color: white;
+    opacity: 0.98;
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    width: 400px;
 
-  div {
-    padding: 5px;
-    border-bottom: 1px solid #efefef;
-  }
-  div:hover {
+    div {
+      padding: 5px;
+      border-bottom: 1px solid #efefef;
+    }
+    div:hover, div.highlit {
       background-color: #efefef;
+    }
+    div:hover {
       cursor: pointer;
-  }
-  div:last-child {
-    border-bottom: none;
-  }
-  a {
-    text-overflow: ellipsis;
-  }
-}
+    }
+    div:last-child {
+      border-bottom: none;
+    }
+    a {
+      text-overflow: ellipsis;
+    }
 
+    div.nothing-found {
+      font-style: italic;
+    }
+  }
+
+  @include media(">phone", "<=tablet") {
+    .search-results, input { width: 100%; }
+  }
 }

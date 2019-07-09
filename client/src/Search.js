@@ -1,17 +1,18 @@
-import React from "react";
-import { Link } from "react-router-dom";
 import FlexSearch from "flexsearch";
+import React from "react";
+import { Redirect } from "react-router-dom";
 import "./Search.scss";
 
 export class SearchWidget extends React.Component {
   state = {
-    q: "",
-    lastQ: "",
+    highlitResult: null,
     initializing: false,
-    serverError: null,
+    lastQ: "",
+    q: "",
+    redirectTo: null,
     searchResults: [],
-    showSearchResults: true,
-    highlitResult: null
+    serverError: null,
+    showSearchResults: true
   };
 
   componentDidMount() {
@@ -23,7 +24,13 @@ export class SearchWidget extends React.Component {
       // console.log("PATHNAME CHANGED!");
       // Hide search results if you changed page.
       if (this.state.showSearchResults || this.state.q) {
-        this.setState({ showSearchResults: false, q: "", lastQ: "" });
+        this.setState({
+          highlitResult: null,
+          lastQ: "",
+          q: "",
+          redirectTo: null,
+          showSearchResults: false
+        });
       }
     }
   }
@@ -44,20 +51,24 @@ export class SearchWidget extends React.Component {
         response = await fetch("/titles.json");
       } catch (ex) {
         if (this.dismounted) return;
-        return this.setState({ serverError: ex });
+        return this.setState({ serverError: ex, showSearchResults: true });
       }
       if (this.dismounted) return;
       if (!response.ok) {
-        return this.setState({ serverError: response });
+        return this.setState({
+          serverError: response,
+          showSearchResults: true
+        });
       }
-      const titles = await response.json();
+      const { titles } = await response.json();
 
       // XXX support locales!
       // NOTE! See search-experimentation.js to play with different settings.
       this.index = new FlexSearch({
         encode: "advanced",
-        tokenize: "reverse",
-        suggest: true
+        suggest: true,
+        // tokenize: "reverse",
+        tokenize: "forward"
       });
       this._map = {};
       Object.entries(titles).forEach(([uri, title]) => {
@@ -107,14 +118,21 @@ export class SearchWidget extends React.Component {
         //   return;
         // }
 
+        if (this.hideSoon) {
+          // You have triggered the hideSoon timeout which usually happens
+          // when you blur the input. But clearly you've changed your mind
+          // and typed something new interesting in. So cancel that timeout.
+          window.clearTimeout(this.hideSoon);
+        }
+
         const indexResults = this.index.search(q, 10);
         const results = indexResults.map(uri => {
-          return { uri, title: this._map[uri] };
+          return { title: this._map[uri], uri };
         });
         this.setState({
           lastQ: q,
-          showSearchResults: results.length > 0,
-          searchResults: results
+          searchResults: results,
+          showSearchResults: true
         });
       }
     });
@@ -126,38 +144,97 @@ export class SearchWidget extends React.Component {
       if (this.state.showSearchResults) {
         this.setState({ showSearchResults: false });
       }
+    } else if (event.key === "ArrowDown") {
+      event.preventDefault();
+      // Increment 'highlitResult' if possible.
+      const { highlitResult, searchResults } = this.state;
+      if (highlitResult === null) {
+        if (searchResults.length) {
+          this.setState({ highlitResult: 0 });
+        }
+      } else if (highlitResult < searchResults.length - 1) {
+        this.setState({ highlitResult: highlitResult + 1 });
+      }
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      // Decrement 'highlitResult' if possible.
+      const { highlitResult } = this.state;
+      if (highlitResult > 0) {
+        this.setState({ highlitResult: highlitResult - 1 });
+      } else {
+        this.setState({ highlitResult: null });
+      }
     }
+  };
+
+  blurHandler = () => {
+    this.hideSoon = window.setTimeout(() => {
+      if (!this.dismounted) {
+        this.setState({ showSearchResults: false });
+      }
+    }, 300);
   };
 
   submitHandler = event => {
     event.preventDefault();
-    console.warn("If there is a good first suggestion, redirect to that");
+    const { highlitResult, searchResults } = this.state;
+    // console.warn("If there is a good first suggestion, redirect to that");
+    let redirectTo;
+    if (searchResults.length === 1) {
+      redirectTo = searchResults[0].uri;
+    } else if (searchResults.length && highlitResult) {
+      console.log(searchResults[highlitResult].uri);
+      redirectTo = searchResults[highlitResult].uri;
+    } else {
+      return;
+    }
+    this.setState({
+      redirectTo,
+      showSearchResults: false
+    });
   };
 
   redirect = uri => {
-    // XXX
+    this.setState({ redirectTo: uri });
   };
 
   render() {
-    const { serverError, showSearchResults, searchResults, q } = this.state;
+    const {
+      highlitResult,
+      q,
+      redirectTo,
+      searchResults,
+      serverError,
+      showSearchResults
+    } = this.state;
+    if (redirectTo) {
+      return <Redirect push to={redirectTo} />;
+    }
     return (
-      <form onSubmit={this.submitHandler} className="search-widget">
+      <form className="search-widget" onSubmit={this.submitHandler}>
         <input
-          type="search"
-          value={q}
+          onBlur={this.blurHandler}
           onChange={this.searchHandler}
-          placeholder="Site search"
-          onMouseOver={this.initializeIndex}
           onFocus={this.initializeIndex}
           onKeyDown={this.keyDownHandler}
+          onMouseOver={this.initializeIndex}
+          placeholder="Site search"
+          type="search"
+          value={q}
         />
         {serverError && (
-          <p>
-            <small>Server error trying to initialize index :(</small>
+          <p className="server-error">
+            {/* XXX Could be smarter here and actually *look* at the serverError object */}
+            Server error trying to initialize index
           </p>
         )}
-        {!serverError && showSearchResults && searchResults.length ? (
-          <ShowSearchResults results={searchResults} redirect={this.redirect} />
+        {!serverError && showSearchResults ? (
+          <ShowSearchResults
+            highlitResult={highlitResult}
+            nothingFound={q && !searchResults.length}
+            redirect={this.redirect}
+            results={searchResults}
+          />
         ) : null}
       </form>
     );
@@ -170,19 +247,21 @@ class ShowSearchResults extends React.PureComponent {
     this.props.redirect(result.uri);
   };
   render() {
-    const { results } = this.props;
+    const { highlitResult, nothingFound, results } = this.props;
+    if (!nothingFound && !results.length) {
+      return null;
+    }
     return (
       <div className="search-results">
-        {results.map(result => {
+        {nothingFound && <div className="nothing-found">nothing found</div>}
+        {results.map((result, i) => {
           return (
             <div
+              className={i === highlitResult ? "highlit" : null}
               key={result.uri}
               onClick={event => this.redirectHandler(result)}
             >
               <b>{result.title}</b>
-              {/* <Link to={result.uri} onClick={event => event.preventDefault()}>
-                {result.title}
-              </Link> */}
             </div>
           );
         })}
