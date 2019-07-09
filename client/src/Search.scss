@@ -1,4 +1,5 @@
-.search-widget .search-results {
+.search-widget {
+  .search-results {
   position: absolute;
   z-index: 2;
   background-color: white;
@@ -22,4 +23,6 @@
   a {
     text-overflow: ellipsis;
   }
+}
+
 }

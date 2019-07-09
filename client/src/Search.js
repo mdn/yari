@@ -74,6 +74,10 @@ export class SearchWidget extends React.Component {
         if (this.state.showSearchResults) {
           this.setState({ showSearchResults: false });
         }
+      } else if (!this.index) {
+        // This can happen if the initializing hasn't completed yet or
+        // completed un-successfully.
+        return;
       } else {
         console.log(
           `Do something interesting with ${this.state.q.trim()} (last search: ${
