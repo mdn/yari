@@ -65,7 +65,10 @@ export class SearchWidget extends React.Component {
           console.warn(ex);
         }
         console.timeEnd("Fetching titles localStorage");
-        // Could check the value of 'storedTitles.fetchDate'.
+        // XXX Could check the value of 'storedTitles._fetchDate'.
+        // For example if `new Date().getTime() - storedTitles._fetchDate`
+        // is a really small number, it probably just means the page was
+        // refreshed very recently.
         if (storedTitles) {
           this.indexTitles(storedTitles);
         }
