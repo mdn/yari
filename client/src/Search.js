@@ -97,7 +97,15 @@ export class SearchWidget extends React.Component {
       titles._fetchDate = new Date().getTime();
       // XXX support proper cache keys based on locales
       console.time("Store fetched titles in localStorage");
-      localStorage.setItem("titles", JSON.stringify(titles));
+      try {
+        localStorage.setItem("titles", JSON.stringify(titles));
+      } catch (ex) {
+        console.warn(
+          ex,
+          `Unable to store a ${JSON.stringify(titles).length} string`
+        );
+      }
+
       console.timeEnd("Store fetched titles in localStorage");
     });
   };
