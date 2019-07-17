@@ -2,10 +2,10 @@ clean:
 	rm -fr .make.built .make.installed
 
 install:
-	cd stumptown && npm install && cd -
-	cd client && yarn && cd -
-	cd server && yarn && cd -
-	cd cli && yarn && cd -
+	cd stumptown && time npm install && cd -
+	cd client && time yarn && cd -
+	cd server && time yarn && cd -
+	cd cli && time yarn && cd -
 	touch .make.installed
 
 build:
