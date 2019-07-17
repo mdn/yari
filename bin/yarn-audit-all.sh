@@ -12,10 +12,7 @@ yarn audit
 cd -
 
 cd server
-yarn audit
+# Only care about the `>= high` warnings because this
+# workspace is only used for local development.
+yarn audit --level high
 cd -
-
-#cd stumptown
-#echo "NOTE! Stumptown is a git submodule!"
-#yarn audit
-#cd -
