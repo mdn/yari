@@ -19,8 +19,14 @@ cache:
 before_install:
   - npm install -g yarn
   - yarn --version
+  - echo "BEFORE:"
+  - yarn cache list
+  - yarn cache dir
   # All nodes of the matrix will
   - make install
+  - echo "AFTER:"
+  - yarn cache list
+  - yarn cache dir
 
 matrix:
   include:
