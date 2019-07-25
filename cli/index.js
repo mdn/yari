@@ -31,8 +31,30 @@ const ROUTES = [
 sourceMapSupport.install();
 
 /* Return a absolute path that is the correct URI for the website */
-function mapToURI({ document }) {
+function mapToURI(document) {
   return url.parse(document.mdn_url).pathname;
+}
+
+/** In the document, there's related_content and it contains keys
+ * called 'mdn_url'. We need to transform them to relative links
+ * that works with our router.
+ * This /mutates/ the document data.
+ */
+function fixRelatedContentURIs(document) {
+  function fixBlock(block) {
+    if (block.content) {
+      block.content.forEach(item => {
+        if (item.mdn_url) {
+          item.uri = mapToURI(item);
+          delete item.mdn_url;
+        }
+        fixBlock(item);
+      });
+    }
+  }
+  document.related_content.forEach(block => {
+    fixBlock(block);
+  });
 }
 
 function buildHtmlAndJson({ filePath, output, buildHtml }) {
@@ -42,15 +64,14 @@ function buildHtmlAndJson({ filePath, output, buildHtml }) {
   //   .update(data)
   //   .digest("hex");
 
-  const jsonData = JSON.parse(data);
-
-  const baseNameSans = path.basename(filePath).replace(/\.json/g, "");
   const options = {
-    // XXX this is weird
-    document: jsonData.html.elements[baseNameSans]
+    document: JSON.parse(data)
   };
 
-  const uri = mapToURI({ filePath, document: options.document });
+  // A temporary fix for the mdn_url values in the related_content.
+  fixRelatedContentURIs(options.document);
+
+  const uri = mapToURI(options.document);
 
   const destination = path.join(output, uri);
   const outfileHtml = path.join(destination, "index.html");
