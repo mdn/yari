@@ -1,3 +1,8 @@
+upgrade-latest-stumptown-submodule:
+	git submodule foreach git pull origin master
+	echo "Consider running 'git commit -am \"Upgraded to latest stumptown\"'"
+
+
 clean:
 	rm -fr .make.built .make.installed
 
