@@ -1,5 +1,5 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 h1.page-title {
@@ -9,15 +9,32 @@ h1.page-title {
 
 div.sidebar {
   float: left;
+  max-width: 300px;
+
+  h3, h4, h5, h6 {
+    // The main content area might not start with a <hX> tag.
+    // By doing this, the top of the sidebar aligns with the top
+    // of the content.
+    margin-top: 0;
+  }
+
+  ul {
+    padding-left: 0;
+    margin-bottom: 50px;
+
+    li {
+      list-style: none;
+      margin-top: 20px;
+    }
+  }
 }
 
 div.content {
-
   margin-left: 22.75%;
 
   h2::before {
     border-top: 3px solid #3d7e9a;
-    content: '';
+    content: "";
     display: block;
     margin: 40px 0 40px 0;
     width: 100%;

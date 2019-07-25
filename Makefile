@@ -10,9 +10,9 @@ install:
 
 build:
 	ls .make.installed || make install
-	cd stumptown && npm run build-json html/element && cd -
+	cd stumptown && npm run build-json html && cd -
 	cd client && yarn run build && cd -
-	cd cli && yarn run run ../stumptown/packaged/html/elements/*.json && cd -
+	cd cli && yarn run run ../stumptown/packaged/html/reference/elements/*.json && cd -
 	touch .make.built
 
 run-server:
@@ -30,12 +30,14 @@ deployment-build:
 
 build-content:
 	ls .make.built || make build
-	cd stumptown && npm run build-json html/element && cd -
-	cd cli && yarn run run ../stumptown/packaged/html/elements/*.json && cd -
+	cd stumptown && npm run build-json html && cd -
+	cd cli && yarn run run ../stumptown/packaged/html/reference/elements/*.json && cd -
 
 yarn-audit-all:
 	ls .make.installed || make install
 	./bin/yarn-audit-all.sh
 
+test-client:
+	cd client && yarn run test
 
 .PHONY: clean install build run-server run-dev deployment-build build-content yarn-audit-all

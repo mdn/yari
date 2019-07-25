@@ -121,7 +121,9 @@ class Document extends React.Component {
       <div>
         <h1 className="page-title">{document.title}</h1>
         <div className="main">
-          <div className="sidebar">SIDE BAR</div>
+          <div className="sidebar">
+            <RenderSideBar document={document} />
+          </div>
           <div className="content">
             <RenderHTMLElementDocument document={document} />
             <hr />
@@ -133,6 +135,56 @@ class Document extends React.Component {
       </div>
     );
   }
+}
+
+function RenderSideBar({ document }) {
+  return document.related_content.map(node => (
+    <SidebarLeaf
+      key={node.title}
+      depth={0}
+      title={node.title}
+      content={node.content || []}
+    />
+  ));
+}
+
+function SidebarLeaf({ depth, title, content }) {
+  let titleNode;
+  if (depth === 0) {
+    titleNode = <h3>{title}</h3>;
+  } else if (depth === 1) {
+    titleNode = <h4>{title}</h4>;
+  } else if (depth === 2) {
+    titleNode = <h5>{title}</h5>;
+  } else if (depth > 2) {
+    titleNode = <h6>{title}</h6>;
+  }
+  return (
+    <div>
+      {titleNode}
+      <ul>
+        {content.map(node => {
+          if (node.content) {
+            return (
+              <li key={node.title}>
+                <SidebarLeaf
+                  depth={depth + 1}
+                  title={node.title}
+                  content={node.content || []}
+                />
+              </li>
+            );
+          } else {
+            return (
+              <li key={node.uri}>
+                <Link to={node.uri}>{node.title}</Link>
+              </li>
+            );
+          }
+        })}
+      </ul>
+    </div>
+  );
 }
 
 function RenderHTMLElementDocument({ document }) {
