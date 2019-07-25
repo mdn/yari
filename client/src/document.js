@@ -1,63 +1,12 @@
 import React from "react";
-import { Route, Switch, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
+import { NoMatch } from "./routing";
 import { InteractiveExample } from "./ingredients/interactive-example";
 import { Attributes } from "./ingredients/attributes";
 import { Examples } from "./ingredients/examples";
 
-function App(appProps) {
-  return (
-    <div>
-      <Route path="/" component={Header} />
-      <section className="section">
-        <Switch>
-          <Route path="/" exact component={Homepage} />
-          <Route
-            path="/docs/:slug*"
-            render={props => <Document {...props} {...appProps} />}
-          />
-          <Route path="/search" component={Search} />
-          <Route component={NoMatch} />
-        </Switch>
-      </section>
-    </div>
-  );
-}
-
-export default App;
-
-function Header(props) {
-  return (
-    <header>
-      <h1>
-        <Link to="/">MDN Web Docs</Link>
-      </h1>
-    </header>
-  );
-}
-
-class Homepage extends React.Component {
-  render() {
-    return (
-      <div>
-        <h2>Welcome to MDN</h2>
-        <ul>
-          <li>
-            <Link to="/docs/Web/HTML/Element/audio">HTML/audio</Link>
-          </li>
-          <li>
-            <Link to="/docs/Web/HTML/Element/video">HTML/video</Link>
-          </li>
-          <li>
-            <Link to="/docs/Web/HTML/Element/canvas">HTML/canvas</Link>
-          </li>
-        </ul>
-      </div>
-    );
-  }
-}
-
-class Document extends React.Component {
+export class Document extends React.Component {
   state = {
     document: this.props.document || null,
     loading: false,
@@ -293,38 +242,5 @@ function LoadingError({ error }) {
         </p>
       )}
     </div>
-  );
-}
-
-function NoMatch({ location, message = null }) {
-  return (
-    <div>
-      <h3>Page Not Found</h3>
-      <p>
-        {message ? message : `Sorry, no document for ${location.pathname}.`}
-      </p>
-    </div>
-  );
-}
-
-function Search(props) {
-  const [search, setSearch] = React.useState("");
-  return (
-    <form
-      onSubmit={event => {
-        event.preventDefault();
-        console.log(`SEARCH FOR ${search}`);
-      }}
-    >
-      <input
-        type="search"
-        value={search}
-        onChange={event => {
-          setSearch(event.target.value);
-        }}
-        placeholder="Search..."
-      />
-      <button type="submit">Search</button>
-    </form>
   );
 }
