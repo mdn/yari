@@ -177,7 +177,7 @@ function SidebarLeaf({ depth, title, content }) {
           } else {
             return (
               <li key={node.uri}>
-                <Link to={node.uri}>{node.short_title || node.title}</Link>
+                <Link to={node.uri}>{node.title}</Link>
               </li>
             );
           }
