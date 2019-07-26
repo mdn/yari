@@ -15,7 +15,7 @@ import buildOptions from "minimist-options";
 import { StaticRouter as Router, matchPath } from "react-router";
 import sourceMapSupport from "source-map-support";
 
-import { App } from "../client/src/App";
+import { App } from "../client/src/app";
 import render from "./render";
 
 const STATIC_ROOT = path.join(__dirname, "../../client/build");
