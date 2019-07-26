@@ -13,7 +13,6 @@
   "dependencies": {
     "dotenv": "8.0.0",
     "escape-html": "1.0.3",
-    "js-yaml": "3.13.1",
     "minimist": "1.2.0",
     "minimist-options": "4.0.1",
     "react": "16.8.6",

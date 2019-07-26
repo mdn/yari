@@ -9,7 +9,6 @@ import path from "path";
 // and we need to reach the .env this way.
 require("dotenv").config({ path: path.join(__dirname, "../../.env") });
 
-import yaml from "js-yaml";
 import minimist from "minimist";
 import buildOptions from "minimist-options";
 import { StaticRouter as Router, matchPath } from "react-router";
