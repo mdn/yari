@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, Link } from "react-router-dom";
+import { Router, Link } from "@reach/router";
 
 import { Homepage } from "./homepage";
 import { Document } from "./document";
@@ -8,16 +8,15 @@ import { NoMatch } from "./routing";
 export function App(appProps) {
   return (
     <div>
-      <Route path="/" component={Header} />
+      <Router primary={false}>
+        <Header default />
+      </Router>
       <section className="section">
-        <Switch>
-          <Route path="/" exact component={Homepage} />
-          <Route
-            path="/docs/:slug*"
-            render={props => <Document {...props} {...appProps} />}
-          />
-          <Route component={NoMatch} />
-        </Switch>
+        <Router>
+          <Homepage path="/" />
+          <Document {...appProps} path="/docs/*" />
+          <NoMatch default />
+        </Router>
       </section>
     </div>
   );

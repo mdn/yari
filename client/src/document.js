@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@reach/router";
 
 import { NoMatch } from "./routing";
 import { InteractiveExample } from "./ingredients/interactive-example";
@@ -21,9 +21,9 @@ export class Document extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { match } = this.props;
-    const prevMatch = prevProps.match;
-    if (prevMatch.params.slug !== match.params.slug) {
+    const currentSlug = this.props["*"];
+    const prevSlug = prevProps["*"];
+    if (currentSlug !== prevSlug) {
       this.fetchDocument();
     }
   }
@@ -41,7 +41,7 @@ export class Document extends React.Component {
         return this.setState({ loading: false, loadingError: ex });
       }
       if (!response.ok) {
-        console.log(response);
+        console.warn(response);
         return this.setState({ loading: false, loadingError: response });
       } else {
         const data = await response.json();
