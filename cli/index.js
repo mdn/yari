@@ -11,21 +11,13 @@ require("dotenv").config({ path: path.join(__dirname, "../../.env") });
 
 import minimist from "minimist";
 import buildOptions from "minimist-options";
-import { StaticRouter as Router, matchPath } from "react-router";
+import { ServerLocation } from "@reach/router";
 import sourceMapSupport from "source-map-support";
 
 import { App } from "../client/src/app";
 import render from "./render";
 
 const STATIC_ROOT = path.join(__dirname, "../../client/build");
-
-const ROUTES = [
-  { path: "", exact: true },
-  { path: "/:locale", exact: true },
-  { path: "/:locale/docs/:slug*" },
-  { path: "/docs/:slug*" },
-  { path: "/search", exact: true }
-];
 
 sourceMapSupport.install();
 
@@ -87,18 +79,21 @@ function buildHtmlAndJson({ filePath, output, buildHtml }) {
 
   let rendered = null;
   if (buildHtml) {
-    const match = ROUTES.reduce((acc, route) => {
-      return matchPath(uri, route) || acc;
-    }, null);
+    // const match = ROUTES.reduce((acc, route) => {
+    //   return matchPath(uri, route) || acc;
+    // }, null);
 
-    if (!match) {
-      throw new Error(`Urecognized URL pattern ${uri}`);
-    }
+    // console.log("MATCH:", match);
+    // console.log({ uri });
+
+    // if (!match) {
+    //   throw new Error(`Urecognized URL pattern ${uri}`);
+    // }
     try {
       rendered = render(
-        <Router context={{}} location={uri}>
+        <ServerLocation url={uri}>
           <App {...options} />
-        </Router>,
+        </ServerLocation>,
         options
       );
     } catch (ex) {

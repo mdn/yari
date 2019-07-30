@@ -107,7 +107,7 @@ rendering. But it's a luxury to have for these reasons:
 
 2. When all possible URLs are pre-generated and uploaded as static files
    you don't need a clever server that knows to "reroute" all (non-static) URLs to
-   `/index.html` (where the `react-router` and `XHR` kicks in).
+   `/index.html`.
 
 3. If you can, with the `cli`, generate every single possible file ready for
    static serving there's an opportunity to do expensive post-processing such
@@ -172,7 +172,7 @@ folder and run something like this:
 
     cd cli
     yarn outdated  # optional if you already know from ./bin/yarn-outdated-all.sh
-    yarn upgrade react-router-dom webpack --latest
+    yarn upgrade webpack --latest
 
 ## Icons and logos
 

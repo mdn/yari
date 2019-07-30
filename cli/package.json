@@ -11,13 +11,13 @@
     "dev:run": "NODE_ENV=development nodemon dist/cli.js --watch dist/cli.js"
   },
   "dependencies": {
+    "@reach/router": "1.2.1",
     "dotenv": "8.0.0",
     "escape-html": "1.0.3",
     "minimist": "1.2.0",
     "minimist-options": "4.0.1",
     "react": "16.8.6",
     "react-dom": "16.8.6",
-    "react-router-dom": "5.0.1",
     "source-map-support": "0.5.12"
   },
   "devDependencies": {
