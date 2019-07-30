@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
 import "./index.scss";
 import "typeface-zilla-slab";
 import { App } from "./app";
@@ -12,11 +11,7 @@ const documentDataElement = document.getElementById("documentdata");
 if (documentDataElement) {
   documentData = JSON.parse(documentDataElement.text);
 }
-const app = (
-  <BrowserRouter>
-    <App document={documentData} />
-  </BrowserRouter>
-);
+const app = <App document={documentData} />;
 if (container.firstElementChild) {
   ReactDOM.hydrate(app, container);
 } else {
