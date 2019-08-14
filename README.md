@@ -174,6 +174,17 @@ folder and run something like this:
     yarn outdated  # optional if you already know from ./bin/yarn-outdated-all.sh
     yarn upgrade webpack --latest
 
+### Upgrading React
+
+React is used in at least two places; the `client` and the `cli`. It's
+important that both of these project folders have the same version of React
+so that server-side rendering and client-side rendering have matching version.
+
+Also, `react` and `react-dom` should be upgraded at the same time since they
+share release cycles. To help with all of this, run:
+
+    ./bin/yarn-upgrade-all-reacts.sh
+
 ## Icons and logos
 
 The various formats and sizes of the favicon is generated
