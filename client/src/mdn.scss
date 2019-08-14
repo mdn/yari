@@ -78,3 +78,32 @@ div.content {
     max-width: 42rem;
   }
 }
+
+.external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external) {
+  white-space: pre-line;
+}
+
+.external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):before, .external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):after {
+  background-image: url("./icons/general/external-link.svg");
+  background-size: 12px;
+  width: 12px;
+  height: 20px;
+  margin-top: 3px;
+  margin-right: 3px;
+  vertical-align: text-top;
+}
+
+.external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):before, .external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):before {
+  display: inline-block;
+  content: '';
+  background-repeat: no-repeat;
+}
+
+:not(pre)>*>code, :not(pre)>code {
+  background-color: #bbb;
+  background-color: rgba(220,220,220,.5);
+  border-radius: 2px;
+  box-decoration-break: clone;
+  padding: 0 2px;
+  word-wrap: break-word;
+}
