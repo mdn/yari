@@ -16,8 +16,8 @@
     "escape-html": "1.0.3",
     "minimist": "1.2.0",
     "minimist-options": "4.0.1",
-    "react": "16.8.6",
-    "react-dom": "16.8.6",
+    "react": "16.9.0",
+    "react-dom": "16.9.0",
     "source-map-support": "0.5.12"
   },
   "devDependencies": {
