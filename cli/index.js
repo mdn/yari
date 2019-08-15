@@ -79,16 +79,6 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
 
   let rendered = null;
   if (buildHtml) {
-    // const match = ROUTES.reduce((acc, route) => {
-    //   return matchPath(uri, route) || acc;
-    // }, null);
-
-    // console.log("MATCH:", match);
-    // console.log({ uri });
-
-    // if (!match) {
-    //   throw new Error(`Urecognized URL pattern ${uri}`);
-    // }
     try {
       rendered = render(
         <ServerLocation url={uri}>
