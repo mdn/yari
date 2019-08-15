@@ -12,7 +12,7 @@ build:
 	ls .make.installed || make install
 	cd stumptown && npm run build-json html && cd -
 	cd client && yarn run build && cd -
-	cd cli && yarn run run ../stumptown/packaged/html/reference/elements/*.json && cd -
+	cd cli && yarn run run ../stumptown/packaged/ && cd -
 	touch .make.built
 
 run-server:
@@ -31,7 +31,7 @@ deployment-build:
 build-content:
 	ls .make.built || make build
 	cd stumptown && npm run build-json html && cd -
-	cd cli && yarn run run ../stumptown/packaged/html/reference/elements/*.json && cd -
+	cd cli && yarn run run ../stumptown/packaged/ && cd -
 
 yarn-audit-all:
 	ls .make.installed || make install

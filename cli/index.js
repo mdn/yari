@@ -9,6 +9,7 @@ import path from "path";
 // and we need to reach the .env this way.
 require("dotenv").config({ path: path.join(__dirname, "../../.env") });
 
+import glob from "glob";
 import minimist from "minimist";
 import buildOptions from "minimist-options";
 import { ServerLocation } from "@reach/router";
@@ -156,7 +157,7 @@ const args = minimist(process.argv.slice(2), options);
 if (args["help"]) {
   console.log(`
   Usage:
-    yarn run run [options] FILES
+    yarn run run [options] FILES [FOLDERS]
 
   Options:
     -h, --help         print usage information
@@ -181,11 +182,52 @@ if (args["debug"]) {
 
 const paths = args["_"];
 if (!paths.length) {
-  console.warn("Building for ALL files is currently not supported");
-  process.exit(1);
+  console.error("Must provider at least 1 file or folder");
+  process.exit(2);
 }
 
-paths.forEach(filePath => {
+/** Given an array of "things" return all distinct .json files.
+ *
+ * Note that these "things" can be a directory, a file path, or a
+ * pattern.
+ * Only if each thing is a directory do we search for *.json files
+ * in there recursively.
+ */
+function expandFiles(directoriesPatternsOrFiles) {
+  function findFiles(directory) {
+    const found = glob.sync(path.join(directory, "*.json"));
+
+    fs.readdirSync(directory, { withFileTypes: true })
+      .filter(dirent => dirent.isDirectory())
+      .map(dirent => path.join(directory, dirent.name))
+      .map(findFiles)
+      .forEach(files => found.push(...files));
+
+    return found;
+  }
+
+  const filePaths = [];
+  directoriesPatternsOrFiles.forEach(thing => {
+    let files = [];
+    if (thing.includes("*")) {
+      // It's a thing!
+      files = glob.sync(thing);
+    } else {
+      const lstat = fs.lstatSync(thing);
+      if (lstat.isDirectory()) {
+        files = findFiles(thing);
+      } else if (lstat.isFile()) {
+        files = [thing];
+      } else {
+        throw new Error(`${thing} is neither file nor directory`);
+      }
+    }
+    files.forEach(p => filePaths.includes(p) || filePaths.push(p));
+  });
+  return filePaths;
+}
+
+expandFiles(paths).forEach(filePath => {
   const output = args.output;
   fs.access(filePath, fs.constants.R_OK, err => {
     if (err) {
