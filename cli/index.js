@@ -48,7 +48,7 @@ function fixRelatedContentURIs(document) {
   });
 }
 
-function buildHtmlAndJson({ filePath, output, buildHtml }) {
+function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
   const data = fs.readFileSync(filePath, "utf8");
   // const buildHash = crypto
   //   .createHash("md5")
@@ -115,10 +115,12 @@ function buildHtmlAndJson({ filePath, output, buildHtml }) {
       : JSON.stringify(options)
   );
   // fs.writeFileSync(outfileHash, buildHash);
-  if (rendered) {
-    console.log(`Wrote ${outfileHtml} and ${outfileJson}`);
-  } else {
-    console.log(`Wrote ${outfileJson}`);
+  if (!quiet) {
+    if (rendered) {
+      console.log(`Wrote ${outfileHtml} and ${outfileJson}`);
+    } else {
+      console.log(`Wrote ${outfileJson}`);
+    }
   }
 }
 
@@ -138,6 +140,12 @@ const options = buildOptions({
   version: {
     type: "boolean",
     alias: ["v"],
+    default: false
+  },
+
+  quiet: {
+    type: "boolean",
+    alias: ["q"],
     default: false
   },
 
@@ -164,6 +172,7 @@ if (args["help"]) {
     -h, --help         print usage information
     -v, --version      show version info and exit
     -d, --debug        with more verbose output (currently not supported!)
+    -q, --quiet        as little output as possible
     -o, --output       root directory to store built files (default ${STATIC_ROOT})
     -b, --build-html   also generate fully formed index.html files (or env var $CLI_BUILD_HTML)
   `);
@@ -193,6 +202,11 @@ paths.forEach(filePath => {
       console.error(err.toString());
       process.exit(1);
     }
-    buildHtmlAndJson({ filePath, output, buildHtml: args["build-html"] });
+    buildHtmlAndJson({
+      filePath,
+      output,
+      buildHtml: args["build-html"],
+      quiet: args["quiet"]
+    });
   });
 });
