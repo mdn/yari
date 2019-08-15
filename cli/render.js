@@ -1,14 +1,11 @@
-import React from "react";
+import cheerio from "cheerio";
+import fs from "fs";
+import path from "path";
 import { renderToString } from "react-dom/server";
-import escape from "escape-html";
-
-const fs = require("fs");
-const path = require("path");
 
 function readBuildHtml() {
   return fs.readFileSync(
     path.resolve(__dirname, "../../client/build/index.html"),
-    // path.resolve(__dirname, "templates/index.html"),
     "utf8"
   );
 }
@@ -29,17 +26,14 @@ export default (renderApp, options) => {
     // Reread on every request
     buildHtml = readBuildHtml();
   }
+  const $ = cheerio.load(buildHtml);
 
   const rendered = renderToString(renderApp);
 
-  // XXX all of these hack string replaces should be replaced with jsdom
-  // or cheerio or something.
+  let pageTitle = "MDN Web Docs"; // default
 
-  let pageTitle = "MDN Web Docs";
   const { document } = options;
-  let outHtml = buildHtml;
 
-  const containerDiv = '<div id="root"></div>';
   if (document) {
     // Use the document's title instead
     pageTitle = document.title;
@@ -50,17 +44,15 @@ export default (renderApp, options) => {
     const documentDataTag = `
     <script id="documentdata" type="application/json">${escapeDocumentJson}</script>
     `.trim();
-
-    outHtml = outHtml.replace(
-      containerDiv,
-      `${containerDiv}\n${documentDataTag}`
-    );
+    $("#root").after(documentDataTag);
   }
 
-  outHtml = outHtml.replace(
-    "<title>MDN Web Docs</title>",
-    `<title>${escape(pageTitle)}</title>`
-  );
+  $("title").text(pageTitle);
 
-  return outHtml.replace(containerDiv, `<div id="root">${rendered}</div>`);
+  $("#root").html(rendered);
+
+  // Every script tag that create-react-app inserts, make them defer
+  $("body script[src]").attr("defer", "");
+
+  return $.html();
 };
