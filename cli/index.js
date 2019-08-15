@@ -210,7 +210,7 @@ function expandFiles(directoriesPatternsOrFiles) {
   directoriesPatternsOrFiles.forEach(thing => {
     let files = [];
     if (thing.includes("*")) {
-      // It's a thing!
+      // It's a pattern!
       files = glob.sync(thing);
     } else {
       const lstat = fs.lstatSync(thing);
