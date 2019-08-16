@@ -1,6 +1,4 @@
-
-# Ideally nobody should push PRs to the "origin" repo.
-# Remove this once the repo is moved to the 'mdn' org.
+# Needed for when dependabot makes PRs. Their branches are added here to the 'mdn' repo. 
 branches:
   only:
     - master
