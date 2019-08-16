@@ -58,8 +58,6 @@ After you have cloned the repo and want to pull in upstream changes run:
 
 ## Contributing
 
-**THIS IS EXPERIMENTAL, HACKY, AND WORK-IN-PROGRESS.**
-
 Open two terminals. In one, run (this will take a little time the first time):
 
     make run-server
@@ -87,6 +85,35 @@ To re-run any of the installation and build steps you can, at any time,
 run:
 
     make clean
+
+## Building
+
+The beauty of a `Makefile` is that it's a recorded "snapshot" of some good
+working default commands. If you're trying to do something slightly different,
+such as hacking on some feature, you can open the `Makefile` and take
+*inspriation* from it rather than thinking it's the only way. So, open
+it and learn how the default commands work.
+
+For example, the most important command beyond the active development one
+mentioned in the section above is:
+
+    make deployment-build
+
+That one does "everything" and you end up with a full directory that has
+all the static bundles of JavaScript, CSS, and the .html files. That directory
+can be shipped to a static hosting platform like AWS S3 for example.
+
+If you're actively working on a piece of content in `stumptown-content` but
+for convenience you don't want to mess with the `stumptown-content` that
+is available here in this project as a git submodule (named `stumptown`),
+then you can set the `STUMPTOWN_CONTENT_ROOT` environment variable.
+For example:
+
+    cd ~/projects/stumptown-renderer
+    # running 'make build' now would use ~/projects/stumptown-renderer/stumptown
+    STUMPTOWN_CONTENT_ROOT=~/stumptown-content make build
+    # or
+    STUMPTOWN_CONTENT_ROOT=~/stumptown-content make deployment-build
 
 ### Security Auditing
 
