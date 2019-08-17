@@ -3,13 +3,14 @@ import fs from "fs";
 import url from "url";
 import path from "path";
 import util from "util";
-
+import { execFile } from "child_process";
 // const crypto = require("crypto");
 
 // This is necessary because the cli.js is in dist/cli.js
 // and we need to reach the .env this way.
 require("dotenv").config({ path: path.join(__dirname, "../../.env") });
 
+import sane from "sane";
 import glob from "glob";
 import minimist from "minimist";
 import buildOptions from "minimist-options";
@@ -24,6 +25,8 @@ import { fixSyntaxHighlighting } from "./syntax-highlighter";
 const STATIC_ROOT = path.join(__dirname, "../../client/build");
 const STUMPTOWN_CONTENT_ROOT =
   process.env.STUMPTOWN_CONTENT_ROOT || path.join(__dirname, "../../stumptown");
+const TOUCHFILE = path.join(__dirname, "../../client/src/touchthis.js");
+
 sourceMapSupport.install();
 
 // Turn callback based functions into functions you can "await".
@@ -60,9 +63,7 @@ function fixRelatedContentURIs(document) {
 
 /** Pretty print the absolute path relative to the current directory. */
 function ppPath(filePath) {
-  // return path.relative(filePath, process.cwd());
   return path.relative(process.cwd(), filePath);
-  return filePath;
 }
 
 function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
@@ -172,6 +173,12 @@ const options = buildOptions({
     default: JSON.parse(process.env.CLI_BUILD_HTML || "false")
   },
 
+  watch: {
+    type: "string",
+    alias: "w",
+    default: "../stumptown/content"
+  },
+
   // Special option for positional arguments (`_` in minimist)
   arguments: "string"
 });
@@ -190,10 +197,12 @@ if (args["help"]) {
     -q, --quiet        as little output as possible
     -o, --output       root directory to store built files (default ${STATIC_ROOT})
     -b, --build-html   also generate fully formed index.html files (or env var $CLI_BUILD_HTML)
+    -w, --watch        watch stumptown content for changes
+    -t, --touchfile    file to touch to trigger client rebuild (default ${TOUCHFILE})
 
-  Note that the default is to build all packaged .json files found in
-  '../stumptown/packaged' (relevant to the cli directory).
-  `);
+    Note that the default is to build all packaged .json files found in
+    '../stumptown/packaged' (relevant to the cli directory).
+    `);
   process.exit(0);
 }
 
@@ -205,6 +214,12 @@ if (args["version"]) {
 if (args["debug"]) {
   console.warn("--debug is not yet supported");
   process.exit(1);
+}
+
+const touchfile = args.touchfile || TOUCHFILE;
+if (touchfile) {
+  // XXX
+  console.warn(`CHECK ${touchfile} THAT IS WRITABLE`);
 }
 
 const paths = args["_"];
@@ -259,44 +274,103 @@ function expandFiles(directoriesPatternsOrFiles) {
   return filePaths;
 }
 
-Promise.all(
-  expandFiles(paths).map(filePath => {
-    const output = args.output;
-    return accessFile(filePath, fs.constants.R_OK)
-      .catch(err => {
-        console.error(err.toString());
-        process.exit(1);
-      })
-      .then(() => {
-        return buildHtmlAndJson({
-          filePath,
-          output,
-          buildHtml: args["build-html"],
-          quiet: args["quiet"]
+function run(packagedPath, callback) {
+  Promise.all(
+    expandFiles(paths).map(filePath => {
+      const output = args.output;
+      return accessFile(filePath, fs.constants.R_OK)
+        .catch(err => {
+          console.error(err.toString());
+          process.exit(1);
+        })
+        .then(() => {
+          return buildHtmlAndJson({
+            filePath,
+            output,
+            buildHtml: args["build-html"],
+            quiet: args["quiet"]
+          });
         });
-      });
-  })
-).then(async values => {
-  console.log(chalk.green(`Built ${values.length} documents.`));
-  const titles = {};
-  // XXX Support locales!
-  const allTitlesFilepath = path.join(STATIC_ROOT, "titles.json");
-  try {
-    titles.titles = JSON.parse(await readFile(allTitlesFilepath, "utf8"));
-    console.warn(
-      `Updating ${Object.keys(allTitles).length} file ${allTitlesFilepath}`
-    );
-  } catch (ex) {
-    // throw ex;
-    console.warn(`Starting a fresh new ${allTitlesFilepath}`);
-    titles.titles = {};
-  }
-  values.forEach(built => {
-    titles.titles[built.uri] = built.document.title;
-  });
+    })
+  ).then(async values => {
+    console.log(chalk.green(`Built ${values.length} documents.`));
+    const titles = {};
+    // XXX Support locales!
+    const allTitlesFilepath = path.join(STATIC_ROOT, "titles.json");
+    try {
+      titles.titles = JSON.parse(await readFile(allTitlesFilepath, "utf8"));
+      console.warn(
+        `Updating ${Object.keys(allTitles).length} file ${allTitlesFilepath}`
+      );
+    } catch (ex) {
+      // throw ex;
+      console.warn(`Starting a fresh new ${allTitlesFilepath}`);
+      titles.titles = {};
+    }
+    values.forEach(built => {
+      titles.titles[built.uri] = built.document.title;
+    });
 
-  await writeFile(allTitlesFilepath, JSON.stringify(titles, null, 2));
-  console.log(
-    `${allTitlesFilepath} now contains ${Object.keys(titles).length} documents.`
+    await writeFile(allTitlesFilepath, JSON.stringify(titles, null, 2));
+    console.log(
+      `${allTitlesFilepath} now contains ${
+        Object.keys(titles).length
+      } documents.`
+    );
+  });
+}
+
+function runStumptownContentBuildJson(root, searchPath, callback) {
+  const child = execFile(
+    "npm",
+    ["run", "build-json", "html/reference/elements/em"],
+    {
+      cwd: "/Users/peterbe/dev/MOZILLA/MDN/stumptown-renderer/stumptown"
+    },
+    (error, stdout, stderr) => {
+      if (error) {
+        throw error;
+      }
+      // console.log(stdout);
+      // XXX Avoid callback and use promises or something?
+      callback(stdout);
+    }
   );
-});
+}
+
+function triggerTouch(msg) {
+  const newContent = `/**
+  ${msg}
+
+  Timestamp: ${new Date()}
+  */`;
+  fs.writeFileSync(touchfile, newContent);
+  console.log(`Touched ${touchfile} to trigger client dev server reload`);
+}
+
+if (args.watch) {
+  const contentDir = path.join(__dirname, args.watch);
+  const watcher = sane(args.watch, {
+    glob: ["**/*.md", "**/*.yaml"]
+  });
+  watcher.on("ready", () => {
+    console.log(`Watching over ${contentDir} for changes...`);
+  });
+  watcher.on("change", (filepath, root, stat) => {
+    console.log("file changed", path.join(contentDir, filepath));
+
+    runStumptownContentBuildJson("X", "Y", packagedDirectories => {
+      console.log("Result from stumptown-content packaging:");
+      console.log(packagedDirectories);
+
+      const packagedPath = [
+        "../stumptown/packaged/html/reference/elements/em.json"
+      ];
+      run(packagedPath, buildFiles => {
+        triggerTouch(buildFiles);
+      });
+    });
+  });
+} else {
+  run(paths);
+}

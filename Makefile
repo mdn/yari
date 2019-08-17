@@ -6,6 +6,9 @@ install:
 	cd server && yarn && cd -
 	cd cli && yarn && cd -
 	touch .make.installed
+	# There has to exist a file called 'client/src/touchthis.js'
+	ls .make.touchthis || echo "/** Must be non-empty */" >> client/src/touchthis.js
+	touch .make.touchthis
 
 build:
 	ls .make.installed || make install
@@ -31,6 +34,9 @@ build-content:
 	ls .make.built || make build
 	cd stumptown && npm run build-json html && cd -
 	cd cli && yarn run run && cd -
+
+watch-content:
+	cd cli && yarn run run --watch "${STUMPTOWN_CONTENT_ROOT}"
 
 yarn-audit-all:
 	ls .make.installed || make install

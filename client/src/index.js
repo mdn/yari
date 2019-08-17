@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.scss";
 import "typeface-zilla-slab";
 import { App } from "./app";
+import "./touchthis"
 // import * as serviceWorker from './serviceWorker';
 
 const container = document.getElementById("root");

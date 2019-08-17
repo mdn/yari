@@ -22,6 +22,7 @@
     "prismjs": "1.17.1",
     "react": "16.9.0",
     "react-dom": "16.9.0",
+    "sane": "4.1.0",
     "source-map-support": "0.5.12"
   },
   "devDependencies": {
