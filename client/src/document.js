@@ -98,16 +98,13 @@ function RenderSideBar({ document }) {
 }
 
 function SidebarLeaf({ depth, title, content }) {
-  let titleNode;
-  if (depth === 0) {
-    titleNode = <h3>{title}</h3>;
-  } else if (depth === 1) {
-    titleNode = <h4>{title}</h4>;
-  } else if (depth === 2) {
-    titleNode = <h5>{title}</h5>;
-  } else if (depth > 2) {
-    titleNode = <h6>{title}</h6>;
-  }
+  const titleTag =
+    {
+      0: "h3",
+      1: "h4",
+      2: "h5"
+    }[depth] || "h6";
+  const titleNode = React.createElement(titleTag, null, title);
   return (
     <div>
       {titleNode}
