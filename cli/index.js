@@ -19,7 +19,8 @@ import { App } from "../client/src/app";
 import render from "./render";
 
 const STATIC_ROOT = path.join(__dirname, "../../client/build");
-
+const STUMPTOWN_CONTENT_ROOT =
+  process.env.STUMPTOWN_CONTENT_ROOT || path.join(__dirname, "../../stumptown");
 sourceMapSupport.install();
 
 /* Return a absolute path that is the correct URI for the website */
@@ -157,7 +158,7 @@ const args = minimist(process.argv.slice(2), options);
 if (args["help"]) {
   console.log(`
   Usage:
-    yarn run run [options] FILES [FOLDERS]
+    yarn run run [options] [FILES AND/OR FOLDERS]
 
   Options:
     -h, --help         print usage information
@@ -166,6 +167,9 @@ if (args["help"]) {
     -q, --quiet        as little output as possible
     -o, --output       root directory to store built files (default ${STATIC_ROOT})
     -b, --build-html   also generate fully formed index.html files (or env var $CLI_BUILD_HTML)
+
+  Note that the default is to build all packaged .json files found in
+  '../stumptown/packaged' (relevant to the cli directory).
   `);
   process.exit(0);
 }
@@ -182,8 +186,7 @@ if (args["debug"]) {
 
 const paths = args["_"];
 if (!paths.length) {
-  console.error("Must provider at least 1 file or folder");
-  process.exit(2);
+  paths.push(path.join(STUMPTOWN_CONTENT_ROOT, "packaged"));
 }
 
 /** Given an array of "things" return all distinct .json files.
@@ -195,6 +198,12 @@ if (!paths.length) {
  */
 function expandFiles(directoriesPatternsOrFiles) {
   function findFiles(directory) {
+    if (path.basename(directory) === "node_modules") {
+      throw new Error(
+        `Can't dig deeper into ${directory}. ` +
+          `Doesn't look like stumptown content packaged location`
+      );
+    }
     const found = glob.sync(path.join(directory, "*.json"));
 
     fs.readdirSync(directory, { withFileTypes: true })

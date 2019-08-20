@@ -105,7 +105,7 @@ can be shipped to a static hosting platform like AWS S3 for example.
 
 If you're actively working on a piece of content in `stumptown-content` but
 for convenience you don't want to mess with the `stumptown-content` that
-is available here in this project as a git submodule (named `stumptown`),
+is available here in this project as a *git submodule* (named `stumptown`),
 then you can set the `STUMPTOWN_CONTENT_ROOT` environment variable.
 For example:
 

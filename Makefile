@@ -1,5 +1,3 @@
-STUMPTOWN_CONTENT_ROOT ?= ../stumptown
-
 clean:
 	rm -fr .make.built .make.installed
 
@@ -14,7 +12,7 @@ build:
 	ls .make.installed || make install
 	cd stumptown && npm run build-json html && cd -
 	cd client && yarn run build && cd -
-	cd cli && yarn run run "${STUMPTOWN_CONTENT_ROOT}/packaged/" && cd -
+	cd cli && yarn run run && cd -
 	touch .make.built
 
 run-server:
@@ -33,7 +31,7 @@ deployment-build:
 build-content:
 	ls .make.built || make build
 	cd stumptown && npm run build-json html && cd -
-	cd cli && yarn run run "${STUMPTOWN_CONTENT_ROOT}/packaged/" && cd -
+	cd cli && yarn run run && cd -
 
 yarn-audit-all:
 	ls .make.installed || make install
