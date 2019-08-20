@@ -22,9 +22,9 @@ import { App } from "../client/src/app";
 import render from "./render";
 import { fixSyntaxHighlighting } from "./syntax-highlighter";
 
-const STATIC_ROOT = path.join(__dirname, "../../client/build");
 const STUMPTOWN_CONTENT_ROOT =
   process.env.STUMPTOWN_CONTENT_ROOT || path.join(__dirname, "../../stumptown");
+const STATIC_ROOT = path.join(__dirname, "../../client/build");
 const TOUCHFILE = path.join(__dirname, "../../client/src/touchthis.js");
 
 sourceMapSupport.install();
@@ -174,9 +174,9 @@ const options = buildOptions({
   },
 
   watch: {
-    type: "string",
+    type: "boolean",
     alias: "w",
-    default: "../stumptown/content"
+    default: false
   },
 
   // Special option for positional arguments (`_` in minimist)
@@ -320,12 +320,12 @@ function run(packagedPath, callback) {
   });
 }
 
-function runStumptownContentBuildJson(root, searchPath, callback) {
+function runStumptownContentBuildJson(searchPath, callback) {
   const child = execFile(
     "npm",
-    ["run", "build-json", "html/reference/elements/em"],
+    ["run", "build-json", searchPath],
     {
-      cwd: "/Users/peterbe/dev/MOZILLA/MDN/stumptown-renderer/stumptown"
+      cwd: STUMPTOWN_CONTENT_ROOT
     },
     (error, stdout, stderr) => {
       if (error) {
@@ -349,22 +349,32 @@ function triggerTouch(msg) {
 }
 
 if (args.watch) {
-  const contentDir = path.join(__dirname, args.watch);
-  const watcher = sane(args.watch, {
+  const contentDir = path.join(STUMPTOWN_CONTENT_ROOT, "content");
+  const watcher = sane(contentDir, {
     glob: ["**/*.md", "**/*.yaml"]
   });
   watcher.on("ready", () => {
     console.log(`Watching over ${contentDir} for changes...`);
   });
   watcher.on("change", (filepath, root, stat) => {
-    console.log("file changed", path.join(contentDir, filepath));
+    console.log("file changed", filepath, path.join(contentDir, filepath));
 
-    runStumptownContentBuildJson("X", "Y", packagedDirectories => {
+    // At this point, the 'filepath' is relative to the 'contentDir'.
+    // For example, it might be 'html/reference/elements/video/prose.md'
+    // Now need to convert that to the "equivalent" search path
+    // which should be 'html/reference/elements/video'.
+    const split = filepath.split(path.sep);
+    const searchPath = split.slice(0, split.length - 1).join(path.sep);
+    runStumptownContentBuildJson(searchPath, packagedDirectories => {
       console.log("Result from stumptown-content packaging:");
       console.log(packagedDirectories);
 
+      // Now, if the 'searchPath' was 'html/reference/elements/video'
+      // the *packaged path* is 'packaged/'html/reference/elements/video.json'.
+      // But for then 'run()' function you need the full absolute path.
+
       const packagedPath = [
-        "../stumptown/packaged/html/reference/elements/em.json"
+        path.join(STUMPTOWN_CONTENT_ROOT, "packaged", searchPath + ".json")
       ];
       run(packagedPath, buildFiles => {
         triggerTouch(buildFiles);
