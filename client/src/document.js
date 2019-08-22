@@ -74,7 +74,7 @@ export class Document extends React.Component {
             <RenderSideBar document={document} />
           </div>
           <div className="content">
-            <RenderHTMLElementDocument document={document} />
+            <RenderDocumentBody document={document} />
             <hr />
             {document.contributors && (
               <Contributors contributors={document.contributors} />
@@ -133,41 +133,70 @@ function SidebarLeaf({ depth, title, content }) {
   );
 }
 
-function RenderHTMLElementDocument({ document }) {
-  let sections = [];
+// function RenderHTMLElementDocument({ document }) {
+//   let sections = [];
 
-  sections.push(
-    <Prose key="short_description" section={document.prose.short_description} />
-  );
-  sections.push(
-    <InteractiveExample key="interactive_example" document={document} />
-  );
-  sections.push(<Prose key="overview" section={document.prose.overview} />);
-  sections.push(<Attributes key="attributes" document={document} />);
-  sections.push(
-    <ProseWithHeading key="usage_notes" section={document.prose.usage_notes} />
-  );
-  sections.push(
-    <ProseWithHeading
-      key="accessibility_concerns"
-      section={document.prose.accessibility_concerns}
-    />
-  );
-  sections.push(<Examples key="examples" document={document} />);
-  sections.push(
-    <BrowserCompatibility key="browser_compatibility" document={document} />
-  );
-  sections.push(
-    <ProseWithHeading key="see_also" section={document.prose.see_also} />
-  );
+//   sections.push(
+//     <Prose key="short_description" section={document.prose.short_description} />
+//   );
+//   sections.push(
+//     <InteractiveExample key="interactive_example" document={document} />
+//   );
+//   sections.push(<Prose key="overview" section={document.prose.overview} />);
+//   sections.push(<Attributes key="attributes" document={document} />);
+//   sections.push(
+//     <ProseWithHeading key="usage_notes" section={document.prose.usage_notes} />
+//   );
+//   sections.push(
+//     <ProseWithHeading
+//       key="accessibility_concerns"
+//       section={document.prose.accessibility_concerns}
+//     />
+//   );
+//   sections.push(<Examples key="examples" document={document} />);
+//   sections.push(
+//     <BrowserCompatibility key="browser_compatibility" document={document} />
+//   );
+//   sections.push(
+//     <ProseWithHeading key="see_also" section={document.prose.see_also} />
+//   );
 
-  return sections;
+//   return sections;
+// }
+
+function RenderDocumentBody({ document }) {
+  return document.body
+    .map((section, i) => {
+      // XXX switch()??
+      if (section.type === "prose") {
+        return <Prose key={section.value.id} section={section.value} />;
+      } else if (section.type === "interactive_example") {
+        return (
+          <InteractiveExample
+            key={section.value}
+            src={section.value}
+            document={document}
+          />
+        );
+      } else if (section.type === "attributes") {
+        return <Attributes key={`attributes${i}`} attributes={section.value} />;
+      } else if (section.type === "examples") {
+        return <Examples key={`examples${i}`} examples={section.value} />;
+      } else if (section.type === "browser_compatibility") {
+        return (
+          <BrowserCompatibility
+            key="browser_compatibility"
+            content={section.value}
+          />
+        );
+      }
+      console.log(section);
+      return null;
+    })
+    .filter(x => !!x);
 }
 
 function Prose({ section }) {
-  if (!section) {
-    return null;
-  }
   return <div dangerouslySetInnerHTML={{ __html: section.content }} />;
 }
 
