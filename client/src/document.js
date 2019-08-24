@@ -133,37 +133,6 @@ function SidebarLeaf({ depth, title, content }) {
   );
 }
 
-// function RenderHTMLElementDocument({ document }) {
-//   let sections = [];
-
-//   sections.push(
-//     <Prose key="short_description" section={document.prose.short_description} />
-//   );
-//   sections.push(
-//     <InteractiveExample key="interactive_example" document={document} />
-//   );
-//   sections.push(<Prose key="overview" section={document.prose.overview} />);
-//   sections.push(<Attributes key="attributes" document={document} />);
-//   sections.push(
-//     <ProseWithHeading key="usage_notes" section={document.prose.usage_notes} />
-//   );
-//   sections.push(
-//     <ProseWithHeading
-//       key="accessibility_concerns"
-//       section={document.prose.accessibility_concerns}
-//     />
-//   );
-//   sections.push(<Examples key="examples" document={document} />);
-//   sections.push(
-//     <BrowserCompatibility key="browser_compatibility" document={document} />
-//   );
-//   sections.push(
-//     <ProseWithHeading key="see_also" section={document.prose.see_also} />
-//   );
-
-//   return sections;
-// }
-
 function RenderDocumentBody({ document }) {
   const sections = [];
   /**
@@ -230,11 +199,9 @@ function Prose({ section }) {
 
 function ProseWithHeading({ id, section }) {
   if (!id) {
+    // XXX Is this safe/right?
     id = section.title.replace(/\s+/g, "_").trim();
   }
-  // if (!section) {
-  //   return null;
-  // }
   return (
     <>
       <h2 id={id}>{section.title}</h2>
