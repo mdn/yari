@@ -3,9 +3,6 @@ import fs from "fs";
 import url from "url";
 import path from "path";
 
-// var b = require('/Users/peterbe/dev/MOZILLA/MDN/stumptown-content/scripts/build-json/build-page-json.js');
-import buildPageJSON from "/Users/peterbe/dev/MOZILLA/MDN/stumptown-content/scripts/build-json/build-page-json.js";
-// console.log(b.buildPageJSON);
 // const crypto = require("crypto");
 
 // This is necessary because the cli.js is in dist/cli.js

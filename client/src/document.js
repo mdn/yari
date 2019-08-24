@@ -165,35 +165,63 @@ function SidebarLeaf({ depth, title, content }) {
 // }
 
 function RenderDocumentBody({ document }) {
-  return document.body
-    .map((section, i) => {
-      // XXX switch()??
-      if (section.type === "prose") {
-        return <Prose key={section.value.id} section={section.value} />;
-      } else if (section.type === "interactive_example") {
-        return (
-          <InteractiveExample
-            key={section.value}
-            src={section.value}
-            document={document}
-          />
-        );
-      } else if (section.type === "attributes") {
-        return <Attributes key={`attributes${i}`} attributes={section.value} />;
-      } else if (section.type === "examples") {
-        return <Examples key={`examples${i}`} examples={section.value} />;
-      } else if (section.type === "browser_compatibility") {
-        return (
-          <BrowserCompatibility
-            key="browser_compatibility"
-            content={section.value}
-          />
-        );
-      }
-      console.log(section);
-      return null;
-    })
-    .filter(x => !!x);
+  const sections = [];
+  /**
+   * The reason we can't return a filtered map of 'document.body' is because
+   * some of the parts of 'document.body' is an array.
+   * E.g. document.body.additional_prose == [
+   *     {type: 'prose', value: STUFF},
+   *     {type: 'prose', value: OTHER_STUFF},
+   * ]
+   */
+  document.body.forEach((section, i) => {
+    if (section.type === "prose") {
+      sections.push(<Prose key={section.value.id} section={section.value} />);
+    } else if (section.type === "additional_prose") {
+      section.value.forEach((subsection, j) => {
+        if (subsection.type === "prose" && subsection.value) {
+          sections.push(
+            <ProseWithHeading
+              key={`${subsection.title}${i}${j}`}
+              section={subsection.value}
+            />
+          );
+        } else {
+          console.warn("Don't know how to deal with subsection:", subsection);
+        }
+      });
+    } else if (section.type === "interactive_example") {
+      sections.push(
+        <InteractiveExample
+          key={section.value}
+          src={section.value}
+          document={document}
+        />
+      );
+    } else if (section.type === "attributes") {
+      sections.push(
+        <Attributes key={`attributes${i}`} attributes={section.value} />
+      );
+    } else if (section.type === "browser_compatibility") {
+      sections.push(
+        <BrowserCompatibility
+          key="browser_compatibility"
+          content={section.value}
+        />
+      );
+    } else if (section.type === "examples") {
+      sections.push(<Examples key={`examples${i}`} examples={section.value} />);
+    } else if (section.type === "info_box") {
+      // XXX Unfinished!
+      // https://github.com/mdn/stumptown-content/issues/106
+      console.warn("Don't know how to deal with info_box!");
+      // console.log(section);
+    } else {
+      console.log("???", section.type, section);
+    }
+  });
+
+  return sections;
 }
 
 function Prose({ section }) {
@@ -201,9 +229,12 @@ function Prose({ section }) {
 }
 
 function ProseWithHeading({ id, section }) {
-  if (!section) {
-    return null;
+  if (!id) {
+    id = section.title.replace(/\s+/g, "_").trim();
   }
+  // if (!section) {
+  //   return null;
+  // }
   return (
     <>
       <h2 id={id}>{section.title}</h2>
