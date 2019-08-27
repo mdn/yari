@@ -3,13 +3,13 @@ import fs from "fs";
 import url from "url";
 import path from "path";
 import util from "util";
-import { execFile } from "child_process";
 // const crypto = require("crypto");
 
 // This is necessary because the cli.js is in dist/cli.js
 // and we need to reach the .env this way.
 require("dotenv").config({ path: path.join(__dirname, "../../.env") });
 
+import fetch from "node-fetch";
 import sane from "sane";
 import glob from "glob";
 import minimist from "minimist";
@@ -26,7 +26,8 @@ const STUMPTOWN_CONTENT_ROOT =
   process.env.STUMPTOWN_CONTENT_ROOT || path.join(__dirname, "../../stumptown");
 const STATIC_ROOT = path.join(__dirname, "../../client/build");
 const TOUCHFILE = path.join(__dirname, "../../client/src/touchthis.js");
-
+const BUILD_JSON_SERVER =
+  process.env.BUILD_JSON_SERVER || "http://localhost:5555";
 sourceMapSupport.install();
 
 // Turn callback based functions into functions you can "await".
@@ -219,7 +220,7 @@ if (args["debug"]) {
 const touchfile = args.touchfile || TOUCHFILE;
 if (touchfile) {
   // XXX
-  console.warn(`CHECK ${touchfile} THAT IS WRITABLE`);
+  // console.warn(`CHECK ${touchfile} THAT IS WRITABLE`);
 }
 
 const paths = args["_"];
@@ -320,22 +321,34 @@ function run(packagedPath, callback) {
   });
 }
 
-function runStumptownContentBuildJson(searchPath, callback) {
-  const child = execFile(
-    "npm",
-    ["run", "build-json", searchPath],
-    {
-      cwd: STUMPTOWN_CONTENT_ROOT
-    },
-    (error, stdout, stderr) => {
-      if (error) {
-        throw error;
-      }
-      // console.log(stdout);
-      // XXX Avoid callback and use promises or something?
-      callback(stdout);
-    }
-  );
+async function runStumptownContentBuildJson(path, callback) {
+  let response;
+  try {
+    response = await fetch(BUILD_JSON_SERVER, {
+      method: "post",
+      body: JSON.stringify({ path }),
+      headers: { "Content-Type": "application/json" }
+    });
+    const result = await response.json();
+    callback(null, result);
+  } catch (ex) {
+    callback(ex, null);
+  }
+  // const child = execFile(
+  //   "npm",
+  //   ["run", "build-json", searchPath],
+  //   {
+  //     cwd: STUMPTOWN_CONTENT_ROOT
+  //   },
+  //   (error, stdout, stderr) => {
+  //     if (error) {
+  //       throw error;
+  //     }
+  //     // console.log(stdout);
+  //     // XXX Avoid callback and use promises or something?
+  //     callback(stdout);
+  //   }
+  // );
 }
 
 function triggerTouch(msg) {
