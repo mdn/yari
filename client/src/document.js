@@ -199,7 +199,6 @@ function Prose({ section }) {
 
 function ProseWithHeading({ id, section }) {
   if (!id) {
-    // XXX Is this safe/right?
     id = section.title.replace(/\s+/g, "_").trim();
   }
   return (
