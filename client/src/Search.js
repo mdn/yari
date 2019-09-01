@@ -428,7 +428,11 @@ function HighlightMatch({ title, q }) {
     .trim()
     .toLowerCase()
     .split(/[ ,]+/);
-  const parts = title.split(new RegExp(`\\b(${words.join("|")})`, "gi"));
+
+  // $& means the whole matched string
+  const regexWords = words.map(s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const regex = `\\b(${regexWords.join("|")})`;
+  const parts = title.split(new RegExp(regex, "gi"));
   return (
     <b>
       {parts.map((part, i) => {
