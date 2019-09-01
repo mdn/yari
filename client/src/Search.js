@@ -54,7 +54,6 @@ export class SearchWidget extends React.Component {
       // Always do the XHR network request (hopefully good HTTP caching
       // will make this pleasant for the client) but localStorage is
       // always faster than XHR even with localStorage's flaws.
-      console.time("Fetching titles localStorage");
       const localStorageCacheKey = "titles";
       const storedTitlesRaw = localStorage.getItem(localStorageCacheKey);
       if (storedTitlesRaw) {
@@ -64,7 +63,6 @@ export class SearchWidget extends React.Component {
         } catch (ex) {
           console.warn(ex);
         }
-        console.timeEnd("Fetching titles localStorage");
         // XXX Could check the value of 'storedTitles._fetchDate'.
         // For example if `new Date().getTime() - storedTitles._fetchDate`
         // is a really small number, it probably just means the page was
@@ -75,7 +73,6 @@ export class SearchWidget extends React.Component {
       }
 
       let response;
-      console.time("Fetching titles JSON");
       try {
         // XXX support locales!
         //
@@ -92,14 +89,12 @@ export class SearchWidget extends React.Component {
         });
       }
       const { titles } = await response.json();
-      console.timeEnd("Fetching titles JSON");
       this.indexTitles(titles);
 
       // So we can keep track of how old the data is when stored
       // in localStorage.
       titles._fetchDate = new Date().getTime();
       // XXX support proper cache keys based on locales
-      console.time("Store fetched titles in localStorage");
       try {
         localStorage.setItem("titles", JSON.stringify(titles));
       } catch (ex) {
@@ -108,13 +103,10 @@ export class SearchWidget extends React.Component {
           `Unable to store a ${JSON.stringify(titles).length} string`
         );
       }
-
-      console.timeEnd("Store fetched titles in localStorage");
     });
   };
 
   indexTitles = titles => {
-    console.time(`Indexing ${Object.keys(titles).length} titles`);
     // NOTE! See search-experimentation.js to play with different settings.
     this.index = new FlexSearch({
       encode: "advanced",
@@ -122,8 +114,6 @@ export class SearchWidget extends React.Component {
       // tokenize: "reverse",
       tokenize: "forward"
     });
-    console.timeEnd(`Indexing ${Object.keys(titles).length} titles`);
-    // console.timeEnd(`Indexing ${titles.length} titles`);
     this._map = {};
     Object.entries(titles).forEach(([uri, title]) => {
       this._map[uri] = title;
@@ -181,19 +171,17 @@ export class SearchWidget extends React.Component {
       //   window.clearTimeout(this.hideSoon);
       // }
 
-      console.time(`Search "${q}"`);
       const indexResults = this.index.search(q, {
         limit: isMobileUserAgent() ? 5 : 10,
         // bool: "or",
         suggest: true // This can give terrible result suggestions
       });
-      console.timeEnd(`Search "${q}"`);
 
       const results = indexResults.map(uri => {
         return { title: this._map[uri], uri };
       });
       this.setState({
-        highlitResult: null,
+        highlitResult: results.length ? 0 : null,
         lastQ: q,
         searchResults: results,
         showSearchResults: true
@@ -226,7 +214,7 @@ export class SearchWidget extends React.Component {
       if (highlitResult > 0) {
         this.setState({ highlitResult: highlitResult - 1 });
       } else {
-        this.setState({ highlitResult: null });
+        this.setState({ highlitResult: 0 });
       }
     } else if (event.key === "Tab") {
       // If the user tabbed, only try to control it if there is a good
@@ -258,12 +246,12 @@ export class SearchWidget extends React.Component {
     // bar is at the top of your screen. That allows maximum height space
     // usage to fix the input widget, the search result suggestions, and
     // the keyboard.
-    if (isMobileUserAgent() && !this._has_scrolled_down) {
+    if (isMobileUserAgent() && !this._hasScrolledDown) {
       if (this.inputRef.current) {
         this.inputRef.current.scrollIntoView();
       }
       // Don't bother a second time.
-      this._has_scrolled_down = true;
+      this._hasScrolledDown = true;
     }
   };
 
@@ -287,7 +275,7 @@ export class SearchWidget extends React.Component {
     let redirectTo;
     if (searchResults.length === 1) {
       redirectTo = searchResults[0].uri;
-    } else if (searchResults.length && highlitResult) {
+    } else if (searchResults.length && highlitResult !== null) {
       console.log(searchResults[highlitResult].uri);
       redirectTo = searchResults[highlitResult].uri;
     } else {
