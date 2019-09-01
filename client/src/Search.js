@@ -1,6 +1,6 @@
+import { Redirect } from "@reach/router";
 import FlexSearch from "flexsearch";
 import React from "react";
-import { Redirect } from "@reach/router";
 import "./Search.scss";
 
 function isMobileUserAgent() {
@@ -28,7 +28,6 @@ export class SearchWidget extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.pathname !== this.props.pathname) {
-      // console.log("PATHNAME CHANGED!");
       // Hide search results if you changed page.
       if (this.state.showSearchResults || this.state.q) {
         this.setState({
@@ -190,7 +189,6 @@ export class SearchWidget extends React.Component {
   };
 
   keyDownHandler = event => {
-    // console.log("keydown:", event.key);
     if (event.key === "Escape") {
       if (this.state.showSearchResults) {
         this.setState({ showSearchResults: false });
@@ -256,27 +254,22 @@ export class SearchWidget extends React.Component {
   };
 
   blurHandler = () => {
-    if (!this.dismounted && this.state.showSearchResults) {
-      this.setState({ showSearchResults: false });
-    }
-    // // How quickly to hide, on a blur depends on what's currently
-    // // shown. For example, ...
-    // this.hideSoon = window.setTimeout(() => {
-    //   if (!this.dismounted) {
-    //     this.setState({ showSearchResults: false });
-    //   }
-    // }, 100);
+    // The reason we have a slight delay before hiding search results
+    // is so that any onClick on the results get a chance to fire.
+    this.hideSoon = window.setTimeout(() => {
+      if (!this.dismounted) {
+        this.setState({ showSearchResults: false });
+      }
+    }, 100);
   };
 
   submitHandler = event => {
     event.preventDefault();
     const { highlitResult, searchResults } = this.state;
-    // console.warn("If there is a good first suggestion, redirect to that");
     let redirectTo;
     if (searchResults.length === 1) {
       redirectTo = searchResults[0].uri;
     } else if (searchResults.length && highlitResult !== null) {
-      console.log(searchResults[highlitResult].uri);
       redirectTo = searchResults[highlitResult].uri;
     } else {
       return;
@@ -332,7 +325,7 @@ export class SearchWidget extends React.Component {
       showSearchResults
     } = this.state;
     if (redirectTo) {
-      return <Redirect noThrow to={redirectTo} replace={false} />;
+      return <Redirect noThrow replace={false} to={redirectTo} />;
     }
 
     // Compute this once so it can be used as a conditional
@@ -362,16 +355,16 @@ export class SearchWidget extends React.Component {
             value={this.computeBackgroundQ()}
           /> */}
         <input
-          ref={this.inputRef}
+          className={show ? "has-search-results" : null}
           onBlur={this.blurHandler}
           onChange={this.searchHandler}
           onFocus={this.focusHandler}
           onKeyDown={this.keyDownHandler}
           onMouseOver={this.initializeIndex}
           placeholder="Site search"
+          ref={this.inputRef}
           type="search"
           value={q}
-          className={show ? "has-search-results" : null}
         />
         {/* </div> */}
         {serverError && (
@@ -384,6 +377,7 @@ export class SearchWidget extends React.Component {
           <ShowSearchResults
             highlitResult={highlitResult}
             nothingFound={nothingFound}
+            q={q}
             redirect={this.redirect}
             results={searchResults}
           />
@@ -395,17 +389,11 @@ export class SearchWidget extends React.Component {
 
 class ShowSearchResults extends React.PureComponent {
   redirectHandler = result => {
-    console.log(`Redirect to ${result.uri}?`);
     this.props.redirect(result.uri);
   };
 
   render() {
-    const { highlitResult, nothingFound, results } = this.props;
-    // if (!nothingFound && !results.length) {
-    //   console.warn("EVER!");
-
-    //   return null;
-    // }
+    const { highlitResult, nothingFound, q, results } = this.props;
     return (
       <div className="search-results">
         {nothingFound && <div className="nothing-found">nothing found</div>}
@@ -414,9 +402,13 @@ class ShowSearchResults extends React.PureComponent {
             <div
               className={i === highlitResult ? "highlit" : null}
               key={result.uri}
-              onClick={event => this.redirectHandler(result)}
+              onClick={event => {
+                console.log("CLICKED!", event);
+                this.redirectHandler(result);
+              }}
             >
-              <b>{result.title}</b> <br />
+              <HighlightMatch title={result.title} q={q} />
+              <br />
               <BreadcrumbURI uri={result.uri} />
             </div>
           );
@@ -424,6 +416,31 @@ class ShowSearchResults extends React.PureComponent {
       </div>
     );
   }
+}
+
+function HighlightMatch({ title, q }) {
+  // FlexSearch doesn't support finding out which "typo corrections"
+  // were done unfortunately.
+  // See https://github.com/nextapps-de/flexsearch/issues/99
+
+  // Split on higlight term and include term into parts, ignore case.
+  const words = q
+    .trim()
+    .toLowerCase()
+    .split(/[ ,]+/);
+  const parts = title.split(new RegExp(`\\b(${words.join("|")})`, "gi"));
+  return (
+    <b>
+      {parts.map((part, i) => {
+        const key = `${part}:${i}`;
+        if (words.includes(part.toLowerCase())) {
+          return <mark key={key}>{part}</mark>;
+        } else {
+          return <span key={key}>{part}</span>;
+        }
+      })}
+    </b>
+  );
 }
 
 function BreadcrumbURI({ uri }) {

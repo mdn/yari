@@ -73,6 +73,9 @@ form.search-widget {
     div:last-child {
       border-bottom: none;
     }
+    mark {
+      background-color: #f3f7bd;
+    }
 
     a {
       text-overflow: ellipsis;
