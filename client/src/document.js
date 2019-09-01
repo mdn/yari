@@ -147,7 +147,6 @@ function RenderDocumentBody({ document }) {
    * ]
    */
   document.body.forEach((section, i) => {
-    console.log(section);
     if (section.type === "prose") {
       // Only exceptional few should use the <Prose/> component,
       // as opposed to <ProseWithHeading/>.
@@ -202,7 +201,8 @@ function RenderDocumentBody({ document }) {
       console.warn("Don't know how to deal with info_box!");
       // console.log(section);
     } else {
-      console.log("???", section.type, section);
+      console.warn(section);
+      throw new Error(`No idea how to handle a '${section.type}' section`);
     }
   });
 
