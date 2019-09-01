@@ -133,6 +133,9 @@ function SidebarLeaf({ depth, title, content }) {
   );
 }
 
+/** These prose sections should be rendered WITHOUT a heading. */
+const PROSE_NO_HEADING = ["short_description", "overview"];
+
 function RenderDocumentBody({ document }) {
   const sections = [];
   /**
@@ -144,8 +147,21 @@ function RenderDocumentBody({ document }) {
    * ]
    */
   document.body.forEach((section, i) => {
+    console.log(section);
     if (section.type === "prose") {
-      sections.push(<Prose key={section.value.id} section={section.value} />);
+      // Only exceptional few should use the <Prose/> component,
+      // as opposed to <ProseWithHeading/>.
+      if (PROSE_NO_HEADING.includes(section.value.id)) {
+        sections.push(<Prose key={section.value.id} section={section.value} />);
+      } else {
+        sections.push(
+          <ProseWithHeading
+            key={section.value.id}
+            id={section.value.id}
+            section={section.value}
+          />
+        );
+      }
     } else if (section.type === "additional_prose") {
       section.value.forEach((subsection, j) => {
         if (subsection.type === "prose" && subsection.value) {
