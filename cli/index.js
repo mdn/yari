@@ -2,6 +2,7 @@ import React from "react";
 import fs from "fs";
 import url from "url";
 import path from "path";
+import util from "util";
 
 // const crypto = require("crypto");
 
@@ -23,6 +24,11 @@ const STATIC_ROOT = path.join(__dirname, "../../client/build");
 const STUMPTOWN_CONTENT_ROOT =
   process.env.STUMPTOWN_CONTENT_ROOT || path.join(__dirname, "../../stumptown");
 sourceMapSupport.install();
+
+// Turn callback based functions into functions you can "await".
+const readFile = util.promisify(fs.readFile);
+const writeFile = util.promisify(fs.writeFile);
+const accessFile = util.promisify(fs.access);
 
 /* Return a absolute path that is the correct URI for the website */
 function mapToURI(document) {
@@ -120,6 +126,7 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
       console.log(`Wrote ${outfileJson}`);
     }
   }
+  return { document: options.document, uri };
 }
 
 const options = buildOptions({
@@ -242,18 +249,44 @@ function expandFiles(directoriesPatternsOrFiles) {
   return filePaths;
 }
 
-expandFiles(paths).forEach(filePath => {
-  const output = args.output;
-  fs.access(filePath, fs.constants.R_OK, err => {
-    if (err) {
-      console.error(err.toString());
-      process.exit(1);
-    }
-    buildHtmlAndJson({
-      filePath,
-      output,
-      buildHtml: args["build-html"],
-      quiet: args["quiet"]
-    });
+Promise.all(
+  expandFiles(paths).map(filePath => {
+    const output = args.output;
+    return accessFile(filePath, fs.constants.R_OK)
+      .catch(err => {
+        console.error(err.toString());
+        process.exit(1);
+      })
+      .then(() => {
+        return buildHtmlAndJson({
+          filePath,
+          output,
+          buildHtml: args["build-html"],
+          quiet: args["quiet"]
+        });
+      });
+  })
+).then(async values => {
+  console.log(`Built ${values.length} documents.`);
+  const titles = {};
+  // XXX Support locales!
+  const allTitlesFilepath = path.join(STATIC_ROOT, "titles.json");
+  try {
+    titles.titles = JSON.parse(await readFile(allTitlesFilepath, "utf8"));
+    console.warn(
+      `Updating ${Object.keys(allTitles).length} file ${allTitlesFilepath}`
+    );
+  } catch (ex) {
+    // throw ex;
+    console.warn(`Starting a fresh new ${allTitlesFilepath}`);
+    titles.titles = {};
+  }
+  values.forEach(built => {
+    titles.titles[built.uri] = built.document.title;
   });
+
+  await writeFile(allTitlesFilepath, JSON.stringify(titles, null, 2));
+  console.log(
+    `${allTitlesFilepath} now contains ${Object.keys(titles).length} documents.`
+  );
 });

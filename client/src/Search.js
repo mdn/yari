@@ -1,6 +1,6 @@
 import FlexSearch from "flexsearch";
 import React from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect } from "@reach/router";
 import "./Search.scss";
 
 function isMobileUserAgent() {
@@ -344,7 +344,7 @@ export class SearchWidget extends React.Component {
       showSearchResults
     } = this.state;
     if (redirectTo) {
-      return <Redirect push to={redirectTo} />;
+      return <Redirect noThrow to={redirectTo} replace={false} />;
     }
 
     // Compute this once so it can be used as a conditional
@@ -422,26 +422,26 @@ class ShowSearchResults extends React.PureComponent {
       <div className="search-results">
         {nothingFound && <div className="nothing-found">nothing found</div>}
         {results.map((result, i) => {
-          // XXX not sure I want to keep this since it should probably be
-          // implicit what locale you've already loaded.
-          // However if you *prefer* French and there is nothing found
-          // for what you were looking for, perhaps it'd be nice to see
-          // the en-US version (and to know that it was only the en-US one
-          // found).
-          let locale = null;
-          locale = result.uri.split("/")[2];
-
           return (
             <div
               className={i === highlitResult ? "highlit" : null}
               key={result.uri}
               onClick={event => this.redirectHandler(result)}
             >
-              <b>{result.title}</b> {locale && <small>({locale})</small>}
+              <b>{result.title}</b> <br />
+              <BreadcrumbURI uri={result.uri} />
             </div>
           );
         })}
       </div>
     );
   }
+}
+
+function BreadcrumbURI({ uri }) {
+  const keep = uri
+    .split("/")
+    .slice(1)
+    .filter(p => p !== "docs");
+  return <small>{keep.join(" / ")}</small>;
 }
