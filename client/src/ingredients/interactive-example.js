@@ -1,6 +1,9 @@
 import React from "react";
 
-export function InteractiveExample({ document }) {
+export function InteractiveExample({ document, src }) {
+  if (!src || typeof src !== "string") {
+    throw new Error("'src' must be truthy and a string");
+  }
   return (
     <div>
       <iframe
@@ -8,7 +11,7 @@ export function InteractiveExample({ document }) {
         className="interactive-example"
         frameBorder={0}
         height={450}
-        src={document.interactive_example_url}
+        src={src}
         width="100%"
       />
     </div>

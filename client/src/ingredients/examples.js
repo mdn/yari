@@ -73,11 +73,11 @@ function RenderExample({ example }) {
   );
 }
 
-export function Examples({ document }) {
+export function Examples({ examples }) {
   return (
     <>
       <h2>Examples</h2>
-      {document.examples.map((example, i) => (
+      {examples.map((example, i) => (
         <RenderExample key={i} example={example} />
       ))}
     </>
