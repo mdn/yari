@@ -18,7 +18,8 @@ build:
 	touch .make.built
 
 run-server:
-	ls .make.built || make build
+	ls .make.installed || make install
+	#ls .make.built || make build
 	cd server && yarn run start
 
 run-dev:
