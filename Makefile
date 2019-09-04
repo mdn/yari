@@ -38,6 +38,9 @@ build-content:
 watch-content:
 	cd cli && yarn run run --watch "${STUMPTOWN_CONTENT_ROOT}"
 
+build-json-server:
+	cd cli && yarn run build-json-server
+
 yarn-audit-all:
 	ls .make.installed || make install
 	./bin/yarn-audit-all.sh

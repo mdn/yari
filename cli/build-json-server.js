@@ -34,15 +34,18 @@ app.post("/", async (req, res) => {
     built = await buildPage.buildPageJSON(filePath);
   } catch (ex) {
     // throw ex;
+    console.warn(`Exception from buildPage.buildPageJSON: ${ex.toString()}`);
     return res.status(500).json({ error: ex.toString(), built });
   }
+
+  // XXX This is never true!
   if (error) {
     return res.status(400).json({ error, built });
   }
-  console.log(`Built: ${built}`);
+  console.log(`Built: ${JSON.stringify(built)}`);
   res.status(201).json({ built, error });
 });
 
-app.listen(PORT, () =>
-  console.log(`build-json server listening on port ${PORT}!`)
-);
+app.listen(PORT, () => {
+  console.log(`build-json server listening on port ${PORT}!`);
+});

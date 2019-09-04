@@ -321,7 +321,7 @@ function run(packagedPath, callback) {
   });
 }
 
-async function runStumptownContentBuildJson(path, callback) {
+async function runStumptownContentBuildJson(path) {
   let response;
   try {
     response = await fetch(BUILD_JSON_SERVER, {
@@ -329,26 +329,15 @@ async function runStumptownContentBuildJson(path, callback) {
       body: JSON.stringify({ path }),
       headers: { "Content-Type": "application/json" }
     });
-    const result = await response.json();
-    callback(null, result);
+    if (response.ok) {
+      const result = await response.json();
+      return result;
+    } else {
+      throw new Error(`${response.statusText} from ${BUILD_JSON_SERVER}`);
+    }
   } catch (ex) {
-    callback(ex, null);
+    throw ex;
   }
-  // const child = execFile(
-  //   "npm",
-  //   ["run", "build-json", searchPath],
-  //   {
-  //     cwd: STUMPTOWN_CONTENT_ROOT
-  //   },
-  //   (error, stdout, stderr) => {
-  //     if (error) {
-  //       throw error;
-  //     }
-  //     // console.log(stdout);
-  //     // XXX Avoid callback and use promises or something?
-  //     callback(stdout);
-  //   }
-  // );
 }
 
 function triggerTouch(msg) {
@@ -369,30 +358,28 @@ if (args.watch) {
   watcher.on("ready", () => {
     console.log(`Watching over ${contentDir} for changes...`);
   });
-  watcher.on("change", (filepath, root, stat) => {
-    console.log("file changed", filepath, path.join(contentDir, filepath));
+  watcher.on("change", async (filepath, root, stat) => {
+    console.log("file changed", filepath);
+    const absoluteFilePath = path.join(contentDir, filepath);
 
-    // At this point, the 'filepath' is relative to the 'contentDir'.
-    // For example, it might be 'html/reference/elements/video/prose.md'
-    // Now need to convert that to the "equivalent" search path
-    // which should be 'html/reference/elements/video'.
-    const split = filepath.split(path.sep);
-    const searchPath = split.slice(0, split.length - 1).join(path.sep);
-    runStumptownContentBuildJson(searchPath, packagedDirectories => {
-      console.log("Result from stumptown-content packaging:");
-      console.log(packagedDirectories);
+    let result;
+    try {
+      result = await runStumptownContentBuildJson(absoluteFilePath);
+      console.log("Result from stumptown-content packaging:", result);
+    } catch (ex) {
+      throw ex;
+    }
 
-      // Now, if the 'searchPath' was 'html/reference/elements/video'
-      // the *packaged path* is 'packaged/'html/reference/elements/video.json'.
-      // But for then 'run()' function you need the full absolute path.
+    const { built, error } = result;
 
-      const packagedPath = [
-        path.join(STUMPTOWN_CONTENT_ROOT, "packaged", searchPath + ".json")
-      ];
-      run(packagedPath, buildFiles => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log(`Running for packaged file ${built.destPath}`);
+      run([built.destPath], buildFiles => {
         triggerTouch(buildFiles);
       });
-    });
+    }
   });
 } else {
   run(paths);
