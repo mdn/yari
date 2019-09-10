@@ -6,21 +6,30 @@ function RenderSources({ sources }) {
       {sources.html && <h4>HTML</h4>}
       {sources.html && (
         <pre>
-          <code>{sources.html}</code>
+          {sources.html_html && (
+            <code dangerouslySetInnerHTML={{ __html: sources.html_html }} />
+          )}
+          {!sources.html_html && <code>{sources.html}</code>}
         </pre>
       )}
 
       {sources.css && <h4>CSS</h4>}
       {sources.css && (
         <pre>
-          <code>{sources.css}</code>
+          {sources.css_html && (
+            <code dangerouslySetInnerHTML={{ __html: sources.css_html }} />
+          )}
+          {!sources.css_html && <code>{sources.css}</code>}
         </pre>
       )}
 
       {sources.js && <h4>JavaScript</h4>}
       {sources.js && (
         <pre>
-          <code>{sources.js}</code>
+          {sources.js_html && (
+            <code dangerouslySetInnerHTML={{ __html: sources.js_html }} />
+          )}
+          {!sources.js_html && <code>{sources.js}</code>}
         </pre>
       )}
     </>

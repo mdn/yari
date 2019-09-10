@@ -77,6 +77,12 @@ div.content {
   .live-sample-frame {
     max-width: 42rem;
   }
+
+  pre > code {
+    background-color: #efefef;
+    padding: 6px;
+    border-radius: 3px;
+  }
 }
 
 .external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external) {
@@ -99,11 +105,11 @@ div.content {
   background-repeat: no-repeat;
 }
 
-:not(pre)>*>code, :not(pre)>code {
-  background-color: #bbb;
-  background-color: rgba(220,220,220,.5);
-  border-radius: 2px;
-  box-decoration-break: clone;
-  padding: 0 2px;
-  word-wrap: break-word;
-}
+// :not(pre)>*>code, :not(pre)>code {
+//   // background-color: #bbb;
+//   // background-color: rgba(220,220,220,.5);
+//   border-radius: 2px;
+//   box-decoration-break: clone;
+//   padding: 0 2px;
+//   word-wrap: break-word;
+// }

@@ -11,15 +11,13 @@ require("dotenv").config({ path: path.join(__dirname, "../../.env") });
 
 import glob from "glob";
 import minimist from "minimist";
-import cheerio from "cheerio";
-import Prism from "prismjs";
-// import loadLanguages from "prismjs/components/";
 import buildOptions from "minimist-options";
 import { ServerLocation } from "@reach/router";
 import sourceMapSupport from "source-map-support";
 
 import { App } from "../client/src/app";
 import render from "./render";
+import { fixSyntaxHighlighting } from "./syntax-highlighter";
 
 const STATIC_ROOT = path.join(__dirname, "../../client/build");
 const STUMPTOWN_CONTENT_ROOT =
@@ -50,38 +48,6 @@ function fixRelatedContentURIs(document) {
   }
   document.related_content.forEach(block => {
     fixBlock(block);
-  });
-}
-
-// Prism, by default will load with the "markup, css, clike and javascript"
-// plugins. So we need to manually load all the other ones we might need.
-// XXX: Actually this might not be necessary when using Webpack and stuff.
-// loadLanguages(["wasm"]); ??
-
-function fixSyntaxHighlighting(document) {
-  let mutations = 0;
-  Object.entries(document.prose || {}).forEach(([key, block]) => {
-    if (!block.content) {
-      return;
-    }
-    const $ = cheerio.load(block.content);
-    $("pre > code").each((_, blob) => {
-      const elem = $(blob);
-      const cls = elem.attr("class");
-      if (!cls) return;
-      // XXX Needs to get a LOT smarter and not just support 'html'!
-      if (cls !== "language-html") {
-        throw new Error(`work harder! '${cls}'`);
-      }
-      const code = elem.text();
-      var html = Prism.highlight(code, Prism.languages.html, "html");
-      elem.html(html);
-      mutations++;
-    });
-
-    if (mutations) {
-      block.content = $.html();
-    }
   });
 }
 
