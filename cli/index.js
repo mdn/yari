@@ -66,7 +66,9 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
   fixRelatedContentURIs(options.document);
 
   // Find blocks of syntax code and transform it to syntax highlighted code.
-  fixSyntaxHighlighting(options.document);
+  if (options.document.body) {
+    fixSyntaxHighlighting(options.document);
+  }
 
   const uri = mapToURI(options.document);
 

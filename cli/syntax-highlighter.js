@@ -20,11 +20,15 @@ export function fixSyntaxHighlighting(document) {
     return null;
   }
 
+  if (!document.body) {
+    throw new Error("Expecting document.body and it being an array");
+  }
+
   // Loop over all prose sections that look for <pre><code> blocks
   // that might have a syntax highlighting marker.
   document.body
-    .filter(thing => {
-      return thing.type === "prose" && thing.value && thing.value.content;
+    .filter(section => {
+      return section.type === "prose" && section.value && section.value.content;
     })
     .forEach(section => {
       const $ = cheerio.load(section.value.content);
