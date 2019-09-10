@@ -53,6 +53,10 @@ function fixRelatedContentURIs(document) {
 /** Flatten 'additional_prose' sections.
  * Basically if the document.body has any sections called 'additional_prose'
  * we replace them with its value which is also an array.
+ *
+ * Note, if https://github.com/mdn/stumptown-content/issues/118 resolves
+ * with a solution already in the stumptown-content packaged content,
+ * this whole function becomes useless and can be removed.
  */
 function fixAdditionalProse(document) {
   if (document.body) {
