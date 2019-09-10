@@ -50,6 +50,20 @@ function fixRelatedContentURIs(document) {
   });
 }
 
+/** Flatten 'additional_prose' sections.
+ * Basically if the document.body has any sections called 'additional_prose'
+ * we replace them with its value which is also an array.
+ */
+function fixAdditionalProse(document) {
+  if (document.body) {
+    document.body.forEach((section, i) => {
+      if (section.type === "additional_prose") {
+        document.body.splice(i, 1, ...section.value);
+      }
+    });
+  }
+}
+
 function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
   const data = fs.readFileSync(filePath, "utf8");
   // const buildHash = crypto
@@ -63,6 +77,8 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
 
   // A temporary fix for the mdn_url values in the related_content.
   fixRelatedContentURIs(options.document);
+
+  fixAdditionalProse(options.document);
 
   const uri = mapToURI(options.document);
 
