@@ -1,2 +1,7 @@
 @import "water.css/light";
+
+// (At least without a theme) regular prism.css is really small so we can
+// afford to load it on all and every page globally.
+@import "prismjs/themes/prism";
+
 @import "mdn";

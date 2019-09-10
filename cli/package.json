@@ -8,7 +8,8 @@
     "start": "node dist/cli.js",
     "run": "yarn run build && yarn run start",
     "build:watch": "webpack --config webpack.config.js --watch --mode=development",
-    "dev:run": "NODE_ENV=development nodemon dist/cli.js --watch dist/cli.js"
+    "dev:run": "NODE_ENV=development nodemon dist/cli.js --watch dist/cli.js",
+    "test": "jest"
   },
   "dependencies": {
     "@reach/router": "1.2.1",
@@ -17,6 +18,7 @@
     "glob": "7.1.4",
     "minimist": "1.2.0",
     "minimist-options": "4.0.1",
+    "prismjs": "1.17.1",
     "react": "16.9.0",
     "react-dom": "16.9.0",
     "source-map-support": "0.5.12"
@@ -35,6 +37,7 @@
     "@babel/preset-react": "7.0.0",
     "babel-loader": "8.0.6",
     "ignore-loader": "0.1.2",
+    "jest": "24.9.0",
     "serve": "11.1.0",
     "webpack": "4.35.3",
     "webpack-cli": "3.3.6",

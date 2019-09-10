@@ -17,6 +17,7 @@ import sourceMapSupport from "source-map-support";
 
 import { App } from "../client/src/app";
 import render from "./render";
+import { fixSyntaxHighlighting } from "./syntax-highlighter";
 
 const STATIC_ROOT = path.join(__dirname, "../../client/build");
 const STUMPTOWN_CONTENT_ROOT =
@@ -63,6 +64,11 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
 
   // A temporary fix for the mdn_url values in the related_content.
   fixRelatedContentURIs(options.document);
+
+  // Find blocks of syntax code and transform it to syntax highlighted code.
+  if (options.document.body) {
+    fixSyntaxHighlighting(options.document);
+  }
 
   const uri = mapToURI(options.document);
 
