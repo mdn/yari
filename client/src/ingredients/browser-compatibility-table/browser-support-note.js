@@ -1,7 +1,17 @@
 import React from "react";
 import { VersionBlock } from "./version-block";
 
-export function BrowserSupportNote({ indexNote, versionAdded, versionRemoved, noteContent, noteType, blockElementTag, noteElementTag, displayBlock, displayNote }) {
+export function BrowserSupportNote({
+  indexNote,
+  versionAdded,
+  versionRemoved,
+  noteContent,
+  noteType,
+  blockElementTag,
+  noteElementTag,
+  displayBlock,
+  displayNote
+}) {
   const note = [];
   if (displayBlock) {
     note.push(
@@ -34,7 +44,7 @@ export function BrowserSupportNote({ indexNote, versionAdded, versionRemoved, no
           key: `note-${indexNote.index}`,
           className: "padded-note"
         },
-        <span/>
+        <span />
       )
     );
   }

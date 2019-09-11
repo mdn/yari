@@ -1,14 +1,24 @@
 import React from "react";
 import BrowserName from "./utils/browser-name";
 
-export function VersionBlock({ icon, browser, versionAdded, versionRemoved, elementTag, index, onNotesClick, currentNoteId, children }) {
+export function VersionBlock({
+  icon,
+  browser,
+  versionAdded,
+  versionRemoved,
+  elementTag,
+  index,
+  onNotesClick,
+  currentNoteId,
+  children
+}) {
   let isSupported;
   let textContent;
   let bcSupport;
   let bcIcon;
   let bcIconTitle;
   let hasChildren = !!children;
-  switch(versionAdded) {
+  switch (versionAdded) {
     case true:
       isSupported = "yes";
       textContent = "Yes";
@@ -31,7 +41,7 @@ export function VersionBlock({ icon, browser, versionAdded, versionRemoved, elem
       bcSupport = "Full Support";
       break;
   }
-  switch(icon) {
+  switch (icon) {
     case "note":
       bcIcon = "ic-footnote";
       bcIconTitle = "See implementation notes";
@@ -46,32 +56,45 @@ export function VersionBlock({ icon, browser, versionAdded, versionRemoved, elem
       break;
     case "alternative":
       isSupported = "no";
-      textContent = `${typeof versionAdded === "string" ? versionAdded : "?"} - ${versionRemoved}`;
+      textContent = `${
+        typeof versionAdded === "string" ? versionAdded : "?"
+      } - ${versionRemoved}`;
       bcIcon = "ic-altname";
       bcIconTitle = "Uses a non-standard name";
       break;
     default:
       break;
   }
-  return (
-    React.createElement(
+  return React.createElement(
     `${elementTag}`,
     {
-      className: `bc-browser-${browser} bc-supports-${isSupported} ${elementTag === "dt" ? "bc-supports" : ""}`,
+      className: `bc-browser-${browser} bc-supports-${isSupported} ${
+        elementTag === "dt" ? "bc-supports" : ""
+      }`,
       key: `${browser}-compat`,
-      onClick: (hasChildren && (() => {onNotesClick(index)})) || null,
+      onClick:
+        (hasChildren &&
+          (() => {
+            onNotesClick(index);
+          })) ||
+        null,
       "aria-expanded": hasChildren ? currentNoteId === index : null,
       "aria-controls": hasChildren ? `${index}` : null,
       tabIndex: hasChildren ? 0 : null
     },
     [
-      (
-        elementTag === "td" &&
+      elementTag === "td" && (
         <span key={`${browser}-name`} className="bc-browser-name">
           <BrowserName browserNameKey={browser} />
         </span>
       ),
-      <abbr key={`${browser}-support`} className={`bc-level-${isSupported} only-icon`} title={bcSupport}><span>{bcSupport}</span></abbr>,
+      <abbr
+        key={`${browser}-support`}
+        className={`bc-level-${isSupported} only-icon`}
+        title={bcSupport}
+      >
+        <span>{bcSupport}</span>
+      </abbr>,
       <span key={`${browser}-content`}>{textContent}</span>,
       <div key={`${browser}-icons`} className="bc-icons">
         <abbr className="only-icon" title={`${bcIconTitle}`}>
@@ -81,6 +104,5 @@ export function VersionBlock({ icon, browser, versionAdded, versionRemoved, elem
       </div>,
       children
     ]
-   )
- )
+  );
 }
