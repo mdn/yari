@@ -15,6 +15,7 @@ import minimist from "minimist";
 import buildOptions from "minimist-options";
 import { ServerLocation } from "@reach/router";
 import sourceMapSupport from "source-map-support";
+import chalk from "chalk";
 
 import { App } from "../client/src/app";
 import render from "./render";
@@ -57,7 +58,15 @@ function fixRelatedContentURIs(document) {
   });
 }
 
+/** Pretty print the absolute path relative to the current directory. */
+function ppPath(filePath) {
+  // return path.relative(filePath, process.cwd());
+  return path.relative(process.cwd(), filePath);
+  return filePath;
+}
+
 function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
+  const start = new Date();
   const data = fs.readFileSync(filePath, "utf8");
   // const buildHash = crypto
   //   .createHash("md5")
@@ -119,12 +128,13 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
       : JSON.stringify(options)
   );
   // fs.writeFileSync(outfileHash, buildHash);
+
   if (!quiet) {
+    let outMsg = `Wrote ${ppPath(outfileJson)}`;
     if (rendered) {
-      console.log(`Wrote ${outfileHtml} and ${outfileJson}`);
-    } else {
-      console.log(`Wrote ${outfileJson}`);
+      outMsg += ` and ${ppPath(outfileHtml)}`;
     }
+    console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
   }
   return { document: options.document, uri };
 }
@@ -267,7 +277,7 @@ Promise.all(
       });
   })
 ).then(async values => {
-  console.log(`Built ${values.length} documents.`);
+  console.log(chalk.green(`Built ${values.length} documents.`));
   const titles = {};
   // XXX Support locales!
   const allTitlesFilepath = path.join(STATIC_ROOT, "titles.json");
