@@ -1,8 +1,8 @@
 {
-  "name": "mdn2",
-  "version": "1.0.0",
+  "name": "stumptown-renderer",
+  "version": "0.0.0",
   "description": "Meta package applicable to all packages",
-  "repository": "git@github.com:peterbe/mdn2.git",
+  "repository": "git@github.com:mdn/stumptown-renderer.git",
   "author": "MDN Web Docs",
   "license": "MPL-2.0",
   "scripts": {
@@ -12,11 +12,10 @@
     "prettier-dev": "pretty-quick --branch master"
   },
   "devDependencies": {
-    "husky": "2.4.1",
+    "husky": "3.0.5",
     "prettier": "1.18.2",
     "pretty-quick": "1.11.1"
   },
-
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged"
