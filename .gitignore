@@ -29,3 +29,6 @@ cli/node_modules/
 cli/dist/
 .make.built
 .make.installed
+watcher/node_modules/
+.make.touchthis
+client/src/touchthis.js

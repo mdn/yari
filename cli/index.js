@@ -3,13 +3,14 @@ import fs from "fs";
 import url from "url";
 import path from "path";
 import util from "util";
-
 // const crypto = require("crypto");
 
 // This is necessary because the cli.js is in dist/cli.js
 // and we need to reach the .env this way.
 require("dotenv").config({ path: path.join(__dirname, "../../.env") });
 
+import fetch from "node-fetch";
+import sane from "sane";
 import glob from "glob";
 import minimist from "minimist";
 import buildOptions from "minimist-options";
@@ -21,9 +22,12 @@ import { App } from "../client/src/app";
 import render from "./render";
 import { fixSyntaxHighlighting } from "./syntax-highlighter";
 
-const STATIC_ROOT = path.join(__dirname, "../../client/build");
 const STUMPTOWN_CONTENT_ROOT =
   process.env.STUMPTOWN_CONTENT_ROOT || path.join(__dirname, "../../stumptown");
+const STATIC_ROOT = path.join(__dirname, "../../client/build");
+const TOUCHFILE = path.join(__dirname, "../../client/src/touchthis.js");
+const BUILD_JSON_SERVER =
+  process.env.BUILD_JSON_SERVER || "http://localhost:5555";
 sourceMapSupport.install();
 
 // Turn callback based functions into functions you can "await".
@@ -60,9 +64,7 @@ function fixRelatedContentURIs(document) {
 
 /** Pretty print the absolute path relative to the current directory. */
 function ppPath(filePath) {
-  // return path.relative(filePath, process.cwd());
   return path.relative(process.cwd(), filePath);
-  return filePath;
 }
 
 function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
@@ -136,7 +138,7 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
     }
     console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
   }
-  return { document: options.document, uri };
+  return { filePath, document: options.document, uri };
 }
 
 const options = buildOptions({
@@ -172,6 +174,12 @@ const options = buildOptions({
     default: JSON.parse(process.env.CLI_BUILD_HTML || "false")
   },
 
+  watch: {
+    type: "boolean",
+    alias: "w",
+    default: false
+  },
+
   // Special option for positional arguments (`_` in minimist)
   arguments: "string"
 });
@@ -190,10 +198,12 @@ if (args["help"]) {
     -q, --quiet        as little output as possible
     -o, --output       root directory to store built files (default ${STATIC_ROOT})
     -b, --build-html   also generate fully formed index.html files (or env var $CLI_BUILD_HTML)
+    -w, --watch        watch stumptown content for changes
+    -t, --touchfile    file to touch to trigger client rebuild (default ${TOUCHFILE})
 
-  Note that the default is to build all packaged .json files found in
-  '../stumptown/packaged' (relevant to the cli directory).
-  `);
+    Note that the default is to build all packaged .json files found in
+    '../stumptown/packaged' (relevant to the cli directory).
+    `);
   process.exit(0);
 }
 
@@ -205,6 +215,12 @@ if (args["version"]) {
 if (args["debug"]) {
   console.warn("--debug is not yet supported");
   process.exit(1);
+}
+
+const touchfile = args.touchfile || TOUCHFILE;
+if (touchfile) {
+  // XXX
+  // console.warn(`CHECK ${touchfile} THAT IS WRITABLE`);
 }
 
 const paths = args["_"];
@@ -259,44 +275,131 @@ function expandFiles(directoriesPatternsOrFiles) {
   return filePaths;
 }
 
-Promise.all(
-  expandFiles(paths).map(filePath => {
-    const output = args.output;
-    return accessFile(filePath, fs.constants.R_OK)
-      .catch(err => {
-        console.error(err.toString());
-        process.exit(1);
-      })
-      .then(() => {
-        return buildHtmlAndJson({
-          filePath,
-          output,
-          buildHtml: args["build-html"],
-          quiet: args["quiet"]
+function run(paths) {
+  return Promise.all(
+    expandFiles(paths).map(filePath => {
+      const output = args.output;
+      return accessFile(filePath, fs.constants.R_OK)
+        .catch(err => {
+          console.error(err.toString());
+          process.exit(1);
+        })
+        .then(() => {
+          return buildHtmlAndJson({
+            filePath,
+            output,
+            buildHtml: args["build-html"],
+            quiet: args["quiet"]
+          });
         });
-      });
-  })
-).then(async values => {
-  console.log(chalk.green(`Built ${values.length} documents.`));
-  const titles = {};
-  // XXX Support locales!
-  const allTitlesFilepath = path.join(STATIC_ROOT, "titles.json");
-  try {
-    titles.titles = JSON.parse(await readFile(allTitlesFilepath, "utf8"));
-    console.warn(
-      `Updating ${Object.keys(allTitles).length} file ${allTitlesFilepath}`
-    );
-  } catch (ex) {
-    // throw ex;
-    console.warn(`Starting a fresh new ${allTitlesFilepath}`);
-    titles.titles = {};
-  }
-  values.forEach(built => {
-    titles.titles[built.uri] = built.document.title;
-  });
+    })
+  ).then(async values => {
+    console.log(chalk.green(`Built ${values.length} documents.`));
+    const titles = {};
+    // XXX Support locales!
+    const allTitlesFilepath = path.join(STATIC_ROOT, "titles.json");
+    try {
+      titles.titles = JSON.parse(await readFile(allTitlesFilepath, "utf8"));
+      console.warn(
+        `Updating ${Object.keys(allTitles).length} file ${allTitlesFilepath}`
+      );
+    } catch (ex) {
+      // throw ex;
+      console.warn(`Starting a fresh new ${allTitlesFilepath}`);
+      titles.titles = {};
+    }
+    values.forEach(built => {
+      titles.titles[built.uri] = built.document.title;
+    });
 
-  await writeFile(allTitlesFilepath, JSON.stringify(titles, null, 2));
+    await writeFile(allTitlesFilepath, JSON.stringify(titles, null, 2));
+    console.log(
+      `${allTitlesFilepath} now contains ${
+        Object.keys(titles).length
+      } documents.`
+    );
+    return values;
+  });
+}
+
+async function runStumptownContentBuildJson(path) {
+  let response;
+  try {
+    response = await fetch(BUILD_JSON_SERVER, {
+      method: "post",
+      body: JSON.stringify({ path }),
+      headers: { "Content-Type": "application/json" }
+    });
+    if (response.ok) {
+      const result = await response.json();
+      return result;
+    } else {
+      throw new Error(`${response.statusText} from ${BUILD_JSON_SERVER}`);
+    }
+  } catch (ex) {
+    throw ex;
+  }
+}
+
+function triggerTouch(documents) {
+  let newContent = `// Timestamp: ${new Date()}\n`;
+  newContent += `const touched = ${JSON.stringify(documents, null, 2)}\n`;
+  newContent += "export default touched;";
+  fs.writeFileSync(touchfile, newContent);
   console.log(
-    `${allTitlesFilepath} now contains ${Object.keys(titles).length} documents.`
+    chalk.green(
+      `Touched ${ppPath(touchfile)} to trigger client dev server reload`
+    )
   );
-});
+}
+
+if (args.watch) {
+  const contentDir = path.join(STUMPTOWN_CONTENT_ROOT, "content");
+  const watcher = sane(contentDir, {
+    glob: ["**/*.md", "**/*.yaml"]
+  });
+  watcher.on("ready", () => {
+    console.log(`Watching over ${ppPath(contentDir)} for changes...`);
+  });
+  watcher.on("change", async filepath => {
+    console.log("file changed", filepath);
+    const absoluteFilePath = path.join(contentDir, filepath);
+
+    let result;
+    try {
+      result = await runStumptownContentBuildJson(absoluteFilePath);
+    } catch (ex) {
+      throw ex;
+    }
+
+    const { built, error } = result;
+    if (error) {
+      console.log(
+        chalk.red(
+          `Result from stumptown-content build JSON: ${error.toString()}`
+        )
+      );
+    } else {
+      console.log(
+        chalk.green(
+          `Stumptown-content build-json built from ${ppPath(
+            built.docsPath
+          )} to ${ppPath(built.destPath)}`
+        )
+      );
+    }
+
+    if (error) {
+      console.error(error);
+    } else {
+      console.log(`Running for packaged file ${built.destPath}`);
+      run([built.destPath]).then(documents => {
+        const buildFiles = documents.map(d => ppPath(d["filePath"]));
+        console.log(chalk.green(`Built documents from: ${buildFiles}`));
+        triggerTouch(documents);
+      });
+    }
+  });
+} else {
+  run(paths);
+}
