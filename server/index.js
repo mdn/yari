@@ -22,7 +22,7 @@ app.use(
 
 // Catch-all
 app.get("/*", (req, res) => {
-  if (req.url.startsWith("/static") || req.url.endsWith("index.json")) {
+  if (req.url.startsWith("/static") || req.url.endsWith(".json")) {
     res.status(404).send("Page not found");
   } else {
     res.sendFile(path.join(STATIC_ROOT, "/index.html"));

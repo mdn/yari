@@ -1,6 +1,5 @@
 clean:
-	rm -fr .make.built .make.installed
-
+	rm -fr .make.built .make.installed client/build/titles.json
 install:
 	cd stumptown && npm install && cd -
 	cd client && yarn && cd -

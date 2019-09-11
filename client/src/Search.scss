@@ -1,0 +1,95 @@
+@import "include-media/dist/_include-media.scss";
+
+$search-border-color: #ccc;
+$search-border-color-focus: #0096bfab;
+
+form.search-widget {
+  position: relative;
+  // float: right;
+
+  input {
+    width: 400px;
+    margin-bottom: 0;
+    border-radius: 4px;
+    background-color: #fafafa;
+    border: 1px solid $search-border-color;
+  }
+  input:focus {
+    // box-shadow: 0 0 0 1px #0096bfab;
+    box-shadow: none;
+    // border-top: 1px solid $search-border-color-focus;
+    // border-right: 1px solid $search-border-color-focus;
+    // border-left: 1px solid $search-border-color-focus;
+    border: 1px solid $search-border-color-focus;
+    border-radius: 4px 4px 0 0;
+  }
+  input.has-search-results:focus {
+    border-bottom: unset;
+  }
+
+  // // The trickery of having 2 input fields on top of each other.
+  // div.input-wrapper {
+  //   // position: relative;
+  //   input {
+  //     background-color: transparent;
+  //     position: absolute;
+  //     height: 40px;
+  //   }
+  //   input.background {
+  //     color: #666;
+  //     // position: relative;
+  //   }
+  // }
+
+  p.server-error {
+    margin: 0;
+    color: red;
+    font-size: 80%;
+  }
+
+  .search-results {
+    position: absolute;
+    z-index: 2;
+    background-color: white;
+    opacity: 0.98;
+    border-bottom: 1px solid #0096bfab;
+    border-right: 1px solid #0096bfab;
+    border-left: 1px solid #0096bfab;
+    border-radius: 0 0 4px 4px;
+    width: 400px;
+    top: 40px;
+
+    div {
+      padding: 5px;
+      border-bottom: 1px solid #efefef;
+    }
+    div:hover,
+    div.highlit {
+      background-color: #efefef;
+    }
+    div:hover {
+      cursor: pointer;
+    }
+    div:last-child {
+      border-bottom: none;
+    }
+    mark {
+      background-color: #f3f7bd;
+    }
+
+    a {
+      text-overflow: ellipsis;
+    }
+
+    div.nothing-found {
+      font-style: italic;
+    }
+  }
+
+  @include media(">phone", "<=tablet") {
+    .search-results,
+    input {
+      width: 100%;
+    }
+  }
+}

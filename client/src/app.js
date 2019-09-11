@@ -4,6 +4,7 @@ import { Router, Link } from "@reach/router";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { NoMatch } from "./routing";
+import { SearchWidget } from "./Search";
 
 export function App(appProps) {
   return (
@@ -22,12 +23,13 @@ export function App(appProps) {
   );
 }
 
-function Header(props) {
+function Header({ location }) {
   return (
     <header>
       <h1>
         <Link to="/">MDN Web Docs</Link>
       </h1>
+      <SearchWidget pathname={location.pathname} />
     </header>
   );
 }
