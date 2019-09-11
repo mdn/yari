@@ -1,7 +1,7 @@
 import { Redirect } from "@reach/router";
 import FlexSearch from "flexsearch";
 import React from "react";
-import "./Search.scss";
+import "./search.scss";
 
 function isMobileUserAgent() {
   return (
@@ -25,7 +25,7 @@ export class SearchWidget extends React.Component {
   ACTIVE_PLACEHOLDER = "Go ahead. Type your search...";
   INACTIVE_PLACEHOLDER = isMobileUserAgent()
     ? "Site search..."
-    : "Site search... (press / to focus)";
+    : 'Site search... (Press "/" to focus)';
 
   inFocus = false;
 
