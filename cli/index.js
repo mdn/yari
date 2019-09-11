@@ -138,7 +138,7 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
     }
     console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
   }
-  return { document: options.document, uri };
+  return { filePath, document: options.document, uri };
 }
 
 const options = buildOptions({
@@ -275,8 +275,8 @@ function expandFiles(directoriesPatternsOrFiles) {
   return filePaths;
 }
 
-function run(packagedPath, callback) {
-  Promise.all(
+function run(paths) {
+  return Promise.all(
     expandFiles(paths).map(filePath => {
       const output = args.output;
       return accessFile(filePath, fs.constants.R_OK)
@@ -318,6 +318,7 @@ function run(packagedPath, callback) {
         Object.keys(titles).length
       } documents.`
     );
+    return values;
   });
 }
 
@@ -340,14 +341,16 @@ async function runStumptownContentBuildJson(path) {
   }
 }
 
-function triggerTouch(msg) {
-  const newContent = `/**
-  ${msg}
-
-  Timestamp: ${new Date()}
-  */`;
+function triggerTouch(documents) {
+  let newContent = `// Timestamp: ${new Date()}\n`;
+  newContent += `const touched = ${JSON.stringify(documents, null, 2)}\n`;
+  newContent += "export default touched;";
   fs.writeFileSync(touchfile, newContent);
-  console.log(`Touched ${touchfile} to trigger client dev server reload`);
+  console.log(
+    chalk.green(
+      `Touched ${ppPath(touchfile)} to trigger client dev server reload`
+    )
+  );
 }
 
 if (args.watch) {
@@ -356,28 +359,44 @@ if (args.watch) {
     glob: ["**/*.md", "**/*.yaml"]
   });
   watcher.on("ready", () => {
-    console.log(`Watching over ${contentDir} for changes...`);
+    console.log(`Watching over ${ppPath(contentDir)} for changes...`);
   });
-  watcher.on("change", async (filepath, root, stat) => {
+  watcher.on("change", async filepath => {
     console.log("file changed", filepath);
     const absoluteFilePath = path.join(contentDir, filepath);
 
     let result;
     try {
       result = await runStumptownContentBuildJson(absoluteFilePath);
-      console.log("Result from stumptown-content packaging:", result);
     } catch (ex) {
       throw ex;
     }
 
     const { built, error } = result;
+    if (error) {
+      console.log(
+        chalk.red(
+          `Result from stumptown-content build JSON: ${error.toString()}`
+        )
+      );
+    } else {
+      console.log(
+        chalk.green(
+          `Stumptown-content build-json built from ${ppPath(
+            built.docsPath
+          )} to ${ppPath(built.destPath)}`
+        )
+      );
+    }
 
     if (error) {
       console.error(error);
     } else {
       console.log(`Running for packaged file ${built.destPath}`);
-      run([built.destPath], buildFiles => {
-        triggerTouch(buildFiles);
+      run([built.destPath]).then(documents => {
+        const buildFiles = documents.map(d => ppPath(d["filePath"]));
+        console.log(chalk.green(`Built documents from: ${buildFiles}`));
+        triggerTouch(documents);
       });
     }
   });

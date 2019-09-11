@@ -7,7 +7,7 @@ install:
 	cd cli && yarn && cd -
 	touch .make.installed
 	# There has to exist a file called 'client/src/touchthis.js'
-	ls .make.touchthis || echo "/** Must be non-empty */" >> client/src/touchthis.js
+	ls .make.touchthis || echo "export default [];" >> client/src/touchthis.js
 	touch .make.touchthis
 
 build:
