@@ -22,8 +22,24 @@ export class SearchWidget extends React.Component {
     showSearchResults: true
   };
 
+  ACTIVE_PLACEHOLDER = "Go ahead. Type your search...";
+  INACTIVE_PLACEHOLDER = isMobileUserAgent()
+    ? "Site search..."
+    : "Site search... (press / to focus)";
+
+  inFocus = false;
+
+  focusOnSearchMaybe = event => {
+    if (event.code === "Slash") {
+      if (!this.inFocus) {
+        event.preventDefault();
+        this.inputRef.current.focus();
+      }
+    }
+  };
+
   componentDidMount() {
-    // XXX set up listener event for ESCAPE?
+    document.addEventListener("keydown", this.focusOnSearchMaybe);
   }
 
   componentDidUpdate(prevProps) {
@@ -43,7 +59,7 @@ export class SearchWidget extends React.Component {
 
   componentWillUnmount() {
     this.dismounted = true;
-    // XXX tear down listener event for ESCAPE?
+    document.removeEventListener("keydown", this.focusOnSearchMaybe);
   }
 
   initializeIndex = () => {
@@ -231,6 +247,9 @@ export class SearchWidget extends React.Component {
   };
 
   focusHandler = () => {
+    this.inFocus = true;
+    this.inputRef.current.placeholder = this.ACTIVE_PLACEHOLDER;
+
     // If it hasn't been done already, do this now. It's idempotent.
     this.initializeIndex();
 
@@ -254,6 +273,8 @@ export class SearchWidget extends React.Component {
   };
 
   blurHandler = () => {
+    this.inFocus = false;
+    this.inputRef.current.placeholder = this.INACTIVE_PLACEHOLDER;
     // The reason we have a slight delay before hiding search results
     // is so that any onClick on the results get a chance to fire.
     this.hideSoon = window.setTimeout(() => {
@@ -361,7 +382,7 @@ export class SearchWidget extends React.Component {
           onFocus={this.focusHandler}
           onKeyDown={this.keyDownHandler}
           onMouseOver={this.initializeIndex}
-          placeholder="Site search"
+          placeholder={this.INACTIVE_PLACEHOLDER}
           ref={this.inputRef}
           type="search"
           value={q}

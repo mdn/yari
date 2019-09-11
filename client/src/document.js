@@ -6,7 +6,6 @@ import { InteractiveExample } from "./ingredients/interactive-example";
 import { Attributes } from "./ingredients/attributes";
 import { Examples } from "./ingredients/examples";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
-import { SearchWidget } from "./Search";
 
 export class Document extends React.Component {
   state = {
