@@ -6,7 +6,7 @@
   "author": "MDN Web Docs",
   "license": "MPL-2.0",
   "scripts": {
-    "prettier": "prettier --write '**'",
+    "prettier-format": "prettier --write '**'",
     "prettier-check": "prettier --list-different '**'",
     "prettier-ci": "prettier --list-different '**' || (echo '\n\nThis failure means you did not run `npm run prettier-dev` before committing\n\n' && exit 1)",
     "prettier-dev": "pretty-quick --branch master"

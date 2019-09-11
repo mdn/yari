@@ -155,27 +155,26 @@ no trailing commas, etc.
 
 To check *all* files once run:
 
-    yarn  # once
-    yarn run prettier-check
+    make lint-check
 
 To only check the files you have touched in the current git stage:
 
-    yarn  # once
-    yarn run prettier-dev
+    make lint-dev
 
-Note that when you run `yarn` the first time it will install a git hook
-that effectively runs the `yarn run prettier-dev` command. **It does
-not complain, it fixes**. Meaning, if you make an edit to a `.js` file and accidentally violate the Prettier rules, simply running
-this will *fix* the violation. For example:
+Note this command **does not complain, it fixes**. Meaning, if you make an edit to a `.js` file and accidentally violate the Prettier rules, simply running this will *fix* the violation. For example:
 
-    emacs client/src/App.js
-    git add client/src/App.js
-    git commit -m "making a change"
+    emacs client/src/app.js
+    make lint-dev
 
-To do the same, but independent of git staging run:
+To run all Prettier checking but across all relevant files and not just
+the ones you've touched run:
 
-    yarn  # once
-    yarn run prettier
+    make lint-check
+
+And if you just want to format all existing files (might be useful after
+you've run `yarn upgrade prettier --latest` for example):
+
+    make lint-format
 
 ## Server-Sider Rendering
 

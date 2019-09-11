@@ -50,4 +50,16 @@ yarn-audit-all:
 test-client:
 	cd client && yarn run test
 
+lint-check:
+	ls .make.installed || yarn
+	yarn run prettier-check
+
+lint-dev:
+	ls .make.installed || yarn
+	yarn run prettier-dev
+
+lint-format:
+	ls .make.installed || yarn
+	yarn run prettier-format
+
 .PHONY: clean install build run-server run-dev deployment-build build-content yarn-audit-all
