@@ -4,7 +4,7 @@ import { Router, Link } from "@reach/router";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { NoMatch } from "./routing";
-import { SearchWidget } from "./Search";
+import { SearchWidget } from "./search";
 
 export function App(appProps) {
   return (
