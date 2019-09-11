@@ -5,8 +5,9 @@ import "./search.scss";
 
 function isMobileUserAgent() {
   return (
-    typeof window.orientation !== "undefined" ||
-    navigator.userAgent.indexOf("IEMobile") !== -1
+    typeof window !== "undefined" &&
+    (typeof window.orientation !== "undefined" ||
+      navigator.userAgent.indexOf("IEMobile") !== -1)
   );
 }
 
