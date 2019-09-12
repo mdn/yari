@@ -6,9 +6,16 @@ import { Legend } from "./legend";
 import "./bcd.scss";
 
 const BROWSERS = {
-  "desktop": ["chrome", "edge", "firefox", "ie", "opera", "safari"],
-  "mobile": ["webview_android", "chrome_android", "firefox_android", "opera_android", "safari_ios", "samsunginternet_android"],
-  "server": ["nodejs"],
+  desktop: ["chrome", "edge", "firefox", "ie", "opera", "safari"],
+  mobile: [
+    "webview_android",
+    "chrome_android",
+    "firefox_android",
+    "opera_android",
+    "safari_ios",
+    "samsunginternet_android"
+  ],
+  server: ["nodejs"],
   "webextensions-desktop": ["chrome", "edge", "firefox", "opera"],
   "webextensions-mobile": ["firefox_android"]
 };
@@ -23,7 +30,7 @@ export class BrowserCompatibilityTable extends Component {
     hasPrefix: false,
     hasNotes: false,
     legendSet: false
-  }
+  };
 
   gatherPlatformsAndBrowsers(document, category) {
     let platforms = ["desktop", "mobile"];
@@ -33,17 +40,30 @@ export class BrowserCompatibilityTable extends Component {
       platforms.push("server");
     }
     if (category === "webextensions") {
-      displayBrowsers = [...BROWSERS["webextensions-desktop"], ...BROWSERS["webextensions-mobile"]];
+      displayBrowsers = [
+        ...BROWSERS["webextensions-desktop"],
+        ...BROWSERS["webextensions-mobile"]
+      ];
       platforms = ["webextensions-desktop", "webextensions-mobile"];
     }
     return [platforms, displayBrowsers];
   }
 
   onNotesClick = noteId => {
-    this.setState({ currentNoteId: noteId === this.state.currentNoteId ? null : noteId });
-  }
+    this.setState({
+      currentNoteId: noteId === this.state.currentNoteId ? null : noteId
+    });
+  };
 
-  setLegendIcons = (hasDeprecation, hasExperimental, hasNonStandard, hasFlag, hasPrefix, hasAlternative, hasNotes) => {
+  setLegendIcons = (
+    hasDeprecation,
+    hasExperimental,
+    hasNonStandard,
+    hasFlag,
+    hasPrefix,
+    hasAlternative,
+    hasNotes
+  ) => {
     if (!this.state.legendSet) {
       this.setState({
         hasDeprecation,
@@ -56,19 +76,30 @@ export class BrowserCompatibilityTable extends Component {
         legendSet: true
       });
     }
-  }
+  };
 
   render() {
-    const {data, category = 'html' } = this.props;
+    const { data, category = "html" } = this.props;
     if (!data || !Object.keys(data).length) {
-      throw new Error("BrowserCompatibilityTable component called with empty data");
+      throw new Error(
+        "BrowserCompatibilityTable component called with empty data"
+      );
     }
 
-    const [platforms, displayBrowsers] = this.gatherPlatformsAndBrowsers(this.props.document, category);
+    const [platforms, displayBrowsers] = this.gatherPlatformsAndBrowsers(
+      this.props.document,
+      category
+    );
     return (
       <>
         <h2 id="Browser_compatibility">Browser Compatibility</h2>
-        <a className="bc-github-link external external-icon" href="https://github.com/mdn/browser-compat-data" rel="noopener">Update compatibility data on GitHub</a>
+        <a
+          className="bc-github-link external external-icon"
+          href="https://github.com/mdn/browser-compat-data"
+          rel="noopener"
+        >
+          Update compatibility data on GitHub
+        </a>
         <table key="bc-table" className="bc-table bc-table-web">
           <thead>
             <Platforms platforms={platforms} browsers={BROWSERS} />

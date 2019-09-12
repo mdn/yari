@@ -1,0 +1,23 @@
+# exclude everything by default
+*.*
+# Backup files
+*~
+# exclude these files
+Dockerfile
+Makefile
+Procfile
+# exclude these directories
+/stumptown/
+/client/build/
+/cli/dist/
+/node_modules/
+/server/node_modules/
+/client/node_modules/
+/cli/node_modules/
+/deployment/node_modules/
+# white-list files we want to process
+!*.js
+
+# Mist files to ignore
+/client/src/serviceWorker.js
+client/src/touchthis.js

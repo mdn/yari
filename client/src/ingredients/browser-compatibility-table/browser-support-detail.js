@@ -2,16 +2,30 @@ import React from "react";
 import { VersionBlock } from "./version-block";
 import { BrowserSupportNotes } from "./browser-support-notes";
 
-export function BrowserSupportDetail({ index, browser, support, versionAdded, currentNoteId, onNotesClick, indexNote }) {
+export function BrowserSupportDetail({
+  index,
+  browser,
+  support,
+  versionAdded,
+  currentNoteId,
+  onNotesClick,
+  indexNote
+}) {
   let noteType;
-  if (!support || (!support.notes && !support.flags && !support.prefix && !Array.isArray(support))) {
+  if (
+    !support ||
+    (!support.notes &&
+      !support.flags &&
+      !support.prefix &&
+      !Array.isArray(support))
+  ) {
     return (
       <VersionBlock
         browser={browser}
         versionAdded={versionAdded}
         elementTag="td"
       />
-    )
+    );
   } else {
     if (support.prefix) {
       noteType = "prefix";
@@ -32,13 +46,21 @@ export function BrowserSupportDetail({ index, browser, support, versionAdded, cu
       elementTag="td"
       index={`bc-history-${index}`}
       onNotesClick={onNotesClick}
-      currentNoteId={currentNoteId}>
-
-      <button title="Open implementation notes" className={`bc-history-link only-icon ${currentNoteId === `bc-history-${index}` ? 'bc-history-link-inverse': null}`} tabIndex={0}>
+      currentNoteId={currentNoteId}
+    >
+      <button
+        title="Open implementation notes"
+        className={`bc-history-link only-icon ${
+          currentNoteId === `bc-history-${index}`
+            ? "bc-history-link-inverse"
+            : null
+        }`}
+        tabIndex={0}
+      >
         <span>Open</span>
         <i className="ic-history" aria-hidden="false" />
       </button>
-      {indexNote &&
+      {indexNote && (
         <div className="bc-notes">
           <BrowserSupportNotes
             key={`${indexNote.index}`}
@@ -48,7 +70,7 @@ export function BrowserSupportDetail({ index, browser, support, versionAdded, cu
             noBlocks
           />
         </div>
-      }
+      )}
     </VersionBlock>
-  )
+  );
 }

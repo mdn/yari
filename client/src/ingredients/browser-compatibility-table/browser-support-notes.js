@@ -10,19 +10,24 @@ function shouldDisplayBlock(blockDisplayed, versionAdded) {
 }
 
 function flagInfoForBrowser(browser) {
-  switch(browser) {
-    case 'chrome':
-    case 'chrome_android':
-      return 'To change preferences in Chrome, visit chrome://flags.';
-    case 'firefox':
-    case 'firefox_android':
-      return 'To change preferences in Firefox, visit about:config.';
+  switch (browser) {
+    case "chrome":
+    case "chrome_android":
+      return "To change preferences in Chrome, visit chrome://flags.";
+    case "firefox":
+    case "firefox_android":
+      return "To change preferences in Firefox, visit about:config.";
     default:
-      return '';
+      return "";
   }
 }
 
-export function BrowserSupportNotes({ indexNote, blockElementTag, noteElementTag, noBlocks }) {
+export function BrowserSupportNotes({
+  indexNote,
+  blockElementTag,
+  noteElementTag,
+  noBlocks
+}) {
   let blockDisplayed = false;
   let browserSupportNotes = [];
   let currentNoteContent, currentNote;
@@ -37,7 +42,10 @@ export function BrowserSupportNotes({ indexNote, blockElementTag, noteElementTag
         noteType="none"
         blockElementTag={blockElementTag}
         noteElementTag={noteElementTag}
-        displayBlock={!noBlocks && shouldDisplayBlock(blockDisplayed, indexNote.support[0].version_added)}
+        displayBlock={
+          !noBlocks &&
+          shouldDisplayBlock(blockDisplayed, indexNote.support[0].version_added)
+        }
         displayNote={false}
       />
     );
@@ -45,18 +53,31 @@ export function BrowserSupportNotes({ indexNote, blockElementTag, noteElementTag
   } else if (indexNote.notes.length > 0) {
     browserSupportNotes.push(
       indexNote.notes.map((note, index) => {
-        currentNoteContent = <><abbr className="only-icon" title="See implementation notes"><span>Notes</span><i className="ic-footnote"></i></abbr><span dangerouslySetInnerHTML={{__html: note}}></span></>;
-        currentNote = <BrowserSupportNote
-                        key={`note-${indexNote.index}-${index}`}
-                        indexNote={indexNote}
-                        versionAdded={indexNote.version_added}
-                        noteContent={currentNoteContent}
-                        noteType="note"
-                        blockElementTag={blockElementTag}
-                        noteElementTag={noteElementTag}
-                        displayBlock={!noBlocks && shouldDisplayBlock(blockDisplayed, indexNote.version_added)}
-                        displayNote
-                      />
+        currentNoteContent = (
+          <>
+            <abbr className="only-icon" title="See implementation notes">
+              <span>Notes</span>
+              <i className="ic-footnote"></i>
+            </abbr>
+            <span dangerouslySetInnerHTML={{ __html: note }}></span>
+          </>
+        );
+        currentNote = (
+          <BrowserSupportNote
+            key={`note-${indexNote.index}-${index}`}
+            indexNote={indexNote}
+            versionAdded={indexNote.version_added}
+            noteContent={currentNoteContent}
+            noteType="note"
+            blockElementTag={blockElementTag}
+            noteElementTag={noteElementTag}
+            displayBlock={
+              !noBlocks &&
+              shouldDisplayBlock(blockDisplayed, indexNote.version_added)
+            }
+            displayNote
+          />
+        );
         blockDisplayed = true;
         return currentNote;
       })
@@ -67,7 +88,22 @@ export function BrowserSupportNotes({ indexNote, blockElementTag, noteElementTag
   if (indexNote.flags.length > 0) {
     browserSupportNotes.push(
       indexNote.flags.map((flag, index) => {
-        currentNoteContent = <><abbr className="only-icon" title="User must explicitly enable this feature."><span>Disabled</span><i className="ic-disabled"></i></abbr> From version {flag.version_added || indexNote.version_added}: this feature is behind the <code>{flag.name}</code> {flag.type}{!!flag.value_to_set && ` (needs to be set to <code>${flag.value_to_set}</code>)`}. {flagInfoForBrowser(indexNote.browser)}</>;
+        currentNoteContent = (
+          <>
+            <abbr
+              className="only-icon"
+              title="User must explicitly enable this feature."
+            >
+              <span>Disabled</span>
+              <i className="ic-disabled"></i>
+            </abbr>{" "}
+            From version {flag.version_added || indexNote.version_added}: this
+            feature is behind the <code>{flag.name}</code> {flag.type}
+            {!!flag.value_to_set &&
+              ` (needs to be set to <code>${flag.value_to_set}</code>)`}
+            . {flagInfoForBrowser(indexNote.browser)}
+          </>
+        );
         return (
           <BrowserSupportNote
             key={`flag-${indexNote.index}-${index}`}
@@ -77,7 +113,10 @@ export function BrowserSupportNotes({ indexNote, blockElementTag, noteElementTag
             noteType="flag"
             blockElementTag={blockElementTag}
             noteElementTag={noteElementTag}
-            displayBlock={!noBlocks && shouldDisplayBlock(blockDisplayed, flag.version_added)}
+            displayBlock={
+              !noBlocks &&
+              shouldDisplayBlock(blockDisplayed, flag.version_added)
+            }
             displayNote
           />
         );
@@ -88,7 +127,19 @@ export function BrowserSupportNotes({ indexNote, blockElementTag, noteElementTag
   if (indexNote.alternatives.length > 0) {
     browserSupportNotes.push(
       indexNote.alternatives.map((alternative, index) => {
-        currentNoteContent = <><abbr className="only-icon" title={`Uses the non-standard name: ${alternative.alternative_name}`}><span>Alternate Name</span><i className="ic-altname"></i></abbr> Uses the non-standard name: <code>{alternative.alternative_name}</code></>
+        currentNoteContent = (
+          <>
+            <abbr
+              className="only-icon"
+              title={`Uses the non-standard name: ${alternative.alternative_name}`}
+            >
+              <span>Alternate Name</span>
+              <i className="ic-altname"></i>
+            </abbr>{" "}
+            Uses the non-standard name:{" "}
+            <code>{alternative.alternative_name}</code>
+          </>
+        );
         return (
           <BrowserSupportNote
             key={`alternative-${indexNote.index}-${index}`}
@@ -99,7 +150,10 @@ export function BrowserSupportNotes({ indexNote, blockElementTag, noteElementTag
             noteType="alternative"
             blockElementTag={blockElementTag}
             noteElementTag={noteElementTag}
-            displayBlock={!noBlocks && shouldDisplayBlock(blockDisplayed, alternative.version_added)}
+            displayBlock={
+              !noBlocks &&
+              shouldDisplayBlock(blockDisplayed, alternative.version_added)
+            }
             displayNote
           />
         );
@@ -110,7 +164,18 @@ export function BrowserSupportNotes({ indexNote, blockElementTag, noteElementTag
   if (indexNote.prefixes.length > 0) {
     browserSupportNotes.push(
       indexNote.prefixes.map((prefix, index) => {
-        currentNoteContent = <><abbr className="only-icon" title={`Implemented with the vendor prefix: ${prefix.prefix}`}><span>Prefixed</span><i className="ic-prefix"></i></abbr>Implemented with the vendor prefix: {prefix.prefix}</>;
+        currentNoteContent = (
+          <>
+            <abbr
+              className="only-icon"
+              title={`Implemented with the vendor prefix: ${prefix.prefix}`}
+            >
+              <span>Prefixed</span>
+              <i className="ic-prefix"></i>
+            </abbr>
+            Implemented with the vendor prefix: {prefix.prefix}
+          </>
+        );
         return (
           <BrowserSupportNote
             key={`prefix-${indexNote.index}-${index}`}
@@ -123,9 +188,9 @@ export function BrowserSupportNotes({ indexNote, blockElementTag, noteElementTag
             displayBlock={!noBlocks}
             displayNote
           />
-        )
+        );
       })
-    )
+    );
   }
 
   return browserSupportNotes;

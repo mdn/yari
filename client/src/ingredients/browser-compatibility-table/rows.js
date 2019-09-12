@@ -6,7 +6,7 @@ function buildCompatibilityObject(compatibilityData, displayBrowsers) {
   const features = {};
 
   if (!!compatibilityData.__compat) {
-    const name = compatibilityData.__compat.mdn_url.split('/').pop();
+    const name = compatibilityData.__compat.mdn_url.split("/").pop();
     features[name] = compatibilityData.__compat;
     for (const compat in compatibilityData) {
       if (compat !== "__compat" && !!compatibilityData[compat]["__compat"]) {
@@ -37,11 +37,17 @@ function getIndexNoteForBrowserDetail(indexNotes, browserDetailIndex) {
 }
 
 function computeDistinctKey(detail) {
-  return `${detail.browser}:${detail.version_added}`
+  return `${detail.browser}:${detail.version_added}`;
 }
 
-function RenderBrowserSupportDetails({browserSupportDetails, rowIndex, indexNotes, currentNoteId, onNotesClick}) {
-  return browserSupportDetails.map((browserSupportDetail, detailIndex) =>
+function RenderBrowserSupportDetails({
+  browserSupportDetails,
+  rowIndex,
+  indexNotes,
+  currentNoteId,
+  onNotesClick
+}) {
+  return browserSupportDetails.map((browserSupportDetail, detailIndex) => (
     <BrowserSupportDetail
       key={computeDistinctKey(browserSupportDetail)}
       index={`${rowIndex}-${detailIndex}`}
@@ -50,86 +56,97 @@ function RenderBrowserSupportDetails({browserSupportDetails, rowIndex, indexNote
       versionAdded={browserSupportDetail.version_added}
       currentNoteId={currentNoteId}
       onNotesClick={onNotesClick}
-      indexNote={getIndexNoteForBrowserDetail(indexNotes, `${rowIndex}-${detailIndex}`)}
+      indexNote={getIndexNoteForBrowserDetail(
+        indexNotes,
+        `${rowIndex}-${detailIndex}`
+      )}
     />
-  )
+  ));
 }
 
-function buildIndexNotes(browserSupportDetails, rowIndex, currentNoteId, hasFlag, hasPrefix, hasAlternative, hasNotes) {
-  const indexNotes = browserSupportDetails.map((browserSupportDetail, detailIndex) => {
-    const support = browserSupportDetail.support;
+function buildIndexNotes(
+  browserSupportDetails,
+  rowIndex,
+  currentNoteId,
+  hasFlag,
+  hasPrefix,
+  hasAlternative,
+  hasNotes
+) {
+  const indexNotes = browserSupportDetails.map(
+    (browserSupportDetail, detailIndex) => {
+      const support = browserSupportDetail.support;
 
-    if (Array.isArray(support)) {
-      const [notes, flags, prefixes, alternatives] = [[], [], [], []];
+      if (Array.isArray(support)) {
+        const [notes, flags, prefixes, alternatives] = [[], [], [], []];
 
-      for (const supportItem of support) {
-        if (!!supportItem.alternative_name) {
-          hasAlternative = true;
-          alternatives.push(supportItem);
-        } else if (!!supportItem.prefix) {
-          hasPrefix = true;
-          prefixes.push(supportItem);
-        } else if (Array.isArray(supportItem.flags)) {
-          hasFlag = true;
-          flags.concat(supportItem.flags);
-        } else if (!!supportItem.notes) {
-          hasNotes = true;
-          if (Array.isArray(supportItem.notes)) {
-            notes.concat(supportItem.notes);
-          } else {
-            notes.push(supportItem.notes);
+        for (const supportItem of support) {
+          if (!!supportItem.alternative_name) {
+            hasAlternative = true;
+            alternatives.push(supportItem);
+          } else if (!!supportItem.prefix) {
+            hasPrefix = true;
+            prefixes.push(supportItem);
+          } else if (Array.isArray(supportItem.flags)) {
+            hasFlag = true;
+            flags.concat(supportItem.flags);
+          } else if (!!supportItem.notes) {
+            hasNotes = true;
+            if (Array.isArray(supportItem.notes)) {
+              notes.concat(supportItem.notes);
+            } else {
+              notes.push(supportItem.notes);
+            }
           }
         }
-      }
 
-      return {
-        index: `${rowIndex}-${detailIndex}`,
-        browser: browserSupportDetail.browser,
-        version_added: browserSupportDetail.version_added,
-        support,
-        prefixes,
-        alternatives,
-        flags,
-        notes
-      };
-    } else {
-      if (!hasFlag) {
-        hasFlag = !!(support && support.flags);
-      }
-      if (!hasPrefix) {
-        hasPrefix = !!(support && support.prefix);
-      }
-      if (!hasNotes) {
-        hasNotes = !!(support && support.notes);
-      }
+        return {
+          index: `${rowIndex}-${detailIndex}`,
+          browser: browserSupportDetail.browser,
+          version_added: browserSupportDetail.version_added,
+          support,
+          prefixes,
+          alternatives,
+          flags,
+          notes
+        };
+      } else {
+        if (!hasFlag) {
+          hasFlag = !!(support && support.flags);
+        }
+        if (!hasPrefix) {
+          hasPrefix = !!(support && support.prefix);
+        }
+        if (!hasNotes) {
+          hasNotes = !!(support && support.notes);
+        }
 
-      const prefixes = !!(support && support.prefix) ? [support] : [];
-      const alternatives = !!(support && support.alternative_name) ? [support] : [];
-      const flags = !!(support && support.flags) ? support.flags : [];
-      const notes = gatherNotesForIndexNote(support);
+        const prefixes = !!(support && support.prefix) ? [support] : [];
+        const alternatives = !!(support && support.alternative_name)
+          ? [support]
+          : [];
+        const flags = !!(support && support.flags) ? support.flags : [];
+        const notes = gatherNotesForIndexNote(support);
 
-      return {
-        index: `${rowIndex}-${detailIndex}`,
-        browser: browserSupportDetail.browser,
-        version_added: browserSupportDetail.version_added,
-        support,
-        prefixes,
-        alternatives,
-        flags,
-        notes
-      };
+        return {
+          index: `${rowIndex}-${detailIndex}`,
+          browser: browserSupportDetail.browser,
+          version_added: browserSupportDetail.version_added,
+          support,
+          prefixes,
+          alternatives,
+          flags,
+          notes
+        };
+      }
     }
-  });
+  );
 
-  const filteredIndexNotes = indexNotes.filter(indexNotes => `bc-history-${indexNotes.index}` === currentNoteId);
+  const filteredIndexNotes = indexNotes.filter(
+    indexNotes => `bc-history-${indexNotes.index}` === currentNoteId
+  );
 
-  return [
-    filteredIndexNotes,
-    hasFlag,
-    hasPrefix,
-    hasAlternative,
-    hasNotes
-  ];
+  return [filteredIndexNotes, hasFlag, hasPrefix, hasAlternative, hasNotes];
 }
 
 // Find notes inside a support object and return as an array
@@ -145,12 +162,28 @@ function gatherNotesForIndexNote(currentSupport) {
   return !!currentSupport.notes ? [currentSupport.notes] : [];
 }
 
-export function Rows({ compatibilityData, displayBrowsers, onNotesClick, currentNoteId, setLegendIcons }) {
-  let [hasDeprecation, hasExperimental, hasNonStandard, hasFlag, hasPrefix, hasAlternative, hasNotes] =
-    [false, false, false, false, false, false, false];
+export function Rows({
+  compatibilityData,
+  displayBrowsers,
+  onNotesClick,
+  currentNoteId,
+  setLegendIcons
+}) {
+  let [
+    hasDeprecation,
+    hasExperimental,
+    hasNonStandard,
+    hasFlag,
+    hasPrefix,
+    hasAlternative,
+    hasNotes
+  ] = [false, false, false, false, false, false, false];
   let indexNotes;
 
-  const compatibility = buildCompatibilityObject(compatibilityData, displayBrowsers);
+  const compatibility = buildCompatibilityObject(
+    compatibilityData,
+    displayBrowsers
+  );
   const browserCompatibilityRows = [];
 
   for (const key in compatibility) {
@@ -172,33 +205,55 @@ export function Rows({ compatibilityData, displayBrowsers, onNotesClick, current
       return { browser, support, version_added };
     });
 
-    [indexNotes, hasFlag, hasPrefix, hasAlternative, hasNotes] =
-      buildIndexNotes(browserSupportDetails, key, currentNoteId, hasFlag, hasPrefix, hasAlternative, hasNotes);
+    [
+      indexNotes,
+      hasFlag,
+      hasPrefix,
+      hasAlternative,
+      hasNotes
+    ] = buildIndexNotes(
+      browserSupportDetails,
+      key,
+      currentNoteId,
+      hasFlag,
+      hasPrefix,
+      hasAlternative,
+      hasNotes
+    );
 
     browserCompatibilityRows.push([
       <tr key={key}>
         <th scope="row">
           <code>{key}</code>
-            <div className="bc-icons">
-              { currentRow.status.deprecated &&
-                <abbr className="only-icon" title="Deprecated. Not for use in new websites.">
-                  <span>Deprecated</span>
-                  <i className="ic-deprecated" />
-                </abbr>
-              }
-              { !currentRow.status.standard_track &&
-                <abbr className="only-icon" title="Non-standard. Expect poor cross-browser support.">
-                  <span>Non-standard</span>
-                  <i className="ic-non-standard" />
-                </abbr>
-              }
-              { currentRow.status.experimental &&
-                <abbr className="only-icon" title="Experimental. Expect behavior to change in the future.">
-                  <span>Experimental</span>
-                  <i className="ic-experimental" />
-                </abbr>
-              }
-            </div>
+          <div className="bc-icons">
+            {currentRow.status.deprecated && (
+              <abbr
+                className="only-icon"
+                title="Deprecated. Not for use in new websites."
+              >
+                <span>Deprecated</span>
+                <i className="ic-deprecated" />
+              </abbr>
+            )}
+            {!currentRow.status.standard_track && (
+              <abbr
+                className="only-icon"
+                title="Non-standard. Expect poor cross-browser support."
+              >
+                <span>Non-standard</span>
+                <i className="ic-non-standard" />
+              </abbr>
+            )}
+            {currentRow.status.experimental && (
+              <abbr
+                className="only-icon"
+                title="Experimental. Expect behavior to change in the future."
+              >
+                <span>Experimental</span>
+                <i className="ic-experimental" />
+              </abbr>
+            )}
+          </div>
         </th>
         <RenderBrowserSupportDetails
           browserSupportDetails={browserSupportDetails}
@@ -207,24 +262,37 @@ export function Rows({ compatibilityData, displayBrowsers, onNotesClick, current
           currentNoteId={currentNoteId}
           onNotesClick={onNotesClick}
         />
-     </tr>,
-     ...indexNotes.map(indexNote =>
-       <tr key={`notes-${indexNote.index}`} id={`bc-history-${indexNote.index}`} className="bc-history" aria-hidden="false">
-         <th scope="row" />
-         <td colSpan={browserSupportDetails.length}>
-           <dl>
-             <BrowserSupportNotes
-               key={`notes-detail-${indexNote.index}`}
-               indexNote={indexNote}
-               blockElementTag="dt"
-               noteElementTag="dd"
-             />
-           </dl>
-         </td>
-       </tr>
-     )
-   ]);
+      </tr>,
+      ...indexNotes.map(indexNote => (
+        <tr
+          key={`notes-${indexNote.index}`}
+          id={`bc-history-${indexNote.index}`}
+          className="bc-history"
+          aria-hidden="false"
+        >
+          <th scope="row" />
+          <td colSpan={browserSupportDetails.length}>
+            <dl>
+              <BrowserSupportNotes
+                key={`notes-detail-${indexNote.index}`}
+                indexNote={indexNote}
+                blockElementTag="dt"
+                noteElementTag="dd"
+              />
+            </dl>
+          </td>
+        </tr>
+      ))
+    ]);
   }
-  setLegendIcons(hasDeprecation, hasExperimental, hasNonStandard, hasFlag, hasPrefix, hasAlternative, hasNotes);
+  setLegendIcons(
+    hasDeprecation,
+    hasExperimental,
+    hasNonStandard,
+    hasFlag,
+    hasPrefix,
+    hasAlternative,
+    hasNotes
+  );
   return browserCompatibilityRows;
 }

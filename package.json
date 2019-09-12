@@ -1,0 +1,24 @@
+{
+  "name": "stumptown-renderer",
+  "version": "0.0.0",
+  "description": "Meta package applicable to all packages",
+  "repository": "git@github.com:mdn/stumptown-renderer.git",
+  "author": "MDN Web Docs",
+  "license": "MPL-2.0",
+  "scripts": {
+    "prettier-format": "prettier --write '**'",
+    "prettier-check": "prettier --list-different '**'",
+    "prettier-ci": "prettier --list-different '**' || (echo '\n\nThis failure means you did not run `npm run prettier-dev` before committing\n\n' && exit 1)",
+    "prettier-dev": "pretty-quick --branch master"
+  },
+  "devDependencies": {
+    "husky": "3.0.5",
+    "prettier": "1.18.2",
+    "pretty-quick": "1.11.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  }
+}

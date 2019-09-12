@@ -7,9 +7,11 @@ export function Browsers({ displayBrowsers }) {
       <td />
       {displayBrowsers.map(displayBrowser => (
         <th key={displayBrowser} className={`bc-browser-${displayBrowser}`}>
-          <span className={`bc-head-txt-label bc-head-icon-${displayBrowser}`}><BrowserName browserNameKey={displayBrowser}/></span>
+          <span className={`bc-head-txt-label bc-head-icon-${displayBrowser}`}>
+            <BrowserName browserNameKey={displayBrowser} />
+          </span>
         </th>
       ))}
     </tr>
-  )
+  );
 }

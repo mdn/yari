@@ -1,6 +1,7 @@
 clean:
 	rm -fr .make.built .make.installed client/build/titles.json
 install:
+	yarn
 	cd stumptown && npm install && git checkout package-lock.json && cd -
 	cd client && yarn && cd -
 	cd server && yarn && cd -
@@ -48,5 +49,17 @@ yarn-audit-all:
 
 test-client:
 	cd client && yarn run test
+
+lint-check:
+	ls .make.installed || yarn
+	yarn run prettier-check
+
+lint-dev:
+	ls .make.installed || yarn
+	yarn run prettier-dev
+
+lint-format:
+	ls .make.installed || yarn
+	yarn run prettier-format
 
 .PHONY: clean install build run-server run-dev deployment-build build-content yarn-audit-all

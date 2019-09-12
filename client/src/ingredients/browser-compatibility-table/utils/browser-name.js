@@ -1,6 +1,6 @@
 export default function BrowserName({ browserNameKey }) {
   let firstChar;
-  switch(browserNameKey) {
+  switch (browserNameKey) {
     case "chrome":
     case "edge":
     case "firefox":
