@@ -5,7 +5,7 @@ import "typeface-zilla-slab";
 import { App } from "./app";
 import touched from "./touchthis";
 if (process.env.NODE_ENV === "development") {
-  if (touched) {
+  if (touched && touched.length) {
     const e = document.createElement("p");
     e.style["background-color"] = "#dedede";
     e.style["bgColor"] = "orange";
