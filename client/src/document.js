@@ -99,12 +99,7 @@ function RenderSideBar({ document }) {
 }
 
 function SidebarLeaf({ depth, title, content }) {
-  const titleTag =
-    {
-      0: "h3",
-      1: "h4",
-      2: "h5"
-    }[depth] || "h6";
+  const titleTag = "h3";
   const titleNode = React.createElement(titleTag, null, title);
   return (
     <div>
@@ -114,11 +109,7 @@ function SidebarLeaf({ depth, title, content }) {
           if (node.content) {
             return (
               <li key={node.title}>
-                <SidebarLeaf
-                  depth={depth + 1}
-                  title={node.title}
-                  content={node.content || []}
-                />
+                <SidebarLeaflets node={node} />
               </li>
             );
           } else {
@@ -131,6 +122,23 @@ function SidebarLeaf({ depth, title, content }) {
         })}
       </ul>
     </div>
+  );
+}
+
+function SidebarLeaflets({ node }) {
+  return (
+    <details>
+      <summary>{node.title}</summary>
+      <ol>
+        {node.content.map(childNode => {
+          return (
+            <li key={childNode.uri}>
+              <Link to={childNode.uri}>{childNode.title}</Link>
+            </li>
+          );
+        })}
+      </ol>
+    </details>
   );
 }
 
