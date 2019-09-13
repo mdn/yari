@@ -59,22 +59,20 @@ After you have cloned the repo and want to pull in upstream changes run:
 ## Development
 
 To do local development, there are many services to start. The simplest
-way to start all of them is to install `honcho` as a system program. It
-requires Python:
+is to use `nf` which is a dev dependency that gets installed by the
+root `package.json`:
 
-    pip3 install honcho
-
-Now run:
-
-    honcho start
+    make install
+    nf start
 
 That will start a React dev-server at `http://localhost:3000`. If you
 change any of them files in `client/src` it will reload and refresh your
 browser. If you edit any of the Markdown files in `stumptown` it will
 repackage that file and refresh your browser too.
 
-Note! We hope to use, as an alternative to `honcho`, `docker-compose`.
+Note! We hope to use, as an alternative to `nf`, `docker-compose`.
 See [https://github.com/mdn/stumptown-renderer/issues/23](https://github.com/mdn/stumptown-renderer/issues/23)
+But even then, using `docker-compose` should and will be optional.
 
 ## Contributing
 
