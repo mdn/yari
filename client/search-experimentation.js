@@ -6,23 +6,26 @@
  */
 const fs = require("fs");
 const FlexSearch = require("flexsearch");
-const data = fs.readFileSync("public/titles.json", "utf8");
-const titles = JSON.parse(data);
+const data = fs.readFileSync("build/titles.json", "utf8");
+const titles = JSON.parse(data).titles;
 
 const index = new FlexSearch({
   encode: "advanced",
-  tokenize: "reverse",
+  tokenize: "forward",
   suggest: true
 });
 
-const _map = {};
+const _map = titles;
 Object.entries(titles).forEach(([uri, title]) => {
-  _map[uri] = title;
+  (title === "CSS" || title.startsWith("CSP")) && console.log({ uri, title });
   index.add(uri, title);
 });
 
-const q = "vi";
-const indexResults = index.search(q, 10);
+const q = "CSS";
+const indexResults = index.search(q, {
+  limit: 5,
+  suggest: true
+});
 const results = indexResults.map(uri => {
   return { uri, title: _map[uri] };
 });
