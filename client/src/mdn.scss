@@ -1,3 +1,6 @@
+$sidebar-summary-color: #333;
+$sidebar-link-color: #3d7e9a;
+
 * {
   box-sizing: border-box;
 }
@@ -39,9 +42,10 @@ div.sidebar {
     padding-left: 20px;
 
     summary {
-      color: #333;
+      color: $sidebar-summary-color;
       display: inline-block;
       margin-right: 5px;
+      cursor: pointer;
     }
 
     summary::-webkit-details-marker {
@@ -53,7 +57,7 @@ div.sidebar {
       content: "▶︎";
       display: inline-block;
       width: 20px;
-      color: #3d7e9a;
+      color: $sidebar-link-color;
     }
   }
 
@@ -72,7 +76,7 @@ div.sidebar {
       padding-bottom: 10px;
 
       a {
-        color: #3d7e9a;
+        color: $sidebar-link-color;
         display: inline-block;
         max-width: 100%;
         position: relative;

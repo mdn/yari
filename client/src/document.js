@@ -98,9 +98,8 @@ function RenderSideBar({ document }) {
   ));
 }
 
-function SidebarLeaf({ depth, title, content }) {
-  const titleTag = "h3";
-  const titleNode = React.createElement(titleTag, null, title);
+function SidebarLeaf({ title, content }) {
+  const titleNode = <h3>{title}</h3>;
   return (
     <div>
       {titleNode}
