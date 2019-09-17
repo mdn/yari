@@ -1,8 +1,15 @@
 import { Redirect } from "@reach/router";
 import FlexSearch from "flexsearch";
 import React from "react";
+// import fuzzy from "fuzzy.js";
+// import FuzzySearch from "fuzzy-search";
+import FuzzySearch from "./fuzzy-search";
 import "./search.scss";
 
+// XXX replace this with a matchMedia instead.
+// The only reason this is used is to make differences on a smaller
+// screen. For example the number of search results shouldn't
+// depend on the navigator but instead of the screen real estate.
 function isMobileUserAgent() {
   return (
     typeof window !== "undefined" &&
@@ -130,11 +137,13 @@ export class SearchWidget extends React.Component {
       // tokenize: "reverse",
       tokenize: "forward"
     });
-    this._map = {};
+    this._map = titles;
     Object.entries(titles).forEach(([uri, title]) => {
-      this._map[uri] = title;
+      // XXX investigate if it's faster to add all at once
+      // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
       this.index.add(uri, title);
     });
+    this.fuzzySearcher = new FuzzySearch(Object.keys(this._map));
   };
 
   searchHandler = event => {
@@ -187,21 +196,52 @@ export class SearchWidget extends React.Component {
       //   window.clearTimeout(this.hideSoon);
       // }
 
-      const indexResults = this.index.search(q, {
-        limit: isMobileUserAgent() ? 5 : 10,
-        // bool: "or",
-        suggest: true // This can give terrible result suggestions
-      });
+      if (q.startsWith("/") && !/\s/.test(q)) {
+        // Fuzzy-String search on the URI
 
-      const results = indexResults.map(uri => {
-        return { title: this._map[uri], uri };
-      });
-      this.setState({
-        highlitResult: results.length ? 0 : null,
-        lastQ: q,
-        searchResults: results,
-        showSearchResults: true
-      });
+        if (q === "/") {
+          this.setState({
+            highlitResult: null,
+            lastQ: q,
+            searchResults: [],
+            showSearchResults: true
+          });
+        } else {
+          const fuzzyResults = this.fuzzySearcher.search(q, {
+            limit: isMobileUserAgent() ? 5 : 10
+          });
+          const results = fuzzyResults.map(fuzzyResult => {
+            return {
+              title: this._map[fuzzyResult.needle],
+              uri: fuzzyResult.needle,
+              substrings: fuzzyResult.substrings
+            };
+          });
+          this.setState({
+            highlitResult: results.length ? 0 : null,
+            lastQ: q,
+            searchResults: results,
+            showSearchResults: true
+          });
+        }
+      } else {
+        // Full-Text search
+        const indexResults = this.index.search(q, {
+          limit: isMobileUserAgent() ? 5 : 10,
+          // bool: "or",
+          suggest: true // This can give terrible result suggestions
+        });
+
+        const results = indexResults.map(uri => {
+          return { title: this._map[uri], uri };
+        });
+        this.setState({
+          highlitResult: results.length ? 0 : null,
+          lastQ: q,
+          searchResults: results,
+          showSearchResults: true
+        });
+      }
     }
   };
 
@@ -350,11 +390,17 @@ export class SearchWidget extends React.Component {
       return <Redirect noThrow replace={false} to={redirectTo} />;
     }
 
+    // The fuzzy search is engaged if the search term starts with a '/'
+    // and does not have any spaces in it.
+    const isFuzzySearch = q.startsWith("/") && !/\s/.test(q);
+
     // Compute this once so it can be used as a conditional
     // and a prop.
     // Nothing found means there was an attempt to find stuff but it
     // came back empty.
-    const nothingFound = q && !searchResults.length;
+    const nothingFound =
+      (q && !searchResults.length && !isFuzzySearch) ||
+      (isFuzzySearch && q !== "/" && !searchResults.length);
 
     // This boolean determines if we should bother to show the search
     // results div at all.
@@ -365,7 +411,7 @@ export class SearchWidget extends React.Component {
     const show =
       !serverError &&
       showSearchResults &&
-      (nothingFound || searchResults.length);
+      (nothingFound || searchResults.length || isFuzzySearch);
 
     return (
       <form className="search-widget" onSubmit={this.submitHandler}>
@@ -402,6 +448,7 @@ export class SearchWidget extends React.Component {
             q={q}
             redirect={this.redirect}
             results={searchResults}
+            isFuzzySearch={isFuzzySearch}
           />
         ) : null}
       </form>
@@ -415,7 +462,13 @@ class ShowSearchResults extends React.PureComponent {
   };
 
   render() {
-    const { highlitResult, nothingFound, q, results } = this.props;
+    const {
+      highlitResult,
+      isFuzzySearch,
+      nothingFound,
+      q,
+      results
+    } = this.props;
     return (
       <div className="search-results">
         {nothingFound && <div className="nothing-found">nothing found</div>}
@@ -425,16 +478,18 @@ class ShowSearchResults extends React.PureComponent {
               className={i === highlitResult ? "highlit" : null}
               key={result.uri}
               onClick={event => {
-                console.log("CLICKED!", event);
                 this.redirectHandler(result);
               }}
             >
               <HighlightMatch title={result.title} q={q} />
               <br />
-              <BreadcrumbURI uri={result.uri} />
+              <BreadcrumbURI uri={result.uri} substrings={result.substrings} />
             </div>
           );
         })}
+        {isFuzzySearch && (
+          <div className="fuzzy-engaged">Fuzzy searching by URI</div>
+        )}
       </div>
     );
   }
@@ -469,7 +524,21 @@ function HighlightMatch({ title, q }) {
   );
 }
 
-function BreadcrumbURI({ uri }) {
+function BreadcrumbURI({ uri, substrings }) {
+  if (substrings) {
+    return (
+      <small>
+        {substrings.map((part, i) => {
+          const key = `${part.str}:${i}`;
+          if (part.match) {
+            return <mark key={key}>{part.str}</mark>;
+          } else {
+            return <span key={key}>{part.str}</span>;
+          }
+        })}
+      </small>
+    );
+  }
   const keep = uri
     .split("/")
     .slice(1)
