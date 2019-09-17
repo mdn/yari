@@ -1,3 +1,6 @@
+$sidebar-summary-color: #333;
+$sidebar-link-color: #3d7e9a;
+
 * {
   box-sizing: border-box;
 }
@@ -10,6 +13,11 @@ h1.page-title {
 div.sidebar {
   float: left;
   max-width: 300px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  font-size: 16px;
+  font-size: .88889rem;
 
   h3, h4, h5, h6 {
     // The main content area might not start with a <hX> tag.
@@ -25,6 +33,61 @@ div.sidebar {
     li {
       list-style: none;
       margin-top: 20px;
+    }
+  }
+
+  details {
+    margin-bottom: 10px;
+    margin-left: 0;
+    padding-left: 20px;
+
+    summary {
+      color: $sidebar-summary-color;
+      display: inline-block;
+      margin-right: 5px;
+      cursor: pointer;
+    }
+
+    summary::-webkit-details-marker {
+      display:none;
+    }
+
+
+    summary:before {
+      content: "▶︎";
+      display: inline-block;
+      width: 20px;
+      color: $sidebar-link-color;
+    }
+  }
+
+  details[open]>summary:before {
+    content: '\25BC\FE0E';
+  }
+
+  ol {
+    list-style-type: none;
+    padding-left: 20px;
+
+    li {
+      padding-left: 0;
+      margin-top: 0;
+      line-height: 1.2;
+      padding-bottom: 10px;
+
+      a {
+        color: $sidebar-link-color;
+        display: inline-block;
+        max-width: 100%;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        hyphens: auto;
+      }
+    }
+
+    li:first-child {
+      padding-top: 10px;
     }
   }
 }
