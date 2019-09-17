@@ -84,6 +84,10 @@ form.search-widget {
     div.nothing-found {
       font-style: italic;
     }
+    .fuzzy-engaged {
+      font-size: 80%;
+      font-style: italic;
+    }
   }
 
   @include media(">phone", "<=tablet") {
