@@ -2,7 +2,18 @@
 
 [![Build Status](https://travis-ci.org/mdn/stumptown-renderer.svg?branch=master)](https://travis-ci.org/mdn/stumptown-renderer)
 
-**THIS IS HIGHLY EXPERIMENTAL AND LIKELY TO CHANGE DRASTICALLY**
+## Quickstart
+
+These steps should get you started, locally, straight away:
+
+    git clone --recursive https://github.com/mdn/stumptown-renderer.git
+    cd stumptown-renderer
+    make install
+    nf start
+    open http://localhost:3000
+
+To really understand how it starts and how to break down the various
+tools, open `Procfile` or the `Makefile`. Or, read on...
 
 ## Overview
 
