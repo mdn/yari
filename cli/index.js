@@ -314,9 +314,9 @@ function run(paths) {
 
     await writeFile(allTitlesFilepath, JSON.stringify(titles, null, 2));
     console.log(
-      `${allTitlesFilepath} now contains ${
-        Object.keys(titles).length
-      } documents.`
+      `${allTitlesFilepath} now contains ${Object.keys(
+        titles.titles
+      ).length.toLocaleString()} documents.`
     );
     return values;
   });
