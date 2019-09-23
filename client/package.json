@@ -37,7 +37,9 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@testing-library/react": "^9.1.4"
+  },
   "resolutions": {
     "fstream": ">=1.0.12",
     "js-yaml": ">=3.13.1",
