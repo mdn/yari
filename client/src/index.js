@@ -26,12 +26,12 @@ if (process.env.NODE_ENV === "development") {
 // import * as serviceWorker from './serviceWorker';
 
 const container = document.getElementById("root");
-let documentData = null;
+let docData = null;
 const documentDataElement = document.getElementById("documentdata");
 if (documentDataElement) {
-  documentData = JSON.parse(documentDataElement.text);
+  docData = JSON.parse(documentDataElement.text);
 }
-const app = <App document={documentData} />;
+const app = <App doc={docData} />;
 if (container.firstElementChild) {
   ReactDOM.hydrate(app, container);
 } else {

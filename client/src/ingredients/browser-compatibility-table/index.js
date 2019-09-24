@@ -32,7 +32,7 @@ export class BrowserCompatibilityTable extends Component {
     legendSet: false
   };
 
-  gatherPlatformsAndBrowsers(document, category) {
+  gatherPlatformsAndBrowsers(category) {
     let platforms = ["desktop", "mobile"];
     let displayBrowsers = [...BROWSERS["desktop"], ...BROWSERS["mobile"]];
     if (category === "javascript") {
@@ -87,7 +87,6 @@ export class BrowserCompatibilityTable extends Component {
     }
 
     const [platforms, displayBrowsers] = this.gatherPlatformsAndBrowsers(
-      this.props.document,
       category
     );
     return (
