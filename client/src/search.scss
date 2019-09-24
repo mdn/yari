@@ -76,6 +76,9 @@ form.search-widget {
     mark {
       background-color: #f3f7bd;
     }
+    small {
+      overflow-wrap: break-word;
+    }
 
     a {
       text-overflow: ellipsis;
