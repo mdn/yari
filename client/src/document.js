@@ -145,23 +145,14 @@ function SidebarLeaflets({ node }) {
 const PROSE_NO_HEADING = ["short_description", "overview"];
 
 function RenderDocumentBody({ document }) {
-  const sections = [];
-  /**
-   * The reason we can't return a filtered map of 'document.body' is because
-   * some of the parts of 'document.body' is an array.
-   * E.g. document.body.additional_prose == [
-   *     {type: 'prose', value: STUFF},
-   *     {type: 'prose', value: OTHER_STUFF},
-   * ]
-   */
-  document.body.forEach((section, i) => {
+  return document.body.map((section, i) => {
     if (section.type === "prose") {
       // Only exceptional few should use the <Prose/> component,
       // as opposed to <ProseWithHeading/>.
       if (PROSE_NO_HEADING.includes(section.value.id)) {
-        sections.push(<Prose key={section.value.id} section={section.value} />);
+        return <Prose key={section.value.id} section={section.value} />;
       } else {
-        sections.push(
+        return (
           <ProseWithHeading
             key={section.value.id}
             id={section.value.id}
@@ -169,52 +160,37 @@ function RenderDocumentBody({ document }) {
           />
         );
       }
-    } else if (section.type === "additional_prose") {
-      section.value.forEach((subsection, j) => {
-        if (subsection.type === "prose" && subsection.value) {
-          sections.push(
-            <ProseWithHeading
-              key={`${subsection.title}${i}${j}`}
-              section={subsection.value}
-            />
-          );
-        } else {
-          console.warn("Don't know how to deal with subsection:", subsection);
-        }
-      });
     } else if (section.type === "interactive_example") {
-      sections.push(
+      return (
         <InteractiveExample
-          key={section.value}
-          src={section.value}
-          document={document}
+          key={section.value.url}
+          url={section.value.url}
+          height={section.value.height}
+          title={document.title}
         />
       );
     } else if (section.type === "attributes") {
-      sections.push(
-        <Attributes key={`attributes${i}`} attributes={section.value} />
-      );
+      return <Attributes key={`attributes${i}`} attributes={section.value} />;
     } else if (section.type === "browser_compatibility") {
-      sections.push(
+      return (
         <BrowserCompatibilityTable
           key="browser_compatibility"
           data={section.value}
         />
       );
     } else if (section.type === "examples") {
-      sections.push(<Examples key={`examples${i}`} examples={section.value} />);
+      return <Examples key={`examples${i}`} examples={section.value} />;
     } else if (section.type === "info_box") {
       // XXX Unfinished!
       // https://github.com/mdn/stumptown-content/issues/106
       console.warn("Don't know how to deal with info_box!");
       // console.log(section);
+      return null;
     } else {
       console.warn(section);
       throw new Error(`No idea how to handle a '${section.type}' section`);
     }
   });
-
-  return sections;
 }
 
 function Prose({ section }) {
