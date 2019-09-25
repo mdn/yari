@@ -9,14 +9,14 @@ import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-t
 
 export class Document extends React.Component {
   state = {
-    document: this.props.document || null,
+    doc: this.props.doc || null,
     loading: false,
     notFound: false,
     loadingError: null
   };
 
   componentDidMount() {
-    if (!this.state.document) {
+    if (!this.state.doc) {
       this.fetchDocument();
     }
   }
@@ -47,13 +47,13 @@ export class Document extends React.Component {
       } else {
         const data = await response.json();
         document.title = data.document.title;
-        this.setState({ document: data.document, loading: false });
+        this.setState({ doc: data.document, loading: false });
       }
     });
   };
 
   render() {
-    const { document, loadingError, loading, notFound } = this.state;
+    const { doc, loadingError, loading, notFound } = this.state;
     const { location } = this.props;
     if (notFound) {
       return <NoMatch location={location} message="Document not found" />;
@@ -64,21 +64,21 @@ export class Document extends React.Component {
     if (loadingError) {
       return <LoadingError error={loadingError} />;
     }
-    if (!document) {
+    if (!doc) {
       return null;
     }
     return (
       <div>
-        <h1 className="page-title">{document.title}</h1>
+        <h1 className="page-title">{doc.title}</h1>
         <div className="main">
           <div className="sidebar">
-            <RenderSideBar document={document} />
+            <RenderSideBar doc={doc} />
           </div>
           <div className="content">
-            <RenderDocumentBody document={document} />
+            <RenderDocumentBody doc={doc} />
             <hr />
-            {document.contributors && (
-              <Contributors contributors={document.contributors} />
+            {doc.contributors && (
+              <Contributors contributors={doc.contributors} />
             )}
           </div>
         </div>
@@ -87,8 +87,8 @@ export class Document extends React.Component {
   }
 }
 
-function RenderSideBar({ document }) {
-  return document.related_content.map(node => (
+function RenderSideBar({ doc }) {
+  return doc.related_content.map(node => (
     <SidebarLeaf
       key={node.title}
       depth={0}
@@ -144,8 +144,8 @@ function SidebarLeaflets({ node }) {
 /** These prose sections should be rendered WITHOUT a heading. */
 const PROSE_NO_HEADING = ["short_description", "overview"];
 
-function RenderDocumentBody({ document }) {
-  return document.body.map((section, i) => {
+function RenderDocumentBody({ doc }) {
+  return doc.body.map((section, i) => {
     if (section.type === "prose") {
       // Only exceptional few should use the <Prose/> component,
       // as opposed to <ProseWithHeading/>.
@@ -166,7 +166,7 @@ function RenderDocumentBody({ document }) {
           key={section.value.url}
           url={section.value.url}
           height={section.value.height}
-          title={document.title}
+          title={doc.title}
         />
       );
     } else if (section.type === "attributes") {
