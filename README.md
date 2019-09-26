@@ -60,7 +60,7 @@ If you haven't already done so, run:
     git clone --recursive https://github.com/mdn/stumptown-renderer.git
     cd stumptown-renderer
 
-You need a decent version of `node`, `yarn`, and `npm`.
+You need a decent version of `node` (>= 10.11.0), `yarn`, and `npm`.
 
 After you have cloned the repo and want to pull in upstream changes run:
 
