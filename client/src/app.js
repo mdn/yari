@@ -15,7 +15,7 @@ export function App(appProps) {
       <section className="section">
         <Router>
           <Homepage path="/" />
-          <Document {...appProps} path="/docs/*" />
+          <Document {...appProps} path="/:locale/docs/*" />
           <NoMatch default />
         </Router>
       </section>
