@@ -35,3 +35,4 @@ matrix:
       script:
         - set -x
         - yarn deployment-build
+        - yarn end-to-end-test

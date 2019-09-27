@@ -12,6 +12,7 @@
     "test": "yarn prettier-check && yarn workspace cli test && yarn workspace client test",
     "build": "cd stumptown && npm run build-json html && cd .. && yarn workspace client build && yarn workspace cli start",
     "deployment-build": "cross-env CLI_BUILD_HTML=true yarn build",
+    "end-to-end-test": "node scripts/end-to-end-test.js",
     "start": "nf start"
   },
   "private": true,
