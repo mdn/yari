@@ -132,9 +132,7 @@ function SidebarLeaflets({ node }) {
         {node.content.map(childNode => {
           return (
             <li key={childNode.uri}>
-              <Link to={childNode.uri}>
-                {childNode.short_title || childNode.title}
-              </Link>
+              <Link to={childNode.uri}>{childNode.title}</Link>
             </li>
           );
         })}
