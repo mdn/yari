@@ -1,4 +1,4 @@
-server: make run-server
-web: PORT=3000 make run-dev
-watch: make watch-content
-buildserver: make build-json-server
+server: yarn workspace server start
+web: yarn cross-env PORT=3000 yarn workspace client start
+watch: yarn workspace cli start --watch
+buildserver: yarn workspace cli build-json-server
