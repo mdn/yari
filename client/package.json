@@ -5,6 +5,7 @@
   "license": "MPL-2.0",
   "dependencies": {
     "@reach/router": "1.2.1",
+    "cross-env": "^6.0.0",
     "flexsearch": "0.6.30",
     "fuzzysearch": "1.0.3",
     "include-media": "1.4.9",
@@ -16,8 +17,9 @@
     "typeface-zilla-slab": "0.0.72"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "INLINE_RUNTIME_CHUNK=false react-scripts build",
+    "start": "cross-env BROWSER=none react-scripts start",
+    "postinstall": "ls src/touchthis.js || echo \"export default [];\" >> src/touchthis.js",
+    "build": "cross-env INLINE_RUNTIME_CHUNK=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

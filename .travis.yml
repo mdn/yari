@@ -18,7 +18,7 @@ before_install:
   - npm install -g yarn
   - yarn --version
   # All nodes of the matrix will need and benefit from this
-  - make install
+  - yarn
 
 matrix:
   include:
@@ -33,9 +33,9 @@ matrix:
     - name: end-to-end
       cache: yarn
       script:
-        - make build-content
-        - make deployment-build
+        - yarn build-content
+        - yarn deployment-build
     - name: yarn-audit
       cache: yarn
       script:
-        - make yarn-audit-all
+        - yarn audit

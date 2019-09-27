@@ -5,10 +5,9 @@
   "license": "MPL-2.0",
   "scripts": {
     "build": "webpack --config webpack.config.js --mode=development",
-    "start": "node dist/cli.js",
-    "run": "yarn run build && yarn run start",
+    "start": "yarn build && node dist/cli.js",
     "build:watch": "webpack --config webpack.config.js --watch --mode=development",
-    "dev:run": "NODE_ENV=development nodemon dist/cli.js --watch dist/cli.js",
+    "dev:run": "cross-env NODE_ENV=development nodemon dist/cli.js --watch dist/cli.js",
     "test": "jest",
     "build-json-server": "node build-json-server.js"
   },
@@ -16,6 +15,7 @@
     "@reach/router": "1.2.1",
     "chalk": "2.4.2",
     "cheerio": "1.0.0-rc.3",
+    "cross-env": "^6.0.0",
     "dotenv": "8.0.0",
     "glob": "7.1.4",
     "minimist": "1.2.0",

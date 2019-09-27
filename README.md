@@ -8,8 +8,8 @@ These steps should get you started, locally, straight away:
 
     git clone --recursive https://github.com/mdn/stumptown-renderer.git
     cd stumptown-renderer
-    make install
-    nf start
+    yarn
+    yarn start
     open http://localhost:3000
 
 To really understand how it starts and how to break down the various
@@ -71,10 +71,10 @@ After you have cloned the repo and want to pull in upstream changes run:
 
 To do local development, there are many services to start. The simplest
 is to use `nf` which is a dev dependency that gets installed by the
-root `package.json`:
+root `package.json` and executed like this:
 
-    make install
-    nf start
+    yarn
+    yarn start
 
 That will start a React dev-server at `http://localhost:3000`. If you
 change any of them files in `client/src` it will reload and refresh your
@@ -89,11 +89,11 @@ But even then, using `docker-compose` should and will be optional.
 
 Open two terminals. In one, run (this will take a little time the first time):
 
-    make run-server
+    yarn workspace server start
 
 In another terminal:
 
-    make run-dev
+    yarn workspace client start
 
 Now you should have two servers:
 
@@ -108,12 +108,12 @@ the browser to see the effect immediately. If you want re-build the
 content made available to the `React` components, open another terminal
 and run:
 
-    make build-content
+    yarn build-content
 
 To re-run any of the installation and build steps you can, at any time,
 run:
 
-    make clean
+    yarn
 
 ## Building
 
@@ -126,7 +126,7 @@ it and learn how the default commands work.
 For example, the most important command beyond the active development one
 mentioned in the section above is:
 
-    make deployment-build
+    yarn deployment-build
 
 That one does "everything" and you end up with a full directory that has
 all the static bundles of JavaScript, CSS, and the .html files. That directory
@@ -139,18 +139,18 @@ then you can set the `STUMPTOWN_CONTENT_ROOT` environment variable.
 For example:
 
     cd ~/projects/stumptown-renderer
-    # running 'make build' now would use ~/projects/stumptown-renderer/stumptown
-    STUMPTOWN_CONTENT_ROOT=~/stumptown-content make build
+    # running 'yarn build' now would use ~/projects/stumptown-renderer/stumptown
+    yarn cross-env STUMPTOWN_CONTENT_ROOT=~/stumptown-content yarn build
     # or
-    STUMPTOWN_CONTENT_ROOT=~/stumptown-content make deployment-build
+    yarn cross-env STUMPTOWN_CONTENT_ROOT=~/stumptown-content yarn deployment-build
 
 ### Security Auditing
 
 To check that all node modules are up to date to secure versions you can run
 
-    make yarn-audit-all
+    yarn audit
 
-It will execute `yarn audit` in each directory where possible. To remedy
+It will execute `yarn audit` in each sub-package. To remedy
 `yarn` auditing warnings, refer to the official `yarn` documentation.
 
 ### Linting (formatting)
@@ -164,26 +164,21 @@ no trailing commas, etc.
 
 To check *all* files once run:
 
-    make lint-check
+    yarn prettier-check
 
 To only check the files you have touched in the current git stage:
 
-    make lint-dev
+    yarn pretty-quick --branch master
 
 Note this command **does not complain, it fixes**. Meaning, if you make an edit to a `.js` file and accidentally violate the Prettier rules, simply running this will *fix* the violation. For example:
 
     emacs client/src/app.js
-    make lint-dev
-
-To run all Prettier checking but across all relevant files and not just
-the ones you've touched run:
-
-    make lint-check
+    yarn pretty-quick --branch master
 
 And if you just want to format all existing files (might be useful after
 you've run `yarn upgrade prettier --latest` for example):
 
-    make lint-format
+    yarn prettier-format
 
 ## Server-Sider Rendering
 
@@ -207,12 +202,12 @@ Deployment means that you prepare one whole single directory that is
 all that is needed. This build directory is ready to ship to wherever you
 host your static site. Build everything with:
 
-    make deployment-build
+    yarn deployment-build
 
-What it does is a mix of `make run-server` and `make run-dev` but without
-starting a server. It also, builds a `index.html` file for every document
-found and processed by the `cli`. This whole directory is ready to be
-uploaded to S3 or Netlify.
+What it does is a mix of `yarn workspace server start` and 
+`yarn workspace client start` but without starting a server. It also,
+builds a `index.html` file for every document found and processed by the 
+`cli`. This whole directory is ready to be uploaded to S3 or Netlify.
 
 ## Goals and Not-Goals
 
