@@ -32,15 +32,15 @@ export default (renderApp, options) => {
 
   let pageTitle = "MDN Web Docs"; // default
 
-  const { document } = options;
+  const { doc } = options;
 
-  if (document) {
-    // Use the document's title instead
-    pageTitle = document.title;
+  if (doc) {
+    // Use the doc's title instead
+    pageTitle = doc.title;
 
     // XXX We *could* just expose some absolute minimal here. Just enough
     // for the React Document component to know it doesn't need to re-render.
-    const escapeDocumentJson = JSON.stringify(document).replace("</", "<\\/");
+    const escapeDocumentJson = JSON.stringify(doc).replace("</", "<\\/");
     const documentDataTag = `
     <script id="documentdata" type="application/json">${escapeDocumentJson}</script>
     `.trim();
