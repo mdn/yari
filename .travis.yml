@@ -1,4 +1,4 @@
-# Needed for when dependabot makes PRs. Their branches are added here to the 'mdn' repo. 
+# Needed for when dependabot makes PRs. Their branches are added here to the 'mdn' repo.
 branches:
   only:
     - master
@@ -33,5 +33,5 @@ matrix:
     - name: end-to-end
       cache: yarn
       script:
-        - yarn build-content
+        - set -x
         - yarn deployment-build
