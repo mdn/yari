@@ -37,5 +37,3 @@ matrix:
         - yarn deployment-build
     - name: yarn-audit
       cache: yarn
-      script:
-        - yarn audit
