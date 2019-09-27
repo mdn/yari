@@ -46,8 +46,8 @@ export class Document extends React.Component {
         return this.setState({ loading: false, loadingError: response });
       } else {
         const data = await response.json();
-        document.title = data.document.title;
-        this.setState({ doc: data.document, loading: false });
+        document.title = data.doc.title;
+        this.setState({ doc: data.doc, loading: false });
       }
     });
   };

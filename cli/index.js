@@ -36,8 +36,8 @@ const writeFile = util.promisify(fs.writeFile);
 const accessFile = util.promisify(fs.access);
 
 /* Return a absolute path that is the correct URI for the website */
-function mapToURI(document) {
-  return url.parse(document.mdn_url).pathname;
+function mapToURI(doc) {
+  return url.parse(doc.mdn_url).pathname;
 }
 
 /** In the document, there's related_content and it contains keys
@@ -76,18 +76,18 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
   //   .digest("hex");
 
   const options = {
-    document: JSON.parse(data)
+    doc: JSON.parse(data)
   };
 
   // A temporary fix for the mdn_url values in the related_content.
-  fixRelatedContentURIs(options.document);
+  fixRelatedContentURIs(options.doc);
 
   // Find blocks of syntax code and transform it to syntax highlighted code.
-  if (options.document.body) {
-    fixSyntaxHighlighting(options.document);
+  if (options.doc.body) {
+    fixSyntaxHighlighting(options.doc);
   }
 
-  const uri = mapToURI(options.document);
+  const uri = mapToURI(options.doc);
 
   const destination = path.join(output, uri);
   const outfileHtml = path.join(destination, "index.html");
@@ -138,7 +138,7 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
     }
     console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
   }
-  return { filePath, document: options.document, uri };
+  return { filePath, doc: options.doc, uri };
 }
 
 const options = buildOptions({
@@ -309,7 +309,7 @@ function run(paths) {
       titles.titles = {};
     }
     values.forEach(built => {
-      titles.titles[built.uri] = built.document.title;
+      titles.titles[built.uri] = built.doc.title;
     });
 
     await writeFile(allTitlesFilepath, JSON.stringify(titles, null, 2));
