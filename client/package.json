@@ -38,7 +38,7 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/react": "^9.1.4"
+    "@testing-library/react": "^9.2.0"
   },
   "resolutions": {
     "fstream": ">=1.0.12",
