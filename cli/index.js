@@ -1,6 +1,5 @@
 import React from "react";
 import fs from "fs";
-import url from "url";
 import path from "path";
 import util from "util";
 // const crypto = require("crypto");
@@ -35,11 +34,6 @@ const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 const accessFile = util.promisify(fs.access);
 
-/* Return a absolute path that is the correct URI for the website */
-function mapToURI(doc) {
-  return url.parse(doc.mdn_url).pathname;
-}
-
 /** In the document, there's related_content and it contains keys
  * called 'mdn_url'. We need to transform them to relative links
  * that works with our router.
@@ -50,7 +44,14 @@ function fixRelatedContent(document) {
     if (block.content) {
       block.content.forEach(item => {
         if (item.mdn_url) {
-          item.uri = mapToURI(item);
+          // always expect this to be a relative URL
+          if (!item.mdn_url.startsWith("/")) {
+            throw new Error(
+              `Document's .mdn_url doesn't start with / (${item.mdn_url})`
+            );
+          }
+          // Complicated way to rename an object key.
+          item.uri = item.mdn_url;
           delete item.mdn_url;
         }
         // The sidebar only needs a 'title' and doesn't really care if
@@ -97,8 +98,13 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
     fixSyntaxHighlighting(options.doc);
   }
 
-  const uri = mapToURI(options.doc);
-
+  // always expect this to be a relative URL
+  if (!options.doc.mdn_url.startsWith("/")) {
+    throw new Error(
+      `Document's .mdn_url doesn't start with / (${options.doc.mdn_url})`
+    );
+  }
+  const uri = options.doc.mdn_url;
   const destination = path.join(output, uri);
   const outfileHtml = path.join(destination, "index.html");
   const outfileJson = path.join(destination, "index.json");
