@@ -45,7 +45,7 @@ function mapToURI(doc) {
  * that works with our router.
  * This /mutates/ the document data.
  */
-function fixRelatedContentURIs(document) {
+function fixRelatedContent(document) {
   function fixBlock(block) {
     if (block.content) {
       block.content.forEach(item => {
@@ -53,6 +53,13 @@ function fixRelatedContentURIs(document) {
           item.uri = mapToURI(item);
           delete item.mdn_url;
         }
+        // The sidebar only needs a 'title' and doesn't really care if
+        // it came from the full title or the 'short_title'.
+        item.title = item.short_title || item.title;
+        delete item.short_title;
+        // At the moment, we never actually use the 'short_description'
+        // so no use including it.
+        delete item.short_description;
         fixBlock(item);
       });
     }
@@ -79,8 +86,11 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
     doc: JSON.parse(data)
   };
 
-  // A temporary fix for the mdn_url values in the related_content.
-  fixRelatedContentURIs(options.doc);
+  // Stumptown produces a `.related_content` for every document. But it
+  // contains data is either not needed or not appropriate for the way
+  // we're using it in the renderer. So mutate it for the specific needs
+  // of the renderer.
+  fixRelatedContent(options.doc);
 
   // Find blocks of syntax code and transform it to syntax highlighted code.
   if (options.doc.body) {
