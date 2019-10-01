@@ -34,13 +34,9 @@ const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 const accessFile = util.promisify(fs.access);
 
-/** In the document, there's related_content and it contains keys
- * called 'mdn_url'. We need to transform them to relative links
- * that works with our router.
- * This /mutates/ the document data.
- */
-function fixRelatedContent(document) {
-  function fixBlock(block) {
+function fixDocumentStructure(document) {
+  function fixBlock(block, options = {}) {
+    const omit = options.omit || [];
     if (block.content) {
       block.content.forEach(item => {
         if (item.mdn_url) {
@@ -54,19 +50,49 @@ function fixRelatedContent(document) {
           item.uri = item.mdn_url;
           delete item.mdn_url;
         }
-        // The sidebar only needs a 'title' and doesn't really care if
-        // it came from the full title or the 'short_title'.
-        item.title = item.short_title || item.title;
-        delete item.short_title;
-        // At the moment, we never actually use the 'short_description'
-        // so no use including it.
-        delete item.short_description;
-        fixBlock(item);
+
+        if (options.mergeShortTitle) {
+          item.title = item.short_title || item.title;
+          delete item.short_title;
+        }
+        omit.forEach(key => {
+          delete item[key];
+        });
+        fixBlock(item, options);
       });
     }
   }
+
+  /** In the document, there's `related_content` and it contains keys
+   * called 'mdn_url'. We need to transform them to relative links
+   * that works with our router.
+   * This /mutates/ the document data.
+   */
   document.related_content.forEach(block => {
-    fixBlock(block);
+    fixBlock(block, {
+      // At the moment, we never actually use the 'short_description'
+      // so no use including it.
+      omit: ["short_description"],
+      // The sidebar only needs a 'title' and doesn't really care if
+      // it came from the full title or the 'short_title'.
+      mergeShortTitle: true
+    });
+  });
+
+  /** In the body we have sections that might need to be tuned for the
+   * renderer. This is ultimately needed because we want to "perfect"
+   * the document structure for the renderer in a way that stuff that
+   * isn't going to be needed (i.e. displayed) can be omitted or transformed
+   * so the resulting .json is as small as it can be.
+   */
+  document.body.forEach(block => {
+    if (
+      block.value &&
+      block.value.content &&
+      Array.isArray(block.value.content)
+    ) {
+      fixBlock(block.value);
+    }
   });
 }
 
@@ -87,11 +113,10 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
     doc: JSON.parse(data)
   };
 
-  // Stumptown produces a `.related_content` for every document. But it
-  // contains data is either not needed or not appropriate for the way
-  // we're using it in the renderer. So mutate it for the specific needs
-  // of the renderer.
-  fixRelatedContent(options.doc);
+  /** Stumptown produces a structure that might not be ideal the
+   * renderer. This is our chance to fix that specifically for the renderer.
+   */
+  fixDocumentStructure(options.doc);
 
   // Find blocks of syntax code and transform it to syntax highlighted code.
   if (options.doc.body) {
