@@ -2,9 +2,6 @@ import React from "react";
 import { Link } from "@reach/router";
 
 export function LinkList({ title, content }) {
-  if (!content.length) {
-    throw new Error(`LinkList with an empty list of links (${title})`);
-  }
   return (
     <>
       <h2>{title}</h2>

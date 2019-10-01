@@ -96,6 +96,20 @@ function fixDocumentStructure(document) {
   });
 }
 
+/** Take the opportunity here to sanity check every document.body[].link_list
+ * section. By doing it here in the cli we can avoid doing these checks
+ * in the runtime code that is shipped.
+ */
+function checkLinkLists(doc) {
+  doc.body
+    .filter(section => section.type === "link_list")
+    .forEach(section => {
+      if (!section.value.content.length) {
+        throw new Error(`LinkList with an empty list of links (${doc.title})`);
+      }
+    });
+}
+
 /** Pretty print the absolute path relative to the current directory. */
 function ppPath(filePath) {
   return path.relative(process.cwd(), filePath);
@@ -117,6 +131,11 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
    * renderer. This is our chance to fix that specifically for the renderer.
    */
   fixDocumentStructure(options.doc);
+
+  /** To avoid attempting to render `link_list` sections that have no
+   * links in runtime, we check it here first.
+   */
+  checkLinkLists(options.doc);
 
   // Find blocks of syntax code and transform it to syntax highlighted code.
   if (options.doc.body) {
