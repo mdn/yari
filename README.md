@@ -300,3 +300,28 @@ from the file `mdn-web-docs.svg` in the repository root. This file is then
 converted to favicons using [realfavicongenerator.net](https://realfavicongenerator.net/).
 To generate new favicons, edit or replace the `mdn-web-docs.svg` file
 and then re-upload that to realfavicongenerator.net.
+
+## Canonical links
+
+By default, every generated `.html` page gets something like this:
+
+    <link ref="canonical" href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video">
+    <meta name="robots" content="noindex, nofollow">
+
+in the `<head>` container tag. The purpose is to not accidentally present
+a staging or testing version of the site other than the eventual
+production instance. This makes sure that Googlebot doesn't incorrectly
+stores in indexes it.
+
+Another thing it creates is a `/robots.txt` file in the root of the build
+directory. It contains just this:
+
+    User-Agent: *
+    Disallow: /
+
+To disable this functionality in the rendered HTML set the environment
+variable `CLI_ALLOW_INDEXING_BOTS` to any truthy value.
+
+You can also set this directly on the cli with:
+
+    yarn workspace cli start --allow-indexing-bots

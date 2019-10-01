@@ -25,6 +25,8 @@ const STATIC_ROOT = path.join(__dirname, "../../client/build");
 const TOUCHFILE = path.join(__dirname, "../../client/src/touchthis.js");
 const BUILD_JSON_SERVER =
   process.env.BUILD_JSON_SERVER || "http://localhost:5555";
+const ALLOW_INDEXING_BOTS = (process.env.ALLOW_INDEXING_BOTS || "") === "true";
+
 sourceMapSupport.install();
 
 /** In the document, there's related_content and it contains keys
@@ -68,7 +70,13 @@ function ppPath(filePath) {
   return path.relative(process.cwd(), filePath);
 }
 
-function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
+function buildHtmlAndJson({
+  filePath,
+  output,
+  buildHtml,
+  quiet,
+  allowIndexingBots = false
+}) {
   const start = new Date();
   const data = fs.readFileSync(filePath, "utf8");
   // const buildHash = crypto
@@ -118,7 +126,7 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
         <ServerLocation url={uri}>
           <App {...options} />
         </ServerLocation>,
-        options
+        { ...options, allowIndexingBots }
       );
     } catch (ex) {
       console.error(`Rendering HTML failed!
@@ -183,6 +191,12 @@ const options = buildOptions({
     default: JSON.parse(process.env.CLI_BUILD_HTML || "false")
   },
 
+  "allow-indexing-bots": {
+    type: "boolean",
+    alias: ["b"],
+    default: JSON.parse(process.env.CLI_ALLOW_INDEXING_BOTS || "false")
+  },
+
   watch: {
     type: "boolean",
     alias: "w",
@@ -201,14 +215,15 @@ if (args["help"]) {
     yarn run run [options] [FILES AND/OR FOLDERS]
 
   Options:
-    -h, --help         print usage information
-    -v, --version      show version info and exit
-    -d, --debug        with more verbose output (currently not supported!)
-    -q, --quiet        as little output as possible
-    -o, --output       root directory to store built files (default ${STATIC_ROOT})
-    -b, --build-html   also generate fully formed index.html files (or env var $CLI_BUILD_HTML)
-    -w, --watch        watch stumptown content for changes
-    -t, --touchfile    file to touch to trigger client rebuild (default ${TOUCHFILE})
+    -h, --help             print usage information
+    -v, --version          show version info and exit
+    -d, --debug            with more verbose output (currently not supported!)
+    -q, --quiet            as little output as possible
+    -o, --output           root directory to store built files (default ${STATIC_ROOT})
+    -b, --build-html       also generate fully formed index.html files (or env var $CLI_BUILD_HTML)
+    -w, --watch            watch stumptown content for changes
+    -t, --touchfile        file to touch to trigger client rebuild (default ${TOUCHFILE})
+    --allow-indexing-bots  don't generate a /robots.txt and canonical <head> tags (default ${ALLOW_INDEXING_BOTS})
 
     Note that the default is to build all packaged .json files found in
     '../stumptown/packaged' (relevant to the cli directory).
@@ -283,7 +298,8 @@ function run(paths) {
       filePath,
       output,
       buildHtml: args["build-html"],
-      quiet: args["quiet"]
+      quiet: args["quiet"],
+      allowIndexingBots: args["allow-indexing-bots"]
     });
   });
 
@@ -321,6 +337,12 @@ function run(paths) {
         titles.titles
       ).length.toLocaleString()} documents.`
     );
+
+    if (!args["allow-indexing-bots"]) {
+      const robotsTxtFilepath = path.join(args.output, "robots.txt");
+      fs.writeFileSync(robotsTxtFilepath, "User-Agent: *\nDisallow: /\n");
+      console.log(`Generated ${ppPath(robotsTxtFilepath)}.`);
+    }
   });
 
   return values;

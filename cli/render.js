@@ -47,6 +47,17 @@ export default (renderApp, options) => {
     $("#root").after(documentDataTag);
   }
 
+  if (!options.allowIndexingBots) {
+    $("head")
+      .append(
+        $('<link ref="canonical">').attr(
+          "href",
+          `https://developer.mozilla.org${doc.mdn_url}`
+        )
+      )
+      .append($('<meta name="robots" content="noindex, nofollow">'));
+  }
+
   $("title").text(pageTitle);
 
   $("#root").html(rendered);
