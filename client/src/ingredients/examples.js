@@ -54,7 +54,7 @@ function RenderLiveSample({ example }) {
         className="live-sample-frame"
         srcDoc={srcdoc}
         title={example.description.title || "Live sample"}
-        width={example.description.width}
+        width={example.description.width || "100%"}
         height={example.description.height}
         frameBorder={0}
       />
@@ -62,7 +62,7 @@ function RenderLiveSample({ example }) {
   );
 }
 
-function RenderExample({ example }) {
+export function Example({ example }) {
   return (
     <>
       {example.description.title && <h3>{example.description.title}</h3>}
@@ -77,7 +77,7 @@ function RenderExample({ example }) {
 
       {/* At the moment the author implicitly signals that an example is live
         by including width and height values for the iframe */}
-      {example.description.width && <RenderLiveSample example={example} />}
+      {example.description.height && <RenderLiveSample example={example} />}
     </>
   );
 }
@@ -87,7 +87,7 @@ export function Examples({ examples }) {
     <>
       <h2>Examples</h2>
       {examples.map((example, i) => (
-        <RenderExample key={i} example={example} />
+        <Example key={i} example={example} />
       ))}
     </>
   );

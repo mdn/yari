@@ -4,7 +4,7 @@ import { Link } from "@reach/router";
 import { NoMatch } from "./routing";
 import { InteractiveExample } from "./ingredients/interactive-example";
 import { Attributes } from "./ingredients/attributes";
-import { Examples } from "./ingredients/examples";
+import { Example, Examples } from "./ingredients/examples";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 
 export class Document extends React.Component {
@@ -149,7 +149,7 @@ function RenderDocumentBody({ doc }) {
     if (section.type === "prose") {
       // Only exceptional few should use the <Prose/> component,
       // as opposed to <ProseWithHeading/>.
-      if (PROSE_NO_HEADING.includes(section.value.id)) {
+      if (!section.value.id || PROSE_NO_HEADING.includes(section.value.id)) {
         return <Prose key={section.value.id} section={section.value} />;
       } else {
         return (
@@ -180,6 +180,8 @@ function RenderDocumentBody({ doc }) {
       );
     } else if (section.type === "examples") {
       return <Examples key={`examples${i}`} examples={section.value} />;
+    } else if (section.type === "example") {
+      return <Example key={`example${i}`} example={section.value} />;
     } else if (section.type === "info_box") {
       // XXX Unfinished!
       // https://github.com/mdn/stumptown-content/issues/106
