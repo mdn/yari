@@ -1,8 +1,8 @@
-import cheerio from "cheerio";
-import Prism from "prismjs";
+const cheerio = require("cheerio");
+const Prism = require("prismjs");
 // import loadLanguages from "prismjs/components/";
 
-export function fixSyntaxHighlighting(document) {
+function fixSyntaxHighlighting(document) {
   function getPrismPluginName(classList) {
     for (let cls of classList) {
       if (/language-\w+/.test(cls)) {
@@ -70,3 +70,5 @@ export function fixSyntaxHighlighting(document) {
         });
     });
 }
+
+module.exports = { fixSyntaxHighlighting };

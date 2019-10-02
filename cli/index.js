@@ -1,33 +1,30 @@
-import React from "react";
-import fs from "fs";
-import path from "path";
-import util from "util";
+const React = require("react");
+const fs = require("fs");
+const path = require("path");
+const util = require("util");
 // const crypto = require("crypto");
 
-// This is necessary because the cli.js is in dist/cli.js
-// and we need to reach the .env this way.
-require("dotenv").config({ path: path.join(__dirname, "../../.env") });
+require("dotenv").config({ path: path.join(__dirname, "../.env") });
 
-import fetch from "node-fetch";
-import sane from "sane";
-import glob from "glob";
-import minimist from "minimist";
-import buildOptions from "minimist-options";
-import { ServerLocation } from "@reach/router";
-import sourceMapSupport from "source-map-support";
-import chalk from "chalk";
+const fetch = require("node-fetch");
+const sane = require("sane");
+const glob = require("glob");
+const minimist = require("minimist");
+const buildOptions = require("minimist-options");
+const { ServerLocation } = require("@reach/router");
+const chalk = require("chalk");
 
-import { App } from "../client/src/app";
-import render from "./render";
-import { fixSyntaxHighlighting } from "./syntax-highlighter";
+const ClientApp = require("client");
+
+const render = require("./render");
+const { fixSyntaxHighlighting } = require("./syntax-highlighter");
 
 const STUMPTOWN_CONTENT_ROOT =
-  process.env.STUMPTOWN_CONTENT_ROOT || path.join(__dirname, "../../stumptown");
-const STATIC_ROOT = path.join(__dirname, "../../client/build");
-const TOUCHFILE = path.join(__dirname, "../../client/src/touchthis.js");
+  process.env.STUMPTOWN_CONTENT_ROOT || path.join(__dirname, "../stumptown");
+const STATIC_ROOT = path.join(__dirname, "../client/dist");
+const TOUCHFILE = path.join(__dirname, "../client/src/touchthis.js");
 const BUILD_JSON_SERVER =
   process.env.BUILD_JSON_SERVER || "http://localhost:5555";
-sourceMapSupport.install();
 
 // Turn callback based functions into functions you can "await".
 const readFile = util.promisify(fs.readFile);
@@ -122,9 +119,11 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
   if (buildHtml) {
     try {
       rendered = render(
-        <ServerLocation url={uri}>
-          <App {...options} />
-        </ServerLocation>,
+        React.createElement(
+          ServerLocation,
+          { url: uri },
+          React.createElement(ClientApp, options)
+        ),
         options
       );
     } catch (ex) {
@@ -271,7 +270,7 @@ function expandFiles(directoriesPatternsOrFiles) {
   }
 
   const filePaths = [];
-  directoriesPatternsOrFiles.forEach(thing => {
+  for (const thing of directoriesPatternsOrFiles) {
     let files = [];
     if (thing.includes("*")) {
       // It's a pattern!
@@ -287,73 +286,67 @@ function expandFiles(directoriesPatternsOrFiles) {
       }
     }
     files.forEach(p => filePaths.includes(p) || filePaths.push(p));
-  });
+  }
   return filePaths;
 }
 
-function run(paths) {
-  return Promise.all(
-    expandFiles(paths).map(filePath => {
+async function run(paths) {
+  const values = await Promise.all(
+    expandFiles(paths).map(async filePath => {
       const output = args.output;
-      return accessFile(filePath, fs.constants.R_OK)
-        .catch(err => {
-          console.error(err.toString());
-          process.exit(1);
-        })
-        .then(() => {
-          return buildHtmlAndJson({
-            filePath,
-            output,
-            buildHtml: args["build-html"],
-            quiet: args["quiet"]
-          });
-        });
+      try {
+        await accessFile(filePath, fs.constants.R_OK);
+      } catch (err) {
+        console.error(err.toString());
+        process.exit(1);
+      }
+      return buildHtmlAndJson({
+        filePath,
+        output,
+        buildHtml: args["build-html"],
+        quiet: args["quiet"]
+      });
     })
-  ).then(async values => {
-    console.log(chalk.green(`Built ${values.length} documents.`));
-    const titles = {};
-    // XXX Support locales!
-    const allTitlesFilepath = path.join(STATIC_ROOT, "titles.json");
-    try {
-      titles.titles = JSON.parse(await readFile(allTitlesFilepath, "utf8"));
-      console.warn(
-        `Updating ${Object.keys(allTitles).length} file ${allTitlesFilepath}`
-      );
-    } catch (ex) {
-      // throw ex;
-      console.warn(`Starting a fresh new ${allTitlesFilepath}`);
-      titles.titles = {};
-    }
-    values.forEach(built => {
-      titles.titles[built.uri] = built.doc.title;
-    });
+  );
 
-    await writeFile(allTitlesFilepath, JSON.stringify(titles, null, 2));
-    console.log(
-      `${allTitlesFilepath} now contains ${Object.keys(
-        titles.titles
-      ).length.toLocaleString()} documents.`
+  console.log(chalk.green(`Built ${values.length} documents.`));
+  const titles = {};
+  // XXX Support locales!
+  const allTitlesFilepath = path.join(STATIC_ROOT, "titles.json");
+  try {
+    titles.titles = JSON.parse(await readFile(allTitlesFilepath, "utf8"));
+    console.warn(
+      `Updating ${Object.keys(allTitles).length} file ${allTitlesFilepath}`
     );
-    return values;
+  } catch (ex) {
+    // throw ex;
+    console.warn(`Starting a fresh new ${allTitlesFilepath}`);
+    titles.titles = {};
+  }
+  values.forEach(built => {
+    titles.titles[built.uri] = built.doc.title;
   });
+
+  await writeFile(allTitlesFilepath, JSON.stringify(titles, null, 2));
+  console.log(
+    `${allTitlesFilepath} now contains ${Object.keys(
+      titles.titles
+    ).length.toLocaleString()} documents.`
+  );
+  return values;
 }
 
 async function runStumptownContentBuildJson(path) {
-  let response;
-  try {
-    response = await fetch(BUILD_JSON_SERVER, {
-      method: "post",
-      body: JSON.stringify({ path }),
-      headers: { "Content-Type": "application/json" }
-    });
-    if (response.ok) {
-      const result = await response.json();
-      return result;
-    } else {
-      throw new Error(`${response.statusText} from ${BUILD_JSON_SERVER}`);
-    }
-  } catch (ex) {
-    throw ex;
+  const response = await fetch(BUILD_JSON_SERVER, {
+    method: "post",
+    body: JSON.stringify({ path }),
+    headers: { "Content-Type": "application/json" }
+  });
+  if (response.ok) {
+    const result = await response.json();
+    return result;
+  } else {
+    throw new Error(`${response.statusText} from ${BUILD_JSON_SERVER}`);
   }
 }
 
@@ -368,7 +361,6 @@ function triggerTouch(documents) {
     )
   );
 }
-
 if (args.watch) {
   const contentDir = path.join(STUMPTOWN_CONTENT_ROOT, "content");
   const watcher = sane(contentDir, {
@@ -381,14 +373,9 @@ if (args.watch) {
     console.log("file changed", filepath);
     const absoluteFilePath = path.join(contentDir, filepath);
 
-    let result;
-    try {
-      result = await runStumptownContentBuildJson(absoluteFilePath);
-    } catch (ex) {
-      throw ex;
-    }
-
-    const { built, error } = result;
+    const { built, error } = await runStumptownContentBuildJson(
+      absoluteFilePath
+    );
     if (error) {
       console.log(
         chalk.red(
@@ -403,12 +390,7 @@ if (args.watch) {
           )} to ${ppPath(built.destPath)}`
         )
       );
-    }
 
-    if (error) {
-      console.error(error);
-    } else {
-      console.log(`Running for packaged file ${built.destPath}`);
       run([built.destPath]).then(documents => {
         const buildFiles = documents.map(d => ppPath(d["filePath"]));
         console.log(chalk.green(`Built documents from: ${buildFiles}`));

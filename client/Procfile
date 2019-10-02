@@ -1,0 +1,2 @@
+server: parcel public/index.html
+watch: parcel watch src/app.js

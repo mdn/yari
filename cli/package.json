@@ -4,10 +4,8 @@
   "main": "index.js",
   "license": "MPL-2.0",
   "scripts": {
-    "build": "webpack --config webpack.config.js --mode=development",
-    "start": "yarn build && node dist/cli.js",
-    "build:watch": "webpack --config webpack.config.js --watch --mode=development",
-    "dev:run": "cross-env NODE_ENV=development nodemon dist/cli.js --watch dist/cli.js",
+    "start": "node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
     "test": "jest",
     "build-json-server": "node build-json-server.js"
   },
@@ -15,6 +13,7 @@
     "@reach/router": "1.2.1",
     "chalk": "2.4.2",
     "cheerio": "1.0.0-rc.3",
+    "client": "0.1.0",
     "cross-env": "^6.0.0",
     "dotenv": "8.0.0",
     "glob": "7.1.4",
@@ -23,29 +22,12 @@
     "prismjs": "1.17.1",
     "react": "16.9.0",
     "react-dom": "16.9.0",
-    "sane": "4.1.0",
-    "source-map-support": "0.5.12"
+    "sane": "4.1.0"
   },
   "devDependencies": {
-    "@babel/core": "7.5.4",
-    "@babel/plugin-proposal-class-properties": "7.5.0",
-    "@babel/plugin-proposal-export-namespace-from": "7.5.2",
-    "@babel/plugin-proposal-function-sent": "7.5.0",
-    "@babel/plugin-proposal-json-strings": "7.2.0",
-    "@babel/plugin-proposal-numeric-separator": "7.2.0",
-    "@babel/plugin-proposal-throw-expressions": "7.2.0",
-    "@babel/plugin-syntax-dynamic-import": "7.2.0",
-    "@babel/plugin-syntax-import-meta": "7.2.0",
-    "@babel/preset-env": "7.5.4",
-    "@babel/preset-react": "7.0.0",
-    "babel-loader": "8.0.6",
     "express": "4.17.1",
-    "ignore-loader": "0.1.2",
     "jest": "24.9.0",
     "node-fetch": "2.6.0",
-    "serve": "11.1.0",
-    "webpack": "4.35.3",
-    "webpack-cli": "3.3.6",
-    "webpack-node-externals": "1.7.2"
+    "serve": "11.1.0"
   }
 }

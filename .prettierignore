@@ -8,8 +8,7 @@ Makefile
 Procfile
 # exclude these directories
 /stumptown/
-/client/build/
-/cli/dist/
+/client/dist/
 /node_modules/
 /server/node_modules/
 /client/node_modules/
@@ -20,4 +19,4 @@ Procfile
 
 # Mist files to ignore
 /client/src/serviceWorker.js
-client/src/touchthis.js
+/client/src/touchthis.js

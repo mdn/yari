@@ -1,24 +1,13 @@
-import path from "path";
+const path = require("path");
 
-import express from "express";
-import sourceMapSupport from "source-map-support";
-
-sourceMapSupport.install();
+const express = require("express");
 
 const app = express();
 
 // XXX Check that that folder exists and has stuff!
-const STATIC_ROOT = path.join(__dirname, "../client/build");
+const STATIC_ROOT = path.join(__dirname, "../client/dist");
 
-app.use(
-  express.static(STATIC_ROOT, {
-    // https://expressjs.com/en/4x/api.html#express.static
-  })
-);
-
-// app.get("/", (req, res) => {
-//   res.status(200).send("Hello kind world!");
-// });
+app.use(express.static(STATIC_ROOT));
 
 // Catch-all
 app.get("/*", (req, res) => {

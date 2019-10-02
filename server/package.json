@@ -4,18 +4,13 @@
   "main": "index.js",
   "license": "MPL-2.0",
   "scripts": {
-    "start": "nodemon index.js --exec babel-node --presets babel-preset-env"
+    "start": "nodemon index.js"
   },
   "dependencies": {
     "dotenv": "8.0.0",
-    "express": "4.17.1",
-    "source-map-support": "0.5.12"
+    "express": "4.17.1"
   },
   "devDependencies": {
-    "babel-cli": "6.26.0",
-    "babel-core": "6.26.3",
-    "babel-loader": "8.0.6",
-    "babel-preset-env": "1.7.0",
     "nodemon": "1.19.1"
   }
 }

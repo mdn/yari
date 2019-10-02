@@ -23,9 +23,8 @@ yarn-debug.log*
 yarn-error.log*
 server/node_modules/
 client/node_modules/
-client/build/
-server/dist/
+client/.cache/
+client/dist/
 cli/node_modules/
-cli/dist/
 watcher/node_modules/
 client/src/touchthis.js

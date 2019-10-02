@@ -1,11 +1,11 @@
-import cheerio from "cheerio";
-import fs from "fs";
-import path from "path";
-import { renderToString } from "react-dom/server";
+const cheerio = require("cheerio");
+const fs = require("fs");
+const path = require("path");
+const { renderToString } = require("react-dom/server");
 
 function readBuildHtml() {
   return fs.readFileSync(
-    path.resolve(__dirname, "../../client/build/index.html"),
+    path.resolve(__dirname, "../client/dist/index.html"),
     "utf8"
   );
 }
@@ -21,7 +21,7 @@ if (process.env.NODE_ENV !== "development") {
   }
 }
 
-export default (renderApp, options) => {
+module.exports = (renderApp, options) => {
   if (process.env.NODE_ENV === "development") {
     // Reread on every request
     buildHtml = readBuildHtml();
