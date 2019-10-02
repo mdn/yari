@@ -17,7 +17,7 @@ test("input placeholder changes when focused", () => {
 describe("Tests using XHR", () => {
   beforeEach(() => {
     // Mock Fetch API
-    jest.spyOn(global, "fetch").mockImplementation(() =>
+    global.fetch = jest.fn(() =>
       Promise.resolve({
         status: 200,
         ok: true,

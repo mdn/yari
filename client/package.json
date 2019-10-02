@@ -44,6 +44,12 @@
   "devDependencies": {
     "@testing-library/react": "^9.1.4",
     "foreman": "^3.0.1",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^24.9.0"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^.+\\.(css|scss)$": "identity-obj-proxy"
+    }
   }
 }
