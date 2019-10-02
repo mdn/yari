@@ -54,5 +54,11 @@ export default (renderApp, options) => {
   // Every script tag that create-react-app inserts, make them defer
   $("body script[src]").attr("defer", "");
 
+  // Move the script tags from the body to the head.
+  // That way the browser can notice, and start downloading these files sooner
+  // but they'll still be executed after the first render.
+  $("body script[src]").appendTo("head");
+  $("body script[src]").remove();
+
   return $.html();
 };
