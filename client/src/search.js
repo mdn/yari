@@ -46,6 +46,12 @@ export class SearchWidget extends React.Component {
     }
   };
 
+  getCurrentLocale = () => {
+    return (
+      (this.props.pathname && this.props.pathname.split("/")[1]) || "en-US"
+    );
+  };
+
   componentDidMount() {
     document.addEventListener("keydown", this.focusOnSearchMaybe);
   }
@@ -59,7 +65,8 @@ export class SearchWidget extends React.Component {
           lastQ: "",
           q: "",
           redirectTo: null,
-          showSearchResults: false
+          showSearchResults: false,
+          locale: this.props.pathname.split("/")[1] || "en-US"
         });
       }
     }
@@ -77,7 +84,7 @@ export class SearchWidget extends React.Component {
       // Always do the XHR network request (hopefully good HTTP caching
       // will make this pleasant for the client) but localStorage is
       // always faster than XHR even with localStorage's flaws.
-      const localStorageCacheKey = "titles";
+      const localStorageCacheKey = `${this.getCurrentLocale()}-titles`;
       const storedTitlesRaw = localStorage.getItem(localStorageCacheKey);
       if (storedTitlesRaw) {
         let storedTitles = null;
@@ -97,9 +104,7 @@ export class SearchWidget extends React.Component {
 
       let response;
       try {
-        // XXX support locales!
-        //
-        response = await fetch("/titles.json");
+        response = await fetch(`/${this.getCurrentLocale()}/titles.json`);
       } catch (ex) {
         if (this.dismounted) return;
         return this.setState({ serverError: ex, showSearchResults: true });
@@ -117,9 +122,11 @@ export class SearchWidget extends React.Component {
       // So we can keep track of how old the data is when stored
       // in localStorage.
       titles._fetchDate = new Date().getTime();
-      // XXX support proper cache keys based on locales
       try {
-        localStorage.setItem("titles", JSON.stringify(titles));
+        localStorage.setItem(
+          `${this.getCurrentLocale()}-titles`,
+          JSON.stringify(titles)
+        );
       } catch (ex) {
         console.warn(
           ex,
