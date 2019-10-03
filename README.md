@@ -117,12 +117,13 @@ run:
 
 ## Building
 
-The beauty of a `Makefile` is that it's a recorded "snapshot" of some good
+The beauty of `package.json` is that it's a recorded "snapshot" of some good
 working default commands. If you're trying to do something slightly different,
-such as hacking on some feature, you can open the `Makefile` and take
+such as hacking on some feature, you can open the `package.json` and take
 *inspriation* from it rather than thinking it's the only way. So, open
 it and learn how the default commands work.
 
+### Deployment Build
 For example, the most important command beyond the active development one
 mentioned in the section above is:
 
@@ -132,6 +133,14 @@ That one does "everything" and you end up with a full directory that has
 all the static bundles of JavaScript, CSS, and the .html files. That directory
 can be shipped to a static hosting platform like AWS S3 for example.
 
+### Building a specific file
+To build a page based on an existing content JSON, you need to run the cli with
+a relative path to the content.
+
+    cd cli
+    yarn start ../stumptown/packaged/html/HTML.json
+
+### Specifying a different content directory
 If you're actively working on a piece of content in `stumptown-content` but
 for convenience you don't want to mess with the `stumptown-content` that
 is available here in this project as a *git submodule* (named `stumptown`),
