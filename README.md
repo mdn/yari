@@ -108,7 +108,7 @@ the browser to see the effect immediately. If you want re-build the
 content made available to the `React` components, open another terminal
 and run:
 
-    yarn build-content
+    yarn build
 
 To re-run any of the installation and build steps you can, at any time,
 run:
@@ -204,9 +204,9 @@ host your static site. Build everything with:
 
     yarn deployment-build
 
-What it does is a mix of `yarn workspace server start` and 
+What it does is a mix of `yarn workspace server start` and
 `yarn workspace client start` but without starting a server. It also,
-builds a `index.html` file for every document found and processed by the 
+builds a `index.html` file for every document found and processed by the
 `cli`. This whole directory is ready to be uploaded to S3 or Netlify.
 
 ## Goals and Not-Goals
