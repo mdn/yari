@@ -14,7 +14,7 @@
     "prismjs": "1.17.1",
     "react": "16.9.0",
     "react-dom": "16.9.0",
-    "react-scripts": "3.1.2",
+    "react-scripts": "3.2.0",
     "typeface-zilla-slab": "0.0.72"
   },
   "scripts": {
