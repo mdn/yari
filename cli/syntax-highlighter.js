@@ -56,17 +56,27 @@ export function fixSyntaxHighlighting(document) {
 
   // Now loop over, and mutate, all 'example' sections
   document.body
-    .filter(thing => thing.type === "examples")
+    .filter(thing => thing.type === "example" || thing.type === "examples")
     .forEach(section => {
-      section.value
-        .filter(block => block.sources)
-        .forEach(block => {
-          Object.entries(block.sources).forEach(([key, source]) => {
-            if (Prism.languages[key]) {
-              const html = Prism.highlight(source, Prism.languages[key], key);
-              block.sources[`${key}_html`] = html;
-            }
+      if (Array.isArray(section.value)) {
+        section.value
+          .filter(block => block.sources)
+          .forEach(block => {
+            highlightSources(block.sources);
           });
-        });
+      } else {
+        if (!!section.value.sources) {
+          highlightSources(section.value.sources);
+        }
+      }
     });
+}
+
+function highlightSources(sources) {
+  Object.entries(sources).forEach(([key, source]) => {
+    if (Prism.languages[key]) {
+      const html = Prism.highlight(source, Prism.languages[key], key);
+      sources[`${key}_html`] = html;
+    }
+  });
 }
