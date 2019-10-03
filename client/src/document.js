@@ -5,6 +5,7 @@ import { NoMatch } from "./routing";
 import { InteractiveExample } from "./ingredients/interactive-example";
 import { Attributes } from "./ingredients/attributes";
 import { Example, Examples } from "./ingredients/examples";
+import { LinkList } from "./ingredients/link-list";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 
 export class Document extends React.Component {
@@ -188,6 +189,10 @@ function RenderDocumentBody({ doc }) {
       console.warn("Don't know how to deal with info_box!");
       // console.log(section);
       return null;
+    } else if (section.type === "link_list") {
+      return (
+        <LinkList title={section.value.title} links={section.value.content} />
+      );
     } else {
       console.warn(section);
       throw new Error(`No idea how to handle a '${section.type}' section`);

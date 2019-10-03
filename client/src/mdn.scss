@@ -146,6 +146,10 @@ div.content {
     padding: 6px;
     border-radius: 3px;
   }
+
+  .link-list {
+    h2 { border-bottom: 1px solid #eaecef; }
+  }
 }
 
 .external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external) {
