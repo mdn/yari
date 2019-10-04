@@ -13,31 +13,31 @@ These steps should get you started, locally, straight away:
     open http://localhost:3000
 
 To really understand how it starts and how to break down the various
-tools, open `Procfile` or the `Makefile`. Or, read on...
+tools, open `Procfile` or the `package.json`. Or, read on...
 
 ## Overview
 
-[stumptown-experiment](https://github.com/mdn/stumptown-experiment) is a
+[stumptown-content](https://github.com/mdn/stumptown-content) is a
 couple of things:
 
-1. It's the source of truth. The content comes in the form of `.md` files and
+1. **It's the source of truth.** The content comes in the form of `.md` files and
    associated `.yaml` files that supplies the required metadata. These files
    are what's expected to be edited, with pull requests, by people who want to
    improve the content.
 
-2. Recipe definitions. It's a bit like a template if you like. Each section
+2. **Recipe definitions.** It's a bit like a template if you like. Each section
    of content is broken up into pieces, by keys, such as `prose.short_description`.
    What the recipes do is they dictate how these pieces are supposed to be put
    together in a final block of HTML.
 
-3. Scripts that convert `.md` files (with their respective `.yaml` file)
+3. **Scripts** that convert `.md` files (with their respective `.yaml` file)
    into blocks of HTML strings. These are put into `.json` files keyed by the
    pieces for each content page. Once transformed from `.md` to `.json`,
    together with the recipe, you can construct a final block of HTML
 
-What this project does is;
+What *this* project does is;
 
-**From content in stumptown, produce a block of HTML using React components.**
+**From content in stumptown, produce HTML using React components.**
 
 But this project also attempts to make those pages ready for viewing
 in a browser. It uses `create-react-app` to define a HTML template and
@@ -132,6 +132,10 @@ mentioned in the section above is:
 That one does "everything" and you end up with a full directory that has
 all the static bundles of JavaScript, CSS, and the .html files. That directory
 can be shipped to a static hosting platform like AWS S3 for example.
+
+Note that as part of `yarn start` it also starts up a plain HTTP server on
+`http://localhost:5000` which simply serves the generates static assets and the
+the `.html` files.
 
 ### Building a specific file
 To build a page based on an existing content JSON, you need to run the cli with
