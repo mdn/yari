@@ -186,15 +186,14 @@ function RenderDocumentBody({ doc }) {
     } else if (section.type === "info_box") {
       // XXX Unfinished!
       // https://github.com/mdn/stumptown-content/issues/106
-      // console.warn("Don't know how to deal with info_box!");
-      // console.log(section);
+      console.warn("Don't know how to deal with info_box!");
       return null;
     } else if (section.type === "link_list") {
       return (
         <LinkList title={section.value.title} links={section.value.content} />
       );
     } else {
-      // console.warn(section);
+      console.warn(section);
       throw new Error(`No idea how to handle a '${section.type}' section`);
     }
   });
