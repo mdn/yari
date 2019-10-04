@@ -154,7 +154,12 @@ function RenderDocumentBody({ doc }) {
       // Only exceptional few should use the <Prose/> component,
       // as opposed to <ProseWithHeading/>.
       if (!section.value.id || PROSE_NO_HEADING.includes(section.value.id)) {
-        return <Prose key={section.value.id} section={section.value} />;
+        return (
+          <Prose
+            key={section.value.id || `prose${i}`}
+            section={section.value}
+          />
+        );
       } else {
         return (
           <ProseWithHeading
