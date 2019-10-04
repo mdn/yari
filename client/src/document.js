@@ -187,7 +187,6 @@ function RenderDocumentBody({ doc }) {
       // XXX Unfinished!
       // https://github.com/mdn/stumptown-content/issues/106
       console.warn("Don't know how to deal with info_box!");
-      // console.log(section);
       return null;
     } else if (section.type === "link_list") {
       return (

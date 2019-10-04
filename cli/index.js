@@ -296,10 +296,6 @@ function run(paths) {
     expandFiles(paths).map(filePath => {
       const output = args.output;
       return accessFile(filePath, fs.constants.R_OK)
-        .catch(err => {
-          console.error(err.toString());
-          process.exit(1);
-        })
         .then(() => {
           return buildHtmlAndJson({
             filePath,
@@ -307,6 +303,10 @@ function run(paths) {
             buildHtml: args["build-html"],
             quiet: args["quiet"]
           });
+        })
+        .catch(ex => {
+          console.error(ex);
+          throw ex;
         });
     })
   ).then(async values => {
@@ -417,5 +417,7 @@ if (args.watch) {
     }
   });
 } else {
-  run(paths);
+  run(paths).catch(() => {
+    process.exitCode = 1;
+  });
 }
