@@ -5,9 +5,6 @@ export function Prose({ section }) {
 }
 
 export function ProseWithHeading({ id, section }) {
-  if (!id) {
-    id = section.title.replace(/\s+/g, "_").trim();
-  }
   return (
     <>
       <h2 id={id}>{section.title}</h2>
