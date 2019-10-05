@@ -8,7 +8,7 @@ export function ProseWithHeading({ id, section }) {
   return (
     <>
       <h2 id={id}>{section.title}</h2>
-      <div dangerouslySetInnerHTML={{ __html: section.content }} />
+      <Prose section={section} />
     </>
   );
 }
