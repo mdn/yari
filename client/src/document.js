@@ -2,6 +2,9 @@ import React from "react";
 import { Link } from "@reach/router";
 
 import { NoMatch } from "./routing";
+
+// Ingredients
+import { Prose, ProseWithHeading } from "./ingredients/prose";
 import { InteractiveExample } from "./ingredients/interactive-example";
 import { Attributes } from "./ingredients/attributes";
 import { Example, Examples } from "./ingredients/examples";
@@ -151,7 +154,12 @@ function RenderDocumentBody({ doc }) {
       // Only exceptional few should use the <Prose/> component,
       // as opposed to <ProseWithHeading/>.
       if (!section.value.id || PROSE_NO_HEADING.includes(section.value.id)) {
-        return <Prose key={section.value.id} section={section.value} />;
+        return (
+          <Prose
+            key={section.value.id || `prose${i}`}
+            section={section.value}
+          />
+        );
       } else {
         return (
           <ProseWithHeading
@@ -197,22 +205,6 @@ function RenderDocumentBody({ doc }) {
       throw new Error(`No idea how to handle a '${section.type}' section`);
     }
   });
-}
-
-function Prose({ section }) {
-  return <div dangerouslySetInnerHTML={{ __html: section.content }} />;
-}
-
-function ProseWithHeading({ id, section }) {
-  if (!id) {
-    id = section.title.replace(/\s+/g, "_").trim();
-  }
-  return (
-    <>
-      <h2 id={id}>{section.title}</h2>
-      <div dangerouslySetInnerHTML={{ __html: section.content }} />
-    </>
-  );
 }
 
 function Contributors({ contributors }) {
