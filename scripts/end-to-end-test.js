@@ -12,17 +12,16 @@ const cheerio = require("cheerio");
    * is sane.
    */
 
-  // XXX Windows?
   const directory = "client/build/en-US/docs/Web/HTML/Element/video/";
   const videoJsonRaw = fs.readFileSync(
     path.join(directory, "index.json"),
     "utf8"
   );
   const videoJson = JSON.parse(videoJsonRaw);
-  if (!videoJson.document.title) {
+  if (!videoJson.doc.title) {
     throw new Error("No document.title");
   }
-  if (!videoJson.document.body || !videoJson.document.body.length) {
+  if (!videoJson.doc.body || !videoJson.doc.body.length) {
     throw new Error("No document.body");
   }
   const videoHtmlRaw = fs.readFileSync(
