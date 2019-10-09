@@ -116,6 +116,19 @@ run:
 
     yarn
 
+### Testing production builds
+
+Suppose that you're working on a feature or bug that only relates to the
+files being compiled for production use, here's how you'd do that:
+
+    yarn deployment-build
+    yarn start server
+    open http://localhost:5000/
+
+You can keep the `yarn start server` in a separate terminal and keep it
+as you run `yarn deployment-build` over and over. That server, on port 5000,
+just serves the built files and nothing else.
+
 ## Building
 
 The beauty of `package.json` is that it's a recorded "snapshot" of some good
