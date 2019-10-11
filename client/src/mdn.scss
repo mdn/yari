@@ -17,9 +17,12 @@ div.sidebar {
   position: relative;
   overflow: hidden;
   font-size: 16px;
-  font-size: .88889rem;
+  font-size: 0.88889rem;
 
-  h3, h4, h5, h6 {
+  h3,
+  h4,
+  h5,
+  h6 {
     // The main content area might not start with a <hX> tag.
     // By doing this, the top of the sidebar aligns with the top
     // of the content.
@@ -49,9 +52,8 @@ div.sidebar {
     }
 
     summary::-webkit-details-marker {
-      display:none;
+      display: none;
     }
-
 
     summary:before {
       content: "▶︎";
@@ -61,8 +63,8 @@ div.sidebar {
     }
   }
 
-  details[open]>summary:before {
-    content: '\25BC\FE0E';
+  details[open] > summary:before {
+    content: "\25BC\FE0E";
   }
 
   ol {
@@ -148,7 +150,9 @@ div.content {
   }
 
   .link-list {
-    h2 { border-bottom: 1px solid #eaecef; }
+    h2 {
+      border-bottom: 1px solid #eaecef;
+    }
   }
 }
 
@@ -168,7 +172,7 @@ div.content {
 
 .external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):before, .external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):before {
   display: inline-block;
-  content: '';
+  content: "";
   background-repeat: no-repeat;
 }
 
