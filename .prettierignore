@@ -1,5 +1,3 @@
-# exclude everything by default
-*.*
 # Backup files
 *~
 # exclude these files
@@ -15,8 +13,7 @@ Procfile
 /client/node_modules/
 /cli/node_modules/
 /deployment/node_modules/
-# white-list files we want to process
-!*.js
+/client/src/water.css/
 
 # Mist files to ignore
 /client/src/serviceWorker.js
