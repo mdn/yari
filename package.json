@@ -7,8 +7,8 @@
   "license": "MPL-2.0",
   "scripts": {
     "postinstall": "cd stumptown && npm install && git checkout package-lock.json",
-    "prettier-check": "prettier --check **/*.{js,jsx,scss,css,html}",
-    "prettier-format": "prettier --write **/*.{js,jsx,scss,css,html}",
+    "prettier-check": "prettier --check **/*.{js,json,scss,html}",
+    "prettier-format": "prettier --write **/*.{js,json,scss,html}",
     "test": "yarn prettier-check && yarn workspace cli test && yarn workspace client test",
     "build": "cd stumptown && npm run build-json html && cd .. && yarn workspace client build && yarn workspace cli start",
     "deployment-build": "cross-env CLI_BUILD_HTML=true yarn build",
