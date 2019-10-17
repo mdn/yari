@@ -274,15 +274,12 @@ instead of the file path on disk.
 
 First, to find out which applications have out-of-date packages, run:
 
-    ./bin/yarn-outdated-all.sh
+    yarn outdated
 
-It won't stop if any one app has outdated packages. It will go through
-all of them. Suppose that it mentions outdated packages, go into the app
-folder and run something like this:
+If it mentions outdated packages, run and select the packages you want to
+upgrade: 
 
-    cd cli
-    yarn outdated  # optional if you already know from ./bin/yarn-outdated-all.sh
-    yarn upgrade webpack --latest
+    yarn upgrade-interactive
 
 ### Upgrading React
 
@@ -291,9 +288,10 @@ important that both of these project folders have the same version of React
 so that server-side rendering and client-side rendering have matching version.
 
 Also, `react` and `react-dom` should be upgraded at the same time since they
-share release cycles. To help with all of this, run:
+share release cycles. To do that run the following and make sure to update
+both the client's and the cli's `react` and `react-dom` dependencies.
 
-    ./bin/yarn-upgrade-all-reacts.sh
+    yarn upgrade-interactive --latest
 
 ## Icons and logos
 
