@@ -163,12 +163,9 @@ export function BrowserCompatibilityTable({ data }) {
   return (
     <>
       {data.title && <h2 id={data.id}>{data.title}</h2>}
+      {!data && fetchError && <FetchError error={fetchError} />}
       {/* Animate this? */}
-      {!data && fetchError ? (
-        <FetchError error={fetchError} />
-      ) : (
-        <p>Loading browser compatibility table...</p>
-      )}
+      {!data && !fetchError && <p>Loading browser compatibility table...</p>}
       {data && <BrowserCompatibilityTableContent data={data} />}
     </>
   );
