@@ -107,15 +107,28 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
   const destination = path.join(output, uri);
   const outfileHtml = path.join(destination, "index.html");
   const outfileJson = path.join(destination, "index.json");
-  // const outfileHash = path.join(destination, "index.hash");
 
-  // let previousHash = "";
-  // try {
-  //   previousHash = fs.readFileSync(outfileHash, "utf8");
-  // } catch (ex) {
-  //   // That's fine
-  // }
-  // console.log("PREVIOUS HASH", [previousHash, buildHash]);
+  fs.mkdirSync(destination, { recursive: true });
+
+  // Extract out all bcd sections into their own files
+  const bcdFiles = [];
+  options.doc.body.forEach(section => {
+    if (section.type === "browser_compatibility") {
+      // Most pages have just 1 BCD table, but it's not a guarantee.
+      const id = bcdFiles.length ? `bcd-${bcdFiles.length + 1}` : "bcd";
+      const outfile = path.join(destination, `${id}.json`);
+      fs.writeFileSync(
+        outfile,
+        process.env.NODE_ENV === "development"
+          ? JSON.stringify(section.value, null, 2)
+          : JSON.stringify(section.value)
+      );
+      bcdFiles.push(outfile);
+      // section.bcd_id = id;
+      // delete section.value;
+      section.value = { uri: path.basename(outfile) };
+    }
+  });
 
   let rendered = null;
   if (buildHtml) {
@@ -134,10 +147,10 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
     }
   }
 
-  fs.mkdirSync(destination, { recursive: true });
   if (rendered) {
     fs.writeFileSync(outfileHtml, rendered);
   }
+
   fs.writeFileSync(
     outfileJson,
     process.env.NODE_ENV === "development"
@@ -151,6 +164,9 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
     if (rendered) {
       outMsg += ` and ${ppPath(outfileHtml)}`;
     }
+    bcdFiles.forEach(p => {
+      outMsg += ` and ${ppPath(p)}`;
+    });
     console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
   }
   return { filePath, doc: options.doc, uri };

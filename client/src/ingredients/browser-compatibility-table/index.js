@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState, useEffect } from "react";
 import { Platforms } from "./platforms";
 import { Browsers } from "./browsers";
 import { Rows } from "./rows";
@@ -20,7 +20,7 @@ const BROWSERS = {
   "webextensions-mobile": ["firefox_android"]
 };
 
-export class BrowserCompatibilityTable extends Component {
+class BrowserCompatibilityTableContent extends Component {
   state = {
     currentNoteId: null,
     hasDeprecation: false,
@@ -91,7 +91,6 @@ export class BrowserCompatibilityTable extends Component {
     );
     return (
       <>
-        {data.title && <h2 id={data.id}>{data.title}</h2>}
         <a
           className="bc-github-link external external-icon"
           href="https://github.com/mdn/browser-compat-data"
@@ -99,7 +98,7 @@ export class BrowserCompatibilityTable extends Component {
         >
           Update compatibility data on GitHub
         </a>
-        <table key="bc-table" className="bc-table bc-table-web">
+        <table className="bc-table bc-table-web">
           <thead>
             <Platforms platforms={platforms} browsers={BROWSERS} />
             <Browsers displayBrowsers={displayBrowsers} />
@@ -126,4 +125,83 @@ export class BrowserCompatibilityTable extends Component {
       </>
     );
   }
+}
+
+export function BrowserCompatibilityTable({ data }) {
+  const { uri } = data;
+  const [data, setData] = useState(null);
+  const [fetchError, setFetchError] = useState(null);
+  useEffect(() => {
+    let dismounted = false;
+    let url = document.location.pathname;
+
+    // Hopefully this hack won't be necessary once we sort out our
+    // CloudFront redirect stuff.
+    url = url.replace(/index\.html$/, "");
+
+    if (!url.endsWith("/")) url += "/";
+    url += uri;
+    fetch(url)
+      .then(r => {
+        if (!r.ok) {
+          return setFetchError(r);
+        }
+        return r.json();
+      })
+      .then(data => {
+        if (!dismounted) {
+          setData(data);
+        }
+      })
+      .catch(err => {
+        setFetchError(err);
+      });
+    return () => {
+      dismounted = true;
+    };
+  }, [uri]);
+  return (
+    <>
+      {data.title && <h2 id={data.id}>{data.title}</h2>}
+      {/* Animate this? */}
+      {!data && fetchError ? (
+        <FetchError error={fetchError} />
+      ) : (
+        <p>Loading browser compatibility table...</p>
+      )}
+      {data && <BrowserCompatibilityTableContent data={data} />}
+    </>
+  );
+}
+
+function FetchError({ error }) {
+  let isResponse = false;
+  try {
+    isResponse = error instanceof window.Response;
+  } catch (err) {
+    // Old browsers don't support '... instanceof window.Response'
+  }
+  if (isResponse) {
+    return (
+      <p className="bcd-fetch-error">
+        Unable to load the JSON from the server.
+        <br />
+        <small>
+          <code>
+            {error.status} on {error.url}
+          </code>
+        </small>
+      </p>
+    );
+  }
+  return (
+    <p className="bcd-fetch-error">
+      Problem loading JSON from the server
+      <br />
+      <small>
+        <code>{error.toString()}</code>
+      </small>
+      .
+    </p>
+  );
 }
