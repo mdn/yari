@@ -17,7 +17,6 @@
     "cheerio": "1.0.0-rc.3",
     "cross-env": "^6.0.3",
     "dotenv": "8.2.0",
-    "glob": "7.1.4",
     "minimist": "1.2.0",
     "minimist-options": "4.0.2",
     "prismjs": "1.17.1",
