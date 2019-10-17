@@ -93,6 +93,12 @@ export class Document extends React.Component {
 }
 
 function RenderSideBar({ doc }) {
+  if (!doc.related_content) {
+    if (doc.sidebarHTML) {
+      return <div dangerouslySetInnerHTML={{ __html: doc.sidebarHTML }} />;
+    }
+    return null;
+  }
   return doc.related_content.map(node => (
     <SidebarLeaf
       key={node.title}

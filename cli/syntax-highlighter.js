@@ -49,6 +49,25 @@ export function fixSyntaxHighlighting(document) {
         elem.html(html);
         mutations++;
       });
+
+      if (!mutations) {
+        // Legacy ones that haven't come from Markdown
+        $("pre[class^=brush]").each((_, blob) => {
+          const elem = $(blob);
+          const name = elem
+            .attr("class")
+            .replace(/^brush:/, "")
+            .trim();
+          const prismLang = Prism.languages[name];
+          if (!prismLang) {
+            return; // bail!
+          }
+          const code = elem.text();
+          const html = Prism.highlight(code, prismLang, name);
+          elem.html(html);
+          mutations++;
+        });
+      }
       if (mutations) {
         section.value.content = $.html();
       }

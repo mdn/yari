@@ -58,9 +58,11 @@ function fixRelatedContent(document) {
       });
     }
   }
-  document.related_content.forEach(block => {
-    fixBlock(block);
-  });
+  if (document.related_content) {
+    document.related_content.forEach(block => {
+      fixBlock(block);
+    });
+  }
 }
 
 /** Pretty print the absolute path relative to the current directory. */
