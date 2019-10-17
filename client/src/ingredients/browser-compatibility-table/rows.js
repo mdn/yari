@@ -2,11 +2,11 @@ import React from "react";
 import { BrowserSupportDetail } from "./browser-support-detail";
 import { BrowserSupportNotes } from "./browser-support-notes";
 
-function buildCompatibilityObject(compatibilityData, displayBrowsers) {
+function buildCompatibilityObject(query, compatibilityData) {
   const features = {};
 
   if (!!compatibilityData.__compat) {
-    const name = compatibilityData.__compat.mdn_url.split("/").pop();
+    const name = query.split(".").pop();
     features[name] = compatibilityData.__compat;
     for (const compat in compatibilityData) {
       if (compat !== "__compat" && !!compatibilityData[compat]["__compat"]) {
@@ -179,10 +179,9 @@ export function Rows({
     hasNotes
   ] = [false, false, false, false, false, false, false];
   let indexNotes;
-
   const compatibility = buildCompatibilityObject(
-    compatibilityData,
-    displayBrowsers
+    compatibilityData.query,
+    compatibilityData.data
   );
   const browserCompatibilityRows = [];
 
