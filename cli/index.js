@@ -243,15 +243,13 @@ if (!paths.length) {
   paths.push(path.join(STUMPTOWN_CONTENT_ROOT, "packaged"));
 }
 
-/** Given an array of "things" return all distinct .json files.
+/** Given an array of directories or files return all distinct .json files.
  *
- * Note that these "things" can be a directory, a file path, or a list of
- * file paths.
- * Only if each thing is a directory do we search for *.json files
+ * Only if it's a directory do we search for *.json files
  * in there recursively.
  */
-function expandFiles(directoriesPatternsOrFiles) {
-  function findFiles(directory, extension = ".json", filepaths = []) {
+function expandFiles(directoriesOrFiles) {
+  function findFiles(directory, extension, filepaths = []) {
     if (path.basename(directory) === "node_modules") {
       throw new Error(
         `Can't dig deeper into ${directory}. ` +
@@ -271,15 +269,13 @@ function expandFiles(directoriesPatternsOrFiles) {
   }
 
   const filePaths = [];
-  directoriesPatternsOrFiles.forEach(thing => {
+  directoriesOrFiles.forEach(thing => {
     let files = [];
     const lstat = fs.lstatSync(thing);
     if (lstat.isDirectory()) {
-      files = findFiles(thing);
-    } else if (lstat.isFile()) {
-      files = [thing];
+      files = findFiles(thing, ".json");
     } else {
-      throw new Error(`${thing} is neither file nor directory`);
+      files = [thing];
     }
     files.forEach(p => filePaths.includes(p) || filePaths.push(p));
   });
