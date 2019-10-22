@@ -91,7 +91,7 @@ export class BrowserCompatibilityTable extends Component {
     );
     return (
       <>
-        <h2 id="Browser_compatibility">Browser Compatibility</h2>
+        {data.title && <h2 id={data.id}>{data.title}</h2>}
         <a
           className="bc-github-link external external-icon"
           href="https://github.com/mdn/browser-compat-data"

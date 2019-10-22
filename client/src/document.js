@@ -7,7 +7,7 @@ import { NoMatch } from "./routing";
 import { Prose, ProseWithHeading } from "./ingredients/prose";
 import { InteractiveExample } from "./ingredients/interactive-example";
 import { Attributes } from "./ingredients/attributes";
-import { Example, Examples } from "./ingredients/examples";
+import { Examples } from "./ingredients/examples";
 import { LinkList } from "./ingredients/link-list";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 
@@ -180,17 +180,19 @@ function RenderDocumentBody({ doc }) {
       );
     } else if (section.type === "attributes") {
       return <Attributes key={`attributes${i}`} attributes={section.value} />;
+    } else if (section.type === "specifications") {
+      // Coming soon! https://github.com/mdn/stumptown-renderer/pull/192
+      console.warn("Don't know how to deal with 'specifications'");
+      return null;
     } else if (section.type === "browser_compatibility") {
       return (
         <BrowserCompatibilityTable
-          key="browser_compatibility"
+          key={`browser_compatibility${i}`}
           data={section.value}
         />
       );
     } else if (section.type === "examples") {
       return <Examples key={`examples${i}`} examples={section.value} />;
-    } else if (section.type === "example") {
-      return <Example key={`example${i}`} example={section.value} />;
     } else if (section.type === "info_box") {
       // XXX Unfinished!
       // https://github.com/mdn/stumptown-content/issues/106

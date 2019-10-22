@@ -56,19 +56,13 @@ export function fixSyntaxHighlighting(document) {
 
   // Now loop over, and mutate, all 'example' sections
   document.body
-    .filter(thing => thing.type === "example" || thing.type === "examples")
+    .filter(section => section.type === "examples")
     .forEach(section => {
-      if (Array.isArray(section.value)) {
-        section.value
-          .filter(block => block.sources)
-          .forEach(block => {
-            highlightSources(block.sources);
-          });
-      } else {
-        if (!!section.value.sources) {
-          highlightSources(section.value.sources);
-        }
-      }
+      section.value.examples
+        .filter(block => block.sources)
+        .forEach(block => {
+          highlightSources(block.sources);
+        });
     });
 }
 
