@@ -10,7 +10,6 @@ require("dotenv").config({ path: path.join(__dirname, "../../.env") });
 
 import fetch from "node-fetch";
 import sane from "sane";
-import glob from "glob";
 import minimist from "minimist";
 import buildOptions from "minimist-options";
 import { ServerLocation } from "@reach/router";
@@ -244,47 +243,39 @@ if (!paths.length) {
   paths.push(path.join(STUMPTOWN_CONTENT_ROOT, "packaged"));
 }
 
-/** Given an array of "things" return all distinct .json files.
+/** Given an array of directories or files return all distinct .json files.
  *
- * Note that these "things" can be a directory, a file path, or a
- * pattern.
- * Only if each thing is a directory do we search for *.json files
+ * Only if it's a directory do we search for *.json files
  * in there recursively.
  */
-function expandFiles(directoriesPatternsOrFiles) {
-  function findFiles(directory) {
+function expandFiles(directoriesOrFiles) {
+  function findFiles(directory, extension, filepaths = []) {
     if (path.basename(directory) === "node_modules") {
       throw new Error(
         `Can't dig deeper into ${directory}. ` +
           `Doesn't look like stumptown content packaged location`
       );
     }
-    const found = glob.sync(path.join(directory, "*.json"));
-
-    fs.readdirSync(directory, { withFileTypes: true })
-      .filter(dirent => dirent.isDirectory())
-      .map(dirent => path.join(directory, dirent.name))
-      .map(findFiles)
-      .forEach(files => found.push(...files));
-
-    return found;
+    const files = fs.readdirSync(directory);
+    for (let filename of files) {
+      const filepath = path.join(directory, filename);
+      if (fs.statSync(filepath).isDirectory()) {
+        findFiles(filepath, extension, filepaths);
+      } else if (path.extname(filename) === extension) {
+        filepaths.push(filepath);
+      }
+    }
+    return filepaths;
   }
 
   const filePaths = [];
-  directoriesPatternsOrFiles.forEach(thing => {
+  directoriesOrFiles.forEach(thing => {
     let files = [];
-    if (thing.includes("*")) {
-      // It's a pattern!
-      files = glob.sync(thing);
+    const lstat = fs.lstatSync(thing);
+    if (lstat.isDirectory()) {
+      files = findFiles(thing, ".json");
     } else {
-      const lstat = fs.lstatSync(thing);
-      if (lstat.isDirectory()) {
-        files = findFiles(thing);
-      } else if (lstat.isFile()) {
-        files = [thing];
-      } else {
-        throw new Error(`${thing} is neither file nor directory`);
-      }
+      files = [thing];
     }
     files.forEach(p => filePaths.includes(p) || filePaths.push(p));
   });
