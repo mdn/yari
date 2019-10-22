@@ -4,7 +4,7 @@ export function Specifications({ specifications }) {
   if (specifications === "non-standard") {
     return (
       <>
-        <h2>Non-standard feature</h2>
+        <h2>Specifications</h2>
         <p>
           This feature is non-standard and is not included in any official
           specification. Do not use it on production sites facing the Web: it
