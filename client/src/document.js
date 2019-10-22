@@ -9,6 +9,7 @@ import { InteractiveExample } from "./ingredients/interactive-example";
 import { Attributes } from "./ingredients/attributes";
 import { Example, Examples } from "./ingredients/examples";
 import { LinkList } from "./ingredients/link-list";
+import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 
 export class Document extends React.Component {
@@ -180,6 +181,10 @@ function RenderDocumentBody({ doc }) {
       );
     } else if (section.type === "attributes") {
       return <Attributes key={`attributes${i}`} attributes={section.value} />;
+    } else if (section.type === "specifications") {
+      return (
+        <Specifications key="specifications" specifications={section.value} />
+      );
     } else if (section.type === "browser_compatibility") {
       return (
         <BrowserCompatibilityTable
