@@ -245,40 +245,31 @@ if (!paths.length) {
 
 /** Given an array of directories or files return all distinct .json files.
  *
- * Only if it's a directory do we search for *.json files
- * in there recursively.
+ * Only if it's a directory do we search for *.json files in all its subdirectories
  */
 function expandFiles(directoriesOrFiles) {
-  function findFiles(directory, extension, filepaths = []) {
-    if (path.basename(directory) === "node_modules") {
+  const filePaths = [];
+  for (
+    let discoveredPaths = directoriesOrFiles.slice(),
+      currentPath = discoveredPaths.pop();
+    currentPath !== undefined;
+    currentPath = discoveredPaths.pop()
+  ) {
+    if (path.basename(currentPath) === "node_modules") {
       throw new Error(
         `Can't dig deeper into ${directory}. ` +
           `Doesn't look like stumptown content packaged location`
       );
     }
-    const files = fs.readdirSync(directory);
-    for (let filename of files) {
-      const filepath = path.join(directory, filename);
-      if (fs.statSync(filepath).isDirectory()) {
-        findFiles(filepath, extension, filepaths);
-      } else if (path.extname(filename) === extension) {
-        filepaths.push(filepath);
-      }
-    }
-    return filepaths;
-  }
 
-  const filePaths = [];
-  directoriesOrFiles.forEach(thing => {
-    let files = [];
-    const lstat = fs.lstatSync(thing);
-    if (lstat.isDirectory()) {
-      files = findFiles(thing, ".json");
-    } else {
-      files = [thing];
+    if (fs.lstatSync(currentPath).isDirectory()) {
+      discoveredPaths.push(
+        ...fs.readdirSync(currentPath).map(p => path.join(currentPath, p))
+      );
+    } else if (path.extname(currentPath) === ".json") {
+      filePaths.push(currentPath);
     }
-    files.forEach(p => filePaths.includes(p) || filePaths.push(p));
-  });
+  }
   return filePaths;
 }
 
