@@ -183,7 +183,10 @@ function RenderDocumentBody({ doc }) {
       return <Attributes key={`attributes${i}`} attributes={section.value} />;
     } else if (section.type === "specifications") {
       return (
-        <Specifications key="specifications" specifications={section.value} />
+        <Specifications
+          key={`specifications${i}`}
+          specifications={section.value}
+        />
       );
     } else if (section.type === "browser_compatibility") {
       return (
