@@ -14,7 +14,7 @@ export function Specifications({ specifications }) {
         </p>
       </>
     );
-  } else {
+  } else if (Array.isArray(specifications)) {
     return (
       <>
         <h2>Specifications</h2>
@@ -27,5 +27,7 @@ export function Specifications({ specifications }) {
         </ul>
       </>
     );
+  } else {
+    throw new Error("Neither recognized string or array");
   }
 }
