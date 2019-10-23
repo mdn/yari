@@ -19,8 +19,8 @@ export function Specifications({ specifications }) {
       <>
         <h2>Specifications</h2>
         <ul>
-          {specifications.map((specification, i) => (
-            <li key={i}>
+          {specifications.map(specification => (
+            <li key={specification.url}>
               <a href={specification.url}>{specification.title}</a>
             </li>
           ))}
