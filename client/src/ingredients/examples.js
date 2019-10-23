@@ -62,7 +62,7 @@ function RenderLiveSample({ example }) {
   );
 }
 
-export function Example({ example }) {
+function Example({ example }) {
   return (
     <>
       {example.description.title && <h3>{example.description.title}</h3>}
@@ -85,8 +85,10 @@ export function Example({ example }) {
 export function Examples({ examples }) {
   return (
     <>
-      <h2>Examples</h2>
-      {examples.map((example, i) => (
+      {examples.title && (
+        <h2 id={examples.id && examples.id}>{examples.title}</h2>
+      )}
+      {examples.examples.map((example, i) => (
         <Example key={i} example={example} />
       ))}
     </>
