@@ -248,7 +248,7 @@ if (!paths.length) {
  * Only if it's a directory do we search for *.json files in all its subdirectories
  */
 function expandFiles(directoriesOrFiles) {
-  const filePaths = [];
+  const filePaths = new Set();
   for (
     let discoveredPaths = directoriesOrFiles.slice(),
       currentPath = discoveredPaths.pop();
@@ -267,10 +267,10 @@ function expandFiles(directoriesOrFiles) {
         ...fs.readdirSync(currentPath).map(p => path.join(currentPath, p))
       );
     } else if (path.extname(currentPath) === ".json") {
-      filePaths.push(currentPath);
+      filePaths.add(currentPath);
     }
   }
-  return filePaths;
+  return Array.from(filePaths);
 }
 
 function run(paths) {
