@@ -124,9 +124,11 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
           : JSON.stringify(section.value)
       );
       bcdFiles.push(outfile);
-      // section.bcd_id = id;
-      // delete section.value;
-      section.value = { uri: path.basename(outfile) };
+      section.value = {
+        uri: path.basename(outfile),
+        id: section.value.id,
+        title: section.value.title
+      };
     }
   });
 

@@ -129,7 +129,7 @@ class BrowserCompatibilityTableContent extends Component {
 
 export function BrowserCompatibilityTable({ data }) {
   const { uri } = data;
-  const [data, setData] = useState(null);
+  const [fullData, setFullData] = useState(null);
   const [fetchError, setFetchError] = useState(null);
   useEffect(() => {
     let dismounted = false;
@@ -150,7 +150,7 @@ export function BrowserCompatibilityTable({ data }) {
       })
       .then(data => {
         if (!dismounted) {
-          setData(data);
+          setFullData(data);
         }
       })
       .catch(err => {
@@ -163,10 +163,12 @@ export function BrowserCompatibilityTable({ data }) {
   return (
     <>
       {data.title && <h2 id={data.id}>{data.title}</h2>}
-      {!data && fetchError && <FetchError error={fetchError} />}
+      {!fullData && fetchError && <FetchError error={fetchError} />}
       {/* Animate this? */}
-      {!data && !fetchError && <p>Loading browser compatibility table...</p>}
-      {data && <BrowserCompatibilityTableContent data={data} />}
+      {!fullData && !fetchError && (
+        <p>Loading browser compatibility table...</p>
+      )}
+      {fullData && <BrowserCompatibilityTableContent data={fullData} />}
     </>
   );
 }
