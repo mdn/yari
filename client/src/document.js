@@ -9,6 +9,7 @@ import { InteractiveExample } from "./ingredients/interactive-example";
 import { Attributes } from "./ingredients/attributes";
 import { Examples } from "./ingredients/examples";
 import { LinkList } from "./ingredients/link-list";
+import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 
 export class Document extends React.Component {
@@ -181,9 +182,12 @@ function RenderDocumentBody({ doc }) {
     } else if (section.type === "attributes") {
       return <Attributes key={`attributes${i}`} attributes={section.value} />;
     } else if (section.type === "specifications") {
-      // Coming soon! https://github.com/mdn/stumptown-renderer/pull/192
-      console.warn("Don't know how to deal with 'specifications'");
-      return null;
+      return (
+        <Specifications
+          key={`specifications${i}`}
+          specifications={section.value}
+        />
+      );
     } else if (section.type === "browser_compatibility") {
       return (
         <BrowserCompatibilityTable
