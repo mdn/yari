@@ -1,10 +1,11 @@
 import React from "react";
 
 export function Specifications({ specifications }) {
+  const title = <h2>Specifications</h2>;
   if (specifications === "non-standard") {
     return (
       <>
-        <h2>Specifications</h2>
+        {title}
         <p>
           This feature is non-standard and is not included in any official
           specification. Do not use it on production sites facing the Web: it
@@ -17,7 +18,7 @@ export function Specifications({ specifications }) {
   } else if (Array.isArray(specifications)) {
     return (
       <>
-        <h2>Specifications</h2>
+        {title}
         <ul>
           {specifications.map(specification => (
             <li key={specification.url}>
