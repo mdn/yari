@@ -1,7 +1,6 @@
 import React from "react";
 import fs from "fs";
 import path from "path";
-import util from "util";
 // const crypto = require("crypto");
 
 // This is necessary because the cli.js is in dist/cli.js
@@ -27,11 +26,6 @@ const TOUCHFILE = path.join(__dirname, "../../client/src/touchthis.js");
 const BUILD_JSON_SERVER =
   process.env.BUILD_JSON_SERVER || "http://localhost:5555";
 sourceMapSupport.install();
-
-// Turn callback based functions into functions you can "await".
-const readFile = util.promisify(fs.readFile);
-const writeFile = util.promisify(fs.writeFile);
-const accessFile = util.promisify(fs.access);
 
 /** In the document, there's related_content and it contains keys
  * called 'mdn_url'. We need to transform them to relative links
@@ -283,61 +277,53 @@ function expandFiles(directoriesOrFiles) {
 }
 
 function run(paths) {
-  return Promise.all(
-    expandFiles(paths).map(filePath => {
-      const output = args.output;
-      return accessFile(filePath, fs.constants.R_OK)
-        .then(() => {
-          return buildHtmlAndJson({
-            filePath,
-            output,
-            buildHtml: args["build-html"],
-            quiet: args["quiet"]
-          });
-        })
-        .catch(ex => {
-          console.error(ex);
-          throw ex;
-        });
-    })
-  ).then(async values => {
-    console.log(chalk.green(`Built ${values.length} documents.`));
-    const titlesByLocale = {};
-    values.forEach(built => {
-      const localeKey = built.uri.split("/")[1];
-      titlesByLocale[localeKey] = titlesByLocale[localeKey] || [];
-      titlesByLocale[localeKey].push(built);
+  const values = expandFiles(paths).map(filePath => {
+    const output = args.output;
+    return buildHtmlAndJson({
+      filePath,
+      output,
+      buildHtml: args["build-html"],
+      quiet: args["quiet"]
     });
-    Object.entries(titlesByLocale).forEach(async ([locale, localeTitles]) => {
-      const titles = {};
-      const allTitlesFilepath = path.join(STATIC_ROOT, `${locale}/titles.json`);
-      try {
-        titles.titles = JSON.parse(await readFile(allTitlesFilepath, "utf8"))[
-          "titles"
-        ];
-        console.warn(
-          `Updating ${
-            Object.keys(titles.titles).length
-          } file ${allTitlesFilepath}`
-        );
-      } catch (ex) {
-        // throw ex;
-        console.warn(`Starting a fresh new ${allTitlesFilepath}`);
-        titles.titles = {};
-      }
-      localeTitles.forEach(built => {
-        titles.titles[built.uri] = built.doc.title;
-      });
-
-      await writeFile(allTitlesFilepath, JSON.stringify(titles, null, 2));
-      console.log(
-        `${allTitlesFilepath} now contains ${Object.keys(
-          titles.titles
-        ).length.toLocaleString()} documents.`
-      );
-    });
-    return values;
   });
+
+  console.log(chalk.green(`Built ${values.length} documents.`));
+  const titlesByLocale = {};
+  values.forEach(built => {
+    const localeKey = built.uri.split("/")[1];
+    titlesByLocale[localeKey] = titlesByLocale[localeKey] || [];
+    titlesByLocale[localeKey].push(built);
+  });
+  Object.entries(titlesByLocale).forEach(([locale, localeTitles]) => {
+    const titles = {};
+    const allTitlesFilepath = path.join(STATIC_ROOT, `${locale}/titles.json`);
+    if (fs.existsSync(allTitlesFilepath)) {
+      titles.titles = JSON.parse(readFileSync(allTitlesFilepath, "utf8"))[
+        "titles"
+      ];
+      console.warn(
+        `Updating ${
+          Object.keys(titles.titles).length
+        } file ${allTitlesFilepath}`
+      );
+    } else {
+      // throw ex;
+      console.warn(`Starting a fresh new ${allTitlesFilepath}`);
+      titles.titles = {};
+    }
+    localeTitles.forEach(built => {
+      titles.titles[built.uri] = built.doc.title;
+    });
+
+    fs.writeFileSync(allTitlesFilepath, JSON.stringify(titles, null, 2));
+    console.log(
+      `${allTitlesFilepath} now contains ${Object.keys(
+        titles.titles
+      ).length.toLocaleString()} documents.`
+    );
+  });
+
+  return values;
 }
 
 async function runStumptownContentBuildJson(path) {
@@ -411,15 +397,12 @@ if (args.watch) {
       console.error(error);
     } else {
       console.log(`Running for packaged file ${built.destPath}`);
-      run([built.destPath]).then(documents => {
-        const buildFiles = documents.map(d => ppPath(d["filePath"]));
-        console.log(chalk.green(`Built documents from: ${buildFiles}`));
-        triggerTouch(documents);
-      });
+      const documents = run([built.destPath]);
+      const buildFiles = documents.map(d => ppPath(d["filePath"]));
+      console.log(chalk.green(`Built documents from: ${buildFiles}`));
+      triggerTouch(documents);
     }
   });
 } else {
-  run(paths).catch(() => {
-    process.exitCode = 1;
-  });
+  run(paths);
 }
