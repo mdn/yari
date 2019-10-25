@@ -121,12 +121,17 @@ function buildHtmlAndJson({
 
   let rendered = null;
   if (buildHtml) {
+    // The options specifically for React rendering but with added options
+    // that are not relevant or needed inside the serialized options
+    // that get included in the HTML.
+    const renderingOptions = { ...options, allowIndexingBots };
+
     try {
       rendered = render(
         <ServerLocation url={uri}>
           <App {...options} />
         </ServerLocation>,
-        { ...options, allowIndexingBots }
+        renderingOptions
       );
     } catch (ex) {
       console.error(`Rendering HTML failed!
