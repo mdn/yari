@@ -277,7 +277,8 @@ function expandFiles(directoriesOrFiles) {
 }
 
 function run(paths) {
-  const values = expandFiles(paths).map(filePath => {
+  const startTime = Date.now();
+  const buildFiles = expandFiles(paths).map(filePath => {
     const output = args.output;
     return buildHtmlAndJson({
       filePath,
@@ -286,10 +287,14 @@ function run(paths) {
       quiet: args["quiet"]
     });
   });
-
-  console.log(chalk.green(`Built ${values.length} documents.`));
+  const tookSeconds = (Date.now() - startTime) / 1000;
+  console.log(
+    chalk.green(
+      `Built ${buildFiles.length} documents in ${tookSeconds.toFixed(1)}s.`
+    )
+  );
   const titlesByLocale = {};
-  values.forEach(built => {
+  buildFiles.forEach(built => {
     const localeKey = built.uri.split("/")[1];
     titlesByLocale[localeKey] = titlesByLocale[localeKey] || [];
     titlesByLocale[localeKey].push(built);
@@ -298,7 +303,7 @@ function run(paths) {
     const titles = {};
     const allTitlesFilepath = path.join(STATIC_ROOT, `${locale}/titles.json`);
     if (fs.existsSync(allTitlesFilepath)) {
-      titles.titles = JSON.parse(readFileSync(allTitlesFilepath, "utf8"))[
+      titles.titles = JSON.parse(fs.readFileSync(allTitlesFilepath, "utf8"))[
         "titles"
       ];
       console.warn(
@@ -307,7 +312,6 @@ function run(paths) {
         } file ${allTitlesFilepath}`
       );
     } else {
-      // throw ex;
       console.warn(`Starting a fresh new ${allTitlesFilepath}`);
       titles.titles = {};
     }
@@ -322,8 +326,6 @@ function run(paths) {
       ).length.toLocaleString()} documents.`
     );
   });
-
-  return values;
 }
 
 async function runStumptownContentBuildJson(path) {
