@@ -82,16 +82,7 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
     doc: JSON.parse(data)
   };
 
-  // Stumptown produces a `.related_content` for every document. But it
-  // contains data is either not needed or not appropriate for the way
-  // we're using it in the renderer. So mutate it for the specific needs
-  // of the renderer.
-  fixRelatedContent(options.doc);
-
-  // Find blocks of syntax code and transform it to syntax highlighted code.
-  if (options.doc.body) {
-    fixSyntaxHighlighting(options.doc);
-  }
+  let rendered = null;
 
   // always expect this to be a relative URL
   if (!options.doc.mdn_url.startsWith("/")) {
@@ -101,53 +92,84 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
   }
   const uri = options.doc.mdn_url;
   const destination = path.join(output, uri);
-  const outfileHtml = path.join(destination, "index.html");
-  const outfileJson = path.join(destination, "index.json");
-  // const outfileHash = path.join(destination, "index.hash");
+  fs.mkdirSync(destination, { recursive: true });
 
-  // let previousHash = "";
-  // try {
-  //   previousHash = fs.readFileSync(outfileHash, "utf8");
-  // } catch (ex) {
-  //   // That's fine
-  // }
-  // console.log("PREVIOUS HASH", [previousHash, buildHash]);
+  if (options.doc.redirect_url) {
+    // We can exit early on these!
+    const outfileRedirect = path.join(destination, "index.redirect");
 
-  let rendered = null;
-  if (buildHtml) {
-    try {
-      rendered = render(
-        <ServerLocation url={uri}>
-          <App {...options} />
-        </ServerLocation>,
-        options
-      );
-    } catch (ex) {
-      console.error(`Rendering HTML failed!
+    // XXX this options.doc.redirect_url is eitger something like
+    // '/api/v1/doc/en-US/Learn/Common_questions' or something like
+    // 'https://wiki.developer.mozilla.org/en-US/Add-ons/SDK/Low-Level_APIs'
+    // of which both are invalid unless we process it a little.
+    fs.writeFileSync(outfileRedirect, options.doc.redirect_url);
+
+    if (!quiet) {
+      let outMsg = `Wrote ${ppPath(outfileRedirect)}`;
+      console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
+    }
+  } else {
+    // Stumptown produces a `.related_content` for every document. But it
+    // contains data is either not needed or not appropriate for the way
+    // we're using it in the renderer. So mutate it for the specific needs
+    // of the renderer.
+    fixRelatedContent(options.doc);
+
+    // Find blocks of syntax code and transform it to syntax highlighted code.
+    if (options.doc.body) {
+      fixSyntaxHighlighting(options.doc);
+    }
+
+    const outfileHtml = path.join(destination, "index.html");
+    const outfileJson = path.join(destination, "index.json");
+    // const outfileHash = path.join(destination, "index.hash");
+
+    // let previousHash = "";
+    // try {
+    //   previousHash = fs.readFileSync(outfileHash, "utf8");
+    // } catch (ex) {
+    //   // That's fine
+    // }
+    // console.log("PREVIOUS HASH", [previousHash, buildHash]);
+
+    if (buildHtml) {
+      try {
+        rendered = render(
+          <ServerLocation url={uri}>
+            <App {...options} />
+          </ServerLocation>,
+          options
+        );
+      } catch (ex) {
+        console.error(`Rendering HTML failed!
       uri=${uri}
       filePath=${filePath}`);
-      throw ex;
+        throw ex;
+      }
     }
-  }
 
-  fs.mkdirSync(destination, { recursive: true });
-  if (rendered) {
-    fs.writeFileSync(outfileHtml, rendered);
-  }
-  fs.writeFileSync(
-    outfileJson,
-    process.env.NODE_ENV === "development"
-      ? JSON.stringify(options, null, 2)
-      : JSON.stringify(options)
-  );
-  // fs.writeFileSync(outfileHash, buildHash);
-
-  if (!quiet) {
-    let outMsg = `Wrote ${ppPath(outfileJson)}`;
     if (rendered) {
-      outMsg += ` and ${ppPath(outfileHtml)}`;
+      fs.writeFileSync(outfileHtml, rendered);
     }
-    console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
+    fs.writeFileSync(
+      outfileJson,
+      process.env.NODE_ENV === "development"
+        ? JSON.stringify(options, null, 2)
+        : JSON.stringify(options)
+    );
+
+    if (!quiet) {
+      let outMsg = `Wrote ${ppPath(outfileJson)}`;
+      if (rendered) {
+        outMsg += ` and ${ppPath(outfileHtml)}`;
+      }
+      console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
+    }
+  }
+
+  if (!quiet || Math.random() > 0.98) {
+    const used = process.memoryUsage().heapUsed / 1024 / 1024;
+    console.log(`Using approximately ${used.toFixed(1)} MB`);
   }
   return { filePath, doc: options.doc, uri };
 }
@@ -255,7 +277,8 @@ function expandFiles(directoriesOrFiles) {
     const files = fs.readdirSync(directory);
     for (let filename of files) {
       const filepath = path.join(directory, filename);
-      if (fs.statSync(filepath).isDirectory()) {
+      const isDirectory = fs.statSync(filepath).isDirectory();
+      if (isDirectory) {
         findFiles(filepath, extension, filepaths);
       } else if (path.extname(filename) === extension) {
         filepaths.push(filepath);
@@ -273,14 +296,19 @@ function expandFiles(directoriesOrFiles) {
     } else {
       files = [thing];
     }
-    files.forEach(p => filePaths.includes(p) || filePaths.push(p));
+    // XXX fix all of this!
+    files.forEach(p => filePaths.push(p));
+    // files.forEach(p => filePaths.includes(p) || filePaths.push(p));
   });
+  // console.log(filePaths.filter(p => p.includes("manifest")));
   return filePaths;
 }
 
 function run(paths) {
+  const expanded = expandFiles(paths);
   const startTime = Date.now();
-  const buildFiles = expandFiles(paths).map(filePath => {
+
+  const buildFiles = expanded.map(filePath => {
     const output = args.output;
     return buildHtmlAndJson({
       filePath,
@@ -289,10 +317,18 @@ function run(paths) {
       quiet: args["quiet"]
     });
   });
-  const tookSeconds = (Date.now() - startTime) / 1000;
+  const endTime = Date.now();
+  const tookSeconds = (endTime - startTime) / 1000;
+  const msPerDoc = (endTime - startTime) / buildFiles.length;
+  const rate = buildFiles.length / tookSeconds;
   console.log(
     chalk.green(
-      `Built ${buildFiles.length} documents in ${tookSeconds.toFixed(1)}s.`
+      `Built ${buildFiles.length.toLocaleString()} documents in ${tookSeconds.toFixed(
+        1
+      )}s ` +
+        `(approximately ${msPerDoc.toFixed(1)}ms/doc - ${rate.toFixed(
+          1
+        )}docs/sec)`
     )
   );
   const titlesByLocale = {};
