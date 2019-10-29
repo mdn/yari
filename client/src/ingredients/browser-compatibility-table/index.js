@@ -4,6 +4,7 @@ import { Browsers } from "./browsers";
 import { Rows } from "./rows";
 import { Legend } from "./legend";
 import "./bcd.scss";
+import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
 
 const BROWSERS = {
   desktop: ["chrome", "edge", "firefox", "ie", "opera", "safari"],
@@ -20,7 +21,7 @@ const BROWSERS = {
   "webextensions-mobile": ["firefox_android"]
 };
 
-export class BrowserCompatibilityTable extends Component {
+class BrowserCompatibilityTableContent extends Component {
   state = {
     currentNoteId: null,
     hasDeprecation: false,
@@ -91,7 +92,6 @@ export class BrowserCompatibilityTable extends Component {
     );
     return (
       <>
-        {data.title && <h2 id={data.id}>{data.title}</h2>}
         <a
           className="bc-github-link external external-icon"
           href="https://github.com/mdn/browser-compat-data"
@@ -127,3 +127,14 @@ export class BrowserCompatibilityTable extends Component {
     );
   }
 }
+
+export const BrowserCompatibilityTable = props => {
+  return (
+    <BrowserCompatibilityErrorBoundary>
+      {props.data && props.data.title && (
+        <h2 id={props.data.id}>{props.data.title}</h2>
+      )}
+      <BrowserCompatibilityTableContent {...props} />
+    </BrowserCompatibilityErrorBoundary>
+  );
+};
