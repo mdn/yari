@@ -505,6 +505,7 @@ class ProgressBar {
     );
   }
 }
+
 async function runStumptownContentBuildJson(path) {
   let response;
   try {
