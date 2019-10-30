@@ -1,6 +1,5 @@
 import cheerio from "cheerio";
 import Prism from "prismjs";
-// import loadLanguages from "prismjs/components/";
 
 export function fixSyntaxHighlighting(document) {
   function getPrismPluginName(classList) {
@@ -10,9 +9,9 @@ export function fixSyntaxHighlighting(document) {
         if (Prism.languages[name]) {
           return name;
         } else {
-          console.warn(
-            `Looks like a syntax highlighting marker but not found as a Prism plugin: ${name}`
-          );
+          // console.warn(
+          //   `Looks like a syntax highlighting marker but not found as a Prism plugin: ${name}`
+          // );
         }
       }
     }
