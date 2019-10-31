@@ -8,8 +8,6 @@ CKSUM_BEFORE=$(cksum yarn.lock)
 yarn install
 EXIT_CODE=$?
 CKSUM_AFTER=$(cksum yarn.lock)
-cat CKSUM_BEFORE
-cat CKSUM_AFTER
 
 if [[ $CKSUM_BEFORE != $CKSUM_AFTER ]]; then
   echo "yarn_frozen_lockfile.sh: yarn.lock was modified unexpectedly - terminating"

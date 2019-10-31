@@ -17,23 +17,24 @@ cache:
 before_install:
   - npm install -g yarn
   - yarn --version
-  # All nodes of the matrix will need and benefit from this
-  - yarn
 
 matrix:
   include:
     - name: linting
       cache: yarn
       script:
+        - yarn
         - ./scripts/ci-lint.sh
     - name: client
       cache: yarn
       script:
+        - yarn
         - ./scripts/ci-client.sh
     - name: end-to-end
       cache: yarn
       script:
         - set -x
+        - yarn
         - yarn deployment-build
         - yarn end-to-end-test
     - name: lockfile-check
