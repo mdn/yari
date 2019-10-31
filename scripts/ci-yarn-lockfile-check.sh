@@ -5,7 +5,7 @@
 # Taken from https://github.com/yarnpkg/yarn/issues/4098#issuecomment-492729443
 
 CKSUM_BEFORE=$(cksum yarn.lock)
-yarn install
+yarn install --ignore-scripts
 EXIT_CODE=$?
 CKSUM_AFTER=$(cksum yarn.lock)
 
