@@ -38,6 +38,5 @@ matrix:
         - yarn deployment-build
         - yarn end-to-end-test
     - name: lockfile-check
-      cache: yarn
       script:
         - ./scripts/ci-yarn-lockfile-check.sh
