@@ -38,5 +38,6 @@ matrix:
         - yarn deployment-build
         - yarn end-to-end-test
     - name: lockfile-check
+      install: skip
       script:
         - ./scripts/ci-yarn-lockfile-check.sh
