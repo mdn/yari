@@ -5,12 +5,12 @@
 # Taken from https://github.com/yarnpkg/yarn/issues/4098#issuecomment-492729443
 
 CKSUM_BEFORE=$(cksum yarn.lock)
-yarn install
+yarn install --ignore-scripts
 EXIT_CODE=$?
 CKSUM_AFTER=$(cksum yarn.lock)
 
 if [[ $CKSUM_BEFORE != $CKSUM_AFTER ]]; then
-  echo "yarn_frozen_lockfile.sh: yarn.lock was modified unexpectedly - terminating"
+  echo "yarn.lock was modified unexpectedly - terminating"
   exit 1
 fi
 
