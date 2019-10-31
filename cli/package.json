@@ -23,7 +23,7 @@
     "react": "16.11.0",
     "react-dom": "16.11.0",
     "sane": "4.1.0",
-    "source-map-support": "0.5.13"
+    "source-map-support": "0.5.16"
   },
   "devDependencies": {
     "@babel/core": "7.6.4",
@@ -44,7 +44,7 @@
     "node-fetch": "2.6.0",
     "serve": "11.2.0",
     "webpack": "4.41.2",
-    "webpack-cli": "3.3.9",
+    "webpack-cli": "3.3.10",
     "webpack-node-externals": "1.7.2"
   }
 }
