@@ -39,4 +39,4 @@ matrix:
     - name: lockfile-check
       cache: yarn
       script:
-        - ./scripts/yarn-lockfile-check.sh
+        - ./scripts/ci-yarn-lockfile-check.sh
