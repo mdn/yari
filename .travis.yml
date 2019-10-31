@@ -17,8 +17,6 @@ cache:
 before_install:
   - npm install -g yarn
   - yarn --version
-  # All nodes of the matrix will need and benefit from this
-  - yarn
 
 matrix:
   include:
@@ -37,6 +35,6 @@ matrix:
         - yarn deployment-build
         - yarn end-to-end-test
     - name: lockfile-check
-      cache: yarn
+      install: skip
       script:
         - ./scripts/ci-yarn-lockfile-check.sh
