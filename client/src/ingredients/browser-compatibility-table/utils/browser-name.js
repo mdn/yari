@@ -24,6 +24,8 @@ export default function BrowserName({ browserNameKey }) {
       return "Samsung Internet";
     case "edge_mobile":
       return "Edge Android";
+    case "nodejs":
+      return "Node.js";
     default:
       return browserNameKey;
   }
