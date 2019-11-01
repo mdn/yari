@@ -151,6 +151,14 @@
   margin-top: 0;
 }
 
+.bc-table .bc-platforms .bc-platform-server:before {
+  background-image: url("../../icons/platforms/server.svg");
+  background-size: 24px;
+  width: 24px;
+  height: 24px;
+  margin-top: 5px;
+}
+
 .bc-table .bc-platforms td + th {
   border-left: 0;
 }
@@ -289,6 +297,13 @@
 
 .bc-browsers .bc-head-icon-samsunginternet_android:before {
   background-image: url("../../icons/browsers/samsung-internet.svg");
+  background-size: 20px;
+  width: 20px;
+  height: 24px;
+}
+
+.bc-browsers .bc-head-icon-nodejs:before {
+  background-image: url("../../icons/platforms/nodejs.svg");
   background-size: 20px;
   width: 20px;
   height: 24px;

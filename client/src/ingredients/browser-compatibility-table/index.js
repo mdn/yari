@@ -80,7 +80,8 @@ class BrowserCompatibilityTableContent extends Component {
   };
 
   render() {
-    const { data, category = "html" } = this.props;
+    const { data } = this.props;
+    const category = data.query.split(".").shift();
     if (!data || !Object.keys(data).length) {
       throw new Error(
         "BrowserCompatibilityTable component called with empty data"
