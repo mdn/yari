@@ -94,7 +94,7 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
       `Document's .mdn_url doesn't start with / (${options.doc.mdn_url})`
     );
   }
-  const uri = options.doc.mdn_url;
+  const uri = decodeURI(options.doc.mdn_url);
 
   // This can totally happen if you're building from multiple sources
   // E.g. `yarn start packaged1 packaged2`
@@ -107,6 +107,7 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
   titles[uri] = options.doc.title;
 
   const destination = path.join(output, uri);
+
   fs.mkdirSync(destination, { recursive: true });
 
   if (options.doc.redirect_url) {
@@ -312,7 +313,6 @@ function run(paths) {
 
   const startTime = Date.now();
   const built = [];
-  // const overlapFiles = [];
   const titles = {};
 
   paths.forEach(fileOrDirectory => {
