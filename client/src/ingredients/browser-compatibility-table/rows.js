@@ -8,13 +8,9 @@ function buildCompatibilityObject(query, compatibilityData) {
   if (!!compatibilityData.__compat) {
     const name = query.split(".").pop();
     features[name] = compatibilityData.__compat;
-    for (const compat in compatibilityData) {
-      if (compat !== "__compat" && !!compatibilityData[compat]["__compat"]) {
-        features[compat] = compatibilityData[compat]["__compat"];
-      }
-    }
-  } else {
-    for (const compat in compatibilityData) {
+  }
+  for (const compat in compatibilityData) {
+    if (compat !== "__compat" && !!compatibilityData[compat]["__compat"]) {
       features[compat] = compatibilityData[compat]["__compat"];
     }
   }
