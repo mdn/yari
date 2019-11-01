@@ -8,10 +8,10 @@ function buildCompatibilityObject(query, compatibilityData) {
   if (!!compatibilityData.__compat) {
     const name = query.split(".").pop();
     features[name] = compatibilityData.__compat;
-    for (const compat in compatibilityData) {
-      if (compat !== "__compat" && !!compatibilityData[compat]["__compat"]) {
-        features[compat] = compatibilityData[compat]["__compat"];
-      }
+  }
+  for (const compat in compatibilityData) {
+    if (compat !== "__compat" && !!compatibilityData[compat]["__compat"]) {
+      features[compat] = compatibilityData[compat]["__compat"];
     }
   }
 
@@ -188,14 +188,16 @@ export function Rows({
   for (const key in compatibility) {
     const currentRow = compatibility[key];
 
-    if (!hasDeprecation) {
-      hasDeprecation = !!currentRow.status.deprecated;
-    }
-    if (!hasExperimental) {
-      hasExperimental = !!currentRow.status.experimental;
-    }
-    if (!hasNonStandard) {
-      hasNonStandard = !!currentRow.status.standard_track;
+    if (currentRow.status) {
+      if (!hasDeprecation) {
+        hasDeprecation = !!currentRow.status.deprecated;
+      }
+      if (!hasExperimental) {
+        hasExperimental = !!currentRow.status.experimental;
+      }
+      if (!hasNonStandard) {
+        hasNonStandard = !!currentRow.status.standard_track;
+      }
     }
 
     const browserSupportDetails = displayBrowsers.map(browser => {
@@ -224,35 +226,37 @@ export function Rows({
       <tr key={key}>
         <th scope="row">
           <code>{key}</code>
-          <div className="bc-icons">
-            {currentRow.status.deprecated && (
-              <abbr
-                className="only-icon"
-                title="Deprecated. Not for use in new websites."
-              >
-                <span>Deprecated</span>
-                <i className="ic-deprecated" />
-              </abbr>
-            )}
-            {!currentRow.status.standard_track && (
-              <abbr
-                className="only-icon"
-                title="Non-standard. Expect poor cross-browser support."
-              >
-                <span>Non-standard</span>
-                <i className="ic-non-standard" />
-              </abbr>
-            )}
-            {currentRow.status.experimental && (
-              <abbr
-                className="only-icon"
-                title="Experimental. Expect behavior to change in the future."
-              >
-                <span>Experimental</span>
-                <i className="ic-experimental" />
-              </abbr>
-            )}
-          </div>
+          {currentRow.status && (
+            <div className="bc-icons">
+              {currentRow.status.deprecated && (
+                <abbr
+                  className="only-icon"
+                  title="Deprecated. Not for use in new websites."
+                >
+                  <span>Deprecated</span>
+                  <i className="ic-deprecated" />
+                </abbr>
+              )}
+              {!currentRow.status.standard_track && (
+                <abbr
+                  className="only-icon"
+                  title="Non-standard. Expect poor cross-browser support."
+                >
+                  <span>Non-standard</span>
+                  <i className="ic-non-standard" />
+                </abbr>
+              )}
+              {currentRow.status.experimental && (
+                <abbr
+                  className="only-icon"
+                  title="Experimental. Expect behavior to change in the future."
+                >
+                  <span>Experimental</span>
+                  <i className="ic-experimental" />
+                </abbr>
+              )}
+            </div>
+          )}
         </th>
         <RenderBrowserSupportDetails
           browserSupportDetails={browserSupportDetails}
