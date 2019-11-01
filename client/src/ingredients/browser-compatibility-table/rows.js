@@ -188,7 +188,7 @@ export function Rows({
   for (const key in compatibility) {
     const currentRow = compatibility[key];
 
-    if (!!currentRow.status) {
+    if (currentRow.status) {
       if (!hasDeprecation) {
         hasDeprecation = !!currentRow.status.deprecated;
       }
