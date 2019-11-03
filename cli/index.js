@@ -390,26 +390,18 @@ function run(paths) {
       titlesByLocale[localeKey].push({ uri, title });
     }
   });
-  // buildFiles.forEach(built => {
-  //   const localeKey = built.uri.split("/")[1];
-  //   titlesByLocale[localeKey] = titlesByLocale[localeKey] || [];
-  //   titlesByLocale[localeKey].push(built);
-  // });
 
   Object.entries(titlesByLocale).forEach(([locale, localeTitles]) => {
     const titles = {};
     const allTitlesFilepath = path.join(STATIC_ROOT, `${locale}/titles.json`);
+    let updateTitlesFiles;
     if (fs.existsSync(allTitlesFilepath)) {
       titles.titles = JSON.parse(fs.readFileSync(allTitlesFilepath, "utf8"))[
         "titles"
       ];
-      console.warn(
-        `Updating ${
-          Object.keys(titles.titles).length
-        } file ${allTitlesFilepath}`
-      );
+      updateTitlesFiles = true;
     } else {
-      console.warn(`Starting a fresh new ${allTitlesFilepath}`);
+      updateTitlesFiles = false;
       titles.titles = {};
     }
     localeTitles.forEach(built => {
@@ -420,7 +412,9 @@ function run(paths) {
     console.log(
       `${allTitlesFilepath} now contains ${Object.keys(
         titles.titles
-      ).length.toLocaleString()} documents.`
+      ).length.toLocaleString()} documents (${
+        updateTitlesFiles ? "updated" : "fresh"
+      }).`
     );
   });
 }
@@ -431,7 +425,6 @@ class ProgressBar {
     this.current;
     this.prefix = prefix;
     this.includeMemory = includeMemory;
-    // console.log(prefix.length + "100.0%".length);
     this.barLength =
       process.stdout.columns - prefix.length - "100.0%".length - 5;
     if (includeMemory) {
