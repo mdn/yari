@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "@reach/router";
 
-export function LinkList({ title, links }) {
+function LinkList({ title, links }) {
   return (
     <div className="link-list">
       <h2>{title}</h2>
@@ -21,4 +21,14 @@ export function LinkList({ title, links }) {
       </dl>
     </div>
   );
+}
+
+export function LinkLists({ lists }) {
+  return lists.map((list, i) => (
+    <LinkList
+      key={`${list.title}${i}`}
+      title={list.title}
+      links={list.content}
+    />
+  ));
 }
