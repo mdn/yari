@@ -8,7 +8,7 @@ import { Prose, ProseWithHeading } from "./ingredients/prose";
 import { InteractiveExample } from "./ingredients/interactive-example";
 import { Attributes } from "./ingredients/attributes";
 import { Examples } from "./ingredients/examples";
-import { LinkList } from "./ingredients/link-list";
+import { LinkLists } from "./ingredients/link-lists";
 import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 
@@ -202,10 +202,8 @@ function RenderDocumentBody({ doc }) {
       // https://github.com/mdn/stumptown-content/issues/106
       console.warn("Don't know how to deal with info_box!");
       return null;
-    } else if (section.type === "link_list") {
-      return (
-        <LinkList title={section.value.title} links={section.value.content} />
-      );
+    } else if (section.type === "link_lists") {
+      return <LinkLists key={`linklists${i}`} lists={section.value} />;
     } else {
       console.warn(section);
       throw new Error(`No idea how to handle a '${section.type}' section`);
