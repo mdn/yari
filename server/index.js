@@ -1,9 +1,7 @@
-import path from "path";
+const path = require("path");
 
-import express from "express";
-import sourceMapSupport from "source-map-support";
-
-sourceMapSupport.install();
+const express = require("express");
+const openEditor = require("open-editor");
 
 const app = express();
 
@@ -19,6 +17,15 @@ app.use(
 // app.get("/", (req, res) => {
 //   res.status(200).send("Hello kind world!");
 // });
+
+app.get("/_open", (req, res) => {
+  const filepath = req.query.filepath;
+  if (!filepath) {
+    throw new Error("No .filepath in the request query");
+  }
+  openEditor([filepath]);
+  res.status(200).send(`Tried to open ${filepath} in ${process.env.EDITOR}`);
+});
 
 // Catch-all
 app.get("/*", (req, res) => {

@@ -326,6 +326,8 @@ function run(paths) {
       ).length.toLocaleString()} documents.`
     );
   });
+
+  return buildFiles;
 }
 
 async function runStumptownContentBuildJson(path) {
@@ -347,9 +349,11 @@ async function runStumptownContentBuildJson(path) {
   }
 }
 
-function triggerTouch(documents) {
+function triggerTouch(documents, changedFile) {
   let newContent = `// Timestamp: ${new Date()}\n`;
-  newContent += `const touched = ${JSON.stringify(documents, null, 2)}\n`;
+  newContent += `const documents = ${JSON.stringify(documents, null, 2)}\n`;
+  newContent += `const changedFile = ${JSON.stringify(changedFile)}\n`;
+  newContent += `const touched = { documents, changedFile };\n`;
   newContent += "export default touched;";
   fs.writeFileSync(touchfile, newContent);
   console.log(
@@ -402,7 +406,10 @@ if (args.watch) {
       const documents = run([built.destPath]);
       const buildFiles = documents.map(d => ppPath(d["filePath"]));
       console.log(chalk.green(`Built documents from: ${buildFiles}`));
-      triggerTouch(documents);
+      triggerTouch(documents, {
+        path: absoluteFilePath,
+        name: path.basename(absoluteFilePath)
+      });
     }
   });
 } else {

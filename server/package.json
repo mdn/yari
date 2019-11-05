@@ -9,7 +9,7 @@
   "dependencies": {
     "dotenv": "8.2.0",
     "express": "4.17.1",
-    "source-map-support": "0.5.13"
+    "open-editor": "2.0.1"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
