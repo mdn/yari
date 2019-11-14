@@ -145,12 +145,17 @@ export class SearchWidget extends React.Component {
       tokenize: "forward"
     });
     this._map = titles;
-    Object.entries(titles).forEach(([uri, title]) => {
-      // XXX investigate if it's faster to add all at once
-      // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
-      this.index.add(uri, title);
-    });
-    this.fuzzySearcher = new FuzzySearch(Object.keys(this._map));
+
+    const urisSorted = [];
+    Object.entries(titles)
+      .sort((a, b) => b[1].popularity - a[1].popularity)
+      .forEach(([uri, info]) => {
+        // XXX investigate if it's faster to add all at once
+        // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
+        this.index.add(uri, info.title);
+        urisSorted.push(uri);
+      });
+    this.fuzzySearcher = new FuzzySearch(urisSorted);
   };
 
   searchHandler = event => {
@@ -219,7 +224,7 @@ export class SearchWidget extends React.Component {
           });
           const results = fuzzyResults.map(fuzzyResult => {
             return {
-              title: this._map[fuzzyResult.needle],
+              title: this._map[fuzzyResult.needle].title,
               uri: fuzzyResult.needle,
               substrings: fuzzyResult.substrings
             };
@@ -240,7 +245,11 @@ export class SearchWidget extends React.Component {
         });
 
         const results = indexResults.map(uri => {
-          return { title: this._map[uri], uri };
+          return {
+            title: this._map[uri].title,
+            uri,
+            popularity: this._map[uri].popularity
+          };
         });
         this.setState({
           highlitResult: results.length ? 0 : null,
@@ -488,6 +497,10 @@ class ShowSearchResults extends React.PureComponent {
                 this.redirectHandler(result);
               }}
             >
+              {/* TEMPORARY */}
+              <small style={{ float: "right", color: "orange" }}>
+                {result.popularity}
+              </small>{" "}
               <HighlightMatch title={result.title} q={q} />
               <br />
               <BreadcrumbURI uri={result.uri} substrings={result.substrings} />
