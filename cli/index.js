@@ -103,11 +103,9 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
   fs.mkdirSync(destination, { recursive: true });
 
   if (options.doc.redirect_url) {
-    // We can exit early on these!
     const outfileRedirect = path.join(destination, "index.redirect");
-    // const outfileHtml = path.join(destination, "index.html");
 
-    // XXX this options.doc.redirect_url is either something like
+    // This `options.doc.redirect_url` is either something like
     // '/api/v1/doc/en-US/Learn/Common_questions' or something like
     // 'https://wiki.developer.mozilla.org/en-US/Add-ons/SDK/Low-Level_APIs'
     // of which both are invalid unless we process it a little.
@@ -447,7 +445,6 @@ class ProgressBar {
     const filledBar = this.getBar(filledBarLength, "█");
     const emptyBar = this.getBar(emptyBarLength, "░");
 
-    // const percentageProgress = (currentProgress * 100).toFixed(1);
     const percentageProgress = this.rJust(
       `${(currentProgress * 100).toFixed(1)}%`,
       "100.0%".length
