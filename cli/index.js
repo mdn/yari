@@ -70,14 +70,6 @@ function ppPath(filePath) {
   return path.relative(process.cwd(), filePath);
 }
 
-// /** Only really useful local development */
-// function httpHtmlRedirect(url_) {
-//   return `<!doctype html><html lang="en"><head><meta charset="utf-8">
-//   <meta http-equiv="refresh" content="2;url=${url_}"><title>Page move</title>
-//   </head>
-//   <body><p>Redirecting you to <a href="${url_}">${url_}</a></p></body></html>`;
-// }
-
 function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
   const start = new Date();
   const data = fs.readFileSync(filePath, "utf8");
@@ -120,9 +112,6 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
     // 'https://wiki.developer.mozilla.org/en-US/Add-ons/SDK/Low-Level_APIs'
     // of which both are invalid unless we process it a little.
     const redirectUrl = correctRedirectURL(options.doc.redirect_url);
-    // if (buildHtml) {
-    //   fs.writeFileSync(outfileHtml, httpHtmlRedirect(redirectUrl));
-    // }
     fs.writeFileSync(outfileRedirect, redirectUrl);
 
     if (!quiet) {
@@ -131,7 +120,7 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
     }
   } else {
     // Stumptown produces a `.related_content` for every document. But it
-    // contains data is either not needed or not appropriate for the way
+    // contains data that is either not needed or not appropriate for the way
     // we're using it in the renderer. So mutate it for the specific needs
     // of the renderer.
     fixRelatedContent(options.doc);
@@ -178,13 +167,7 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
       console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
     }
   }
-
-  // if (!quiet || Math.random() > 0.98) {
-  //   const used = process.memoryUsage().heapUsed / 1024 / 1024;
-  //   console.log(`Using approximately ${used.toFixed(1)} MB`);
-  // }
   return true;
-  // return { filePath, doc: options.doc, uri };
 }
 
 function correctRedirectURL(redirectUrl) {
@@ -294,16 +277,27 @@ if (!paths.length) {
 
 function walk(directory, callback) {
   const files = fs.readdirSync(directory);
-  for (let filename of files) {
-    const filepath = path.join(directory, filename);
-    const isDirectory = fs.statSync(filepath).isDirectory();
-    // XXX Explain!
-    if (path.extname(filename) === ".json" && !isDirectory) {
-      callback(filepath);
-    } else if (isDirectory) {
+  // First walk all the files. Then all the directories.
+  // This means we're making sure we processing any "parent" page
+  // before its children which'll be necessary for the ability to build
+  // a breadcrumb on the leaf pages.
+  const filepaths = files.map(filename => path.join(directory, filename));
+
+  // First every not-directory
+  filepaths
+    .filter(filepath => !fs.statSync(filepath).isDirectory())
+    .forEach(filepath => {
+      if (filepath.endsWith(".json")) {
+        callback(filepath);
+      }
+    });
+
+  // Now dig into each directory
+  filepaths
+    .filter(filepath => fs.statSync(filepath).isDirectory())
+    .forEach(filepath => {
       walk(filepath, callback);
-    }
-  }
+    });
 }
 
 function run(paths) {
@@ -430,22 +424,20 @@ class ProgressBar {
     if (includeMemory) {
       this.barLength -= 10;
     }
-
-    this.updateFrequency = 0.01; // every 1%
   }
 
   init(total) {
+    if (!total) {
+      throw new Error("Must be initialized with a >0 number.");
+    }
     this.total = total;
     this.current = 0;
-    this.every = Math.round(total * this.updateFrequency);
     this.update(this.current);
   }
 
   update(current) {
     this.current = current;
-    // if (this.current % this.every === 0) {
     this.draw(this.current / this.total);
-    // }
   }
 
   draw(currentProgress) {
