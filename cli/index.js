@@ -386,14 +386,12 @@ function run(paths) {
   Object.entries(titlesByLocale).forEach(([locale, localeTitles]) => {
     const titles = {};
     const allTitlesFilepath = path.join(STATIC_ROOT, `${locale}/titles.json`);
-    let updateTitlesFiles;
-    if (fs.existsSync(allTitlesFilepath)) {
+    const updateTitlesFiles = fs.existsSync(allTitlesFilepath);
+    if (updateTitlesFiles) {
       titles.titles = JSON.parse(fs.readFileSync(allTitlesFilepath, "utf8"))[
         "titles"
       ];
-      updateTitlesFiles = true;
     } else {
-      updateTitlesFiles = false;
       titles.titles = {};
     }
     localeTitles.forEach(built => {
