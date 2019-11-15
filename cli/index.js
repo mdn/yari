@@ -1,7 +1,7 @@
 import React from "react";
 import fs from "fs";
 import path from "path";
-// const crypto = require("crypto");
+import url from "url";
 
 // This is necessary because the cli.js is in dist/cli.js
 // and we need to reach the .env this way.
@@ -58,9 +58,11 @@ function fixRelatedContent(document) {
       });
     }
   }
-  document.related_content.forEach(block => {
-    fixBlock(block);
-  });
+  if (document.related_content) {
+    document.related_content.forEach(block => {
+      fixBlock(block);
+    });
+  }
 }
 
 /** Pretty print the absolute path relative to the current directory. */
@@ -68,28 +70,15 @@ function ppPath(filePath) {
   return path.relative(process.cwd(), filePath);
 }
 
-function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
+function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
   const start = new Date();
   const data = fs.readFileSync(filePath, "utf8");
-  // const buildHash = crypto
-  //   .createHash("md5")
-  //   .update(data)
-  //   .digest("hex");
 
   const options = {
     doc: JSON.parse(data)
   };
 
-  // Stumptown produces a `.related_content` for every document. But it
-  // contains data is either not needed or not appropriate for the way
-  // we're using it in the renderer. So mutate it for the specific needs
-  // of the renderer.
-  fixRelatedContent(options.doc);
-
-  // Find blocks of syntax code and transform it to syntax highlighted code.
-  if (options.doc.body) {
-    fixSyntaxHighlighting(options.doc);
-  }
+  let rendered = null;
 
   // always expect this to be a relative URL
   if (!options.doc.mdn_url.startsWith("/")) {
@@ -97,57 +86,104 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet }) {
       `Document's .mdn_url doesn't start with / (${options.doc.mdn_url})`
     );
   }
-  const uri = options.doc.mdn_url;
-  const destination = path.join(output, uri);
-  const outfileHtml = path.join(destination, "index.html");
-  const outfileJson = path.join(destination, "index.json");
-  // const outfileHash = path.join(destination, "index.hash");
+  const uri = decodeURI(options.doc.mdn_url);
 
-  // let previousHash = "";
-  // try {
-  //   previousHash = fs.readFileSync(outfileHash, "utf8");
-  // } catch (ex) {
-  //   // That's fine
-  // }
-  // console.log("PREVIOUS HASH", [previousHash, buildHash]);
-
-  let rendered = null;
-  if (buildHtml) {
-    try {
-      rendered = render(
-        <ServerLocation url={uri}>
-          <App {...options} />
-        </ServerLocation>,
-        options
-      );
-    } catch (ex) {
-      console.error(`Rendering HTML failed!
-      uri=${uri}
-      filePath=${filePath}`);
-      throw ex;
-    }
+  // This can totally happen if you're building from multiple sources
+  // E.g. `yarn start packaged1 packaged2`
+  // In this case, if some .json file in packaged1 has an mdn_url of
+  // for example /en-US/docs/Foo/bar and then this comes up again from
+  // a file in packaged2, then igore it this time.
+  if (uri in titles) {
+    return null;
   }
+  titles[uri] = options.doc.title;
+
+  const destination = path.join(output, uri);
 
   fs.mkdirSync(destination, { recursive: true });
-  if (rendered) {
-    fs.writeFileSync(outfileHtml, rendered);
-  }
-  fs.writeFileSync(
-    outfileJson,
-    process.env.NODE_ENV === "development"
-      ? JSON.stringify(options, null, 2)
-      : JSON.stringify(options)
-  );
-  // fs.writeFileSync(outfileHash, buildHash);
 
-  if (!quiet) {
-    let outMsg = `Wrote ${ppPath(outfileJson)}`;
-    if (rendered) {
-      outMsg += ` and ${ppPath(outfileHtml)}`;
+  if (options.doc.redirect_url) {
+    const outfileRedirect = path.join(destination, "index.redirect");
+
+    // This `options.doc.redirect_url` is either something like
+    // '/api/v1/doc/en-US/Learn/Common_questions' or something like
+    // 'https://wiki.developer.mozilla.org/en-US/Add-ons/SDK/Low-Level_APIs'
+    // of which both are invalid unless we process it a little.
+    const redirectUrl = correctRedirectURL(options.doc.redirect_url);
+    fs.writeFileSync(outfileRedirect, redirectUrl);
+
+    if (!quiet) {
+      let outMsg = `Wrote ${ppPath(outfileRedirect)}`;
+      console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
     }
-    console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
+  } else {
+    // Stumptown produces a `.related_content` for every document. But it
+    // contains data that is either not needed or not appropriate for the way
+    // we're using it in the renderer. So mutate it for the specific needs
+    // of the renderer.
+    fixRelatedContent(options.doc);
+
+    // Find blocks of syntax code and transform it to syntax highlighted code.
+    if (options.doc.body) {
+      fixSyntaxHighlighting(options.doc);
+    }
+
+    const outfileHtml = path.join(destination, "index.html");
+    const outfileJson = path.join(destination, "index.json");
+
+    if (buildHtml) {
+      try {
+        rendered = render(
+          <ServerLocation url={uri}>
+            <App {...options} />
+          </ServerLocation>,
+          options
+        );
+      } catch (ex) {
+        console.error(`Rendering HTML failed!
+      uri=${uri}
+      filePath=${filePath}`);
+        throw ex;
+      }
+    }
+
+    if (rendered) {
+      fs.writeFileSync(outfileHtml, rendered);
+    }
+    fs.writeFileSync(
+      outfileJson,
+      process.env.NODE_ENV === "development"
+        ? JSON.stringify(options, null, 2)
+        : JSON.stringify(options)
+    );
+
+    if (!quiet) {
+      let outMsg = `Wrote ${ppPath(outfileJson)}`;
+      if (rendered) {
+        outMsg += ` and ${ppPath(outfileHtml)}`;
+      }
+      console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
+    }
   }
-  return { filePath, doc: options.doc, uri };
+  return true;
+}
+
+function correctRedirectURL(redirectUrl) {
+  if (redirectUrl.startsWith("/api/v1/doc/")) {
+    redirectUrl = redirectUrl.replace("/api/v1/doc/", "");
+    const split = redirectUrl.split("/");
+    split.splice(1, 0, "docs");
+    split.unshift("");
+    return split.join("/");
+  } else if (redirectUrl.includes("://")) {
+    const parsed = url.parse(redirectUrl);
+    if (parsed.host.endsWith("developer.mozilla.org")) {
+      return parsed.pathname;
+    }
+  }
+
+  // I give up!
+  return redirectUrl;
 }
 
 const options = buildOptions({
@@ -237,95 +273,217 @@ if (!paths.length) {
   paths.push(path.join(STUMPTOWN_CONTENT_ROOT, "packaged"));
 }
 
-/** Given an array of directories or files return all distinct .json files.
- *
- * Only if it's a directory do we search for *.json files
- * in there recursively.
- */
-function expandFiles(directoriesOrFiles) {
-  function findFiles(directory, extension, filepaths = []) {
-    if (path.basename(directory) === "node_modules") {
-      throw new Error(
-        `Can't dig deeper into ${directory}. ` +
-          `Doesn't look like stumptown content packaged location`
-      );
-    }
-    const files = fs.readdirSync(directory);
-    for (let filename of files) {
-      const filepath = path.join(directory, filename);
-      if (fs.statSync(filepath).isDirectory()) {
-        findFiles(filepath, extension, filepaths);
-      } else if (path.extname(filename) === extension) {
-        filepaths.push(filepath);
-      }
-    }
-    return filepaths;
-  }
+function walk(directory, callback) {
+  const files = fs.readdirSync(directory);
+  // First walk all the files. Then all the directories.
+  // This means we're making sure we processing any "parent" page
+  // before its children which'll be necessary for the ability to build
+  // a breadcrumb on the leaf pages.
+  const filepaths = files.map(filename => path.join(directory, filename));
 
-  const filePaths = [];
-  directoriesOrFiles.forEach(thing => {
-    let files = [];
-    const lstat = fs.lstatSync(thing);
-    if (lstat.isDirectory()) {
-      files = findFiles(thing, ".json");
-    } else {
-      files = [thing];
-    }
-    files.forEach(p => filePaths.includes(p) || filePaths.push(p));
-  });
-  return filePaths;
+  // First every not-directory
+  filepaths
+    .filter(filepath => !fs.statSync(filepath).isDirectory())
+    .forEach(filepath => {
+      if (filepath.endsWith(".json")) {
+        callback(filepath);
+      }
+    });
+
+  // Now dig into each directory
+  filepaths
+    .filter(filepath => fs.statSync(filepath).isDirectory())
+    .forEach(filepath => {
+      walk(filepath, callback);
+    });
 }
 
 function run(paths) {
+  const output = args.output;
+  const buildHtml = args["build-html"];
+  const quiet = args["quiet"];
+
   const startTime = Date.now();
-  const buildFiles = expandFiles(paths).map(filePath => {
-    const output = args.output;
-    return buildHtmlAndJson({
-      filePath,
-      output,
-      buildHtml: args["build-html"],
-      quiet: args["quiet"]
-    });
+  const built = [];
+  const titles = {};
+
+  paths.forEach(fileOrDirectory => {
+    const lstat = fs.lstatSync(fileOrDirectory);
+    if (lstat.isDirectory()) {
+      const todo = [];
+      walk(fileOrDirectory, filePath => {
+        todo.push(filePath);
+      });
+
+      console.log(
+        `About to process ${fileOrDirectory} (${todo.length.toLocaleString()} files)`
+      );
+      const progressBar = new ProgressBar({ includeMemory: true });
+      progressBar.init(todo.length);
+
+      todo.forEach((filePath, index) => {
+        built.push(
+          buildHtmlAndJson({
+            filePath,
+            output,
+            buildHtml,
+            quiet,
+            titles
+          })
+        );
+        progressBar.update(index + 1);
+      });
+      if (quiet) {
+        progressBar.stop();
+      }
+    } else if (lstat.isFile()) {
+      built.push(
+        buildHtmlAndJson({
+          fileOrDirectory,
+          output,
+          buildHtml,
+          quiet,
+          titles
+        })
+      );
+    } else {
+      throw new Error(`neither file or directory ${fileOrDirectory}`);
+    }
   });
-  const tookSeconds = (Date.now() - startTime) / 1000;
+  const overlapFiles = built.filter(p => !p);
+  const buildFiles = built.filter(p => !!p);
+
+  const endTime = Date.now();
+  const tookSeconds = (endTime - startTime) / 1000;
+  const msPerDoc = (endTime - startTime) / buildFiles.length;
+  const rate = buildFiles.length / tookSeconds;
   console.log(
     chalk.green(
-      `Built ${buildFiles.length} documents in ${tookSeconds.toFixed(1)}s.`
+      `Built ${buildFiles.length.toLocaleString()} documents in ${tookSeconds.toFixed(
+        1
+      )}s ` +
+        `(approximately ${msPerDoc.toFixed(1)} ms/doc - ${rate.toFixed(
+          1
+        )} docs/sec)`
     )
   );
+  if (overlapFiles) {
+    chalk.yellow(
+      `${overlapFiles.length.toLocaleString()} files overlapped ` +
+        `and were skipped.`
+    );
+  }
+
   const titlesByLocale = {};
-  buildFiles.forEach(built => {
-    const localeKey = built.uri.split("/")[1];
-    titlesByLocale[localeKey] = titlesByLocale[localeKey] || [];
-    titlesByLocale[localeKey].push(built);
+  Object.entries(titles).forEach(([uri, title]) => {
+    if (title) {
+      const localeKey = uri.split("/")[1];
+      titlesByLocale[localeKey] = titlesByLocale[localeKey] || [];
+      titlesByLocale[localeKey].push({ uri, title });
+    }
   });
+
   Object.entries(titlesByLocale).forEach(([locale, localeTitles]) => {
     const titles = {};
     const allTitlesFilepath = path.join(STATIC_ROOT, `${locale}/titles.json`);
-    if (fs.existsSync(allTitlesFilepath)) {
+    const updateTitlesFiles = fs.existsSync(allTitlesFilepath);
+    if (updateTitlesFiles) {
       titles.titles = JSON.parse(fs.readFileSync(allTitlesFilepath, "utf8"))[
         "titles"
       ];
-      console.warn(
-        `Updating ${
-          Object.keys(titles.titles).length
-        } file ${allTitlesFilepath}`
-      );
     } else {
-      console.warn(`Starting a fresh new ${allTitlesFilepath}`);
       titles.titles = {};
     }
     localeTitles.forEach(built => {
-      titles.titles[built.uri] = built.doc.title;
+      titles.titles[built.uri] = built.title;
     });
 
     fs.writeFileSync(allTitlesFilepath, JSON.stringify(titles, null, 2));
     console.log(
       `${allTitlesFilepath} now contains ${Object.keys(
         titles.titles
-      ).length.toLocaleString()} documents.`
+      ).length.toLocaleString()} documents (${
+        updateTitlesFiles ? "updated" : "fresh"
+      }).`
     );
   });
+}
+
+class ProgressBar {
+  constructor({ prefix = "Progress: ", includeMemory = false }) {
+    this.total;
+    this.current;
+    this.prefix = prefix;
+    this.includeMemory = includeMemory;
+    this.barLength =
+      process.stdout.columns - prefix.length - "100.0%".length - 5;
+    if (includeMemory) {
+      this.barLength -= 10;
+    }
+  }
+
+  init(total) {
+    if (!total) {
+      throw new Error("Must be initialized with a >0 number.");
+    }
+    this.total = total;
+    this.current = 0;
+    this.update(this.current);
+  }
+
+  update(current) {
+    this.current = current;
+    this.draw(this.current / this.total);
+  }
+
+  draw(currentProgress) {
+    const filledBarLength = Math.round(currentProgress * this.barLength);
+    const emptyBarLength = this.barLength - filledBarLength;
+
+    const filledBar = this.getBar(filledBarLength, "█");
+    const emptyBar = this.getBar(emptyBarLength, "░");
+
+    const percentageProgress = this.rJust(
+      `${(currentProgress * 100).toFixed(1)}%`,
+      "100.0%".length
+    );
+
+    let out = `${this.prefix}[${filledBar}${emptyBar}] | ${percentageProgress}`;
+    if (this.includeMemory) {
+      const bytes = process.memoryUsage().heapUsed;
+      out += ` | ${this.rJust(this.humanFileSize(bytes))}`;
+    }
+    process.stdout.clearLine();
+    process.stdout.cursorTo(0);
+    process.stdout.write(out);
+  }
+
+  stop() {
+    process.stdout.write("\n");
+  }
+
+  humanFileSize(size) {
+    if (size < 1024) return size + " B";
+    let i = Math.floor(Math.log(size) / Math.log(1024));
+    let num = size / Math.pow(1024, i);
+    let round = Math.round(num);
+    num = round < 10 ? num.toFixed(2) : round < 100 ? num.toFixed(1) : round;
+    return `${num} ${"KMGTPEZY"[i - 1]}B`;
+  }
+  rJust(str, length) {
+    while (str.length < length) {
+      str = ` ${str}`;
+    }
+    return str;
+  }
+
+  getBar(length, char, color = a => a) {
+    return color(
+      Array(length)
+        .fill(char)
+        .join("")
+    );
+  }
 }
 
 async function runStumptownContentBuildJson(path) {
