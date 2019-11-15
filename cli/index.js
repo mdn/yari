@@ -353,7 +353,10 @@ function triggerTouch(documents, changedFile) {
   let newContent = `// Timestamp: ${new Date()}\n`;
   newContent += `const documents = ${JSON.stringify(documents, null, 2)}\n`;
   newContent += `const changedFile = ${JSON.stringify(changedFile)}\n`;
-  newContent += `const touched = { documents, changedFile };\n`;
+  newContent += `const hasEDITOR = ${JSON.stringify(
+    Boolean(process.env.EDITOR)
+  )}\n`;
+  newContent += `const touched = { documents, changedFile, hasEDITOR };\n`;
   newContent += "export default touched;";
   fs.writeFileSync(touchfile, newContent);
   console.log(

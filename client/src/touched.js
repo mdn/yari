@@ -20,20 +20,28 @@ if (process.env.NODE_ENV === "development") {
     labelChangedFile.textContent = "changed file: ";
     wrapper.appendChild(labelChangedFile);
 
-    const changedFile = document.createElement("a");
-    changedFile.href = `file://${touched.changedFile.path}`;
-    changedFile.onclick = event => {
-      event.preventDefault();
-      console.log(
-        `Going to try to open ${touched.changedFile.path} in your editor`
-      );
-      fetch(`/_open?filepath=${touched.changedFile.path}`);
-    };
-    changedFile.title = "Click to open in your editor";
-    changedFile.style["padding-left"] = "2px";
-    changedFile.style["padding-right"] = "10px";
-    changedFile.textContent = touched.changedFile.name;
-    wrapper.appendChild(changedFile);
+    if (touched.hasEDITOR) {
+      const changedFile = document.createElement("a");
+      changedFile.href = `file://${touched.changedFile.path}`;
+      changedFile.onclick = event => {
+        event.preventDefault();
+        console.log(
+          `Going to try to open ${touched.changedFile.path} in your editor`
+        );
+        fetch(`/_open?filepath=${touched.changedFile.path}`);
+      };
+      changedFile.title = "Click to open in your editor";
+      changedFile.style["padding-left"] = "2px";
+      changedFile.style["padding-right"] = "10px";
+      changedFile.textContent = touched.changedFile.name;
+      wrapper.appendChild(changedFile);
+    } else {
+      const changedFile = document.createElement("span");
+      changedFile.title = "$EDITOR is not set. See README.";
+      changedFile.style["padding-right"] = "10px";
+      changedFile.textContent = touched.changedFile.name;
+      wrapper.appendChild(changedFile);
+    }
 
     const labelDocument = document.createElement("b");
     labelDocument.textContent = "document url: ";
