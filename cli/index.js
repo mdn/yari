@@ -165,7 +165,7 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
       console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
     }
   }
-  return true;
+  return { filePath, uri };
 }
 
 function correctRedirectURL(redirectUrl) {
@@ -298,7 +298,7 @@ function walk(directory, callback) {
     });
 }
 
-function run(paths) {
+function run(paths, returnDocumentBuilt = false) {
   const output = args.output;
   const buildHtml = args["build-html"];
   const quiet = args["quiet"];
@@ -306,6 +306,27 @@ function run(paths) {
   const startTime = Date.now();
   const built = [];
   const titles = {};
+
+  /** Run buildHtmlAndJson() but be smart about how we're adding its
+   * result to an array.
+   * The buildHtmlAndJson() function will always return an object of useful
+   * information, but if you run it 1,000 times that means the array
+   * that keeps track of what was built will be so large in memory that
+   * Node will crash with Out-of-memory.
+   * So, when you have a lot to do, just compute an array of boolean results,
+   * but if explicitly asked (`returnDocumentBuilt`) then return an array
+   * of result objects. This latter is useful for the watcher that builds
+   * one file at a time and populates some information about that in the
+   * client.
+   */
+  function wrapBuildHtmlAndJson(...args) {
+    const result = buildHtmlAndJson(...args);
+    if (returnDocumentBuilt) {
+      built.push(result);
+    } else {
+      built.push(!!result);
+    }
+  }
 
   paths.forEach(fileOrDirectory => {
     const lstat = fs.lstatSync(fileOrDirectory);
@@ -323,7 +344,7 @@ function run(paths) {
 
       todo.forEach((filePath, index) => {
         built.push(
-          buildHtmlAndJson({
+          wrapBuildHtmlAndJson({
             filePath,
             output,
             buildHtml,
@@ -338,8 +359,8 @@ function run(paths) {
       }
     } else if (lstat.isFile()) {
       built.push(
-        buildHtmlAndJson({
-          fileOrDirectory,
+        wrapBuildHtmlAndJson({
+          filePath: fileOrDirectory,
           output,
           buildHtml,
           quiet,
@@ -564,7 +585,7 @@ if (args.watch) {
       console.error(error);
     } else {
       console.log(`Running for packaged file ${built.destPath}`);
-      const documents = run([built.destPath]);
+      const documents = run([built.destPath], { returnDocumentBuilt: true });
       const buildFiles = documents.map(d => ppPath(d["filePath"]));
       console.log(chalk.green(`Built documents from: ${buildFiles}`));
       triggerTouch(documents, {
