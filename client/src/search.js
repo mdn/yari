@@ -497,10 +497,6 @@ class ShowSearchResults extends React.PureComponent {
                 this.redirectHandler(result);
               }}
             >
-              {/* TEMPORARY */}
-              <small style={{ float: "right", color: "orange" }}>
-                {result.popularity}
-              </small>{" "}
               <HighlightMatch title={result.title} q={q} />
               <br />
               <BreadcrumbURI uri={result.uri} substrings={result.substrings} />

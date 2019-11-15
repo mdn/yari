@@ -395,7 +395,15 @@ function run(paths) {
       titles.titles = {};
     }
     localeTitles.forEach(built => {
-      titles.titles[built.uri] = built.title;
+      // TODO: Some day, we'll make it easier to "influence" the popularity
+      // number. At the moment (Nov 2019), it just needs to be present
+      // for the in-client search widget to work at all.
+      // In the future this could be a lookup based on `built.uri` where
+      // perhaps we pre-process a Google Analytics Pageviews CSV report into
+      // a map and use that to give each URI a number that somehow reflects
+      // "popularity". Or, it could be manually determined based on the URI
+      // like `if (uri.includes('Archive')) popularity /= 2.0`
+      titles.titles[built.uri] = { title: built.title, popularity: 0.0 };
     });
 
     fs.writeFileSync(allTitlesFilepath, JSON.stringify(titles, null, 2));
