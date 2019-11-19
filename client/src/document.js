@@ -76,6 +76,7 @@ export class Document extends React.Component {
       <div>
         <h1 className="page-title">{doc.title}</h1>
         <div className="main">
+          <nav>{doc.parents && <Breadcrumbs parents={doc.parents} />}</nav>
           <div className="sidebar">
             <RenderSideBar doc={doc} />
           </div>
@@ -90,6 +91,36 @@ export class Document extends React.Component {
       </div>
     );
   }
+}
+
+function Breadcrumbs({ parents }) {
+  if (!parents.length) {
+    throw new Error("Empty parents array");
+  }
+  return (
+    <ol
+      typeof="BreadcrumbList"
+      vocab="https://schema.org/"
+      aria-label="breadcrumbs"
+    >
+      {parents.map((parent, i) => {
+        const isLast = i + 1 === parents.length;
+        return (
+          <li key={parent.uri} property="itemListElement" typeof="ListItem">
+            <Link
+              to={parent.uri}
+              className={isLast ? "crumb-current-page" : "breadcrumb-chevron"}
+              property="item"
+              typeof="WebPage"
+            >
+              <span property="name">{parent.title}</span>
+            </Link>
+            <meta property="position" content={i + 1} />
+          </li>
+        );
+      })}
+    </ol>
+  );
 }
 
 function RenderSideBar({ doc }) {
