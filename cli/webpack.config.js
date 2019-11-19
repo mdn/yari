@@ -2,7 +2,6 @@ const path = require("path");
 
 const nodeExternals = require("webpack-node-externals");
 const webpack = require("webpack");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   context: path.resolve(__dirname, "."),
@@ -51,5 +50,5 @@ module.exports = {
   },
   externals: nodeExternals(),
   devtool: "source-map",
-  plugins: [new CleanWebpackPlugin(), new webpack.SourceMapDevToolPlugin({})]
+  plugins: [new webpack.SourceMapDevToolPlugin({})]
 };
