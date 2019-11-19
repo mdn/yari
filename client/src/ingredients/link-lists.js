@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "@reach/router";
 
-function LinkList({ title, links }) {
+export function LinkList({ title, links }) {
   return (
     <div className="link-list">
       <h2>{title}</h2>
