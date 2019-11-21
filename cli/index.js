@@ -18,6 +18,7 @@ import chalk from "chalk";
 import { App } from "../client/src/app";
 import render from "./render";
 import { fixSyntaxHighlighting } from "./syntax-highlighter";
+import { fixMdnURL } from "./browser-compatibility-table";
 
 const STUMPTOWN_CONTENT_ROOT =
   process.env.STUMPTOWN_CONTENT_ROOT || path.join(__dirname, "../../stumptown");
@@ -126,6 +127,7 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
     // Find blocks of syntax code and transform it to syntax highlighted code.
     if (options.doc.body) {
       fixSyntaxHighlighting(options.doc);
+      fixMdnURL(options.doc);
     }
 
     const outfileHtml = path.join(destination, "index.html");

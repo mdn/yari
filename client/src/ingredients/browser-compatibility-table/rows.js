@@ -1,13 +1,14 @@
 import React from "react";
 import { BrowserSupportDetail } from "./browser-support-detail";
 import { BrowserSupportNotes } from "./browser-support-notes";
+import { Link } from "@reach/router";
 
 function buildCompatibilityObject(query, compatibilityData) {
   const features = {};
 
   if (!!compatibilityData.__compat) {
     const name = query.split(".").pop();
-    features[name] = compatibilityData.__compat;
+    features[name] = { ...compatibilityData.__compat, ...{ origin: true } };
   }
   for (const compat in compatibilityData) {
     if (compat !== "__compat" && !!compatibilityData[compat]["__compat"]) {
@@ -221,11 +222,16 @@ export function Rows({
       hasAlternative,
       hasNotes
     );
-
     browserCompatibilityRows.push([
       <tr key={key}>
         <th scope="row">
-          <code>{key}</code>
+          {currentRow.mdn_url && !currentRow.origin ? (
+            <Link to={currentRow.mdn_url}>
+              <code>{key}</code>
+            </Link>
+          ) : (
+            <code>{key}</code>
+          )}
           {currentRow.status && (
             <div className="bc-icons">
               {currentRow.status.deprecated && (
