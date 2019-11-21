@@ -21,7 +21,6 @@ export default class FuzzySearch {
 }
 
 function getSubstrings(regexString, matchString) {
-  console.log(regexString);
   const regex = new RegExp(regexString, "gi");
   const matchArray = regex.exec(matchString);
   const substrings = [];
