@@ -1,8 +1,6 @@
 import { Redirect } from "@reach/router";
 import FlexSearch from "flexsearch";
 import React from "react";
-// import fuzzy from "fuzzy.js";
-// import FuzzySearch from "fuzzy-search";
 import FuzzySearch from "./fuzzy-search";
 import "./search.scss";
 

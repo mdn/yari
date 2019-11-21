@@ -20,18 +20,20 @@ export default class FuzzySearch {
   }
 }
 
-const getSubstrings = (regexString, matchString) => {
-  let regex = new RegExp(regexString, "gi");
-  let matchArray = regex.exec(matchString);
-  let substrings = [];
-  let isMatch = false;
-  for (let i = 1; i < matchArray.length; i++) {
-    if (matchArray[i]) substrings.push({ str: matchArray[i], match: isMatch });
-    isMatch = !isMatch;
-  }
+function getSubstrings(regexString, matchString) {
+  console.log(regexString);
+  const regex = new RegExp(regexString, "gi");
+  const matchArray = regex.exec(matchString);
+  const substrings = [];
+  matchArray.forEach((str, i) => {
+    if (str && i) {
+      const match = !(i % 2);
+      substrings.push({ str, match });
+    }
+  });
   return { substrings };
-};
+}
 
-const escapeExp = term => {
+function escapeExp(term) {
   return term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-};
+}
