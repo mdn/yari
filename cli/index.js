@@ -12,12 +12,15 @@ import sane from "sane";
 import minimist from "minimist";
 import buildOptions from "minimist-options";
 import { ServerLocation } from "@reach/router";
-import sourceMapSupport from "source-map-support";
 import chalk from "chalk";
+import sourceMapSupport from "source-map-support";
 
 import { App } from "../client/src/app";
 import render from "./render";
 import { fixSyntaxHighlighting } from "./syntax-highlighter";
+import { normalizeURLs } from "./browser-compatibility-table";
+
+sourceMapSupport.install();
 
 const STUMPTOWN_CONTENT_ROOT =
   process.env.STUMPTOWN_CONTENT_ROOT || path.join(__dirname, "../../stumptown");
@@ -25,7 +28,6 @@ const STATIC_ROOT = path.join(__dirname, "../../client/build");
 const TOUCHFILE = path.join(__dirname, "../../client/src/touchthis.js");
 const BUILD_JSON_SERVER =
   process.env.BUILD_JSON_SERVER || "http://localhost:5555";
-sourceMapSupport.install();
 
 /** In the document, there's related_content and it contains keys
  * called 'mdn_url'. We need to transform them to relative links
@@ -123,9 +125,12 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
     // of the renderer.
     fixRelatedContent(options.doc);
 
-    // Find blocks of syntax code and transform it to syntax highlighted code.
     if (options.doc.body) {
+      // Find blocks of code and transform it to syntax highlighted code.
       fixSyntaxHighlighting(options.doc);
+      // Creates new mdn_url's for the browser-compatibility-table to link to
+      // pages within this project rather than use the absolute URLs
+      normalizeURLs(options.doc);
     }
 
     const outfileHtml = path.join(destination, "index.html");
@@ -165,7 +170,7 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
       console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
     }
   }
-  return true;
+  return { filePath, uri };
 }
 
 function correctRedirectURL(redirectUrl) {
@@ -298,7 +303,7 @@ function walk(directory, callback) {
     });
 }
 
-function run(paths) {
+function run(paths, returnDocumentBuilt = false) {
   const output = args.output;
   const buildHtml = args["build-html"];
   const quiet = args["quiet"];
@@ -306,6 +311,27 @@ function run(paths) {
   const startTime = Date.now();
   const built = [];
   const titles = {};
+
+  /** Run buildHtmlAndJson() but be smart about how we're adding its
+   * result to an array.
+   * The buildHtmlAndJson() function will always return an object of useful
+   * information, but if you run it 1,000 times that means the array
+   * that keeps track of what was built will be so large in memory that
+   * Node will crash with Out-of-memory.
+   * So, when you have a lot to do, just compute an array of boolean results,
+   * but if explicitly asked (`returnDocumentBuilt`) then return an array
+   * of result objects. This latter is useful for the watcher that builds
+   * one file at a time and populates some information about that in the
+   * client.
+   */
+  function wrapBuildHtmlAndJson(...args) {
+    const result = buildHtmlAndJson(...args);
+    if (returnDocumentBuilt) {
+      built.push(result);
+    } else {
+      built.push(!!result);
+    }
+  }
 
   paths.forEach(fileOrDirectory => {
     const lstat = fs.lstatSync(fileOrDirectory);
@@ -323,7 +349,7 @@ function run(paths) {
 
       todo.forEach((filePath, index) => {
         built.push(
-          buildHtmlAndJson({
+          wrapBuildHtmlAndJson({
             filePath,
             output,
             buildHtml,
@@ -338,8 +364,8 @@ function run(paths) {
       }
     } else if (lstat.isFile()) {
       built.push(
-        buildHtmlAndJson({
-          fileOrDirectory,
+        wrapBuildHtmlAndJson({
+          filePath: fileOrDirectory,
           output,
           buildHtml,
           quiet,
@@ -395,7 +421,15 @@ function run(paths) {
       titles.titles = {};
     }
     localeTitles.forEach(built => {
-      titles.titles[built.uri] = built.title;
+      // TODO: Some day, we'll make it easier to "influence" the popularity
+      // number. At the moment (Nov 2019), it just needs to be present
+      // for the in-client search widget to work at all.
+      // In the future this could be a lookup based on `built.uri` where
+      // perhaps we pre-process a Google Analytics Pageviews CSV report into
+      // a map and use that to give each URI a number that somehow reflects
+      // "popularity". Or, it could be manually determined based on the URI
+      // like `if (uri.includes('Archive')) popularity /= 2.0`
+      titles.titles[built.uri] = { title: built.title, popularity: 0.0 };
     });
 
     fs.writeFileSync(allTitlesFilepath, JSON.stringify(titles, null, 2));
@@ -564,7 +598,7 @@ if (args.watch) {
       console.error(error);
     } else {
       console.log(`Running for packaged file ${built.destPath}`);
-      const documents = run([built.destPath]);
+      const documents = run([built.destPath], { returnDocumentBuilt: true });
       const buildFiles = documents.map(d => ppPath(d["filePath"]));
       console.log(chalk.green(`Built documents from: ${buildFiles}`));
       triggerTouch(documents, {

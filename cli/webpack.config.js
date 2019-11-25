@@ -2,16 +2,15 @@ const path = require("path");
 
 const nodeExternals = require("webpack-node-externals");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-
-const srcPath = path.resolve(__dirname, ".");
-const distPath = path.resolve(__dirname, "dist");
+const webpack = require("webpack");
 
 module.exports = {
-  context: srcPath,
+  context: path.resolve(__dirname, "."),
   entry: "./index.js",
   output: {
-    path: distPath,
-    filename: "cli.js"
+    path: path.resolve(__dirname, "dist"),
+    filename: "[name].js",
+    sourceMapFilename: "[name].js.map"
   },
   target: "node",
   node: {
@@ -52,5 +51,5 @@ module.exports = {
   },
   externals: nodeExternals(),
   devtool: "source-map",
-  plugins: [new CleanWebpackPlugin()]
+  plugins: [new CleanWebpackPlugin(), new webpack.SourceMapDevToolPlugin({})]
 };
