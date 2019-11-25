@@ -1,4 +1,4 @@
-// This file is the magic. It gets edited by the automation in the cli.
+// This file is the magic. It gets edited by the automation in the ssr.
 // In fact its content is auto-generated and when it gets edited, this
 // will cause the development server to refresh itself.
 import touched from "./touchthis";

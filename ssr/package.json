@@ -1,13 +1,12 @@
 {
-  "name": "cli",
+  "name": "ssr",
   "version": "0.1.0",
-  "main": "index.js",
+  "main": "dist/main.js",
   "license": "MPL-2.0",
   "scripts": {
     "build": "webpack --config webpack.config.js --mode=development",
-    "start": "yarn build && node dist/main.js",
     "build:watch": "webpack --config webpack.config.js --watch --mode=development",
-    "dev:run": "cross-env NODE_ENV=development nodemon dist/cli.js --watch dist/cli.js",
+    "start:dev": "cross-env NODE_ENV=development nodemon dist/main.js --watch dist/main.js",
     "test": "jest",
     "build-json-server": "node build-json-server.js"
   },
@@ -17,8 +16,6 @@
     "cheerio": "1.0.0-rc.3",
     "cross-env": "^6.0.3",
     "dotenv": "8.2.0",
-    "minimist": "1.2.0",
-    "minimist-options": "4.0.2",
     "prismjs": "1.17.1",
     "react": "16.11.0",
     "react-dom": "16.11.0",
@@ -42,6 +39,7 @@
     "ignore-loader": "0.1.2",
     "jest": "24.9.0",
     "node-fetch": "2.6.0",
+    "nodemon": "^2.0.1",
     "serve": "11.2.0",
     "webpack": "4.41.2",
     "webpack-cli": "3.3.9",

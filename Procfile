@@ -1,4 +1,5 @@
 server: yarn workspace server start
 web: yarn cross-env PORT=3000 yarn workspace client start
-watch: yarn workspace cli start --watch
-buildserver: yarn workspace cli build-json-server
+build-ssr: yarn workspace ssr build:watch
+ssr: yarn workspace ssr start:dev
+buildserver: yarn workspace ssr build-json-server

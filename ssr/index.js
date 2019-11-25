@@ -2,30 +2,30 @@ import React from "react";
 import fs from "fs";
 import path from "path";
 import url from "url";
-
-// This is necessary because the cli.js is in dist/cli.js
-// and we need to reach the .env this way.
-require("dotenv").config({ path: path.join(__dirname, "../../.env") });
-
 import fetch from "node-fetch";
 import sane from "sane";
-import minimist from "minimist";
-import buildOptions from "minimist-options";
 import { ServerLocation } from "@reach/router";
 import chalk from "chalk";
 import sourceMapSupport from "source-map-support";
 
 import { App } from "../client/src/app";
 import render from "./render";
+import ProgressBar from "./progress-bar";
 import { fixSyntaxHighlighting } from "./syntax-highlighter";
 import { normalizeURLs } from "./browser-compatibility-table";
 
 sourceMapSupport.install();
 
+// This is necessary because the ssr.js is in dist/ssr.js
+// and we need to reach the .env this way.
+require("dotenv").config({ path: path.join(__dirname, "../../.env") });
+
+const PROJECT_ROOT = path.join(__dirname, "..", "..");
 const STUMPTOWN_CONTENT_ROOT =
-  process.env.STUMPTOWN_CONTENT_ROOT || path.join(__dirname, "../../stumptown");
-const STATIC_ROOT = path.join(__dirname, "../../client/build");
-const TOUCHFILE = path.join(__dirname, "../../client/src/touchthis.js");
+  process.env.STUMPTOWN_CONTENT_ROOT || path.join(PROJECT_ROOT, "stumptown");
+const STATIC_ROOT = path.join(PROJECT_ROOT, "client", "build");
+const TOUCHFILE = path.join(PROJECT_ROOT, "client", "src", "touchthis.js");
+
 const BUILD_JSON_SERVER =
   process.env.BUILD_JSON_SERVER || "http://localhost:5555";
 
@@ -191,93 +191,6 @@ function correctRedirectURL(redirectUrl) {
   return redirectUrl;
 }
 
-const options = buildOptions({
-  help: {
-    type: "boolean",
-    alias: ["h"],
-    default: false
-  },
-
-  output: {
-    type: "string",
-    alias: "o",
-    default: STATIC_ROOT
-  },
-
-  version: {
-    type: "boolean",
-    alias: ["v"],
-    default: false
-  },
-
-  quiet: {
-    type: "boolean",
-    alias: ["q"],
-    default: false
-  },
-
-  debug: "boolean",
-
-  "build-html": {
-    type: "boolean",
-    alias: ["b"],
-    default: JSON.parse(process.env.CLI_BUILD_HTML || "false")
-  },
-
-  watch: {
-    type: "boolean",
-    alias: "w",
-    default: false
-  },
-
-  // Special option for positional arguments (`_` in minimist)
-  arguments: "string"
-});
-
-const args = minimist(process.argv.slice(2), options);
-
-if (args["help"]) {
-  console.log(`
-  Usage:
-    yarn run run [options] [FILES AND/OR FOLDERS]
-
-  Options:
-    -h, --help         print usage information
-    -v, --version      show version info and exit
-    -d, --debug        with more verbose output (currently not supported!)
-    -q, --quiet        as little output as possible
-    -o, --output       root directory to store built files (default ${STATIC_ROOT})
-    -b, --build-html   also generate fully formed index.html files (or env var $CLI_BUILD_HTML)
-    -w, --watch        watch stumptown content for changes
-    -t, --touchfile    file to touch to trigger client rebuild (default ${TOUCHFILE})
-
-    Note that the default is to build all packaged .json files found in
-    '../stumptown/packaged' (relevant to the cli directory).
-    `);
-  process.exit(0);
-}
-
-if (args["version"]) {
-  console.log(require("./package.json").version);
-  process.exit(0);
-}
-
-if (args["debug"]) {
-  console.warn("--debug is not yet supported");
-  process.exit(1);
-}
-
-const touchfile = args.touchfile || TOUCHFILE;
-if (touchfile) {
-  // XXX
-  // console.warn(`CHECK ${touchfile} THAT IS WRITABLE`);
-}
-
-const paths = args["_"];
-if (!paths.length) {
-  paths.push(path.join(STUMPTOWN_CONTENT_ROOT, "packaged"));
-}
-
 function walk(directory, callback) {
   const files = fs.readdirSync(directory);
   // First walk all the files. Then all the directories.
@@ -303,11 +216,11 @@ function walk(directory, callback) {
     });
 }
 
-function run(paths, returnDocumentBuilt = false) {
-  const output = args.output;
-  const buildHtml = args["build-html"];
-  const quiet = args["quiet"];
-
+function renderDocuments(
+  paths,
+  { "build-html": buildHtml, output, quiet },
+  returnDocumentBuilt = false
+) {
   const startTime = Date.now();
   const built = [];
   const titles = {};
@@ -445,103 +358,20 @@ function run(paths, returnDocumentBuilt = false) {
   return buildFiles;
 }
 
-class ProgressBar {
-  constructor({ prefix = "Progress: ", includeMemory = false }) {
-    this.total;
-    this.current;
-    this.prefix = prefix;
-    this.includeMemory = includeMemory;
-    this.barLength =
-      process.stdout.columns - prefix.length - "100.0%".length - 5;
-    if (includeMemory) {
-      this.barLength -= 10;
-    }
-  }
-
-  init(total) {
-    if (!total) {
-      throw new Error("Must be initialized with a >0 number.");
-    }
-    this.total = total;
-    this.current = 0;
-    this.update(this.current);
-  }
-
-  update(current) {
-    this.current = current;
-    this.draw(this.current / this.total);
-  }
-
-  draw(currentProgress) {
-    const filledBarLength = Math.round(currentProgress * this.barLength);
-    const emptyBarLength = this.barLength - filledBarLength;
-
-    const filledBar = this.getBar(filledBarLength, "█");
-    const emptyBar = this.getBar(emptyBarLength, "░");
-
-    const percentageProgress = this.rJust(
-      `${(currentProgress * 100).toFixed(1)}%`,
-      "100.0%".length
-    );
-
-    let out = `${this.prefix}[${filledBar}${emptyBar}] | ${percentageProgress}`;
-    if (this.includeMemory) {
-      const bytes = process.memoryUsage().heapUsed;
-      out += ` | ${this.rJust(this.humanFileSize(bytes))}`;
-    }
-    process.stdout.clearLine();
-    process.stdout.cursorTo(0);
-    process.stdout.write(out);
-  }
-
-  stop() {
-    process.stdout.write("\n");
-  }
-
-  humanFileSize(size) {
-    if (size < 1024) return size + " B";
-    let i = Math.floor(Math.log(size) / Math.log(1024));
-    let num = size / Math.pow(1024, i);
-    let round = Math.round(num);
-    num = round < 10 ? num.toFixed(2) : round < 100 ? num.toFixed(1) : round;
-    return `${num} ${"KMGTPEZY"[i - 1]}B`;
-  }
-  rJust(str, length) {
-    while (str.length < length) {
-      str = ` ${str}`;
-    }
-    return str;
-  }
-
-  getBar(length, char, color = a => a) {
-    return color(
-      Array(length)
-        .fill(char)
-        .join("")
-    );
-  }
-}
-
 async function runStumptownContentBuildJson(path) {
-  let response;
-  try {
-    response = await fetch(BUILD_JSON_SERVER, {
-      method: "post",
-      body: JSON.stringify({ path }),
-      headers: { "Content-Type": "application/json" }
-    });
-    if (response.ok) {
-      const result = await response.json();
-      return result;
-    } else {
-      throw new Error(`${response.statusText} from ${BUILD_JSON_SERVER}`);
-    }
-  } catch (ex) {
-    throw ex;
+  const response = await fetch(BUILD_JSON_SERVER, {
+    method: "post",
+    body: JSON.stringify({ path }),
+    headers: { "Content-Type": "application/json" }
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw new Error(`${response.statusText} from ${BUILD_JSON_SERVER}`);
   }
 }
 
-function triggerTouch(documents, changedFile) {
+function triggerTouch(touchfile, documents, changedFile) {
   let newContent = `// Timestamp: ${new Date()}\n`;
   newContent += `const documents = ${JSON.stringify(documents, null, 2)}\n`;
   newContent += `const changedFile = ${JSON.stringify(changedFile)}\n`;
@@ -558,7 +388,21 @@ function triggerTouch(documents, changedFile) {
   );
 }
 
-if (args.watch) {
+export const OPTION_DEFAULTS = Object.freeze({
+  output: STATIC_ROOT,
+  "build-html": JSON.parse(process.env.CLI_BUILD_HTML || "false"),
+  watch: false,
+  touchfile: TOUCHFILE,
+  quiet: false
+});
+
+function watch(options = OPTION_DEFAULTS) {
+  const touchfile = options.touchfile;
+  if (touchfile) {
+    // XXX
+    // console.warn(`CHECK ${touchfile} THAT IS WRITABLE`);
+  }
+
   const contentDir = path.join(STUMPTOWN_CONTENT_ROOT, "content");
   const watcher = sane(contentDir, {
     glob: ["**/*.md", "**/*.yaml"]
@@ -570,12 +414,7 @@ if (args.watch) {
     console.log("file changed", filepath);
     const absoluteFilePath = path.join(contentDir, filepath);
 
-    let result;
-    try {
-      result = await runStumptownContentBuildJson(absoluteFilePath);
-    } catch (ex) {
-      throw ex;
-    }
+    const result = await runStumptownContentBuildJson(absoluteFilePath);
 
     const { built, error } = result;
     if (error) {
@@ -598,15 +437,33 @@ if (args.watch) {
       console.error(error);
     } else {
       console.log(`Running for packaged file ${built.destPath}`);
-      const documents = run([built.destPath], { returnDocumentBuilt: true });
+      const documents = renderDocuments([built.destPath], options, {
+        returnDocumentBuilt: true
+      });
       const buildFiles = documents.map(d => ppPath(d["filePath"]));
       console.log(chalk.green(`Built documents from: ${buildFiles}`));
-      triggerTouch(documents, {
+      triggerTouch(touchfile, documents, {
         path: absoluteFilePath,
         name: path.basename(absoluteFilePath)
       });
     }
   });
-} else {
-  run(paths);
+}
+
+export function run(paths = [], options = OPTION_DEFAULTS) {
+  if (options.watch) {
+    watch(options);
+  } else {
+    renderDocuments(
+      paths.length > 0
+        ? paths
+        : [path.join(STUMPTOWN_CONTENT_ROOT, "packaged")],
+      options
+    );
+  }
+}
+
+const isRunDirectly = process.mainModule.filename === __filename;
+if (isRunDirectly) {
+  watch();
 }
