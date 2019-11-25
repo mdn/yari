@@ -12,13 +12,15 @@ import sane from "sane";
 import minimist from "minimist";
 import buildOptions from "minimist-options";
 import { ServerLocation } from "@reach/router";
-import sourceMapSupport from "source-map-support";
 import chalk from "chalk";
+import sourceMapSupport from "source-map-support";
 
 import { App } from "../client/src/app";
 import render from "./render";
 import { fixSyntaxHighlighting } from "./syntax-highlighter";
 import { normalizeURLs } from "./browser-compatibility-table";
+
+sourceMapSupport.install();
 
 const STUMPTOWN_CONTENT_ROOT =
   process.env.STUMPTOWN_CONTENT_ROOT || path.join(__dirname, "../../stumptown");
@@ -26,7 +28,6 @@ const STATIC_ROOT = path.join(__dirname, "../../client/build");
 const TOUCHFILE = path.join(__dirname, "../../client/src/touchthis.js");
 const BUILD_JSON_SERVER =
   process.env.BUILD_JSON_SERVER || "http://localhost:5555";
-sourceMapSupport.install();
 
 /** In the document, there's related_content and it contains keys
  * called 'mdn_url'. We need to transform them to relative links

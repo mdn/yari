@@ -5,7 +5,7 @@
   "license": "MPL-2.0",
   "scripts": {
     "build": "webpack --config webpack.config.js --mode=development",
-    "start": "yarn build && node dist/cli.js",
+    "start": "yarn build && node dist/main.js",
     "build:watch": "webpack --config webpack.config.js --watch --mode=development",
     "dev:run": "cross-env NODE_ENV=development nodemon dist/cli.js --watch dist/cli.js",
     "test": "jest",
