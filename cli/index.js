@@ -18,6 +18,7 @@ import chalk from "chalk";
 import { App } from "../client/src/app";
 import render from "./render";
 import { fixSyntaxHighlighting } from "./syntax-highlighter";
+import { normalizeURLs } from "./browser-compatibility-table";
 
 const STUMPTOWN_CONTENT_ROOT =
   process.env.STUMPTOWN_CONTENT_ROOT || path.join(__dirname, "../../stumptown");
@@ -123,9 +124,12 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
     // of the renderer.
     fixRelatedContent(options.doc);
 
-    // Find blocks of syntax code and transform it to syntax highlighted code.
     if (options.doc.body) {
+      // Find blocks of code and transform it to syntax highlighted code.
       fixSyntaxHighlighting(options.doc);
+      // Creates new mdn_url's for the browser-compatibility-table to link to
+      // pages within this project rather than use the absolute URLs
+      normalizeURLs(options.doc);
     }
 
     const outfileHtml = path.join(destination, "index.html");

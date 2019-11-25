@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "@reach/router";
 import { BrowserSupportDetail } from "./browser-support-detail";
 import { BrowserSupportNotes } from "./browser-support-notes";
 
@@ -6,8 +7,12 @@ function buildCompatibilityObject(query, compatibilityData) {
   const features = {};
 
   if (!!compatibilityData.__compat) {
+    // The first row in the BCD data is the overall topic for the page, and
+    // does not have its name within the data. Retrieve the name from the query
+    // data and set a flag so that we do not render a `Link` for it since we
+    // are already on that page.
     const name = query.split(".").pop();
-    features[name] = compatibilityData.__compat;
+    features[name] = { ...compatibilityData.__compat, ...{ isFirst: true } };
   }
   for (const compat in compatibilityData) {
     if (compat !== "__compat" && !!compatibilityData[compat]["__compat"]) {
@@ -221,11 +226,16 @@ export function Rows({
       hasAlternative,
       hasNotes
     );
-
     browserCompatibilityRows.push([
       <tr key={key}>
         <th scope="row">
-          <code>{key}</code>
+          {currentRow.mdn_url && !currentRow.isFirst ? (
+            <Link to={currentRow.mdn_url}>
+              <code>{key}</code>
+            </Link>
+          ) : (
+            <code>{key}</code>
+          )}
           {currentRow.status && (
             <div className="bc-icons">
               {currentRow.status.deprecated && (
