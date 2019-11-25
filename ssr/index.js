@@ -218,7 +218,7 @@ function walk(directory, callback) {
 
 function renderDocuments(
   paths,
-  { "build-html": buildHtml, output, quiet },
+  { buildHtml, output, quiet, ...args },
   returnDocumentBuilt = false
 ) {
   const startTime = Date.now();
@@ -390,13 +390,14 @@ function triggerTouch(touchfile, documents, changedFile) {
 
 export const OPTION_DEFAULTS = Object.freeze({
   output: STATIC_ROOT,
-  "build-html": JSON.parse(process.env.CLI_BUILD_HTML || "false"),
+  buildHtml: JSON.parse(process.env.CLI_BUILD_HTML || "false"),
   watch: false,
   touchfile: TOUCHFILE,
   quiet: false
 });
 
-function watch(options = OPTION_DEFAULTS) {
+function watch(options = {}) {
+  options = { ...OPTION_DEFAULTS, ...options };
   const touchfile = options.touchfile;
   if (touchfile) {
     // XXX
@@ -450,7 +451,8 @@ function watch(options = OPTION_DEFAULTS) {
   });
 }
 
-export function run(paths = [], options = OPTION_DEFAULTS) {
+export function run(paths = [], options = {}) {
+  options = { ...OPTION_DEFAULTS, ...options };
   if (options.watch) {
     watch(options);
   } else {

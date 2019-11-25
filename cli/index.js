@@ -28,7 +28,7 @@ cli
     "-b, --build-html",
     "also generate fully formed index.html files (or env var $CLI_BUILD_HTML)",
     cli.BOOL,
-    SSR_OPTION_DEFAULTS["build-html"]
+    SSR_OPTION_DEFAULTS.buildHtml
   )
   .option("-w, --watch", "watch stumptown content for changes", cli.BOOL)
   .option(
