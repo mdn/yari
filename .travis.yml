@@ -9,9 +9,10 @@ node_js: lts/*
 cache:
   yarn: true
   directories:
+    - cli/node_modules
     - client/node_modules
     - server/node_modules
-    - cli/node_modules
+    - ssr/node_modules
 
 # Because https://github.com/travis-ci/travis-ci/issues/9445
 before_install:

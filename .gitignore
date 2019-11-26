@@ -25,7 +25,7 @@ server/node_modules/
 client/node_modules/
 client/build/
 server/dist/
-cli/node_modules/
-cli/dist/
+ssr/node_modules/
+ssr/dist/
 watcher/node_modules/
 client/src/touchthis.js
