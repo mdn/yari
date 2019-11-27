@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 const cli = require("caporal");
 const { OPTION_DEFAULTS: SSR_OPTION_DEFAULTS, run: runSSR } = require("ssr");
+const {
+  writeContentVersion,
+  checkContentVersion,
+  VersionStatus
+} = require("./content-version");
 
 cli
   .option("--version", "show version info and exit", cli.BOOL)
@@ -49,6 +54,35 @@ cli
     cli.BOOL,
     SSR_OPTION_DEFAULTS.noProgressBar
   )
-  .action((args, options) => runSSR(args.paths, options));
+  .action((args, options) => runSSR(args.paths, options))
+
+  .command(
+    "write-content-version",
+    'writes current content version to "/content.gitsha". Should only be called after a build.'
+  )
+  .action((args, options, logger) =>
+    writeContentVersion().catch(e => {
+      logger.error(e);
+      process.exit(1);
+    })
+  )
+
+  .command("check-content-version", "warns when content is out-of-date")
+  .action(async (args, options, logger) => {
+    const currentVersionStatus = await checkContentVersion();
+
+    if (currentVersionStatus === VersionStatus.ALL_GOOD) {
+      logger.info("Your content is up-to-date.");
+      return;
+    }
+
+    logger.warn(
+      "Your content build is out-of-date. To resolve run these commands:"
+    );
+    if (currentVersionStatus === VersionStatus.REMOTE_CHANGES) {
+      logger.warn('"git submodule update" updates your submodule.');
+    }
+    logger.warn('"yarn build" creates a new build.');
+  });
 
 cli.parse(process.argv);
