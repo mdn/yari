@@ -23,7 +23,7 @@
     "source-map-support": "0.5.13"
   },
   "devDependencies": {
-    "@babel/core": "7.6.4",
+    "@babel/core": "7.7.4",
     "@babel/plugin-proposal-class-properties": "7.5.5",
     "@babel/plugin-proposal-export-namespace-from": "7.5.2",
     "@babel/plugin-proposal-function-sent": "7.7.4",
