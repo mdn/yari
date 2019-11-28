@@ -20,7 +20,7 @@
     "react": "16.12.0",
     "react-dom": "16.12.0",
     "sane": "4.1.0",
-    "source-map-support": "0.5.13"
+    "source-map-support": "0.5.16"
   },
   "devDependencies": {
     "@babel/core": "7.7.4",
