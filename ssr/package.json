@@ -33,7 +33,7 @@
     "@babel/plugin-syntax-dynamic-import": "7.2.0",
     "@babel/plugin-syntax-import-meta": "7.2.0",
     "@babel/preset-env": "7.7.4",
-    "@babel/preset-react": "7.6.3",
+    "@babel/preset-react": "7.7.4",
     "babel-loader": "8.0.6",
     "express": "4.17.1",
     "ignore-loader": "0.1.2",
