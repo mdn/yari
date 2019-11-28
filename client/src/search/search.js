@@ -1,8 +1,7 @@
-import { Redirect } from "@reach/router";
-import FlexSearch from "flexsearch";
+import { Redirect, navigate } from "@reach/router";
 import React from "react";
-import FuzzySearch from "./fuzzy-search";
 import "./search.scss";
+import { useSearch } from "./search-index";
 
 // XXX replace this with a matchMedia instead.
 // The only reason this is used is to make differences on a smaller
@@ -16,15 +15,13 @@ function isMobileUserAgent() {
   );
 }
 
-export class SearchWidget extends React.Component {
+class SearchWidgetInner extends React.Component {
   state = {
     highlitResult: null,
-    initializing: false,
     lastQ: "",
     q: "",
     redirectTo: null,
     searchResults: [],
-    serverError: null,
     showSearchResults: true
   };
 
@@ -42,12 +39,6 @@ export class SearchWidget extends React.Component {
         this.inputRef.current.focus();
       }
     }
-  };
-
-  getCurrentLocale = () => {
-    return (
-      (this.props.pathname && this.props.pathname.split("/")[1]) || "en-US"
-    );
   };
 
   componentDidMount() {
@@ -75,98 +66,18 @@ export class SearchWidget extends React.Component {
     document.removeEventListener("keydown", this.focusOnSearchMaybe);
   }
 
-  initializeIndex = () => {
-    if (this.state.initializing) return;
-
-    this.setState({ initializing: true }, async () => {
-      // Always do the XHR network request (hopefully good HTTP caching
-      // will make this pleasant for the client) but localStorage is
-      // always faster than XHR even with localStorage's flaws.
-      const localStorageCacheKey = `${this.getCurrentLocale()}-titles`;
-      const storedTitlesRaw = localStorage.getItem(localStorageCacheKey);
-      if (storedTitlesRaw) {
-        let storedTitles = null;
-        try {
-          storedTitles = JSON.parse(storedTitlesRaw);
-        } catch (ex) {
-          console.warn(ex);
-        }
-        // XXX Could check the value of 'storedTitles._fetchDate'.
-        // For example if `new Date().getTime() - storedTitles._fetchDate`
-        // is a really small number, it probably just means the page was
-        // refreshed very recently.
-        if (storedTitles) {
-          this.indexTitles(storedTitles);
-        }
-      }
-
-      let response;
-      try {
-        response = await fetch(`/${this.getCurrentLocale()}/titles.json`);
-      } catch (ex) {
-        if (this.dismounted) return;
-        return this.setState({ serverError: ex, showSearchResults: true });
-      }
-      if (this.dismounted) return;
-      if (!response.ok) {
-        return this.setState({
-          serverError: response,
-          showSearchResults: true
-        });
-      }
-      const { titles } = await response.json();
-      this.indexTitles(titles);
-
-      // So we can keep track of how old the data is when stored
-      // in localStorage.
-      titles._fetchDate = new Date().getTime();
-      try {
-        localStorage.setItem(
-          `${this.getCurrentLocale()}-titles`,
-          JSON.stringify(titles)
-        );
-      } catch (ex) {
-        console.warn(
-          ex,
-          `Unable to store a ${JSON.stringify(titles).length} string`
-        );
-      }
-    });
-  };
-
-  indexTitles = titles => {
-    // NOTE! See search-experimentation.js to play with different settings.
-    this.index = new FlexSearch({
-      encode: "advanced",
-      suggest: true,
-      // tokenize: "reverse",
-      tokenize: "forward"
-    });
-    this._map = titles;
-
-    const urisSorted = [];
-    Object.entries(titles)
-      .sort((a, b) => b[1].popularity - a[1].popularity)
-      .forEach(([uri, info]) => {
-        // XXX investigate if it's faster to add all at once
-        // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
-        this.index.add(uri, info.title);
-        urisSorted.push(uri);
-      });
-    this.fuzzySearcher = new FuzzySearch(urisSorted);
-  };
-
   searchHandler = event => {
     this.setState({ q: event.target.value }, this.updateSearch);
   };
 
   updateSearch = () => {
+    const { search } = this.props;
     const q = this.state.q.trim();
     if (!q) {
       if (this.state.showSearchResults) {
         this.setState({ showSearchResults: false });
       }
-    } else if (!this.index) {
+    } else if (search == null || search instanceof Error) {
       // This can happen if the initializing hasn't completed yet or
       // completed un-successfully.
       return;
@@ -217,18 +128,18 @@ export class SearchWidget extends React.Component {
             showSearchResults: true
           });
         } else {
-          const fuzzyResults = this.fuzzySearcher.search(q, {
+          const fuzzyResults = search.fuzzy(q, {
             limit: isMobileUserAgent() ? 5 : 10
           });
           const results = fuzzyResults.map(fuzzyResult => {
             return {
-              title: this._map[fuzzyResult.needle].title,
+              title: search.titles[fuzzyResult.needle].title,
               uri: fuzzyResult.needle,
               substrings: fuzzyResult.substrings
             };
           });
           this.setState({
-            highlitResult: results.length ? 0 : null,
+            highlitResult: null,
             lastQ: q,
             searchResults: results,
             showSearchResults: true
@@ -236,7 +147,7 @@ export class SearchWidget extends React.Component {
         }
       } else {
         // Full-Text search
-        const indexResults = this.index.search(q, {
+        const indexResults = search.flex(q, {
           limit: isMobileUserAgent() ? 5 : 10,
           // bool: "or",
           suggest: true // This can give terrible result suggestions
@@ -244,13 +155,13 @@ export class SearchWidget extends React.Component {
 
         const results = indexResults.map(uri => {
           return {
-            title: this._map[uri].title,
+            title: search.titles[uri].title,
             uri,
-            popularity: this._map[uri].popularity
+            popularity: search.titles[uri].popularity
           };
         });
         this.setState({
-          highlitResult: results.length ? 0 : null,
+          highlitResult: null,
           lastQ: q,
           searchResults: results,
           showSearchResults: true
@@ -260,7 +171,9 @@ export class SearchWidget extends React.Component {
   };
 
   keyDownHandler = event => {
-    if (event.key === "Escape") {
+    if (event.key === "Enter" && this.state.highlitResult == null) {
+      navigate(`/en-US/search/${encodeURIComponent(event.target.value)}`);
+    } else if (event.key === "Escape") {
       if (this.state.showSearchResults) {
         this.setState({ showSearchResults: false });
       }
@@ -304,9 +217,6 @@ export class SearchWidget extends React.Component {
   focusHandler = () => {
     this.inFocus = true;
     this.inputRef.current.placeholder = this.ACTIVE_PLACEHOLDER;
-
-    // If it hasn't been done already, do this now. It's idempotent.
-    this.initializeIndex();
 
     // Perhaps the blur closed the search results
     const { q, searchResults, showSearchResults } = this.state;
@@ -392,17 +302,19 @@ export class SearchWidget extends React.Component {
   inputRef = React.createRef();
 
   render() {
+    const { search } = this.props;
     const {
       highlitResult,
       q,
       redirectTo,
       searchResults,
-      serverError,
       showSearchResults
     } = this.state;
     if (redirectTo) {
       return <Redirect noThrow replace={false} to={redirectTo} />;
     }
+
+    const serverError = search instanceof Error ? search : null;
 
     // The fuzzy search is engaged if the search term starts with a '/'
     // and does not have any spaces in it.
@@ -442,7 +354,6 @@ export class SearchWidget extends React.Component {
           onChange={this.searchHandler}
           onFocus={this.focusHandler}
           onKeyDown={this.keyDownHandler}
-          onMouseOver={this.initializeIndex}
           placeholder={this.INACTIVE_PLACEHOLDER}
           ref={this.inputRef}
           type="search"
@@ -468,6 +379,11 @@ export class SearchWidget extends React.Component {
       </form>
     );
   }
+}
+
+export function SearchWidget(props) {
+  const search = useSearch();
+  return <SearchWidgetInner {...props} search={search} />;
 }
 
 class ShowSearchResults extends React.PureComponent {
