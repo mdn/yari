@@ -29,4 +29,4 @@ ssr/node_modules/
 ssr/dist/
 watcher/node_modules/
 client/src/touchthis.js
-content.gitsha
+content-versions.json

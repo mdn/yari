@@ -1,15 +1,14 @@
 const fs = require("fs");
 const path = require("path");
 const { Repository } = require("nodegit");
+const { HAS_CUSTOM_CONTENT, STUMPTOWN_CONTENT_ROOT } = require("ssr");
 
 const PROJECT_ROOT = path.join(__dirname, "..");
-const SHA_PATH = path.join(PROJECT_ROOT, "content.gitsha");
+const VERSION_FILE_PATH = path.join(PROJECT_ROOT, "content-versions.json");
 const CONTENT_NAME = "stumptown";
 
 async function retrieveLocalVersion() {
-  const repository = await Repository.open(
-    path.join(PROJECT_ROOT, CONTENT_NAME)
-  );
+  const repository = await Repository.open(STUMPTOWN_CONTENT_ROOT);
   const commit = await repository.getHeadCommit();
   return commit.sha();
 }
@@ -22,8 +21,18 @@ async function retrieveRemoteVersion() {
   return submodule ? submodule.headId().toString() : null;
 }
 
+function readContentVersions() {
+  return fs.existsSync(VERSION_FILE_PATH)
+    ? JSON.parse(fs.readFileSync(VERSION_FILE_PATH, "utf-8"))
+    : {};
+}
+
 async function writeContentVersion() {
-  fs.writeFileSync(SHA_PATH, await retrieveLocalVersion());
+  const contentVersions = {
+    ...readContentVersions(),
+    [STUMPTOWN_CONTENT_ROOT]: await retrieveLocalVersion()
+  };
+  fs.writeFileSync(VERSION_FILE_PATH, JSON.stringify(contentVersions, null, 2));
 }
 
 const VersionStatus = Object.freeze({
@@ -33,21 +42,22 @@ const VersionStatus = Object.freeze({
 });
 
 async function checkContentVersion() {
-  const remoteVersion = await retrieveRemoteVersion();
   const localVersion = await retrieveLocalVersion();
 
-  if (remoteVersion !== localVersion) {
+  if (!HAS_CUSTOM_CONTENT && (await retrieveRemoteVersion()) !== localVersion) {
     return VersionStatus.REMOTE_CHANGES;
   }
 
-  if (
-    !fs.existsSync(SHA_PATH) ||
-    fs.readFileSync(SHA_PATH, "utf-8").trim() !== localVersion
-  ) {
+  if (readContentVersions()[STUMPTOWN_CONTENT_ROOT] !== localVersion) {
     return VersionStatus.OLD_BUILD;
   }
 
   return VersionStatus.ALL_GOOD;
 }
 
-module.exports = { writeContentVersion, checkContentVersion, VersionStatus };
+module.exports = {
+  writeContentVersion,
+  checkContentVersion,
+  VERSION_FILE_PATH,
+  VersionStatus
+};

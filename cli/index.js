@@ -5,6 +5,7 @@ const boxify = require("./boxify");
 const {
   writeContentVersion,
   checkContentVersion,
+  VERSION_FILE_PATH,
   VersionStatus
 } = require("./content-version");
 
@@ -59,7 +60,7 @@ cli
 
   .command(
     "write-content-version",
-    'writes current content version to "/content.gitsha". Should only be called after a build.'
+    `writes current content version to "${VERSION_FILE_PATH}". Should only be called after a build.`
   )
   .action((args, options, logger) =>
     writeContentVersion().catch(e => {
@@ -81,7 +82,7 @@ cli
       "Your content build is out-of-date. To resolve, run these commands:"
     ];
     if (currentVersionStatus === VersionStatus.REMOTE_CHANGES) {
-      warnings.push('"git submodule update" updates your submodule.');
+      warnings.push('"git submodule update" updates the content submodule.');
     }
     warnings.push('"yarn build" creates a new build.');
     logger.warn(boxify(warnings));
