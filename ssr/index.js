@@ -21,7 +21,8 @@ sourceMapSupport.install();
 require("dotenv").config({ path: path.join(__dirname, "../../.env") });
 
 const PROJECT_ROOT = path.join(__dirname, "..", "..");
-const STUMPTOWN_CONTENT_ROOT =
+export const HAS_CUSTOM_CONTENT = !!process.env.STUMPTOWN_CONTENT_ROOT;
+export const STUMPTOWN_CONTENT_ROOT =
   process.env.STUMPTOWN_CONTENT_ROOT || path.join(PROJECT_ROOT, "stumptown");
 const STATIC_ROOT = path.join(PROJECT_ROOT, "client", "build");
 const TOUCHFILE = path.join(PROJECT_ROOT, "client", "src", "touchthis.js");
