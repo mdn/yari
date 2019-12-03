@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const cli = require("caporal");
 const { OPTION_DEFAULTS: SSR_OPTION_DEFAULTS, run: runSSR } = require("ssr");
+const boxify = require("./boxify");
 const {
   writeContentVersion,
   checkContentVersion,
@@ -76,13 +77,14 @@ cli
       return;
     }
 
-    logger.warn(
-      "Your content build is out-of-date. To resolve run these commands:"
-    );
+    const warnings = [
+      "Your content build is out-of-date. To resolve, run these commands:"
+    ];
     if (currentVersionStatus === VersionStatus.REMOTE_CHANGES) {
-      logger.warn('"git submodule update" updates your submodule.');
+      warnings.push('"git submodule update" updates your submodule.');
     }
-    logger.warn('"yarn build" creates a new build.');
+    warnings.push('"yarn build" creates a new build.');
+    logger.warn(boxify(warnings));
   });
 
 cli.parse(process.argv);
