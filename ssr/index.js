@@ -218,9 +218,24 @@ function walk(directory, callback) {
 
 function renderDocuments(
   paths,
-  { buildHtml, output, quiet, ...args },
+  { buildHtml, output, quiet, noProgressBar, ...args },
   returnDocumentBuilt = false
 ) {
+  /**
+   * It's more useful to display either progress bar or each built file, but not both.
+   * But if `--quiet` is passed, we should disable both
+   *
+   * @see https://github.com/mdn/stumptown-renderer/pull/259#pullrequestreview-325419683
+   */
+  const useProgressBar =
+    !quiet &&
+    (JSON.parse(process.env.CI || "false") ||
+      !process.stdout.isTTY ||
+      !noProgressBar);
+  const printEachBuiltFile = !quiet && !useProgressBar;
+  console.log("useProgressBar", useProgressBar);
+  console.log("printEachBuiltFile", printEachBuiltFile);
+
   const startTime = Date.now();
   const built = [];
   const titles = {};
@@ -257,8 +272,14 @@ function renderDocuments(
       console.log(
         `About to process ${fileOrDirectory} (${todo.length.toLocaleString()} files)`
       );
-      const progressBar = new ProgressBar({ includeMemory: true });
-      progressBar.init(todo.length);
+      const progressBar = useProgressBar
+        ? new ProgressBar({
+            includeMemory: true
+          })
+        : null;
+      if (progressBar) {
+        progressBar.init(todo.length);
+      }
 
       todo.forEach((filePath, index) => {
         built.push(
@@ -266,13 +287,15 @@ function renderDocuments(
             filePath,
             output,
             buildHtml,
-            quiet,
+            quiet: !printEachBuiltFile,
             titles
           })
         );
-        progressBar.update(index + 1);
+        if (progressBar) {
+          progressBar.update(index + 1);
+        }
       });
-      if (quiet) {
+      if (progressBar) {
         progressBar.stop();
       }
     } else if (lstat.isFile()) {
@@ -393,7 +416,8 @@ export const OPTION_DEFAULTS = Object.freeze({
   buildHtml: JSON.parse(process.env.CLI_BUILD_HTML || "false"),
   watch: false,
   touchfile: TOUCHFILE,
-  quiet: false
+  quiet: false,
+  noProgressBar: false
 });
 
 function watch(options = {}) {
