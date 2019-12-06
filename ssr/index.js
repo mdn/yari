@@ -229,12 +229,9 @@ function renderDocuments(
    */
   const useProgressBar =
     !quiet &&
-    (JSON.parse(process.env.CI || "false") ||
-      !process.stdout.isTTY ||
-      !noProgressBar);
+    !noProgressBar &&
+    (!JSON.parse(process.env.CI || "false") || !process.stdout.isTTY);
   const printEachBuiltFile = !quiet && !useProgressBar;
-  console.log("useProgressBar", useProgressBar);
-  console.log("printEachBuiltFile", printEachBuiltFile);
 
   const startTime = Date.now();
   const built = [];
