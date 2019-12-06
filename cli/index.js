@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 const cli = require("caporal");
-const { OPTION_DEFAULTS: SSR_OPTION_DEFAULTS, run: runSSR } = require("ssr");
+const {
+  OPTION_DEFAULTS: SSR_OPTION_DEFAULTS,
+  run: runSSR,
+  STUMPTOWN_CONTENT_ROOT
+} = require("ssr");
 const boxify = require("./boxify");
 const {
   writeContentVersion,
@@ -74,12 +78,13 @@ cli
     const currentVersionStatus = await checkContentVersion();
 
     if (currentVersionStatus === VersionStatus.ALL_GOOD) {
-      logger.info("Your content is up-to-date.");
+      logger.info(STUMPTOWN_CONTENT_ROOT, "content is up-to-date.");
       return;
     }
 
     const warnings = [
-      "Your content build is out-of-date. To resolve, run these commands:"
+      STUMPTOWN_CONTENT_ROOT +
+        " content build is out-of-date. To resolve, run these commands:"
     ];
     if (currentVersionStatus === VersionStatus.REMOTE_CHANGES) {
       warnings.push('"git submodule update" updates the content submodule.');
