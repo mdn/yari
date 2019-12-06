@@ -43,6 +43,12 @@ cli
     cli.BOOL,
     SSR_OPTION_DEFAULTS.quiet
   )
+  .option(
+    "--no-progress-bar",
+    "disable progress bar",
+    cli.BOOL,
+    SSR_OPTION_DEFAULTS.noProgressBar
+  )
   .action((args, options) => runSSR(args.paths, options));
 
 cli.parse(process.argv);
