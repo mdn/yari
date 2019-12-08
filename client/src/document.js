@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "@reach/router";
+import { Link, Location } from "@reach/router";
 
 import { NoMatch } from "./routing";
 
@@ -137,19 +137,47 @@ function SidebarLeaf({ title, content }) {
 
 function SidebarLeaflets({ node }) {
   return (
-    <details>
-      <summary>{node.title}</summary>
-      <ol>
-        {node.content.map(childNode => {
-          return (
-            <li key={childNode.uri}>
-              <Link to={childNode.uri}>{childNode.title}</Link>
-            </li>
-          );
-        })}
-      </ol>
-    </details>
+    <Location>
+      {({ location }) => {
+        const activeChild = getChildActiveInCurrentLocation(
+          location,
+          node.content
+        );
+        return (
+          <details open={!!activeChild}>
+            <summary>{node.title}</summary>
+            <ol>
+              {node.content.map(childNode => {
+                return (
+                  <li
+                    key={childNode.uri}
+                    className={
+                      activeChild && activeChild.uri === childNode.uri
+                        ? "active"
+                        : undefined
+                    }
+                  >
+                    <Link to={childNode.uri}>{childNode.title}</Link>
+                  </li>
+                );
+              })}
+            </ol>
+          </details>
+        );
+      }}
+    </Location>
   );
+}
+
+/**
+ * @returns Child node who is active in the current URL. Returns null if no child nodes in content are active.
+ * @param {Location} location as returned by `@reach/router`'s [`<Location>`](https://reach.tech/router/api/Location)
+ * @param {Array<Object>} content List of child nodes
+ */
+function getChildActiveInCurrentLocation(location, content) {
+  return content.find(childNode => {
+    return childNode.uri === location.pathname;
+  });
 }
 
 /** These prose sections should be rendered WITHOUT a heading. */
