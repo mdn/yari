@@ -1,3 +1,5 @@
+$link-color: #3d7e9a;
+
 .bc-github-link {
   white-space: pre-line;
   float: right;
@@ -106,7 +108,12 @@
   background-color: #eaeef2;
 }
 
+.bc-table tbody th a {
+  color: $link-color;
+}
+
 .bc-table tbody th code {
+  color: unset;
   word-wrap: break-word;
   width: 100%;
   position: relative;

@@ -9,8 +9,11 @@
     "postinstall": "cd stumptown && npm install && git checkout package-lock.json",
     "prettier-check": "prettier --check **/*.{js,json,scss,html}",
     "prettier-format": "prettier --write **/*.{js,json,scss,html}",
-    "test": "yarn prettier-check && yarn workspace cli test && yarn workspace client test",
-    "build": "cd stumptown && npm run build-json && cd .. && yarn workspace client build && yarn workspace cli start",
+    "test": "yarn prettier-check && yarn workspace ssr test && yarn workspace client test",
+    "build:stumptown": "cd ${STUMPTOWN_CONTENT_ROOT:-stumptown} && npm run build-json",
+    "build:client": "yarn workspace client build",
+    "build:ssr": "yarn workspace ssr build && node cli/index.js ssr --build-html",
+    "build": "yarn run build:stumptown && yarn run build:client && yarn run build:ssr",
     "deployment-build": "cross-env CLI_BUILD_HTML=true yarn build",
     "end-to-end-test": "node scripts/end-to-end-test.js",
     "start": "nf start"
@@ -19,13 +22,14 @@
   "workspaces": [
     "cli",
     "client",
-    "server"
+    "server",
+    "ssr"
   ],
   "devDependencies": {
     "foreman": "3.0.1",
-    "husky": "3.0.9",
-    "prettier": "1.18.2",
-    "pretty-quick": "2.0.0"
+    "husky": "3.1.0",
+    "prettier": "1.19.1",
+    "pretty-quick": "2.0.1"
   },
   "dependencies": {
     "cross-env": "^6.0.3"
@@ -37,7 +41,8 @@
     "lodash": ">=4.17.15",
     "mixin-deep": ">=1.3.2",
     "set-value": ">=2.0.1",
-    "tar": ">=4.4.9"
+    "tar": ">=4.4.9",
+    "handlebars": ">=4.5.3"
   },
   "engines": {
     "node": ">=10.11.0"
