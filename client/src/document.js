@@ -139,9 +139,8 @@ function SidebarLeaflets({ node }) {
   return (
     <Location>
       {({ location }) => {
-        const activeChild = getChildActiveInCurrentLocation(
-          location,
-          node.content
+        const activeChild = node.content.find(
+          childNode => childNode.uri === location.pathname
         );
         return (
           <details open={!!activeChild}>
@@ -167,17 +166,6 @@ function SidebarLeaflets({ node }) {
       }}
     </Location>
   );
-}
-
-/**
- * @returns Child node who is active in the current URL. Returns null if no child nodes in content are active.
- * @param {Location} location as returned by `@reach/router`'s [`<Location>`](https://reach.tech/router/api/Location)
- * @param {Array<Object>} content List of child nodes
- */
-function getChildActiveInCurrentLocation(location, content) {
-  return content.find(childNode => {
-    return childNode.uri === location.pathname;
-  });
 }
 
 /** These prose sections should be rendered WITHOUT a heading. */
