@@ -139,28 +139,23 @@ function SidebarLeaflets({ node }) {
   return (
     <Location>
       {({ location }) => {
-        const activeChild = node.content.find(
-          childNode => childNode.uri === location.pathname
-        );
+        let hasActiveChild = false;
+        const listItems = node.content.map(childNode => {
+          const isActive = childNode.uri === location.pathname;
+          if (isActive && !hasActiveChild) {
+            hasActiveChild = true;
+          }
+          return (
+            <li key={childNode.uri} className={isActive ? "active" : undefined}>
+              <Link to={childNode.uri}>{childNode.title}</Link>
+            </li>
+          );
+        });
+
         return (
-          <details open={!!activeChild}>
+          <details open={!!hasActiveChild}>
             <summary>{node.title}</summary>
-            <ol>
-              {node.content.map(childNode => {
-                return (
-                  <li
-                    key={childNode.uri}
-                    className={
-                      activeChild && activeChild.uri === childNode.uri
-                        ? "active"
-                        : undefined
-                    }
-                  >
-                    <Link to={childNode.uri}>{childNode.title}</Link>
-                  </li>
-                );
-              })}
-            </ol>
+            <ol>{listItems}</ol>
           </details>
         );
       }}
