@@ -41,6 +41,6 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/react": "^9.3.2"
+    "@testing-library/react": "^9.3.3"
   }
 }
