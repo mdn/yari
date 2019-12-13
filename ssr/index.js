@@ -152,7 +152,6 @@ function buildHtmlAndJson({
   const uri = decodeURI(options.doc.mdn_url);
   const locale = options.doc.locale || extractLocaleFromURI(uri);
 
-  console.log({ uri, prep });
   // This can totally happen if you're building from multiple sources
   // E.g. `yarn start packaged1 packaged2`
   // In this case, if some .json file in packaged1 has an mdn_url of
