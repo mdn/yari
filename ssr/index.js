@@ -51,8 +51,8 @@ function fixRelatedContent(document) {
         }
         // The sidebar only needs a 'title' and doesn't really care if
         // it came from the full title or the 'short_title'.
-        item.title = item.short_title || item.title;
-        delete item.short_title;
+        item.title = item.shortTitle || item.title;
+        delete item.shortTitle;
         // At the moment, we never actually use the 'short_description'
         // so no use including it.
         delete item.short_description;
@@ -101,7 +101,39 @@ function ppPath(filePath) {
   return path.relative(process.cwd(), filePath);
 }
 
-function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
+function extractLocaleFromURI(uri) {
+  return uri.split("/")[1];
+}
+
+/** Given a source file path, open the file, read it and make the necessary
+ * transformations.
+ * This function can be used for 3 different things and it depends on the
+ * options 'prep' and 'buildHtml'.
+ * If...
+ *
+ *     - prep===true; just add the document's uri and title to 'titles'
+ *     - prep===false; generate the .json file for client-side navigation
+ *     - buildHtml===true; generate a final .html file too
+ *
+ * The reason to do a 'prep' run is to build up that massive mutable
+ * 'titles' object so we have a complete list of *all* URIs and *all* titles.
+ * Equipped with this, the second time we run we will have a complete picture
+ * of all other available documents. Now you can, for example, know all
+ * the titles of all the parent documents.
+ * Or you can use it to validate any internal link. Or you can use it
+ * to connect between translated pages to get where a translation came
+ * from or to make a list of other available translations (e.g. "You're
+ * reading this in English (US). Here are the alternative other
+ * translations...")
+ */
+function buildHtmlAndJson({
+  prep,
+  filePath,
+  output,
+  buildHtml,
+  quiet,
+  titles
+}) {
   const start = new Date();
   const data = fs.readFileSync(filePath, "utf8");
 
@@ -118,7 +150,9 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
     );
   }
   const uri = decodeURI(options.doc.mdn_url);
+  const locale = options.doc.locale || extractLocaleFromURI(uri);
 
+  console.log({ uri, prep });
   // This can totally happen if you're building from multiple sources
   // E.g. `yarn start packaged1 packaged2`
   // In this case, if some .json file in packaged1 has an mdn_url of
@@ -127,10 +161,15 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
   if (uri in titles) {
     return null;
   }
-  titles[uri] = {
-    title: options.doc.title,
-    short_title: options.doc.short_title
-  };
+  if (prep) {
+    titles[uri] = {
+      title: options.doc.title,
+      shortTitle: options.doc.short_title,
+      filePath,
+      locale
+    };
+    return;
+  }
 
   const destination = path.join(output, uri);
 
@@ -255,8 +294,14 @@ function walk(directory, callback) {
 
 function renderDocuments(
   paths,
-  { buildHtml, output, quiet, noProgressBar, ...args },
-  returnDocumentBuilt = false
+  {
+    buildHtml,
+    output,
+    quiet,
+    noProgressBar,
+    returnDocumentBuilt = false,
+    noPrep = false
+  }
 ) {
   /**
    * It's more useful to display either progress bar or each built file, but not both.
@@ -283,7 +328,7 @@ function renderDocuments(
    * The buildHtmlAndJson() function will always return an object of useful
    * information, but if you run it 1,000 times that means the array
    * that keeps track of what was built will be so large in memory that
-   * Node will crash with Out-of-memory.
+   * Node will crash with out-of-memory.
    * So, when you have a lot to do, just compute an array of boolean results,
    * but if explicitly asked (`returnDocumentBuilt`) then return an array
    * of result objects. This latter is useful for the watcher that builds
@@ -299,56 +344,79 @@ function renderDocuments(
     }
   }
 
-  paths.forEach(fileOrDirectory => {
-    const lstat = fs.lstatSync(fileOrDirectory);
-    if (lstat.isDirectory()) {
-      const todo = [];
-      walk(fileOrDirectory, filePath => {
-        todo.push(filePath);
-      });
+  // This makes to passes of walking the directories.
+  // The first time (prep===true), it just populates the
+  // mutable 'title' object so that we get a *complete* mapping of every
+  // URI->Data{title, shortTitle, popularity, locale}
+  // Yes, it's slow to have to open 2x as many .json files but it
+  // makes it feasible to be aware of all possible other URLs in different
+  // locales and their titles.
+  const tasks = [];
+  // When rendering an individual document, which happens when in "watch
+  // mode" it doesn't need to do the prep task.
+  // By default, when you're rendering a bunch of documents, noPrep is false
+  // which means it will do both tasks.
+  if (!noPrep) {
+    tasks.push({ prep: true });
+  }
+  tasks.push({ prep: false });
 
-      console.log(
-        `About to process ${fileOrDirectory} (${todo.length.toLocaleString()} files)`
-      );
-      const progressBar = useProgressBar
-        ? new ProgressBar({
-            includeMemory: true
-          })
-        : null;
-      if (progressBar) {
-        progressBar.init(todo.length);
-      }
+  tasks.forEach(({ prep }) => {
+    paths.forEach(fileOrDirectory => {
+      const lstat = fs.lstatSync(fileOrDirectory);
+      if (lstat.isDirectory()) {
+        const todo = [];
+        walk(fileOrDirectory, filePath => {
+          todo.push(filePath);
+        });
 
-      todo.forEach((filePath, index) => {
+        console.log(
+          `${
+            prep ? "Gathering docs from" : "Actually process in"
+          } ${fileOrDirectory} (${todo.length.toLocaleString()} files)`
+        );
+        const progressBar = useProgressBar
+          ? new ProgressBar({
+              includeMemory: true
+            })
+          : null;
+        if (progressBar) {
+          progressBar.init(todo.length);
+        }
+
+        todo.forEach((filePath, index) => {
+          built.push(
+            wrapBuildHtmlAndJson({
+              prep,
+              filePath,
+              output,
+              buildHtml,
+              quiet: !printEachBuiltFile,
+              titles
+            })
+          );
+          if (progressBar) {
+            progressBar.update(index + 1);
+          }
+        });
+        if (progressBar) {
+          progressBar.stop();
+        }
+      } else if (lstat.isFile()) {
         built.push(
           wrapBuildHtmlAndJson({
-            filePath,
+            prep,
+            filePath: fileOrDirectory,
             output,
             buildHtml,
-            quiet: !printEachBuiltFile,
+            quiet,
             titles
           })
         );
-        if (progressBar) {
-          progressBar.update(index + 1);
-        }
-      });
-      if (progressBar) {
-        progressBar.stop();
+      } else {
+        throw new Error(`neither file or directory ${fileOrDirectory}`);
       }
-    } else if (lstat.isFile()) {
-      built.push(
-        wrapBuildHtmlAndJson({
-          filePath: fileOrDirectory,
-          output,
-          buildHtml,
-          quiet,
-          titles
-        })
-      );
-    } else {
-      throw new Error(`neither file or directory ${fileOrDirectory}`);
-    }
+    });
   });
   const overlapFiles = built.filter(p => !p);
   const buildFiles = built.filter(p => !!p);
@@ -459,7 +527,15 @@ export const OPTION_DEFAULTS = Object.freeze({
 });
 
 function watch(options = {}) {
-  options = { ...OPTION_DEFAULTS, ...options };
+  options = {
+    ...OPTION_DEFAULTS,
+    ...options,
+
+    // When in "watch mode", we always care about what was rendered.
+    // And we don't need to bother with the "prep" task.
+    returnDocumentBuilt: true,
+    noPrep: true
+  };
   const touchfile = options.touchfile;
   if (touchfile) {
     // XXX
@@ -500,9 +576,7 @@ function watch(options = {}) {
       console.error(error);
     } else {
       console.log(`Running for packaged file ${built.destPath}`);
-      const documents = renderDocuments([built.destPath], options, {
-        returnDocumentBuilt: true
-      });
+      const documents = renderDocuments([built.destPath], options);
       const buildFiles = documents.map(d => ppPath(d["filePath"]));
       console.log(chalk.green(`Built documents from: ${buildFiles}`));
       triggerTouch(touchfile, documents, {
