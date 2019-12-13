@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "@reach/router";
+import { Link, Location } from "@reach/router";
 
 import { NoMatch } from "./routing";
 
@@ -168,18 +168,29 @@ function SidebarLeaf({ title, content }) {
 
 function SidebarLeaflets({ node }) {
   return (
-    <details>
-      <summary>{node.title}</summary>
-      <ol>
-        {node.content.map(childNode => {
+    <Location>
+      {({ location }) => {
+        let hasActiveChild = false;
+        const listItems = node.content.map(childNode => {
+          const isActive = childNode.uri === location.pathname;
+          if (isActive && !hasActiveChild) {
+            hasActiveChild = true;
+          }
           return (
-            <li key={childNode.uri}>
+            <li key={childNode.uri} className={isActive ? "active" : undefined}>
               <Link to={childNode.uri}>{childNode.title}</Link>
             </li>
           );
-        })}
-      </ol>
-    </details>
+        });
+
+        return (
+          <details open={!!hasActiveChild}>
+            <summary>{node.title}</summary>
+            <ol>{listItems}</ol>
+          </details>
+        );
+      }}
+    </Location>
   );
 }
 
