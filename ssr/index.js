@@ -166,6 +166,10 @@ function buildHtmlAndJson({
       shortTitle: options.doc.short_title,
       filePath,
       locale
+      // TODO: Here it would be nice to store a timestamp or something
+      // about the document. That can then be used to figure out if a
+      // non-en-US document is *older* than its equivalent en-US source.
+      // I.e. is the translated page you're reading potentially out of date?
     };
     return;
   }
