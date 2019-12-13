@@ -157,9 +157,22 @@ function buildHtmlAndJson({
   // In this case, if some .json file in packaged1 has an mdn_url of
   // for example /en-US/docs/Foo/bar and then this comes up again from
   // a file in packaged2, then igore it this time.
-  if (uri in titles) {
+  //
+  // The reason for the second conditional that checks the filePath is that
+  // we usually run 2 passes. First one just to gather all possible URIs
+  // and the second pass we actually do the document processing.
+  // If we rely solely on checking if the 'uri' is already in 'titles'
+  // the second pass will always think the file has already been processed.
+  // That's why we're comparing the `filePath` because if this happens:
+  //   1. uri=/some/thing filePath=primary/source/of/files/foo.json
+  //   2. uri=/some/thing filePath=second/source/of/files/foo.json
+  //
+  // Then, we want to exit early when we encountered that second one (with
+  // the same URI) second/source/of/files/foo.json.
+  if (uri in titles && titles[uri].filePath !== filePath) {
     return null;
   }
+
   if (prep) {
     titles[uri] = {
       title: options.doc.title,
@@ -320,6 +333,7 @@ function renderDocuments(
 
   const startTime = Date.now();
   const built = [];
+  const prepared = [];
 
   // Mutable for every possible document URI (e.g. /en-US/Web/Learn) we
   // make an object containing {'title', 'short_title'}.
@@ -338,12 +352,15 @@ function renderDocuments(
    * one file at a time and populates some information about that in the
    * client.
    */
-  function wrapBuildHtmlAndJson(...args) {
-    const result = buildHtmlAndJson(...args);
-    if (returnDocumentBuilt) {
-      built.push(result);
-    } else {
-      built.push(!!result);
+  function wrapBuildHtmlAndJson(options) {
+    const result = buildHtmlAndJson(options);
+    if (!options.prep) {
+      // If it's not just a prep run, store that this built
+      if (returnDocumentBuilt) {
+        built.push(result);
+      } else {
+        built.push(!!result);
+      }
     }
   }
 
@@ -428,16 +445,21 @@ function renderDocuments(
   const tookSeconds = (endTime - startTime) / 1000;
   const msPerDoc = (endTime - startTime) / buildFiles.length;
   const rate = buildFiles.length / tookSeconds;
-  console.log(
-    chalk.green(
-      `Built ${buildFiles.length.toLocaleString()} documents in ${tookSeconds.toFixed(
-        1
-      )}s ` +
-        `(approximately ${msPerDoc.toFixed(1)} ms/doc - ${rate.toFixed(
+  if (buildFiles.length) {
+    console.log(
+      chalk.green(
+        `Built ${buildFiles.length.toLocaleString()} documents in ${tookSeconds.toFixed(
           1
-        )} docs/sec)`
-    )
-  );
+        )}s ` +
+          `(approximately ${msPerDoc.toFixed(1)} ms/doc - ${rate.toFixed(
+            1
+          )} docs/sec)`
+      )
+    );
+  } else {
+    console.log(chalk.yellow("Built no documents"));
+  }
+
   if (overlapFiles) {
     chalk.yellow(
       `${overlapFiles.length.toLocaleString()} files overlapped ` +
