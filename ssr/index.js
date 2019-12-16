@@ -100,7 +100,7 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
   }
   titles[uri] = options.doc.title;
 
-  const destination = path.join(output, uri);
+  const destination = path.join(output, uri.toLowerCase());
 
   fs.mkdirSync(destination, { recursive: true });
 

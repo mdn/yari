@@ -8,6 +8,15 @@ const app = express();
 // XXX Check that that folder exists and has stuff!
 const STATIC_ROOT = path.join(__dirname, "../client/build");
 
+// Lowercase every request because every possible file we might have
+// on disk is always in lowercase.
+// This only helps when you're on a filesystem (e.g. Linux) that is case
+// sensitive.
+app.use((req, res, next) => {
+  req.url = req.url.toLowerCase();
+  next();
+});
+
 app.use(
   express.static(STATIC_ROOT, {
     // https://expressjs.com/en/4x/api.html#express.static
