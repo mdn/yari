@@ -100,7 +100,7 @@ class BrowserCompatibilityTableContent extends Component {
         >
           Update compatibility data on GitHub
         </a>
-        <table className="bc-table bc-table-web">
+        <table className="bc-table bc-table-web" data-testid="bcd-table">
           <thead>
             <Platforms platforms={platforms} browsers={BROWSERS} />
             <Browsers displayBrowsers={displayBrowsers} />
@@ -168,7 +168,6 @@ export function BrowserCompatibilityTable({ data }) {
   useEffect(() => {
     let dismounted = false;
     let url = document.location.pathname;
-    console.log({ uri, url });
 
     // Hopefully this hack won't be necessary once we sort out our
     // CloudFront redirect stuff.

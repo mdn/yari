@@ -27,15 +27,23 @@ it("renders crashing mock component", () => {
     );
   };
 
+  // The ErrorBoundary component deliberately uses console.error(). Let's
+  // silence that during this test so it won't spook us.
+  const originalError = console.error;
+  console.error = jest.fn();
+
   const { container } = render(
     <BrowserCompatibilityErrorBoundary>
       <CrashingComponent />
     </BrowserCompatibilityErrorBoundary>
   );
+
   expect(container.querySelector(".bc-table-error-boundary")).toBeNull();
   const div = container.querySelector("div");
   fireEvent.click(div);
 
   // TODO: When `BrowserCompatibilityErrorBoundary` reports to Sentry, spy on the report function so that we can assert the error stack
   expect(container.querySelector(".bc-table-error-boundary")).toBeDefined();
+
+  console.error = originalError;
 });

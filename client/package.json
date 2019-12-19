@@ -41,6 +41,7 @@
     ]
   },
   "devDependencies": {
+    "@react-mock/fetch": "0.3.0",
     "@testing-library/react": "^9.4.0"
   }
 }
