@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "@reach/router";
+import { Link, Location } from "@reach/router";
 
 import { NoMatch } from "./routing";
 
@@ -8,7 +8,7 @@ import { Prose, ProseWithHeading } from "./ingredients/prose";
 import { InteractiveExample } from "./ingredients/interactive-example";
 import { Attributes } from "./ingredients/attributes";
 import { Examples } from "./ingredients/examples";
-import { LinkList } from "./ingredients/link-list";
+import { LinkList, LinkLists } from "./ingredients/link-lists";
 import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 
@@ -93,6 +93,12 @@ export class Document extends React.Component {
 }
 
 function RenderSideBar({ doc }) {
+  if (!doc.related_content) {
+    if (doc.sidebarHTML) {
+      return <div dangerouslySetInnerHTML={{ __html: doc.sidebarHTML }} />;
+    }
+    return null;
+  }
   return doc.related_content.map(node => (
     <SidebarLeaf
       key={node.title}
@@ -131,18 +137,29 @@ function SidebarLeaf({ title, content }) {
 
 function SidebarLeaflets({ node }) {
   return (
-    <details>
-      <summary>{node.title}</summary>
-      <ol>
-        {node.content.map(childNode => {
+    <Location>
+      {({ location }) => {
+        let hasActiveChild = false;
+        const listItems = node.content.map(childNode => {
+          const isActive = childNode.uri === location.pathname;
+          if (isActive && !hasActiveChild) {
+            hasActiveChild = true;
+          }
           return (
-            <li key={childNode.uri}>
+            <li key={childNode.uri} className={isActive ? "active" : undefined}>
               <Link to={childNode.uri}>{childNode.title}</Link>
             </li>
           );
-        })}
-      </ol>
-    </details>
+        });
+
+        return (
+          <details open={!!hasActiveChild}>
+            <summary>{node.title}</summary>
+            <ol>{listItems}</ol>
+          </details>
+        );
+      }}
+    </Location>
   );
 }
 
@@ -202,10 +219,19 @@ function RenderDocumentBody({ doc }) {
       // https://github.com/mdn/stumptown-content/issues/106
       console.warn("Don't know how to deal with info_box!");
       return null;
-    } else if (section.type === "link_list") {
+    } else if (
+      section.type === "static_methods" ||
+      section.type === "instance_methods"
+    ) {
       return (
-        <LinkList title={section.value.title} links={section.value.content} />
+        <LinkList
+          key={`${section.type}${i}`}
+          title={section.value.title}
+          links={section.value.content}
+        />
       );
+    } else if (section.type === "link_lists") {
+      return <LinkLists key={`linklists${i}`} lists={section.value} />;
     } else {
       console.warn(section);
       throw new Error(`No idea how to handle a '${section.type}' section`);

@@ -9,16 +9,15 @@ node_js: lts/*
 cache:
   yarn: true
   directories:
+    - cli/node_modules
     - client/node_modules
     - server/node_modules
-    - cli/node_modules
+    - ssr/node_modules
 
 # Because https://github.com/travis-ci/travis-ci/issues/9445
 before_install:
   - npm install -g yarn
   - yarn --version
-  # All nodes of the matrix will need and benefit from this
-  - yarn
 
 matrix:
   include:
@@ -36,3 +35,7 @@ matrix:
         - set -x
         - yarn deployment-build
         - yarn end-to-end-test
+    - name: lockfile-check
+      install: skip
+      script:
+        - ./scripts/ci-yarn-lockfile-check.sh

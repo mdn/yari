@@ -24,7 +24,10 @@ describe("Tests using XHR", () => {
         json: () =>
           Promise.resolve({
             titles: {
-              "/docs/Web/HTML/Element/abbr": "<abbr>: The Abbreviation element"
+              "/docs/Web/HTML/Element/abbr": {
+                title: "<abbr>: The Abbreviation element",
+                popularity: 0.0
+              }
             }
           })
       })

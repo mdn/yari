@@ -7,7 +7,7 @@ Procfile
 # exclude these directories
 /stumptown/
 /client/build/
-/cli/dist/
+/ssr/dist/
 /node_modules/
 /server/node_modules/
 /client/node_modules/

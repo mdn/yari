@@ -36,7 +36,7 @@ couple of things:
    pieces for each content page. Once transformed from `.md` to `.json`,
    together with the recipe, you can construct a final block of HTML
 
-What *this* project does is;
+What _this_ project does is;
 
 **From content in stumptown, produce HTML using React components.**
 
@@ -129,15 +129,28 @@ You can keep the `yarn start server` in a separate terminal and keep it
 as you run `yarn deployment-build` over and over. That server, on port 5000,
 just serves the built files and nothing else.
 
+### Setting up `$EDITOR`
+
+If you configure an environment variable called `EDITOR`, either on your
+system as a whole or in the root `.env` file, it can be used in the development
+server to link to `stumptown-content` sources which, when clicked, opens in
+your preferred editor/IDE. For example, in the root:
+
+    echo 'EDITOR=code' >> .env
+
+Now clicking certain links will open files directly in the currently open
+VSCode IDE.
+
 ## Building
 
 The beauty of `package.json` is that it's a recorded "snapshot" of some good
 working default commands. If you're trying to do something slightly different,
 such as hacking on some feature, you can open the `package.json` and take
-*inspriation* from it rather than thinking it's the only way. So, open
+_inspriation_ from it rather than thinking it's the only way. So, open
 it and learn how the default commands work.
 
 ### Deployment Build
+
 For example, the most important command beyond the active development one
 mentioned in the section above is:
 
@@ -152,6 +165,7 @@ Note that as part of `yarn start` it also starts up a plain HTTP server on
 the `.html` files.
 
 ### Building a specific file
+
 To build a page based on an existing content JSON, you need to run the cli with
 a relative path to the content.
 
@@ -159,9 +173,10 @@ a relative path to the content.
     yarn start ../stumptown/packaged/html/HTML.json
 
 ### Specifying a different content directory
+
 If you're actively working on a piece of content in `stumptown-content` but
 for convenience you don't want to mess with the `stumptown-content` that
-is available here in this project as a *git submodule* (named `stumptown`),
+is available here in this project as a _git submodule_ (named `stumptown`),
 then you can set the `STUMPTOWN_CONTENT_ROOT` environment variable.
 For example:
 
@@ -184,12 +199,12 @@ It will execute `yarn audit` in each sub-package. To remedy
 
 Linting is done with Prettier. It's checked in CI but also installed as a
 git hook. The configuration (i.e. our choices) are deliberately omitted
-which means it applies all the *default choices* from
+which means it applies all the _default choices_ from
 [stock Prettier](https://prettier.io/docs/en/options.html). For example,
 line width 80, 2 spaces indentation, semicolon strings, single quotes,
 no trailing commas, etc.
 
-To check *all* files once run:
+To check _all_ files once run:
 
     yarn prettier-check
 
@@ -197,7 +212,7 @@ To only check the files you have touched in the current git stage:
 
     yarn pretty-quick --branch master
 
-Note this command **does not complain, it fixes**. Meaning, if you make an edit to a `.js` file and accidentally violate the Prettier rules, simply running this will *fix* the violation. For example:
+Note this command **does not complain, it fixes**. Meaning, if you make an edit to a `.js` file and accidentally violate the Prettier rules, simply running this will _fix_ the violation. For example:
 
     emacs client/src/app.js
     yarn pretty-quick --branch master
@@ -277,7 +292,7 @@ First, to find out which applications have out-of-date packages, run:
     yarn outdated
 
 If it mentions outdated packages, run and select the packages you want to
-upgrade: 
+upgrade:
 
     yarn upgrade-interactive
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "@reach/router";
 import { BrowserSupportDetail } from "./browser-support-detail";
 import { BrowserSupportNotes } from "./browser-support-notes";
 
@@ -6,12 +7,16 @@ function buildCompatibilityObject(query, compatibilityData) {
   const features = {};
 
   if (!!compatibilityData.__compat) {
+    // The first row in the BCD data is the overall topic for the page, and
+    // does not have its name within the data. Retrieve the name from the query
+    // data and set a flag so that we do not render a `Link` for it since we
+    // are already on that page.
     const name = query.split(".").pop();
-    features[name] = compatibilityData.__compat;
-    for (const compat in compatibilityData) {
-      if (compat !== "__compat" && !!compatibilityData[compat]["__compat"]) {
-        features[compat] = compatibilityData[compat]["__compat"];
-      }
+    features[name] = { ...compatibilityData.__compat, ...{ isFirst: true } };
+  }
+  for (const compat in compatibilityData) {
+    if (compat !== "__compat" && !!compatibilityData[compat]["__compat"]) {
+      features[compat] = compatibilityData[compat]["__compat"];
     }
   }
 
@@ -188,14 +193,16 @@ export function Rows({
   for (const key in compatibility) {
     const currentRow = compatibility[key];
 
-    if (!hasDeprecation) {
-      hasDeprecation = !!currentRow.status.deprecated;
-    }
-    if (!hasExperimental) {
-      hasExperimental = !!currentRow.status.experimental;
-    }
-    if (!hasNonStandard) {
-      hasNonStandard = !!currentRow.status.standard_track;
+    if (currentRow.status) {
+      if (!hasDeprecation) {
+        hasDeprecation = !!currentRow.status.deprecated;
+      }
+      if (!hasExperimental) {
+        hasExperimental = !!currentRow.status.experimental;
+      }
+      if (!hasNonStandard) {
+        hasNonStandard = !!currentRow.status.standard_track;
+      }
     }
 
     const browserSupportDetails = displayBrowsers.map(browser => {
@@ -219,40 +226,47 @@ export function Rows({
       hasAlternative,
       hasNotes
     );
-
     browserCompatibilityRows.push([
       <tr key={key}>
         <th scope="row">
-          <code>{key}</code>
-          <div className="bc-icons">
-            {currentRow.status.deprecated && (
-              <abbr
-                className="only-icon"
-                title="Deprecated. Not for use in new websites."
-              >
-                <span>Deprecated</span>
-                <i className="ic-deprecated" />
-              </abbr>
-            )}
-            {!currentRow.status.standard_track && (
-              <abbr
-                className="only-icon"
-                title="Non-standard. Expect poor cross-browser support."
-              >
-                <span>Non-standard</span>
-                <i className="ic-non-standard" />
-              </abbr>
-            )}
-            {currentRow.status.experimental && (
-              <abbr
-                className="only-icon"
-                title="Experimental. Expect behavior to change in the future."
-              >
-                <span>Experimental</span>
-                <i className="ic-experimental" />
-              </abbr>
-            )}
-          </div>
+          {currentRow.mdn_url && !currentRow.isFirst ? (
+            <Link to={currentRow.mdn_url}>
+              <code>{key}</code>
+            </Link>
+          ) : (
+            <code>{key}</code>
+          )}
+          {currentRow.status && (
+            <div className="bc-icons">
+              {currentRow.status.deprecated && (
+                <abbr
+                  className="only-icon"
+                  title="Deprecated. Not for use in new websites."
+                >
+                  <span>Deprecated</span>
+                  <i className="ic-deprecated" />
+                </abbr>
+              )}
+              {!currentRow.status.standard_track && (
+                <abbr
+                  className="only-icon"
+                  title="Non-standard. Expect poor cross-browser support."
+                >
+                  <span>Non-standard</span>
+                  <i className="ic-non-standard" />
+                </abbr>
+              )}
+              {currentRow.status.experimental && (
+                <abbr
+                  className="only-icon"
+                  title="Experimental. Expect behavior to change in the future."
+                >
+                  <span>Experimental</span>
+                  <i className="ic-experimental" />
+                </abbr>
+              )}
+            </div>
+          )}
         </th>
         <RenderBrowserSupportDetails
           browserSupportDetails={browserSupportDetails}

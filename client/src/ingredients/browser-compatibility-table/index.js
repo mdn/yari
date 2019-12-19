@@ -4,6 +4,7 @@ import { Browsers } from "./browsers";
 import { Rows } from "./rows";
 import { Legend } from "./legend";
 import "./bcd.scss";
+import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
 
 const BROWSERS = {
   desktop: ["chrome", "edge", "firefox", "ie", "opera", "safari"],
@@ -79,7 +80,8 @@ class BrowserCompatibilityTableContent extends Component {
   };
 
   render() {
-    const { data, category = "html" } = this.props;
+    const { data } = this.props;
+    const category = data.query.split(".").shift();
     if (!data || !Object.keys(data).length) {
       throw new Error(
         "BrowserCompatibilityTable component called with empty data"
@@ -127,6 +129,49 @@ class BrowserCompatibilityTableContent extends Component {
   }
 }
 
+// const BrowserCompatibilityTableContentWrapper = props => {
+//   return (
+//     <BrowserCompatibilityErrorBoundary>
+//       {props.data && props.data.title && (
+//         <h2 id={props.data.id}>{props.data.title}</h2>
+//       )}
+//       <BrowserCompatibilityTableContent {...props} />
+//     </BrowserCompatibilityErrorBoundary>
+//   );
+// };
+
+function FetchError({ error }) {
+  let isResponse = false;
+  try {
+    isResponse = error instanceof window.Response;
+  } catch (err) {
+    // Old browsers don't support '... instanceof window.Response'
+  }
+  if (isResponse) {
+    return (
+      <p className="bcd-fetch-error">
+        Unable to load the JSON from the server.
+        <br />
+        <small>
+          <code>
+            {error.status} on {error.url}
+          </code>
+        </small>
+      </p>
+    );
+  }
+  return (
+    <p className="bcd-fetch-error">
+      Problem loading JSON from the server
+      <br />
+      <small>
+        <code>{error.toString()}</code>
+      </small>
+      .
+    </p>
+  );
+}
+
 export function BrowserCompatibilityTable({ data }) {
   const { uri } = data;
   const [fullData, setFullData] = useState(null);
@@ -161,46 +206,14 @@ export function BrowserCompatibilityTable({ data }) {
     };
   }, [uri]);
   return (
-    <>
+    <BrowserCompatibilityErrorBoundary>
       {data.title && <h2 id={data.id}>{data.title}</h2>}
       {!fullData && fetchError && <FetchError error={fetchError} />}
       {/* Animate this? */}
       {!fullData && !fetchError && (
         <p>Loading browser compatibility table...</p>
       )}
-      {fullData && <BrowserCompatibilityTableContent data={fullData} />}
-    </>
-  );
-}
-
-function FetchError({ error }) {
-  let isResponse = false;
-  try {
-    isResponse = error instanceof window.Response;
-  } catch (err) {
-    // Old browsers don't support '... instanceof window.Response'
-  }
-  if (isResponse) {
-    return (
-      <p className="bcd-fetch-error">
-        Unable to load the JSON from the server.
-        <br />
-        <small>
-          <code>
-            {error.status} on {error.url}
-          </code>
-        </small>
-      </p>
-    );
-  }
-  return (
-    <p className="bcd-fetch-error">
-      Problem loading JSON from the server
-      <br />
-      <small>
-        <code>{error.toString()}</code>
-      </small>
-      .
-    </p>
+      {fullData && <BrowserCompatibilityTableContentWrapper data={fullData} />}
+    </BrowserCompatibilityErrorBoundary>
   );
 }

@@ -22,3 +22,13 @@ export function LinkList({ title, links }) {
     </div>
   );
 }
+
+export function LinkLists({ lists }) {
+  return lists.map((list, i) => (
+    <LinkList
+      key={`${list.title}${i}`}
+      title={list.title}
+      links={list.content}
+    />
+  ));
+}
