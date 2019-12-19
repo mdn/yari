@@ -129,17 +129,6 @@ class BrowserCompatibilityTableContent extends Component {
   }
 }
 
-// const BrowserCompatibilityTableContentWrapper = props => {
-//   return (
-//     <BrowserCompatibilityErrorBoundary>
-//       {props.data && props.data.title && (
-//         <h2 id={props.data.id}>{props.data.title}</h2>
-//       )}
-//       <BrowserCompatibilityTableContent {...props} />
-//     </BrowserCompatibilityErrorBoundary>
-//   );
-// };
-
 function FetchError({ error }) {
   let isResponse = false;
   try {
