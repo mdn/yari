@@ -12,7 +12,7 @@ import { App } from "../client/src/app";
 import render from "./render";
 import ProgressBar from "./progress-bar";
 import { fixSyntaxHighlighting } from "./syntax-highlighter";
-import { normalizeURLs } from "./browser-compatibility-table";
+import { fixBCDSections } from "./browser-compatibility-table";
 
 sourceMapSupport.install();
 
@@ -128,9 +128,9 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
     if (options.doc.body) {
       // Find blocks of code and transform it to syntax highlighted code.
       fixSyntaxHighlighting(options.doc);
-      // Creates new mdn_url's for the browser-compatibility-table to link to
-      // pages within this project rather than use the absolute URLs
-      normalizeURLs(options.doc);
+
+      // Find BCD blocks and fix what needs to and can be done.
+      fixBCDSections(options.doc, destination);
     }
 
     const outfileHtml = path.join(destination, "index.html");

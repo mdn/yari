@@ -179,6 +179,7 @@ export function BrowserCompatibilityTable({ data }) {
   useEffect(() => {
     let dismounted = false;
     let url = document.location.pathname;
+    console.log({ uri, url });
 
     // Hopefully this hack won't be necessary once we sort out our
     // CloudFront redirect stuff.
@@ -213,7 +214,7 @@ export function BrowserCompatibilityTable({ data }) {
       {!fullData && !fetchError && (
         <p>Loading browser compatibility table...</p>
       )}
-      {fullData && <BrowserCompatibilityTableContentWrapper data={fullData} />}
+      {fullData && <BrowserCompatibilityTableContent data={fullData} />}
     </BrowserCompatibilityErrorBoundary>
   );
 }
