@@ -5,7 +5,5 @@ set -ex
 # start in interactive mode. To make it like in CI
 # execute this script like `CI=true ./scripts/ci-client.sh
 
-cd client
-yarn
-yarn run test
-yarn run build
+yarn workspace client run test
+yarn workspace client run build
