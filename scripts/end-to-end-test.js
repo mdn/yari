@@ -12,7 +12,7 @@ const cheerio = require("cheerio");
    * is sane.
    */
 
-  const directory = "client/build/en-US/docs/Web/HTML/Element/video/";
+  const directory = "client/build/en-us/docs/web/html/element/video/";
   const videoJsonRaw = fs.readFileSync(
     path.join(directory, "index.json"),
     "utf8"

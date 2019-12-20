@@ -100,7 +100,7 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
   }
   titles[uri] = options.doc.title;
 
-  const destination = path.join(output, uri);
+  const destination = path.join(output, uri.toLowerCase());
 
   fs.mkdirSync(destination, { recursive: true });
 
@@ -344,7 +344,10 @@ function renderDocuments(
 
   Object.entries(titlesByLocale).forEach(([locale, localeTitles]) => {
     const titles = {};
-    const allTitlesFilepath = path.join(STATIC_ROOT, `${locale}/titles.json`);
+    const allTitlesFilepath = path.join(
+      STATIC_ROOT,
+      `${locale.toLowerCase()}/titles.json`
+    );
     const updateTitlesFiles = fs.existsSync(allTitlesFilepath);
     if (updateTitlesFiles) {
       titles.titles = JSON.parse(fs.readFileSync(allTitlesFilepath, "utf8"))[
