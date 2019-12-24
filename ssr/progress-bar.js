@@ -1,4 +1,4 @@
-export default class ProgressBar {
+class ProgressBar {
   constructor({ prefix = "Progress: ", includeMemory = false }) {
     this.total;
     this.current;
@@ -74,3 +74,5 @@ export default class ProgressBar {
     );
   }
 }
+
+module.exports = ProgressBar;

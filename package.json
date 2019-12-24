@@ -23,7 +23,8 @@
     "cli",
     "client",
     "server",
-    "ssr"
+    "ssr",
+    "content"
   ],
   "devDependencies": {
     "foreman": "3.0.1",
