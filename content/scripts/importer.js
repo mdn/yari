@@ -276,14 +276,15 @@ class ToDiskImporter extends Importer {
       mdn_url: absoluteUrl,
       slug,
       locale,
-
-      // XXX At the moment, we're pretending we have the KS shim, and that means
-      // we'll have access to the raw (full of macros) string which'll be
-      // useful to infer certain things such as how the {{Compat(...)}}
-      // macro is used. But for now, we'll inject it into the metadata:
-      _raw: doc.html
+      modified: doc.modified
     };
     fs.writeFileSync(metaFile, yaml.safeDump(meta));
+    // XXX At the moment, we're pretending we have the KS shim, and that means
+    // we'll have access to the raw (full of macros) string which'll be
+    // useful to infer certain things such as how the {{Compat(...)}}
+    // macro is used. But for now, we'll inject it into the metadata:
+    const rawFile = path.join(folder, "raw.html");
+    fs.writeFileSync(rawFile, doc.html);
   }
 
   saveAllRedirects() {
