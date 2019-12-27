@@ -42,7 +42,7 @@
     "node-fetch": "2.6.0",
     "nodemon": "^2.0.2",
     "serve": "11.2.0",
-    "webpack": "4.41.4",
+    "webpack": "4.41.5",
     "webpack-cli": "3.3.10",
     "webpack-node-externals": "1.7.2"
   }
