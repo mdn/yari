@@ -313,7 +313,8 @@ class Builder {
 
     // Remove those '<span class="alllinks"><a href="/en-US/docs/tag/Web">View All...</a></span>' links
     // Remove any completely empty <p>, <dl>, or <div> tags.
-    $("p:empty,dl:empty,div:empty,span.alllinks").remove();
+    // XXX costs about 5% longer time
+    // $("p:empty,dl:empty,div:empty,span.alllinks").remove();
 
     // let macroCalls = extractMacroCalls(rawHtml);
 
@@ -338,13 +339,14 @@ class Builder {
         c = 0;
       }
       // We *could* wrap this in something like `if (child.tagName) {`
-      // which would exclude any node that isn't a tag, such as comments.
+      // which would exclude any node that isn't a tag, such as jed comments.
       // That might make the DOM nodes more compact and memory efficient.
       c++;
       section.append(child);
     });
     if (c) {
-      sections.push(...addSections(section.clone()));
+      // last straggler
+      sections.push(...addSections(section));
     }
 
     doc.title = metadata.title;
