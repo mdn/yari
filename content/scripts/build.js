@@ -21,7 +21,7 @@ const processing = Object.freeze({
   ALREADY: "already",
   PROCESSED: "processed",
   EMPTY: "empty",
-  NO_HTML: "no_html",
+  // NO_HTML: "no_html",
   EXCLUDED: "excluded"
 });
 
@@ -52,10 +52,33 @@ class Builder {
   }
 
   start() {
+    // Just print what could be found and exit
+    if (this.options.listLocales) {
+      const t0 = new Date();
+      Object.entries(this.countLocaleFolders())
+        .map(([locale, count]) => {
+          return [count, locale];
+        })
+        .sort((a, b) => b[0] - a[0])
+        .forEach(([count, locale]) => {
+          console.log(
+            `${chalk.green(locale.padStart(6))}: ${count.toLocaleString()}`
+          );
+        });
+      // console.log(counts)
+      const t1 = new Date();
+      console.log(chalk.yellow(`Took ${ppMilliseconds(t1 - t0)}`));
+      return;
+    }
+
     // To be able to make a progress bar we need to first count what we're
     // going to need to do.
     if (this.progressBar) {
-      this.initProgressbar(this.countFolders());
+      const countTodo = this.countFolders();
+      if (!countTodo) {
+        throw new Error("No folders found to process!");
+      }
+      this.initProgressbar(countTodo);
     }
 
     // Now do similar to what countFolders() does but actually process each
@@ -67,6 +90,7 @@ class Builder {
       counts[key] = 0;
     });
 
+    const t0 = new Date();
     this.getLocaleRootFolders().forEach(filepath => {
       walker(filepath, (folder, files) => {
         if (this.excludeFolder(folder, filepath, files)) {
@@ -92,7 +116,29 @@ class Builder {
         this.tickProgressbar(++total);
       });
     });
-    console.log(counts);
+    const t1 = new Date();
+    this.summorizeResults(counts, t1 - t0);
+  }
+
+  summorizeResults(counts, took) {
+    console.log("\n");
+    console.log(chalk.green("Summary of build:"));
+    const totalProcessed = counts[processing.PROCESSED];
+    // const totalDocuments = Object.values(counts).reduce((a, b) => a + b);
+    const rate = (1000 * totalProcessed) / took; // per second
+    console.log(
+      chalk.yellow(
+        `Processed ${totalProcessed.toLocaleString()} in ${ppMilliseconds(
+          took
+        )} (roughly ${rate.toFixed(1)} docs/sec)`
+      )
+    );
+    Object.keys(counts)
+      .sort()
+      .map(key => {
+        const count = counts[key];
+        console.log(`${key.padEnd(12)}: ${count.toLocaleString()}`);
+      });
   }
 
   /** Return true if for any reason this folder should not be processed */
@@ -133,6 +179,25 @@ class Builder {
       });
     });
     return folders;
+  }
+
+  countLocaleFolders() {
+    let locales = {};
+    this.getLocaleRootFolders().forEach(filepath => {
+      const locale = path.basename(filepath);
+      if (!(locale in locales)) {
+        locales[locale] = 0;
+      }
+      walker(filepath, (folder, files) => {
+        if (files.includes("index.html") && files.includes("index.yaml")) {
+          if (this.excludeFolder(folder, filepath, files)) {
+            return;
+          }
+          locales[locale]++;
+        }
+      });
+    });
+    return locales;
   }
 
   processFolder(folder) {
@@ -464,6 +529,21 @@ function _addSectionProse($) {
 //   }
 //   return calls;
 // }
+
+function ppMilliseconds(ms) {
+  // If the number of millseconds is really large, use seconds. Or minutes
+  // even.
+  if (ms > 1000 * 60 * 5) {
+    const seconds = ms / 1000;
+    const minutes = seconds / 60;
+    return `${minutes.toFixed(1)} minutes`;
+  } else if (ms > 1000) {
+    const seconds = ms / 1000;
+    return `${seconds.toFixed(1)} seconds`;
+  } else {
+    return `${ms.toFixed(1)} milliseconds`;
+  }
+}
 
 module.exports = {
   runBuild

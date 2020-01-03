@@ -61,6 +61,7 @@ cli
   )
   .option("-l, --locales <locale>", "locales to limit on", cli.ARRAY, [])
   .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
+  .option("--list-locales", "display all locales and their counts", cli.BOOL)
   .option(
     "-s, --slugsearch <partofslug>",
     "filter by slug matches",
