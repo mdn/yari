@@ -4,16 +4,36 @@ const path = require("path");
 const chalk = require("chalk");
 const cheerio = require("cheerio");
 const yaml = require("js-yaml");
+const csv = require("@fast-csv/parse");
 
 require("dotenv").config();
 
 const { packageBCD } = require("./resolve-bcd");
 const ProgressBar = require("ssr/progress-bar");
+const { MIN_GOOGLE_ANALYTICS_PAGEVIEWS } = require("./constants");
 
 function runBuild(options) {
   const { root, destination } = options;
   const builder = new Builder(root, destination, options);
-  builder.start();
+
+  if (options.googleanalyticsPageviewsCsv) {
+    const t0 = new Date();
+    builder.initGoogleAnalyticsPageviewsCSV(rowsParsed => {
+      const t1 = new Date();
+      console.log(
+        chalk.green(
+          `${rowsParsed.toLocaleString()} rows parsed. ${Object.keys(
+            builder.popularities
+          ).length.toLocaleString()} popularities found. Took ${ppMilliseconds(
+            t1 - t0
+          )}.`
+        )
+      );
+      builder.start();
+    });
+  } else {
+    builder.start();
+  }
 }
 
 // Enums for return values
@@ -35,6 +55,8 @@ class Builder {
           includeMemory: true
         })
       : null;
+
+    this.popularities = {};
   }
   initProgressbar(total) {
     this.progressBar && this.progressBar.init(total);
@@ -64,7 +86,6 @@ class Builder {
             `${chalk.green(locale.padStart(6))}: ${count.toLocaleString()}`
           );
         });
-      // console.log(counts)
       const t1 = new Date();
       console.log(chalk.yellow(`Took ${ppMilliseconds(t1 - t0)}`));
       return;
@@ -88,6 +109,8 @@ class Builder {
     Object.values(processing).forEach(key => {
       counts[key] = 0;
     });
+
+    this.prepareRoot();
 
     const t0 = new Date();
     this.getLocaleRootFolders().forEach(filepath => {
@@ -117,6 +140,50 @@ class Builder {
     });
     const t1 = new Date();
     this.summorizeResults(counts, t1 - t0);
+  }
+
+  prepareRoot() {
+    if (this.options.startClean) {
+      // Experimental new feature
+      // https://nodejs.org/api/fs.html#fs_fs_rmdirsync_path_options
+      fs.rmdirSync(this.options.destination, { recursive: true });
+    }
+    fs.mkdirSync(this.options.destination, { recursive: true });
+  }
+
+  initGoogleAnalyticsPageviewsCSV(done) {
+    if (this.options.googleanalyticsPageviewsCsv) {
+      const pageviews = {};
+      csv
+        .parseFile(this.options.googleanalyticsPageviewsCsv, { headers: true })
+        .on("error", error => console.error(error))
+        .on("data", row => {
+          const uri = row.Page;
+          const count = parseInt(row.Pageviews);
+
+          if (
+            count >= MIN_GOOGLE_ANALYTICS_PAGEVIEWS &&
+            uri.includes("/docs/") &&
+            !uri.includes("$") &&
+            !uri.includes("?")
+          ) {
+            pageviews[uri] = count;
+          }
+        })
+        .on("end", rowCount => {
+          const sumTotal = Object.values(pageviews).reduce((a, b) => a + b);
+          if (!sumTotal) {
+            throw new Error("No pageviews found!");
+          }
+          Object.entries(pageviews).forEach(([uri, count]) => {
+            // It just needs to be a floating point number.
+            // Multiply by 1000 to avoid complicated floating point rounding
+            // errors when this eventually gets serialized in JSON.
+            this.popularities[uri] = (1000 * count) / sumTotal;
+          });
+          done(rowCount);
+        });
+    }
   }
 
   summorizeResults(counts, took) {
@@ -281,7 +348,9 @@ class Builder {
     }
 
     doc.title = metadata.title;
+    doc.mdn_url = metadata.mdn_url;
     doc.body = sections;
+    doc.popularity = this.popularities[doc.mdn_url] || 0.0;
 
     doc.last_modified = metadata.modified;
     const destDir = path.dirname(destination);

@@ -136,10 +136,6 @@ class Importer {
           console.error("Error event!");
           throw err;
         })
-        // .on("fields", function(fields) {
-        //   // the field packets for the rows to follow
-        //   // console.log("FIELDS:", fields);
-        // })
         .on("result", row => {
           individualCount++;
           // Only update (and repaint) every 20th time.

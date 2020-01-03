@@ -61,6 +61,7 @@ cli
   )
   .option("-l, --locales <locale>", "locales to limit on", cli.ARRAY, [])
   .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
+  .option("--start-clean", "delete anything created first", cli.BOOL)
   .option("--list-locales", "display all locales and their counts", cli.BOOL)
   .option(
     "-s, --slugsearch <partofslug>",
@@ -73,6 +74,11 @@ cli
     "filter by folder matches",
     cli.ARRAY,
     []
+  )
+  .option(
+    "--googleanalytics-pageviews-csv <path>",
+    "export from Google Analytics containing pageview counts",
+    cli.PATH
   )
   .argument(
     "[destination]",
