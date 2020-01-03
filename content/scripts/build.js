@@ -21,7 +21,6 @@ const processing = Object.freeze({
   ALREADY: "already",
   PROCESSED: "processed",
   EMPTY: "empty",
-  // NO_HTML: "no_html",
   EXCLUDED: "excluded"
 });
 
@@ -200,11 +199,27 @@ class Builder {
     return locales;
   }
 
+  excludeSlug(metadata) {
+    const { slugsearch } = this.options;
+    if (slugsearch.length) {
+      const { mdn_url } = metadata;
+      return slugsearch.some(search => mdn_url.includes(search));
+    }
+    return false;
+  }
+
   processFolder(folder) {
     const doc = {};
     const metadata = yaml.safeLoad(
       fs.readFileSync(path.join(folder, "index.yaml"))
     );
+    const { slugsearch } = this.options;
+    if (slugsearch.length) {
+      // Only bother if this document's slug matches
+      if (this.excludeSlug(metadata)) {
+        return [processing.EXCLUDED, null];
+      }
+    }
     // The destination is the same as source but with a different base.
     // If the file *came from* /path/to/files/en-US/foo/bar/
     // the final destination is /path/to/build/en-US/foo/bar/index.json
