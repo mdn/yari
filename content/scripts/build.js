@@ -29,7 +29,6 @@ class Builder {
   constructor(root, destination, options) {
     this.root = root;
     this.destination = destination;
-    // this.locales = options.locales;
     this.options = options;
 
     this.progressBar = !options.noProgressbar
@@ -431,40 +430,40 @@ function _addSectionProse($) {
   ];
 }
 
-function extractMacroCalls(text) {
-  const RECOGNIZED_MACRO_NAMES = ["Compat"];
+// function extractMacroCalls(text) {
+//   const RECOGNIZED_MACRO_NAMES = ["Compat"];
 
-  function evaluateMacroArgs(argsString) {
-    if (argsString.startsWith("{") && argsString.endsWith("}")) {
-      return JSON.parse(argsString);
-    }
-    if (argsString.includes(",")) {
-      return eval(`[${argsString}]`);
-    }
-    // XXX A proper parser instead??
-    return eval(argsString);
-  }
+//   function evaluateMacroArgs(argsString) {
+//     if (argsString.startsWith("{") && argsString.endsWith("}")) {
+//       return JSON.parse(argsString);
+//     }
+//     if (argsString.includes(",")) {
+//       return eval(`[${argsString}]`);
+//     }
+//     // XXX A proper parser instead??
+//     return eval(argsString);
+//   }
 
-  const calls = {};
-  /**
-   * Note that the text can have escaped macros. For example:
-   *
-   *    This is how you write a macros: \{{Compat("foo.bar")}}
-   *
-   */
-  const matches = text.matchAll(/[^\\]{{\s*(\w+)\s*\((.*?)\)\s*}}/g);
-  for (const match of matches) {
-    const macroName = match[1];
-    if (RECOGNIZED_MACRO_NAMES.includes(macroName)) {
-      if (!calls[macroName]) {
-        calls[macroName] = [];
-      }
-      const macroArgs = evaluateMacroArgs(match[2].trim());
-      calls[macroName].push(macroArgs);
-    }
-  }
-  return calls;
-}
+//   const calls = {};
+//   /**
+//    * Note that the text can have escaped macros. For example:
+//    *
+//    *    This is how you write a macros: \{{Compat("foo.bar")}}
+//    *
+//    */
+//   const matches = text.matchAll(/[^\\]{{\s*(\w+)\s*\((.*?)\)\s*}}/g);
+//   for (const match of matches) {
+//     const macroName = match[1];
+//     if (RECOGNIZED_MACRO_NAMES.includes(macroName)) {
+//       if (!calls[macroName]) {
+//         calls[macroName] = [];
+//       }
+//       const macroArgs = evaluateMacroArgs(match[2].trim());
+//       calls[macroName].push(macroArgs);
+//     }
+//   }
+//   return calls;
+// }
 
 module.exports = {
   runBuild
