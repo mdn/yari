@@ -2,17 +2,11 @@ const url = require("url");
 const fs = require("fs");
 const path = require("path");
 const mysql = require("mysql");
+// const knex = require("knex");
 const cheerio = require("cheerio");
 const yaml = require("js-yaml");
 
-require("dotenv").config();
-
 const ProgressBar = require("ssr/progress-bar");
-
-const DEFAULT_DATABASE_URL =
-  process.env.DATABASE_URL || "mysql2://username:password@host/databasename";
-
-const DEFAULT_ROOT = process.env.ROOT || path.join(__dirname, "..", "files");
 
 const REDIRECT_HTML = "REDIRECT <a ";
 
@@ -26,6 +20,9 @@ function runImporter(options) {
   console.log(
     `Going to try to connect to ${database} (locales=${options.locales})`
   );
+  console.log(
+    `Going to exclude the following slug prefixes: ${options.excludePrefixes}`
+  );
 
   const connection = mysql.createConnection({
     host,
@@ -34,6 +31,16 @@ function runImporter(options) {
     database
   });
   connection.connect();
+
+  // const connection = knex({
+  //   client: "mysql",
+  //   connection: {
+  //     host,
+  //     user,
+  //     password,
+  //     database
+  //   }
+  // });
 
   const importer = new ToDiskImporter(connection, options, () => {
     connection.end();
@@ -84,8 +91,6 @@ class Importer {
   }
 
   start() {
-    const { locales } = this.options;
-
     // Count of how many rows we've processed
     let individualCount = 0;
     let totalCount = 0; // this'll soon be set by the first query
@@ -94,15 +99,10 @@ class Importer {
 
     // Let's warm up by seeing we can connect to the wiki_document table
     // and extract some stats.
-    let sql = `
-      SELECT locale, COUNT(*) as count from wiki_document
-      `;
-    let queryArgs = [];
-    if (locales && locales.length) {
-      sql += `WHERE locale in (?)`;
-      queryArgs.push(locales);
-    }
-    sql += "group by locale ORDER by count DESC ";
+    const [constraintsSql, queryArgs] = this._getSQLConstraints();
+    let sql =
+      "SELECT locale, COUNT(*) as count from wiki_document" + constraintsSql;
+    sql += " group by locale ORDER by count DESC ";
 
     // First make a table of locale<->counts
     this.connection.query(sql, queryArgs, (error, results) => {
@@ -129,13 +129,16 @@ class Importer {
           )}%) are non-en-US)`
         );
       }
+      // return this.quitCallback();
+
+      // If something needs to be done to where files will be written.
+      this.prepareRoot();
+
       this.initProgressbar(totalCount);
 
       // Actually do the imported
-      sql = `SELECT * FROM wiki_document`;
-      if (locales && locales.length) {
-        sql += ` WHERE locale in (?)`;
-      }
+      sql = "SELECT * FROM wiki_document " + constraintsSql;
+
       const query = this.connection.query(sql, queryArgs);
       query
         .on("error", err => {
@@ -166,6 +169,30 @@ class Importer {
         });
     });
   }
+
+  _getSQLConstraints() {
+    // Yeah, this is ugly but it bloody works for now.
+    const extra = [];
+    const queryArgs = [];
+    const { locales, excludePrefixes } = this.options;
+    if (locales.length) {
+      extra.push("locale in (?)");
+      queryArgs.push(locales);
+    }
+    if (excludePrefixes.length) {
+      extra.push(
+        "NOT (" + excludePrefixes.map(_ => "slug LIKE ?").join(" OR ") + ")"
+      );
+      queryArgs.push(...excludePrefixes.map(s => `${s}%`));
+    }
+
+    return [extra.length ? ` WHERE ${extra.join(" AND ")}` : "", queryArgs];
+  }
+
+  prepareRoot() {
+    // In case anything needs to be done to this.options.root
+  }
+
   processRow(row, resumeCallback) {
     const absoluteUrl = `/${row.locale}/docs/${row.slug}`;
     if (row.is_redirect) {
@@ -252,9 +279,17 @@ class Importer {
 
 /** Same as Importer but will dump to disk */
 class ToDiskImporter extends Importer {
-  start() {
+  // start() {
+  //   super.start();
+  // }
+
+  prepareRoot() {
+    if (this.options.startClean) {
+      // Experimental new feature
+      // https://nodejs.org/api/fs.html#fs_fs_rmdirsync_path_options
+      fs.rmdirSync(this.options.root, { recursive: true });
+    }
     fs.mkdirSync(this.options.root, { recursive: true });
-    super.start();
   }
 
   processDocument(doc, absoluteUrl) {
@@ -268,7 +303,7 @@ class ToDiskImporter extends Importer {
     // XXX As of right now, we don't have a KS shim that converts "raw Kuma HTML"
     // to rendered HTML. So we'll cheat by copying the `rendered_html`.
     // fs.writeFileSync(htmlFile, doc.html);
-    fs.writeFileSync(htmlFile, doc.rendered_html);
+    fs.writeFileSync(htmlFile, `${doc.rendered_html}`);
 
     const metaFile = path.join(folder, "index.yaml");
     const meta = {
@@ -323,7 +358,5 @@ class ToDiskImporter extends Importer {
 }
 
 module.exports = {
-  runImporter,
-  DEFAULT_DATABASE_URL,
-  DEFAULT_ROOT
+  runImporter
 };
