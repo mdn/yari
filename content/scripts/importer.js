@@ -32,16 +32,6 @@ function runImporter(options) {
   });
   connection.connect();
 
-  // const connection = knex({
-  //   client: "mysql",
-  //   connection: {
-  //     host,
-  //     user,
-  //     password,
-  //     database
-  //   }
-  // });
-
   const importer = new ToDiskImporter(connection, options, () => {
     connection.end();
   });
