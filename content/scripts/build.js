@@ -210,7 +210,9 @@ class Builder {
 
   summorizeResults(counts, took) {
     console.log("\n");
-    console.log(chalk.green("Summary of build:"));
+    console.log(
+      chalk.green(`Summary of build (locales=${this.options.locales}):`)
+    );
     const totalProcessed = counts[processing.PROCESSED];
     // const totalDocuments = Object.values(counts).reduce((a, b) => a + b);
     const rate = (1000 * totalProcessed) / took; // per second

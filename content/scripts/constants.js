@@ -8,7 +8,9 @@ const DEFAULT_DESTINATION =
 const DEFAULT_DATABASE_URL =
   process.env.DATABASE_URL || "mysql2://username:password@host/databasename";
 
-const DEFAULT_BUILD_LOCALES = (process.env.BUILD_LOCALES || "").split(",");
+const DEFAULT_BUILD_LOCALES = (process.env.BUILD_LOCALES || "")
+  .split(",")
+  .filter(x => x);
 const DEFAULT_EXCLUDE_SLUG_PREFIXES = [
   "User:",
   "Talk:",
