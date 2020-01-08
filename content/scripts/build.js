@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 
 const chalk = require("chalk");
 const cheerio = require("cheerio");
@@ -49,6 +50,7 @@ class Builder {
     this.root = root;
     this.destination = destination;
     this.options = options;
+    this.selfHash = null;
 
     this.progressBar = !options.noProgressbar
       ? new ProgressBar({
@@ -90,6 +92,10 @@ class Builder {
       console.log(chalk.yellow(`Took ${ppMilliseconds(t1 - t0)}`));
       return;
     }
+
+    // This prepares this.selfHash so that when we build files, we can
+    // write down which "self hash" was used at the time.
+    this.initSelfHash();
 
     // To be able to make a progress bar we need to first count what we're
     // going to need to do.
@@ -140,6 +146,21 @@ class Builder {
     });
     const t1 = new Date();
     this.summorizeResults(counts, t1 - t0);
+  }
+
+  initSelfHash() {
+    this.selfHash = makeHash([
+      // This'll be different when new packages are changed like
+      // `mdn-browser-compat-data` but we *could* be more explicit but
+      // this'll be on the safe side.
+      path.join(__dirname, "../package.json"),
+      // This is broad but let's make it depend on every .js file
+      // in this file's folder
+      ...fs
+        .readdirSync(path.dirname(__filename))
+        .filter(name => name.endsWith(".js"))
+        .map(name => path.join(path.dirname(__filename), name))
+    ]);
   }
 
   prepareRoot() {
@@ -276,10 +297,11 @@ class Builder {
   }
 
   processFolder(folder) {
+    const hasher = crypto.createHash("md5");
     const doc = {};
-    const metadata = yaml.safeLoad(
-      fs.readFileSync(path.join(folder, "index.yaml"))
-    );
+    const metadataRaw = fs.readFileSync(path.join(folder, "index.yaml"));
+    hasher.update(metadataRaw);
+    const metadata = yaml.safeLoad(metadataRaw);
     const { slugsearch } = this.options;
     if (slugsearch.length) {
       // Only bother if this document's slug matches
@@ -294,18 +316,39 @@ class Builder {
       folder.replace(this.root, this.destination),
       "index.json"
     );
+    const hashDestination = path.join(
+      folder.replace(this.root, this.destination),
+      "index.hash"
+    );
 
     // When the KS thing works we won't need this line
 
     // // REAL
     // const rawHtml = fs.readFileSync(path.join(folder, "index.html"), "utf8");
+    // hasher.update(rawHtml);
     // const renderedHtml = this.renderHtml(rawHtml, metadata);
-    // FAKE
+    // FAKE (NOTE, the docHash check stuff needs to happen BEFORE executing renderHtml)
     // const rawHtml = fs.readFileSync(path.join(folder, "raw.html"), "utf8");
     const renderedHtml = fs.readFileSync(
       path.join(folder, "index.html"),
       "utf8"
     );
+    hasher.update(renderedHtml);
+
+    // Now we've read in all the "inputs" needed.
+    const docHash = hasher.digest("hex").slice(0, 12);
+    const combinedHash = `${this.selfHash}.${docHash}`;
+    // If the destination and the hash file already exists AND the content
+    // of an existing hash file is the same as this `combinedHash` then we
+    // can bail early.
+    if (
+      !this.options.noCache &&
+      fs.existsSync(destination) &&
+      fs.existsSync(hashDestination) &&
+      fs.readFileSync(hashDestination, "utf8") === combinedHash
+    ) {
+      return [processing.ALREADY, null];
+    }
 
     const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`, {
       decodeEntities: false
@@ -358,6 +401,7 @@ class Builder {
     const destDir = path.dirname(destination);
     fs.mkdirSync(destDir, { recursive: true });
     fs.writeFileSync(destination, JSON.stringify(doc, null, 2));
+    fs.writeFileSync(hashDestination, combinedHash);
     return [processing.PROCESSED, destination];
   }
 
@@ -631,6 +675,13 @@ function ppMilliseconds(ms) {
   }
 }
 
+function makeHash(filepaths, length = 12) {
+  const hasher = crypto.createHash("md5");
+  filepaths
+    .map(fp => fs.readFileSync(fp, "utf8"))
+    .forEach(content => hasher.update(content));
+  return hasher.digest("hex").slice(0, length);
+}
 module.exports = {
   runBuild
 };

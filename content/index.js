@@ -63,6 +63,7 @@ cli
   .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
   .option("--start-clean", "delete anything created first", cli.BOOL)
   .option("--list-locales", "display all locales and their counts", cli.BOOL)
+  .option("--no-cache", "never benefit from the cache", cli.BOOL)
   .option(
     "-s, --slugsearch <partofslug>",
     "filter by slug matches",
