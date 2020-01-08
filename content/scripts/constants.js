@@ -8,6 +8,7 @@ const DEFAULT_DESTINATION =
 const DEFAULT_DATABASE_URL =
   process.env.DATABASE_URL || "mysql2://username:password@host/databasename";
 
+const DEFAULT_BUILD_LOCALES = (process.env.BUILD_LOCALES || "").split(",");
 const DEFAULT_EXCLUDE_SLUG_PREFIXES = [
   "User:",
   "Talk:",
@@ -38,5 +39,6 @@ module.exports = {
   DEFAULT_DESTINATION,
   DEFAULT_DATABASE_URL,
   DEFAULT_EXCLUDE_SLUG_PREFIXES,
+  DEFAULT_BUILD_LOCALES,
   MIN_GOOGLE_ANALYTICS_PAGEVIEWS
 };

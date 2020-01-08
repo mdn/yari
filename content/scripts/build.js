@@ -13,9 +13,9 @@ const { packageBCD } = require("./resolve-bcd");
 const ProgressBar = require("ssr/progress-bar");
 const { MIN_GOOGLE_ANALYTICS_PAGEVIEWS } = require("./constants");
 
-function runBuild(options) {
+function runBuild(options, logger) {
   const { root, destination } = options;
-  const builder = new Builder(root, destination, options);
+  const builder = new Builder(root, destination, options, logger);
 
   if (options.googleanalyticsPageviewsCsv) {
     const t0 = new Date();
@@ -46,10 +46,11 @@ const processing = Object.freeze({
 });
 
 class Builder {
-  constructor(root, destination, options) {
+  constructor(root, destination, options, logger) {
     this.root = root;
     this.destination = destination;
     this.options = options;
+    this.logger = logger;
     this.selfHash = null;
 
     this.progressBar = !options.noProgressbar
@@ -71,7 +72,7 @@ class Builder {
   }
 
   printProcessing(result, fileWritten) {
-    !this.progressBar && console.log(`${result}: ${fileWritten}`);
+    !this.progressBar && this.logger.info(`${result}: ${fileWritten}`);
   }
 
   start() {
@@ -347,7 +348,7 @@ class Builder {
       fs.existsSync(hashDestination) &&
       fs.readFileSync(hashDestination, "utf8") === combinedHash
     ) {
-      return [processing.ALREADY, null];
+      return [processing.ALREADY, destination];
     }
 
     const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`, {

@@ -87,9 +87,9 @@ cli
     cli.STRING,
     DEFAULT_DESTINATION
   )
-  .action((args, options) => {
+  .action((args, options, logger) => {
     options.destination = args.destination;
-    return runBuild(options);
+    return runBuild(options, logger);
   });
 
 cli.parse(process.argv);

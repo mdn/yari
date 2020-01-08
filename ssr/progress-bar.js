@@ -4,6 +4,9 @@ class ProgressBar {
     this.current;
     this.prefix = prefix;
     this.includeMemory = includeMemory;
+    if (!process.stdout.columns) {
+      throw new Error("You can't use this class if it's not a TTY");
+    }
     this.barLength =
       process.stdout.columns - prefix.length - "100.0%".length - 5;
     if (includeMemory) {
@@ -67,6 +70,7 @@ class ProgressBar {
   }
 
   getBar(length, char, color = a => a) {
+    console.log({ length }, typeof length);
     return color(
       Array(length)
         .fill(char)
