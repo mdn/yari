@@ -70,7 +70,6 @@ class ProgressBar {
   }
 
   getBar(length, char, color = a => a) {
-    console.log({ length }, typeof length);
     return color(
       Array(length)
         .fill(char)

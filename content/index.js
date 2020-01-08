@@ -8,7 +8,8 @@ const {
   DEFAULT_ROOT,
   DEFAULT_DATABASE_URL,
   DEFAULT_DESTINATION,
-  DEFAULT_EXCLUDE_SLUG_PREFIXES
+  DEFAULT_EXCLUDE_SLUG_PREFIXES,
+  DEFAULT_BUILD_LOCALES
 } = require("./scripts/constants.js");
 
 cli
@@ -28,7 +29,12 @@ cli
     cli.PATH,
     DEFAULT_ROOT
   )
-  .option("-l, --locales <locale>", "locales to limit on", cli.ARRAY, [])
+  .option(
+    "-l, --locales <locale>",
+    "locales to limit on",
+    cli.ARRAY,
+    DEFAULT_BUILD_LOCALES
+  )
   .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
   .option("--start-clean", "delete anything created first", cli.BOOL)
   .option(
@@ -59,7 +65,12 @@ cli
     cli.PATH,
     DEFAULT_ROOT
   )
-  .option("-l, --locales <locale>", "locales to limit on", cli.ARRAY, [])
+  .option(
+    "-l, --locales <locale>",
+    "locales to limit on",
+    cli.ARRAY,
+    DEFAULT_BUILD_LOCALES
+  )
   .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
   .option("--start-clean", "delete anything created first", cli.BOOL)
   .option("--list-locales", "display all locales and their counts", cli.BOOL)
