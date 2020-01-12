@@ -973,10 +973,10 @@
     js-levenshtein "^1.1.3"
     semver "^5.5.0"
 
-"@babel/preset-env@7.8.0", "@babel/preset-env@^7.4.5":
-  version "7.8.0"
-  resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.8.0.tgz#f0a0a353091cb2135e9aea21ed9c4563c51bd31f"
-  integrity sha512-g3wnth3Ct+ZvnaHcvb5PQyojqNj0whXTkO7hatXgz+lQ2FphOoXrG1JMIfeaHgDakGzx3LiNe0KsWO69xSVFDA==
+"@babel/preset-env@7.8.2", "@babel/preset-env@^7.4.5":
+  version "7.8.2"
+  resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.8.2.tgz#dd55bd61f5d0bb1237915173c0e94aa350de3089"
+  integrity sha512-AF2YUl2bGsLWTtFL68upTTB7nDo05aEcKjHmXJE+aXRvsx5K+9yRsHQP3MjnTrLOWe/eFyUr93dfILROsKC4eg==
   dependencies:
     "@babel/compat-data" "^7.8.0"
     "@babel/helper-compilation-targets" "^7.8.0"
@@ -6160,9 +6160,9 @@ handle-thing@^2.0.0:
   integrity sha512-d4sze1JNC454Wdo2fkuyzCr6aHcbL6PGGuFAz0Li/NcOm1tCHGnWDRmJP85dh9IhQErTc2svWFEX5xHIOo//kQ==
 
 handlebars@>=4.5.3, handlebars@^4.1.2:
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.0.tgz#8db186e9d7cb89a3705b61d503a6e152665f35cc"
-  integrity sha512-PaZ6G6nYzfJ0Hd1WIhOpsnUPWh1R0Pg//r4wEYOtzG65c2V8RJQ/++yYlVmuoQ7EMXcb4eri5+FB2XH1Lwed9g==
+  version "4.7.1"
+  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.1.tgz#052bd2618964dcb8aebad0940bfeb2d8d1cfbfde"
+  integrity sha512-2dd6soo60cwKNJ90VewNLIzdZPR/E2YhszOTgHpN9V0YuwZk7x33/iZoIBnASwDFVHMY7iJ6NPL8d9f/DWYCTA==
   dependencies:
     neo-async "^2.6.0"
     optimist "^0.6.1"
