@@ -318,13 +318,13 @@
     "@babel/helper-plugin-utils" "^7.0.0"
     "@babel/plugin-syntax-dynamic-import" "^7.7.4"
 
-"@babel/plugin-proposal-export-namespace-from@7.7.4":
-  version "7.7.4"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-export-namespace-from/-/plugin-proposal-export-namespace-from-7.7.4.tgz#9b32a9e3538ba4b0e2fa08942f0a8e5f60899dea"
-  integrity sha512-3whN5U7iZjKdbwRSFwBOjGBgH7apXCzwielljxVH8D/iYcGRqPPw63vlIbG0GqQoT9bO0QYPcIUVkhQG5hcHtg==
+"@babel/plugin-proposal-export-namespace-from@7.8.0":
+  version "7.8.0"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-export-namespace-from/-/plugin-proposal-export-namespace-from-7.8.0.tgz#60bbb22deb6f7b4a93b630d2db6f53d3abc615c8"
+  integrity sha512-WTcu6CSvDRpWOCOVHfQpaM2Y3aiKpl1FBpoZfFZt5f2NR5TgEHvfwThOTrrCVdqhjLX81zbudnykxTSJj/n5uw==
   dependencies:
-    "@babel/helper-plugin-utils" "^7.0.0"
-    "@babel/plugin-syntax-export-namespace-from" "^7.7.4"
+    "@babel/helper-plugin-utils" "^7.8.0"
+    "@babel/plugin-syntax-export-namespace-from" "^7.8.0"
 
 "@babel/plugin-proposal-function-sent@7.7.4":
   version "7.7.4"
@@ -443,12 +443,12 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.8.0"
 
-"@babel/plugin-syntax-export-namespace-from@^7.7.4":
-  version "7.7.4"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-export-namespace-from/-/plugin-syntax-export-namespace-from-7.7.4.tgz#116c3e5db0d3e41018665528a468bc0f336044c3"
-  integrity sha512-YTc2djwMzJjiTTUJxJunRAnK0xW6OrmCSrgBc7QbWtpUo44FCkhZQtNcwZUqVf3sc4JFxhreiJ/P7YkmCTw4rg==
+"@babel/plugin-syntax-export-namespace-from@^7.8.0":
+  version "7.8.0"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-export-namespace-from/-/plugin-syntax-export-namespace-from-7.8.0.tgz#5656c84d27a7795fd75b966716be766869994790"
+  integrity sha512-bxY8JgcND2oM2jHe/7/VptKFnDLHPVyZqtv1ToRfaknkk8LMQag0C4FyFp4bkt/+GrgvpWYPmGtSLeUkgP/s6A==
   dependencies:
-    "@babel/helper-plugin-utils" "^7.0.0"
+    "@babel/helper-plugin-utils" "^7.8.0"
 
 "@babel/plugin-syntax-flow@^7.7.4":
   version "7.7.4"
