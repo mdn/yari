@@ -13,8 +13,29 @@ const { packageBCD } = require("./resolve-bcd");
 const ProgressBar = require("ssr/progress-bar");
 const { MIN_GOOGLE_ANALYTICS_PAGEVIEWS } = require("./constants");
 
+function cleanLocales(locales) {
+  const clean = [];
+  for (const locale of locales) {
+    // The user *might* type locales as a comma separated strings.
+    // Explode those split by ','.
+    if (locale.includes(",")) {
+      clean.push(...locale.split(",").map(l => l.toLowerCase()));
+    } else {
+      // As a convenience, we know that every locale folder is always lowercase,
+      // but it's very possible that someone specifies it in NOT lowercase.
+      // E.g '--locales en-US'. So just lowercase them all.
+      clean.push(locale.toLowerCase());
+    }
+  }
+  return clean.filter(x => x);
+}
+
 function runBuild(options, logger) {
   const { root, destination } = options;
+
+  options.locales = cleanLocales(options.locales);
+  options.notLocales = cleanLocales(options.notLocales);
+
   const builder = new Builder(root, destination, options, logger);
 
   if (options.googleanalyticsPageviewsCsv) {
@@ -246,13 +267,17 @@ class Builder {
   }
 
   getLocaleRootFolders() {
-    const { locales } = this.options;
+    const { locales, notLocales } = this.options;
     const files = fs.readdirSync(this.root);
     const folders = [];
     for (const name of files) {
       const filepath = path.join(this.root, name);
       const isDirectory = fs.statSync(filepath).isDirectory();
-      if (isDirectory && (!locales.length || locales.includes(name))) {
+      if (
+        isDirectory &&
+        (!locales.length || locales.includes(name)) &&
+        (!notLocales || !notLocales.includes(name))
+      ) {
         folders.push(filepath);
       }
     }

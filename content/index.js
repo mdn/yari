@@ -9,7 +9,8 @@ const {
   DEFAULT_DATABASE_URL,
   DEFAULT_DESTINATION,
   DEFAULT_EXCLUDE_SLUG_PREFIXES,
-  DEFAULT_BUILD_LOCALES
+  DEFAULT_BUILD_LOCALES,
+  DEFAULT_BUILD_NOT_LOCALES
 } = require("./scripts/constants.js");
 
 cli
@@ -71,6 +72,12 @@ cli
     cli.ARRAY,
     DEFAULT_BUILD_LOCALES
   )
+  .option(
+    "--not-locales <locale>",
+    "locales to explicitly exclude",
+    cli.ARRAY,
+    DEFAULT_BUILD_NOT_LOCALES
+  )
   .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
   .option("--start-clean", "delete anything created first", cli.BOOL)
   .option("--list-locales", "display all locales and their counts", cli.BOOL)
@@ -100,6 +107,10 @@ cli
   )
   .action((args, options, logger) => {
     options.destination = args.destination;
+    // Sanity check the invariance of locales filtering.
+    if (options.locales.length && options.notLocales.length) {
+      throw new Error("Can't specify --locales AND --not-locales");
+    }
     return runBuild(options, logger);
   });
 

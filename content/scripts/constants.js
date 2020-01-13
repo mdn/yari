@@ -11,6 +11,11 @@ const DEFAULT_DATABASE_URL =
 const DEFAULT_BUILD_LOCALES = (process.env.BUILD_LOCALES || "")
   .split(",")
   .filter(x => x);
+
+const DEFAULT_BUILD_NOT_LOCALES = (process.env.BUILD_NOT_LOCALES || "")
+  .split(",")
+  .filter(x => x);
+
 const DEFAULT_EXCLUDE_SLUG_PREFIXES = [
   "User:",
   "Talk:",
@@ -42,5 +47,6 @@ module.exports = {
   DEFAULT_DATABASE_URL,
   DEFAULT_EXCLUDE_SLUG_PREFIXES,
   DEFAULT_BUILD_LOCALES,
+  DEFAULT_BUILD_NOT_LOCALES,
   MIN_GOOGLE_ANALYTICS_PAGEVIEWS
 };
