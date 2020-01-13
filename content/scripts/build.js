@@ -291,10 +291,12 @@ class Builder {
   }
 
   excludeSlug(metadata) {
+    // XXX would it be faster to compute a regex in the constructor
+    // and use it repeatedly here instead?
     const { slugsearch } = this.options;
     if (slugsearch.length) {
       const { mdn_url } = metadata;
-      return slugsearch.some(search => mdn_url.includes(search));
+      return !slugsearch.some(search => mdn_url.includes(search));
     }
     return false;
   }
@@ -305,12 +307,8 @@ class Builder {
     const metadataRaw = fs.readFileSync(path.join(folder, "index.yaml"));
     hasher.update(metadataRaw);
     const metadata = yaml.safeLoad(metadataRaw);
-    const { slugsearch } = this.options;
-    if (slugsearch.length) {
-      // Only bother if this document's slug matches
-      if (this.excludeSlug(metadata)) {
-        return [processing.EXCLUDED, null];
-      }
+    if (this.excludeSlug(metadata)) {
+      return [processing.EXCLUDED, folder];
     }
     // The destination is the same as source but with a different base.
     // If the file *came from* /path/to/files/en-US/foo/bar/
@@ -521,7 +519,6 @@ function addSections($) {
      *       "content": "Any other stuff before table maybe"
      *    },
      */
-    // if (macroCalls.Compat.length > 1) {
     if ($.find("div.bc-data").length > 1) {
       const subSections = [];
       let section = cheerio
@@ -587,6 +584,10 @@ function _addSingleSectionBCD($) {
   }
   const query = dataQuery.replace(/^bcd:/, "");
   const data = packageBCD(query);
+  if (data === undefined) {
+    console.warn(`No BCD data for query '${query}' (${(title, id)})`);
+    return [];
+  }
   return [
     {
       type: "browser_compatibility",

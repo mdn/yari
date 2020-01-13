@@ -249,12 +249,21 @@ function renderDocuments(
    * one file at a time and populates some information about that in the
    * client.
    */
-  function wrapBuildHtmlAndJson(...args) {
-    const result = buildHtmlAndJson(...args);
-    if (returnDocumentBuilt) {
-      built.push(result);
-    } else {
-      built.push(!!result);
+  function wrapBuildHtmlAndJson(args) {
+    try {
+      const result = buildHtmlAndJson(args);
+      if (returnDocumentBuilt) {
+        built.push(result);
+      } else {
+        built.push(!!result);
+      }
+    } catch (ex) {
+      console.log(Object.keys(args));
+      console.error(
+        chalk.red(`buildHtmlAndJson failed!
+      filepath=${args.filePath}`)
+      );
+      throw ex;
     }
   }
 

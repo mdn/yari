@@ -2,7 +2,6 @@ const url = require("url");
 const fs = require("fs");
 const path = require("path");
 const mysql = require("mysql");
-// const knex = require("knex");
 const cheerio = require("cheerio");
 const yaml = require("js-yaml");
 
@@ -96,7 +95,10 @@ class Importer {
 
     // First make a table of locale<->counts
     this.connection.query(sql, queryArgs, (error, results) => {
-      if (error) throw error;
+      if (error) {
+        console.error("Unable to connect to MySQL.");
+        throw error;
+      }
 
       console.log(`LOCALE\tDOCUMENTS`);
       let countNonEnUs = 0;
@@ -246,7 +248,7 @@ class Importer {
   cleanSlugForFoldername(slug) {
     // return a new slug that makes it appropriate as a folder name.
     // XXX not sure what's needed here.
-    return slug;
+    return slug.toLowerCase();
   }
 
   getRedirectURL(html) {
@@ -280,7 +282,7 @@ class ToDiskImporter extends Importer {
 
   processDocument(doc, absoluteUrl) {
     const { slug, locale } = doc;
-    const localeFolder = path.join(this.options.root, locale);
+    const localeFolder = path.join(this.options.root, locale.toLowerCase());
 
     const folder = path.join(localeFolder, this.cleanSlugForFoldername(slug));
     fs.mkdirSync(folder, { recursive: true });
