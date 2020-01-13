@@ -86,9 +86,9 @@ cli
       `${STUMPTOWN_CONTENT_ROOT} content build is out-of-date. To resolve, run these commands:`
     ];
     if (currentVersionStatus === VersionStatus.REMOTE_CHANGES) {
-      warnings.push('"git submodule update" updates the content submodule.');
+      warnings.push("git submodule update");
     }
-    warnings.push('"yarn build" creates a new build.');
+    warnings.push("yarn build");
     logger.warn(boxify(warnings));
   });
 
