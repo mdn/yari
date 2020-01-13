@@ -1169,13 +1169,13 @@
     babel-plugin-dynamic-import-node "^2.3.0"
 
 "@babel/plugin-transform-modules-commonjs@^7.7.5":
-  version "7.8.0"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-modules-commonjs/-/plugin-transform-modules-commonjs-7.8.0.tgz#69c682a41905f8885ffb9c37ab34ad1fe8ec3fd7"
-  integrity sha512-w2g8tmL7NgBYt6alc8YawMcmPiYqnVvvI0kLB++VOUOssqdJMAkfQOMGV+2M8H5uhJYDaAghAVMUYps3s+jMrw==
+  version "7.7.5"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-modules-commonjs/-/plugin-transform-modules-commonjs-7.7.5.tgz#1d27f5eb0bcf7543e774950e5b2fa782e637b345"
+  integrity sha512-9Cq4zTFExwFhQI6MT1aFxgqhIsMWQWDVwOgLzl7PTWJHsNaqFvklAU+Oz6AQLAS0dJKTwZSOCo20INwktxpi3Q==
   dependencies:
-    "@babel/helper-module-transforms" "^7.8.0"
-    "@babel/helper-plugin-utils" "^7.8.0"
-    "@babel/helper-simple-access" "^7.8.0"
+    "@babel/helper-module-transforms" "^7.7.5"
+    "@babel/helper-plugin-utils" "^7.0.0"
+    "@babel/helper-simple-access" "^7.7.4"
     babel-plugin-dynamic-import-node "^2.3.0"
 
 "@babel/plugin-transform-modules-systemjs@^7.5.0":
@@ -1384,9 +1384,9 @@
     regenerator-transform "^0.14.0"
 
 "@babel/plugin-transform-regenerator@^7.7.5":
-  version "7.8.0"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-regenerator/-/plugin-transform-regenerator-7.8.0.tgz#4a0a40af2f7d60a54a3fd7ce58f06b12ab14eaf9"
-  integrity sha512-n88GT8PZuOHWxqxCJORW3g1QaYzQhHu5sEslxYeQkHVoewfnfuWN37t7YGaRLaNUdaZUlRPXhDcLGT7zBa/u0g==
+  version "7.7.5"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-regenerator/-/plugin-transform-regenerator-7.7.5.tgz#3a8757ee1a2780f390e89f246065ecf59c26fce9"
+  integrity sha512-/8I8tPvX2FkuEyWbjRCt4qTAgZK0DVy8QRguhA524UH48RfGJy94On2ri+dCuwOpcerPRl9O4ebQkRcVzIaGBw==
   dependencies:
     regenerator-transform "^0.14.0"
 

@@ -13,7 +13,7 @@
     "build:stumptown": "cd stumptown && npm run build-json && cd .. && node cli write-content-version",
     "build:client": "yarn workspace client build",
     "build:html": "node cli/index.js ssr --build-html",
-    "build": "yarn workspace ssr build && yarn run build:stumptown && yarn run build:client && yarn run build:html",
+    "build": "yarn run build:stumptown && yarn workspace ssr build",
     "deployment-build": "cross-env CLI_BUILD_HTML=true yarn build",
     "end-to-end-test": "node scripts/end-to-end-test.js",
     "start": "node cli check-content-version && nf start"
