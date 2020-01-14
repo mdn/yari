@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const mysql = require("mysql");
 const cheerio = require("cheerio");
+const sanitizeFilename = require("sanitize-filename");
 const yaml = require("js-yaml");
 
 const ProgressBar = require("ssr/progress-bar");
@@ -189,11 +190,11 @@ class Importer {
     let sql =
       "SELECT document_id, creator_id FROM wiki_revision" + constraintsSql;
     sql += " ORDER BY created DESC ";
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       console.log("Going to fetch ALL contributor *mappings*");
       this.connection.query(sql, queryArgs, (error, results) => {
         if (error) {
-          return promise.reject(error);
+          return reject(error);
         }
         const contributors = {};
         results.forEach(result => {
@@ -211,7 +212,7 @@ class Importer {
         let sql = "SELECT id, username FROM auth_user";
         this.connection.query(sql, queryArgs, (error, results) => {
           if (error) {
-            return promise.reject(error);
+            return reject(error);
           }
           const usernames = {};
           results.forEach(result => {
@@ -322,7 +323,7 @@ class Importer {
   cleanSlugForFoldername(slug) {
     // return a new slug that makes it appropriate as a folder name.
     // XXX not sure what's needed here.
-    return slug.toLowerCase();
+    return sanitizeFilename(slug.toLowerCase());
   }
 
   getRedirectURL(html) {
