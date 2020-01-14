@@ -375,7 +375,7 @@ class ToDiskImporter extends Importer {
       slug,
       locale,
       modified: doc.modified,
-      contributors
+      mdn_contributors: contributors
     };
     fs.writeFileSync(metaFile, yaml.safeDump(meta));
     // XXX At the moment, we're pretending we have the KS shim, and that means
