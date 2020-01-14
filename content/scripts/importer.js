@@ -9,6 +9,8 @@ const ProgressBar = require("ssr/progress-bar");
 
 const REDIRECT_HTML = "REDIRECT <a ";
 
+const EveryPossibleContributor = new Set();
+
 function runImporter(options) {
   const creds = url.parse(options.dbURL);
   const host = creds.host; // XXX should it be creds.hostname??
@@ -34,7 +36,21 @@ function runImporter(options) {
   const importer = new ToDiskImporter(connection, options, () => {
     connection.end();
   });
-  importer.start();
+
+  console.time("Time to fetch all contributors");
+  importer
+    .fetchAllContributors()
+    .then(() => {
+      console.timeEnd("Time to fetch all contributors");
+      console.log(
+        `THERE ARE ${EveryPossibleContributor.size.toLocaleString()} different contributors`
+      );
+      importer.start();
+    })
+    .catch(err => {
+      throw err;
+    });
+  // importer.start();
 }
 
 /** The basic class that takes a connection and options, and a callback to
@@ -61,6 +77,13 @@ class Importer {
     this.options = options;
     this.quitCallback = quitCallback;
 
+    // A map of document_id => [user_id, user_idX, user_idY]
+    // where the user IDs are inserted in a descending order. Meaning, the
+    // user IDs of the *most recently created document revisions* come first.
+    this.allContributors = {};
+    // Just a map of user_id => username
+    this.allUsernames = {};
+
     this.progressBar = !options.noProgressbar
       ? new ProgressBar({
           includeMemory: true
@@ -80,6 +103,7 @@ class Importer {
   }
 
   start() {
+    console.log("IN START!");
     // Count of how many rows we've processed
     let individualCount = 0;
     let totalCount = 0; // this'll soon be set by the first query
@@ -158,7 +182,50 @@ class Importer {
     });
   }
 
-  _getSQLConstraints() {
+  fetchAllContributors() {
+    const [constraintsSql, queryArgs] = this._getSQLConstraints(
+      "wiki_document"
+    );
+    let sql =
+      "SELECT document_id, creator_id FROM wiki_revision" + constraintsSql;
+    sql += " ORDER BY created DESC ";
+    return new Promise(resolve => {
+      console.log("Going to fetch ALL contributor *mappings*");
+      this.connection.query(sql, queryArgs, (error, results) => {
+        if (error) {
+          return promise.reject(error);
+        }
+        const contributors = {};
+        results.forEach(result => {
+          if (!(result.document_id in contributors)) {
+            contributors[result.document_id] = []; // Array because order matters
+          }
+          if (!contributors[result.document_id].includes(result.creator_id)) {
+            contributors[result.document_id].push(result.creator_id);
+          }
+          EveryPossibleContributor.add(result.creator_id);
+        });
+        this.allContributors = contributors;
+
+        console.log("Going to fetch ALL contributor *usernames*");
+        let sql = "SELECT id, username FROM auth_user";
+        this.connection.query(sql, queryArgs, (error, results) => {
+          if (error) {
+            return promise.reject(error);
+          }
+          const usernames = {};
+          results.forEach(result => {
+            usernames[result.id] = result.username;
+          });
+          this.allUsernames = usernames;
+
+          resolve();
+        });
+      });
+    });
+  }
+
+  _getSQLConstraints(joinTable = null) {
     // Yeah, this is ugly but it bloody works for now.
     const extra = [];
     const queryArgs = [];
@@ -174,7 +241,14 @@ class Importer {
       queryArgs.push(...excludePrefixes.map(s => `${s}%`));
     }
 
-    return [extra.length ? ` WHERE ${extra.join(" AND ")}` : "", queryArgs];
+    let sql = " ";
+    if (joinTable) {
+      sql += `INNER JOIN ${joinTable} ON document_id=${joinTable}.id `;
+    }
+
+    return (
+      sql + [extra.length ? ` WHERE ${extra.join(" AND ")}` : "", queryArgs]
+    );
   }
 
   prepareRoot() {
@@ -267,10 +341,6 @@ class Importer {
 
 /** Same as Importer but will dump to disk */
 class ToDiskImporter extends Importer {
-  // start() {
-  //   super.start();
-  // }
-
   prepareRoot() {
     if (this.options.startClean) {
       // Experimental new feature
@@ -294,12 +364,17 @@ class ToDiskImporter extends Importer {
     fs.writeFileSync(htmlFile, `${doc.rendered_html}`);
 
     const metaFile = path.join(folder, "index.yaml");
+    const contributors = (this.allContributors[doc.id] || []).map(
+      userId => this.allUsernames[userId]
+    );
+
     const meta = {
       title: doc.title,
       mdn_url: absoluteUrl,
       slug,
       locale,
-      modified: doc.modified
+      modified: doc.modified,
+      contributors
     };
     fs.writeFileSync(metaFile, yaml.safeDump(meta));
     // XXX At the moment, we're pretending we have the KS shim, and that means
