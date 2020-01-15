@@ -10,19 +10,17 @@ const ProgressBar = require("ssr/progress-bar");
 
 const REDIRECT_HTML = "REDIRECT <a ";
 
-const EveryPossibleContributor = new Set();
-
-function runImporter(options) {
+function runImporter(options, logger) {
   const creds = url.parse(options.dbURL);
   const host = creds.host; // XXX should it be creds.hostname??
   const user = (creds.auth && creds.auth.split(":")[0]) || "";
   const password = (creds.auth && creds.auth.split(":")[1]) || "";
   const database = creds.pathname.split("/")[1];
 
-  console.log(
+  logger.info(
     `Going to try to connect to ${database} (locales=${options.locales})`
   );
-  console.log(
+  logger.info(
     `Going to exclude the following slug prefixes: ${options.excludePrefixes}`
   );
 
@@ -34,7 +32,7 @@ function runImporter(options) {
   });
   connection.connect();
 
-  const importer = new ToDiskImporter(connection, options, () => {
+  const importer = new ToDiskImporter(connection, options, logger, () => {
     connection.end();
   });
 
@@ -43,15 +41,11 @@ function runImporter(options) {
     .fetchAllContributors()
     .then(() => {
       console.timeEnd("Time to fetch all contributors");
-      console.log(
-        `THERE ARE ${EveryPossibleContributor.size.toLocaleString()} different contributors`
-      );
       importer.start();
     })
     .catch(err => {
       throw err;
     });
-  // importer.start();
 }
 
 /** The basic class that takes a connection and options, and a callback to
@@ -73,9 +67,10 @@ function runImporter(options) {
  *
  */
 class Importer {
-  constructor(connection, options, quitCallback) {
+  constructor(connection, options, logger, quitCallback) {
     this.connection = connection;
     this.options = options;
+    this.logger = logger;
     this.quitCallback = quitCallback;
 
     // A map of document_id => [user_id, user_idX, user_idY]
@@ -104,7 +99,6 @@ class Importer {
   }
 
   start() {
-    console.log("IN START!");
     // Count of how many rows we've processed
     let individualCount = 0;
     let totalCount = 0; // this'll soon be set by the first query
@@ -204,7 +198,6 @@ class Importer {
           if (!contributors[result.document_id].includes(result.creator_id)) {
             contributors[result.document_id].push(result.creator_id);
           }
-          EveryPossibleContributor.add(result.creator_id);
         });
         this.allContributors = contributors;
 

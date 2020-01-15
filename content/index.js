@@ -50,9 +50,9 @@ cli
     cli.STRING,
     DEFAULT_DATABASE_URL
   )
-  .action((args, options) => {
+  .action((args, options, logger) => {
     options.dbURL = args.url;
-    return runImporter(options);
+    return runImporter(options, logger);
   })
 
   // XXX Hey @Gregoor, how do I set global options that can be shared across all commands?
