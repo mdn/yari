@@ -353,6 +353,14 @@ class Builder {
 
     // When the KS thing works we won't need this line
 
+    // XXX What might be interesting is to make KS do less.
+    // The idea is we first have the raw HTML, which'll contain strings
+    // like `{{Compat('foo.bar')}}`, then we allow KS turn that into
+    // something like `<div class="bc-data" data-query="foo.bar">...`.
+    // To avoid KS having to do that, just replace the KS macro with a marker
+    // like `<--#Compat('foo.bar')--> and then replace it here in the
+    // post-processing instead.
+
     // // REAL
     // const rawHtml = fs.readFileSync(path.join(folder, "index.html"), "utf8");
     // hasher.update(rawHtml);

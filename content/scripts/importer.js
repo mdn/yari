@@ -314,9 +314,11 @@ class Importer {
   }
 
   cleanSlugForFoldername(slug) {
-    // return a new slug that makes it appropriate as a folder name.
-    // XXX not sure what's needed here.
-    return sanitizeFilename(slug.toLowerCase());
+    return slug
+      .toLowerCase()
+      .split(path.sep)
+      .map(sanitizeFilename)
+      .join(path.sep);
   }
 
   getRedirectURL(html) {
