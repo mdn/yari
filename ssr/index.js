@@ -72,13 +72,46 @@ function ppPath(filePath) {
   return path.relative(process.cwd(), filePath);
 }
 
+/**
+ * Just a thin wrapper on the true workhorse buildHtmlAndJsonFromData
+ * where you can supply the path to a .json that has the renderable content.
+ */
 function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
-  const start = new Date();
   const data = fs.readFileSync(filePath, "utf8");
+  const doc = JSON.parse(data);
+  const destinationDir = path.join(output, doc.mdn_url.toLowerCase());
+  const start = new Date();
+  try {
+    const {
+      uri,
+      wasRendered,
+      outfileHtml,
+      outfileJson
+    } = buildHtmlAndJsonFromDoc(doc, destinationDir, buildHtml, titles);
+    if (!quiet) {
+      let outMsg = `Wrote ${ppPath(outfileJson)}`;
+      if (wasRendered) {
+        outMsg += ` and ${ppPath(outfileHtml)}`;
+      }
+      console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
+    }
 
-  const options = {
-    doc: JSON.parse(data)
-  };
+    return { uri, filePath };
+  } catch (ex) {
+    console.error(`Rendering HTML failed!
+  uri=${doc.mdn_url}
+  filePath=${filePath}`);
+    throw ex;
+  }
+}
+
+export function buildHtmlAndJsonFromDoc({
+  doc,
+  destinationDir,
+  buildHtml,
+  titles
+}) {
+  const options = { doc };
 
   let rendered = null;
 
@@ -90,106 +123,94 @@ function buildHtmlAndJson({ filePath, output, buildHtml, quiet, titles }) {
   }
   const uri = decodeURI(options.doc.mdn_url);
 
-  // This can totally happen if you're building from multiple sources
-  // E.g. `yarn start packaged1 packaged2`
-  // In this case, if some .json file in packaged1 has an mdn_url of
-  // for example /en-US/docs/Foo/bar and then this comes up again from
-  // a file in packaged2, then igore it this time.
-  if (uri in titles) {
-    return null;
+  // // This can totally happen if you're building from multiple sources
+  // // E.g. `yarn start packaged1 packaged2`
+  // // In this case, if some .json file in packaged1 has an mdn_url of
+  // // for example /en-US/docs/Foo/bar and then this comes up again from
+  // // a file in packaged2, then igore it this time.
+  // if (uri in titles) {
+  //   return null;
+  // }
+  // titles[uri] = options.doc.title;
+
+  // const destination = path.join(output, uri.toLowerCase());
+
+  fs.mkdirSync(destinationDir, { recursive: true });
+
+  // if (options.doc.redirect_url) {
+  //   const outfileRedirect = path.join(destination, "index.redirect");
+
+  //   // This `options.doc.redirect_url` is either something like
+  //   // '/api/v1/doc/en-US/Learn/Common_questions' or something like
+  //   // 'https://wiki.developer.mozilla.org/en-US/Add-ons/SDK/Low-Level_APIs'
+  //   // of which both are invalid unless we process it a little.
+  //   const redirectUrl = correctRedirectURL(options.doc.redirect_url);
+  //   fs.writeFileSync(outfileRedirect, redirectUrl);
+
+  //   if (!quiet) {
+  //     let outMsg = `Wrote ${ppPath(outfileRedirect)}`;
+  //     console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
+  //   }
+  // } else {
+  // Stumptown produces a `.related_content` for every document. But it
+  // contains data that is either not needed or not appropriate for the way
+  // we're using it in the renderer. So mutate it for the specific needs
+  // of the renderer.
+  fixRelatedContent(options.doc);
+
+  if (options.doc.body) {
+    // Find blocks of code and transform it to syntax highlighted code.
+    fixSyntaxHighlighting(options.doc);
+    // Creates new mdn_url's for the browser-compatibility-table to link to
+    // pages within this project rather than use the absolute URLs
+    normalizeURLs(options.doc);
   }
-  titles[uri] = options.doc.title;
 
-  const destination = path.join(output, uri.toLowerCase());
+  const outfileHtml = path.join(destinationDir, "index.html");
+  const outfileJson = path.join(destinationDir, "index.json");
 
-  fs.mkdirSync(destination, { recursive: true });
-
-  if (options.doc.redirect_url) {
-    const outfileRedirect = path.join(destination, "index.redirect");
-
-    // This `options.doc.redirect_url` is either something like
-    // '/api/v1/doc/en-US/Learn/Common_questions' or something like
-    // 'https://wiki.developer.mozilla.org/en-US/Add-ons/SDK/Low-Level_APIs'
-    // of which both are invalid unless we process it a little.
-    const redirectUrl = correctRedirectURL(options.doc.redirect_url);
-    fs.writeFileSync(outfileRedirect, redirectUrl);
-
-    if (!quiet) {
-      let outMsg = `Wrote ${ppPath(outfileRedirect)}`;
-      console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
-    }
-  } else {
-    // Stumptown produces a `.related_content` for every document. But it
-    // contains data that is either not needed or not appropriate for the way
-    // we're using it in the renderer. So mutate it for the specific needs
-    // of the renderer.
-    fixRelatedContent(options.doc);
-
-    if (options.doc.body) {
-      // Find blocks of code and transform it to syntax highlighted code.
-      fixSyntaxHighlighting(options.doc);
-      // Creates new mdn_url's for the browser-compatibility-table to link to
-      // pages within this project rather than use the absolute URLs
-      normalizeURLs(options.doc);
-    }
-
-    const outfileHtml = path.join(destination, "index.html");
-    const outfileJson = path.join(destination, "index.json");
-
-    if (buildHtml) {
-      try {
-        rendered = render(
-          <ServerLocation url={uri}>
-            <App {...options} />
-          </ServerLocation>,
-          options
-        );
-      } catch (ex) {
-        console.error(`Rendering HTML failed!
-      uri=${uri}
-      filePath=${filePath}`);
-        throw ex;
-      }
-    }
-
-    if (rendered) {
-      fs.writeFileSync(outfileHtml, rendered);
-    }
-    fs.writeFileSync(
-      outfileJson,
-      process.env.NODE_ENV === "development"
-        ? JSON.stringify(options, null, 2)
-        : JSON.stringify(options)
+  if (buildHtml) {
+    rendered = render(
+      <ServerLocation url={uri}>
+        <App {...options} />
+      </ServerLocation>,
+      options
     );
-
-    if (!quiet) {
-      let outMsg = `Wrote ${ppPath(outfileJson)}`;
-      if (rendered) {
-        outMsg += ` and ${ppPath(outfileHtml)}`;
-      }
-      console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
-    }
-  }
-  return { filePath, uri };
-}
-
-function correctRedirectURL(redirectUrl) {
-  if (redirectUrl.startsWith("/api/v1/doc/")) {
-    redirectUrl = redirectUrl.replace("/api/v1/doc/", "");
-    const split = redirectUrl.split("/");
-    split.splice(1, 0, "docs");
-    split.unshift("");
-    return split.join("/");
-  } else if (redirectUrl.includes("://")) {
-    const parsed = url.parse(redirectUrl);
-    if (parsed.host.endsWith("developer.mozilla.org")) {
-      return parsed.pathname;
-    }
   }
 
-  // I give up!
-  return redirectUrl;
+  let wasRendered = false;
+  if (rendered) {
+    fs.writeFileSync(outfileHtml, rendered);
+    wasRendered = true;
+  }
+  fs.writeFileSync(
+    outfileJson,
+    process.env.NODE_ENV === "development"
+      ? JSON.stringify(options, null, 2)
+      : JSON.stringify(options)
+  );
+
+  // }
+  return { uri, wasRendered, outfileHtml, outfileJson };
 }
+
+// function correctRedirectURL(redirectUrl) {
+//   if (redirectUrl.startsWith("/api/v1/doc/")) {
+//     redirectUrl = redirectUrl.replace("/api/v1/doc/", "");
+//     const split = redirectUrl.split("/");
+//     split.splice(1, 0, "docs");
+//     split.unshift("");
+//     return split.join("/");
+//   } else if (redirectUrl.includes("://")) {
+//     const parsed = url.parse(redirectUrl);
+//     if (parsed.host.endsWith("developer.mozilla.org")) {
+//       return parsed.pathname;
+//     }
+//   }
+
+//   // I give up!
+//   return redirectUrl;
+// }
 
 function walk(directory, callback) {
   const files = fs.readdirSync(directory);

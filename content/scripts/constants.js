@@ -3,7 +3,7 @@ require("dotenv").config();
 
 const DEFAULT_ROOT = process.env.ROOT || path.join(__dirname, "..", "files");
 const DEFAULT_DESTINATION =
-  process.env.ROOT || path.join(__dirname, "..", "build");
+  process.env.ROOT || path.join(__dirname, "..", "..", "client", "build");
 
 const DEFAULT_DATABASE_URL =
   process.env.DATABASE_URL || "mysql2://username:password@host/databasename";

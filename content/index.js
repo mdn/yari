@@ -83,6 +83,11 @@ cli
   .option("--list-locales", "display all locales and their counts", cli.BOOL)
   .option("--no-cache", "never benefit from the cache", cli.BOOL)
   .option(
+    "--regenerate-all-titles",
+    "don't reuse existing _all-titles.json",
+    cli.BOOL
+  )
+  .option(
     "-s, --slugsearch <partofslug>",
     "filter by slug matches",
     cli.ARRAY,

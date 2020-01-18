@@ -5,12 +5,15 @@ const crypto = require("crypto");
 const chalk = require("chalk");
 const cheerio = require("cheerio");
 const yaml = require("js-yaml");
+const sanitizeFilename = require("sanitize-filename");
 const csv = require("@fast-csv/parse");
 
 require("dotenv").config();
 
-const { packageBCD } = require("./resolve-bcd");
 const ProgressBar = require("ssr/progress-bar");
+const { buildHtmlAndJsonFromDoc } = require("ssr");
+
+const { packageBCD } = require("./resolve-bcd");
 const { MIN_GOOGLE_ANALYTICS_PAGEVIEWS } = require("./constants");
 
 function cleanLocales(locales) {
@@ -73,6 +76,7 @@ class Builder {
     this.options = options;
     this.logger = logger;
     this.selfHash = null;
+    this.allTitles = {};
 
     this.progressBar = !options.noProgressbar
       ? new ProgressBar({
@@ -119,17 +123,49 @@ class Builder {
     // write down which "self hash" was used at the time.
     this.initSelfHash();
 
+    // First walk all the content and pick up all the titles.
+    // Note, no matter what locales you have picked in the filtering,
+    // *always* include 'en-US' because with that, it becomes possible
+    // to reference back to the English version for any locale.
+    // But first, see if we can use the title from the last build.
+    const allTitlesJsonFilepath = path.join(
+      path.dirname(__dirname),
+      "_all-titles.json"
+    );
+    if (
+      fs.existsSync(allTitlesJsonFilepath) &&
+      !this.options.regenerateAllTitles
+    ) {
+      this.allTitles = JSON.parse(
+        fs.readFileSync(allTitlesJsonFilepath, "utf8")
+      );
+    }
+    if (!Object.keys(this.allTitles).length) {
+      this.getLocaleRootFolders({ always: "en-us" }).forEach(filepath => {
+        walker(filepath, (folder, files) => {
+          if (files.includes("index.html") && files.includes("index.yaml")) {
+            this.processFolderTitle(folder);
+          }
+        });
+      });
+      fs.writeFileSync(
+        allTitlesJsonFilepath,
+        JSON.stringify(this.allTitles, null, 2)
+      );
+    }
+
     // To be able to make a progress bar we need to first count what we're
     // going to need to do.
     if (this.progressBar) {
-      const countTodo = this.countFolders();
+      const countTodo = Object.values(this.countLocaleFolders()).reduce(
+        (a, b) => a + b
+      );
       if (!countTodo) {
         throw new Error("No folders found to process!");
       }
       this.initProgressbar(countTodo);
     }
 
-    // Now do similar to what countFolders() does but actually process each
     let total = 0;
 
     // Record of counts of all results
@@ -138,8 +174,11 @@ class Builder {
       counts[key] = 0;
     });
 
-    this.prepareRoot();
+    this.getLocaleRootFolders().forEach(folderpath => {
+      this.prepareRoot(path.basename(folderpath));
+    });
 
+    // Start the real processing
     const t0 = new Date();
     this.getLocaleRootFolders().forEach(filepath => {
       walker(filepath, (folder, files) => {
@@ -171,27 +210,32 @@ class Builder {
   }
 
   initSelfHash() {
+    const contentRoot = path.resolve(__dirname, "..");
+    const ssrRoot = path.resolve(__dirname, "..", "..", "ssr");
     this.selfHash = makeHash([
       // This'll be different when new packages are changed like
       // `mdn-browser-compat-data` but we *could* be more explicit but
       // this'll be on the safe side.
-      path.join(__dirname, "../package.json"),
+      path.join(contentRoot, "package.json"),
       // This is broad but let's make it depend on every .js file
       // in this file's folder
-      ...fs
-        .readdirSync(path.dirname(__filename))
-        .filter(name => name.endsWith(".js"))
-        .map(name => path.join(path.dirname(__filename), name))
+      ...simpleGlob(contentRoot, ".js"),
+      ...simpleGlob(path.join(contentRoot, "scripts"), ".js"),
+      // Also factor in the ssr builder's package.json
+      path.join(ssrRoot, "package.json"),
+      // and it's .js files
+      ...simpleGlob(ssrRoot, ".js")
     ]);
   }
 
-  prepareRoot() {
+  prepareRoot(locale) {
+    const folderpath = path.join(this.options.destination, locale);
     if (this.options.startClean) {
       // Experimental new feature
       // https://nodejs.org/api/fs.html#fs_fs_rmdirsync_path_options
-      fs.rmdirSync(this.options.destination, { recursive: true });
+      fs.rmdirSync(folderpath, { recursive: true });
     }
-    fs.mkdirSync(this.options.destination, { recursive: true });
+    fs.mkdirSync(folderpath, { recursive: true });
   }
 
   initGoogleAnalyticsPageviewsCSV(done) {
@@ -270,7 +314,17 @@ class Builder {
     return !(files.includes("index.html") && files.includes("index.yaml"));
   }
 
-  getLocaleRootFolders() {
+  /**
+   * Return an array of full paths for the locale folders.
+   * This function will take into account this.options.locales,
+   * this.options.notLocales and an optional specified 'always' list of
+   * locales.
+   * The 'always' parameter can be an array or a string.
+   */
+  getLocaleRootFolders({ always = null } = {}) {
+    if (always && !Array.isArray(always)) {
+      always = [always];
+    }
     const { locales, notLocales } = this.options;
     const files = fs.readdirSync(this.root);
     const folders = [];
@@ -279,24 +333,13 @@ class Builder {
       const isDirectory = fs.statSync(filepath).isDirectory();
       if (
         isDirectory &&
-        (!locales.length || locales.includes(name)) &&
-        (!notLocales || !notLocales.includes(name))
+        (((!locales.length || locales.includes(name)) &&
+          (!notLocales || !notLocales.includes(name))) ||
+          (always && always.includes(name)))
       ) {
         folders.push(filepath);
       }
     }
-    return folders;
-  }
-
-  countFolders() {
-    let folders = 0;
-    this.getLocaleRootFolders().forEach(filepath => {
-      walker(filepath, (_, files) => {
-        if (files.includes("index.html") && files.includes("index.yaml")) {
-          folders++;
-        }
-      });
-    });
     return folders;
   }
 
@@ -342,14 +385,21 @@ class Builder {
     // The destination is the same as source but with a different base.
     // If the file *came from* /path/to/files/en-US/foo/bar/
     // the final destination is /path/to/build/en-US/foo/bar/index.json
-    const destination = path.join(
-      folder.replace(this.root, this.destination),
-      "index.json"
+
+    const destinationDirRaw = path.join(
+      this.destination,
+      metadata.mdn_url.toLowerCase()
     );
-    const hashDestination = path.join(
-      folder.replace(this.root, this.destination),
-      "index.hash"
-    );
+    const destinationDir = destinationDirRaw
+      .split(path.sep)
+      .map(sanitizeFilename)
+      .join(path.sep);
+
+    // const destination = path.join(
+    //   folder.replace(this.root, this.destination),
+    //   "index.json"
+    // );
+    const hashDestination = path.join(destinationDir, "_index.hash");
 
     // When the KS thing works we won't need this line
 
@@ -381,11 +431,11 @@ class Builder {
     // can bail early.
     if (
       !this.options.noCache &&
-      fs.existsSync(destination) &&
+      fs.existsSync(destinationDir) &&
       fs.existsSync(hashDestination) &&
       fs.readFileSync(hashDestination, "utf8") === combinedHash
     ) {
-      return [processing.ALREADY, destination];
+      return [processing.ALREADY, path.join(destinationDir, "index.html")];
     }
 
     const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`, {
@@ -436,11 +486,43 @@ class Builder {
     doc.popularity = this.popularities[doc.mdn_url] || 0.0;
 
     doc.last_modified = metadata.modified;
-    const destDir = path.dirname(destination);
-    fs.mkdirSync(destDir, { recursive: true });
-    fs.writeFileSync(destination, JSON.stringify(doc, null, 2));
+    const { outfileJson, outfileHtml } = buildHtmlAndJsonFromDoc({
+      doc,
+      destinationDir,
+      buildHtml: true,
+      titles: this.allTitles
+    });
+
+    // We're *assuming* that `metadata.mdn_url.toLowerCase()`
+    // can be a valid folder name on the current filesystem. It if's all
+    // non-control characters, it should be fine, but some characters can't be
+    // used when storing folders. E.g. `:` in Windows.
+    // However, we might want that for the eventual S3 key when it gets
+    // uploaded. So make a note about it if necessary.
+    if (destinationDir !== destinationDirRaw) {
+      // In the cleaned folder that the file was was put, put a "hidden
+      // file" which'll be used by the deployer when it picks S3 key names.
+      fs.writeFileSync(
+        path.join(destinationDir, "_preferred-name.txt"),
+        destinationDirRaw.replace(this.destination, "")
+      );
+    }
+
     fs.writeFileSync(hashDestination, combinedHash);
-    return [processing.PROCESSED, destination];
+    return [processing.PROCESSED, outfileHtml || outfileJson];
+  }
+
+  /** Similar to processFolder() but this time we're only interesting it
+   * adding this document's uri and title to this.allTitles
+   */
+  processFolderTitle(folder) {
+    const metadata = yaml.safeLoad(
+      fs.readFileSync(path.join(folder, "index.yaml"))
+    );
+    this.allTitles[metadata.mdn_url] = {
+      title: metadata.title,
+      popularity: this.popularities[metadata.mdn_url] || 0.0
+    };
   }
 
   renderHtml(rawHtml, metadata) {
@@ -716,6 +798,7 @@ function ppMilliseconds(ms) {
   }
 }
 
+// Return a md5 hash based on the content of a list of file paths
 function makeHash(filepaths, length = 12) {
   const hasher = crypto.createHash("md5");
   filepaths
@@ -723,6 +806,15 @@ function makeHash(filepaths, length = 12) {
     .forEach(content => hasher.update(content));
   return hasher.digest("hex").slice(0, length);
 }
+
+// Slight extension of fs.readdirSync that returns full paths
+function simpleGlob(directory, extension) {
+  return fs
+    .readdirSync(directory)
+    .filter(name => name.endsWith(extension))
+    .map(name => path.join(directory, name));
+}
+
 module.exports = {
   runBuild
 };

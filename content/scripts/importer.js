@@ -107,9 +107,9 @@ class Importer {
 
     // Let's warm up by seeing we can connect to the wiki_document table
     // and extract some stats.
-    const [constraintsSql, queryArgs] = this._getSQLConstraints();
+    const { constraintsSQL, queryArgs } = this._getSQLConstraints();
     let sql =
-      "SELECT locale, COUNT(*) as count from wiki_document" + constraintsSql;
+      "SELECT locale, COUNT(*) as count from wiki_document" + constraintsSQL;
     sql += " group by locale ORDER by count DESC ";
 
     // First make a table of locale<->counts
@@ -148,7 +148,7 @@ class Importer {
       this.initProgressbar(totalCount);
 
       // Actually do the imported
-      sql = "SELECT * FROM wiki_document " + constraintsSql;
+      sql = "SELECT * FROM wiki_document " + constraintsSQL;
 
       const query = this.connection.query(sql, queryArgs);
       query
@@ -178,11 +178,11 @@ class Importer {
   }
 
   fetchAllContributors() {
-    const [constraintsSql, queryArgs] = this._getSQLConstraints(
+    const { constraintsSQL, queryArgs } = this._getSQLConstraints(
       "wiki_document"
     );
     let sql =
-      "SELECT document_id, creator_id FROM wiki_revision" + constraintsSql;
+      "SELECT document_id, creator_id FROM wiki_revision" + constraintsSQL;
     sql += " ORDER BY created DESC ";
     return new Promise((resolve, reject) => {
       console.log("Going to fetch ALL contributor *mappings*");
@@ -240,9 +240,10 @@ class Importer {
       sql += `INNER JOIN ${joinTable} ON document_id=${joinTable}.id `;
     }
 
-    return (
-      sql + [extra.length ? ` WHERE ${extra.join(" AND ")}` : "", queryArgs]
-    );
+    return {
+      constraintsSQL: sql + extra.length ? ` WHERE ${extra.join(" AND ")}` : "",
+      queryArgs
+    };
   }
 
   prepareRoot() {
@@ -263,14 +264,15 @@ class Importer {
     if (doc.html.includes(REDIRECT_HTML)) {
       const redirectUrl = this.getRedirectURL(doc.html);
       if (redirectUrl) {
-        // if (redirectUrl.includes("://")) {
-        //   console.warn(
-        //     "WEIRD REDIRECT:",
-        //     redirectUrl,
-        //     "  FROM  ",
-        //     `https://developer.mozilla.org${encodeURI(absoluteUrl)}`
-        //   );
-        // }
+        if (redirectUrl.includes("://")) {
+          console.warn(
+            "WEIRD REDIRECT:",
+            redirectUrl,
+            "  FROM  ",
+            `https://developer.mozilla.org${encodeURI(absoluteUrl)}`,
+            doc.html
+          );
+        }
         this.allRedirects[absoluteUrl] = redirectUrl;
       }
     } else {
@@ -324,7 +326,7 @@ class Importer {
   getRedirectURL(html) {
     const $ = cheerio.load(html);
     for (const a of $("a[href].redirect").toArray()) {
-      const href = a.attribs.href;
+      const href = $(a).text();
       if (href.startsWith("https://developer.mozilla.org")) {
         return url.parse(href).pathname;
       } else if (href.startsWith("/") && !href.startsWith("//")) {
