@@ -154,6 +154,10 @@ class Builder {
       );
     }
 
+    this.getLocaleRootFolders().forEach(folderpath => {
+      this.prepareRoot(path.basename(folderpath));
+    });
+
     // To be able to make a progress bar we need to first count what we're
     // going to need to do.
     if (this.progressBar) {
@@ -172,10 +176,6 @@ class Builder {
     const counts = {};
     Object.values(processing).forEach(key => {
       counts[key] = 0;
-    });
-
-    this.getLocaleRootFolders().forEach(folderpath => {
-      this.prepareRoot(path.basename(folderpath));
     });
 
     // Start the real processing
