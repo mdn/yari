@@ -521,7 +521,9 @@ class Builder {
     );
     this.allTitles[metadata.mdn_url] = {
       title: metadata.title,
-      popularity: this.popularities[metadata.mdn_url] || 0.0
+      popularity: this.popularities[metadata.mdn_url] || 0.0,
+      locale: metadata.locale,
+      file: folder
     };
   }
 

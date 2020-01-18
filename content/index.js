@@ -112,6 +112,9 @@ cli
   )
   .action((args, options, logger) => {
     options.destination = args.destination;
+    if (options.startClean) {
+      options.regenerateAllTitles = true;
+    }
     // Sanity check the invariance of locales filtering.
     if (options.locales.length && options.notLocales.length) {
       throw new Error("Can't specify --locales AND --not-locales");
