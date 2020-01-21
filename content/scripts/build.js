@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
+const { performance } = require("perf_hooks");
 
 const chalk = require("chalk");
 const yaml = require("js-yaml");
@@ -85,6 +86,8 @@ class Builder {
       : null;
 
     this.popularities = {};
+    this._profileMarks = {};
+    this._currentProfile = {};
   }
   initProgressbar(total) {
     this.progressBar && this.progressBar.init(total);
@@ -98,6 +101,39 @@ class Builder {
 
   printProcessing(result, fileWritten) {
     !this.progressBar && this.logger.info(`${result}: ${fileWritten}`);
+  }
+
+  _profile(marker) {
+    if (marker in this._currentProfile) {
+      const took = performance.now() - this._currentProfile[marker];
+      if (!(marker in this._profileMarks)) {
+        this._profileMarks[marker] = [];
+      }
+      this._profileMarks[marker].push(took);
+      delete this._currentProfile[marker];
+    } else {
+      this._currentProfile[marker] = performance.now();
+    }
+  }
+
+  _dumpProfiles() {
+    let sumAll = 0.0;
+    Object.values(this._profileMarks).forEach(v => {
+      sumAll += v.reduce((a, b) => a + b);
+    });
+    Object.keys(this._profileMarks)
+      .sort()
+      .forEach(key => {
+        const times = this._profileMarks[key];
+        const sum = times.reduce((a, b) => a + b);
+        const mean = sum / times.length;
+        const p = (100 * sum) / sumAll;
+        console.log(
+          `${key.padEnd(25)}\tSUM: ${sum.toFixed(2)}ms\tMEAN: ${mean.toFixed(
+            2
+          )}ms\tSUM PORTION: ${p.toFixed(1)}% of total time`
+        );
+      });
   }
 
   start() {
@@ -121,7 +157,9 @@ class Builder {
 
     // This prepares this.selfHash so that when we build files, we can
     // write down which "self hash" was used at the time.
+    this._profile("initSelfHash");
     this.initSelfHash();
+    this._profile("initSelfHash");
 
     // First walk all the content and pick up all the titles.
     // Note, no matter what locales you have picked in the filtering,
@@ -209,6 +247,8 @@ class Builder {
     this.summorizeResults(counts, t1 - t0);
 
     this.dumpAllURLs();
+
+    this._dumpProfiles();
   }
 
   initSelfHash() {
@@ -453,6 +493,8 @@ class Builder {
     if (this.excludeSlug(metadata)) {
       return [processing.EXCLUDED, folder];
     }
+
+    this._profile("processFolder");
     // The destination is the same as source but with a different base.
     // If the file *came from* /path/to/files/en-US/foo/bar/
     // the final destination is /path/to/build/en-US/foo/bar/index.json
@@ -560,14 +602,17 @@ class Builder {
     }
     doc.body = sections;
     doc.popularity = this.popularities[doc.mdn_url] || 0.0;
-
     doc.last_modified = metadata.modified;
+
+    this._profile("processFolder");
+    this._profile("buildHtmlAndJsonFromDoc");
     const { outfileJson, outfileHtml } = buildHtmlAndJsonFromDoc({
       doc,
       destinationDir,
       buildHtml: true,
       titles: this.allTitles
     });
+    this._profile("buildHtmlAndJsonFromDoc");
 
     // We're *assuming* that `metadata.mdn_url.toLowerCase()`
     // can be a valid folder name on the current filesystem. It if's all

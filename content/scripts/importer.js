@@ -116,6 +116,7 @@ class Importer {
       FROM wiki_document w ${constraintsSQL}
     `;
     sql += " group by w.locale ORDER by count DESC ";
+    console.log(sql);
 
     // First make a table of locale<->counts
     this.connection.query(sql, queryArgs, (error, results) => {
@@ -201,7 +202,8 @@ class Importer {
 
   fetchAllContributors() {
     const { constraintsSQL, queryArgs } = this._getSQLConstraints({
-      joinTable: "wiki_document"
+      joinTable: "wiki_document",
+      includeDeleted: true
     });
     let sql =
       "SELECT document_id, creator_id FROM wiki_revision" + constraintsSQL;
@@ -241,11 +243,19 @@ class Importer {
     });
   }
 
-  _getSQLConstraints({ joinTable = null, alias = null } = {}) {
+  _getSQLConstraints({
+    joinTable = null,
+    alias = null,
+    includeDeleted = false
+  } = {}) {
     // Yeah, this is ugly but it bloody works for now.
     const a = alias ? `${alias}.` : "";
     const extra = [];
     const queryArgs = [];
+
+    if (!includeDeleted) {
+      extra.push(`${a}deleted = false`);
+    }
     const { locales, excludePrefixes } = this.options;
     if (locales.length) {
       extra.push(`${a}locale in (?)`);
