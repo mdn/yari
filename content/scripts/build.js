@@ -341,7 +341,7 @@ class Builder {
       const sitemapFilepath = path.join(sitemapsDir, "sitemap.xml");
       fs.writeFileSync(sitemapFilepath, sitemapXml);
       allSitemapsBuilt.push(locale);
-      this.logger.info(`Wrote: ${sitemapFilepath}`);
+      this.logger.debug(`Wrote: ${sitemapFilepath}`);
 
       // Dump a `titles.json` into each locale folder
       const titles = {};
@@ -354,7 +354,7 @@ class Builder {
 
       const titlesFilepath = path.join(this.destination, locale, "titles.json");
       fs.writeFileSync(titlesFilepath, JSON.stringify({ titles }, null, 2));
-      this.logger.info(`Wrote ${titlesFilepath}`);
+      this.logger.debug(`Wrote ${titlesFilepath}`);
     });
 
     // Need to make the generic /sitemap.xml for all sitemaps
@@ -368,7 +368,7 @@ class Builder {
     );
     const allSitemapFilepath = path.join(this.destination, "sitemap.xml");
     fs.writeFileSync(allSitemapFilepath, allSitemapXml);
-    this.logger.info(`Wrote ${allSitemapFilepath}`);
+    this.logger.debug(`Wrote ${allSitemapFilepath}`);
   }
 
   /** Return true if for any reason this folder should not be processed */
