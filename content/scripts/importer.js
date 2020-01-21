@@ -107,10 +107,15 @@ class Importer {
 
     // Let's warm up by seeing we can connect to the wiki_document table
     // and extract some stats.
-    const { constraintsSQL, queryArgs } = this._getSQLConstraints();
-    let sql =
-      "SELECT locale, COUNT(*) as count from wiki_document" + constraintsSQL;
-    sql += " group by locale ORDER by count DESC ";
+    const { constraintsSQL, queryArgs } = this._getSQLConstraints({
+      alias: "w"
+    });
+    let sql = `
+      SELECT
+      w.locale, COUNT(*) AS count
+      FROM wiki_document w ${constraintsSQL}
+    `;
+    sql += " group by w.locale ORDER by count DESC ";
 
     // First make a table of locale<->counts
     this.connection.query(sql, queryArgs, (error, results) => {
@@ -148,7 +153,24 @@ class Importer {
       this.initProgressbar(totalCount);
 
       // Actually do the imported
-      sql = "SELECT * FROM wiki_document " + constraintsSQL;
+      sql = `
+        SELECT
+          w.id,
+          w.title,
+          w.slug,
+          w.locale,
+          w.is_redirect,
+          w.html,
+          w.rendered_html,
+          w.modified,
+          p.id AS parent_id,
+          p.slug AS parent_slug,
+          p.locale AS parent_locale,
+          p.modified AS parent_modified
+        FROM wiki_document w
+        LEFT OUTER JOIN wiki_document p ON w.parent_id = p.id
+        ${constraintsSQL}
+      `;
 
       const query = this.connection.query(sql, queryArgs);
       query
@@ -178,9 +200,9 @@ class Importer {
   }
 
   fetchAllContributors() {
-    const { constraintsSQL, queryArgs } = this._getSQLConstraints(
-      "wiki_document"
-    );
+    const { constraintsSQL, queryArgs } = this._getSQLConstraints({
+      joinTable: "wiki_document"
+    });
     let sql =
       "SELECT document_id, creator_id FROM wiki_revision" + constraintsSQL;
     sql += " ORDER BY created DESC ";
@@ -219,18 +241,19 @@ class Importer {
     });
   }
 
-  _getSQLConstraints(joinTable = null) {
+  _getSQLConstraints({ joinTable = null, alias = null } = {}) {
     // Yeah, this is ugly but it bloody works for now.
+    const a = alias ? `${alias}.` : "";
     const extra = [];
     const queryArgs = [];
     const { locales, excludePrefixes } = this.options;
     if (locales.length) {
-      extra.push("locale in (?)");
+      extra.push(`${a}locale in (?)`);
       queryArgs.push(locales);
     }
     if (excludePrefixes.length) {
       extra.push(
-        "NOT (" + excludePrefixes.map(_ => "slug LIKE ?").join(" OR ") + ")"
+        "NOT (" + excludePrefixes.map(_ => `${a}slug LIKE ?`).join(" OR ") + ")"
       );
       queryArgs.push(...excludePrefixes.map(s => `${s}%`));
     }
@@ -374,6 +397,13 @@ class ToDiskImporter extends Importer {
       modified: doc.modified,
       mdn_contributors: contributors
     };
+    if (doc.parent_slug && doc.parent_locale) {
+      meta.parent = {
+        slug: doc.parent_slug,
+        locale: doc.parent_locale,
+        modified: doc.parent_modified
+      };
+    }
     fs.writeFileSync(metaFile, yaml.safeDump(meta));
     // XXX At the moment, we're pretending we have the KS shim, and that means
     // we'll have access to the raw (full of macros) string which'll be

@@ -3,13 +3,13 @@ const path = require("path");
 const crypto = require("crypto");
 
 const chalk = require("chalk");
-const cheerio = require("cheerio");
 const yaml = require("js-yaml");
 const sanitizeFilename = require("sanitize-filename");
 const csv = require("@fast-csv/parse");
 
 require("dotenv").config();
 
+const cheerio = require("./monkeypatched-cheerio");
 const ProgressBar = require("ssr/progress-bar");
 const { buildHtmlAndJsonFromDoc } = require("ssr");
 
@@ -207,6 +207,8 @@ class Builder {
     });
     const t1 = new Date();
     this.summorizeResults(counts, t1 - t0);
+
+    this.dumpAllURLs();
   }
 
   initSelfHash() {
@@ -298,6 +300,75 @@ class Builder {
         const count = counts[key];
         console.log(`${key.padEnd(12)}: ${count.toLocaleString()}`);
       });
+  }
+
+  /** `this.allTitles` is a map of mdn_url => object that contains useful
+   * for the SSR work. This function dumps just the necessary data of that,
+   * per locale, to the final destination.
+   */
+  dumpAllURLs() {
+    // First regroup ALL URLs into buckets per locale.
+    const byLocale = {};
+    const mostModified = {};
+    for (let [uri, data] of Object.entries(this.allTitles)) {
+      if (!(data.locale in byLocale)) {
+        byLocale[data.locale] = {};
+        mostModified[data.locale] = data.modified;
+      }
+      byLocale[data.locale][uri] = data;
+      if (data.modified > mostModified[data.locale]) {
+        mostModified[data.locale] = data.modified;
+      }
+    }
+
+    const { sitemapBaseUrl } = this.options;
+    const allSitemapsBuilt = [];
+    Object.entries(byLocale).forEach(([locale, data]) => {
+      // For every locale, build a
+      // `$DESTINATION/sitemaps/$LOCALE/sitemap_other.xml` and
+      // `$DESTINATION/sitemaps/$LOCALE/sitemap.xml`
+
+      const sitemapXml = makeSitemapXML(
+        Object.entries(data).map(([uri, data]) => {
+          return {
+            loc: sitemapBaseUrl + uri,
+            lastmod: data.modified.split("T")[0]
+          };
+        })
+      );
+      const sitemapsDir = path.join(this.destination, "sitemaps", locale);
+      fs.mkdirSync(sitemapsDir, { recursive: true });
+      const sitemapFilepath = path.join(sitemapsDir, "sitemap.xml");
+      fs.writeFileSync(sitemapFilepath, sitemapXml);
+      allSitemapsBuilt.push(locale);
+      this.logger.info(`Wrote: ${sitemapFilepath}`);
+
+      // Dump a `titles.json` into each locale folder
+      const titles = {};
+      Object.entries(data).forEach(([uri, documentData]) => {
+        titles[uri] = {
+          title: documentData.title,
+          popularity: documentData.popularity
+        };
+      });
+
+      const titlesFilepath = path.join(this.destination, locale, "titles.json");
+      fs.writeFileSync(titlesFilepath, JSON.stringify({ titles }, null, 2));
+      this.logger.info(`Wrote ${titlesFilepath}`);
+    });
+
+    // Need to make the generic /sitemap.xml for all sitemaps
+    const allSitemapXml = makeSitemapXML(
+      allSitemapsBuilt.map(locale => {
+        return {
+          loc: sitemapBaseUrl + `/sitemaps/${locale}/sitemap.xml`,
+          lastmod: mostModified[locale]
+        };
+      })
+    );
+    const allSitemapFilepath = path.join(this.destination, "sitemap.xml");
+    fs.writeFileSync(allSitemapFilepath, allSitemapXml);
+    this.logger.info(`Wrote ${allSitemapFilepath}`);
   }
 
   /** Return true if for any reason this folder should not be processed */
@@ -439,7 +510,7 @@ class Builder {
     }
 
     const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`, {
-      decodeEntities: false
+      // decodeEntities: false
     });
 
     // Remove those '<span class="alllinks"><a href="/en-US/docs/tag/Web">View All...</a></span>' links
@@ -455,7 +526,9 @@ class Builder {
 
     const sections = [];
     let section = cheerio
-      .load("<div></div>", { decodeEntities: false })("div")
+      .load("<div></div>", {
+        // decodeEntities: false
+      })("div")
       .eq(0);
 
     const iterable = [...$("#_body")[0].childNodes];
@@ -482,6 +555,9 @@ class Builder {
 
     doc.title = metadata.title;
     doc.mdn_url = metadata.mdn_url;
+    if (metadata.parent) {
+      doc.parent = metadata.parent;
+    }
     doc.body = sections;
     doc.popularity = this.popularities[doc.mdn_url] || 0.0;
 
@@ -523,7 +599,8 @@ class Builder {
       title: metadata.title,
       popularity: this.popularities[metadata.mdn_url] || 0.0,
       locale: metadata.locale,
-      file: folder
+      file: folder,
+      modified: metadata.modified
     };
   }
 
@@ -643,7 +720,9 @@ function addSections($) {
     if ($.find("div.bc-data").length > 1) {
       const subSections = [];
       let section = cheerio
-        .load("<div></div>", { decodeEntities: false })("div")
+        .load("<div></div>", {
+          // decodeEntities: false
+        })("div")
         .eq(0);
 
       // Loop over each and every "root element" in the node and keep piling
@@ -807,6 +886,24 @@ function makeHash(filepaths, length = 12) {
     .map(fp => fs.readFileSync(fp, "utf8"))
     .forEach(content => hasher.update(content));
   return hasher.digest("hex").slice(0, length);
+}
+
+function makeSitemapXML(locations) {
+  const xmlParts = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+  ];
+  xmlParts.push(
+    ...locations.map(location => {
+      return (
+        `<url><loc>${location.loc}</loc>` +
+        `<lastmod>${location.lastmod}</lastmod></url>`
+      );
+    })
+  );
+  xmlParts.push("</urlset>");
+  xmlParts.push("");
+  return xmlParts.join("\n");
 }
 
 // Slight extension of fs.readdirSync that returns full paths

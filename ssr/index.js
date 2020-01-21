@@ -67,6 +67,35 @@ function fixRelatedContent(document) {
   }
 }
 
+/** The breadcrumb is an array of parents include the document itself.
+ * It only gets added to the document there are actual parents.
+ */
+function addBreadcrumbData(uri, document, allTitles) {
+  const parents = [];
+  let split = uri.split("/");
+  let parentUri;
+  while (split.length > 2) {
+    split.pop();
+    parentUri = split.join("/");
+    // This test makes it possible to "skip" certain URIs that might not
+    // be a page on its own. For example: /en-US/docs/Web/ is a page,
+    // and so is /en-US/ but there might not be a page for /end-US/docs/.
+    if (allTitles[parentUri]) {
+      parents.unshift({
+        uri: parentUri,
+        title: allTitles[parentUri].title
+      });
+    }
+  }
+  if (parents.length) {
+    parents.push({
+      uri: uri,
+      title: document.short_title || document.title
+    });
+    document.parents = parents;
+  }
+}
+
 /** Pretty print the absolute path relative to the current directory. */
 function ppPath(filePath) {
   return path.relative(process.cwd(), filePath);
@@ -152,6 +181,12 @@ export function buildHtmlAndJsonFromDoc({
   //     console.log(`${chalk.grey(outMsg)} ${Date.now() - start}ms`);
   //   }
   // } else {
+
+  // The `titles` object should contain every possible URI->Title mapping.
+  // We can use that generate the necessary information needed to build
+  // a breadcrumb in the React componentx.
+  addBreadcrumbData(uri, options.doc, titles);
+
   // Stumptown produces a `.related_content` for every document. But it
   // contains data that is either not needed or not appropriate for the way
   // we're using it in the renderer. So mutate it for the specific needs

@@ -1,0 +1,33 @@
+/* Peterbe's note: This is rough hack by attempting to copy from Kuma's SASS */
+
+.main nav {
+  border-bottom: solid 1px #eee;
+
+  ol {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    font-size: 0.9rem;
+
+    li {
+      hyphens: auto;
+      display: inline;
+
+      .crumb-current-page {
+        &:link,
+        &:visited {
+          color: #333;
+        }
+      }
+
+      .breadcrumb-chevron::after {
+        display: inline-block;
+        content: "›";
+        color: #151515;
+        margin: 0 5px;
+        font-size: 1rem;
+        font-weight: 700;
+      }
+    }
+  }
+}

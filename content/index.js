@@ -10,7 +10,8 @@ const {
   DEFAULT_DESTINATION,
   DEFAULT_EXCLUDE_SLUG_PREFIXES,
   DEFAULT_BUILD_LOCALES,
-  DEFAULT_BUILD_NOT_LOCALES
+  DEFAULT_BUILD_NOT_LOCALES,
+  DEFAULT_SITEMAP_BASE_URL
 } = require("./scripts/constants.js");
 
 cli
@@ -103,6 +104,12 @@ cli
     "--googleanalytics-pageviews-csv <path>",
     "export from Google Analytics containing pageview counts",
     cli.PATH
+  )
+  .option(
+    "--sitemap-base-url <url>",
+    "absolute url prefixing the sitemap.xml files",
+    cli.STRING,
+    DEFAULT_SITEMAP_BASE_URL
   )
   .argument(
     "[destination]",

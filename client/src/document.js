@@ -27,9 +27,10 @@ export class Document extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const currentSlug = this.props["*"];
-    const prevSlug = prevProps["*"];
-    if (currentSlug !== prevSlug) {
+    if (
+      this.props["*"] !== prevProps["*"] ||
+      this.props.locale !== prevProps.locale
+    ) {
       this.fetchDocument();
     }
   }
@@ -75,7 +76,10 @@ export class Document extends React.Component {
     return (
       <div>
         <h1 className="page-title">{doc.title}</h1>
+        {doc.parent && <AboutParentDocument parent={doc.parent} />}
         <div className="main">
+          <nav>{doc.parents && <Breadcrumbs parents={doc.parents} />}</nav>
+
           <div className="sidebar">
             <RenderSideBar doc={doc} />
           </div>
@@ -90,6 +94,48 @@ export class Document extends React.Component {
       </div>
     );
   }
+}
+
+function AboutParentDocument({ parent }) {
+  const { slug, locale } = parent;
+  const uri = `/${locale}/docs/${slug}`;
+  return (
+    <p style={{ float: "right", fontSize: "80%" }}>
+      <Link to={uri}>
+        Read this document in <b>{locale}</b>
+      </Link>
+    </p>
+  );
+}
+
+function Breadcrumbs({ parents }) {
+  if (!parents.length) {
+    throw new Error("Empty parents array");
+  }
+  return (
+    <ol
+      typeof="BreadcrumbList"
+      vocab="https://schema.org/"
+      aria-label="breadcrumbs"
+    >
+      {parents.map((parent, i) => {
+        const isLast = i + 1 === parents.length;
+        return (
+          <li key={parent.uri} property="itemListElement" typeof="ListItem">
+            <Link
+              to={parent.uri}
+              className={isLast ? "crumb-current-page" : "breadcrumb-chevron"}
+              property="item"
+              typeof="WebPage"
+            >
+              <span property="name">{parent.title}</span>
+            </Link>
+            <meta property="position" content={i + 1} />
+          </li>
+        );
+      })}
+    </ol>
+  );
 }
 
 function RenderSideBar({ doc }) {

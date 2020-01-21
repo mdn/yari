@@ -25,6 +25,8 @@ const DEFAULT_EXCLUDE_SLUG_PREFIXES = [
   "Experiment:"
 ];
 
+const DEFAULT_SITEMAP_BASE_URL = "https://developer.mozilla.org";
+
 // If you're parsing the Google Analytics pageviews CSV file, you'll see
 // that there are a LOT of pages that only have tiny amount of pageviews.
 // Eliminating some of the really small counts we can save on some
@@ -48,5 +50,6 @@ module.exports = {
   DEFAULT_EXCLUDE_SLUG_PREFIXES,
   DEFAULT_BUILD_LOCALES,
   DEFAULT_BUILD_NOT_LOCALES,
+  DEFAULT_SITEMAP_BASE_URL,
   MIN_GOOGLE_ANALYTICS_PAGEVIEWS
 };
