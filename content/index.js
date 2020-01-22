@@ -111,6 +111,18 @@ cli
     cli.STRING,
     DEFAULT_SITEMAP_BASE_URL
   )
+  .option(
+    "--watch",
+    "monitor the source and re-run when files change",
+    cli.BOOL,
+    false
+  )
+  .option(
+    "--build-and-watch",
+    "run the build first, then start watching",
+    cli.BOOL,
+    false
+  )
   .argument(
     "[destination]",
     "root folder to put built files into",

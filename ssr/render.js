@@ -1,6 +1,6 @@
-import cheerio from "cheerio";
 import fs from "fs";
 import path from "path";
+import cheerio from "cheerio";
 import { renderToString } from "react-dom/server";
 
 function readBuildHtml() {
@@ -14,14 +14,14 @@ let buildHtml = "";
 if (process.env.NODE_ENV !== "development") {
   // read it once
   buildHtml = readBuildHtml();
-  if (buildHtml.indexOf('<div id="root"></div>') === -1) {
+  if (!buildHtml.includes('<div id="root"></div>')) {
     throw new Error(
-      'The server depends on being able to inject into <div id="root"></div>'
+      'The render depends on being able to inject into <div id="root"></div>'
     );
   }
 }
 
-export default (renderApp, options) => {
+export default function render(renderApp, options) {
   if (process.env.NODE_ENV === "development") {
     // Reread on every request
     buildHtml = readBuildHtml();
@@ -61,4 +61,4 @@ export default (renderApp, options) => {
   $("body script[src]").remove();
 
   return $.html();
-};
+}

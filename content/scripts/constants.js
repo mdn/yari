@@ -43,6 +43,11 @@ const MIN_GOOGLE_ANALYTICS_PAGEVIEWS = parseInt(
   process.env.MIN_GOOGLE_ANALYTICS_PAGEVIEWS || "2"
 );
 
+// The file to trigger a write too when being in watch mode
+const TOUCHFILE =
+  process.env.TOUCHFILE ||
+  path.join(__dirname, "..", "..", "client", "src", "touchthis.js");
+
 module.exports = {
   DEFAULT_ROOT,
   DEFAULT_DESTINATION,
@@ -51,5 +56,6 @@ module.exports = {
   DEFAULT_BUILD_LOCALES,
   DEFAULT_BUILD_NOT_LOCALES,
   DEFAULT_SITEMAP_BASE_URL,
-  MIN_GOOGLE_ANALYTICS_PAGEVIEWS
+  MIN_GOOGLE_ANALYTICS_PAGEVIEWS,
+  TOUCHFILE
 };

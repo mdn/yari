@@ -116,7 +116,6 @@ class Importer {
       FROM wiki_document w ${constraintsSQL}
     `;
     sql += " group by w.locale ORDER by count DESC ";
-    console.log(sql);
 
     // First make a table of locale<->counts
     this.connection.query(sql, queryArgs, (error, results) => {

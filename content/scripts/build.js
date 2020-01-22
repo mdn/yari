@@ -7,6 +7,7 @@ const chalk = require("chalk");
 const yaml = require("js-yaml");
 const sanitizeFilename = require("sanitize-filename");
 const csv = require("@fast-csv/parse");
+const sane = require("sane");
 
 require("dotenv").config();
 
@@ -15,8 +16,9 @@ const ProgressBar = require("ssr/progress-bar");
 const { buildHtmlAndJsonFromDoc } = require("ssr");
 
 const { packageBCD } = require("./resolve-bcd");
-const { MIN_GOOGLE_ANALYTICS_PAGEVIEWS } = require("./constants");
+const { MIN_GOOGLE_ANALYTICS_PAGEVIEWS, TOUCHFILE } = require("./constants");
 
+/** Needs doc string */
 function cleanLocales(locales) {
   const clean = [];
   for (const locale of locales) {
@@ -34,31 +36,54 @@ function cleanLocales(locales) {
   return clean.filter(x => x);
 }
 
-function runBuild(options, logger) {
-  const { root, destination } = options;
+/** Needs doc string */
+function triggerTouch(filepath, documents, root) {
+  const changedFile = {
+    path: filepath,
+    name: path.relative(root, filepath)
+  };
+  let newContent = `// Timestamp: ${new Date()}\n`;
+  newContent += `const documents = ${JSON.stringify(documents, null, 2)}\n`;
+  newContent += `const changedFile = ${JSON.stringify(changedFile)}\n`;
+  newContent += `const hasEDITOR = ${JSON.stringify(
+    Boolean(process.env.EDITOR)
+  )};\n`;
+  newContent += `const touched = { documents, changedFile, hasEDITOR };\n`;
+  newContent += "export default touched;";
+  fs.writeFileSync(TOUCHFILE, newContent);
+}
 
+async function runBuild(options, logger) {
   options.locales = cleanLocales(options.locales);
   options.notLocales = cleanLocales(options.notLocales);
 
-  const builder = new Builder(root, destination, options, logger);
+  const builder = new Builder(
+    options.root,
+    options.destination,
+    options,
+    logger
+  );
 
   if (options.googleanalyticsPageviewsCsv) {
-    const t0 = new Date();
-    builder.initGoogleAnalyticsPageviewsCSV(rowsParsed => {
-      const t1 = new Date();
-      console.log(
-        chalk.green(
-          `${rowsParsed.toLocaleString()} rows parsed. ${Object.keys(
-            builder.popularities
-          ).length.toLocaleString()} popularities found. Took ${ppMilliseconds(
-            t1 - t0
-          )}.`
-        )
-      );
-      builder.start();
-    });
-  } else {
+    const t0 = performance.now();
+    const rowsParsed = await builder.initGoogleAnalyticsPageviewsCSV();
+    const t1 = performance.now();
+    console.log(
+      chalk.green(
+        `${rowsParsed.toLocaleString()} rows parsed. ${Object.keys(
+          builder.popularities
+        ).length.toLocaleString()} popularities found. Took ${ppMilliseconds(
+          t1 - t0
+        )}.`
+      )
+    );
+  }
+  if (!options.watch) {
     builder.start();
+  }
+  if (options.watch || options.buildAndWatch) {
+    // console.log("START WATCHING");
+    builder.watch();
   }
 }
 
@@ -224,11 +249,9 @@ class Builder {
           counts[processing.EXCLUDED]++;
           return;
         }
-        let wrote;
-        let result;
+        let processed;
         try {
-          [result, wrote] = this.processFolder(folder);
-          this.printProcessing(result, wrote);
+          processed = this.processFolder(folder);
         } catch (err) {
           // If a crash happens inside processFolder it's hard to debug
           // if you don't know which files/folders caused it. So inject
@@ -239,6 +262,8 @@ class Builder {
           // We could increment a counter and dump all errors to a log file.
           throw err;
         }
+        const { result, file } = processed;
+        this.printProcessing(result, file);
         counts[result]++;
         this.tickProgressbar(++total);
       });
@@ -248,7 +273,81 @@ class Builder {
 
     this.dumpAllURLs();
 
-    this._dumpProfiles();
+    // this._dumpProfiles();
+  }
+
+  watch() {
+    const { locales, notLocales, root } = this.options;
+    const watchRoots = [];
+    if (locales.length || notLocales.length) {
+      watchRoots.push(...locales.map(locale => path.join(root, locale)));
+      if (!locales.length) {
+        watchRoots.push(
+          ...fs
+            .readdirSync(root)
+            .filter(locale => {
+              return !notLocales.length || !notLocales.includes(locale);
+            })
+            .map(locale => path.join(root, locale))
+        );
+      }
+      console.log(
+        chalk.yellow(
+          `Setting up file watchers for ${JSON.stringify(watchRoots)}`
+        )
+      );
+    } else {
+      watchRoots.push(root);
+      console.log(
+        chalk.yellow(`Setting up file watchers for ${watchRoots[0]}`)
+      );
+    }
+
+    const onChangeOrAdd = (filepath, watchRoot) => {
+      // XXX could consider NOT bothering if the file isn't index.html or index.yaml
+      const fullFilepath = path.join(watchRoot, filepath);
+      const folder = path.dirname(fullFilepath);
+      const files = fs.readdirSync(folder);
+      this.logger.debug(`Change in ${folder}`);
+      if (!this.excludeFolder(folder, watchRoot, files)) {
+        const t0 = performance.now();
+        const { result, wrote } = this.processFolder(folder);
+        const t1 = performance.now();
+
+        const tookStr = `${(t1 - t0).toFixed(1)}ms`;
+        console.log(
+          `${
+            result === processing.PROCESSED
+              ? chalk.green(result)
+              : chalk.yellow(result)
+          }: ${chalk.white(wrote)} ${chalk.grey(tookStr)}`
+        );
+        triggerTouch(fullFilepath, result, watchRoot);
+      }
+    };
+    let watchRootsCount = 0;
+    // const watchers = watchRoots.map(watchRoot => {
+    watchRoots.map(watchRoot => {
+      return sane(watchRoot, {
+        watchman: true,
+        glob: ["**/*.html", "**/*.yaml"]
+      })
+        .on("ready", () => {
+          watchRootsCount++;
+          if (watchRootsCount === watchRoots.length) {
+            console.log(
+              chalk.green(
+                `File watcher set up (${watchRootsCount} ${
+                  watchRootsCount === 1 ? "directory" : "directories"
+                })`
+              )
+            );
+            console.log("Hit Ctrl-C to quit the watcher when ready.");
+          }
+        })
+        .on("change", onChangeOrAdd)
+        .on("add", onChangeOrAdd);
+    });
   }
 
   initSelfHash() {
@@ -280,11 +379,13 @@ class Builder {
     fs.mkdirSync(folderpath, { recursive: true });
   }
 
-  initGoogleAnalyticsPageviewsCSV(done) {
-    if (this.options.googleanalyticsPageviewsCsv) {
+  initGoogleAnalyticsPageviewsCSV() {
+    return new Promise((resolve, reject) => {
       const pageviews = {};
       csv
-        .parseFile(this.options.googleanalyticsPageviewsCsv, { headers: true })
+        .parseFile(this.options.googleanalyticsPageviewsCsv, {
+          headers: true
+        })
         .on("error", error => console.error(error))
         .on("data", row => {
           const uri = row.Page;
@@ -302,7 +403,7 @@ class Builder {
         .on("end", rowCount => {
           const sumTotal = Object.values(pageviews).reduce((a, b) => a + b);
           if (!sumTotal) {
-            throw new Error("No pageviews found!");
+            reject(new Error("No pageviews found!"));
           }
           Object.entries(pageviews).forEach(([uri, count]) => {
             // It just needs to be a floating point number.
@@ -310,9 +411,9 @@ class Builder {
             // errors when this eventually gets serialized in JSON.
             this.popularities[uri] = (1000 * count) / sumTotal;
           });
-          done(rowCount);
+          resolve(rowCount);
         });
-    }
+    });
   }
 
   summorizeResults(counts, took) {
@@ -491,7 +592,7 @@ class Builder {
     hasher.update(metadataRaw);
     const metadata = yaml.safeLoad(metadataRaw);
     if (this.excludeSlug(metadata)) {
-      return [processing.EXCLUDED, folder];
+      return { result: processing.EXCLUDED, file: folder };
     }
 
     this._profile("processFolder");
@@ -548,7 +649,10 @@ class Builder {
       fs.existsSync(hashDestination) &&
       fs.readFileSync(hashDestination, "utf8") === combinedHash
     ) {
-      return [processing.ALREADY, path.join(destinationDir, "index.html")];
+      return {
+        result: processing.ALREADY,
+        file: path.join(destinationDir, "index.html")
+      };
     }
 
     const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`, {
@@ -630,7 +734,11 @@ class Builder {
     }
 
     fs.writeFileSync(hashDestination, combinedHash);
-    return [processing.PROCESSED, outfileHtml || outfileJson];
+    return {
+      result: processing.PROCESSED,
+      file: outfileHtml || outfileJson,
+      doc
+    };
   }
 
   /** Similar to processFolder() but this time we're only interesting it
