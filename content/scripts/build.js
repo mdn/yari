@@ -277,31 +277,8 @@ class Builder {
   }
 
   watch() {
-    const { locales, notLocales, root } = this.options;
-    const watchRoots = [];
-    if (locales.length || notLocales.length) {
-      watchRoots.push(...locales.map(locale => path.join(root, locale)));
-      if (!locales.length) {
-        watchRoots.push(
-          ...fs
-            .readdirSync(root)
-            .filter(locale => {
-              return !notLocales.length || !notLocales.includes(locale);
-            })
-            .map(locale => path.join(root, locale))
-        );
-      }
-      console.log(
-        chalk.yellow(
-          `Setting up file watchers for ${JSON.stringify(watchRoots)}`
-        )
-      );
-    } else {
-      watchRoots.push(root);
-      console.log(
-        chalk.yellow(`Setting up file watchers for ${watchRoots[0]}`)
-      );
-    }
+    const { root } = this.options;
+    console.log(chalk.yellow(`Setting up file watcher on ${root}`));
 
     const onChangeOrAdd = (filepath, watchRoot) => {
       // XXX could consider NOT bothering if the file isn't index.html or index.yaml
@@ -325,29 +302,13 @@ class Builder {
         triggerTouch(fullFilepath, result, watchRoot);
       }
     };
-    let watchRootsCount = 0;
-    // const watchers = watchRoots.map(watchRoot => {
-    watchRoots.map(watchRoot => {
-      return sane(watchRoot, {
-        watchman: true,
-        glob: ["**/*.html", "**/*.yaml"]
+    sane(root, { watchman: true, glob: ["**/*.html", "**/*.yaml"] })
+      .on("ready", () => {
+        console.log(chalk.green(`File watcher set up on ${root}`));
+        console.log("Hit Ctrl-C to quit the watcher when ready.");
       })
-        .on("ready", () => {
-          watchRootsCount++;
-          if (watchRootsCount === watchRoots.length) {
-            console.log(
-              chalk.green(
-                `File watcher set up (${watchRootsCount} ${
-                  watchRootsCount === 1 ? "directory" : "directories"
-                })`
-              )
-            );
-            console.log("Hit Ctrl-C to quit the watcher when ready.");
-          }
-        })
-        .on("change", onChangeOrAdd)
-        .on("add", onChangeOrAdd);
-    });
+      .on("change", onChangeOrAdd)
+      .on("add", onChangeOrAdd);
   }
 
   initSelfHash() {
