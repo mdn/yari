@@ -281,14 +281,13 @@ class Builder {
     console.log(chalk.yellow(`Setting up file watcher on ${root}`));
 
     const onChangeOrAdd = (filepath, watchRoot) => {
-      // XXX could consider NOT bothering if the file isn't index.html or index.yaml
       const fullFilepath = path.join(watchRoot, filepath);
       const folder = path.dirname(fullFilepath);
       const files = fs.readdirSync(folder);
       this.logger.debug(`Change in ${folder}`);
       if (!this.excludeFolder(folder, watchRoot, files)) {
         const t0 = performance.now();
-        const { result, wrote } = this.processFolder(folder);
+        const { result, file } = this.processFolder(folder);
         const t1 = performance.now();
 
         const tookStr = `${(t1 - t0).toFixed(1)}ms`;
@@ -297,8 +296,9 @@ class Builder {
             result === processing.PROCESSED
               ? chalk.green(result)
               : chalk.yellow(result)
-          }: ${chalk.white(wrote)} ${chalk.grey(tookStr)}`
+          }: ${chalk.white(file)} ${chalk.grey(tookStr)}`
         );
+
         triggerTouch(fullFilepath, result, watchRoot);
       }
     };
