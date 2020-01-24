@@ -25,6 +25,10 @@ const DEFAULT_EXCLUDE_SLUG_PREFIXES = [
   "Experiment:"
 ];
 
+const DEFAULT_FOLDER_SEARCHES = (process.env.BUILD_FOLDER_SEARCHES || "")
+  .split(",")
+  .filter(x => x);
+
 const DEFAULT_SITEMAP_BASE_URL = "https://developer.mozilla.org";
 
 // If you're parsing the Google Analytics pageviews CSV file, you'll see
@@ -56,6 +60,7 @@ module.exports = {
   DEFAULT_BUILD_LOCALES,
   DEFAULT_BUILD_NOT_LOCALES,
   DEFAULT_SITEMAP_BASE_URL,
+  DEFAULT_FOLDER_SEARCHES,
   MIN_GOOGLE_ANALYTICS_PAGEVIEWS,
   TOUCHFILE
 };

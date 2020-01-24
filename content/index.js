@@ -11,7 +11,8 @@ const {
   DEFAULT_EXCLUDE_SLUG_PREFIXES,
   DEFAULT_BUILD_LOCALES,
   DEFAULT_BUILD_NOT_LOCALES,
-  DEFAULT_SITEMAP_BASE_URL
+  DEFAULT_SITEMAP_BASE_URL,
+  DEFAULT_FOLDER_SEARCHES
 } = require("./scripts/constants.js");
 
 cli
@@ -56,7 +57,6 @@ cli
     return runImporter(options, logger);
   })
 
-  // XXX Hey @Gregoor, how do I set global options that can be shared across all commands?
   .command(
     "build",
     "turns Wiki HTML files into JSON files that the renderer can process"
@@ -98,7 +98,7 @@ cli
     "-f, --foldersearch <partoffolder>",
     "filter by folder matches",
     cli.ARRAY,
-    []
+    DEFAULT_FOLDER_SEARCHES
   )
   .option(
     "--googleanalytics-pageviews-csv <path>",
@@ -136,9 +136,24 @@ cli
     }
     // Sanity check the invariance of locales filtering.
     if (options.locales.length && options.notLocales.length) {
-      throw new Error("Can't specify --locales AND --not-locales");
+      if (equalArray(options.locales, DEFAULT_BUILD_LOCALES)) {
+        options.locales = [];
+      } else {
+        throw new Error("Can't specify --locales AND --not-locales");
+      }
+    }
+    if (options.foldersearch.some(x => /[A-Z]/.test(x))) {
+      const newFoldersearch = options.foldersearch.map(x => x.toLowerCase());
+      console.warn(
+        `Folder search lowercased from '${options.foldersearch}' to '${newFoldersearch}'`
+      );
+      options.foldersearch = newFoldersearch;
     }
     return runBuild(options, logger);
   });
 
 cli.parse(process.argv);
+
+function equalArray(a, b) {
+  return a.length === b.length && a.every((x, i) => x === b[i]);
+}

@@ -82,7 +82,6 @@ async function runBuild(options, logger) {
     builder.start();
   }
   if (options.watch || options.buildAndWatch) {
-    // console.log("START WATCHING");
     builder.watch();
   }
 }
@@ -241,6 +240,8 @@ class Builder {
       counts[key] = 0;
     });
 
+    this.describeActiveFilters();
+
     // Start the real processing
     const t0 = new Date();
     this.getLocaleRootFolders().forEach(filepath => {
@@ -311,6 +312,28 @@ class Builder {
       .on("add", onChangeOrAdd);
   }
 
+  describeActiveFilters() {
+    const filtersHuman = [];
+    if (this.options.locales.length) {
+      filtersHuman.push(`Locales: ${JSON.stringify(this.options.locales)}`);
+    } else if (this.options.notLocales.length) {
+      filtersHuman.push(
+        `Not locales: ${JSON.stringify(this.options.notLocales)}`
+      );
+    }
+    if (this.options.foldersearch) {
+      filtersHuman.push(
+        `Folders: ${JSON.stringify(this.options.foldersearch)}`
+      );
+    }
+    if (filtersHuman.length) {
+      console.log(
+        chalk.yellow(`Current filters:\n\t${filtersHuman.join("\n\t")}`)
+      );
+      console.log("\n");
+    }
+  }
+
   initSelfHash() {
     const contentRoot = path.resolve(__dirname, "..");
     const ssrRoot = path.resolve(__dirname, "..", "..", "ssr");
@@ -379,13 +402,7 @@ class Builder {
 
   summorizeResults(counts, took) {
     console.log("\n");
-    console.log(
-      chalk.green(
-        this.options.notLocales.length
-          ? `Summary of build (not locales=${this.options.notLocales}):`
-          : `Summary of build (locales=${this.options.locales}):`
-      )
-    );
+    console.log(chalk.green("Summary of build:"));
     const totalProcessed = counts[processing.PROCESSED];
     // const totalDocuments = Object.values(counts).reduce((a, b) => a + b);
     const rate = (1000 * totalProcessed) / took; // per second
@@ -476,9 +493,21 @@ class Builder {
   /** Return true if for any reason this folder should not be processed */
   excludeFolder(folder, localeFolder, files) {
     if (this.options.foldersearch.length) {
-      const foldername = folder.replace(localeFolder, "");
+      // The slice makes it so that `foldername` never starts with a '/'
+      // (or '\' on Windows).
+      const foldername = folder.replace(localeFolder, "").slice(1);
       if (
-        !this.options.foldersearch.some(search => foldername.includes(search))
+        !this.options.foldersearch.some(search => {
+          // The folder search can contain special characters.
+          // For example `^web` means `.startswith('web')`.
+          // For example `foo/bar/media$` means `.endswith('foo/bar/media$')`.
+          // anything else is plainly looking if the string is in the folder name.
+          if (search.startsWith("^")) {
+            return foldername.startsWith(search.slice(1));
+          }
+          console.log({ search, foldername });
+          return foldername.includes(search);
+        })
       ) {
         return true;
       }
