@@ -48,10 +48,10 @@ if (process.env.NODE_ENV === "development") {
     wrapper.appendChild(labelDocument);
 
     const builtFile = document.createElement("a");
-    builtFile.href = touched.documents[0].uri;
+    builtFile.href = touched.documentUri;
     builtFile.title = "Click to go to";
     builtFile.style["padding-left"] = "2px";
-    builtFile.textContent = touched.documents[0].uri;
+    builtFile.textContent = touched.documentUri;
     wrapper.appendChild(builtFile);
     document.body.appendChild(wrapper);
   }

@@ -88,6 +88,7 @@ cli
     "don't reuse existing _all-titles.json",
     cli.BOOL
   )
+  .option("--no-sitemaps", "don't generate all sitemap xml files", cli.BOOL)
   .option(
     "-s, --slugsearch <partofslug>",
     "filter by slug matches",
@@ -136,6 +137,12 @@ cli
     DEFAULT_DESTINATION
   )
   .action((args, options, logger) => {
+    // Because you can't have boolean options that default to 'true'
+    // we'll do this check manually.
+    if (!process.stdout.columns) {
+      // No TTY, definitely no progressbar
+      options.noProgressbar = true;
+    }
     options.destination = args.destination;
     if (options.startClean) {
       options.regenerateAllTitles = true;
