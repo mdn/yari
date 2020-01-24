@@ -703,7 +703,7 @@ class Builder {
     const { outfileJson, outfileHtml } = buildHtmlAndJsonFromDoc({
       doc,
       destinationDir,
-      buildHtml: true,
+      buildHtml: !this.options.buildJsonOnly,
       titles: this.allTitles
     });
     this._profile("buildHtmlAndJsonFromDoc");

@@ -123,6 +123,12 @@ cli
     cli.BOOL,
     false
   )
+  .option(
+    "--build-json-only",
+    "only generate the index.json and not the index.html",
+    cli.BOOL,
+    false
+  )
   .argument(
     "[destination]",
     "root folder to put built files into",
