@@ -14,7 +14,7 @@
     "@reach/router": "1.2.1",
     "chalk": "3.0.0",
     "cheerio": "1.0.0-rc.3",
-    "cross-env": "^6.0.3",
+    "cross-env": "^7.0.0",
     "dotenv": "8.2.0",
     "prismjs": "1.19.0",
     "react": "16.12.0",
