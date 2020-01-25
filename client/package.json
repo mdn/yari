@@ -6,7 +6,7 @@
   "main": "build/app.js",
   "dependencies": {
     "@reach/router": "1.2.1",
-    "cross-env": "^6.0.3",
+    "cross-env": "^7.0.0",
     "flexsearch": "0.6.30",
     "fuzzysearch": "1.0.3",
     "include-media": "1.4.9",
