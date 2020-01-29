@@ -13,6 +13,7 @@ const {
 const app = express();
 
 const STATIC_ROOT = path.join(__dirname, "../client/build");
+const CONTENT_ROOT = path.join(__dirname, "../content/files");
 
 // The client/build directory is won't exist at the very very first time
 // you start the server after a fresh git clone.
@@ -20,6 +21,40 @@ if (!fs.existsSync(STATIC_ROOT)) {
   fs.mkdirSync(STATIC_ROOT);
 }
 
+// A global where we stuff ALL redirects possible.
+const _allRedirects = {};
+
+// Return the redirect but if it can't be found, just return `undefined`
+function getRedirectUrl(uri) {
+  if (!Object.keys(_allRedirects).length) {
+    // They're all in 1 level deep from CONTENT_ROOT
+    fs.readdirSync(CONTENT_ROOT)
+      .map(n => path.join(CONTENT_ROOT, n))
+      .filter(filepath => fs.statSync(filepath).isDirectory())
+      .forEach(directory => {
+        fs.readdirSync(directory)
+          .filter(n => n === "_redirects.txt")
+          .map(n => path.join(directory, n))
+          .forEach(filepath => {
+            const content = fs.readFileSync(filepath, "utf8");
+            content.split(/\n/).forEach(line => {
+              if (line.trim().length && !line.trim().startsWith("#")) {
+                const [from, to] = line.split("\t");
+                // Express turns ALL URLs into lowercase. So we have to do
+                // this here too to have any chance matching.
+                _allRedirects[from.toLowerCase()] = to;
+              }
+            });
+          });
+      });
+  }
+  const basename = path.basename(uri);
+  const pathname = path.dirname(uri);
+  if (pathname in _allRedirects) {
+    return `${_allRedirects[pathname]}/${basename}`;
+  }
+  return null;
+}
 // Lowercase every request because every possible file we might have
 // on disk is always in lowercase.
 // This only helps when you're on a filesystem (e.g. Linux) that is case
@@ -96,7 +131,14 @@ app.get("/*", async (req, res) => {
       );
       res.sendFile(built[0].jsonFile);
     } else {
-      res.status(404).send("Page not found. Couldn't be generated.");
+      // Try looking through all the _redirects.txt files
+      const redirectUrl = getRedirectUrl(req.url);
+      console.log({ redirectUrl });
+      if (redirectUrl) {
+        res.redirect(301, redirectUrl);
+      } else {
+        res.status(404).send("Page not found. Couldn't be generated.");
+      }
     }
   } else {
     res.sendFile(path.join(STATIC_ROOT, "/index.html"));

@@ -202,11 +202,15 @@ class Importer {
   fetchAllContributors() {
     const { constraintsSQL, queryArgs } = this._getSQLConstraints({
       joinTable: "wiki_document",
-      includeDeleted: true
+      includeDeleted: true,
+      alias: "d"
     });
     let sql =
-      "SELECT document_id, creator_id FROM wiki_revision" + constraintsSQL;
-    sql += " ORDER BY created DESC ";
+      `SELECT r.document_id, r.creator_id FROM wiki_revision r
+      inner join wiki_document d on r.document_id = d.id
+      ` + constraintsSQL;
+    sql += " ORDER BY r.created DESC ";
+
     return new Promise((resolve, reject) => {
       console.log("Going to fetch ALL contributor *mappings*");
       this.connection.query(sql, queryArgs, (error, results) => {
@@ -356,9 +360,27 @@ class Importer {
   }
 
   getRedirectURL(html) {
+    /**
+     * Sometimes the HTML is like this:
+     *   'REDIRECT <a class="redirect" href="/docs/http://wiki.commonjs.org/wiki/C_API">http://wiki.commonjs.org/wiki/C_API</a>'
+     * and sometimes it's like this:
+     *   'REDIRECT <a class="redirect" href="/en-US/docs/Web/API/WebGL_API">WebGL</a>'
+     *
+     * So we need the "best of both worlds".
+     * */
     const $ = cheerio.load(html);
     for (const a of $("a[href].redirect").toArray()) {
-      const href = $(a).text();
+      const hrefHref = $(a).attr("href");
+      const hrefText = $(a).text();
+      let href;
+      if (
+        hrefHref.startsWith("/docs/http") ||
+        hrefHref.startsWith("/docs/en/http")
+      ) {
+        href = hrefText;
+      } else {
+        href = hrefHref;
+      }
       if (href.startsWith("https://developer.mozilla.org")) {
         return url.parse(href).pathname;
       } else if (href.startsWith("/") && !href.startsWith("//")) {

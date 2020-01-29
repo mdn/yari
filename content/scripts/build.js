@@ -18,6 +18,11 @@ const { buildHtmlAndJsonFromDoc } = require("ssr");
 const { packageBCD } = require("./resolve-bcd");
 const { MIN_GOOGLE_ANALYTICS_PAGEVIEWS, TOUCHFILE } = require("./constants");
 
+// XXX is this the best way??
+function isTTY() {
+  return !!process.stdout.columns;
+}
+
 /** Needs doc string */
 function cleanLocales(locales) {
   const clean = [];
@@ -189,36 +194,7 @@ class Builder {
     this.initSelfHash();
     this._profile("initSelfHash");
 
-    // First walk all the content and pick up all the titles.
-    // Note, no matter what locales you have picked in the filtering,
-    // *always* include 'en-US' because with that, it becomes possible
-    // to reference back to the English version for any locale.
-    // But first, see if we can use the title from the last build.
-    const allTitlesJsonFilepath = path.join(
-      path.dirname(__dirname),
-      "_all-titles.json"
-    );
-    if (
-      fs.existsSync(allTitlesJsonFilepath) &&
-      !this.options.regenerateAllTitles
-    ) {
-      this.allTitles = JSON.parse(
-        fs.readFileSync(allTitlesJsonFilepath, "utf8")
-      );
-    }
-    if (!Object.keys(this.allTitles).length) {
-      this.getLocaleRootFolders({ always: "en-us" }).forEach(filepath => {
-        walker(filepath, (folder, files) => {
-          if (files.includes("index.html") && files.includes("index.yaml")) {
-            this.processFolderTitle(folder);
-          }
-        });
-      });
-      fs.writeFileSync(
-        allTitlesJsonFilepath,
-        JSON.stringify(this.allTitles, null, 2)
-      );
-    }
+    this.ensureAllTitles();
 
     this.getLocaleRootFolders().forEach(folderpath => {
       this.prepareRoot(path.basename(folderpath));
@@ -313,6 +289,46 @@ class Builder {
     }
   }
 
+  ensureAllTitles() {
+    // First walk all the content and pick up all the titles.
+    // Note, no matter what locales you have picked in the filtering,
+    // *always* include 'en-US' because with that, it becomes possible
+    // to reference back to the English version for any locale.
+    // But first, see if we can use the title from the last build.
+    const allTitlesJsonFilepath = path.join(
+      path.dirname(__dirname),
+      "_all-titles.json"
+    );
+    if (
+      fs.existsSync(allTitlesJsonFilepath) &&
+      !this.options.regenerateAllTitles
+    ) {
+      this.allTitles = JSON.parse(
+        fs.readFileSync(allTitlesJsonFilepath, "utf8")
+      );
+    }
+    if (!Object.keys(this.allTitles).length) {
+      this.logger.info("Building a list of ALL titles and URIs...");
+      const t0 = new Date();
+      this.getLocaleRootFolders({ always: "en-us" }).forEach(filepath => {
+        walker(filepath, (folder, files) => {
+          if (files.includes("index.html") && files.includes("index.yaml")) {
+            this.processFolderTitle(folder);
+          }
+        });
+      });
+
+      fs.writeFileSync(
+        allTitlesJsonFilepath,
+        JSON.stringify(this.allTitles, null, 2)
+      );
+      const t1 = new Date();
+      this.logger.info(
+        `Building list of all titles took ${ppMilliseconds(t1 - t0)}ms`
+      );
+    }
+  }
+
   watch() {
     const { root } = this.options;
     console.log(chalk.yellow(`Setting up file watcher on ${root}`));
@@ -346,7 +362,9 @@ class Builder {
     sane(root, { watchman: true, glob: ["**/*.html", "**/*.yaml"] })
       .on("ready", () => {
         console.log(chalk.green(`File watcher set up on ${root}`));
-        console.log("Hit Ctrl-C to quit the watcher when ready.");
+        if (isTTY()) {
+          console.log("Hit Ctrl-C to quit the watcher when ready.");
+        }
       })
       .on("change", onChangeOrAdd)
       .on("add", onChangeOrAdd);

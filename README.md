@@ -9,7 +9,6 @@ These steps should get you started, locally, straight away:
     git clone --recursive https://github.com/mdn/stumptown-renderer.git
     cd stumptown-renderer
     yarn
-    yarn build
     yarn start
     open http://localhost:3000
 
