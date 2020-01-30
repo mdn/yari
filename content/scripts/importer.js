@@ -397,7 +397,10 @@ class ToDiskImporter extends Importer {
     if (this.options.startClean) {
       // Experimental new feature
       // https://nodejs.org/api/fs.html#fs_fs_rmdirsync_path_options
+      const label = `Delete all of ${this.options.root}`;
+      console.time(label);
       fs.rmdirSync(this.options.root, { recursive: true });
+      console.timeEnd(label);
     }
     fs.mkdirSync(this.options.root, { recursive: true });
   }
@@ -464,8 +467,8 @@ class ToDiskImporter extends Importer {
       const filePath = path.join(this.options.root, locale, "_redirects.txt");
       const writeStream = fs.createWriteStream(filePath);
       writeStream.write(`# FROM-URL\tTO-URL\n`);
-      pairs.forEach(([rightUrl, wrongUrl]) => {
-        writeStream.write(`${wrongUrl}\t${rightUrl}\n`);
+      pairs.forEach(([fromUrl, toUrl]) => {
+        writeStream.write(`${fromUrl}\t${toUrl}\n`);
       });
       writeStream.end();
       console.log(`Wrote all ${locale} redirects to ${filePath}`);

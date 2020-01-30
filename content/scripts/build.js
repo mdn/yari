@@ -333,14 +333,29 @@ class Builder {
     const { root } = this.options;
     console.log(chalk.yellow(`Setting up file watcher on ${root}`));
 
+    const lastChangedFiled = {};
+
     const onChangeOrAdd = (filepath, watchRoot) => {
+      if (filepath in lastChangedFiled) {
+        // If the filewatcher ran twice (in quick succession), we want to
+        // prevent it from doing stuff this second time.
+        const age = new Date().getTime() - lastChangedFiled[filepath];
+        if (age < 1000) {
+          // It triggered too soon again for the same file!
+          // This can happen if something like watchexec or watchman triggers
+          // twice.
+          this.logger.debug("Same file changed too recently.");
+        }
+      }
+      lastChangedFiled[filepath] = new Date().getTime();
       const locale = filepath.split(path.sep)[0];
       const localeFolder = path.join(watchRoot, locale);
       const fullFilepath = path.join(watchRoot, filepath);
       const folder = path.dirname(fullFilepath);
       const files = fs.readdirSync(folder);
-      this.logger.debug(`Change in ${folder}`);
+      this.logger.info(`Change in ${folder}`);
       if (!this.excludeFolder(folder, localeFolder, files)) {
+        this.logger.debug(`Change in ${folder} NOT excluded.`);
         const t0 = performance.now();
         const { result, file, doc } = this.processFolder(folder);
         const t1 = performance.now();
@@ -353,13 +368,18 @@ class Builder {
               : chalk.yellow(result)
           }: ${chalk.white(file)} ${chalk.grey(tookStr)}`
         );
-
-        triggerTouch(fullFilepath, doc, watchRoot);
+        if (result === processing.PROCESSED) {
+          triggerTouch(fullFilepath, doc, watchRoot);
+        }
       } else {
-        console.log("Excluded!");
+        this.logger.debug(`Change in ${folder} excluded!`);
       }
     };
-    sane(root, { watchman: true, glob: ["**/*.html", "**/*.yaml"] })
+    sane(root, {
+      watchman: true,
+      // watchexec: true,
+      glob: ["**/*.html", "**/*.yaml"]
+    })
       .on("ready", () => {
         console.log(chalk.green(`File watcher set up on ${root}`));
         if (isTTY()) {
