@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
+const childProcess = require("child_process");
+
 const { performance } = require("perf_hooks");
 
 const chalk = require("chalk");
@@ -17,6 +19,10 @@ const { buildHtmlAndJsonFromDoc } = require("ssr");
 
 const { packageBCD } = require("./resolve-bcd");
 const { MIN_GOOGLE_ANALYTICS_PAGEVIEWS, TOUCHFILE } = require("./constants");
+
+function isWatchmanSupported() {
+  return !childProcess.spawnSync("watchman").error;
+}
 
 // XXX is this the best way??
 function isTTY() {
@@ -91,7 +97,22 @@ async function runBuild(options, logger) {
       return builder.start();
     }
     if (options.watch || options.buildAndWatch) {
-      builder.watch();
+      const supported = isWatchmanSupported();
+      if (supported) {
+        logger.debug("Watchman supposedly supported.");
+        builder.watch();
+      } else {
+        // @Gregoor Here's where we'd need a nice banner
+        logger.warn(
+          chalk.red(
+            "\nWarning! You don't have 'watchman' installed.\n" +
+              "Without 'watchman' you can't monitor large directories for " +
+              "file changes.\n" +
+              "Go to https://facebook.github.io/watchman/docs/install.html\n" +
+              "\n"
+          )
+        );
+      }
     }
   }
 }

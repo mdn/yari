@@ -136,7 +136,7 @@ cli
     cli.STRING,
     DEFAULT_DESTINATION
   )
-  .action((args, options, logger) => {
+  .action(async (args, options, logger) => {
     // Because you can't have boolean options that default to 'true'
     // we'll do this check manually.
     if (!process.stdout.columns) {
