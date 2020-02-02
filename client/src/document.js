@@ -14,6 +14,7 @@ import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-t
 
 // Sub-components
 import { DocumentTranslations } from "./document-languages";
+import { EditThisPage } from "./document-editthispage";
 
 export class Document extends React.Component {
   state = {
@@ -95,6 +96,7 @@ export class Document extends React.Component {
           <div className="content">
             <RenderDocumentBody doc={doc} />
             <hr />
+            <EditThisPage source={doc.source} />
             {doc.contributors && (
               <Contributors contributors={doc.contributors} />
             )}

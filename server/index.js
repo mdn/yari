@@ -129,6 +129,7 @@ app.get("/*", async (req, res) => {
         },
         console
       );
+      console.log(`Successfully on-the-fly built ${built[0].jsonFile}`);
       res.sendFile(built[0].jsonFile);
     } else {
       // Try looking through all the _redirects.txt files

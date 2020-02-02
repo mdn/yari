@@ -10,6 +10,8 @@ const yaml = require("js-yaml");
 const sanitizeFilename = require("sanitize-filename");
 const csv = require("@fast-csv/parse");
 const sane = require("sane");
+// XXX does this work on Windows?
+const packageJson = require("../../package.json");
 
 require("dotenv").config();
 
@@ -19,6 +21,36 @@ const { buildHtmlAndJsonFromDoc } = require("ssr");
 
 const { packageBCD } = require("./resolve-bcd");
 const { MIN_GOOGLE_ANALYTICS_PAGEVIEWS, TOUCHFILE } = require("./constants");
+
+function getCurretGitHubBaseURL() {
+  return packageJson.repository;
+}
+
+// Module level global that gets set once and reused repeatedly
+let _currentGitBranch = null;
+function getCurrentGitBranch(fallback = "master") {
+  if (!_currentGitBranch) {
+    // XXX Fixme with what you'd get in the likes of TravisCI!
+    if (process.env.CI_CURRENT_BRANCH) {
+      _currentGitBranch = process.env.CI_CURRENT_BRANCH;
+    } else {
+      const spawned = childProcess.spawnSync("git", [
+        "branch",
+        "--show-current"
+      ]);
+      if (spawned.error) {
+        console.warn(
+          "Unable to run 'git branch' to find out name of the current branch. Error:",
+          spawned.error
+        );
+        return fallback;
+      } else {
+        return spawned.stdout.toString().trim();
+      }
+    }
+  }
+  return _currentGitBranch;
+}
 
 function isWatchmanSupported() {
   return !childProcess.spawnSync("watchman").error;
@@ -803,6 +835,8 @@ class Builder {
       doc.other_translations = metadata.other_translations;
     }
 
+    this.injectSource(doc, folder);
+
     this._profile("processFolder");
     this._profile("buildHtmlAndJsonFromDoc");
     const { outfileJson, outfileHtml } = buildHtmlAndJsonFromDoc({
@@ -837,6 +871,23 @@ class Builder {
     };
   }
 
+  injectSource(doc, folder) {
+    if (process.env.NODE_ENV === "development") {
+      // When in development mode, put the absolute path of the source
+      // of where the content comes from.
+      doc.source = {
+        folder: path.relative(this.options.root, folder),
+        absolute_folder: folder,
+        // XXX This is going to depend it being stumptown or not
+        content_file: path.join(folder, "index.html")
+      };
+    } else {
+      doc.source = {
+        github_url: this.getGitHubURL(folder)
+      };
+    }
+  }
+
   /** Similar to processFolder() but this time we're only interesting it
    * adding this document's uri and title to this.allTitles
    */
@@ -856,6 +907,20 @@ class Builder {
   renderHtml(rawHtml, metadata) {
     // XXX Ryan! This is where we need that sweet KumaScript action!
     throw new Error("under construction");
+  }
+
+  /**
+   * Return the full URL directly to the file in GitHub based on this folder.
+   *
+   *
+   * @param {String} folder - the current folder we're processing.
+   * @paraam {Bool} stumptown - source is from stumptown.
+   */
+  getGitHubURL(folder, stumptown = false) {
+    const gitUrl = getCurretGitHubBaseURL();
+    const branch = getCurrentGitBranch();
+    const relativePath = path.relative(this.options.root, folder);
+    return `${gitUrl}/blob/${branch}/content/files/${relativePath}`;
   }
 }
 

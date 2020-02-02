@@ -162,7 +162,13 @@ cli
       );
       options.foldersearch = newFoldersearch;
     }
-    return runBuild(options, logger);
+
+    try {
+      return await runBuild(options, logger);
+    } catch (ex) {
+      console.error(ex);
+      throw ex;
+    }
   });
 
 cli.parse(process.argv);
