@@ -12,6 +12,9 @@ import { LinkList, LinkLists } from "./ingredients/link-lists";
 import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 
+// Sub-components
+import { DocumentTranslations } from "./document-languages";
+
 export class Document extends React.Component {
   state = {
     doc: this.props.doc || null,
@@ -73,10 +76,16 @@ export class Document extends React.Component {
     if (!doc) {
       return null;
     }
+    const translations = [...(doc.other_translations || [])];
+    if (doc.parent) {
+      translations.unshift(doc.parent);
+    }
     return (
       <div>
         <h1 className="page-title">{doc.title}</h1>
-        {doc.parent && <AboutParentDocument parent={doc.parent} />}
+        {translations && translations.length && (
+          <DocumentTranslations translations={translations} />
+        )}
         <div className="main">
           <nav>{doc.parents && <Breadcrumbs parents={doc.parents} />}</nav>
 
@@ -94,18 +103,6 @@ export class Document extends React.Component {
       </div>
     );
   }
-}
-
-function AboutParentDocument({ parent }) {
-  const { slug, locale } = parent;
-  const uri = `/${locale}/docs/${slug}`;
-  return (
-    <p style={{ float: "right", fontSize: "80%" }}>
-      <Link to={uri}>
-        Read this document in <b>{locale}</b>
-      </Link>
-    </p>
-  );
 }
 
 function Breadcrumbs({ parents }) {

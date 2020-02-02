@@ -1,0 +1,25 @@
+.document-languages {
+  float: right;
+  font-size: 80%;
+}
+.document-languages .translations {
+  z-index: 10;
+  position: absolute;
+  background-color: white;
+  opacity: 0.95;
+}
+.document-languages .choices {
+  position: relative;
+}
+
+.document-languages .translations {
+  padding: 10px;
+  left: -100px;
+  width: 200px;
+}
+.document-languages .translations ul {
+  padding: 0;
+}
+.document-languages .translations li {
+  list-style-type: none;
+}

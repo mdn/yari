@@ -799,6 +799,9 @@ class Builder {
     doc.body = sections;
     doc.popularity = this.popularities[doc.mdn_url] || 0.0;
     doc.last_modified = metadata.modified;
+    if (metadata.other_translations) {
+      doc.other_translations = metadata.other_translations;
+    }
 
     this._profile("processFolder");
     this._profile("buildHtmlAndJsonFromDoc");

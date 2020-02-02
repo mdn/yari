@@ -10,7 +10,7 @@ const ProgressBar = require("ssr/progress-bar");
 
 const REDIRECT_HTML = "REDIRECT <a ";
 
-function runImporter(options, logger) {
+async function runImporter(options, logger) {
   const creds = url.parse(options.dbURL);
   const host = creds.host; // XXX should it be creds.hostname??
   const user = (creds.auth && creds.auth.split(":")[0]) || "";
@@ -37,15 +37,13 @@ function runImporter(options, logger) {
   });
 
   console.time("Time to fetch all contributors");
-  importer
-    .fetchAllContributors()
-    .then(() => {
-      console.timeEnd("Time to fetch all contributors");
-      importer.start();
-    })
-    .catch(err => {
-      throw err;
-    });
+  await importer.fetchAllContributors();
+  console.timeEnd("Time to fetch all contributors");
+  console.time("Time to fetch all translation relationships");
+  await importer.fetchAllTranslationRelationships();
+  console.timeEnd("Time to fetch all translation relationships");
+
+  importer.start();
 }
 
 /** The basic class that takes a connection and options, and a callback to
@@ -246,6 +244,42 @@ class Importer {
     });
   }
 
+  fetchAllTranslationRelationships() {
+    const { constraintsSQL, queryArgs } = this._getSQLConstraints({
+      // joinTable: "wiki_document",
+      // includeDeleted: true,
+      alias: "d"
+    });
+    let sql =
+      `SELECT d.id, d.parent_id, d.slug, d.locale FROM wiki_document d
+      ` + constraintsSQL;
+    sql += `
+      AND d.parent_id IS NOT NULL
+      ORDER BY d.locale
+    `;
+
+    return new Promise((resolve, reject) => {
+      console.log("Going to fetch ALL parents");
+      this.connection.query(sql, queryArgs, (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        const translations = {};
+        results.forEach(result => {
+          if (!(result.parent_id in translations)) {
+            translations[result.parent_id] = [];
+          }
+          translations[result.parent_id].push({
+            slug: result.slug,
+            locale: result.locale
+          });
+        });
+        this.allTranslations = translations;
+        resolve();
+      });
+    });
+  }
+
   _getSQLConstraints({
     joinTable = null,
     alias = null,
@@ -419,24 +453,42 @@ class ToDiskImporter extends Importer {
     fs.writeFileSync(htmlFile, `${doc.rendered_html}`);
 
     const metaFile = path.join(folder, "index.yaml");
-    const contributors = (this.allContributors[doc.id] || []).map(
-      userId => this.allUsernames[userId]
-    );
 
     const meta = {
       title: doc.title,
       mdn_url: absoluteUrl,
       slug,
       locale,
-      modified: doc.modified,
-      mdn_contributors: contributors
+      // XXX this one probably shouldn't be put here!
+      modified: doc.modified
     };
+
     if (doc.parent_slug && doc.parent_locale) {
       meta.parent = {
         slug: doc.parent_slug,
         locale: doc.parent_locale,
         modified: doc.parent_modified
       };
+    }
+
+    let otherTranslations = this.allTranslations[doc.id] || [];
+    if (
+      !otherTranslations.length &&
+      doc.parent_id &&
+      this.allTranslations[doc.parent_id]
+    ) {
+      // This document is a child and its parent has translations.
+      otherTranslations = this.allTranslations[doc.parent_id];
+    }
+    if (otherTranslations.length) {
+      meta.other_translations = otherTranslations;
+    }
+
+    const contributors = (this.allContributors[doc.id] || []).map(
+      userId => this.allUsernames[userId]
+    );
+    if (contributors.length) {
+      meta.mdn_contributors = contributors;
     }
     fs.writeFileSync(metaFile, yaml.safeDump(meta));
     // XXX At the moment, we're pretending we have the KS shim, and that means
