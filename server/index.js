@@ -134,7 +134,6 @@ app.get("/*", async (req, res) => {
     } else {
       // Try looking through all the _redirects.txt files
       const redirectUrl = getRedirectUrl(req.url);
-      console.log({ redirectUrl });
       if (redirectUrl) {
         res.redirect(301, redirectUrl);
       } else {
