@@ -31,21 +31,17 @@ const DEFAULT_FOLDER_SEARCHES = (process.env.BUILD_FOLDER_SEARCHES || "")
 
 const DEFAULT_SITEMAP_BASE_URL = "https://developer.mozilla.org";
 
-// If you're parsing the Google Analytics pageviews CSV file, you'll see
-// that there are a LOT of pages that only have tiny amount of pageviews.
-// Eliminating some of the really small counts we can save on some
-// processing time and memory.
-//
-// An analyzes of MDN as of November 2019 indicates that approximately...
-//   ~40% have [,10] pageviews
-//   ~8%  have (10,5] pageviews
-//   ~4%  have (5,3] pageviews
-//   ~40% have (1,0] pageviews   (ie. ~40% only have 1 pageview)
-//
-// Anything *smaller* than this number gets ignored.
-const MIN_GOOGLE_ANALYTICS_PAGEVIEWS = parseInt(
-  process.env.MIN_GOOGLE_ANALYTICS_PAGEVIEWS || "2"
+const DEFAULT_POPULARITIES_FILEPATH = path.join(
+  DEFAULT_ROOT,
+  "..",
+  "popularities.json"
 );
+
+// The Google Analytics pageviews CSV file parsed, sorted (most pageviews
+// first), and sliced to this number of URIs that goes into the JSON file.
+// If this number is too large the resulting JSON file gets too big and
+// will include very rarely used URIs.
+const MAX_GOOGLE_ANALYTICS_URIS = 20000;
 
 // The file to trigger a write too when being in watch mode
 const TOUCHFILE =
@@ -61,6 +57,7 @@ module.exports = {
   DEFAULT_BUILD_NOT_LOCALES,
   DEFAULT_SITEMAP_BASE_URL,
   DEFAULT_FOLDER_SEARCHES,
-  MIN_GOOGLE_ANALYTICS_PAGEVIEWS,
+  DEFAULT_POPULARITIES_FILEPATH,
+  MAX_GOOGLE_ANALYTICS_URIS,
   TOUCHFILE
 };

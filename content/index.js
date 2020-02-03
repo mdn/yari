@@ -4,6 +4,7 @@ const cli = require("caporal");
 
 const { runImporter } = require("./scripts/importer");
 const { runBuild } = require("./scripts/build");
+const { runMakePopularitiesFile } = require("./scripts/popularities");
 const {
   DEFAULT_ROOT,
   DEFAULT_DATABASE_URL,
@@ -12,7 +13,9 @@ const {
   DEFAULT_BUILD_LOCALES,
   DEFAULT_BUILD_NOT_LOCALES,
   DEFAULT_SITEMAP_BASE_URL,
-  DEFAULT_FOLDER_SEARCHES
+  DEFAULT_FOLDER_SEARCHES,
+  DEFAULT_POPULARITIES_FILEPATH,
+  MAX_GOOGLE_ANALYTICS_URIS
 } = require("./scripts/constants.js");
 
 cli
@@ -102,9 +105,10 @@ cli
     DEFAULT_FOLDER_SEARCHES
   )
   .option(
-    "--googleanalytics-pageviews-csv <path>",
-    "export from Google Analytics containing pageview counts",
-    cli.PATH
+    "--popularitiesfile <path>",
+    "JSON file that maps URIs to popularities",
+    cli.PATH,
+    DEFAULT_POPULARITIES_FILEPATH
   )
   .option(
     "--sitemap-base-url <url>",
@@ -136,7 +140,7 @@ cli
     cli.STRING,
     DEFAULT_DESTINATION
   )
-  .action(async (args, options, logger) => {
+  .action((args, options, logger) => {
     // Because you can't have boolean options that default to 'true'
     // we'll do this check manually.
     if (!process.stdout.columns) {
@@ -163,12 +167,27 @@ cli
       options.foldersearch = newFoldersearch;
     }
 
-    try {
-      return await runBuild(options, logger);
-    } catch (ex) {
-      console.error(ex);
-      throw ex;
-    }
+    return runBuild(options, logger);
+  })
+  .command(
+    "popularities",
+    "Convert a Google Analytics pageviews CSV into a popularities.json file"
+  )
+  .option(
+    "--outfile <path>",
+    "export from Google Analytics containing pageview counts",
+    cli.PATH,
+    DEFAULT_POPULARITIES_FILEPATH
+  )
+  .option(
+    "--max-uris <number>",
+    "export from Google Analytics containing pageview counts",
+    cli.INTEGER,
+    MAX_GOOGLE_ANALYTICS_URIS
+  )
+  .argument("csvfile", "Google Analytics pageviews CSV file", cli.PATH)
+  .action((args, options, logger) => {
+    return runMakePopularitiesFile(args.csvfile, options, logger);
   });
 
 cli.parse(process.argv);

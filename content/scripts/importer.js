@@ -460,7 +460,7 @@ class ToDiskImporter extends Importer {
       slug,
       locale,
       // XXX this one probably shouldn't be put here!
-      modified: doc.modified
+      modified: doc.modified.toISOString()
     };
 
     if (doc.parent_slug && doc.parent_locale) {

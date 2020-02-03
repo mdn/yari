@@ -8,7 +8,6 @@ const { performance } = require("perf_hooks");
 const chalk = require("chalk");
 const yaml = require("js-yaml");
 const sanitizeFilename = require("sanitize-filename");
-const csv = require("@fast-csv/parse");
 const sane = require("sane");
 // XXX does this work on Windows?
 const packageJson = require("../../package.json");
@@ -20,7 +19,7 @@ const ProgressBar = require("ssr/progress-bar");
 const { buildHtmlAndJsonFromDoc } = require("ssr");
 
 const { packageBCD } = require("./resolve-bcd");
-const { MIN_GOOGLE_ANALYTICS_PAGEVIEWS, TOUCHFILE } = require("./constants");
+const { TOUCHFILE } = require("./constants");
 
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
@@ -97,7 +96,7 @@ function triggerTouch(filepath, document, root) {
   fs.writeFileSync(TOUCHFILE, newContent);
 }
 
-async function runBuild(options, logger) {
+function runBuild(options, logger) {
   options.locales = cleanLocales(options.locales);
   options.notLocales = cleanLocales(options.notLocales);
 
@@ -108,20 +107,6 @@ async function runBuild(options, logger) {
     logger
   );
 
-  if (options.googleanalyticsPageviewsCsv) {
-    const t0 = performance.now();
-    const rowsParsed = await builder.initGoogleAnalyticsPageviewsCSV();
-    const t1 = performance.now();
-    console.log(
-      chalk.green(
-        `${rowsParsed.toLocaleString()} rows parsed. ${Object.keys(
-          builder.popularities
-        ).length.toLocaleString()} popularities found. Took ${ppMilliseconds(
-          t1 - t0
-        )}.`
-      )
-    );
-  }
   if (options.listLocales) {
     builder.listLocales();
   } else {
@@ -165,6 +150,7 @@ class Builder {
     this.logger = logger;
     this.selfHash = null;
     this.allTitles = {};
+    this.allPopularities = {};
 
     this.progressBar = !options.noProgressbar
       ? new ProgressBar({
@@ -172,7 +158,6 @@ class Builder {
         })
       : null;
 
-    this.popularities = {};
     this._profileMarks = {};
     this._currentProfile = {};
   }
@@ -286,6 +271,7 @@ class Builder {
       return allProcessed;
     } else {
       this.describeActiveFilters();
+      this.ensurePopularities();
 
       // To be able to make a progress bar we need to first count what we're
       // going to need to do.
@@ -361,6 +347,12 @@ class Builder {
       );
     }
     if (!Object.keys(this.allTitles).length) {
+      // If we're going to generate all titles, we need all popularities.
+      // Normally this gets run later in the build process, but in the
+      // case of a needing the titles first, make sure popularities are set.
+      if (!Object.keys(this.allPopularities).length) {
+        this.ensurePopularities();
+      }
       this.logger.info("Building a list of ALL titles and URIs...");
       const t0 = new Date();
       this.getLocaleRootFolders({ always: "en-us" }).forEach(filepath => {
@@ -377,7 +369,9 @@ class Builder {
       );
       const t1 = new Date();
       this.logger.info(
-        `Building list of all titles took ${ppMilliseconds(t1 - t0)}ms`
+        chalk.green(
+          `Building list of all titles took ${ppMilliseconds(t1 - t0)}ms`
+        )
       );
     }
   }
@@ -494,41 +488,23 @@ class Builder {
     fs.mkdirSync(folderpath, { recursive: true });
   }
 
-  initGoogleAnalyticsPageviewsCSV() {
-    return new Promise((resolve, reject) => {
-      const pageviews = {};
-      csv
-        .parseFile(this.options.googleanalyticsPageviewsCsv, {
-          headers: true
-        })
-        .on("error", error => console.error(error))
-        .on("data", row => {
-          const uri = row.Page;
-          const count = parseInt(row.Pageviews);
+  ensurePopularities() {
+    if (!Object.keys(this.allPopularities).length) {
+      const { popularitiesfile } = this.options;
+      if (popularitiesfile) {
+        this.allPopularities = JSON.parse(
+          fs.readFileSync(popularitiesfile, "utf8")
+        );
 
-          if (
-            count >= MIN_GOOGLE_ANALYTICS_PAGEVIEWS &&
-            uri.includes("/docs/") &&
-            !uri.includes("$") &&
-            !uri.includes("?")
-          ) {
-            pageviews[uri] = count;
-          }
-        })
-        .on("end", rowCount => {
-          const sumTotal = Object.values(pageviews).reduce((a, b) => a + b);
-          if (!sumTotal) {
-            reject(new Error("No pageviews found!"));
-          }
-          Object.entries(pageviews).forEach(([uri, count]) => {
-            // It just needs to be a floating point number.
-            // Multiply by 1000 to avoid complicated floating point rounding
-            // errors when this eventually gets serialized in JSON.
-            this.popularities[uri] = (1000 * count) / sumTotal;
-          });
-          resolve(rowCount);
-        });
-    });
+        this.logger.info(
+          chalk.magenta(
+            `Parsed ${Object.keys(
+              this.allPopularities
+            ).length.toLocaleString()} popularities.`
+          )
+        );
+      }
+    }
   }
 
   summorizeResults(counts, took) {
@@ -580,10 +556,10 @@ class Builder {
         // `$DESTINATION/sitemaps/$LOCALE/sitemap.xml`
 
         const sitemapXml = makeSitemapXML(
-          Object.entries(data).map(([uri, data]) => {
+          Object.entries(data).map(([uri, documentData]) => {
             return {
               loc: sitemapBaseUrl + uri,
-              lastmod: data.modified.split("T")[0]
+              lastmod: documentData.modified.split("T")[0]
             };
           })
         );
@@ -598,6 +574,10 @@ class Builder {
       // Dump a `titles.json` into each locale folder
       const titles = {};
       Object.entries(data).forEach(([uri, documentData]) => {
+        // This is the data that gets put into each 'titles.json` file which
+        // gets XHR downloaded by the React autocomplete search widget.
+        // So, it's important to only inject the absolutely minimum because
+        // network bytes matter.
         titles[uri] = {
           title: documentData.title,
           popularity: documentData.popularity
@@ -829,7 +809,7 @@ class Builder {
       doc.parent = metadata.parent;
     }
     doc.body = sections;
-    doc.popularity = this.popularities[doc.mdn_url] || 0.0;
+    doc.popularity = this.allPopularities[doc.mdn_url] || 0.0;
     doc.last_modified = metadata.modified;
     if (metadata.other_translations) {
       doc.other_translations = metadata.other_translations;
@@ -897,7 +877,7 @@ class Builder {
     );
     this.allTitles[metadata.mdn_url] = {
       title: metadata.title,
-      popularity: this.popularities[metadata.mdn_url] || 0.0,
+      popularity: this.allPopularities[metadata.mdn_url] || 0.0,
       locale: metadata.locale,
       file: folder,
       modified: metadata.modified
