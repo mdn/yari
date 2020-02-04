@@ -13,6 +13,7 @@ const {
 const app = express();
 
 const STATIC_ROOT = path.join(__dirname, "../client/build");
+const CONTENT_ALL_TITLES = path.join(__dirname, "../content/_all-titles.json");
 const CONTENT_ROOT = path.join(__dirname, "../content/files");
 
 // The client/build directory is won't exist at the very very first time
@@ -21,12 +22,32 @@ if (!fs.existsSync(STATIC_ROOT)) {
   fs.mkdirSync(STATIC_ROOT);
 }
 
+function getFolderFromURI(uri) {
+  // The file CONTENT_ALL_TITLES has a complete list of every *known* URI
+  // and what file, on disk, it corresponds to.
+  // Let's open this file dynamically each time because there's not much
+  // benefit in caching it once since it might change after this server
+  // has started.
+  const allUris = JSON.parse(fs.readFileSync(CONTENT_ALL_TITLES));
+  for (const key of Object.keys(allUris)) {
+    if (
+      key.toLowerCase().includes("Interface/nsIDOMChromeWindow".toLowerCase())
+    ) {
+      console.log({ uri, key });
+    }
+    if (key.toLowerCase() === uri.toLowerCase()) {
+      return allUris[key].file;
+    }
+  }
+  return null;
+}
+
 // A global where we stuff ALL redirects possible.
-const _allRedirects = {};
+const _allRedirects = new Map();
 
 // Return the redirect but if it can't be found, just return `undefined`
 function getRedirectUrl(uri) {
-  if (!Object.keys(_allRedirects).length) {
+  if (!_allRedirects.size) {
     // They're all in 1 level deep from CONTENT_ROOT
     fs.readdirSync(CONTENT_ROOT)
       .map(n => path.join(CONTENT_ROOT, n))
@@ -42,19 +63,15 @@ function getRedirectUrl(uri) {
                 const [from, to] = line.split("\t");
                 // Express turns ALL URLs into lowercase. So we have to do
                 // this here too to have any chance matching.
-                _allRedirects[from.toLowerCase()] = to;
+                _allRedirects.set(from.toLowerCase(), to);
               }
             });
           });
       });
   }
-  const basename = path.basename(uri);
-  const pathname = path.dirname(uri);
-  if (pathname in _allRedirects) {
-    return `${_allRedirects[pathname]}/${basename}`;
-  }
-  return null;
+  return _allRedirects.get(uri) || null;
 }
+
 // Lowercase every request because every possible file we might have
 // on disk is always in lowercase.
 // This only helps when you're on a filesystem (e.g. Linux) that is case
@@ -107,38 +124,46 @@ app.get("/*", async (req, res) => {
       res.status(404).send("Not yet");
     }
   } else if (req.url.endsWith(".json") && req.url.includes("/docs/")) {
-    const specificFolder = path.dirname(
-      path.join(DEFAULT_ROOT, req.url.slice(1).replace("/docs", ""))
-    );
+    const redirectUrl = getRedirectUrl(req.url.replace(/\.json$/, ""));
+    if (redirectUrl) {
+      return res.redirect(301, redirectUrl + ".json");
+    }
+
+    const specificFolder = getFolderFromURI(req.url.replace(/\.json$/, ""));
     // Check that it even makes sense!
-    if (
-      fs.existsSync(specificFolder) &&
-      fs.statSync(specificFolder).isDirectory()
-    ) {
-      const built = await runBuild(
-        {
-          root: DEFAULT_ROOT,
-          destination: DEFAULT_DESTINATION,
-          specificFolders: [specificFolder],
-          buildJsonOnly: true,
-          locales: [],
-          notLocales: [],
-          slugsearch: [],
-          noProgressbar: true,
-          noSitemaps: true
-        },
-        console
-      );
-      console.log(`Successfully on-the-fly built ${built[0].jsonFile}`);
-      res.sendFile(built[0].jsonFile);
-    } else {
-      // Try looking through all the _redirects.txt files
-      const redirectUrl = getRedirectUrl(req.url);
-      if (redirectUrl) {
-        res.redirect(301, redirectUrl);
-      } else {
-        res.status(404).send("Page not found. Couldn't be generated.");
+    if (specificFolder) {
+      try {
+        const built = await runBuild(
+          {
+            root: DEFAULT_ROOT,
+            destination: DEFAULT_DESTINATION,
+            specificFolders: [specificFolder],
+            buildJsonOnly: true,
+            locales: [],
+            notLocales: [],
+            slugsearch: [],
+            noProgressbar: true,
+            noSitemaps: true
+          },
+          console
+        );
+        console.log(`Successfully on-the-fly built ${built[0].jsonFile}`);
+        res.sendFile(built[0].jsonFile);
+      } catch (ex) {
+        console.log(
+          `Error trying to build ${specificFolder}: ${ex.toString()}`
+        );
+        res.status(500).send(ex.toString());
+
+        // How are you, in Express, supposed to throw errors?
+        // If you don't do this throw, you don't get the stack trace.
+        // But with it, you get the UnhandledPromiseRejectionWarning.
+        throw ex;
       }
+    } else {
+      res
+        .status(404)
+        .send("Page not found. Not a redirect or a real directory");
     }
   } else {
     res.sendFile(path.join(STATIC_ROOT, "/index.html"));

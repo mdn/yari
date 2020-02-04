@@ -690,6 +690,8 @@ class Builder {
   }
 
   processFolder(folder) {
+    console.log({ folder });
+
     const hasher = crypto.createHash("md5");
     const doc = {};
     const metadataRaw = fs.readFileSync(path.join(folder, "index.yaml"));
