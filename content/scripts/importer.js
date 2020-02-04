@@ -523,13 +523,13 @@ class ToDiskImporter extends Importer {
         writeStream.write(`${fromUrl}\t${toUrl}\n`);
       });
       writeStream.end();
-      console.log(`Wrote all ${locale} redirects to ${filePath}`);
+      this.logger.info(`Wrote all ${locale} redirects to ${filePath}`);
     });
 
-    console.log("# Redirects per locale");
+    this.logger.info("# Redirects per locale");
     countPerLocale.sort((a, b) => b[1] - a[1]);
     countPerLocale.forEach(([locale, count]) => {
-      console.log(`${locale.padEnd(10)}${count.toLocaleString()}`);
+      this.logger.info(`${locale.padEnd(10)}${count.toLocaleString()}`);
     });
   }
 }
