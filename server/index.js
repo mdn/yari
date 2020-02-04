@@ -30,11 +30,6 @@ function getFolderFromURI(uri) {
   // has started.
   const allUris = JSON.parse(fs.readFileSync(CONTENT_ALL_TITLES));
   for (const key of Object.keys(allUris)) {
-    if (
-      key.toLowerCase().includes("Interface/nsIDOMChromeWindow".toLowerCase())
-    ) {
-      console.log({ uri, key });
-    }
     if (key.toLowerCase() === uri.toLowerCase()) {
       return allUris[key].file;
     }
