@@ -119,12 +119,15 @@ app.get("/*", async (req, res) => {
       res.status(404).send("Not yet");
     }
   } else if (req.url.endsWith(".json") && req.url.includes("/docs/")) {
-    const redirectUrl = getRedirectUrl(req.url.replace(/\.json$/, ""));
+    const redirectUrl = getRedirectUrl(req.url.replace(/\/index\.json$/, ""));
     if (redirectUrl) {
       return res.redirect(301, redirectUrl + ".json");
     }
 
-    const specificFolder = getFolderFromURI(req.url.replace(/\.json$/, ""));
+    const specificFolder = getFolderFromURI(
+      req.url.replace(/\/index\.json$/, "")
+    );
+
     // Check that it even makes sense!
     if (specificFolder) {
       try {

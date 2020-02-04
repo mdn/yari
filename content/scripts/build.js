@@ -2,7 +2,6 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const childProcess = require("child_process");
-
 const { performance } = require("perf_hooks");
 
 const chalk = require("chalk");
@@ -158,7 +157,6 @@ class Builder {
         })
       : null;
 
-    this._profileMarks = {};
     this._currentProfile = {};
   }
   initProgressbar(total) {
@@ -173,39 +171,6 @@ class Builder {
 
   printProcessing(result, fileWritten) {
     !this.progressBar && this.logger.info(`${result}: ${fileWritten}`);
-  }
-
-  _profile(marker) {
-    if (marker in this._currentProfile) {
-      const took = performance.now() - this._currentProfile[marker];
-      if (!(marker in this._profileMarks)) {
-        this._profileMarks[marker] = [];
-      }
-      this._profileMarks[marker].push(took);
-      delete this._currentProfile[marker];
-    } else {
-      this._currentProfile[marker] = performance.now();
-    }
-  }
-
-  _dumpProfiles() {
-    let sumAll = 0.0;
-    Object.values(this._profileMarks).forEach(v => {
-      sumAll += v.reduce((a, b) => a + b);
-    });
-    Object.keys(this._profileMarks)
-      .sort()
-      .forEach(key => {
-        const times = this._profileMarks[key];
-        const sum = times.reduce((a, b) => a + b);
-        const mean = sum / times.length;
-        const p = (100 * sum) / sumAll;
-        console.log(
-          `${key.padEnd(25)}\tSUM: ${sum.toFixed(2)}ms\tMEAN: ${mean.toFixed(
-            2
-          )}ms\tSUM PORTION: ${p.toFixed(1)}% of total time`
-        );
-      });
   }
 
   // Just print what could be found and exit
@@ -228,9 +193,7 @@ class Builder {
   start() {
     // This prepares this.selfHash so that when we build files, we can
     // write down which "self hash" was used at the time.
-    this._profile("initSelfHash");
     this.initSelfHash();
-    this._profile("initSelfHash");
 
     this.ensureAllTitles();
 
@@ -342,17 +305,21 @@ class Builder {
       fs.existsSync(allTitlesJsonFilepath) &&
       !this.options.regenerateAllTitles
     ) {
+      // XXX maybe this should become a Map instance.
+      // Or, maybe we can memoize this so that when the server runs runBuild
+      // every time, it's only computed once.
       this.allTitles = JSON.parse(
         fs.readFileSync(allTitlesJsonFilepath, "utf8")
       );
     }
+    console.log("ENSURING allTitles", Object.keys(this.allTitles).length);
+
     if (!Object.keys(this.allTitles).length) {
       // If we're going to generate all titles, we need all popularities.
       // Normally this gets run later in the build process, but in the
       // case of a needing the titles first, make sure popularities are set.
-      if (!Object.keys(this.allPopularities).length) {
-        this.ensurePopularities();
-      }
+      this.ensurePopularities();
+
       this.logger.info("Building a list of ALL titles and URIs...");
       const t0 = new Date();
       this.getLocaleRootFolders({ always: "en-us" }).forEach(filepath => {
@@ -699,7 +666,6 @@ class Builder {
       return { result: processing.EXCLUDED, file: folder };
     }
 
-    this._profile("processFolder");
     // The destination is the same as source but with a different base.
     // If the file *came from* /path/to/files/en-US/foo/bar/
     // the final destination is /path/to/build/en-US/foo/bar/index.json
@@ -817,15 +783,12 @@ class Builder {
 
     this.injectSource(doc, folder);
 
-    this._profile("processFolder");
-    this._profile("buildHtmlAndJsonFromDoc");
     const { outfileJson, outfileHtml } = buildHtmlAndJsonFromDoc({
       doc,
       destinationDir,
       buildHtml: !this.options.buildJsonOnly,
       titles: this.allTitles
     });
-    this._profile("buildHtmlAndJsonFromDoc");
 
     // We're *assuming* that `metadata.mdn_url.toLowerCase()`
     // can be a valid folder name on the current filesystem. It if's all
