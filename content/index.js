@@ -85,6 +85,11 @@ cli
   .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
   .option("--start-clean", "delete anything created first", cli.BOOL)
   .option("--list-locales", "display all locales and their counts", cli.BOOL)
+  .option(
+    "--ensure-titles",
+    "make sure the _all-titles.json file is prepared",
+    cli.BOOL
+  )
   .option("--no-cache", "never benefit from the cache", cli.BOOL)
   .option(
     "--regenerate-all-titles",
@@ -148,7 +153,7 @@ cli
       options.noProgressbar = true;
     }
     options.destination = args.destination;
-    if (options.startClean) {
+    if (options.startClean || (options.noCache && options.ensureTitles)) {
       options.regenerateAllTitles = true;
     }
     // Sanity check the invariance of locales filtering.

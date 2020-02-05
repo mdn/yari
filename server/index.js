@@ -1,10 +1,11 @@
 const fs = require("fs");
 const path = require("path");
+const { performance } = require("perf_hooks");
 
 const express = require("express");
 const openEditor = require("open-editor");
 
-const { runBuild } = require("content/scripts/build");
+const { Builder } = require("content/scripts/build");
 const {
   DEFAULT_ROOT,
   DEFAULT_DESTINATION
@@ -91,16 +92,14 @@ app.get("/_open", (req, res) => {
   res.status(200).send(`Tried to open ${filepath} in ${process.env.EDITOR}`);
 });
 
-// Catch-all
-app.get("/*", async (req, res) => {
-  if (req.url.startsWith("/static")) {
-    res.status(404).send("Page not found");
-  } else if (req.url.endsWith("/titles.json")) {
-    await runBuild(
+// Module level memoization
+let builder = null;
+function getOrCreateBuilder() {
+  if (!builder) {
+    builder = new Builder(
       {
         root: DEFAULT_ROOT,
         destination: DEFAULT_DESTINATION,
-        generateAllTitles: true,
         noSitemaps: true,
         specificFolders: [],
         buildJsonOnly: true,
@@ -111,6 +110,20 @@ app.get("/*", async (req, res) => {
       },
       console
     );
+    builder.initSelfHash();
+    builder.ensureAllTitles();
+    builder.prepareRoots();
+  }
+  return builder;
+}
+
+// Catch-all
+app.get("/*", async (req, res) => {
+  if (req.url.startsWith("/static")) {
+    res.status(404).send("Page not found");
+  } else if (req.url.endsWith("/titles.json")) {
+    getOrCreateBuilder().dumpAllURLs();
+
     // Let's see, did that generate the desired titles.json file?
     if (fs.existsSync(path.join(STATIC_ROOT, req.url))) {
       // Try now!
@@ -130,33 +143,21 @@ app.get("/*", async (req, res) => {
 
     // Check that it even makes sense!
     if (specificFolder) {
+      const t0 = performance.now();
       try {
-        const built = await runBuild(
-          {
-            root: DEFAULT_ROOT,
-            destination: DEFAULT_DESTINATION,
-            specificFolders: [specificFolder],
-            buildJsonOnly: true,
-            locales: [],
-            notLocales: [],
-            slugsearch: [],
-            noProgressbar: true,
-            noSitemaps: true
-          },
-          console
+        const built = getOrCreateBuilder().start({
+          specificFolders: [specificFolder]
+        });
+        const t1 = performance.now();
+        console.log(
+          `Successfully on-the-fly built ${built[0].jsonFile} (${(
+            t1 - t0
+          ).toFixed()}ms)`
         );
-        console.log(`Successfully on-the-fly built ${built[0].jsonFile}`);
         res.sendFile(built[0].jsonFile);
       } catch (ex) {
-        console.log(
-          `Error trying to build ${specificFolder}: ${ex.toString()}`
-        );
+        console.error(ex);
         res.status(500).send(ex.toString());
-
-        // How are you, in Express, supposed to throw errors?
-        // If you don't do this throw, you don't get the stack trace.
-        // But with it, you get the UnhandledPromiseRejectionWarning.
-        throw ex;
       }
     } else {
       res

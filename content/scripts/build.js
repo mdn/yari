@@ -96,20 +96,17 @@ function triggerTouch(filepath, document, root) {
 }
 
 function runBuild(options, logger) {
-  options.locales = cleanLocales(options.locales);
-  options.notLocales = cleanLocales(options.notLocales);
-
-  const builder = new Builder(
-    options.root,
-    options.destination,
-    options,
-    logger
-  );
+  const builder = new Builder(options, logger);
 
   if (options.listLocales) {
-    builder.listLocales();
+    return builder.listLocales();
+  } else if (options.ensureTitles) {
+    return builder.ensureAllTitles();
   } else {
     if (!options.watch) {
+      builder.initSelfHash();
+      builder.ensureAllTitles();
+      builder.prepareRoots();
       return builder.start();
     }
     if (options.watch || options.buildAndWatch) {
@@ -142,22 +139,23 @@ const processing = Object.freeze({
 });
 
 class Builder {
-  constructor(root, destination, options, logger) {
-    this.root = root;
-    this.destination = destination;
+  constructor(options, logger) {
+    this.root = options.root;
+    this.destination = options.destination;
     this.options = options;
     this.logger = logger;
     this.selfHash = null;
     this.allTitles = {};
     this.allPopularities = {};
 
+    this.options.locales = cleanLocales(this.options.locales || []);
+    this.options.notLocales = cleanLocales(this.options.notLocales || []);
+
     this.progressBar = !options.noProgressbar
       ? new ProgressBar({
           includeMemory: true
         })
       : null;
-
-    this._currentProfile = {};
   }
   initProgressbar(total) {
     this.progressBar && this.progressBar.init(total);
@@ -175,7 +173,7 @@ class Builder {
 
   // Just print what could be found and exit
   listLocales() {
-    const t0 = new Date();
+    const t0 = performance.now();
     Object.entries(this.countLocaleFolders())
       .map(([locale, count]) => {
         return [count, locale];
@@ -186,30 +184,17 @@ class Builder {
           `${chalk.green(locale.padStart(6))}: ${count.toLocaleString()}`
         );
       });
-    const t1 = new Date();
+    const t1 = performance.now();
     console.log(chalk.yellow(`Took ${ppMilliseconds(t1 - t0)}`));
   }
 
-  start() {
+  start({ specificFolders = null } = {}) {
     // This prepares this.selfHash so that when we build files, we can
     // write down which "self hash" was used at the time.
-    this.initSelfHash();
-
-    this.ensureAllTitles();
-
-    this.getLocaleRootFolders().forEach(folderpath => {
-      this.prepareRoot(path.basename(folderpath));
-    });
-
-    if (this.options.generateAllTitles) {
-      return this.dumpAllURLs();
-    } else if (
-      this.options.specificFolders &&
-      this.options.specificFolders.length
-    ) {
+    if (specificFolders) {
       // Check that they all exist and are folders
       const allProcessed = [];
-      this.options.specificFolders.forEach(folder => {
+      specificFolders.forEach(folder => {
         if (!fs.existsSync(folder)) {
           throw new Error(`${folder} does not exist`);
         }
@@ -287,7 +272,6 @@ class Builder {
       this.summorizeResults(counts, t1 - t0);
 
       this.dumpAllURLs();
-      // this._dumpProfiles();
     }
   }
 
@@ -312,7 +296,6 @@ class Builder {
         fs.readFileSync(allTitlesJsonFilepath, "utf8")
       );
     }
-    console.log("ENSURING allTitles", Object.keys(this.allTitles).length);
 
     if (!Object.keys(this.allTitles).length) {
       // If we're going to generate all titles, we need all popularities.
@@ -322,7 +305,7 @@ class Builder {
 
       this.logger.info("Building a list of ALL titles and URIs...");
       const t0 = new Date();
-      this.getLocaleRootFolders({ always: "en-us" }).forEach(filepath => {
+      this.getLocaleRootFolders({ allLocales: true }).forEach(filepath => {
         walker(filepath, (folder, files) => {
           if (files.includes("index.html") && files.includes("index.yaml")) {
             this.processFolderTitle(folder);
@@ -374,7 +357,7 @@ class Builder {
         const { result, file, doc } = this.processFolder(folder);
         const t1 = performance.now();
 
-        const tookStr = `${(t1 - t0).toFixed(1)}ms`;
+        const tookStr = ppMilliseconds(t1 - t0);
         console.log(
           `${
             result === processing.PROCESSED
@@ -422,8 +405,14 @@ class Builder {
       console.log(
         chalk.yellow(`Current filters:\n\t${filtersHuman.join("\n\t")}`)
       );
-      console.log("\n");
+      console.log("");
     }
+  }
+
+  prepareRoots() {
+    this.getLocaleRootFolders().forEach(folderpath => {
+      this.prepareRoot(path.basename(folderpath));
+    });
   }
 
   initSelfHash() {
@@ -516,6 +505,7 @@ class Builder {
 
     const { sitemapBaseUrl } = this.options;
     const allSitemapsBuilt = [];
+    const allTitlesBuilt = [];
     Object.entries(byLocale).forEach(([locale, data]) => {
       if (!this.options.noSitemaps) {
         // For every locale, build a
@@ -553,8 +543,11 @@ class Builder {
 
       const titlesFilepath = path.join(this.destination, locale, "titles.json");
       fs.writeFileSync(titlesFilepath, JSON.stringify({ titles }, null, 2));
-      this.logger.debug(`Wrote ${titlesFilepath}`);
+      allTitlesBuilt.push(titlesFilepath);
     });
+    this.logger.info(
+      chalk.green(`${allTitlesBuilt.length} titles.json files created`)
+    );
 
     // Need to make the generic /sitemap.xml for all sitemaps
     if (!this.options.noSitemaps) {
@@ -599,15 +592,10 @@ class Builder {
 
   /**
    * Return an array of full paths for the locale folders.
-   * This function will take into account this.options.locales,
-   * this.options.notLocales and an optional specified 'always' list of
-   * locales.
-   * The 'always' parameter can be an array or a string.
+   * The 'allLocales' parameter means it overrides the
+   * 'options.locales` or `options.notLocales` values.
    */
-  getLocaleRootFolders({ always = null } = {}) {
-    if (always && !Array.isArray(always)) {
-      always = [always];
-    }
+  getLocaleRootFolders({ allLocales = false } = {}) {
     const { locales, notLocales } = this.options;
     const files = fs.readdirSync(this.root);
     const folders = [];
@@ -616,9 +604,9 @@ class Builder {
       const isDirectory = fs.statSync(filepath).isDirectory();
       if (
         isDirectory &&
-        (((!locales.length || locales.includes(name)) &&
-          (!notLocales || !notLocales.includes(name))) ||
-          (always && always.includes(name)))
+        (allLocales ||
+          ((!locales.length || locales.includes(name)) &&
+            (!notLocales || !notLocales.includes(name))))
       ) {
         folders.push(filepath);
       }
@@ -1172,5 +1160,6 @@ function simpleGlob(directory, extension) {
 }
 
 module.exports = {
-  runBuild
+  runBuild,
+  Builder
 };
