@@ -183,11 +183,6 @@ class Importer {
           // Make it much more than every 1 time or else it'll flicker.
           individualCount % 20 == 0 && this.tickProgressbar(individualCount);
 
-          if (!row.html.trim()) {
-            console.log({ html: row.html });
-            console.log(row);
-          }
-
           this.processRow(row, () => {});
           // // Pausing the connnection is useful if your processing involves I/O
           // connection.pause();
@@ -296,9 +291,9 @@ class Importer {
     const queryArgs = [];
     // Always exclude these. These are straggler documents that don't yet
     // have a revision
-    queryArgs.push(`${a}current_revision_id IS NOT NULL`);
+    extra.push(`${a}current_revision_id IS NOT NULL`);
     // There aren't many but these get excluded in kuma anyway.
-    queryArgs.push(`${a}html <> ''`);
+    extra.push(`${a}html <> ''`);
 
     if (!includeDeleted) {
       extra.push(`${a}deleted = false`);
