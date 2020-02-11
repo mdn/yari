@@ -43,7 +43,7 @@
     "nodemon": "^2.0.2",
     "serve": "11.3.0",
     "webpack": "4.41.6",
-    "webpack-cli": "3.3.10",
+    "webpack-cli": "3.3.11",
     "webpack-node-externals": "1.7.2"
   }
 }
