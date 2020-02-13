@@ -22,7 +22,12 @@ const DEFAULT_EXCLUDE_SLUG_PREFIXES = [
   "User_talk:",
   "Template_talk:",
   "Project_talk:",
-  "Experiment:"
+  "Experiment:",
+
+  // The following come from 'NOINDEX_SLUG_PREFIXES' in
+  // https://github.com/mdn/kuma/blob/master/kuma/wiki/constants.py#L668
+  // We'll have to manually maintain a match between that and this
+  "MDN/Doc_status"
 ];
 
 const DEFAULT_FOLDER_SEARCHES = (process.env.BUILD_FOLDER_SEARCHES || "")
