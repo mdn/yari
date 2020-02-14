@@ -46,6 +46,54 @@ async function runImporter(options, logger) {
   importer.start();
 }
 
+function buildAbsoluteUrl(locale, slug) {
+  return `/${locale}/docs/${slug}`;
+}
+
+const _legacyLocalesMap = {
+  // old-locale-code: new-locale-code
+  en: "en-US"
+};
+
+function plainLocalePrefixRedirect(fromUrl, toUrl) {
+  if (
+    fromUrl.startsWith("/docs/") &&
+    !toUrl.startsWith("/docs/") &&
+    toUrl.includes("/docs/")
+  ) {
+    const fromPath = fromUrl.split("/");
+    const toPath = toUrl.split("/");
+    if (
+      fromPath[1] === "docs" &&
+      toPath[2] === "docs" &&
+      (fromPath[2] === toPath[1] ||
+        (_legacyLocalesMap[fromPath[2]] &&
+          _legacyLocalesMap[fromPath[2]] === toPath[1]))
+    ) {
+      // Getting hotter!
+      if (equalArray(fromPath.splice(3), toPath.slice(3))) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+function equalArray(a, b) {
+  return a.length === b.length && a.every((x, i) => x === b[i]);
+}
+
+// function eq_(a, b, e) {
+//   var r = plainLocalePrefixRedirect(a, b);
+//   if (r !== e) {
+//     console.log({ from: a, to: b });
+//     throw new Error(`didn't work!`);
+//   }
+// }
+// eq_("/docs/en/Foo", "/en/docs/Foo", true);
+// eq_("/docs/en/Foo", "/en-US/docs/Foo", true);
+// eq_("/docs/en/Foo", "/en/docs/Foo/Bar", false);
+// eq_("/docs/en/FooBar", "/en-US/docs/Foo", false);
+
 /** The basic class that takes a connection and options, and a callback to
  * be called when all rows have been processed.
  * The only API function is the `start` method. Example:
@@ -83,8 +131,11 @@ class Importer {
           includeMemory: true
         })
       : null;
-    // Massive mutable for all directs
+
+    // Mutable for all redirects
     this.allRedirects = {};
+    this.improvedRedirects = 0;
+    this.messedupRedirects = 0;
   }
   initProgressbar(total) {
     this.progressBar && this.progressBar.init(total);
@@ -246,8 +297,6 @@ class Importer {
 
   fetchAllTranslationRelationships() {
     const { constraintsSQL, queryArgs } = this._getSQLConstraints({
-      // joinTable: "wiki_document",
-      // includeDeleted: true,
       alias: "d"
     });
     let sql =
@@ -326,11 +375,11 @@ class Importer {
   }
 
   processRow(row, resumeCallback) {
-    const absoluteUrl = `/${row.locale}/docs/${row.slug}`;
+    const absoluteUrl = buildAbsoluteUrl(row.locale, row.slug);
     if (row.is_redirect) {
       this.processRedirect(row, absoluteUrl);
     } else {
-      this.processDocument(row, absoluteUrl);
+      this.processDocument(row);
     }
     resumeCallback();
   }
@@ -348,7 +397,29 @@ class Importer {
             doc.html
           );
         }
-        this.allRedirects[absoluteUrl] = redirectUrl;
+        // A lot of documents redirect to the old URL style.
+        // E.g. `/en-us/docs/Foo` --> `/docs/en/Bar`.
+        // Fix those to it becomes `/en-us/docs/Foo` --> `/en-us/docs/Bar`
+        // But if the redirect was `/en-us/docs/Foo` --> `/docs/en/Foo`
+        // then just drop those.
+        if (redirectUrl.startsWith("/docs/")) {
+          const split = redirectUrl.split("/");
+          let locale = split[2];
+          if (locale === "en") {
+            locale = "en-US";
+          }
+          split.splice(2, 1);
+          split.splice(1, 0, locale);
+          const fixedRedirectUrl = split.join("/");
+          if (fixedRedirectUrl === absoluteUrl) {
+            this.messedupRedirects++;
+          } else {
+            this.improvedRedirects++;
+            this.allRedirects[absoluteUrl] = fixedRedirectUrl;
+          }
+        } else {
+          this.allRedirects[absoluteUrl] = redirectUrl;
+        }
       }
     } else {
       console.log(`${doc.locale}/${doc.slug} is direct but not REDIRECT_HTML`);
@@ -367,6 +438,17 @@ class Importer {
     // all rows have been received
     this.stopProgressbar();
     this.saveAllRedirects();
+
+    if (this.improvedRedirects) {
+      console.log(
+        `${this.improvedRedirects.toLocaleString()} redirects were corrected as they used the old URL style.`
+      );
+    }
+    if (this.messedupRedirects) {
+      console.log(
+        `${this.messedupRedirects} redirects were ignored because they would lead to an infinite redirect loop.`
+      );
+    }
 
     const endTime = Date.now();
     const secondsTook = (endTime - this.startTime) / 1000;
@@ -387,6 +469,7 @@ class Importer {
     console.log(
       `Roughly ${(individualCount / secondsTook).toFixed(1)} rows/sec.`
     );
+
     this.quitCallback();
   }
 
@@ -444,8 +527,8 @@ class ToDiskImporter extends Importer {
     fs.mkdirSync(this.options.root, { recursive: true });
   }
 
-  processDocument(doc, absoluteUrl) {
-    const { slug, locale } = doc;
+  processDocument(doc) {
+    const { slug, locale, title } = doc;
     const localeFolder = path.join(this.options.root, locale.toLowerCase());
 
     const folder = path.join(localeFolder, this.cleanSlugForFoldername(slug));
@@ -457,22 +540,22 @@ class ToDiskImporter extends Importer {
     // fs.writeFileSync(htmlFile, doc.html);
     fs.writeFileSync(htmlFile, `${doc.rendered_html}`);
 
+    const wikiHistoryFile = path.join(folder, "wikihistory.yaml");
     const metaFile = path.join(folder, "index.yaml");
 
     const meta = {
-      title: doc.title,
-      mdn_url: absoluteUrl,
+      title,
       slug,
-      locale,
-      // XXX this one probably shouldn't be put here!
+      locale
+    };
+    const wikiHistory = {
       modified: doc.modified.toISOString()
     };
 
     if (doc.parent_slug && doc.parent_locale) {
       meta.parent = {
         slug: doc.parent_slug,
-        locale: doc.parent_locale,
-        modified: doc.parent_modified
+        locale: doc.parent_locale
       };
     }
 
@@ -483,7 +566,7 @@ class ToDiskImporter extends Importer {
       this.allTranslations[doc.parent_id]
     ) {
       // This document is a child and its parent has translations.
-      otherTranslations = this.allTranslations[doc.parent_id];
+      // otherTranslations = this.allTranslations[doc.parent_id];
     }
     if (otherTranslations.length) {
       meta.other_translations = otherTranslations;
@@ -493,9 +576,16 @@ class ToDiskImporter extends Importer {
       userId => this.allUsernames[userId]
     );
     if (contributors.length) {
-      meta.mdn_contributors = contributors;
+      wikiHistory.mdn_contributors = contributors;
     }
     fs.writeFileSync(metaFile, yaml.safeDump(meta));
+
+    const genratedComment = `# Auto generated by Yari importer ${new Date().toISOString()}`;
+    fs.writeFileSync(
+      wikiHistoryFile,
+      `${genratedComment}\n${yaml.safeDump(wikiHistory)}\n`
+    );
+
     // XXX At the moment, we're pretending we have the KS shim, and that means
     // we'll have access to the raw (full of macros) string which'll be
     // useful to infer certain things such as how the {{Compat(...)}}
