@@ -120,6 +120,9 @@ function buildMDNUrl(locale, slug) {
  * If all is well, do nothing. Nothing is expected to return.
  */
 function validateLocale(locale) {
+  if (!locale) {
+    throw new Error("locale is empty");
+  }
   if (!VALID_LOCALES.has(locale)) {
     throw new Error(`'${locale}' is not a recognized locale`);
   }
@@ -131,6 +134,9 @@ function validateLocale(locale) {
  * If all is well, do nothing. Nothing is expected to return.
  */
 function validateSlug(slug) {
+  if (!slug) {
+    throw new Error("slug is empty");
+  }
   if (slug.startsWith("/")) {
     throw new Error(`Slug '${slug}' starts with a /`);
   }
