@@ -31,12 +31,12 @@
   ],
   "devDependencies": {
     "foreman": "3.0.1",
-    "husky": "3.1.0",
+    "husky": "4.2.3",
     "prettier": "1.19.1",
     "pretty-quick": "2.0.1"
   },
   "dependencies": {
-    "cross-env": "^6.0.3"
+    "cross-env": "^7.0.0"
   },
   "resolutions": {
     "braces": ">=2.3.1",
