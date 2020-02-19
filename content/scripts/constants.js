@@ -54,6 +54,44 @@ const TOUCHFILE =
   process.env.TOUCHFILE ||
   path.join(__dirname, "..", "..", "client", "src", "touchthis.js");
 
+// A set of every possible locale we accept content to be in.
+const VALID_LOCALES = new Set([
+  "ar",
+  "bg",
+  "bm",
+  "bn",
+  "ca",
+  "de",
+  "el",
+  "en-US",
+  "es",
+  "fa",
+  "fi",
+  "fr",
+  "he",
+  "hi-IN",
+  "hu",
+  "id",
+  "it",
+  "ja",
+  "kab",
+  "ko",
+  "ms",
+  "my",
+  "nl",
+  "pl",
+  "pt-BR",
+  "pt-PT",
+  "ru",
+  "sv-SE",
+  "th",
+  "tr",
+  "uk",
+  "vi",
+  "zh-CN",
+  "zh-TW"
+]);
+
 module.exports = {
   DEFAULT_ROOT,
   DEFAULT_DESTINATION,
@@ -65,5 +103,6 @@ module.exports = {
   DEFAULT_FOLDER_SEARCHES,
   DEFAULT_POPULARITIES_FILEPATH,
   MAX_GOOGLE_ANALYTICS_URIS,
-  TOUCHFILE
+  TOUCHFILE,
+  VALID_LOCALES
 };

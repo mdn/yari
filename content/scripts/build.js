@@ -18,7 +18,7 @@ const ProgressBar = require("ssr/progress-bar");
 const { buildHtmlAndJsonFromDoc } = require("ssr");
 
 const { packageBCD } = require("./resolve-bcd");
-const { TOUCHFILE } = require("./constants");
+const { TOUCHFILE, VALID_LOCALES } = require("./constants");
 
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
@@ -59,8 +59,15 @@ function isTTY() {
   return !!process.stdout.columns;
 }
 
-/** Needs doc string */
+/** Given a array of locales, return it "cleaned up".
+ * For example, they should always be lowercase and whitespace stripped.
+ * and if they locale (case INsensitively) is not in VALID_LOCALES it
+ * should throw an error.
+ */
 function cleanLocales(locales) {
+  const validLocalesLower = new Set(
+    [...VALID_LOCALES].map(x => x.toLowerCase())
+  );
   const clean = [];
   for (const locale of locales) {
     // The user *might* type locales as a comma separated strings.
@@ -74,7 +81,14 @@ function cleanLocales(locales) {
       clean.push(locale.toLowerCase());
     }
   }
-  return clean.filter(x => x);
+  return clean.filter(x => {
+    if (x) {
+      if (!validLocalesLower.has(x)) {
+        throw new Error(`'${x}' is not a valid locale (see VALID_LOCALES)`);
+      }
+    }
+    return x;
+  });
 }
 
 /** Needs doc string */
@@ -93,6 +107,39 @@ function triggerTouch(filepath, document, root) {
   newContent += `const touched = { documentUri, changedFile, hasEDITOR };\n`;
   newContent += "export default touched;";
   fs.writeFileSync(TOUCHFILE, newContent);
+}
+
+/** Needs doc string */
+function buildMDNUrl(locale, slug) {
+  return `/${locale}/docs/${slug}`;
+}
+
+/** Throw an error if the locale in insane.
+ * This helps breaking the build if someone has put in faulty data into
+ * the content (metadata file).
+ * If all is well, do nothing. Nothing is expected to return.
+ */
+function validateLocale(locale) {
+  if (!VALID_LOCALES.has(locale)) {
+    throw new Error(`'${locale}' is not a recognized locale`);
+  }
+}
+
+/** Throw an error if the slug is insane.
+ * This helps breaking the build if someone has put in faulty data into
+ * the content (metadata file).
+ * If all is well, do nothing. Nothing is expected to return.
+ */
+function validateSlug(slug) {
+  if (slug.startsWith("/")) {
+    throw new Error(`Slug '${slug}' starts with a /`);
+  }
+  if (slug.endsWith("/")) {
+    throw new Error(`Slug '${slug}' ends with a /`);
+  }
+  if (slug.includes("//")) {
+    throw new Error(`Slug '${slug}' contains a double /`);
+  }
 }
 
 function runBuild(options, logger) {
@@ -658,9 +705,21 @@ class Builder {
     // If the file *came from* /path/to/files/en-US/foo/bar/
     // the final destination is /path/to/build/en-US/foo/bar/index.json
 
+    // This is arguably linting of the content. We're checking that
+    // the locale and slug are sane. We're doing this during build,
+    // which means that to lint you have to actually try to build.
+    // We might want to reconsider this at some point in the future.
+    // For example, it might be a nice optimization to execute linting
+    // separately in CI so you don't have to wait for a complete build
+    // and thus you could "break the CI build" sooner for earlier feedback.
+    validateLocale(metadata.locale);
+    validateSlug(metadata.slug);
+
+    const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
+
     const destinationDirRaw = path.join(
       this.destination,
-      metadata.mdn_url.toLowerCase()
+      mdn_url.toLowerCase()
     );
     const destinationDir = destinationDirRaw
       .split(path.sep)
@@ -758,7 +817,7 @@ class Builder {
     }
 
     doc.title = metadata.title;
-    doc.mdn_url = metadata.mdn_url;
+    doc.mdn_url = mdn_url;
     if (metadata.parent) {
       doc.parent = metadata.parent;
     }
