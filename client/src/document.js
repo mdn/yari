@@ -15,6 +15,7 @@ import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-t
 // Sub-components
 import { DocumentTranslations } from "./document-languages";
 import { EditThisPage } from "./document-editthispage";
+import { DocumentSpy } from "./document-spy";
 
 export class Document extends React.Component {
   state = {
@@ -39,8 +40,8 @@ export class Document extends React.Component {
     }
   }
 
-  fetchDocument = () => {
-    this.setState({ loading: true }, async () => {
+  fetchDocument = (loading = true) => {
+    this.setState({ loading }, async () => {
       let url = document.location.pathname;
       if (!url.endsWith("/")) url += "/";
       url += "index.json";
@@ -102,6 +103,12 @@ export class Document extends React.Component {
             )}
           </div>
         </div>
+        {process.env.NODE_ENV === "development" && (
+          <DocumentSpy
+            location={this.props.location}
+            fetchDocument={this.fetchDocument}
+          />
+        )}
       </div>
     );
   }

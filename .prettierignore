@@ -17,4 +17,3 @@ Procfile
 
 # Mist files to ignore
 /client/src/serviceWorker.js
-client/src/touchthis.js

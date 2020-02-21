@@ -16,6 +16,7 @@
     "mdn-browser-compat-data": "1.0.3",
     "mysql": "2.17.1",
     "sane": "4.1.0",
-    "sanitize-filename": "^1.6.3"
+    "sanitize-filename": "^1.6.3",
+    "ws": "7.2.1"
   }
 }
