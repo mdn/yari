@@ -145,15 +145,26 @@ function SidebarLeaflets({ node }) {
           if (isActive && !hasActiveChild) {
             hasActiveChild = true;
           }
-          return (
-            <li key={childNode.uri} className={isActive ? "active" : undefined}>
-              <Link to={childNode.uri}>{childNode.title}</Link>
-            </li>
-          );
+          if (childNode.content) {
+            return (
+              <li key={childNode.title}>
+                <SidebarLeaflets node={childNode} />
+              </li>
+            );
+          } else {
+            return (
+              <li
+                key={childNode.uri}
+                className={isActive ? "active" : undefined}
+              >
+                <Link to={childNode.uri}>{childNode.title}</Link>
+              </li>
+            );
+          }
         });
 
         return (
-          <details open={!!hasActiveChild}>
+          <details open={true}>
             <summary>{node.title}</summary>
             <ol>{listItems}</ol>
           </details>
@@ -220,6 +231,7 @@ function RenderDocumentBody({ doc }) {
       console.warn("Don't know how to deal with info_box!");
       return null;
     } else if (
+      section.type === "class_constructor" ||
       section.type === "static_methods" ||
       section.type === "instance_methods"
     ) {
