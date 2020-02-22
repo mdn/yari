@@ -100,77 +100,87 @@ function RenderSideBar({ doc }) {
     return null;
   }
   return doc.related_content.map(node => (
-    <SidebarLeaf
-      key={node.title}
-      depth={0}
-      title={node.title}
-      content={node.content || []}
-    />
+    <SidebarLeaf key={node.title} parent={node} />
   ));
 }
 
-function SidebarLeaf({ title, content }) {
-  const titleNode = <h3>{title}</h3>;
+function SidebarLeaf({ parent }) {
+  const titleNode = <h3>{parent.title}</h3>;
   return (
-    <div>
-      {titleNode}
-      <ul>
-        {content.map(node => {
-          if (node.content) {
-            return (
-              <li key={node.title}>
-                <SidebarLeaflets node={node} />
-              </li>
-            );
-          } else {
-            return (
-              <li key={node.uri}>
-                <Link to={node.uri}>{node.title}</Link>
-              </li>
-            );
+    <Location>
+      {({ location }) => {
+        function setOpenNodes(node, pathname) {
+          if (node.uri === pathname) {
+            node.open = true;
+            node.isActive = true;
+            return true;
           }
-        })}
-      </ul>
-    </div>
+          if (node.content) {
+            for (const child of node.content) {
+              if (setOpenNodes(child, pathname)) {
+                node.open = true;
+                return true;
+              }
+            }
+          }
+          return false;
+        }
+        setOpenNodes(parent, location.pathname);
+
+        return (
+          <div>
+            {titleNode}
+            <ul>
+              {parent.content.map(node => {
+                if (node.content) {
+                  return (
+                    <li key={node.title}>
+                      <SidebarLeaflets node={node} />
+                    </li>
+                  );
+                } else {
+                  return (
+                    <li key={node.uri}>
+                      <Link to={node.uri}>{node.title}</Link>
+                    </li>
+                  );
+                }
+              })}
+            </ul>
+          </div>
+        );
+      }}
+    </Location>
   );
 }
 
 function SidebarLeaflets({ node }) {
-  return (
-    <Location>
-      {({ location }) => {
-        let hasActiveChild = false;
-        const listItems = node.content.map(childNode => {
-          const isActive = childNode.uri === location.pathname;
-          if (isActive && !hasActiveChild) {
-            hasActiveChild = true;
-          }
-          if (childNode.content) {
-            return (
-              <li key={childNode.title}>
-                <SidebarLeaflets node={childNode} />
-              </li>
-            );
-          } else {
-            return (
-              <li
-                key={childNode.uri}
-                className={isActive ? "active" : undefined}
-              >
-                <Link to={childNode.uri}>{childNode.title}</Link>
-              </li>
-            );
-          }
-        });
+  const listItems = node.content.map(childNode => {
+    if (childNode.content) {
+      return (
+        <li key={childNode.title}>
+          <SidebarLeaflets node={childNode} />
+        </li>
+      );
+    } else {
+      return (
+        <li
+          key={childNode.uri}
+          className={childNode.isActive ? "active" : undefined}
+        >
+          <Link to={childNode.uri}>{childNode.title}</Link>
+        </li>
+      );
+    }
+  });
 
-        return (
-          <details open={true}>
-            <summary>{node.title}</summary>
-            <ol>{listItems}</ol>
-          </details>
-        );
-      }}
-    </Location>
+  return (
+    <details open={node.open}>
+      <summary>
+        {node.uri ? <a href={node.uri}> {node.title}</a> : node.title}
+      </summary>
+      <ol>{listItems}</ol>
+    </details>
   );
 }
 
