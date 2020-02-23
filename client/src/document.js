@@ -109,6 +109,9 @@ function SidebarLeaf({ parent }) {
   return (
     <Location>
       {({ location }) => {
+        // walk through the tree, annotating its nodes:
+        // * `isActive` if a node contains the link to the current page
+        // * `open` if a node is on the path to the `isActive` node
         function setOpenNodes(node, pathname) {
           if (node.uri === pathname) {
             node.open = true;
