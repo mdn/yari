@@ -13,9 +13,6 @@
     "build:stumptown": "cd ${STUMPTOWN_CONTENT_ROOT:-stumptown} && npm run build-json",
     "build:client": "yarn workspace client build",
     "build:ssr": "yarn workspace ssr build",
-    "#build:ssr": "yarn workspace ssr build && node cli ssr --build-html",
-    "#build": "yarn run build:stumptown && yarn run build:client && yarn run build:ssr",
-    "#deployment-build": "cross-env CLI_BUILD_HTML=true yarn build",
     "end-to-end-test": "node scripts/end-to-end-test.js",
     "clean": "rm -fr client/build && rm -fr ssr/dist && rm -fr content/_all-titles.json",
     "prebuild": "yarn build:ssr && yarn build:client",
@@ -23,7 +20,6 @@
   },
   "private": true,
   "workspaces": [
-    "cli",
     "client",
     "server",
     "ssr",

@@ -15,11 +15,11 @@ const packageJson = require("../../package.json");
 require("dotenv").config();
 
 const cheerio = require("./monkeypatched-cheerio");
-const ProgressBar = require("ssr/progress-bar");
+const ProgressBar = require("./progress-bar");
 const { buildHtmlAndJsonFromDoc } = require("ssr");
 
 const { packageBCD } = require("./resolve-bcd");
-const { TOUCHFILE, VALID_LOCALES } = require("./constants");
+const { VALID_LOCALES } = require("./constants");
 
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
@@ -616,7 +616,9 @@ class Builder {
         };
       });
 
-      const titlesFilepath = path.join(this.destination, locale, "titles.json");
+      const localeFolder = path.join(this.destination, locale);
+      fs.mkdirSync(localeFolder, { recursive: true });
+      const titlesFilepath = path.join(localeFolder, "titles.json");
       fs.writeFileSync(titlesFilepath, JSON.stringify({ titles }, null, 2));
       allTitlesBuilt.push(titlesFilepath);
     });
@@ -735,7 +737,6 @@ class Builder {
       const wikiMetadata = yaml.safeLoad(wikiMetadataRaw);
       metadata.modified = wikiMetadata.modified;
     }
-    console.log(metadata);
 
     // The destination is the same as source but with a different base.
     // If the file *came from* /path/to/files/en-US/foo/bar/

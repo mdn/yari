@@ -6,7 +6,7 @@ const cheerio = require("cheerio");
 const sanitizeFilename = require("sanitize-filename");
 const yaml = require("js-yaml");
 
-const ProgressBar = require("ssr/progress-bar");
+const ProgressBar = require("./progress-bar");
 
 const REDIRECT_HTML = "REDIRECT <a ";
 

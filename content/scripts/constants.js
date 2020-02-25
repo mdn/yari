@@ -49,11 +49,6 @@ const DEFAULT_POPULARITIES_FILEPATH = path.join(
 // will include very rarely used URIs.
 const MAX_GOOGLE_ANALYTICS_URIS = 20000;
 
-// The file to trigger a write too when being in watch mode
-const TOUCHFILE =
-  process.env.TOUCHFILE ||
-  path.join(__dirname, "..", "..", "client", "src", "touchthis.js");
-
 // A set of every possible locale we accept content to be in.
 const VALID_LOCALES = new Set([
   "ar",
@@ -103,6 +98,5 @@ module.exports = {
   DEFAULT_FOLDER_SEARCHES,
   DEFAULT_POPULARITIES_FILEPATH,
   MAX_GOOGLE_ANALYTICS_URIS,
-  TOUCHFILE,
   VALID_LOCALES
 };
