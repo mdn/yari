@@ -380,9 +380,8 @@ class Builder {
       // Normally this gets run later in the build process, but in the
       // case of a needing the titles first, make sure popularities are set.
       this.ensurePopularities();
-
       this.logger.info("Building a list of ALL titles and URIs...");
-      const t0 = new Date();
+      let t0 = new Date();
       this.getLocaleRootFolders({ allLocales: true }).forEach(filepath => {
         walker(filepath, (folder, files) => {
           if (files.includes("index.html") && files.includes("index.yaml")) {
@@ -390,15 +389,14 @@ class Builder {
           }
         });
       });
-
       fs.writeFileSync(
         allTitlesJsonFilepath,
         JSON.stringify(this.allTitles, null, 2)
       );
-      const t1 = new Date();
+      let t1 = new Date();
       this.logger.info(
         chalk.green(
-          `Building list of all titles took ${ppMilliseconds(t1 - t0)}ms`
+          `Building list of all titles took ${ppMilliseconds(t1 - t0)}`
         )
       );
     }
@@ -917,7 +915,9 @@ class Builder {
     const metadata = yaml.safeLoad(
       fs.readFileSync(path.join(folder, "index.yaml"))
     );
-    this.allTitles[metadata.mdn_url] = {
+    const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
+    this.allTitles[mdn_url] = {
+      mdn_url,
       title: metadata.title,
       popularity: this.allPopularities[metadata.mdn_url] || 0.0,
       locale: metadata.locale,
