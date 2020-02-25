@@ -70,26 +70,6 @@ function fixRelatedContent(document) {
  * It only gets added to the document there are actual parents.
  */
 function addBreadcrumbData(uri, document, allTitles) {
-  // XXX This function is flawed!
-  // It assumes that the "parent" is the document's slug minus the last
-  // portion when split by '/'. E.g. it assumes that the parent URL
-  // of /en-US/docs/Foo/Bar/bim is /en-US/docs/Foo/Bar but that is not
-  // entirely right.
-  // For example, in en-US, Ryan discovered, in
-  // https://github.com/mdn/kuma/issues/6441#issuecomment-589402410
-  // that there are at least 4 documents where you can't reply purely
-  // on the path.
-  // A more accurate solution is to rely on the document's metadata.
-  // In particular the `parent_topic` piece which we don't have at the moment.
-  // We have the `parent` but that's a localization thing.
-  // So, it should be something like this:
-  //
-  //   while doc.parent_topic:
-  //       parents.push(allTitles[doc.parent_top.slug])
-  //       doc = doc.parent_topic
-  //
-  // Worth sanity checking and testing this.
-
   const parents = [];
   let split = uri.split("/");
   let parentUri;
