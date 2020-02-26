@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "strictBindCallApply": true,
+    "target": "ES2019"
+  }
+}
