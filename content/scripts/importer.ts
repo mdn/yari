@@ -60,7 +60,7 @@ function getSQLConstraints(
   };
 }
 
-async function fetchAllContributors(query, options) {
+async function queryContributors(query, options) {
   const [contributors, usernames] = await Promise.all([
     (async () => {
       console.log("Going to fetch ALL contributor *mappings*");
@@ -107,7 +107,7 @@ async function fetchAllContributors(query, options) {
   return { contributors, usernames };
 }
 
-async function fetchAllTranslationRelationships(
+async function queryTranslationRelationships(
   query,
   options
 ): Promise<{ [id: string]: string }> {
@@ -457,10 +457,10 @@ export default async function runImporter(options) {
   const query = promisify(pool.query).bind(pool);
   const [{ usernames, contributors }, translations] = await Promise.all([
     withTimer("Time to fetch all contributors", () =>
-      fetchAllContributors(query, options)
+      queryContributors(query, options)
     ),
     withTimer("Time to fetch all translation relationships", () =>
-      fetchAllTranslationRelationships(query, options)
+      queryTranslationRelationships(query, options)
     )
   ]);
 
