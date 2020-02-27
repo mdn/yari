@@ -11,6 +11,8 @@ import * as ProgressBar from "ssr/progress-bar";
 
 const sanitizeFilename = require("sanitize-filename");
 
+const MAX_OPEN_FILES = 256;
+
 function getSQLConstraints(
   {
     joinTable = null,
@@ -209,7 +211,7 @@ async function queryDocuments(
     totalCount,
     stream: pool
       .query(documentsSQL, queryArgs)
-      .stream({ highWaterMark: 100 })
+      .stream({ highWaterMark: MAX_OPEN_FILES })
       // node MySQL uses custom streams which are not iterable. Piping it through a native stream fixes that
       .pipe(new stream.PassThrough({ objectMode: true }))
   };
@@ -488,7 +490,7 @@ export default async function runImporter(options) {
   for await (const row of documents.stream) {
     processedDocumentsCount++;
 
-    while (pendingDocuments > 50) {
+    while (pendingDocuments > MAX_OPEN_FILES) {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
 
