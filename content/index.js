@@ -7,6 +7,7 @@ const { runBuild } = require("./scripts/build");
 const { runMakePopularitiesFile } = require("./scripts/popularities");
 const {
   DEFAULT_ROOT,
+  DEFAULT_ARCHIVE_ROOT,
   DEFAULT_DATABASE_URL,
   DEFAULT_DESTINATION,
   DEFAULT_EXCLUDE_SLUG_PREFIXES,
@@ -31,9 +32,15 @@ cli
   .command("import", "turns Kuma Wiki documents, from mysql, to files")
   .option(
     "-r, --root <path>",
-    "root of where to save file",
+    "root of where to save active content files",
     cli.PATH,
     DEFAULT_ROOT
+  )
+  .option(
+    "-a, --archive-root <path>",
+    "root of where to save the archive content files",
+    cli.PATH,
+    DEFAULT_ARCHIVE_ROOT
   )
   .option(
     "-l, --locales <locale>",

@@ -10,6 +10,12 @@ const ProgressBar = require("./progress-bar");
 
 const REDIRECT_HTML = "REDIRECT <a ";
 
+// Any slug that starts with one of these prefixes goes into a different
+// folder; namely the archive folder.
+// Case matters but 100% of Prod slugs are spelled like this. I.e.
+// there's *no* slug that is something like this 'archiVe/Foo/Bar'.
+const ARCHIVE_SLUG_PREFIXES = ["Archive", "Mozilla", "Sandbox"];
+
 async function runImporter(options, logger) {
   const creds = url.parse(options.dbURL);
   const host = creds.host; // XXX should it be creds.hostname??
@@ -49,50 +55,6 @@ async function runImporter(options, logger) {
 function buildAbsoluteUrl(locale, slug) {
   return `/${locale}/docs/${slug}`;
 }
-
-const _legacyLocalesMap = {
-  // old-locale-code: new-locale-code
-  en: "en-US"
-};
-
-function plainLocalePrefixRedirect(fromUrl, toUrl) {
-  if (
-    fromUrl.startsWith("/docs/") &&
-    !toUrl.startsWith("/docs/") &&
-    toUrl.includes("/docs/")
-  ) {
-    const fromPath = fromUrl.split("/");
-    const toPath = toUrl.split("/");
-    if (
-      fromPath[1] === "docs" &&
-      toPath[2] === "docs" &&
-      (fromPath[2] === toPath[1] ||
-        (_legacyLocalesMap[fromPath[2]] &&
-          _legacyLocalesMap[fromPath[2]] === toPath[1]))
-    ) {
-      // Getting hotter!
-      if (equalArray(fromPath.splice(3), toPath.slice(3))) {
-        return true;
-      }
-    }
-  }
-  return false;
-}
-function equalArray(a, b) {
-  return a.length === b.length && a.every((x, i) => x === b[i]);
-}
-
-// function eq_(a, b, e) {
-//   var r = plainLocalePrefixRedirect(a, b);
-//   if (r !== e) {
-//     console.log({ from: a, to: b });
-//     throw new Error(`didn't work!`);
-//   }
-// }
-// eq_("/docs/en/Foo", "/en/docs/Foo", true);
-// eq_("/docs/en/Foo", "/en-US/docs/Foo", true);
-// eq_("/docs/en/Foo", "/en/docs/Foo/Bar", false);
-// eq_("/docs/en/FooBar", "/en-US/docs/Foo", false);
 
 /** The basic class that takes a connection and options, and a callback to
  * be called when all rows have been processed.
@@ -197,7 +159,7 @@ class Importer {
       // return this.quitCallback();
 
       // If something needs to be done to where files will be written.
-      this.prepareRoot();
+      this.prepareRoots();
 
       this.initProgressbar(totalCount);
 
@@ -370,16 +332,26 @@ class Importer {
     };
   }
 
-  prepareRoot() {
+  prepareRoots() {
     // In case anything needs to be done to this.options.root
   }
 
+  isArchiveSlug(slug) {
+    return ARCHIVE_SLUG_PREFIXES.some(prefix => slug.startsWith(prefix));
+  }
+
   processRow(row, resumeCallback) {
+    const isArchive = this.isArchiveSlug(row.slug);
     const absoluteUrl = buildAbsoluteUrl(row.locale, row.slug);
     if (row.is_redirect) {
-      this.processRedirect(row, absoluteUrl);
+      if (isArchive) {
+        // Note! If a document is considered archive, any redirect is
+        // simply dropped!
+      } else {
+        this.processRedirect(row, absoluteUrl);
+      }
     } else {
-      this.processDocument(row);
+      this.processDocument(row, isArchive);
     }
     resumeCallback();
   }
@@ -515,21 +487,34 @@ class Importer {
 
 /** Same as Importer but will dump to disk */
 class ToDiskImporter extends Importer {
-  prepareRoot() {
+  prepareRoots() {
+    if (!this.options.archiveRoot) throw new Error("woot?!");
+    if (!this.options.root) throw new Error("waat?!");
+    if (this.options.root === this.options.archiveRoot) throw new Error("eh?!");
+
     if (this.options.startClean) {
       // Experimental new feature
       // https://nodejs.org/api/fs.html#fs_fs_rmdirsync_path_options
-      const label = `Delete all of ${this.options.root}`;
+      let label = `Delete all of ${this.options.root}`;
       console.time(label);
       fs.rmdirSync(this.options.root, { recursive: true });
       console.timeEnd(label);
+      label = `Delete all of ${this.options.archiveRoot}`;
+      console.time(label);
+      fs.rmdirSync(this.options.archiveRoot, { recursive: true });
+      console.timeEnd(label);
     }
     fs.mkdirSync(this.options.root, { recursive: true });
+    fs.mkdirSync(this.options.archiveRoot, { recursive: true });
   }
 
-  processDocument(doc) {
+  processDocument(doc, isArchive) {
     const { slug, locale, title } = doc;
-    const localeFolder = path.join(this.options.root, locale.toLowerCase());
+
+    const localeFolder = path.join(
+      isArchive ? this.options.archiveRoot : this.options.root,
+      locale.toLowerCase()
+    );
 
     const folder = path.join(localeFolder, this.cleanSlugForFoldername(slug));
     fs.mkdirSync(folder, { recursive: true });
@@ -538,9 +523,15 @@ class ToDiskImporter extends Importer {
     // XXX As of right now, we don't have a KS shim that converts "raw Kuma HTML"
     // to rendered HTML. So we'll cheat by copying the `rendered_html`.
     // fs.writeFileSync(htmlFile, doc.html);
-    fs.writeFileSync(htmlFile, `${doc.rendered_html}`);
+    // Extra confusing is that archived slugs never store the Kuma raw HTML.
+    // It always just used the rendered_html.
+    if (isArchive) {
+      fs.writeFileSync(htmlFile, doc.rendered_html);
+    } else {
+      fs.writeFileSync(htmlFile, doc.rendered_html);
+    }
 
-    const wikiHistoryFile = path.join(folder, "wikihistory.yaml");
+    const wikiHistoryFile = path.join(folder, "wikihistory.json");
     const metaFile = path.join(folder, "index.yaml");
 
     const meta = {
@@ -548,8 +539,12 @@ class ToDiskImporter extends Importer {
       slug,
       locale
     };
+    if (isArchive) {
+      meta.archived = true;
+    }
     const wikiHistory = {
-      modified: doc.modified.toISOString()
+      modified: doc.modified.toISOString(),
+      _generated: new Date().toISOString()
     };
 
     if (doc.parent_slug && doc.parent_locale) {
@@ -571,6 +566,7 @@ class ToDiskImporter extends Importer {
     if (otherTranslations.length) {
       meta.other_translations = otherTranslations;
     }
+    fs.writeFileSync(metaFile, yaml.safeDump(meta));
 
     const contributors = (this.allContributors[doc.id] || []).map(
       userId => this.allUsernames[userId]
@@ -578,20 +574,16 @@ class ToDiskImporter extends Importer {
     if (contributors.length) {
       wikiHistory.mdn_contributors = contributors;
     }
-    fs.writeFileSync(metaFile, yaml.safeDump(meta));
-
-    const genratedComment = `# Auto generated by Yari importer ${new Date().toISOString()}`;
-    fs.writeFileSync(
-      wikiHistoryFile,
-      `${genratedComment}\n${yaml.safeDump(wikiHistory)}\n`
-    );
+    fs.writeFileSync(wikiHistoryFile, JSON.stringify(wikiHistory, null, 2));
 
     // XXX At the moment, we're pretending we have the KS shim, and that means
     // we'll have access to the raw (full of macros) string which'll be
     // useful to infer certain things such as how the {{Compat(...)}}
     // macro is used. But for now, we'll inject it into the metadata:
-    const rawFile = path.join(folder, "raw.html");
-    fs.writeFileSync(rawFile, doc.html);
+    if (!isArchive) {
+      const rawFile = path.join(folder, "raw.html");
+      fs.writeFileSync(rawFile, doc.html);
+    }
   }
 
   saveAllRedirects() {

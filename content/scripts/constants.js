@@ -2,6 +2,10 @@ const path = require("path");
 require("dotenv").config();
 
 const DEFAULT_ROOT = process.env.ROOT || path.join(__dirname, "..", "files");
+
+const DEFAULT_ARCHIVE_ROOT =
+  process.env.ARCHIVE_ROOT ||
+  path.join(__dirname, "..", "..", "archivecontent", "files");
 const DEFAULT_DESTINATION =
   process.env.ROOT || path.join(__dirname, "..", "..", "client", "build");
 
@@ -89,6 +93,7 @@ const VALID_LOCALES = new Set([
 
 module.exports = {
   DEFAULT_ROOT,
+  DEFAULT_ARCHIVE_ROOT,
   DEFAULT_DESTINATION,
   DEFAULT_DATABASE_URL,
   DEFAULT_EXCLUDE_SLUG_PREFIXES,

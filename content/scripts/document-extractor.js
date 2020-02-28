@@ -49,7 +49,7 @@ function extractDocumentSections($, {}) {
       c = 0;
     }
     // We *could* wrap this in something like `if (child.tagName) {`
-    // which would exclude any node that isn't a tag, such as jed comments.
+    // which would exclude any node that isn't a tag, such as comments.
     // That might make the DOM nodes more compact and memory efficient.
     c++;
     section.append(child);
