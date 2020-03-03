@@ -6,6 +6,7 @@ const express = require("express");
 const openEditor = require("open-editor");
 
 const { Builder } = require("content/scripts/build");
+const { Sources } = require("content/scripts/sources");
 const {
   DEFAULT_ROOT,
   DEFAULT_DESTINATION
@@ -96,9 +97,11 @@ app.get("/_open", (req, res) => {
 let builder = null;
 function getOrCreateBuilder() {
   if (!builder) {
+    const sources = new Sources();
+    sources.add(DEFAULT_ROOT);
     builder = new Builder(
+      sources,
       {
-        root: DEFAULT_ROOT,
         destination: DEFAULT_DESTINATION,
         noSitemaps: true,
         specificFolders: [],

@@ -164,8 +164,8 @@ function broadcastWebsocketMessage(msg) {
   // console.log(`Sent to ${i} open clients`);
 }
 
-function runBuild(options, logger) {
-  const builder = new Builder(options, logger);
+function runBuild(sources, options, logger) {
+  const builder = new Builder(sources, options, logger);
 
   if (options.listLocales) {
     return builder.listLocales();
@@ -209,8 +209,8 @@ const processing = Object.freeze({
 });
 
 class Builder {
-  constructor(options, logger) {
-    this.root = options.root;
+  constructor(sources, options, logger) {
+    this.sources = sources;
     this.destination = options.destination;
     this.options = options;
     this.logger = logger;
@@ -243,19 +243,33 @@ class Builder {
 
   // Just print what could be found and exit
   listLocales() {
-    const t0 = performance.now();
-    Object.entries(this.countLocaleFolders())
-      .map(([locale, count]) => {
-        return [count, locale];
-      })
-      .sort((a, b) => b[0] - a[0])
-      .forEach(([count, locale]) => {
-        console.log(
-          `${chalk.green(locale.padStart(6))}: ${count.toLocaleString()}`
-        );
-      });
-    const t1 = performance.now();
-    console.log(chalk.yellow(`Took ${ppMilliseconds(t1 - t0)}`));
+    this.sources.entries().forEach(source => {
+      console.log(`\n${chalk.bold("Source:")} ${chalk.white(source.filepath)}`);
+      const counts = this.countLocaleFolders(source);
+      const sumCounts = Array.from(counts.values()).reduce((a, b) => a + b, 0);
+      Array.from(counts)
+        .sort((a, b) => b[1] - a[1])
+        .forEach(([locale, count], i) => {
+          const percent = (100 * count) / sumCounts;
+          console.log(
+            `${chalk.green(
+              locale.padStart(6)
+            )}: ${count.toLocaleString().padEnd(10)} ${chalk.grey(
+              percent.toFixed(percent > 10 ? 1 : 2) + "%"
+            )}`
+          );
+          if (i === counts.size - 1) {
+            // Last one
+            console.log(
+              `${chalk.green(
+                "TOTAL".padStart(6)
+              )}: ${sumCounts.toLocaleString().padEnd(10)} ${chalk.grey(
+                "100%"
+              )}`
+            );
+          }
+        });
+    });
   }
 
   start({ specificFolders = null } = {}) {
@@ -271,9 +285,17 @@ class Builder {
         if (!fs.statSync(folder).isDirectory()) {
           throw new Error(`${folder} is not a directory`);
         }
+
+        const source = this.sources.entries().find(source => {
+          return folder.startsWith(source.filepath);
+        });
+        if (!source) {
+          throw new Error(`Unable to find the source based on ${folder}`);
+        }
+
         let processed;
         try {
-          processed = this.processFolder(folder);
+          processed = this.processFolder(source, folder);
         } catch (err) {
           // If a crash happens inside processFolder it's hard to debug
           // if you don't know which files/folders caused it. So inject
@@ -294,9 +316,11 @@ class Builder {
       // To be able to make a progress bar we need to first count what we're
       // going to need to do.
       if (this.progressBar) {
-        const countTodo = Object.values(this.countLocaleFolders()).reduce(
-          (a, b) => a + b
-        );
+        const countTodo = this.sources
+          .entries()
+          .map(source => this.countLocaleFolders(source))
+          .map(m => Array.from(m.values()).reduce((a, b) => a + b))
+          .reduce((a, b) => a + b);
         if (!countTodo) {
           throw new Error("No folders found to process!");
         }
@@ -313,47 +337,46 @@ class Builder {
 
       // Start the real processing
       const t0 = new Date();
-      this.getLocaleRootFolders().forEach(filepath => {
-        walker(filepath, (folder, files) => {
-          if (this.excludeFolder(folder, filepath, files)) {
-            counts[processing.EXCLUDED]++;
-            return;
-          }
-          let processed;
-          try {
-            processed = this.processFolder(folder);
-          } catch (err) {
-            // If a crash happens inside processFolder it's hard to debug
-            // if you don't know which files/folders caused it. So inject
-            // some logging of that before throwing.
-            console.error(chalk.yellow(`Error happened processing: ${folder}`));
+      this.sources.entries().forEach(source => {
+        this.getLocaleRootFolders(source).forEach(filepath => {
+          walker(filepath, (folder, files) => {
+            if (this.excludeFolder(source, folder, filepath, files)) {
+              counts[processing.EXCLUDED]++;
+              return;
+            }
+            let processed;
+            try {
+              processed = this.processFolder(source, folder);
+            } catch (err) {
+              // If a crash happens inside processFolder it's hard to debug
+              // if you don't know which files/folders caused it. So inject
+              // some logging of that before throwing.
+              console.error(
+                chalk.yellow(`Error happened processing: ${folder}`)
+              );
 
-            // XXX need to decide what to do with errors.
-            // We could increment a counter and dump all errors to a log file.
-            throw err;
-          }
-          const { result, file } = processed;
-          this.printProcessing(result, file);
-          counts[result]++;
-          this.tickProgressbar(++total);
+              // XXX need to decide what to do with errors.
+              // We could increment a counter and dump all errors to a log file.
+              throw err;
+            }
+            const { result, file } = processed;
+            this.printProcessing(result, file);
+            counts[result]++;
+            this.tickProgressbar(++total);
+          });
         });
       });
       const t1 = new Date();
-      this.summorizeResults(counts, t1 - t0);
 
       this.dumpAllURLs();
 
-      // Temporary hack!
-      // I want to find out how many of the URLs are left from the
-      // popularities.json file after we've benefitted from it.
-      fs.writeFileSync(
-        "_remainingpopularities.json",
-        JSON.stringify(this.allPopularities, null, 2)
-      );
+      this.summorizeResults(counts, t1 - t0);
     }
   }
 
   ensureAllTitles() {
+    this.ensurePopularities();
+
     // First walk all the content and pick up all the titles.
     // Note, no matter what locales you have picked in the filtering,
     // *always* include 'en-US' because with that, it becomes possible
@@ -382,12 +405,19 @@ class Builder {
       this.ensurePopularities();
       this.logger.info("Building a list of ALL titles and URIs...");
       let t0 = new Date();
-      this.getLocaleRootFolders({ allLocales: true }).forEach(filepath => {
-        walker(filepath, (folder, files) => {
-          if (files.includes("index.html") && files.includes("index.yaml")) {
-            this.processFolderTitle(folder);
+      this.sources.entries().forEach(source => {
+        this.getLocaleRootFolders(source, { allLocales: true }).forEach(
+          filepath => {
+            walker(filepath, (folder, files) => {
+              if (
+                files.includes("index.html") &&
+                files.includes("index.yaml")
+              ) {
+                this.processFolderTitle(source, folder);
+              }
+            });
           }
-        });
+        );
       });
       fs.writeFileSync(
         allTitlesJsonFilepath,
@@ -431,7 +461,7 @@ class Builder {
       if (!this.excludeFolder(folder, localeFolder, files)) {
         this.logger.debug(`Change in ${folder} NOT excluded.`);
         const t0 = performance.now();
-        const { result, file, doc } = this.processFolder(folder);
+        const { result, file, doc } = this.processFolder(source, folder);
         const t1 = performance.now();
 
         const tookStr = ppMilliseconds(t1 - t0);
@@ -487,8 +517,10 @@ class Builder {
   }
 
   prepareRoots() {
-    this.getLocaleRootFolders().forEach(folderpath => {
-      this.prepareRoot(path.basename(folderpath));
+    this.sources.entries().forEach(source => {
+      this.getLocaleRootFolders(source).forEach(folderpath => {
+        this.prepareRoot(path.basename(folderpath));
+      });
     });
   }
 
@@ -566,10 +598,14 @@ class Builder {
    * per locale, to the final destination.
    */
   dumpAllURLs() {
+    const t0 = new Date();
     // First regroup ALL URLs into buckets per locale.
     const byLocale = {};
     const mostModified = {};
     for (let [uri, data] of Object.entries(this.allTitles)) {
+      // XXX skip locales not in this.options.locales and
+      // this.options.notLocales etc.
+
       if (!(data.locale in byLocale)) {
         byLocale[data.locale] = {};
         mostModified[data.locale] = data.modified;
@@ -590,12 +626,16 @@ class Builder {
         // `$DESTINATION/sitemaps/$LOCALE/sitemap.xml`
 
         const sitemapXml = makeSitemapXML(
-          Object.entries(data).map(([uri, documentData]) => {
-            return {
-              loc: sitemapBaseUrl + uri,
-              lastmod: documentData.modified.split("T")[0]
-            };
-          })
+          Object.entries(data)
+            .filter(([uri, documentData]) => {
+              return !documentData.excludeInSitemaps;
+            })
+            .map(([uri, documentData]) => {
+              return {
+                loc: sitemapBaseUrl + uri,
+                lastmod: documentData.modified.split("T")[0]
+              };
+            })
         );
         const sitemapsDir = path.join(this.destination, "sitemaps", locale);
         fs.mkdirSync(sitemapsDir, { recursive: true });
@@ -607,16 +647,20 @@ class Builder {
 
       // Dump a `titles.json` into each locale folder
       const titles = {};
-      Object.entries(data).forEach(([uri, documentData]) => {
-        // This is the data that gets put into each 'titles.json` file which
-        // gets XHR downloaded by the React autocomplete search widget.
-        // So, it's important to only inject the absolutely minimum because
-        // network bytes matter.
-        titles[uri] = {
-          title: documentData.title,
-          popularity: documentData.popularity
-        };
-      });
+      Object.entries(data)
+        .filter(([uri, documentData]) => {
+          return !documentData.excludeInTitlesJson;
+        })
+        .forEach(([uri, documentData]) => {
+          // This is the data that gets put into each 'titles.json` file which
+          // gets XHR downloaded by the React autocomplete search widget.
+          // So, it's important to only inject the absolutely minimum because
+          // network bytes matter.
+          titles[uri] = {
+            title: documentData.title,
+            popularity: documentData.popularity
+          };
+        });
 
       const localeFolder = path.join(this.destination, locale);
       fs.mkdirSync(localeFolder, { recursive: true });
@@ -642,10 +686,19 @@ class Builder {
       fs.writeFileSync(allSitemapFilepath, allSitemapXml);
       this.logger.debug(`Wrote ${allSitemapFilepath}`);
     }
+
+    const t1 = new Date();
+    console.log(
+      chalk.yellow(
+        `Dumping all URLs to sitemaps and titles.json took ${ppMilliseconds(
+          t1 - t0
+        )}`
+      )
+    );
   }
 
   /** Return true if for any reason this folder should not be processed */
-  excludeFolder(folder, localeFolder, files) {
+  excludeFolder(source, folder, localeFolder, files) {
     if (this.options.foldersearch.length) {
       // The slice makes it so that `foldername` never starts with a '/'
       // (or '\' on Windows).
@@ -674,12 +727,15 @@ class Builder {
    * The 'allLocales' parameter means it overrides the
    * 'options.locales` or `options.notLocales` values.
    */
-  getLocaleRootFolders({ allLocales = false } = {}) {
+  getLocaleRootFolders(source, { allLocales = false } = {}) {
+    if (!source || !source.filepath) {
+      throw new Error("Invalid source");
+    }
     const { locales, notLocales } = this.options;
-    const files = fs.readdirSync(this.root);
+    const files = fs.readdirSync(source.filepath);
     const folders = [];
     for (const name of files) {
-      const filepath = path.join(this.root, name);
+      const filepath = path.join(source.filepath, name);
       const isDirectory = fs.statSync(filepath).isDirectory();
       if (
         isDirectory &&
@@ -693,19 +749,19 @@ class Builder {
     return folders;
   }
 
-  countLocaleFolders() {
-    let locales = {};
-    this.getLocaleRootFolders().forEach(filepath => {
+  countLocaleFolders(source) {
+    let locales = new Map();
+    this.getLocaleRootFolders(source).forEach(filepath => {
       const locale = path.basename(filepath);
-      if (!(locale in locales)) {
-        locales[locale] = 0;
+      if (!locales.has(locale)) {
+        locales.set(locale, 0);
       }
       walker(filepath, (folder, files) => {
         if (files.includes("index.html") && files.includes("index.yaml")) {
-          if (this.excludeFolder(folder, filepath, files)) {
+          if (this.excludeFolder(source, folder, filepath, files)) {
             return;
           }
-          locales[locale]++;
+          locales.set(locale, locales.get(locale) + 1);
         }
       });
     });
@@ -723,11 +779,11 @@ class Builder {
     return false;
   }
 
-  processFolder(folder, config) {
+  processFolder(source, folder, config) {
     config = config || {};
 
     const hasher = crypto.createHash("md5");
-    const doc = {};
+
     const metadataRaw = fs.readFileSync(path.join(folder, "index.yaml"));
     hasher.update(metadataRaw);
     const metadata = yaml.safeLoad(metadataRaw);
@@ -824,6 +880,9 @@ class Builder {
 
     // let macroCalls = extractMacroCalls(rawHtml);
 
+    // XXX should we get some of this stuff from this.allTitles instead?!
+    const doc = {};
+
     // Note that 'extractSidebar' will always return a string.
     // And if it finds a sidebar section, it gets removed from '$' too.
     doc.sidebarHTML = extractSidebar($, config);
@@ -837,19 +896,13 @@ class Builder {
     doc.body = sections;
 
     doc.popularity = this.allPopularities[doc.mdn_url] || 0.0;
-    // By popping it from the this.allPopularities we reduce memory usage
-    // and we can, at the end of the process see how much of it was
-    // never used at all when we finished the whole build process.
-    // Basically, just a temporary experimentation to understand the data
-    // better.
-    delete this.allPopularities[doc.mdn_url];
 
     doc.last_modified = metadata.modified;
     if (metadata.other_translations) {
       doc.other_translations = metadata.other_translations;
     }
 
-    this.injectSource(doc, folder);
+    this.injectSource(source, doc, folder);
 
     const { outfileJson, outfileHtml } = buildHtmlAndJsonFromDoc({
       doc,
@@ -882,19 +935,19 @@ class Builder {
     };
   }
 
-  injectSource(doc, folder) {
+  injectSource(source, doc, folder) {
     if (process.env.NODE_ENV === "development") {
       // When in development mode, put the absolute path of the source
       // of where the content comes from.
       doc.source = {
-        folder: path.relative(this.options.root, folder),
+        folder: path.relative(source.filepath, folder),
         absolute_folder: folder,
         // XXX This is going to depend it being stumptown or not
         content_file: path.join(folder, "index.html")
       };
     } else {
       doc.source = {
-        github_url: this.getGitHubURL(folder)
+        github_url: this.getGitHubURL(source, folder)
       };
     }
   }
@@ -902,26 +955,33 @@ class Builder {
   /** Similar to processFolder() but this time we're only interesting it
    * adding this document's uri and title to this.allTitles
    */
-  processFolderTitle(folder) {
+  processFolderTitle(source, folder) {
     const metadata = yaml.safeLoad(
       fs.readFileSync(path.join(folder, "index.yaml"))
     );
-    if (fs.existsSync(path.join(folder, "wikihistory.yaml"))) {
+    // XXX Perhaps, if the source of this is from archive, we might
+    // not need to or what to bother with popularity or modified data.
+    if (fs.existsSync(path.join(folder, "wikihistory.json"))) {
       const wikiMetadataRaw = fs.readFileSync(
-        path.join(folder, "wikihistory.yaml")
+        path.join(folder, "wikihistory.json")
       );
-      const wikiMetadata = yaml.safeLoad(wikiMetadataRaw);
+      const wikiMetadata = JSON.parse(wikiMetadataRaw);
       metadata.modified = wikiMetadata.modified;
     }
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
-    this.allTitles[mdn_url] = {
+    const doc = {
       mdn_url,
       title: metadata.title,
-      popularity: this.allPopularities[metadata.mdn_url] || 0.0,
+      popularity: this.allPopularities[mdn_url] || 0.0,
       locale: metadata.locale,
       file: folder,
-      modified: metadata.modified
+      modified: metadata.modified,
+      // XXX To be lean if either of these are false, perhaps not
+      // bother setting it.
+      excludeInTitlesJson: source.excludeInTitlesJson,
+      excludeInSitemaps: source.excludeInSitemaps
     };
+    this.allTitles[mdn_url] = doc;
   }
 
   renderHtml(rawHtml, metadata) {
@@ -936,10 +996,10 @@ class Builder {
    * @param {String} folder - the current folder we're processing.
    * @paraam {Bool} stumptown - source is from stumptown.
    */
-  getGitHubURL(folder, stumptown = false) {
+  getGitHubURL(source, folder, stumptown = false) {
     const gitUrl = getCurretGitHubBaseURL();
     const branch = getCurrentGitBranch();
-    const relativePath = path.relative(this.options.root, folder);
+    const relativePath = path.relative(source.filepath, folder);
     return `${gitUrl}/blob/${branch}/content/files/${relativePath}`;
   }
 }
@@ -1004,7 +1064,7 @@ function ppMilliseconds(ms) {
     const seconds = ms / 1000;
     const minutes = seconds / 60;
     return `${minutes.toFixed(1)} minutes`;
-  } else if (ms > 1000) {
+  } else if (ms > 100) {
     const seconds = ms / 1000;
     return `${seconds.toFixed(1)} seconds`;
   } else {

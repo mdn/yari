@@ -1,10 +1,13 @@
 #!/usr/bin/env node
+const fs = require("fs");
 
 const cli = require("caporal");
 
 const { runImporter } = require("./scripts/importer");
 const { runBuild } = require("./scripts/build");
 const { runMakePopularitiesFile } = require("./scripts/popularities");
+const { Sources } = require("./scripts/sources");
+
 const {
   DEFAULT_ROOT,
   DEFAULT_ARCHIVE_ROOT,
@@ -73,9 +76,15 @@ cli
   )
   .option(
     "-r, --root <path>",
-    "root of where to save file",
+    "main root to get content with Kuma HTML",
     cli.PATH,
     DEFAULT_ROOT
+  )
+  .option(
+    "-a, --archive-root <path>",
+    "optional to get content with fully rendered HTML",
+    cli.PATH
+    // DEFAULT_ARCHIVE_ROOT
   )
   .option(
     "-l, --locales <locale>",
@@ -153,6 +162,27 @@ cli
     DEFAULT_DESTINATION
   )
   .action((args, options, logger) => {
+    const sources = new Sources();
+    sources.add(options.root, {
+      watch: true
+      // isStumptown: false,
+      // htmlAlreadyRendered: false,
+      // excludeInTitlesJson: false,
+      // excludeInSitemaps: false
+    });
+    if (options.archiveRoot) {
+      sources.add(options.archiveRoot, {
+        watch: false,
+        // isStumptown: false,
+        htmlAlreadyRendered: true,
+        excludeInTitlesJson: true,
+        excludeInSitemaps: true,
+        noindexNofollowHeader: true
+      });
+    }
+    // console.log(sources.entries());
+    // return;
+
     // Because you can't have boolean options that default to 'true'
     // we'll do this check manually.
     if (!process.stdout.columns) {
@@ -179,7 +209,7 @@ cli
       options.foldersearch = newFoldersearch;
     }
 
-    return runBuild(options, logger);
+    return runBuild(sources, options, logger);
   })
   .command(
     "popularities",

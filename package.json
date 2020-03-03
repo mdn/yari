@@ -15,7 +15,7 @@
     "build:ssr": "yarn workspace ssr build",
     "end-to-end-test": "node scripts/end-to-end-test.js",
     "clean": "rm -fr client/build && rm -fr ssr/dist && rm -fr content/_all-titles.json",
-    "prebuild": "yarn build:ssr && yarn build:client",
+    "prebuild": "yarn build:ssr && yarn build:client && node content build --ensure-titles",
     "start": "yarn run prebuild && nf start"
   },
   "private": true,

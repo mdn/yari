@@ -333,7 +333,7 @@ class Importer {
   }
 
   prepareRoots() {
-    // In case anything needs to be done to this.options.root
+    // In case anything needs to be done to this.sources
   }
 
   isArchiveSlug(slug) {
