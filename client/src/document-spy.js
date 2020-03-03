@@ -1,13 +1,13 @@
 /**
  * Needs a doc string.
  */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Sockette from "sockette";
 import { Link } from "@reach/router";
 
 import "./document-spy.css";
 
-export function DocumentSpy({ location, fetchDocument }) {
+export function DocumentSpy({ onMessage }) {
   // null - never connected before
   // true - connected
   // false - no longer connected
@@ -15,17 +15,10 @@ export function DocumentSpy({ location, fetchDocument }) {
   const [lastMessage, setLastMessage] = useState(null);
   const [websocketError, setWebsocketError] = useState(null);
 
-  // XXX At the moment, the `new Sockette()` thing happens every time
-  // the location changes. It would be better to use a ref to maintain
-  // one and the same Sockette instance open the WHOLE time independent
-  // of *which* document you're viewing.
-  // This component needs to be a child of the <Document/> component
-  // because of the access to `fetchDocument()`. But as you hop from
-  // one document to another, it would be nice to not have to destroy
-  // and reconnect the Sockette instance.
+  const wssRef = useRef();
   useEffect(() => {
     let mounted = true;
-    const wss = new Sockette("ws://localhost:8080", {
+    wssRef.current = new Sockette("ws://localhost:8080", {
       timeout: 5e3,
       maxAttempts: 25,
       onopen: e => {
@@ -33,11 +26,7 @@ export function DocumentSpy({ location, fetchDocument }) {
       },
       onmessage: e => {
         const data = JSON.parse(e.data);
-        if (data.documentUri === location.pathname) {
-          // The recently edited document is the one we're currently
-          // looking at!
-          if (mounted) fetchDocument(false);
-        }
+        onMessage(data);
         if (mounted) setLastMessage(data);
       },
       onreconnect: e => {},
@@ -51,9 +40,9 @@ export function DocumentSpy({ location, fetchDocument }) {
     });
     return () => {
       mounted = false;
-      wss.close();
+      wssRef.current.close();
     };
-  }, [location.pathname, fetchDocument]);
+  }, [onMessage]);
 
   if (connected === null) {
     return null;

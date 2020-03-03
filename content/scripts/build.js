@@ -476,9 +476,15 @@ class Builder {
       const localeFolder = path.join(watchRoot, locale);
       const fullFilepath = path.join(watchRoot, filepath);
       const folder = path.dirname(fullFilepath);
+      const source = this.sources.entries().find(source => {
+        return folder.startsWith(source.filepath);
+      });
+      if (!source) {
+        throw new Error(`Unable to find the source based on ${folder}`);
+      }
       const files = fs.readdirSync(folder);
       this.logger.info(`Change in ${folder}`);
-      if (!this.excludeFolder(folder, localeFolder, files)) {
+      if (!this.excludeFolder(source, folder, localeFolder, files)) {
         this.logger.debug(`Change in ${folder} NOT excluded.`);
         const t0 = performance.now();
         const { result, file, doc } = this.processFolder(source, folder);

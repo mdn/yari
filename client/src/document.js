@@ -31,6 +31,10 @@ export class Document extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.dismounted = true;
+  }
+
   componentDidUpdate(prevProps) {
     if (
       this.props["*"] !== prevProps["*"] ||
@@ -61,6 +65,15 @@ export class Document extends React.Component {
         this.setState({ doc: data.doc, loading: false });
       }
     });
+  };
+
+  onMessage = data => {
+    if (data.documentUri === this.props.location.pathname) {
+      // The recently edited document is the one we're currently looking at!
+      if (!this.dismounted) {
+        this.fetchDocument(false);
+      }
+    }
   };
 
   render() {
@@ -105,8 +118,9 @@ export class Document extends React.Component {
         </div>
         {process.env.NODE_ENV === "development" && (
           <DocumentSpy
-            location={this.props.location}
-            fetchDocument={this.fetchDocument}
+            onMessage={this.onMessage}
+            // location={this.props.location}
+            // fetchDocument={this.fetchDocument}
           />
         )}
       </div>
