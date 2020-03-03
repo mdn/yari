@@ -115,6 +115,7 @@ function getOrCreateBuilder() {
     );
     builder.initSelfHash();
     builder.ensureAllTitles();
+    builder.ensureAllChildren();
     builder.prepareRoots();
   }
   return builder;

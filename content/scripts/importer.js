@@ -554,18 +554,18 @@ class ToDiskImporter extends Importer {
       };
     }
 
-    let otherTranslations = this.allTranslations[doc.id] || [];
-    if (
-      !otherTranslations.length &&
-      doc.parent_id &&
-      this.allTranslations[doc.parent_id]
-    ) {
-      // This document is a child and its parent has translations.
-      // otherTranslations = this.allTranslations[doc.parent_id];
-    }
-    if (otherTranslations.length) {
-      meta.other_translations = otherTranslations;
-    }
+    // let otherTranslations = this.allTranslations[doc.id] || [];
+    // if (
+    //   !otherTranslations.length &&
+    //   doc.parent_id &&
+    //   this.allTranslations[doc.parent_id]
+    // ) {
+    //   // This document is a child and its parent has translations.
+    //   // otherTranslations = this.allTranslations[doc.parent_id];
+    // }
+    // if (otherTranslations.length) {
+    //   meta.other_translations = otherTranslations;
+    // }
     fs.writeFileSync(metaFile, yaml.safeDump(meta));
 
     const contributors = (this.allContributors[doc.id] || []).map(

@@ -85,7 +85,7 @@ export class Document extends React.Component {
     return (
       <div>
         <h1 className="page-title">{doc.title}</h1>
-        {translations && translations.length && (
+        {translations && !!translations.length && (
           <DocumentTranslations translations={translations} />
         )}
         <div className="main">

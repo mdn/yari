@@ -175,6 +175,7 @@ function runBuild(sources, options, logger) {
     if (!options.watch) {
       builder.initSelfHash();
       builder.ensureAllTitles();
+      builder.ensureAllChildren();
       builder.prepareRoots();
       return builder.start();
     }
@@ -217,6 +218,7 @@ class Builder {
     this.selfHash = null;
     this.allTitles = {};
     this.allPopularities = {};
+    this.allChildren = {};
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
@@ -375,7 +377,7 @@ class Builder {
   }
 
   ensureAllTitles() {
-    this.ensurePopularities();
+    // this.ensurePopularities();
 
     // First walk all the content and pick up all the titles.
     // Note, no matter what locales you have picked in the filtering,
@@ -430,6 +432,24 @@ class Builder {
         )
       );
     }
+  }
+
+  ensureAllChildren() {
+    this.ensureAllTitles();
+    Object.entries(this.allTitles).forEach(([uri, data]) => {
+      if (data.parent) {
+        const parentMdnURL = buildMDNUrl(data.parent.locale, data.parent.slug);
+        if (this.allTitles[parentMdnURL]) {
+          if (!(parentMdnURL in this.allChildren)) {
+            this.allChildren[parentMdnURL] = [];
+          }
+          this.allChildren[parentMdnURL].push({
+            locale: data.locale,
+            slug: data.slug
+          });
+        }
+      }
+    });
   }
 
   watch() {
@@ -898,8 +918,21 @@ class Builder {
     doc.popularity = this.allPopularities[doc.mdn_url] || 0.0;
 
     doc.last_modified = metadata.modified;
-    if (metadata.other_translations) {
-      doc.other_translations = metadata.other_translations;
+
+    const otherTranslations = this.allChildren[doc.mdn_url] || [];
+    if (!otherTranslations.length && metadata.parent) {
+      // But perhaps the parent has other translations?!
+      const parentMdnURL = buildMDNUrl(
+        metadata.parent.locale,
+        metadata.parent.slug
+      );
+      const parentOtherTranslations = this.allChildren[parentMdnURL];
+      if (parentOtherTranslations && parentOtherTranslations.length) {
+        otherTranslations.push(...parentOtherTranslations);
+      }
+    }
+    if (otherTranslations.length) {
+      doc.other_translations = otherTranslations;
     }
 
     this.injectSource(source, doc, folder);
@@ -974,8 +1007,10 @@ class Builder {
       title: metadata.title,
       popularity: this.allPopularities[mdn_url] || 0.0,
       locale: metadata.locale,
+      slug: metadata.slug,
       file: folder,
       modified: metadata.modified,
+      parent: metadata.parent,
       // XXX To be lean if either of these are false, perhaps not
       // bother setting it.
       excludeInTitlesJson: source.excludeInTitlesJson,
