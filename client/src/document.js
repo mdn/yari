@@ -105,34 +105,13 @@ function RenderSideBar({ doc }) {
 }
 
 function SidebarLeaf({ parent }) {
-  const titleNode = <h3>{parent.title}</h3>;
   return (
     <Location>
       {({ location }) => {
-        // walk through the tree, annotating its nodes:
-        // * `isActive` if a node contains the link to the current page
-        // * `open` if a node is on the path to the `isActive` node
-        function setOpenNodes(node, pathname) {
-          if (node.uri === pathname) {
-            node.open = true;
-            node.isActive = true;
-            return true;
-          }
-          if (node.content) {
-            for (const child of node.content) {
-              if (setOpenNodes(child, pathname)) {
-                node.open = true;
-                return true;
-              }
-            }
-          }
-          return false;
-        }
         setOpenNodes(parent, location.pathname);
-
         return (
           <div>
-            {titleNode}
+            <h3>{parent.title}</h3>
             <ul>
               {parent.content.map(node => {
                 if (node.content) {
@@ -157,32 +136,48 @@ function SidebarLeaf({ parent }) {
   );
 }
 
-function SidebarLeaflets({ node }) {
-  const listItems = node.content.map(childNode => {
-    if (childNode.content) {
-      return (
-        <li key={childNode.title}>
-          <SidebarLeaflets node={childNode} />
-        </li>
-      );
-    } else {
-      return (
-        <li
-          key={childNode.uri}
-          className={childNode.isActive ? "active" : undefined}
-        >
-          <Link to={childNode.uri}>{childNode.title}</Link>
-        </li>
-      );
+/**
+ * Walk through the tree, annotating its nodes by adding attributes:
+ * - `isActive` if a node contains the link to the current page
+ * - `open` if a node is on the path to the `isActive` node
+ */
+function setOpenNodes(node, pathname) {
+  for (const child of node.content) {
+    if (child.uri === pathname) {
+      child.open = true;
+      child.isActive = true;
+    } else if (child.content) {
+      setOpenNodes(child, pathname);
     }
-  });
+  }
+}
 
+function SidebarLeaflets({ node }) {
   return (
     <details open={node.open}>
       <summary>
-        {node.uri ? <a href={node.uri}> {node.title}</a> : node.title}
+        {node.uri ? <Link to={node.uri}>{node.title}</Link> : node.title}
       </summary>
-      <ol>{listItems}</ol>
+      <ol>
+        {node.content.map(childNode => {
+          if (childNode.content) {
+            return (
+              <li key={childNode.title}>
+                <SidebarLeaflets node={childNode} />
+              </li>
+            );
+          } else {
+            return (
+              <li
+                key={childNode.uri}
+                className={childNode.isActive && "active"}
+              >
+                <Link to={childNode.uri}>{childNode.title}</Link>
+              </li>
+            );
+          }
+        })}
+      </ol>
     </details>
   );
 }
