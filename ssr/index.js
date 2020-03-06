@@ -55,11 +55,11 @@ function fixRelatedContent(document) {
 
     // The sidebar only needs a 'title' and doesn't really care if
     // it came from the full title or the 'short_title'.
-    item.title = item.short_title || item.title;
-    delete item.short_title;
+    node.title = node.short_title || node.title;
+    delete node.short_title;
     // At the moment, we never actually use the 'short_description'
     // so no use including it.
-    delete item.short_description;
+    delete node.short_description;
 
     // isActive means that this node is a link to the current document
     // open means that this node or one of its children is a link to the current document
