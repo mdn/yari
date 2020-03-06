@@ -100,56 +100,33 @@ function RenderSideBar({ doc }) {
     return null;
   }
   return doc.related_content.map(node => (
-    <SidebarLeaf key={node.title} parent={node} />
+    <SidebarLeaf key={node.title} parent={parent} />
   ));
 }
 
 function SidebarLeaf({ parent }) {
   return (
-    <Location>
-      {({ location }) => {
-        setOpenNodes(parent, location.pathname);
-        return (
-          <div>
-            <h3>{parent.title}</h3>
-            <ul>
-              {parent.content.map(node => {
-                if (node.content) {
-                  return (
-                    <li key={node.title}>
-                      <SidebarLeaflets node={node} />
-                    </li>
-                  );
-                } else {
-                  return (
-                    <li key={node.uri}>
-                      <Link to={node.uri}>{node.title}</Link>
-                    </li>
-                  );
-                }
-              })}
-            </ul>
-          </div>
-        );
-      }}
-    </Location>
+    <div>
+      <h3>{parent.title}</h3>
+      <ul>
+        {parent.content.map(node => {
+          if (node.content) {
+            return (
+              <li key={node.title}>
+                <SidebarLeaflets node={node} />
+              </li>
+            );
+          } else {
+            return (
+              <li key={node.uri}>
+                <Link to={node.uri}>{node.title}</Link>
+              </li>
+            );
+          }
+        })}
+      </ul>
+    </div>
   );
-}
-
-/**
- * Walk through the tree, annotating its nodes by adding attributes:
- * - `isActive` if a node contains the link to the current page
- * - `open` if a node is on the path to the `isActive` node
- */
-function setOpenNodes(node, pathname) {
-  for (const child of node.content) {
-    if (child.uri === pathname) {
-      child.open = true;
-      child.isActive = true;
-    } else if (child.content) {
-      setOpenNodes(child, pathname);
-    }
-  }
 }
 
 function SidebarLeaflets({ node }) {
