@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Location } from "@reach/router";
+import { Link } from "@reach/router";
 
 import { NoMatch } from "./routing";
 
@@ -100,22 +100,16 @@ function RenderSideBar({ doc }) {
     return null;
   }
   return doc.related_content.map(node => (
-    <SidebarLeaf
-      key={node.title}
-      depth={0}
-      title={node.title}
-      content={node.content || []}
-    />
+    <SidebarLeaf key={node.title} parent={node} />
   ));
 }
 
-function SidebarLeaf({ title, content }) {
-  const titleNode = <h3>{title}</h3>;
+function SidebarLeaf({ parent }) {
   return (
     <div>
-      {titleNode}
+      <h3>{parent.title}</h3>
       <ul>
-        {content.map(node => {
+        {parent.content.map(node => {
           if (node.content) {
             return (
               <li key={node.title}>
@@ -137,29 +131,31 @@ function SidebarLeaf({ title, content }) {
 
 function SidebarLeaflets({ node }) {
   return (
-    <Location>
-      {({ location }) => {
-        let hasActiveChild = false;
-        const listItems = node.content.map(childNode => {
-          const isActive = childNode.uri === location.pathname;
-          if (isActive && !hasActiveChild) {
-            hasActiveChild = true;
+    <details open={node.open}>
+      <summary>
+        {node.uri ? <Link to={node.uri}>{node.title}</Link> : node.title}
+      </summary>
+      <ol>
+        {node.content.map(childNode => {
+          if (childNode.content) {
+            return (
+              <li key={childNode.title}>
+                <SidebarLeaflets node={childNode} />
+              </li>
+            );
+          } else {
+            return (
+              <li
+                key={childNode.uri}
+                className={childNode.isActive && "active"}
+              >
+                <Link to={childNode.uri}>{childNode.title}</Link>
+              </li>
+            );
           }
-          return (
-            <li key={childNode.uri} className={isActive ? "active" : undefined}>
-              <Link to={childNode.uri}>{childNode.title}</Link>
-            </li>
-          );
-        });
-
-        return (
-          <details open={!!hasActiveChild}>
-            <summary>{node.title}</summary>
-            <ol>{listItems}</ol>
-          </details>
-        );
-      }}
-    </Location>
+        })}
+      </ol>
+    </details>
   );
 }
 
@@ -220,6 +216,7 @@ function RenderDocumentBody({ doc }) {
       console.warn("Don't know how to deal with info_box!");
       return null;
     } else if (
+      section.type === "class_constructor" ||
       section.type === "static_methods" ||
       section.type === "instance_methods"
     ) {
