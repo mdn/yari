@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Location } from "@reach/router";
+import { Link } from "@reach/router";
 
 import { NoMatch } from "./routing";
 
@@ -100,7 +100,7 @@ function RenderSideBar({ doc }) {
     return null;
   }
   return doc.related_content.map(node => (
-    <SidebarLeaf key={node.title} parent={parent} />
+    <SidebarLeaf key={node.title} parent={node} />
   ));
 }
 
