@@ -32,7 +32,7 @@
     "pretty-quick": "2.0.1"
   },
   "dependencies": {
-    "cross-env": "^7.0.0"
+    "cross-env": "^7.0.2"
   },
   "resolutions": {
     "braces": ">=2.3.1",
