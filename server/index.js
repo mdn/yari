@@ -7,10 +7,10 @@ const openEditor = require("open-editor");
 
 const { Builder } = require("content/scripts/build");
 const { Sources } = require("content/scripts/sources");
-const {
-  DEFAULT_ROOT,
-  DEFAULT_DESTINATION
-} = require("content/scripts/constants.js");
+// const {
+//   DEFAULT_ROOT,
+//   DEFAULT_DESTINATION
+// } = require("content/scripts/constants.js");
 
 const app = express();
 

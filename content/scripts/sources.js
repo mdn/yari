@@ -3,7 +3,6 @@ const fs = require("fs");
 class Sources {
   constructor() {
     this.list = [];
-    // this.buildURIs = new Map();
   }
 
   add(filepath, config) {

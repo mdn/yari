@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-const fs = require("fs");
-
 const cli = require("caporal");
 
 const { runImporter } = require("./scripts/importer");
@@ -9,10 +7,7 @@ const { runMakePopularitiesFile } = require("./scripts/popularities");
 const { Sources } = require("./scripts/sources");
 
 const {
-  DEFAULT_ROOT,
-  DEFAULT_ARCHIVE_ROOT,
   DEFAULT_DATABASE_URL,
-  DEFAULT_DESTINATION,
   DEFAULT_EXCLUDE_SLUG_PREFIXES,
   DEFAULT_BUILD_LOCALES,
   DEFAULT_BUILD_NOT_LOCALES,
@@ -37,13 +32,13 @@ cli
     "-r, --root <path>",
     "root of where to save active content files",
     cli.PATH,
-    DEFAULT_ROOT
+    process.env.BUILD_ROOT || "content/files"
   )
   .option(
     "-a, --archive-root <path>",
     "root of where to save the archive content files",
     cli.PATH,
-    DEFAULT_ARCHIVE_ROOT
+    process.env.BUILD_ARCHIVE_ROOT || "archivecontent/files"
   )
   .option(
     "-l, --locales <locale>",
@@ -78,13 +73,19 @@ cli
     "-r, --root <path>",
     "main root to get content with Kuma HTML",
     cli.PATH,
-    DEFAULT_ROOT
+    process.env.BUILD_ROOT
   )
   .option(
     "-a, --archive-root <path>",
-    "optional to get content with fully rendered HTML",
-    cli.PATH
-    // DEFAULT_ARCHIVE_ROOT
+    "archived content files",
+    cli.PATH,
+    process.env.BUILD_ARCHIVE_ROOT
+  )
+  .option(
+    "-s, --stumptown-root <path>",
+    "stumptown packaged files",
+    cli.PATH,
+    process.env.BUILD_STUMPTOWN_ROOT
   )
   .option(
     "-l, --locales <locale>",
@@ -113,12 +114,7 @@ cli
     cli.BOOL
   )
   .option("--no-sitemaps", "don't generate all sitemap xml files", cli.BOOL)
-  .option(
-    "-s, --slugsearch <partofslug>",
-    "filter by slug matches",
-    cli.ARRAY,
-    []
-  )
+  .option("--slugsearch <partofslug>", "filter by slug matches", cli.ARRAY, [])
   .option(
     "-f, --foldersearch <partoffolder>",
     "filter by folder matches",
@@ -129,7 +125,8 @@ cli
     "--popularitiesfile <path>",
     "JSON file that maps URIs to popularities",
     cli.PATH,
-    DEFAULT_POPULARITIES_FILEPATH
+    process.env.BUILD_POPULARITIES_FILEPATH
+    // DEFAULT_POPULARITIES_FILEPATH
   )
   .option(
     "--sitemap-base-url <url>",
@@ -159,29 +156,33 @@ cli
     "[destination]",
     "root folder to put built files into",
     cli.STRING,
-    DEFAULT_DESTINATION
+    process.env.BUILD_DESTINATION || "client/build"
   )
   .action((args, options, logger) => {
     const sources = new Sources();
-    sources.add(options.root, {
-      watch: true
-      // isStumptown: false,
-      // htmlAlreadyRendered: false,
-      // excludeInTitlesJson: false,
-      // excludeInSitemaps: false
-    });
+    if (options.stumptownRoot) {
+      sources.add(options.stumptownRoot, {
+        isStumptown: true
+      });
+    }
+    if (options.root) {
+      sources.add(options.root, {
+        watch: true
+      });
+    }
     if (options.archiveRoot) {
       sources.add(options.archiveRoot, {
         watch: false,
-        // isStumptown: false,
         htmlAlreadyRendered: true,
         excludeInTitlesJson: true,
         excludeInSitemaps: true,
         noindexNofollowHeader: true
       });
     }
-    // console.log(sources.entries());
-    // return;
+    if (!sources.entries().length) {
+      logger.error("No configured sources");
+      return 1;
+    }
 
     // Because you can't have boolean options that default to 'true'
     // we'll do this check manually.
@@ -219,7 +220,7 @@ cli
     "--outfile <path>",
     "export from Google Analytics containing pageview counts",
     cli.PATH,
-    DEFAULT_POPULARITIES_FILEPATH
+    process.env.BUILD_POPULARITIES_FILEPATH || "content/popularities.json"
   )
   .option(
     "--max-uris <number>",
@@ -232,8 +233,16 @@ cli
     return runMakePopularitiesFile(args.csvfile, options, logger);
   });
 
-cli.parse(process.argv);
+cli.parse(process.argv).then(r => {
+  // If the command explicitly returned a number, use that as the exit code
+  // Otherwise, if it's anything truthy return 1 or all else 0.
+  process.exit(typeof r === Number ? r : r ? 1 : 0);
+});
 
 function equalArray(a, b) {
   return a.length === b.length && a.every((x, i) => x === b[i]);
 }
+
+// function relPath(absPath) {
+//   return path.relative(process.cwd(), absPath);
+// }

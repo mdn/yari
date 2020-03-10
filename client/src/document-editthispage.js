@@ -46,11 +46,11 @@ export function EditThisPage({ source }) {
         </a>
       </p>
     );
-  } else if (source.absolute_folder) {
+  } else if (source.content_file) {
     return (
       <p className="edit-this-page">
         <a
-          href={`file://${source.absolute_folder}`}
+          href={`file://${source.content_file}`}
           title={`Folder: ${source.folder}`}
           onClick={openInEditorHandler}
         >
@@ -61,6 +61,6 @@ export function EditThisPage({ source }) {
       </p>
     );
   } else {
-    throw new Error("source has neither .github_url or .absolute_folder");
+    throw new Error("source has neither .github_url or .content_file");
   }
 }

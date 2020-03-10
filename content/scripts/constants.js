@@ -1,13 +1,12 @@
 const path = require("path");
 require("dotenv").config();
 
-const DEFAULT_ROOT = process.env.ROOT || path.join(__dirname, "..", "files");
+// const DEFAULT_ROOT = process.env.BUILD_ROOT;
 
-const DEFAULT_ARCHIVE_ROOT =
-  process.env.ARCHIVE_ROOT ||
-  path.join(__dirname, "..", "..", "archivecontent", "files");
-const DEFAULT_DESTINATION =
-  process.env.ROOT || path.join(__dirname, "..", "..", "client", "build");
+// const DEFAULT_ARCHIVE_ROOT = process.env.ARCHIVE_ROOT ||
+//   path.join(__dirname, "..", "..", "archivecontent", "files");
+// const DEFAULT_DESTINATION =
+//   process.env.ROOT || path.join(__dirname, "..", "..", "client", "build");
 
 const DEFAULT_DATABASE_URL =
   process.env.DATABASE_URL || "mysql2://username:password@host/databasename";
@@ -19,6 +18,10 @@ const DEFAULT_BUILD_LOCALES = (process.env.BUILD_LOCALES || "")
 const DEFAULT_BUILD_NOT_LOCALES = (process.env.BUILD_NOT_LOCALES || "")
   .split(",")
   .filter(x => x);
+
+// const DEFAULT_STUMPTOWN_PACKAGED_ROOT =
+//   process.env.STUMPTOWN_PACKAGED_ROOT ||
+//   path.join(__dirname, "..", "..", "stumptown", "packaged");
 
 const DEFAULT_EXCLUDE_SLUG_PREFIXES = [
   "User:",
@@ -41,11 +44,11 @@ const DEFAULT_FOLDER_SEARCHES = (process.env.BUILD_FOLDER_SEARCHES || "")
 
 const DEFAULT_SITEMAP_BASE_URL = "https://developer.mozilla.org";
 
-const DEFAULT_POPULARITIES_FILEPATH = path.join(
-  DEFAULT_ROOT,
-  "..",
-  "popularities.json"
-);
+// const DEFAULT_POPULARITIES_FILEPATH = path.join(
+//   DEFAULT_ROOT,
+//   "..",
+//   "popularities.json"
+// );
 
 // The Google Analytics pageviews CSV file parsed, sorted (most pageviews
 // first), and sliced to this number of URIs that goes into the JSON file.
@@ -92,16 +95,17 @@ const VALID_LOCALES = new Set([
 ]);
 
 module.exports = {
-  DEFAULT_ROOT,
-  DEFAULT_ARCHIVE_ROOT,
-  DEFAULT_DESTINATION,
+  // DEFAULT_ROOT,
+  // DEFAULT_ARCHIVE_ROOT,
+  // DEFAULT_DESTINATION,
   DEFAULT_DATABASE_URL,
   DEFAULT_EXCLUDE_SLUG_PREFIXES,
   DEFAULT_BUILD_LOCALES,
   DEFAULT_BUILD_NOT_LOCALES,
   DEFAULT_SITEMAP_BASE_URL,
   DEFAULT_FOLDER_SEARCHES,
-  DEFAULT_POPULARITIES_FILEPATH,
+  // DEFAULT_POPULARITIES_FILEPATH,
+  // DEFAULT_STUMPTOWN_PACKAGED_ROOT,
   MAX_GOOGLE_ANALYTICS_URIS,
   VALID_LOCALES
 };

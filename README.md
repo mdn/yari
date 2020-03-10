@@ -8,12 +8,37 @@ These steps should get you started, locally, straight away:
 
     git clone --recursive https://github.com/mdn/stumptown-renderer.git
     cd stumptown-renderer
+    cp .env-dist .env
     yarn
     yarn start
     open http://localhost:3000
 
 To really understand how it starts and how to break down the various
 tools, open `Procfile` or the `package.json`. Or, read on...
+
+### Stumptown-content
+
+By default, content from `stumptown-content` is not included. To add it
+you need to do two things.
+
+1. Edit your `.env` file to put where the packaged `stumptown-content` files
+are. For example: `BUILD_STUMTPTOWN_ROOT=/path/to/stumptown-content/packaged`
+
+2. Go into your `stumptown-content` folder (if you use the default
+git submodule it's in `./stumptown`) and run `npm install && npm run build-json`
+
+Now, when building content it will read from **multiple sources** in a
+predetermined order.
+
+Note! In a future revision we will probably not use the filesystem but inside
+fully integrate `stumptown-content` as a Node package and execute its tools
+for turning `.md` files into `.json` files that the builder can use.
+
+### Archive content
+
+Archive content is content that does not get included by default. Its files
+are treated differently. For example, the HTML blobs can not contain
+`KumaScript` and they don't get included in sitemap XML files for example.
 
 ## Overview
 

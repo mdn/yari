@@ -252,11 +252,11 @@ class Builder {
       Array.from(counts)
         .sort((a, b) => b[1] - a[1])
         .forEach(([locale, count], i) => {
-          const percent = (100 * count) / sumCounts;
+          const percent = sumCounts ? (100 * count) / sumCounts : 0;
           console.log(
-            `${chalk.green(
-              locale.padStart(6)
-            )}: ${count.toLocaleString().padEnd(10)} ${chalk.grey(
+            `${chalk.green(locale.padEnd(6))}${count
+              .toLocaleString()
+              .padStart(10)} ${chalk.grey(
               percent.toFixed(percent > 10 ? 1 : 2) + "%"
             )}`
           );
@@ -264,9 +264,9 @@ class Builder {
             // Last one
             console.log(
               `${chalk.green(
-                "TOTAL".padStart(6)
-              )}: ${sumCounts.toLocaleString().padEnd(10)} ${chalk.grey(
-                "100%"
+                "TOTAL".padEnd(6)
+              )}${sumCounts.toLocaleString().padStart(10)} ${chalk.grey(
+                " 100%"
               )}`
             );
           }
@@ -312,6 +312,7 @@ class Builder {
       });
       return allProcessed;
     } else {
+      this.describeActiveSources();
       this.describeActiveFilters();
       this.ensurePopularities();
 
@@ -343,9 +344,45 @@ class Builder {
         this.getLocaleRootFolders(source).forEach(filepath => {
           walker(filepath, (folder, files) => {
             if (this.excludeFolder(source, folder, filepath, files)) {
-              counts[processing.EXCLUDED]++;
+              // If the folder was a Stumptown folder, what we're
+              // actually excluding is all the .json files in the folder.
+              if (source.isStumptown) {
+                counts[processing.EXCLUDED] += files.filter(n =>
+                  n.endsWith(".json")
+                ).length;
+              } else {
+                counts[processing.EXCLUDED]++;
+              }
               return;
             }
+
+            if (source.isStumptown) {
+              // In the case of stumptown, one folder will have multiple
+              // files with each representing a document.
+              files
+                .filter(n => n.endsWith(".json"))
+                .forEach(filename => {
+                  const filepath = path.join(folder, filename);
+                  let processed;
+                  try {
+                    processed = this.processStumptownFile(source, filepath);
+                  } catch (err) {
+                    // If a crash happens inside processStumptownFile it's hard
+                    // to debug if you don't know which files/folders caused it.
+                    // So inject some logging of that before throwing.
+                    this.logger.error(
+                      chalk.yellow(`Error happened processing: ${filepath}`)
+                    );
+                    throw err;
+                  }
+                  const { result, file } = processed;
+                  this.printProcessing(result, file);
+                  counts[result]++;
+                  this.tickProgressbar(++total);
+                });
+              return;
+            }
+
             let processed;
             try {
               processed = this.processFolder(source, folder);
@@ -377,8 +414,6 @@ class Builder {
   }
 
   ensureAllTitles() {
-    // this.ensurePopularities();
-
     // First walk all the content and pick up all the titles.
     // Note, no matter what locales you have picked in the filtering,
     // *always* include 'en-US' because with that, it becomes possible
@@ -411,6 +446,15 @@ class Builder {
         this.getLocaleRootFolders(source, { allLocales: true }).forEach(
           filepath => {
             walker(filepath, (folder, files) => {
+              if (source.isStumptown) {
+                files
+                  .filter(n => n.endsWith(".json"))
+                  .forEach(filename => {
+                    const filepath = path.join(folder, filename);
+                    this.processStumptownFileTitle(source, filepath);
+                  });
+                return;
+              }
               if (
                 files.includes("index.html") &&
                 files.includes("index.yaml")
@@ -520,6 +564,21 @@ class Builder {
       .on("add", onChangeOrAdd);
   }
 
+  describeActiveSources() {
+    const sourcesHuman = this.sources.entries().map((s, i) => {
+      let out = `${i + 1}. ${s.filepath}`;
+      if (s.isStumptown) {
+        out += `\t(stumptown)`;
+      } else if (s.htmlAlreadyRendered) {
+        out += `\t(html already rendered)`;
+      }
+      return out;
+    });
+    console.log(
+      chalk.yellow(`Current sources...\n\t${sourcesHuman.join("\n\t")}\n`)
+    );
+  }
+
   describeActiveFilters() {
     const filtersHuman = [];
     if (this.options.locales.length) {
@@ -529,16 +588,15 @@ class Builder {
         `Not locales: ${JSON.stringify(this.options.notLocales)}`
       );
     }
-    if (this.options.foldersearch) {
+    if (this.options.foldersearch.length) {
       filtersHuman.push(
         `Folders: ${JSON.stringify(this.options.foldersearch)}`
       );
     }
     if (filtersHuman.length) {
       console.log(
-        chalk.yellow(`Current filters:\n\t${filtersHuman.join("\n\t")}`)
+        chalk.yellow(`Current filters...\n\t${filtersHuman.join("\n\t")}\n`)
       );
-      console.log("");
     }
   }
 
@@ -570,6 +628,9 @@ class Builder {
   }
 
   prepareRoot(locale) {
+    if (!this.options.destination) {
+      throw new Error("options.destination not set");
+    }
     const folderpath = path.join(this.options.destination, locale);
     if (this.options.startClean) {
       // Experimental new feature
@@ -657,6 +718,9 @@ class Builder {
               return !documentData.excludeInSitemaps;
             })
             .map(([uri, documentData]) => {
+              if (!documentData.modified) {
+                throw new Error("No .modified in documentData");
+              }
               return {
                 loc: sitemapBaseUrl + uri,
                 lastmod: documentData.modified.split("T")[0]
@@ -744,8 +808,11 @@ class Builder {
         return true;
       }
     }
-
-    return !(files.includes("index.html") && files.includes("index.yaml"));
+    if (source.isStumptown) {
+      return !files.some(filepath => filepath.endsWith(".json"));
+    } else {
+      return !(files.includes("index.html") && files.includes("index.yaml"));
+    }
   }
 
   /**
@@ -775,6 +842,8 @@ class Builder {
     return folders;
   }
 
+  // For a given source, return a mapping of locale-> docs to build.
+  // E.g. {'en-us': 123, fr: 9}
   countLocaleFolders(source) {
     let locales = new Map();
     this.getLocaleRootFolders(source).forEach(filepath => {
@@ -783,10 +852,18 @@ class Builder {
         locales.set(locale, 0);
       }
       walker(filepath, (folder, files) => {
-        if (files.includes("index.html") && files.includes("index.yaml")) {
-          if (this.excludeFolder(source, folder, filepath, files)) {
-            return;
-          }
+        if (this.excludeFolder(source, folder, filepath, files)) {
+          return;
+        }
+        if (source.isStumptown) {
+          // In stumptown, you'll have multiple .json files per folder.
+          // For example `en-us/html/reference/elements/abbr.json` and
+          // `en-us/html/reference/elements/video.json` etc.
+          locales.set(
+            locale,
+            locales.get(locale) + files.filter(x => x.endsWith(".json")).length
+          );
+        } else {
           locales.set(locale, locales.get(locale) + 1);
         }
       });
@@ -811,11 +888,13 @@ class Builder {
     const hasher = crypto.createHash("md5");
 
     const metadataRaw = fs.readFileSync(path.join(folder, "index.yaml"));
-    hasher.update(metadataRaw);
+
     const metadata = yaml.safeLoad(metadataRaw);
     if (this.excludeSlug(metadata)) {
       return { result: processing.EXCLUDED, file: folder };
     }
+    hasher.update(metadataRaw);
+
     if (fs.existsSync(path.join(folder, "wikihistory.yaml"))) {
       const wikiMetadataRaw = fs.readFileSync(
         path.join(folder, "wikihistory.yaml")
@@ -827,16 +906,6 @@ class Builder {
     // The destination is the same as source but with a different base.
     // If the file *came from* /path/to/files/en-US/foo/bar/
     // the final destination is /path/to/build/en-US/foo/bar/index.json
-
-    // This is arguably linting of the content. We're checking that
-    // the locale and slug are sane. We're doing this during build,
-    // which means that to lint you have to actually try to build.
-    // We might want to reconsider this at some point in the future.
-    // For example, it might be a nice optimization to execute linting
-    // separately in CI so you don't have to wait for a complete build
-    // and thus you could "break the CI build" sooner for earlier feedback.
-    validateLocale(metadata.locale);
-    validateSlug(metadata.slug);
 
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
 
@@ -878,6 +947,9 @@ class Builder {
     hasher.update(renderedHtml);
 
     // Now we've read in all the "inputs" needed.
+    // Even if there's no hope in hell that we're going to get a catch hit,
+    // we have to compute this hash because on a cache miss, we need to
+    // write it down after we've done the work.
     const docHash = hasher.digest("hex").slice(0, 12);
     const combinedHash = `${this.selfHash}.${docHash}`;
     // If the destination and the hash file already exists AND the content
@@ -894,6 +966,16 @@ class Builder {
         file: path.join(destinationDir, "index.html")
       };
     }
+
+    // This is arguably linting of the content. We're checking that
+    // the locale and slug are sane. We're doing this during build,
+    // which means that to lint you have to actually try to build.
+    // We might want to reconsider this at some point in the future.
+    // For example, it might be a nice optimization to execute linting
+    // separately in CI so you don't have to wait for a complete build
+    // and thus you could "break the CI build" sooner for earlier feedback.
+    validateLocale(metadata.locale);
+    validateSlug(metadata.slug);
 
     const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`, {
       // decodeEntities: false
@@ -978,17 +1060,81 @@ class Builder {
     if (process.env.NODE_ENV === "development") {
       // When in development mode, put the absolute path of the source
       // of where the content comes from.
-      doc.source = {
-        folder: path.relative(source.filepath, folder),
-        absolute_folder: folder,
-        // XXX This is going to depend it being stumptown or not
-        content_file: path.join(folder, "index.html")
-      };
+      if (source.isStumptown) {
+        doc.source = {
+          folder: path.dirname(folder),
+          // absolute_folder: folder,
+          // markdown_file: folder
+          content_file: folder // actually a filepath!
+          // content_file: path.join(folder, "index.html")
+        };
+      } else {
+        doc.source = {
+          // folder: path.relative(source.filepath, folder),
+          // absolute_folder: folder,
+          content_file: path.join(folder, "index.html")
+        };
+      }
     } else {
       doc.source = {
         github_url: this.getGitHubURL(source, folder)
       };
     }
+  }
+
+  processStumptownFile(source, file, config) {
+    config = config || {};
+
+    const hasher = crypto.createHash("md5");
+    const docRaw = fs.readFileSync(file);
+    const doc = JSON.parse(docRaw);
+    if (this.excludeSlug(doc)) {
+      return { result: processing.EXCLUDED, file };
+    }
+    hasher.update(docRaw);
+
+    const { mdn_url } = doc;
+    const destinationDirRaw = path.join(
+      this.destination,
+      mdn_url.toLowerCase()
+    );
+    const destinationDir = destinationDirRaw
+      .split(path.sep)
+      .map(sanitizeFilename)
+      .join(path.sep);
+
+    const hashDestination = path.join(destinationDir, "_index.hash");
+
+    // Now let's see if the inputs have changed since last time
+    const docHash = hasher.digest("hex").slice(0, 12);
+    const combinedHash = `${this.selfHash}.${docHash}`;
+    if (
+      !this.options.noCache &&
+      fs.existsSync(destinationDir) &&
+      fs.existsSync(hashDestination) &&
+      fs.readFileSync(hashDestination, "utf8") === combinedHash
+    ) {
+      return {
+        result: processing.ALREADY,
+        file: path.join(destinationDir, "index.html")
+      };
+    }
+
+    this.injectSource(source, doc, file);
+
+    const { outfileJson, outfileHtml } = buildHtmlAndJsonFromDoc({
+      doc,
+      destinationDir,
+      buildHtml: !this.options.buildJsonOnly,
+      titles: this.allTitles
+    });
+
+    return {
+      result: processing.PROCESSED,
+      file: outfileHtml || outfileJson,
+      jsonFile: outfileJson,
+      doc
+    };
   }
 
   /** Similar to processFolder() but this time we're only interesting it
@@ -998,6 +1144,9 @@ class Builder {
     const metadata = yaml.safeLoad(
       fs.readFileSync(path.join(folder, "index.yaml"))
     );
+
+    const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
+
     // XXX Perhaps, if the source of this is from archive, we might
     // not need to or what to bother with popularity or modified data.
     if (fs.existsSync(path.join(folder, "wikihistory.json"))) {
@@ -1007,7 +1156,21 @@ class Builder {
       const wikiMetadata = JSON.parse(wikiMetadataRaw);
       metadata.modified = wikiMetadata.modified;
     }
-    const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
+
+    if (mdn_url in this.allTitles) {
+      // Already been added by stumptown probably.
+      // But, before we exit early, let's update some of the pieces of
+      // information that stumptown might not have, such as last_modified
+      // and parent.
+      if (!this.allTitles[mdn_url].modified) {
+        this.allTitles[mdn_url].modified = metadata.modified;
+      }
+      if (!this.allTitles[mdn_url].parent) {
+        this.allTitles[mdn_url].parent = metadata.parent;
+      }
+      return;
+    }
+
     const doc = {
       mdn_url,
       title: metadata.title,
@@ -1020,8 +1183,28 @@ class Builder {
       // XXX To be lean if either of these are false, perhaps not
       // bother setting it.
       excludeInTitlesJson: source.excludeInTitlesJson,
-      excludeInSitemaps: source.excludeInSitemaps
+      excludeInSitemaps: source.excludeInSitemaps,
+      source: source.filepath
     };
+    this.allTitles[mdn_url] = doc;
+  }
+
+  processStumptownFileTitle(source, file) {
+    const metadata = JSON.parse(fs.readFileSync(file));
+    const { mdn_url, title } = metadata;
+    const doc = {
+      mdn_url,
+      title,
+      popularity: this.allPopularities[mdn_url] || 0.0,
+      locale: null,
+      slug: null,
+      modified: null,
+      parent: null,
+      excludeInTitlesJson: source.excludeInTitlesJson,
+      excludeInSitemaps: source.excludeInSitemaps,
+      source: source.filepath
+    };
+
     this.allTitles[mdn_url] = doc;
   }
 
@@ -1045,8 +1228,16 @@ class Builder {
   }
 }
 
-function walker(root, callback) {
+function walker(root, callback, depth = 0) {
   const files = fs.readdirSync(root);
+  if (!depth) {
+    callback(
+      root,
+      files.filter(name => {
+        return !fs.statSync(path.join(root, name)).isDirectory();
+      })
+    );
+  }
   for (const name of files) {
     const filepath = path.join(root, name);
     const isDirectory = fs.statSync(filepath).isDirectory();
@@ -1058,7 +1249,7 @@ function walker(root, callback) {
         })
       );
       // Now go deeper
-      walker(filepath, callback);
+      walker(filepath, callback, depth + 1);
     }
   }
 }
