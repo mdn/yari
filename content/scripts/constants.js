@@ -24,12 +24,17 @@ const DEFAULT_BUILD_NOT_LOCALES = (process.env.BUILD_NOT_LOCALES || "")
 //   path.join(__dirname, "..", "..", "stumptown", "packaged");
 
 const DEFAULT_EXCLUDE_SLUG_PREFIXES = [
-  "User:",
-  "Talk:",
-  "User_talk:",
-  "Template_talk:",
-  "Project_talk:",
   "Experiment:",
+  "Help:",
+  "Help_talk:",
+  "Project:",
+  "Project_talk:",
+  "Special:",
+  "Talk:",
+  "Template:",
+  "Template_talk:",
+  "User:",
+  "User_talk:",
 
   // The following come from 'NOINDEX_SLUG_PREFIXES' in
   // https://github.com/mdn/kuma/blob/master/kuma/wiki/constants.py#L668

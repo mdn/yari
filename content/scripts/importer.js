@@ -5,6 +5,7 @@ const mysql = require("mysql");
 const cheerio = require("cheerio");
 const sanitizeFilename = require("sanitize-filename");
 const yaml = require("js-yaml");
+const assert = require('assert').strict;
 
 const ProgressBar = require("./progress-bar");
 
@@ -14,7 +15,32 @@ const REDIRECT_HTML = "REDIRECT <a ";
 // folder; namely the archive folder.
 // Case matters but 100% of Prod slugs are spelled like this. I.e.
 // there's *no* slug that is something like this 'archiVe/Foo/Bar'.
-const ARCHIVE_SLUG_PREFIXES = ["Archive", "Mozilla", "Sandbox"];
+const ARCHIVE_SLUG_PREFIXES = [
+  "Archive",
+  "BrowserID",
+  "Debugging",
+  "Extensions",
+  "Firefox_OS",
+  "Garbage_MixedContentBlocker",
+  "Gecko",
+  "Hacking_Firefox",
+  "Interfaces",
+  "Mercurial",
+  "Mozilla",
+  "Multi-Process_Architecture",
+  "NSS",
+  "nsS",
+  "Performance",
+  "Persona",
+  "Preferences_System",
+  "Sandbox",
+  "SpiderMonkey",
+  "Thunderbird",
+  "XML_Web_Services",
+  "XUL",
+  "XULREF",
+  "Zones"
+];
 
 async function runImporter(options, logger) {
   const creds = url.parse(options.dbURL);
@@ -336,12 +362,15 @@ class Importer {
     // In case anything needs to be done to this.sources
   }
 
-  isArchiveSlug(slug) {
-    return ARCHIVE_SLUG_PREFIXES.some(prefix => slug.startsWith(prefix));
+  isArchiveDoc(row) {
+    return ARCHIVE_SLUG_PREFIXES.some(prefix =>
+      row.slug.startsWith(prefix) ||
+      (row.parent_slug && row.parent_slug.startsWith(prefix))
+    );
   }
 
   processRow(row, resumeCallback) {
-    const isArchive = this.isArchiveSlug(row.slug);
+    const isArchive = this.isArchiveDoc(row);
     const absoluteUrl = buildAbsoluteUrl(row.locale, row.slug);
     if (row.is_redirect) {
       if (isArchive) {
@@ -536,8 +565,7 @@ class ToDiskImporter extends Importer {
 
     const meta = {
       title,
-      slug,
-      locale
+      slug
     };
     if (isArchive) {
       meta.archived = true;
@@ -547,11 +575,9 @@ class ToDiskImporter extends Importer {
       _generated: new Date().toISOString()
     };
 
-    if (doc.parent_slug && doc.parent_locale) {
-      meta.parent = {
-        slug: doc.parent_slug,
-        locale: doc.parent_locale
-      };
+    if (doc.parent_slug) {
+      assert(doc.parent_locale === "en-US");
+      meta.translationof = doc.parent_slug;
     }
 
     // let otherTranslations = this.allTranslations[doc.id] || [];
@@ -572,7 +598,7 @@ class ToDiskImporter extends Importer {
       userId => this.allUsernames[userId]
     );
     if (contributors.length) {
-      wikiHistory.mdn_contributors = contributors;
+      wikiHistory.contributors = contributors;
     }
     fs.writeFileSync(wikiHistoryFile, JSON.stringify(wikiHistory, null, 2));
 
