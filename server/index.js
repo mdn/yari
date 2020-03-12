@@ -84,6 +84,10 @@ app.use(
   })
 );
 
+function normalizeContentPath(start) {
+  return path.join(__dirname, "..", start);
+}
+
 app.get("/_open", (req, res) => {
   const filepath = req.query.filepath;
   if (!filepath) {
@@ -98,11 +102,17 @@ let builder = null;
 function getOrCreateBuilder() {
   if (!builder) {
     const sources = new Sources();
-    sources.add(DEFAULT_ROOT);
+    // The server doesn't have command line arguments like the content CLI
+    // does so we need to entirely rely on environment variables.
+    if (process.env.BUILD_ROOT) {
+      sources.add(normalizeContentPath(process.env.BUILD_ROOT));
+    }
     builder = new Builder(
       sources,
       {
-        destination: DEFAULT_DESTINATION,
+        destination: normalizeContentPath(
+          process.env.BUILD_DESTINATION || "client/build"
+        ),
         noSitemaps: true,
         specificFolders: [],
         buildJsonOnly: true,
@@ -141,8 +151,8 @@ app.get("/*", async (req, res) => {
       return res.redirect(301, redirectUrl + ".json");
     }
 
-    const specificFolder = getFolderFromURI(
-      req.url.replace(/\/index\.json$/, "")
+    const specificFolder = normalizeContentPath(
+      getFolderFromURI(req.url.replace(/\/index\.json$/, ""))
     );
 
     // Check that it even makes sense!

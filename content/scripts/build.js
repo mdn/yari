@@ -7,7 +7,7 @@ const { performance } = require("perf_hooks");
 const chalk = require("chalk");
 const yaml = require("js-yaml");
 const sanitizeFilename = require("sanitize-filename");
-const sane = require("sane");
+const chokidar = require("chokidar");
 const WebSocket = require("ws");
 // XXX does this work on Windows?
 const packageJson = require("../../package.json");
@@ -184,6 +184,7 @@ function runBuild(sources, options, logger) {
       if (supported) {
         logger.debug("Watchman supposedly supported.");
         builder.watch();
+        console.log("Starting WebSocket (port 8080) to report on builds.");
         webSocketServer = new WebSocket.Server({ port: 8080 });
       } else {
         // @Gregoor Here's where we'd need a nice banner
@@ -497,77 +498,53 @@ class Builder {
   }
 
   watch() {
-    const lastChangedFiled = {};
+    const onChange = (filepath, source) => {
+      const folder = path.dirname(filepath);
+      this.logger.info(`${chalk.bold("change")} in ${folder}`);
+      const t0 = performance.now();
+      const { result, file, doc } = this.processFolder(source, folder);
+      const t1 = performance.now();
 
-    const onChangeOrAdd = (filepath, watchRoot) => {
-      if (filepath in lastChangedFiled) {
-        // If the filewatcher ran twice (in quick succession), we want to
-        // prevent it from doing stuff this second time.
-        const age = new Date().getTime() - lastChangedFiled[filepath];
-        if (age < 1000) {
-          // It triggered too soon again for the same file!
-          // This can happen if something like watchexec or watchman triggers
-          // twice.
-          this.logger.debug("Same file changed too recently.");
-          return;
-        }
-      }
-      lastChangedFiled[filepath] = new Date().getTime();
-      const locale = filepath.split(path.sep)[0];
-      const localeFolder = path.join(watchRoot, locale);
-      const fullFilepath = path.join(watchRoot, filepath);
-      const folder = path.dirname(fullFilepath);
-      const source = this.sources.entries().find(source => {
-        return folder.startsWith(source.filepath);
-      });
-      if (!source) {
-        throw new Error(`Unable to find the source based on ${folder}`);
-      }
-      const files = fs.readdirSync(folder);
-      this.logger.info(`Change in ${folder}`);
-      if (!this.excludeFolder(source, folder, localeFolder, files)) {
-        this.logger.debug(`Change in ${folder} NOT excluded.`);
-        const t0 = performance.now();
-        const { result, file, doc } = this.processFolder(source, folder);
-        const t1 = performance.now();
-
-        const tookStr = ppMilliseconds(t1 - t0);
-        console.log(
-          `${
-            result === processing.PROCESSED
-              ? chalk.green(result)
-              : chalk.yellow(result)
-          }: ${chalk.white(file)} ${chalk.grey(tookStr)}`
-        );
-        if (result === processing.PROCESSED) {
-          triggerTouch(fullFilepath, doc, watchRoot);
-        }
-      } else {
-        this.logger.debug(`Change in ${folder} excluded!`);
+      const tookStr = ppMilliseconds(t1 - t0);
+      console.log(
+        `${
+          result === processing.PROCESSED
+            ? chalk.green(result)
+            : chalk.yellow(result)
+        }: ${chalk.white(file)} ${chalk.grey(tookStr)}`
+      );
+      if (result === processing.PROCESSED) {
+        triggerTouch(filepath, doc, source.filepath);
       }
     };
+
     this.sources
       .entries()
       .filter(source => source.watch)
       .forEach(source => {
-        console.log(
-          chalk.yellow(`Setting up file watcher on ${source.filepath}`)
-        );
-        sane(source.filepath, {
-          watchman: true,
-          // watchexec: true,
-          glob: ["**/*.html", "**/*.yaml"]
-        })
-          .on("ready", () => {
-            console.log(
-              chalk.green(`File watcher set up on ${source.filepath}`)
-            );
-            if (isTTY()) {
-              console.log("Hit Ctrl-C to quit the watcher when ready.");
-            }
-          })
-          .on("change", onChangeOrAdd)
-          .on("add", onChangeOrAdd);
+        const watchdir = path.resolve(source.filepath);
+
+        console.log(chalk.yellow(`Setting up file watcher on ${watchdir}...`));
+        const watcher = chokidar.watch(path.join(watchdir, "**/*.(html|yaml)"));
+        watcher.on("change", path => {
+          onChange(path, source);
+        });
+        watcher.on("ready", () => {
+          const watchedPaths = watcher.getWatched();
+          const folders = Object.values(watchedPaths);
+          const count = folders
+            .map(list => list.length)
+            .reduce((a, b) => a + b, 0);
+          console.log(
+            chalk.yellow(
+              `File watcher set up for ${watchdir}. ` +
+                `Watching over ${count.toLocaleString()} files in ${folders.length.toLocaleString()} folders.`
+            )
+          );
+          if (isTTY()) {
+            console.log("Hit Ctrl-C to quit the watcher when ready.");
+          }
+        });
       });
   }
 
