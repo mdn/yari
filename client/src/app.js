@@ -1,10 +1,11 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { Router, Link } from "@reach/router";
 
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { NoMatch } from "./routing";
 import { SearchWidget } from "./search";
+const EditDocument = lazy(() => import("./edit-document.js"));
 
 export function App(appProps) {
   return (
@@ -13,11 +14,16 @@ export function App(appProps) {
         <Header default />
       </Router>
       <section className="section">
-        <Router>
-          <Homepage path="/" />
-          <Document {...appProps} path="/:locale/docs/*" />
-          <NoMatch default />
-        </Router>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Router>
+            <Homepage path="/" />
+
+            <EditDocument {...appProps} path="/:locale/edit/*" />
+
+            <Document {...appProps} path="/:locale/docs/*" />
+            <NoMatch default />
+          </Router>
+        </Suspense>
       </section>
     </div>
   );
