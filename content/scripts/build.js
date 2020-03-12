@@ -497,9 +497,6 @@ class Builder {
   }
 
   watch() {
-    const { root } = this.options;
-    console.log(chalk.yellow(`Setting up file watcher on ${root}`));
-
     const lastChangedFiled = {};
 
     const onChangeOrAdd = (filepath, watchRoot) => {
@@ -549,19 +546,29 @@ class Builder {
         this.logger.debug(`Change in ${folder} excluded!`);
       }
     };
-    sane(root, {
-      watchman: true,
-      // watchexec: true,
-      glob: ["**/*.html", "**/*.yaml"]
-    })
-      .on("ready", () => {
-        console.log(chalk.green(`File watcher set up on ${root}`));
-        if (isTTY()) {
-          console.log("Hit Ctrl-C to quit the watcher when ready.");
-        }
-      })
-      .on("change", onChangeOrAdd)
-      .on("add", onChangeOrAdd);
+    this.sources
+      .entries()
+      .filter(source => source.watch)
+      .forEach(source => {
+        console.log(
+          chalk.yellow(`Setting up file watcher on ${source.filepath}`)
+        );
+        sane(source.filepath, {
+          watchman: true,
+          // watchexec: true,
+          glob: ["**/*.html", "**/*.yaml"]
+        })
+          .on("ready", () => {
+            console.log(
+              chalk.green(`File watcher set up on ${source.filepath}`)
+            );
+            if (isTTY()) {
+              console.log("Hit Ctrl-C to quit the watcher when ready.");
+            }
+          })
+          .on("change", onChangeOrAdd)
+          .on("add", onChangeOrAdd);
+      });
   }
 
   describeActiveSources() {
