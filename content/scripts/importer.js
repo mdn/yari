@@ -5,7 +5,7 @@ const mysql = require("mysql");
 const cheerio = require("cheerio");
 const sanitizeFilename = require("sanitize-filename");
 const yaml = require("js-yaml");
-const assert = require('assert').strict;
+const assert = require("assert").strict;
 
 const ProgressBar = require("./progress-bar");
 
@@ -363,9 +363,10 @@ class Importer {
   }
 
   isArchiveDoc(row) {
-    return ARCHIVE_SLUG_PREFIXES.some(prefix =>
-      row.slug.startsWith(prefix) ||
-      (row.parent_slug && row.parent_slug.startsWith(prefix))
+    return ARCHIVE_SLUG_PREFIXES.some(
+      prefix =>
+        row.slug.startsWith(prefix) ||
+        (row.parent_slug && row.parent_slug.startsWith(prefix))
     );
   }
 
@@ -629,14 +630,21 @@ class ToDiskImporter extends Importer {
         return 0;
       });
       countPerLocale.push([locale, pairs.length]);
-      const filePath = path.join(this.options.root, locale, "_redirects.txt");
-      const writeStream = fs.createWriteStream(filePath);
-      writeStream.write(`# FROM-URL\tTO-URL\n`);
-      pairs.forEach(([fromUrl, toUrl]) => {
-        writeStream.write(`${fromUrl}\t${toUrl}\n`);
-      });
-      writeStream.end();
-      this.logger.info(`Wrote all ${locale} redirects to ${filePath}`);
+      const localeFolder = path.join(this.options.root, locale);
+      if (!fs.existsSync(localeFolder)) {
+        this.logger.info(
+          `No content for ${locale}, so skip ${pairs.length} redirects`
+        );
+      } else {
+        const filePath = path.join(localeFolder, "_redirects.txt");
+        const writeStream = fs.createWriteStream(filePath);
+        writeStream.write(`# FROM-URL\tTO-URL\n`);
+        pairs.forEach(([fromUrl, toUrl]) => {
+          writeStream.write(`${fromUrl}\t${toUrl}\n`);
+        });
+        writeStream.end();
+        this.logger.info(`Wrote all ${locale} redirects to ${filePath}`);
+      }
     });
 
     this.logger.info("# Redirects per locale");
