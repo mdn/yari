@@ -46,9 +46,7 @@ export class Document extends React.Component {
 
   fetchDocument = (loading = true) => {
     this.setState({ loading }, async () => {
-      let url = document.location.pathname;
-      if (!url.endsWith("/")) url += "/";
-      url += "index.json";
+      const url = `/${this.props.locale}/docs/${this.props["*"]}/index.json`;
       console.log("OPENING", url);
       let response;
       try {
@@ -68,7 +66,8 @@ export class Document extends React.Component {
   };
 
   onMessage = data => {
-    if (data.documentUri === this.props.location.pathname) {
+    const url = `/${this.props.locale}/docs/${this.props["*"]}`;
+    if (data.documentUri === url) {
       // The recently edited document is the one we're currently looking at!
       if (!this.dismounted) {
         this.fetchDocument(false);
@@ -117,11 +116,7 @@ export class Document extends React.Component {
           </div>
         </div>
         {process.env.NODE_ENV === "development" && (
-          <DocumentSpy
-            onMessage={this.onMessage}
-            // location={this.props.location}
-            // fetchDocument={this.fetchDocument}
-          />
+          <DocumentSpy onMessage={this.onMessage} />
         )}
       </div>
     );

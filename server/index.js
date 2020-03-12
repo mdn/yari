@@ -4,6 +4,7 @@ const { performance } = require("perf_hooks");
 
 const express = require("express");
 const openEditor = require("open-editor");
+const yaml = require("js-yaml");
 
 const { Builder } = require("content/scripts/build");
 const { Sources } = require("content/scripts/sources");
@@ -84,9 +85,76 @@ app.use(
   })
 );
 
+// For submitting form data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 function normalizeContentPath(start) {
   return path.join(__dirname, "..", start);
 }
+
+app.get("/_document", (req, res) => {
+  if (!req.query.url) {
+    return res.status(400).send("No ?url= query param");
+  }
+  console.log(`Looking up document data by URL ${req.query.url}`);
+  const docData = getOrCreateBuilder().allTitles[req.query.url];
+  if (!docData) {
+    return res.status(400).send(`No document by the URL ${req.query.url}`);
+  }
+  // console.log(docData);
+  const folder = normalizeContentPath(docData.file);
+  const html = fs.readFileSync(path.join(folder, "index.html"), "utf8");
+  const rawMetadata = fs.readFileSync(path.join(folder, "index.yaml"));
+  const metadata = yaml.safeLoad(rawMetadata);
+  res.status(200).json({
+    html,
+    metadata
+  });
+});
+
+app.put("/_document", (req, res) => {
+  if (!req.query.url) {
+    return res.status(400).send("No ?url= query param");
+  }
+  console.log(`Looking up document data by URL ${req.query.url}`);
+  const docData = getOrCreateBuilder().allTitles[req.query.url];
+  if (!docData) {
+    return res.status(400).send(`No document by the URL ${req.query.url}`);
+  }
+
+  // console.log(req);
+  // console.log(req.body);
+  console.log({ title: req.body.title });
+  if (req.body.title && req.body.html) {
+    const folder = normalizeContentPath(docData.file);
+    const htmlFile = path.join(folder, "index.html");
+    const html = fs.readFileSync(htmlFile, "utf8");
+    const metadataFile = path.join(folder, "index.yaml");
+    console.log(`WRITING TO ${metadataFile}`);
+    const rawMetadata = fs.readFileSync(metadataFile);
+    const metadata = yaml.safeLoad(rawMetadata);
+    metadata.title = req.body.title;
+    fs.writeFileSync(metadataFile, yaml.safeDump(metadata));
+    fs.writeFileSync(htmlFile, req.body.html);
+  }
+
+  res.status(200).send("Ok");
+  // console.log(`Looking up document data by URL ${req.query.url}`);
+  // const docData = getOrCreateBuilder().allTitles[req.query.url];
+  // if (!docData) {
+  //   return res.status(400).send(`No document by the URL ${req.query.url}`);
+  // }
+  // // console.log(docData);
+  // const folder = normalizeContentPath(docData.file);
+  // const html = fs.readFileSync(path.join(folder, "index.html"), "utf8");
+  // const rawMetadata = fs.readFileSync(path.join(folder, "index.yaml"));
+  // const metadata = yaml.safeLoad(rawMetadata);
+  // res.status(200).json({
+  //   html,
+  //   metadata
+  // });
+});
 
 app.get("/_open", (req, res) => {
   const filepath = req.query.filepath;

@@ -8,22 +8,30 @@ import { SearchWidget } from "./search";
 const EditDocument = lazy(() => import("./edit-document.js"));
 
 export function App(appProps) {
+  const router = (
+    <Router>
+      <Homepage path="/" />
+      <EditDocument {...appProps} path="/:locale/edit/*" />
+      <Document {...appProps} path="/:locale/docs/*" />
+      <NoMatch default />
+    </Router>
+  );
+  const isServer = typeof window === "undefined";
   return (
     <div>
       <Router primary={false}>
         <Header default />
       </Router>
       <section className="section">
-        <Suspense fallback={<div>Loading...</div>}>
-          <Router>
-            <Homepage path="/" />
-
-            <EditDocument {...appProps} path="/:locale/edit/*" />
-
-            <Document {...appProps} path="/:locale/docs/*" />
-            <NoMatch default />
-          </Router>
-        </Suspense>
+        {/* This might look a bit odd but it's actually quite handy.
+        This way, when rendering client-side, we wrap all the routes in
+        <Suspense> but in server-side rendering that goes away.
+         */}
+        {isServer ? (
+          router
+        ) : (
+          <Suspense fallback={<div>Loading...</div>}>{router}</Suspense>
+        )}
       </section>
     </div>
   );
