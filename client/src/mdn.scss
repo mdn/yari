@@ -152,7 +152,8 @@ div.content {
   ul,
   ol,
   pre,
-  .live-sample-frame {
+  .live-sample-frame,
+  .banner {
     max-width: 42rem;
   }
 
@@ -166,6 +167,23 @@ div.content {
     h2 {
       border-bottom: 1px solid #eaecef;
     }
+  }
+
+  .banner {
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+
+  .deprecated-banner {
+    background-color: #ffe7e8;
+  }
+
+  .experimental-banner {
+    background-color: #fff3d4;
+  }
+
+  .nonstandard-banner {
+    background-color: #ffe7e8;
   }
 }
 

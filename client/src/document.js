@@ -5,6 +5,7 @@ import { NoMatch } from "./routing";
 
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
+import { StatusBanners } from "./ingredients/status-banners";
 import { InteractiveExample } from "./ingredients/interactive-example";
 import { Attributes } from "./ingredients/attributes";
 import { Examples } from "./ingredients/examples";
@@ -183,6 +184,8 @@ function RenderDocumentBody({ doc }) {
           />
         );
       }
+    } else if (section.type === "status") {
+      return <StatusBanners key={`status${i}`} status={section.value} />;
     } else if (section.type === "interactive_example") {
       return (
         <InteractiveExample
