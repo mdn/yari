@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const cli = require("caporal");
 
-import runImporter from "./scripts/importer";
+const runImporter = require("./scripts/importer");
 const { runBuild } = require("./scripts/build");
 const { runMakePopularitiesFile } = require("./scripts/popularities");
 const { Sources } = require("./scripts/sources");
@@ -236,7 +236,7 @@ cli
 cli.parse(process.argv).then(r => {
   // If the command explicitly returned a number, use that as the exit code
   // Otherwise, if it's anything truthy return 1 or all else 0.
-  process.exitCode = typeof r === (Number as any) ? r : r ? 1 : 0;
+  process.exitCode = typeof r === Number ? r : r ? 1 : 0;
 });
 
 function equalArray(a, b) {

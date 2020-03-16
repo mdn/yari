@@ -1,16 +1,14 @@
-import { strict as assert } from "assert";
-import * as fs from "fs";
-import * as path from "path";
-import * as stream from "stream";
-import { promisify } from "util";
-import * as url from "url";
-import * as cheerio from "cheerio";
-import * as mysql from "mysql";
-import { Pool } from "mysql";
-import * as yaml from "js-yaml";
-import * as ProgressBar from "./progress-bar";
-
+const url = require("url");
+const fs = require("fs");
+const path = require("path");
+const stream = require("stream");
+const { promisify } = require("util");
+const mysql = require("mysql");
+const cheerio = require("cheerio");
 const sanitizeFilename = require("sanitize-filename");
+const yaml = require("js-yaml");
+const assert = require("assert").strict;
+const ProgressBar = require("./progress-bar");
 
 const MAX_OPEN_FILES = 256;
 
@@ -46,16 +44,9 @@ const ARCHIVE_SLUG_PREFIXES = [
 ];
 
 function getSQLConstraints(
-  {
-    joinTable = null,
-    alias = null,
-    includeDeleted = false
-  }: { joinTable?: string; alias?: string; includeDeleted?: boolean } = {},
+  { joinTable = null, alias = null, includeDeleted = false } = {},
   options
-): {
-  constraintsSQL: string;
-  queryArgs: string[];
-} {
+) {
   // Yeah, this is ugly but it bloody works for now.
   const a = alias ? `${alias}.` : "";
   const extra = [];
@@ -139,10 +130,7 @@ async function queryContributors(query, options) {
   return { contributors, usernames };
 }
 
-async function queryTranslationRelationships(
-  query,
-  options
-): Promise<{ [id: string]: string }> {
+async function queryTranslationRelationships(query, options) {
   const { constraintsSQL, queryArgs } = getSQLConstraints(
     {
       alias: "d"
@@ -207,10 +195,7 @@ async function queryDocumentCount(query, constraintsSQL, queryArgs) {
   return totalCount;
 }
 
-async function queryDocuments(
-  pool: Pool,
-  options
-): Promise<{ totalCount: number; stream: stream.Readable }> {
+async function queryDocuments(pool, options) {
   const { constraintsSQL, queryArgs } = getSQLConstraints(
     {
       alias: "w"
@@ -249,10 +234,7 @@ async function queryDocuments(
   };
 }
 
-async function withTimer<T>(
-  label: string,
-  fn: () => T | Promise<T>
-): Promise<T> {
+async function withTimer(label, fn) {
   console.time(label);
   const result = await fn();
   console.timeEnd(label);
@@ -275,10 +257,10 @@ async function prepareRoots(options) {
     // Experimental new feature
     // https://nodejs.org/api/fs.html#fs_fs_rmdirsync_path_options
     await withTimer(`Delete all of ${options.root}`, () =>
-      (fs.rmdirSync as any)(options.root, { recursive: true })
+      fs.rmdirSync(options.root, { recursive: true })
     );
     await withTimer(`Delete all of ${options.archiveRoot}`, () =>
-      (fs.rmdirSync as any)(options.archiveRoot, { recursive: true })
+      fs.rmdirSync(options.archiveRoot, { recursive: true })
     );
   }
   fs.mkdirSync(options.root, { recursive: true });
@@ -316,13 +298,7 @@ function getRedirectURL(html) {
 }
 
 const REDIRECT_HTML = "REDIRECT <a ";
-function processRedirect(
-  doc,
-  absoluteURL
-):
-  | null
-  | { url: null; status: "mess" }
-  | { url: string; status: null | "improved" } {
+function processRedirect(doc, absoluteURL) {
   if (!doc.html.includes(REDIRECT_HTML)) {
     console.log(`${doc.locale}/${doc.slug} is direct but not REDIRECT_HTML`);
     return null;
@@ -396,7 +372,7 @@ async function processDocument(
   const wikiHistoryFile = path.join(folder, "wikihistory.json");
   const metaFile = path.join(folder, "index.yaml");
 
-  const meta: any = {
+  const meta = {
     title,
     slug
   };
@@ -408,7 +384,7 @@ async function processDocument(
     meta.translationof = doc.parent_slug;
   }
 
-  const wikiHistory: any = {
+  const wikiHistory = {
     modified: doc.modified.toISOString(),
     _generated: new Date().toISOString()
   };
@@ -451,7 +427,7 @@ async function saveAllRedirects(redirects, root) {
   }
 
   const countPerLocale = [];
-  for (const [locale, pairs] of Object.entries(byLocale) as any[]) {
+  for (const [locale, pairs] of Object.entries(byLocale)) {
     pairs.sort((a, b) => {
       if (a[0] < b[0]) return -1;
       if (a[0] > b[0]) return 1;
@@ -462,7 +438,7 @@ async function saveAllRedirects(redirects, root) {
     const localeFolder = path.join(root, locale);
     if (!fs.existsSync(localeFolder)) {
       console.log(
-          `No content for ${locale}, so skip ${pairs.length} redirects`
+        `No content for ${locale}, so skip ${pairs.length} redirects`
       );
     } else {
       const filePath = path.join(localeFolder, "_redirects.txt");
@@ -493,7 +469,7 @@ function formatSeconds(s) {
   }
 }
 
-export default async function runImporter(options) {
+module.exports = async function runImporter(options) {
   options = { locales: [], excludePrefixes: [], ...options };
 
   await prepareRoots(options);
@@ -501,9 +477,7 @@ export default async function runImporter(options) {
   const pool = mysql.createPool(options.dbURL);
 
   console.log(
-    `Going to try to connect to ${
-      (pool.config as any).connectionConfig.database
-    } (locales=${options.locales})`
+    `Going to try to connect to ${pool.config.connectionConfig.database} (locales=${options.locales})`
   );
   console.log(
     `Going to exclude the following slug prefixes: ${options.excludePrefixes}`
@@ -617,4 +591,4 @@ export default async function runImporter(options) {
   console.log(
     `Roughly ${(processedDocumentsCount / secondsTook).toFixed(1)} rows/sec.`
   );
-}
+};
