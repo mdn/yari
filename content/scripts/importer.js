@@ -184,6 +184,7 @@ async function queryDocuments(pool, options) {
       w.locale,
       w.is_redirect,
       w.html,
+      w.rendered_html,
       w.modified,
       p.id AS parent_id,
       p.slug AS parent_slug,
@@ -363,7 +364,10 @@ async function processDocument(
   await fs.promises.mkdir(folder, { recursive: true });
   const htmlFile = path.join(folder, "index.html");
 
-  await fs.promises.writeFile(htmlFile, doc.html);
+  // XXX As of right now, we don't have a KS shim that converts "raw Kuma HTML"
+  // to rendered HTML. So we'll cheat by copying the `rendered_html`.
+  // await fs.promises.writeFile(htmlFile, doc.html);
+  await fs.promises.writeFile(htmlFile, `${doc.rendered_html}`);
 
   const wikiHistoryFile = path.join(folder, "wikihistory.json");
   const metaFile = path.join(folder, "index.yaml");
