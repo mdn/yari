@@ -159,7 +159,7 @@ app.get("/*", async (req, res) => {
     if (specificFolder) {
       const t0 = performance.now();
       try {
-        const built = getOrCreateBuilder().start({
+        const built = await getOrCreateBuilder().start({
           specificFolders: [specificFolder]
         });
         const t1 = performance.now();

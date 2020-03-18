@@ -1,12 +1,19 @@
 const path = require("path");
 require("dotenv").config();
 
+// The build timeout in seconds.
+const BUILD_TIMEOUT = process.env.BUILD_TIMEOUT || 1800;
+
 // const DEFAULT_ROOT = process.env.BUILD_ROOT;
+const PROJECT_ROOT = path.join(__dirname, "..", "..");
 
 // const DEFAULT_ARCHIVE_ROOT = process.env.ARCHIVE_ROOT ||
 //   path.join(__dirname, "..", "..", "archivecontent", "files");
 // const DEFAULT_DESTINATION =
 //   process.env.ROOT || path.join(__dirname, "..", "..", "client", "build");
+
+const KUMASCRIPT_ROOT =
+  process.env.KUMASCRIPT_ROOT || path.join(PROJECT_ROOT, "..", "kumascript");
 
 const DEFAULT_DATABASE_URL =
   process.env.DATABASE_URL || "mysql2://username:password@host/databasename";
@@ -62,44 +69,47 @@ const DEFAULT_SITEMAP_BASE_URL = "https://developer.mozilla.org";
 const MAX_GOOGLE_ANALYTICS_URIS = 20000;
 
 // A set of every possible locale we accept content to be in.
-const VALID_LOCALES = new Set([
-  "ar",
-  "bg",
-  "bm",
-  "bn",
-  "ca",
-  "de",
-  "el",
-  "en-US",
-  "es",
-  "fa",
-  "fi",
-  "fr",
-  "he",
-  "hi-IN",
-  "hu",
-  "id",
-  "it",
-  "ja",
-  "kab",
-  "ko",
-  "ms",
-  "my",
-  "nl",
-  "pl",
-  "pt-BR",
-  "pt-PT",
-  "ru",
-  "sv-SE",
-  "th",
-  "tr",
-  "uk",
-  "vi",
-  "zh-CN",
-  "zh-TW"
-]);
+const VALID_LOCALES = new Map(
+  [
+    "ar",
+    "bg",
+    "bm",
+    "bn",
+    "ca",
+    "de",
+    "el",
+    "en-US",
+    "es",
+    "fa",
+    "fi",
+    "fr",
+    "he",
+    "hi-IN",
+    "hu",
+    "id",
+    "it",
+    "ja",
+    "kab",
+    "ko",
+    "ms",
+    "my",
+    "nl",
+    "pl",
+    "pt-BR",
+    "pt-PT",
+    "ru",
+    "sv-SE",
+    "th",
+    "tr",
+    "uk",
+    "vi",
+    "zh-CN",
+    "zh-TW"
+  ].map(x => [x.toLowerCase(), x])
+);
 
 module.exports = {
+  BUILD_TIMEOUT,
   // DEFAULT_ROOT,
   // DEFAULT_ARCHIVE_ROOT,
   // DEFAULT_DESTINATION,
@@ -111,6 +121,7 @@ module.exports = {
   DEFAULT_FOLDER_SEARCHES,
   // DEFAULT_POPULARITIES_FILEPATH,
   // DEFAULT_STUMPTOWN_PACKAGED_ROOT,
+  KUMASCRIPT_ROOT,
   MAX_GOOGLE_ANALYTICS_URIS,
   VALID_LOCALES
 };

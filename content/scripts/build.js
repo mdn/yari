@@ -21,7 +21,16 @@ const {
   extractDocumentSections,
   extractSidebar
 } = require("./document-extractor");
-const { VALID_LOCALES } = require("./constants");
+const {
+  BUILD_TIMEOUT,
+  KUMASCRIPT_ROOT,
+  VALID_LOCALES
+} = require("./constants");
+const { timeout } = require("./timeout-promise.js");
+
+const ksConfig = require(`${KUMASCRIPT_ROOT}/src/config.js`);
+const ksRender = require(`${KUMASCRIPT_ROOT}/src/render.js`);
+const ksTemplates = require(`${KUMASCRIPT_ROOT}/src/templates.js`);
 
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
@@ -68,9 +77,6 @@ function isTTY() {
  * should throw an error.
  */
 function cleanLocales(locales) {
-  const validLocalesLower = new Set(
-    [...VALID_LOCALES].map(x => x.toLowerCase())
-  );
   const clean = [];
   for (const locale of locales) {
     // The user *might* type locales as a comma separated strings.
@@ -86,7 +92,7 @@ function cleanLocales(locales) {
   }
   return clean.filter(x => {
     if (x) {
-      if (!validLocalesLower.has(x)) {
+      if (!VALID_LOCALES.has(x)) {
         throw new Error(`'${x}' is not a valid locale (see VALID_LOCALES)`);
       }
     }
@@ -113,18 +119,20 @@ function buildMDNUrl(locale, slug) {
   return `/${locale}/docs/${slug}`;
 }
 
-/** Throw an error if the locale in insane.
- * This helps breaking the build if someone has put in faulty data into
- * the content (metadata file).
- * If all is well, do nothing. Nothing is expected to return.
- */
-function validateLocale(locale) {
+function extractLocale(source, folder) {
+  // E.g. 'pt-br/web/foo'
+  const relativeToSource = path.relative(source.filepath, folder);
+  // E.g. 'pr-br'
+  const localeFolderName = relativeToSource.split(path.sep)[0];
+  // E.g. 'pt-BR'
+  const locale = VALID_LOCALES.get(localeFolderName);
+  // This checks that the extraction worked *and* that the locale found
+  // really is in VALID_LOCALES *and* it ultimately returns the
+  // locale as we prefer to spell it (e.g. 'pt-BR' not 'Pt-bR')
   if (!locale) {
-    throw new Error("locale is empty");
+    throw new Error(`Unable to determine locale from ${folder}`);
   }
-  if (!VALID_LOCALES.has(locale)) {
-    throw new Error(`'${locale}' is not a recognized locale`);
-  }
+  return locale;
 }
 
 /** Throw an error if the slug is insane.
@@ -164,7 +172,7 @@ function broadcastWebsocketMessage(msg) {
   // console.log(`Sent to ${i} open clients`);
 }
 
-function runBuild(sources, options, logger) {
+async function runBuild(sources, options, logger) {
   const builder = new Builder(sources, options, logger);
 
   if (options.listLocales) {
@@ -184,7 +192,7 @@ function runBuild(sources, options, logger) {
       if (supported) {
         logger.debug("Watchman supposedly supported.");
         builder.watch();
-        console.log("Starting WebSocket (port 8080) to report on builds.");
+        logger.info("Starting WebSocket (port 8080) to report on builds.");
         webSocketServer = new WebSocket.Server({ port: 8080 });
       } else {
         // @Gregoor Here's where we'd need a nice banner
@@ -219,7 +227,7 @@ class Builder {
     this.selfHash = null;
     this.allTitles = {};
     this.allPopularities = {};
-    this.allChildren = {};
+    this.ksMacros = new ksTemplates(ksConfig.macrosDirectory);
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
@@ -246,15 +254,17 @@ class Builder {
 
   // Just print what could be found and exit
   listLocales() {
-    this.sources.entries().forEach(source => {
-      console.log(`\n${chalk.bold("Source:")} ${chalk.white(source.filepath)}`);
+    for (const source of this.sources.entries()) {
+      this.logger.info(
+        `\n${chalk.bold("Source:")} ${chalk.white(source.filepath)}`
+      );
       const counts = this.countLocaleFolders(source);
       const sumCounts = Array.from(counts.values()).reduce((a, b) => a + b, 0);
       Array.from(counts)
         .sort((a, b) => b[1] - a[1])
         .forEach(([locale, count], i) => {
           const percent = sumCounts ? (100 * count) / sumCounts : 0;
-          console.log(
+          this.logger.info(
             `${chalk.green(locale.padEnd(6))}${count
               .toLocaleString()
               .padStart(10)} ${chalk.grey(
@@ -263,7 +273,7 @@ class Builder {
           );
           if (i === counts.size - 1) {
             // Last one
-            console.log(
+            this.logger.info(
               `${chalk.green(
                 "TOTAL".padEnd(6)
               )}${sumCounts.toLocaleString().padStart(10)} ${chalk.grey(
@@ -272,146 +282,175 @@ class Builder {
             );
           }
         });
-    });
+    }
   }
 
-  start({ specificFolders = null } = {}) {
+  *walkSources({ allLocales = false } = {}) {
+    for (const source of this.sources.entries()) {
+      for (const localeFolder of this.getLocaleRootFolders(source, {allLocales})) {
+        for (const [folder, files] of walker(localeFolder)) {
+          yield { source, localeFolder, folder, files };
+        }
+      }
+    }
+  }
+
+  async start({ specificFolders = null } = {}) {
     // This prepares this.selfHash so that when we build files, we can
     // write down which "self hash" was used at the time.
+    const self = this;
     if (specificFolders) {
       // Check that they all exist and are folders
       const allProcessed = [];
-      specificFolders.forEach(folder => {
-        if (!fs.existsSync(folder)) {
-          throw new Error(`${folder} does not exist`);
-        }
-        if (!fs.statSync(folder).isDirectory()) {
-          throw new Error(`${folder} is not a directory`);
-        }
+      await Promise.all(
+        specificFolders.map(async folder => {
+          if (!fs.existsSync(folder)) {
+            throw new Error(`${folder} does not exist`);
+          }
+          if (!fs.statSync(folder).isDirectory()) {
+            throw new Error(`${folder} is not a directory`);
+          }
 
-        const source = this.sources.entries().find(source => {
-          return folder.startsWith(source.filepath);
-        });
-        if (!source) {
-          throw new Error(`Unable to find the source based on ${folder}`);
-        }
+          const source = self.sources.entries().find(source => {
+            return folder.startsWith(source.filepath);
+          });
+          if (!source) {
+            throw new Error(`Unable to find the source based on ${folder}`);
+          }
 
-        let processed;
-        try {
-          processed = this.processFolder(source, folder);
-        } catch (err) {
-          // If a crash happens inside processFolder it's hard to debug
-          // if you don't know which files/folders caused it. So inject
-          // some logging of that before throwing.
-          console.error(chalk.yellow(`Error happened processing: ${folder}`));
+          let processed;
+          try {
+            processed = await timeout(
+              self.processFolder(source, folder),
+              BUILD_TIMEOUT,
+              folder
+            );
+          } catch (err) {
+            // If a crash happens inside processFolder it's hard to debug
+            // if you don't know which files/folders caused it. So inject
+            // some logging of that before throwing.
+            self.logger.error(
+              chalk.red(`Error happened processing: ${folder}`)
+            );
+            self.logger.error(err);
+            // XXX need to decide what to do with errors.
+            // We could increment a counter and dump all errors to a log file.
+            throw err;
+          }
+          allProcessed.push(processed);
+        })
+      );
 
-          // XXX need to decide what to do with errors.
-          // We could increment a counter and dump all errors to a log file.
-          throw err;
-        }
-        allProcessed.push(processed);
-      });
       return allProcessed;
-    } else {
-      this.describeActiveSources();
-      this.describeActiveFilters();
-      this.ensurePopularities();
+    }
 
-      // To be able to make a progress bar we need to first count what we're
-      // going to need to do.
-      if (this.progressBar) {
-        const countTodo = this.sources
-          .entries()
-          .map(source => this.countLocaleFolders(source))
-          .map(m => Array.from(m.values()).reduce((a, b) => a + b))
-          .reduce((a, b) => a + b);
-        if (!countTodo) {
-          throw new Error("No folders found to process!");
+    self.describeActiveSources();
+    self.describeActiveFilters();
+    self.ensurePopularities();
+
+    // To be able to make a progress bar we need to first count what we're
+    // going to need to do.
+    if (self.progressBar) {
+      const countTodo = self.sources
+        .entries()
+        .map(source => self.countLocaleFolders(source))
+        .map(m => Array.from(m.values()).reduce((a, b) => a + b))
+        .reduce((a, b) => a + b);
+      if (!countTodo) {
+        throw new Error("No folders found to process!");
+      }
+      self.logger.info(`Found ${countTodo} folders`);
+      self.initProgressbar(countTodo);
+    }
+
+    let total = 0;
+
+    // Record of counts of all results
+    const counts = {};
+    Object.values(processing).forEach(key => {
+      counts[key] = 0;
+    });
+
+    async function processAndTrackFolder(source, folder) {
+      let processed;
+      try {
+        processed = await timeout(
+          self.processFolder(source, folder),
+          BUILD_TIMEOUT,
+          folder
+        );
+      } catch (err) {
+        // If a crash happens inside processFolder it's hard to debug
+        // if you don't know which files/folders caused it. So inject
+        // some logging of that before throwing.
+        self.logger.error(chalk.red(`Error happened processing: ${folder}`));
+        self.logger.error(err);
+        // XXX need to decide what to do with errors.
+        // We could increment a counter and dump all errors to a log file.
+        throw err;
+      }
+      const { result, file } = processed;
+      self.printProcessing(result, file);
+      counts[result]++;
+      self.tickProgressbar(++total);
+    }
+
+    // Start the real processing
+    const t0 = new Date();
+    let folderProcessingPromises = [];
+
+    for (const {
+      source,
+      localeFolder,
+      folder,
+      files
+    } of self.walkSources()) {
+      if (self.excludeFolder(source, folder, localeFolder, files)) {
+        // If the folder was a Stumptown folder, what we're
+        // actually excluding is all the .json files in the folder.
+        if (source.isStumptown) {
+          counts[processing.EXCLUDED] += files.filter(n =>
+            n.endsWith(".json")
+          ).length;
+        } else {
+          counts[processing.EXCLUDED]++;
         }
-        this.initProgressbar(countTodo);
+        continue;
       }
 
-      let total = 0;
-
-      // Record of counts of all results
-      const counts = {};
-      Object.values(processing).forEach(key => {
-        counts[key] = 0;
-      });
-
-      // Start the real processing
-      const t0 = new Date();
-      this.sources.entries().forEach(source => {
-        this.getLocaleRootFolders(source).forEach(filepath => {
-          walker(filepath, (folder, files) => {
-            if (this.excludeFolder(source, folder, filepath, files)) {
-              // If the folder was a Stumptown folder, what we're
-              // actually excluding is all the .json files in the folder.
-              if (source.isStumptown) {
-                counts[processing.EXCLUDED] += files.filter(n =>
-                  n.endsWith(".json")
-                ).length;
-              } else {
-                counts[processing.EXCLUDED]++;
-              }
-              return;
-            }
-
-            if (source.isStumptown) {
-              // In the case of stumptown, one folder will have multiple
-              // files with each representing a document.
-              files
-                .filter(n => n.endsWith(".json"))
-                .forEach(filename => {
-                  const filepath = path.join(folder, filename);
-                  let processed;
-                  try {
-                    processed = this.processStumptownFile(source, filepath);
-                  } catch (err) {
-                    // If a crash happens inside processStumptownFile it's hard
-                    // to debug if you don't know which files/folders caused it.
-                    // So inject some logging of that before throwing.
-                    this.logger.error(
-                      chalk.yellow(`Error happened processing: ${filepath}`)
-                    );
-                    throw err;
-                  }
-                  const { result, file } = processed;
-                  this.printProcessing(result, file);
-                  counts[result]++;
-                  this.tickProgressbar(++total);
-                });
-              return;
-            }
-
-            let processed;
-            try {
-              processed = this.processFolder(source, folder);
-            } catch (err) {
-              // If a crash happens inside processFolder it's hard to debug
-              // if you don't know which files/folders caused it. So inject
-              // some logging of that before throwing.
-              console.error(
-                chalk.yellow(`Error happened processing: ${folder}`)
-              );
-
-              // XXX need to decide what to do with errors.
-              // We could increment a counter and dump all errors to a log file.
-              throw err;
-            }
-            const { result, file } = processed;
-            this.printProcessing(result, file);
-            counts[result]++;
-            this.tickProgressbar(++total);
-          });
-        });
-      });
-      const t1 = new Date();
-
-      this.dumpAllURLs();
-
-      this.summorizeResults(counts, t1 - t0);
+      if (source.isStumptown) {
+        // In the case of stumptown, one folder will have multiple
+        // files with each representing a document.
+        for (const filename of files.filter(n => n.endsWith(".json"))) {
+          const filepath = path.join(folder, filename);
+          let processed;
+          try {
+            processed = self.processStumptownFile(source, filepath);
+          } catch (err) {
+            // If a crash happens inside processStumptownFile it's hard
+            // to debug if you don't know which files/folders caused it.
+            // So inject some logging of that before throwing.
+            self.logger.error(
+              chalk.red(`Error happened processing: ${filepath}`)
+            );
+            self.logger.error(err);
+            throw err;
+          }
+          const { result, file } = processed;
+          self.printProcessing(result, file);
+          counts[result]++;
+          self.tickProgressbar(++total);
+        }
+      } else {
+        folderProcessingPromises.push(
+          processAndTrackFolder(source, folder)
+        );
+      }
     }
+    await Promise.all(folderProcessingPromises);
+    const t1 = new Date();
+    self.dumpAllURLs();
+    self.summarizeResults(counts, t1 - t0);
   }
 
   ensureAllTitles() {
@@ -443,29 +482,19 @@ class Builder {
       this.ensurePopularities();
       this.logger.info("Building a list of ALL titles and URIs...");
       let t0 = new Date();
-      this.sources.entries().forEach(source => {
-        this.getLocaleRootFolders(source, { allLocales: true }).forEach(
-          filepath => {
-            walker(filepath, (folder, files) => {
-              if (source.isStumptown) {
-                files
-                  .filter(n => n.endsWith(".json"))
-                  .forEach(filename => {
-                    const filepath = path.join(folder, filename);
-                    this.processStumptownFileTitle(source, filepath);
-                  });
-                return;
-              }
-              if (
-                files.includes("index.html") &&
-                files.includes("index.yaml")
-              ) {
-                this.processFolderTitle(source, folder);
-              }
-            });
+      for (const { source, folder, files } of this.walkSources({allLocales: true})) {
+        if (source.isStumptown) {
+          for (const filename of files.filter(n => n.endsWith(".json"))) {
+            const filepath = path.join(folder, filename);
+            this.processStumptownFileTitle(source, filepath);
           }
-        );
-      });
+        } else if (
+          files.includes("index.html") &&
+          files.includes("index.yaml")
+        ) {
+          this.processFolderTitle(source, folder);
+        }
+      }
       fs.writeFileSync(
         allTitlesJsonFilepath,
         JSON.stringify(this.allTitles, null, 2)
@@ -481,32 +510,41 @@ class Builder {
 
   ensureAllChildren() {
     this.ensureAllTitles();
-    Object.entries(this.allTitles).forEach(([uri, data]) => {
-      if (data.parent) {
-        const parentMdnURL = buildMDNUrl(data.parent.locale, data.parent.slug);
-        if (this.allTitles[parentMdnURL]) {
-          if (!(parentMdnURL in this.allChildren)) {
-            this.allChildren[parentMdnURL] = [];
+    for (const [uri, data] of Object.entries(this.allTitles)) {
+      if (data.translation_of) {
+        const parentURL = buildMDNUrl("en-US", data.translation_of);
+        const parentData = this.allTitles[parentURL];
+        if (parentData) {
+          if (!parentData.hasOwnProperty("translations")) {
+            parentData.translations = [];
           }
-          this.allChildren[parentMdnURL].push({
+          parentData.translations.push({
             locale: data.locale,
-            slug: data.slug
+            slug: data.slug,
+            title: data.title
           });
+        } else {
+          this.logger.error(`${uri} is a translation of ${parentURL}, which is missing!`);
         }
       }
-    });
+    }
   }
 
-  watch() {
-    const onChange = (filepath, source) => {
+  async watch() {
+    const onChange = async (filepath, source) => {
       const folder = path.dirname(filepath);
       this.logger.info(`${chalk.bold("change")} in ${folder}`);
       const t0 = performance.now();
-      const { result, file, doc } = this.processFolder(source, folder);
+      const { result, file, doc } = await timeout(
+        this.processFolder(source, folder),
+        10, // seconds
+        folder
+      );
+
       const t1 = performance.now();
 
       const tookStr = ppMilliseconds(t1 - t0);
-      console.log(
+      this.logger.info(
         `${
           result === processing.PROCESSED
             ? chalk.green(result)
@@ -558,7 +596,7 @@ class Builder {
       }
       return out;
     });
-    console.log(
+    this.logger.info(
       chalk.yellow(`Current sources...\n\t${sourcesHuman.join("\n\t")}\n`)
     );
   }
@@ -578,18 +616,18 @@ class Builder {
       );
     }
     if (filtersHuman.length) {
-      console.log(
+      this.logger.info(
         chalk.yellow(`Current filters...\n\t${filtersHuman.join("\n\t")}\n`)
       );
     }
   }
 
   prepareRoots() {
-    this.sources.entries().forEach(source => {
-      this.getLocaleRootFolders(source).forEach(folderpath => {
-        this.prepareRoot(path.basename(folderpath));
-      });
-    });
+    for (const source of this.sources.entries()) {
+      for (const localeFolder of this.getLocaleRootFolders(source)) {
+        this.prepareRoot(path.basename(localeFolder));
+      }
+    }
   }
 
   initSelfHash() {
@@ -643,13 +681,13 @@ class Builder {
     }
   }
 
-  summorizeResults(counts, took) {
-    console.log("\n");
-    console.log(chalk.green("Summary of build:"));
+  summarizeResults(counts, took) {
+    this.logger.info("\n");
+    this.logger.info(chalk.green("Summary of build:"));
     const totalProcessed = counts[processing.PROCESSED];
     // const totalDocuments = Object.values(counts).reduce((a, b) => a + b);
     const rate = (1000 * totalProcessed) / took; // per second
-    console.log(
+    this.logger.info(
       chalk.yellow(
         `Processed ${totalProcessed.toLocaleString()} in ${ppMilliseconds(
           took
@@ -660,7 +698,7 @@ class Builder {
       .sort()
       .map(key => {
         const count = counts[key];
-        console.log(`${key.padEnd(12)}: ${count.toLocaleString()}`);
+        this.logger.info(`${key.padEnd(12)}: ${count.toLocaleString()}`);
       });
   }
 
@@ -762,7 +800,7 @@ class Builder {
     }
 
     const t1 = new Date();
-    console.log(
+    this.logger.info(
       chalk.yellow(
         `Dumping all URLs to sitemaps and titles.json took ${ppMilliseconds(
           t1 - t0
@@ -804,40 +842,38 @@ class Builder {
    * The 'allLocales' parameter means it overrides the
    * 'options.locales` or `options.notLocales` values.
    */
-  getLocaleRootFolders(source, { allLocales = false } = {}) {
+  *getLocaleRootFolders(source, { allLocales = false } = {}) {
     if (!source || !source.filepath) {
       throw new Error("Invalid source");
     }
     const { locales, notLocales } = this.options;
     const files = fs.readdirSync(source.filepath);
-    const folders = [];
     for (const name of files) {
-      const filepath = path.join(source.filepath, name);
-      const isDirectory = fs.statSync(filepath).isDirectory();
+      const locale = VALID_LOCALES.get(name.toLowerCase());
       if (
-        isDirectory &&
+        locale &&
         (allLocales ||
           ((!locales.length || locales.includes(name)) &&
-            (!notLocales || !notLocales.includes(name))))
+            (!notLocales.length || !notLocales.includes(name))))
       ) {
-        folders.push(filepath);
+        const localeFolder = path.join(source.filepath, name);
+        const isDirectory = fs.statSync(localeFolder).isDirectory();
+        if (isDirectory) {
+          yield localeFolder;
+        }
       }
     }
-    return folders;
   }
 
   // For a given source, return a mapping of locale-> docs to build.
   // E.g. {'en-us': 123, fr: 9}
   countLocaleFolders(source) {
     let locales = new Map();
-    this.getLocaleRootFolders(source).forEach(filepath => {
-      const locale = path.basename(filepath);
-      if (!locales.has(locale)) {
-        locales.set(locale, 0);
-      }
-      walker(filepath, (folder, files) => {
-        if (this.excludeFolder(source, folder, filepath, files)) {
-          return;
+    for (const localeFolder of this.getLocaleRootFolders(source)) {
+      const locale = path.basename(localeFolder);
+      for (const [folder, files] of walker(localeFolder)) {
+        if (this.excludeFolder(source, folder, localeFolder, files)) {
+          continue;
         }
         if (source.isStumptown) {
           // In stumptown, you'll have multiple .json files per folder.
@@ -845,13 +881,14 @@ class Builder {
           // `en-us/html/reference/elements/video.json` etc.
           locales.set(
             locale,
-            locales.get(locale) + files.filter(x => x.endsWith(".json")).length
+            (locales.get(locale) || 0) +
+              files.filter(x => x.endsWith(".json")).length
           );
         } else {
-          locales.set(locale, locales.get(locale) + 1);
+          locales.set(locale, (locales.get(locale) || 0) + 1);
         }
-      });
-    });
+      }
+    }
     return locales;
   }
 
@@ -866,7 +903,7 @@ class Builder {
     return false;
   }
 
-  processFolder(source, folder, config) {
+  async processFolder(source, folder, config) {
     config = config || {};
 
     const hasher = crypto.createHash("md5");
@@ -878,6 +915,8 @@ class Builder {
       return { result: processing.EXCLUDED, file: folder };
     }
     hasher.update(metadataRaw);
+
+    metadata.locale = extractLocale(source, folder);
 
     if (fs.existsSync(path.join(folder, "wikihistory.yaml"))) {
       const wikiMetadataRaw = fs.readFileSync(
@@ -919,16 +958,16 @@ class Builder {
     // post-processing instead.
 
     // // REAL
-    // const rawHtml = fs.readFileSync(path.join(folder, "index.html"), "utf8");
-    // hasher.update(rawHtml);
-    // const renderedHtml = this.renderHtml(rawHtml, metadata);
+    const rawHtml = fs.readFileSync(path.join(folder, "index.html"), "utf8");
+    hasher.update(rawHtml);
+    const renderedHtml = await this.renderHtml(rawHtml, metadata);
     // FAKE (NOTE, the docHash check stuff needs to happen BEFORE executing renderHtml)
     // const rawHtml = fs.readFileSync(path.join(folder, "raw.html"), "utf8");
-    const renderedHtml = fs.readFileSync(
-      path.join(folder, "index.html"),
-      "utf8"
-    );
-    hasher.update(renderedHtml);
+    // const renderedHtml = fs.readFileSync(
+    //   path.join(folder, "index.html"),
+    //   "utf8"
+    // );
+    // hasher.update(renderedHtml);
 
     // Now we've read in all the "inputs" needed.
     // Even if there's no hope in hell that we're going to get a catch hit,
@@ -951,14 +990,6 @@ class Builder {
       };
     }
 
-    // This is arguably linting of the content. We're checking that
-    // the locale and slug are sane. We're doing this during build,
-    // which means that to lint you have to actually try to build.
-    // We might want to reconsider this at some point in the future.
-    // For example, it might be a nice optimization to execute linting
-    // separately in CI so you don't have to wait for a complete build
-    // and thus you could "break the CI build" sooner for earlier feedback.
-    validateLocale(metadata.locale);
     // TODO: The slug should always match the folder name.
     // If you edit the slug bug don't correctly edit the folder it's in
     // it's going to lead to confusion.
@@ -987,8 +1018,8 @@ class Builder {
 
     doc.title = metadata.title;
     doc.mdn_url = mdn_url;
-    if (metadata.parent) {
-      doc.parent = metadata.parent;
+    if (metadata.translation_of) {
+      doc.translation_of = metadata.translation_of;
     }
     doc.body = sections;
 
@@ -996,20 +1027,35 @@ class Builder {
 
     doc.last_modified = metadata.modified;
 
-    const otherTranslations = this.allChildren[doc.mdn_url] || [];
-    if (!otherTranslations.length && metadata.parent) {
-      // But perhaps the parent has other translations?!
-      const parentMdnURL = buildMDNUrl(
-        metadata.parent.locale,
-        metadata.parent.slug
-      );
-      const parentOtherTranslations = this.allChildren[parentMdnURL];
-      if (parentOtherTranslations && parentOtherTranslations.length) {
-        otherTranslations.push(...parentOtherTranslations);
+    const englishSlug = metadata.translation_of || metadata.slug;
+    const englishURL = buildMDNUrl("en-US", englishSlug);
+    
+    if (this.allTitles.hasOwnProperty(englishURL)) {
+      let otherTranslations = this.allTitles[englishURL].translations || [];
+      if (otherTranslations.length) {
+        if (metadata.locale !== "en-US") {
+          // Don't consider this non-English locale a translation of itself.
+          otherTranslations = otherTranslations.filter(
+            trans => trans.locale !== metadata.locale
+          );
+          // The English translation has to be added for non-English locales.
+          otherTranslations.push({
+            locale: "en-US",
+            slug: englishSlug,
+            title: this.allTitles[englishURL].title
+          });
+        }
+        // Sort by locale.
+        doc.other_translations = otherTranslations.sort((a, b) => {
+          if (a.locale < b.locale) {
+            return -1;
+          }
+          if (a.locale > b.locale) {
+            return 1;
+          }
+          return 0;
+        });
       }
-    }
-    if (otherTranslations.length) {
-      doc.other_translations = otherTranslations;
     }
 
     this.injectSource(source, doc, folder);
@@ -1134,10 +1180,11 @@ class Builder {
       fs.readFileSync(path.join(folder, "index.yaml"))
     );
 
+    metadata.locale = extractLocale(source, folder);
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
 
     // XXX Perhaps, if the source of this is from archive, we might
-    // not need to or what to bother with popularity or modified data.
+    // not need to or want to bother with popularity or modified data.
     if (fs.existsSync(path.join(folder, "wikihistory.json"))) {
       const wikiMetadataRaw = fs.readFileSync(
         path.join(folder, "wikihistory.json")
@@ -1149,13 +1196,13 @@ class Builder {
     if (mdn_url in this.allTitles) {
       // Already been added by stumptown probably.
       // But, before we exit early, let's update some of the pieces of
-      // information that stumptown might not have, such as last_modified
-      // and parent.
+      // information that stumptown might not have, such as "modified"
+      // and "translation_of".
       if (!this.allTitles[mdn_url].modified) {
         this.allTitles[mdn_url].modified = metadata.modified;
       }
-      if (!this.allTitles[mdn_url].parent) {
-        this.allTitles[mdn_url].parent = metadata.parent;
+      if (!this.allTitles[mdn_url].translation_of) {
+        this.allTitles[mdn_url].translation_of = metadata.translation_of;
       }
       return;
     }
@@ -1168,7 +1215,7 @@ class Builder {
       slug: metadata.slug,
       file: folder,
       modified: metadata.modified,
-      parent: metadata.parent,
+      translation_of: metadata.translation_of,
       // XXX To be lean if either of these are false, perhaps not
       // bother setting it.
       excludeInTitlesJson: source.excludeInTitlesJson,
@@ -1198,8 +1245,33 @@ class Builder {
   }
 
   renderHtml(rawHtml, metadata) {
-    // XXX Ryan! This is where we need that sweet KumaScript action!
-    throw new Error("under construction");
+    // For temporary reference (TODO: remove later):
+    // env_vars = dict(
+    //   path = path,
+    //   url = urljoin(base_url, path),
+    //   id = document.pk,
+    //   revision_id = document.current_revision.pk,
+    //   locale = document.locale,
+    //   title = document.title,
+    //   slug = document.slug,
+    //   tags = list(document.tags.names()),
+    //   review_tags = list(document.current_revision.review_tags.names()),
+    //   modified = time.mktime(document.modified.timetuple()),
+    //   selective_mode = selective_mode,
+    // )
+    const baseURL = "https://developer.mozilla.org";
+    const path = buildMDNUrl(metadata.locale, metadata.slug);
+    let docEnv = {
+      path: path,
+      url: `${baseURL}${path}`,
+      locale: metadata.locale,
+      slug: metadata.slug,
+      tags: metadata.tags || [],
+      review_tags: [],
+      modified: metadata.modified,
+      selective_mode: false
+    };
+    return ksRender(rawHtml, this.ksMacros, docEnv);
   }
 
   /**
@@ -1217,66 +1289,31 @@ class Builder {
   }
 }
 
-function walker(root, callback, depth = 0) {
+function* walker(root, depth = 0) {
   const files = fs.readdirSync(root);
   if (!depth) {
-    callback(
+    yield [
       root,
       files.filter(name => {
         return !fs.statSync(path.join(root, name)).isDirectory();
       })
-    );
+    ];
   }
   for (const name of files) {
     const filepath = path.join(root, name);
     const isDirectory = fs.statSync(filepath).isDirectory();
     if (isDirectory) {
-      callback(
+      yield [
         filepath,
         fs.readdirSync(filepath).filter(name => {
           return !fs.statSync(path.join(filepath, name)).isDirectory();
         })
-      );
+      ];
       // Now go deeper
-      walker(filepath, callback, depth + 1);
+      yield* walker(filepath, depth + 1);
     }
   }
 }
-
-// function extractMacroCalls(text) {
-//   const RECOGNIZED_MACRO_NAMES = ["Compat"];
-
-//   function evaluateMacroArgs(argsString) {
-//     if (argsString.startsWith("{") && argsString.endsWith("}")) {
-//       return JSON.parse(argsString);
-//     }
-//     if (argsString.includes(",")) {
-//       return eval(`[${argsString}]`);
-//     }
-//     // XXX A proper parser instead??
-//     return eval(argsString);
-//   }
-
-//   const calls = {};
-//   /**
-//    * Note that the text can have escaped macros. For example:
-//    *
-//    *    This is how you write a macros: \{{Compat("foo.bar")}}
-//    *
-//    */
-//   const matches = text.matchAll(/[^\\]{{\s*(\w+)\s*\((.*?)\)\s*}}/g);
-//   for (const match of matches) {
-//     const macroName = match[1];
-//     if (RECOGNIZED_MACRO_NAMES.includes(macroName)) {
-//       if (!calls[macroName]) {
-//         calls[macroName] = [];
-//       }
-//       const macroArgs = evaluateMacroArgs(match[2].trim());
-//       calls[macroName].push(macroArgs);
-//     }
-//   }
-//   return calls;
-// }
 
 function ppMilliseconds(ms) {
   // If the number of millseconds is really large, use seconds. Or minutes
