@@ -358,7 +358,6 @@ async function processDocument(
 
   const folder = path.join(localeFolder, cleanSlugForFoldername(slug));
   if (startClean && (await fs.promises.stat(folder).catch(e => false))) {
-    console.warn("Folder already exists, skipping:", folder);
     return;
   }
   await fs.promises.mkdir(folder, { recursive: true });
