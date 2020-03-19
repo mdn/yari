@@ -5,10 +5,10 @@ const stream = require("stream");
 const { promisify } = require("util");
 const mysql = require("mysql");
 const cheerio = require("cheerio");
-const sanitizeFilename = require("sanitize-filename");
 const yaml = require("js-yaml");
 const assert = require("assert").strict;
 const ProgressBar = require("./progress-bar");
+const { slugToFoldername } = require("./utils");
 
 const MAX_OPEN_FILES = 256;
 
@@ -336,19 +336,17 @@ function processRedirect(doc, absoluteURL) {
     : { url: fixedRedirectURL, status: "improved" };
 }
 
-function cleanSlugForFoldername(slug) {
-  return slug
-    .toLowerCase()
-    .split(path.sep)
-    .map(sanitizeFilename)
-    .join(path.sep);
-}
+// Global that keeps track of all meta files that get built.
+// It's used so that we can make absolutely sure that we don't
+// build something that was already built as that would indicate
+// that two different slugs lead to the exact same name as a file.
+const allBuiltMetaFiles = new Set();
 
 async function processDocument(
   doc,
   { archiveRoot, root, startClean },
   isArchive = false,
-  { usernames, contributors, translations }
+  { usernames, contributors }
 ) {
   const { slug, locale, title } = doc;
   const localeFolder = path.join(
@@ -356,10 +354,7 @@ async function processDocument(
     locale.toLowerCase()
   );
 
-  const folder = path.join(localeFolder, cleanSlugForFoldername(slug));
-  if (startClean && (await fs.promises.stat(folder).catch(e => false))) {
-    return;
-  }
+  const folder = path.join(localeFolder, slugToFoldername(slug));
   await fs.promises.mkdir(folder, { recursive: true });
   const htmlFile = path.join(folder, "index.html");
 
@@ -370,6 +365,11 @@ async function processDocument(
 
   const wikiHistoryFile = path.join(folder, "wikihistory.json");
   const metaFile = path.join(folder, "index.yaml");
+  if (startClean && allBuiltMetaFiles.has(metaFile)) {
+    throw new Error(`${path.resolve(metaFile)} already exists! slug:${slug}`);
+  } else {
+    allBuiltMetaFiles.add(metaFile);
+  }
 
   const meta = {
     title,
@@ -514,6 +514,8 @@ module.exports = async function runImporter(options) {
   const redirects = {};
   let improvedRedirects = 0;
   let messedupRedirects = 0;
+  let discardedRedirects = 0;
+  let archivedRedirects = 0;
 
   for await (const row of documents.stream) {
     processedDocumentsCount++;
@@ -536,11 +538,13 @@ module.exports = async function runImporter(options) {
         if (isArchive) {
           // Note! If a document is considered archive, any redirect is
           // simply dropped!
+          archivedRedirects++;
           return;
         }
         const absoluteUrl = `/${row.locale}/docs/${row.slug}`;
         const redirect = processRedirect(row, absoluteUrl);
         if (!redirect) {
+          discardedRedirects++;
           return;
         }
         if (redirect.url) {
@@ -559,7 +563,11 @@ module.exports = async function runImporter(options) {
         });
       }
     })()
-      .catch(console.error)
+      .catch(err => {
+        console.error(err);
+        // The slightest unexpected error should stop the importer immediately.
+        process.exit(1);
+      })
       .then(() => {
         pendingDocuments--;
       });
@@ -576,7 +584,17 @@ module.exports = async function runImporter(options) {
   }
   if (messedupRedirects) {
     console.log(
-      `${messedupRedirects} redirects were ignored because they would lead to an infinite redirect loop.`
+      `${messedupRedirects.toLocaleString()} redirects were ignored because they would lead to an infinite redirect loop.`
+    );
+  }
+  if (discardedRedirects) {
+    console.log(
+      `${discardedRedirects.toLocaleString()} redirects that could not be imported.`
+    );
+  }
+  if (archivedRedirects) {
+    console.log(
+      `${archivedRedirects.toLocaleString()} redirects that are considered archived content ignored.`
     );
   }
 
