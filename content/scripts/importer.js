@@ -220,10 +220,12 @@ async function queryDocuments(pool, options) {
       p.id AS parent_id,
       p.slug AS parent_slug,
       p.locale AS parent_locale,
-      p.modified AS parent_modified
+      p.modified AS parent_modified,
+      p.is_redirect AS parent_is_redirect
     FROM wiki_document w
     LEFT OUTER JOIN wiki_document p ON w.parent_id = p.id
     ${constraintsSQL}
+    ORDER BY is_redirect DESC
   `;
 
   return {
@@ -353,6 +355,11 @@ function processRedirect(doc, absoluteURL) {
 // that two different slugs lead to the exact same name as a file.
 const allBuiltMetaFiles = new Set();
 
+// Where we keep track of all redirects and where they go.
+// We need this because we might encounter that a document's parent slug
+// actually redirects. If so, to what?!
+const slugRedirects = {};
+
 async function processDocument(
   doc,
   { archiveRoot, root, startClean },
@@ -386,12 +393,30 @@ async function processDocument(
     title,
     slug
   };
-  if (isArchive) {
-    meta.archived = true;
-  }
   if (doc.parent_slug) {
     assert(doc.parent_locale === "en-US");
-    meta.translationof = doc.parent_slug;
+    if (doc.parent_is_redirect) {
+      // The parent doc is a redirect! That's means we need to know what
+      // that redirect is going to.
+      const localeRedirects = slugRedirects[doc.parent_locale] || {};
+      if (localeRedirects[doc.parent_slug]) {
+        const newParentSlug = localeRedirects[doc.parent_slug].split(
+          "/docs/"
+        )[1];
+        if (!newParentSlug) {
+          // This happens when the parent document is a redirect whose URL
+          // is not one of those with /docs/ in it.
+          // Like `/en-US/Firefox_OS/Developing_Firefox_OS` for example.
+          // Just bail on these.
+          return false;
+        }
+        meta.translation_of = newParentSlug;
+      } else {
+        return false;
+      }
+    } else {
+      meta.translation_of = doc.parent_slug;
+    }
   }
 
   const wikiHistory = {
@@ -424,6 +449,8 @@ async function processDocument(
     const rawFile = path.join(folder, "raw.html");
     await fs.promises.writeFile(rawFile, doc.html);
   }
+
+  return true; // meaning, we built it
 }
 
 async function saveAllRedirects(redirects, root) {
@@ -444,7 +471,7 @@ async function saveAllRedirects(redirects, root) {
       return 0;
     });
     countPerLocale.push([locale, pairs.length]);
-    const filePath = path.join(root, locale, "_redirects.txt");
+    // const filePath = path.join(root, locale, "_redirects.txt");
     const localeFolder = path.join(root, locale);
     if (!fs.existsSync(localeFolder)) {
       console.log(
@@ -568,6 +595,10 @@ module.exports = async function runImporter(options) {
             archivedRedirectDestination++;
             return;
           }
+          if (!(row.locale in slugRedirects)) {
+            slugRedirects[row.locale] = {};
+          }
+          slugRedirects[row.locale][row.slug] = redirect.url;
           redirects[absoluteUrl] = redirect.url;
         }
         if (redirect.status == "mess") {
