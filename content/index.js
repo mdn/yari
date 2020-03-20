@@ -233,11 +233,16 @@ cli
     return runMakePopularitiesFile(args.csvfile, options, logger);
   });
 
-cli.parse(process.argv).then(r => {
-  // If the command explicitly returned a number, use that as the exit code
-  // Otherwise, if it's anything truthy return 1 or all else 0.
-  process.exitCode = typeof r === Number ? r : r ? 1 : 0;
-});
+cli
+  .parse(process.argv)
+  .then(r => {
+    // If the command explicitly returned a number, use that as the exit code
+    // Otherwise, if it's anything truthy return 1 or all else 0.
+    process.exitCode = typeof r === Number ? r : r ? 1 : 0;
+  })
+  .catch(err => {
+    console.log("AN ERROR HAPPENED HERE");
+  });
 
 function equalArray(a, b) {
   return a.length === b.length && a.every((x, i) => x === b[i]);

@@ -1,12 +1,14 @@
+const assert = require("assert").strict;
 const url = require("url");
 const fs = require("fs");
 const path = require("path");
 const stream = require("stream");
 const { promisify } = require("util");
+
+const chalk = require("chalk");
 const mysql = require("mysql");
 const cheerio = require("cheerio");
 const yaml = require("js-yaml");
-const assert = require("assert").strict;
 const ProgressBar = require("./progress-bar");
 const { slugToFoldername } = require("./utils");
 
@@ -249,6 +251,15 @@ function isArchiveDoc(row) {
   );
 }
 
+function isArchiveRedirect(uri) {
+  if (uri.includes("/docs/")) {
+    const split = uri.split("/docs/");
+    return ARCHIVE_SLUG_PREFIXES.some(prefix => split[1].startsWith(prefix));
+  } else {
+    return ARCHIVE_SLUG_PREFIXES.some(prefix => uri.startsWith(prefix));
+  }
+}
+
 async function prepareRoots(options) {
   if (!options.archiveRoot) throw new Error("woot?!");
   if (!options.root) throw new Error("waat?!");
@@ -447,7 +458,6 @@ async function saveAllRedirects(redirects, root) {
         writeStream.write(`${fromUrl}\t${toUrl}\n`);
       });
       writeStream.end();
-      console.log(`Wrote all ${locale} redirects to ${filePath}`);
     }
   }
 
@@ -502,7 +512,9 @@ module.exports = async function runImporter(options) {
       })
     : null;
 
-  progressBar.init(documents.totalCount);
+  if (!options.noProgressbar) {
+    progressBar.init(documents.totalCount);
+  }
 
   documents.stream.on("error", error => {
     console.error("Querying documents failed with", error);
@@ -516,6 +528,7 @@ module.exports = async function runImporter(options) {
   let messedupRedirects = 0;
   let discardedRedirects = 0;
   let archivedRedirects = 0;
+  let archivedRedirectDestination = 0;
 
   for await (const row of documents.stream) {
     processedDocumentsCount++;
@@ -547,7 +560,14 @@ module.exports = async function runImporter(options) {
           discardedRedirects++;
           return;
         }
+
         if (redirect.url) {
+          if (isArchiveRedirect(redirect.url)) {
+            // This redirect redirects to a URL that is considered archived.
+            // Just drop it.
+            archivedRedirectDestination++;
+            return;
+          }
           redirects[absoluteUrl] = redirect.url;
         }
         if (redirect.status == "mess") {
@@ -564,6 +584,7 @@ module.exports = async function runImporter(options) {
       }
     })()
       .catch(err => {
+        console.log("An error occured during processing");
         console.error(err);
         // The slightest unexpected error should stop the importer immediately.
         process.exit(1);
@@ -573,37 +594,51 @@ module.exports = async function runImporter(options) {
       });
   }
 
-  progressBar.stop();
+  if (!options.noProgressbar) {
+    progressBar.stop();
+  }
   pool.end();
   await saveAllRedirects(redirects, options.root);
 
   if (improvedRedirects) {
     console.log(
-      `${improvedRedirects.toLocaleString()} redirects were corrected as they used the old URL style.`
+      chalk.bold(improvedRedirects.toLocaleString()),
+      "redirects were corrected as they used the old URL style."
     );
   }
   if (messedupRedirects) {
     console.log(
-      `${messedupRedirects.toLocaleString()} redirects were ignored because they would lead to an infinite redirect loop.`
+      chalk.bold(messedupRedirects.toLocaleString()),
+      "redirects were ignored because they would lead to an infinite redirect loop."
     );
   }
   if (discardedRedirects) {
     console.log(
-      `${discardedRedirects.toLocaleString()} redirects that could not be imported.`
+      chalk.bold(discardedRedirects.toLocaleString()),
+      "redirects that could not be imported."
     );
   }
   if (archivedRedirects) {
     console.log(
-      `${archivedRedirects.toLocaleString()} redirects that are considered archived content ignored.`
+      chalk.bold(archivedRedirects.toLocaleString()),
+      "redirects that are considered archived content ignored."
+    );
+  }
+  if (archivedRedirectDestination) {
+    console.log(
+      chalk.bold(archivedRedirectDestination.toLocaleString()),
+      "redirects that redirected to an archived URL."
     );
   }
 
   const endTime = Date.now();
   const secondsTook = (endTime - startTime) / 1000;
   console.log(
-    `Took ${formatSeconds(
-      secondsTook
-    )} seconds to process ${processedDocumentsCount.toLocaleString()} rows.`
+    chalk.green(
+      `Took ${formatSeconds(secondsTook)} seconds to process ${chalk.bold(
+        processedDocumentsCount.toLocaleString()
+      )} rows.`
+    )
   );
   console.log(
     `Roughly ${(processedDocumentsCount / secondsTook).toFixed(1)} rows/sec.`
