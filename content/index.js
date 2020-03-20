@@ -242,7 +242,3 @@ cli.parse(process.argv).then(r => {
 function equalArray(a, b) {
   return a.length === b.length && a.every((x, i) => x === b[i]);
 }
-
-// function relPath(absPath) {
-//   return path.relative(process.cwd(), absPath);
-// }
