@@ -345,8 +345,6 @@ function processRedirect(doc, absoluteURL) {
   split.splice(2, 1);
   split.splice(1, 0, locale);
   const fixedRedirectURL = split.join("/");
-  if (!fixedRedirectURL.includes("/docs"))
-    console.log("WEIRD", fixedRedirectURL);
   return fixedRedirectURL === absoluteURL
     ? { url: null, status: "mess" }
     : { url: fixedRedirectURL, status: "improved" };
