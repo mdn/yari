@@ -11,6 +11,7 @@ const cheerio = require("cheerio");
 const yaml = require("js-yaml");
 const ProgressBar = require("./progress-bar");
 const { slugToFoldername } = require("./utils");
+const { VALID_LOCALES } = require("./constants");
 
 const MAX_OPEN_FILES = 256;
 
@@ -330,7 +331,20 @@ function processRedirect(doc, absoluteURL) {
     );
   }
 
-  if (!redirectURL.startsWith("/docs/")) {
+  if (
+    !redirectURL.includes("/docs/") &&
+    VALID_LOCALES.has(redirectURL.split("/")[1])
+  ) {
+    const locale = redirectURL.split("/")[1];
+    // This works because String.replace only replaces the first occurance.
+    // And we can be confident that `redirectURL.split("/")[1]` is a valid
+    // locale because of the if-statement just above that uses `VALID_LOCALES`.
+    const fixedRedirectURL = redirectURL.replace(
+      `/${locale}/`,
+      `/${locale}/docs/`
+    );
+    return { url: fixedRedirectURL, status: null };
+  } else if (!redirectURL.startsWith("/docs/")) {
     return { url: redirectURL, status: null };
   }
 
@@ -597,6 +611,7 @@ module.exports = async function runImporter(options) {
   if (!options.noProgressbar) {
     progressBar.stop();
   }
+
   pool.end();
   await saveAllRedirects(redirects, options.root);
 
