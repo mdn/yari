@@ -518,7 +518,9 @@ module.exports = async function runImporter(options) {
       })
     : null;
 
-  if (!options.noProgressbar) progressBar.init(documents.totalCount);
+  if (!options.noProgressbar) {
+    progressBar.init(documents.totalCount);
+  }
 
   documents.stream.on("error", error => {
     console.error("Querying documents failed with", error);
@@ -589,7 +591,9 @@ module.exports = async function runImporter(options) {
       });
   }
 
-  if (!options.noProgressbar) progressBar.stop();
+  if (!options.noProgressbar) {
+    progressBar.stop();
+  }
 
   pool.end();
   await saveAllRedirects(redirects, options.root);
