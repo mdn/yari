@@ -107,6 +107,8 @@ function triggerTouch(filepath, document, root) {
 
 /** Needs doc string */
 function buildMDNUrl(locale, slug) {
+  if (!locale) throw new Error("locale falsy!");
+  if (!slug) throw new Error("slug falsy!");
   return `/${locale}/docs/${slug}`;
 }
 
@@ -114,7 +116,7 @@ function extractLocale(source, folder) {
   // E.g. 'pt-br/web/foo'
   const relativeToSource = path.relative(source.filepath, folder);
   // E.g. 'pr-br'
-  const localeFolderName = path.parse(relativeToSource).dir.split(path.sep)[0];
+  const localeFolderName = relativeToSource.split(path.sep)[0];
   // E.g. 'pt-BR'
   const locale = VALID_LOCALES.get(localeFolderName);
   // This checks that the extraction worked *and* that the locale found
@@ -480,9 +482,10 @@ class Builder {
 
   ensureAllChildren() {
     this.ensureAllTitles();
-    Object.entries(this.allTitles).forEach(([uri, data]) => {
-      if (data.parent) {
-        const parentMdnURL = buildMDNUrl(data.parent.locale, data.parent.slug);
+    Object.values(this.allTitles)
+      .filter(data => data.translation_of)
+      .forEach(data => {
+        const parentMdnURL = buildMDNUrl("en-US", data.translation_of);
         if (this.allTitles[parentMdnURL]) {
           if (!(parentMdnURL in this.allChildren)) {
             this.allChildren[parentMdnURL] = [];
@@ -492,8 +495,7 @@ class Builder {
             slug: data.slug
           });
         }
-      }
-    });
+      });
   }
 
   watch() {
@@ -980,8 +982,8 @@ class Builder {
 
     doc.title = metadata.title;
     doc.mdn_url = mdn_url;
-    if (metadata.parent) {
-      doc.parent = metadata.parent;
+    if (metadata.translation_of) {
+      doc.translation_of = metadata.translation_of;
     }
     doc.body = sections;
 
@@ -990,12 +992,9 @@ class Builder {
     doc.last_modified = metadata.modified;
 
     const otherTranslations = this.allChildren[doc.mdn_url] || [];
-    if (!otherTranslations.length && metadata.parent) {
+    if (!otherTranslations.length && metadata.translation_of) {
       // But perhaps the parent has other translations?!
-      const parentMdnURL = buildMDNUrl(
-        metadata.parent.locale,
-        metadata.parent.slug
-      );
+      const parentMdnURL = buildMDNUrl("en-US", metadata.translation_of);
       const parentOtherTranslations = this.allChildren[parentMdnURL];
       if (parentOtherTranslations && parentOtherTranslations.length) {
         otherTranslations.push(...parentOtherTranslations);
@@ -1148,8 +1147,8 @@ class Builder {
       if (!this.allTitles[mdn_url].modified) {
         this.allTitles[mdn_url].modified = metadata.modified;
       }
-      if (!this.allTitles[mdn_url].parent) {
-        this.allTitles[mdn_url].parent = metadata.parent;
+      if (!this.allTitles[mdn_url].translation_of) {
+        this.allTitles[mdn_url].translation_of = metadata.translation_of;
       }
       return;
     }
@@ -1162,7 +1161,7 @@ class Builder {
       slug: metadata.slug,
       file: folder,
       modified: metadata.modified,
-      parent: metadata.parent,
+      translation_of: metadata.translation_of,
       // XXX To be lean if either of these are false, perhaps not
       // bother setting it.
       excludeInTitlesJson: source.excludeInTitlesJson,
