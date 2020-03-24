@@ -374,6 +374,20 @@ const allBuiltMetaFiles = new Set();
 // actually redirects. If so, to what?!
 const slugRedirects = {};
 
+// Suppose we parse a document that is a redirect and we find that its
+// destination URL is archived, and thus gets dropped. We need to remember
+// what those were. So after we've processed all redirects, we'll know,
+// in a second pass, which "parent" redirects can also be dropped.
+// Imagine we process the following in this order:
+//
+//  1. /en-US/docs/Foo --> /en-US/docs/Bar
+//  2. /en-US/docs/Bar --> /en-US/docs/Archive/Bar  (gets dropped!)
+//
+// Now, our main `redirects` object will have an entry of:
+// {'/en-US/docs/Foo': '/en-US/docs/Bar'} and that means it's a dead
+// redirect.
+const droppedRedirects = new Set();
+
 async function processDocument(
   doc,
   { archiveRoot, root, startClean },
@@ -465,7 +479,16 @@ async function saveAllRedirects(redirects, root) {
     if (!(locale in byLocale)) {
       byLocale[locale] = [];
     }
-    byLocale[locale].push([fromUrl, toUrl]);
+
+    // Dropped redirects are URLs that was the "from-URL" where the
+    // "to-URL" was an archived one.
+    // E.g.   /en-US/docs/A -> /en-US/docs/B
+    // and    /en-US/docs/B -> /en-US/docs/Archive/B
+    // In this example, `droppedRedirects` will contain
+    // '/en-US/docs/B' which we can then safely ignore.
+    if (!droppedRedirects.has(toUrl)) {
+      byLocale[locale].push([fromUrl, toUrl]);
+    }
   }
 
   const countPerLocale = [];
@@ -598,6 +621,7 @@ module.exports = async function runImporter(options) {
             // This redirect redirects to a URL that is considered archived.
             // Just drop it.
             archivedRedirectDestination++;
+            droppedRedirects.add(`/${row.locale}/docs/${row.slug}`);
             return;
           }
           if (!(row.locale in slugRedirects)) {
