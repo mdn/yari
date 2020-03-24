@@ -422,7 +422,6 @@ async function processDocument(
           // is not one of those with /docs/ in it.
           // Like `/en-US/Firefox_OS/Developing_Firefox_OS` for example.
           // Just bail on these.
-          console.log("BUSTED:", localeRedirects[doc.parent_slug]);
           return false;
         }
         meta.translation_of = newParentSlug;
