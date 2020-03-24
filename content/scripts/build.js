@@ -1127,6 +1127,7 @@ class Builder {
       fs.readFileSync(path.join(folder, "index.yaml"))
     );
 
+    metadata.locale = extractLocale(source, folder);
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
 
     // XXX Perhaps, if the source of this is from archive, we might
