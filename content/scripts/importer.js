@@ -133,35 +133,6 @@ async function queryContributors(query, options) {
   return { contributors, usernames };
 }
 
-async function queryTranslationRelationships(query, options) {
-  const { constraintsSQL, queryArgs } = getSQLConstraints(
-    {
-      alias: "d"
-    },
-    options
-  );
-  const sql = `
-    SELECT d.id, d.parent_id, d.slug, d.locale
-    FROM wiki_document d
-    ${constraintsSQL} AND d.parent_id IS NOT NULL
-    ORDER BY d.locale
-  `;
-
-  console.log("Going to fetch ALL parents");
-  const results = await query(sql, queryArgs);
-  const translations = {};
-  for (const row of results) {
-    if (!(row.parent_id in translations)) {
-      translations[row.parent_id] = [];
-    }
-    translations[row.parent_id].push({
-      slug: row.slug,
-      locale: row.locale
-    });
-  }
-  return translations;
-}
-
 async function queryDocumentCount(query, constraintsSQL, queryArgs) {
   const localesSQL = `
     SELECT w.locale, COUNT(*) AS count
@@ -237,6 +208,35 @@ async function queryDocuments(pool, options) {
       // node MySQL uses custom streams which are not iterable. Piping it through a native stream fixes that
       .pipe(new stream.PassThrough({ objectMode: true }))
   };
+}
+
+async function queryDocumentTags(query, options) {
+  const { constraintsSQL, queryArgs } = getSQLConstraints(
+    {
+      alias: "w"
+    },
+    options
+  );
+  const sql = `
+    SELECT
+      w.id,
+      t.name
+    FROM wiki_document w
+    INNER JOIN wiki_taggeddocument wt ON wt.content_object_id = w.id
+    INNER JOIN wiki_documenttag t ON t.id = wt.tag_id
+    ${constraintsSQL}
+  `;
+
+  console.log("Going to fetch ALL document tags");
+  const results = await query(sql, queryArgs);
+  const tags = {};
+  for (const row of results) {
+    if (!(row.id in tags)) {
+      tags[row.id] = [];
+    }
+    tags[row.id].push(row.name);
+  }
+  return tags;
 }
 
 async function withTimer(label, fn) {
@@ -378,7 +378,7 @@ async function processDocument(
   doc,
   { archiveRoot, root, startClean },
   isArchive = false,
-  { usernames, contributors }
+  { usernames, contributors, tags }
 ) {
   const { slug, locale, title } = doc;
   const localeFolder = path.join(
@@ -438,10 +438,10 @@ async function processDocument(
     _generated: new Date().toISOString()
   };
 
-  // const otherTranslations = translations[doc.id] || [];
-  // if (otherTranslations.length) {
-  //   meta.other_translations = otherTranslations;
-  // }
+  const docTags = tags[doc.id] || [];
+  if (docTags.length) {
+    meta.tags = docTags.sort();
+  }
   await fs.promises.writeFile(metaFile, yaml.safeDump(meta));
 
   const docContributors = (contributors[doc.id] || []).map(
@@ -454,15 +454,6 @@ async function processDocument(
     wikiHistoryFile,
     JSON.stringify(wikiHistory, null, 2)
   );
-
-  // XXX At the moment, we're pretending we have the KS shim, and that means
-  // we'll have access to the raw (full of macros) string which'll be
-  // useful to infer certain things such as how the {{Compat(...)}}
-  // macro is used. But for now, we'll inject it into the metadata:
-  if (!isArchive) {
-    const rawFile = path.join(folder, "raw.html");
-    await fs.promises.writeFile(rawFile, doc.html);
-  }
 
   return true; // meaning, we built it
 }
@@ -534,12 +525,12 @@ module.exports = async function runImporter(options) {
   );
 
   const query = promisify(pool.query).bind(pool);
-  const [{ usernames, contributors }, translations] = await Promise.all([
+  const [{ usernames, contributors }, tags] = await Promise.all([
     withTimer("Time to fetch all contributors", () =>
       queryContributors(query, options)
     ),
-    withTimer("Time to fetch all translation relationships", () =>
-      queryTranslationRelationships(query, options)
+    withTimer("Time to fetch all document tags", () =>
+      queryDocumentTags(query, options)
     )
   ]);
 
@@ -624,7 +615,7 @@ module.exports = async function runImporter(options) {
         await processDocument(row, options, isArchive, {
           usernames,
           contributors,
-          translations
+          tags
         });
       }
     })()
