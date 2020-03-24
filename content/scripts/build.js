@@ -68,9 +68,6 @@ function isTTY() {
  * should throw an error.
  */
 function cleanLocales(locales) {
-  const validLocalesLower = new Set(
-    [...VALID_LOCALES].map(x => x.toLowerCase())
-  );
   const clean = [];
   for (const locale of locales) {
     // The user *might* type locales as a comma separated strings.
@@ -86,7 +83,7 @@ function cleanLocales(locales) {
   }
   return clean.filter(x => {
     if (x) {
-      if (!validLocalesLower.has(x)) {
+      if (!VALID_LOCALES.has(x)) {
         throw new Error(`'${x}' is not a valid locale (see VALID_LOCALES)`);
       }
     }
@@ -113,18 +110,20 @@ function buildMDNUrl(locale, slug) {
   return `/${locale}/docs/${slug}`;
 }
 
-/** Throw an error if the locale in insane.
- * This helps breaking the build if someone has put in faulty data into
- * the content (metadata file).
- * If all is well, do nothing. Nothing is expected to return.
- */
-function validateLocale(locale) {
+function extractLocale(source, folder) {
+  // E.g. 'pt-br/web/foo'
+  const relativeToSource = path.relative(source.filepath, folder);
+  // E.g. 'pr-br'
+  const localeFolderName = path.parse(relativeToSource).dir.split(path.sep)[0];
+  // E.g. 'pt-BR'
+  const locale = VALID_LOCALES.get(localeFolderName);
+  // This checks that the extraction worked *and* that the locale found
+  // really is in VALID_LOCALES *and* it ultimately returns the
+  // locale as we prefer to spell it (e.g. 'pt-BR' not 'Pt-bR')
   if (!locale) {
-    throw new Error("locale is empty");
+    throw new Error(`Unable to figure out locale from ${folder}`);
   }
-  if (!VALID_LOCALES.has(locale)) {
-    throw new Error(`'${locale}' is not a recognized locale`);
-  }
+  return locale;
 }
 
 /** Throw an error if the slug is insane.
@@ -887,6 +886,8 @@ class Builder {
       metadata.modified = wikiMetadata.modified;
     }
 
+    metadata.locale = extractLocale(source, folder);
+
     // The destination is the same as source but with a different base.
     // If the file *came from* /path/to/files/en-US/foo/bar/
     // the final destination is /path/to/build/en-US/foo/bar/index.json
@@ -951,14 +952,6 @@ class Builder {
       };
     }
 
-    // This is arguably linting of the content. We're checking that
-    // the locale and slug are sane. We're doing this during build,
-    // which means that to lint you have to actually try to build.
-    // We might want to reconsider this at some point in the future.
-    // For example, it might be a nice optimization to execute linting
-    // separately in CI so you don't have to wait for a complete build
-    // and thus you could "break the CI build" sooner for earlier feedback.
-    validateLocale(metadata.locale);
     // TODO: The slug should always match the folder name.
     // If you edit the slug bug don't correctly edit the folder it's in
     // it's going to lead to confusion.
