@@ -14,7 +14,7 @@ function slugToFoldername(slug) {
       .replace(/\?/g, "_question_")
 
       .toLowerCase()
-      .split(path.sep)
+      .split("/")
       .map(sanitizeFilename)
       .join(path.sep)
   );
