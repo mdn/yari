@@ -53,10 +53,6 @@ function getCurrentGitBranch(fallback = "master") {
   return _currentGitBranch;
 }
 
-function isWatchmanSupported() {
-  return !childProcess.spawnSync("watchman").error;
-}
-
 // XXX is this the best way??
 function isTTY() {
   return !!process.stdout.columns;
@@ -180,24 +176,9 @@ function runBuild(sources, options, logger) {
       return builder.start();
     }
     if (options.watch || options.buildAndWatch) {
-      const supported = isWatchmanSupported();
-      if (supported) {
-        logger.debug("Watchman supposedly supported.");
-        builder.watch();
-        console.log("Starting WebSocket (port 8080) to report on builds.");
-        webSocketServer = new WebSocket.Server({ port: 8080 });
-      } else {
-        // @Gregoor Here's where we'd need a nice banner
-        logger.warn(
-          chalk.red(
-            "\nWarning! You don't have 'watchman' installed.\n" +
-              "Without 'watchman' you can't monitor large directories for " +
-              "file changes.\n" +
-              "Go to https://facebook.github.io/watchman/docs/install.html\n" +
-              "\n"
-          )
-        );
-      }
+      builder.watch();
+      console.log("Starting WebSocket (port 8080) to report on builds.");
+      webSocketServer = new WebSocket.Server({ port: 8080 });
     }
   }
 }
