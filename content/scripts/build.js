@@ -173,11 +173,10 @@ function runBuild(sources, options, logger) {
   } else if (options.ensureTitles) {
     return builder.ensureAllTitles();
   } else {
+    builder.initSelfHash();
+    builder.ensureAllTitles();
+    builder.prepareRoots();
     if (!options.watch) {
-      builder.initSelfHash();
-      builder.ensureAllTitles();
-      builder.ensureAllChildren();
-      builder.prepareRoots();
       return builder.start();
     }
     if (options.watch || options.buildAndWatch) {
@@ -219,8 +218,9 @@ class Builder {
     this.logger = logger;
     this.selfHash = null;
     this.allTitles = {};
+    // TODO(peterbe): Evaluate why does this need to be its own data struct
+    // Can't it all just be part of this.allTitles??
     this.allPopularities = {};
-    this.allChildren = {};
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
@@ -416,6 +416,13 @@ class Builder {
   }
 
   ensureAllTitles() {
+    if (
+      Object.keys(this.allTitles).length &&
+      !this.options.regenerateAllTitles
+    ) {
+      // No reason to proceed, the titles have already been loaded into memory.
+      return;
+    }
     // First walk all the content and pick up all the titles.
     // Note, no matter what locales you have picked in the filtering,
     // *always* include 'en-US' because with that, it becomes possible
@@ -430,72 +437,85 @@ class Builder {
       !this.options.regenerateAllTitles
     ) {
       // XXX maybe this should become a Map instance.
-      // Or, maybe we can memoize this so that when the server runs runBuild
-      // every time, it's only computed once.
       this.allTitles = JSON.parse(
         fs.readFileSync(allTitlesJsonFilepath, "utf8")
       );
+      return;
     }
 
-    if (!Object.keys(this.allTitles).length) {
-      // If we're going to generate all titles, we need all popularities.
-      // Normally this gets run later in the build process, but in the
-      // case of a needing the titles first, make sure popularities are set.
-      this.ensurePopularities();
-      this.logger.info("Building a list of ALL titles and URIs...");
-      let t0 = new Date();
-      this.sources.entries().forEach(source => {
-        this.getLocaleRootFolders(source, { allLocales: true }).forEach(
-          filepath => {
-            walker(filepath, (folder, files) => {
-              if (source.isStumptown) {
-                files
-                  .filter(n => n.endsWith(".json"))
-                  .forEach(filename => {
-                    const filepath = path.join(folder, filename);
-                    this.processStumptownFileTitle(source, filepath);
-                  });
-                return;
-              }
-              if (
-                files.includes("index.html") &&
-                files.includes("index.yaml")
-              ) {
-                this.processFolderTitle(source, folder);
-              }
-            });
-          }
-        );
-      });
-      fs.writeFileSync(
-        allTitlesJsonFilepath,
-        JSON.stringify(this.allTitles, null, 2)
-      );
-      let t1 = new Date();
-      this.logger.info(
-        chalk.green(
-          `Building list of all titles took ${ppMilliseconds(t1 - t0)}`
-        )
-      );
-    }
-  }
+    // If we're going to generate all titles, we need all popularities.
+    // Normally this gets run later in the build process, but in the
+    // case of a needing the titles first, make sure popularities are set.
+    this.ensurePopularities();
 
-  ensureAllChildren() {
-    this.ensureAllTitles();
+    this.logger.info("Building a list of ALL titles and URIs...");
+    let t0 = new Date();
+    this.sources.entries().forEach(source => {
+      this.getLocaleRootFolders(source, { allLocales: true }).forEach(
+        filepath => {
+          walker(filepath, (folder, files) => {
+            if (source.isStumptown) {
+              files
+                .filter(n => n.endsWith(".json"))
+                .forEach(filename => {
+                  const filepath = path.join(folder, filename);
+                  this.processStumptownFileTitle(source, filepath);
+                });
+              return;
+            }
+            if (files.includes("index.html") && files.includes("index.yaml")) {
+              this.processFolderTitle(source, folder);
+            }
+          });
+        }
+      );
+    });
+
+    // Only after *all* titles have been processed can we iterate over the
+    // mapping and figure out all translations.
+    // What this does is that it sets `.translations=[{slug, locale}, ...]`
+    // on every title that is the "translation_of". Practically, that means
+    // that every 'en-US' document that has been translated, will have a list
+    // of other locales and slugs.
+    let countBrokenTranslationOfDocuments = 0;
     Object.values(this.allTitles)
       .filter(data => data.translation_of)
       .forEach(data => {
-        const parentMdnURL = buildMDNUrl("en-US", data.translation_of);
-        if (this.allTitles[parentMdnURL]) {
-          if (!(parentMdnURL in this.allChildren)) {
-            this.allChildren[parentMdnURL] = [];
+        const parentURL = buildMDNUrl("en-US", data.translation_of);
+        const parentData = this.allTitles[parentURL];
+        if (parentData) {
+          if (!("translations" in parentData)) {
+            parentData.translations = [];
           }
-          this.allChildren[parentMdnURL].push({
+          parentData.translations.push({
             locale: data.locale,
             slug: data.slug
           });
+        } else {
+          countBrokenTranslationOfDocuments++;
+          this.logger.debug(
+            `${data.locale}/${data.slug} (${data.file}) refers to a ` +
+              "en-US translation_of that doesn't exist."
+          );
         }
       });
+    if (countBrokenTranslationOfDocuments) {
+      this.logger.warn(
+        chalk.yellow(
+          `${countBrokenTranslationOfDocuments.toLocaleString()} documents ` +
+            "has a 'translation_of' that can actually not be found."
+        )
+      );
+    }
+
+    fs.writeFileSync(
+      allTitlesJsonFilepath,
+      JSON.stringify(this.allTitles, null, 2)
+    );
+    let t1 = new Date();
+    this.logger.info(
+      chalk.green(`Building list of all titles took ${ppMilliseconds(t1 - t0)}`)
+    );
   }
 
   watch() {
@@ -991,13 +1011,17 @@ class Builder {
 
     doc.last_modified = metadata.modified;
 
-    const otherTranslations = this.allChildren[doc.mdn_url] || [];
+    const otherTranslations = this.allTitles[doc.mdn_url].translations || [];
     if (!otherTranslations.length && metadata.translation_of) {
       // But perhaps the parent has other translations?!
-      const parentMdnURL = buildMDNUrl("en-US", metadata.translation_of);
-      const parentOtherTranslations = this.allChildren[parentMdnURL];
+      const parentURL = buildMDNUrl("en-US", metadata.translation_of);
+      const parentOtherTranslations = this.allTitles[parentURL].translations;
       if (parentOtherTranslations && parentOtherTranslations.length) {
-        otherTranslations.push(...parentOtherTranslations);
+        otherTranslations.push(
+          ...parentOtherTranslations.filter(
+            translation => translation.locale !== metadata.locale
+          )
+        );
       }
     }
     if (otherTranslations.length) {
