@@ -483,6 +483,20 @@ class Builder {
       .forEach(data => {
         const parentURL = buildMDNUrl("en-US", data.translation_of);
         const parentData = this.allTitles[parentURL];
+
+        // TODO: Our dumper is not perfect yet. We still get bad
+        // 'translation_of' references.
+        // I.e. a localized document's 'index.yaml' says its
+        // 'translation_of' is 'Web/Foo/Bar' but there is actually no en-US
+        // document by that slug!
+        // We're working on it in the dumper and this problem is known also
+        // in the 'ensureAllTitles()' method which at least debug logs the
+        // bad ones and warn logs about a total count of bad documents.
+        // Once the dumper has matured, we'll remove this defensive style and
+        // throw an error here. That'll be a form of validation-by-building
+        // which can really help our CI trap content edit PRs that sets
+        // or gets these references wrong.
+
         if (parentData) {
           if (!("translations" in parentData)) {
             parentData.translations = [];
@@ -1015,13 +1029,17 @@ class Builder {
     if (!otherTranslations.length && metadata.translation_of) {
       // But perhaps the parent has other translations?!
       const parentURL = buildMDNUrl("en-US", metadata.translation_of);
-      const parentOtherTranslations = this.allTitles[parentURL].translations;
-      if (parentOtherTranslations && parentOtherTranslations.length) {
-        otherTranslations.push(
-          ...parentOtherTranslations.filter(
-            translation => translation.locale !== metadata.locale
-          )
-        );
+      const parent = this.allTitles[parentURL];
+      // See note in 'ensureAllTitles()' about why we need this if statement.
+      if (parent) {
+        const parentOtherTranslations = parent.translations;
+        if (parentOtherTranslations && parentOtherTranslations.length) {
+          otherTranslations.push(
+            ...parentOtherTranslations.filter(
+              translation => translation.locale !== metadata.locale
+            )
+          );
+        }
       }
     }
     if (otherTranslations.length) {
