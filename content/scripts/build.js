@@ -517,7 +517,7 @@ class Builder {
       this.logger.warn(
         chalk.yellow(
           `${countBrokenTranslationOfDocuments.toLocaleString()} documents ` +
-            "has a 'translation_of' that can actually not be found."
+            "have a 'translation_of' that can actually not be found."
         )
       );
     }
