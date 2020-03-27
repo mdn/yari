@@ -92,8 +92,11 @@ export class Document extends React.Component {
       return null;
     }
     const translations = [...(doc.other_translations || [])];
-    if (doc.parent) {
-      translations.unshift(doc.parent);
+    if (doc.translation_of) {
+      translations.unshift({
+        locale: "en-US",
+        slug: doc.translation_of
+      });
     }
     return (
       <div>
