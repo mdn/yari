@@ -498,7 +498,7 @@ class Builder {
         // or gets these references wrong.
 
         if (parentData) {
-          if (!("translations" in parentData)) {
+          if (!parentData.hasOwnProperty("translations")) {
             parentData.translations = [];
           }
           parentData.translations.push({
@@ -1029,10 +1029,10 @@ class Builder {
     if (!otherTranslations.length && metadata.translation_of) {
       // But perhaps the parent has other translations?!
       const parentURL = buildMDNUrl("en-US", metadata.translation_of);
-      const parent = this.allTitles[parentURL];
+      const parentData = this.allTitles[parentURL];
       // See note in 'ensureAllTitles()' about why we need this if statement.
-      if (parent) {
-        const parentOtherTranslations = parent.translations;
+      if (parentData) {
+        const parentOtherTranslations = parentData.translations;
         if (parentOtherTranslations && parentOtherTranslations.length) {
           otherTranslations.push(
             ...parentOtherTranslations.filter(
