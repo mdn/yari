@@ -102,7 +102,6 @@ app.get("/_document", (req, res) => {
   if (!docData) {
     return res.status(400).send(`No document by the URL ${req.query.url}`);
   }
-  // console.log(docData);
   const folder = normalizeContentPath(docData.file);
   const html = fs.readFileSync(path.join(folder, "index.html"), "utf8");
   const rawMetadata = fs.readFileSync(path.join(folder, "index.yaml"));
@@ -123,13 +122,9 @@ app.put("/_document", (req, res) => {
     return res.status(400).send(`No document by the URL ${req.query.url}`);
   }
 
-  // console.log(req);
-  // console.log(req.body);
-  console.log({ title: req.body.title });
   if (req.body.title && req.body.html) {
     const folder = normalizeContentPath(docData.file);
     const htmlFile = path.join(folder, "index.html");
-    const html = fs.readFileSync(htmlFile, "utf8");
     const metadataFile = path.join(folder, "index.yaml");
     console.log(`WRITING TO ${metadataFile}`);
     const rawMetadata = fs.readFileSync(metadataFile);

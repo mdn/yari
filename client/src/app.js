@@ -5,13 +5,13 @@ import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { NoMatch } from "./routing";
 import { SearchWidget } from "./search";
-const EditDocument = lazy(() => import("./edit-document.js"));
+const DocumentEdit = lazy(() => import("./document-edit"));
 
 export function App(appProps) {
   const router = (
     <Router>
       <Homepage path="/" />
-      <EditDocument {...appProps} path="/:locale/edit/*" />
+      <DocumentEdit {...appProps} path="/:locale/edit/*" />
       <Document {...appProps} path="/:locale/docs/*" />
       <NoMatch default />
     </Router>

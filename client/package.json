@@ -17,6 +17,7 @@
     "react-scripts": "3.4.0",
     "sockette": "2.0.6",
     "swr": "0.1.18",
+    "throttle-debounce": "2.1.0",
     "typeface-zilla-slab": "0.0.72"
   },
   "scripts": {
