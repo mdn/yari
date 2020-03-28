@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const cli = require("caporal");
 
-const { runImporter } = require("./scripts/importer");
+const runImporter = require("./scripts/importer");
 const { runBuild } = require("./scripts/build");
 const { runMakePopularitiesFile } = require("./scripts/popularities");
 const { Sources } = require("./scripts/sources");
@@ -62,7 +62,7 @@ cli
   )
   .action((args, options, logger) => {
     options.dbURL = args.url;
-    return runImporter(options, logger);
+    return runImporter(options);
   })
 
   .command(
@@ -242,7 +242,3 @@ cli.parse(process.argv).then(r => {
 function equalArray(a, b) {
   return a.length === b.length && a.every((x, i) => x === b[i]);
 }
-
-// function relPath(absPath) {
-//   return path.relative(process.cwd(), absPath);
-// }
