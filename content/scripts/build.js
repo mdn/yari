@@ -62,10 +62,6 @@ function getCurrentGitBranch(fallback = "master") {
   return _currentGitBranch;
 }
 
-function isWatchmanSupported() {
-  return !childProcess.spawnSync("watchman").error;
-}
-
 // XXX is this the best way??
 function isTTY() {
   return !!process.stdout.columns;
@@ -116,6 +112,8 @@ function triggerTouch(filepath, document, root) {
 
 /** Needs doc string */
 function buildMDNUrl(locale, slug) {
+  if (!locale) throw new Error("locale falsy!");
+  if (!slug) throw new Error("slug falsy!");
   return `/${locale}/docs/${slug}`;
 }
 
@@ -130,7 +128,7 @@ function extractLocale(source, folder) {
   // really is in VALID_LOCALES *and* it ultimately returns the
   // locale as we prefer to spell it (e.g. 'pt-BR' not 'Pt-bR')
   if (!locale) {
-    throw new Error(`Unable to determine locale from ${folder}`);
+    throw new Error(`Unable to figure out locale from ${folder}`);
   }
   return locale;
 }
@@ -180,32 +178,16 @@ async function runBuild(sources, options, logger) {
   } else if (options.ensureTitles) {
     return builder.ensureAllTitles();
   } else {
+    builder.initSelfHash();
+    builder.ensureAllTitles();
+    builder.prepareRoots();
     if (!options.watch) {
-      builder.initSelfHash();
-      builder.ensureAllTitles();
-      builder.ensureAllChildren();
-      builder.prepareRoots();
       return builder.start();
     }
     if (options.watch || options.buildAndWatch) {
-      const supported = isWatchmanSupported();
-      if (supported) {
-        logger.debug("Watchman supposedly supported.");
-        builder.watch();
-        logger.info("Starting WebSocket (port 8080) to report on builds.");
-        webSocketServer = new WebSocket.Server({ port: 8080 });
-      } else {
-        // @Gregoor Here's where we'd need a nice banner
-        logger.warn(
-          chalk.red(
-            "\nWarning! You don't have 'watchman' installed.\n" +
-              "Without 'watchman' you can't monitor large directories for " +
-              "file changes.\n" +
-              "Go to https://facebook.github.io/watchman/docs/install.html\n" +
-              "\n"
-          )
-        );
-      }
+      builder.watch();
+      console.log("Starting WebSocket (port 8080) to report on builds.");
+      webSocketServer = new WebSocket.Server({ port: 8080 });
     }
   }
 }
@@ -226,6 +208,8 @@ class Builder {
     this.logger = logger;
     this.selfHash = null;
     this.allTitles = {};
+    // TODO(peterbe): Evaluate why does this need to be its own data struct
+    // Can't it all just be part of this.allTitles??
     this.allPopularities = {};
     this.ksMacros = new ksTemplates(ksConfig.macrosDirectory);
 
@@ -454,6 +438,13 @@ class Builder {
   }
 
   ensureAllTitles() {
+    if (
+      Object.keys(this.allTitles).length &&
+      !this.options.regenerateAllTitles
+    ) {
+      // No reason to proceed, the titles have already been loaded into memory.
+      return;
+    }
     // First walk all the content and pick up all the titles.
     // Note, no matter what locales you have picked in the filtering,
     // *always* include 'en-US' because with that, it becomes possible
@@ -468,52 +459,59 @@ class Builder {
       !this.options.regenerateAllTitles
     ) {
       // XXX maybe this should become a Map instance.
-      // Or, maybe we can memoize this so that when the server runs runBuild
-      // every time, it's only computed once.
       this.allTitles = JSON.parse(
         fs.readFileSync(allTitlesJsonFilepath, "utf8")
       );
+      return;
     }
 
-    if (!Object.keys(this.allTitles).length) {
-      // If we're going to generate all titles, we need all popularities.
-      // Normally this gets run later in the build process, but in the
-      // case of a needing the titles first, make sure popularities are set.
-      this.ensurePopularities();
-      this.logger.info("Building a list of ALL titles and URIs...");
-      let t0 = new Date();
-      for (const { source, folder, files } of this.walkSources({allLocales: true})) {
-        if (source.isStumptown) {
-          for (const filename of files.filter(n => n.endsWith(".json"))) {
-            const filepath = path.join(folder, filename);
-            this.processStumptownFileTitle(source, filepath);
-          }
-        } else if (
-          files.includes("index.html") &&
-          files.includes("index.yaml")
-        ) {
-          this.processFolderTitle(source, folder);
+    // If we're going to generate all titles, we need all popularities.
+    // Normally this gets run later in the build process, but in the
+    // case of a needing the titles first, make sure popularities are set.
+    this.ensurePopularities();
+
+    this.logger.info("Building a list of ALL titles and URIs...");
+    let t0 = new Date();
+    for (const { source, folder, files } of this.walkSources({allLocales: true})) {
+      if (source.isStumptown) {
+        for (const filename of files.filter(n => n.endsWith(".json"))) {
+          const filepath = path.join(folder, filename);
+          this.processStumptownFileTitle(source, filepath);
         }
+      } else if (
+        files.includes("index.html") &&
+        files.includes("index.yaml")
+      ) {
+        this.processFolderTitle(source, folder);
       }
-      fs.writeFileSync(
-        allTitlesJsonFilepath,
-        JSON.stringify(this.allTitles, null, 2)
-      );
-      let t1 = new Date();
-      this.logger.info(
-        chalk.green(
-          `Building list of all titles took ${ppMilliseconds(t1 - t0)}`
-        )
-      );
-    }
-  }
+    }    
 
-  ensureAllChildren() {
-    this.ensureAllTitles();
-    for (const [uri, data] of Object.entries(this.allTitles)) {
-      if (data.translation_of) {
+    // Only after *all* titles have been processed can we iterate over the
+    // mapping and figure out all translations.
+    // What this does is that it sets `.translations=[{slug, locale}, ...]`
+    // on every title that is the "translation_of". Practically, that means
+    // that every 'en-US' document that has been translated, will have a list
+    // of other locales and slugs.
+    let countBrokenTranslationOfDocuments = 0;
+    Object.values(this.allTitles)
+      .filter(data => data.translation_of)
+      .forEach(data => {
         const parentURL = buildMDNUrl("en-US", data.translation_of);
         const parentData = this.allTitles[parentURL];
+
+        // TODO: Our dumper is not perfect yet. We still get bad
+        // 'translation_of' references.
+        // I.e. a localized document's 'index.yaml' says its
+        // 'translation_of' is 'Web/Foo/Bar' but there is actually no en-US
+        // document by that slug!
+        // We're working on it in the dumper and this problem is known also
+        // in the 'ensureAllTitles()' method which at least debug logs the
+        // bad ones and warn logs about a total count of bad documents.
+        // Once the dumper has matured, we'll remove this defensive style and
+        // throw an error here. That'll be a form of validation-by-building
+        // which can really help our CI trap content edit PRs that sets
+        // or gets these references wrong.
+
         if (parentData) {
           if (!parentData.hasOwnProperty("translations")) {
             parentData.translations = [];
@@ -524,10 +522,30 @@ class Builder {
             title: data.title
           });
         } else {
-          this.logger.error(`${uri} is a translation of ${parentURL}, which is missing!`);
+          countBrokenTranslationOfDocuments++;
+          this.logger.debug(
+            `${data.locale}/${data.slug} (${data.file}) refers to a ` +
+              "en-US translation_of that doesn't exist."
+          );
         }
-      }
+      });
+    if (countBrokenTranslationOfDocuments) {
+      this.logger.warn(
+        chalk.yellow(
+          `${countBrokenTranslationOfDocuments.toLocaleString()} documents ` +
+            "have a 'translation_of' that can actually not be found."
+        )
+      );
     }
+
+    fs.writeFileSync(
+      allTitlesJsonFilepath,
+      JSON.stringify(this.allTitles, null, 2)
+    );
+    let t1 = new Date();
+    this.logger.info(
+      chalk.green(`Building list of all titles took ${ppMilliseconds(t1 - t0)}`)
+    );
   }
 
   async watch() {
@@ -926,6 +944,8 @@ class Builder {
       metadata.modified = wikiMetadata.modified;
     }
 
+    metadata.locale = extractLocale(source, folder);
+
     // The destination is the same as source but with a different base.
     // If the file *came from* /path/to/files/en-US/foo/bar/
     // the final destination is /path/to/build/en-US/foo/bar/index.json
@@ -1027,34 +1047,21 @@ class Builder {
 
     doc.last_modified = metadata.modified;
 
-    const englishSlug = metadata.translation_of || metadata.slug;
-    const englishURL = buildMDNUrl("en-US", englishSlug);
-    
-    if (this.allTitles.hasOwnProperty(englishURL)) {
-      let otherTranslations = this.allTitles[englishURL].translations || [];
-      if (otherTranslations.length) {
-        if (metadata.locale !== "en-US") {
-          // Don't consider this non-English locale a translation of itself.
-          otherTranslations = otherTranslations.filter(
-            trans => trans.locale !== metadata.locale
+    const otherTranslations = this.allTitles[doc.mdn_url].translations || [];
+    if (!otherTranslations.length && metadata.translation_of) {
+      // But perhaps the parent has other translations?!
+      const parentURL = buildMDNUrl("en-US", metadata.translation_of);
+      const parentData = this.allTitles[parentURL];
+      // See note in 'ensureAllTitles()' about why we need this if statement.
+      if (parentData) {
+        const parentOtherTranslations = parentData.translations;
+        if (parentOtherTranslations && parentOtherTranslations.length) {
+          otherTranslations.push(
+            ...parentOtherTranslations.filter(
+              translation => translation.locale !== metadata.locale
+            )
           );
-          // The English translation has to be added for non-English locales.
-          otherTranslations.push({
-            locale: "en-US",
-            slug: englishSlug,
-            title: this.allTitles[englishURL].title
-          });
         }
-        // Sort by locale.
-        doc.other_translations = otherTranslations.sort((a, b) => {
-          if (a.locale < b.locale) {
-            return -1;
-          }
-          if (a.locale > b.locale) {
-            return 1;
-          }
-          return 0;
-        });
       }
     }
 

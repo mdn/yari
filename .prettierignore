@@ -4,6 +4,7 @@
 Dockerfile
 Makefile
 Procfile
+content/_all-titles.json
 # exclude these directories
 /stumptown/
 /client/build/
@@ -15,6 +16,8 @@ Procfile
 /cli/node_modules/
 /deployment/node_modules/
 /client/src/water.css/
+/archivecontent/
+/content/files/
 
-# Mist files to ignore
+# Misc files to ignore
 /client/src/serviceWorker.js

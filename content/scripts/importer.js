@@ -1,14 +1,17 @@
+const assert = require("assert").strict;
 const url = require("url");
 const fs = require("fs");
 const path = require("path");
 const stream = require("stream");
 const { promisify } = require("util");
+
+const chalk = require("chalk");
 const mysql = require("mysql");
 const cheerio = require("cheerio");
 const yaml = require("js-yaml");
-const assert = require("assert").strict;
 const ProgressBar = require("./progress-bar");
 const { slugToFoldername } = require("./utils");
+const { VALID_LOCALES } = require("./constants");
 
 const MAX_OPEN_FILES = 256;
 
@@ -130,35 +133,6 @@ async function queryContributors(query, options) {
   return { contributors, usernames };
 }
 
-async function queryTranslationRelationships(query, options) {
-  const { constraintsSQL, queryArgs } = getSQLConstraints(
-    {
-      alias: "d"
-    },
-    options
-  );
-  const sql = `
-    SELECT d.id, d.parent_id, d.slug, d.locale
-    FROM wiki_document d
-    ${constraintsSQL} AND d.parent_id IS NOT NULL
-    ORDER BY d.locale
-  `;
-
-  console.log("Going to fetch ALL parents");
-  const results = await query(sql, queryArgs);
-  const translations = {};
-  for (const row of results) {
-    if (!(row.parent_id in translations)) {
-      translations[row.parent_id] = [];
-    }
-    translations[row.parent_id].push({
-      slug: row.slug,
-      locale: row.locale
-    });
-  }
-  return translations;
-}
-
 async function queryDocumentCount(query, constraintsSQL, queryArgs) {
   const localesSQL = `
     SELECT w.locale, COUNT(*) AS count
@@ -234,6 +208,35 @@ async function queryDocuments(pool, options) {
   };
 }
 
+async function queryDocumentTags(query, options) {
+  const { constraintsSQL, queryArgs } = getSQLConstraints(
+    {
+      alias: "w"
+    },
+    options
+  );
+  const sql = `
+    SELECT
+      w.id,
+      t.name
+    FROM wiki_document w
+    INNER JOIN wiki_taggeddocument wt ON wt.content_object_id = w.id
+    INNER JOIN wiki_documenttag t ON t.id = wt.tag_id
+    ${constraintsSQL}
+  `;
+
+  console.log("Going to fetch ALL document tags");
+  const results = await query(sql, queryArgs);
+  const tags = {};
+  for (const row of results) {
+    if (!(row.id in tags)) {
+      tags[row.id] = [];
+    }
+    tags[row.id].push(row.name);
+  }
+  return tags;
+}
+
 async function withTimer(label, fn) {
   console.time(label);
   const result = await fn();
@@ -247,6 +250,15 @@ function isArchiveDoc(row) {
       row.slug.startsWith(prefix) ||
       (row.parent_slug && row.parent_slug.startsWith(prefix))
   );
+}
+
+function isArchiveRedirect(uri) {
+  if (uri.includes("/docs/")) {
+    const split = uri.split("/docs/");
+    return ARCHIVE_SLUG_PREFIXES.some(prefix => split[1].startsWith(prefix));
+  } else {
+    return ARCHIVE_SLUG_PREFIXES.some(prefix => uri.startsWith(prefix));
+  }
 }
 
 async function prepareRoots(options) {
@@ -319,7 +331,20 @@ function processRedirect(doc, absoluteURL) {
     );
   }
 
-  if (!redirectURL.startsWith("/docs/")) {
+  if (
+    !redirectURL.includes("/docs/") &&
+    VALID_LOCALES.has(redirectURL.split("/")[1])
+  ) {
+    const locale = redirectURL.split("/")[1];
+    // This works because String.replace only replaces the first occurance.
+    // And we can be confident that `redirectURL.split("/")[1]` is a valid
+    // locale because of the if-statement just above that uses `VALID_LOCALES`.
+    const fixedRedirectURL = redirectURL.replace(
+      `/${locale}/`,
+      `/${locale}/docs/`
+    );
+    return { url: fixedRedirectURL, status: null };
+  } else if (!redirectURL.startsWith("/docs/")) {
     return { url: redirectURL, status: null };
   }
 
@@ -346,7 +371,7 @@ async function processDocument(
   doc,
   { archiveRoot, root, startClean },
   isArchive = false,
-  { usernames, contributors }
+  { usernames, contributors, tags }
 ) {
   const { slug, locale, title } = doc;
   const localeFolder = path.join(
@@ -380,7 +405,7 @@ async function processDocument(
   }
   if (doc.parent_slug) {
     assert(doc.parent_locale === "en-US");
-    meta.translationof = doc.parent_slug;
+    meta.translation_of = doc.parent_slug;
   }
 
   const wikiHistory = {
@@ -388,10 +413,10 @@ async function processDocument(
     _generated: new Date().toISOString()
   };
 
-  // const otherTranslations = translations[doc.id] || [];
-  // if (otherTranslations.length) {
-  //   meta.other_translations = otherTranslations;
-  // }
+  const docTags = tags[doc.id] || [];
+  if (docTags.length) {
+    meta.tags = docTags.sort();
+  }
   await fs.promises.writeFile(metaFile, yaml.safeDump(meta));
 
   const docContributors = (contributors[doc.id] || []).map(
@@ -404,15 +429,6 @@ async function processDocument(
     wikiHistoryFile,
     JSON.stringify(wikiHistory, null, 2)
   );
-
-  // XXX At the moment, we're pretending we have the KS shim, and that means
-  // we'll have access to the raw (full of macros) string which'll be
-  // useful to infer certain things such as how the {{Compat(...)}}
-  // macro is used. But for now, we'll inject it into the metadata:
-  if (!isArchive) {
-    const rawFile = path.join(folder, "raw.html");
-    await fs.promises.writeFile(rawFile, doc.html);
-  }
 }
 
 async function saveAllRedirects(redirects, root) {
@@ -447,7 +463,6 @@ async function saveAllRedirects(redirects, root) {
         writeStream.write(`${fromUrl}\t${toUrl}\n`);
       });
       writeStream.end();
-      console.log(`Wrote all ${locale} redirects to ${filePath}`);
     }
   }
 
@@ -483,12 +498,12 @@ module.exports = async function runImporter(options) {
   );
 
   const query = promisify(pool.query).bind(pool);
-  const [{ usernames, contributors }, translations] = await Promise.all([
+  const [{ usernames, contributors }, tags] = await Promise.all([
     withTimer("Time to fetch all contributors", () =>
       queryContributors(query, options)
     ),
-    withTimer("Time to fetch all translation relationships", () =>
-      queryTranslationRelationships(query, options)
+    withTimer("Time to fetch all document tags", () =>
+      queryDocumentTags(query, options)
     )
   ]);
 
@@ -502,7 +517,9 @@ module.exports = async function runImporter(options) {
       })
     : null;
 
-  progressBar.init(documents.totalCount);
+  if (!options.noProgressbar) {
+    progressBar.init(documents.totalCount);
+  }
 
   documents.stream.on("error", error => {
     console.error("Querying documents failed with", error);
@@ -516,6 +533,7 @@ module.exports = async function runImporter(options) {
   let messedupRedirects = 0;
   let discardedRedirects = 0;
   let archivedRedirects = 0;
+  let archivedRedirectDestination = 0;
 
   for await (const row of documents.stream) {
     processedDocumentsCount++;
@@ -547,7 +565,14 @@ module.exports = async function runImporter(options) {
           discardedRedirects++;
           return;
         }
+
         if (redirect.url) {
+          if (isArchiveRedirect(redirect.url)) {
+            // This redirect redirects to a URL that is considered archived.
+            // Just drop it.
+            archivedRedirectDestination++;
+            return;
+          }
           redirects[absoluteUrl] = redirect.url;
         }
         if (redirect.status == "mess") {
@@ -559,11 +584,12 @@ module.exports = async function runImporter(options) {
         await processDocument(row, options, isArchive, {
           usernames,
           contributors,
-          translations
+          tags
         });
       }
     })()
       .catch(err => {
+        console.log("An error occured during processing");
         console.error(err);
         // The slightest unexpected error should stop the importer immediately.
         process.exit(1);
@@ -573,37 +599,52 @@ module.exports = async function runImporter(options) {
       });
   }
 
-  progressBar.stop();
+  if (!options.noProgressbar) {
+    progressBar.stop();
+  }
+
   pool.end();
   await saveAllRedirects(redirects, options.root);
 
   if (improvedRedirects) {
     console.log(
-      `${improvedRedirects.toLocaleString()} redirects were corrected as they used the old URL style.`
+      chalk.bold(improvedRedirects.toLocaleString()),
+      "redirects were corrected as they used the old URL style."
     );
   }
   if (messedupRedirects) {
     console.log(
-      `${messedupRedirects.toLocaleString()} redirects were ignored because they would lead to an infinite redirect loop.`
+      chalk.bold(messedupRedirects.toLocaleString()),
+      "redirects were ignored because they would lead to an infinite redirect loop."
     );
   }
   if (discardedRedirects) {
     console.log(
-      `${discardedRedirects.toLocaleString()} redirects that could not be imported.`
+      chalk.bold(discardedRedirects.toLocaleString()),
+      "redirects that could not be imported."
     );
   }
   if (archivedRedirects) {
     console.log(
-      `${archivedRedirects.toLocaleString()} redirects that are considered archived content ignored.`
+      chalk.bold(archivedRedirects.toLocaleString()),
+      "redirects that are considered archived content ignored."
+    );
+  }
+  if (archivedRedirectDestination) {
+    console.log(
+      chalk.bold(archivedRedirectDestination.toLocaleString()),
+      "redirects that redirected to an archived URL."
     );
   }
 
   const endTime = Date.now();
   const secondsTook = (endTime - startTime) / 1000;
   console.log(
-    `Took ${formatSeconds(
-      secondsTook
-    )} seconds to process ${processedDocumentsCount.toLocaleString()} rows.`
+    chalk.green(
+      `Took ${formatSeconds(secondsTook)} seconds to process ${chalk.bold(
+        processedDocumentsCount.toLocaleString()
+      )} rows.`
+    )
   );
   console.log(
     `Roughly ${(processedDocumentsCount / secondsTook).toFixed(1)} rows/sec.`
