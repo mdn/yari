@@ -1,8 +1,10 @@
 import React from "react";
+import { Link } from "@reach/router";
 
 import "./document-editthispage.css";
 
-export function EditThisPage({ source }) {
+export function EditThisPage({ doc }) {
+  const { source } = doc;
   const [opening, setOpening] = React.useState(false);
 
   React.useEffect(() => {
@@ -49,6 +51,10 @@ export function EditThisPage({ source }) {
   } else if (source.content_file) {
     return (
       <p className="edit-this-page">
+        <Link to={doc.mdn_url.replace("/docs/", "/edit/")}>
+          Edit this page in this browser
+        </Link>{" "}
+        •{" "}
         <a
           href={`file://${source.content_file}`}
           title={`Folder: ${source.folder}`}

@@ -27,7 +27,7 @@ function DocumentEdit({ ...props }) {
   return (
     <div className="document-edit">
       <h2>
-        EDIT VIEW
+        Edit view
         <Link to={url} className="close">
           close
         </Link>

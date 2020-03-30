@@ -98,7 +98,7 @@ export class Document extends React.Component {
       });
     }
     return (
-      <div>
+      <div className="page">
         <h1 className="page-title">{doc.title}</h1>
         {translations && !!translations.length && (
           <DocumentTranslations translations={translations} />
@@ -112,7 +112,7 @@ export class Document extends React.Component {
           <div className="content">
             <RenderDocumentBody doc={doc} />
             <hr />
-            <EditThisPage source={doc.source} />
+            <EditThisPage doc={doc} />
             {doc.contributors && (
               <Contributors contributors={doc.contributors} />
             )}
