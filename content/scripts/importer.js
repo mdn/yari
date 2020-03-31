@@ -47,7 +47,12 @@ const ARCHIVE_SLUG_PREFIXES = [
 ];
 
 function getSQLConstraints(
-  { joinTable = null, alias = null, includeDeleted = false } = {},
+  {
+    joinTable = null,
+    alias = null,
+    parentAlias = null,
+    includeDeleted = false
+  } = {},
   options
 ) {
   // Yeah, this is ugly but it bloody works for now.
@@ -70,9 +75,17 @@ function getSQLConstraints(
   }
   if (excludePrefixes.length) {
     extra.push(
-      "NOT (" + excludePrefixes.map(_ => `${a}slug LIKE ?`).join(" OR ") + ")"
+      `NOT (${excludePrefixes.map(_ => `${a}slug LIKE ?`).join(" OR ")})`
     );
     queryArgs.push(...excludePrefixes.map(s => `${s}%`));
+    if (parentAlias) {
+      extra.push(
+        `((${parentAlias}.slug IS NULL) OR NOT (${excludePrefixes
+          .map(_ => `${parentAlias}.slug LIKE ?`)
+          .join(" OR ")}))`
+      );
+      queryArgs.push(...excludePrefixes.map(s => `${s}%`));
+    }
   }
 
   let sql = " ";
@@ -137,6 +150,7 @@ async function queryDocumentCount(query, constraintsSQL, queryArgs) {
   const localesSQL = `
     SELECT w.locale, COUNT(*) AS count
     FROM wiki_document w
+    LEFT OUTER JOIN wiki_document p ON w.parent_id = p.id
     ${constraintsSQL}
     GROUP BY w.locale
     ORDER BY count DESC
@@ -172,7 +186,8 @@ async function queryDocumentCount(query, constraintsSQL, queryArgs) {
 async function queryDocuments(pool, options) {
   const { constraintsSQL, queryArgs } = getSQLConstraints(
     {
-      alias: "w"
+      alias: "w",
+      parentAlias: "p"
     },
     options
   );
