@@ -228,7 +228,7 @@ class Builder {
 
   // Just print what could be found and exit
   listLocales() {
-    this.sources.entries().forEach(source => {
+    for (const source of this.sources.entries()) {
       console.log(`\n${chalk.bold("Source:")} ${chalk.white(source.filepath)}`);
       const counts = this.countLocaleFolders(source);
       const sumCounts = Array.from(counts.values()).reduce((a, b) => a + b, 0);
@@ -254,7 +254,7 @@ class Builder {
             );
           }
         });
-    });
+    }
   }
 
   *walkSources({ allLocales = false } = {}) {
