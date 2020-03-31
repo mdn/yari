@@ -597,11 +597,11 @@ class Builder {
   }
 
   prepareRoots() {
-    this.sources.entries().forEach(source => {
-      this.getLocaleRootFolders(source).forEach(folderpath => {
-        this.prepareRoot(path.basename(folderpath));
-      });
-    });
+    for (const source of this.sources.entries()) {
+      for (const localeFolder of this.getLocaleRootFolders(source)) {
+        this.prepareRoot(path.basename(localeFolder));
+      }
+    }
   }
 
   initSelfHash() {
