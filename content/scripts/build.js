@@ -239,9 +239,7 @@ class Builder {
   // Just print what could be found and exit
   listLocales() {
     for (const source of this.sources.entries()) {
-      this.logger.info(
-        `\n${chalk.bold("Source:")} ${chalk.white(source.filepath)}`
-      );
+      console.log(`\n${chalk.bold("Source:")} ${chalk.white(source.filepath)}`);
       const counts = this.countLocaleFolders(source);
       const sumCounts = Array.from(counts.values()).reduce((a, b) => a + b, 0);
       Array.from(counts)
@@ -271,7 +269,9 @@ class Builder {
 
   *walkSources({ allLocales = false } = {}) {
     for (const source of this.sources.entries()) {
-      for (const localeFolder of this.getLocaleRootFolders(source, {allLocales})) {
+      for (const localeFolder of this.getLocaleRootFolders(source, {
+        allLocales
+      })) {
         for (const [folder, files] of walker(localeFolder)) {
           yield { source, localeFolder, folder, files };
         }
@@ -472,19 +472,18 @@ class Builder {
 
     this.logger.info("Building a list of ALL titles and URIs...");
     let t0 = new Date();
-    for (const { source, folder, files } of this.walkSources({allLocales: true})) {
+    for (const { source, folder, files } of this.walkSources({
+      allLocales: true
+    })) {
       if (source.isStumptown) {
         for (const filename of files.filter(n => n.endsWith(".json"))) {
           const filepath = path.join(folder, filename);
           this.processStumptownFileTitle(source, filepath);
         }
-      } else if (
-        files.includes("index.html") &&
-        files.includes("index.yaml")
-      ) {
+      } else if (files.includes("index.html") && files.includes("index.yaml")) {
         this.processFolderTitle(source, folder);
       }
-    }    
+    }
 
     // Only after *all* titles have been processed can we iterate over the
     // mapping and figure out all translations.
