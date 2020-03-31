@@ -383,12 +383,7 @@ class Builder {
     const t0 = new Date();
     let folderProcessingPromises = [];
 
-    for (const {
-      source,
-      localeFolder,
-      folder,
-      files
-    } of self.walkSources()) {
+    for (const { source, localeFolder, folder, files } of self.walkSources()) {
       if (self.excludeFolder(source, folder, localeFolder, files)) {
         // If the folder was a Stumptown folder, what we're
         // actually excluding is all the .json files in the folder.
@@ -426,9 +421,7 @@ class Builder {
           self.tickProgressbar(++total);
         }
       } else {
-        folderProcessingPromises.push(
-          processAndTrackFolder(source, folder)
-        );
+        folderProcessingPromises.push(processAndTrackFolder(source, folder));
       }
     }
     await Promise.all(folderProcessingPromises);
@@ -517,8 +510,7 @@ class Builder {
           }
           parentData.translations.push({
             locale: data.locale,
-            slug: data.slug,
-            title: data.title
+            slug: data.slug
           });
         } else {
           countBrokenTranslationOfDocuments++;
@@ -866,18 +858,15 @@ class Builder {
     const { locales, notLocales } = this.options;
     const files = fs.readdirSync(source.filepath);
     for (const name of files) {
-      const locale = VALID_LOCALES.get(name.toLowerCase());
+      const filepath = path.join(source.filepath, name);
+      const isDirectory = fs.statSync(filepath).isDirectory();
       if (
-        locale &&
+        isDirectory &&
         (allLocales ||
           ((!locales.length || locales.includes(name)) &&
-            (!notLocales.length || !notLocales.includes(name))))
+            (!notLocales || !notLocales.includes(name))))
       ) {
-        const localeFolder = path.join(source.filepath, name);
-        const isDirectory = fs.statSync(localeFolder).isDirectory();
-        if (isDirectory) {
-          yield localeFolder;
-        }
+        yield filepath;
       }
     }
   }
@@ -932,8 +921,6 @@ class Builder {
       return { result: processing.EXCLUDED, file: folder };
     }
     hasher.update(metadataRaw);
-
-    metadata.locale = extractLocale(source, folder);
 
     if (fs.existsSync(path.join(folder, "wikihistory.yaml"))) {
       const wikiMetadataRaw = fs.readFileSync(
@@ -1062,6 +1049,9 @@ class Builder {
           );
         }
       }
+    }
+    if (otherTranslations.length) {
+      doc.other_translations = otherTranslations;
     }
 
     this.injectSource(source, doc, folder);
