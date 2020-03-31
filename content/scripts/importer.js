@@ -124,12 +124,7 @@ async function populateRedirectInfo(pool, constraintsSQL, queryArgs) {
 }
 
 function getSQLConstraints(
-  {
-    joinTable = null,
-    alias = null,
-    parentAlias = null,
-    includeDeleted = false
-  } = {},
+  { alias = null, parentAlias = null, includeDeleted = false } = {},
   options
 ) {
   // Yeah, this is ugly but it bloody works for now.
@@ -165,13 +160,8 @@ function getSQLConstraints(
     }
   }
 
-  let sql = " ";
-  if (joinTable) {
-    sql += `INNER JOIN ${joinTable} ON document_id=${joinTable}.id `;
-  }
-
   return {
-    constraintsSQL: sql + extra.length ? ` WHERE ${extra.join(" AND ")}` : "",
+    constraintsSQL: ` WHERE ${extra.join(" AND ")}`,
     queryArgs
   };
 }
@@ -182,7 +172,6 @@ async function queryContributors(query, options) {
       console.log("Going to fetch ALL contributor *mappings*");
       const { constraintsSQL, queryArgs } = getSQLConstraints(
         {
-          joinTable: "wiki_document",
           includeDeleted: true,
           alias: "d"
         },
