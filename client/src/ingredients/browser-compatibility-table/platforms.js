@@ -4,7 +4,7 @@ export function Platforms({ platforms, browsers }) {
   return (
     <tr className="bc-platforms">
       <td />
-      {platforms.map(platform => (
+      {platforms.map((platform) => (
         <th
           key={platform}
           className={`bc-platform-${platform}`}

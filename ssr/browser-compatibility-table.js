@@ -6,8 +6,8 @@ export function normalizeURLs(doc) {
   // This takes the `mdn_url` and sets it to a URI that can be used when
   // rendering the BCD table to link to a relative path.
   doc.body
-    .filter(section => section.type === "browser_compatibility")
-    .forEach(section => {
+    .filter((section) => section.type === "browser_compatibility")
+    .forEach((section) => {
       Object.entries(section.value.data).forEach(([, block]) => {
         // First block from the BCD data does not have its name as the root key
         // so mdn_url is accessible at the root. If the block has a key for

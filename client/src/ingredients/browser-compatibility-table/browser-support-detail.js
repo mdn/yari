@@ -9,7 +9,7 @@ export function BrowserSupportDetail({
   versionAdded,
   currentNoteId,
   onNotesClick,
-  indexNote
+  indexNote,
 }) {
   let noteType;
   if (

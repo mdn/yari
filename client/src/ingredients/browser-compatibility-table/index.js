@@ -14,11 +14,11 @@ const BROWSERS = {
     "firefox_android",
     "opera_android",
     "safari_ios",
-    "samsunginternet_android"
+    "samsunginternet_android",
   ],
   server: ["nodejs"],
   "webextensions-desktop": ["chrome", "edge", "firefox", "opera"],
-  "webextensions-mobile": ["firefox_android"]
+  "webextensions-mobile": ["firefox_android"],
 };
 
 class BrowserCompatibilityTableContent extends Component {
@@ -30,7 +30,7 @@ class BrowserCompatibilityTableContent extends Component {
     hasFlag: false,
     hasPrefix: false,
     hasNotes: false,
-    legendSet: false
+    legendSet: false,
   };
 
   gatherPlatformsAndBrowsers(category) {
@@ -43,16 +43,16 @@ class BrowserCompatibilityTableContent extends Component {
     if (category === "webextensions") {
       displayBrowsers = [
         ...BROWSERS["webextensions-desktop"],
-        ...BROWSERS["webextensions-mobile"]
+        ...BROWSERS["webextensions-mobile"],
       ];
       platforms = ["webextensions-desktop", "webextensions-mobile"];
     }
     return [platforms, displayBrowsers];
   }
 
-  onNotesClick = noteId => {
+  onNotesClick = (noteId) => {
     this.setState({
-      currentNoteId: noteId === this.state.currentNoteId ? null : noteId
+      currentNoteId: noteId === this.state.currentNoteId ? null : noteId,
     });
   };
 
@@ -74,7 +74,7 @@ class BrowserCompatibilityTableContent extends Component {
         hasPrefix,
         hasAlternative,
         hasNotes,
-        legendSet: true
+        legendSet: true,
       });
     }
   };
@@ -129,7 +129,7 @@ class BrowserCompatibilityTableContent extends Component {
   }
 }
 
-export const BrowserCompatibilityTable = props => {
+export const BrowserCompatibilityTable = (props) => {
   return (
     <BrowserCompatibilityErrorBoundary>
       {props.data && props.data.title && (

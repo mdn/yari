@@ -169,11 +169,13 @@ div.content {
   }
 }
 
-.external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external) {
+.external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external)
+{
   white-space: pre-line;
 }
 
-.external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):before, .external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):after {
+.external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):before, .external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):after
+{
   background-image: url("./icons/general/external-link.svg");
   background-size: 12px;
   width: 12px;
@@ -183,7 +185,8 @@ div.content {
   vertical-align: text-top;
 }
 
-.external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):before, .external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):before {
+.external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):before, .external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):before
+{
   display: inline-block;
   content: "";
   background-repeat: no-repeat;
