@@ -19,7 +19,7 @@ const MAX_OPEN_FILES = 256;
 // folder; namely the archive folder.
 // Case matters but 100% of Prod slugs are spelled like this. I.e.
 // there's *no* slug that is something like this 'archiVe/Foo/Bar'.
-const ARCHIVE_SLUG_PREFIXES = [
+const ARCHIVE_SLUG_ENGLISH_PREFIXES = [
   "Archive",
   "BrowserID",
   "Debugging",
@@ -46,13 +46,85 @@ const ARCHIVE_SLUG_PREFIXES = [
   "Zones"
 ];
 
+const redirectsToArchive = new Set();
+const redirectFinalDestinations = new Map();
+const archiveSlugPrefixes = [...ARCHIVE_SLUG_ENGLISH_PREFIXES];
+
+function startsWithArchivePrefix(uri) {
+  return archiveSlugPrefixes.some(prefix => uriToSlug(uri).startsWith(prefix));
+}
+
+function isArchiveRedirect(uri) {
+  return redirectsToArchive.has(uri) || startsWithArchivePrefix(uri);
+}
+
+async function populateRedirectInfo(pool, constraintsSQL, queryArgs) {
+  // Populates two data structures: "redirectsToArchive", a set of URI's
+  // that ultimately redirect to a page that will be archived, as well as
+  // "redirectFinalDestinations", a mapping of the URI's of redirects
+  // to the URI of their final destination.
+
+  function extractFromChain(toUri, chainOfRedirects) {
+    // Recursive function that builds the set of redirects to
+    // archive, as well as the map that provides the final
+    // destination of each redirect that we'll keep.
+    const isInfiniteLoop = chainOfRedirects.has(toUri);
+    if (isInfiniteLoop) {
+      // This next URI in the redirect chain is already in
+      // the chain, so we've discovered an infinite loop.
+      const arrayOfRedirects = [...chainOfRedirects];
+      arrayOfRedirects.push(toUri);
+      const chainAsString = arrayOfRedirects.join(" --> ");
+      // console.error(`FOUND INFINITE REDIRECT LOOP: ${chainAsString}`);
+    } else {
+      const nextUri = redirects.get(toUri);
+      if (nextUri) {
+        return extractFromChain(nextUri, chainOfRedirects.add(toUri));
+      }
+    }
+    // Is the final destination meant to be archived?
+    if (isInfiniteLoop || startsWithArchivePrefix(toUri)) {
+      for (const uri of chainOfRedirects) {
+        // All of these URI's ultimately redirect to a page that
+        // will be archived or are involved in an inifinite loop.
+        // We'll only add to the set of "redirectsToArchive" those
+        // that are not already covered by "archiveSlugPrefixes".
+        if (!startsWithArchivePrefix(uri)) {
+          // console.log(`adding to archive: ${uri}`);
+          redirectsToArchive.add(uri);
+        }
+      }
+    }
+    // Let's record the final destination of each URI in the chain.
+    for (const uri of chainOfRedirects) {
+      redirectFinalDestinations.set(uri, toUri);
+    }
+  }
+
+  const redirectDocs = await queryRedirects(pool, constraintsSQL, queryArgs);
+
+  redirectDocs.on("error", error => {
+    console.error("Querying redirect documents failed with", error);
+    process.exit(1);
+  });
+
+  const redirects = new Map();
+
+  for await (const row of redirectDocs) {
+    const fromUri = `/${row.locale}/docs/${row.slug}`;
+    const redirect = processRedirect(row, fromUri);
+    if (redirect && redirect.url) {
+      redirects.set(fromUri, redirect.url);
+    }
+  }
+
+  for (const [fromUri, toUri] of redirects.entries()) {
+    extractFromChain(toUri, new Set([fromUri]));
+  }
+}
+
 function getSQLConstraints(
-  {
-    joinTable = null,
-    alias = null,
-    parentAlias = null,
-    includeDeleted = false
-  } = {},
+  { alias = null, parentAlias = null, includeDeleted = false } = {},
   options
 ) {
   // Yeah, this is ugly but it bloody works for now.
@@ -88,13 +160,8 @@ function getSQLConstraints(
     }
   }
 
-  let sql = " ";
-  if (joinTable) {
-    sql += `INNER JOIN ${joinTable} ON document_id=${joinTable}.id `;
-  }
-
   return {
-    constraintsSQL: sql + extra.length ? ` WHERE ${extra.join(" AND ")}` : "",
+    constraintsSQL: ` WHERE ${extra.join(" AND ")}`,
     queryArgs
   };
 }
@@ -105,7 +172,6 @@ async function queryContributors(query, options) {
       console.log("Going to fetch ALL contributor *mappings*");
       const { constraintsSQL, queryArgs } = getSQLConstraints(
         {
-          joinTable: "wiki_document",
           includeDeleted: true,
           alias: "d"
         },
@@ -183,6 +249,50 @@ async function queryDocumentCount(query, constraintsSQL, queryArgs) {
   return totalCount;
 }
 
+async function queryRedirects(pool, constraintsSQL, queryArgs) {
+  const documentsSQL = `
+    SELECT
+      w.html,
+      w.slug,
+      w.locale,
+      w.is_redirect
+    FROM wiki_document w
+    LEFT OUTER JOIN wiki_document p ON w.parent_id = p.id
+    ${constraintsSQL} AND w.is_redirect = true
+  `;
+
+  return pool
+    .query(documentsSQL, queryArgs)
+    .stream({ highWaterMark: MAX_OPEN_FILES })
+    .pipe(new stream.PassThrough({ objectMode: true }));
+}
+
+async function addLocalizedArchiveSlugPrefixes(
+  query,
+  constraintsSQL,
+  queryArgs
+) {
+  // Adds all of the localized versions of the English archive
+  // slug prefixes to "archiveSlugPrefixes".
+  const slugsSQL = `
+    SELECT
+      w.slug
+    FROM wiki_document w
+    INNER JOIN wiki_document p ON w.parent_id = p.id
+    ${constraintsSQL} AND p.slug in (?)
+  `;
+
+  queryArgs.push(ARCHIVE_SLUG_ENGLISH_PREFIXES);
+
+  const slugsFromLocales = await query(slugsSQL, queryArgs);
+
+  for (const slug of new Set(slugsFromLocales)) {
+    if (!archiveSlugPrefixes.includes(slug)) {
+      archiveSlugPrefixes.push(slug);
+    }
+  }
+}
+
 async function queryDocuments(pool, options) {
   const { constraintsSQL, queryArgs } = getSQLConstraints(
     {
@@ -193,7 +303,11 @@ async function queryDocuments(pool, options) {
   );
 
   const query = promisify(pool.query).bind(pool);
+
+  await addLocalizedArchiveSlugPrefixes(query, constraintsSQL, queryArgs);
+  await populateRedirectInfo(pool, constraintsSQL, queryArgs);
   const totalCount = await queryDocumentCount(query, constraintsSQL, queryArgs);
+
   const documentsSQL = `
     SELECT
       w.id,
@@ -207,7 +321,8 @@ async function queryDocuments(pool, options) {
       p.id AS parent_id,
       p.slug AS parent_slug,
       p.locale AS parent_locale,
-      p.modified AS parent_modified
+      p.modified AS parent_modified,
+      p.is_redirect AS parent_is_redirect
     FROM wiki_document w
     LEFT OUTER JOIN wiki_document p ON w.parent_id = p.id
     ${constraintsSQL}
@@ -260,20 +375,24 @@ async function withTimer(label, fn) {
 }
 
 function isArchiveDoc(row) {
-  return ARCHIVE_SLUG_PREFIXES.some(
-    prefix =>
-      row.slug.startsWith(prefix) ||
-      (row.parent_slug && row.parent_slug.startsWith(prefix))
+  return (
+    archiveSlugPrefixes.some(
+      prefix =>
+        row.slug.startsWith(prefix) ||
+        (row.parent_slug && row.parent_slug.startsWith(prefix))
+    ) ||
+    (row.is_redirect && isArchiveRedirect(`/${row.locale}/docs/${row.slug}`)) ||
+    (row.parent_slug &&
+      row.parent_is_redirect &&
+      isArchiveRedirect(`/${row.parent_locale}/docs/${row.parent_slug}`))
   );
 }
 
-function isArchiveRedirect(uri) {
+function uriToSlug(uri) {
   if (uri.includes("/docs/")) {
-    const split = uri.split("/docs/");
-    return ARCHIVE_SLUG_PREFIXES.some(prefix => split[1].startsWith(prefix));
-  } else {
-    return ARCHIVE_SLUG_PREFIXES.some(prefix => uri.startsWith(prefix));
+    return uri.split("/docs/")[1];
   }
+  return uri;
 }
 
 async function prepareRoots(options) {
@@ -415,12 +534,15 @@ async function processDocument(
     title,
     slug
   };
-  if (isArchive) {
-    meta.archived = true;
-  }
   if (doc.parent_slug) {
     assert(doc.parent_locale === "en-US");
-    meta.translation_of = doc.parent_slug;
+    if (doc.parent_is_redirect) {
+      const parentUri = `/${doc.parent_locale}/docs/${doc.parent_slug}`;
+      const finalUri = redirectFinalDestinations.get(parentUri);
+      meta.translation_of = uriToSlug(finalUri);
+    } else {
+      meta.translation_of = doc.parent_slug;
+    }
   }
 
   const wikiHistory = {
@@ -543,12 +665,13 @@ module.exports = async function runImporter(options) {
 
   let processedDocumentsCount = 0;
   let pendingDocuments = 0;
+
   const redirects = {};
   let improvedRedirects = 0;
   let messedupRedirects = 0;
   let discardedRedirects = 0;
   let archivedRedirects = 0;
-  let archivedRedirectDestination = 0;
+  let fastForwardedRedirects = 0;
 
   for await (const row of documents.stream) {
     processedDocumentsCount++;
@@ -569,8 +692,9 @@ module.exports = async function runImporter(options) {
       const isArchive = isArchiveDoc(row);
       if (row.is_redirect) {
         if (isArchive) {
-          // Note! If a document is considered archive, any redirect is
-          // simply dropped!
+          // This redirect or its parent is a page that will
+          // be archived, or eventually arrives at a page that
+          // will be archived. So just drop it!
           archivedRedirects++;
           return;
         }
@@ -580,15 +704,12 @@ module.exports = async function runImporter(options) {
           discardedRedirects++;
           return;
         }
-
         if (redirect.url) {
-          if (isArchiveRedirect(redirect.url)) {
-            // This redirect redirects to a URL that is considered archived.
-            // Just drop it.
-            archivedRedirectDestination++;
-            return;
+          const finalUri = redirectFinalDestinations.get(absoluteUrl);
+          if (redirect.url !== finalUri) {
+            fastForwardedRedirects++;
           }
-          redirects[absoluteUrl] = redirect.url;
+          redirects[absoluteUrl] = finalUri;
         }
         if (redirect.status == "mess") {
           messedupRedirects++;
@@ -645,10 +766,10 @@ module.exports = async function runImporter(options) {
       "redirects that are considered archived content ignored."
     );
   }
-  if (archivedRedirectDestination) {
+  if (fastForwardedRedirects) {
     console.log(
-      chalk.bold(archivedRedirectDestination.toLocaleString()),
-      "redirects that redirected to an archived URL."
+      chalk.bold(fastForwardedRedirects.toLocaleString()),
+      "redirects were fast-forwarded directly to their final destination."
     );
   }
 
