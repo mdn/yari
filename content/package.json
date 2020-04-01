@@ -16,7 +16,7 @@
     "mdn-browser-compat-data": "1.0.15",
     "mysql": "2.18.1",
     "sanitize-filename": "^1.6.3",
-    "ws": "7.2.1"
+    "ws": "7.2.3"
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.16",
