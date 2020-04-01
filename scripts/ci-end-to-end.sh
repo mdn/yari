@@ -27,13 +27,19 @@ yarn run prebuild
 # know it gets created.
 cat content/_all-titles.json
 # The folder should have been created
+echo "Contents of client/build/static..."
 ls -lh client/build/static/
 
 # Actually do the build!
 node content build
 
+echo "Contents of client/build/..."
 ls -ltr client/build/
 # It should have built this folder too
+echo "Contents of client/build/en-us/docs/foo/bar..."
 ls -ltr client/build/en-us/docs/foo/bar
+
+echo "HACK"
+tree client/build
 
 node scripts/end-to-end-test.js
