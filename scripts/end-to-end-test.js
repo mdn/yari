@@ -29,18 +29,10 @@ const cheerio = require("cheerio");
     "utf8"
   );
   const videoHtmlDoc = cheerio.load(videoHtmlRaw);
-  if (
-    !videoHtmlDoc("title")
-      .text()
-      .includes("Video")
-  ) {
+  if (!videoHtmlDoc("title").text().includes("Video")) {
     throw new Error("<title> tag is expected to have the word 'Video'");
   }
-  if (
-    !videoHtmlDoc("h1.page-title")
-      .text()
-      .includes("Video")
-  ) {
+  if (!videoHtmlDoc("h1.page-title").text().includes("Video")) {
     throw new Error(
       "<h1 class=page-title> tag is expected to have the word 'Video'"
     );

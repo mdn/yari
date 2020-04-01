@@ -14,7 +14,7 @@ const {
   DEFAULT_SITEMAP_BASE_URL,
   DEFAULT_FOLDER_SEARCHES,
   DEFAULT_POPULARITIES_FILEPATH,
-  MAX_GOOGLE_ANALYTICS_URIS
+  MAX_GOOGLE_ANALYTICS_URIS,
 } = require("./scripts/constants.js");
 
 cli
@@ -162,12 +162,12 @@ cli
     const sources = new Sources();
     if (options.stumptownRoot) {
       sources.add(options.stumptownRoot, {
-        isStumptown: true
+        isStumptown: true,
       });
     }
     if (options.root) {
       sources.add(options.root, {
-        watch: true
+        watch: true,
       });
     }
     if (options.archiveRoot) {
@@ -176,7 +176,7 @@ cli
         htmlAlreadyRendered: true,
         excludeInTitlesJson: true,
         excludeInSitemaps: true,
-        noindexNofollowHeader: true
+        noindexNofollowHeader: true,
       });
     }
     if (!sources.entries().length) {
@@ -202,8 +202,8 @@ cli
         throw new Error("Can't specify --locales AND --not-locales");
       }
     }
-    if (options.foldersearch.some(x => /[A-Z]/.test(x))) {
-      const newFoldersearch = options.foldersearch.map(x => x.toLowerCase());
+    if (options.foldersearch.some((x) => /[A-Z]/.test(x))) {
+      const newFoldersearch = options.foldersearch.map((x) => x.toLowerCase());
       console.warn(
         `Folder search lowercased from '${options.foldersearch}' to '${newFoldersearch}'`
       );
@@ -233,7 +233,7 @@ cli
     return runMakePopularitiesFile(args.csvfile, options, logger);
   });
 
-cli.parse(process.argv).then(r => {
+cli.parse(process.argv).then((r) => {
   // If the command explicitly returned a number, use that as the exit code
   // Otherwise, if it's anything truthy return 1 or all else 0.
   process.exitCode = typeof r === Number ? r : r ? 1 : 0;
