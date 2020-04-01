@@ -8,33 +8,25 @@ const path = require("path");
 const cheerio = require("cheerio");
 
 (() => {
-  /** Check that the /en-US/docs/Web/HTML/Element/video page built and
+  /** Check that the /en-US/docs/Foo/Bar page built and
    * is sane.
    */
 
-  const directory = "client/build/en-us/docs/web/html/element/video/";
-  const videoJsonRaw = fs.readFileSync(
-    path.join(directory, "index.json"),
-    "utf8"
-  );
-  const videoJson = JSON.parse(videoJsonRaw);
-  if (!videoJson.doc.title) {
+  const directory = "client/build/en-us/docs/foo/bar/";
+  const jsonRaw = fs.readFileSync(path.join(directory, "index.json"), "utf8");
+  const json = JSON.parse(jsonRaw);
+  if (!json.doc.title) {
     throw new Error("No document.title");
   }
-  if (!videoJson.doc.body || !videoJson.doc.body.length) {
+  if (!json.doc.body || !json.doc.body.length) {
     throw new Error("No document.body");
   }
-  const videoHtmlRaw = fs.readFileSync(
-    path.join(directory, "index.html"),
-    "utf8"
-  );
-  const videoHtmlDoc = cheerio.load(videoHtmlRaw);
-  if (!videoHtmlDoc("title").text().includes("Video")) {
-    throw new Error("<title> tag is expected to have the word 'Video'");
+  const htmlRaw = fs.readFileSync(path.join(directory, "index.html"), "utf8");
+  const htmlDoc = cheerio.load(htmlRaw);
+  if (!htmlDoc("title").text().includes("Foo Bar")) {
+    throw new Error("<title> tag is expected to have the word 'Foo Bar'");
   }
-  if (!videoHtmlDoc("h1.page-title").text().includes("Video")) {
-    throw new Error(
-      "<h1 class=page-title> tag is expected to have the word 'Video'"
-    );
+  if (!htmlDoc("p").text().includes("I'm alive!")) {
+    throw new Error(htmlDoc("p").html());
   }
 })();

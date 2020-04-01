@@ -8,7 +8,7 @@ set -ex
 mkdir -p ci-content/files/en-us/foo/bar
 echo "<p>I'm alive!</p>" > ci-content/files/en-us/foo/bar/index.html
 cat > ci-content/files/en-us/foo/bar/index.yaml <<YAML
-title: 'Sample Title'
+title: 'Foo Bar'
 slug: Foo/Bar
 YAML
 cat > ci-content/files/en-us/foo/bar/wikihistory.json <<JSON
@@ -33,3 +33,6 @@ ls -lh client/build/static/
 node content build
 
 ls -ltr client/build/
+
+
+node scripts/end-to-end-test.js
