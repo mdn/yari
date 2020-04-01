@@ -11,5 +11,15 @@ cat > ci-content/files/en-us/foo/bar/index.yaml <<YAML
 title: 'Sample Title'
 slug: Foo/Bar
 YAML
+cat > ci-content/files/en-us/foo/bar/wikihistory.json <<JSON
+{
+  "modified": "2020-03-27T04:29:28.234Z",
+  "_generated": "2020-04-01T15:02:53.589Z",
+  "contributors": [
+    "peterbe"
+  ]
+}
+JSON
 
+export BUILD_ROOT=ci-content/files
 yarn run prebuild
