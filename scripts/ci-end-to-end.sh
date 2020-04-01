@@ -23,3 +23,8 @@ JSON
 
 export BUILD_ROOT=ci-content/files
 yarn run prebuild
+
+ls -ltr client/build/
+
+ls -ltr ci-content
+ls -ltr content

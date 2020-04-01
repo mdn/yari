@@ -34,7 +34,6 @@ matrix:
       script:
         - set -x
         - ./scripts/ci-end-to-end.sh
-        # - yarn deployment-build
         # - yarn end-to-end-test
     - name: lockfile-check
       install: skip
