@@ -33,6 +33,7 @@ ls -lh client/build/static/
 node content build
 
 ls -ltr client/build/
-
+# It should have built this folder too
+ls -ltr client/build/en-us/docs/foo/bar
 
 node scripts/end-to-end-test.js
