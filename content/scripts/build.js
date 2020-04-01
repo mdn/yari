@@ -335,7 +335,7 @@ class Builder {
 
       // Start the real processing
       const t0 = new Date();
-      for (const { source, locFolder, folder, files } of self.walkSources()) {
+      for (const { source, locFolder, folder, files } of this.walkSources()) {
         if (this.excludeFolder(source, folder, locFolder, files)) {
           // If the folder was a Stumptown folder, what we're
           // actually excluding is all the .json files in the folder.
