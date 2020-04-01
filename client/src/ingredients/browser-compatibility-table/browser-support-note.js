@@ -10,7 +10,7 @@ export function BrowserSupportNote({
   blockElementTag,
   noteElementTag,
   displayBlock,
-  displayNote
+  displayNote,
 }) {
   const note = [];
   if (displayBlock) {
@@ -31,7 +31,7 @@ export function BrowserSupportNote({
         noteElementTag,
         {
           key: `note-${indexNote.index}`,
-          className: "padded-note"
+          className: "padded-note",
         },
         noteContent
       )
@@ -42,7 +42,7 @@ export function BrowserSupportNote({
         noteElementTag,
         {
           key: `note-${indexNote.index}`,
-          className: "padded-note"
+          className: "padded-note",
         },
         <span />
       )

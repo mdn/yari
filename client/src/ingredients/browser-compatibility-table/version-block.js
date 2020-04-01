@@ -10,7 +10,7 @@ export function VersionBlock({
   index,
   onNotesClick,
   currentNoteId,
-  children
+  children,
 }) {
   let isSupported;
   let textContent;
@@ -80,7 +80,7 @@ export function VersionBlock({
         null,
       "aria-expanded": hasChildren ? currentNoteId === index : null,
       "aria-controls": hasChildren ? `${index}` : null,
-      tabIndex: hasChildren ? 0 : null
+      tabIndex: hasChildren ? 0 : null,
     },
     [
       elementTag === "td" && (
@@ -102,7 +102,7 @@ export function VersionBlock({
           <i className={`${bcIcon}`} />
         </abbr>
       </div>,
-      children
+      children,
     ]
   );
 }

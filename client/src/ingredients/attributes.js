@@ -3,7 +3,7 @@ import React from "react";
 function RenderValues({ values }) {
   return (
     <ul>
-      {values.map(value => {
+      {values.map((value) => {
         return (
           <li key={value.value}>
             <p>
@@ -39,7 +39,7 @@ function RenderAttributes({ attributes }) {
           as well as the following element-specific attributes:
         </p>
         <dl>
-          {attributes.map(attribute => {
+          {attributes.map((attribute) => {
             return (
               <React.Fragment key={attribute.name}>
                 <dt>

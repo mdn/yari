@@ -6,7 +6,7 @@ export function LinkList({ title, links }) {
     <div className="link-list">
       <h2>{title}</h2>
       <dl>
-        {links.map(link => (
+        {links.map((link) => (
           <React.Fragment key={link.mdn_url}>
             <dt>
               <Link to={link.mdn_url}>{link.short_title || link.title}</Link>

@@ -25,7 +25,7 @@ export class SearchWidget extends React.Component {
     redirectTo: null,
     searchResults: [],
     serverError: null,
-    showSearchResults: true
+    showSearchResults: true,
   };
 
   ACTIVE_PLACEHOLDER = "Go ahead. Type your search...";
@@ -35,7 +35,7 @@ export class SearchWidget extends React.Component {
 
   inFocus = false;
 
-  focusOnSearchMaybe = event => {
+  focusOnSearchMaybe = (event) => {
     if (event.code === "Slash") {
       if (!this.inFocus) {
         event.preventDefault();
@@ -64,7 +64,7 @@ export class SearchWidget extends React.Component {
           q: "",
           redirectTo: null,
           showSearchResults: false,
-          locale: this.props.pathname.split("/")[1] || "en-US"
+          locale: this.props.pathname.split("/")[1] || "en-US",
         });
       }
     }
@@ -111,7 +111,7 @@ export class SearchWidget extends React.Component {
       if (!response.ok) {
         return this.setState({
           serverError: response,
-          showSearchResults: true
+          showSearchResults: true,
         });
       }
       const { titles } = await response.json();
@@ -134,13 +134,13 @@ export class SearchWidget extends React.Component {
     });
   };
 
-  indexTitles = titles => {
+  indexTitles = (titles) => {
     // NOTE! See search-experimentation.js to play with different settings.
     this.index = new FlexSearch({
       encode: "advanced",
       suggest: true,
       // tokenize: "reverse",
-      tokenize: "forward"
+      tokenize: "forward",
     });
     this._map = titles;
 
@@ -156,7 +156,7 @@ export class SearchWidget extends React.Component {
     this.fuzzySearcher = new FuzzySearch(urisSorted);
   };
 
-  searchHandler = event => {
+  searchHandler = (event) => {
     this.setState({ q: event.target.value }, this.updateSearch);
   };
 
@@ -214,24 +214,24 @@ export class SearchWidget extends React.Component {
             highlitResult: null,
             lastQ: q,
             searchResults: [],
-            showSearchResults: true
+            showSearchResults: true,
           });
         } else {
           const fuzzyResults = this.fuzzySearcher.search(q, {
-            limit: isMobileUserAgent() ? 5 : 10
+            limit: isMobileUserAgent() ? 5 : 10,
           });
-          const results = fuzzyResults.map(fuzzyResult => {
+          const results = fuzzyResults.map((fuzzyResult) => {
             return {
               title: this._map[fuzzyResult.needle].title,
               uri: fuzzyResult.needle,
-              substrings: fuzzyResult.substrings
+              substrings: fuzzyResult.substrings,
             };
           });
           this.setState({
             highlitResult: results.length ? 0 : null,
             lastQ: q,
             searchResults: results,
-            showSearchResults: true
+            showSearchResults: true,
           });
         }
       } else {
@@ -239,27 +239,27 @@ export class SearchWidget extends React.Component {
         const indexResults = this.index.search(q, {
           limit: isMobileUserAgent() ? 5 : 10,
           // bool: "or",
-          suggest: true // This can give terrible result suggestions
+          suggest: true, // This can give terrible result suggestions
         });
 
-        const results = indexResults.map(uri => {
+        const results = indexResults.map((uri) => {
           return {
             title: this._map[uri].title,
             uri,
-            popularity: this._map[uri].popularity
+            popularity: this._map[uri].popularity,
           };
         });
         this.setState({
           highlitResult: results.length ? 0 : null,
           lastQ: q,
           searchResults: results,
-          showSearchResults: true
+          showSearchResults: true,
         });
       }
     }
   };
 
-  keyDownHandler = event => {
+  keyDownHandler = (event) => {
     if (event.key === "Escape") {
       if (this.state.showSearchResults) {
         this.setState({ showSearchResults: false });
@@ -339,7 +339,7 @@ export class SearchWidget extends React.Component {
     }, 100);
   };
 
-  submitHandler = event => {
+  submitHandler = (event) => {
     event.preventDefault();
     const { highlitResult, searchResults } = this.state;
     let redirectTo;
@@ -352,11 +352,11 @@ export class SearchWidget extends React.Component {
     }
     this.setState({
       redirectTo,
-      showSearchResults: false
+      showSearchResults: false,
     });
   };
 
-  redirect = uri => {
+  redirect = (uri) => {
     this.setState({ redirectTo: uri });
   };
 
@@ -398,7 +398,7 @@ export class SearchWidget extends React.Component {
       redirectTo,
       searchResults,
       serverError,
-      showSearchResults
+      showSearchResults,
     } = this.state;
     if (redirectTo) {
       return <Redirect noThrow replace={false} to={redirectTo} />;
@@ -471,7 +471,7 @@ export class SearchWidget extends React.Component {
 }
 
 class ShowSearchResults extends React.PureComponent {
-  redirectHandler = result => {
+  redirectHandler = (result) => {
     this.props.redirect(result.uri);
   };
 
@@ -481,7 +481,7 @@ class ShowSearchResults extends React.PureComponent {
       isFuzzySearch,
       nothingFound,
       q,
-      results
+      results,
     } = this.props;
     return (
       <div className="search-results">
@@ -491,7 +491,7 @@ class ShowSearchResults extends React.PureComponent {
             <div
               className={i === highlitResult ? "highlit" : null}
               key={result.uri}
-              onClick={event => {
+              onClick={(event) => {
                 this.redirectHandler(result);
               }}
             >
@@ -515,13 +515,10 @@ function HighlightMatch({ title, q }) {
   // See https://github.com/nextapps-de/flexsearch/issues/99
 
   // Split on higlight term and include term into parts, ignore case.
-  const words = q
-    .trim()
-    .toLowerCase()
-    .split(/[ ,]+/);
+  const words = q.trim().toLowerCase().split(/[ ,]+/);
 
   // $& means the whole matched string
-  const regexWords = words.map(s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const regexWords = words.map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
   const regex = `\\b(${regexWords.join("|")})`;
   const parts = title.split(new RegExp(regex, "gi"));
   return (
@@ -556,6 +553,6 @@ function BreadcrumbURI({ uri, substrings }) {
   const keep = uri
     .split("/")
     .slice(1)
-    .filter(p => p !== "docs");
+    .filter((p) => p !== "docs");
   return <small>{keep.join(" / ")}</small>;
 }
