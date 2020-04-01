@@ -39,7 +39,9 @@ ls -ltr client/build/
 echo "Contents of client/build/en-us/docs/foo/bar..."
 ls -ltr client/build/en-us/docs/foo/bar
 
-echo "HACK"
-tree client/build
+echo "HACK 1. Contents of client/build/en-us"
+ls -ltr client/build/en-us
+echo "HACK 2. Contents of client/build/en-us"
+ls -ltr client/build/en-US
 
 node scripts/end-to-end-test.js
