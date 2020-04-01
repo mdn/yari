@@ -47,15 +47,15 @@ function getRedirectUrl(uri) {
   if (!_allRedirects.size) {
     // They're all in 1 level deep from CONTENT_ROOT
     fs.readdirSync(CONTENT_ROOT)
-      .map(n => path.join(CONTENT_ROOT, n))
-      .filter(filepath => fs.statSync(filepath).isDirectory())
-      .forEach(directory => {
+      .map((n) => path.join(CONTENT_ROOT, n))
+      .filter((filepath) => fs.statSync(filepath).isDirectory())
+      .forEach((directory) => {
         fs.readdirSync(directory)
-          .filter(n => n === "_redirects.txt")
-          .map(n => path.join(directory, n))
-          .forEach(filepath => {
+          .filter((n) => n === "_redirects.txt")
+          .map((n) => path.join(directory, n))
+          .forEach((filepath) => {
             const content = fs.readFileSync(filepath, "utf8");
-            content.split(/\n/).forEach(line => {
+            content.split(/\n/).forEach((line) => {
               if (line.trim().length && !line.trim().startsWith("#")) {
                 const [from, to] = line.split("\t");
                 // Express turns ALL URLs into lowercase. So we have to do
@@ -119,7 +119,7 @@ function getOrCreateBuilder() {
         locales: [],
         notLocales: [],
         slugsearch: [],
-        noProgressbar: true
+        noProgressbar: true,
       },
       console
     );
@@ -159,7 +159,7 @@ app.get("/*", async (req, res) => {
       const t0 = performance.now();
       try {
         const built = getOrCreateBuilder().start({
-          specificFolders: [specificFolder]
+          specificFolders: [specificFolder],
         });
         const t1 = performance.now();
         console.log(

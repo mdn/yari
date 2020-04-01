@@ -26,10 +26,10 @@ describe("Tests using XHR", () => {
             titles: {
               "/docs/Web/HTML/Element/abbr": {
                 title: "<abbr>: The Abbreviation element",
-                popularity: 0.0
-              }
-            }
-          })
+                popularity: 0.0,
+              },
+            },
+          }),
       })
     );
     global.fetch.mockClear();
@@ -93,7 +93,7 @@ describe("Tests using XHR", () => {
     // Focus input to get titles from XHR
     fireEvent.focus(input);
     fireEvent.change(input, {
-      target: { value: "/dwm/mtabr" }
+      target: { value: "/dwm/mtabr" },
     });
     // Get the search results
     const searchResults = await waitForElement(() =>
@@ -106,9 +106,9 @@ describe("Tests using XHR", () => {
     expect(getByText("Fuzzy searching by URI")).toBeDefined();
   });
 
-  test("Should redirect when clicking a search result", async done => {
+  test("Should redirect when clicking a search result", async (done) => {
     // Define onPushState function to listen for redirect
-    const onPushState = event => {
+    const onPushState = (event) => {
       expect(event.detail.url).toBe("/docs/Web/HTML/Element/abbr");
       window.removeEventListener("pushState", onPushState);
       done();
@@ -119,7 +119,7 @@ describe("Tests using XHR", () => {
     // Focus input to get titles from XHR
     fireEvent.focus(input);
     fireEvent.change(input, {
-      target: { value: "/docs/Web/HTML/Element/abbr" }
+      target: { value: "/docs/Web/HTML/Element/abbr" },
     });
     // Get the search results
     const searchResults = await waitForElement(() =>
@@ -136,7 +136,7 @@ describe("Tests using XHR", () => {
     // Focus input to get titles from XHR
     fireEvent.focus(input);
     fireEvent.change(input, {
-      target: { value: "/docs/Web/HTML/Element/abbr" }
+      target: { value: "/docs/Web/HTML/Element/abbr" },
     });
     // Get the search results
     const searchResults = await waitForElement(() =>

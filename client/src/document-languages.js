@@ -37,7 +37,7 @@ function ShowTranslations({ translations }) {
   return (
     <div className="translations">
       <ul>
-        {translations.map(translation => {
+        {translations.map((translation) => {
           const { slug, locale } = translation;
           const uri = `/${locale}/docs/${slug}`;
           return (

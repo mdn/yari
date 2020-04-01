@@ -38,7 +38,9 @@ function getVersionAdded(support) {
 }
 
 function getIndexNoteForBrowserDetail(indexNotes, browserDetailIndex) {
-  return indexNotes.find(indexNotes => indexNotes.index === browserDetailIndex);
+  return indexNotes.find(
+    (indexNotes) => indexNotes.index === browserDetailIndex
+  );
 }
 
 function computeDistinctKey(detail) {
@@ -50,7 +52,7 @@ function RenderBrowserSupportDetails({
   rowIndex,
   indexNotes,
   currentNoteId,
-  onNotesClick
+  onNotesClick,
 }) {
   return browserSupportDetails.map((browserSupportDetail, detailIndex) => (
     <BrowserSupportDetail
@@ -113,7 +115,7 @@ function buildIndexNotes(
           prefixes,
           alternatives,
           flags,
-          notes
+          notes,
         };
       } else {
         if (!hasFlag) {
@@ -141,14 +143,14 @@ function buildIndexNotes(
           prefixes,
           alternatives,
           flags,
-          notes
+          notes,
         };
       }
     }
   );
 
   const filteredIndexNotes = indexNotes.filter(
-    indexNotes => `bc-history-${indexNotes.index}` === currentNoteId
+    (indexNotes) => `bc-history-${indexNotes.index}` === currentNoteId
   );
 
   return [filteredIndexNotes, hasFlag, hasPrefix, hasAlternative, hasNotes];
@@ -172,7 +174,7 @@ export function Rows({
   displayBrowsers,
   onNotesClick,
   currentNoteId,
-  setLegendIcons
+  setLegendIcons,
 }) {
   let [
     hasDeprecation,
@@ -181,7 +183,7 @@ export function Rows({
     hasFlag,
     hasPrefix,
     hasAlternative,
-    hasNotes
+    hasNotes,
   ] = [false, false, false, false, false, false, false];
   let indexNotes;
   const compatibility = buildCompatibilityObject(
@@ -205,7 +207,7 @@ export function Rows({
       }
     }
 
-    const browserSupportDetails = displayBrowsers.map(browser => {
+    const browserSupportDetails = displayBrowsers.map((browser) => {
       const support = currentRow.support[browser];
       const version_added = getVersionAdded(support);
       return { browser, support, version_added };
@@ -216,7 +218,7 @@ export function Rows({
       hasFlag,
       hasPrefix,
       hasAlternative,
-      hasNotes
+      hasNotes,
     ] = buildIndexNotes(
       browserSupportDetails,
       key,
@@ -276,7 +278,7 @@ export function Rows({
           onNotesClick={onNotesClick}
         />
       </tr>,
-      ...indexNotes.map(indexNote => (
+      ...indexNotes.map((indexNote) => (
         <tr
           key={`notes-${indexNote.index}`}
           id={`bc-history-${indexNote.index}`}
@@ -295,7 +297,7 @@ export function Rows({
             </dl>
           </td>
         </tr>
-      ))
+      )),
     ]);
   }
   setLegendIcons(

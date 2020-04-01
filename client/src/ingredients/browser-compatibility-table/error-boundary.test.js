@@ -12,7 +12,7 @@ it("renders without crashing", () => {
 });
 
 it("renders crashing mock component", () => {
-  const CrashingComponent = function() {
+  const CrashingComponent = function () {
     const [crashing, setCrashing] = React.useState(false);
 
     if (crashing) {

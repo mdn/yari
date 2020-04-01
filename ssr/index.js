@@ -65,7 +65,7 @@ function fixRelatedContent(document) {
   }
 
   if (document.related_content) {
-    document.related_content.forEach(block => {
+    document.related_content.forEach((block) => {
       fixBlock(block);
     });
   }
@@ -87,14 +87,14 @@ function addBreadcrumbData(uri, document, allTitles) {
     if (allTitles[parentUri]) {
       parents.unshift({
         uri: parentUri,
-        title: allTitles[parentUri].title
+        title: allTitles[parentUri].title,
       });
     }
   }
   if (parents.length) {
     parents.push({
       uri: uri,
-      title: document.short_title || document.title
+      title: document.short_title || document.title,
     });
     document.parents = parents;
   }
@@ -104,7 +104,7 @@ export function buildHtmlAndJsonFromDoc({
   doc,
   destinationDir,
   buildHtml,
-  titles
+  titles,
 }) {
   const options = { doc };
 

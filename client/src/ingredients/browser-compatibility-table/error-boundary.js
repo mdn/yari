@@ -9,11 +9,11 @@ import React from "react";
  */
 export class BrowserCompatibilityErrorBoundary extends React.Component {
   state = {
-    error: null
+    error: null,
   };
   componentDidCatch(error, _errorInfo) {
     this.setState({
-      error
+      error,
     });
     // TODO: Report this error to Sentry, https://github.com/mdn/stumptown-renderer/issues/99
   }

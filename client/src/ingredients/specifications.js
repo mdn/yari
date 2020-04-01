@@ -20,7 +20,7 @@ export function Specifications({ specifications }) {
       <>
         {title}
         <ul>
-          {specifications.map(specification => (
+          {specifications.map((specification) => (
             <li key={specification.url}>
               <a href={specification.url}>{specification.title}</a>
             </li>

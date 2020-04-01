@@ -7,7 +7,7 @@ export function Legend({
   hasFlag,
   hasPrefix,
   hasAlternative,
-  hasNotes
+  hasNotes,
 }) {
   return (
     <section className="bc-legend">
@@ -52,7 +52,7 @@ export function Legend({
               <i className="ic-footnote" />
             </abbr>
           </dt>,
-          <dd key="notes-dd">See implementation notes.</dd>
+          <dd key="notes-dd">See implementation notes.</dd>,
         ]}
         {hasDeprecation && [
           <dt key="deprecated-dt">
@@ -64,7 +64,7 @@ export function Legend({
               <i className="ic-deprecated" />
             </abbr>
           </dt>,
-          <dd key="deprecated-dd">Deprecated. Not for use in new websites.</dd>
+          <dd key="deprecated-dd">Deprecated. Not for use in new websites.</dd>,
         ]}
         {hasExperimental && [
           <dt key="experimental-dt">
@@ -80,7 +80,7 @@ export function Legend({
           </dt>,
           <dd key="experimental-dd">
             Experimental. Expect behavior to change in the future.
-          </dd>
+          </dd>,
         ]}
         {hasNonStandard && [
           <dt key="standard-dt">
@@ -94,7 +94,7 @@ export function Legend({
           </dt>,
           <dd key="standard-dd">
             Non-standard. Expect poor cross-browser support.
-          </dd>
+          </dd>,
         ]}
         {hasFlag && [
           <dt key="flag-dt">
@@ -106,7 +106,7 @@ export function Legend({
               <i className="ic-disabled" />
             </abbr>
           </dt>,
-          <dd key="flag-dd">User must explicitly enable this feature.</dd>
+          <dd key="flag-dd">User must explicitly enable this feature.</dd>,
         ]}
         {hasPrefix && [
           <dt key="prefix-dt">
@@ -120,7 +120,7 @@ export function Legend({
           </dt>,
           <dd key="prefix-dd">
             Requires a vendor prefix or different name for use.
-          </dd>
+          </dd>,
         ]}
         {hasAlternative && [
           <dt key="alternative-dt">
@@ -129,7 +129,7 @@ export function Legend({
               <i className="ic-altname" />
             </abbr>
           </dt>,
-          <dd key="alternative-dd">Uses a non-standard name.</dd>
+          <dd key="alternative-dd">Uses a non-standard name.</dd>,
         ]}
       </dl>
     </section>

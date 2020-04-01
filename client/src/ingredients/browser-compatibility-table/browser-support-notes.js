@@ -26,7 +26,7 @@ export function BrowserSupportNotes({
   indexNote,
   blockElementTag,
   noteElementTag,
-  noBlocks
+  noBlocks,
 }) {
   let blockDisplayed = false;
   let browserSupportNotes = [];

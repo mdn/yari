@@ -40,7 +40,7 @@ function extractDocumentSections($, {}) {
   const iterable = [...$("#_body")[0].childNodes];
 
   let c = 0;
-  iterable.forEach(child => {
+  iterable.forEach((child) => {
     if (child.tagName === "h2") {
       if (c) {
         sections.push(...addSections(section.clone()));
@@ -152,7 +152,7 @@ function addSections($) {
       // add that to the stack, clear and repeat.
       let iterable = [...$[0].childNodes];
       let c = 0;
-      iterable.forEach(child => {
+      iterable.forEach((child) => {
         if (
           child.tagName === "div" &&
           child.attribs &&
@@ -217,9 +217,9 @@ function _addSingleSectionBCD($) {
         title,
         id,
         data,
-        query
-      }
-    }
+        query,
+      },
+    },
   ];
 }
 
@@ -245,13 +245,13 @@ function _addSectionProse($) {
       value: {
         id,
         title,
-        content: $.html().trim()
-      }
-    }
+        content: $.html().trim(),
+      },
+    },
   ];
 }
 
 module.exports = {
   extractSidebar,
-  extractDocumentSections
+  extractDocumentSections,
 };

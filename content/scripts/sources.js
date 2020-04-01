@@ -16,7 +16,7 @@ class Sources {
       htmlAlreadyRendered: false,
       excludeInTitlesJson: false,
       excludeInSitemaps: false,
-      noindexNofollowHeader: false
+      noindexNofollowHeader: false,
     };
 
     this.list.push(Object.assign(default_, config, { filepath }));

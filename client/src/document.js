@@ -22,7 +22,7 @@ export class Document extends React.Component {
     doc: this.props.doc || null,
     loading: false,
     notFound: false,
-    loadingError: null
+    loadingError: null,
   };
 
   componentDidMount() {
@@ -67,7 +67,7 @@ export class Document extends React.Component {
     });
   };
 
-  onMessage = data => {
+  onMessage = (data) => {
     if (data.documentUri === this.props.location.pathname) {
       // The recently edited document is the one we're currently looking at!
       if (!this.dismounted) {
@@ -95,7 +95,7 @@ export class Document extends React.Component {
     if (doc.translation_of) {
       translations.unshift({
         locale: "en-US",
-        slug: doc.translation_of
+        slug: doc.translation_of,
       });
     }
     return (
@@ -168,7 +168,7 @@ function RenderSideBar({ doc }) {
     }
     return null;
   }
-  return doc.related_content.map(node => (
+  return doc.related_content.map((node) => (
     <SidebarLeaf key={node.title} parent={node} />
   ));
 }
@@ -178,7 +178,7 @@ function SidebarLeaf({ parent }) {
     <div>
       <h3>{parent.title}</h3>
       <ul>
-        {parent.content.map(node => {
+        {parent.content.map((node) => {
           if (node.content) {
             return (
               <li key={node.title}>
@@ -205,7 +205,7 @@ function SidebarLeaflets({ node }) {
         {node.uri ? <Link to={node.uri}>{node.title}</Link> : node.title}
       </summary>
       <ol>
-        {node.content.map(childNode => {
+        {node.content.map((childNode) => {
           if (childNode.content) {
             return (
               <li key={childNode.title}>
