@@ -627,7 +627,10 @@ class Builder {
     if (!this.options.destination) {
       throw new Error("options.destination not set");
     }
-    const folderpath = path.join(this.options.destination, locale);
+    const folderpath = path.join(
+      this.options.destination,
+      locale.toLowerCase()
+    );
     if (this.options.startClean) {
       // Experimental new feature
       // https://nodejs.org/api/fs.html#fs_fs_rmdirsync_path_options
