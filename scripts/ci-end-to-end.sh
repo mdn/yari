@@ -23,8 +23,13 @@ JSON
 
 export BUILD_ROOT=ci-content/files
 yarn run prebuild
+# The `_all-titles.json` file is an implementation detail but it's nice to
+# know it gets created.
+cat content/_all-titles.json
+# The folder should have been created
+ls -lh client/build/static/
+
+# Actually do the build!
+node content build
 
 ls -ltr client/build/
-
-ls -ltr ci-content
-ls -ltr content
