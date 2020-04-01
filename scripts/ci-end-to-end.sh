@@ -35,13 +35,22 @@ node content build
 
 echo "Contents of client/build/..."
 ls -ltr client/build/
+
 # It should have built this folder too
 echo "Contents of client/build/en-us/docs/foo/bar..."
 ls -ltr client/build/en-us/docs/foo/bar
 
-echo "HACK 1. Contents of client/build/en-us"
-ls -ltr client/build/en-us
-echo "HACK 2. Contents of client/build/en-us"
-ls -ltr client/build/en-US
+# Expect this file to have been created
+echo "Contents of client/build/en-us/titles.json"
+cat client/build/en-us/titles.json
+
+
+# It should never create a build folder called 'en-US'
+# It should always only be 'en-us'.
+if [ -d client/build/en-US ]; then
+  echo "client/build/en-US should never have been created."
+  echo "(only lower case please!)"
+  exit 1
+fi
 
 node scripts/end-to-end-test.js
