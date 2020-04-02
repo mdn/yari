@@ -43,7 +43,7 @@ const ARCHIVE_SLUG_ENGLISH_PREFIXES = [
   "XML_Web_Services",
   "XUL",
   "XULREF",
-  "Zones",
+  "Zones"
 ];
 
 const redirectsToArchive = new Set();
@@ -51,9 +51,7 @@ const redirectFinalDestinations = new Map();
 const archiveSlugPrefixes = [...ARCHIVE_SLUG_ENGLISH_PREFIXES];
 
 function startsWithArchivePrefix(uri) {
-  return archiveSlugPrefixes.some((prefix) =>
-    uriToSlug(uri).startsWith(prefix)
-  );
+  return archiveSlugPrefixes.some(prefix => uriToSlug(uri).startsWith(prefix));
 }
 
 function isArchiveRedirect(uri) {
@@ -105,7 +103,7 @@ async function populateRedirectInfo(pool, constraintsSQL, queryArgs) {
 
   const redirectDocs = await queryRedirects(pool, constraintsSQL, queryArgs);
 
-  redirectDocs.on("error", (error) => {
+  redirectDocs.on("error", error => {
     console.error("Querying redirect documents failed with", error);
     process.exit(1);
   });
@@ -149,22 +147,22 @@ function getSQLConstraints(
   }
   if (excludePrefixes.length) {
     extra.push(
-      `NOT (${excludePrefixes.map((_) => `${a}slug LIKE ?`).join(" OR ")})`
+      `NOT (${excludePrefixes.map(_ => `${a}slug LIKE ?`).join(" OR ")})`
     );
-    queryArgs.push(...excludePrefixes.map((s) => `${s}%`));
+    queryArgs.push(...excludePrefixes.map(s => `${s}%`));
     if (parentAlias) {
       extra.push(
         `((${parentAlias}.slug IS NULL) OR NOT (${excludePrefixes
-          .map((_) => `${parentAlias}.slug LIKE ?`)
+          .map(_ => `${parentAlias}.slug LIKE ?`)
           .join(" OR ")}))`
       );
-      queryArgs.push(...excludePrefixes.map((s) => `${s}%`));
+      queryArgs.push(...excludePrefixes.map(s => `${s}%`));
     }
   }
 
   return {
     constraintsSQL: ` WHERE ${extra.join(" AND ")}`,
-    queryArgs,
+    queryArgs
   };
 }
 
@@ -175,7 +173,7 @@ async function queryContributors(query, options) {
       const { constraintsSQL, queryArgs } = getSQLConstraints(
         {
           includeDeleted: true,
-          alias: "d",
+          alias: "d"
         },
         options
       );
@@ -208,7 +206,7 @@ async function queryContributors(query, options) {
         usernames[user.id] = user.username;
       }
       return usernames;
-    })(),
+    })()
   ]);
 
   return { contributors, usernames };
@@ -299,7 +297,7 @@ async function queryDocuments(pool, options) {
   const { constraintsSQL, queryArgs } = getSQLConstraints(
     {
       alias: "w",
-      parentAlias: "p",
+      parentAlias: "p"
     },
     options
   );
@@ -336,14 +334,14 @@ async function queryDocuments(pool, options) {
       .query(documentsSQL, queryArgs)
       .stream({ highWaterMark: MAX_OPEN_FILES })
       // node MySQL uses custom streams which are not iterable. Piping it through a native stream fixes that
-      .pipe(new stream.PassThrough({ objectMode: true })),
+      .pipe(new stream.PassThrough({ objectMode: true }))
   };
 }
 
 async function queryDocumentTags(query, options) {
   const { constraintsSQL, queryArgs } = getSQLConstraints(
     {
-      alias: "w",
+      alias: "w"
     },
     options
   );
@@ -379,7 +377,7 @@ async function withTimer(label, fn) {
 function isArchiveDoc(row) {
   return (
     archiveSlugPrefixes.some(
-      (prefix) =>
+      prefix =>
         row.slug.startsWith(prefix) ||
         (row.parent_slug && row.parent_slug.startsWith(prefix))
     ) ||
@@ -531,7 +529,7 @@ async function processDocument(
 
   const meta = {
     title,
-    slug,
+    slug
   };
   if (doc.parent_slug) {
     assert(doc.parent_locale === "en-US");
@@ -546,7 +544,7 @@ async function processDocument(
 
   const wikiHistory = {
     modified: doc.modified.toISOString(),
-    _generated: new Date().toISOString(),
+    _generated: new Date().toISOString()
   };
 
   const docTags = tags[doc.id] || [];
@@ -556,7 +554,7 @@ async function processDocument(
   await fs.promises.writeFile(metaFile, yaml.safeDump(meta));
 
   const docContributors = (contributors[doc.id] || []).map(
-    (userId) => usernames[userId]
+    userId => usernames[userId]
   );
   if (docContributors.length) {
     wikiHistory.contributors = docContributors;
@@ -640,7 +638,7 @@ module.exports = async function runImporter(options) {
     ),
     withTimer("Time to fetch all document tags", () =>
       queryDocumentTags(query, options)
-    ),
+    )
   ]);
 
   let startTime = Date.now();
@@ -649,7 +647,7 @@ module.exports = async function runImporter(options) {
 
   const progressBar = !options.noProgressbar
     ? new ProgressBar({
-        includeMemory: true,
+        includeMemory: true
       })
     : null;
 
@@ -657,7 +655,7 @@ module.exports = async function runImporter(options) {
     progressBar.init(documents.totalCount);
   }
 
-  documents.stream.on("error", (error) => {
+  documents.stream.on("error", error => {
     console.error("Querying documents failed with", error);
     process.exit(1);
   });
@@ -676,7 +674,7 @@ module.exports = async function runImporter(options) {
     processedDocumentsCount++;
 
     while (pendingDocuments > MAX_OPEN_FILES) {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 500));
     }
 
     pendingDocuments++;
@@ -719,11 +717,11 @@ module.exports = async function runImporter(options) {
         await processDocument(row, options, isArchive, {
           usernames,
           contributors,
-          tags,
+          tags
         });
       }
     })()
-      .catch((err) => {
+      .catch(err => {
         console.log("An error occured during processing");
         console.error(err);
         // The slightest unexpected error should stop the importer immediately.
