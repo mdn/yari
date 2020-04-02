@@ -667,7 +667,10 @@ class Builder {
     if (!this.options.destination) {
       throw new Error("options.destination not set");
     }
-    const folderpath = path.join(this.options.destination, locale);
+    const folderpath = path.join(
+      this.options.destination,
+      locale.toLowerCase()
+    );
     if (this.options.startClean) {
       // Experimental new feature
       // https://nodejs.org/api/fs.html#fs_fs_rmdirsync_path_options
@@ -763,7 +766,11 @@ class Builder {
               };
             })
         );
-        const sitemapsDir = path.join(this.destination, "sitemaps", locale);
+        const sitemapsDir = path.join(
+          this.destination,
+          "sitemaps",
+          locale.toLowerCase()
+        );
         fs.mkdirSync(sitemapsDir, { recursive: true });
         const sitemapFilepath = path.join(sitemapsDir, "sitemap.xml");
         fs.writeFileSync(sitemapFilepath, sitemapXml);
@@ -788,7 +795,7 @@ class Builder {
           };
         });
 
-      const localeFolder = path.join(this.destination, locale);
+      const localeFolder = path.join(this.destination, locale.toLowerCase());
       fs.mkdirSync(localeFolder, { recursive: true });
       const titlesFilepath = path.join(localeFolder, "titles.json");
       fs.writeFileSync(titlesFilepath, JSON.stringify({ titles }, null, 2));
