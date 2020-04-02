@@ -1,0 +1,68 @@
+{
+    "api": {
+        "feature": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": "1"
+                    }
+                }
+            }
+        }
+    },
+    "css": {
+        "feature": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": "1"
+                    }
+                }
+            }
+        }
+    },
+    "html": {
+        "feature": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": "1"
+                    }
+                }
+            }
+        }
+    },
+    "http": {
+        "feature": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": "1"
+                    }
+                }
+            }
+        }
+    },
+    "javascript": {
+        "feature": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": "1"
+                    }
+                }
+            }
+        }
+    },
+    "webextensions": {
+        "feature": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": "1"
+                    }
+                }
+            }
+        }
+    }
+}

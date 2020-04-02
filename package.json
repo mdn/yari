@@ -22,7 +22,8 @@
     "client",
     "server",
     "ssr",
-    "content"
+    "content",
+    "kumascript"
   ],
   "devDependencies": {
     "foreman": "3.0.1",

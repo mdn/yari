@@ -1,0 +1,25 @@
+<%
+// Inserts a link to a term's entry in our glossary.
+//
+// Parameters:
+//
+//  $0 - Term name
+//  $1 - name to display (optional)
+
+let str = $1 || $0;
+
+let URL = "/en-US/docs/Glossary/";
+URL += $0.replace(/\s+/g,'_');
+
+if (env.locale !== "en-US") {
+    let page = await wiki.getPage(URL);
+    if (page && page.translations) {
+        for(let translation of page.translations) {
+            if (translation.locale === env.locale) {
+                URL = translation.url;
+            }
+        }
+    }
+}
+
+%><a href="<%- URL %>"><%= str %></a>

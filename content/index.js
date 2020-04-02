@@ -99,6 +99,11 @@ cli
     cli.ARRAY,
     DEFAULT_BUILD_NOT_LOCALES
   )
+  .option(
+    "--verify-renders",
+    "verify each Kumascript render against Kuma",
+    cli.BOOL
+  )
   .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
   .option("--start-clean", "delete anything created first", cli.BOOL)
   .option("--list-locales", "display all locales and their counts", cli.BOOL)

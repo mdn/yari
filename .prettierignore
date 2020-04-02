@@ -18,6 +18,7 @@ content/_all-titles.json
 /client/src/water.css/
 /archivecontent/
 /content/files/
+/content/coverage/
 
 # Misc files to ignore
 /client/src/serviceWorker.js
