@@ -1,0 +1,69 @@
+{
+
+    "Methods": {
+        "en-US": "Methods",
+        "fr"   : "Méthodes",
+        "ja"   : "メソッド"
+    },
+
+    "Properties": {
+        "en-US": "Properties",
+        "fr"   : "Propriétés",
+        "ja"   : "プロパティ"
+    },
+
+    "Constructor": {
+        "en-US": "Constructor",
+        "fr"   : "Constructeur",
+        "ja"   : "コンストラクター"
+    },
+
+    "Inheritance": {
+        "en-US": "Inheritance:",
+        "fr"   : "Héritage :",
+        "ja"   : "継承"
+    },
+
+    "Implemented_by": {
+        "en-US": "Implemented by:",
+        "fr"   : "Implémenté par :",
+        "ja"   : "Implemented by:"
+    },
+
+    "Related_pages": {
+        "en-US": "Related pages for $1",
+        "fr"   : "Pages liées à $1",
+        "ja"   : "$1 に関連するページ"
+    },
+
+    "Related_pages_wo_group": {
+        "en-US": "Related pages:",
+        "fr"   : "Pages similaires :",
+        "ja"   : "関連するページ"
+    },
+
+    "[Translate]": {
+        "en-US": "[Translate]",
+        "fr"   : "[Traduire]",
+        "ja"   : "[翻訳する]"
+    },
+
+    "TranslationCTA": {
+        "en-US": "Our volunteers haven't translated this article into your language yet. Join us and help get the job done!",
+        "fr": "Nos volontaires n'ont pas encore traduit cet article en français. Rejoignez-nous et aidez-nous à le faire&nbsp;!",
+        "ja" : "まだボランティアによって日本語に翻訳されていない記事です。MDNに参加して、翻訳してみませんか？"
+    },
+
+    "Events": {
+        "en-US": "Events",
+        "fr"   : "Événements",
+        "ja"   : "イベント"
+    },
+
+    "Interfaces": {
+        "en-US": "Interfaces",
+        "fr"   : "Interfaces",
+        "ja"   : "インターフェイス"
+    }
+
+}

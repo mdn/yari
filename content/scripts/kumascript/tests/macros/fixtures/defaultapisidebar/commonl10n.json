@@ -1,0 +1,45 @@
+{
+
+    "Methods": {
+        "en-US": "Methods",
+        "fr"   : "Méthodes",
+        "ja"   : "メソッド"
+    },
+
+    "Properties": {
+        "en-US": "Properties",
+        "fr"   : "Propriétés",
+        "ja"   : "プロパティ"
+    },
+
+    "[Translate]": {
+        "en-US": "[Translate]",
+        "fr"   : "[Traduire]",
+        "ja"   : "[翻訳する]"
+    },
+
+    "TranslationCTA": {
+        "en-US": "Our volunteers haven't translated this article into your language yet. Join us and help get the job done!",
+        "fr": "Nos volontaires n'ont pas encore traduit cet article en français. Rejoignez-nous et aidez-nous à le faire&nbsp;!",
+        "ja" : "まだボランティアによって日本語に翻訳されていない記事です。MDNに参加して、翻訳してみませんか？"
+    },
+
+    "Events": {
+        "en-US": "Events",
+        "fr"   : "Événements",
+        "ja"   : "イベント"
+    },
+
+    "Interfaces": {
+        "en-US": "Interfaces",
+        "fr"   : "Interfaces",
+        "ja"   : "インターフェイス"
+    },
+
+    "Guides": {
+        "en-US": "Guides",
+        "fr"   : "Guides",
+        "ja"   : "ガイド"
+    }
+
+}

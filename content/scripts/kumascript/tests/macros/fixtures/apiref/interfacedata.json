@@ -1,0 +1,28 @@
+[
+    {
+        "ImplementsTestInterface": {
+            "inh": "AndAnotherRandomThing",
+            "impl": ["TestInterface"]
+        },
+        "AlsoImplementsTestInterface": {
+            "inh": "YetAnotherRandomThing",
+            "impl": ["TestInterface", "SomethingUnrelated"]
+        },
+        "AnUnrelatedThing": {
+            "inh": "SomeOtherRandomThing",
+            "impl": []
+        },
+        "TestInterfaceGrandparent": {
+            "inh": "",
+            "impl": []
+        },
+        "TestInterfaceParent": {
+            "inh": "TestInterfaceGrandparent",
+            "impl": ["SomeRandomThing"]
+        },
+        "TestInterface": {
+            "inh": "TestInterfaceParent",
+            "impl": []
+        }
+    }
+]

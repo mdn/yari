@@ -46,6 +46,11 @@ cli
     cli.ARRAY,
     DEFAULT_BUILD_LOCALES
   )
+  .option(
+    "--also-write-rendered",
+    "write the rendered as well as the raw HTML to disk",
+    cli.BOOL
+  )
   .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
   .option("--start-clean", "delete anything created first", cli.BOOL)
   .option(
@@ -98,6 +103,11 @@ cli
     "locales to explicitly exclude",
     cli.ARRAY,
     DEFAULT_BUILD_NOT_LOCALES
+  )
+  .option(
+    "--verify-renders",
+    "verify each Kumascript render against Kuma",
+    cli.BOOL
   )
   .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
   .option("--start-clean", "delete anything created first", cli.BOOL)
