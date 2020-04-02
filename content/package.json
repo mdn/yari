@@ -19,7 +19,7 @@
     "ws": "7.2.3"
   },
   "devDependencies": {
-    "@types/cheerio": "^0.22.16",
+    "@types/cheerio": "^0.22.17",
     "@types/mysql": "^2.15.9"
   }
 }
