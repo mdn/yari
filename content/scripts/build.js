@@ -199,9 +199,6 @@ class Builder {
     this.logger = logger;
     this.selfHash = null;
     this.allTitles = {};
-    // TODO(peterbe): Evaluate why does this need to be its own data struct
-    // Can't it all just be part of this.allTitles??
-    this.allPopularities = {};
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
@@ -309,7 +306,6 @@ class Builder {
     } else {
       this.describeActiveSources();
       this.describeActiveFilters();
-      this.ensurePopularities();
 
       // To be able to make a progress bar we need to first count what we're
       // going to need to do.
@@ -429,9 +425,7 @@ class Builder {
     }
 
     // If we're going to generate all titles, we need all popularities.
-    // Normally this gets run later in the build process, but in the
-    // case of a needing the titles first, make sure popularities are set.
-    this.ensurePopularities();
+    const allPopularities = this._getAllPopularities();
 
     this.logger.info("Building a list of ALL titles and URIs...");
     let t0 = new Date();
@@ -441,10 +435,10 @@ class Builder {
       if (source.isStumptown) {
         for (const filename of files.filter((n) => n.endsWith(".json"))) {
           const filepath = path.join(folder, filename);
-          this.processStumptownFileTitle(source, filepath);
+          this.processStumptownFileTitle(source, filepath, allPopularities);
         }
       } else if (files.includes("index.html") && files.includes("index.yaml")) {
-        this.processFolderTitle(source, folder);
+        this.processFolderTitle(source, folder, allPopularities);
       }
     }
 
@@ -639,23 +633,24 @@ class Builder {
     fs.mkdirSync(folderpath, { recursive: true });
   }
 
-  ensurePopularities() {
-    if (!Object.keys(this.allPopularities).length) {
-      const { popularitiesfile } = this.options;
-      if (popularitiesfile) {
-        this.allPopularities = JSON.parse(
-          fs.readFileSync(popularitiesfile, "utf8")
-        );
-
-        this.logger.info(
-          chalk.magenta(
-            `Parsed ${Object.keys(
-              this.allPopularities
-            ).length.toLocaleString()} popularities.`
-          )
-        );
-      }
+  _getAllPopularities() {
+    const { popularitiesfile } = this.options;
+    if (popularitiesfile) {
+      const allPopularities = JSON.parse(
+        fs.readFileSync(popularitiesfile, "utf8")
+      );
+      this.logger.info(
+        chalk.magenta(
+          `Parsed ${Object.keys(
+            allPopularities
+          ).length.toLocaleString()} popularities.`
+        )
+      );
+      return allPopularities;
     }
+    // If the popularitiesfile isn't available you simply get
+    // no popularity numbers set on any of the documents.
+    return {};
   }
 
   summorizeResults(counts, took) {
@@ -1001,9 +996,9 @@ class Builder {
     }
     doc.body = sections;
 
-    doc.popularity = this.allPopularities[doc.mdn_url] || 0.0;
-
-    doc.last_modified = metadata.modified;
+    const titleData = this.allTitles[doc.mdn_url];
+    doc.popularity = titleData.popularity || 0.0;
+    doc.modified = titleData.modified;
 
     const otherTranslations = this.allTitles[doc.mdn_url].translations || [];
     if (!otherTranslations.length && metadata.translation_of) {
@@ -1143,7 +1138,7 @@ class Builder {
   /** Similar to processFolder() but this time we're only interesting it
    * adding this document's uri and title to this.allTitles
    */
-  processFolderTitle(source, folder) {
+  processFolderTitle(source, folder, allPopularities) {
     const metadata = yaml.safeLoad(
       fs.readFileSync(path.join(folder, "index.yaml"))
     );
@@ -1178,7 +1173,7 @@ class Builder {
     const doc = {
       mdn_url,
       title: metadata.title,
-      popularity: this.allPopularities[mdn_url] || 0.0,
+      popularity: allPopularities[mdn_url] || 0.0,
       locale: metadata.locale,
       slug: metadata.slug,
       file: folder,
@@ -1193,13 +1188,13 @@ class Builder {
     this.allTitles[mdn_url] = doc;
   }
 
-  processStumptownFileTitle(source, file) {
+  processStumptownFileTitle(source, file, allPopularities) {
     const metadata = JSON.parse(fs.readFileSync(file));
     const { mdn_url, title } = metadata;
     const doc = {
       mdn_url,
       title,
-      popularity: this.allPopularities[mdn_url] || 0.0,
+      popularity: allPopularities[mdn_url] || 0.0,
       locale: null,
       slug: null,
       modified: null,
