@@ -15,6 +15,8 @@ const {
   DEFAULT_FOLDER_SEARCHES,
   DEFAULT_POPULARITIES_FILEPATH,
   MAX_GOOGLE_ANALYTICS_URIS,
+  DEFAULT_FLAW_CHECKS,
+  VALID_FLAW_CHECKS,
 } = require("./scripts/constants.js");
 
 cli
@@ -99,6 +101,12 @@ cli
     cli.ARRAY,
     DEFAULT_BUILD_NOT_LOCALES
   )
+  .option(
+    "--flaw-check <check>",
+    "flaw checks to include in build",
+    cli.ARRAY,
+    DEFAULT_FLAW_CHECKS
+  )
   .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
   .option("--start-clean", "delete anything created first", cli.BOOL)
   .option("--list-locales", "display all locales and their counts", cli.BOOL)
@@ -159,6 +167,7 @@ cli
     process.env.BUILD_DESTINATION || "client/build"
   )
   .action((args, options, logger) => {
+    // Build up the 'sources' based on the various paths arguments.
     const sources = new Sources();
     if (options.stumptownRoot) {
       sources.add(options.stumptownRoot, {
@@ -179,9 +188,22 @@ cli
         noindexNofollowHeader: true,
       });
     }
+
+    // Validate that there is at least >=1 source
     if (!sources.entries().length) {
       logger.error("No configured sources");
       return 1;
+    }
+
+    // Validate any --flaw-check
+    for (const name of options.flawCheck) {
+      if (!VALID_FLAW_CHECKS.has(name)) {
+        throw new Error(
+          `'${name}' is not valid flaw check. Only ${Array.from(
+            VALID_FLAW_CHECKS
+          )}`
+        );
+      }
     }
 
     // Because you can't have boolean options that default to 'true'

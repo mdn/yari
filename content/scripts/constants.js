@@ -47,6 +47,20 @@ const DEFAULT_FOLDER_SEARCHES = (process.env.BUILD_FOLDER_SEARCHES || "")
   .split(",")
   .filter((x) => x);
 
+const DEFAULT_FLAW_CHECKS = (process.env.BUILD_FLAW_CHECKS || "")
+  .split(",")
+  .filter((x) => x);
+
+// These names need to match what we have in the code where we have various
+// blocks of code that look something like this:
+//
+//    if (this.options.flawChecks.profanities) {
+//      ... analyze and possible add to doc.flaws.profanities ...
+//
+// This list needs to be synced with the code. And the CLI arguments
+// used with --flaw-checks needs to match this set.
+const VALID_FLAW_CHECKS = new Set(["broken_links"]);
+
 const DEFAULT_SITEMAP_BASE_URL = "https://developer.mozilla.org";
 
 // const DEFAULT_POPULARITIES_FILEPATH = path.join(
@@ -115,4 +129,6 @@ module.exports = {
   // DEFAULT_STUMPTOWN_PACKAGED_ROOT,
   MAX_GOOGLE_ANALYTICS_URIS,
   VALID_LOCALES,
+  DEFAULT_FLAW_CHECKS,
+  VALID_FLAW_CHECKS,
 };

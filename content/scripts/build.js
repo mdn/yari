@@ -989,17 +989,21 @@ class Builder {
     // XXX should we get some of this stuff from this.allTitles instead?!
     const doc = {};
 
-    // Note that 'extractSidebar' will always return a string.
-    // And if it finds a sidebar section, it gets removed from '$' too.
-    doc.sidebarHTML = extractSidebar($, config);
-    const sections = extractDocumentSections($, config);
-
     doc.title = metadata.title;
     doc.mdn_url = mdn_url;
     if (metadata.translation_of) {
       doc.translation_of = metadata.translation_of;
     }
-    doc.body = sections;
+
+    // Note that 'extractSidebar' will always return a string.
+    // And if it finds a sidebar section, it gets removed from '$' too.
+    // Also note, these operations mutate the `$`.
+    doc.sidebarHTML = extractSidebar($, config);
+
+    // With the sidebar out of the way, go ahead and check the rest
+    this.injectFlaws(source, doc, $);
+
+    doc.body = extractDocumentSections($, config);
 
     doc.popularity = this.allPopularities[doc.mdn_url] || 0.0;
 
@@ -1057,6 +1061,36 @@ class Builder {
       jsonFile: outfileJson,
       doc,
     };
+  }
+
+  /**
+   * Validate the parsed HTML, with the sidebar removed.
+   *
+   * @param {folder} source
+   * @param {Object} doc
+   * @param {Cheerio document instance} $
+   */
+  injectFlaws(source, doc, $) {
+    doc.flaws = {};
+
+    // The 'broken_links' flaw check looks for internal links that
+    // link to a document that's going to fail with a 404 Not Found.
+    if (this.options.flawCheck.includes("broken_links")) {
+      $("a[href]").each((i, element) => {
+        const a = $(element);
+        const href = a.attr("href").split("#")[0];
+        if (href.startsWith("/") && !href.startsWith("//")) {
+          if (!(href in this.allTitles)) {
+            if (!doc.flaws.hasOwnProperty("broken_links")) {
+              doc.flaws.broken_links = [];
+            }
+            doc.flaws.broken_links.push(href);
+            a.attr("title", `The link to ${href} is broken.`);
+            a.addClass("flawed--broken_link");
+          }
+        }
+      });
+    }
   }
 
   injectSource(source, doc, folder) {
