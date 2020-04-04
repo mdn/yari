@@ -15,11 +15,11 @@ const DEFAULT_DATABASE_URL =
 
 const DEFAULT_BUILD_LOCALES = (process.env.BUILD_LOCALES || "")
   .split(",")
-  .filter(x => x);
+  .filter((x) => x);
 
 const DEFAULT_BUILD_NOT_LOCALES = (process.env.BUILD_NOT_LOCALES || "")
   .split(",")
-  .filter(x => x);
+  .filter((x) => x);
 
 // const DEFAULT_STUMPTOWN_PACKAGED_ROOT =
 //   process.env.STUMPTOWN_PACKAGED_ROOT ||
@@ -42,12 +42,12 @@ const DEFAULT_EXCLUDE_SLUG_PREFIXES = [
   // https://github.com/mdn/kuma/blob/master/kuma/wiki/constants.py#L668
   // We'll have to manually maintain a match between that and this
   "MDN/Doc_status",
-  "MDN/Jobs"
+  "MDN/Jobs",
 ];
 
 const DEFAULT_FOLDER_SEARCHES = (process.env.BUILD_FOLDER_SEARCHES || "")
   .split(",")
-  .filter(x => x);
+  .filter((x) => x);
 
 const DEFAULT_SITEMAP_BASE_URL = "https://developer.mozilla.org";
 
@@ -99,8 +99,8 @@ const VALID_LOCALES = new Map(
     "uk",
     "vi",
     "zh-CN",
-    "zh-TW"
-  ].map(x => [x.toLowerCase(), x])
+    "zh-TW",
+  ].map((x) => [x.toLowerCase(), x])
 );
 
 module.exports = {
@@ -117,5 +117,5 @@ module.exports = {
   // DEFAULT_POPULARITIES_FILEPATH,
   // DEFAULT_STUMPTOWN_PACKAGED_ROOT,
   MAX_GOOGLE_ANALYTICS_URIS,
-  VALID_LOCALES
+  VALID_LOCALES,
 };

@@ -104,19 +104,7 @@ module.exports = {
 
   // Returns the page object for the specified page.
   async getPage(path) {
-    const key = "kuma:get_page:" + path.toLowerCase();
-    return JSON.parse(
-      await cache(key, async () => {
-        const url = util.buildAbsoluteURL(path) + "$json";
-        try {
-          const response = await got(url);
-          if (response.statusCode == 200) {
-            return response.body;
-          }
-        } catch (e) {}
-        return "{}";
-      })
-    );
+    this.info.getPage(path || this.env.url);
   },
 
   // Retrieve the full uri of a given wiki page.

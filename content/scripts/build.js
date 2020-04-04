@@ -23,12 +23,12 @@ const ProgressBar = require("./progress-bar");
 const { buildHtmlAndJsonFromDoc } = require("ssr");
 const {
   extractDocumentSections,
-  extractSidebar
+  extractSidebar,
 } = require("./document-extractor");
 const { BUILD_TIMEOUT, VALID_LOCALES } = require("./constants");
 const { timeout } = require("./promise-timeout.js");
 
-const renderMacros = require("kumascript");
+const KSRenderer = require("kumascript");
 
 const MAX_OPEN_FILES = 256;
 const htmlDiffer = new HtmlDiffer();
@@ -47,7 +47,7 @@ function getCurrentGitBranch(fallback = "master") {
     } else {
       const spawned = childProcess.spawnSync("git", [
         "branch",
-        "--show-current"
+        "--show-current",
       ]);
       if (spawned.error) {
         console.warn(
@@ -79,7 +79,7 @@ function cleanLocales(locales) {
     // The user *might* type locales as a comma separated strings.
     // Explode those split by ','.
     if (locale.includes(",")) {
-      clean.push(...locale.split(",").map(l => l.toLowerCase()));
+      clean.push(...locale.split(",").map((l) => l.toLowerCase()));
     } else {
       // As a convenience, we know that every locale folder is always lowercase,
       // but it's very possible that someone specifies it in NOT lowercase.
@@ -87,7 +87,7 @@ function cleanLocales(locales) {
       clean.push(locale.toLowerCase());
     }
   }
-  return clean.filter(x => {
+  return clean.filter((x) => {
     if (x) {
       if (!VALID_LOCALES.has(x)) {
         throw new Error(`'${x}' is not a valid locale (see VALID_LOCALES)`);
@@ -101,12 +101,12 @@ function cleanLocales(locales) {
 function triggerTouch(filepath, document, root) {
   const changedFile = {
     path: filepath,
-    name: path.relative(root, filepath)
+    name: path.relative(root, filepath),
   };
   const data = {
     documentUri: document.mdn_url,
     changedFile,
-    hasEDITOR: Boolean(process.env.EDITOR)
+    hasEDITOR: Boolean(process.env.EDITOR),
   };
   broadcastWebsocketMessage(JSON.stringify(data));
 }
@@ -161,7 +161,7 @@ function broadcastWebsocketMessage(msg) {
     return;
   }
   // let i = 0;
-  webSocketServer.clients.forEach(client => {
+  webSocketServer.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       // i++;
       // console.log(`SENDING (${i})...`, msg);
@@ -169,6 +169,25 @@ function broadcastWebsocketMessage(msg) {
     }
   });
   // console.log(`Sent to ${i} open clients`);
+}
+
+function getSummary(html) {
+  // TODO: Find a better way to do summaries!
+  // TODO: Ask Daniel Beck how his tool extracts summaries.
+  // TODO: There's a chicken and egg problem here. We'd like to use
+  //       the rendered HTML for extracting the summary, but the
+  //       summaries are used to create the rendered HTML!
+  // This is a simple implementation very loosely based on Kuma's approach,
+  // which is a mess. For now, let's just try our best. The summaries are
+  // mainly used (95% of the time) by the Kumascript macros for tool tips
+  // ("title" attribute) on links to their pages.
+  const $ = cheerio.load(html);
+  return (
+    $(".seoSummary").text() ||
+    $(".summary").text() ||
+    $("p").html() ||
+    ""
+  ).trim();
 }
 
 async function runBuild(sources, options, logger) {
@@ -198,7 +217,7 @@ const processing = Object.freeze({
   ALREADY: "already",
   PROCESSED: "processed",
   EMPTY: "empty",
-  EXCLUDED: "excluded"
+  EXCLUDED: "excluded",
 });
 
 class Builder {
@@ -209,13 +228,19 @@ class Builder {
     this.logger = logger;
     this.selfHash = null;
     this.allTitles = {};
+    // Create a new Kumascript renderer object with a reference
+    // to the document information needed for resolving macros.
+    // The renderer lazily consumes the document information, so
+    // it only has to be valid by the time you call the "render"
+    // method.
+    this.ksRenderer = new KSRenderer(this.allTitles);
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
 
     this.progressBar = !options.noProgressbar
       ? new ProgressBar({
-          includeMemory: true
+          includeMemory: true,
         })
       : null;
   }
@@ -267,7 +292,7 @@ class Builder {
   *walkSources({ allLocales = false } = {}) {
     for (const source of this.sources.entries()) {
       for (const localeFolder of this.getLocaleRootFolders(source, {
-        allLocales
+        allLocales,
       })) {
         for (const [folder, files] of walker(localeFolder)) {
           yield { source, localeFolder, folder, files };
@@ -280,12 +305,13 @@ class Builder {
     // This prepares this.selfHash so that when we build files, we can
     // write down which "self hash" was used at the time.
     const self = this;
+
     if (specificFolders) {
       // Check that they all exist and are folders
       const allProcessed = [];
 
       await Promise.all(
-        specificFolders.map(async folder => {
+        specificFolders.map(async (folder) => {
           if (!fs.existsSync(folder)) {
             throw new Error(`${folder} does not exist`);
           }
@@ -293,7 +319,7 @@ class Builder {
             throw new Error(`${folder} is not a directory`);
           }
 
-          const source = self.sources.entries().find(source => {
+          const source = self.sources.entries().find((source) => {
             return folder.startsWith(source.filepath);
           });
           if (!source) {
@@ -334,8 +360,8 @@ class Builder {
     if (self.progressBar) {
       const countTodo = self.sources
         .entries()
-        .map(source => self.countLocaleFolders(source))
-        .map(m => Array.from(m.values()).reduce((a, b) => a + b))
+        .map((source) => self.countLocaleFolders(source))
+        .map((m) => Array.from(m.values()).reduce((a, b) => a + b))
         .reduce((a, b) => a + b);
       if (!countTodo) {
         throw new Error("No folders found to process!");
@@ -347,7 +373,7 @@ class Builder {
 
     // Record of counts of all results
     const counts = {};
-    Object.values(processing).forEach(key => {
+    Object.values(processing).forEach((key) => {
       counts[key] = 0;
     });
 
@@ -385,7 +411,7 @@ class Builder {
         // If the folder was a Stumptown folder, what we're
         // actually excluding is all the .json files in the folder.
         if (source.isStumptown) {
-          counts[processing.EXCLUDED] += files.filter(n =>
+          counts[processing.EXCLUDED] += files.filter((n) =>
             n.endsWith(".json")
           ).length;
         } else {
@@ -397,7 +423,7 @@ class Builder {
       if (source.isStumptown) {
         // In the case of stumptown, one folder will have multiple
         // files with each representing a document.
-        for (const filename of files.filter(n => n.endsWith(".json"))) {
+        for (const filename of files.filter((n) => n.endsWith(".json"))) {
           const filepath = path.join(folder, filename);
           let processed;
           try {
@@ -419,7 +445,7 @@ class Builder {
         }
       } else {
         while (pendingFolders > MAX_OPEN_FILES) {
-          await new Promise(resolve => setTimeout(resolve, 500));
+          await new Promise((resolve) => setTimeout(resolve, 500));
         }
         pendingFolders++;
         folderProcessingPromises.push(
@@ -455,8 +481,9 @@ class Builder {
       !this.options.regenerateAllTitles
     ) {
       // XXX maybe this should become a Map instance.
-      this.allTitles = JSON.parse(
-        fs.readFileSync(allTitlesJsonFilepath, "utf8")
+      Object.assign(
+        this.allTitles,
+        JSON.parse(fs.readFileSync(allTitlesJsonFilepath, "utf8"))
       );
       return;
     }
@@ -467,10 +494,10 @@ class Builder {
     this.logger.info("Building a list of ALL titles and URIs...");
     let t0 = new Date();
     for (const { source, folder, files } of this.walkSources({
-      allLocales: true
+      allLocales: true,
     })) {
       if (source.isStumptown) {
-        for (const filename of files.filter(n => n.endsWith(".json"))) {
+        for (const filename of files.filter((n) => n.endsWith(".json"))) {
           const filepath = path.join(folder, filename);
           this.processStumptownFileTitle(source, filepath, allPopularities);
         }
@@ -487,8 +514,8 @@ class Builder {
     // of other locales and slugs.
     let countBrokenTranslationOfDocuments = 0;
     Object.values(this.allTitles)
-      .filter(data => data.translation_of)
-      .forEach(data => {
+      .filter((data) => data.translation_of)
+      .forEach((data) => {
         const parentURL = buildMDNUrl("en-US", data.translation_of);
         const parentData = this.allTitles[parentURL];
 
@@ -511,7 +538,7 @@ class Builder {
           }
           parentData.translations.push({
             locale: data.locale,
-            slug: data.slug
+            slug: data.slug,
           });
         } else {
           countBrokenTranslationOfDocuments++;
@@ -567,20 +594,20 @@ class Builder {
 
     this.sources
       .entries()
-      .filter(source => source.watch)
-      .forEach(source => {
+      .filter((source) => source.watch)
+      .forEach((source) => {
         const watchdir = path.resolve(source.filepath);
 
         console.log(chalk.yellow(`Setting up file watcher on ${watchdir}...`));
         const watcher = chokidar.watch(path.join(watchdir, "**/*.(html|yaml)"));
-        watcher.on("change", path => {
+        watcher.on("change", (path) => {
           onChange(path, source);
         });
         watcher.on("ready", () => {
           const watchedPaths = watcher.getWatched();
           const folders = Object.values(watchedPaths);
           const count = folders
-            .map(list => list.length)
+            .map((list) => list.length)
             .reduce((a, b) => a + b, 0);
           console.log(
             chalk.yellow(
@@ -654,7 +681,7 @@ class Builder {
       // Also factor in the ssr builder's package.json
       path.join(ssrRoot, "package.json"),
       // and it's .js files
-      ...simpleGlob(ssrRoot, ".js")
+      ...simpleGlob(ssrRoot, ".js"),
     ]);
   }
 
@@ -709,7 +736,7 @@ class Builder {
     );
     Object.keys(counts)
       .sort()
-      .map(key => {
+      .map((key) => {
         const count = counts[key];
         console.log(`${key.padEnd(12)}: ${count.toLocaleString()}`);
       });
@@ -758,7 +785,7 @@ class Builder {
               }
               return {
                 loc: sitemapBaseUrl + uri,
-                lastmod: documentData.modified.split("T")[0]
+                lastmod: documentData.modified.split("T")[0],
               };
             })
         );
@@ -787,7 +814,7 @@ class Builder {
           // network bytes matter.
           titles[uri] = {
             title: documentData.title,
-            popularity: documentData.popularity
+            popularity: documentData.popularity,
           };
         });
 
@@ -804,10 +831,10 @@ class Builder {
     // Need to make the generic /sitemap.xml for all sitemaps
     if (!this.options.noSitemaps) {
       const allSitemapXml = makeSitemapXML(
-        allSitemapsBuilt.map(locale => {
+        allSitemapsBuilt.map((locale) => {
           return {
             loc: sitemapBaseUrl + `/sitemaps/${locale}/sitemap.xml`,
-            lastmod: mostModified[locale]
+            lastmod: mostModified[locale],
           };
         })
       );
@@ -833,7 +860,7 @@ class Builder {
       // (or '\' on Windows).
       const foldername = folder.replace(localeFolder, "").slice(1);
       if (
-        !this.options.foldersearch.some(search => {
+        !this.options.foldersearch.some((search) => {
           // The folder search can contain special characters.
           // For example `^web` means `.startswith('web')`.
           // For example `foo/bar/media$` means `.endswith('foo/bar/media$')`.
@@ -848,7 +875,7 @@ class Builder {
       }
     }
     if (source.isStumptown) {
-      return !files.some(filepath => filepath.endsWith(".json"));
+      return !files.some((filepath) => filepath.endsWith(".json"));
     } else {
       return !(files.includes("index.html") && files.includes("index.yaml"));
     }
@@ -896,7 +923,7 @@ class Builder {
           locales.set(
             locale,
             (locales.get(locale) || 0) +
-              files.filter(x => x.endsWith(".json")).length
+              files.filter((x) => x.endsWith(".json")).length
           );
         } else {
           locales.set(locale, (locales.get(locale) || 0) + 1);
@@ -912,37 +939,9 @@ class Builder {
     const { slugsearch } = this.options;
     if (slugsearch.length) {
       const { mdn_url } = metadata;
-      return !slugsearch.some(search => mdn_url.includes(search));
+      return !slugsearch.some((search) => mdn_url.includes(search));
     }
     return false;
-  }
-
-  async verifyRender(uri, metadata) {
-    // This still needs work, and is tricky. Sometimes, for example,
-    // the rendered HTML from the DB has not actually been rendered
-    // for some time. It's stale and could be different from the
-    // freshly-rendered HTML.
-    const wikiUrl = "https://wiki.developer.mozilla.org";
-    const url = nodeUrl.resolve(wikiUrl, uri);
-    const urlRaw = url + "?raw";
-    const urlExpected = url + "?raw&macros";
-    try {
-      const [responseRaw, responseExpected] = await Promise.all([
-        got(urlRaw),
-        got(urlExpected)
-      ]);
-      if (responseRaw.statusCode == 200 && responseExpected.statusCode == 200) {
-        const rawHtml = responseRaw.body;
-        const expectedHtml = responseExpected.body;
-        const [renderedHtml, errors] = await this.renderHtml(rawHtml, metadata);
-        if (!htmlDiffer.isEqual(expectedHtml, renderedHtml)) {
-          this.logger.error(`\Difference in render: ${uri}`);
-          htmlDifferlogger.logDiffText(
-            htmlDiffer.diffHtml(expectedHtml, renderedHtml)
-          );
-        }
-      }
-    } catch (e) {}
   }
 
   async processFolder(source, folder, config) {
@@ -999,10 +998,6 @@ class Builder {
     // like `<--#Compat('foo.bar')--> and then replace it here in the
     // post-processing instead.
 
-    if (this.options.verifyRenders) {
-      this.verifyRender(mdn_url, metadata);
-    }
-
     const rawHtml = fs.readFileSync(path.join(folder, "index.html"), "utf8");
     hasher.update(rawHtml);
 
@@ -1025,7 +1020,7 @@ class Builder {
     ) {
       return {
         result: processing.ALREADY,
-        file: path.join(destinationDir, "index.html")
+        file: path.join(destinationDir, "index.html"),
       };
     }
 
@@ -1077,7 +1072,7 @@ class Builder {
         if (parentOtherTranslations && parentOtherTranslations.length) {
           otherTranslations.push(
             ...parentOtherTranslations.filter(
-              translation => translation.locale !== metadata.locale
+              (translation) => translation.locale !== metadata.locale
             )
           );
         }
@@ -1093,7 +1088,7 @@ class Builder {
       doc,
       destinationDir,
       buildHtml: !this.options.buildJsonOnly,
-      titles: this.allTitles
+      titles: this.allTitles,
     });
 
     // We're *assuming* that `metadata.mdn_url.toLowerCase()`
@@ -1116,7 +1111,7 @@ class Builder {
       result: processing.PROCESSED,
       file: outfileHtml || outfileJson,
       jsonFile: outfileJson,
-      doc
+      doc,
     };
   }
 
@@ -1129,19 +1124,19 @@ class Builder {
           folder: path.dirname(folder),
           // absolute_folder: folder,
           // markdown_file: folder
-          content_file: folder // actually a filepath!
+          content_file: folder, // actually a filepath!
           // content_file: path.join(folder, "index.html")
         };
       } else {
         doc.source = {
           // folder: path.relative(source.filepath, folder),
           // absolute_folder: folder,
-          content_file: path.join(folder, "index.html")
+          content_file: path.join(folder, "index.html"),
         };
       }
     } else {
       doc.source = {
-        github_url: this.getGitHubURL(source, folder)
+        github_url: this.getGitHubURL(source, folder),
       };
     }
   }
@@ -1180,7 +1175,7 @@ class Builder {
     ) {
       return {
         result: processing.ALREADY,
-        file: path.join(destinationDir, "index.html")
+        file: path.join(destinationDir, "index.html"),
       };
     }
 
@@ -1190,14 +1185,14 @@ class Builder {
       doc,
       destinationDir,
       buildHtml: !this.options.buildJsonOnly,
-      titles: this.allTitles
+      titles: this.allTitles,
     });
 
     return {
       result: processing.PROCESSED,
       file: outfileHtml || outfileJson,
       jsonFile: outfileJson,
-      doc
+      doc,
     };
   }
 
@@ -1236,11 +1231,16 @@ class Builder {
       return;
     }
 
+    // Get the summary from the raw HTML.
+    const rawHtml = fs.readFileSync(path.join(folder, "index.html"), "utf8");
+    const summary = getSummary(rawHtml);
+
     const doc = {
       mdn_url,
       title: metadata.title,
       popularity: allPopularities[mdn_url] || 0.0,
       locale: metadata.locale,
+      summary: summary,
       slug: metadata.slug,
       file: folder,
       modified: metadata.modified,
@@ -1249,8 +1249,11 @@ class Builder {
       // bother setting it.
       excludeInTitlesJson: source.excludeInTitlesJson,
       excludeInSitemaps: source.excludeInSitemaps,
-      source: source.filepath
+      source: source.filepath,
     };
+    if (metadata.tags) {
+      doc.tags = metadata.tags;
+    }
     this.allTitles[mdn_url] = doc;
   }
 
@@ -1267,7 +1270,7 @@ class Builder {
       parent: null,
       excludeInTitlesJson: source.excludeInTitlesJson,
       excludeInSitemaps: source.excludeInSitemaps,
-      source: source.filepath
+      source: source.filepath,
     };
 
     this.allTitles[mdn_url] = doc;
@@ -1285,9 +1288,9 @@ class Builder {
       locale: metadata.locale,
       slug: metadata.slug,
       tags: metadata.tags || [],
-      selective_mode: false
+      selective_mode: false,
     };
-    return renderMacros(rawHtml, docEnv);
+    return this.ksRenderer.render(rawHtml, docEnv);
   }
 
   /**
@@ -1310,9 +1313,9 @@ function* walker(root, depth = 0) {
   if (!depth) {
     yield [
       root,
-      files.filter(name => {
+      files.filter((name) => {
         return !fs.statSync(path.join(root, name)).isDirectory();
-      })
+      }),
     ];
   }
   for (const name of files) {
@@ -1321,9 +1324,9 @@ function* walker(root, depth = 0) {
     if (isDirectory) {
       yield [
         filepath,
-        fs.readdirSync(filepath).filter(name => {
+        fs.readdirSync(filepath).filter((name) => {
           return !fs.statSync(path.join(filepath, name)).isDirectory();
-        })
+        }),
       ];
       // Now go deeper
       yield* walker(filepath, depth + 1);
@@ -1350,18 +1353,18 @@ function ppMilliseconds(ms) {
 function makeHash(filepaths, length = 12) {
   const hasher = crypto.createHash("md5");
   filepaths
-    .map(fp => fs.readFileSync(fp, "utf8"))
-    .forEach(content => hasher.update(content));
+    .map((fp) => fs.readFileSync(fp, "utf8"))
+    .forEach((content) => hasher.update(content));
   return hasher.digest("hex").slice(0, length);
 }
 
 function makeSitemapXML(locations) {
   const xmlParts = [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
   ];
   xmlParts.push(
-    ...locations.map(location => {
+    ...locations.map((location) => {
       return (
         `<url><loc>${location.loc}</loc>` +
         `<lastmod>${location.lastmod}</lastmod></url>`
@@ -1377,11 +1380,11 @@ function makeSitemapXML(locations) {
 function simpleGlob(directory, extension) {
   return fs
     .readdirSync(directory)
-    .filter(name => name.endsWith(extension))
-    .map(name => path.join(directory, name));
+    .filter((name) => name.endsWith(extension))
+    .map((name) => path.join(directory, name));
 }
 
 module.exports = {
   runBuild,
-  Builder
+  Builder,
 };

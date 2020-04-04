@@ -44,22 +44,7 @@ module.exports = {
   // This is not called by any macros, and is only used here by
   // wiki.tree(), so we could move it to be part of that function.
   async subpages(path, depth, self) {
-    var url = util.apiURL((path ? path : this.env.url) + "$children");
-    var depth_check = parseInt(depth);
-    if (depth_check >= 0) {
-      url += "?depth=" + depth_check;
-    }
-
-    var subpages = await this.MDN.fetchJSONResource(url);
-    var result = [];
-    if (subpages != null) {
-      if (!self) {
-        result = subpages.subpages || [];
-      } else {
-        result = [subpages];
-      }
-    }
-    return result;
+    return this.info.getChildren(path || this.env.url, self);
   },
 
   // Optional path, defaults to current page
@@ -70,22 +55,8 @@ module.exports = {
   // Optional self, defaults to false. Include the path page in
   // the results
   //
-  async subpagesExpand(path, depth, self) {
-    var url = util.apiURL((path ? path : this.env.url) + "$children?expand");
-    var depth_check = parseInt(depth);
-    if (depth_check >= 0) {
-      url += "&depth=" + depth_check;
-    }
-    var subpages = await this.MDN.fetchJSONResource(url);
-    var result = [];
-    if (subpages != null) {
-      if (!self) {
-        result = subpages.subpages || [];
-      } else {
-        result = [subpages];
-      }
-    }
-    return result;
+  subpagesExpand(path, depth, self) {
+    return this.info.getChildren(path || this.env.url, self);
   },
 
   // Flatten subPages list
@@ -114,13 +85,7 @@ module.exports = {
     }
   },
 
-  async translations(path) {
-    var url = util.apiURL((path ? path : this.env.url) + "$json");
-    var json = await this.MDN.fetchJSONResource(url);
-    var result = [];
-    if (json != null) {
-      result = json.translations || [];
-    }
-    return result;
+  translations(path) {
+    return this.info.getTranslations(path || this.env.url);
   },
 };

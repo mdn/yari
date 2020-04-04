@@ -66,7 +66,7 @@ function createMacroTestObject(macroName) {
     locale: "en-US",
     url: "https://developer.mozilla.org/",
   };
-  let environment = new Environment(pageContext, templates, true);
+  let environment = new Environment(templates, pageContext, true);
 
   return {
     /**
