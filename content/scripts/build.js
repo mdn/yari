@@ -23,6 +23,16 @@ const {
 } = require("./document-extractor");
 const { VALID_LOCALES } = require("./constants");
 
+// These names need to match what we have in the code where we have various
+// blocks of code that look something like this:
+//
+//    if (this.options.flawChecks.profanities) {
+//      ... analyze and possible add to doc.flaws.profanities ...
+//
+// This list needs to be synced with the code. And the CLI arguments
+// used with --flaw-checks needs to match this set.
+const VALID_FLAW_CHECKS = new Set(["broken_links"]);
+
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
 }
@@ -85,6 +95,23 @@ function cleanLocales(locales) {
     }
     return x;
   });
+}
+
+/**
+ * Check that every flawCheck is valid and spelled correctly.
+ *
+ * @param {Array} checks
+ */
+function cleanFlawChecks(flawChecks) {
+  const checked = [];
+  for (const name of flawChecks) {
+    const nameLower = name.toLowerCase();
+    if (!VALID_FLAW_CHECKS.has(nameLower)) {
+      throw new Error(`'${name} is not a valid flaw check.`);
+    }
+    checked.push(nameLower);
+  }
+  return checked;
 }
 
 /** Needs doc string */
@@ -205,6 +232,8 @@ class Builder {
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
+
+    this.options.flawCheck = cleanFlawChecks(this.options.flawCheck || []);
 
     this.progressBar = !options.noProgressbar
       ? new ProgressBar({

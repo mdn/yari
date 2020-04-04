@@ -7,10 +7,7 @@ const openEditor = require("open-editor");
 
 const { Builder } = require("content/scripts/build");
 const { Sources } = require("content/scripts/sources");
-// const {
-//   DEFAULT_ROOT,
-//   DEFAULT_DESTINATION
-// } = require("content/scripts/constants.js");
+const { DEFAULT_FLAW_CHECKS } = require("content/scripts/constants.js");
 
 const app = express();
 
@@ -120,6 +117,7 @@ function getOrCreateBuilder() {
         notLocales: [],
         slugsearch: [],
         noProgressbar: true,
+        flawCheck: DEFAULT_FLAW_CHECKS,
       },
       console
     );

@@ -16,7 +16,6 @@ const {
   DEFAULT_POPULARITIES_FILEPATH,
   MAX_GOOGLE_ANALYTICS_URIS,
   DEFAULT_FLAW_CHECKS,
-  VALID_FLAW_CHECKS,
 } = require("./scripts/constants.js");
 
 cli
@@ -193,17 +192,6 @@ cli
     if (!sources.entries().length) {
       logger.error("No configured sources");
       return 1;
-    }
-
-    // Validate any --flaw-check
-    for (const name of options.flawCheck) {
-      if (!VALID_FLAW_CHECKS.has(name)) {
-        throw new Error(
-          `'${name}' is not valid flaw check. Only ${Array.from(
-            VALID_FLAW_CHECKS
-          )}`
-        );
-      }
     }
 
     // Because you can't have boolean options that default to 'true'

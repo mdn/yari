@@ -279,6 +279,24 @@ rendering. But it's a luxury to have for these reasons:
    static serving there's an opportunity to do expensive post-processing such
    as extracting critical CSS or calculating nonce for CSP headers.
 
+### Flaw checks
+
+When building you can enable specific "flaw checks". They're extra pieces
+of code that checks the contents to the effect that it might help someone
+working on the content to spot flaws and fix them. For example, finding
+broken links to relative URLs. To run them, you can either add it to the
+CLI like this:
+
+    node content build --flaw-check=broken_links --flaw-check=profanities
+
+Or, as environment variables:
+
+    export BUILD_FLAW_CHECK=broken_links,profanities
+    node content build
+
+The advantage with setting it as an environment variable is that it gets
+automatically included in the build-on-the-fly server.
+
 ## Deployment
 
 Deployment means that you prepare one whole single directory that is
