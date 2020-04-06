@@ -60,6 +60,11 @@ export class Document extends React.Component {
         console.warn(response);
         return this.setState({ loading: false, loadingError: response });
       } else {
+        if (response.redirected) {
+          // Fetching that data required a redirect!
+          // XXX perhaps do a route redirect here in React?
+          console.warn(`${url} was redirected to ${response.url}`);
+        }
         const data = await response.json();
         document.title = data.doc.title;
         this.setState({ doc: data.doc, loading: false });
