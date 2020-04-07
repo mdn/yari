@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "@reach/router";
 
-import { NoMatch } from "./routing";
+import { NoMatch } from "../routing";
 
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
@@ -13,9 +13,9 @@ import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 
 // Sub-components
-import { DocumentTranslations } from "./document-languages";
-import { EditThisPage } from "./document-editthispage";
-import { DocumentSpy } from "./document-spy";
+import { DocumentTranslations } from "./languages";
+import { EditThisPage } from "./editthispage";
+import { DocumentSpy } from "./spy";
 
 export class Document extends React.Component {
   state = {

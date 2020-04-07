@@ -1,8 +1,7 @@
 import React from "react";
 import { Link } from "@reach/router";
 
-// XXX css-modules please(?!)
-import "./document-languages.css";
+import "./languages.css";
 
 export function DocumentTranslations({ translations }) {
   const [showChoices, setShowChoices] = React.useState(false);
