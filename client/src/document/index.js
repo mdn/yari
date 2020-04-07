@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, useReducer, Suspense } from "react";
 import { Link } from "@reach/router";
 
 import { NoMatch } from "../routing";
@@ -16,6 +16,7 @@ import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-t
 import { DocumentTranslations } from "./languages";
 import { EditThisPage } from "./editthispage";
 import { DocumentSpy } from "./spy";
+const DocumentFlaws = lazy(() => import("./flaws"));
 
 export class Document extends React.Component {
   state = {
@@ -118,6 +119,7 @@ export class Document extends React.Component {
           <div className="content">
             <RenderDocumentBody doc={doc} />
             <hr />
+            <ToggleDocmentFlaws flaws={doc.flaws} />
             <EditThisPage source={doc.source} />
             {doc.contributors && (
               <Contributors contributors={doc.contributors} />
@@ -333,6 +335,43 @@ function LoadingError({ error }) {
         <p>
           <code>{error.toString()}</code>
         </p>
+      )}
+    </div>
+  );
+}
+
+function ToggleDocmentFlaws({ flaws }) {
+  const [show, toggle] = useReducer((v) => !v, false);
+  let flatFlaws = [];
+  for (const [flawCheck, actualFlaws] of Object.entries(flaws)) {
+    flatFlaws.push({
+      flawCheck,
+      flaws: actualFlaws,
+      count: actualFlaws.length,
+    });
+  }
+  flatFlaws.sort((a, b) => b.count - a.count);
+  return (
+    <div className="toggle-flaws">
+      <button type="submit" onClick={toggle}>
+        {show ? "Hide flaws" : "Show flaws"}
+      </button>
+
+      {show ? (
+        <Suspense fallback={<div>Loading...</div>}>
+          <DocumentFlaws flaws={flatFlaws} />
+        </Suspense>
+      ) : (
+        <dl>
+          {flatFlaws.map((flaw) => {
+            return [
+              <dt key={`key-${flaw.flawCheck}`}>
+                <code>{flaw.flawCheck}</code>
+              </dt>,
+              <dd key={`count-${flaw.flawCheck}`}>{flaw.count}</dd>,
+            ];
+          })}
+        </dl>
       )}
     </div>
   );

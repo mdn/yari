@@ -1103,7 +1103,7 @@ class Builder {
       $("a[href]").each((i, element) => {
         const a = $(element);
         const href = a.attr("href").split("#")[0];
-        if (href.startsWith("/") && !href.startsWith("//")) {
+        if (href.startsWith("/")) {
           if (!(href in this.allTitles)) {
             if (!doc.flaws.hasOwnProperty("broken_links")) {
               doc.flaws.broken_links = [];
