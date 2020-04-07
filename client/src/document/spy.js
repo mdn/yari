@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Sockette from "sockette";
 import { Link } from "@reach/router";
 
-import "./document-spy.css";
+import "./spy.css";
 
 export function DocumentSpy({ onMessage }) {
   // null - never connected before
