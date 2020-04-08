@@ -25,7 +25,7 @@ const expectedObjects = [
   "web",
   "Web",
   "page",
-  "Page"
+  "Page",
 ];
 
 const expectedFunctions = [
@@ -153,7 +153,7 @@ const expectedFunctions = [
   "Page.subPagesFlatten",
   "page.subpagesflatten",
   "page.translations",
-  "Page.translations"
+  "Page.translations",
 ];
 
 const expectedAsync = [
@@ -166,23 +166,23 @@ const expectedAsync = [
   "page.subpages",
   "page.subpagesExpand",
   "page.translations",
-  "template"
+  "template",
 ];
 
 describe("Environment class", () => {
-  it.each(expectedObjects)("defines global object %s", global => {
+  it.each(expectedObjects)("defines global object %s", (global) => {
     let environment = new Environment({});
     let context = environment.getExecutionContext([]);
     expect(typeof getValue(context, global)).toBe("object");
   });
 
-  it.each(expectedFunctions)("defines global function %s", global => {
+  it.each(expectedFunctions)("defines global function %s", (global) => {
     let environment = new Environment({});
     let context = environment.getExecutionContext([]);
     expect(typeof getValue(context, global)).toBe("function");
   });
 
-  it.each(expectedAsync)("defines async function %s", global => {
+  it.each(expectedAsync)("defines async function %s", (global) => {
     let environment = new Environment({});
     let context = environment.getExecutionContext([]);
     let value = getValue(context, global);
@@ -197,7 +197,7 @@ describe("Environment class", () => {
       title: "This is a test",
       url: "Hello World",
       x: 1,
-      mdn: 2
+      mdn: 2,
     });
     let context = environment.getExecutionContext([]);
     expect(getValue(context, "env.locale")).toBe("en-CA");

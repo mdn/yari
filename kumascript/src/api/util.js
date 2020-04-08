@@ -102,5 +102,5 @@ const util = (module.exports = {
     var re2 = /%20/gi;
     str = str.replace(re1, "_");
     return str.replace(re2, "_");
-  }
+  },
 });

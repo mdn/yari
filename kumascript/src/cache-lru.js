@@ -12,7 +12,7 @@ const lru = new LRU({
   // The size of each cache entry is the length of the key (in chars)
   // plus the length of the value buffer (in bytes), and this is
   // approximately the total size in bytes.
-  length: (v, k) => k.length + v.length
+  length: (v, k) => k.length + v.length,
 });
 
 module.exports = {
@@ -26,5 +26,5 @@ module.exports = {
   },
   set(key, value) {
     lru.set(key, Buffer.from(value));
-  }
+  },
 };
