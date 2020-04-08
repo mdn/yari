@@ -1,0 +1,860 @@
+{
+  "json_modified": "2017-07-02T21:56:43.462560",
+  "subpages": [
+    {
+      "json_modified": "2017-07-13T23:04:01.759228",
+      "subpages": [],
+      "tags": [
+        "Guide",
+        "HTTP",
+        "URL"
+      ],
+      "locale": "en-US",
+      "translations": [
+        {
+          "uuid": "a98e9f72-d2ab-4be6-ab52-fdd4f42f9888",
+          "title": "www URL か非 www URL かを選択する",
+          "url": "/ja/docs/Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs",
+          "tags": [
+            "Guide",
+            "HTTP",
+            "URL"
+          ],
+          "summary": "ウェブサイトの管理者の間で繰り返される質問が、www URL と非 www URL のどちらを選択するかです。このページでは、何が最良かについてアドバイスを提供します。",
+          "localization_tags": [],
+          "locale": "ja",
+          "last_edit": "2016-10-11T06:46:08",
+          "review_tags": []
+        },
+        {
+          "uuid": "967c02e0-1e62-49f7-b003-77298662d0e5",
+          "title": "www와 비-www URL 중에서 선택하기",
+          "url": "/ko/docs/Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs",
+          "tags": [],
+          "summary": "웹 사이트 소유자들이 반복해서 하게 되는 질문은 비-www 혹은 www URL 중 무엇을 선택해야 하는가입니다. 이 페이지는 그에 대해 최선의 결론을 내기 위한 조언을 제공합니다.",
+          "localization_tags": [],
+          "locale": "ko",
+          "last_edit": "2016-12-11T06:15:47.850822",
+          "review_tags": []
+        },
+        {
+          "uuid": "6bbed2e9-5002-47d3-b992-bfee4636ed18",
+          "title": "选择 www 或非 www URL 作为域名",
+          "url": "/zh-CN/docs/Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs",
+          "tags": [
+            "Guide",
+            "HTTP",
+            "URL"
+          ],
+          "summary": "网站所有者经常会问的一个问题是选择非 www 的还是 www 的网址。本文提供了选择建议。",
+          "localization_tags": [],
+          "locale": "zh-CN",
+          "last_edit": "2017-07-13T23:03:58.294738",
+          "review_tags": []
+        }
+      ],
+      "summary": "A recurring question among website owners is whether to choose non-www or www URLs. This page provides some advice on what's best.",
+      "id": 66757,
+      "review_tags": [],
+      "slug": "Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs",
+      "uuid": "8247b120-8ec7-4e03-a08a-b8442257bc30",
+      "title": "Choosing between www and non-www URLs",
+      "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs",
+      "modified": "2017-06-05T21:22:54.407141",
+      "label": "Choosing between www and non-www URLs",
+      "localization_tags": [],
+      "last_edit": "2017-06-05T21:22:52.467138",
+      "sections": [
+        {
+          "id": "Quick_Links",
+          "title": null
+        },
+        {
+          "id": "What_are_domain_names",
+          "title": "What are domain names?"
+        },
+        {
+          "id": "So_do_I_have_to_choose_one_or_the_other_for_my_web_site",
+          "title": "So, do I have to choose one or the other for my web site?"
+        },
+        {
+          "id": "Techniques_for_canonical_URLs",
+          "title": "Techniques for canonical URLs"
+        },
+        {
+          "id": "Using_HTTP_301_redirects",
+          "title": "Using HTTP 301 redirects"
+        },
+        {
+          "id": "Using_<link_relcanonical>",
+          "title": "Using "
+        },
+        {
+          "id": "Make_your_page_work_for_both",
+          "title": "Make your page work for both"
+        },
+        {
+          "id": "Deciding_the_case",
+          "title": "Deciding the case"
+        },
+        {
+          "id": "See_also",
+          "title": "See also"
+        }
+      ]
+    },
+    {
+      "json_modified": "2017-07-13T02:24:51.543629",
+      "subpages": [],
+      "tags": [
+        "Guide",
+        "Base64",
+        "Intermediate",
+        "URL",
+        "HTTP"
+      ],
+      "locale": "en-US",
+      "translations": [
+        {
+          "uuid": "af2beddc-0d6f-4c06-bc47-b877c0d971c3",
+          "title": "Datos URIs",
+          "url": "/es/docs/Web/HTTP/Basics_of_HTTP/Datos_URIs",
+          "tags": [
+            "Base 64",
+            "Guia",
+            "URI",
+            "URL",
+            "Intermedio"
+          ],
+          "summary": "<strong>Datos URIs</strong>, URLs prefijados con los datos<code>:</code> esquema, permiten a los creadores de contenido incorporar pequeños archivos en linea en los documentos.",
+          "localization_tags": [
+            "inprogress"
+          ],
+          "locale": "es",
+          "last_edit": "2017-01-27T00:42:21.527707",
+          "review_tags": []
+        },
+        {
+          "uuid": "741898cf-ba0b-4617-90fe-c0d631b81f42",
+          "title": "data URIs",
+          "url": "/ja/docs/data_URIs",
+          "tags": [
+            "Guide",
+            "URI",
+            "Base64",
+            "Intermediate",
+            "URL"
+          ],
+          "summary": "<code>data:</code> スキームが先頭についている URL である <strong>data URI</strong> を使うと、コンテンツ製作者は小さなファイルをインラインで文書に埋め込むことができます。",
+          "localization_tags": [],
+          "locale": "ja",
+          "last_edit": "2016-10-04T07:18:52",
+          "review_tags": []
+        },
+        {
+          "uuid": "38bbeb85-963b-4a0b-9f40-685a9ffcf55d",
+          "title": "Data URIs",
+          "url": "/ko/docs/Web/HTTP/Basics_of_HTTP/Data_URIs",
+          "tags": [],
+          "summary": "<strong>Data URIs</strong>, 즉 <code>data:</code> 스킴이 접두어로 붙은 URL은 컨텐츠 작성자가 작은 파일을 문서 내에 인라인으로 임베드할 수 있도록 해줍니다.",
+          "localization_tags": [],
+          "locale": "ko",
+          "last_edit": "2016-12-11T05:58:00.086612",
+          "review_tags": []
+        },
+        {
+          "uuid": "d3c7fd5b-fe20-418e-b14b-3e73fdcf6854",
+          "title": "Data URLs",
+          "url": "/zh-CN/docs/Web/HTTP/data_URIs",
+          "tags": [
+            "HTTP",
+            "Base64",
+            "教程",
+            "URL",
+            "进阶"
+          ],
+          "summary": "<strong>Data URLs</strong>，即为前缀为 <code>data：scheme </code>的URL，其允许内容创建者向文档中嵌入小文件。",
+          "localization_tags": [],
+          "locale": "zh-CN",
+          "last_edit": "2017-07-13T02:24:12.913340",
+          "review_tags": []
+        },
+        {
+          "uuid": "f6b4fc9e-bf0d-4dd8-9fa8-785f0d191af3",
+          "title": "data URIs",
+          "url": "/zh-TW/docs/Web/HTTP/data_URIs",
+          "tags": [
+            "Guide",
+            "Base64",
+            "URI"
+          ],
+          "summary": "<code>data</code> URIs, 由 <a href=\"http://tools.ietf.org/html/rfc2397\" class=\"external\" title=\"http://tools.ietf.org/html/rfc2397\">RFC 2397</a> 文件定義, 允許作者在文件中嵌入檔案.",
+          "localization_tags": [],
+          "locale": "zh-TW",
+          "last_edit": "2017-02-08T11:31:50.686867",
+          "review_tags": []
+        }
+      ],
+      "summary": "<strong>Data URLs</strong>, URLs prefixed with the <code>data:</code> scheme, allow content creators to embed small files inline in documents.",
+      "id": 329,
+      "review_tags": [],
+      "slug": "Web/HTTP/Basics_of_HTTP/Data_URIs",
+      "uuid": "0429e5cd-0704-4dcd-a9e3-c2438c4f1b6c",
+      "title": "Data URLs",
+      "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs",
+      "modified": "2017-06-22T13:23:26.383417",
+      "label": "Data URLs",
+      "localization_tags": [],
+      "last_edit": "2017-06-22T13:23:24.247347",
+      "sections": [
+        {
+          "id": "Quick_Links",
+          "title": null
+        },
+        {
+          "id": "Syntax",
+          "title": "Syntax"
+        },
+        {
+          "id": "Encoding_data_into_base64_format",
+          "title": "Encoding data into base64 format"
+        },
+        {
+          "id": "In_a_Web_page_using_JavaScript",
+          "title": "In a Web page, using JavaScript"
+        },
+        {
+          "id": "Common_problems",
+          "title": "Common problems"
+        },
+        {
+          "id": "Specifications",
+          "title": "Specifications"
+        },
+        {
+          "id": "Browser_compatibility",
+          "title": "Browser compatibility"
+        },
+        {
+          "id": "See_also",
+          "title": "See also"
+        }
+      ]
+    },
+    {
+      "json_modified": "2017-07-10T13:12:04.406733",
+      "subpages": [],
+      "tags": [
+        "Guide",
+        "HTTP"
+      ],
+      "locale": "en-US",
+      "translations": [
+        {
+          "uuid": "594a7018-eb76-415f-a1cb-64a1b92c15db",
+          "title": "Evolution of HTTP",
+          "url": "/es/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP",
+          "tags": [],
+          "summary": "<strong>HTTP</strong> es el protocolo en el que se basa la Web. Fue inventado por Tim Berners-Lee entre los años 1989-1991, HTTP ha visto muchos cambios, manteniendo la mayor parte de su simplicidad y desarrollando su flexibilidad. HTTP ha evolucionado, desde un protocolo destinado al intercambio de archivos en un entorno de un laboratorio semi-seguro, al actual laberinto de Internet, sirviendo ahora para el intercambio de imágenes, vídeos en alta resolución y en 3D.",
+          "localization_tags": [
+            "inprogress"
+          ],
+          "locale": "es",
+          "last_edit": "2017-07-10T13:11:57.877895",
+          "review_tags": []
+        },
+        {
+          "uuid": "6b5cc2f6-791a-416b-88fe-f8acea41ed77",
+          "title": "L'évolution du language HTTP",
+          "url": "/fr/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP",
+          "tags": [],
+          "summary": "<strong>Le language HTTP</strong> est le protocole qui sous-tend le World Wide Web. Il a connu de nombreuses modifications depuis son invention, par Tim Berners-Lee, dans les années 1989-1991. Il a conservé de sa simplicité tout en devenant plus flexible. Du protocole initial qui permettait d'échanger des fichiers dans un environnement de laboratoire plus ou moins fiable, il a évolué dans le sens du labyrinthe moderne qu'est Internet, et transporte désormais des images et vidéos en grande résolution et en 3D.",
+          "localization_tags": [
+            "inprogress"
+          ],
+          "locale": "fr",
+          "last_edit": "2017-07-05T13:56:33.148345",
+          "review_tags": [
+            "technical",
+            "editorial"
+          ]
+        },
+        {
+          "uuid": "8ff7eebb-2892-4a68-9003-4dabb8171933",
+          "title": "HTTP の進化",
+          "url": "/ja/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP",
+          "tags": [
+            "Guide",
+            "HTTP"
+          ],
+          "summary": "<strong>HTTP</strong> は World Wide Web を支えるプロトコルです。Tim Berners-Lee によって 1989-1991 年に発明されれてから、HTTP にはシンプルさのほとんどを維持しながら柔軟性をさらに形作る、多くの変更がみられます。HTTP は初期のいくぶん信頼された研究所の環境内でファイルを交換するプロトコルから、現代のインターネットの迷宮で高解像度や 3D の画像や動画を運ぶプロトコルに進化しました。",
+          "localization_tags": [],
+          "locale": "ja",
+          "last_edit": "2016-09-25T06:27:02",
+          "review_tags": []
+        },
+        {
+          "uuid": "6e02fb06-2032-498e-9be3-300dc191b7a1",
+          "title": "HTTP의 진화",
+          "url": "/ko/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP",
+          "tags": [],
+          "summary": "<strong>HTTP</strong>는 월드 웹의 내재된 프로토콜입니다. Tim Berners-Lee에 의해 1989년부터 1991년에 발명된 HTTP는, 본래의 단순함의 대부분을 지키면서 확장성 위에서 만들어지도록, 많은 수정을 거쳐왔습니다. HTTP는 의사-신뢰도가 있는 실험실 환경에서 파일을 교환하는 프로토콜에서 높은 수준의 분석과 3D 내에서 이미지와 비디오를 실어나르는 현대 인터넷 정글로 진화해 왔습니다.",
+          "localization_tags": [
+            "inprogress"
+          ],
+          "locale": "ko",
+          "last_edit": "2016-12-28T20:20:51.646030",
+          "review_tags": []
+        },
+        {
+          "uuid": "5ccd7c6b-ec90-49f3-a199-d3268f788e0e",
+          "title": "Evolution of HTTP",
+          "url": "/ru/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP",
+          "tags": [
+            "HTTP",
+            "Руководство"
+          ],
+          "summary": "<strong>HTTP</strong> is the underlying protocol of the World Wide Web. Invented by Tim Berners-Lee in the years 1989-1991, HTTP has seen many changes, keeping most of the simplicity and further shaping its flexibility. HTTP has evolved, from an early protocol to exchange files in a semi-trusted laboratory environment, to the modern maze of the Internet, now carrying images, videos in high resolution and 3D.",
+          "localization_tags": [
+            "inprogress"
+          ],
+          "locale": "ru",
+          "last_edit": "2016-10-18T06:53:49",
+          "review_tags": []
+        },
+        {
+          "uuid": "0c9e7ddd-9c81-4617-8e53-87eddcf77a81",
+          "title": "HTTP的发展",
+          "url": "/zh-CN/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP",
+          "tags": [],
+          "summary": "<strong>HTTP</strong>是<strong>WWW</strong>的基础协议。Tim Berners-Lee在1989-1991年创建了它，HTTP已经发生了许多变化，保持了大部分的简单性，并进一步塑造了其灵活性。HTTP已经从一个早期的协议逐步进化成在实验环境下交换文件的协议，再进化到携带图片，高分辨率视频和3D的现代复杂互联网的协议。",
+          "localization_tags": [
+            "inprogress"
+          ],
+          "locale": "zh-CN",
+          "last_edit": "2017-07-08T05:28:19.441607",
+          "review_tags": []
+        }
+      ],
+      "summary": "<strong>HTTP</strong> is the underlying protocol of the World Wide Web. Invented by Tim Berners-Lee in the years 1989-1991, HTTP has seen many changes, keeping most of the simplicity and further shaping its flexibility. HTTP has evolved, from an early protocol to exchange files in a semi-trusted laboratory environment, to the modern maze of the Internet, now carrying images, videos in high resolution and 3D.",
+      "id": 188953,
+      "review_tags": [],
+      "slug": "Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP",
+      "uuid": "6a087df4-d445-4e14-b953-25cb1c5c3131",
+      "title": "Evolution of HTTP",
+      "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP",
+      "modified": "2017-03-09T15:28:27.221583",
+      "label": "Evolution of HTTP",
+      "localization_tags": [],
+      "last_edit": "2017-03-09T15:28:25.077414",
+      "sections": [
+        {
+          "id": "Quick_Links",
+          "title": null
+        },
+        {
+          "id": "Invention_of_the_World_Wide_Web",
+          "title": "Invention of the World Wide Web"
+        },
+        {
+          "id": "HTTP0.9_–_The_one-line_protocol",
+          "title": "HTTP/0.9 – The one-line protocol"
+        },
+        {
+          "id": "HTTP1.0_–_Building_extensibility",
+          "title": "HTTP/1.0 – Building extensibility"
+        },
+        {
+          "id": "HTTP1.1_–_The_standardized_protocol",
+          "title": "HTTP/1.1 – The standardized protocol"
+        },
+        {
+          "id": "More_than_15_years_of_extensions",
+          "title": "More than 15 years of extensions"
+        },
+        {
+          "id": "Using_HTTP_for_secure_transmissions",
+          "title": "Using HTTP for secure transmissions"
+        },
+        {
+          "id": "Using_HTTP_for_complex_applications",
+          "title": "Using HTTP for complex applications"
+        },
+        {
+          "id": "Relaxing_the_security-model_of_the_Web",
+          "title": "Relaxing the security-model of the Web"
+        },
+        {
+          "id": "HTTP2_–_A_protocol_for_greater_performance",
+          "title": "HTTP/2 – A protocol for greater performance"
+        },
+        {
+          "id": "Post-HTTP2_evolution",
+          "title": "Post-HTTP/2 evolution"
+        }
+      ]
+    },
+    {
+      "json_modified": "2017-07-06T13:03:52.553487",
+      "subpages": [],
+      "tags": [
+        "HTTP"
+      ],
+      "locale": "en-US",
+      "translations": [
+        {
+          "uuid": "44d38ffc-6428-4ded-b1bc-35c5e2150dbe",
+          "title": "Identificación de recursos web",
+          "url": "/es/docs/Web/HTTP/Basics_of_HTTP/Identificaci%C3%B3n_recursos_en_la_Web",
+          "tags": [],
+          "summary": "El objetivo de una petición HTTP es llamada \"recurso\", de manera natural no se encuentre definido; puede ser un documento, una foto, o cualquier otro. Cada recurso es identificado por un Identificador Uniforme de Recursos(<a href=\"/en-US/docs/Glossary/URI\" class=\"glossaryLink\" title=\"URI: A URI (Uniform Resource Identifier) is a string that refers to a resource. The most common are URLs, which identify the resource by giving its location on the Web. URNs, by contrast, refer to a resource by a name, in a given namespace, e.g. the ISBN of a book.\">URI</a>) utilizado a través de HTTP para la identificación de recursos.",
+          "localization_tags": [
+            "inprogress"
+          ],
+          "locale": "es",
+          "last_edit": "2017-07-06T13:03:46.853539",
+          "review_tags": []
+        },
+        {
+          "uuid": "a9a326c1-dae7-4535-96d4-04ff0548e143",
+          "title": "ウェブ上のリソースを特定する",
+          "url": "/ja/docs/Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web",
+          "tags": [
+            "HTTP"
+          ],
+          "summary": "HTTP リクエストの対象は \"リソース\" と呼ばれ、その本質は細かく定義されていません。ドキュメント、写真、その他の何にでもなりえます。それぞれのリソースは、リソースを特定するために HTTP の至るところで使用される Uniform Resource Identifier (<a class=\"glossaryLink\" href=\"/ja/docs/Glossary/URI\" title=\"&#x3053;&#x306E;&#x7528;&#x8A9E; (URI) &#x306E;&#x5B9A;&#x7FA9;&#x306F;&#x307E;&#x3060;&#x66F8;&#x304B;&#x308C;&#x3066;&#x3044;&#x307E;&#x305B;&#x3093;&#x3002;&#x305C;&#x3072;&#x3054;&#x5BC4;&#x7A3F;&#x304F;&#x3060;&#x3055;&#x3044;&#xFF01;\">URI</a>) で特定されます。",
+          "localization_tags": [],
+          "locale": "ja",
+          "last_edit": "2016-10-03T08:36:20",
+          "review_tags": []
+        },
+        {
+          "uuid": "8ad7bfa1-6382-4db1-a2f2-1433f37b2d55",
+          "title": "웹 리소스 식별",
+          "url": "/ko/docs/Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web",
+          "tags": [],
+          "summary": "HTTP 요청 대상을 \"리소스\"라고 부르는데, 그에 대한 본질을 이 이상으로 정의할 수 없습니다; 그것은 문서, 사진 또는 다른 어떤 것이든 될 수 있습니다. 각 리소스는 리소스 식별을 위해 HTTP 전체에서 사용되는 Uniform Resource Identifier (<a class=\"glossaryLink\" href=\"/en-US/docs/Glossary/URI\" title=\"URI: A URI (Uniform Resource Identifier) is a string that refers to a resource. The most common are URLs, which identify the resource by giving its location on the Web. URNs, by contrast, refer to a resource by a name, in a given namespace, e.g. the ISBN of a book.\">URI</a>)에 의해 식별됩니다.",
+          "localization_tags": [],
+          "locale": "ko",
+          "last_edit": "2016-12-10T23:57:38.544716",
+          "review_tags": []
+        },
+        {
+          "uuid": "e096fbd0-a6f3-4152-b987-5f72c677aa03",
+          "title": "标识互联网上的内容",
+          "url": "/zh-CN/docs/Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web",
+          "tags": [
+            "HTTP",
+            "URI"
+          ],
+          "summary": "HTTP 请求的内容通称为\"资源\"。”资源“这一概念非常宽泛，它可以是一份文档，一张图片，或所有其他你能够想到的格式。每个资源都由一个 (<a href=\"/en-US/docs/Glossary/URI\" class=\"glossaryLink\" title=\"URI: A URI (Uniform Resource Identifier) is a string that refers to a resource. The most common are URLs, which identify the resource by giving its location on the Web. URNs, by contrast, refer to a resource by a name, in a given namespace, e.g. the ISBN of a book.\">URI</a>) 来进行标识。",
+          "localization_tags": [],
+          "locale": "zh-CN",
+          "last_edit": "2017-06-30T05:55:26.043651",
+          "review_tags": []
+        }
+      ],
+      "summary": "The target of an HTTP request is called a \"resource\", which nature isn't defined further; it can be a document, a photo, or anything else. Each resource is identified by a Uniform Resource Identifier (<a title=\"URI: A URI (Uniform Resource Identifier) is a string that refers to a resource. The most common are URLs, which identify the resource by giving its location on the Web. URNs, by contrast, refer to a resource by a name, in a given namespace, e.g. the ISBN of a book.\" class=\"glossaryLink\" href=\"/en-US/docs/Glossary/URI\">URI</a>) used throughout HTTP for identifying resources.",
+      "id": 192319,
+      "review_tags": [],
+      "slug": "Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web",
+      "uuid": "cff29d64-ceaa-4b6d-9c32-ab4b6e9beccb",
+      "title": "Identifying resources on the Web",
+      "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web",
+      "modified": "2017-05-15T05:04:20.538664",
+      "label": "Identifying resources on the Web",
+      "localization_tags": [],
+      "last_edit": "2017-05-15T05:04:18.377924",
+      "sections": [
+        {
+          "id": "Quick_Links",
+          "title": null
+        },
+        {
+          "id": "URLs_and_URNs",
+          "title": "URLs and URNs"
+        },
+        {
+          "id": "URLs",
+          "title": "URLs"
+        },
+        {
+          "id": "URNs",
+          "title": "URNs"
+        },
+        {
+          "id": "Syntax_of_Uniform_Resource_Identifiers_(URIs)",
+          "title": "Syntax of Uniform Resource Identifiers (URIs)"
+        },
+        {
+          "id": "Scheme_or_protocol",
+          "title": "Scheme or protocol"
+        },
+        {
+          "id": "Authority",
+          "title": "Authority"
+        },
+        {
+          "id": "Port",
+          "title": "Port"
+        },
+        {
+          "id": "Path",
+          "title": "Path"
+        },
+        {
+          "id": "Query",
+          "title": "Query"
+        },
+        {
+          "id": "Fragment",
+          "title": "Fragment"
+        },
+        {
+          "id": "Examples",
+          "title": "Examples"
+        },
+        {
+          "id": "Specifications",
+          "title": "Specifications"
+        },
+        {
+          "id": "See_also",
+          "title": "See also"
+        }
+      ]
+    },
+    {
+      "json_modified": "2017-06-21T02:58:59.547553",
+      "subpages": [],
+      "tags": [
+        "Guide",
+        "HTTP"
+      ],
+      "locale": "en-US",
+      "translations": [
+        {
+          "uuid": "88b8100b-9e87-4d03-9353-53c48ff50d54",
+          "title": "MIME types",
+          "url": "/es/docs/Web/HTTP/Basics_of_HTTP/MIME_types",
+          "tags": [
+            "Guide",
+            "TopicStub",
+            "HTTP",
+            "NeedsTranslation"
+          ],
+          "summary": "The <strong>MIME type</strong> is the mechanism to tell the client the variety of document transmitted: the extension of a file name has no meaning on the web. It is, therefore, important that the server is correctly set up, so that the correct MIME type is transmitted with each document. Browsers often use the MIME-type to determine what default action to do when a resource is fetched.",
+          "localization_tags": [
+            "inprogress"
+          ],
+          "locale": "es",
+          "last_edit": "2016-09-12T13:25:52",
+          "review_tags": []
+        },
+        {
+          "uuid": "88b8100b-9e87-4d03-9353-53c48ff50d54",
+          "title": "MIME types",
+          "url": "/fr/docs/Web/HTTP/Basics_of_HTTP/MIME_types",
+          "tags": [
+            "Guide",
+            "TopicStub",
+            "HTTP",
+            "NeedsTranslation"
+          ],
+          "summary": "The <strong>MIME type</strong> is the mechanism to tell the client the variety of document transmitted: the extension of a file name has no meaning on the web. It is, therefore, important that the server is correctly set up, so that the correct MIME type is transmitted with each document. Browsers often use the MIME-type to determine what default action to do when a resource is fetched.",
+          "localization_tags": [
+            "inprogress"
+          ],
+          "locale": "fr",
+          "last_edit": "2016-09-12T13:25:52",
+          "review_tags": []
+        },
+        {
+          "uuid": "8d138238-8711-4eb2-b294-0377881c66da",
+          "title": "MIME タイプ",
+          "url": "/ja/docs/Web/HTTP/Basics_of_HTTP/MIME_types",
+          "tags": [
+            "Guide",
+            "HTTP"
+          ],
+          "summary": "<strong>MIME タイプ</strong>はクライアントに対して、転送するドキュメントの種類を伝える機能です。ウェブにおいて、ファイル名の拡張子は意味を持ちません。従って、サーバーはそれぞれのドキュメントと共に正しい MIME タイプを転送するよう適切に設定することが重要です。ブラウザーはたいてい MIME タイプを、読み込んだリソースに対して行う既定のアクションを決めるために使用します。",
+          "localization_tags": [],
+          "locale": "ja",
+          "last_edit": "2016-10-09T08:47:01",
+          "review_tags": []
+        },
+        {
+          "uuid": "78755419-5ef9-43d8-b173-c55752b99a83",
+          "title": "MIME 타입",
+          "url": "/ko/docs/Web/HTTP/Basics_of_HTTP/MIME_types",
+          "tags": [],
+          "summary": "<strong>MIME 타입</strong>이란 클라이언트에게 전송된 문서의 다양성을 알려주기 위한 메커니즘입니다: 웹에서 파일의 확장자는 별  의미가 없습니다. 그러므로, 각 문서와 함께 올바른 MIME 타입을 전송하도록, 서버가 정확히 설정하는 것이 중요합니다. 브라라우저들은 리소스를 내려받았을 때 해야 할 기본 동작이 무엇인지를 결정하기 위해 대게 MIME 타입을 사용합니다.",
+          "localization_tags": [],
+          "locale": "ko",
+          "last_edit": "2016-09-26T09:36:23",
+          "review_tags": []
+        },
+        {
+          "uuid": "f71fb51d-90b9-4b14-8e00-6dc067b86331",
+          "title": "MIME types",
+          "url": "/pt-BR/docs/Web/HTTP/Basico_sobre_HTTP/MIME_types",
+          "tags": [],
+          "summary": "O <strong>MIME type </strong>é o mecanismo para dizer ao cliente a variedade de documentos transmitidos: a extensão de um nome de arquivo não tem significado na web. Portanto, é importante que o servidor esteja configurado corretamente, de modo que o <em>MIME-type</em> correto seja transmitido com cada documento. Os navegadores costumam usar o <em>MIME-type</em> para determinar qual ação usar como padrão para fazer quando um recurso é obtido.",
+          "localization_tags": [
+            "inprogress"
+          ],
+          "locale": "pt-BR",
+          "last_edit": "2017-05-28T12:19:04.610437",
+          "review_tags": []
+        },
+        {
+          "uuid": "ec434c25-fb88-419e-afa3-91e5fb20c279",
+          "title": "MIME 类型",
+          "url": "/zh-CN/docs/Web/HTTP/Basics_of_HTTP/MIME_types",
+          "tags": [
+            "MIME类型",
+            "HTTP"
+          ],
+          "summary": "<strong>MIME类型</strong>是一种通知客户端其接收文件的多样性的机制:文件后缀名在网页上并没有明确的意义。因此，使服务器设置正确的传输类型非常重要，所以正确的MIME类型与每个文件一同传输给服务器。在网络资源进行连接时，浏览器经常使用MIME类型来决定执行何种默认行为。",
+          "localization_tags": [],
+          "locale": "zh-CN",
+          "last_edit": "2017-06-21T02:58:53.468292",
+          "review_tags": [
+            "editorial"
+          ]
+        }
+      ],
+      "summary": "The <strong>MIME type</strong> is the mechanism to tell the client the variety of document transmitted: the extension of a file name has no meaning on the web. It is, therefore, important that the server is correctly set up, so that the correct MIME type is transmitted with each document. Browsers often use the MIME-type to determine what default action to do when a resource is fetched.",
+      "id": 189053,
+      "review_tags": [
+        "editorial"
+      ],
+      "slug": "Web/HTTP/Basics_of_HTTP/MIME_types",
+      "uuid": "88b8100b-9e87-4d03-9353-53c48ff50d54",
+      "title": "MIME types",
+      "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types",
+      "modified": "2017-05-17T11:54:17.464901",
+      "label": "MIME types",
+      "localization_tags": [],
+      "last_edit": "2017-05-17T11:54:14.794113",
+      "sections": [
+        {
+          "id": "Quick_Links",
+          "title": null
+        },
+        {
+          "id": "Syntax",
+          "title": "Syntax"
+        },
+        {
+          "id": "General_structure",
+          "title": "General structure"
+        },
+        {
+          "id": "Discrete_types",
+          "title": "Discrete types"
+        },
+        {
+          "id": "Multipart_types",
+          "title": "Multipart types"
+        },
+        {
+          "id": "Important_MIME_types_for_Web_developers",
+          "title": "Important MIME types for Web developers"
+        },
+        {
+          "id": "applicationoctet-stream",
+          "title": null
+        },
+        {
+          "id": "textplain",
+          "title": null
+        },
+        {
+          "id": "textcss",
+          "title": null
+        },
+        {
+          "id": "texthtml",
+          "title": null
+        },
+        {
+          "id": "Images_types",
+          "title": "Images types"
+        },
+        {
+          "id": "Audio_and_video_types",
+          "title": "Audio and video types"
+        },
+        {
+          "id": "multipartform-data",
+          "title": null
+        },
+        {
+          "id": "multipartbyteranges",
+          "title": null
+        },
+        {
+          "id": "Importance_of_setting_the_correct_MIME_type",
+          "title": "Importance of setting the correct MIME type"
+        },
+        {
+          "id": "MIME_sniffing",
+          "title": "MIME sniffing"
+        },
+        {
+          "id": "See_also",
+          "title": "See also"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "HTTP",
+    "Overview"
+  ],
+  "locale": "en-US",
+  "translations": [
+    {
+      "uuid": "579a7d0a-8b01-4257-a067-3a0098eb0798",
+      "title": "Conceptos básicos de HTTP",
+      "url": "/es/docs/Web/HTTP/Basics_of_HTTP",
+      "tags": [
+        "TopicStub",
+        "HTTP",
+        "Overview",
+        "NeedsTranslation"
+      ],
+      "summary": "El protocolo HTTP es un protocolo ampliable, es decir se puede añadir \"vocabulario\". HTTP está basado en unos pocos conceptos básicos como el concepto de recursos y URIs, una estructura sencilla de mensajes, y una arquitectura de cliente-servidor para ordenar el flujo de las comunicaciones. A demás de estos conceptos, a lo largo de su desarrollo han aparecido otros nuevos y se han añadido funcionalidades y reglas semánticas, creando nuevos métodos y cabeceras.",
+      "localization_tags": [
+        "inprogress"
+      ],
+      "locale": "es",
+      "last_edit": "2017-07-02T21:56:37.330543",
+      "review_tags": []
+    },
+    {
+      "uuid": "579a7d0a-8b01-4257-a067-3a0098eb0798",
+      "title": "Basics of HTTP",
+      "url": "/fr/docs/Web/HTTP/Basics_of_HTTP",
+      "tags": [
+        "TopicStub",
+        "HTTP",
+        "Overview",
+        "NeedsTranslation"
+      ],
+      "summary": "HTTP is a pretty extensible protocol. It relies on a few basics concepts like the notion of resources and URIs, a simple structure of messages, and a client-server structure for the communication flow. On top of these basics concepts, numerous extensions have appeared over the years, adding new functionality and new semantics by creating new HTTP methods or headers.",
+      "localization_tags": [
+        "inprogress"
+      ],
+      "locale": "fr",
+      "last_edit": "2016-09-08T20:43:34",
+      "review_tags": []
+    },
+    {
+      "uuid": "579a7d0a-8b01-4257-a067-3a0098eb0798",
+      "title": "Basics of HTTP",
+      "url": "/ja/docs/Web/HTTP/Basics_of_HTTP",
+      "tags": [
+        "TopicStub",
+        "HTTP",
+        "Overview",
+        "NeedsTranslation"
+      ],
+      "summary": "HTTP is a pretty extensible protocol. It relies on a few basics concepts like the notion of resources and URIs, a simple structure of messages, and a client-server structure for the communication flow. On top of these basics concepts, numerous extensions have appeared over the years, adding new functionality and new semantics by creating new HTTP methods or headers.",
+      "localization_tags": [
+        "inprogress"
+      ],
+      "locale": "ja",
+      "last_edit": "2016-09-08T20:43:34",
+      "review_tags": []
+    },
+    {
+      "uuid": "579a7d0a-8b01-4257-a067-3a0098eb0798",
+      "title": "Basics of HTTP",
+      "url": "/ko/docs/Web/HTTP/Basics_of_HTTP",
+      "tags": [
+        "TopicStub",
+        "HTTP",
+        "Overview",
+        "NeedsTranslation"
+      ],
+      "summary": "HTTP is a pretty extensible protocol. It relies on a few basics concepts like the notion of resources and URIs, a simple structure of messages, and a client-server structure for the communication flow. On top of these basics concepts, numerous extensions have appeared over the years, adding new functionality and new semantics by creating new HTTP methods or headers.",
+      "localization_tags": [
+        "inprogress"
+      ],
+      "locale": "ko",
+      "last_edit": "2016-08-12T04:29:34",
+      "review_tags": []
+    },
+    {
+      "uuid": "4c1568bd-c5a6-451e-bd6d-ddafcebfa4f6",
+      "title": "Básico sobre HTTP",
+      "url": "/pt-BR/docs/Web/HTTP/Basico_sobre_HTTP",
+      "tags": [],
+      "summary": "HTTP é um protocolo bem extensivo. Isso depende um pouco do conceito básico com noção de recursos e URIs, uma simples estrutura de mensagens, e uma estrutura de cliente-servidor para a comunicação ocorrer. Em cima destes conceitos básicos, várias versões surgiram ao longo do tempo, adicionando novas funcionalidades e novas semanticas para criar novo metohos HTTP ou cabeçalhos. the most adequate response",
+      "localization_tags": [],
+      "locale": "pt-BR",
+      "last_edit": "2017-03-08T21:53:54.258318",
+      "review_tags": []
+    },
+    {
+      "uuid": "579a7d0a-8b01-4257-a067-3a0098eb0798",
+      "title": "Basics of HTTP",
+      "url": "/ru/docs/Web/HTTP/Basics_of_HTTP",
+      "tags": [
+        "TopicStub",
+        "HTTP",
+        "Overview",
+        "NeedsTranslation"
+      ],
+      "summary": "HTTP is a pretty extensible protocol. It relies on a few basics concepts like the notion of resources and URIs, a simple structure of messages, and a client-server structure for the communication flow. On top of these basics concepts, numerous extensions have appeared over the years, adding new functionality and new semantics by creating new HTTP methods or headers.",
+      "localization_tags": [
+        "inprogress"
+      ],
+      "locale": "ru",
+      "last_edit": "2016-09-08T20:43:34",
+      "review_tags": []
+    },
+    {
+      "uuid": "f2b4286e-4db3-476f-948d-96517ad98da0",
+      "title": "HTTP 基础",
+      "url": "/zh-CN/docs/Web/HTTP/Basics_of_HTTP",
+      "tags": [
+        "概览",
+        "HTTP"
+      ],
+      "summary": "HTTP 是一个拓展性非常好的协议. 它构建在以下基础之上: 一些像资源或是 URI 这样的基本概念, 一个简单的消息结构, 一个客户端-服务器结构的通信流. 在这些基础概念之上, 近年来已经出现了许多拓展, 以增加新的 HTTP 方法或首部的方式为 HTTP 协议增加了新的功能和语义.",
+      "localization_tags": [
+        "inprogress"
+      ],
+      "locale": "zh-CN",
+      "last_edit": "2017-04-26T20:04:37.343007",
+      "review_tags": [
+        "technical",
+        "editorial"
+      ]
+    }
+  ],
+  "summary": "HTTP is a pretty extensible protocol. It relies on a few basics concepts like the notion of resources and URIs, a simple structure of messages, and a client-server structure for the communication flow. On top of these basics concepts, numerous extensions have appeared over the years, adding new functionality and new semantics by creating new HTTP methods or headers.",
+  "id": 189027,
+  "review_tags": [],
+  "slug": "Web/HTTP/Basics_of_HTTP",
+  "uuid": "579a7d0a-8b01-4257-a067-3a0098eb0798",
+  "title": "Basics of HTTP",
+  "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP",
+  "modified": "2016-12-13T09:12:47.420798",
+  "label": "Basics of HTTP",
+  "localization_tags": [],
+  "last_edit": "2016-09-08T20:43:34",
+  "sections": [
+    {
+      "id": "Quick_Links",
+      "title": null
+    },
+    {
+      "id": "Articles",
+      "title": "Articles"
+    }
+  ]
+}

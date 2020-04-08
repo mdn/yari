@@ -1,14 +1,18 @@
 const fs = require("fs");
 const path = require("path");
+const nodeUrl = require("url");
 const crypto = require("crypto");
 const childProcess = require("child_process");
 const { performance } = require("perf_hooks");
 
+const got = require("got");
 const chalk = require("chalk");
 const yaml = require("js-yaml");
 const sanitizeFilename = require("sanitize-filename");
 const chokidar = require("chokidar");
 const WebSocket = require("ws");
+const { HtmlDiffer } = require("html-differ");
+const htmlDifferlogger = require("html-differ/lib/logger");
 // XXX does this work on Windows?
 const packageJson = require("../../package.json");
 
@@ -21,8 +25,14 @@ const {
   extractDocumentSections,
   extractSidebar,
 } = require("./document-extractor");
-const { VALID_LOCALES } = require("./constants");
+const { BUILD_TIMEOUT, VALID_LOCALES } = require("./constants");
 const { slugToFoldername } = require("./utils");
+const { timeout } = require("./promise-timeout.js");
+
+const renderMacros = require("kumascript");
+
+const MAX_OPEN_FILES = 256;
+const htmlDiffer = new HtmlDiffer();
 
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
@@ -202,7 +212,7 @@ function broadcastWebsocketMessage(msg) {
   // console.log(`Sent to ${i} open clients`);
 }
 
-function runBuild(sources, options, logger) {
+async function runBuild(sources, options, logger) {
   const builder = new Builder(sources, options, logger);
 
   if (options.listLocales) {
@@ -310,134 +320,161 @@ class Builder {
     }
   }
 
-  start({ specificFolders = null } = {}) {
+  async start({ specificFolders = null } = {}) {
     // This prepares this.selfHash so that when we build files, we can
     // write down which "self hash" was used at the time.
+    const self = this;
     if (specificFolders) {
       // Check that they all exist and are folders
       const allProcessed = [];
-      specificFolders.forEach((folder) => {
-        if (!fs.existsSync(folder)) {
-          throw new Error(`${folder} does not exist`);
-        }
-        if (!fs.statSync(folder).isDirectory()) {
-          throw new Error(`${folder} is not a directory`);
-        }
 
-        const source = this.sources.entries().find((source) => {
-          return folder.startsWith(source.filepath);
-        });
-        if (!source) {
-          throw new Error(`Unable to find the source based on ${folder}`);
-        }
+      await Promise.all(
+        specificFolders.map(async (folder) => {
+          if (!fs.existsSync(folder)) {
+            throw new Error(`${folder} does not exist`);
+          }
+          if (!fs.statSync(folder).isDirectory()) {
+            throw new Error(`${folder} is not a directory`);
+          }
 
-        let processed;
-        try {
-          processed = this.processFolder(source, folder);
-        } catch (err) {
-          // If a crash happens inside processFolder it's hard to debug
-          // if you don't know which files/folders caused it. So inject
-          // some logging of that before throwing.
-          console.error(chalk.yellow(`Error happened processing: ${folder}`));
+          const source = self.sources.entries().find((source) => {
+            return folder.startsWith(source.filepath);
+          });
+          if (!source) {
+            throw new Error(`Unable to find the source based on ${folder}`);
+          }
 
-          // XXX need to decide what to do with errors.
-          // We could increment a counter and dump all errors to a log file.
-          throw err;
-        }
-        allProcessed.push(processed);
-      });
+          let processed;
+          try {
+            processed = await timeout(
+              self.processFolder(source, folder),
+              BUILD_TIMEOUT,
+              folder
+            );
+          } catch (err) {
+            // If a crash happens inside processFolder it's hard to debug
+            // if you don't know which files/folders caused it. So inject
+            // some logging of that before throwing.
+            self.logger.error(
+              chalk.red(`Error happened processing: ${folder}`)
+            );
+            self.logger.error(err);
+            // XXX need to decide what to do with errors.
+            // We could increment a counter and dump all errors to a log file.
+            throw err;
+          }
+          allProcessed.push(processed);
+        })
+      );
+
       return allProcessed;
-    } else {
-      this.describeActiveSources();
-      this.describeActiveFilters();
-
-      // To be able to make a progress bar we need to first count what we're
-      // going to need to do.
-      if (this.progressBar) {
-        const countTodo = this.sources
-          .entries()
-          .map((source) => this.countLocaleFolders(source))
-          .map((m) => Array.from(m.values()).reduce((a, b) => a + b))
-          .reduce((a, b) => a + b);
-        if (!countTodo) {
-          throw new Error("No folders found to process!");
-        }
-        this.initProgressbar(countTodo);
-      }
-
-      let total = 0;
-
-      // Record of counts of all results
-      const counts = {};
-      Object.values(processing).forEach((key) => {
-        counts[key] = 0;
-      });
-
-      // Start the real processing
-      const t0 = new Date();
-      for (const { source, locFolder, folder, files } of this.walkSources()) {
-        if (this.excludeFolder(source, folder, locFolder, files)) {
-          // If the folder was a Stumptown folder, what we're
-          // actually excluding is all the .json files in the folder.
-          if (source.isStumptown) {
-            counts[processing.EXCLUDED] += files.filter((n) =>
-              n.endsWith(".json")
-            ).length;
-          } else {
-            counts[processing.EXCLUDED]++;
-          }
-          continue;
-        }
-
-        if (source.isStumptown) {
-          // In the case of stumptown, one folder will have multiple
-          // files with each representing a document.
-          for (const filename of files.filter((n) => n.endsWith(".json"))) {
-            const filepath = path.join(folder, filename);
-            let processed;
-            try {
-              processed = this.processStumptownFile(source, filepath);
-            } catch (err) {
-              // If a crash happens inside processStumptownFile it's hard
-              // to debug if you don't know which files/folders caused it.
-              // So inject some logging of that before throwing.
-              this.logger.error(
-                chalk.yellow(`Error happened processing: ${filepath}`)
-              );
-              throw err;
-            }
-            const { result, file } = processed;
-            this.printProcessing(result, file);
-            counts[result]++;
-            this.tickProgressbar(++total);
-          }
-          continue;
-        }
-
-        let processed;
-        try {
-          processed = this.processFolder(source, folder);
-        } catch (err) {
-          // If a crash happens inside processFolder it's hard to debug
-          // if you don't know which files/folders caused it. So inject
-          // some logging of that before throwing.
-          console.error(chalk.yellow(`Error happened processing: ${folder}`));
-
-          // XXX need to decide what to do with errors.
-          // We could increment a counter and dump all errors to a log file.
-          throw err;
-        }
-        const { result, file } = processed;
-        this.printProcessing(result, file);
-        counts[result]++;
-        this.tickProgressbar(++total);
-      }
-      const t1 = new Date();
-
-      this.dumpAllURLs();
-
-      this.summorizeResults(counts, t1 - t0);
     }
+
+    self.describeActiveSources();
+    self.describeActiveFilters();
+
+    // To be able to make a progress bar we need to first count what we're
+    // going to need to do.
+    if (self.progressBar) {
+      const countTodo = self.sources
+        .entries()
+        .map((source) => self.countLocaleFolders(source))
+        .map((m) => Array.from(m.values()).reduce((a, b) => a + b))
+        .reduce((a, b) => a + b);
+      if (!countTodo) {
+        throw new Error("No folders found to process!");
+      }
+      self.initProgressbar(countTodo);
+    }
+
+    let total = 0;
+
+    // Record of counts of all results
+    const counts = {};
+    Object.values(processing).forEach((key) => {
+      counts[key] = 0;
+    });
+
+    async function processAndTrackFolder(source, folder) {
+      let processed;
+      try {
+        processed = await timeout(
+          self.processFolder(source, folder),
+          BUILD_TIMEOUT,
+          folder
+        );
+      } catch (err) {
+        // If a crash happens inside processFolder it's hard to debug
+        // if you don't know which files/folders caused it. So inject
+        // some logging of that before throwing.
+        self.logger.error(chalk.red(`Error happened processing: ${folder}`));
+        self.logger.error(err);
+        // XXX need to decide what to do with errors.
+        // We could increment a counter and dump all errors to a log file.
+        throw err;
+      }
+      const { result, file } = processed;
+      self.printProcessing(result, file);
+      counts[result]++;
+      self.tickProgressbar(++total);
+    }
+
+    // Start the real processing
+    const t0 = new Date();
+    let pendingFolders = 0;
+    const folderProcessingPromises = [];
+
+    for (const { source, localeFolder, folder, files } of self.walkSources()) {
+      if (self.excludeFolder(source, folder, localeFolder, files)) {
+        // If the folder was a Stumptown folder, what we're
+        // actually excluding is all the .json files in the folder.
+        if (source.isStumptown) {
+          counts[processing.EXCLUDED] += files.filter((n) =>
+            n.endsWith(".json")
+          ).length;
+        } else {
+          counts[processing.EXCLUDED]++;
+        }
+        continue;
+      }
+
+      if (source.isStumptown) {
+        // In the case of stumptown, one folder will have multiple
+        // files with each representing a document.
+        for (const filename of files.filter((n) => n.endsWith(".json"))) {
+          const filepath = path.join(folder, filename);
+          let processed;
+          try {
+            processed = self.processStumptownFile(source, filepath);
+          } catch (err) {
+            // If a crash happens inside processStumptownFile it's hard
+            // to debug if you don't know which files/folders caused it.
+            // So inject some logging of that before throwing.
+            self.logger.error(
+              chalk.red(`Error happened processing: ${filepath}`)
+            );
+            self.logger.error(err);
+            throw err;
+          }
+          const { result, file } = processed;
+          self.printProcessing(result, file);
+          counts[result]++;
+          self.tickProgressbar(++total);
+        }
+      } else {
+        while (pendingFolders > MAX_OPEN_FILES) {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        }
+        pendingFolders++;
+        folderProcessingPromises.push(
+          processAndTrackFolder(source, folder).finally(() => pendingFolders--)
+        );
+      }
+    }
+    await Promise.all(folderProcessingPromises);
+    const t1 = new Date();
+    self.dumpAllURLs();
+    self.summarizeResults(counts, t1 - t0);
   }
 
   ensureAllTitles() {
@@ -613,12 +650,16 @@ class Builder {
     );
   }
 
-  watch() {
-    const onChange = (filepath, source) => {
+  async watch() {
+    const onChange = async (filepath, source) => {
       const folder = path.dirname(filepath);
       this.logger.info(`${chalk.bold("change")} in ${folder}`);
       const t0 = performance.now();
-      const { result, file, doc } = this.processFolder(source, folder);
+      const { result, file, doc } = await timeout(
+        this.processFolder(source, folder),
+        10, // seconds
+        folder
+      );
       const t1 = performance.now();
 
       const tookStr = ppMilliseconds(t1 - t0);
@@ -763,7 +804,7 @@ class Builder {
     return {};
   }
 
-  summorizeResults(counts, took) {
+  summarizeResults(counts, took) {
     console.log("\n");
     console.log(chalk.green("Summary of build:"));
     const totalProcessed = counts[processing.PROCESSED];
@@ -989,7 +1030,35 @@ class Builder {
     return false;
   }
 
-  processFolder(source, folder, config) {
+  async verifyRender(uri, metadata) {
+    // This still needs work, and is tricky. Sometimes, for example,
+    // the rendered HTML from the DB has not actually been rendered
+    // for some time. It's stale and could be different from the
+    // freshly-rendered HTML.
+    const wikiUrl = "https://wiki.developer.mozilla.org";
+    const url = nodeUrl.resolve(wikiUrl, uri);
+    const urlRaw = url + "?raw";
+    const urlExpected = url + "?raw&macros";
+    try {
+      const [responseRaw, responseExpected] = await Promise.all([
+        got(urlRaw),
+        got(urlExpected),
+      ]);
+      if (responseRaw.statusCode == 200 && responseExpected.statusCode == 200) {
+        const rawHtml = responseRaw.body;
+        const expectedHtml = responseExpected.body;
+        const [renderedHtml, errors] = await this.renderHtml(rawHtml, metadata);
+        if (!htmlDiffer.isEqual(expectedHtml, renderedHtml)) {
+          this.logger.error(`\Difference in render: ${uri}`);
+          htmlDifferlogger.logDiffText(
+            htmlDiffer.diffHtml(expectedHtml, renderedHtml)
+          );
+        }
+      }
+    } catch (e) {}
+  }
+
+  async processFolder(source, folder, config) {
     config = config || {};
 
     const hasher = crypto.createHash("md5");
@@ -1043,17 +1112,14 @@ class Builder {
     // like `<--#Compat('foo.bar')--> and then replace it here in the
     // post-processing instead.
 
-    // // REAL
-    // const rawHtml = fs.readFileSync(path.join(folder, "index.html"), "utf8");
-    // hasher.update(rawHtml);
-    // const renderedHtml = this.renderHtml(rawHtml, metadata);
-    // FAKE (NOTE, the docHash check stuff needs to happen BEFORE executing renderHtml)
-    // const rawHtml = fs.readFileSync(path.join(folder, "raw.html"), "utf8");
-    const renderedHtml = fs.readFileSync(
-      path.join(folder, "index.html"),
-      "utf8"
-    );
-    hasher.update(renderedHtml);
+    if (this.options.verifyRenders) {
+      this.verifyRender(mdn_url, metadata);
+    }
+
+    const rawHtml = fs.readFileSync(path.join(folder, "index.html"), "utf8");
+    hasher.update(rawHtml);
+
+    const [renderedHtml, errors] = await this.renderHtml(rawHtml, metadata);
 
     // Now we've read in all the "inputs" needed.
     // Even if there's no hope in hell that we're going to get a catch hit,
@@ -1262,7 +1328,7 @@ class Builder {
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
 
     // XXX Perhaps, if the source of this is from archive, we might
-    // not need to or what to bother with popularity or modified data.
+    // not need or want to bother with popularity or modified data.
     if (fs.existsSync(path.join(folder, "wikihistory.json"))) {
       const wikiMetadataRaw = fs.readFileSync(
         path.join(folder, "wikihistory.json")
@@ -1274,8 +1340,8 @@ class Builder {
     if (this.allTitles.has(mdn_url)) {
       // Already been added by stumptown probably.
       // But, before we exit early, let's update some of the pieces of
-      // information that stumptown might not have, such as last_modified
-      // and parent.
+      // information that stumptown might not have, such as "modified"
+      // and "translation_of".
       if (!this.allTitles.get(mdn_url).modified) {
         this.allTitles.get(mdn_url).modified = metadata.modified;
       }
@@ -1323,8 +1389,20 @@ class Builder {
   }
 
   renderHtml(rawHtml, metadata) {
-    // XXX Ryan! This is where we need that sweet KumaScript action!
-    throw new Error("under construction");
+    // TODO: The "LiveSampleURL" macro uses the "revision_id" attribute of
+    //       the "docEnv" below, but obviously that makes no sense in the world
+    //       of Yari. We need to determine a new way to resolve that macro.
+    const baseURL = "https://developer.mozilla.org";
+    const path = buildMDNUrl(metadata.locale, metadata.slug);
+    const docEnv = {
+      path: path,
+      url: `${baseURL}${path}`,
+      locale: metadata.locale,
+      slug: metadata.slug,
+      tags: metadata.tags || [],
+      selective_mode: false,
+    };
+    return renderMacros(rawHtml, docEnv);
   }
 
   /**
@@ -1367,41 +1445,6 @@ function* walker(root, depth = 0) {
     }
   }
 }
-
-// function extractMacroCalls(text) {
-//   const RECOGNIZED_MACRO_NAMES = ["Compat"];
-
-//   function evaluateMacroArgs(argsString) {
-//     if (argsString.startsWith("{") && argsString.endsWith("}")) {
-//       return JSON.parse(argsString);
-//     }
-//     if (argsString.includes(",")) {
-//       return eval(`[${argsString}]`);
-//     }
-//     // XXX A proper parser instead??
-//     return eval(argsString);
-//   }
-
-//   const calls = {};
-//   /**
-//    * Note that the text can have escaped macros. For example:
-//    *
-//    *    This is how you write a macros: \{{Compat("foo.bar")}}
-//    *
-//    */
-//   const matches = text.matchAll(/[^\\]{{\s*(\w+)\s*\((.*?)\)\s*}}/g);
-//   for (const match of matches) {
-//     const macroName = match[1];
-//     if (RECOGNIZED_MACRO_NAMES.includes(macroName)) {
-//       if (!calls[macroName]) {
-//         calls[macroName] = [];
-//       }
-//       const macroArgs = evaluateMacroArgs(match[2].trim());
-//       calls[macroName].push(macroArgs);
-//     }
-//   }
-//   return calls;
-// }
 
 function ppMilliseconds(ms) {
   // If the number of millseconds is really large, use seconds. Or minutes

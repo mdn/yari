@@ -1,0 +1,3 @@
+This file is here only because we need a directory with no macros
+in it, and if we use a completely empty directory, git will remove
+the directory itself from the repo
