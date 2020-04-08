@@ -1,0 +1,162 @@
+{
+    "api": {
+        "bareFeature": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": "1"
+                    }
+                }
+            },
+            "bareSubFeature": {
+                "__compat": {
+                    "support": {
+                        "firefox": {
+                            "version_added": "1"
+                        }
+                    }
+                }
+            }
+        },
+        "feature_with_description": {
+            "__compat": {
+                "description": "Root feature description",
+                "support": {
+                    "firefox": {
+                        "version_added": "1"
+                    }
+                }
+            },
+            "subFeature_with_description": {
+                "__compat": {
+                    "description": "<code>Interface()</code> constructor",
+                    "support": {
+                        "firefox": {
+                            "version_added": "1"
+                        }
+                    }
+                }
+            }
+        },
+        "feature_with_mdn_url": {
+            "__compat": {
+                "mdn_url": "https://developer.mozilla.org/docs/Web/HTTP/Headers/Content-Security-Policy",
+                "support": {
+                    "firefox": {
+                        "version_added": "1"
+                    }
+                }
+            },
+            "subfeature_with_mdn_url": {
+                "__compat": {
+                    "mdn_url": "https://developer.mozilla.org/docs/Web/HTTP/Headers/Content-Security-Policy/child-src",
+                    "support": {
+                        "firefox": {
+                            "version_added": "1"
+                        }
+                    }
+                }
+            },
+            "subfeature_with_same_mdn_url_and_fragment": {
+                "__compat": {
+                    "mdn_url": "https://developer.mozilla.org/docs/Web/HTTP/Headers/Content-Security-Policy#Directives",
+                    "support": {
+                        "firefox": {
+                            "version_added": "1"
+                        }
+                    }
+                }
+            }
+        },
+        "feature_with_mdn_url_and_description": {
+            "__compat": {
+                "mdn_url": "https://developer.mozilla.org/docs/Web/HTTP/Headers/Content-Security-Policy",
+                "description": "CSP",
+                "support": {
+                    "firefox": {
+                        "version_added": "1"
+                    }
+                }
+            },
+            "subfeature_with_mdn_url_and_description": {
+                "__compat": {
+                    "mdn_url": "https://developer.mozilla.org/docs/Web/HTTP/Headers/Content-Security-Policy/child-src",
+                    "description": "CSP: child-src",
+                    "support": {
+                        "firefox": {
+                            "version_added": "1"
+                        }
+                    }
+                }
+            },
+            "subfeature_with_same_mdn_url_and_fragment": {
+                "__compat": {
+                    "mdn_url": "https://developer.mozilla.org/docs/Web/HTTP/Headers/Content-Security-Policy#Directives",
+                    "description": "CSP Directives",
+                    "support": {
+                        "firefox": {
+                            "version_added": "1"
+                        }
+                    }
+                }
+            }
+        },
+        "experimental_feature": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": "1"
+                    }
+                },
+                "status": {
+                    "experimental": true,
+                    "standard_track": true,
+                    "deprecated": false
+                }
+            },
+            "experimental_non-standard_sub_feature": {
+                "__compat": {
+                    "support": {
+                        "firefox": {
+                            "version_added": "1"
+                        }
+                    },
+                    "status": {
+                        "experimental": true,
+                        "standard_track": false,
+                        "deprecated": false
+                    }
+                }
+            }
+        },
+        "deprecated_feature_with_description": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": "1"
+                    }
+                },
+                "status": {
+                    "experimental": false,
+                    "standard_track": true,
+                    "deprecated": true
+                }
+            },
+            "deprecated_subfeature_with_description": {
+                "__compat": {
+                    "description": "Deprecated syntax",
+                    "support": {
+                        "firefox": {
+                            "version_added": "1"
+                        }
+                    },
+                    "status": {
+                        "experimental": false,
+                        "standard_track": true,
+                        "deprecated": true
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,53 @@
+{
+  "/en-US/docs/Web/API/TestInterface_API/MyGuidePage1": {
+        "locale": "en-US",
+        "translations": [
+            {
+                "title": "A Guide listed in GroupData and also a subpage (ja translation)",
+                "url": "/ja/docs/Web/API/TestInterface_API/MyGuidePage1",
+                "tags": [
+                ],
+                "summary": "The <code><strong>MyGuidePage1</strong></code> ... (ja translation).",
+                "locale": "ja"
+            }
+        ],
+        "summary": "The <code><strong>MyGuidePage1</strong></code> ...",
+        "slug": "Web/API/TestInterface_API/MyGuidePage1",
+        "title": "A Guide listed in GroupData and also a subpage",
+        "url": "/en-US/docs/Web/API/TestInterface_API/MyGuidePage1"
+    },
+    "/en-US/docs/Web/API/TestInterface_API/MyGuidePage2": {
+        "locale": "en-US",
+        "translations": [
+            {
+                "title": "A Guide which is only a subpage (ja translation)",
+                "url": "/ja/docs/Web/API/TestInterface_API/MyGuidePage2",
+                "tags": [
+                ],
+                "summary": "The <code><strong>MyGuidePage2</strong></code> ... (ja translation).",
+                "locale": "ja"
+            }
+        ],
+        "summary": "The <code><strong>MyGuidePage2</strong></code> ...",
+        "slug": "Web/API/TestInterface_API/MyGuidePage2",
+        "title": "A Guide which is only a subpage",
+        "url": "/en-US/docs/Web/API/TestInterface_API/MyGuidePage2"
+    },
+    "/en-US/docs/Web/AnotherPlace/A_guide": {
+        "locale": "en-US",
+        "translations": [
+            {
+                "title": "A Guide in another place (ja translation)",
+                "url": "/ja/docs/Web/AnotherPlace/A_guide",
+                "tags": [
+                ],
+                "summary": "The <code><strong>A_guide</strong></code> ... (ja translation).",
+                "locale": "ja"
+            }
+        ],
+        "summary": "The <code><strong>MyGuidePage2</strong></code> ...",
+        "slug": "Web/API/TestInterface_API/MyGuidePage2",
+        "title": "A Guide in another place",
+        "url": "/en-US/docs/Web/AnotherPlace/A_guide"
+    }
+}

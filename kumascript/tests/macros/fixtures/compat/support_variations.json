@@ -1,0 +1,122 @@
+{
+    "html": {
+        "no_support": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": false
+                    }
+                }
+            }
+        },
+        "unknown_version_support": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": true
+                    }
+                }
+            }
+        },
+        "versioned_support": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": "25"
+                    }
+                }
+            }
+        },
+        "removed_support": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": "25",
+                        "version_removed": "35"
+                    }
+                }
+            }
+        },
+        "removed_support_unknown_start": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": true,
+                        "version_removed": "35"
+                    }
+                }
+            }
+        },
+        "removed_support_unknown_end": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": "25",
+                        "version_removed": true
+                    }
+                }
+            }
+        },
+        "removed_support_unknown_range": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": true,
+                        "version_removed": true
+                    }
+                }
+            }
+        },
+        "partial_versioned_support": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": "25",
+                        "partial_implementation": true
+                    }
+                }
+            }
+        },
+        "partial_unknown_version_support": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": true,
+                        "partial_implementation": true
+                    }
+                }
+            }
+        },
+        "partial_no_support": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": false,
+                        "partial_implementation": true
+                    }
+                }
+            }
+        },
+        "partial_unknown_support": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": null,
+                        "partial_implementation": true
+                    }
+                }
+            }
+        },
+        "partial_removed_support": {
+            "__compat": {
+                "support": {
+                    "firefox": {
+                        "version_added": "25",
+                        "version_removed": "35",
+                        "partial_implementation": true
+                    }
+                }
+            }
+        }
+    }
+}
