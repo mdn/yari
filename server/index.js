@@ -7,16 +7,11 @@ const openEditor = require("open-editor");
 
 const { Builder } = require("content/scripts/build");
 const { Sources } = require("content/scripts/sources");
-// const {
-//   DEFAULT_ROOT,
-//   DEFAULT_DESTINATION
-// } = require("content/scripts/constants.js");
 
 const app = express();
 
 const STATIC_ROOT = path.join(__dirname, "../client/build");
 const CONTENT_ALL_TITLES = path.join(__dirname, "../content/_all-titles.json");
-const CONTENT_ROOT = path.join(__dirname, "../content/files");
 
 // The client/build directory is won't exist at the very very first time
 // you start the server after a fresh git clone.
@@ -46,7 +41,7 @@ const _allRedirects = new Map();
 function getRedirectUrl(uri) {
   if (!_allRedirects.size && process.env.BUILD_ROOT) {
     const contentRoot = normalizeContentPath(process.env.BUILD_ROOT);
-    // They're all in 1 level deep from CONTENT_ROOT
+    // They're all in 1 level deep from the content root
     fs.readdirSync(contentRoot)
       .map((n) => path.join(contentRoot, n))
       .filter((filepath) => fs.statSync(filepath).isDirectory())
@@ -116,7 +111,7 @@ function getOrCreateBuilder() {
         ),
         noSitemaps: true,
         specificFolders: [],
-        buildJsonOnly: true,
+        buildJsonOnly: false,
         locales: [],
         notLocales: [],
         slugsearch: [],
@@ -145,15 +140,34 @@ app.get("/*", async (req, res) => {
     } else {
       res.status(404).send("Not yet");
     }
-  } else if (req.url.endsWith(".json") && req.url.includes("/docs/")) {
-    const redirectUrl = getRedirectUrl(req.url.replace(/\/index\.json$/, ""));
-    if (redirectUrl) {
-      return res.redirect(301, redirectUrl + "/index.json");
+  } else if (req.url.includes("/docs/")) {
+    let lookupUrl = req.url;
+    let extraSuffix = "";
+
+    if (req.url.endsWith("index.json")) {
+      // It's a bit special then.
+      // The URL like me something like
+      // /en-US/docs/HTML/Global_attributes/index.json
+      // and that won't be found in getRedirectUrl() since that doesn't
+      // index things with the '/index.json' suffix. So we need to
+      // temporarily remove it and remember to but it back when we're done.
+      extraSuffix = "/index.json";
+      lookupUrl = lookupUrl.replace(extraSuffix, "");
     }
 
-    const specificFolder = normalizeContentPath(
-      getFolderFromURI(req.url.replace(/\/index\.json$/, ""))
-    );
+    const redirectUrl = getRedirectUrl(lookupUrl);
+    if (redirectUrl) {
+      return res.redirect(301, redirectUrl + extraSuffix);
+    }
+
+    // If it wasn't a redirect, it has to be possible to build!
+    const folderName = getFolderFromURI(lookupUrl);
+    if (!folderName) {
+      return res
+        .status(404)
+        .send(`Can not finder a folder based on ${lookupUrl}`);
+    }
+    const specificFolder = normalizeContentPath(folderName);
 
     // Check that it even makes sense!
     if (specificFolder) {
@@ -168,7 +182,11 @@ app.get("/*", async (req, res) => {
             t1 - t0
           ).toFixed()}ms)`
         );
-        res.sendFile(built[0].jsonFile);
+        if (extraSuffix == "/index.json") {
+          res.sendFile(built[0].jsonFile);
+        } else {
+          res.sendFile(built[0].file);
+        }
       } catch (ex) {
         console.error(ex);
         res.status(500).send(ex.toString());
@@ -179,6 +197,9 @@ app.get("/*", async (req, res) => {
         .send("Page not found. Not a redirect or a real directory");
     }
   } else {
+    // This should really only be expected for "single page apps".
+    // All *documents* should be handled by the
+    // `if (req.url.includes("/docs/"))` test above.
     res.sendFile(path.join(STATIC_ROOT, "/index.html"));
   }
 });
