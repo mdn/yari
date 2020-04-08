@@ -1115,6 +1115,9 @@ class Builder {
         }
       });
     }
+
+    console.log("LOOKING FOR FLAWS IN", doc.title, doc.mdn_url);
+    console.log("AND FOUND...", doc.flaws);
   }
 
   injectSource(source, doc, folder) {

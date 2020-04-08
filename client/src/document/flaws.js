@@ -34,11 +34,14 @@ function BrokenLinks({ urls }) {
       });
     }
   }, [counts]);
+  const urlsAsKeys = Object.keys(counts);
+  urlsAsKeys.sort();
   return (
     <div className="flaw flaw__broken_links">
       <h3>Broken Links</h3>
       <ol>
-        {Object.entries(counts).map(([url, times]) => {
+        {urlsAsKeys.map((url) => {
+          const times = counts[url];
           return (
             <li key={url}>
               <code>{url}</code>{" "}
