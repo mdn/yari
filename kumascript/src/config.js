@@ -21,5 +21,5 @@ module.exports = {
   cacheMegabytes: parseInt(process.env["KUMASCRIPT_CACHE_MEGABYTES"]) || 200,
 
   // This is something that is configurable only for tests
-  macrosDirectory: path.normalize(`${__dirname}/../macros/`)
+  macrosDirectory: path.normalize(`${__dirname}/../macros/`),
 };

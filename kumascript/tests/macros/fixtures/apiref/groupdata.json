@@ -1,10 +1,10 @@
 [
-    {
-        "TestInterface": {
-            "overview":   [ "TestInterface API"],
-            "interfaces": [ "AnInterface" ],
-            "methods":    [ "AnInterface.doOneThing()", "AnotherInterface.doAnother()" ],
-            "properties": []
-        }
+  {
+    "TestInterface": {
+      "overview": ["TestInterface API"],
+      "interfaces": ["AnInterface"],
+      "methods": ["AnInterface.doOneThing()", "AnotherInterface.doAnother()"],
+      "properties": []
     }
+  }
 ]

@@ -43,7 +43,7 @@ class Templates {
     // Walk the directory tree under the specified root directory.
     while (dirs.length > 0) {
       let dir = dirs.shift();
-      fs.readdirSync(dir).forEach(fn => {
+      fs.readdirSync(dir).forEach((fn) => {
         // If the given filename is a directory, push it onto
         // the queue, otherwise consider it a template.
         let fp = path.join(dir, fn);
@@ -99,7 +99,7 @@ class Templates {
 
     let rendered = await ejs.renderFile(path, args, {
       cache: true,
-      async: true
+      async: true,
     });
     return rendered.trim();
   }

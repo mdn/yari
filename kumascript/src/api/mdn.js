@@ -128,8 +128,8 @@ module.exports = {
       headers: {
         "Cache-Control": this.env.cache_control,
         Accept: "application/json",
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     });
     return JSON.parse(await this.MDN.fetchHTTPResource(url, opts));
   },
@@ -140,9 +140,9 @@ module.exports = {
       method: "GET",
       headers: {
         Accept: "text/plain",
-        "Content-Type": "text/plain"
+        "Content-Type": "text/plain",
       },
-      url: url
+      url: url,
     });
 
     async function fetchBody() {
@@ -178,5 +178,5 @@ module.exports = {
     var p = url.parse(this.env.url, true),
       site_url = p.protocol + "//" + p.host;
     return site_url;
-  }
+  },
 };
