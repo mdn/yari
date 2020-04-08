@@ -1,0 +1,23 @@
+{
+    "alternative_name": {
+        "feature": {
+            "__compat": {
+                "support": {
+                    "chrome": {
+                        "alternative_name": "contextMenus.ContextType",
+                        "version_added": "10"
+                    },
+                    "firefox": [
+                        {
+                            "version_added": "12"
+                        },
+                        {
+                            "alternative_name": "CookieMonsterInterface",
+                            "version_added": "5"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

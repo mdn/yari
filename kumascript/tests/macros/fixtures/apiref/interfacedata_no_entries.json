@@ -1,0 +1,24 @@
+[
+    {
+          "ImplementsAnInterface": {
+              "inh": "AndAnotherRandomThing",
+              "impl": ["NoThisOne"]
+          },
+          "AlsoImplementsTestInterface": {
+              "inh": "YetAnotherRandomThing",
+              "impl": ["SomethingUnrelated"]
+          },
+          "AnUnrelatedThing": {
+              "inh": "SomeOtherRandomThing",
+              "impl": []
+          },
+          "NotMyGrandParent": {
+              "inh": "",
+              "impl": []
+          },
+          "NotMyParent": {
+              "inh": "NotMyGrandParent",
+              "impl": ["SomeRandomThing"]
+          }
+    }
+]

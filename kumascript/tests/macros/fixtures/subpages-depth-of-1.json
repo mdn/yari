@@ -1,0 +1,43 @@
+{
+  "locale": "en-US",
+  "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP",
+  "subpages": [
+    {
+      "locale": "en-US",
+      "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs",
+      "subpages": [],
+      "slug": "Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs",
+      "title": "Choosing between www and non-www URLs"
+    },
+    {
+      "locale": "en-US",
+      "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs",
+      "subpages": [],
+      "slug": "Web/HTTP/Basics_of_HTTP/Data_URIs",
+      "title": "Data URLs"
+    },
+    {
+      "locale": "en-US",
+      "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP",
+      "subpages": [],
+      "slug": "Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP",
+      "title": "Evolution of HTTP"
+    },
+    {
+      "locale": "en-US",
+      "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web",
+      "subpages": [],
+      "slug": "Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web",
+      "title": "Identifying resources on the Web"
+    },
+    {
+      "locale": "en-US",
+      "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types",
+      "subpages": [],
+      "slug": "Web/HTTP/Basics_of_HTTP/MIME_types",
+      "title": "MIME types"
+    }
+  ],
+  "slug": "Web/HTTP/Basics_of_HTTP",
+  "title": "Basics of HTTP"
+}

@@ -1,0 +1,34 @@
+<%
+/*
+  Searches all CSS properties in CSSData that are animated and lists them
+  in columns
+*/
+
+// Read all CSSData and extract animated properties
+
+var data = require('mdn-data/css');
+var animatedProps = [];
+
+// Go through all properties, and test if they are animated. If so, add them to
+// the animatedProps array.
+for (var property in data.properties) {
+    if (data.properties.hasOwnProperty(property)) {
+        if (data.properties[property].animationType !== "discrete") {
+            animatedProps.push(property);
+        }
+    }
+}
+animatedProps.sort();
+
+// Build the output string
+var result = "<div class=\"index\">\n  <ul>\n";
+for (var propIndex in animatedProps) {
+    var prop = animatedProps[propIndex];
+    if (result) {
+        result += " ";
+    }
+    result += "    <li>" + await template("cssxref", [prop]) + "</li>\n";
+}
+result += "  </ul>\n</div>";
+
+%><%- result %>

@@ -1,0 +1,12 @@
+The following items are all macros, though:
+
+* {{ MacroUsingParams("Foo", "Bar", "Baz") }}
+* {{HelloWorld("HéllöWôrld")}}
+* 
+* {{ Alpha_Macro_123 ( "Quoted, Comma", 'Another, quoted' ) }}
+* {{ ParenTastic ( "()()()" ) }}
+* {{ Bracepocalypse(  "{{}}{{}}{{}}"  ) }}
+
+Here is a  that even works inline.
+
+Here is a  that even works inline.
