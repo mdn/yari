@@ -249,5 +249,5 @@ module.exports = {
       }
       return result;
     }
-  }
+  },
 };

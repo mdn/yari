@@ -1,26 +1,16 @@
 {
   "json_modified": "2017-07-02T21:56:43.462560",
   "subpages": [],
-  "tags": [
-    "HTTP",
-    "Overview"
-  ],
+  "tags": ["HTTP", "Overview"],
   "locale": "en-US",
   "translations": [
     {
       "uuid": "579a7d0a-8b01-4257-a067-3a0098eb0798",
       "title": "Conceptos básicos de HTTP",
       "url": "/es/docs/Web/HTTP/Basics_of_HTTP",
-      "tags": [
-        "TopicStub",
-        "HTTP",
-        "Overview",
-        "NeedsTranslation"
-      ],
+      "tags": ["TopicStub", "HTTP", "Overview", "NeedsTranslation"],
       "summary": "El protocolo HTTP es un protocolo ampliable, es decir se puede añadir \"vocabulario\". HTTP está basado en unos pocos conceptos básicos como el concepto de recursos y URIs, una estructura sencilla de mensajes, y una arquitectura de cliente-servidor para ordenar el flujo de las comunicaciones. A demás de estos conceptos, a lo largo de su desarrollo han aparecido otros nuevos y se han añadido funcionalidades y reglas semánticas, creando nuevos métodos y cabeceras.",
-      "localization_tags": [
-        "inprogress"
-      ],
+      "localization_tags": ["inprogress"],
       "locale": "es",
       "last_edit": "2017-07-02T21:56:37.330543",
       "review_tags": []
@@ -29,16 +19,9 @@
       "uuid": "579a7d0a-8b01-4257-a067-3a0098eb0798",
       "title": "Basics of HTTP",
       "url": "/fr/docs/Web/HTTP/Basics_of_HTTP",
-      "tags": [
-        "TopicStub",
-        "HTTP",
-        "Overview",
-        "NeedsTranslation"
-      ],
+      "tags": ["TopicStub", "HTTP", "Overview", "NeedsTranslation"],
       "summary": "HTTP is a pretty extensible protocol. It relies on a few basics concepts like the notion of resources and URIs, a simple structure of messages, and a client-server structure for the communication flow. On top of these basics concepts, numerous extensions have appeared over the years, adding new functionality and new semantics by creating new HTTP methods or headers.",
-      "localization_tags": [
-        "inprogress"
-      ],
+      "localization_tags": ["inprogress"],
       "locale": "fr",
       "last_edit": "2016-09-08T20:43:34",
       "review_tags": []
@@ -47,16 +30,9 @@
       "uuid": "579a7d0a-8b01-4257-a067-3a0098eb0798",
       "title": "Basics of HTTP",
       "url": "/ja/docs/Web/HTTP/Basics_of_HTTP",
-      "tags": [
-        "TopicStub",
-        "HTTP",
-        "Overview",
-        "NeedsTranslation"
-      ],
+      "tags": ["TopicStub", "HTTP", "Overview", "NeedsTranslation"],
       "summary": "HTTP is a pretty extensible protocol. It relies on a few basics concepts like the notion of resources and URIs, a simple structure of messages, and a client-server structure for the communication flow. On top of these basics concepts, numerous extensions have appeared over the years, adding new functionality and new semantics by creating new HTTP methods or headers.",
-      "localization_tags": [
-        "inprogress"
-      ],
+      "localization_tags": ["inprogress"],
       "locale": "ja",
       "last_edit": "2016-09-08T20:43:34",
       "review_tags": []
@@ -65,16 +41,9 @@
       "uuid": "579a7d0a-8b01-4257-a067-3a0098eb0798",
       "title": "Basics of HTTP",
       "url": "/ko/docs/Web/HTTP/Basics_of_HTTP",
-      "tags": [
-        "TopicStub",
-        "HTTP",
-        "Overview",
-        "NeedsTranslation"
-      ],
+      "tags": ["TopicStub", "HTTP", "Overview", "NeedsTranslation"],
       "summary": "HTTP is a pretty extensible protocol. It relies on a few basics concepts like the notion of resources and URIs, a simple structure of messages, and a client-server structure for the communication flow. On top of these basics concepts, numerous extensions have appeared over the years, adding new functionality and new semantics by creating new HTTP methods or headers.",
-      "localization_tags": [
-        "inprogress"
-      ],
+      "localization_tags": ["inprogress"],
       "locale": "ko",
       "last_edit": "2016-08-12T04:29:34",
       "review_tags": []
@@ -94,16 +63,9 @@
       "uuid": "579a7d0a-8b01-4257-a067-3a0098eb0798",
       "title": "Basics of HTTP",
       "url": "/ru/docs/Web/HTTP/Basics_of_HTTP",
-      "tags": [
-        "TopicStub",
-        "HTTP",
-        "Overview",
-        "NeedsTranslation"
-      ],
+      "tags": ["TopicStub", "HTTP", "Overview", "NeedsTranslation"],
       "summary": "HTTP is a pretty extensible protocol. It relies on a few basics concepts like the notion of resources and URIs, a simple structure of messages, and a client-server structure for the communication flow. On top of these basics concepts, numerous extensions have appeared over the years, adding new functionality and new semantics by creating new HTTP methods or headers.",
-      "localization_tags": [
-        "inprogress"
-      ],
+      "localization_tags": ["inprogress"],
       "locale": "ru",
       "last_edit": "2016-09-08T20:43:34",
       "review_tags": []
@@ -112,20 +74,12 @@
       "uuid": "f2b4286e-4db3-476f-948d-96517ad98da0",
       "title": "HTTP 基础",
       "url": "/zh-CN/docs/Web/HTTP/Basics_of_HTTP",
-      "tags": [
-        "概览",
-        "HTTP"
-      ],
+      "tags": ["概览", "HTTP"],
       "summary": "HTTP 是一个拓展性非常好的协议. 它构建在以下基础之上: 一些像资源或是 URI 这样的基本概念, 一个简单的消息结构, 一个客户端-服务器结构的通信流. 在这些基础概念之上, 近年来已经出现了许多拓展, 以增加新的 HTTP 方法或首部的方式为 HTTP 协议增加了新的功能和语义.",
-      "localization_tags": [
-        "inprogress"
-      ],
+      "localization_tags": ["inprogress"],
       "locale": "zh-CN",
       "last_edit": "2017-04-26T20:04:37.343007",
-      "review_tags": [
-        "technical",
-        "editorial"
-      ]
+      "review_tags": ["technical", "editorial"]
     }
   ],
   "summary": "HTTP is a pretty extensible protocol. It relies on a few basics concepts like the notion of resources and URIs, a simple structure of messages, and a client-server structure for the communication flow. On top of these basics concepts, numerous extensions have appeared over the years, adding new functionality and new semantics by creating new HTTP methods or headers.",

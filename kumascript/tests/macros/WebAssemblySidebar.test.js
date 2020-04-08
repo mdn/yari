@@ -1,7 +1,7 @@
 /**
  * @prettier
  */
-const { assert, itMacro, describeMacro, beforeEachMacro } = require('./utils');
+const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
 var expected = `\
 <section class="Quick_links" id="Quick_Links">
@@ -44,20 +44,20 @@ var expected = `\
 
 </section>`;
 
-describeMacro('WebAssemblySidebar', function() {
-    beforeEachMacro(function(macro) {
-        const baseURL = '/en-US/docs/Web/JavaScript/Reference/Global_Objects/';
+describeMacro("WebAssemblySidebar", function () {
+  beforeEachMacro(function (macro) {
+    const baseURL = "/en-US/docs/Web/JavaScript/Reference/Global_Objects/";
 
-        // Mock calls to template("jsxref", [partialSlug])
-        macro.ctx.template = jest.fn((macro, args) => {
-            let jsSlug = args[0];
-            let partialSlug = jsSlug.replace('.', '/');
-            let url = baseURL + partialSlug;
-            return `<a href="${url}" title="Title for ${jsSlug}"><code>${jsSlug}</code></a>`;
-        });
+    // Mock calls to template("jsxref", [partialSlug])
+    macro.ctx.template = jest.fn((macro, args) => {
+      let jsSlug = args[0];
+      let partialSlug = jsSlug.replace(".", "/");
+      let url = baseURL + partialSlug;
+      return `<a href="${url}" title="Title for ${jsSlug}"><code>${jsSlug}</code></a>`;
     });
+  });
 
-    itMacro('Generates WebAssembly Sidebar', function(macro) {
-        return assert.eventually.equal(macro.call(), expected);
-    });
+  itMacro("Generates WebAssembly Sidebar", function (macro) {
+    return assert.eventually.equal(macro.call(), expected);
+  });
 });

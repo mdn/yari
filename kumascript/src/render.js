@@ -48,7 +48,7 @@ const {
   MacroInvocationError,
   MacroNotFoundError,
   MacroCompilationError,
-  MacroExecutionError
+  MacroExecutionError,
 } = require("./errors.js");
 
 function normalize(name) {
@@ -78,7 +78,7 @@ async function render(source, templates, pageEnvironment) {
   if (pageEnvironment.selective_mode) {
     [selectiveMode, selectMacros] = pageEnvironment.selective_mode;
     // Normalize the macro names for the purpose of robust comparison.
-    selectMacros = selectMacros.map(name => normalize(name));
+    selectMacros = selectMacros.map((name) => normalize(name));
   }
 
   // Create the Environment object that we'll use to render all of
@@ -149,7 +149,7 @@ async function render(source, templates, pageEnvironment) {
       promises.push(
         templates
           .render(macroName, environment.getExecutionContext(token.args))
-          .catch(e => {
+          .catch((e) => {
             // If there was an error rendering this macro, we still
             // want the promise to resolve normally, otherwise the
             // Promise.all() will fail. So we resolve to "", and
@@ -178,7 +178,7 @@ async function render(source, templates, pageEnvironment) {
 
   // And assemble the output document
   let output = tokens
-    .map(token => {
+    .map((token) => {
       if (token.type === "MACRO") {
         if (selectiveMode) {
           if (selectMacros.includes(normalize(token.name))) {
@@ -216,7 +216,7 @@ async function render(source, templates, pageEnvironment) {
     .join("");
 
   // The return value is the rendered string plus an array of errors.
-  return [output, errors.filter(e => e !== null)];
+  return [output, errors.filter((e) => e !== null)];
 }
 
 module.exports = render;

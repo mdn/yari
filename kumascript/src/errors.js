@@ -9,57 +9,57 @@
  * error occurs in and drawing an ASCII art arrow to point at it.
  */
 class SourceCodeError extends Error {
-    constructor(cause, line, column, name) {
-        super();
-        this.cause = cause;
-        this.line = line;
-        this.column = column;
-        this.stack = cause.stack;
+  constructor(cause, line, column, name) {
+    super();
+    this.cause = cause;
+    this.line = line;
+    this.column = column;
+    this.stack = cause.stack;
 
-        // Kuma's error handling code seems to expect the macro name here.
-        // See server.js and firelogger.js for details.
-        if (name) {
-            this.options = { name };
-        }
+    // Kuma's error handling code seems to expect the macro name here.
+    // See server.js and firelogger.js for details.
+    if (name) {
+      this.options = { name };
+    }
+  }
+
+  // TODO(djf): a lot of our HTML documents have really long lines and
+  // showing line-oriented errors when the column number is > 100
+  // doesn't really make sense. Perhaps we can modify this function to
+  // show the relevant context in a more useful way.
+  getSourceContext(source) {
+    function arrow(column) {
+      let arrow = "";
+      for (let i = 0; i < column + 7; i++) {
+        arrow += "-";
+      }
+      return arrow + "^";
     }
 
-    // TODO(djf): a lot of our HTML documents have really long lines and
-    // showing line-oriented errors when the column number is > 100
-    // doesn't really make sense. Perhaps we can modify this function to
-    // show the relevant context in a more useful way.
-    getSourceContext(source) {
-        function arrow(column) {
-            let arrow = '';
-            for (let i = 0; i < column + 7; i++) {
-                arrow += '-';
-            }
-            return arrow + '^';
-        }
-
-        function formatLine(i, line) {
-            let lnum = ('      ' + (i + 1)).substr(-5);
-            return lnum + ' | ' + line;
-        }
-
-        let lines = source.split('\n');
-
-        // Work out a range of lines to show for context around the error,
-        // 2 before and after.
-        let errorLine = this.line - 1;
-        let startLine = Math.max(errorLine - 2, 0);
-        let endLine = Math.min(errorLine + 3, lines.length);
-
-        // Assemble the lines of error context, inject the column pointer
-        // at the appropriate spot after the error line.
-        var context = [];
-        for (var i = startLine; i < endLine; i++) {
-            context.push(formatLine(i, lines[i]));
-            if (i == errorLine) {
-                context.push(arrow(this.column));
-            }
-        }
-        return context.join('\n');
+    function formatLine(i, line) {
+      let lnum = ("      " + (i + 1)).substr(-5);
+      return lnum + " | " + line;
     }
+
+    let lines = source.split("\n");
+
+    // Work out a range of lines to show for context around the error,
+    // 2 before and after.
+    let errorLine = this.line - 1;
+    let startLine = Math.max(errorLine - 2, 0);
+    let endLine = Math.min(errorLine + 3, lines.length);
+
+    // Assemble the lines of error context, inject the column pointer
+    // at the appropriate spot after the error line.
+    var context = [];
+    for (var i = startLine; i < endLine; i++) {
+      context.push(formatLine(i, lines[i]));
+      if (i == errorLine) {
+        context.push(arrow(this.column));
+      }
+    }
+    return context.join("\n");
+  }
 }
 
 /**
@@ -69,21 +69,21 @@ class SourceCodeError extends Error {
  * of the error.
  */
 class MacroInvocationError extends SourceCodeError {
-    constructor(error, source) {
-        // If the error is not a SyntaxError, with a location property then
-        // just return it instead of creating a wrapper object
-        if (error.name !== 'SyntaxError' || error.location === undefined) {
-            return error;
-        }
-
-        super(error, error.location.start.line, error.location.start.column);
-        this.name = 'MacroInvocationError';
-
-        // Finally, assemble the complete error message.
-        this.message = `Syntax error at line ${this.line}, column ${
-            this.column
-        } of document:\n${this.getSourceContext(source)}\n${error.message}`;
+  constructor(error, source) {
+    // If the error is not a SyntaxError, with a location property then
+    // just return it instead of creating a wrapper object
+    if (error.name !== "SyntaxError" || error.location === undefined) {
+      return error;
     }
+
+    super(error, error.location.start.line, error.location.start.column);
+    this.name = "MacroInvocationError";
+
+    // Finally, assemble the complete error message.
+    this.message = `Syntax error at line ${this.line}, column ${
+      this.column
+    } of document:\n${this.getSourceContext(source)}\n${error.message}`;
+  }
 }
 
 /**
@@ -92,22 +92,20 @@ class MacroInvocationError extends SourceCodeError {
  * macro in the HTML document, which it determines from the token argument.
  */
 class MacroNotFoundError extends SourceCodeError {
-    constructor(error, source, token) {
-        super(
-            error,
-            token.location.start.line,
-            token.location.start.column,
-            token.name
-        );
-        this.name = 'MacroNotFoundError';
+  constructor(error, source, token) {
+    super(
+      error,
+      token.location.start.line,
+      token.location.start.column,
+      token.name
+    );
+    this.name = "MacroNotFoundError";
 
-        // Finally, assemble the complete error message.
-        this.message = `Unknown macro '${token.name}' at line ${
-            this.line
-        }, column ${this.column} of document:\n${this.getSourceContext(
-            source
-        )}`;
-    }
+    // Finally, assemble the complete error message.
+    this.message = `Unknown macro '${token.name}' at line ${
+      this.line
+    }, column ${this.column} of document:\n${this.getSourceContext(source)}`;
+  }
 }
 
 /**
@@ -116,22 +114,22 @@ class MacroNotFoundError extends SourceCodeError {
  * macro in the HTML document and also includes the underlying error message.
  */
 class MacroCompilationError extends SourceCodeError {
-    constructor(error, source, token) {
-        super(
-            error,
-            token.location.start.line,
-            token.location.start.column,
-            token.name
-        );
-        this.name = 'MacroCompilationError';
+  constructor(error, source, token) {
+    super(
+      error,
+      token.location.start.line,
+      token.location.start.column,
+      token.name
+    );
+    this.name = "MacroCompilationError";
 
-        // Finally, assemble the complete error message.
-        this.message = `Error compiling macro '${token.name}' at line ${
-            this.line
-        }, column ${this.column} of document:\n${this.getSourceContext(
-            source
-        )}\n${error.message};`;
-    }
+    // Finally, assemble the complete error message.
+    this.message = `Error compiling macro '${token.name}' at line ${
+      this.line
+    }, column ${this.column} of document:\n${this.getSourceContext(source)}\n${
+      error.message
+    };`;
+  }
 }
 
 /**
@@ -141,27 +139,27 @@ class MacroCompilationError extends SourceCodeError {
  * from the underlying runtime error.
  */
 class MacroExecutionError extends SourceCodeError {
-    constructor(error, source, token) {
-        super(
-            error,
-            token.location.start.line,
-            token.location.start.column,
-            token.name
-        );
-        this.name = 'MacroExecutionError';
+  constructor(error, source, token) {
+    super(
+      error,
+      token.location.start.line,
+      token.location.start.column,
+      token.name
+    );
+    this.name = "MacroExecutionError";
 
-        // Finally, assemble the complete error message.
-        this.message = `Error rendering macro '${token.name}' at line ${
-            this.line
-        }, column ${this.column} of document:\n${this.getSourceContext(
-            source
-        )}\n${error.message};`;
-    }
+    // Finally, assemble the complete error message.
+    this.message = `Error rendering macro '${token.name}' at line ${
+      this.line
+    }, column ${this.column} of document:\n${this.getSourceContext(source)}\n${
+      error.message
+    };`;
+  }
 }
 
 module.exports = {
-    MacroInvocationError,
-    MacroNotFoundError,
-    MacroCompilationError,
-    MacroExecutionError
+  MacroInvocationError,
+  MacroNotFoundError,
+  MacroCompilationError,
+  MacroExecutionError,
 };
