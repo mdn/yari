@@ -35,22 +35,22 @@ module.exports = {
 
   // Optional path, defaults to current page
   //
-  // Optional depth. Number of levels of children to include, 0
-  // is the path page
+  // Optional depth. Ignored. The caller may request subpages
+  // as deeply as desired.
   //
   // Optional self, defaults to false. Include the path page in
   // the results
   //
   // This is not called by any macros, and is only used here by
   // wiki.tree(), so we could move it to be part of that function.
-  async subpages(path, depth, self) {
+  subpages(path, depth, self) {
     return this.info.getChildren(path || this.env.url, self);
   },
 
   // Optional path, defaults to current page
   //
-  // Optional depth. Number of levels of children to include, 0
-  // is the path page
+  // Optional depth. Ignored. The caller may request subpages
+  // as deeply as desired.
   //
   // Optional self, defaults to false. Include the path page in
   // the results

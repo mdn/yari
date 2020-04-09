@@ -83,7 +83,7 @@ async function render(source, templates, pageEnvironment, allPagesInfo) {
 
   // Create the Environment object that we'll use to render all of
   // the macros on the page
-  let environment = new Environment(templates, pageEnvironment, allPagesInfo);
+  let environment = new Environment(pageEnvironment, templates, allPagesInfo);
 
   // Loop through the tokens, rendering the macros and collecting
   // the resulting promises. We detect duplicate invocations and

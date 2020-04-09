@@ -8,39 +8,16 @@
 
 const fs = require("fs");
 const path = require("path");
+const AllPagesInfo = require("../../src/info.js");
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
 const fixture_dir = path.resolve(__dirname, "fixtures");
 
 // Load fixture data.
 const fixtures = {
-  spe: {
+  all: {
     data: null,
-    filename: "subpagesExpand-depth-gt-1.json",
-  },
-  spe0: {
-    data: null,
-    filename: "subpagesExpand-depth-of-0.json",
-  },
-  spe1: {
-    data: null,
-    filename: "subpagesExpand-depth-of-1.json",
-  },
-  sp: {
-    data: null,
-    filename: "subpages-depth-gt-1.json",
-  },
-  sp0: {
-    data: null,
-    filename: "subpages-depth-of-0.json",
-  },
-  sp1: {
-    data: null,
-    filename: "subpages-depth-of-1.json",
-  },
-  trans: {
-    data: null,
-    filename: "translations.json",
+    filename: "allTitles1.json",
   },
 };
 for (const name in fixtures) {
@@ -55,7 +32,7 @@ const titles = [
   "Data URLs",
   "Evolution of HTTP",
   "Identifying resources on the Web",
-  "MIME types",
+  "MIME types (IANA media types)",
 ];
 
 function getProps(items, prop_name) {
@@ -64,6 +41,42 @@ function getProps(items, prop_name) {
     result.push(item[prop_name]);
   }
   return result;
+}
+
+function checkSubpagesResult(res) {
+  assert.isArray(res);
+  assert.equal(res.length, 5);
+  assert.sameMembers(getProps(res, "title"), titles);
+  assert.sameMembers(res[0].tags, ["Guide", "HTTP", "URL"]);
+  assert.equal(res[0].translations.length, 2);
+  assert.sameMembers(getProps(res[0].translations, "locale"), ["es", "fr"]);
+  assert.sameMembers(getProps(res[0].translations, "url"), [
+    "/es/docs/Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs",
+    "/fr/docs/Web/HTTP/Basics_of_HTTP/Choisir_entre_les_URLs_www_sans_www",
+  ]);
+  assert.sameMembers(getProps(res[0].translations, "title"), [
+    "Elección entre www y no-www URLs",
+    "Choisir entre les URLs avec ou sans www",
+  ]);
+  assert.property(res[0].translations[0], "summary");
+  assert.property(res[0].translations[1], "summary");
+  assert.equal(res[4].subpages.length, 1);
+}
+
+function checkTranslationsResult(res) {
+  assert.isArray(res);
+  assert.equal(res.length, 2);
+  assert.sameMembers(getProps(res, "locale"), ["es", "fr"]);
+  assert.sameMembers(getProps(res, "url"), [
+    "/es/docs/Web/HTTP/Basics_of_HTTP",
+    "/fr/docs/Web/HTTP/Basics_of_HTTP",
+  ]);
+  assert.sameMembers(getProps(res, "title"), [
+    "Conceptos básicos de HTTP",
+    "L'essentiel de HTTP",
+  ]);
+  assert.property(res[0], "summary");
+  assert.property(res[1], "summary");
 }
 
 describeMacro("dekiscript-page", function () {
@@ -78,240 +91,64 @@ describeMacro("dekiscript-page", function () {
   });
   describe('test "subpages"', function () {
     beforeEachMacro(function (macro) {
-      macro.ctx.mdn.fetchJSONResource = jest.fn(async (url) => {
-        if (url.endsWith("$children")) {
-          return fixtures.sp.data;
-        }
-        if (url.endsWith("?depth=0")) {
-          return fixtures.sp0.data;
-        }
-        if (url.endsWith("?depth=1")) {
-          return fixtures.sp1.data;
-        }
-        if (url.endsWith("?depth=2")) {
-          return fixtures.sp.data;
-        }
-      });
+      macro.ctx.info = new AllPagesInfo(fixtures.all.data);
     });
     itMacro("One argument (non-null)", function (macro) {
-      return macro.ctx.page.subpages(fix_url).then((res) => {
-        assert.isArray(res);
-        assert.equal(res.length, 5);
-        assert.sameMembers(getProps(res, "title"), titles);
-        assert.notProperty(res[0], "tags");
-        assert.notProperty(res[0], "translations");
-        assert.equal(res[4].subpages.length, 1);
-      });
+      const res = macro.ctx.page.subpages(fix_url);
+      checkSubpagesResult(res);
     });
     itMacro("One argument (null)", function (macro) {
       macro.ctx.env.url = base_url + fix_url;
-      return macro.ctx.page.subpages(null).then((res) => {
-        assert.isArray(res);
-        assert.equal(res.length, 5);
-        assert.sameMembers(getProps(res, "title"), titles);
-        assert.notProperty(res[0], "tags");
-        assert.notProperty(res[0], "translations");
-        assert.equal(res[4].subpages.length, 1);
-      });
+      const res = macro.ctx.page.subpages(null);
+      checkSubpagesResult(res);
     });
-    itMacro("Two arguments (depth=0)", function (macro) {
-      return macro.ctx.page.subpages(fix_url, 0).then((res) => {
-        assert.isArray(res);
-        assert.equal(res.length, 0);
-      });
-    });
-    itMacro("Two arguments (depth=1)", function (macro) {
-      return macro.ctx.page.subpages(fix_url, 1).then((res) => {
-        assert.isArray(res);
-        assert.equal(res.length, 5);
-        assert.sameMembers(getProps(res, "title"), titles);
-        assert.notProperty(res[0], "tags");
-        assert.notProperty(res[0], "translations");
-        assert.equal(res[4].subpages.length, 0);
-      });
-    });
-    itMacro("Two arguments (depth=2)", function (macro) {
-      return macro.ctx.page.subpages(fix_url, 2).then((res) => {
-        assert.isArray(res);
-        assert.equal(res.length, 5);
-        assert.sameMembers(getProps(res, "title"), titles);
-        assert.notProperty(res[0], "tags");
-        assert.notProperty(res[0], "translations");
-        assert.equal(res[4].subpages.length, 1);
-      });
-    });
-    itMacro("Three arguments (depth=2, self=true)", function (macro) {
-      return macro.ctx.page.subpages(fix_url, 2, true).then((res) => {
-        assert.isArray(res);
-        assert.equal(res.length, 1);
-        assert.equal(res[0].slug, "Web/HTTP/Basics_of_HTTP");
-        const sub = res[0].subpages;
-        assert.equal(sub.length, 5);
-        assert.sameMembers(getProps(sub, "title"), titles);
-        assert.notProperty(sub[0], "tags");
-        assert.notProperty(sub[0], "translations");
-        assert.equal(sub[4].subpages.length, 1);
-      });
-    });
-    itMacro("Three arguments (depth=0, self=true)", function (macro) {
-      return macro.ctx.page.subpages(fix_url, 0, true).then((res) => {
-        assert.isArray(res);
-        assert.equal(res.length, 1);
-        assert.notProperty(res[0], "tags");
-        assert.notProperty(res[0], "translations");
-        assert.equal(res[0].slug, "Web/HTTP/Basics_of_HTTP");
-        assert.equal(res[0].subpages.length, 0);
-      });
+    itMacro("Two arguments (self=true)", function (macro) {
+      const res = macro.ctx.page.subpages(fix_url, 2, true);
+      assert.isArray(res);
+      assert.equal(res.length, 1);
+      assert.equal(res[0].slug, "Web/HTTP/Basics_of_HTTP");
+      checkSubpagesResult(res[0].subpages);
     });
   });
   describe('test "subpagesExpand"', function () {
     beforeEachMacro(function (macro) {
-      macro.ctx.mdn.fetchJSONResource = jest.fn(async (url) => {
-        if (url.endsWith("$children?expand")) {
-          return fixtures.spe.data;
-        }
-        if (url.endsWith("&depth=0")) {
-          return fixtures.spe0.data;
-        }
-        if (url.endsWith("&depth=1")) {
-          return fixtures.spe1.data;
-        }
-        if (url.endsWith("&depth=2")) {
-          return fixtures.spe.data;
-        }
-      });
+      macro.ctx.info = new AllPagesInfo(fixtures.all.data);
     });
     itMacro("One argument (non-null)", function (macro) {
-      return macro.ctx.page.subpagesExpand(fix_url).then((res) => {
-        assert.isArray(res);
-        assert.equal(res.length, 5);
-        assert.sameMembers(getProps(res, "title"), titles);
-        assert.property(res[0], "tags");
-        assert.equal(res[0].tags.length, 3);
-        assert.property(res[0], "translations");
-        assert.equal(res[0].translations.length, 3);
-        assert.equal(res[4].subpages.length, 1);
-      });
+      const res = macro.ctx.page.subpagesExpand(fix_url);
+      checkSubpagesResult(res);
     });
     itMacro("One argument (null)", function (macro) {
       macro.ctx.env.url = base_url + fix_url;
-      return macro.ctx.page.subpagesExpand(null).then((res) => {
-        assert.isArray(res);
-        assert.equal(res.length, 5);
-        assert.sameMembers(getProps(res, "title"), titles);
-        assert.property(res[0], "tags");
-        assert.equal(res[0].tags.length, 3);
-        assert.property(res[0], "translations");
-        assert.equal(res[0].translations.length, 3);
-        assert.equal(res[4].subpages.length, 1);
-      });
+      const res = macro.ctx.page.subpagesExpand(null);
+      checkSubpagesResult(res);
     });
-    itMacro("Two arguments (depth=0)", function (macro) {
-      return macro.ctx.page.subpagesExpand(fix_url, 0).then((res) => {
-        assert.isArray(res);
-        assert.equal(res.length, 0);
-      });
-    });
-    itMacro("Two arguments (depth=1)", function (macro) {
-      return macro.ctx.page.subpagesExpand(fix_url, 1).then((res) => {
-        assert.isArray(res);
-        assert.equal(res.length, 5);
-        assert.sameMembers(getProps(res, "title"), titles);
-        assert.property(res[0], "tags");
-        assert.equal(res[0].tags.length, 3);
-        assert.property(res[0], "translations");
-        assert.equal(res[0].translations.length, 3);
-        assert.equal(res[4].subpages.length, 0);
-      });
-    });
-    itMacro("Two arguments (depth=2)", function (macro) {
-      return macro.ctx.page.subpagesExpand(fix_url, 2).then((res) => {
-        assert.isArray(res);
-        assert.equal(res.length, 5);
-        assert.sameMembers(getProps(res, "title"), titles);
-        assert.property(res[0], "tags");
-        assert.equal(res[0].tags.length, 3);
-        assert.property(res[0], "translations");
-        assert.equal(res[0].translations.length, 3);
-        assert.equal(res[4].subpages.length, 1);
-      });
-    });
-    itMacro("Three arguments (depth=2, self=true)", function (macro) {
-      return macro.ctx.page.subpagesExpand(fix_url, 2, true).then((res) => {
-        assert.isArray(res);
-        assert.equal(res.length, 1);
-        assert.equal(res[0].slug, "Web/HTTP/Basics_of_HTTP");
-        const sub = res[0].subpages;
-        assert.equal(sub.length, 5);
-        assert.sameMembers(getProps(sub, "title"), titles);
-        assert.property(sub[0], "tags");
-        assert.equal(sub[0].tags.length, 3);
-        assert.property(sub[0], "translations");
-        assert.equal(sub[0].translations.length, 3);
-        assert.equal(sub[4].subpages.length, 1);
-      });
-    });
-    itMacro("Three arguments (depth=0, self=true)", function (macro) {
-      return macro.ctx.page.subpagesExpand(fix_url, 0, true).then((res) => {
-        assert.isArray(res);
-        assert.equal(res.length, 1);
-        assert.property(res[0], "tags");
-        assert.equal(res[0].tags.length, 2);
-        assert.property(res[0], "translations");
-        assert.equal(res[0].translations.length, 7);
-        assert.equal(res[0].slug, "Web/HTTP/Basics_of_HTTP");
-        assert.equal(res[0].subpages.length, 0);
-      });
+    itMacro("Two arguments (self=true)", function (macro) {
+      const res = macro.ctx.page.subpagesExpand(fix_url, 2, true);
+      assert.isArray(res);
+      assert.equal(res.length, 1);
+      assert.equal(res[0].slug, "Web/HTTP/Basics_of_HTTP");
+      checkSubpagesResult(res[0].subpages);
     });
   });
   describe('test "translations"', function () {
     beforeEachMacro(function (macro) {
-      macro.ctx.mdn.fetchJSONResource = jest.fn(async (url) => {
-        if (!url || url.endsWith("junk$json")) {
-          return null;
-        }
-        if (url.endsWith("$json")) {
-          return fixtures.trans.data;
-        }
-      });
+      macro.ctx.info = new AllPagesInfo(fixtures.all.data);
     });
     itMacro("One argument (non-null)", function (macro) {
-      return macro.ctx.page.translations(fix_url).then((res) => {
-        assert.isArray(res);
-        assert.equal(res.length, 7);
-        assert.sameMembers(getProps(res, "locale"), [
-          "es",
-          "fr",
-          "ja",
-          "ko",
-          "pt-BR",
-          "ru",
-          "zh-CN",
-        ]);
-      });
+      const res = macro.ctx.page.translations(fix_url);
+      checkTranslationsResult(res);
     });
     itMacro("One argument (null)", function (macro) {
       macro.ctx.env.url = base_url + fix_url;
-      return macro.ctx.page.translations(null).then((res) => {
-        assert.isArray(res);
-        assert.equal(res.length, 7);
-        assert.sameMembers(getProps(res, "locale"), [
-          "es",
-          "fr",
-          "ja",
-          "ko",
-          "pt-BR",
-          "ru",
-          "zh-CN",
-        ]);
-      });
+      const res = macro.ctx.page.translations(null);
+      checkTranslationsResult(res);
     });
     itMacro("One argument (return null)", function (macro) {
       const junk_url = "/en-US/docs/junk";
-      return macro.ctx.page.translations(junk_url).then((res) => {
-        assert.isArray(res);
-        assert.equal(res.length, 0);
-      });
+      const res = macro.ctx.page.translations(junk_url);
+      assert.isArray(res);
+      assert.equal(res.length, 0);
     });
   });
 });

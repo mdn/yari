@@ -160,19 +160,6 @@ module.exports = {
     return await cache(cache_key, fetchBody);
   },
 
-  // http://www.bugzilla.org/docs/4.2/en/html/api/Bugzilla/WebService/Bug.html#search
-  async bzSearch(query) {
-    /* Fix colon (":") encoding problems */
-    query = query.replace(/&amp;/g, "&");
-    query = encodeURI(query);
-    query = query.replace(/&/g, "%26");
-    var url =
-      "https://bugzilla.mozilla.org/jsonrpc.cgi?method=Bug.search&params=" +
-      query;
-    var resource = await this.MDN.fetchJSONResource(url);
-    return resource.result;
-  },
-
   /* Derive the site URL from the request URL */
   siteURL() {
     var p = url.parse(this.env.url, true),

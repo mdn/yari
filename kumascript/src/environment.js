@@ -66,7 +66,7 @@ class Environment {
   // true makes us not freeze the environment so that tests can stub out
   // methods in the API like mdn.fetchJSONResources
   //
-  constructor(templates, perPageContext, allPagesInfo, testing = false) {
+  constructor(perPageContext, templates, allPagesInfo = null, testing = false) {
     // Freeze an object unless we're in testing mode
     function freeze(o) {
       return testing ? o : Object.freeze(o);
@@ -114,7 +114,7 @@ class Environment {
     let web = Object.create(prepareProto(webPrototype, globals));
     let page = Object.create(prepareProto(pagePrototype, globals));
     let env = Object.create(prepareProto(perPageContext));
-    let info = Object.create(allPagesInfo);
+    let info = Object.create(allPagesInfo || null);
 
     // The page object also gets some properties copied from
     // the per-page context object
