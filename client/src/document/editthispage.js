@@ -1,6 +1,6 @@
 import React from "react";
 
-import "./document-editthispage.css";
+import "./editthispage.css";
 
 export function EditThisPage({ source }) {
   const [opening, setOpening] = React.useState(false);

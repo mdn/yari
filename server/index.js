@@ -44,10 +44,11 @@ const _allRedirects = new Map();
 
 // Return the redirect but if it can't be found, just return `undefined`
 function getRedirectUrl(uri) {
-  if (!_allRedirects.size) {
+  if (!_allRedirects.size && process.env.BUILD_ROOT) {
+    const contentRoot = normalizeContentPath(process.env.BUILD_ROOT);
     // They're all in 1 level deep from CONTENT_ROOT
-    fs.readdirSync(CONTENT_ROOT)
-      .map((n) => path.join(CONTENT_ROOT, n))
+    fs.readdirSync(contentRoot)
+      .map((n) => path.join(contentRoot, n))
       .filter((filepath) => fs.statSync(filepath).isDirectory())
       .forEach((directory) => {
         fs.readdirSync(directory)
@@ -147,7 +148,7 @@ app.get("/*", async (req, res) => {
   } else if (req.url.endsWith(".json") && req.url.includes("/docs/")) {
     const redirectUrl = getRedirectUrl(req.url.replace(/\/index\.json$/, ""));
     if (redirectUrl) {
-      return res.redirect(301, redirectUrl + ".json");
+      return res.redirect(301, redirectUrl + "/index.json");
     }
 
     const specificFolder = normalizeContentPath(
