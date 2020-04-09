@@ -342,6 +342,11 @@ function LoadingError({ error }) {
 
 function ToggleDocmentFlaws({ flaws }) {
   const [show, toggle] = useReducer((v) => !v, false);
+
+  if (process.env.NODE_ENV !== "development") {
+    return null;
+  }
+
   let flatFlaws = [];
   for (const [flawCheck, actualFlaws] of Object.entries(flaws)) {
     flatFlaws.push({
@@ -351,27 +356,43 @@ function ToggleDocmentFlaws({ flaws }) {
     });
   }
   flatFlaws.sort((a, b) => b.count - a.count);
+
+  function summarizeFlaws() {
+    // Return a one-liner about all the flaws
+    const bits = flatFlaws.map((flaw) => `${flaw.flawCheck}: ${flaw.count}`);
+    return bits.join(", ");
+  }
+
   return (
     <div className="toggle-flaws">
       <button type="submit" onClick={toggle}>
         {show ? "Hide flaws" : "Show flaws"}
       </button>
 
+      {/* {show ? (
+        <Suspense fallback={<div>Loading...</div>}>
+          <DocumentFlaws flaws={flatFlaws} />
+        </Suspense>
+      ) : (
+        <table>
+          {flatFlaws.map((flaw) => {
+            return (
+              <tr key={flaw.flawCheck}>
+                <td>
+                  <b>{flaw.flawCheck}</b>
+                </td>
+                <td>{flaw.count}</td>
+              </tr>
+            );
+          })}
+        </table>
+      )} */}
       {show ? (
         <Suspense fallback={<div>Loading...</div>}>
           <DocumentFlaws flaws={flatFlaws} />
         </Suspense>
       ) : (
-        <dl>
-          {flatFlaws.map((flaw) => {
-            return [
-              <dt key={`key-${flaw.flawCheck}`}>
-                <code>{flaw.flawCheck}</code>
-              </dt>,
-              <dd key={`count-${flaw.flawCheck}`}>{flaw.count}</dd>,
-            ];
-          })}
-        </dl>
+        <small>{summarizeFlaws()}</small>
       )}
     </div>
   );

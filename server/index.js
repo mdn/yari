@@ -63,8 +63,13 @@ function getRedirectUrl(uri) {
             });
           });
       });
+
+    if (!_allRedirects.size) {
+      throw new Error(`Unable to gather any redirects from ${contentRoot}`);
+    }
   }
-  return _allRedirects.get(uri) || null;
+
+  return _allRedirects.get(uri.toLowerCase()) || null;
 }
 
 // Lowercase every request because every possible file we might have
@@ -128,6 +133,18 @@ function getOrCreateBuilder() {
   }
   return builder;
 }
+
+// Return about redirects based on a list of URLs.
+// This is used by the "<Flaws/>" component which displays information
+// about broken links in a page, as some of those broken links might just
+// be redirects.
+app.get("/_redirects", (req, res) => {
+  redirects = {};
+  for (const url of req.query.url) {
+    redirects[url] = getRedirectUrl(url);
+  }
+  res.json({ redirects });
+});
 
 // Catch-all
 app.get("/*", async (req, res) => {

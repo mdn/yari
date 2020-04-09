@@ -207,7 +207,6 @@ function _addSingleSectionBCD($) {
   const query = dataQuery.replace(/^bcd:/, "");
   const data = packageBCD(query);
   if (data === undefined) {
-    console.warn(`No BCD data for query '${query}' (${(title, id)})`);
     return [];
   }
   return [

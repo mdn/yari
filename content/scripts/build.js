@@ -16,6 +16,7 @@ require("dotenv").config();
 
 const cheerio = require("./monkeypatched-cheerio");
 const ProgressBar = require("./progress-bar");
+const { packageBCD } = require("./resolve-bcd");
 const { buildHtmlAndJsonFromDoc } = require("ssr");
 const {
   extractDocumentSections,
@@ -32,7 +33,7 @@ const { slugToFoldername } = require("./utils");
 //
 // This list needs to be synced with the code. And the CLI arguments
 // used with --flaw-checks needs to match this set.
-const VALID_FLAW_CHECKS = new Set(["broken_links"]);
+const VALID_FLAW_CHECKS = new Set(["broken_links", "bad_bcd_queries"]);
 
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
@@ -1110,8 +1111,21 @@ class Builder {
               doc.flaws.broken_links = [];
             }
             doc.flaws.broken_links.push(href);
-            a.attr("title", `The link to ${href} is broken.`);
-            a.addClass("flawed--broken_link");
+          }
+        }
+      });
+    }
+
+    if (this.options.flawCheck.includes("bad_bcd_queries")) {
+      $("div.bc-data").each((i, element) => {
+        const dataQuery = $(element).attr("id");
+        if (!dataQuery) {
+          doc.flaws.bad_bcd_queries = ["BCD table without an ID"];
+        } else {
+          const query = dataQuery.replace(/^bcd:/, "");
+          const data = packageBCD(query);
+          if (!data) {
+            doc.flaws.bad_bcd_queries = [`No BCD data for query: ${query}`];
           }
         }
       });
