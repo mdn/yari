@@ -22,6 +22,7 @@ const {
   extractSidebar,
 } = require("./document-extractor");
 const { VALID_LOCALES } = require("./constants");
+const { slugToFoldername } = require("./utils");
 
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
@@ -909,10 +910,10 @@ class Builder {
       this.destination,
       mdn_url.toLowerCase()
     );
-    const destinationDir = destinationDirRaw
-      .split(path.sep)
-      .map(sanitizeFilename)
-      .join(path.sep);
+    const destinationDir = path.join(
+      this.destination,
+      slugToFoldername(mdn_url)
+    );
 
     // const destination = path.join(
     //   folder.replace(this.root, this.destination),
@@ -1030,14 +1031,14 @@ class Builder {
       titles: this.allTitles,
     });
 
-    // We're *assuming* that `metadata.mdn_url.toLowerCase()`
+    // We're *assuming* that `slugToFoldername(metadata.mdn_url)`
     // can be a valid folder name on the current filesystem. It if's all
     // non-control characters, it should be fine, but some characters can't be
     // used when storing folders. E.g. `:` in Windows.
     // However, we might want that for the eventual S3 key when it gets
     // uploaded. So make a note about it if necessary.
     if (destinationDir !== destinationDirRaw) {
-      // In the cleaned folder that the file was was put, put a "hidden
+      // In the cleaned folder that the file was put, put a "hidden
       // file" which'll be used by the deployer when it picks S3 key names.
       fs.writeFileSync(
         path.join(destinationDir, "_preferred-name.txt"),
