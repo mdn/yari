@@ -171,25 +171,6 @@ function broadcastWebsocketMessage(msg) {
   // console.log(`Sent to ${i} open clients`);
 }
 
-function getSummary(html) {
-  // TODO: Find a better way to do summaries!
-  // TODO: Ask Daniel Beck how his tool extracts summaries.
-  // TODO: There's a chicken and egg problem here. We'd like to use
-  //       the rendered HTML for extracting the summary, but the
-  //       summaries are used to create the rendered HTML!
-  // This is a simple implementation very loosely based on Kuma's approach,
-  // which is a mess. For now, let's just try our best. The summaries are
-  // mainly used (95% of the time) by the Kumascript macros for tool tips
-  // ("title" attribute) on links to their pages.
-  const $ = cheerio.load(html);
-  return (
-    $(".seoSummary").text() ||
-    $(".summary").text() ||
-    $("p").html() ||
-    ""
-  ).trim();
-}
-
 async function runBuild(sources, options, logger) {
   const builder = new Builder(sources, options, logger);
 
@@ -228,12 +209,7 @@ class Builder {
     this.logger = logger;
     this.selfHash = null;
     this.allTitles = {};
-    // Create a new Kumascript renderer object with a reference
-    // to the document information needed for resolving macros.
-    // The renderer lazily consumes the document information, so
-    // it only has to be valid by the time you call the "render"
-    // method.
-    this.ksRenderer = new KSRenderer(this.allTitles);
+    this.ksRenderer = new KSRenderer();
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
@@ -481,10 +457,11 @@ class Builder {
       !this.options.regenerateAllTitles
     ) {
       // XXX maybe this should become a Map instance.
-      Object.assign(
-        this.allTitles,
-        JSON.parse(fs.readFileSync(allTitlesJsonFilepath, "utf8"))
+      this.allTitles = JSON.parse(
+        fs.readFileSync(allTitlesJsonFilepath, "utf8")
       );
+      // Set the context for the Kumascript renderer.
+      this.ksRenderer.use(this.allTitles);
       return;
     }
 
@@ -556,6 +533,9 @@ class Builder {
         )
       );
     }
+
+    // Set the context for the Kumascript renderer.
+    this.ksRenderer.use(this.allTitles);
 
     fs.writeFileSync(
       allTitlesJsonFilepath,
@@ -1231,16 +1211,12 @@ class Builder {
       return;
     }
 
-    // Get the summary from the raw HTML.
-    const rawHtml = fs.readFileSync(path.join(folder, "index.html"), "utf8");
-    const summary = getSummary(rawHtml);
-
     const doc = {
       mdn_url,
       title: metadata.title,
       popularity: allPopularities[mdn_url] || 0.0,
       locale: metadata.locale,
-      summary: summary,
+      summary: metadata.summary,
       slug: metadata.slug,
       file: folder,
       modified: metadata.modified,
@@ -1252,6 +1228,9 @@ class Builder {
       source: source.filepath,
     };
     if (metadata.tags) {
+      // Unfortunately, some of the Kumascript macros (including some of the
+      // sidebar macros) depend on tags for proper operation, so we need to
+      // keep them for now.
       doc.tags = metadata.tags;
     }
     this.allTitles[mdn_url] = doc;

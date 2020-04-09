@@ -13,25 +13,15 @@ function getUriKey(url) {
 
 class AllPagesInfo {
   constructor(pageInfoByUri) {
-    this.pagesByUri = null;
-    this.childrenByUri = null;
-    this.pageInfoByUri = pageInfoByUri;
-  }
+    // Using the provided "pageInfoByUri", build the data structures
+    // needed to efficiently provide data suitable for consumption by
+    // the Kumascript macros.
 
-  build() {
-    // Builds the data structures needed to efficiently provide
-    // data suitable for consumption by Kumascript macros.
+    const pagesByUri = {};
+    const childrenByUri = {};
 
-    if (this.pagesByUri && this.childrenByUri) {
-      // No need to do anything if we've already built our
-      // data structures.
-      return;
-    }
-
-    // Using the provided "pageInfoByUri", build a new data structure
-    // "pagesByUri" that provides data suitable for consumption by
-    // Kumascript macros.
-    const pageInfoByUri = this.pageInfoByUri;
+    // We'll build "pagesByUri" first, and then populate the "childrenByUri"
+    // object it references.
 
     function buildTranslationObjects(data) {
       // Builds a list of translation objects suitable for
@@ -73,9 +63,6 @@ class AllPagesInfo {
       return result;
     }
 
-    const pagesByUri = {};
-    const childrenByUri = {};
-
     for (const [uri, data] of Object.entries(pageInfoByUri)) {
       pagesByUri[uri.toLowerCase()] = Object.freeze({
         url: data.mdn_url,
@@ -98,10 +85,12 @@ class AllPagesInfo {
         },
       });
     }
+
     this.pagesByUri = Object.freeze(pagesByUri);
 
-    // Finally, using the "pagesByUri" we just built, let's populate
-    // "childrenByUri", a map of URI's to their immediate child pages.
+    // Now let's populate "childrenByUri", a mapping of URI's to their
+    // immediate children. This is only used (referenced) within the
+    // lazy "subpages" getter of each page object within "pagesByUri".
 
     const alreadyProcessed = new Set();
     function addChild(childUri, locale, slugSegments) {
@@ -142,9 +131,9 @@ class AllPagesInfo {
   }
 
   getChildren(url, includeSelf) {
-    // We don't need "depth" since its handled dynamically (lazily).
+    // We don't need "depth" since it's handled dynamically (lazily).
     // The caller can keep requesting "subpages" as deep as the
-    // hierarchy goes, and they will be provided on-demand.
+    // hierarchy goes, and they'll be provided on-demand.
     const uriKey = getUriKey(url);
     if (!this.pagesByUri.hasOwnProperty(uriKey)) {
       return Object.freeze([]);
@@ -174,14 +163,22 @@ class AllPagesInfo {
 }
 
 class Renderer {
-  constructor(pageInfoByUri) {
+  constructor() {
+    this.allPagesInfo = null;
     this.templates = new Templates();
+  }
+
+  use(pageInfoByUri) {
     this.allPagesInfo = new AllPagesInfo(pageInfoByUri);
+    return this;
   }
 
   async render(source, pageEnvironment) {
-    // Build if we haven't already.
-    this.allPagesInfo.build();
+    if (!this.allPagesInfo) {
+      throw new Error(
+        `You haven't yet specified the context for the render via Renderer().use(pageInfoByUri).`
+      );
+    }
     return renderMacros(
       source,
       this.templates,
