@@ -909,10 +909,10 @@ class Builder {
       this.destination,
       mdn_url.toLowerCase()
     );
-    const destinationDir = destinationDirRaw
-      .split(path.sep)
-      .map(sanitizeFilename)
-      .join(path.sep);
+    const destinationDir = path.join(
+      this.destination,
+      mdn_url.toLowerCase().split(path.sep).map(sanitizeFilename).join(path.sep)
+    );
 
     // const destination = path.join(
     //   folder.replace(this.root, this.destination),
