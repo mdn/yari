@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, waitForElement } from "@testing-library/react";
+import { render, fireEvent, waitFor } from "@testing-library/react";
 import { SearchWidget } from "./search";
 
 it("renders without crashing", () => {
@@ -64,7 +64,7 @@ describe("Tests using XHR", () => {
     fireEvent.focus(input);
     fireEvent.change(input, { target: { value: "div" } });
     // Get the search results
-    const searchResults = await waitForElement(() =>
+    const searchResults = await waitFor(() =>
       container.querySelector("div.search-results")
     );
     expect(searchResults.children.length).toBe(1);
@@ -79,7 +79,7 @@ describe("Tests using XHR", () => {
     fireEvent.focus(input);
     fireEvent.change(input, { target: { value: "ABb" } });
     // Get the search results
-    const searchResults = await waitForElement(() =>
+    const searchResults = await waitFor(() =>
       container.querySelector("div.search-results")
     );
     expect(searchResults.children.length).toBe(1);
@@ -96,7 +96,7 @@ describe("Tests using XHR", () => {
       target: { value: "/dwm/mtabr" },
     });
     // Get the search results
-    const searchResults = await waitForElement(() =>
+    const searchResults = await waitFor(() =>
       container.querySelector("div.search-results")
     );
     // Length of children should be 2 including the "Fuzzy searching by URI" div
@@ -122,7 +122,7 @@ describe("Tests using XHR", () => {
       target: { value: "/docs/Web/HTML/Element/abbr" },
     });
     // Get the search results
-    const searchResults = await waitForElement(() =>
+    const searchResults = await waitFor(() =>
       container.querySelector("div.search-results")
     );
     const targetResult = container.querySelector("div.highlit");
@@ -139,7 +139,7 @@ describe("Tests using XHR", () => {
       target: { value: "/docs/Web/HTML/Element/abbr" },
     });
     // Get the search results
-    const searchResults = await waitForElement(() =>
+    const searchResults = await waitFor(() =>
       container.querySelector("div.search-results")
     );
     const targetResult = container.querySelector("div.highlit");
