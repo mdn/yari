@@ -1,5 +1,5 @@
 import React from "react";
-import { cleanup } from "@testing-library/react";
+// import { cleanup } from "@testing-library/react";
 
 // localStorage mock for tests
 const mockLocalStorage = () => {
@@ -33,7 +33,7 @@ beforeEach(() => {
   };
 });
 
-afterEach(() => {
-  // Unmounts React trees that were mounted with @testing-library/react's render.
-  cleanup();
-});
+// afterEach(() => {
+//   // Unmounts React trees that were mounted with @testing-library/react's render.
+//   cleanup();
+// });
