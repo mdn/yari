@@ -29,7 +29,7 @@ const { BUILD_TIMEOUT, VALID_LOCALES } = require("./constants");
 const { slugToFoldername } = require("./utils");
 const { timeout } = require("./promise-timeout.js");
 
-const renderMacros = require("kumascript");
+const KSRenderer = require("kumascript");
 
 const MAX_OPEN_FILES = 256;
 const htmlDiffer = new HtmlDiffer();
@@ -253,6 +253,7 @@ class Builder {
     this.selfHash = null;
     this.allTitles = new Map();
     this.allRedirects = new Map();
+    this.ksRenderer = new KSRenderer();
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
@@ -324,6 +325,7 @@ class Builder {
     // This prepares this.selfHash so that when we build files, we can
     // write down which "self hash" was used at the time.
     const self = this;
+
     if (specificFolders) {
       // Check that they all exist and are folders
       const allProcessed = [];
@@ -515,6 +517,8 @@ class Builder {
         );
       } else {
         // This means we DON'T need to re-generate all titles.
+        // Set the context for the Kumascript renderer.
+        this.ksRenderer.use(this.allTitles);
         return;
       }
     }
@@ -601,6 +605,9 @@ class Builder {
         )
       );
     }
+
+    // Set the context for the Kumascript renderer.
+    this.ksRenderer.use(this.allTitles);
 
     fs.writeFileSync(
       allTitlesJsonFilepath,
@@ -1030,34 +1037,6 @@ class Builder {
     return false;
   }
 
-  async verifyRender(uri, metadata) {
-    // This still needs work, and is tricky. Sometimes, for example,
-    // the rendered HTML from the DB has not actually been rendered
-    // for some time. It's stale and could be different from the
-    // freshly-rendered HTML.
-    const wikiUrl = "https://wiki.developer.mozilla.org";
-    const url = nodeUrl.resolve(wikiUrl, uri);
-    const urlRaw = url + "?raw";
-    const urlExpected = url + "?raw&macros";
-    try {
-      const [responseRaw, responseExpected] = await Promise.all([
-        got(urlRaw),
-        got(urlExpected),
-      ]);
-      if (responseRaw.statusCode == 200 && responseExpected.statusCode == 200) {
-        const rawHtml = responseRaw.body;
-        const expectedHtml = responseExpected.body;
-        const [renderedHtml, errors] = await this.renderHtml(rawHtml, metadata);
-        if (!htmlDiffer.isEqual(expectedHtml, renderedHtml)) {
-          this.logger.error(`\Difference in render: ${uri}`);
-          htmlDifferlogger.logDiffText(
-            htmlDiffer.diffHtml(expectedHtml, renderedHtml)
-          );
-        }
-      }
-    } catch (e) {}
-  }
-
   async processFolder(source, folder, config) {
     config = config || {};
 
@@ -1111,10 +1090,6 @@ class Builder {
     // To avoid KS having to do that, just replace the KS macro with a marker
     // like `<--#Compat('foo.bar')--> and then replace it here in the
     // post-processing instead.
-
-    if (this.options.verifyRenders) {
-      this.verifyRender(mdn_url, metadata);
-    }
 
     const rawHtml = fs.readFileSync(path.join(folder, "index.html"), "utf8");
     hasher.update(rawHtml);
@@ -1356,6 +1331,7 @@ class Builder {
       title: metadata.title,
       popularity: allPopularities[mdn_url] || 0.0,
       locale: metadata.locale,
+      summary: metadata.summary,
       slug: metadata.slug,
       file: folder,
       modified: metadata.modified,
@@ -1366,6 +1342,12 @@ class Builder {
       excludeInSitemaps: source.excludeInSitemaps,
       source: source.filepath,
     };
+    if (metadata.tags) {
+      // Unfortunately, some of the Kumascript macros (including some of the
+      // sidebar macros) depend on tags for proper operation, so we need to
+      // keep them for now.
+      doc.tags = metadata.tags;
+    }
     this.allTitles.set(mdn_url, doc);
   }
 
@@ -1402,7 +1384,7 @@ class Builder {
       tags: metadata.tags || [],
       selective_mode: false,
     };
-    return renderMacros(rawHtml, docEnv);
+    return this.ksRenderer.render(rawHtml, docEnv);
   }
 
   /**

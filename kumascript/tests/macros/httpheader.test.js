@@ -34,6 +34,7 @@ describeMacro("httpheader", function () {
     );
   });
   itMacro("One unknown argument (en-US)", function (macro) {
+    macro.ctx.wiki.getPage = jest.fn((url) => {});
     return assert.eventually.equal(
       macro.call("fleetwood-mac"),
       `<a href="/en-US/docs/Web/HTTP/Headers/fleetwood-mac" title="The documentation about this has not yet been written; please consider contributing!"><code>fleetwood-mac</code></a>`

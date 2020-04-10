@@ -55,7 +55,7 @@ function normalize(name) {
   return name.replace(/:/g, "-").toLowerCase();
 }
 
-async function render(source, templates, pageEnvironment) {
+async function render(source, templates, pageEnvironment, allPagesInfo) {
   // Parse the source document.
   let tokens;
   try {
@@ -83,7 +83,7 @@ async function render(source, templates, pageEnvironment) {
 
   // Create the Environment object that we'll use to render all of
   // the macros on the page
-  let environment = new Environment(pageEnvironment, templates);
+  let environment = new Environment(pageEnvironment, templates, allPagesInfo);
 
   // Loop through the tokens, rendering the macros and collecting
   // the resulting promises. We detect duplicate invocations and

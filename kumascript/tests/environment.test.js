@@ -62,9 +62,6 @@ const expectedFunctions = [
   "mdn.fetchHTTPResource",
   "MDN.fetchHTTPResource",
   "MDN.fetchhttpresource",
-  "mdn.bzSearch",
-  "MDN.bzSearch",
-  "MDN.bzsearch",
   "mdn.siteURL",
   "MDN.siteURL",
   "MDN.siteurl",
@@ -159,13 +156,7 @@ const expectedFunctions = [
 const expectedAsync = [
   "MDN.fetchJSONResource",
   "MDN.fetchHTTPResource",
-  "MDN.bzSearch",
   "wiki.page",
-  "wiki.getPage",
-  "wiki.tree",
-  "page.subpages",
-  "page.subpagesExpand",
-  "page.translations",
   "template",
 ];
 

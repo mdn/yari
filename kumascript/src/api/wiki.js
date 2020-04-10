@@ -103,20 +103,8 @@ module.exports = {
   },
 
   // Returns the page object for the specified page.
-  async getPage(path) {
-    const key = "kuma:get_page:" + path.toLowerCase();
-    return JSON.parse(
-      await cache(key, async () => {
-        const url = util.buildAbsoluteURL(path) + "$json";
-        try {
-          const response = await got(url);
-          if (response.statusCode == 200) {
-            return response.body;
-          }
-        } catch (e) {}
-        return "{}";
-      })
-    );
+  getPage(path) {
+    this.info.getPage(path || this.env.url);
   },
 
   // Retrieve the full uri of a given wiki page.
@@ -136,13 +124,13 @@ module.exports = {
   // Special note: If ordered is true, pages whose locale differ from
   // the current page's locale are omitted, to work around misplaced
   // localizations showing up in navigation.
-  async tree(path, depth, self, reverse, ordered) {
+  tree(path, depth, self, reverse, ordered) {
     // If the path ends with a slash, remove it.
     if (path.substr(-1, 1) === "/") {
       path = path.slice(0, -1);
     }
 
-    var pages = await this.page.subpages(path, depth, self);
+    var pages = this.page.subpages(path, depth, self);
 
     if (reverse == 0) {
       pages.sort(alphanumForward);

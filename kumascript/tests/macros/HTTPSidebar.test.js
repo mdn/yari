@@ -1,7 +1,10 @@
 /**
  * @prettier
  */
-
+const fs = require("fs");
+const path = require("path");
+const jsdom = require("jsdom");
+const AllPagesInfo = require("../../src/info.js");
 const {
   assert,
   itMacro,
@@ -10,7 +13,13 @@ const {
   lintHTML,
 } = require("./utils");
 
-const jsdom = require("jsdom");
+// Load fixture data.
+const fixtureData = JSON.parse(
+  fs.readFileSync(
+    path.resolve(__dirname, "fixtures", "allTitles2.json"),
+    "utf8"
+  )
+);
 
 const locales = {
   "en-US": {
@@ -35,6 +44,7 @@ function checkSidebarDom(dom, locale) {
 describeMacro("HTTPSidebar", function () {
   beforeEachMacro(function (macro) {
     macro.ctx.env.path = "/en-US/docs/Web/HTTP/Overview";
+    macro.ctx.info = new AllPagesInfo(fixtureData);
   });
 
   itMacro("Creates a sidebar object for en-US", function (macro) {
