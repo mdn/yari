@@ -71,7 +71,8 @@ export class Document extends React.Component {
   };
 
   onMessage = (data) => {
-    if (data.documentUri === this.props.location.pathname) {
+    const currentDocumentUri = `/${this.props.locale}/docs/${this.props["*"]}`;
+    if (data.documentUri === currentDocumentUri) {
       // The recently edited document is the one we're currently looking at!
       if (!this.dismounted) {
         this.fetchDocument(false);

@@ -5,7 +5,7 @@ import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { NoMatch } from "./routing";
 import { SearchWidget } from "./search";
-const DocumentEdit = lazy(() => import("./document-edit"));
+const DocumentEdit = lazy(() => import("./document/edit"));
 
 export function App(appProps) {
   const router = (

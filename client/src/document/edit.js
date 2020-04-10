@@ -4,13 +4,11 @@ import useSWR from "swr";
 import { debounce } from "throttle-debounce";
 
 // Sub-components
-import { Document } from "./document";
+import { Document } from "./";
 
 import "./edit.scss";
 
 function DocumentEdit({ ...props }) {
-  // console.log(props);
-
   const sp = new URLSearchParams();
   const url = `/${props.locale}/docs/${props["*"]}`;
   sp.append("url", url);
@@ -61,7 +59,7 @@ function EditForm({ data, url }) {
     setAutoSaveEnabled(!autosaveEnabled);
   }
 
-  const putDocumentDebounced = useRef(debounce(400, putDocument));
+  const putDocumentDebounced = useRef(debounce(1000, putDocument));
 
   useEffect(() => {
     if (autosaveEnabled) {
