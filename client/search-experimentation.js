@@ -12,7 +12,7 @@ const titles = JSON.parse(data);
 const index = new FlexSearch({
   encode: "advanced",
   tokenize: "reverse",
-  suggest: true
+  suggest: true,
 });
 
 const _map = {};
@@ -23,7 +23,7 @@ Object.entries(titles).forEach(([uri, title]) => {
 
 const q = "vi";
 const indexResults = index.search(q, 10);
-const results = indexResults.map(uri => {
+const results = indexResults.map((uri) => {
   return { uri, title: _map[uri] };
 });
 console.log(JSON.stringify(results, null, 2));

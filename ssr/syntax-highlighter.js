@@ -26,10 +26,10 @@ export function fixSyntaxHighlighting(document) {
   // Loop over all prose sections that look for <pre><code> blocks
   // that might have a syntax highlighting marker.
   document.body
-    .filter(section => {
+    .filter((section) => {
       return section.type === "prose" && section.value && section.value.content;
     })
-    .forEach(section => {
+    .forEach((section) => {
       const $ = cheerio.load(section.value.content);
       let mutations = 0;
       $("pre > code").each((_, blob) => {
@@ -74,11 +74,11 @@ export function fixSyntaxHighlighting(document) {
 
   // Now loop over, and mutate, all 'example' sections
   document.body
-    .filter(section => section.type === "examples")
-    .forEach(section => {
+    .filter((section) => section.type === "examples")
+    .forEach((section) => {
       section.value.examples
-        .filter(block => block.sources)
-        .forEach(block => {
+        .filter((block) => block.sources)
+        .forEach((block) => {
           highlightSources(block.sources);
         });
     });

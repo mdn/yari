@@ -21,5 +21,5 @@ function slugToFoldername(slug) {
 }
 
 module.exports = {
-  slugToFoldername
+  slugToFoldername,
 };

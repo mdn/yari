@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "@reach/router";
 
-import "./document-editthispage.css";
+import "./editthispage.css";
 
 export function EditThisPage({ doc }) {
   const { source } = doc;

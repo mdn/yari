@@ -28,13 +28,13 @@ function decode(string) {
 }
 
 function wrapHtml(fn) {
-  return function() {
+  return function () {
     const result = fn.apply(this, arguments);
     return typeof result === "string" ? decode(result) : result;
   };
 }
 
-cheerio.load = function() {
+cheerio.load = function () {
   const instance = load.apply(this, arguments);
 
   instance.html = wrapHtml(instance.html);

@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Sockette from "sockette";
 import { Link } from "@reach/router";
 
-import "./document-spy.css";
+import "./spy.css";
 
 export function DocumentSpy({ onMessage }) {
   // null - never connected before
@@ -21,22 +21,22 @@ export function DocumentSpy({ onMessage }) {
     wssRef.current = new Sockette("ws://localhost:8080", {
       timeout: 5e3,
       maxAttempts: 25,
-      onopen: e => {
+      onopen: (e) => {
         if (mounted) setConnected(true);
       },
-      onmessage: e => {
+      onmessage: (e) => {
         const data = JSON.parse(e.data);
         onMessage(data);
         if (mounted) setLastMessage(data);
       },
-      onreconnect: e => {},
-      onmaximum: e => {},
-      onclose: e => {
+      onreconnect: (e) => {},
+      onmaximum: (e) => {},
+      onclose: (e) => {
         if (mounted) setConnected(false);
       },
-      onerror: e => {
+      onerror: (e) => {
         if (mounted) setWebsocketError(e);
-      }
+      },
     });
     return () => {
       mounted = false;

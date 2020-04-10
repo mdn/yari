@@ -19,9 +19,10 @@ const ProgressBar = require("./progress-bar");
 const { buildHtmlAndJsonFromDoc } = require("ssr");
 const {
   extractDocumentSections,
-  extractSidebar
+  extractSidebar,
 } = require("./document-extractor");
 const { VALID_LOCALES } = require("./constants");
+const { slugToFoldername } = require("./utils");
 
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
@@ -37,7 +38,7 @@ function getCurrentGitBranch(fallback = "master") {
     } else {
       const spawned = childProcess.spawnSync("git", [
         "branch",
-        "--show-current"
+        "--show-current",
       ]);
       if (spawned.error) {
         console.warn(
@@ -69,7 +70,7 @@ function cleanLocales(locales) {
     // The user *might* type locales as a comma separated strings.
     // Explode those split by ','.
     if (locale.includes(",")) {
-      clean.push(...locale.split(",").map(l => l.toLowerCase()));
+      clean.push(...locale.split(",").map((l) => l.toLowerCase()));
     } else {
       // As a convenience, we know that every locale folder is always lowercase,
       // but it's very possible that someone specifies it in NOT lowercase.
@@ -77,7 +78,7 @@ function cleanLocales(locales) {
       clean.push(locale.toLowerCase());
     }
   }
-  return clean.filter(x => {
+  return clean.filter((x) => {
     if (x) {
       if (!VALID_LOCALES.has(x)) {
         throw new Error(`'${x}' is not a valid locale (see VALID_LOCALES)`);
@@ -91,12 +92,12 @@ function cleanLocales(locales) {
 function triggerTouch(filepath, document, root) {
   const changedFile = {
     path: filepath,
-    name: path.relative(root, filepath)
+    name: path.relative(root, filepath),
   };
   const data = {
     documentUri: document.mdn_url,
     changedFile,
-    hasEDITOR: Boolean(process.env.EDITOR)
+    hasEDITOR: Boolean(process.env.EDITOR),
   };
   broadcastWebsocketMessage(JSON.stringify(data));
 }
@@ -151,7 +152,7 @@ function broadcastWebsocketMessage(msg) {
     return;
   }
   // let i = 0;
-  webSocketServer.clients.forEach(client => {
+  webSocketServer.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       // i++;
       // console.log(`SENDING (${i})...`, msg);
@@ -188,7 +189,7 @@ const processing = Object.freeze({
   ALREADY: "already",
   PROCESSED: "processed",
   EMPTY: "empty",
-  EXCLUDED: "excluded"
+  EXCLUDED: "excluded",
 });
 
 class Builder {
@@ -199,16 +200,13 @@ class Builder {
     this.logger = logger;
     this.selfHash = null;
     this.allTitles = {};
-    // TODO(peterbe): Evaluate why does this need to be its own data struct
-    // Can't it all just be part of this.allTitles??
-    this.allPopularities = {};
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
 
     this.progressBar = !options.noProgressbar
       ? new ProgressBar({
-          includeMemory: true
+          includeMemory: true,
         })
       : null;
   }
@@ -228,7 +226,7 @@ class Builder {
 
   // Just print what could be found and exit
   listLocales() {
-    this.sources.entries().forEach(source => {
+    for (const source of this.sources.entries()) {
       console.log(`\n${chalk.bold("Source:")} ${chalk.white(source.filepath)}`);
       const counts = this.countLocaleFolders(source);
       const sumCounts = Array.from(counts.values()).reduce((a, b) => a + b, 0);
@@ -254,7 +252,19 @@ class Builder {
             );
           }
         });
-    });
+    }
+  }
+
+  *walkSources({ allLocales = false } = {}) {
+    for (const source of this.sources.entries()) {
+      for (const localeFolder of this.getLocaleRootFolders(source, {
+        allLocales,
+      })) {
+        for (const [folder, files] of walker(localeFolder)) {
+          yield { source, localeFolder, folder, files };
+        }
+      }
+    }
   }
 
   start({ specificFolders = null } = {}) {
@@ -263,7 +273,7 @@ class Builder {
     if (specificFolders) {
       // Check that they all exist and are folders
       const allProcessed = [];
-      specificFolders.forEach(folder => {
+      specificFolders.forEach((folder) => {
         if (!fs.existsSync(folder)) {
           throw new Error(`${folder} does not exist`);
         }
@@ -271,7 +281,7 @@ class Builder {
           throw new Error(`${folder} is not a directory`);
         }
 
-        const source = this.sources.entries().find(source => {
+        const source = this.sources.entries().find((source) => {
           return folder.startsWith(source.filepath);
         });
         if (!source) {
@@ -297,15 +307,14 @@ class Builder {
     } else {
       this.describeActiveSources();
       this.describeActiveFilters();
-      this.ensurePopularities();
 
       // To be able to make a progress bar we need to first count what we're
       // going to need to do.
       if (this.progressBar) {
         const countTodo = this.sources
           .entries()
-          .map(source => this.countLocaleFolders(source))
-          .map(m => Array.from(m.values()).reduce((a, b) => a + b))
+          .map((source) => this.countLocaleFolders(source))
+          .map((m) => Array.from(m.values()).reduce((a, b) => a + b))
           .reduce((a, b) => a + b);
         if (!countTodo) {
           throw new Error("No folders found to process!");
@@ -317,77 +326,69 @@ class Builder {
 
       // Record of counts of all results
       const counts = {};
-      Object.values(processing).forEach(key => {
+      Object.values(processing).forEach((key) => {
         counts[key] = 0;
       });
 
       // Start the real processing
       const t0 = new Date();
-      this.sources.entries().forEach(source => {
-        this.getLocaleRootFolders(source).forEach(filepath => {
-          walker(filepath, (folder, files) => {
-            if (this.excludeFolder(source, folder, filepath, files)) {
-              // If the folder was a Stumptown folder, what we're
-              // actually excluding is all the .json files in the folder.
-              if (source.isStumptown) {
-                counts[processing.EXCLUDED] += files.filter(n =>
-                  n.endsWith(".json")
-                ).length;
-              } else {
-                counts[processing.EXCLUDED]++;
-              }
-              return;
-            }
+      for (const { source, locFolder, folder, files } of this.walkSources()) {
+        if (this.excludeFolder(source, folder, locFolder, files)) {
+          // If the folder was a Stumptown folder, what we're
+          // actually excluding is all the .json files in the folder.
+          if (source.isStumptown) {
+            counts[processing.EXCLUDED] += files.filter((n) =>
+              n.endsWith(".json")
+            ).length;
+          } else {
+            counts[processing.EXCLUDED]++;
+          }
+          continue;
+        }
 
-            if (source.isStumptown) {
-              // In the case of stumptown, one folder will have multiple
-              // files with each representing a document.
-              files
-                .filter(n => n.endsWith(".json"))
-                .forEach(filename => {
-                  const filepath = path.join(folder, filename);
-                  let processed;
-                  try {
-                    processed = this.processStumptownFile(source, filepath);
-                  } catch (err) {
-                    // If a crash happens inside processStumptownFile it's hard
-                    // to debug if you don't know which files/folders caused it.
-                    // So inject some logging of that before throwing.
-                    this.logger.error(
-                      chalk.yellow(`Error happened processing: ${filepath}`)
-                    );
-                    throw err;
-                  }
-                  const { result, file } = processed;
-                  this.printProcessing(result, file);
-                  counts[result]++;
-                  this.tickProgressbar(++total);
-                });
-              return;
-            }
-
+        if (source.isStumptown) {
+          // In the case of stumptown, one folder will have multiple
+          // files with each representing a document.
+          for (const filename of files.filter((n) => n.endsWith(".json"))) {
+            const filepath = path.join(folder, filename);
             let processed;
             try {
-              processed = this.processFolder(source, folder);
+              processed = this.processStumptownFile(source, filepath);
             } catch (err) {
-              // If a crash happens inside processFolder it's hard to debug
-              // if you don't know which files/folders caused it. So inject
-              // some logging of that before throwing.
-              console.error(
-                chalk.yellow(`Error happened processing: ${folder}`)
+              // If a crash happens inside processStumptownFile it's hard
+              // to debug if you don't know which files/folders caused it.
+              // So inject some logging of that before throwing.
+              this.logger.error(
+                chalk.yellow(`Error happened processing: ${filepath}`)
               );
-
-              // XXX need to decide what to do with errors.
-              // We could increment a counter and dump all errors to a log file.
               throw err;
             }
             const { result, file } = processed;
             this.printProcessing(result, file);
             counts[result]++;
             this.tickProgressbar(++total);
-          });
-        });
-      });
+          }
+          continue;
+        }
+
+        let processed;
+        try {
+          processed = this.processFolder(source, folder);
+        } catch (err) {
+          // If a crash happens inside processFolder it's hard to debug
+          // if you don't know which files/folders caused it. So inject
+          // some logging of that before throwing.
+          console.error(chalk.yellow(`Error happened processing: ${folder}`));
+
+          // XXX need to decide what to do with errors.
+          // We could increment a counter and dump all errors to a log file.
+          throw err;
+        }
+        const { result, file } = processed;
+        this.printProcessing(result, file);
+        counts[result]++;
+        this.tickProgressbar(++total);
+      }
       const t1 = new Date();
 
       this.dumpAllURLs();
@@ -425,32 +426,22 @@ class Builder {
     }
 
     // If we're going to generate all titles, we need all popularities.
-    // Normally this gets run later in the build process, but in the
-    // case of a needing the titles first, make sure popularities are set.
-    this.ensurePopularities();
+    const allPopularities = this._getAllPopularities();
 
     this.logger.info("Building a list of ALL titles and URIs...");
     let t0 = new Date();
-    this.sources.entries().forEach(source => {
-      this.getLocaleRootFolders(source, { allLocales: true }).forEach(
-        filepath => {
-          walker(filepath, (folder, files) => {
-            if (source.isStumptown) {
-              files
-                .filter(n => n.endsWith(".json"))
-                .forEach(filename => {
-                  const filepath = path.join(folder, filename);
-                  this.processStumptownFileTitle(source, filepath);
-                });
-              return;
-            }
-            if (files.includes("index.html") && files.includes("index.yaml")) {
-              this.processFolderTitle(source, folder);
-            }
-          });
+    for (const { source, folder, files } of this.walkSources({
+      allLocales: true,
+    })) {
+      if (source.isStumptown) {
+        for (const filename of files.filter((n) => n.endsWith(".json"))) {
+          const filepath = path.join(folder, filename);
+          this.processStumptownFileTitle(source, filepath, allPopularities);
         }
-      );
-    });
+      } else if (files.includes("index.html") && files.includes("index.yaml")) {
+        this.processFolderTitle(source, folder, allPopularities);
+      }
+    }
 
     // Only after *all* titles have been processed can we iterate over the
     // mapping and figure out all translations.
@@ -460,8 +451,8 @@ class Builder {
     // of other locales and slugs.
     let countBrokenTranslationOfDocuments = 0;
     Object.values(this.allTitles)
-      .filter(data => data.translation_of)
-      .forEach(data => {
+      .filter((data) => data.translation_of)
+      .forEach((data) => {
         const parentURL = buildMDNUrl("en-US", data.translation_of);
         const parentData = this.allTitles[parentURL];
 
@@ -484,7 +475,7 @@ class Builder {
           }
           parentData.translations.push({
             locale: data.locale,
-            slug: data.slug
+            slug: data.slug,
           });
         } else {
           countBrokenTranslationOfDocuments++;
@@ -536,20 +527,20 @@ class Builder {
 
     this.sources
       .entries()
-      .filter(source => source.watch)
-      .forEach(source => {
+      .filter((source) => source.watch)
+      .forEach((source) => {
         const watchdir = path.resolve(source.filepath);
 
         console.log(chalk.yellow(`Setting up file watcher on ${watchdir}...`));
         const watcher = chokidar.watch(path.join(watchdir, "**/*.(html|yaml)"));
-        watcher.on("change", path => {
+        watcher.on("change", (path) => {
           onChange(path, source);
         });
         watcher.on("ready", () => {
           const watchedPaths = watcher.getWatched();
           const folders = Object.values(watchedPaths);
           const count = folders
-            .map(list => list.length)
+            .map((list) => list.length)
             .reduce((a, b) => a + b, 0);
           console.log(
             chalk.yellow(
@@ -601,11 +592,11 @@ class Builder {
   }
 
   prepareRoots() {
-    this.sources.entries().forEach(source => {
-      this.getLocaleRootFolders(source).forEach(folderpath => {
-        this.prepareRoot(path.basename(folderpath));
-      });
-    });
+    for (const source of this.sources.entries()) {
+      for (const localeFolder of this.getLocaleRootFolders(source)) {
+        this.prepareRoot(path.basename(localeFolder));
+      }
+    }
   }
 
   initSelfHash() {
@@ -623,7 +614,7 @@ class Builder {
       // Also factor in the ssr builder's package.json
       path.join(ssrRoot, "package.json"),
       // and it's .js files
-      ...simpleGlob(ssrRoot, ".js")
+      ...simpleGlob(ssrRoot, ".js"),
     ]);
   }
 
@@ -631,7 +622,10 @@ class Builder {
     if (!this.options.destination) {
       throw new Error("options.destination not set");
     }
-    const folderpath = path.join(this.options.destination, locale);
+    const folderpath = path.join(
+      this.options.destination,
+      locale.toLowerCase()
+    );
     if (this.options.startClean) {
       // Experimental new feature
       // https://nodejs.org/api/fs.html#fs_fs_rmdirsync_path_options
@@ -640,23 +634,24 @@ class Builder {
     fs.mkdirSync(folderpath, { recursive: true });
   }
 
-  ensurePopularities() {
-    if (!Object.keys(this.allPopularities).length) {
-      const { popularitiesfile } = this.options;
-      if (popularitiesfile) {
-        this.allPopularities = JSON.parse(
-          fs.readFileSync(popularitiesfile, "utf8")
-        );
-
-        this.logger.info(
-          chalk.magenta(
-            `Parsed ${Object.keys(
-              this.allPopularities
-            ).length.toLocaleString()} popularities.`
-          )
-        );
-      }
+  _getAllPopularities() {
+    const { popularitiesfile } = this.options;
+    if (popularitiesfile) {
+      const allPopularities = JSON.parse(
+        fs.readFileSync(popularitiesfile, "utf8")
+      );
+      this.logger.info(
+        chalk.magenta(
+          `Parsed ${Object.keys(
+            allPopularities
+          ).length.toLocaleString()} popularities.`
+        )
+      );
+      return allPopularities;
     }
+    // If the popularitiesfile isn't available you simply get
+    // no popularity numbers set on any of the documents.
+    return {};
   }
 
   summorizeResults(counts, took) {
@@ -674,7 +669,7 @@ class Builder {
     );
     Object.keys(counts)
       .sort()
-      .map(key => {
+      .map((key) => {
         const count = counts[key];
         console.log(`${key.padEnd(12)}: ${count.toLocaleString()}`);
       });
@@ -723,11 +718,15 @@ class Builder {
               }
               return {
                 loc: sitemapBaseUrl + uri,
-                lastmod: documentData.modified.split("T")[0]
+                lastmod: documentData.modified.split("T")[0],
               };
             })
         );
-        const sitemapsDir = path.join(this.destination, "sitemaps", locale);
+        const sitemapsDir = path.join(
+          this.destination,
+          "sitemaps",
+          locale.toLowerCase()
+        );
         fs.mkdirSync(sitemapsDir, { recursive: true });
         const sitemapFilepath = path.join(sitemapsDir, "sitemap.xml");
         fs.writeFileSync(sitemapFilepath, sitemapXml);
@@ -748,11 +747,11 @@ class Builder {
           // network bytes matter.
           titles[uri] = {
             title: documentData.title,
-            popularity: documentData.popularity
+            popularity: documentData.popularity,
           };
         });
 
-      const localeFolder = path.join(this.destination, locale);
+      const localeFolder = path.join(this.destination, locale.toLowerCase());
       fs.mkdirSync(localeFolder, { recursive: true });
       const titlesFilepath = path.join(localeFolder, "titles.json");
       fs.writeFileSync(titlesFilepath, JSON.stringify({ titles }, null, 2));
@@ -765,10 +764,10 @@ class Builder {
     // Need to make the generic /sitemap.xml for all sitemaps
     if (!this.options.noSitemaps) {
       const allSitemapXml = makeSitemapXML(
-        allSitemapsBuilt.map(locale => {
+        allSitemapsBuilt.map((locale) => {
           return {
             loc: sitemapBaseUrl + `/sitemaps/${locale}/sitemap.xml`,
-            lastmod: mostModified[locale]
+            lastmod: mostModified[locale],
           };
         })
       );
@@ -794,7 +793,7 @@ class Builder {
       // (or '\' on Windows).
       const foldername = folder.replace(localeFolder, "").slice(1);
       if (
-        !this.options.foldersearch.some(search => {
+        !this.options.foldersearch.some((search) => {
           // The folder search can contain special characters.
           // For example `^web` means `.startswith('web')`.
           // For example `foo/bar/media$` means `.endswith('foo/bar/media$')`.
@@ -809,7 +808,7 @@ class Builder {
       }
     }
     if (source.isStumptown) {
-      return !files.some(filepath => filepath.endsWith(".json"));
+      return !files.some((filepath) => filepath.endsWith(".json"));
     } else {
       return !(files.includes("index.html") && files.includes("index.yaml"));
     }
@@ -820,13 +819,12 @@ class Builder {
    * The 'allLocales' parameter means it overrides the
    * 'options.locales` or `options.notLocales` values.
    */
-  getLocaleRootFolders(source, { allLocales = false } = {}) {
+  *getLocaleRootFolders(source, { allLocales = false } = {}) {
     if (!source || !source.filepath) {
       throw new Error("Invalid source");
     }
     const { locales, notLocales } = this.options;
     const files = fs.readdirSync(source.filepath);
-    const folders = [];
     for (const name of files) {
       const filepath = path.join(source.filepath, name);
       const isDirectory = fs.statSync(filepath).isDirectory();
@@ -836,24 +834,20 @@ class Builder {
           ((!locales.length || locales.includes(name)) &&
             (!notLocales || !notLocales.includes(name))))
       ) {
-        folders.push(filepath);
+        yield filepath;
       }
     }
-    return folders;
   }
 
   // For a given source, return a mapping of locale-> docs to build.
   // E.g. {'en-us': 123, fr: 9}
   countLocaleFolders(source) {
     let locales = new Map();
-    this.getLocaleRootFolders(source).forEach(filepath => {
-      const locale = path.basename(filepath);
-      if (!locales.has(locale)) {
-        locales.set(locale, 0);
-      }
-      walker(filepath, (folder, files) => {
-        if (this.excludeFolder(source, folder, filepath, files)) {
-          return;
+    for (const localeFolder of this.getLocaleRootFolders(source)) {
+      const locale = path.basename(localeFolder);
+      for (const [folder, files] of walker(localeFolder)) {
+        if (this.excludeFolder(source, folder, localeFolder, files)) {
+          continue;
         }
         if (source.isStumptown) {
           // In stumptown, you'll have multiple .json files per folder.
@@ -861,13 +855,14 @@ class Builder {
           // `en-us/html/reference/elements/video.json` etc.
           locales.set(
             locale,
-            locales.get(locale) + files.filter(x => x.endsWith(".json")).length
+            (locales.get(locale) || 0) +
+              files.filter((x) => x.endsWith(".json")).length
           );
         } else {
-          locales.set(locale, locales.get(locale) + 1);
+          locales.set(locale, (locales.get(locale) || 0) + 1);
         }
-      });
-    });
+      }
+    }
     return locales;
   }
 
@@ -877,7 +872,7 @@ class Builder {
     const { slugsearch } = this.options;
     if (slugsearch.length) {
       const { mdn_url } = metadata;
-      return !slugsearch.some(search => mdn_url.includes(search));
+      return !slugsearch.some((search) => mdn_url.includes(search));
     }
     return false;
   }
@@ -915,10 +910,10 @@ class Builder {
       this.destination,
       mdn_url.toLowerCase()
     );
-    const destinationDir = destinationDirRaw
-      .split(path.sep)
-      .map(sanitizeFilename)
-      .join(path.sep);
+    const destinationDir = path.join(
+      this.destination,
+      slugToFoldername(mdn_url)
+    );
 
     // const destination = path.join(
     //   folder.replace(this.root, this.destination),
@@ -965,7 +960,7 @@ class Builder {
     ) {
       return {
         result: processing.ALREADY,
-        file: path.join(destinationDir, "index.html")
+        file: path.join(destinationDir, "index.html"),
       };
     }
 
@@ -1002,9 +997,9 @@ class Builder {
     }
     doc.body = sections;
 
-    doc.popularity = this.allPopularities[doc.mdn_url] || 0.0;
-
-    doc.last_modified = metadata.modified;
+    const titleData = this.allTitles[doc.mdn_url];
+    doc.popularity = titleData.popularity || 0.0;
+    doc.modified = titleData.modified;
 
     const otherTranslations = this.allTitles[doc.mdn_url].translations || [];
     if (!otherTranslations.length && metadata.translation_of) {
@@ -1017,7 +1012,7 @@ class Builder {
         if (parentOtherTranslations && parentOtherTranslations.length) {
           otherTranslations.push(
             ...parentOtherTranslations.filter(
-              translation => translation.locale !== metadata.locale
+              (translation) => translation.locale !== metadata.locale
             )
           );
         }
@@ -1033,17 +1028,17 @@ class Builder {
       doc,
       destinationDir,
       buildHtml: !this.options.buildJsonOnly,
-      titles: this.allTitles
+      titles: this.allTitles,
     });
 
-    // We're *assuming* that `metadata.mdn_url.toLowerCase()`
+    // We're *assuming* that `slugToFoldername(metadata.mdn_url)`
     // can be a valid folder name on the current filesystem. It if's all
     // non-control characters, it should be fine, but some characters can't be
     // used when storing folders. E.g. `:` in Windows.
     // However, we might want that for the eventual S3 key when it gets
     // uploaded. So make a note about it if necessary.
     if (destinationDir !== destinationDirRaw) {
-      // In the cleaned folder that the file was was put, put a "hidden
+      // In the cleaned folder that the file was put, put a "hidden
       // file" which'll be used by the deployer when it picks S3 key names.
       fs.writeFileSync(
         path.join(destinationDir, "_preferred-name.txt"),
@@ -1056,7 +1051,7 @@ class Builder {
       result: processing.PROCESSED,
       file: outfileHtml || outfileJson,
       jsonFile: outfileJson,
-      doc
+      doc,
     };
   }
 
@@ -1069,19 +1064,19 @@ class Builder {
           folder: path.dirname(folder),
           // absolute_folder: folder,
           // markdown_file: folder
-          content_file: folder // actually a filepath!
+          content_file: folder, // actually a filepath!
           // content_file: path.join(folder, "index.html")
         };
       } else {
         doc.source = {
           // folder: path.relative(source.filepath, folder),
           // absolute_folder: folder,
-          content_file: path.join(folder, "index.html")
+          content_file: path.join(folder, "index.html"),
         };
       }
     } else {
       doc.source = {
-        github_url: this.getGitHubURL(source, folder)
+        github_url: this.getGitHubURL(source, folder),
       };
     }
   }
@@ -1120,7 +1115,7 @@ class Builder {
     ) {
       return {
         result: processing.ALREADY,
-        file: path.join(destinationDir, "index.html")
+        file: path.join(destinationDir, "index.html"),
       };
     }
 
@@ -1130,21 +1125,21 @@ class Builder {
       doc,
       destinationDir,
       buildHtml: !this.options.buildJsonOnly,
-      titles: this.allTitles
+      titles: this.allTitles,
     });
 
     return {
       result: processing.PROCESSED,
       file: outfileHtml || outfileJson,
       jsonFile: outfileJson,
-      doc
+      doc,
     };
   }
 
   /** Similar to processFolder() but this time we're only interesting it
    * adding this document's uri and title to this.allTitles
    */
-  processFolderTitle(source, folder) {
+  processFolderTitle(source, folder, allPopularities) {
     const metadata = yaml.safeLoad(
       fs.readFileSync(path.join(folder, "index.yaml"))
     );
@@ -1179,7 +1174,7 @@ class Builder {
     const doc = {
       mdn_url,
       title: metadata.title,
-      popularity: this.allPopularities[mdn_url] || 0.0,
+      popularity: allPopularities[mdn_url] || 0.0,
       locale: metadata.locale,
       slug: metadata.slug,
       file: folder,
@@ -1189,25 +1184,25 @@ class Builder {
       // bother setting it.
       excludeInTitlesJson: source.excludeInTitlesJson,
       excludeInSitemaps: source.excludeInSitemaps,
-      source: source.filepath
+      source: source.filepath,
     };
     this.allTitles[mdn_url] = doc;
   }
 
-  processStumptownFileTitle(source, file) {
+  processStumptownFileTitle(source, file, allPopularities) {
     const metadata = JSON.parse(fs.readFileSync(file));
     const { mdn_url, title } = metadata;
     const doc = {
       mdn_url,
       title,
-      popularity: this.allPopularities[mdn_url] || 0.0,
+      popularity: allPopularities[mdn_url] || 0.0,
       locale: null,
       slug: null,
       modified: null,
       parent: null,
       excludeInTitlesJson: source.excludeInTitlesJson,
       excludeInSitemaps: source.excludeInSitemaps,
-      source: source.filepath
+      source: source.filepath,
     };
 
     this.allTitles[mdn_url] = doc;
@@ -1233,28 +1228,28 @@ class Builder {
   }
 }
 
-function walker(root, callback, depth = 0) {
+function* walker(root, depth = 0) {
   const files = fs.readdirSync(root);
   if (!depth) {
-    callback(
+    yield [
       root,
-      files.filter(name => {
+      files.filter((name) => {
         return !fs.statSync(path.join(root, name)).isDirectory();
-      })
-    );
+      }),
+    ];
   }
   for (const name of files) {
     const filepath = path.join(root, name);
     const isDirectory = fs.statSync(filepath).isDirectory();
     if (isDirectory) {
-      callback(
+      yield [
         filepath,
-        fs.readdirSync(filepath).filter(name => {
+        fs.readdirSync(filepath).filter((name) => {
           return !fs.statSync(path.join(filepath, name)).isDirectory();
-        })
-      );
+        }),
+      ];
       // Now go deeper
-      walker(filepath, callback, depth + 1);
+      yield* walker(filepath, depth + 1);
     }
   }
 }
@@ -1313,18 +1308,18 @@ function ppMilliseconds(ms) {
 function makeHash(filepaths, length = 12) {
   const hasher = crypto.createHash("md5");
   filepaths
-    .map(fp => fs.readFileSync(fp, "utf8"))
-    .forEach(content => hasher.update(content));
+    .map((fp) => fs.readFileSync(fp, "utf8"))
+    .forEach((content) => hasher.update(content));
   return hasher.digest("hex").slice(0, length);
 }
 
 function makeSitemapXML(locations) {
   const xmlParts = [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
   ];
   xmlParts.push(
-    ...locations.map(location => {
+    ...locations.map((location) => {
       return (
         `<url><loc>${location.loc}</loc>` +
         `<lastmod>${location.lastmod}</lastmod></url>`
@@ -1340,11 +1335,11 @@ function makeSitemapXML(locations) {
 function simpleGlob(directory, extension) {
   return fs
     .readdirSync(directory)
-    .filter(name => name.endsWith(extension))
-    .map(name => path.join(directory, name));
+    .filter((name) => name.endsWith(extension))
+    .map((name) => path.join(directory, name));
 }
 
 module.exports = {
   runBuild,
-  Builder
+  Builder,
 };

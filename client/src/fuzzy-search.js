@@ -6,15 +6,15 @@ export default class FuzzySearch {
   }
 
   search(needle, { limit = 10 }) {
-    const replChars = needle.split("").map(i => {
+    const replChars = needle.split("").map((i) => {
       return `(${escapeExp(i)})`;
     });
     const fuzzyFindExp = `(.+)?${replChars.join("(.+)?")}(.+)?$`;
     const needleLower = needle.toLowerCase();
     return this.haystack
-      .filter(item => fuzzysearch(needleLower, item.toLowerCase()))
+      .filter((item) => fuzzysearch(needleLower, item.toLowerCase()))
       .slice(0, limit)
-      .map(item => {
+      .map((item) => {
         return { needle: item, ...getSubstrings(fuzzyFindExp, item) };
       });
   }

@@ -11,7 +11,11 @@ const documentDataElement = document.getElementById("documentdata");
 if (documentDataElement) {
   docData = JSON.parse(documentDataElement.text);
 }
-const app = <App doc={docData} />;
+const app = (
+  <React.StrictMode>
+    <App doc={docData} />
+  </React.StrictMode>
+);
 if (container.firstElementChild) {
   ReactDOM.hydrate(app, container);
 } else {

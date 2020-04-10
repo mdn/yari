@@ -1,8 +1,7 @@
 import React from "react";
 import { Link } from "@reach/router";
 
-// XXX css-modules please(?!)
-import "./document-languages.css";
+import "./languages.css";
 
 export function DocumentTranslations({ translations }) {
   const [showChoices, setShowChoices] = React.useState(false);
@@ -37,7 +36,7 @@ function ShowTranslations({ translations }) {
   return (
     <div className="translations">
       <ul>
-        {translations.map(translation => {
+        {translations.map((translation) => {
           const { slug, locale } = translation;
           const uri = `/${locale}/docs/${slug}`;
           return (

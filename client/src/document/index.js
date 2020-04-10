@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "@reach/router";
 
-import { NoMatch } from "./routing";
+import { NoMatch } from "../routing";
 
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
@@ -13,16 +13,16 @@ import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 
 // Sub-components
-import { DocumentTranslations } from "./document-languages";
-import { EditThisPage } from "./document-editthispage";
-import { DocumentSpy } from "./document-spy";
+import { DocumentTranslations } from "./languages";
+import { EditThisPage } from "./editthispage";
+import { DocumentSpy } from "./spy";
 
 export class Document extends React.Component {
   state = {
     doc: this.props.doc || null,
     loading: false,
     notFound: false,
-    loadingError: null
+    loadingError: null,
   };
 
   componentDidMount() {
@@ -58,6 +58,11 @@ export class Document extends React.Component {
         console.warn(response);
         return this.setState({ loading: false, loadingError: response });
       } else {
+        if (response.redirected) {
+          // Fetching that data required a redirect!
+          // XXX perhaps do a route redirect here in React?
+          console.warn(`${url} was redirected to ${response.url}`);
+        }
         const data = await response.json();
         document.title = data.doc.title;
         this.setState({ doc: data.doc, loading: false });
@@ -65,9 +70,8 @@ export class Document extends React.Component {
     });
   };
 
-  onMessage = data => {
-    const url = `/${this.props.locale}/docs/${this.props["*"]}`;
-    if (data.documentUri === url) {
+  onMessage = (data) => {
+    if (data.documentUri === this.props.location.pathname) {
       // The recently edited document is the one we're currently looking at!
       if (!this.dismounted) {
         this.fetchDocument(false);
@@ -94,7 +98,7 @@ export class Document extends React.Component {
     if (doc.translation_of) {
       translations.unshift({
         locale: "en-US",
-        slug: doc.translation_of
+        slug: doc.translation_of,
       });
     }
     return (
@@ -163,7 +167,7 @@ function RenderSideBar({ doc }) {
     }
     return null;
   }
-  return doc.related_content.map(node => (
+  return doc.related_content.map((node) => (
     <SidebarLeaf key={node.title} parent={node} />
   ));
 }
@@ -173,7 +177,7 @@ function SidebarLeaf({ parent }) {
     <div>
       <h3>{parent.title}</h3>
       <ul>
-        {parent.content.map(node => {
+        {parent.content.map((node) => {
           if (node.content) {
             return (
               <li key={node.title}>
@@ -200,7 +204,7 @@ function SidebarLeaflets({ node }) {
         {node.uri ? <Link to={node.uri}>{node.title}</Link> : node.title}
       </summary>
       <ol>
-        {node.content.map(childNode => {
+        {node.content.map((childNode) => {
           if (childNode.content) {
             return (
               <li key={childNode.title}>

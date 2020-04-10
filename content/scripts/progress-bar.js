@@ -69,12 +69,8 @@ class ProgressBar {
     return str;
   }
 
-  getBar(length, char, color = a => a) {
-    return color(
-      Array(length)
-        .fill(char)
-        .join("")
-    );
+  getBar(length, char, color = (a) => a) {
+    return color(Array(length).fill(char).join(""));
   }
 }
 

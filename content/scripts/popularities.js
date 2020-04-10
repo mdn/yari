@@ -20,10 +20,10 @@ function runMakePopularitiesFile(filepath, options, logger) {
   let biggestCount = null;
   csv
     .parseFile(filepath, {
-      headers: true
+      headers: true,
     })
-    .on("error", error => console.error(error))
-    .on("data", row => {
+    .on("error", (error) => console.error(error))
+    .on("data", (row) => {
       const uri = row.Page;
       const count = parseInt(row.Pageviews);
 
@@ -41,7 +41,7 @@ function runMakePopularitiesFile(filepath, options, logger) {
         pageviews.push([uri, count / biggestCount]);
       }
     })
-    .on("end", rowCount => {
+    .on("end", (rowCount) => {
       logger.info(chalk.green(`Parsed ${rowCount.toLocaleString()} rows.`));
       if (!pageviews.length) {
         new Error("No pageviews found!");
