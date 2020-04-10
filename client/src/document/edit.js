@@ -6,7 +6,7 @@ import { debounce } from "throttle-debounce";
 // Sub-components
 import { Document } from "./document";
 
-import "./document-edit.scss";
+import "./edit.scss";
 
 function DocumentEdit({ ...props }) {
   // console.log(props);
@@ -15,8 +15,8 @@ function DocumentEdit({ ...props }) {
   const url = `/${props.locale}/docs/${props["*"]}`;
   sp.append("url", url);
   const fetchUrl = `/_document?${sp.toString()}`;
-  const { data, error } = useSWR(fetchUrl, url => {
-    return fetch(url).then(r => {
+  const { data, error } = useSWR(fetchUrl, (url) => {
+    return fetch(url).then((r) => {
       if (!r.ok) {
         throw new Error(`${r.status} on ${url}`);
       }
@@ -80,7 +80,7 @@ function EditForm({ data, url }) {
       let response = await fetch(`/_document?url=${encodeURIComponent(url)}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, html })
+        body: JSON.stringify({ title, html }),
       });
       if (response.ok) {
         setSubmissionError(response);
@@ -99,14 +99,14 @@ function EditForm({ data, url }) {
           disabled={loading}
           type="text"
           value={title}
-          onChange={event => setTitle(event.target.value)}
+          onChange={(event) => setTitle(event.target.value)}
         />
       </p>
 
       <textarea
         disabled={loading}
         value={html}
-        onChange={event => setHtml(event.target.value)}
+        onChange={(event) => setHtml(event.target.value)}
         rows="30"
         style={{ width: "100%" }}
       ></textarea>
@@ -150,7 +150,7 @@ function useLocalStorage(key, initialValue) {
 
   // Return a wrapped version of useState's setter function that ...
   // ... persists the new value to localStorage.
-  const setValue = value => {
+  const setValue = (value) => {
     try {
       // Allow value to be a function so we have same API as useState
       const valueToStore =
