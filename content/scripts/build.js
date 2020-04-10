@@ -410,10 +410,7 @@ class Builder {
     // *always* include 'en-US' because with that, it becomes possible
     // to reference back to the English version for any locale.
     // But first, see if we can use the title from the last build.
-    const allTitlesJsonFilepath = path.join(
-      path.dirname(__dirname),
-      "_all-titles.json"
-    );
+    const allTitlesJsonFilepath = this._getAllTitlesJsonFilepath();
     if (
       fs.existsSync(allTitlesJsonFilepath) &&
       !this.options.regenerateAllTitles
@@ -494,14 +491,22 @@ class Builder {
       );
     }
 
-    fs.writeFileSync(
-      allTitlesJsonFilepath,
-      JSON.stringify(this.allTitles, null, 2)
-    );
+    this.dumpAllTitles();
     let t1 = new Date();
     this.logger.info(
       chalk.green(`Building list of all titles took ${ppMilliseconds(t1 - t0)}`)
     );
+  }
+
+  dumpAllTitles() {
+    fs.writeFileSync(
+      this._getAllTitlesJsonFilepath(),
+      JSON.stringify(this.allTitles, null, 2)
+    );
+  }
+
+  _getAllTitlesJsonFilepath() {
+    return path.join(path.dirname(__dirname), "_all-titles.json");
   }
 
   watch() {
@@ -521,7 +526,18 @@ class Builder {
         }: ${chalk.white(file)} ${chalk.grey(tookStr)}`
       );
       if (result === processing.PROCESSED) {
+        doc.modified = new Date().toISOString();
         triggerTouch(filepath, doc, source.filepath);
+
+        const titleData = this.allTitles[doc.mdn_url];
+        for (const key of Object.keys(titleData)) {
+          if (key in doc) {
+            if (key !== "source" && titleData[key] !== doc[key]) {
+              titleData[key] = doc[key];
+            }
+          }
+        }
+        this.dumpAllTitles();
       }
     };
 
