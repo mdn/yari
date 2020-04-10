@@ -73,44 +73,38 @@ const SUMMARIES = {
 
 const MANIFEST_SLUG = "Mozilla/Add-ons/WebExtensions/manifest.json";
 
-function getMockResultForFetchJSONResource(doc_url) {
+function getMockResultForGetChildren(doc_url) {
   const locale = url.parse(doc_url).pathname.split("/")[1];
-  return {
-    locale: `${locale}`,
-    url: `/${locale}/docs/${MANIFEST_SLUG}`,
-    subpages: [
-      {
-        locale: `${locale}`,
-        url: `/${locale}/docs/${MANIFEST_SLUG}/author`,
-        subpages: [],
-        slug: `${MANIFEST_SLUG}/author`,
-        title: "author",
-      },
-      {
-        locale: `${locale}`,
-        url: `/${locale}/docs/${MANIFEST_SLUG}/background`,
-        subpages: [],
-        slug: `${MANIFEST_SLUG}/background`,
-        title: "background",
-      },
-      {
-        locale: `${locale}`,
-        url: `/${locale}/docs/${MANIFEST_SLUG}/theme`,
-        subpages: [],
-        slug: `${MANIFEST_SLUG}/theme`,
-        title: "theme",
-      },
-      {
-        locale: `${locale}`,
-        url: `/${locale}/docs/${MANIFEST_SLUG}/version`,
-        subpages: [],
-        slug: `${MANIFEST_SLUG}/version`,
-        title: "version",
-      },
-    ],
-    slug: MANIFEST_SLUG,
-    title: "manifest.json",
-  };
+  return [
+    {
+      locale: `${locale}`,
+      url: `/${locale}/docs/${MANIFEST_SLUG}/author`,
+      subpages: [],
+      slug: `${MANIFEST_SLUG}/author`,
+      title: "author",
+    },
+    {
+      locale: `${locale}`,
+      url: `/${locale}/docs/${MANIFEST_SLUG}/background`,
+      subpages: [],
+      slug: `${MANIFEST_SLUG}/background`,
+      title: "background",
+    },
+    {
+      locale: `${locale}`,
+      url: `/${locale}/docs/${MANIFEST_SLUG}/theme`,
+      subpages: [],
+      slug: `${MANIFEST_SLUG}/theme`,
+      title: "theme",
+    },
+    {
+      locale: `${locale}`,
+      url: `/${locale}/docs/${MANIFEST_SLUG}/version`,
+      subpages: [],
+      slug: `${MANIFEST_SLUG}/version`,
+      title: "version",
+    },
+  ];
 }
 
 function checkSidebarResult(html, locale, isUnderWebExtAPI = false) {
@@ -162,9 +156,7 @@ describeMacro("AddonSidebar", function () {
     });
     // Mock calls to MDN.fetchJSONResource, which indirectly mocks the
     // call to wiki.tree within AddonSidebar.ejs.
-    macro.ctx.MDN.fetchJSONResource = jest.fn(
-      getMockResultForFetchJSONResource
-    );
+    macro.ctx.info.getChildren = jest.fn(getMockResultForGetChildren);
   });
 
   for (const locale of ["en-US", "fr", "ja"]) {
