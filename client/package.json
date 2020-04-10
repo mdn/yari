@@ -11,8 +11,8 @@
     "fuzzysearch": "1.0.3",
     "include-media": "1.4.9",
     "node-sass": "4.13.1",
-    "react": "16.13.1",
     "prismjs": "1.20.0",
+    "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-scripts": "3.4.1",
     "sockette": "2.0.6",
@@ -21,7 +21,7 @@
   "scripts": {
     "start": "cross-env BROWSER=none react-scripts start",
     "build": "cross-env INLINE_RUNTIME_CHUNK=false react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -41,6 +41,7 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/react": "^10.0.2"
+    "@testing-library/react": "^10.0.2",
+    "jest-environment-jsdom-sixteen": "^1.0.3"
   }
 }
