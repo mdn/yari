@@ -982,7 +982,19 @@ class Builder {
     const rawHtml = fs.readFileSync(path.join(folder, "index.html"), "utf8");
     hasher.update(rawHtml);
 
-    const [renderedHtml, errors] = await this.renderHtml(rawHtml, metadata);
+    let renderedHtml;
+
+    // When the source has this set to truthy it simple means, the 'index.html'
+    // is already fully rendered HTML.
+    if (source.htmlAlreadyRendered) {
+      renderedHtml = rawHtml;
+    } else {
+      const renderingResult = await this.renderHtml(rawHtml, metadata);
+      renderedHtml = renderingResult[0];
+      // XXX The this.renderHtml() method actually returns a tuple
+      // of (renderedHtml, errors) but we're not doing anything with the
+      // errors yet.
+    }
 
     // Now we've read in all the "inputs" needed.
     // Even if there's no hope in hell that we're going to get a catch hit,
@@ -1039,6 +1051,9 @@ class Builder {
     doc.body = sections;
 
     const titleData = this.allTitles[doc.mdn_url];
+    if (titleData === undefined) {
+      throw new Error(`${doc.mdn_url} is not present in this.allTitles`);
+    }
     doc.popularity = titleData.popularity || 0.0;
     doc.modified = titleData.modified;
 
