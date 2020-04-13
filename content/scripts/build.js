@@ -741,7 +741,10 @@ class Builder {
         const sitemapXml = makeSitemapXML(
           Object.entries(data)
             .filter(([uri, documentData]) => {
-              return !documentData.excludeInSitemaps;
+              // We're looping over all the keys in this.allTitles but
+              // nestled into it is also some custom keys that need
+              // to be ignored.
+              return !documentData.excludeInSitemaps && uri !== "_hash";
             })
             .map(([uri, documentData]) => {
               if (!documentData.modified) {
@@ -769,7 +772,7 @@ class Builder {
       const titles = {};
       Object.entries(data)
         .filter(([uri, documentData]) => {
-          return !documentData.excludeInTitlesJson;
+          return !documentData.excludeInTitlesJson && uri !== "_hash";
         })
         .forEach(([uri, documentData]) => {
           // This is the data that gets put into each 'titles.json` file which
