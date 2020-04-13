@@ -14,7 +14,8 @@
     "build:client": "yarn workspace client build",
     "build:ssr": "yarn workspace ssr build",
     "clean": "rm -fr client/build && rm -fr ssr/dist && rm -fr content/_all-titles.json",
-    "prebuild": "yarn build:ssr && yarn build:client && node content build --ensure-titles",
+    "ensuretitles": "node content build --ensure-titles",
+    "prebuild": "npm-run-all --parallel --aggregate-output build:ssr build:client ensuretitles",
     "start": "yarn run prebuild && nf start"
   },
   "private": true,
@@ -31,7 +32,8 @@
     "pretty-quick": "2.0.1"
   },
   "dependencies": {
-    "cross-env": "^7.0.2"
+    "cross-env": "^7.0.2",
+    "npm-run-all": "4.1.5"
   },
   "resolutions": {
     "braces": ">=2.3.1",
