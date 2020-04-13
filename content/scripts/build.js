@@ -168,6 +168,7 @@ function runBuild(sources, options, logger) {
   if (options.listLocales) {
     return builder.listLocales();
   } else if (options.ensureTitles) {
+    builder.initSelfHash();
     return builder.ensureAllTitles();
   } else {
     builder.initSelfHash();
@@ -199,7 +200,7 @@ class Builder {
     this.options = options;
     this.logger = logger;
     this.selfHash = null;
-    this.allTitles = {};
+    this.allTitles = null;
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
@@ -398,13 +399,18 @@ class Builder {
   }
 
   ensureAllTitles() {
+    if (!this.selfHash) {
+      throw new Error("this.selfHash hasn't been set yet");
+    }
     if (
-      Object.keys(this.allTitles).length &&
+      this.allTitles &&
+      this.allTitles._hash === this.selfHash &&
       !this.options.regenerateAllTitles
     ) {
       // No reason to proceed, the titles have already been loaded into memory.
       return;
     }
+
     // First walk all the content and pick up all the titles.
     // Note, no matter what locales you have picked in the filtering,
     // *always* include 'en-US' because with that, it becomes possible
@@ -422,11 +428,36 @@ class Builder {
       this.allTitles = JSON.parse(
         fs.readFileSync(allTitlesJsonFilepath, "utf8")
       );
-      return;
+      // We got it from disk, but is it out-of-date?
+      if (this.allTitles._hash !== this.selfHash) {
+        this.logger.info(
+          chalk.yellow(`${allTitlesJsonFilepath} existed but is out-of-date.`)
+        );
+      } else {
+        // This means we DON'T need to re-generate all titles.
+        return;
+      }
     }
 
     // If we're going to generate all titles, we need all popularities.
     const allPopularities = this._getAllPopularities();
+
+    // This starts it up from scratch and the this.processFolderTitle()
+    // and this.processStumptownFileTitle() will start populating this
+    // class instance variable.
+    this.allTitles = {};
+    // This helps us exclusively to know about the validitity of the
+    // _all-titles.json file which is our disk-based caching strategy.
+    // It's very possible that the "self hash" has changed because of some
+    // change that has no effect on the map of all titles and their data.
+    // But it's better to be safe rather than sorry. After all, the
+    // _all-titles.json file is purely for local development when you
+    // stop and start the builder.
+    // Note! Just because the hashes here match, doesn't mean the
+    // this.allTitles loaded from disk is in sync. For example, a slug
+    // might have been edited in one of the index.yaml files without this
+    // having a chance to be picked up and stored in disk-based cache.
+    this.allTitles._hash = this.selfHash;
 
     this.logger.info("Building a list of ALL titles and URIs...");
     let t0 = new Date();
