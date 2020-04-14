@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useSWR from "swr";
 
 import "./flaws.scss";
@@ -25,12 +25,6 @@ function Flaws({ flaws }) {
 export default Flaws;
 
 function BrokenLinks({ urls }) {
-  // TODO:
-  // This component should probably scan the DOM for the `<a>` elements
-  // whose `href=` is considered broken.
-  // // a.attr("title", `The link to ${href} is broken.`);
-  // // a.addClass("flawed--broken_link");
-
   // urls has repeats so turn it into a count for each
   const counts = {};
   for (const u of urls) {
@@ -56,6 +50,48 @@ function BrokenLinks({ urls }) {
   const urlsAsKeys = Object.keys(counts);
   // If we don't sort them, their visual presence isn't predictable.
   urlsAsKeys.sort();
+
+  useEffect(() => {
+    const areBroken = new Set(
+      urlsAsKeys.map((uri) => new URL(uri, window.location.href).toString())
+    );
+    const areRedirects = new Map();
+    if (data && data.redirects) {
+      Object.entries(data.redirects).forEach(([uri, correctUri]) => {
+        areRedirects.set(
+          new URL(uri, window.location.href).toString(),
+          correctUri
+        );
+      });
+    }
+    [...document.querySelectorAll("div.content a[href]")].forEach((a) => {
+      if (areRedirects.has(a.href) && areRedirects.get(a.href)) {
+        a.classList.add("flawed--broken_link_redirect");
+        a.title = `Consider fixing! It's actually a redirect to ${areRedirects.get(
+          a.href
+        )}`;
+      } else if (areBroken.has(a.href)) {
+        a.classList.add("flawed--broken_link_404");
+        a.title = "Links to a page that will 404 Not Found";
+      }
+    });
+
+    return () => {
+      [...document.querySelectorAll("a.flawed--broken_link_redirect")].forEach(
+        (a) => {
+          a.classList.remove("flawed--broken_link_redirect");
+          a.title = "";
+        }
+      );
+      [...document.querySelectorAll("a.flawed--broken_link_404")].forEach(
+        (a) => {
+          a.classList.remove("flawed--broken_link_404");
+          a.title = "";
+        }
+      );
+    };
+  }, [data, urlsAsKeys]);
+
   return (
     <div className="flaw flaw__broken_links">
       <h3>Broken Links</h3>

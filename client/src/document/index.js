@@ -1,4 +1,4 @@
-import React, { lazy, useReducer, Suspense } from "react";
+import React, { lazy, useReducer, Suspense, useEffect } from "react";
 import { Link } from "@reach/router";
 
 import { NoMatch } from "../routing";
@@ -343,6 +343,24 @@ function LoadingError({ error }) {
 function ToggleDocmentFlaws({ flaws }) {
   const [show, toggle] = useReducer((v) => !v, false);
 
+  useEffect(() => {
+    if (window.location.hash && window.location.hash === "#show-flaws") {
+      toggle();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (show) {
+      if (!(window.location.hash && window.location.hash === "#show-flaws")) {
+        window.location.hash = "#show-flaws";
+      }
+    } else {
+      if (window.location.hash && window.location.hash === "#show-flaws") {
+        window.location.hash = "";
+      }
+    }
+  }, [show]);
+
   if (process.env.NODE_ENV !== "development") {
     return null;
   }
@@ -359,34 +377,22 @@ function ToggleDocmentFlaws({ flaws }) {
 
   function summarizeFlaws() {
     // Return a one-liner about all the flaws
-    const bits = flatFlaws.map((flaw) => `${flaw.flawCheck}: ${flaw.count}`);
+    const verboseNames = {
+      broken_links: "Broken links",
+    };
+    const bits = flatFlaws.map((flaw) => {
+      const verboseName = verboseNames[flaw.flawCheck] || flaw.flawCheck;
+      return `${verboseName}: ${flaw.count}`;
+    });
     return bits.join(", ");
   }
 
   return (
-    <div className="toggle-flaws">
+    <div id="show-flaws" className="toggle-flaws">
       <button type="submit" onClick={toggle}>
         {show ? "Hide flaws" : "Show flaws"}
       </button>
 
-      {/* {show ? (
-        <Suspense fallback={<div>Loading...</div>}>
-          <DocumentFlaws flaws={flatFlaws} />
-        </Suspense>
-      ) : (
-        <table>
-          {flatFlaws.map((flaw) => {
-            return (
-              <tr key={flaw.flawCheck}>
-                <td>
-                  <b>{flaw.flawCheck}</b>
-                </td>
-                <td>{flaw.count}</td>
-              </tr>
-            );
-          })}
-        </table>
-      )} */}
       {show ? (
         <Suspense fallback={<div>Loading...</div>}>
           <DocumentFlaws flaws={flatFlaws} />

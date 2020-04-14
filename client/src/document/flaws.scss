@@ -1,3 +1,10 @@
 #document-flaws {
-    margin: 20px;
+  margin: 20px;
+}
+
+a.flawed--broken_link_404 {
+  border: 1px solid red;
+}
+a.flawed--broken_link_redirect {
+  border: 1px solid orange;
 }
