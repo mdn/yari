@@ -989,11 +989,10 @@ class Builder {
     if (source.htmlAlreadyRendered) {
       renderedHtml = rawHtml;
     } else {
-      const renderingResult = await this.renderHtml(rawHtml, metadata);
-      renderedHtml = renderingResult[0];
       // XXX The this.renderHtml() method actually returns a tuple
       // of (renderedHtml, errors) but we're not doing anything with the
-      // errors yet.
+      // errors yet. Which we *will* do eventually.
+      [renderedHtml] = await this.renderHtml(rawHtml, metadata);
     }
 
     // Now we've read in all the "inputs" needed.

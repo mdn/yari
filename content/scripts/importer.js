@@ -71,14 +71,7 @@ async function populateRedirectInfo(pool, constraintsSQL, queryArgs) {
     // archive, as well as the map that provides the final
     // destination of each redirect that we'll keep.
     const isInfiniteLoop = chainOfRedirects.has(toUri);
-    if (isInfiniteLoop) {
-      // // This next URI in the redirect chain is already in
-      // // the chain, so we've discovered an infinite loop.
-      // const arrayOfRedirects = [...chainOfRedirects];
-      // arrayOfRedirects.push(toUri);
-      // const chainAsString = arrayOfRedirects.join(" --> ");
-      // // console.error(`FOUND INFINITE REDIRECT LOOP: ${chainAsString}`);
-    } else {
+    if (!isInfiniteLoop) {
       const nextUri = redirects.get(toUri);
       if (nextUri) {
         return extractFromChain(nextUri, chainOfRedirects.add(toUri));
