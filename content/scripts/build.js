@@ -984,7 +984,7 @@ class Builder {
 
     let renderedHtml;
 
-    // When the source has this set to truthy it simple means, the 'index.html'
+    // When 'source.htmlAlreadyRendered' is true, it simply means that the 'index.html'
     // is already fully rendered HTML.
     if (source.htmlAlreadyRendered) {
       renderedHtml = rawHtml;
