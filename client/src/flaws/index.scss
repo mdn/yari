@@ -1,0 +1,27 @@
+#all-flaws {
+  .attention {
+    margin: 10px;
+    padding: 20px 30px;
+    border-radius: 10px;
+
+    h3,
+    h4 {
+      margin-top: 0;
+    }
+  }
+
+  .search-error {
+    background-color: rgb(252, 159, 159);
+  }
+
+  .document-warnings {
+    background-color: rgb(255, 215, 154);
+  }
+
+  .search-times {
+    margin-top: 60px;
+    p {
+      font-size: 70%;
+    }
+  }
+}

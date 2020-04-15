@@ -7,7 +7,10 @@ const openEditor = require("open-editor");
 
 const { Builder } = require("content/scripts/build");
 const { Sources } = require("content/scripts/sources");
-const { DEFAULT_FLAW_CHECKS } = require("content/scripts/constants.js");
+const {
+  DEFAULT_FLAW_CHECKS,
+  DEFAULT_POPULARITIES_FILEPATH,
+} = require("content/scripts/constants.js");
 
 const app = express();
 
@@ -101,7 +104,8 @@ app.get("/_open", (req, res) => {
 
 // Module level memoization
 let builder = null;
-function getOrCreateBuilder() {
+function getOrCreateBuilder(options) {
+  options = options || {};
   if (!builder) {
     const sources = new Sources();
     // The server doesn't have command line arguments like the content CLI
@@ -115,14 +119,17 @@ function getOrCreateBuilder() {
         destination: normalizeContentPath(
           process.env.BUILD_DESTINATION || "client/build"
         ),
+        // popularitiesfiles: process.env.BUILD_POPULARITIES_FILEPATH,
         noSitemaps: true,
         specificFolders: [],
         buildJsonOnly: false,
-        locales: [],
+        locales: options.locales || [],
         notLocales: [],
         slugsearch: [],
         noProgressbar: true,
         flawCheck: DEFAULT_FLAW_CHECKS,
+        foldersearch: options.foldersearch || [],
+        popularitiesfile: normalizeContentPath(DEFAULT_POPULARITIES_FILEPATH),
       },
       console
     );
@@ -145,21 +152,162 @@ app.get("/_redirects", (req, res) => {
   res.json({ redirects });
 });
 
+app.get("/_flaws", (req, res) => {
+  const locale = req.query.locale.toLowerCase();
+  if (!locale) {
+    return res.status(400).send("'locale' is always required");
+  }
+
+  const MAX_DOCUMENTS_RETURNED = 100;
+
+  const counts = {
+    // Number of documents found with the matching flaws
+    found: 0,
+    // Number of documents that can be built independent of how many have
+    // been built.
+    possible: 0,
+    // Number of documents that have been built.
+    // Basically a count of client/build/**/index.json files.
+    built: 0,
+  };
+  // return res.status(400).send("bla");
+  const documents = [];
+
+  // XXX Perhaps we want to put a global lock on this because it can be
+  // a really resource intensive operation.
+
+  // First count, all possible documents which is based on the builder
+  const t0 = new Date();
+  const builder = getOrCreateBuilder({ locales: [locale] });
+  counts.possible = builder.sources
+    .entries()
+    .map((source) => builder.countLocaleFolders(source))
+    .map((m) => Array.from(m.values()).reduce((a, b) => a + b))
+    .reduce((a, b) => a + b);
+  const t1 = new Date();
+
+  const allPopularitiesValues = Object.values(builder._getAllPopularities());
+  // Higest number first.
+  allPopularitiesValues.sort((a, b) => b - a);
+
+  // Some flaws *values* are overly verbose
+  function packageFlaws(flawsObj) {
+    const packaged = [];
+    const keys = Object.keys(flawsObj);
+    keys.sort();
+    for (const name of keys) {
+      let value = flawsObj[name];
+      if (Array.isArray(value)) {
+        value = value.length;
+      }
+      packaged.push({ name, value });
+    }
+    return packaged;
+  }
+
+  // We can't just open the `index.json` and return it like that in the XHR
+  // payload. It's too much stuff and some values need to be repackaged/
+  // serialized or some other transformation computation.
+  function packageDocument(folder, doc) {
+    const { modified, mdn_url } = doc;
+    const popularity = {
+      value: doc.popularity,
+      ranking: doc.popularity
+        ? 1 + allPopularitiesValues.filter((p) => p > doc.popularity).length
+        : NaN,
+    };
+    const flaws = packageFlaws(doc.flaws);
+    return Object.assign({ folder, popularity, flaws }, { modified, mdn_url });
+  }
+
+  // The Builder instance doesn't know about traversing all the built
+  // documents, but it *does* know *where* to look.
+  for (const [folder, files] of walker(
+    path.join(builder.destination, locale)
+  )) {
+    if (files.includes("index.json")) {
+      counts.built++;
+
+      const { doc } = JSON.parse(
+        fs.readFileSync(path.join(folder, "index.json"))
+      );
+
+      if (doc.flaws && Object.keys(doc.flaws)) {
+        counts.found++;
+        documents.push(packageDocument(folder, doc));
+      }
+    }
+  }
+  // XXX might want to consider more advanced sorting and pagination
+
+  const t2 = new Date();
+
+  const times = {
+    possible: t1.getTime() - t0.getTime(),
+    built: t2.getTime() - t1.getTime(),
+  };
+
+  res.json({
+    counts,
+    times,
+
+    // The slicing is just to make the payload more manageable
+    documents: documents.slice(0, MAX_DOCUMENTS_RETURNED),
+  });
+});
+
+function* walker(root, depth = 0) {
+  const files = fs.readdirSync(root);
+  if (!depth) {
+    yield [
+      root,
+      files.filter((name) => {
+        return !fs.statSync(path.join(root, name)).isDirectory();
+      }),
+    ];
+  }
+  for (const name of files) {
+    const filepath = path.join(root, name);
+    const isDirectory = fs.statSync(filepath).isDirectory();
+    if (isDirectory) {
+      yield [
+        filepath,
+        fs.readdirSync(filepath).filter((name) => {
+          return !fs.statSync(path.join(filepath, name)).isDirectory();
+        }),
+      ];
+      // Now go deeper
+      yield* walker(filepath, depth + 1);
+    }
+  }
+}
+
 // Catch-all
 app.get("/*", async (req, res) => {
+  if (req.url.startsWith("_")) {
+    // URLs starting with _ is exclusively for the meta-work and if there
+    // isn't already a handler, it's something wrong.
+    return res.status(404).send("Page not found");
+  }
+
+  // If the catch-all gets one of these something's gone wrong
   if (req.url.startsWith("/static")) {
-    res.status(404).send("Page not found");
-  } else if (req.url.endsWith("/titles.json")) {
+    return res.status(404).send("Page not found");
+  }
+
+  if (req.url.endsWith("/titles.json")) {
     getOrCreateBuilder().dumpAllURLs();
 
     // Let's see, did that generate the desired titles.json file?
     if (fs.existsSync(path.join(STATIC_ROOT, req.url))) {
       // Try now!
-      res.sendFile(path.join(STATIC_ROOT, req.url));
+      return res.sendFile(path.join(STATIC_ROOT, req.url));
     } else {
-      res.status(404).send("Not yet");
+      return res.status(404).send("Not yet");
     }
-  } else if (req.url.includes("/docs/")) {
+  }
+
+  if (req.url.includes("/docs/")) {
     let lookupUrl = req.url;
     let extraSuffix = "";
 

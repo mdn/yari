@@ -12,10 +12,15 @@ import { LinkList, LinkLists } from "./ingredients/link-lists";
 import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 
+// Misc
+import { humanizeFlawName } from "../flaw-utils";
+
 // Sub-components
 import { DocumentTranslations } from "./languages";
 import { EditThisPage } from "./editthispage";
 import { DocumentSpy } from "./spy";
+
+// Lazy sub-components
 const DocumentFlaws = lazy(() => import("./flaws"));
 
 export class Document extends React.Component {
@@ -377,12 +382,8 @@ function ToggleDocmentFlaws({ flaws }) {
 
   function summarizeFlaws() {
     // Return a one-liner about all the flaws
-    const verboseNames = {
-      broken_links: "Broken links",
-    };
     const bits = flatFlaws.map((flaw) => {
-      const verboseName = verboseNames[flaw.flawCheck] || flaw.flawCheck;
-      return `${verboseName}: ${flaw.count}`;
+      return `${humanizeFlawName(flaw.flawCheck)}: ${flaw.count}`;
     });
     return bits.join(", ");
   }

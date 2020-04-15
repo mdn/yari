@@ -22,7 +22,7 @@ const {
   extractDocumentSections,
   extractSidebar,
 } = require("./document-extractor");
-const { VALID_LOCALES } = require("./constants");
+const { VALID_LOCALES, DEFAULT_POPULARITIES_FILEPATH } = require("./constants");
 const { slugToFoldername } = require("./utils");
 
 // These names need to match what we have in the code where we have various
@@ -231,7 +231,8 @@ class Builder {
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
-
+    this.options.popularitiesfile =
+      this.options.popularitiesfile || DEFAULT_POPULARITIES_FILEPATH;
     this.options.flawCheck = cleanFlawChecks(this.options.flawCheck || []);
 
     this.progressBar = !options.noProgressbar

@@ -132,8 +132,7 @@ cli
     "--popularitiesfile <path>",
     "JSON file that maps URIs to popularities",
     cli.PATH,
-    process.env.BUILD_POPULARITIES_FILEPATH
-    // DEFAULT_POPULARITIES_FILEPATH
+    DEFAULT_POPULARITIES_FILEPATH
   )
   .option(
     "--sitemap-base-url <url>",

@@ -53,11 +53,9 @@ const DEFAULT_FLAW_CHECKS = (process.env.BUILD_FLAW_CHECKS || "")
 
 const DEFAULT_SITEMAP_BASE_URL = "https://developer.mozilla.org";
 
-// const DEFAULT_POPULARITIES_FILEPATH = path.join(
-//   DEFAULT_ROOT,
-//   "..",
-//   "popularities.json"
-// );
+const DEFAULT_POPULARITIES_FILEPATH =
+  process.env.BUILD_POPULARITIES_FILEPATH ||
+  path.join(process.env.BUILD_ROOT, "..", "popularities.json");
 
 // The Google Analytics pageviews CSV file parsed, sorted (most pageviews
 // first), and sliced to this number of URIs that goes into the JSON file.
@@ -115,7 +113,7 @@ module.exports = {
   DEFAULT_BUILD_NOT_LOCALES,
   DEFAULT_SITEMAP_BASE_URL,
   DEFAULT_FOLDER_SEARCHES,
-  // DEFAULT_POPULARITIES_FILEPATH,
+  DEFAULT_POPULARITIES_FILEPATH,
   // DEFAULT_STUMPTOWN_PACKAGED_ROOT,
   MAX_GOOGLE_ANALYTICS_URIS,
   VALID_LOCALES,
