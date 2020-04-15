@@ -31,4 +31,6 @@ ssr/dist/
 watcher/node_modules/
 content/node_modules/
 content/build/
+content/files/
 content/_all-titles.json
+archivecontent/
