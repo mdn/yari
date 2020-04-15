@@ -1,6 +1,6 @@
-import React from "react";
+import * as React from "react";
 
-export function NoMatch({ location, message = null }) {
+export function NoMatch({ location = window.location, message = null }: any) {
   return (
     <div>
       <h3>Page Not Found</h3>

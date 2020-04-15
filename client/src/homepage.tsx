@@ -1,7 +1,7 @@
-import React from "react";
+import * as React from "react";
 import { Link } from "@reach/router";
 
-export class Homepage extends React.Component {
+export class Homepage extends React.Component<any, any> {
   render() {
     return (
       <div>

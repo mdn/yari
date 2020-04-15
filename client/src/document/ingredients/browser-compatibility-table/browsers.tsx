@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import BrowserName from "./utils/browser-name";
 
 export function Browsers({ displayBrowsers }) {

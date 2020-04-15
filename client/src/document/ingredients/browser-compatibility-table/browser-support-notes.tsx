@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { BrowserSupportNote } from "./browser-support-note";
 
 function shouldDisplayBlock(blockDisplayed, versionAdded) {
@@ -22,14 +22,14 @@ function flagInfoForBrowser(browser) {
   }
 }
 
-export function BrowserSupportNotes({
+export const BrowserSupportNotes: any = ({
   indexNote,
   blockElementTag,
   noteElementTag,
   noBlocks,
-}) {
+}) => {
   let blockDisplayed = false;
-  let browserSupportNotes = [];
+  let browserSupportNotes: any = [];
   let currentNoteContent, currentNote;
 
   if (Array.isArray(indexNote.support) && indexNote.notes.length === 0) {
@@ -194,4 +194,4 @@ export function BrowserSupportNotes({
   }
 
   return browserSupportNotes;
-}
+};

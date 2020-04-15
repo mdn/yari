@@ -1,7 +1,7 @@
-import React from "react";
+import * as React from "react";
 import { VersionBlock } from "./version-block";
 
-export function BrowserSupportNote({
+export const BrowserSupportNote: any = ({
   indexNote,
   versionAdded,
   versionRemoved,
@@ -11,8 +11,8 @@ export function BrowserSupportNote({
   noteElementTag,
   displayBlock,
   displayNote,
-}) {
-  const note = [];
+}) => {
+  const note: any[] = [];
   if (displayBlock) {
     note.push(
       <VersionBlock
@@ -49,4 +49,4 @@ export function BrowserSupportNote({
     );
   }
   return note;
-}
+};

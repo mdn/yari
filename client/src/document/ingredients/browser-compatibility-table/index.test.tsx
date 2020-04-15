@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import { BrowserCompatibilityTable } from "./index.js";
+import { BrowserCompatibilityTable } from "./index";
 
 it("renders error boundary when no data is present", () => {
   const { container } = render(<BrowserCompatibilityTable />);

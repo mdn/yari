@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Link } from "@reach/router";
 import { BrowserSupportDetail } from "./browser-support-detail";
 import { BrowserSupportNotes } from "./browser-support-notes";
@@ -85,7 +85,7 @@ function buildIndexNotes(
       const support = browserSupportDetail.support;
 
       if (Array.isArray(support)) {
-        const [notes, flags, prefixes, alternatives] = [[], [], [], []];
+        const [notes, flags, prefixes, alternatives]: any[] = [[], [], [], []];
 
         for (const supportItem of support) {
           if (!!supportItem.alternative_name) {
@@ -169,13 +169,13 @@ function gatherNotesForIndexNote(currentSupport) {
   return !!currentSupport.notes ? [currentSupport.notes] : [];
 }
 
-export function Rows({
+export const Rows: any = ({
   compatibilityData,
   displayBrowsers,
   onNotesClick,
   currentNoteId,
   setLegendIcons,
-}) {
+}) => {
   let [
     hasDeprecation,
     hasExperimental,
@@ -190,7 +190,7 @@ export function Rows({
     compatibilityData.query,
     compatibilityData.data
   );
-  const browserCompatibilityRows = [];
+  const browserCompatibilityRows: any[] = [];
 
   for (const key in compatibility) {
     const currentRow = compatibility[key];
@@ -310,4 +310,4 @@ export function Rows({
     hasNotes
   );
   return browserCompatibilityRows;
-}
+};

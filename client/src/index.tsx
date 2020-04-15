@@ -6,10 +6,13 @@ import { App } from "./app";
 // import * as serviceWorker from './serviceWorker';
 
 const container = document.getElementById("root");
+if (!container) {
+  throw new Error("missing root element");
+}
 let docData = null;
 const documentDataElement = document.getElementById("documentdata");
 if (documentDataElement) {
-  docData = JSON.parse(documentDataElement.text);
+  docData = JSON.parse(documentDataElement.textContent || "");
 }
 const app = (
   <React.StrictMode>

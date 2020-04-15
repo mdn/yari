@@ -1,6 +1,7 @@
+// @ts-nocheck
 import { Redirect } from "@reach/router";
 import FlexSearch from "flexsearch";
-import React from "react";
+import * as React from "react";
 import FuzzySearch from "./fuzzy-search";
 import "./search.scss";
 
@@ -16,7 +17,12 @@ function isMobileUserAgent() {
   );
 }
 
-export class SearchWidget extends React.Component {
+const ACTIVE_PLACEHOLDER = "Go ahead. Type your search...";
+const INACTIVE_PLACEHOLDER = isMobileUserAgent()
+  ? "Site search..."
+  : 'Site search... (Press "/" to focus)';
+
+export class SearchWidget extends React.Component<any, any> {
   state = {
     highlitResult: null,
     initializing: false,
@@ -28,18 +34,19 @@ export class SearchWidget extends React.Component {
     showSearchResults: true,
   };
 
-  ACTIVE_PLACEHOLDER = "Go ahead. Type your search...";
-  INACTIVE_PLACEHOLDER = isMobileUserAgent()
-    ? "Site search..."
-    : 'Site search... (Press "/" to focus)';
-
-  inFocus = false;
+  private dismounted = false;
+  private inFocus = false;
+  private index: any;
+  private map: any;
+  private fuzzySearcher: any;
+  private hasScrolledDown = false;
+  private hideSoon: number | undefined;
 
   focusOnSearchMaybe = (event) => {
     if (event.code === "Slash") {
       if (!this.inFocus) {
         event.preventDefault();
-        this.inputRef.current.focus();
+        this.inputRef.current && this.inputRef.current.focus();
       }
     }
   };
@@ -136,18 +143,18 @@ export class SearchWidget extends React.Component {
 
   indexTitles = (titles) => {
     // NOTE! See search-experimentation.js to play with different settings.
-    this.index = new FlexSearch({
+    this.index = new (FlexSearch as any)({
       encode: "advanced",
       suggest: true,
       // tokenize: "reverse",
       tokenize: "forward",
     });
-    this._map = titles;
+    this.map = titles;
 
-    const urisSorted = [];
+    const urisSorted: any[] = [];
     Object.entries(titles)
-      .sort((a, b) => b[1].popularity - a[1].popularity)
-      .forEach(([uri, info]) => {
+      .sort((a: any, b: any) => b[1].popularity - a[1].popularity)
+      .forEach(([uri, info]: any) => {
         // XXX investigate if it's faster to add all at once
         // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
         this.index.add(uri, info.title);
@@ -222,7 +229,7 @@ export class SearchWidget extends React.Component {
           });
           const results = fuzzyResults.map((fuzzyResult) => {
             return {
-              title: this._map[fuzzyResult.needle].title,
+              title: this.map[fuzzyResult.needle].title,
               uri: fuzzyResult.needle,
               substrings: fuzzyResult.substrings,
             };
@@ -244,9 +251,9 @@ export class SearchWidget extends React.Component {
 
         const results = indexResults.map((uri) => {
           return {
-            title: this._map[uri].title,
+            title: this.map[uri].title,
             uri,
-            popularity: this._map[uri].popularity,
+            popularity: this.map[uri].popularity,
           };
         });
         this.setState({
@@ -303,7 +310,7 @@ export class SearchWidget extends React.Component {
 
   focusHandler = () => {
     this.inFocus = true;
-    this.inputRef.current.placeholder = this.ACTIVE_PLACEHOLDER;
+    this.inputRef.current.placeholder = ACTIVE_PLACEHOLDER;
 
     // If it hasn't been done already, do this now. It's idempotent.
     this.initializeIndex();
@@ -318,18 +325,18 @@ export class SearchWidget extends React.Component {
     // bar is at the top of your screen. That allows maximum height space
     // usage to fix the input widget, the search result suggestions, and
     // the keyboard.
-    if (isMobileUserAgent() && !this._hasScrolledDown) {
+    if (isMobileUserAgent() && !this.hasScrolledDown) {
       if (this.inputRef.current) {
         this.inputRef.current.scrollIntoView();
       }
       // Don't bother a second time.
-      this._hasScrolledDown = true;
+      this.hasScrolledDown = true;
     }
   };
 
   blurHandler = () => {
     this.inFocus = false;
-    this.inputRef.current.placeholder = this.INACTIVE_PLACEHOLDER;
+    this.inputRef.current.placeholder = INACTIVE_PLACEHOLDER;
     // The reason we have a slight delay before hiding search results
     // is so that any onClick on the results get a chance to fire.
     this.hideSoon = window.setTimeout(() => {
@@ -389,7 +396,7 @@ export class SearchWidget extends React.Component {
 
   // This exists to avoid having to use 'document.querySelector(...)'
   // to get to the DOM element.
-  inputRef = React.createRef();
+  inputRef = React.createRef<HTMLInputElement>();
 
   render() {
     const {
@@ -443,7 +450,7 @@ export class SearchWidget extends React.Component {
           onFocus={this.focusHandler}
           onKeyDown={this.keyDownHandler}
           onMouseOver={this.initializeIndex}
-          placeholder={this.INACTIVE_PLACEHOLDER}
+          placeholder={INACTIVE_PLACEHOLDER}
           ref={this.inputRef}
           type="search"
           value={q}
@@ -470,7 +477,7 @@ export class SearchWidget extends React.Component {
   }
 }
 
-class ShowSearchResults extends React.PureComponent {
+class ShowSearchResults extends React.PureComponent<any, any> {
   redirectHandler = (result) => {
     this.props.redirect(result.uri);
   };

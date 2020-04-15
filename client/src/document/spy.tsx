@@ -1,7 +1,8 @@
 /**
  * Needs a doc string.
  */
-import React, { useState, useEffect, useRef } from "react";
+import * as React from "react";
+import { useState, useEffect, useRef } from "react";
 import Sockette from "sockette";
 import { Link } from "@reach/router";
 
@@ -11,11 +12,11 @@ export function DocumentSpy({ onMessage }) {
   // null - never connected before
   // true - connected
   // false - no longer connected
-  const [connected, setConnected] = useState(null);
+  const [connected, setConnected] = useState<boolean | null>(null);
   const [lastMessage, setLastMessage] = useState(null);
-  const [websocketError, setWebsocketError] = useState(null);
+  const [websocketError, setWebsocketError] = useState<any>(null);
 
-  const wssRef = useRef();
+  const wssRef = useRef<Sockette>();
   useEffect(() => {
     let mounted = true;
     wssRef.current = new Sockette("ws://localhost:8080", {
@@ -40,7 +41,7 @@ export function DocumentSpy({ onMessage }) {
     });
     return () => {
       mounted = false;
-      wssRef.current.close();
+      wssRef.current && wssRef.current.close();
     };
   }, [onMessage]);
 
@@ -65,7 +66,7 @@ export function DocumentSpy({ onMessage }) {
   );
 }
 
-function ShowLastMessage({ hasEDITOR, documentUri, changedFile }) {
+function ShowLastMessage({ hasEDITOR, documentUri, changedFile }: any) {
   function clickToOpenHandler(event) {
     event.preventDefault();
     console.log(`Going to try to open ${changedFile.path} in your editor`);

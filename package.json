@@ -7,14 +7,14 @@
   "license": "MPL-2.0",
   "scripts": {
     "#postinstall": "cd stumptown && npm install && git checkout package-lock.json",
-    "prettier-check": "prettier --check '**/*.{js,json,scss,html}'",
-    "prettier-format": "prettier --write '**/*.{js,json,scss,html}'",
-    "test": "yarn prettier-check && yarn workspace ssr test && yarn workspace client test",
+    "prettier-check": "prettier --check '**/*.{ts,tsx,json,scss,html}'",
+    "prettier-format": "prettier --write '**/*.{ts,tsx,json,scss,html}'",
+    "test": "yarn prettier-check && yarn workspace client test",
     "build:stumptown": "cd ${STUMPTOWN_CONTENT_ROOT:-stumptown} && npm run build-json",
     "build:client": "yarn workspace client build",
     "build:ssr": "yarn workspace ssr build",
     "clean": "rm -fr client/build && rm -fr ssr/dist && rm -fr content/_all-titles.json",
-    "prebuild": "yarn build:ssr && yarn build:client && node content build --ensure-titles",
+    "prebuild": "yarn build:client && yarn build:ssr && node content build --ensure-titles",
     "start": "yarn run prebuild && nf start"
   },
   "private": true,
