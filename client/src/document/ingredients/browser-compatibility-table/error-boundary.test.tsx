@@ -1,6 +1,6 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
-import { BrowserCompatibilityErrorBoundary } from "./error-boundary.js";
+import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
 
 it("renders without crashing", () => {
   const { container } = render(
