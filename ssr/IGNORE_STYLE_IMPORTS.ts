@@ -1,4 +1,4 @@
-import Module from "module";
+const Module = require("module");
 
 const originalRequire = Module.prototype.require;
 
