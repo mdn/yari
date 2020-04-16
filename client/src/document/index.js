@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
 
-// import { NoMatch } from "../routing";
+import { NoMatch } from "../routing";
 
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
@@ -20,10 +20,10 @@ import { EditThisPage } from "./editthispage";
 import { DocumentSpy } from "./spy";
 
 export function Document(props) {
-  const p = useParams();
-  const newProps = Object.assign({}, props, p);
+  const params = useParams();
+  const slug = params["*"];
+  const locale = params.locale;
 
-  const { location } = props;
   const [doc, setDoc] = useState(props.doc || null);
   const [loading, setLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(null);
@@ -44,12 +44,20 @@ export function Document(props) {
     setLoading(false);
   }, [loadingError]);
 
-  async function fetchDocument(pathname) {
-    let url = pathname;
-    if (!url.endsWith("/")) {
-      url += "/";
+  const getCurrentPathname = useCallback(() => {
+    let pathname = `/${locale}/docs/${slug}`;
+    // If you're in local development Express will force the trailing /
+    // on any URL. We can't keep that if we're going to compare the current
+    // pathname with the document's mdn_url.
+    if (pathname.endsWith("/")) {
+      pathname = pathname.substring(0, pathname.length - 1);
     }
-    url += "index.json";
+    return pathname;
+  }, [slug, locale]);
+
+  const fetchDocument = useCallback(async () => {
+    let url = getCurrentPathname();
+    url += "/index.json";
     console.log("OPENING", url);
     let response;
     try {
@@ -70,17 +78,52 @@ export function Document(props) {
       const data = await response.json();
       setDoc(data.doc);
     }
-  }
+  }, [getCurrentPathname]);
+  // async function fetchDocument() {
+  //   let url = `/${locale}/docs/${slug}`;
+  //   if (!url.endsWith("/")) {
+  //     url += "/";
+  //   }
+  //   url += "index.json";
+  //   console.log("OPENING", url);
+  //   let response;
+  //   try {
+  //     response = await fetch(url);
+  //   } catch (ex) {
+  //     setLoadingError(ex);
+  //     return;
+  //   }
+  //   if (!response.ok) {
+  //     console.warn(response);
+  //     setLoadingError(response);
+  //   } else {
+  //     if (response.redirected) {
+  //       // Fetching that data required a redirect!
+  //       // XXX perhaps do a route redirect here in React?
+  //       console.warn(`${url} was redirected to ${response.url}`);
+  //     }
+  //     const data = await response.json();
+  //     setDoc(data.doc);
+  //   }
+  // }
 
+  // There are 2 reasons why you'd want to call fetchDocument() on mounts:
+  // - The slug/locale combo has *changed*
+  // - The page started with no props.doc
   useEffect(() => {
-    setLoading(true);
-    fetchDocument(location.pathname);
-  }, [location.pathname]);
+    if (
+      !props.doc ||
+      getCurrentPathname().toLowerCase() !== props.doc.mdn_url.toLowerCase()
+    ) {
+      setLoading(true);
+      fetchDocument();
+    }
+  }, [slug, locale, props.doc, getCurrentPathname, fetchDocument]);
 
   function onMessage(data) {
-    if (data.documentUri === location.pathname) {
+    if (data.documentUri === getCurrentPathname()) {
       // The recently edited document is the one we're currently looking at!
-      fetchDocument(data.documentUri);
+      fetchDocument();
     }
   }
 
@@ -88,7 +131,12 @@ export function Document(props) {
     return <p>Loading...</p>;
   }
   if (loadingError) {
-    return <LoadingError error={loadingError} />;
+    // Was it because of a 404?
+    if (typeof window !== "undefined" && loadingError instanceof Response) {
+      return <NoMatch />;
+    } else {
+      return <LoadingError error={loadingError} />;
+    }
   }
   if (!doc) {
     return null;

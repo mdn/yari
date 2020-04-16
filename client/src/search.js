@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import FlexSearch from "flexsearch";
-import React, { useEffect } from "react";
 import FuzzySearch from "./fuzzy-search";
 import "./search.scss";
 
@@ -16,13 +16,26 @@ function isMobileUserAgent() {
   );
 }
 
-export class SearchWidget extends React.Component {
+export function SearchWidget() {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  return (
+    <SearchWidgetClass
+      pathname={pathname}
+      onRedirect={(uri) => {
+        console.log("Let's navigate to:", uri);
+        navigate(uri);
+      }}
+    />
+  );
+}
+
+class SearchWidgetClass extends React.Component {
   state = {
     highlitResult: null,
     initializing: false,
     lastQ: "",
     q: "",
-    // redirectTo: null,
     searchResults: [],
     serverError: null,
     showSearchResults: true,
@@ -62,7 +75,6 @@ export class SearchWidget extends React.Component {
           highlitResult: null,
           lastQ: "",
           q: "",
-          // redirectTo: null,
           showSearchResults: false,
           locale: this.props.pathname.split("/")[1] || "en-US",
         });
@@ -343,7 +355,6 @@ export class SearchWidget extends React.Component {
     event.preventDefault();
     const { onRedirect } = this.props;
     const { highlitResult, searchResults } = this.state;
-    // let redirectTo;
     if (searchResults.length === 1) {
       onRedirect(searchResults[0].uri);
     } else if (searchResults.length && highlitResult !== null) {
@@ -352,7 +363,6 @@ export class SearchWidget extends React.Component {
       return;
     }
     this.setState({
-      // redirectTo,
       showSearchResults: false,
     });
   };
@@ -360,7 +370,6 @@ export class SearchWidget extends React.Component {
   redirect = (uri) => {
     const { onRedirect } = this.props;
     onRedirect(uri);
-    // this.setState({ redirectTo: uri });
   };
 
   // computeBackgroundQ = (caseInsensitive = false) => {
@@ -474,18 +483,6 @@ export class SearchWidget extends React.Component {
       </form>
     );
   }
-}
-
-/** The SearchWidget component is a class, not a (hook) function.
- * The only way I know to use useNavigate() is to do it in a function.
- * Therefore, we're using this here to help the SearchWidget component.
- */
-function RedirectHack({ uri }) {
-  const navigate = useNavigate();
-  useEffect(() => {
-    navigate(uri);
-  });
-  return null;
 }
 
 class ShowSearchResults extends React.PureComponent {

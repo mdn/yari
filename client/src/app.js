@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Link, useNavigate } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 
 import { Homepage } from "./homepage";
 import { Document } from "./document";
@@ -24,18 +24,19 @@ export function App(appProps) {
 }
 
 function Header() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   return (
     <header>
       <h1>
         <Link to="/">MDN Web Docs</Link>
       </h1>
-      <SearchWidget
+      {/* <SearchWidget
         onRedirect={(uri) => {
           console.log("Let's navigate to:", uri);
           navigate(uri);
         }}
-      />
+      /> */}
+      <SearchWidget />
     </header>
   );
 }
