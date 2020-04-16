@@ -15,7 +15,7 @@ export function App(appProps) {
         <Routes>
           {/* Consider using useRoutes() hook instead! */}
           <Route path="/" element={<Homepage />} />
-          <Route path="/:locale/docs/*" element={<Document />} />
+          <Route path="/:locale/docs/*" element={<Document {...appProps} />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>
       </section>

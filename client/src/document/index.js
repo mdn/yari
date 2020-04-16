@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { NoMatch } from "../routing";
 
@@ -17,9 +17,17 @@ import { DocumentTranslations } from "./languages";
 import { EditThisPage } from "./editthispage";
 import { DocumentSpy } from "./spy";
 
-export class Document extends React.Component {
+export function Document(props) {
+  // LOG
+
+  const p = useParams();
+  const newProps = Object.assign({}, props, p);
+  console.log(Object.keys(newProps));
+  return <DocumentInner {...newProps} />;
+}
+
+class DocumentInner extends React.Component {
   state = {
-    // XXX this kinda stinks, to copy from props to state.
     doc: this.props.doc || null,
     loading: false,
     notFound: false,
@@ -27,7 +35,6 @@ export class Document extends React.Component {
   };
 
   componentDidMount() {
-    console.log("MOUNTED:", this.props);
     if (!this.state.doc) {
       this.fetchDocument();
     }
@@ -38,7 +45,6 @@ export class Document extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.props, prevProps);
     if (
       this.props["*"] !== prevProps["*"] ||
       this.props.locale !== prevProps.locale
