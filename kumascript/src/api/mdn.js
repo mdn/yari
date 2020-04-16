@@ -5,7 +5,6 @@ const url = require("url");
 const got = require("got");
 
 const util = require("./util.js");
-const cache = require("../cache.js");
 
 module.exports = {
   /**
@@ -145,19 +144,14 @@ module.exports = {
       url: url,
     });
 
-    async function fetchBody() {
-      try {
-        const response = await got(opts);
-        if (response.statusCode == 200) {
-          return response.body;
-        }
-      } catch (e) {}
-      return null;
-    }
+    try {
+      const response = await got(opts);
+      if (response.statusCode == 200) {
+        return response.body;
+      }
+    } catch (e) {}
 
-    const cache_key = "kuma:http_resource:" + url.toLowerCase();
-
-    return await cache(cache_key, fetchBody);
+    return null;
   },
 
   /* Derive the site URL from the request URL */

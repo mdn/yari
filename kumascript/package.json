@@ -8,6 +8,7 @@
     "test-coverage": "jest --coverage --collectCoverageFrom='./src/**' ./tests"
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
     "ejs": "2.6.1",
     "got": "10.7.0",
     "lru-cache": "5.1.1",
