@@ -407,17 +407,10 @@ class SearchWidgetClass extends React.Component {
     const {
       highlitResult,
       q,
-      // redirectTo,
       searchResults,
       serverError,
       showSearchResults,
     } = this.state;
-    // if (redirectTo) {
-    //   // return <Redirect noThrow replace={false} to={redirectTo} />;
-    //   this.props.onRedirect(redirectTo);
-    //   return null;
-    //   // return <RedirectHack uri={redirectTo} />;
-    // }
 
     // The fuzzy search is engaged if the search term starts with a '/'
     // and does not have any spaces in it.
