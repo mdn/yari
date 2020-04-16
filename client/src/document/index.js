@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "@reach/router";
 
-import { NoMatch } from "../routing";
+// import { NoMatch } from "../routing";
 
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
@@ -15,125 +15,112 @@ import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-t
 // Sub-components
 import { DocumentTranslations } from "./languages";
 import { EditThisPage } from "./editthispage";
+
+// XXX Make this lazy!
 import { DocumentSpy } from "./spy";
 
-export class Document extends React.Component {
-  state = {
-    doc: this.props.doc || null,
-    loading: false,
-    notFound: false,
-    loadingError: null,
-  };
+export function Document(props) {
+  const { location } = props;
+  const [doc, setDoc] = useState(props.doc || null);
+  const [loading, setLoading] = useState(false);
+  const [loadingError, setLoadingError] = useState(null);
 
-  componentDidMount() {
-    if (!this.state.doc) {
-      this.fetchDocument();
+  useEffect(() => {
+    if (doc) {
+      document.title = doc.title;
+      if (loading) {
+        setLoading(false);
+      }
+      if (loadingError) {
+        setLoadingError(null);
+      }
+    }
+  }, [doc, loading, loadingError]);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [loadingError]);
+
+  async function fetchDocument(pathname) {
+    let url = pathname;
+    if (!url.endsWith("/")) {
+      url += "/";
+    }
+    url += "index.json";
+    console.log("OPENING", url);
+    let response;
+    try {
+      response = await fetch(url);
+    } catch (ex) {
+      setLoadingError(ex);
+      return;
+    }
+    if (!response.ok) {
+      console.warn(response);
+      setLoadingError(response);
+    } else {
+      if (response.redirected) {
+        // Fetching that data required a redirect!
+        // XXX perhaps do a route redirect here in React?
+        console.warn(`${url} was redirected to ${response.url}`);
+      }
+      const data = await response.json();
+      setDoc(data.doc);
     }
   }
 
-  componentWillUnmount() {
-    this.dismounted = true;
-  }
+  useEffect(() => {
+    setLoading(true);
+    fetchDocument(location.pathname);
+  }, [location.pathname]);
 
-  componentDidUpdate(prevProps) {
-    if (
-      this.props["*"] !== prevProps["*"] ||
-      this.props.locale !== prevProps.locale
-    ) {
-      this.fetchDocument();
-    }
-  }
-
-  fetchDocument = (loading = true) => {
-    this.setState({ loading }, async () => {
-      let url = document.location.pathname;
-      if (!url.endsWith("/")) url += "/";
-      url += "index.json";
-      console.log("OPENING", url);
-      let response;
-      try {
-        response = await fetch(url);
-      } catch (ex) {
-        return this.setState({ loading: false, loadingError: ex });
-      }
-      if (!response.ok) {
-        console.warn(response);
-        return this.setState({ loading: false, loadingError: response });
-      } else {
-        if (response.redirected) {
-          // Fetching that data required a redirect!
-          // XXX perhaps do a route redirect here in React?
-          console.warn(`${url} was redirected to ${response.url}`);
-        }
-        const data = await response.json();
-        document.title = data.doc.title;
-        this.setState({ doc: data.doc, loading: false });
-      }
-    });
-  };
-
-  onMessage = (data) => {
-    if (data.documentUri === this.props.location.pathname) {
+  function onMessage(data) {
+    if (data.documentUri === location.pathname) {
       // The recently edited document is the one we're currently looking at!
-      if (!this.dismounted) {
-        this.fetchDocument(false);
-      }
+      fetchDocument(data.documentUri);
     }
-  };
-
-  render() {
-    const { doc, loadingError, loading, notFound } = this.state;
-    const { location } = this.props;
-    if (notFound) {
-      return <NoMatch location={location} message="Document not found" />;
-    }
-    if (loading) {
-      return <p>Loading...</p>;
-    }
-    if (loadingError) {
-      return <LoadingError error={loadingError} />;
-    }
-    if (!doc) {
-      return null;
-    }
-    const translations = [...(doc.other_translations || [])];
-    if (doc.translation_of) {
-      translations.unshift({
-        locale: "en-US",
-        slug: doc.translation_of,
-      });
-    }
-    return (
-      <div>
-        <h1 className="page-title">{doc.title}</h1>
-        {translations && !!translations.length && (
-          <DocumentTranslations translations={translations} />
-        )}
-        <div className="main">
-          <nav>{doc.parents && <Breadcrumbs parents={doc.parents} />}</nav>
-
-          <div className="sidebar">
-            <RenderSideBar doc={doc} />
-          </div>
-          <div className="content">
-            <RenderDocumentBody doc={doc} />
-            <hr />
-            <EditThisPage source={doc.source} />
-            {doc.contributors && (
-              <Contributors contributors={doc.contributors} />
-            )}
-          </div>
-        </div>
-        {process.env.NODE_ENV === "development" && (
-          <DocumentSpy
-            onMessage={this.onMessage}
-            // location={this.props.location}
-            // fetchDocument={this.fetchDocument}
-          />
-        )}
-      </div>
-    );
   }
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+  if (loadingError) {
+    return <LoadingError error={loadingError} />;
+  }
+  if (!doc) {
+    return null;
+  }
+  const translations = [...(doc.other_translations || [])];
+  if (doc.translation_of) {
+    translations.unshift({
+      locale: "en-US",
+      slug: doc.translation_of,
+    });
+  }
+  return (
+    <div>
+      <h1 className="page-title">{doc.title}</h1>
+      {translations && !!translations.length && (
+        <DocumentTranslations translations={translations} />
+      )}
+      <div className="main">
+        <nav>{doc.parents && <Breadcrumbs parents={doc.parents} />}</nav>
+
+        <div className="sidebar">
+          <RenderSideBar doc={doc} />
+        </div>
+        <div className="content">
+          <RenderDocumentBody doc={doc} />
+          <hr />
+          <EditThisPage source={doc.source} />
+          {doc.contributors && <Contributors contributors={doc.contributors} />}
+        </div>
+      </div>
+      {process.env.NODE_ENV === "development" && (
+        <DocumentSpy onMessage={onMessage} />
+      )}
+    </div>
+  );
 }
 
 function Breadcrumbs({ parents }) {
