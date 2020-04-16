@@ -22,7 +22,6 @@ export function Document(props) {
 
   const p = useParams();
   const newProps = Object.assign({}, props, p);
-  console.log(Object.keys(newProps));
   return <DocumentInner {...newProps} />;
 }
 
