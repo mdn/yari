@@ -3,7 +3,7 @@
  */
 import React, { useState, useEffect, useRef } from "react";
 import Sockette from "sockette";
-import { Link } from "@reach/router";
+import { Link } from "react-router-dom";
 
 import "./spy.css";
 

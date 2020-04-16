@@ -1,6 +1,6 @@
-import { Redirect } from "@reach/router";
+import { useNavigate } from "react-router-dom";
 import FlexSearch from "flexsearch";
-import React from "react";
+import React, { useEffect } from "react";
 import FuzzySearch from "./fuzzy-search";
 import "./search.scss";
 
@@ -22,7 +22,7 @@ export class SearchWidget extends React.Component {
     initializing: false,
     lastQ: "",
     q: "",
-    redirectTo: null,
+    // redirectTo: null,
     searchResults: [],
     serverError: null,
     showSearchResults: true,
@@ -62,7 +62,7 @@ export class SearchWidget extends React.Component {
           highlitResult: null,
           lastQ: "",
           q: "",
-          redirectTo: null,
+          // redirectTo: null,
           showSearchResults: false,
           locale: this.props.pathname.split("/")[1] || "en-US",
         });
@@ -341,23 +341,26 @@ export class SearchWidget extends React.Component {
 
   submitHandler = (event) => {
     event.preventDefault();
+    const { onRedirect } = this.props;
     const { highlitResult, searchResults } = this.state;
-    let redirectTo;
+    // let redirectTo;
     if (searchResults.length === 1) {
-      redirectTo = searchResults[0].uri;
+      onRedirect(searchResults[0].uri);
     } else if (searchResults.length && highlitResult !== null) {
-      redirectTo = searchResults[highlitResult].uri;
+      onRedirect(searchResults[highlitResult].uri);
     } else {
       return;
     }
     this.setState({
-      redirectTo,
+      // redirectTo,
       showSearchResults: false,
     });
   };
 
   redirect = (uri) => {
-    this.setState({ redirectTo: uri });
+    const { onRedirect } = this.props;
+    onRedirect(uri);
+    // this.setState({ redirectTo: uri });
   };
 
   // computeBackgroundQ = (caseInsensitive = false) => {
@@ -395,14 +398,17 @@ export class SearchWidget extends React.Component {
     const {
       highlitResult,
       q,
-      redirectTo,
+      // redirectTo,
       searchResults,
       serverError,
       showSearchResults,
     } = this.state;
-    if (redirectTo) {
-      return <Redirect noThrow replace={false} to={redirectTo} />;
-    }
+    // if (redirectTo) {
+    //   // return <Redirect noThrow replace={false} to={redirectTo} />;
+    //   this.props.onRedirect(redirectTo);
+    //   return null;
+    //   // return <RedirectHack uri={redirectTo} />;
+    // }
 
     // The fuzzy search is engaged if the search term starts with a '/'
     // and does not have any spaces in it.
@@ -468,6 +474,18 @@ export class SearchWidget extends React.Component {
       </form>
     );
   }
+}
+
+/** The SearchWidget component is a class, not a (hook) function.
+ * The only way I know to use useNavigate() is to do it in a function.
+ * Therefore, we're using this here to help the SearchWidget component.
+ */
+function RedirectHack({ uri }) {
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate(uri);
+  });
+  return null;
 }
 
 class ShowSearchResults extends React.PureComponent {

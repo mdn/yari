@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "@reach/router";
+import { Link } from "react-router-dom";
 
 import { NoMatch } from "../routing";
 
@@ -19,6 +19,7 @@ import { DocumentSpy } from "./spy";
 
 export class Document extends React.Component {
   state = {
+    // XXX this kinda stinks, to copy from props to state.
     doc: this.props.doc || null,
     loading: false,
     notFound: false,
@@ -26,6 +27,7 @@ export class Document extends React.Component {
   };
 
   componentDidMount() {
+    console.log("MOUNTED:", this.props);
     if (!this.state.doc) {
       this.fetchDocument();
     }
@@ -36,6 +38,7 @@ export class Document extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    console.log(this.props, prevProps);
     if (
       this.props["*"] !== prevProps["*"] ||
       this.props.locale !== prevProps.locale

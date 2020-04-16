@@ -1,5 +1,5 @@
 import React from "react";
-import { Router, Link } from "@reach/router";
+import { Routes, Route, Link, useNavigate } from "react-router-dom";
 
 import { Homepage } from "./homepage";
 import { Document } from "./document";
@@ -9,27 +9,33 @@ import { SearchWidget } from "./search";
 export function App(appProps) {
   return (
     <div>
-      <Router primary={false}>
-        <Header default />
-      </Router>
+      <Header />
+
       <section className="section">
-        <Router>
-          <Homepage path="/" />
-          <Document {...appProps} path="/:locale/docs/*" />
-          <NoMatch default />
-        </Router>
+        <Routes>
+          {/* Consider using useRoutes() hook instead! */}
+          <Route path="/" element={<Homepage />} />
+          <Route path="/:locale/docs/*" element={<Document />} />
+          <Route path="*" element={<NoMatch />} />
+        </Routes>
       </section>
     </div>
   );
 }
 
-function Header({ location }) {
+function Header() {
+  const navigate = useNavigate();
   return (
     <header>
       <h1>
         <Link to="/">MDN Web Docs</Link>
       </h1>
-      <SearchWidget pathname={location.pathname} />
+      <SearchWidget
+        onRedirect={(uri) => {
+          console.log("Let's navigate to:", uri);
+          navigate(uri);
+        }}
+      />
     </header>
   );
 }

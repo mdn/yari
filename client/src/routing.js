@@ -1,6 +1,9 @@
 import React from "react";
 
-export function NoMatch({ location, message = null }) {
+export function NoMatch(props) {
+  console.log(props);
+  const message = "";
+  const location = { pathname: "fff" };
   return (
     <div>
       <h3>Page Not Found</h3>
