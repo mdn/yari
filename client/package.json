@@ -26,7 +26,7 @@
   "scripts": {
     "start": "cross-env BROWSER=none react-scripts start",
     "build": "cross-env INLINE_RUNTIME_CHUNK=false react-scripts build",
-    "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
+    "test": "tsc --noEmit && react-scripts test --env=jest-environment-jsdom-sixteen",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
