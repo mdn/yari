@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { VersionBlock } from "./version-block";
 
 export const BrowserSupportNote: any = ({

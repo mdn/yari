@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 export function Specifications({ specifications }) {
   const title = <h2>Specifications</h2>;

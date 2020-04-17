@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { VersionBlock } from "./version-block";
 import { BrowserSupportNotes } from "./browser-support-notes";
 

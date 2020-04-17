@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Platforms } from "./platforms";
 import { Browsers } from "./browsers";
 import { Rows } from "./rows";

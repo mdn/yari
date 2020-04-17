@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { BrowserSupportNote } from "./browser-support-note";
 
 function shouldDisplayBlock(blockDisplayed, versionAdded) {

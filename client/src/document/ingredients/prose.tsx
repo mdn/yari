@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 export function Prose({ section }) {
   return <div dangerouslySetInnerHTML={{ __html: section.content }} />;

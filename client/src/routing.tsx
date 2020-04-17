@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 export function NoMatch({ location = window.location, message = null }: any) {
   return (

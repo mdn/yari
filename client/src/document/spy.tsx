@@ -1,8 +1,7 @@
 /**
  * Needs a doc string.
  */
-import * as React from "react";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Sockette from "sockette";
 import { Link } from "@reach/router";
 

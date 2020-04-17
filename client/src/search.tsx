@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { Redirect } from "@reach/router";
 import FlexSearch from "flexsearch";
-import * as React from "react";
+import React from "react";
 import FuzzySearch from "./fuzzy-search";
 import "./search.scss";
 

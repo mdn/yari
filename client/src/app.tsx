@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as React from "react";
+import React from "react";
 import { Router, Link } from "@reach/router";
 
 import { Homepage } from "./homepage";

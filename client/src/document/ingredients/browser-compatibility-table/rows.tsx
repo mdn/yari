@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Link } from "@reach/router";
 import { BrowserSupportDetail } from "./browser-support-detail";
 import { BrowserSupportNotes } from "./browser-support-notes";
