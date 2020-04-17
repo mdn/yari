@@ -20,6 +20,6 @@
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.17",
-    "@types/mysql": "^2.15.9"
+    "@types/mysql": "^2.15.10"
   }
 }
