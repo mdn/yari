@@ -34,7 +34,7 @@ it("renders crashing mock component", () => {
   );
   expect(container.querySelector(".bc-table-error-boundary")).toBeNull();
   const div = container.querySelector("div");
-  fireEvent.click(div);
+  div && fireEvent.click(div);
 
   // TODO: When `BrowserCompatibilityErrorBoundary` reports to Sentry, spy on the report function so that we can assert the error stack
   expect(container.querySelector(".bc-table-error-boundary")).toBeDefined();

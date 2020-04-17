@@ -1,6 +1,8 @@
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react";
+const { render, fireEvent, waitFor } = require("@testing-library/react");
 import { SearchWidget } from "./search";
+
+declare var global: Window;
 
 it("renders without crashing", () => {
   const { container } = render(<SearchWidget />);
@@ -30,9 +32,9 @@ describe("Tests using XHR", () => {
               },
             },
           }),
-      })
+      } as Response)
     );
-    global.fetch.mockClear();
+    (global.fetch as any).mockClear();
   });
 
   test("XHR request on focusing input the first time", () => {
@@ -43,7 +45,7 @@ describe("Tests using XHR", () => {
     // Expect XHR
     expect(global.fetch).toHaveBeenCalledTimes(1);
     // Clear the mock fetch
-    global.fetch.mockClear();
+    (global.fetch as any).mockClear();
     // Fire focus event again to ensure it's not called again
     fireEvent.focus(input);
     expect(global.fetch).toHaveBeenCalledTimes(0);
