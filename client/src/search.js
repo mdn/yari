@@ -23,17 +23,19 @@ export function SearchWidget() {
     <SearchWidgetClass
       pathname={pathname}
       onRedirect={(uri) => {
-        console.log("Let's navigate to:", uri);
         navigate(uri);
       }}
     />
   );
 }
 
-class SearchWidgetClass extends React.Component {
+// TODO the only reason exporting this, for now, is to make
+// jest tests pass until https://github.com/mdn/stumptown-renderer/pull/494
+// is resolved.
+export class SearchWidgetClass extends React.Component {
   state = {
     highlitResult: null,
-    initializing: false, // XXX bad name!
+    initializing: false,
     ready: false,
     lastQ: "",
     q: "",
@@ -42,7 +44,6 @@ class SearchWidgetClass extends React.Component {
     showSearchResults: true,
   };
 
-  INITIALIZING_PLACEHOLDER = "Initializing search...";
   ACTIVE_PLACEHOLDER = "Go ahead. Type your search...";
   INACTIVE_PLACEHOLDER = isMobileUserAgent()
     ? "Site search..."
@@ -91,7 +92,6 @@ class SearchWidgetClass extends React.Component {
 
   initializeIndex = () => {
     if (this.state.initializing) {
-      console.log("Already initializing");
       return;
     }
 
@@ -136,7 +136,6 @@ class SearchWidgetClass extends React.Component {
       }
       const { titles } = await response.json();
       this.indexTitles(titles);
-      console.log("Have called indexTitles", titles);
       this.inputRef.current.placeholder = this.ACTIVE_PLACEHOLDER;
 
       // So we can keep track of how old the data is when stored
@@ -184,9 +183,7 @@ class SearchWidgetClass extends React.Component {
 
   updateSearch = () => {
     const q = this.state.q.trim();
-    console.log("IN updateSearch", { q });
     if (!this.state.ready) {
-      console.log("not ready yet!");
       return;
     }
     if (!q) {
@@ -196,7 +193,6 @@ class SearchWidgetClass extends React.Component {
     } else if (!this.index) {
       // This can happen if the initializing hasn't completed yet or
       // completed un-successfully.
-      console.log("no index!");
       return;
     } else {
       // console.log(
@@ -234,8 +230,6 @@ class SearchWidgetClass extends React.Component {
       //   window.clearTimeout(this.hideSoon);
       // }
 
-      console.log({ q });
-
       if (q.startsWith("/") && !/\s/.test(q)) {
         // Fuzzy-String search on the URI
 
@@ -257,7 +251,6 @@ class SearchWidgetClass extends React.Component {
               substrings: fuzzyResult.substrings,
             };
           });
-          console.log("RESULTS:", results);
           this.setState({
             highlitResult: results.length ? 0 : null,
             lastQ: q,
