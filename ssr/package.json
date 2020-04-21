@@ -15,7 +15,7 @@
     "react": "16.13.1",
     "prismjs": "1.20.0",
     "react-dom": "16.13.1",
-    "source-map-support": "0.5.17"
+    "source-map-support": "0.5.18"
   },
   "devDependencies": {
     "@babel/core": "7.9.0",
