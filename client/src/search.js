@@ -33,7 +33,8 @@ export function SearchWidget() {
 class SearchWidgetClass extends React.Component {
   state = {
     highlitResult: null,
-    initializing: false,
+    initializing: false, // XXX bad name!
+    ready: false,
     lastQ: "",
     q: "",
     searchResults: [],
@@ -41,6 +42,7 @@ class SearchWidgetClass extends React.Component {
     showSearchResults: true,
   };
 
+  INITIALIZING_PLACEHOLDER = "Initializing search...";
   ACTIVE_PLACEHOLDER = "Go ahead. Type your search...";
   INACTIVE_PLACEHOLDER = isMobileUserAgent()
     ? "Site search..."
@@ -88,8 +90,12 @@ class SearchWidgetClass extends React.Component {
   }
 
   initializeIndex = () => {
-    if (this.state.initializing) return;
+    if (this.state.initializing) {
+      console.log("Already initializing");
+      return;
+    }
 
+    this.inputRef.current.placeholder = this.INITIALIZING_PLACEHOLDER;
     this.setState({ initializing: true }, async () => {
       // Always do the XHR network request (hopefully good HTTP caching
       // will make this pleasant for the client) but localStorage is
@@ -109,6 +115,8 @@ class SearchWidgetClass extends React.Component {
         // refreshed very recently.
         if (storedTitles) {
           this.indexTitles(storedTitles);
+          this.inputRef.current.placeholder = this.ACTIVE_PLACEHOLDER;
+          // this.setState({ ready: true });
         }
       }
 
@@ -128,6 +136,8 @@ class SearchWidgetClass extends React.Component {
       }
       const { titles } = await response.json();
       this.indexTitles(titles);
+      console.log("Have called indexTitles", titles);
+      this.inputRef.current.placeholder = this.ACTIVE_PLACEHOLDER;
 
       // So we can keep track of how old the data is when stored
       // in localStorage.
@@ -174,6 +184,11 @@ class SearchWidgetClass extends React.Component {
 
   updateSearch = () => {
     const q = this.state.q.trim();
+    console.log("IN updateSearch", { q });
+    if (!this.state.ready) {
+      console.log("not ready yet!");
+      return;
+    }
     if (!q) {
       if (this.state.showSearchResults) {
         this.setState({ showSearchResults: false });
@@ -181,6 +196,7 @@ class SearchWidgetClass extends React.Component {
     } else if (!this.index) {
       // This can happen if the initializing hasn't completed yet or
       // completed un-successfully.
+      console.log("no index!");
       return;
     } else {
       // console.log(
@@ -218,6 +234,8 @@ class SearchWidgetClass extends React.Component {
       //   window.clearTimeout(this.hideSoon);
       // }
 
+      console.log({ q });
+
       if (q.startsWith("/") && !/\s/.test(q)) {
         // Fuzzy-String search on the URI
 
@@ -239,6 +257,7 @@ class SearchWidgetClass extends React.Component {
               substrings: fuzzyResult.substrings,
             };
           });
+          console.log("RESULTS:", results);
           this.setState({
             highlitResult: results.length ? 0 : null,
             lastQ: q,
@@ -315,7 +334,7 @@ class SearchWidgetClass extends React.Component {
 
   focusHandler = () => {
     this.inFocus = true;
-    this.inputRef.current.placeholder = this.ACTIVE_PLACEHOLDER;
+    // this.inputRef.current.placeholder = this.ACTIVE_PLACEHOLDER;
 
     // If it hasn't been done already, do this now. It's idempotent.
     this.initializeIndex();

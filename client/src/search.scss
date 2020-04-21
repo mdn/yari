@@ -46,6 +46,11 @@ form.search-widget {
     color: red;
     font-size: 80%;
   }
+  p.initializing {
+    margin: 0;
+    color: #666;
+    font-size: 80;
+  }
 
   .search-results {
     position: absolute;
