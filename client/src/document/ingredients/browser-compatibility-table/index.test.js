@@ -9,8 +9,7 @@ function renderWithRouter(component) {
 }
 
 it("renders error boundary when no data is present", () => {
-  const { container } = renderWithRouter(<BrowserCompatibilityTable />);
-  expect(container.querySelector(".bc-table")).toBeNull();
-  expect(container.querySelector(".bc-table-error-boundary")).toBeDefined();
+  const { getByText } = renderWithRouter(<BrowserCompatibilityTable />);
+  expect(getByText(/this table has encountered unhandled error/));
   // TODO: When `BrowserCompatibilityErrorBoundary` reports to Sentry, spy on the report function so that we can assert the error stack
 });
