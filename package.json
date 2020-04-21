@@ -27,7 +27,7 @@
   "devDependencies": {
     "foreman": "3.0.1",
     "husky": "4.2.5",
-    "prettier": "2.0.4",
+    "prettier": "2.0.5",
     "pretty-quick": "2.0.1"
   },
   "dependencies": {
