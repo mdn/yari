@@ -586,7 +586,7 @@ class Builder {
           const rawRedirects = fs.readFileSync(filepath, "utf8");
           for (const line of rawRedirects.split(/[\r\n]+/)) {
             const trimmedLineLC = line.trim().toLowerCase();
-            if (!trimmedLineLC.startsWith("#")) {
+            if (trimmedLineLC && !trimmedLineLC.startsWith("#")) {
               const [fromUri, toUri] = trimmedLineLC
                 .split(/\s+/)
                 .map((uri) => repairUri(uri));
