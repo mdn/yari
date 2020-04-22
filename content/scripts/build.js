@@ -59,6 +59,16 @@ function isTTY() {
   return !!process.stdout.columns;
 }
 
+// Turn a Map instance into a object.
+// This is something you might need to do when serializing a Map
+// with JSON.stringify().
+function mapToObject(map) {
+  const obj = Object.create(null);
+  for (const [key, value] of map) {
+    obj[key] = value;
+  }
+  return obj;
+}
 /** Given a array of locales, return it "cleaned up".
  * For example, they should always be lowercase and whitespace stripped.
  * and if they locale (case INsensitively) is not in VALID_LOCALES it
@@ -200,7 +210,7 @@ class Builder {
     this.options = options;
     this.logger = logger;
     this.selfHash = null;
-    this.allTitles = null;
+    this.allTitles = new Map();
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
@@ -403,8 +413,8 @@ class Builder {
       throw new Error("this.selfHash hasn't been set yet");
     }
     if (
-      this.allTitles &&
-      this.allTitles._hash === this.selfHash &&
+      this.allTitles.size &&
+      this.allTitles.get("_hash") === this.selfHash &&
       !this.options.regenerateAllTitles
     ) {
       // No reason to proceed, the titles have already been loaded into memory.
@@ -424,12 +434,13 @@ class Builder {
       fs.existsSync(allTitlesJsonFilepath) &&
       !this.options.regenerateAllTitles
     ) {
-      // XXX maybe this should become a Map instance.
-      this.allTitles = JSON.parse(
-        fs.readFileSync(allTitlesJsonFilepath, "utf8")
+      this.allTitles = new Map(
+        Object.entries(
+          JSON.parse(fs.readFileSync(allTitlesJsonFilepath, "utf8"))
+        )
       );
       // We got it from disk, but is it out-of-date?
-      if (this.allTitles._hash !== this.selfHash) {
+      if (this.allTitles.get("_hash") !== this.selfHash) {
         this.logger.info(
           chalk.yellow(`${allTitlesJsonFilepath} existed but is out-of-date.`)
         );
@@ -442,10 +453,6 @@ class Builder {
     // If we're going to generate all titles, we need all popularities.
     const allPopularities = this._getAllPopularities();
 
-    // This starts it up from scratch and the this.processFolderTitle()
-    // and this.processStumptownFileTitle() will start populating this
-    // class instance variable.
-    this.allTitles = {};
     // This helps us exclusively to know about the validitity of the
     // _all-titles.json file which is our disk-based caching strategy.
     // It's very possible that the "self hash" has changed because of some
@@ -457,7 +464,7 @@ class Builder {
     // this.allTitles loaded from disk is in sync. For example, a slug
     // might have been edited in one of the index.yaml files without this
     // having a chance to be picked up and stored in disk-based cache.
-    this.allTitles._hash = this.selfHash;
+    this.allTitles.set("_hash", this.selfHash);
 
     this.logger.info("Building a list of ALL titles and URIs...");
     let t0 = new Date();
@@ -481,41 +488,41 @@ class Builder {
     // that every 'en-US' document that has been translated, will have a list
     // of other locales and slugs.
     let countBrokenTranslationOfDocuments = 0;
-    Object.values(this.allTitles)
-      .filter((data) => data.translation_of)
-      .forEach((data) => {
-        const parentURL = buildMDNUrl("en-US", data.translation_of);
-        const parentData = this.allTitles[parentURL];
+    this.allTitles.forEach((data) => {
+      if (!data.translation_of) return;
 
-        // TODO: Our dumper is not perfect yet. We still get bad
-        // 'translation_of' references.
-        // I.e. a localized document's 'index.yaml' says its
-        // 'translation_of' is 'Web/Foo/Bar' but there is actually no en-US
-        // document by that slug!
-        // We're working on it in the dumper and this problem is known also
-        // in the 'ensureAllTitles()' method which at least debug logs the
-        // bad ones and warn logs about a total count of bad documents.
-        // Once the dumper has matured, we'll remove this defensive style and
-        // throw an error here. That'll be a form of validation-by-building
-        // which can really help our CI trap content edit PRs that sets
-        // or gets these references wrong.
+      const parentURL = buildMDNUrl("en-US", data.translation_of);
+      const parentData = this.allTitles.get(parentURL);
 
-        if (parentData) {
-          if (!parentData.hasOwnProperty("translations")) {
-            parentData.translations = [];
-          }
-          parentData.translations.push({
-            locale: data.locale,
-            slug: data.slug,
-          });
-        } else {
-          countBrokenTranslationOfDocuments++;
-          this.logger.debug(
-            `${data.locale}/${data.slug} (${data.file}) refers to a ` +
-              "en-US translation_of that doesn't exist."
-          );
+      // TODO: Our dumper is not perfect yet. We still get bad
+      // 'translation_of' references.
+      // I.e. a localized document's 'index.yaml' says its
+      // 'translation_of' is 'Web/Foo/Bar' but there is actually no en-US
+      // document by that slug!
+      // We're working on it in the dumper and this problem is known also
+      // in the 'ensureAllTitles()' method which at least debug logs the
+      // bad ones and warn logs about a total count of bad documents.
+      // Once the dumper has matured, we'll remove this defensive style and
+      // throw an error here. That'll be a form of validation-by-building
+      // which can really help our CI trap content edit PRs that sets
+      // or gets these references wrong.
+
+      if (parentData) {
+        if (!parentData.hasOwnProperty("translations")) {
+          parentData.translations = [];
         }
-      });
+        parentData.translations.push({
+          locale: data.locale,
+          slug: data.slug,
+        });
+      } else {
+        countBrokenTranslationOfDocuments++;
+        this.logger.debug(
+          `${data.locale}/${data.slug} (${data.file}) refers to a ` +
+            "en-US translation_of that doesn't exist."
+        );
+      }
+    });
     if (countBrokenTranslationOfDocuments) {
       this.logger.warn(
         chalk.yellow(
@@ -527,7 +534,7 @@ class Builder {
 
     fs.writeFileSync(
       allTitlesJsonFilepath,
-      JSON.stringify(this.allTitles, null, 2)
+      JSON.stringify(mapToObject(this.allTitles), null, 2)
     );
     let t1 = new Date();
     this.logger.info(
@@ -715,7 +722,7 @@ class Builder {
     // First regroup ALL URLs into buckets per locale.
     const byLocale = {};
     const mostModified = {};
-    for (let [uri, data] of Object.entries(this.allTitles)) {
+    for (const [uri, data] of this.allTitles) {
       // XXX skip locales not in this.options.locales and
       // this.options.notLocales etc.
 
@@ -1017,6 +1024,7 @@ class Builder {
     // let macroCalls = extractMacroCalls(rawHtml);
 
     // XXX should we get some of this stuff from this.allTitles instead?!
+    // XXX see https://github.com/mdn/stumptown-renderer/issues/502
     const doc = {};
 
     // Note that 'extractSidebar' will always return a string.
@@ -1031,15 +1039,16 @@ class Builder {
     }
     doc.body = sections;
 
-    const titleData = this.allTitles[doc.mdn_url];
+    const titleData = this.allTitles.get(doc.mdn_url);
     doc.popularity = titleData.popularity || 0.0;
     doc.modified = titleData.modified;
 
-    const otherTranslations = this.allTitles[doc.mdn_url].translations || [];
+    const otherTranslations =
+      this.allTitles.get(doc.mdn_url).translations || [];
     if (!otherTranslations.length && metadata.translation_of) {
       // But perhaps the parent has other translations?!
       const parentURL = buildMDNUrl("en-US", metadata.translation_of);
-      const parentData = this.allTitles[parentURL];
+      const parentData = this.allTitles.get(parentURL);
       // See note in 'ensureAllTitles()' about why we need this if statement.
       if (parentData) {
         const parentOtherTranslations = parentData.translations;
@@ -1062,7 +1071,7 @@ class Builder {
       doc,
       destinationDir,
       buildHtml: !this.options.buildJsonOnly,
-      titles: this.allTitles,
+      allTitles: this.allTitles,
     });
 
     // We're *assuming* that `slugToFoldername(metadata.mdn_url)`
@@ -1159,7 +1168,7 @@ class Builder {
       doc,
       destinationDir,
       buildHtml: !this.options.buildJsonOnly,
-      titles: this.allTitles,
+      allTitles: this.allTitles,
     });
 
     return {
@@ -1191,16 +1200,16 @@ class Builder {
       metadata.modified = wikiMetadata.modified;
     }
 
-    if (mdn_url in this.allTitles) {
+    if (this.allTitles.has(mdn_url)) {
       // Already been added by stumptown probably.
       // But, before we exit early, let's update some of the pieces of
       // information that stumptown might not have, such as last_modified
       // and parent.
-      if (!this.allTitles[mdn_url].modified) {
-        this.allTitles[mdn_url].modified = metadata.modified;
+      if (!this.allTitles.get(mdn_url).modified) {
+        this.allTitles.get(mdn_url).modified = metadata.modified;
       }
-      if (!this.allTitles[mdn_url].translation_of) {
-        this.allTitles[mdn_url].translation_of = metadata.translation_of;
+      if (!this.allTitles.get(mdn_url).translation_of) {
+        this.allTitles.get(mdn_url).translation_of = metadata.translation_of;
       }
       return;
     }
@@ -1220,7 +1229,7 @@ class Builder {
       excludeInSitemaps: source.excludeInSitemaps,
       source: source.filepath,
     };
-    this.allTitles[mdn_url] = doc;
+    this.allTitles.set(mdn_url, doc);
   }
 
   processStumptownFileTitle(source, file, allPopularities) {
@@ -1239,7 +1248,7 @@ class Builder {
       source: source.filepath,
     };
 
-    this.allTitles[mdn_url] = doc;
+    this.allTitles.set(mdn_url, doc);
   }
 
   renderHtml(rawHtml, metadata) {
