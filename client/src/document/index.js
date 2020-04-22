@@ -70,9 +70,11 @@ export function Document(props) {
   }
 
   useEffect(() => {
-    setLoading(true);
-    fetchDocument(location.pathname);
-  }, [location.pathname]);
+    if (!props.doc) {
+      setLoading(true);
+      fetchDocument(location.pathname);
+    }
+  }, [location.pathname, props.doc]);
 
   function onMessage(data) {
     if (data.documentUri === location.pathname) {
