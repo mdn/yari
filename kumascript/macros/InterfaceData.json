@@ -182,7 +182,7 @@
     },
     "CSSPseudoElement": {
       "inh": "EventTarget",
-      "impl": ["Animatable"]
+      "impl": []
     },
     "CSSStyleDeclaration": {
       "inh": "",
