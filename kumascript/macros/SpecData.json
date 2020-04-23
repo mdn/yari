@@ -476,7 +476,7 @@
   },
   "CSS Grid 2": {
     "name": "CSS Grid Layout Module Level 2",
-    "url": "https://www.w3.org/TR/css-grid-2/",
+    "url": "https://drafts.csswg.org/css-grid-2/",
     "status": "WD"
   },
   "CSS Layout": {
@@ -511,7 +511,7 @@
   },
   "CSS Overscroll Behavior": {
     "name": "CSS Overscroll Behavior Module Level 1",
-    "url": "https://www.w3.org/TR/css-overscroll-1/",
+    "url": "https://drafts.csswg.org/css-overscroll-1/",
     "status": "WD"
   },
   "CSS Properties and Values API": {
@@ -551,7 +551,7 @@
   },
   "CSS Shadow Parts": {
     "name": "Shadow Parts",
-    "url": "https://www.w3.org/TR/css-shadow-parts-1/",
+    "url": "https://drafts.csswg.org/css-shadow-parts-1/",
     "status": "WD"
   },
   "CSS Shapes": {
@@ -966,7 +966,7 @@
   },
   "Media Capabilities": {
     "name": "Media Capabilities",
-    "url": "https://wicg.github.io/media-capabilities/",
+    "url": "https://w3c.github.io/media-capabilities/",
     "status": "Draft"
   },
   "Media Capture": {
@@ -981,12 +981,12 @@
   },
   "Media Playback Quality": {
     "name": "Media Playback Quality",
-    "url": "https://wicg.github.io/media-playback-quality/",
+    "url": "https://w3c.github.io/media-playback-quality/",
     "status": "ED"
   },
   "Media Session": {
     "name": "Media Session Standard",
-    "url": "https://wicg.github.io/mediasession/",
+    "url": "https://w3c.github.io/mediasession/",
     "status": "Draft"
   },
   "Media Source Extensions": {
@@ -1036,7 +1036,7 @@
   },
   "Network Information": {
     "name": "Network Information API",
-    "url": "https://w3c.github.io/netinfo/",
+    "url": "https://wicg.github.io/netinfo/",
     "status": "Draft"
   },
   "OpenGL ES 2.0": {
@@ -1376,8 +1376,13 @@
   },
   "Web Animations": {
     "name": "Web Animations",
-    "url": "https://drafts.csswg.org/web-animations/",
+    "url": "https://drafts.csswg.org/web-animations-1/",
     "status": "WD"
+  },
+  "Web Animations 2": {
+    "name": "Web Animations Level 2",
+    "url": "https://drafts.csswg.org/web-animations-2/",
+    "status": "Draft"
   },
   "WebAssembly Core": {
     "name": "WebAssembly Core Specification",
@@ -1631,7 +1636,7 @@
   },
   "Web Speech API": {
     "name": "Web Speech API",
-    "url": "https://w3c.github.io/speech-api/",
+    "url": "https://wicg.github.io/speech-api/",
     "status": "Draft"
   },
   "Web Telephony": {
