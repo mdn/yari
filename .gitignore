@@ -37,3 +37,7 @@ content/coverage/
 content/files/
 content/build/
 content/_all-titles.json
+
+# Can be removed once content lives in its own repo
+archivecontent/files
+content/files

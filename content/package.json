@@ -16,13 +16,13 @@
     "html-differ": "^1.4.0",
     "js-yaml": "3.13.1",
     "kumascript": "0.1.0",
-    "mdn-browser-compat-data": "1.0.17",
+    "mdn-browser-compat-data": "1.0.18",
     "mysql": "2.18.1",
     "sanitize-filename": "^1.6.3",
     "ws": "7.2.3"
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.17",
-    "@types/mysql": "^2.15.9"
+    "@types/mysql": "^2.15.10"
   }
 }
