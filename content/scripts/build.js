@@ -488,7 +488,7 @@ class Builder {
     // that every 'en-US' document that has been translated, will have a list
     // of other locales and slugs.
     let countBrokenTranslationOfDocuments = 0;
-    this.allTitles.forEach((data) => {
+    for (const data of this.allTitles.values()) {
       if (!data.translation_of) return;
 
       const parentURL = buildMDNUrl("en-US", data.translation_of);
@@ -522,7 +522,7 @@ class Builder {
             "en-US translation_of that doesn't exist."
         );
       }
-    });
+    }
     if (countBrokenTranslationOfDocuments) {
       this.logger.warn(
         chalk.yellow(
