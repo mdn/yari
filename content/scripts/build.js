@@ -657,8 +657,8 @@ class Builder {
     );
   }
 
-  watch() {
-    const onChange = (filepath, source) => {
+  async watch() {
+    const onChange = async (filepath, source) => {
       const folder = path.dirname(filepath);
       this.logger.info(`${chalk.bold("change")} in ${folder}`);
       const t0 = performance.now();
