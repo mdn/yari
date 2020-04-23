@@ -155,6 +155,36 @@ function validateSlug(slug) {
   }
 }
 
+function repairUri(uri) {
+  // Returns a lowercase URI with common irregularities repaired.
+  uri = uri.trim().toLowerCase();
+  if (!uri.startsWith("/")) {
+    // Ensure the URI starts with a "/".
+    uri = "/" + uri;
+  }
+  // Remove redundant forward slashes, like "//".
+  uri = uri.replace(/\/{2,}/g, "/");
+  // Ensure the URI starts with a valid locale.
+  const maybeLocale = uri.split("/")[1];
+  if (!VALID_LOCALES.has(maybeLocale)) {
+    if (maybeLocale === "en") {
+      // Converts URI's like "/en/..." to "/en-us/...".
+      uri = uri.replace(`/${maybeLocale}`, "/en-us");
+    } else {
+      // Converts URI's like "/web/..." to "/en-us/web/...", or
+      // URI's like "/docs/..." to "/en-us/docs/...".
+      uri = "/en-us" + uri;
+    }
+  }
+  // Ensure the locale is followed by "/docs".
+  const [locale, maybeDocs] = uri.split("/").slice(1, 3);
+  if (maybeDocs !== "docs") {
+    // Converts URI's like "/en-us/web/..." to "/en-us/docs/web/...".
+    uri = uri.replace(`/${locale}`, `/${locale}/docs`);
+  }
+  return uri;
+}
+
 let webSocketServer = null;
 function broadcastWebsocketMessage(msg) {
   if (!webSocketServer) {
@@ -183,6 +213,7 @@ function runBuild(sources, options, logger) {
   } else {
     builder.initSelfHash();
     builder.ensureAllTitles();
+    builder.ensureAllRedirects();
     builder.prepareRoots();
     if (!options.watch) {
       return builder.start();
@@ -211,6 +242,7 @@ class Builder {
     this.logger = logger;
     this.selfHash = null;
     this.allTitles = new Map();
+    this.allRedirects = new Map();
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
@@ -539,6 +571,44 @@ class Builder {
     let t1 = new Date();
     this.logger.info(
       chalk.green(`Building list of all titles took ${ppMilliseconds(t1 - t0)}`)
+    );
+  }
+
+  ensureAllRedirects() {
+    if (this.allRedirects.size) {
+      // No reason to proceed, the redirects have already been loaded into memory.
+      return;
+    }
+
+    this.logger.info("Building a map of ALL redirects...");
+    let t0 = new Date();
+
+    // Walk all the locale folders and gather all of the redirects.
+    for (const source of this.sources.entries()) {
+      for (const localeFolder of this.getLocaleRootFolders(source, {
+        allLocales: true,
+      })) {
+        const filepath = path.join(localeFolder, "_redirects.txt");
+        if (fs.existsSync(filepath)) {
+          const rawRedirects = fs.readFileSync(filepath, "utf8");
+          for (const line of rawRedirects.split(/[\r\n]+/)) {
+            const trimmedLineLC = line.trim().toLowerCase();
+            if (trimmedLineLC && !trimmedLineLC.startsWith("#")) {
+              const [fromUri, toUri] = trimmedLineLC
+                .split(/\s+/)
+                .map((uri) => repairUri(uri));
+              this.allRedirects.set(fromUri, toUri);
+            }
+          }
+        }
+      }
+    }
+
+    let t1 = new Date();
+    this.logger.info(
+      chalk.green(
+        `Building map of all redirects took ${ppMilliseconds(t1 - t0)}`
+      )
     );
   }
 
