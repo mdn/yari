@@ -520,8 +520,9 @@ class Builder {
     // that every 'en-US' document that has been translated, will have a list
     // of other locales and slugs.
     let countBrokenTranslationOfDocuments = 0;
-    for (const data of this.allTitles.values()) {
-      if (!data.translation_of) return;
+    for (const [key, data] of this.allTitles) {
+      if (key === "_hash") continue;
+      if (!data.translation_of) continue;
 
       const parentURL = buildMDNUrl("en-US", data.translation_of);
       const parentData = this.allTitles.get(parentURL);
