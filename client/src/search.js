@@ -41,8 +41,7 @@ const INACTIVE_PLACEHOLDER = isMobileUserAgent()
 export class SearchWidgetClass extends React.Component {
   state = {
     highlitResult: null,
-    initialized: false,
-    ready: false,
+    initialized: null, // null=not started, false=started, true=finished
     lastQ: "",
     q: "",
     searchResults: [],
