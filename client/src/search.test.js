@@ -63,6 +63,9 @@ describe("Tests using XHR", () => {
     const input = container.querySelector('[type="search"]');
     // Focus input to get titles from XHR
     fireEvent.focus(input);
+    await waitFor(() =>
+      container.querySelector('input[type="search"][placeholder^="Go ahead"]')
+    );
     expect(global.localStorage.getItem("titles")).toBeDefined();
   });
 
@@ -71,6 +74,9 @@ describe("Tests using XHR", () => {
     const input = container.querySelector('[type="search"]');
     // Focus input to get titles from XHR
     fireEvent.focus(input);
+    await waitFor(() =>
+      container.querySelector('input[type="search"][placeholder^="Go ahead"]')
+    );
     fireEvent.change(input, { target: { value: "div" } });
     // Get the search results
     const searchResults = await waitFor(() =>
@@ -86,6 +92,9 @@ describe("Tests using XHR", () => {
     const input = container.querySelector('[type="search"]');
     // Focus input to get titles from XHR
     fireEvent.focus(input);
+    await waitFor(() =>
+      container.querySelector('input[type="search"][placeholder^="Go ahead"]')
+    );
     fireEvent.change(input, { target: { value: "ABb" } });
     // Get the search results
     const searchResults = await waitFor(() =>
@@ -97,11 +106,15 @@ describe("Tests using XHR", () => {
   });
 
   test("should get search results by URI", async () => {
-    const { container, getByText } = renderWithRouter(<SearchWidget />);
+    const { container, getByText, debug } = renderWithRouter(<SearchWidget />);
     const input = container.querySelector('[type="search"]');
     // Focus input to get titles from XHR
     fireEvent.focus(input);
     await waitFor(() =>
+      container.querySelector('input[type="search"][placeholder^="Go ahead"]')
+    );
+    debug();
+    console.log(
       container.querySelector('input[type="search"][placeholder^="Go ahead"]')
     );
     fireEvent.change(input, {
@@ -111,6 +124,7 @@ describe("Tests using XHR", () => {
     const searchResults = await waitFor(() =>
       container.querySelector("div.search-results")
     );
+    debug();
     // Length of children should be 2 including the "Fuzzy searching by URI" div
     expect(searchResults.children.length).toBe(2);
     expect(input.classList.contains("has-search-results")).toBe(true);
@@ -130,6 +144,9 @@ describe("Tests using XHR", () => {
     const input = container.querySelector('[type="search"]');
     // Focus input to get titles from XHR
     fireEvent.focus(input);
+    await waitFor(() =>
+      container.querySelector('input[type="search"][placeholder^="Go ahead"]')
+    );
     fireEvent.change(input, {
       target: { value: "/docs/Web/HTML/Element/abbr" },
     });
@@ -145,6 +162,9 @@ describe("Tests using XHR", () => {
     const input = container.querySelector('[type="search"]');
     // Focus input to get titles from XHR
     fireEvent.focus(input);
+    await waitFor(() =>
+      container.querySelector('input[type="search"][placeholder^="Go ahead"]')
+    );
     fireEvent.change(input, {
       target: { value: "/docs/Web/HTML/Element/abbr" },
     });
