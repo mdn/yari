@@ -16,10 +16,16 @@ function isMobileUserAgent() {
   );
 }
 
+const ACTIVE_PLACEHOLDER = "Go ahead. Type your search...";
+const INITIALIZING_PLACEHOLDER = "Initializing search...";
+const INACTIVE_PLACEHOLDER = isMobileUserAgent()
+  ? "Site search..."
+  : 'Site search... (Press "/" to focus)';
+
 export class SearchWidget extends React.Component {
   state = {
     highlitResult: null,
-    initializing: false,
+    initialized: null, // null=not started, false=started, true=finished
     lastQ: "",
     q: "",
     redirectTo: null,
@@ -27,11 +33,6 @@ export class SearchWidget extends React.Component {
     serverError: null,
     showSearchResults: true,
   };
-
-  ACTIVE_PLACEHOLDER = "Go ahead. Type your search...";
-  INACTIVE_PLACEHOLDER = isMobileUserAgent()
-    ? "Site search..."
-    : 'Site search... (Press "/" to focus)';
 
   inFocus = false;
 
@@ -76,9 +77,12 @@ export class SearchWidget extends React.Component {
   }
 
   initializeIndex = () => {
-    if (this.state.initializing) return;
+    if (this.state.initialized !== null) {
+      // Been initialized, or started to, at least once before.
+      return;
+    }
 
-    this.setState({ initializing: true }, async () => {
+    this.setState({ initialized: false }, async () => {
       // Always do the XHR network request (hopefully good HTTP caching
       // will make this pleasant for the client) but localStorage is
       // always faster than XHR even with localStorage's flaws.
@@ -97,6 +101,7 @@ export class SearchWidget extends React.Component {
         // refreshed very recently.
         if (storedTitles) {
           this.indexTitles(storedTitles);
+          this.setState({ initialized: true });
         }
       }
 
@@ -116,6 +121,7 @@ export class SearchWidget extends React.Component {
       }
       const { titles } = await response.json();
       this.indexTitles(titles);
+      this.setState({ initialized: true });
 
       // So we can keep track of how old the data is when stored
       // in localStorage.
@@ -167,7 +173,7 @@ export class SearchWidget extends React.Component {
         this.setState({ showSearchResults: false });
       }
     } else if (!this.index) {
-      // This can happen if the initializing hasn't completed yet or
+      // This can happen if the initialized hasn't completed yet or
       // completed un-successfully.
       return;
     } else {
@@ -303,7 +309,6 @@ export class SearchWidget extends React.Component {
 
   focusHandler = () => {
     this.inFocus = true;
-    this.inputRef.current.placeholder = this.ACTIVE_PLACEHOLDER;
 
     // If it hasn't been done already, do this now. It's idempotent.
     this.initializeIndex();
@@ -329,7 +334,6 @@ export class SearchWidget extends React.Component {
 
   blurHandler = () => {
     this.inFocus = false;
-    this.inputRef.current.placeholder = this.INACTIVE_PLACEHOLDER;
     // The reason we have a slight delay before hiding search results
     // is so that any onClick on the results get a chance to fire.
     this.hideSoon = window.setTimeout(() => {
@@ -399,6 +403,7 @@ export class SearchWidget extends React.Component {
       searchResults,
       serverError,
       showSearchResults,
+      initialized,
     } = this.state;
     if (redirectTo) {
       return <Redirect noThrow replace={false} to={redirectTo} />;
@@ -443,7 +448,13 @@ export class SearchWidget extends React.Component {
           onFocus={this.focusHandler}
           onKeyDown={this.keyDownHandler}
           onMouseOver={this.initializeIndex}
-          placeholder={this.INACTIVE_PLACEHOLDER}
+          placeholder={
+            initialized === null
+              ? INACTIVE_PLACEHOLDER
+              : initialized
+              ? ACTIVE_PLACEHOLDER
+              : INITIALIZING_PLACEHOLDER
+          }
           ref={this.inputRef}
           type="search"
           value={q}

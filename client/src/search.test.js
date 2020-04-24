@@ -7,11 +7,15 @@ it("renders without crashing", () => {
   expect(container).toBeDefined();
 });
 
-test("input placeholder changes when focused", () => {
+test("input placeholder changes when focused", async () => {
   const { container } = render(<SearchWidget />);
+
   const input = container.querySelector('[type="search"]');
   fireEvent.focus(input);
-  expect(input.placeholder).toBe("Go ahead. Type your search...");
+  expect(input.placeholder).toBe("Initializing search...");
+  await waitFor(() =>
+    container.querySelector('input[type="search"][placeholder^="Go ahead"]')
+  );
 });
 
 describe("Tests using XHR", () => {
@@ -49,7 +53,7 @@ describe("Tests using XHR", () => {
     expect(global.fetch).toHaveBeenCalledTimes(0);
   });
 
-  test("Should set titles in localStorage", async () => {
+  test("should set titles in localStorage", async () => {
     const { container } = render(<SearchWidget />);
     const input = container.querySelector('[type="search"]');
     // Focus input to get titles from XHR
@@ -57,7 +61,7 @@ describe("Tests using XHR", () => {
     expect(global.localStorage.getItem("titles")).toBeDefined();
   });
 
-  test("Should NOT get search results", async () => {
+  test("should NOT get search results", async () => {
     const { container, getByText } = render(<SearchWidget />);
     const input = container.querySelector('[type="search"]');
     // Focus input to get titles from XHR
@@ -72,8 +76,8 @@ describe("Tests using XHR", () => {
     expect(getByText("nothing found")).toBeDefined();
   });
 
-  test("Should get search results", async () => {
-    const { container, getByText } = render(<SearchWidget />);
+  test("should get search results", async () => {
+    const { container } = render(<SearchWidget />);
     const input = container.querySelector('[type="search"]');
     // Focus input to get titles from XHR
     fireEvent.focus(input);
@@ -87,7 +91,7 @@ describe("Tests using XHR", () => {
     expect(container.textContent).toContain("The Abbreviation element");
   });
 
-  test("Should get search results by URI", async () => {
+  test("should get search results by URI", async () => {
     const { container, getByText } = render(<SearchWidget />);
     const input = container.querySelector('[type="search"]');
     // Focus input to get titles from XHR
@@ -106,7 +110,7 @@ describe("Tests using XHR", () => {
     expect(getByText("Fuzzy searching by URI")).toBeDefined();
   });
 
-  test("Should redirect when clicking a search result", async (done) => {
+  test("should redirect when clicking a search result", async (done) => {
     // Define onPushState function to listen for redirect
     const onPushState = (event) => {
       expect(event.detail.url).toBe("/docs/Web/HTML/Element/abbr");
@@ -122,15 +126,13 @@ describe("Tests using XHR", () => {
       target: { value: "/docs/Web/HTML/Element/abbr" },
     });
     // Get the search results
-    const searchResults = await waitFor(() =>
-      container.querySelector("div.search-results")
-    );
+    await waitFor(() => container.querySelector("div.search-results"));
     const targetResult = container.querySelector("div.highlit");
     // Click the highlit result
     fireEvent.click(targetResult);
   });
 
-  test("Should remove search-results class after clicking a result", async () => {
+  test("should remove search-results class after clicking a result", async () => {
     const { container } = render(<SearchWidget pathname="/" />);
     const input = container.querySelector('[type="search"]');
     // Focus input to get titles from XHR
@@ -139,9 +141,7 @@ describe("Tests using XHR", () => {
       target: { value: "/docs/Web/HTML/Element/abbr" },
     });
     // Get the search results
-    const searchResults = await waitFor(() =>
-      container.querySelector("div.search-results")
-    );
+    await waitFor(() => container.querySelector("div.search-results"));
     const targetResult = container.querySelector("div.highlit");
     // Click the highlit result
     fireEvent.click(targetResult);
