@@ -29,6 +29,12 @@ export function SearchWidget() {
   );
 }
 
+const ACTIVE_PLACEHOLDER = "Go ahead. Type your search...";
+const INITIALIZING_PLACEHOLDER = "Initializing search...";
+const INACTIVE_PLACEHOLDER = isMobileUserAgent()
+  ? "Site search..."
+  : 'Site search... (Press "/" to focus)';
+
 // TODO the only reason exporting this, for now, is to make
 // jest tests pass until https://github.com/mdn/stumptown-renderer/pull/494
 // is resolved.
@@ -43,11 +49,6 @@ export class SearchWidgetClass extends React.Component {
     serverError: null,
     showSearchResults: true,
   };
-
-  ACTIVE_PLACEHOLDER = "Go ahead. Type your search...";
-  INACTIVE_PLACEHOLDER = isMobileUserAgent()
-    ? "Site search..."
-    : 'Site search... (Press "/" to focus)';
 
   inFocus = false;
 
@@ -91,12 +92,12 @@ export class SearchWidgetClass extends React.Component {
   }
 
   initializeIndex = () => {
-    if (this.state.initializing) {
+    if (this.state.initialized !== null) {
+      // Been initialized, or started to, at least once before.
       return;
     }
 
-    this.inputRef.current.placeholder = this.INITIALIZING_PLACEHOLDER;
-    this.setState({ initializing: true }, async () => {
+    this.setState({ initialized: false }, async () => {
       // Always do the XHR network request (hopefully good HTTP caching
       // will make this pleasant for the client) but localStorage is
       // always faster than XHR even with localStorage's flaws.
@@ -115,8 +116,7 @@ export class SearchWidgetClass extends React.Component {
         // refreshed very recently.
         if (storedTitles) {
           this.indexTitles(storedTitles);
-          this.inputRef.current.placeholder = this.ACTIVE_PLACEHOLDER;
-          // this.setState({ ready: true });
+          this.setState({ initialized: true });
         }
       }
 
@@ -136,7 +136,7 @@ export class SearchWidgetClass extends React.Component {
       }
       const { titles } = await response.json();
       this.indexTitles(titles);
-      this.inputRef.current.placeholder = this.ACTIVE_PLACEHOLDER;
+      this.setState({ initialized: true });
 
       // So we can keep track of how old the data is when stored
       // in localStorage.
@@ -191,7 +191,7 @@ export class SearchWidgetClass extends React.Component {
         this.setState({ showSearchResults: false });
       }
     } else if (!this.index) {
-      // This can happen if the initializing hasn't completed yet or
+      // This can happen if the initialized hasn't completed yet or
       // completed un-successfully.
       return;
     } else {
@@ -327,7 +327,6 @@ export class SearchWidgetClass extends React.Component {
 
   focusHandler = () => {
     this.inFocus = true;
-    // this.inputRef.current.placeholder = this.ACTIVE_PLACEHOLDER;
 
     // If it hasn't been done already, do this now. It's idempotent.
     this.initializeIndex();
@@ -353,7 +352,6 @@ export class SearchWidgetClass extends React.Component {
 
   blurHandler = () => {
     this.inFocus = false;
-    this.inputRef.current.placeholder = this.INACTIVE_PLACEHOLDER;
     // The reason we have a slight delay before hiding search results
     // is so that any onClick on the results get a chance to fire.
     this.hideSoon = window.setTimeout(() => {
@@ -422,6 +420,7 @@ export class SearchWidgetClass extends React.Component {
       searchResults,
       serverError,
       showSearchResults,
+      initialized,
     } = this.state;
 
     // The fuzzy search is engaged if the search term starts with a '/'
@@ -463,7 +462,13 @@ export class SearchWidgetClass extends React.Component {
           onFocus={this.focusHandler}
           onKeyDown={this.keyDownHandler}
           onMouseOver={this.initializeIndex}
-          placeholder={this.INACTIVE_PLACEHOLDER}
+          placeholder={
+            initialized === null
+              ? INACTIVE_PLACEHOLDER
+              : initialized
+              ? ACTIVE_PLACEHOLDER
+              : INITIALIZING_PLACEHOLDER
+          }
           ref={this.inputRef}
           type="search"
           value={q}
