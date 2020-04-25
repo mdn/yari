@@ -182,9 +182,6 @@ export class SearchWidgetClass extends React.Component {
 
   updateSearch = () => {
     const q = this.state.q.trim();
-    if (!this.state.ready) {
-      return;
-    }
     if (!q) {
       if (this.state.showSearchResults) {
         this.setState({ showSearchResults: false });

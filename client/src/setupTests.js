@@ -20,14 +20,3 @@ const mockLocalStorage = () => {
 };
 
 global.localStorage = mockLocalStorage();
-
-beforeEach(() => {
-  // Replacing the native history.pushState with a wrapper to sniff calls to
-  // window.history.pushState
-  const nativeHistoryPushState = window.history.pushState;
-  window.history.pushState = function (state, title, url) {
-    nativeHistoryPushState.apply(this, arguments);
-    var event = new CustomEvent("pushState", { detail: { state, title, url } });
-    window.dispatchEvent(event);
-  };
-});

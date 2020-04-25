@@ -24,18 +24,11 @@ export function App(appProps) {
 }
 
 function Header() {
-  // const navigate = useNavigate();
   return (
     <header>
       <h1>
         <Link to="/">MDN Web Docs</Link>
       </h1>
-      {/* <SearchWidget
-        onRedirect={(uri) => {
-          console.log("Let's navigate to:", uri);
-          navigate(uri);
-        }}
-      /> */}
       <SearchWidget />
     </header>
   );
