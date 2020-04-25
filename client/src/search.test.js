@@ -128,6 +128,9 @@ describe("Tests using XHR", () => {
     // main component.
     // Let's leave it until we learn more about how to test
     // with react-router v6.
+    // By the way, here's an example of how they do it within tests
+    // inside react-router-dom itself:
+    // https://github.com/ReactTraining/react-router/blob/e576ca7bf65f62680cc61b7f0ea29f0c8fd13d65/packages/react-router-dom/__tests__/navigate-encode-params-test.js#L53
     // console.log(window.location.pathname);
   });
 });
