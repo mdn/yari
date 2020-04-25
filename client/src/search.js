@@ -4,10 +4,6 @@ import React from "react";
 import FuzzySearch from "./fuzzy-search";
 import "./search.scss";
 
-// XXX replace this with a matchMedia instead.
-// The only reason this is used is to make differences on a smaller
-// screen. For example the number of search results shouldn't
-// depend on the navigator but instead of the screen real estate.
 function isMobileUserAgent() {
   return (
     typeof window !== "undefined" &&
@@ -18,6 +14,8 @@ function isMobileUserAgent() {
 
 const ACTIVE_PLACEHOLDER = "Go ahead. Type your search...";
 const INITIALIZING_PLACEHOLDER = "Initializing search...";
+// Make this one depend on figuring out if you're on a mobile device
+// because there you can't really benefit from keyboard shortcuts.
 const INACTIVE_PLACEHOLDER = isMobileUserAgent()
   ? "Site search..."
   : 'Site search... (Press "/" to focus)';
@@ -26,7 +24,6 @@ export class SearchWidget extends React.Component {
   state = {
     highlitResult: null,
     initialized: null, // null=not started, false=started, true=finished
-    lastQ: "",
     q: "",
     redirectTo: null,
     searchResults: [],
@@ -61,7 +58,6 @@ export class SearchWidget extends React.Component {
       if (this.state.showSearchResults || this.state.q) {
         this.setState({
           highlitResult: null,
-          lastQ: "",
           q: "",
           redirectTo: null,
           showSearchResults: false,
@@ -177,40 +173,10 @@ export class SearchWidget extends React.Component {
       // completed un-successfully.
       return;
     } else {
-      // console.log(
-      //   `Do something interesting with ${this.state.q.trim()} (last search: ${
-      //     this.state.lastQ
-      //   })`
-      // );
-      // // XXX we could compare this.state.q and this.state.lastQ
-      // // since this.state.lastQ reflects the current results.
-      // // IF nothing was found based on this.state.lastQ AND
-      // // this.state.q.startsWith(this.state.lastQ)
-      // // we know don't need to bother searching again.
-      // console.log(
-      //   "COMPARE",
-      //   [this.state.q, this.state.lastQ],
-      //   this.state.searchResults.length
-      // );
-      // if (
-      //   this.state.lastQ &&
-      //   this.state.q.startsWith(this.state.lastQ) &&
-      //   !this.state.searchResults.length
-      // ) {
-      //   console.warn(
-      //     `Nothing found for ${this.state.lastQ} so don't bother with ${
-      //       this.state.q
-      //     }`
-      //   );
-      //   return;
-      // }
-
-      // if (this.hideSoon) {
-      //   // You have triggered the hideSoon timeout which usually happens
-      //   // when you blur the input. But clearly you've changed your mind
-      //   // and typed something new interesting in. So cancel that timeout.
-      //   window.clearTimeout(this.hideSoon);
-      // }
+      // The iPhone X series is 812px high.
+      // If the window isn't very high, show fewer matches so that the
+      // overlaying search results don't trigger a scroll.
+      const limit = window.innerHeight < 850 ? 5 : 10;
 
       if (q.startsWith("/") && !/\s/.test(q)) {
         // Fuzzy-String search on the URI
@@ -218,14 +184,11 @@ export class SearchWidget extends React.Component {
         if (q === "/") {
           this.setState({
             highlitResult: null,
-            lastQ: q,
             searchResults: [],
             showSearchResults: true,
           });
         } else {
-          const fuzzyResults = this.fuzzySearcher.search(q, {
-            limit: isMobileUserAgent() ? 5 : 10,
-          });
+          const fuzzyResults = this.fuzzySearcher.search(q, { limit });
           const results = fuzzyResults.map((fuzzyResult) => {
             return {
               title: this._map[fuzzyResult.needle].title,
@@ -235,7 +198,6 @@ export class SearchWidget extends React.Component {
           });
           this.setState({
             highlitResult: results.length ? 0 : null,
-            lastQ: q,
             searchResults: results,
             showSearchResults: true,
           });
@@ -243,7 +205,7 @@ export class SearchWidget extends React.Component {
       } else {
         // Full-Text search
         const indexResults = this.index.search(q, {
-          limit: isMobileUserAgent() ? 5 : 10,
+          limit,
           // bool: "or",
           suggest: true, // This can give terrible result suggestions
         });
@@ -257,7 +219,6 @@ export class SearchWidget extends React.Component {
         });
         this.setState({
           highlitResult: results.length ? 0 : null,
-          lastQ: q,
           searchResults: results,
           showSearchResults: true,
         });
@@ -291,19 +252,6 @@ export class SearchWidget extends React.Component {
       } else {
         this.setState({ highlitResult: 0 });
       }
-    } else if (event.key === "Tab") {
-      // If the user tabbed, only try to control it if there is a good
-      // reason to do so.
-      // const {highlitResult, searchResults} =this.state;
-      // if (highlitResult === null)
-      // If the user tabbed, only try to control it if there is a good
-      // "background q" to tab-complete to.
-      // const backgroundQ = this.computeBackgroundQ(true);
-      // if (backgroundQ) {
-      //   event.preventDefault();
-      //   this.setState({ q: backgroundQ }, this.updateSearch);
-      //   // console.warn({ backgroundQ });
-      // }
     }
   };
 
@@ -323,7 +271,8 @@ export class SearchWidget extends React.Component {
     // bar is at the top of your screen. That allows maximum height space
     // usage to fix the input widget, the search result suggestions, and
     // the keyboard.
-    if (isMobileUserAgent() && !this._hasScrolledDown) {
+    const isSmallerScreen = isMobileUserAgent() && window.innerHeight < 850;
+    if (isSmallerScreen && !this._hasScrolledDown) {
       if (this.inputRef.current) {
         this.inputRef.current.scrollIntoView();
       }
@@ -363,33 +312,6 @@ export class SearchWidget extends React.Component {
   redirect = (uri) => {
     this.setState({ redirectTo: uri });
   };
-
-  // computeBackgroundQ = (caseInsensitive = false) => {
-  //   // If there is a good new suggestion, add its full word to 'q'.
-  //   const { q, highlitResult, searchResults } = this.state;
-  //   if (!q) {
-  //     return "";
-  //   }
-  //   let next;
-  //   if (highlitResult !== null) {
-  //     next = searchResults[highlitResult].title;
-  //   } else if (searchResults.length) {
-  //     next = searchResults[0].title;
-  //   }
-
-  //   // If the user has typed "jav" and the 'next' value is 'JavaScript'
-  //   // we ultimately want to return and suggest 'javaScript'
-  //   console.log({ next });
-  //   // let regex
-  //   if (caseInsensitive) {
-  //     return next;
-  //   }
-  //   if (next) {
-  //     return q + next.replace(new RegExp(q, "i"), "");
-  //   }
-
-  //   return q;
-  // };
 
   // This exists to avoid having to use 'document.querySelector(...)'
   // to get to the DOM element.
@@ -434,13 +356,6 @@ export class SearchWidget extends React.Component {
 
     return (
       <form className="search-widget" onSubmit={this.submitHandler}>
-        {/* <div className="input-wrapper">
-          <input
-            type="search"
-            className={show ? "background has-search-results" : "background"}
-            readOnly
-            value={this.computeBackgroundQ()}
-          /> */}
         <input
           className={show ? "has-search-results" : null}
           onBlur={this.blurHandler}
@@ -459,7 +374,6 @@ export class SearchWidget extends React.Component {
           type="search"
           value={q}
         />
-        {/* </div> */}
         {serverError && (
           <p className="server-error">
             {/* XXX Could be smarter here and actually *look* at the serverError object */}
@@ -481,43 +395,39 @@ export class SearchWidget extends React.Component {
   }
 }
 
-class ShowSearchResults extends React.PureComponent {
-  redirectHandler = (result) => {
-    this.props.redirect(result.uri);
-  };
-
-  render() {
-    const {
-      highlitResult,
-      isFuzzySearch,
-      nothingFound,
-      q,
-      results,
-    } = this.props;
-    return (
-      <div className="search-results">
-        {nothingFound && <div className="nothing-found">nothing found</div>}
-        {results.map((result, i) => {
-          return (
-            <div
-              className={i === highlitResult ? "highlit" : null}
-              key={result.uri}
-              onClick={(event) => {
-                this.redirectHandler(result);
-              }}
-            >
-              <HighlightMatch title={result.title} q={q} />
-              <br />
-              <BreadcrumbURI uri={result.uri} substrings={result.substrings} />
-            </div>
-          );
-        })}
-        {isFuzzySearch && (
-          <div className="fuzzy-engaged">Fuzzy searching by URI</div>
-        )}
-      </div>
-    );
+function ShowSearchResults({
+  redirect,
+  highlitResult,
+  isFuzzySearch,
+  nothingFound,
+  q,
+  results,
+}) {
+  function redirectHandler(result) {
+    redirect(result.uri);
   }
+
+  return (
+    <div className="search-results">
+      {nothingFound && <div className="nothing-found">nothing found</div>}
+      {results.map((result, i) => {
+        return (
+          <div
+            className={i === highlitResult ? "highlit" : null}
+            key={result.uri}
+            onClick={() => redirectHandler(result)}
+          >
+            <HighlightMatch title={result.title} q={q} />
+            <br />
+            <BreadcrumbURI uri={result.uri} substrings={result.substrings} />
+          </div>
+        );
+      })}
+      {isFuzzySearch && (
+        <div className="fuzzy-engaged">Fuzzy searching by URI</div>
+      )}
+    </div>
+  );
 }
 
 function HighlightMatch({ title, q }) {
