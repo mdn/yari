@@ -18,7 +18,7 @@ it("renders without crashing", () => {
 });
 
 it("renders crashing mock component", () => {
-  const CrashingComponent = function () {
+  function CrashingComponent() {
     const [crashing, setCrashing] = React.useState(false);
 
     if (crashing) {
@@ -31,7 +31,11 @@ it("renders crashing mock component", () => {
         }}
       />
     );
-  };
+  }
+
+  const consoleError = jest
+    .spyOn(console, "error")
+    .mockImplementation(() => {});
 
   const { container } = renderWithRouter(
     <BrowserCompatibilityErrorBoundary>
@@ -41,6 +45,10 @@ it("renders crashing mock component", () => {
   expect(container.querySelector(".bc-table-error-boundary")).toBeNull();
   const div = container.querySelector("div");
   fireEvent.click(div);
+
+  expect(consoleError).toHaveBeenCalledWith(
+    expect.stringMatching("The above error occurred")
+  );
 
   // TODO: When `BrowserCompatibilityErrorBoundary` reports to Sentry, spy on the report function so that we can assert the error stack
   expect(container.querySelector(".bc-table-error-boundary")).toBeDefined();
