@@ -44,7 +44,7 @@ export function Document(props) {
     setLoading(false);
   }, [loadingError]);
 
-  const getCurrentPathname = useCallback(() => {
+  const getCurrentDocumentUri = useCallback(() => {
     let pathname = `/${locale}/docs/${slug}`;
     // If you're in local development Express will force the trailing /
     // on any URL. We can't keep that if we're going to compare the current
@@ -56,7 +56,7 @@ export function Document(props) {
   }, [slug, locale]);
 
   const fetchDocument = useCallback(async () => {
-    let url = getCurrentPathname();
+    let url = getCurrentDocumentUri();
     url += "/index.json";
     console.log("OPENING", url);
     let response;
@@ -78,34 +78,7 @@ export function Document(props) {
       const data = await response.json();
       setDoc(data.doc);
     }
-  }, [getCurrentPathname]);
-  // async function fetchDocument() {
-  //   let url = `/${locale}/docs/${slug}`;
-  //   if (!url.endsWith("/")) {
-  //     url += "/";
-  //   }
-  //   url += "index.json";
-  //   console.log("OPENING", url);
-  //   let response;
-  //   try {
-  //     response = await fetch(url);
-  //   } catch (ex) {
-  //     setLoadingError(ex);
-  //     return;
-  //   }
-  //   if (!response.ok) {
-  //     console.warn(response);
-  //     setLoadingError(response);
-  //   } else {
-  //     if (response.redirected) {
-  //       // Fetching that data required a redirect!
-  //       // XXX perhaps do a route redirect here in React?
-  //       console.warn(`${url} was redirected to ${response.url}`);
-  //     }
-  //     const data = await response.json();
-  //     setDoc(data.doc);
-  //   }
-  // }
+  }, [getCurrentDocumentUri]);
 
   // There are 2 reasons why you'd want to call fetchDocument() on mounts:
   // - The slug/locale combo has *changed*
@@ -113,15 +86,15 @@ export function Document(props) {
   useEffect(() => {
     if (
       !props.doc ||
-      getCurrentPathname().toLowerCase() !== props.doc.mdn_url.toLowerCase()
+      getCurrentDocumentUri().toLowerCase() !== props.doc.mdn_url.toLowerCase()
     ) {
       setLoading(true);
       fetchDocument();
     }
-  }, [slug, locale, props.doc, getCurrentPathname, fetchDocument]);
+  }, [slug, locale, props.doc, getCurrentDocumentUri, fetchDocument]);
 
   function onMessage(data) {
-    if (data.documentUri === getCurrentPathname()) {
+    if (data.documentUri === getCurrentDocumentUri()) {
       // The recently edited document is the one we're currently looking at!
       fetchDocument();
     }
