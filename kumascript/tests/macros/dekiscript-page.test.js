@@ -21,8 +21,15 @@ const fixtures = {
   },
 };
 for (const name in fixtures) {
-  fixtures[name].data = JSON.parse(
-    fs.readFileSync(path.resolve(fixture_dir, fixtures[name].filename), "utf8")
+  fixtures[name].data = new Map(
+    Object.entries(
+      JSON.parse(
+        fs.readFileSync(
+          path.resolve(fixture_dir, fixtures[name].filename),
+          "utf8"
+        )
+      )
+    )
   );
 }
 const base_url = "https://developer.mozilla.org";
@@ -91,7 +98,10 @@ describeMacro("dekiscript-page", function () {
   });
   describe('test "subpages"', function () {
     beforeEachMacro(function (macro) {
-      macro.ctx.info = new AllPagesInfo(fixtures.all.data);
+      macro.ctx.info = new AllPagesInfo(fixtures.all.data, {
+        uriTransform: (uri) => uri,
+        recordFlaw: (msg, caller, context) => null,
+      });
     });
     itMacro("One argument (non-null)", function (macro) {
       const res = macro.ctx.page.subpages(fix_url);
@@ -112,7 +122,10 @@ describeMacro("dekiscript-page", function () {
   });
   describe('test "subpagesExpand"', function () {
     beforeEachMacro(function (macro) {
-      macro.ctx.info = new AllPagesInfo(fixtures.all.data);
+      macro.ctx.info = new AllPagesInfo(fixtures.all.data, {
+        uriTransform: (uri) => uri,
+        recordFlaw: (msg, caller, context) => null,
+      });
     });
     itMacro("One argument (non-null)", function (macro) {
       const res = macro.ctx.page.subpagesExpand(fix_url);
@@ -133,7 +146,10 @@ describeMacro("dekiscript-page", function () {
   });
   describe('test "translations"', function () {
     beforeEachMacro(function (macro) {
-      macro.ctx.info = new AllPagesInfo(fixtures.all.data);
+      macro.ctx.info = new AllPagesInfo(fixtures.all.data, {
+        uriTransform: (uri) => uri,
+        recordFlaw: (msg, caller, context) => null,
+      });
     });
     itMacro("One argument (non-null)", function (macro) {
       const res = macro.ctx.page.translations(fix_url);

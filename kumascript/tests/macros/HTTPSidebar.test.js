@@ -14,10 +14,14 @@ const {
 } = require("./utils");
 
 // Load fixture data.
-const fixtureData = JSON.parse(
-  fs.readFileSync(
-    path.resolve(__dirname, "fixtures", "allTitles2.json"),
-    "utf8"
+const fixtureData = new Map(
+  Object.entries(
+    JSON.parse(
+      fs.readFileSync(
+        path.resolve(__dirname, "fixtures", "allTitles2.json"),
+        "utf8"
+      )
+    )
   )
 );
 
@@ -44,7 +48,10 @@ function checkSidebarDom(dom, locale) {
 describeMacro("HTTPSidebar", function () {
   beforeEachMacro(function (macro) {
     macro.ctx.env.path = "/en-US/docs/Web/HTTP/Overview";
-    macro.ctx.info = new AllPagesInfo(fixtureData);
+    macro.ctx.info = new AllPagesInfo(fixtureData, {
+      uriTransform: (uri) => uri,
+      recordFlaw: (msg, caller, context) => null,
+    });
   });
 
   itMacro("Creates a sidebar object for en-US", function (macro) {

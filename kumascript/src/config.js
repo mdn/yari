@@ -15,11 +15,6 @@ module.exports = {
   liveSamplesURL:
     process.env["LIVE_SAMPLES_URL"] || "https://mdn.mozillademos.org",
 
-  // NOTE(djf): In January 2019 I tried rendering 9500 documents, and
-  // it resulted in 14,600 items in the cache for a total size of 41mb
-  // of content.
-  cacheMegabytes: parseInt(process.env["KUMASCRIPT_CACHE_MEGABYTES"]) || 200,
-
   // This is something that is configurable only for tests
   macrosDirectory: path.normalize(`${__dirname}/../macros/`),
 };

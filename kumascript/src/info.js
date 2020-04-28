@@ -1,21 +1,22 @@
 BASE_URL = "https://developer.mozilla.org";
 
-function getUriKey(url) {
-  // This function returns just the lowercase pathname of the given "url",
-  // removing any trailing "/". The BASE_URL is not important here, since
-  // we're only after the path of any incoming "url", but it's required by
-  // the URL constructor when the incoming "url" is relative.
-  return new URL(url, BASE_URL).pathname.replace(/\/$/, "").toLowerCase();
-}
-
 class AllPagesInfo {
-  constructor(pageInfoByUri) {
-    // Using the provided "pageInfoByUri", build the data structures
+  constructor(pageInfoByUri, renderer) {
+    // This constructor requires a "pageInfoByUri" Map object (for example,
+    // "allTitles"), and a reference to the "renderer" instance for access
+    // to its "uriTransform" function for cleaning/repairing URI's provided
+    // as arguments to the macros, and for access to its "recordFlaw" function
+    // for capturing flaws as they are discovered during the macro-rendering
+    // process.
+    this.renderer = renderer;
+    this.renderedHtmlCache = new Map();
+
+    // Using the provided "pageInfoByUri" map, build the data structures
     // needed to efficiently provide data suitable for consumption by
     // the Kumascript macros.
 
-    const pagesByUri = {};
-    const childrenByUri = {};
+    const pagesByUri = new Map();
+    const childrenByUri = new Map();
 
     // We'll build "pagesByUri" first, and then populate the "childrenByUri"
     // object it references.
@@ -28,7 +29,7 @@ class AllPagesInfo {
       let rawTranslations = data.translations || [];
       if (!rawTranslations.length && data.translation_of) {
         const englishUri = `/en-US/docs/${data.translation_of}`;
-        const englishData = pageInfoByUri[englishUri];
+        const englishData = pageInfoByUri.get(englishUri);
         if (englishData) {
           // First, add the English translation for this non-English locale.
           result.push(
@@ -46,7 +47,7 @@ class AllPagesInfo {
         if (locale !== data.locale) {
           // A locale is never a translation of itself.
           const uri = `/${locale}/docs/${slug}`;
-          const pageData = pageInfoByUri[uri];
+          const pageData = pageInfoByUri.get(uri);
           result.push(
             Object.freeze({
               url: uri,
@@ -60,27 +61,31 @@ class AllPagesInfo {
       return result;
     }
 
-    for (const [uri, data] of Object.entries(pageInfoByUri)) {
-      pagesByUri[uri.toLowerCase()] = Object.freeze({
-        url: data.mdn_url,
-        locale: data.locale,
-        slug: data.slug,
-        title: data.title,
-        summary: data.summary,
-        tags: Object.freeze(data.tags || []),
-        translations: Object.freeze(buildTranslationObjects(data)),
-        get subpages() {
-          // Let's make this "subpages" property lazy, i.e. we'll only
-          // generate its value on demand. Most of the macros don't even
-          // use this property, so don't waste any time and memory until
-          // it's actually requested.
-          return Object.freeze(
-            (childrenByUri[this.url.toLowerCase()] || []).map(
-              (childUriKey) => pagesByUri[childUriKey]
-            )
-          );
-        },
-      });
+    for (const [uri, data] of pageInfoByUri) {
+      pagesByUri.set(
+        uri.toLowerCase(),
+        Object.freeze({
+          url: data.mdn_url,
+          locale: data.locale,
+          slug: data.slug,
+          title: data.title,
+          summary: data.summary,
+          tags: Object.freeze(data.tags || []),
+          translations: Object.freeze(buildTranslationObjects(data)),
+          get subpages() {
+            // Let's make this "subpages" property lazy, i.e. we'll only
+            // generate its value on demand. Most of the macros don't even
+            // use this property, so don't waste any time and memory until
+            // it's actually requested. IMPORTANT: The list returned does
+            // not need to be frozen since it's re-created for each caller
+            // (so one caller can't mess with another), but also should NOT
+            // be frozen since some macros sort the list in-place.
+            return (
+              childrenByUri.get(this.url.toLowerCase()) || []
+            ).map((childUriKey) => pagesByUri.get(childUriKey));
+          },
+        })
+      );
     }
 
     this.pagesByUri = Object.freeze(pagesByUri);
@@ -101,13 +106,13 @@ class AllPagesInfo {
       alreadyProcessed.add(childUri);
       slugSegments.pop();
       const parentUri = `/${locale}/docs/${slugSegments.join("/")}`;
-      if (pagesByUri.hasOwnProperty(childUri)) {
+      if (pagesByUri.has(childUri)) {
         // This URI is an actual document, so add it as a child of
         // its parent URI.
-        if (childrenByUri.hasOwnProperty(parentUri)) {
-          childrenByUri[parentUri].push(childUri);
+        if (childrenByUri.has(parentUri)) {
+          childrenByUri.get(parentUri).push(childUri);
         } else {
-          childrenByUri[parentUri] = [childUri];
+          childrenByUri.set(parentUri, [childUri]);
         }
       }
       if (slugSegments.length > 1) {
@@ -117,7 +122,7 @@ class AllPagesInfo {
 
     // Build "childrenByUri", a map of every possible parent URI
     // to its list of actual child document URI's.
-    for (const uri of Object.keys(pagesByUri)) {
+    for (const uri of pagesByUri.keys()) {
       const [locale, ...slugSegments] = uri
         .replace("/docs/", " ")
         .replace(/\//g, " ")
@@ -127,35 +132,92 @@ class AllPagesInfo {
     }
   }
 
-  getChildren(url, includeSelf) {
+  getUriKey(url) {
+    // This function returns just the lowercase pathname of the given "url",
+    // removing any trailing "/". The BASE_URL is not important here, since
+    // we're only after the path of any incoming "url", but it's required by
+    // the URL constructor when the incoming "url" is relative.
+    const uri = new URL(url, BASE_URL).pathname
+      .replace(/\/$/, "")
+      .toLowerCase();
+    return this.renderer.uriTransform(uri);
+  }
+
+  getDescription(url) {
+    const uriKey = this.getUriKey(url);
+    let description = `"${uriKey}"`;
+    if (uriKey !== url.toLowerCase()) {
+      description += ` (derived from "${url}")`;
+    }
+    return description;
+  }
+
+  getChildren(url, includeSelf, caller, context) {
     // We don't need "depth" since it's handled dynamically (lazily).
     // The caller can keep requesting "subpages" as deep as the
     // hierarchy goes, and they'll be provided on-demand.
-    const uriKey = getUriKey(url);
-    if (!this.pagesByUri.hasOwnProperty(uriKey)) {
-      return Object.freeze([]);
+    // IMPORTANT: The list returned does not need to be frozen since
+    // it's re-created for each caller (so one caller can't mess with
+    // another), but also should NOT be frozen since some macros sort
+    // the list in-place.
+    const uriKey = this.getUriKey(url);
+    if (!this.pagesByUri.has(uriKey)) {
+      this.recordFlaw(
+        `${this.getDescription(url)} does not exist`,
+        caller,
+        context
+      );
+      return [];
     }
-    const pageData = this.pagesByUri[uriKey];
+    const pageData = this.pagesByUri.get(uriKey);
     if (includeSelf) {
-      return Object.freeze([pageData]);
+      return [pageData];
     }
     return pageData.subpages;
   }
 
-  getTranslations(url) {
-    const uriKey = getUriKey(url);
-    if (this.pagesByUri.hasOwnProperty(uriKey)) {
-      return this.pagesByUri[uriKey].translations;
+  getTranslations(url, caller, context) {
+    const uriKey = this.getUriKey(url);
+    if (!this.pagesByUri.has(uriKey)) {
+      this.recordFlaw(
+        `${this.getDescription(url)} does not exist`,
+        caller,
+        context
+      );
+      return Object.freeze([]);
     }
-    return Object.freeze([]);
+    return this.pagesByUri.get(uriKey).translations;
   }
 
-  getPage(url) {
-    const uriKey = getUriKey(url);
-    if (this.pagesByUri.hasOwnProperty(uriKey)) {
-      return this.pagesByUri[uriKey];
+  getPage(url, caller, context) {
+    const uriKey = this.getUriKey(url);
+    if (!this.pagesByUri.has(uriKey)) {
+      this.recordFlaw(
+        `${this.getDescription(url)} does not exist`,
+        caller,
+        context
+      );
+      return Object.freeze({});
     }
-    return Object.freeze({});
+    return this.pagesByUri.get(uriKey);
+  }
+
+  cacheRenderedHtml(uri, renderedHtml) {
+    const uriKey = this.getUriKey(uri);
+    this.renderedHtmlCache.set(uriKey, renderedHtml);
+  }
+
+  getRenderedHtmlFromCache(uri) {
+    const uriKey = this.getUriKey(uri);
+    return this.renderedHtmlCache.get(uriKey);
+  }
+
+  clearRenderedHtmlCache() {
+    this.renderedHtmlCache.clear();
+  }
+
+  recordFlaw(message, caller, context) {
+    return this.renderer.recordFlaw(message, caller, context);
   }
 }
 

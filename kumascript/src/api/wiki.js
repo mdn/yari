@@ -2,10 +2,8 @@
  * @prettier
  */
 const url = require("url");
-const got = require("got");
 
 const util = require("./util.js");
-const cache = require("../cache.js");
 
 module.exports = {
   //
@@ -27,13 +25,7 @@ module.exports = {
   //
   // Doesn't support the revision parameter offered by DekiScript
   //
-  async page(path, section, revision, show, heading, ignore_cache_control) {
-    let key_text = path.toLowerCase();
-    if (section) {
-      key_text += "?section" + section;
-    }
-    const key = "kuma:include:" + key_text;
-
+  async page(path, section, revision, show, heading) {
     // Adjusts the visibility and heading levels of the specified HTML.
     //
     // The show parameter indicates whether or not the top level
@@ -67,11 +59,9 @@ module.exports = {
           }
         }
       }
-
       if (show) {
         return html;
       }
-
       // Rip out the section header
       if (html) {
         html = html.replace(/^<h\d[^>]*>[^<]*<\/h\d>/gi, "") + "";
@@ -79,32 +69,46 @@ module.exports = {
       return html;
     }
 
-    async function regenerate() {
-      let params = ["raw=1", "macros=1", "include=1"];
-      if (section) {
-        params.push("section=" + encodeURIComponent(section));
-      }
+    let result = this.info.getRenderedHtmlFromCache(path);
 
-      const url = util.buildAbsoluteURL(path) + "?" + params.join("&");
-
-      try {
-        const response = await got(url);
-        if (response.statusCode == 200) {
-          let result = response.body || "";
-          if (show === undefined) {
-            show = 0;
-          }
-          return adjustHeadings(result, section, show, heading);
-        }
-      } catch (e) {}
-      return "";
+    if (!result) {
+      // There was no cached, rendered HTML for the path. One
+      // possibility is that the requested path was in archived
+      // content, so it was never pre-rendered and cached.
+      const pathDescription = this.info.getDescription(path);
+      throw new Error(
+        `unable to find pre-rendered HTML for prerequisite ${pathDescription}`
+      );
     }
-    return await cache(key, regenerate);
+
+    const tool = new util.HTMLTool(result);
+
+    // First, we need to inject section ID's since the section
+    // extraction often depends on them.
+    tool.injectSectionIDs();
+    tool.removeOnEventHandlers();
+    tool.removeNoIncludes();
+
+    if (section) {
+      result = tool.extractSection(section);
+      if (!result) {
+        const pathDescription = this.info.getDescription(path);
+        this.info.recordFlaw(
+          `unable to find section "${section}" within ${pathDescription}`,
+          "wiki.page",
+          this.env
+        );
+      }
+    } else {
+      result = tool.html();
+    }
+
+    return adjustHeadings(result, section, show || 0, heading);
   },
 
   // Returns the page object for the specified page.
   getPage(path) {
-    this.info.getPage(path || this.env.url);
+    return this.info.getPage(path || this.env.url, "wiki.getPage", this.env);
   },
 
   // Retrieve the full uri of a given wiki page.
