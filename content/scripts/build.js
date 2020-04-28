@@ -1,18 +1,14 @@
 const fs = require("fs");
 const path = require("path");
-const nodeUrl = require("url");
 const crypto = require("crypto");
 const childProcess = require("child_process");
 const { performance } = require("perf_hooks");
 
-const got = require("got");
 const chalk = require("chalk");
 const yaml = require("js-yaml");
 const sanitizeFilename = require("sanitize-filename");
 const chokidar = require("chokidar");
 const WebSocket = require("ws");
-const { HtmlDiffer } = require("html-differ");
-const htmlDifferlogger = require("html-differ/lib/logger");
 // XXX does this work on Windows?
 const packageJson = require("../../package.json");
 
@@ -25,14 +21,13 @@ const {
   extractDocumentSections,
   extractSidebar,
 } = require("./document-extractor");
-const { BUILD_TIMEOUT, VALID_LOCALES } = require("./constants");
+const { BUILD_TIMEOUT, ROOT_DIR, VALID_LOCALES } = require("./constants");
 const { slugToFoldername } = require("./utils");
 const { timeout } = require("./promise-timeout.js");
 
-const KSRenderer = require("kumascript");
+const kumascript = require("kumascript");
 
 const MAX_OPEN_FILES = 256;
-const htmlDiffer = new HtmlDiffer();
 
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
@@ -145,6 +140,27 @@ function extractLocale(source, folder) {
   return locale;
 }
 
+function getUrl(source, folder) {
+  const metadataRaw = fs.readFileSync(path.join(folder, "index.yaml"));
+  const { slug } = yaml.safeLoad(metadataRaw);
+  locale = extractLocale(source, folder);
+  return buildMDNUrl(locale, slug);
+}
+
+function getMetadata(source, folder) {
+  const metadataRaw = fs.readFileSync(path.join(folder, "index.yaml"));
+  const metadata = yaml.safeLoad(metadataRaw);
+  if (fs.existsSync(path.join(folder, "wikihistory.yaml"))) {
+    const wikiMetadataRaw = fs.readFileSync(
+      path.join(folder, "wikihistory.yaml")
+    );
+    const wikiMetadata = yaml.safeLoad(wikiMetadataRaw);
+    metadata.modified = wikiMetadata.modified;
+  }
+  metadata.locale = extractLocale(source, folder);
+  return { metadata, metadataRaw };
+}
+
 /** Throw an error if the slug is insane.
  * This helps breaking the build if someone has put in faulty data into
  * the content (metadata file).
@@ -253,7 +269,11 @@ class Builder {
     this.selfHash = null;
     this.allTitles = new Map();
     this.allRedirects = new Map();
-    this.ksRenderer = new KSRenderer();
+    this.prerequisitesByUri = new Map();
+    this.macroRenderer = new kumascript.Renderer({
+      uriTransform: this.cleanUri.bind(this),
+      convertFlawsToErrors: this.options.flaws === "error",
+    });
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
@@ -276,6 +296,16 @@ class Builder {
 
   printProcessing(result, fileWritten) {
     !this.progressBar && this.logger.info(`${result}: ${fileWritten}`);
+  }
+
+  cleanUri(uri) {
+    // Attempts to both repair the incoming URI, as well as transform it
+    // into a URI that represents an existing document within allTitles.
+    // (i.e., it may not exist because it has been redirected, so in that
+    // case let's use its final destination instead). Returns a lowercase
+    // URI.
+    const repairedUri = repairUri(uri);
+    return this.allRedirects.get(repairedUri) || repairedUri;
   }
 
   // Just print what could be found and exit
@@ -321,10 +351,294 @@ class Builder {
     }
   }
 
-  async start({ specificFolders = null } = {}) {
-    // This prepares this.selfHash so that when we build files, we can
-    // write down which "self hash" was used at the time.
+  getSource(folder) {
+    if (!fs.existsSync(folder)) {
+      throw new Error(`${folder} does not exist`);
+    }
+    if (!fs.statSync(folder).isDirectory()) {
+      throw new Error(`${folder} is not a directory`);
+    }
+    const source = this.sources.entries().find((source) => {
+      return folder.startsWith(source.filepath);
+    });
+    if (!source) {
+      throw new Error(`Unable to find the source based on ${folder}`);
+    }
+    return source;
+  }
+
+  reportMacroRenderingFlaws() {
+    // The "this.macroRenderer" instance (used within "this.renderMacros")
+    // accumulates the flaws it encounters within its "flaws" property,
+    // a Map of flaws by URI.
+    if (this.macroRenderer.flaws.size) {
+      if (this.options.flaws === "ignore") {
+        this.logger.info(
+          chalk.white.bold(
+            `Flaws within ${this.macroRenderer.flaws.size} document(s) ignored while rendering macros.`
+          )
+        );
+      } else if (this.options.flaws === "warn") {
+        this.logger.warn(
+          chalk.yellow.bold(
+            `Flaws within ${this.macroRenderer.flaws.size} document(s) while rendering macros:`
+          )
+        );
+        for (const [uri, flaws] of this.macroRenderer.flaws) {
+          this.logger.warn(
+            chalk.yellow.bold(`*** flaw(s) while rendering ${uri}:`)
+          );
+          for (const flaw of flaws) {
+            this.logger.warn(chalk.yellow(`${flaw}`));
+          }
+        }
+      }
+    }
+    return this.macroRenderer.flaws.size;
+  }
+
+  reportMacroRenderingErrors() {
+    // The "this.macroRenderer" instance (used within "this.renderMacros")
+    // accumulates the errors it encounters within its "errors" property,
+    // a Map of errors by URI.
+    if (this.macroRenderer.errors.size) {
+      this.logger.error(
+        chalk.red.bold(
+          `Error(s) within ${this.macroRenderer.errors.size} document(s) while rendering macros:`
+        )
+      );
+      for (const [uri, errors] of this.macroRenderer.errors) {
+        this.logger.error(
+          chalk.red.bold(`*** error(s) while rendering ${uri}:`)
+        );
+        for (const error of errors) {
+          this.logger.error(chalk.red(`${error}`));
+        }
+      }
+    }
+    return this.macroRenderer.errors.size;
+  }
+
+  async renderPrerequisites(specificFolders = null) {
+    // Walk through all of the specific folders or sources, find all
+    // of the documents that must be Kumascript-rendered prior to the
+    // build, render them, and cache the results.
+    const t0 = new Date();
+
     const self = this;
+    const cwd_is_root = process.cwd() === ROOT_DIR;
+
+    // Clear any cached results and errors.
+    this.macroRenderer.clearCache();
+
+    if (!specificFolders) {
+      this.logger.info(chalk.green(`Searching for prerequisites...`));
+    }
+
+    // Make a temporary view of "allTitles" but with lowercase keys.
+    // TODO: Consider just making the keys in "allTitles" lower-case.
+    const allTitlesLC = new Map(
+      // This avoids having to create a large temporary array of
+      // key/value pairs just to create this new view of "allTitles".
+      (function* () {
+        for (const [key, value] of self.allTitles) {
+          yield [key.toLowerCase(), value];
+        }
+      })()
+    );
+
+    // This is the complete set of URI's that must be rendered prior to others.
+    const allPrerequisites = new Set();
+    // This is a map of the complete set of preqrequisites (including
+    // prerequisites of prerequisites) for each URI encountered. It's
+    // used for sorting "allPrerequisites" such that the dependencies
+    // within the prerequisites are respected.
+    const prerequisitesByUri = new Map();
+    // This is for reporting prerequisites that don't exist in "allTitles".
+    const missingPrerequisites = [];
+
+    function getFolder(uri) {
+      // Depending on the current working directory, get the
+      // relative or absolute path of the folder for this URI.
+      const folder = allTitlesLC.get(uri).file;
+      if (cwd_is_root) {
+        // If the current working directory is the root directory of the repo,
+        // the relative path of the folder from "allTitles" is just fine.
+        return folder;
+      }
+      // The current working directory is NOT the root directory of the repo,
+      // so we need to use to an absolute path.
+      return path.join(ROOT_DIR, folder);
+    }
+
+    function gatherPrerequisites(source, folder) {
+      // Each time this function is called, given a document represented by
+      // a source and folder, it recursively finds ALL of the prerequisites
+      // of that document, including the prerequisites of the prerequisites
+      // and so on, and also accumulates the findings into "allPrerequisites"
+      // and "prerequisitesByUri".
+      const uri = getUrl(source, folder).toLowerCase();
+      if (prerequisitesByUri.has(uri)) {
+        return prerequisitesByUri.get(uri);
+      }
+      const rawHtml = fs.readFileSync(path.join(folder, "index.html"), "utf8");
+      const prerequisites = kumascript.getPrerequisites(rawHtml);
+      const cleanPrerequisites = new Set();
+      for (const prereqUri of prerequisites) {
+        const cleanPrereqUri = self.cleanUri(prereqUri);
+        if (allTitlesLC.has(cleanPrereqUri)) {
+          allPrerequisites.add(cleanPrereqUri);
+          cleanPrerequisites.add(cleanPrereqUri);
+          // Now recursively get the clean prerequisites of this prerequisite.
+          let nextFolder = getFolder(cleanPrereqUri);
+          const nextSource = self.getSource(nextFolder);
+          // TODO: What if this prerequisite is a stumptown document?
+          //       I suspect that should be an error that we report.
+          if (!nextSource.isStumptown) {
+            for (const nextCleanPrereqUri of gatherPrerequisites(
+              nextSource,
+              nextFolder
+            )) {
+              cleanPrerequisites.add(nextCleanPrereqUri);
+            }
+          }
+        } else {
+          // We won't be able to do anything with documents missing
+          // from allTitles, so let's just gather them for reporting
+          // later.
+          missingPrerequisites.push({
+            uri: prereqUri,
+            cleanUri: cleanPrereqUri,
+            sourceUri: uri,
+          });
+        }
+      }
+      prerequisitesByUri.set(uri, cleanPrerequisites);
+      return cleanPrerequisites;
+    }
+
+    // First, let's gather all of the pages that we need to Kumascript-render
+    // prior to the actual build. We'll gather the clean URI's into a set, in
+    // order to eliminate the duplication that's common.
+    if (specificFolders) {
+      for (const folder of specificFolders) {
+        const source = this.getSource(folder);
+        if (!source.isStumptown) {
+          gatherPrerequisites(source, folder);
+        }
+      }
+    } else {
+      for (const {
+        source,
+        localeFolder,
+        folder,
+        files,
+      } of this.walkSources()) {
+        if (
+          !source.isStumptown &&
+          !this.excludeFolder(source, folder, localeFolder, files)
+        ) {
+          gatherPrerequisites(source, folder);
+        }
+      }
+    }
+
+    if (!specificFolders) {
+      this.logger.info(
+        chalk.green(
+          `   found ${
+            allPrerequisites.size + missingPrerequisites.length
+          } prerequisite(s)`
+        )
+      );
+      if (missingPrerequisites.length) {
+        this.logger.warn(
+          chalk.yellow(
+            `   ${missingPrerequisites.length} prerequisite(s) missing from allTitles:`
+          )
+        );
+        for (const { uri, cleanUri, sourceUri } of missingPrerequisites) {
+          const uriLC = uri.toLowerCase();
+          if (uriLC === cleanUri) {
+            this.logger.warn(
+              chalk.yellow(`      ${uriLC} was requested within ${sourceUri}`)
+            );
+          } else {
+            this.logger.warn(
+              chalk.yellow(
+                `      ${uriLC} (cleaned as ${cleanUri}) was requested within ${sourceUri}`
+              )
+            );
+          }
+        }
+      }
+      this.logger.info(
+        chalk.green(`   rendering ${allPrerequisites.size} prerequisite(s)...`)
+      );
+    }
+
+    // Before we render the prerequisites, let's sort them based on
+    // their dependencies, so we can render them in the proper order.
+    const sortedPrerequisites = [...allPrerequisites].sort((uriA, uriB) => {
+      const prereqsA = prerequisitesByUri.get(uriA);
+      const prereqsB = prerequisitesByUri.get(uriB);
+      if (!prereqsA.size && !prereqsB.size) {
+        // Neither A nor B depends on other documents, so they're equal in priority.
+        return 0;
+      } else if (!prereqsA.size && prereqsB.size) {
+        // A has no prerequisites, but B does, so A should be placed before B.
+        return -1;
+      } else if (prereqsA.size && !prereqsB.size) {
+        // B has no prerequisites, but A does, so B should be placed before A.
+        return 1;
+      } else if (prereqsA.has(uriB) && prereqsB.has(uriA)) {
+        throw new Error(
+          `circular dependency: ${uriA} and ${uriB} ultimately depend on each other`
+        );
+      } else if (prereqsA.has(uriB)) {
+        // A depends on B, so B should be placed before A.
+        return 1;
+      } else if (prereqsB.has(uriA)) {
+        // B depends on A, so A should be placed before B.
+        return -1;
+      } else {
+        // They're independent.
+        return 0;
+      }
+    });
+
+    // Now let's render each of the prerequisites in the set and
+    // cache the results for when we do the actual build.
+    for (const uri of sortedPrerequisites) {
+      const folder = getFolder(uri);
+      const source = this.getSource(folder);
+      const { metadata } = getMetadata(source, folder);
+      const rawHtml = fs.readFileSync(path.join(folder, "index.html"), "utf8");
+      await this.renderMacros(rawHtml, metadata, { cacheResult: true });
+    }
+
+    if (!specificFolders) {
+      const t1 = new Date();
+      this.logger.info(
+        chalk.green(
+          `   prerequisite processing took ${ppMilliseconds(t1 - t0)}.\n`
+        )
+      );
+    }
+  }
+
+  async start({ specificFolders = null } = {}) {
+    const self = this;
+
+    if (!specificFolders) {
+      self.describeActiveSources();
+      self.describeActiveFilters();
+    }
+
+    // First, let's Kumascript-render any documents that must be rendered
+    // before other documents that depend on them, and cache the results
+    // before we start the actual build.
+    await this.renderPrerequisites(specificFolders);
 
     if (specificFolders) {
       // Check that they all exist and are folders
@@ -332,20 +646,7 @@ class Builder {
 
       await Promise.all(
         specificFolders.map(async (folder) => {
-          if (!fs.existsSync(folder)) {
-            throw new Error(`${folder} does not exist`);
-          }
-          if (!fs.statSync(folder).isDirectory()) {
-            throw new Error(`${folder} is not a directory`);
-          }
-
-          const source = self.sources.entries().find((source) => {
-            return folder.startsWith(source.filepath);
-          });
-          if (!source) {
-            throw new Error(`Unable to find the source based on ${folder}`);
-          }
-
+          const source = this.getSource(folder);
           let processed;
           try {
             processed = await timeout(
@@ -371,9 +672,6 @@ class Builder {
 
       return allProcessed;
     }
-
-    self.describeActiveSources();
-    self.describeActiveFilters();
 
     // To be able to make a progress bar we need to first count what we're
     // going to need to do.
@@ -477,6 +775,10 @@ class Builder {
     const t1 = new Date();
     self.dumpAllURLs();
     self.summarizeResults(counts, t1 - t0);
+    self.reportMacroRenderingFlaws();
+    if (self.reportMacroRenderingErrors()) {
+      process.exit(1);
+    }
   }
 
   ensureAllTitles() {
@@ -518,7 +820,7 @@ class Builder {
       } else {
         // This means we DON'T need to re-generate all titles, so
         // let's set the context for the Kumascript renderer.
-        this.ksRenderer.use(this.allTitles);
+        this.macroRenderer.use(this.allTitles);
         return;
       }
     }
@@ -607,7 +909,7 @@ class Builder {
     }
 
     // Set the context for the Kumascript renderer.
-    this.ksRenderer.use(this.allTitles);
+    this.macroRenderer.use(this.allTitles);
 
     fs.writeFileSync(
       allTitlesJsonFilepath,
@@ -662,6 +964,7 @@ class Builder {
       const folder = path.dirname(filepath);
       this.logger.info(`${chalk.bold("change")} in ${folder}`);
       const t0 = performance.now();
+      await this.renderPrerequisites([folder]);
       const { result, file, doc } = await timeout(
         this.processFolder(source, folder),
         10, // seconds
@@ -1026,46 +1329,31 @@ class Builder {
     return locales;
   }
 
-  excludeSlug(metadata) {
+  excludeSlug(url) {
     // XXX would it be faster to compute a regex in the constructor
     // and use it repeatedly here instead?
-    const { slugsearch } = this.options;
-    if (slugsearch.length) {
-      const { mdn_url } = metadata;
-      return !slugsearch.some((search) => mdn_url.includes(search));
+    if (url) {
+      const { slugsearch } = this.options;
+      if (slugsearch.length) {
+        return !slugsearch.some((search) => url.includes(search));
+      }
     }
     return false;
   }
 
   async processFolder(source, folder, config) {
-    config = config || {};
+    const { metadata, metadataRaw } = getMetadata(source, folder);
+    const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
 
-    const hasher = crypto.createHash("md5");
-
-    const metadataRaw = fs.readFileSync(path.join(folder, "index.yaml"));
-
-    const metadata = yaml.safeLoad(metadataRaw);
-    if (this.excludeSlug(metadata)) {
+    if (this.excludeSlug(mdn_url)) {
       return { result: processing.EXCLUDED, file: folder };
     }
-    hasher.update(metadataRaw);
 
-    if (fs.existsSync(path.join(folder, "wikihistory.yaml"))) {
-      const wikiMetadataRaw = fs.readFileSync(
-        path.join(folder, "wikihistory.yaml")
-      );
-      const wikiMetadata = yaml.safeLoad(wikiMetadataRaw);
-      metadata.modified = wikiMetadata.modified;
-    }
-
-    metadata.locale = extractLocale(source, folder);
+    config = config || {};
 
     // The destination is the same as source but with a different base.
     // If the file *came from* /path/to/files/en-US/foo/bar/
     // the final destination is /path/to/build/en-US/foo/bar/index.json
-
-    const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
-
     const destinationDirRaw = path.join(
       this.destination,
       mdn_url.toLowerCase()
@@ -1074,14 +1362,7 @@ class Builder {
       this.destination,
       slugToFoldername(mdn_url)
     );
-
-    // const destination = path.join(
-    //   folder.replace(this.root, this.destination),
-    //   "index.json"
-    // );
     const hashDestination = path.join(destinationDir, "_index.hash");
-
-    // When the KS thing works we won't need this line
 
     // XXX What might be interesting is to make KS do less.
     // The idea is we first have the raw HTML, which'll contain strings
@@ -1092,7 +1373,6 @@ class Builder {
     // post-processing instead.
 
     const rawHtml = fs.readFileSync(path.join(folder, "index.html"), "utf8");
-    hasher.update(rawHtml);
 
     let renderedHtml;
 
@@ -1101,16 +1381,22 @@ class Builder {
     if (source.htmlAlreadyRendered) {
       renderedHtml = rawHtml;
     } else {
-      // XXX The this.renderHtml() method actually returns a tuple
-      // of (renderedHtml, errors) but we're not doing anything with the
-      // errors yet. Which we *will* do eventually.
-      [renderedHtml] = await this.renderHtml(rawHtml, metadata);
+      // Errors while KS rendering will be accumulated during the build
+      // and reported at the end.
+      const result = await this.renderMacros(rawHtml, metadata);
+      renderedHtml = result.renderedHtml;
     }
 
     // Now we've read in all the "inputs" needed.
-    // Even if there's no hope in hell that we're going to get a catch hit,
+    // Even if there's no hope in hell that we're going to get a cache hit,
     // we have to compute this hash because on a cache miss, we need to
     // write it down after we've done the work.
+    const hasher = crypto.createHash("md5");
+    hasher.update(metadataRaw);
+    // I think we should use the "renderedHtml" instead of the "rawHtml" for
+    // the document hash since it takes into account document prerequisites
+    // (i.e. one document including parts of another document within itself).
+    hasher.update(renderedHtml);
     const docHash = hasher.digest("hex").slice(0, 12);
     const combinedHash = `${this.selfHash}.${docHash}`;
     // If the destination and the hash file already exists AND the content
@@ -1143,8 +1429,6 @@ class Builder {
     // Remove any completely empty <p>, <dl>, or <div> tags.
     // XXX costs about 5% longer time
     $("p:empty,dl:empty,div:empty,span.alllinks").remove();
-
-    // let macroCalls = extractMacroCalls(rawHtml);
 
     // XXX should we get some of this stuff from this.allTitles instead?!
     // XXX see https://github.com/mdn/stumptown-renderer/issues/502
@@ -1256,7 +1540,7 @@ class Builder {
     const hasher = crypto.createHash("md5");
     const docRaw = fs.readFileSync(file);
     const doc = JSON.parse(docRaw);
-    if (this.excludeSlug(doc)) {
+    if (this.excludeSlug(doc.mdn_url)) {
       return { result: processing.EXCLUDED, file };
     }
     hasher.update(docRaw);
@@ -1384,21 +1668,22 @@ class Builder {
     this.allTitles.set(mdn_url, doc);
   }
 
-  renderHtml(rawHtml, metadata) {
+  renderMacros(rawHtml, metadata, { cacheResult = false } = {}) {
     // TODO: The "LiveSampleURL" macro uses the "revision_id" attribute of
     //       the "docEnv" below, but obviously that makes no sense in the world
     //       of Yari. We need to determine a new way to resolve that macro.
-    const baseURL = "https://developer.mozilla.org";
+    const { sitemapBaseUrl } = this.options;
     const path = buildMDNUrl(metadata.locale, metadata.slug);
     const docEnv = {
       path: path,
-      url: `${baseURL}${path}`,
+      url: `${sitemapBaseUrl}${path}`,
       locale: metadata.locale,
       slug: metadata.slug,
+      title: metadata.title,
       tags: metadata.tags || [],
       selective_mode: false,
     };
-    return this.ksRenderer.render(rawHtml, docEnv);
+    return this.macroRenderer.render(rawHtml, docEnv, cacheResult);
   }
 
   /**

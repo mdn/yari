@@ -44,7 +44,12 @@ module.exports = {
   // This is not called by any macros, and is only used here by
   // wiki.tree(), so we could move it to be part of that function.
   subpages(path, depth, self) {
-    return this.info.getChildren(path || this.env.url, self);
+    return this.info.getChildren(
+      path || this.env.url,
+      self,
+      "page.subpages",
+      this.env
+    );
   },
 
   // Optional path, defaults to current page
@@ -56,7 +61,12 @@ module.exports = {
   // the results
   //
   subpagesExpand(path, depth, self) {
-    return this.info.getChildren(path || this.env.url, self);
+    return this.info.getChildren(
+      path || this.env.url,
+      self,
+      "page.subpagesExpand",
+      this.env
+    );
   },
 
   // Flatten subPages list
@@ -86,6 +96,10 @@ module.exports = {
   },
 
   translations(path) {
-    return this.info.getTranslations(path || this.env.url);
+    return this.info.getTranslations(
+      path || this.env.url,
+      "page.translations",
+      this.env
+    );
   },
 };

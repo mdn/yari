@@ -4,7 +4,7 @@
 
 const fs = require("fs");
 const Templates = require("../src/templates.js");
-const render = require("../src/render.js");
+const { render } = require("../src/render.js");
 const {
   MacroInvocationError,
   MacroNotFoundError,
