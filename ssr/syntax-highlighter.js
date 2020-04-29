@@ -36,18 +36,17 @@ export function fixSyntaxHighlighting(document) {
   // that might have a syntax highlighting marker.
   document.body
     .filter((section) => {
-      // return (
-      //   section.type === "prose" &&
-      //   section.value &&
-      //   section.value.content &&
-      //   // This is an important piece of optimization. Very roughly
-      //   // only 1 in 5 prose sections has a <pre> tag in it. If it doesn't
-      //   // have one there's no point loading up `cheerio.load(...)`
-      //   // and doing selector lookups on it. So this is our
-      //   // chance to avoid bothering.
-      //   section.value.content.includes("</pre>")
-      // );
-      return section.type === "prose" && section.value && section.value.content;
+      return (
+        section.type === "prose" &&
+        section.value &&
+        section.value.content &&
+        // This is an optimization. Very roughly,
+        // only 1 in 5 prose sections has a <pre> tag in it. If it doesn't
+        // have one there's no point loading up `cheerio.load(...)`
+        // and doing selector lookups on it. So this is our
+        // chance to avoid bothering.
+        section.value.content.includes("</pre>")
+      );
     })
     .forEach((section) => {
       const $ = cheerio.load(section.value.content);
