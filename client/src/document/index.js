@@ -1,5 +1,12 @@
-import React, { lazy, useReducer, Suspense, useEffect } from "react";
-import { Link } from "@reach/router";
+import React, {
+  lazy,
+  useReducer,
+  Suspense,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
+import { Link, useParams } from "react-router-dom";
 
 import { NoMatch } from "../routing";
 
@@ -18,129 +25,141 @@ import { humanizeFlawName } from "../flaw-utils";
 // Sub-components
 import { DocumentTranslations } from "./languages";
 import { EditThisPage } from "./editthispage";
+
+// XXX Make this lazy!
 import { DocumentSpy } from "./spy";
 
 // Lazy sub-components
 const DocumentFlaws = lazy(() => import("./flaws"));
 
-export class Document extends React.Component {
-  state = {
-    doc: this.props.doc || null,
-    loading: false,
-    notFound: false,
-    loadingError: null,
-  };
+export function Document(props) {
+  const params = useParams();
+  const slug = params["*"];
+  const locale = params.locale;
 
-  componentDidMount() {
-    if (!this.state.doc) {
-      this.fetchDocument();
+  const [doc, setDoc] = useState(props.doc || null);
+  const [loading, setLoading] = useState(false);
+  const [loadingError, setLoadingError] = useState(null);
+
+  useEffect(() => {
+    if (doc) {
+      document.title = doc.title;
+      if (loading) {
+        setLoading(false);
+      }
+      if (loadingError) {
+        setLoadingError(null);
+      }
     }
-  }
+  }, [doc, loading, loadingError]);
 
-  componentWillUnmount() {
-    this.dismounted = true;
-  }
+  useEffect(() => {
+    setLoading(false);
+  }, [loadingError]);
 
-  componentDidUpdate(prevProps) {
+  const getCurrentDocumentUri = useCallback(() => {
+    let pathname = `/${locale}/docs/${slug}`;
+    // If you're in local development Express will force the trailing /
+    // on any URL. We can't keep that if we're going to compare the current
+    // pathname with the document's mdn_url.
+    if (pathname.endsWith("/")) {
+      pathname = pathname.substring(0, pathname.length - 1);
+    }
+    return pathname;
+  }, [slug, locale]);
+
+  const fetchDocument = useCallback(async () => {
+    let url = getCurrentDocumentUri();
+    url += "/index.json";
+    console.log("OPENING", url);
+    let response;
+    try {
+      response = await fetch(url);
+    } catch (ex) {
+      setLoadingError(ex);
+      return;
+    }
+    if (!response.ok) {
+      console.warn(response);
+      setLoadingError(response);
+    } else {
+      if (response.redirected) {
+        // Fetching that data required a redirect!
+        // XXX perhaps do a route redirect here in React?
+        console.warn(`${url} was redirected to ${response.url}`);
+      }
+      const data = await response.json();
+      setDoc(data.doc);
+    }
+  }, [getCurrentDocumentUri]);
+
+  // There are 2 reasons why you'd want to call fetchDocument():
+  // - The slug/locale combo has *changed*
+  // - The page started with no props.doc
+  useEffect(() => {
     if (
-      this.props["*"] !== prevProps["*"] ||
-      this.props.locale !== prevProps.locale
+      !props.doc ||
+      getCurrentDocumentUri().toLowerCase() !== props.doc.mdn_url.toLowerCase()
     ) {
-      this.fetchDocument();
+      setLoading(true);
+      fetchDocument();
+    }
+  }, [slug, locale, props.doc, getCurrentDocumentUri, fetchDocument]);
+
+  function onMessage(data) {
+    if (data.documentUri === getCurrentDocumentUri()) {
+      // The recently edited document is the one we're currently looking at!
+      fetchDocument();
     }
   }
 
-  fetchDocument = (loading = true) => {
-    this.setState({ loading }, async () => {
-      let url = document.location.pathname;
-      if (!url.endsWith("/")) url += "/";
-      url += "index.json";
-      console.log("OPENING", url);
-      let response;
-      try {
-        response = await fetch(url);
-      } catch (ex) {
-        return this.setState({ loading: false, loadingError: ex });
-      }
-      if (!response.ok) {
-        console.warn(response);
-        return this.setState({ loading: false, loadingError: response });
-      } else {
-        if (response.redirected) {
-          // Fetching that data required a redirect!
-          // XXX perhaps do a route redirect here in React?
-          console.warn(`${url} was redirected to ${response.url}`);
-        }
-        const data = await response.json();
-        document.title = data.doc.title;
-        this.setState({ doc: data.doc, loading: false });
-      }
-    });
-  };
-
-  onMessage = (data) => {
-    if (data.documentUri === this.props.location.pathname) {
-      // The recently edited document is the one we're currently looking at!
-      if (!this.dismounted) {
-        this.fetchDocument(false);
-      }
-    }
-  };
-
-  render() {
-    const { doc, loadingError, loading, notFound } = this.state;
-    const { location } = this.props;
-    if (notFound) {
-      return <NoMatch location={location} message="Document not found" />;
-    }
-    if (loading) {
-      return <p>Loading...</p>;
-    }
-    if (loadingError) {
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+  if (loadingError) {
+    // Was it because of a 404?
+    if (typeof window !== "undefined" && loadingError instanceof Response) {
+      return <NoMatch />;
+    } else {
       return <LoadingError error={loadingError} />;
     }
-    if (!doc) {
-      return null;
-    }
-    const translations = [...(doc.other_translations || [])];
-    if (doc.translation_of) {
-      translations.unshift({
-        locale: "en-US",
-        slug: doc.translation_of,
-      });
-    }
-    return (
-      <div>
-        <h1 className="page-title">{doc.title}</h1>
-        {translations && !!translations.length && (
-          <DocumentTranslations translations={translations} />
-        )}
-        <div className="main">
-          <nav>{doc.parents && <Breadcrumbs parents={doc.parents} />}</nav>
-
-          <div className="sidebar">
-            <RenderSideBar doc={doc} />
-          </div>
-          <div className="content">
-            <RenderDocumentBody doc={doc} />
-            <hr />
-            <ToggleDocmentFlaws flaws={doc.flaws} />
-            <EditThisPage source={doc.source} />
-            {doc.contributors && (
-              <Contributors contributors={doc.contributors} />
-            )}
-          </div>
-        </div>
-        {process.env.NODE_ENV === "development" && (
-          <DocumentSpy
-            onMessage={this.onMessage}
-            // location={this.props.location}
-            // fetchDocument={this.fetchDocument}
-          />
-        )}
-      </div>
-    );
   }
+  if (!doc) {
+    return null;
+  }
+  const translations = [...(doc.other_translations || [])];
+  if (doc.translation_of) {
+    translations.unshift({
+      locale: "en-US",
+      slug: doc.translation_of,
+    });
+  }
+  return (
+    <>
+      <h1 className="page-title">{doc.title}</h1>
+      {translations && !!translations.length && (
+        <DocumentTranslations translations={translations} />
+      )}
+      <div className="main">
+        <nav>{doc.parents && <Breadcrumbs parents={doc.parents} />}</nav>
+
+        <div className="sidebar">
+          <RenderSideBar doc={doc} />
+        </div>
+        <div className="content">
+          <RenderDocumentBody doc={doc} />
+          <hr />
+          <ToggleDocmentFlaws flaws={doc.flaws} />
+          <EditThisPage source={doc.source} />
+          {doc.contributors && <Contributors contributors={doc.contributors} />}
+        </div>
+      </div>
+
+      {process.env.NODE_ENV === "development" && (
+        <DocumentSpy onMessage={onMessage} />
+      )}
+    </>
+  );
 }
 
 function Breadcrumbs({ parents }) {

@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import { Router, Link } from "@reach/router";
+import { Routes, Route, Link } from "react-router-dom";
 
 import { Homepage } from "./homepage";
 import { Document } from "./document";
@@ -8,44 +8,43 @@ import { SearchWidget } from "./search";
 const AllFlaws = lazy(() => import("./flaws"));
 
 export function App(appProps) {
-  const router = (
-    <Router>
-      <Homepage path="/" />
+  const routes = (
+    <Routes>
+      <Route path="/" element={<Homepage />} />
       {process.env.NODE_ENV === "development" && (
-        <AllFlaws {...appProps} path="/:locale/flaws" />
+        <Route path="/:locale/flaws" element={<AllFlaws />} />
       )}
-      <Document {...appProps} path="/:locale/docs/*" />
-      <NoMatch default />
-    </Router>
+      <Route path="/:locale/docs/*" element={<Document {...appProps} />} />
+      <Route path="*" element={<NoMatch />} />
+    </Routes>
   );
   const isServer = typeof window === "undefined";
   return (
     <div>
-      <Router primary={false}>
-        <Header default />
-      </Router>
+      <Header />
+
       <section className="section">
         {/* This might look a bit odd but it's actually quite handy.
         This way, when rendering client-side, we wrap all the routes in
         <Suspense> but in server-side rendering that goes away.
          */}
         {isServer ? (
-          router
+          routes
         ) : (
-          <Suspense fallback={<div>Loading...</div>}>{router}</Suspense>
+          <Suspense fallback={<div>Loading...</div>}>{routes}</Suspense>
         )}
       </section>
     </div>
   );
 }
 
-function Header({ location }) {
+function Header() {
   return (
     <header>
       <h1>
         <Link to="/">MDN Web Docs</Link>
       </h1>
-      <SearchWidget pathname={location.pathname} />
+      <SearchWidget />
     </header>
   );
 }

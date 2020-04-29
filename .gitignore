@@ -32,3 +32,7 @@ watcher/node_modules/
 content/node_modules/
 content/build/
 content/_all-titles.json
+
+# Can be removed once content lives in its own repo
+archivecontent/files
+content/files

@@ -135,6 +135,7 @@ function getOrCreateBuilder(options) {
     );
     builder.initSelfHash();
     builder.ensureAllTitles();
+    builder.ensureAllRedirects();
     builder.prepareRoots();
   }
   return builder;
