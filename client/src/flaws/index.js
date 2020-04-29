@@ -1,12 +1,18 @@
 import React from "react";
-import { Link } from "@reach/router";
+import { Link, useParams } from "react-router-dom";
 import useSWR from "swr";
 
 import "./index.scss";
 
 import { humanizeFlawName } from "../flaw-utils";
 
-export default function AllFlaws({ locale }) {
+// XXX This component should also import DocumentSpy so that it can
+// know to automatically refresh when there's new document edits
+// because their flaws might have changed.
+
+export default function AllFlaws() {
+  const { locale } = useParams();
+
   function makeSearchQueryString() {
     const params = new URLSearchParams();
     params.set("locale", locale);
@@ -123,7 +129,7 @@ function ShowDocumentsFound({ counts, documents }) {
             return (
               <tr key={doc.mdn_url}>
                 <td>
-                  <Link to={doc.mdn_url} title={doc.title}>
+                  <Link to={`${doc.mdn_url}#show-flaws`} title={doc.title}>
                     {doc.mdn_url}
                   </Link>
                 </td>

@@ -33,6 +33,12 @@ export function Homepage() {
           <Link to="/fr/docs/Web/HTML/Element/video">HTML/video</Link>
         </li>
       </ul>
+      <h3>Flaws</h3>
+      <ul>
+        <li>
+          <Link to="/en-US/flaws">All (en-US) flaws</Link>
+        </li>
+      </ul>
       <h3>HTML Guide Pages</h3>
       <ul>
         <li>
