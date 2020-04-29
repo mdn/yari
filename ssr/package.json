@@ -4,7 +4,7 @@
   "main": "dist/main.js",
   "license": "MPL-2.0",
   "scripts": {
-    "build": "webpack --config webpack.config.js --mode=development",
+    "build": "webpack --config webpack.config.js --mode=production",
     "build:watch": "webpack --config webpack.config.js --watch --mode=development",
     "test": "jest"
   },
