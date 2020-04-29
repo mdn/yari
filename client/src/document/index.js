@@ -80,7 +80,7 @@ export function Document(props) {
     }
   }, [getCurrentDocumentUri]);
 
-  // There are 2 reasons why you'd want to call fetchDocument() on mounts:
+  // There are 2 reasons why you'd want to call fetchDocument():
   // - The slug/locale combo has *changed*
   // - The page started with no props.doc
   useEffect(() => {

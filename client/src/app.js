@@ -13,7 +13,6 @@ export function App(appProps) {
 
       <section className="section">
         <Routes>
-          {/* Consider using useRoutes() hook instead! */}
           <Route path="/" element={<Homepage />} />
           <Route path="/:locale/docs/*" element={<Document {...appProps} />} />
           <Route path="*" element={<NoMatch />} />
