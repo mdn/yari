@@ -1,7 +1,7 @@
 import React from "react";
 import fs from "fs";
 import path from "path";
-import { ServerLocation } from "@reach/router";
+import { StaticRouter } from "react-router-dom/server";
 import sourceMapSupport from "source-map-support";
 
 import { App } from "../client/src/app";
@@ -143,9 +143,9 @@ export function buildHtmlAndJsonFromDoc({
 
   if (buildHtml) {
     rendered = render(
-      <ServerLocation url={uri}>
+      <StaticRouter location={uri} context={options}>
         <App {...options} />
-      </ServerLocation>,
+      </StaticRouter>,
       options
     );
   }

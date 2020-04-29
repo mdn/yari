@@ -1,9 +1,15 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary.js";
 
+function renderWithRouter(component) {
+  return render(<MemoryRouter>{component}</MemoryRouter>);
+}
+
 it("renders without crashing", () => {
-  const { container } = render(
+  const { container } = renderWithRouter(
     <BrowserCompatibilityErrorBoundary>
       <div />
     </BrowserCompatibilityErrorBoundary>
@@ -31,7 +37,7 @@ it("renders crashing mock component", () => {
     .spyOn(console, "error")
     .mockImplementation(() => {});
 
-  const { container } = render(
+  const { container } = renderWithRouter(
     <BrowserCompatibilityErrorBoundary>
       <CrashingComponent />
     </BrowserCompatibilityErrorBoundary>

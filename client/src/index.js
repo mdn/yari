@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import "./index.scss";
 import "typeface-zilla-slab";
 import { App } from "./app";
@@ -13,7 +14,9 @@ if (documentDataElement) {
 }
 const app = (
   <React.StrictMode>
-    <App doc={docData} />
+    <Router>
+      <App doc={docData} />
+    </Router>
   </React.StrictMode>
 );
 if (container.firstElementChild) {

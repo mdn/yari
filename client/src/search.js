@@ -1,6 +1,6 @@
-import { Redirect } from "@reach/router";
-import FlexSearch from "flexsearch";
 import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import FlexSearch from "flexsearch";
 import FuzzySearch from "./fuzzy-search";
 import "./search.scss";
 
@@ -12,6 +12,19 @@ function isMobileUserAgent() {
   );
 }
 
+export function SearchWidget() {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  return (
+    <SearchWidgetClass
+      pathname={pathname}
+      onRedirect={(uri) => {
+        navigate(uri);
+      }}
+    />
+  );
+}
+
 const ACTIVE_PLACEHOLDER = "Go ahead. Type your search...";
 const INITIALIZING_PLACEHOLDER = "Initializing search...";
 // Make this one depend on figuring out if you're on a mobile device
@@ -20,12 +33,14 @@ const INACTIVE_PLACEHOLDER = isMobileUserAgent()
   ? "Site search..."
   : 'Site search... (Press "/" to focus)';
 
-export class SearchWidget extends React.Component {
+// TODO the only reason exporting this, for now, is to make
+// jest tests pass until https://github.com/mdn/stumptown-renderer/pull/494
+// is resolved.
+export class SearchWidgetClass extends React.Component {
   state = {
     highlitResult: null,
     initialized: null, // null=not started, false=started, true=finished
     q: "",
-    redirectTo: null,
     searchResults: [],
     serverError: null,
     showSearchResults: true,
@@ -59,7 +74,6 @@ export class SearchWidget extends React.Component {
         this.setState({
           highlitResult: null,
           q: "",
-          redirectTo: null,
           showSearchResults: false,
           locale: this.props.pathname.split("/")[1] || "en-US",
         });
@@ -293,23 +307,23 @@ export class SearchWidget extends React.Component {
 
   submitHandler = (event) => {
     event.preventDefault();
+    const { onRedirect } = this.props;
     const { highlitResult, searchResults } = this.state;
-    let redirectTo;
     if (searchResults.length === 1) {
-      redirectTo = searchResults[0].uri;
+      onRedirect(searchResults[0].uri);
     } else if (searchResults.length && highlitResult !== null) {
-      redirectTo = searchResults[highlitResult].uri;
+      onRedirect(searchResults[highlitResult].uri);
     } else {
       return;
     }
     this.setState({
-      redirectTo,
       showSearchResults: false,
     });
   };
 
   redirect = (uri) => {
-    this.setState({ redirectTo: uri });
+    const { onRedirect } = this.props;
+    onRedirect(uri);
   };
 
   // This exists to avoid having to use 'document.querySelector(...)'
@@ -320,15 +334,11 @@ export class SearchWidget extends React.Component {
     const {
       highlitResult,
       q,
-      redirectTo,
       searchResults,
       serverError,
       showSearchResults,
       initialized,
     } = this.state;
-    if (redirectTo) {
-      return <Redirect noThrow replace={false} to={redirectTo} />;
-    }
 
     // The fuzzy search is engaged if the search term starts with a '/'
     // and does not have any spaces in it.
