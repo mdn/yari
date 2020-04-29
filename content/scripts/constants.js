@@ -8,8 +8,6 @@ require("dotenv").config();
 // const DEFAULT_DESTINATION =
 //   process.env.ROOT || path.join(__dirname, "..", "..", "client", "build");
 
-const BUILD_TIMEOUT = process.env.BUILD_TIMEOUT || 1800;
-
 const DEFAULT_DATABASE_URL =
   process.env.DATABASE_URL || "mysql2://username:password@host/databasename";
 
@@ -109,7 +107,6 @@ module.exports = {
   // DEFAULT_ROOT,
   // DEFAULT_ARCHIVE_ROOT,
   // DEFAULT_DESTINATION,
-  BUILD_TIMEOUT,
   DEFAULT_DATABASE_URL,
   DEFAULT_EXCLUDE_SLUG_PREFIXES,
   DEFAULT_BUILD_LOCALES,
