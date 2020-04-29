@@ -139,7 +139,6 @@ export class SearchWidget extends React.Component {
   indexTitles = (titles) => {
     // NOTE! See search-experimentation.js to play with different settings.
     this.index = new FlexSearch({
-      encode: "advanced",
       suggest: true,
       // tokenize: "reverse",
       tokenize: "forward",
