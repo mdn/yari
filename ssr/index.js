@@ -78,16 +78,18 @@ function addBreadcrumbData(uri, document, allTitles) {
   const parents = [];
   let split = uri.split("/");
   let parentUri;
+  let parentUriLC;
   while (split.length > 2) {
     split.pop();
     parentUri = split.join("/");
+    parentUriLC = parentUri.toLowerCase();
     // This test makes it possible to "skip" certain URIs that might not
     // be a page on its own. For example: /en-US/docs/Web/ is a page,
     // and so is /en-US/ but there might not be a page for /end-US/docs/.
-    if (allTitles.has(parentUri)) {
+    if (allTitles.has(parentUriLC)) {
       parents.unshift({
         uri: parentUri,
-        title: allTitles.get(parentUri).title,
+        title: allTitles.get(parentUriLC).title,
       });
     }
   }
