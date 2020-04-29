@@ -2,7 +2,7 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
-import { BrowserCompatibilityErrorBoundary } from "./error-boundary.js";
+import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
 
 function renderWithRouter(component) {
   return render(<MemoryRouter>{component}</MemoryRouter>);
