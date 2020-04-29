@@ -1,24 +1,33 @@
 import cheerio from "cheerio";
 import Prism from "prismjs";
 
-export function fixSyntaxHighlighting(document) {
-  function getPrismPluginName(classList) {
-    for (let cls of classList) {
-      if (/language-\w+/.test(cls)) {
-        const name = cls.replace(/^language-/, "").trim();
-        if (Prism.languages[name]) {
-          return name;
-        } else {
-          // console.warn(
-          //   `Looks like a syntax highlighting marker but not found as a Prism plugin: ${name}`
-          // );
-        }
+// Memoization cache for getPrismPluginName()
+const _prismPluginNames = new Map();
+
+function getPrismPluginName(classList) {
+  const cacheKey = classList.join("");
+  if (_prismPluginNames.has(cacheKey)) {
+    return _prismPluginNames.get(cacheKey);
+  }
+  for (let cls of classList) {
+    if (/language-\w+/.test(cls)) {
+      const name = cls.replace(/^language-/, "").trim();
+      if (Prism.languages[name]) {
+        _prismPluginNames.set(cacheKey, name);
+        return name;
+      } else {
+        // console.warn(
+        //   `Looks like a syntax highlighting marker but not found as a Prism plugin: ${name}`
+        // );
       }
     }
-    // No good match
-    return null;
   }
+  // No good match
+  _prismPluginNames.set(cacheKey, null);
+  return null;
+}
 
+export function fixSyntaxHighlighting(document) {
   if (!document.body) {
     throw new Error("Expecting document.body and it being an array");
   }
@@ -27,6 +36,17 @@ export function fixSyntaxHighlighting(document) {
   // that might have a syntax highlighting marker.
   document.body
     .filter((section) => {
+      // return (
+      //   section.type === "prose" &&
+      //   section.value &&
+      //   section.value.content &&
+      //   // This is an important piece of optimization. Very roughly
+      //   // only 1 in 5 prose sections has a <pre> tag in it. If it doesn't
+      //   // have one there's no point loading up `cheerio.load(...)`
+      //   // and doing selector lookups on it. So this is our
+      //   // chance to avoid bothering.
+      //   section.value.content.includes("</pre>")
+      // );
       return section.type === "prose" && section.value && section.value.content;
     })
     .forEach((section) => {
