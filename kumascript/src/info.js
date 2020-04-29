@@ -7,7 +7,7 @@ class AllPagesInfo {
     // to its "uriTransform" function for cleaning/repairing URI's provided
     // as arguments to the macros, and for access to its "recordFlaw" function
     // for capturing flaws as they are discovered during the macro-rendering
-    // process.
+    // process. NOTE: Assumes all of the keys of "pageInfoByUri" are lowercase.
     this.renderer = renderer;
     this.renderedHtmlCache = new Map();
 
@@ -29,7 +29,7 @@ class AllPagesInfo {
       let rawTranslations = data.translations || [];
       if (!rawTranslations.length && data.translation_of) {
         const englishUri = `/en-US/docs/${data.translation_of}`;
-        const englishData = pageInfoByUri.get(englishUri);
+        const englishData = pageInfoByUri.get(englishUri.toLowerCase());
         if (englishData) {
           // First, add the English translation for this non-English locale.
           result.push(
@@ -47,7 +47,7 @@ class AllPagesInfo {
         if (locale !== data.locale) {
           // A locale is never a translation of itself.
           const uri = `/${locale}/docs/${slug}`;
-          const pageData = pageInfoByUri.get(uri);
+          const pageData = pageInfoByUri.get(uri.toLowerCase());
           result.push(
             Object.freeze({
               url: uri,
@@ -61,9 +61,10 @@ class AllPagesInfo {
       return result;
     }
 
+    // Assumes
     for (const [uri, data] of pageInfoByUri) {
       pagesByUri.set(
-        uri.toLowerCase(),
+        uri,
         Object.freeze({
           url: data.mdn_url,
           locale: data.locale,

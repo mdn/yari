@@ -103,7 +103,7 @@ cli
     "--flaws <error|warn|ignore>",
     "absolute url prefixing the sitemap.xml files",
     cli.STRING,
-    "warn"
+    "ignore" // TODO: Switch to "warn" or "error" when number of flaws drops.
   )
   .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
   .option("--start-clean", "delete anything created first", cli.BOOL)

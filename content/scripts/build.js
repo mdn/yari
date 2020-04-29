@@ -21,13 +21,13 @@ const {
   extractDocumentSections,
   extractSidebar,
 } = require("./document-extractor");
-const { BUILD_TIMEOUT, ROOT_DIR, VALID_LOCALES } = require("./constants");
+const { ROOT_DIR, VALID_LOCALES } = require("./constants");
 const { slugToFoldername } = require("./utils");
-const { timeout } = require("./promise-timeout.js");
 
 const kumascript = require("kumascript");
 
 const MAX_OPEN_FILES = 256;
+const CWD_IS_ROOT = process.cwd() === ROOT_DIR;
 
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
@@ -140,20 +140,12 @@ function extractLocale(source, folder) {
   return locale;
 }
 
-function getUrl(source, folder) {
-  const metadataRaw = fs.readFileSync(path.join(folder, "index.yaml"));
-  const { slug } = yaml.safeLoad(metadataRaw);
-  locale = extractLocale(source, folder);
-  return buildMDNUrl(locale, slug);
-}
-
 function getMetadata(source, folder) {
   const metadataRaw = fs.readFileSync(path.join(folder, "index.yaml"));
   const metadata = yaml.safeLoad(metadataRaw);
-  if (fs.existsSync(path.join(folder, "wikihistory.yaml"))) {
-    const wikiMetadataRaw = fs.readFileSync(
-      path.join(folder, "wikihistory.yaml")
-    );
+  const wikiHistoryPath = path.join(folder, "wikihistory.json");
+  if (fs.existsSync(wikiHistoryPath)) {
+    const wikiMetadataRaw = fs.readFileSync(wikiHistoryPath);
     const wikiMetadata = yaml.safeLoad(wikiMetadataRaw);
     metadata.modified = wikiMetadata.modified;
   }
@@ -374,8 +366,8 @@ class Builder {
     if (this.macroRenderer.flaws.size) {
       if (this.options.flaws === "ignore") {
         this.logger.info(
-          chalk.white.bold(
-            `Flaws within ${this.macroRenderer.flaws.size} document(s) ignored while rendering macros.`
+          chalk.yellow.bold(
+            `Ignored flaws within ${this.macroRenderer.flaws.size} document(s) while rendering macros.`
           )
         );
       } else if (this.options.flaws === "warn") {
@@ -419,226 +411,79 @@ class Builder {
     return this.macroRenderer.errors.size;
   }
 
-  async renderPrerequisites(specificFolders = null) {
-    // Walk through all of the specific folders or sources, find all
-    // of the documents that must be Kumascript-rendered prior to the
-    // build, render them, and cache the results.
-    const t0 = new Date();
-
-    const self = this;
-    const cwd_is_root = process.cwd() === ROOT_DIR;
-
-    // Clear any cached results and errors.
-    this.macroRenderer.clearCache();
-
-    if (!specificFolders) {
-      this.logger.info(chalk.green(`Searching for prerequisites...`));
+  getFolder(uri) {
+    // Depending on the current working directory, get the
+    // relative or absolute path of the folder for this URI.
+    if (!this.allTitles.has(uri)) {
+      return null;
     }
-
-    // Make a temporary view of "allTitles" but with lowercase keys.
-    // TODO: Consider just making the keys in "allTitles" lower-case.
-    const allTitlesLC = new Map(
-      // This avoids having to create a large temporary array of
-      // key/value pairs just to create this new view of "allTitles".
-      (function* () {
-        for (const [key, value] of self.allTitles) {
-          yield [key.toLowerCase(), value];
-        }
-      })()
-    );
-
-    // This is the complete set of URI's that must be rendered prior to others.
-    const allPrerequisites = new Set();
-    // This is a map of the complete set of preqrequisites (including
-    // prerequisites of prerequisites) for each URI encountered. It's
-    // used for sorting "allPrerequisites" such that the dependencies
-    // within the prerequisites are respected.
-    const prerequisitesByUri = new Map();
-    // This is for reporting prerequisites that don't exist in "allTitles".
-    const missingPrerequisites = [];
-
-    function getFolder(uri) {
-      // Depending on the current working directory, get the
-      // relative or absolute path of the folder for this URI.
-      const folder = allTitlesLC.get(uri).file;
-      if (cwd_is_root) {
-        // If the current working directory is the root directory of the repo,
-        // the relative path of the folder from "allTitles" is just fine.
-        return folder;
-      }
-      // The current working directory is NOT the root directory of the repo,
-      // so we need to use to an absolute path.
-      return path.join(ROOT_DIR, folder);
+    const folder = this.allTitles.get(uri).file;
+    if (CWD_IS_ROOT) {
+      // If the current working directory is the root directory of the repo,
+      // the relative path of the folder from "allTitles" is just fine.
+      return folder;
     }
+    // The current working directory is NOT the root directory of the repo,
+    // so we need to use to an absolute path.
+    return path.join(ROOT_DIR, folder);
+  }
 
-    function gatherPrerequisites(source, folder) {
-      // Each time this function is called, given a document represented by
-      // a source and folder, it recursively finds ALL of the prerequisites
-      // of that document, including the prerequisites of the prerequisites
-      // and so on, and also accumulates the findings into "allPrerequisites"
-      // and "prerequisitesByUri".
-      const uri = getUrl(source, folder).toLowerCase();
-      if (prerequisitesByUri.has(uri)) {
-        return prerequisitesByUri.get(uri);
-      }
-      const rawHtml = fs.readFileSync(path.join(folder, "index.html"), "utf8");
-      const prerequisites = kumascript.getPrerequisites(rawHtml);
-      const cleanPrerequisites = new Set();
-      for (const prereqUri of prerequisites) {
-        const cleanPrereqUri = self.cleanUri(prereqUri);
-        if (allTitlesLC.has(cleanPrereqUri)) {
-          allPrerequisites.add(cleanPrereqUri);
-          cleanPrerequisites.add(cleanPrereqUri);
-          // Now recursively get the clean prerequisites of this prerequisite.
-          let nextFolder = getFolder(cleanPrereqUri);
-          const nextSource = self.getSource(nextFolder);
-          // TODO: What if this prerequisite is a stumptown document?
-          //       I suspect that should be an error that we report.
-          if (!nextSource.isStumptown) {
-            for (const nextCleanPrereqUri of gatherPrerequisites(
-              nextSource,
-              nextFolder
-            )) {
-              cleanPrerequisites.add(nextCleanPrereqUri);
-            }
-          }
-        } else {
-          // We won't be able to do anything with documents missing
-          // from allTitles, so let's just gather them for reporting
-          // later.
-          missingPrerequisites.push({
-            uri: prereqUri,
-            cleanUri: cleanPrereqUri,
-            sourceUri: uri,
+  async renderMacros(rawHtml, metadata, { cacheResult = false } = {}) {
+    // Recursive method that renders the macros within the document
+    // represented by this raw HTML and metadata, but only after first
+    // rendering all of this document's prerequisites, taking into
+    // account that the prerequisites may have prerequisites and so on.
+    const prerequisites = kumascript.getPrerequisites(rawHtml);
+
+    // First, render all of the prerequisites of this document.
+    for (const preUri of prerequisites) {
+      const preCleanUri = this.cleanUri(preUri);
+      if (this.allTitles.has(preCleanUri)) {
+        const preFolder = this.getFolder(preCleanUri);
+        const preSource = this.getSource(preFolder);
+        // TODO: What if this prerequisite is a stumptown document?
+        //       Probably should be an error that we report?
+        if (!preSource.isStumptown) {
+          const preMetadata = getMetadata(preSource, preFolder).metadata;
+          const preRawHtml = fs.readFileSync(
+            path.join(preFolder, "index.html"),
+            "utf8"
+          );
+          // When rendering prerequisites, we're only interested in
+          // caching the results for later use. We don't care about
+          // the results returned.
+          await this.renderMacros(preRawHtml, preMetadata, {
+            cacheResult: true,
           });
         }
       }
-      prerequisitesByUri.set(uri, cleanPrerequisites);
-      return cleanPrerequisites;
     }
 
-    // First, let's gather all of the pages that we need to Kumascript-render
-    // prior to the actual build. We'll gather the clean URI's into a set, in
-    // order to eliminate the duplication that's common.
-    if (specificFolders) {
-      for (const folder of specificFolders) {
-        const source = this.getSource(folder);
-        if (!source.isStumptown) {
-          gatherPrerequisites(source, folder);
-        }
-      }
-    } else {
-      for (const {
-        source,
-        localeFolder,
-        folder,
-        files,
-      } of this.walkSources()) {
-        if (
-          !source.isStumptown &&
-          !this.excludeFolder(source, folder, localeFolder, files)
-        ) {
-          gatherPrerequisites(source, folder);
-        }
-      }
-    }
+    // Now that all of the prerequisites have been rendered, we can render
+    // this document and return the result.
 
-    if (!specificFolders) {
-      this.logger.info(
-        chalk.green(
-          `   found ${
-            allPrerequisites.size + missingPrerequisites.length
-          } prerequisite(s)`
-        )
-      );
-      if (missingPrerequisites.length) {
-        this.logger.warn(
-          chalk.yellow(
-            `   ${missingPrerequisites.length} prerequisite(s) missing from allTitles:`
-          )
-        );
-        for (const { uri, cleanUri, sourceUri } of missingPrerequisites) {
-          const uriLC = uri.toLowerCase();
-          if (uriLC === cleanUri) {
-            this.logger.warn(
-              chalk.yellow(`      ${uriLC} was requested within ${sourceUri}`)
-            );
-          } else {
-            this.logger.warn(
-              chalk.yellow(
-                `      ${uriLC} (cleaned as ${cleanUri}) was requested within ${sourceUri}`
-              )
-            );
-          }
-        }
-      }
-      this.logger.info(
-        chalk.green(`   rendering ${allPrerequisites.size} prerequisite(s)...`)
-      );
-    }
+    const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
 
-    // Before we render the prerequisites, let's sort them based on
-    // their dependencies, so we can render them in the proper order.
-    const sortedPrerequisites = [...allPrerequisites].sort((uriA, uriB) => {
-      const prereqsA = prerequisitesByUri.get(uriA);
-      const prereqsB = prerequisitesByUri.get(uriB);
-      if (!prereqsA.size && !prereqsB.size) {
-        // Neither A nor B depends on other documents, so they're equal in priority.
-        return 0;
-      } else if (!prereqsA.size && prereqsB.size) {
-        // A has no prerequisites, but B does, so A should be placed before B.
-        return -1;
-      } else if (prereqsA.size && !prereqsB.size) {
-        // B has no prerequisites, but A does, so B should be placed before A.
-        return 1;
-      } else if (prereqsA.has(uriB) && prereqsB.has(uriA)) {
-        throw new Error(
-          `circular dependency: ${uriA} and ${uriB} ultimately depend on each other`
-        );
-      } else if (prereqsA.has(uriB)) {
-        // A depends on B, so B should be placed before A.
-        return 1;
-      } else if (prereqsB.has(uriA)) {
-        // B depends on A, so A should be placed before B.
-        return -1;
-      } else {
-        // They're independent.
-        return 0;
-      }
-    });
-
-    // Now let's render each of the prerequisites in the set and
-    // cache the results for when we do the actual build.
-    for (const uri of sortedPrerequisites) {
-      const folder = getFolder(uri);
-      const source = this.getSource(folder);
-      const { metadata } = getMetadata(source, folder);
-      const rawHtml = fs.readFileSync(path.join(folder, "index.html"), "utf8");
-      await this.renderMacros(rawHtml, metadata, { cacheResult: true });
-    }
-
-    if (!specificFolders) {
-      const t1 = new Date();
-      this.logger.info(
-        chalk.green(
-          `   prerequisite processing took ${ppMilliseconds(t1 - t0)}.\n`
-        )
-      );
-    }
+    return this.macroRenderer.render(
+      rawHtml,
+      {
+        path: mdn_url,
+        url: `${this.options.sitemapBaseUrl}${mdn_url}`,
+        locale: metadata.locale,
+        slug: metadata.slug,
+        title: metadata.title,
+        tags: metadata.tags || [],
+        selective_mode: false,
+      },
+      cacheResult
+    );
   }
 
   async start({ specificFolders = null } = {}) {
     const self = this;
 
-    if (!specificFolders) {
-      self.describeActiveSources();
-      self.describeActiveFilters();
-    }
-
-    // First, let's Kumascript-render any documents that must be rendered
-    // before other documents that depend on them, and cache the results
-    // before we start the actual build.
-    await this.renderPrerequisites(specificFolders);
+    // Clear any cached results and errors.
+    this.macroRenderer.clearCache();
 
     if (specificFolders) {
       // Check that they all exist and are folders
@@ -649,11 +494,7 @@ class Builder {
           const source = this.getSource(folder);
           let processed;
           try {
-            processed = await timeout(
-              self.processFolder(source, folder),
-              BUILD_TIMEOUT,
-              folder
-            );
+            processed = await self.processFolder(source, folder);
           } catch (err) {
             // If a crash happens inside processFolder it's hard to debug
             // if you don't know which files/folders caused it. So inject
@@ -672,6 +513,9 @@ class Builder {
 
       return allProcessed;
     }
+
+    self.describeActiveSources();
+    self.describeActiveFilters();
 
     // To be able to make a progress bar we need to first count what we're
     // going to need to do.
@@ -698,11 +542,7 @@ class Builder {
     async function processAndTrackFolder(source, folder) {
       let processed;
       try {
-        processed = await timeout(
-          self.processFolder(source, folder),
-          BUILD_TIMEOUT,
-          folder
-        );
+        processed = await self.processFolder(source, folder);
       } catch (err) {
         // If a crash happens inside processFolder it's hard to debug
         // if you don't know which files/folders caused it. So inject
@@ -810,7 +650,7 @@ class Builder {
       this.allTitles = new Map(
         Object.entries(
           JSON.parse(fs.readFileSync(allTitlesJsonFilepath, "utf8"))
-        )
+        ).map(([key, value]) => [key.toLowerCase(), value])
       );
       // We got it from disk, but is it out-of-date?
       if (this.allTitles.get("_hash") !== this.selfHash) {
@@ -867,8 +707,11 @@ class Builder {
       if (key === "_hash") continue;
       if (!data.translation_of) continue;
 
-      const parentURL = buildMDNUrl("en-US", data.translation_of);
-      const parentData = this.allTitles.get(parentURL);
+      const parentUrlLC = buildMDNUrl(
+        "en-US",
+        data.translation_of
+      ).toLowerCase();
+      const parentData = this.allTitles.get(parentUrlLC);
 
       // TODO: Our dumper is not perfect yet. We still get bad
       // 'translation_of' references.
@@ -964,12 +807,9 @@ class Builder {
       const folder = path.dirname(filepath);
       this.logger.info(`${chalk.bold("change")} in ${folder}`);
       const t0 = performance.now();
-      await this.renderPrerequisites([folder]);
-      const { result, file, doc } = await timeout(
-        this.processFolder(source, folder),
-        10, // seconds
-        folder
-      );
+      // Clear any cached results and errors.
+      this.macroRenderer.clearCache();
+      const { result, file, doc } = await this.processFolder(source, folder);
       const t1 = performance.now();
 
       const tookStr = ppMilliseconds(t1 - t0);
@@ -1344,6 +1184,7 @@ class Builder {
   async processFolder(source, folder, config) {
     const { metadata, metadataRaw } = getMetadata(source, folder);
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
+    const mdnUrlLC = mdn_url.toLowerCase();
 
     if (this.excludeSlug(mdn_url)) {
       return { result: processing.EXCLUDED, file: folder };
@@ -1354,10 +1195,7 @@ class Builder {
     // The destination is the same as source but with a different base.
     // If the file *came from* /path/to/files/en-US/foo/bar/
     // the final destination is /path/to/build/en-US/foo/bar/index.json
-    const destinationDirRaw = path.join(
-      this.destination,
-      mdn_url.toLowerCase()
-    );
+    const destinationDirRaw = path.join(this.destination, mdnUrlLC);
     const destinationDir = path.join(
       this.destination,
       slugToFoldername(mdn_url)
@@ -1446,19 +1284,21 @@ class Builder {
     }
     doc.body = sections;
 
-    const titleData = this.allTitles.get(doc.mdn_url);
+    const titleData = this.allTitles.get(mdnUrlLC);
     if (titleData === undefined) {
-      throw new Error(`${doc.mdn_url} is not present in this.allTitles`);
+      throw new Error(`${mdnUrlLC} is not present in this.allTitles`);
     }
     doc.popularity = titleData.popularity || 0.0;
     doc.modified = titleData.modified;
 
-    const otherTranslations =
-      this.allTitles.get(doc.mdn_url).translations || [];
+    const otherTranslations = this.allTitles.get(mdnUrlLC).translations || [];
     if (!otherTranslations.length && metadata.translation_of) {
       // But perhaps the parent has other translations?!
-      const parentURL = buildMDNUrl("en-US", metadata.translation_of);
-      const parentData = this.allTitles.get(parentURL);
+      const parentUrlLC = buildMDNUrl(
+        "en-US",
+        metadata.translation_of
+      ).toLowerCase();
+      const parentData = this.allTitles.get(parentUrlLC);
       // See note in 'ensureAllTitles()' about why we need this if statement.
       if (parentData) {
         const parentOtherTranslations = parentData.translations;
@@ -1593,33 +1433,20 @@ class Builder {
    * adding this document's uri and title to this.allTitles
    */
   processFolderTitle(source, folder, allPopularities) {
-    const metadata = yaml.safeLoad(
-      fs.readFileSync(path.join(folder, "index.yaml"))
-    );
-
-    metadata.locale = extractLocale(source, folder);
+    const { metadata } = getMetadata(source, folder);
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
+    const mdnUrlLC = mdn_url.toLowerCase();
 
-    // XXX Perhaps, if the source of this is from archive, we might
-    // not need or want to bother with popularity or modified data.
-    if (fs.existsSync(path.join(folder, "wikihistory.json"))) {
-      const wikiMetadataRaw = fs.readFileSync(
-        path.join(folder, "wikihistory.json")
-      );
-      const wikiMetadata = JSON.parse(wikiMetadataRaw);
-      metadata.modified = wikiMetadata.modified;
-    }
-
-    if (this.allTitles.has(mdn_url)) {
+    if (this.allTitles.has(mdnUrlLC)) {
       // Already been added by stumptown probably.
       // But, before we exit early, let's update some of the pieces of
       // information that stumptown might not have, such as "modified"
       // and "translation_of".
-      if (!this.allTitles.get(mdn_url).modified) {
-        this.allTitles.get(mdn_url).modified = metadata.modified;
+      if (!this.allTitles.get(mdnUrlLC).modified) {
+        this.allTitles.get(mdnUrlLC).modified = metadata.modified;
       }
-      if (!this.allTitles.get(mdn_url).translation_of) {
-        this.allTitles.get(mdn_url).translation_of = metadata.translation_of;
+      if (!this.allTitles.get(mdnUrlLC).translation_of) {
+        this.allTitles.get(mdnUrlLC).translation_of = metadata.translation_of;
       }
       return;
     }
@@ -1646,7 +1473,7 @@ class Builder {
       // keep them for now.
       doc.tags = metadata.tags;
     }
-    this.allTitles.set(mdn_url, doc);
+    this.allTitles.set(mdnUrlLC, doc);
   }
 
   processStumptownFileTitle(source, file, allPopularities) {
@@ -1665,25 +1492,7 @@ class Builder {
       source: source.filepath,
     };
 
-    this.allTitles.set(mdn_url, doc);
-  }
-
-  renderMacros(rawHtml, metadata, { cacheResult = false } = {}) {
-    // TODO: The "LiveSampleURL" macro uses the "revision_id" attribute of
-    //       the "docEnv" below, but obviously that makes no sense in the world
-    //       of Yari. We need to determine a new way to resolve that macro.
-    const { sitemapBaseUrl } = this.options;
-    const path = buildMDNUrl(metadata.locale, metadata.slug);
-    const docEnv = {
-      path: path,
-      url: `${sitemapBaseUrl}${path}`,
-      locale: metadata.locale,
-      slug: metadata.slug,
-      title: metadata.title,
-      tags: metadata.tags || [],
-      selective_mode: false,
-    };
-    return this.macroRenderer.render(rawHtml, docEnv, cacheResult);
+    this.allTitles.set(mdn_url.toLowerCase(), doc);
   }
 
   /**
