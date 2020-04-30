@@ -1,6 +1,7 @@
-const { getPrerequisites, render: renderMacros } = require("./src/render.js");
 const Templates = require("./src/templates.js");
 const AllPagesInfo = require("./src/info.js");
+const { MacroExecutionWarning } = require("./src/errors.js");
+const { getPrerequisites, render: renderMacros } = require("./src/render.js");
 
 class Renderer {
   constructor({
@@ -39,11 +40,16 @@ class Renderer {
     if (this.convertFlawsToErrors) {
       throw new Error(fullMessage);
     }
+    const flaw = new MacroExecutionWarning(
+      fullMessage,
+      context.parsingInfo.source,
+      context.parsingInfo.token
+    );
     const docUri = context.path.toLowerCase();
     if (this.flaws.has(docUri)) {
-      this.flaws.get(docUri).add(fullMessage);
+      this.flaws.get(docUri).push(flaw);
     } else {
-      this.flaws.set(docUri, new Set([fullMessage]));
+      this.flaws.set(docUri, [flaw]);
     }
   }
 

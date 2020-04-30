@@ -121,6 +121,10 @@ async function render(source, templates, pageEnvironment, allPagesInfo) {
       base_url: config.interactiveExamplesURL,
     },
     live_samples: { base_url: config.liveSamplesURL },
+    parsingInfo: {
+      source,
+      token: null,
+    },
   };
 
   // Create the Environment object that we'll use to render all of
@@ -158,6 +162,12 @@ async function render(source, templates, pageEnvironment, allPagesInfo) {
       if (selectiveMode === "render" && !selectMacros.includes(macroName)) {
         continue;
       }
+
+      // Although the "fullPageEnvironment" object is frozen when creating the
+      // "Environment" instance above, its "parsingInfo" object is not. This
+      // information allows flaws to be recorded with the same detailed context
+      // information as errors.
+      fullPageEnvironment.parsingInfo.token = token;
 
       // Check to see if we're already processing this exact
       // macro invocation. To do that we need a signature for
