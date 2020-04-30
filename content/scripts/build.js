@@ -21,7 +21,7 @@ const {
   extractDocumentSections,
   extractSidebar,
 } = require("./document-extractor");
-const { ROOT_DIR, VALID_LOCALES } = require("./constants");
+const { ROOT_DIR, VALID_LOCALES, FLAWS_LEVELS } = require("./constants");
 const { slugToFoldername } = require("./utils");
 
 const kumascript = require("kumascript");
@@ -264,7 +264,7 @@ class Builder {
     this.prerequisitesByUri = new Map();
     this.macroRenderer = new kumascript.Renderer({
       uriTransform: this.cleanUri.bind(this),
-      throwErrorsOnFlaws: this.options.flaws === "error",
+      throwErrorsOnFlaws: this.options.flaws === FLAWS_LEVELS.ERROR,
     });
 
     this.options.locales = cleanLocales(this.options.locales || []);
@@ -364,31 +364,24 @@ class Builder {
     // accumulates the flaws it encounters within its "flaws" property,
     // a Map of flaws by URI.
     if (this.macroRenderer.flaws.size) {
-      if (this.options.flaws === "ignore") {
+      if (this.options.flaws === FLAWS_LEVELS.IGNORE) {
         this.logger.info(
           chalk.yellow.bold(
             `Ignored flaws within ${this.macroRenderer.flaws.size} document(s) while rendering macros.`
           )
         );
       } else {
-        let color;
-        let logger;
-        if (this.options.flaws === "error") {
-          color = chalk.red;
-          logger = this.logger.error;
-        } else {
-          color = chalk.yellow;
-          logger = this.logger.warn;
-        }
-        logger(
-          color.bold(
+        this.logger.error(
+          chalk.red.bold(
             `Flaws within ${this.macroRenderer.flaws.size} document(s) while rendering macros:`
           )
         );
         for (const [uri, flaws] of this.macroRenderer.flaws) {
-          logger(color.bold(`*** flaw(s) while rendering ${uri}:`));
+          this.logger.error(
+            chalk.red.bold(`*** flaw(s) while rendering ${uri}:`)
+          );
           for (const flaw of flaws) {
-            logger(color(`${flaw}\n`));
+            this.logger.error(chalk.red(`${flaw}\n`));
           }
         }
       }
@@ -468,7 +461,7 @@ class Builder {
     const self = this;
 
     // Clear any cached results and errors.
-    this.macroRenderer.clearCache();
+    self.macroRenderer.clearCache();
 
     if (specificFolders) {
       // Check that they all exist and are folders
@@ -476,7 +469,7 @@ class Builder {
 
       await Promise.all(
         specificFolders.map(async (folder) => {
-          const source = this.getSource(folder);
+          const source = self.getSource(folder);
           let processed;
           try {
             processed = await self.processFolder(source, folder);
@@ -601,7 +594,9 @@ class Builder {
     self.dumpAllURLs();
     self.summarizeResults(counts, t1 - t0);
     if (self.reportMacroRenderingFlaws()) {
-      process.exit(1);
+      if (self.options.flaws !== FLAWS_LEVELS.IGNORE) {
+        process.exit(1);
+      }
     }
   }
 
@@ -1206,6 +1201,13 @@ class Builder {
       // Errors while KS rendering will be accumulated during the build
       // and reported at the end.
       renderedHtml = await this.renderMacros(rawHtml, metadata);
+      if (
+        this.options.flaws === FLAWS_LEVELS.ERROR &&
+        this.reportMacroRenderingFlaws()
+      ) {
+        // Report and exit immediately on the first document with flaws.
+        process.exit(1);
+      }
     }
 
     // Now we've read in all the "inputs" needed.
