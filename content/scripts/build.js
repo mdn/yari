@@ -21,7 +21,7 @@ const {
   extractDocumentSections,
   extractSidebar,
 } = require("./document-extractor");
-const { ROOT_DIR, VALID_LOCALES } = require("./constants");
+const { ROOT_DIR, VALID_LOCALES, FLAWS_LEVELS } = require("./constants");
 const { slugToFoldername } = require("./utils");
 
 const kumascript = require("kumascript");
@@ -264,7 +264,7 @@ class Builder {
     this.prerequisitesByUri = new Map();
     this.macroRenderer = new kumascript.Renderer({
       uriTransform: this.cleanUri.bind(this),
-      convertFlawsToErrors: this.options.flaws === "error",
+      convertFlawsToErrors: this.options.flaws === FLAWS_LEVELS.ERROR,
     });
 
     this.options.locales = cleanLocales(this.options.locales || []);
@@ -364,13 +364,13 @@ class Builder {
     // accumulates the flaws it encounters within its "flaws" property,
     // a Map of flaws by URI.
     if (this.macroRenderer.flaws.size) {
-      if (this.options.flaws === "ignore") {
+      if (this.options.flaws === FLAWS_LEVELS.IGNORE) {
         this.logger.info(
           chalk.yellow.bold(
             `Ignored flaws within ${this.macroRenderer.flaws.size} document(s) while rendering macros.`
           )
         );
-      } else if (this.options.flaws === "warn") {
+      } else if (this.options.flaws === FLAWS_LEVELS.WARN) {
         this.logger.warn(
           chalk.yellow.bold(
             `Flaws within ${this.macroRenderer.flaws.size} document(s) while rendering macros:`
@@ -616,7 +616,10 @@ class Builder {
     self.dumpAllURLs();
     self.summarizeResults(counts, t1 - t0);
     self.reportMacroRenderingFlaws();
-    if (self.reportMacroRenderingErrors()) {
+    if (
+      this.options.flaws === FLAWS_LEVELS.ERROR &&
+      this.self.reportMacroRenderingErrors()
+    ) {
       process.exit(1);
     }
   }
