@@ -1,99 +1,57 @@
 import React from "react";
-import { Platforms } from "./platforms";
-import { Browsers } from "./browsers";
-import { Rows } from "./rows";
-import { Legend } from "./legend";
-import "./bcd.scss";
+import type bcd from "mdn-browser-compat-data/types";
+import { AccordionProvider } from "./accordion";
+import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
+import { FeatureRow } from "./feature-row";
+import { PLATFORM_BROWSERS, Headers } from "./headers";
+import { Legend } from "./legend";
+import { listFeatures } from "./utils";
 
-const BROWSERS = {
-  desktop: ["chrome", "edge", "firefox", "ie", "opera", "safari"],
-  mobile: [
-    "webview_android",
-    "chrome_android",
-    "firefox_android",
-    "opera_android",
-    "safari_ios",
-    "samsunginternet_android",
-  ],
-  server: ["nodejs"],
-  "webextensions-desktop": ["chrome", "edge", "firefox", "opera"],
-  "webextensions-mobile": ["firefox_android"],
-};
+import "./bcd.scss";
 
-class BrowserCompatibilityTableContent extends React.Component<any, any> {
-  state = {
-    currentNoteId: null,
-    hasDeprecation: false,
-    hasExperimental: false,
-    hasNonStandard: false,
-    hasAlternative: false,
-    hasFlag: false,
-    hasPrefix: false,
-    hasNotes: false,
-    legendSet: false,
-  };
+function gatherPlatformsAndBrowsers(category): [string[], bcd.BrowserNames[]] {
+  let platforms = ["desktop", "mobile"];
+  if (category === "javascript") {
+    platforms.push("server");
+  } else if (category === "webextensions") {
+    platforms = ["webextensions-desktop", "webextensions-mobile"];
+  }
+  return [
+    platforms,
+    platforms.map((platform) => PLATFORM_BROWSERS[platform] || []).flat(),
+  ];
+}
 
-  gatherPlatformsAndBrowsers(category) {
-    let platforms = ["desktop", "mobile"];
-    let displayBrowsers = [...BROWSERS["desktop"], ...BROWSERS["mobile"]];
-    if (category === "javascript") {
-      displayBrowsers.push(...BROWSERS["server"]);
-      platforms.push("server");
-    }
-    if (category === "webextensions") {
-      displayBrowsers = [
-        ...BROWSERS["webextensions-desktop"],
-        ...BROWSERS["webextensions-mobile"],
-      ];
-      platforms = ["webextensions-desktop", "webextensions-mobile"];
-    }
-    return [platforms, displayBrowsers];
+export function BrowserCompatibilityTable({
+  id,
+  title,
+  query,
+  data,
+  browsers: browserInfo,
+}: {
+  id: string;
+  title: string;
+  query: string;
+  data: bcd.Identifier;
+  browsers: bcd.Browsers;
+}) {
+  if (!data || !Object.keys(data).length) {
+    throw new Error(
+      "BrowserCompatibilityTable component called with empty data"
+    );
   }
 
-  onNotesClick = (noteId) => {
-    this.setState({
-      currentNoteId: noteId === this.state.currentNoteId ? null : noteId,
-    });
-  };
+  const breadcrumbs = query.split(".");
+  const category = breadcrumbs[0];
+  const name = breadcrumbs[breadcrumbs.length - 1];
 
-  setLegendIcons = (
-    hasDeprecation,
-    hasExperimental,
-    hasNonStandard,
-    hasFlag,
-    hasPrefix,
-    hasAlternative,
-    hasNotes
-  ) => {
-    if (!this.state.legendSet) {
-      this.setState({
-        hasDeprecation,
-        hasExperimental,
-        hasNonStandard,
-        hasFlag,
-        hasPrefix,
-        hasAlternative,
-        hasNotes,
-        legendSet: true,
-      });
-    }
-  };
+  const [platforms, browsers] = gatherPlatformsAndBrowsers(category);
 
-  render() {
-    const { data } = this.props;
-    const category = data.query.split(".").shift();
-    if (!data || !Object.keys(data).length) {
-      throw new Error(
-        "BrowserCompatibilityTable component called with empty data"
-      );
-    }
-
-    const [platforms, displayBrowsers] = this.gatherPlatformsAndBrowsers(
-      category
-    );
-    return (
-      <>
+  return (
+    <BrowserCompatibilityErrorBoundary>
+      <BrowserInfoContext.Provider value={browserInfo}>
+        {title && <h2 id={id}>{title}</h2>}
         <a
           className="bc-github-link external external-icon"
           href="https://github.com/mdn/browser-compat-data"
@@ -102,41 +60,17 @@ class BrowserCompatibilityTableContent extends React.Component<any, any> {
           Update compatibility data on GitHub
         </a>
         <table key="bc-table" className="bc-table bc-table-web">
-          <thead>
-            <Platforms platforms={platforms} browsers={BROWSERS} />
-            <Browsers displayBrowsers={displayBrowsers} />
-          </thead>
+          <Headers {...{ platforms, browsers }} />
           <tbody>
-            <Rows
-              compatibilityData={data}
-              displayBrowsers={displayBrowsers}
-              currentNoteId={this.state.currentNoteId}
-              onNotesClick={this.onNotesClick}
-              setLegendIcons={this.setLegendIcons}
-            />
+            <AccordionProvider>
+              {listFeatures(data, name).map((feature, i) => (
+                <FeatureRow key={i} index={i} {...{ feature, browsers }} />
+              ))}
+            </AccordionProvider>
           </tbody>
         </table>
-        <Legend
-          hasDeprecation={this.state.hasDeprecation}
-          hasExperimental={this.state.hasExperimental}
-          hasNonStandard={this.state.hasNonStandard}
-          hasFlag={this.state.hasFlag}
-          hasPrefix={this.state.hasPrefix}
-          hasAlternative={this.state.hasAlternative}
-          hasNotes={this.state.hasNotes}
-        />
-      </>
-    );
-  }
-}
-
-export const BrowserCompatibilityTable = (props) => {
-  return (
-    <BrowserCompatibilityErrorBoundary>
-      {props.data && props.data.title && (
-        <h2 id={props.data.id}>{props.data.title}</h2>
-      )}
-      <BrowserCompatibilityTableContent {...props} />
+        <Legend compat={data} />
+      </BrowserInfoContext.Provider>
     </BrowserCompatibilityErrorBoundary>
   );
-};
+}

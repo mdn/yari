@@ -320,6 +320,27 @@ $link-color: #3d7e9a;
   background-color: #e4f8e1;
 }
 
+.bc-supports-partial {
+  background-color: #fff3d4;
+  background-image: linear-gradient(
+    to bottom right,
+    rgba(246, 183, 60, 0.3) 0,
+    rgba(246, 183, 60, 0.3) 1px,
+    transparent 1px,
+    transparent 67px,
+    rgba(246, 183, 60, 0.3) 67px,
+    rgba(246, 183, 60, 0.3) 73px,
+    transparent 73px,
+    transparent 138px,
+    rgba(246, 183, 60, 0.3) 138px,
+    rgba(246, 183, 60, 0.3) 144px,
+    transparent 144px
+  );
+  background-size: 100px 100px;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+}
+
 .bc-supports-no,
 .bc-supports-partial,
 .bc-supports-unknown,
@@ -471,7 +492,7 @@ td[tabindex]:hover .bc-history-link {
 }
 
 .bc-history dd {
-  min-height: 1.2em;
+  min-height: 19.2px;
   margin-bottom: 0;
   padding-top: 4px;
   padding-left: 0;
@@ -680,7 +701,7 @@ td[tabindex].bc-supports-yes:hover .ic-history:before {
     font-size: 0.88889rem;
   }
 
-  .bc-history {
+  tr.bc-history {
     display: none;
   }
 
@@ -719,5 +740,9 @@ td[tabindex].bc-supports-yes:hover .ic-history:before {
 @media (min-width: 47.9385em) {
   .bc-legend dl {
     grid-template-columns: 30px 1fr 30px 1fr;
+  }
+
+  td.bc-history {
+    display: none;
   }
 }

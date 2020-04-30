@@ -1,136 +1,110 @@
 import React from "react";
+import type bcd from "mdn-browser-compat-data/types";
+import { asList, listFeatures } from "./utils";
 
-export function Legend({
-  hasDeprecation,
-  hasExperimental,
-  hasNonStandard,
-  hasFlag,
-  hasPrefix,
-  hasAlternative,
-  hasNotes,
-}) {
+// Also specifies the order in which the legend appears
+const LEGEND_LABELS = {
+  yes: "Full support",
+  partial: "Partial support",
+  no: "No support",
+  experimental: "Experimental. Expect behavior to change in the future.",
+  "non-standard": "Non-standard. Expect poor cross-browser support.",
+  deprecated: "Deprecated. Not for use in new websites.",
+  footnote: "See implementation notes.",
+  disabled: "User must explicitly enable this feature.",
+  altname: "Uses a non-standard name.",
+  prefix: "Requires a vendor prefix or different name for use.",
+};
+type LEGEND_KEY = keyof typeof LEGEND_LABELS;
+
+function getActiveLegendItems(compat: bcd.Identifier) {
+  const legendItems = new Set<LEGEND_KEY>();
+
+  for (const feature of listFeatures(compat)) {
+    const { status } = feature.compat;
+
+    if (status) {
+      if (status.experimental) {
+        legendItems.add("experimental");
+      }
+      if (status.deprecated) {
+        legendItems.add("deprecated");
+      }
+      if (!status.standard_track) {
+        legendItems.add("non-standard");
+      }
+    }
+
+    for (const browserSupport of Object.values(feature.compat.support)) {
+      if (!browserSupport) {
+        legendItems.add("no");
+        continue;
+      }
+
+      for (const versionSupport of asList(browserSupport)) {
+        if (versionSupport.version_added) {
+          legendItems.add("yes");
+        } else if (versionSupport.version_added !== null) {
+          legendItems.add("no");
+        }
+
+        if (versionSupport.partial_implementation) {
+          legendItems.add("partial");
+        }
+        if (versionSupport.prefix) {
+          legendItems.add("prefix");
+        }
+        if (versionSupport.notes) {
+          legendItems.add("footnote");
+        }
+        if (versionSupport.alternative_name) {
+          legendItems.add("altname");
+        }
+        if (versionSupport.flags) {
+          legendItems.add("disabled");
+        }
+      }
+    }
+  }
+  return Object.keys(LEGEND_LABELS)
+    .filter((key) => legendItems.has(key as LEGEND_KEY))
+    .map((key) => [key, LEGEND_LABELS[key]]);
+}
+
+export function Legend({ compat }: { compat: bcd.Identifier }) {
   return (
     <section className="bc-legend">
       <h3 className="offscreen highlight-spanned" id="Legend">
         <span className="highlight-span">Legend</span>
       </h3>
       <dl>
-        <dt>
-          <span className="bc-supports-yes bc-supports">
-            <abbr
-              className="bc-level bc-level-yes only-icon"
-              title="Full support"
-            >
-              <span>Full support</span>
-            </abbr>
-          </span>
-        </dt>
-        <dd>Full support</dd>
-        <dt>
-          <span className="bc-supports-no bc-supports">
-            <abbr className="bc-level bc-level-no only-icon" title="No support">
-              <span>No support</span>
-            </abbr>
-          </span>
-        </dt>
-        <dd>No support</dd>
-        <dt>
-          <span className="bc-supports-unknown bc-supports">
-            <abbr
-              className="bc-level bc-level-unknown only-icon"
-              title="Compatibility unknown"
-            >
-              <span>Compatibility unknown</span>
-            </abbr>
-          </span>
-        </dt>
-        <dd>Compatibility unknown</dd>
-        {hasNotes && [
-          <dt key="notes-dt">
-            <abbr className="only-icon" title="See implementation notes.">
-              <span>See implementation notes.</span>
-              <i className="ic-footnote" />
-            </abbr>
-          </dt>,
-          <dd key="notes-dd">See implementation notes.</dd>,
-        ]}
-        {hasDeprecation && [
-          <dt key="deprecated-dt">
-            <abbr
-              className="only-icon"
-              title="Deprecated. Not for use in new websites."
-            >
-              <span>Deprecated. Not for use in new websites.</span>
-              <i className="ic-deprecated" />
-            </abbr>
-          </dt>,
-          <dd key="deprecated-dd">Deprecated. Not for use in new websites.</dd>,
-        ]}
-        {hasExperimental && [
-          <dt key="experimental-dt">
-            <abbr
-              className="only-icon"
-              title="Experimental. Expect behavior to change in the future."
-            >
-              <span>
-                Experimental. Expect behavior to change in the future.
-              </span>
-              <i className="ic-experimental" />
-            </abbr>
-          </dt>,
-          <dd key="experimental-dd">
-            Experimental. Expect behavior to change in the future.
-          </dd>,
-        ]}
-        {hasNonStandard && [
-          <dt key="standard-dt">
-            <abbr
-              className="only-icon"
-              title="Non-standard. Expect poor cross-browser support."
-            >
-              <span>Non-standard. Expect poor cross-browser support.</span>
-              <i className="ic-non-standard" />
-            </abbr>
-          </dt>,
-          <dd key="standard-dd">
-            Non-standard. Expect poor cross-browser support.
-          </dd>,
-        ]}
-        {hasFlag && [
-          <dt key="flag-dt">
-            <abbr
-              className="only-icon"
-              title="User must explicitly enable this feature."
-            >
-              <span>User must explicitly enable this feature.</span>
-              <i className="ic-disabled" />
-            </abbr>
-          </dt>,
-          <dd key="flag-dd">User must explicitly enable this feature.</dd>,
-        ]}
-        {hasPrefix && [
-          <dt key="prefix-dt">
-            <abbr
-              className="only-icon"
-              title="Requires a vendor prefix or different name for use."
-            >
-              <span>Requires a vendor prefix or different name for use.</span>
-              <i className="ic-prefix" />
-            </abbr>
-          </dt>,
-          <dd key="prefix-dd">
-            Requires a vendor prefix or different name for use.
-          </dd>,
-        ]}
-        {hasAlternative && [
-          <dt key="alternative-dt">
-            <abbr className="only-icon" title="Uses a non-standard name.">
-              <span>Uses a non-standard name.</span>
-              <i className="ic-altname" />
-            </abbr>
-          </dt>,
-          <dd key="alternative-dd">Uses a non-standard name.</dd>,
-        ]}
+        {getActiveLegendItems(compat).map(([key, label]) =>
+          ["yes", "partial", "no"].includes(key) ? (
+            <React.Fragment key={key}>
+              <dt key={key}>
+                <span className={`bc-supports-${key} bc-supports`}>
+                  <abbr
+                    className={`bc-level bc-level-${key} only-icon`}
+                    title={label}
+                  >
+                    <span>{label}</span>
+                  </abbr>
+                </span>
+              </dt>
+              <dd>{label}</dd>
+            </React.Fragment>
+          ) : (
+            <React.Fragment key={key}>
+              <dt>
+                <abbr className="only-icon" title={label}>
+                  <span>{label}</span>
+                  <i className={`ic-${key}`} />
+                </abbr>
+              </dt>
+              <dd>{label}</dd>
+            </React.Fragment>
+          )
+        )}
       </dl>
     </section>
   );
