@@ -2,7 +2,7 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
-import { BrowserCompatibilityErrorBoundary } from "./error-boundary.js";
+import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
 
 function renderWithRouter(component) {
   return render(<MemoryRouter>{component}</MemoryRouter>);
@@ -44,7 +44,7 @@ it("renders crashing mock component", () => {
   );
   expect(container.querySelector(".bc-table-error-boundary")).toBeNull();
   const div = container.querySelector("div");
-  fireEvent.click(div);
+  div && fireEvent.click(div);
 
   expect(consoleError).toHaveBeenCalledWith(
     expect.stringMatching("The above error occurred")

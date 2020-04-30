@@ -17,7 +17,7 @@ require("dotenv").config();
 const cheerio = require("./monkeypatched-cheerio");
 const ProgressBar = require("./progress-bar");
 const { packageBCD } = require("./resolve-bcd");
-const { buildHtmlAndJsonFromDoc } = require("ssr");
+const { buildHtmlAndJsonFromDoc } = require("ssr/");
 const {
   extractDocumentSections,
   extractSidebar,

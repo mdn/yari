@@ -1,8 +1,9 @@
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react";
+const { render, fireEvent, waitFor } = require("@testing-library/react");
 import { MemoryRouter } from "react-router-dom";
-
 import { SearchWidget } from "./search";
+
+declare var global: Window;
 
 function renderWithRouter(component) {
   return render(<MemoryRouter>{component}</MemoryRouter>);
@@ -29,9 +30,9 @@ describe("Tests using XHR", () => {
               },
             },
           }),
-      })
+      } as Response)
     );
-    global.fetch.mockClear();
+    (global.fetch as any).mockClear();
   });
 
   test("input placeholder changes when focused", async () => {
@@ -50,7 +51,7 @@ describe("Tests using XHR", () => {
     // Expect XHR
     expect(global.fetch).toHaveBeenCalledTimes(1);
     // Clear the mock fetch
-    global.fetch.mockClear();
+    (global.fetch as any).mockClear();
     // Fire focus event again to ensure it's not called again
     fireEvent.focus(input);
     expect(global.fetch).toHaveBeenCalledTimes(0);

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Platforms } from "./platforms";
 import { Browsers } from "./browsers";
 import { Rows } from "./rows";
@@ -21,12 +21,13 @@ const BROWSERS = {
   "webextensions-mobile": ["firefox_android"],
 };
 
-class BrowserCompatibilityTableContent extends Component {
+class BrowserCompatibilityTableContent extends React.Component<any, any> {
   state = {
     currentNoteId: null,
     hasDeprecation: false,
     hasExperimental: false,
     hasNonStandard: false,
+    hasAlternative: false,
     hasFlag: false,
     hasPrefix: false,
     hasNotes: false,
