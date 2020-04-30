@@ -26,7 +26,9 @@ export function Document(props) {
 
   const [doc, setDoc] = useState(props.doc || null);
   const [loading, setLoading] = useState(false);
-  const [loadingError, setLoadingError] = useState<null | Error>(null);
+  const [loadingError, setLoadingError] = useState<null | Error | Response>(
+    null
+  );
 
   useEffect(() => {
     if (doc) {
@@ -59,7 +61,7 @@ export function Document(props) {
     let url = getCurrentDocumentUri();
     url += "/index.json";
     console.log("OPENING", url);
-    let response;
+    let response: Response;
     try {
       response = await fetch(url);
     } catch (ex) {
