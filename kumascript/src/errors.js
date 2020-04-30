@@ -157,35 +157,9 @@ class MacroExecutionError extends SourceCodeError {
   }
 }
 
-/**
- * A MacroExecutionWarning is created when there is a warning during
- * template rendering. The warning message shows the location of the
- * macro in the HTML document and also includes the message from the
- * underlying runtime event.
- */
-class MacroExecutionWarning extends SourceCodeError {
-  constructor(message, source, token) {
-    super(
-      {},
-      token.location.start.line,
-      token.location.start.column,
-      token.name
-    );
-    this.name = "MacroExecutionWarning";
-
-    // Finally, assemble the complete warning message.
-    this.message = `Warning while rendering macro '${token.name}' at line ${
-      this.line
-    }, column ${this.column} of document:\n${this.getSourceContext(
-      source
-    )}\n${message};`;
-  }
-}
-
 module.exports = {
   MacroInvocationError,
   MacroNotFoundError,
   MacroCompilationError,
   MacroExecutionError,
-  MacroExecutionWarning,
 };

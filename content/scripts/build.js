@@ -264,7 +264,7 @@ class Builder {
     this.prerequisitesByUri = new Map();
     this.macroRenderer = new kumascript.Renderer({
       uriTransform: this.cleanUri.bind(this),
-      convertFlawsToErrors: this.options.flaws === "error",
+      throwErrorsOnFlaws: this.options.flaws === "error",
     });
 
     this.options.locales = cleanLocales(this.options.locales || []);
@@ -370,45 +370,30 @@ class Builder {
             `Ignored flaws within ${this.macroRenderer.flaws.size} document(s) while rendering macros.`
           )
         );
-      } else if (this.options.flaws === "warn") {
-        this.logger.warn(
-          chalk.yellow.bold(
+      } else {
+        let color;
+        let logger;
+        if (this.options.flaws === "error") {
+          color = chalk.red;
+          logger = this.logger.error;
+        } else {
+          color = chalk.yellow;
+          logger = this.logger.warn;
+        }
+        logger(
+          color.bold(
             `Flaws within ${this.macroRenderer.flaws.size} document(s) while rendering macros:`
           )
         );
         for (const [uri, flaws] of this.macroRenderer.flaws) {
-          this.logger.warn(
-            chalk.yellow.bold(`*** flaw(s) while rendering ${uri}:`)
-          );
+          logger(color.bold(`*** flaw(s) while rendering ${uri}:`));
           for (const flaw of flaws) {
-            this.logger.warn(chalk.yellow(`${flaw}\n`));
+            logger(color(`${flaw}\n`));
           }
         }
       }
     }
     return this.macroRenderer.flaws.size;
-  }
-
-  reportMacroRenderingErrors() {
-    // The "this.macroRenderer" instance (used within "this.renderMacros")
-    // accumulates the errors it encounters within its "errors" property,
-    // a Map of errors by URI.
-    if (this.macroRenderer.errors.size) {
-      this.logger.error(
-        chalk.red.bold(
-          `Error(s) within ${this.macroRenderer.errors.size} document(s) while rendering macros:`
-        )
-      );
-      for (const [uri, errors] of this.macroRenderer.errors) {
-        this.logger.error(
-          chalk.red.bold(`*** error(s) while rendering ${uri}:`)
-        );
-        for (const error of errors) {
-          this.logger.error(chalk.red(`${error}\n`));
-        }
-      }
-    }
-    return this.macroRenderer.errors.size;
   }
 
   getFolder(uri) {
@@ -615,8 +600,7 @@ class Builder {
     const t1 = new Date();
     self.dumpAllURLs();
     self.summarizeResults(counts, t1 - t0);
-    self.reportMacroRenderingFlaws();
-    if (self.reportMacroRenderingErrors()) {
+    if (self.reportMacroRenderingFlaws()) {
       process.exit(1);
     }
   }
@@ -1221,8 +1205,7 @@ class Builder {
     } else {
       // Errors while KS rendering will be accumulated during the build
       // and reported at the end.
-      const result = await this.renderMacros(rawHtml, metadata);
-      renderedHtml = result.renderedHtml;
+      renderedHtml = await this.renderMacros(rawHtml, metadata);
     }
 
     // Now we've read in all the "inputs" needed.
