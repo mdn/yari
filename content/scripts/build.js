@@ -381,7 +381,7 @@ class Builder {
             chalk.yellow.bold(`*** flaw(s) while rendering ${uri}:`)
           );
           for (const flaw of flaws) {
-            this.logger.warn(chalk.yellow(`${flaw}`));
+            this.logger.warn(chalk.yellow(`${flaw}\n`));
           }
         }
       }
@@ -404,7 +404,7 @@ class Builder {
           chalk.red.bold(`*** error(s) while rendering ${uri}:`)
         );
         for (const error of errors) {
-          this.logger.error(chalk.red(`${error}`));
+          this.logger.error(chalk.red(`${error}\n`));
         }
       }
     }
