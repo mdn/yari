@@ -1,6 +1,8 @@
 import fuzzysearch from "fuzzysearch";
 
 export default class FuzzySearch {
+  haystack: any;
+
   constructor(haystack) {
     this.haystack = haystack;
   }
@@ -22,8 +24,8 @@ export default class FuzzySearch {
 
 function getSubstrings(regexString, matchString) {
   const regex = new RegExp(regexString, "gi");
-  const matchArray = regex.exec(matchString);
-  const substrings = [];
+  const matchArray = regex.exec(matchString) || [];
+  const substrings: any[] = [];
   matchArray.forEach((str, i) => {
     if (str && i) {
       const match = !(i % 2);

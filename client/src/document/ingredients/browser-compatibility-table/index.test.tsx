@@ -2,7 +2,7 @@ import React from "react";
 import { render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
-import { BrowserCompatibilityTable } from "./index.js";
+import { BrowserCompatibilityTable } from "./index";
 
 function renderWithRouter(component) {
   return render(<MemoryRouter>{component}</MemoryRouter>);

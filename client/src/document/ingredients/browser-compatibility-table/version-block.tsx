@@ -1,7 +1,7 @@
 import React from "react";
 import BrowserName from "./utils/browser-name";
 
-export function VersionBlock({
+export const VersionBlock: any = ({
   icon,
   browser,
   versionAdded,
@@ -11,7 +11,7 @@ export function VersionBlock({
   onNotesClick,
   currentNoteId,
   children,
-}) {
+}) => {
   let isSupported;
   let textContent;
   let bcSupport;
@@ -105,4 +105,4 @@ export function VersionBlock({
       children,
     ]
   );
-}
+};

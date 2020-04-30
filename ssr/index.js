@@ -2,14 +2,11 @@ import React from "react";
 import fs from "fs";
 import path from "path";
 import { StaticRouter } from "react-router-dom/server";
-import sourceMapSupport from "source-map-support";
 
 import { App } from "../client/src/app";
 import render from "./render";
 import { fixSyntaxHighlighting } from "./syntax-highlighter";
 import { normalizeURLs } from "./browser-compatibility-table";
-
-sourceMapSupport.install();
 
 // This is necessary because the ssr.js is in dist/ssr.js
 // and we need to reach the .env this way.
@@ -143,9 +140,11 @@ export function buildHtmlAndJsonFromDoc({
 
   if (buildHtml) {
     rendered = render(
-      <StaticRouter location={uri} context={options}>
-        <App {...options} />
-      </StaticRouter>,
+      React.createElement(
+        StaticRouter,
+        { location: uri, context: options },
+        React.createElement(App, options)
+      ),
       options
     );
   }

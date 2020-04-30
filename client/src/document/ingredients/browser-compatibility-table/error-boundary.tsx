@@ -7,7 +7,10 @@ import React from "react";
  * this component will show a friendly message
  * to replace that crashed component
  */
-export class BrowserCompatibilityErrorBoundary extends React.Component {
+export class BrowserCompatibilityErrorBoundary extends React.Component<
+  any,
+  any
+> {
   state = {
     error: null,
   };
