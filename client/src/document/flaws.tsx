@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, AnchorHTMLAttributes } from "react";
 import useSWR from "swr";
 
 import "./flaws.scss";
@@ -64,7 +64,9 @@ function BrokenLinks({ urls }) {
         );
       });
     }
-    [...document.querySelectorAll("div.content a[href]")].forEach((a) => {
+    [
+      ...document.querySelectorAll<HTMLAnchorElement>("div.content a[href]"),
+    ].forEach((a) => {
       if (areRedirects.has(a.href) && areRedirects.get(a.href)) {
         a.classList.add("flawed--broken_link_redirect");
         a.title = `Consider fixing! It's actually a redirect to ${areRedirects.get(
@@ -77,18 +79,22 @@ function BrokenLinks({ urls }) {
     });
 
     return () => {
-      [...document.querySelectorAll("a.flawed--broken_link_redirect")].forEach(
-        (a) => {
-          a.classList.remove("flawed--broken_link_redirect");
-          a.title = "";
-        }
-      );
-      [...document.querySelectorAll("a.flawed--broken_link_404")].forEach(
-        (a) => {
-          a.classList.remove("flawed--broken_link_404");
-          a.title = "";
-        }
-      );
+      [
+        ...document.querySelectorAll<HTMLAnchorElement>(
+          "a.flawed--broken_link_redirect"
+        ),
+      ].forEach((a) => {
+        a.classList.remove("flawed--broken_link_redirect");
+        a.title = "";
+      });
+      [
+        ...document.querySelectorAll<HTMLAnchorElement>(
+          "a.flawed--broken_link_404"
+        ),
+      ].forEach((a) => {
+        a.classList.remove("flawed--broken_link_404");
+        a.title = "";
+      });
     };
   }, [data, urlsAsKeys]);
 
