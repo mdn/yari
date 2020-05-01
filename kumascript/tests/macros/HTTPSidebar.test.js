@@ -22,7 +22,7 @@ const fixtureData = new Map(
         "utf8"
       )
     )
-  )
+  ).map(([key, value]) => [key.toLowerCase(), value])
 );
 
 const locales = {

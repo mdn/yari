@@ -29,7 +29,7 @@ for (const name in fixtures) {
           "utf8"
         )
       )
-    )
+    ).map(([key, value]) => [key.toLowerCase(), value])
   );
 }
 const base_url = "https://developer.mozilla.org";
