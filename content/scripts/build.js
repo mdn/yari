@@ -260,7 +260,6 @@ class Builder {
     this.selfHash = null;
     this.allTitles = new Map();
     this.allRedirects = new Map();
-    this.prerequisitesByUri = new Map();
     this.macroRenderer = new kumascript.Renderer({
       uriTransform: this.cleanUri.bind(this),
       throwErrorsOnFlaws: this.options.flaws === FLAWS_LEVELS.ERROR,
