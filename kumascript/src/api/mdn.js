@@ -6,6 +6,8 @@ const got = require("got");
 
 const util = require("./util.js");
 
+const cache = new Map();
+
 module.exports = {
   /**
    * Given a set of names and a corresponding list of values, apply HTML
@@ -123,6 +125,9 @@ module.exports = {
   // Fetch an HTTP resource with JSON representation, parse the JSON and
   // return a JS object.
   async fetchJSONResource(url, opts) {
+    if (cache.has(url)) {
+      return cache.get(url);
+    }
     opts = util.defaults(opts || {}, {
       headers: {
         "Cache-Control": this.env.cache_control,
@@ -130,11 +135,16 @@ module.exports = {
         "Content-Type": "application/json",
       },
     });
-    return JSON.parse(await this.MDN.fetchHTTPResource(url, opts));
+    const result = JSON.parse(await this.MDN.fetchHTTPResource(url, opts));
+    cache.set(url, result);
+    return result;
   },
 
   // Fetch an HTTP resource, return the response body.
   async fetchHTTPResource(url, opts) {
+    if (cache.has(url)) {
+      return cache.get(url);
+    }
     opts = util.defaults(opts || {}, {
       method: "GET",
       headers: {
@@ -147,10 +157,12 @@ module.exports = {
     try {
       const response = await got(opts);
       if (response.statusCode == 200) {
+        cache.set(url, response.body);
         return response.body;
       }
     } catch (e) {}
 
+    cache.set(url, null);
     return null;
   },
 

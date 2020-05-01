@@ -7,6 +7,7 @@ const openEditor = require("open-editor");
 
 const { Builder } = require("content/scripts/build");
 const { Sources } = require("content/scripts/sources");
+const { FLAWS_LEVELS } = require("content/scripts/constants");
 
 const app = express();
 
@@ -116,6 +117,7 @@ function getOrCreateBuilder() {
         notLocales: [],
         slugsearch: [],
         noProgressbar: true,
+        flaws: FLAWS_LEVELS.WARN,
       },
       console
     );

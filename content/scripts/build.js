@@ -21,12 +21,11 @@ const {
   extractDocumentSections,
   extractSidebar,
 } = require("./document-extractor");
-const { ROOT_DIR, VALID_LOCALES } = require("./constants");
+const { ROOT_DIR, VALID_LOCALES, FLAWS_LEVELS } = require("./constants");
 const { slugToFoldername } = require("./utils");
 
 const kumascript = require("kumascript");
 
-const MAX_OPEN_FILES = 256;
 const CWD_IS_ROOT = process.cwd() === ROOT_DIR;
 
 function getCurretGitHubBaseURL() {
@@ -264,7 +263,7 @@ class Builder {
     this.prerequisitesByUri = new Map();
     this.macroRenderer = new kumascript.Renderer({
       uriTransform: this.cleanUri.bind(this),
-      convertFlawsToErrors: this.options.flaws === "error",
+      throwErrorsOnFlaws: this.options.flaws === FLAWS_LEVELS.ERROR,
     });
 
     this.options.locales = cleanLocales(this.options.locales || []);
@@ -276,14 +275,13 @@ class Builder {
         })
       : null;
   }
+
   initProgressbar(total) {
     this.progressBar && this.progressBar.init(total);
   }
+
   tickProgressbar(incr) {
     this.progressBar && this.progressBar.update(incr);
-  }
-  stopProgressbar() {
-    this.progressBar && this.progressBar.stop();
   }
 
   printProcessing(result, fileWritten) {
@@ -364,51 +362,29 @@ class Builder {
     // accumulates the flaws it encounters within its "flaws" property,
     // a Map of flaws by URI.
     if (this.macroRenderer.flaws.size) {
-      if (this.options.flaws === "ignore") {
+      if (this.options.flaws === FLAWS_LEVELS.IGNORE) {
         this.logger.info(
           chalk.yellow.bold(
-            `Ignored flaws within ${this.macroRenderer.flaws.size} document(s) while rendering macros.`
+            `\nIgnored flaws within ${this.macroRenderer.flaws.size} document(s) while rendering macros.`
           )
         );
-      } else if (this.options.flaws === "warn") {
-        this.logger.warn(
-          chalk.yellow.bold(
-            `Flaws within ${this.macroRenderer.flaws.size} document(s) while rendering macros:`
+      } else {
+        this.logger.error(
+          chalk.red.bold(
+            `\nFlaws within ${this.macroRenderer.flaws.size} document(s) while rendering macros:`
           )
         );
         for (const [uri, flaws] of this.macroRenderer.flaws) {
-          this.logger.warn(
-            chalk.yellow.bold(`*** flaw(s) while rendering ${uri}:`)
+          this.logger.error(
+            chalk.red.bold(`*** flaw(s) while rendering ${uri}:`)
           );
           for (const flaw of flaws) {
-            this.logger.warn(chalk.yellow(`${flaw}\n`));
+            this.logger.error(chalk.red(`${flaw}\n`));
           }
         }
       }
     }
     return this.macroRenderer.flaws.size;
-  }
-
-  reportMacroRenderingErrors() {
-    // The "this.macroRenderer" instance (used within "this.renderMacros")
-    // accumulates the errors it encounters within its "errors" property,
-    // a Map of errors by URI.
-    if (this.macroRenderer.errors.size) {
-      this.logger.error(
-        chalk.red.bold(
-          `Error(s) within ${this.macroRenderer.errors.size} document(s) while rendering macros:`
-        )
-      );
-      for (const [uri, errors] of this.macroRenderer.errors) {
-        this.logger.error(
-          chalk.red.bold(`*** error(s) while rendering ${uri}:`)
-        );
-        for (const error of errors) {
-          this.logger.error(chalk.red(`${error}\n`));
-        }
-      }
-    }
-    return this.macroRenderer.errors.size;
   }
 
   getFolder(uri) {
@@ -483,33 +459,27 @@ class Builder {
     const self = this;
 
     // Clear any cached results and errors.
-    this.macroRenderer.clearCache();
+    self.macroRenderer.clearCache();
 
     if (specificFolders) {
       // Check that they all exist and are folders
+      let source;
+      let processed;
       const allProcessed = [];
 
-      await Promise.all(
-        specificFolders.map(async (folder) => {
-          const source = this.getSource(folder);
-          let processed;
-          try {
-            processed = await self.processFolder(source, folder);
-          } catch (err) {
-            // If a crash happens inside processFolder it's hard to debug
-            // if you don't know which files/folders caused it. So inject
-            // some logging of that before throwing.
-            self.logger.error(
-              chalk.red(`Error happened processing: ${folder}`)
-            );
-            self.logger.error(err);
-            // XXX need to decide what to do with errors.
-            // We could increment a counter and dump all errors to a log file.
-            throw err;
-          }
-          allProcessed.push(processed);
-        })
-      );
+      for (const folder of specificFolders) {
+        source = self.getSource(folder);
+        try {
+          processed = await self.processFolder(source, folder);
+        } catch (err) {
+          self.logger.error(chalk.red(`Error while processing: ${folder}`));
+          self.logger.error(err);
+          throw err;
+        }
+        allProcessed.push(processed);
+      }
+
+      self.reportMacroRenderingFlaws();
 
       return allProcessed;
     }
@@ -532,6 +502,7 @@ class Builder {
     }
 
     let total = 0;
+    let processed;
 
     // Record of counts of all results
     const counts = {};
@@ -539,20 +510,7 @@ class Builder {
       counts[key] = 0;
     });
 
-    async function processAndTrackFolder(source, folder) {
-      let processed;
-      try {
-        processed = await self.processFolder(source, folder);
-      } catch (err) {
-        // If a crash happens inside processFolder it's hard to debug
-        // if you don't know which files/folders caused it. So inject
-        // some logging of that before throwing.
-        self.logger.error(chalk.red(`Error happened processing: ${folder}`));
-        self.logger.error(err);
-        // XXX need to decide what to do with errors.
-        // We could increment a counter and dump all errors to a log file.
-        throw err;
-      }
+    function reportProcessed(processed) {
       const { result, file } = processed;
       self.printProcessing(result, file);
       counts[result]++;
@@ -561,8 +519,6 @@ class Builder {
 
     // Start the real processing
     const t0 = new Date();
-    let pendingFolders = 0;
-    const folderProcessingPromises = [];
 
     for (const { source, localeFolder, folder, files } of self.walkSources()) {
       if (self.excludeFolder(source, folder, localeFolder, files)) {
@@ -583,41 +539,34 @@ class Builder {
         // files with each representing a document.
         for (const filename of files.filter((n) => n.endsWith(".json"))) {
           const filepath = path.join(folder, filename);
-          let processed;
           try {
             processed = self.processStumptownFile(source, filepath);
           } catch (err) {
-            // If a crash happens inside processStumptownFile it's hard
-            // to debug if you don't know which files/folders caused it.
-            // So inject some logging of that before throwing.
-            self.logger.error(
-              chalk.red(`Error happened processing: ${filepath}`)
-            );
+            self.logger.error(chalk.red(`Error while processing: ${filepath}`));
             self.logger.error(err);
             throw err;
           }
-          const { result, file } = processed;
-          self.printProcessing(result, file);
-          counts[result]++;
-          self.tickProgressbar(++total);
+          reportProcessed(processed);
         }
       } else {
-        while (pendingFolders > MAX_OPEN_FILES) {
-          await new Promise((resolve) => setTimeout(resolve, 500));
+        try {
+          processed = await self.processFolder(source, folder);
+        } catch (err) {
+          self.logger.error(chalk.red(`Error while processing: ${folder}`));
+          self.logger.error(err);
+          throw err;
         }
-        pendingFolders++;
-        folderProcessingPromises.push(
-          processAndTrackFolder(source, folder).finally(() => pendingFolders--)
-        );
+        reportProcessed(processed);
       }
     }
-    await Promise.all(folderProcessingPromises);
+
     const t1 = new Date();
     self.dumpAllURLs();
     self.summarizeResults(counts, t1 - t0);
-    self.reportMacroRenderingFlaws();
-    if (self.reportMacroRenderingErrors()) {
-      process.exit(1);
+    if (self.reportMacroRenderingFlaws()) {
+      if (self.options.flaws !== FLAWS_LEVELS.IGNORE) {
+        process.exit(1);
+      }
     }
   }
 
@@ -810,6 +759,7 @@ class Builder {
       // Clear any cached results and errors.
       this.macroRenderer.clearCache();
       const { result, file, doc } = await this.processFolder(source, folder);
+      this.reportMacroRenderingFlaws();
       const t1 = performance.now();
 
       const tookStr = ppMilliseconds(t1 - t0);
@@ -955,8 +905,7 @@ class Builder {
   }
 
   summarizeResults(counts, took) {
-    console.log("\n");
-    console.log(chalk.green("Summary of build:"));
+    console.log(chalk.green("\nSummary of build:"));
     const totalProcessed = counts[processing.PROCESSED];
     // const totalDocuments = Object.values(counts).reduce((a, b) => a + b);
     const rate = (1000 * totalProcessed) / took; // per second
@@ -1221,8 +1170,14 @@ class Builder {
     } else {
       // Errors while KS rendering will be accumulated during the build
       // and reported at the end.
-      const result = await this.renderMacros(rawHtml, metadata);
-      renderedHtml = result.renderedHtml;
+      renderedHtml = await this.renderMacros(rawHtml, metadata);
+      if (
+        this.options.flaws === FLAWS_LEVELS.ERROR &&
+        this.reportMacroRenderingFlaws()
+      ) {
+        // Report and exit immediately on the first document with flaws.
+        process.exit(1);
+      }
     }
 
     // Now we've read in all the "inputs" needed.
