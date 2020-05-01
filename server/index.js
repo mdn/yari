@@ -158,6 +158,7 @@ app.get("/_flaws", (req, res) => {
   if (!locale) {
     return res.status(400).send("'locale' is always required");
   }
+  const filters = req.query;
 
   const MAX_DOCUMENTS_RETURNED = 100;
 
@@ -234,6 +235,29 @@ app.get("/_flaws", (req, res) => {
       );
 
       if (doc.flaws && Object.keys(doc.flaws)) {
+        if (filters.mdn_url && !doc.mdn_url.includes(filters.mdn_url)) {
+          continue;
+        }
+        if (filters.popularity) {
+          const docRanking = doc.popularity
+            ? 1 + allPopularitiesValues.filter((p) => p > doc.popularity).length
+            : NaN;
+          if (filters.popularity.startsWith("<")) {
+            const min = parseInt(filters.popularity.slice(1).trim());
+            console.log({ min, docRanking });
+            if (isNaN(docRanking) || docRanking > min) {
+              continue;
+            }
+          } else if (filters.popularity.startsWith(">")) {
+            const max = parseInt(filters.popularity.slice(1).trim());
+            console.log({ max, docRanking });
+            if (docRanking < max) {
+              continue;
+            }
+          } else {
+            throw new Error("Not implemented");
+          }
+        }
         counts.found++;
         documents.push(packageDocument(folder, doc));
       }

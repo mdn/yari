@@ -366,7 +366,13 @@ function LoadingError({ error }) {
   );
 }
 
-function ToggleDocmentFlaws({ flaws }) {
+interface FlatFlaw {
+  flawCheck: string;
+  flaws: string[];
+  count: number;
+}
+
+function ToggleDocmentFlaws({ flaws }: { flaws: object }) {
   const [show, toggle] = useReducer((v) => !v, false);
 
   useEffect(() => {
@@ -391,7 +397,7 @@ function ToggleDocmentFlaws({ flaws }) {
     return null;
   }
 
-  let flatFlaws = [];
+  let flatFlaws: FlatFlaw[] = [];
   for (const [flawCheck, actualFlaws] of Object.entries(flaws)) {
     flatFlaws.push({
       flawCheck,

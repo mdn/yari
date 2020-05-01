@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import useSWR from "swr";
 
@@ -10,15 +10,41 @@ import { humanizeFlawName } from "../flaw-utils";
 // know to automatically refresh when there's new document edits
 // because their flaws might have changed.
 
+interface Data {
+  counts: number;
+  documents: any[];
+}
+
 export default function AllFlaws() {
   const { locale } = useParams();
+  const [lastData, setLastData] = useState<Data | null>(null);
+
+  const [filters, setFilters] = useState({
+    mdn_url: "",
+    popularity: "",
+    flaws: [],
+  });
 
   function makeSearchQueryString() {
     const params = new URLSearchParams();
     params.set("locale", locale);
+    Object.entries(filters).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        for (const v of value) {
+          params.append(key, v);
+        }
+      } else {
+        params.set(key, value);
+      }
+    });
     return params.toString();
   }
-  const { data, error } = useSWR(
+
+  function updateFilters(newFilters) {
+    setFilters(Object.assign({}, newFilters));
+  }
+
+  const { data, error, isValidating } = useSWR(
     `/_flaws?${makeSearchQueryString()}`,
     async (url) => {
       let response;
@@ -38,22 +64,46 @@ export default function AllFlaws() {
       // Always return a promise!
       return response.json();
     },
-    { revalidateOnFocus: false }
+    {
+      // revalidateOnFocus: false
+    }
   );
 
-  console.log({ data, error });
+  useEffect(() => {
+    if (data) {
+      setLastData(data);
+    }
+  }, [data]);
 
   function submitHandler(event) {
     event.preventDefault();
   }
 
+  // XXX there's something weird about this logic
+  let loading: React.ReactNode = <small> </small>;
+  if (!data && !error) {
+    if (lastData) {
+      loading = <small>Reloading...</small>;
+    } else {
+      loading = <small>Loading...</small>;
+    }
+  } else if (isValidating) {
+    loading = <small>Reloading...</small>;
+  }
+
   return (
     <div id="all-flaws">
-      <h1>Find all flaws {!data && !error && <small>Loading...</small>}</h1>
+      <h1>Find all flaws </h1>
+      {loading}
       {error && <ShowSearchError error={error} />}
       <form onSubmit={submitHandler}></form>
-      {data && (
-        <ShowDocumentsFound counts={data.counts} documents={data.documents} />
+      {lastData && (
+        <ShowDocumentsFound
+          counts={lastData.counts}
+          documents={lastData.documents}
+          initialFilters={filters}
+          updateFilters={updateFilters}
+        />
       )}
       {data && <ShowTimes times={data.times} />}
     </div>
@@ -70,10 +120,10 @@ function ShowSearchError({ error }) {
 }
 
 function ShowTimes({ times }) {
-  function format(ms) {
+  function format(ms: number) {
     if (ms > 1000) {
       const s = ms / 1000;
-      return `${s.toFixed(s, 1)} seconds`;
+      return `${s.toFixed(1)} seconds`;
     } else {
       return `${Math.trunc(ms)} milliseconds`;
     }
@@ -89,9 +139,20 @@ function ShowTimes({ times }) {
   );
 }
 
-function ShowDocumentsFound({ counts, documents }) {
+function ShowDocumentsFound({
+  counts,
+  documents,
+  initialFilters,
+  updateFilters,
+}) {
+  const [filters, setFilters] = useState(initialFilters);
+
+  function refreshFilters() {
+    updateFilters(filters);
+  }
+
   // https://gist.github.com/jlbruno/1535691/db35b4f3af3dcbb42babc01541410f291a8e8fac
-  function getGetOrdinal(n) {
+  function getGetOrdinal(n: number) {
     const s = ["th", "st", "nd", "rd"];
     const v = n % 100;
     return n.toLocaleString() + (s[(v - 20) % 10] || s[v] || s[0]);
@@ -124,6 +185,45 @@ function ShowDocumentsFound({ counts, documents }) {
             <th>Flaws</th>
           </tr>
         </thead>
+        <tfoot>
+          <tr>
+            <th>
+              <input
+                type="search"
+                placeholder="Filter by document URI"
+                value={filters.mdn_url}
+                onChange={(event) => {
+                  setFilters({ ...filters, mdn_url: event.target.value });
+                }}
+                onBlur={refreshFilters}
+              />
+            </th>
+            <th>
+              <input
+                type="text"
+                placeholder="E.g. < 100"
+                value={filters.popularity || ""}
+                onChange={(event) => {
+                  setFilters({ ...filters, popularity: event.target.value });
+                }}
+                onBlur={refreshFilters}
+              />
+            </th>
+            <th>
+              <select
+                multiple
+                value={filters.flaws || []}
+                onChange={(event) => {
+                  setFilters({ ...filters, flaws: [event.target.value] });
+                }}
+              >
+                <option value="broken_links">
+                  {humanizeFlawName("broken_links")}
+                </option>
+              </select>
+            </th>
+          </tr>
+        </tfoot>
         <tbody>
           {documents.map((doc) => {
             return (
@@ -152,6 +252,7 @@ function ShowDocumentsFound({ counts, documents }) {
           })}
         </tbody>
       </table>
+      <pre>{JSON.stringify(filters)}</pre>
     </div>
   );
 }

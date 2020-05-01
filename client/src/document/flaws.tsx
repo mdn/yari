@@ -1,4 +1,4 @@
-import React, { useEffect, AnchorHTMLAttributes } from "react";
+import React, { useEffect } from "react";
 import useSWR from "swr";
 
 import "./flaws.scss";
