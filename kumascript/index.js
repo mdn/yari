@@ -1,18 +1,17 @@
 const Templates = require("./src/templates.js");
 const AllPagesInfo = require("./src/info.js");
-const { MacroExecutionWarning } = require("./src/errors.js");
+const { MacroExecutionError } = require("./src/errors.js");
 const { getPrerequisites, render: renderMacros } = require("./src/render.js");
 
 class Renderer {
   constructor({
     uriTransform = (uri) => uri,
-    convertFlawsToErrors = false,
+    throwErrorsOnFlaws = false,
   } = {}) {
     this.allPagesInfo = null;
     this.uriTransform = uriTransform;
-    this.convertFlawsToErrors = convertFlawsToErrors;
+    this.throwErrorsOnFlaws = throwErrorsOnFlaws;
     this.templates = new Templates();
-    this.errors = new Map();
     this.flaws = new Map();
   }
 
@@ -31,25 +30,36 @@ class Renderer {
 
   clearCache() {
     this.flaws.clear();
-    this.errors.clear();
     this.allPagesInfo.clearRenderedHtmlCache();
   }
 
   recordFlaw(message, caller, context) {
     const fullMessage = `${caller}: ${message}`;
-    if (this.convertFlawsToErrors) {
-      throw new Error(fullMessage);
+    const error = new Error(fullMessage);
+    if (this.throwErrorsOnFlaws) {
+      // This sacrifices further work on rendering the current macro
+      // for the potential benefit of a better stack trace. The error
+      // will be caught and pushed onto the flaws of the current
+      // document being rendered, within the "render" method below.
+      throw error;
     }
-    const flaw = new MacroExecutionWarning(
-      fullMessage,
+    // This path is more forgiving, in the sense that we'll record the
+    // flaw but also keep trying to render the current macro within the
+    // current document.
+    const flaw = new MacroExecutionError(
+      error,
       context.parsingInfo.source,
       context.parsingInfo.token
     );
     const docUri = context.path.toLowerCase();
-    if (this.flaws.has(docUri)) {
-      this.flaws.get(docUri).push(flaw);
+    this.pushFlaw(docUri, flaw);
+  }
+
+  pushFlaw(uri, flaw) {
+    if (this.flaws.has(uri)) {
+      this.flaws.get(uri).push(flaw);
     } else {
-      this.flaws.set(docUri, [flaw]);
+      this.flaws.set(uri, [flaw]);
     }
   }
 
@@ -58,8 +68,7 @@ class Renderer {
     const uri = pageEnvironment.path.toLowerCase();
     const cachedResult = this.allPagesInfo.getRenderedHtmlFromCache(uri);
     if (cachedResult) {
-      const cachedErrors = this.errors.get(uri) || [];
-      return { renderedHtml: cachedResult, errors: cachedErrors };
+      return cachedResult;
     }
     const [result, errors] = await renderMacros(
       source,
@@ -67,15 +76,13 @@ class Renderer {
       pageEnvironment,
       this.allPagesInfo
     );
-    if (errors.length) {
-      this.errors.set(uri, errors);
-    } else {
-      this.errors.delete(uri);
+    for (const error of errors) {
+      this.pushFlaw(uri, error);
     }
     if (cacheResult) {
       this.allPagesInfo.cacheRenderedHtml(uri, result);
     }
-    return { renderedHtml: result, errors };
+    return result;
   }
 }
 
