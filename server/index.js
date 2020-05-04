@@ -159,8 +159,10 @@ app.get("/_flaws", (req, res) => {
     return res.status(400).send("'locale' is always required");
   }
   const filters = req.query;
+  const sortBy = req.query.sort || "popularity";
+  const sortReverse = JSON.parse(req.query.reverse || "false");
 
-  const MAX_DOCUMENTS_RETURNED = 100;
+  const MAX_DOCUMENTS_RETURNED = 25;
 
   const counts = {
     // Number of documents found with the matching flaws
@@ -172,24 +174,30 @@ app.get("/_flaws", (req, res) => {
     // Basically a count of client/build/**/index.json files.
     built: 0,
   };
-  // return res.status(400).send("bla");
+
   const documents = [];
 
-  // XXX Perhaps we want to put a global lock on this because it can be
-  // a really resource intensive operation.
+  // // XXX Perhaps we want to put a global lock on this because it can be
+  // // a really resource intensive operation.
 
-  // First count, all possible documents which is based on the builder
-  const t0 = new Date();
-  const builder = getOrCreateBuilder({ locales: [locale] });
-  counts.possible = builder.sources
-    .entries()
-    .map((source) => builder.countLocaleFolders(source))
-    .map((m) => Array.from(m.values()).reduce((a, b) => a + b))
-    .reduce((a, b) => a + b);
-  const t1 = new Date();
+  // // First count, all possible documents which is based on the builder
+  // const t0 = new Date();
+  // const builder = getOrCreateBuilder({ locales: [locale] });
+  // counts.possible = builder.sources
+  //   .entries()
+  //   .map((source) => builder.countLocaleFolders(source))
+  //   .map((m) => Array.from(m.values()).reduce((a, b) => a + b))
+  //   .reduce((a, b) => a + b);
+  // const t1 = new Date();
+  const builder = getOrCreateBuilder();
+  counts.possible - builder.allTitles.size;
 
-  const allPopularitiesValues = Object.values(builder._getAllPopularities());
-  // Higest number first.
+  const allPopularitiesValues = [];
+  for (const value of builder.allTitles.values()) {
+    if (value.popularity) {
+      allPopularitiesValues.push(value.popularity);
+    }
+  }
   allPopularitiesValues.sort((a, b) => b - a);
 
   // Some flaws *values* are overly verbose
@@ -222,6 +230,8 @@ app.get("/_flaws", (req, res) => {
     return Object.assign({ folder, popularity, flaws }, { modified, mdn_url });
   }
 
+  const t1 = new Date();
+
   // The Builder instance doesn't know about traversing all the built
   // documents, but it *does* know *where* to look.
   for (const [folder, files] of walker(
@@ -244,13 +254,11 @@ app.get("/_flaws", (req, res) => {
             : NaN;
           if (filters.popularity.startsWith("<")) {
             const min = parseInt(filters.popularity.slice(1).trim());
-            console.log({ min, docRanking });
             if (isNaN(docRanking) || docRanking > min) {
               continue;
             }
           } else if (filters.popularity.startsWith(">")) {
             const max = parseInt(filters.popularity.slice(1).trim());
-            console.log({ max, docRanking });
             if (docRanking < max) {
               continue;
             }
@@ -265,10 +273,30 @@ app.get("/_flaws", (req, res) => {
   }
   // XXX might want to consider more advanced sorting and pagination
 
+  const sortMultiplier = sortReverse ? -1 : 1;
+  documents.sort((a, b) => {
+    switch (sortBy) {
+      case "popularity":
+        return (
+          sortMultiplier *
+          ((b.popularity.value || 0) - (a.popularity.value || 0))
+        );
+      case "mdn_url":
+        if (a.mdn_url.toLowerCase() < b.mdn_url.toLowerCase()) {
+          return sortMultiplier * -1;
+        } else if (a.mdn_url.toLowerCase() > b.mdn_url.toLowerCase()) {
+          return sortMultiplier * 1;
+        } else {
+          return 0;
+        }
+      default:
+        throw new Error("not implemented");
+    }
+  });
+
   const t2 = new Date();
 
   const times = {
-    possible: t1.getTime() - t0.getTime(),
     built: t2.getTime() - t1.getTime(),
   };
 
