@@ -51,9 +51,12 @@ export class SearchWidgetClass extends React.Component {
 
   focusOnSearchMaybe = (event) => {
     if (event.code === "Slash") {
-      if (!this.inFocus) {
-        event.preventDefault();
-        this.inputRef.current.focus();
+      // Don't do this if the current event target is a widget
+      if (!["TEXTAREA", "INPUT"].includes(event.target.tagName)) {
+        if (!this.inFocus) {
+          event.preventDefault();
+          this.inputRef.current.focus();
+        }
       }
     }
   };
