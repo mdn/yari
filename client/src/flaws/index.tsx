@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import useSWR from "swr";
 
 import "./index.scss";
@@ -10,15 +10,35 @@ import { humanizeFlawName } from "../flaw-utils";
 // know to automatically refresh when there's new document edits
 // because their flaws might have changed.
 
+interface DocumentPopularity {
+  value: number;
+  ranking: number;
+}
+
+interface Document {
+  mdn_url: string;
+  modified: string;
+  popularity: DocumentPopularity;
+  folder: string;
+  flaws: {
+    [key: string]: string[];
+  };
+}
+
 interface Counts {
   found: number;
   possible: number;
   built: number;
 }
 
+interface Times {
+  built: number;
+}
+
 interface Data {
   counts: Counts;
-  documents: any[];
+  documents: Document[];
+  times: Times;
 }
 
 interface Filter {
@@ -27,20 +47,70 @@ interface Filter {
   flaws: string[];
 }
 
+const defaultFilter = {
+  mdn_url: "",
+  popularity: "",
+  flaws: [],
+};
+
+function deserializeFilters(qs: string): Filter {
+  const filters = Object.assign({}, defaultFilter);
+  const sp = new URLSearchParams(qs);
+  for (const [key, value] of sp) {
+    if (filters.hasOwnProperty(key)) {
+      if (Array.isArray(filters[key])) {
+        filters[key] = sp.getAll(key);
+      } else {
+        filters[key] = value;
+      }
+    }
+  }
+  return filters;
+}
+
+function serializeFilters(previousQs: string, filters: Filter): string {
+  const sp = new URLSearchParams(previousQs);
+  Object.keys(defaultFilter).forEach((key) => {
+    sp.delete(key);
+  });
+  Object.entries(filters).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      for (const v of value) {
+        sp.append(key, v);
+      }
+    } else if (value) {
+      sp.set(key, value);
+    }
+  });
+  return `?${sp.toString()}`;
+}
+
 export default function AllFlaws() {
+  const navigate = useNavigate();
   const { locale } = useParams();
   const [lastData, setLastData] = useState<Data | null>(null);
 
-  const [filters, setFilters] = useState<Filter>({
-    mdn_url: "",
-    popularity: "",
-    flaws: [],
-  });
+  const location = useLocation();
+  const [filters, setFilters] = useState<Filter>(
+    deserializeFilters(location.search)
+  );
+
+  useEffect(() => {
+    let title = "Find all flaws";
+    if (lastData) {
+      title = `(${lastData.counts.found.toLocaleString()} found) ${title}`;
+    }
+    document.title = title;
+  }, [lastData]);
 
   const [sortBy, setSortBy] = useState<string>("popularity");
   const [sortReverse, setSortReverse] = useState<boolean>(false);
 
-  function updateFilters(newFilters) {
+  useEffect(() => {
+    navigate(serializeFilters(location.search, filters));
+  }, [filters, location.search, navigate]);
+
+  function updateFilters(newFilters: Filter) {
     setFilters(Object.assign({}, newFilters));
   }
 
@@ -61,7 +131,7 @@ export default function AllFlaws() {
     return `/_flaws?${params.toString()}`;
   }, [locale, filters, sortBy, sortReverse]);
 
-  const { data, error, isValidating } = useSWR(
+  const { data, error, isValidating } = useSWR<Data, Error>(
     getAPIUrl(),
     async (url) => {
       let response;
@@ -118,20 +188,22 @@ export default function AllFlaws() {
 
   return (
     <div id="all-flaws">
-      <h1>Find all flaws </h1>
+      <h1>Find all flaws</h1>
       {loading}
       {error && <ShowSearchError error={error} />}
       <form onSubmit={submitHandler}></form>
       {lastData && (
-        <ShowDocumentsFound
-          counts={lastData.counts}
-          documents={lastData.documents}
-          initialFilters={filters}
-          updateFilters={updateFilters}
-          sortBy={sortBy}
-          sortReverse={sortReverse}
-          setSort={setSort}
-        />
+        <div className="filter-documents">
+          <ShowFilters initialFilters={filters} updateFilters={updateFilters} />
+          <ShowDocumentsFound
+            locale={locale}
+            counts={lastData.counts}
+            documents={lastData.documents}
+            sortBy={sortBy}
+            sortReverse={sortReverse}
+            setSort={setSort}
+          />
+        </div>
       )}
       {data && <ShowTimes times={data.times} />}
     </div>
@@ -145,10 +217,6 @@ function ShowSearchError({ error }) {
       <pre>{error.toString()}</pre>
     </div>
   );
-}
-
-interface Times {
-  built: number;
 }
 
 function ShowTimes({ times }: { times: Times }) {
@@ -171,22 +239,12 @@ function ShowTimes({ times }: { times: Times }) {
   );
 }
 
-function ShowDocumentsFound({
-  counts,
-  documents,
+function ShowFilters({
   initialFilters,
   updateFilters,
-  sortBy,
-  sortReverse,
-  setSort,
 }: {
-  counts: Counts;
-  documents: any;
   initialFilters: Filter;
   updateFilters: Function;
-  sortBy: string;
-  sortReverse: boolean;
-  setSort: Function;
 }) {
   const [filters, setFilters] = useState(initialFilters);
 
@@ -194,6 +252,81 @@ function ShowDocumentsFound({
     updateFilters(filters);
   }
 
+  return (
+    <div className="filters">
+      <h3>Filters</h3>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          refreshFilters();
+        }}
+      >
+        <div>
+          <h4>Document URL</h4>
+          <input
+            type="search"
+            placeholder="Filter by document URI"
+            value={filters.mdn_url}
+            onChange={(event) => {
+              setFilters({ ...filters, mdn_url: event.target.value });
+            }}
+            onBlur={refreshFilters}
+          />
+        </div>
+
+        <div>
+          <h4>Popularity</h4>
+          <input
+            type="search"
+            placeholder="E.g. < 100"
+            value={filters.popularity || ""}
+            onChange={(event) => {
+              setFilters({ ...filters, popularity: event.target.value });
+            }}
+            onBlur={refreshFilters}
+          />
+        </div>
+        <div>
+          <h4>Flaws</h4>
+          <select
+            multiple
+            value={filters.flaws || []}
+            onChange={(event) => {
+              setFilters({ ...filters, flaws: [event.target.value] });
+            }}
+          >
+            <option value="broken_links">
+              {humanizeFlawName("broken_links")}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <h4>&nbsp;</h4>
+          <button type="submit">Filter now</button>
+        </div>
+      </form>
+
+      <pre>{JSON.stringify(filters, null, 2)}</pre>
+    </div>
+  );
+}
+
+function ShowDocumentsFound({
+  locale,
+  counts,
+  documents,
+  sortBy,
+  sortReverse,
+  setSort,
+}: {
+  locale: string;
+  counts: Counts;
+  documents: any;
+  sortBy: string;
+  sortReverse: boolean;
+  setSort: Function;
+}) {
   // https://gist.github.com/jlbruno/1535691/db35b4f3af3dcbb42babc01541410f291a8e8fac
   function getGetOrdinal(n: number) {
     const s = ["th", "st", "nd", "rd"];
@@ -209,108 +342,62 @@ function ShowDocumentsFound({
     return bits.join(", ");
   }
 
+  function TH({ id, title }: { id: string; title: string }) {
+    return (
+      <th onClick={() => setSort(id)} className="sortable">
+        {title} {sortBy === id ? (sortReverse ? "🔽" : "🔼") : null}
+      </th>
+    );
+  }
+
   return (
-    <div className="documents-found">
+    <div className="documents">
       <h3>Documents with flaws found ({counts.found})</h3>
       {!counts.built ? (
         <WarnAboutNothingBuilt />
       ) : (
         <h4>
           {counts.built.toLocaleString()} built documents out of a possible{" "}
-          {counts.possible.toLocaleString()}
+          {counts.possible.toLocaleString()} ({locale})
         </h4>
       )}
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          console.log("SUBMIT!");
 
-          refreshFilters();
-        }}
-      >
-        <table>
-          <thead>
-            <tr>
-              <th onClick={() => setSort("mdn_url")}>
-                Document
-                {sortBy === "mdn_url" ? (sortReverse ? "🔽" : "🔼") : null}
-              </th>
-              <th onClick={() => setSort("popularity")}>
-                Popularity ranking
-                {sortBy === "popularity" ? (sortReverse ? "🔽" : "🔼") : null}
-              </th>
-              <th onClick={() => setSort("flaws")}>Flaws</th>
-            </tr>
-          </thead>
-          <thead>
-            <tr>
-              <th>
-                <input
-                  type="search"
-                  placeholder="Filter by document URI"
-                  value={filters.mdn_url}
-                  onChange={(event) => {
-                    setFilters({ ...filters, mdn_url: event.target.value });
-                  }}
-                  onBlur={refreshFilters}
-                />
-              </th>
-              <th>
-                <input
-                  type="search"
-                  placeholder="E.g. < 100"
-                  value={filters.popularity || ""}
-                  onChange={(event) => {
-                    setFilters({ ...filters, popularity: event.target.value });
-                  }}
-                  onBlur={refreshFilters}
-                />
-              </th>
-              <th>
-                <select
-                  multiple
-                  value={filters.flaws || []}
-                  onChange={(event) => {
-                    setFilters({ ...filters, flaws: [event.target.value] });
-                  }}
+      <table>
+        <thead>
+          <tr>
+            <TH id="mdn_url" title="Document" />
+            <TH id="popularity" title="Popularity" />
+            <TH id="flaws" title="Flaws" />
+          </tr>
+        </thead>
+        <tbody>
+          {documents.map((doc) => {
+            return (
+              <tr key={doc.mdn_url}>
+                <td>
+                  <Link to={`${doc.mdn_url}#show-flaws`} title={doc.title}>
+                    {doc.mdn_url}
+                  </Link>
+                </td>
+                <td
+                  title={
+                    doc.popularity.ranking
+                      ? `Meaning there are ${
+                          doc.popularity.ranking - 1
+                        } more popular pages than this`
+                      : "Meaning it has no ranking. Most likely a very rare (or new) document"
+                  }
                 >
-                  <option value="broken_links">
-                    {humanizeFlawName("broken_links")}
-                  </option>
-                </select>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {documents.map((doc) => {
-              return (
-                <tr key={doc.mdn_url}>
-                  <td>
-                    <Link to={`${doc.mdn_url}#show-flaws`} title={doc.title}>
-                      {doc.mdn_url}
-                    </Link>
-                  </td>
-                  <td
-                    title={
-                      doc.popularity.ranking
-                        ? `Meaning there are ${
-                            doc.popularity.ranking - 1
-                          } more popular pages than this`
-                        : "Meaning it has no ranking. Most likely a very rare (or new) document"
-                    }
-                  >
-                    {!doc.popularity.ranking
-                      ? "n/a"
-                      : `${getGetOrdinal(doc.popularity.ranking)}`}
-                  </td>
-                  <td>{summarizeFlaws(doc.flaws)}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </form>
-      <pre>{JSON.stringify(filters)}</pre>
+                  {!doc.popularity.ranking
+                    ? "n/a"
+                    : `${getGetOrdinal(doc.popularity.ranking)}`}
+                </td>
+                <td>{summarizeFlaws(doc.flaws)}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }

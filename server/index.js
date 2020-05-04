@@ -190,7 +190,16 @@ app.get("/_flaws", (req, res) => {
   //   .reduce((a, b) => a + b);
   // const t1 = new Date();
   const builder = getOrCreateBuilder();
-  counts.possible - builder.allTitles.size;
+  for (const data of builder.allTitles.values()) {
+    if (data.locale && data.locale.toLowerCase() === locale) {
+      counts.possible++;
+    }
+  }
+  builder.allTitles.forEach((data) => {
+    if (data.locale && data.locale.toLowerCase() === locale) {
+      counts.possible++;
+    }
+  });
 
   const allPopularitiesValues = [];
   for (const value of builder.allTitles.values()) {
@@ -271,7 +280,6 @@ app.get("/_flaws", (req, res) => {
       }
     }
   }
-  // XXX might want to consider more advanced sorting and pagination
 
   const sortMultiplier = sortReverse ? -1 : 1;
   documents.sort((a, b) => {
@@ -281,6 +289,11 @@ app.get("/_flaws", (req, res) => {
           sortMultiplier *
           ((b.popularity.value || 0) - (a.popularity.value || 0))
         );
+      case "flaws":
+        // This is kinda bogus and slow.
+        const vA = a.flaws.reduce((x, y) => x + y.value, 0);
+        const vB = b.flaws.reduce((x, y) => x + y.value, 0);
+        return sortMultiplier * (vB - vA);
       case "mdn_url":
         if (a.mdn_url.toLowerCase() < b.mdn_url.toLowerCase()) {
           return sortMultiplier * -1;

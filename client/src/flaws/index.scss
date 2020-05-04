@@ -24,4 +24,24 @@
       font-size: 70%;
     }
   }
+
+  div.filter-documents {
+    .filters {
+      // XXX Can someone please turn this into a CSS grid
+      float: left;
+      width: 300px;
+
+      h4 {
+        border-bottom: 1px solid #efefef;
+        margin-bottom: 10px;
+      }
+    }
+    .documents {
+      margin-left: 300px;
+
+      th.sortable {
+        cursor: ns-resize;
+      }
+    }
+  }
 }
