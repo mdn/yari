@@ -29,9 +29,12 @@ server/dist/
 ssr/node_modules/
 ssr/dist/
 watcher/node_modules/
+archivecontent/
 content/node_modules/
+content/files/
 content/build/
 content/_all-titles.json
+kumascript/coverage/
 
 # Can be removed once content lives in its own repo
 archivecontent/files
