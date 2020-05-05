@@ -10,6 +10,7 @@ const { Sources } = require("content/scripts/sources");
 const {
   DEFAULT_FLAW_CHECKS,
   DEFAULT_POPULARITIES_FILEPATH,
+  VALID_FLAW_CHECKS,
 } = require("content/scripts/constants.js");
 
 const app = express();
@@ -175,6 +176,12 @@ app.get("/_flaws", (req, res) => {
     built: 0,
   };
 
+  // This helps the filtering UI to know what all the possible flawchecks are.
+  const checks = {
+    all: [...VALID_FLAW_CHECKS],
+    enabled: DEFAULT_FLAW_CHECKS,
+  };
+
   const documents = [];
 
   // // XXX Perhaps we want to put a global lock on this because it can be
@@ -241,6 +248,15 @@ app.get("/_flaws", (req, res) => {
 
   const t1 = new Date();
 
+  let filteredFlaws = new Set();
+  if (filters.flaws) {
+    if (Array.isArray(filters.flaws)) {
+      filteredFlaws = new Set(filters.flaws);
+    } else {
+      filteredFlaws = new Set([filters.flaws]);
+    }
+  }
+
   // The Builder instance doesn't know about traversing all the built
   // documents, but it *does* know *where* to look.
   for (const [folder, files] of walker(
@@ -257,6 +273,12 @@ app.get("/_flaws", (req, res) => {
         if (filters.mdn_url && !doc.mdn_url.includes(filters.mdn_url)) {
           continue;
         }
+        if (filteredFlaws.size) {
+          if (!Object.keys(doc.flaws).some((x) => filteredFlaws.has(x))) {
+            continue;
+          }
+        }
+
         if (filters.popularity) {
           const docRanking = doc.popularity
             ? 1 + allPopularitiesValues.filter((p) => p > doc.popularity).length
@@ -316,6 +338,7 @@ app.get("/_flaws", (req, res) => {
   res.json({
     counts,
     times,
+    checks,
 
     // The slicing is just to make the payload more manageable
     documents: documents.slice(0, MAX_DOCUMENTS_RETURNED),

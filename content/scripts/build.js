@@ -22,18 +22,12 @@ const {
   extractDocumentSections,
   extractSidebar,
 } = require("./document-extractor");
-const { VALID_LOCALES, DEFAULT_POPULARITIES_FILEPATH } = require("./constants");
+const {
+  VALID_LOCALES,
+  DEFAULT_POPULARITIES_FILEPATH,
+  VALID_FLAW_CHECKS,
+} = require("./constants");
 const { slugToFoldername } = require("./utils");
-
-// These names need to match what we have in the code where we have various
-// blocks of code that look something like this:
-//
-//    if (this.options.flawChecks.profanities) {
-//      ... analyze and possible add to doc.flaws.profanities ...
-//
-// This list needs to be synced with the code. And the CLI arguments
-// used with --flaw-checks needs to match this set.
-const VALID_FLAW_CHECKS = new Set(["broken_links", "bad_bcd_queries"]);
 
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
@@ -1235,12 +1229,20 @@ class Builder {
       $("div.bc-data").each((i, element) => {
         const dataQuery = $(element).attr("id");
         if (!dataQuery) {
-          doc.flaws.bad_bcd_queries = ["BCD table without an ID"];
+          console.log(doc.mdn_url, "BCD table without an ID");
+          if (!doc.flaws.hasOwnProperty("bad_bcd_queries")) {
+            doc.flaws.bad_bcd_queries = [];
+          }
+          doc.flaws.bad_bcd_queries.push("BCD table without an ID");
         } else {
           const query = dataQuery.replace(/^bcd:/, "");
           const data = packageBCD(query);
           if (!data) {
-            doc.flaws.bad_bcd_queries = [`No BCD data for query: ${query}`];
+            if (!doc.flaws.hasOwnProperty("bad_bcd_queries")) {
+              doc.flaws.bad_bcd_queries = [];
+            }
+            console.log(doc.mdn_url, `No BCD data for query: ${query}`);
+            doc.flaws.bad_bcd_queries.push(`No BCD data for query: ${query}`);
           }
         }
       });

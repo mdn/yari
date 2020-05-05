@@ -35,10 +35,16 @@ interface Times {
   built: number;
 }
 
+interface FlawChecks {
+  all: string[];
+  enabled: string[];
+}
+
 interface Data {
   counts: Counts;
   documents: Document[];
   times: Times;
+  checks: FlawChecks;
 }
 
 interface Filter {
@@ -194,7 +200,11 @@ export default function AllFlaws() {
       <form onSubmit={submitHandler}></form>
       {lastData && (
         <div className="filter-documents">
-          <ShowFilters initialFilters={filters} updateFilters={updateFilters} />
+          <ShowFilters
+            initialFilters={filters}
+            updateFilters={updateFilters}
+            checks={lastData.checks}
+          />
           <ShowDocumentsFound
             locale={locale}
             counts={lastData.counts}
@@ -242,9 +252,11 @@ function ShowTimes({ times }: { times: Times }) {
 function ShowFilters({
   initialFilters,
   updateFilters,
+  checks,
 }: {
   initialFilters: Filter;
   updateFilters: Function;
+  checks: FlawChecks;
 }) {
   const [filters, setFilters] = useState(initialFilters);
 
@@ -289,15 +301,24 @@ function ShowFilters({
         <div>
           <h4>Flaws</h4>
           <select
-            multiple
-            value={filters.flaws || []}
+            multiple={true}
+            value={filters.flaws}
             onChange={(event) => {
-              setFilters({ ...filters, flaws: [event.target.value] });
+              const flaws = [...event.target.selectedOptions].map(
+                (opt) => opt.value
+              );
+              setFilters({ ...filters, flaws });
             }}
           >
-            <option value="broken_links">
-              {humanizeFlawName("broken_links")}
-            </option>
+            {checks &&
+              checks.all.map((checkName) => {
+                return (
+                  <option key={checkName} value={checkName}>
+                    {humanizeFlawName(checkName)}{" "}
+                    {!checks.enabled.includes(checkName) && "(not enabled)"}
+                  </option>
+                );
+              })}
           </select>
         </div>
 

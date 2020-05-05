@@ -165,6 +165,9 @@ function addSections($) {
             c = 0; // reset the counter
           }
           section.append(child);
+          // XXX That `_addSingleSectionBCD(section.clone())` might return a
+          // and empty array and that means it failed and we should
+          // bail.
           subSections.push(..._addSingleSectionBCD(section.clone()));
           section.empty();
         } else {
@@ -177,7 +180,12 @@ function addSections($) {
       }
       return subSections;
     } else {
-      return _addSingleSectionBCD($);
+      const bcdSections = _addSingleSectionBCD($);
+      // If it comes back as an empty array, it means it couldn't be
+      // turned into structured content. So don't bother.
+      if (bcdSections.length) {
+        return bcdSections;
+      }
     }
   }
 

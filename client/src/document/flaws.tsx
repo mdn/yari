@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import useSWR from "swr";
+import { humanizeFlawName } from "../flaw-utils";
 
 import "./flaws.scss";
 
@@ -137,8 +138,14 @@ function BrokenLinks({ urls }) {
 function BadBCDQueries({ messages }) {
   return (
     <div className="flaw flaw__bad_bcd_queries">
-      <h3>Bad BCD Queries</h3>
-      <pre>{JSON.stringify(messages)}</pre>
+      <h3>{humanizeFlawName("bad_bcd_queries")}</h3>
+      <ul>
+        {messages.map((message) => (
+          <li key={message}>
+            <code>{message}</code>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
