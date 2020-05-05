@@ -48,10 +48,7 @@ function checkSidebarDom(dom, locale) {
 describeMacro("HTTPSidebar", function () {
   beforeEachMacro(function (macro) {
     macro.ctx.env.path = "/en-US/docs/Web/HTTP/Overview";
-    macro.ctx.info = new AllPagesInfo(fixtureData, {
-      uriTransform: (uri) => uri,
-      recordFlaw: (msg, caller, context) => null,
-    });
+    macro.ctx.info = new AllPagesInfo(fixtureData, (uri) => uri);
   });
 
   itMacro("Creates a sidebar object for en-US", function (macro) {

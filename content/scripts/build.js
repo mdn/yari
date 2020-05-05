@@ -262,8 +262,8 @@ class Builder {
     this.allRedirects = new Map();
     this.macroRenderer = new kumascript.Renderer({
       uriTransform: this.cleanUri.bind(this),
-      throwErrorsOnFlaws: this.options.flaws === FLAWS_LEVELS.ERROR,
     });
+    this.flawsByType = new Map();
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
@@ -356,34 +356,34 @@ class Builder {
     return source;
   }
 
-  reportMacroRenderingFlaws() {
-    // The "this.macroRenderer" instance (used within "this.renderMacros")
-    // accumulates the flaws it encounters within its "flaws" property,
-    // a Map of flaws by URI.
-    if (this.macroRenderer.flaws.size) {
-      if (this.options.flaws === FLAWS_LEVELS.IGNORE) {
-        this.logger.info(
-          chalk.yellow.bold(
-            `\nIgnored flaws within ${this.macroRenderer.flaws.size} document(s) while rendering macros.`
-          )
-        );
-      } else {
-        this.logger.error(
-          chalk.red.bold(
-            `\nFlaws within ${this.macroRenderer.flaws.size} document(s) while rendering macros:`
-          )
-        );
-        for (const [uri, flaws] of this.macroRenderer.flaws) {
-          this.logger.error(
-            chalk.red.bold(`*** flaw(s) while rendering ${uri}:`)
-          );
-          for (const flaw of flaws) {
-            this.logger.error(chalk.red(`${flaw}\n`));
+  recordFlaws(type, uri, flaws) {
+    if (!this.flawsByType.has(type)) {
+      this.flawsByType.set(type, new Map());
+    }
+    const flawsByUri = this.flawsByType.get(type);
+    flawsByUri.set(uri, flaws);
+  }
+
+  reportFlaws(type) {
+    const flawsByUri = this.flawsByType.get(type);
+    if (flawsByUri) {
+      if (flawsByUri.size) {
+        const header = `\nFlaws found within ${flawsByUri.size} document(s) while rendering macros`;
+        if (this.options.flaws === FLAWS_LEVELS.IGNORE) {
+          this.logger.info(chalk.yellow.bold(header + "."));
+        } else {
+          this.logger.error(chalk.red.bold(header + ":"));
+          for (const [uri, flaws] of flawsByUri) {
+            this.logger.error(
+              chalk.red.bold(`*** flaw(s) while rendering ${uri}:`)
+            );
+            for (const flaw of flaws) {
+              this.logger.error(chalk.red(`${flaw}\n`));
+            }
           }
         }
       }
     }
-    return this.macroRenderer.flaws.size;
   }
 
   getFolder(uri) {
@@ -457,7 +457,7 @@ class Builder {
   async start({ specificFolders = null } = {}) {
     const self = this;
 
-    // Clear any cached results and errors.
+    // Clear any cached results.
     self.macroRenderer.clearCache();
 
     if (specificFolders) {
@@ -478,7 +478,7 @@ class Builder {
         allProcessed.push(processed);
       }
 
-      self.reportMacroRenderingFlaws();
+      self.reportFlaws("macros");
 
       return allProcessed;
     }
@@ -562,11 +562,7 @@ class Builder {
     const t1 = new Date();
     self.dumpAllURLs();
     self.summarizeResults(counts, t1 - t0);
-    if (self.reportMacroRenderingFlaws()) {
-      if (self.options.flaws !== FLAWS_LEVELS.IGNORE) {
-        process.exit(1);
-      }
-    }
+    self.reportFlaws("macros");
   }
 
   ensureAllTitles() {
@@ -755,10 +751,10 @@ class Builder {
       const folder = path.dirname(filepath);
       this.logger.info(`${chalk.bold("change")} in ${folder}`);
       const t0 = performance.now();
-      // Clear any cached results and errors.
+      // Clear any cached results.
       this.macroRenderer.clearCache();
       const { result, file, doc } = await this.processFolder(source, folder);
-      this.reportMacroRenderingFlaws();
+      this.reportFlaws("macros");
       const t1 = performance.now();
 
       const tookStr = ppMilliseconds(t1 - t0);
@@ -1120,11 +1116,8 @@ class Builder {
   excludeSlug(url) {
     // XXX would it be faster to compute a regex in the constructor
     // and use it repeatedly here instead?
-    if (url) {
-      const { slugsearch } = this.options;
-      if (slugsearch.length) {
-        return !slugsearch.some((search) => url.includes(search));
-      }
+    if (this.options.slugsearch.length) {
+      return !this.options.slugsearch.some((search) => url.includes(search));
     }
     return false;
   }
@@ -1167,15 +1160,21 @@ class Builder {
     if (source.htmlAlreadyRendered) {
       renderedHtml = rawHtml;
     } else {
-      // Errors while KS rendering will be accumulated during the build
-      // and reported at the end.
-      renderedHtml = await this.renderMacros(rawHtml, metadata);
-      if (
-        this.options.flaws === FLAWS_LEVELS.ERROR &&
-        this.reportMacroRenderingFlaws()
-      ) {
-        // Report and exit immediately on the first document with flaws.
-        process.exit(1);
+      let flaws;
+      [renderedHtml, flaws] = await this.renderMacros(rawHtml, metadata);
+      if (flaws.length) {
+        if (this.options.flaws === FLAWS_LEVELS.ERROR) {
+          // Report and exit immediately on the first document with flaws.
+          this.logger.error(
+            chalk.red.bold(`\nFlaws within ${mdnUrlLC} while rendering macros:`)
+          );
+          for (const flaw of flaws) {
+            this.logger.error(chalk.red(`${flaw}\n`));
+          }
+          process.exit(1);
+        } else {
+          this.recordFlaws("macros", mdnUrlLC, flaws);
+        }
       }
     }
 

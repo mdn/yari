@@ -15,45 +15,6 @@ const H1_TO_H6_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 const HEADING_TAGS = new Set([...H1_TO_H6_TAGS, "hgroup"]);
 const INJECT_SECTION_ID_TAGS = new Set([...HEADING_TAGS, "section"]);
 
-const VALID_LOCALES = new Map(
-  [
-    "ar",
-    "bg",
-    "bm",
-    "bn",
-    "ca",
-    "de",
-    "el",
-    "en-US",
-    "es",
-    "fa",
-    "fi",
-    "fr",
-    "he",
-    "hi-IN",
-    "hu",
-    "id",
-    "it",
-    "ja",
-    "kab",
-    "ko",
-    "ms",
-    "my",
-    "nl",
-    "pl",
-    "pt-BR",
-    "pt-PT",
-    "ru",
-    "sv-SE",
-    "th",
-    "tr",
-    "uk",
-    "vi",
-    "zh-CN",
-    "zh-TW",
-  ].map((x) => [x.toLowerCase(), x])
-);
-
 function slugify(text) {
   // Turn the text content of a header into a slug for use in an ID.
   // Remove unsafe characters, and collapse whitespace gaps into
@@ -62,8 +23,9 @@ function slugify(text) {
 }
 
 class HTMLTool {
-  constructor(html) {
+  constructor(html, pathDescription) {
     this.$ = cheerio.load(html);
+    this.pathDescription = pathDescription;
   }
 
   removeNoIncludes() {
@@ -153,7 +115,9 @@ class HTMLTool {
     // so let's simplify this as well as make it much faster.
     const sectionStart = $(`#${sectionID}`);
     if (!sectionStart.length) {
-      return "";
+      throw new Error(
+        `unable to find section "${sectionID}" within ${this.pathDescription}`
+      );
     }
     let result;
     const sectionTag = sectionStart.get(0).tagName;

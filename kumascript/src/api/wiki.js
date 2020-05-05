@@ -69,19 +69,23 @@ module.exports = {
       return html;
     }
 
-    let result = this.info.getRenderedHtmlFromCache(path);
+    let result = this.info.getResultFromCache(path);
+    const pathDescription = this.info.getDescription(path);
 
     if (!result) {
-      // There was no cached, rendered HTML for the path. One
+      // There was no cached result for the path. One
       // possibility is that the requested path was in archived
       // content, so it was never pre-rendered and cached.
-      const pathDescription = this.info.getDescription(path);
       throw new Error(
         `unable to find pre-rendered HTML for prerequisite ${pathDescription}`
       );
     }
 
-    const tool = new util.HTMLTool(result);
+    // Let's just use the rendered HTML, the first part of the pair from
+    // the result, and ignore the second part, which is the list of errors.
+    result = result[0];
+
+    const tool = new util.HTMLTool(result, pathDescription);
 
     // First, we need to inject section ID's since the section
     // extraction often depends on them.
@@ -91,14 +95,6 @@ module.exports = {
 
     if (section) {
       result = tool.extractSection(section);
-      if (!result) {
-        const pathDescription = this.info.getDescription(path);
-        this.info.recordFlaw(
-          `unable to find section "${section}" within ${pathDescription}`,
-          "wiki.page",
-          this.env
-        );
-      }
     } else {
       result = tool.html();
     }
@@ -108,7 +104,7 @@ module.exports = {
 
   // Returns the page object for the specified page.
   getPage(path) {
-    return this.info.getPage(path || this.env.url, "wiki.getPage", this.env);
+    return this.info.getPage(path || this.env.url);
   },
 
   // Retrieve the full uri of a given wiki page.

@@ -98,10 +98,7 @@ describeMacro("dekiscript-page", function () {
   });
   describe('test "subpages"', function () {
     beforeEachMacro(function (macro) {
-      macro.ctx.info = new AllPagesInfo(fixtures.all.data, {
-        uriTransform: (uri) => uri,
-        recordFlaw: (msg, caller, context) => null,
-      });
+      macro.ctx.info = new AllPagesInfo(fixtures.all.data, (uri) => uri);
     });
     itMacro("One argument (non-null)", function (macro) {
       const res = macro.ctx.page.subpages(fix_url);
@@ -122,10 +119,7 @@ describeMacro("dekiscript-page", function () {
   });
   describe('test "subpagesExpand"', function () {
     beforeEachMacro(function (macro) {
-      macro.ctx.info = new AllPagesInfo(fixtures.all.data, {
-        uriTransform: (uri) => uri,
-        recordFlaw: (msg, caller, context) => null,
-      });
+      macro.ctx.info = new AllPagesInfo(fixtures.all.data, (uri) => uri);
     });
     itMacro("One argument (non-null)", function (macro) {
       const res = macro.ctx.page.subpagesExpand(fix_url);
@@ -146,10 +140,7 @@ describeMacro("dekiscript-page", function () {
   });
   describe('test "translations"', function () {
     beforeEachMacro(function (macro) {
-      macro.ctx.info = new AllPagesInfo(fixtures.all.data, {
-        uriTransform: (uri) => uri,
-        recordFlaw: (msg, caller, context) => null,
-      });
+      macro.ctx.info = new AllPagesInfo(fixtures.all.data, (uri) => uri);
     });
     itMacro("One argument (non-null)", function (macro) {
       const res = macro.ctx.page.translations(fix_url);
@@ -160,11 +151,11 @@ describeMacro("dekiscript-page", function () {
       const res = macro.ctx.page.translations(null);
       checkTranslationsResult(res);
     });
-    itMacro("One argument (return null)", function (macro) {
+    itMacro("One argument (throws error)", function (macro) {
       const junk_url = "/en-US/docs/junk";
-      const res = macro.ctx.page.translations(junk_url);
-      assert.isArray(res);
-      assert.equal(res.length, 0);
+      expect(() => macro.ctx.page.translations(junk_url)).toThrow(
+        `"${junk_url.toLowerCase()}" does not exist`
+      );
     });
   });
 });

@@ -1,15 +1,14 @@
 BASE_URL = "https://developer.mozilla.org";
 
 class AllPagesInfo {
-  constructor(pageInfoByUri, renderer) {
+  constructor(pageInfoByUri, uriTransform) {
     // This constructor requires a "pageInfoByUri" Map object (for example,
-    // "allTitles"), and a reference to the "renderer" instance for access
-    // to its "uriTransform" function for cleaning/repairing URI's provided
-    // as arguments to the macros, and for access to its "recordFlaw" function
-    // for capturing flaws as they are discovered during the macro-rendering
-    // process. NOTE: Assumes all of the keys of "pageInfoByUri" are lowercase.
-    this.renderer = renderer;
-    this.renderedHtmlCache = new Map();
+    // "allTitles"), and a "uriTransform" function for cleaning/repairing
+    // URI's provided as arguments to the macros.
+    //
+    // NOTE: Assumes all of the keys of "pageInfoByUri" are lowercase.
+    this.resultCache = new Map();
+    this.uriTransform = uriTransform;
 
     // Using the provided "pageInfoByUri" map, build the data structures
     // needed to efficiently provide data suitable for consumption by
@@ -141,7 +140,7 @@ class AllPagesInfo {
     const uri = new URL(url, BASE_URL).pathname
       .replace(/\/$/, "")
       .toLowerCase();
-    return this.renderer.uriTransform(uri);
+    return this.uriTransform(uri);
   }
 
   getDescription(url) {
@@ -153,7 +152,7 @@ class AllPagesInfo {
     return description;
   }
 
-  getChildren(url, includeSelf, caller, context) {
+  getChildren(url, includeSelf) {
     // We don't need "depth" since it's handled dynamically (lazily).
     // The caller can keep requesting "subpages" as deep as the
     // hierarchy goes, and they'll be provided on-demand.
@@ -163,12 +162,7 @@ class AllPagesInfo {
     // the list in-place.
     const uriKey = this.getUriKey(url);
     if (!this.pagesByUri.has(uriKey)) {
-      this.recordFlaw(
-        `${this.getDescription(url)} does not exist`,
-        caller,
-        context
-      );
-      return [];
+      throw new Error(`${this.getDescription(url)} does not exist`);
     }
     const pageData = this.pagesByUri.get(uriKey);
     if (includeSelf) {
@@ -177,48 +171,34 @@ class AllPagesInfo {
     return pageData.subpages;
   }
 
-  getTranslations(url, caller, context) {
+  getTranslations(url) {
     const uriKey = this.getUriKey(url);
     if (!this.pagesByUri.has(uriKey)) {
-      this.recordFlaw(
-        `${this.getDescription(url)} does not exist`,
-        caller,
-        context
-      );
-      return Object.freeze([]);
+      throw new Error(`${this.getDescription(url)} does not exist`);
     }
     return this.pagesByUri.get(uriKey).translations;
   }
 
-  getPage(url, caller, context) {
+  getPage(url) {
     const uriKey = this.getUriKey(url);
     if (!this.pagesByUri.has(uriKey)) {
-      this.recordFlaw(
-        `${this.getDescription(url)} does not exist`,
-        caller,
-        context
-      );
-      return Object.freeze({});
+      throw new Error(`${this.getDescription(url)} does not exist`);
     }
     return this.pagesByUri.get(uriKey);
   }
 
-  cacheRenderedHtml(uri, renderedHtml) {
+  cacheResult(uri, result) {
     const uriKey = this.getUriKey(uri);
-    this.renderedHtmlCache.set(uriKey, renderedHtml);
+    this.resultCache.set(uriKey, result);
   }
 
-  getRenderedHtmlFromCache(uri) {
+  getResultFromCache(uri) {
     const uriKey = this.getUriKey(uri);
-    return this.renderedHtmlCache.get(uriKey);
+    return this.resultCache.get(uriKey);
   }
 
-  clearRenderedHtmlCache() {
-    this.renderedHtmlCache.clear();
-  }
-
-  recordFlaw(message, caller, context) {
-    return this.renderer.recordFlaw(message, caller, context);
+  clearCache() {
+    this.resultCache.clear();
   }
 }
 
