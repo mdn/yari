@@ -13,7 +13,8 @@ const {
   DEFAULT_BUILD_NOT_LOCALES,
   DEFAULT_SITEMAP_BASE_URL,
   DEFAULT_FOLDER_SEARCHES,
-  DEFAULT_POPULARITIES_FILEPATH,
+  DEFAULT_FLAWS_LEVEL,
+  FLAWS_LEVELS,
   MAX_GOOGLE_ANALYTICS_URIS,
 } = require("./scripts/constants.js");
 
@@ -98,6 +99,12 @@ cli
     "locales to explicitly exclude",
     cli.ARRAY,
     DEFAULT_BUILD_NOT_LOCALES
+  )
+  .option(
+    `--flaws <${Object.values(FLAWS_LEVELS).join("|")}>`,
+    "How to deal with imperfections in the content building process",
+    new RegExp(Object.values(FLAWS_LEVELS).join("|")),
+    DEFAULT_FLAWS_LEVEL
   )
   .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
   .option("--start-clean", "delete anything created first", cli.BOOL)

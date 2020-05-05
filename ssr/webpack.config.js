@@ -20,26 +20,16 @@ module.exports = {
   },
   resolve: {
     modules: ["node_modules", "src"],
-    extensions: ["*", ".js", ".json"],
+    extensions: ["*", ".js", ".json", ".ts", ".tsx"],
   },
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.tsx?$/,
         exclude: /node_modules/,
-        loader: "babel-loader",
+        loader: "ts-loader",
         options: {
-          presets: ["@babel/preset-react"],
-          plugins: [
-            "@babel/plugin-syntax-dynamic-import",
-            "@babel/plugin-syntax-import-meta",
-            "@babel/plugin-proposal-class-properties",
-            "@babel/plugin-proposal-json-strings",
-            "@babel/plugin-proposal-function-sent",
-            "@babel/plugin-proposal-export-namespace-from",
-            "@babel/plugin-proposal-numeric-separator",
-            "@babel/plugin-proposal-throw-expressions",
-          ],
+          transpileOnly: true,
         },
       },
       {
@@ -52,5 +42,5 @@ module.exports = {
   },
   externals: nodeExternals(),
   devtool: "source-map",
-  plugins: [new CleanWebpackPlugin(), new webpack.SourceMapDevToolPlugin({})],
+  plugins: [new CleanWebpackPlugin()],
 };

@@ -26,6 +26,9 @@ class ProgressBar {
   update(current) {
     this.current = current;
     this.draw(this.current / this.total);
+    if (this.current === this.total) {
+      this.stop();
+    }
   }
 
   draw(currentProgress) {
@@ -51,7 +54,7 @@ class ProgressBar {
   }
 
   stop() {
-    process.stdout.write("\n");
+    process.stdout.write("\n\n");
   }
 
   humanFileSize(size) {

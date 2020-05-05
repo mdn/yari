@@ -71,14 +71,7 @@ async function populateRedirectInfo(pool, constraintsSQL, queryArgs) {
     // archive, as well as the map that provides the final
     // destination of each redirect that we'll keep.
     const isInfiniteLoop = chainOfRedirects.has(toUri);
-    if (isInfiniteLoop) {
-      // This next URI in the redirect chain is already in
-      // the chain, so we've discovered an infinite loop.
-      const arrayOfRedirects = [...chainOfRedirects];
-      arrayOfRedirects.push(toUri);
-      const chainAsString = arrayOfRedirects.join(" --> ");
-      // console.error(`FOUND INFINITE REDIRECT LOOP: ${chainAsString}`);
-    } else {
+    if (!isInfiniteLoop) {
       const nextUri = redirects.get(toUri);
       if (nextUri) {
         return extractFromChain(nextUri, chainOfRedirects.add(toUri));
@@ -319,6 +312,7 @@ async function queryDocuments(pool, options) {
       w.is_redirect,
       w.html,
       w.rendered_html,
+      w.summary_text AS summary,
       w.modified,
       p.id AS parent_id,
       p.slug AS parent_slug,
@@ -509,7 +503,7 @@ async function processDocument(
   isArchive = false,
   { usernames, contributors, tags }
 ) {
-  const { slug, locale, title } = doc;
+  const { slug, locale, title, summary } = doc;
   const localeFolder = path.join(
     isArchive ? archiveRoot : root,
     locale.toLowerCase()
@@ -519,10 +513,11 @@ async function processDocument(
   await fs.promises.mkdir(folder, { recursive: true });
   const htmlFile = path.join(folder, "index.html");
 
-  // XXX As of right now, we don't have a KS shim that converts "raw Kuma HTML"
-  // to rendered HTML. So we'll cheat by copying the `rendered_html`.
-  // await fs.promises.writeFile(htmlFile, doc.html);
-  await fs.promises.writeFile(htmlFile, `${doc.rendered_html}`);
+  if (isArchive) {
+    await fs.promises.writeFile(htmlFile, doc.rendered_html);
+  } else {
+    await fs.promises.writeFile(htmlFile, doc.html);
+  }
 
   const wikiHistoryFile = path.join(folder, "wikihistory.json");
   const metaFile = path.join(folder, "index.yaml");
@@ -535,6 +530,7 @@ async function processDocument(
   const meta = {
     title,
     slug,
+    summary,
   };
   if (doc.parent_slug) {
     assert(doc.parent_locale === "en-US");

@@ -1,0 +1,51 @@
+<%
+/*
+ * Inserts a link to a bug in Mozilla's Bugzilla database.
+ *
+ * $0 - The bug number to link to.
+ * $1 - Type of output (optional)
+ *      bug (default) - Linked bug number
+ *      table - Row in a table, columns are linked bug number and an empty cell
+ * $2 - Comment number to link to (optional)
+ *
+ * http://www.bugzilla.org/docs/tip/en/html/api/Bugzilla/WebService/Server/REST.html
+ * https://wiki.mozilla.org/Bugzilla:REST_API
+ */
+
+var type = $1 || 'bug';
+var bugNumber = $0;
+var bugPageURL = 'https://bugzilla.mozilla.org/show_bug.cgi?id=' + bugNumber;
+
+var s_comment = "";
+
+if ($2 != undefined && !isNaN($2)) {
+    var comment = parseInt($2, 10);
+    if (!isNaN(comment)) {
+        bugPageURL += "#c" + comment;
+
+        s_comment = mdn.localString({
+            "en-US":    ", comment " + comment
+        });
+    }
+}
+
+var s_bug = mdn.localString({
+    "en-US": "bug",
+    "ca"   : "errada",
+    "cs"   : "chyba",
+    "es"   : "error",
+    "ja"   : "バグ",
+    "pl"   : "błąd",
+    "de"   : "Bug",
+    "ru"   : "баг"
+});
+if (type == 'table') { %>
+<tr>
+    <td><a href="<%= bugPageURL %>"><%= bugNumber %></a></td>
+    <td></td>
+</tr>
+<%
+} else {
+%>
+<a href="<%= bugPageURL %>"><%=s_bug%>&nbsp;<%= bugNumber %><%=s_comment%></a>
+<% } %>
