@@ -180,11 +180,27 @@ app.get("/*", async (req, res) => {
           specificFolders: [specificFolder],
         });
         const t1 = performance.now();
-        console.log(
-          `Successfully on-the-fly built ${built[0].jsonFile} (${(
-            t1 - t0
-          ).toFixed()}ms)`
-        );
+        // Remember, the only reason we're here in the catch-all is because
+        // Express couldn't find the file as a static asset. But might
+        // actually already be built because inside the Builder it might
+        // have transformed the URL to something that doesn't match what
+        // it's called on disk.
+        // If that's the case, then `built[0].result === 'already'`.
+        if (built[0].result === "already") {
+          console.log(
+            `Actually already built ${path.join(
+              path.dirname(built[0].file),
+              extraSuffix
+            )} (${(t1 - t0).toFixed()}ms)`
+          );
+        } else {
+          console.log(
+            `Successfully on-the-fly built ${path.join(
+              path.dirname(built[0].file),
+              extraSuffix
+            )} (${(t1 - t0).toFixed()}ms)`
+          );
+        }
         if (extraSuffix == "/index.json") {
           res.sendFile(built[0].jsonFile);
         } else {

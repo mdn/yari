@@ -1199,9 +1199,13 @@ class Builder {
       fs.existsSync(hashDestination) &&
       fs.readFileSync(hashDestination, "utf8") === combinedHash
     ) {
+      // XXX If you delete the 'index.html' and/or the 'index.json' file
+      // but leave the folder and the 'index.hash' file, this code here
+      // will wrongfully say the it's already built.
       return {
         result: processing.ALREADY,
         file: path.join(destinationDir, "index.html"),
+        jsonFile: path.join(destinationDir, "index.json"),
       };
     }
 

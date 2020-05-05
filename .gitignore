@@ -34,6 +34,7 @@ content/node_modules/
 content/files/
 content/build/
 content/_all-titles.json
+ci-content/
 kumascript/coverage/
 
 # Can be removed once content lives in its own repo
