@@ -695,10 +695,6 @@ class Builder {
     // Set the context for the Kumascript renderer.
     this.macroRenderer.use(this.allTitles);
 
-    // fs.writeFileSync(
-    //   allTitlesJsonFilepath,
-    //   JSON.stringify(mapToObject(this.allTitles), null, 2)
-    // );
     this.dumpAllTitles();
     let t1 = new Date();
     this.logger.info(
@@ -709,7 +705,7 @@ class Builder {
   dumpAllTitles() {
     fs.writeFileSync(
       this._getAllTitlesJsonFilepath(),
-      JSON.stringify(this.allTitles, null, 2)
+      JSON.stringify(mapToObject(this.allTitles), null, 2)
     );
   }
 
@@ -1145,6 +1141,7 @@ class Builder {
 
   async processFolder(source, folder, config) {
     const { metadata, metadataRaw } = getMetadata(source, folder);
+
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
     const mdnUrlLC = mdn_url.toLowerCase();
 
@@ -1256,6 +1253,7 @@ class Builder {
     const sections = extractDocumentSections($, config);
 
     doc.title = metadata.title;
+    doc.summary = metadata.summary;
     doc.mdn_url = mdn_url;
     if (metadata.translation_of) {
       doc.translation_of = metadata.translation_of;
