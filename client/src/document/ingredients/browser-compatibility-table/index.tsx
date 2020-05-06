@@ -22,12 +22,9 @@ function gatherPlatformsAndBrowsers(category): [string[], bcd.BrowserNames[]] {
   ];
 }
 
-interface BrowserFeature {
-  browser: bcd.BrowserNames;
-  feature: number;
-}
+type BrowserFeature = [bcd.BrowserNames, number];
 
-function FeatureRowWithIndex({
+function FeatureRowWithCallback({
   index,
   onToggleBrowserFeature,
   ...props
@@ -37,17 +34,12 @@ function FeatureRowWithIndex({
 } & Omit<Parameters<typeof FeatureRow>[0], "onToggleBrowser">) {
   const handleToggleBrowser = useCallback(
     (browser: bcd.BrowserNames) => {
-      onToggleBrowserFeature({ browser, feature: index });
+      onToggleBrowserFeature([browser, index]);
     },
-    [index]
+    [index, onToggleBrowserFeature]
   );
   return <FeatureRow {...props} onToggleBrowser={handleToggleBrowser} />;
 }
-
-const inactiveBrowserFeature = {
-  browser: null,
-  feature: null,
-};
 
 export function BrowserCompatibilityTable({
   id,
@@ -74,19 +66,15 @@ export function BrowserCompatibilityTable({
 
   const [platforms, browsers] = gatherPlatformsAndBrowsers(category);
 
-  const [
-    { browser: activeBrowser, feature: activeFeature },
-    setActiveBrowserFeature,
-  ] = useState<BrowserFeature | typeof inactiveBrowserFeature>({
-    browser: null,
-    feature: null,
-  });
+  const [[activeBrowser, activeFeature], setActiveBrowserFeature] = useState<
+    BrowserFeature | [null, null]
+  >([null, null]);
 
-  function toggleActiveFeatureBrowser({ browser, feature }: BrowserFeature) {
+  function toggleActiveBrowserFeature([browser, feature]: BrowserFeature) {
     setActiveBrowserFeature(
-      activeBrowser == browser && activeFeature == feature
-        ? inactiveBrowserFeature
-        : { browser, feature }
+      activeBrowser === browser && activeFeature === feature
+        ? [null, null]
+        : [browser, feature]
     );
   }
 
@@ -106,12 +94,12 @@ export function BrowserCompatibilityTable({
           <tbody>
             {listFeatures(data, name).map((feature, i) => {
               return (
-                <FeatureRowWithIndex
+                <FeatureRowWithCallback
                   key={i}
                   {...{ feature, browsers }}
                   index={i}
-                  showNotesFor={activeFeature == i ? activeBrowser : null}
-                  onToggleBrowserFeature={toggleActiveFeatureBrowser}
+                  showNotesFor={activeFeature === i ? activeBrowser : null}
+                  onToggleBrowserFeature={toggleActiveBrowserFeature}
                 />
               );
             })}

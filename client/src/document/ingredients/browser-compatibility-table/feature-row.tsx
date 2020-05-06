@@ -145,6 +145,15 @@ function CellText({ support }: { support: bcd.SupportStatement | undefined }) {
   );
 }
 
+function Icon({ name }: { name: string }) {
+  return (
+    <abbr className="only-icon" title={name}>
+      <span>{name}</span>
+      <i className={`ic-${name}`} />
+    </abbr>
+  );
+}
+
 const CellIcons = React.memo(
   ({ support }: { support: bcd.SupportStatement | undefined }) => {
     const supportItem = getFirst(support);
@@ -161,76 +170,6 @@ const CellIcons = React.memo(
     );
   }
 );
-
-const CompatCell = React.memo(
-  ({
-    browser,
-    support,
-    showNotes,
-    onToggle,
-  }: {
-    browser: bcd.BrowserNames;
-    support: bcd.SupportStatement | undefined;
-    showNotes: boolean;
-    onToggle: () => void;
-  }) => {
-    const supportClassName = getSupportClassName(support);
-    const hasNotes =
-      support &&
-      asList(support).some(
-        (item) =>
-          item.prefix || item.notes || item.alternative_name || item.flags
-      );
-    return (
-      <>
-        <td
-          className={`bc-browser-${browser} bc-supports-${supportClassName} ${
-            hasNotes ? "bc-has-history" : ""
-          }`}
-          aria-expanded={showNotes ? "true" : "false"}
-          tabIndex={hasNotes ? 0 : undefined}
-          onClick={
-            hasNotes
-              ? () => {
-                  onToggle();
-                }
-              : undefined
-          }
-        >
-          <span className="bc-browser-name">
-            <BrowserName id={browser} />
-          </span>
-          <CellText {...{ support }} />
-          <CellIcons support={support} />
-          {hasNotes && (
-            <button
-              type="button"
-              title="Open implementation notes"
-              className={`bc-history-link only-icon ${
-                showNotes ? "bc-history-link-inverse" : ""
-              }`}
-            >
-              <span>Open</span>
-              <i className="ic-history" aria-hidden="true" />
-            </button>
-          )}
-        </td>
-        {showNotes && (
-          <td className="bc-history">{getNotes(browser, support!)}</td>
-        )}
-      </>
-    );
-  }
-);
-
-function Icon({ name }: { name: string }) {
-  return (
-    <abbr className="only-icon" title={name}>
-      <span>{name}</span>
-      <i className={`ic-${name}`} />
-    </abbr>
-  );
-}
 
 function FlagsNote({
   supportItem,
@@ -335,6 +274,80 @@ function getNotes(browser: bcd.BrowserNames, support: bcd.SupportStatement) {
     .filter(isTruthy);
 }
 
+const CompatCell = React.memo(
+  ({
+    browser,
+    support,
+    showNotes,
+    onToggle,
+  }: {
+    browser: bcd.BrowserNames;
+    support: bcd.SupportStatement | undefined;
+    showNotes: boolean;
+    onToggle: () => void;
+  }) => {
+    const supportClassName = getSupportClassName(support);
+    const hasNotes =
+      support &&
+      asList(support).some(
+        (item) =>
+          item.prefix || item.notes || item.alternative_name || item.flags
+      );
+    return (
+      <>
+        <td
+          className={`bc-browser-${browser} bc-supports-${supportClassName} ${
+            hasNotes ? "bc-has-history" : ""
+          }`}
+          aria-expanded={showNotes ? "true" : "false"}
+          tabIndex={hasNotes ? 0 : undefined}
+          onClick={
+            hasNotes
+              ? () => {
+                  onToggle();
+                }
+              : undefined
+          }
+        >
+          <span className="bc-browser-name">
+            <BrowserName id={browser} />
+          </span>
+          <CellText {...{ support }} />
+          <CellIcons support={support} />
+          {hasNotes && (
+            <button
+              type="button"
+              title="Open implementation notes"
+              className={`bc-history-link only-icon ${
+                showNotes ? "bc-history-link-inverse" : ""
+              }`}
+            >
+              <span>Open</span>
+              <i className="ic-history" aria-hidden="true" />
+            </button>
+          )}
+        </td>
+        {showNotes && (
+          <td className="bc-history">{getNotes(browser, support!)}</td>
+        )}
+      </>
+    );
+  }
+);
+
+function CompatCellWithCallback({
+  onToggleBrowser,
+  ...props
+}: { onToggleBrowser: (browser: bcd.BrowserNames) => void } & Omit<
+  Parameters<typeof CompatCell>[0],
+  "onToggle"
+>) {
+  const handleToggle = useCallback(() => onToggleBrowser(props.browser), [
+    props.browser,
+  ]);
+  return <CompatCell {...props} onToggle={handleToggle} />;
+}
+
 export const FeatureRow = React.memo(
   ({
     feature,
@@ -349,7 +362,7 @@ export const FeatureRow = React.memo(
     };
     browsers: bcd.BrowserNames[];
     showNotesFor: bcd.BrowserNames | null;
-    onToggleBrowser: (browser: bcd.BrowserNames) => any;
+    onToggleBrowser: (browser: bcd.BrowserNames) => void;
   }) => {
     const { name, compat, isRoot } = feature;
     const title = compat.description ? (
@@ -369,20 +382,15 @@ export const FeatureRow = React.memo(
             )}
             {compat.status && <StatusIcons status={compat.status} />}
           </th>
-          {browsers.map((browser) => {
-            const handleToggle = useCallback(() => onToggleBrowser(browser), [
-              browser,
-            ]);
-            return (
-              <CompatCell
-                key={browser}
-                browser={browser}
-                support={compat.support[browser]}
-                showNotes={showNotesFor == browser}
-                onToggle={handleToggle}
-              />
-            );
-          })}
+          {browsers.map((browser) => (
+            <CompatCellWithCallback
+              key={browser}
+              browser={browser}
+              support={compat.support[browser]}
+              showNotes={showNotesFor === browser}
+              onToggleBrowser={onToggleBrowser}
+            />
+          ))}
         </tr>
         {showNotesFor && (
           <tr className="bc-history">
