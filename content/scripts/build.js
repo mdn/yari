@@ -601,9 +601,6 @@ class Builder {
         this.logger.info(
           chalk.yellow(`${allTitlesJsonFilepath} existed but is out-of-date.`)
         );
-
-        // We can't keep what we got from the cached disk, so clear it.
-        this.allTitles.clear();
       } else {
         // This means we DON'T need to re-generate all titles, so
         // let's set the context for the Kumascript renderer.
@@ -614,6 +611,11 @@ class Builder {
 
     // If we're going to generate all titles, we need all popularities.
     const allPopularities = this._getAllPopularities();
+
+    // You're here and it means we're going to fill up the this.allTitles map.
+    // Just to be absolutely clear that there's nothing in there already
+    // let's make sure it's cleared:
+    this.allTitles.clear();
 
     // This helps us exclusively to know about the validitity of the
     // _all-titles.json file which is our disk-based caching strategy.
