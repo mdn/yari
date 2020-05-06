@@ -775,7 +775,6 @@ class Builder {
         triggerTouch(filepath, doc, source.filepath);
 
         const titleData = this.allTitles.get(doc.mdn_url.toLowerCase());
-        console.log("DOC", doc);
         for (const [key, value] of Object.entries(titleData)) {
           if (key in doc) {
             if (key !== "source" && value !== doc[key]) {
@@ -1141,7 +1140,6 @@ class Builder {
 
   async processFolder(source, folder, config) {
     const { metadata, metadataRaw } = getMetadata(source, folder);
-
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
     const mdnUrlLC = mdn_url.toLowerCase();
 
