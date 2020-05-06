@@ -343,6 +343,7 @@ function CompatCellWithCallback({
   "onToggle"
 >) {
   const handleToggle = useCallback(() => onToggleBrowser(props.browser), [
+    onToggleBrowser,
     props.browser,
   ]);
   return <CompatCell {...props} onToggle={handleToggle} />;
