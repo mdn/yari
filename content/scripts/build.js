@@ -414,7 +414,11 @@ class Builder {
     for (const preUri of prerequisites) {
       const preCleanUri = this.cleanUri(preUri);
       if (this.allTitles.has(preCleanUri)) {
+        // XXX/TODO: This can maybe better be figured out based on
+        // this.allTitles.get(preCleanUri).source + this.allTitles.get(preCleanUri).file
+        // etc.
         const preFolder = this.getFolder(preCleanUri);
+        // XXX/TODO: Ditto just above; use this.allTitles.get(preCleanUri).source ??
         const preSource = this.getSource(preFolder);
         // TODO: What if this prerequisite is a stumptown document?
         //       Probably should be an error that we report?
@@ -1306,29 +1310,9 @@ class Builder {
   }
 
   injectSource(source, doc, folder) {
-    if (process.env.NODE_ENV === "development") {
-      // When in development mode, put the absolute path of the source
-      // of where the content comes from.
-      if (source.isStumptown) {
-        doc.source = {
-          folder: path.dirname(folder),
-          // absolute_folder: folder,
-          // markdown_file: folder
-          content_file: folder, // actually a filepath!
-          // content_file: path.join(folder, "index.html")
-        };
-      } else {
-        doc.source = {
-          // folder: path.relative(source.filepath, folder),
-          // absolute_folder: folder,
-          content_file: path.join(folder, "index.html"),
-        };
-      }
-    } else {
-      doc.source = {
-        github_url: this.getGitHubURL(source, folder),
-      };
-    }
+    doc.source = {
+      github_url: this.getGitHubURL(source, folder),
+    };
   }
 
   processStumptownFile(source, file, config) {

@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 const cli = require("caporal");
-
 const runImporter = require("./scripts/importer");
 const { runBuild } = require("./scripts/build");
 const { runMakePopularitiesFile } = require("./scripts/popularities");

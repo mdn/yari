@@ -86,12 +86,15 @@ function normalizeContentPath(start) {
 }
 
 app.get("/_open", (req, res) => {
-  const filepath = req.query.filepath;
+  const { filepath } = req.query;
   if (!filepath) {
     throw new Error("No .filepath in the request query");
   }
-  openEditor([filepath]);
-  res.status(200).send(`Tried to open ${filepath} in ${process.env.EDITOR}`);
+  const absoluteFilepath = normalizeContentPath(filepath);
+  openEditor([absoluteFilepath]);
+  res
+    .status(200)
+    .send(`Tried to open ${absoluteFilepath} in ${process.env.EDITOR}`);
 });
 
 // Module level memoization
