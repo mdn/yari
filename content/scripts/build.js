@@ -612,6 +612,11 @@ class Builder {
     // If we're going to generate all titles, we need all popularities.
     const allPopularities = this._getAllPopularities();
 
+    // You're here and it means we're going to fill up the this.allTitles map.
+    // Just to be absolutely clear that there's nothing in there already
+    // let's make sure it's cleared:
+    this.allTitles.clear();
+
     // This helps us exclusively to know about the validitity of the
     // _all-titles.json file which is our disk-based caching strategy.
     // It's very possible that the "self hash" has changed because of some
