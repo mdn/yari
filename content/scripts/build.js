@@ -591,19 +591,22 @@ class Builder {
       fs.existsSync(allTitlesJsonFilepath) &&
       !this.options.regenerateAllTitles
     ) {
-      this.allTitles = new Map(
+      // We can't set this to `this.allTitles`, yet, because it might
+      // be out-of-date.
+      const previousAllTitles = new Map(
         Object.entries(
           JSON.parse(fs.readFileSync(allTitlesJsonFilepath, "utf8"))
         ).map(([key, value]) => [key.toLowerCase(), value])
       );
       // We got it from disk, but is it out-of-date?
-      if (this.allTitles.get("_hash") !== this.selfHash) {
+      if (previousAllTitles.get("_hash") !== this.selfHash) {
         this.logger.info(
           chalk.yellow(`${allTitlesJsonFilepath} existed but is out-of-date.`)
         );
       } else {
         // This means we DON'T need to re-generate all titles, so
         // let's set the context for the Kumascript renderer.
+        this.allTitles = previousAllTitles;
         this.macroRenderer.use(this.allTitles);
         return;
       }
