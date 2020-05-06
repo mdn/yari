@@ -778,11 +778,12 @@ class Builder {
         doc.modified = new Date().toISOString();
         triggerTouch(filepath, doc, source.filepath);
 
-        const titleData = this.allTitles[doc.mdn_url.toLowerCase()];
-        for (const [key, value] of titleData) {
+        const titleData = this.allTitles.get(doc.mdn_url.toLowerCase());
+        console.log("DOC", doc);
+        for (const [key, value] of Object.entries(titleData)) {
           if (key in doc) {
             if (key !== "source" && value !== doc[key]) {
-              titleData.set(key, doc[key]);
+              titleData[key] = doc[key];
             }
           }
         }
