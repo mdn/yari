@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import type bcd from "mdn-browser-compat-data/types";
-import { AccordionProvider } from "./accordion";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
 import { FeatureRow } from "./feature-row";
@@ -22,6 +21,33 @@ function gatherPlatformsAndBrowsers(category): [string[], bcd.BrowserNames[]] {
     platforms.map((platform) => PLATFORM_BROWSERS[platform] || []).flat(),
   ];
 }
+
+interface BrowserFeature {
+  browser: bcd.BrowserNames;
+  feature: number;
+}
+
+function FeatureRowWithIndex({
+  index,
+  onToggleBrowserFeature,
+  ...props
+}: {
+  index: number;
+  onToggleBrowserFeature: (p: BrowserFeature) => void;
+} & Omit<Parameters<typeof FeatureRow>[0], "onToggleBrowser">) {
+  const handleToggleBrowser = useCallback(
+    (browser: bcd.BrowserNames) => {
+      onToggleBrowserFeature({ browser, feature: index });
+    },
+    [index]
+  );
+  return <FeatureRow {...props} onToggleBrowser={handleToggleBrowser} />;
+}
+
+const inactiveBrowserFeature = {
+  browser: null,
+  feature: null,
+};
 
 export function BrowserCompatibilityTable({
   id,
@@ -48,6 +74,22 @@ export function BrowserCompatibilityTable({
 
   const [platforms, browsers] = gatherPlatformsAndBrowsers(category);
 
+  const [
+    { browser: activeBrowser, feature: activeFeature },
+    setActiveBrowserFeature,
+  ] = useState<BrowserFeature | typeof inactiveBrowserFeature>({
+    browser: null,
+    feature: null,
+  });
+
+  function toggleActiveFeatureBrowser({ browser, feature }: BrowserFeature) {
+    setActiveBrowserFeature(
+      activeBrowser == browser && activeFeature == feature
+        ? inactiveBrowserFeature
+        : { browser, feature }
+    );
+  }
+
   return (
     <BrowserCompatibilityErrorBoundary>
       <BrowserInfoContext.Provider value={browserInfo}>
@@ -62,11 +104,17 @@ export function BrowserCompatibilityTable({
         <table key="bc-table" className="bc-table bc-table-web">
           <Headers {...{ platforms, browsers }} />
           <tbody>
-            <AccordionProvider>
-              {listFeatures(data, name).map((feature, i) => (
-                <FeatureRow key={i} index={i} {...{ feature, browsers }} />
-              ))}
-            </AccordionProvider>
+            {listFeatures(data, name).map((feature, i) => {
+              return (
+                <FeatureRowWithIndex
+                  key={i}
+                  {...{ feature, browsers }}
+                  index={i}
+                  showNotesFor={activeFeature == i ? activeBrowser : null}
+                  onToggleBrowserFeature={toggleActiveFeatureBrowser}
+                />
+              );
+            })}
           </tbody>
         </table>
         <Legend compat={data} />
