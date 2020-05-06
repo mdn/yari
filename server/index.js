@@ -19,7 +19,7 @@ app.use(express.json());
 const STATIC_ROOT = path.join(__dirname, "../client/build");
 const CONTENT_ALL_TITLES = path.join(__dirname, "../content/_all-titles.json");
 
-// The client/build directory is won't exist at the very very first time
+// The client/build directory won't exist at the very very first time
 // you start the server after a fresh git clone.
 if (!fs.existsSync(STATIC_ROOT)) {
   fs.mkdirSync(STATIC_ROOT);
@@ -216,6 +216,7 @@ function getOrCreateBuilder(options) {
         noProgressbar: true,
         foldersearch: options.foldersearch || [],
         popularitiesfile: normalizeContentPath(DEFAULT_POPULARITIES_FILEPATH),
+        liveSamplesBaseUrl: "http://localhost:5000",
       },
       console
     );

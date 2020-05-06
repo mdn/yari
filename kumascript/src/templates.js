@@ -28,10 +28,11 @@
 const fs = require("fs");
 const path = require("path");
 const ejs = require("ejs");
-const config = require("./config.js");
+
+DEFAULT_MACROS_DIRECTORY = path.normalize(`${__dirname}/../macros/`);
 
 class Templates {
-  constructor(macroDirectory = config.macrosDirectory) {
+  constructor(macroDirectory = DEFAULT_MACROS_DIRECTORY) {
     this.macroDirectory = macroDirectory;
     this.macroNameToPath = new Map();
 

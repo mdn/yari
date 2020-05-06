@@ -19,7 +19,6 @@ let url = new kuma.url.URL(base);
 let liveSampleUrl = new kuma.url.URL(env.live_samples.base_url);
 url.host = liveSampleUrl.host;
 url.protocol = liveSampleUrl.protocol;
-url.pathname = url.pathname + '$samples/' + $0;
-url.search = 'revision=' + env.revision_id;
+url.pathname = url.pathname + '$samples/' + web.slugify(web.safeDecodeURIComponent($0));
 %>
 <%= url %>

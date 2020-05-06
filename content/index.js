@@ -12,6 +12,8 @@ const {
   DEFAULT_BUILD_LOCALES,
   DEFAULT_BUILD_NOT_LOCALES,
   DEFAULT_SITEMAP_BASE_URL,
+  DEFAULT_LIVE_SAMPLES_BASE_URL,
+  DEFAULT_INTERACTIVE_EXAMPLES_BASE_URL,
   DEFAULT_FOLDER_SEARCHES,
   DEFAULT_FLAW_LEVELS,
   MAX_GOOGLE_ANALYTICS_URIS,
@@ -144,6 +146,18 @@ cli
     "absolute url prefixing the sitemap.xml files",
     cli.STRING,
     DEFAULT_SITEMAP_BASE_URL
+  )
+  .option(
+    "--live-samples-base-url <url>",
+    "absolute url prefixing the live samples",
+    cli.STRING,
+    DEFAULT_LIVE_SAMPLES_BASE_URL
+  )
+  .option(
+    "--interactive-examples-base-url <url>",
+    "absolute url prefixing the interactive examples",
+    cli.STRING,
+    DEFAULT_INTERACTIVE_EXAMPLES_BASE_URL
   )
   .option(
     "--watch",

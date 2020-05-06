@@ -51,6 +51,13 @@ const DEFAULT_FOLDER_SEARCHES = (process.env.BUILD_FOLDER_SEARCHES || "")
 
 const DEFAULT_SITEMAP_BASE_URL = "https://developer.mozilla.org";
 
+const DEFAULT_LIVE_SAMPLES_BASE_URL =
+  process.env.LIVE_SAMPLES_BASE_URL || "https://mdn.mozillademos.org";
+
+const DEFAULT_INTERACTIVE_EXAMPLES_BASE_URL =
+  process.env.INTERACTIVE_EXAMPLES_BASE_URL ||
+  "https://interactive-examples.mdn.mozilla.net";
+
 const DEFAULT_POPULARITIES_FILEPATH =
   process.env.BUILD_POPULARITIES_FILEPATH ||
   path.join(process.env.BUILD_ROOT, "..", "popularities.json");
@@ -138,6 +145,8 @@ module.exports = {
   DEFAULT_BUILD_LOCALES,
   DEFAULT_BUILD_NOT_LOCALES,
   DEFAULT_SITEMAP_BASE_URL,
+  DEFAULT_LIVE_SAMPLES_BASE_URL,
+  DEFAULT_INTERACTIVE_EXAMPLES_BASE_URL,
   DEFAULT_FOLDER_SEARCHES,
   DEFAULT_POPULARITIES_FILEPATH,
   ALLOW_STALE_TITLES,
