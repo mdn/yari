@@ -414,11 +414,7 @@ class Builder {
     for (const preUri of prerequisites) {
       const preCleanUri = this.cleanUri(preUri);
       if (this.allTitles.has(preCleanUri)) {
-        // XXX/TODO: This can maybe better be figured out based on
-        // this.allTitles.get(preCleanUri).source + this.allTitles.get(preCleanUri).file
-        // etc.
         const preFolder = this.getFolder(preCleanUri);
-        // XXX/TODO: Ditto just above; use this.allTitles.get(preCleanUri).source ??
         const preSource = this.getSource(preFolder);
         // TODO: What if this prerequisite is a stumptown document?
         //       Probably should be an error that we report?
