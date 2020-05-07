@@ -21,12 +21,10 @@ const {
   extractDocumentSections,
   extractSidebar,
 } = require("./document-extractor");
-const { ROOT_DIR, VALID_LOCALES, FLAWS_LEVELS } = require("./constants");
+const { VALID_LOCALES, FLAWS_LEVELS } = require("./constants");
 const { slugToFoldername } = require("./utils");
 
 const kumascript = require("kumascript");
-
-const CWD_IS_ROOT = process.cwd() === ROOT_DIR;
 
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
@@ -386,24 +384,7 @@ class Builder {
     }
   }
 
-  getFolder(uri) {
-    // Depending on the current working directory, get the
-    // relative or absolute path of the folder for this URI.
-    if (!this.allTitles.has(uri)) {
-      return null;
-    }
-    const folder = this.allTitles.get(uri).file;
-    if (CWD_IS_ROOT) {
-      // If the current working directory is the root directory of the repo,
-      // the relative path of the folder from "allTitles" is just fine.
-      return folder;
-    }
-    // The current working directory is NOT the root directory of the repo,
-    // so we need to use to an absolute path.
-    return path.join(ROOT_DIR, folder);
-  }
-
-  async renderMacros(rawHtml, metadata, { cacheResult = false } = {}) {
+  async renderMacros(source, rawHtml, metadata, { cacheResult = false } = {}) {
     // Recursive method that renders the macros within the document
     // represented by this raw HTML and metadata, but only after first
     // rendering all of this document's prerequisites, taking into
@@ -414,23 +395,21 @@ class Builder {
     for (const preUri of prerequisites) {
       const preCleanUri = this.cleanUri(preUri);
       if (this.allTitles.has(preCleanUri)) {
-        const preFolder = this.getFolder(preCleanUri);
-        const preSource = this.getSource(preFolder);
-        // TODO: What if this prerequisite is a stumptown document?
-        //       Probably should be an error that we report?
-        if (!preSource.isStumptown) {
-          const preMetadata = getMetadata(preSource, preFolder).metadata;
-          const preRawHtml = fs.readFileSync(
-            path.join(preFolder, "index.html"),
-            "utf8"
-          );
-          // When rendering prerequisites, we're only interested in
-          // caching the results for later use. We don't care about
-          // the results returned.
-          await this.renderMacros(preRawHtml, preMetadata, {
-            cacheResult: true,
-          });
+        const folder = this.allTitles.get(preCleanUri).file;
+        if (source.isStumptown) {
+          throw new Error("Stumptown sources don't have macros.");
         }
+        const preMetadata = getMetadata(source, folder).metadata;
+        const preRawHtml = fs.readFileSync(
+          path.join(folder, "index.html"),
+          "utf8"
+        );
+        // When rendering prerequisites, we're only interested in
+        // caching the results for later use. We don't care about
+        // the results returned.
+        await this.renderMacros(source, preRawHtml, preMetadata, {
+          cacheResult: true,
+        });
       }
     }
 
@@ -1166,7 +1145,11 @@ class Builder {
       renderedHtml = rawHtml;
     } else {
       let flaws;
-      [renderedHtml, flaws] = await this.renderMacros(rawHtml, metadata);
+      [renderedHtml, flaws] = await this.renderMacros(
+        source,
+        rawHtml,
+        metadata
+      );
       if (flaws.length) {
         if (this.options.flaws === FLAWS_LEVELS.ERROR) {
           // Report and exit immediately on the first document with flaws.
