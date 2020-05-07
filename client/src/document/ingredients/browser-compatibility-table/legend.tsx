@@ -7,6 +7,7 @@ const LEGEND_LABELS = {
   yes: "Full support",
   partial: "Partial support",
   no: "No support",
+  unknown: "Compatibility unknown",
   experimental: "Experimental. Expect behavior to change in the future.",
   "non-standard": "Non-standard. Expect poor cross-browser support.",
   deprecated: "Deprecated. Not for use in new websites.",
@@ -44,7 +45,9 @@ function getActiveLegendItems(compat: bcd.Identifier) {
       for (const versionSupport of asList(browserSupport)) {
         if (versionSupport.version_added) {
           legendItems.add("yes");
-        } else if (versionSupport.version_added !== null) {
+        } else if (versionSupport.version_added == null) {
+          legendItems.add("unknown");
+        } else {
           legendItems.add("no");
         }
 
@@ -79,7 +82,7 @@ export function Legend({ compat }: { compat: bcd.Identifier }) {
       </h3>
       <dl>
         {getActiveLegendItems(compat).map(([key, label]) =>
-          ["yes", "partial", "no"].includes(key) ? (
+          ["yes", "partial", "no", "unknown"].includes(key) ? (
             <React.Fragment key={key}>
               <dt key={key}>
                 <span className={`bc-supports-${key} bc-supports`}>
