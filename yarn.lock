@@ -12784,10 +12784,10 @@ vm-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.0.tgz#bd76d6a23323e2ca8ffa12028dc04559c75f9019"
   integrity sha512-iq+S7vZJE60yejDYM0ek6zg308+UZsdtPExWP9VZoCFCz1zkJoXFnAX7aZfd/ZwrkidzdUZL0C/ryW+JwAiIGw==
 
-vnu-jar@^18.12.18:
-  version "18.12.18"
-  resolved "https://registry.yarnpkg.com/vnu-jar/-/vnu-jar-18.12.18.tgz#6dcbc1983fe92eb0481a2c2f261d997c34d31bd1"
-  integrity sha512-jcJC7fVvLA8BWdmSIhWLT7uinbjsMEGYJQzVaEdSsfI7mCl7WD+eebNXNJS38+KSExmS3ZDjxkB6EaoFtAuOzA==
+vnu-jar@^20.3.16:
+  version "20.3.16"
+  resolved "https://registry.yarnpkg.com/vnu-jar/-/vnu-jar-20.3.16.tgz#18072cf9f2578abbcb39024517c6069a6dab32f6"
+  integrity sha512-CHlvP4lilQvgjSRDsiB7i0lN0gnkq6zv3sN/71FYVgOQ/nYLXFfUhGIVeGskm9W1C0+UralU1XQnbsjJr2ijaw==
 
 w3c-hr-time@^1.0.1, w3c-hr-time@^1.0.2:
   version "1.0.2"
