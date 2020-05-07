@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import type bcd from "mdn-browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
@@ -22,23 +22,55 @@ function gatherPlatformsAndBrowsers(category): [string[], bcd.BrowserNames[]] {
   ];
 }
 
-type BrowserFeature = [bcd.BrowserNames, number];
-
 function FeatureRowWithCallback({
   index,
   onToggleBrowserFeature,
   ...props
 }: {
   index: number;
-  onToggleBrowserFeature: (p: BrowserFeature) => void;
-} & Omit<Parameters<typeof FeatureRow>[0], "onToggleBrowser">) {
+  onToggleBrowserFeature: (feature: number, browser: bcd.BrowserNames) => void;
+} & Omit<React.ComponentProps<typeof FeatureRow>, "onToggleBrowser">) {
   const handleToggleBrowser = useCallback(
     (browser: bcd.BrowserNames) => {
-      onToggleBrowserFeature([browser, index]);
+      onToggleBrowserFeature(index, browser);
     },
     [index, onToggleBrowserFeature]
   );
   return <FeatureRow {...props} onToggleBrowser={handleToggleBrowser} />;
+}
+
+class FeatureListAccordion extends React.Component<
+  {
+    features: ReturnType<typeof listFeatures>;
+    browsers: bcd.BrowserNames[];
+  },
+  { activeRow: null | number; activeBrowser: null | bcd.BrowserNames }
+> {
+  state = { activeRow: null, activeBrowser: null };
+
+  toggleActiveBrowserFeature = (row, browser) => {
+    this.setState(
+      this.state.activeBrowser === browser && this.state.activeRow === row
+        ? { activeRow: null, activeBrowser: null }
+        : { activeRow: row, activeBrowser: browser }
+    );
+  };
+
+  render() {
+    const { features, browsers } = this.props;
+    const { activeRow, activeBrowser } = this.state;
+    return features.map((feature, i) => {
+      return (
+        <FeatureRowWithCallback
+          key={i}
+          {...{ feature, browsers }}
+          index={i}
+          showNotesFor={activeRow === i ? activeBrowser : null}
+          onToggleBrowserFeature={this.toggleActiveBrowserFeature}
+        />
+      );
+    });
+  }
 }
 
 export function BrowserCompatibilityTable({
@@ -66,18 +98,6 @@ export function BrowserCompatibilityTable({
 
   const [platforms, browsers] = gatherPlatformsAndBrowsers(category);
 
-  const [[activeBrowser, activeFeature], setActiveBrowserFeature] = useState<
-    BrowserFeature | [null, null]
-  >([null, null]);
-
-  function toggleActiveBrowserFeature([browser, feature]: BrowserFeature) {
-    setActiveBrowserFeature(
-      activeBrowser === browser && activeFeature === feature
-        ? [null, null]
-        : [browser, feature]
-    );
-  }
-
   return (
     <BrowserCompatibilityErrorBoundary>
       <BrowserInfoContext.Provider value={browserInfo}>
@@ -92,17 +112,10 @@ export function BrowserCompatibilityTable({
         <table key="bc-table" className="bc-table bc-table-web">
           <Headers {...{ platforms, browsers }} />
           <tbody>
-            {listFeatures(data, name).map((feature, i) => {
-              return (
-                <FeatureRowWithCallback
-                  key={i}
-                  {...{ feature, browsers }}
-                  index={i}
-                  showNotesFor={activeFeature === i ? activeBrowser : null}
-                  onToggleBrowserFeature={toggleActiveBrowserFeature}
-                />
-              );
-            })}
+            <FeatureListAccordion
+              browsers={browsers}
+              features={listFeatures(data, name)}
+            />
           </tbody>
         </table>
         <Legend compat={data} />

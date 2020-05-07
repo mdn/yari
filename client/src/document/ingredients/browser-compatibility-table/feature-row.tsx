@@ -339,7 +339,7 @@ function CompatCellWithCallback({
   onToggleBrowser,
   ...props
 }: { onToggleBrowser: (browser: bcd.BrowserNames) => void } & Omit<
-  Parameters<typeof CompatCell>[0],
+  React.ComponentProps<typeof CompatCell>,
   "onToggle"
 >) {
   const handleToggle = useCallback(() => onToggleBrowser(props.browser), [
