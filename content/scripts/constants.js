@@ -105,6 +105,11 @@ const VALID_LOCALES = new Map(
   ].map((x) => [x.toLowerCase(), x])
 );
 
+const IGNORE_TITLES_CACHE = JSON.parse(
+  process.env.BUILD_IGNORE_TITLES_CACHE || "false"
+);
+assert(typeof IGNORE_TITLES_CACHE === "boolean");
+
 const FLAWS_LEVELS = Object.freeze({
   WARN: "warn",
   IGNORE: "ignore",
@@ -125,6 +130,7 @@ module.exports = {
   DEFAULT_BUILD_NOT_LOCALES,
   DEFAULT_SITEMAP_BASE_URL,
   DEFAULT_FOLDER_SEARCHES,
+  IGNORE_TITLES_CACHE,
   // DEFAULT_POPULARITIES_FILEPATH,
   // DEFAULT_STUMPTOWN_PACKAGED_ROOT,
   MAX_GOOGLE_ANALYTICS_URIS,

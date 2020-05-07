@@ -120,6 +120,11 @@ cli
     "don't reuse existing _all-titles.json",
     cli.BOOL
   )
+  .option(
+    "--ignore-titles-cache",
+    "reuse _all-titles.json if it exists independent of cache hashing",
+    cli.BOOL
+  )
   .option("--no-sitemaps", "don't generate all sitemap xml files", cli.BOOL)
   .option("--slugsearch <partofslug>", "filter by slug matches", cli.ARRAY, [])
   .option(
