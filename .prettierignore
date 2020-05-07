@@ -1,6 +1,7 @@
 # Backup files
 *~
 # exclude these files
+*.ejs
 Dockerfile
 Makefile
 Procfile
@@ -18,6 +19,7 @@ content/_all-titles.json
 /client/src/water.css/
 /archivecontent/
 /content/files/
+/kumascript/coverage/
 
 # Misc files to ignore
 /client/src/serviceWorker.js
