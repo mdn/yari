@@ -1,4 +1,4 @@
-import React, { Reducer, useCallback, useReducer } from "react";
+import React, { useReducer } from "react";
 import type bcd from "mdn-browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
