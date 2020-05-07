@@ -21,8 +21,8 @@ const ERROR_TEST_CASES = [
   },
   {
     title: "with an illegal value for a link attribute",
-    html: '<a href="https://example.com" rel="xxx">an example</a>',
-    error: "Bad value “xxx” for attribute “rel” on element “a”",
+    html: '<a href="https://example.com" dir="xxx">an example</a>',
+    error: "Bad value “xxx” for attribute “dir” on element “a”",
   },
 ];
 
