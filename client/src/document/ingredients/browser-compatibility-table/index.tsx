@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { Reducer, useCallback, useReducer } from "react";
 import type bcd from "mdn-browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
@@ -22,55 +22,38 @@ function gatherPlatformsAndBrowsers(category): [string[], bcd.BrowserNames[]] {
   ];
 }
 
-function FeatureRowWithCallback({
-  index,
-  onToggleBrowserFeature,
-  ...props
+type CellIndex = [number, number];
+
+function FeatureListAccordion({
+  features,
+  browsers,
 }: {
-  index: number;
-  onToggleBrowserFeature: (feature: number, browser: bcd.BrowserNames) => void;
-} & Omit<React.ComponentProps<typeof FeatureRow>, "onToggleBrowser">) {
-  const handleToggleBrowser = useCallback(
-    (browser: bcd.BrowserNames) => {
-      onToggleBrowserFeature(index, browser);
-    },
-    [index, onToggleBrowserFeature]
+  features: ReturnType<typeof listFeatures>;
+  browsers: bcd.BrowserNames[];
+}) {
+  const [[activeRow, activeColumn], dispatchCellToggle] = useReducer<
+    React.Reducer<CellIndex | [null, null], CellIndex>
+  >(
+    ([activeRow, activeColumn], [row, column]) =>
+      activeRow === row && activeColumn === column
+        ? [null, null]
+        : [row, column],
+    [null, null]
   );
-  return <FeatureRow {...props} onToggleBrowser={handleToggleBrowser} />;
-}
 
-class FeatureListAccordion extends React.Component<
-  {
-    features: ReturnType<typeof listFeatures>;
-    browsers: bcd.BrowserNames[];
-  },
-  { activeRow: null | number; activeBrowser: null | bcd.BrowserNames }
-> {
-  state = { activeRow: null, activeBrowser: null };
-
-  toggleActiveBrowserFeature = (row, browser) => {
-    this.setState(
-      this.state.activeBrowser === browser && this.state.activeRow === row
-        ? { activeRow: null, activeBrowser: null }
-        : { activeRow: row, activeBrowser: browser }
-    );
-  };
-
-  render() {
-    const { features, browsers } = this.props;
-    const { activeRow, activeBrowser } = this.state;
-    return features.map((feature, i) => {
-      return (
-        <FeatureRowWithCallback
+  return (
+    <>
+      {features.map((feature, i) => (
+        <FeatureRow
           key={i}
           {...{ feature, browsers }}
           index={i}
-          showNotesFor={activeRow === i ? activeBrowser : null}
-          onToggleBrowserFeature={this.toggleActiveBrowserFeature}
+          activeCell={activeRow === i ? activeColumn : null}
+          onToggleCell={dispatchCellToggle}
         />
-      );
-    });
-  }
+      ))}
+    </>
+  );
 }
 
 export function BrowserCompatibilityTable({
