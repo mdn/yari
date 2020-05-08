@@ -1283,7 +1283,6 @@ class Builder {
       buildHtml: !this.options.buildJsonOnly,
       allTitles: this.allTitles,
     });
-    console.log({ outfileJson, outfileHtml });
 
     // We're *assuming* that `slugToFoldername(metadata.mdn_url)`
     // can be a valid folder name on the current filesystem. It if's all

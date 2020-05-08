@@ -170,10 +170,7 @@ app.get("/*", async (req, res) => {
         .status(404)
         .send(`Can not finder a folder based on ${lookupUrl}`);
     }
-    console.log({ folderName });
     const specificFolder = normalizeContentPath(folderName);
-
-    console.log({ specificFolder });
 
     // Check that it even makes sense!
     if (specificFolder) {
@@ -182,7 +179,6 @@ app.get("/*", async (req, res) => {
         const built = await getOrCreateBuilder().start({
           specificFolders: [specificFolder],
         });
-        console.log("BUILT", built);
         const t1 = performance.now();
         // Remember, the only reason we're here in the catch-all is because
         // Express couldn't find the file as a static asset. But might
