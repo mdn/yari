@@ -13,9 +13,10 @@ const {
   DEFAULT_BUILD_NOT_LOCALES,
   DEFAULT_SITEMAP_BASE_URL,
   DEFAULT_FOLDER_SEARCHES,
-  DEFAULT_FLAWS_LEVEL,
-  FLAWS_LEVELS,
+  DEFAULT_FLAW_LEVELS,
+  // FLAW_LEVELS,
   MAX_GOOGLE_ANALYTICS_URIS,
+  DEFAULT_POPULARITIES_FILEPATH,
 } = require("./scripts/constants.js");
 
 cli
@@ -101,10 +102,10 @@ cli
     DEFAULT_BUILD_NOT_LOCALES
   )
   .option(
-    `--flaws <${Object.values(FLAWS_LEVELS).join("|")}>`,
+    "--flaw-levels <levels>",
     "How to deal with imperfections in the content building process",
-    new RegExp(Object.values(FLAWS_LEVELS).join("|")),
-    DEFAULT_FLAWS_LEVEL
+    cli.STRING,
+    DEFAULT_FLAW_LEVELS
   )
   .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
   .option("--start-clean", "delete anything created first", cli.BOOL)

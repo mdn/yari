@@ -11,7 +11,7 @@ const {
   DEFAULT_FLAW_CHECKS,
   DEFAULT_POPULARITIES_FILEPATH,
   VALID_FLAW_CHECKS,
-  FLAWS_LEVELS,
+  FLAW_LEVELS,
 } = require("content/scripts/constants.js");
 
 const app = express();
@@ -132,7 +132,7 @@ function getOrCreateBuilder(options) {
         flawCheck: DEFAULT_FLAW_CHECKS,
         foldersearch: options.foldersearch || [],
         popularitiesfile: normalizeContentPath(DEFAULT_POPULARITIES_FILEPATH),
-        flaws: FLAWS_LEVELS.WARN,
+        flaws: FLAW_LEVELS.WARN,
       },
       console
     );
@@ -186,18 +186,6 @@ app.get("/_flaws", (req, res) => {
 
   const documents = [];
 
-  // // XXX Perhaps we want to put a global lock on this because it can be
-  // // a really resource intensive operation.
-
-  // // First count, all possible documents which is based on the builder
-  // const t0 = new Date();
-  // const builder = getOrCreateBuilder({ locales: [locale] });
-  // counts.possible = builder.sources
-  //   .entries()
-  //   .map((source) => builder.countLocaleFolders(source))
-  //   .map((m) => Array.from(m.values()).reduce((a, b) => a + b))
-  //   .reduce((a, b) => a + b);
-  // const t1 = new Date();
   const builder = getOrCreateBuilder();
   for (const data of builder.allTitles.values()) {
     if (data.locale && data.locale.toLowerCase() === locale) {

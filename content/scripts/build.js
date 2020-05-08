@@ -25,7 +25,10 @@ const {
 const {
   ROOT_DIR,
   VALID_LOCALES,
-  FLAWS_LEVELS,
+  DEFAULT_POPULARITIES_FILEPATH,
+  FLAW_LEVELS,
+  VALID_FLAW_CHECKS,
+  DEFAULT_FLAW_LEVELS,
   ALLOW_STALE_TITLES,
 } = require("./constants");
 const { slugToFoldername } = require("./utils");
@@ -113,15 +116,54 @@ function cleanLocales(locales) {
  *
  * @param {Array} checks
  */
-function cleanFlawChecks(flawChecks) {
-  const checked = [];
-  for (const name of flawChecks) {
-    const nameLower = name.toLowerCase();
-    if (!VALID_FLAW_CHECKS.has(nameLower)) {
-      throw new Error(`'${name} is not a valid flaw check.`);
+function checkFlawLevels(flawChecks) {
+  const checks = flawChecks
+    .split(",")
+    .map((x) => x.trim())
+    .filter((x) => x)
+    .map((x) => x.split(":"));
+
+  // But any wildcards (e.g. '*:warn') first
+  checks.sort((a, b) => {
+    if (a[0] === "*" && b[0] !== "*") {
+      return -1;
+    } else if (a[0] !== "*" && b[0] === "*") {
+      return 1;
     }
-    checked.push(nameLower);
+    return 0;
+  });
+
+  // Reverse FLAW_LEVELS
+  const levels = Object.fromEntries(
+    Object.entries(FLAW_LEVELS).map(([key, value]) => [value, key])
+  );
+
+  const checked = new Map();
+  for (const tuple of checks) {
+    if (tuple.length !== 2) {
+      throw new Error(`Not a tuple pair of 2 (${tuple})`);
+    }
+    const [identifier, level] = tuple;
+    if (!levels[level]) {
+      throw new Error(
+        `Invalid level: '${level}' (only ${Object.keys(levels)})`
+      );
+    }
+    if (identifier === "*") {
+      for (const check of VALID_FLAW_CHECKS) {
+        checked.set(check, levels[level]);
+      }
+    } else if (!VALID_FLAW_CHECKS.has(identifier)) {
+      throw new Error(
+        `Unrecognized flaw identifier: '${identifier}' (only ${[
+          ...VALID_FLAW_CHECKS,
+        ]})`
+      );
+    } else {
+      checked.set(identifier, levels[level]);
+    }
   }
+
   return checked;
 }
 
@@ -292,7 +334,11 @@ class Builder {
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
     this.options.popularitiesfile =
       this.options.popularitiesfile || DEFAULT_POPULARITIES_FILEPATH;
-    this.options.flawCheck = cleanFlawChecks(this.options.flawCheck || []);
+
+    console.log("this.options.flawLevels:", this.options.flawLevels);
+    this.options.flawLevels = checkFlawLevels(
+      this.options.flawLevels || DEFAULT_FLAW_LEVELS
+    );
     this.options.allowStaleTitles =
       this.options.allowStaleTitles || ALLOW_STALE_TITLES;
 
@@ -397,7 +443,7 @@ class Builder {
     if (flawsByUri) {
       if (flawsByUri.size) {
         const header = `\nFlaws found within ${flawsByUri.size} document(s) while rendering macros`;
-        if (this.options.flaws === FLAWS_LEVELS.IGNORE) {
+        if (this.options.flaws === FLAW_LEVELS.IGNORE) {
           this.logger.info(chalk.yellow.bold(header + "."));
         } else {
           this.logger.error(chalk.red.bold(header + ":"));
@@ -1205,7 +1251,7 @@ class Builder {
       let flaws;
       [renderedHtml, flaws] = await this.renderMacros(rawHtml, metadata);
       if (flaws.length) {
-        if (this.options.flaws === FLAWS_LEVELS.ERROR) {
+        if (this.options.flaws === FLAW_LEVELS.ERROR) {
           // Report and exit immediately on the first document with flaws.
           this.logger.error(
             chalk.red.bold(`\nFlaws within ${mdnUrlLC} while rendering macros:`)

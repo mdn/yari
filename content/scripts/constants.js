@@ -49,20 +49,6 @@ const DEFAULT_FOLDER_SEARCHES = (process.env.BUILD_FOLDER_SEARCHES || "")
   .split(",")
   .filter((x) => x);
 
-const DEFAULT_FLAW_CHECKS = (process.env.BUILD_FLAW_CHECKS || "")
-  .split(",")
-  .filter((x) => x);
-
-// These names need to match what we have in the code where we have various
-// blocks of code that look something like this:
-//
-//    if (this.options.flawChecks.profanities) {
-//      ... analyze and possible add to doc.flaws.profanities ...
-//
-// This list needs to be synced with the code. And the CLI arguments
-// used with --flaw-checks needs to match this set.
-const VALID_FLAW_CHECKS = new Set(["broken_links", "bad_bcd_queries"]);
-
 const DEFAULT_SITEMAP_BASE_URL = "https://developer.mozilla.org";
 
 const DEFAULT_POPULARITIES_FILEPATH =
@@ -122,15 +108,31 @@ const ALLOW_STALE_TITLES = JSON.parse(
 );
 assert(typeof ALLOW_STALE_TITLES === "boolean");
 
-const FLAWS_LEVELS = Object.freeze({
+const FLAW_LEVELS = Object.freeze({
   WARN: "warn",
   IGNORE: "ignore",
   ERROR: "error",
 });
+const DEFAULT_FLAW_CHECKS = (process.env.BUILD_FLAW_CHECKS || "")
+  .split(",")
+  .filter((x) => x);
 
-// TODO: Switch to "warn" or "error" when number of flaws drops.
-const DEFAULT_FLAWS_LEVEL = process.env.BUILD_FLAWS || FLAWS_LEVELS.IGNORE;
-assert(Object.values(FLAWS_LEVELS).includes(DEFAULT_FLAWS_LEVEL));
+// These names need to match what we have in the code where we have various
+// blocks of code that look something like this:
+//
+//    if (this.options.flawChecks.profanities) {
+//      ... analyze and possible add to doc.flaws.profanities ...
+//
+// This list needs to be synced with the code. And the CLI arguments
+// used with --flaw-checks needs to match this set.
+const VALID_FLAW_CHECKS = new Set([
+  "macros",
+  "broken_links",
+  "bad_bcd_queries",
+]);
+
+// TODO (far future): Switch to "warn" or "error" when number of flaws drops.
+const DEFAULT_FLAW_LEVELS = process.env.BUILD_FLAW_LEVELS || "*:warn";
 
 module.exports = {
   // DEFAULT_ROOT,
@@ -144,13 +146,13 @@ module.exports = {
   DEFAULT_FOLDER_SEARCHES,
   DEFAULT_POPULARITIES_FILEPATH,
   ALLOW_STALE_TITLES,
-  // DEFAULT_POPULARITIES_FILEPATH,
   // DEFAULT_STUMPTOWN_PACKAGED_ROOT,
   MAX_GOOGLE_ANALYTICS_URIS,
   ROOT_DIR,
   VALID_LOCALES,
   DEFAULT_FLAW_CHECKS,
   VALID_FLAW_CHECKS,
-  DEFAULT_FLAWS_LEVEL,
-  FLAWS_LEVELS,
+  // DEFAULT_FLAWS_LEVEL,
+  FLAW_LEVELS,
+  DEFAULT_FLAW_LEVELS,
 };
