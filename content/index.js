@@ -121,7 +121,7 @@ cli
     cli.BOOL
   )
   .option(
-    "--ignore-titles-cache",
+    "--allow-stale-titles",
     "reuse _all-titles.json if it exists independent of cache hashing",
     cli.BOOL
   )

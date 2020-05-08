@@ -13,7 +13,7 @@ CLI arguments. And
 The general rule is that environment variables specific to the builder are
 all prefixed with `BUILD_`. E.g. `BUILD_LOCALES`
 
-### `BUILD_IGNORE_TITLES_CACHE`
+### `BUILD_ALLOW_STALE_TITLES`
 
 **Default: `false`**
 

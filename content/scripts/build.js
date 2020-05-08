@@ -25,7 +25,7 @@ const {
   ROOT_DIR,
   VALID_LOCALES,
   FLAWS_LEVELS,
-  IGNORE_TITLES_CACHE,
+  ALLOW_STALE_TITLES,
 } = require("./constants");
 const { slugToFoldername } = require("./utils");
 
@@ -273,7 +273,7 @@ class Builder {
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
     this.options.ignoreTitlesCache =
-      this.options.ignoreTitlesCache || IGNORE_TITLES_CACHE;
+      this.options.ignoreTitlesCache || ALLOW_STALE_TITLES;
 
     this.progressBar = !options.noProgressbar
       ? new ProgressBar({
