@@ -402,8 +402,6 @@ class Builder {
       const preCleanUri = this.cleanUri(preUri);
       if (this.allTitles.has(preCleanUri)) {
         const folder = this.allTitles.get(preCleanUri).file;
-        console.log("FOLDER:", folder);
-        console.log("SOURCE.filepath:", source.filepath);
         if (source.isStumptown) {
           throw new Error("Stumptown sources don't have macros.");
         }
@@ -453,10 +451,8 @@ class Builder {
       let processed;
       const allProcessed = [];
 
-      console.log("specificFolders", specificFolders);
       for (const folder of specificFolders) {
         source = self.getSource(folder);
-        console.log({ folder, source });
         try {
           processed = await self.processFolder(source, folder);
         } catch (err) {
@@ -1164,7 +1160,6 @@ class Builder {
       renderedHtml = rawHtml;
     } else {
       let flaws;
-      console.log("About to renderMacros", source);
       [renderedHtml, flaws] = await this.renderMacros(
         source,
         rawHtml,
@@ -1288,6 +1283,7 @@ class Builder {
       buildHtml: !this.options.buildJsonOnly,
       allTitles: this.allTitles,
     });
+    console.log({ outfileJson, outfileHtml });
 
     // We're *assuming* that `slugToFoldername(metadata.mdn_url)`
     // can be a valid folder name on the current filesystem. It if's all
@@ -1423,6 +1419,8 @@ class Builder {
       locale: metadata.locale,
       summary: metadata.summary,
       slug: metadata.slug,
+      // It's important that this is a full absolute path so that it
+      // will work more universally across builder, server, and watcher.
       file: path.resolve(folder),
       modified: metadata.modified,
       translation_of: metadata.translation_of,
