@@ -21,7 +21,11 @@ const {
   extractDocumentSections,
   extractSidebar,
 } = require("./document-extractor");
-const { VALID_LOCALES, FLAWS_LEVELS } = require("./constants");
+const {
+  ALLOW_STALE_TITLES,
+  VALID_LOCALES,
+  FLAWS_LEVELS,
+} = require("./constants");
 const { slugToFoldername } = require("./utils");
 
 const kumascript = require("kumascript");
@@ -265,6 +269,8 @@ class Builder {
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
+    this.options.allowStaleTitles =
+      this.options.allowStaleTitles || ALLOW_STALE_TITLES;
 
     this.progressBar = !options.noProgressbar
       ? new ProgressBar({
@@ -580,11 +586,20 @@ class Builder {
         ).map(([key, value]) => [key.toLowerCase(), value])
       );
       // We got it from disk, but is it out-of-date?
-      if (this.allTitles.get("_hash") !== this.selfHash) {
+      const outOfDate = this.allTitles.get("_hash") !== this.selfHash;
+      if (outOfDate && !this.options.allowStaleTitles) {
         this.logger.info(
           chalk.yellow(`${allTitlesJsonFilepath} existed but is out-of-date.`)
         );
       } else {
+        if (outOfDate) {
+          this.logger.info(
+            chalk.yellow(
+              `Warning! ${allTitlesJsonFilepath} exists but is out-of-date. ` +
+                "To reset run `yarn clean`."
+            )
+          );
+        }
         // This means we DON'T need to re-generate all titles, so
         // let's set the context for the Kumascript renderer.
         this.macroRenderer.use(this.allTitles);
