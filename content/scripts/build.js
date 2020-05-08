@@ -272,8 +272,8 @@ class Builder {
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
-    this.options.ignoreTitlesCache =
-      this.options.ignoreTitlesCache || ALLOW_STALE_TITLES;
+    this.options.allowStaleTitles =
+      this.options.allowStaleTitles || ALLOW_STALE_TITLES;
 
     this.progressBar = !options.noProgressbar
       ? new ProgressBar({
@@ -605,7 +605,7 @@ class Builder {
       );
       // We got it from disk, but is it out-of-date?
       const outOfDate = this.allTitles.get("_hash") !== this.selfHash;
-      if (outOfDate && !this.options.ignoreTitlesCache) {
+      if (outOfDate && !this.options.allowStaleTitles) {
         this.logger.info(
           chalk.yellow(`${allTitlesJsonFilepath} existed but is out-of-date.`)
         );
