@@ -13,9 +13,9 @@ const {
   DEFAULT_BUILD_NOT_LOCALES,
   DEFAULT_SITEMAP_BASE_URL,
   DEFAULT_FOLDER_SEARCHES,
-  DEFAULT_POPULARITIES_FILEPATH,
+  DEFAULT_FLAWS_LEVEL,
+  FLAWS_LEVELS,
   MAX_GOOGLE_ANALYTICS_URIS,
-  DEFAULT_FLAW_CHECKS,
 } = require("./scripts/constants.js");
 
 cli
@@ -101,10 +101,10 @@ cli
     DEFAULT_BUILD_NOT_LOCALES
   )
   .option(
-    "--flaw-check <check>",
-    "flaw checks to include in build",
-    cli.ARRAY,
-    DEFAULT_FLAW_CHECKS
+    `--flaws <${Object.values(FLAWS_LEVELS).join("|")}>`,
+    "How to deal with imperfections in the content building process",
+    new RegExp(Object.values(FLAWS_LEVELS).join("|")),
+    DEFAULT_FLAWS_LEVEL
   )
   .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
   .option("--start-clean", "delete anything created first", cli.BOOL)
@@ -118,6 +118,11 @@ cli
   .option(
     "--regenerate-all-titles",
     "don't reuse existing _all-titles.json",
+    cli.BOOL
+  )
+  .option(
+    "--allow-stale-titles",
+    "reuse _all-titles.json if it exists independent of cache hashing",
     cli.BOOL
   )
   .option("--no-sitemaps", "don't generate all sitemap xml files", cli.BOOL)

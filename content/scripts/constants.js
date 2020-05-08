@@ -1,4 +1,6 @@
 const path = require("path");
+const assert = require("assert").strict;
+
 require("dotenv").config();
 
 // const DEFAULT_ROOT = process.env.BUILD_ROOT;
@@ -73,6 +75,8 @@ const DEFAULT_POPULARITIES_FILEPATH =
 // will include very rarely used URIs.
 const MAX_GOOGLE_ANALYTICS_URIS = 20000;
 
+const ROOT_DIR = path.join(__dirname, "..", "..");
+
 // A set of every possible locale we accept content to be in.
 const VALID_LOCALES = new Map(
   [
@@ -113,6 +117,21 @@ const VALID_LOCALES = new Map(
   ].map((x) => [x.toLowerCase(), x])
 );
 
+const ALLOW_STALE_TITLES = JSON.parse(
+  process.env.BUILD_ALLOW_STALE_TITLES || "false"
+);
+assert(typeof ALLOW_STALE_TITLES === "boolean");
+
+const FLAWS_LEVELS = Object.freeze({
+  WARN: "warn",
+  IGNORE: "ignore",
+  ERROR: "error",
+});
+
+// TODO: Switch to "warn" or "error" when number of flaws drops.
+const DEFAULT_FLAWS_LEVEL = process.env.BUILD_FLAWS || FLAWS_LEVELS.IGNORE;
+assert(Object.values(FLAWS_LEVELS).includes(DEFAULT_FLAWS_LEVEL));
+
 module.exports = {
   // DEFAULT_ROOT,
   // DEFAULT_ARCHIVE_ROOT,
@@ -124,9 +143,14 @@ module.exports = {
   DEFAULT_SITEMAP_BASE_URL,
   DEFAULT_FOLDER_SEARCHES,
   DEFAULT_POPULARITIES_FILEPATH,
+  ALLOW_STALE_TITLES,
+  // DEFAULT_POPULARITIES_FILEPATH,
   // DEFAULT_STUMPTOWN_PACKAGED_ROOT,
   MAX_GOOGLE_ANALYTICS_URIS,
+  ROOT_DIR,
   VALID_LOCALES,
   DEFAULT_FLAW_CHECKS,
   VALID_FLAW_CHECKS,
+  DEFAULT_FLAWS_LEVEL,
+  FLAWS_LEVELS,
 };
