@@ -396,6 +396,8 @@ class Builder {
       const preCleanUri = this.cleanUri(preUri);
       if (this.allTitles.has(preCleanUri)) {
         const folder = this.allTitles.get(preCleanUri).file;
+        console.log("FOLDER:", folder);
+        console.log("SOURCE.filepath:", source.filepath);
         if (source.isStumptown) {
           throw new Error("Stumptown sources don't have macros.");
         }
@@ -445,8 +447,10 @@ class Builder {
       let processed;
       const allProcessed = [];
 
+      console.log("specificFolders", specificFolders);
       for (const folder of specificFolders) {
         source = self.getSource(folder);
+        console.log({ folder, source });
         try {
           processed = await self.processFolder(source, folder);
         } catch (err) {
@@ -1145,6 +1149,7 @@ class Builder {
       renderedHtml = rawHtml;
     } else {
       let flaws;
+      console.log("About to renderMacros", source);
       [renderedHtml, flaws] = await this.renderMacros(
         source,
         rawHtml,
@@ -1403,7 +1408,7 @@ class Builder {
       locale: metadata.locale,
       summary: metadata.summary,
       slug: metadata.slug,
-      file: folder,
+      file: path.resolve(folder),
       modified: metadata.modified,
       translation_of: metadata.translation_of,
       // XXX To be lean if either of these are false, perhaps not

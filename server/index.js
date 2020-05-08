@@ -82,7 +82,7 @@ app.use(
 );
 
 function normalizeContentPath(start) {
-  return path.join(__dirname, "..", start);
+  return fs.existsSync(start) ? start : path.join(__dirname, "..", start);
 }
 
 app.get("/_open", (req, res) => {
@@ -170,7 +170,10 @@ app.get("/*", async (req, res) => {
         .status(404)
         .send(`Can not finder a folder based on ${lookupUrl}`);
     }
+    console.log({ folderName });
     const specificFolder = normalizeContentPath(folderName);
+
+    console.log({ specificFolder });
 
     // Check that it even makes sense!
     if (specificFolder) {
