@@ -1226,10 +1226,9 @@ class Builder {
       // decodeEntities: false
     });
 
-    // Remove those '<span class="alllinks"><a href="/en-US/docs/tag/Web">View All...</a></span>' links
-    // Remove any completely empty <p>, <dl>, or <div> tags.
-    // XXX costs about 5% longer time
-    $("p:empty,dl:empty,div:empty,span.alllinks").remove();
+    // Remove those '<span class="alllinks"><a href="/en-US/docs/tag/Web">View All...</a></span>' links.
+    // If a document has them, they don't make sense in a Yari world anyway.
+    $("span.alllinks").remove();
 
     // XXX should we get some of this stuff from this.allTitles instead?!
     // XXX see https://github.com/mdn/yari/issues/502
