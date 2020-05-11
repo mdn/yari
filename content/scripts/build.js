@@ -1247,7 +1247,7 @@ class Builder {
     $("p:empty,dl:empty,div:empty,span.alllinks").remove();
 
     // XXX should we get some of this stuff from this.allTitles instead?!
-    // XXX see https://github.com/mdn/stumptown-renderer/issues/502
+    // XXX see https://github.com/mdn/yari/issues/502
     const doc = {};
 
     // Note that 'extractSidebar' will always return a string.
