@@ -35,16 +35,17 @@ interface Times {
   built: number;
 }
 
-interface FlawChecks {
-  all: string[];
-  enabled: string[];
+interface FlawLevel {
+  name: string;
+  level: string;
+  ignored: boolean;
 }
 
 interface Data {
   counts: Counts;
   documents: Document[];
   times: Times;
-  checks: FlawChecks;
+  flawLevels: FlawLevel[];
 }
 
 interface Filter {
@@ -74,7 +75,26 @@ function deserializeFilters(qs: string): Filter {
   return filters;
 }
 
-function serializeFilters(previousQs: string, filters: Filter): string {
+function deserializePagination(qs: string): number {
+  const sp = new URLSearchParams(qs);
+  if (sp.get("page")) {
+    try {
+      const page = parseInt(sp.get("page") || "1");
+      if (page >= 1) {
+        return page;
+      }
+    } catch (err) {
+      console.warn(`Invalid page '${sp.get("page")}'`);
+    }
+  }
+  return 1;
+}
+
+function serializeFiltersAndPagination(
+  previousQs: string,
+  filters: Filter,
+  page: number
+): string {
   const sp = new URLSearchParams(previousQs);
   Object.keys(defaultFilter).forEach((key) => {
     sp.delete(key);
@@ -88,7 +108,14 @@ function serializeFilters(previousQs: string, filters: Filter): string {
       sp.set(key, value);
     }
   });
-  return `?${sp.toString()}`;
+  if (page !== 1) {
+    sp.set("page", `${page}`);
+  }
+  const spString = sp.toString();
+  if (spString) {
+    return `?${spString}`;
+  }
+  return "";
 }
 
 export default function AllFlaws() {
@@ -97,6 +124,9 @@ export default function AllFlaws() {
   const [lastData, setLastData] = useState<Data | null>(null);
 
   const location = useLocation();
+  const [page, setPage] = useState<number>(
+    deserializePagination(location.search)
+  );
   const [filters, setFilters] = useState<Filter>(
     deserializeFilters(location.search)
   );
@@ -113,8 +143,8 @@ export default function AllFlaws() {
   const [sortReverse, setSortReverse] = useState<boolean>(false);
 
   useEffect(() => {
-    navigate(serializeFilters(location.search, filters));
-  }, [filters, location.search, navigate]);
+    navigate(serializeFiltersAndPagination(location.search, filters, page));
+  }, [filters, location.search, navigate, page]);
 
   function updateFilters(newFilters: Filter) {
     setFilters(Object.assign({}, newFilters));
@@ -134,8 +164,11 @@ export default function AllFlaws() {
     });
     params.set("sort", sortBy);
     params.set("reverse", JSON.stringify(sortReverse));
+    if (page > 1) {
+      params.set("page", `${page}`);
+    }
     return `/_flaws?${params.toString()}`;
-  }, [locale, filters, sortBy, sortReverse]);
+  }, [locale, filters, sortBy, sortReverse, page]);
 
   const { data, error, isValidating } = useSWR<Data, Error>(
     getAPIUrl(),
@@ -203,20 +236,51 @@ export default function AllFlaws() {
           <ShowFilters
             initialFilters={filters}
             updateFilters={updateFilters}
-            checks={lastData.checks}
+            flawLevels={lastData.flawLevels}
           />
           <ShowDocumentsFound
             locale={locale}
+            page={page}
             counts={lastData.counts}
             documents={lastData.documents}
             sortBy={sortBy}
             sortReverse={sortReverse}
             setSort={setSort}
           />
+          <Pagination page={page} setPage={setPage} />
         </div>
       )}
       {data && <ShowTimes times={data.times} />}
     </div>
+  );
+}
+
+function Pagination({ page, setPage }: { page: number; setPage: Function }) {
+  return (
+    <p className="pagination">
+      {page > 1 ? (
+        <Link
+          to={`?page=${page - 1}`}
+          onClick={() => {
+            setPage(page - 1);
+          }}
+        >
+          Previous page ({page - 1})
+        </Link>
+      ) : (
+        <a href="." className="disabled">
+          Previous page
+        </a>
+      )}{" "}
+      <Link
+        to={`?page=${page + 1}`}
+        onClick={() => {
+          setPage(page + 1);
+        }}
+      >
+        Next page ({page + 1})
+      </Link>
+    </p>
   );
 }
 
@@ -252,11 +316,11 @@ function ShowTimes({ times }: { times: Times }) {
 function ShowFilters({
   initialFilters,
   updateFilters,
-  checks,
+  flawLevels,
 }: {
   initialFilters: Filter;
   updateFilters: Function;
-  checks: FlawChecks;
+  flawLevels: FlawLevel[];
 }) {
   const [filters, setFilters] = useState(initialFilters);
 
@@ -310,12 +374,12 @@ function ShowFilters({
               setFilters({ ...filters, flaws });
             }}
           >
-            {checks &&
-              checks.all.map((checkName) => {
+            {flawLevels &&
+              flawLevels.map((flawLevel) => {
                 return (
-                  <option key={checkName} value={checkName}>
-                    {humanizeFlawName(checkName)}{" "}
-                    {!checks.enabled.includes(checkName) && "(not enabled)"}
+                  <option key={flawLevel.name} value={flawLevel.name}>
+                    {humanizeFlawName(flawLevel.name)}{" "}
+                    {flawLevel.ignored && "(ignored)"}
                   </option>
                 );
               })}
@@ -327,14 +391,13 @@ function ShowFilters({
           <button type="submit">Filter now</button>
         </div>
       </form>
-
-      <pre>{JSON.stringify(filters, null, 2)}</pre>
     </div>
   );
 }
 
 function ShowDocumentsFound({
   locale,
+  page,
   counts,
   documents,
   sortBy,
@@ -342,6 +405,7 @@ function ShowDocumentsFound({
   setSort,
 }: {
   locale: string;
+  page: number;
   counts: Counts;
   documents: any;
   sortBy: string;
@@ -371,9 +435,22 @@ function ShowDocumentsFound({
     );
   }
 
+  function showBriefURL(uri: string) {
+    const [left, right] = uri.split(/\/docs\//, 2);
+    return (
+      <>
+        <span className="url-prefix">{left}/docs/</span>
+        <span className="url-slug">{right}</span>
+      </>
+    );
+  }
+
   return (
     <div className="documents">
-      <h3>Documents with flaws found ({counts.found})</h3>
+      <h3>
+        Documents with flaws found ({counts.found.toLocaleString()}){" "}
+        {page > 1 && <span className="page">page {page}</span>}
+      </h3>
       {!counts.built ? (
         <WarnAboutNothingBuilt />
       ) : (
@@ -397,8 +474,9 @@ function ShowDocumentsFound({
               <tr key={doc.mdn_url}>
                 <td>
                   <Link to={`${doc.mdn_url}#show-flaws`} title={doc.title}>
-                    {doc.mdn_url}
+                    {showBriefURL(doc.mdn_url)}
                   </Link>
+                  <span className="document-title-preview">{doc.title}</span>
                 </td>
                 <td
                   title={

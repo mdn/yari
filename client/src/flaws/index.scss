@@ -8,6 +8,21 @@
     h4 {
       margin-top: 0;
     }
+
+    h3 span.page {
+      margin-left: 10px;
+      color: #666;
+    }
+  }
+
+  td a .url-prefix,
+  td .document-title-preview {
+    color: rgb(159, 159, 159);
+    margin-right: 2px;
+    font-size: 80%;
+  }
+  td .document-title-preview {
+    margin-left: 10px;
   }
 
   .search-error {
@@ -22,6 +37,17 @@
     margin-top: 60px;
     p {
       font-size: 70%;
+    }
+  }
+
+  .pagination {
+    text-align: center;
+    margin: 20px;
+    a.disabled {
+      color: rgb(159, 159, 159);
+    }
+    a {
+      padding: 10px;
     }
   }
 

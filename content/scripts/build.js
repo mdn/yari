@@ -112,18 +112,29 @@ function cleanLocales(locales) {
 }
 
 /**
- * Check that every flawCheck is valid and spelled correctly.
+ * Return a map of {flaw identifier => level} from a comma separated string.
  *
- * @param {Array} checks
+ * The input is a comma separated string that looks like this:
+ *   'broken_links:ignore, macros:error, *:warn'
+ *
+ * Every flaw identifier and every level is checked against the known
+ * values and throws an error on anything unrecognized.
  */
 function checkFlawLevels(flawChecks) {
   const checks = flawChecks
     .split(",")
     .map((x) => x.trim())
     .filter((x) => x)
-    .map((x) => x.split(":"));
+    .map((x) => x.split(":").map((s) => s.trim()));
 
-  // But any wildcards (e.g. '*:warn') first
+  // Check that it doesn't contain more than 1 wildcard,
+  // because that'd make no sense.
+  const wildcards = checks.filter((tuple) => tuple[0] === "*");
+  if (wildcards.length > 1) {
+    throw new Error(`Can only be 1 wild card (not: ${wildcards})`);
+  }
+
+  // Put any wildcards (e.g. '*:warn') first
   checks.sort((a, b) => {
     if (a[0] === "*" && b[0] !== "*") {
       return -1;
@@ -133,25 +144,26 @@ function checkFlawLevels(flawChecks) {
     return 0;
   });
 
-  // Reverse FLAW_LEVELS
-  const levels = Object.fromEntries(
-    Object.entries(FLAW_LEVELS).map(([key, value]) => [value, key])
-  );
-
   const checked = new Map();
+
+  // Unless specified, set 'ignore' on all of them first.
+  for (const check of VALID_FLAW_CHECKS) {
+    checked.set(check, FLAW_LEVELS.IGNORE);
+  }
+
+  const levelValues = Object.values(FLAW_LEVELS);
+
   for (const tuple of checks) {
     if (tuple.length !== 2) {
       throw new Error(`Not a tuple pair of 2 (${tuple})`);
     }
     const [identifier, level] = tuple;
-    if (!levels[level]) {
-      throw new Error(
-        `Invalid level: '${level}' (only ${Object.keys(levels)})`
-      );
+    if (!levelValues.includes(level)) {
+      throw new Error(`Invalid level: '${level}' (only ${levelValues})`);
     }
     if (identifier === "*") {
       for (const check of VALID_FLAW_CHECKS) {
-        checked.set(check, levels[level]);
+        checked.set(check, level);
       }
     } else if (!VALID_FLAW_CHECKS.has(identifier)) {
       throw new Error(
@@ -160,7 +172,7 @@ function checkFlawLevels(flawChecks) {
         ]})`
       );
     } else {
-      checked.set(identifier, levels[level]);
+      checked.set(identifier, level);
     }
   }
 
@@ -285,26 +297,31 @@ function broadcastWebsocketMessage(msg) {
 }
 
 async function runBuild(sources, options, logger) {
-  const builder = new Builder(sources, options, logger);
+  try {
+    const builder = new Builder(sources, options, logger);
 
-  if (options.listLocales) {
-    return builder.listLocales();
-  } else if (options.ensureTitles) {
-    builder.initSelfHash();
-    return builder.ensureAllTitles();
-  } else {
-    builder.initSelfHash();
-    builder.ensureAllTitles();
-    builder.ensureAllRedirects();
-    builder.prepareRoots();
-    if (!options.watch) {
-      return builder.start();
+    if (options.listLocales) {
+      return builder.listLocales();
+    } else if (options.ensureTitles) {
+      builder.initSelfHash();
+      return builder.ensureAllTitles();
+    } else {
+      builder.initSelfHash();
+      builder.ensureAllTitles();
+      builder.ensureAllRedirects();
+      builder.prepareRoots();
+      if (!options.watch) {
+        return builder.start();
+      }
+      if (options.watch || options.buildAndWatch) {
+        builder.watch();
+        console.log("Starting WebSocket (port 8080) to report on builds.");
+        webSocketServer = new WebSocket.Server({ port: 8080 });
+      }
     }
-    if (options.watch || options.buildAndWatch) {
-      builder.watch();
-      console.log("Starting WebSocket (port 8080) to report on builds.");
-      webSocketServer = new WebSocket.Server({ port: 8080 });
-    }
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
 }
 
@@ -335,7 +352,6 @@ class Builder {
     this.options.popularitiesfile =
       this.options.popularitiesfile || DEFAULT_POPULARITIES_FILEPATH;
 
-    console.log("this.options.flawLevels:", this.options.flawLevels);
     this.options.flawLevels = checkFlawLevels(
       this.options.flawLevels || DEFAULT_FLAW_LEVELS
     );
@@ -431,6 +447,7 @@ class Builder {
   }
 
   recordFlaws(type, uri, flaws) {
+    console.log([type, uri, flaws]);
     if (!this.flawsByType.has(type)) {
       this.flawsByType.set(type, new Map());
     }
@@ -438,27 +455,27 @@ class Builder {
     flawsByUri.set(uri, flaws);
   }
 
-  reportFlaws(type) {
-    const flawsByUri = this.flawsByType.get(type);
-    if (flawsByUri) {
-      if (flawsByUri.size) {
-        const header = `\nFlaws found within ${flawsByUri.size} document(s) while rendering macros`;
-        if (this.options.flaws === FLAW_LEVELS.IGNORE) {
-          this.logger.info(chalk.yellow.bold(header + "."));
-        } else {
-          this.logger.error(chalk.red.bold(header + ":"));
-          for (const [uri, flaws] of flawsByUri) {
-            this.logger.error(
-              chalk.red.bold(`*** flaw(s) while rendering ${uri}:`)
-            );
-            for (const flaw of flaws) {
-              this.logger.error(chalk.red(`${flaw}\n`));
-            }
-          }
-        }
-      }
-    }
-  }
+  // reportFlaws(type) {
+  //   const flawsByUri = this.flawsByType.get(type);
+  //   if (flawsByUri) {
+  //     if (flawsByUri.size) {
+  //       const header = `\nFlaws found within ${flawsByUri.size} document(s) while rendering macros`;
+  //       if (this.options.flaws === FLAW_LEVELS.IGNORE) {
+  //         this.logger.info(chalk.yellow.bold(header + "."));
+  //       } else {
+  //         this.logger.error(chalk.red.bold(header + ":"));
+  //         for (const [uri, flaws] of flawsByUri) {
+  //           this.logger.error(
+  //             chalk.red.bold(`*** flaw(s) while rendering ${uri}:`)
+  //           );
+  //           for (const flaw of flaws) {
+  //             this.logger.error(chalk.red(`${flaw}\n`));
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
   getFolder(uri) {
     // Depending on the current working directory, get the
@@ -546,13 +563,11 @@ class Builder {
           processed = await self.processFolder(source, folder);
         } catch (err) {
           self.logger.error(chalk.red(`Error while processing: ${folder}`));
-          self.logger.error(err);
+          console.error(err);
           throw err;
         }
         allProcessed.push(processed);
       }
-
-      self.reportFlaws("macros");
 
       return allProcessed;
     }
@@ -626,7 +641,7 @@ class Builder {
           processed = await self.processFolder(source, folder);
         } catch (err) {
           self.logger.error(chalk.red(`Error while processing: ${folder}`));
-          self.logger.error(err);
+          console.error(err);
           throw err;
         }
         reportProcessed(processed);
@@ -636,7 +651,6 @@ class Builder {
     const t1 = new Date();
     self.dumpAllURLs();
     self.summarizeResults(counts, t1 - t0);
-    self.reportFlaws("macros");
   }
 
   ensureAllTitles() {
@@ -1231,6 +1245,12 @@ class Builder {
     );
     const hashDestination = path.join(destinationDir, "_index.hash");
 
+    // XXX should we get some of this stuff from this.allTitles instead?!
+    // XXX see https://github.com/mdn/stumptown-renderer/issues/502
+    const doc = {};
+
+    doc.flaws = {};
+
     // XXX What might be interesting is to make KS do less.
     // The idea is we first have the raw HTML, which'll contain strings
     // like `{{Compat('foo.bar')}}`, then we allow KS turn that into
@@ -1249,9 +1269,13 @@ class Builder {
       renderedHtml = rawHtml;
     } else {
       let flaws;
-      [renderedHtml, flaws] = await this.renderMacros(rawHtml, metadata);
+      try {
+        [renderedHtml, flaws] = await this.renderMacros(rawHtml, metadata);
+      } catch (err) {
+        throw err;
+      }
       if (flaws.length) {
-        if (this.options.flaws === FLAW_LEVELS.ERROR) {
+        if (this.options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
           // Report and exit immediately on the first document with flaws.
           this.logger.error(
             chalk.red.bold(`\nFlaws within ${mdnUrlLC} while rendering macros:`)
@@ -1260,8 +1284,12 @@ class Builder {
             this.logger.error(chalk.red(`${flaw}\n`));
           }
           process.exit(1);
+        } else if (this.options.flawLevels.get("macros") === FLAW_LEVELS.WARN) {
+          // XXX should record a tally of macro flaws
+          this.injectMacroFlaws(doc, mdnUrlLC, flaws);
         } else {
-          this.recordFlaws("macros", mdnUrlLC, flaws);
+          // XXX should record a tally of macro flaws
+          // this.recordFlaws("macros", mdnUrlLC, flaws);
         }
       }
     }
@@ -1312,10 +1340,6 @@ class Builder {
     // Remove any completely empty <p>, <dl>, or <div> tags.
     // XXX costs about 5% longer time
     $("p:empty,dl:empty,div:empty,span.alllinks").remove();
-
-    // XXX should we get some of this stuff from this.allTitles instead?!
-    // XXX see https://github.com/mdn/stumptown-renderer/issues/502
-    const doc = {};
 
     doc.title = metadata.title;
     doc.mdn_url = mdn_url;
@@ -1397,6 +1421,10 @@ class Builder {
     };
   }
 
+  injectMacroFlaws(doc, mdnUrlLC, flaws) {
+    doc.flaws.macros = flaws;
+  }
+
   /**
    * Validate the parsed HTML, with the sidebar removed.
    *
@@ -1405,11 +1433,9 @@ class Builder {
    * @param {Cheerio document instance} $
    */
   injectFlaws(source, doc, $) {
-    doc.flaws = {};
-
     // The 'broken_links' flaw check looks for internal links that
     // link to a document that's going to fail with a 404 Not Found.
-    if (this.options.flawCheck.includes("broken_links")) {
+    if (this.options.flawLevels.get("broken_links") !== FLAW_LEVELS.IGNORE) {
       $("a[href]").each((i, element) => {
         const a = $(element);
         const href = a.attr("href").split("#")[0];
@@ -1422,9 +1448,12 @@ class Builder {
           }
         }
       });
+      if (this.options.flawLevels.get("broken_links") === FLAW_LEVELS.ERROR) {
+        throw new Error(`broken_links flaws: ${doc.flaws.broken_links}`);
+      }
     }
 
-    if (this.options.flawCheck.includes("bad_bcd_queries")) {
+    if (this.options.flawLevels.get("bad_bcd_queries") !== FLAW_LEVELS.IGNORE) {
       $("div.bc-data").each((i, element) => {
         const dataQuery = $(element).attr("id");
         if (!dataQuery) {
@@ -1445,6 +1474,9 @@ class Builder {
           }
         }
       });
+      if (this.options.flawLevels.get("broken_links") === FLAW_LEVELS.ERROR) {
+        throw new Error(`bad_bcd_queries flaws: ${doc.flaws.bad_bcd_queries}`);
+      }
     }
   }
 

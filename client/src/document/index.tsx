@@ -151,7 +151,9 @@ export function Document(props) {
         <div className="content">
           <RenderDocumentBody doc={doc} />
           <hr />
-          <ToggleDocmentFlaws flaws={doc.flaws} />
+          {process.env.NODE_ENV === "development" && (
+            <ToggleDocmentFlaws flaws={doc.flaws} />
+          )}
           <EditThisPage source={doc.source} />
           {doc.contributors && <Contributors contributors={doc.contributors} />}
         </div>
@@ -367,7 +369,7 @@ function LoadingError({ error }) {
 }
 
 interface FlatFlaw {
-  flawCheck: string;
+  name: string;
   flaws: string[];
   count: number;
 }
@@ -393,14 +395,10 @@ function ToggleDocmentFlaws({ flaws }: { flaws: object }) {
     }
   }, [show]);
 
-  if (process.env.NODE_ENV !== "development") {
-    return null;
-  }
-
   let flatFlaws: FlatFlaw[] = [];
-  for (const [flawCheck, actualFlaws] of Object.entries(flaws)) {
+  for (const [name, actualFlaws] of Object.entries(flaws)) {
     flatFlaws.push({
-      flawCheck,
+      name,
       flaws: actualFlaws,
       count: actualFlaws.length,
     });
@@ -410,19 +408,36 @@ function ToggleDocmentFlaws({ flaws }: { flaws: object }) {
   function summarizeFlaws() {
     // Return a one-liner about all the flaws
     const bits = flatFlaws.map((flaw) => {
-      return `${humanizeFlawName(flaw.flawCheck)}: ${flaw.count}`;
+      return `${humanizeFlawName(flaw.name)}: ${flaw.count}`;
     });
     return bits.join(", ");
   }
 
+  function summarizeFlawsCounts() {
+    // Return a one-liner about all the flaws
+    const bits = flatFlaws.map((flaw) => flaw.count);
+    return bits.join(" + ");
+  }
+
+  const hasFlaws = flatFlaws.length > 0;
+
   return (
     <div id="show-flaws" className="toggle-flaws">
-      <button type="submit" onClick={toggle}>
-        {show ? "Hide flaws" : "Show flaws"}
-      </button>
+      {hasFlaws ? (
+        <button type="submit" onClick={toggle}>
+          {show ? "Hide flaws" : `Show flaws (${summarizeFlawsCounts()})`}
+        </button>
+      ) : (
+        <p className="no-flaws">
+          No known flaws at the moment
+          <span role="img" aria-label="yay!">
+            🍾
+          </span>
+        </p>
+      )}
 
       {show ? (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>Loading document flaws...</div>}>
           <DocumentFlaws flaws={flatFlaws} />
         </Suspense>
       ) : (

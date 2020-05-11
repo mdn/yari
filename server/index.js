@@ -129,10 +129,8 @@ function getOrCreateBuilder(options) {
         notLocales: [],
         slugsearch: [],
         noProgressbar: true,
-        flawCheck: DEFAULT_FLAW_CHECKS,
         foldersearch: options.foldersearch || [],
         popularitiesfile: normalizeContentPath(DEFAULT_POPULARITIES_FILEPATH),
-        flaws: FLAW_LEVELS.WARN,
       },
       console
     );
@@ -162,6 +160,17 @@ app.get("/_flaws", (req, res) => {
     return res.status(400).send("'locale' is always required");
   }
   const filters = req.query;
+
+  let page;
+  try {
+    page = parseInt(req.query.page || "1");
+    if (page < 1) {
+      return res.status(400).send("'page' number too small");
+    }
+  } catch (err) {
+    return res.status(400).send("'page' number invalid");
+  }
+
   const sortBy = req.query.sort || "popularity";
   const sortReverse = JSON.parse(req.query.reverse || "false");
 
@@ -178,12 +187,6 @@ app.get("/_flaws", (req, res) => {
     built: 0,
   };
 
-  // This helps the filtering UI to know what all the possible flawchecks are.
-  const checks = {
-    all: [...VALID_FLAW_CHECKS],
-    enabled: DEFAULT_FLAW_CHECKS,
-  };
-
   const documents = [];
 
   const builder = getOrCreateBuilder();
@@ -192,11 +195,6 @@ app.get("/_flaws", (req, res) => {
       counts.possible++;
     }
   }
-  builder.allTitles.forEach((data) => {
-    if (data.locale && data.locale.toLowerCase() === locale) {
-      counts.possible++;
-    }
-  });
 
   const allPopularitiesValues = [];
   for (const value of builder.allTitles.values()) {
@@ -225,7 +223,7 @@ app.get("/_flaws", (req, res) => {
   // payload. It's too much stuff and some values need to be repackaged/
   // serialized or some other transformation computation.
   function packageDocument(folder, doc) {
-    const { modified, mdn_url } = doc;
+    const { modified, mdn_url, title } = doc;
     const popularity = {
       value: doc.popularity,
       ranking: doc.popularity
@@ -233,7 +231,10 @@ app.get("/_flaws", (req, res) => {
         : NaN,
     };
     const flaws = packageFlaws(doc.flaws);
-    return Object.assign({ folder, popularity, flaws }, { modified, mdn_url });
+    return Object.assign(
+      { folder, popularity, flaws },
+      { modified, mdn_url, title }
+    );
   }
 
   const t1 = new Date();
@@ -259,8 +260,11 @@ app.get("/_flaws", (req, res) => {
         fs.readFileSync(path.join(folder, "index.json"))
       );
 
-      if (doc.flaws && Object.keys(doc.flaws)) {
-        if (filters.mdn_url && !doc.mdn_url.includes(filters.mdn_url)) {
+      if (doc.flaws && Object.keys(doc.flaws).length) {
+        if (
+          filters.mdn_url &&
+          !doc.mdn_url.toLowerCase().includes(filters.mdn_url.toLowerCase())
+        ) {
           continue;
         }
         if (filteredFlaws.size) {
@@ -325,15 +329,33 @@ app.get("/_flaws", (req, res) => {
     built: t2.getTime() - t1.getTime(),
   };
 
+  // Prepare to slice per the page number
+  let [m, n] = [
+    (page - 1) * MAX_DOCUMENTS_RETURNED,
+    page * MAX_DOCUMENTS_RETURNED,
+  ];
+
   res.json({
     counts,
     times,
-    checks,
+    flawLevels: serializeFlawLevels(builder.options.flawLevels),
 
     // The slicing is just to make the payload more manageable
-    documents: documents.slice(0, MAX_DOCUMENTS_RETURNED),
+    documents: documents.slice(m, n),
   });
 });
+
+function serializeFlawLevels(flawLevels) {
+  const keys = [...flawLevels.keys()];
+  keys.sort();
+  return keys.map((key) => {
+    return {
+      name: key,
+      level: flawLevels.get(key),
+      ignored: flawLevels.get(key) === FLAW_LEVELS.IGNORE,
+    };
+  });
+}
 
 function* walker(root, depth = 0) {
   const files = fs.readdirSync(root);

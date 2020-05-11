@@ -4,19 +4,27 @@ import { humanizeFlawName } from "../flaw-utils";
 
 import "./flaws.scss";
 
-function Flaws({ flaws }) {
+interface FlawCheck {
+  count: number;
+  name: string;
+  flaws: any[];
+}
+
+function Flaws({ flaws }: { flaws: FlawCheck[] }) {
   if (process.env.NODE_ENV !== "development") {
     throw new Error("This shouldn't be used in non-development builds");
   }
   return (
     <div id="document-flaws">
       {flaws.map((flaw) => {
-        if (flaw.flawCheck === "broken_links") {
+        if (flaw.name === "broken_links") {
           return <BrokenLinks key="broken_links" urls={flaw.flaws} />;
-        } else if (flaw.flawCheck === "bad_bcd_queries") {
+        } else if (flaw.name === "bad_bcd_queries") {
           return <BadBCDQueries key="bad_bcd_queries" messages={flaw.flaws} />;
+        } else if (flaw.name === "macros") {
+          return <Macros key="macros" messages={flaw.flaws} />;
         } else {
-          throw new Error(`Unknown flaw check '${flaw.flawCheck}'`);
+          throw new Error(`Unknown flaw check '${flaw.name}'`);
         }
       })}
     </div>
@@ -146,6 +154,46 @@ function BadBCDQueries({ messages }) {
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+interface MacroErrorMessage {
+  name: string;
+  cause?: {
+    path: string;
+  };
+  options: {
+    name: string;
+  };
+  line: number;
+  column: number;
+  message: string;
+}
+
+function Macros({ messages }: { messages: MacroErrorMessage[] }) {
+  return (
+    <div className="flaw flaw__macros">
+      <h3>{humanizeFlawName("macros")}</h3>
+      {messages.map((msg) => {
+        return (
+          <details key={`${msg.name}:${msg.line}:${msg.column}`}>
+            <summary>
+              <a href={`?line=${msg.line}&column=${msg.column}`}>
+                <code>{msg.options.name}</code> on line {msg.line}
+              </a>
+            </summary>
+            <pre>{msg.message}</pre>
+
+            {msg.cause && msg.cause.path && (
+              <p className="cause">
+                Cause: <code>{msg.cause.path}</code>
+              </p>
+            )}
+          </details>
+        );
+      })}
+      {/* <pre>{JSON.stringify(messages, null, 2)}</pre> */}
     </div>
   );
 }
