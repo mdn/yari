@@ -405,7 +405,7 @@ class Builder {
         const folder = titleData.file;
         if (titleData.source !== source.filepath) {
           throw new Error(
-            "rendering macros across different sources not current supported"
+            "rendering macros across different sources is not currently supported"
           );
         }
         const preMetadata = getMetadata(source, folder).metadata;
