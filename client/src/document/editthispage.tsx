@@ -6,16 +6,16 @@ export function EditThisPage({ source }) {
   const [opening, setOpening] = React.useState(false);
 
   useEffect(() => {
-    let dismounted = false;
+    let unsetOpeningTimer: ReturnType<typeof setTimeout>;
     if (opening) {
-      setTimeout(() => {
-        if (!dismounted) {
-          setOpening(false);
-        }
+      unsetOpeningTimer = setTimeout(() => {
+        setOpening(false);
       }, 3000);
     }
     return () => {
-      dismounted = true;
+      if (unsetOpeningTimer) {
+        clearTimeout(unsetOpeningTimer);
+      }
     };
   }, [opening]);
 
