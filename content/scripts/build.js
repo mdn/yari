@@ -401,9 +401,12 @@ class Builder {
     for (const preUri of prerequisites) {
       const preCleanUri = this.cleanUri(preUri);
       if (this.allTitles.has(preCleanUri)) {
-        const folder = this.allTitles.get(preCleanUri).file;
-        if (source.isStumptown) {
-          throw new Error("Stumptown sources don't have macros.");
+        const titleData = this.allTitles.get(preCleanUri);
+        const folder = titleData.file;
+        if (titleData.source !== source.filepath) {
+          throw new Error(
+            "rendering macros across different sources not current supported"
+          );
         }
         const preMetadata = getMetadata(source, folder).metadata;
         const preRawHtml = fs.readFileSync(
@@ -1427,7 +1430,7 @@ class Builder {
       // bother setting it.
       excludeInTitlesJson: source.excludeInTitlesJson,
       excludeInSitemaps: source.excludeInSitemaps,
-      source: source.filepath,
+      source: path.resolve(source.filepath),
     };
     if (metadata.tags) {
       // Unfortunately, some of the Kumascript macros (including some of the
