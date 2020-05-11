@@ -1,13 +1,13 @@
-# stumptown-renderer
+# yari
 
-[![Build Status](https://travis-ci.org/mdn/stumptown-renderer.svg?branch=master)](https://travis-ci.org/mdn/stumptown-renderer)
+[![Build Status](https://travis-ci.org/mdn/yari.svg?branch=master)](https://travis-ci.org/mdn/yari)
 
 ## Quickstart
 
 These steps should get you started, locally, straight away:
 
-    git clone --recursive https://github.com/mdn/stumptown-renderer.git
-    cd stumptown-renderer
+    git clone --recursive https://github.com/mdn/yari.git
+    cd yari
     cp .env-dist .env
     yarn
     yarn start
@@ -22,10 +22,10 @@ By default, content from `stumptown-content` is not included. To add it
 you need to do two things.
 
 1. Edit your `.env` file to put where the packaged `stumptown-content` files
-are. For example: `BUILD_STUMTPTOWN_ROOT=/path/to/stumptown-content/packaged`
+   are. For example: `BUILD_STUMTPTOWN_ROOT=/path/to/stumptown-content/packaged`
 
 2. Go into your `stumptown-content` folder (if you use the default
-git submodule it's in `./stumptown`) and run `npm install && npm run build-json`
+   git submodule it's in `./stumptown`) and run `npm install && npm run build-json`
 
 Now, when building content it will read from **multiple sources** in a
 predetermined order.
@@ -82,8 +82,8 @@ the React components within are used in two different ways:
 If you haven't already done so, run:
 
     cd where/you/want/to/clone/it
-    git clone --recursive https://github.com/mdn/stumptown-renderer.git
-    cd stumptown-renderer
+    git clone --recursive https://github.com/mdn/yari.git
+    cd yari
 
 You need a decent version of `node` (>= 10.11.0), `yarn`, and `npm`.
 
@@ -107,7 +107,7 @@ browser. If you edit any of the Markdown files in `stumptown` it will
 repackage that file and refresh your browser too.
 
 Note! We hope to use, as an alternative to `nf`, `docker-compose`.
-See [https://github.com/mdn/stumptown-renderer/issues/23](https://github.com/mdn/stumptown-renderer/issues/23)
+See [https://github.com/mdn/yari/issues/23](https://github.com/mdn/yari/issues/23)
 But even then, using `docker-compose` should and will be optional.
 
 ## Contributing
@@ -204,8 +204,8 @@ is available here in this project as a _git submodule_ (named `stumptown`),
 then you can set the `STUMPTOWN_CONTENT_ROOT` environment variable.
 For example:
 
-    cd ~/projects/stumptown-renderer
-    # running 'yarn build' now would use ~/projects/stumptown-renderer/stumptown
+    cd ~/projects/yari
+    # running 'yarn build' now would use ~/projects/yari/stumptown
     yarn cross-env STUMPTOWN_CONTENT_ROOT=~/stumptown-content yarn build
     # or
     yarn cross-env STUMPTOWN_CONTENT_ROOT=~/stumptown-content yarn deployment-build

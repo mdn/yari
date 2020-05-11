@@ -1,8 +1,8 @@
 {
-  "name": "stumptown-renderer",
+  "name": "yari",
   "version": "0.0.0",
   "description": "Meta package applicable to all packages",
-  "repository": "https://github.com/mdn/stumptown-renderer",
+  "repository": "https://github.com/mdn/yari",
   "author": "MDN Web Docs",
   "license": "MPL-2.0",
   "scripts": {
