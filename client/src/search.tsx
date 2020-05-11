@@ -35,7 +35,7 @@ const INACTIVE_PLACEHOLDER = isMobileUserAgent()
   : 'Site search... (Press "/" to focus)';
 
 // TODO the only reason exporting this, for now, is to make
-// jest tests pass until https://github.com/mdn/stumptown-renderer/pull/494
+// jest tests pass until https://github.com/mdn/yari/pull/494
 // is resolved.
 export class SearchWidgetClass extends React.Component {
   state = {

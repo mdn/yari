@@ -82,7 +82,7 @@ app.use(
 );
 
 function normalizeContentPath(start) {
-  return path.join(__dirname, "..", start);
+  return fs.existsSync(start) ? start : path.join(__dirname, "..", start);
 }
 
 app.get("/_open", (req, res) => {
