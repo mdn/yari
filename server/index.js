@@ -127,7 +127,6 @@ function getOrCreateBuilder(options) {
         destination: normalizeContentPath(
           process.env.BUILD_DESTINATION || "client/build"
         ),
-        // popularitiesfiles: process.env.BUILD_POPULARITIES_FILEPATH,
         noSitemaps: true,
         specificFolders: [],
         buildJsonOnly: false,

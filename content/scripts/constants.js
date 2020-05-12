@@ -111,9 +111,6 @@ const FLAW_LEVELS = Object.freeze({
   IGNORE: "ignore",
   ERROR: "error",
 });
-const DEFAULT_FLAW_CHECKS = (process.env.BUILD_FLAW_CHECKS || "")
-  .split(",")
-  .filter((x) => x);
 
 // These names need to match what we have in the code where we have various
 // blocks of code that look something like this:
@@ -129,7 +126,7 @@ const VALID_FLAW_CHECKS = new Set([
   "bad_bcd_queries",
 ]);
 
-// TODO (far future): Switch to "warn" or "error" when number of flaws drops.
+// TODO (far future): Switch to "error" when number of flaws drops.
 const DEFAULT_FLAW_LEVELS = process.env.BUILD_FLAW_LEVELS || "*:warn";
 
 module.exports = {
@@ -147,9 +144,7 @@ module.exports = {
   // DEFAULT_STUMPTOWN_PACKAGED_ROOT,
   MAX_GOOGLE_ANALYTICS_URIS,
   VALID_LOCALES,
-  DEFAULT_FLAW_CHECKS,
   VALID_FLAW_CHECKS,
-  // DEFAULT_FLAWS_LEVEL,
   FLAW_LEVELS,
   DEFAULT_FLAW_LEVELS,
 };

@@ -31,11 +31,9 @@ import "./index.scss";
 
 // Lazy sub-components
 const DocumentSpy = lazy(() => import("./spy"));
-
-// Lazy sub-components
 const DocumentFlaws = lazy(() => import("./flaws"));
 
-export function Document(props) {
+export function Document(props /* TODO: define a TS interface for this */) {
   const params = useParams();
   const slug = params["*"];
   const locale = params.locale;
