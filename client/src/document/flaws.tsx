@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import useSWR from "swr";
 import { humanizeFlawName } from "../flaw-utils";
-
 import "./flaws.scss";
+// import { Doc } from "./types";
 
 interface FlawCheck {
   count: number;
@@ -168,18 +168,53 @@ interface MacroErrorMessage {
   };
   line: number;
   column: number;
+  filepath: string;
   message: string;
 }
 
 function Macros({ messages }: { messages: MacroErrorMessage[] }) {
+  const [opening, setOpening] = React.useState<string | null>(null);
+  useEffect(() => {
+    let unsetOpeningTimer: ReturnType<typeof setTimeout>;
+    if (opening) {
+      unsetOpeningTimer = setTimeout(() => {
+        setOpening(null);
+      }, 3000);
+    }
+    return () => {
+      if (unsetOpeningTimer) {
+        clearTimeout(unsetOpeningTimer);
+      }
+    };
+  }, [opening]);
+
+  function openInEditor(msg: MacroErrorMessage, key: string) {
+    const sp = new URLSearchParams();
+    sp.set("filepath", msg.filepath);
+    sp.set("line", `${msg.line}`);
+    sp.set("column", `${msg.column}`);
+    console.log(
+      `Going to try to open ${msg.filepath}:${msg.line}:${msg.column} in your editor`
+    );
+    setOpening(key);
+    fetch(`/_open?${sp.toString()}`);
+  }
   return (
     <div className="flaw flaw__macros">
       <h3>{humanizeFlawName("macros")}</h3>
       {messages.map((msg) => {
+        const key = `${msg.filepath}:${msg.line}:${msg.column}`;
+
         return (
-          <details key={`${msg.name}:${msg.line}:${msg.column}`}>
+          <details key={key}>
             <summary>
-              <a href={`?line=${msg.line}&column=${msg.column}`}>
+              <a
+                href={`file://${msg.filepath}`}
+                onClick={(event: React.MouseEvent) => {
+                  event.preventDefault();
+                  openInEditor(msg, key);
+                }}
+              >
                 <code>{msg.options.name}</code> on line {msg.line}
               </a>
             </summary>

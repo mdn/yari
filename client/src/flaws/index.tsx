@@ -29,6 +29,7 @@ interface Counts {
   found: number;
   possible: number;
   built: number;
+  pages: number;
 }
 
 interface Times {
@@ -108,7 +109,11 @@ function serializeFiltersAndPagination(
       sp.set(key, value);
     }
   });
-  if (page !== 1) {
+  if (page === 1) {
+    if (sp.has("page")) {
+      sp.delete("page");
+    }
+  } else {
     sp.set("page", `${page}`);
   }
   const spString = sp.toString();
@@ -147,6 +152,7 @@ export default function AllFlaws() {
   }, [filters, location.search, navigate, page]);
 
   function updateFilters(newFilters: Filter) {
+    setPage(1);
     setFilters(Object.assign({}, newFilters));
   }
 
@@ -247,7 +253,12 @@ export default function AllFlaws() {
             sortReverse={sortReverse}
             setSort={setSort}
           />
-          <Pagination page={page} setPage={setPage} />
+          <Pagination
+            page={page}
+            setPage={setPage}
+            filters={filters}
+            pages={lastData.counts.pages}
+          />
         </div>
       )}
       {data && <ShowTimes times={data.times} />}
@@ -255,12 +266,28 @@ export default function AllFlaws() {
   );
 }
 
-function Pagination({ page, setPage }: { page: number; setPage: Function }) {
+function Pagination({
+  page,
+  setPage,
+  filters,
+  pages,
+}: {
+  page: number;
+  setPage: Function;
+  filters: Filter;
+  pages: number;
+}) {
+  const location = useLocation();
+
+  if (pages < 2) {
+    return null;
+  }
+
   return (
     <p className="pagination">
       {page > 1 ? (
         <Link
-          to={`?page=${page - 1}`}
+          to={serializeFiltersAndPagination(location.search, filters, page - 1)}
           onClick={() => {
             setPage(page - 1);
           }}
@@ -268,18 +295,24 @@ function Pagination({ page, setPage }: { page: number; setPage: Function }) {
           Previous page ({page - 1})
         </Link>
       ) : (
-        <a href="." className="disabled">
+        <a href={window.location.href} className="disabled">
           Previous page
         </a>
       )}{" "}
-      <Link
-        to={`?page=${page + 1}`}
-        onClick={() => {
-          setPage(page + 1);
-        }}
-      >
-        Next page ({page + 1})
-      </Link>
+      {page + 1 <= pages ? (
+        <Link
+          to={serializeFiltersAndPagination(location.search, filters, page + 1)}
+          onClick={() => {
+            setPage(page + 1);
+          }}
+        >
+          Next page ({page + 1})
+        </Link>
+      ) : (
+        <a href={window.location.href} className="disabled">
+          Next page
+        </a>
+      )}
     </p>
   );
 }
@@ -326,6 +359,15 @@ function ShowFilters({
 
   function refreshFilters() {
     updateFilters(filters);
+  }
+
+  let hasFilters = !equalObjects(defaultFilter, filters);
+
+  function resetFilters(event: React.MouseEvent) {
+    event.preventDefault();
+    const newFilters = Object.assign({}, defaultFilter);
+    setFilters(newFilters);
+    updateFilters(newFilters);
   }
 
   return (
@@ -389,10 +431,42 @@ function ShowFilters({
         <div>
           <h4>&nbsp;</h4>
           <button type="submit">Filter now</button>
+          {hasFilters && (
+            <button type="button" onClick={resetFilters}>
+              Reset filters
+            </button>
+          )}
         </div>
       </form>
     </div>
   );
+}
+
+function equalObjects(obj1: object, obj2: object) {
+  const keys1 = new Set(Object.keys(obj1));
+  const keys2 = new Set(Object.keys(obj2));
+  if (keys1.size !== keys2.size) {
+    return false;
+  }
+  for (const key of keys1) {
+    if (!keys2.has(key)) {
+      return false;
+    }
+  }
+
+  return Object.entries(obj1).every(([key, value]) => {
+    const value2 = obj2[key];
+    if (typeof value !== typeof value2) {
+      return false;
+    }
+    if (Array.isArray(value)) {
+      return (
+        value.length === value2.length && value.every((v, i) => v === value2[i])
+      );
+    } else {
+      return value === value2;
+    }
+  });
 }
 
 function ShowDocumentsFound({

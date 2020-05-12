@@ -1259,7 +1259,8 @@ class Builder {
     // like `<--#Compat('foo.bar')--> and then replace it here in the
     // post-processing instead.
 
-    const rawHtml = fs.readFileSync(path.join(folder, "index.html"), "utf8");
+    const rawHtmlFilepath = path.join(folder, "index.html");
+    const rawHtml = fs.readFileSync(rawHtmlFilepath, "utf8");
 
     let renderedHtml;
 
@@ -1275,6 +1276,8 @@ class Builder {
         throw err;
       }
       if (flaws.length) {
+        // XXX should record a tally of macro flaws
+
         if (this.options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
           // Report and exit immediately on the first document with flaws.
           this.logger.error(
@@ -1283,10 +1286,18 @@ class Builder {
           for (const flaw of flaws) {
             this.logger.error(chalk.red(`${flaw}\n`));
           }
+          // XXX This is probably the wrong way to bubble up.
           process.exit(1);
         } else if (this.options.flawLevels.get("macros") === FLAW_LEVELS.WARN) {
           // XXX should record a tally of macro flaws
-          this.injectMacroFlaws(doc, mdnUrlLC, flaws);
+
+          // For each flaw, inject the path of the file that was used.
+          // This gets used in the dev UI so that you can get a shortcut
+          // link to open that file directly in your $EDITOR.
+          flaws.forEach((flaw) => {
+            flaw.filepath = rawHtmlFilepath;
+          });
+          doc.flaws.macros = flaws;
         } else {
           // XXX should record a tally of macro flaws
           // this.recordFlaws("macros", mdnUrlLC, flaws);
@@ -1419,10 +1430,6 @@ class Builder {
       jsonFile: outfileJson,
       doc,
     };
-  }
-
-  injectMacroFlaws(doc, mdnUrlLC, flaws) {
-    doc.flaws.macros = flaws;
   }
 
   /**

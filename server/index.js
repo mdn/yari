@@ -8,9 +8,7 @@ const openEditor = require("open-editor");
 const { Builder } = require("content/scripts/build");
 const { Sources } = require("content/scripts/sources");
 const {
-  DEFAULT_FLAW_CHECKS,
   DEFAULT_POPULARITIES_FILEPATH,
-  VALID_FLAW_CHECKS,
   FLAW_LEVELS,
 } = require("content/scripts/constants.js");
 
@@ -96,12 +94,20 @@ function normalizeContentPath(start) {
 }
 
 app.get("/_open", (req, res) => {
-  const filepath = req.query.filepath;
+  const { line, column, filepath } = req.query;
   if (!filepath) {
     throw new Error("No .filepath in the request query");
   }
-  openEditor([filepath]);
-  res.status(200).send(`Tried to open ${filepath} in ${process.env.EDITOR}`);
+  const absoluteFilepath = normalizeContentPath(filepath);
+  let spec = absoluteFilepath;
+  if (line) {
+    spec += `:${parseInt(line)}`;
+    if (column) {
+      spec += `:${parseInt(column)}`;
+    }
+  }
+  openEditor([spec]);
+  res.status(200).send(`Tried to open ${spec} in ${process.env.EDITOR}`);
 });
 
 // Module level memoization
@@ -171,6 +177,11 @@ app.get("/_flaws", (req, res) => {
     return res.status(400).send("'page' number invalid");
   }
 
+  let [popularityFilter, error] = validPopularityFilter(filters.popularity);
+  if (error) {
+    return res.status(400).send(error.toString());
+  }
+
   const sortBy = req.query.sort || "popularity";
   const sortReverse = JSON.parse(req.query.reverse || "false");
 
@@ -185,6 +196,8 @@ app.get("/_flaws", (req, res) => {
     // Number of documents that have been built.
     // Basically a count of client/build/**/index.json files.
     built: 0,
+    // Used by the pagination
+    pages: 0,
   };
 
   const documents = [];
@@ -273,22 +286,18 @@ app.get("/_flaws", (req, res) => {
           }
         }
 
-        if (filters.popularity) {
+        if (popularityFilter) {
           const docRanking = doc.popularity
             ? 1 + allPopularitiesValues.filter((p) => p > doc.popularity).length
             : NaN;
-          if (filters.popularity.startsWith("<")) {
-            const min = parseInt(filters.popularity.slice(1).trim());
-            if (isNaN(docRanking) || docRanking > min) {
+          if (popularityFilter.min) {
+            if (isNaN(docRanking) || docRanking > popularityFilter.min) {
               continue;
             }
-          } else if (filters.popularity.startsWith(">")) {
-            const max = parseInt(filters.popularity.slice(1).trim());
-            if (docRanking < max) {
+          } else if (popularityFilter.max) {
+            if (docRanking < popularityFilter.max) {
               continue;
             }
-          } else {
-            throw new Error("Not implemented");
           }
         }
         counts.found++;
@@ -296,6 +305,10 @@ app.get("/_flaws", (req, res) => {
       }
     }
   }
+
+  // Now we know how many documents were found, update the number of pages
+  // based on the batch size.
+  counts.pages = Math.ceil(counts.found / MAX_DOCUMENTS_RETURNED);
 
   const sortMultiplier = sortReverse ? -1 : 1;
   documents.sort((a, b) => {
@@ -344,6 +357,23 @@ app.get("/_flaws", (req, res) => {
     documents: documents.slice(m, n),
   });
 });
+
+function validPopularityFilter(value) {
+  let filter = null;
+  if (value) {
+    if (/[^\d<>]/.test(value)) {
+      return [null, "popularity contains unrecognized characters"];
+    }
+    if (value.startsWith("<")) {
+      filter = { min: parseInt(value.slice(1).trim()) };
+    } else if (value.startsWith(">")) {
+      filter = { max: parseInt(value.slice(1).trim()) };
+    } else {
+      throw new Error("Not implemented");
+    }
+  }
+  return [filter, null];
+}
 
 function serializeFlawLevels(flawLevels) {
   const keys = [...flawLevels.keys()];

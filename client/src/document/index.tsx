@@ -9,6 +9,7 @@ import React, {
 import { Link, useParams } from "react-router-dom";
 
 import { NoMatch } from "../routing";
+import { Doc } from "./types";
 
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
@@ -37,7 +38,7 @@ export function Document(props) {
   const slug = params["*"];
   const locale = params.locale;
 
-  const [doc, setDoc] = useState(props.doc || null);
+  const [doc, setDoc] = useState<Doc | null>(props.doc || null);
   const [loading, setLoading] = useState(false);
   const [loadingError, setLoadingError] = useState<null | Error | Response>(
     null
@@ -129,6 +130,9 @@ export function Document(props) {
   if (!doc) {
     return null;
   }
+  console.log(doc);
+  console.log(Object.keys(doc));
+
   const translations = [...(doc.other_translations || [])];
   if (doc.translation_of) {
     translations.unshift({
@@ -152,7 +156,7 @@ export function Document(props) {
           <RenderDocumentBody doc={doc} />
           <hr />
           {process.env.NODE_ENV === "development" && (
-            <ToggleDocmentFlaws flaws={doc.flaws} />
+            <ToggleDocmentFlaws doc={doc} />
           )}
           <EditThisPage source={doc.source} />
           {doc.contributors && <Contributors contributors={doc.contributors} />}
@@ -374,7 +378,8 @@ interface FlatFlaw {
   count: number;
 }
 
-function ToggleDocmentFlaws({ flaws }: { flaws: object }) {
+function ToggleDocmentFlaws({ doc }: { doc: Doc }) {
+  const { flaws }: { flaws: object } = doc;
   const [show, toggle] = useReducer((v) => !v, false);
 
   useEffect(() => {
