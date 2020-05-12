@@ -137,7 +137,7 @@ export default function AllFlaws() {
   );
 
   useEffect(() => {
-    let title = "Find all flaws";
+    let title = "Documents with flaws";
     if (lastData) {
       title = `(${lastData.counts.found.toLocaleString()} found) ${title}`;
     }
@@ -233,7 +233,7 @@ export default function AllFlaws() {
 
   return (
     <div id="all-flaws">
-      <h1>Find all flaws</h1>
+      {/* <h1>Find all flaws</h1> */}
       {loading}
       {error && <ShowSearchError error={error} />}
       <form onSubmit={submitHandler}></form>
@@ -287,6 +287,20 @@ function Pagination({
     <p className="pagination">
       {page > 1 ? (
         <Link
+          to={serializeFiltersAndPagination(location.search, filters, 1)}
+          onClick={() => {
+            setPage(1);
+          }}
+        >
+          First page
+        </Link>
+      ) : (
+        <a href={window.location.href} className="disabled">
+          First page
+        </a>
+      )}{" "}
+      {page > 2 ? (
+        <Link
           to={serializeFiltersAndPagination(location.search, filters, page - 1)}
           onClick={() => {
             setPage(page - 1);
@@ -294,11 +308,7 @@ function Pagination({
         >
           Previous page ({page - 1})
         </Link>
-      ) : (
-        <a href={window.location.href} className="disabled">
-          Previous page
-        </a>
-      )}{" "}
+      ) : null}{" "}
       {page + 1 <= pages ? (
         <Link
           to={serializeFiltersAndPagination(location.search, filters, page + 1)}
@@ -335,13 +345,9 @@ function ShowTimes({ times }: { times: Times }) {
       return `${Math.trunc(ms)} milliseconds`;
     }
   }
-  const bits = [
-    // `possible documents: ${format(times.possible)}`,
-    `built documents: ${format(times.built)}`,
-  ];
   return (
     <div className="search-times">
-      <p>Time to find... {bits.join(", ")}</p>
+      <p>Time to find built documents {format(times.built)}</p>
     </div>
   );
 }
@@ -528,8 +534,8 @@ function ShowDocumentsFound({
       {!counts.built ? (
         <WarnAboutNothingBuilt />
       ) : (
-        <h4>
-          {counts.built.toLocaleString()} built documents out of a possible{" "}
+        <h4 className="subheader">
+          {counts.built.toLocaleString()} documents built out of a possible{" "}
           {counts.possible.toLocaleString()} ({locale})
         </h4>
       )}

@@ -12,7 +12,7 @@ export function App(appProps) {
     <Routes>
       <Route path="/" element={<Homepage />} />
       {process.env.NODE_ENV === "development" && (
-        <Route path="/:locale/flaws" element={<AllFlaws />} />
+        <Route path="/:locale/_flaws" element={<AllFlaws />} />
       )}
       <Route path="/:locale/docs/*" element={<Document {...appProps} />} />
       <Route path="*" element={<NoMatch />} />

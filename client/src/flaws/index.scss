@@ -65,6 +65,10 @@
     .documents {
       margin-left: 300px;
 
+      h4.subheader {
+        margin-top: 2px;
+      }
+
       th.sortable {
         cursor: ns-resize;
       }

@@ -36,7 +36,7 @@ export function Homepage() {
       <h3>Flaws</h3>
       <ul>
         <li>
-          <Link to="/en-US/flaws">All (en-US) flaws</Link>
+          <Link to="/en-US/_flaws">All (en-US) flaws</Link>
         </li>
       </ul>
       <h3>HTML Guide Pages</h3>
