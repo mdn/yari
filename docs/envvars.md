@@ -11,9 +11,9 @@ This document attempts to describe each environment variable.
 
 #### Default: n/a
 
-This is a general OS, optional, OS environment variable and it's needed
+This is a general OS, optional, environment variable and it's needed
 if you want the ability to go from viewing a rendered document to
-open the source in your preferred editor. It's needed for the
+opening the source in your preferred editor. It's needed for the
 "Edit this page in your editor" button to work.
 
 ## Builder
@@ -40,7 +40,7 @@ Where the built `index.html` and `index.json` files go.
 
 **Default: `content/popularities.json`**
 
-It's the location to a .json file that has a popularities based on
+It's the location to a .json file that has popularities based on
 Google Analytics pageviews numbers.
 
 ### `BUILD_ALLOW_STALE_TITLES`
@@ -68,7 +68,7 @@ the file exists or not independent of the hash digest.
 
 Limits which locales to build when not specifying a specific folder or a
 specific locale. Can be useful when you often build large batches but
-is aware that you only care about these specific locales.
+only care about these specific locales.
 
 In the CLI you can override this with `-l ...` or `--locales=...`.
 
