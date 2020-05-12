@@ -215,8 +215,9 @@ function Macros({ messages }: { messages: MacroErrorMessage[] }) {
                   openInEditor(msg, key);
                 }}
               >
-                <code>{msg.options.name}</code> on line {msg.line}
-              </a>
+                <code>{msg.options.name}</code> on line {msg.line}:{msg.column}
+              </a>{" "}
+              {opening && opening === key && <small>Opening...</small>}
             </summary>
             <pre>{msg.message}</pre>
 

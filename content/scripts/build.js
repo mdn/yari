@@ -29,7 +29,6 @@ const {
   FLAW_LEVELS,
   VALID_FLAW_CHECKS,
   DEFAULT_FLAW_LEVELS,
-  ALLOW_STALE_TITLES,
 } = require("./constants");
 const { slugToFoldername } = require("./utils");
 
@@ -445,7 +444,6 @@ class Builder {
   }
 
   recordFlaws(type, uri, flaws) {
-    console.log([type, uri, flaws]);
     if (!this.flawsByType.has(type)) {
       this.flawsByType.set(type, new Map());
     }
@@ -1450,7 +1448,6 @@ class Builder {
       $("div.bc-data").each((i, element) => {
         const dataQuery = $(element).attr("id");
         if (!dataQuery) {
-          console.log(doc.mdn_url, "BCD table without an ID");
           if (!doc.flaws.hasOwnProperty("bad_bcd_queries")) {
             doc.flaws.bad_bcd_queries = [];
           }
@@ -1462,7 +1459,6 @@ class Builder {
             if (!doc.flaws.hasOwnProperty("bad_bcd_queries")) {
               doc.flaws.bad_bcd_queries = [];
             }
-            console.log(doc.mdn_url, `No BCD data for query: ${query}`);
             doc.flaws.bad_bcd_queries.push(`No BCD data for query: ${query}`);
           }
         }

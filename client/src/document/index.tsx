@@ -136,8 +136,6 @@ export function Document(props) {
   if (!doc) {
     return null;
   }
-  console.log(doc);
-  console.log(Object.keys(doc));
 
   const translations = [...(doc.other_translations || [])];
   if (doc.translation_of) {
