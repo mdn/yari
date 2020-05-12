@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 import "./spy.css";
 
-export function DocumentSpy({ onMessage }) {
+export default function DocumentSpy({ onMessage }) {
   // null - never connected before
   // true - connected
   // false - no longer connected

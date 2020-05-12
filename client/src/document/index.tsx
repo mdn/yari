@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, lazy, Suspense } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { NoMatch } from "../routing";
@@ -16,8 +16,10 @@ import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-t
 import { DocumentTranslations } from "./languages";
 import { EditThisPage } from "./editthispage";
 
-// XXX Make this lazy!
-import { DocumentSpy } from "./spy";
+import "./index.scss";
+
+// Lazy sub-components
+const DocumentSpy = lazy(() => import("./spy"));
 
 export function Document(props) {
   const params = useParams();
@@ -146,8 +148,15 @@ export function Document(props) {
           {doc.contributors && <Contributors contributors={doc.contributors} />}
         </div>
       </div>
+
       {process.env.NODE_ENV === "development" && (
-        <DocumentSpy onMessage={onMessage} />
+        <Suspense
+          fallback={
+            <p className="loading-document-spy">Loading document spy</p>
+          }
+        >
+          <DocumentSpy onMessage={onMessage} />
+        </Suspense>
       )}
     </div>
   );
