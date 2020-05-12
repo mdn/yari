@@ -107,7 +107,11 @@ export function Document(props) {
   }
   if (loadingError) {
     // Was it because of a 404?
-    if (typeof window !== "undefined" && loadingError instanceof Response) {
+    if (
+      typeof window !== "undefined" &&
+      loadingError instanceof Response &&
+      loadingError.status === 404
+    ) {
       return <NoMatch />;
     } else {
       return <LoadingError error={loadingError} />;
@@ -347,6 +351,9 @@ function LoadingError({ error }) {
           <code>{error.toString()}</code>
         </p>
       )}
+      <p>
+        <a href=".">Try reloading the page</a>
+      </p>
     </div>
   );
 }
