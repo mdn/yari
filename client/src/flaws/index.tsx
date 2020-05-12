@@ -18,6 +18,7 @@ interface DocumentPopularity {
 interface Document {
   mdn_url: string;
   modified: string;
+  title: string;
   popularity: DocumentPopularity;
   folder: string;
   flaws: {
@@ -51,12 +52,14 @@ interface Data {
 
 interface Filter {
   mdn_url: string;
+  title: string;
   popularity: string;
   flaws: string[];
 }
 
 const defaultFilter = {
   mdn_url: "",
+  title: "",
   popularity: "",
   flaws: [],
 };
@@ -246,6 +249,7 @@ export default function AllFlaws() {
           />
           <ShowDocumentsFound
             locale={locale}
+            filters={filters}
             page={page}
             counts={lastData.counts}
             documents={lastData.documents}
@@ -386,13 +390,22 @@ function ShowFilters({
         }}
       >
         <div>
-          <h4>Document URL</h4>
+          <h4>Document</h4>
           <input
             type="search"
             placeholder="Filter by document URI"
             value={filters.mdn_url}
             onChange={(event) => {
               setFilters({ ...filters, mdn_url: event.target.value });
+            }}
+            onBlur={refreshFilters}
+          />
+          <input
+            type="search"
+            placeholder="Filter by document title"
+            value={filters.title}
+            onChange={(event) => {
+              setFilters({ ...filters, title: event.target.value });
             }}
             onBlur={refreshFilters}
           />
@@ -480,6 +493,7 @@ function ShowDocumentsFound({
   page,
   counts,
   documents,
+  filters,
   sortBy,
   sortReverse,
   setSort,
@@ -488,6 +502,7 @@ function ShowDocumentsFound({
   page: number;
   counts: Counts;
   documents: any;
+  filters: Filter;
   sortBy: string;
   sortReverse: boolean;
   setSort: Function;
@@ -515,12 +530,36 @@ function ShowDocumentsFound({
     );
   }
 
+  function getHighlightedText(text: string, highlight: string) {
+    // Split on highlight term and include term into parts, ignore case
+    const parts = text.split(new RegExp(`(${highlight})`, "gi"));
+    return (
+      <span>
+        {" "}
+        {parts.map((part, i) => (
+          <span
+            key={i}
+            style={
+              part.toLowerCase() === highlight.toLowerCase()
+                ? { fontWeight: "bold" }
+                : {}
+            }
+          >
+            {part}
+          </span>
+        ))}{" "}
+      </span>
+    );
+  }
+
   function showBriefURL(uri: string) {
     const [left, right] = uri.split(/\/docs\//, 2);
     return (
       <>
         <span className="url-prefix">{left}/docs/</span>
-        <span className="url-slug">{right}</span>
+        <span className="url-slug">
+          {filters.mdn_url ? getHighlightedText(right, filters.mdn_url) : right}
+        </span>
       </>
     );
   }
@@ -549,14 +588,18 @@ function ShowDocumentsFound({
           </tr>
         </thead>
         <tbody>
-          {documents.map((doc) => {
+          {documents.map((doc: Document) => {
             return (
               <tr key={doc.mdn_url}>
                 <td>
                   <Link to={`${doc.mdn_url}#show-flaws`} title={doc.title}>
                     {showBriefURL(doc.mdn_url)}
                   </Link>
-                  <span className="document-title-preview">{doc.title}</span>
+                  <span className="document-title-preview">
+                    {filters.title
+                      ? getHighlightedText(doc.title, filters.title)
+                      : doc.title}
+                  </span>
                 </td>
                 <td
                   title={

@@ -280,6 +280,12 @@ app.get("/_flaws", (req, res) => {
         ) {
           continue;
         }
+        if (
+          filters.title &&
+          !doc.title.toLowerCase().includes(filters.title.toLowerCase())
+        ) {
+          continue;
+        }
         if (filteredFlaws.size) {
           if (!Object.keys(doc.flaws).some((x) => filteredFlaws.has(x))) {
             continue;

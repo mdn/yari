@@ -836,7 +836,6 @@ class Builder {
       // Clear any cached results.
       this.macroRenderer.clearCache();
       const { result, file, doc } = await this.processFolder(source, folder);
-      this.reportFlaws("macros");
       const t1 = performance.now();
 
       const tookStr = ppMilliseconds(t1 - t0);
