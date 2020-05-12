@@ -22,7 +22,7 @@
     "react-scripts": "3.4.1",
     "sockette": "2.0.6",
     "typeface-zilla-slab": "0.0.72",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.2"
   },
   "scripts": {
     "start": "cross-env BROWSER=none react-scripts start",

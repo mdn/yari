@@ -12486,10 +12486,10 @@ typeface-zilla-slab@0.0.72:
   resolved "https://registry.yarnpkg.com/typeface-zilla-slab/-/typeface-zilla-slab-0.0.72.tgz#6d101393e3137b3c8217a0b73ce189165e75a2a0"
   integrity sha512-sX85tUKZfb62DsrPcRC3tQIAm1bhA5+3O17yvAvfXKGaLYNBAHaj8aLmurCsHvLKAeivrjWgCjVokk2Oepbeyw==
 
-typescript@^3.8.3:
-  version "3.8.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.8.3.tgz#409eb8544ea0335711205869ec458ab109ee1061"
-  integrity sha512-MYlEfn5VrLNsgudQTVJeNaQFUAI7DkhnOjdpAp4T+ku1TfQClewlbSuTVHiA+8skNBgaf02TL/kLOvig4y3G8w==
+typescript@^3.9.2:
+  version "3.9.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.2.tgz#64e9c8e9be6ea583c54607677dd4680a1cf35db9"
+  integrity sha512-q2ktq4n/uLuNNShyayit+DTobV2ApPEo/6so68JaD5ojvc/6GClBipedB9zNWYxRSAlZXAe405Rlijzl6qDiSw==
 
 uglify-js@^3.1.4:
   version "3.6.0"
