@@ -281,21 +281,11 @@ rendering. But it's a luxury to have for these reasons:
 
 ### Flaw checks
 
-When building you can enable specific "flaw checks". They're extra pieces
-of code that checks the contents to the effect that it might help someone
-working on the content to spot flaws and fix them. For example, finding
-broken links to relative URLs. To run them, you can either add it to the
-CLI like this:
+When building you can enable specific "flaw checks" and their level of
+how to deal with the flaws. Some flaws "cosmetic" and some are more
+severe but they should never block a full build.
 
-    node content build --flaw-check=broken_links --flaw-check=profanities
-
-Or, as environment variables:
-
-    export BUILD_FLAW_CHECK=broken_links,profanities
-    node content build
-
-The advantage with setting it as an environment variable is that it gets
-automatically included in the build-on-the-fly server.
+More information about how to set flaws can be found in `docs/envvars.md`.
 
 ## Deployment
 
