@@ -27,8 +27,10 @@ import { humanizeFlawName } from "../flaw-utils";
 import { DocumentTranslations } from "./languages";
 import { EditThisPage } from "./editthispage";
 
-// XXX Make this lazy!
-import { DocumentSpy } from "./spy";
+import "./index.scss";
+
+// Lazy sub-components
+const DocumentSpy = lazy(() => import("./spy"));
 
 // Lazy sub-components
 const DocumentFlaws = lazy(() => import("./flaws"));
@@ -121,7 +123,11 @@ export function Document(props) {
   }
   if (loadingError) {
     // Was it because of a 404?
-    if (typeof window !== "undefined" && loadingError instanceof Response) {
+    if (
+      typeof window !== "undefined" &&
+      loadingError instanceof Response &&
+      loadingError.status === 404
+    ) {
       return <NoMatch />;
     } else {
       return <LoadingError error={loadingError} />;
@@ -164,7 +170,13 @@ export function Document(props) {
       </div>
 
       {process.env.NODE_ENV === "development" && (
-        <DocumentSpy onMessage={onMessage} />
+        <Suspense
+          fallback={
+            <p className="loading-document-spy">Loading document spy</p>
+          }
+        >
+          <DocumentSpy onMessage={onMessage} />
+        </Suspense>
       )}
     </>
   );
@@ -368,6 +380,9 @@ function LoadingError({ error }) {
           <code>{error.toString()}</code>
         </p>
       )}
+      <p>
+        <a href=".">Try reloading the page</a>
+      </p>
     </div>
   );
 }

@@ -49,7 +49,7 @@ function RenderAttributes({ attributes }) {
                 </dt>
                 <dd>
                   {/* XXX a div tag in the middle of a dd tag!
-                  See https://github.com/mdn/stumptown-renderer/issues/5
+                  See https://github.com/mdn/yari/issues/5
                   */}
                   <div
                     dangerouslySetInnerHTML={{ __html: attribute.description }}

@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 
 class Sources {
   constructor() {
@@ -19,7 +20,9 @@ class Sources {
       noindexNofollowHeader: false,
     };
 
-    this.list.push(Object.assign(default_, config, { filepath }));
+    this.list.push(
+      Object.assign(default_, config, { filepath: path.resolve(filepath) })
+    );
   }
 
   entries() {
