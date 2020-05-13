@@ -443,36 +443,6 @@ class Builder {
     return source;
   }
 
-  recordFlaws(type, uri, flaws) {
-    if (!this.flawsByType.has(type)) {
-      this.flawsByType.set(type, new Map());
-    }
-    const flawsByUri = this.flawsByType.get(type);
-    flawsByUri.set(uri, flaws);
-  }
-
-  // reportFlaws(type) {
-  //   const flawsByUri = this.flawsByType.get(type);
-  //   if (flawsByUri) {
-  //     if (flawsByUri.size) {
-  //       const header = `\nFlaws found within ${flawsByUri.size} document(s) while rendering macros`;
-  //       if (this.options.flaws === FLAW_LEVELS.IGNORE) {
-  //         this.logger.info(chalk.yellow.bold(header + "."));
-  //       } else {
-  //         this.logger.error(chalk.red.bold(header + ":"));
-  //         for (const [uri, flaws] of flawsByUri) {
-  //           this.logger.error(
-  //             chalk.red.bold(`*** flaw(s) while rendering ${uri}:`)
-  //           );
-  //           for (const flaw of flaws) {
-  //             this.logger.error(chalk.red(`${flaw}\n`));
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-
   async renderMacros(source, rawHtml, metadata, { cacheResult = false } = {}) {
     // Recursive method that renders the macros within the document
     // represented by this raw HTML and metadata, but only after first
@@ -1303,8 +1273,6 @@ class Builder {
         throw err;
       }
       if (flaws.length) {
-        // XXX should record a tally of macro flaws
-
         if (this.options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
           // Report and exit immediately on the first document with flaws.
           this.logger.error(
@@ -1316,8 +1284,6 @@ class Builder {
           // XXX This is probably the wrong way to bubble up.
           process.exit(1);
         } else if (this.options.flawLevels.get("macros") === FLAW_LEVELS.WARN) {
-          // XXX should record a tally of macro flaws
-
           // For each flaw, inject the path of the file that was used.
           // This gets used in the dev UI so that you can get a shortcut
           // link to open that file directly in your $EDITOR.
@@ -1325,9 +1291,6 @@ class Builder {
             flaw.filepath = rawHtmlFilepath;
           });
           doc.flaws.macros = flaws;
-        } else {
-          // XXX should record a tally of macro flaws
-          // this.recordFlaws("macros", mdnUrlLC, flaws);
         }
       }
     }
