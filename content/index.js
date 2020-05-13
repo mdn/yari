@@ -169,7 +169,7 @@ cli
     cli.STRING,
     process.env.BUILD_DESTINATION || "client/build"
   )
-  .action((args, options, logger) => {
+  .action(async (args, options, logger) => {
     // Build up the 'sources' based on the various paths arguments.
     const sources = new Sources();
     if (options.stumptownRoot) {
@@ -224,7 +224,12 @@ cli
       options.foldersearch = newFoldersearch;
     }
 
-    return runBuild(sources, options, logger);
+    try {
+      await runBuild(sources, options, logger);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   })
   .command(
     "popularities",
