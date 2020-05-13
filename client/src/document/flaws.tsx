@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import useSWR from "swr";
 import { humanizeFlawName } from "../flaw-utils";
 import "./flaws.scss";
-// import { Doc } from "./types";
 
 interface FlawCheck {
   count: number;
@@ -160,16 +159,15 @@ function BadBCDQueries({ messages }) {
 
 interface MacroErrorMessage {
   name: string;
-  cause?: {
-    path: string;
+  error: {
+    path?: string;
   };
-  options: {
-    name: string;
-  };
+  errorMessage: string;
   line: number;
   column: number;
   filepath: string;
-  message: string;
+  sourceContext: string;
+  macroName: string;
 }
 
 function Macros({ messages }: { messages: MacroErrorMessage[] }) {
@@ -215,21 +213,21 @@ function Macros({ messages }: { messages: MacroErrorMessage[] }) {
                   openInEditor(msg, key);
                 }}
               >
-                <code>{msg.options.name}</code> on line {msg.line}:{msg.column}
+                <code>{msg.name}</code> from <code>{msg.macroName}</code> in
+                line {msg.line}:{msg.column}
               </a>{" "}
               {opening && opening === key && <small>Opening...</small>}
             </summary>
-            <pre>{msg.message}</pre>
-
-            {msg.cause && msg.cause.path && (
-              <p className="cause">
-                Cause: <code>{msg.cause.path}</code>
-              </p>
-            )}
+            <b>Context:</b>
+            <pre>{msg.sourceContext}</pre>
+            <b>Original error message:</b>
+            <pre>{msg.errorMessage}</pre>
+            <b>Filepath:</b>
+            <br />
+            <code>{msg.filepath}</code>
           </details>
         );
       })}
-      {/* <pre>{JSON.stringify(messages, null, 2)}</pre> */}
     </div>
   );
 }

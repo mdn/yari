@@ -1276,11 +1276,14 @@ class Builder {
         if (this.options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
           // Report and exit immediately on the first document with flaws.
           this.logger.error(
-            chalk.red.bold(`\nFlaws within ${mdnUrlLC} while rendering macros:`)
+            chalk.red.bold(
+              `Flaws (${flaws.length}) within ${mdnUrlLC} while rendering macros:`
+            )
           );
-          for (const flaw of flaws) {
+          flaws.forEach((flaw, i) => {
+            this.logger.error(chalk.bold.red(`${i + 1}: ${flaw.name}`));
             this.logger.error(chalk.red(`${flaw}\n`));
-          }
+          });
           // XXX This is probably the wrong way to bubble up.
           process.exit(1);
         } else if (this.options.flawLevels.get("macros") === FLAW_LEVELS.WARN) {
