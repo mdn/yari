@@ -158,7 +158,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
           <RenderDocumentBody doc={doc} />
           <hr />
           {process.env.NODE_ENV === "development" && (
-            <ToggleDocmentFlaws doc={doc} />
+            <ToggleDocumentFlaws doc={doc} />
           )}
           <EditThisPage source={doc.source} />
           {doc.contributors && <Contributors contributors={doc.contributors} />}
@@ -425,7 +425,7 @@ function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
     }))
     .sort((a, b) => b.count - a.count);
 
-    return (
+  return (
     <div id="show-flaws" className="toggle-flaws">
       {flatFlaws.length > 0 ? (
         <button type="submit" onClick={toggle}>

@@ -592,7 +592,11 @@ function ShowDocumentsFound({
             return (
               <tr key={doc.mdn_url}>
                 <td>
-                  <Link to={`${doc.mdn_url}#show-flaws`} title={doc.title}>
+                  <Link
+                    to={`${doc.mdn_url}#show-flaws`}
+                    title={doc.title}
+                    target="_blank"
+                  >
                     {showBriefURL(doc.mdn_url)}
                   </Link>
                   <span className="document-title-preview">
