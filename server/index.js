@@ -501,6 +501,7 @@ app.get("/*", async (req, res) => {
             )} (${(t1 - t0).toFixed()}ms)`
           );
         } else {
+          // XXX Should this also log about flaws??
           console.log(
             `Successfully on-the-fly built ${path.join(
               path.dirname(built[0].file),

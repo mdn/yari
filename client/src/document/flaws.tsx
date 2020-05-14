@@ -96,18 +96,20 @@ function BrokenLinks({ urls }: { urls: string[] }) {
     }
     return () => {
       // Undo setting those extra classes and titles
-      for (const anchor of [
-        ...document.querySelectorAll<HTMLAnchorElement>(
+      for (const anchor of Array.from(
+        document.querySelectorAll<HTMLAnchorElement>(
           `div.content a.flawed--broken_link_redirect`
-        ),
-        ...document.querySelectorAll<HTMLAnchorElement>(
+        )
+      )) {
+        anchor.classList.remove("flawed--broken_link_redirect");
+        anchor.title = "";
+      }
+      for (const anchor of Array.from(
+        document.querySelectorAll<HTMLAnchorElement>(
           `div.content a.flawed--broken_link_404`
-        ),
-      ]) {
-        anchor.classList.remove(
-          "flawed--broken_link_redirect",
-          "flawed--broken_link_404"
-        );
+        )
+      )) {
+        anchor.classList.remove("flawed--broken_link_404");
         anchor.title = "";
       }
     };

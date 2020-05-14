@@ -1442,7 +1442,7 @@ class Builder {
         const a = $(element);
         const href = a.attr("href").split("#")[0];
         if (href.startsWith("/")) {
-          if (!(href in this.allTitles)) {
+          if (!this.allTitles.has(href.toLowerCase())) {
             if (!doc.flaws.hasOwnProperty("broken_links")) {
               doc.flaws.broken_links = [];
             }
