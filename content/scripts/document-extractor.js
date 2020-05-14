@@ -213,7 +213,7 @@ function _addSingleSectionBCD($) {
     return _addSectionProse($);
   }
   const query = dataQuery.replace(/^bcd:/, "");
-  const data = packageBCD(query);
+  const { browsers, data } = packageBCD(query);
   if (data === undefined) {
     return [];
   }
@@ -225,6 +225,7 @@ function _addSingleSectionBCD($) {
         id,
         data,
         query,
+        browsers,
       },
     },
   ];
