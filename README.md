@@ -282,7 +282,7 @@ rendering. But it's a luxury to have for these reasons:
 ### Flaw checks
 
 When building you can enable specific "flaw checks" and their level of
-how to deal with the flaws. Some flaws "cosmetic" and some are more
+handling. Some flaws are "cosmetic" and some are more
 severe but they should never block a full build.
 
 More information about how to set flaws can be found in `docs/envvars.md`.

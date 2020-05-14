@@ -389,59 +389,49 @@ interface FlatFlaw {
   count: number;
 }
 
-function ToggleDocmentFlaws({ doc }: { doc: Doc }) {
-  const { flaws }: { flaws: object } = doc;
+const FLAWS_HASH = "#show-flaws";
+function toggleLocationFlawsHash(on: boolean) {
+  window.history.pushState(
+    "",
+    document.title,
+    window.location.href.split("#")[0] + (on ? FLAWS_HASH : "")
+  );
+}
+
+function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
+  const { flaws } = doc;
   const [show, toggle] = useReducer((v) => !v, false);
 
   useEffect(() => {
-    if (window.location.hash && window.location.hash === "#show-flaws") {
+    if (window.location.hash && window.location.hash === FLAWS_HASH) {
       toggle();
     }
   }, []);
 
   useEffect(() => {
-    if (show) {
-      if (!(window.location.hash && window.location.hash === "#show-flaws")) {
-        window.location.hash = "#show-flaws";
-      }
-    } else {
-      if (window.location.hash && window.location.hash === "#show-flaws") {
-        window.location.hash = "";
-      }
+    const hasShowHash = window.location.hash === FLAWS_HASH;
+    if (show && !hasShowHash) {
+      toggleLocationFlawsHash(true);
+    } else if (!show && hasShowHash) {
+      toggleLocationFlawsHash(false);
     }
   }, [show]);
 
-  let flatFlaws: FlatFlaw[] = [];
-  for (const [name, actualFlaws] of Object.entries(flaws)) {
-    flatFlaws.push({
+  const flatFlaws: FlatFlaw[] = Object.entries(flaws)
+    .map(([name, actualFlaws]) => ({
       name,
       flaws: actualFlaws,
       count: actualFlaws.length,
-    });
-  }
-  flatFlaws.sort((a, b) => b.count - a.count);
+    }))
+    .sort((a, b) => b.count - a.count);
 
-  function summarizeFlaws() {
-    // Return a one-liner about all the flaws
-    const bits = flatFlaws.map((flaw) => {
-      return `${humanizeFlawName(flaw.name)}: ${flaw.count}`;
-    });
-    return bits.join(", ");
-  }
-
-  function summarizeFlawsCounts() {
-    // Return a one-liner about all the flaws
-    const bits = flatFlaws.map((flaw) => flaw.count);
-    return bits.join(" + ");
-  }
-
-  const hasFlaws = flatFlaws.length > 0;
-
-  return (
+    return (
     <div id="show-flaws" className="toggle-flaws">
-      {hasFlaws ? (
+      {flatFlaws.length > 0 ? (
         <button type="submit" onClick={toggle}>
-          {show ? "Hide flaws" : `Show flaws (${summarizeFlawsCounts()})`}
+          {show
+            ? "Hide flaws"
+            : `Show flaws (${flatFlaws.map((flaw) => flaw.count).join(" + ")})`}
         </button>
       ) : (
         <p className="no-flaws">
@@ -457,7 +447,12 @@ function ToggleDocmentFlaws({ doc }: { doc: Doc }) {
           <DocumentFlaws flaws={flatFlaws} />
         </Suspense>
       ) : (
-        <small>{summarizeFlaws()}</small>
+        <small>
+          {/* a one-liner about all the flaws */}
+          {flatFlaws
+            .map((flaw) => `${humanizeFlawName(flaw.name)}: ${flaw.count}`)
+            .join(" + ")}
+        </small>
       )}
     </div>
   );

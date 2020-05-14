@@ -1291,7 +1291,9 @@ class Builder {
           // This gets used in the dev UI so that you can get a shortcut
           // link to open that file directly in your $EDITOR.
           flaws.forEach((flaw) => {
-            flaw.filepath = rawHtmlFilepath;
+            if (!flaw.filepath) {
+              flaw.filepath = rawHtmlFilepath;
+            }
           });
           doc.flaws.macros = flaws;
         }
