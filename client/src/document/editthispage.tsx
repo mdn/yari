@@ -16,7 +16,7 @@ export function EditThisPage({ source }) {
     }
   }, [opening]);
 
-  function openInEditorHandler(event) {
+  function openInEditorHandler(event: React.MouseEvent) {
     event.preventDefault();
 
     const filepath = source.content_file;

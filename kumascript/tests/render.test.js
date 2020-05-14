@@ -84,7 +84,6 @@ describe("render() function", () => {
     expect(errors[0].name).toBe("MacroInvocationError");
     expect(errors[0]).toHaveProperty("line");
     expect(errors[0]).toHaveProperty("column");
-    expect(errors[0].message).toMatch(/^Syntax error at line \d+, column \d+/);
   });
 
   it("handles undefined templates", async () => {

@@ -13,9 +13,9 @@ const {
   DEFAULT_BUILD_NOT_LOCALES,
   DEFAULT_SITEMAP_BASE_URL,
   DEFAULT_FOLDER_SEARCHES,
-  DEFAULT_FLAWS_LEVEL,
-  FLAWS_LEVELS,
+  DEFAULT_FLAW_LEVELS,
   MAX_GOOGLE_ANALYTICS_URIS,
+  DEFAULT_POPULARITIES_FILEPATH,
 } = require("./scripts/constants.js");
 
 cli
@@ -101,10 +101,10 @@ cli
     DEFAULT_BUILD_NOT_LOCALES
   )
   .option(
-    `--flaws <${Object.values(FLAWS_LEVELS).join("|")}>`,
+    "--flaw-levels <levels>",
     "How to deal with imperfections in the content building process",
-    new RegExp(Object.values(FLAWS_LEVELS).join("|")),
-    DEFAULT_FLAWS_LEVEL
+    cli.STRING,
+    DEFAULT_FLAW_LEVELS
   )
   .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
   .option("--start-clean", "delete anything created first", cli.BOOL)
@@ -120,6 +120,11 @@ cli
     "don't reuse existing _all-titles.json",
     cli.BOOL
   )
+  .option(
+    "--allow-stale-titles",
+    "reuse _all-titles.json if it exists independent of cache hashing",
+    cli.BOOL
+  )
   .option("--no-sitemaps", "don't generate all sitemap xml files", cli.BOOL)
   .option("--slugsearch <partofslug>", "filter by slug matches", cli.ARRAY, [])
   .option(
@@ -132,8 +137,7 @@ cli
     "--popularitiesfile <path>",
     "JSON file that maps URIs to popularities",
     cli.PATH,
-    process.env.BUILD_POPULARITIES_FILEPATH
-    // DEFAULT_POPULARITIES_FILEPATH
+    DEFAULT_POPULARITIES_FILEPATH
   )
   .option(
     "--sitemap-base-url <url>",
@@ -165,7 +169,8 @@ cli
     cli.STRING,
     process.env.BUILD_DESTINATION || "client/build"
   )
-  .action((args, options, logger) => {
+  .action(async (args, options, logger) => {
+    // Build up the 'sources' based on the various paths arguments.
     const sources = new Sources();
     if (options.stumptownRoot) {
       sources.add(options.stumptownRoot, {
@@ -186,6 +191,8 @@ cli
         noindexNofollowHeader: true,
       });
     }
+
+    // Validate that there is at least >=1 source
     if (!sources.entries().length) {
       logger.error("No configured sources");
       return 1;
@@ -217,7 +224,12 @@ cli
       options.foldersearch = newFoldersearch;
     }
 
-    return runBuild(sources, options, logger);
+    try {
+      await runBuild(sources, options, logger);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   })
   .command(
     "popularities",
@@ -240,11 +252,7 @@ cli
     return runMakePopularitiesFile(args.csvfile, options, logger);
   });
 
-cli.parse(process.argv).then((r) => {
-  // If the command explicitly returned a number, use that as the exit code
-  // Otherwise, if it's anything truthy return 1 or all else 0.
-  process.exitCode = typeof r === Number ? r : r ? 1 : 0;
-});
+cli.parse(process.argv);
 
 function equalArray(a, b) {
   return a.length === b.length && a.every((x, i) => x === b[i]);

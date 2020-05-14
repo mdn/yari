@@ -51,19 +51,15 @@ const DEFAULT_FOLDER_SEARCHES = (process.env.BUILD_FOLDER_SEARCHES || "")
 
 const DEFAULT_SITEMAP_BASE_URL = "https://developer.mozilla.org";
 
-// const DEFAULT_POPULARITIES_FILEPATH = path.join(
-//   DEFAULT_ROOT,
-//   "..",
-//   "popularities.json"
-// );
+const DEFAULT_POPULARITIES_FILEPATH =
+  process.env.BUILD_POPULARITIES_FILEPATH ||
+  path.join(process.env.BUILD_ROOT, "..", "popularities.json");
 
 // The Google Analytics pageviews CSV file parsed, sorted (most pageviews
 // first), and sliced to this number of URIs that goes into the JSON file.
 // If this number is too large the resulting JSON file gets too big and
 // will include very rarely used URIs.
 const MAX_GOOGLE_ANALYTICS_URIS = 20000;
-
-const ROOT_DIR = path.join(__dirname, "..", "..");
 
 // A set of every possible locale we accept content to be in.
 const VALID_LOCALES = new Map(
@@ -105,15 +101,33 @@ const VALID_LOCALES = new Map(
   ].map((x) => [x.toLowerCase(), x])
 );
 
-const FLAWS_LEVELS = Object.freeze({
+const ALLOW_STALE_TITLES = JSON.parse(
+  process.env.BUILD_ALLOW_STALE_TITLES || "false"
+);
+assert(typeof ALLOW_STALE_TITLES === "boolean");
+
+const FLAW_LEVELS = Object.freeze({
   WARN: "warn",
   IGNORE: "ignore",
   ERROR: "error",
 });
 
-// TODO: Switch to "warn" or "error" when number of flaws drops.
-const DEFAULT_FLAWS_LEVEL = process.env.BUILD_FLAWS || FLAWS_LEVELS.IGNORE;
-assert(Object.values(FLAWS_LEVELS).includes(DEFAULT_FLAWS_LEVEL));
+// These names need to match what we have in the code where we have various
+// blocks of code that look something like this:
+//
+//    if (this.options.flawChecks.profanities) {
+//      ... analyze and possible add to doc.flaws.profanities ...
+//
+// This list needs to be synced with the code. And the CLI arguments
+// used with --flaw-checks needs to match this set.
+const VALID_FLAW_CHECKS = new Set([
+  "macros",
+  "broken_links",
+  "bad_bcd_queries",
+]);
+
+// TODO (far future): Switch to "error" when number of flaws drops.
+const DEFAULT_FLAW_LEVELS = process.env.BUILD_FLAW_LEVELS || "*:warn";
 
 module.exports = {
   // DEFAULT_ROOT,
@@ -125,11 +139,12 @@ module.exports = {
   DEFAULT_BUILD_NOT_LOCALES,
   DEFAULT_SITEMAP_BASE_URL,
   DEFAULT_FOLDER_SEARCHES,
-  // DEFAULT_POPULARITIES_FILEPATH,
+  DEFAULT_POPULARITIES_FILEPATH,
+  ALLOW_STALE_TITLES,
   // DEFAULT_STUMPTOWN_PACKAGED_ROOT,
   MAX_GOOGLE_ANALYTICS_URIS,
-  ROOT_DIR,
   VALID_LOCALES,
-  DEFAULT_FLAWS_LEVEL,
-  FLAWS_LEVELS,
+  VALID_FLAW_CHECKS,
+  FLAW_LEVELS,
+  DEFAULT_FLAW_LEVELS,
 };
