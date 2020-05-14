@@ -153,9 +153,6 @@ function getOrCreateBuilder(options) {
 // about broken links in a page, as some of those broken links might just
 // be redirects.
 app.post("/_redirects", (req, res) => {
-  if (Math.random() > 0.9) {
-    return res.status(500).send("craop!");
-  }
   if (req.body === undefined) {
     throw new Error("express.json middleware not installed");
   }
