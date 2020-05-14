@@ -1,5 +1,10 @@
-import React, { useCallback, useState, useEffect } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  createSearchParams,
+  Link,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import useSWR from "swr";
 
 import "./index.scss";
@@ -50,94 +55,66 @@ interface Data {
   flawLevels: FlawLevel[];
 }
 
-interface Filter {
+interface Filters {
   mdn_url: string;
   title: string;
   popularity: string;
   flaws: string[];
+  page: number;
+  sort_by: string;
+  sort_reverse: boolean;
 }
 
-const defaultFilter = {
+const defaultFilters: Filters = Object.freeze({
   mdn_url: "",
   title: "",
   popularity: "",
   flaws: [],
-};
+  page: 1,
+  sort_by: "popularity",
+  sort_reverse: false,
+});
 
-function deserializeFilters(qs: string): Filter {
-  const filters = Object.assign({}, defaultFilter);
-  const sp = new URLSearchParams(qs);
-  for (const [key, value] of sp) {
-    if (filters.hasOwnProperty(key)) {
-      if (Array.isArray(filters[key])) {
-        filters[key] = sp.getAll(key);
-      } else {
-        filters[key] = value;
-      }
-    }
-  }
-  return filters;
+function withoutDefaultFilters(filters: Filters): Partial<Filters> {
+  return Object.fromEntries(
+    Object.entries(filters).filter(
+      ([key, value]) =>
+        JSON.stringify(defaultFilters[key]) !== JSON.stringify(value)
+    )
+  );
 }
 
-function deserializePagination(qs: string): number {
-  const sp = new URLSearchParams(qs);
-  if (sp.get("page")) {
-    try {
-      const page = parseInt(sp.get("page") || "1");
-      if (page >= 1) {
-        return page;
-      }
-    } catch (err) {
-      console.warn(`Invalid page '${sp.get("page")}'`);
-    }
-  }
-  return 1;
-}
+/**
+ * Returns an array where
+ * first element is the currently set (or default) filters
+ * second element is a function to update a given set of partial filters.
+ * NOTE: This only changes the given filters, and doesn't reset what is missing
+ */
+function useFiltersURL(): [Filters, (filters: Partial<Filters>) => void] {
+  const [searchParams, setSearchParams] = (useSearchParams as any)();
 
-function serializeFiltersAndPagination(
-  previousQs: string,
-  filters: Filter,
-  page: number
-): string {
-  const sp = new URLSearchParams(previousQs);
-  Object.keys(defaultFilter).forEach((key) => {
-    sp.delete(key);
-  });
-  Object.entries(filters).forEach(([key, value]) => {
-    if (Array.isArray(value)) {
-      for (const v of value) {
-        sp.append(key, v);
-      }
-    } else if (value) {
-      sp.set(key, value);
+  const filters = useMemo(() => {
+    const searchParamsObject = Object.fromEntries(searchParams);
+    if (searchParamsObject.page) {
+      searchParamsObject.page = parseInt(searchParamsObject.page);
     }
-  });
-  if (page === 1) {
-    if (sp.has("page")) {
-      sp.delete("page");
-    }
-  } else {
-    sp.set("page", `${page}`);
-  }
-  const spString = sp.toString();
-  if (spString) {
-    return `?${spString}`;
-  }
-  return "";
+    return { ...defaultFilters, ...searchParamsObject };
+  }, [searchParams]);
+
+  const updateFiltersURL = useCallback(
+    (partialFilters: Partial<Filters>) => {
+      setSearchParams(withoutDefaultFilters({ ...filters, ...partialFilters }));
+    },
+    [filters, setSearchParams]
+  );
+
+  return [filters, updateFiltersURL];
 }
 
 export default function AllFlaws() {
-  const navigate = useNavigate();
   const { locale } = useParams();
+  const [filters] = useFiltersURL();
   const [lastData, setLastData] = useState<Data | null>(null);
-
-  const location = useLocation();
-  const [page, setPage] = useState<number>(
-    deserializePagination(location.search)
-  );
-  const [filters, setFilters] = useState<Filter>(
-    deserializeFilters(location.search)
-  );
 
   useEffect(() => {
     let title = "Documents with flaws";
@@ -147,37 +124,17 @@ export default function AllFlaws() {
     document.title = title;
   }, [lastData]);
 
-  const [sortBy, setSortBy] = useState<string>("popularity");
-  const [sortReverse, setSortReverse] = useState<boolean>(false);
-
-  useEffect(() => {
-    navigate(serializeFiltersAndPagination(location.search, filters, page));
-  }, [filters, location.search, navigate, page]);
-
-  function updateFilters(newFilters: Filter) {
-    setPage(1);
-    setFilters(Object.assign({}, newFilters));
-  }
-
   const getAPIUrl = useCallback(() => {
-    const params = new URLSearchParams();
-    params.set("locale", locale);
-    Object.entries(filters).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        for (const v of value) {
-          params.append(key, v);
-        }
-      } else {
-        params.set(key, value);
-      }
+    const { sort_by, sort_reverse, page, ...restFilters } = filters;
+    const params = createSearchParams({
+      ...restFilters,
+      page: String(page),
+      locale,
+      sort: sort_by,
+      reverse: JSON.stringify(sort_reverse),
     });
-    params.set("sort", sortBy);
-    params.set("reverse", JSON.stringify(sortReverse));
-    if (page > 1) {
-      params.set("page", `${page}`);
-    }
     return `/_flaws?${params.toString()}`;
-  }, [locale, filters, sortBy, sortReverse, page]);
+  }, [locale, filters]);
 
   const { data, error, isValidating } = useSWR<Data, Error>(
     getAPIUrl(),
@@ -210,18 +167,6 @@ export default function AllFlaws() {
     }
   }, [data]);
 
-  function setSort(key: string): void {
-    if (sortBy === key) {
-      setSortReverse(!sortReverse);
-    } else {
-      setSortBy(key);
-    }
-  }
-
-  function submitHandler(event) {
-    event.preventDefault();
-  }
-
   // XXX there's something weird about this logic
   let loading: React.ReactNode = <small>&nbsp;</small>;
   if (!data && !error) {
@@ -234,100 +179,39 @@ export default function AllFlaws() {
     loading = <small>Reloading...</small>;
   }
 
+  const { page } = filters;
+  const pageCount = lastData ? lastData.counts.pages : 0;
   return (
     <div id="all-flaws">
-      {/* <h1>Find all flaws</h1> */}
       {loading}
       {error && <ShowSearchError error={error} />}
-      <form onSubmit={submitHandler}></form>
       {lastData && (
         <div className="filter-documents">
-          <ShowFilters
-            initialFilters={filters}
-            updateFilters={updateFilters}
-            flawLevels={lastData.flawLevels}
-          />
-          <ShowDocumentsFound
+          <FilterControls flawLevels={lastData.flawLevels} />
+          <DocumentsTable
             locale={locale}
-            filters={filters}
-            page={page}
             counts={lastData.counts}
             documents={lastData.documents}
-            sortBy={sortBy}
-            sortReverse={sortReverse}
-            setSort={setSort}
           />
-          <Pagination
-            page={page}
-            setPage={setPage}
-            filters={filters}
-            pages={lastData.counts.pages}
-          />
+          {pageCount > 1 && (
+            <p className="pagination">
+              <PageLink number={1} disabled={page === 1}>
+                First page
+              </PageLink>{" "}
+              {page > 2 && (
+                <PageLink number={page - 1}>
+                  Previous page ({page - 1})
+                </PageLink>
+              )}{" "}
+              <PageLink number={page + 1} disabled={page + 1 === pageCount}>
+                Next page ({page + 1})
+              </PageLink>
+            </p>
+          )}
         </div>
       )}
-      {data && <ShowTimes times={data.times} />}
+      {data && <BuildTimes times={data.times} />}
     </div>
-  );
-}
-
-function Pagination({
-  page,
-  setPage,
-  filters,
-  pages,
-}: {
-  page: number;
-  setPage: Function;
-  filters: Filter;
-  pages: number;
-}) {
-  const location = useLocation();
-
-  if (pages < 2) {
-    return null;
-  }
-
-  return (
-    <p className="pagination">
-      {page > 1 ? (
-        <Link
-          to={serializeFiltersAndPagination(location.search, filters, 1)}
-          onClick={() => {
-            setPage(1);
-          }}
-        >
-          First page
-        </Link>
-      ) : (
-        <a href={window.location.href} className="disabled">
-          First page
-        </a>
-      )}{" "}
-      {page > 2 ? (
-        <Link
-          to={serializeFiltersAndPagination(location.search, filters, page - 1)}
-          onClick={() => {
-            setPage(page - 1);
-          }}
-        >
-          Previous page ({page - 1})
-        </Link>
-      ) : null}{" "}
-      {page + 1 <= pages ? (
-        <Link
-          to={serializeFiltersAndPagination(location.search, filters, page + 1)}
-          onClick={() => {
-            setPage(page + 1);
-          }}
-        >
-          Next page ({page + 1})
-        </Link>
-      ) : (
-        <a href={window.location.href} className="disabled">
-          Next page
-        </a>
-      )}
-    </p>
   );
 }
 
@@ -340,7 +224,7 @@ function ShowSearchError({ error }) {
   );
 }
 
-function ShowTimes({ times }: { times: Times }) {
+function BuildTimes({ times }: { times: Times }) {
   function format(ms: number) {
     if (ms > 1000) {
       const s = ms / 1000;
@@ -356,28 +240,20 @@ function ShowTimes({ times }: { times: Times }) {
   );
 }
 
-function ShowFilters({
-  initialFilters,
-  updateFilters,
-  flawLevels,
-}: {
-  initialFilters: Filter;
-  updateFilters: Function;
-  flawLevels: FlawLevel[];
-}) {
+function FilterControls({ flawLevels }: { flawLevels: FlawLevel[] }) {
+  const [initialFilters, updateFiltersURL] = useFiltersURL();
   const [filters, setFilters] = useState(initialFilters);
 
   function refreshFilters() {
-    updateFilters(filters);
+    updateFiltersURL(filters);
   }
 
-  let hasFilters = !equalObjects(defaultFilter, filters);
+  let hasFilters = !equalObjects(defaultFilters, filters);
 
   function resetFilters(event: React.MouseEvent) {
     event.preventDefault();
-    const newFilters = Object.assign({}, defaultFilter);
-    setFilters(newFilters);
-    updateFilters(newFilters);
+    setFilters(defaultFilters);
+    updateFiltersURL(defaultFilters);
   }
 
   return (
@@ -488,25 +364,24 @@ function equalObjects(obj1: object, obj2: object) {
   });
 }
 
-function ShowDocumentsFound({
+function DocumentsTable({
   locale,
-  page,
   counts,
   documents,
-  filters,
-  sortBy,
-  sortReverse,
-  setSort,
 }: {
   locale: string;
-  page: number;
   counts: Counts;
   documents: any;
-  filters: Filter;
-  sortBy: string;
-  sortReverse: boolean;
-  setSort: Function;
 }) {
+  const [filters, updateFiltersURL] = useFiltersURL();
+
+  function setSort(key: string): void {
+    updateFiltersURL(
+      filters.sort_by === key
+        ? { sort_reverse: !filters.sort_reverse }
+        : { sort_by: key }
+    );
+  }
   // https://gist.github.com/jlbruno/1535691/db35b4f3af3dcbb42babc01541410f291a8e8fac
   function getGetOrdinal(n: number) {
     const s = ["th", "st", "nd", "rd"];
@@ -525,7 +400,8 @@ function ShowDocumentsFound({
   function TH({ id, title }: { id: string; title: string }) {
     return (
       <th onClick={() => setSort(id)} className="sortable">
-        {title} {sortBy === id ? (sortReverse ? "🔽" : "🔼") : null}
+        {title}{" "}
+        {filters.sort_by === id ? (filters.sort_reverse ? "🔽" : "🔼") : null}
       </th>
     );
   }
@@ -568,7 +444,7 @@ function ShowDocumentsFound({
     <div className="documents">
       <h3>
         Documents with flaws found ({counts.found.toLocaleString()}){" "}
-        {page > 1 && <span className="page">page {page}</span>}
+        {filters.page > 1 && <span className="page">page {filters.page}</span>}
       </h3>
       {!counts.built ? (
         <WarnAboutNothingBuilt />
@@ -625,6 +501,36 @@ function ShowDocumentsFound({
         </tbody>
       </table>
     </div>
+  );
+}
+
+function PageLink({
+  number,
+  disabled,
+  children,
+}: {
+  number: number;
+  disabled?: boolean;
+  children: React.ReactNode;
+}) {
+  const [filters] = useFiltersURL();
+  // Unfortunately TS's Partial<T> is not quite the right return type of this function,
+  // as it implies the object could have keys set to undefined, which isn't true here.
+  // Hence we have to use type coercion (any)
+  const newFilters = withoutDefaultFilters({ ...filters, page: number }) as any;
+  return (
+    <Link
+      to={
+        "?" +
+        createSearchParams({
+          ...newFilters,
+          page: String(newFilters.page),
+        }).toString()
+      }
+      className={disabled ? "disabled" : ""}
+    >
+      {children}
+    </Link>
   );
 }
 

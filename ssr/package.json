@@ -14,8 +14,8 @@
     "prismjs": "1.20.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "react-router": "6.0.0-alpha.3",
-    "react-router-dom": "6.0.0-alpha.3",
+    "react-router": "6.0.0-alpha.4",
+    "react-router-dom": "6.0.0-alpha.4",
     "source-map-support": "0.5.19"
   },
   "devDependencies": {
