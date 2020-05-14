@@ -228,20 +228,25 @@ function getNotes(browser: bcd.BrowserNames, support: bcd.SupportStatement) {
   return asList(support)
     .flatMap((item, i) => {
       const supportNotes = [
-        item.prefix && { iconName: "prefix", label: "prefix" },
-        item.notes &&
-          (Array.isArray(item.notes)
-            ? item.notes
-            : [item.notes]
-          ).map((note) => ({ iconName: "footnote", label: note })),
-        item.alternative_name && {
-          iconName: "altname",
-          label: item.alternative_name,
-        },
-        item.flags && {
-          iconName: "disabled",
-          label: <FlagsNote browser={browser} supportItem={item} />,
-        },
+        item.prefix ? { iconName: "prefix", label: "prefix" } : null,
+        item.notes
+          ? (Array.isArray(item.notes)
+              ? item.notes
+              : [item.notes]
+            ).map((note) => ({ iconName: "footnote", label: note }))
+          : null,
+        item.alternative_name
+          ? {
+              iconName: "altname",
+              label: item.alternative_name,
+            }
+          : null,
+        item.flags
+          ? {
+              iconName: "disabled",
+              label: <FlagsNote browser={browser} supportItem={item} />,
+            }
+          : null,
       ]
         .flat()
         .filter(isTruthy);
