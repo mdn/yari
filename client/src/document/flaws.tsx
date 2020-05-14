@@ -47,48 +47,63 @@ function BrokenLinks({ urls }: { urls: string[] }) {
     // If we don't sort them, their visual presence isn't predictable.
   ).sort(([url1], [url2]) => url1.localeCompare(url2));
 
-  const params = new URLSearchParams(urls.map((url) => ["url", url]));
   const { data, error } = useSWR(
-    `/_redirects?${params.toString()}`,
-    (url) => {
-      return fetch(url).then((r) => {
-        if (!r.ok) {
-          throw new Error(`${r.status} on ${url}`);
+    `/_redirects`,
+    async (url) => {
+      try {
+        const response = await fetch(url, {
+          method: "post",
+          body: JSON.stringify({ urls }),
+          headers: { "Content-Type": "application/json" },
+        });
+        if (!response.ok) {
+          throw new Error(`${response.status} on ${url}`);
         }
-        return r.json();
-      });
+        return await response.json();
+      } catch (err) {
+        throw err;
+      }
     },
-    { revalidateOnFocus: false }
+    {
+      // The chances of redirects to have changed since first load is
+      // just too small to justify using 'revalidateOnFocus'.
+      revalidateOnFocus: false,
+    }
   );
 
   useEffect(() => {
-    const flawedAnchors = [
-      ...Object.entries(data ? data.redirects : {})
-        .filter(([uri, correctURI]) => !!correctURI)
-        .map(([uri, correctURI]) => ({
-          href: uri,
-          title: `Consider fixing! It's actually a redirect to ${correctURI}`,
-          className: "flawed--broken_link_redirect",
-        })),
-      ...urls.map((uri) => ({
-        href: uri,
-        title: "Links to a page that will 404 Not Found",
-        className: "flawed--broken_link_404",
-      })),
-    ].flatMap(({ href, title, className }) =>
-      Array.from(
-        document.querySelectorAll<HTMLAnchorElement>(
-          `div.content a[href='${href}']`
-        )
-      ).map((anchor) => {
-        anchor.classList.add(className);
-        anchor.title = title;
-        return anchor;
-      })
-    );
-
+    // 'data' will be 'undefined' until the server has had a chance to
+    // compute all the redirects. Don't bother until we have that data.
+    if (!data) {
+      return;
+    }
+    for (const anchor of [
+      ...document.querySelectorAll<HTMLAnchorElement>("div.content a[href]"),
+    ]) {
+      const pathname = new URL(anchor.href).pathname;
+      if (pathname in data.redirects) {
+        // Trouble! But is it a redirect?
+        const correctURI = data.redirects[pathname];
+        if (correctURI) {
+          // It can be fixed!
+          anchor.classList.add("flawed--broken_link_redirect");
+          anchor.title = `Consider fixing! It's actually a redirect to ${correctURI}`;
+        } else {
+          anchor.classList.add("flawed--broken_link_404");
+          anchor.title = "Broken link! Links to a page that will not be found";
+        }
+      }
+    }
     return () => {
-      for (const anchor of flawedAnchors) {
+      // Undo setting those extra classes and titles
+      for (const anchor of [
+        ...document.querySelectorAll<HTMLAnchorElement>(
+          `div.content a.flawed--broken_link_redirect`
+        ),
+        ...document.querySelectorAll<HTMLAnchorElement>(
+          `div.content a.flawed--broken_link_404`
+        ),
+      ]) {
         anchor.classList.remove(
           "flawed--broken_link_redirect",
           "flawed--broken_link_404"
@@ -107,9 +122,10 @@ function BrokenLinks({ urls }: { urls: string[] }) {
         </p>
       )}
       {error && (
-        <p>
-          <b>Error checking for redirects:</b> <pre>{error.toString()}</pre>
-        </p>
+        <div className="fetch-error">
+          <p>Error checking for redirects:</p>
+          <pre>{error.toString()}</pre>
+        </div>
       )}
       <ol>
         {urlsWithCount.map(([url, count]) => (

@@ -4,6 +4,16 @@
   details {
     margin-bottom: 20px;
   }
+
+  .flaw .fetch-error {
+    margin: 10px;
+    padding: 20px 30px;
+    border-radius: 10px;
+    background-color: rgb(252, 159, 159);
+    p {
+      font-weight: bold;
+    }
+  }
 }
 
 a.flawed--broken_link_404 {

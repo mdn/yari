@@ -13,6 +13,7 @@ const {
 } = require("content/scripts/constants.js");
 
 const app = express();
+app.use(express.json());
 
 const STATIC_ROOT = path.join(__dirname, "../client/build");
 const CONTENT_ALL_TITLES = path.join(__dirname, "../content/_all-titles.json");
@@ -151,9 +152,18 @@ function getOrCreateBuilder(options) {
 // This is used by the "<Flaws/>" component which displays information
 // about broken links in a page, as some of those broken links might just
 // be redirects.
-app.get("/_redirects", (req, res) => {
-  redirects = {};
-  for (const url of req.query.url) {
+app.post("/_redirects", (req, res) => {
+  if (Math.random() > 0.9) {
+    return res.status(500).send("craop!");
+  }
+  if (req.body === undefined) {
+    throw new Error("express.json middleware not installed");
+  }
+  const redirects = {};
+  if (!req.body.urls) {
+    return res.status(400).send("No .urls array sent in JSON");
+  }
+  for (const url of req.body.urls) {
     redirects[url] = getRedirectUrl(url);
   }
   res.json({ redirects });
