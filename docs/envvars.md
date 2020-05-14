@@ -101,3 +101,33 @@ If you want to build archive content (no KumaScript rendering) you
 can say where the location to the folder is.
 
 **Example: `/tmp/mdn-archive-content`**
+
+### `BUILD_FLAW_LEVELS`
+
+**Default: `*:warn`**
+
+To set this you need to know what all the possible flaw identifiers are called.
+The complete set can be found in `content/src/constants.js` in
+`VALID_FLAW_CHECKS`. And the level values are `error`, `warn`, or `ignore`.
+
+The value of this environment variable is a comma separated string. Any
+identifier or level value that is not recognized will throw an error.
+
+You can mix and match like this for example:
+
+```sh
+macros:error, broken_links: warn, bad_bcd_queries: ignore
+```
+
+Anything _not_ mentioned defaults to `ignore`, so the above example
+is equivalent to:
+
+```sh
+macros:error, broken_links: warn
+```
+
+When a flaw is discovered, if the level is `error` it will, halt the build
+and throw an error. It will halt on the first flaw error encountered.
+If the level is `warn` it will inject the flaw message into the built
+`index.json` file which you can view when rendering the document on
+`http://localhost:3000/`.
