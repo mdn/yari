@@ -67,83 +67,88 @@ function NonBreakingSpace() {
   return <>{"\u00A0"}</>;
 }
 
-function CellText({ support }: { support: bcd.SupportStatement | undefined }) {
-  const currentSupport = getFirst(support);
+const CellText = React.memo(
+  ({ support }: { support: bcd.SupportStatement | undefined }) => {
+    console.log("hi");
+    const currentSupport = getFirst(support);
 
-  const added = currentSupport && currentSupport.version_added;
-  const removed = currentSupport && currentSupport.version_removed;
+    const added = currentSupport && currentSupport.version_added;
+    const removed = currentSupport && currentSupport.version_removed;
 
-  let status:
-    | { isSupported: "unknown" }
-    | { isSupported: "no" | "yes" | "partial"; label?: React.ReactNode };
+    let status:
+      | { isSupported: "unknown" }
+      | { isSupported: "no" | "yes" | "partial"; label?: React.ReactNode };
 
-  switch (added) {
-    case null:
-      status = { isSupported: "unknown" };
-      break;
-    case true:
-      status = { isSupported: "yes" };
-      break;
-    case false:
-      status = { isSupported: "no" };
-      break;
-    default:
-      status = { isSupported: "yes", label: added };
-      break;
+    switch (added) {
+      case null:
+        status = { isSupported: "unknown" };
+        break;
+      case true:
+        status = { isSupported: "yes" };
+        break;
+      case false:
+        status = { isSupported: "no" };
+        break;
+      default:
+        status = { isSupported: "yes", label: added };
+        break;
+    }
+
+    if (removed) {
+      status = {
+        isSupported: "no",
+        label: (
+          <>
+            {typeof added === "string" ? added : "?"}
+            <NonBreakingSpace />— {typeof removed === "string" ? removed : "?"}
+          </>
+        ),
+      };
+    } else if (currentSupport && currentSupport.partial_implementation) {
+      status = {
+        isSupported: "partial",
+        label: typeof added === "string" ? added : "Partial",
+      };
+    }
+
+    let label, title;
+    switch (status.isSupported) {
+      case "yes":
+        title = "Full support";
+        label = status.label || "Yes";
+        break;
+
+      case "partial":
+        title = "Partial support";
+        label = status.label || "Partial";
+        break;
+
+      case "no":
+        title = "No support";
+        label = status.label || "No";
+        break;
+
+      case "unknown":
+        title = "Compatibility unknown; please update this.";
+        label = "?";
+        break;
+    }
+
+    return (
+      <>
+        <abbr
+          className={`bc-level-${getSupportClassName(
+            currentSupport
+          )} only-icon`}
+          title={title}
+        >
+          <span>{title}</span>
+        </abbr>
+        {label}
+      </>
+    );
   }
-
-  if (removed) {
-    status = {
-      isSupported: "no",
-      label: (
-        <>
-          {typeof added === "string" ? added : "?"}
-          <NonBreakingSpace />— {typeof removed === "string" ? removed : "?"}
-        </>
-      ),
-    };
-  } else if (currentSupport && currentSupport.partial_implementation) {
-    status = {
-      isSupported: "partial",
-      label: typeof added === "string" ? added : "Partial",
-    };
-  }
-
-  let label, title;
-  switch (status.isSupported) {
-    case "yes":
-      title = "Full support";
-      label = status.label || "Yes";
-      break;
-
-    case "partial":
-      title = "Partial support";
-      label = status.label || "Partial";
-      break;
-
-    case "no":
-      title = "No support";
-      label = status.label || "No";
-      break;
-
-    case "unknown":
-      title = "Compatibility unknown; please update this.";
-      label = "?";
-      break;
-  }
-
-  return (
-    <>
-      <abbr
-        className={`bc-level-${getSupportClassName(currentSupport)} only-icon`}
-        title={title}
-      >
-        <span>{title}</span>
-      </abbr>
-      {label}
-    </>
-  );
-}
+);
 
 function Icon({ name }: { name: string }) {
   return (
