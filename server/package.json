@@ -13,6 +13,6 @@
     "open-editor": "2.0.1"
   },
   "devDependencies": {
-    "nodemon": "2.0.3"
+    "nodemon": "2.0.4"
   }
 }
