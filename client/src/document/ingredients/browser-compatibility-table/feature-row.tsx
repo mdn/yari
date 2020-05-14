@@ -69,7 +69,6 @@ function NonBreakingSpace() {
 
 const CellText = React.memo(
   ({ support }: { support: bcd.SupportStatement | undefined }) => {
-    console.log("hi");
     const currentSupport = getFirst(support);
 
     const added = currentSupport && currentSupport.version_added;
