@@ -16,14 +16,17 @@ function Flaws({ flaws }: { flaws: FlawCheck[] }) {
   return (
     <div id="document-flaws">
       {flaws.map((flaw) => {
-        if (flaw.name === "broken_links") {
-          return <BrokenLinks key="broken_links" urls={flaw.flaws} />;
-        } else if (flaw.name === "bad_bcd_queries") {
-          return <BadBCDQueries key="bad_bcd_queries" messages={flaw.flaws} />;
-        } else if (flaw.name === "macros") {
-          return <Macros key="macros" messages={flaw.flaws} />;
-        } else {
-          throw new Error(`Unknown flaw check '${flaw.name}'`);
+        switch (flaw.name) {
+          case "broken_links":
+            return <BrokenLinks key="broken_links" urls={flaw.flaws} />;
+          case "bad_bcd_queries":
+            return (
+              <BadBCDQueries key="bad_bcd_queries" messages={flaw.flaws} />
+            );
+          case "macros":
+            return <Macros key="macros" messages={flaw.flaws} />;
+          default:
+            throw new Error(`Unknown flaw check '${flaw.name}'`);
         }
       })}
     </div>
@@ -32,17 +35,19 @@ function Flaws({ flaws }: { flaws: FlawCheck[] }) {
 
 export default Flaws;
 
-function BrokenLinks({ urls }) {
+function BrokenLinks({ urls }: { urls: string[] }) {
   // urls has repeats so turn it into a count for each
-  const counts = {};
-  for (const u of urls) {
-    if (!(u in counts)) {
-      counts[u] = 0;
-    }
-    counts[u] += 1;
-  }
-  const params = new URLSearchParams();
-  Object.keys(counts).forEach((url) => params.append("url", url));
+  const urlsWithCount = Array.from(
+    urls
+      .reduce<Map<string, number>>(
+        (map, url) => map.set(url, (map.get(url) || 0) + 1),
+        new Map()
+      )
+      .entries()
+    // If we don't sort them, their visual presence isn't predictable.
+  ).sort(([url1], [url2]) => url1.localeCompare(url2));
+
+  const params = new URLSearchParams(urls.map((url) => ["url", url]));
   const { data, error } = useSWR(
     `/_redirects?${params.toString()}`,
     (url) => {
@@ -55,56 +60,43 @@ function BrokenLinks({ urls }) {
     },
     { revalidateOnFocus: false }
   );
-  const urlsAsKeys = Object.keys(counts);
-  // If we don't sort them, their visual presence isn't predictable.
-  urlsAsKeys.sort();
 
   useEffect(() => {
-    const areBroken = new Set(
-      urlsAsKeys.map((uri) => new URL(uri, window.location.href).toString())
+    const flawedAnchors = [
+      ...Object.entries(data ? data.redirects : {})
+        .filter(([uri, correctURI]) => !!correctURI)
+        .map(([uri, correctURI]) => ({
+          href: uri,
+          title: `Consider fixing! It's actually a redirect to ${correctURI}`,
+          className: "flawed--broken_link_redirect",
+        })),
+      ...urls.map((uri) => ({
+        href: uri,
+        title: "Links to a page that will 404 Not Found",
+        className: "flawed--broken_link_404",
+      })),
+    ].flatMap(({ href, title, className }) =>
+      Array.from(
+        document.querySelectorAll<HTMLAnchorElement>(
+          `div.content a[href='${href}']`
+        )
+      ).map((anchor) => {
+        anchor.classList.add(className);
+        anchor.title = title;
+        return anchor;
+      })
     );
-    const areRedirects = new Map();
-    if (data && data.redirects) {
-      Object.entries(data.redirects).forEach(([uri, correctUri]) => {
-        areRedirects.set(
-          new URL(uri, window.location.href).toString(),
-          correctUri
-        );
-      });
-    }
-    [
-      ...document.querySelectorAll<HTMLAnchorElement>("div.content a[href]"),
-    ].forEach((a) => {
-      if (areRedirects.has(a.href) && areRedirects.get(a.href)) {
-        a.classList.add("flawed--broken_link_redirect");
-        a.title = `Consider fixing! It's actually a redirect to ${areRedirects.get(
-          a.href
-        )}`;
-      } else if (areBroken.has(a.href)) {
-        a.classList.add("flawed--broken_link_404");
-        a.title = "Links to a page that will 404 Not Found";
-      }
-    });
 
     return () => {
-      [
-        ...document.querySelectorAll<HTMLAnchorElement>(
-          "a.flawed--broken_link_redirect"
-        ),
-      ].forEach((a) => {
-        a.classList.remove("flawed--broken_link_redirect");
-        a.title = "";
-      });
-      [
-        ...document.querySelectorAll<HTMLAnchorElement>(
-          "a.flawed--broken_link_404"
-        ),
-      ].forEach((a) => {
-        a.classList.remove("flawed--broken_link_404");
-        a.title = "";
-      });
+      for (const anchor of flawedAnchors) {
+        anchor.classList.remove(
+          "flawed--broken_link_redirect",
+          "flawed--broken_link_404"
+        );
+        anchor.title = "";
+      }
     };
-  }, [data, urlsAsKeys]);
+  }, [data, urls]);
 
   return (
     <div className="flaw flaw__broken_links">
@@ -120,23 +112,20 @@ function BrokenLinks({ urls }) {
         </p>
       )}
       <ol>
-        {urlsAsKeys.map((url) => {
-          const times = counts[url];
-          return (
-            <li key={url}>
-              <code>{url}</code>{" "}
-              <i>
-                {times} {times === 1 ? "time" : "times"}
-              </i>{" "}
-              {data && data.redirects[url] && (
-                <span>
-                  <b>Actually a redirect!</b> to...{" "}
-                  <code>{data.redirects[url]}</code>
-                </span>
-              )}
-            </li>
-          );
-        })}
+        {urlsWithCount.map(([url, count]) => (
+          <li key={url}>
+            <code>{url}</code>{" "}
+            <i>
+              {count} {count === 1 ? "time" : "times"}
+            </i>{" "}
+            {data && data.redirects[url] && (
+              <span>
+                <b>Actually a redirect!</b> to...{" "}
+                <code>{data.redirects[url]}</code>
+              </span>
+            )}
+          </li>
+        ))}
       </ol>
     </div>
   );
