@@ -51,7 +51,7 @@ export function EditThisPage({ doc }) {
   } else if (source.content_file) {
     return (
       <p className="edit-this-page">
-        <Link to={doc.mdn_url.replace("/docs/", "/edit/")}>
+        <Link to={doc.mdn_url.replace("/docs/", "/_edit/")}>
           Edit this page in this browser
         </Link>{" "}
         •{" "}
