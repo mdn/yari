@@ -331,9 +331,16 @@ app.get("/_flaws", (req, res) => {
           ((b.popularity.value || 0) - (a.popularity.value || 0))
         );
       case "flaws":
-        // This is kinda bogus and slow.
-        const vA = a.flaws.reduce((x, y) => x + y.value, 0);
-        const vB = b.flaws.reduce((x, y) => x + y.value, 0);
+        const vA = a.flaws
+          .filter(({ name }) => {
+            return !filteredFlaws.size || filteredFlaws.has(name);
+          })
+          .reduce((x, y) => x + y.value, 0);
+        const vB = b.flaws
+          .filter(({ name }) => {
+            return !filteredFlaws.size || filteredFlaws.has(name);
+          })
+          .reduce((x, y) => x + y.value, 0);
         return sortMultiplier * (vB - vA);
       case "mdn_url":
         if (a.mdn_url.toLowerCase() < b.mdn_url.toLowerCase()) {
