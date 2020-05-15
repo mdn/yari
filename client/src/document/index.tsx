@@ -408,7 +408,7 @@ function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
 
   useEffect(() => {
     if (isInitialRender.current && show && rootElement.current) {
-      rootElement.current.scrollIntoView();
+      rootElement.current.scrollIntoView({behavior: "smooth", });
     }
     isInitialRender.current = false;
   }, [show]);
