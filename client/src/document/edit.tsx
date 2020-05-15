@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "@reach/router";
+import { Link, useParams } from "react-router-dom";
 import useSWR from "swr";
 import { debounce } from "throttle-debounce";
 
@@ -8,18 +8,21 @@ import { Document } from "./";
 
 import "./edit.scss";
 
-function DocumentEdit({ ...props }) {
+function DocumentEdit() {
+  const params = useParams();
+  const slug = params["*"];
+  const locale = params.locale;
+
   const sp = new URLSearchParams();
-  const url = `/${props.locale}/docs/${props["*"]}`;
+  const url = `/${locale}/docs/${slug}`;
   sp.append("url", url);
   const fetchUrl = `/_document?${sp.toString()}`;
-  const { data, error } = useSWR(fetchUrl, (url) => {
-    return fetch(url).then((r) => {
-      if (!r.ok) {
-        throw new Error(`${r.status} on ${url}`);
-      }
-      return r.json();
-    });
+  const { data, error } = useSWR(fetchUrl, async (url) => {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`${response.status} on ${url}`);
+    }
+    return await response.json();
   });
 
   return (
@@ -39,7 +42,7 @@ function DocumentEdit({ ...props }) {
         </div>
       )}
       {data && <EditForm data={data} url={url} />}
-      <Document {...props} />
+      <Document />
     </div>
   );
 }
@@ -50,7 +53,9 @@ function EditForm({ data, url }) {
   const [title, setTitle] = useState(data.metadata.title);
   const [html, setHtml] = useState(data.html);
   const [loading, setLoading] = useState(false);
-  const [submissionError, setSubmissionError] = useState(null);
+  const [submissionError, setSubmissionError] = useState<
+    Response | Error | null
+  >(null);
   const [autosaveEnabled, setAutoSaveEnabled] = useLocalStorage(
     "autosaveEdit",
     false
@@ -105,7 +110,7 @@ function EditForm({ data, url }) {
         disabled={loading}
         value={html}
         onChange={(event) => setHtml(event.target.value)}
-        rows="30"
+        rows={30}
         style={{ width: "100%" }}
       ></textarea>
       <p>
