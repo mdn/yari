@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useState,
   useCallback,
+  useRef,
 } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -401,10 +402,12 @@ function toggleLocationFlawsHash(on: boolean) {
 function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
   const { flaws } = doc;
   const [show, toggle] = useReducer((v) => !v, false);
+  const rootElement = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (window.location.hash && window.location.hash === FLAWS_HASH) {
       toggle();
+      rootElement.current && rootElement.current.scrollIntoView();
     }
   }, []);
 
@@ -426,7 +429,7 @@ function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
     .sort((a, b) => b.count - a.count);
 
   return (
-    <div id="show-flaws" className="toggle-flaws">
+    <div id="show-flaws" className="toggle-flaws" ref={rootElement}>
       {flatFlaws.length > 0 ? (
         <button type="submit" onClick={toggle}>
           {show
