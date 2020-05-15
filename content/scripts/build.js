@@ -532,7 +532,7 @@ class Builder {
       const countTodo = self.sources
         .entries()
         .map((source) => self.countLocaleFolders(source))
-        .map((m) => Array.from(m.values()).reduce((a, b) => a + b))
+        .map((m) => Array.from(m.values()).reduce((a, b) => a + b, 0))
         .reduce((a, b) => a + b);
       if (!countTodo) {
         throw new Error("No folders found to process!");
