@@ -404,12 +404,14 @@ function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
   const location = useLocation();
   const [show, toggle] = useReducer((v) => !v, location.hash === FLAWS_HASH);
   const rootElement = useRef<HTMLDivElement>(null);
+  const isInitialRender = useRef(true);
 
   useEffect(() => {
-    if (show && rootElement.current) {
+    if (isInitialRender.current && show && rootElement.current) {
       rootElement.current.scrollIntoView();
     }
-  }, []);
+    isInitialRender.current = false;
+  }, [show]);
 
   useEffect(() => {
     const hasShowHash = window.location.hash === FLAWS_HASH;
