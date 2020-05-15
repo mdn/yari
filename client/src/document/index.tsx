@@ -5,8 +5,9 @@ import React, {
   useEffect,
   useState,
   useCallback,
+  useRef,
 } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { NoMatch } from "../routing";
 import { Doc } from "./types";
@@ -389,33 +390,30 @@ interface FlatFlaw {
   count: number;
 }
 
-const FLAWS_HASH = "#show-flaws";
-function toggleLocationFlawsHash(on: boolean) {
-  window.history.pushState(
-    "",
-    document.title,
-    window.location.href.split("#")[0] + (on ? FLAWS_HASH : "")
-  );
-}
-
+const FLAWS_HASH = "#_flaws";
 function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
   const { flaws } = doc;
-  const [show, toggle] = useReducer((v) => !v, false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [show, toggle] = useReducer((v) => !v, location.hash === FLAWS_HASH);
+  const rootElement = useRef<HTMLDivElement>(null);
+  const isInitialRender = useRef(true);
 
   useEffect(() => {
-    if (window.location.hash && window.location.hash === FLAWS_HASH) {
-      toggle();
+    if (isInitialRender.current && show && rootElement.current) {
+      rootElement.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, []);
+    isInitialRender.current = false;
+  }, [show]);
 
   useEffect(() => {
     const hasShowHash = window.location.hash === FLAWS_HASH;
     if (show && !hasShowHash) {
-      toggleLocationFlawsHash(true);
+      navigate(location.pathname + location.search + FLAWS_HASH);
     } else if (!show && hasShowHash) {
-      toggleLocationFlawsHash(false);
+      navigate(location.pathname + location.search);
     }
-  }, [show]);
+  }, [location, navigate, show]);
 
   const flatFlaws: FlatFlaw[] = Object.entries(flaws)
     .map(([name, actualFlaws]) => ({
@@ -426,7 +424,7 @@ function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
     .sort((a, b) => b.count - a.count);
 
   return (
-    <div id="show-flaws" className="toggle-flaws">
+    <div id={FLAWS_HASH.slice(1)} className="toggle-flaws" ref={rootElement}>
       {flatFlaws.length > 0 ? (
         <button type="submit" onClick={toggle}>
           {show
