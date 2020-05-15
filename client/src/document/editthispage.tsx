@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import { Doc } from "./types";
 import "./editthispage.css";
 
-export function EditThisPage({ doc }) {
+export function EditThisPage({ doc }: { doc: Doc }) {
   const { source } = doc;
   const [opening, setOpening] = React.useState(false);
 
