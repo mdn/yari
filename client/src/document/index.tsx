@@ -7,7 +7,7 @@ import React, {
   useCallback,
   useRef,
 } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 import { NoMatch } from "../routing";
 import { Doc } from "./types";
@@ -401,13 +401,13 @@ function toggleLocationFlawsHash(on: boolean) {
 
 function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
   const { flaws } = doc;
-  const [show, toggle] = useReducer((v) => !v, false);
+  const location = useLocation();
+  const [show, toggle] = useReducer((v) => !v, location.hash === FLAWS_HASH);
   const rootElement = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (window.location.hash && window.location.hash === FLAWS_HASH) {
-      toggle();
-      rootElement.current && rootElement.current.scrollIntoView();
+    if (show && rootElement.current) {
+      rootElement.current.scrollIntoView();
     }
   }, []);
 
