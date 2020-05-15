@@ -413,7 +413,7 @@ function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
     } else if (!show && hasShowHash) {
       navigate(location.pathname + location.search);
     }
-  }, [location, show]);
+  }, [location, navigate, show]);
 
   const flatFlaws: FlatFlaw[] = Object.entries(flaws)
     .map(([name, actualFlaws]) => ({
