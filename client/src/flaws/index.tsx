@@ -469,7 +469,7 @@ function DocumentsTable({
               <tr key={doc.mdn_url}>
                 <td>
                   <Link
-                    to={`${doc.mdn_url}#show-flaws`}
+                    to={`${doc.mdn_url}#_flaws`}
                     title={doc.title}
                     target="_blank"
                   >

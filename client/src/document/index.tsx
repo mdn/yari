@@ -7,7 +7,7 @@ import React, {
   useCallback,
   useRef,
 } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { NoMatch } from "../routing";
 import { Doc } from "./types";
@@ -390,25 +390,18 @@ interface FlatFlaw {
   count: number;
 }
 
-const FLAWS_HASH = "#show-flaws";
-function toggleLocationFlawsHash(on: boolean) {
-  window.history.pushState(
-    "",
-    document.title,
-    window.location.href.split("#")[0] + (on ? FLAWS_HASH : "")
-  );
-}
-
+const FLAWS_HASH = "#_flaws";
 function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
   const { flaws } = doc;
   const location = useLocation();
+  const navigate = useNavigate();
   const [show, toggle] = useReducer((v) => !v, location.hash === FLAWS_HASH);
   const rootElement = useRef<HTMLDivElement>(null);
   const isInitialRender = useRef(true);
 
   useEffect(() => {
     if (isInitialRender.current && show && rootElement.current) {
-      rootElement.current.scrollIntoView({behavior: "smooth", });
+      rootElement.current.scrollIntoView({ behavior: "smooth" });
     }
     isInitialRender.current = false;
   }, [show]);
@@ -416,9 +409,9 @@ function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
   useEffect(() => {
     const hasShowHash = window.location.hash === FLAWS_HASH;
     if (show && !hasShowHash) {
-      toggleLocationFlawsHash(true);
+      navigate(location.pathname + location.search + FLAWS_HASH);
     } else if (!show && hasShowHash) {
-      toggleLocationFlawsHash(false);
+      navigate(location.pathname + location.search);
     }
   }, [show]);
 
@@ -431,7 +424,7 @@ function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
     .sort((a, b) => b.count - a.count);
 
   return (
-    <div id="show-flaws" className="toggle-flaws" ref={rootElement}>
+    <div id={FLAWS_HASH.slice(1)} className="toggle-flaws" ref={rootElement}>
       {flatFlaws.length > 0 ? (
         <button type="submit" onClick={toggle}>
           {show
