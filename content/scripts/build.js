@@ -1440,10 +1440,17 @@ class Builder {
     // The 'broken_links' flaw check looks for internal links that
     // link to a document that's going to fail with a 404 Not Found.
     if (this.options.flawLevels.get("broken_links") !== FLAW_LEVELS.IGNORE) {
+      // This is needed because the same href can occur multiple time.
+      // Especially when there's...
+      //    <a href="/foo/bar#one">
+      //    <a href="/foo/bar#two">
+      const checked = new Set();
+
       $("a[href]").each((i, element) => {
         const a = $(element);
         const href = a.attr("href").split("#")[0];
-        if (href.startsWith("/")) {
+        if (href.startsWith("/") && !checked.has(href)) {
+          checked.add(href);
           if (!this.allTitles.has(href.toLowerCase())) {
             if (!doc.flaws.hasOwnProperty("broken_links")) {
               doc.flaws.broken_links = [];
