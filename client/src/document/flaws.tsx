@@ -124,7 +124,7 @@ function BrokenLinks({ urls }: { urls: string[] }) {
         </p>
       )}
       {error && (
-        <div className="fetch-error">
+        <div className="error-message fetch-error">
           <p>Error checking for redirects:</p>
           <pre>{error.toString()}</pre>
         </div>

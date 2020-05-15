@@ -1484,6 +1484,7 @@ class Builder {
 
   injectSource(source, doc, folder) {
     doc.source = {
+      folder: path.relative(source.filepath, folder),
       github_url: this.getGitHubURL(source, folder),
     };
   }

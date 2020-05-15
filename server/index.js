@@ -99,7 +99,28 @@ app.get("/_open", (req, res) => {
   if (!filepath) {
     throw new Error("No .filepath in the request query");
   }
-  const absoluteFilepath = normalizeContentPath(filepath);
+
+  // Sometimes that 'filepath' query string parameter is a full absolute
+  // filepath (e.g. /Users/peterbe/yari/content.../index.html), which usually
+  // happens when you this is used from the displayed flaws on a preview
+  // page.
+  // But sometimes, it's a relative path and if so, it's always relative
+  // to the main builder source.
+  const absoluteFilepath = fs.existsSync(filepath)
+    ? filepath
+    : path.join(
+        // This works because the builder created here in the server is hardcoded
+        // to only have exactly one source which is the main process.env.BUILD_ROOT
+        // but adjusted.
+        getOrCreateBuilder().sources.entries()[0].filepath,
+        filepath
+      );
+
+  // Double-check that the file can be found.
+  if (!fs.existsSync(absoluteFilepath)) {
+    return res.status(400).send(`${absoluteFilepath} does not exist on disk.`);
+  }
+
   let spec = absoluteFilepath;
   if (line) {
     spec += `:${parseInt(line)}`;
