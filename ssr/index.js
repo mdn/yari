@@ -1,15 +1,12 @@
 import React from "react";
 import fs from "fs";
 import path from "path";
-import { ServerLocation } from "@reach/router";
-import sourceMapSupport from "source-map-support";
+import { StaticRouter } from "react-router-dom/server";
 
 import { App } from "../client/src/app";
 import render from "./render";
 import { fixSyntaxHighlighting } from "./syntax-highlighter";
 import { normalizeURLs } from "./browser-compatibility-table";
-
-sourceMapSupport.install();
 
 // This is necessary because the ssr.js is in dist/ssr.js
 // and we need to reach the .env this way.
@@ -78,16 +75,18 @@ function addBreadcrumbData(uri, document, allTitles) {
   const parents = [];
   let split = uri.split("/");
   let parentUri;
+  let parentUriLC;
   while (split.length > 2) {
     split.pop();
     parentUri = split.join("/");
+    parentUriLC = parentUri.toLowerCase();
     // This test makes it possible to "skip" certain URIs that might not
     // be a page on its own. For example: /en-US/docs/Web/ is a page,
     // and so is /en-US/ but there might not be a page for /end-US/docs/.
-    if (allTitles[parentUri]) {
+    if (allTitles.has(parentUriLC)) {
       parents.unshift({
         uri: parentUri,
-        title: allTitles[parentUri].title,
+        title: allTitles.get(parentUriLC).title,
       });
     }
   }
@@ -104,7 +103,7 @@ export function buildHtmlAndJsonFromDoc({
   doc,
   destinationDir,
   buildHtml,
-  titles,
+  allTitles,
 }) {
   const options = { doc };
 
@@ -122,7 +121,7 @@ export function buildHtmlAndJsonFromDoc({
   // The `titles` object should contain every possible URI->Title mapping.
   // We can use that generate the necessary information needed to build
   // a breadcrumb in the React componentx.
-  addBreadcrumbData(uri, options.doc, titles);
+  addBreadcrumbData(uri, options.doc, allTitles);
 
   // Stumptown produces a `.related_content` for every document. But it
   // contains data that is either not needed or not appropriate for the way
@@ -143,9 +142,11 @@ export function buildHtmlAndJsonFromDoc({
 
   if (buildHtml) {
     rendered = render(
-      <ServerLocation url={uri}>
-        <App {...options} />
-      </ServerLocation>,
+      React.createElement(
+        StaticRouter,
+        { location: uri, context: options },
+        React.createElement(App, options)
+      ),
       options
     );
   }

@@ -1,0 +1,77 @@
+#all-flaws {
+  .attention {
+    margin: 10px;
+    padding: 20px 30px;
+    border-radius: 10px;
+
+    h3,
+    h4 {
+      margin-top: 0;
+    }
+
+    h3 span.page {
+      margin-left: 10px;
+      color: #666;
+    }
+  }
+
+  td a .url-prefix,
+  td .document-title-preview {
+    color: rgb(159, 159, 159);
+    margin-right: 2px;
+    font-size: 80%;
+  }
+  td .document-title-preview {
+    margin-left: 10px;
+  }
+
+  .search-error {
+    background-color: rgb(252, 159, 159);
+  }
+
+  .document-warnings {
+    background-color: rgb(255, 215, 154);
+  }
+
+  .search-times {
+    margin-top: 60px;
+    p {
+      font-size: 70%;
+    }
+  }
+
+  .pagination {
+    text-align: center;
+    margin: 20px;
+    a.disabled {
+      color: rgb(159, 159, 159);
+    }
+    a {
+      padding: 10px;
+    }
+  }
+
+  div.filter-documents {
+    .filters {
+      // XXX Can someone please turn this into a CSS grid
+      float: left;
+      width: 300px;
+
+      h4 {
+        border-bottom: 1px solid #efefef;
+        margin-bottom: 10px;
+      }
+    }
+    .documents {
+      margin-left: 300px;
+
+      h4.subheader {
+        margin-top: 2px;
+      }
+
+      th.sortable {
+        cursor: ns-resize;
+      }
+    }
+  }
+}

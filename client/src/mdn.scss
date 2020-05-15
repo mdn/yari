@@ -110,6 +110,11 @@ div.sidebar {
 div.content {
   margin-left: 22.75%;
 
+  .hidden,
+  .is-hidden {
+    display: none;
+  }
+
   h2::before {
     border-top: 3px solid #3d7e9a;
     content: "";

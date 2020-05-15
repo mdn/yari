@@ -13,6 +13,7 @@ cache:
     - server/node_modules
     - ssr/node_modules
     - content/node_modules
+    - kumascript/node_modules
 
 # Because https://github.com/travis-ci/travis-ci/issues/9445
 before_install:
@@ -29,6 +30,10 @@ matrix:
       cache: yarn
       script:
         - ./scripts/ci-client.sh
+    - name: kumascript
+      cache: yarn
+      script:
+        - ./scripts/ci-kumascript.sh
     - name: end-to-end
       cache: yarn
       script:
