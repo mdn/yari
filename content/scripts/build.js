@@ -535,7 +535,10 @@ class Builder {
         .map((m) => Array.from(m.values()).reduce((a, b) => a + b, 0))
         .reduce((a, b) => a + b);
       if (!countTodo) {
-        throw new Error("No folders found to process!");
+        this.logger.warn(
+          chalk.red("No folders found to process. Did you filter too much?")
+        );
+        return;
       }
       self.initProgressbar(countTodo);
     }
