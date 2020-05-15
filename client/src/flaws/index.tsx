@@ -203,7 +203,7 @@ export default function AllFlaws() {
                   Previous page ({page - 1})
                 </PageLink>
               )}{" "}
-              <PageLink number={page + 1} disabled={page + 1 === pageCount}>
+              <PageLink number={page + 1} disabled={page + 1 > pageCount}>
                 Next page ({page + 1})
               </PageLink>
             </p>
@@ -518,16 +518,18 @@ function PageLink({
   // as it implies the object could have keys set to undefined, which isn't true here.
   // Hence we have to use type coercion (any)
   const newFilters = withoutDefaultFilters({ ...filters, page: number }) as any;
+  if (newFilters.page) {
+    newFilters.page = String(newFilters.page);
+  }
   return (
     <Link
-      to={
-        "?" +
-        createSearchParams({
-          ...newFilters,
-          page: String(newFilters.page),
-        }).toString()
-      }
+      to={"?" + createSearchParams(newFilters).toString()}
       className={disabled ? "disabled" : ""}
+      onClick={(event) => {
+        if (disabled) {
+          event.preventDefault();
+        }
+      }}
     >
       {children}
     </Link>
