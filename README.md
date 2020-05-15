@@ -279,6 +279,14 @@ rendering. But it's a luxury to have for these reasons:
    static serving there's an opportunity to do expensive post-processing such
    as extracting critical CSS or calculating nonce for CSP headers.
 
+### Flaw checks
+
+When building you can enable specific "flaw checks" and their level of
+handling. Some flaws are "cosmetic" and some are more
+severe but they should never block a full build.
+
+More information about how to set flaws can be found in `docs/envvars.md`.
+
 ## Deployment
 
 Deployment means that you prepare one whole single directory that is

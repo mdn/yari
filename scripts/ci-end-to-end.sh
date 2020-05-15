@@ -3,7 +3,8 @@ set -e
 
 
 # TEMPORARILY...
-# Because, at the time of writing, we don't have any real content checked in, we'll fake some.
+# Because, at the time of writing, we don't have any real content
+# checked in, we'll fake some.
 
 mkdir -p ci-content/files/en-us/foo/bar
 echo "<p>I'm alive!</p>" > ci-content/files/en-us/foo/bar/index.html
@@ -20,12 +21,25 @@ cat > ci-content/files/en-us/foo/bar/wikihistory.json <<JSON
   ]
 }
 JSON
+cat > ci-content/popularities.json <<JSON
+{
+  "/en-US/docs/Web/CSS/Specificity": 1,
+  "/en-US/docs/Web/JavaScript": 0.8420770619785778,
+  "/en-US/docs/foo/bar": 0.000001
+}
+JSON
+
 
 export BUILD_ROOT=ci-content/files
+export BUILD_POPULARITIES_FILEPATH=ci-content/popularities.json
+export BUILD_ALLOW_STALE_TITLES=false
+
 yarn run prebuild
+
 # The `_all-titles.json` file is an implementation detail but it's nice to
 # know it gets created.
 cat content/_all-titles.json
+
 # The folder should have been created
 echo "Contents of client/build/static..."
 ls -lh client/build/static/
@@ -43,14 +57,5 @@ ls -ltr client/build/en-us/docs/foo/bar
 # Expect this file to have been created
 echo "Contents of client/build/en-us/titles.json"
 cat client/build/en-us/titles.json
-
-
-# It should never create a build folder called 'en-US'
-# It should always only be 'en-us'.
-if [ -d client/build/en-US ]; then
-  echo "client/build/en-US should never have been created."
-  echo "(only lower case please!)"
-  exit 1
-fi
 
 node scripts/end-to-end-test.js

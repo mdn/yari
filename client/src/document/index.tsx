@@ -1,7 +1,15 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, {
+  lazy,
+  useReducer,
+  Suspense,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { NoMatch } from "../routing";
+import { Doc } from "./types";
 
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
@@ -12,19 +20,25 @@ import { LinkList, LinkLists } from "./ingredients/link-lists";
 import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 
+// Misc
+import { humanizeFlawName } from "../flaw-utils";
+
 // Sub-components
 import { DocumentTranslations } from "./languages";
 import { EditThisPage } from "./editthispage";
 
-// XXX Make this lazy!
-import { DocumentSpy } from "./spy";
+import "./index.scss";
 
-export function Document(props) {
+// Lazy sub-components
+const DocumentSpy = lazy(() => import("./spy"));
+const DocumentFlaws = lazy(() => import("./flaws"));
+
+export function Document(props /* TODO: define a TS interface for this */) {
   const params = useParams();
   const slug = params["*"];
   const locale = params.locale;
 
-  const [doc, setDoc] = useState(props.doc || null);
+  const [doc, setDoc] = useState<Doc | null>(props.doc || null);
   const [loading, setLoading] = useState(false);
   const [loadingError, setLoadingError] = useState<null | Error | Response>(
     null
@@ -107,7 +121,11 @@ export function Document(props) {
   }
   if (loadingError) {
     // Was it because of a 404?
-    if (typeof window !== "undefined" && loadingError instanceof Response) {
+    if (
+      typeof window !== "undefined" &&
+      loadingError instanceof Response &&
+      loadingError.status === 404
+    ) {
       return <NoMatch />;
     } else {
       return <LoadingError error={loadingError} />;
@@ -116,6 +134,7 @@ export function Document(props) {
   if (!doc) {
     return null;
   }
+
   const translations = [...(doc.other_translations || [])];
   if (doc.translation_of) {
     translations.unshift({
@@ -124,7 +143,7 @@ export function Document(props) {
     });
   }
   return (
-    <div>
+    <>
       <h1 className="page-title">{doc.title}</h1>
       {translations && !!translations.length && (
         <DocumentTranslations translations={translations} />
@@ -138,14 +157,24 @@ export function Document(props) {
         <div className="content">
           <RenderDocumentBody doc={doc} />
           <hr />
+          {process.env.NODE_ENV === "development" && (
+            <ToggleDocumentFlaws doc={doc} />
+          )}
           <EditThisPage source={doc.source} />
           {doc.contributors && <Contributors contributors={doc.contributors} />}
         </div>
       </div>
+
       {process.env.NODE_ENV === "development" && (
-        <DocumentSpy onMessage={onMessage} />
+        <Suspense
+          fallback={
+            <p className="loading-document-spy">Loading document spy</p>
+          }
+        >
+          <DocumentSpy onMessage={onMessage} />
+        </Suspense>
       )}
-    </div>
+    </>
   );
 }
 
@@ -292,7 +321,7 @@ function RenderDocumentBody({ doc }) {
       return (
         <BrowserCompatibilityTable
           key={`browser_compatibility${i}`}
-          data={section.value}
+          {...section.value}
         />
       );
     } else if (section.type === "examples") {
@@ -346,6 +375,84 @@ function LoadingError({ error }) {
         <p>
           <code>{error.toString()}</code>
         </p>
+      )}
+      <p>
+        <a href=".">Try reloading the page</a>
+      </p>
+    </div>
+  );
+}
+
+interface FlatFlaw {
+  name: string;
+  flaws: string[];
+  count: number;
+}
+
+const FLAWS_HASH = "#show-flaws";
+function toggleLocationFlawsHash(on: boolean) {
+  window.history.pushState(
+    "",
+    document.title,
+    window.location.href.split("#")[0] + (on ? FLAWS_HASH : "")
+  );
+}
+
+function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
+  const { flaws } = doc;
+  const [show, toggle] = useReducer((v) => !v, false);
+
+  useEffect(() => {
+    if (window.location.hash && window.location.hash === FLAWS_HASH) {
+      toggle();
+    }
+  }, []);
+
+  useEffect(() => {
+    const hasShowHash = window.location.hash === FLAWS_HASH;
+    if (show && !hasShowHash) {
+      toggleLocationFlawsHash(true);
+    } else if (!show && hasShowHash) {
+      toggleLocationFlawsHash(false);
+    }
+  }, [show]);
+
+  const flatFlaws: FlatFlaw[] = Object.entries(flaws)
+    .map(([name, actualFlaws]) => ({
+      name,
+      flaws: actualFlaws,
+      count: actualFlaws.length,
+    }))
+    .sort((a, b) => b.count - a.count);
+
+  return (
+    <div id="show-flaws" className="toggle-flaws">
+      {flatFlaws.length > 0 ? (
+        <button type="submit" onClick={toggle}>
+          {show
+            ? "Hide flaws"
+            : `Show flaws (${flatFlaws.map((flaw) => flaw.count).join(" + ")})`}
+        </button>
+      ) : (
+        <p className="no-flaws">
+          No known flaws at the moment
+          <span role="img" aria-label="yay!">
+            🍾
+          </span>
+        </p>
+      )}
+
+      {show ? (
+        <Suspense fallback={<div>Loading document flaws...</div>}>
+          <DocumentFlaws flaws={flatFlaws} />
+        </Suspense>
+      ) : (
+        <small>
+          {/* a one-liner about all the flaws */}
+          {flatFlaws
+            .map((flaw) => `${humanizeFlawName(flaw.name)}: ${flaw.count}`)
+            .join(" + ")}
+        </small>
       )}
     </div>
   );
