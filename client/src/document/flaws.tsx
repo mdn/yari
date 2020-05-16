@@ -87,9 +87,13 @@ function BrokenLinks({ urls }: { urls: string[] }) {
         if (correctURI) {
           // It can be fixed!
           anchor.classList.add("flawed--broken_link_redirect");
+          // XXX This would overwrite existing 'title' attributes
+          // but we can stuff it in a 'data-originaltitle' attribute.
           anchor.title = `Consider fixing! It's actually a redirect to ${correctURI}`;
         } else {
           anchor.classList.add("flawed--broken_link_404");
+          // XXX This would overwrite existing 'title' attributes
+          // but we can stuff it in a 'data-originaltitle' attribute.
           anchor.title = "Broken link! Links to a page that will not be found";
         }
       }
@@ -102,6 +106,7 @@ function BrokenLinks({ urls }: { urls: string[] }) {
         )
       )) {
         anchor.classList.remove("flawed--broken_link_redirect");
+        // XXX Restore if there was a 'data-originaltitle' attribute
         anchor.title = "";
       }
       for (const anchor of Array.from(
@@ -110,6 +115,7 @@ function BrokenLinks({ urls }: { urls: string[] }) {
         )
       )) {
         anchor.classList.remove("flawed--broken_link_404");
+        // XXX Restore if there was a 'data-originaltitle' attribute
         anchor.title = "";
       }
     };

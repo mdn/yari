@@ -1451,8 +1451,9 @@ class Builder {
     $("a[href][data-macro]").each((i, element) => {
       const a = $(element);
       const macroData = a.data("macro");
-      const [href, hash] = a.attr("href").split("#", 2);
+      // XXX check that the macroData is /xref$/
       if (macroData && href.startsWith("/")) {
+        const [href, hash] = a.attr("href").split("#", 2);
         a.removeAttr("data-macro");
         if (!this.allTitles.has(href.toLowerCase())) {
           // let cleanedHref = this.cleanUri(href);
