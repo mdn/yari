@@ -48,4 +48,4 @@ let code = '';
 let endcode = '';
 if (!$3) { code = '<code>'; endcode = '</code>' }
 
-%><a href="<%- URL+anch %>"><%- code %><%- str %><%- endcode %></a>
+%><a macro="domxref" href="<%- URL+anch %>"><%- code %><%- str %><%- endcode %></a>

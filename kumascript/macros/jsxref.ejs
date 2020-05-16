@@ -47,4 +47,4 @@ if (anchor && anchor[0] != '#') {
 let code    = !$3 ? '<code>'  : '';
 let endcode = !$3 ? '</code>' : '';
 
-%><a href="<%- URL + anchor %>"><%- code %><%- str %><%- endcode %></a>
+%><a data-macro="jsxref" href="<%- URL + anchor %>"><%- code %><%- str %><%- endcode %></a>

@@ -107,6 +107,17 @@ div.sidebar {
   }
 }
 
+// Temporary hack so that <a><code>...</code></a> becomes distinguishable
+// from <code>...</code>.
+a > code {
+  text-decoration: underline;
+}
+a.new > code,
+a.new:hover > code {
+  border-bottom: 1px dashed red;
+  text-decoration: none;
+}
+
 div.content {
   margin-left: 22.75%;
 

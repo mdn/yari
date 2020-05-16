@@ -182,7 +182,8 @@ class AllPagesInfo {
   getPage(url) {
     const uriKey = this.getUriKey(url);
     if (!this.pagesByUri.has(uriKey)) {
-      throw new Error(`${this.getDescription(url)} does not exist`);
+      return {};
+      // throw new Error(`${this.getDescription(url)} does not exist`);
     }
     return this.pagesByUri.get(uriKey);
   }

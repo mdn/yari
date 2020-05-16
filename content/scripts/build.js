@@ -924,6 +924,7 @@ class Builder {
   initSelfHash() {
     const contentRoot = path.resolve(__dirname, "..");
     const ssrRoot = path.resolve(__dirname, "..", "..", "ssr");
+    const kumascriptRoot = path.resolve(__dirname, "..", "..", "kumascript");
     this.selfHash = makeHash([
       // This'll be different when new packages are changed like
       // `mdn-browser-compat-data` but we *could* be more explicit but
@@ -935,8 +936,14 @@ class Builder {
       ...simpleGlob(path.join(contentRoot, "scripts"), ".js"),
       // Also factor in the ssr builder's package.json
       path.join(ssrRoot, "package.json"),
-      // and it's .js files
+      // and its .js files
       ...simpleGlob(ssrRoot, ".js"),
+      // Also factor in the kumascripts's package.json
+      path.join(kumascriptRoot, "package.json"),
+      // and its .js files
+      ...simpleGlob(kumascriptRoot, "src/.js"),
+      // and its .ejs files
+      ...simpleGlob(kumascriptRoot, "macros/.ejs"),
     ]);
   }
 
@@ -1360,6 +1367,9 @@ class Builder {
     // Also note, these operations mutate the `$`.
     doc.sidebarHTML = extractSidebar($, config);
 
+    // Fixes any '<a data-macro="*xref" href="...">' tags
+    this.postProcessXRefs($);
+
     // With the sidebar out of the way, go ahead and check the rest
     this.injectFlaws(source, doc, $);
 
@@ -1430,6 +1440,49 @@ class Builder {
   }
 
   /**
+   * Check all <a href="..." data-macro="*xref"> tags.
+   * Mutate them if possible.
+   *
+   * @param {Object} source
+   * @param {Object} doc
+   * @param {Cheerio document instance} $
+   */
+  postProcessXRefs($) {
+    $("a[href][data-macro]").each((i, element) => {
+      const a = $(element);
+      const macroData = a.data("macro");
+      const [href, hash] = a.attr("href").split("#", 2);
+      if (macroData && href.startsWith("/")) {
+        a.removeAttr("data-macro");
+        if (!this.allTitles.has(href.toLowerCase())) {
+          // let cleanedHref = this.cleanUri(href);
+          const redirectHref = this.allRedirects.get(href.toLowerCase());
+          let correctHref = null;
+          const titleData = this.allTitles.get(redirectHref);
+          if (titleData) {
+            correctHref = titleData.mdn_url;
+          }
+          if (correctHref && correctHref !== href) {
+            // console.log("IT CAN BE FIXED!!!", [href, correctHref]);
+            // console.log("BEFORE", $.html(a));
+            a.attr("href", correctHref + (hash || ""));
+            // console.log("AFTER ", $.html(a));
+          } else {
+            // console.log("TROUBLE!", a.html());
+            a.removeAttr("href");
+            a.addClass("new");
+            a.attr("title", "Page has not been created yet!");
+          }
+        } else {
+          // console.log("ITS FINE", $.html(a));
+        }
+      } else {
+        throw new Error(`Not implemented (${a.html()})`);
+      }
+    });
+  }
+
+  /**
    * Validate the parsed HTML, with the sidebar removed.
    *
    * @param {folder} source
@@ -1442,6 +1495,11 @@ class Builder {
     if (this.options.flawLevels.get("broken_links") !== FLAW_LEVELS.IGNORE) {
       $("a[href]").each((i, element) => {
         const a = $(element);
+        // const macroData = a.data("macro");
+        // if (macroData) {
+        //   // These are dealt with elsewhere.
+        //   return;
+        // }
         const href = a.attr("href").split("#")[0];
         if (href.startsWith("/")) {
           if (!this.allTitles.has(href.toLowerCase())) {
