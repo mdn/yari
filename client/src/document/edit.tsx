@@ -56,9 +56,7 @@ function EditForm({ data, url }) {
   const [summary, setSummary] = useState(data.metadata.summary);
   const [html, setHtml] = useState(data.html);
   const [loading, setLoading] = useState(false);
-  const [submissionError, setSubmissionError] = useState<
-    Response | Error | null
-  >(null);
+  const [submissionError, setSubmissionError] = useState<Error | null>(null);
   const [autosaveEnabled, setAutoSaveEnabled] = useLocalStorage(
     "autosaveEdit",
     false
@@ -75,7 +73,7 @@ function EditForm({ data, url }) {
     }
   }, [title, summary, html, autosaveEnabled]);
 
-  function onSubmitHandler(event) {
+  function onSubmitHandler(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     putDocument({ title, summary, html });
   }
@@ -83,13 +81,16 @@ function EditForm({ data, url }) {
   async function putDocument({ html, summary, title }) {
     if (!autosaveEnabled) setLoading(true);
     try {
-      let response = await fetch(`/_document?url=${encodeURIComponent(url)}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, summary, html }),
-      });
-      if (response.ok) {
-        setSubmissionError(response);
+      const response = await fetch(
+        `/_document?url=${encodeURIComponent(url)}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, summary, html }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`${response.status} on ${url}`);
       }
     } catch (err) {
       setSubmissionError(err);
@@ -140,6 +141,12 @@ function EditForm({ data, url }) {
           <label htmlFor="enable_autosave">Enable autosave</label>
         </span>
       </p>
+      {submissionError && (
+        <div className="error-message submission-error">
+          <p>Error saving document</p>
+          <pre>{submissionError.toString()}</pre>
+        </div>
+      )}
     </form>
   );
 }
