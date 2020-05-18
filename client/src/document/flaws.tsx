@@ -80,11 +80,15 @@ function BrokenLinks({ urls }: { urls: string[] }) {
     for (const anchor of [
       ...document.querySelectorAll<HTMLAnchorElement>("div.content a[href]"),
     ]) {
-      const pathname = new URL(anchor.href).pathname;
+      const hrefURL = new URL(anchor.href);
+      const { pathname, hash } = hrefURL;
       if (pathname in data.redirects) {
         // Trouble! But is it a redirect?
-        const correctURI = data.redirects[pathname];
+        let correctURI = data.redirects[pathname];
         if (correctURI) {
+          if (hash) {
+            correctURI += hash;
+          }
           // It can be fixed!
           anchor.classList.add("flawed--broken_link_redirect");
           anchor.title = `Consider fixing! It's actually a redirect to ${correctURI}`;
