@@ -1017,26 +1017,46 @@ class Builder {
     });
   }
 
-  /** `this.allTitles` is a map of mdn_url => object that contains useful
-   * for the SSR work. This function dumps just the necessary data of that,
-   * per locale, to the final destination.
+  /** `this.allTitles` is a map of mdn_url (lowercase) => object that
+   * contains useful data for the SSR work. This function dumps just
+   * the necessary data of that, per locale, to the final destination.
    */
   dumpAllURLs() {
     const t0 = new Date();
     // First regroup ALL URLs into buckets per locale.
     const byLocale = {};
     const mostModified = {};
-    for (const [uri, data] of this.allTitles) {
-      // XXX skip locales not in this.options.locales and
-      // this.options.notLocales etc.
-
-      if (!(data.locale in byLocale)) {
-        byLocale[data.locale] = {};
-        mostModified[data.locale] = data.modified;
+    for (const [key, data] of this.allTitles) {
+      // That one special key. Ignore it in this context.
+      if (key === "_hash") {
+        continue;
       }
-      byLocale[data.locale][uri] = data;
-      if (data.modified > mostModified[data.locale]) {
-        mostModified[data.locale] = data.modified;
+      const uri = data.mdn_url;
+      const { locale, modified } = data;
+      // Lowercase because the 'this.options.locales' and
+      // 'this.options.notLocales' are always in lowercase but the locale
+      // as part of the allTitles values is not.
+      const localeLower = locale.toLowerCase();
+      if (
+        this.options.notLocales.length &&
+        this.options.notLocales.includes(localeLower)
+      ) {
+        continue;
+      }
+      if (
+        this.options.locales.length &&
+        !this.options.locales.includes(localeLower)
+      ) {
+        continue;
+      }
+
+      if (!(locale in byLocale)) {
+        byLocale[locale] = {};
+        mostModified[locale] = modified;
+      }
+      byLocale[locale][uri] = data;
+      if (data.modified > mostModified[locale]) {
+        mostModified[locale] = modified;
       }
     }
 
