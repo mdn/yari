@@ -65,11 +65,11 @@ function EditForm({ data, url }) {
     setAutoSaveEnabled(!autosaveEnabled);
   }
 
-  const putDocumentDebounced = useRef(debounce(1000, putDocument));
+  const putDocumentDebounced = debounce(1000, putDocument);
 
   useEffect(() => {
     if (autosaveEnabled) {
-      putDocumentDebounced.current({ title, summary, html });
+      putDocumentDebounced({ title, summary, html });
     }
   }, [title, summary, html, autosaveEnabled]);
 
@@ -117,7 +117,7 @@ function EditForm({ data, url }) {
         placeholder="Summary"
         rows={2}
         style={{ width: "100%" }}
-      ></textarea>
+      />
 
       <textarea
         disabled={loading}
@@ -125,7 +125,7 @@ function EditForm({ data, url }) {
         onChange={(event) => setHtml(event.target.value)}
         rows={30}
         style={{ width: "100%" }}
-      ></textarea>
+      />
       <p>
         <button type="submit" disabled={loading}>
           Save
