@@ -322,6 +322,13 @@ app.get("/_flaws", (req, res) => {
   // based on the batch size.
   counts.pages = Math.ceil(counts.found / MAX_DOCUMENTS_RETURNED);
 
+  // Used when sorting by "number of flaws".
+  function countFilteredFlaws(doc) {
+    return doc.flaws
+      .filter(({ name }) => !filteredFlaws.size || filteredFlaws.has(name))
+      .reduce((x, y) => x + y.value, 0);
+  }
+
   const sortMultiplier = sortReverse ? -1 : 1;
   documents.sort((a, b) => {
     switch (sortBy) {
@@ -331,17 +338,7 @@ app.get("/_flaws", (req, res) => {
           ((b.popularity.value || 0) - (a.popularity.value || 0))
         );
       case "flaws":
-        const vA = a.flaws
-          .filter(({ name }) => {
-            return !filteredFlaws.size || filteredFlaws.has(name);
-          })
-          .reduce((x, y) => x + y.value, 0);
-        const vB = b.flaws
-          .filter(({ name }) => {
-            return !filteredFlaws.size || filteredFlaws.has(name);
-          })
-          .reduce((x, y) => x + y.value, 0);
-        return sortMultiplier * (vB - vA);
+        return sortMultiplier * (countFilteredFlaws(a) - countFilteredFlaws(b));
       case "mdn_url":
         if (a.mdn_url.toLowerCase() < b.mdn_url.toLowerCase()) {
           return sortMultiplier * -1;
