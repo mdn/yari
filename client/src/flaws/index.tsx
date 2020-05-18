@@ -217,7 +217,7 @@ export default function AllFlaws() {
 
 function ShowSearchError({ error }) {
   return (
-    <div className="attention search-error">
+    <div className="error-message search-error">
       <h3>Search error</h3>
       <pre>{error.toString()}</pre>
     </div>

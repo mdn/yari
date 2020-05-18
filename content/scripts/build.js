@@ -1483,29 +1483,10 @@ class Builder {
   }
 
   injectSource(source, doc, folder) {
-    if (process.env.NODE_ENV === "development") {
-      // When in development mode, put the absolute path of the source
-      // of where the content comes from.
-      if (source.isStumptown) {
-        doc.source = {
-          folder: path.dirname(folder),
-          // absolute_folder: folder,
-          // markdown_file: folder
-          content_file: folder, // actually a filepath!
-          // content_file: path.join(folder, "index.html")
-        };
-      } else {
-        doc.source = {
-          // folder: path.relative(source.filepath, folder),
-          // absolute_folder: folder,
-          content_file: path.join(folder, "index.html"),
-        };
-      }
-    } else {
-      doc.source = {
-        github_url: this.getGitHubURL(source, folder),
-      };
-    }
+    doc.source = {
+      folder: path.relative(source.filepath, folder),
+      github_url: this.getGitHubURL(source, folder),
+    };
   }
 
   processStumptownFile(source, file, config) {

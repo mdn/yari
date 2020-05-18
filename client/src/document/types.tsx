@@ -1,3 +1,8 @@
+export interface Source {
+  github_url: string;
+  folder: string;
+}
+
 export interface Doc {
   title: string;
   mdn_url: string;
@@ -8,6 +13,6 @@ export interface Doc {
   other_translations?: object[];
   translation_of?: string;
   parents?: Doc[];
-  source: object;
+  source: Source;
   contributors: string[];
 }
