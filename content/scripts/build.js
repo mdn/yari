@@ -920,7 +920,7 @@ class Builder {
   }
 
   /** `this.allTitles` is a map of mdn_url (lowercase) => object that
-   * contains useful for the SSR work. This function dumps just
+   * contains useful data for the SSR work. This function dumps just
    * the necessary data of that, per locale, to the final destination.
    */
   dumpAllURLs() {
