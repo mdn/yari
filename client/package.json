@@ -6,7 +6,6 @@
   "main": "src/app.tsx",
   "dependencies": {
     "@types/jest": "^25.2.2",
-    "@types/node": "^13.13.5",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
     "cross-env": "^7.0.2",
