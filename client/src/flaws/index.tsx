@@ -217,7 +217,7 @@ export default function AllFlaws() {
 
 function ShowSearchError({ error }) {
   return (
-    <div className="attention search-error">
+    <div className="error-message search-error">
       <h3>Search error</h3>
       <pre>{error.toString()}</pre>
     </div>
@@ -469,7 +469,7 @@ function DocumentsTable({
               <tr key={doc.mdn_url}>
                 <td>
                   <Link
-                    to={`${doc.mdn_url}#show-flaws`}
+                    to={`${doc.mdn_url}#_flaws`}
                     title={doc.title}
                     target="_blank"
                   >

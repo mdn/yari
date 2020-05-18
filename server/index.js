@@ -103,8 +103,8 @@ app.get("/_document", (req, res) => {
   if (!req.query.url) {
     return res.status(400).send("No ?url= query param");
   }
-  console.log(`Looking up document data by URL ${req.query.url}`);
-  const docData = getOrCreateBuilder().allTitles[req.query.url];
+  const mdn_url = req.query.url.toLowerCase();
+  const docData = getOrCreateBuilder().allTitles.get(mdn_url);
   if (!docData) {
     return res.status(400).send(`No document by the URL ${req.query.url}`);
   }
@@ -122,8 +122,8 @@ app.put("/_document", (req, res) => {
   if (!req.query.url) {
     return res.status(400).send("No ?url= query param");
   }
-  console.log(`Looking up document data by URL ${req.query.url}`);
-  const docData = getOrCreateBuilder().allTitles[req.query.url];
+  const mdn_url = req.query.url.toLowerCase();
+  const docData = getOrCreateBuilder().allTitles.get(mdn_url);
   if (!docData) {
     return res.status(400).send(`No document by the URL ${req.query.url}`);
   }
@@ -133,14 +133,18 @@ app.put("/_document", (req, res) => {
     const htmlFile = path.join(folder, "index.html");
     const html = fs.readFileSync(htmlFile, "utf8");
     if (html !== req.body.html) {
-      fs.writeFileSync(htmlFile, req.body.html);
+      fs.writeFileSync(htmlFile, req.body.html.trim() + "\n");
     }
 
     const metadataFile = path.join(folder, "index.yaml");
     const rawMetadata = fs.readFileSync(metadataFile);
     const metadata = yaml.safeLoad(rawMetadata);
-    if (metadata.title !== req.body.title) {
-      metadata.title = req.body.title;
+    if (
+      metadata.title !== req.body.title ||
+      metadata.summary !== req.body.summary
+    ) {
+      metadata.title = req.body.title.trim();
+      metadata.summary = req.body.summary.trim();
       fs.writeFileSync(metadataFile, yaml.safeDump(metadata));
     }
   }
@@ -153,7 +157,28 @@ app.get("/_open", (req, res) => {
   if (!filepath) {
     throw new Error("No .filepath in the request query");
   }
-  const absoluteFilepath = normalizeContentPath(filepath);
+
+  // Sometimes that 'filepath' query string parameter is a full absolute
+  // filepath (e.g. /Users/peterbe/yari/content.../index.html), which usually
+  // happens when you this is used from the displayed flaws on a preview
+  // page.
+  // But sometimes, it's a relative path and if so, it's always relative
+  // to the main builder source.
+  const absoluteFilepath = fs.existsSync(filepath)
+    ? filepath
+    : path.join(
+        // This works because the builder created here in the server is hardcoded
+        // to only have exactly one source which is the main process.env.BUILD_ROOT
+        // but adjusted.
+        getOrCreateBuilder().sources.entries()[0].filepath,
+        filepath
+      );
+
+  // Double-check that the file can be found.
+  if (!fs.existsSync(absoluteFilepath)) {
+    return res.status(400).send(`${absoluteFilepath} does not exist on disk.`);
+  }
+
   let spec = absoluteFilepath;
   if (line) {
     spec += `:${parseInt(line)}`;

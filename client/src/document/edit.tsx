@@ -42,7 +42,9 @@ function DocumentEdit() {
         </div>
       )}
       {data && <EditForm data={data} url={url} />}
-      <Document />
+      <div className="document-edited">
+        <Document />
+      </div>
     </div>
   );
 }
@@ -51,6 +53,7 @@ export default DocumentEdit;
 
 function EditForm({ data, url }) {
   const [title, setTitle] = useState(data.metadata.title);
+  const [summary, setSummary] = useState(data.metadata.summary);
   const [html, setHtml] = useState(data.html);
   const [loading, setLoading] = useState(false);
   const [submissionError, setSubmissionError] = useState<
@@ -68,22 +71,22 @@ function EditForm({ data, url }) {
 
   useEffect(() => {
     if (autosaveEnabled) {
-      putDocumentDebounced.current({ title, html });
+      putDocumentDebounced.current({ title, summary, html });
     }
-  }, [title, html, autosaveEnabled]);
+  }, [title, summary, html, autosaveEnabled]);
 
   function onSubmitHandler(event) {
     event.preventDefault();
-    putDocument({ title, html });
+    putDocument({ title, summary, html });
   }
 
-  async function putDocument({ html, title }) {
+  async function putDocument({ html, summary, title }) {
     if (!autosaveEnabled) setLoading(true);
     try {
       let response = await fetch(`/_document?url=${encodeURIComponent(url)}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, html }),
+        body: JSON.stringify({ title, summary, html }),
       });
       if (response.ok) {
         setSubmissionError(response);
@@ -105,6 +108,15 @@ function EditForm({ data, url }) {
           onChange={(event) => setTitle(event.target.value)}
         />
       </p>
+
+      <textarea
+        disabled={loading}
+        value={summary}
+        onChange={(event) => setSummary(event.target.value)}
+        placeholder="Summary"
+        rows={2}
+        style={{ width: "100%" }}
+      ></textarea>
 
       <textarea
         disabled={loading}

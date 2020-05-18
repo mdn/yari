@@ -1440,10 +1440,17 @@ class Builder {
     // The 'broken_links' flaw check looks for internal links that
     // link to a document that's going to fail with a 404 Not Found.
     if (this.options.flawLevels.get("broken_links") !== FLAW_LEVELS.IGNORE) {
+      // This is needed because the same href can occur multiple time.
+      // Especially when there's...
+      //    <a href="/foo/bar#one">
+      //    <a href="/foo/bar#two">
+      const checked = new Set();
+
       $("a[href]").each((i, element) => {
         const a = $(element);
         const href = a.attr("href").split("#")[0];
-        if (href.startsWith("/")) {
+        if (href.startsWith("/") && !checked.has(href)) {
+          checked.add(href);
           if (!this.allTitles.has(href.toLowerCase())) {
             if (!doc.flaws.hasOwnProperty("broken_links")) {
               doc.flaws.broken_links = [];
@@ -1483,29 +1490,10 @@ class Builder {
   }
 
   injectSource(source, doc, folder) {
-    if (process.env.NODE_ENV === "development") {
-      // When in development mode, put the absolute path of the source
-      // of where the content comes from.
-      if (source.isStumptown) {
-        doc.source = {
-          folder: path.dirname(folder),
-          // absolute_folder: folder,
-          // markdown_file: folder
-          content_file: folder, // actually a filepath!
-          // content_file: path.join(folder, "index.html")
-        };
-      } else {
-        doc.source = {
-          // folder: path.relative(source.filepath, folder),
-          // absolute_folder: folder,
-          content_file: path.join(folder, "index.html"),
-        };
-      }
-    } else {
-      doc.source = {
-        github_url: this.getGitHubURL(source, folder),
-      };
-    }
+    doc.source = {
+      folder: path.relative(source.filepath, folder),
+      github_url: this.getGitHubURL(source, folder),
+    };
   }
 
   processStumptownFile(source, file, config) {
