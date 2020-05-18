@@ -4,6 +4,7 @@ const { performance } = require("perf_hooks");
 
 const express = require("express");
 const openEditor = require("open-editor");
+const yaml = require("js-yaml");
 
 const { Builder } = require("content/scripts/build");
 const { Sources } = require("content/scripts/sources");
@@ -90,9 +91,66 @@ app.use(
   })
 );
 
+// For submitting form data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 function normalizeContentPath(start) {
   return fs.existsSync(start) ? start : path.join(__dirname, "..", start);
 }
+
+app.get("/_document", (req, res) => {
+  if (!req.query.url) {
+    return res.status(400).send("No ?url= query param");
+  }
+  const mdn_url = req.query.url.toLowerCase();
+  const docData = getOrCreateBuilder().allTitles.get(mdn_url);
+  if (!docData) {
+    return res.status(400).send(`No document by the URL ${req.query.url}`);
+  }
+  const folder = normalizeContentPath(docData.file);
+  const html = fs.readFileSync(path.join(folder, "index.html"), "utf8");
+  const rawMetadata = fs.readFileSync(path.join(folder, "index.yaml"));
+  const metadata = yaml.safeLoad(rawMetadata);
+  res.status(200).json({
+    html,
+    metadata,
+  });
+});
+
+app.put("/_document", (req, res) => {
+  if (!req.query.url) {
+    return res.status(400).send("No ?url= query param");
+  }
+  const mdn_url = req.query.url.toLowerCase();
+  const docData = getOrCreateBuilder().allTitles.get(mdn_url);
+  if (!docData) {
+    return res.status(400).send(`No document by the URL ${req.query.url}`);
+  }
+
+  if (req.body.title && req.body.html) {
+    const folder = normalizeContentPath(docData.file);
+    const htmlFile = path.join(folder, "index.html");
+    const html = fs.readFileSync(htmlFile, "utf8");
+    if (html !== req.body.html) {
+      fs.writeFileSync(htmlFile, req.body.html.trim() + "\n");
+    }
+
+    const metadataFile = path.join(folder, "index.yaml");
+    const rawMetadata = fs.readFileSync(metadataFile);
+    const metadata = yaml.safeLoad(rawMetadata);
+    if (
+      metadata.title !== req.body.title ||
+      metadata.summary !== req.body.summary
+    ) {
+      metadata.title = req.body.title.trim();
+      metadata.summary = req.body.summary.trim();
+      fs.writeFileSync(metadataFile, yaml.safeDump(metadata));
+    }
+  }
+
+  res.status(200).send("Ok");
+});
 
 app.get("/_open", (req, res) => {
   const { line, column, filepath } = req.query;

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 import { Source } from "./types";
 
 import "./editthispage.scss";
@@ -64,8 +66,12 @@ export function EditThisPage({ source }: { source: Source }) {
       {process.env.NODE_ENV === "development" && (
         <>
           {" "}
+          Edit this page{" "}
+          <Link to={window.location.pathname.replace("/docs/", "/_edit/")}>
+            in your <b>browser</b>
+          </Link>{" "}
           <button title={`Folder: ${folder}`} onClick={openInEditorHandler}>
-            Edit this page in your <b>editor</b>
+            in your <b>editor</b>
           </button>
           <br />
           {editorOpeningError ? (
