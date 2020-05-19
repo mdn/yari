@@ -654,14 +654,14 @@ class Builder {
       if (outOfDate && !this.options.allowStaleTitles) {
         this.logger.info(
           chalk.yellow(
-            `${ALL_TITLES_JSON_FILEPATHL} existed but is out-of-date.`
+            `${ALL_TITLES_JSON_FILEPATH} existed but is out-of-date.`
           )
         );
       } else {
         if (outOfDate) {
           this.logger.info(
             chalk.yellow(
-              `Warning! ${allTitlesJsonFilepath} exists but is out-of-date. ` +
+              `Warning! ${ALL_TITLES_JSON_FILEPATH} exists but is out-of-date. ` +
                 "To reset run `yarn clean`."
             )
           );
