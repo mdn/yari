@@ -28,6 +28,11 @@ const kumascript = require("kumascript");
 
 const CWD_IS_ROOT = process.cwd() === ROOT_DIR;
 
+const ALL_TITLES_JSON_FILEPATH = path.join(
+  path.dirname(__dirname),
+  "_all-titles.json"
+);
+
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
 }
@@ -583,20 +588,21 @@ class Builder {
     // *always* include 'en-US' because with that, it becomes possible
     // to reference back to the English version for any locale.
     // But first, see if we can use the title from the last build.
-    const allTitlesJsonFilepath = this._getAllTitlesJsonFilepath();
     if (
-      fs.existsSync(allTitlesJsonFilepath) &&
+      fs.existsSync(ALL_TITLES_JSON_FILEPATH) &&
       !this.options.regenerateAllTitles
     ) {
       this.allTitles = new Map(
         Object.entries(
-          JSON.parse(fs.readFileSync(allTitlesJsonFilepath, "utf8"))
+          JSON.parse(fs.readFileSync(ALL_TITLES_JSON_FILEPATH, "utf8"))
         ).map(([key, value]) => [key.toLowerCase(), value])
       );
       // We got it from disk, but is it out-of-date?
       if (this.allTitles.get("_hash") !== this.selfHash) {
         this.logger.info(
-          chalk.yellow(`${allTitlesJsonFilepath} existed but is out-of-date.`)
+          chalk.yellow(
+            `${ALL_TITLES_JSON_FILEPATHL} existed but is out-of-date.`
+          )
         );
       } else {
         // This means we DON'T need to re-generate all titles, so
@@ -704,13 +710,9 @@ class Builder {
 
   dumpAllTitles() {
     fs.writeFileSync(
-      this._getAllTitlesJsonFilepath(),
+      ALL_TITLES_JSON_FILEPATH,
       JSON.stringify(mapToObject(this.allTitles), null, 2)
     );
-  }
-
-  _getAllTitlesJsonFilepath() {
-    return path.join(path.dirname(__dirname), "_all-titles.json");
   }
 
   ensureAllRedirects() {
