@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import useSWR from "swr";
-import { debounce } from "throttle-debounce";
+import { useDebouncedCallback } from "use-debounce";
 
 // Sub-components
 import { Document } from "./";
@@ -61,24 +61,12 @@ function EditForm({ data, url }) {
     "autosaveEdit",
     false
   );
+
   function toggleAutoSave() {
     setAutoSaveEnabled(!autosaveEnabled);
   }
 
-  const putDocumentDebounced = debounce(1000, putDocument);
-
-  useEffect(() => {
-    if (autosaveEnabled) {
-      putDocumentDebounced({ title, summary, html });
-    }
-  }, [title, summary, html, autosaveEnabled]);
-
-  function onSubmitHandler(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    putDocument({ title, summary, html });
-  }
-
-  async function putDocument({ html, summary, title }) {
+  async function putDocument() {
     if (!autosaveEnabled) setLoading(true);
     try {
       const response = await fetch(
@@ -98,8 +86,21 @@ function EditForm({ data, url }) {
     if (!autosaveEnabled) setLoading(false);
   }
 
+  const [putDocumentDebounced] = useDebouncedCallback(putDocument, 1000);
+
+  useEffect(() => {
+    if (autosaveEnabled) {
+      putDocumentDebounced();
+    }
+  }, [autosaveEnabled, putDocumentDebounced, title, summary, html]);
+
   return (
-    <form onSubmit={onSubmitHandler}>
+    <form
+      onSubmit={function (event) {
+        event.preventDefault();
+        putDocument();
+      }}
+    >
       <p>
         <label htmlFor="id_title">Title</label>
         <input
