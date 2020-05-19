@@ -71,9 +71,9 @@ function EditForm({ data, url }) {
     if (autosaveEnabled) {
       putDocumentDebounced({ title, summary, html });
     }
-  }, [title, summary, html, autosaveEnabled]);
+  }, [title, summary, html, autosaveEnabled, putDocumentDebounced]);
 
-  function onSubmitHandler(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     putDocument({ title, summary, html });
   }
@@ -99,7 +99,7 @@ function EditForm({ data, url }) {
   }
 
   return (
-    <form onSubmit={onSubmitHandler}>
+    <form onSubmit={handleSubmit}>
       <p>
         <label htmlFor="id_title">Title</label>
         <input
