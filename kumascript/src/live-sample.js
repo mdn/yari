@@ -46,7 +46,7 @@ const LIVE_SAMPLE_HTML = `
             <%- css %>
         </style>
         <% } %>
-        <title><%- sampleTitle %></title>
+        <title><%= sampleTitle %></title>
     </head>
     <body>
         <% if (html) { %>
@@ -58,7 +58,7 @@ const LIVE_SAMPLE_HTML = `
             </script>
         <% } %>
     </body>
-</html>`;
+</html>`.trim();
 
 const liveSampleTemplate = ejs.compile(LIVE_SAMPLE_HTML);
 

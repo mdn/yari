@@ -6,7 +6,6 @@ const { performance } = require("perf_hooks");
 
 const chalk = require("chalk");
 const yaml = require("js-yaml");
-const rimraf = require("rimraf");
 const sanitizeFilename = require("sanitize-filename");
 const chokidar = require("chokidar");
 const WebSocket = require("ws");
@@ -1337,7 +1336,9 @@ class Builder {
           // document are specific live samples. If one exists that is not
           // contained in the current set of live samples, remove it.
           if (de.isDirectory() && !ownSampleIds.has(de.name)) {
-            rimraf.sync(path.join(liveSamplesDir, de.name));
+            fs.rmdirSync(path.join(liveSamplesDir, de.name), {
+              recursive: true,
+            });
           }
         }
       }
@@ -1369,7 +1370,7 @@ class Builder {
     } else if (fs.existsSync(liveSamplesDir)) {
       // The live samples within this document have been removed, so
       // recursively remove the entire contents of the live-samples directory.
-      rimraf.sync(liveSamplesDir);
+      fs.rmdirSync(liveSamplesDir, { recursive: true });
     }
 
     // Finally, let's build any live sample pages within other documents.
