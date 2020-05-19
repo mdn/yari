@@ -37,6 +37,11 @@ const { slugToFoldername } = require("./utils");
 
 const kumascript = require("kumascript");
 
+const ALL_TITLES_JSON_FILEPATH = path.join(
+  path.dirname(__dirname),
+  "_all-titles.json"
+);
+
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
 }
@@ -681,30 +686,28 @@ class Builder {
     // *always* include 'en-US' because with that, it becomes possible
     // to reference back to the English version for any locale.
     // But first, see if we can use the title from the last build.
-    const allTitlesJsonFilepath = path.join(
-      path.dirname(__dirname),
-      "_all-titles.json"
-    );
     if (
-      fs.existsSync(allTitlesJsonFilepath) &&
+      fs.existsSync(ALL_TITLES_JSON_FILEPATH) &&
       !this.options.regenerateAllTitles
     ) {
       this.allTitles = new Map(
         Object.entries(
-          JSON.parse(fs.readFileSync(allTitlesJsonFilepath, "utf8"))
+          JSON.parse(fs.readFileSync(ALL_TITLES_JSON_FILEPATH, "utf8"))
         ).map(([key, value]) => [key.toLowerCase(), value])
       );
       // We got it from disk, but is it out-of-date?
       const outOfDate = this.allTitles.get("_hash") !== this.selfHash;
       if (outOfDate && !this.options.allowStaleTitles) {
         this.logger.info(
-          chalk.yellow(`${allTitlesJsonFilepath} existed but is out-of-date.`)
+          chalk.yellow(
+            `${ALL_TITLES_JSON_FILEPATH} existed but is out-of-date.`
+          )
         );
       } else {
         if (outOfDate) {
           this.logger.info(
             chalk.yellow(
-              `Warning! ${allTitlesJsonFilepath} exists but is out-of-date. ` +
+              `Warning! ${ALL_TITLES_JSON_FILEPATH} exists but is out-of-date. ` +
                 "To reset run `yarn clean`."
             )
           );
@@ -810,13 +813,17 @@ class Builder {
     // Set the context for the Kumascript renderer.
     this.macroRenderer.use(this.allTitles);
 
-    fs.writeFileSync(
-      allTitlesJsonFilepath,
-      JSON.stringify(mapToObject(this.allTitles), null, 2)
-    );
+    this.dumpAllTitles();
     let t1 = new Date();
     this.logger.info(
       chalk.green(`Building list of all titles took ${ppMilliseconds(t1 - t0)}`)
+    );
+  }
+
+  dumpAllTitles() {
+    fs.writeFileSync(
+      ALL_TITLES_JSON_FILEPATH,
+      JSON.stringify(mapToObject(this.allTitles), null, 2)
     );
   }
 
@@ -877,7 +884,18 @@ class Builder {
         }: ${chalk.white(file)} ${chalk.grey(tookStr)}`
       );
       if (result === processing.PROCESSED) {
+        doc.modified = new Date().toISOString();
         triggerTouch(filepath, doc, source.filepath);
+
+        const titleData = this.allTitles.get(doc.mdn_url.toLowerCase());
+        for (const [key, value] of Object.entries(titleData)) {
+          if (key in doc) {
+            if (key !== "source" && value !== doc[key]) {
+              titleData[key] = doc[key];
+            }
+          }
+        }
+        this.dumpAllTitles();
       }
     };
 
@@ -1567,6 +1585,7 @@ class Builder {
     $("span.alllinks").remove();
 
     doc.title = metadata.title;
+    doc.summary = metadata.summary;
     doc.mdn_url = mdn_url;
     if (metadata.translation_of) {
       doc.translation_of = metadata.translation_of;
