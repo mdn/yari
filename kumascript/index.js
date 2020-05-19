@@ -4,6 +4,7 @@ const { getPrerequisites, render: renderMacros } = require("./src/render.js");
 const {
   getLiveSampleIDs,
   buildLiveSamplePage,
+  LiveSampleError,
 } = require("./src/live-sample.js");
 const { HTMLTool, KumascriptError } = require("./src/api/util.js");
 
@@ -75,6 +76,6 @@ module.exports = {
   buildLiveSamplePage,
   getLiveSampleIDs,
   getPrerequisites,
-  KumascriptError,
+  LiveSampleError,
   Renderer,
 };

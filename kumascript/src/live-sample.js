@@ -1,8 +1,27 @@
 const ejs = require("ejs");
 
 const Parser = require("./parser.js");
+const { SourceCodeError } = require("./errors.js");
 const { normalizeMacroName } = require("./render.js");
-const { HTMLTool, slugify, safeDecodeURIComponent } = require("./api/util.js");
+const {
+  HTMLTool,
+  slugify,
+  safeDecodeURIComponent,
+  KumascriptError,
+} = require("./api/util.js");
+
+class LiveSampleError extends SourceCodeError {
+  constructor(error, source, token) {
+    super(
+      "LiveSampleError",
+      error,
+      source,
+      token.location.start.line,
+      token.location.start.column,
+      token.name
+    );
+  }
+}
 
 const LIVE_SAMPLE_HTML = `
 <!DOCTYPE html>
@@ -62,14 +81,27 @@ const LIVE_SAMPLE_HTML = `
 
 const liveSampleTemplate = ejs.compile(LIVE_SAMPLE_HTML);
 
-function buildLiveSamplePage(uri, title, source, sampleID) {
+function buildLiveSamplePage(uri, title, source, sampleIDWithContext) {
   // Given the URI, title, and rendered HTML of a document, build
   // and return the HTML of the live-sample page for the given
-  // sampleID that this document or another references, as well as
-  // an error ( )
+  // sampleID (with context) that this document or another references,
+  // or throw an instance of LiveSampleError.
   const tool = new HTMLTool(source, uri);
-  const sampleData = tool.extractLiveSampleObject(sampleID);
-  sampleData.sampleTitle = `${title} - ${sampleID} - code sample`;
+  let sampleData;
+  try {
+    sampleData = tool.extractLiveSampleObject(sampleIDWithContext.sampleID);
+  } catch (e) {
+    if (e instanceof KumascriptError) {
+      throw new LiveSampleError(
+        e,
+        sampleIDWithContext.context.source,
+        sampleIDWithContext.context.token
+      );
+    } else {
+      throw e;
+    }
+  }
+  sampleData.sampleTitle = `${title} - ${sampleIDWithContext.sampleID} - code sample`;
   return liveSampleTemplate(sampleData);
 }
 
@@ -112,6 +144,7 @@ function getLiveSampleIDs(slug, source) {
       // the live-sample ID, even though they don't need to do that,
       // so let's first call "safeDecodeURIComponent" just in case.
       const sampleID = slugify(safeDecodeURIComponent(token.args[0]));
+      const sampleIDWithContext = { sampleID, context: { source, token } };
       if (token.args.length > 4) {
         // Some calls to EmbedLiveSample explicitly specify a slug from which
         // to extract the live sample ID in the 5th argument (4th index), so
@@ -124,17 +157,17 @@ function getLiveSampleIDs(slug, source) {
       }
       if (sampleSlug === currentSlug) {
         if (!ownSampleIDs) {
-          ownSampleIDs = new Set();
+          ownSampleIDs = [];
         }
-        ownSampleIDs.add(sampleID);
+        ownSampleIDs.push(sampleIDWithContext);
       } else {
         if (!otherSampleIDs) {
           otherSampleIDs = new Map();
         }
         if (otherSampleIDs.has(sampleSlug)) {
-          otherSampleIDs.get(sampleSlug).add(sampleID);
+          otherSampleIDs.get(sampleSlug).push(sampleIDWithContext);
         } else {
-          otherSampleIDs.set(sampleSlug, new Set([sampleID]));
+          otherSampleIDs.set(sampleSlug, [sampleIDWithContext]);
         }
       }
     }
@@ -142,4 +175,4 @@ function getLiveSampleIDs(slug, source) {
   return [ownSampleIDs, otherSampleIDs];
 }
 
-module.exports = { buildLiveSamplePage, getLiveSampleIDs };
+module.exports = { buildLiveSamplePage, getLiveSampleIDs, LiveSampleError };

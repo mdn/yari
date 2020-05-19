@@ -1347,13 +1347,15 @@ class Builder {
     if (ownSampleIds) {
       // First, remove any live samples that no longer exist.
       if (fs.existsSync(liveSamplesDir)) {
+        // Build a set of sampleID's from the list of sampleID objects.
+        const ownSampleIDSet = new Set(ownSampleIds.map((x) => x.sampleID));
         for (const de of fs.readdirSync(liveSamplesDir, {
           withFileTypes: true,
         })) {
           // All directories under the main live-samples directory for this
           // document are specific live samples. If one exists that is not
           // contained in the current set of live samples, remove it.
-          if (de.isDirectory() && !ownSampleIds.has(de.name)) {
+          if (de.isDirectory() && !ownSampleIDSet.has(de.name)) {
             fs.rmdirSync(path.join(liveSamplesDir, de.name), {
               recursive: true,
             });
@@ -1362,23 +1364,26 @@ class Builder {
       }
       // Now, we'll either update or create new live sample pages.
       let liveSamplePageHtml;
-      for (const sampleID of ownSampleIds) {
+      for (const sampleIDWithContext of ownSampleIds) {
         try {
           liveSamplePageHtml = kumascript.buildLiveSamplePage(
             uri,
             metadata.title,
             renderedHtml,
-            sampleID
+            sampleIDWithContext
           );
         } catch (e) {
-          if (e instanceof kumascript.KumascriptError) {
+          if (e instanceof kumascript.LiveSampleError) {
             flaws.push(e);
             continue;
           } else {
             throw e;
           }
         }
-        const liveSampleDir = path.join(liveSamplesDir, sampleID);
+        const liveSampleDir = path.join(
+          liveSamplesDir,
+          sampleIDWithContext.sampleID
+        );
         const liveSamplePath = path.join(liveSampleDir, "index.html");
         if (!fs.existsSync(liveSampleDir)) {
           fs.mkdirSync(liveSampleDir, { recursive: true });
@@ -1406,9 +1411,16 @@ class Builder {
       const otherUri = buildMDNUrl(metadata.locale, slug);
       const otherCleanUri = this.cleanUri(otherUri);
       if (!this.allTitles.has(otherCleanUri)) {
+        // I suppose we could use any, but let's use the context of the first
+        // usage of the sampleID within the original source file.
+        const context = sampleIDs[0].context;
         flaws.push(
-          new Error(
-            `${uri} references live sample(s) from ${otherCleanUri}, which does not exist`
+          new kumascript.LiveSampleError(
+            new Error(
+              `${uri} references live sample(s) from ${otherCleanUri}, which does not exist`
+            ),
+            context.source,
+            context.token
           )
         );
         continue;
@@ -1416,9 +1428,16 @@ class Builder {
       const otherTitleData = this.allTitles.get(otherCleanUri);
       const otherFolder = otherTitleData.file;
       if (otherTitleData.source !== source.filepath) {
+        // Again let's just use the context of the first usage of sampleID within
+        // the original source file.
+        const context = sampleIDs[0].context;
         flaws.push(
-          new Error(
-            `${uri} references live sample(s) from ${otherCleanUri}, which is from a different source`
+          new kumascript.LiveSampleError(
+            new Error(
+              `${uri} references live sample(s) from ${otherCleanUri}, which is from a different source`
+            ),
+            context.source,
+            context.token
           )
         );
         continue;

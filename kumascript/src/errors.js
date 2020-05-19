@@ -150,6 +150,7 @@ class MacroExecutionError extends SourceCodeError {
 }
 
 module.exports = {
+  SourceCodeError,
   MacroInvocationError,
   MacroNotFoundError,
   MacroCompilationError,
