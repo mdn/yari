@@ -6,18 +6,18 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "caporal": "1.3.0",
+    "caporal": "1.4.0",
     "chalk": "4.0.0",
     "cheerio": "1.0.0-rc.3",
     "chokidar": "3.4.0",
     "dotenv": "8.2.0",
-    "fast-csv": "4.1.3",
-    "got": "10.7.0",
+    "fast-csv": "4.1.6",
+    "got": "11.1.4",
     "js-yaml": "3.13.1",
     "kumascript": "0.1.0",
-    "mdn-browser-compat-data": "1.0.19",
+    "mdn-browser-compat-data": "1.0.21",
     "mysql": "2.18.1",
     "sanitize-filename": "^1.6.3",
-    "ws": "7.2.5"
+    "ws": "7.3.0"
   }
 }

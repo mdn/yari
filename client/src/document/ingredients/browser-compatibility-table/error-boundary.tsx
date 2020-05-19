@@ -18,7 +18,7 @@ export class BrowserCompatibilityErrorBoundary extends React.Component<
     this.setState({
       error,
     });
-    // TODO: Report this error to Sentry, https://github.com/mdn/stumptown-renderer/issues/99
+    // TODO: Report this error to Sentry, https://github.com/mdn/yari/issues/99
   }
   render() {
     if (this.state.error) {

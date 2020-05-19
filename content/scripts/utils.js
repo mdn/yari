@@ -10,6 +10,7 @@ function slugToFoldername(slug) {
       // happen is that it leads to two *different slugs* becoming
       // *same* folder name.
       .replace(/\*/g, "_star_")
+      .replace(/::/g, "_doublecolon_")
       .replace(/:/g, "_colon_")
       .replace(/\?/g, "_question_")
 

@@ -1,66 +1,90 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-import "./editthispage.css";
+import { Source } from "./types";
 
-export function EditThisPage({ source }) {
-  const [opening, setOpening] = React.useState(false);
+import "./editthispage.scss";
 
-  React.useEffect(() => {
-    let dismounted = false;
+export function EditThisPage({ source }: { source: Source }) {
+  const [opening, setOpening] = useState(false);
+  const [editorOpeningError, setEditorOpeningError] = useState<Error | null>(
+    null
+  );
+
+  useEffect(() => {
+    let unsetOpeningTimer: ReturnType<typeof setTimeout>;
     if (opening) {
-      setTimeout(() => {
-        if (!dismounted) {
-          setOpening(false);
-        }
+      unsetOpeningTimer = setTimeout(() => {
+        setOpening(false);
       }, 3000);
     }
+    return () => {
+      if (unsetOpeningTimer) {
+        clearTimeout(unsetOpeningTimer);
+      }
+    };
   }, [opening]);
 
-  function openInEditorHandler(event) {
+  const { github_url, folder } = source;
+
+  async function openInEditorHandler(event: React.MouseEvent) {
     event.preventDefault();
 
-    const filepath = source.content_file;
+    const filepath = folder + "/index.html";
     console.log(`Going to try to open ${filepath} in your editor`);
     setOpening(true);
-    fetch(`/_open?filepath=${filepath}`);
-    // .then(r => {
-    //   console.log("R", r);
-    // })
-    // .catch(ex => {
-    //   console.log("EX:", ex);
-    // });
+    try {
+      const response = await fetch(`/_open?filepath=${filepath}`);
+      if (!response.ok) {
+        if (response.status >= 500) {
+          setEditorOpeningError(
+            new Error(`${response.status}: ${response.statusText}`)
+          );
+        } else {
+          const body = await response.text();
+          setEditorOpeningError(new Error(`${response.status}: ${body}`));
+        }
+      }
+    } catch (err) {
+      setEditorOpeningError(err);
+    }
   }
   if (!source) {
     return null;
   }
-  if (source.github_url) {
-    return (
-      <p className="edit-this-page">
-        <a
-          href={source.github_url}
-          title={`Folder: ${source.folder}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Edit this page in <b>GitHub</b>
-        </a>
-      </p>
-    );
-  } else if (source.content_file) {
-    return (
-      <p className="edit-this-page">
-        <a
-          href={`file://${source.content_file}`}
-          title={`Folder: ${source.folder}`}
-          onClick={openInEditorHandler}
-        >
-          Edit this page in your editor
-        </a>
-        <br />
-        {opening && <small>Trying to your editor now...</small>}
-      </p>
-    );
-  } else {
-    throw new Error("source has neither .github_url or .content_file");
-  }
+
+  return (
+    <div className="edit-this-page">
+      <a
+        href={github_url}
+        title={`Folder: ${folder}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Edit this page in <b>GitHub</b>
+      </a>
+      {process.env.NODE_ENV === "development" && (
+        <>
+          {" "}
+          Edit this page{" "}
+          <Link to={window.location.pathname.replace("/docs/", "/_edit/")}>
+            in your <b>browser</b>
+          </Link>{" "}
+          <button title={`Folder: ${folder}`} onClick={openInEditorHandler}>
+            in your <b>editor</b>
+          </button>
+          <br />
+          {editorOpeningError ? (
+            <p className="error-message editor-opening-error">
+              <b>Error opening page in your editor!</b>
+              <br />
+              <code>{editorOpeningError.toString()}</code>
+            </p>
+          ) : (
+            opening && <small>Trying to your editor now...</small>
+          )}
+        </>
+      )}
+    </div>
+  );
 }
