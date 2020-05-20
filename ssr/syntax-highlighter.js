@@ -75,7 +75,9 @@ export function fixSyntaxHighlighting(document) {
           const name = elem
             .attr("class")
             .replace(/^brush:/, "")
-            .trim();
+            .trim()
+            .split(" ")[0]
+            .replace("'", "");
           const prismLang = Prism.languages[name];
           if (!prismLang) {
             return; // bail!
