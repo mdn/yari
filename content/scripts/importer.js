@@ -8,10 +8,9 @@ const { promisify } = require("util");
 const chalk = require("chalk");
 const mysql = require("mysql");
 const cheerio = require("cheerio");
-const yaml = require("js-yaml");
 const ProgressBar = require("./progress-bar");
-const { slugToFoldername } = require("./utils");
 const { VALID_LOCALES } = require("./constants");
+const Document = require("./document");
 
 const MAX_OPEN_FILES = 256;
 
@@ -495,7 +494,7 @@ function processRedirect(doc, absoluteURL) {
 // It's used so that we can make absolutely sure that we don't
 // build something that was already built as that would indicate
 // that two different slugs lead to the exact same name as a file.
-const allBuiltMetaFiles = new Set();
+const allBuiltPaths = new Set();
 
 async function processDocument(
   doc,
@@ -504,27 +503,19 @@ async function processDocument(
   { usernames, contributors, tags }
 ) {
   const { slug, locale, title, summary } = doc;
-  const localeFolder = path.join(
+
+  const contentPath = path.join(
     isArchive ? archiveRoot : root,
     locale.toLowerCase()
   );
+  const documentPath = Document.buildPath(contentPath, slug);
 
-  const folder = path.join(localeFolder, slugToFoldername(slug));
-  await fs.promises.mkdir(folder, { recursive: true });
-  const htmlFile = path.join(folder, "index.html");
-
-  if (isArchive) {
-    await fs.promises.writeFile(htmlFile, doc.rendered_html);
+  if (startClean && allBuiltPaths.has(documentPath)) {
+    throw new Error(
+      `${path.resolve(documentPath)} already exists! slug:${slug}`
+    );
   } else {
-    await fs.promises.writeFile(htmlFile, doc.html);
-  }
-
-  const wikiHistoryFile = path.join(folder, "wikihistory.json");
-  const metaFile = path.join(folder, "index.yaml");
-  if (startClean && allBuiltMetaFiles.has(metaFile)) {
-    throw new Error(`${path.resolve(metaFile)} already exists! slug:${slug}`);
-  } else {
-    allBuiltMetaFiles.add(metaFile);
+    allBuiltPaths.add(documentPath);
   }
 
   const meta = {
@@ -552,7 +543,6 @@ async function processDocument(
   if (docTags.length) {
     meta.tags = docTags.sort();
   }
-  await fs.promises.writeFile(metaFile, yaml.safeDump(meta));
 
   const docContributors = (contributors[doc.id] || []).map(
     (userId) => usernames[userId]
@@ -560,9 +550,12 @@ async function processDocument(
   if (docContributors.length) {
     wikiHistory.contributors = docContributors;
   }
-  await fs.promises.writeFile(
-    wikiHistoryFile,
-    JSON.stringify(wikiHistory, null, 2)
+
+  await Document.create(
+    contentPath,
+    isArchive ? doc.rendered_html : doc.html,
+    meta,
+    wikiHistory
   );
 }
 
