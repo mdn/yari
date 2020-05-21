@@ -138,7 +138,7 @@ If the level is `warn` it will inject the flaw message into the built
 
 When generating live samples `<iframe>` tags, the `src` attribute gets this
 set as a prefix. The ultimate reason why it's meant to be different is
-because it security of the `iframe`'s content has been security audited as
+because the security of the `iframe`'s content has not been audited as
 carefully as the rest of the site.
 
 When doing local development, it's recommended to set this to
