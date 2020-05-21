@@ -5,8 +5,10 @@ const { performance } = require("perf_hooks");
 const express = require("express");
 const openEditor = require("open-editor");
 const yaml = require("js-yaml");
+const fm = require("front-matter");
 
 const { Builder } = require("content/scripts/build");
+const Document = require("content/scripts/document");
 const { Sources } = require("content/scripts/sources");
 const {
   DEFAULT_POPULARITIES_FILEPATH,
@@ -109,9 +111,10 @@ app.get("/_document", (req, res) => {
     return res.status(400).send(`No document by the URL ${req.query.url}`);
   }
   const folder = normalizeContentPath(docData.file);
-  const html = fs.readFileSync(path.join(folder, "index.html"), "utf8");
-  const rawMetadata = fs.readFileSync(path.join(folder, "index.yaml"));
-  const metadata = yaml.safeLoad(rawMetadata);
+  const rawContent = fs.readFileSync(path.join(folder, "index.html"), "utf8");
+  const content = fm(rawContent);
+  const metadata = content.attributes;
+  const html = content.body;
   res.status(200).json({
     html,
     metadata,
@@ -131,21 +134,24 @@ app.put("/_document", (req, res) => {
   if (req.body.title && req.body.html) {
     const folder = normalizeContentPath(docData.file);
     const htmlFile = path.join(folder, "index.html");
-    const html = fs.readFileSync(htmlFile, "utf8");
+    const rawContent = fs.readFileSync(htmlFile, "utf8");
+    const content = fm(rawContent);
+    const metadata = content.attributes;
+    const html = content.body;
+    let write = false;
     if (html !== req.body.html) {
-      fs.writeFileSync(htmlFile, req.body.html.trim() + "\n");
+      write = true;
     }
-
-    const metadataFile = path.join(folder, "index.yaml");
-    const rawMetadata = fs.readFileSync(metadataFile);
-    const metadata = yaml.safeLoad(rawMetadata);
     if (
       metadata.title !== req.body.title ||
       metadata.summary !== req.body.summary
     ) {
+      write = true;
       metadata.title = req.body.title.trim();
       metadata.summary = req.body.summary.trim();
-      fs.writeFileSync(metadataFile, yaml.safeDump(metadata));
+    }
+    if (write) {
+      Document.saveFile(htmlFile, req.body.html, metadata);
     }
   }
 

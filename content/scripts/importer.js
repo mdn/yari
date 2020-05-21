@@ -551,7 +551,7 @@ async function processDocument(
     wikiHistory.contributors = docContributors;
   }
 
-  await Document.create(
+  Document.create(
     contentPath,
     isArchive ? doc.rendered_html : doc.html,
     meta,
