@@ -12,7 +12,7 @@ describeMacro("LiveSampleURL", function () {
       "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p";
     return assert.eventually.equal(
       macro.call("Example"),
-      "https://mdn.mozillademos.org/en-US/docs/Web/HTML/Element/p/_samples_/example"
+      "https://mdn.mozillademos.org/en-US/docs/Web/HTML/Element/p/_samples_/Example"
     );
   });
   itMacro("Override page URL", function (macro) {
@@ -26,7 +26,7 @@ describeMacro("LiveSampleURL", function () {
         "No_JS",
         "https://developer.mozilla.org/en-US/docs/HTML/Forms/How_to_build_custom_form_widgets/Example_2"
       ),
-      "https://mdn.mozillademos.org/en-US/docs/HTML/Forms/How_to_build_custom_form_widgets/Example_2/_samples_/no_js"
+      "https://mdn.mozillademos.org/en-US/docs/HTML/Forms/How_to_build_custom_form_widgets/Example_2/_samples_/No_JS"
     );
   });
   itMacro("Staging settings", function (macro) {
@@ -37,7 +37,7 @@ describeMacro("LiveSampleURL", function () {
       "https://developer.allizom.org/en-US/docs/Web/CSS/background-color";
     return assert.eventually.equal(
       macro.call("Examples"),
-      "https://files-stage.mdn.mozit.cloud/en-US/docs/Web/CSS/background-color/_samples_/examples"
+      "https://files-stage.mdn.mozit.cloud/en-US/docs/Web/CSS/background-color/_samples_/Examples"
     );
   });
   itMacro("Development default settings", function (macro) {
@@ -45,7 +45,7 @@ describeMacro("LiveSampleURL", function () {
     macro.ctx.env.url = "http://localhost:8000/en-US/docs/Web/HTML/Element/p";
     return assert.eventually.equal(
       macro.call("Example"),
-      "http://localhost:8000/en-US/docs/Web/HTML/Element/p/_samples_/example"
+      "http://localhost:8000/en-US/docs/Web/HTML/Element/p/_samples_/Example"
     );
   });
   itMacro("Unicode ID", function (macro) {
@@ -64,7 +64,7 @@ describeMacro("LiveSampleURL", function () {
     macro.ctx.env.url = "http://localhost:8000/en-US/docs/Web/HTML/Element/p";
     return assert.eventually.equal(
       macro.call("Example"),
-      "http://demos:8000/en-US/docs/Web/HTML/Element/p/_samples_/example"
+      "http://demos:8000/en-US/docs/Web/HTML/Element/p/_samples_/Example"
     );
   });
 });

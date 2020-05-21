@@ -27,13 +27,11 @@ function slugify(text) {
   // into a slug for use as an ID as well as a filename. Trim it, collapse
   // whitespace gaps into underscores, remove the same special characters that
   // Kuma removes (for consistency, since for example many live-samples depend
-  // on this), lowercase it, and finally remove any remaining characters that
-  // would not work within a filename on a Windows, Mac OS X, or Unix filesystem.
+  // on this), and finally remove any remaining characters that would not work
+  // within a filename on a Windows, Mac OS X, or Unix filesystem.
   // NOTE: These are the constraints that have to be satisfied:
   //    1) the result can be used as a filename on Windows, Mac OS X, and Unix
-  //       (this is why the "sanitize-filename" npm package is used, and since
-  //       all of Yari's filenames are lowercase, this is why "toLowerCase" is
-  //       used)
+  //       (this is why the "sanitize-filename" npm package is used)
   //    2) the result will be used as an "id" attribute, so in HTML5 it must
   //       contain at least one character and must not contain any whitespace
   //       characters (the "sanitize-filename" npm package will itself remove
@@ -47,11 +45,7 @@ function slugify(text) {
   //       use case (see the "cssesc" code within the "getSection" method of the
   //       HTMLTool below)
   return sanitizeFilename(
-    text
-      .trim()
-      .replace(/\s+/g, "_")
-      .replace(SECTION_ID_DISALLOWED, "")
-      .toLowerCase()
+    text.trim().replace(/\s+/g, "_").replace(SECTION_ID_DISALLOWED, "")
   );
 }
 
@@ -168,7 +162,7 @@ class HTMLTool {
     const sectionStart = $(`#${cssesc(sectionID, { isIdentifier: true })}`);
     if (!sectionStart.length) {
       throw new KumascriptError(
-        `unable to find section "${sectionID}" within ${this.pathDescription}`
+        `unable to find an HTML element with an "id" of "${sectionID}" within ${this.pathDescription}`
       );
     }
     let result;
