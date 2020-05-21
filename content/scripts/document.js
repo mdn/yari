@@ -7,7 +7,7 @@ function buildPath(contentPath, slug) {
   return path.join(contentPath, slugToFoldername(slug));
 }
 
-async function create(contentPath, html, meta, wikiHistory = null) {
+function create(contentPath, html, meta, wikiHistory = null) {
   const folder = buildPath(contentPath, meta.slug);
   fs.mkdirSync(folder, { recursive: true });
 
