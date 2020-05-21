@@ -20,7 +20,7 @@
     "react-router-dom": "6.0.0-alpha.4",
     "react-scripts": "3.4.1",
     "sockette": "2.0.6",
-    "swr": "0.2.0",
+    "swr": "0.2.1",
     "typeface-zilla-slab": "0.0.72",
     "typescript": "^3.9.3",
     "use-debounce": "^3.4.2"
@@ -50,6 +50,6 @@
   "devDependencies": {
     "@testing-library/react": "^10.0.4",
     "jest-environment-jsdom-sixteen": "^1.0.3",
-    "mdn-browser-compat-data": "^1.0.21"
+    "mdn-browser-compat-data": "^1.0.22"
   }
 }

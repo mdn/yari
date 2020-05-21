@@ -58,14 +58,15 @@ function getCurrentGitBranch(fallback = "master") {
         "branch",
         "--show-current",
       ]);
-      if (spawned.error) {
+      if (spawned.error || spawned.status) {
         console.warn(
-          "Unable to run 'git branch' to find out name of the current branch. Error:",
-          spawned.error
+          "\nUnable to run 'git branch' to find out name of the current branch:\n",
+          spawned.error ? spawned.error : spawned.stderr.toString().trim()
         );
-        return fallback;
+        // I don't think it makes sense to keep trying, so let's cache the fallback.
+        _currentGitBranch = fallback;
       } else {
-        return spawned.stdout.toString().trim();
+        _currentGitBranch = spawned.stdout.toString().trim();
       }
     }
   }
