@@ -131,3 +131,15 @@ and throw an error. It will halt on the first flaw error encountered.
 If the level is `warn` it will inject the flaw message into the built
 `index.json` file which you can view when rendering the document on
 `http://localhost:3000/`.
+
+### `BUILD_LIVE_SAMPLES_BASE_URL`
+
+**Default: `https://mdn.mozillademos.org`**
+
+When generating live samples `<iframe>` tags, the `src` attribute gets this
+set as a prefix. The ultimate reason why it's meant to be different is
+because it security of the `iframe`'s content has been security audited as
+carefully as the rest of the site.
+
+When doing local development, it's recommended to set this to
+`http://localhost:5000` in your personal `.env`.
