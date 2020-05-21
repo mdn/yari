@@ -16,7 +16,7 @@ describeMacro("EmbedLiveSample", function () {
       macro.call("Quotations"),
       '<iframe class="live-sample-frame sample-code-frame"' +
         ' id="frame_quotations" frameborder="0"' +
-        ' src="https://mdn.mozillademos.org/en-US/docs/Web/HTML/Element/figure$samples/quotations">' +
+        ' src="https://mdn.mozillademos.org/en-US/docs/Web/HTML/Element/figure/_samples_/quotations">' +
         "</iframe>"
     );
   });
@@ -28,7 +28,7 @@ describeMacro("EmbedLiveSample", function () {
       macro.call("SVG_&lt;switch&gt;_example"),
       '<iframe class="live-sample-frame sample-code-frame"' +
         ' id="frame_svg_ltswitchgt_example" frameborder="0"' +
-        ' src="https://mdn.mozillademos.org/en-US/docs/Web/SVG/Element/switch$samples/svg_ltswitchgt_example">' +
+        ' src="https://mdn.mozillademos.org/en-US/docs/Web/SVG/Element/switch/_samples_/svg_ltswitchgt_example">' +
         "</iframe>"
     );
   });
@@ -39,7 +39,7 @@ describeMacro("EmbedLiveSample", function () {
       macro.call("SVG_%3Cswitch%3E_example"),
       '<iframe class="live-sample-frame sample-code-frame"' +
         ' id="frame_svg_switch_example" frameborder="0"' +
-        ' src="https://mdn.mozillademos.org/en-US/docs/Web/SVG/Element/switch$samples/svg_switch_example">' +
+        ' src="https://mdn.mozillademos.org/en-US/docs/Web/SVG/Element/switch/_samples_/svg_switch_example">' +
         "</iframe>"
     );
   });
@@ -50,7 +50,7 @@ describeMacro("EmbedLiveSample", function () {
       macro.call("Dégradés_linéaires_simples"),
       '<iframe class="live-sample-frame sample-code-frame"' +
         ' id="frame_dégradés_linéaires_simples" frameborder="0"' +
-        ' src="https://mdn.mozillademos.org/fr/docs/Web/CSS/Utilisation_de_d%C3%A9grad%C3%A9s_CSS$samples/d%C3%A9grad%C3%A9s_lin%C3%A9aires_simples">' +
+        ' src="https://mdn.mozillademos.org/fr/docs/Web/CSS/Utilisation_de_d%C3%A9grad%C3%A9s_CSS/_samples_/d%C3%A9grad%C3%A9s_lin%C3%A9aires_simples">' +
         "</iframe>"
     );
   });
@@ -61,7 +61,7 @@ describeMacro("EmbedLiveSample", function () {
       macro.call('"><script>alert("XSS");</script>'),
       '<iframe class="live-sample-frame sample-code-frame"' +
         ' id="frame_scriptalertxssscript" frameborder="0"' +
-        ' src="https://mdn.mozillademos.org/en-US/docs/Web/HTML/Element/figure$samples/scriptalertxssscript">' +
+        ' src="https://mdn.mozillademos.org/en-US/docs/Web/HTML/Element/figure/_samples_/scriptalertxssscript">' +
         "</iframe>"
     );
   });
@@ -73,7 +73,7 @@ describeMacro("EmbedLiveSample", function () {
       '<iframe class="live-sample-frame sample-code-frame"' +
         ' id="frame_example" frameborder="0"' +
         ' width="100%"' +
-        ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/border-top-width$samples/example">' +
+        ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/border-top-width/_samples_/example">' +
         "</iframe>"
     );
   });
@@ -85,7 +85,7 @@ describeMacro("EmbedLiveSample", function () {
       '<iframe class="live-sample-frame sample-code-frame"' +
         ' id="frame_example" frameborder="0"' +
         ' width="&#34;&gt;&lt;script&gt;alert(&#34;XSS&#34;);&lt;/script&gt;"' +
-        ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/border-top-width$samples/example">' +
+        ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/border-top-width/_samples_/example">' +
         "</iframe>"
     );
   });
@@ -97,7 +97,7 @@ describeMacro("EmbedLiveSample", function () {
       '<iframe class="live-sample-frame sample-code-frame"' +
         ' id="frame_images" frameborder="0"' +
         ' width="100%" height="250"' +
-        ' src="https://mdn.mozillademos.org/en-US/docs/Web/HTML/Element/figure$samples/images">' +
+        ' src="https://mdn.mozillademos.org/en-US/docs/Web/HTML/Element/figure/_samples_/images">' +
         "</iframe>"
     );
   });
@@ -109,7 +109,7 @@ describeMacro("EmbedLiveSample", function () {
       '<iframe class="live-sample-frame sample-code-frame"' +
         ' id="frame_增加关键帧" frameborder="0"' +
         ' width="100%" height="250"' +
-        ' src="https://mdn.mozillademos.org/zh-CN/docs/Web/CSS/CSS_Animations/Using_CSS_animations$samples/%E5%A2%9E%E5%8A%A0%E5%85%B3%E9%94%AE%E5%B8%A7">' +
+        ' src="https://mdn.mozillademos.org/zh-CN/docs/Web/CSS/CSS_Animations/Using_CSS_animations/_samples_/%E5%A2%9E%E5%8A%A0%E5%85%B3%E9%94%AE%E5%B8%A7">' +
         "</iframe>"
     );
   });
@@ -125,7 +125,7 @@ describeMacro("EmbedLiveSample", function () {
       '<iframe class="live-sample-frame sample-code-frame"' +
         ' id="frame_一个模板骨架" frameborder="0"' +
         ' width="160" height="160"' +
-        ' src="https://mdn.mozillademos.org/zh-CN/docs/Web/API/Canvas_API/Tutorial/Basic_usage$samples/%E4%B8%80%E4%B8%AA%E6%A8%A1%E6%9D%BF%E9%AA%A8%E6%9E%B6">' +
+        ' src="https://mdn.mozillademos.org/zh-CN/docs/Web/API/Canvas_API/Tutorial/Basic_usage/_samples_/%E4%B8%80%E4%B8%AA%E6%A8%A1%E6%9D%BF%E9%AA%A8%E6%9E%B6">' +
         "</iframe>"
     );
   });
@@ -137,7 +137,7 @@ describeMacro("EmbedLiveSample", function () {
       '<iframe class="live-sample-frame sample-code-frame"' +
         ' id="frame_images" frameborder="0"' +
         ' width="100%" height="&#34;&gt;&lt;script&gt;alert(&#34;XSS&#34;);&lt;/script&gt;"' +
-        ' src="https://mdn.mozillademos.org/en-US/docs/Web/HTML/Element/figure$samples/images">' +
+        ' src="https://mdn.mozillademos.org/en-US/docs/Web/HTML/Element/figure/_samples_/images">' +
         "</iframe>"
     );
   });
@@ -149,7 +149,7 @@ describeMacro("EmbedLiveSample", function () {
       '<iframe class="live-sample-frame sample-code-frame"' +
         ' id="frame_adding_quotation_marks" frameborder="0"' +
         ' width="500" height="50"' +
-        ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/::before$samples/adding_quotation_marks">' +
+        ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/::before/_samples_/adding_quotation_marks">' +
         "</iframe>"
     );
   });
@@ -173,7 +173,7 @@ describeMacro("EmbedLiveSample", function () {
         '<iframe class="live-sample-frame sample-code-frame" ' +
         'id="frame_svglineargradient" frameborder="0"' +
         ' width="120" height="240"' +
-        ' src="https://mdn.mozillademos.org/en-US/docs/Web/SVG/Tutorial/Gradients$samples/svglineargradient">' +
+        ' src="https://mdn.mozillademos.org/en-US/docs/Web/SVG/Tutorial/Gradients/_samples_/svglineargradient">' +
         "</iframe></td></tr></tbody></table>"
     );
   });
@@ -199,7 +199,7 @@ describeMacro("EmbedLiveSample", function () {
         '<iframe class="live-sample-frame sample-code-frame" ' +
         'id="frame_svglineargradient" frameborder="0"' +
         ' width="120" height="240"' +
-        ' src="https://mdn.mozillademos.org/en-US/docs/Web/SVG/Tutorial/Gradients$samples/svglineargradient">' +
+        ' src="https://mdn.mozillademos.org/en-US/docs/Web/SVG/Tutorial/Gradients/_samples_/svglineargradient">' +
         "</iframe></td></tr></tbody></table>"
     );
   });
@@ -207,7 +207,7 @@ describeMacro("EmbedLiveSample", function () {
     '<iframe class="live-sample-frame sample-code-frame"' +
     ' id="frame_examples" frameborder="0"' +
     ' width="700px" height="700px"' +
-    ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/flex-wrap$samples/examples">' +
+    ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/flex-wrap/_samples_/examples">' +
     "</iframe>";
   itMacro('Five arguments: ID, width, height, "", same slug', function (macro) {
     macro.ctx.env.url =
@@ -235,7 +235,7 @@ describeMacro("EmbedLiveSample", function () {
       macro.call("Event delegation", "", "", "", "Web/Events/blur"),
       '<iframe class="live-sample-frame sample-code-frame"' +
         ' id="frame_event_delegation" frameborder="0"' +
-        ' src="https://mdn.mozillademos.org/en-US/docs/Web/Events/blur$samples/event_delegation">' +
+        ' src="https://mdn.mozillademos.org/en-US/docs/Web/Events/blur/_samples_/event_delegation">' +
         "</iframe>"
     );
   });
@@ -254,7 +254,7 @@ describeMacro("EmbedLiveSample", function () {
       ),
       '<iframe class="live-sample-frame sample-code-frame"' +
         ' id="frame_event_delegation" frameborder="0"' +
-        ' src="https://mdn.mozillademos.org/en-US/docs/%22%3E%3Cscript%3Ealert(%22XSS%22);%3C/script%3E$samples/event_delegation">' +
+        ' src="https://mdn.mozillademos.org/en-US/docs/%22%3E%3Cscript%3Ealert(%22XSS%22);%3C/script%3E/_samples_/event_delegation">' +
         "</iframe>"
     );
   });
@@ -266,7 +266,7 @@ describeMacro("EmbedLiveSample", function () {
       '<iframe class="live-sample-frame nobutton"' +
         ' id="frame_samplenone" frameborder="0"' +
         ' width="100" height="50"' +
-        ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/-moz-appearance$samples/samplenone">' +
+        ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/-moz-appearance/_samples_/samplenone">' +
         "</iframe>"
     );
   });
@@ -287,7 +287,7 @@ describeMacro("EmbedLiveSample", function () {
         '<iframe class="live-sample-frame &#34;&gt;&lt;script&gt;alert(&#34;XSS&#34;);&lt;/script&gt;"' +
           ' id="frame_samplenone" frameborder="0"' +
           ' width="100" height="50"' +
-          ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/-moz-appearance$samples/samplenone">' +
+          ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/-moz-appearance/_samples_/samplenone">' +
           "</iframe>"
       );
     }
@@ -310,7 +310,7 @@ describeMacro("EmbedLiveSample", function () {
       '<iframe class="live-sample-frame sample-code-frame"' +
         ' id="frame_example_constraint_exerciser" frameborder="0"' +
         ' width="650" height="800"' +
-        ' src="https://mdn.mozillademos.org/en-US/docs/Web/API/Media_Streams_API/Constraints$samples/example_constraint_exerciser"' +
+        ' src="https://mdn.mozillademos.org/en-US/docs/Web/API/Media_Streams_API/Constraints/_samples_/example_constraint_exerciser"' +
         ' allow="video; microphone">' +
         "</iframe>"
     );
@@ -333,7 +333,7 @@ describeMacro("EmbedLiveSample", function () {
         '<iframe class="live-sample-frame sample-code-frame"' +
           ' id="frame_example_constraint_exerciser" frameborder="0"' +
           ' width="650" height="800"' +
-          ' src="https://mdn.mozillademos.org/en-US/docs/Web/API/Media_Streams_API/Constraints$samples/example_constraint_exerciser"' +
+          ' src="https://mdn.mozillademos.org/en-US/docs/Web/API/Media_Streams_API/Constraints/_samples_/example_constraint_exerciser"' +
           ' allow="&#34;&gt;&lt;script&gt;alert(&#34;XSS&#34;);&lt;/script&gt;">' +
           "</iframe>"
       );

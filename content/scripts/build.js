@@ -1333,7 +1333,7 @@ class Builder {
     // that one or more or even all might be within other documents.
     let ownSampleIds;
     let otherSampleIds = null;
-    const liveSamplesDir = destinationDir + "$samples";
+    const liveSamplesDir = path.join(destinationDir, "_samples_");
     if (selectedSampleIDs) {
       ownSampleIds = selectedSampleIDs;
     } else {
