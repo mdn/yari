@@ -9,6 +9,7 @@ const yaml = require("js-yaml");
 const { Builder } = require("content/scripts/build");
 const { Sources } = require("content/scripts/sources");
 const {
+  DEFAULT_LIVE_SAMPLES_BASE_URL,
   DEFAULT_POPULARITIES_FILEPATH,
   FLAW_LEVELS,
 } = require("content/scripts/constants.js");
@@ -216,7 +217,7 @@ function getOrCreateBuilder(options) {
         noProgressbar: true,
         foldersearch: options.foldersearch || [],
         popularitiesfile: normalizeContentPath(DEFAULT_POPULARITIES_FILEPATH),
-        liveSamplesBaseUrl: "http://localhost:5000",
+        liveSamplesBaseUrl: DEFAULT_LIVE_SAMPLES_BASE_URL,
       },
       console
     );
