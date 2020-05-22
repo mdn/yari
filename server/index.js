@@ -356,6 +356,15 @@ app.get("/_flaws", (req, res) => {
     }
   }
 
+  let searchFlaws = new Map();
+  if (filters.search_flaws) {
+    if (Array.isArray(filters.search_flaws)) {
+      searchFlaws = new Map(filters.search_flaws.map((x) => x.split(":", 2)));
+    } else {
+      searchFlaws = new Map([filters.search_flaws].map((x) => x.split(":", 2)));
+    }
+  }
+
   // The Builder instance doesn't know about traversing all the built
   // documents, but it *does* know *where* to look.
   for (const [folder, files] of walker(
@@ -383,6 +392,11 @@ app.get("/_flaws", (req, res) => {
         }
         if (filteredFlaws.size) {
           if (!Object.keys(doc.flaws).some((x) => filteredFlaws.has(x))) {
+            continue;
+          }
+        }
+        if (searchFlaws.size) {
+          if (!anyMatchSearchFlaws(searchFlaws, doc.flaws)) {
             continue;
           }
         }
@@ -462,6 +476,21 @@ app.get("/_flaws", (req, res) => {
     documents: documents.slice(m, n),
   });
 });
+
+function anyMatchSearchFlaws(searchFlaws, flaws) {
+  for (const [flaw, search] of searchFlaws) {
+    if (flaws[flaw]) {
+      // There's room to be a LOT smarter here.
+      // For example, if the 'flaw' is 'macros', we might want to loop
+      // over the key/values in the flaw and compare the values or
+      // even parse the search if it's something like 'name:CSSxRef'.
+      if (JSON.stringify(flaws[flaw]).includes(search)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
 
 function validPopularityFilter(value) {
   let filter = null;

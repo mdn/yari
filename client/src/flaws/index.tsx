@@ -63,7 +63,7 @@ interface Filters {
   page: number;
   sort_by: string;
   sort_reverse: boolean;
-  searchFlaws: string[];
+  search_flaws: string[];
 }
 
 const defaultFilters: Filters = Object.freeze({
@@ -74,7 +74,7 @@ const defaultFilters: Filters = Object.freeze({
   page: 1,
   sort_by: "popularity",
   sort_reverse: false,
-  searchFlaws: [],
+  search_flaws: [],
 });
 
 function withoutDefaultFilters(filters: Filters): Partial<Filters> {
@@ -95,8 +95,29 @@ function withoutDefaultFilters(filters: Filters): Partial<Filters> {
 function useFiltersURL(): [Filters, (filters: Partial<Filters>) => void] {
   const [searchParams, setSearchParams] = (useSearchParams as any)();
 
+  function groupParamsByKey(params: URLSearchParams): any {
+    return [...params.entries()].reduce((acc, tuple) => {
+      // getting the key and value from each tuple
+      const [key, val] = tuple;
+      if (acc.hasOwnProperty(key)) {
+        // if the current key is already an array, we'll add the value to it
+        if (Array.isArray(acc[key])) {
+          acc[key] = [...acc[key], val];
+        } else {
+          // if it's not an array, but contains a value, we'll convert it into an array
+          // and add the current value to it
+          acc[key] = [acc[key], val];
+        }
+      } else {
+        // plain assignment if no special case is present
+        acc[key] = val;
+      }
+      return acc;
+    }, {});
+  }
+
   const filters = useMemo(() => {
-    const searchParamsObject = Object.fromEntries(searchParams);
+    const searchParamsObject = groupParamsByKey(searchParams);
     if (searchParamsObject.page) {
       searchParamsObject.page = parseInt(searchParamsObject.page);
     }
@@ -110,7 +131,12 @@ function useFiltersURL(): [Filters, (filters: Partial<Filters>) => void] {
     [filters, setSearchParams]
   );
 
-  console.log("FILTERS:", filters);
+  const mustBeArrayKeys = ["flaws", "search_flaws"];
+  for (const key of mustBeArrayKeys) {
+    if (filters[key] && !Array.isArray(filters[key])) {
+      filters[key] = [filters[key]];
+    }
+  }
 
   return [filters, updateFiltersURL];
 }
@@ -245,27 +271,19 @@ function BuildTimes({ times }: { times: Times }) {
 }
 
 interface SearchFlawRow {
-  macro: string;
-  key: string;
-  value: string;
+  flaw: string;
+  search: string;
 }
 
-function serializeSearchFlaws(list: SearchFlawRow) {
-  const serialized = [];
-  console.log("LIST:", list);
-  throw new Error("not implemented");
-  return serialized;
+function serializeSearchFlaws(rows: SearchFlawRow[]) {
+  return rows.map((row) => `${row.flaw}:${row.search}`);
 }
 
 function deserializeSearchFlaws(list: string[]) {
   const rows: SearchFlawRow[] = [];
   for (const row of list) {
-    const [macro, key, value] = row.split(":", 3);
-    rows.push({
-      macro,
-      key,
-      value,
-    });
+    const [flaw, search] = row.split(":", 2);
+    rows.push({ flaw, search });
   }
   return rows;
 }
@@ -274,8 +292,21 @@ function FilterControls({ flawLevels }: { flawLevels: FlawLevel[] }) {
   const [initialFilters, updateFiltersURL] = useFiltersURL();
   const [filters, setFilters] = useState(initialFilters);
   const [searchFlawsRows, setSearchFlawsRows] = useState<SearchFlawRow[]>(
-    deserializeSearchFlaws(initialFilters.searchFlaws)
+    deserializeSearchFlaws(initialFilters.search_flaws)
   );
+
+  useEffect(() => {
+    // A little convenience DOM trick to put focus on the search input
+    // after you've added a row or used the <select>
+    const searchInputs = [
+      ...document.querySelectorAll<HTMLInputElement>(
+        'ul.search-flaws-rows input[type="search"]'
+      ),
+    ].filter((input) => !input.value);
+    if (searchInputs.length) {
+      searchInputs[searchInputs.length - 1].focus();
+    }
+  }, [searchFlawsRows]);
 
   function refreshFilters() {
     updateFiltersURL(filters);
@@ -284,7 +315,7 @@ function FilterControls({ flawLevels }: { flawLevels: FlawLevel[] }) {
   let hasFilters = !equalObjects(defaultFilters, filters);
 
   let hasEmptySearchFlawsRow = searchFlawsRows.some(
-    (row) => !(row.key.trim() && row.value.trim())
+    (row) => !row.search.trim()
   );
 
   function resetFilters(event: React.MouseEvent) {
@@ -292,8 +323,6 @@ function FilterControls({ flawLevels }: { flawLevels: FlawLevel[] }) {
     setFilters(defaultFilters);
     updateFiltersURL(defaultFilters);
   }
-
-  console.log("filters.flaws==", filters.flaws);
 
   return (
     <div className="filters">
@@ -362,15 +391,17 @@ function FilterControls({ flawLevels }: { flawLevels: FlawLevel[] }) {
           </select>
         </div>
         <div>
-          <h4>Search in flaws</h4>
-          <ul>
+          <h4>Search inside flaws</h4>
+          <ul className="search-flaws-rows">
             {searchFlawsRows.map((row, i) => {
               return (
-                <li key={`${row.macro}:${row.key}:${row.value}`}>
+                <li key={`${row.flaw}:${i}`}>
                   <select
-                    value={row.macro}
+                    value={row.flaw}
                     onChange={(event) => {
-                      console.log("VALUE", event.target.value);
+                      const clone = [...searchFlawsRows];
+                      clone[i].flaw = event.target.value;
+                      setSearchFlawsRows(clone);
                     }}
                   >
                     {flawLevels &&
@@ -385,24 +416,36 @@ function FilterControls({ flawLevels }: { flawLevels: FlawLevel[] }) {
                         })}
                   </select>
                   <input
-                    type="text"
-                    value={row.key}
-                    onChange={(event) => {
-                      // row.key = event.target.value
-                    }}
-                  />
-                  <input
                     type="search"
-                    value={row.value}
+                    placeholder="Search expression (e.g. jsxref)"
+                    value={row.search}
                     onChange={(event) => {
-                      // row.value = event.target.value
+                      setSearchFlawsRows(
+                        searchFlawsRows.map((row, j) => {
+                          if (i === j) {
+                            row.search = event.target.value;
+                          }
+                          return row;
+                        })
+                      );
+                    }}
+                    onBlur={() => {
+                      const serialized = serializeSearchFlaws(searchFlawsRows);
+                      setFilters({ ...filters, search_flaws: serialized });
+                      refreshFilters();
                     }}
                   />
                   <button
                     type="button"
                     title="Remove search row"
                     onClick={() => {
-                      setSearchFlawsRows([...searchFlawsRows.splice(i, 1)]);
+                      const clone = [...searchFlawsRows];
+                      clone.splice(i, 1);
+                      setSearchFlawsRows(clone);
+
+                      // const serialized = serializeSearchFlaws(searchFlawsRows);
+                      // setFilters({ ...filters, search_flaws: serialized });
+                      // refreshFilters()
                     }}
                   >
                     -
@@ -420,9 +463,8 @@ function FilterControls({ flawLevels }: { flawLevels: FlawLevel[] }) {
                 ...searchFlawsRows,
                 ...[
                   {
-                    macro: "macros",
-                    key: "",
-                    value: "",
+                    flaw: "macros",
+                    search: "",
                   },
                 ],
               ]);
