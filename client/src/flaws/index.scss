@@ -57,6 +57,13 @@
         border-bottom: 1px solid #efefef;
         margin-bottom: 10px;
       }
+
+      ul.search-flaws-rows {
+        padding-left: 0;
+        li {
+          list-style: none;
+        }
+      }
     }
     .documents {
       margin-left: 300px;
