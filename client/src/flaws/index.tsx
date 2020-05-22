@@ -93,8 +93,29 @@ function withoutDefaultFilters(filters: Filters): Partial<Filters> {
 function useFiltersURL(): [Filters, (filters: Partial<Filters>) => void] {
   const [searchParams, setSearchParams] = (useSearchParams as any)();
 
+  function groupParamsByKey(params: URLSearchParams): any {
+    return [...params.entries()].reduce((acc, tuple) => {
+      // getting the key and value from each tuple
+      const [key, val] = tuple;
+      if (acc.hasOwnProperty(key)) {
+        // if the current key is already an array, we'll add the value to it
+        if (Array.isArray(acc[key])) {
+          acc[key] = [...acc[key], val];
+        } else {
+          // if it's not an array, but contains a value, we'll convert it into an array
+          // and add the current value to it
+          acc[key] = [acc[key], val];
+        }
+      } else {
+        // plain assignment if no special case is present
+        acc[key] = val;
+      }
+      return acc;
+    }, {});
+  }
+
   const filters = useMemo(() => {
-    const searchParamsObject = Object.fromEntries(searchParams);
+    const searchParamsObject = groupParamsByKey(searchParams);
     if (searchParamsObject.page) {
       searchParamsObject.page = parseInt(searchParamsObject.page);
     }
@@ -107,6 +128,13 @@ function useFiltersURL(): [Filters, (filters: Partial<Filters>) => void] {
     },
     [filters, setSearchParams]
   );
+
+  const mustBeArrayKeys = ["flaws"];
+  for (const key of mustBeArrayKeys) {
+    if (filters[key] && !Array.isArray(filters[key])) {
+      filters[key] = [filters[key]];
+    }
+  }
 
   return [filters, updateFiltersURL];
 }

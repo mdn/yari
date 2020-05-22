@@ -10,7 +10,9 @@ const fm = require("front-matter");
 const { Builder } = require("content/scripts/build");
 const Document = require("content/scripts/document");
 const { Sources } = require("content/scripts/sources");
+const { slugToFoldername } = require("content/scripts/utils");
 const {
+  DEFAULT_LIVE_SAMPLES_BASE_URL,
   DEFAULT_POPULARITIES_FILEPATH,
   FLAW_LEVELS,
 } = require("content/scripts/constants.js");
@@ -21,7 +23,7 @@ app.use(express.json());
 const STATIC_ROOT = path.join(__dirname, "../client/build");
 const CONTENT_ALL_TITLES = path.join(__dirname, "../content/_all-titles.json");
 
-// The client/build directory is won't exist at the very very first time
+// The client/build directory won't exist at the very very first time
 // you start the server after a fresh git clone.
 if (!fs.existsSync(STATIC_ROOT)) {
   fs.mkdirSync(STATIC_ROOT);
@@ -34,10 +36,9 @@ function getFolderFromURI(uri) {
   // benefit in caching it once since it might change after this server
   // has started.
   const allUris = JSON.parse(fs.readFileSync(CONTENT_ALL_TITLES));
-  for (const key of Object.keys(allUris)) {
-    if (key.toLowerCase() === uri.toLowerCase()) {
-      return allUris[key].file;
-    }
+  const data = allUris[uri.toLowerCase()];
+  if (data) {
+    return data.file;
   }
   return null;
 }
@@ -84,6 +85,14 @@ function getRedirectUrl(uri) {
 // sensitive.
 app.use((req, res, next) => {
   req.url = req.url.toLowerCase();
+  if (req.url.includes("/_samples_/")) {
+    // We need to convert incoming live-sample URL's like:
+    //   /en-us/docs/web/css/:indeterminate/_samples_/progress_bar
+    // to:
+    //   /en-us/docs/web/css/_colon_indeterminate/_samples_/progress_bar
+    // since they should be served directly by the static middleware.
+    req.url = slugToFoldername(req.url);
+  }
   next();
 });
 
@@ -222,6 +231,7 @@ function getOrCreateBuilder(options) {
         noProgressbar: true,
         foldersearch: options.foldersearch || [],
         popularitiesfile: normalizeContentPath(DEFAULT_POPULARITIES_FILEPATH),
+        liveSamplesBaseUrl: DEFAULT_LIVE_SAMPLES_BASE_URL,
       },
       console
     );
