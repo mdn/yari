@@ -45,7 +45,7 @@ function slugify(text) {
   //       use case (see the "cssesc" code within the "getSection" method of the
   //       HTMLTool below)
   return sanitizeFilename(
-    text.trim().replace(/\s+/g, "_").replace(SECTION_ID_DISALLOWED, "")
+    text.trim().replace(SECTION_ID_DISALLOWED, "").replace(/\s+/g, "_")
   );
 }
 
@@ -70,7 +70,7 @@ function safeDecodeURIComponent(text) {
 
 class HTMLTool {
   constructor(html, pathDescription) {
-    this.$ = cheerio.load(html);
+    this.$ = cheerio.load(html, { decodeEntities: true });
     this.pathDescription = pathDescription;
   }
 

@@ -1349,7 +1349,9 @@ class Builder {
       // First, remove any live samples that no longer exist.
       if (fs.existsSync(liveSamplesDir)) {
         // Build a set of sampleID's from the list of sampleID objects.
-        const ownSampleIDSet = new Set(ownSampleIds.map((x) => x.sampleID));
+        const ownSampleIDSet = new Set(
+          ownSampleIds.map((x) => x.sampleID.toLowerCase())
+        );
         for (const de of fs.readdirSync(liveSamplesDir, {
           withFileTypes: true,
         })) {
@@ -1383,7 +1385,7 @@ class Builder {
         }
         const liveSampleDir = path.join(
           liveSamplesDir,
-          sampleIDWithContext.sampleID
+          sampleIDWithContext.sampleID.toLowerCase()
         );
         const liveSamplePath = path.join(liveSampleDir, "index.html");
         if (!fs.existsSync(liveSampleDir)) {
