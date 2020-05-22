@@ -502,7 +502,7 @@ class Builder {
         continue;
       }
       const content = getContent(source, folder);
-      const { metadata, rawHtml } = content;
+      const { metadata, rawHtml, rawHtmlFilepath } = content;
       // When rendering prerequisites, we're only interested in
       // caching the results for later use. We don't care about
       // the results returned.
@@ -515,7 +515,7 @@ class Builder {
       // a different level of recursion.
       for (const flaw of preFlaws) {
         if (!flaw.filepath) {
-          flaw.filepath = preRawHtmlFilepath;
+          flaw.filepath = rawHtmlFilepath;
         }
         allPrerequisiteFlaws.push(flaw);
       }
@@ -1441,9 +1441,11 @@ class Builder {
         );
         continue;
       }
-      const otherMetadata = getMetadata(source, otherFolder).metadata;
-      const otherRawHtmlFilepath = path.join(otherFolder, "index.html");
-      const otherRawHtml = fs.readFileSync(otherRawHtmlFilepath, "utf8");
+      const {
+        metadata: otherMetadata,
+        rawHtml: otherRawHtml,
+        rawHtmlFilepath: otherRawHtmlFilepath,
+      } = getContent(source, otherFolder);
       const otherDestinationDir = path.join(
         this.destination,
         slugToFoldername(otherUri)
