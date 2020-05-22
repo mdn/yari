@@ -212,6 +212,8 @@ function Macros({ messages }: { messages: MacroErrorMessage[] }) {
     <div className="flaw flaw__macros">
       <h3>{humanizeFlawName("macros")}</h3>
       {messages.map((msg) => {
+        console.log(msg);
+
         const key = `${msg.filepath}:${msg.line}:${msg.column}`;
 
         return (

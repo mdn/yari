@@ -63,6 +63,7 @@ interface Filters {
   page: number;
   sort_by: string;
   sort_reverse: boolean;
+  searchFlaws: string[];
 }
 
 const defaultFilters: Filters = Object.freeze({
@@ -73,6 +74,7 @@ const defaultFilters: Filters = Object.freeze({
   page: 1,
   sort_by: "popularity",
   sort_reverse: false,
+  searchFlaws: [],
 });
 
 function withoutDefaultFilters(filters: Filters): Partial<Filters> {
@@ -107,6 +109,8 @@ function useFiltersURL(): [Filters, (filters: Partial<Filters>) => void] {
     },
     [filters, setSearchParams]
   );
+
+  console.log("FILTERS:", filters);
 
   return [filters, updateFiltersURL];
 }
@@ -240,9 +244,38 @@ function BuildTimes({ times }: { times: Times }) {
   );
 }
 
+interface SearchFlawRow {
+  macro: string;
+  key: string;
+  value: string;
+}
+
+function serializeSearchFlaws(list: SearchFlawRow) {
+  const serialized = [];
+  console.log("LIST:", list);
+  throw new Error("not implemented");
+  return serialized;
+}
+
+function deserializeSearchFlaws(list: string[]) {
+  const rows: SearchFlawRow[] = [];
+  for (const row of list) {
+    const [macro, key, value] = row.split(":", 3);
+    rows.push({
+      macro,
+      key,
+      value,
+    });
+  }
+  return rows;
+}
+
 function FilterControls({ flawLevels }: { flawLevels: FlawLevel[] }) {
   const [initialFilters, updateFiltersURL] = useFiltersURL();
   const [filters, setFilters] = useState(initialFilters);
+  const [searchFlawsRows, setSearchFlawsRows] = useState<SearchFlawRow[]>(
+    deserializeSearchFlaws(initialFilters.searchFlaws)
+  );
 
   function refreshFilters() {
     updateFiltersURL(filters);
@@ -250,11 +283,17 @@ function FilterControls({ flawLevels }: { flawLevels: FlawLevel[] }) {
 
   let hasFilters = !equalObjects(defaultFilters, filters);
 
+  let hasEmptySearchFlawsRow = searchFlawsRows.some(
+    (row) => !(row.key.trim() && row.value.trim())
+  );
+
   function resetFilters(event: React.MouseEvent) {
     event.preventDefault();
     setFilters(defaultFilters);
     updateFiltersURL(defaultFilters);
   }
+
+  console.log("filters.flaws==", filters.flaws);
 
   return (
     <div className="filters">
@@ -321,6 +360,76 @@ function FilterControls({ flawLevels }: { flawLevels: FlawLevel[] }) {
                 );
               })}
           </select>
+        </div>
+        <div>
+          <h4>Search in flaws</h4>
+          <ul>
+            {searchFlawsRows.map((row, i) => {
+              return (
+                <li key={`${row.macro}:${row.key}:${row.value}`}>
+                  <select
+                    value={row.macro}
+                    onChange={(event) => {
+                      console.log("VALUE", event.target.value);
+                    }}
+                  >
+                    {flawLevels &&
+                      flawLevels
+                        .filter((flawLevel) => !flawLevel.ignored)
+                        .map((flawLevel) => {
+                          return (
+                            <option key={flawLevel.name} value={flawLevel.name}>
+                              {humanizeFlawName(flawLevel.name)}
+                            </option>
+                          );
+                        })}
+                  </select>
+                  <input
+                    type="text"
+                    value={row.key}
+                    onChange={(event) => {
+                      // row.key = event.target.value
+                    }}
+                  />
+                  <input
+                    type="search"
+                    value={row.value}
+                    onChange={(event) => {
+                      // row.value = event.target.value
+                    }}
+                  />
+                  <button
+                    type="button"
+                    title="Remove search row"
+                    onClick={() => {
+                      setSearchFlawsRows([...searchFlawsRows.splice(i, 1)]);
+                    }}
+                  >
+                    -
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          <button
+            type="button"
+            title="Add search row"
+            disabled={hasEmptySearchFlawsRow}
+            onClick={() => {
+              setSearchFlawsRows([
+                ...searchFlawsRows,
+                ...[
+                  {
+                    macro: "macros",
+                    key: "",
+                    value: "",
+                  },
+                ],
+              ]);
+            }}
+          >
+            +
+          </button>
         </div>
 
         <div>
