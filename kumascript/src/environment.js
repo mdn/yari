@@ -41,7 +41,6 @@ const kumaPrototype = require("./api/kuma.js");
 const mdnPrototype = require("./api/mdn.js");
 const stringPrototype = require("./api/string.js");
 const wikiPrototype = require("./api/wiki.js");
-const uriPrototype = require("./api/uri.js");
 const webPrototype = require("./api/web.js");
 const pagePrototype = require("./api/page.js");
 
@@ -110,7 +109,6 @@ class Environment {
     let mdn = Object.create(prepareProto(mdnPrototype, globals));
     let string = Object.create(prepareProto(stringPrototype, globals));
     let wiki = Object.create(prepareProto(wikiPrototype, globals));
-    let uri = Object.create(prepareProto(uriPrototype, globals));
     let web = Object.create(prepareProto(webPrototype, globals));
     let page = Object.create(prepareProto(pagePrototype, globals));
     let env = Object.create(prepareProto(perPageContext));
@@ -131,7 +129,6 @@ class Environment {
     globals.MDN = globals.mdn = freeze(mdn);
     globals.string = globals.String = freeze(string);
     globals.wiki = globals.Wiki = freeze(wiki);
-    globals.uri = globals.Uri = freeze(uri);
     globals.web = globals.Web = freeze(web);
     globals.page = globals.Page = freeze(page);
     globals.env = globals.Env = freeze(env);

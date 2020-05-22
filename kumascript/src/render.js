@@ -42,7 +42,6 @@
  *
  * @prettier
  */
-const config = require("./config.js");
 const Parser = require("./parser.js");
 const Environment = require("./environment.js");
 const {
@@ -52,22 +51,14 @@ const {
   MacroExecutionError,
 } = require("./errors.js");
 
-function normalize(name) {
+function normalizeMacroName(name) {
   return name.replace(/:/g, "-").toLowerCase();
 }
 
 function getPrerequisites(source) {
   // Returns a set of URI's that must be rendered prior to
   // rendering this source.
-  let tokens;
-  try {
-    tokens = Parser.parse(source);
-  } catch (e) {
-    // If there are any parsing errors in the input document
-    // we can't process any of the macros, so just return an
-    // empty set of prerequisites.
-    return new Set();
-  }
+  const tokens = Parser.parse(source);
   // Loop through the tokens, looking for macros whose resolution
   // requires an already-rendered document. In other words, look
   // for prerequisites, or documents that need to be rendered prior
@@ -75,7 +66,7 @@ function getPrerequisites(source) {
   const result = new Set();
   for (let token of tokens) {
     if (token.type === "MACRO") {
-      const macroName = normalize(token.name);
+      const macroName = normalizeMacroName(token.name);
       // The resolution of these macros requires a fully-rendered document
       // identified by their first argument.
       if (macroName === "page" || macroName === "includesubnav") {
@@ -111,25 +102,12 @@ async function render(source, templates, pageEnvironment, allPagesInfo) {
   if (pageEnvironment.selective_mode) {
     [selectiveMode, selectMacros] = pageEnvironment.selective_mode;
     // Normalize the macro names for the purpose of robust comparison.
-    selectMacros = selectMacros.map((name) => normalize(name));
+    selectMacros = selectMacros.map((name) => normalizeMacroName(name));
   }
-
-  // Create a complete page environment with information from the config.
-  const fullPageEnvironment = {
-    ...pageEnvironment,
-    interactive_examples: {
-      base_url: config.interactiveExamplesURL,
-    },
-    live_samples: { base_url: config.liveSamplesURL },
-  };
 
   // Create the Environment object that we'll use to render all of
   // the macros on the page
-  let environment = new Environment(
-    fullPageEnvironment,
-    templates,
-    allPagesInfo
-  );
+  let environment = new Environment(pageEnvironment, templates, allPagesInfo);
 
   // Loop through the tokens, rendering the macros and collecting
   // the resulting promises. We detect duplicate invocations and
@@ -152,7 +130,7 @@ async function render(source, templates, pageEnvironment, allPagesInfo) {
         continue;
       }
 
-      let macroName = normalize(token.name);
+      let macroName = normalizeMacroName(token.name);
 
       // If we're only rendering selected macros, ignore the rest.
       if (selectiveMode === "render" && !selectMacros.includes(macroName)) {
@@ -227,7 +205,7 @@ async function render(source, templates, pageEnvironment, allPagesInfo) {
     .map((token) => {
       if (token.type === "MACRO") {
         if (selectiveMode) {
-          if (selectMacros.includes(normalize(token.name))) {
+          if (selectMacros.includes(normalizeMacroName(token.name))) {
             if (selectiveMode === "remove") {
               return "";
             }
@@ -264,4 +242,4 @@ async function render(source, templates, pageEnvironment, allPagesInfo) {
   return [output, errors.filter((e) => e !== null)];
 }
 
-module.exports = { getPrerequisites, render };
+module.exports = { normalizeMacroName, getPrerequisites, render };

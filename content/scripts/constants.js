@@ -3,13 +3,6 @@ const assert = require("assert").strict;
 
 require("dotenv").config();
 
-// const DEFAULT_ROOT = process.env.BUILD_ROOT;
-
-// const DEFAULT_ARCHIVE_ROOT = process.env.ARCHIVE_ROOT ||
-//   path.join(__dirname, "..", "..", "archivecontent", "files");
-// const DEFAULT_DESTINATION =
-//   process.env.ROOT || path.join(__dirname, "..", "..", "client", "build");
-
 const DEFAULT_DATABASE_URL =
   process.env.DATABASE_URL || "mysql2://username:password@host/databasename";
 
@@ -20,10 +13,6 @@ const DEFAULT_BUILD_LOCALES = (process.env.BUILD_LOCALES || "")
 const DEFAULT_BUILD_NOT_LOCALES = (process.env.BUILD_NOT_LOCALES || "")
   .split(",")
   .filter((x) => x);
-
-// const DEFAULT_STUMPTOWN_PACKAGED_ROOT =
-//   process.env.STUMPTOWN_PACKAGED_ROOT ||
-//   path.join(__dirname, "..", "..", "stumptown", "packaged");
 
 const DEFAULT_EXCLUDE_SLUG_PREFIXES = [
   "Experiment:",
@@ -50,6 +39,13 @@ const DEFAULT_FOLDER_SEARCHES = (process.env.BUILD_FOLDER_SEARCHES || "")
   .filter((x) => x);
 
 const DEFAULT_SITEMAP_BASE_URL = "https://developer.mozilla.org";
+
+const DEFAULT_LIVE_SAMPLES_BASE_URL =
+  process.env.BUILD_LIVE_SAMPLES_BASE_URL || "https://mdn.mozillademos.org";
+
+const DEFAULT_INTERACTIVE_EXAMPLES_BASE_URL =
+  process.env.INTERACTIVE_EXAMPLES_BASE_URL ||
+  "https://interactive-examples.mdn.mozilla.net";
 
 const DEFAULT_POPULARITIES_FILEPATH =
   process.env.BUILD_POPULARITIES_FILEPATH ||
@@ -138,6 +134,8 @@ module.exports = {
   DEFAULT_BUILD_LOCALES,
   DEFAULT_BUILD_NOT_LOCALES,
   DEFAULT_SITEMAP_BASE_URL,
+  DEFAULT_LIVE_SAMPLES_BASE_URL,
+  DEFAULT_INTERACTIVE_EXAMPLES_BASE_URL,
   DEFAULT_FOLDER_SEARCHES,
   DEFAULT_POPULARITIES_FILEPATH,
   ALLOW_STALE_TITLES,

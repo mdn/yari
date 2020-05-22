@@ -1,12 +1,23 @@
 const Templates = require("./src/templates.js");
 const AllPagesInfo = require("./src/info.js");
-const { MacroExecutionError } = require("./src/errors.js");
 const { getPrerequisites, render: renderMacros } = require("./src/render.js");
+const {
+  getLiveSampleIDs,
+  buildLiveSamplePage,
+  LiveSampleError,
+} = require("./src/live-sample.js");
+const { HTMLTool, KumascriptError } = require("./src/api/util.js");
 
 class Renderer {
-  constructor({ uriTransform = (uri) => uri } = {}) {
+  constructor({
+    liveSamplesBaseUrl = null,
+    interactiveExamplesBaseUrl = null,
+    uriTransform = (uri) => uri,
+  } = {}) {
     this.allPagesInfo = null;
     this.uriTransform = uriTransform;
+    this.liveSamplesBaseUrl = liveSamplesBaseUrl;
+    this.interactiveExamplesBaseUrl = interactiveExamplesBaseUrl;
     this.templates = new Templates();
   }
 
@@ -34,12 +45,25 @@ class Renderer {
     if (cachedResult) {
       return cachedResult;
     }
-    const result = await renderMacros(
+    const [renderedHtml, errors] = await renderMacros(
       source,
       this.templates,
-      pageEnvironment,
+      {
+        ...pageEnvironment,
+        interactive_examples: {
+          base_url: this.interactiveExamplesBaseUrl,
+        },
+        live_samples: { base_url: this.liveSamplesBaseUrl },
+      },
       this.allPagesInfo
     );
+
+    // For now, we're just going to inject section ID's.
+    // TODO: Sanitize the HTML and also filter the "src"
+    //       attributes of any iframes.
+    const tool = new HTMLTool(renderedHtml);
+    tool.injectSectionIDs();
+    const result = [tool.html(), errors];
 
     if (cacheResult) {
       this.allPagesInfo.cacheResult(uri, result);
@@ -49,6 +73,9 @@ class Renderer {
 }
 
 module.exports = {
+  buildLiveSamplePage,
+  getLiveSampleIDs,
   getPrerequisites,
+  LiveSampleError,
   Renderer,
 };

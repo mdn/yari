@@ -4,27 +4,73 @@
  *
  * @prettier
  */
-const url = require("url");
+const cssesc = require("cssesc");
+const sanitizeFilename = require("sanitize-filename");
 
-const config = require("../config.js");
 const cheerio = require("../monkeypatched-cheerio.js");
-
-const URL_UNSAFE = /["#$%&+,/:;=?@\[\]^`{}|~'()]/g;
 
 const H1_TO_H6_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 const HEADING_TAGS = new Set([...H1_TO_H6_TAGS, "hgroup"]);
 const INJECT_SECTION_ID_TAGS = new Set([...HEADING_TAGS, "section"]);
+const LIVE_SAMPLE_PARTS = ["html", "css", "js"];
+const SECTION_ID_DISALLOWED = /["#$%&+,/:;=?@[\]\^`{|}~')(\\]/g;
+
+class KumascriptError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = this.constructor.name;
+  }
+}
 
 function slugify(text) {
-  // Turn the text content of a header into a slug for use in an ID.
-  // Remove unsafe characters, and collapse whitespace gaps into
-  // underscores.
-  return text.replace(URL_UNSAFE, "").trim().replace(/\s+/g, "_");
+  // Turn the text content of a header, or the value of the "name" attribute,
+  // into a slug for use as an ID as well as a filename. Trim it, collapse
+  // whitespace gaps into underscores, remove the same special characters that
+  // Kuma removes (for consistency, since for example many live-samples depend
+  // on this), and finally remove any remaining characters that would not work
+  // within a filename on a Windows, Mac OS X, or Unix filesystem.
+  // NOTE: These are the constraints that have to be satisfied:
+  //    1) the result can be used as a filename on Windows, Mac OS X, and Unix
+  //       (this is why the "sanitize-filename" npm package is used)
+  //    2) the result will be used as an "id" attribute, so in HTML5 it must
+  //       contain at least one character and must not contain any whitespace
+  //       characters (the "sanitize-filename" npm package will itself remove
+  //       spaces, but since they're useful in breaking up phrases, before we
+  //       run "sanitize-filename" we convert whitespace gaps into underscores)
+  //    3) many macros use sample ID's that assume that "id" attributes have
+  //       had the SECTION_ID_DISALLOWED characters removed, so for now we have
+  //       to maintain that legacy
+  //    4) there's no need to add constraints that assume the result will be
+  //       used as a CSS ID selector, since it will be properly escaped for that
+  //       use case (see the "cssesc" code within the "getSection" method of the
+  //       HTMLTool below)
+  return sanitizeFilename(
+    text.trim().replace(SECTION_ID_DISALLOWED, "").replace(/\s+/g, "_")
+  );
+}
+
+function spacesToUnderscores(text) {
+  return text.replace(/ |%20/g, "_");
+}
+
+function safeDecodeURIComponent(text) {
+  // This function will attempt to URI-decode the incoming text, which may
+  // or may not be URI-encoded, and if it can't, it assumes the text is not
+  // URI-encoded and simply falls back to using the text itself. This exists
+  // solely because some localized pages URI-encode the sample ID argument
+  // to their "EmbedLiveSample" macro calls, and we need to run the non-URI-
+  // encoded sample ID through "slugify()" above prior to URI-encoding it
+  // for the live-sample URL.
+  try {
+    return decodeURIComponent(text);
+  } catch (e) {
+    return text;
+  }
 }
 
 class HTMLTool {
   constructor(html, pathDescription) {
-    this.$ = cheerio.load(html);
+    this.$ = cheerio.load(html, { decodeEntities: true });
     this.pathDescription = pathDescription;
   }
 
@@ -65,11 +111,10 @@ class HTMLTool {
 
     // First, let's gather the known ID's.
     $("[id],[name]").each((i, e) => {
-      if (e.attribs.id && !H1_TO_H6_TAGS.has(e.tagName)) {
+      if (e.attribs.name && INJECT_SECTION_ID_TAGS.has(e.tagName)) {
+        knownIDs.add(slugify(e.attribs.name));
+      } else if (e.attribs.id && !H1_TO_H6_TAGS.has(e.tagName)) {
         knownIDs.add(e.attribs.id);
-      }
-      if (e.attribs.name) {
-        knownIDs.add(e.attribs.name);
       }
     });
 
@@ -106,17 +151,18 @@ class HTMLTool {
     return this;
   }
 
-  extractSection(section) {
+  getSection(section) {
     const $ = this.$;
-    // This is important since many macros specify the section ID with spaces.
-    const sectionID = section.replace(/ |%20/g, "_");
+    // This is important since many macros specify the section ID with spaces,
+    // and/or characters that are stripped from the actual ID's (e.g., "(" and ")").
+    const sectionID = slugify(section);
     // Kuma looks for the first HTML tag of a limited set of section tags with ANY
     // attribute equal to the "sectionID", but in practice it's always an "id" attribute,
     // so let's simplify this as well as make it much faster.
-    const sectionStart = $(`#${sectionID}`);
+    const sectionStart = $(`#${cssesc(sectionID, { isIdentifier: true })}`);
     if (!sectionStart.length) {
-      throw new Error(
-        `unable to find section "${sectionID}" within ${this.pathDescription}`
+      throw new KumascriptError(
+        `unable to find an HTML element with an "id" of "${sectionID}" within ${this.pathDescription}`
       );
     }
     let result;
@@ -137,8 +183,39 @@ class HTMLTool {
       // the starting element, but not the starting element itself.
       result = sectionStart.children();
     }
-    result = result.not(".noinclude");
-    return $.html(result);
+    return result;
+  }
+
+  extractSection(section) {
+    const result = this.getSection(section).not(".noinclude");
+    return cheerio.html(result);
+  }
+
+  extractLiveSampleObject(sampleID) {
+    const result = Object.create(null);
+    const sample = this.getSection(sampleID);
+    // We have to wrap the collection of elements from the section
+    // we've just aquired because we're going to search among all
+    // descendants and we want to include the elements themselves
+    // as well as their descendants.
+    const $ = cheerio.load(`<div>${cheerio.html(sample)}</div>`);
+    for (const part of LIVE_SAMPLE_PARTS) {
+      const src = $(
+        `.${part},pre[class*="brush:${part}"],pre[class*="${part};"]`
+      ).text();
+      // The string replacements below have been carried forward from Kuma:
+      //   * Bugzilla 819999: &nbsp; gets decoded to \xa0, which trips up CSS.
+      //   * Bugzilla 1284781: &nbsp; is incorrectly parsed on embed sample.
+      result[part] = src
+        ? src.replace("\xa0", " ").replace("&nbsp;", " ")
+        : null;
+    }
+    if (!LIVE_SAMPLE_PARTS.some((part) => result[part])) {
+      throw new KumascriptError(
+        `unable to find any live code samples for "${sampleID}" within ${this.pathDescription}`
+      );
+    }
+    return result;
   }
 
   html() {
@@ -148,7 +225,7 @@ class HTMLTool {
 
 // Utility functions are collected here. These are functions that are used
 // by the exported functions below. Some of them are themselves exported.
-const util = (module.exports = {
+module.exports = {
   // Fill in undefined properties in object with values from the
   // defaults objects, and return the object. As soon as the property is
   // filled, further defaults will have no effect.
@@ -179,32 +256,7 @@ const util = (module.exports = {
       // until/unless URLs are corrected in templates
       path = "/en-US/docs" + path;
     }
-    return path.replace(/ |%20/gi, "_");
-  },
-
-  // Given a path, attempt to construct an absolute URL to the wiki.
-  buildAbsoluteURL(path) {
-    return util.apiURL(util.preparePath(path));
-  },
-
-  /**
-   * Build an absolute URL from the given "path" that uses the
-   * protocol and host of the document service rather than those
-   * of the public-facing website. If the "path" argument is an
-   * absolute URL, everything will be discarded except its "path"
-   * and "hash" attributes (as defined by "url.parse()"). If the
-   * "path" argument is not provided or is falsy, the base URL of
-   * the document service will be returned.
-   *
-   * @param {string} path;
-   */
-  apiURL(path) {
-    if (!path) {
-      return config.documentURL;
-    }
-    let parts = url.parse(encodeURI(path));
-    path = parts.path + (parts.hash ? parts.hash : "");
-    return url.resolve(config.documentURL, path);
+    return spacesToUnderscores(path);
   },
 
   /**
@@ -234,12 +286,13 @@ const util = (module.exports = {
     return b.replace(/(<([^>]+)>)/gi, "");
   },
 
-  spacesToUnderscores(str) {
-    var re1 = / /gi;
-    var re2 = /%20/gi;
-    str = str.replace(re1, "_");
-    return str.replace(re2, "_");
-  },
+  safeDecodeURIComponent,
+
+  spacesToUnderscores,
+
+  slugify,
 
   HTMLTool,
-});
+
+  KumascriptError,
+};
