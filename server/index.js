@@ -480,12 +480,28 @@ app.get("/_flaws", (req, res) => {
 function anyMatchSearchFlaws(searchFlaws, flaws) {
   for (const [flaw, search] of searchFlaws) {
     if (flaws[flaw]) {
-      // There's room to be a LOT smarter here.
-      // For example, if the 'flaw' is 'macros', we might want to loop
-      // over the key/values in the flaw and compare the values or
-      // even parse the search if it's something like 'name:CSSxRef'.
-      if (JSON.stringify(flaws[flaw]).includes(search)) {
-        return true;
+      if (flaw === "macros") {
+        // Let's allow ourselves to be a little bit smarter.
+        // The `flaws[flaw]` is always list of objects but they have
+        // different things in them.
+        if (
+          flaws[flaw].some((flawError) => {
+            if (typeof flawError === "string") {
+              return flawError.includes(search);
+            } else {
+              // Assume it's an object. Compare against string values.
+              return Object.values(flawError).some((value) =>
+                String(value).includes(search)
+              );
+            }
+          })
+        ) {
+          return true;
+        }
+      } else {
+        if (JSON.stringify(flaws[flaw]).includes(search)) {
+          return true;
+        }
       }
     }
   }
