@@ -4,6 +4,8 @@ import { EditButtons } from "./edit-buttons";
 import { ToggleDocumentFlaws } from "./flaws";
 import DocumentSpy from "./spy";
 
+import "./index.scss";
+
 export default function WriterToolbar({
   doc,
   onMessage,
@@ -12,14 +14,8 @@ export default function WriterToolbar({
   onMessage: Function;
 }) {
   return (
-    <div style={{ padding: "10px 0" }}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
+    <div className="writer-toolbar">
+      <div className="writer-toolbar-first-row">
         <EditButtons source={doc.source} />
         <DocumentSpy onMessage={onMessage} />
       </div>

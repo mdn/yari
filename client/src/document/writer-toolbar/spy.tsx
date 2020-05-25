@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Sockette from "sockette";
 import { Link } from "react-router-dom";
 
-import "./spy.css";
+import "./spy.scss";
 
 export default function DocumentSpy({ onMessage }) {
   // null - never connected before
@@ -50,8 +50,9 @@ export default function DocumentSpy({ onMessage }) {
 
   return (
     <div
-      id="document-spy"
-      className={connected ? "ws-connected" : "ws-not-connected"}
+      className={`document-spy ${
+        connected ? "ws-connected" : "ws-not-connected"
+      }`}
     >
       {websocketError ? (
         <span title={websocketError.toString()}>WebSocket error!</span>
