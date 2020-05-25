@@ -1,4 +1,4 @@
-.document-edit {
+.document-form {
   form {
     background-color: white;
     z-index: 10;
@@ -11,12 +11,4 @@
   input {
     font-family: monospace;
   }
-  h2 .close {
-    font-size: 70%;
-    margin-left: 20px;
-  }
-}
-
-.document-edit .document-edited {
-  margin-top: 330px;
 }

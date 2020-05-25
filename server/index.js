@@ -4,16 +4,11 @@ const { performance } = require("perf_hooks");
 
 const express = require("express");
 const openEditor = require("open-editor");
-const yaml = require("js-yaml");
 
-const { Builder } = require("content/scripts/build");
-const { Sources } = require("content/scripts/sources");
-const { slugToFoldername } = require("content/scripts/utils");
-const {
-  DEFAULT_LIVE_SAMPLES_BASE_URL,
-  DEFAULT_POPULARITIES_FILEPATH,
-  FLAW_LEVELS,
-} = require("content/scripts/constants.js");
+const { FLAW_LEVELS } = require("content/scripts/constants.js");
+
+const documentRouter = require("./document");
+const { getOrCreateBuilder, normalizeContentPath } = require("./utils");
 
 const app = express();
 app.use(express.json());
@@ -104,62 +99,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-function normalizeContentPath(start) {
-  return fs.existsSync(start) ? start : path.join(__dirname, "..", start);
-}
-
-app.get("/_document", (req, res) => {
-  if (!req.query.url) {
-    return res.status(400).send("No ?url= query param");
-  }
-  const mdn_url = req.query.url.toLowerCase();
-  const docData = getOrCreateBuilder().allTitles.get(mdn_url);
-  if (!docData) {
-    return res.status(400).send(`No document by the URL ${req.query.url}`);
-  }
-  const folder = normalizeContentPath(docData.file);
-  const html = fs.readFileSync(path.join(folder, "index.html"), "utf8");
-  const rawMetadata = fs.readFileSync(path.join(folder, "index.yaml"));
-  const metadata = yaml.safeLoad(rawMetadata);
-  res.status(200).json({
-    html,
-    metadata,
-  });
-});
-
-app.put("/_document", (req, res) => {
-  if (!req.query.url) {
-    return res.status(400).send("No ?url= query param");
-  }
-  const mdn_url = req.query.url.toLowerCase();
-  const docData = getOrCreateBuilder().allTitles.get(mdn_url);
-  if (!docData) {
-    return res.status(400).send(`No document by the URL ${req.query.url}`);
-  }
-
-  if (req.body.title && req.body.html) {
-    const folder = normalizeContentPath(docData.file);
-    const htmlFile = path.join(folder, "index.html");
-    const html = fs.readFileSync(htmlFile, "utf8");
-    if (html !== req.body.html) {
-      fs.writeFileSync(htmlFile, req.body.html.trim() + "\n");
-    }
-
-    const metadataFile = path.join(folder, "index.yaml");
-    const rawMetadata = fs.readFileSync(metadataFile);
-    const metadata = yaml.safeLoad(rawMetadata);
-    if (
-      metadata.title !== req.body.title ||
-      metadata.summary !== req.body.summary
-    ) {
-      metadata.title = req.body.title.trim();
-      metadata.summary = req.body.summary.trim();
-      fs.writeFileSync(metadataFile, yaml.safeDump(metadata));
-    }
-  }
-
-  res.status(200).send("Ok");
-});
+app.use("/_document", documentRouter);
 
 app.get("/_open", (req, res) => {
   const { line, column, filepath } = req.query;
@@ -198,44 +138,6 @@ app.get("/_open", (req, res) => {
   openEditor([spec]);
   res.status(200).send(`Tried to open ${spec} in ${process.env.EDITOR}`);
 });
-
-// Module level memoization
-let builder = null;
-function getOrCreateBuilder(options) {
-  options = options || {};
-  if (!builder) {
-    const sources = new Sources();
-    // The server doesn't have command line arguments like the content CLI
-    // does so we need to entirely rely on environment variables.
-    if (process.env.BUILD_ROOT) {
-      sources.add(normalizeContentPath(process.env.BUILD_ROOT));
-    }
-    builder = new Builder(
-      sources,
-      {
-        destination: normalizeContentPath(
-          process.env.BUILD_DESTINATION || "client/build"
-        ),
-        noSitemaps: true,
-        specificFolders: [],
-        buildJsonOnly: false,
-        locales: options.locales || [],
-        notLocales: [],
-        slugsearch: [],
-        noProgressbar: true,
-        foldersearch: options.foldersearch || [],
-        popularitiesfile: normalizeContentPath(DEFAULT_POPULARITIES_FILEPATH),
-        liveSamplesBaseUrl: DEFAULT_LIVE_SAMPLES_BASE_URL,
-      },
-      console
-    );
-    builder.initSelfHash();
-    builder.ensureAllTitles();
-    builder.ensureAllRedirects();
-    builder.prepareRoots();
-  }
-  return builder;
-}
 
 // Return about redirects based on a list of URLs.
 // This is used by the "<Flaws/>" component which displays information
