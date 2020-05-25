@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Source } from "./types";
+import { Source } from "../types";
 
-import "./editthispage.scss";
+import "./edit-buttons.scss";
 
-export function EditThisPage({ source }: { source: Source }) {
+export function EditButtons({ source }: { source: Source }) {
   const [opening, setOpening] = useState(false);
   const [editorOpeningError, setEditorOpeningError] = useState<Error | null>(
     null
@@ -54,22 +54,24 @@ export function EditThisPage({ source }: { source: Source }) {
   }
 
   return (
-    <div className="edit-this-page">
+    <div className="edit-buttons">
+      Edit
       <a
         href={github_url}
         title={`Folder: ${folder}`}
         target="_blank"
         rel="noopener noreferrer"
       >
-        Edit this page in <b>GitHub</b>
+        {" "}
+        on <b>GitHub</b>
       </a>
       {process.env.NODE_ENV === "development" && (
         <>
-          {" "}
-          Edit this page{" "}
+          {" or "}
           <Link to={window.location.pathname.replace("/docs/", "/_edit/")}>
             in your <b>browser</b>
-          </Link>{" "}
+          </Link>
+          {" or "}
           <button title={`Folder: ${folder}`} onClick={openInEditorHandler}>
             in your <b>editor</b>
           </button>

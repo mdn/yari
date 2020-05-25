@@ -1,17 +1,8 @@
-import React, {
-  lazy,
-  useReducer,
-  Suspense,
-  useEffect,
-  useState,
-  useCallback,
-  useRef,
-} from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import React, { lazy, Suspense, useCallback, useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 import { NoMatch } from "../routing";
 import { Doc } from "./types";
-
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
 import { InteractiveExample } from "./ingredients/interactive-example";
@@ -20,19 +11,14 @@ import { Examples } from "./ingredients/examples";
 import { LinkList, LinkLists } from "./ingredients/link-lists";
 import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
-
 // Misc
-import { humanizeFlawName } from "../flaw-utils";
-
 // Sub-components
 import { DocumentTranslations } from "./languages";
-import { EditThisPage } from "./editthispage";
 
 import "./index.scss";
 
 // Lazy sub-components
-const DocumentSpy = lazy(() => import("./spy"));
-const DocumentFlaws = lazy(() => import("./flaws"));
+const WriterToolbar = lazy(() => import("./writer-toolbar"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const params = useParams();
@@ -110,7 +96,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
     }
   }, [slug, locale, props.doc, getCurrentDocumentUri, fetchDocument]);
 
-  function onMessage(data) {
+  function handleMessage(data) {
     if (data.documentUri === getCurrentDocumentUri()) {
       // The recently edited document is the one we're currently looking at!
       fetchDocument();
@@ -145,6 +131,11 @@ export function Document(props /* TODO: define a TS interface for this */) {
   }
   return (
     <>
+      {process.env.NODE_ENV === "development" && (
+        <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
+          <WriterToolbar doc={doc} onMessage={handleMessage} />
+        </Suspense>
+      )}
       <h1 className="page-title">{doc.title}</h1>
       {translations && !!translations.length && (
         <DocumentTranslations translations={translations} />
@@ -158,23 +149,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
         <div className="content">
           <RenderDocumentBody doc={doc} />
           <hr />
-          {process.env.NODE_ENV === "development" && (
-            <ToggleDocumentFlaws doc={doc} />
-          )}
-          <EditThisPage source={doc.source} />
           {doc.contributors && <Contributors contributors={doc.contributors} />}
         </div>
       </div>
-
-      {process.env.NODE_ENV === "development" && (
-        <Suspense
-          fallback={
-            <p className="loading-document-spy">Loading document spy</p>
-          }
-        >
-          <DocumentSpy onMessage={onMessage} />
-        </Suspense>
-      )}
     </>
   );
 }
@@ -380,78 +357,6 @@ function LoadingError({ error }) {
       <p>
         <a href=".">Try reloading the page</a>
       </p>
-    </div>
-  );
-}
-
-interface FlatFlaw {
-  name: string;
-  flaws: string[];
-  count: number;
-}
-
-const FLAWS_HASH = "#_flaws";
-function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
-  const { flaws } = doc;
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [show, toggle] = useReducer((v) => !v, location.hash === FLAWS_HASH);
-  const rootElement = useRef<HTMLDivElement>(null);
-  const isInitialRender = useRef(true);
-
-  useEffect(() => {
-    if (isInitialRender.current && show && rootElement.current) {
-      rootElement.current.scrollIntoView({ behavior: "smooth" });
-    }
-    isInitialRender.current = false;
-  }, [show]);
-
-  useEffect(() => {
-    const hasShowHash = window.location.hash === FLAWS_HASH;
-    if (show && !hasShowHash) {
-      navigate(location.pathname + location.search + FLAWS_HASH);
-    } else if (!show && hasShowHash) {
-      navigate(location.pathname + location.search);
-    }
-  }, [location, navigate, show]);
-
-  const flatFlaws: FlatFlaw[] = Object.entries(flaws)
-    .map(([name, actualFlaws]) => ({
-      name,
-      flaws: actualFlaws,
-      count: actualFlaws.length,
-    }))
-    .sort((a, b) => b.count - a.count);
-
-  return (
-    <div id={FLAWS_HASH.slice(1)} className="toggle-flaws" ref={rootElement}>
-      {flatFlaws.length > 0 ? (
-        <button type="submit" onClick={toggle}>
-          {show
-            ? "Hide flaws"
-            : `Show flaws (${flatFlaws.map((flaw) => flaw.count).join(" + ")})`}
-        </button>
-      ) : (
-        <p className="no-flaws">
-          No known flaws at the moment
-          <span role="img" aria-label="yay!">
-            🍾
-          </span>
-        </p>
-      )}
-
-      {show ? (
-        <Suspense fallback={<div>Loading document flaws...</div>}>
-          <DocumentFlaws flaws={flatFlaws} />
-        </Suspense>
-      ) : (
-        <small>
-          {/* a one-liner about all the flaws */}
-          {flatFlaws
-            .map((flaw) => `${humanizeFlawName(flaw.name)}: ${flaw.count}`)
-            .join(" + ")}
-        </small>
-      )}
     </div>
   );
 }
