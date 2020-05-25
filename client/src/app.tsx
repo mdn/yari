@@ -16,7 +16,7 @@ export function App(appProps) {
       {process.env.NODE_ENV === "development" && (
         <>
           <Route path="/:locale/_flaws" element={<AllFlaws />} />
-          <Route path="/:locale/_create" element={<DocumentCreate />} />
+          <Route path="/:locale/_create/*" element={<DocumentCreate />} />
           <Route path="/:locale/_edit/*" element={<DocumentEdit />} />
         </>
       )}

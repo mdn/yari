@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Doc } from "../types";
 import { EditButtons } from "./edit-buttons";
 import { ToggleDocumentFlaws } from "./flaws";
@@ -14,10 +14,11 @@ export default function WriterToolbar({
   doc: Doc;
   onDocumentUpdate: Function;
 }) {
+  const params = useParams();
   return (
     <div className="writer-toolbar">
       <div className="writer-toolbar-first-row">
-        <Link to="/en-US/_create">Create new document</Link>
+        <Link to={`/en-US/_create/${params["*"]}`}>Create new document</Link>
         <EditButtons source={doc.source} />
         <Spy currentSlug={doc.mdn_url} onDocumentUpdate={onDocumentUpdate} />
       </div>

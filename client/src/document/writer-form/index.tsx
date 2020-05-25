@@ -9,25 +9,34 @@ export type DocumentData = {
 };
 export default function DocumentForm({
   data,
+  isNew,
   isSaving,
   savingError,
   onSave,
 }: {
+  data: Partial<Omit<DocumentData, "meta">> & {
+    meta?: Partial<DocumentData["meta"]>;
+  };
   onSave: (data: DocumentData) => any;
-  data?: DocumentData;
+  isNew?: boolean;
   isSaving?: boolean;
   savingError?: null | Error;
 }) {
-  const [slug, setSlug] = useState("");
-  const [title, setTitle] = useState(data ? data.meta.title : "");
-  const [summary, setSummary] = useState(data ? data.meta.summary : "");
-  const [html, setHtml] = useState(data ? data.html : "");
+  const defaults: DocumentData = {
+    html: "",
+    ...data,
+    meta: { slug: "", title: "", summary: "", ...data.meta },
+  };
+  const [slug, setSlug] = useState(
+    defaults.meta.slug ? defaults.meta.slug + "/" : ""
+  );
+  const [title, setTitle] = useState(defaults.meta.title);
+  const [summary, setSummary] = useState(defaults.meta.summary);
+  const [html, setHtml] = useState(defaults.html);
   const [autosaveEnabled, setAutoSaveEnabled] = useLocalStorage(
     "autosaveEdit",
     false
   );
-
-  const isNew = !data;
 
   // New documents should not autosave
   const shouldAutosave = !isNew && autosaveEnabled;
@@ -111,7 +120,7 @@ export default function DocumentForm({
           Save
         </button>
 
-        {data && (
+        {!isNew && (
           <span className="action-options">
             <input
               type="checkbox"

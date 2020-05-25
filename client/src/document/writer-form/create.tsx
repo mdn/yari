@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import DocumentForm, { DocumentData } from "./index";
 
 export default function DocumentCreate() {
-  const { locale } = useParams();
+  const { locale, ["*"]: slug } = useParams();
   const navigate = useNavigate();
   const [savingError, setSavingError] = useState<Error | null>(null);
 
@@ -26,5 +26,17 @@ export default function DocumentCreate() {
     }
   }
 
-  return <DocumentForm onSave={handleCreate} savingError={savingError} />;
+  useEffect(() => {
+    // remove slug from URL, as it might be changed in the form
+    navigate(`/${locale}/_create`);
+  }, [locale]);
+
+  return (
+    <DocumentForm
+      isNew
+      data={{ meta: { slug } }}
+      onSave={handleCreate}
+      savingError={savingError}
+    />
+  );
 }
