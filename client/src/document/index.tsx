@@ -96,13 +96,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
     }
   }, [slug, locale, props.doc, getCurrentDocumentUri, fetchDocument]);
 
-  function handleMessage(data) {
-    if (data.documentUri === getCurrentDocumentUri()) {
-      // The recently edited document is the one we're currently looking at!
-      fetchDocument();
-    }
-  }
-
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -133,7 +126,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
     <>
       {process.env.NODE_ENV === "development" && (
         <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
-          <WriterToolbar doc={doc} onMessage={handleMessage} />
+          <WriterToolbar
+            doc={doc}
+            onDocumentUpdate={() => {
+              fetchDocument();
+            }}
+          />
         </Suspense>
       )}
       <h1 className="page-title">{doc.title}</h1>

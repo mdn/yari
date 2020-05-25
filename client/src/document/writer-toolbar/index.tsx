@@ -2,22 +2,22 @@ import React from "react";
 import { Doc } from "../types";
 import { EditButtons } from "./edit-buttons";
 import { ToggleDocumentFlaws } from "./flaws";
-import DocumentSpy from "./spy";
+import Spy from "./spy";
 
 import "./index.scss";
 
 export default function WriterToolbar({
   doc,
-  onMessage,
+  onDocumentUpdate,
 }: {
   doc: Doc;
-  onMessage: Function;
+  onDocumentUpdate: Function;
 }) {
   return (
     <div className="writer-toolbar">
       <div className="writer-toolbar-first-row">
         <EditButtons source={doc.source} />
-        <DocumentSpy onMessage={onMessage} />
+        <Spy currentSlug={doc.mdn_url} onDocumentUpdate={onDocumentUpdate} />
       </div>
       <ToggleDocumentFlaws flaws={doc.flaws} />
     </div>

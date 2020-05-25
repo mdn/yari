@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 import "./spy.scss";
 
-export default function DocumentSpy({ onMessage }) {
+export default function Spy({ currentSlug, onDocumentUpdate }) {
   // null - never connected before
   // true - connected
   // false - no longer connected
@@ -26,7 +26,9 @@ export default function DocumentSpy({ onMessage }) {
       },
       onmessage: (e) => {
         const data = JSON.parse(e.data);
-        onMessage(data);
+        if (currentSlug === data.documentUri) {
+          onDocumentUpdate();
+        }
         if (mounted) setLastMessage(data);
       },
       onreconnect: (e) => {},
@@ -42,7 +44,7 @@ export default function DocumentSpy({ onMessage }) {
       mounted = false;
       wssRef.current && wssRef.current.close();
     };
-  }, [onMessage]);
+  }, [currentSlug, onDocumentUpdate]);
 
   if (connected === null) {
     return null;
