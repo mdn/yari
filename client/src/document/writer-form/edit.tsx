@@ -1,21 +1,18 @@
-import { Link, useParams } from "react-router-dom";
-import useSWR from "swr";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import useSWR from "swr";
 import { Document } from "../index";
+import { useDocumentURL } from "../hooks";
 import DocumentForm, { DocumentData } from "./index";
 
 import "./edit.scss";
 
 export default function DocumentEdit() {
-  const params = useParams();
-  const slug = params["*"];
-  const locale = params.locale;
-
-  const sp = new URLSearchParams();
-  const url = `/${locale}/docs/${slug}`;
-  sp.append("url", url);
-  const fetchUrl = `/_document?${sp.toString()}`;
-  const { data, error } = useSWR(fetchUrl, async (url) => {
+  const documentURL = useDocumentURL();
+  const fetchURL = `/_document?${new URLSearchParams({
+    url: documentURL,
+  }).toString()}`;
+  const { data, error } = useSWR(fetchURL, async (url) => {
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`${response.status} on ${url}`);
@@ -29,7 +26,7 @@ export default function DocumentEdit() {
     setIsSaving(true);
     try {
       const response = await fetch(
-        `/_document?url=${encodeURIComponent(url)}`,
+        `/_document?url=${encodeURIComponent(documentURL)}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -37,7 +34,7 @@ export default function DocumentEdit() {
         }
       );
       if (!response.ok) {
-        setSavingError(new Error(`${response.status} on ${url}`));
+        setSavingError(new Error(`${response.status} on ${documentURL}`));
       }
     } catch (err) {
       setSavingError(err);
@@ -49,7 +46,7 @@ export default function DocumentEdit() {
     <div className="document-edit">
       <h2>
         Edit view
-        <Link to={url} className="close">
+        <Link to={documentURL} className="close">
           close
         </Link>
       </h2>

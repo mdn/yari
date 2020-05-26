@@ -5,9 +5,11 @@ import React, { useState, useEffect, useRef } from "react";
 import Sockette from "sockette";
 import { Link } from "react-router-dom";
 
+import { useDocumentURL } from "../hooks";
 import "./spy.scss";
 
-export default function Spy({ currentSlug, onDocumentUpdate }) {
+export default function Spy({ onDocumentUpdate }) {
+  const documentURL = useDocumentURL();
   // null - never connected before
   // true - connected
   // false - no longer connected
@@ -26,7 +28,7 @@ export default function Spy({ currentSlug, onDocumentUpdate }) {
       },
       onmessage: (e) => {
         const data = JSON.parse(e.data);
-        if (currentSlug === data.documentUri) {
+        if (documentURL === data.documentUri) {
           onDocumentUpdate();
         }
         if (mounted) setLastMessage(data);
@@ -44,7 +46,7 @@ export default function Spy({ currentSlug, onDocumentUpdate }) {
       mounted = false;
       wssRef.current && wssRef.current.close();
     };
-  }, [currentSlug, onDocumentUpdate]);
+  }, [documentURL, onDocumentUpdate]);
 
   if (connected === null) {
     return null;
