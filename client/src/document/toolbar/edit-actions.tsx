@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
-import "./edit-buttons.scss";
+import "./edit-actions.scss";
 
-export function EditButtons({ folder }: { folder: string }) {
+export function EditActions({ folder }: { folder: string }) {
+  const location = useLocation();
   const [opening, setOpening] = useState(false);
   const [editorOpeningError, setEditorOpeningError] = useState<Error | null>(
     null
@@ -50,9 +51,9 @@ export function EditButtons({ folder }: { folder: string }) {
   }
 
   return (
-    <div className="edit-buttons">
+    <div className="edit-actions">
       Edit{" "}
-      <Link to={window.location.pathname.replace("/docs/", "/_edit/")}>
+      <Link to={location.pathname.replace("/docs/", "/_edit/")}>
         in your <b>browser</b>
       </Link>
       {" or "}

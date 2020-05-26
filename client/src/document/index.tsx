@@ -19,7 +19,7 @@ import { DocumentTranslations } from "./languages";
 import "./index.scss";
 
 // Lazy sub-components
-const WriterToolbar = lazy(() => import("./writer-toolbar"));
+const Toolbar = lazy(() => import("./toolbar"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const documentURL = useDocumentURL();
@@ -116,7 +116,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
     <>
       {process.env.NODE_ENV === "development" && (
         <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
-          <WriterToolbar
+          <Toolbar
             doc={doc}
             onDocumentUpdate={() => {
               fetchDocument();

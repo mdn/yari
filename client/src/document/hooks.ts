@@ -1,9 +1,7 @@
 import { useParams } from "react-router-dom";
 
 export function useDocumentURL() {
-  const params = useParams();
-  const slug = params["*"];
-  const locale = params.locale;
+  const { "*": slug, locale } = useParams();
   const url = `/${locale}/docs/${slug}`;
   // If you're in local development Express will force the trailing /
   // on any URL. We can't keep that if we're going to compare the current
