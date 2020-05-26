@@ -1,7 +1,8 @@
 import React, { lazy, Suspense, useCallback, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { NoMatch } from "../routing";
+import { useDocumentURL } from "./hooks";
 import { Doc } from "./types";
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
@@ -21,9 +22,7 @@ import "./index.scss";
 const WriterToolbar = lazy(() => import("./writer-toolbar"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
-  const params = useParams();
-  const slug = params["*"];
-  const locale = params.locale;
+  const documentURL = useDocumentURL();
 
   const [doc, setDoc] = useState<Doc | null>(props.doc || null);
   const [loading, setLoading] = useState(false);
@@ -47,20 +46,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
     setLoading(false);
   }, [loadingError]);
 
-  const getCurrentDocumentUri = useCallback(() => {
-    let pathname = `/${locale}/docs/${slug}`;
-    // If you're in local development Express will force the trailing /
-    // on any URL. We can't keep that if we're going to compare the current
-    // pathname with the document's mdn_url.
-    if (pathname.endsWith("/")) {
-      pathname = pathname.substring(0, pathname.length - 1);
-    }
-    return pathname;
-  }, [slug, locale]);
-
   const fetchDocument = useCallback(async () => {
-    let url = getCurrentDocumentUri();
-    url += "/index.json";
+    const url = `${documentURL}/index.json`;
     console.log("OPENING", url);
     let response: Response;
     try {
@@ -81,7 +68,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       const data = await response.json();
       setDoc(data.doc);
     }
-  }, [getCurrentDocumentUri]);
+  }, [documentURL]);
 
   // There are 2 reasons why you'd want to call fetchDocument():
   // - The slug/locale combo has *changed*
@@ -89,12 +76,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
   useEffect(() => {
     if (
       !props.doc ||
-      getCurrentDocumentUri().toLowerCase() !== props.doc.mdn_url.toLowerCase()
+      documentURL.toLowerCase() !== props.doc.mdn_url.toLowerCase()
     ) {
       setLoading(true);
       fetchDocument();
     }
-  }, [slug, locale, props.doc, getCurrentDocumentUri, fetchDocument]);
+  }, [props.doc, documentURL, fetchDocument]);
 
   if (loading) {
     return <p>Loading...</p>;
