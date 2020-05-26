@@ -1899,7 +1899,7 @@ class Builder {
     const gitUrl = getCurretGitHubBaseURL();
     const branch = getCurrentGitBranch();
     const relativePath = path.relative(source.filepath, folder);
-    return `${gitUrl}/blob/${branch}/content/files/${relativePath}`;
+    return `${gitUrl}/blob/${branch}/content/files/${relativePath}/index.html`;
   }
 }
 
