@@ -36,7 +36,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Prebuild
+      - name: Build
         run: |
           set -a
           source .env-functional
@@ -48,3 +48,5 @@ jobs:
           yarn run prebuild
           ls -l content/_testfiles
           cat content/_all-titles.json
+
+          ./scripts/ci-functional.sh

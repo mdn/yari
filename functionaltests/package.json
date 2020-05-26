@@ -1,0 +1,17 @@
+{
+  "name": "functionaltests",
+  "version": "0.1.0",
+  "description": "All the functional tests",
+  "main": "index.js",
+  "license": "MPL-2.0",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "cheerio": "1.0.0-rc.3",
+    "jest": "26.0.1"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}

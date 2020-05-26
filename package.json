@@ -23,7 +23,8 @@
     "server",
     "ssr",
     "content",
-    "kumascript"
+    "kumascript",
+    "functionaltests"
   ],
   "devDependencies": {
     "foreman": "3.0.1",

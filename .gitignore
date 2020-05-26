@@ -37,6 +37,7 @@ content/_all-titles.json
 ci-content/
 kumascript/coverage/
 kumascript/node_modules/
+functionaltests/node_modules/
 
 # Can be removed once content lives in its own repo
 archivecontent/files
