@@ -158,6 +158,14 @@ export function Document(props /* TODO: define a TS interface for this */) {
           >
             Edit on <b>GitHub</b>
           </a>
+          {" | "}
+          <a
+            href={`https://developer.mozilla.org${doc.mdn_url}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View on <b>MDN</b>
+          </a>
           {doc.contributors && <Contributors contributors={doc.contributors} />}
         </div>
       </div>
