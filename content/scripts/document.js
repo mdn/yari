@@ -9,6 +9,7 @@ function buildPath(contentPath, slug) {
 
 const htmlPath = (folder) => path.join(folder, "index.html");
 const metaPath = (folder) => path.join(folder, "index.yaml");
+const wikiHistoryPath = (folder) => path.join(folder, "wikihistory.json");
 
 async function create(contentPath, html, meta, wikiHistory = null) {
   const folder = buildPath(contentPath, meta.slug);
@@ -20,7 +21,7 @@ async function create(contentPath, html, meta, wikiHistory = null) {
 
   if (wikiHistory) {
     await fs.promises.writeFile(
-      path.join(folder, "wikihistory.json"),
+      wikiHistoryPath(folder),
       JSON.stringify(wikiHistory, null, 2)
     );
   }
@@ -47,4 +48,16 @@ async function update(folder, html, meta) {
   }
 }
 
-module.exports = { buildPath, create, read, update };
+async function del(folder) {
+  await fs.promises.unlink(htmlPath(folder));
+  await fs.promises.unlink(metaPath(folder));
+  await fs.promises.unlink(wikiHistoryPath(folder));
+  const dirIter = await fs.promises.opendir(folder);
+  const isEmpty = !(await dirIter.read());
+  await dirIter.close();
+  if (isEmpty) {
+    await fs.promises.rmdir(folder);
+  }
+}
+
+module.exports = { buildPath, create, read, update, del };

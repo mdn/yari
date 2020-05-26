@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
+import { useDocumentURL } from "../hooks";
 import { Source } from "../types";
 
 import "./edit-buttons.scss";
 
 export function EditButtons({ source }: { source: Source }) {
+  const location = useLocation();
+  const documentURL = useDocumentURL();
+  const navigate = useNavigate();
   const [opening, setOpening] = useState(false);
   const [editorOpeningError, setEditorOpeningError] = useState<Error | null>(
     null
@@ -49,6 +53,15 @@ export function EditButtons({ source }: { source: Source }) {
       setEditorOpeningError(err);
     }
   }
+
+  async function deleteDocument() {
+    await fetch(`/_document?url=${encodeURIComponent(documentURL)}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+    navigate("/");
+  }
+
   if (!source) {
     return null;
   }
@@ -65,27 +78,26 @@ export function EditButtons({ source }: { source: Source }) {
         {" "}
         on <b>GitHub</b>
       </a>
-      {process.env.NODE_ENV === "development" && (
-        <>
-          {" or "}
-          <Link to={window.location.pathname.replace("/docs/", "/_edit/")}>
-            in your <b>browser</b>
-          </Link>
-          {" or "}
-          <button title={`Folder: ${folder}`} onClick={openInEditorHandler}>
-            in your <b>editor</b>
-          </button>
+      {" or "}
+      <Link to={location.pathname.replace("/docs/", "/_edit/")}>
+        in your <b>browser</b>
+      </Link>
+      {" or "}
+      <button title={`Folder: ${folder}`} onClick={openInEditorHandler}>
+        in your <b>editor.</b>
+      </button>
+      <button className="delete" onClick={deleteDocument}>
+        Delete document
+      </button>
+      <br />
+      {editorOpeningError ? (
+        <p className="error-message editor-opening-error">
+          <b>Error opening page in your editor!</b>
           <br />
-          {editorOpeningError ? (
-            <p className="error-message editor-opening-error">
-              <b>Error opening page in your editor!</b>
-              <br />
-              <code>{editorOpeningError.toString()}</code>
-            </p>
-          ) : (
-            opening && <small>Trying to your editor now...</small>
-          )}
-        </>
+          <code>{editorOpeningError.toString()}</code>
+        </p>
+      ) : (
+        opening && <small>Trying to your editor now...</small>
       )}
     </div>
   );
