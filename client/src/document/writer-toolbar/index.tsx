@@ -16,7 +16,7 @@ export default function WriterToolbar({
   return (
     <div className="writer-toolbar">
       <div className="writer-toolbar-first-row">
-        <EditButtons source={doc.source} />
+        <EditButtons folder={doc.source.folder} />
         <Spy currentSlug={doc.mdn_url} onDocumentUpdate={onDocumentUpdate} />
       </div>
       <ToggleDocumentFlaws flaws={doc.flaws} />

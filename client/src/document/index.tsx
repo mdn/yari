@@ -122,6 +122,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
       slug: doc.translation_of,
     });
   }
+
+  const { github_url, folder } = doc.source;
+
   return (
     <>
       {process.env.NODE_ENV === "development" && (
@@ -147,6 +150,14 @@ export function Document(props /* TODO: define a TS interface for this */) {
         <div className="content">
           <RenderDocumentBody doc={doc} />
           <hr />
+          <a
+            href={github_url}
+            title={`Folder: ${folder}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Edit on <b>GitHub</b>
+          </a>
           {doc.contributors && <Contributors contributors={doc.contributors} />}
         </div>
       </div>
