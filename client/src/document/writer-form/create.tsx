@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import DocumentForm, { DocumentData } from "./index";
 
 export default function DocumentCreate() {
-  const { locale, ["*"]: slug } = useParams();
+  const { locale, "*": slug } = useParams();
   const navigate = useNavigate();
   const [savingError, setSavingError] = useState<Error | null>(null);
 
@@ -29,7 +29,7 @@ export default function DocumentCreate() {
   useEffect(() => {
     // remove slug from URL, as it might be changed in the form
     navigate(`/${locale}/_create`);
-  }, [locale]);
+  }, [locale, navigate]);
 
   return (
     <DocumentForm
