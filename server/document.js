@@ -1,12 +1,12 @@
 const path = require("path");
 
-const promiseRouter = require("express-promise-router");
+const express = require("express");
 
 const Document = require("content/scripts/document");
 
 const { getOrCreateBuilder, normalizeContentPath } = require("./utils");
 
-const router = promiseRouter();
+const router = express();
 
 function withDocFolder(req, res, next) {
   if (!req.query.url) {
@@ -21,26 +21,26 @@ function withDocFolder(req, res, next) {
   next();
 }
 
-router.post("/", async (req, res) => {
+router.post("/", (req, res) => {
   const { locale, html, meta } = req.body;
   const contentPath = path.join(
     "..",
     process.env.BUILD_ROOT,
     locale.toLowerCase()
   );
-  await Document.create(contentPath, html, meta);
+  Document.create(contentPath, html, meta);
   getOrCreateBuilder().ensureAllTitles();
   res.sendStatus(200);
 });
 
-router.get("/", withDocFolder, async (req, res) => {
-  res.status(200).json(await Document.read(req.folder));
+router.get("/", withDocFolder, (req, res) => {
+  res.status(200).json(Document.read(req.folder));
 });
 
-router.put("/", withDocFolder, async (req, res) => {
+router.put("/", withDocFolder, (req, res) => {
   const { html, meta } = req.body;
   if (meta.title && html) {
-    await Document.update(req.folder, html.trim() + "\n", {
+    Document.update(req.folder, html.trim() + "\n", {
       title: meta.title.trim(),
       summary: meta.summary.trim(),
     });
@@ -48,8 +48,8 @@ router.put("/", withDocFolder, async (req, res) => {
   res.sendStatus(200);
 });
 
-router.delete("/", withDocFolder, async (req, res) => {
-  await Document.del(req.folder);
+router.delete("/", withDocFolder, (req, res) => {
+  Document.del(req.folder);
   res.sendStatus(200);
 });
 

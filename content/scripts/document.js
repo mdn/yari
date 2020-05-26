@@ -11,31 +11,31 @@ const htmlPath = (folder) => path.join(folder, "index.html");
 const metaPath = (folder) => path.join(folder, "index.yaml");
 const wikiHistoryPath = (folder) => path.join(folder, "wikihistory.json");
 
-async function create(contentPath, html, meta, wikiHistory = null) {
+function create(contentPath, html, meta, wikiHistory = null) {
   const folder = buildPath(contentPath, meta.slug);
 
-  await fs.promises.mkdir(folder, { recursive: true });
+  fs.mkdirSync(folder, { recursive: true });
 
-  await fs.promises.writeFile(htmlPath(folder), html);
-  await fs.promises.writeFile(metaPath(folder), yaml.safeDump(meta));
+  fs.writeFileSync(htmlPath(folder), html);
+  fs.writeFileSync(metaPath(folder), yaml.safeDump(meta));
 
   if (wikiHistory) {
-    await fs.promises.writeFile(
+    fs.writeFileSync(
       wikiHistoryPath(folder),
       JSON.stringify(wikiHistory, null, 2)
     );
   }
 }
 
-const read = async (folder) => ({
-  html: await fs.promises.readFile(htmlPath(folder), "utf8"),
-  meta: await yaml.safeLoad(await fs.promises.readFile(metaPath(folder))),
+const read = (folder) => ({
+  html: fs.readFileSync(htmlPath(folder), "utf8"),
+  meta: yaml.safeLoad(fs.readFileSync(metaPath(folder))),
 });
 
-async function update(folder, html, meta) {
-  const document = await read(folder);
+function update(folder, html, meta) {
+  const document = read(folder);
   if (document.html !== html) {
-    await fs.promises.writeFile(htmlPath(folder), html);
+    fs.writeFileSync(htmlPath(folder), html);
   }
   if (
     document.meta.title !== meta.title ||
@@ -44,19 +44,19 @@ async function update(folder, html, meta) {
     const newMeta = { ...document.meta };
     newMeta.title = meta.title;
     newMeta.summary = meta.summary;
-    await fs.promises.writeFile(metaPath(folder), yaml.safeDump(newMeta));
+    fs.writeFileSync(metaPath(folder), yaml.safeDump(newMeta));
   }
 }
 
-async function del(folder) {
-  await fs.promises.unlink(htmlPath(folder));
-  await fs.promises.unlink(metaPath(folder));
-  await fs.promises.unlink(wikiHistoryPath(folder));
-  const dirIter = await fs.promises.opendir(folder);
-  const isEmpty = !(await dirIter.read());
-  await dirIter.close();
+function del(folder) {
+  fs.unlinkSync(htmlPath(folder));
+  fs.unlinkSync(metaPath(folder));
+  fs.unlinkSync(wikiHistoryPath(folder));
+  const dirIter = fs.opendirSync(folder);
+  const isEmpty = !dirIter.readSync();
+  dirIter.closeSync();
   if (isEmpty) {
-    await fs.promises.rmdir(folder);
+    fs.rmdirSync(folder);
   }
 }
 
