@@ -109,6 +109,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
       slug: doc.translation_of,
     });
   }
+
+  const { github_url, folder } = doc.source;
+
   return (
     <>
       {process.env.NODE_ENV === "development" && (
@@ -134,6 +137,22 @@ export function Document(props /* TODO: define a TS interface for this */) {
         <div className="content">
           <RenderDocumentBody doc={doc} />
           <hr />
+          <a
+            href={github_url}
+            title={`Folder: ${folder}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Edit on <b>GitHub</b>
+          </a>
+          {" | "}
+          <a
+            href={`https://developer.mozilla.org${doc.mdn_url}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View on <b>MDN</b>
+          </a>
           {doc.contributors && <Contributors contributors={doc.contributors} />}
         </div>
       </div>

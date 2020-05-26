@@ -19,7 +19,7 @@ export default function WriterToolbar({
     <div className="writer-toolbar">
       <div className="writer-toolbar-first-row">
         <Link to={`/en-US/_create/${params["*"]}`}>Create new document</Link>
-        <EditButtons source={doc.source} />
+        <EditButtons folder={doc.source.folder} />
         <Spy onDocumentUpdate={onDocumentUpdate} />
       </div>
       <ToggleDocumentFlaws flaws={doc.flaws} />

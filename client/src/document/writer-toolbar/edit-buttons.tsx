@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { useDocumentURL } from "../hooks";
-import { Source } from "../types";
 
 import "./edit-buttons.scss";
 
-export function EditButtons({ source }: { source: Source }) {
+export function EditButtons({ folder }: { folder: string }) {
   const location = useLocation();
   const documentURL = useDocumentURL();
   const navigate = useNavigate();
@@ -28,8 +27,6 @@ export function EditButtons({ source }: { source: Source }) {
       }
     };
   }, [opening]);
-
-  const { github_url, folder } = source;
 
   async function openInEditorHandler(event: React.MouseEvent) {
     event.preventDefault();
@@ -62,29 +59,19 @@ export function EditButtons({ source }: { source: Source }) {
     navigate("/");
   }
 
-  if (!source) {
+  if (!folder) {
     return null;
   }
 
   return (
     <div className="edit-buttons">
-      Edit
-      <a
-        href={github_url}
-        title={`Folder: ${folder}`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {" "}
-        on <b>GitHub</b>
-      </a>
-      {" or "}
+      Edit{" "}
       <Link to={location.pathname.replace("/docs/", "/_edit/")}>
         in your <b>browser</b>
       </Link>
       {" or "}
       <button title={`Folder: ${folder}`} onClick={openInEditorHandler}>
-        in your <b>editor.</b>
+        in your <b>editor</b>.
       </button>
       <button className="delete" onClick={deleteDocument}>
         Delete document
