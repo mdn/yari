@@ -20,7 +20,7 @@ export default function DocumentCreate() {
         );
         return;
       }
-      navigate(`/${locale}/docs/${data.meta.slug}`);
+      navigate(`/${locale}/docs/${data.meta.slug}`, { replace: true });
     } catch (err) {
       setSavingError(err);
     }
