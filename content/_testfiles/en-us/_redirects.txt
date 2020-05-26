@@ -1,0 +1,2 @@
+# FROM-URL	TO-URL
+/en-US/docs/Web/Fuu	/en-US/docs/Web/Foo

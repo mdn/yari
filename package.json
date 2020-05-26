@@ -6,7 +6,6 @@
   "author": "MDN Web Docs",
   "license": "MPL-2.0",
   "scripts": {
-    "#postinstall": "cd stumptown && npm install && git checkout package-lock.json",
     "prettier-check": "prettier --check '**/*.{js,ts,tsx,json,scss,html}'",
     "prettier-format": "prettier --write '**/*.{js,ts,tsx,json,scss,html}'",
     "test": "yarn prettier-check && yarn workspace client test",
@@ -15,7 +14,8 @@
     "build:ssr": "yarn workspace ssr build",
     "clean": "rm -fr client/build && rm -fr ssr/dist && rm -fr content/_all-titles.json",
     "prebuild": "yarn build:client && yarn build:ssr && node content build --ensure-titles",
-    "start": "yarn run prebuild && nf start"
+    "start": "yarn run prebuild && nf start",
+    "functionalstart": "set -a && source .env-functional && yarn run prebuild && nf -e .env-functional start"
   },
   "private": true,
   "workspaces": [

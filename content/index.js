@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const cli = require("caporal");
+const chalk = require("chalk");
 
 const runImporter = require("./scripts/importer");
 const { runBuild } = require("./scripts/build");
@@ -192,6 +193,12 @@ cli
       });
     }
     if (options.root) {
+      if (options.root !== "content/files") {
+        // XXX This isn't working on Windows!
+        logger.warn(
+          chalk.yellow(`Note! root is not the default! (${options.root})`)
+        );
+      }
       sources.add(options.root, {
         watch: true,
       });

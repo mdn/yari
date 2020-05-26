@@ -37,6 +37,8 @@ const { slugToFoldername } = require("./utils");
 
 const kumascript = require("kumascript");
 
+console.log("INSIDE BUILDER:", process.env.BUILD_ROOT);
+
 const ALL_TITLES_JSON_FILEPATH = path.join(
   path.dirname(__dirname),
   "_all-titles.json"

@@ -17,6 +17,7 @@ const {
   FLAW_LEVELS,
 } = require("content/scripts/constants.js");
 
+console.log("INSIDE SERVER:", process.env.BUILD_ROOT);
 const app = express();
 app.use(express.json());
 
@@ -213,6 +214,10 @@ function getOrCreateBuilder(options) {
     const sources = new Sources();
     // The server doesn't have command line arguments like the content CLI
     // does so we need to entirely rely on environment variables.
+    console.log({
+      BUILD_ROOT: process.env.BUILD_ROOT,
+      normalized: normalizeContentPath(process.env.BUILD_ROOT),
+    });
     if (process.env.BUILD_ROOT) {
       sources.add(normalizeContentPath(process.env.BUILD_ROOT));
     }
