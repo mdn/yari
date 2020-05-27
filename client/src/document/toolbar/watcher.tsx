@@ -5,9 +5,12 @@ import React, { useState, useEffect, useRef } from "react";
 import Sockette from "sockette";
 import { Link } from "react-router-dom";
 
-import "./spy.css";
+import { useDocumentURL } from "../hooks";
 
-export default function DocumentSpy({ onMessage }) {
+import "./watcher.scss";
+
+export default function Watcher({ onDocumentUpdate }) {
+  const documentURL = useDocumentURL();
   // null - never connected before
   // true - connected
   // false - no longer connected
@@ -26,7 +29,9 @@ export default function DocumentSpy({ onMessage }) {
       },
       onmessage: (e) => {
         const data = JSON.parse(e.data);
-        onMessage(data);
+        if (documentURL === data.documentURL) {
+          onDocumentUpdate();
+        }
         if (mounted) setLastMessage(data);
       },
       onreconnect: (e) => {},
@@ -42,7 +47,7 @@ export default function DocumentSpy({ onMessage }) {
       mounted = false;
       wssRef.current && wssRef.current.close();
     };
-  }, [onMessage]);
+  }, [documentURL, onDocumentUpdate]);
 
   if (connected === null) {
     return null;
@@ -50,14 +55,17 @@ export default function DocumentSpy({ onMessage }) {
 
   return (
     <div
-      id="document-spy"
-      className={connected ? "ws-connected" : "ws-not-connected"}
+      className={`document-watcher ${
+        connected ? "ws-connected" : "ws-not-connected"
+      }`}
     >
       {websocketError ? (
         <span title={websocketError.toString()}>WebSocket error!</span>
       ) : (
         <span>
-          Document Spy {connected ? "connected 👀" : "not connected 👎🏽"}
+          {connected
+            ? "Watching file system for changes 👀"
+            : "Document watcher is not connected 👎🏽"}
         </span>
       )}{" "}
       {lastMessage && <ShowLastMessage {...lastMessage} />}
@@ -65,20 +73,24 @@ export default function DocumentSpy({ onMessage }) {
   );
 }
 
-function ShowLastMessage({ hasEDITOR, documentUri, changedFile }: any) {
+function ShowLastMessage({ hasEDITOR, documentURL, changedFile }: any) {
   function clickToOpenHandler(event) {
     event.preventDefault();
     console.log(`Going to try to open ${changedFile.path} in your editor`);
     fetch(`/_open?filepath=${changedFile.path}`);
   }
   return (
-    <span>
-      Last changed URL <Link to={documentUri}>{documentUri}</Link>{" "}
+    <div>
+      Last changed URL <Link to={documentURL}>{documentURL}</Link>{" "}
       {hasEDITOR && (
-        <Link to={documentUri} onClick={clickToOpenHandler}>
-          <b>Open in your editor</b>
-        </Link>
+        <>
+          (
+          <Link to={documentURL} onClick={clickToOpenHandler}>
+            <b>Open in your editor</b>
+          </Link>
+          )
+        </>
       )}
-    </span>
+    </div>
   );
 }
