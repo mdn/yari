@@ -192,7 +192,7 @@ function triggerTouch(filepath, document, root) {
     name: path.relative(root, filepath),
   };
   const data = {
-    documentUri: document.mdn_url,
+    documentURL: document.mdn_url,
     changedFile,
     hasEDITOR: Boolean(process.env.EDITOR),
   };

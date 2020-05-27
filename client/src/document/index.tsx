@@ -1,17 +1,9 @@
-import React, {
-  lazy,
-  useReducer,
-  Suspense,
-  useEffect,
-  useState,
-  useCallback,
-  useRef,
-} from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import React, { lazy, Suspense, useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import { NoMatch } from "../routing";
+import { useDocumentURL } from "./hooks";
 import { Doc } from "./types";
-
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
 import { InteractiveExample } from "./ingredients/interactive-example";
@@ -20,24 +12,17 @@ import { Examples } from "./ingredients/examples";
 import { LinkList, LinkLists } from "./ingredients/link-lists";
 import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
-
 // Misc
-import { humanizeFlawName } from "../flaw-utils";
-
 // Sub-components
 import { DocumentTranslations } from "./languages";
-import { EditThisPage } from "./editthispage";
 
 import "./index.scss";
 
 // Lazy sub-components
-const DocumentSpy = lazy(() => import("./spy"));
-const DocumentFlaws = lazy(() => import("./flaws"));
+const Toolbar = lazy(() => import("./toolbar"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
-  const params = useParams();
-  const slug = params["*"];
-  const locale = params.locale;
+  const documentURL = useDocumentURL();
 
   const [doc, setDoc] = useState<Doc | null>(props.doc || null);
   const [loading, setLoading] = useState(false);
@@ -61,20 +46,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
     setLoading(false);
   }, [loadingError]);
 
-  const getCurrentDocumentUri = useCallback(() => {
-    let pathname = `/${locale}/docs/${slug}`;
-    // If you're in local development Express will force the trailing /
-    // on any URL. We can't keep that if we're going to compare the current
-    // pathname with the document's mdn_url.
-    if (pathname.endsWith("/")) {
-      pathname = pathname.substring(0, pathname.length - 1);
-    }
-    return pathname;
-  }, [slug, locale]);
-
   const fetchDocument = useCallback(async () => {
-    let url = getCurrentDocumentUri();
-    url += "/index.json";
+    const url = `${documentURL}/index.json`;
     console.log("OPENING", url);
     let response: Response;
     try {
@@ -95,7 +68,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       const data = await response.json();
       setDoc(data.doc);
     }
-  }, [getCurrentDocumentUri]);
+  }, [documentURL]);
 
   // There are 2 reasons why you'd want to call fetchDocument():
   // - The slug/locale combo has *changed*
@@ -103,19 +76,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
   useEffect(() => {
     if (
       !props.doc ||
-      getCurrentDocumentUri().toLowerCase() !== props.doc.mdn_url.toLowerCase()
+      documentURL.toLowerCase() !== props.doc.mdn_url.toLowerCase()
     ) {
       setLoading(true);
       fetchDocument();
     }
-  }, [slug, locale, props.doc, getCurrentDocumentUri, fetchDocument]);
-
-  function onMessage(data) {
-    if (data.documentUri === getCurrentDocumentUri()) {
-      // The recently edited document is the one we're currently looking at!
-      fetchDocument();
-    }
-  }
+  }, [props.doc, documentURL, fetchDocument]);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -143,8 +109,21 @@ export function Document(props /* TODO: define a TS interface for this */) {
       slug: doc.translation_of,
     });
   }
+
+  const { github_url, folder } = doc.source;
+
   return (
     <>
+      {process.env.NODE_ENV === "development" && (
+        <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
+          <Toolbar
+            doc={doc}
+            onDocumentUpdate={() => {
+              fetchDocument();
+            }}
+          />
+        </Suspense>
+      )}
       <h1 className="page-title">{doc.title}</h1>
       {translations && !!translations.length && (
         <DocumentTranslations translations={translations} />
@@ -158,23 +137,25 @@ export function Document(props /* TODO: define a TS interface for this */) {
         <div className="content">
           <RenderDocumentBody doc={doc} />
           <hr />
-          {process.env.NODE_ENV === "development" && (
-            <ToggleDocumentFlaws doc={doc} />
-          )}
-          <EditThisPage source={doc.source} />
+          <a
+            href={github_url}
+            title={`Folder: ${folder}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Edit on <b>GitHub</b>
+          </a>
+          {" | "}
+          <a
+            href={`https://developer.mozilla.org${doc.mdn_url}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View on <b>MDN</b>
+          </a>
           {doc.contributors && <Contributors contributors={doc.contributors} />}
         </div>
       </div>
-
-      {process.env.NODE_ENV === "development" && (
-        <Suspense
-          fallback={
-            <p className="loading-document-spy">Loading document spy</p>
-          }
-        >
-          <DocumentSpy onMessage={onMessage} />
-        </Suspense>
-      )}
     </>
   );
 }
@@ -380,78 +361,6 @@ function LoadingError({ error }) {
       <p>
         <a href=".">Try reloading the page</a>
       </p>
-    </div>
-  );
-}
-
-interface FlatFlaw {
-  name: string;
-  flaws: string[];
-  count: number;
-}
-
-const FLAWS_HASH = "#_flaws";
-function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
-  const { flaws } = doc;
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [show, toggle] = useReducer((v) => !v, location.hash === FLAWS_HASH);
-  const rootElement = useRef<HTMLDivElement>(null);
-  const isInitialRender = useRef(true);
-
-  useEffect(() => {
-    if (isInitialRender.current && show && rootElement.current) {
-      rootElement.current.scrollIntoView({ behavior: "smooth" });
-    }
-    isInitialRender.current = false;
-  }, [show]);
-
-  useEffect(() => {
-    const hasShowHash = window.location.hash === FLAWS_HASH;
-    if (show && !hasShowHash) {
-      navigate(location.pathname + location.search + FLAWS_HASH);
-    } else if (!show && hasShowHash) {
-      navigate(location.pathname + location.search);
-    }
-  }, [location, navigate, show]);
-
-  const flatFlaws: FlatFlaw[] = Object.entries(flaws)
-    .map(([name, actualFlaws]) => ({
-      name,
-      flaws: actualFlaws,
-      count: actualFlaws.length,
-    }))
-    .sort((a, b) => b.count - a.count);
-
-  return (
-    <div id={FLAWS_HASH.slice(1)} className="toggle-flaws" ref={rootElement}>
-      {flatFlaws.length > 0 ? (
-        <button type="submit" onClick={toggle}>
-          {show
-            ? "Hide flaws"
-            : `Show flaws (${flatFlaws.map((flaw) => flaw.count).join(" + ")})`}
-        </button>
-      ) : (
-        <p className="no-flaws">
-          No known flaws at the moment
-          <span role="img" aria-label="yay!">
-            🍾
-          </span>
-        </p>
-      )}
-
-      {show ? (
-        <Suspense fallback={<div>Loading document flaws...</div>}>
-          <DocumentFlaws flaws={flatFlaws} />
-        </Suspense>
-      ) : (
-        <small>
-          {/* a one-liner about all the flaws */}
-          {flatFlaws
-            .map((flaw) => `${humanizeFlawName(flaw.name)}: ${flaw.count}`)
-            .join(" + ")}
-        </small>
-      )}
     </div>
   );
 }

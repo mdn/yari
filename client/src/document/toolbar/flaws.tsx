@@ -1,7 +1,78 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useReducer, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import useSWR from "swr";
-import { humanizeFlawName } from "../flaw-utils";
+import { humanizeFlawName } from "../../flaw-utils";
+import { Doc } from "../types";
 import "./flaws.scss";
+
+interface FlatFlaw {
+  name: string;
+  flaws: string[];
+  count: number;
+}
+
+const FLAWS_HASH = "#_flaws";
+export function ToggleDocumentFlaws({ flaws }: Pick<Doc, "flaws">) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [show, toggle] = useReducer((v) => !v, location.hash === FLAWS_HASH);
+  const rootElement = useRef<HTMLDivElement>(null);
+  const isInitialRender = useRef(true);
+
+  useEffect(() => {
+    if (isInitialRender.current && show && rootElement.current) {
+      rootElement.current.scrollIntoView({ behavior: "smooth" });
+    }
+    isInitialRender.current = false;
+  }, [show]);
+
+  useEffect(() => {
+    const hasShowHash = window.location.hash === FLAWS_HASH;
+    if (show && !hasShowHash) {
+      navigate(location.pathname + location.search + FLAWS_HASH);
+    } else if (!show && hasShowHash) {
+      navigate(location.pathname + location.search);
+    }
+  }, [location, navigate, show]);
+
+  const flatFlaws: FlatFlaw[] = Object.entries(flaws)
+    .map(([name, actualFlaws]) => ({
+      name,
+      flaws: actualFlaws,
+      count: actualFlaws.length,
+    }))
+    .sort((a, b) => b.count - a.count);
+
+  return (
+    <div id={FLAWS_HASH.slice(1)} ref={rootElement}>
+      {flatFlaws.length > 0 ? (
+        <button type="submit" onClick={toggle}>
+          {show
+            ? "Hide flaws"
+            : `Show flaws (${flatFlaws.map((flaw) => flaw.count).join(" + ")})`}
+        </button>
+      ) : (
+        <p>
+          No known flaws at the moment
+          <span role="img" aria-label="yay!">
+            🍾
+          </span>
+        </p>
+      )}
+
+      {show ? (
+        <Flaws flaws={flatFlaws} />
+      ) : (
+        <small>
+          {/* a one-liner about all the flaws */}
+          {flatFlaws
+            .map((flaw) => `${humanizeFlawName(flaw.name)}: ${flaw.count}`)
+            .join(" + ")}
+        </small>
+      )}
+    </div>
+  );
+}
 
 interface FlawCheck {
   count: number;
@@ -32,8 +103,6 @@ function Flaws({ flaws }: { flaws: FlawCheck[] }) {
     </div>
   );
 }
-
-export default Flaws;
 
 function BrokenLinks({ urls }: { urls: string[] }) {
   // urls has repeats so turn it into a count for each
