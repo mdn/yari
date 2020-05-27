@@ -3,9 +3,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { useDocumentURL } from "../hooks";
 
-import "./edit-buttons.scss";
+import "./edit-actions.scss";
 
-export function EditButtons({ folder }: { folder: string }) {
+export function EditActions({ folder }: { folder: string }) {
   const location = useLocation();
   const documentURL = useDocumentURL();
   const navigate = useNavigate();
@@ -64,7 +64,7 @@ export function EditButtons({ folder }: { folder: string }) {
   }
 
   return (
-    <div className="edit-buttons">
+    <div className="edit-actions">
       Edit{" "}
       <Link to={location.pathname.replace("/docs/", "/_edit/")}>
         in your <b>browser</b>
