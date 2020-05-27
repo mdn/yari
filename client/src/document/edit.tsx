@@ -66,7 +66,7 @@ function EditForm({ data, url }) {
     setAutoSaveEnabled(!autosaveEnabled);
   }
 
-  async function putDocument() {
+  async function putDocument({ title, summary, html }) {
     if (!autosaveEnabled) setLoading(true);
     try {
       const response = await fetch(
@@ -90,7 +90,7 @@ function EditForm({ data, url }) {
 
   useEffect(() => {
     if (autosaveEnabled) {
-      putDocumentDebounced();
+      putDocumentDebounced({ title, summary, html });
     }
   }, [autosaveEnabled, putDocumentDebounced, title, summary, html]);
 
@@ -98,7 +98,7 @@ function EditForm({ data, url }) {
     <form
       onSubmit={function (event) {
         event.preventDefault();
-        putDocument();
+        putDocument({ title, summary, html });
       }}
     >
       <p>

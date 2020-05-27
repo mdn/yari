@@ -22,7 +22,7 @@ function create(contentPath, html, metadata, wikiHistory = null) {
 }
 
 function saveFile(filePath, html, metadata) {
-  const combined = `---\n${yaml.safeDump(metadata)}\n---\n${html.trim()}\n`;
+  const combined = `---\n${yaml.safeDump(metadata)}---\n${html.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 
