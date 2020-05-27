@@ -37,24 +37,15 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install all yarn packages
-        run: yarn --frozen-lockfile
+        run: |
+          ./testing/scripts/yarn-install.sh
+          ./testing/scripts/yarn-lockfile-check.sh
 
       - name: Lint checking
-        run: yarn prettier-check
+        run: ./testing/scripts/lint-check.sh
 
       - name: Unit testing
-        run: yarn workspace client run test
+        run: ./testing/scripts/unit-test.sh
 
-      - name: Functional Build
-        run: |
-          set -a
-          source testing/.env
-          echo "$BUILD_ROOT"
-          echo "$BUILD_ARCHIVE_ROOT"
-          echo "$BUILD_ALLOW_STALE_TITLES"
-          echo "$BUILD_POPULARITIES_FILEPATH"
-
-          yarn run prebuild
-
-          node content build
-          ./scripts/ci-functional.sh
+      - name: Functional testing
+        run: ./testing/scripts/functional-test.sh
