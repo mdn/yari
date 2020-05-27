@@ -6,7 +6,7 @@ import "./flaws.scss";
 interface FlawCheck {
   count: number;
   name: string;
-  flaws: any[];
+  flaws: any[]; // XXX fixme!
 }
 
 function Flaws({ flaws }: { flaws: FlawCheck[] }) {
