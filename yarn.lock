@@ -1089,10 +1089,10 @@
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-10.1.0.tgz#f0950bba18819512d42f7197e56c518aa491cf18"
   integrity sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
 
-"@fast-csv/format@4.2.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@fast-csv/format/-/format-4.2.0.tgz#4350ef1bf965f3b3e83f2419aa4f704438c082bc"
-  integrity sha512-QGIfmSLYMit2g7aKohc8Bt1Ww86spWnAHBnr66W0qab3SasbrOBWCqNkyjztQQ7ECt5ELXqVu5gj5SvFTHSPmw==
+"@fast-csv/format@4.3.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@fast-csv/format/-/format-4.3.0.tgz#5ca8960db86133bc0616fc2913bfee31fc0b59a1"
+  integrity sha512-ypK8qfGcn1P0M3RUAeabtpkBSjP/u0tfeEuQejf9P30iQIC0TQTAEYC5sdnxJRkF+Iz3+c/VD5MAYemSE3HVLw==
   dependencies:
     lodash.escaperegexp "^4.1.2"
     lodash.isboolean "^3.0.3"
@@ -1100,10 +1100,10 @@
     lodash.isfunction "^3.0.9"
     lodash.isnil "^4.0.0"
 
-"@fast-csv/parse@4.2.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@fast-csv/parse/-/parse-4.2.0.tgz#fccd36abcd31d328991ffd434eca742e6b006dcc"
-  integrity sha512-bdLBb8Qg/jqQNyZYcoNjX5EOvyzYXwAm/5nQOCLTO3h3v6G2nuQFlrDzuoNKSXzCHZDHtvKHHzVVi0EfTD/bZA==
+"@fast-csv/parse@4.3.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@fast-csv/parse/-/parse-4.3.0.tgz#3136c2c7cbe1933bd62f4f8dd3fb77eeaa11cd44"
+  integrity sha512-uY4BARoVJtywTb4yI5b2vs7P+YGhwicKIIp0jAWSXhP8a5RuMwSVULkmqqj7pcICZmAUlfJytRjJFHXt39sRXw==
   dependencies:
     lodash.escaperegexp "^4.1.2"
     lodash.groupby "^4.6.0"
@@ -5141,13 +5141,13 @@ eyes@0.1.x:
   resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
   integrity sha1-Ys8SAjTGg3hdkCNIqADvPgzCC8A=
 
-fast-csv@4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/fast-csv/-/fast-csv-4.2.0.tgz#bdfabfd96057c67b6f1b1015c94306c196f96fd6"
-  integrity sha512-Ylnwd+bb09+dB3EzMq4uCuHE9dysc8BmaVZeWQROtRDSXmej6k5WssVCS1Z7aqG4EOn4tCoZs9rLvGtCnMHXMw==
+fast-csv@4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/fast-csv/-/fast-csv-4.3.0.tgz#22a86dda71a18beb5a8dfbe1da0d458798ceb1ee"
+  integrity sha512-o4ckWOx03GhZ+s2+u1ZggMe98PTNt34vYs4IJEnKRcactOlZImCGAx48v/6afXh8lyX5WvnvppuvHQMtDc8gxw==
   dependencies:
-    "@fast-csv/format" "4.2.0"
-    "@fast-csv/parse" "4.2.0"
+    "@fast-csv/format" "4.3.0"
+    "@fast-csv/parse" "4.3.0"
     "@types/node" "^14.0.1"
 
 fast-deep-equal@2.0.1:
@@ -7384,10 +7384,10 @@ js-tokens@^3.0.2:
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
   integrity sha1-mGbfOVECEw449/mWvOtlRDIJwls=
 
-js-yaml@3.13.1, js-yaml@>=3.13.1, js-yaml@^3.13.1:
-  version "3.13.1"
-  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.13.1.tgz#aff151b30bfdfa8e49e05da22e7415e9dfa37847"
-  integrity sha512-YfbcO7jXDdyj0DGxYVSlSeQNHbD7XPWvrVWeVUujrQEoZzWJIRrCPoyk6kL6IAjAG2IolMK4T0hNUe0HOUs5Jw==
+js-yaml@3.14.0, js-yaml@>=3.13.1, js-yaml@^3.13.1:
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.14.0.tgz#a7a34170f26a21bb162424d8adacb4113a69e482"
+  integrity sha512-/4IbIeHcD9VMHFqDR/gQ7EdZdLimOvW2DdcxFjdyyZ9NsbS+ccrXqVWDtab/lRl5AlUqmpBx8EhPaWR+OtY17A==
   dependencies:
     argparse "^1.0.7"
     esprima "^4.0.0"
@@ -8042,10 +8042,10 @@ mdn-data@2.0.4:
   resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.4.tgz#699b3c38ac6f1d728091a64650b65d388502fd5b"
   integrity sha512-iV3XNKw06j5Q7mi6h+9vbx23Tv7JkjEVgKHW4pimwyDGWm0OIQntJJ+u1C6mg6mK1EaTv42XQ7w76yuzH7M2cA==
 
-mdn-data@2.0.8:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.8.tgz#b5b1b8b9dc76abb5261bf2b8c495a0b4565af5c6"
-  integrity sha512-2gcTclvIaw9K/D3+HeX2YrSmzJYvOL7CJCGTTrHlnzQ0N4KQkB/sgRwHArP7JzlL0feUwCZQ1C0yCO/us/dSdw==
+mdn-data@2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.9.tgz#7bf9378aff611b4e853e86edf5f3864568f45133"
+  integrity sha512-VMhGyDiXLxVp5XuGdtf04fIEZtcvLvlB+kAIbxLAjfAYgvGTIeLNxa9ZpIriHWB1SkG7q02hrnTt4yzZH+7gyA==
 
 mdn-data@~1.1.0:
   version "1.1.4"
@@ -12065,10 +12065,10 @@ svgo@^1.0.0, svgo@^1.2.2:
     unquote "~1.1.1"
     util.promisify "~1.0.0"
 
-swr@0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/swr/-/swr-0.2.1.tgz#159abba3b746bf004d22a77e5e58432185e98929"
-  integrity sha512-ucfcwqPUqABvCKFQnk6DrX2/zmWYXogPB0GaIpwTspJd3kXiYpya72aupcTH+qqq52ri5c4o8hY3+bYjbawIcA==
+swr@0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-0.2.2.tgz#6e1b3e5c0e545c4fdb36ae3aa38cd94d0f9a88b7"
+  integrity sha512-D/z+PTUchZhoUA0tNC8TNJivf7Hc61WPxbUdXPi+VxRloddWYNP1ZicaEgyAph42ZnKl1L7twcZr4q6d0UMXcg==
   dependencies:
     fast-deep-equal "2.0.1"
 
@@ -12346,10 +12346,10 @@ truncate-utf8-bytes@^1.0.0:
   dependencies:
     utf8-byte-length "^1.0.1"
 
-ts-loader@^7.0.4:
-  version "7.0.4"
-  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-7.0.4.tgz#5d9b95227de5afb91fdd9668f8920eb193cfe0cc"
-  integrity sha512-5du6OQHl+4ZjO4crEyoYUyWSrmmo7bAO+inkaILZ68mvahqrfoa4nn0DRmpQ4ruT4l+cuJCgF0xD7SBIyLeeow==
+ts-loader@^7.0.5:
+  version "7.0.5"
+  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-7.0.5.tgz#789338fb01cb5dc0a33c54e50558b34a73c9c4c5"
+  integrity sha512-zXypEIT6k3oTc+OZNx/cqElrsbBtYqDknf48OZos0NQ3RTt045fBIU8RRSu+suObBzYB355aIPGOe/3kj9h7Ig==
   dependencies:
     chalk "^2.3.0"
     enhanced-resolve "^4.0.0"

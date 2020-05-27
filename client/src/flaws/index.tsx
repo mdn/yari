@@ -63,6 +63,7 @@ interface Filters {
   page: number;
   sort_by: string;
   sort_reverse: boolean;
+  search_flaws: string[];
 }
 
 const defaultFilters: Filters = Object.freeze({
@@ -73,6 +74,7 @@ const defaultFilters: Filters = Object.freeze({
   page: 1,
   sort_by: "popularity",
   sort_reverse: false,
+  search_flaws: [],
 });
 
 function withoutDefaultFilters(filters: Filters): Partial<Filters> {
@@ -129,7 +131,7 @@ function useFiltersURL(): [Filters, (filters: Partial<Filters>) => void] {
     [filters, setSearchParams]
   );
 
-  const mustBeArrayKeys = ["flaws"];
+  const mustBeArrayKeys = ["flaws", "search_flaws"];
   for (const key of mustBeArrayKeys) {
     if (filters[key] && !Array.isArray(filters[key])) {
       filters[key] = [filters[key]];
@@ -268,15 +270,53 @@ function BuildTimes({ times }: { times: Times }) {
   );
 }
 
+interface SearchFlawRow {
+  flaw: string;
+  search: string;
+}
+
+function serializeSearchFlaws(rows: SearchFlawRow[]) {
+  return rows.map((row) => `${row.flaw}:${row.search}`);
+}
+
+function deserializeSearchFlaws(list: string[]) {
+  const rows: SearchFlawRow[] = [];
+  for (const row of list) {
+    const [flaw, search] = row.split(":", 2);
+    rows.push({ flaw, search });
+  }
+  return rows;
+}
+
 function FilterControls({ flawLevels }: { flawLevels: FlawLevel[] }) {
   const [initialFilters, updateFiltersURL] = useFiltersURL();
   const [filters, setFilters] = useState(initialFilters);
+  const [searchFlawsRows, setSearchFlawsRows] = useState<SearchFlawRow[]>(
+    deserializeSearchFlaws(initialFilters.search_flaws)
+  );
+
+  useEffect(() => {
+    // A little convenience DOM trick to put focus on the search input
+    // after you've added a row or used the <select>
+    const searchInputs = [
+      ...document.querySelectorAll<HTMLInputElement>(
+        'ul.search-flaws-rows input[type="search"]'
+      ),
+    ].filter((input) => !input.value);
+    if (searchInputs.length) {
+      searchInputs[searchInputs.length - 1].focus();
+    }
+  }, [searchFlawsRows]);
 
   function refreshFilters() {
     updateFiltersURL(filters);
   }
 
   let hasFilters = !equalObjects(defaultFilters, filters);
+
+  let hasEmptySearchFlawsRow = searchFlawsRows.some(
+    (row) => !row.search.trim()
+  );
 
   function resetFilters(event: React.MouseEvent) {
     event.preventDefault();
@@ -349,6 +389,89 @@ function FilterControls({ flawLevels }: { flawLevels: FlawLevel[] }) {
                 );
               })}
           </select>
+        </div>
+        <div>
+          <h4>Search inside flaws</h4>
+          <ul className="search-flaws-rows">
+            {searchFlawsRows.map((row, i) => {
+              return (
+                <li key={`${row.flaw}:${i}`}>
+                  <select
+                    value={row.flaw}
+                    onChange={(event) => {
+                      const clone = [...searchFlawsRows];
+                      clone[i].flaw = event.target.value;
+                      setSearchFlawsRows(clone);
+                    }}
+                  >
+                    {flawLevels &&
+                      flawLevels
+                        .filter((flawLevel) => !flawLevel.ignored)
+                        .map((flawLevel) => {
+                          return (
+                            <option key={flawLevel.name} value={flawLevel.name}>
+                              {humanizeFlawName(flawLevel.name)}
+                            </option>
+                          );
+                        })}
+                  </select>
+                  <input
+                    type="search"
+                    placeholder="Search expression (e.g. jsxref)"
+                    value={row.search}
+                    onChange={(event) => {
+                      setSearchFlawsRows(
+                        searchFlawsRows.map((row, j) => {
+                          if (i === j) {
+                            row.search = event.target.value;
+                          }
+                          return row;
+                        })
+                      );
+                    }}
+                    onBlur={() => {
+                      const serialized = serializeSearchFlaws(searchFlawsRows);
+                      setFilters({ ...filters, search_flaws: serialized });
+                      refreshFilters();
+                    }}
+                  />
+                  <button
+                    type="button"
+                    title="Remove search row"
+                    onClick={() => {
+                      const clone = [...searchFlawsRows];
+                      clone.splice(i, 1);
+                      setSearchFlawsRows(clone);
+
+                      // const serialized = serializeSearchFlaws(searchFlawsRows);
+                      // setFilters({ ...filters, search_flaws: serialized });
+                      // refreshFilters()
+                    }}
+                  >
+                    -
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          <button
+            type="button"
+            title="Add search row"
+            disabled={hasEmptySearchFlawsRow}
+            onClick={() => {
+              setSearchFlawsRows([
+                ...searchFlawsRows,
+                ...[
+                  {
+                    flaw: "macros",
+                    search: "",
+                  },
+                ],
+              ]);
+            }}
+          >
+            +
+          </button>
         </div>
 
         <div>
