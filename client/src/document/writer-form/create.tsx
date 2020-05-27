@@ -33,8 +33,7 @@ export default function DocumentCreate() {
 
   return (
     <DocumentForm
-      isNew
-      data={{ meta: { slug } }}
+      parentSlug={slug}
       onSave={handleCreate}
       savingError={savingError}
     />

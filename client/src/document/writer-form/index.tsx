@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
+import { SearchWidget } from "../../search";
+
 import "./index.scss";
 
 export type DocumentData = {
@@ -8,35 +10,28 @@ export type DocumentData = {
   meta: { slug: string; title: string; summary: string };
 };
 export default function DocumentForm({
+  onSave,
+  parentSlug,
   data,
-  isNew,
   isSaving,
   savingError,
-  onSave,
 }: {
-  data: Partial<Omit<DocumentData, "meta">> & {
-    meta?: Partial<DocumentData["meta"]>;
-  };
   onSave: (data: DocumentData) => any;
-  isNew?: boolean;
+  parentSlug?: string;
+  data?: DocumentData;
   isSaving?: boolean;
   savingError?: null | Error;
 }) {
-  const defaults: DocumentData = {
-    html: "",
-    ...data,
-    meta: { slug: "", title: "", summary: "", ...data.meta },
-  };
-  const [slug, setSlug] = useState(
-    defaults.meta.slug ? defaults.meta.slug + "/" : ""
-  );
-  const [title, setTitle] = useState(defaults.meta.title);
-  const [summary, setSummary] = useState(defaults.meta.summary);
-  const [html, setHtml] = useState(defaults.html);
+  const [slug, setSlug] = useState(data ? data.meta.slug + "/" : "");
+  const [title, setTitle] = useState(data ? data.meta.title : "");
+  const [summary, setSummary] = useState(data ? data.meta.summary : "");
+  const [html, setHtml] = useState(data ? data.html : "");
   const [autosaveEnabled, setAutoSaveEnabled] = useLocalStorage(
     "autosaveEdit",
     false
   );
+
+  const isNew = !data;
 
   // New documents should not autosave
   const shouldAutosave = !isNew && autosaveEnabled;
@@ -64,19 +59,21 @@ export default function DocumentForm({
         onSave({ html, meta: { slug, title, summary } });
       }}
     >
-      {isNew && (
-        <p>
-          <label>
-            Slug
-            <input
-              type="text"
-              value={slug}
-              onChange={(event) => setSlug(event.target.value)}
-              style={{ width: "100%" }}
-            />
-          </label>
-        </p>
-      )}
+      <div>
+        <label>
+          URL
+          <SearchWidget
+            value={slug}
+            onChange={(url) => {
+              setSlug(url);
+            }}
+            onSelect={(url) => {
+              // skip over the /:locale/docs/ parts of the URL
+              setSlug(url.split("/").slice(3).join("/"));
+            }}
+          />
+        </label>
+      </div>
 
       <p>
         <label>
@@ -117,7 +114,7 @@ export default function DocumentForm({
             disableInputs || !title || (isNew && !slug) || !summary || !html
           }
         >
-          Save
+          {isNew ? "Create" : "Save"}
         </button>
 
         {!isNew && (

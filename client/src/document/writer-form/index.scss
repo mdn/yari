@@ -1,14 +1,17 @@
 .document-form {
-  form {
-    background-color: white;
-    z-index: 10;
-    position: sticky;
-    top: 0;
-    width: 100%;
-    height: 300px;
-  }
+  background-color: white;
+  z-index: 10;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 300px;
+
   textarea,
   input {
     font-family: monospace;
+  }
+
+  .search-widget input {
+    width: 100%;
   }
 }
