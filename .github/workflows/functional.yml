@@ -36,6 +36,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      - name: Install yarn packages
+        run: yarn --frozen-lockfile
+
       - name: Build
         run: |
+          cp .env-dist .env
+
+          # Temporary hack, until we have functional tests
+          mkdir content/files
+          mkdir content/files/en-us
+
+
           yarn run prebuild
