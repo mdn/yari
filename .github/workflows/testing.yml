@@ -44,8 +44,11 @@ jobs:
       - name: Lint checking
         run: ./testing/scripts/lint-check.sh
 
-      - name: Unit testing
-        run: ./testing/scripts/unit-test.sh
+      - name: Unit testing client
+        run: yarn workspace client run test
+
+      - name: Unit testing kumascript
+        run: yarn workspace kumascript run test
 
       - name: Functional testing
         run: ./testing/scripts/functional-test.sh
