@@ -41,11 +41,13 @@ jobs:
 
       - name: Build
         run: |
+          cp .env-dist .env
 
           # Temporary hack,
           ls -l
           ls -l content
           mkdir content/files
           mkdir content/files/en-us
+
 
           yarn run prebuild
