@@ -1,57 +1,100 @@
 const fs = require("fs");
 const path = require("path");
+
+const fm = require("front-matter");
 const yaml = require("js-yaml");
+
+const { VALID_LOCALES } = require("./constants");
 const { slugToFoldername } = require("./utils");
 
 function buildPath(contentPath, slug) {
   return path.join(contentPath, slugToFoldername(slug));
 }
 
-const htmlPath = (folder) => path.join(folder, "index.html");
-const metaPath = (folder) => path.join(folder, "index.yaml");
-const wikiHistoryPath = (folder) => path.join(folder, "wikihistory.json");
+const getHTMLPath = (folder) => path.join(folder, "index.html");
+const getWikiHistoryPath = (folder) => path.join(folder, "wikihistory.json");
 
-function create(contentPath, html, meta, wikiHistory = null) {
-  const folder = buildPath(contentPath, meta.slug);
+function extractLocale(contentRoot, folder) {
+  // E.g. 'pt-br/web/foo'
+  const relativeToSource = path.relative(contentRoot, folder);
+  // E.g. 'pr-br'
+  const localeFolderName = relativeToSource.split(path.sep)[0];
+  // E.g. 'pt-BR'
+  const locale = VALID_LOCALES.get(localeFolderName);
+  // This checks that the extraction worked *and* that the locale found
+  // really is in VALID_LOCALES *and* it ultimately returns the
+  // locale as we prefer to spell it (e.g. 'pt-BR' not 'Pt-bR')
+  if (!locale) {
+    throw new Error(`Unable to figure out locale from ${folder}`);
+  }
+  return locale;
+}
+
+function saveFile(folder, rawHtml, metadata) {
+  const combined = `---\n${yaml.safeDump(metadata)}---\n${rawHtml.trim()}\n`;
+  fs.writeFileSync(path.join(folder, "index.html"), combined);
+}
+
+function create(contentRoot, rawHtml, metadata, wikiHistory = null) {
+  const folder = buildPath(contentRoot, metadata.slug);
 
   fs.mkdirSync(folder, { recursive: true });
 
-  fs.writeFileSync(htmlPath(folder), html);
-  fs.writeFileSync(metaPath(folder), yaml.safeDump(meta));
+  saveFile(folder, rawHtml, metadata);
 
   if (wikiHistory) {
     fs.writeFileSync(
-      wikiHistoryPath(folder),
+      getWikiHistoryPath(folder),
       JSON.stringify(wikiHistory, null, 2)
     );
   }
 }
 
-const read = (folder) => ({
-  html: fs.readFileSync(htmlPath(folder), "utf8"),
-  meta: yaml.safeLoad(fs.readFileSync(metaPath(folder))),
-});
+const read = (contentRoot, folder, includeTimestamp = false) => {
+  const filePath = getHTMLPath(folder);
+  const {
+    attributes: metadata,
+    body: rawHtml,
+    bodyBegin: frontMatterOffset,
+  } = fm(fs.readFileSync(filePath, "utf8"));
 
-function update(folder, html, meta) {
-  const document = read(folder);
-  if (document.html !== html) {
-    fs.writeFileSync(htmlPath(folder), html);
+  if (includeTimestamp) {
+    metadata.modified = null;
+    const wikiHistoryPath = getWikiHistoryPath(folder);
+    if (fs.existsSync(wikiHistoryPath)) {
+      const wikiMetadata = JSON.parse(
+        fs.readFileSync(wikiHistoryPath, "utf-8")
+      );
+      metadata.modified = wikiMetadata.modified;
+    }
   }
+
+  metadata.locale = extractLocale(contentRoot, folder);
+
+  return {
+    metadata,
+    rawHtml,
+    fileInfo: {
+      path: filePath,
+      frontMatterOffset,
+    },
+  };
+};
+
+function update(contentRoot, folder, rawHtml, metadata) {
+  const document = read(contentRoot, folder);
   if (
-    document.meta.title !== meta.title ||
-    document.meta.summary !== meta.summary
+    document.rawHtml !== rawHtml ||
+    document.metadata.title !== metadata.title ||
+    document.metadata.summary !== metadata.summary
   ) {
-    const newMeta = { ...document.meta };
-    newMeta.title = meta.title;
-    newMeta.summary = meta.summary;
-    fs.writeFileSync(metaPath(folder), yaml.safeDump(newMeta));
+    saveFile(folder, rawHtml, metadata);
   }
 }
 
 function del(folder) {
-  fs.unlinkSync(htmlPath(folder));
-  fs.unlinkSync(metaPath(folder));
-  fs.unlinkSync(wikiHistoryPath(folder));
+  fs.unlinkSync(getHTMLPath(folder));
+  fs.unlinkSync(getWikiHistoryPath(folder));
   const dirIter = fs.opendirSync(folder);
   const isEmpty = !dirIter.readSync();
   dirIter.closeSync();
@@ -60,4 +103,10 @@ function del(folder) {
   }
 }
 
-module.exports = { buildPath, create, read, update, del };
+module.exports = {
+  buildPath,
+  create,
+  read,
+  update,
+  del,
+};

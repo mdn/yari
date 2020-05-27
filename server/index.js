@@ -4,7 +4,10 @@ const { performance } = require("perf_hooks");
 
 const express = require("express");
 const openEditor = require("open-editor");
+const yaml = require("js-yaml");
+const fm = require("front-matter");
 
+const { slugToFoldername } = require("content/scripts/utils");
 const { FLAW_LEVELS } = require("content/scripts/constants.js");
 
 const documentRouter = require("./document");

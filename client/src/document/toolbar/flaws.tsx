@@ -77,7 +77,7 @@ export function ToggleDocumentFlaws({ flaws }: Pick<Doc, "flaws">) {
 interface FlawCheck {
   count: number;
   name: string;
-  flaws: any[];
+  flaws: any[]; // XXX fixme!
 }
 
 function Flaws({ flaws }: { flaws: FlawCheck[] }) {

@@ -8,6 +8,15 @@ const { getOrCreateBuilder, normalizeContentPath } = require("./utils");
 
 const router = express();
 
+const getContentRoot = () => path.join("..", process.env.BUILD_ROOT);
+
+router.post("/", (req, res) => {
+  const { locale, rawHtml, metadata } = req.body;
+  const contentPath = path.join(getContentRoot(), locale.toLowerCase());
+  Document.create(contentPath, rawHtml, metadata);
+  res.sendStatus(200);
+});
+
 function withDocFolder(req, res, next) {
   if (!req.query.url) {
     return res.status(400).send("No ?url= query param");
@@ -21,28 +30,16 @@ function withDocFolder(req, res, next) {
   next();
 }
 
-router.post("/", (req, res) => {
-  const { locale, html, meta } = req.body;
-  const contentPath = path.join(
-    "..",
-    process.env.BUILD_ROOT,
-    locale.toLowerCase()
-  );
-  Document.create(contentPath, html, meta);
-  getOrCreateBuilder().ensureAllTitles();
-  res.sendStatus(200);
-});
-
 router.get("/", withDocFolder, (req, res) => {
-  res.status(200).json(Document.read(req.folder));
+  res.status(200).json(Document.read(getContentRoot(), req.folder));
 });
 
 router.put("/", withDocFolder, (req, res) => {
-  const { html, meta } = req.body;
-  if (meta.title && html) {
-    Document.update(req.folder, html.trim() + "\n", {
-      title: meta.title.trim(),
-      summary: meta.summary.trim(),
+  const { rawHtml, metadata } = req.body;
+  if (metadata.title && rawHtml) {
+    Document.update(getContentRoot(), req.folder, rawHtml.trim() + "\n", {
+      title: metadata.title.trim(),
+      summary: metadata.summary.trim(),
     });
   }
   res.sendStatus(200);

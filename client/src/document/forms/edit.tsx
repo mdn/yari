@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import useSWR from "swr";
 import { Document } from "../index";
 import { useDocumentURL } from "../hooks";
-import DocumentForm, { DocumentData } from "./index";
+import DocumentForm, { DocumentData } from "./form";
 
 import "./edit.scss";
 
@@ -60,7 +60,8 @@ export default function DocumentEdit() {
       )}
       {data && (
         <DocumentForm
-          {...{ data, isSaving, savingError }}
+          doc={data}
+          {...{ isSaving, savingError }}
           onSave={handleSave}
         />
       )}

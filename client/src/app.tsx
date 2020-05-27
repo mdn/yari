@@ -6,8 +6,8 @@ import { Document } from "./document";
 import { NoMatch } from "./routing";
 import { SearchNavigateWidget } from "./search";
 const AllFlaws = lazy(() => import("./flaws"));
-const DocumentEdit = lazy(() => import("./document/writer-form/edit"));
-const DocumentCreate = lazy(() => import("./document/writer-form/create"));
+const DocumentEdit = lazy(() => import("./document/forms/edit"));
+const DocumentCreate = lazy(() => import("./document/forms/create"));
 
 export function App(appProps) {
   const routes = (

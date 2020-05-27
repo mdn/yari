@@ -3,35 +3,35 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { SearchWidget } from "../../search";
 
-import "./index.scss";
+import "./form.scss";
 
 export type DocumentData = {
-  html: string;
-  meta: { slug: string; title: string; summary: string };
+  rawHtml: string;
+  metadata: { slug: string; title: string; summary: string };
 };
 export default function DocumentForm({
   onSave,
   parentSlug,
-  data,
+  doc,
   isSaving,
   savingError,
 }: {
-  onSave: (data: DocumentData) => any;
+  onSave: (doc: DocumentData) => any;
   parentSlug?: string;
-  data?: DocumentData;
+  doc?: DocumentData;
   isSaving?: boolean;
   savingError?: null | Error;
 }) {
-  const [slug, setSlug] = useState(data ? data.meta.slug + "/" : "");
-  const [title, setTitle] = useState(data ? data.meta.title : "");
-  const [summary, setSummary] = useState(data ? data.meta.summary : "");
-  const [html, setHtml] = useState(data ? data.html : "");
+  const [slug, setSlug] = useState(doc ? doc.metadata.slug + "/" : "");
+  const [title, setTitle] = useState(doc ? doc.metadata.title : "");
+  const [summary, setSummary] = useState(doc ? doc.metadata.summary : "");
+  const [rawHtml, setRawHtml] = useState(doc ? doc.rawHtml : "");
   const [autosaveEnabled, setAutoSaveEnabled] = useLocalStorage(
     "autosaveEdit",
     false
   );
 
-  const isNew = !data;
+  const isNew = !doc;
 
   // New documents should not autosave
   const shouldAutosave = !isNew && autosaveEnabled;
@@ -47,16 +47,16 @@ export default function DocumentForm({
 
   useEffect(() => {
     if (shouldAutosave) {
-      putDocumentDebounced({ html, meta: { slug, title, summary } });
+      putDocumentDebounced({ rawHtml, metadata: { slug, title, summary } });
     }
-  }, [shouldAutosave, putDocumentDebounced, slug, title, summary, html]);
+  }, [shouldAutosave, putDocumentDebounced, slug, title, summary, rawHtml]);
 
   return (
     <form
       className="document-form"
       onSubmit={function (event) {
         event.preventDefault();
-        onSave({ html, meta: { slug, title, summary } });
+        onSave({ rawHtml, metadata: { slug, title, summary } });
       }}
     >
       <div>
@@ -102,8 +102,8 @@ export default function DocumentForm({
 
       <textarea
         disabled={disableInputs}
-        value={html}
-        onChange={(event) => setHtml(event.target.value)}
+        value={rawHtml}
+        onChange={(event) => setRawHtml(event.target.value)}
         rows={30}
         style={{ width: "100%" }}
       />
@@ -111,7 +111,7 @@ export default function DocumentForm({
         <button
           type="submit"
           disabled={
-            disableInputs || !title || (isNew && !slug) || !summary || !html
+            disableInputs || !title || (isNew && !slug) || !summary || !rawHtml
           }
         >
           {isNew ? "Create" : "Save"}

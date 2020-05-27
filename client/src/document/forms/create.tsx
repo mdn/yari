@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import DocumentForm, { DocumentData } from "./index";
+import DocumentForm, { DocumentData } from "./form";
 
 export default function DocumentCreate() {
   const { locale, "*": slug } = useParams();
@@ -20,7 +20,7 @@ export default function DocumentCreate() {
         );
         return;
       }
-      navigate(`/${locale}/docs/${data.meta.slug}`, { replace: true });
+      navigate(`/${locale}/docs/${data.metadata.slug}`, { replace: true });
     } catch (err) {
       setSavingError(err);
     }
