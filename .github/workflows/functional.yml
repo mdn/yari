@@ -41,4 +41,11 @@ jobs:
 
       - name: Build
         run: |
+
+          # Temporary hack,
+          ls -l
+          ls -l content
+          mkdir content/files
+          mkdir content/files/en-us
+
           yarn run prebuild
