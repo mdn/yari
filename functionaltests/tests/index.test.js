@@ -23,13 +23,11 @@ test("content built foo page", () => {
   expect(doc.modified).toBeTruthy();
   expect(doc.modified).toBeTruthy();
   expect(doc.source).toBeTruthy();
-  // console.log(doc);
 
   const htmlFile = path.join(builtFolder, "index.html");
   expect(fs.existsSync(htmlFile)).toBeTruthy();
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  // console.log(html);
   expect($("p").text()).toMatch(/Below is a sample interactive example/);
   expect($("iframe").length).toEqual(1);
 });
@@ -38,7 +36,6 @@ test("content built titles.json file", () => {
   const titlesFile = path.join(buildRoot, "en-us", "titles.json");
   expect(fs.existsSync(titlesFile)).toBeTruthy();
   const { titles } = JSON.parse(fs.readFileSync(titlesFile));
-  // console.log(titles);
   expect(titles["/en-US/docs/Web/Foo"].title).toEqual("<foo>: A test tag");
   expect(titles["/en-US/docs/Web/Foo"].popularity).toEqual(0.5);
 
