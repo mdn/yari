@@ -14,7 +14,7 @@
     "got": "11.1.4",
     "lru-cache": "5.1.1",
     "mdn-browser-compat-data": "1.0.22",
-    "mdn-data": "2.0.8",
+    "mdn-data": "2.0.9",
     "sanitize-filename": "^1.6.3"
   },
   "devDependencies": {

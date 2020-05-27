@@ -7,11 +7,13 @@ set -e
 # checked in, we'll fake some.
 
 mkdir -p ci-content/files/en-us/foo/bar
-echo "<p>I'm alive!</p>" > ci-content/files/en-us/foo/bar/index.html
-cat > ci-content/files/en-us/foo/bar/index.yaml <<YAML
+cat > ci-content/files/en-us/foo/bar/index.html <<PAYLOAD
+---
 title: 'Foo Bar'
 slug: Foo/Bar
-YAML
+---
+<p>I'm alive!</p>
+PAYLOAD
 cat > ci-content/files/en-us/foo/bar/wikihistory.json <<JSON
 {
   "modified": "2020-03-27T04:29:28.234Z",

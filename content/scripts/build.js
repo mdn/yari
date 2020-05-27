@@ -4,8 +4,8 @@ const crypto = require("crypto");
 const childProcess = require("child_process");
 const { performance } = require("perf_hooks");
 
+const fm = require("front-matter");
 const chalk = require("chalk");
-const yaml = require("js-yaml");
 const sanitizeFilename = require("sanitize-filename");
 const chokidar = require("chokidar");
 const WebSocket = require("ws");
@@ -222,17 +222,23 @@ function extractLocale(source, folder) {
   return locale;
 }
 
-function getMetadata(source, folder) {
-  const metadataRaw = fs.readFileSync(path.join(folder, "index.yaml"));
-  const metadata = yaml.safeLoad(metadataRaw);
-  const wikiHistoryPath = path.join(folder, "wikihistory.json");
-  if (fs.existsSync(wikiHistoryPath)) {
-    const wikiMetadataRaw = fs.readFileSync(wikiHistoryPath);
-    const wikiMetadata = yaml.safeLoad(wikiMetadataRaw);
-    metadata.modified = wikiMetadata.modified;
+function getContent(source, folder, appendWikiHistory = false) {
+  const rawHtmlFilepath = path.join(folder, "index.html");
+  const rawContent = fs.readFileSync(rawHtmlFilepath, "utf8");
+  const content = fm(rawContent);
+  const metadata = content.attributes;
+  const rawHtml = content.body;
+  metadata.frontMatterOffset = content.bodyBegin;
+  if (appendWikiHistory) {
+    const wikiHistoryPath = path.join(folder, "wikihistory.json");
+    if (fs.existsSync(wikiHistoryPath)) {
+      const wikiMetadataRaw = fs.readFileSync(wikiHistoryPath);
+      const wikiMetadata = JSON.parse(wikiMetadataRaw);
+      metadata.modified = wikiMetadata.modified;
+    }
   }
   metadata.locale = extractLocale(source, folder);
-  return { metadata, metadataRaw };
+  return { metadata, rawHtml, rawContent, rawHtmlFilepath };
 }
 
 /** Throw an error if the slug is insane.
@@ -495,27 +501,21 @@ class Builder {
         );
         continue;
       }
-      const preMetadata = getMetadata(source, folder).metadata;
-      const preRawHtmlFilepath = path.join(folder, "index.html");
-      const preRawHtml = fs.readFileSync(preRawHtmlFilepath, "utf8");
+      const content = getContent(source, folder);
+      const { metadata, rawHtml, rawHtmlFilepath } = content;
       // When rendering prerequisites, we're only interested in
       // caching the results for later use. We don't care about
       // the results returned.
-      const preResult = await this.renderMacros(
-        source,
-        preRawHtml,
-        preMetadata,
-        {
-          cacheResult: true,
-        }
-      );
+      const preResult = await this.renderMacros(source, rawHtml, metadata, {
+        cacheResult: true,
+      });
       const preFlaws = preResult[1];
       // Flatten the flaws from this other document into the current flaws,
       // and set the filepath for flaws that haven't already been set at
       // a different level of recursion.
       for (const flaw of preFlaws) {
         if (!flaw.filepath) {
-          flaw.filepath = preRawHtmlFilepath;
+          flaw.filepath = rawHtmlFilepath;
         }
         allPrerequisiteFlaws.push(flaw);
       }
@@ -735,10 +735,6 @@ class Builder {
     // But it's better to be safe rather than sorry. After all, the
     // _all-titles.json file is purely for local development when you
     // stop and start the builder.
-    // Note! Just because the hashes here match, doesn't mean the
-    // this.allTitles loaded from disk is in sync. For example, a slug
-    // might have been edited in one of the index.yaml files without this
-    // having a chance to be picked up and stored in disk-based cache.
     this.allTitles.set("_hash", this.selfHash);
 
     this.logger.info("Building a list of ALL titles and URIs...");
@@ -751,7 +747,7 @@ class Builder {
           const filepath = path.join(folder, filename);
           this.processStumptownFileTitle(source, filepath, allPopularities);
         }
-      } else if (files.includes("index.html") && files.includes("index.yaml")) {
+      } else if (files.includes("index.html")) {
         this.processFolderTitle(source, folder, allPopularities);
       }
     }
@@ -775,7 +771,7 @@ class Builder {
 
       // TODO: Our dumper is not perfect yet. We still get bad
       // 'translation_of' references.
-      // I.e. a localized document's 'index.yaml' says its
+      // I.e. a localized document's metadata says its
       // 'translation_of' is 'Web/Foo/Bar' but there is actually no en-US
       // document by that slug!
       // We're working on it in the dumper and this problem is known also
@@ -1240,7 +1236,7 @@ class Builder {
     if (source.isStumptown) {
       return !files.some((filepath) => filepath.endsWith(".json"));
     } else {
-      return !(files.includes("index.html") && files.includes("index.yaml"));
+      return !files.includes("index.html");
     }
   }
 
@@ -1445,9 +1441,11 @@ class Builder {
         );
         continue;
       }
-      const otherMetadata = getMetadata(source, otherFolder).metadata;
-      const otherRawHtmlFilepath = path.join(otherFolder, "index.html");
-      const otherRawHtml = fs.readFileSync(otherRawHtmlFilepath, "utf8");
+      const {
+        metadata: otherMetadata,
+        rawHtml: otherRawHtml,
+        rawHtmlFilepath: otherRawHtmlFilepath,
+      } = getContent(source, otherFolder);
       const otherDestinationDir = path.join(
         this.destination,
         slugToFoldername(otherUri)
@@ -1476,7 +1474,10 @@ class Builder {
   }
 
   async processFolder(source, folder, config) {
-    const { metadata, metadataRaw } = getMetadata(source, folder);
+    const { metadata, rawHtml, rawContent, rawHtmlFilepath } = getContent(
+      source,
+      folder
+    );
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
     const mdnUrlLC = mdn_url.toLowerCase();
 
@@ -1510,9 +1511,6 @@ class Builder {
     // like `<--#Compat('foo.bar')--> and then replace it here in the
     // post-processing instead.
 
-    const rawHtmlFilepath = path.join(folder, "index.html");
-    const rawHtml = fs.readFileSync(rawHtmlFilepath, "utf8");
-
     let renderedHtml;
 
     // When 'source.htmlAlreadyRendered' is true, it simply means that the 'index.html'
@@ -1533,6 +1531,19 @@ class Builder {
         throw err;
       }
       if (flaws.length) {
+        // The flaw objects might have a 'line' attribute, but the
+        // original document it came from had front-matter in the file.
+        // The KS renderer doesn't know about this, so we adjust it
+        // accordingly.
+        // Only applicable if the flaw has a 'line'
+        flaws.forEach((flaw) => {
+          if (flaw.line) {
+            // The extra `- 1` is because of the added newline that
+            // is only present because of the serialized linebreak.
+            flaw.line += metadata.frontMatterOffset - 1;
+          }
+        });
+
         if (this.options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
           // Report and exit immediately on the first document with flaws.
           this.logger.error(
@@ -1565,7 +1576,7 @@ class Builder {
     // we have to compute this hash because on a cache miss, we need to
     // write it down after we've done the work.
     const hasher = crypto.createHash("md5");
-    hasher.update(metadataRaw);
+    hasher.update(rawContent);
     // I think we should use the "renderedHtml" instead of the "rawHtml" for
     // the document hash since it takes into account document prerequisites
     // (i.e. one document including parts of another document within itself).
@@ -1813,7 +1824,7 @@ class Builder {
    * adding this document's uri and title to this.allTitles
    */
   processFolderTitle(source, folder, allPopularities) {
-    const { metadata } = getMetadata(source, folder);
+    const { metadata } = getContent(source, folder, true);
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
     const mdnUrlLC = mdn_url.toLowerCase();
 
@@ -1888,7 +1899,7 @@ class Builder {
     const gitUrl = getCurretGitHubBaseURL();
     const branch = getCurrentGitBranch();
     const relativePath = path.relative(source.filepath, folder);
-    return `${gitUrl}/blob/${branch}/content/files/${relativePath}`;
+    return `${gitUrl}/blob/${branch}/content/files/${relativePath}/index.html`;
   }
 }
 
