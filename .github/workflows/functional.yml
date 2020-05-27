@@ -52,4 +52,5 @@ jobs:
           ls -l content/_testfiles
           cat content/_all-titles.json
 
+          node content build
           ./scripts/ci-functional.sh
