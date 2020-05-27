@@ -1718,7 +1718,11 @@ class Builder {
       $("a[href]").each((i, element) => {
         const a = $(element);
         const href = a.attr("href").split("#")[0];
-        if (href.startsWith("/") && !checked.has(href)) {
+        if (
+          href.startsWith("/") &&
+          !href.startsWith("//") &&
+          !checked.has(href)
+        ) {
           checked.add(href);
           if (!this.allTitles.has(href.toLowerCase())) {
             if (!doc.flaws.hasOwnProperty("broken_links")) {
