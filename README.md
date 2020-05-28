@@ -1,6 +1,6 @@
 # yari
 
-[![Build Status](https://travis-ci.org/mdn/yari.svg?branch=master)](https://travis-ci.org/mdn/yari)
+![](https://github.com/mdn/yari/workflows/.github/workflows/testing.yml/badge.svg)
 
 ## Quickstart
 
