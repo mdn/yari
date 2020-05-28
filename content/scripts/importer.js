@@ -28,6 +28,7 @@ const ARCHIVE_SLUG_ENGLISH_PREFIXES = [
   "Gecko",
   "Hacking_Firefox",
   "Interfaces",
+  "Marketplace",
   "Mercurial",
   "Mozilla",
   "Multi-Process_Architecture",
