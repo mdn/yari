@@ -20,7 +20,7 @@ export default function DocumentCreate() {
         );
         return;
       }
-      navigate(`/${locale}/docs/${data.metadata.slug}`, { replace: true });
+      navigate(`/${locale}/docs/${data.metadata.slug}`);
     } catch (err) {
       setSavingError(err);
     }
@@ -28,7 +28,7 @@ export default function DocumentCreate() {
 
   useEffect(() => {
     // remove slug from URL, as it might be changed in the form
-    navigate(`/${locale}/_create`);
+    navigate(`/${locale}/_create`, { replace: true });
   }, [locale, navigate]);
 
   return (
