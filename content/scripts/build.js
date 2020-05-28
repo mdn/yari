@@ -12,7 +12,7 @@ const WebSocket = require("ws");
 // XXX does this work on Windows?
 const packageJson = require("../../package.json");
 
-require("dotenv").config();
+require("dotenv").config({ path: process.env.ENV_FILE });
 
 const cheerio = require("./monkeypatched-cheerio");
 const ProgressBar = require("./progress-bar");
