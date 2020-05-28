@@ -669,14 +669,15 @@ class Builder {
     self.summarizeResults(counts, flawCounts, t1 - t0);
   }
 
-  ensureAllTitles() {
+  ensureAllTitles(forceRegenerate = false) {
     if (!this.selfHash) {
       throw new Error("this.selfHash hasn't been set yet");
     }
     if (
       this.allTitles.size &&
       this.allTitles.get("_hash") === this.selfHash &&
-      !this.options.regenerateAllTitles
+      !this.options.regenerateAllTitles &&
+      !forceRegenerate
     ) {
       // No reason to proceed, the titles have already been loaded into memory.
       return;
@@ -689,7 +690,8 @@ class Builder {
     // But first, see if we can use the title from the last build.
     if (
       fs.existsSync(ALL_TITLES_JSON_FILEPATH) &&
-      !this.options.regenerateAllTitles
+      !this.options.regenerateAllTitles &&
+      !forceRegenerate
     ) {
       this.allTitles = new Map(
         Object.entries(
@@ -907,7 +909,21 @@ class Builder {
         watcher.on("change", (path) => {
           onChange(path, source);
         });
+        const startTime = new Date().getTime();
+        watcher.on("add", (path) => {
+          const ageSinceStart = new Date().getTime() - startTime;
+          // As of May 2020, it takes about 5 seconds for the watcher to
+          // be ready to watch ALL files in content/files/.
+          // For some reason, chokidar triggers the 'add' event even for
+          // files that already existed. By putting this timer we can
+          // be confident *this* add happened long after you started
+          // the watcher.
+          if (ageSinceStart > 10000) {
+            onChange(path, source);
+          }
+        });
         watcher.on("ready", () => {
+          const ageSinceStart = new Date().getTime() - startTime;
           const watchedPaths = watcher.getWatched();
           const folders = Object.values(watchedPaths);
           const count = folders
@@ -917,6 +933,11 @@ class Builder {
             chalk.yellow(
               `File watcher set up for ${watchdir}. ` +
                 `Watching over ${count.toLocaleString()} files in ${folders.length.toLocaleString()} folders.`
+            )
+          );
+          console.log(
+            chalk.yellow(
+              `Setting up file watcher took ${ppMilliseconds(ageSinceStart)}`
             )
           );
           if (isTTY()) {
@@ -1481,6 +1502,15 @@ class Builder {
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
     const mdnUrlLC = mdn_url.toLowerCase();
 
+    if (!this.allTitles.has(mdnUrlLC)) {
+      // This means the this.allTitles is out of date
+      // This can happen if you've added a new document and made
+      // the first ever edit on it.
+      // For example, if you edit a document's front-matter to change
+      // the slug. Then it's a new mdnUrl since the watcher started.
+      this.ensureAllTitles(true);
+    }
+
     if (this.excludeSlug(mdn_url)) {
       return { result: processing.EXCLUDED, file: folder };
     }
@@ -1825,7 +1855,13 @@ class Builder {
    */
   processFolderTitle(source, folder, allPopularities) {
     const { metadata } = getContent(source, folder, true);
-    const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
+    let mdn_url;
+    try {
+      mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
+    } catch (err) {
+      console.warn(`The folder that caused the error was: ${folder}`);
+      throw err;
+    }
     const mdnUrlLC = mdn_url.toLowerCase();
 
     if (this.allTitles.has(mdnUrlLC)) {
