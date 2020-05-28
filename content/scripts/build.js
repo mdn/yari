@@ -1838,6 +1838,10 @@ class Builder {
     this.allTitles.set(mdnUrlLC, doc);
   }
 
+  removeFolderTitle(locale, slug) {
+    this.allTitles.delete(buildMDNUrl(locale, slug).toLowerCase());
+  }
+
   processStumptownFileTitle(source, file, allPopularities) {
     const metadata = JSON.parse(fs.readFileSync(file));
     const { mdn_url, title } = metadata;

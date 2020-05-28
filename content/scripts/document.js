@@ -52,6 +52,9 @@ function create(contentRoot, rawHtml, metadata, wikiHistory = null) {
 
 const read = (contentRoot, folder, includeTimestamp = false) => {
   const filePath = getHTMLPath(folder);
+  if (!fs.existsSync(filePath)) {
+    return null;
+  }
   const {
     attributes: metadata,
     body: rawHtml,
@@ -94,7 +97,8 @@ function update(contentRoot, folder, rawHtml, metadata) {
 
 function del(folder) {
   fs.unlinkSync(getHTMLPath(folder));
-  fs.unlinkSync(getWikiHistoryPath(folder));
+  const wikiHistoryPath = getWikiHistoryPath(folder);
+  fs.existsSync(wikiHistoryPath) && fs.unlinkSync(wikiHistoryPath);
   const dirIter = fs.opendirSync(folder);
   const isEmpty = !dirIter.readSync();
   dirIter.closeSync();
