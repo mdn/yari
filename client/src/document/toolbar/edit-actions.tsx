@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import { useDocumentURL } from "../hooks";
-
 import "./edit-actions.scss";
 
 export function EditActions({ folder }: { folder: string }) {
   const location = useLocation();
   const documentURL = useDocumentURL();
   const navigate = useNavigate();
+
   const [opening, setOpening] = useState(false);
   const [editorOpeningError, setEditorOpeningError] = useState<Error | null>(
     null
@@ -71,7 +70,7 @@ export function EditActions({ folder }: { folder: string }) {
       </Link>
       {" or "}
       <button title={`Folder: ${folder}`} onClick={openInEditorHandler}>
-        in your <b>editor</b>.
+        in your <b>editor</b>
       </button>
       <button className="delete" onClick={deleteDocument}>
         Delete document
