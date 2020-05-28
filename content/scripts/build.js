@@ -905,22 +905,16 @@ class Builder {
         const watchdir = path.resolve(source.filepath);
 
         console.log(chalk.yellow(`Setting up file watcher on ${watchdir}...`));
-        const watcher = chokidar.watch(path.join(watchdir, "**/*.(html|yaml)"));
+        const startTime = new Date().getTime();
+        const watcher = chokidar.watch(path.join(watchdir, "**/*.html"), {
+          // Otherwise the 'add' event is triggered for existing files.
+          ignoreInitial: true,
+        });
         watcher.on("change", (path) => {
           onChange(path, source);
         });
-        const startTime = new Date().getTime();
         watcher.on("add", (path) => {
-          const ageSinceStart = new Date().getTime() - startTime;
-          // As of May 2020, it takes about 5 seconds for the watcher to
-          // be ready to watch ALL files in content/files/.
-          // For some reason, chokidar triggers the 'add' event even for
-          // files that already existed. By putting this timer we can
-          // be confident *this* add happened long after you started
-          // the watcher.
-          if (ageSinceStart > 10000) {
-            onChange(path, source);
-          }
+          onChange(path, source);
         });
         watcher.on("ready", () => {
           const ageSinceStart = new Date().getTime() - startTime;
@@ -932,12 +926,8 @@ class Builder {
           console.log(
             chalk.yellow(
               `File watcher set up for ${watchdir}. ` +
-                `Watching over ${count.toLocaleString()} files in ${folders.length.toLocaleString()} folders.`
-            )
-          );
-          console.log(
-            chalk.yellow(
-              `Setting up file watcher took ${ppMilliseconds(ageSinceStart)}`
+                `Watching over ${count.toLocaleString()} files in ${folders.length.toLocaleString()} folders. ` +
+                `Took ${ppMilliseconds(ageSinceStart)} to get ready.`
             )
           );
           if (isTTY()) {
