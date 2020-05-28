@@ -16,7 +16,7 @@
     "got": "11.1.4",
     "js-yaml": "3.14.0",
     "kumascript": "0.1.0",
-    "mdn-browser-compat-data": "1.0.22",
+    "mdn-browser-compat-data": "1.0.23",
     "mysql": "2.18.1",
     "sanitize-filename": "^1.6.3",
     "ws": "7.3.0"
