@@ -22,7 +22,7 @@ wait for CI to run your every commit in a pull request (PR).
 Also, you can start the full development environment with:
 
 ```bash
-yarn functionalstart
+yarn start:functional
 ```
 
 That will start the `watcher` (long-running), the `server` (Express
@@ -39,8 +39,12 @@ test suite.
 To run the `jest` test suite:
 
 ```bash
-yarn workspace functionaltests run test
+yarn workspace testing run test
 ```
+
+This assumes you've set the appropriate environment variables and built the
+content. Alternatively, you can run `./testing/scripts/functional-test.sh`
+which takes care of all of these things.
 
 ## Caveats
 

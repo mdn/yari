@@ -15,7 +15,7 @@
     "clean": "rm -fr client/build && rm -fr ssr/dist && rm -fr content/_all-titles.json",
     "prebuild": "yarn build:client && yarn build:ssr && node content build --ensure-titles",
     "start": "yarn run prebuild && nf start",
-    "functionalstart": "set -a && source testing/.env && yarn run prebuild && nf -e testing/.env start"
+    "start:functional": "set -a && source testing/.env && yarn run prebuild && nf -e testing/.env start"
   },
   "private": true,
   "workspaces": [

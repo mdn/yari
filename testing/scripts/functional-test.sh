@@ -14,4 +14,4 @@ yarn run prebuild
 
 node content build
 
-yarn workspace functionaltests run test
+yarn workspace testing run test
