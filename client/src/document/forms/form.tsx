@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router";
 import { useDebouncedCallback } from "use-debounce";
 
 import { SearchWidget } from "../../search";
@@ -22,7 +23,12 @@ export default function DocumentForm({
   isSaving?: boolean;
   savingError?: null | Error;
 }) {
-  const [slug, setSlug] = useState(doc ? doc.metadata.slug + "/" : "");
+  const { locale } = useParams();
+
+  const [slug, setSlug] = useState(
+    doc ? doc.metadata.slug + "/" : parentSlug || ""
+  );
+  const [slugExists, setSlugExists] = useState(false);
   const [title, setTitle] = useState(doc ? doc.metadata.title : "");
   const [summary, setSummary] = useState(doc ? doc.metadata.summary : "");
   const [rawHtml, setRawHtml] = useState(doc ? doc.rawHtml : "");
@@ -43,8 +49,12 @@ export default function DocumentForm({
     setAutoSaveEnabled(!autosaveEnabled);
   }
 
-  const [putDocumentDebounced] = useDebouncedCallback(onSave, 1000);
+  // skip over the /:locale/docs/ parts of the URL
+  function setSlugFromURL(url: string) {
+    setSlug(url.split("/").slice(3).join("/"));
+  }
 
+  const [putDocumentDebounced] = useDebouncedCallback(onSave, 1000);
   useEffect(() => {
     if (shouldAutosave) {
       putDocumentDebounced({ rawHtml, metadata: { slug, title, summary } });
@@ -54,26 +64,33 @@ export default function DocumentForm({
   return (
     <form
       className="document-form"
-      onSubmit={function (event) {
+      onSubmit={(event) => {
         event.preventDefault();
         onSave({ rawHtml, metadata: { slug, title, summary } });
       }}
     >
-      <div>
-        <label>
-          URL
-          <SearchWidget
-            value={slug}
-            onChange={(url) => {
-              setSlug(url);
-            }}
-            onSelect={(url) => {
-              // skip over the /:locale/docs/ parts of the URL
-              setSlug(url.split("/").slice(3).join("/"));
-            }}
-          />
-        </label>
-      </div>
+      {isNew && (
+        <div>
+          <label>
+            URL
+            <SearchWidget
+              value={`/${locale}/docs/${slug}`}
+              onChange={(url) => {
+                setSlugFromURL(url);
+              }}
+              onValueExistsChange={(exists) => {
+                setSlugExists(exists);
+              }}
+            />
+          </label>
+          {slugExists && (
+            <div className="form-warning">
+              Warning! This URL already exists, creating this document will
+              override the other document using that URL.
+            </div>
+          )}
+        </div>
+      )}
 
       <p>
         <label>

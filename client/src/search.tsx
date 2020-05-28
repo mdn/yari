@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import FlexSearch from "flexsearch";
 import FuzzySearch from "./fuzzy-search";
 import "./search.scss";
@@ -69,10 +69,11 @@ const INACTIVE_PLACEHOLDER = isMobileUserAgent()
 // is resolved.
 export class SearchWidget extends React.Component<{
   value: string;
+  pathname?: string;
   onChange: (url: string) => unknown;
   inputRef: React.RefObject<HTMLInputElement>;
   onSelect?: (url: string) => unknown;
-  pathname?: string;
+  onValueExistsChange?: (exists: boolean) => unknown;
 }> {
   static defaultProps = {
     inputRef: React.createRef(null),
@@ -103,6 +104,10 @@ export class SearchWidget extends React.Component<{
           locale: this.props.pathname.split("/")[1] || "en-US",
         });
       }
+    }
+
+    if (prevProps.value !== this.props.value) {
+      this.updateSearch();
     }
   }
 
@@ -195,72 +200,69 @@ export class SearchWidget extends React.Component<{
     this.fuzzySearcher = new FuzzySearch(urisSorted);
   };
 
-  searchHandler = (event) => {
-    this.props.onChange(event.target.value);
-    this.updateSearch();
-  };
-
   updateSearch = () => {
-    const { value } = this.props;
+    const { value, onValueExistsChange } = this.props;
     if (!value) {
       if (this.state.showSearchResults) {
         this.setState({ showSearchResults: false });
       }
+      return;
     } else if (!this.index) {
       // This can happen if the initialized hasn't completed yet or
       // completed un-successfully.
       return;
-    } else {
-      // The iPhone X series is 812px high.
-      // If the window isn't very high, show fewer matches so that the
-      // overlaying search results don't trigger a scroll.
-      const limit = window.innerHeight < 850 ? 5 : 10;
+    }
 
-      if (value.startsWith("/") && !/\s/.test(value)) {
-        // Fuzzy-String search on the URI
+    // The iPhone X series is 812px high.
+    // If the window isn't very high, show fewer matches so that the
+    // overlaying search results don't trigger a scroll.
+    const limit = window.innerHeight < 850 ? 5 : 10;
 
-        if (value === "/") {
-          this.setState({
-            highlitResult: null,
-            searchResults: [],
-            showSearchResults: true,
-          });
-        } else {
-          const fuzzyResults = this.fuzzySearcher.search(value, { limit });
-          const results = fuzzyResults.map((fuzzyResult) => {
-            return {
-              title: this._map[fuzzyResult.needle].title,
-              uri: fuzzyResult.needle,
-              substrings: fuzzyResult.substrings,
-            };
-          });
-          this.setState({
-            highlitResult: results.length ? 0 : null,
-            searchResults: results,
-            showSearchResults: true,
-          });
-        }
-      } else {
-        // Full-Text search
-        const indexResults = this.index.search(value, {
-          limit,
-          // bool: "or",
-          suggest: true, // This can give terrible result suggestions
-        });
+    let results = null;
+    if (value.startsWith("/") && !/\s/.test(value)) {
+      // Fuzzy-String search on the URI
 
-        const results = indexResults.map((uri) => {
-          return {
-            title: this._map[uri].title,
-            uri,
-            popularity: this._map[uri].popularity,
-          };
-        });
+      if (value === "/") {
         this.setState({
-          highlitResult: results.length ? 0 : null,
-          searchResults: results,
+          highlitResult: null,
+          searchResults: [],
           showSearchResults: true,
         });
+      } else {
+        const fuzzyResults = this.fuzzySearcher.search(value, { limit });
+        results = fuzzyResults.map((fuzzyResult) => ({
+          title: this._map[fuzzyResult.needle].title,
+          uri: fuzzyResult.needle,
+          substrings: fuzzyResult.substrings,
+        }));
       }
+    } else {
+      // Full-Text search
+      const indexResults = this.index.search(value, {
+        limit,
+        // bool: "or",
+        suggest: true, // This can give terrible result suggestions
+      });
+
+      results = indexResults.map((uri) => ({
+        title: this._map[uri].title,
+        uri,
+        popularity: this._map[uri].popularity,
+      }));
+    }
+
+    if (results) {
+      onValueExistsChange &&
+        onValueExistsChange(
+          results.some((item) => item.uri.toLowerCase() === value.toLowerCase())
+        );
+      this.setState({
+        highlitResult: results.length ? 0 : null,
+        searchResults: results,
+        showSearchResults: true,
+      });
+    } else {
+      onValueExistsChange && onValueExistsChange(false);
     }
   };
 
@@ -347,11 +349,6 @@ export class SearchWidget extends React.Component<{
     }
   };
 
-  redirect = (uri) => {
-    const { onSelect } = this.props;
-    onSelect(uri);
-  };
-
   render() {
     const { value } = this.props;
     const {
@@ -390,7 +387,9 @@ export class SearchWidget extends React.Component<{
         <input
           className={show ? "has-search-results" : null}
           onBlur={this.blurHandler}
-          onChange={this.searchHandler}
+          onChange={(event) => {
+            this.props.onChange(event.target.value);
+          }}
           onFocus={this.focusHandler}
           onKeyDown={this.keyDownHandler}
           onMouseOver={this.initializeIndex}
