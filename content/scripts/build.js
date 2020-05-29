@@ -669,15 +669,14 @@ class Builder {
     self.summarizeResults(counts, flawCounts, t1 - t0);
   }
 
-  ensureAllTitles(forceRegenerate = false) {
+  ensureAllTitles() {
     if (!this.selfHash) {
       throw new Error("this.selfHash hasn't been set yet");
     }
     if (
       this.allTitles.size &&
       this.allTitles.get("_hash") === this.selfHash &&
-      !this.options.regenerateAllTitles &&
-      !forceRegenerate
+      !this.options.regenerateAllTitles
     ) {
       // No reason to proceed, the titles have already been loaded into memory.
       return;
@@ -690,8 +689,7 @@ class Builder {
     // But first, see if we can use the title from the last build.
     if (
       fs.existsSync(ALL_TITLES_JSON_FILEPATH) &&
-      !this.options.regenerateAllTitles &&
-      !forceRegenerate
+      !this.options.regenerateAllTitles
     ) {
       this.allTitles = new Map(
         Object.entries(
@@ -1498,7 +1496,7 @@ class Builder {
       // the first ever edit on it.
       // For example, if you edit a document's front-matter to change
       // the slug. Then it's a new mdnUrl since the watcher started.
-      this.ensureAllTitles(true);
+      this.processFolderTitle(source, folder, this._getAllPopularities());
     }
 
     if (this.excludeSlug(mdn_url)) {
