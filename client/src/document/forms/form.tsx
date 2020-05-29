@@ -6,10 +6,15 @@ import { SearchWidget } from "../../search";
 
 import "./form.scss";
 
-export type DocumentData = {
+type DocumentFormData = {
   rawHtml: string;
   metadata: { slug: string; title: string; summary: string };
 };
+
+export type DocumentOutData = Omit<DocumentFormData, "metadata"> & {
+  metadata: DocumentFormData["metadata"] & { locale: string };
+};
+
 export default function DocumentForm({
   onSave,
   initialSlug,
@@ -17,16 +22,16 @@ export default function DocumentForm({
   isSaving,
   savingError,
 }: {
-  onSave: (doc: DocumentData) => any;
+  onSave: (doc: DocumentOutData, didSlugChange: boolean) => unknown;
   initialSlug?: string | null;
-  doc?: DocumentData;
+  doc?: DocumentFormData;
   isSaving?: boolean;
   savingError?: null | Error;
 }) {
   const { locale } = useParams();
 
   const [slug, setSlug] = useState(
-    initialSlug ? initialSlug + "/" : doc ? doc.metadata.slug + "/" : ""
+    initialSlug ? initialSlug + "/" : doc ? doc.metadata.slug : ""
   );
   const [slugExists, setSlugExists] = useState(false);
   const [title, setTitle] = useState(doc ? doc.metadata.title : "");
@@ -45,52 +50,62 @@ export default function DocumentForm({
   // In auto-save mode inputs should still be changeable during saving
   const disableInputs = !shouldAutosave && isSaving;
 
+  const didSlugChange = Boolean(doc && doc.metadata.slug !== slug);
+
+  // skip over the /:locale/docs/ parts of the URL
   function toggleAutoSave() {
     setAutoSaveEnabled(!autosaveEnabled);
   }
-
-  // skip over the /:locale/docs/ parts of the URL
   function setSlugFromURL(url: string) {
     setSlug(url.split("/").slice(3).join("/"));
   }
-
-  const [putDocumentDebounced] = useDebouncedCallback(onSave, 1000);
+  const [onSaveDebounced] = useDebouncedCallback(onSave, 1000);
   useEffect(() => {
-    if (shouldAutosave) {
-      putDocumentDebounced({ rawHtml, metadata: { slug, title, summary } });
+    if (shouldAutosave && !didSlugChange) {
+      onSaveDebounced(
+        {
+          rawHtml,
+          metadata: { slug, title, summary, locale },
+        },
+        didSlugChange
+      );
     }
-  }, [shouldAutosave, putDocumentDebounced, slug, title, summary, rawHtml]);
+  }, [shouldAutosave, onSaveDebounced, slug, title, summary, rawHtml]);
 
   return (
     <form
       className="document-form"
       onSubmit={(event) => {
         event.preventDefault();
-        onSave({ rawHtml, metadata: { slug, title, summary } });
+        onSave(
+          {
+            rawHtml,
+            metadata: { slug, title, summary, locale },
+          },
+          didSlugChange
+        );
       }}
     >
-      {isNew && (
-        <div>
-          <label>
-            URL
-            <SearchWidget
-              value={`/${locale}/docs/${slug}`}
-              onChange={(url) => {
-                setSlugFromURL(url);
-              }}
-              onValueExistsChange={(exists) => {
-                setSlugExists(exists);
-              }}
-            />
-          </label>
-          {slugExists && (
-            <div className="form-warning">
-              Warning! This URL already exists, creating this document will
-              override the other document using that URL.
-            </div>
-          )}
-        </div>
-      )}
+      <div>
+        <label>
+          URL
+          <SearchWidget
+            value={`/${locale}/docs/${slug}`}
+            onChange={(url) => {
+              setSlugFromURL(url);
+            }}
+            onValueExistsChange={(exists) => {
+              setSlugExists(exists);
+            }}
+          />
+        </label>
+        {slugExists && !(doc && doc.metadata.slug === slug) && (
+          <div className="form-warning">
+            Warning! This URL already exists, creating this document will
+            override the other document using that URL.
+          </div>
+        )}
+      </div>
 
       <p>
         <label>

@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useSWR from "swr";
 import { Document } from "../index";
 import { useDocumentURL } from "../hooks";
-import DocumentForm, { DocumentData } from "./form";
+import DocumentForm, { DocumentOutData } from "./form";
 
 import "./edit.scss";
 
 export default function DocumentEdit() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const documentURL = useDocumentURL();
   const fetchURL = `/_document?${new URLSearchParams({
     url: documentURL,
@@ -22,7 +24,7 @@ export default function DocumentEdit() {
 
   const [isSaving, setIsSaving] = useState(false);
   const [savingError, setSavingError] = useState<Error | null>(null);
-  async function handleSave(data: DocumentData) {
+  async function handleSave(data: DocumentOutData, didSlugChange: boolean) {
     setIsSaving(true);
     try {
       const response = await fetch(
@@ -35,6 +37,13 @@ export default function DocumentEdit() {
       );
       if (!response.ok) {
         setSavingError(new Error(`${response.status} on ${documentURL}`));
+        return;
+      }
+      if (didSlugChange) {
+        navigate(
+          location.pathname.split("_edit")[0] + "_edit/" + data.metadata.slug,
+          { replace: true }
+        );
       }
     } catch (err) {
       setSavingError(err);

@@ -11,6 +11,7 @@ const cheerio = require("cheerio");
 const ProgressBar = require("./progress-bar");
 const { VALID_LOCALES } = require("./constants");
 const Document = require("./document");
+const { writeRedirects } = require("./utils");
 
 const MAX_OPEN_FILES = 256;
 
@@ -579,20 +580,13 @@ async function saveAllRedirects(redirects, root) {
       return 0;
     });
     countPerLocale.push([locale, pairs.length]);
-    const filePath = path.join(root, locale, "_redirects.txt");
     const localeFolder = path.join(root, locale);
     if (!fs.existsSync(localeFolder)) {
       console.log(
         `No content for ${locale}, so skip ${pairs.length} redirects`
       );
     } else {
-      const filePath = path.join(localeFolder, "_redirects.txt");
-      const writeStream = fs.createWriteStream(filePath);
-      writeStream.write(`# FROM-URL\tTO-URL\n`);
-      pairs.forEach(([fromUrl, toUrl]) => {
-        writeStream.write(`${fromUrl}\t${toUrl}\n`);
-      });
-      writeStream.end();
+      writeRedirects(localeFolder, pairs);
     }
   }
 

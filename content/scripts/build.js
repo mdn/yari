@@ -34,7 +34,7 @@ const {
   DEFAULT_LIVE_SAMPLES_BASE_URL,
   DEFAULT_INTERACTIVE_EXAMPLES_BASE_URL,
 } = require("./constants");
-const { slugToFoldername } = require("./utils");
+const { slugToFoldername, writeRedirects } = require("./utils");
 
 const kumascript = require("kumascript");
 
@@ -1864,6 +1864,20 @@ class Builder {
 
   removeFolderTitle(locale, slug) {
     this.allTitles.delete(buildMDNUrl(locale, slug).toLowerCase());
+  }
+
+  moveSlug(contentRoot, locale, oldSlug, newSlug, { redirectOldToNew }) {
+    const oldURL = buildMDNUrl(locale, oldSlug);
+    const newURL = buildMDNUrl(locale, newSlug);
+    const pairs = Array.from(this.allRedirects.entries()).map(([from, to]) => [
+      from,
+      to === oldURL ? newURL : to,
+    ]);
+    if (redirectOldToNew) {
+      pairs.push([oldURL, newURL]);
+    }
+    this.allRedirects = new Map(pairs);
+    writeRedirects(path.join(contentRoot, locale), pairs);
   }
 
   processStumptownFileTitle(source, file, allPopularities) {

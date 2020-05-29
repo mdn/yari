@@ -7,8 +7,8 @@ const yaml = require("js-yaml");
 const { VALID_LOCALES } = require("./constants");
 const { slugToFoldername } = require("./utils");
 
-function buildPath(contentPath, slug) {
-  return path.join(contentPath, slugToFoldername(slug));
+function buildPath(localeFolder, slug) {
+  return path.join(localeFolder, slugToFoldername(slug));
 }
 
 const getHTMLPath = (folder) => path.join(folder, "index.html");
@@ -30,9 +30,13 @@ function extractLocale(contentRoot, folder) {
   return locale;
 }
 
-function saveFile(folder, rawHtml, metadata) {
-  const combined = `---\n${yaml.safeDump(metadata)}---\n${rawHtml.trim()}\n`;
-  fs.writeFileSync(path.join(folder, "index.html"), combined);
+function saveFile(folder, rawHtml, { slug, title, summary }) {
+  const combined = `---\n${yaml.safeDump({
+    slug,
+    title,
+    summary,
+  })}---\n${rawHtml.trim()}\n`;
+  fs.writeFileSync(getHTMLPath(folder), combined);
 }
 
 function create(
@@ -98,14 +102,40 @@ const read = (contentRoot, folder, includeTimestamp = false) => {
   };
 };
 
+function rmdirIfEmpty(folder) {
+  const dirIter = fs.opendirSync(folder);
+  const isEmpty = !dirIter.readSync();
+  dirIter.closeSync();
+  if (isEmpty) {
+    fs.rmdirSync(folder);
+  }
+}
+
 function update(contentRoot, folder, rawHtml, metadata) {
   const document = read(contentRoot, folder);
+  const isNewSlug = document.metadata.slug !== metadata.slug;
+
   if (
+    isNewSlug ||
     document.rawHtml !== rawHtml ||
     document.metadata.title !== metadata.title ||
     document.metadata.summary !== metadata.summary
   ) {
     saveFile(folder, rawHtml, metadata);
+  }
+
+  if (isNewSlug) {
+    const newFolder = buildPath(
+      path.join(contentRoot, metadata.locale.toLowerCase()),
+      metadata.slug
+    );
+    fs.mkdirSync(newFolder, { recursive: true });
+    fs.renameSync(getHTMLPath(folder), getHTMLPath(newFolder));
+    const oldWikiHistoryPath = getWikiHistoryPath(folder);
+    if (fs.existsSync(oldWikiHistoryPath)) {
+      fs.renameSync(oldWikiHistoryPath, getWikiHistoryPath(newFolder));
+    }
+    rmdirIfEmpty(folder);
   }
 }
 
@@ -113,12 +143,7 @@ function del(folder) {
   fs.unlinkSync(getHTMLPath(folder));
   const wikiHistoryPath = getWikiHistoryPath(folder);
   fs.existsSync(wikiHistoryPath) && fs.unlinkSync(wikiHistoryPath);
-  const dirIter = fs.opendirSync(folder);
-  const isEmpty = !dirIter.readSync();
-  dirIter.closeSync();
-  if (isEmpty) {
-    fs.rmdirSync(folder);
-  }
+  rmdirIfEmpty(folder);
 }
 
 module.exports = {

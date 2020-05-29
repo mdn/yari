@@ -1,19 +1,18 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation, useParams } from "react-router";
-import DocumentForm, { DocumentData } from "./form";
+import { useNavigate, useLocation } from "react-router";
+import DocumentForm, { DocumentOutData } from "./form";
 
 export default function DocumentCreate() {
   const location = useLocation();
-  const { locale } = useParams();
   const navigate = useNavigate();
   const [savingError, setSavingError] = useState<Error | null>(null);
 
-  async function handleCreate(data: DocumentData) {
+  async function handleCreate(data: DocumentOutData) {
     try {
       const response = await fetch(`/_document`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ locale, ...data }),
+        body: JSON.stringify(data),
       });
       if (!response.ok) {
         setSavingError(
@@ -21,7 +20,7 @@ export default function DocumentCreate() {
         );
         return;
       }
-      navigate(`/${locale}/docs/${data.metadata.slug}`);
+      navigate(`/${data.metadata.locale}/docs/${data.metadata.slug}`);
     } catch (err) {
       setSavingError(err);
     }
