@@ -1794,7 +1794,14 @@ class Builder {
    */
   processFolderTitle(source, folder, allPopularities) {
     const { metadata } = Document.read(source.filepath, folder, true);
-    const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
+    let mdn_url;
+    try {
+      mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
+    } catch (e) {
+      throw new Error(
+        `error while building mdn url for ${folder}: ${e.toString()}`
+      );
+    }
     const mdnUrlLC = mdn_url.toLowerCase();
 
     if (this.allTitles.has(mdnUrlLC)) {
