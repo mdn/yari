@@ -23,7 +23,7 @@
     "jest-junit-reporter": "^1.1.0",
     "jsdom": "^16.2.2",
     "pegjs": "^0.10.0",
-    "vnu-jar": "^20.3.16"
+    "vnu-jar": "^20.5.29"
   },
   "jest": {
     "testEnvironment": "node",
