@@ -84,7 +84,7 @@ export class SearchWidget extends React.Component<{
     initialized: null, // null=not started, false=started, true=finished
     searchResults: [],
     serverError: null,
-    showSearchResults: true,
+    showSearchResults: false,
   };
 
   getCurrentLocale = () => {
