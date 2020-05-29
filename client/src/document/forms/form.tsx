@@ -70,7 +70,16 @@ export default function DocumentForm({
         didSlugChange
       );
     }
-  }, [shouldAutosave, onSaveDebounced, slug, title, summary, rawHtml]);
+  }, [
+    shouldAutosave,
+    onSaveDebounced,
+    slug,
+    title,
+    summary,
+    rawHtml,
+    didSlugChange,
+    locale,
+  ]);
 
   return (
     <form
