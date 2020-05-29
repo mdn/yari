@@ -18,7 +18,11 @@ export default function Toolbar({
   return (
     <div className="toolbar">
       <div className="toolbar-first-row">
-        <Link to={`/en-US/_create/${params["*"]}`}>Create new document</Link>
+        <Link
+          to={`/en-US/_create?initial_slug=${encodeURIComponent(params["*"])}`}
+        >
+          Create new document
+        </Link>
         <EditActions folder={doc.source.folder} />
         <Watcher onDocumentUpdate={onDocumentUpdate} />
       </div>

@@ -12,13 +12,13 @@ export type DocumentData = {
 };
 export default function DocumentForm({
   onSave,
-  parentSlug,
+  initialSlug,
   doc,
   isSaving,
   savingError,
 }: {
   onSave: (doc: DocumentData) => any;
-  parentSlug?: string;
+  initialSlug?: string | null;
   doc?: DocumentData;
   isSaving?: boolean;
   savingError?: null | Error;
@@ -26,7 +26,7 @@ export default function DocumentForm({
   const { locale } = useParams();
 
   const [slug, setSlug] = useState(
-    doc ? doc.metadata.slug + "/" : parentSlug || ""
+    initialSlug ? initialSlug + "/" : doc ? doc.metadata.slug + "/" : ""
   );
   const [slugExists, setSlugExists] = useState(false);
   const [title, setTitle] = useState(doc ? doc.metadata.title : "");
