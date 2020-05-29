@@ -556,7 +556,8 @@ async function processDocument(
     contentPath,
     isArchive ? doc.rendered_html : doc.html,
     meta,
-    wikiHistory
+    wikiHistory,
+    isArchive ? doc.html : null
   );
 }
 
