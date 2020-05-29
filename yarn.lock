@@ -8030,10 +8030,10 @@ md5.js@^1.3.4:
     inherits "^2.0.1"
     safe-buffer "^5.1.2"
 
-mdn-browser-compat-data@1.0.22, mdn-browser-compat-data@^1.0.22:
-  version "1.0.22"
-  resolved "https://registry.yarnpkg.com/mdn-browser-compat-data/-/mdn-browser-compat-data-1.0.22.tgz#17035cdb182bb72223f0feb9c12f6b77b4ee32fb"
-  integrity sha512-huoiqBhPzjuOx6pg9bbY0MiqXz+pKWWLxY8IsAIlS76lSY2ignepP8BGANst2P0VIekepnvC9oRGZkBHyxAiEQ==
+mdn-browser-compat-data@1.0.23, mdn-browser-compat-data@^1.0.23:
+  version "1.0.23"
+  resolved "https://registry.yarnpkg.com/mdn-browser-compat-data/-/mdn-browser-compat-data-1.0.23.tgz#52e21d74e52d40bacf1cc3377755897ef1639033"
+  integrity sha512-qzabBf9lN1UG6Ju6am5j4bsy8PJSxlE8zQEyDXzKqD+nAQsAnA8apvbkgTSIA/ZpKgz/7qOtpJgtgGN00MEsIg==
   dependencies:
     extend "3.0.2"
 
@@ -8042,10 +8042,10 @@ mdn-data@2.0.4:
   resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.4.tgz#699b3c38ac6f1d728091a64650b65d388502fd5b"
   integrity sha512-iV3XNKw06j5Q7mi6h+9vbx23Tv7JkjEVgKHW4pimwyDGWm0OIQntJJ+u1C6mg6mK1EaTv42XQ7w76yuzH7M2cA==
 
-mdn-data@2.0.8:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.8.tgz#b5b1b8b9dc76abb5261bf2b8c495a0b4565af5c6"
-  integrity sha512-2gcTclvIaw9K/D3+HeX2YrSmzJYvOL7CJCGTTrHlnzQ0N4KQkB/sgRwHArP7JzlL0feUwCZQ1C0yCO/us/dSdw==
+mdn-data@2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.9.tgz#7bf9378aff611b4e853e86edf5f3864568f45133"
+  integrity sha512-VMhGyDiXLxVp5XuGdtf04fIEZtcvLvlB+kAIbxLAjfAYgvGTIeLNxa9ZpIriHWB1SkG7q02hrnTt4yzZH+7gyA==
 
 mdn-data@~1.1.0:
   version "1.1.4"

@@ -26,6 +26,7 @@ const DEFAULT_EXCLUDE_SLUG_PREFIXES = [
   "Template_talk:",
   "User:",
   "User_talk:",
+  "Trash",
 
   // The following come from 'NOINDEX_SLUG_PREFIXES' in
   // https://github.com/mdn/kuma/blob/master/kuma/wiki/constants.py#L668

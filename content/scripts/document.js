@@ -35,12 +35,26 @@ function saveFile(folder, rawHtml, metadata) {
   fs.writeFileSync(path.join(folder, "index.html"), combined);
 }
 
-function create(contentRoot, rawHtml, metadata, wikiHistory = null) {
+function create(
+  contentRoot,
+  html,
+  metadata,
+  wikiHistory = null,
+  rawHtml = null
+) {
   const folder = buildPath(contentRoot, metadata.slug);
 
   fs.mkdirSync(folder, { recursive: true });
 
-  saveFile(folder, rawHtml, metadata);
+  saveFile(folder, html, metadata);
+
+  // The `rawHtml` is only applicable in the importer when it saves
+  // archived content. The archived content gets the *rendered* html
+  // saved but by storing the raw html too we can potentially resurrect
+  // the document if we decide to NOT archive it in the future.
+  if (rawHtml) {
+    fs.writeFileSync(path.join(folder, "raw.html"), rawHtml);
+  }
 
   if (wikiHistory) {
     fs.writeFileSync(
