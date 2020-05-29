@@ -5463,10 +5463,10 @@ from2@^2.1.0:
     inherits "^2.0.1"
     readable-stream "^2.0.0"
 
-front-matter@4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/front-matter/-/front-matter-4.0.1.tgz#5fde892d19b6ec548b73693818dd94e57b1df163"
-  integrity sha512-Kbm520Nf8Ir1IAdZg2CyXXszDCRsA0NbY25JJFgC9XWOcYyYIngRPk9M7RVpR478sGQfC9hS1Fxwaz58tVJbLw==
+front-matter@4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/front-matter/-/front-matter-4.0.2.tgz#b14e54dc745cfd7293484f3210d15ea4edd7f4d5"
+  integrity sha512-I8ZuJ/qG92NWX8i5x1Y8qyj3vizhXS31OxjKDu3LKP+7/qBgfIKValiZIEwoVoJKUHlhWtYrktkxV1XsX+pPlg==
   dependencies:
     js-yaml "^3.13.1"
 
