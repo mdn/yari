@@ -4,19 +4,17 @@ const { performance } = require("perf_hooks");
 
 const express = require("express");
 const openEditor = require("open-editor");
-const yaml = require("js-yaml");
-const fm = require("front-matter");
 
 const { slugToFoldername } = require("content/scripts/utils");
 const { FLAW_LEVELS } = require("content/scripts/constants.js");
 
+const { STATIC_ROOT } = require("./constants");
 const documentRouter = require("./document");
 const { getOrCreateBuilder, normalizeContentPath } = require("./utils");
 
 const app = express();
 app.use(express.json());
 
-const STATIC_ROOT = path.join(__dirname, "../client/build");
 const CONTENT_ALL_TITLES = path.join(__dirname, "../content/_all-titles.json");
 
 // The client/build directory won't exist at the very very first time
@@ -558,8 +556,12 @@ app.get("/*", async (req, res) => {
           res.sendFile(built[0].file);
         }
       } catch (ex) {
+        const message = ex.toString();
+        if (message.includes("does not exist")) {
+          return res.sendStatus(404);
+        }
         console.error(ex);
-        res.status(500).send(ex.toString());
+        res.status(500).send(message);
       }
     } else {
       res

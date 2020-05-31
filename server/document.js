@@ -1,9 +1,11 @@
+const fs = require("fs");
 const path = require("path");
 
 const express = require("express");
 
 const Document = require("content/scripts/document");
 
+const { STATIC_ROOT } = require("./constants");
 const { getOrCreateBuilder, normalizeContentPath } = require("./utils");
 
 const CONTENT_ROOT = path.join("..", process.env.BUILD_ROOT);
@@ -95,6 +97,15 @@ router.delete("/", withDocFolder, (req, res) => {
   const { metadata } = Document.read(CONTENT_ROOT, req.docFolder);
   Document.del(req.docFolder);
   getOrCreateBuilder().removeFolderTitle(metadata.locale, metadata.slug);
+
+  const builtFile = path.join(
+    STATIC_ROOT,
+    req.query.url.toLowerCase(),
+    "index.json"
+  );
+  if (fs.existsSync(builtFile)) {
+    fs.unlinkSync(builtFile);
+  }
   res.sendStatus(200);
 });
 
