@@ -37,6 +37,7 @@ export default function DocumentForm({
   const [title, setTitle] = useState(doc ? doc.metadata.title : "");
   const [summary, setSummary] = useState(doc ? doc.metadata.summary : "");
   const [rawHtml, setRawHtml] = useState(doc ? doc.rawHtml : "");
+
   const [autosaveEnabled, setAutoSaveEnabled] = useLocalStorage(
     "autosaveEdit",
     false
@@ -52,6 +53,8 @@ export default function DocumentForm({
 
   const didSlugChange = Boolean(doc && doc.metadata.slug !== slug);
 
+  const invalidSlug = slug.endsWith("/");
+
   // skip over the /:locale/docs/ parts of the URL
   function toggleAutoSave() {
     setAutoSaveEnabled(!autosaveEnabled);
@@ -60,6 +63,7 @@ export default function DocumentForm({
     setSlug(url.split("/").slice(3).join("/"));
   }
   const [onSaveDebounced] = useDebouncedCallback(onSave, 1000);
+
   useEffect(() => {
     if (shouldAutosave && !didSlugChange) {
       onSaveDebounced(
@@ -80,7 +84,6 @@ export default function DocumentForm({
     didSlugChange,
     locale,
   ]);
-
   return (
     <form
       className="document-form"
@@ -112,6 +115,11 @@ export default function DocumentForm({
           <div className="form-warning">
             Warning! This URL already exists, creating this document will
             override the other document using that URL.
+          </div>
+        )}
+        {invalidSlug && (
+          <div className="form-warning">
+            URLs are not allowed to end in a slash
           </div>
         )}
       </div>
@@ -152,7 +160,12 @@ export default function DocumentForm({
         <button
           type="submit"
           disabled={
-            disableInputs || !title || (isNew && !slug) || !summary || !rawHtml
+            disableInputs ||
+            !title ||
+            !slug ||
+            invalidSlug ||
+            !summary ||
+            !rawHtml
           }
         >
           {isNew ? "Create" : "Save"}
