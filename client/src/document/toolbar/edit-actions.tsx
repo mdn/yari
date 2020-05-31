@@ -53,11 +53,22 @@ export function EditActions({ folder }: { folder: string }) {
   }
 
   async function deleteDocument() {
-    await fetch(`/_document?url=${encodeURIComponent(documentURL)}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    });
-    navigate("/");
+    if (!window.confirm("Are you sure you want to delete this document?")) {
+      return;
+    }
+    const response = await fetch(
+      `/_document?url=${encodeURIComponent(documentURL)}`,
+      {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    if (response.ok) {
+      window.alert("Document successfully deleted");
+      navigate("/");
+    } else {
+      window.alert(`Error while deleting document: ${response.statusText}`);
+    }
   }
 
   if (!folder) {
