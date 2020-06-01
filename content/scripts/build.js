@@ -1149,7 +1149,7 @@ class Builder {
             })
             .map(([uri, documentData]) => {
               if (!documentData.modified) {
-                throw new Error("No .modified in documentData");
+                throw new Error(`No .modified in documentData (url: ${uri})`);
               }
               return {
                 loc: sitemapBaseUrl + uri,

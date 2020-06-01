@@ -1,6 +1,9 @@
 import React, { useEffect, useReducer, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useSWR from "swr";
+import { annotate, annotationGroup } from "rough-notation";
+import { RoughAnnotation } from "rough-notation/lib/model";
+
 import { humanizeFlawName } from "../../flaw-utils";
 import { Doc } from "../types";
 import "./flaws.scss";
@@ -146,6 +149,10 @@ function BrokenLinks({ urls }: { urls: string[] }) {
     if (!data) {
       return;
     }
+    const annotatations: RoughAnnotation[] = [];
+    // If the anchor already had a title, put it into this map.
+    // That way, when we restore the titles, we know what it used to be.
+    const originalTitles = new Map();
     for (const anchor of [
       ...document.querySelectorAll<HTMLAnchorElement>("div.content a[href]"),
     ]) {
@@ -154,36 +161,46 @@ function BrokenLinks({ urls }: { urls: string[] }) {
       if (pathname in data.redirects) {
         // Trouble! But is it a redirect?
         let correctURI = data.redirects[pathname];
+        let annotationColor = "red";
+        originalTitles.set(anchor.href, anchor.title);
         if (correctURI) {
           if (hash) {
             correctURI += hash;
           }
           // It can be fixed!
-          anchor.classList.add("flawed--broken_link_redirect");
+          annotationColor = "orange";
           anchor.title = `Consider fixing! It's actually a redirect to ${correctURI}`;
         } else {
-          anchor.classList.add("flawed--broken_link_404");
           anchor.title = "Broken link! Links to a page that will not be found";
         }
+        annotatations.push(
+          annotate(anchor, {
+            type: "box",
+            color: annotationColor,
+            animationDuration: 400,
+          })
+        );
       }
     }
+    const ag = annotationGroup(annotatations);
+    ag.show();
+
     return () => {
-      // Undo setting those extra classes and titles
+      ag.hide();
+
+      // Now, restore any 'title' attributes that were overridden.
       for (const anchor of Array.from(
-        document.querySelectorAll<HTMLAnchorElement>(
-          `div.content a.flawed--broken_link_redirect`
-        )
+        document.querySelectorAll<HTMLAnchorElement>(`div.content a`)
       )) {
-        anchor.classList.remove("flawed--broken_link_redirect");
-        anchor.title = "";
-      }
-      for (const anchor of Array.from(
-        document.querySelectorAll<HTMLAnchorElement>(
-          `div.content a.flawed--broken_link_404`
-        )
-      )) {
-        anchor.classList.remove("flawed--broken_link_404");
-        anchor.title = "";
+        // Only look at anchors that were bothered with at all in the
+        // beginning of the effect.
+        if (originalTitles.has(anchor.href)) {
+          const currentTitle = anchor.title;
+          const originalTitle = originalTitles.get(anchor.href);
+          if (currentTitle !== originalTitle) {
+            anchor.title = originalTitle;
+          }
+        }
       }
     };
   }, [data, urls]);
