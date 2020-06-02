@@ -152,3 +152,15 @@ When doing local development, it's recommended to set this to
 
 Usually the `server` workspace is started with `foreman` (the `nf` command)
 and this is the default port.
+
+## Testing
+
+### `TESTING_OPEN_BROWSER`
+
+**Default: `false`**
+
+When running the `jest-puppeteer` test suites, if you set this to `true`,
+it will open a browser on every page navigation.
+
+It might just flash by too quickly, so consider putting in
+`await jestPuppeteer.debug()` inside the test function to slow it down.
