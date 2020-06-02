@@ -16,14 +16,23 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: technote-space/get-diff-action@v1
+        id: git_diff_kumascript
+        with:
+          PREFIX_FILTER: |
+            kumascript/
+
+      - name: Display Git diffs
+        run: echo ${{ steps.git_diff_kumascript.outputs.diff }}
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v2-beta
         with:
           node-version: "12"
-      - name: Display Node version
-        run: node --version
-      - name: Display Yarn version
-        run: yarn --version
+      - name: Display Node & Yarn version
+        run: |
+          node --version
+          yarn --version
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -49,6 +58,7 @@ jobs:
 
       - name: Unit testing kumascript
         run: yarn workspace kumascript run test
+        if: steps.git_diff_kumascript.outputs.diff
 
       - name: Functional testing
         run: |
