@@ -1,6 +1,12 @@
 const path = require("path");
 const assert = require("assert").strict;
 
+const fs = require("fs");
+console.log(
+  "process.env.ENV_FILE====",
+  process.env.ENV_FILE,
+  fs.existsSync(process.env.ENV_FILE)
+);
 require("dotenv").config({ path: process.env.ENV_FILE });
 
 const DEFAULT_DATABASE_URL =
@@ -48,6 +54,7 @@ const DEFAULT_INTERACTIVE_EXAMPLES_BASE_URL =
   process.env.INTERACTIVE_EXAMPLES_BASE_URL ||
   "https://interactive-examples.mdn.mozilla.net";
 
+console.log("process.env.BUILD_ROOT=======", process.env.BUILD_ROOT);
 const DEFAULT_POPULARITIES_FILEPATH =
   process.env.BUILD_POPULARITIES_FILEPATH ||
   path.join(process.env.BUILD_ROOT, "..", "popularities.json");
