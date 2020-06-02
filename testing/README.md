@@ -46,6 +46,14 @@ This assumes you've set the appropriate environment variables and built the
 content. Alternatively, you can run `./testing/scripts/functional-test.sh`
 which takes care of all of these things.
 
+## Conditional testing in CI
+
+In GitHub Actions, instead of trying to optimize certain tests, just skip
+them if none of the files that affect the tests have changed.
+
+One such example is the tests for the `kumascript` source code plus macros.
+Use this technique heartly to speed up the continous integration.
+
 ## Caveats
 
 - At the moment it might not work on Windows. It should. At least the "Local
