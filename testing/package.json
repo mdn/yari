@@ -9,9 +9,11 @@
   },
   "dependencies": {
     "cheerio": "1.0.0-rc.3",
-    "jest": "26.0.1"
+    "jest": "26.0.1",
+    "jest-puppeteer": "4.4.0",
+    "puppeteer": "3.3.0"
   },
   "jest": {
-    "testEnvironment": "node"
+    "preset": "jest-puppeteer"
   }
 }

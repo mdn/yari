@@ -143,3 +143,12 @@ carefully as the rest of the site.
 
 When doing local development, it's recommended to set this to
 `http://localhost:5000` in your personal `.env`.
+
+## Server
+
+### `SERVER_PORT`
+
+**Default: `5000`**
+
+Usually the `server` workspace is started with `foreman` (the `nf` command)
+and this is the default port.

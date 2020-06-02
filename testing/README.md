@@ -55,3 +55,5 @@ which takes care of all of these things.
   intend to support.
 - There is no guidelines for how to add tests but feel free to pile on
   sample pages. You should not be afraid to add more.
+
+## Debugging headless tests
