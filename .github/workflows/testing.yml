@@ -1,7 +1,7 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Functional tests
+name: Testing Yari
 
 on:
   push:
@@ -15,6 +15,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v2-beta
         with:
@@ -27,7 +28,6 @@ jobs:
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
-
       - uses: actions/cache@v1
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
@@ -36,16 +36,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Install yarn packages
-        run: yarn --frozen-lockfile
-
-      - name: Build
+      - name: Install all yarn packages
         run: |
-          cp .env-dist .env
+          ./testing/scripts/yarn-install.sh
+          ./testing/scripts/yarn-lockfile-check.sh
 
-          # Temporary hack, until we have functional tests
-          mkdir content/files
-          mkdir content/files/en-us
+      - name: Lint checking
+        run: ./testing/scripts/lint-check.sh
 
+      - name: Unit testing client
+        run: yarn workspace client run test
 
-          yarn run prebuild
+      - name: Unit testing kumascript
+        run: yarn workspace kumascript run test
+
+      - name: Functional testing
+        run: ./testing/scripts/functional-test.sh
