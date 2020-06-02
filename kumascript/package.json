@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "license": "MPL-2.0",
+  "author": "Peter Testing",
   "scripts": {
     "test": "jest ./tests",
     "test-coverage": "jest --coverage --collectCoverageFrom='./src/**' ./tests"
