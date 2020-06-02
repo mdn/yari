@@ -16,6 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: technote-space/get-diff-action@v1
+        with:
+          PREFIX_FILTER: |
+            kumascript/
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v2-beta
         with:
@@ -49,6 +54,7 @@ jobs:
 
       - name: Unit testing kumascript
         run: yarn workspace kumascript run test
+        if: env.GIT_DIFF
 
       - name: Functional testing
         run: ./testing/scripts/functional-test.sh
