@@ -39,6 +39,7 @@ const ARCHIVE_SLUG_ENGLISH_PREFIXES = [
   "Sandbox",
   "SpiderMonkey",
   "Thunderbird",
+  "Trash",
   "XML_Web_Services",
   "XUL",
   "XULREF",
@@ -555,7 +556,8 @@ async function processDocument(
     contentPath,
     isArchive ? doc.rendered_html : doc.html,
     meta,
-    wikiHistory
+    wikiHistory,
+    isArchive ? doc.html : null
   );
 }
 
