@@ -51,4 +51,9 @@ jobs:
         run: yarn workspace kumascript run test
 
       - name: Functional testing
-        run: ./testing/scripts/functional-test.sh
+        run: |
+          # Make this env var explicit for GitHub Actions because in local
+          # dev/debug you're encourage to start it yourself in a separate
+          # terminal.
+          export TESTING_START_SERVER=true
+          ./testing/scripts/functional-test.sh --runInBand

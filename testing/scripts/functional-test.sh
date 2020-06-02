@@ -11,7 +11,7 @@ node content build
 # and https://www.peterbe.com/plog/ideal-number-of-workers-in-jest-maxWorkers
 
 # The default where jest can attempt to run as much in parallel as possible
-yarn workspace testing run test
+yarn workspace testing run test $@
 # This is shorthand for `--maxWorkers=2`
 # yarn workspace testing run test --runInBand
 # Example of manually fine-tuning the number
