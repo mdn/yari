@@ -24,6 +24,12 @@ test("content built foo page", () => {
   expect(doc.modified).toBeTruthy();
   expect(doc.source).toBeTruthy();
 
+  const brokenLinks = doc.flaws.broken_links;
+  expect(brokenLinks).toBeTruthy();
+  expect(brokenLinks.includes("/en-US/docs/Web/Fuu")).toBeTruthy();
+  expect(brokenLinks.includes("/en-US/docs/Does/Not/Exist")).toBeTruthy();
+  expect(brokenLinks.includes("//www.peterbe.com")).toBeFalsy();
+
   const htmlFile = path.join(builtFolder, "index.html");
   expect(fs.existsSync(htmlFile)).toBeTruthy();
   const html = fs.readFileSync(htmlFile, "utf-8");
