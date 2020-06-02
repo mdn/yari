@@ -1,6 +1,8 @@
 # yari
 
-[![Build Status](https://travis-ci.org/mdn/yari.svg?branch=master)](https://travis-ci.org/mdn/yari)
+<!-- https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#adding-a-workflow-status-badge-to-your-repository -->
+
+![](https://github.com/mdn/yari/workflows/.github/workflows/testing.yml/badge.svg)
 
 ## Quickstart
 

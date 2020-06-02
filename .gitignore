@@ -17,27 +17,27 @@
 .env.development.local
 .env.test.local
 .env.production.local
-.env
+/.env
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-server/node_modules/
-client/node_modules/
-client/build/
-server/dist/
-ssr/node_modules/
-ssr/dist/
-watcher/node_modules/
-archivecontent/
-content/node_modules/
-content/files/
-content/build/
-content/_all-titles.json
-ci-content/
-kumascript/coverage/
-kumascript/node_modules/
+/server/node_modules/
+/client/node_modules/
+/client/build/
+/server/dist/
+/ssr/node_modules/
+/ssr/dist/
+/watcher/node_modules/
+/content/node_modules/
+/content/build/
+/content/_all-titles.json
+# Remove this once we're using `/testing/content/` fully.
+/ci-content/
+/kumascript/coverage/
+/kumascript/node_modules/
+/testing/node_modules/
 
 # Can be removed once content lives in its own repo
-archivecontent/files
-content/files
+/archivecontent/files
+/content/files

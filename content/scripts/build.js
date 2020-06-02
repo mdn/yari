@@ -12,7 +12,7 @@ const WebSocket = require("ws");
 // XXX does this work on Windows?
 const packageJson = require("../../package.json");
 
-require("dotenv").config();
+require("dotenv").config({ path: process.env.ENV_FILE });
 
 const cheerio = require("./monkeypatched-cheerio");
 const ProgressBar = require("./progress-bar");
@@ -192,7 +192,7 @@ function triggerTouch(filepath, document, root) {
     name: path.relative(root, filepath),
   };
   const data = {
-    documentUri: document.mdn_url,
+    documentURL: document.mdn_url,
     changedFile,
     hasEDITOR: Boolean(process.env.EDITOR),
   };
@@ -903,11 +903,19 @@ class Builder {
         const watchdir = path.resolve(source.filepath);
 
         console.log(chalk.yellow(`Setting up file watcher on ${watchdir}...`));
-        const watcher = chokidar.watch(path.join(watchdir, "**/*.(html|yaml)"));
+        const startTime = new Date().getTime();
+        const watcher = chokidar.watch(path.join(watchdir, "**/*.html"), {
+          // Otherwise the 'add' event is triggered for existing files.
+          ignoreInitial: true,
+        });
         watcher.on("change", (path) => {
           onChange(path, source);
         });
+        watcher.on("add", (path) => {
+          onChange(path, source);
+        });
         watcher.on("ready", () => {
+          const ageSinceStart = new Date().getTime() - startTime;
           const watchedPaths = watcher.getWatched();
           const folders = Object.values(watchedPaths);
           const count = folders
@@ -916,7 +924,8 @@ class Builder {
           console.log(
             chalk.yellow(
               `File watcher set up for ${watchdir}. ` +
-                `Watching over ${count.toLocaleString()} files in ${folders.length.toLocaleString()} folders.`
+                `Watching over ${count.toLocaleString()} files in ${folders.length.toLocaleString()} folders. ` +
+                `Took ${ppMilliseconds(ageSinceStart)} to get ready.`
             )
           );
           if (isTTY()) {
@@ -1481,6 +1490,15 @@ class Builder {
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
     const mdnUrlLC = mdn_url.toLowerCase();
 
+    if (!this.allTitles.has(mdnUrlLC)) {
+      // This means the this.allTitles is out of date
+      // This can happen if you've added a new document and made
+      // the first ever edit on it.
+      // For example, if you edit a document's front-matter to change
+      // the slug. Then it's a new mdnUrl since the watcher started.
+      this.processFolderTitle(source, folder, this._getAllPopularities());
+    }
+
     if (this.excludeSlug(mdn_url)) {
       return { result: processing.EXCLUDED, file: folder };
     }
@@ -1829,7 +1847,13 @@ class Builder {
    */
   processFolderTitle(source, folder, allPopularities) {
     const { metadata } = getContent(source, folder, true);
-    const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
+    let mdn_url;
+    try {
+      mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
+    } catch (err) {
+      console.warn(`The folder that caused the error was: ${folder}`);
+      throw err;
+    }
     const mdnUrlLC = mdn_url.toLowerCase();
 
     if (this.allTitles.has(mdnUrlLC)) {
