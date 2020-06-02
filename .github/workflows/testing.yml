@@ -29,10 +29,10 @@ jobs:
         uses: actions/setup-node@v2-beta
         with:
           node-version: "12"
-      - name: Display Node version
-        run: node --version
-      - name: Display Yarn version
-        run: yarn --version
+      - name: Display Node & Yarn version
+        run: |
+          node --version
+          yarn --version
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
