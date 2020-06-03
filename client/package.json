@@ -48,7 +48,7 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/react": "^10.0.5",
+    "@testing-library/react": "^10.0.6",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "mdn-browser-compat-data": "^1.0.23"
   }
