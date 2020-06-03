@@ -9,6 +9,9 @@ const { Sources } = require("./scripts/sources");
 const {
   DEFAULT_DATABASE_URL,
   DEFAULT_EXCLUDE_SLUG_PREFIXES,
+  DEFAULT_BUILD_ROOT,
+  DEFAULT_BUILD_ARCHIVE_ROOT,
+  DEFAULT_BUILD_DESTINATION,
   DEFAULT_BUILD_LOCALES,
   DEFAULT_BUILD_NOT_LOCALES,
   DEFAULT_SITEMAP_BASE_URL,
@@ -35,13 +38,13 @@ cli
     "-r, --root <path>",
     "root of where to save active content files",
     cli.PATH,
-    process.env.BUILD_ROOT || "content/files"
+    DEFAULT_BUILD_ROOT
   )
   .option(
     "-a, --archive-root <path>",
     "root of where to save the archive content files",
     cli.PATH,
-    process.env.BUILD_ARCHIVE_ROOT || "archivecontent/files"
+    DEFAULT_BUILD_ARCHIVE_ROOT
   )
   .option(
     "-l, --locales <locale>",
@@ -76,13 +79,13 @@ cli
     "-r, --root <path>",
     "main root to get content with Kuma HTML",
     cli.PATH,
-    process.env.BUILD_ROOT
+    DEFAULT_BUILD_ROOT
   )
   .option(
     "-a, --archive-root <path>",
     "archived content files",
     cli.PATH,
-    process.env.BUILD_ARCHIVE_ROOT
+    DEFAULT_BUILD_ARCHIVE_ROOT
   )
   .option(
     "-s, --stumptown-root <path>",
@@ -181,7 +184,7 @@ cli
     "[destination]",
     "root folder to put built files into",
     cli.STRING,
-    process.env.BUILD_DESTINATION || "client/build"
+    DEFAULT_BUILD_DESTINATION
   )
   .action(async (args, options, logger) => {
     // Build up the 'sources' based on the various paths arguments.
