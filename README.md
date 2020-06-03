@@ -147,6 +147,36 @@ upgrade:
 
     yarn upgrade-interactive
 
+### Sharing your dev environment with `ngrok`
+
+[`ngrok`](https://ngrok.com/) is a great tool for starting a HTTP proxy
+server from the Internet into your Yari server. This can be useful for testing
+your current build on external tools like BrowserStack, WebPageTest,
+Google Translate, or to simply show a friend what you're up to. Obiviously
+it'll never be faster than your uplink Internet connection but it should
+be fairly feature complete.
+
+1. [Create in account on Ngrok.com](https://dashboard.ngrok.com/signup)
+2. [Download the executable](https://ngrok.com/download)
+3. Start your Yari server with `yarn start` in one terminal
+4. Start the `ngrok` executable with: `/path/to/your/ngrok http 5000`
+
+This will display something like this:
+
+    Session Status                online
+    Account                        (Plan: Free)
+    Version                       2.3.35
+    Region                        United States (us)
+    Web Interface                 http://127.0.0.1:4040
+    Forwarding                    http://920ba2108da8.ngrok.io -> http://localhost:5000
+    Forwarding                    https://920ba2108da8.ngrok.io -> http://localhost:5000
+
+    Connections                   ttl     opn     rt1     rt5     p50     p90
+                                0       0       0.00    0.00    0.00    0.00
+
+Now, take that "Forwarding" URL `https://920ba2108da8.ngrok.io` (in this
+example) and share it.
+
 ## Building
 
 The `server` builds content automatically (on-the-fly) when you're viewing
