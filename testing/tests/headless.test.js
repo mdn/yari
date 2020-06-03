@@ -7,9 +7,7 @@ function testURL(pathname = "/") {
 describe("Basic viewing of functional pages", () => {
   it("open the temporary home page", async () => {
     await page.goto(testURL("/"));
-    // await jestPuppeteer.debug();
     await expect(page).toMatch("MDN Web Docs");
-    // await expect(page).toMatchElement("h1", { text: /MDN Web Docs/ });
     await expect(page).toMatchElement("title", { text: /MDN Web Docs/ });
   });
 
@@ -17,8 +15,6 @@ describe("Basic viewing of functional pages", () => {
     await page.goto(testURL("/"));
     await expect(page).toFill('form input[type="search"]', "fo");
     await expect(page).toMatch("<foo>: A test tag");
-    // console.log(await page.content());
-    // await jestPuppeteer.debug();
     await expect(page).toClick("div.highlit");
     // Should have been redirected too...
     expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));

@@ -1,6 +1,8 @@
 const path = require("path");
 const assert = require("assert").strict;
 
+require("dotenv").config({ path: process.env.ENV_FILE });
+
 const DEFAULT_DATABASE_URL =
   process.env.DATABASE_URL || "mysql2://username:password@host/databasename";
 
