@@ -55,6 +55,7 @@ test("the 'notranslate' class is correctly inserted", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("pre.notranslate").length).toEqual($("pre").length);
+});
 
 test("content with non-ascii characters in the slug", () => {
   const titlesFile = path.join(buildRoot, "en-us", "titles.json");
@@ -75,4 +76,5 @@ test("content with non-ascii characters in the slug", () => {
   expect(fs.existsSync(jsonFile)).toBeTruthy();
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.title).toBe("Bézier curve");
-  expect(doc.mdn_url).toBe("/en-US/docs/Glossary/Bézier_curve");});
+  expect(doc.mdn_url).toBe("/en-US/docs/Glossary/Bézier_curve");
+});
