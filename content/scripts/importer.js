@@ -1,5 +1,4 @@
 const assert = require("assert").strict;
-const url = require("url");
 const fs = require("fs");
 const path = require("path");
 const stream = require("stream");
@@ -157,13 +156,13 @@ function getSQLConstraints(
   }
   if (excludePrefixes.length) {
     extra.push(
-      `NOT (${excludePrefixes.map((_) => `${a}slug LIKE ?`).join(" OR ")})`
+      `NOT (${excludePrefixes.map(() => `${a}slug LIKE ?`).join(" OR ")})`
     );
     queryArgs.push(...excludePrefixes.map((s) => `${s}%`));
     if (parentAlias) {
       extra.push(
         `((${parentAlias}.slug IS NULL) OR NOT (${excludePrefixes
-          .map((_) => `${parentAlias}.slug LIKE ?`)
+          .map(() => `${parentAlias}.slug LIKE ?`)
           .join(" OR ")}))`
       );
       queryArgs.push(...excludePrefixes.map((s) => `${s}%`));
@@ -462,7 +461,7 @@ function getRedirectURL(html) {
       href = hrefHref;
     }
     if (href.startsWith("https://developer.mozilla.org")) {
-      return url.parse(href).pathname;
+      return new URL(href).pathname;
     } else {
       return href;
     }
