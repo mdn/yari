@@ -43,6 +43,20 @@ test("content built titles.json file", () => {
   expect(titles["/en-US/docs/XUL/ancientness"]).toBeFalsy();
 });
 
+test("the 'notranslate' class is correctly inserted", () => {
+  const folder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "donttranslatethese"
+  );
+  const htmlFile = path.join(folder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("pre.notranslate").length).toEqual($("pre").length);
+});
+
 test("content with non-ascii characters in the slug", () => {
   const titlesFile = path.join(buildRoot, "en-us", "titles.json");
   expect(fs.existsSync(titlesFile)).toBeTruthy();
