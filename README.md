@@ -30,7 +30,7 @@ up-to-date with these commands:
     yarn clean
     yarn start
 
-These are also good steps to always take when you embark to make a change.
+These are also good steps to always take when you embark on making a change.
 Then, the only extra command needed is `git checkout -b my-new-branch`
 (or however you prefer to create new `git` branches)
 
@@ -48,7 +48,7 @@ the bulk of the document.
 
 The builder converts these "source files" into "build files" using a CLI tool
 that iterates over the files, builds the HTML, and lastly packages it up
-with the front-end code. Ready to be served as static file.
+with the front-end code, ready to be served as static files.
 
 ## Development
 
@@ -60,8 +60,8 @@ content exclusively.
 
 The `yarn start` command encapsulates the front-end dev server
 (on `localhost:3000`) and the `server` (on `localhost:5000`)
-as well as the `watcher`. What the `watcher` does is that when a `index.html`
-file changes (or is added!) it triggers a build of it.
+as well as the `watcher`. The `watcher` triggers a build when a
+file changes (or is added!).
 The `yarn start` command also first runs a command that gathers up *all*
 the document URLs and their titles (plus some other metadata). This can
 take a while but it's cached to disk and is automatically invalidated if
@@ -87,13 +87,13 @@ click the "Edit in your editor" button.
 
 The `server` has two main jobs:
 
-1. Simulate what it would be like to statically serve the site (e.g. a CDN)
+1. Simulate serving the site (e.g. from a server, S3 or a CDN).
 2. Trigger builds of documents that haven't been built, by URL.
 
 If you don't use the server you can manually use the CLI to build a page.
 For example:
 
-    node content build -l en-us -f we/html/element
+    node content build -l en-us -f web/html/element
 
 ...will build all documents that match that folder prefix. But you don't
 need to do that up front since the server will "fill in the gaps" by
@@ -106,11 +106,11 @@ and it's easy to test this with:
 
     yarn prettier-check
 
-And conviently, if you're not even interested in what the flaws were, run:
+And conveniently, if you're not even interested in what the flaws were, run:
 
     yarn prettier-format
 
-But automatically when you ran `yarn` the first time (`yarn` is alias for
+But automatically when you ran `yarn` the first time (`yarn` is an alias for
 `yarn install`) it set up a `git` pre-commit hook that uses `pretty-quick`
 which is a wrapper on `prettier` that checks only the files in the git
 commit.
@@ -194,7 +194,8 @@ to build all `en-US` documents under the `Web/CSS/` subtree, you can run this:
     node content build -l en-us -f web/css
 
 The files get put into the `client/build/` and that folder should be ready
-to be uploaded to static file hosting.
+to be uploaded to static file hosting. Note the `-f` (aka `--foldersearch`)
+is case-insensitive.
 
 ### What gets built
 
@@ -226,12 +227,12 @@ severe but they should never block a full build.
 More information about how to set flaws can be found in `docs/envvars.md`.
 
 Essentially, the default is to *warn* about any flaw and you can see
-those flaws when using `http://localhost:3000`. But for finish builds,
+those flaws when using `http://localhost:3000`. But for completed builds,
 all flaws are ignored. This makes the build faster and there's also
 no good place to display the flaws in a production-grade build.
 
 **In the future**, we might make the default flaw level `error` instead.
-That means that any new edits (or creation) to any document will break
+That means that any new edits to (or creation of) any document will break
 in continuous integration if there's a single flaw and the onus will
 be on you to fix it.
 
