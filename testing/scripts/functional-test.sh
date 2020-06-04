@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 export ENV_FILE=testing/.env
 

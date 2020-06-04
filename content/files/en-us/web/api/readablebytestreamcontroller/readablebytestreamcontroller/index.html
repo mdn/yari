@@ -1,0 +1,78 @@
+---
+title: ReadableByteStreamController.ReadableByteStreamController()
+slug: Web/API/ReadableByteStreamController/ReadableByteStreamController
+summary: >-
+  The ReadableByteStreamController() constructor creates and returns a
+  ReadableByteStreamController() object instance.
+tags:
+  - API
+  - Constructor
+  - Experimental
+  - ReadableByteStreamController
+  - Reference
+  - Streams
+---
+<div>{{draft}}{{SeeCompatTable}}{{APIRef("Streams")}}</div>
+
+<p class="summary">The <strong><code>ReadableByteStreamController()</code></strong> constructor creates and returns a <code>ReadableByteStreamController()</code> object instance.</p>
+
+<div class="note">
+<p><strong>Note</strong>: You wouldn't use this constructor manually — this is used during the construction of a {{domxref("ReadableStream")}} object.</p>
+</div>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox">var readableStreamController = new ReadableStreamController(<em>stream</em>, <em>underlyingSource,</em> <em>highWaterMark</em>);</pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<dl>
+ <dt>stream</dt>
+ <dd>The {{domxref("ReadableStream")}} to be controlled.</dd>
+ <dt>underlyingSource</dt>
+ <dd>An object containing methods and properties that define how the constructed stream instance will behave. See the <a href="https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream/ReadableStream#Parameters"><code>ReadableStream()</code> constructor's parameters definitions</a> for more information.</dd>
+ <dt>highWaterMark</dt>
+ <dd>A non-negative integer — this defines the total number of chunks that can be contained in the internal queue before backpressure is applied.</dd>
+</dl>
+
+<h3 id="Return_value">Return value</h3>
+
+<p>An instance of the {{domxref("ReadableByteStreamController")}} object.</p>
+
+<h3 id="Exceptions">Exceptions</h3>
+
+<dl>
+ <dt>RangeError</dt>
+ <dd>The associated {{domxref("ReadableStream")}} was constructed with <code>autoAllocateChunkSize</code> set, but its value is not an integer or below 0.</dd>
+ <dt>TypeError</dt>
+ <dd>The supplied <code>stream</code> parameter is not a {{domxref("ReadableStream")}}, or it already has an associated controller.</dd>
+</dl>
+
+<h2 id="Examples">Examples</h2>
+
+<p>TBD</p>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+  <tr>
+   <td>{{SpecName("Streams","#rbs-controller-constructor","ReadableByteStreamController()")}}</td>
+   <td>{{Spec2('Streams')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">
+<p>The compatibility table in this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</p>
+</div>
+
+<p>{{Compat("api.ReadableByteStreamController.ReadableByteStreamController")}}</p>

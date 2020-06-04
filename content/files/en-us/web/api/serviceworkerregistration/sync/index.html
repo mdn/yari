@@ -1,0 +1,48 @@
+---
+title: ServiceWorkerRegistration.sync
+slug: Web/API/ServiceWorkerRegistration/sync
+summary: "The sync property of the ServiceWorkerRegistration interface returns a reference to the SyncManager\_interface, which manages background synchronization processes."
+tags:
+  - API
+  - Experimental
+  - Property
+  - Reference
+  - Service Workers
+  - ServiceWorkerRegistration
+  - Sync
+---
+<div>{{Non-standard_header}}{{APIRef("Service Workers API")}}</div>
+
+<p>The <code><strong>sync</strong></code> property of the {{domxref("ServiceWorkerRegistration")}} interface returns a reference to the {{domxref("SyncManager")}} interface, which manages background synchronization processes.</p>
+
+<h2 id="Syntax" name="Syntax">Syntax</h2>
+
+<pre class="syntaxbox">var <em>syncManager</em> = <em>serviceWorkerRegistration</em>.sync;
+</pre>
+
+<h3 id="Value">Value</h3>
+
+<p>A {{domxref("SyncManager")}} object.</p>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+  <tr>
+   <td>{{SpecName('Background Sync')}}</td>
+   <td>{{Spec2('Background Sync')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table in this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.ServiceWorkerRegistration.sync")}}</p>

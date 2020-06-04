@@ -1,0 +1,108 @@
+---
+title: inset-block
+slug: Web/CSS/inset-block
+summary: >-
+  The inset-block CSS property defines the logical block start and end offsets
+  of an element, which maps to physical offsets depending on the element's
+  writing mode, directionality, and text orientation. It corresponds to the top
+  and bottom, or right and left properties depending on the values defined for
+  writing-mode, direction, and text-orientation.
+tags:
+  - CSS
+  - CSS Logical Property
+  - CSS Property
+  - Experimental
+  - Reference
+---
+<div>{{CSSRef}}</div>
+
+<p>The <strong><code>inset-block</code></strong> <a href="/en-US/docs/Web/CSS" title="CSS">CSS</a> property defines the logical block start and end offsets of an element, which maps to physical offsets depending on the element's writing mode, directionality, and text orientation. It corresponds to the {{cssxref("top")}} and {{cssxref("bottom")}}, or {{cssxref("right")}} and {{cssxref("left")}} properties depending on the values defined for {{cssxref("writing-mode")}}, {{cssxref("direction")}}, and {{cssxref("text-orientation")}}.</p>
+
+<pre class="brush:css no-line-numbers">/* &lt;length&gt; values */
+inset-block: 3px 10px;
+inset-block: 2.4em 3em;
+inset-block: 10px; /* value applied to start and end */
+
+/* &lt;percentage&gt;s of the width or height of the containing block */
+inset-block: 10% 5%;
+
+/* Keyword value */
+inset-block: auto;
+
+/* Global values */
+inset-block: inherit;
+inset-block: initial;
+inset-block: unset;
+</pre>
+
+<p>The shorthand for the other dimension is {{cssxref("inset-inline")}}, which is a shorthand for {{cssxref("inset-inline-start")}}, and {{cssxref("inset-inline-end")}}.</p>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<h3 id="Values">Values</h3>
+
+<p>The <code>inset-block</code> property takes the same values as the {{cssxref("left")}} property.</p>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h2 id="Example">Example</h2>
+
+<h3 id="HTML">HTML</h3>
+
+<pre class="brush: html">&lt;div&gt;
+  &lt;p class="exampleText"&gt;Example text&lt;/p&gt;
+&lt;/div&gt;
+</pre>
+
+<h3 id="CSS">CSS</h3>
+
+<pre class="brush: css">div {
+  background-color: yellow;
+  width: 120px;
+  height: 120px;
+}
+
+.exampleText {
+  writing-mode: vertical-lr;
+  position: relative;
+  inset-block: 20px 50px;
+  background-color: #c8c800;
+}</pre>
+
+<p>{{EmbedLiveSample("Example", 140, 140)}}</p>
+
+<h2 id="Specification">Specification</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName("CSS Logical Properties", "#propdef-inset-block", "inset-block")}}</td>
+   <td>{{Spec2("CSS Logical Properties")}}</td>
+   <td>Initial definition</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.properties.inset-block")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>The mapped physical properties: {{cssxref("top")}}, {{cssxref("right")}}, {{cssxref("bottom")}}, and {{cssxref("left")}}</li>
+ <li>{{cssxref("writing-mode")}}, {{cssxref("direction")}}, {{cssxref("text-orientation")}}</li>
+</ul>

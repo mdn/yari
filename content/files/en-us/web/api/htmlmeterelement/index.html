@@ -1,0 +1,84 @@
+---
+title: HTMLMeterElement
+slug: Web/API/HTMLMeterElement
+summary: >-
+  The HTML meter elements expose the HTMLMeterElement interface, which provides
+  special properties and methods (beyond the HTMLElement object interface they
+  also have available to them by inheritance) for manipulating the layout and
+  presentation of meter elements.
+tags:
+  - API
+  - HTML DOM
+  - HTMLMeterElement
+  - Interface
+  - Reference
+---
+<div>{{APIRef("HTML DOM")}}</div>
+
+<p>The HTML {{HTMLElement("meter")}} elements expose the <code><strong>HTMLMeterElement</strong></code> interface, which provides special properties and methods (beyond the {{domxref("HTMLElement")}} object interface they also have available to them by inheritance) for manipulating the layout and presentation of {{HTMLElement("meter")}} elements.</p>
+
+<p>{{InheritanceDiagram(600, 120)}}</p>
+
+<h2 id="Properties">Properties</h2>
+
+<p><em>Also inherits properties from its parent, {{domxref("HTMLElement")}}.</em></p>
+
+<dl>
+ <dt>{{domxref("HTMLMeterElement.high")}}</dt>
+ <dd>A <code>double</code> representing the value of the high boundary, reflecting the {{htmlattrxref("high","meter")}} attribute.</dd>
+ <dt>{{domxref("HTMLMeterElement.low")}}</dt>
+ <dd>A <code>double</code> representing the value of the low boundary, reflecting the {{htmlattrxref("low","meter")}}attribute.</dd>
+ <dt>{{domxref("HTMLMeterElement.max")}}</dt>
+ <dd>A <code>double</code> representing the maximum value, reflecting the {{htmlattrxref("max","meter")}} attribute.</dd>
+ <dt>{{domxref("HTMLMeterElement.min")}}</dt>
+ <dd>A <code>double</code> representing the minimum value, reflecting the {{htmlattrxref("min","meter")}} attribute.</dd>
+ <dt>{{domxref("HTMLMeterElement.optimum")}}</dt>
+ <dd>A <code>double</code> representing the optimum, reflecting the {{htmlattrxref("optimum","meter")}} attribute.</dd>
+ <dt>{{domxref("HTMLMeterElement.value")}}</dt>
+ <dd>A <code>double</code> representing the currrent value, reflecting the {{htmlattrxref("value","meter")}} attribute.</dd>
+ <dt>{{domxref("HTMLMeterElement.labels")}}{{ReadOnlyInline}}</dt>
+ <dd>A {{domxref("NodeList")}} of {{HTMLElement("label")}} elements that are associated with the element.</dd>
+</dl>
+
+<h2 id="Methods">Methods</h2>
+
+<p><em>This interface does not implement any specific methods but inherits methods from its parent, {{domxref("HTMLElement")}}.</em></p>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+  <tr>
+   <td>{{SpecName('HTML WHATWG', "#htmlmeterelement", "HTMLMeterElement")}}</td>
+   <td>{{Spec2('HTML WHATWG')}}</td>
+   <td> </td>
+  </tr>
+  <tr>
+   <td>{{SpecName('HTML5.1', "forms.html#the-meter-element", "HTMLMeterElement")}}</td>
+   <td>{{Spec2('HTML5.1')}}</td>
+   <td>No change</td>
+  </tr>
+  <tr>
+   <td>{{SpecName('HTML5 W3C', "forms.html#the-meter-element", "HTMLMeterElement")}}</td>
+   <td>{{Spec2('HTML5 W3C')}}</td>
+   <td>Initial definition</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.HTMLMeterElement")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>The HTML element implementing this interface: {{HTMLElement("meter")}}</li>
+</ul>

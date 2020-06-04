@@ -1,0 +1,27 @@
+---
+title: Black box a source
+slug: Tools/Debugger/How_to/Black_box_a_source
+summary: >-
+  In modern web development, we often rely on libraries like jQuery, Ember, or
+  Angular, and 99% of the time we can safely assume that they “just work”. We
+  don’t care about the internal implementation of these libraries: we treat them
+  like a black box. However, a library’s abstraction leaks during debugging
+  sessions when you are forced to step through its stack frames in order to
+  reach your own code. With black boxing, you can tell the debugger to ignore
+  the details of selected sources.
+---
+<div>{{ToolsSidebar}}</div>
+
+<p>In modern web development, we often rely on libraries like <a href="http://jquery.com/">jQuery</a>, <a href="http://emberjs.com/">Ember</a>, or <a href="http://angularjs.org/">Angular</a>, and 99% of the time we can safely assume that they “just work”. We don’t care about the internal implementation of these libraries: we treat them like a <a href="http://en.wikipedia.org/wiki/Black_box">black box</a>. However, a library’s abstraction leaks during debugging sessions when you are forced to step through its stack frames in order to reach your own code. With black boxing, you can tell the debugger to ignore the details of selected sources.</p>
+
+<p>To enable or disable black boxing for a source, select the source in the <a href="https://developer.mozilla.org/en-US/docs/Tools/Debugger/UI_Tour#Source_list_pane">source list pane</a> and click the eyeball icon at the bottom left:</p>
+
+<p><img alt="" src="https://mdn.mozillademos.org/files/13218/debugger-black-box.png" style="display: block; height: 401px; margin-left: auto; margin-right: auto; width: 922px;"></p>
+
+<p>When a source is black boxed:</p>
+
+<ul>
+ <li>Any breakpoints it may have are disabled.</li>
+ <li>When “Pause on Exceptions” is enabled in the <a href="/en-US/docs/Tools/Debugger/Settings">Debugger settings</a>, the debugger won’t pause when an exception is thrown in the black boxed source; instead it will wait until (and if) the stack unwinds to a frame in a source that isn’t black boxed.</li>
+ <li>The debugger will skip through black boxed sources when stepping.</li>
+</ul>

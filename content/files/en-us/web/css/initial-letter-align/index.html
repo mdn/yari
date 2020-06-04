@@ -1,0 +1,118 @@
+---
+title: initial-letter-align
+slug: Web/CSS/initial-letter-align
+summary: >-
+  The initial-letter-align CSS property specifies the alignment of initial
+  letters within a paragraph.
+tags:
+  - Align
+  - CSS
+  - CSS Inline
+  - CSS Property
+  - Experimental
+  - Graphics
+  - Layout
+  - NeedsL
+  - Reference
+  - Web
+---
+<div>{{CSSRef}}{{SeeCompatTable}}</div>
+
+<p>The <strong><code>initial-letter-align</code></strong> CSS property specifies the alignment of initial letters within a paragraph.</p>
+
+<pre class="brush: css no-line-numbers">/* Keyword values */
+initial-letter-align: auto;
+initial-letter-align: alphabetic;
+initial-letter-align: hanging;
+initial-letter-align: ideographic;
+
+/* Global values */
+initial-letter-align: inherit;
+initial-letter-align: initial;
+initial-letter-align: unset;
+</pre>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<p>One of the keyword values listed below.</p>
+
+<h3 id="Values">Values</h3>
+
+<dl>
+ <dt><code>auto</code></dt>
+ <dd>The user agent selects the value which corresponds to the language of the text. Western languages would default to alphabetic, CJK languages to ideographic, and some Indic languages to hanging.</dd>
+ <dt><code>alphabetic</code></dt>
+ <dd>As described above, the cap height of the initial letter aligns with the cap height of the first line of text. The baseline of the initial letter aligns with the baseline of the Nth text baseline.</dd>
+ <dt><code>hanging</code></dt>
+ <dd>The hanging baseline of the initial letter aligns with the hanging baseline of the first line of text.</dd>
+ <dt><code>ideographic</code></dt>
+ <dd>The initial letter is centered in the N-line area.</dd>
+</dl>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h2 id="Example">Example</h2>
+
+<h3 id="HTML">HTML</h3>
+
+<pre><code>&lt;p class="auto "&gt;Initial letter - auto&lt;/p&gt;
+&lt;p class="</code>alphabetic<code>"&gt;Initial letter - </code>alphabetic<code>&lt;/p&gt;
+&lt;p class="</code>hanging<code>"&gt;Initial letter - </code>hanging<code>&lt;/p&gt;
+&lt;p class="</code>ideographic<code>"&gt;Initial letter - </code>ideographic<code>&lt;/p&gt;</code>
+</pre>
+
+<h3 id="CSS">CSS</h3>
+
+<pre><code>.auto {
+  -webkit-</code>initial-letter-align<code>: auto;
+  </code>initial-letter-align: auto;<code>
+}
+
+.</code>alphabetic<code> {
+  -webkit-</code>initial-letter-align<code>: </code>alphabetic<code>;
+  </code>initial-letter-align: alphabetic;<code>
+}
+
+.</code>hanging<code> {
+  -webkit-</code>initial-letter-align<code>: </code>hanging;
+  initial-letter-align: hanging;
+<code>}
+
+.</code>ideographic<code> {
+  -webkit-</code>initial-letter-align<code>: </code>ideographic<code>;
+  </code>initial-letter-align: ideographic;<code>
+}</code>
+</pre>
+
+<h3 id="Result">Result</h3>
+
+<p>{{EmbedLiveSample('Example')}}</p>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('CSS3 Inline', '#aligning-initial-letter', 'initial-letter-align')}}</td>
+   <td>{{Spec2('CSS3 Inline')}}</td>
+   <td>Initial definition</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.properties.initial-letter-align")}}</p>

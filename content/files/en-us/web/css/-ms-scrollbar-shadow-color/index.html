@@ -1,0 +1,76 @@
+---
+title: '-ms-scrollbar-shadow-color'
+slug: Web/CSS/-ms-scrollbar-shadow-color
+summary: >-
+  The -ms-scrollbar-shadow-color CSS property is a Microsoft extension that
+  specifies the color of the bottom and right edges of the scroll box and scroll
+  arrows of a scroll bar.
+tags:
+  - CSS
+  - CSS Property
+  - 'CSS:Microsoft extentions'
+  - Deprecated
+  - Non-standard
+  - Reference
+---
+<p>{{CSSRef}}{{Non-standard_Header}}{{Deprecated_Header}}</p>
+
+<p>The <strong><code>-ms-scrollbar-shadow-color</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property is a <a href="/en-US/docs/Web/CSS/Microsoft_CSS_extensions">Microsoft extension</a> that specifies the color of the bottom and right edges of the scroll box and scroll arrows of a scroll bar.</p>
+
+<p>{{CSSInfo}}</p>
+
+<h2 id="Syntax" name="Syntax">Syntax</h2>
+
+<h3 id="Values" name="Values">Values</h3>
+
+<dl>
+ <dt>{{CSSxRef("&lt;color&gt;")}}</dt>
+ <dd>
+ <p>The color of the bottom and right edges of the scroll box and scroll arrows of a scroll bar.</p>
+ </dd>
+</dl>
+
+<h3 id="Formal_syntax" name="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{CSSSyntax}}</pre>
+
+<h2 id="Examples" name="Examples">Examples</h2>
+
+<p>The following example shows how to create a style rule that sets the <code>-ms-scrollbar-shadow-color</code> property for a {{HTMLElement("textarea")}} element.</p>
+
+<pre class="brush: html">&lt;!DOCTYPE html&gt;
+
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;scrollbar-shadow-color&lt;/title&gt;
+  &lt;style&gt;
+    .BlueShadow {
+      scrollbar-shadow-color: blue;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;textarea class="BlueShadow"&gt;The gutter elements in the scroll bar for this element will be blue.&lt;/textarea&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<p>{{EmbedLiveSample("Examples")}}</p>
+
+<h2 id="Specifications" name="Specifications">Specifications</h2>
+
+<p>Not part of any specification.</p>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.properties.-ms-scrollbar-shadow-color")}}</p>
+
+<h2 id="Remarks" name="Remarks">Remarks</h2>
+
+<p>Supported in Windows Internet Explorer 8+. The <code>-ms-scrollbar-shadow-color</code> attribute is an extension to CSS, and can be used as a synonym for <code>scrollbar-shadow-color</code> in IE8 Standards Mode.</p>
+
+<p>The scroll box is the rectangular box within a scroll bar that can be moved either up and down or left and right on a track to change the position of the content on the screen. The scroll arrows, located at each end of a scroll bar, are the square buttons containing the arrows that move the content on the screen in small increments, either up and down or left and right.</p>
+
+<p>This property applies to elements that display a scroll bar. CSS enables scrolling on all objects through the {{CSSxRef("overflow")}} property. These objects are not listed in the <em>Applies To</em> list for this property.</p>

@@ -1,0 +1,576 @@
+---
+title: Bitwise operators
+slug: Web/JavaScript/Reference/Operators/Bitwise_Operators
+summary: >-
+  Bitwise operators treat their operands as a sequence of 32 bits (zeroes and
+  ones), rather than as decimal, hexadecimal, or octal numbers. For example, the
+  decimal number nine has a binary representation of 1001. Bitwise operators
+  perform their operations on such binary representations, but they return
+  standard JavaScript numerical values.
+tags:
+  - JavaScript
+  - Language feature
+  - Operator
+  - Reference
+---
+<div>{{jsSidebar("Operators")}}</div>
+
+<p><span class="seoSummary"><strong>Bitwise operators</strong> treat their operands as a sequence of 32 bits (zeroes and ones), rather than as decimal, hexadecimal, or octal <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number" title="/en-US/docs/JavaScript/Reference/Global_Objects/Number">numbers</a></code>. For example, the decimal number nine has a binary representation of <code>1001</code>. Bitwise operators perform their operations on such binary representations, but they return standard JavaScript numerical values.</span></p>
+
+<div>{{EmbedInteractiveExample("pages/js/expressions-bitwiseoperators.html")}}</div>
+
+<p class="hidden">The source for this interactive example is stored in a GitHub repository. If you'd like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</p>
+
+<p>The following table summarizes JavaScript's bitwise operators:</p>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Operator</th>
+   <th scope="col">Usage</th>
+   <th scope="col">Description</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><a href="#Bitwise_AND">Bitwise AND</a></td>
+   <td><code><var>a</var> &amp; <var>b</var></code></td>
+   <td>Returns a <code>1</code> in each bit position for which the corresponding bits of both operands are <code>1</code>s.</td>
+  </tr>
+  <tr>
+   <td><a href="#Bitwise_OR">Bitwise OR</a></td>
+   <td><code><var>a</var> | <var>b</var></code></td>
+   <td>Returns a <code>1</code> in each bit position for which the corresponding bits of either or both operands are <code>1</code>s.</td>
+  </tr>
+  <tr>
+   <td><a href="#Bitwise_XOR">Bitwise XOR</a></td>
+   <td><code><var>a</var> ^ <var>b</var></code></td>
+   <td>Returns a <code>1</code> in each bit position for which the corresponding bits of either but not both operands are <code>1</code>s.</td>
+  </tr>
+  <tr>
+   <td><a href="#Bitwise_NOT">Bitwise NOT</a></td>
+   <td><code>~ <var>a</var></code></td>
+   <td>Inverts the bits of its operand.</td>
+  </tr>
+  <tr>
+   <td><a href="#Left_shift">Left shift</a></td>
+   <td><code><var>a</var> &lt;&lt; <var>b</var></code></td>
+   <td>Shifts <code><var>a</var></code> in binary representation <code><var>b</var></code> (&lt; 32) bits to the left, shifting in <code>0</code>s from the right.</td>
+  </tr>
+  <tr>
+   <td><a href="#Right_shift">Sign-propagating right shift</a></td>
+   <td><code><var>a</var> &gt;&gt; <var>b</var></code></td>
+   <td>Shifts <code><var>a</var></code> in binary representation <code>b</code> (&lt; 32) bits to the right, discarding bits shifted off.</td>
+  </tr>
+  <tr>
+   <td><a href="#Unsigned_right_shift">Zero-fill right shift</a></td>
+   <td><code><var>a</var> &gt;&gt;&gt; <var>b</var></code>  </td>
+   <td>Shifts <code><var>a</var></code> in binary representation <code><var>b</var></code> (&lt; 32) bits to the right, discarding bits shifted off, and shifting in <code>0</code>s from the left.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Signed_32-bit_integers">Signed 32-bit integers</h2>
+
+<p>The operands of all bitwise operators are converted to signed 32-bit integers in two's <a href="https://en.wikipedia.org/wiki/Method_of_complements">complement format</a>, except for zero-fill right shift which results in an unsigned 32-bit integer.</p>
+
+<p><em>Two's complement format</em> means that a number's negative counterpart (e.g. <code>5</code> vs. <code>-5</code>) is all the number's bits inverted (bitwise NOT of the number, or <em>ones' complement</em> of the number) plus one.</p>
+
+<p>For example, the following encodes the integer <code>314</code>:</p>
+
+<pre class="brush: js">00000000000000000000000100111010
+</pre>
+
+<p>The following encodes <code>~314</code> (the <em>ones' complement</em> of <code>314</code>):</p>
+
+<pre class="brush: js">11111111111111111111111011000101
+</pre>
+
+<p>Finally, the following encodes <code>-314</code>, (the <em>two's complement</em> of <code>314</code>):</p>
+
+<pre class="brush: js">11111111111111111111111011000110
+</pre>
+
+<p>The two's complement guarantees that the left-most bit is <code>0</code> when the number is positive and <code>1</code> when the number is negative. Thus, it is called the <em>sign bit</em>.</p>
+
+<p>The number <code>0</code> is the integer that is composed completely of 0 bits.</p>
+
+<pre class="brush: js">0 (base 10) = 00000000000000000000000000000000 (base 2)
+</pre>
+
+<p>The number <code>-1</code> is the integer that is composed completely of 1 bits.</p>
+
+<pre class="brush: js">-1 (base 10) = 11111111111111111111111111111111 (base 2)
+</pre>
+
+<p>The number <code>-2147483648</code> (hexadecimal representation: <code>-0x80000000</code>) is the integer that is composed completely of 0 bits, except the first (left-most) one.</p>
+
+<pre class="brush: js">-2147483648 (base 10) = 10000000000000000000000000000000 (base 2)
+</pre>
+
+<p>The number <code>2147483647</code> (hexadecimal representation: <code>0x7fffffff</code>) is the integer that is composed completely of 1 bits, except the first (left-most) one.</p>
+
+<pre class="brush: js">2147483647 (base 10) = 01111111111111111111111111111111 (base 2)
+</pre>
+
+<p>The numbers <code>-2147483648</code> and <code>2147483647</code> are the minimum and the maximum integers representable through a 32-bit signed number.</p>
+
+<h2 id="Bitwise_logical_operators">Bitwise logical operators</h2>
+
+<p>Conceptually, the bitwise logical operators work as follows:</p>
+
+<ul>
+ <li>The operands are converted to 32-bit integers and expressed by a series of bits (zeroes and ones). Numbers with more than 32 bits get their most significant bits discarded. For example, the following integer with more than 32 bits will be converted to a 32 bit integer:
+  <pre class="brush: js">Before: 11100110111110100000000000000110000000000001
+After:              10100000000000000110000000000001</pre>
+ </li>
+ <li>Each bit in the first operand is paired with the corresponding bit in the second operand: <em>first bit</em> to <em>first bit</em>, <em>second bit</em> to <em>second bit</em>, and so on.</li>
+ <li>The operator is applied to each pair of bits, and the result is constructed bitwise.</li>
+</ul>
+
+<h3 id="Bitwise_AND_2"><a name="Bitwise_AND">&amp; (Bitwise AND)</a></h3>
+
+<p>Performs the AND operation on each pair of bits. <code><var>a</var></code> AND <code><var>b</var></code> yields 1 only if both <code><var>a</var></code> and <code><var>b</var></code> are <code>1</code>. The truth table for the AND operation is:</p>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th class="header" scope="col">a</th>
+   <th class="header" scope="col">b</th>
+   <th class="header" scope="col">a AND b</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>0</td>
+   <td>0</td>
+   <td>0</td>
+  </tr>
+  <tr>
+   <td>0</td>
+   <td>1</td>
+   <td>0</td>
+  </tr>
+  <tr>
+   <td>1</td>
+   <td>0</td>
+   <td>0</td>
+  </tr>
+  <tr>
+   <td>1</td>
+   <td>1</td>
+   <td>1</td>
+  </tr>
+ </tbody>
+</table>
+
+<pre class="brush: js">.    9 (base 10) = 00000000000000000000000000001001 (base 2)
+    14 (base 10) = 00000000000000000000000000001110 (base 2)
+                   --------------------------------
+14 &amp; 9 (base 10) = 00000000000000000000000000001000 (base 2) = 8 (base 10)
+</pre>
+
+<p>Bitwise ANDing any number <code><var>x</var></code> with <code>0</code> yields <code>0</code>.</p>
+
+<h3 id="Bitwise_OR_2"><a name="Bitwise_OR">| (Bitwise OR)</a></h3>
+
+<p>Performs the OR operation on each pair of bits. <code><var>a</var></code> OR <code><var>b</var></code> yields 1 if either <code><var>a</var></code> or <code><var>b</var></code> is <code>1</code>. The truth table for the <code>OR</code> operation is:</p>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th class="header" scope="col">a</th>
+   <th class="header" scope="col">b</th>
+   <th class="header" scope="col">a OR b</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>0</td>
+   <td>0</td>
+   <td>0</td>
+  </tr>
+  <tr>
+   <td>0</td>
+   <td>1</td>
+   <td>1</td>
+  </tr>
+  <tr>
+   <td>1</td>
+   <td>0</td>
+   <td>1</td>
+  </tr>
+  <tr>
+   <td>1</td>
+   <td>1</td>
+   <td>1</td>
+  </tr>
+ </tbody>
+</table>
+
+<pre class="brush: js">.    9 (base 10) = 00000000000000000000000000001001 (base 2)
+    14 (base 10) = 00000000000000000000000000001110 (base 2)
+                   --------------------------------
+14 | 9 (base 10) = 00000000000000000000000000001111 (base 2) = 15 (base 10)
+</pre>
+
+<p>Bitwise ORing any number <code><var>x</var></code> with <code>0</code> yields <code><var>x</var></code>.</p>
+
+<h3 id="Bitwise_XOR_2"><a name="Bitwise_XOR">^ (Bitwise XOR)</a></h3>
+
+<p>Performs the XOR operation on each pair of bits. <code><var>a</var></code> XOR <code><var>b</var></code> yields 1 if <code><var>a</var></code> and <code><var>b</var></code> are different. The truth table for the <code>XOR</code> operation is:</p>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th class="header" scope="col">a</th>
+   <th class="header" scope="col">b</th>
+   <th class="header" scope="col">a XOR b</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>0</td>
+   <td>0</td>
+   <td>0</td>
+  </tr>
+  <tr>
+   <td>0</td>
+   <td>1</td>
+   <td>1</td>
+  </tr>
+  <tr>
+   <td>1</td>
+   <td>0</td>
+   <td>1</td>
+  </tr>
+  <tr>
+   <td>1</td>
+   <td>1</td>
+   <td>0</td>
+  </tr>
+ </tbody>
+</table>
+
+<pre class="brush: js">.    9 (base 10) = 00000000000000000000000000001001 (base 2)
+    14 (base 10) = 00000000000000000000000000001110 (base 2)
+                   --------------------------------
+14 ^ 9 (base 10) = 00000000000000000000000000000111 (base 2) = 7 (base 10)
+</pre>
+
+<p>Bitwise XORing any number <code><var>x</var></code> with <code>0</code> yields <code><var>x</var></code>.</p>
+
+<h3 id="Bitwise_NOT_2"><a name="Bitwise_NOT">~ (Bitwise NOT)</a></h3>
+
+<p>Performs the NOT operator on each bit. NOT <code><var>a</var></code> yields the inverted value (or <em>one's complement</em>) of <code><var>a</var></code>. The truth table for the <code>NOT</code> operation is:</p>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th class="header" scope="col">a</th>
+   <th class="header" scope="col">NOT a</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>0</td>
+   <td>1</td>
+  </tr>
+  <tr>
+   <td>1</td>
+   <td>0</td>
+  </tr>
+ </tbody>
+</table>
+
+<pre class="brush: js"> 9 (base 10) = 00000000000000000000000000001001 (base 2)
+               --------------------------------
+~9 (base 10) = 11111111111111111111111111110110 (base 2) = -10 (base 10)
+</pre>
+
+<p>Bitwise NOTing any number <code>x</code> yields <code>-(x + 1)</code>. For example, <code>~-5</code> yields <code>4</code>.</p>
+
+<p>Note that due to using 32-bit representation for numbers both <code>~-1</code> and <code>~4294967295</code> (2<sup>32</sup>-1) results in <code>0</code>.</p>
+
+<h2 id="Bitwise_shift_operators">Bitwise shift operators</h2>
+
+<p>The bitwise shift operators take two operands: the first is a quantity to be shifted, and the second specifies the number of bit positions by which the first operand is to be shifted. The direction of the shift operation is controlled by the operator used.</p>
+
+<p>Shift operators convert their operands to 32-bit integers in big-endian order, and return a result of the same type as the left operand. Only the low five bits of the right operand will be used.</p>
+
+<h3 id="&lt;&lt;_Left_shift"><a name="Left_shift">&lt;&lt; (Left shift)</a></h3>
+
+<p>This operator shifts the first operand the specified number of bits to the left. Excess bits shifted off to the left are discarded. Zero bits are shifted in from the right.</p>
+
+<p>For example, <code>9 &lt;&lt; 2</code> yields 36:</p>
+
+<pre class="brush: js">.    9 (base 10): 00000000000000000000000000001001 (base 2)
+                  --------------------------------
+9 &lt;&lt; 2 (base 10): 00000000000000000000000000100100 (base 2) = 36 (base 10)
+</pre>
+
+<p>Bitwise shifting any number <code>x</code> to the left by <code>y</code> bits yields <code>x * 2 ** y</code>.<br>
+ So e.g.: <code>9 &lt;&lt; 3</code> translates to: <code>9 * (2 ** 3) = 9 * (8) =</code><code> 72</code>.</p>
+
+<h3 id=">>_Sign-propagating_right_shift"><a name="Right_shift">&gt;&gt; (Sign-propagating right shift)</a></h3>
+
+<p>This operator shifts the first operand the specified number of bits to the right. Excess bits shifted off to the right are discarded. Copies of the leftmost bit are shifted in from the left. Since the new leftmost bit has the same value as the previous leftmost bit, the sign bit (the leftmost bit) does not change. Hence the name "sign-propagating".</p>
+
+<p>For example, <code>9 &gt;&gt; 2</code> yields 2:</p>
+
+<pre class="brush: js">.    9 (base 10): 00000000000000000000000000001001 (base 2)
+                  --------------------------------
+9 &gt;&gt; 2 (base 10): 00000000000000000000000000000010 (base 2) = 2 (base 10)
+</pre>
+
+<p>Likewise, <code>-9 &gt;&gt; 2</code> yields <code>-3</code>, because the sign is preserved:</p>
+
+<pre class="brush: js">.    -9 (base 10): 11111111111111111111111111110111 (base 2)
+                   --------------------------------
+-9 &gt;&gt; 2 (base 10): 11111111111111111111111111111101 (base 2) = -3 (base 10)
+</pre>
+
+<h3 id=">>>_Zero-fill_right_shift"><a name="Unsigned_right_shift">&gt;&gt;&gt; (Zero-fill right shift)</a></h3>
+
+<p>This operator shifts the first operand the specified number of bits to the right. Excess bits shifted off to the right are discarded. Zero bits are shifted in from the left. The sign bit becomes <code>0</code>, so the result is always non-negative.  Unlike the other bitwise operators, zero-fill right shift returns an unsigned 32-bit integer.</p>
+
+<p>For non-negative numbers, zero-fill right shift and sign-propagating right shift yield the same result. For example, <code>9 &gt;&gt;&gt; 2</code> yields 2, the same as <code>9 &gt;&gt; 2</code>:</p>
+
+<pre class="brush: js">.     9 (base 10): 00000000000000000000000000001001 (base 2)
+                   --------------------------------
+9 &gt;&gt;&gt; 2 (base 10): 00000000000000000000000000000010 (base 2) = 2 (base 10)
+</pre>
+
+<p>However, this is not the case for negative numbers. For example, <code>-9 &gt;&gt;&gt; 2</code> yields 1073741821, which is different than <code>-9 &gt;&gt; 2</code> (which yields <code>-3</code>):</p>
+
+<pre class="brush: js">.     -9 (base 10): 11111111111111111111111111110111 (base 2)
+                    --------------------------------
+-9 &gt;&gt;&gt; 2 (base 10): 00111111111111111111111111111101 (base 2) = 1073741821 (base 10)
+</pre>
+
+<h2 id="Examples">Examples</h2>
+
+<h3 id="Flags_and_bitmasks">Flags and bitmasks</h3>
+
+<p>The bitwise logical operators are often used to create, manipulate, and read sequences of <em>flags</em>, which are like binary variables. Variables could be used instead of these sequences, but binary flags take much less memory (by a factor of 32).</p>
+
+<p>Suppose there are 4 flags:</p>
+
+<dl>
+ <dt>flag A</dt>
+ <dd>we have an ant problem</dd>
+ <dt>flag B</dt>
+ <dd>we own a bat</dd>
+ <dt>flag C</dt>
+ <dd>we own a cat</dd>
+ <dt>flag D</dt>
+ <dd>we own a duck</dd>
+</dl>
+
+<p>These flags are represented by a sequence of bits: DCBA. When a flag is <em>set</em>, it has a value of <code>1</code>. When a flag is <em>cleared</em>, it has a value of <code>0</code>.</p>
+
+<p>Suppose a variable <code>flags</code> has the binary value <code>0101</code>:</p>
+
+<pre class="brush: js">let flags = 5;   // binary 0101
+</pre>
+
+<p>This value indicates:</p>
+
+<ul>
+ <li><strong>flag A</strong> is <code>true</code> (we have an ant problem)</li>
+ <li><strong>flag B</strong> is <code>false</code> (we don't own a bat)</li>
+ <li><strong>flag C</strong> is <code>true</code> (we own a cat)</li>
+ <li><strong>flag D</strong> is <code>false</code> (we don't own a duck)</li>
+</ul>
+
+<div class="blockIndicator note">
+<p><strong>Note:</strong> Since bitwise operators are 32-bit, <code>0101</code> is actually <code>00000000000000000000000000000101</code>, but the preceding zeroes can be neglected since they contain no meaningful information.</p>
+</div>
+
+<p>A <em>bitmask</em> is a sequence of bits that can manipulate and/or read flags. Typically, a "primitive" bitmask for each flag is defined:</p>
+
+<pre class="brush: js">let FLAG_A = 1; // 0001
+let FLAG_B = 2; // 0010
+let FLAG_C = 4; // 0100
+let FLAG_D = 8; // 1000
+</pre>
+
+<p>New bitmasks can be created by using the bitwise logical operators on these primitive bitmasks. For example, the bitmask <code>1011</code> can be created by ORing <code>FLAG_A</code>, <code>FLAG_B</code>, and <code>FLAG_D</code>:</p>
+
+<pre class="brush: js">let mask = FLAG_A | FLAG_B | FLAG_D; // 0001 | 0010 | 1000 =&gt; 1011
+</pre>
+
+<p>Individual flag values can be extracted by ANDing them with a bitmask, where each bit with the value of one will "extract" the corresponding flag. The bitmask <em>masks</em> out the non-relevant flags by ANDing with zeroes (hence the term "bitmask"). For example, the bitmask <code>0100</code> can be used to see if <code>FLAG_C</code> is set:</p>
+
+<pre class="brush: js">// if we own a cat
+if (flags &amp; FLAG_C) { // 0101 &amp; 0100 =&gt; 0100 =&gt; true
+   // do stuff
+}
+</pre>
+
+<p>A bitmask with multiple set flags acts like an "either/or". For example, the following two are equivalent:</p>
+
+<pre class="brush: js">// if we own a bat or we own a cat
+// (0101 &amp; 0010) || (0101 &amp; 0100) =&gt; 0000 || 0100 =&gt; true
+if ((flags &amp; FLAG_B) || (flags &amp; FLAG_C)) {
+   // do stuff
+}
+</pre>
+
+<pre class="brush: js">// if we own a bat or cat
+let mask = FLAG_B | FLAG_C; // 0010 | 0100 =&gt; 0110
+if (flags &amp; mask) {         // 0101 &amp; 0110 =&gt; 0100 =&gt; true
+   // do stuff
+}
+</pre>
+
+<p>Flags can be set by ORing them with a bitmask, where each bit with the value one will set the corresponding flag, if that flag isn't already set. For example, the bitmask <code>1100</code> can be used to set <code>FLAG_C</code> and <code>FLAG_D</code>:</p>
+
+<pre class="brush: js">// yes, we own a cat and a duck
+let mask = FLAG_C | FLAG_D; // 0100 | 1000 =&gt; 1100
+flags |= mask;              // 0101 | 1100 =&gt; 1101
+</pre>
+
+<p>Flags can be cleared by ANDing them with a bitmask, where each bit with the value zero will clear the corresponding flag, if it isn't already cleared. This bitmask can be created by NOTing primitive bitmasks. For example, the bitmask <code>1010</code> can be used to clear <code>FLAG_A</code> and <code>FLAG_C</code>:</p>
+
+<pre class="brush: js">// no, we don't have an ant problem or own a cat
+let mask = ~(FLAG_A | FLAG_C); // ~0101 =&gt; 1010
+flags &amp;= mask;                 // 1101 &amp; 1010 =&gt; 1000
+</pre>
+
+<p>The mask could also have been created with <code>~FLAG_A &amp; ~FLAG_C</code> (De Morgan's law):</p>
+
+<pre class="brush: js">// no, we don't have an ant problem, and we don't own a cat
+let mask = ~FLAG_A &amp; ~FLAG_C;
+flags &amp;= mask;                 // 1101 &amp; 1010 =&gt; 1000
+</pre>
+
+<p>Flags can be toggled by XORing them with a bitmask, where each bit with the value one will toggle the corresponding flag. For example, the bitmask <code>0110</code> can be used to toggle <code>FLAG_B</code> and <code>FLAG_C</code>:</p>
+
+<pre class="brush: js">// if we didn't have a bat, we have one now, 
+// and if we did have one, bye-bye bat
+// same thing for cats
+let mask = FLAG_B | FLAG_C;
+flags = flags ^ mask;          // 1100 ^ 0110 =&gt; 1010
+</pre>
+
+<p>Finally, the flags can all be flipped with the NOT operator:</p>
+
+<pre class="brush: js">// entering parallel universe...
+flags = ~flags;               // ~1010 =&gt; 0101
+</pre>
+
+<h3 id="Conversion_snippets">Conversion snippets</h3>
+
+<p>Convert a binary <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" title="/en-US/docs/JavaScript/Reference/Global_Objects/String">String</a></code> to a decimal <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number" title="/en-US/docs/JavaScript/Reference/Global_Objects/Number">Number</a></code>:</p>
+
+<pre class="brush: js">let sBinString = '1011';
+let nMyNumber = parseInt(sBinString, 2);
+alert(nMyNumber); // prints 11, i.e. 1011
+</pre>
+
+<p>Convert a decimal <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number" title="/en-US/docs/JavaScript/Reference/Global_Objects/Number">Number</a></code> to a binary <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" title="/en-US/docs/JavaScript/Reference/Global_Objects/String">String</a></code>:</p>
+
+<pre class="brush: js">let nMyNumber = 11;
+let sBinString = nMyNumber.toString(2);
+alert(sBinString); // prints 1011, i.e. 11
+</pre>
+
+<h3 id="Automate_Mask_Creation">Automate Mask Creation</h3>
+
+<p>You can create multiple masks from a set of <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" title="/en-US/docs/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code> values, like this:</p>
+
+<pre class="brush: js">function createMask() {
+  let nMask = 0, nFlag = 0, nLen = arguments.length &gt; 32 ? 32 : arguments.length;
+  for (nFlag; nFlag &lt; nLen; nMask |= arguments[nFlag] &lt;&lt; nFlag++);
+  return nMask;
+}
+let mask1 = createMask(true, true, false, true); // 11, i.e.: 1011
+let mask2 = createMask(false, false, true);      //  4, i.e.: 0100
+let mask3 = createMask(true);                    //  1, i.e.: 0001
+// etc.
+
+alert(mask1);                                    // prints 11, i.e.: 1011
+</pre>
+
+<h3 id="Reverse_algorithm_an_array_of_booleans_from_a_mask">Reverse algorithm: an array of booleans from a mask</h3>
+
+<p>If you want to create an <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" title="/en-US/docs/JavaScript/Reference/Global_Objects/Array">Array</a></code> of <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" title="/en-US/docs/JavaScript/Reference/Global_Objects/Boolean">Booleans</a></code> from a mask you can use this code:</p>
+
+<pre class="brush: js">function arrayFromMask(nMask) {
+  // nMask must be between -2147483648 and 2147483647
+  if (nMask &gt; 0x7fffffff || nMask &lt; -0x80000000) { 
+    throw new TypeError('arrayFromMask - out of range'); 
+  }
+  for (let nShifted = nMask, aFromMask = []; nShifted; 
+       aFromMask.push(Boolean(nShifted &amp; 1)), nShifted &gt;&gt;&gt;= 1);
+  return aFromMask;
+}
+
+let array1 = arrayFromMask(11);
+let array2 = arrayFromMask(4);
+let array3 = arrayFromMask(1);
+
+alert('[' + array1.join(', ') + ']');
+// prints "[true, true, false, true]", i.e.: 11, i.e.: 1011
+</pre>
+
+<p>You can test both algorithms at the same time…</p>
+
+<pre class="brush: js">let nTest = 19; // our custom mask
+let nResult = createMask.apply(this, arrayFromMask(nTest));
+
+alert(nResult); // 19
+</pre>
+
+<p>For the didactic purpose only (since there is the <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString" title="/en-US/docs/JavaScript/Reference/Global_Objects/Number/toString">Number.toString(2)</a></code> method), we show how it is possible to modify the <code>arrayFromMask</code> algorithm in order to create a <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" title="/en-US/docs/JavaScript/Reference/Global_Objects/String">String</a></code> containing the binary representation of a <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number" title="/en-US/docs/JavaScript/Reference/Global_Objects/Number">Number</a></code>, rather than an <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" title="/en-US/docs/JavaScript/Reference/Global_Objects/Array">Array</a></code> of <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" title="/en-US/docs/JavaScript/Reference/Global_Objects/Boolean">Booleans</a></code>:</p>
+
+<pre class="brush: js">function createBinaryString(nMask) {
+  // nMask must be between -2147483648 and 2147483647
+  for (let nFlag = 0, nShifted = nMask, sMask = ''; nFlag &lt; 32;
+       nFlag++, sMask += String(nShifted &gt;&gt;&gt; 31), nShifted &lt;&lt;= 1);
+  return sMask;
+}
+
+let string1 = createBinaryString(11);
+let string2 = createBinaryString(4);
+let string3 = createBinaryString(1);
+
+alert(string1);
+// prints 00000000000000000000000000001011, i.e. 11
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('ESDraft', '#sec-bitwise-not-operator', 'Bitwise NOT Operator')}}</td>
+  </tr>
+  <tr>
+   <td>{{SpecName('ESDraft', '#sec-binary-bitwise-operators', 'Binary Bitwise Operators')}}</td>
+  </tr>
+  <tr>
+   <td>{{SpecName('ESDraft', '#sec-bitwise-shift-operators', 'Bitwise Shift Operators')}}</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">
+<p>The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</p>
+</div>
+
+<p>{{Compat("javascript.operators.bitwise")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><a href="/en-US/docs/Web/JavaScript/Reference/Operators/Logical_Operators">Logical operators</a></li>
+</ul>

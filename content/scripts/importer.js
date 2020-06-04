@@ -46,6 +46,21 @@ const ARCHIVE_SLUG_ENGLISH_PREFIXES = [
   "Zones",
 ];
 
+const OLD_LOCALE_PREFIXES = new Map([
+  ["en", "en-US"],
+  ["cn", "zh-CN"],
+  ["zh_tw", "zh-TW"],
+  ["zh", "zh-TW"],
+  ["pt", "pt-PT"],
+]);
+// Double check that every value of the old locale mappings
+// point to valid ones.
+assert(
+  [...OLD_LOCALE_PREFIXES.values()].every((x) =>
+    [...VALID_LOCALES.values()].includes(x)
+  )
+);
+
 const redirectsToArchive = new Set();
 const redirectFinalDestinations = new Map();
 const archiveSlugPrefixes = [...ARCHIVE_SLUG_ENGLISH_PREFIXES];
@@ -414,6 +429,8 @@ function getRedirectURL(html) {
    *   'REDIRECT <a class="redirect" href="/docs/http://wiki.commonjs.org/wiki/C_API">http://wiki.commonjs.org/wiki/C_API</a>'
    * and sometimes it's like this:
    *   'REDIRECT <a class="redirect" href="/en-US/docs/Web/API/WebGL_API">WebGL</a>'
+   * and sometimes it's like this:
+   *   'REDIRECT <a class="redirect" href="/en-US/docs/https://developer.mozilla.org/en-US/docs/Mozilla">Firefox Marketplace FAQ</a>'
    *
    * So we need the "best of both worlds".
    * */
@@ -421,75 +438,245 @@ function getRedirectURL(html) {
   for (const a of $("a[href].redirect").toArray()) {
     const hrefHref = $(a).attr("href");
     const hrefText = $(a).text();
+
+    if (hrefHref.includes("http://")) {
+      // Life's too short to accept these. Not only is it scary to even
+      // consider sending our users to a http:// site but it's not
+      // even working in Kuma because in Kuma redirects that
+      // start with '/docs/http://..' end up in a string of redirects
+      // and eventually fails with a 404.
+      return null;
+    }
+
     let href;
-    if (
-      hrefHref.startsWith("/docs/http") ||
-      hrefHref.startsWith("/docs/en/http")
+    if (hrefHref.startsWith("https://")) {
+      href = hrefHref;
+    } else if (
+      hrefHref.includes("/https://") &&
+      hrefText.startsWith("https://")
     ) {
       href = hrefText;
+    } else if (hrefHref.includes("/https://")) {
+      href = "https://" + hrefHref.split("https://")[1];
     } else {
       href = hrefHref;
     }
     if (href.startsWith("https://developer.mozilla.org")) {
       return url.parse(href).pathname;
-    } else if (href.startsWith("/") && !href.startsWith("//")) {
+    } else {
       return href;
     }
   }
   return null;
 }
 
+function test_getRedirectURL(href, text, expect) {
+  const h = `REDIRECT <a class="redirect" href="${href}">${text}</a>`;
+  const r = getRedirectURL(h);
+  assert(r === expect, `${r}  !=  ${expect}`);
+}
+
+test_getRedirectURL(
+  "/en-US/docs/Persona",
+  "/en-US/docs/Persona",
+  "/en-US/docs/Persona"
+);
+test_getRedirectURL(
+  "/en-US/docs/Persona",
+  "Persona was cool",
+  "/en-US/docs/Persona"
+);
+test_getRedirectURL(
+  "/docs/En/NsIPlacesView",
+  "En/NsIPlacesView",
+  "/docs/En/NsIPlacesView"
+);
+test_getRedirectURL(
+  "/docs/https://wiki.commonjs.org/wiki/Binary",
+  "https://wiki.commonjs.org/wiki/Binary",
+  "https://wiki.commonjs.org/wiki/Binary"
+);
+test_getRedirectURL(
+  "/docs/http://wiki.commonjs.org/wiki/Binary",
+  "http://wiki.commonjs.org/wiki/Binary",
+  null
+);
+test_getRedirectURL(
+  "/docs/https://wiki.commonjs.org/wiki/Binary",
+  "Plain text",
+  "https://wiki.commonjs.org/wiki/Binary"
+);
+
+test_getRedirectURL(
+  "https://developer.mozilla.org/en-US/docs/Mozilla/Projects/",
+  "SpiderMonkey",
+  "/en-US/docs/Mozilla/Projects/"
+);
+test_getRedirectURL(
+  "/en-US/docs/https://developer.mozilla.org/en-US/docs/Mozilla/Marketplace",
+  "Firefox Marketplace",
+  "/en-US/docs/Mozilla/Marketplace"
+);
+test_getRedirectURL(
+  "/en-US/docs/tools/Keyboard_shortcuts#Source_editor",
+  "/en-US/docs/tools/Keyboard_shortcuts",
+  "/en-US/docs/tools/Keyboard_shortcuts#Source_editor"
+);
+test_getRedirectURL(
+  "https://www.peterbe.com/",
+  "Peterbe.com",
+  "https://www.peterbe.com/"
+);
+
 const REDIRECT_HTML = "REDIRECT <a ";
+
+// Return either 'null' or an object that looks like this:
+//
+//  { url: redirectURL, status: null };
+//  or
+//  { url: null, status: "mess" }
+//  or
+//  { url: fixedRedirectURL, status: "improved" }
+//
+// So basically, if it's an object it has the keys 'url' and 'status'.
 function processRedirect(doc, absoluteURL) {
   if (!doc.html.includes(REDIRECT_HTML)) {
-    console.log(`${doc.locale}/${doc.slug} is direct but not REDIRECT_HTML`);
+    console.log(`${doc.locale}/${doc.slug} is redirect but no REDIRECT_HTML`);
     return null;
   }
 
-  const redirectURL = getRedirectURL(doc.html);
+  let redirectURL = getRedirectURL(doc.html);
   if (!redirectURL) {
     return null;
   }
 
   if (redirectURL.includes("://")) {
-    console.warn(
-      "WEIRD REDIRECT:",
-      redirectURL,
-      "  FROM  ",
-      `https://developer.mozilla.org${encodeURI(absoluteURL)}`,
-      doc.html
-    );
-  }
-
-  if (
-    !redirectURL.includes("/docs/") &&
-    VALID_LOCALES.has(redirectURL.split("/")[1])
-  ) {
-    const locale = redirectURL.split("/")[1];
-    // This works because String.replace only replaces the first occurance.
-    // And we can be confident that `redirectURL.split("/")[1]` is a valid
-    // locale because of the if-statement just above that uses `VALID_LOCALES`.
-    const fixedRedirectURL = redirectURL.replace(
-      `/${locale}/`,
-      `/${locale}/docs/`
-    );
-    return { url: fixedRedirectURL, status: null };
-  } else if (!redirectURL.startsWith("/docs/")) {
+    if (
+      redirectURL.includes("developer.mozilla.org") ||
+      redirectURL.includes("/http")
+    ) {
+      console.warn(
+        "WEIRD REDIRECT:",
+        redirectURL,
+        "  FROM  ",
+        `https://developer.mozilla.org${encodeURI(absoluteURL)}`,
+        doc.html
+      );
+    }
+    // Generally, leave external redirects untouched
     return { url: redirectURL, status: null };
   }
 
-  const split = redirectURL.split("/");
-  let locale = split[2];
-  if (locale === "en") {
-    locale = "en-US";
-  }
-  split.splice(2, 1);
-  split.splice(1, 0, locale);
-  const fixedRedirectURL = split.join("/");
-  return fixedRedirectURL === absoluteURL
-    ? { url: null, status: "mess" }
-    : { url: fixedRedirectURL, status: "improved" };
+  return postProcessRedirectURL(redirectURL);
 }
+
+function postProcessRedirectURL(redirectURL) {
+  if (redirectURL === "/") {
+    return { url: "/en-US/", status: "improved" };
+  }
+  const split = redirectURL.split("/");
+  let locale;
+  if (split[1] === "docs") {
+    // E.g. /docs/en/JavaScript
+    locale = split[2];
+  } else if (split[2] == "docs") {
+    // E.g. /en/docs/HTML
+    locale = split[1];
+  } else if (!split.includes("docs")) {
+    // E.g. /en-us/Addons
+    locale = split[1];
+  } else {
+    // That's some seriously messed up URL!
+    locale = null;
+  }
+
+  if (locale) {
+    const localeLC = locale.toLowerCase();
+    if (OLD_LOCALE_PREFIXES.has(localeLC)) {
+      locale = OLD_LOCALE_PREFIXES.get(localeLC);
+    } else if (VALID_LOCALES.has(localeLC)) {
+      locale = VALID_LOCALES.get(localeLC);
+    } else {
+      // If the URL contains no recognizable locale that can be cleaned up
+      // we have to assume 'en-US'. There are so many redirect URLs
+      // in MySQL that look like this: '/docs/Web/JavaScript...'
+      // And for them we have to assume it's '/en-US/docs/Web/JavaScript...'
+      locale = "en-US";
+      split.splice(1, 0, locale);
+    }
+  }
+
+  // No valid locale found. We have to try to fix that manually.
+  if (!locale) {
+    console.log(split, { redirectURL });
+    throw new Error("WHAT THE HELL?");
+  }
+
+  // E.g. '/en/' or '/en-uS/' or '/fr'
+  if (!split.includes("docs") && split.filter((x) => x).length === 1) {
+    return { url: `/${locale}/`, status: null };
+  }
+
+  // E.g. '/en/docs/Foo' or '/en-us/docs/Foo' - in other words; perfect
+  // but the locale might need to be corrected
+  if (split[2] === "docs") {
+    if (locale !== split[1]) {
+      split[1] = locale;
+      return { url: split.join("/"), status: "improved" };
+    }
+    return { url: split.join("/"), status: null };
+  }
+
+  // E.g. '/en-US/Foo/Bar' or '/en/Foo/Bar'
+  if (!split.includes("docs")) {
+    // The locale is valid but it's just missing the '/docs/' part
+    split[1] = locale;
+    split.splice(2, 0, "docs");
+    return { url: split.join("/"), status: "improved" };
+  }
+
+  // E.g. '/docs/en-uS/Foo' or '/docs/cn/Foo'
+  if (split[1] === "docs") {
+    split.splice(2, 1); // remove the local after '/docs/'
+    split.splice(1, 0, locale); // put the (correct) locale in before
+    return { url: split.join("/"), status: "improved" };
+  }
+
+  return { url: null, status: "mess" };
+}
+
+function test_postProcessRedirectURL(a, b) {
+  let got = postProcessRedirectURL(a);
+  if (b) {
+    assert(got.url === b, `${got.url} != ${b}`);
+  } else {
+    assert(!got.url, `Expected null but got: ${JSON.stringify(got)}`);
+  }
+}
+test_postProcessRedirectURL("/", "/en-US/");
+test_postProcessRedirectURL("/en-US/", "/en-US/");
+test_postProcessRedirectURL("/en-US", "/en-US/");
+test_postProcessRedirectURL("/en-us", "/en-US/");
+test_postProcessRedirectURL("/en/", "/en-US/");
+test_postProcessRedirectURL("/en", "/en-US/");
+
+test_postProcessRedirectURL("/en-US/Foo", "/en-US/docs/Foo");
+test_postProcessRedirectURL("/en-uS/Foo", "/en-US/docs/Foo");
+test_postProcessRedirectURL("/en/Foo", "/en-US/docs/Foo");
+test_postProcessRedirectURL("/zh/Foo", "/zh-TW/docs/Foo");
+test_postProcessRedirectURL("/pt/Foo", "/pt-PT/docs/Foo");
+
+test_postProcessRedirectURL("/docs/en-US/Foo", "/en-US/docs/Foo");
+test_postProcessRedirectURL("/docs/EN-us/Foo", "/en-US/docs/Foo");
+test_postProcessRedirectURL("/docs/en/Foo", "/en-US/docs/Foo");
+test_postProcessRedirectURL("/docs/cn/Foo", "/zh-CN/docs/Foo");
+
+test_postProcessRedirectURL("/docs/cn/Foo", "/zh-CN/docs/Foo");
+test_postProcessRedirectURL("/docs/Foo", "/en-US/docs/Foo");
+
+test_postProcessRedirectURL("/en-us/docs/Foo", "/en-US/docs/Foo");
+test_postProcessRedirectURL("/en/docs/Foo", "/en-US/docs/Foo");
+test_postProcessRedirectURL("/en-US/docs/Foo", "/en-US/docs/Foo");
 
 // Global that keeps track of all meta files that get built.
 // It's used so that we can make absolutely sure that we don't
@@ -579,7 +766,6 @@ async function saveAllRedirects(redirects, root) {
       return 0;
     });
     countPerLocale.push([locale, pairs.length]);
-    const filePath = path.join(root, locale, "_redirects.txt");
     const localeFolder = path.join(root, locale);
     if (!fs.existsSync(localeFolder)) {
       console.log(

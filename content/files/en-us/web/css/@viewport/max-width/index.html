@@ -1,0 +1,73 @@
+---
+title: max-width
+slug: Web/CSS/@viewport/max-width
+summary: >-
+  The max-width CSS descriptor specifies the maximum width of the viewport of a
+  document defined via the @viewport at-rule.
+tags:
+  - '@viewport'
+  - CSS
+  - CSS Descriptor
+  - Reference
+---
+<div>{{CSSRef}}</div>
+
+<p>The <strong><code>max-width</code></strong> CSS descriptor specifies the maximum width of the viewport of a document defined via the {{cssxref("@viewport")}} <a href="/en-US/docs/Web/CSS/At-rule">at-rule</a>.</p>
+
+<p>By default, the width is set as close as possible to the initial viewport considering the maximum width constraint.</p>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="brush: css">/* Keyword value */
+max-width: auto;
+
+/* &lt;length&gt; values */
+max-width: 600px;
+max-width: 80em;
+max-width: 15cm;
+
+/* &lt;percentage&gt; value */
+max-width: 75%;
+</pre>
+
+<h3 id="Values">Values</h3>
+
+<dl>
+ <dt><code>auto</code></dt>
+ <dd>The used value is calculated from the other CSS descriptors' values.</dd>
+ <dt><code>&lt;length&gt;</code></dt>
+ <dd>A non-negative absolute or relative length.</dd>
+ <dt><code>&lt;percentage&gt;</code></dt>
+ <dd>A percentage value relative to the width of the initial viewport at zoom factor 1.0 for horizontal lengths. Must be non-negative.</dd>
+</dl>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('CSS3 Device', '#descdef-viewport-max-width', '"max-width" descriptor')}}</td>
+   <td>{{Spec2('CSS3 Device')}}</td>
+   <td>Initial definition</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.at-rules.viewport.max-width")}}</p>

@@ -1,0 +1,109 @@
+---
+title: ReadableStreamDefaultController.ReadableStreamDefaultController()
+slug: Web/API/ReadableStreamDefaultController/ReadableStreamDefaultController
+summary: >-
+  The ReadableStreamDefaultController() constructor creates and returns a
+  ReadableStreamDefaultController object instance.
+tags:
+  - API
+  - Constructor
+  - ReadableStreamDefaultController
+  - Reference
+  - Streams
+---
+<div>{{APIRef("Streams")}}</div>
+
+<p class="summary">The <strong><code>ReadableStreamDefaultController()</code></strong> constructor creates and returns a <code>ReadableStreamDefaultController</code> object instance.</p>
+
+<div class="note">
+<p><strong>Note</strong>: You wouldn't use this constructor manually — this is used during the construction of a {{domxref("ReadableStream")}} object.</p>
+</div>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox">var <em>readableStreamDefaultController</em> = new ReadableStreamDefaultController(<em>stream</em>, <em>underlyingSource</em>, <em>size</em>, <em>highWaterMark</em>);</pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<dl>
+ <dt>stream</dt>
+ <dd>The {{domxref("ReadableStream")}} to be controlled.</dd>
+ <dt>underlyingSource</dt>
+ <dd>An object containing methods and properties that define how the constructed stream instance will behave. See the <a href="https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream/ReadableStream#Parameters"><code>ReadableStream()</code> constructor's parameters definitions</a> for more information.</dd>
+ <dt>size</dt>
+ <dd>A method containing a parameter <code>chunk</code> — this indicates the size to use for each chunk, in bytes.</dd>
+ <dt>highWaterMark</dt>
+ <dd>A non-negative integer — this defines the total number of chunks that can be contained in the internal queue before backpressure is applied.</dd>
+</dl>
+
+<h3 id="Return_value">Return value</h3>
+
+<p>An instance of the {{domxref("ReadableStreamDefaultController")}} object.</p>
+
+<h3 id="Exceptions">Exceptions</h3>
+
+<dl>
+ <dt>TypeError</dt>
+ <dd>The supplied <code>stream</code> parameter is not a {{domxref("ReadableStream")}}, or it already has an associated controller.</dd>
+</dl>
+
+<h2 id="Examples">Examples</h2>
+
+<p>In the following simple example, a custom <code>ReadableStream</code> is created using a constructor (see our <a href="https://mdn.github.io/dom-examples/streams/simple-random-stream/">Simple random stream example</a> for the full code). The <code>start()</code> function generates a random string of text every second and enqueues it into the stream. A <code>cancel()</code> function is also provided to stop the generation if {{domxref("ReadableStream.cancel()")}} is called for any reason.</p>
+
+<p>Note that a {{domxref("ReadableStreamDefaultController")}} object is provided as the parameter of the <code>start()</code> and <code>pull()</code> functions.</p>
+
+<p>When a button is pressed, the generation is stopped, the stream is closed using {{domxref("ReadableStreamDefaultController.close()")}}, and another function is run, which reads the data back out of the stream.</p>
+
+<pre class="brush: js">const stream = new ReadableStream({
+  start(controller) {
+    interval = setInterval(() =&gt; {
+      let string = randomChars();
+
+      // Add the string to the stream
+      controller.enqueue(string);
+
+      // show it on the screen
+      let listItem = document.createElement('li');
+      listItem.textContent = string;
+      list1.appendChild(listItem);
+    }, 1000);
+
+    button.addEventListener('click', function() {
+      clearInterval(interval);
+      fetchStream();
+      controller.close();
+    })
+  },
+  pull(controller) {
+    // We don't really need a pull in this example
+  },
+  cancel() {
+    // This is called if the reader cancels,
+    // so we should stop generating strings
+    clearInterval(interval);
+  }
+});</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+  <tr>
+   <td>{{SpecName("Streams","#rs-default-controller-constructor","ReadableStreamDefaultController()")}}</td>
+   <td>{{Spec2('Streams')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.ReadableStreamDefaultController.ReadableStreamDefaultController")}}</p>

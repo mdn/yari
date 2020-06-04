@@ -1,0 +1,74 @@
+---
+title: scroll-margin
+slug: Web/CSS/scroll-margin
+summary: "The scroll-margin property is a shorthand\_property which sets all of the scroll-margin longhands, assigning values much like the margin property does for the margin-* longhands."
+tags:
+  - CSS
+  - Property
+  - Reference
+  - margin
+  - scroll-margin
+  - scrollbar
+  - scrolling
+---
+<div>{{CSSRef}}</div>
+
+<p>The <strong><code>scroll-margin</code></strong> property is a shorthand property which sets all of the <code>scroll-margin</code> longhands, assigning values much like the <code>margin</code> property does for the <code>margin-*</code> longhands.</p>
+
+<div>{{EmbedInteractiveExample("pages/css/scroll-margin.html")}}</div>
+
+<p class="hidden">The source for this interactive example is stored in a GitHub repository. If you'd like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</p>
+
+<p>In these examples, you can see the effect of <code>scroll-margin</code> by scrolling the output box to a point partway between two of the "pages" of the example's content. The value specified for <code>scroll-margin</code> determines how much of the page that's primarily outside the snapport should remain visible.</p>
+
+<p>Thus, the <code>scroll-margin</code> values represent outsets defining the scroll snap area that is used for snapping this box to the snapport. The scroll snap area is determined by taking the transformed border box, finding its rectangular bounding box (axis-aligned in the scroll container’s coordinate space), then adding the specified outsets.</p>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax" name="Syntax">Syntax</h2>
+
+<pre class="brush: css">/* &lt;length&gt; values */
+scroll-margin: 10px;
+scroll-margin: 1em .5em 1em 1em;
+
+/* Global values */
+scroll-margin: inherit;
+scroll-margin: initial;
+scroll-margin: unset;
+</pre>
+
+<h3 id="Values" name="Values">Values</h3>
+
+<dl>
+ <dt>{{cssxref("&lt;length&gt;")}}</dt>
+ <dd>An outset from the corresponding edge of the scroll container.</dd>
+</dl>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h2 id="Specification">Specification</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName("CSS Scroll Snap Points", "#propdef-scroll-margin", "scroll-margin")}}</td>
+   <td>{{Spec2("CSS Scroll Snap Points")}}</td>
+   <td>Initial definition</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.properties.scroll-margin")}}</p>
