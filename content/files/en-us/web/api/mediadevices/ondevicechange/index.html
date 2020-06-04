@@ -149,11 +149,11 @@ let videoList = document.getElementById("videoList");</pre>
   .then(function(devices) {
     audioList.innerHTML = "";
     videoList.innerHTML = "";
-    
+
     devices.forEach(function(device) {
-      let elem = document.createElement("li");      
+      let elem = document.createElement("li");
       let [kind, type, direction] = device.kind.match(/(\w+)(input|output)/i);
-      
+
       elem.innerHTML = "&lt;strong&gt;" + device.label + "&lt;/strong&gt; (" + direction + ")";
       if (type === "audio") {
         audioList.appendChild(elem);

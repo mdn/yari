@@ -77,7 +77,7 @@ tags:
   color: white;
   background-color: darkgreen;
   font: 14px "Open Sans", "Arial", sans-serif;
-} 
+}
 
 #text {
   width: 46px;
@@ -130,15 +130,15 @@ tags:
 
 <pre class="brush: js">function log(msg, event) {
   let logBox = document.getElementById("log");
- 
+
   logBox.innerHTML += msg;
- 
+
   if (event) {
     logBox.innerHTML += " &lt;code&gt;"+ event.animationName +
         "&lt;/code&gt; at time " + event.elapsedTime.toFixed(2) +
         " seconds.";
   }
- 
+
   logBox.innerHTML += "\n";
 };
 </pre>

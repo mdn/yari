@@ -99,7 +99,7 @@ tags:
 'abc'.repeat(3.5)   // 'abcabcabc' (count will be converted to integer)
 'abc'.repeat(1/0)   // RangeError
 
-({ toString: () =&gt; 'abc', repeat: String.prototype.repeat }).repeat(2) 
+({ toString: () =&gt; 'abc', repeat: String.prototype.repeat }).repeat(2)
 // 'abcabc' (repeat() is a generic method)
 </pre>
 

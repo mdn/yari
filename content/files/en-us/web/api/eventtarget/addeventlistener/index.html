@@ -183,9 +183,9 @@ el.addEventListener("click", modifyText, false);
 <pre class="brush: js">// Function to change the content of t2
 function modifyText(new_text) {
   const t2 = document.getElementById("t2");
-  t2.firstChild.nodeValue = new_text;    
+  t2.firstChild.nodeValue = new_text;
 }
- 
+
 // Function to add event listener to table
 const el = document.getElementById("outside");
 el.addEventListener("click", function(){modifyText("four")}, false);
@@ -214,9 +214,9 @@ el.addEventListener("click", function(){modifyText("four")}, false);
 <pre class="brush: js">// Function to change the content of t2
 function modifyText(new_text) {
   const t2 = document.getElementById("t2");
-  t2.firstChild.nodeValue = new_text;    
+  t2.firstChild.nodeValue = new_text;
 }
- 
+
 // Add event listener to table with an arrow function
 const el = document.getElementById("outside");
 el.addEventListener("click", () =&gt; { modifyText("four"); }, false);
@@ -562,7 +562,7 @@ window.setInterval(function() {
 <p>In Internet Explorer versions before IE 9, you have to use {{domxref("EventTarget.attachEvent", "attachEvent()")}}, rather than the standard <code>addEventListener()</code>. For IE, we modify the preceding example to:</p>
 
 <pre class="brush: js">if (el.addEventListener) {
-  el.addEventListener('click', modifyText, false); 
+  el.addEventListener('click', modifyText, false);
 } else if (el.attachEvent)  {
   el.attachEvent('onclick', modifyText);
 }
@@ -593,7 +593,7 @@ window.setInterval(function() {
   }
   if (!Element.prototype.addEventListener) {
     var eventListeners=[];
-    
+
     var addEventListener=function(type,listener /*, useCapture (will be ignored) */) {
       var self=this;
       var wrapper=function(e) {
@@ -613,7 +613,7 @@ window.setInterval(function() {
         };
         document.attachEvent("onreadystatechange",wrapper2);
         eventListeners.push({object:this,type:type,listener:listener,wrapper:wrapper2});
-        
+
         if (document.readyState=="complete") {
           var e=new Event();
           e.srcElement=window;
@@ -709,7 +709,7 @@ for(let i=0, j=0 ; i&lt;els.length ; i++){
 for(let i=0, j=0 ; i&lt;els.length ; i++){
   /* do lots of stuff with j */
   function processEvent(e){/*do something*/};
-  els[j].addEventListener("click", processEvent, false); 
+  els[j].addEventListener("click", processEvent, false);
 }</pre>
 
 <h3 id="Improving_scrolling_performance_with_passive_listeners">Improving scrolling performance with passive listeners</h3>
@@ -728,10 +728,10 @@ for(let i=0, j=0 ; i&lt;els.length ; i++){
 let passiveIfSupported = false;
 
 try {
-  window.addEventListener("test", null, 
+  window.addEventListener("test", null,
     Object.defineProperty(
-      {}, 
-      "passive", 
+      {},
+      "passive",
       {
         get: function() { passiveIfSupported = { passive: false }; }
       }

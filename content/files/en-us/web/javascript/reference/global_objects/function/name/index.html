@@ -131,7 +131,7 @@ o.foo.name; // "foo";</pre>
 
 <p>{{jsxref("Function.bind()")}} produces a function whose name is "bound " plus the function name.</p>
 
-<pre class="brush: js">function foo() {}; 
+<pre class="brush: js">function foo() {};
 foo.bind({}).name; // "bound foo"
 </pre>
 
@@ -139,13 +139,13 @@ foo.bind({}).name; // "bound foo"
 
 <p>When using <code><a href="/en-US/docs/Web/JavaScript/Reference/Functions/get">get</a></code> and <code><a href="/en-US/docs/Web/JavaScript/Reference/Functions/set">set</a></code> accessor properties, "get" or "set" will appear in the function name.</p>
 
-<pre class="brush: js">let o = { 
-  get foo(){}, 
-  set foo(x){} 
-}; 
+<pre class="brush: js">let o = {
+  get foo(){},
+  set foo(x){}
+};
 
-var descriptor = Object.getOwnPropertyDescriptor(o, "foo"); 
-descriptor.get.name; // "get foo" 
+var descriptor = Object.getOwnPropertyDescriptor(o, "foo");
+descriptor.get.name; // "get foo"
 descriptor.set.name; // "set foo";</pre>
 
 <h3 id="Function_names_in_classes">Function names in classes</h3>
@@ -195,12 +195,12 @@ console.log(Foo.name); // logs "Hello" if class Foo has a static name() property
 
 <p>If a {{jsxref("Symbol")}} is used a function name and the symbol has a description, the method's name is the description in square brackets.</p>
 
-<pre class="brush: js">let sym1 = Symbol("foo"); 
-let sym2 = Symbol(); 
-let o = { 
-  [sym1]: function(){}, 
-  [sym2]: function(){} 
-}; 
+<pre class="brush: js">let sym1 = Symbol("foo");
+let sym2 = Symbol();
+let o = {
+  [sym1]: function(){},
+  [sym2]: function(){}
+};
 
 o[sym1].name; // "[foo]"
 o[sym2].name; // ""</pre>

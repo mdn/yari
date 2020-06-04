@@ -138,7 +138,7 @@ class BookListView(generic.ListView):
   &lt;/ul&gt;
   <strong>{% else %}</strong>
     &lt;p&gt;There are no books in the library.&lt;/p&gt;
-  <strong>{% endif %} </strong>      
+  <strong>{% endif %} </strong>
 {% endblock %}</pre>
 
 <p>The view passes the context (list of books) by default as <code>object_list</code> and <code>book_list</code> aliases; either will work.</p>
@@ -363,7 +363,7 @@ path('anotherurl/', views.my_reused_view, <strong>{'my_template_name': 'another_
         book = Book.objects.get(pk=primary_key)
     except Book.DoesNotExist:
         raise Http404('Book does not exist')
-    
+
     return render(request, 'catalog/book_detail.html', context={'book': book})
 </pre>
 
@@ -388,9 +388,9 @@ def book_detail_view(request, primary_key):
 
   &lt;p&gt;&lt;strong&gt;Author:&lt;/strong&gt; &lt;a href=""&gt;\{{ book.author }}&lt;/a&gt;&lt;/p&gt; &lt;!-- author detail link not yet defined --&gt;
   &lt;p&gt;&lt;strong&gt;Summary:&lt;/strong&gt; \{{ book.summary }}&lt;/p&gt;
-  &lt;p&gt;&lt;strong&gt;ISBN:&lt;/strong&gt; \{{ book.isbn }}&lt;/p&gt; 
-  &lt;p&gt;&lt;strong&gt;Language:&lt;/strong&gt; \{{ book.language }}&lt;/p&gt;  
-  &lt;p&gt;&lt;strong&gt;Genre:&lt;/strong&gt; \{{ book.genre.all|join:", " }}&lt;/p&gt;  
+  &lt;p&gt;&lt;strong&gt;ISBN:&lt;/strong&gt; \{{ book.isbn }}&lt;/p&gt;
+  &lt;p&gt;&lt;strong&gt;Language:&lt;/strong&gt; \{{ book.language }}&lt;/p&gt;
+  &lt;p&gt;&lt;strong&gt;Genre:&lt;/strong&gt; \{{ book.genre.all|join:", " }}&lt;/p&gt;
 
   &lt;div style="margin-left:20px;margin-top:20px"&gt;
     &lt;h4&gt;Copies&lt;/h4&gt;
@@ -517,7 +517,7 @@ def book_detail_view(request, primary_key):
 <p>Open <strong>/locallibrary/catalog/templates/<em>base_generic.html</em></strong> and copy in the following pagination block below our content block (highlighted below in bold). The code first checks if pagination is enabled on the current page. If so then it adds next and previous links as appropriate (and the current page number). </p>
 
 <pre class="brush: python">{% block content %}{% endblock %}
-  
+
 <strong>  {% block pagination %}
     {% if is_paginated %}
         &lt;div class="pagination"&gt;
@@ -567,7 +567,7 @@ def book_detail_view(request, primary_key):
 <ul>
  <li>Once you've created the URL mapper for the author list page you will also need to update the <strong>All authors</strong> link in the base template. Follow the <a href="#Update_the_base_template">same process</a> as we did when we updated the <strong>All books</strong> link.</li>
  <li>Once you've created the URL mapper for the author detail page, you should also update the <a href="#Creating_the_Detail_View_template">book detail view template</a> (<strong>/locallibrary/catalog/templates/catalog/book_detail.html</strong>) so that the author link points to your new author detail page (rather than being an empty URL). The line will change to add the template tag shown in bold below.
-  <pre class="brush: html">&lt;p&gt;&lt;strong&gt;Author:&lt;/strong&gt; &lt;a href="<strong>{% url 'author-detail' book.author.pk %}</strong>"&gt;\{{ book.author }}&lt;/a&gt;&lt;/p&gt; 
+  <pre class="brush: html">&lt;p&gt;&lt;strong&gt;Author:&lt;/strong&gt; &lt;a href="<strong>{% url 'author-detail' book.author.pk %}</strong>"&gt;\{{ book.author }}&lt;/a&gt;&lt;/p&gt;
 </pre>
  </li>
 </ul>

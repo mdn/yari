@@ -36,7 +36,7 @@ window.requestFileSystemSync  = window.requestFileSystemSync || window.webkitReq
 // Next, set the size of space needed (in bytes)
 // initFs is the success callback
 // And the last one is the error callback
-// for denial of access and other errors. 
+// for denial of access and other errors.
 
 var fs = requestFileSystemSync(TEMPORARY, 1024*1024 /*1MB*/);</pre>
 
@@ -88,8 +88,8 @@ var fs = requestFileSystemSync(TEMPORARY, 1024*1024 /*1MB*/);</pre>
 <p>Requests a file system where data should be stored. You access a sandboxed file system by requesting a <code>LocalFileSystemSync</code> object from within a web worker using this global method, <code>window.requestFileSystemSync()</code>. [ RESEARCH ]</p>
 
 <pre><code>FileSystemSync</code> requestFileSystemSync(
-  in unsigned short type, 
-  in unsigned long long size  
+  in unsigned short type,
+  in unsigned long long size
 );</pre>
 
 <h5 id="Parameters">Parameters</h5>
@@ -130,7 +130,7 @@ var fs = requestFileSystemSync(TEMPORARY, 1024*1024 /*1MB*/);</pre>
 <p>Allows the user to look up the <code>Entry</code> for a file or directory referred to by a local URL.</p>
 
 <pre>void resolveLocalFileSystemURL(
-  in DOMString url  
+  in DOMString url
 );</pre>
 
 <h5 id="Parameter">Parameter</h5>

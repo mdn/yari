@@ -83,8 +83,8 @@ delete <var>object</var>['<var>property</var>']
 console.log(delete Employee.name);   // returns true
 console.log(delete Employee.age);    // returns true
 
-// When trying to delete a property that does 
-// not exist, true is returned 
+// When trying to delete a property that does
+// not exist, true is returned
 console.log(delete Employee.salary); // returns true
 </pre>
 
@@ -103,10 +103,10 @@ console.log(delete Employee.name);  // returns false
 <pre class="brush: js">var nameOther = 'XYZ';
 
 // We can access this global property using:
-Object.getOwnPropertyDescriptor(window, 'nameOther');  
+Object.getOwnPropertyDescriptor(window, 'nameOther');
 
-// output: Object {value: "XYZ", 
-//                  writable: true, 
+// output: Object {value: "XYZ",
+//                  writable: true,
 //                  enumerable: true,
 //                  <strong>configurable: false</strong>}
 
@@ -149,7 +149,7 @@ console.log(delete func); // false
 <h2 id="Examples">Examples</h2>
 
 <pre class="brush: js">// Creates the property adminName on the global scope.
-adminName = 'xyz';            
+adminName = 'xyz';
 
 // Creates the property empCount on the global scope.
 // Since we are using var, this is marked as non-configurable. The same is true of let and const.
@@ -168,16 +168,16 @@ delete adminName;       // returns true
 
 // On the contrary, empCount is not configurable
 // since var was used.
-delete empCount;       // returns false 
+delete empCount;       // returns false
 
 // delete can be used to remove properties from objects.
-delete EmployeeDetails.name; // returns true 
+delete EmployeeDetails.name; // returns true
 
 <strong>// </strong>Even when the property does not exist, delete returns "true".
-delete EmployeeDetails.salary; // returns true 
+delete EmployeeDetails.salary; // returns true
 
 // delete does not affect built-in static properties.
-delete Math.PI; // returns false 
+delete Math.PI; // returns false
 
 // EmployeeDetails is a property of the global scope.
 // Since it was defined without "var", it is marked configurable.
@@ -203,24 +203,24 @@ Foo.prototype.bar = 42;
 
 var foo = new Foo();
 
-// foo.bar is associated with the 
-// own property. 
-console.log(foo.bar); // 10 
+// foo.bar is associated with the
+// own property.
+console.log(foo.bar); // 10
 
-// Delete the own property within the 
-// foo object. 
-delete foo.bar; // returns true 
+// Delete the own property within the
+// foo object.
+delete foo.bar; // returns true
 
-// foo.bar is still available in the 
-// prototype chain. 
-console.log(foo.bar); // 42 
+// foo.bar is still available in the
+// prototype chain.
+console.log(foo.bar); // 42
 
 // Delete the property on the prototype.
-delete Foo.prototype.bar; // returns true 
+delete Foo.prototype.bar; // returns true
 
-// The "bar" property can no longer be 
-// inherited from Foo since it has been 
-// deleted. 
+// The "bar" property can no longer be
+// inherited from Foo since it has been
+// deleted.
 console.log(foo.bar); // undefined</pre>
 
 <h3 id="Deleting_array_elements">Deleting array elements</h3>

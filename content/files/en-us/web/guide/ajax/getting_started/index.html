@@ -224,7 +224,7 @@ alert(root_node.firstChild.data);
 
 <p>First we'll add a text box to our HTML so the user can enter their name:</p>
 
-<pre class="brush: html">&lt;label&gt;Your name: 
+<pre class="brush: html">&lt;label&gt;Your name:
   &lt;input type="text" id="ajaxTextbox" /&gt;
 &lt;/label&gt;
 &lt;span id="ajaxButton" style="cursor: pointer; text-decoration: underline"&gt;
@@ -233,9 +233,9 @@ alert(root_node.firstChild.data);
 
 <p>We'll also add a line to our event handler to get the user's data from the text box and send it to the <code>makeRequest()</code> function along with the URL of our server-side script:</p>
 
-<pre class="brush: js">  document.getElementById("ajaxButton").onclick = function() { 
+<pre class="brush: js">  document.getElementById("ajaxButton").onclick = function() {
       var userName = document.getElementById("ajaxTextbox").value;
-      makeRequest('test.php',userName); 
+      makeRequest('test.php',userName);
   };
 </pre>
 
@@ -325,7 +325,7 @@ TIME: 312.15</pre>
       fullData.textContent = text;
 
       let timeArray = text.split('\n');
-      
+
       // included because some file systems always include a blank line at the end of text files.
       if(timeArray[timeArray.length-1] === '') {
         timeArray.pop();

@@ -58,11 +58,11 @@ tags:
 <pre class="brush: js">const videoConfiguration = {
   type: "file",
     video: {
-      contentType: "video/webm;codecs=vp8", 
-      width: 800,     
-      height: 600,    
-      bitrate: 10000, 
-      framerate: 15  
+      contentType: "video/webm;codecs=vp8",
+      width: 800,
+      height: 600,
+      bitrate: 10000,
+      framerate: 15
    }
 };</pre>
 
@@ -71,7 +71,7 @@ tags:
 <pre class="brush: js">const audioConfiguration = {
   type: "file",
     audio: {
-      contentType: "audio/ogg", 
+      contentType: "audio/ogg",
       channels: 2,
       bitrate: 132700,
       samplerate: 5200
@@ -93,7 +93,7 @@ tags:
 <p>Instead of the assigning the promise to a variable, we can output the values returned by the promise to the console:</p>
 
 <pre class="brush: js language-js">navigator.mediaCapabilities.decodingInfo(videoConfiguration).then(result =&gt; {
-  console.log('This configuration is ' + 
+  console.log('This configuration is ' +
     (result.supported ? '' : 'not ') + 'supported, ' +
     (result.smooth ? '' : 'not ') + 'smooth, and ' +
     (result.powerEfficient ? '' : 'not ') + 'power efficient.')
@@ -114,7 +114,7 @@ tags:
 
 <pre class="brush: js;">navigator.mediaCapabilities.decodingInfo(videoConfiguration).then(
   console.log('It worked')
-).catch(error =&gt; 
+).catch(error =&gt;
   console.log('It failed: ' + error)
 );</pre>
 
@@ -128,7 +128,7 @@ tags:
 <h3 id="HTML">HTML</h3>
 
 <pre class="brush: html;">&lt;form&gt;
-&lt;p&gt;Select your video configuration and find out if this browser supports the codec, 
+&lt;p&gt;Select your video configuration and find out if this browser supports the codec,
 and whether decoding will be smooth and power efficient:&lt;/p&gt;
   &lt;ul&gt;
   &lt;li&gt;
@@ -176,7 +176,7 @@ and whether decoding will be smooth and power efficient:&lt;/p&gt;
   &lt;/li&gt;
   &lt;/ul&gt;
   &lt;p&gt;&lt;input type="button" value="Test this Video Configuration" id="tryit"&gt;&lt;/p&gt;
-&lt;/form&gt; 
+&lt;/form&gt;
 
 &lt;ul id="results"&gt;&lt;/ul&gt;</pre>
 
@@ -184,12 +184,12 @@ and whether decoding will be smooth and power efficient:&lt;/p&gt;
 
 <pre class="brush: js;">let mc = {
   videoConfiguration : new Object(),
-  
+
   tryit: function () {
    mc.createConfiguration();
    mc.testit();
   },
-    
+
   createConfiguration: function () {
     var size = document.getElementById('size').value.split('x');
     mc.videoConfiguration = {
@@ -206,7 +206,7 @@ and whether decoding will be smooth and power efficient:&lt;/p&gt;
 
   testit: function () {
     let content = '';
-    navigator.mediaCapabilities.decodingInfo(mc.videoConfiguration).then(result =&gt; { 
+    navigator.mediaCapabilities.decodingInfo(mc.videoConfiguration).then(result =&gt; {
       var li = document.createElement('li'),
         mcv = mc.videoConfiguration.video;
       content = 'A ' + mcv.width + 'x' + mcv.height + ', ' + mcv.contentType + ' at ' +

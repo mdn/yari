@@ -82,7 +82,7 @@ d = Object.getOwnPropertyDescriptor(o, 'bar');
 // }
 
 o = { [Symbol.for('baz')]: 73 }
-d = Object.getOwnPropertyDescriptor(o, Symbol.for('baz')); 
+d = Object.getOwnPropertyDescriptor(o, Symbol.for('baz'));
 // d is {
 //   configurable: true,
 //   enumerable: true,

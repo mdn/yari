@@ -17,10 +17,10 @@ tags:
 
 <p>The simplest way of styling content elements like <code>&lt;p&gt;</code> or <code>&lt;span&gt;</code> is by specifying one or more style attributes, such as <code>tts:color</code>, on them. For instance, the following</p>
 
-<pre class="brush: xml">&lt;p tts:textAlign="center" 
-   tts:fontSize="64px" 
-   tts:color="red" 
-   tts:fontFamily="proportionalSansSerif" 
+<pre class="brush: xml">&lt;p tts:textAlign="center"
+   tts:fontSize="64px"
+   tts:color="red"
+   tts:fontFamily="proportionalSansSerif"
    tts:fontStyle="italic"&gt;
  Hello, I am Mork from Ork
 &lt;/p&gt;</pre>
@@ -49,7 +49,7 @@ tags:
 
 <p>In referential styling, styles are defined once and reused throughout the document — in a similar way to how CSS rules can be declared once and then applied to multiple HTML elements via for example, element or class selectors. In IMSC this is achieved by defining a <code>&lt;styling&gt;</code> element inside the document <code>&lt;head&gt;</code>, inside which is placed one or more <code>&lt;style&gt;</code> elements — each one of which defines a set of styles that you can reuse elsewhere. This is illustrated below:</p>
 
-<pre class="brush: xml">&lt;tt xmlns="http://www.w3.org/ns/ttml" 
+<pre class="brush: xml">&lt;tt xmlns="http://www.w3.org/ns/ttml"
     xmlns:tts="http://www.w3.org/ns/ttml#styling"
     xml:lang="en"&gt;
   &lt;head&gt;
@@ -113,7 +113,7 @@ tags:
 
 <p>Region styling plays a special role in IMSC since a style property specified on a region is inherited by all elements that are selected to the region, starting with the <code>&lt;body&gt;</code> element, as if the <code>&lt;region&gt;</code> element was the parent of the <code>&lt;body&gt; </code>element. For example, in the following example, the text "Hello, I am Mork from Ork" will appear in yellow.</p>
 
-<pre class="brush: xml">&lt;tt 
+<pre class="brush: xml">&lt;tt
   xmlns="http://www.w3.org/ns/ttml"
   xmlns:tts="http://www.w3.org/ns/ttml#styling"
   xml:lang="en"&gt;
@@ -125,7 +125,7 @@ tags:
  &lt;body&gt;
    &lt;div&gt;
      &lt;p region="r1"&gt;Hello, I am Mork from Ork&lt;/p&gt;
-   &lt;/div&gt;  
+   &lt;/div&gt;
  &lt;/body&gt;
 &lt;/tt&gt;</pre>
 
@@ -134,11 +134,11 @@ tags:
 <p>Referential styling can be applied to style elements themselves:</p>
 
 <pre class="brush: xml">&lt;styling&gt;
-  &lt;style xml:id="s1" 
-         tts:color="yellow" 
+  &lt;style xml:id="s1"
+         tts:color="yellow"
          tts:backgroundColor="black"/&gt;
-  &lt;style xml:id="s2" 
-         style="s1" 
+  &lt;style xml:id="s2"
+         style="s1"
          tts:textAlign="left"/&gt;
 &lt;/styling&gt;</pre>
 

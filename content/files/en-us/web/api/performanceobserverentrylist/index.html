@@ -29,13 +29,13 @@ tags:
 
 <h2 id="Example">Example</h2>
 
-<pre class="brush: js">// Create observer for all performance event types 
+<pre class="brush: js">// Create observer for all performance event types
 // list is of type PerformanceObserveEntryList
-var observe_all = new PerformanceObserver(function(list, obs) {  
-   var perfEntries = list.getEntries(); 
-   for (var i = 0; i &lt; perfEntries.length; i++) { 
-      print_perf_entry(perfEntries[i]); 
-      // do something with it 
+var observe_all = new PerformanceObserver(function(list, obs) {
+   var perfEntries = list.getEntries();
+   for (var i = 0; i &lt; perfEntries.length; i++) {
+      print_perf_entry(perfEntries[i]);
+      // do something with it
    }
 }</pre>
 

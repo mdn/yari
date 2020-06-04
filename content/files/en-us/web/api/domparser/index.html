@@ -141,7 +141,7 @@ doc = parser.parseFromString(stringContainingHTMLSource, "text/html")
 <pre class="brush: js">/*
  * DOMParser HTML extension
  * 2012-09-04
- * 
+ *
  * By Eli Grey, http://eligrey.com
  * Public domain.
  * NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
@@ -153,7 +153,7 @@ doc = parser.parseFromString(stringContainingHTMLSource, "text/html")
 (function(DOMParser) {
 	"use strict";
 
-	var proto = DOMParser.prototype, 
+	var proto = DOMParser.prototype,
         nativeParse = <span style="font-size: 1rem;">proto</span><span style="font-size: 1rem;">.parseFromString</span>;
 
 	// Firefox/Opera/IE throw errors on unsupported types

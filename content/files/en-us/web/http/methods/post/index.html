@@ -80,16 +80,16 @@ field1=value1&amp;field2=value2</pre>
 
 <p>A form using the <code>multipart/form-data</code> content type:</p>
 
-<pre>POST /test HTTP/1.1 
+<pre>POST /test HTTP/1.1
 Host: foo.example
-Content-Type: multipart/form-data;boundary="boundary" 
+Content-Type: multipart/form-data;boundary="boundary"
 
---boundary 
-Content-Disposition: form-data; name="field1" 
+--boundary
+Content-Disposition: form-data; name="field1"
 
-value1 
---boundary 
-Content-Disposition: form-data; name="field2"; filename="example.txt" 
+value1
+--boundary
+Content-Disposition: form-data; name="field2"; filename="example.txt"
 
 value2
 --boundary--

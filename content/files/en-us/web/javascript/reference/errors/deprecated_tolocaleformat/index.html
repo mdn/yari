@@ -33,7 +33,7 @@ tags:
 
 <p>The {{jsxref("Date.prototype.toLocaleFormat")}} method is deprecated and will be removed (no cross-browser support, available in Firefox only).</p>
 
-<pre class="brush: js example-bad">var today = new Date(); 
+<pre class="brush: js example-bad">var today = new Date();
 var date = today.toLocaleFormat('%A, %e. %B %Y');
 
 console.log(date);
@@ -57,12 +57,12 @@ console.log(date);
 
 <p>Or, you can make use of the {{jsxref("DateTimeFormat", "Intl.DateTimeFormat")}} object, which allows you to cache an object with most of the computations done so that formatting is fast. This is useful if you have a loop of dates to format.</p>
 
-<pre class="brush: js example-good">var options = { weekday: 'long', year: 'numeric', 
-                month: 'long', day: 'numeric' }; 
+<pre class="brush: js example-good">var options = { weekday: 'long', year: 'numeric',
+                month: 'long', day: 'numeric' };
 var dateFormatter = new Intl.DateTimeFormat('de-DE', options)
 
-var dates = [Date.UTC(2012, 11, 20, 3, 0, 0), 
-             Date.UTC(2014, 04, 12, 8, 0, 0)]; 
+var dates = [Date.UTC(2012, 11, 20, 3, 0, 0),
+             Date.UTC(2014, 04, 12, 8, 0, 0)];
 
 dates.forEach(date =&gt; console.log(dateFormatter.format(date)));
 
@@ -81,7 +81,7 @@ dates.forEach(date =&gt; console.log(dateFormatter.format(date)));
 <p>Can be converted to:</p>
 
 <pre class="brush: js example-good">let now = new Date();
-let date = now.getFullYear() * 10000 + 
+let date = now.getFullYear() * 10000 +
           (now.getMonth() + 1) * 100 + now.getDate();
 
 console.log(date);

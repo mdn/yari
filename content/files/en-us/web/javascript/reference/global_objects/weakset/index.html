@@ -41,7 +41,7 @@ tags:
 function execRecursively(fn, subject, _refs = null){
 	if(!_refs)
 		_refs = new WeakSet();
-	
+
 	// Avoid infinite recursion
 	if(_refs.has(subject))
 		return;

@@ -52,19 +52,19 @@ exports.bookinstance_detail = function(req, res, <strong>next</strong>) {
 block content
 
 <strong>  h1 ID: #{bookinstance._id}</strong>
-  
-  p #[strong Title:] 
+
+  p #[strong Title:]
     a(href=bookinstance.book.url) #{bookinstance.book.title}
   p #[strong Imprint:] #{bookinstance.imprint}
 
-  p #[strong Status:] 
+  p #[strong Status:]
     if bookinstance.status=='Available'
       span.text-success #{bookinstance.status}
     else if bookinstance.status=='Maintenance'
       span.text-danger #{bookinstance.status}
     else
-      span.text-warning #{bookinstance.status} 
-      
+      span.text-warning #{bookinstance.status}
+
   if bookinstance.status!='Available'
     p #[strong Due back:] #{bookinstance.due_back}
 </pre>

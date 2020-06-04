@@ -23,7 +23,7 @@ tags:
 <pre class="brush: js">window.addEventListener("load", function() {
   let now = new Date().getTime();
   let loadingTime = now - performance.timing.navigationStart;
- 
+
   document.querySelector(".output").innerText =
         loadingTime + " ms";
 }, false);</pre>
@@ -69,10 +69,10 @@ tags:
 <pre class="brush: js">window.addEventListener("load", function() {
   let now = new Date().getTime();
   let loadingTime = now - performance.timing.navigationStart;
-   
+
   output = "Load time: " + loadingTime + " ms&lt;br/&gt;";
   output += "Navigation type: ";
- 
+
   switch(performance.navigation.type) {
       case PerformanceNavigation.TYPE_NAVIGATE:
         output += "Navigation";
@@ -87,8 +87,8 @@ tags:
         output += "Unknown";
       break;
   }
- 
-  output += "&lt;br/&gt;Redirects: " + 
+
+  output += "&lt;br/&gt;Redirects: " +
       performance.navigation.redirectCount;
   document.querySelector(".output").innerHTML = output;
 }, false);</pre>

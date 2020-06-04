@@ -34,7 +34,7 @@ tags:
 
 <pre class="brush: js example-bad">var x = function() 1;
 
-var obj = { 
+var obj = {
   count: function() 1
 };
 </pre>
@@ -68,9 +68,9 @@ var obj = {
 
 <p>With ES2015 <a href="/en-US/docs/Web/JavaScript/Reference/Functions/Method_definitions">method definitions</a>, this can be converted to:</p>
 
-<pre class="brush: js example-good">var obj = { 
-  get x() { return 1 }, 
-  set x(v) { this.v = v } 
+<pre class="brush: js example-good">var obj = {
+  get x() { return 1 },
+  set x(v) { this.v = v }
 };
 </pre>
 

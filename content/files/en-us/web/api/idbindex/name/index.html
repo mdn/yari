@@ -55,7 +55,7 @@ tags:
   var transaction = db.transaction(['contactsList'], 'readonly');
   var objectStore = transaction.objectStore('contactsList');
 
-  var myIndex = objectStore.index('lName'); 
+  var myIndex = objectStore.index('lName');
   console.log(myIndex.name);
 
   myIndex.openCursor().onsuccess = function(event) {
@@ -70,11 +70,11 @@ tags:
                            + '&lt;td&gt;' + cursor.value.eMail + '&lt;/td&gt;'
                            + '&lt;td&gt;' + cursor.value.phone + '&lt;/td&gt;'
                            + '&lt;td&gt;' + cursor.value.age + '&lt;/td&gt;';
-      tableEntry.appendChild(tableRow);  
+      tableEntry.appendChild(tableRow);
 
       cursor.continue();
     } else {
-      console.log('Entries all displayed.');    
+      console.log('Entries all displayed.');
     }
   };
 };</pre>

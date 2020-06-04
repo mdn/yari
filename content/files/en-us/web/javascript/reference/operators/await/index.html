@@ -42,7 +42,7 @@ tags:
 
 <p>If a <code>Promise</code> is passed to an <code>await</code> expression, it waits for the <code>Promise</code> to be fulfilled and returns the fulfilled value.</p>
 
-<pre class="brush: js">function resolveAfter2Seconds(x) { 
+<pre class="brush: js">function resolveAfter2Seconds(x) {
   return new Promise(resolve =&gt; {
     setTimeout(() =&gt; {
       resolve(x);

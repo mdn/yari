@@ -24,18 +24,18 @@ tags:
     &lt;rect   fill="black" x="0" y="0" width="100%" height="100%" /&gt;
     &lt;circle fill="white" cx="50" cy="50" r="35" /&gt;
   &lt;/mask&gt;
- 
+
   &lt;mask id="myMask2" maskContentUnits="objectBoundingBox"&gt;
     &lt;rect   fill="black" x="0" y="0" width="100%" height="100%" /&gt;
     &lt;circle fill="white" cx=".5" cy=".5" r=".35" /&gt;
   &lt;/mask&gt;
- 
+
   &lt;!-- Some reference rect to materialized the mask --&gt;
   &lt;rect id="r1" x="0"  y="0"  width="45" height="45" /&gt;
   &lt;rect id="r2" x="0"  y="55" width="45" height="45" /&gt;
   &lt;rect id="r3" x="55" y="55" width="45" height="45" /&gt;
   &lt;rect id="r4" x="55" y="0"  width="45" height="45" /&gt;
- 
+
   &lt;!-- The first 3 rect are masked with useSpaceOnUse units --&gt;
   &lt;use mask="url(#myMask1)" xlink:href="#r1" fill="red" /&gt;
   &lt;use mask="url(#myMask1)" xlink:href="#r2" fill="red" /&gt;

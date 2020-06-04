@@ -50,7 +50,7 @@ tags:
 <h3 id="Catching_a_TypeError">Catching a <code>TypeError</code></h3>
 
 <pre class="brush: js">try {
-  null.f() 
+  null.f()
 } catch (e) {
   console.log(e instanceof TypeError)  // true
   console.log(e.message)               // "null has no properties"
@@ -65,7 +65,7 @@ tags:
 <h3 id="Creating_a_TypeError">Creating a <code>TypeError</code></h3>
 
 <pre class="brush: js">try {
-  throw new TypeError('Hello', "someFile.js", 10) 
+  throw new TypeError('Hello', "someFile.js", 10)
 } catch (e) {
   console.log(e instanceof TypeError)  // true
   console.log(e.message)               // "Hello"

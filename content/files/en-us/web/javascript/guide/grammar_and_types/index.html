@@ -40,11 +40,11 @@ tags:
 <p>The syntax of <strong>comments</strong> is the same as in C++ and in many other languages:</p>
 
 <pre class="brush: js">// a one line comment
- 
-/* this is a longer, 
+
+/* this is a longer,
  * multi-line comment
  */
- 
+
 /* You can't, however, /* nest comments */ SyntaxError */
 </pre>
 
@@ -126,7 +126,7 @@ if (input === undefined) {
 <p>The <code>undefined</code> value behaves as <code>false</code> when used in a boolean context. For example, the following code executes the function <code>myFunction</code> because the <code>myArray</code> element is <code>undefined</code>:</p>
 
 <pre class="brush: js">var myArray = [];
-if (!myArray[0]) myFunction(); 
+if (!myArray[0]) myFunction();
 </pre>
 
 <p>The <code>undefined</code> value converts to <code>NaN</code> when used in numeric context.</p>
@@ -179,7 +179,7 @@ var x = 3;
  */
 // will return a value of undefined
 var myvar = 'my value';
- 
+
 (function() {
   console.log(myvar); // undefined
   var myvar = 'local value';
@@ -194,12 +194,12 @@ var myvar = 'my value';
 var x;
 console.log(x === undefined); // true
 x = 3;
- 
+
 /**
  * Example 2
  */
 var myvar = 'my value';
- 
+
 (function() {
   var myvar;
   console.log(myvar); // undefined
@@ -358,7 +358,7 @@ y = 42 + ' is the answer' // "42 is the answer"
 <p>An alternative method of retrieving a number from a string is with the <code>+</code> (unary plus) operator:</p>
 
 <pre class="brush: js">'1.1' + '1.1' // '1.11.1'
-(+'1.1') + (+'1.1') // 2.2   
+(+'1.1') + (+'1.1') // 2.2
 // Note: the parentheses are added for clarity, not required.</pre>
 
 <h2 id="Literals">Literals</h2>
@@ -460,7 +460,7 @@ y = 42 + ' is the answer' // "42 is the answer"
 <p>Some examples of numeric literals are:</p>
 
 <pre class="eval">0, 117, -345, 123456789123456789n             (decimal, base 10)
-015, 0001, -0o77, 0o777777777777n             (octal, base 8) 
+015, 0001, -0o77, 0o777777777777n             (octal, base 8)
 0x1123, 0x00111, -0xF1A7, 0x123456789ABCDEFn  (hexadecimal, "hex" or base 16)
 0b11, 0b0011, -0b11, 0b11101001010101010101n  (binary, base 2)
 </pre>
@@ -517,7 +517,7 @@ var car = { myCar: 'Saturn', getCar: carTypes('Honda'), special: sales };
 
 console.log(car.myCar);   // Saturn
 console.log(car.getCar);  // Honda
-console.log(car.special); // Toyota 
+console.log(car.special); // Toyota
 </pre>
 
 <p>Additionally, you can use a numeric or string literal for the name of a property or nest an object inside another. The following example uses these options.</p>
@@ -583,7 +583,7 @@ console.log(unusualPropertyNames['!']); // Bang!</pre>
 
 <p>You can call any of the {{jsxref("String")}} object's methods on a string literal value. JavaScript automatically converts the string literal to a temporary String object, calls the method, then discards the temporary String object. You can also use the <code>String.length</code> property with a string literal:</p>
 
-<pre class="brush: js">// Will print the number of symbols in the string including whitespace. 
+<pre class="brush: js">// Will print the number of symbols in the string including whitespace.
 console.log("John's cat".length)  // In this case, 10.
 </pre>
 
@@ -732,7 +732,7 @@ console.log(str);   // this string is broken across multiple lines.
 
 <p>Although JavaScript does not have "heredoc" syntax, you can get close by adding a line break escape and an escaped line break at the end of each line:</p>
 
-<pre class="brush: js">var poem = 
+<pre class="brush: js">var poem =
 'Roses are red,\n\
 Violets are blue.\n\
 Sugar is sweet,\n\
@@ -741,10 +741,10 @@ and so is foo.'
 
 <p>ECMAScript 2015 introduces a new type of literal, namely <a href="/en-US/docs/Web/JavaScript/Reference/template_strings"><strong>template literals</strong></a>. This allows for many new features, including multiline strings!</p>
 
-<pre class="brush: js" dir="rtl">var poem = 
-`Roses are red, 
-Violets are blue. 
-Sugar is sweet, 
+<pre class="brush: js" dir="rtl">var poem =
+`Roses are red,
+Violets are blue.
+Sugar is sweet,
 and so is foo.` </pre>
 
 <h2 id="More_information">More information</h2>

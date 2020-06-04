@@ -54,7 +54,7 @@ if (navigator.userAgent.indexOf("Chrome") !== -1){
     //  browsers that do not support look-behind expressions
     //  because all browsers parse the entire script, including
     //  sections of the code that are never executed.
-    var camelCaseExpression = new RegExp("(?&lt;=[A-Z])"); 
+    var camelCaseExpression = new RegExp("(?&lt;=[A-Z])");
     var splitUpString = function(str) {
         return (""+str).split(camelCaseExpression);
     };
@@ -107,10 +107,10 @@ var splitUpString = isLookBehindSupported ? function(str) {
  <dd>Arguably the most common use and misuse of user agent sniffing is to detect if the device is a mobile device. However, people too often overlook what they are really after. People use user agent sniffing to detect if the users' device is touch-friendly and has a small screen so they can optimize their website accordingly. While user agent sniffing can sometimes detect these, not all devices are the same: some mobile devices have big screen sizes, some desktops have a small touchscreen, some people use smart TV's which are an entirely different ballgame altogether, and some people can dynamically change the width and height of their screen by flipping their tablet on its side! So, user agent sniffing is definitely not the way to go. Thankfully, there are much better alternatives. Use <a href="/en-US/docs/Web/API/Navigator/maxTouchPoints">Navigator.maxTouchPoints</a> to detect if the user's device has a touchscreen. Then, default back to checking the user agent screen only <em>if (!("maxTouchPoints" in navigator)) { /*Code here*/}</em>. Using this information of whether the device has a touchscreen, do not change the entire layout of the website just for touch devices: you will only create more work and maintenance for yourself. Rather, add in touch conveniences such as bigger, more easily clickable buttons (you can do this using CSS by simply increasing the font size). Here is an example of code that increases the padding of #exampleButton to 1em on mobile devices.</dd>
  <dd>
  <pre class="brush: js">var hasTouchScreen = false;
-if ("maxTouchPoints" in navigator) { 
+if ("maxTouchPoints" in navigator) {
     hasTouchScreen = navigator.maxTouchPoints &gt; 0;
 } else if ("msMaxTouchPoints" in navigator) {
-    hasTouchScreen = navigator.msMaxTouchPoints &gt; 0; 
+    hasTouchScreen = navigator.msMaxTouchPoints &gt; 0;
 } else {
     var mQ = window.matchMedia &amp;&amp; matchMedia("(pointer:coarse)");
     if (mQ &amp;&amp; mQ.media === "(pointer:coarse)") {
@@ -157,7 +157,7 @@ var destroyMediaQuery = isWebkit ? function(mQ) {
         if (mqL[i][0] === mQ) mqL.splice(i, 1);
     mQ.removeListener(whenMediaChanges);
 } : listenToMediaQuery;
-        
+
 var orientationChanged = false;
 addEventListener("orientationchange", function(){
     orientationChanged = true;

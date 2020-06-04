@@ -238,13 +238,13 @@ console.log(/[^.]+/.exec(url)[0].substr(7)) // logs 'xxx'
 <pre class="brush: js">// Firefox 33 or older
 'x'.replace(/x(.)?/g, function(m, group) {
   console.log("'group:" + group + "'");
-}); 
+});
 // 'group:'
 
 // Firefox 34 or newer
 'x'.replace(/x(.)?/g, function(m, group) {
   console.log("'group:" + group + "'");
-}); 
+});
 // 'group:undefined'
 </pre>
 

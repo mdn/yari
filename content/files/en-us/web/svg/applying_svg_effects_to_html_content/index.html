@@ -41,8 +41,8 @@ tags:
 &lt;/svg&gt;
 </pre>
 
-<pre class="brush: css">.target { 
-  mask: url(#mask-1); 
+<pre class="brush: css">.target {
+  mask: url(#mask-1);
 }
 p {
   width: 300px;
@@ -192,14 +192,14 @@ pre.target:hover { filter:url(#f3); }
 
 <p>In order to blur text, Webkit based browsers have a (prefixed) CSS filter called blur (see also <a href="/en-US/docs/Web/CSS/filter#blur%28%29_2">CSS filter</a>). You can achieve the same effect using SVG filters.</p>
 
-<pre class="brush: html">&lt;p class="blur"&gt;Time to clean my glasses&lt;/p&gt; 
+<pre class="brush: html">&lt;p class="blur"&gt;Time to clean my glasses&lt;/p&gt;
 &lt;svg height="0"&gt;
   &lt;defs&gt;
     &lt;filter id="wherearemyglasses" x="0" y="0"&gt;
     &lt;feGaussianBlur in="SourceGraphic" stdDeviation="1"/&gt;
     &lt;/filter&gt;
   &lt;/defs&gt;
-&lt;/svg&gt; 
+&lt;/svg&gt;
 </pre>
 
 <p>You can apply the SVG and the CSS filter in the same class:</p>

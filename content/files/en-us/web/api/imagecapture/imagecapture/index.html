@@ -37,7 +37,7 @@ tags:
 <p>The following example shows how to use a call to {{domxref("MediaDevices.getUserMedia()")}} to retrieve the {{domxref("MediaStreamTrack")}} needed by the <code>ImageCapture()</code> constructor.</p>
 
 <pre class="brush: js"> navigator.mediaDevices.getUserMedia({video: true})
-  .then(mediaStream =&gt; { 
+  .then(mediaStream =&gt; {
     document.querySelector('video').srcObject = mediaStream
     const track = mediaStream.getVideoTracks()[0];
     imageCapture = new ImageCapture(track);

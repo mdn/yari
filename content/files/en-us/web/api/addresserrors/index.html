@@ -75,10 +75,10 @@ tags:
 
 <pre class="brush: js">function handleAddressChange(ev) {
   const validCountries = ["US", "CA", "GB", "JP", "CN", "MX"];
- 
+
   const genericAddressError = "Unable to ship to the given address. Please check for any errors.";
   const invalidCountryError = "At this time, we only ship to the United States, Canada, Great Britain, Japan, China, and Germany.";
- 
+
   let shippingAddress = ev.target.shippingAddress;
   let shippingAddressErrors = {};
   let updateDetails = {};
@@ -86,7 +86,7 @@ tags:
   if (!validCountries.includes(shippingAddress.country)) {
     ev.target.shippingOptions = [];
     shippingAddressErrors.country = invalidCountryError;
-    
+
     updateDetails = {
       error: genericAddressError,
       shippingAddressErrors,
@@ -178,10 +178,10 @@ function process() {
 
 <pre class="brush: js">function handleAddressChange(ev) {
   const validCountries = ["US", "CA", "GB", "JP", "CN", "MX"];
- 
+
   const genericAddressError = "Unable to ship to the given address. Please check for any errors.";
   const invalidCountryError = "At this time, we only ship to the United States, Canada, Great Britain, Japan, China, and Germany.";
- 
+
   let shippingAddress = ev.target.shippingAddress;
   let shippingAddressErrors = {};
   let updateDetails = {};
@@ -189,7 +189,7 @@ function process() {
   if (!validCountries.includes(shippingAddress.country)) {
     ev.target.shippingOptions = [];
     shippingAddressErrors.country = invalidCountryError;
-    
+
     updateDetails = {
       error: genericAddressError,
       shippingAddressErrors,

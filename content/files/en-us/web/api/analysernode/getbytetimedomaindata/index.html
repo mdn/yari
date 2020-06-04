@@ -23,8 +23,8 @@ tags:
 
 <pre class="brush: js">const audioCtx = new AudioContext();
 const analyser = audioCtx.createAnalyser();
-const dataArray = new Uint8Array(analyser.fftSize); // Uint8Array should be the same length as the fftSize 
-analyser.getByteTimeDomainData(dataArray); // fill the Uint8Array with data returned from getByteTimeDomainData() 
+const dataArray = new Uint8Array(analyser.fftSize); // Uint8Array should be the same length as the fftSize
+analyser.getByteTimeDomainData(dataArray); // fill the Uint8Array with data returned from getByteTimeDomainData()
 </pre>
 
 <h3 id="Parameters">Parameters</h3>

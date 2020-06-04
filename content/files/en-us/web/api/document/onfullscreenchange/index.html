@@ -34,9 +34,9 @@ tags:
 
 <h2 id="Example">Example</h2>
 
-<pre class="brush: js">document.onfullscreenchange = function ( event ) { 
+<pre class="brush: js">document.onfullscreenchange = function ( event ) {
   console.log("FULL SCREEN CHANGE")
-}; 
+};
 document.documentElement.onclick = function () {
   // requestFullscreen() must be in an event handler or it will fail
   document.documentElement.requestFullscreen();

@@ -160,7 +160,7 @@ whatsThis.apply(obj); // 'Custom' as this in the function is set to obj
 var o = {a: 1, b: 3};
 
 // The first parameter is the object to use as
-// 'this', subsequent parameters are passed as 
+// 'this', subsequent parameters are passed as
 // arguments in the function call
 add.call(o, 5, 7); // 16
 
@@ -225,10 +225,10 @@ console.log(foo() === globalObject); // true</pre>
 <p>No matter what, <code>foo</code>'s <code>this</code> is set to what it was when it was created (in the example above, the global object). The same applies to arrow functions created inside other functions: their <code>this</code> remains that of the enclosing lexical context.</p>
 
 <pre class="brush: js">// Create obj with a method bar that returns a function that
-// returns its this. The returned function is created as 
+// returns its this. The returned function is created as
 // an arrow function, so its this is permanently bound to the
 // this of its enclosing function. The value of bar can be set
-// in the call, which in turn sets the value of the 
+// in the call, which in turn sets the value of the
 // returned function.
 var obj = {
   bar: function() {
@@ -340,7 +340,7 @@ console.log(o.average, o.sum); // 2, 6
  * Constructors work like this:
  *
  * function MyConstructor(){
- *   // Actual function body code goes here.  
+ *   // Actual function body code goes here.
  *   // Create properties on |this| as
  *   // desired by assigning to them.  E.g.,
  *   this.fum = "nom";

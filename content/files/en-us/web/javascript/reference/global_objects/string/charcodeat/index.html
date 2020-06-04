@@ -67,9 +67,9 @@ tags:
   idx = idx || 0;
   var code = str.charCodeAt(idx);
   var hi, low;
-  
+
   // High surrogate (could change last hex to 0xDB7F
-  // to treat high private surrogates 
+  // to treat high private surrogates
   // as single characters)
   if (0xD800 &lt;= code &amp;&amp; code &lt;= 0xDBFF) {
     hi = code;
@@ -79,7 +79,7 @@ tags:
         'low surrogate in fixedCharCodeAt()';
     }
     return (
-      (hi - 0xD800) * 0x400) + 
+      (hi - 0xD800) * 0x400) +
       (low - 0xDC00) + 0x10000;
   }
   if (0xDC00 &lt;= code &amp;&amp; code &lt;= 0xDFFF) { // Low surrogate

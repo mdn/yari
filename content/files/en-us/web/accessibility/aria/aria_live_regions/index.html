@@ -75,12 +75,12 @@ tags:
     title: "Venus",
     description: 'Venus is the second planet from the Sun. It is named after the Roman goddess of love and beauty.'
   },
-  
+
   earth: {
     title: "Earth",
     description: 'Earth is the third planet from the Sun and the only object in the Universe known to harbor life.'
   },
-  
+
   mars: {
     title: "Mars",
     description: 'Mars is the fourth planet from the Sun and the second-smallest planet in the Solar System after Mercury. In English, Mars carries a name of the Roman god of war, and is often referred to as the "Red Planet".'
@@ -90,7 +90,7 @@ tags:
 function renderPlanetInfo(planet) {
   const planetTitle = document.querySelector('#planetTitle');
   const planetDescription = document.querySelector('#planetDescription');
-  
+
   if (planet in PLANETS_INFO) {
     planetTitle.textContent = PLANETS_INFO[planet].title;
     planetDescription.textContent = PLANETS_INFO[planet].description;

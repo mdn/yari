@@ -31,13 +31,13 @@ tags:
       &lt;feOffset in="blur" dx="4" dy="4" result="offsetBlur"/&gt;
 
       &lt;!-- litPaint --&gt;
-      &lt;feSpecularLighting in="blur" surfaceScale="5" specularConstant=".75" 
-                          specularExponent="20" lighting-color="#bbbbbb"  
+      &lt;feSpecularLighting in="blur" surfaceScale="5" specularConstant=".75"
+                          specularExponent="20" lighting-color="#bbbbbb"
                           result="specOut"&gt;
         &lt;fePointLight x="-5000" y="-10000" z="20000"/&gt;
       &lt;/feSpecularLighting&gt;
       &lt;feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut"/&gt;
-      &lt;feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" 
+      &lt;feComposite in="SourceGraphic" in2="specOut" operator="arithmetic"
                    k1="0" k2="1" k3="1" k4="0" result="litPaint"/&gt;
 
       &lt;!-- merge offsetBlur + litPaint --&gt;
@@ -50,9 +50,9 @@ tags:
 
   &lt;!-- Graphic elements --&gt;
   &lt;g filter="url(#MyFilter)"&gt;
-      &lt;path fill="none" stroke="#D90000" stroke-width="10" 
+      &lt;path fill="none" stroke="#D90000" stroke-width="10"
             d="M50,66 c-50,0 -50,-60 0,-60 h100 c50,0 50,60 0,60z" /&gt;
-      &lt;path fill="#D90000" 
+      &lt;path fill="#D90000"
             d="M60,56 c-30,0 -30,-40 0,-40 h80 c30,0 30,40 0,40z" /&gt;
       &lt;g fill="#FFFFFF" stroke="black" font-size="45" font-family="Verdana" &gt;
         &lt;text x="52" y="52"&gt;SVG&lt;/text&gt;
@@ -82,7 +82,7 @@ tags:
 <h3 id="Step_3">Step 3</h3>
 
 <pre class="brush: html">&lt;feSpecularLighting in="offsetBlur"
-                    surfaceScale="5" specularConstant=".75" 
+                    surfaceScale="5" specularConstant=".75"
                     specularExponent="20" lighting-color="#bbbbbb"
                     result="specOut"&gt;
   &lt;fePointLight x="-5000" y="-10000" z="20000"/&gt;
@@ -101,7 +101,7 @@ tags:
 <h3 id="Step_5">Step 5</h3>
 
 <pre class="brush: html">&lt;feComposite in="SourceGraphic" in2="specOut"
-             operator="arithmetic" 
+             operator="arithmetic"
              k1="0" k2="1" k3="1" k4="0"
              result="litPaint"/&gt;</pre>
 

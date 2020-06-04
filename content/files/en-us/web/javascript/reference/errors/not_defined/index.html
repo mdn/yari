@@ -46,8 +46,8 @@ foo.substring(1); // "ar"</pre>
 
 <p>A variable needs to be available in the current context of execution. Variables defined inside a <a href="/en-US/docs/Web/JavaScript/Reference/Functions">function</a> cannot be accessed from anywhere outside the function, because the variable is defined only in the scope of the function</p>
 
-<pre class="brush: js example-bad">function numbers() { 
-  var num1 = 2, 
+<pre class="brush: js example-bad">function numbers() {
+  var num1 = 2,
       num2 = 3;
   return num1 + num2;
 }
@@ -60,7 +60,7 @@ console.log(num1); // ReferenceError num1 is not defined.</pre>
     num2 = 3;
 
 function numbers() {
-  return num1 + num2; 
+  return num1 + num2;
 }
 
 console.log(numbers()); // 5</pre>

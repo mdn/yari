@@ -36,9 +36,9 @@ tags:
 <p>The following code waits until all animations running on the element <code>elem</code> have finished, then deletes the element from the DOM tree:</p>
 
 <pre class="brush: js">Promise.all(
-  elem.getAnimations().map( 
-    function(animation) { 
-      return animation.finished 
+  elem.getAnimations().map(
+    function(animation) {
+      return animation.finished
     }
   )
 ).then(

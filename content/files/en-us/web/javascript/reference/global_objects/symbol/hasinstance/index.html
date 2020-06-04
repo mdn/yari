@@ -28,7 +28,7 @@ tags:
 
 <p>You could implement your custom <code>instanceof</code> behavior like this, for example:</p>
 
-<pre class="brush: js">class MyArray {  
+<pre class="brush: js">class MyArray {
   static [Symbol.hasInstance](instance) {
     return Array.isArray(instance)
   }

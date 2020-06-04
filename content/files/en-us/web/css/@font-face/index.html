@@ -84,7 +84,7 @@ tags:
       font-family: "Bitstream Vera Serif Bold";
       src: url("https://mdn.mozillademos.org/files/2468/VeraSeBd.ttf");
     }
-    
+
     body { font-family: "Bitstream Vera Serif Bold", serif }
   &lt;/style&gt;
 &lt;/head&gt;
@@ -139,14 +139,14 @@ tags:
 <ul>
  <li>Web fonts are subject to the same domain restriction (font files must be on the same domain as the page using them), unless <a href="/en-US/docs/HTTP_access_control">HTTP access controls</a> are used to relax this restriction.</li>
  <li><code>@font-face</code> cannot be declared within a CSS selector. For example, the following will not work:
-  <pre class="brush: css; example-bad">.className { 
-  @font-face { 
-    font-family: MyHelvetica; 
+  <pre class="brush: css; example-bad">.className {
+  @font-face {
+    font-family: MyHelvetica;
     src: local("Helvetica Neue Bold"),
          local("HelveticaNeue-Bold"),
          url(MgOpenModernaBold.ttf);
-    font-weight: bold; 
-  } 
+    font-weight: bold;
+  }
 }</pre>
  </li>
 </ul>

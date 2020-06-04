@@ -66,10 +66,10 @@ var p3 = new Promise((resolve, reject) =&gt; {
   setTimeout(() =&gt; {
     resolve("foo");
   }, 100);
-}); 
+});
 
-Promise.all([p1, p2, p3]).then(values =&gt; { 
-  console.log(values); // [3, 1337, "foo"] 
+Promise.all([p1, p2, p3]).then(values =&gt; {
+  console.log(values); // [3, 1337, "foo"]
 });</pre>
 
 <p>If the <var>iterable</var> contains non-promise values, they will be ignored, but still counted in the returned promise array value (if the promise is fulfilled):</p>
@@ -112,7 +112,7 @@ setTimeout(function() {
 });
 
 // logs, in order:
-// Promise { &lt;state&gt;: "pending" } 
+// Promise { &lt;state&gt;: "pending" }
 // the stack is now empty
 // Promise { &lt;state&gt;: "fulfilled", &lt;value&gt;: Array[2] }
 </pre>
@@ -128,7 +128,7 @@ setTimeout(function() {
 });
 
 // logs
-// Promise { &lt;state&gt;: "pending" } 
+// Promise { &lt;state&gt;: "pending" }
 // the stack is now empty
 // Promise { &lt;state&gt;: "rejected", &lt;reason&gt;: 44 }
 </pre>
@@ -155,11 +155,11 @@ setTimeout(function() {
 
 <p><code>Promise.all</code> is rejected if any of the elements are rejected. For example, if you pass in four promises that resolve after a timeout and one promise that rejects immediately, then <code>Promise.all</code> will reject immediately.</p>
 
-<pre class="brush: js">var p1 = new Promise((resolve, reject) =&gt; { 
-  setTimeout(() =&gt; resolve('one'), 1000); 
-}); 
-var p2 = new Promise((resolve, reject) =&gt; { 
-  setTimeout(() =&gt; resolve('two'), 2000); 
+<pre class="brush: js">var p1 = new Promise((resolve, reject) =&gt; {
+  setTimeout(() =&gt; resolve('one'), 1000);
+});
+var p2 = new Promise((resolve, reject) =&gt; {
+  setTimeout(() =&gt; resolve('two'), 2000);
 });
 var p3 = new Promise((resolve, reject) =&gt; {
   setTimeout(() =&gt; resolve('three'), 3000);
@@ -174,23 +174,23 @@ var p5 = new Promise((resolve, reject) =&gt; {
 
 // Using .catch:
 Promise.all([p1, p2, p3, p4, p5])
-.then(values =&gt; { 
+.then(values =&gt; {
   console.log(values);
 })
-.catch(error =&gt; { 
+.catch(error =&gt; {
   console.error(error.message)
 });
 
-//From console: 
+//From console:
 //"reject"
 
 </pre>
 
 <p>It is possible to change this behaviour by handling possible rejections:</p>
 
-<pre class="brush: js">var p1 = new Promise((resolve, reject) =&gt; { 
-  setTimeout(() =&gt; resolve('p1_delayed_resolution'), 1000); 
-}); 
+<pre class="brush: js">var p1 = new Promise((resolve, reject) =&gt; {
+  setTimeout(() =&gt; resolve('p1_delayed_resolution'), 1000);
+});
 
 var p2 = new Promise((resolve, reject) =&gt; {
   reject(new Error('p2_immediate_rejection'));
@@ -199,7 +199,7 @@ var p2 = new Promise((resolve, reject) =&gt; {
 Promise.all([
   p1.catch(error =&gt; { return error }),
   p2.catch(error =&gt; { return error }),
-]).then(values =&gt; { 
+]).then(values =&gt; {
   console.log(values[0]) // "p1_delayed_resolution"
   console.error(values[1]) // "Error: p2_immediate_rejection"
 })

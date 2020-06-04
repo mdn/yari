@@ -32,7 +32,7 @@ tags:
  <dt>
  <pre class="brush: js">function(resolutionFunc, rejectionFunc){
     // typically, some asynchronous operation.
-} 
+}
 </pre>
  </dt>
  <dd>At the time when the constructor generates the new <code>promiseObj</code>, it also generates a corresponding pair of functions for <code>resolutionFunc</code> and <code>rejectionFunc;</code> these are "tethered" to the <code>promiseObj</code>.  Therefore, the code within the <code>executor</code> has the opportunity to perform some operation and then reflect the operation's outcome(If the value is not another Promise object) as either "fulfilled" or "rejected" by terminating with an invocation of either the <code>resolutionFunc</code> or the <code>rejectionFunc</code>, respectively.</dd>
@@ -77,11 +77,11 @@ rejectionFunc(reason) // call on <em>rejected</em></pre>
 
 <pre class="brush: js;">function myAsyncFunction(url) {
   return new Promise((resolve, reject) =&gt; {
-    const xhr = new XMLHttpRequest() 
-    xhr.open("GET", url) 
-    xhr.onload = () =&gt; resolve(xhr.responseText) 
-    xhr.onerror = () =&gt; reject(xhr.statusText) 
-    xhr.send() 
+    const xhr = new XMLHttpRequest()
+    xhr.open("GET", url)
+    xhr.onload = () =&gt; resolve(xhr.responseText)
+    xhr.onerror = () =&gt; reject(xhr.statusText)
+    xhr.send()
   });
 }</pre>
 

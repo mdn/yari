@@ -72,7 +72,7 @@ button.addEventListener('click', e =&gt; {
 
   for (let i = 0; i &lt; selection.rangeCount; i++) {
     const range = selection.getRangeAt(i);
-    
+
     if (range.commonAncestorContainer === list1 ||
         range.commonAncestorContainer.parentNode === list1) {
       const documentFragment = range.extractContents();

@@ -129,12 +129,12 @@ tags:
 
 if (XR) {
   XR.requestSession("inline").then((xrSession) =&gt; {
-    xrSession.requestReferenceSpace("local").then((xrReferenceSpace) =&gt; { 
+    xrSession.requestReferenceSpace("local").then((xrReferenceSpace) =&gt; {
       xrSession.requestAnimationFrame((time, xrFrame) =&gt; {
         let viewer = xrFrame.getViewerPose(xrReferenceSpace);
 
         gl.bindFramebuffer(xrWebGLLayer.framebuffer);
-        
+
         for (xrView of viewer.views) {
           let xrViewport = xrWebGLLayer.getViewport(xrView);
           gl.viewport(xrViewport.x, xrViewport.y,

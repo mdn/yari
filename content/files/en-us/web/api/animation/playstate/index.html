@@ -47,9 +47,9 @@ tags:
 
 <pre class="brush: js">// Setting up the tear animations
 
-tears.forEach(function(el) {  
+tears.forEach(function(el) {
   el.animate(
-    tearsFalling, 
+    tearsFalling,
     {
       delay: getRandomMsRange(-1000, 1000), // randomized for each tear
       duration: getRandomMsRange(2000, 6000), // randomized for each tear
@@ -60,16 +60,16 @@ tears.forEach(function(el) {  
 });
 
 
-// Play the tears falling when the ending needs to be shown. 
+// Play the tears falling when the ending needs to be shown.
 
-tears.forEach(function(el) { 
+tears.forEach(function(el) {
   el.play();
 });
 
 
 // Reset the crying tears animations and pause them.
 
-tears.forEach(function(el) {  
+tears.forEach(function(el) {
   el.pause();
   el.currentTime = 0;
 });

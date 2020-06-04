@@ -62,7 +62,7 @@ Reflect.setPrototypeOf(Object.freeze({}), null)  // false
 
 // Returns false if it cause a prototype chain cycle.
 let target = {}
-let proto = Object.create(target) 
+let proto = Object.create(target)
 Reflect.setPrototypeOf(target, proto)  // false
 </pre>
 

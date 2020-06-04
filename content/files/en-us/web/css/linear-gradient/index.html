@@ -44,7 +44,7 @@ tags:
 
 <p>By adding more color-stop points on the gradient line, you can create a highly customized transition between multiple colors. A color-stop's position can be explicitly defined by using a {{CSSxRef("&lt;length&gt;")}} or a {{CSSxRef("&lt;percentage&gt;")}}. If you don't specify the location of a color, it is placed halfway between the one that precedes it and the one that follows it. The following two gradients are equivalent.</p>
 
-<pre class="brush: css">linear-gradient(red, orange, yellow, green, blue); 
+<pre class="brush: css">linear-gradient(red, orange, yellow, green, blue);
 linear-gradient(red 0%, orange 25%, yellow 50%, green 75%, blue 100%);</pre>
 
 <p>By default, colors transition smoothly from the color at one color stop to the color at the subsequent color stop, with the midpoint between the colors being the half way point between the color transition. You can move this midpoint to any position between two color stops by adding an unlabelled % color hint between the two colors to indicate where the middle of the color transition should be. The following example is solid red from the start to the 10% mark and solid blue from 90% to the end. Between 10% and 90% the color transitions from red to blue, however the midpoint of the transition is at the 30% mark rather than 50% as would have happened without the 30% color hint.</p>
@@ -81,14 +81,14 @@ linear-gradient(to left top, blue, red);
    and finishing red */
 linear-gradient(0deg, blue, green 40%, red);
 
-/* Color hint: A gradient going from the left to right, 
-   starting red, getting to the midpoint color 
-   10% of the way across the length of the gradient, 
-   taking the rest of the 90% of the length to change to blue */ 
+/* Color hint: A gradient going from the left to right,
+   starting red, getting to the midpoint color
+   10% of the way across the length of the gradient,
+   taking the rest of the 90% of the length to change to blue */
 linear-gradient(.25turn, red, 10%, blue);
 
-/* Multi-position color stop: A gradient tilted 45 degrees, 
-   with a red bottom-left half and a blue top-right half, 
+/* Multi-position color stop: A gradient tilted 45 degrees,
+   with a red bottom-left half and a blue top-right half,
    with a hard line where the gradient changes from red to blue */
 linear-gradient(45deg, red 0 50%, blue 50% 100%);</pre>
 
@@ -116,7 +116,7 @@ linear-gradient(45deg, red 0 50%, blue 50% 100%);</pre>
 <pre class="syntaxbox">linear-gradient(
   [ <a href="/en-US/CSS/angle">&lt;angle&gt;</a> | to &lt;side-or-corner&gt; ,]? &lt;color-stop-list&gt; )
   \---------------------------------/ \----------------------------/
-    Definition of the gradient line        List of color stops  
+    Definition of the gradient line        List of color stops
 
 where &lt;side-or-corner&gt; = [ left | right ] || [ top | bottom ]
   and &lt;color-stop-list&gt; = [ &lt;linear-color-stop&gt; [, &lt;color-hint&gt; ]? ]#, &lt;linear-color-stop&gt;
@@ -169,7 +169,7 @@ where &lt;side-or-corner&gt; = [ left | right ] || [ top | bottom ]
 </div>
 
 <pre class="brush: css">body {
-  background: linear-gradient(to right, 
+  background: linear-gradient(to right,
      red 20%, orange 20% 40%, yellow 40% 60%, green 60% 80%, blue 80%);
 }</pre>
 

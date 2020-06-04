@@ -75,13 +75,13 @@ tags:
 &lt;script&gt;
 function dragstart_handler(ev) {
  console.log("dragStart");
- // Set the drag's format and data. Use the event target's id for the data 
+ // Set the drag's format and data. Use the event target's id for the data
  ev.dataTransfer.setData("text/plain", ev.target.id);
  // Create an image and use it for the drag image
  // NOTE: change "example.gif" to an existing image or the image will not
  // be created and the default drag image will be used.
- var img = new Image(); 
- img.src = 'example.gif'; 
+ var img = new Image();
+ img.src = 'example.gif';
  ev.dataTransfer.setDragImage(img, 10, 10);
 }
 

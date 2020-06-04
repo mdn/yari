@@ -33,11 +33,11 @@ tags:
 
 </span><span style="line-height: 1.5;">DBOpenRequest.onsuccess = function(event) {</span>
   note.innerHTML += '&lt;li&gt;Database initialised.&lt;/li&gt;';
-    
+
   // store the result of opening the database in the db variable.
   // This is used a lot below
   db = DBOpenRequest.result;
-    
+
   // Run the addData() function to add the data to the database
   addData();
 };
@@ -73,8 +73,8 @@ function addData() {
   transaction.onabort = function() {
     // Report when the transaction was successfully aborted
     console.log("Transaction aborted!");
-  }; 
- 
+  };
+
   // Abort the transaction we just did
   transaction.abort();
 };</pre>

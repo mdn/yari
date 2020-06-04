@@ -21,7 +21,7 @@ tags:
 
 <p>The related comment is marked up using an HTML structure wrapped with a <code>&lt;div&gt;</code> containing <code>role="comment"</code>.</p>
 
-<pre class="brush: html">&lt;p&gt;The last half of the song is a slow-rising crescendo that peaks at the 
+<pre class="brush: html">&lt;p&gt;The last half of the song is a slow-rising crescendo that peaks at the
 &lt;span role="mark" aria-details="thread-1"&gt;end of the guitar solo&lt;/span&gt;, before fading away sharply.&lt;/p&gt;
 
 &lt;div role="comment" id="thread-1" data-author="chris"&gt;
@@ -36,7 +36,7 @@ tags:
 
 <p>Since <code>aria-details</code> can now accept multiple IDs, we can associate multiple comments with the same annotation, like so:</p>
 
-<pre>&lt;p&gt;The last half of the song is a slow-rising crescendo that peaks at the 
+<pre>&lt;p&gt;The last half of the song is a slow-rising crescendo that peaks at the
 &lt;mark aria-details="thread-1 thread-2"&gt;end of the guitar solo&lt;/mark&gt;, before fading away sharply.&lt;/p&gt;
 
 &lt;div role="comment" id="thread-1" data-author="chris"&gt;
@@ -47,7 +47,7 @@ tags:
 
 &lt;div role="comment" id="thread-2" data-author="chris"&gt;
   &lt;h3&gt;Marcus said&lt;/h3&gt;
-  &lt;p class="comment-text"&gt;The guitar solo could do with a touch more chorus, 
+  &lt;p class="comment-text"&gt;The guitar solo could do with a touch more chorus,
     and a slightly lower volume.&lt;/p&gt;
   &lt;p&gt;&lt;time datetime="2019-03-29T15:35"&gt;March 29 2019, 15:35&lt;/time&gt;&lt;/p&gt;
 &lt;/div&gt;</pre>
@@ -63,7 +63,7 @@ tags:
 
   &lt;div role="comment" data-author="marcus"&gt;
     &lt;h3&gt;Marcus replied&lt;/h3&gt;
-    &lt;p class="comment-text"&gt;I don't know about that. 
+    &lt;p class="comment-text"&gt;I don't know about that.
       I think the cowbell could distract from the solo.&lt;/p&gt;
     &lt;p&gt;&lt;time datetime="2019-03-30T21:02"&gt;March 30 2019, 21:02&lt;/time&gt;&lt;/p&gt;
   &lt;/div&gt;

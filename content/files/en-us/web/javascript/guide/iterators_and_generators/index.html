@@ -154,8 +154,8 @@ console.log(<var>it</var>[Symbol.iterator]() === <var>it</var>) // true;
     }
 }
 
-for (let value of myIterable) { 
-    console.log(value); 
+for (let value of myIterable) {
+    console.log(value);
 }
 // 1
 // 2
@@ -181,18 +181,18 @@ or
 // "b"
 // "c"
 
-[...'abc']; 
+[...'abc'];
 // ["a", "b", "c"]
 
 function* gen() {
   yield* ['a', 'b', 'c'];
 }
 
-gen().next(); 
+gen().next();
 // { value: "a", done: false }
 
 [a, b, c] = new Set(['a', 'b', 'c']);
-a; 
+a;
 // "a"
 
 </pre>
@@ -212,7 +212,7 @@ a;
 <pre class="brush: js">function* fibonacci() {
   let fn1 = 0;
   let fn2 = 1;
-  while (true) {  
+  while (true) {
     let current = fn1;
     fn1 = fn2;
     fn2 = current + fn1;

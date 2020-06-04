@@ -196,7 +196,7 @@ tags:
   display: grid;
   grid-template-columns: repeat(9, 1fr);
   grid-auto-rows: minmax(100px, auto);
-  grid-template-areas: 
+  grid-template-areas:
     "hd hd hd hd   hd   hd   hd   hd   hd"
     "sd sd sd main main main main main main"
     "ft ft ft ft   ft   ft   ft   ft   ft";
@@ -315,14 +315,14 @@ tags:
 
 <pre class="brush: css">.wrapper {
   grid-template-columns: repeat(4, [col-start] 1fr [col-end] );
-} 
+}
 </pre>
 
 <p>If we write this definition out without using repeat notation it would look like this.</p>
 
 <pre class="brush: css">.wrapper {
   grid-template-columns: [col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr  [col-end col-start] 1fr [col-end];
-} 
+}
 </pre>
 
 <p>If you have used a track list then you can use the <code>span</code> keyword not just to span a number of lines but also to span a number of lines of a certain name.</p>
@@ -426,7 +426,7 @@ tags:
 }
 
 .content {
-  grid-column: col-start 4 / span 6; 
+  grid-column: col-start 4 / span 6;
   grid-row: 2;
 }
 

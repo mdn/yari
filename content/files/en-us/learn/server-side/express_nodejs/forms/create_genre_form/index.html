@@ -29,7 +29,7 @@ tags:
 <p>Find the exported <code>genre_create_get()</code> controller method and replace it with the following code. This simply renders the <strong>genre_form.pug</strong> view, passing a title variable.</p>
 
 <pre class="brush: js">// Display Genre create form on GET.
-exports.genre_create_get = function(req, res, next) {     
+exports.genre_create_get = function(req, res, next) {
   res.render('genre_form', { title: 'Create Genre' });
 };</pre>
 
@@ -39,10 +39,10 @@ exports.genre_create_get = function(req, res, next) {
 
 <pre class="brush: js">// Handle Genre create on POST.
 exports.genre_create_post =  [
-   
+
   // Validate that the name field is not empty.
   validator.body('name', 'Genre name required').trim().isLength({ min: 1 }),
-  
+
   // Sanitize (escape) the name field.
   validator.sanitizeBody('name').escape(),
 
@@ -99,7 +99,7 @@ exports.genre_create_post =  [
 
 <pre class="brush: js">// Validate that the name field is not empty.
 validator<code>.</code>body('name', 'Genre name required').isLength({ min: 1 }).trim(),
-  
+
 // Sanitize (escape) the name field.
 validator.sanitizeBody('name').escape()</pre>
 
@@ -132,8 +132,8 @@ validator.sanitizeBody('name').escape()</pre>
 <pre class="brush: js">// Check if Genre with same name already exists.
 Genre.findOne({ 'name': req.body.name })
   .exec( function(err, found_genre) {
-  if (err) { return next(err); }  
-    if (found_genre) { 
+  if (err) { return next(err); }
+    if (found_genre) {
       // Genre exists, redirect to its detail page.
       res.redirect(found_genre.url);
       }
@@ -143,7 +143,7 @@ Genre.findOne({ 'name': req.body.name })
           // Genre saved. Redirect to genre detail page.
           res.redirect(genre.url);
         });
-    }     
+    }
 });</pre>
 
 <p>This same pattern is used in all our post controllers: we run validators, then sanitisers,  then check for errors and either re-render the form with error information or save the data. </p>
@@ -168,7 +168,7 @@ block content
       input#name.form-control(type='text', placeholder='Fantasy, Poetry etc.' name='name' value=(undefined===genre ? '' : genre.name))
     button.btn.btn-primary(type='submit') Submit
 
-  if errors 
+  if errors
    ul
     for error in errors
      li!= error.msg</pre>

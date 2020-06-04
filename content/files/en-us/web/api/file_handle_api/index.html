@@ -36,7 +36,7 @@ tags:
 IDBReq.onsuccess = function(){
   var DB = this.result;
   var buildHandle = DB.mozCreateFileHandle("test.txt", "plain/text");
-    
+
   buildHandle.onsuccess = function(){
     var myFileHandle = this.result;
     console.log('handle', myFileHandle);

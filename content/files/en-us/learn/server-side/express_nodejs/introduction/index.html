@@ -74,12 +74,12 @@ const http = require("http");
 const hostname = "127.0.0.1";
 const port = 8000;
 
-// Create HTTP server 
+// Create HTTP server
 const server = http.createServer((req, res) =&gt; {
 
    // Set the response HTTP header with HTTP status and Content type
    res.writeHead(200, {'Content-Type': 'text/plain'});
-   
+
    // Send the response body "Hello World"
    res.end('Hello World\n');
 });
@@ -217,7 +217,7 @@ console.log('The area of a square with a width of 4 is ' + square.area(4));</pre
   area: function(width) {
     return width * width;
   },
-       
+
   perimeter: function(width) {
     return 4 * width;
   }
@@ -467,7 +467,7 @@ MongoClient.connect('mongodb://localhost:27017/animals', function(err, db) {
 let MongoClient = require('mongodb').MongoClient;
 MongoClient.connect('mongodb://localhost:27017/animals', function(err, client){
    if(err) throw err;
-   
+
    let db = client.db('animals');
    db.collection('mammals').find().toArray(function(err, result){
      if(err) throw err;

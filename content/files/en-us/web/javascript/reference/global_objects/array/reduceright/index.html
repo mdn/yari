@@ -289,9 +289,9 @@ const computation2 = (input, callback) =&gt; {
 
 <h3 id="​​​​​​Difference_between_reduce_and_reduceRight">​​​​​​Difference between <code>reduce</code> and <code>reduceRight</code></h3>
 
-<pre class="brush: js">var a = ['1', '2', '3', '4', '5']; 
-var left  = a.reduce(function(prev, cur)      { return prev + cur; }); 
-var right = a.reduceRight(function(prev, cur) { return prev + cur; }); 
+<pre class="brush: js">var a = ['1', '2', '3', '4', '5'];
+var left  = a.reduce(function(prev, cur)      { return prev + cur; });
+var right = a.reduceRight(function(prev, cur) { return prev + cur; });
 
 console.log(left);  // "12345"
 console.log(right); // "54321"</pre>

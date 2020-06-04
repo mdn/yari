@@ -62,7 +62,7 @@ tags:
 {
     alert ("Clicked button: " + evt.buttonID);
 }
-document.addEventListener('msthumbnailclick', thumbnailClickHandler); 
+document.addEventListener('msthumbnailclick', thumbnailClickHandler);
 </pre>
 
 <h2 id="Example_2">Example 2</h2>
@@ -74,21 +74,21 @@ window.external.msSiteModeSetIconOverlay(iconUri, toolTip);
 window.external.msSiteModeClearIconOverlay();
 
 // pinned icons on your taskbar can be instructed to trigger specific events on your site from the taskbar
-// add an event 
-handlerdocument.addEventListener('msthumbnailclick', onButtonClicked, false); 
+// add an event
+handlerdocument.addEventListener('msthumbnailclick', onButtonClicked, false);
 
 // add the buttons
-var btnPlay = window.external.msSiteModeAddThumbBarButton(iconUri, toolTip); 
+var btnPlay = window.external.msSiteModeAddThumbBarButton(iconUri, toolTip);
 
 // refresh the taskbar
-window.external.msSiteModeShowThumbBar(); 
+window.external.msSiteModeShowThumbBar();
 
 // call a javascript function when the button is pressed
 function onButtonClicked(e) {
    switch (e.buttonID) {
      case btnPlay: play();
      break;}
- } 
+ }
 </pre>
 
 <h2 id="See_Also" name="See_Also">See also</h2>

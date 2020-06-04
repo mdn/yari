@@ -203,24 +203,24 @@ for (let myLetVariable = 0; myLetVariable &lt; 5; myLetVariable++) {
 
 <p><code><strong>const</strong></code> allows you to declare variables whose values are never intended to change. The variable is available from the <em>block</em> it is declared in.</p>
 
-<pre class="brush: js">const Pi = 3.14; // variable Pi is set 
+<pre class="brush: js">const Pi = 3.14; // variable Pi is set
 Pi = 1; // will throw an error because you cannot change a constant variable.</pre>
 
 <p><br>
  <code><strong>var</strong></code> is the most common declarative keyword. It does not have the restrictions that the other two keywords have. This is because it was traditionally the only way to declare a variable in JavaScript. A variable declared with the <strong><code>var</code> </strong>keyword is available from the <em>function</em> it is declared in.</p>
 
-<pre class="brush: js">var a; 
+<pre class="brush: js">var a;
 var name = 'Simon';</pre>
 
 <p>An example of scope with a variable declared with <strong><code>var</code>:</strong></p>
 
 <pre class="brush: js">// myVarVariable *is* visible out here
 
-for (var myVarVariable = 0; myVarVariable &lt; 5; myVarVariable++) { 
-  // myVarVariable is visible to the whole function 
-} 
+for (var myVarVariable = 0; myVarVariable &lt; 5; myVarVariable++) {
+  // myVarVariable is visible to the whole function
+}
 
-// myVarVariable *is* visible out here 
+// myVarVariable *is* visible out here
 </pre>
 
 <p>If you declare a variable without assigning any value to it, its type is <code>undefined</code>.</p>
@@ -420,7 +420,7 @@ obj['details']['size']; // 12
 }
 
 // Define an object
-var you = new Person('You', 24); 
+var you = new Person('You', 24);
 // We are creating a new person named "You" aged 24.
 
 </pre>
@@ -916,7 +916,7 @@ s.lastNameCaps(); // WILLISON
 
   function nestedFunc() {
     var b = 4; // parentFunc can't use this
-    return a + b; 
+    return a + b;
   }
   return nestedFunc(); // 5
 }

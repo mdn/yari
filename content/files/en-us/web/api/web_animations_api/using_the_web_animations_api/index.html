@@ -55,7 +55,7 @@ tags:
 @keyframes aliceTumbling {
   0% {
     color: #000;
-    transform: rotate(0) translate3D(-50%, -50%, 0);    
+    transform: rotate(0) translate3D(-50%, -50%, 0);
   }
   30% {
     color: #431236;
@@ -158,7 +158,7 @@ tags:
 <pre class="brush: js">var nommingCake = document.getElementById('eat-me_sprite').animate(
 [
   { transform: 'translateY(0)' },
-  { transform: 'translateY(-80%)' }   
+  { transform: 'translateY(-80%)' }
 ], {
   fill: 'forwards',
   easing: 'steps(4, end)',
@@ -257,7 +257,7 @@ document.addEventListener("touchstart", goFaster);</pre>
 <pre class="brush: js">var aliceChange = document.getElementById('alice').animate(
   [
     { transform: 'translate(-50%, -50%) scale(.5)' },
-    { transform: 'translate(-50%, -50%) scale(2)' }   
+    { transform: 'translate(-50%, -50%) scale(2)' }
   ], {
     duration: 8000,
     easing: 'ease-in-out',
@@ -283,7 +283,7 @@ document.addEventListener("touchstart", goFaster);</pre>
 <pre class="brush: js">var drinking = document.getElementById('liquid').animate(
 [
   { height: '100%' },
-  { height: '0' }   
+  { height: '0' }
 ], {
   fill: 'forwards',
   duration: aliceChange.effect.getComputedTiming().duration / 2
@@ -295,7 +295,7 @@ drinking.pause();</pre>
 <p>We can also use the Web Animations API to figure out the animation's current time. The game ends when you run out of cake to eat or empty the bottle. Which vignette players are presented with depends on how far along Alice was in her animation, whether she grew too big and can't get in the tiny door anymore or too small and cannot reach the key to open the door. We can figure out whether she's on the large end or small end of her animation by getting her animation's <code><a href="/en-US/docs/Web/API/Animation/currentTime">currentTime</a></code> and dividing it by her <code>activeDuration</code>:</p>
 
 <pre class="brush: js">var endGame = function() {
-  
+
   // get Alice's timeline's playhead location
   var alicePlayhead = aliceChange.currentTime;
   var aliceTimeline = aliceChange.effect.getComputedTiming().activeDuration;
@@ -315,7 +315,7 @@ drinking.pause();</pre>
     ...
 
   } else {
-    // Alice didn't change significantly    
+    // Alice didn't change significantly
     ...
 
   }
@@ -337,7 +337,7 @@ drinking.pause();</pre>
 
 <p>Here we set the callbacks for the cake, bottle, and Alice to fire the <code>endGame</code> function:</p>
 
-<pre class="brush: js">// When the cake or bottle runs out... 
+<pre class="brush: js">// When the cake or bottle runs out...
 nommingCake.onfinish = endGame;
 drinking.onfinish = endGame;
 

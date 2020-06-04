@@ -36,7 +36,7 @@ tags:
             var xpointer = xinclude.getAttribute('xpointer');
             var encoding = xinclude.getAttribute('encoding'); // e.g., UTF-8 // "text/xml or application/xml or matches text/*+xml or application/*+xml" before encoding (then UTF-8)
             var accept = xinclude.getAttribute('accept'); // header "Accept: "+x
-            var acceptLanguage = xinclude.getAttribute('accept-language'); // "Accept-Language: "+x 
+            var acceptLanguage = xinclude.getAttribute('accept-language'); // "Accept-Language: "+x
             var xiFallback = xinclude.getElementsByTagNameNS('http://www.w3.org/2001/XInclude', 'fallback')[0]; // Only one such child is allowed
             if (href === '' || href === null) { // Points to same document if empty (null is equivalent to empty string)
                 href = null; // Set for uniformity in testing below
@@ -102,13 +102,13 @@ tags:
                         response = request[responseType];
                          if (responseType === 'responseXML') {
                             // apply xpointer (only xpath1() subset is supported)
-                            var responseNodes;                                                                
+                            var responseNodes;
                             if (xpointer) {
                                 var xpathResult = response.evaluate(
-                                                                 xpointer, 
-                                                                 response, 
-                                                                 null, 
-                                                                 XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, 
+                                                                 xpointer,
+                                                                 response,
+                                                                 null,
+                                                                 XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
                                                                  null
                                                               );
                                 var a = [];
@@ -144,11 +144,11 @@ tags:
                                   request2.send(null);
                                   response = request2[responseType]; // Update the response for processing
                              }
-                             
+
                              // REPLACE XINCLUDE WITH THE RESPONSE AS TEXT
                              var textNode = docu.createTextNode(response);                             xincludeParent.replaceChild(textNode, xinclude);
                          }
-                         
+
                         // replace xinclude in doc with response now (as plain text or XML)
                     }
                 }

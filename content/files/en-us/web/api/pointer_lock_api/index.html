@@ -106,7 +106,7 @@ function lockChangeAlert() {
 document.addEventListener('mozpointerlock<span style="font-size: 1rem;">error</span><span style="font-size: 1rem;">', lockError, false);</span>
 
 function lockError(e) {
-  alert("Pointer lock failed"); 
+  alert("Pointer lock failed");
 }</pre>
 
 <div class="note"><strong>Note</strong>: until Firefox 50 the above events were prefixed with <code>moz</code> in Firefox.</div>
@@ -186,7 +186,7 @@ function updatePosition(e) {
   }
   if (y &gt; canvas.height + RADIUS) {
     y = -RADIUS;
-  }  
+  }
   if (x &lt; -RADIUS) {
     x = canvas.width + RADIUS;
   }

@@ -52,7 +52,7 @@ tags:
 
 <dl>
  <dd>
- <pre class="brush: js">const myPromise = 
+ <pre class="brush: js">const myPromise =
   (new Promise(myExecutorFunc))
   .then(handleFulfilledA,handleRejectedA)
   .then(handleFulfilledB,handleRejectedB)
@@ -93,7 +93,7 @@ handleRejection(reason)  { /*...*/; return nextValue;  }</pre>
 
 <pre class="brush: js">const promiseA = new Promise(myExecutorFunc);
 const promiseB = promiseA.then(handleFulfilled1, handleRejected1);
-const promiseC = promiseA.then(handleFulfilled2, handleRejected2); 
+const promiseC = promiseA.then(handleFulfilled2, handleRejected2);
 </pre>
 
 <p>An action can be assigned to an already "settled" promise.  In that case the action (if appropriate) will be performed at the first asynchronous opportunity.  Note that promises are guaranteed to be asynchronous.  Therefore, an action for an already "settled" promise will occur only after the stack has cleared and a clock-tick has passed.  The effect is much like that of <code>setTimeout(action,10)</code>.</p>
@@ -155,17 +155,17 @@ console.log("immediate logging");
 
 <pre class="brush: js;">let myFirstPromise = new Promise((resolve, reject) =&gt; {
   // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
-  // In this example, we use setTimeout(...) to simulate async code. 
+  // In this example, we use setTimeout(...) to simulate async code.
   // In reality, you will probably be using something like XHR or an HTML5 API.
   setTimeout( function() {
     resolve("Success!")  // Yay! Everything went well!
-  }, 250) 
-}) 
+  }, 250)
+})
 
 myFirstPromise.then((successMessage) =&gt; {
   // successMessage is whatever we passed in the resolve(...) function above.
   // It doesn't have to be a string, but if it is only a succeed message, it probably will be.
-  console.log("Yay! " + successMessage) 
+  console.log("Yay! " + successMessage)
 });
 
 </pre>
@@ -187,16 +187,16 @@ const THRESHOLD_A = 8; // can use zero 0 to guarantee error
 
 function tetheredGetNumber(resolve, reject) {
   try {
-    setTimeout( 
+    setTimeout(
       function() {
         const randomInt = Date.now();
         const value = randomInt % 10;
-        try { 
+        try {
           if(value &gt;= THRESHOLD_A) {
             throw new Error(`Too large: ${value}`);
-          } 
+          }
         } catch(msg) {
-            reject(`Error in callback ${msg}`); 
+            reject(`Error in callback ${msg}`);
         }
       resolve(value);
       return;
@@ -239,9 +239,9 @@ function promiseGetWord(parityInfo) {
 (new Promise(tetheredGetNumber))
   .then(determineParity,troubleWithGetNumber)
   .then(promiseGetWord)
-  .then((info) =&gt; { 
-    console.log("Got: ",info.theNumber," , ", info.wordEvenOdd); 
-    return info; 
+  .then((info) =&gt; {
+    console.log("Got: ",info.theNumber," , ", info.wordEvenOdd);
+    return info;
   })
   .catch((reason) =&gt; {
     if(reason === -999) {

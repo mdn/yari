@@ -22,17 +22,17 @@ tags:
          &lt;span role="columnheader" aria-sort="descending"&gt;Country&lt;/span&gt;
          &lt;span role="columnheader"aria-sort="none"&gt;Population&lt;/span&gt;
       &lt;/div&gt;
-   &lt;/div&gt; 
+   &lt;/div&gt;
    &lt;div role="rowgroup"&gt;
      &lt;div role="row"&gt;
-        &lt;span role="cell"&gt;Finland&lt;/span&gt;   
-        &lt;span role="cell"&gt;5.5 million&lt;/span&gt; 
-     &lt;/div&gt; 
-     &lt;div role="row"&gt;   
-        &lt;span role="cell"&gt;France&lt;/span&gt; 
-        &lt;span role="cell"&gt;67 million&lt;/span&gt; 
-     &lt;/div&gt; 
-  &lt;/div&gt; 
+        &lt;span role="cell"&gt;Finland&lt;/span&gt;
+        &lt;span role="cell"&gt;5.5 million&lt;/span&gt;
+     &lt;/div&gt;
+     &lt;div role="row"&gt;
+        &lt;span role="cell"&gt;France&lt;/span&gt;
+        &lt;span role="cell"&gt;67 million&lt;/span&gt;
+     &lt;/div&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 </pre>
 
@@ -173,16 +173,16 @@ tags:
 
 <p>Only use table, tbody, thead, tr, th, td, etc., for data table structure. You can add these ARIA roles to ensure accessibility should the native semantics of the table be removed, such as with CSS. A relevant use case for the ARIA table role is when the native semantics of a table are overridden by CSS's display property, such as by display: grid. In this case, you can use the ARIA table roles to add the semantics back in.</p>
 
-<pre class="brush: html">&lt;table role="table" aria-label="Semantic Elements" aria-describedby="semantic_elements_table_desc" aria-rowcount="81"&gt;   
-  &lt;caption id="semantic_elements_table_desc"&gt;Semantic Elements to use instead of ARIA's roles&lt;/caption&gt;   
-  &lt;thead role="rowgroup"&gt;      
-     &lt;tr role="row"&gt;        
+<pre class="brush: html">&lt;table role="table" aria-label="Semantic Elements" aria-describedby="semantic_elements_table_desc" aria-rowcount="81"&gt;
+  &lt;caption id="semantic_elements_table_desc"&gt;Semantic Elements to use instead of ARIA's roles&lt;/caption&gt;
+  &lt;thead role="rowgroup"&gt;
+     &lt;tr role="row"&gt;
        &lt;th role="columnheader" aria-sort="none"&gt;ARIA Role&lt;/th&gt;
-       &lt;th role="columnheader" aria-sort="none"&gt;Semantic Element&lt;/th&gt;      
-     &lt;/tr&gt;    
+       &lt;th role="columnheader" aria-sort="none"&gt;Semantic Element&lt;/th&gt;
+     &lt;/tr&gt;
   &lt;/thead&gt;
-  &lt;tbody role="rowgroup"&gt;     
-     &lt;tr role="row" aria-rowindex="11"&gt;        
+  &lt;tbody role="rowgroup"&gt;
+     &lt;tr role="row" aria-rowindex="11"&gt;
        &lt;td role="cell"&gt;header&lt;/td&gt;
        &lt;td role="cell"&gt;h1&lt;/td&gt;
      &lt;/tr&gt;

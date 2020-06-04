@@ -76,7 +76,7 @@ function drop_handler(ev) {
 
 function dragenter_handler(ev) {
  console.log("dragEnter");
- // Change the source element's background color for enter events 
+ // Change the source element's background color for enter events
  ev.currentTarget.style.background = "yellow";
 }
 
@@ -88,7 +88,7 @@ function dragleave_handler(ev) {
 
 function dragend_handler(ev) {
  console.log("dragEnd");
- // Change the target element's background color to visually indicate 
+ // Change the target element's background color to visually indicate
  // the drag ended.
  var el=document.getElementById("target");
  el.style.background = "pink";

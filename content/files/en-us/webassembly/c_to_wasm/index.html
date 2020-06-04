@@ -180,7 +180,7 @@ void EMSCRIPTEN_KEEPALIVE myFunction(int argc, char ** argv) {
     .addEventListener('click', function() {
         alert('check console');
         var result = Module.ccall(
-            'myFunction',	// name of C function 
+            'myFunction',	// name of C function
             null,	// return type
             null,	// argument types
             null	// arguments

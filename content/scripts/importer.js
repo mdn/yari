@@ -724,7 +724,6 @@ async function processDocument(
 
   const wikiHistory = {
     modified: doc.modified.toISOString(),
-    _generated: new Date().toISOString(),
   };
 
   const docTags = tags[doc.id] || [];

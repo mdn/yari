@@ -108,7 +108,7 @@ new Derived().delete(); // ReferenceError: invalid delete involving 'super'. </p
   constructor() {
     Object.defineProperty(this, 'prop', {
       configurable: true,
-      writable: false, 
+      writable: false,
       value: 1
     });
   }

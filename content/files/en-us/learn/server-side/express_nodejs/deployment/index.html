@@ -138,8 +138,8 @@ tags:
 <pre class="brush: js"><strong>var debug = require('debug')('author');</strong>
 
 // Display Author update form on GET
-exports.author_update_get = function(req, res, next) {   
-    
+exports.author_update_get = function(req, res, next) {
+
     req.sanitize('id').escape().trim();
     Author.findById(req.params.id, function(err, author) {
         if (err) {
@@ -158,7 +158,7 @@ exports.author_update_get = function(req, res, next) {
 set DEBUG=author,book
 
 #Linux
-export DEBUG="author,book" 
+export DEBUG="author,book"
 </pre>
 
 <div class="note">

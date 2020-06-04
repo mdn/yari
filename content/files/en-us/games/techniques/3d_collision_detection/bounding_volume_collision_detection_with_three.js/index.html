@@ -35,7 +35,7 @@ tags:
 knot.geometry.computeBoundingBox();
 var knotBBox = new Box3(
   knot.geometry.boundingBox.min,
-  knot.geometry.boundingBox.max);  
+  knot.geometry.boundingBox.max);
 </pre>
 
 <p> </p>
@@ -164,7 +164,7 @@ box3.setFromObject(knotBoxHelper);</pre>
 <pre class="syntaxbox">knot.position.set(-3, 2, 1);
 knot.rotation.x = -Math.PI / 4;
 // update the bounding box so it stills wraps the knot
-knotBoxHelper.update(); 
+knotBoxHelper.update();
 box3.setFromObject(knotBoxHelper);</pre>
 
 <p>Performing <strong>collision tests</strong> is done in the same way as explained in the above section — we use our Box3 object in the same way as described above.</p>

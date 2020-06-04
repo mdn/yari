@@ -136,11 +136,11 @@ alert( 'This document contains ' + paragraphCount.stringValue + ' paragraph elem
 
 try {
   var thisNode = iterator.iterateNext();
-  
+
   while (thisNode) {
     alert( thisNode.textContent );
     thisNode = iterator.iterateNext();
-  }	
+  }
 }
 catch (e) {
   alert( 'Error: Document tree modified during iteration ' + e );
@@ -252,10 +252,10 @@ while (thisHeading) {
 
 <pre class="brush: js">var req = new XMLHttpRequest();
 
-req.open("GET", "chrome://yourextension/content/peopleDB.xml", false); 
+req.open("GET", "chrome://yourextension/content/peopleDB.xml", false);
 req.send(null);
 
-var xmlDoc = req.responseXML;		
+var xmlDoc = req.responseXML;
 
 var nsResolver = xmlDoc.createNSResolver( xmlDoc.ownerDocument == null ? xmlDoc.documentElement : xmlDoc.ownerDocument.documentElement);
 

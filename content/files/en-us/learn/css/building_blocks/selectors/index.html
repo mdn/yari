@@ -43,25 +43,25 @@ tags:
 
 <p>If you have more than one thing which uses the same CSS then the individual selectors can be combined into a <em>selector list</em> so that the rule is applied to all of the individual selectors. For example, if I have the same CSS for an <code>h1</code> and also a class of <code>.special</code>, I could write this as two separate rules.</p>
 
-<pre class="brush: css"><code>h1 { 
-  color: blue; 
-} 
+<pre class="brush: css"><code>h1 {
+  color: blue;
+}
 
-.special { 
-  color: blue; 
+.special {
+  color: blue;
 } </code></pre>
 
 <p>I could also combine these into a selector list, by adding a comma between them.</p>
 
-<pre class="brush: css"><code>h1, .special { 
-  color: blue; 
+<pre class="brush: css"><code>h1, .special {
+  color: blue;
 } </code></pre>
 
 <p>White space is valid before or after the comma. You may also find the selectors more readable if each is on a new line.</p>
 
-<pre class="brush: css"><code>h1, 
+<pre class="brush: css"><code>h1,
 .special {
-  color: blue; 
+  color: blue;
 } </code></pre>
 
 <p>In the live example below try combining the two selectors which have identical declarations. The visual display should be the same after combining them.</p>
@@ -72,18 +72,18 @@ tags:
 
 <p>In the following example, the invalid class selector rule will be ignored, whereas the <code>h1</code> would still be styled.</p>
 
-<pre class="brush: css"><code>h1 { 
-  color: blue; 
-} 
+<pre class="brush: css"><code>h1 {
+  color: blue;
+}
 
-..special { 
-  color: blue; 
+..special {
+  color: blue;
 } </code></pre>
 
 <p>When combined however, neither the <code>h1</code> nor the class will be styled as the entire rule is deemed invalid.</p>
 
-<pre class="brush: css"><code>h1, ..special { 
-  color: blue; 
+<pre class="brush: css"><code>h1, ..special {
+  color: blue;
 } </code></pre>
 
 <h2 id="Types_of_selectors">Types of selectors</h2>

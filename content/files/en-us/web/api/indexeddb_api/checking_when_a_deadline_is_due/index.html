@@ -46,7 +46,7 @@ tags:
 
 <pre class="brush: js">function addData(e) {
   e.preventDefault();
-   
+
   if(title.value == '' || hours.value == null || minutes.value == null || day.value == '' || month.value == '' || year.value == null) {
     note.innerHTML += '&lt;li&gt;Data not submitted — form incomplete.&lt;/li&gt;';
     return;
@@ -70,7 +70,7 @@ tags:
 
     // open a read/write db transaction, ready for adding the data
     var transaction = db.transaction(["toDoList"], "readwrite");
-    
+
     // report on the success of opening the transaction
     transaction.oncomplete = function(event) {
       note.innerHTML += '&lt;li&gt;Transaction opened for task addition.&lt;/li&gt;';
@@ -92,9 +92,9 @@ tags:
 <p><strong>Note:</strong> The <code>db</code> variable stores a reference to the IndexedDB database instance; we can then use various properties of this variable to manipulate the data.</p>
 </div>
 
-<pre class="brush: js"> 
+<pre class="brush: js">
     request.onsuccess = function(event) {
-         
+
       note.innerHTML += '&lt;li&gt;New item added to database.&lt;/li&gt;';
 
       title.value = '';
@@ -103,12 +103,12 @@ tags:
       day.value = 01;
       month.value = 'January';
       year.value = 2020;
-    };     
+    };
   }</pre>
 
 <p>This next section creates a log message to say the new item addition is successful, and resets the form so it's ready for the next task to be entered.</p>
 
-<pre class="brush: js"> 
+<pre class="brush: js">
   // update the display of data to show the newly added item, by running displayData() again.
   displayData();
 };</pre>
@@ -161,14 +161,14 @@ tags:
 
 <p>The first thing we do is convert the month names we have stored in the database into a month number that JavaScript will understand. As we saw before, the JavaScript <code>Date</code> object creates month values as a number between 0 and 11.    </p>
 
-<pre class="brush: js">      if(+(cursor.value.hours) == hourCheck &amp;&amp; 
-         +(cursor.value.minutes) == minuteCheck &amp;&amp; 
-         +(cursor.value.day) == dayCheck &amp;&amp; 
-         monthNumber == monthCheck &amp;&amp; 
-         cursor.value.year == yearCheck &amp;&amp; 
+<pre class="brush: js">      if(+(cursor.value.hours) == hourCheck &amp;&amp;
+         +(cursor.value.minutes) == minuteCheck &amp;&amp;
+         +(cursor.value.day) == dayCheck &amp;&amp;
+         monthNumber == monthCheck &amp;&amp;
+         cursor.value.year == yearCheck &amp;&amp;
          notified == "no") {
 
-        // If the numbers all do match, run the createNotification() 
+        // If the numbers all do match, run the createNotification()
         // function to create a system notification
         createNotification(cursor.value.taskTitle);
       }</pre>
@@ -191,13 +191,13 @@ tags:
     request.onsuccess = function() {
       // grab the data object returned as the result
       var data = request.result;
-      
+
       // update the notified value in the object to "yes"
       data.notified = "yes";
-      
+
       // create another request that inserts the item back into the database
       var requestUpdate = objectStore.put(data);
-      
+
       // when this new request succeeds, run the displayData() function again to update the display
       requestUpdate.onsuccess = function() {
         displayData();

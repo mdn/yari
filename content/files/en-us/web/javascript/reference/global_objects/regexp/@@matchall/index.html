@@ -55,7 +55,7 @@ tags:
 var str = '2016-01-02';
 var result = re[Symbol.matchAll](str);
 
-console.log(Array.from(result, x =&gt; x[0]));  
+console.log(Array.from(result, x =&gt; x[0]));
 // ["2016", "01", "02"]
 </pre>
 
@@ -68,7 +68,7 @@ console.log(Array.from(result, x =&gt; x[0]));
 <pre class="brush: js">class MyRegExp extends RegExp {
   [Symbol.matchAll](str) {
     var result = RegExp.prototype[Symbol.matchAll].call(this, str);
-    if (!result) { 
+    if (!result) {
       return null;
     } else {
       return Array.from(result);

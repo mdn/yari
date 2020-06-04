@@ -108,7 +108,7 @@ tags:
 <p>{{note("A real service worker implementation would use caching and onfetch rather than the XMLHttpRequest API. Those features are not used here so that you can focus on understanding Promises.")}}</p>
 
 <pre class="brush: js">const imgLoad = (url) =&gt; {
-  return new Promise((resolve, reject) =&gt; {      
+  return new Promise((resolve, reject) =&gt; {
     var request = new XMLHttpRequest();
     request.open('GET', url);
     request.responseType = 'blob';
@@ -366,7 +366,7 @@ event.request.body</pre>
         return caches.open('v1').then((cache) =&gt; {
           cache.put(event.request, response.clone());
           return response;
-        });  
+        });
       });
     })
   );
@@ -412,7 +412,7 @@ event.request.body</pre>
         './sw-test/style.css',
         './sw-test/app.js',
         './sw-test/image-list.js',
-        
+
         …
 
         // include other new resources for the new version...

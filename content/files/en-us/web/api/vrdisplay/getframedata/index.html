@@ -48,7 +48,7 @@ navigator.getVRDisplays().then(function(displays) {
   console.log('Display found');
   // Starting the presentation when the button is clicked: It can only be called in response to a user gesture
   btn.addEventListener('click', function() {
-    vrDisplay.requestPresent([{ source: canvas }]).then(function() {        
+    vrDisplay.requestPresent([{ source: canvas }]).then(function() {
       drawVRScene();
     });
   });
@@ -91,7 +91,7 @@ function drawVRScene() {
   drawGeometry();
 
   function drawGeometry() {
-    // draw the view for each eye 
+    // draw the view for each eye
   }
 
     ...

@@ -114,15 +114,15 @@ argv = { "movie.avi", "100", "100", "true" }
 <p>To ensure that the browser does not crash or leak memory when the saved data is discarded, the buf field should be a flat structure (a simple structure with no allocated substructures) allocated with <code><a href="/en/NPN_MemAlloc" title="en/NPN_MemAlloc">NPN_MemAlloc</a></code>, as in this example:</p>
 
 <pre>char* myData = "Here is some saved data.\n";
- 
+
 int32 myLength = strlen(myData) + 1;
- 
+
 *save = (NPSavedData*) NPN_MemAlloc(sizeof(NPSavedData));
- 
+
 (*save)-&gt;len = myLength;
- 
+
 (*save)-&gt;buf = (void*) NPN_MemAlloc(myLength);
- 
+
 strcpy((*save)-&gt;buf, myData);
 </pre>
 
@@ -144,7 +144,7 @@ strcpy((*save)-&gt;buf, myData);
 
 <pre>/* Define global variable to hold the user agent string. */
 static char* userAgent = NULL;
- 
+
 /* Initialize function. */
 NPError NP_Initialize(void)
 {
@@ -161,7 +161,7 @@ NPError NP_Initialize(void)
 
   return NPERR_NO_ERROR;
 }
- 
+
 /* Shutdown function */
 NPError NP_Shutdown(void)
 {

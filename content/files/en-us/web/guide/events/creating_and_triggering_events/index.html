@@ -121,7 +121,7 @@ textarea.addEventListener('input', function() {
     bubbles: true,
     cancelable: true
   });
-  var cb = document.getElementById('checkbox'); 
+  var cb = document.getElementById('checkbox');
   var cancelled = !cb.dispatchEvent(event);
   if (cancelled) {
     // A handler called preventDefault.

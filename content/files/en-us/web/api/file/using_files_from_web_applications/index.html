@@ -195,7 +195,7 @@ dropbox.addEventListener("drop", drop, false);
 function dragover(e) {
   e.stopPropagation();
   e.preventDefault();
-} 
+}
 </pre>
 
 <p>The real magic happens in the <code>drop()</code> function:</p>
@@ -220,14 +220,14 @@ function dragover(e) {
 <pre class="brush: js">function handleFiles(files) {
   for (let i = 0; i &lt; files.length; i++) {
     const file = files[i];
-    
+
     if (!file.type.startsWith('image/')){ continue }
-    
+
     const img = document.createElement("img");
     img.classList.add("obj");
     img.file = file;
     preview.appendChild(img); // Assuming that "preview" is the div output where the content will be displayed.
-    
+
     const reader = new FileReader();
     reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
     reader.readAsDataURL(file);
@@ -260,7 +260,7 @@ function dragover(e) {
 <p>The HTML that presents the interface looks like this:</p>
 
 <pre class="brush: html">&lt;input type="file" id="fileElem" multiple accept="image/*" style="display:none"&gt;
-&lt;a href="#" id="fileSelect"&gt;Select some files&lt;/a&gt; 
+&lt;a href="#" id="fileSelect"&gt;Select some files&lt;/a&gt;
 &lt;div id="fileList"&gt;
   &lt;p&gt;No files selected!&lt;/p&gt;
 &lt;/div&gt;
@@ -281,7 +281,7 @@ fileSelect.addEventListener("click", function (e) {
   e.preventDefault(); // prevent navigation to "#"
 }, false);
 
-fileElem.addEventListener("change", handleFiles, false); 
+fileElem.addEventListener("change", handleFiles, false);
 
 function handleFiles() {
   if (!this.files.length) {
@@ -293,7 +293,7 @@ function handleFiles() {
     for (let i = 0; i &lt; this.files.length; i++) {
       const li = document.createElement("li");
       list.appendChild(li);
-      
+
       const img = document.createElement("img");
       img.src = URL.createObjectURL(this.files[i]);
       img.height = 60;
@@ -342,7 +342,7 @@ function handleFiles() {
 
 <pre class="brush: js">function sendFiles() {
   const imgs = document.querySelectorAll(".obj");
-  
+
   for (let i = 0; i &lt; imgs.length; i++) {
     new FileUpload(imgs[i], imgs[i].file);
   }
@@ -356,11 +356,11 @@ function handleFiles() {
 <p>The <code>FileUpload</code> function accepts two inputs: an image element and a file from which to read the image data.</p>
 
 <pre class="brush: js">function FileUpload(img, file) {
-  const reader = new FileReader();  
+  const reader = new FileReader();
   this.ctrl = createThrobber(img);
   const xhr = new XMLHttpRequest();
   this.xhr = xhr;
-  
+
   const self = this;
   this.xhr.upload.addEventListener("progress", function(e) {
         if (e.lengthComputable) {
@@ -368,7 +368,7 @@ function handleFiles() {
           self.ctrl.update(percentage);
         }
       }, false);
-  
+
   xhr.upload.addEventListener("load", function(e){
           self.ctrl.update(100);
           const canvas = self.ctrl.ctx.canvas;
@@ -416,7 +416,7 @@ if (isset($_FILES['myFile'])) {
             const uri = "/index.php";
             const xhr = new XMLHttpRequest();
             const fd = new FormData();
-            
+
             xhr.open("POST", uri, true);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4 &amp;&amp; xhr.status == 200) {
@@ -434,7 +434,7 @@ if (isset($_FILES['myFile'])) {
                 event.stopPropagation();
                 event.preventDefault();
             }
-    
+
             dropzone.ondrop = function(event) {
                 event.stopPropagation();
                 event.preventDefault();

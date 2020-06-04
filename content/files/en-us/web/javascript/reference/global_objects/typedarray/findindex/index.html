@@ -70,7 +70,7 @@ tags:
         if (!this) {
           throw new TypeError('Array.prototype.some called on null or undefined');
         }
-    
+
         if (typeof(evaluator) !== 'function') {
             if (typeof(evaluator) === 'string') {
                 // Attempt to convert it to a function
@@ -81,7 +81,7 @@ tags:
                 throw new TypeError();
             }
         }
-        
+
         var i;
         if (thisArg === undefined) {  // Optimize for thisArg
             for (i in this) {

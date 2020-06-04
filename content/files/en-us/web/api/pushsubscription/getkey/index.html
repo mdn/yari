@@ -42,25 +42,25 @@ tags:
 
 <h2 id="Example">Example</h2>
 
-<pre class="brush: js">reg.pushManager.getSubscription()  
-  .then(function(subscription) {  
-  // Enable any UI which subscribes / unsubscribes from  
-  // push messages.  
- 
+<pre class="brush: js">reg.pushManager.getSubscription()
+  .then(function(subscription) {
+  // Enable any UI which subscribes / unsubscribes from
+  // push messages.
+
   subBtn.disabled = false;
 
-  if (!subscription) {  
+  if (!subscription) {
     console.log('Not yet subscribed to Push')
-    // We aren't subscribed to push, so set UI  
-    // to allow the user to enable push  
-    return;  
+    // We aren't subscribed to push, so set UI
+    // to allow the user to enable push
+    return;
   }
 
-  // Set your UI to show they have subscribed for  
-  // push messages  
-  subBtn.textContent = 'Unsubscribe from Push Messaging';  
-  isPushEnabled = true;  
-        
+  // Set your UI to show they have subscribed for
+  // push messages
+  subBtn.textContent = 'Unsubscribe from Push Messaging';
+  isPushEnabled = true;
+
   // initialize status, which includes setting UI elements for subscribed status
   // and updating Subscribers list via push
   var endpoint = subscription.endpoint;

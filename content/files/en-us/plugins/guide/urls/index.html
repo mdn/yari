@@ -119,8 +119,8 @@ tags:
 
 <p><code>NPN_GetURLNotify</code> handles the URL request asynchronously. It returns immediately and only later handles the request and calls <code>NPP_URLNotify</code>. Without this notification, the plug-in cannot tell whether a request with a null target failed or a request with a non-null target was completed.</p>
 
-<pre>NPError NPN_GetURLNotify(NPP instance, const char* url, 
- 
+<pre>NPError NPN_GetURLNotify(NPP instance, const char* url,
+
                         const char* target, void* notifyData);</pre>
 
 <p>The instance, url, and target parameters have the same definitions as those of <code>NPN_GetURL</code>. The notifyData parameter contains private plug-in data that can be used to associate the request with the subsequent <code>NPP_URLNotify</code> call (which returns this value) and/or to pass a pointer to some request-related payload.</p>
@@ -130,7 +130,7 @@ tags:
 <p>Both the <code>NPN_GetURLNotify</code> and <code>NPN_PostURLNotify</code> functions call <code>the NPP_URLNotify</code> method to notify the plug-in of the result of a request. Both functions pass the <code>notifyData</code> value to <code>NPP_URLNotify</code>, which tells the plug-in that the URL request was completed and the reason for completion.</p>
 
 <pre>void NPP_URLNotify(NPP instance, const char* url,
- 
+
                    NPReason reason, void* notifyData);</pre>
 
 <p>The instance and url parameters have the same definitions as those of <code>NPN_GetURL</code>. The notifyData parameter contains the private plug-in data passed to the corresponding call to <code>NPN_GetURLNotify</code> and <code>NPN_PostURLNotify</code>.</p>
@@ -153,7 +153,7 @@ tags:
 <p>Here's an example of getting a URL: A plug-in instance draws a button that acts like a link to another web page. When the user clicks the button, the plug-in calls <code>NPN_GetURL</code> to go to the page.</p>
 
 <pre>err = NPN_GetURL(
- 
+
   instance, "http://www.example.com/", "_blank");</pre>
 
 <h3 id="Posting_URLs" name="Posting_URLs">Posting URLs</h3>
@@ -180,9 +180,9 @@ tags:
 <p><code>NPN_PostURL</code> is typically asynchronous: it returns immediately and only later handles the request and calls <code>NPP_Notify</code> (which, in turn, calls <code>NPP_URLNotify</code>).</p>
 
 <pre>NPError NPN_PostURL(NPP instance, const char *url,
- 
+
 const char *target, uint32 len,
- 
+
 const char *buf, NPBool file);</pre>
 
 <p>The <code>instance</code>, <code>url</code>, and <code>target</code> parameters have the same definitions as those of <code>NPN_GetURL</code>.</p>
@@ -200,13 +200,13 @@ const char *buf, NPBool file);</pre>
 <div class="note"><strong>NOTE</strong>: You cannot use <code>NPN_PostURL</code> to specify headers (even a blank line) in a memory buffer. To do this, use <code>NPN_PostURLNotify</code> for this purpose. § The <code>NPN_PostURLNotify</code> function has all the same capabilities and works like <code>NPN_PostURL</code> in most ways except that (1) it supports specifying headers when posting a memory buffer, and (2) it calls <code>NPP_URLNotify</code> upon successful or unsuccessful completion of the request. <code>NPN_PostURLNotify</code> is typically asynchronous: it returns immediately and only later handles the request and calls <code>NPP_URLNotify</code>.</div>
 
 <pre>NPError NPN_PostURLNotify(
- 
+
   NPP instance, const char *url,
- 
-  const char *target, uint32 len, 
- 
+
+  const char *target, uint32 len,
+
   const char *buf, NPBool file, void* notifyData
- 
+
 );</pre>
 
 <p>The parameters of this function have the same definitions as those of <code>NPN_PostURL</code>. The <code>notifyData</code> parameter contains plug-in-private data passed by <code>NPP_URLNotify</code> and may be used for tracking multiple posts.</p>
@@ -228,13 +228,13 @@ const char *buf, NPBool file);</pre>
 <p>Plug-ins can use <code>NPN_PostURL</code> or <code>NPN_PostURLNotify</code> to upload files to a remote server using FTP. This example uploads a file from the root of the local file system to an FTP server and displays the response in a frame named response:</p>
 
 <pre>char* myData = "file:///c\/myDirectory/myFileName";
- 
-uint32 myLength = strlen(myData) + 1;
- 
 
- 
+uint32 myLength = strlen(myData) + 1;
+
+
+
 err = NPN_PostURL(instance, "ftp://fred@ftp.example.com/pub/",
- 
+
                   "response", myLength, myData, TRUE);</pre>
 
 <h4 id="Sending_Mail" name="Sending_Mail">Sending Mail</h4>
@@ -242,13 +242,13 @@ err = NPN_PostURL(instance, "ftp://fred@ftp.example.com/pub/",
 <p>A plug-in can send an email message using <code>NPN_PostURL</code> or <code>NPN_PostURLNotify</code>. The following code sends a mail message with the default headers from the client machine.</p>
 
 <pre>char* myData = "\nHi Fred, this is a message from my plug-in!";
- 
-uint32 myLength = strlen(myData) + 1;
- 
 
- 
+uint32 myLength = strlen(myData) + 1;
+
+
+
 err = NPN_PostURLNotify(instance, "mailto:fred@example.com",
- 
+
 NULL, myLength, myData, FALSE);</pre>
 
 <p>The example starts by defining the mail message, <code>myData</code>, and its length, <code>myLength</code>. It sends <code>myData</code> and <code>myLength</code> to the mailto URL <span class="nowiki">mailto:fred@example.com</span>. The target window for displaying the message is null in the example. Normally, using a null target window causes the response to be delivered from the server to the plug-in instance in a new stream, but no response is expected for a mailto URL.</p>

@@ -106,7 +106,7 @@ function rotateViewBy(dx, dy) {
   if (!mouseYaw &amp;&amp; !mousePitch) {
     return refSpace;
   }
-  
+
   quat.identity(inverseOrientation);
   quat.rotateX(inverseOrientation, inverseOrientation, -mousePitch);
   quat.rotateY(inverseOrientation, inverseOrientation, -mouseYaw);

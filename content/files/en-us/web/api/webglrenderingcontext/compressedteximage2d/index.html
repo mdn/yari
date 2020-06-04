@@ -22,15 +22,15 @@ tags:
 <pre class="syntaxbox">// WebGL 1:
 void <var>gl</var>.compressedTexImage2D(<var>target</var>, <var>level</var>, <var>internalformat</var>, <var>width</var>, <var>height</var>, <var>border</var>, ArrayBufferView? <var>pixels</var>);
 
-// Additionally available in WebGL 2: 
+// Additionally available in WebGL 2:
 // read from buffer bound to gl.PIXEL_UNPACK_BUFFER
-void <var>gl</var>.compressedTexImage2D(<var>target</var>, <var>level</var>, <var>internalformat</var>, <var>width</var>, <var>height</var>, <var>border</var>, GLsizei <var>imageSize</var>, GLintptr <var>offset</var>); 
+void <var>gl</var>.compressedTexImage2D(<var>target</var>, <var>level</var>, <var>internalformat</var>, <var>width</var>, <var>height</var>, <var>border</var>, GLsizei <var>imageSize</var>, GLintptr <var>offset</var>);
 void <var>gl</var>.compressedTexImage2D(<var>target</var>, <var>level</var>, <var>internalformat</var>, <var>width</var>, <var>height</var>, <var>border</var>,
                              ArrayBufferView <var>srcData</var>, optional <var>srcOffset</var>, optional <var>srcLengthOverride</var>);
 
  // read from buffer bound to gl.PIXEL_UNPACK_BUFFER
-void <var>gl</var>.compressedTexImage3D(<var>target</var>, <var>level</var>, <var>internalformat</var>, <var>width</var>, <var>height</var>, <var>depth</var>, <var>border</var>, GLsizei <var>imageSize</var>, GLintptr <var>offset</var>); 
-void <var>gl</var>.compressedTexImage3D(<var>target</var>, <var>level</var>, <var>internalformat</var>, <var>width</var>, <var>height</var>, <var>depth</var>, <var>border</var>, 
+void <var>gl</var>.compressedTexImage3D(<var>target</var>, <var>level</var>, <var>internalformat</var>, <var>width</var>, <var>height</var>, <var>depth</var>, <var>border</var>, GLsizei <var>imageSize</var>, GLintptr <var>offset</var>);
+void <var>gl</var>.compressedTexImage3D(<var>target</var>, <var>level</var>, <var>internalformat</var>, <var>width</var>, <var>height</var>, <var>depth</var>, <var>border</var>,
                              ArrayBufferView <var>srcData</var>, optional <var>srcOffset</var>, optional <var>srcLengthOverride</var>);</pre>
 
 <h3 id="Parameters">Parameters</h3>
@@ -187,7 +187,7 @@ void <var>gl</var>.compressedTexImage3D(<var>target</var>, <var>level</var>, <va
 
 var texture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, texture);
-gl.compressedTexImage2D(gl.TEXTURE_2D, 0, ext.COMPRESSED_RGBA_S3TC_DXT5_EXT, 512, 512, 0, textureData); 
+gl.compressedTexImage2D(gl.TEXTURE_2D, 0, ext.COMPRESSED_RGBA_S3TC_DXT5_EXT, 512, 512, 0, textureData);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 </pre>

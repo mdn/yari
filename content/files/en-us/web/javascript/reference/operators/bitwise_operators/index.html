@@ -447,7 +447,7 @@ flags &amp;= mask;                 // 1101 &amp; 1010 =&gt; 1000
 
 <p>Flags can be toggled by XORing them with a bitmask, where each bit with the value one will toggle the corresponding flag. For example, the bitmask <code>0110</code> can be used to toggle <code>FLAG_B</code> and <code>FLAG_C</code>:</p>
 
-<pre class="brush: js">// if we didn't have a bat, we have one now, 
+<pre class="brush: js">// if we didn't have a bat, we have one now,
 // and if we did have one, bye-bye bat
 // same thing for cats
 let mask = FLAG_B | FLAG_C;
@@ -499,10 +499,10 @@ alert(mask1);                                    // prints 11, i.e.: 1011
 
 <pre class="brush: js">function arrayFromMask(nMask) {
   // nMask must be between -2147483648 and 2147483647
-  if (nMask &gt; 0x7fffffff || nMask &lt; -0x80000000) { 
-    throw new TypeError('arrayFromMask - out of range'); 
+  if (nMask &gt; 0x7fffffff || nMask &lt; -0x80000000) {
+    throw new TypeError('arrayFromMask - out of range');
   }
-  for (let nShifted = nMask, aFromMask = []; nShifted; 
+  for (let nShifted = nMask, aFromMask = []; nShifted;
        aFromMask.push(Boolean(nShifted &amp; 1)), nShifted &gt;&gt;&gt;= 1);
   return aFromMask;
 }

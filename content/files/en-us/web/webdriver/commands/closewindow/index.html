@@ -80,7 +80,7 @@ namespace MDNWebDriverExamples
             session.ExecuteScript("window.open()");
             session.SwitchTo().Window(session.WindowHandles[1]); // Switch to the second window
 
-            session.Close(); // Close current window 
+            session.Close(); // Close current window
             session.SwitchTo().Window(session.WindowHandles[0]); // Switch back to the first window
         }
     }

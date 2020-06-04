@@ -65,8 +65,8 @@ exports.book_detail = function(req, res, <strong>next</strong>) {
 
 block content
   h1 Title: #{book.title}
-  
-  p #[strong Author:] 
+
+  p #[strong Author:]
     a(href=book.author.url) #{book.author.name}
   p #[strong Summary:] #{book.summary}
   p #[strong ISBN:] #{book.isbn}
@@ -74,11 +74,11 @@ block content
     each val, index in book.genre
       a(href=val.url) #{val.name}
       if index &lt; book.genre.length - 1
-        |, 
-  
+        |,
+
   div(style='margin-left:20px;margin-top:20px')
     h4 Copies
-    
+
     each val in book_instances
       hr
       if val.status=='Available'
@@ -86,13 +86,13 @@ block content
       else if val.status=='Maintenance'
         p.text-danger #{val.status}
       else
-        p.text-warning #{val.status} 
+        p.text-warning #{val.status}
       p #[strong Imprint:] #{val.imprint}
       if val.status!='Available'
         p #[strong Due back:] #{val.due_back}
       p #[strong Id:]&amp;nbsp;
         a(href=val.url) #{val._id}
- 
+
     else
       p There are no copies of this book in the library.
 </pre>

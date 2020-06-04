@@ -198,9 +198,9 @@ var myArray = myRe.exec('cdbbdbsbz');
 
 <p>If you do not need to access the properties of the regular expression, an alternative way of creating <code>myArray</code> is with this script:</p>
 
-<pre class="brush: js">var myArray = /d(b+)d/g.exec('cdbbdbsbz'); 
+<pre class="brush: js">var myArray = /d(b+)d/g.exec('cdbbdbsbz');
     // similar to "cdbbdbsbz".match(/d(b+)d/g); however,
-    // "cdbbdbsbz".match(/d(b+)d/g) outputs Array [ "dbbd" ], while 
+    // "cdbbdbsbz".match(/d(b+)d/g) outputs Array [ "dbbd" ], while
     // /d(b+)d/g.exec('cdbbdbsbz') outputs Array [ 'dbbd', 'bb', index: 1, input: 'cdbbdbsbz' ].
 </pre>
 
@@ -363,7 +363,7 @@ console.log(myArray);
 <p id="g-different-behaviors">The behavior associated with the <code>g</code> flag is different when the <code>.exec()</code> method is used.  The roles of "class" and "argument" get reversed: In the case of <code>.match()</code>, the string class (or data type) owns the method and the regular expression is just an argument, while in the case of <code>.exec()</code>, it is the regular expression that owns the method, with the string being the argument.  Contrast this <em><code>str.match(re)</code></em> versus <em><code>re.exec(str)</code></em>.  The <code>g</code> flag is used with the <strong><code>.exec()</code></strong> method to get iterative progression.</p>
 
 <pre class="brush: js">var xArray; while(xArray = re.exec(str)) console.log(xArray);
-// produces: 
+// produces:
 // ["fee ", index: 0, input: "fee fi fo fum"]
 // ["fi ", index: 4, input: "fee fi fo fum"]
 // ["fo ", index: 7, input: "fee fi fo fum"]</pre>
@@ -407,7 +407,7 @@ console.log(myArray);
 function testInfo(phoneInput) {
   var OK = re.exec(phoneInput.value);
   if (!OK) {
-    console.error(phoneInput.value + ' isn\'t a phone number with area code!'); 
+    console.error(phoneInput.value + ' isn\'t a phone number with area code!');
   } else {
     console.log('Thanks, your phone number is ' + OK[0]);}
 } </pre>

@@ -18,7 +18,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">[Throws, Unscopable] 
+<pre class="syntaxbox">[Throws, Unscopable]
 void ChildNode.before((Node or DOMString)... nodes);
 </pre>
 
@@ -53,10 +53,10 @@ console.log(parent.outerHTML);
 <h3 id="Inserting_text">Inserting text</h3>
 
 <pre class="brush: js">var parent = document.createElement("div");
-var child = document.createElement("p"); 
+var child = document.createElement("p");
 parent.appendChild(child);
 
-child.before("Text"); 
+child.before("Text");
 
 console.log(parent.outerHTML);
 // "&lt;div&gt;Text&lt;p&gt;&lt;/p&gt;&lt;/div&gt;"</pre>
@@ -64,11 +64,11 @@ console.log(parent.outerHTML);
 <h3 id="Inserting_an_element_and_text">Inserting an element and text</h3>
 
 <pre class="brush: js">var parent = document.createElement("div");
-var child = document.createElement("p"); 
-parent.appendChild(child); 
+var child = document.createElement("p");
+parent.appendChild(child);
 var span = document.createElement("span");
 
-child.before(span, "Text"); 
+child.before(span, "Text");
 
 console.log(parent.outerHTML);
 // "&lt;div&gt;&lt;span&gt;&lt;/span&gt;Text&lt;p&gt;&lt;/p&gt;&lt;/div&gt;"</pre>
@@ -77,7 +77,7 @@ console.log(parent.outerHTML);
 
 <p>The <code>before()</code> method is not scoped into the <code>with</code> statement. See {{jsxref("Symbol.unscopables")}} for more information.</p>
 
-<pre class="brush: js">with(node) { 
+<pre class="brush: js">with(node) {
   before("foo");
 }
 // ReferenceError: before is not defined </pre>
@@ -99,12 +99,12 @@ console.log(parent.outerHTML);
       value: function before() {
         var argArr = Array.prototype.slice.call(arguments),
           docFrag = document.createDocumentFragment();
-        
+
         argArr.forEach(function (argItem) {
           var isNode = argItem instanceof Node;
           docFrag.appendChild(isNode ? argItem : document.createTextNode(String(argItem)));
         });
-        
+
         this.parentNode.insertBefore(docFrag, this);
       }
     });

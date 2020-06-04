@@ -201,7 +201,7 @@ var result = setDescendantProp(obj, propPath, 1);  // obj.a.b.c will now be 1</p
 <p>JavaScript has <a class="external" href="http://en.wikipedia.org/wiki/First-class_function">first-class functions</a>, which means you can pass functions as arguments to other APIs, store them in variables and objects' properties, and so on. Many DOM APIs are designed with this in mind, so you can (and should) write:</p>
 
 <pre class="brush: js">// instead of setTimeout(" ... ", 1000) use:
-setTimeout(function() { ... }, 1000); 
+setTimeout(function() { ... }, 1000);
 
 // instead of elt.setAttribute("onclick", "...") use:
 elt.addEventListener('click', function() { ... } , false); </pre>
@@ -232,7 +232,7 @@ elt.addEventListener('click', function() { ... } , false); </pre>
 var y = 39;
 var z = '42';
 eval('x + y + 1'); // returns 42
-eval(z);           // returns 42 
+eval(z);           // returns 42
 </pre>
 
 <h3 id="Using_eval_to_evaluate_a_string_of_JavaScript_statements">Using <code>eval</code> to evaluate a string of JavaScript statements</h3>
@@ -247,9 +247,9 @@ console.log('z is ', eval(str));</pre>
 <p>If you define multiple values then the last value is returned.</p>
 
 <pre class="brush:js">var x = 5;
-var str = "if (x == 5) {console.log('z is 42'); z = 42; x = 420; } else z = 0;"; 
+var str = "if (x == 5) {console.log('z is 42'); z = 42; x = 420; } else z = 0;";
 
-console.log('x is ', eval(str)); // z is 42  x is 420 
+console.log('x is ', eval(str)); // z is 42  x is 420
 </pre>
 
 <h3 id="Last_expression_is_evaluated">Last expression is evaluated</h3>
@@ -259,7 +259,7 @@ console.log('x is ', eval(str)); // z is 42  x is 420
 <pre class="brush:js">var str = 'if ( a ) { 1 + 1; } else { 1 + 2; }';
 var a = true;
 var b = eval(str);  // returns 2
- 
+
 console.log('b is : ' + b);
 
 a = false;

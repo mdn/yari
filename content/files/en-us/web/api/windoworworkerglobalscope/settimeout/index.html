@@ -229,18 +229,18 @@ setTimeout(() =&gt; {myArray.myMethod('1')}, 2.5*1000); // prints "one" after 2.
 <p>Another possible way to solve the "<code>this</code>" problem is to replace the host <code>setTimeout()</code> and <code>setInterval()</code> global functions with ones that allow passing a <code>this</code> object and set it in the callback using <a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call"><code>Function.prototype.call</code></a>, e.g.:</p>
 
 <pre class="brush: js">// Enable setting 'this' in JavaScript timers
- 
-var __nativeST__ = window.setTimeout, 
+
+var __nativeST__ = window.setTimeout,
     __nativeSI__ = window.setInterval;
- 
+
 window.setTimeout = function (vCallback, nDelay /*, argumentToPass1, argumentToPass2, etc. */) {
-  var oThis = this, 
+  var oThis = this,
       aArgs = Array.prototype.slice.call(arguments, 2);
   return __nativeST__(vCallback instanceof Function ? function () {
     vCallback.apply(oThis, aArgs);
   } : vCallback, nDelay);
 };
- 
+
 window.setInterval = function (vCallback, nDelay /*, argumentToPass1, argumentToPass2, etc. */) {
   var oThis = this,
       aArgs = Array.prototype.slice.call(arguments, 2);

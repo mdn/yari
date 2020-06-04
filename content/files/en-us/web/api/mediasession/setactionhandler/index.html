@@ -83,7 +83,7 @@ navigator.mediaSession.setActionHandler('seekbackward', evt =&gt; {
 
 navigator.mediaSession.setActionHandler('seekforward', evt =&gt; {
  // User clicked "Seek Forward" media notification icon.
- audio.currentTime = Math.min(audio.currentTime + skipTime,  
+ audio.currentTime = Math.min(audio.currentTime + skipTime,
                audio.duration);
 });</pre>
 

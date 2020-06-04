@@ -45,9 +45,9 @@ const mediaConfig = {
         bitrate : 10000, // number of bits used to encode 1s of video
         framerate : 30   // number of frames making up that 1s.
      }
-}; 
+};
 
-// check support and performance 
+// check support and performance
 navigator.mediaCapabilities.decodingInfo(mediaConfig).then(result =&gt; {
     console.log('This configuration is ' +  (result.supported ? '' : 'not ') + 'supported.')
 });</pre>

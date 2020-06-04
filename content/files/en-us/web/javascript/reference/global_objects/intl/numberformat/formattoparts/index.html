@@ -83,9 +83,9 @@ tags:
 
 <pre class="brush: js">var number = 3500;
 
-var formatter = new Intl.NumberFormat('de-DE', { 
-  style: 'currency', 
-  currency: 'EUR' 
+var formatter = new Intl.NumberFormat('de-DE', {
+  style: 'currency',
+  currency: 'EUR'
 });
 
 formatter.format(number);
@@ -96,8 +96,8 @@ formatter.format(number);
 
 <pre class="brush: js">formatter.formatToParts(number);
 
-// return value: 
-[ 
+// return value:
+[
   { type: "integer",  value: "3"   }
   { type: "group",    value: "."   }
   { type: "integer",  value: "500" }
@@ -110,11 +110,11 @@ formatter.format(number);
 
 <p>Now the information is available separately and it can be formatted and concatenated again in a customized way. For example by using {{jsxref("Array.prototype.map()")}}, <a href="/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions">arrow functions</a>, a <a href="/en-US/docs/Web/JavaScript/Reference/Statements/switch">switch statement</a>, <a href="/en-US/docs/Web/JavaScript/Reference/Template_literals">template literals</a>, and {{jsxref("Array.prototype.reduce()")}}.</p>
 
-<pre class="brush: js">var numberString = formatter.formatToParts(number).map(({type, value}) =&gt; { 
+<pre class="brush: js">var numberString = formatter.formatToParts(number).map(({type, value}) =&gt; {
   switch (type) {
-    case 'currency': return `&lt;strong&gt;${value}&lt;/strong&gt;`; 
-    default : return value; 
-  } 
+    case 'currency': return `&lt;strong&gt;${value}&lt;/strong&gt;`;
+    default : return value;
+  }
 }).reduce((string, part) =&gt; string + part);
 </pre>
 

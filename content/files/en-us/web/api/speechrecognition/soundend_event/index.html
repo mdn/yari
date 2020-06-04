@@ -40,14 +40,14 @@ tags:
 
 <pre class="brush: js">var recognition = new webkitSpeechRecognition() || new SpeechRecognition();
 
-recognition.addEventListener('soundend', function(event) { 
+recognition.addEventListener('soundend', function(event) {
   console.log('Sound has stopped being received');
 });</pre>
 
 <p>Or use the <code><a href="/en-US/docs/Web/API/SpeechRecognition/onsoundend">onsoundend</a></code> event handler property:</p>
 
-<pre class="brush: js">recognition.onsoundend = function(event) { 
-  console.log('Sound has stopped being received'); 
+<pre class="brush: js">recognition.onsoundend = function(event) {
+  console.log('Sound has stopped being received');
 }</pre>
 
 <h2 id="Specifications">Specifications</h2>

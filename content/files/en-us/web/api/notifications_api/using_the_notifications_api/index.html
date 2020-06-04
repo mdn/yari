@@ -149,7 +149,7 @@ var notification = new Notification('To do list', { body: text, icon: img });</p
 <pre class="brush: js">var n = new Notification('My Great Song');
 document.addEventListener('visibilitychange', function() {
   if (document.visibilityState === 'visible') {
-    // The tab has become visible so clear the now-stale Notification.                                                                                                                                      
+    // The tab has become visible so clear the now-stale Notification.
     n.close();
   }
 });
@@ -214,7 +214,7 @@ document.addEventListener('visibilitychange', function() {
       var i = 0;
       // Using an interval cause some browsers (including Firefox) are blocking notifications if there are too much in a certain time.
       var interval = window.setInterval(function () {
-        // Thanks to the tag, we should only see the "Hi! 9" notification 
+        // Thanks to the tag, we should only see the "Hi! 9" notification
         var n = new Notification("Hi! " + i, {tag: 'soManyNotification'});
         if (i++ == 9) {
           window.clearInterval(interval);
@@ -232,7 +232,7 @@ document.addEventListener('visibilitychange', function() {
           var i = 0;
           // Using an interval cause some browsers (including Firefox) are blocking notifications if there are too much in a certain time.
           var interval = window.setInterval(function () {
-            // Thanks to the tag, we should only see the "Hi! 9" notification 
+            // Thanks to the tag, we should only see the "Hi! 9" notification
             var n = new Notification("Hi! " + i, {tag: 'soManyNotification'});
             if (i++ == 9) {
               window.clearInterval(interval);

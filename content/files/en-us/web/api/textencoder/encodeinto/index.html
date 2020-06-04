@@ -116,7 +116,7 @@ resultPara.textContent += 'Bytes read: ' + encodedResults.read +
         var point = nonAsciiChars.charCodeAt(0)|0;
         if (0xD800 &lt;= point &amp;&amp; point &lt;= 0xDBFF) {
             var nextcode = nonAsciiChars.charCodeAt(1)|0; // defaults to 0 when NaN, causing null replacement character
-            
+
             if (0xDC00 &lt;= nextcode &amp;&amp; nextcode &lt;= 0xDFFF) {
                 //point = ((point - 0xD800)&lt;&lt;10) + nextcode - 0xDC00 + 0x10000|0;
                 point = (point&lt;&lt;10) + nextcode - 0x35fdc00|0;
@@ -196,7 +196,7 @@ resultPara.textContent += 'Bytes read: ' + encodedResults.read +
         return {"written": i, "read": inputLength &lt; read ? inputLength : read};
     };
     TextEncoderPrototype["encodeInto"] = polyfill_encodeInto;
-    
+
     if (!GlobalTextEncoder) {
         window["TextEncoder"] = TextEncoder;
     } else if (!(globalTextEncoderPrototype = GlobalTextEncoder["prototype"])["encodeInto"]) {

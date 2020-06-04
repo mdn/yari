@@ -55,13 +55,13 @@ tags:
 
 <pre class="brush: js">var el = document.getElementById('div-03');
 
-var r1 = el.closest("#div-02");  
+var r1 = el.closest("#div-02");
 // returns the element with the id=div-02
 
-var r2 = el.closest("div div");  
+var r2 = el.closest("div div");
 // returns the closest ancestor which is a div in div, here it is the div-03 itself
 
-var r3 = el.closest("article &gt; div");  
+var r3 = el.closest("article &gt; div");
 // returns the closest ancestor which is a div and has a parent article, here it is the div-01
 
 var r4 = el.closest(":not(div)");
@@ -72,7 +72,7 @@ var r4 = el.closest(":not(div)");
 <p>For browsers that do not support <code>Element.closest()</code>, but carry support for <code>element.matches()</code> (or a prefixed equivalent, meaning IE9+), a polyfill exists:</p>
 
 <pre class="brush: js">if (!Element.prototype.matches) {
-  Element.prototype.matches = Element.prototype.msMatchesSelector || 
+  Element.prototype.matches = Element.prototype.msMatchesSelector ||
                               Element.prototype.webkitMatchesSelector;
 }
 

@@ -114,7 +114,7 @@ tags:
   &lt;button&gt;Update&lt;/button&gt;
 
   &lt;canvas&gt;&lt;/canvas&gt;
-    
+
 
     &lt;script&gt;
     const btn = document.querySelector('button');
@@ -142,9 +142,9 @@ tags:
     }
 
     btn.addEventListener('click',draw);
-      
+
     &lt;/script&gt;
-    
+
   &lt;/body&gt;
 &lt;/html&gt;</pre>
 </div>
@@ -221,13 +221,13 @@ para.textContent = info;</pre>
     &lt;meta charset="utf-8"&gt;
     &lt;title&gt;Basic for loop example&lt;/title&gt;
     &lt;style&gt;
-      
+
     &lt;/style&gt;
   &lt;/head&gt;
   &lt;body&gt;
 
   &lt;p&gt;&lt;/p&gt;
-    
+
 
     &lt;script&gt;
     const cats = ['Bill', 'Jeff', 'Pete', 'Biggles', 'Jasmin'];
@@ -239,9 +239,9 @@ para.textContent = info;</pre>
     }
 
     para.textContent = info;
-      
+
     &lt;/script&gt;
-    
+
   &lt;/body&gt;
 &lt;/html&gt;</pre>
 </div>
@@ -344,7 +344,7 @@ btn.addEventListener('click', function() {
     &lt;meta charset="utf-8"&gt;
     &lt;title&gt;Simple contact search example&lt;/title&gt;
     &lt;style&gt;
-      
+
     &lt;/style&gt;
   &lt;/head&gt;
   &lt;body&gt;
@@ -354,7 +354,7 @@ btn.addEventListener('click', function() {
   &lt;button&gt;Search&lt;/button&gt;
 
   &lt;p&gt;&lt;/p&gt;
-    
+
 
     &lt;script&gt;
     const contacts = ['Chris:2232322', 'Sarah:3453456', 'Bill:7654322', 'Mary:9998769', 'Dianne:9384975'];
@@ -371,12 +371,12 @@ btn.addEventListener('click', function() {
         if (splitContact[0].toLowerCase() === searchName) {
           para.textContent = splitContact[0] + '\'s number is ' + splitContact[1] + '.';
           break;
-        } else if (i === contacts.length-1) 
-              para.textContent = 'Contact not found.'; 
+        } else if (i === contacts.length-1)
+              para.textContent = 'Contact not found.';
         }
-    });  
+    });
     &lt;/script&gt;
-    
+
   &lt;/body&gt;
 &lt;/html&gt;</pre>
 </div>
@@ -431,7 +431,7 @@ for (let i = 1; i &lt;= num; i++) {
     &lt;meta charset="utf-8"&gt;
     &lt;title&gt;Integer squares generator&lt;/title&gt;
     &lt;style&gt;
-      
+
     &lt;/style&gt;
   &lt;/head&gt;
   &lt;body&gt;
@@ -441,7 +441,7 @@ for (let i = 1; i &lt;= num; i++) {
   &lt;button&gt;Generate integer squares&lt;/button&gt;
 
   &lt;p&gt;Output: &lt;/p&gt;
-    
+
 
     &lt;script&gt;
     const para = document.querySelector('p');
@@ -461,9 +461,9 @@ for (let i = 1; i &lt;= num; i++) {
 
         para.textContent += i + ' ';
       }
-    });  
+    });
     &lt;/script&gt;
-    
+
   &lt;/body&gt;
 &lt;/html&gt;</pre>
 </div>
@@ -581,7 +581,7 @@ do {
 
 <pre class="brush: html">&lt;h2&gt;Live output&lt;/h2&gt;
 &lt;div class="output" style="height: 410px;overflow: auto;"&gt;
-  
+
 &lt;/div&gt;
 
 &lt;h2&gt;Editable code&lt;/h2&gt;
@@ -592,7 +592,7 @@ output.innerHTML = '';
 
 // let i = 10;
 
-// const para = document.createElement('p');  
+// const para = document.createElement('p');
 // para.textContent = ;
 // output.appendChild(para);
 &lt;/textarea&gt;
@@ -656,7 +656,7 @@ solution.addEventListener('click', function() {
   updateCode();
 });
 
-let jsSolution = 'const output = document.querySelector(\'.output\');\noutput.innerHTML = \'\';\n\nlet i = 10;\n\nwhile(i &gt;= 0) {\n let para = document.createElement(\'p\');\n if(i === 10) {\n para.textContent = \'Countdown \' + i;\n } else if(i === 0) {\n  para.textContent = \'Blast off!\';\n } else {\n para.textContent = i;\n }\n\n output.appendChild(para);\n\n i--;\n}';   
+let jsSolution = 'const output = document.querySelector(\'.output\');\noutput.innerHTML = \'\';\n\nlet i = 10;\n\nwhile(i &gt;= 0) {\n let para = document.createElement(\'p\');\n if(i === 10) {\n para.textContent = \'Countdown \' + i;\n } else if(i === 0) {\n  para.textContent = \'Blast off!\';\n } else {\n para.textContent = i;\n }\n\n output.appendChild(para);\n\n i--;\n}';
 let solutionEntry = jsSolution;
 
 textarea.addEventListener('input', updateCode);
@@ -750,7 +750,7 @@ textarea.onkeyup = function(){
 &lt;p class="a11y-label"&gt;Press Esc to move focus away from the code area (Tab inserts a tab character).&lt;/p&gt;
 &lt;textarea id="code" class="playable-code" style="height: 400px;width: 95%"&gt;
 const people = ['Chris', 'Anne', 'Colin', 'Terri', 'Phil', 'Lola', 'Sam', 'Kay', 'Bruce'];
-    
+
 const admitted = document.querySelector('.admitted');
 const refused = document.querySelector('.refused');
 admitted.textContent = 'Admit: ';
@@ -818,7 +818,7 @@ solution.addEventListener('click', function() {
   updateCode();
 });
 
-const jsSolution = 'const people = [\'Chris\', \'Anne\', \'Colin\', \'Terri\', \'Phil\', \'Lola\', \'Sam\', \'Kay\', \'Bruce\'];\n\nconst admitted = document.querySelector(\'.admitted\');\nconst refused = document.querySelector(\'.refused\');\n\nadmitted.textContent = \'Admit: \';\nrefused.textContent = \'Refuse: \'\nlet i = 0;\n\ndo {\n if(people[i] === \'Phil\' || people[i] === \'Lola\') {\n refused.textContent += people[i] + \', \';\n } else {\n admitted.textContent += people[i] + \', \';\n }\n i++;\n} while(i &lt; people.length);\n\nrefused.textContent = refused.textContent.slice(0,refused.textContent.length-2) + \'.\';\nadmitted.textContent = admitted.textContent.slice(0,admitted.textContent.length-2) + \'.\';';    
+const jsSolution = 'const people = [\'Chris\', \'Anne\', \'Colin\', \'Terri\', \'Phil\', \'Lola\', \'Sam\', \'Kay\', \'Bruce\'];\n\nconst admitted = document.querySelector(\'.admitted\');\nconst refused = document.querySelector(\'.refused\');\n\nadmitted.textContent = \'Admit: \';\nrefused.textContent = \'Refuse: \'\nlet i = 0;\n\ndo {\n if(people[i] === \'Phil\' || people[i] === \'Lola\') {\n refused.textContent += people[i] + \', \';\n } else {\n admitted.textContent += people[i] + \', \';\n }\n i++;\n} while(i &lt; people.length);\n\nrefused.textContent = refused.textContent.slice(0,refused.textContent.length-2) + \'.\';\nadmitted.textContent = admitted.textContent.slice(0,admitted.textContent.length-2) + \'.\';';
 let solutionEntry = jsSolution;
 
 textarea.addEventListener('input', updateCode);

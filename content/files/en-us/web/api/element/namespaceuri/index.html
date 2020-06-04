@@ -28,9 +28,9 @@ tags:
 
 <p>In this snippet, an element is being examined for its {{domxref("localName")}} and its <code>namespaceURI</code>. If the <code>namespaceURI</code> returns the XUL namespace and the <code>localName</code> returns "browser", then the node is understood to be a XUL <code>&lt;browser/&gt;</code>.</p>
 
-<pre class="brush:js">if (element.localName == "browser" &amp;&amp; 
+<pre class="brush:js">if (element.localName == "browser" &amp;&amp;
     element.namespaceURI == "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul") {
-  // this is a XUL browser 
+  // this is a XUL browser
 }</pre>
 
 <h2 id="Notes" name="Notes">Notes</h2>

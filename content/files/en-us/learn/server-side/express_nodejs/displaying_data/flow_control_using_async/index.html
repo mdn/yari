@@ -35,7 +35,7 @@ tags:
 <p>If a controller only needs to <em>perform <strong>one </strong>asynchronous operation</em> to get the information required to render a page then the implementation is easy—we simply render the template in the callback. The code fragment below shows this for a function that renders the count of a model <code>SomeModel</code> (using the Mongoose <code><a class="external external-icon" href="https://mongoosejs.com/docs/api.html#model_Model.count" rel="noopener">count()</a></code> method):</p>
 
 <pre class="brush: js"><code>exports.some_model_count = function(req, res, next) {
- 
+
 </code>  SomeModel.count({ a_model_field: 'match_value' }, function (err, count) {
     // ... do something if there is an err
 
@@ -59,12 +59,12 @@ tags:
 
 <p>The example below shows how this works when we pass an object as the first argument. As you can see, the results are <em>returned</em> in an object with the same property names as the original functions that were passed in.</p>
 
-<pre class="brush: js line-numbers  language-js"><code class="language-js"><span class="keyword token">async</span><span class="punctuation token">.</span><span class="function token">parallel</span><span class="punctuation token">(</span><span class="punctuation token">{</span> 
+<pre class="brush: js line-numbers  language-js"><code class="language-js"><span class="keyword token">async</span><span class="punctuation token">.</span><span class="function token">parallel</span><span class="punctuation token">(</span><span class="punctuation token">{</span>
   one<span class="punctuation token">:</span> <span class="keyword token">function</span><span class="punctuation token">(</span>callback<span class="punctuation token">)</span> <span class="punctuation token">{</span> <span class="punctuation token">.</span><span class="punctuation token">.</span><span class="punctuation token">.</span> <span class="punctuation token">}</span><span class="punctuation token">,</span>
   two<span class="punctuation token">:</span> <span class="keyword token">function</span><span class="punctuation token">(</span>callback<span class="punctuation token">)</span> <span class="punctuation token">{</span> <span class="punctuation token">.</span><span class="punctuation token">.</span><span class="punctuation token">.</span> <span class="punctuation token">}</span><span class="punctuation token">,</span>
   <span class="punctuation token">.</span><span class="punctuation token">.</span><span class="punctuation token">.</span>
   something_else<span class="punctuation token">:</span> <span class="keyword token">function</span><span class="punctuation token">(</span>callback<span class="punctuation token">)</span> <span class="punctuation token">{</span> <span class="punctuation token">.</span><span class="punctuation token">.</span><span class="punctuation token">.</span> <span class="punctuation token">}</span>
-  <span class="punctuation token">}</span><span class="punctuation token">,</span> 
+  <span class="punctuation token">}</span><span class="punctuation token">,</span>
   <span class="comment token">// optional callback</span>
   <span class="keyword token">function</span><span class="punctuation token">(</span>err<span class="punctuation token">,</span> results<span class="punctuation token">)</span> <span class="punctuation token">{</span>
     <span class="comment token">// 'results' is now equal to: {one: 1, two: 2, ..., something_else: some_value}</span>
@@ -77,12 +77,12 @@ tags:
 
 <p>The method <code><a class="external external-icon" href="http://caolan.github.io/async/v3/docs.html#series" rel="noopener">async.series()</a></code> is used to run multiple asynchronous operations in sequence, when subsequent functions do not depend on the output of earlier functions. It is essentially declared and behaves in the same way as <code>async.parallel()</code>.</p>
 
-<pre class="brush: js line-numbers  language-js"><code class="language-js"><span class="keyword token">async</span><span class="punctuation token">.</span><span class="function token">series</span><span class="punctuation token">(</span><span class="punctuation token">{</span> 
+<pre class="brush: js line-numbers  language-js"><code class="language-js"><span class="keyword token">async</span><span class="punctuation token">.</span><span class="function token">series</span><span class="punctuation token">(</span><span class="punctuation token">{</span>
   one<span class="punctuation token">:</span> <span class="keyword token">function</span><span class="punctuation token">(</span>callback<span class="punctuation token">)</span> <span class="punctuation token">{</span> <span class="punctuation token">.</span><span class="punctuation token">.</span><span class="punctuation token">.</span> <span class="punctuation token">}</span><span class="punctuation token">,</span>
   two<span class="punctuation token">:</span> <span class="keyword token">function</span><span class="punctuation token">(</span>callback<span class="punctuation token">)</span> <span class="punctuation token">{</span> <span class="punctuation token">.</span><span class="punctuation token">.</span><span class="punctuation token">.</span> <span class="punctuation token">}</span><span class="punctuation token">,</span>
   <span class="punctuation token">.</span><span class="punctuation token">.</span><span class="punctuation token">.</span>
   something_else<span class="punctuation token">:</span> <span class="keyword token">function</span><span class="punctuation token">(</span>callback<span class="punctuation token">)</span> <span class="punctuation token">{</span> <span class="punctuation token">.</span><span class="punctuation token">.</span><span class="punctuation token">.</span> <span class="punctuation token">}</span>
-  <span class="punctuation token">}</span><span class="punctuation token">,</span> 
+  <span class="punctuation token">}</span><span class="punctuation token">,</span>
   <span class="comment token">// optional callback after the last asynchronous function completes.</span>
   <span class="keyword token">function</span><span class="punctuation token">(</span>err<span class="punctuation token">,</span> results<span class="punctuation token">)</span> <span class="punctuation token">{</span>
     <span class="comment token">// 'results' is now equals to: {one: 1, two: 2, ..., something_else: some_value} </span>
@@ -96,13 +96,13 @@ tags:
 <pre class="brush: js line-numbers  language-js"><code class="language-js"><span class="keyword token">async</span><span class="punctuation token">.</span><span class="function token">series</span><span class="punctuation token">(</span><span class="punctuation token">[</span>
   <span class="keyword token">function</span><span class="punctuation token">(</span>callback<span class="punctuation token">)</span> <span class="punctuation token">{</span>
     <span class="comment token">// do some stuff ...</span>
-    <span class="function token">callback</span><span class="punctuation token">(</span><span class="keyword token">null</span><span class="punctuation token">,</span> <span class="string token">'one'</span><span class="punctuation token">)</span><span class="punctuation token">;</span> 
+    <span class="function token">callback</span><span class="punctuation token">(</span><span class="keyword token">null</span><span class="punctuation token">,</span> <span class="string token">'one'</span><span class="punctuation token">)</span><span class="punctuation token">;</span>
   <span class="punctuation token">}</span><span class="punctuation token">,</span>
   <span class="keyword token">function</span><span class="punctuation token">(</span>callback<span class="punctuation token">)</span> <span class="punctuation token">{</span>
     <span class="comment token">// do some more stuff ... </span>
-    <span class="function token">callback</span><span class="punctuation token">(</span><span class="keyword token">null</span><span class="punctuation token">,</span> <span class="string token">'two'</span><span class="punctuation token">)</span><span class="punctuation token">;</span> 
-  <span class="punctuation token">}</span> 
- <span class="punctuation token">]</span><span class="punctuation token">,</span> 
+    <span class="function token">callback</span><span class="punctuation token">(</span><span class="keyword token">null</span><span class="punctuation token">,</span> <span class="string token">'two'</span><span class="punctuation token">)</span><span class="punctuation token">;</span>
+  <span class="punctuation token">}</span>
+ <span class="punctuation token">]</span><span class="punctuation token">,</span>
   <span class="comment token">// optional callback</span>
   <span class="keyword token">function</span><span class="punctuation token">(</span>err<span class="punctuation token">,</span> results<span class="punctuation token">)</span> <span class="punctuation token">{</span>
   <span class="comment token">// results is now equal to ['one', 'two'] </span>
@@ -117,12 +117,12 @@ tags:
 
 <pre class="brush: js line-numbers  language-js"><code class="language-js"><span class="keyword token">async</span><span class="punctuation token">.</span><span class="function token">waterfall</span><span class="punctuation token">(</span><span class="punctuation token">[</span>
   <span class="keyword token">function</span><span class="punctuation token">(</span>callback<span class="punctuation token">)</span> <span class="punctuation token">{</span>
-    <span class="function token">callback</span><span class="punctuation token">(</span><span class="keyword token">null</span><span class="punctuation token">,</span> <span class="string token">'one'</span><span class="punctuation token">,</span> <span class="string token">'two'</span><span class="punctuation token">)</span><span class="punctuation token">;</span> 
-  <span class="punctuation token">}</span><span class="punctuation token">,</span> 
-  <span class="keyword token">function</span><span class="punctuation token">(</span>arg1<span class="punctuation token">,</span> arg2<span class="punctuation token">,</span> callback<span class="punctuation token">)</span> <span class="punctuation token">{</span> 
+    <span class="function token">callback</span><span class="punctuation token">(</span><span class="keyword token">null</span><span class="punctuation token">,</span> <span class="string token">'one'</span><span class="punctuation token">,</span> <span class="string token">'two'</span><span class="punctuation token">)</span><span class="punctuation token">;</span>
+  <span class="punctuation token">}</span><span class="punctuation token">,</span>
+  <span class="keyword token">function</span><span class="punctuation token">(</span>arg1<span class="punctuation token">,</span> arg2<span class="punctuation token">,</span> callback<span class="punctuation token">)</span> <span class="punctuation token">{</span>
     <span class="comment token">// arg1 now equals 'one' and arg2 now equals 'two' </span>
-    <span class="function token">callback</span><span class="punctuation token">(</span><span class="keyword token">null</span><span class="punctuation token">,</span> <span class="string token">'three'</span><span class="punctuation token">)</span><span class="punctuation token">;</span> 
-  <span class="punctuation token">}</span><span class="punctuation token">,</span> 
+    <span class="function token">callback</span><span class="punctuation token">(</span><span class="keyword token">null</span><span class="punctuation token">,</span> <span class="string token">'three'</span><span class="punctuation token">)</span><span class="punctuation token">;</span>
+  <span class="punctuation token">}</span><span class="punctuation token">,</span>
   <span class="keyword token">function</span><span class="punctuation token">(</span>arg1<span class="punctuation token">,</span> callback<span class="punctuation token">)</span> <span class="punctuation token">{</span>
     <span class="comment token">// arg1 now equals 'three'</span>
     <span class="function token">callback</span><span class="punctuation token">(</span><span class="keyword token">null</span><span class="punctuation token">,</span> <span class="string token">'done'</span><span class="punctuation token">)</span><span class="punctuation token">;</span>

@@ -132,7 +132,7 @@ tags:
 <p>Once encoded your file structure may look something like this:</p>
 
 <pre>play list -&gt;                /segments/news.mp4.mpd
- 
+
 main segment folder -&gt;      /segments/main/
 
 100 Kbps segment folder -&gt;  /segments/main/news100 contains (1.m4s, 2.m4s, 3.m4s ... )
@@ -152,7 +152,7 @@ main segment folder -&gt;      /segments/main/
     &lt;/BaseURL&gt;
     &lt;Period start="PT0S"&gt;
       &lt;AdaptationSet bitstreamSwitching="true"&gt;
-      
+
         &lt;Representation id="0" codecs="avc1" mimeType="video/mp4" width="320" height="240" startWithSAP="1" bandwidth="46986"&gt;
           &lt;SegmentBase&gt;
             &lt;Initialization sourceURL="main/news100/1.m4s" range="0-862"/&gt;
@@ -163,7 +163,7 @@ main segment folder -&gt;      /segments/main/
             &lt;SegmentURL media="main/news100/4.m4s" mediaRange="14105-17990"/&gt;
           &lt;/SegmentList&gt;
         &lt;/Representation&gt;
-        
+
         &lt;Representation id="1" codecs="avc1" mimeType="video/mp4" width="320" height="240" startWithSAP="1" bandwidth="91932"&gt;
           &lt;SegmentBase&gt;
             &lt;Initialization sourceURL="main/news200/1.m4s" range="0-864"/&gt;
@@ -174,7 +174,7 @@ main segment folder -&gt;      /segments/main/
             &lt;SegmentURL media="main/news200/4.m4s" mediaRange="25622-33693"/&gt;
           &lt;/SegmentList&gt;
         &lt;/Representation&gt;
-        
+
         &lt;Representation id="1" codecs="avc1" mimeType="video/mp4" width="320" height="240" startWithSAP="1" bandwidth="270370"&gt;
           &lt;SegmentBase&gt;
             &lt;Initialization sourceURL="main/news300/1.m4s" range="0-865"/&gt;
@@ -185,9 +185,9 @@ main segment folder -&gt;      /segments/main/
             &lt;SegmentURL media="main/news300/4.m4s" mediaRange="72544-95972"/&gt;
           &lt;/SegmentList&gt;
         &lt;/Representation&gt;
-        
+
         ...
-        
+
       &lt;/AdaptationSet&gt;
     &lt;/Period&gt;
   &lt;/MPD&gt;</pre>
@@ -243,11 +243,11 @@ main segment folder -&gt;      /segments/main/
 #EXTM3U
 #EXT-X-TARGETDURATION:10
 #EXT-X-MEDIA-SEQUENCE:1
- 
+
 # Old-style integer duration; avoid for newer clients.
 #EXTINF:10,
 http://media.example.com/segment0.ts
- 
+
 # New-style floating-point duration; use for modern clients.
 #EXTINF:10.0,
 http://media.example.com/segment1.ts

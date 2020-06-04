@@ -43,11 +43,11 @@ exports.author_list = function(req, res, next) {
 
 block content
   h1= title
-  
+
   ul
     each author in author_list
-      li 
-        a(href=author.url) #{author.name} 
+      li
+        a(href=author.url) #{author.name}
         |  (#{author.date_of_birth} - #{author.date_of_death})
 
     else

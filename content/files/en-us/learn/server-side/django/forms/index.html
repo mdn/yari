@@ -137,7 +137,7 @@ tags:
 <p>Form data is stored in an application's forms.py file, inside the application directory. Create and open the file <strong>locallibrary/catalog/forms.py</strong>. To create a <code>Form</code>, we import the <code>forms</code> library, derive from the <code>Form</code> class, and declare the form's fields. A very basic form class for our library book renewal form is shown below — add this to your new file:</p>
 
 <pre class="brush: python">from django import forms
-    
+
 class RenewBookForm(forms.Form):
     renewal_date = forms.DateField(help_text="Enter a date between now and 4 weeks (default 3).")
 </pre>
@@ -180,8 +180,8 @@ class RenewBookForm(forms.Form):
 
 <strong>    def clean_renewal_date(self):
         data = self.cleaned_data['renewal_date']
-        
-        # Check if a date is not in the past. 
+
+        # Check if a date is not in the past.
         if data &lt; datetime.date.today():
             raise ValidationError(_('Invalid date - renewal in past'))
 
@@ -206,7 +206,7 @@ class RenewBookForm(forms.Form):
 
 <p>Before we create our view, let's add a URL configuration for the <em>renew-books</em> page. Copy the following configuration to the bottom of <strong>locallibrary/catalog/urls.py</strong>.</p>
 
-<pre class="brush: python">urlpatterns += [   
+<pre class="brush: python">urlpatterns += [
     path('book/&lt;uuid:pk&gt;/renew/', views.renew_book_librarian, name='renew-book-librarian'),
 ]</pre>
 
@@ -273,7 +273,7 @@ def renew_book_librarian(request, pk):
 
 <p>In the view, we first use the <code>pk</code> argument in <code>get_object_or_404()</code> to get the current <code>BookInstance</code> (if this does not exist, the view will immediately exit and the page will display a "not found" error). If this is <em>not </em>a <code>POST</code> request (handled by the <code>else</code> clause) then we create the default form passing in an <code>initial</code> value for the <code>renewal_date</code> field (as shown in bold below, this is 3 weeks from the current date). </p>
 
-<pre class="brush: python">    book_instance = get_object_or_404(BookInstance, pk=pk)    
+<pre class="brush: python">    book_instance = get_object_or_404(BookInstance, pk=pk)
 
     # If this is a GET (or any other method) create the default form
     else:
@@ -381,7 +381,7 @@ def renew_book_librarian(request, pk):
   &lt;h1&gt;Renew: \{{ book_instance.book.title }}&lt;/h1&gt;
   &lt;p&gt;Borrower: \{{ book_instance.borrower }}&lt;/p&gt;
   &lt;p{% if book_instance.is_overdue %} class="text-danger"{% endif %}&gt;Due date: \{{ book_instance.due_back }}&lt;/p&gt;
-    
+
 <strong>  &lt;form action="" method="post"&gt;
     {% csrf_token %}
     &lt;table&gt;
@@ -510,7 +510,7 @@ from catalog.models import BookInstance
 class RenewBookModelForm(ModelForm):
 <strong>    def clean_due_back(self):
        data = self.cleaned_data['due_back</strong><strong>']
-       
+
        # Check if a date is not in the past.
        if data &lt; datetime.date.today():
            raise ValidationError(_('Invalid date - renewal in past'))
@@ -526,7 +526,7 @@ class RenewBookModelForm(ModelForm):
         model = BookInstance
         fields = ['due_back']
         labels = {'due_back': _('Renewal date')}
-        help_texts = {'due_back': _('Enter a date between now and 4 weeks (default 3).')} 
+        help_texts = {'due_back': _('Enter a date between now and 4 weeks (default 3).')}
 </pre>
 
 <p>The class <code>RenewBookModelForm</code> above is now functionally equivalent to our original <code>RenewBookForm</code>. You could import and use it wherever you currently use <code>RenewBookForm</code> as long as you also update the corresponding form variable name from <code>renewal_date</code> to <code>due_back</code> as in the second form declaration: <code>RenewBookModelForm(initial={'due_back': proposed_renewal_date}</code>.</p>
@@ -611,7 +611,7 @@ class AuthorDelete(DeleteView):
 
 <p>Open your URL configuration file (<strong>locallibrary/catalog/urls.py</strong>) and add the following configuration to the bottom of the file:</p>
 
-<pre class="brush: python">urlpatterns += [  
+<pre class="brush: python">urlpatterns += [
     path('author/create/', views.AuthorCreate.as_view(), name='author_create'),
     path('author/&lt;int:pk&gt;/update/', views.AuthorUpdate.as_view(), name='author_update'),
     path('author/&lt;int:pk&gt;/delete/', views.AuthorDelete.as_view(), name='author_delete'),

@@ -103,17 +103,17 @@ tags:
 
     data.innerHTML = event.dataTransfer.getData('text/plain');
   }
-  
+
   function dragEndHandler (event) {
     if (!dropped) {
       status.innerHTML = 'Drag canceled';
     }
-      
+
     data.innerHTML = event.dataTransfer.getData('text/plain') || 'empty';
 
     // Change border to signify drag is no longer in process
     event.currentTarget.style.border = '1px solid black';
-    
+
     if (dropped) {
       // Remove all event listeners
       draggable.removeEventListener('dragstart', dragStartHandler);
@@ -129,16 +129,16 @@ tags:
 
     event.preventDefault();
   }
-  
+
   function dragLeaveHandler (event) {
     status.innerHTML = 'Drag in process (drop was available)';
-    
+
     event.preventDefault();
   }
 
   function dropHandler (event) {
     dropped = true;
-    
+
     status.innerHTML = 'Drop done';
 
     event.preventDefault();
@@ -146,10 +146,10 @@ tags:
     // Get data linked to event format « text »
     var _data = event.dataTransfer.getData('text/plain');
     var element = document.getElementById(_data);
-    
+
     // Append drag source element to event's target element
     event.target.appendChild(element);
-    
+
     // Change CSS styles and displayed text
     element.style.cssText = 'border: 1px solid black;display: block; color: red';
     element.innerHTML = "I'm in the Drop Zone!";

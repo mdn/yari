@@ -86,7 +86,7 @@ function playAnimation(el) {
   if (el.nodeType === Node.TEXT_NODE) {
     el = el.parentNode;
   }
- 
+
   el.classList.remove('highlight');
   setTimeout(() =&gt; {
     el.classList.add('highlight');

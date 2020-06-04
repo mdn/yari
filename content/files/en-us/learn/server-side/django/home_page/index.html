@@ -138,13 +138,13 @@ def index(request):
     # Generate counts of some of the main objects
     num_books = Book.objects.all().count()
     num_instances = BookInstance.objects.all().count()
-    
+
     # Available books (status = 'a')
     num_instances_available = BookInstance.objects.filter(status__exact='a').count()
-    
-    # The 'all()' is implied by default.    
+
+    # The 'all()' is implied by default.
     num_authors = Author.objects.count()
-    
+
     context = {
         'num_books': num_books,
         'num_instances': num_instances,
@@ -307,8 +307,8 @@ return render(request, 'index.html', context=context)</pre>
 
 <p>Within the template you first call the <code>load</code> template tag specifying "static" to add the template library, as shown in the code sample below. You can then use the <code>static</code> template tag and specify the relative URL to the required file.</p>
 
-<pre class="brush: html">&lt;!-- Add additional CSS in static file --&gt; 
-{% load static %} 
+<pre class="brush: html">&lt;!-- Add additional CSS in static file --&gt;
+{% load static %}
 &lt;link rel="stylesheet" href="{% static 'css/styles.css' %}"&gt;</pre>
 
 <p>You can add an image into the page in a similar way, for example:</p>
@@ -327,7 +327,7 @@ return render(request, 'index.html', context=context)</pre>
 
 <p>The base template above introduced the <code>url</code> template tag.</p>
 
-<pre class="brush: python">&lt;li&gt;&lt;a href="{% url 'index' %}"&gt;Home&lt;/a&gt;&lt;/li&gt; 
+<pre class="brush: python">&lt;li&gt;&lt;a href="{% url 'index' %}"&gt;Home&lt;/a&gt;&lt;/li&gt;
 </pre>
 
 <p>This tag accepts the name of a <code>path()</code> function called in your <strong>urls.py</strong> and the values for any arguments that the associated view will receive from that function, and returns a URL that you can use to link to the resource.</p>

@@ -118,10 +118,10 @@ tags:
 
 <pre class="brush: js" id="line1">const xhr = new XMLHttpRequest();
 const url = 'https://bar.other/resources/public-data/';
-   
+
 xhr.open('GET', url);
 xhr.onreadystatechange = someHandler;
-xhr.send(); 
+xhr.send();
 </pre>
 
 <p>This performs a simple exchange between the client and the server, using CORS headers to handle the privileges:</p>
@@ -170,7 +170,7 @@ xhr.open('POST', 'https://bar.other/resources/post-here/');
 xhr.setRequestHeader('X-PINGOTHER', 'pingpong');
 xhr.setRequestHeader('Content-Type', 'application/xml');
 xhr.onreadystatechange = handler;
-xhr.send('&lt;person&gt;&lt;name&gt;Arun&lt;/name&gt;&lt;/person&gt;'); 
+xhr.send('&lt;person&gt;&lt;name&gt;Arun&lt;/name&gt;&lt;/person&gt;');
 </pre>
 
 <p>The example above creates an XML body to send with the <code>POST</code> request. Also, a non-standard HTTP <code>X-PINGOTHER</code> request header is set. Such headers are not part of HTTP/1.1, but are generally useful to web applications. Since the request uses a Content-Type of <code>text/xml</code>, and since a custom header is set, this request is preflighted.</p>
@@ -300,13 +300,13 @@ Access-Control-Max-Age: 86400</pre>
 
 <pre class="brush: js" id="line1">const invocation = new XMLHttpRequest();
 const url = 'http://bar.other/resources/credentialed-content/';
-    
+
 function callOtherDomain() {
   if (invocation) {
     invocation.open('GET', url, true);
     invocation.withCredentials = true;
     invocation.onreadystatechange = handler;
-    invocation.send(); 
+    invocation.send();
   }
 }</pre>
 

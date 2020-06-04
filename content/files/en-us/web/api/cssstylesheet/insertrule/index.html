@@ -61,7 +61,7 @@ tags:
 
 <p>This snippet pushes a new rule onto the top of my stylesheet.</p>
 
-<pre class="brush: js">myStyle.insertRule('#blanc { color: white }', 0); 
+<pre class="brush: js">myStyle.insertRule('#blanc { color: white }', 0);
 </pre>
 
 <h3 id="Function_to_add_a_stylesheet_rule">Function to add a stylesheet rule</h3>
@@ -71,16 +71,16 @@ tags:
  * to dynamically change classes, so style information can be kept in
  * genuine stylesheets and avoid adding extra elements to the DOM).
  * Note that an array is needed for declarations and rules since ECMAScript does
- * not guarantee a predictable object iteration order, and since CSS is 
+ * not guarantee a predictable object iteration order, and since CSS is
  * order-dependent.
  * @param {Array} rules Accepts an array of JSON-encoded declarations
  * @example
 addStylesheetRules([
   ['h2', // Also accepts a second argument as an array of arrays instead
     ['color', 'red'],
-    ['background-color', 'green', true] // 'true' for !important rules 
-  ], 
-  ['.myClass', 
+    ['background-color', 'green', true] // 'true' for !important rules
+  ],
+  ['.myClass',
     ['background-color', 'yellow']
   ]
 ]);
@@ -95,9 +95,9 @@ function addStylesheetRules (rules) {
   var styleSheet = styleEl.sheet;
 
   for (var i = 0; i &lt; rules.length; i++) {
-    var j = 1, 
-        rule = rules[i], 
-        selector = rule[0], 
+    var j = 1,
+        rule = rules[i],
+        selector = rule[0],
         propStr = '';
     // If the second argument of a rule is an array of arrays, correct our variables.
     if (Array.isArray(rule[1][0])) {

@@ -148,7 +148,7 @@ tags:
 	var MouseEventPolyfill = function (eventType, params) {
 		params = params || { bubbles: false, cancelable: false };
 		var mouseEvent = document.createEvent('MouseEvent');
-		mouseEvent.initMouseEvent(eventType, 
+		mouseEvent.initMouseEvent(eventType,
 			params.bubbles,
 			params.cancelable,
 			window,

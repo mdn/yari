@@ -529,22 +529,22 @@ getPlanDetails();
 		console.log(JSON.parse(body));
 	});
 	/* Response:
-	[ 
-		{ 
-			automation_build: { 
+	[
+		{
+			automation_build: {
 				name: &lt;string&gt;,
 				duration: &lt;int&gt;,
 				status: &lt;string&gt;,
-				hashed_id: &lt;string&gt; 
-			} 
+				hashed_id: &lt;string&gt;
+			}
 		},
-		{ 
-			automation_build: { 
+		{
+			automation_build: {
 				name: &lt;string&gt;,
 				duration: &lt;int&gt;,
 				status: &lt;string&gt;,
-				hashed_id: &lt;string&gt; 
-			} 
+				hashed_id: &lt;string&gt;
+			}
 		},
 		...
 	]
@@ -558,8 +558,8 @@ function getSessionsInBuild(build){
 	});
 	/* Response:
 	[
-		{ 
-			automation_session: { 
+		{
+			automation_session: {
 				name: &lt;string&gt;,
 				duration: &lt;int&gt;,
 				os: &lt;string&gt;,
@@ -577,11 +577,11 @@ function getSessionsInBuild(build){
 				public_url: &lt;string&gt;,
 				video_url: &lt;string&gt;,
 				browser_console_logs_url: &lt;string&gt;,
-				har_logs_url: &lt;string&gt; 
-			} 
+				har_logs_url: &lt;string&gt;
+			}
 		},
-		{ 
-			automation_session: { 
+		{
+			automation_session: {
 				name: &lt;string&gt;,
 				duration: &lt;int&gt;,
 				os: &lt;string&gt;,
@@ -599,10 +599,10 @@ function getSessionsInBuild(build){
 				public_url: &lt;string&gt;,
 				video_url: &lt;string&gt;,
 				browser_console_logs_url: &lt;string&gt;,
-				har_logs_url: &lt;string&gt; 
-			} 
+				har_logs_url: &lt;string&gt;
+			}
 		},
-		... 
+		...
 	]
 	*/
 }
@@ -613,8 +613,8 @@ function getSessionDetails(session){
 		console.log(JSON.parse(body));
 	});
 	/* Response:
-	{ 
-		automation_session: { 
+	{
+		automation_session: {
 			name: &lt;string&gt;,
 			duration: &lt;int&gt;,
 			os: &lt;string&gt;,
@@ -632,8 +632,8 @@ function getSessionDetails(session){
 			public_url: &lt;string&gt;,
 			video_url: &lt;string&gt;,
 			browser_console_logs_url: &lt;string&gt;,
-			har_logs_url: &lt;string&gt; 
-		} 
+			har_logs_url: &lt;string&gt;
+		}
 	}
 	*/
 }</pre>

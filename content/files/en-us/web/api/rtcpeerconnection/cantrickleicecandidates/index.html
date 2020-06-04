@@ -46,7 +46,7 @@ tags:
 pc.setRemoteDescription(remoteOffer)
   .then(_ =&gt; pc.createAnswer())
   .then(answer =&gt; pc.setLocalDescription(answer))
-  .then(_ =&gt;     
+  .then(_ =&gt;
     if (pc.canTrickleIceCandidates) {
       return pc.localDescription;
     }

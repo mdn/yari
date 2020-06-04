@@ -168,14 +168,14 @@ tags:
 
 <pre class="brush: js">var SimplePropertyRetriever = {
     getOwnEnumerables: function(obj) {
-        return this._getPropertyNames(obj, true, false, this._enumerable); 
+        return this._getPropertyNames(obj, true, false, this._enumerable);
          // Or could use for..in filtered with hasOwnProperty or just this: return Object.keys(obj);
     },
     getOwnNonenumerables: function(obj) {
         return this._getPropertyNames(obj, true, false, this._notEnumerable);
     },
     getOwnEnumerablesAndNonenumerables: function(obj) {
-        return this._getPropertyNames(obj, true, false, this._enumerableAndNotEnumerable); 
+        return this._getPropertyNames(obj, true, false, this._enumerableAndNotEnumerable);
         // Or just use: return Object.getOwnPropertyNames(obj);
     },
     getPrototypeEnumerables: function(obj) {
@@ -188,7 +188,7 @@ tags:
         return this._getPropertyNames(obj, false, true, this._enumerableAndNotEnumerable);
     },
     getOwnAndPrototypeEnumerables: function(obj) {
-        return this._getPropertyNames(obj, true, true, this._enumerable); 
+        return this._getPropertyNames(obj, true, true, this._enumerable);
         // Or could use unfiltered for..in
     },
     getOwnAndPrototypeNonenumerables: function(obj) {

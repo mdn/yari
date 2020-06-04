@@ -56,7 +56,7 @@ Content-Security-Policy: base-uri &lt;source&gt; &lt;source&gt;;
 
 <h3 id="Apache_configuration">Apache configuration</h3>
 
-<pre class="brush: bash">&lt;IfModule mod_headers.c&gt; 
+<pre class="brush: bash">&lt;IfModule mod_headers.c&gt;
 Header set Content-Security-Policy "base-uri 'self'";
 &lt;/IfModule&gt;</pre>
 
@@ -71,8 +71,8 @@ Header set Content-Security-Policy "base-uri 'self'";
 <pre class="brush: html; example-bad">&lt;meta http-equiv="Content-Security-Policy" content="base-uri 'self'"&gt;
 &lt;base href="https://example.com/"&gt;
 
-// Error: Refused to set the document's base URI to 'https://example.com/' 
-// because it violates the following Content Security Policy 
+// Error: Refused to set the document's base URI to 'https://example.com/'
+// because it violates the following Content Security Policy
 // directive: "base-uri 'self'"</pre>
 
 <h2 id="Specifications">Specifications</h2>

@@ -44,7 +44,7 @@ createAudioFileAsync(audioSettings, successCallback, failureCallback);
 
 <p>That's shorthand for:</p>
 
-<pre class="brush: js line-numbers  language-js">const promise = createAudioFileAsync(audioSettings); 
+<pre class="brush: js line-numbers  language-js">const promise = createAudioFileAsync(audioSettings);
 promise.then(successCallback, failureCallback);</pre>
 
 <p>We call this an <em>asynchronous function call</em>. This convention has several advantages. We will explore each one.</p>
@@ -130,7 +130,7 @@ const promise2 = promise.then(successCallback, failureCallback);
 })
 .then(() =&gt; {
     throw new Error('Something failed');
-        
+
     console.log('Do this');
 })
 .catch(() =&gt; {

@@ -109,8 +109,8 @@ console.log(new myConstructorWithArguments);
 
 <p>Without spread syntax, to create a new array using an existing array as one part of it, the array literal syntax is no longer sufficient and imperative code must be used instead using a combination of {{jsxref("Array.prototype.push", "push()")}}, {{jsxref("Array.prototype.splice", "splice()")}}, {{jsxref("Array.prototype.concat", "concat()")}}, etc. With spread syntax this becomes much more succinct:</p>
 
-<pre class="brush: js">const parts = ['shoulders', 'knees']; 
-const lyrics = ['head', ...parts, 'and', 'toes']; 
+<pre class="brush: js">const parts = ['shoulders', 'knees'];
+const lyrics = ['head', ...parts, 'and', 'toes'];
 //  ["head", "shoulders", "knees", "and", "toes"]
 </pre>
 
@@ -132,7 +132,7 @@ arr2.push(4);
 <pre class="brush: js example-bad">const a = [[1], [2], [3]];
 const b = [...a];
 
-b.shift().shift(); 
+b.shift().shift();
 //  1
 
 //  Oh no!  Now array 'a' is affected as well:
@@ -146,7 +146,7 @@ a
 <p>{{jsxref("Array.prototype.concat()")}} is often used to concatenate an array to the end of an existing array. Without spread syntax, this is done as:</p>
 
 <pre class="brush: js">const arr1 = [0, 1, 2];
-const arr2 = [3, 4, 5]; 
+const arr2 = [3, 4, 5];
 
 //  Append all items from arr2 onto arr1
 arr1 = arr1.concat(arr2);
@@ -159,7 +159,7 @@ arr1 = arr1.concat(arr2);
 <pre class="brush: js">let arr1 = [0, 1, 2];
 let arr2 = [3, 4, 5];
 
-arr1 = [...arr1, ...arr2]; 
+arr1 = [...arr1, ...arr2];
 //  arr1 is now [0, 1, 2, 3, 4, 5]
 Note: Not to use const otherwise, it will give TypeError(invalid assignment)
 </pre>

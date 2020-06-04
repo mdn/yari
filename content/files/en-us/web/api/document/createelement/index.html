@@ -58,17 +58,17 @@ tags:
 
 <pre class="brush:js">document.body.onload = addElement;
 
-function addElement () { 
-  // create a new div element 
-  var newDiv = document.createElement("div"); 
-  // and give it some content 
-  var newContent = document.createTextNode("Hi there and greetings!"); 
+function addElement () {
+  // create a new div element
+  var newDiv = document.createElement("div");
+  // and give it some content
+  var newContent = document.createTextNode("Hi there and greetings!");
   // add the text node to the newly created div
-  newDiv.appendChild(newContent);  
+  newDiv.appendChild(newContent);
 
-  // add the newly created element and its content into the DOM 
-  var currentDiv = document.getElementById("div1"); 
-  document.body.insertBefore(newDiv, currentDiv); 
+  // add the newly created element and its content into the DOM
+  var currentDiv = document.getElementById("div1");
+  document.body.insertBefore(newDiv, currentDiv);
 }</pre>
 
 <p>{{EmbedLiveSample("Basic_example", 500, 50)}}</p>

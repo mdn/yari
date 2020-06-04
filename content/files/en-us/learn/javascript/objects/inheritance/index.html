@@ -143,8 +143,8 @@ tags:
   Here our friend <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create">create()</a></code> comes to the rescue again. In this case we are using it to create a new object and make it the value of <code>Teacher.prototype</code>. The new object has <code>Person.prototype</code> as its prototype and will therefore inherit, if and when needed, all the methods available on <code>Person.prototype</code>.</li>
  <li>We need to do one more thing before we move on. After adding the last line, <code>Teacher.</code><code>prototype</code>'s <code>constructor</code> property is now equal to <code>Person()</code>, because we just set <code>Teacher.prototype</code> to reference an object that inherits its properties from <code>Person.prototype</code>! Try saving your code, loading the page in a browser, and entering <code>Teacher.prototype.constructor</code> into the console to verify.</li>
  <li>This can become a problem, so we need to set this right. You can do so by going back to your source code and adding the following line at the bottom:
-  <pre class="brush: js">Object.defineProperty(Teacher.prototype, 'constructor', { 
-    value: Teacher, 
+  <pre class="brush: js">Object.defineProperty(Teacher.prototype, 'constructor', {
+    value: Teacher,
     enumerable: false, // so that it does not appear in 'for in' loop
     writable: true });</pre>
  </li>
@@ -303,10 +303,10 @@ accessing 'this' or returning from derived constructor</pre>
 <p>To call the parent constructor we have to use the <a href="/en-US/docs/Web/JavaScript/Reference/Operators/super"><code>super()</code> operator</a>, like so:</p>
 
 <pre class="brush: js">class Teacher extends Person {
-  constructor(subject, grade) { 
+  constructor(subject, grade) {
     super(); // Now 'this' is initialized by calling the parent constructor.
-    this.subject = subject;   
-    this.grade = grade; 
+    this.subject = subject;
+    this.grade = grade;
   }
 }</pre>
 
@@ -315,14 +315,14 @@ accessing 'this' or returning from derived constructor</pre>
 
 <p>Looking back to our <code>Person</code> constructor, we can see it has the following block of code in its constructor method:</p>
 
-<pre class="brush: js"> constructor(first, last, age, gender, interests) { 
-   this.name = {   
-     first,   
-     last   
-   }; 
-   this.age = age; 
-   this.gender = gender;   
-   this.interests = interests; 
+<pre class="brush: js"> constructor(first, last, age, gender, interests) {
+   this.name = {
+     first,
+     last
+   };
+   this.age = age;
+   this.gender = gender;
+   this.interests = interests;
 } </pre>
 
 <p>Since the <code><a href="/en-US/docs/Web/JavaScript/Reference/Operators/super">super()</a></code> operator is actually the parent class constructor, passing it the necessary arguments of the <code>Parent</code> class constructor will also initialize the parent class properties in our sub-class, thereby inheriting it:</p>

@@ -27,14 +27,14 @@ tags:
 
 <p>In this example, a new stream whose source is the user's local camera and microphone is requested using {{domxref("MediaDevices.getUserMedia", "getUserMedia()")}}. When that stream becomes available (that is, when the returned {{jsxref("Promise")}} is fulfilled, a button on the page is updated based on whether or not the stream is currently active.</p>
 
-<pre class="brush: js">var promise = navigator.mediaDevices.getUserMedia({ 
-  audio: true, 
-  video: true 
+<pre class="brush: js">var promise = navigator.mediaDevices.getUserMedia({
+  audio: true,
+  video: true
 });
 
 promise.then(function(stream) {
   var startBtn = document.querySelector('#startBtn');
-  startBtn.disabled = stream.active; 
+  startBtn.disabled = stream.active;
 };)</pre>
 
 <h2 id="Specifications">Specifications</h2>

@@ -48,14 +48,14 @@ tags:
   &lt;defs&gt;
     &lt;!-- solidColor is experimental. --&gt;
     &lt;solidcolor id="myColor" solid-color="gold" solid-opacity="0.8"/&gt;
-      
-    &lt;!-- linearGradient with a single color stop is a less elegant way to 
+
+    &lt;!-- linearGradient with a single color stop is a less elegant way to
          achieve the same effect, but it works in current browsers. --&gt;
     &lt;linearGradient id="myGradient"&gt;
       &lt;stop offset="0" stop-color="green" /&gt;
     &lt;/linearGradient&gt;
   &lt;/defs&gt;
-   
+
   &lt;text x="10" y="20"&gt;Circles colored with solidColor&lt;/text&gt;
   &lt;circle cx="150" cy="65" r="35" stroke-width="2" stroke="url(#myColor)"
       fill="white"/&gt;

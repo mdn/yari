@@ -30,7 +30,7 @@ passwordCredential.additionalData = urlSearchParams
 
 <p>The following example creates a {{domxref("FormData")}} object with an appended <a href="/docs/Web/Security/Same-origin_policy#How_to_block_cross-origin_access">CSRF token</a>. It then stores the form object in the additionalData parameter, before sending it to server in a call to {{domxref("fetch")}}.</p>
 
-<pre class="brush: js">//The options object was previously created. 
+<pre class="brush: js">//The options object was previously created.
 navigator.credentials.get(options).then(function(creds) {
   if (creds.type == 'password') {
     var form = new FormData();

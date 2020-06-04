@@ -45,7 +45,7 @@ tags:
 <pre class="brush: js">o = new Object();
 o.propOne = null;
 o.hasOwnProperty('propOne');   // returns true
-o.propTwo = undefined;  
+o.propTwo = undefined;
 o.hasOwnProperty('propTwo');   // returns true
 </pre>
 
@@ -57,7 +57,7 @@ o.hasOwnProperty('propTwo');   // returns true
 
 <pre class="brush: js">o = new Object();
 o.hasOwnProperty('prop');   // returns false
-o.prop = 'exists';  
+o.prop = 'exists';
 o.hasOwnProperty('prop');   // returns true
 </pre>
 
@@ -82,7 +82,7 @@ o.hasOwnProperty('hasOwnProperty');   // returns false
 
 for (var name in buz) {
   if (buz.hasOwnProperty(name)) {
-    console.log('this is fog (' + 
+    console.log('this is fog (' +
       name + ') for sure. Value: ' + buz[name]);
   }
   else {

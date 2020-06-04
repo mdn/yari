@@ -26,7 +26,7 @@ tags:
 void <var>gl</var>.compressedTexSubImage2D(<var>target</var>, <var>level</var>, <var>xoffset</var>, <var>yoffset</var>, <var>width</var>, <var>height</var>, <var>format</var>, ArrayBufferView? <var>pixels</var>);
 
 // Additionally available in WebGL 2:
-void gl.compressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, offset); 
+void gl.compressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, offset);
 void gl.compressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, ArrayBufferView srcData, optional srcOffset, optional srcLengthOverride);
 
 </pre>
@@ -173,7 +173,7 @@ void gl.compressedTexSubImage2D(target, level, xoffset, yoffset, width, height, 
   gl.getExtension('MOZ_WEBGL_compressed_texture_s3tc') ||
   gl.getExtension('WEBKIT_WEBGL_compressed_texture_s3tc')
 );
-gl.compressedTexSubImage2D(gl.TEXTURE_2D, 0, 256, 256, 512, 512, ext.COMPRESSED_RGBA_S3TC_DXT5_EXT, textureData); 
+gl.compressedTexSubImage2D(gl.TEXTURE_2D, 0, 256, 256, 512, 512, ext.COMPRESSED_RGBA_S3TC_DXT5_EXT, textureData);
 </pre>
 
 <h2 id="Specifications">Specifications</h2>

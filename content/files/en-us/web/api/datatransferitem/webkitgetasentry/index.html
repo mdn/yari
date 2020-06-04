@@ -102,7 +102,7 @@ function scanFiles(item, container) {
   let elem = document.createElement("li");
   elem.innerHTML = item.name;
   container.appendChild(elem);
- 
+
  if (item.isDirectory) {
     let directoryReader = item.createReader();
     let directoryContainer = document.createElement("ul");
@@ -136,10 +136,10 @@ function scanFiles(item, container) {
 
   event.preventDefault();
   listing.innerHTML = "";
- 
+
   for (let i=0; i&lt;items.length; i++) {
     let item = items[i].webkitGetAsEntry();
-    
+
     if (item) {
         scanFiles(item, listing);
     }

@@ -86,7 +86,7 @@ fetch("some.json", {cache: "force-cache"})
 // Prefer a cached albeit stale response; but update if it's too old.
 // AbortController and signal to allow better memory cleaning.
 // In reality; this would be a function that takes a path and a
-// reference to the controller since it would need to change the value 
+// reference to the controller since it would need to change the value
 let controller = new AbortController();
 fetch("some.json", {cache: "only-if-cached", mode: "same-origin", signal: controller.signal})
   .catch(e =&gt; e instanceof TypeError &amp;&amp; e.message === "Failed to fetch" ?

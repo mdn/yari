@@ -34,9 +34,9 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">Public-Key-Pins: pin-sha256="&lt;pin-value&gt;"; 
-                 max-age=&lt;expire-time&gt;; 
-                 includeSubDomains; 
+<pre class="syntaxbox">Public-Key-Pins: pin-sha256="&lt;pin-value&gt;";
+                 max-age=&lt;expire-time&gt;;
+                 includeSubDomains;
                  report-uri="&lt;uri&gt;"</pre>
 
 <h2 id="Directives">Directives</h2>
@@ -58,10 +58,10 @@ tags:
 <p id="HPKP_has_the_potential_to_lock_out_users_for_a_long_time_if_used_incorrectly!_The_use_of_backup_certificates_andor_pinning_the_CA_certificate_is_recommend.">HPKP has the potential to lock out users for a long time if used incorrectly! The use of backup certificates and/or pinning the CA certificate is recommended.</p>
 </div>
 
-<pre>Public-Key-Pins: 
-  pin-sha256="cUPcTAZWKaASuYWhhneDttWpY3oBAkE3h2+soZS7sWs="; 
-  pin-sha256="M8HztCzM3elUxkcjR2S5P4hhyBNf6lHkmjAHKhpGPWE="; 
-  max-age=5184000; includeSubDomains; 
+<pre>Public-Key-Pins:
+  pin-sha256="cUPcTAZWKaASuYWhhneDttWpY3oBAkE3h2+soZS7sWs=";
+  pin-sha256="M8HztCzM3elUxkcjR2S5P4hhyBNf6lHkmjAHKhpGPWE=";
+  max-age=5184000; includeSubDomains;
   report-uri="https://www.example.org/hpkp-report"</pre>
 
 <p>In this example, <strong>pin-sha256="cUPcTAZWKaASuYWhhneDttWpY3oBAkE3h2+soZS7sWs="</strong> pins the server's public key used in production. The second pin declaration <strong>pin-sha256="M8HztCzM3elUxkcjR2S5P4hhyBNf6lHkmjAHKhpGPWE="</strong> also pins the backup key. <strong>max-age=5184000</strong> tells the client to store this information for two months, which is a reasonable time limit according to the IETF RFC. This key pinning is also valid for all subdomains, which is told by the <strong>includeSubDomains</strong> declaration. Finally, <strong>report-uri="https://www.example.org/hpkp-report"</strong> explains where to report pin validation failures.</p>

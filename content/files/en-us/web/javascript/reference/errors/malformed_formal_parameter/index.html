@@ -38,10 +38,10 @@ SyntaxError: malformed formal parameter (Firefox)
 
 <h3 id="Invalid_cases">Invalid cases</h3>
 
-<pre class="brush: js example-bad">var f = Function('x y', 'return x + y;');  
+<pre class="brush: js example-bad">var f = Function('x y', 'return x + y;');
 // SyntaxError (missing a comma)
 
-var f = Function('x,', 'return x;');  
+var f = Function('x,', 'return x;');
 // SyntaxError (extraneous comma)
 
 var f = Function(37, "alert('OK')");

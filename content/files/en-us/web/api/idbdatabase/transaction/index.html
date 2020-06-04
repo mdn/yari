@@ -32,7 +32,7 @@ tags:
  <dd>The names of object stores that are in the scope of the new transaction, declared as an array of strings. Specify only the object stores that you need to access.<br>
  If you need to access only one object store, you can specify its name as a string. Therefore the following lines are equivalent:</dd>
  <dd>
- <pre class="brush: js">var transaction = db.transaction(['my-store-name']); 
+ <pre class="brush: js">var transaction = db.transaction(['my-store-name']);
 var transaction = db.transaction('my-store-name');</pre>
  </dd>
  <dd>If you need to access all object stores in the database, you can use the property {{domxref("IDBDatabase.objectStoreNames")}}:
@@ -104,7 +104,7 @@ DBOpenRequest.onsuccess = function(event) {
 
   // store the result of opening the database in the db variable.
   // This is used a lot below
-  db = DBOpenRequest.result;    
+  db = DBOpenRequest.result;
 
   // Run the displayData() function to populate the task list with
   // all the to-do list data already in the IDB

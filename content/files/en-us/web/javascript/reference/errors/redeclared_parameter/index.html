@@ -36,8 +36,8 @@ SyntaxError: Identifier "x" has already been declared (Chrome)
 
 <p>In this case, the variable "arg" redeclares the argument.</p>
 
-<pre class="brush: js example-bad">function f(arg) { 
-  let arg = 'foo'; 
+<pre class="brush: js example-bad">function f(arg) {
+  let arg = 'foo';
 }
 
 // SyntaxError: redeclaration of formal parameter "arg"
@@ -49,8 +49,8 @@ SyntaxError: Identifier "x" has already been declared (Chrome)
   arg = 'foo';
 }
 
-function f(arg) { 
-  let bar = 'foo'; 
+function f(arg) {
+  let bar = 'foo';
 }
 </pre>
 

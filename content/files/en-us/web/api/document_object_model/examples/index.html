@@ -31,11 +31,11 @@ function init() {
   var strHtml = "&lt;ul&gt;";
 
   for (var i = 0; i &lt; arrImages.length; i++) {
-    strHtml += "&lt;li&gt;image" + (i+1) + 
-            ": height=" + arrImages[i].height + 
-            ", width=" + arrImages[i].width + 
-            ", style.height=" + arrImages[i].style.height + 
-            ", style.width=" + arrImages[i].style.width + 
+    strHtml += "&lt;li&gt;image" + (i+1) +
+            ": height=" + arrImages[i].height +
+            ", width=" + arrImages[i].width +
+            ", style.height=" + arrImages[i].style.height +
+            ", style.width=" + arrImages[i].style.width +
             "&lt;\/li&gt;";
   }
 
@@ -47,19 +47,19 @@ function init() {
 &lt;/head&gt;
 &lt;body onload="init();"&gt;
 
-&lt;p&gt;Image 1: no height, width, or style 
+&lt;p&gt;Image 1: no height, width, or style
   &lt;img id="image1" src="http://www.mozilla.org/images/mozilla-banner.gif"&gt;
 &lt;/p&gt;
 
-&lt;p&gt;Image 2: height="50", width="500", but no style 
+&lt;p&gt;Image 2: height="50", width="500", but no style
   &lt;img id="image2"
-       src="http://www.mozilla.org/images/mozilla-banner.gif" 
+       src="http://www.mozilla.org/images/mozilla-banner.gif"
        height="50" width="500"&gt;
 &lt;/p&gt;
 
 &lt;p&gt;Image 3: no height, width, but style="height: 50px; width: 500px;"
   &lt;img id="image3"
-       src="http://www.mozilla.org/images/mozilla-banner.gif" 
+       src="http://www.mozilla.org/images/mozilla-banner.gif"
        style="height: 50px; width: 500px;"&gt;
 &lt;/p&gt;
 
@@ -238,7 +238,7 @@ function cStyles() {
 &lt;style&gt;
 #d1 {
   margin-left: 10px;
-  background-color: rgb(173, 216, 230); 
+  background-color: rgb(173, 216, 230);
   height: 20px;
   max-width: 20px;
 }
@@ -328,7 +328,7 @@ window.onload = function(event){
 &lt;/head&gt;
 
 &lt;body&gt;
-&lt;h1&gt;Properties of the DOM &lt;span id="eventType"&gt;&lt;/span&gt; Event Object&lt;/h1&gt;    
+&lt;h1&gt;Properties of the DOM &lt;span id="eventType"&gt;&lt;/span&gt; Event Object&lt;/h1&gt;
 &lt;/body&gt;
 
 &lt;/html&gt;

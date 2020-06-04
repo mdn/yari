@@ -138,8 +138,8 @@ var buffer = new ArrayBuffer(8);
 var z = new Uint16Array(buffer, 0, 4);
 
 // From an iterable
-var iterable = function*(){ yield* [1,2,3]; }(); 
-var uint16 = new Uint16Array(iterable); 
+var iterable = function*(){ yield* [1,2,3]; }();
+var uint16 = new Uint16Array(iterable);
 // Uint16Array[1, 2, 3]
 </pre>
 

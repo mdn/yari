@@ -85,7 +85,7 @@ delete Object.prototype; // error!
 <pre class="brush: js">// example taken from vanillajs: http://vanilla-js.com/
 var s = document.getElementById('thing').style;
 s.opacity = 1;
-(function() { 
+(function() {
   if ((s.opacity-=.1) &lt; 0)
     s.display = 'none';
   else

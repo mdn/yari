@@ -59,7 +59,7 @@ tags:
 <h3 id="Creating_an_URIError">Creating an <code>URIError</code></h3>
 
 <pre class="brush: js">try {
-  throw new URIError('Hello', 'someFile.js', 10) 
+  throw new URIError('Hello', 'someFile.js', 10)
 } catch (e) {
   console.log(e instanceof URIError)  // true
   console.log(e.message)              // "Hello"

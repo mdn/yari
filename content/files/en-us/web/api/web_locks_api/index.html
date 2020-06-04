@@ -91,7 +91,7 @@ await do_something_else_without_lock();
 <p>For more complicated cases, such as holding the lock for an arbitrary amount of time, the callback can return a promise explicitly resolved by the script:</p>
 
 <pre class="brush: js">// Capture promise control functions:
-let resolve, reject; 
+let resolve, reject;
 const p = new Promise((res, rej) =&gt; { resolve = res; reject = rej; });
 
 // Request the lock:
@@ -100,7 +100,7 @@ navigator.locks.request('my_resource', lock =&gt; {
 
   return p;
   // Now lock will be held until either resolve() or reject() is called.
-}); 
+});
 
 </pre>
 

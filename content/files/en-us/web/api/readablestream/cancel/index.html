@@ -58,7 +58,7 @@ fetch(url).then(response =&gt; {
   var reader = response.body.getReader();
   var toMatch = caseInsensitive ? searchTerm.toLowerCase() : searchTerm;
   var bufferSize = Math.max(toMatch.length - 1, contextBefore);
- 
+
   var bytesReceived = 0;
   var buffer = '';
   var matchFoundAt = -1;

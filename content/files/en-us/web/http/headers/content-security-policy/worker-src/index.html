@@ -61,10 +61,10 @@ Content-Security-Policy: worker-src &lt;source&gt; &lt;source&gt;;
 
 <p>{{domxref("Worker")}}, {{domxref("SharedWorker")}}, {{domxref("ServiceWorker")}} are blocked and won't load:</p>
 
-<pre class="brush: html">&lt;script&gt; 
-  var blockedWorker = new Worker("data:application/javascript,..."); 
-  blockedWorker = new SharedWorker("https://not-example.com/"); 
-  navigator.serviceWorker.register('https://not-example.com/sw.js'); 
+<pre class="brush: html">&lt;script&gt;
+  var blockedWorker = new Worker("data:application/javascript,...");
+  blockedWorker = new SharedWorker("https://not-example.com/");
+  navigator.serviceWorker.register('https://not-example.com/sw.js');
 &lt;/script&gt;</pre>
 
 <h2 id="Specifications">Specifications</h2>

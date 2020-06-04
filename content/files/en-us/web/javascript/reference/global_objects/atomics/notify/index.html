@@ -63,7 +63,7 @@ console.log(int32[0]); // 123</pre>
 <p>A writing thread stores a new value and notifies the waiting thread once it has written:</p>
 
 <pre class="brush: js">console.log(int32[0]); // 0;
-Atomics.store(int32, 0, 123); 
+Atomics.store(int32, 0, 123);
 Atomics.notify(int32, 0, 1);</pre>
 
 <h2 id="Specifications">Specifications</h2>

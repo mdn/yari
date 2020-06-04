@@ -44,25 +44,25 @@ tags:
 
 <p>We start with a <code><a href="/en-US/docs/Web/HTML/Element/video">&lt;video&gt;</a></code> that has several <code><a href="/en-US/docs/Web/HTML/Element/track">&lt;track&gt;</a></code> children </p>
 
-<pre class="brush: html">&lt;video controls poster="/images/sample.gif"&gt; 
-  &lt;source src="sample.mp4" type="video/mp4"&gt; 
-  &lt;source src="sample.ogv" type="video/ogv"&gt; 
-  &lt;track kind="captions" src="sampleCaptions.vtt" srclang="en"&gt; 
-  &lt;track kind="descriptions" src="sampleDescriptions.vtt" srclang="en"&gt; 
-  &lt;track kind="chapters" src="sampleChapters.vtt" srclang="en"&gt; 
-  &lt;track kind="subtitles" src="sampleSubtitles_de.vtt" srclang="de"&gt; 
-  &lt;track kind="subtitles" src="sampleSubtitles_en.vtt" srclang="en"&gt; 
-  &lt;track kind="subtitles" src="sampleSubtitles_ja.vtt" srclang="ja"&gt; 
-  &lt;track kind="subtitles" src="sampleSubtitles_oz.vtt" srclang="oz"&gt; 
-  &lt;track kind="metadata" src="keyStage1.vtt" srclang="en" label="Key Stage 1"&gt; 
-  &lt;track kind="metadata" src="keyStage2.vtt" srclang="en" label="Key Stage 2"&gt; 
-  &lt;track kind="metadata" src="keyStage3.vtt" srclang="en" label="Key Stage 3"&gt; 
+<pre class="brush: html">&lt;video controls poster="/images/sample.gif"&gt;
+  &lt;source src="sample.mp4" type="video/mp4"&gt;
+  &lt;source src="sample.ogv" type="video/ogv"&gt;
+  &lt;track kind="captions" src="sampleCaptions.vtt" srclang="en"&gt;
+  &lt;track kind="descriptions" src="sampleDescriptions.vtt" srclang="en"&gt;
+  &lt;track kind="chapters" src="sampleChapters.vtt" srclang="en"&gt;
+  &lt;track kind="subtitles" src="sampleSubtitles_de.vtt" srclang="de"&gt;
+  &lt;track kind="subtitles" src="sampleSubtitles_en.vtt" srclang="en"&gt;
+  &lt;track kind="subtitles" src="sampleSubtitles_ja.vtt" srclang="ja"&gt;
+  &lt;track kind="subtitles" src="sampleSubtitles_oz.vtt" srclang="oz"&gt;
+  &lt;track kind="metadata" src="keyStage1.vtt" srclang="en" label="Key Stage 1"&gt;
+  &lt;track kind="metadata" src="keyStage2.vtt" srclang="en" label="Key Stage 2"&gt;
+  &lt;track kind="metadata" src="keyStage3.vtt" srclang="en" label="Key Stage 3"&gt;
 &lt;/video&gt;
 </pre>
 
 <p>The <code><em>HTMLMediaElement</em>.textTracks</code> returns a <code>textTracksList</code> thru which we can iterate.  Here we print all the properties of each English track to the console.</p>
 
-<pre class="brush: js">var tracks = document.querySelector('video').textTracks; 
+<pre class="brush: js">var tracks = document.querySelector('video').textTracks;
 
 for (var i = 0, L = tracks.length; i &lt; L; i++) { /* tracks.length == 10 */
    if (tracks[i].language == 'en') {

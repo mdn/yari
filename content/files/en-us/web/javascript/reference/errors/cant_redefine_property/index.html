@@ -37,7 +37,7 @@ TypeError: Cannot redefine property: "x" (Chrome)
 <p>The {{jsxref("Object.defineProperty()")}} creates non-configurable properties if you haven't specified them as configurable.</p>
 
 <pre class="brush: js example-bad">var obj = Object.create({});
-Object.defineProperty(obj, "foo", {value: "bar"}); 
+Object.defineProperty(obj, "foo", {value: "bar"});
 
 Object.defineProperty(obj, "foo", {value: "baz"});
 // TypeError: can't redefine non-configurable property "foo"

@@ -33,8 +33,8 @@ tags:
 <pre class="brush: css">@keyframe validIdent {
   /* keyframes go here */
 }
-@keyframe 'validString' { 
-  /* keyframes go here */ 
+@keyframe 'validString' {
+  /* keyframes go here */
 }</pre>
 
 <p>Some text values are not valid if encompassed in quotes. For example, the value of {{cssxref("grid-area")}} can be a <code>&lt;custom-ident&gt;</code>, so if we had a grid area named <code>content</code> we would use it without quotes:</p>
@@ -82,13 +82,13 @@ tags:
 
 <p>A {{cssxref("&lt;url&gt;")}} type uses functional notation, which accepts a <code>&lt;string&gt;</code> that is a URL. This may be an absolute URL or a relative URL. For example, if you wanted to include a background image, you might use either of the following.</p>
 
-<pre class="brush: css"><code>.box { 
-  background-image: url("images/my-background.png"); 
-}</code> 
+<pre class="brush: css"><code>.box {
+  background-image: url("images/my-background.png");
+}</code>
 
 <code>.box {
   background-image: url("https://www.exammple.com/images/my-background.png");
-}</code> 
+}</code>
 </pre>
 
 <p>The parameter for <code>url()</code> can be either quoted or unquoted. If unquoted, it is parsed as a <code>&lt;url-token&gt;</code>, which has extra requirements including the escaping of certain characters. See {{cssxref("&lt;url&gt;")}}  for more information.</p>

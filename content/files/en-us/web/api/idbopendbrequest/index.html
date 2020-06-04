@@ -57,11 +57,11 @@ DBOpenRequest.onerror = function(event) {
 
 DBOpenRequest.onsuccess = function(event) {
   note.innerHTML += '&lt;li&gt;Database initialised.&lt;/li&gt;';
- 
+
   // store the result of opening the database in the db
   // variable. This is used a lot below
   db = DBOpenRequest.result;
- 
+
   // Run the displayData() function to populate the task
   // listwith all the to-do list data already in the IDB
   displayData();
@@ -74,16 +74,16 @@ DBOpenRequest.onsuccess = function(event) {
 // it is only implemented in recent browsers
 DBOpenRequest.onupgradeneeded = function(event) {
   var db = this.result;
- 
+
   db.onerror = function(event) {
     note.innerHTML += '&lt;li&gt;Error loading database.&lt;/li&gt;';
   };
 
-  // Create an objectStore for this database   
+  // Create an objectStore for this database
   var objectStore = db.createObjectStore("toDoList", { keyPath: "taskTitle" });
 
   // define what data items the objectStore will contain
-    
+
   objectStore.createIndex("hours", "hours", { unique: false });
   objectStore.createIndex("minutes", "minutes", { unique: false });
   objectStore.createIndex("day", "day", { unique: false });

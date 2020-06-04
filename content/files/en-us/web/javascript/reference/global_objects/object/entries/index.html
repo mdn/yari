@@ -58,7 +58,7 @@ tags:
         resArray = new Array(i); // preallocate the Array
     while (i--)
       resArray[i] = [ownProps[i], obj[ownProps[i]]];
-    
+
     return resArray;
   };
 }
@@ -107,7 +107,7 @@ Object.entries(obj).forEach(([key, value]) =&gt; {
 
 <p>The {{jsxref("Map", "new Map()")}} constructor accepts an iterable of <code>entries</code>. With <code>Object.entries</code>, you can easily convert from {{jsxref("Object")}} to {{jsxref("Map")}}:</p>
 
-<pre class="brush: js">const obj = { foo: 'bar', baz: 42 }; 
+<pre class="brush: js">const obj = { foo: 'bar', baz: 42 };
 const map = new Map(Object.entries(obj));
 console.log(map); // Map { foo: "bar", baz: 42 }
 </pre>

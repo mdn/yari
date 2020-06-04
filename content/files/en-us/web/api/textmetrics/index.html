@@ -60,9 +60,9 @@ tags:
 <pre class="brush: js">const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-const baselinesAboveAlphabetic = ['fontBoundingBoxAscent', 'actualBoundingBoxAscent', 
+const baselinesAboveAlphabetic = ['fontBoundingBoxAscent', 'actualBoundingBoxAscent',
                    'emHeightAscent', 'hangingBaseline'];
-const baselinesBelowAlphabetic = ['ideographicBaseline', 'emHeightDescent', 
+const baselinesBelowAlphabetic = ['ideographicBaseline', 'emHeightDescent',
                    'actualBoundingBoxDescent', 'fontBoundingBoxDescent'];
 const baselines = [...baselinesAboveAlphabetic, ...baselinesBelowAlphabetic];
 ctx.font = '25px serif';
@@ -81,7 +81,7 @@ baselines.forEach(function (baseline, index) {
   ctx.moveTo(0, lineY);
   ctx.lineTo(550, lineY);
   ctx.stroke();
-  
+
 });
 </pre>
 

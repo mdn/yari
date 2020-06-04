@@ -145,9 +145,9 @@ tags:
 <pre class="brush: js">let startPlayPromise = videoElem.play();
 
 if (startPlayPromise !== undefined) {
-  startPlayPromise.then(() =&gt; { 
-    // Start whatever you need to do only after playback 
-    // has begun. 
+  startPlayPromise.then(() =&gt; {
+    // Start whatever you need to do only after playback
+    // has begun.
   }).catch(error =&gt; {
     if (error.name === "NotAllowedError") {
       showPlayButton(videoElem);

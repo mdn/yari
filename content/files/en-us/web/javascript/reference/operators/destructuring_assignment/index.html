@@ -128,8 +128,8 @@ console.log(arr); // [1,3,2]
   return [1, 2];
 }
 
-let a, b; 
-[a, b] = f(); 
+let a, b;
+[a, b] = f();
 console.log(a); // 1
 console.log(b); // 2
 </pre>
@@ -168,27 +168,27 @@ console.log(b); // [2, 3]</pre>
 <pre class="brush: js example-bad">const [a, ...b,] = [1, 2, 3];
 
 // SyntaxError: rest element may not have a trailing comma
-// Always consider using rest operator as the last element 
+// Always consider using rest operator as the last element
 </pre>
 
 <h4 id="Unpacking_values_from_a_regular_expression_match">Unpacking values from a regular expression match</h4>
 
 <p>When the regular expression <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec"> exec()</a></code> method finds a match, it returns an array containing first the entire matched portion of the string and then the portions of the string that matched each parenthesized group in the regular expression. Destructuring assignment allows you to unpack the parts out of this array easily, ignoring the full match if it is not needed.</p>
 
-<pre class="brush:js">function parseProtocol(url) { 
+<pre class="brush:js">function parseProtocol(url) {
   const parsedURL = /^(\w+)\:\/\/([^\/]+)\/(.*)$/.exec(url);
   if (!parsedURL) {
     return false;
   }
-  console.log(parsedURL); 
-  // ["https://developer.mozilla.org/en-US/Web/JavaScript", 
+  console.log(parsedURL);
+  // ["https://developer.mozilla.org/en-US/Web/JavaScript",
       "https", "developer.mozilla.org", "en-US/Web/JavaScript"]
 
   const [, protocol, fullhost, fullpath] = parsedURL;
   return protocol;
 }
 
-console.log(parseProtocol('https://developer.mozilla.org/en-US/Web/JavaScript')); 
+console.log(parseProtocol('https://developer.mozilla.org/en-US/Web/JavaScript'));
 // "https"
 </pre>
 
@@ -204,7 +204,7 @@ console.log(parseProtocol('https://developer.mozilla.org/en-US/Web/JavaScript'))
 const {id, is_verified} = user;
 
 console.log(id); // 42
-console.log(is_verified); // true 
+console.log(is_verified); // true
 </pre>
 
 <h4 id="Assignment_without_declaration">Assignment without declaration</h4>
@@ -231,8 +231,8 @@ console.log(is_verified); // true
 
 <pre class="brush: js">const o = {p: 42, q: true};
 const {p: foo, q: bar} = o;
- 
-console.log(foo); // 42 
+
+console.log(foo); // 42
 console.log(bar); // true</pre>
 
 <p>Here, for example, <code>const {p: foo} = o</code> takes from the object <code>o</code> the property named <code>p</code> and assigns it to a local variable named <code>foo</code>.</p>
@@ -370,8 +370,8 @@ console.log(foo); // "bar"
 <p>The <a class="external external-icon" href="https://github.com/tc39/proposal-object-rest-spread">Rest/Spread Properties for ECMAScript</a> proposal (stage 4) adds the <a href="/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters">rest</a> syntax to destructuring. Rest properties collect the remaining own enumerable property keys that are not already picked off by the destructuring pattern.</p>
 
 <pre class="brush: js">let {a, b, ...rest} = {a: 10, b: 20, c: 30, d: 40}
-a; // 10 
-b; // 20 
+a; // 10
+b; // 20
 rest; // { c: 30, d: 40 }</pre>
 
 <h4 id="Invalid_JavaScript_identifier_as_a_property_name">Invalid JavaScript identifier as a property name</h4>

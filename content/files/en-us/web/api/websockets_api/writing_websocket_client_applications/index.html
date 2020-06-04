@@ -70,7 +70,7 @@ tags:
 
 <p>Once you've opened your connection, you can begin transmitting data to the server. To do this, simply call the <code>WebSocket</code> object's {{domxref("WebSocket.send", "send()")}} method for each message you want to send:</p>
 
-<pre class="brush: js">exampleSocket.send("Here's some text that the server is urgently awaiting!"); 
+<pre class="brush: js">exampleSocket.send("Here's some text that the server is urgently awaiting!");
 </pre>
 
 <p>You can send data as a string, {{ domxref("Blob") }}, or {{jsxref("ArrayBuffer")}}.</p>
@@ -78,7 +78,7 @@ tags:
 <p>As establishing a connection is asynchronous and prone to failure there is no guarantee that calling the <code>send()</code> method immediately after creating a WebSocket object will be successful. We can at least be sure that attempting to send data only takes place once a connection is established by defining an {{domxref("WebSocket.onopen", "onopen")}} event handler to do the work:</p>
 
 <pre class="brush: js">exampleSocket.onopen = function (event) {
-  exampleSocket.send("Here's some text that the server is urgently awaiting!"); 
+  exampleSocket.send("Here's some text that the server is urgently awaiting!");
 };
 </pre>
 
@@ -98,10 +98,10 @@ function sendText() {
 
   // Send the msg object as a JSON-formatted string.
   exampleSocket.send(JSON.stringify(msg));
-  
+
   // Blank the text input element, ready to receive the next line of text from the user.
   document.getElementById("text").value = "";
-} 
+}
 </pre>
 
 <h2 id="Receiving_messages_from_the_server">Receiving messages from the server</h2>
@@ -131,7 +131,7 @@ function sendText() {
   var msg = JSON.parse(event.data);
   var time = new Date(msg.date);
   var timeStr = time.toLocaleTimeString();
-  
+
   switch(msg.type) {
     case "id":
       clientID = msg.id;
@@ -154,7 +154,7 @@ function sendText() {
       document.getElementById("userlistbox").innerHTML = ul;
       break;
   }
-  
+
   if (text.length) {
     f.write(text);
     document.getElementById("chatbox").contentWindow.scrollByPages(1);

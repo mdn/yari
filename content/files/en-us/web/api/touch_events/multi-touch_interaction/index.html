@@ -117,10 +117,10 @@ function handle_pinch_zoom(ev) {
 <p>The {{event("touchstart")}} event handler caches touch points to support 2-touch gestures. It also calls {{domxref("Event.preventDefault","preventDefault()")}} to keep the browser from applying further event handling (for example, mouse event emulation).</p>
 
 <pre class="brush: js">function start_handler(ev) {
- // If the user makes simultaneous touches, the browser will fire a 
- // separate touchstart event for each touch point. Thus if there are 
- // three simultaneous touches, the first touchstart event will have 
- // targetTouches length of one, the second event will have a length 
+ // If the user makes simultaneous touches, the browser will fire a
+ // separate touchstart event for each touch point. Thus if there are
+ // three simultaneous touches, the first touchstart event will have
+ // targetTouches length of one, the second event will have a length
  // of two, and so on.
  ev.preventDefault();
  // Cache the touch points for later processing of 2-touch pinch/zoom
@@ -139,7 +139,7 @@ function handle_pinch_zoom(ev) {
 <p>The {{event("touchmove")}} handler calls {{domxref("Event.preventDefault","preventDefault()")}} for the same reason mentioned above, and invokes the pinch/zoom handler.</p>
 
 <pre class="brush: js">function move_handler(ev) {
- // Note: if the user makes more than one "simultaneous" touches, most browsers 
+ // Note: if the user makes more than one "simultaneous" touches, most browsers
  // fire at least one touchmove event and some will fire several touchmoves.
  // Consequently, an application might want to "ignore" some touchmoves.
  //
@@ -233,21 +233,21 @@ function handle_pinch_zoom(ev) {
 
 function log(name, ev, printTargetIds) {
   var o = document.getElementsByTagName('output')[0];
-  var s = name + ": touches = " + ev.touches.length + 
+  var s = name + ": touches = " + ev.touches.length +
                 " ; targetTouches = " + ev.targetTouches.length +
                 " ; changedTouches = " + ev.changedTouches.length;
-  o.innerHTML += s + " 
+  o.innerHTML += s + "
 ";
 
   if (printTargetIds) {
     s = "";
     for (var i=0; i &lt; ev.targetTouches.length; i++) {
-      s += "... id = " + ev.targetTouches[i].identifier + " 
+      s += "... id = " + ev.targetTouches[i].identifier + "
 ";
     }
     o.innerHTML += s;
   }
-} 
+}
 
 function clearLog(event) {
  var o = document.getElementsByTagName('output')[0];

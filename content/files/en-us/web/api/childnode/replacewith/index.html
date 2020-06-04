@@ -18,7 +18,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">[Throws, Unscopable] 
+<pre class="syntaxbox">[Throws, Unscopable]
 void ChildNode.replaceWith((Node or DOMString)... nodes);
 </pre>
 
@@ -54,7 +54,7 @@ console.log(parent.outerHTML);
 
 <p>The <code>replaceWith()</code> method is not scoped into the <code>with</code> statement. See {{jsxref("Symbol.unscopables")}} for more information.</p>
 
-<pre class="brush: js">with(node) { 
+<pre class="brush: js">with(node) {
   replaceWith("foo");
 }
 // ReferenceError: replaceWith is not defined </pre>
@@ -87,7 +87,7 @@ if (!Element.prototype.replaceWith)
     Element.prototype.replaceWith = ReplaceWithPolyfill;
 if (!CharacterData.prototype.replaceWith)
     CharacterData.prototype.replaceWith = ReplaceWithPolyfill;
-if (!DocumentType.prototype.replaceWith) 
+if (!DocumentType.prototype.replaceWith)
     DocumentType.prototype.replaceWith = ReplaceWithPolyfill;</pre>
 
 <h2 id="Specification">Specification</h2>

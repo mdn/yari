@@ -105,14 +105,14 @@ gl.framebufferTexture2D(gl.FRAMEBUFFER, ext.COLOR_ATTACHMENT3_WEBGL, gl.TEXTURE_
 <p>Shader code that writes to multiple textures:</p>
 
 <pre class="brush: html">&lt;script type="x-shader/x-fragment"&gt;
-#extension GL_EXT_draw_buffers : require 
+#extension GL_EXT_draw_buffers : require
 
-precision highp float; 
+precision highp float;
 
-void main(void) { 
-  gl_FragData[0] = vec4(0.25); 
+void main(void) {
+  gl_FragData[0] = vec4(0.25);
   gl_FragData[1] = vec4(0.5);
-  gl_FragData[2] = vec4(0.75); 
+  gl_FragData[2] = vec4(0.75);
   gl_FragData[3] = vec4(1.0);
 }
 &lt;/script&gt;</pre>

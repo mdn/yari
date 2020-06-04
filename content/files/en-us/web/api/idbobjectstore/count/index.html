@@ -72,7 +72,7 @@ var <code>request</code> = <em>ObjectStore</em>.count(<em>query</em>);
 
 <pre class="brush: js">var transaction = db.transaction(['fThings'], 'readonly');
 var objectStore = transaction.objectStore('fThings');
-    
+
 var countRequest = objectStore.count();
 countRequest.onsuccess = function() {
   console.log(countRequest.result);

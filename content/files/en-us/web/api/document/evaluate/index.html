@@ -35,10 +35,10 @@ tags:
 
 <h2 id="Example" name="Example">Example</h2>
 
-<pre class="brush: js">var headings = document.evaluate("/html/body//h2", document, null, XPathResult.ANY_TYPE, null); 
-/* Search the document for all h2 elements.  
+<pre class="brush: js">var headings = document.evaluate("/html/body//h2", document, null, XPathResult.ANY_TYPE, null);
+/* Search the document for all h2 elements.
  * The result will likely be an unordered node iterator. */
-var thisHeading = headings.iterateNext(); 
+var thisHeading = headings.iterateNext();
 var alertText = "Level 2 headings in this document are:\n";
 while (thisHeading) {
   alertText += thisHeading.textContent + "\n";

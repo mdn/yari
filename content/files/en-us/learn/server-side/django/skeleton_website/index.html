@@ -63,7 +63,7 @@ tags:
 
 <p>First open a command prompt/terminal, make sure you are in your <a href="/en-US/docs/Learn/Server-side/Django/development_environment#Using_a_virtual_environment">virtual environment</a>, navigate <span style="line-height: 1.5;">to where you want to store your Django apps (make it somewhere easy to find like inside your <em>documents</em> folder), and create a folder for your new website (in this case: </span><em>django_projects</em>). Then enter into the folder using the cd command:</p>
 
-<pre class="brush: bash">mkdir django_projects 
+<pre class="brush: bash">mkdir django_projects
 cd django_projects</pre>
 
 <p>Create the new project using the <code>django-admin startproject</code> command as shown, and then navigate into the folder.</p>
@@ -226,7 +226,7 @@ urlpatterns = [
 
 <p>Add the lines below to the bottom of the file in order to add a new list item to the <code>urlpatterns</code> list. This new item includes a <code>path()</code> that forwards requests with the pattern <code>catalog/</code> to the module <code>catalog.urls</code> (the file with the relative URL <strong>catalog/urls.py</strong>).</p>
 
-<pre class="brush: python"># Use include() to add paths from the catalog application 
+<pre class="brush: python"># Use include() to add paths from the catalog application
 from django.urls import include
 
 urlpatterns += [
@@ -255,8 +255,8 @@ urlpatterns += [
 <pre class="brush: python">System check identified some issues:
 
 WARNINGS:
-?: (urls.W002) Your URL pattern '/' has a route beginning with a '/'. 
-Remove this slash as it is unnecessary. 
+?: (urls.W002) Your URL pattern '/' has a route beginning with a '/'.
+Remove this slash as it is unnecessary.
 If this pattern is targeted in an include(), ensure the include() pattern has a trailing '/'.
 </pre>
 

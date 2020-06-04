@@ -59,7 +59,7 @@ tags:
 
 <p>This method can be used in almost the same way as {{jsxref("String.prototype.replace()")}}, except the different <code>this</code> and the different arguments order.</p>
 
-<pre class="brush: js">var re = /-/g; 
+<pre class="brush: js">var re = /-/g;
 var str = '2016-01-01';
 var newstr = re[Symbol.replace](str, '.');
 console.log(newstr);  // 2016.01.01

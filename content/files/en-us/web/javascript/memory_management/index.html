@@ -32,16 +32,16 @@ tags:
 <p>In order to not bother the programmer with allocations, JavaScript will automatically allocate memory when values are initially declared.</p>
 
 <pre class="brush: js">var n = 123; // allocates memory for a number
-var s = 'azerty'; // allocates memory for a string 
+var s = 'azerty'; // allocates memory for a string
 
 var o = {
   a: 1,
   b: null
 }; // allocates memory for an object and contained values
 
-// (like object) allocates memory for the array and 
+// (like object) allocates memory for the array and
 // contained values
-var a = [1, null, 'abra']; 
+var a = [1, null, 'abra'];
 
 function f(a) {
   return a + 2;
@@ -65,13 +65,13 @@ var e = document.createElement('div'); // allocates a DOM element</pre>
 
 <pre class="brush: js">var s = 'azerty';
 var s2 = s.substr(0, 3); // s2 is a new string
-// Since strings are immutable values, 
-// JavaScript may decide to not allocate memory, 
+// Since strings are immutable values,
+// JavaScript may decide to not allocate memory,
 // but just store the [0, 3] range.
 
 var a = ['ouais ouais', 'nan nan'];
 var a2 = ['generation', 'nan nan'];
-var a3 = a.concat(a2); 
+var a3 = a.concat(a2);
 // new array with 4 elements being
 // the concatenation of a and a2 elements.
 </pre>
@@ -104,11 +104,11 @@ var a3 = a.concat(a2);
 
 <h4 id="Example">Example</h4>
 
-<pre class="brush: js">var x = { 
+<pre class="brush: js">var x = {
   a: {
     b: 2
   }
-}; 
+};
 // 2 objects are created. One is referenced by the other as one of its properties.
 // The other is referenced by virtue of being assigned to the 'x' variable.
 // Obviously, none can be garbage-collected.
@@ -120,15 +120,15 @@ x = 1;          // Now, the object that was originally in 'x' has a unique refer
                 //   embodied by the 'y' variable.
 
 var z = y.a;    // Reference to 'a' property of the object.
-                //   This object now has 2 references: one as a property, 
+                //   This object now has 2 references: one as a property,
                 //   the other as the 'z' variable.
 
 y = 'mozilla';  // The object that was originally in 'x' has now zero
                 //   references to it. It can be garbage-collected.
-                //   However its 'a' property is still referenced by 
+                //   However its 'a' property is still referenced by
                 //   the 'z' variable, so it cannot be freed.
 
-z = null;       // The 'a' property of the object originally in x 
+z = null;       // The 'a' property of the object originally in x
                 //   has zero references to it. It can be garbage collected.
 </pre>
 

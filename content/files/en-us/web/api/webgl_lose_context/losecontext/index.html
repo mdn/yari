@@ -29,7 +29,7 @@ tags:
 var gl = canvas.getContext('webgl');
 
 canvas.addEventListener('webglcontextlost', function(e) {
-  console.log(e); 
+  console.log(e);
 }, false);
 
 gl.getExtension('WEBGL_lose_context').loseContext();

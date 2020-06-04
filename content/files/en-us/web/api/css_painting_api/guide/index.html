@@ -32,20 +32,20 @@ tags:
 
 <pre class="brush: js">registerPaint('headerHighlight', class {
 
-  /* 
+  /*
        define if alphatransparency  is allowed alpha
-       is set to true by default. If set to false, all 
-       colours used on the canvas will be fully opaque 
+       is set to true by default. If set to false, all
+       colours used on the canvas will be fully opaque
     */
-  static get contextOptions() { 
-           return { alpha: true }; 
+  static get contextOptions() {
+           return { alpha: true };
     }
 
     /*
-        <strong>ctx</strong> is the 2D drawing context 
+        <strong>ctx</strong> is the 2D drawing context
         a subset of the <a href="/en-US/docs/Web/API/Canvas_API">HTML5 Canvas API</a>.
     */
-  paint(ctx) {  
+  paint(ctx) {
         ctx.fillStyle = 'hsla(55, 90%, 60%, 1.0)';
         ctx.fillRect(0, 15, 200, 20);     /* order: x, y, w, h */
   }
@@ -113,16 +113,16 @@ tags:
 
 <pre class="brush: js">registerPaint('headerHighlight', class {
 
-  static get contextOptions() { 
-           return { alpha: true }; 
+  static get contextOptions() {
+           return { alpha: true };
   }
 
     /*
-        <strong>ctx</strong> is the 2D drawing context 
+        <strong>ctx</strong> is the 2D drawing context
         <strong>size</strong> is the paintSize, the dimensions (height and width) of the box being painted
     */
 
-  paint(ctx, size) {  
+  paint(ctx, size) {
         ctx.fillStyle = 'hsla(55, 90%, 60%, 1.0)';
         ctx.fillRect( 0, size.height / 3, size.width * 0.4, size.height * 0.6 );
   }
@@ -145,7 +145,7 @@ tags:
 <pre class="brush: css">.fancy {
   background-image: paint(headerHighlight);
 }
-.half { 
+.half {
     width: 50%;
 }</pre>
 
@@ -172,7 +172,7 @@ tags:
 
      paint(drawingContext, elementSize, styleMap) {
          // Paint code goes here.
-     } 
+     }
 });
 </pre>
 
@@ -216,12 +216,12 @@ tags:
    --boxColor: hsla(55, 90%, 60%, 1.0);
 }
 
-li:nth-of-type(3n) { 
+li:nth-of-type(3n) {
    --boxColor: hsla(155, 90%, 60%, 1.0);
    --widthSubtractor: 20;
 }
 
-li:nth-of-type(3n+1) { 
+li:nth-of-type(3n+1) {
    --boxColor: hsla(255, 90%, 60%, 1.0);
    --widthSubtractor: 40;
 }</pre>
@@ -233,8 +233,8 @@ li:nth-of-type(3n+1) {
 
   static get contextOptions() { return {alpha: true}; }
 
-  /* 
-     use this function to retrieve any custom properties (or regular properties, such as 'height') 
+  /*
+     use this function to retrieve any custom properties (or regular properties, such as 'height')
      defined for the element, return them in the specified array
   */
   <strong>static get inputProperties() { return ['--boxColor', '--widthSubtractor']; }</strong>
@@ -246,7 +246,7 @@ li:nth-of-type(3n+1) {
        props -&gt; properties: get() method
     */
 
-    ctx.fillStyle = <strong>props.get('--boxColor')</strong>; 
+    ctx.fillStyle = <strong>props.get('--boxColor')</strong>;
     ctx.fillRect(0, size.height/3, size.width*0.4 - <strong>props.get('--widthSubtractor')</strong>, size.height*0.6);
   }
 });</pre>
@@ -283,7 +283,7 @@ li:nth-of-type(3n+1) {
         const color = props.get('--highColour');
 
 		ctx.fillStyle = color;
-		
+
 		ctx.beginPath();
 		ctx.moveTo( x, y );
 		ctx.lineTo( blockWidth, y );
@@ -498,12 +498,12 @@ h6 { --highColour: hsla(355, 90%, 60%, 0.3); }</pre>
    background-image: paint(hollowHighlights, stroke, 5px);
 }
 
-li:nth-of-type(3n) { 
+li:nth-of-type(3n) {
    --boxColor: hsla(255, 90%, 60%, 0.5);
    background-image: paint(hollowHighlights, filled,  3px);
 }
 
-li:nth-of-type(3n+1) { 
+li:nth-of-type(3n+1) {
    --boxColor: hsla(355, 90%, 60%, 0.5);
    background-image: paint(hollowHighlights, stroke, 1px);
 }</pre>

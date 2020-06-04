@@ -137,9 +137,9 @@ tags:
 
 <p>We can use these values to measure specific timings of interest:</p>
 
-<pre class="brush: js">let 
+<pre class="brush: js">let
     dns  = time.domainLookupEnd - time.domainLookupStart,
-    tcp  = time.connectEnd - time.connectStart, 
+    tcp  = time.connectEnd - time.connectStart,
     ssl != time.<code>secureConnectionStart</code>,</pre>
 
 <h3 id="Time_to_first_byte">Time to first byte</h3>
@@ -193,8 +193,8 @@ performance.getEntriesByType("measure").forEach((measure) =&gt; {
   console.dir(measure);
 });
 
-performance.getEntriesByType('paint').forEach((paint) =&gt; { 
-  console.dir(paint); 
+performance.getEntriesByType('paint').forEach((paint) =&gt; {
+  console.dir(paint);
 });
 
 performance.getEntriesByType('frame').forEach((frame) =&gt; {

@@ -55,7 +55,7 @@ tags:
 
 <p>When the following code is used inside the main thread to set up a message channel between it and a service worker for sending messages between the two, the event object of <code>onmessage</code> will be a <code>ServiceWorkerMessageEvent</code>.</p>
 
-<pre class="brush: js">navigator.serviceWorker.ready.then(function(reg) {  
+<pre class="brush: js">navigator.serviceWorker.ready.then(function(reg) {
 
   ...
 
@@ -65,7 +65,7 @@ tags:
         console.log(e);
         handleChannelMessage(e.data);
       }
-      
+
       mySW = reg.active;
       mySW.postMessage('hello', [channel.port2]);
   });</pre>

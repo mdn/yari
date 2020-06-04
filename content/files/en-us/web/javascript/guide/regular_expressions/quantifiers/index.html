@@ -114,7 +114,7 @@ console.table(sentence.match(loooongWord));      // ["multiplication"]
 <pre class="brush: js">var britishText = "He asked his neighbour a favour.";
 var americanText = "He asked his neighbor a favor.";
 
-var regexpEnding = /\w+ou?r/g; 
+var regexpEnding = /\w+ou?r/g;
 // \w+ One or several letters
 // o   followed by an "o",
 // u?  optionally followed by a "u"
@@ -132,7 +132,7 @@ console.table(americanText.match(regexpEnding));
 <pre class="brush: js">var text = "I must be getting somewhere near the centre of the earth.";
 var greedyRegexp = /[\w ]+/;
 // [\w ]      a letter of the latin alphabet or a whitespace
-//      +     one or several times 
+//      +     one or several times
 
 console.log(text.match(greedyRegexp)[0]);
 // "I must be getting somewhere near the centre of the earth"

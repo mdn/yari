@@ -95,7 +95,7 @@ console.info(array); // ["a", "b", 0, 1, 2]
 const numbers = [5, 6, 2, 3, 7];
 
 // using Math.min/Math.max apply
-let max = Math.max.apply(null, numbers); 
+let max = Math.max.apply(null, numbers);
 // This about equal to Math.max(numbers[0], ...)
 // or Math.max(5, 6, ...)
 
@@ -125,7 +125,7 @@ for (let i = 0; i &lt; numbers.length; i++) {
   let QUANTUM = 32768;
 
   for (var i = 0, len = arr.length; i &lt; len; i += QUANTUM) {
-    var submin = Math.min.apply(null, 
+    var submin = Math.min.apply(null,
                                 arr.slice(i, Math.min(i+QUANTUM, len)));
     min = Math.min(submin, min);
   }
@@ -165,8 +165,8 @@ let min = minOfArray([5, 6, 2, 3, 7]);
 <p>Using <a href="/en-US/docs/Web/JavaScript/Closures">closures</a>:</p>
 
 <pre class="brush: js">Function.prototype.construct = function(aArgs) {
-  let fConstructor = this, fNewConstr = function() { 
-    fConstructor.apply(this, aArgs); 
+  let fConstructor = this, fNewConstr = function() {
+    fConstructor.apply(this, aArgs);
   };
   fNewConstr.prototype = fConstructor.prototype;
   return new fNewConstr();

@@ -47,13 +47,13 @@ for (let letter of iterator) {
 <h3 id="Iteration_using_.next">Iteration using .next()</h3>
 
 <pre class="brush: js">var arr = ['a', 'b', 'c', 'd', 'e'];
-var iterator = arr.values(); 
+var iterator = arr.values();
 iterator.next();               // Object { value: "a", done: false }
 iterator.next().value;         // "b"
 iterator.next()["value"];      // "c"
 iterator.next();               // Object { value: "d", done: false }
 iterator.next();               // Object { value: "e", done: false }
-iterator.next();               // Object { value: undefined, done: true } 
+iterator.next();               // Object { value: undefined, done: true }
 iteraror.next().value;         // undefined </pre>
 
 <div class="blockIndicator warning">
@@ -65,22 +65,22 @@ iteraror.next().value;         // undefined </pre>
 <pre class="brush: js">var arr = ['a', 'b', 'c', 'd', 'e'];
  var iterator = arr.values();
  for (let letter of iterator) {
- console.log(letter); 
+ console.log(letter);
 } //"a" "b" "c" "d" "e"
 for (let letter of iterator) {
 console.log(letter);
-} // undefined 
+} // undefined
 </pre>
 
 <p><strong>reason:</strong> When <code>next().done=true</code>  or  <code>currentIndex&gt;length</code> the <code>for..of</code> loop ends. See <a href="/en-US/docs/Web/JavaScript/Reference/Iteration_protocols">Iteration protocols.</a></p>
 
 <p><strong>Value</strong>: there are no values stored in the array Iterator object; instead it stores the address of the array used in its creation and so depends on the values stored in that array.</p>
 
-<pre class="brush: js">var arr = ['a', 'b', 'c', 'd', 'e']; 
+<pre class="brush: js">var arr = ['a', 'b', 'c', 'd', 'e'];
 var iterator = arr.values();
 console.log(iterator);        // Array Iterator {  }
 iterator.next().value;        // "a"
-arr[1]='n';                 
+arr[1]='n';
 iterator.next().value;        //  "n"
 </pre>
 

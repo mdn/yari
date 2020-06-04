@@ -91,7 +91,7 @@ ocn.p = 0; // create a simple property on "null" obj
 
 <pre class="brush: js">// display top-level property name:value pairs of given object
 function ShowProperties(obj){
-  for(var prop in obj){  
+  for(var prop in obj){
     console.log(prop + ": " + obj[prop] + "\n" );
   }
 }</pre>
@@ -152,7 +152,7 @@ ocn.prototype.toString = Object.toString; // since new object lacks method then 
 <p><br>
  Adding the missing object-method by using the standard-object<strong> </strong>as new object's prototype does not work either:</p>
 
-<pre class="brush: js">ocn = Object.create( null );        // create "null" object (same as before) 
+<pre class="brush: js">ocn = Object.create( null );        // create "null" object (same as before)
 Object.setPrototypeOf(ocn, Object); // set new object's prototype to the standard-object
 
 &gt; ocn.toString() // error: Function.prototype.toString requires that 'this' be a Function
@@ -324,7 +324,7 @@ o = new Constructor();
 // is equivalent to:
 o = Object.create(Constructor.prototype);
 // Of course, if there is actual initialization code
-// in the Constructor function, 
+// in the Constructor function,
 // the Object.create() cannot reflect it
 
 
@@ -358,7 +358,7 @@ o2 = Object.create({}, {
 });
 /* is not equivalent to:
 This will create an object with prototype : {p: 42 }
-o2 = Object.create({p: 42}) */ 
+o2 = Object.create({p: 42}) */
 
 
 

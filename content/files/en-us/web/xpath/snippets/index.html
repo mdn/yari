@@ -107,7 +107,7 @@ function docEvaluateArray (expr, doc, context, resolver) {
     doc = doc || (context ? context.ownerDocument : document);
     resolver = resolver || null;
     context = context || doc;
-	
+
     result = doc.evaluate(expr, context, resolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
     for(i = 0; i &lt; result.snapshotLength; i++) {
         a[i] = result.snapshotItem(i);
@@ -125,8 +125,8 @@ function docEvaluateArray (expr, doc, context, resolver) {
 <pre class="brush: js">function getXPathForElement(el, xml) {
 	var xpath = '';
 	var pos, tempitem2;
-	
-	while(el !== xml.documentElement) {		
+
+	while(el !== xml.documentElement) {
 		pos = 0;
 		tempitem2 = el;
 		while(tempitem2) {
@@ -135,7 +135,7 @@ function docEvaluateArray (expr, doc, context, resolver) {
 			}
 			tempitem2 = tempitem2.previousSibling;
 		}
-		
+
 		xpath = "*[name()='"+el.nodeName+"' and namespace-uri()='"+(el.namespaceURI===null?'':el.namespaceURI)+"']["+pos+']'+'/'+xpath;
 
 		el = el.parentNode;

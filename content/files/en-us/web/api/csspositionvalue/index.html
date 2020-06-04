@@ -45,8 +45,8 @@ tags:
 <pre class="brush: js">let replacedEl = document.getElementById( 'image' );
 let position = new CSSPositionValue( CSS.px(35), CSS.px(40) );
 
-replacedEl.attributeStyleMap.set( 'object-position', position ); 
-console.log( position.x.value, position.y.value ); 
+replacedEl.attributeStyleMap.set( 'object-position', position );
+console.log( position.x.value, position.y.value );
 console.log( replacedEl.computedStyleMap().get('object-position') );</pre>
 
 <p>We set the {{cssxref('object-position')}} property, then check the values returned.</p>

@@ -161,7 +161,7 @@ editCancelled() {
 <p>Next, add a <code>mounted()</code> property just inside your component object — <strong>note that this should not be put inside the <code>methods</code> property, but rather at the same hierarchy level as <code>props</code>, <code>data()</code>, and <code>methods</code>.</strong> Lifecycle methods are special methods that sit on their own, not alongside the user-defined methods. This should take no inputs. Note that you cannot use an arrow function here since we need access to <code>this</code> to access our <code>labelInput</code> ref.</p>
 
 <pre class="brush: js">mounted() {
-    
+
 }</pre>
 
 <p>Inside your <code>mounted()</code> method, assign your <code>labelInput</code> ref to a variable, and then call the <code>focus()</code> function of the ref. You don't have to use <code>$nextTick</code> here because the component has already been added to the DOM when <code>mounted()</code> is called.</p>

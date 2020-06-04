@@ -73,10 +73,10 @@ tags:
 
 <h3 id="Example_HPKP_Header">Example HPKP Header</h3>
 
-<pre>Public-Key-Pins: 
-  pin-sha256="cUPcTAZWKaASuYWhhneDttWpY3oBAkE3h2+soZS7sWs="; 
-  pin-sha256="M8HztCzM3elUxkcjR2S5P4hhyBNf6lHkmjAHKhpGPWE="; 
-  max-age=5184000; includeSubDomains; 
+<pre>Public-Key-Pins:
+  pin-sha256="cUPcTAZWKaASuYWhhneDttWpY3oBAkE3h2+soZS7sWs=";
+  pin-sha256="M8HztCzM3elUxkcjR2S5P4hhyBNf6lHkmjAHKhpGPWE=";
+  max-age=5184000; includeSubDomains;
   report-uri="<em>https://www.example.org/hpkp-report"</em></pre>
 
 <p>In this example, <strong>pin-sha256="cUPcTAZWKaASuYWhhneDttWpY3oBAkE3h2+soZS7sWs="</strong> pins the server's public key used in production. The second pin declaration <strong>pin-sha256="M8HztCzM3elUxkcjR2S5P4hhyBNf6lHkmjAHKhpGPWE="</strong> also pins the backup key. <strong>max-age=5184000</strong> tells the client to store this information for two months, which is a reasonable time limit according to the IETF RFC. This key pinning is also valid for all subdomains, which is told by the <strong>includeSubDomains</strong> declaration. Finally, <strong>report-uri="https://www.example.net/hpkp-report"</strong> explains where to report pin validation failures.</p>

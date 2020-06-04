@@ -31,7 +31,7 @@ tags:
 
 <pre class="brush: js;highlight:[8,9,10]">DBOpenRequest.onupgradeneeded = function(event) {
   var db = event.target.result;
-    
+
   db.onerror = function() {
     note.innerHTML += '&lt;li&gt;Error opening database.&lt;/li&gt;';
   };
@@ -41,11 +41,11 @@ tags:
   };
 
   // Create an objectStore for this database
-    
+
   var objectStore = db.createObjectStore("toDoList", { keyPath: "taskTitle" });
-    
+
   // define what data items the objectStore will contain
-    
+
   objectStore.createIndex("hours", "hours", { unique: false });
   objectStore.createIndex("minutes", "minutes", { unique: false });
   objectStore.createIndex("day", "day", { unique: false });
@@ -53,7 +53,7 @@ tags:
   objectStore.createIndex("year", "year", { unique: false });
 
   objectStore.createIndex("notified", "notified", { unique: false });
-    
+
   note.innerHTML += '&lt;li&gt;Object store created.&lt;/li&gt;';
 };</pre>
 

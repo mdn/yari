@@ -79,7 +79,7 @@ function sendData( data ) {
     urlEncodedDataPairs.push( encodeURIComponent( name ) + '=' + encodeURIComponent( data[name] ) );
   }
 
-  // Combine the pairs into a single string and replace all %-encoded spaces to 
+  // Combine the pairs into a single string and replace all %-encoded spaces to
   // the '+' character; matches the behaviour of browser form submissions.
   urlEncodedData = urlEncodedDataPairs.join( '&amp;' ).replace( /%20/g, '+' );
 
@@ -158,8 +158,8 @@ function sendData( data ) {
   XHR.send( FD );
 }
 
-btn.addEventListener( 'click', function() 
-  { sendData( {test:'ok'} ); 
+btn.addEventListener( 'click', function()
+  { sendData( {test:'ok'} );
 } )</pre>
 
 <p>Here's the live result:</p>
@@ -203,7 +203,7 @@ btn.addEventListener( 'click', function()
     // The data sent is what the user provided in the form
     XHR.send( FD );
   }
- 
+
   // Access the form element...
   const form = document.getElementById( "myForm" );
 
@@ -255,7 +255,7 @@ window.addEventListener( 'load', function () {
         dom    : document.getElementById( "theFile" ),
         binary : null
       };
- 
+
   // Use the FileReader API to access file content
   const reader = new FileReader();
 
@@ -275,7 +275,7 @@ window.addEventListener( 'load', function () {
     if( reader.readyState === FileReader.LOADING ) {
       reader.abort();
     }
-    
+
     reader.readAsBinaryString( file.dom.files[0] );
   } );
 
@@ -314,7 +314,7 @@ window.addEventListener( 'load', function () {
 
       // There's a blank line between the metadata and the data
       data += '\r\n';
-      
+
       // Append the binary data to our body's request
       data += file.binary + '\r\n';
     }

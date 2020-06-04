@@ -45,12 +45,12 @@ tags:
 
 <h4 id="CSS">CSS</h4>
 
-<pre class="brush:css">q::before { 
+<pre class="brush:css">q::before {
   content: "«";
   color: blue;
 }
 
-q::after { 
+q::after {
   content: "»";
   color: red;
 }</pre>
@@ -134,7 +134,7 @@ li.done::before {
 <pre class="brush: js">var list = document.querySelector('ul');
 list.addEventListener('click', function(ev) {
   if (ev.target.tagName === 'LI') {
-     ev.target.classList.toggle('done'); 
+     ev.target.classList.toggle('done');
   }
 }, false);
 </pre>
@@ -171,7 +171,7 @@ li {
 }
 
 li[aria-current='step'] {
-  font-weight:bold; 
+  font-weight:bold;
 }
 
 li[aria-current='step']::after {

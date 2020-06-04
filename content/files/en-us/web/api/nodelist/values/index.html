@@ -26,27 +26,27 @@ tags:
 
 <h2 id="Example">Example</h2>
 
-<pre class="brush: js;highlight:[13]">var node = document.createElement("div"); 
-var kid1 = document.createElement("p"); 
-var kid2 = document.createTextNode("hey"); 
-var kid3 = document.createElement("span"); 
+<pre class="brush: js;highlight:[13]">var node = document.createElement("div");
+var kid1 = document.createElement("p");
+var kid2 = document.createTextNode("hey");
+var kid3 = document.createElement("span");
 
-node.appendChild(kid1); 
-node.appendChild(kid2); 
-node.appendChild(kid3); 
+node.appendChild(kid1);
+node.appendChild(kid2);
+node.appendChild(kid3);
 
-var list = node.childNodes; 
+var list = node.childNodes;
 
-// Using for..of 
-for(var value of list.values()) { 
-  console.log(value); 
+// Using for..of
+for(var value of list.values()) {
+  console.log(value);
 }
 </pre>
 
 <p>The result is:</p>
 
-<pre>&lt;p&gt; 
-#text "hey" 
+<pre>&lt;p&gt;
+#text "hey"
 &lt;span&gt;
 </pre>
 

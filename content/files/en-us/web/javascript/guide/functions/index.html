@@ -98,7 +98,7 @@ console.log(factorial(3))
   return result;
 }
 const f = function(x) {
-   return x * x * x; 
+   return x * x * x;
 }
 let numbers = [0, 1, 2, 5, 10];
 let cube = map(f,numbers);
@@ -134,7 +134,7 @@ if (num === 0) {
 
 <pre class="brush: js">console.log(square(5));
 /* ... */
-function square(n) { return n * n } 
+function square(n) { return n * n }
 </pre>
 
 <p>The scope of a function is the function in which it is declared (or the entire program, if it is declared at the top level).</p>
@@ -146,8 +146,8 @@ function square(n) { return n * n }
 
 <pre class="brush: js example-bad">console.log(square)    // square is hoisted with an initial value undefined.
 console.log(square(5)) // Uncaught TypeError: square is not a function
-const square = function(n) { 
-  return n * n; 
+const square = function(n) {
+  return n * n;
 }
 </pre>
 </div>
@@ -200,11 +200,11 @@ multiply(); // Returns 60
 function getScore() {
   var num1 = 2,
       num2 = 3;
-  
+
   function add() {
     return name + ' scored ' + (num1 + num2);
   }
-  
+
   return add();
 }
 
@@ -263,7 +263,7 @@ loop(0);
 <p>However, some algorithms cannot be simple iterative loops. For example, getting all the nodes of a tree structure (such as the <a href="/en-US/docs/DOM">DOM</a>) is easier via recursion:</p>
 
 <pre class="brush: js">function walkTree(node) {
-  if (node == null) // 
+  if (node == null) //
     return;
   // do something with node
   for (var i = 0; i &lt; node.childNodes.length; i++) {
@@ -415,13 +415,13 @@ outside()(10); // returns 20 instead of 10
 
 <pre class="brush: js">var pet = function(name) {   // The outer function defines a variable called "name"
   var getName = function() {
-    return name;             // The inner function has access to the "name" variable of the outer 
+    return name;             // The inner function has access to the "name" variable of the outer
                              //function
   }
   return getName;            // Return the inner function, thereby exposing it to outer scopes
 }
 myPet = pet('Vivie');
-   
+
 myPet();                     // Returns "Vivie"
 </pre>
 
@@ -429,22 +429,22 @@ myPet();                     // Returns "Vivie"
 
 <pre class="brush: js">var createPet = function(name) {
   var sex;
-  
+
   return {
     setName: function(newName) {
       name = newName;
     },
-    
+
     getName: function() {
       return name;
     },
-    
+
     getSex: function() {
       return sex;
     },
-    
+
     setSex: function(newSex) {
-      if(typeof newSex === 'string' &amp;&amp; (newSex.toLowerCase() === 'male' || 
+      if(typeof newSex === 'string' &amp;&amp; (newSex.toLowerCase() === 'male' ||
         newSex.toLowerCase() === 'female')) {
         sex = newSex;
       }
@@ -465,7 +465,7 @@ pet.getName();                  // Oliver
 
 <pre class="brush: js">var getCode = (function() {
   var apiCode = '0]Eal(eh&amp;2';    // A code we do not want outsiders to be able to modify...
-  
+
   return function() {
     return apiCode;
   };
@@ -614,7 +614,7 @@ console.log(a3); // logs [8, 6, 7, 9]
   this.age = 0;
 
   setInterval(function growUp() {
-    // In nonstrict mode, the growUp() function defines `this` 
+    // In nonstrict mode, the growUp() function defines `this`
     // as the global object, which is different from the `this`
     // defined by the Person() constructor.
     this.age++;
@@ -626,7 +626,7 @@ var p = new Person();</pre>
 <p>In ECMAScript 3/5, this issue was fixed by assigning the value in <code>this</code> to a variable that could be closed over.</p>
 
 <pre class="brush: js">function Person() {
-  var self = this; // Some choose `that` instead of `self`. 
+  var self = this; // Some choose `that` instead of `self`.
                    // Choose one and be consistent.
   self.age = 0;
 

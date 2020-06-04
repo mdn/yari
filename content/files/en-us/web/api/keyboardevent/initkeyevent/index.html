@@ -27,9 +27,9 @@ tags:
 
 <h2 id="Syntax" name="Syntax">Syntax</h2>
 
-<pre class="syntaxbox"><em>event</em>.initKeyEvent (<em>type</em>, <em>bubbles</em>, <em>cancelable</em>, <em>viewArg</em>, 
-                    <em>ctrlKeyArg</em>, <em>altKeyArg</em>, <em>shiftKeyArg</em>, <em>metaKeyArg</em>, 
-                    <em>keyCodeArg</em>, <em>charCodeArg</em>) 
+<pre class="syntaxbox"><em>event</em>.initKeyEvent (<em>type</em>, <em>bubbles</em>, <em>cancelable</em>, <em>viewArg</em>,
+                    <em>ctrlKeyArg</em>, <em>altKeyArg</em>, <em>shiftKeyArg</em>, <em>metaKeyArg</em>,
+                    <em>keyCodeArg</em>, <em>charCodeArg</em>)
 </pre>
 
 <h3 id="Parameters">Parameters</h3>
@@ -61,15 +61,15 @@ tags:
 
 <pre class="brush: js">var event = document.createEvent('KeyboardEvent'); // create a key event
 // define the event
-event.initKeyEvent("keypress",       // typeArg,                                                           
-                   true,             // canBubbleArg,                                                        
-                   true,             // cancelableArg,                                                       
-                   null,             // viewArg,  Specifies UIEvent.view. This value may be null.     
-                   false,            // ctrlKeyArg,                                                               
-                   false,            // altKeyArg,                                                        
-                   false,            // shiftKeyArg,                                                      
-                   false,            // metaKeyArg,                                                       
-                    9,               // keyCodeArg,                                                      
+event.initKeyEvent("keypress",       // typeArg,
+                   true,             // canBubbleArg,
+                   true,             // cancelableArg,
+                   null,             // viewArg,  Specifies UIEvent.view. This value may be null.
+                   false,            // ctrlKeyArg,
+                   false,            // altKeyArg,
+                   false,            // shiftKeyArg,
+                   false,            // metaKeyArg,
+                    9,               // keyCodeArg,
                     0);              // charCodeArg);
 
 document.getElementById('blah').dispatchEvent(event);
@@ -81,11 +81,11 @@ document.getElementById('blah').dispatchEvent(event);
 
 <p>The <code>initKeyEvent</code> is the current Gecko equivalent of the DOM Level 3 Events (initially drafted and also deprecated in favor of {{domxref("KeyboardEvent.KeyboardEvent", "KeyboardEvent()")}} {{domxref("Keyboard.initKeyboardEvent()")}} method with the following arguments :</p>
 
-<pre class="eval">typeArg of type DOMString               
-canBubbleArg of type boolean            
-cancelableArg of type boolean           
-viewArg of type views::AbstractView     
-keyIdentifierArg of type DOMString      
-keyLocationArg of type unsigned long    
+<pre class="eval">typeArg of type DOMString
+canBubbleArg of type boolean
+cancelableArg of type boolean
+viewArg of type views::AbstractView
+keyIdentifierArg of type DOMString
+keyLocationArg of type unsigned long
 modifiersList of type DOMString);
 </pre>

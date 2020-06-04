@@ -29,8 +29,8 @@ tags:
 
 <h2 id="Example">Example</h2>
 
-<pre class="brush:js">var foo = document.getElementById("foo"); 
-if (foo.hasAttribute("bar")) { 
+<pre class="brush:js">var foo = document.getElementById("foo");
+if (foo.hasAttribute("bar")) {
     // do something
 }
 </pre>
@@ -39,7 +39,7 @@ if (foo.hasAttribute("bar")) {
 
 <pre class="brush:js">;(function(prototype) {
     prototype.hasAttribute = prototype.hasAttribute || function(name) {
-        return !!(this.attributes[name] &amp;&amp; 
+        return !!(this.attributes[name] &amp;&amp;
                   this.attributes[name].specified);
     }
 })(Element.prototype);

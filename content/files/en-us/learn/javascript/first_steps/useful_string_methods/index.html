@@ -245,7 +245,7 @@ const jsSolution = 'const list = document.querySelector(\'.output ul\');' +
 '\n                 \'Merry Christmas my love\',' +
 '\n                 \'A happy Christmas to all the family\',' +
 '\n                 \'You\\\'re all I want for Christmas\',' +
-'\n                 \'Get well soon\'];' + 
+'\n                 \'Get well soon\'];' +
 '\n' +
 '\nfor (let i = 0; i &lt; greetings.length; i++) {' +
 '\n  let input = greetings[i];' +
@@ -281,7 +281,7 @@ function insertAtCaret(text) {
   const caretPos = textarea.selectionStart;
   const front = (textarea.value).substring(0, caretPos);
   const back = (textarea.value).substring(textarea.selectionEnd, textarea.value.length);
-  
+
   textarea.value = front + text + back;
   caretPos = caretPos + text.length;
   textarea.selectionStart = caretPos;
@@ -522,7 +522,7 @@ let stations = ['MAN675847583748sjt567654;Manchester Piccadilly',
 
 for (let i = 0; i &lt; stations.length; i++) {
   let input = stations[i];
-  // write your code just below here   
+  // write your code just below here
 
   let result = input;
   let listItem = document.createElement('li');

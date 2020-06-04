@@ -62,7 +62,7 @@ console.log(o.a); // 1
 
 console.log(o.b); // 2
 // Is there a 'b' own property on o? Yes, and its value is 2.
-// The prototype also has a 'b' property, but it's not visited. 
+// The prototype also has a 'b' property, but it's not visited.
 // This is called Property Shadowing
 
 console.log(o.c); // 4
@@ -103,7 +103,7 @@ var p = Object.create(o);
 p.a = 4; // creates a property 'a' on p
 console.log(p.m()); // 5
 // when p.m is called, 'this' refers to p.
-// So when p inherits the function m of o, 
+// So when p inherits the function m of o,
 // 'this.a' means p.a, the property 'a' of p
 
 
@@ -121,7 +121,7 @@ console.log( doSomething.prototype );
 //  function in JavaScript will always have a default
 //  prototype property.
 //  (Ps: There is one exception that arrow function doesn't have a default prototype property)
-var doSomething = function(){}; 
+var doSomething = function(){};
 console.log( doSomething.prototype );
 </pre>
 
@@ -230,14 +230,14 @@ doSomething.prototype.foo:  bar</pre>
 
 // The newly created object o has Object.prototype as its [[Prototype]]
 // o has no own property named 'hasOwnProperty'
-// hasOwnProperty is an own property of Object.prototype. 
+// hasOwnProperty is an own property of Object.prototype.
 // So o inherits hasOwnProperty from Object.prototype
 // Object.prototype has null as its prototype.
 // o ---&gt; Object.prototype ---&gt; null
 
 var b = ['yo', 'whadup', '?'];
 
-// Arrays inherit from Array.prototype 
+// Arrays inherit from Array.prototype
 // (which has methods indexOf, forEach, etc.)
 // The prototype chain looks like:
 // b ---&gt; Array.prototype ---&gt; Object.prototype ---&gt; null
@@ -246,7 +246,7 @@ function f() {
   return 2;
 }
 
-// Functions inherit from Function.prototype 
+// Functions inherit from Function.prototype
 // (which has methods call, bind, etc.)
 // f ---&gt; Function.prototype ---&gt; Object.prototype ---&gt; null
 </pre>
@@ -275,7 +275,7 @@ var g = new Graph();
 
 <p>ECMAScript 5 introduced a new method: {{jsxref("Object.create()")}}. Calling this method creates a new object. The prototype of this object is the first argument of the function:</p>
 
-<pre class="brush: js">var a = {a: 1}; 
+<pre class="brush: js">var a = {a: 1};
 // a ---&gt; Object.prototype ---&gt; null
 
 var b = Object.create(a);
@@ -287,7 +287,7 @@ var c = Object.create(b);
 
 var d = Object.create(null);
 // d ---&gt; null
-console.log(d.hasOwnProperty); 
+console.log(d.hasOwnProperty);
 // undefined, because d doesn't inherit from Object.prototype
 </pre>
 
@@ -297,9 +297,9 @@ console.log(d.hasOwnProperty);
 
 <pre class="brush: js">var a = {a: 1};
 
-var b = Object.create(a); 
+var b = Object.create(a);
 
-console.log(a.a); // print 1 
+console.log(a.a); // print 1
 console.log(b.a); // print 1
 b.a=5;
 console.log(a.a); // print 1

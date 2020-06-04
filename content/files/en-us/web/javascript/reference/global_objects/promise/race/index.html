@@ -102,8 +102,8 @@ setTimeout(function(){
 });
 
 // logs, in order:
-// Promise { &lt;state&gt;: "pending" } 
-// Promise { &lt;state&gt;: "pending" } 
+// Promise { &lt;state&gt;: "pending" }
+// Promise { &lt;state&gt;: "pending" }
 // the stack is now empty
 // Promise { &lt;state&gt;: "fulfilled", &lt;value&gt;: 666 }
 // Promise { &lt;state&gt;: "fulfilled", &lt;value&gt;: "non-Promise value" }
@@ -111,11 +111,11 @@ setTimeout(function(){
 
 <h3 id="Using_Promise.race_–_examples_with_setTimeout">Using Promise.race – examples with setTimeout</h3>
 
-<pre class="brush: js">var p1 = new Promise(function(resolve, reject) { 
-    setTimeout(() =&gt; resolve('one'), 500); 
+<pre class="brush: js">var p1 = new Promise(function(resolve, reject) {
+    setTimeout(() =&gt; resolve('one'), 500);
 });
-var p2 = new Promise(function(resolve, reject) { 
-    setTimeout(() =&gt; resolve('two'), 100); 
+var p2 = new Promise(function(resolve, reject) {
+    setTimeout(() =&gt; resolve('two'), 100);
 });
 
 Promise.race([p1, p2])
@@ -124,11 +124,11 @@ Promise.race([p1, p2])
   // Both fulfill, but p2 is faster
 });
 
-var p3 = new Promise(function(resolve, reject) { 
+var p3 = new Promise(function(resolve, reject) {
     setTimeout(() =&gt; resolve('three'), 100);
 });
-var p4 = new Promise(function(resolve, reject) { 
-    setTimeout(() =&gt; reject(new Error('four')), 500); 
+var p4 = new Promise(function(resolve, reject) {
+    setTimeout(() =&gt; reject(new Error('four')), 500);
 });
 
 Promise.race([p3, p4])
@@ -139,10 +139,10 @@ Promise.race([p3, p4])
   // Not called
 });
 
-var p5 = new Promise(function(resolve, reject) { 
-    setTimeout(() =&gt; resolve('five'), 500); 
+var p5 = new Promise(function(resolve, reject) {
+    setTimeout(() =&gt; resolve('five'), 500);
 });
-var p6 = new Promise(function(resolve, reject) { 
+var p6 = new Promise(function(resolve, reject) {
     setTimeout(() =&gt; reject(new Error('six')), 100);
 });
 

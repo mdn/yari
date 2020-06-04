@@ -43,7 +43,7 @@ Symbol.keyFor(globalSym); // "foo"
 var localSym = Symbol();
 Symbol.keyFor(localSym); // undefined
 
-// well-known symbols are not symbols registered 
+// well-known symbols are not symbols registered
 // in the global symbol registry
 Symbol.keyFor(Symbol.iterator) // undefined
 </pre>

@@ -289,12 +289,12 @@ eachNode(box, function(node) {
 <pre class="brush: js;">function grep(parentNode, pattern) {
 	const matches = []
 	let endScan = false
-	
+
 	eachNode(parentNode, function(node){
 		if (endScan) {
 			return false
         }
-		
+
 		// Ignore anything which isn't a text node
 		if (node.nodeType !== Node.TEXT_NODE) {
 			return
@@ -315,7 +315,7 @@ eachNode(box, function(node) {
             }
 		}
 	})
-	
+
 	return matches
 }</pre>
 

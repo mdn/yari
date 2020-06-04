@@ -110,7 +110,7 @@ console.log(typeof someString[Symbol.iterator]); // "function"
 
 <pre class="brush: js">let iterator = someString[Symbol.iterator]();
 console.log(iterator + ''); // "[object String Iterator]"
- 
+
 console.log(iterator.next()); // { value: "h", done: false }
 console.log(iterator.next()); // { value: "i", done: false }
 console.log(iterator.next()); // { value: undefined, done: true }</pre>
@@ -190,9 +190,9 @@ new Set([1, 2, 3]).has(3); // true
 new Set('123').has('2');   // true
 
 new WeakSet(function* () {
-    yield {} 
-    yield myObj 
-    yield {} 
+    yield {}
+    yield myObj
+    yield {}
 }()).has(myObj);           // true
 </pre>
 
@@ -344,7 +344,7 @@ console.log(gen.next().value); // '2'
 const simple = new SimpleClass([1,2,3,4,5]);
 
 for (const val of simple) {
-  console.log(val); // '1' '2' '3' '4' '5' 
+  console.log(val); // '1' '2' '3' '4' '5'
 }
 </pre>
 

@@ -77,14 +77,14 @@ exports.genre_detail = function(req, res, <strong>next</strong>) {
 block content
 
   <strong>h1 Genre: #{genre.name}</strong>
-  
+
   div(style='margin-left:20px;margin-top:20px')
 
     h4 Books
-    
+
     dl
       each book in genre_books
-        dt 
+        dt
           a(href=book.url) #{book.title}
         dd #{book.summary}
 
@@ -114,7 +114,7 @@ block content
 <p>Then use <strong>mongoose.Types.ObjectId() </strong>to convert the id to a type that can be used. For example:</p>
 
 <pre class="brush: js">exports.genre_detail = function(req, res, next) {
-    var id = mongoose.Types.ObjectId(req.params.id);  
+    var id = mongoose.Types.ObjectId(req.params.id);
     ...
 </pre>
 </div>

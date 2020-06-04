@@ -40,18 +40,18 @@ tags:
 <p>To see an example of how <code>toURL()</code> works, see the <a href="#toURL">method description</a>. The snippet below shows you how you can remove a file by name.</p>
 
 <pre class="brush: js">// Taking care of the browser-specific prefixes.
-window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem; 
+window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
 
 ...
 
 // Opening a file system with temporary storage
 window.requestFileSystem(TEMPORARY, 1024*1024 /*1MB*/, function(fs) {
   fs.root.getFile('log.txt', {}, function(fileEntry) {
-    
+
     fileEntry.remove(function() {
       console.log('File removed.');
     }, onError);
-  
+
   }, onError);
 }, onError); </pre>
 

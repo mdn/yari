@@ -40,7 +40,7 @@ tags:
 
 self.addEventListener('messageerror', (event) =&gt; {
     self.postMessage('Error receiving message');
-    console.error(event);  
+    console.error(event);
 });</pre>
 
 <p>The same, but using the <code><a href="/en-US/docs/Web/API/WindowEventHandlers/onmessageerror">onmessageerror</a></code> event handler property:</p>
@@ -49,7 +49,7 @@ self.addEventListener('messageerror', (event) =&gt; {
 
 self.onmessageerror = (event) =&gt; {
     self.postMessage('Error receiving message');
-    console.error(event);  
+    console.error(event);
 };</pre>
 
 <h2 id="Specifications">Specifications</h2>

@@ -60,14 +60,14 @@ block content
 
 <strong>  h1 Author: #{author.name}</strong>
   p #{author.date_of_birth} - #{author.date_of_death}
-  
+
   div(style='margin-left:20px;margin-top:20px')
 
     h4 Books
-    
+
     dl
       each book in author_books
-        dt 
+        dt
           a(href=book.url) #{book.title}
         dd #{book.summary}
 

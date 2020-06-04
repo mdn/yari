@@ -596,7 +596,7 @@ Setting DJANGO_DEBUG and restarting locallibrary... done, v8</code></pre>
 <p>If you visit the site now you'll get a "Bad request" error, because the <a href="https://docs.djangoproject.com/en/2.1/ref/settings/#allowed-hosts">ALLOWED_HOSTS</a> setting is <em>required</em> if you have <code>DEBUG=False</code> (as a security measure). Open <strong>/locallibrary/settings.py</strong> and change the <code>ALLOWED_HOSTS</code> setting to include your base app url (e.g. 'locallibrary1234.herokuapp.com') and the URL you normally use on your local development server.</p>
 
 <pre class="brush: python">ALLOWED_HOSTS = ['&lt;your app URL without the https:// prefix&gt;.herokuapp.com','127.0.0.1']
-# For example: 
+# For example:
 # ALLOWED_HOSTS = ['fathomless-scrubland-30645.herokuapp.com', '127.0.0.1']
 </pre>
 

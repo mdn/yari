@@ -44,7 +44,7 @@ tags:
   if (source.handedness == user.handedness) {
     if (source.targetRayMode == "tracked-pointer") {
       let targetRayPose = event.frame.getPose(source.targetRaySpace, myRefSpace);
-      
+
       if (targetRayPose) {
         myHandleSelectWithRay(targetRayPose);
       }

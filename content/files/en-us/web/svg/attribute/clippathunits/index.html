@@ -23,22 +23,22 @@ tags:
   &lt;clipPath id="myClip1" clipPathUnits="userSpaceOnUse"&gt;
     &lt;circle cx="50" cy="50" r="35" /&gt;
   &lt;/clipPath&gt;
- 
+
   &lt;clipPath id="myClip2" clipPathUnits="objectBoundingBox"&gt;
     &lt;circle cx=".5" cy=".5" r=".35" /&gt;
   &lt;/clipPath&gt;
- 
+
   &lt;!-- Some reference rect to materialized to clip path --&gt;
   &lt;rect id="r1" x="0"  y="0"  width="45" height="45" /&gt;
   &lt;rect id="r2" x="0"  y="55" width="45" height="45" /&gt;
   &lt;rect id="r3" x="55" y="55" width="45" height="45" /&gt;
   &lt;rect id="r4" x="55" y="0"  width="45" height="45" /&gt;
- 
+
   &lt;!-- The first 3 rect are clipped with useSpaceOnUse units --&gt;
   &lt;use clip-path="url(#myClip1)" xlink:href="#r1" fill="red" /&gt;
   &lt;use clip-path="url(#myClip1)" xlink:href="#r2" fill="red" /&gt;
   &lt;use clip-path="url(#myClip1)" xlink:href="#r3" fill="red" /&gt;
- 
+
   &lt;!-- The last rect is clipped with objectBoundingBox units --&gt;
   &lt;use clip-path="url(#myClip2)" xlink:href="#r4" fill="red" /&gt;
 &lt;/svg&gt;</pre>

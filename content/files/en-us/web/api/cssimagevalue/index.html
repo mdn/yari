@@ -42,13 +42,13 @@ tags:
 
 <p>We get the element's style map. We then get() the background-image from the stylemap and stringify it:</p>
 
-<pre class="brush: js">// get the element 
-const button = document.querySelector( 'button' ); 
+<pre class="brush: js">// get the element
+const button = document.querySelector( 'button' );
 
-// Retrieve all computed styles with computedStyleMap() 
-const allComputedStyles = button.computedStyleMap(); 
+// Retrieve all computed styles with computedStyleMap()
+const allComputedStyles = button.computedStyleMap();
 
-// Return the CSSImageValue Example 
+// Return the CSSImageValue Example
 console.log( allComputedStyles.get('background-image') );
 console.log( allComputedStyles.get('background-image').toString() );
 </pre>

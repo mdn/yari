@@ -19,25 +19,25 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="brush:css no-line-numbers">/* Positional alignment */ 
+<pre class="brush:css no-line-numbers">/* Positional alignment */
 /* align-content does not take left and right values */
-place-content: center start;  
-place-content: start center; 
-place-content: end left; 
+place-content: center start;
+place-content: start center;
+place-content: end left;
 place-content: flex-start center;
-place-content: flex-end center; 
+place-content: flex-end center;
 
-/* Baseline alignment */ 
+/* Baseline alignment */
 /* justify-content does not take baseline values */
-place-content: baseline center; 
-place-content: first baseline space-evenly; 
+place-content: baseline center;
+place-content: first baseline space-evenly;
 place-content: last baseline right;
 
 /* Distributed alignment */
-place-content: space-between space-evenly; 
+place-content: space-between space-evenly;
 place-content: space-around space-evenly;
-place-content: space-evenly stretch; 
-place-content: stretch space-evenly; 
+place-content: space-evenly stretch;
+place-content: stretch space-evenly;
 
 /* Global values */
 place-content: inherit;
@@ -162,10 +162,10 @@ div &gt; div {
   &lt;option value="unsafe"&gt;unsafe&lt;/option&gt;
 &lt;/select&gt;
 ﻿&lt;select id="justifyContentAlignment"&gt;
-  &lt;option value="normal"&gt;normal&lt;/option&gt; 
-  &lt;option value="space-between"&gt;space-between&lt;/option&gt; 
-  &lt;option value="space-around"&gt;space-around&lt;/option&gt; 
-  &lt;option value="space-evenly"&gt;space-evenly&lt;/option&gt; 
+  &lt;option value="normal"&gt;normal&lt;/option&gt;
+  &lt;option value="space-between"&gt;space-between&lt;/option&gt;
+  &lt;option value="space-around"&gt;space-around&lt;/option&gt;
+  &lt;option value="space-evenly"&gt;space-evenly&lt;/option&gt;
   &lt;option value="stretch"&gt;stretch&lt;/option&gt;
   &lt;option value="center" selected&gt;center&lt;/option&gt;
   &lt;option value="start"&gt;start&lt;/option&gt;
@@ -179,8 +179,8 @@ div &gt; div {
 &lt;/select&gt;&lt;code&gt;;&lt;/code&gt;
 </pre>
 
-<pre class="brush: js">var update = function () { 
-   document.getElementById("container").style.placeContent = document.getElementById("alignContentAlignment").value + " " + document.getElementById("justifyContentAlignment").value; 
+<pre class="brush: js">var update = function () {
+   document.getElementById("container").style.placeContent = document.getElementById("alignContentAlignment").value + " " + document.getElementById("justifyContentAlignment").value;
 }
 
 var alignContentAlignment = document.getElementById("alignContentAlignment");
@@ -189,13 +189,13 @@ alignContentAlignment.addEventListener("change",  update);
 var justifyContentAlignment = document.getElementById("justifyContentAlignment");
 justifyContentAlignment.addEventListener("change", update);
 
-var writingM = document.getElementById("writingMode"); 
-writingM.addEventListener("change", function (evt) { 
-   document.getElementById("container").style.writingMode = evt.target.value; 
+var writingM = document.getElementById("writingMode");
+writingM.addEventListener("change", function (evt) {
+   document.getElementById("container").style.writingMode = evt.target.value;
 });
-var direction = document.getElementById("direction"); 
-direction.addEventListener("change", function (evt) { 
-   document.getElementById("container").style.direction = evt.target.value; 
+var direction = document.getElementById("direction");
+direction.addEventListener("change", function (evt) {
+   document.getElementById("container").style.direction = evt.target.value;
 });
 </pre>
 </div>

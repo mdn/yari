@@ -87,7 +87,7 @@ console.log(this.y); // undefined
 
   Thing = function() {
     this.someProperty = 'foo';
-    
+
     privateScope.set(this, {
       hidden: ++counter,
     });
@@ -136,7 +136,7 @@ switch(x) {
   case 0:
     let foo;
     break;
-    
+
   case 1:
     let foo; // SyntaxError for redeclaration.
     break;
@@ -150,7 +150,7 @@ switch(x) {
   case 0: {
     let foo;
     break;
-  }  
+  }
   case 1: {
     let foo;
     break;
@@ -224,7 +224,7 @@ if (a === 1) {
 
   console.log(a);  // 11
   console.log(b);  // 22
-} 
+}
 
 console.log(a); // 11
 console.log(b); // 2

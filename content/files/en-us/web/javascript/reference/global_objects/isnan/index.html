@@ -76,7 +76,7 @@ isNaN(new Date());                // false
 isNaN(new Date().toString());     // true
 
 // This is a false positive and the reason why isNaN is not entirely reliable
-isNaN('blabla');   // true: "blabla" is converted to a number. 
+isNaN('blabla');   // true: "blabla" is converted to a number.
                    // Parsing this as a number fails and returns NaN
 </pre>
 

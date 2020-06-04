@@ -85,11 +85,11 @@ myAudio.buffered.end(1);   // returns 19</pre>
     context.fillRect(0, 0, myCanvas.width, myCanvas.height);
     context.fillStyle = 'red';
     context.strokeStyle = 'white';
-    
+
     var inc = myCanvas.width / myAudio.duration;
 
     // display TimeRanges
-    
+
     myAudio.addEventListener('seeked', function() {
       for (i = 0; i &lt; myAudio.buffered.length; i++) {
 
@@ -161,7 +161,7 @@ myAudio.buffered.end(1);   // returns 19</pre>
 
 .progress {
   margin-top: -20px;
-  height: 20px;  
+  height: 20px;
   position: relative;
   width: 300px;
 }

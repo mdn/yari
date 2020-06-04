@@ -155,7 +155,7 @@ remoteConnection.ondatachannel = receiveChannelCallback;</pre>
 <pre class="brush: js">  function handleLocalAddCandidateSuccess() {
     connectButton.disabled = true;
   }
- 
+
   function handleRemoteAddCandidateSuccess() {
     disconnectButton.disabled = false;
   }</pre>
@@ -184,7 +184,7 @@ remoteConnection.ondatachannel = receiveChannelCallback;</pre>
 <pre class="brush: js">  function handleSendChannelStatusChange(event) {
     if (sendChannel) {
       var state = sendChannel.readyState;
-    
+
       if (state === "open") {
         messageInputBox.disabled = false;
         messageInputBox.focus();
@@ -222,7 +222,7 @@ remoteConnection.ondatachannel = receiveChannelCallback;</pre>
 <pre class="brush: js">  function sendMessage() {
     var message = messageInputBox.value;
     sendChannel.send(message);
-    
+
     messageInputBox.value = "";
     messageInputBox.focus();
   }</pre>
@@ -236,7 +236,7 @@ remoteConnection.ondatachannel = receiveChannelCallback;</pre>
 <pre class="brush: js">  function handleReceiveMessage(event) {
     var el = document.createElement("p");
     var txtNode = document.createTextNode(event.data);
-    
+
     el.appendChild(txtNode);
     receiveBox.appendChild(el);
   }</pre>
@@ -248,14 +248,14 @@ remoteConnection.ondatachannel = receiveChannelCallback;</pre>
 <p>When the user clicks the "Disconnect" button, the <code>disconnectPeers()</code> method previously set as that button's handler is called.</p>
 
 <pre class="brush: js">  function disconnectPeers() {
- 
+
     // Close the RTCDataChannels if they're open.
-    
+
     sendChannel.close();
     receiveChannel.close();
-    
+
     // Close the RTCPeerConnections
-    
+
     localConnection.close();
     remoteConnection.close();
 
@@ -263,13 +263,13 @@ remoteConnection.ondatachannel = receiveChannelCallback;</pre>
     receiveChannel = null;
     localConnection = null;
     remoteConnection = null;
-    
+
     // Update user interface elements
-    
+
     connectButton.disabled = false;
     disconnectButton.disabled = true;
     sendButton.disabled = true;
-    
+
     messageInputBox.value = "";
     messageInputBox.disabled = true;
   }

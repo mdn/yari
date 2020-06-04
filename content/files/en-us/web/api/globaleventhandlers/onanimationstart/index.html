@@ -76,7 +76,7 @@ tags:
   color: white;
   background-color: darkgreen;
   font: 14px "Open Sans", "Arial", sans-serif;
-} 
+}
 
 #text {
   width: 46px;
@@ -86,7 +86,7 @@ tags:
   align-self: center;
   color: white;
   font: bold 1.4em "Lucida Grande", "Open Sans", sans-serif;
-} 
+}
 
  </pre>
 </div>
@@ -104,8 +104,8 @@ tags:
   background-color: #2233FF;
   display: flex;
   justify-content: center;
-} 
- 
+}
+
 </pre>
 
 <p>The animation sequence is described next. First, the <code>"slideAnimation"</code> class, which establishes the {{cssxref("animation")}} that will cause the box to move over the course of five seconds, one time, using the <code>"slideBox"</code> keyframe set. The keyframes are defined next; they describe an animation which causes the box to migrate from the top-left corner of the container to the bottom-right corner.</p>
@@ -134,15 +134,15 @@ tags:
 
 <pre class="brush: js">function log(msg, event) {
   let logBox = document.getElementById("log");
- 
+
   logBox.innerHTML += msg;
- 
+
   if (event) {
     logBox.innerHTML += " &lt;code&gt;"+ event.animationName +
         "&lt;/code&gt; at time " + event.elapsedTime.toFixed(2) +
         " seconds.";
   }
- 
+
   logBox.innerHTML += "\n";
 };
 </pre>
@@ -157,7 +157,7 @@ box.onanimationstart = function(event) {
 
 box.onanimationend = function(event) {
   log("Animation stopped", event);
-}; 
+};
 </pre>
 
 <p>Finally, we set up a handler for a click on the button that runs the animation:</p>

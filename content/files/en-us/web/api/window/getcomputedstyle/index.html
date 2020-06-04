@@ -101,10 +101,10 @@ para.textContent = 'My computed font-size is ' +
   }
 &lt;/style&gt;
 
-&lt;h3&gt;Generated content&lt;/h3&gt; 
+&lt;h3&gt;Generated content&lt;/h3&gt;
 
 &lt;script&gt;
-  var h3 = document.querySelector('h3'); 
+  var h3 = document.querySelector('h3');
   var result = getComputedStyle(h3, ':after').content;
 
   console.log('the generated content is: ', result); // returns ' rocks!'

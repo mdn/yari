@@ -71,7 +71,7 @@ console.log('original === cast ? ' + (original === cast));
 <h3 id="Resolving_thenables_and_throwing_Errors">Resolving thenables and throwing Errors</h3>
 
 <pre class="brush: js">// Resolving a thenable object
-var p1 = Promise.resolve({ 
+var p1 = Promise.resolve({
   then: function(onFulfill, onReject) { onFulfill('fulfilled!'); }
 });
 console.log(p1 instanceof Promise) // true, object casted to a Promise

@@ -69,7 +69,7 @@ let obj = {prop: [element0, element1, ...., elementN]}
                      // the number 42.
 
 let arr = Array(42)  // Creates an array with no elements
-                     // and arr.length set to 42. 
+                     // and arr.length set to 42.
                      //
                      // This is equivalent to:
 let arr = []
@@ -155,10 +155,10 @@ console.log(cats.length)  // 3
 cats.length = 2
 console.log(cats)  // logs "Dusty, Misty" - Twiggy has been removed
 
-cats.length = 0 
+cats.length = 0
 console.log(cats)  // logs []; the cats array is empty
 
-cats.length = 3 
+cats.length = 3
 console.log(cats)  // logs [ &lt;3 empty items&gt; ]
 </pre>
 
@@ -215,9 +215,9 @@ array.forEach(function(element) {
 // second
 // fourth
 
-if (array[2] === undefined) { 
+if (array[2] === undefined) {
   console.log('array[2] is undefined')  // true
-} 
+}
 
 array = ['first', 'second', undefined, 'fourth']
 
@@ -288,7 +288,7 @@ myArray = myArray.slice(1, 4)  // starts at index 1 and extracts all elements
 <pre class="brush: js">let myArray = new Array('1', '2', '3', '4', '5')
 myArray.splice(1, 3, 'a', 'b', 'c', 'd')
 // myArray is now ["1", "a", "b", "c", "d", "5"]
-// This code started at index one (or where the "2" was), 
+// This code started at index one (or where the "2" was),
 // removed 3 elements there, and then inserted all consecutive
 // elements in its place.
 </pre>
@@ -333,7 +333,7 @@ myArray.sort(sortFn)
 
 <p>{{jsxref("Array.indexOf", "indexOf(searchElement[, fromIndex])")}} searches the array for <code><var>searchElement</var></code> and returns the index of the first match.</p>
 
-<pre class="brush: js">let a = ['a', 'b', 'a', 'b', 'a'] 
+<pre class="brush: js">let a = ['a', 'b', 'a', 'b', 'a']
 console.log(a.indexOf('b'))     // logs 1
 
 // Now try again, starting from after the last match
@@ -375,11 +375,11 @@ console.log(a2)  // logs [10, 20, 30]
 <p>{{jsxref("Array.every", "every(callback[, thisObject])")}} returns <code>true</code> if <code><var>callback</var></code> returns <code>true</code> for every item in the array.</p>
 
 <pre class="brush: js">function isNumber(value) {
-  return typeof value === 'number' 
+  return typeof value === 'number'
 }
 let a1 = [1, 2, 3]
 console.log(a1.every(isNumber))  // logs true
-let a2 = [1, '2', 3] 
+let a2 = [1, '2', 3]
 console.log(a2.every(isNumber))  // logs false
 </pre>
 

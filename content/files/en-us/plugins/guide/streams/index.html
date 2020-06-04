@@ -61,7 +61,7 @@ tags:
 <p>The <code><a href="/en-US/Add-ons/Plugins/Reference/NPP_NewStream">NPP_NewStream</a></code> method has the following syntax:</p>
 
 <pre>NPError NPP_NewStream(NPP instance, NPMIMEType type,
- 
+
 NPStream *stream, NPBool seekable, uint16* stype);
 </pre>
 
@@ -92,8 +92,8 @@ NPStream *stream, NPBool seekable, uint16* stype);
 
 <p>You should delete any private data allocated in the plug-in's <code>stream-&gt;pdata</code> field when you destroy a stream. The plug-in can store private data associated with the stream in <code>stream-&gt;pdata</code>. The browser stores private data in <code>stream-&gt;ndata</code>; this value should not be changed by the plug-in.</p>
 
-<pre>NPError NPP_DestroyStream(NPP instance, 
- 
+<pre>NPError NPP_DestroyStream(NPP instance,
+
 NPStream *stream, NPError reason);
 </pre>
 
@@ -131,7 +131,7 @@ NPStream *stream, NPError reason);
 <p>The <code><a href="/en-US/Add-ons/Plugins/Reference/NPP_Write">NPP_Write</a></code> function should return the number of bytes consumed by the instance. If this is a negative number, the browser calls <code><a href="/en-US/Add-ons/Plugins/Reference/NPP_DestroyStream">NPP_DestroyStream</a></code> to destroy the stream. If the number returned is smaller than the size of the buffer, the browser sends the remaining data in the buffer to the plug-in through repeated calls to <code><a href="/en-US/Add-ons/Plugins/Reference/NPP_WriteReady">NPP_WriteReady</a></code> and <code><a href="/en-US/Add-ons/Plugins/Reference/NPP_Write">NPP_Write</a></code>.</p>
 
 <pre>int32 NPP_Write(NPP instance, NPStream *stream,
- 
+
 int32 offset, int32 len, void *buf);
 </pre>
 
@@ -177,8 +177,8 @@ int32 offset, int32 len, void *buf);
 <p>NOTE: Most plug-ins that need the stream saved to a file should use NP_ASFILEONLY mode rather than the older NP_ASFILE; this mode is less efficient because it uses successive calls to <code><a href="/en-US/Add-ons/Plugins/Reference/NPP_Write">NPP_Write</a></code>. <code><a href="/en-US/Add-ons/Plugins/Reference/NPP_StreamAsFile">NPP_StreamAsFile</a></code> provides the plug-in with a full path to a local file for the stream. It is a good idea to check that the file exists in the directory at the start of this method. If an error occurs during data retrieval or writing to the file, the browser passes null for the filename. If the file is created from a stream from the network, the file is locked in the the browser disk cache until the stream or its instance is destroyed.</p>
 </div>
 
-<pre>void NPP_StreamAsFile(NPP instance, NPStream *stream, 
- 
+<pre>void NPP_StreamAsFile(NPP instance, NPStream *stream,
+
 const char* fname);
 </pre>
 
@@ -204,7 +204,7 @@ const char* fname);
 <p>The plug-in can use this stream object in subsequent <code><a href="/en-US/Add-ons/Plugins/Reference/NPN_Write">NPN_Write</a></code> calls to the browser. When all the plug-in data is written into the stream, the plug-in must terminate the stream and deallocate the <code><a href="/en-US/Add-ons/Plugins/Reference/NPStream">NPStream</a></code> object by calling the <code><a href="/en-US/Add-ons/Plugins/Reference/NPN_DestroyStream">NPN_DestroyStream</a></code> function.</p>
 
 <pre>NPError NPN_NewStream(NPP instance,
-                      NPMIMEType type, 
+                      NPMIMEType type,
                       const char* target,
                       NPStream** stream);
 </pre>
@@ -222,7 +222,7 @@ const char* fname);
 <p>After creating a stream with <code><a href="/en-US/Add-ons/Plugins/Reference/NPN_NewStream">NPN_NewStream</a></code>, the plug-in can call <code><a href="/en-US/Add-ons/Plugins/Reference/NPN_Write">NPN_Write</a></code> to deliver a buffer of data from the plug-in to the browser. This function returns the number of bytes written or a negative integer in case of an error during processing. NPN_Write should send as much data as is available. Unlike <code><a href="/en-US/Add-ons/Plugins/Reference/NPP_Write">NPP_Write</a></code>, <code><a href="/en-US/Add-ons/Plugins/Reference/NPN_Write">NPN_Write</a></code> has no corresponding <code><a href="/en-US/Add-ons/Plugins/Reference/NPN_WriteReady">NPN_WriteReady</a></code> function.</p>
 
 <pre>int32 NPN_Write(NPP instance, NPStream *stream,
- 
+
 int32 len, void *buf);
 </pre>
 
@@ -236,8 +236,8 @@ int32 len, void *buf);
 
 <p>When the stream is complete, the plug-in calls <code><a href="/en-US/Add-ons/Plugins/Reference/NPN_DestroyStream">NPN_DestroyStream</a></code> to close and delete it. This applies to streams the plug-in creates with <code><a href="/en-US/Add-ons/Plugins/Reference/NPN_NewStream">NPN_NewStream</a></code> or streams created by the browser with <code><a href="/en-US/Add-ons/Plugins/Reference/NPP_NewStream">NPP_NewStream</a></code>.</p>
 
-<pre>NPError NPN_DestroyStream(NPP instance, NPStream* stream, 
- 
+<pre>NPError NPN_DestroyStream(NPP instance, NPStream* stream,
+
 NPError reason);
 </pre>
 
@@ -260,13 +260,13 @@ NPError reason);
 <pre>NPStream* stream;
 char* myData = "&lt;html&gt;&lt;head&gt;&lt;title&gt;This is a message from my plug-in!&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;p&gt;&lt;strong&gt;This is a message from my plug-in!&lt;/strong&gt;&lt;/p&gt;&lt;/body&gt;/html&gt;";
 int32 myLength = strlen(myData) + 1;
- 
+
 /* Create the stream. */
 err = NPN_NewStream(instance, "text/html", "_blank", &amp;stream);
- 
+
 /* Push data into the stream. */
 err = NPN_Write(instance, stream, myLength, myData);
- 
+
 /* Delete the stream. */
 err = NPN_DestroyStream(instance, stream, NPRES_DONE);
 </pre>

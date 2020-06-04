@@ -43,17 +43,17 @@ tags:
  ev.preventDefault();
  var data = event.dataTransfer.items;
  for (var i = 0; i &lt; data.length; i += 1) {
-   if ((data[i].kind == 'string') &amp;&amp; 
+   if ((data[i].kind == 'string') &amp;&amp;
        (data[i].type.match('^text/plain'))) {
      // This item is the target node
      data[i].getAsString(function (s){
-       ev.target.appendChild(document.getElementById(s)); 
+       ev.target.appendChild(document.getElementById(s));
      });
-   } else if ((data[i].kind == 'string') &amp;&amp; 
+   } else if ((data[i].kind == 'string') &amp;&amp;
               (data[i].type.match('^text/html'))) {
      // Drag data item is HTML
      console.log("... Drop: HTML");
-   } else if ((data[i].kind == 'file') &amp;&amp; 
+   } else if ((data[i].kind == 'file') &amp;&amp;
               (data[i].type.match('^image/'))) {
      // Drag data item is an image file
      var f = data[i].getAsFile();

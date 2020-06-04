@@ -42,7 +42,7 @@ tags:
     urls.forEach(function(url, i) {
       window.resolveLocalFileSystemURL(url, function(fileEntry) {
         // Print out file's name.
-        console.log(fileEntry.name); 
+        console.log(fileEntry.name);
       });
     });
   };
@@ -57,14 +57,14 @@ self.requestFileSystemSync = self.webkitRequestFileSystemSync ||
                              self.requestFileSystemSync;
 
 // Global for holding the list of entry file system URLs.
-var paths = []; 
+var paths = [];
 
 function getAllEntries(dirReader) {
   var entries = dirReader.readEntries();
 
   for (var i = 0, entry; entry = entries[i]; ++i) {
     // Stash this entry's filesystem in URL
-    paths.push(entry.toURL()); 
+    paths.push(entry.toURL());
 
     // If this is a directory, traverse.
     if (entry.isDirectory) {
@@ -75,7 +75,7 @@ function getAllEntries(dirReader) {
 
 // Forward the error to main app.
 function onError(e) {
-  postMessage('ERROR: ' + e.toString()); 
+  postMessage('ERROR: ' + e.toString());
 }
 
 self.onmessage = function(e) {

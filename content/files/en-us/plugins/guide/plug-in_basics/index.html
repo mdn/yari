@@ -298,7 +298,7 @@ if (mimetype) {
 
 <p>An <strong>embedded plug-in</strong> is part of a larger HTML document and is loaded at the time the document is displayed. The plug-in is visible as a rectangular subpart of the page (unless it is hidden). Embedded plug-ins are commonly used for multimedia images relating to text in the page, such as the Adobe Flash plug-in. When Gecko encounters the <code>object</code> or <code>embed</code> element in a document, it attempts to find and display the file represented by the <code>data</code> and <code>src</code> attributes, respectively. The <code>height</code> and <code>width</code> attributes of the <code>object</code> element determine the size of the embedded plug-in in the HTML page. For example, this <code>object</code> element calls a plug-in that displays video:</p>
 
-<pre class="brush: html">&lt;object data="newave.avi" type="video/avi" 
+<pre class="brush: html">&lt;object data="newave.avi" type="video/avi"
         width="320" height="200"
         autostart="true" loop="true"&gt;
 &lt;/object&gt;
@@ -370,30 +370,30 @@ object.hiddenObject {
      height: 231px;
   }
 &lt;/style&gt;
-&lt;/head&gt; 
+&lt;/head&gt;
 &lt;body&gt;&lt;p&gt;
 &lt;object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
-        codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=5,0,30,0" 
+        codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=5,0,30,0"
         class="myPlugin"&gt;
- 
+
   &lt;param name="movie" value="foo.swf"/&gt;
   &lt;param name="quality" value="high"/&gt;
   &lt;param name="salign" value="tl"/&gt;
   &lt;param name="menu" value="0"/&gt;
- 
+
        &lt;object data="foo_movie.swf"
                type="application/x-shockwave-flash"
                class="myPlugin"/&gt;
- 
+
          &lt;param name="quality" value="high"/&gt;
          &lt;param name="salign" value="tl"/&gt;
          &lt;param name="menu" value="0"/&gt;
- 
+
           &lt;object type="*" class="myPlugin"&gt;
-            &lt;param name="pluginspage" 
+            &lt;param name="pluginspage"
                    value="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"/&gt;
           &lt;/object&gt;
- 
+
        &lt;/object&gt;
 &lt;/object&gt;
 &lt;/p&gt;&lt;/body&gt;
@@ -421,8 +421,8 @@ object.hiddenObject {
   data="dataLocation"
   codebase="classFileDir"
   type="MIMEtype"
-  align="alignment" 
-  height="pixHeight" 
+  align="alignment"
+  height="pixHeight"
   width="pixWidth"
   id="name"
  &gt;
@@ -462,26 +462,26 @@ object.hiddenObject {
 
 <p>The <code>embed</code> element has the following syntax and attributes:</p>
 
-<pre class="brush: html">&lt;embed 
+<pre class="brush: html">&lt;embed
   src="location"
   type="mimetype"
   pluginspage="instrUrl"
   pluginurl="pluginUrl"
   align="left"|"right"|"top"|"bottom"
-  border="borderWidth" 
+  border="borderWidth"
   frameborder="no"
-  height="height" 
+  height="height"
   width="width"
   units="units"
   hidden="true|false"
-  hspace="horizMargin" 
-  vspace="vertMargin" 
+  hspace="horizMargin"
+  vspace="vertMargin"
   name="pluginName"
   palette="foreground"|"background"
  &gt;
- 
+
 ...
- 
+
 &lt;/embed&gt;
 </pre>
 
@@ -524,8 +524,8 @@ object.hiddenObject {
 
 <p>Example 2: <code>embed</code> within <code>object</code></p>
 
-<pre class="brush: html">&lt;object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" 
-   codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=5,0,30,0" 
+<pre class="brush: html">&lt;object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+   codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=5,0,30,0"
    width="749" height="68"&gt;
 
  &lt;param name="movie" value="foo.swf"&gt;
@@ -533,18 +533,18 @@ object.hiddenObject {
  &lt;param name="bgcolor" value="#EEEEEE"&gt;
  &lt;param name="salign" value="tl"&gt;
  &lt;param name="menu" value="0"&gt;
- 
- &lt;embed src="foo.swf" 
-   quality="high" pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" 
-   type="application/x-shockwave-flash" 
-   width="749" 
-   height="68" 
-   bgcolor="#EEEEEE" 
-   salign="tl" 
+
+ &lt;embed src="foo.swf"
+   quality="high" pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"
+   type="application/x-shockwave-flash"
+   width="749"
+   height="68"
+   bgcolor="#EEEEEE"
+   salign="tl"
    menu="0"&gt;
- 
+
  &lt;/embed&gt;
- 
+
 &lt;/object&gt;
 </pre>
 

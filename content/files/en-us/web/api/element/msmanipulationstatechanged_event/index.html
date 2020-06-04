@@ -45,13 +45,13 @@ tags:
 
 <h2 id="Examples">Examples</h2>
 
-<pre class="brush: js">// Listen for panning state change events 
+<pre class="brush: js">// Listen for panning state change events
 outerScroller.addEventListener("MSManipulationStateChanged", function(e) {
-    // Check to see if they lifted while pulled to the top 
-    if (e.currentState == MS_MANIPULATION_STATE_INERTIA &amp;&amp; 
-        outerScroller.scrollTop === 0) { 
-        refreshItemsAsync(); 
-    } 
+    // Check to see if they lifted while pulled to the top
+    if (e.currentState == MS_MANIPULATION_STATE_INERTIA &amp;&amp;
+        outerScroller.scrollTop === 0) {
+        refreshItemsAsync();
+    }
 });
 </pre>
 

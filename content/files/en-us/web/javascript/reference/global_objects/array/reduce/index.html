@@ -241,7 +241,7 @@ if (!Array.prototype.reduce) {
   Object.defineProperty(Array.prototype, 'reduce', {
     value: function(callback /*, initialValue*/) {
       if (this === null) {
-        throw new TypeError( 'Array.prototype.reduce ' + 
+        throw new TypeError( 'Array.prototype.reduce ' +
           'called on null or undefined' );
       }
       if (typeof callback !== 'function') {
@@ -253,17 +253,17 @@ if (!Array.prototype.reduce) {
       var o = Object(this);
 
       // 2. Let len be ? ToLength(? Get(O, "length")).
-      var len = o.length &gt;&gt;&gt; 0; 
+      var len = o.length &gt;&gt;&gt; 0;
 
-      // Steps 3, 4, 5, 6, 7      
-      var k = 0; 
+      // Steps 3, 4, 5, 6, 7
+      var k = 0;
       var value;
 
       if (arguments.length &gt;= 2) {
         value = arguments[1];
       } else {
         while (k &lt; len &amp;&amp; !(k in o)) {
-          k++; 
+          k++;
         }
 
         // 3. If len is 0 and initialValue is not present,
@@ -288,7 +288,7 @@ if (!Array.prototype.reduce) {
           value = callback(value, o[k], k, o);
         }
 
-        // d. Increase k by 1.      
+        // d. Increase k by 1.
         k++;
       }
 
@@ -366,7 +366,7 @@ console.log(sum) // logs 6</pre>
 
 <pre class="brush: js">let names = ['Alice', 'Bob', 'Tiff', 'Bruce', 'Alice']
 
-let countedNames = names.reduce(function (allNames, name) { 
+let countedNames = names.reduce(function (allNames, name) {
   if (name in allNames) {
     allNames[name]++
   }
@@ -400,19 +400,19 @@ function groupBy(objectArray, property) {
 
 let groupedPeople = groupBy(people, 'age')
 // groupedPeople is:
-// { 
+// {
 //   20: [
-//     { name: 'Max', age: 20 }, 
+//     { name: 'Max', age: 20 },
 //     { name: 'Jane', age: 20 }
-//   ], 
-//   21: [{ name: 'Alice', age: 21 }] 
+//   ],
+//   21: [{ name: 'Alice', age: 21 }]
 // }
 </pre>
 
 <h3 id="Bonding_arrays_contained_in_an_array_of_objects_using_the_spread_operator_and_initialValue">Bonding arrays contained in an array of objects using the spread operator and initialValue</h3>
 
-<pre class="brush: js">// friends - an array of objects 
-// where object field "books" is a list of favorite books 
+<pre class="brush: js">// friends - an array of objects
+// where object field "books" is a list of favorite books
 let friends = [{
   name: 'Anna',
   books: ['Bible', 'Harry Potter'],
@@ -427,14 +427,14 @@ let friends = [{
   age: 18
 }]
 
-// allbooks - list which will contain all friends' books +  
+// allbooks - list which will contain all friends' books +
 // additional list contained in initialValue
 let allbooks = friends.reduce(function(accumulator, currentValue) {
   return [...accumulator, ...currentValue.books]
 }, ['Alphabet'])
 
 // allbooks = [
-//   'Alphabet', 'Bible', 'Harry Potter', 'War and peace', 
+//   'Alphabet', 'Bible', 'Harry Potter', 'War and peace',
 //   'Romeo and Juliet', 'The Lord of the Rings',
 //   'The Shining'
 // ]</pre>

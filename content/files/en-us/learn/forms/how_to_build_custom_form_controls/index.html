@@ -114,13 +114,13 @@ tags:
 <p>Now that the control's basic functionality has been decided upon, it's time to start building it. The first step is to define its HTML structure and to give it some basic semantics. Here is what we need to rebuild a {{HTMLElement("select")}} element:</p>
 
 <pre class="brush: html">&lt;!-- This is our main container for our control.
-     The tabindex attribute is what allows the user to focus the control. 
+     The tabindex attribute is what allows the user to focus the control.
      We'll see later that it's better to set it through JavaScript. --&gt;
 &lt;div class="select" tabindex="0"&gt;
-  
+
   &lt;!-- This container will be used to display the current value of the control --&gt;
   &lt;span class="value"&gt;Cherry&lt;/span&gt;
-  
+
   &lt;!-- This container will contain all the options available for our control.
        Because it's a list, it makes sense to use the ul element. --&gt;
   &lt;ul class="optList"&gt;
@@ -152,7 +152,7 @@ tags:
      adding this to .select{{cssxref(':focus-within')}} will be a better option when fully supported
   */
   position: relative;
- 
+
   /* This will make our control become part of the text flow and sizable at the same time */
   display : inline-block;
 }</pre>
@@ -162,7 +162,7 @@ tags:
 <pre class="brush: css">.select .active,
 .select:focus {
   outline: none;
- 
+
   /* This {{cssxref('box-shadow')}} property is not exactly required, however it's imperative to ensure
      active state is visible, especially to keyboard users, that we use it as a default value. */
   box-shadow: 0 0 3px 1px #227755;
@@ -183,7 +183,7 @@ tags:
 <p>We need an extra class to handle when the list of options is hidden. This is necessary in order to manage the differences between the active state and the open state that do not exactly match.</p>
 
 <pre class="brush: css">.select .optList.hidden {
-  /* This is a simple way to hide the list in an accessible way; 
+  /* This is a simple way to hide the list in an accessible way;
      we will talk more about accessibility in the end */
   max-height: 0;
   visibility: hidden;
@@ -206,13 +206,13 @@ tags:
   box-sizing : border-box;
 
   /* We need extra room for the down arrow we will add */
-  padding : .1em 2.5em .2em .5em; 
+  padding : .1em 2.5em .2em .5em;
   width   : 10em; /* 100px */
 
-  border        : .2em solid #000; 
-  border-radius : .4em; 
-  box-shadow    : 0 .1em .2em rgba(0,0,0,.45); 
-  
+  border        : .2em solid #000;
+  border-radius : .4em;
+  box-shadow    : 0 .1em .2em rgba(0,0,0,.45);
+
   /* The first declaration is for browsers that do not support linear gradients. */
   background : #F0F0F0;
   background : linear-gradient(0deg, #E3E3E3, #fcfcfc 50%, #f0f0f0);
@@ -224,7 +224,7 @@ tags:
   display  : inline-block;
   width    : 100%;
   overflow : hidden;
-  white-space : nowrap; 
+  white-space : nowrap;
   text-overflow: ellipsis;
   vertical-align: top;
 }</pre>
@@ -241,11 +241,11 @@ tags:
   box-sizing : border-box;
 
   height  : 100%;
-  width   : 2em; 
-  padding-top : .1em; 
+  width   : 2em;
+  padding-top : .1em;
 
-  border-left  : .2em solid #000; 
-  border-radius: 0 .1em .1em 0;  
+  border-left  : .2em solid #000;
+  border-radius: 0 .1em .1em 0;
 
   background-color : #000;
   color : #FFF;
@@ -264,23 +264,23 @@ tags:
 
   box-sizing : border-box;
 
-  /* If the values are smaller than the control, the list of options 
+  /* If the values are smaller than the control, the list of options
      will be as wide as the control itself */
   min-width : 100%;
 
-  /* In case the list is too long, its content will overflow vertically 
-     (which will add a vertical scrollbar automatically) but never horizontally 
-     (because we haven't set a width, the list will adjust its width automatically. 
+  /* In case the list is too long, its content will overflow vertically
+     (which will add a vertical scrollbar automatically) but never horizontally
+     (because we haven't set a width, the list will adjust its width automatically.
      If it can't, the content will be truncated) */
   max-height: 10em; /* 100px */
   overflow-y: auto;
   overflow-x: hidden;
 
-  border: .2em solid #000; 
-  border-top-width : .1em; 
+  border: .2em solid #000;
+  border-top-width : .1em;
   border-radius: 0 0 .4em .4em;
 
-  box-shadow: 0 .2em .4em rgba(0,0,0,.4); 
+  box-shadow: 0 .2em .4em rgba(0,0,0,.4);
   background: #f0f0f0;
 }</pre>
 
@@ -557,12 +557,12 @@ window.addEventListener('load', function () {
       // We deactivate the control
       deactivateSelect(select);
     });
- 
+
 <code class="language-js"><span class="comment token">  </span></code>  // Loose focus if the user hits `esc`
 <code class="language-js">    select<span class="punctuation token">.</span><span class="function token">addEventListener</span><span class="punctuation token">(</span><span class="string token">'keyup'</span><span class="punctuation token">,</span> <span class="keyword token">function</span> <span class="punctuation token">(</span><span class="parameter token">event</span><span class="punctuation token">)</span> <span class="punctuation token">{</span>
 
       <span class="comment token">// deactive on keyup of `esc`</span>
-      <span class="keyword token">if</span> <span class="punctuation token">(</span>event<span class="punctuation token">.</span>keyCode <span class="operator token">===</span> <span class="number token">27</span><span class="punctuation token">)</span> <span class="punctuation token">{</span> 
+      <span class="keyword token">if</span> <span class="punctuation token">(</span>event<span class="punctuation token">.</span>keyCode <span class="operator token">===</span> <span class="number token">27</span><span class="punctuation token">)</span> <span class="punctuation token">{</span>
 </code>         deactivateSelect(select);
 <code class="language-js"><span class="punctuation token">     </span> <span class="punctuation token">}</span></code>
     });

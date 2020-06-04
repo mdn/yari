@@ -117,7 +117,7 @@ console.log(new Intl.DateTimeFormat('en-US', options).format(date));
 
 // sometimes you want to be more precise
 options = {
-  hour: 'numeric', minute: 'numeric', second: 'numeric', 
+  hour: 'numeric', minute: 'numeric', second: 'numeric',
   timeZone: 'Australia/Sydney',
   timeZoneName: 'short'
 };
@@ -135,7 +135,7 @@ options = {
   year: 'numeric', month: 'numeric', day: 'numeric',
   hour: 'numeric', minute: 'numeric', second: 'numeric',
   hour12: false,
-  timeZone: 'America/Los_Angeles' 
+  timeZone: 'America/Los_Angeles'
 };
 console.log(new Intl.DateTimeFormat('en-US', options).format(date));
 // → "12/19/2012, 19:00:00"
@@ -148,7 +148,7 @@ console.log(new Intl.DateTimeFormat('default', options).format(date));
 // sometimes it's helpful to include the period of the day
 options = {hour: "numeric", dayPeriod: "short"};
 console.log(new Intl.DateTimeFormat('en-US', options).format(date));
-// → 10 at night 
+// → 10 at night
 </pre>
 
 <p>The used calendar and numbering formats can also be set independently via <code>options</code> arguments:</p>

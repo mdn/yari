@@ -34,7 +34,7 @@ tags:
 <p>Create each video variant.</p>
 
 <pre><code>ffmpeg -i in.video -c:v </code>libvpx-vp9 -keyint_min 150 -g 150 -tile-columns 4 -frame-parallel 1  -f webm -dash 1 \
--an -vf scale=160:90 -b:v 250k -dash 1 video_160x90_250k.webm 
+-an -vf scale=160:90 -b:v 250k -dash 1 video_160x90_250k.webm
 
 ffmpeg -i in.video -c:v libvpx-vp9 -keyint_min 150 -g 150 -tile-columns 4 -frame-parallel 1  -f webm -dash 1 \
 -an -vf scale=320:180 -b:v 500k -dash 1 video_320x180_500k.webm

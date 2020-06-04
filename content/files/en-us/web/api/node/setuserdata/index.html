@@ -40,7 +40,7 @@ tags:
 
 <h2 id="Example">Example</h2>
 
-<pre class="brush: js">var d = document.implementation.createDocument('', 'test', null); 
+<pre class="brush: js">var d = document.implementation.createDocument('', 'test', null);
 d.documentElement.setUserData('key', 15, {handle:function (o, k, d, s, ds) {console.log(o+'::'+k+'::'+d+'::'+s+'::'+ds)}}); // 2::key::15::[object Element]::[object Element]
 console.log(d.documentElement.getUserData('key')); // 15
 var e = document.importNode(d.documentElement, true); // causes handler to be called
