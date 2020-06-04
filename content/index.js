@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+const path = require("path");
+
 const cli = require("caporal");
 
 const runImporter = require("./scripts/importer");
@@ -136,6 +138,10 @@ cli
     DEFAULT_FOLDER_SEARCHES
   )
   .option(
+    "--files <listoffilestobuild>",
+    "list of files to build (space separated). like --foldersearch but pickier"
+  )
+  .option(
     "--popularitiesfile <path>",
     "JSON file that maps URIs to popularities",
     cli.PATH,
@@ -236,6 +242,28 @@ cli
         `Folder search lowercased from '${options.foldersearch}' to '${newFoldersearch}'`
       );
       options.foldersearch = newFoldersearch;
+    }
+
+    // We might need to parse the list of files because it's a string
+    // with a space separator.
+    if (options.files) {
+      // The get-diff-action will make this a massive string that looks like
+      // this: `'content/files/en-us/a/index.html' 'content/files/en-us/a/index.html'`
+      // so we need to turn that into an array:
+      // ["content/files/en-us/a/index.html", "content/files/en-us/b/index.html"]`
+      options.files = options.files.split(" ").map((item) => {
+        if (item.startsWith("'") || item.startsWith('"')) {
+          item = item.slice(1, item.length - 1);
+        }
+        // It's very likely that the file paths supplied were relative to
+        // the root of the project. This is what happens when we use
+        // `git diff` to get a list of file paths in the repo.
+        // When this is the case, fix them to become absolute file path.
+        if (item.startsWith("content")) {
+          return path.join(process.cwd(), item);
+        }
+        return item;
+      });
     }
 
     try {

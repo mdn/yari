@@ -185,6 +185,22 @@ function checkFlawLevels(flawChecks) {
   return checked;
 }
 
+/**
+ * Return a set of resolved file paths.
+ *
+ * Each file must exist
+ */
+function checkSpecificFiles(files) {
+  const set = new Set();
+  for (const filepath of files) {
+    if (!fs.existsSync(filepath)) {
+      throw new Error(`${filepath} does not exist`);
+    }
+    set.add(filepath);
+  }
+  return set;
+}
+
 /** Needs doc string */
 function triggerTouch(filepath, document, root) {
   const changedFile = {
@@ -355,6 +371,11 @@ class Builder {
     this.allTitles = new Map();
     this.allRedirects = new Map();
     this.flawsByType = new Map();
+
+    // Turn the optional list of files into a set because sets are filter
+    // to look for presence in than an array.
+    // This function also validates that every file exists on disk.
+    this.specificFiles = checkSpecificFiles(options.files || []);
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
@@ -625,7 +646,16 @@ class Builder {
     const t0 = new Date();
 
     for (const { source, localeFolder, folder, files } of self.walkSources()) {
-      if (self.excludeFolder(source, folder, localeFolder, files)) {
+      if (this.specificFiles.size) {
+        if (
+          !files
+            .map((f) => path.join(folder, f))
+            .some((f) => this.specificFiles.has(f))
+        ) {
+          counts[processing.EXCLUDED]++;
+          continue;
+        }
+      } else if (self.excludeFolder(source, folder, localeFolder, files)) {
         // If the folder was a Stumptown folder, what we're
         // actually excluding is all the .json files in the folder.
         if (source.isStumptown) {

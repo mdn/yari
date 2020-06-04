@@ -1,0 +1,76 @@
+name: PR Build
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: technote-space/get-diff-action@v1
+        id: git_diff_content
+        with:
+          SUFFIX_FILTER: .html
+          PREFIX_FILTER: content/files/
+
+      - name: Display Git diffs
+        run: |
+          echo ${{ steps.git_diff_content.outputs.diff }}
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: "12"
+      - name: Display Node & Yarn version
+        run: |
+          node --version
+          yarn --version
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install all yarn packages
+        run: yarn --frozen-lockfile
+
+      # TODO figure out a way to set up a cache that we can put things
+      # like _all-content.json into.
+
+      - name: Build changed content
+        if: steps.git_diff_content.outputs.diff
+        run: |
+          # TEMPORARY UNTIL https://github.com/mdn/yari/pull/712 IS MERGED
+          export BUILD_ROOT=content/files
+          export BUILD_DESTINATION=client/build
+          export BUILD_POPULARITIES_FILEPATH=content/popularities.json
+
+          yarn prebuild
+
+          # Some day, when our number of flaws have reached 0 we'll change
+          # this to "*:error" which means the slightest flaw in the build
+          # will break the build.
+          # See https://github.com/mdn/yari/issues/715
+          export BUILD_FLAW_LEVELS="*:ignore"
+
+          # Note, it might be interesting to explore building *some*
+          # pages in a PR build if the diff doesn't have any index.html
+          # files changed.
+          # Instead of building the git diff, you build some known typical
+          # folders that you know don't take too long and do cover a lot
+          # of interesting macros etc.
+          # This way, when an edit to the source code comes in, perhaps the
+          # functional tests have a gap in them but actually building
+          # real content exposes it.
+
+          node content build --no-progressbar --files="${GIT_DIFF}"
