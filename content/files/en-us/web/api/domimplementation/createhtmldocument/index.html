@@ -1,0 +1,110 @@
+---
+title: DOMImplementation.createHTMLDocument()
+slug: Web/API/DOMImplementation/createHTMLDocument
+summary: The DOMImplementation.createHTMLDocument() method creates a new HTML Document.
+tags:
+  - API
+  - DOM
+  - DOM Reference
+  - DOMImplementation
+  - Method
+  - Reference
+---
+<p>{{ApiRef("DOM")}}</p>
+
+<p>The <strong><code>DOMImplementation.createHTMLDocument()</code></strong> method creates a new HTML {{ domxref("Document") }}.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox"><em>newDoc</em> = document.implementation.createHTMLDocument(<em>title</em>);</pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<dl>
+ <dt><em>title</em>  {{optional_inline}} (except in IE)</dt>
+ <dd>Is a {{domxref("DOMString")}} containing the title to give the new HTML document.</dd>
+</dl>
+
+<h2 id="Example">Example</h2>
+
+<p>This example creates a new HTML document and inserts it into an {{ HTMLElement("iframe") }} in the current document.</p>
+
+<p>Here's the HTML for this example:</p>
+
+<pre class="brush: html">&lt;body&gt;
+  &lt;p&gt;Click &lt;a href="javascript:makeDocument()"&gt;here&lt;/a&gt; to create a new document and insert it below.&lt;/p&gt;
+  &lt;iframe id="theFrame" src="about:blank" /&gt;
+&lt;/body&gt;
+</pre>
+
+<p>The JavaScript implementation of the <code>makeDocument()</code> method follows:</p>
+
+<pre class="brush: js">function makeDocument() {
+  var frame = document.getElementById("theFrame");
+          
+  var doc = document.implementation.createHTMLDocument("New Document");
+  var p = doc.createElement("p");
+  p.innerHTML = "This is a new paragraph.";
+  
+  try {
+    doc.body.appendChild(p);
+  } catch(e) {
+    console.log(e);
+  }
+
+  // Copy the new HTML document into the frame
+
+  var destDocument = frame.contentDocument;
+  var srcNode = doc.documentElement;
+  var newNode = destDocument.importNode(srcNode, true);
+  
+  destDocument.replaceChild(newNode, destDocument.documentElement);
+}
+</pre>
+
+<p>The code in lines 4-12 handle creating the new HTML document and inserting some content into it. Line 4 uses <code>createHTMLDocument()</code> to construct a new HTML document whose {{ HTMLElement("title") }} is "New Document". Lines 5 and 6 create a new paragraph element with some simple content, and then lines 8-12 handle inserting the new paragraph into the new document.</p>
+
+<p>Line 16 pulls the <code>contentDocument</code> of the frame; this is the document into which we'll be injecting the new content. The next two lines handle importing the contents of our new document into the new document's context. Finally, line 20 actually replaces the contents of the frame with the new document's contents.</p>
+
+<p><a href="/samples/domref/createHTMLDocument.html">View Live Examples</a></p>
+
+<p>The returned document is pre-constructed with the following HTML:</p>
+
+<pre class="brush: html">&lt;!doctype html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;<em>title</em>&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+  <tr>
+   <td>{{SpecName('DOM WHATWG', '#dom-domimplementation-createhtmldocument', 'DOMImplementation.createHTMLDocument')}}</td>
+   <td>{{Spec2('DOM WHATWG')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table in this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.DOMImplementation.createHTMLDocument")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>The {{domxref("DOMImplementation")}} interface it belongs to.</li>
+</ul>

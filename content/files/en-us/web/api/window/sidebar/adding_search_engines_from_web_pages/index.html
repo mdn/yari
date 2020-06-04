@@ -1,0 +1,29 @@
+---
+title: Adding search engines from web pages
+slug: Web/API/Window/sidebar/Adding_search_engines_from_Web_pages
+summary: >-
+  Firefox allows JavaScript code to install search engine plugins to the search
+  box using OpenSearch.
+tags:
+  - API
+  - Add-ons
+  - Guide
+  - Non-standard
+  - Search plugins
+---
+<div>{{APIRef("Mozilla Extensions")}}</div>
+
+<p>Firefox allows JavaScript code to install search engine plugins to the search box using <a href="/en/Creating_OpenSearch_plugins_for_Firefox" title="en/Creating_OpenSearch_plugins_for_Firefox">OpenSearch.</a></p>
+
+<p>When JavaScript code attempts to install a search plugin, Firefox presents an alert asking the user for permission to install the plugin.</p>
+
+<p>This method is not widely supported. The preferred method of exposing OpenSearch is to <a href="/en-US/docs/Web/OpenSearch#Autodiscovery_of_search_plugins">use search plugin autodiscovery</a>.</p>
+
+<h2 id="Installing_OpenSearch_plugins" name="Installing_OpenSearch_plugins">Installing OpenSearch plugins</h2>
+
+<p>To install an OpenSearch plugin, use the <code>window.external.AddSearchProvider()</code> DOM method. The syntax for this method is:</p>
+
+<pre class="eval">window.external.AddSearchProvider(<em>engineURL</em>);
+</pre>
+
+<p>Where <em>engineURL</em> is the absolute URL to the XML file for the search engine plugin.</p>

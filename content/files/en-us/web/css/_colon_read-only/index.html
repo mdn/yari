@@ -1,0 +1,99 @@
+---
+title: ':read-only'
+slug: 'Web/CSS/:read-only'
+summary: "The :read-only CSS pseudo-class represents an element (such as\_input\_or textarea) that is not editable by the user."
+tags:
+  - CSS
+  - Layout
+  - Pseudo-class
+  - Reference
+  - Web
+---
+<div>{{CSSRef}}</div>
+
+<p>The <strong><code>:read-only</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> <a href="/en-US/docs/CSS/Pseudo-classes" title="Pseudo-classes">pseudo-class</a> represents an element (such as <code>input</code> or <code>textarea</code>) that is not editable by the user.</p>
+
+<pre class="brush: css no-line-numbers">/* Selects any &lt;input&gt; element that is read-only */
+/* Supported in Firefox with a prefix */
+input:-moz-read-only {
+  background-color: #ccc;
+}
+
+/* Supported in Blink/WebKit/Edge without a prefix */
+input:read-only {
+  background-color: #ccc;
+}</pre>
+
+<div class="note">
+<p><strong>Note</strong>: This selector doesn't just select {{htmlElement("input")}}/{{htmlElement("textarea")}} with {{htmlattrxref("readonly", "input")}} set on them; it will select <em>any</em> element that cannot be edited by the user.</p>
+</div>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h2 id="Example" name="Example">Example</h2>
+
+<h3 id="HTML">HTML</h3>
+
+<pre class="brush: html">&lt;input type="text" value="Type whatever you want here."&gt;
+&lt;input type="text" value="This is a read-only field." readonly&gt;
+&lt;p&gt;This is a normal paragraph.&lt;/p&gt;
+&lt;p contenteditable="true"&gt;You can edit this paragraph!&lt;/p&gt;</pre>
+
+<h3 id="CSS">CSS</h3>
+
+<pre class="brush: css">input { min-width: 25em; }
+input:-moz-read-only { background: cyan; }
+input:read-only { background: cyan; }
+
+p:-moz-read-only { background: lightgray; }
+p:read-only { background: lightgray; }
+p[contenteditable="true"] { color: blue; }
+</pre>
+
+<h3 id="Result">Result</h3>
+
+<p>{{EmbedLiveSample("Example")}}</p>
+
+<h2 class="editable" id="Specifications" name="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{ SpecName('HTML WHATWG', '#selector-read-only', ':read-only') }}</td>
+   <td>{{ Spec2('HTML WHATWG') }}</td>
+   <td>No change.</td>
+  </tr>
+  <tr>
+   <td>{{ SpecName('HTML5 W3C', '#selector-read-only', ':read-only') }}</td>
+   <td>{{ Spec2('HTML5 W3C') }}</td>
+   <td>Defines the semantics regarding HTML and constraint validation.</td>
+  </tr>
+  <tr>
+   <td>{{ SpecName('CSS4 Selectors', '#rw-pseudos', ':read-only') }}</td>
+   <td>{{ Spec2('CSS4 Selectors') }}</td>
+   <td>Defines the pseudo-class, but not the associated semantics.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility" name="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.selectors.read-only")}}</p>
+
+<h2 id="See_also" name="See_also">See also</h2>
+
+<ul>
+ <li>{{cssxref(":read-write")}}</li>
+ <li>HTML {{htmlattrxref("contenteditable")}} attribute</li>
+</ul>

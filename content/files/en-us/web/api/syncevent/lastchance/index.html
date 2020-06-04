@@ -1,0 +1,48 @@
+---
+title: SyncEvent.lastChance
+slug: Web/API/SyncEvent/lastChance
+summary: "The SyncEvent.lastChance\_read-only property of the SyncEvent interface returns\_true\_if the user agent will not make further synchronization attempts after the current attempt. This is the value passed in the lastChance parameter of the SyncEvent() constructor."
+tags:
+  - API
+  - Background Sync
+  - Experimental
+  - Property
+  - Reference
+  - ServiceWorker
+  - SyncEvent
+  - lastChance
+---
+<p>{{SeeCompatTable}}{{APIRef("")}}</p>
+
+<p>The <strong><code>SyncEvent.lastChance</code></strong> read-only property of the {{domxref("SyncEvent")}} interface returns <code>true</code> if the user agent will not make further synchronization attempts after the current attempt. This is the value passed in the <code>lastChance</code> parameter of the {{domxref("SyncEvent.SyncEvent","SyncEvent()")}} constructor.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox">var <em>lastChance</em> = SyncEvent.lastChance</pre>
+
+<h3 id="Value">Value</h3>
+
+<p>A {{jsxref("Boolean")}} that indicates whether the user agent will not make further synchronization attempts after the current attempt.</p>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th>Specification</th>
+   <th>Status</th>
+   <th>Comment</th>
+  </tr>
+  <tr>
+   <td>{{SpecName('Background Sync','#sync-event', 'lastChance')}}</td>
+   <td>{{Spec2('Background Sync')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.SyncEvent.lastChance")}}</p>

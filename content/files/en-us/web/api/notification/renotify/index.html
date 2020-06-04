@@ -1,0 +1,69 @@
+---
+title: Notification.renotify
+slug: Web/API/notification/renotify
+summary: >-
+  The renotify read-only property of the Notification interface specifies
+  whether the user should be notified after a new notification replaces an old
+  one, as specified in the renotify option of the Notification() constructor.
+tags:
+  - API
+  - Experimental
+  - Notifications
+  - Property
+  - Reference
+  - renotify
+---
+<div>{{APIRef("Web Notifications")}}{{AvailableInWorkers}}{{securecontext_header}}</div>
+
+<p>The <code>renotify</code> read-only property of the {{domxref("Notification")}} interface specifies whether the user should be notified after a new notification replaces an old one, as specified in the <code>renotify</code> option of the {{domxref("Notification.Notification","Notification()")}} constructor.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox">var renotify = Notification.renotify;
+</pre>
+
+<h3 id="Value">Value</h3>
+
+<p>A {{domxref("Boolean")}}. <code>false</code> is the default; <code>true</code> makes the notification renotify the user.</p>
+
+<h2 id="Examples">Examples</h2>
+
+<p>The following snippet is intended to fire a notification that renotifies the user after it has been replaced; a simple <code>options</code> object is created, and then the notification is fired using the <code>Notification()</code> constructor.</p>
+
+<pre class="brush: js">var options = {
+  body: 'Do you like my body?',
+  renotify: true
+}
+
+var n = new Notification('Test notification',options);
+
+console.log(n.renotify) // should log true</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table>
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+  <tr>
+   <td>{{SpecName('Web Notifications','#dom-notification-renotify','renotify')}}</td>
+   <td>{{Spec2('Web Notifications')}}</td>
+   <td>Living standard</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.Notification.renotify")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><a href="/en-US/docs/Web/API/Notifications_API/Using_the_Notifications_API">Using the Notifications API</a></li>
+</ul>

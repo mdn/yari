@@ -1,0 +1,99 @@
+---
+title: clamp()
+slug: Web/CSS/clamp
+summary: >-
+  The clamp() CSS function clamps a value between an upper and lower bound.
+  clamp() enables selecting a middle value within a range of values between a
+  defined minimum and maximum. It takes three parameters: a minimum value, a
+  preferred value, and a maximum allowed value. The clamp() function can be used
+  anywhere a length, frequency, angle, time, percentage, number, or integer is
+  allowed.
+tags:
+  - CSS
+  - CSS Function
+  - Calculate
+  - Compute
+  - Function
+  - Layout
+  - Reference
+  - Web
+  - clamp
+---
+<div>{{CSSRef}}</div>
+
+<p>The <strong><code>clamp()</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> function clamps a value between an upper and lower bound. <code>clamp()</code> enables selecting a middle value within a range of values between a defined minimum and maximum. It takes three parameters: a minimum value, a preferred value, and a maximum allowed value. The <code>clamp()</code> function can be used anywhere a {{CSSxRef("&lt;length&gt;")}}, {{CSSxRef("&lt;frequency&gt;")}}, {{CSSxRef("&lt;angle&gt;")}}, {{CSSxRef("&lt;time&gt;")}}, {{CSSxRef("&lt;percentage&gt;")}}, {{CSSxRef("&lt;number&gt;")}}, or {{CSSxRef("&lt;integer&gt;")}} is allowed.</p>
+
+<p><code>clamp(MIN, VAL, MAX)</code> is resolved as <code>{{CSSxRef("max", "max")}}(MIN, {{CSSxRef("min", "min")}}(VAL, MAX))</code></p>
+
+<div>{{EmbedInteractiveExample("pages/css/function-clamp.html")}}</div>
+
+<p class="hidden">The source for this interactive example is stored in a GitHub repository. If you'd like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</p>
+
+<p>Note that using <code>clamp()</code> for font sizes, as in these examples, allows you to set a font-size that grows with the size of the viewport, but doesn't go below a minimum font-size or above a maximum font-size. It has the same effect as the code in <a href="https://css-tricks.com/snippets/css/fluid-typography/">Fluid Typography</a> but in one line, and without the use of media queries.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<p>The <code>clamp()</code> function takes three comma separated expressions as its parameter, in the order of minimum value, preferred value, maximum value.</p>
+
+<p>The minimum value is the smallest (most negative) value. This is the lower bound in the range of allowed values. If the preferred value is less than this value, the minimum value will be used.</p>
+
+<p>The preferred value is the expression whose value will be used as long as the result is between the minimum and maximum values.</p>
+
+<p>The maximum value is the largest (most positive) expression value to which the value of the property will be assigned if the preferred value is greater than this upper bound.</p>
+
+<p>The expressions can be math functions (see {{CSSxRef("calc")}} for more information), literal values, or other expressions, such as {{CSSxRef("attr", "attr()")}}, that evaluate to a valid argument type (like {{CSSxRef("&lt;length&gt;")}}), or nested {{CSSxRef("min")}} and {{CSSxRef("max")}} functions. As math expressions, so you can use addition, subtraction, multiplication and division without using the <code>calc()</code> function itself. You may also use parentheses to establish computation order when needed.</p>
+
+<p>You can use different units for each value in your expressions, and different units in any math function making up any of the arguments.</p>
+
+<h3 id="Notes">Notes</h3>
+
+<ul>
+ <li>Math expressions involving percentages for widths and heights on table columns, table column groups, table rows, table row groups, and table cells in both auto and fixed layout tables <em>may</em> be treated as if <code>auto</code> had been specified.</li>
+ <li>It is permitted to nest <code>max()</code> and <code>min()</code> functions as expression values, in which case the inner ones are treated as simple parentheses. The expressions are full math expressions, so you can use direct addition, subtraction, multiplication and division without using the calc() function itself.</li>
+ <li>The expression can be values combining the addition ( + ), subtraction ( - ), multiplication ( * ) and division ( / ) operators, using standard operator precedence rules. Make sure to put a space on each side of the + and - operands. The operands in the expression may be any {{CSSxRef("&lt;length&gt;")}} syntax value. You can use different units for each value in your expression. You may also use parentheses to establish computation order when needed.</li>
+ <li>Oftentimes you will want to use {{CSSxRef("min")}} and {{CSSxRef("max")}} within a <code>clamp()</code> function.</li>
+</ul>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{CSSSyntax}}</pre>
+
+<p> 
+ </p><h2 id="Accessibility_concerns">Accessibility concerns</h2>
+
+
+<p>TBD</p>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName("CSS4 Values", "#calc-notation", "clamp()")}}</td>
+   <td>{{Spec2('CSS4 Values')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.types.clamp")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{CSSxRef("calc")}}</li>
+ <li>{{CSSxRef("max")}}</li>
+ <li>{{CSSxRef("min")}}</li>
+ <li><a href="/en-US/docs/Learn/CSS/Introduction_to_CSS/Values_and_units">CSS Values</a></li>
+</ul>

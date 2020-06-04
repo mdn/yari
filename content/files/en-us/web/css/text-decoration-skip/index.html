@@ -1,0 +1,112 @@
+---
+title: text-decoration-skip
+slug: Web/CSS/text-decoration-skip
+summary: >-
+  The text-decoration-skip CSS property sets what parts of an element’s content
+  any text decoration affecting the element must skip over.
+tags:
+  - CSS
+  - CSS Property
+  - CSS Text Decoration
+  - Experimental
+  - Layout
+  - Reference
+  - Web
+---
+<div>{{CSSRef}}</div>
+
+<p><span class="seoSummary">The <strong><code>text-decoration-skip</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property sets what parts of an element’s content any text decoration affecting the element must skip over.</span> It controls all text decoration lines drawn by the element and also any text decoration lines drawn by its ancestors.</p>
+
+<div class="blockIndicator note">
+<p><strong>Note:</strong> Most other browsers are converging on supporting the simpler {{cssxref("text-decoration-skip-ink")}} property.</p>
+</div>
+
+<pre class="brush:css no-line-numbers">/* Keyword values */
+text-decoration-skip: none;
+text-decoration-skip: objects;
+text-decoration-skip: spaces;
+text-decoration-skip: edges;
+text-decoration-skip: box-decoration;
+
+/* Multiple keywords */
+text-decoration-skip: objects spaces;
+text-decoration-skip: leading-spaces trailing-spaces;
+text-decoration-skip: objects edges box-decoration;
+
+/* Global values */
+text-decoration-skip: inherit;
+text-decoration-skip: initial;
+text-decoration-skip: unset;
+</pre>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<h3 id="Values">Values</h3>
+
+<dl>
+ <dt><code>none</code></dt>
+ <dd>Nothing is skipped. Thus, text decoration is drawn for all text content and across atomic inline-level boxes.</dd>
+ <dt><code>objects</code></dt>
+ <dd>The entire margin box of the element is skipped if it is an atomic inline such as an image or inline-block.</dd>
+ <dt><code>spaces</code></dt>
+ <dd>All spacing is skipped: all <a href="https://www.unicode.org/reports/tr44/#White_Space">Unicode white space characters</a> and all word separators, plus any adjacent {{cssxref("letter-spacing")}} or {{cssxref("word-spacing")}}.</dd>
+ <dt><code>leading-spaces</code></dt>
+ <dd>The same as <code>spaces</code>, except that only leading spaces are skipped.</dd>
+ <dt><code>trailing-spaces</code></dt>
+ <dd>The same as <code>spaces</code>, except that only trailing spaces are skipped.</dd>
+ <dt><code>edges</code></dt>
+ <dd>The start and end of the text decoration is inset slightly (e.g., by half of the line thickness) from the content edge of the decorating box. Thus, adjacent elements receive separate underlines. (This is important in Chinese, where underlining is a form of punctuation.)</dd>
+ <dd><img alt='An example of "text-decoration-skip: edges;".' src="https://mdn.mozillademos.org/files/13466/decoration-skip-edges.png"></dd>
+ <dt><code>box-decoration</code></dt>
+ <dd>The text decoration is skipped over the box's margin, border, and padding areas. This only has an effect on decorations imposed by an ancestor; a <em>decorating box</em> never draws over its own box decoration.</dd>
+</dl>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h2 id="Example">Example</h2>
+
+<h3 id="HTML">HTML</h3>
+
+<pre class="brush: html">&lt;p&gt;Hey, grab a cup of &lt;em&gt;coffee!&lt;/em&gt;&lt;/p&gt;</pre>
+
+<h3 id="CSS">CSS</h3>
+
+<pre class="brush: css; highlight[4]">p {
+  margin: 0;
+  font-size: 3em;
+  text-decoration: underline;
+  text-decoration-skip: edges;
+}</pre>
+
+<h3 id="Result">Result</h3>
+
+<p>{{EmbedLiveSample("Example", "100%", 150)}}</p>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName("CSS4 Text Decoration", "#text-decoration-skipping", "text-decoration-skip")}}</td>
+   <td>{{Spec2("CSS4 Text Decoration")}}</td>
+   <td>Initial definition</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.properties.text-decoration-skip")}}</p>

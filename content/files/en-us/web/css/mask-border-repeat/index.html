@@ -1,0 +1,84 @@
+---
+title: mask-border-repeat
+slug: Web/CSS/mask-border-repeat
+summary: >-
+  The mask-border-repeat CSS property sets how the edge regions of a source
+  image are adjusted to fit the dimensions of an element's mask border.
+tags:
+  - CSS
+  - CSS Masking
+  - CSS Property
+  - Experimental
+  - NeedsCompatTable
+  - NeedsExample
+  - Reference
+---
+<div>{{CSSRef}}{{SeeCompatTable}}</div>
+
+<p>The <strong><code>mask-border-repeat</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property sets how the <a href="/en-US/docs/Web/CSS/border-image-slice#edge-regions">edge regions</a> of a source image are adjusted to fit the dimensions of an element's <a href="/en-US/docs/Web/CSS/mask-border">mask border</a>.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="brush: css no-line-numbers">/* Keyword value */
+mask-border-repeat: stretch;
+mask-border-repeat: repeat;
+mask-border-repeat: round;
+mask-border-repeat: space;
+
+/* vertical | horizontal */
+mask-border-repeat: round stretch;
+
+/* Global values */
+mask-border-repeat: inherit;
+mask-border-repeat: initial;
+mask-border-repeat: unset;
+</pre>
+
+<p>The <code>mask-border-repeat</code> property may be specified using one or two values chosen from the list of values below.</p>
+
+<ul>
+ <li>When <strong>one</strong> value is specified, it applies the same behavior on <strong>all four sides</strong>.</li>
+ <li>When <strong>two</strong> values are specified, the first applies to the <strong>top and bottom</strong>, the second to the <strong>left and right</strong>.</li>
+</ul>
+
+<h3 id="Values">Values</h3>
+
+<dl>
+ <dt><code>stretch</code></dt>
+ <dd>The source image's edge regions are stretched to fill the gap between each border.</dd>
+ <dt><code>repeat</code></dt>
+ <dd>The source image's edge regions are tiled (repeated) to fill the gap between each border. Tiles may be clipped to achieve the proper fit.</dd>
+ <dt><code>round</code></dt>
+ <dd>The source image's edge regions are tiled (repeated) to fill the gap between each border. Tiles may be stretched to achieve the proper fit.</dd>
+ <dt><code>space</code></dt>
+ <dd>The source image's edge regions are tiled (repeated) to fill the gap between each border. Extra space will be distributed in between tiles to achieve the proper fit.</dd>
+</dl>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h2 id="Specifications" name="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName("CSS Masks", "#propdef-mask-border-repeat", "mask-border-repeat")}}</td>
+   <td>{{Spec2("CSS Masks")}}</td>
+   <td>Initial definition</td>
+  </tr>
+ </tbody>
+</table>
+
+<div>{{cssinfo}}</div>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<p>TBD</p>

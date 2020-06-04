@@ -1,0 +1,36 @@
+---
+title: ServiceWorkerGlobalScope.onsync
+slug: Web/API/ServiceWorkerGlobalScope/onsync
+summary: "The ServiceWorkerGlobalScope.onsync event of the ServiceWorkerGlobalScope interface is\_fired whenever a\_SyncEvent\_event occurs. This is triggered when a call to\_SyncManager.register\_is made from a service worker client page. The attempt to sync is made either\_immediately if the network is available or as soon as the network becomes available."
+---
+<p>{{APIRef("")}}</p>
+
+<p>The <strong><code>ServiceWorkerGlobalScope.onsync</code></strong> event of the {{domxref("ServiceWorkerGlobalScope")}} interface is<span style="line-height: 1.5;"> fired whenever a </span><code style="font-style: normal; font-weight: normal; line-height: 1.5;"><a href="https://developer.mozilla.org/en-US/docs/Web/Events/SyncEvent" title="/en-US/docs/Web/Events/SyncEvent">SyncEvent</a></code><span style="line-height: 1.5;"> event occurs. This is triggered when a call to </span><a href="https://developer.mozilla.org/en-US/docs/Web/API/SyncManager/register" style="line-height: 1.5;" title="The register method of the SyncManager interface returns a Promise that resolves to a SyncRegistration instance."><code>SyncManager.register</code></a><span style="line-height: 1.5;"> is made from a service worker client page. The attempt to sync is made either immediately if the network is available or as soon as the network becomes available. </span></p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox">ServiceWorkerGlobalScope.onsync = function(SyncEvent) { ... }
+self.addEventListener('sync', function(SyncEvent) { ... })</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th>Specification</th>
+   <th>Status</th>
+   <th>Comment</th>
+  </tr>
+  <tr>
+   <td>{{SpecName('Background Sync','#sync-event','onsync')}}</td>
+   <td>{{Spec2('Background Sync')}}</td>
+   <td>Adds the {{domxref("ServiceWorkerGlobalScope.onsync","onsync")}} event.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.ServiceWorkerGlobalScope.onsync")}}</p>

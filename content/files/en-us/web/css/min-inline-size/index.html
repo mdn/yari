@@ -1,0 +1,105 @@
+---
+title: min-inline-size
+slug: Web/CSS/min-inline-size
+summary: >-
+  The min-inline-size CSS property defines the horizontal or vertical minimal
+  size of an element's block, depending on its writing mode. It corresponds to
+  either the min-width or the min-height property, depending on the value of
+  writing-mode.
+tags:
+  - CSS
+  - CSS Logical Property
+  - CSS Property
+  - Experimental
+  - Reference
+  - min-inline-size
+---
+<div>{{CSSRef}}</div>
+
+<p>The <strong><code>min-inline-size</code></strong> <a href="/en-US/docs/Web/CSS" title="CSS">CSS</a> property defines the horizontal or vertical minimal size of an element's block, depending on its writing mode. It corresponds to either the {{cssxref("min-width")}} or the {{cssxref("min-height")}} property, depending on the value of {{cssxref("writing-mode")}}.</p>
+
+<div>{{EmbedInteractiveExample("pages/css/min-inline-size.html")}}</div>
+
+<p class="hidden">The source for this interactive example is stored in a GitHub repository. If you'd like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="brush:css no-line-numbers">/* &lt;length&gt; values */
+min-inline-size: 100px;
+min-inline-size: 5em;
+
+/* &lt;percentage&gt; values */
+min-inline-size: 10%;
+
+/* Keyword values */
+min-inline-size: max-content;
+min-inline-size: min-content;
+min-inline-size: fit-content(20em);
+
+/* Global values */
+min-inline-size: inherit;
+min-inline-size: initial;
+min-inline-size: unset;
+</pre>
+
+<p>If the writing mode is vertically oriented, the value of <code>min-inline-size</code> relates to the minimum height of the element; otherwise, it relates to the minimum width of the element. A related property is {{cssxref("min-block-size")}}, which defines the other dimension of the element.</p>
+
+<p>{{cssinfo}}</p>
+
+<h3 id="Values">Values</h3>
+
+<p>The <code>min-inline-size</code> property takes the same values as the {{cssxref("min-width")}} and {{cssxref("min-height")}} properties.</p>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h2 id="Example">Example</h2>
+
+<h3 id="HTML">HTML</h3>
+
+<pre class="brush: html">&lt;p class="exampleText"&gt;Example text&lt;/p&gt;
+</pre>
+
+<h3 id="CSS">CSS</h3>
+
+<pre class="brush: css">.exampleText {
+  writing-mode: vertical-rl;
+  background-color: yellow;
+  block-size: 5%;
+  min-inline-size: 200px;
+}</pre>
+
+<p>{{EmbedLiveSample("Example")}}</p>
+
+<h2 id="Specification">Specification</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName("CSS Logical Properties", "#propdef-min-inline-size", "min-inline-size")}}</td>
+   <td>{{Spec2("CSS Logical Properties")}}</td>
+   <td>Initial definition</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.properties.min-inline-size")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>The mapped physical properties: {{cssxref("min-width")}} and {{cssxref("min-height")}}</li>
+ <li>{{cssxref("writing-mode")}}</li>
+</ul>

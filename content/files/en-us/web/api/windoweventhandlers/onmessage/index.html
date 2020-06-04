@@ -1,0 +1,50 @@
+---
+title: WindowEventHandlers.onmessage
+slug: Web/API/WindowEventHandlers/onmessage
+summary: >-
+  The onmessage property of the WindowEventHandlers mixin is the EventHandler
+  called whenever an object receives a message event.
+tags:
+  - API
+  - Event Handler
+  - HTML-DOM
+  - Property
+  - Reference
+  - Window
+  - WindowEventHandlers
+  - events
+  - onmessage
+---
+<div>{{APIRef("HTML DOM")}}{{ SeeCompatTable() }}</div>
+
+<p>The <strong><code>onmessage</code></strong> property of the {{domxref("WindowEventHandlers")}} mixin is the {{domxref("EventHandler")}} called whenever an object receives a {{event("message")}} event.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox">window.addEventListener('message', function(event) { ... })
+window.onmessage = function(event) { ... }</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+  <tr>
+   <td>{{SpecName('HTML WHATWG','#handler-window-onmessage','onmessage')}}</td>
+   <td>{{Spec2('HTML WHATWG')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div>
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.WindowEventHandlers.onmessage")}}</p>
+</div>

@@ -1,0 +1,50 @@
+---
+title: '-ms-hyphenate-limit-lines'
+slug: Web/CSS/-ms-hyphenate-limit-lines
+summary: >-
+  The -ms-hyphenate-limit-lines CSS property is a Microsoft extension specifying
+  the maximum number of consecutive lines in an element that may be ended with a
+  hyphenated word.
+tags:
+  - CSS
+  - CSS Property
+  - Non-standard
+  - Reference
+---
+<div>{{CSSRef}}</div>
+
+<div>{{non-standard_header}}</div>
+
+<div> </div>
+
+<p>The <strong><code>-ms-hyphenate-limit-lines</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property is a <a href="/en-US/docs/Web/CSS/Microsoft_CSS_extensions">Microsoft extension</a> specifying the maximum number of consecutive lines in an element that may be ended with a hyphenated word.</p>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax" name="Syntax">Syntax</h2>
+
+<h3 id="Values" name="Values">Values</h3>
+
+<dl>
+ <dt><code>no-limit</code></dt>
+ <dd>
+ <p>Indicates that hyphenation is not limited based on the number of consecutive hyphenated lines. In the flow above the consecutive hyphenated lines limit would be an infinitely large positive number.</p>
+ </dd>
+ <dt>{{cssxref("integer")}}</dt>
+ <dd>
+ <p>Indicates the maximum number of successive hyphenated lines.</p>
+
+ <p>For instance, if 2, then no more than 2 successive lines may end with a hyphenated word. If 0 then no lines may end with a hyphenated word. (Hyphenation is effectively disabled.)</p>
+
+ <p>Negative values are not allowed.</p>
+ </dd>
+</dl>
+
+<h3 id="Formal_syntax" name="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">  {{csssyntax}}
+</pre>
+
+<h2 id="Specifications" name="Specifications">Specifications</h2>
+
+<p>Not part of any specification.</p>

@@ -40,4 +40,39 @@ yarn-error.log*
 
 # Can be removed once content lives in its own repo
 /archivecontent/files
-/content/files
+
+# These are an effect of the dumper still producing all locales
+# We haven't decided what to do with them but for now we're *not*
+# going to check them into git.
+/content/files/ar/
+/content/files/bg/
+/content/files/bn/
+/content/files/ca/
+/content/files/de/
+/content/files/el/
+/content/files/es/
+/content/files/fa/
+/content/files/fi/
+/content/files/fr/
+/content/files/he/
+/content/files/hi-in/
+/content/files/hu/
+/content/files/id/
+/content/files/it/
+/content/files/ja/
+/content/files/kab/
+/content/files/ko/
+/content/files/ms/
+/content/files/my/
+/content/files/nl/
+/content/files/pl/
+/content/files/pt-br/
+/content/files/pt-pt/
+/content/files/ru/
+/content/files/sv-se/
+/content/files/th/
+/content/files/tr/
+/content/files/uk/
+/content/files/vi/
+/content/files/zh-cn/
+/content/files/zh-tw/

@@ -1,0 +1,70 @@
+---
+title: Set.prototype.clear()
+slug: Web/JavaScript/Reference/Global_Objects/Set/clear
+summary: The clear() method removes all elements from a Set object.
+tags:
+  - ECMAScript 2015
+  - JavaScript
+  - Method
+  - Prototype
+  - Reference
+  - set
+---
+<div>{{JSRef}}</div>
+
+<p>The <code><strong>clear()</strong></code> method removes all elements from a <code>Set</code> object.</p>
+
+<div>{{EmbedInteractiveExample("pages/js/set-prototype-clear.html")}}</div>
+
+<p class="hidden">The source for this interactive example is stored in a GitHub repository. If you'd like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox"><em>mySet</em>.clear();</pre>
+
+<h3 id="Return_value">Return value</h3>
+
+<p>{{jsxref("undefined")}}.</p>
+
+<h2 id="Examples">Examples</h2>
+
+<h3 id="Using_the_clear_method">Using the <code>clear</code> method</h3>
+
+<pre class="brush: js">var mySet = new Set();
+mySet.add(1);
+mySet.add('foo');
+
+mySet.size;       // 2
+mySet.has('foo'); // true
+
+mySet.clear();
+
+mySet.size;       // 0
+mySet.has('bar')  // false
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+  </tr>
+  <tr>
+   <td>{{SpecName('ESDraft', '#sec-set.prototype.clear', 'Set.prototype.clear')}}</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.builtins.Set.clear")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("Set")}}</li>
+ <li>{{jsxref("Set.prototype.delete()")}}</li>
+</ul>

@@ -1,0 +1,119 @@
+---
+title: Intl.ListFormat
+slug: Web/JavaScript/Reference/Global_Objects/Intl/ListFormat
+summary: >-
+  The Intl.ListFormat object is a constructor for objects that enable
+  language-sensitive list formatting.
+tags:
+  - Class
+  - Experimental
+  - Internationalization
+  - Intl
+  - JavaScript
+  - ListFormat
+---
+<p>{{JSRef}}</p>
+
+<p>The <strong><code>Intl.ListFormat</code></strong> object is a constructor for objects that enable language-sensitive list formatting.</p>
+
+<div>{{EmbedInteractiveExample("pages/js/intl-listformat.html", "taller")}}</div>
+
+<p class="hidden">The source for this interactive example is stored in a GitHub repository. If you'd like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</p>
+
+<h2 id="Constructor">Constructor</h2>
+
+<dl>
+ <dt><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/ListFormat"><code>Intl.ListFormat()</code></a></dt>
+ <dd>Creates a new <code>ListFormat</code> object.</dd>
+</dl>
+
+<h2 id="Static_methods">Static methods</h2>
+
+<dl>
+ <dt>{{jsxref("ListFormat.supportedLocalesOf", "Intl.ListFormat.supportedLocalesOf()")}}</dt>
+ <dd>Returns an array containing those of the provided locales that are supported without having to fall back to the runtime's default locale.</dd>
+</dl>
+
+<h2 id="Instance_methods">Instance methods</h2>
+
+<dl>
+ <dt>{{jsxref("ListFormat.prototype.format", "Intl.ListFormat.prototype.format()")}}</dt>
+ <dd>Returns a language-specific formatted string representing the elements of the list.</dd>
+ <dt>{{jsxref("ListFormat.prototype.formatToParts", "Intl.ListFormat.prototype.formatToParts()")}}</dt>
+ <dd>Returns an array of objects representing the different components that can be used to format a list of values in a locale-aware fashion.</dd>
+</dl>
+
+<h2 id="Examples">Examples</h2>
+
+<h3 id="Using_format">Using <code>format</code></h3>
+
+<p>The following example shows how to create a List formatter using the English language.</p>
+
+<pre class="brush: js">const list = ['Motorcycle', 'Bus', 'Car'];
+
+ console.log(new Intl.ListFormat('en-GB', { style: 'long', type: 'conjunction' }).format(list));
+// &gt; Motorcycle, Bus and Car
+
+ console.log(new Intl.ListFormat('en-GB', { style: 'short', type: 'disjunction' }).format(list));
+// &gt; Motorcycle, Bus or Car
+
+ console.log(new Intl.ListFormat('en-GB', { style: 'narrow', type: 'unit' }).format(list));
+// &gt; Motorcycle Bus Car
+</pre>
+
+<h3 id="Using_formatToParts">Using <code>formatToParts</code></h3>
+
+<p>The following example shows how to create a List formatter returning formatted parts</p>
+
+<pre class="brush: js">const list = ['Motorcycle', 'Bus', 'Car'];
+console.log(new Intl.ListFormat('en-GB', { style: 'long', type: 'conjunction' }).formatToParts(list));
+ 
+// [ { "type": "element", "value": "Motorcycle" }, 
+//   { "type": "literal", "value": ", " }, 
+//   { "type": "element", "value": "Bus" },
+//   { "type": "literal", "value": ", and " },
+//   { "type": "element", "value": "Car" } ];
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('Intl.ListFormat', '#listformat-objects', 'ListFormat')}}</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div>
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.builtins.Intl.ListFormat")}}</p>
+</div>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl">Intl</a></code></li>
+</ul>
+
+<div id="gtx-anchor" style="position: absolute; left: 20px; top: 1894px; width: 593.609px; height: 42px;"></div>
+
+<div class="jfk-bubble gtx-bubble" style="display: none;">
+<div class="jfk-bubble-content-id" id="bubble-2"></div>
+
+<div class="jfk-bubble-closebtn-id jfk-bubble-closebtn"></div>
+
+<div class="jfk-bubble-arrow-id jfk-bubble-arrow">
+<div class="jfk-bubble-arrowimplbefore"></div>
+
+<div class="jfk-bubble-arrowimplafter"></div>
+</div>
+</div>

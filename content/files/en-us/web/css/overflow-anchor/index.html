@@ -1,0 +1,88 @@
+---
+title: overflow-anchor
+slug: Web/CSS/overflow-anchor
+summary: >-
+  The overflow-anchor CSS property provides a way to opt out of the browser's
+  scroll anchoring behavior, which adjusts scroll position to minimize content
+  shifts.
+tags:
+  - CSS
+  - CSS Property
+  - CSS Scroll Anchoring
+  - Reference
+---
+<div>{{CSSRef}}</div>
+
+<p>The <strong><code>overflow-anchor</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property provides a way to opt out of the browser's scroll anchoring behavior, which adjusts scroll position to minimize content shifts.</p>
+
+<p>Scroll anchoring behavior is enabled by default in any browser that supports it. Therefore, changing the value of this property is typically only required if you are experiencing problems with scroll anchoring in a document or part of a document and need to turn the behavior off.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="brush:css no-line-numbers">/* Keyword values */
+overflow-anchor: auto;
+overflow-anchor: none;
+
+/* Global values */
+overflow-anchor: inherit;
+overflow-anchor: initial;
+overflow-anchor: unset;
+</pre>
+
+<h3 id="Values">Values</h3>
+
+<dl>
+ <dt><code>auto</code></dt>
+ <dd>The element becomes a potential anchor when adjusting scroll position.</dd>
+ <dt><code>none</code></dt>
+ <dd>The element won't be selected as a potential anchor.</dd>
+</dl>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h2 id="Example">Example</h2>
+
+<p>To prevent scroll anchoring in a document, use the <code>overflow-anchor</code> property.</p>
+
+<pre class="brush: css">body {
+  overflow-anchor: none;
+}
+</pre>
+
+<ul>
+</ul>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('CSS Scroll Anchoring', '#propdef-overflow-anchor', 'overflow-anchor')}}</td>
+   <td>{{Spec2('CSS Scroll Anchoring')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
+</table>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.properties.overflow-anchor")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><a href="/en-US/docs/Web/CSS/overflow-anchor/Guide_to_scroll_anchoring">Guide to scroll anchoring</a></li>
+</ul>

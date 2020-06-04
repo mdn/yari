@@ -1,0 +1,101 @@
+---
+title: 'RTCPeerConnection: iceconnectionstatechange event'
+slug: Web/API/RTCPeerConnection/iceconnectionstatechange_event
+summary: >-
+  An iceconnectionstatechange event is sent to an RTCPeerConnection object each
+  time the ICE connection state changes during the negotiation process.
+tags:
+  - API
+  - Connection
+  - Connectivity
+  - Disconnect
+  - ICE
+  - Media
+  - RTCPeerConnection
+  - Reference
+  - WebRTC
+  - WebRTC API
+  - events
+  - iceConnectionState
+  - iceconnectionstatechange
+---
+<div>{{APIRef("WebRTC")}}</div>
+
+<p><span class="seoSummary">An <strong><code>iceconnectionstatechange</code></strong> event is sent to an {{domxref("RTCPeerConnection")}} object each time the {{Glossary("ICE")}} connection state changes during the negotiation process.</span> The new ICE connection state is available in the object's {{domxref("RTCPeerConnection.iceConnectionState", "iceConnectionState")}}} property.</p>
+
+<table class="properties">
+ <tbody>
+  <tr>
+   <th scope="row">Bubbles</th>
+   <td>No</td>
+  </tr>
+  <tr>
+   <th scope="row">Cancelable</th>
+   <td>No</td>
+  </tr>
+  <tr>
+   <th scope="row">Interface</th>
+   <td>{{DOMxRef("Event")}}</td>
+  </tr>
+  <tr>
+   <th scope="row">Event handler property</th>
+   <td>{{DOMxRef("RTCPeerConnection.oniceconnectionstatechange", "oniceconnectionstatechange")}}</td>
+  </tr>
+ </tbody>
+</table>
+
+<p>One common task performed by the <code>iceconnectionstatechange</code> event listener: to trigger ICE restart when the state changes to <code>failed</code>. See {{SectionOnPage("/en-US/docs/Web/API/WebRTC_API/Session_lifetime", "ICE restart")}} for further information.</p>
+
+<h2 id="Examples">Examples</h2>
+
+<p>An event handler for this event can be added using the {{domxref("RTCPeerConnection.oniceconnectionstatechange")}} property or by using {{domxref("EventTarget.addEventListener", "addEventListener()")}} on the <code>RTCPeerConnection</code>.</p>
+
+<p>In this example, a handler for <code>iceconnectionstatechange</code> is set up to cleanly shut down a conference call when the ICE connection enters the <code>disconnected</code> state.</p>
+
+<pre class="brush: js">pc.addEventListener("iceconnectionstatechange", ev =&gt; {
+  if (pc.iceConnectionState === "disconnected") {
+    closeVideoCall(pc);  // Our code to shut down the call
+  }
+}, false);
+</pre>
+
+<p>This can also be written as:</p>
+
+<pre class="brush: js">pc.oniceconnectionstatechange = ev =&gt; {
+  if (pc.iceConnectionState === "disconnected") {
+    closeVideoCall(pc);  // Our code to shut down the call
+  }
+}
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+  <tr>
+   <td>{{ SpecName('WebRTC 1.0', '#event-iceconnectionstatechange', 'iceconnectionstatechange') }}</td>
+   <td>{{Spec2('WebRTC 1.0')}}</td>
+   <td> </td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.RTCPeerConnection.iceconnectionstatechange_event")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><a href="/en-US/docs/Web/API/WebRTC_API" title="/en-US/docs/CSS/Using_CSS_animations">WebRTC API</a></li>
+ <li>{{domxref("RTCPeerConnection")}}</li>
+ <li>{{domxref("RTCPeerConnection.onIceConnectionStateChange")}}</li>
+ <li>{{domxref("RTCPeerConnection.iceConnectionState")}}</li>
+</ul>

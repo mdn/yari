@@ -1,0 +1,89 @@
+---
+title: 'Window: deviceorientation event'
+slug: Web/API/Window/deviceorientation_event
+summary: >-
+  The deviceorientation event is fired when fresh data is available from an
+  orientation sensor about the current orientation of the device as compared to
+  the Earth coordinate frame. This data is gathered from a magnetometer inside
+  the device.
+tags:
+  - Sensors
+  - Window Event
+  - events
+---
+<div>{{APIRef}}</div>
+
+<p><span class="seoSummary">The <code>deviceorientation</code> event is fired when fresh data is available from an orientation sensor about the current orientation of the device as compared to the Earth coordinate frame. This data is gathered from a magnetometer inside the device.</span> See <a href="/en-US/docs/DOM/Orientation_and_motion_data_explained">Orientation and motion data explained</a> for details.</p>
+
+<table class="properties">
+ <tbody>
+  <tr>
+   <th scope="row">Bubbles</th>
+   <td>No</td>
+  </tr>
+  <tr>
+   <th scope="row">Cancelable</th>
+   <td>No</td>
+  </tr>
+  <tr>
+   <th scope="row">Interface</th>
+   <td>{{domxref("DeviceOrientationEvent")}}</td>
+  </tr>
+  <tr>
+   <th scope="row">Event handler property</th>
+   <td>{{domxref("window.ondeviceorientation")}}</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Examples">Examples</h2>
+
+<pre class="brush: js">if (window.DeviceOrientationEvent) {
+    window.addEventListener("deviceorientation", function(event) {
+        // alpha: rotation around z-axis
+        var rotateDegrees = event.alpha;
+        // gamma: left to right
+        var leftToRight = event.gamma;
+        // beta: front back motion
+        var frontToBack = event.beta;
+
+        handleOrientationEvent(frontToBack, leftToRight, rotateDegrees);
+    }, true);
+}
+
+var handleOrientationEvent = function(frontToBack, leftToRight, rotateDegrees) {
+    // do something amazing
+};
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName("Device Orientation", "#deviceorientation", "DeviceOrientation event")}}</td>
+   <td>{{Spec2("Device Orientation")}}</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.Window.deviceorientation_event")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><a href="/en-US/docs/Web/Events/devicemotion"><code>devicemotion</code></a></li>
+ <li><a href="/en-US/docs/Web/API/Detecting_device_orientation">Detecting device orientation</a></li>
+ <li><a href="/en-US/docs/Web/Guide/Events/Orientation_and_motion_data_explained">Orientation and motion data explained</a></li>
+ <li>Simulating orientation events on desktop browsers with the <a href="http://louisremi.github.com/orientation-devtool/">orientation-devtool</a></li>
+</ul>

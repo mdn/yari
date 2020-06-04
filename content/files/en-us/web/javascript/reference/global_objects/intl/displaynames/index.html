@@ -1,0 +1,152 @@
+---
+title: Intl.DisplayNames
+slug: Web/JavaScript/Reference/Global_Objects/Intl/DisplayNames
+summary: >-
+  The Intl.DisplayNames object is a constructor for objects that enables the
+  consistent translation of language, region and script display names.
+tags:
+  - Class
+  - DisplayNames
+  - Internationalization
+  - Intl
+  - JavaScript
+  - Reference
+---
+<div>{{JSRef}}</div>
+
+<p>The <strong><code>Intl.DisplayNames</code></strong> object is a constructor for objects that enables the consistent translation of language, region and script display names.</p>
+
+<h2 id="Constructor">Constructor</h2>
+
+<dl>
+ <dt><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DisplayNames/DisplayNames"><code>Intl.DisplayNames()</code></a></dt>
+ <dd>Creates a new <code>Intl.DisplayNames</code> object.</dd>
+</dl>
+
+<h2 id="Static_methods">Static methods</h2>
+
+<dl>
+ <dt><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DisplayNames/supportedLocalesOf"><code>Intl.DisplayNames.supportedLocalesOf()</code></a></dt>
+ <dd>Returns an array containing those of the provided locales that are supported without having to fall back to the runtime's default locale.</dd>
+</dl>
+
+<h2 id="Instance_methods">Instance methods</h2>
+
+<dl>
+ <dt><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DisplayNames/of"><code>Intl.DisplayNames.prototype.of()</code></a></dt>
+ <dd>This method receives a <code>code</code> and returns a string based on the locale and options provided when instantiating <a href="#"><code>Intl.DisplayNames</code></a>.</dd>
+ <dt><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DisplayNames/resolvedOptions"><code>Intl.DisplayNames.prototype.resolvedOptions()</code></a></dt>
+ <dd>Returns a new object with properties reflecting the locale and formatting options computed during initialization of the object.</dd>
+</dl>
+
+<h2 id="Examples">Examples</h2>
+
+<h3 id="Region_Code_Display_Names">Region Code Display Names</h3>
+
+<p>To create an <code>Intl.DisplayNames</code> for a locale and get the display name for a region code.</p>
+
+<pre class="brush: js">// Get display names of region in English
+var regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
+console.log(regionNames.of('419')); // "Latin America"
+console.log(regionNames.of('BZ')); // "Belize"
+console.log(regionNames.of('US')); // "United States"
+console.log(regionNames.of('BA')); // "Bosnia &amp; Herzegovina"
+console.log(regionNames.of('MM')); // "Myanmar (Burma)"
+
+// Get display names of region in Traditional Chinese
+regionNames = new Intl.DisplayNames(['zh-Hant'], {type: 'region'});
+console.log(regionNames.of('419')); // "拉丁美洲"
+console.log(regionNames.of('BZ')); // "貝里斯"
+console.log(regionNames.of('US')); // "美國"
+console.log(regionNames.of('BA')); // "波士尼亞與赫塞哥維納"
+console.log(regionNames.of('MM')); // "緬甸"</pre>
+
+<h3 id="Language_Display_Names">Language Display Names</h3>
+
+<p>To create an <code>Intl.DisplayNames</code> for a locale and get the display name for a language-script-region sequence.</p>
+
+<pre class="brush: js">// Get display names of language in English
+var languageNames = new Intl.DisplayNames(['en'], {type: 'language'});
+console.log(languageNames.of('fr')); // "French"
+console.log(languageNames.of('de')); // "German"
+console.log(languageNames.of('fr-CA')); // "Canadian French"
+console.log(languageNames.of('zh-Hant')); // "Traditional Chinese"
+console.log(languageNames.of('en-US')); // "American English"
+console.log(languageNames.of('zh-TW')); // "Chinese (Taiwan)"]
+
+// Get display names of language in Traditional Chinese
+languageNames = new Intl.DisplayNames(['zh-Hant'], {type: 'language'});
+console.log(languageNames.of('fr')); // "法文"
+console.log(languageNames.of('zh')); // "中文"
+console.log(languageNames.of('de')); // "德文"</pre>
+
+<h3 id="Script_Code_Display_Names">Script Code Display Names</h3>
+
+<p>To create an <code>Intl.DisplayNames</code> for a locale and get the display name for a script code.</p>
+
+<pre class="brush: js">// Get display names of script in English
+var scriptNames = new Intl.DisplayNames(['en'], {type: 'script'});
+// Get script names
+console.log(scriptNames.of('Latn')); // "Latin"
+console.log(scriptNames.of('Arab')); // "Arabic"
+console.log(scriptNames.of('Kana')); // "Katakana"
+
+// Get display names of script in Traditional Chinese
+scriptNames = new Intl.DisplayNames(['zh-Hant'], {type: 'script'});
+console.log(scriptNames.of('Latn')); // "拉丁文"
+console.log(scriptNames.of('Arab')); // "阿拉伯文"
+console.log(scriptNames.of('Kana')); // "片假名"</pre>
+
+<h3 id="Currency_Code_Display_Names">Currency Code Display Names</h3>
+
+<p>To create an <code>Intl.DisplayNames</code> for a locale and get the display name for currency code.</p>
+
+<pre class="brush: js">// Get display names of currency code in English
+var currencyNames = new Intl.DisplayNames(['en'], {type: 'currency'});
+// Get currency names
+console.log(currencyNames.of('USD')); // "US Dollar"
+console.log(currencyNames.of('EUR')); // "Euro"
+console.log(currencyNames.of('TWD')); // "New Taiwan Dollar"
+console.log(currencyNames.of('CNY')); // "Chinese Yuan"
+
+// Get display names of currency code in Traditional Chinese
+currencyNames = new Intl.DisplayNames(['zh-Hant'], {type: 'currency'});
+console.log(currencyNames.of('USD')); // "美元"
+console.log(currencyNames.of('EUR')); // "歐元"
+console.log(currencyNames.of('TWD')); // "新台幣"
+console.log(currencyNames.of('CNY')); // "人民幣"</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('Intl.DisplayNames', '#sec-intl-displaynames', 'DisplayNames')}}</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div>
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.builtins.Intl.DisplayNames")}}</p>
+</div>
+
+<h3 id="Implementation_Progress">Implementation Progress</h3>
+
+<p>The following table provides a daily implementation status for new features that has not yet reached cross-browser stability. The data is generated by running the relevant feature tests in <a href="https://github.com/tc39/test262">Test262</a>, the standard test suite of JavaScript, in the nightly build, or latest release of each browser's JavaScript engine.</p>
+
+<p>{{EmbedTest262ReportResultsTable("Intl.DisplayNames")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl">Intl</a></code></li>
+</ul>

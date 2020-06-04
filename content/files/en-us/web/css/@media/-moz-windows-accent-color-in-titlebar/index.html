@@ -1,0 +1,50 @@
+---
+title: '-moz-windows-accent-color-in-titlebar'
+slug: Web/CSS/@media/-moz-windows-accent-color-in-titlebar
+summary: >-
+  The -moz-windows-accent-color-in-titlebar Gecko-only CSS media feature can be
+  used to apply styles based on whether accent colors are enabled in Microsoft
+  Windows titlebars.
+tags:
+  - '-moz-windows-accent-color-in-titlebar'
+  - '@media'
+  - CSS
+  - 'CSS:Mozilla Extensions'
+  - Non-standard
+  - media feature
+---
+<p>{{CSSRef}}{{Non-standard_Header}}</p>
+
+<div class="blockIndicator note">
+<p><strong>Note</strong>: Since <a href="/en-US/docs/Mozilla/Firefox/Releases/58">Firefox 58</a>, this media feature is no longer available to web content — it is only available internally (e.g. to XUL / chrome code). See {{bug(1396066)}} for more details.</p>
+</div>
+
+<p><span class="seoSummary">The <strong>-moz-windows-accent-color-in-titlebar</strong> Gecko-only <a href="/en-US/docs/CSS">CSS</a> <a href="/en-US/docs/Web/CSS/Media_Queries/Using_media_queries#Media_features">media feature</a> can be used to apply styles based on whether accent colors are enabled in Microsoft Windows titlebars.</span></p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<dl>
+ <dt>{{CSSxRef("&lt;integer&gt;")}}</dt>
+ <dd>In recent Windows versions (e.g., 10), if accent colors are enabled in window titlebars, this is 1. Otherwise it's 0.</dd>
+</dl>
+
+<p><strong>Media:</strong> {{CSSxRef("Media/Visual")}}<br>
+ <strong>Accepts min/max prefixes:</strong> no</p>
+
+<h2 id="Example">Example</h2>
+
+<pre class="brush: css">@media (-moz-windows-accent-color-in-titlebar: 1) {
+  h1 {
+    color: -moz-win-accentcolortext;
+  }
+
+  body {
+    background-color: -moz-win-accentcolor;
+  }
+}</pre>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>This feature is closely related to the Mozilla-specific {{CSSxRef("&lt;color&gt;")}} values <code>-moz-win-accentcolor</code> and <code>-moz-win-accentcolortext</code>, which allow you to access the Windows accent and overlaid text accent colors from CSS.</li>
+</ul>
