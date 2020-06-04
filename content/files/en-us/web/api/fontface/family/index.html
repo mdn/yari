@@ -1,0 +1,62 @@
+---
+title: family
+slug: Web/API/FontFace/family
+summary: >-
+  The FontFace.family property allows the author to get or set the font family
+  of a FontFace object. This is equivalent to the font-family descriptor of
+  @font-face.
+tags:
+  - API
+  - CSS Font Loading API
+  - FontFace
+  - Fonts
+  - Property
+  - Reference
+  - family
+---
+<div>{{draft}}{{APIRef("CSS Font Loading API")}}{{SeeCompatTable}}</div>
+
+<p><span class="seoSummary">The <code><strong>FontFace.family</strong></code> property allows the author to get or set the font family of a {{domxref("FontFace")}} object. This is equivalent to the {{cssxref("@font-face/font-family", "font-family")}} descriptor of {{cssxref("@font-face")}}.</span></p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox"><em>instanceOfFontFace</em>.family = 'font family name';
+var fontFace = <em>instanceOfFontFace</em>.family; // "font family name"</pre>
+
+<h3 id="Value">Value</h3>
+
+<p>A {{domxref("DOMString")}}.</p>
+
+<h2 id="Example">Example</h2>
+
+<pre class="brush: js">var fontFace = new FontFace('Roboto', 'url(https://fonts.example.com/roboto.woff2)');
+console.log(fontFace.family); // 'Roboto'
+
+fontFace.family = 'newRoboto';
+console.log(fontFace.family); // 'newRoboto'
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+  <tr>
+   <td>{{SpecName('CSS3 Font Loading','#dom-fontface-family','family')}}</td>
+   <td>{{Spec2('CSS3 Font Loading')}}</td>
+   <td>Initial definition</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div>
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.FontFace.family")}}</p>
+</div>

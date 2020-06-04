@@ -1,0 +1,71 @@
+---
+title: margin-trim
+slug: Web/CSS/margin-trim
+summary: >-
+  The margin-trim property allows the container to trim the margins of its
+  children where they adjoin the container’s edges.
+tags:
+  - CSS
+  - CSS Property
+  - Draft
+  - Experimental
+  - NeedsContent
+  - NeedsExample
+  - NeedsLiveSample
+  - Reference
+---
+<p>{{CSSRef}}{{Draft}}</p>
+
+<p>The <code>margin-trim</code> property allows the container to trim the margins of its children where they adjoin the container’s edges.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<dl>
+ <dt><code>none</code></dt>
+ <dd>Margins are not trimmed by the container.</dd>
+ <dt><code>in-flow</code></dt>
+ <dd>
+ <p>For in-flow boxes contained by this box, block-axis margins adjacent to the box's edges are truncated to zero.</p>
+
+ <p>It also truncates any margins collapsed with such a margin.</p>
+ </dd>
+ <dt><code>all</code></dt>
+ <dd>Trims the margins of in-flow boxes and floats whose margins coincide with the container's content edge.</dd>
+</dl>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{CSSSyntax}}</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th>Specification</th>
+   <th>Status</th>
+   <th>Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><a href="https://drafts.csswg.org/css-box-4/#margin-trim">CSS Box Model Module Level 4</a></td>
+   <td></td>
+   <td></td>
+  </tr>
+ </tbody>
+</table>
+
+<p>{{CSSInfo}}</p>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.properties.margin-trim")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{CSSxRef("margin")}}</li>
+</ul>

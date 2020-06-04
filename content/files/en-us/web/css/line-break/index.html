@@ -1,0 +1,79 @@
+---
+title: line-break
+slug: Web/CSS/line-break
+summary: >-
+  The line-break CSS property sets how to break lines of Chinese, Japanese, or
+  Korean (CJK) text when working with punctuation and symbols.
+tags:
+  - CSS
+  - CSS Property
+  - CSS Text
+  - NeedsExample
+  - Reference
+---
+<div>{{CSSRef}}</div>
+
+<p>The <strong><code>line-break</code></strong> CSS property sets how to break lines of Chinese, Japanese, or Korean (CJK) text when working with punctuation and symbols.</p>
+
+<pre class="brush:css no-line-numbers">/* Keyword values */
+line-break: auto;
+line-break: loose;
+line-break: normal;
+line-break: strict;
+line-break: anywhere;
+
+/* Global values */
+line-break: inherit;
+line-break: initial;
+line-break: unset;
+</pre>
+
+<div>{{cssinfo}}</div>
+
+<h2 id="Syntax">Syntax</h2>
+
+<h3 id="Values">Values</h3>
+
+<dl>
+ <dt><code>auto</code></dt>
+ <dd>Break text using the default line break rule.</dd>
+ <dt><code>loose</code></dt>
+ <dd>Break text using the least restrictive line break rule. Typically used for short lines, such as in newspapers.</dd>
+ <dt><code>normal</code></dt>
+ <dd>Break text using the most common line break rule.</dd>
+ <dt><code>strict</code></dt>
+ <dd>Break text using the most stringent line break rule.</dd>
+ <dt><code>anywhere</code> </dt>
+ <dd>
+ <p>There is a soft wrap opportunity around every typographic character unit, including around any punctuation character or preserved white spaces, or in the middle of words, disregarding any prohibition against line breaks, even those introduced by characters with the GL, WJ, or ZWJ character class or mandated by the word-break property. The different wrapping opportunities must not be prioritized. Hyphenation is not applied.</p>
+ </dd>
+</dl>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('CSS3 Text', '#line-break-property', 'line-break')}}</td>
+   <td>{{Spec2('CSS3 Text')}}</td>
+   <td>Initial definition</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.properties.line-break")}}</p>

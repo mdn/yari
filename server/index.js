@@ -21,7 +21,6 @@ const app = express();
 app.use(express.json());
 
 const STATIC_ROOT = path.join(__dirname, "../client/build");
-const CONTENT_ALL_TITLES = path.join(__dirname, "../content/_all-titles.json");
 
 // The client/build directory won't exist at the very very first time
 // you start the server after a fresh git clone.
@@ -30,13 +29,7 @@ if (!fs.existsSync(STATIC_ROOT)) {
 }
 
 function getFolderFromURI(uri) {
-  // The file CONTENT_ALL_TITLES has a complete list of every *known* URI
-  // and what file, on disk, it corresponds to.
-  // Let's open this file dynamically each time because there's not much
-  // benefit in caching it once since it might change after this server
-  // has started.
-  const allUris = JSON.parse(fs.readFileSync(CONTENT_ALL_TITLES));
-  const data = allUris[uri.toLowerCase()];
+  const data = getOrCreateBuilder().allTitles.get(decodeURI(uri.toLowerCase()));
   if (data) {
     return data.file;
   }
@@ -85,6 +78,7 @@ function getRedirectUrl(uri) {
 // sensitive.
 app.use((req, res, next) => {
   req.url = req.url.toLowerCase();
+
   if (req.url.includes("/_samples_/")) {
     // We need to convert incoming live-sample URL's like:
     //   /en-us/docs/web/css/:indeterminate/_samples_/progress_bar

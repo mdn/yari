@@ -1,0 +1,62 @@
+---
+title: WebRTC Statistics API
+slug: Web/API/WebRTC_Statistics_API
+summary: >-
+  The WebRTC API has a vast array of statistics available, covering the entire
+  breadth of the WebRTC connectivity system, from sender to receiver and peer to
+  peer.
+tags:
+  - Draft
+---
+<p>{{APIRef("WebRTC")}}{{Draft}}</p>
+
+<p>The WebRTC API has a vast array of statistics available, covering the entire breadth of the WebRTC connectivity system, from sender to receiver and peer to peer.</p>
+
+<h2 id="Collecting_statistics">Collecting statistics</h2>
+
+<p>You can collect statistics at various levels throughout the WebRTC hierarchy of objects. Most broadly, you can call {{domxref("RTCPeerConnection.getStats", "getStats()")}} on an {{domxref("RTCPeerConnection")}} to get statistics for the connection overall. In this example, a new {{domxref("RTCPeerConnection")}} is created, and then {{domxref("WindowOrWorkerGlobalScope.setInterval", "setInterval()")}} is used to set the function <code>getConnectionStats()</code> to be called every second.</p>
+
+<p>That function, in turn, uses {{domxref("RTCPeerConnection.getStats", "getStats()")}} to obtain statistics for the connection and to make use of that data.</p>
+
+<pre class="brush: js">try {
+  myPeerConnection = new RTCPeerConnection(pcOptions);
+
+  statsInterval = window.setInterval(getConnectionStats, 1000);
+  /* add event handlers, etc */
+} catch(err) {
+  console.error("Error creating RTCPeerConnection: " + err);
+}
+
+function getConnectionStats() {  
+  myPeerConnection.getStats(null).then(stats =&gt; {
+    var statsOutput = "";
+ 
+    stats.forEach(report =&gt; {
+      if (report.type === "inbound-rtp" &amp;&amp; report.kind === "video") {
+        Object.keys(report).forEach(statName =&gt; {
+          statsOutput += `&lt;strong&gt;${statName}:&lt;/strong&gt; ${report[statName]}&lt;br&gt;\n`;
+        });
+      }
+    });
+    
+    document.querySelector(".stats-box").innerHTML = statsOutput;
+  });  
+}</pre>
+
+<p>When the promise returned by <code>getStats()</code> is fulfilled, the resolution handler receives as input an {{domxref("RTCStatsReport")}} object containing the statistics information. This object contains a {{jsxref("Map")}} of named dictionaries based on {{domxref("RTCStats")}} and its affiliated types.</p>
+
+<p>This example specifically looks for the report whose {{domxref("RTCStats.type", "type")}} is <code>inbound-rtp</code> and whose {{domxref("RTCRtpStreamStats.kind", "kind")}} is <code>video</code>. This way, we look only at the video-related statistics for the local {{domxref("RTCRtpReceiver")}} responsible for receiving the streamed media.</p>
+
+<h2 id="Commonly_used_statistics">Commonly used statistics</h2>
+
+<p> </p>
+
+<h2 id="Statistics_dictionary_hierarchy">Statistics dictionary hierarchy</h2>
+
+<p>The {{domxref("RTCStats")}} object you receive contains a set of named dictionaries, each describing a different set of statistics. Many of these dictionaries are constructed using a set of sub-dictionaries which are chosen depending on the type of statistics being collected and how they were received.</p>
+
+<p> </p>
+
+<h2 id="Specifications">Specifications</h2>
+
+<p>https://w3c.github.io/webrtc-pc/#mandatory-to-implement-stats</p>

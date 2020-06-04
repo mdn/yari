@@ -1,0 +1,56 @@
+---
+title: '-ms-overflow-style'
+slug: Web/CSS/-ms-overflow-style
+summary: >-
+  The -ms-overflow-style CSS property is a Microsoft extension controlling the
+  behavior of scrollbars when the content of an element overflows.
+tags:
+  - CSS
+  - CSS Property
+  - NeedsBrowserCompatibility
+  - NeedsCompatTable
+  - NeedsExample
+  - NeedsMobileBrowserCompatibility
+  - Non-standard
+  - Reference
+---
+<div>{{CSSRef}}</div>
+
+<div>{{non-standard_header}}</div>
+
+<div> </div>
+
+<p>The <strong><code>-ms-overflow-style</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property is a <a href="/en-US/docs/Web/CSS/Microsoft_CSS_extensions">Microsoft extension</a> controlling the behavior of scrollbars when the content of an element overflows.</p>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax" name="Syntax">Syntax</h2>
+
+<h3 id="Values" name="Values">Values</h3>
+
+<dl>
+ <dt><code>auto</code></dt>
+ <dd>The initial value. Same as <code>inherit</code>.</dd>
+ <dt><code>none</code></dt>
+ <dd>Scrollbars are never displayed, although the element can still be scrolled if the element's content overflows.</dd>
+ <dt><code>scrollbar</code></dt>
+ <dd>"Traditional" scrollbars are displayed if the element's content overflows. "Traditional" scrollbars don't auto-hide and never overlap the element's content. Accordingly, the dimensions of the layout area for the content are reduced by the width (for vertical scrollbars) or height (for horizontal scrollbars) of the scrollbar(s).</dd>
+ <dt><code>-ms-autohiding-scrollbar</code></dt>
+ <dd>Auto-hiding scrollbars are used if the element's content overflows. Auto-hiding scrollbars are displayed during scrolling or shortly after the pointer interacts with the page, and are hidden shortly after scrolling and pointer interaction stops. When they are visible, auto-hiding scrollbars overlap the element's content.</dd>
+</dl>
+
+<h3 id="Formal_syntax" name="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">  {{csssyntax}}
+</pre>
+
+<h2 id="Specifications" name="Specifications">Specifications</h2>
+
+<p>Not part of any specification.</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{CSSxRef("scrollbar-width")}}</li>
+ <li>{{CSSxRef("::-webkit-scrollbar")}}</li>
+</ul>

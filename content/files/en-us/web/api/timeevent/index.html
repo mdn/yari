@@ -1,0 +1,56 @@
+---
+title: TimeEvent
+slug: Web/API/TimeEvent
+summary: >-
+  The TimeEvent interface, a part of SVG SMIL animation, provides specific
+  contextual information associated with Time events. It extends Event.
+tags:
+  - API
+  - Interface
+  - NeedsMarkupWork
+  - SVG
+---
+<p>{{APIRef("SVG")}}</p>
+
+<p>The <strong><code>TimeEvent</code></strong> interface, a part of <a href="/en-US/docs/Web/SVG/SVG_animation_with_SMIL">SVG SMIL</a> animation, provides specific contextual information associated with Time events. It extends {{domxref("Event")}}.</p>
+
+<h2 id="Properties">Properties</h2>
+
+<table class="members">
+ <tbody>
+  <tr id="detail">
+   <td>long</td>
+   <td>
+    <dl>
+     <dt><a class="ext" href="http://www.w3.org/TR/SVG/single-page.html#animate-__smil__TimeEvent__detail">detail</a></dt>
+     <dd>Specifies some detail information about the Event, depending on the type of the event. For this event type, indicates the repeat number for the animation.</dd>
+    </dl>
+   </td>
+  </tr>
+  <tr id="view">
+   <td>AbstractView</td>
+   <td>
+    <dl>
+     <dt><a class="ext" href="http://www.w3.org/TR/SVG/single-page.html#animate-__smil__TimeEvent__view">view</a></dt>
+     <dd>The view attribute identifies the AbstractView [DOM2VIEWS] from which the event was generated.</dd>
+    </dl>
+   </td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Methods">Methods</h2>
+
+<table class="members">
+ <tbody>
+  <tr id="initTimeEvent">
+   <td>void</td>
+   <td>
+    <dl>
+     <dt><a class="ext" href="http://www.w3.org/TR/SVG/single-page.html#animate-__smil__TimeEvent__initTimeEvent">initTimeEvent</a>(DOMString typeArg, AbstractView viewArg, long detailArg)</dt>
+     <dd>The initTimeEvent method is used to initialize the value of a TimeEvent created through the DocumentEvent interface. This method may only be called before the TimeEvent has been dispatched via the dispatchEvent method, though it may be called multiple times during that phase if necessary.</dd>
+    </dl>
+   </td>
+  </tr>
+ </tbody>
+</table>

@@ -1,0 +1,92 @@
+---
+title: '-ms-scrollbar-face-color'
+slug: Web/CSS/-ms-scrollbar-face-color
+summary: >-
+  The -ms-scrollbar-face-color CSS property is a Microsoft extension that
+  specifies the color of the scroll box and scroll arrows of a scroll bar.
+tags:
+  - CSS
+  - CSS Property
+  - 'CSS:Microsoft extentions'
+  - Deprecated
+  - Non-standard
+  - Reference
+---
+<p>{{CSSRef}}{{Non-standard_Header}}{{Deprecated_Header}}</p>
+
+<p>The <code><strong>-ms-scrollbar-face-color</strong></code> <a href="/en-US/docs/Web/CSS">CSS</a> property is a <a href="/en-US/docs/Web/CSS/Microsoft_extensions">Microsoft extension</a> that specifies the color of the scroll box and scroll arrows of a scroll bar.</p>
+
+<p>{{CSSInfo}}</p>
+
+<h2 id="Syntax" name="Syntax">Syntax</h2>
+
+<h3 id="Values" name="Values">Values</h3>
+
+<dl>
+ <dt>{{CSSxRef("&lt;color&gt;")}}</dt>
+ <dd>
+ <p>The color of the scroll box and scroll arrows.</p>
+ </dd>
+</dl>
+
+<h3 id="Formal_syntax" name="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{CSSSyntax}}</pre>
+
+<h2 id="Examples" name="Examples">Examples</h2>
+
+<p>This example uses <code>-ms-scrollbar-face-color</code> and {{cssxref("-ms-scrollbar-arrow-color")}} to display a scroll bar with a blue scroll box and arrows, and a scroll bar with a green scroll box and arrows.</p>
+
+<pre class="brush: css;">div {
+  width: 150px;
+  height: 150px;
+  overflow-y: scroll;
+  border-style: solid;
+  border-width: thin;
+  font-family: sans-serif;
+  float: left;
+  margin-right: 10px;
+}
+.blueScrollBox {
+  scrollbar-face-color: blue;
+  scrollbar-arrow-color: blue;
+}
+.greenScrollBox {
+  scrollbar-face-color: green;
+  scrollbar-arrow-color: green;
+}
+</pre>
+
+<pre class="brush: html;">&lt;body&gt;
+  &lt;div class="blueScrollBox"&gt;
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+  &lt;/div&gt;
+  &lt;div class="greenScrollBox"&gt;
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+  &lt;/div&gt;
+&lt;/body&gt;
+</pre>
+
+<p>{{EmbedLiveSample("Examples")}}</p>
+
+<p>This image shows the result:</p>
+
+<p><img alt="Image for -ms-scrollbar-face-color example" src="https://mdn.mozillademos.org/files/15826/image002.png" style="height: 168px; width: 330px;"></p>
+
+<h2 id="Specifications" name="Specifications">Specifications</h2>
+
+<p>Not part of any specification.</p>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.properties.-ms-scrollbar-face-color")}}</p>
+
+<h2 id="Remarks">Remarks</h2>
+
+<p>Supported in Windows Internet Explorer 8+. The <code>-ms-scrollbar-face-color</code> attribute is an extension to CSS, and can be used as a synonym for <code>scrollbar-face-color</code> in IE8 Standards Mode.</p>
+
+<p>The scroll box is the rectagular box within a scroll bar that can be moved either up and down or left and right on a track to change the position of the content on the screen. The scroll arrows, located at each end of a scroll bar, are the square buttons containing the arrows that move the content on the screen in small increments — either up and down or left and right.</p>
+
+<p>This property applies to elements that display a scroll bar. CSS enables scrolling on all objects through the {{CSSxRef("overflow")}} property.</p>

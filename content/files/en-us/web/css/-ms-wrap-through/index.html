@@ -1,0 +1,48 @@
+---
+title: '-ms-wrap-through'
+slug: Web/CSS/-ms-wrap-through
+summary: >-
+  The -ms-wrap-through CSS property is a Microsoft extension that specifies how
+  content should wrap around an exclusion element.
+tags:
+  - CSS
+  - CSS Property
+  - 'CSS:Microsoft Extensions'
+  - Non-standard
+  - Reference
+---
+<div>{{CSSRef}}{{non-standard_header}}</div>
+
+<p>The <strong><code>-ms-wrap-through</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property is a <a href="/en-US/docs/Web/CSS/Microsoft_CSS_extensions">Microsoft extension</a> that specifies how content should wrap around an exclusion element.</p>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax" name="Syntax">Syntax</h2>
+
+<h3 id="Values" name="Values">Values</h3>
+
+<dl>
+ <dt><code>wrap</code></dt>
+ <dd>
+ <p>The exclusion element inherits its parent node's wrapping context. Its descendant inline content wraps around exclusions defined outside the element.</p>
+ </dd>
+ <dt><code>none</code></dt>
+ <dd>
+ <p>The exclusion element does not inherit its parent node's wrapping context. Its descendants are only subject to exclusion shapes defined inside the element.</p>
+ </dd>
+</dl>
+
+<h3 id="Formal_syntax" name="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}
+</pre>
+
+<h2 id="Specifications" name="Specifications">Specifications</h2>
+
+<p>Not part of any specification.</p>
+
+<h2 id="Remarks" name="Remarks">Remarks</h2>
+
+<p>You can use the <code>-ms-wrap-through</code> property to control the effect of exclusions; for instance, to cause one content block to wrap around an exclusion element and another to intersect the same exclusion element.</p>
+
+<p>The wrapping context of a box is a collection of exclusion areas contributed by its associated exclusion boxes.  The inline flow content of a box is placed in the area that corresponds to the subtraction of its wrapping context from its own content area. For more information about exclusion elements' impact on content flow, see the <a href="https://drafts.csswg.org/css-exclusions-1/#terms">Terminology</a> section of the CSS Exclusions Module Level 1 specification.</p>

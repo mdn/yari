@@ -55,4 +55,24 @@ test("the 'notranslate' class is correctly inserted", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("pre.notranslate").length).toEqual($("pre").length);
-});
+
+test("content with non-ascii characters in the slug", () => {
+  const titlesFile = path.join(buildRoot, "en-us", "titles.json");
+  expect(fs.existsSync(titlesFile)).toBeTruthy();
+  const { titles } = JSON.parse(fs.readFileSync(titlesFile));
+  expect(titles["/en-US/docs/Glossary/Bézier_curve"]).toBeTruthy();
+
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "glossary",
+    "bézier_curve"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  expect(fs.existsSync(jsonFile)).toBeTruthy();
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.title).toBe("Bézier curve");
+  expect(doc.mdn_url).toBe("/en-US/docs/Glossary/Bézier_curve");});

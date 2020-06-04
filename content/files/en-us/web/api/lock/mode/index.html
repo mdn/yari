@@ -1,0 +1,69 @@
+---
+title: Locks.mode
+slug: Web/API/Lock/mode
+summary: >-
+  The mode read-only property of the Lock interface returns the access mode
+  passed to LockManager.request() when the lock was requested. The mode is
+  either "exclusive" (the default) or "shared".
+tags:
+  - API
+  - Experimental
+  - Property
+  - Reference
+  - Web Locks API
+  - lock
+  - mode
+---
+<p>{{SeeCompatTable}}{{APIRef("Web Locks")}}</p>
+
+<p><span class="seoSummary">The <strong><code>mode</code></strong> read-only property of the {{domxref("Lock")}} interface returns the access mode passed to {{domxref('LockManager.request()')}} when the lock was requested. The mode is either <code>"exclusive"</code> (the default) or <code>"shared"</code>.</span></p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox">var <var>mode</var> = <var>Lock.mode</var></pre>
+
+<h3 id="Value">Value</h3>
+
+<p>One of <code>"exclusive"</code> or <code>"shared"</code>.</p>
+
+<h2 id="Example">Example</h2>
+
+<p>The following examples show how the mode property is passed in the call to {{domxref('LockManager.request()')}}. <code>LockManager</code> is the object returned by {{domxref('navigator.locks')}}.</p>
+
+<pre class="brush: js">// Should show "exclusive" (the default)
+navigator.locks.request("my_resource", show_lock_properties);
+
+// Should show "exclusive"
+navigator.locks.request("my_resource", {mode: "exclusive"}, show_lock_properties);
+
+// Should show "shared"
+navigator.locks.request("my_resource", {mode: "shared"}, show_lock_properties);
+
+function show_lock_properties(lock) {
+  console.log(`The lock name is: ${lock.name}`);
+  console.log(`The lock mode is: ${lock.mode}`);
+}
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+  <tr>
+   <td>{{SpecName('Web Locks','#dom-lock-mode','mode')}}</td>
+   <td>{{Spec2('Web Locks')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table in this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.Lock.mode")}}</p>
