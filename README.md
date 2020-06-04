@@ -55,7 +55,7 @@ with the front-end code, ready to be served as static files.
 First of all, development on `yari` can mean the source code (e.g. the
 styling of the header) or it can mean the content, since it's all one
 repo. This document doesn't distinguish between the two. In the future we
-might expand with more documentation specifically for contributing on the
+might expand with more documentation specifically for contributing to the
 content exclusively.
 
 The `yarn start` command encapsulates the front-end dev server
