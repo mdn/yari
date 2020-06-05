@@ -59,7 +59,7 @@ tags:
 <p>Because <code>insertAdjacentHTML()</code> accepts a string and not a <code>Node</code> as its second parameter, <code>XMLSerializer</code> is used to first convert the node into a string.</p>
 
 <pre class="brush: js">var inp = document.createElement('input');
-var XMLS = new XMLSerializer(); 
+var XMLS = new XMLSerializer();
 var inp_xmls = XMLS.serializeToString(inp); // First convert DOM node into a string
 
 // Insert the newly created node into the document's body

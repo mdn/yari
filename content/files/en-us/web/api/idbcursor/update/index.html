@@ -94,7 +94,7 @@ tags:
     if (cursor) {
       if (cursor.value.albumTitle === 'A farewell to kings') {
         const updateData = cursor.value;
-          
+
         updateData.year = 2050;
         const request = cursor.update(updateData);
         request.onsuccess = function() {
@@ -104,10 +104,10 @@ tags:
 
       const listItem = document.createElement('li');
       listItem.innerHTML = '&lt;strong&gt;' + cursor.value.albumTitle + '&lt;/strong&gt;, ' + cursor.value.year;
-      list.appendChild(listItem);   
-      cursor.continue();        
+      list.appendChild(listItem);
+      cursor.continue();
     } else {
-      console.log('Entries displayed.');         
+      console.log('Entries displayed.');
     }
   };
 };</pre>

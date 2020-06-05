@@ -42,11 +42,11 @@ request.onerror = function(event) {
 
 request.onsuccess = function(event) {
   note.innerHTML += '&lt;li&gt;Database initialised.&lt;/li&gt;';
- 
+
   // store the result of opening the database in the db variable.
   // This is used a lot below
   db = request.result;
- 
+
   // Run the displayData() function to populate the task list with
   // all the to-do list data already in the IDB
   displayData();
@@ -59,12 +59,12 @@ request.onsuccess = function(event) {
 //it is only implemented in recent browsers
 request.onupgradeneeded = function(event) {
   var db = event.target.result;
- 
+
   db.onerror = function(event) {
     note.innerHTML += '&lt;li&gt;Error loading database.&lt;/li&gt;';
   };
 
-  // Create an objectStore for this database   
+  // Create an objectStore for this database
   var objectStore = db.createObjectStore("toDoList", { keyPath: "taskTitle" });
 
   ...

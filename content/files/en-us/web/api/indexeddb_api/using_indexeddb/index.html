@@ -131,9 +131,9 @@ request.onsuccess = function(event) {
 
 <p><a name="Updating_the_version_of_the_database"></a>When you create a new database or increase the version number of an existing database (by specifying a higher version number than you did previously, when {{ anch("Opening a database") }}), the <code style="font-size: 14px; color: rgb(51, 51, 51);">onupgradeneeded</code><span style="line-height: 21px;"> event will be triggered and an </span><a href="/en-US/docs/Web/API/IDBVersionChangeEvent">IDBVersionChangeEvent</a> object will be passed to any <code>onversionchange</code> event handler set up on <code>request.result</code> (i.e., <code>db</code> in the example). In the handler for the <code>upgradeneeded</code> event, you should create the object stores needed for this version of the database:</p>
 
-<pre class="brush:js;">// This event is only implemented in recent browsers   
-request.onupgradeneeded = function(event) { 
-  // Save the IDBDatabase interface 
+<pre class="brush:js;">// This event is only implemented in recent browsers
+request.onupgradeneeded = function(event) {
+  // Save the IDBDatabase interface
   var db = event.target.result;
 
   // Create an objectStore for this database
@@ -226,7 +226,7 @@ request.onupgradeneeded = function(event) {
   // no two customers have the same email, so use a unique index.
   objectStore.createIndex("email", "email", { unique: true });
 
-  // Use transaction oncomplete to make sure the objectStore creation is 
+  // Use transaction oncomplete to make sure the objectStore creation is
   // finished before adding data into it.
   objectStore.transaction.oncomplete = function(event) {
     // Store values in the newly created objectStore.
@@ -263,7 +263,7 @@ request.onupgradeneeded = function (event) {
 
     var db = event.target.result;
 
-    // Create another object store called "names" with the autoIncrement flag set as true.    
+    // Create another object store called "names" with the autoIncrement flag set as true.
     var objStore = db.createObjectStore("names", { autoIncrement : true });
 
     // Because the "names" object store has the key generator, the key for the name value is generated automatically.
@@ -302,7 +302,7 @@ request.onupgradeneeded = function (event) {
 
 <pre class="brush:js;">var transaction = db.transaction(["customers"], "readwrite");
 // Note: Older experimental implementations use the deprecated constant IDBTransaction.READ_WRITE instead of "readwrite".
-// In case you want to support such an implementation, you can write: 
+// In case you want to support such an implementation, you can write:
 // var transaction = db.transaction(["customers"], IDBTransaction.READ_WRITE);</pre>
 
 <p>The <code>transaction()</code> function takes two arguments (though one is optional) and returns a transaction object. The first argument is a list of object stores that the transaction will span. You can pass an empty array if you want the transaction to span all object stores, but don't do it because the spec says an empty array should generate an InvalidAccessError. If you don't specify anything for the second argument, you get a read-only transaction. Since you want to write to it here you need to pass the <code>"readwrite"</code> flag.</p>
@@ -385,7 +385,7 @@ request.onerror = function(event) {
 request.onsuccess = function(event) {
   // Get the old value that we want to update
   var data = event.target.result;
-  
+
   // update the value(s) in the object that you want to change
   data.age = 42;
 
@@ -560,13 +560,13 @@ openReq.onblocked = function(event) {
   // before we can proceed.
   console.log("Please close all other tabs with this site open!");
 };
-  
+
 openReq.onupgradeneeded = function(event) {
   // All other databases have been closed. Set everything up.
   db.createObjectStore(/* ... */);
   useDatabase(db);
 };
-  
+
 openReq.onsuccess = function(event) {
   var db = event.target.result;
   useDatabase(db);
@@ -643,7 +643,7 @@ function useDatabase(db) {
 
 <h3 id="HTML_Content">HTML Content</h3>
 
-<pre class="brush: html">&lt;script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"&gt;&lt;/script&gt;    
+<pre class="brush: html">&lt;script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"&gt;&lt;/script&gt;
 
     &lt;h1&gt;IndexedDB Demo: storing blobs, e-publication example&lt;/h1&gt;
     &lt;div class="note"&gt;

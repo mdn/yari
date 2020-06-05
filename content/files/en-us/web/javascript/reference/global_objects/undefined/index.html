@@ -37,14 +37,14 @@ tags:
 <pre class="brush: js example-bad">//  DON'T DO THIS
 
 //  logs "foo string"
-(function() { 
-  var undefined = 'foo'; 
-  console.log(undefined, typeof undefined); 
+(function() {
+  var undefined = 'foo';
+  console.log(undefined, typeof undefined);
 })();
 
 //  logs "foo string"
-(function(undefined) { 
-  console.log(undefined, typeof undefined); 
+(function(undefined) {
+  console.log(undefined, typeof undefined);
 })('foo');
 </pre>
 </div>
@@ -97,7 +97,7 @@ if (x === undefined) { //  throws a ReferenceError
 <p>The global scope is bound to the {{jsxref("globalThis", "global object", "", 1)}}, so checking the existence of a variable in the global context can be done by checking the existence of a property on the <em>global object</em>, using the {{jsxref("Operators/in", "in")}} operator, for instance:</p>
 
 <pre class="brush: js">if ('x' in window) {
-  //  these statements execute only if x is defined globally 
+  //  these statements execute only if x is defined globally
 }</pre>
 
 <h3 id="void_operator_and_undefined"><code>void</code> operator and <code>undefined</code></h3>

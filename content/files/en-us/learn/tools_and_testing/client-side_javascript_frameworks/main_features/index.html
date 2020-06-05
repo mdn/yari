@@ -280,7 +280,7 @@ import CounterButton from "./CounterButton";
 it("renders a semantic with an initial state of 0", () =&gt; {
   const { getByRole } = render(&lt;CounterButton /&gt;);
   const btn = getByRole("button");
- 
+
   expect(btn).toBeInTheDocument();
   expect(btn).toHaveTextContent("Clicked 0 times");
 });
@@ -288,10 +288,10 @@ it("renders a semantic with an initial state of 0", () =&gt; {
 it("Increments the count when clicked", () =&gt; {
   const { getByRole } = render(&lt;CounterButton /&gt;);
   const btn = getByRole("button");
- 
+
   fireEvent.click(btn);
   expect(btn).toHaveTextContent("Clicked 1 times");
- 
+
   fireEvent.click(btn);
   expect(btn).toHaveTextContent("Clicked 2 times");
 });</pre>

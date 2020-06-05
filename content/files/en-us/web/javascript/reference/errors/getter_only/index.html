@@ -36,17 +36,17 @@ TypeError: Cannot set property "prop" of #&lt;Object&gt; which has only a getter
 
 <pre class="brush: js example-bad">"use strict";
 
-function Archiver() { 
-  var temperature = null; 
-  Object.defineProperty(this, 'temperature', { 
-    get: function() { 
-      console.log('get!'); 
-      return temperature; 
+function Archiver() {
+  var temperature = null;
+  Object.defineProperty(this, 'temperature', {
+    get: function() {
+      console.log('get!');
+      return temperature;
     }
   });
 }
 
-var arc = new Archiver(); 
+var arc = new Archiver();
 arc.temperature; // 'get!'
 
 arc.temperature = 30;

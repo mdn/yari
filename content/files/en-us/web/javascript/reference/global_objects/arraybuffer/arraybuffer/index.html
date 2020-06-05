@@ -41,7 +41,7 @@ tags:
 <p>Starting with ECMAScript 2015, <code>ArrayBuffer</code> constructors require to be constructed with a {{jsxref("Operators/new", "new")}} operator. Calling an <code>ArrayBuffer</code> constructor as a function without <code>new</code>, will throw a {{jsxref("TypeError")}} from now on.</p>
 
 <pre class="brush: js example-bad">var dv = ArrayBuffer(10);
-// TypeError: calling a builtin ArrayBuffer constructor 
+// TypeError: calling a builtin ArrayBuffer constructor
 // without new is forbidden</pre>
 
 <pre class="brush: js example-good">var dv = new ArrayBuffer(10);</pre>

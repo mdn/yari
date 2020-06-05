@@ -50,9 +50,9 @@ tags:
 	Math.trunc = function(v) {
 		v = +v;
 		if (!isFinite(v)) return v;
-		
+
 		return (v - v % 1)   ||   (v &lt; 0 ? -0 : v === 0 ? v : 0);
-		
+
 		// returns:
 		//  0        -&gt;  0
 		// -0        -&gt; -0

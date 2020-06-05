@@ -37,18 +37,18 @@ tags:
 
 <pre class="brush: js">// {{domxref("MediaConfiguration")}} to be tested
 const mediaConfig = {
-    type : 'file', 
+    type : 'file',
     audio : {<code class="language-js">
         contentType <span class="punctuation token">:</span> <span class="string token">"audio/ogg"</span><span class="punctuation token">,</span>
-        channels <span class="punctuation token">:</span> <span class="number token">2</span><span class="punctuation token">,</span>   
-        bitrate <span class="punctuation token">:</span> <span class="number token">132700</span><span class="punctuation token">,</span> 
-        samplerate <span class="punctuation token">:</span> <span class="number token">5200</span> 
-     </code>}, 
-}; 
+        channels <span class="punctuation token">:</span> <span class="number token">2</span><span class="punctuation token">,</span>
+        bitrate <span class="punctuation token">:</span> <span class="number token">132700</span><span class="punctuation token">,</span>
+        samplerate <span class="punctuation token">:</span> <span class="number token">5200</span>
+     </code>},
+};
 
-// check support and performance 
+// check support and performance
 navigator.mediaCapabilities.decodingInfo(mediaConfig).then(result =&gt; { // result contains the media capabilities information
-    console.log('This configuration is ' +                     
+    console.log('This configuration is ' +
         (result.supported ? '' : 'not ') + 'supported, ' +             // Can the media, as configured, be decoded by the user agent
         (result.smooth ? '' : 'not ') + 'smooth, and ' +               // is it smooth?
         (result.powerEfficient ? '' : 'not ') + 'power efficient.')    // is it power efficient?

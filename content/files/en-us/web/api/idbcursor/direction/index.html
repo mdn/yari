@@ -82,8 +82,8 @@ tags:
       if(cursor) {
         var listItem = document.createElement('li');
         listItem.innerHTML = '&lt;strong&gt;' + cursor.value.albumTitle + '&lt;/strong&gt;, ' + cursor.value.year;
-        list.appendChild(listItem);  
-          
+        list.appendChild(listItem);
+
         console.log(cursor.direction);
         cursor.continue();
       } else {

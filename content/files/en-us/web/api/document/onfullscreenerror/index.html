@@ -32,9 +32,9 @@ tags:
 
 <p>This example attempts to call <code>requestFullscreen()</code> outside of an event handler. Since <code>requestFullscreen()</code> can only be called in response to user action, for security reasons, this will fail, causing the <code>fullscreenerror</code> to be sent to the document.</p>
 
-<pre class="brush: js">document.onfullscreenerror = function ( event ) { 
+<pre class="brush: js">document.onfullscreenerror = function ( event ) {
   displayWarning("Unable to switch into full-screen mode.");
-}; 
+};
 
 //....
 

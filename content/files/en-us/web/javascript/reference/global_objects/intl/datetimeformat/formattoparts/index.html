@@ -105,34 +105,34 @@ formatter.format(date);
 
 <pre class="brush: js">formatter.formatToParts(date);
 
-// return value: 
-[ 
-  { type: 'weekday',   value: 'Monday' }, 
-  { type: 'literal',   value: ', '     }, 
-  { type: 'month',     value: '12'     }, 
-  { type: 'literal',   value: '/'      }, 
-  { type: 'day',       value: '17'     }, 
-  { type: 'literal',   value: '/'      }, 
-  { type: 'year',      value: '2012'   }, 
-  { type: 'literal',   value: ', '     }, 
-  { type: 'hour',      value: '3'      }, 
-  { type: 'literal',   value: ':'      }, 
-  { type: 'minute',    value: '00'     }, 
-  { type: 'literal',   value: ':'      }, 
-  { type: 'second',    value: '42'     }, 
+// return value:
+[
+  { type: 'weekday',   value: 'Monday' },
+  { type: 'literal',   value: ', '     },
+  { type: 'month',     value: '12'     },
+  { type: 'literal',   value: '/'      },
+  { type: 'day',       value: '17'     },
+  { type: 'literal',   value: '/'      },
+  { type: 'year',      value: '2012'   },
+  { type: 'literal',   value: ', '     },
+  { type: 'hour',      value: '3'      },
+  { type: 'literal',   value: ':'      },
+  { type: 'minute',    value: '00'     },
+  { type: 'literal',   value: ':'      },
+  { type: 'second',    value: '42'     },
   { type: 'fractionalSecond', value: '000' },
-  { type: 'literal',   value: ' '      }, 
-  { type: 'dayPeriod', value: 'AM'     } 
+  { type: 'literal',   value: ' '      },
+  { type: 'dayPeriod', value: 'AM'     }
 ]
 </pre>
 
 <p>Now the information is available separately and it can be formatted and concatenated again in a customized way. For example by using {{jsxref("Array.prototype.map()")}}, <a href="/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions">arrow functions</a>, a <a href="/en-US/docs/Web/JavaScript/Reference/Statements/switch">switch statement</a>, <a href="/en-US/docs/Web/JavaScript/Reference/Template_literals">template literals</a>, and {{jsxref("Array.prototype.reduce()")}}.</p>
 
-<pre class="brush: js">var dateString = formatter.formatToParts(date).map(({type, value}) =&gt; { 
+<pre class="brush: js">var dateString = formatter.formatToParts(date).map(({type, value}) =&gt; {
   switch (type) {
-    case 'dayPeriod': return `&lt;b&gt;${value}&lt;/b&gt;`; 
-    default : return value; 
-  } 
+    case 'dayPeriod': return `&lt;b&gt;${value}&lt;/b&gt;`;
+    default : return value;
+  }
 }).reduce((string, part) =&gt; string + part);
 </pre>
 
@@ -150,7 +150,7 @@ console.log(dateString);
 
 <pre class="brush: js">let opts = { year: "numeric", month: "numeric", day: "numeric" };
 let df = new Intl.DateTimeFormat("zh-u-ca-chinese", opts);
-df.formatToParts(Date.UTC(2012, 11, 17, 3, 0, 42));  
+df.formatToParts(Date.UTC(2012, 11, 17, 3, 0, 42));
 
 // return value
 [
@@ -164,21 +164,21 @@ df.formatToParts(Date.UTC(2012, 11, 17, 3, 0, 42));  
 <p>If the <code>year</code> option is not set in the bag (to any value), the result will include only the <code>relatedYear</code>:</p>
 
 <pre class="brush: js">let df = new Intl.DateTimeFormat("zh-u-ca-chinese");
-df.formatToParts(Date.UTC(2012, 11, 17, 3, 0, 42));  
+df.formatToParts(Date.UTC(2012, 11, 17, 3, 0, 42));
 
 // return value
 [
    { type: 'relatedYear', value: '2012' },
    { type: 'literal', value: '年' },
    { type: 'month', value: '十一月' },
-   { type: 'day', value: '4' } 
+   { type: 'day', value: '4' }
 ]
 </pre>
 
 <p>In cases where the <code>year</code> would be output, <code>.format()</code> may commonly present these side-by-side:</p>
 
 <pre class="brush: js">let df = new Intl.DateTimeFormat("zh-u-ca-chinese", {year: "numeric"});
-df.format(Date.UTC(2012, 11, 17, 3, 0, 42));   
+df.format(Date.UTC(2012, 11, 17, 3, 0, 42));
 
 // return value
 2012壬辰年</pre>
@@ -187,7 +187,7 @@ df.format(Date.UTC(2012, 11, 17, 3, 0, 42));   
 
 <pre class="brush: js">let df = new Intl.DateTimeFormat("en-u-ca-chinese", {year: "numeric"});
 let date = Date.UTC(2012, 11, 17, 3, 0, 42);
-df.format(date);   
+df.format(date);
 
 // return value
 2012(ren-chen)

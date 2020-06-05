@@ -81,7 +81,7 @@ tags:
     'use strict';
     if ( ! ((typeof func === 'Function' || typeof func === 'function') &amp;&amp; this) )
         throw new TypeError();
-   
+
     var len = this.length &gt;&gt;&gt; 0,
         res = new Array(len), // preallocate array
         t = this, c = 0, i = -1;
@@ -109,7 +109,7 @@ tags:
         }
       }
     }
-   
+
     res.length = c; // shrink down array to proper size
     return res;
   };
@@ -133,7 +133,7 @@ let filtered = [12, 5, 8, 130, 44].filter(isBigEnough)
 
 <p>The following example returns all prime numbers in the array:</p>
 
-<pre><code>const array = [-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]; 
+<pre><code>const array = [-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 
 function isPrime(num) {
   for (let i = 2; num &gt; i; i++) {
@@ -171,7 +171,7 @@ function isNumber(obj) {
 function filterByID(item) {
   if (isNumber(item.id) &amp;&amp; item.id !== 0) {
     return true
-  } 
+  }
   invalidEntries++
   return false;
 }

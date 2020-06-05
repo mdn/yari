@@ -82,10 +82,10 @@ tags:
 
 <p>Creates and returns a new object store with the given name in the connected database.</p>
 
-<pre class="eval"> IDBObjectStoreSync createObjectStore(   
-  in DOMString name,   
-  in DOMString keypath,   
-  in optional boolean autoIncrement 
+<pre class="eval"> IDBObjectStoreSync createObjectStore(
+  in DOMString name,
+  in DOMString keypath,
+  in optional boolean autoIncrement
 ) raises  (IDBDatabaseException);
 </pre>
 
@@ -121,7 +121,7 @@ tags:
 <p>Opens the object store with the given name in the connected database using the specified mode.</p>
 
 <pre>IDBObjectStoreSync openObjectStore (
-  in DOMString name, 
+  in DOMString name,
   in optional unsigned short mode
 ) raises (IDBDatabaseException);
 </pre>

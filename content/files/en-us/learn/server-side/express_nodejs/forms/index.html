@@ -137,11 +137,11 @@ const { sanitizeBody } = require('express-validator/filter');
 <ul>
  <li><code><a href="https://github.com/ctavan/express-validator#bodyfields-message">body(fields[, message])</a></code>: Specifies a set of fields in the request body (a <code>POST</code> parameter) to validate along with an optional error message that can be displayed if it fails the tests. The validation criteria are daisy-chained to the <code>body()</code> method. For example, the first check below tests that the "name" field is not empty and sets an error message "Empty name" if it is not. The second test checks that the age field is a valid date, and uses <code>optional()</code> to specify that null and empty strings will not fail validation.
 
-  <pre class="brush: js">body('name', 'Empty name').isLength({ min: 1 }), 
+  <pre class="brush: js">body('name', 'Empty name').isLength({ min: 1 }),
 body('age', 'Invalid age').optional({ checkFalsy: true }).isISO8601(),
 </pre>
   You can also daisy chain different validators, and add messages that are displayed if the preceding validators are true.<br>
-   
+
   <pre class="brush: js">body('name').isLength({ min: 1 }).trim().withMessage('Name empty.')
     .isAlpha().withMessage('Name must be alphabet letters.'),
 </pre>

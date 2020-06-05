@@ -295,7 +295,7 @@ let urgentCallback = () =&gt; log("*** Oh noes! An urgent callback has run!");
 
 let doWork = () =&gt; {
   let result = 1;
- 
+
   queueMicrotask(urgentCallback);
 
   for (let i=2; i&lt;=10; i++) {

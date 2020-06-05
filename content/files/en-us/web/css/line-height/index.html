@@ -73,8 +73,8 @@ line-height: unset;
 
 <pre class="brush: css">/* All rules below have the same resultant line height */
 
-div { line-height: 1.2;   font-size: 10pt; }   /* number/unitless */ 
-div { line-height: 1.2em; font-size: 10pt; }   /* length */ 
+div { line-height: 1.2;   font-size: 10pt; }   /* number/unitless */
+div { line-height: 1.2em; font-size: 10pt; }   /* length */
 div { line-height: 120%;  font-size: 10pt; }   /* percentage */
 div { font: 10pt/1.2  Georgia,"Bitstream Charter",serif; } /* font shorthand */</pre>
 
@@ -120,7 +120,7 @@ h1 {
   length and percentage line-heights have poor inheritance behavior ...
 &lt;/div&gt;
 
-&lt;!-- The first &lt;h1&gt; line-height is calculated from its own font-size   (30px × 1.1) = 33px  --&gt; 
+&lt;!-- The first &lt;h1&gt; line-height is calculated from its own font-size   (30px × 1.1) = 33px  --&gt;
 &lt;!-- The second &lt;h1&gt; line-height results from the red div's font-size  (15px × 1.1) = 16.5px,  probably not what you want --&gt;
 </pre>
 

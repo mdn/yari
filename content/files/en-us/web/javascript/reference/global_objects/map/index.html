@@ -204,11 +204,11 @@ myMap.get(function() {}) // undefined, because keyFunc !== function () {}
 <pre class="brush: js">let myMap = new Map()
 myMap.set(NaN, 'not a number')
 
-myMap.get(NaN) 
+myMap.get(NaN)
 // "not a number"
 
 let otherNaN = Number('foo')
-myMap.get(otherNaN) 
+myMap.get(otherNaN)
 // "not a number"
 </pre>
 

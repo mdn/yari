@@ -37,7 +37,7 @@ let dc = pc.createDataChannel();
 dc.onmessage = function(event) {
   var el = document.createElement("p");
   var txtNode = document.createTextNode(event.data);
- 
+
   el.appendChild(txtNode);
   receiveBox.appendChild(el);
 }

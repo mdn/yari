@@ -197,7 +197,7 @@ document.body.onclick = function() {
 <pre class="brush: html">&lt;h1&gt;Speech synthesiser&lt;/h1&gt;
 
 &lt;p&gt;Enter some text in the input below and press return to hear it. change voices using the dropdown menu.&lt;/p&gt;
-    
+
 &lt;form&gt;
   &lt;input type="text" class="txt"&gt;
   &lt;div&gt;
@@ -249,7 +249,7 @@ var voices = [];
   for(i = 0; i &lt; voices.length ; i++) {
     var option = document.createElement('option');
     option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
-    
+
     if(voices[i].default) {
       option.textContent += ' -- DEFAULT';
     }

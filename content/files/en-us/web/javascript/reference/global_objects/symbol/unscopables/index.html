@@ -39,8 +39,8 @@ with (Array.prototype) {
   keys.push('something');
 }
 
-Object.keys(Array.prototype[Symbol.unscopables]); 
-// ["copyWithin", "entries", "fill", "find", "findIndex", 
+Object.keys(Array.prototype[Symbol.unscopables]);
+// ["copyWithin", "entries", "fill", "find", "findIndex",
 //  "includes", "keys", "values"]
 </pre>
 
@@ -48,14 +48,14 @@ Object.keys(Array.prototype[Symbol.unscopables]);
 
 <p>You can also set <code>unscopables</code> for your own objects.</p>
 
-<pre class="brush: js">var obj = { 
-  foo: 1, 
-  bar: 2 
+<pre class="brush: js">var obj = {
+  foo: 1,
+  bar: 2
 };
 
-obj[Symbol.unscopables] = { 
-  foo: false, 
-  bar: true 
+obj[Symbol.unscopables] = {
+  foo: false,
+  bar: true
 };
 
 with (obj) {

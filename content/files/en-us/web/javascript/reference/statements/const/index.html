@@ -72,8 +72,8 @@ let MY_FAV = 20;
 
 <p>It's important to note the nature of block scoping.</p>
 
-<pre class="brush: js">if (MY_FAV === 7) { 
-  // this is fine and creates a block scoped MY_FAV variable 
+<pre class="brush: js">if (MY_FAV === 7) {
+  // this is fine and creates a block scoped MY_FAV variable
   // (works equally well with let to declare a block scoped non const variable)
   let MY_FAV = 20;
 
@@ -114,7 +114,7 @@ MY_OBJECT.key = 'otherValue'; // Use Object.freeze() to make object immutable
 const MY_ARRAY = [];
 // It's possible to push items into the array
 MY_ARRAY.push('A'); // ["A"]
-// However, assigning a new array to the variable throws an error 
+// However, assigning a new array to the variable throws an error
 // Uncaught TypeError: Assignment to constant variable.
 MY_ARRAY = ['B'];</pre>
 

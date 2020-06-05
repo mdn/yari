@@ -80,10 +80,10 @@ var <em>request</em> = <em>objectStore</em>.delete(<em>KeyRange</em>);
 
 </span><span style="line-height: 1.5;">DBOpenRequest.onsuccess = function(event) {</span>
   note.innerHTML += '&lt;li&gt;Database initialised.&lt;/li&gt;';
-    
+
   // store the result of opening the database in the db variable. This is used a lot below
   db = DBOpenRequest.result;
-    
+
   // Run the deleteData() function to delete a record from the database
   deleteData();
 };

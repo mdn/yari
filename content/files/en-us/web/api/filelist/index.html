@@ -119,11 +119,11 @@ for (var i = 0; i &lt; files.length; i++) {
 
 &lt;script&gt;
 
-var pullfiles=function(){ 
+var pullfiles=function(){
     // love the query selector
     var fileInput = document.querySelector("#myfiles");
     var files = fileInput.files;
-    // cache files.length 
+    // cache files.length
     var fl = files.length;
     var i = 0;
 
@@ -132,7 +132,7 @@ var pullfiles=function(){
         var file = files[i];
         alert(file.name);
         i++;
-    }    
+    }
 }
 
 // set the input element onchange to call pullfiles

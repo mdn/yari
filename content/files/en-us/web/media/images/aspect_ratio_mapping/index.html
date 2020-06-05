@@ -31,9 +31,9 @@ tags:
 
 <p>Let’s move forward a few years to the era of responsive design. To keep images from breaking out of their containers when the container becomes narrower than the image, developers started using CSS like the following:</p>
 
-<pre class="brush: css">img { 
-  max-width: 100%; 
-  height: auto; 
+<pre class="brush: css">img {
+  max-width: 100%;
+  height: auto;
 }</pre>
 
 <p>This is really useful for responsive layouts, but unfortunately it causes the jank problem to return — the above CSS overrides the width and height attribute information, meaning that if the image has not loaded for some reason, its height will be set to 0. When the image finally loads, the same jank will occur as the page layout is shifted to make space for it.</p>
@@ -46,8 +46,8 @@ tags:
 
 <p>Due to this work, browsers are working on adding a new mechanism for sizing images before the actual image is loaded. Firefox has added an internal <code>aspect-ratio</code> property (in version 69 onwards) that applies to replaced elements, and other related elements that accept <code>width</code> and <code>height</code> attributes. This appears in the browser's internal UA stylesheet, similar to the following:</p>
 
-<pre class="brush: css">img, input[type="image"], video, embed, iframe, marquee, object, table { 
-  aspect-ratio: attr(width) / attr(height); 
+<pre class="brush: css">img, input[type="image"], video, embed, iframe, marquee, object, table {
+  aspect-ratio: attr(width) / attr(height);
 }</pre>
 
 <p>This actually affects any element that acts as a container for complex or mixed visual media — {{htmlelement("embed")}}, {{htmlelement("iframe")}}, {{htmlelement("marquee")}}, {{htmlelement("object")}}, {{htmlelement("table")}}, and {{htmlelement("video")}}, in addition to actual images ({{htmlelement("img")}} and <strong id="docs-internal-guid-1a994dc9-7fff-a700-71f0-25b6cfe48215"> </strong><code>&lt;input type="image"&gt;</code>). When such an element has <code>width</code> and <code>height</code> attributes set on it, its aspect ratio will be calculated before load time, and be available to the browser.</p>
@@ -58,8 +58,8 @@ tags:
 
 <p>When the <code>width</code>/<code>height</code> of an <code>&lt;img&gt;</code> element — as set using HTML attributes — is overidden using CSS using something like this:</p>
 
-<pre class="brush: css">img { 
-  max-width: 100%; height: auto 
+<pre class="brush: css">img {
+  max-width: 100%; height: auto
 }</pre>
 
 <p>The aspect ratio is then used to calculate the height and therefore the correct size is applied to the <code>&lt;img&gt;</code> element, meaning that the aforementioned jank will not occur when the image loads.</p>

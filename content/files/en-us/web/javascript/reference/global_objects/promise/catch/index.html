@@ -58,7 +58,7 @@ p.catch(function(<var>reason</var>) {
 (function(Promise){
     var originalThen = Promise.prototype.then;
     var originalCatch = Promise.prototype.catch;
-    
+
     Promise.prototype.then = function(){
         console.log('&gt; &gt; &gt; &gt; &gt; &gt; called .then on %o with arguments: %o', this, arguments);
         return originalThen.apply(this, arguments);

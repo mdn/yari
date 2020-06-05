@@ -104,19 +104,19 @@ evtSource.onmessage = function(e) {
 
 <pre class="brush: js">  const sse = new EventSource('/api/v1/sse');
 
-  /* This will listen only for events 
+  /* This will listen only for events
    * similar to the following:
-   * 
+   *
    * event: notice
    * data: useful data
    * id: someid
    *
    */
-  sse.addEventListener("notice", function(e) { 
+  sse.addEventListener("notice", function(e) {
     console.log(e.data)
   })
 
-  /* Similarly, this will listen for events 
+  /* Similarly, this will listen for events
    * with the field `event: update`
    */
   sse.addEventListener("update", function(e) {

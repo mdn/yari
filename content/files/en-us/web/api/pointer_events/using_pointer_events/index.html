@@ -64,7 +64,7 @@ Log: &lt;pre id="log" style="border: 1px solid #ccc;"&gt;&lt;/pre&gt;
   el.addEventListener("pointercancel", handleCancel, false);
   el.addEventListener("pointermove", handleMove, false);
   log("initialized.");
-} 
+}
 </pre>
 
 <p>This simply sets up all the event listeners for our {{HTMLElement("canvas")}} element so we can handle the touch events as they occur.</p>
@@ -82,7 +82,7 @@ Log: &lt;pre id="log" style="border: 1px solid #ccc;"&gt;&lt;/pre&gt;
   log("pointerdown.");
   var el = document.getElementsByTagName("canvas")[0];
   var ctx = el.getContext("2d");
-        
+
   log("pointerdown: id = " + evt.pointerId);
   ongoingTouches.push(copyTouch(evt));
   var color = colorForTouch(evt);
@@ -153,7 +153,7 @@ Log: &lt;pre id="log" style="border: 1px solid #ccc;"&gt;&lt;/pre&gt;
   } else {
     log("can't figure out which touch to end");
   }
-} 
+}
 </pre>
 
 <p>This is very similar to the previous function; the only real differences are that we draw a small square to mark the end and that when we call <a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice"><code>Array.splice()</code></a>, we simply remove the old entry from the ongoing touch list, without adding in the updated information. The result is that we stop tracking that touch point.</p>
@@ -166,7 +166,7 @@ Log: &lt;pre id="log" style="border: 1px solid #ccc;"&gt;&lt;/pre&gt;
   log("pointercancel: id = " + evt.pointerId);
   var idx = ongoingTouchIndexById(evt.pointerId);
   ongoingTouches.splice(idx, 1);  // remove it; we're done
-} 
+}
 </pre>
 
 <p>Since the idea is to immediately abort the touch, we simply remove it from the ongoing touch list without drawing a final line segment.</p>
@@ -210,13 +210,13 @@ Log: &lt;pre id="log" style="border: 1px solid #ccc;"&gt;&lt;/pre&gt;
 <pre class="brush: js">function ongoingTouchIndexById(idToFind) {
   for (var i = 0; i &lt; ongoingTouches.length; i++) {
     var id = ongoingTouches[i].identifier;
-    
+
     if (id == idToFind) {
       return i;
     }
   }
   return -1;    // not found
-} 
+}
 </pre>
 
 <h4 id="Showing_what's_going_on">Showing what's going on</h4>

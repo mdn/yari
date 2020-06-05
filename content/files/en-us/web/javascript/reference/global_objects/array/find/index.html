@@ -136,11 +136,11 @@ if (!Array.prototype.find) {
   {name: 'cherries', quantity: 5}
 ];
 
-function isCherries(fruit) { 
+function isCherries(fruit) {
   return fruit.name === 'cherries';
 }
 
-console.log(inventory.find(isCherries)); 
+console.log(inventory.find(isCherries));
 // { name: 'cherries', quantity: 5 }</pre>
 
 <h4 id="Using_arrow_function_and_destructuring">Using arrow function and destructuring</h4>
@@ -180,7 +180,7 @@ const array = [0,1,,,,5,6];
 
 // Shows all indexes, not just those with assigned values
 array.find(function(value, index) {
-  console.log('Visited index ', index, ' with value ', value); 
+  console.log('Visited index ', index, ' with value ', value);
 });
 
 // Shows all indexes, including deleted
@@ -191,16 +191,16 @@ array.find(function(value, index) {
     delete array[5];
   }
   // Element 5 is still visited even though deleted
-  console.log('Visited index ', index, ' with value ', value); 
+  console.log('Visited index ', index, ' with value ', value);
 });
 // expected output:
-// Deleting array[5] with value 5 
-// Visited index 0 with value 0 
-// Visited index 1 with value 1 
-// Visited index 2 with value undefined 
-// Visited index 3 with value undefined 
-// Visited index 4 with value undefined 
-// Visited index 5 with value undefined 
+// Deleting array[5] with value 5
+// Visited index 0 with value 0
+// Visited index 1 with value 1
+// Visited index 2 with value undefined
+// Visited index 3 with value undefined
+// Visited index 4 with value undefined
+// Visited index 5 with value undefined
 // Visited index 6 with value 6
 </pre>
 

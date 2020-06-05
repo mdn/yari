@@ -505,12 +505,12 @@ tags:
 
 <p>Eric Bailey, of CSS-Tricks, found an innovative use the update feature which, used in combination with animation-duration or transition-duration, to conclude at a rate that is imperceptible to the human eye. In other words, Eric's techniques address the refresh-rate problem. The CSS below is from the article, <strong><a href="https://css-tricks.com/revisiting-prefers-reduced-motion-the-reduced-motion-media-query/">CSS-TRICKS Revisiting prefers-reduced-motion, the reduced motion media query</a></strong>.</p>
 
-<pre class="brush: css">@media screen and (prefers-reduced-motion: reduce), 
-(update: slow) { 
+<pre class="brush: css">@media screen and (prefers-reduced-motion: reduce),
+(update: slow) {
 * { animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important; /* Hat tip Nick/cssremedy (https://css-tricks.com/revisiting-prefers-reduced-motion-the-reduced-motion-media-query/#comment-1700170) */ 
+    animation-iteration-count: 1 !important; /* Hat tip Nick/cssremedy (https://css-tricks.com/revisiting-prefers-reduced-motion-the-reduced-motion-media-query/#comment-1700170) */
     transition-duration: 0.001ms !important;
- } 
+ }
 }</pre>
 
 <p>From W3.org's page on <strong><a href="https://www.w3.org/TR/mediaqueries-4/">Media Queries 4</a></strong>:</p>

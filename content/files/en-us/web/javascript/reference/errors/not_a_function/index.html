@@ -76,9 +76,9 @@ obj.map(function(num) {
 
 <pre class="brush: js example-good">let numbers = [1, 4, 9];
 
-numbers.map(function(num) { 
-  return num * 2; 
-}); 
+numbers.map(function(num) {
+  return num * 2;
+});
 
 // Array [2, 8, 18]
 </pre>
@@ -92,7 +92,7 @@ numbers.map(function(num) {
  this.color = "black";
  this.name = "Ralph";
  return this;
-} 
+}
 
 Dog.prototype.name = function(name) {
  this.name = name;
@@ -111,7 +111,7 @@ myNewDog.name("Cassidy"); //Uncaught TypeError: myNewDog.name is not a function
  this.color = "black";
  this.dogName = "Ralph"; //Using this.dogName instead of .name
  return this;
-} 
+}
 
 Dog.prototype.name = function(name) {
  this.dogName = name;
@@ -156,7 +156,7 @@ helpers.groupBy = function (objectArray, property) {
     }
     acc[key].push(obj);
     return acc;
-  }, 
+  },
 {});
 }
 

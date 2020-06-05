@@ -74,13 +74,13 @@ Content-Security-Policy: connect-src &lt;source&gt; &lt;source&gt;;
 <pre class="brush: html">&lt;a ping="https://not-example.com"&gt;
 
 &lt;script&gt;
-  var xhr = new XMLHttpRequest(); 
-  xhr.open('GET', 'https://not-example.com/'); 
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://not-example.com/');
   xhr.send();
 
   var ws = new WebSocket("https://not-example.com/");
 
-  var es = new EventSource("https://not-example.com/"); 
+  var es = new EventSource("https://not-example.com/");
 
   navigator.sendBeacon("https://not-example.com/", { ... });
 &lt;/script&gt;</pre>

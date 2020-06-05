@@ -38,9 +38,9 @@ tags:
 
 <p>The CSS {{cssxref("background")}} property is a shorthand for a number of background longhand properties that we will meet in this lesson. If you discover a complex background property in a stylesheet, it might seem a little hard to understand as so many values can be passed in at once.</p>
 
-<pre class="brush: css"><code>.box { 
-  background: linear-gradient(105deg, rgba(255,255,255,.2) 39%, rgba(51,56,57,1) 96%) center center / 400px 200px no-repeat, 
-  url(big-star.png) center no-repeat, rebeccapurple; 
+<pre class="brush: css"><code>.box {
+  background: linear-gradient(105deg, rgba(255,255,255,.2) 39%, rgba(51,56,57,1) 96%) center center / 400px 200px no-repeat,
+  url(big-star.png) center no-repeat, rebeccapurple;
 } </code>
 </pre>
 
@@ -116,19 +116,19 @@ tags:
 
 <p>You can use keywords such as <code>top</code> and <code>right</code> (look up the others on the {{cssxref("background-position")}} page):</p>
 
-<pre class="brush: css"><code>.box { 
-  background-image: url(star.png); 
-  background-repeat: no-repeat; 
-  background-position: top center; 
+<pre class="brush: css"><code>.box {
+  background-image: url(star.png);
+  background-repeat: no-repeat;
+  background-position: top center;
 } </code>
 </pre>
 
 <p>And <a href="/en-US/docs/Web/CSS/length">Lengths</a>, and <a href="/en-US/docs/Web/CSS/percentage">percentages</a>:</p>
 
-<pre class="brush: css"><code>.box { 
-  background-image: url(star.png); 
-  background-repeat: no-repeat; 
-  background-position: 20px 10%; 
+<pre class="brush: css"><code>.box {
+  background-image: url(star.png);
+  background-repeat: no-repeat;
+  background-position: 20px 10%;
 } </code>
 </pre>
 
@@ -142,10 +142,10 @@ tags:
 
 <p>Finally, you can also use a 4-value syntax in order to indicate a distance from certain edges of the box — the length unit in this case is an offset from the value that precedes it. So in the CSS below we are positioning the background 20px from the top and 10px from the right:</p>
 
-<pre class="brush: css"><code>.box { 
-  background-image: url(star.png); 
-  background-repeat: no-repeat; 
-  background-position: top 20px right 10px; 
+<pre class="brush: css"><code>.box {
+  background-image: url(star.png);
+  background-repeat: no-repeat;
+  background-position: top 20px right 10px;
 } </code></pre>
 
 <p><strong>Use the example below to play around with these values and move the star around inside the box.</strong></p>
@@ -229,30 +229,30 @@ background-position: 10px 20px,  top right;</pre>
 
 <p>We can set a border for all four sides of a box with {{cssxref("border")}}:</p>
 
-<pre class="brush: css"><code>.box { 
-  border: 1px solid black; 
+<pre class="brush: css"><code>.box {
+  border: 1px solid black;
 } </code></pre>
 
 <p>Or we can target one edge of the box, for example:</p>
 
-<pre class="brush: css"><code>.box { 
-  border-top: 1px solid black; 
+<pre class="brush: css"><code>.box {
+  border-top: 1px solid black;
 } </code></pre>
 
 <p>The individual properties for these shorthands would be:</p>
 
-<pre class="brush: css"><code>.box { 
-  border-width: 1px; 
-  border-style: solid; 
-  border-color: black; 
+<pre class="brush: css"><code>.box {
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;
 } </code></pre>
 
 <p>And for the longhands:</p>
 
-<pre class="brush: css"><code>.box { 
-  border-top-width: 1px; 
-  border-top-style: solid; 
-  border-top-color: black; 
+<pre class="brush: css"><code>.box {
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: black;
 } </code></pre>
 
 <div class="blockIndicator note">
@@ -269,14 +269,14 @@ background-position: 10px 20px,  top right;</pre>
 
 <p>For example, to make all four corners of a box have a 10px radius:</p>
 
-<pre class="brush: css"><code>.box { 
-  border-radius: 10px; 
+<pre class="brush: css"><code>.box {
+  border-radius: 10px;
 } </code></pre>
 
 <p>Or to make the top right corner have a horizontal radius of 1em, and a vertical radius of 10%:</p>
 
-<pre class="brush: css"><code>.box { 
-  border-top-right-radius: 1em 10%; 
+<pre class="brush: css"><code>.box {
+  border-top-right-radius: 1em 10%;
 } </code></pre>
 
 <p>We have set all four corners in the example below, and then changed the values for the top right corner to make it different. You can play with the values to change the corners. Take a look at the property page for {{cssxref("border-radius")}} to see the available syntax options.</p>

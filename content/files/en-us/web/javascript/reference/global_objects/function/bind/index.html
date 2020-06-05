@@ -119,7 +119,7 @@ if (!Function.prototype.bind) (function(){
 
     if (this.prototype) {
       // Function.prototype doesn't have a prototype property
-      fNOP.prototype = this.prototype; 
+      fNOP.prototype = this.prototype;
     }
     fBound.prototype = new fNOP();
 
@@ -170,7 +170,7 @@ retrieveX();
 //  New programmers might confuse the
 //  global variable 'x' with module's property 'x'
 const boundGetX = retrieveX.bind(module);
-boundGetX(); 
+boundGetX();
 //  returns 81
 </pre>
 
@@ -198,19 +198,19 @@ const result1 = addArguments(1, 2);
 const leadingThirtysevenList = list.bind(null, 37);
 
 // Create a function with a preset first argument.
-const addThirtySeven = addArguments.bind(null, 37); 
+const addThirtySeven = addArguments.bind(null, 37);
 
-const list2 = leadingThirtysevenList(); 
+const list2 = leadingThirtysevenList();
 //  [37]
 
-const list3 = leadingThirtysevenList(1, 2, 3); 
+const list3 = leadingThirtysevenList(1, 2, 3);
 //  [37, 1, 2, 3]
 
-const result2 = addThirtySeven(5); 
-//  37 + 5 = 42 
+const result2 = addThirtySeven(5);
+//  37 + 5 = 42
 
 const result3 = addThirtySeven(5, 10);
-//  37 + 5 = 42 
+//  37 + 5 = 42
 //  (the second argument is ignored)
 </pre>
 
@@ -232,7 +232,7 @@ LateBloomer.prototype.declare = function() {
 };
 
 const flower = new LateBloomer();
-flower.bloom();  
+flower.bloom();
 //  after 1 second, calls 'flower.declare()'
 </pre>
 
@@ -253,8 +253,8 @@ flower.bloom();
   this.y = y;
 }
 
-Point.prototype.toString = function() { 
-  return `${this.x},${this.y}`; 
+Point.prototype.toString = function() {
+  return `${this.x},${this.y}`;
 };
 
 const p = new Point(1, 2);
@@ -287,7 +287,7 @@ new YAxisPoint(17, 42) instanceof Point; // true
 <pre class="brush: js">//  Example can be run directly in your JavaScript console
 //  ...continued from above
 
-//  Can still be called as a normal function 
+//  Can still be called as a normal function
 //  (although usually this is undesired)
 YAxisPoint(13);
 

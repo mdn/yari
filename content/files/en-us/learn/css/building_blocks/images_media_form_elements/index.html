@@ -114,12 +114,12 @@ tags:
 
 <p>In some browsers, form elements do not inherit font styling by default. Therefore if you want to be sure that your form fields use the font defined on the body, or on a parent element, you should add this rule to your CSS.</p>
 
-<pre class="brush: css"><code>button, 
-input, 
-select, 
-textarea { 
-  font-family : inherit; 
-  font-size : 100%; 
+<pre class="brush: css"><code>button,
+input,
+select,
+textarea {
+  font-family : inherit;
+  font-size : 100%;
 } </code></pre>
 
 <h3 id="Form_elements_and_box-sizing">Form elements and box-sizing</h3>
@@ -128,13 +128,13 @@ textarea {
 
 <p>For consistency it is a good idea to set margins and padding to <code>0</code> on all elements, then add these back in when styling particular controls</p>
 
-<pre class="brush: css"><code>button, 
-input, 
-select, 
-textarea {  
-  box-sizing: border-box; 
+<pre class="brush: css"><code>button,
+input,
+select,
+textarea {
+  box-sizing: border-box;
   padding: 0;
-  margin: 0; 
+  margin: 0;
 }</code></pre>
 
 <h3 id="Other_useful_settings">Other useful settings</h3>
@@ -149,18 +149,18 @@ textarea {
 
 <p>As a final step, we can wrap up the various properties discussed above into the following "form reset" to provide a consistent base to work from. This includes all the items mentioned in the last three sections:</p>
 
-<pre class="brush: css"><code>button, 
-input, 
-select, 
-textarea { 
-  font-family: inherit; 
-  font-size: 100%; 
-  box-sizing: border-box; 
-  padding: 0; margin: 0; 
-} 
+<pre class="brush: css"><code>button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  box-sizing: border-box;
+  padding: 0; margin: 0;
+}
 
-textarea { 
-  overflow: auto; 
+textarea {
+  overflow: auto;
 } </code></pre>
 
 <div class="blockIndicator note">

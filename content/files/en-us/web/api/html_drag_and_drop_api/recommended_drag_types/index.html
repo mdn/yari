@@ -178,7 +178,7 @@ currentEvent.dataTransfer.mozSetDataAt('application/x-moz-file-promise',
                   new dataProvider(success,error),
                   0, Components.interfaces.nsISupports);
 
-function dataProvider(){} 
+function dataProvider(){}
 
 dataProvider.prototype = {
   QueryInterface : function(iid) {
@@ -189,34 +189,34 @@ dataProvider.prototype = {
   },
   getFlavorData : function(aTransferable, aFlavor, aData, aDataLen) {
     if (aFlavor == 'application/x-moz-file-promise') {
-  
+
        var urlPrimitive = {};
        var dataSize = {};
-  
+
        aTransferable.getTransferData('application/x-moz-file-promise-url', urlPrimitive, dataSize);
        var url = urlPrimitive.value.QueryInterface(Components.interfaces.nsISupportsString).data;
        console.log("URL file orignal is = " + url);
-      
+
        var namePrimitive = {};
        aTransferable.getTransferData('<span class="p">application/x-moz-file-promise-dest-filename</span>', namePrimitive, dataSize);
        var name = namePrimitive.value.QueryInterface(Components.interfaces.nsISupportsString).data;
-  
+
        console.log("target filename is = " + name);
-  
+
        var dirPrimitive = {};
        aTransferable.getTransferData('application/x-moz-file-promise-dir', dirPrimitive, dataSize);
        var dir = dirPrimitive.value.QueryInterface(Components.interfaces.nsILocalFile);
-  
+
        console.log("target folder is = " + dir.path);
-  
+
        var file = Cc['@mozilla.org/file/local;1'].createInstance(Components.interfaces.nsILocalFile);
        file.initWithPath(dir.path);
        file.appendRelativePath(name);
-  
+
        console.log("output final path is =" + file.path);
-  
+
        // now you can write or copy the file yourself…
-    } 
+    }
   }
 }
 </pre>

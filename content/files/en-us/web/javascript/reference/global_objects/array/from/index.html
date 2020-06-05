@@ -127,7 +127,7 @@ if (!Array.from) {
       var len = toLength(items.length);
 
       // 13. If IsConstructor(C) is true, then
-      // 13. a. Let A be the result of calling the [[Construct]] internal method 
+      // 13. a. Let A be the result of calling the [[Construct]] internal method
       // of C with an argument list containing the single item len.
       // 14. a. Else, Let A be ArrayCreate(len).
       var A = isCallable(C) ? Object(new C(len)) : new Array(len);
@@ -158,7 +158,7 @@ if (!Array.from) {
 
 <h3 id="Array_from_a_String">Array from a <code>String</code></h3>
 
-<pre class="brush: js">Array.from('foo'); 
+<pre class="brush: js">Array.from('foo');
 // [ "f", "o", "o" ]</pre>
 
 <h3 id="Array_from_a_Set">Array from a <code>Set</code></h3>
@@ -195,7 +195,7 @@ f(1, 2, 3);
 
 <pre class="brush: js">// Using an arrow function as the map function to
 // manipulate the elements
-Array.from([1, 2, 3], x =&gt; x + x);      
+Array.from([1, 2, 3], x =&gt; x + x);
 // [2, 4, 6]
 
 
@@ -213,10 +213,10 @@ const range = (start, stop, step) =&gt; Array.from({ length: (stop - start) / st
 
 // Generate numbers range 0..4
 range(0, 4, 1);
-// [0, 1, 2, 3, 4] 
+// [0, 1, 2, 3, 4]
 
-// Generate numbers range 1..10 with step of 2 
-range(1, 10, 2); 
+// Generate numbers range 1..10 with step of 2
+range(1, 10, 2);
 // [1, 3, 5, 7, 9]
 
 // Generate the alphabet using Array.from making use of it being ordered as a sequence

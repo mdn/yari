@@ -87,13 +87,13 @@ tags:
 <pre class="brush: js">// identify an element to observe
 var elementToObserve = document.querySelector("#targetElementId");
 
-// create a new instance of `MutationObserver` named `observer`, 
+// create a new instance of `MutationObserver` named `observer`,
 // passing it a callback function
 var observer = new MutationObserver(function() {
     console.log('callback that runs when observer is triggered');
 });
 
-// call `observe` on that MutationObserver instance, 
+// call `observe` on that MutationObserver instance,
 // passing it the element to observe, and the options object
 observer.observe(elementToObserve, {subtree: true, childList: true});</pre>
 

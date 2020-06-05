@@ -86,10 +86,10 @@ var prevDiff = -1;
 <p>When this event is processed, the target's border is set to <code>dashed</code> to provide a clear visual indication the element has received a move event.</p>
 
 <pre class="brush: js">function pointermove_handler(ev) {
- // This function implements a 2-pointer horizontal pinch/zoom gesture. 
+ // This function implements a 2-pointer horizontal pinch/zoom gesture.
  //
- // If the distance between the two pointers has increased (zoom in), 
- // the target element's background is changed to "pink" and if the 
+ // If the distance between the two pointers has increased (zoom in),
+ // the target element's background is changed to "pink" and if the
  // distance is decreasing (zoom out), the color is changed to "lightblue".
  //
  // This function sets the target element's border to "dashed" to visually
@@ -123,7 +123,7 @@ var prevDiff = -1;
      }
    }
 
-   // Cache the distance for the next move event 
+   // Cache the distance for the next move event
    prevDiff = curDiff;
  }
 }
@@ -157,7 +157,7 @@ var prevDiff = -1;
 
 <pre class="brush: html">&lt;body onload="init();" style="touch-action:none"&gt;
  &lt;div id="target"&gt;Touch and Hold with 2 pointers, then pinch in or out.&lt;br/&gt;
-    The background color will change to pink if the pinch is opening (Zoom In) 
+    The background color will change to pink if the pinch is opening (Zoom In)
     or changes to lightblue if the pinch is closing (Zoom out).&lt;/div&gt;
  &lt;!-- UI for logging/debugging --&gt;
  &lt;button id="log" onclick="enableLog(event);"&gt;Start/Stop event logging&lt;/button&gt;
@@ -204,9 +204,9 @@ function log(prefix, ev) {
   var s = prefix + ": pointerID = " + ev.pointerId +
                 " ; pointerType = " + ev.pointerType +
                 " ; isPrimary = " + ev.isPrimary;
-  o.innerHTML += s + " 
+  o.innerHTML += s + "
 ";
-} 
+}
 
 function clearLog(event) {
  var o = document.getElementsByTagName('output')[0];

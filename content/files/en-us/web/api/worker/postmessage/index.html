@@ -96,7 +96,7 @@ myWorker.postMessage(
     [
         arrBuf // The array buffer we created 9 lines above
     ]
-); 
+);
 
 console.info('arrBuf.byteLength post transfer:', arrBuf.byteLength);
 </pre>
@@ -114,7 +114,7 @@ console.info('arrBuf.byteLength post transfer:', arrBuf.byteLength);
 }
 
 function sendWorkerArrBuff(aBuf) {
-    console.info('from worker, PRE send back aBuf.byteLength:', aBuf.byteLength);    
+    console.info('from worker, PRE send back aBuf.byteLength:', aBuf.byteLength);
 
     self.postMessage({aTopic:'do_sendMainArrBuff', aBuf:aBuf}, [aBuf]);
 

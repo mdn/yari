@@ -32,7 +32,7 @@ exports<span class="punctuation token">.</span>bookinstance_list <span class="op
       <span class="comment token">// Successful, so render</span>
       res<span class="punctuation token">.</span><span class="function token">render</span><span class="punctuation token">(</span><span class="string token">'bookinstance_list'</span><span class="punctuation token">,</span> <span class="punctuation token">{</span> title<span class="punctuation token">:</span> <span class="string token">'Book Instance List'</span><span class="punctuation token">,</span> bookinstance_list<span class="punctuation token">:</span> list_bookinstances <span class="punctuation token">}</span><span class="punctuation token">)</span><span class="punctuation token">;</span>
     <span class="punctuation token">}</span><span class="punctuation token">)</span><span class="punctuation token">;</span></strong>
-    
+
 <span class="punctuation token">}</span><span class="punctuation token">;</span></code></pre>
 
 <p>The method uses the model's <code>find()</code> function to return all <code>BookInstance</code> objects. It then daisy-chains a call to <code>populate()</code> with the <code>book</code> field—this will replace the book id stored for each <code>BookInstance</code> with a full <code>Book</code> document.</p>
@@ -50,14 +50,14 @@ block content
 
   ul
     each val <span class="keyword token">in</span> bookinstance_list
-      li 
-        <span class="function token">a</span><span class="punctuation token">(</span>href<span class="operator token">=</span>val<span class="punctuation token">.</span>url<span class="punctuation token">)</span> #<span class="punctuation token">{</span>val<span class="punctuation token">.</span>book<span class="punctuation token">.</span>title<span class="punctuation token">}</span> <span class="punctuation token">:</span> #<span class="punctuation token">{</span>val<span class="punctuation token">.</span>imprint<span class="punctuation token">}</span> <span class="operator token">-</span> 
+      li
+        <span class="function token">a</span><span class="punctuation token">(</span>href<span class="operator token">=</span>val<span class="punctuation token">.</span>url<span class="punctuation token">)</span> #<span class="punctuation token">{</span>val<span class="punctuation token">.</span>book<span class="punctuation token">.</span>title<span class="punctuation token">}</span> <span class="punctuation token">:</span> #<span class="punctuation token">{</span>val<span class="punctuation token">.</span>imprint<span class="punctuation token">}</span> <span class="operator token">-</span>
         <span class="keyword token">if</span> val<span class="punctuation token">.</span>status<span class="operator token">==</span><span class="string token">'Available'</span>
           span<span class="punctuation token">.</span>text<span class="operator token">-</span>success #<span class="punctuation token">{</span>val<span class="punctuation token">.</span>status<span class="punctuation token">}</span>
         <span class="keyword token">else</span> <span class="keyword token">if</span> val<span class="punctuation token">.</span>status<span class="operator token">==</span><span class="string token">'Maintenance'</span>
           span<span class="punctuation token">.</span>text<span class="operator token">-</span>danger #<span class="punctuation token">{</span>val<span class="punctuation token">.</span>status<span class="punctuation token">}</span>
         <span class="keyword token">else</span>
-          span<span class="punctuation token">.</span>text<span class="operator token">-</span>warning #<span class="punctuation token">{</span>val<span class="punctuation token">.</span>status<span class="punctuation token">}</span> 
+          span<span class="punctuation token">.</span>text<span class="operator token">-</span>warning #<span class="punctuation token">{</span>val<span class="punctuation token">.</span>status<span class="punctuation token">}</span>
         <span class="keyword token">if</span> val<span class="punctuation token">.</span>status<span class="operator token">!=</span><span class="string token">'Available'</span>
           span <span class="function token"> </span><span class="punctuation token">(</span>Due<span class="punctuation token">:</span> #<span class="punctuation token">{</span>val<span class="punctuation token">.</span>due_back<span class="punctuation token">}</span> <span class="punctuation token">)</span>
 

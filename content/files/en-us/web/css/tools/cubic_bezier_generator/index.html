@@ -46,12 +46,12 @@ var scaling; //LIMITATION: scaling is computed once: if canvas.height/canvas.wid
 var dragSM = 0; // Drag state machine: 0 = nodrag, others = object being dragged
 
 function initCanvas() {
-    // get the canvas element using the DOM   
+    // get the canvas element using the DOM
     var canvas = document.getElementById('bezier');
 
-    // Make sure we don't execute when canvas isn't supported   
+    // Make sure we don't execute when canvas isn't supported
     if (canvas.getContext) {
-        // use getContext to use the canvas for drawing     
+        // use getContext to use the canvas for drawing
         var ctx = canvas.getContext('2d');
 
         scaling = Math.min(canvas.height - rulers - margin, canvas.width - rulers - margin);
@@ -94,13 +94,13 @@ function lY(y) {
 
 function drawBezierCurve(x1, y1, x2, y2) {
 
-    // get the canvas element using the DOM   
+    // get the canvas element using the DOM
     var canvas = document.getElementById('bezier');
 
-    // Make sure we don't execute when canvas isn't supported   
+    // Make sure we don't execute when canvas isn't supported
     if (canvas.getContext) {
 
-        // use getContext to use the canvas for drawing     
+        // use getContext to use the canvas for drawing
         var ctx = canvas.getContext('2d');
 
 

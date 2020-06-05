@@ -58,7 +58,7 @@ p.then(value =&gt; {
 
 <p>Following, an example to demonstrate the asynchronicity of the <code>then</code> method.</p>
 
-<pre class="brush: js">// using a resolved promise, the 'then' block will be triggered instantly, 
+<pre class="brush: js">// using a resolved promise, the 'then' block will be triggered instantly,
 // but its handlers will be triggered asynchronously as demonstrated by the console.logs
 const resolvedProm = Promise.resolve(33);
 
@@ -129,13 +129,13 @@ p1.then(value =&gt; {
   })
   // 3. print helpful messages about how the code in this section will be run
   // before the string is actually processed by the mocked asynchronous code in the
-  // previous then block.  
+  // previous then block.
   .then(function(string) {
     console.log("Last Then:  oops... didn't bother to instantiate and return " +
                 "a promise in the prior then so the sequence may be a bit " +
                 "surprising");
 
-    // Note that `string` will not have the 'baz' bit of it at this point. This 
+    // Note that `string` will not have the 'baz' bit of it at this point. This
     // is because we mocked that to happen asynchronously with a setTimeout function
     console.log(string);
   });

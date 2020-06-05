@@ -137,7 +137,7 @@ console.log(y[0]); // 21
 var buffer = new ArrayBuffer(32);
 var z = new Float64Array(buffer, 0, 4);
 
-// From an iterable 
+// From an iterable
 var iterable = function*(){ yield* [1,2,3]; }();
 var float64 = new Float64Array(iterable);
 // Float64Array[1, 2, 3]

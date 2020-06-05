@@ -301,9 +301,9 @@ onmessage = function(oEvent) {
         listeners = {};
 
     this.defaultListener = defaultListener || function() {};
-    
+
     if (onError) {worker.onerror = onError;}
-    
+
     this.postMessage = function(message) {
         worker.postMessage(message);
     }
@@ -325,13 +325,13 @@ this.removeListeners = function(name) {
 
 <p>Here we let the worker handle two simple operations for illustration: getting the difference of two numbers and making an alert after three seconds. In order to achieve that we first implement a sendQuery method which queries if the worker actually has the corresponding methods to do what we want.</p>
 
-<pre class="brush: js">/* 
+<pre class="brush: js">/*
   This functions takes at least one argument, the method name we want to query.
   Then we can pass in the arguments that the method needs.
  */
 this.sendQuery = function() {
     if (arguments.length &lt; 1) {
-         throw new TypeError('QueryableWorker.sendQuery takes at least one argument'); 
+         throw new TypeError('QueryableWorker.sendQuery takes at least one argument');
          return;
     }
     worker.postMessage({
@@ -367,13 +367,13 @@ this.sendQuery = function() {
 }
 
 function reply() {
-    if (arguments.length &lt; 1) { 
-        throw new TypeError('reply - takes at least one argument'); 
-        return; 
-    } 
-    postMessage({ 
-        queryMethodListener: arguments[0], 
-        queryMethodArguments: Array.prototype.slice.call(arguments, 1) 
+    if (arguments.length &lt; 1) {
+        throw new TypeError('reply - takes at least one argument');
+        return;
+    }
+    postMessage({
+        queryMethodListener: arguments[0],
+        queryMethodArguments: Array.prototype.slice.call(arguments, 1)
     });
 }
 
@@ -423,7 +423,7 @@ function defaultReply(message) {
       listeners = {};
 
       this.defaultListener = defaultListener || function() {};
- 
+
       if (onError) {worker.onerror = onError;}
 
       this.postMessage = function(message) {
@@ -435,20 +435,20 @@ function defaultReply(message) {
       }
 
       this.addListener = function(name, listener) {
-        listeners[name] = listener; 
+        listeners[name] = listener;
       }
- 
-      this.removeListener = function(name) { 
+
+      this.removeListener = function(name) {
         delete listeners[name];
       }
 
-      /* 
+      /*
         This functions takes at least one argument, the method name we want to query.
         Then we can pass in the arguments that the method needs.
       */
       this.sendQuery = function() {
         if (arguments.length &lt; 1) {
-          throw new TypeError('QueryableWorker.sendQuery takes at least one argument'); 
+          throw new TypeError('QueryableWorker.sendQuery takes at least one argument');
           return;
         }
         worker.postMessage({

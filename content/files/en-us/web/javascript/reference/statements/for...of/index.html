@@ -144,14 +144,14 @@ for (const paragraph of articleParagraphs) {
 
 <p>In <code>for...of</code> loops, abrupt iteration termination can be caused by <code>break</code>, <code>throw</code> or <code>return</code>. In these cases, the iterator is closed.</p>
 
-<pre class="brush: js">function* foo(){ 
-  yield 1; 
-  yield 2; 
-  yield 3; 
-}; 
+<pre class="brush: js">function* foo(){
+  yield 1;
+  yield 2;
+  yield 3;
+};
 
-for (const o of foo()) { 
-  console.log(o); 
+for (const o of foo()) {
+  console.log(o);
   break; // closes iterator, execution continues outside of the loop
 }
 console.log('done');
@@ -234,7 +234,7 @@ for (const value of iterable) {
 
 <p>The following example shows the difference between a <code>for...of</code> loop and a <code>for...in</code> loop when used with an {{jsxref("Array")}}.</p>
 
-<pre class="brush:js">Object.prototype.objCustom = function() {}; 
+<pre class="brush:js">Object.prototype.objCustom = function() {};
 Array.prototype.arrCustom = function() {};
 
 const iterable = [3, 5, 7];
@@ -258,15 +258,15 @@ for (const i of iterable) {
 <p>Let us look into the above code step by step.</p>
 
 <pre class="brush: js">Object.prototype.objCustom = function() {};
-Array.prototype.arrCustom = function() {}; 
+Array.prototype.arrCustom = function() {};
 
-const iterable = [3, 5, 7]; 
+const iterable = [3, 5, 7];
 iterable.foo = 'hello';</pre>
 
 <p>Every object will inherit the <code>objCustom</code> property and every object that is an {{jsxref("Array")}} will inherit the <code>arrCustom</code> property since these properties have been added to {{jsxref("Object.prototype")}} and {{jsxref("Array.prototype")}}, respectively. The object <code>iterable</code> inherits the properties <code>objCustom</code> and <code>arrCustom</code> because of <a href="/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain">inheritance and the prototype chain</a>.</p>
 
 <pre class="brush: js">for (const i in iterable) {
-  console.log(i); // logs 0, 1, 2, "foo", "arrCustom", "objCustom" 
+  console.log(i); // logs 0, 1, 2, "foo", "arrCustom", "objCustom"
 }</pre>
 
 <p>This loop logs only <a href="/en-US/docs/Web/JavaScript/Enumerability_and_ownership_of_properties">enumerable properties</a> of the <code>iterable</code> object, in arbitrary order. It doesn't log array <strong>elements</strong> <code>3</code>, <code>5</code>, <code>7</code> or <code>hello</code> because those are <strong>not</strong> enumerable properties, in fact they are not properties at all, they are <strong>values</strong>. It logs array <strong>indexes</strong> as well as <code>arrCustom</code> and <code>objCustom</code>, which are. If you're not sure why these properties are iterated over, there's a more thorough explanation of how {{jsxref("Statements/for...in", "array iteration and for...in", "#Array_iteration_and_for...in")}} work.</p>
@@ -280,7 +280,7 @@ iterable.foo = 'hello';</pre>
 <p>This loop is similar to the first one, but it uses {{jsxref("Object.prototype.hasOwnProperty()", "hasOwnProperty()")}} to check if the found enumerable property is the object's own, i.e. not inherited. If it is, the property is logged. Properties <code>0</code>, <code>1</code>, <code>2</code> and <code>foo</code> are logged because they are own properties (<strong>not inherited</strong>). Properties <code>arrCustom</code> and <code>objCustom</code> are not logged because they <strong>are inherited</strong>.</p>
 
 <pre class="brush: js">for (const i of iterable) {
-  console.log(i); // logs 3, 5, 7 
+  console.log(i); // logs 3, 5, 7
 }</pre>
 
 <p>This loop iterates and logs <strong>values</strong> that <code>iterable</code>, as an <a href="/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators#Iterables">iterable object</a>, defines to be iterated over. The object's <strong>elements</strong> <code>3</code>, <code>5</code>, <code>7</code> are shown, but none of the object's <strong>properties</strong>.</p>

@@ -79,11 +79,11 @@ tags:
 
 </span><span style="line-height: 1.5;">DBOpenRequest.onsuccess = function(event) {</span>
   note.innerHTML += '&lt;li&gt;Database initialised.&lt;/li&gt;';
-    
+
   // store the result of opening the database in the db variable.
   // This is used a lot below
   db = DBOpenRequest.result;
-    
+
   // Run the getData() function to get the data from the database
   getData();
 };

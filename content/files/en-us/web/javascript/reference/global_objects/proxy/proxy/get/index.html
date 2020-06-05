@@ -84,11 +84,11 @@ console.log(p.a); // "called: a"
 <p>The following code violates an invariant.</p>
 
 <pre class="brush: js">const obj = {};
-Object.defineProperty(obj, 'a', { 
-  configurable: false, 
-  enumerable: false, 
-  value: 10, 
-  writable: false 
+Object.defineProperty(obj, 'a', {
+  configurable: false,
+  enumerable: false,
+  value: 10,
+  writable: false
 });
 
 const p = new Proxy(obj, {

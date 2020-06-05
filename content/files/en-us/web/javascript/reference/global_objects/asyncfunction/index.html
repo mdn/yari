@@ -61,8 +61,8 @@ tags:
 
 let AsyncFunction = Object.getPrototypeOf(async function(){}).constructor
 
-let a = new AsyncFunction('a', 
-                          'b', 
+let a = new AsyncFunction('a',
+                          'b',
                           'return await resolveAfter2Seconds(a) + await resolveAfter2Seconds(b);');
 
 a(10, 20).then(v =&gt; {

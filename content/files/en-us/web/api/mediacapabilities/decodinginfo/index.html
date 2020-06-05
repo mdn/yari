@@ -64,12 +64,12 @@ const mediaConfig = {
         channels <span class="punctuation token">:</span> <span class="number token">2</span><span class="punctuation token">,</span>     <span class="comment token">// audio channels used by the track</span>
         bitrate <span class="punctuation token">:</span> <span class="number token">132700</span><span class="punctuation token">,</span> <span class="comment token">// number of bits used to encode 1s of audio </span>
         samplerate <span class="punctuation token">:</span> <span class="number token">5200</span> <span class="comment token">// number of audio samples making up that 1s. </span>
-     </code>}, 
-}; 
+     </code>},
+};
 
-// check support and performance 
+// check support and performance
 navigator.mediaCapabilities.decodingInfo(mediaConfig).then(result =&gt; {
-    console.log('This configuration is ' + 
+    console.log('This configuration is ' +
         (result.supported ? '' : 'not ') + 'supported, ' +
         (result.smooth ? '' : 'not ') + 'smooth, and ' +
         (result.powerEfficient ? '' : 'not ') + 'power efficient.')

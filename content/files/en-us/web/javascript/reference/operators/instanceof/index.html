@@ -56,17 +56,17 @@ o instanceof D
 o instanceof Object           // true, because:
 C.prototype instanceof Object // true
 
-C.prototype = {} 
-let o2 = new C() 
+C.prototype = {}
+let o2 = new C()
 
 o2 instanceof C  // true
 
 // false, because C.prototype is nowhere in
 // o's prototype chain anymore
-o instanceof C  
+o instanceof C
 
 D.prototype = new C()  // add C to [[Prototype]] linkage of D
-let o3 = new D() 
+let o3 = new D()
 o3 instanceof D        // true
 o3 instanceof C        // true since C.prototype is now in o3's prototype chain
 </pre>
@@ -129,7 +129,7 @@ myDate instanceof String    // returns false
   this.model = model;
   this.year = year;
 }
-let mycar = new Car('Honda', 'Accord', 1998) 
+let mycar = new Car('Honda', 'Accord', 1998)
 let a = mycar instanceof Car     // returns true
 let b = mycar instanceof Object  // returns true
 </pre>

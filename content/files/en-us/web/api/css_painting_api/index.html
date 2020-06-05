@@ -76,7 +76,7 @@ tags:
 		const strokeWidth = parseInt(args[1]);
 
 		console.log(theColor);
-		
+
 		if ( strokeWidth ) {
 			ctx.lineWidth = strokeWidth;
 		} else {
@@ -94,7 +94,7 @@ tags:
 			ctx.strokeStyle = 'none';
 		}
 
-	
+
 		ctx.beginPath();
 		ctx.moveTo( x, y );
 		ctx.lineTo( blockWidth, y );
@@ -104,7 +104,7 @@ tags:
 		ctx.closePath();
 		ctx.fill();
 		ctx.stroke();
-		
+
 		for (let i = 0; i &lt; 4; i++) {
 			let start = i * 2;
 			ctx.beginPath();
@@ -117,7 +117,7 @@ tags:
 			ctx.fill();
 			ctx.stroke();
 		}
-  } 
+  }
 });</pre>
 
 <div id="hollowExample">
@@ -156,12 +156,12 @@ tags:
    background-image: paint(hollowHighlights, stroke, 2px);
 }
 
-li:nth-of-type(3n) { 
+li:nth-of-type(3n) {
    --boxColor: hsla(155, 90%, 60%, 1.0);
    background-image: paint(hollowHighlights, filled,  3px);
 }
 
-li:nth-of-type(3n+1) { 
+li:nth-of-type(3n+1) {
    --boxColor: hsla(255, 90%, 60%, 1.0);
    background-image: paint(hollowHighlights, stroke, 1px);
 }</pre>

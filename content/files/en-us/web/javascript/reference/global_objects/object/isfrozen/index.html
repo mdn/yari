@@ -52,8 +52,8 @@ Object.isFrozen(vacuouslyFrozen); // === true
 var oneProp = { p: 42 };
 Object.isFrozen(oneProp); // === false
 
-// Preventing extensions to the object still doesn't 
-// make it frozen, because the property is still 
+// Preventing extensions to the object still doesn't
+// make it frozen, because the property is still
 // configurable (and writable).
 Object.preventExtensions(oneProp);
 Object.isFrozen(oneProp); // === false

@@ -18,8 +18,8 @@ summary: "The\_requestFileSystemSync method of the LocalFileSystemSync interface
 <h2 id="requestFileSystem" name="requestFileSystem">Syntax</h2>
 
 <pre><em>LocalFileSystemSync</em>.requestFileSystemSync(
-  unsigned short type, 
-  unsigned long long size  
+  unsigned short type,
+  unsigned long long size
 );</pre>
 
 <h3 id="Parameters">Parameters</h3>
@@ -64,7 +64,7 @@ window.requestFileSystemSync  = window.requestFileSystemSync || window.webkitReq
 // Next, set the size of space needed (in bytes)
 // initFs is the success callback
 // And the last one is the error callback
-// for denial of access and other errors. 
+// for denial of access and other errors.
 
 var fs = requestFileSystemSync(TEMPORARY, 1024*1024 /*1MB*/);</pre>
 

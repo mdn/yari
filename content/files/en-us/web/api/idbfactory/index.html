@@ -54,10 +54,10 @@ var DBOpenRequest = window.indexedDB.open("toDoList", 4);
 DBOpenRequest.onerror = function(event) {
   console.error("Error loading database.");
 };
- 
+
 DBOpenRequest.onsuccess = function(event) {
   console.info("Database initialised.");
-    
+
   // store the result of opening the database in the db variable. This is used a lot later on, for opening transactions and suchlike.
   db = DBOpenRequest.result;
 };

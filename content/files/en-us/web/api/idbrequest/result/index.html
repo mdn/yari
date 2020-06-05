@@ -43,14 +43,14 @@ var objectStoreTitleRequest = objectStore.get(title);
 objectStoreTitleRequest.onsuccess = function() {
   // Grab the data object returned as the result
   var data = objectStoreTitleRequest.result;
- 
+
   // Update the notified value in the object to "yes"
   data.notified = "yes";
- 
+
   // Create another request that inserts the item
   // back into the database
   var updateTitleRequest = objectStore.put(data);
- 
+
   // When this new request succeeds, run the displayData()
   // function again to update the display
   <span style="font-size: 1rem;">updateTitleRequest</span><span style="font-size: 1rem;">.onsuccess = function() {</span>

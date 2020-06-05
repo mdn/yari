@@ -49,14 +49,14 @@ tags:
         vec4( 1.0, 0.0, 0.0, 1.0 ),  // red
         vec4( 1.0, 1.0, 0.0, 1.0 ),  // yellow
         vec4( 0.0, 1.0, 0.0, 1.0 ),  // green
-    ];     
+    ];
     var cBuffer = gl.createBuffer();
 </pre>
 
 <p> </p>
 
 <pre class="brush: js">//continued
-//create buffer to store colors and reference it to "vColor" which is in GLSL    
+//create buffer to store colors and reference it to "vColor" which is in GLSL
     gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(vertexColors), gl.STATIC_DRAW );
 
@@ -71,7 +71,7 @@ tags:
 attribute  vec4 vColor;
 
 void main()
-{   
+{
 
 fColor = vColor;
 }

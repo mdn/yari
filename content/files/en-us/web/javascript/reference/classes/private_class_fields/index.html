@@ -16,17 +16,17 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">class ClassWithPrivateField {   
+<pre class="syntaxbox">class ClassWithPrivateField {
   #privateField
 }
 
-class ClassWithPrivateMethod {   
-  #privateMethod() {     
+class ClassWithPrivateMethod {
+  #privateMethod() {
     return 'hello world'
  }
 }
 
-class ClassWithPrivateStaticField {   
+class ClassWithPrivateStaticField {
   static #PRIVATE_STATIC_FIELD
 }
 </pre>
@@ -78,7 +78,7 @@ assertThrows(() =&gt; SubClass.basePublicStaticMethod(), TypeError)
 
 <pre class="brush: js">class ClassWithPrivateField {
   #privateField
-  
+
   constructor() {
     this.#privateField = 42
     this.#randomField = 666 // Syntax error

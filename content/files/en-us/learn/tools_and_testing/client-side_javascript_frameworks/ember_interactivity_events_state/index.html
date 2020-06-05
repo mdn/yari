@@ -77,26 +77,26 @@ tags:
 <p>This will create the following empty class file — <code>todomvc/app/components/header.js</code>:</p>
 
 <pre class="brush: js">import Component from '@glimmer/component';
- 
+
 export default class HeaderComponent extends Component {
- 
+
 }</pre>
 
 <p>Inside this file we will implement the event handler code. Update the content to the following:</p>
 
 <pre class="brush: js">import Component from '@glimmer/component';
 import { action } from '@ember/object';
- 
+
 export default class HeaderComponent extends Component {
- 
+
   @action
   onKeyDown({ target, key }) {
     let text = target.value.trim();
     let hasValue = Boolean(text);
- 
+
     if (key === 'Enter' &amp;&amp; hasValue) {
       alert(text);
- 
+
       target.value = ''
     }
   }
@@ -132,9 +132,9 @@ installing service-test
 <p>This creates a <code>todo-data.js</code> file inside the <code>todomvc/app/services</code> directory to contain our service, which initially contains an import statement and an empty class:</p>
 
 <pre class="brush: js">import Service from '@ember/service';
- 
+
 export default class TodoDataService extends Service {
- 
+
 }</pre>
 
 <p>First of all, we want to define <em>what a todo is</em>. We know that we want to track both the text of a todo, and whether or not it is is completed.</p>
@@ -148,7 +148,7 @@ export default class TodoDataService extends Service {
 <pre class="brush: js">class Todo {
   @tracked text = '';
   @tracked isCompleted = false;
- 
+
   constructor(text) {
     this.text = text;
   }
@@ -166,11 +166,11 @@ export default class TodoDataService extends Service {
 
 <pre class="brush: js">export default class TodoDataService extends Service {
   @tracked todos = [];
- 
+
   @action
   add(text) {
     let newTodo = new Todo(text);
- 
+
     this.todos = [...this.todos, newTodo];
   }
 }</pre>
@@ -213,7 +213,7 @@ export default class TodoDataService extends Service {
 
 <pre class="brush: js">import Component from '@glimmer/component';
 import { inject as service } from '@ember/service';
- 
+
 export default class TodoListComponent extends Component {
   @service('todo-data') todos;
 }</pre>

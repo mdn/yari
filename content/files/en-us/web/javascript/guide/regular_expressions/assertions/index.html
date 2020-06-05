@@ -126,11 +126,11 @@ buggyMultiline = `tey, ihe light-greon apple
 tangs on ihe greon traa`;
 
 // 1) Use ^ to fix the matching at the begining of the string, and right after newline.
-buggyMultiline = buggyMultiline.replace(/^t/gim,'h'); 
+buggyMultiline = buggyMultiline.replace(/^t/gim,'h');
 console.log(1, buggyMultiline); // fix 'tey', 'tangs' =&gt; 'hey', 'hangs'. Avoid 'traa'.
 
 // 2) Use $ to fix matching at the end of the text.
-buggyMultiline = buggyMultiline.replace(/aa$/gim,'ee.'); 
+buggyMultiline = buggyMultiline.replace(/aa$/gim,'ee.');
 console.log(2, buggyMultiline); // fix  'traa' =&gt; 'tree'.
 
 // 3) Use \b to match characters right on border between a word and a space.

@@ -47,7 +47,7 @@ tags:
 
 <p>The following example shows a simple generator and the object that the <code>next</code> method returns:</p>
 
-<pre class="brush: js">function* gen() { 
+<pre class="brush: js">function* gen() {
   yield 1;
   yield 2;
   yield 3;
@@ -102,9 +102,9 @@ page.next();                              // Object {value: undefined, done: tru
 }
 
 const g = gen();
-g.next(1); 
+g.next(1);
 // "{ value: null, done: false }"
-g.next(2); 
+g.next(2);
 // 2
 // "{ value: null, done: false }"
 </pre>

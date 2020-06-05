@@ -47,11 +47,11 @@ var getRandomMsRange = function(min, max) {
 }
 
 // Loop through each tear
-tears.forEach(function(el) {  
+tears.forEach(function(el) {
 
   // Animate each tear
   el.animate(
-    tearsFalling, 
+    tearsFalling,
     {
       delay: getRandomMsRange(-1000, 1000), // randomized for each tear
       duration: getRandomMsRange(2000, 6000), // randomized for each tear

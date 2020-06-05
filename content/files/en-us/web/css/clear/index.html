@@ -28,9 +28,9 @@ tags:
 <div class="note">
 <p><strong>Note:</strong> If an element contains only floated elements, its height collapses to nothing. If you want it to always be able to resize, so that it contains floating elements inside it, you need to self-clear its children. This is called <strong>clearfix</strong>, and one way to do it is <code>clear</code> a replaced {{cssxref("::after")}} <a href="/en-US/docs/Web/CSS/Pseudo-elements">pseudo-element</a> on it.</p>
 
-<pre class="brush: css">#container::after { 
+<pre class="brush: css">#container::after {
   content: "";
-  display: block; 
+  display: block;
   clear: both;
 }
 </pre>

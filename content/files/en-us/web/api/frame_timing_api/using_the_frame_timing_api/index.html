@@ -30,7 +30,7 @@ tags:
 
 <pre class="brush: js">function create_frame_observer() {
   if (window.PerformanceObserver === undefined) return;
-  
+
   // Register the performance observer
   var observe_frame = new PerformanceObserver(function(list) {
     // Log the frame entries
@@ -80,11 +80,11 @@ function frame_observer_2(list) {
    var perfEntries = list.getEntries();
    for (var i=0; i &lt; perfEntries.length; i++) {
      switch (perfEntries[i].entryType) {
-       case "frame": process_frame(perfEntries[i]); break; 
-       case "mark": process_mark(perfEntries[i]); break; 
-       case "measure": process_measure(perfEntries[i]); break; 
-       case "resource": process_resource(perfEntries[i]); break; 
-       default: console.log("Unexpected performance entry type: " + perfEntries[i].entryType); 
+       case "frame": process_frame(perfEntries[i]); break;
+       case "mark": process_mark(perfEntries[i]); break;
+       case "measure": process_measure(perfEntries[i]); break;
+       case "resource": process_resource(perfEntries[i]); break;
+       default: console.log("Unexpected performance entry type: " + perfEntries[i].entryType);
      }
   }
  });

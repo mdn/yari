@@ -137,16 +137,16 @@ tags:
 
 <p>Only use table, tbody, thead, tr, th, td, etc., for data table structure. You can add ARIA roles to ensure accessibility should the native semantics of the table be removed, such as with CSS. A relevant use case for the ARIA table role is when the native semantics of a table are overridden by <a href="/en-US/docs/Web/CSS/display#Accessibility_concerns">CSS's display property, such as by display: grid</a>. In this case, you can use the ARIA table roles to add the semantics back in.</p>
 
-<pre>&lt;table role="table" aria-label="Semantic Elements" aria-describedby="semantic_elements_table_desc" aria-rowcount="81"&gt;   
-  &lt;caption id="semantic_elements_table_desc"&gt;Semantic Elements to use instead of ARIA's roles&lt;/caption&gt;   
-  &lt;thead role="rowgroup"&gt;      
-     &lt;tr role="row"&gt;        
+<pre>&lt;table role="table" aria-label="Semantic Elements" aria-describedby="semantic_elements_table_desc" aria-rowcount="81"&gt;
+  &lt;caption id="semantic_elements_table_desc"&gt;Semantic Elements to use instead of ARIA's roles&lt;/caption&gt;
+  &lt;thead role="rowgroup"&gt;
+     &lt;tr role="row"&gt;
        &lt;th role="columnheader" aria-sort="none" aria-rowindex="1"&gt;ARIA Role&lt;/th&gt;
-       &lt;th role="columnheader" aria-sort="none" aria-rowindex="1"&gt;Semantic Element&lt;/th&gt;      
-     &lt;/tr&gt;    
+       &lt;th role="columnheader" aria-sort="none" aria-rowindex="1"&gt;Semantic Element&lt;/th&gt;
+     &lt;/tr&gt;
   &lt;/thead&gt;
-  &lt;tbody role="rowgroup"&gt;     
-     &lt;tr role="row"&gt;        
+  &lt;tbody role="rowgroup"&gt;
+     &lt;tr role="row"&gt;
        &lt;td role="cell" aria-rowindex="11"&gt;header&lt;/td&gt;
        &lt;td role="cell" aria-rowindex="11"&gt;h1&lt;/td&gt;
      &lt;/tr&gt;

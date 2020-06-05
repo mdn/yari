@@ -45,7 +45,7 @@ function createTCPErrorFromFailedXHR(xhr) {
     } else {
       errType = 'SecurityProtocol';
     }
-                 
+
     // NSS_SEC errors (happen below the base value because of negative vals)
     if ((status &amp; 0xffff) &lt; Math.abs(nsINSSErrorsService.NSS_SEC_ERROR_BASE)) {
       // The bases are actually negative, so in our positive numeric space, we
@@ -59,7 +59,7 @@ function createTCPErrorFromFailedXHR(xhr) {
         case 12: // SEC_ERROR_REVOKED_CERTIFICATE, sec(12)
           errName = 'SecurityRevokedCertificateError';
           break;
-          
+
         // per bsmith, we will be unable to tell these errors apart very soon,
         // so it makes sense to just folder them all together already.
         case 13: // SEC_ERROR_UNKNOWN_ISSUER, sec(13)
@@ -79,8 +79,8 @@ function createTCPErrorFromFailedXHR(xhr) {
           break;
       }
     } else {
-  // Calculating the difference 
-      
+  // Calculating the difference
+
   <span style="">let sslErr = Math.abs(nsINSSErrorsService.NSS_SSL_ERROR_BASE) - (status &amp; 0xffff);</span>
 
       switch (sslErr) {
@@ -136,13 +136,13 @@ function createTCPErrorFromFailedXHR(xhr) {
   let error = Cc["@mozilla.org/dom-error;1"].createInstance(Ci.nsIDOMDOMError);
   error.wrappedJSObject.init(errName);
   return error;
- 
+
   // XXX: errType goes unused
 }
 
 function dumpSecurityInfo(xhr, error) {
   let channel = xhr.channel;
- 
+
   try {
     dump("Connection status:\n");
 
@@ -151,7 +151,7 @@ function dumpSecurityInfo(xhr, error) {
     } else {
       dump("\tfailed: " + error.name + "\n");
     }
- 
+
     let secInfo = channel.securityInfo;
 
     // Print general connection security state
@@ -182,12 +182,12 @@ function dumpSecurityInfo(xhr, error) {
     if (secInfo instanceof Ci.nsISSLStatusProvider) {
       var cert = secInfo.QueryInterface(Ci.nsISSLStatusProvider)
                         .SSLStatus.QueryInterface(Ci.nsISSLStatus).serverCert;
-            
+
       dump("\tCommon name (CN) = " + cert.commonName + "\n");
       dump("\tIssuer = " + cert.issuerOrganization + "\n");
-      <span style="">dump("\tOrganisation = " + cert.organization + "\n");</span><span style="font-size: 1rem;">  
+      <span style="">dump("\tOrganisation = " + cert.organization + "\n");</span><span style="font-size: 1rem;">
       dump("\tSHA1 fingerprint = " + cert.sha1Fingerprint + "\n");</span>
-       
+
       var validity = cert.validity.QueryInterface(Ci.nsIX509CertValidity);
       dump("\tValid from " + validity.notBeforeGMT + "\n");
       dump("\tValid until " + validity.notAfterGMT + "\n");
@@ -206,7 +206,7 @@ function test(url) {
       dumpSecurityInfo(req, error);
     },
     false);
- 
+
   req.onload = function(e) {
     dumpSecurityInfo(req);
   };

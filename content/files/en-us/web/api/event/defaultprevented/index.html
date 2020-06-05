@@ -44,7 +44,7 @@ tags:
 
 function logClick(event) {
   const log = document.getElementById('log');
- 
+
   if (event.target.tagName === 'A') {
     if (event.defaultPrevented) {
       log.innerText = 'Sorry, but you cannot visit this link!\n' + log.innerText;

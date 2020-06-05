@@ -47,7 +47,7 @@ tags:
 <p>The following example displays characters at different locations in the string <code>"Brave new world"</code>:</p>
 
 <pre class="brush: js">var anyString = 'Brave new world';
-console.log("The character at index 0   is '" + anyString.charAt()   + "'"); 
+console.log("The character at index 0   is '" + anyString.charAt()   + "'");
 // No index was provided, used 0 as default
 
 console.log("The character at index 0   is '" + anyString.charAt(0)   + "'");
@@ -80,7 +80,7 @@ for (var i = 0, chr; i &lt; str.length; i++) {
     continue;
   }
   // Adapt this line at the top of each loop, passing in the whole string and
-  // the current iteration and returning a variable to represent the 
+  // the current iteration and returning a variable to represent the
   // individual character
 
   console.log(chr);
@@ -129,17 +129,17 @@ function getWholeChar(str, i) {
 
 <pre class="brush: js">let str = 'A\uD87E\uDC04Z'  // We could also use a non-BMP character directly
 for (let i = 0, chr; i &lt; str.length; i++) {
-  [chr, i] = getWholeCharAndI(str, i) 
-  
+  [chr, i] = getWholeCharAndI(str, i)
+
   // Adapt this line at the top of each loop, passing in the whole string and
   // the current iteration and returning an array with the individual character
   // and 'i' value (only changed if a surrogate pair)
 
-  console.log(chr) 
+  console.log(chr)
 }
 
 function getWholeCharAndI(str, i) {
-  let code = str.charCodeAt(i) 
+  let code = str.charCodeAt(i)
 
   if (Number.isNaN(code)) {
     return ''  // Position not found
@@ -148,34 +148,34 @@ function getWholeCharAndI(str, i) {
     return [str.charAt(i), i]  // Normal character, keeping 'i' the same
   }
 
-  // High surrogate (could change last hex to 0xDB7F to treat high private 
+  // High surrogate (could change last hex to 0xDB7F to treat high private
   // surrogates as single characters)
   if (0xD800 &lt;= code &amp;&amp; code &lt;= 0xDBFF) {
     if (str.length &lt;= (i + 1)) {
-      throw 'High surrogate without following low surrogate' 
+      throw 'High surrogate without following low surrogate'
     }
-    let next = str.charCodeAt(i + 1) 
+    let next = str.charCodeAt(i + 1)
       if (0xDC00 &gt; next || next &gt; 0xDFFF) {
-        throw 'High surrogate without following low surrogate' 
+        throw 'High surrogate without following low surrogate'
       }
-      return [str.charAt(i) + str.charAt(i + 1), i + 1] 
+      return [str.charAt(i) + str.charAt(i + 1), i + 1]
   }
-  
+
   // Low surrogate (0xDC00 &lt;= code &amp;&amp; code &lt;= 0xDFFF)
   if (i === 0) {
-    throw 'Low surrogate without preceding high surrogate' 
+    throw 'Low surrogate without preceding high surrogate'
   }
-  
-  let prev = str.charCodeAt(i - 1) 
+
+  let prev = str.charCodeAt(i - 1)
 
   // (could change last hex to 0xDB7F to treat high private surrogates
   // as single characters)
   if (0xD800 &gt; prev || prev &gt; 0xDBFF) {
-    throw 'Low surrogate without preceding high surrogate' 
+    throw 'Low surrogate without preceding high surrogate'
   }
-  
+
   // Return the next character instead (and increment)
-  return [str.charAt(i + 1), i + 1] 
+  return [str.charAt(i + 1), i + 1]
 }
 </pre>
 

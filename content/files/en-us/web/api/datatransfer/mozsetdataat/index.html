@@ -56,7 +56,7 @@ tags:
 {
   var dt = event.dataTransfer;
   var idx = dt.mozItemCount;
-  // Add two new items to the drag transfer 
+  // Add two new items to the drag transfer
   if (idx &gt;= 0) {
     dt.mozSetDataAt("text/uri-list","http://www.example.com/", idx);
     dt.mozSetDataAt("text/html", "Hello <strong>World</strong>", idx+1);

@@ -100,10 +100,10 @@ tags:
 
 <p>For example, the following media query tests to see if the current web page is being displayed as screen media (therefore not a printed document) and the viewport is at least 800 pixels wide. The CSS for the <code>.container</code> selector will only be applied if these two things are true.</p>
 
-<pre class="brush: css"><code>@media screen and (min-width: 800px) { 
-  .container { 
-    margin: 1em 2em; 
-  } 
+<pre class="brush: css"><code>@media screen and (min-width: 800px) {
+  .container {
+    margin: 1em 2em;
+  }
 } </code>
 </pre>
 
@@ -126,8 +126,8 @@ tags:
 
 <p>For example, if our target column size is 60 pixels, and the context (or container) it is in is 960 pixels, we divide 60 by 960 to get a value we can use in our CSS, after moving the decimal point two places to the right.</p>
 
-<pre class="brush: css"><code>.col { 
-  width: 6.25%; /* 60 / 960 = 0.0625 */ 
+<pre class="brush: css"><code>.col {
+  width: 6.25%; /* 60 / 960 = 0.0625 */
 } </code>
 </pre>
 
@@ -157,15 +157,15 @@ tags:
 
 <p>The oldest of these layout methods is multicol — when you specify a <code>column-count</code>, this indicates how many columns you want your content to be split into. The browser then works out the size of these, a size that will change according to the screen size.</p>
 
-<pre class="brush: css"><code>.container { 
-  column-count: 3; 
+<pre class="brush: css"><code>.container {
+  column-count: 3;
 } </code>
 </pre>
 
 <p>If you instead specify a <code>column-width</code>, you are specifying a <em>minimum</em> width. The browser will create as many columns of that width as will comfortably fit into the container, then share out the remaining space between all the columns. Therefore the number of columns will change according to how much space there is.</p>
 
-<pre class="brush: css"><code>.container { 
-  column-width: 10em; 
+<pre class="brush: css"><code>.container {
+  column-width: 10em;
 } </code>
 </pre>
 
@@ -175,12 +175,12 @@ tags:
 
 <p>In the example below the flex items will each take an equal amount of space in the flex container, using the shorthand of <code>flex: 1</code> as described in the layout topic <a href="/en-US/docs/Learn/CSS/CSS_layout/Flexbox#Flexible_sizing_of_flex_items">Flexbox: Flexible sizing of flex items</a>.</p>
 
-<pre class="brush: css"><code>.container { 
-  display: flex; 
-} 
+<pre class="brush: css"><code>.container {
+  display: flex;
+}
 
-.item { 
-  flex: 1; 
+.item {
+  flex: 1;
 } </code>
 </pre>
 
@@ -192,9 +192,9 @@ tags:
 
 <p>In CSS Grid Layout the <code>fr</code> unit allows the distribution of available space across grid tracks. The next example creates a grid container with three tracks sized at <code>1fr</code>. This will create three column tracks, each taking one part of the available space in the container. You can find out more about this approach to create a grid in the Learn Layout Grids topic, under <a href="/en-US/docs/Learn/CSS/CSS_layout/Grids#Flexible_grids_with_the_fr_unit">Flexible grids with the fr unit</a>.</p>
 
-<pre class="brush: css"><code>.container { 
-  display: grid; 
-  grid-template-columns: 1fr 1fr 1fr; 
+<pre class="brush: css"><code>.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 } </code>
 </pre>
 
@@ -225,17 +225,17 @@ tags:
 
 <p>In this example, we want to set our level 1 heading to be <code>4rem</code>, meaning it will be four times our base font size. That's a really large heading! We only want this jumbo heading on larger screen sizes, therefore we first create a smaller heading then use media queries to overwrite it with the larger size if we know that the user has a screen size of at least <code>1200px</code>.</p>
 
-<pre class="brush: css"><code>html { 
-  font-size: 1em; 
-} 
+<pre class="brush: css"><code>html {
+  font-size: 1em;
+}
 
-h1 { 
-  font-size: 2rem; 
-} 
+h1 {
+  font-size: 2rem;
+}
 
-@media (min-width: 1200px) { 
+@media (min-width: 1200px) {
   h1 {
-    font-size: 4rem; 
+    font-size: 4rem;
   }
 } </code>
 </pre>

@@ -173,7 +173,7 @@ function updateProgress(percentComplete) {
 <pre class="brush: css">.tab-panel[aria-hidden="true"] {
   display: none;
   }
-  
+
 .tab-panel[aria-hidden="false"] {
   display: block;
   }
@@ -210,7 +210,7 @@ function updateProgress(percentComplete) {
 <p>... and here is the JavaScript code that will ensure the progress bar still works in older browsers:</p>
 
 <pre class="brush: javascript" id="line96">var progressBar = document.getElementById("progress-bar");
-      
+
 // Check to see if the browser supports the HTML5 &lt;progress&gt; tag.
 var supportsHTML5Progress = (typeof (HTMLProgressElement) !== "undefined");
 
@@ -226,7 +226,7 @@ function setupProgress() {
 
 function updateProgress(percentComplete) {
   if (!supportsHTML5Progress) {
-    // HTML5 &lt;progress&gt; isn't supported by this browser, 
+    // HTML5 &lt;progress&gt; isn't supported by this browser,
     // so we need to update the aria-valuenow attribute
     progressBar.setAttribute("aria-valuenow", percentComplete);
   } else {
@@ -238,7 +238,7 @@ function updateProgress(percentComplete) {
 }
 
 function initDemo() {
-  setupProgress(); // Setup the progress bar.     
+  setupProgress(); // Setup the progress bar.
 
   // Bind a click handler to the button, which will update the progress bar to 75%.
   document.getElementById("update-button").addEventListener("click", function (e) {

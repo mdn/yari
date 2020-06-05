@@ -208,7 +208,7 @@ tags:
       &lt;td&gt;30&lt;/td&gt;
       &lt;td&gt;31&lt;/td&gt;
       &lt;td role="gridcell" tabindex="-1"&gt;1&lt;/td&gt;
-    &lt;/tr&gt;   
+    &lt;/tr&gt;
     &lt;tr role="row"&gt;
       &lt;th scope="row" role="rowheader"&gt;Week 36&lt;/th&gt;
       &lt;td role="gridcell" tabindex="-1"&gt;
@@ -360,7 +360,7 @@ tbody td[role="gridcell"]:hover, tbody td[role="gridcell"]:focus {
 selectables[0].setAttribute('tabindex', 0);
 
 var trs = document.querySelectorAll('table tbody tr'),
-    row = 0, 
+    row = 0,
     col = 0,
     maxrow = trs.length - 1,
     maxcol = 0;
@@ -378,7 +378,7 @@ Array.prototype.forEach.call(trs, function(gridrow, i){
 
 function moveto(newrow, newcol) {
   var tgt = document.querySelector('[data-row="' + newrow + '"][data-col="' + newcol + '"]');
-  if (tgt &amp;&amp; (tgt.getAttribute('role')==='gridcell') ) { 
+  if (tgt &amp;&amp; (tgt.getAttribute('role')==='gridcell') ) {
     Array.prototype.forEach.call(document.querySelectorAll('[role=gridcell]'), function(el, i){
       el.setAttribute('tabindex', '-1');
     });
@@ -457,7 +457,7 @@ document.querySelector('table').addEventListener("keydown", function(event) {
       alert(event.target.textContent);
       break;
   }
-  event.preventDefault(); 
+  event.preventDefault();
 });
 </pre>
 </div>
@@ -490,7 +490,7 @@ document.querySelector('table').addEventListener("keydown", function(event) {
       &lt;td&gt;30&lt;/td&gt;
       &lt;td&gt;31&lt;/td&gt;
       &lt;td role="gridcell" tabindex="-1"&gt;1&lt;/td&gt;
-    &lt;/tr&gt;   
+    &lt;/tr&gt;
     &lt;tr role="row"&gt;
       &lt;th scope="row" role="rowheader"&gt;Week 36&lt;/th&gt;
       &lt;td role="gridcell" tabindex="-1"&gt;
@@ -521,29 +521,29 @@ document.querySelector('table').addEventListener("keydown", function(event) {
 
 <h4 id="CSS_2">CSS</h4>
 
-<pre class="brush: css">table { 
-  margin: 0; 
-  border-collapse: collapse; 
-  font-variant-numeric: tabular-nums; 
-} 
+<pre class="brush: css">table {
+  margin: 0;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
 
-tbody th, tbody td { 
-  padding: 5px; 
-} 
+tbody th, tbody td {
+  padding: 5px;
+}
 
-tbody td { 
-  border: 1px solid #000; 
+tbody td {
+  border: 1px solid #000;
   text-align: right;
-  color: #767676; 
-} 
+  color: #767676;
+}
 
 tbody td[role="gridcell"] {
-  color: #000; 
-} 
+  color: #000;
+}
 
 tbody td[role="gridcell"]:hover, tbody td[role="gridcell"]:focus {
-  background-color: #f6f6f6; outline: 3px solid blue; 
-} 
+  background-color: #f6f6f6; outline: 3px solid blue;
+}
 </pre>
 
 <h4 id="JavaScript_2">JavaScript</h4>
@@ -553,7 +553,7 @@ tbody td[role="gridcell"]:hover, tbody td[role="gridcell"]:focus {
 selectables[0].setAttribute('tabindex', 0);
 
 var trs = document.querySelectorAll('table tbody tr'),
-    row = 0, 
+    row = 0,
     col = 0,
     maxrow = trs.length - 1,
     maxcol = 0;
@@ -571,7 +571,7 @@ Array.prototype.forEach.call(trs, function(gridrow, i){
 
 function moveto(newrow, newcol) {
   var tgt = document.querySelector('[data-row="' + newrow + '"][data-col="' + newcol + '"]');
-  if (tgt &amp;&amp; (tgt.getAttribute('role')==='gridcell') ) { 
+  if (tgt &amp;&amp; (tgt.getAttribute('role')==='gridcell') ) {
     Array.prototype.forEach.call(document.querySelectorAll('[role=gridcell]'), function(el, i){
       el.setAttribute('tabindex', '-1');
     });
@@ -650,7 +650,7 @@ document.querySelector('table').addEventListener("keydown", function(event) {
       alert(event.target.textContent);
       break;
   }
-  event.preventDefault(); 
+  event.preventDefault();
 });</pre>
 
 <h3 id="More_examples">More examples</h3>

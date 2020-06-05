@@ -30,7 +30,7 @@ tags:
 <p>Starting with ECMAScript 2015, <code>TypedArray</code> constructors must be constructed with the {{jsxref("Operators/new", "new")}} operator. Calling a <code>TypedArray</code> constructor as a function without <code>new</code> will throw a {{jsxref("TypeError")}}.</p>
 
 <pre class="brush: js example-bad">var dv = Int8Array([1, 2, 3]);
-// TypeError: calling a builtin Int8Array constructor 
+// TypeError: calling a builtin Int8Array constructor
 // without new is forbidden</pre>
 
 <pre class="brush: js example-good">var dv = new Int8Array([1, 2, 3]);</pre>

@@ -244,7 +244,7 @@ request.send();</pre>
 
 <pre class="brush: js">function showHeroes(jsonObj) {
   const heroes = jsonObj['members'];
-      
+
   for (let i = 0; i &lt; heroes.length; i++) {
     const myArticle = document.createElement('article');
     const myH2 = document.createElement('h2');
@@ -257,7 +257,7 @@ request.send();</pre>
     myPara1.textContent = 'Secret identity: ' + heroes[i].secretIdentity;
     myPara2.textContent = 'Age: ' + heroes[i].age;
     myPara3.textContent = 'Superpowers:';
-        
+
     const superPowers = heroes[i].powers;
     for (let j = 0; j &lt; superPowers.length; j++) {
       const listItem = document.createElement('li');

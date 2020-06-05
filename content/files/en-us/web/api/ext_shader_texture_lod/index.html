@@ -52,7 +52,7 @@ uniform sampler2D myTexture;
 varying vec2 texcoord;
 
 void main(){
-  gl_FragColor = texture2DGradEXT(myTexture, mod(texcoord, vec2(0.1, 0.5)), 
+  gl_FragColor = texture2DGradEXT(myTexture, mod(texcoord, vec2(0.1, 0.5)),
                                   dFdx(texcoord), dFdy(texcoord));
 }
 &lt;/script&gt;</pre>

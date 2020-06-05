@@ -350,7 +350,7 @@ class Server {
                     byte[] decoded = new byte[msglen];
                     byte[] masks = new byte[4] { bytes[offset], bytes[offset + 1], bytes[offset + 2], bytes[offset + 3] };
                     offset += 4;
-                    
+
                     for (int i = 0; i &lt; msglen; ++i)
                         decoded[i] = (byte)(bytes[offset + i] ^ masks[i % 4]);
 

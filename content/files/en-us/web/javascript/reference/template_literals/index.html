@@ -214,9 +214,9 @@ Array.from(str).join(',');
 
 <p>However, illegal escape sequences must still be represented in the “cooked” representation. They will show up as {{jsxref("undefined")}} element in the “cooked” array:</p>
 
-<pre class="brush: js">function latex(str) { 
+<pre class="brush: js">function latex(str) {
   return { "cooked": str[0], "raw": str.raw[0] }
-} 
+}
 
 latex`\unicode`
 

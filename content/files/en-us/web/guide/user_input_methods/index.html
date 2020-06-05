@@ -72,9 +72,9 @@ window.addEventListener("keyup", handleKeyUp, true);</pre>
  <br>
  If you want to use touch events, you need to add event listeners and specify handler functions, which will be called when the event gets fired:</p>
 
-<pre class="brush: js">element.addEventListener("touchstart", handleStart, false); 
-element.addEventListener("touchcancel", handleCancel, false); 
-element.addEventListener("touchend", handleEnd, false); 
+<pre class="brush: js">element.addEventListener("touchstart", handleStart, false);
+element.addEventListener("touchcancel", handleCancel, false);
+element.addEventListener("touchend", handleEnd, false);
 element.addEventListener("touchmove", handleMove, false);</pre>
 
 <p>where <code>element</code> is the DOM element you want to register the touch events on.</p>
@@ -140,7 +140,7 @@ element.addEventListener("touchmove", handleMove, false);</pre>
  <br>
  Here is an example that allows a section of content to be dragged.</p>
 
-<pre class="brush: html">&lt;div draggable="true" ondragstart="event.dataTransfer.setData('text/plain', 'This text may be dragged')"&gt; 
+<pre class="brush: html">&lt;div draggable="true" ondragstart="event.dataTransfer.setData('text/plain', 'This text may be dragged')"&gt;
     This text &lt;strong&gt;may&lt;/strong&gt; be dragged.
  &lt;/div&gt;</pre>
 
@@ -159,7 +159,7 @@ element.addEventListener("touchmove", handleMove, false);</pre>
 
 <p>In open web apps any DOM element can be made directly editable using the <a href="/en-US/docs/Web/HTML/Global_attributes#contenteditable"><code>contenteditable</code></a> attribute.</p>
 
-<pre class="brush: html">&lt;div contenteditable="true"&gt; 
+<pre class="brush: html">&lt;div contenteditable="true"&gt;
     This text can be edited by the user.
 &lt;/div&gt;</pre>
 

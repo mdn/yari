@@ -103,7 +103,7 @@ var <em>request</em> = <em>myIndex</em>.openKeyCursor(<em>range</em>, <em>direct
   var transaction = db.transaction(['contactsList'], 'readonly');
   var objectStore = transaction.objectStore('contactsList');
 
-  var myIndex = objectStore.index('lName'); 
+  var myIndex = objectStore.index('lName');
 
   myIndex.openKeyCursor().onsuccess = function(event) {
     var cursor = event.target.result;
@@ -111,11 +111,11 @@ var <em>request</em> = <em>myIndex</em>.openKeyCursor(<em>range</em>, <em>direct
       var tableRow = document.createElement('tr');
       tableRow.innerHTML =   '&lt;td&gt;' + cursor.key + '&lt;/td&gt;'
                            + '&lt;td&gt;' + cursor.primaryKey + '&lt;/td&gt;';
-      tableEntry.appendChild(tableRow);  
+      tableEntry.appendChild(tableRow);
 
       cursor.continue();
     } else {
-      console.log('All last names displayed.');    
+      console.log('All last names displayed.');
     }
   };
 };</pre>

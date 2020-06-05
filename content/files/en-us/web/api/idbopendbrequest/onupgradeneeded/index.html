@@ -47,7 +47,7 @@ var request = window.indexedDB.open("library", 3);
 // window.indexedDB.open line above.
 request.onupgradeneeded = function(event) {
   db = request.result;
- 
+
   db.onerror = function(errorEvent) {
     note.innerHTML += '&lt;li&gt;Error loading database.&lt;/li&gt;';
   };

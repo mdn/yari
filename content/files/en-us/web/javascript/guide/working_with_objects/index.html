@@ -65,7 +65,7 @@ myCar['year'] = 1969;
 
 <p>An object property name can be any valid JavaScript string, or anything that can be converted to a string, including the empty string. However, any property name that is not a valid JavaScript identifier (for example, a property name that has a space or a hyphen, or that starts with a number) can only be accessed using the square bracket notation. This notation is also very useful when property names are to be dynamically determined (when the property name is not determined until runtime). Examples are as follows:</p>
 
-<pre class="brush: js">// four variables are created and assigned in a single go, 
+<pre class="brush: js">// four variables are created and assigned in a single go,
 // separated by commas
 var myObj = new Object(),
     str = 'myString',
@@ -129,17 +129,17 @@ myCar.year = 1969</pre>
 <p>Before ECMAScript 5, there was no native way to list all properties of an object. However, this can be achieved with the following function:</p>
 
 <pre class="brush: js">function listAllProperties(o) {
-	var objectToInspect;     
+	var objectToInspect;
 	var result = [];
-	
-	for(objectToInspect = o; objectToInspect !== null; 
-           objectToInspect = Object.getPrototypeOf(objectToInspect)) {  
+
+	for(objectToInspect = o; objectToInspect !== null;
+           objectToInspect = Object.getPrototypeOf(objectToInspect)) {
         result = result.concat(
             Object.getOwnPropertyNames(objectToInspect)
-        );  
+        );
     }
-	
-	return result; 
+
+	return result;
 }
 </pre>
 
@@ -265,7 +265,7 @@ var Animal = {
   }
 };
 
-// Create new animal type called animal1 
+// Create new animal type called animal1
 var animal1 = Object.create(Animal);
 animal1.displayType(); // Output:Invertebrates
 
@@ -375,7 +375,7 @@ function sayHi() {
 
 // add sayHi function to both objects
 Manager.sayHi = sayHi;
-Intern.sayHi = sayHi; 
+Intern.sayHi = sayHi;
 
 Manager.sayHi() // Hello, my name is John'
 Intern.sayHi() // Hello, my name is Ben'
@@ -405,7 +405,7 @@ Manager.howOldAmI() // I am 27 years old.
 
 <pre class="brush: js">var o = {
   a: 7,
-  get b() { 
+  get b() {
     return this.a + 1;
   },
   set c(x) {

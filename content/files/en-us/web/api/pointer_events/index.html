@@ -236,7 +236,7 @@ tags:
       // Non primary handler
     }
 
-    function down_handler(ev) { 
+    function down_handler(ev) {
       // Calculate the touch point's contact area
       var area = ev.width * ev.height;
 
@@ -245,14 +245,14 @@ tags:
 
       // Call the appropriate pointer type handler
       switch (ev.pointerType) {
-        case "mouse": 
-          process_mouse(ev); 
+        case "mouse":
+          process_mouse(ev);
           break;
-        case "pen": 
-          process_pen(ev); 
+        case "pen":
+          process_pen(ev);
           break;
-        case "touch": 
-          process_touch(ev); 
+        case "touch":
+          process_touch(ev);
           break;
         default:
           console.log("pointerType " + ev.pointerType + " is Not suported");

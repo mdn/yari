@@ -53,27 +53,27 @@ The result of the code above is: "My cat's name is Chloe"
 
 <p>JavaScript only hoists declarations, not initializations. If a variable is declared and initialized after using it, the value will be undefined. For example:</p>
 
-<pre class="brush: js">console.log(num); // Returns undefined, as only declaration was hoisted, no initialization has happened at this stage 
+<pre class="brush: js">console.log(num); // Returns undefined, as only declaration was hoisted, no initialization has happened at this stage
 var num; // declaration
 num = 6; // initialization</pre>
 
 <p>The example below only has initialization. No hoisting happens so trying to read the variable results in ReferenceError exception.</p>
 
-<pre class="brush: js">console.log(num); // throws ReferenceError exception 
+<pre class="brush: js">console.log(num); // throws ReferenceError exception
 num = 6; // initialization</pre>
 
 <p>Below are more examples demonstrating hoisting.</p>
 
-<pre class="brush: js">// Example 1 
+<pre class="brush: js">// Example 1
 // Only y is hoisted
 
 x = 1; // Initialize x, and if not already declared, declare it - but no hoisting as there is no var in the statement.
 console.log(x + " " + y); // '1 undefined'
-//This prints value of y as undefined as JavaScript <strong>only hoists</strong> <strong>declarations</strong> 
+//This prints value of y as undefined as JavaScript <strong>only hoists</strong> <strong>declarations</strong>
 var y = 2; // Declare and Initialize y
 
 
-// Example 2 
+// Example 2
 // No hoisting, but since initialization also causes declaration (if not already declared), variables are available.
 
 a = 'Cran'; //Initialize a

@@ -44,7 +44,7 @@ tags:
 const gl = canvas.getContext('webgl');
 
 canvas.addEventListener('webglcontextlost', (event) =&gt; {
-  console.log(event); 
+  console.log(event);
 });
 
 gl.getExtension('WEBGL_lose_context').loseContext();

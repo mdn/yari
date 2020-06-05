@@ -32,9 +32,9 @@ tags:
 <p>JavaScript ignores trailing commas in arrays:</p>
 
 <pre class="brush: js">var arr = [
-  1, 
-  2, 
-  3, 
+  1,
+  2,
+  3,
 ];
 
 arr; // [1, 2, 3]
@@ -50,8 +50,8 @@ arr.length; // 5
 
 <p>Starting with ECMAScript 5, trailing commas in object literals are legal as well:</p>
 
-<pre class="brush: js">var object = { 
-  foo: "bar", 
+<pre class="brush: js">var object = {
+  foo: "bar",
   baz: "qwerty",
   age: 42,
 };</pre>
@@ -65,7 +65,7 @@ arr.length; // 5
 <p>The following function definition pairs are legal and equivalent to each other. Trailing commas don't affect the <code>length</code> property of function declarations or their <code>arguments</code> object.</p>
 
 <pre class="brush: js">function f(p) {}
-function f(p,) {} 
+function f(p,) {}
 
 (p) =&gt; {};
 (p,) =&gt; {};
@@ -116,7 +116,7 @@ function f(...p,) {} // SyntaxError: parameter after rest parameter
 
 // object destructuring with trailing comma
 var o = {
-  p: 42, 
+  p: 42,
   q: true,
 };
 var {p, q,} = o;
@@ -135,7 +135,7 @@ var {p, q,} = o;
 
 <pre class="brush: js example-bad">JSON.parse('[1, 2, 3, 4, ]');
 JSON.parse('{"foo" : 1, }');
-// SyntaxError JSON.parse: unexpected character 
+// SyntaxError JSON.parse: unexpected character
 // at line 1 column 14 of the JSON data
 </pre>
 

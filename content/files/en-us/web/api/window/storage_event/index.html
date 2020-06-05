@@ -47,7 +47,7 @@ tags:
 <pre class="brush: js">window.addEventListener('storage', () =&gt; {
   // When local storage changes, dump the list to
   // the console.
-  console.log(JSON.parse(window.localStorage.getItem('sampleList')));    
+  console.log(JSON.parse(window.localStorage.getItem('sampleList')));
 });</pre>
 
 <p>The same action can be achieved using the <code><a href="/en-US/docs/Web/API/WindowEventHandlers/onstorage">onstorage</a></code> event handler property:</p>
@@ -55,7 +55,7 @@ tags:
 <pre class="brush: js">window.onstorage = () =&gt; {
   // When local storage changes, dump the list to
   // the console.
-  console.log(JSON.parse(window.localStorage.getItem('sampleList')));    
+  console.log(JSON.parse(window.localStorage.getItem('sampleList')));
 };
 </pre>
 

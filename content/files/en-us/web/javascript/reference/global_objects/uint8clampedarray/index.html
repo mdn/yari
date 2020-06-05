@@ -133,9 +133,9 @@ console.log(y[0]); // 21
 var buffer = new ArrayBuffer(8);
 var z = new Uint8ClampedArray(buffer, 1, 4);
 
-// From an iterable 
-var iterable = function*(){ yield* [1,2,3]; }(); 
-var uintc8 = new Uint8ClampedArray(iterable); 
+// From an iterable
+var iterable = function*(){ yield* [1,2,3]; }();
+var uintc8 = new Uint8ClampedArray(iterable);
 // Uint8ClampedArray[1, 2, 3]
 </pre>
 

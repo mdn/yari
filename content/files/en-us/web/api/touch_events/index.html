@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", startup);</pre>
   var el = document.getElementById("canvas");
   var ctx = el.getContext("2d");
   var touches = evt.changedTouches;
-        
+
   for (var i = 0; i &lt; touches.length; i++) {
     console.log("touchstart:" + i + "...");
     ongoingTouches.push(copyTouch(touches[i]));
@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", startup);</pre>
   evt.preventDefault();
   console.log("touchcancel.");
   var touches = evt.changedTouches;
-  
+
   for (var i = 0; i &lt; touches.length; i++) {
     var idx = ongoingTouchIndexById(touches[i].identifier);
     ongoingTouches.splice(idx, 1);  // remove it; we're done
@@ -237,7 +237,7 @@ document.addEventListener("DOMContentLoaded", startup);</pre>
 <pre class="brush: js">function ongoingTouchIndexById(idToFind) {
   for (var i = 0; i &lt; ongoingTouches.length; i++) {
     var id = ongoingTouches[i].identifier;
-    
+
     if (id == idToFind) {
       return i;
     }
@@ -275,7 +275,7 @@ document.addEventListener("DOMContentLoaded", startup);</pre>
   var touch = null;
 
   switch (evt.type) {
-    case "touchstart": 
+    case "touchstart":
       type = "mousedown";
       touch = evt.changedTouches[0];
       break;
@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", startup);</pre>
       type = "mousemove";
       touch = evt.changedTouches[0];
       break;
-    case "touchend":        
+    case "touchend":
       type = "mouseup";
       touch = evt.changedTouches[0];
       break;

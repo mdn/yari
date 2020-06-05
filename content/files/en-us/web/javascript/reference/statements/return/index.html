@@ -58,7 +58,7 @@ a + b;
 
 <p>is transformed by ASI into:</p>
 
-<pre class="brush: js">return; 
+<pre class="brush: js">return;
 a + b;
 </pre>
 
@@ -82,7 +82,7 @@ a + b;
 <pre class="brush: js">function counter() {
   for (var count = 1; ; count++) {  // infinite loop
     console.log(count + 'A'); // until 5
-      if (count === 5) {          
+      if (count === 5) {
         return;
       }
       console.log(count + 'B');  // until 4

@@ -36,13 +36,13 @@ SyntaxError: for-of loop variable declaration may not have an initializer. (Chro
 
 <h3 id="Invalid_for-of_loop">Invalid <code>for-of</code> loop</h3>
 
-<pre class="brush: js example-bad">let iterable = [10, 20, 30]; 
+<pre class="brush: js example-bad">let iterable = [10, 20, 30];
 
-for (let value = 50 of iterable) { 
-  console.log(value); 
-} 
+for (let value = 50 of iterable) {
+  console.log(value);
+}
 
-// SyntaxError: a declaration in the head of a for-of loop can't 
+// SyntaxError: a declaration in the head of a for-of loop can't
 // have an initializer</pre>
 
 <h3 id="Valid_for-of_loop">Valid <code>for-of</code> loop</h3>

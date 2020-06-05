@@ -65,8 +65,8 @@ var buffer = new ArrayBuffer(32);
 var z = new BigInt64Array(buffer, 0, 4);
 
 // From an iterable
-var iterable = function*(){ yield* [1n, 2n, 3n]; }(); 
-var bigint64 = new BigInt64Array(iterable); 
+var iterable = function*(){ yield* [1n, 2n, 3n]; }();
+var bigint64 = new BigInt64Array(iterable);
 // BigInt64Array[1n, 2n, 3n]
 </pre>
 

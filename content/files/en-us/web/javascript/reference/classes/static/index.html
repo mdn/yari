@@ -71,10 +71,10 @@ console.log(tp.triple());
     return this.staticMethod() + ' from another static method';
   }
 }
-StaticMethodCall.staticMethod(); 
+StaticMethodCall.staticMethod();
 // 'Static method has been called'
 
-StaticMethodCall.anotherStaticMethod(); 
+StaticMethodCall.anotherStaticMethod();
 // 'Static method has been called from another static method'</pre>
 
 <h3 id="Calling_static_methods_from_a_class_constructor_and_other_methods">Calling static methods from a class constructor and other methods</h3>
@@ -83,11 +83,11 @@ StaticMethodCall.anotherStaticMethod();
 
 <pre class="brush: js">class StaticMethodCall {
   constructor() {
-    console.log(StaticMethodCall.staticMethod()); 
-    // 'static method has been called.' 
+    console.log(StaticMethodCall.staticMethod());
+    // 'static method has been called.'
 
-    console.log(this.constructor.staticMethod()); 
-    // 'static method has been called.' 
+    console.log(this.constructor.staticMethod());
+    // 'static method has been called.'
   }
 
   static staticMethod() {

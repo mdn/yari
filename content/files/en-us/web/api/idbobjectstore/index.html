@@ -80,7 +80,7 @@ var DBOpenRequest = window.indexedDB.open("toDoList", 4);
 
 DBOpenRequest.onsuccess = function(event) {
   note.innerHTML += '&lt;li&gt;Database initialised.&lt;/li&gt;';
- 
+
   // store the result of opening the database in db.
   db = DBOpenRequest.result;
 };
@@ -91,17 +91,17 @@ DBOpenRequest.onsuccess = function(event) {
 // submitted via the window.indexedDB.open line above
 DBOpenRequest.onupgradeneeded = function(event) {
   var db = event.target.result;
- 
+
   db.onerror = function(event) {
     note.innerHTML += '&lt;li&gt;Error loading database.&lt;/li&gt;';
   };
 
   // Create an objectStore for this database
- 
+
   var objectStore = db.createObjectStore("toDoList", { keyPath: "taskTitle" });
- 
+
   // define what data items the objectStore will contain
- 
+
   objectStore.createIndex("hours", "hours", { unique: false });
   objectStore.createIndex("minutes", "minutes", { unique: false });
   objectStore.createIndex("day", "day", { unique: false });
@@ -109,7 +109,7 @@ DBOpenRequest.onupgradeneeded = function(event) {
   objectStore.createIndex("year", "year", { unique: false });
 
   objectStore.createIndex("notified", "notified", { unique: false });
- 
+
   note.innerHTML += '&lt;li&gt;Object store created.&lt;/li&gt;';
 };
 
@@ -120,7 +120,7 @@ var newItem = [
 
 // open a read/write db transaction, ready for adding the data
 var transaction = db.transaction(["toDoList"], "readwrite");
-    
+
 // report on the success of the transaction completing, when everything is done
 transaction.oncomplete = function(event) {
   note.innerHTML += '&lt;li&gt;Transaction completed.&lt;/li&gt;';
@@ -133,7 +133,7 @@ transaction.onerror = function(event) {
 // create an object store on the transaction
 var objectStore = transaction.objectStore("toDoList");
 // make a request to add our newItem object to the object store
-var objectStoreRequest = objectStore.add(newItem[0]);        
+var objectStoreRequest = objectStore.add(newItem[0]);
 
 objectStoreRequest.onsuccess = function(event) {
   note.innerHTML += '&lt;li&gt;Request successful .&lt;/li&gt;';

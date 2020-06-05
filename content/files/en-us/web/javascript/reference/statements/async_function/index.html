@@ -107,7 +107,7 @@ foo()</pre>
 
 <pre class="syntaxbox">async function <var>foo</var>() {
    const p1 = <var>new Promise((resolve) =&gt; setTimeout(() =&gt; resolve('1'), 1000))
-</var>   const p2 = <var>new Promise((_,reject) =&gt; setTimeout(() =&gt; reject('2'), 500))   
+</var>   const p2 = <var>new Promise((_,reject) =&gt; setTimeout(() =&gt; reject('2'), 500))
    const results = [await p1, await p2] // Do not do this! Use Promise.all or Promise.allSettled instead.</var>
 }
 foo().catch(() =&gt; {}) // Attempt to swallow all errors...
@@ -168,7 +168,7 @@ function concurrentPromise() {
 
 async function parallel() {
   console.log('==PARALLEL with await Promise.all==')
-  
+
   // Start 2 "jobs" in parallel and wait for both of them to complete
   await Promise.all([
       (async()=&gt;console.log(await resolveAfter2Seconds()))(),
@@ -218,7 +218,7 @@ setTimeout(parallel, 10000) // truly parallel: after 1 second, logs "fast", then
     })
     .then(v =&gt; {
       return processDataInWorker(v)  // returns a promise
-    }) 
+    })
 }
 </pre>
 

@@ -37,13 +37,13 @@ tags:
 
 <p>A client requests  signals to the server that it supports the upgrade mechanisms of {{CSP("upgrade-insecure-requests")}}:</p>
 
-<pre>GET / HTTP/1.1 
-Host: example.com 
+<pre>GET / HTTP/1.1
+Host: example.com
 Upgrade-Insecure-Requests: 1</pre>
 
 <p>The server can now redirect to a secure version of the site. A {{HTTPHeader("Vary")}} header can be used so that the site isn't served by caches to clients that don’t support the upgrade mechanism.</p>
 
-<pre>Location: https://example.com/ 
+<pre>Location: https://example.com/
 Vary: Upgrade-Insecure-Requests</pre>
 
 <h2 id="Specifications">Specifications</h2>

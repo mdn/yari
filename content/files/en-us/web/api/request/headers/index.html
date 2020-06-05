@@ -37,11 +37,11 @@ var myHeaders = myRequest.headers; // Headers {}</pre>
 <pre class="brush: js">var myHeaders = new Headers();
 myHeaders.append('Content-Type', 'image/jpeg');
 
-var myInit = { 
+var myInit = {
   method: 'GET',
   headers: myHeaders,
   mode: 'cors',
-  cache: 'default' 
+  cache: 'default'
 };
 
 var myRequest = new Request('flowers.jpg', myInit);

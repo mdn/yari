@@ -49,7 +49,7 @@ arguments[2] // third argument
 
 <pre class="brush: js">var args = Array.prototype.slice.call(arguments);
 // Using an array literal is shorter than above but allocates an empty array
-var args = [].slice.call(arguments); 
+var args = [].slice.call(arguments);
 </pre>
 
 <p>As you can do with any Array-like object, you can use ES2015's {{jsxref("Array.from()")}} method or <a href="/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax">spread syntax</a> to convert <code>arguments</code> to a real Array:</p>
@@ -125,8 +125,8 @@ myConcat('. ', 'sage', 'basil', 'oregano', 'pepper', 'parsley');</pre>
   var html = '&lt;' + type + 'l&gt;&lt;li&gt;';
   var args = Array.prototype.slice.call(arguments, 1);
   html += args.join('&lt;/li&gt;&lt;li&gt;');
-  html += '&lt;/li&gt;&lt;/' + type + 'l&gt;'; // end list 
-  return html; 
+  html += '&lt;/li&gt;&lt;/' + type + 'l&gt;'; // end list
+  return html;
 }</pre>
 
 <p>You can pass any number of arguments to this function, and it adds each argument as a list item to a list of the type indicated. For example:</p>

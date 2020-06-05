@@ -129,7 +129,7 @@ function fail(){
 
 fail();
 
-// Attempted changes through Object.defineProperty; 
+// Attempted changes through Object.defineProperty;
 // both statements below throw a TypeError.
 Object.defineProperty(obj, 'ohai', { value: 17 });
 Object.defineProperty(obj, 'foo', { value: 'eit' });
@@ -200,11 +200,11 @@ console.log(employee.address.city) // Output: "Noida"
   var propNames = Object.getOwnPropertyNames(object);
 
   // Freeze properties before freezing self
-  
+
   for (let name of propNames) {
     let value = object[name];
 
-    if(value &amp;&amp; typeof value === "object") { 
+    if(value &amp;&amp; typeof value === "object") {
       deepFreeze(value);
     }
   }

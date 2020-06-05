@@ -43,17 +43,17 @@ tags:
 
 <p>Prior to <code>globalThis</code>, the only reliable cross-platform way to get the global object for an environment was <code>Function('return this')()</code>. However, this causes <a href="/en-US/docs/Web/HTTP/CSP">CSP</a> violations in some settings, so <a href="https://github.com/paulmillr/es6-shim">es6-shim</a> uses a check like this, for example:</p>
 
-<pre class="brush: js">var getGlobal = function () { 
-  if (typeof self !== 'undefined') { return self; } 
-  if (typeof window !== 'undefined') { return window; } 
-  if (typeof global !== 'undefined') { return global; } 
-  throw new Error('unable to locate global object'); 
-}; 
+<pre class="brush: js">var getGlobal = function () {
+  if (typeof self !== 'undefined') { return self; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  throw new Error('unable to locate global object');
+};
 
-var globals = getGlobal(); 
+var globals = getGlobal();
 
-if (typeof globals.setTimeout !== 'function') { 
-  // no setTimeout in this environment! 
+if (typeof globals.setTimeout !== 'function') {
+  // no setTimeout in this environment!
 }
 </pre>
 

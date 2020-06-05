@@ -55,7 +55,7 @@ multiply(5)     // 5
 <p>With default parameters in ES2015, checks in the function body are no longer necessary. Now, you can assign <code>1</code> as the default value for <code><var>b</var></code> in the function head:</p>
 
 <pre class="brush: js">function multiply(a, b = 1) {
-  return a * b 
+  return a * b
 }
 
 multiply(5, 2)          // 10
@@ -128,7 +128,7 @@ greet('David', 'Hi', 'Happy Birthday!')  // ["David", "Hi", "Happy Birthday!"]
   return ':P'
 }
 
-function withDefaults(a, b = 5, c = b, d = go(), e = this, 
+function withDefaults(a, b = 5, c = b, d = go(), e = this,
                       f = arguments, g = this.value) {
   return [a, b, c, d, e, f, g]
 }
@@ -181,15 +181,15 @@ withoutDefaults.call({value: '=^_^='});
 <pre class="brush: js example-bad">function f(a, b = () =&gt; console.log(a)) {
   var a = 1
   b() // Prints `undefined`, because default parameter values exist in their own scope
-} 
+}
 </pre>
 
 <h3 id="Parameters_without_defaults_after_default_parameters">Parameters without defaults after default parameters</h3>
 
 <p>Parameters are still set left-to-right, overwriting default parameters even if there are later parameters without defaults.</p>
 
-<pre class="brush: js">function f(x = 1, y) { 
-  return [x, y]  
+<pre class="brush: js">function f(x = 1, y) {
+  return [x, y]
 }
 
 f()   // [1, undefined]
@@ -200,7 +200,7 @@ f(2)  // [2, undefined]
 
 <p>You can use default value assignment with the {{jsxref("Operators/Destructuring_assignment", "destructuring assignment", "", 1)}} notation:</p>
 
-<pre class="brush: js">function f([x, y] = [1, 2], {z: z} = {z: 3}) { 
+<pre class="brush: js">function f([x, y] = [1, 2], {z: z} = {z: 3}) {
   return x + y + z
 }
 

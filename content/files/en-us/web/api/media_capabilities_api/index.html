@@ -26,20 +26,20 @@ tags:
 
 <pre class="brush: js">if ('mediaCapabilities' in navigator) {
   const audioFileConfiguration = {
-    type : 'file', 
+    type : 'file',
     audio : {
         contentType: "audio/mp3",
-        channels: 2,  
-        bitrate: 132700, 
-        samplerate: 5200 
-    } 
-  }; 
+        channels: 2,
+        bitrate: 132700,
+        samplerate: 5200
+    }
+  };
 
-  navigator.mediaCapabilities.decodingInfo(audioFileConfiguration).then(result =&gt; { 
-    console.log('This configuration is ' +                     
-        (result.supported ? '' : 'not ') + 'supported, ' +           
-        (result.smooth ? '' : 'not ') + 'smooth, and ' +            
-        (result.powerEfficient ? '' : 'not ') + 'power efficient.') 
+  navigator.mediaCapabilities.decodingInfo(audioFileConfiguration).then(result =&gt; {
+    console.log('This configuration is ' +
+        (result.supported ? '' : 'not ') + 'supported, ' +
+        (result.smooth ? '' : 'not ') + 'smooth, and ' +
+        (result.powerEfficient ? '' : 'not ') + 'power efficient.')
     })
     .catch(() =&gt; {
       console.log("decodingInfo error: " + contentType)

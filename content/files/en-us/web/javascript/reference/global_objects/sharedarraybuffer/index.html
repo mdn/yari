@@ -50,7 +50,7 @@ worker.postMessage(sab);
 <p><code>SharedArrayBuffer</code> constructors are required to be constructed with a {{jsxref("Operators/new", "new")}} operator. Calling a <code>SharedArrayBuffer</code> constructor as a function without <code>new</code> will throw a {{jsxref("TypeError")}}.</p>
 
 <pre class="brush: js example-bad">var sab = SharedArrayBuffer(1024);
-// TypeError: calling a builtin SharedArrayBuffer constructor 
+// TypeError: calling a builtin SharedArrayBuffer constructor
 // without new is forbidden</pre>
 
 <pre class="brush: js example-good">var sab = new SharedArrayBuffer(1024);</pre>

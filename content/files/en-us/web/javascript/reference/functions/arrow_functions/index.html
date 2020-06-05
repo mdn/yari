@@ -20,7 +20,7 @@ tags:
 
 <h3 id="Basic_syntax">Basic syntax</h3>
 
-<pre class="syntaxbox">(param1, param2, …, paramN) =&gt; { statements } 
+<pre class="syntaxbox">(param1, param2, …, paramN) =&gt; { statements }
 (param1, param2, …, paramN) =&gt; expression
 // equivalent to: =&gt; { return expression; }
 
@@ -39,7 +39,7 @@ params =&gt; ({foo: bar})
 
 // <a href="/en-US/docs/Web/JavaScript/Reference/Functions/Rest_parameters">Rest parameters</a> and <a href="/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters">default parameters</a> are supported
 (param1, param2, ...rest) =&gt; { statements }
-(param1 = defaultValue1, param2, …, paramN = defaultValueN) =&gt; { 
+(param1 = defaultValue1, param2, …, paramN = defaultValueN) =&gt; {
 statements }
 
 // <a href="/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment">Destructuring</a> within the parameter list is also supported
@@ -90,7 +90,7 @@ elements.<a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map"
 // This destructuring parameter assignment can also be written as seen below. However, note that in
 // this example we are not assigning `length` value to the made up property. Instead, the literal name
 // itself of the variable `length` is used as the property we want to retrieve from the object.
-elements.<a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map">map</a>(({ length }) =&gt; length); // [8, 6, 7, 9] 
+elements.<a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map">map</a>(({ length }) =&gt; length); // [8, 6, 7, 9]
 </pre>
 
 <h3 id="No_separate_this">No separate <code>this</code></h3>
@@ -112,7 +112,7 @@ elements.<a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map"
 
   setInterval(function growUp() {
     // In non-strict mode, the growUp() function defines `this`
-    // as the global object (because it's where growUp() is executed.), 
+    // as the global object (because it's where growUp() is executed.),
     // which is different from the `this`
     // defined by the Person() constructor.
     this.age++;
@@ -263,9 +263,9 @@ foo(3); // 6</pre>
 
 <p>In most cases, using <a href="/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters">rest parameters</a> is a good alternative to using an <code>arguments</code> object.</p>
 
-<pre class="brush: js">function foo(n) { 
+<pre class="brush: js">function foo(n) {
   var f = (...args) =&gt; args[0] + n;
-  return f(10); 
+  return f(10);
 }
 
 foo(1); // 11</pre>
@@ -328,10 +328,10 @@ console.log(Foo.prototype); // undefined
 
 <p>In a concise body, only an expression is specified, which becomes the implicit return value. In a block body, you must use an explicit <code>return</code> statement.</p>
 
-<pre class="brush: js">var func = x =&gt; x * x;                  
+<pre class="brush: js">var func = x =&gt; x * x;
 // concise body syntax, implied "return"
 
-var func = (x, y) =&gt; { return x + y; }; 
+var func = (x, y) =&gt; { return x + y; };
 // with block body, explicit "return" needed
 </pre>
 
@@ -377,7 +377,7 @@ var func = (
   b,
   c
 ) =&gt; 1;
- 
+
 // no SyntaxError thrown</pre>
 
 <h3 id="Parsing_order">Parsing order</h3>
@@ -401,11 +401,11 @@ callback = callback || (() =&gt; {});    // ok
 <pre class="brush: js">// An empty arrow function returns undefined
 let empty = () =&gt; {};
 
-(() =&gt; 'foobar')(); 
+(() =&gt; 'foobar')();
 // Returns "foobar"
 // (this is an Immediately Invoked Function Expression)
 
-var simple = a =&gt; a &gt; 15 ? 15 : a; 
+var simple = a =&gt; a &gt; 15 ? 15 : a;
 simple(16); // 15
 simple(10); // 10
 
@@ -418,7 +418,7 @@ var arr = [5, 6, 13, 0, 1, 18, 23];
 var sum = arr.reduce((a, b) =&gt; a + b);
 // 66
 
-var even = arr.filter(v =&gt; v % 2 == 0); 
+var even = arr.filter(v =&gt; v % 2 == 0);
 // [6, 0, 18]
 
 var double = arr.map(v =&gt; v * 2);

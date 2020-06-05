@@ -115,9 +115,9 @@ function Number() {
     [native code]
 },false,1                                                     // 1
 function Type() {},false,[object Object]                      // new Object()
-function Type() {},false,[object Object]                      // {} 
+function Type() {},false,[object Object]                      // {}
 function Type() {},false,/(?:)/                               // new Regexp()
-function Type() {},false,/(?:)/                               // /(?:)/ 
+function Type() {},false,/(?:)/                               // /(?:)/
 function Type() {},false,                                     // new String()
 function String() {
     [native code]
@@ -162,14 +162,14 @@ new CreatedConstructor().create().create() // TypeError undefined is not a funct
 <p>To avoid this, just assign the necessary constructor you are going to use.</p>
 
 <pre class="brush: js">function Parent() { /* ... */ }
-function CreatedConstructor() { /* ... */ } 
+function CreatedConstructor() { /* ... */ }
 
-CreatedConstructor.prototype = Object.create(Parent.prototype) 
+CreatedConstructor.prototype = Object.create(Parent.prototype)
 CreatedConstructor.prototype.constructor = CreatedConstructor // sets the correct constructor for future use
 
-CreatedConstructor.prototype.create = function create() { 
+CreatedConstructor.prototype.create = function create() {
   return new this.constructor()
-} 
+}
 
 new CreatedConstructor().create().create() // it's pretty fine</pre>
 
@@ -182,7 +182,7 @@ new CreatedConstructor().create().create() // it's pretty fine</pre>
 ParentWithStatic.startPosition = { x: 0, y:0 } // Static member property
 ParentWithStatic.getStartPosition = function getStartPosition() {
   return this.startPosition
-} 
+}
 
 function Child(x, y) {
   this.position = {

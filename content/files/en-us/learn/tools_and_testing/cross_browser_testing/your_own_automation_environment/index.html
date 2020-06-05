@@ -180,7 +180,7 @@ function searchTest(driver) {
     });
   });
 
-  
+
 }</pre>
  </li>
  <li>In terminal, make sure you are inside your project folder, then enter the following command:
@@ -427,7 +427,7 @@ function searchTextOnGoogle() {
 // URL: https://{username}:{accessToken}@hub.lambdatest.com/wd/hub
 
 const gridUrl = 'https://' + USERNAME + ':' + KEY + '@' + GRID_HOST;
-  
+
 // setup and build selenium driver object
      const driver = new webdriver.Builder()
      .usingServer(gridUrl)
@@ -444,7 +444,7 @@ driver.get('https://www.google.com/ncr').then(function() {
                }, 5000);
             });
          });
-      });  
+      });
    }
 
 searchTextOnGoogle();
@@ -531,7 +531,7 @@ driver.sleep(2000).then(function() {
       console.log('Test failed');
     }
   });
-});  
+});
 
 driver.quit();</pre>
  </li>

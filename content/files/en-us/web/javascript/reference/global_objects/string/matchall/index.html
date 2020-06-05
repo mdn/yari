@@ -101,7 +101,7 @@ Array.from(str.matchAll(regexp), m =&gt; `${regexp.lastIndex} ${m[0]}`);
 <pre class="brush: js">let regexp = /t(e)(st(\d?))/g;
 let str = 'test1test2';
 
-str.match(regexp); 
+str.match(regexp);
 // Array ['test1', 'test2']</pre>
 
 <p>Using <code>matchAll</code>, you can access capture groups easily:</p>

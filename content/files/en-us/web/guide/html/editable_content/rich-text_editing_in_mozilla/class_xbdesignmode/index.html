@@ -28,57 +28,57 @@ tags:
  *
  * Contributor(s): Doron Rosenberg &lt;doron@netscape.com&gt; (original author)
  *
- *                 
+ *
  *
  * ***** END LICENSE BLOCK ***** */
 
- 
+
 /*
     xbDesignMode
-    
+
     a JavaScript wrapper for browsers that support designMode
-*/ 
- 
+*/
+
 function xbDesignMode(aIFrame){
 
   this.mEditorDocument = null;
   this.mIFrameElement = null;
-  
+
   // argument is a string, therefore an ID
   if ( (typeof(aIFrame) == "string") &amp;&amp; (document.getElementById(aIFrame).tagName.toLowerCase()=="iframe") ){
     this.mIFrameElement = document.getElementById(aIFrame);
   } else if( (typeof(aIFrame)=="object") &amp;&amp; (aIFrame.tagName.toLowerCase() == "iframe") ){
-    this.mIFrameElement = aIFrame;   
+    this.mIFrameElement = aIFrame;
   } else {
     throw "Argument isn't an id of an iframe or an iframe reference";
   }
-  
-  if (this.mIFrameElement.contentDocument){  
+
+  if (this.mIFrameElement.contentDocument){
     // Gecko
     this.mEditorDocument = this.mIFrameElement.contentDocument;
-    this.mEditorDocument.designMode = "On";    
+    this.mEditorDocument.designMode = "On";
   } else {
     // IE
     this.mEditorDocument = this.mIFrameElement.contentWindow.document;
-    this.mEditorDocument.designMode = "On";   
-    // IE needs to reget the document element after designMode was set 
+    this.mEditorDocument.designMode = "On";
+    // IE needs to reget the document element after designMode was set
     this.mEditorDocument = this.mIFrameElement.contentWindow.document;
-  }    
+  }
 }
 
 
 xbDesignMode.prototype.execCommand = function (aCommandName, aParam){
   if (this.mEditorDocument)
     this.mEditorDocument.execCommand(aCommandName, false, aParam);
-  else 
-    throw "no mEditorDocument found";    
+  else
+    throw "no mEditorDocument found";
 }
 
 xbDesignMode.prototype.setCSSCreation = function (aStyleWithCSS){
   if (this.mEditorDocument)
     this.mEditorDocument.execCommand("styleWithCSS", false, aStyleWithCSS);
-  else 
-    throw "no mEditorDocument found";  
-    
+  else
+    throw "no mEditorDocument found";
+
 }
 &lt;/doron@netscape.com&gt;</pre>

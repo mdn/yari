@@ -38,7 +38,7 @@ tags:
 var info = document.querySelector('p');
 if(navigator.getVRDevices) {
   navigator.getVRDevices().then(function(myDevices) {
-    reportDevices(myDevices);     
+    reportDevices(myDevices);
   });
 } else {
   info.textContent = 'WebVR API not supported by this browser.'

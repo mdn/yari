@@ -32,7 +32,7 @@ tags:
 
 <h3 id="Typical_invalid_assignments">Typical invalid assignments</h3>
 
-<pre class="brush: js example-bad">if (Math.PI = 3 || Math.PI = 4) { 
+<pre class="brush: js example-bad">if (Math.PI = 3 || Math.PI = 4) {
   console.log('no way!');
 }
 // ReferenceError: invalid assignment left-hand side
@@ -45,12 +45,12 @@ var str = 'Hello, '
 
 <p>In the <code>if</code> statement, you want to use a comparison operator ("=="), and for the string concatenation, the plus ("+") operator is needed.</p>
 
-<pre class="brush: js example-good">if (Math.PI == 3 || Math.PI == 4) { 
-  console.log('no way!'); 
+<pre class="brush: js example-good">if (Math.PI == 3 || Math.PI == 4) {
+  console.log('no way!');
 }
 
-var str = 'Hello, ' 
-+ 'from the ' 
+var str = 'Hello, '
++ 'from the '
 + 'other side!';
 </pre>
 

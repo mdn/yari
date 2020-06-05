@@ -31,7 +31,7 @@ tags:
       &lt;!-- button graphical elements here --&gt;
     &lt;/g&gt;
   &lt;/a&gt;
-&lt;/svg&gt; 
+&lt;/svg&gt;
 </pre>
 
 <p>The specification says that the browser should navigate to the HTML document page2.html when the button graphics are clicked. However, <code>target</code> does not work with Mozilla's implementation of the SVG <code>&lt;a&gt;</code> element in Firefox 1.5. (The problem will be fixed in Firefox 2.0.)</p>
@@ -47,7 +47,7 @@ tags:
   &lt;g onclick="top.document.href='page2.html'" cursor="pointer"&gt;
     &lt;!-- button graphical elements here --&gt;
   &lt;/g&gt;
-&lt;/svg&gt; 
+&lt;/svg&gt;
 </pre>
 
 <h2 id="Example">Example</h2>

@@ -50,7 +50,7 @@ NPWindowTypeDrawable
 } NPWindowType;
 
 
- 
+
 typedef struct _NPWindow
 {
 void*   window;   /* Platform-specific handle      */
@@ -63,7 +63,7 @@ NPRect  clipRect; /* Clipping rectangle in port coordinates */
 #ifdef XP_UNIX
 void *  ws_info;  /* Platform-dependent additional data     */
 #endif /* XP_UNIX */
- 
+
 NPWindowType  type;   /* Whether this is a window or a drawable */
 } NPWindow;
 </pre>
@@ -293,23 +293,23 @@ void NPN_InvalidateRegion(NPP instance, NPRegion invalidRegion);
 <p>Both methods cause the <code>NPP_HandleEvent</code> method to pass an update event or a paint message to the plug-in.</p>
 
 <pre>#ifdef XP_MAC
- 
+
 typedef RgnHandle NPRegion;
- 
+
 #elif defined(XP_WIN)
- 
+
 typedef HRGN NPRegion;
- 
+
 #elif defined(XP_UNIX)
- 
+
 typedef Region NPRegion;
- 
+
 #else
- 
+
 typedef void* NPRegion;
- 
+
 #endif /* XP_MAC */
- 
+
 void NPN_InvalidateRect(NPP instance, NPRect *invalidRect);
 void NPN_InvalidateRegion(NPP instance, NPRegion invalidRegion);
 </pre>
@@ -407,27 +407,27 @@ void NPN_InvalidateRegion(NPP instance, NPRegion invalidRegion);
 <p>This code shows the specific data passed through this method for each platform:</p>
 
 <pre>#ifdef XP_MAC
- 
+
 typedef EventRecord NPEvent;
- 
+
 #elif defined(XP_WIN)
- 
+
 typedef struct _NPEvent {
 int16    event;
 int16    wParam;
 int32    lParam;
 } NPEvent;
- 
+
 #elif defined(XP_UNIX)
- 
+
 typedef XEvent NPEvent;
- 
+
 #else
- 
+
 typedef void NPEvent;
- 
+
 #endif /* XP_MAC */
- 
+
 int16 NPP_HandleEvent(NPP instance, NPEvent* event);
 </pre>
 

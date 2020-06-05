@@ -48,7 +48,7 @@ worker.addEventListener('message', (event) =&gt; {
 <pre class="brush: js">// inside static/scripts/worker.js
 
 self.addEventListener('message', (event) =&gt; {
-    console.log(`Received message from parent: ${event.data}`);  
+    console.log(`Received message from parent: ${event.data}`);
 });</pre>
 
 <p>Alternatively, it could listen using the <code><a href="/en-US/docs/Web/API/DedicatedWorkerGlobalScope/onmessage">onmessage</a></code> event handler property:</p>
@@ -56,7 +56,7 @@ self.addEventListener('message', (event) =&gt; {
 <pre class="brush: js">// static/scripts/worker.js
 
 self.onmessage = (event) =&gt; {
-    console.log(`Received message from parent: ${event.data}`);  
+    console.log(`Received message from parent: ${event.data}`);
 };</pre>
 
 <h2 id="Specifications">Specifications</h2>

@@ -60,22 +60,22 @@ counters(countername, '.', upper-roman)</pre>
 
 <pre class="brush: html;">&lt;ol&gt;
   &lt;li&gt;
-     &lt;ol&gt; 
+     &lt;ol&gt;
         &lt;li&gt;&lt;/li&gt;
         &lt;li&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;/li&gt; 
+        &lt;li&gt;&lt;/li&gt;
       &lt;/ol&gt;
   &lt;/li&gt;
   &lt;li&gt;&lt;/li&gt;
   &lt;li&gt;&lt;/li&gt;
   &lt;li&gt;
-     &lt;ol&gt; 
+     &lt;ol&gt;
         &lt;li&gt;&lt;/li&gt;
         &lt;li&gt;
-           &lt;ol&gt; 
+           &lt;ol&gt;
               &lt;li&gt;&lt;/li&gt;
               &lt;li&gt;&lt;/li&gt;
-              &lt;li&gt;&lt;/li&gt; 
+              &lt;li&gt;&lt;/li&gt;
            &lt;/ol&gt;
         &lt;/li&gt;
       &lt;/ol&gt;
@@ -107,22 +107,22 @@ li::before {
 
 <pre class="brush: html;">&lt;ol&gt;
   &lt;li&gt;
-     &lt;ol&gt; 
+     &lt;ol&gt;
         &lt;li&gt;&lt;/li&gt;
         &lt;li&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;/li&gt; 
+        &lt;li&gt;&lt;/li&gt;
       &lt;/ol&gt;
   &lt;/li&gt;
   &lt;li&gt;&lt;/li&gt;
   &lt;li&gt;&lt;/li&gt;
   &lt;li&gt;
-     &lt;ol&gt; 
+     &lt;ol&gt;
         &lt;li&gt;&lt;/li&gt;
         &lt;li&gt;
-           &lt;ol&gt; 
+           &lt;ol&gt;
               &lt;li&gt;&lt;/li&gt;
               &lt;li&gt;&lt;/li&gt;
-              &lt;li&gt;&lt;/li&gt; 
+              &lt;li&gt;&lt;/li&gt;
            &lt;/ol&gt;
         &lt;/li&gt;
       &lt;/ol&gt;
@@ -137,8 +137,8 @@ li::before {
 li {
   counter-increment: count;
 }
-li::marker { 
-   content: counters(count, '.', upper-alpha) ') '; 
+li::marker {
+   content: counters(count, '.', upper-alpha) ') ';
 }
 li::before {
   content: counters(count, ".", <dfn>decimal-leading-zero</dfn>) " == " counters(count, ".", lower-alpha);

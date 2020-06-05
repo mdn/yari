@@ -133,7 +133,7 @@ admin.site.register(BookInstance)
 <p>You can further customise the interface to make it even easier to use. Some of the things you can do are:</p>
 
 <ul>
- <li>List views: 
+ <li>List views:
   <ul>
    <li>Add additional fields/information displayed for each record. </li>
    <li>Add filters to select which records are listed, based on date or some other selection value (e.g. Book loan status).</li>
@@ -183,7 +183,7 @@ class BookAdmin(admin.ModelAdmin):
     pass
 
 # Register the Admin classes for BookInstance using the decorator
-@admin.register(BookInstance) 
+@admin.register(BookInstance)
 class BookInstanceAdmin(admin.ModelAdmin):
     pass
 </pre>
@@ -221,7 +221,7 @@ class BookInstanceAdmin(admin.ModelAdmin):
 <pre class="brush: python">    def display_genre(self):
         """Create a string for the Genre. This is required to display genre in Admin."""
         return ', '.join(genre.name for genre in self.genre.all()[:3])
-    
+
     display_genre.short_description = 'Genre'
 </pre>
 
@@ -283,7 +283,7 @@ class BookInstanceAdmin(admin.ModelAdmin):
 <pre class="brush: python">@admin.register(BookInstance)
 class BookInstanceAdmin(admin.ModelAdmin):
     list_filter = ('status', 'due_back')
-    
+
 <strong>    fieldsets = (
         (None, {
             'fields': ('book', 'imprint', 'id')

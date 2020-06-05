@@ -75,7 +75,7 @@ console.log(parent.childNodes) // NodeList [ #text "Some text", &lt;p&gt; ]</pre
 
 <pre class="brush: js">let parent = document.createElement("div")
 
-with(parent) { 
+with(parent) {
   append("foo")
 }
 // ReferenceError: append is not defined </pre>
@@ -97,12 +97,12 @@ with(parent) {
       value: function append() {
         var argArr = Array.prototype.slice.call(arguments),
           docFrag = document.createDocumentFragment();
-        
+
         argArr.forEach(function (argItem) {
           var isNode = argItem instanceof Node;
           docFrag.appendChild(isNode ? argItem : document.createTextNode(String(argItem)));
         });
-        
+
         this.appendChild(docFrag);
       }
     });

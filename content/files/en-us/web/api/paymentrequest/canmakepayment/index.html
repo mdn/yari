@@ -47,7 +47,7 @@ tags:
 
 <p>In the following example, is <a href="https://rsolomakhin.github.io/samples/paymentrequest/can-make-payment/">excerpted from a demo</a> that asynchronously builds a <code>PaymentRequest</code> object for both Apple Pay and credit cards. It wraps the call to <code>canMakePayment()</code> in feature detection, and calls an appropriate callback depending on the resolution of the <code>Promise</code>.</p>
 
-<pre class="brush:js">  
+<pre class="brush:js">
 async function initPaymentRquest() {
   const details = {
     total: {

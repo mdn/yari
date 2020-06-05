@@ -98,7 +98,7 @@ function blobCallback(iconName) {
     a.href = window.URL.createObjectURL(b);
   }
 }
-canvas.toBlob(blobCallback('passThisString'), 'image/vnd.microsoft.icon', 
+canvas.toBlob(blobCallback('passThisString'), 'image/vnd.microsoft.icon',
               '-moz-parse-options:format=bmp;bpp=32');</pre>
 </div>
 
@@ -125,9 +125,9 @@ function blobCallback(iconName) {
     r.onloadend = function () {
     // r.result contains the ArrayBuffer.
     Cu.import('resource://gre/modules/osfile.jsm');
-    var writePath = OS.Path.join(OS.Constants.Path.desktopDir, 
+    var writePath = OS.Path.join(OS.Constants.Path.desktopDir,
                                  iconName + '.ico');
-    var promise = OS.File.writeAtomic(writePath, new Uint8Array(r.result), 
+    var promise = OS.File.writeAtomic(writePath, new Uint8Array(r.result),
                                       {tmpPath:writePath + '.tmp'});
     promise.then(
       function() {

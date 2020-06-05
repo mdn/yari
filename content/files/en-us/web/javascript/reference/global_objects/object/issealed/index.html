@@ -73,11 +73,11 @@ Object.isExtensible(sealed); // === false
 
 // A sealed object might be frozen,
 // but it doesn't have to be.
-Object.isFrozen(sealed); // === true 
+Object.isFrozen(sealed); // === true
 // (all properties also non-writable)
 
 var s2 = Object.seal({ p: 3 });
-Object.isFrozen(s2); // === false 
+Object.isFrozen(s2); // === false
 // ('p' is still writable)
 
 var s3 = Object.seal({ get p() { return 0; } });

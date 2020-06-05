@@ -57,13 +57,13 @@ tags:
 <p>These cubic Bézier curves are valid for use in CSS:</p>
 
 <pre class="brush: css">/* The canonical Bézier curve with four &lt;number&gt; in the [0,1] range. */
-cubic-bezier(0.1, 0.7, 1.0, 0.1)   
+cubic-bezier(0.1, 0.7, 1.0, 0.1)
 
 /* Using &lt;integer&gt; is valid as any &lt;integer&gt; is also a &lt;number&gt;. */
-cubic-bezier(0, 0, 1, 1)           
+cubic-bezier(0, 0, 1, 1)
 
 /* Negative values for ordinates are valid, leading to bouncing effects.*/
-cubic-bezier(0.1, -0.6, 0.2, 0)    
+cubic-bezier(0.1, -0.6, 0.2, 0)
 
 /* Values &gt; 1.0 for ordinates are also valid. */
 cubic-bezier(0, 1.1, 0.8, 4)
@@ -71,20 +71,20 @@ cubic-bezier(0, 1.1, 0.8, 4)
 
 <p>These cubic Bézier curves definitions are invalid:</p>
 
-<pre class="brush: css example-bad">/* Though the animated output type may be a color, 
+<pre class="brush: css example-bad">/* Though the animated output type may be a color,
    Bézier curves work w/ numerical ratios.*/
-cubic-bezier(0.1, red, 1.0, green) 
+cubic-bezier(0.1, red, 1.0, green)
 
-/* Abscissas must be in the [0, 1] range or 
+/* Abscissas must be in the [0, 1] range or
    the curve is not a function of time. */
-cubic-bezier(2.45, 0.6, 4, 0.1)    
+cubic-bezier(2.45, 0.6, 4, 0.1)
 
 /* The two points must be defined, there is no default value. */
-cubic-bezier(0.3, 2.1)   
+cubic-bezier(0.3, 2.1)
 
-/* Abscissas must be in the [0, 1] range or 
+/* Abscissas must be in the [0, 1] range or
    the curve is not a function of time. */
-cubic-bezier(-1.9, 0.3, -0.2, 2.1) 
+cubic-bezier(-1.9, 0.3, -0.2, 2.1)
 </pre>
 
 <h3 id="Keywords_for_common_cubic-bezier_easing_functions">Keywords for common cubic-bezier easing functions</h3>
@@ -188,11 +188,11 @@ cubic-bezier(-1.9, 0.3, -0.2, 2.1)
 
 <p>These easing functions are valid:</p>
 
-<pre class="brush: css">/* There is 5 treads, the last one happens 
+<pre class="brush: css">/* There is 5 treads, the last one happens
    right before the end of the animation. */
 steps(5, end)
 
-/* A two-step staircase, the first one happening 
+/* A two-step staircase, the first one happening
    at the start of the animation. */
 steps(2, start)
 
@@ -202,7 +202,7 @@ steps(2)
 
 <p>These easing function are invalid:</p>
 
-<pre class="brush: css example-bad">/* The first parameter must be an <a href="/en-US/docs/Web/CSS/integer">&lt;integer&gt;</a> and 
+<pre class="brush: css example-bad">/* The first parameter must be an <a href="/en-US/docs/Web/CSS/integer">&lt;integer&gt;</a> and
    cannot be a real value, even if it is equal to one. */
 steps(2.0, jump-end)
 

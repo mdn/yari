@@ -56,18 +56,18 @@ html(lang="en")
     h1= title
 
     p This is a line with #[em some emphasis] and #[strong strong text] markup.
-    p This line has un-escaped data: !{'<span class="tag token"><span class="tag token"><span class="punctuation token">&lt;</span>em</span><span class="punctuation token">&gt;</span></span> is emphasised<span class="tag token"><span class="tag token"><span class="punctuation token">&lt;/</span>em</span><span class="punctuation token">&gt;</span></span>'} and escaped data: #{'<span class="tag token"><span class="tag token"><span class="punctuation token">&lt;</span>em</span><span class="punctuation token">&gt;</span></span> is not emphasised<span class="tag token"><span class="tag token"><span class="punctuation token">&lt;/</span>em</span><span class="punctuation token">&gt;</span></span>'}. 
+    p This line has un-escaped data: !{'<span class="tag token"><span class="tag token"><span class="punctuation token">&lt;</span>em</span><span class="punctuation token">&gt;</span></span> is emphasised<span class="tag token"><span class="tag token"><span class="punctuation token">&lt;/</span>em</span><span class="punctuation token">&gt;</span></span>'} and escaped data: #{'<span class="tag token"><span class="tag token"><span class="punctuation token">&lt;</span>em</span><span class="punctuation token">&gt;</span></span> is not emphasised<span class="tag token"><span class="tag token"><span class="punctuation token">&lt;/</span>em</span><span class="punctuation token">&gt;</span></span>'}.
       | This line follows on.
     p= 'Evaluated and <span class="tag token"><span class="tag token"><span class="punctuation token">&lt;</span>em</span><span class="punctuation token">&gt;</span></span>escaped expression<span class="tag token"><span class="tag token"><span class="punctuation token">&lt;/</span>em</span><span class="punctuation token">&gt;</span></span>:' + title
 
     <span class="comment token">&lt;!-- You can add HTML comments directly --&gt;</span>
     // You can add single line JavaScript comments and they are generated to HTML comments
-    //- Introducing a single line JavaScript comment with "//-" ensures the comment isn't rendered to HTML 
-    
-    p A line with a link 
+    //- Introducing a single line JavaScript comment with "//-" ensures the comment isn't rendered to HTML
+
+    p A line with a link
       a(href='/catalog/authors') Some link text
       |  and some extra text.
-    
+
     #container.col
       if title
         p A variable named "title" exists.
@@ -76,9 +76,9 @@ html(lang="en")
       p.
         Pug is a terse and simple template language with a
         strong focus on performance and powerful features.
-        
+
     h2 Generate a list
-        
+
     ul
       each val in [1, 2, 3, 4, 5]
         li= val</code></pre>
@@ -94,12 +94,12 @@ html(lang="en")
 
 <p>If a tag is followed by the equals sign, the following text is treated as a JavaScript <em>expression</em>. So for example, in the first line below, the content of the <code>h1</code> tag will be <em>variable</em> <code>title</code> (either defined in the file or passed into the template from Express). In the second line the paragraph content is a text string concatenated with the <code>title</code> variable. In both cases the default behaviour is to <em>escape</em> the line.</p>
 
-<pre class="brush: html line-numbers  language-html"><code class="language-html">h1= title 
+<pre class="brush: html line-numbers  language-html"><code class="language-html">h1= title
 p= 'Evaluated and <span class="tag token"><span class="tag token"><span class="punctuation token">&lt;</span>em</span><span class="punctuation token">&gt;</span></span>escaped expression<span class="tag token"><span class="tag token"><span class="punctuation token">&lt;/</span>em</span><span class="punctuation token">&gt;</span></span>:' + title</code></pre>
 
 <p>If there is no equals symbol after the tag then the content is treated as plain text. Within the plain text you can insert escaped and unescaped data using the <code>#{}</code> and<code> !{}</code> syntax respectively, as shown below. You can also add raw HTML within the plain text.</p>
 
-<pre class="brush: html line-numbers  language-html"><code class="language-html">p This is a line with #[em some emphasis] and #[strong strong text] markup. 
+<pre class="brush: html line-numbers  language-html"><code class="language-html">p This is a line with #[em some emphasis] and #[strong strong text] markup.
 p This line has an un-escaped string: !{'<span class="tag token"><span class="tag token"><span class="punctuation token">&lt;</span>em</span><span class="punctuation token">&gt;</span></span> is emphasised<span class="tag token"><span class="tag token"><span class="punctuation token">&lt;/</span>em</span><span class="punctuation token">&gt;</span></span>'}, an escaped string: #{'<span class="tag token"><span class="tag token"><span class="punctuation token">&lt;</span>em</span><span class="punctuation token">&gt;</span></span> is not emphasised<span class="tag token"><span class="tag token"><span class="punctuation token">&lt;/</span>em</span><span class="punctuation token">&gt;</span></span>'}, and escaped variables: #{title}.</code></pre>
 
 <div class="note">

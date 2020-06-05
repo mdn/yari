@@ -43,7 +43,7 @@ tags:
 
 <pre class="brush: js">window.requestIdleCallback = window.requestIdleCallback || function(handler) {
   let startTime = Date.now();
- 
+
   return setTimeout(function() {
     handler({
       didTimeout: false,
@@ -247,7 +247,7 @@ let statusRefreshScheduled = false;
 
 <pre class="brush: js">window.requestIdleCallback = window.requestIdleCallback || function(handler) {
   let startTime = Date.now();
- 
+
   return setTimeout(function() {
     handler({
       didTimeout: false,
@@ -277,13 +277,13 @@ window.cancelIdleCallback = window.cancelIdleCallback || function(id) {
     handler: taskHandler,
     data: taskData
   });
- 
+
   totalTaskCount++;
- 
+
   if (!taskHandle) {
     taskHandle = requestIdleCallback(runTaskQueue, { timeout: 1000 });
   }
- 
+
   scheduleStatusRefresh();
 }
 </pre>
@@ -307,11 +307,11 @@ window.cancelIdleCallback = window.cancelIdleCallback || function(id) {
   while ((deadline.timeRemaining() &gt; 0 || deadline.didTimeout) &amp;&amp; taskList.length) {
     let task = taskList.shift();
     currentTaskNumber++;
-    
+
     task.handler(task.data);
     scheduleStatusRefresh();
   }
- 
+
   if (taskList.length) {
     taskHandle = requestIdleCallback(runTaskQueue, { timeout: 1000} );
   } else {
@@ -357,7 +357,7 @@ window.cancelIdleCallback = window.cancelIdleCallback || function(id) {
 
 <pre class="brush: js">function updateDisplay() {
   let scrolledToEnd = logElem.scrollHeight - logElem.clientHeight &lt;= logElem.scrollTop + 1;
- 
+
   if (totalTaskCount) {
     if (progressBarElem.max != totalTaskCount) {
       totalTaskCountElem.textContent = totalTaskCount;
@@ -369,16 +369,16 @@ window.cancelIdleCallback = window.cancelIdleCallback || function(id) {
       progressBarElem.value = currentTaskNumber;
     }
   }
-  
+
   if (logFragment) {
     logElem.appendChild(logFragment);
     logFragment = null;
   }
- 
+
   if (scrolledToEnd) {
       logElem.scrollTop = logElem.scrollHeight - logElem.clientHeight;
   }
- 
+
   statusRefreshScheduled = false;
 }</pre>
 
@@ -403,7 +403,7 @@ window.cancelIdleCallback = window.cancelIdleCallback || function(id) {
   if (!logFragment) {
       logFragment = document.createDocumentFragment();
   }
- 
+
   let el = document.createElement("div");
   el.innerHTML = text;
   logFragment.appendChild(el);
@@ -424,7 +424,7 @@ window.cancelIdleCallback = window.cancelIdleCallback || function(id) {
 
 <pre class="brush: js">function logTaskHandler(data) {
   log("&lt;strong&gt;Running task #" + currentTaskNumber + "&lt;/strong&gt;");
- 
+
   for (i=0; i&lt;data.count; i+=1) {
     log((i+1).toString() + ". " + data.text);
   }
@@ -446,7 +446,7 @@ window.cancelIdleCallback = window.cancelIdleCallback || function(id) {
 </pre>
 </div>
 
-<pre class="brush: js">function decodeTechnoStuff() {  
+<pre class="brush: js">function decodeTechnoStuff() {
   totalTaskCount = 0;
   currentTaskNumber = 0;
   updateDisplay();

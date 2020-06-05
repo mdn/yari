@@ -74,8 +74,8 @@ tags:
       if(cursor) {
         var listItem = document.createElement('li');
         listItem.innerHTML = '&lt;strong&gt;' + cursor.value.fThing + '&lt;/strong&gt;, ' + cursor.value.fRating;
-        list.appendChild(listItem);  
-          
+        list.appendChild(listItem);
+
         cursor.continue();
       } else {
         console.log('Entries all displayed.');

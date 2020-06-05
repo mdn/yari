@@ -74,10 +74,10 @@ function genURL(rExp, aText, bDebug=false){
 	if( bDebug ){
 		// Display the key/value pairs
 		for(var pair of theURL.searchParams.entries()) {
-			console.debug(pair[0] + ' = \'' + pair[1] + '\''); 
+			console.debug(pair[0] + ' = \'' + pair[1] + '\'');
 		}
 		console.debug(theURL)
-	} 
+	}
 	return theURL
 }
 var url = genURL(

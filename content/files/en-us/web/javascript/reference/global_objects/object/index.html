@@ -169,12 +169,12 @@ let o = new Object(Boolean())
 <pre class="brush: js">var current = Object.prototype.valueOf;
 
 // Since my property "-prop-value" is cross-cutting and isn't always
-// on the same prototype chain, I want to modify Object.prototype: 
+// on the same prototype chain, I want to modify Object.prototype:
 Object.prototype.valueOf = function() {
   if (this.hasOwnProperty('-prop-value')) {
     return this['-prop-value'];
   } else {
-    // It doesn't look like one of my objects, so let's fall back on 
+    // It doesn't look like one of my objects, so let's fall back on
     // the default behavior by reproducing the current behavior as best we can.
     // The apply behaves like "super" in some other languages.
     // Even though valueOf() doesn't take arguments, some other hook may.
@@ -202,8 +202,8 @@ var Employee = function(name, title) {
 };
 
 Employee.prototype = Object.create(Person.prototype);
-Employee.prototype.constructor = Employee; //If you don't set Object.prototype.constructor to Employee, 
-                                           //it will take prototype.constructor of Person (parent). 
+Employee.prototype.constructor = Employee; //If you don't set Object.prototype.constructor to Employee,
+                                           //it will take prototype.constructor of Person (parent).
                                            //To avoid that, we set the prototype.constructor to Employee (child).
 
 
@@ -218,8 +218,8 @@ var Customer = function(name) {
 };
 
 Customer.prototype = Object.create(Person.prototype);
-Customer.prototype.constructor = Customer; //If you don't set Object.prototype.constructor to Customer, 
-                                           //it will take prototype.constructor of Person (parent). 
+Customer.prototype.constructor = Customer; //If you don't set Object.prototype.constructor to Customer,
+                                           //it will take prototype.constructor of Person (parent).
                                            //To avoid that, we set the prototype.constructor to Customer (child).
 
 

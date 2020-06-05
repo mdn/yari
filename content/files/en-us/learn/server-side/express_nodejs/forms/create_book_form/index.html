@@ -27,8 +27,8 @@ const { sanitizeBody } = require('express-validator/filter');</code></pre>
 <p>Find the exported <code>book_create_get()</code> controller method and replace it with the following code.</p>
 
 <pre class="brush: js line-numbers  language-js"><code class="language-js">// Display book create form on GET.
-exports.book_create_get = function(req, res, next) { 
-      
+exports.book_create_get = function(req, res, next) {
+
     // Get all authors and genres, which we can use for adding to our book.
     async.parallel({
         authors: function(callback) {
@@ -41,7 +41,7 @@ exports.book_create_get = function(req, res, next) {
         if (err) { return next(err); }
         res.render('book_form', { title: 'Create Book', authors: results.authors, genres: results.genres });
     });
-    
+
 };</code></pre>
 
 <p>This uses the async module (described in <a href="https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Displaying_data">Express Tutorial Part 5: Displaying library data</a>) to get all <code>Author</code> and <code>Genre</code> objects. These are then passed to the view <code><strong>book_form.pug</strong></code> as variables named <code>authors</code> and <code>genres</code> (along with the page <code>title</code>).</p>
@@ -68,13 +68,13 @@ exports.book_create_post = [
     body('author', 'Author must not be empty.').trim().isLength({ min: 1 }),
     body('summary', 'Summary must not be empty.').trim().isLength({ min: 1 }),
     body('isbn', 'ISBN must not be empty').trim().isLength({ min: 1 }),
-  
+
     // Sanitize fields (using wildcard).
     sanitizeBody('*').escape(),
 
     // Process request after validation and sanitization.
     (req, res, next) =&gt; {
-        
+
         // Extract the validation errors from a request.
         const errors = validationResult(req);
 
@@ -182,7 +182,7 @@ block content
       textarea#summary.form-control(type='textarea', placeholder='Summary' name='summary' rows='3' required='true') #{undefined===book ? '' : book.summary}
     div.form-group
       label(for='isbn') ISBN:
-      input#isbn.form-control(type='text', placeholder='ISBN13' name='isbn' value=(undefined===book ? '' : book.isbn) required='true') 
+      input#isbn.form-control(type='text', placeholder='ISBN13' name='isbn' value=(undefined===book ? '' : book.isbn) required='true')
     div.form-group
       label Genre:
       div
@@ -192,7 +192,7 @@ block content
             label(for=genre._id) #{genre.name}
     button.btn.btn-primary(type='submit') Submit
 
-  if errors 
+  if errors
     ul
       for error in errors
         li!= error.msg</code></pre>

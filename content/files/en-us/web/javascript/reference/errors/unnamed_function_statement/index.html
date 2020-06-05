@@ -58,7 +58,7 @@ SyntaxError: Unexpected token ( [Chrome]
 <p>If you are using function <a href="/en-US/docs/Web/JavaScript/Reference/Statements/label">labels</a>, you will still need to provide a function name after the <code>function</code> keyword. This doesn't work:</p>
 
 <pre class="brush: js example-bad">function Greeter() {
-  german: function () { 
+  german: function () {
     return "Moin";
   }
 }
@@ -67,10 +67,10 @@ SyntaxError: Unexpected token ( [Chrome]
 
 <p>This would work, for example:</p>
 
-<pre class="brush: js example-good">function Greeter() { 
-  german: function g() { 
-    return "Moin"; 
-  } 
+<pre class="brush: js example-good">function Greeter() {
+  german: function g() {
+    return "Moin";
+  }
 }</pre>
 
 <h3 id="Object_methods">Object methods</h3>
@@ -80,7 +80,7 @@ SyntaxError: Unexpected token ( [Chrome]
 <pre class="brush: js example-good">var greeter = {
   german: function () {
     return "Moin";
-  } 
+  }
 };</pre>
 
 <h3 id="Callback_syntax">Callback syntax</h3>
@@ -89,7 +89,7 @@ SyntaxError: Unexpected token ( [Chrome]
 
 <pre class="brush: js example-bad">promise.then(
   function() {
-    console.log("success"); 
+    console.log("success");
   });
   function() {
     console.log("error");

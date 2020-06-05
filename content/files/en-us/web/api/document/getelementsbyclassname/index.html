@@ -68,7 +68,7 @@ var testDivs = Array.prototype.filter.call(testElements, function(testElement){
 
     &lt;script&gt;
         var parentDOM = document.getElementById("parent-id");
-        
+
         var test = parentDOM.getElementsByClassName("test"); // a list of matching elements, *not* the element itself
         console.log(test); //HTMLCollection[1]
 
@@ -92,7 +92,7 @@ var testDivs = Array.prototype.filter.call(testElements, function(testElement){
 
 <h4 id="JavaScript">JavaScript</h4>
 
-<pre class="brush: js">// getElementsByClassName only selects elements that have both given classes 
+<pre class="brush: js">// getElementsByClassName only selects elements that have both given classes
 var allOrangeJuiceByClass = document.getElementsByClassName('orange juice');
 var result = "document.getElementsByClassName('orange juice')";
 for (var i=0, len=allOrangeJuiceByClass.length|0; i&lt;len; i=i+1|0) {

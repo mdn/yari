@@ -70,7 +70,7 @@ if (!Array.prototype.indexOf)
       } else if (member !== member) { // NaN
         return -1 // Since NaN !== NaN, it will never be found. Fast-path it.
       } else                          // all else
-        for (; i !== Len; ++i) if (that[i] === member) return i 
+        for (; i !== Len; ++i) if (that[i] === member) return i
 
       return -1 // if the value was not found, then return -1
     }
@@ -181,9 +181,9 @@ console.log(indices);
 
 var veggies = ['potato', 'tomato', 'chillies', 'green-pepper'];
 
-updateVegetablesCollection(veggies, 'spinach'); 
+updateVegetablesCollection(veggies, 'spinach');
 // New veggies collection is : potato,tomato,chillies,green-pepper,spinach
-updateVegetablesCollection(veggies, 'spinach'); 
+updateVegetablesCollection(veggies, 'spinach');
 // spinach already exists in the veggies collection.
 </pre>
 

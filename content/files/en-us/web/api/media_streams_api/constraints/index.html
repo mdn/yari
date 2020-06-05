@@ -220,7 +220,7 @@ if (!supports["width"] || !supports["height"] || !supports["frameRate"] || !supp
       &lt;textarea id="audioSettingsText" cols=32 rows=8 disabled&gt;&lt;/textarea&gt;
     &lt;/div&gt;
   &lt;/div&gt;
- 
+
   &lt;div class="button" id="applyButton"&gt;
     Apply Constraints
   &lt;/div&gt;
@@ -399,7 +399,7 @@ audioConstraintEditor.value = audioDefaultConstraintString;</pre>
   }).then(function(stream) {
     let audioTracks = stream.getAudioTracks();
     let videoTracks = stream.getVideoTracks();
-    
+
     videoElement.srcObject = stream;
     if (audioTracks.length) {
         audioTrack = audioTracks[0];
@@ -493,7 +493,7 @@ audioConstraintEditor.value = audioDefaultConstraintString;</pre>
   if (event.key == "Tab") {
     let elem = event.target;
     let str = elem.value;
-    
+
     let position = elem.selectionStart;
     let newStr = str.substring(0, position) + "  " +
             str.substring(position, str.length);
@@ -519,7 +519,7 @@ audioConstraintEditor.addEventListener("keydown", keyDownHandler, false);
 for (let constraint in supportedConstraints) {
   if (supportedConstraints.hasOwnProperty(constraint)) {
     let elem = document.createElement("li");
-    
+
     elem.innerHTML = "&lt;code&gt;&lt;a href='https://developer.mozilla.org/docs/Web/API/MediaTrackSupportedConstraints/"
         .concat(constraint) + "' target='_blank'&gt;" + constraint + "&lt;/a&gt;&lt;/code&gt;";
     supportedConstraintList.appendChild(elem);

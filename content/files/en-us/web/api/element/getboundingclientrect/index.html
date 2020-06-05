@@ -118,7 +118,7 @@ for (var key in rect) {
 <p>Properties in the returned <code>DOMRect</code> object are not own properties. While the <code>in</code> operator and <code>for...in</code> will find returned properties, other APIs such as <code>Object.keys()</code> will fail. Moreover, and unexpectedly, the ES2015 and newer features such as <code>Object.assign()</code> and object rest/spread will fail to copy returned properties.</p>
 
 <pre class="brush: js">rect = elt.getBoundingClientRect()
-// The result in emptyObj is {} 
+// The result in emptyObj is {}
 emptyObj = Object.assign({}, rect)
 emptyObj = { ...rect }
 {width, ...emptyObj} = rect

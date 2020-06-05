@@ -74,7 +74,7 @@ tags:
     var msg = event.data;
     // Log worker's send status
     console.log("Worker reply: sendBeacon() status = " + msg);
-  };  
+  };
 }
 </pre>
 
@@ -82,14 +82,14 @@ tags:
 
 <pre class="brush: js">onmessage = function(event) {
   var msg = event.data;
-  // Split the URL and data from the message 
+  // Split the URL and data from the message
   var url = msg[0];
   var data = msg[1];
 
   // If the browser supports worker sendBeacon(), then send the beacon; otherwise
   // return failure message to the global context
   if (self.navigator.sendBeacon) {
-    var status = self.navigator.sendBeacon(url, data); 
+    var status = self.navigator.sendBeacon(url, data);
     postMessage(status ? "success" : "fail");
   } else {
     postMessage("Worker: self.navigator.sendBeacon is unsupported");

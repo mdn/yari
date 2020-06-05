@@ -74,7 +74,7 @@ tags:
 
 <pre class="brush: js">function startDownload() {
   let imageURL = "https://cdn.glitch.com/4c9ebeb9-8b9a-4adc-ad0a-238d9ae00bb5%2Fmdn_logo-only_color.svg?1535749917189";
- 
+
   downloadedImg = new Image;
   downloadedImg.crossOrigin = "Anonymous";
   downloadedImg.addEventListener("load", imageReceived, false);
@@ -95,16 +95,16 @@ tags:
 
   canvas.width = downloadedImg.width;
   canvas.height = downloadedImg.height;
- 
+
   context.drawImage(downloadedImg, 0, 0);
   imageBox.appendChild(canvas);
- 
+
   try {
     localStorage.setItem("saved-image-example", canvas.toDataURL("image/png"));
   }
   catch(err) {
     console.log("Error: " + err);
-  }  
+  }
 }</pre>
 
 <p><code>imageReceived()</code> is called to handle the <code>"load"</code> event on the <code>HTMLImageElement</code> that receives the downloaded image. This event is triggered once the downloaded data is all available. It begins by creating a new {{HTMLElement("canvas")}} element that we'll use to convert the image into a data URL, and by getting access to the canvas's 2D drawing context ({{domxref("CanvasRenderingContext2D")}}) in the variable <code>context</code>.</p>

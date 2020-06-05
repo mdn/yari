@@ -36,12 +36,12 @@ TypeError: cannot use 'in' operator to search for 'x' in 'y' (Firefox, Chrome)
 
 <p>Unlike in other programming languages (e.g. Python), you can't search in strings using the <a href="/en-US/docs/Web/JavaScript/Reference/Operators/in"><code>in</code> operator</a>.</p>
 
-<pre class="brush: js example-bad">"Hello" in "Hello World"; 
+<pre class="brush: js example-bad">"Hello" in "Hello World";
 // TypeError: cannot use 'in' operator to search for 'Hello' in 'Hello World'</pre>
 
 <p>Instead you will need to use {{jsxref("String.prototype.indexOf()")}}, for example.</p>
 
-<pre class="brush: js example-good">"Hello World".indexOf("Hello") !== -1; 
+<pre class="brush: js example-good">"Hello World".indexOf("Hello") !== -1;
 // true</pre>
 
 <h3 id="The_operand_cant_be_null_or_undefined">The operand can't be <code>null</code> or <code>undefined</code></h3>

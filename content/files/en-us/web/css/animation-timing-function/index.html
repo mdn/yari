@@ -35,7 +35,7 @@ animation-timing-function: step-end;
 animation-timing-function: cubic-bezier(0.1, 0.7, 1.0, 0.1);
 animation-timing-function: steps(4, end);
 
-/* Steps Function keywords */ 
+/* Steps Function keywords */
 animation-timing-function: steps(4, jump-start);
 animation-timing-function: steps(10, jump-end);
 animation-timing-function: steps(20, jump-none);
@@ -114,7 +114,7 @@ animation-timing-function: unset;
 <h3 id="Cubic-Bezier_examples">Cubic-Bezier examples</h3>
 
 <div class="hidden">
-<pre class="brush:html">&lt;div class="parent"&gt; 
+<pre class="brush:html">&lt;div class="parent"&gt;
   &lt;div class="ease"&gt;ease&lt;/div&gt;
   &lt;div class="easein"&gt;ease-in&lt;/div&gt;
   &lt;div class="easeout"&gt;ease-out&lt;/div&gt;
@@ -132,17 +132,17 @@ animation-timing-function: unset;
 @keyframes changeme {
    0% {
       min-width: 12em;
-      width: 12em; 
-      background-color: black; 
-      border: 1px solid red; 
+      width: 12em;
+      background-color: black;
+      border: 1px solid red;
       color: white;
    }
    100% {
-      width: 90vw; 
-      min-width: 24em; 
-      background-color: magenta; 
+      width: 90vw;
+      min-width: 24em;
+      background-color: magenta;
       color: yellow;
-      border: 1px solid orange; 
+      border: 1px solid orange;
    }
 }
 </pre>
@@ -174,7 +174,7 @@ animation-timing-function: unset;
 <h3 id="Step_examples">Step examples</h3>
 
 <div class="hidden">
-<pre class="brush:html">&lt;div class="parent"&gt; 
+<pre class="brush:html">&lt;div class="parent"&gt;
   &lt;div class="jump-start"&gt;jump-start&lt;/div&gt;
   &lt;div class="jump-end"&gt;jump-end&lt;/div&gt;
   &lt;div class="jump-both"&gt;jump-both&lt;/div&gt;
@@ -185,7 +185,7 @@ animation-timing-function: unset;
   &lt;div class="step-end"&gt;step-end&lt;/div&gt;
 &lt;/div&gt;</pre>
 
-<pre class="brush:css;">.parent &gt; div[class] { 
+<pre class="brush:css;">.parent &gt; div[class] {
     animation-name: changeme;
     animation-duration: 10s;
     animation-iteration-count: infinite;
@@ -193,18 +193,18 @@ animation-timing-function: unset;
 }
 @keyframes changeme {
    0% {
-      min-width: 12em; 
+      min-width: 12em;
       width: 12em;
-      background-color: black; 
-      border: 1px solid red; 
+      background-color: black;
+      border: 1px solid red;
       color: white;
    }
    100% {
-      width: 90vw; 
-      min-width: 24em; 
-      background-color: magenta; 
+      width: 90vw;
+      min-width: 24em;
+      background-color: magenta;
       color: yellow;
-      border: 1px solid orange; 
+      border: 1px solid orange;
    }
 }
 </pre>
@@ -222,11 +222,11 @@ animation-timing-function: unset;
 .jump-both {
    animation-timing-function: steps(5, jump-both);
 }
-.start { 
-   animation-timing-function: steps(5, start); 
-} 
-.end { 
-   animation-timing-function: steps(5, end); 
+.start {
+   animation-timing-function: steps(5, start);
+}
+.end {
+   animation-timing-function: steps(5, end);
 }
 .step-start {
    animation-timing-function: step-start;

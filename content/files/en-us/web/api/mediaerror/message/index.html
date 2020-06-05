@@ -42,7 +42,7 @@ tags:
 <pre class="brush: js">  audioElement.onerror = function() {
     let s = "";
     let err = audioElement.error;
-    
+
     switch(err.code) {
       case MediaError.MEDIA_ERR_ABORTED:
         s += "The user canceled the audio.";
@@ -60,13 +60,13 @@ tags:
         s += "An unknown error occurred.";
         break;
     }
-    
+
     let message = err.message;
-    
+
     if (message &amp;&amp; message.length) {
       s += " " + message;
     }
-    
+
     displayErrorMessage("&lt;strong&gt;Error " + err.code + ":&lt;/strong&gt; " + s + "&lt;br&gt;");
   };</pre>
 

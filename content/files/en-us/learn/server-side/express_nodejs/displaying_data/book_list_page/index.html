@@ -30,7 +30,7 @@ exports<span class="punctuation token">.</span>book_list <span class="operator t
       <span class="comment token">//Successful, so render</span>
       res<span class="punctuation token">.</span><span class="function token">render</span><span class="punctuation token">(</span><span class="string token">'book_list'</span><span class="punctuation token">,</span> <span class="punctuation token">{</span> title<span class="punctuation token">:</span> <span class="string token">'Book List'</span><span class="punctuation token">,</span> book_list<span class="punctuation token">:</span> list_books <span class="punctuation token">}</span><span class="punctuation token">)</span><span class="punctuation token">;</span>
     <span class="punctuation token">}</span><span class="punctuation token">)</span><span class="punctuation token">;</span>
-    
+
 <span class="punctuation token">}</span><span class="punctuation token">;</span></code></pre>
 
 <p>The method uses the model's <code>find()</code> function to return all <code>Book</code> objects, selecting to return only the <code>title</code> and <code>author</code> as we don't need the other fields (it will also return the <code>_id</code> and virtual fields). Here we also call <code>populate()</code> on <code>Book</code>, specifying the <code>author</code> field—this will replace the stored book author id with the full author details.</p>
@@ -45,12 +45,12 @@ exports<span class="punctuation token">.</span>book_list <span class="operator t
 
 block content
   h1<span class="operator token">=</span> title
-  
+
   ul
     - book_list.sort(function(a, b) {let textA = a.title.toUpperCase(); let textB = b.title.toUpperCase(); return (textA &lt; textB) ? -1 : (textA &gt; textB) ? 1 : 0;});
     each book <span class="keyword token">in</span> book_list
-      li 
-        <span class="function token">a</span><span class="punctuation token">(</span>href<span class="operator token">=</span>book<span class="punctuation token">.</span>url<span class="punctuation token">)</span> #<span class="punctuation token">{</span>book<span class="punctuation token">.</span>title<span class="punctuation token">}</span> 
+      li
+        <span class="function token">a</span><span class="punctuation token">(</span>href<span class="operator token">=</span>book<span class="punctuation token">.</span>url<span class="punctuation token">)</span> #<span class="punctuation token">{</span>book<span class="punctuation token">.</span>title<span class="punctuation token">}</span>
         <span class="operator token">|</span>  <span class="punctuation token">(</span>#<span class="punctuation token">{</span>book<span class="punctuation token">.</span>author<span class="punctuation token">.</span>name<span class="punctuation token">}</span><span class="punctuation token">)</span>
 
     <span class="keyword token">else</span>

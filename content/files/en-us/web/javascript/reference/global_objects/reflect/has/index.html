@@ -50,8 +50,8 @@ tags:
 <pre class="brush: js">Reflect.has({x: 0}, 'x')  // true
 Reflect.has({x: 0}, 'y')  // false
 
-// returns true for properties in the prototype chain 
-Reflect.has({x: 0}, 'toString') 
+// returns true for properties in the prototype chain
+Reflect.has({x: 0}, 'toString')
 
 // Proxy with .has() handler method
 obj = new Proxy({}, {

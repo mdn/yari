@@ -79,7 +79,7 @@ ctx.fillStyle = 'rgba(255, 165, 0, 1)';
     var ctx = document.getElementById('canvas').getContext('2d');
     for (var i = 0; i &lt; 6; i++) {
       for (var j = 0; j &lt; 6; j++) {
-        ctx.strokeStyle = 'rgb(0, ' + Math.floor(255 - 42.5 * i) + ', ' + 
+        ctx.strokeStyle = 'rgb(0, ' + Math.floor(255 - 42.5 * i) + ', ' +
                          Math.floor(255 - 42.5 * j) + ')';
         ctx.beginPath();
         ctx.arc(12.5 + j * 25, 12.5 + i * 25, 10, 0, Math.PI * 2, true);
@@ -378,26 +378,26 @@ ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
 
 <pre class="brush: js;highlight[18]">function draw() {
   var ctx = document.getElementById('canvas').getContext('2d');
- 
+
   // Clear canvas
   ctx.clearRect(0, 0, 150, 150);
- 
+
   // Draw guides
   ctx.strokeStyle = '#09f';
   ctx.lineWidth   = 2;
   ctx.strokeRect(-5, 50, 160, 50);
- 
+
   // Set line styles
   ctx.strokeStyle = '#000';
   ctx.lineWidth = 10;
- 
+
   // check input
   if (document.getElementById('miterLimit').value.match(/\d+(\.\d+)?/)) {
     ctx.miterLimit = parseFloat(document.getElementById('miterLimit').value);
   } else {
     alert('Value must be a positive number');
   }
- 
+
   // Draw lines
   ctx.beginPath();
   ctx.moveTo(0, 100);
@@ -515,7 +515,7 @@ lineargradient.addColorStop(1, 'black');
   // assign gradients to fill and stroke styles
   ctx.fillStyle = lingrad;
   ctx.strokeStyle = lingrad2;
-  
+
   // draw shapes
   ctx.fillRect(10, 10, 130, 130);
   ctx.strokeRect(50, 50, 50, 50);
@@ -547,7 +547,7 @@ lineargradient.addColorStop(1, 'black');
   radgrad.addColorStop(0, '#A7D30C');
   radgrad.addColorStop(0.9, '#019F62');
   radgrad.addColorStop(1, 'rgba(1, 159, 98, 0)');
-  
+
   var radgrad2 = ctx.createRadialGradient(105, 105, 20, 112, 120, 50);
   radgrad2.addColorStop(0, '#FF5F98');
   radgrad2.addColorStop(0.75, '#FF0188');
@@ -562,7 +562,7 @@ lineargradient.addColorStop(1, 'black');
   radgrad4.addColorStop(0, '#F4F201');
   radgrad4.addColorStop(0.8, '#E4C700');
   radgrad4.addColorStop(1, 'rgba(228, 199, 0, 0)');
-  
+
   // draw shapes
   ctx.fillStyle = radgrad4;
   ctx.fillRect(0, 0, 150, 150);
@@ -687,7 +687,7 @@ var ptrn = ctx.createPattern(img, 'repeat');
   ctx.shadowOffsetY = 2;
   ctx.shadowBlur = 2;
   ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
- 
+
   ctx.font = '20px Times New Roman';
   ctx.fillStyle = 'Black';
   ctx.fillText('Sample String', 5, 30);
@@ -718,8 +718,8 @@ var ptrn = ctx.createPattern(img, 'repeat');
 <p>In this example we are using the <code>evenodd</code> rule.</p>
 
 <pre class="brush: js;highlight[6]">function draw() {
-  var ctx = document.getElementById('canvas').getContext('2d'); 
-  ctx.beginPath(); 
+  var ctx = document.getElementById('canvas').getContext('2d');
+  ctx.beginPath();
   ctx.arc(50, 50, 30, 0, Math.PI * 2, true);
   ctx.arc(50, 50, 15, 0, Math.PI * 2, true);
   ctx.fill('evenodd');

@@ -36,7 +36,7 @@ tags:
    &lt;/fieldset&gt;
    &lt;label for="message"&gt;Please enter your message (required):&lt;/label&gt;
    &lt;br /&gt;
-   &lt;textarea name="message" id="message" rows="5" cols="80"  
+   &lt;textarea name="message" id="message" rows="5" cols="80"
              aria-required="true"&gt;&lt;/textarea&gt;
    &lt;br /&gt;
    &lt;input type="submit" name="submit" value="Send message"/&gt;
@@ -62,7 +62,7 @@ tags:
    var oldAlert = document.getElementById("alert");
    if (oldAlert){
      document.body.removeChild(oldAlert);
-   }    
+   }
  }
 
  function addAlert(aMsg)
@@ -120,10 +120,10 @@ tags:
 
 <p>All that’s left now is add the event handler. We need to change the two inputs for e-mail and name for this:</p>
 
-<pre class="brush: html"> &lt;input name="name" id="name" aria-required="true" 
+<pre class="brush: html"> &lt;input name="name" id="name" aria-required="true"
         onblur="checkValidity('name', ' ', 'Invalid name entered!');"/&gt;
  &lt;br /&gt;
- &lt;input name="email" id="email" aria-required="true" 
+ &lt;input name="email" id="email" aria-required="true"
         onblur="checkValidity('email', '@', 'Invalid e-mail address');"/&gt;
 </pre>
 

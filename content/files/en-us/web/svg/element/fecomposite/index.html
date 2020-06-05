@@ -102,7 +102,7 @@ tags:
       &lt;feComposite in="SourceGraphic" in2="BackgroundImage" operator="xor" result="comp"/&gt;
       &lt;feMerge&gt; &lt;feMergeNode in="flood"/&gt; &lt;feMergeNode in="comp"/&gt; &lt;/feMerge&gt;
     &lt;/filter&gt;
-    &lt;filter id="arithmeticFlood" filterUnits="objectBoundingBox" 
+    &lt;filter id="arithmeticFlood" filterUnits="objectBoundingBox"
             x="-5%" y="-5%" width="110%" height="110%"&gt;
       &lt;feFlood flood-color="#ffffff" flood-opacity="1" result="flood"/&gt;
       &lt;feComposite in="SourceGraphic" in2="BackgroundImage" result="comp"
@@ -124,7 +124,7 @@ tags:
     &lt;filter id="xorNoFlood" filterUnits="objectBoundingBox" x="-5%" y="-5%" width="110%" height="110%"&gt;
       &lt;feComposite in="SourceGraphic" in2="BackgroundImage" operator="xor" result="comp"/&gt;
     &lt;/filter&gt;
-    &lt;filter id="arithmeticNoFlood" filterUnits="objectBoundingBox" 
+    &lt;filter id="arithmeticNoFlood" filterUnits="objectBoundingBox"
             x="-5%" y="-5%" width="110%" height="110%"&gt;
       &lt;feComposite in="SourceGraphic" in2="BackgroundImage" result="comp"
                    operator="arithmetic" k1=".5" k2=".5" k3=".5" k4=".5"/&gt;

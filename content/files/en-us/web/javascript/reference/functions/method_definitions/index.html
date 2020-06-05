@@ -94,7 +94,7 @@ const obj2 = {
 };
 
 // The same object using shorthand syntax
-const obj2 = { 
+const obj2 = {
   * g() {
     let index = 0
     while (true) {
@@ -119,7 +119,7 @@ const obj3 = {
 }
 
 // The same object using shorthand syntax
-const obj3 = { 
+const obj3 = {
   async f() {
     await some_promise
   }
@@ -151,13 +151,13 @@ const obj4 = {
 
 <p>All methods are not constructors (only shorthand syntax)! They will throw a {{jsxref("TypeError")}} if you try to instantiate them.</p>
 
-<pre class="brush: js example-bad">const objA = { 
+<pre class="brush: js example-bad">const objA = {
   method() {}
 }
 new objA.method  // TypeError: obj.method is not a constructor
 
-const objB = { 
-  * g() {} 
+const objB = {
+  * g() {}
 }
 new objB.g       // TypeError: obj.g is not a constructor (changed in ES2016)
 </pre>
@@ -187,7 +187,7 @@ console.log(bar.foo0())  // 0
 console.log(bar.foo1())  // 1
 console.log(bar.foo2())  // 2
 
-// A global function 
+// A global function
 function foo() {
   return 1
 }

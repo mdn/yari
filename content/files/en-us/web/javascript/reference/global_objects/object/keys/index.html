@@ -109,7 +109,7 @@ console.log(Object.keys(anObj)); // console: ['2', '7', '100']
 const myObj = Object.create({}, {
   getFoo: {
     value: function () { return this.foo; }
-  } 
+  }
 });
 myObj.foo = 1;
 console.log(Object.keys(myObj)); // console: ['foo']
@@ -124,10 +124,10 @@ console.log(Object.keys(myObj)); // console: ['foo']
 <p>From ES2015 onwards, a non-object argument will be coerced to an object.</p>
 
 <pre class="brush: js">// In ES5
-Object.keys('foo');  // TypeError: "foo" is not an object 
+Object.keys('foo');  // TypeError: "foo" is not an object
 
 // In ES2015+
-Object.keys('foo');  // ["0", "1", "2"]                   
+Object.keys('foo');  // ["0", "1", "2"]
 </pre>
 
 <h2 id="Specifications">Specifications</h2>

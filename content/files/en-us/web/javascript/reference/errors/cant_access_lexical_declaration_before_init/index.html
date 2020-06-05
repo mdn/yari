@@ -40,8 +40,8 @@ ReferenceError: 'x' is not defined (Chrome)
 <pre class="brush: js example-bad">function test() {
   let foo = 33;
   if (true) {
-    let foo = (foo + 55); 
-    // ReferenceError: can't access lexical 
+    let foo = (foo + 55);
+    // ReferenceError: can't access lexical
     // declaration `foo' before initialization
   }
 }

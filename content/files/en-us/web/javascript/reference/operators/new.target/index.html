@@ -65,7 +65,7 @@ let b = new B()  // logs "B"
 
 class C { constructor() { console.log(new.target)  } }
 class D extends C { constructor() { super()  } }
- 
+
 let c = new C()  // logs class C{constructor(){console.log(new.target);}}
 let d = new D()  // logs class D extends C{constructor(){super();}}</pre>
 

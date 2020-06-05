@@ -88,7 +88,7 @@ try {
   let url = new URL(document.location.href);
   url.searchParams.sort();
   let keys = url.searchParams.keys();
- 
+
   for (let key of keys) {
     let val = url.searchParams.get(key);
     let row = document.createElement("tr");

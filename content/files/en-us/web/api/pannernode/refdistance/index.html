@@ -56,14 +56,14 @@ const scheduleTestTone = (refDistance, startTime) =&gt; {
 
   const panner = new PannerNode(context);
   panner.refDistance = refDistance;
-  
+
   // set the initial Z position, then schedule the ramp
   panner.positionZ.setValueAtTime(0, startTime);
   panner.positionZ.linearRampToValueAtTime(Z_DISTANCE, startTime + NOTE_LENGTH);
 
   osc.connect(panner)
      .connect(context.destination);
-  
+
   osc.start(startTime);
   osc.stop(startTime + NOTE_LENGTH);
 };

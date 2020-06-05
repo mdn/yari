@@ -33,7 +33,7 @@ tags:
   &lt;source src="audiofile.mp3" type="audio/mpeg"&gt;
   &lt;source src="audiofile.ogg" type="audio/ogg"&gt;
   &lt;!-- fallback for non supporting browsers goes here --&gt;
-  &lt;p&gt;Your browser does not support HTML5 audio, but you can still 
+  &lt;p&gt;Your browser does not support HTML5 audio, but you can still
      &lt;a href="audiofile.mp3"&gt;download the music&lt;/a&gt;.&lt;/p&gt;
 &lt;/audio&gt;</pre>
 
@@ -443,7 +443,7 @@ myAudio.volume = 0.5;</pre>
    width: 80px;
    float: left;
 }
-    
+
 #progress {
    margin-left: 80px;
    border: 1px solid black;
@@ -479,21 +479,21 @@ myAudio.volume = 0.5;</pre>
          displayControls();
       });
    }
-    
+
    play.addEventListener('click', function() {
       myAudio.play();
       play.style.display = "none";
       pause.style.display = "block";
    });
-    
+
    pause.addEventListener('click', function() {
       myAudio.pause();
       pause.style.display = "none";
       play.style.display = "block";
    });
-    
+
    // display progress
-    
+
    myAudio.addEventListener('timeupdate', function() {
       //sets the percentage
       bar.style.width = parseInt(((myAudio.currentTime / myAudio.duration) * 100), 10) + "%";
@@ -525,7 +525,7 @@ myAudio.volume = 0.5;</pre>
 <pre class="brush: js">var progress = document.getElementById('progress');
 
 progress.addEventListener('click', function(e) {
-      
+
   // calculate the normalized position clicked
   var clickPosition = (e.pageX  - this.offsetLeft) / this.offsetWidth;
   var clickTime = clickPosition * myAudio.duration;

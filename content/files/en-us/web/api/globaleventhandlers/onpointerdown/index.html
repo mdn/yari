@@ -52,7 +52,7 @@ targetBox.onpointerdown = handleDown;
 
 function handleDown(evt) {
   var action;
- 
+
   switch(evt.pointerType) {
     case "mouse":
       action = "clicking";
@@ -67,7 +67,7 @@ function handleDown(evt) {
       action = "interacting with";
       break;
   }
- 
+
   targetBox.innerHTML = "&lt;strong&gt;Thanks for " + action + " me!&lt;/strong&gt;";
   evt.preventDefault();
 }</pre>

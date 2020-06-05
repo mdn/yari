@@ -62,17 +62,17 @@ The <strong><code>matches()</code></strong> method checks to see if the {{domxre
 <p>For browsers that do not support <code>Element.matches()</code> or <code>Element.matchesSelector()</code>, but include support for <code>document.querySelectorAll()</code>, a polyfill exists:</p>
 
 <pre class="brush: js">if (!Element.prototype.matches) {
-  Element.prototype.matches = 
-      Element.prototype.matchesSelector || 
+  Element.prototype.matches =
+      Element.prototype.matchesSelector ||
       Element.prototype.mozMatchesSelector ||
-      Element.prototype.msMatchesSelector || 
-      Element.prototype.oMatchesSelector || 
+      Element.prototype.msMatchesSelector ||
+      Element.prototype.oMatchesSelector ||
       Element.prototype.webkitMatchesSelector ||
       function(s) {
         var matches = (this.document || this.ownerDocument).querySelectorAll(s),
             i = matches.length;
         while (--i &gt;= 0 &amp;&amp; matches.item(i) !== this) {}
-        return i &gt; -1;            
+        return i &gt; -1;
       };
 }</pre>
 

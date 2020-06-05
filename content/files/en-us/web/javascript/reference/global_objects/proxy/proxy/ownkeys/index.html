@@ -82,9 +82,9 @@ console.log(Object.getOwnPropertyNames(p)); // "called"
 <p>The following code violates an invariant.</p>
 
 <pre class="brush: js example-bad">const obj = {};
-Object.defineProperty(obj, 'a', { 
-  configurable: false, 
-  enumerable: true, 
+Object.defineProperty(obj, 'a', {
+  configurable: false,
+  enumerable: true,
   value: 10 }
 );
 
@@ -94,9 +94,9 @@ const p = new Proxy(obj, {
   }
 });
 
-console.log(Object.getOwnPropertyNames(p)); 
+console.log(Object.getOwnPropertyNames(p));
 
-// TypeError: proxy [[OwnPropertyKeys]] must return an array 
+// TypeError: proxy [[OwnPropertyKeys]] must return an array
 // with only string and symbol elements
 </pre>
 

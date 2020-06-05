@@ -41,14 +41,14 @@ tags:
 
 <pre class="brush: js">var recognition = new webkitSpeechRecognition() || new SpeechRecognition();
 
-recognition.addEventListener('start', function() { 
+recognition.addEventListener('start', function() {
   console.log('Speech recognition service has started');
 });</pre>
 
 <p>Or use the <code><a href="/en-US/docs/Web/API/SpeechRecognition/onstart">onstart</a></code> event handler property:</p>
 
-<pre class="brush: js">recognition.onstart = function() { 
-  console.log('Speech recognition service has started'); 
+<pre class="brush: js">recognition.onstart = function() {
+  console.log('Speech recognition service has started');
 }</pre>
 
 <h2 id="Specifications">Specifications</h2>

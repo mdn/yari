@@ -42,14 +42,14 @@ tags:
 
 <pre class="brush: js">var recognition = new webkitSpeechRecognition() || new SpeechRecognition();
 
-recognition.addEventListener('nomatch', function() { 
+recognition.addEventListener('nomatch', function() {
   console.log('Speech not recognized');
 });</pre>
 
 <p>Or use the <code><a href="/en-US/docs/Web/API/SpeechRecognition/onnomatch">onnomatch</a></code> event handler property:</p>
 
-<pre class="brush: js">recognition.onnomatch = function() { 
-  console.log('Speech not recognized'); 
+<pre class="brush: js">recognition.onnomatch = function() {
+  console.log('Speech not recognized');
 }</pre>
 
 <h2 id="Specifications">Specifications</h2>

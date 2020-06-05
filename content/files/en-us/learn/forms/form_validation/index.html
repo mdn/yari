@@ -300,7 +300,7 @@ div {
       &lt;legend&gt;Do you have a driver's license?&lt;abbr title="This field is mandatory" aria-label="required"&gt;*&lt;/abbr&gt;&lt;/legend&gt;
       &lt;!-- While only one radio button in a same-named group can be selected at a time,
            and therefore only one radio button in a same-named group having the "required"
-           attribute suffices in making a selection a requirement --&gt; 
+           attribute suffices in making a selection a requirement --&gt;
       &lt;input type="radio" required name="driver" id="r1" value="yes"&gt;&lt;label for="r1"&gt;Yes&lt;/label&gt;
       &lt;input type="radio" required name="driver" id="r2" value="no"&gt;&lt;label for="r2"&gt;No&lt;/label&gt;
     &lt;/fieldset&gt;
@@ -714,7 +714,7 @@ input:focus.invalid {
 .error {
   width  : 100%;
   padding: 0;
- 
+
   font-size: 80%;
   color: white;
   background-color: #900;
@@ -760,7 +760,7 @@ function addEvent(element, event, callback) {
 };
 
 // Now we can rebuild our validation constraint
-// Because we do not rely on CSS pseudo-class, we have to 
+// Because we do not rely on CSS pseudo-class, we have to
 // explicitly set the valid/invalid class on our email field
 addEvent(window, "load", function () {
   // Here, we test if the field is empty (remember, the field is not required)

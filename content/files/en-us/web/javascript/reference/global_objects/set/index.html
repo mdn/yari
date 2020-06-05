@@ -112,16 +112,16 @@ console.log(mySet)
 <h3 id="Iterating_Sets">Iterating Sets</h3>
 
 <pre class="brush: js">// iterate over items in set
-// logs the items in the order: 1, "some text", {"a": 1, "b": 2}, {"a": 1, "b": 2} 
+// logs the items in the order: 1, "some text", {"a": 1, "b": 2}, {"a": 1, "b": 2}
 for (let item of mySet) console.log(item)
 
-// logs the items in the order: 1, "some text", {"a": 1, "b": 2}, {"a": 1, "b": 2} 
+// logs the items in the order: 1, "some text", {"a": 1, "b": 2}, {"a": 1, "b": 2}
 for (let item of mySet.keys()) console.log(item)
- 
-// logs the items in the order: 1, "some text", {"a": 1, "b": 2}, {"a": 1, "b": 2} 
+
+// logs the items in the order: 1, "some text", {"a": 1, "b": 2}, {"a": 1, "b": 2}
 for (let item of mySet.values()) console.log(item)
 
-// logs the items in the order: 1, "some text", {"a": 1, "b": 2}, {"a": 1, "b": 2} 
+// logs the items in the order: 1, "some text", {"a": 1, "b": 2}, {"a": 1, "b": 2}
 // (key and value are the same here)
 for (let [key, value] of mySet.entries()) console.log(key)
 
@@ -137,7 +137,7 @@ mySet2 = new Set([1, 2, 3, 4])
 mySet2.size                    // 4
 [...mySet2]                    // [1, 2, 3, 4]
 
-// intersect can be simulated via 
+// intersect can be simulated via
 let intersection = new Set([...set1].filter(x =&gt; set2.has(x)))
 
 // difference can be simulated via
@@ -230,11 +230,11 @@ console.log([...mySet]) // Will show you exactly the same Array as myArray
 
 <h3 id="Remove_duplicate_elements_from_the_array">Remove duplicate elements from the array</h3>
 
-<pre class="brush: js">// Use to remove duplicate elements from the array 
+<pre class="brush: js">// Use to remove duplicate elements from the array
 
 const numbers = [2,3,4,4,2,3,3,4,4,5,5,6,6,7,5,32,3,4,5]
 
-console.log([...new Set(numbers)]) 
+console.log([...new Set(numbers)])
 
 // [2, 3, 4, 5, 6, 7, 32]</pre>
 

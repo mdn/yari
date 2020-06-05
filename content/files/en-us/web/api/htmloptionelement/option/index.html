@@ -37,11 +37,11 @@ tags:
 
 <h3 id="Just_add_new_options">Just add new options</h3>
 
-<pre class="brush: js"> /* assuming we have the following HTML 
-&lt;select id='s'&gt; 
+<pre class="brush: js"> /* assuming we have the following HTML
+&lt;select id='s'&gt;
 
-&lt;/select&gt; 
-*/  
+&lt;/select&gt;
+*/
 
 var s = document.getElementById('s');
 var options = [Four, Five, Six];
@@ -59,7 +59,7 @@ options.forEach(function(element,key) {
     &lt;option&gt;Second&lt;/option&gt;
     &lt;option&gt;Third&lt;/option&gt;
 &lt;/select&gt;
-*/ 
+*/
 
 var s = document.getElementById('s');
 </code>var options = [ 'zero', 'one', 'two' ];<code class="language-js">
@@ -67,9 +67,9 @@ var s = document.getElementById('s');
 options.forEach(function(element, key) {</code>
   if (element == 'zero') {
     s[s.options.length] = new Option(element, s.options.length, false, false);
-  }                
+  }
   if (element == 'one') {
-    s[s.options.length] = new Option(element, s.options.length, true, false); // Will add the "selected" attribute    
+    s[s.options.length] = new Option(element, s.options.length, true, false); // Will add the "selected" attribute
   }
   if (element == 'two') {
     s[s.options.length] = new Option(element, s.options.length, false, true); // Just will be selected in "view"

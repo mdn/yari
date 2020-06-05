@@ -20,7 +20,7 @@ tags:
 <p>CSS can scope styles to particular conditions with media queries. Media queries are important for a responsive web design and help us optimize a critical rendering path. The browser blocks rendering until it parses all of these styles but will not block rendering on styles it knows it will not use, such the print stylesheets. By splitting the CSS into multiple files based on media queries, you can prevent render blocking during download of unused CSS. To create a non-blocking CSS link, move the not-immediately used styles, such as print styles, into separate file, add a <code><a href="/en-US/docs/Web/HTML/Element/link">&lt;link&gt;</a></code> to the HTML mark up, and add a media query, in this case stating it's a print stylesheet.</p>
 
 <pre class="brush: html">&lt;link rel="stylesheet" href="styles.css"&gt; &lt;!-- blocking --&gt;
-&lt;link rel="stylesheet" href="print.css" media="print"&gt; &lt;!-- not blocking --&gt; 
+&lt;link rel="stylesheet" href="print.css" media="print"&gt; &lt;!-- not blocking --&gt;
 &lt;link rel="stylesheet" href="mobile.css" media="screen and (max-width: 480px)"&gt; &lt;!-- not blocking on large screens --&gt;</pre>
 
 <p>By default the browser assumes that each specified style sheet is render blocking. Tell the browser when the style sheet should be applied by adding a <code>media</code> attribute with the <a href="/en-US/docs/Web/CSS/Media_Queries/Using_media_queries">media query</a>. When the browser sees a style sheet it knows that it only needs to apply it for a specific scenario, it still downloads the stylesheet, but doesn't render block. By separating out the CSS into multiple files, the main render-blocking file, in this case <code>styles.css</code>, is much smaller, reducing the time that rendering is blocked.</p>
@@ -43,8 +43,8 @@ tags:
   font-family: someFont;
   src: url(/path/to/fonts/someFont.woff) format('woff');
   font-weight: 400;
-  font-style: normal; 
-  font-display: fallback; 
+  font-style: normal;
+  font-display: fallback;
 }</pre>
 
 <h3 id="The_cssxrefcontain_property">The {{cssxref('contain')}} property</h3>

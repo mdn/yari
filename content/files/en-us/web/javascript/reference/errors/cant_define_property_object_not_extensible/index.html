@@ -48,10 +48,10 @@ obj.x = 'foo';
 
 <p>In both, <a href="/en-US/docs/Web/JavaScript/Reference/Strict_mode">strict mode</a> and sloppy mode, a call to {{jsxref("Object.defineProperty()")}} throws when adding a new property to a non-extensible object.</p>
 
-<pre class="brush: js example-bad">var obj = { }; 
-Object.preventExtensions(obj); 
+<pre class="brush: js example-bad">var obj = { };
+Object.preventExtensions(obj);
 
-Object.defineProperty(obj, 
+Object.defineProperty(obj,
   'x', { value: "foo" }
 );
 // TypeError: can't define property "x": "obj" is not extensible
@@ -59,9 +59,9 @@ Object.defineProperty(obj,
 
 <p>To fix this error, you will either need to remove the call to {{jsxref("Object.preventExtensions()")}} entirely, or move it to a position so that the property is added earlier and only later the object is marked as non-extensible. Of course you can also remove the property that was attempted to be added, if you don't need it.</p>
 
-<pre class="brush: js example-good">'use strict'; 
+<pre class="brush: js example-good">'use strict';
 
-var obj = {}; 
+var obj = {};
 obj.x = 'foo'; // add property first and only then prevent extensions
 
 Object.preventExtensions(obj);</pre>

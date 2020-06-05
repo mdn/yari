@@ -238,7 +238,7 @@ tags:
 <p>This example gives a preference for camera resolution, and assigns the resulting {{domxref("MediaStream")}} object to a video element.</p>
 
 <pre class="brush: js">// Prefer camera resolution nearest to 1280x720.
-var constraints = { audio: true, video: { width: 1280, height: 720 } }; 
+var constraints = { audio: true, video: { width: 1280, height: 720 } };
 
 navigator.mediaDevices.getUserMedia(constraints)
 .then(function(mediaStream) {

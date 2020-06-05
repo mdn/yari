@@ -44,7 +44,7 @@ tags:
       box-shadow: black 2px 2px;
     }
   &lt;/style&gt;
-  
+
   &lt;script type="text/javascript"&gt;
     function init() {
       var btn = document.getElementById("myButton");
@@ -56,16 +56,16 @@ tags:
           = "Sorry, there appears to be no setCapture support on this browser";
       }
     }
-    
+
     function mouseDown(e) {
       e.target.setCapture();
       e.target.addEventListener("mousemove", mouseMoved, false);
     }
-    
+
     function mouseUp(e) {
       e.target.removeEventListener("mousemove", mouseMoved, false);
     }
-    
+
     function mouseMoved(e) {
       var output = document.getElementById("output");
       output.innerHTML = "Position: " + e.clientX + ", " + e.clientY;

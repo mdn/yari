@@ -36,7 +36,7 @@ tags:
 
 <p>By default, {{jsxref("Array.prototype.concat()")}} spreads (flattens) arrays into its result:</p>
 
-<pre class="brush: js">let alpha = ['a', 'b', 'c'], 
+<pre class="brush: js">let alpha = ['a', 'b', 'c'],
 let numeric = [1, 2, 3]
 
 let alphaNumeric = alpha.concat(numeric)
@@ -46,7 +46,7 @@ console.log(alphaNumeric)  // Result: ['a', 'b', 'c', 1, 2, 3]
 
 <p>When setting <code>Symbol.isConcatSpreadable</code> to <code>false</code>, you can disable the default behavior:</p>
 
-<pre class="brush: js">let alpha = ['a', 'b', 'c'], 
+<pre class="brush: js">let alpha = ['a', 'b', 'c'],
 let numeric = [1, 2, 3]
 
 numeric[Symbol.isConcatSpreadable] = false
@@ -61,11 +61,11 @@ console.log(alphaNumeric)  // Result: ['a', 'b', 'c', [1, 2, 3] ]
 
 <pre class="brush: js">let x = [1, 2, 3]
 
-let fakeArray = { 
-  [Symbol.isConcatSpreadable]: true, 
-  length: 2, 
-  0: 'hello', 
-  1: 'world' 
+let fakeArray = {
+  [Symbol.isConcatSpreadable]: true,
+  length: 2,
+  0: 'hello',
+  1: 'world'
 }
 
 x.concat(fakeArray)  // [1, 2, 3, "hello", "world"]

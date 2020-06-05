@@ -82,23 +82,23 @@ function myCallback(a, b)
 
   &lt;script&gt;
     var nIntervId;
- 
+
     function changeColor() {
       nIntervId = setInterval(flashText, 1000);
     }
- 
+
     function flashText() {
       var oElem = document.getElementById('my_box');
       oElem.style.color = oElem.style.color == 'red' ? 'blue' : 'red';
       // oElem.style.color == 'red' ? 'blue' : 'red' is a ternary operator.
     }
- 
+
     function stopTextColor() {
       clearInterval(nIntervId);
     }
   &lt;/script&gt;
 &lt;/head&gt;
- 
+
 &lt;body onload="changeColor();"&gt;
   &lt;div id="my_box"&gt;
     &lt;p&gt;Hello World&lt;/p&gt;
@@ -179,7 +179,7 @@ function myCallback(a, b)
     nIdx = 0, sPart = "", aSheets = [], aMap = [];
 
   this.rate = nRate || 100;
- 
+
   this.play = function () {
     if (bTyping) { return; }
     if (bStart) {
@@ -198,12 +198,12 @@ function myCallback(a, b)
     nIntervId = setInterval(typewrite, this.rate);
     bTyping = true;
   };
- 
+
   this.pause = function () {
     clearInterval(nIntervId);
     bTyping = false;
   };
- 
+
   this.terminate = function () {
     oCurrent.nodeValue += sPart;
     sPart = "";
@@ -211,16 +211,16 @@ function myCallback(a, b)
     clean();
   };
 }
- 
+
 /* usage: */
 var oTWExample1 = new Typewriter(/* elements: */ '#article, h1, #info, #copyleft', /* frame rate (optional): */ 15);
- 
+
 /* default frame rate is 100: */
 var oTWExample2 = new Typewriter('#controls');
 
 /* you can also change the frame rate value modifying the "rate" property; for example: */
 // oTWExample2.rate = 150;
- 
+
 onload = function () {
   oTWExample1.play();
   oTWExample2.play();
@@ -232,7 +232,7 @@ span.intLink, a, a:visited {
   color: #000000;
   text-decoration: underline;
 }
- 
+
 #info {
   width: 180px;
   height: 150px;
@@ -247,7 +247,7 @@ span.intLink, a, a:visited {
 }
 &lt;/style&gt;
 &lt;/head&gt;
- 
+
 &lt;body&gt;
 
 &lt;p id="copyleft" style="font-style: italic; font-size: 12px; text-align: center;"&gt;CopyLeft 2012 by &lt;a href="https://developer.mozilla.org/" target="_blank"&gt;Mozilla Developer Network&lt;/a&gt;&lt;/p&gt;
@@ -256,7 +256,7 @@ span.intLink, a, a:visited {
 Vivamus blandit massa ut metus mattis in fringilla lectus imperdiet. Proin ac ante a felis ornare vehicula. Fusce pellentesque lacus vitae eros convallis ut mollis magna pellentesque. Pellentesque placerat enim at lacus ultricies vitae facilisis nisi fringilla. In tincidunt tincidunt tincidunt.
 &lt;/div&gt;
 &lt;h1&gt;JavaScript Typewriter&lt;/h1&gt;
- 
+
 &lt;div id="article"&gt;
 &lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ultrices dolor ac dolor imperdiet ullamcorper. Suspendisse quam libero, luctus auctor mollis sed, malesuada condimentum magna. Quisque in ante tellus, in placerat est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec a mi magna, quis mattis dolor. Etiam sit amet ligula quis urna auctor imperdiet nec faucibus ante. Mauris vel consectetur dolor. Nunc eget elit eget velit pulvinar fringilla consectetur aliquam purus. Curabitur convallis, justo posuere porta egestas, velit erat ornare tortor, non viverra justo diam eget arcu. Phasellus adipiscing fermentum nibh ac commodo. Nam turpis nunc, suscipit a hendrerit vitae, volutpat non ipsum.&lt;/p&gt;
 &lt;form&gt;
@@ -418,7 +418,7 @@ setTimeout.call(myArray, myArray.myMethod, 2500, 2); // prints "two" after 2,5 s
 |*|  http://www.gnu.org/licenses/lgpl-3.0.html
 |*|
 \*/
- 
+
 function MiniDaemon (oOwner, fTask, nRate, nLen) {
   if (!(this &amp;&amp; this instanceof MiniDaemon)) { return; }
   if (arguments.length &lt; 2) { throw new TypeError('MiniDaemon - not enough arguments'); }
@@ -427,44 +427,44 @@ function MiniDaemon (oOwner, fTask, nRate, nLen) {
   if (isFinite(nRate) &amp;&amp; nRate &gt; 0) { this.rate = Math.floor(nRate); }
   if (nLen &gt; 0) { this.length = Math.floor(nLen); }
 }
- 
+
 MiniDaemon.prototype.owner = null;
 MiniDaemon.prototype.task = null;
 MiniDaemon.prototype.rate = 100;
 MiniDaemon.prototype.length = Infinity;
- 
+
   /* These properties should be read-only */
- 
+
 MiniDaemon.prototype.SESSION = -1;
 MiniDaemon.prototype.INDEX = 0;
 MiniDaemon.prototype.PAUSED = true;
 MiniDaemon.prototype.BACKW = true;
- 
+
   /* Global methods */
- 
+
 MiniDaemon.forceCall = function (oDmn) {
   oDmn.INDEX += oDmn.BACKW ? -1 : 1;
   if (oDmn.task.call(oDmn.owner, oDmn.INDEX, oDmn.length, oDmn.BACKW) === false || oDmn.isAtEnd()) { oDmn.pause(); return false; }
   return true;
 };
- 
+
   /* Instances methods */
- 
+
 MiniDaemon.prototype.isAtEnd = function () {
   return this.BACKW ? isFinite(this.length) &amp;&amp; this.INDEX &lt; 1 : this.INDEX + 1 &gt; this.length;
 };
- 
+
 MiniDaemon.prototype.synchronize = function () {
   if (this.PAUSED) { return; }
   clearInterval(this.SESSION);
   this.SESSION = setInterval(MiniDaemon.forceCall, this.rate, this);
 };
- 
+
 MiniDaemon.prototype.pause = function () {
   clearInterval(this.SESSION);
   this.PAUSED = true;
 };
- 
+
 MiniDaemon.prototype.start = function (bReverse) {
   var bBackw = Boolean(bReverse);
   if (this.BACKW === bBackw &amp;&amp; (this.isAtEnd() || !this.PAUSED)) { return; }

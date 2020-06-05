@@ -116,7 +116,7 @@ tags:
 navigator.credentials.create({ publicKey })
   .then(function (newCredentialInfo) {
     // myBuffer will contain the result of any of the processing of the extensions
-    var myBuffer = newCredentialInfo.getClientExtensionResults(); 
+    var myBuffer = newCredentialInfo.getClientExtensionResults();
 
     // send attestation response and client extensions
     // to the server to proceed with the registration

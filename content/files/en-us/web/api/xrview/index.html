@@ -65,7 +65,7 @@ tags:
   let viewport = glLayer.getViewport(view);
 
   gl.viewport(viewport.x, viewport.y, viewport.width, viewport.height);
-  
+
   // Draw the scene; the eye being drawn is identified
   // by view.eye.
 }
@@ -98,19 +98,19 @@ mat4.transpose(normalMatrix, normalMatrix);
       !transverseDistance &amp;&amp; !verticalDistance) {
     return refSpace;
   }
-    
+
   // Compute the quaternion used to rotate the image based
   // on the pitch and yaw.
- 
+
   quat.identity(inverseOrientation);
   quat.rotateX(inverseOrientation, inverseOrientation, -mousePitch);
   quat.rotateY(inverseOrientation, inverseOrientation, -mouseYaw);
-      
+
   // Compute the true "up" vector for our object.
- 
+
   vec3.cross(vecX, vecY, cubeOrientation);
   vec3.cross(vecY, cubeOrientation, vecX);
- 
+
   // Now compute the transform that teleports the object to the
   // specified point and save a copy of it to display to the user
   // later; otherwise we probably wouldn't need to save mouseMatrix

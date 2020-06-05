@@ -70,14 +70,14 @@ tags:
         html {
             font-family: sans-serif;
         }
-        
+
         body {
             width: 50%;
             max-width: 800px;
             min-width: 480px;
             margin: 0 auto;
         }
-        
+
         .lastResult {
             color: white;
             padding: 3px;
@@ -413,7 +413,7 @@ greeting;</pre>
     guesses.textContent = 'Previous guesses: ';
   }
   guesses.textContent += userGuess + ' ';
- 
+
   if (userGuess === randomNumber) {
     lastResult.textContent = 'Congratulations! You got it right!';
     lastResult.style.backgroundColor = 'green';
@@ -431,7 +431,7 @@ greeting;</pre>
       lowOrHi.textContent = 'Last guess was too high!';
     }
   }
- 
+
   guessCount++;
   guessField.value = '';
   guessField.focus();

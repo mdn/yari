@@ -72,10 +72,10 @@ var style = window.getDefaultComputedStyle(elem1);
  }
 &lt;/style&gt;
 
-&lt;h3&gt;generated content&lt;/h3&gt; 
+&lt;h3&gt;generated content&lt;/h3&gt;
 
 &lt;script&gt;
-  var h3       = document.querySelector('h3'), 
+  var h3       = document.querySelector('h3'),
       result   = getDefaultComputedStyle(h3, ':after').content;
 
   console.log('the generated content is: ', result); // returns 'none'

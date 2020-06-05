@@ -156,7 +156,7 @@ function onLoad() {
   modelMatrixOut = document.querySelector("#model-view-matrix div");
   cameraMatrixOut = document.querySelector("#camera-matrix div");
   mouseMatrixOut = document.querySelector("#mouse-matrix div");
-  
+
   if (!navigator.xr || enableForcePolyfill) {
     console.log("Using the polyfill");
     polyfill = new WebXRPolyfill();
@@ -199,7 +199,7 @@ function onLoad() {
     .then(sessionStarted);
   } else {
     await xrSession.end();
-    
+
     if (xrSession) {
       sessionEnded();
     }
@@ -219,10 +219,10 @@ function onLoad() {
 <pre class="brush: js">function sessionStarted(session) {
   let refSpaceType;
 
-  xrSession = session;  
+  xrSession = session;
   xrButton.innerText = "Exit WebXR";
   xrSession.addEventListener("end", sessionEnded);
-  
+
   let canvas = document.querySelector("canvas");
   gl = canvas.getContext("webgl", { xrCompatible: true });
 
@@ -230,7 +230,7 @@ function onLoad() {
     canvas.addEventListener("pointermove", handlePointerMove);
     canvas.addEventListener("contextmenu", (event) =&gt; { event.preventDefault(); });
   }
-    
+
   if (allowKeyboardMotion) {
     document.addEventListener("keydown", handleKeyDown);
   }
@@ -254,19 +254,19 @@ function onLoad() {
 
   buffers = initBuffers(gl);
   texture = loadTexture(gl, 'https://cdn.glitch.com/a9381af1-18a9-495e-ad01-afddfd15d000%2Ffirefox-logo-solid.png?v=1575659351244');
-  
+
   xrSession.updateRenderState({
     baseLayer: new XRWebGLLayer(xrSession, gl)
   });
-      
+
   if (SESSION_TYPE == "immersive-vr") {
     refSpaceType = "local";
   } else {
     refSpaceType = "viewer";
   }
 
-  mat4.fromTranslation(cubeMatrix, viewerStartPosition); 
-    
+  mat4.fromTranslation(cubeMatrix, viewerStartPosition);
+
   vec3.copy(cubeOrientation, viewerStartOrientation);
 
   xrSession.requestReferenceSpace(refSpaceType)
@@ -275,7 +275,7 @@ function onLoad() {
           new XRRigidTransform(viewerStartPosition, cubeOrientation));
     animationFrameRequestID = xrSession.requestAnimationFrame(drawFrame);
   });
-  
+
   return xrSession;
 }</pre>
 
@@ -303,7 +303,7 @@ function onLoad() {
 
 <pre class="brush: js">function sessionEnded() {
   xrButton.innerText = "Enter WebXR";
-  
+
   if (animationFrameRequestID) {
     xrSession.cancelAnimationFrame(animationFrameRequestID);
     animationFrameRequestID = 0;
@@ -406,14 +406,14 @@ function drawFrame(time, frame) {
   let session = frame.session;
   let adjustedRefSpace = xrReferenceSpace;
   let pose = null;
- 
-  animationFrameRequestID = session.requestAnimationFrame(drawFrame); 
+
+  animationFrameRequestID = session.requestAnimationFrame(drawFrame);
   adjustedRefSpace = applyViewerControls(xrReferenceSpace);
   pose = frame.getViewerPose(adjustedRefSpace);
- 
+
   if (pose) {
     let glLayer = session.renderState.baseLayer;
-    
+
     gl.bindFramebuffer(gl.FRAMEBUFFER, glLayer.framebuffer);
     LogGLError("bindFrameBuffer");
 
@@ -421,7 +421,7 @@ function drawFrame(time, frame) {
     gl.clearDepth(1.0);                 // Clear everything
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     LogGLError("glClear");
-        
+
     const deltaTime = (time - lastFrameTime) * 0.001;  // Convert to seconds
     lastFrameTime = time;
 
@@ -457,18 +457,18 @@ function drawFrame(time, frame) {
       !transverseDistance &amp;&amp; !verticalDistance) {
     return refSpace;
   }
-  
+
   quat.identity(inverseOrientation);
   quat.rotateX(inverseOrientation, inverseOrientation, -mousePitch);
   quat.rotateY(inverseOrientation, inverseOrientation, -mouseYaw);
- 
+
   let newTransform = new XRRigidTransform({x: transverseDistance,
                                            y: verticalDistance,
                                            z: axialDistance},
                          {x: inverseOrientation[0], y: inverseOrientation[1],
                           z: inverseOrientation[2], w: inverseOrientation[3]});
   mat4.copy(mouseMatrix, newTransform.matrix);
- 
+
   return refSpace.getOffsetReferenceSpace(newTransform);
 }</pre>
 
@@ -491,10 +491,10 @@ function renderScene(gl, view, programInfo, buffers, texture, deltaTime) {
   const xRotationForTime = (xRotationDegreesPerSecond * RADIANS_PER_DEGREE) * deltaTime;
   const yRotationForTime = (yRotationDegreesPerSecond * RADIANS_PER_DEGREE) * deltaTime;
   const zRotationForTime = (zRotationDegreesPerSecond * RADIANS_PER_DEGREE) * deltaTime;
- 
+
   gl.enable(gl.DEPTH_TEST);           // Enable depth testing
   gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
- 
+
   if (enableRotation) {
     mat4.rotate(cubeMatrix,  // destination matrix
                 cubeMatrix,  // matrix to rotate
@@ -510,11 +510,11 @@ function renderScene(gl, view, programInfo, buffers, texture, deltaTime) {
                 [1, 0, 0]);       // axis to rotate around (X)
   }
 
-  mat4.multiply(modelViewMatrix, view.transform.inverse.matrix, cubeMatrix);    
+  mat4.multiply(modelViewMatrix, view.transform.inverse.matrix, cubeMatrix);
   mat4.invert(normalMatrix, modelViewMatrix);
   mat4.transpose(normalMatrix, normalMatrix);
 
-  displayMatrix(view.projectionMatrix, 4, projectionMatrixOut);    
+  displayMatrix(view.projectionMatrix, 4, projectionMatrixOut);
   displayMatrix(modelViewMatrix, 4, modelMatrixOut);
   displayMatrix(view.transform.matrix, 4, cameraMatrixOut);
   displayMatrix(mouseMatrix, 4, mouseMatrixOut);
@@ -619,7 +619,7 @@ function renderScene(gl, view, programInfo, buffers, texture, deltaTime) {
   if (mat &amp;&amp; rowLength &amp;&amp; rowLength &lt;= mat.length) {
     let numRows = mat.length / rowLength;
     outHTML = "&lt;math xmlns='http://www.w3.org/1998/Math/MathML' display='block'&gt;\n&lt;mrow&gt;\n&lt;mo&gt;[&lt;/mo&gt;\n&lt;mtable&gt;\n";
-    
+
     for (let y=0; y&lt;numRows; y++) {
       outHTML += "&lt;mtr&gt;\n";
       for (let x=0; x&lt;rowLength; x++) {
@@ -627,10 +627,10 @@ function renderScene(gl, view, programInfo, buffers, texture, deltaTime) {
       }
       outHTML += "&lt;/mtr&gt;\n";
     }
-    
+
     outHTML += "&lt;/mtable&gt;\n&lt;mo&gt;]&lt;/mo&gt;\n&lt;/mrow&gt;\n&lt;/math&gt;";
   }
- 
+
   target.innerHTML = outHTML;
 }</pre>
 

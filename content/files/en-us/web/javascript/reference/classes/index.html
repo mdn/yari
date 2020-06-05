@@ -138,7 +138,7 @@ console.log(Point.distance(p1, p2)); // 7.0710678118654755
 
 <p>When a static or prototype method is called without a value for <em>this</em>, the <em>this</em> value will be <code>undefined</code> inside the method. This behavior will be the same even if the <code>"use strict"</code> directive isn't present, because code within the <code>class</code> body's syntactic boundary is always executed in strict mode.</p>
 
-<pre class="brush: js">class Animal { 
+<pre class="brush: js">class Animal {
   speak() {
     return this;
   }
@@ -183,7 +183,7 @@ eat(); // global object
 <p>Instance properties must be defined inside of class methods:</p>
 
 <pre class="brush: js">class Rectangle {
-  constructor(height, width) {    
+  constructor(height, width) {
     this.height = height;
     this.width = width;
   }
@@ -208,7 +208,7 @@ Rectangle.prototype.prototypeWidth = 25;
 <pre class="brush: js">class Rectangle {
   height = 0;
   width;
-  constructor(height, width) {    
+  constructor(height, width) {
     this.height = height;
     this.width = width;
   }
@@ -228,7 +228,7 @@ Rectangle.prototype.prototypeWidth = 25;
 <pre class="brush: js">class Rectangle {
   #height = 0;
   #width;
-  constructor(height, width) {    
+  constructor(height, width) {
     this.#height = height;
     this.#width = width;
   }
@@ -249,11 +249,11 @@ Rectangle.prototype.prototypeWidth = 25;
 
 <p>The <code><a href="/en-US/docs/Web/JavaScript/Reference/Classes/extends">extends</a></code> keyword is used in <em>class declarations</em> or <em>class expressions</em> to create a class as a child of another class.</p>
 
-<pre class="brush: js">class Animal { 
+<pre class="brush: js">class Animal {
   constructor(name) {
     this.name = name;
   }
-  
+
   speak() {
     console.log(`${this.name} makes a noise.`);
   }
@@ -278,7 +278,7 @@ d.speak(); // Mitzie barks.
 <p>One may also extend traditional function-based "classes":</p>
 
 <pre class="brush: js">function Animal (name) {
-  this.name = name;  
+  this.name = name;
 }
 
 Animal.prototype.speak = function () {
@@ -343,7 +343,7 @@ console.log(mapped instanceof Array);   // true
   constructor(name) {
     this.name = name;
   }
-  
+
   speak() {
     console.log(`${this.name} makes a noise.`);
   }
@@ -357,7 +357,7 @@ class Lion extends Cat {
 }
 
 let l = new Lion('Fuzzy');
-l.speak(); 
+l.speak();
 // Fuzzy makes a noise.
 // Fuzzy roars.
 </pre>

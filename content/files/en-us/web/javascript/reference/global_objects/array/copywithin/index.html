@@ -146,7 +146,7 @@ var i32a = new Int32Array([1, 2, 3, 4, 5])
 i32a.copyWithin(0, 2)
 // Int32Array [3, 4, 5, 4, 5]
 
-// On platforms that are not yet ES2015 compliant: 
+// On platforms that are not yet ES2015 compliant:
 [].copyWithin.call(new Int32Array([1, 2, 3, 4, 5]), 0, 3, 4);
 // Int32Array [4, 2, 3, 4, 5]
 </pre>

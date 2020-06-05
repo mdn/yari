@@ -129,8 +129,8 @@ for ( let i = 0; i &lt; ofInterest.length; i++ ) {
 <p>Let's write a plain paragraph, apply no styles, and inspect a few of its CSS properties by returning a table with the unit and value:</p>
 
 <pre class="brush: html">&lt;p&gt;
-   This is a paragraph with some content. Open up this example in Codepen or 
-   JSFiddle, and change some features. Try adding some CSS, such as a width 
+   This is a paragraph with some content. Open up this example in Codepen or
+   JSFiddle, and change some features. Try adding some CSS, such as a width
    for this paragraph, or adding a CSS property to the ofInterst array.
 &lt;/p&gt;
 &lt;table id="regurgitation"&gt;
@@ -154,7 +154,7 @@ const stylesTable = document.querySelector('#regurgitation');
 const allComputedStyles = myElement.computedStyleMap();
 
 // array of properties we're interested in
-const ofInterest = ['padding-top', 'margin-bottom', 'font-size', 'font-stretch', 
+const ofInterest = ['padding-top', 'margin-bottom', 'font-size', 'font-stretch',
      'animation-duration', 'animation-iteration-count', 'width', 'height'];
 // iterate thru our properties of interest
 for ( let i = 0; i &lt; ofInterest.length; i++ ) {
@@ -311,8 +311,8 @@ const allComputedStyles = button.computedStyleMap();
 // CSSMathSum Example
 let btnWidth = allComputedStyles.get('width')
 
-console.log( btnWidth ); // CSSMathSum 
-console.log( btnWidth.values ); // CSSNumericArray {0: CSSUnitValue, 1: CSSUnitValue, length: 2} 
+console.log( btnWidth ); // CSSMathSum
+console.log( btnWidth.values ); // CSSNumericArray {0: CSSUnitValue, 1: CSSUnitValue, length: 2}
 console.log( btnWidth.operator ); // 'sum'
 
 // CSSTransformValue
@@ -327,17 +327,17 @@ console.log( transform[0].z );   // CSSUnitValue {value: 1, unit: "number"}
 console.log( transform.is2D );   // true
 
 // CSSImageValue
-let bgImage = allComputedStyles.get('background-image'); 
+let bgImage = allComputedStyles.get('background-image');
 
-console.log( bgImage );             // CSSImageValue 
+console.log( bgImage );             // CSSImageValue
 console.log( bgImage.toString() ); // url("https://mdn.mozillademos.org/files/16793/magicwand.png")
 
 // CSSUnparsedValue
-let unit = allComputedStyles.get('--unit'); 
+let unit = allComputedStyles.get('--unit');
 
 console.log( unit ) //
 
-let parsedUnit = CSSNumericValue.parse( unit ); 
+let parsedUnit = CSSNumericValue.parse( unit );
 console.log( parsedUnit );
 console.log( parsedUnit.unit );
 console.log( parsedUnit.value );
@@ -363,7 +363,7 @@ console.log( parsedUnit.value );
 <pre class="brush: js">// CSSUnparsedValue
 let unit = allComputedStyles.get('--unit');
 
-console.log( unit )    // CSSUnparsedValue {0: " 1.2rem", length: 1} 
+console.log( unit )    // CSSUnparsedValue {0: " 1.2rem", length: 1}
 console.log (unit[0] ) // " 1.2rem" </pre>
 
 <p>When we invoke <code>get()</code>, a custom property of type <code>CSSUnparsedValue</code> is returned. Note the space before the <code> 1.2rem</code>.  To get a unit and value, we need a <code>CSSUnitValue</code>, which we can retrieve using the <code>CSSStyleValue.parse()</code> method on the <code>CSSUnparsedValue</code>.</p>
@@ -384,7 +384,7 @@ console.log( parsedUnit.value );  // 1.2</pre>
 <pre class="brush: js">let btnWidth = allComputedStyles.get('width')
 
 console.log( btnWidth );             // CSSMathSum
-console.log( btnWidth.values );      // CSSNumericArray {0: CSSUnitValue, 1: CSSUnitValue, length: 2} 
+console.log( btnWidth.values );      // CSSNumericArray {0: CSSUnitValue, 1: CSSUnitValue, length: 2}
 console.log( btnWidth.operator );    // 'sum'</pre>
 
 <h3 id="CSSTransformValue_with_CSSScale">CSSTransformValue with CSSScale</h3>

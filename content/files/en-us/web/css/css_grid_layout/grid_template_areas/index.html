@@ -64,7 +64,7 @@ tags:
     display: grid;
     grid-template-columns: repeat(9, 1fr);
     grid-auto-rows: minmax(100px, auto);
-    grid-template-areas: 
+    grid-template-areas:
       "hd hd hd hd   hd   hd   hd   hd   hd"
       "sd sd sd main main main main main main"
       "ft ft ft ft   ft   ft   ft   ft   ft";
@@ -149,7 +149,7 @@ tags:
     display: grid;
     grid-template-columns: repeat(9, 1fr);
     grid-auto-rows: minmax(100px, auto);
-    grid-template-areas: 
+    grid-template-areas:
       "hd hd hd hd   hd   hd   hd   hd   hd"
       "sd sd sd main main main main main main"
       ".  .  .  ft   ft   ft   ft   ft   ft";
@@ -212,7 +212,7 @@ tags:
     display: grid;
     grid-template-columns: repeat(9, 1fr);
     grid-auto-rows: minmax(100px, auto);
-    grid-template-areas: 
+    grid-template-areas:
       "hd hd hd hd   hd   hd   hd   hd   hd"
       "sd sd sd main main main main main main"
       "sd sd sd  ft  ft   ft   ft   ft   ft";
@@ -278,7 +278,7 @@ tags:
     display: grid;
     grid-auto-rows: minmax(100px, auto);
     grid-template-columns: 1fr;
-    grid-template-areas: 
+    grid-template-areas:
       "hd"
       "main"
       "sd"
@@ -291,7 +291,7 @@ tags:
 <pre class="brush: css">@media (min-width: 500px) {
     .wrapper {
         grid-template-columns: repeat(9, 1fr);
-        grid-template-areas: 
+        grid-template-areas:
           "hd hd hd hd   hd   hd   hd   hd   hd"
           "sd sd sd main main main main main main"
           "sd sd sd  ft  ft   ft   ft   ft   ft";
@@ -299,7 +299,7 @@ tags:
 }
 @media (min-width: 700px) {
     .wrapper {
-        grid-template-areas: 
+        grid-template-areas:
           "hd hd hd   hd   hd   hd   hd   hd hd"
           "sd sd main main main main main ft ft";
     }
@@ -353,13 +353,13 @@ tags:
 .media .text {
     grid-area: content;
     padding: 10px;
-    
+
 }
 </pre>
 
 <pre class="brush: html">&lt;div class="media"&gt;
     &lt;div class="image"&gt;&lt;/div&gt;
-    &lt;div class="text"&gt;This is a media object example. 
+    &lt;div class="text"&gt;This is a media object example.
       We can use grid-template-areas to switch around the image and text part of the media object.
     &lt;/div&gt;
 &lt;/div&gt;</pre>
@@ -400,12 +400,12 @@ tags:
 .media .text {
     grid-area: content;
     padding: 10px;
-    
+
 }
 </pre>
 
-<pre class="brush: html">&lt;div class="media flipped"&gt; 
-    &lt;div class="image"&gt;&lt;/div&gt; 
+<pre class="brush: html">&lt;div class="media flipped"&gt;
+    &lt;div class="image"&gt;&lt;/div&gt;
     &lt;div class="text"&gt;This is a media object example.
       We can use grid-template-areas to switch around the image and text part of the media object.
     &lt;/div&gt;
@@ -440,11 +440,11 @@ tags:
 
 <pre class="brush: css">.wrapper {
     display: grid;
-    grid-template: 
+    grid-template:
       "hd hd hd hd   hd   hd   hd   hd   hd" minmax(100px, auto)
       "sd sd sd main main main main main main" minmax(100px, auto)
       "ft ft ft ft   ft   ft   ft   ft   ft" minmax(100px, auto)
-             / 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr ;           
+             / 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr ;
 }
 </pre>
 
@@ -474,7 +474,7 @@ tags:
     grid: "hd hd hd hd   hd   hd   hd   hd   hd" minmax(100px, auto)
     "sd sd sd main main main main main main" minmax(100px, auto)
     "ft ft ft ft   ft   ft   ft   ft   ft" minmax(100px, auto)
-    / 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr ;           
+    / 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr ;
 }
 </pre>
 

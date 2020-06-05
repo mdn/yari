@@ -71,31 +71,31 @@ where
 <pre class="brush: html;">&lt;body&gt;
   &lt;p&gt;Click the image to start the filter.&lt;/p&gt;
   // Call the function.
-  &lt;div id="filterFrom" 
-      style="position: absolute; 
-            width: 200px; 
-            height: 250px; 
-            background-color: white; 
+  &lt;div id="filterFrom"
+      style="position: absolute;
+            width: 200px;
+            height: 250px;
+            background-color: white;
             filter: revealTrans()"&gt;
-    &lt;img id="imageFrom" 
-         style="position: absolute; 
-                top: 20px; 
-                left: 20px;" 
-                src="sphere.jpg" 
+    &lt;img id="imageFrom"
+         style="position: absolute;
+                top: 20px;
+                left: 20px;"
+                src="sphere.jpg"
                 alt="sphere"&gt;
-    &lt;div id="filterTo" 
-         style="position: absolute; 
-                width: 200px; 
-                height: 250px; 
-                top: 20px; 
-                left: 20px; 
-                background: white; 
+    &lt;div id="filterTo"
+         style="position: absolute;
+                width: 200px;
+                height: 250px;
+                top: 20px;
+                left: 20px;
+                background: white;
                 visibility: hidden;"&gt;
     &lt;/div&gt;
   &lt;/div&gt;
   &lt;script type="text/javascript"&gt;
   let filterImg = document.querySelector('#filterFrom');
-  filterImg.addEventListener('click', doFilter);  
+  filterImg.addEventListener('click', doFilter);
 
   function doFilter () {
     filterFrom.filters.item(0).Apply(); // 12 is the dissolve filter.
@@ -161,8 +161,8 @@ where
 </div>
 
 <pre class="brush: css; highlight[2, 7]">.gradient.horizontal {
-  -ms-filter: 'progid:DXImageTransform.Microsoft.Gradient(startColorStr="#ffffff", endColorStr="#000000", GradientType=1)'; 
-  background-image: linear-gradient(to right, #ffffff 0%, #000000 100%); 
+  -ms-filter: 'progid:DXImageTransform.Microsoft.Gradient(startColorStr="#ffffff", endColorStr="#000000", GradientType=1)';
+  background-image: linear-gradient(to right, #ffffff 0%, #000000 100%);
 }
 
 .gradient.vertical {

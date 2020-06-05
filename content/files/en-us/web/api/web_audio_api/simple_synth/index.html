@@ -411,22 +411,22 @@ let cosineTerms = null;
 
 <pre class="brush: js">function setup() {
   noteFreq = createNoteTable();
- 
+
   volumeControl.addEventListener("change", changeVolume, false);
- 
+
   masterGainNode = audioContext.createGain();
   masterGainNode.connect(audioContext.destination);
   masterGainNode.gain.value = volumeControl.value;
- 
+
   // Create the keys; skip any that are sharp or flat; for
   // our purposes we don't need them. Each octave is inserted
   // into a &lt;div&gt; of class "octave".
- 
+
   noteFreq.forEach(function(keys, idx) {
     let keyList = Object.entries(keys);
     let octaveElem = document.createElement("div");
     octaveElem.className = "octave";
-    
+
     keyList.forEach(function(key) {
       if (key[0].length == 1) {
         octaveElem.appendChild(createKey(key[0], idx, key[1]));
@@ -437,11 +437,11 @@ let cosineTerms = null;
   });
 
   document.querySelector("div[data-note='B'][data-octave='5']").scrollIntoView(false);
- 
+
   sineTerms = new Float32Array([0, 0, 1, 0, 1]);
   cosineTerms = new Float32Array(sineTerms.length);
   customWaveform = audioContext.createPeriodicWave(cosineTerms, sineTerms);
- 
+
   for (i=0; i&lt;9; i++) {
       oscList[i] = [];
   }
@@ -468,12 +468,12 @@ setup();</pre>
 <pre class="brush: js">function createKey(note, octave, freq) {
   let keyElement = document.createElement("div");
   let labelElement = document.createElement("div");
- 
+
   keyElement.className = "key";
   keyElement.dataset["octave"] = octave;
   keyElement.dataset["note"] = note;
   keyElement.dataset["frequency"] = freq;
- 
+
   labelElement.innerHTML = note + "&lt;sub&gt;" + octave + "&lt;/sub&gt;";
   keyElement.appendChild(labelElement);
 
@@ -497,9 +497,9 @@ setup();</pre>
 <pre class="brush: js">function playTone(freq) {
   let osc = audioContext.createOscillator();
   osc.connect(masterGainNode);
- 
+
   let type = wavePicker.options[wavePicker.selectedIndex].value;
- 
+
   if (type == "custom") {
     osc.setPeriodicWave(customWaveform);
   } else {
@@ -508,7 +508,7 @@ setup();</pre>
 
   osc.frequency.value = freq;
   osc.start();
- 
+
   return osc;
 }
 </pre>

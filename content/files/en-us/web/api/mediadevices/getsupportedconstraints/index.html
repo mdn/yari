@@ -60,7 +60,7 @@ let supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
 for (let constraint in supportedConstraints) {
   if (supportedConstraints.hasOwnProperty(constraint)) {
     let elem = document.createElement("li");
-    
+
     elem.innerHTML = "&lt;code&gt;" + constraint + "&lt;/code&gt;";
     constraintList.appendChild(elem);
   }

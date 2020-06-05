@@ -86,11 +86,11 @@ void NPN_Version(
 {
    int plugin_major, plugin_minor;
    int netscape_major, netscape_minor;
-   
+
    /* Find the version numbers. */
    NPN_Version(&amp;plugin_major, &amp;plugin_minor,
       &amp;netscape_major, &amp;netscape_minor);
-   
+
    /* Use the netscape_minor version number: */
    /* Does this version support the windowless feature? */
    if (netscape_minor &lt; NPVERS_HAS_WINDOWLESS) {

@@ -102,11 +102,11 @@ function draw() {
   ctx.restore();
 
   ctx.restore();
-  
+
   ctx.beginPath();
   ctx.arc(150, 150, 105, 0, Math.PI * 2, false); // Earth orbit
   ctx.stroke();
- 
+
   ctx.drawImage(sun, 0, 0, 300, 300);
 
   window.requestAnimationFrame(draw);
@@ -162,7 +162,7 @@ init();
     ctx.rotate(Math.PI / 30);
   }
   ctx.restore();
- 
+
   var sec = now.getSeconds();
   var min = now.getMinutes();
   var hr  = now.getHours();
@@ -189,7 +189,7 @@ init();
   ctx.lineTo(112, 0);
   ctx.stroke();
   ctx.restore();
- 
+
   // Write seconds
   ctx.save();
   ctx.rotate(sec * Math.PI / 30);
@@ -259,7 +259,7 @@ var ctx;
 img.onload = function() {
     imgW = img.width * scale;
     imgH = img.height * scale;
-    
+
     if (imgW &gt; CanvasXSize) {
         // image larger than canvas
         x = CanvasXSize - imgW;
@@ -276,17 +276,17 @@ img.onload = function() {
     } else {
         clearY = CanvasYSize;
     }
-    
+
     // get canvas context
     ctx = document.getElementById('canvas').getContext('2d');
- 
+
     // set refresh rate
     return setInterval(draw, speed);
 }
 
 function draw() {
     ctx.clearRect(0, 0, clearX, clearY); // clear the canvas
-    
+
     // if image is &lt;= Canvas Size
     if (imgW &lt;= CanvasXSize) {
         // reset, start from beginning

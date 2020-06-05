@@ -62,25 +62,25 @@ typeof BigInt('1') === 'bigint'  // true
 
 <p>Also unsupported is the unary operator (<code>+</code>), <a href="https://github.com/tc39/proposal-bigint/blob/master/ADVANCED.md#dont-break-asmjs">in order to not break asm.js</a>.</p>
 
-<pre class="brush: js">const previousMaxSafe = BigInt(Number.MAX_SAFE_INTEGER) 
+<pre class="brush: js">const previousMaxSafe = BigInt(Number.MAX_SAFE_INTEGER)
 // ↪ 9007199254740991n
 
-const maxPlusOne = previousMaxSafe + 1n 
+const maxPlusOne = previousMaxSafe + 1n
 // ↪ 9007199254740992n
- 
-const theFuture = previousMaxSafe + 2n 
+
+const theFuture = previousMaxSafe + 2n
 // ↪ 9007199254740993n, this works now!
 
-const multi = previousMaxSafe * 2n 
+const multi = previousMaxSafe * 2n
 // ↪ 18014398509481982n
 
-const subtr = multi – 10n 
+const subtr = multi – 10n
 // ↪ 18014398509481972n
 
-const mod = multi % 10n 
+const mod = multi % 10n
 // ↪ 2n
 
-const bigN = 2n ** 54n 
+const bigN = 2n ** 54n
 // ↪ 18014398509481984n
 
 bigN * -1n
@@ -132,13 +132,13 @@ const rounded = 5n / 2n
 
 <p>They may be mixed in arrays and sorted:</p>
 
-<pre class="brush: js">const mixed = [4n, 6, -12n, 10, 4, 0, 0n] 
+<pre class="brush: js">const mixed = [4n, 6, -12n, 10, 4, 0, 0n]
 // ↪  [4n, 6, -12n, 10, 4, 0, 0n]
 
 mixed.sort() // default sorting behavior
 // ↪  [ -12n, 0, 0n, 10, 4n, 4, 6 ]
 
-mixed.sort((a, b) =&gt; a - b) 
+mixed.sort((a, b) =&gt; a - b)
 // won't work since subtraction will not work with mixed types
 // TypeError: can't convert BigInt to number
 
@@ -152,7 +152,7 @@ mixed.sort((a, b) =&gt; (a &lt; b) ? -1 : ((a &gt; b) ? 1 : 0)
 <pre class="brush: js">0n === Object(0n)          // false
 Object(0n) === Object(0n)  // false
 
-const o = Object(0n) 
+const o = Object(0n)
 o === o                    // true
 </pre>
 
@@ -167,9 +167,9 @@ o === o                    // true
 </ul>
 
 <pre class="brush: js">if (0n) {
-  console.log('Hello from the if!') 
+  console.log('Hello from the if!')
 } else {
-  console.log('Hello from the else!') 
+  console.log('Hello from the else!')
 }
 
 // ↪ "Hello from the else!"
@@ -238,7 +238,7 @@ Boolean(12n)
 
 <p>Instead of throwing, <code>JSON.stringify</code> now produces a string like this:</p>
 
-<pre class="brush: js">JSON.stringify(BigInt(1)) 
+<pre class="brush: js">JSON.stringify(BigInt(1))
 // '"1"'</pre>
 
 <h2 id="Examples">Examples</h2>
@@ -257,7 +257,7 @@ function isPrime(p) {
 function nthPrime(nth) {
   let maybePrime = 2n
   let prime = 0n
-  
+
   while (nth &gt;= 0n) {
     if (isPrime(maybePrime)) {
       nth--
@@ -265,7 +265,7 @@ function nthPrime(nth) {
     }
     maybePrime++
   }
-  
+
   return prime
 }
 

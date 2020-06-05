@@ -175,9 +175,9 @@ Cookie: yummy_cookie=choco; tasty_cookie=strawberry</pre>
 
 <p>New cookies can be created via JavaScript using the {{domxref("Document.cookie")}} property, and existing cookies can be accessed from JavaScript as well, if the <code>HttpOnly</code> flag is not set.</p>
 
-<pre class="brush: js">document.cookie = "yummy_cookie=choco"; 
-document.cookie = "tasty_cookie=strawberry"; 
-console.log(document.cookie); 
+<pre class="brush: js">document.cookie = "yummy_cookie=choco";
+document.cookie = "tasty_cookie=strawberry";
+console.log(document.cookie);
 // logs "yummy_cookie=choco; tasty_cookie=strawberry"</pre>
 
 <p>Cookies created via JavaScript cannot include the <code>HttpOnly</code> flag.</p>

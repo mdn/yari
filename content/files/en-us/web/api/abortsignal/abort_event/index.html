@@ -39,11 +39,11 @@ tags:
 
 <p>You can use the <code>abort</code> event in an <code><a href="/en-US/docs/Web/API/EventTarget/addEventListener">addEventListener</a></code> method:</p>
 
-<pre class="brush: js">var controller = new AbortController(); 
-var signal = controller.signal; 
+<pre class="brush: js">var controller = new AbortController();
+var signal = controller.signal;
 
 signal.addEventListener('abort', function() {
- console.log('Request aborted'); 
+ console.log('Request aborted');
 };</pre>
 
 <p>Or use the <code><a href="/en-US/docs/Web/API/AbortSignal/onabort">onabort</a></code> event handler property:</p>

@@ -273,7 +273,7 @@ editToDo(toDoId, newLabel) {
 <p>Update the <code>&lt;to-do-item&gt;&lt;/to-do-item&gt;</code> call inside the <code>App.vue</code> template to look like this:</p>
 
 <pre class="brush: js">&lt;to-do-item :label="item.label" :done="item.done" :id="item.id"
-            @checkbox-changed="updateDoneStatus(item.id)"        
+            @checkbox-changed="updateDoneStatus(item.id)"
             @item-deleted="deleteToDo(item.id)"
             @item-edited="editToDo(item.id, $event)"&gt;
 &lt;/to-do-item&gt;</pre>

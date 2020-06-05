@@ -56,15 +56,15 @@ tags:
     output(" Item " + i + ":\n");
     var types = dt.mozTypesAt(i);
     for (var t = 0; t &lt; types.length; t++) {
-      output("  " + types[t] + ": "); 
+      output("  " + types[t] + ": ");
       try {
-        var data = dt.mozGetDataAt(types[t], i); 
+        var data = dt.mozGetDataAt(types[t], i);
         output("(" + (typeof data) + ") : &lt;" + data + " &gt;\n");
       } catch (ex) {
         output("&lt;&gt;\n");
         dump(ex);
-      }   
-    }   
+      }
+    }
   }
 }
 </pre>

@@ -41,8 +41,8 @@ tags:
 <h2 id="Polyfill">Polyfill</h2>
 
 <pre class="brush: js">Number.isInteger = Number.isInteger || function(value) {
-  return typeof value === 'number' &amp;&amp; 
-    isFinite(value) &amp;&amp; 
+  return typeof value === 'number' &amp;&amp;
+    isFinite(value) &amp;&amp;
     Math.floor(value) === value;
 };
 </pre>

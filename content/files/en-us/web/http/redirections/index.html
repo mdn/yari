@@ -149,7 +149,7 @@ tags:
 
 <p>HTTP redirects are the best way to create redirections, but sometimes you don't have control over the server. In that case, try a {{HTMLElement("meta")}} element with its {{htmlattrxref("http-equiv", "meta")}} attribute set to <code>Refresh</code> in the {{HTMLElement("head")}} of the page. When displaying the page, the browser will go to the indicated URL.</p>
 
-<pre class="brush: html">&lt;head&gt; 
+<pre class="brush: html">&lt;head&gt;
   &lt;meta http-equiv="Refresh" content="0; URL=https://example.com/"&gt;
 &lt;/head&gt;
 </pre>
@@ -242,7 +242,7 @@ tags:
 <p>If you don't want a temporary redirect, an extra parameter (either the HTTP status code to use or the <code>permanent</code> keyword) can be used to set up a different redirect:</p>
 
 <pre>Redirect permanent / https://www.example.com
-# …acts the same as: 
+# …acts the same as:
 Redirect 301 / https://www.example.com
 </pre>
 

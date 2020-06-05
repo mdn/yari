@@ -188,7 +188,7 @@ if (testElem.style.flex !== undefined &amp;&amp; testElem.style.flexFlow !== und
 <p>We also wanted to mention the {{domxref("Window.matchMedia")}} JavaScript feature at this point too. This is a property that allows you to run media query tests inside JavaScript. It looks like this:</p>
 
 <pre class="brush: js">if (window.matchMedia("(max-width: 480px)").matches) {
-  // run JavaScript in here. 
+  // run JavaScript in here.
 }</pre>
 
 <p>As an example, our <a href="https://github.com/chrisdavidmills/snapshot">Snapshot</a> demo makes use of it to selectively apply the Brick JavaScript library and use it to handle the UI layout, but only for the small screen layout (480px wide or less). We first use the <code>media</code> attribute to only apply the Brick CSS to the page if the page width is 480px or less:</p>
@@ -198,7 +198,7 @@ if (testElem.style.flex !== undefined &amp;&amp; testElem.style.flexFlow !== und
 <p>We then use <code>matchMedia()</code> in the JavaScript several times, to only run Brick navigation functions if we are on the small screen layout (in wider screen layouts, everything can be seen at once, so we don't need to navigate between different views).</p>
 
 <pre class="brush: js">if (window.matchMedia("(max-width: 480px)").matches) {
-  deck.shuffleTo(1);  
+  deck.shuffleTo(1);
 }</pre>
 
 <h2 id="Using_Modernizr_to_implement_feature_detection">Using Modernizr to implement feature detection</h2>

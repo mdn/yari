@@ -125,7 +125,7 @@ request.session['my_car']['wheels'] = 'alloy'
     ...
 
     num_authors = Author.objects.count()  # The 'all()' is implied by default.
-    
+
 <strong>    # Number of visits to this view, as counted in the session variable.
     num_visits = request.session.get('num_visits', 0)
     request.session['num_visits'] = num_visits + 1</strong>
@@ -137,7 +137,7 @@ request.session['my_car']['wheels'] = 'alloy'
         'num_authors': num_authors,
         'num_visits': num_visits,
     }</strong>
-    
+
     # Render the HTML template index.html with the data in the context variable.
     return render(request, 'index.html', context=context)</pre>
 

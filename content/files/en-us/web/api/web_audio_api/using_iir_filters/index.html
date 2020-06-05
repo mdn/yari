@@ -105,7 +105,7 @@ const iirFilter = audioCtx.createIIRFilter(feedForward, feedBack);
 <pre class="brush: js">filterButton.addEventListener('click', function() {
     if (this.dataset.filteron === 'false') {
         srcNode.disconnect(audioCtx.destination);
-        srcNode.connect(iirfilter).connect(audioCtx.destination);   
+        srcNode.connect(iirfilter).connect(audioCtx.destination);
         ...
 }, false);</pre>
 

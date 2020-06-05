@@ -60,7 +60,7 @@ tags:
 <pre class="brush: js">var myScript = document.querySelector('script');
 var myPre = document.querySelector('pre');
 var playButton = document.querySelector('button');
-      
+
 // Create AudioContext and buffer source
 var audioCtx = new AudioContext();
 source = audioCtx.createBufferSource();
@@ -79,7 +79,7 @@ function getData() {
     var audioData = request.response;
 
     audioCtx.decodeAudioData(audioData, function(buffer) {
-    myBuffer = buffer;   
+    myBuffer = buffer;
     source.buffer = myBuffer;
   },
     function(e){"Error with decoding audio data" + e.err});
@@ -106,7 +106,7 @@ scriptNode.onaudioprocess = function(audioProcessingEvent) {
       outputData[sample] = inputData[sample];
 
       // add noise to each output sample
-      outputData[sample] += ((Math.random() * 2) - 1) * 0.2;         
+      outputData[sample] += ((Math.random() * 2) - 1) * 0.2;
     }
   }
 }
@@ -119,7 +119,7 @@ playButton.onclick = function() {
   scriptNode.connect(audioCtx.destination);
   source.start();
 }
-      
+
 // When the buffer source stops playing, disconnect everything
 source.onended = function() {
   source.disconnect(scriptNode);

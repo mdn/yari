@@ -24,17 +24,17 @@ tags:
 
 <p>The value of the <code>length</code> property is an integer with a positive sign and a value less than 2 to the 32nd power (2<sup>32</sup>).</p>
 
-<pre class="brush: js">var namelistA = new Array(4294967296); //2 to the 32nd power<sup> = </sup>4294967296 
+<pre class="brush: js">var namelistA = new Array(4294967296); //2 to the 32nd power<sup> = </sup>4294967296
 var namelistC = new Array(-100) //negative sign
 
-console.log(namelistA.length); //RangeError: Invalid array length 
-console.log(namelistC.length); //RangeError: Invalid array length 
+console.log(namelistA.length); //RangeError: Invalid array length
+console.log(namelistC.length); //RangeError: Invalid array length
 
 
 
-var namelistB = []; 
-namelistB.length = Math.pow(2,32)-1; //set array length less than 2 to the 32nd power 
-console.log(namelistB.length); 
+var namelistB = [];
+namelistB.length = Math.pow(2,32)-1; //set array length less than 2 to the 32nd power
+console.log(namelistB.length);
 
 //4294967295
 </pre>

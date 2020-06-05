@@ -29,7 +29,7 @@ router.get('/', book_controller.index);  //This actually maps to /catalog/ becau
 
 <p>Where the callback function parameter (<code>book_controller.index</code>) is defined in <strong>/controllers/bookController.js</strong>:</p>
 
-<pre class="brush: js">exports.index = function(req, res, next) {   
+<pre class="brush: js">exports.index = function(req, res, next) {
     res.send('NOT IMPLEMENTED: Site Home Page');
 }</pre>
 
@@ -53,7 +53,7 @@ router.get('/', book_controller.index);  //This actually maps to /catalog/ becau
 <pre class="brush: python ">var Book = require('../models/book')
 
 exports.index = function(req, res, next) {
- res.send('NOT IMPLEMENTED: Site Home Page'); 
+ res.send('NOT IMPLEMENTED: Site Home Page');
 }</pre>
 
 <p>Replace all the code above with the following code fragment. The first thing this does is import (<code>require()</code>) all the models (highlighted in bold). We need to do this because we'll be using them to get our counts of records. It then imports the <em>async</em> module.</p>
@@ -65,8 +65,8 @@ var BookInstance = require('../models/bookinstance');
 
 var async = require('async');
 
-exports.index = function(req, res) {   
-    
+exports.index = function(req, res) {
+
     async.parallel({
         book_count: function(callback) {
             Book.countDocuments({}, callback); // Pass an empty object as match condition to find all documents of this collection
@@ -116,7 +116,7 @@ block content
     ul
       li #[strong Books:] !{data.book_count}
       li #[strong Copies:] !{data.book_instance_count}
-      li #[strong Copies available:] !{data.book_instance_available_count} 
+      li #[strong Copies available:] !{data.book_instance_available_count}
       li #[strong Authors:] !{data.author_count}
       li #[strong Genres:] !{data.genre_count}</pre>
 

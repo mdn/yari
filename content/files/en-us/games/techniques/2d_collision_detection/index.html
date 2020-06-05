@@ -70,7 +70,7 @@ rect2.bind("EnterFrame", function () {
         this.color("green");
     } else {
         // no collision
-        this.color("blue"); 
+        this.color("blue");
     }
 });
 
@@ -111,11 +111,11 @@ Crafty.c("Circle", {
         this.radius = radius;
         this.w = this.h = radius * 2;
         this.color = color || "#000000";
-        
+
         this.bind("Move", Crafty.DrawManager.drawAll)
         return this;
    },
-    
+
    draw: function() {
        var ctx = Crafty.canvas.context;
        ctx.save();
@@ -142,13 +142,13 @@ circle2.bind("EnterFrame", function () {
     var dx = (circle1.x + circle1.radius) - (circle2.x + circle2.radius);
     var dy = (circle1.y + circle1.radius) - (circle2.y + circle2.radius);
     var distance = Math.sqrt(dx * dx + dy * dy);
-    
+
     if (distance &lt; circle1.radius + circle2.radius) {
         // collision detected!
         this.color = "green";
     } else {
         // no collision
-        this.color = "blue"; 
+        this.color = "blue";
     }
 });
 

@@ -57,18 +57,18 @@ tags:
 
 <p>In this example, the {{HTTPHeader("Expires")}} header is used at the end of the chunked message and serves as a trailing header.</p>
 
-<pre>HTTP/1.1 200 OK 
-Content-Type: text/plain 
+<pre>HTTP/1.1 200 OK
+Content-Type: text/plain
 Transfer-Encoding: chunked
 Trailer: Expires
 
-7\r\n 
-Mozilla\r\n 
-9\r\n 
-Developer\r\n 
-7\r\n 
-Network\r\n 
-0\r\n 
+7\r\n
+Mozilla\r\n
+9\r\n
+Developer\r\n
+7\r\n
+Network\r\n
+0\r\n
 Expires: Wed, 21 Oct 2015 07:28:00 GMT\r\n
 \r\n
 </pre>

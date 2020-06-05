@@ -168,10 +168,10 @@ def index(request):
 
 <pre class="brush: python"># filename: models.py
 
-from django.db import models 
+from django.db import models
 
-class Team(models.Model): 
-    team_name = models.CharField(max_length=40) 
+class Team(models.Model):
+    team_name = models.CharField(max_length=40)
 
     TEAM_LEVELS = (
         ('U09', 'Under 09s'),
@@ -201,7 +201,7 @@ class Team(models.Model):
 <pre class="brush: python">## filename: views.py
 
 from django.shortcuts import render
-from .models import Team 
+from .models import Team
 
 def index(request):
     <strong>list_teams = Team.objects.filter(team_level__exact="U09")</strong>

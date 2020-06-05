@@ -32,17 +32,17 @@ tags:
 <h3 id="HTML">HTML</h3>
 
 <pre class="brush: html">&lt;template id="tabbed-custom-element"&gt;
-&lt;style type="text/css"&gt; 
+&lt;style type="text/css"&gt;
 *, ::before, ::after {
-  box-sizing: border-box; 
+  box-sizing: border-box;
   padding: 1rem;
 }
 :host {
   display: flex;
 }
-&lt;/style&gt; 
-&lt;div part="tab active"&gt;Tab 1&lt;/div&gt; 
-&lt;div part="tab"&gt;Tab 2&lt;/div&gt; 
+&lt;/style&gt;
+&lt;div part="tab active"&gt;Tab 1&lt;/div&gt;
+&lt;div part="tab"&gt;Tab 2&lt;/div&gt;
 &lt;div part="tab"&gt;Tab 3&lt;/div&gt;
 &lt;/template&gt;
 
@@ -65,8 +65,8 @@ tabbed-custom-element::part(tab):hover:active {
 }
 
 tabbed-custom-element::part(tab):focus {
-  box-shadow: 
-    0 0 0 1px #0a84ff inset, 
+  box-shadow:
+    0 0 0 1px #0a84ff inset,
     0 0 0 1px #0a84ff,
     0 0 0 4px rgba(10, 132, 255, 0.3);
 }

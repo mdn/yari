@@ -116,10 +116,10 @@ const p = new Proxy({}, handler);
 p.a = 1;
 p.b = undefined;
 
-console.log(p.a, p.b); 
+console.log(p.a, p.b);
 //  1, undefined
 
-console.log('c' in p, p.c); 
+console.log('c' in p, p.c);
 //  false, 37
 </pre>
 
@@ -242,14 +242,14 @@ console.log(Peter.age);     // 13</pre>
 });
 
 let i1 = view.selected = document.getElementById('item-1');  //giving error here, i1 is null
-console.log(i1.getAttribute('aria-selected')); 
+console.log(i1.getAttribute('aria-selected'));
 //  'true'
 
 let i2 = view.selected = document.getElementById('item-2');
-console.log(i1.getAttribute('aria-selected')); 
+console.log(i1.getAttribute('aria-selected'));
 //  'false'
 
-console.log(i2.getAttribute('aria-selected')); 
+console.log(i2.getAttribute('aria-selected'));
 //  'true'
 Note: even if selected: !null, then giving oldval.setAttribute is not a function
 </pre>
@@ -291,18 +291,18 @@ Note: even if selected: !null, then giving oldval.setAttribute is not a function
   }
 });
 
-console.log(products.browsers); 
+console.log(products.browsers);
 //  ['Internet Explorer', 'Netscape']
 
-products.browsers = 'Firefox'; 
+products.browsers = 'Firefox';
 //  pass a string (by mistake)
 
-console.log(products.browsers); 
+console.log(products.browsers);
 //  ['Firefox'] &lt;- no problem, the value is an array
 
 products.latestBrowser = 'Chrome';
 
-console.log(products.browsers); 
+console.log(products.browsers);
 //  ['Firefox', 'Chrome']
 
 console.log(products.latestBrowser);
@@ -374,7 +374,7 @@ console.log(products.number);      // 3
 <p>Now in order to create a complete sample <code>traps</code> list, for didactic purposes, we will try to proxify a <em>non-native</em> object that is particularly suited to this type of operation: the <code>docCookies</code> global object created by <a href="/en-US/docs/Web/API/Document/cookie/Simple_document.cookie_framework">the "little framework" published on the <code>document.cookie</code> page</a>.</p>
 
 <pre class="brush: js">/*
-  var docCookies = ... get the "docCookies" object here:  
+  var docCookies = ... get the "docCookies" object here:
   https://developer.mozilla.org/en-US/docs/DOM/document.cookie#A_little_framework.3A_a_complete_cookies_reader.2Fwriter_with_full_unicode_support
 */
 

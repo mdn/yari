@@ -101,7 +101,7 @@ tags:
 
 <p>For this example app, the HTML structure is going to be very simple: I am just including a heading, navigation menu and filler text to highlight the fact that articles can get very long on narrow screen devices. Our HTML looks like this:</p>
 
-<pre class="brush: html">&lt;article&gt;   
+<pre class="brush: html">&lt;article&gt;
   &lt;nav&gt;
     &lt;ul&gt;
       &lt;li&gt;&lt;a href="#"&gt;Home&lt;/a&gt;&lt;/li&gt;
@@ -117,14 +117,14 @@ tags:
     &lt;a id="top" href="#bottom"&gt;Jump to menu&lt;/a&gt;
     &lt;h1&gt;My article&lt;/h1&gt;
   &lt;/header&gt;
-    
+
   &lt;div class="main"&gt;
-    &lt;p&gt;Lorem ipsum … &lt;/p&gt;     
-    &lt;a id="bottom" href="#top"&gt;Back to top&lt;/a&gt;  
+    &lt;p&gt;Lorem ipsum … &lt;/p&gt;
+    &lt;a id="bottom" href="#top"&gt;Back to top&lt;/a&gt;
   &lt;/div&gt;
- 
+
 &lt;/article&gt;
-        
+
 &lt;button id="install-btn"&gt;Install&lt;/button&gt;</pre>
 
 <h3 id="Default_mobile_CSS">Default mobile CSS</h3>
@@ -156,7 +156,7 @@ nav {
   font-size: 0.8em;
   position:absolute;
   right: 1em;
-  text-decoration: none;  
+  text-decoration: none;
 }
 
 #top {
@@ -178,19 +178,19 @@ nav {
   #bottom, #top {
     display: none;
   }
- 
+
   article, nav {
     display: block;
   }
- 
+
   nav ul {
     text-align: center;
   }
- 
+
   nav li {
     display: inline;
   }
- 
+
   nav li a {
     border-right: 1px solid #AD66D5;
     border-bottom: none;
@@ -210,14 +210,14 @@ nav {
     background: #eee;
     height: 100%;
   }
- 
+
   body {
     width: 600px;
     height: inherit;
     margin: 0 auto;
     background: url(../img/firefox-os.png) bottom left no-repeat, linear-gradient(to bottom, #fff, #eee);
   }
- 
+
   .main &gt; p {
     background: rgba(255,255,255,0.3);
   }
@@ -285,7 +285,7 @@ nav {
 
 <p>Modernizr also puts its feature detect results in a JavaScript <code>Modenizr</code> object too, so that you can run JavaScript code selectively depending on feature support. For example, you could do this:</p>
 
-<pre class="brush: js">if(Modernizr.rgba) { 
+<pre class="brush: js">if(Modernizr.rgba) {
 
   // run code that depends on RGBA colours being supported.
 

@@ -72,13 +72,13 @@ let outputBox = document.getElementById("output");
 orderButton.addEventListener("click", function() {
   let collection = itemList.selectedOptions;
   let output = "";
- 
+
   for (let i=0; i&lt;collection.length; i++) {
     if (output === "") {
       output = "Your order for the following items has been placed: ";
     }
     output += collection[i].label;
-    
+
     if (i === (collection.length - 2) &amp;&amp; (collection.length &lt; 3)) {
       output +=  " and ";
     } else if (i &lt; (collection.length - 2)) {
@@ -87,11 +87,11 @@ orderButton.addEventListener("click", function() {
       output += ", and ";
     }
   }
- 
+
   if (output === "") {
     output = "You didn't order anything!";
   }
- 
+
   outputBox.innerHTML = output;
 }, false);</pre>
 

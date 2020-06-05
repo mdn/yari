@@ -22,7 +22,7 @@
     "sockette": "2.0.6",
     "swr": "0.2.2",
     "typeface-zilla-slab": "0.0.72",
-    "typescript": "^3.9.3",
+    "typescript": "^3.9.5",
     "use-debounce": "^3.4.2"
   },
   "scripts": {
@@ -50,6 +50,6 @@
   "devDependencies": {
     "@testing-library/react": "^10.2.0",
     "jest-environment-jsdom-sixteen": "^1.0.3",
-    "mdn-browser-compat-data": "^1.0.23"
+    "mdn-browser-compat-data": "^1.0.24"
   }
 }

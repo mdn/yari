@@ -34,7 +34,7 @@ tags:
 <pre>var requestedBytes = 1024*1024*10; // 10MB
 
 navigator.webkitPersistentStorage.requestQuota (
-    requestedBytes, function(grantedBytes) {  
+    requestedBytes, function(grantedBytes) {
         window.requestFileSystem(PERSISTENT, grantedBytes, onInitFs, errorHandler);
 
     }, function(e) { console.log('Error', e); }
@@ -60,7 +60,7 @@ window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFile
 // Next, set the size of space needed (in bytes)
 // initFs is the success callback
 // And the last one is the error callback
-// for denial of access and other errors. 
+// for denial of access and other errors.
 
 window.requestFileSystem(window.PERSISTENT, 1024*1024,onInitFs,errorHandler);
 </pre>
@@ -111,9 +111,9 @@ window.requestFileSystem(window.PERSISTENT, 1024*1024,onInitFs,errorHandler);
 <p>Requests a file system where data should be stored. You access a sandboxed file system by requesting a <code>LocalFileSystem</code> object using this global method, <code>window.requestFileSystem()</code>.</p>
 
 <pre>void requestFileSystem(
-  in unsigned short type, 
-  in unsigned long long size, 
-  in FileSystemCallback successCallback, 
+  in unsigned short type,
+  in unsigned long long size,
+  in FileSystemCallback successCallback,
   in ErrorCallback errorCallback
 );</pre>
 
@@ -163,8 +163,8 @@ window.requestFileSystem(window.PERSISTENT, 1024*1024,onInitFs,errorHandler);
 <p>Lets you look up the entry for a file or directory with a local URL.</p>
 
 <pre>void resolveLocalFileSystemURL(
-  in DOMString url, 
-  in EntryCallback successCallback, 
+  in DOMString url,
+  in EntryCallback successCallback,
   in optional ErrorCallback errorCallback
 );
 </pre>

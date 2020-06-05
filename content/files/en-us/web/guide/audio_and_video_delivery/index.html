@@ -37,10 +37,10 @@ tags:
 
 <pre class="brush: html">&lt;audio controls preload="auto"&gt;
   &lt;source src="audiofile.mp3" type="audio/mpeg"&gt;
- 
+
   &lt;!-- fallback for browsers that don't suppport mp3 --&gt;
   &lt;source src="audiofile.ogg" type="audio/ogg"&gt;
- 
+
   &lt;!-- fallback for browsers that don't support audio tag --&gt;
   &lt;a href="audiofile.mp3"&gt;download audio&lt;/a&gt;
 &lt;/audio&gt;</pre>
@@ -57,14 +57,14 @@ tags:
 
 <pre class="brush: html">&lt;video controls width="640" height="480" poster="initialimage.png" autoplay muted&gt;
   &lt;source src="videofile.mp4" type="video/mp4"&gt;
- 
+
   &lt;!-- fallback for browsers that don't suppport mp4 --&gt;
   &lt;source src="videofile.webm" type="video/webm"&gt;
- 
+
   &lt;!-- specifying subtitle files --&gt;
   &lt;track src="subtitles_en.vtt" kind="subtitles" srclang="en" label="English"&gt;
   &lt;track src="subtitles_no.vtt" kind="subtitles" srclang="no" label="Norwegian"&gt;
- 
+
   &lt;!-- fallback for browsers that don't support video tag --&gt;
   &lt;a href="videofile.mp4"&gt;download video&lt;/a&gt;
 &lt;/video&gt;</pre>
@@ -150,7 +150,7 @@ myVideo.height = 320;</pre>
 
     request.onload = function() {
       context.decodeAudioData(request.response, function(buffer) {
-        source = context.createBufferSource();  
+        source = context.createBufferSource();
         source.buffer = buffer;
         source.connect(context.destination);
         // auto play
@@ -271,10 +271,10 @@ myVideo.height = 320;</pre>
 <p>add a bit of JavaScript to detect events to play and pause the audio:</p>
 
 <pre class="brush: js">window.onload = function() {
- 
+
   var myAudio = document.getElementById('my-audio');
   var myControl = document.getElementById('my-control');
- 
+
   function switchState() {
     if (myAudio.paused == true) {
       myAudio.play();
@@ -284,17 +284,17 @@ myVideo.height = 320;</pre>
       myControl.innerHTML = "play";
     }
   }
- 
+
   function checkKey(e) {
     if (e.keycode == 32 ) { //spacebar
       switchState();
     }
   }
- 
+
   myControl.addEventListener('click', function() {
     switchState();
   }, false);
- 
+
   window.addEventListener( "keypress", checkKey, false );
 }</pre>
 
@@ -402,12 +402,12 @@ mediaElement.played.end(0);      // Returns the number of seconds the browser ha
 <p>Although this is usually supported, you may need to add the following to your media server's <code>.htaccess</code> file.</p>
 
 <pre># AddType TYPE/SUBTYPE EXTENSION
- 
+
 AddType audio/mpeg mp3
 AddType audio/mp4 m4a
 AddType audio/ogg ogg
 AddType audio/ogg oga
- 
+
 AddType video/mp4 mp4
 AddType video/mp4 m4v
 AddType video/ogg ogv

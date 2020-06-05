@@ -178,7 +178,7 @@ tags:
 <pre class="brush: js">function createPerspectiveMatrix(viewport, fovDegrees, nearClip, farClip) {
   const fovRadians = fov * (Math.PI / 180.0);
   const aspectRatio = viewport.width / viewport.height;
-  
+
   const transform = mat4.create();
   mat4.perspective(transform, fovRadians, aspectRatio,
                    nearClip, farClip);
@@ -390,9 +390,9 @@ mat4.multiply(viewMatrix, viewMatrix, rotateMatrix);</pre>
 <pre class="brush: js">function myAnimationFrameCallback(time, frame) {
   let adjustedRefSpace = applyPositionOffsets(xrReferenceSpace);
   let pose = frame.getViewerPose(adjustedRefSpace);
-  
-  animationFrameRequestID = frame.session.requestAnimationFrame(myAnimationFrameCallback);  
-    
+
+  animationFrameRequestID = frame.session.requestAnimationFrame(myAnimationFrameCallback);
+
   if (pose) {
     let glLayer = frame.session.renderState.baseLayer;
     gl.bindFramebuffer(gl.FRAMEBUFFER, glLayer.framebuffer);
@@ -402,7 +402,7 @@ mat4.multiply(viewMatrix, viewMatrix, rotateMatrix);</pre>
     gl.clearDepth(1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     CheckGLError("Clearing the framebuffer");
-        
+
     const deltaTime = (time - lastFrameTime) * 0.001;
     lastFrameTime = time;
 
@@ -410,7 +410,7 @@ mat4.multiply(viewMatrix, viewMatrix, rotateMatrix);</pre>
       let viewport = glLayer.getViewport(view);
       gl.viewport(viewport.x, viewport.y, viewport.width, viewport.height);
       CheckGLError(`Setting viewport for eye: ${view.eye}`);
-      
+
       myRenderScene(gl, view, sceneData, deltaTime);
     }
   }

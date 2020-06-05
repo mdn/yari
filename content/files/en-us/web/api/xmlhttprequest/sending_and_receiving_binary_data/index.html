@@ -143,7 +143,7 @@ req.sendAsBinary(aBody);
 <pre class="brush: js">// Make a stream from a file.
 var stream = Components.classes["@mozilla.org/network/file-input-stream;1"]
                        .createInstance(Components.interfaces.nsIFileInputStream);
-stream.init(file, 0x04 | 0x08, 0644, 0x04); // file is an nsIFile instance   
+stream.init(file, 0x04 | 0x08, 0644, 0x04); // file is an nsIFile instance
 
 // Try to determine the MIME type of the file
 var mimeType = "text\/plain";
@@ -154,7 +154,7 @@ try {
 }
 catch (oEvent) { /* eat it; just use text/plain */ }
 
-// Send    
+// Send
 var req = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"]
                     .createInstance(Components.interfaces.nsIXMLHttpRequest);
 req.open('PUT', url, false); /* synchronous! */

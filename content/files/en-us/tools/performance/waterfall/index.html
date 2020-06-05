@@ -460,7 +460,7 @@ function calculatePrimes() {
     if (i % 10 == 0) {
       console.timeStamp(i.toString());
     }
-    
+
     var candidate = i * (multiplier * Math.random());
     var isPrime = true;
     for (var c = 2; c &lt;= Math.sqrt(candidate); ++c) {
