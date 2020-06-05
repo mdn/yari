@@ -42,19 +42,12 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install all yarn packages
+        if: steps.git_diff_content.outputs.diff
         run: yarn --frozen-lockfile
-
-      # TODO figure out a way to set up a cache that we can put things
-      # like _all-content.json into.
 
       - name: Build changed content
         if: steps.git_diff_content.outputs.diff
         run: |
-          # TEMPORARY UNTIL https://github.com/mdn/yari/pull/712 IS MERGED
-          export BUILD_ROOT=content/files
-          export BUILD_DESTINATION=client/build
-          export BUILD_POPULARITIES_FILEPATH=content/popularities.json
-
           yarn prebuild
 
           # Some day, when our number of flaws have reached 0 we'll change
