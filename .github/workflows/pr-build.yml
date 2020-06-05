@@ -30,10 +30,19 @@ jobs:
           node --version
           yarn --version
 
+      - name: Install
+        uses: abatilo/actions-poetry@v1.5.0
+        with:
+          python_version: 3.8
+          poetry_version: 1.0
+          working_directory: ./deployer # Optional, defaults to '.'
+          args: install
+
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
       - uses: actions/cache@v1
+        if: steps.git_diff_content.outputs.diff
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -67,3 +76,9 @@ jobs:
           # real content exposes it.
 
           node content build --no-progressbar --files="${GIT_DIFF}"
+
+      - name: Upload build to S3
+        if: steps.git_diff_content.outputs.diff
+        run: |
+          cd deployer
+          poetry run deployer upload --help

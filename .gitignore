@@ -76,3 +76,6 @@ yarn-error.log*
 /content/files/vi/
 /content/files/zh-cn/
 /content/files/zh-tw/
+
+/deployer/upload.log
+/deployer/src/deployer.egg-info/
