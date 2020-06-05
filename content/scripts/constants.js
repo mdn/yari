@@ -6,6 +6,15 @@ require("dotenv").config({ path: process.env.ENV_FILE });
 const DEFAULT_DATABASE_URL =
   process.env.DATABASE_URL || "mysql2://username:password@host/databasename";
 
+const DEFAULT_BUILD_ROOT =
+  process.env.BUILD_ROOT || path.join("content", "files");
+
+// This doesn't have a default because it's a not for everyone.
+const DEFAULT_BUILD_ARCHIVE_ROOT = process.env.BUILD_ARCHIVE_ROOT;
+
+const DEFAULT_BUILD_DESTINATION =
+  process.env.BUILD_DESTINATION || path.join("client", "build");
+
 const DEFAULT_BUILD_LOCALES = (process.env.BUILD_LOCALES || "")
   .split(",")
   .filter((x) => x);
@@ -50,7 +59,7 @@ const DEFAULT_INTERACTIVE_EXAMPLES_BASE_URL =
 
 const DEFAULT_POPULARITIES_FILEPATH =
   process.env.BUILD_POPULARITIES_FILEPATH ||
-  path.join(process.env.BUILD_ROOT, "..", "popularities.json");
+  path.join(DEFAULT_BUILD_ROOT, "..", "popularities.json");
 
 // The Google Analytics pageviews CSV file parsed, sorted (most pageviews
 // first), and sliced to this number of URIs that goes into the JSON file.
@@ -132,6 +141,9 @@ module.exports = {
   // DEFAULT_DESTINATION,
   DEFAULT_DATABASE_URL,
   DEFAULT_EXCLUDE_SLUG_PREFIXES,
+  DEFAULT_BUILD_ROOT,
+  DEFAULT_BUILD_ARCHIVE_ROOT,
+  DEFAULT_BUILD_DESTINATION,
   DEFAULT_BUILD_LOCALES,
   DEFAULT_BUILD_NOT_LOCALES,
   DEFAULT_SITEMAP_BASE_URL,
