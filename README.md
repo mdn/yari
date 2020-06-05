@@ -1,16 +1,15 @@
-# yari
+# Yari
 
 <!-- https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#adding-a-workflow-status-badge-to-your-repository -->
 
-![](https://github.com/mdn/yari/workflows/.github/workflows/testing.yml/badge.svg)
+![](https://github.com/mdn/yari/workflows/Testing%20Yari/badge.svg)
 
 ## Quickstart
 
 These steps should get you started, locally, straight away:
 
-    git clone --recursive https://github.com/mdn/yari.git
+    git clone https://github.com/mdn/yari.git
     cd yari
-    cp .env-dist .env
     yarn
     yarn start
     open http://localhost:3000
@@ -18,240 +17,111 @@ These steps should get you started, locally, straight away:
 To really understand how it starts and how to break down the various
 tools, open `Procfile` or the `package.json`. Or, read on...
 
-### Stumptown-content
+If you prefer, you can fork the repo first and do the `git clone` with
+*your* fork instead of the `mdn` one.
 
-By default, content from `stumptown-content` is not included. To add it
-you need to do two things.
+### How to stay up-to-date
 
-1. Edit your `.env` file to put where the packaged `stumptown-content` files
-   are. For example: `BUILD_STUMTPTOWN_ROOT=/path/to/stumptown-content/packaged`
-
-2. Go into your `stumptown-content` folder (if you use the default
-   git submodule it's in `./stumptown`) and run `npm install && npm run build-json`
-
-Now, when building content it will read from **multiple sources** in a
-predetermined order.
-
-Note! In a future revision we will probably not use the filesystem but inside
-fully integrate `stumptown-content` as a Node package and execute its tools
-for turning `.md` files into `.json` files that the builder can use.
-
-### Archive content
-
-Archive content is content that does not get included by default. Its files
-are treated differently. For example, the HTML blobs can not contain
-`KumaScript` and they don't get included in sitemap XML files for example.
-
-## Overview
-
-[stumptown-content](https://github.com/mdn/stumptown-content) is a
-couple of things:
-
-1. **It's the source of truth.** The content comes in the form of `.md` files and
-   associated `.yaml` files that supplies the required metadata. These files
-   are what's expected to be edited, with pull requests, by people who want to
-   improve the content.
-
-2. **Recipe definitions.** It's a bit like a template if you like. Each section
-   of content is broken up into pieces, by keys, such as `prose.short_description`.
-   What the recipes do is they dictate how these pieces are supposed to be put
-   together in a final block of HTML.
-
-3. **Scripts** that convert `.md` files (with their respective `.yaml` file)
-   into blocks of HTML strings. These are put into `.json` files keyed by the
-   pieces for each content page. Once transformed from `.md` to `.json`,
-   together with the recipe, you can construct a final block of HTML
-
-What _this_ project does is;
-
-**From content in stumptown, produce HTML using React components.**
-
-But this project also attempts to make those pages ready for viewing
-in a browser. It uses `create-react-app` to define a HTML template and
-the React components within are used in two different ways:
-
-1. You execute the command line program to produce ready-to-statically-serve
-   `.html` files that can be opened without an application server. (e.g. Nginx
-   or Netlify)
-
-2. All the React components that are used by the cli are usable in the
-   browser too. For every produced `<page>/index.html` file there's also
-   a `<page>/index.json` which contains all the information to be able to
-   render it client-side after an XHR request gathers the information.
-
-## Installing
-
-If you haven't already done so, run:
-
-    cd where/you/want/to/clone/it
-    git clone --recursive https://github.com/mdn/yari.git
-    cd yari
-
-You need a decent version of `node` (>= 10.11.0), `yarn`, and `npm`.
-
-After you have cloned the repo and want to pull in upstream changes run:
+Periodically, the code and the content changes. Make sure you're staying
+up-to-date with these commands:
 
     git pull origin master
-    git submodule update
+    yarn
+    yarn clean
+    yarn start
+
+These are also good steps to always take when you embark on making a change.
+Then, the only extra command needed is `git checkout -b my-new-branch`
+(or however you prefer to create new `git` branches)
+
+## License
+
+All source code is MPL-2.0.
+
+For content, see [issue #408](https://github.com/mdn/yari/issues/408).
+
+## How it works
+
+Yari is multiple things but at its core is the MDN content as `index.html`
+files, in `git`, that contain the metadata (as front-matter) and
+the bulk of the document.
+
+The builder converts these "source files" into "build files" using a CLI tool
+that iterates over the files, builds the HTML, and lastly packages it up
+with the front-end code, ready to be served as static files.
 
 ## Development
 
-To do local development, there are many services to start. The simplest
-is to use `nf` which is a dev dependency that gets installed by the
-root `package.json` and executed like this:
+First of all, development on `yari` can mean the source code (e.g. the
+styling of the header) or it can mean the content, since it's all one
+repo. This document doesn't distinguish between the two. In the future we
+might expand with more documentation specifically for contributing to the
+content exclusively.
 
-    yarn
-    yarn start
+The `yarn start` command encapsulates the front-end dev server
+(on `localhost:3000`) and the `server` (on `localhost:5000`)
+as well as the `watcher`. The `watcher` triggers a build when a
+file changes (or is added!).
+The `yarn start` command also first runs a command that gathers up *all*
+the document URLs and their titles (plus some other metadata). This can
+take a while but it's cached to disk and is automatically invalidated if
+any of the source code changes.
 
-That will start a React dev-server at `http://localhost:3000`. If you
-change any of them files in `client/src` it will reload and refresh your
-browser. If you edit any of the Markdown files in `stumptown` it will
-repackage that file and refresh your browser too.
-
-Note! We hope to use, as an alternative to `nf`, `docker-compose`.
-See [https://github.com/mdn/yari/issues/23](https://github.com/mdn/yari/issues/23)
-But even then, using `docker-compose` should and will be optional.
-
-## Contributing
-
-Open two terminals. In one, run (this will take a little time the first time):
-
-    yarn workspace server start
-
-In another terminal:
-
-    yarn workspace client start
-
-Now you should have two servers:
-
-1. [http://localhost:3000](http://localhost:3000) (open this in your browser)
-
-2. [http://localhost:5000](http://localhost:5000)
-
-Note that when you run the `React` dev server (on `localhost:3000`) it
-depends on the files built by `stumptown` and consequently built by
-the `cli`. You can now hack on the key `React` components and just refresh
-the browser to see the effect immediately. If you want re-build the
-content made available to the `React` components, open another terminal
-and run:
-
-    yarn build
-
-To re-run any of the installation and build steps you can, at any time,
-run:
-
-    yarn
-
-### Testing production builds
-
-Suppose that you're working on a feature or bug that only relates to the
-files being compiled for production use, here's how you'd do that:
-
-    yarn deployment-build
-    yarn start server
-    open http://localhost:5000/
-
-You can keep the `yarn start server` in a separate terminal and keep it
-as you run `yarn deployment-build` over and over. That server, on port 5000,
-just serves the built files and nothing else.
+All the sub-commands of `yarn start` can be broken down and run individually
+if you want to work more rapidly.
 
 ### Setting up `$EDITOR`
 
 If you configure an environment variable called `EDITOR`, either on your
 system as a whole or in the root `.env` file, it can be used in the development
-server to link to `stumptown-content` sources which, when clicked, opens in
+server to link to sources which, when clicked, opens in
 your preferred editor/IDE. For example, in the root:
 
     echo 'EDITOR=code' >> .env
 
 Now clicking certain links will open files directly in the currently open
-VSCode IDE.
+VSCode IDE. To test it, view any document on `http://localhost:3000` and
+click the "Edit in your editor" button.
 
-## Building
+### How the server works
 
-The beauty of `package.json` is that it's a recorded "snapshot" of some good
-working default commands. If you're trying to do something slightly different,
-such as hacking on some feature, you can open the `package.json` and take
-_inspriation_ from it rather than thinking it's the only way. So, open
-it and learn how the default commands work.
+The `server` has two main jobs:
 
-### Deployment Build
+1. Simulate serving the site (e.g. from a server, S3 or a CDN).
+2. Trigger builds of documents that haven't been built, by URL.
 
-For example, the most important command beyond the active development one
-mentioned in the section above is:
-
-    yarn deployment-build
-
-That one does "everything" and you end up with a full directory that has
-all the static bundles of JavaScript, CSS, and the .html files. That directory
-can be shipped to a static hosting platform like AWS S3 for example.
-
-Note that as part of `yarn start` it also starts up a plain HTTP server on
-`http://localhost:5000` which simply serves the generates static assets and the
-the `.html` files.
-
-### Building a specific file
-
-To build a page based on an existing content JSON, you need to run the cli with
-a relative path to the content.
-
-    cd cli
-    yarn start ../stumptown/packaged/html/HTML.json
-
-### Specifying a different content directory
-
-If you're actively working on a piece of content in `stumptown-content` but
-for convenience you don't want to mess with the `stumptown-content` that
-is available here in this project as a _git submodule_ (named `stumptown`),
-then you can set the `STUMPTOWN_CONTENT_ROOT` environment variable.
+If you don't use the server you can manually use the CLI to build a page.
 For example:
 
-    cd ~/projects/yari
-    # running 'yarn build' now would use ~/projects/yari/stumptown
-    yarn cross-env STUMPTOWN_CONTENT_ROOT=~/stumptown-content yarn build
-    # or
-    yarn cross-env STUMPTOWN_CONTENT_ROOT=~/stumptown-content yarn deployment-build
+    node content build -l en-us -f web/html/element
 
-### Security Auditing
+...will build all documents that match that folder prefix. But you don't
+need to do that up front since the server will "fill in the gaps" by
+triggering a build if you simply try to view it.
 
-To check that all node modules are up to date to secure versions you can run
+### Linting
 
-    yarn audit
-
-It will execute `yarn audit` in each sub-package. To remedy
-`yarn` auditing warnings, refer to the official `yarn` documentation.
-
-### Linting (formatting)
-
-Linting is done with Prettier. It's checked in CI but also installed as a
-git hook. The configuration (i.e. our choices) are deliberately omitted
-which means it applies all the _default choices_ from
-[stock Prettier](https://prettier.io/docs/en/options.html). For example,
-line width 80, 2 spaces indentation, semicolon strings, single quotes,
-no trailing commas, etc.
-
-To check _all_ files once run:
+All JavaScript and TypeScript code needs to be formatted with `prettier`
+and it's easy to test this with:
 
     yarn prettier-check
 
-To only check the files you have touched in the current git stage:
-
-    yarn pretty-quick --branch master
-
-Note this command **does not complain, it fixes**. Meaning, if you make an edit to a `.js` file and accidentally violate the Prettier rules, simply running this will _fix_ the violation. For example:
-
-    emacs client/src/app.js
-    yarn pretty-quick --branch master
-
-And if you just want to format all existing files (might be useful after
-you've run `yarn upgrade prettier --latest` for example):
+And conveniently, if you're not even interested in what the flaws were, run:
 
     yarn prettier-format
 
+But automatically when you ran `yarn` the first time (`yarn` is an alias for
+`yarn install`) it set up a `git` pre-commit hook that uses `pretty-quick`
+which is a wrapper on `prettier` that checks only the files in the git
+commit.
+
+If in doubt about formatting, you can create a pull request and if you have
+formatting flaws, the pull request checks should catch it.
+
 ### Adding dependencies
 
-To add a new NPM dependency into one of the workspaces, start a shell in the root
-directory. From there, type:
+To add a new `yarn` dependency into one of the workspaces, start
+a shell in the root directory. From there, type:
 
     yarn workspace client add some-lib
     # or...
@@ -259,27 +129,94 @@ directory. From there, type:
 
 This will update the `/yarn.lock` file and your `/node_modules`.
 
-NOTE! Due to a bug in `yarn` v1, you have to run `yarn install --ignore-scripts`
+**Note!** Due to a bug in `yarn` v1, you have to run `yarn install --ignore-scripts`
 one extra time so that the `/yarn.lock` file gets corrected. We hope to remove
 this requirement when we can switch to `yarn` v2 in 2020. For now, to make it
 easier for you, we have this added as a `huskey` `pre-commit` hook so simply
 committing your changes will fix it for you automatically.
 
-## Server-Sider Rendering
+### Upgrading Packages
 
-Usually, when doing local development work you don't need server-side
-rendering. But it's a luxury to have for these reasons:
+We maintain the dependencies using `Dependabot` in GitHub but if you want
+to manually upgrade some you can use:
 
-1. It's faster for the sake of SEO and will work in any non-JavaScript
-   enabled browser.
+    yarn outdated
 
-2. When all possible URLs are pre-generated and uploaded as static files
-   you don't need a clever server that knows to "reroute" all (non-static) URLs to
-   `/index.html`.
+If it mentions outdated packages, run and select the packages you want to
+upgrade:
 
-3. If you can, with the `cli`, generate every single possible file ready for
-   static serving there's an opportunity to do expensive post-processing such
-   as extracting critical CSS or calculating nonce for CSP headers.
+    yarn upgrade-interactive
+
+### Sharing your dev environment with `ngrok`
+
+[`ngrok`](https://ngrok.com/) is a great tool for starting a HTTP proxy
+server from the Internet into your Yari server. This can be useful for testing
+your current build on external tools like BrowserStack, WebPageTest,
+Google Translate, or to simply show a friend what you're up to. Obiviously
+it'll never be faster than your uplink Internet connection but it should
+be fairly feature complete.
+
+1. [Create in account on Ngrok.com](https://dashboard.ngrok.com/signup)
+2. [Download the executable](https://ngrok.com/download)
+3. Start your Yari server with `yarn start` in one terminal
+4. Start the `ngrok` executable with: `/path/to/your/ngrok http 5000`
+
+This will display something like this:
+
+    Session Status                online
+    Account                        (Plan: Free)
+    Version                       2.3.35
+    Region                        United States (us)
+    Web Interface                 http://127.0.0.1:4040
+    Forwarding                    http://920ba2108da8.ngrok.io -> http://localhost:5000
+    Forwarding                    https://920ba2108da8.ngrok.io -> http://localhost:5000
+
+    Connections                   ttl     opn     rt1     rt5     p50     p90
+                                0       0       0.00    0.00    0.00    0.00
+
+Now, take that "Forwarding" URL `https://920ba2108da8.ngrok.io` (in this
+example) and share it.
+
+## Building
+
+The `server` builds content automatically (on-the-fly) when you're viewing
+pages. But if you want to you can pre-emptively build all the content
+in advance. One potential advantage is that you can get a more complete
+list of all possible "flaws" across all documents before you even visit them.
+The most fundamental CLI command is:
+
+    yarn prebuild  # if you haven't run 'yarn start' recently
+    node content build
+
+You can use `--help` to find various options such as filtering. For example,
+to build all `en-US` documents under the `Web/CSS/` subtree, you can run this:
+
+    node content build -l en-us -f web/css
+
+The files get put into the `client/build/` and that folder should be ready
+to be uploaded to static file hosting. Note the `-f` (aka `--foldersearch`)
+is case-insensitive.
+
+### What gets built
+
+Every `index.html` becomes three files:
+
+* `index.html` fully formed and complete HTML file
+* `index.json` the React needed state to build the page in the client
+* `index.hash` a short hash digest of the cache key used to build this page
+
+### Caching
+
+When building, we attempt to use a disk-based cache. It computes a hash
+for every document by combining...
+
+* The content of the `index.html` file.
+* The combined source code of all `.js`, `.tsx`, and also all `package.json`
+  and `yarn.lock`.
+
+If you run `node content build -l en-us -f web/css` *twice* you'll find it
+runs *much* faster the second time. But any little change to any source
+code file should invalidate the cache.
 
 ### Flaw checks
 
@@ -289,75 +226,15 @@ severe but they should never block a full build.
 
 More information about how to set flaws can be found in `docs/envvars.md`.
 
-## Deployment
+Essentially, the default is to *warn* about any flaw and you can see
+those flaws when using `http://localhost:3000`. But for completed builds,
+all flaws are ignored. This makes the build faster and there's also
+no good place to display the flaws in a production-grade build.
 
-Deployment means that you prepare one whole single directory that is
-all that is needed. This build directory is ready to ship to wherever you
-host your static site. Build everything with:
-
-    yarn deployment-build
-
-What it does is a mix of `yarn workspace server start` and
-`yarn workspace client start` but without starting a server. It also,
-builds a `index.html` file for every document found and processed by the
-`cli`. This whole directory is ready to be uploaded to S3 or Netlify.
-
-## Goals and Not-Goals
-
-Number one goal right now: **Being able to turn a stumptown content into
-a HTML block that you can view in a browser.**
-
-Another useful goal is that building HTML pages is the ultimate litmus
-test to check that the whole chain works. If a pull request is made against
-`content/html/properties/video/prose.md` you should be able to render that.
-If the rendering fails, it's most likely due to a serious problem in the
-the `prose.md` (or the `meta.yaml`) file.
-
-It's not a goal to slot this perfectly into `kuma`. First and foremost
-the React components, that takes the `.json` from stumptown's packaging,
-can produce a valid DOM as a string.
-
-It's not a goal to have every feature that `kuma` has.
-
-## Nice To Haves
-
-In principle since every piece of content (transformed) is available
-it can be used to feed a graph so that we can have automatic relevant
-links. E.g. the `html/content/properties/video/` should know that
-`html/content/properties/canvas/` is available and within the same reach.
-
-Also, we can use the content to feed a full-text search engine. Be that
-Elasticsearch or FlexSearch it will need a dynamic server which
-we don't yet have.
-
-At the moment, a cli produces the fully viewable `index.html` files.
-This has advantages that we can prepare every single page in something
-like a deployment script or a build step in CI. But we could also start
-a Node ExpressJS server and do the same thing there. The URL is the input
-instead of the file path on disk.
-
-## Upgrading Packages
-
-First, to find out which applications have out-of-date packages, run:
-
-    yarn outdated
-
-If it mentions outdated packages, run and select the packages you want to
-upgrade:
-
-    yarn upgrade-interactive
-
-### Upgrading React
-
-React is used in at least two places; the `client` and the `cli`. It's
-important that both of these project folders have the same version of React
-so that server-side rendering and client-side rendering have matching version.
-
-Also, `react` and `react-dom` should be upgraded at the same time since they
-share release cycles. To do that run the following and make sure to update
-both the client's and the cli's `react` and `react-dom` dependencies.
-
-    yarn upgrade-interactive --latest
+**In the future**, we might make the default flaw level `error` instead.
+That means that any new edits to (or creation of) any document will break
+in continuous integration if there's a single flaw and the onus will
+be on you to fix it.
 
 ## Icons and logos
 
