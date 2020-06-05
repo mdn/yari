@@ -77,8 +77,6 @@ jobs:
 
           node content build --no-progressbar --files="${GIT_DIFF}"
 
-      - name: Upload build to S3
-        if: steps.git_diff_content.outputs.diff
-        run: |
+          # Upload the lot!
           cd deployer
           poetry run deployer upload --help
