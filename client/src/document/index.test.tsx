@@ -30,7 +30,6 @@ const sampleDocumentState = Object.freeze({
 });
 
 describe("test viewing a simple document", () => {
-
   test("render document with props should not crash", async () => {
     const xhrSpy = jest.spyOn(global, "fetch");
 
@@ -73,5 +72,4 @@ describe("test viewing a simple document", () => {
     await waitFor(() => getByText(/Hello World!/));
     await waitFor(() => getByText(/Sample Page/));
   });
-
 });
