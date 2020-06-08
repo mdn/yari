@@ -71,9 +71,9 @@ use `fs.readFileSync()` and `cheerio` etc. to inspect the created files in
 `client/build/**`.
 
 We use [`jest-puppeteer`](https://github.com/smooth-code/jest-puppeteer) and
-its README is very relevant to help you write tests. And this links to
+its README is very relevant to help you write tests. Here's the link to
 the [document for `expect-puppeteer`](https://github.com/smooth-code/jest-puppeteer/blob/master/packages/expect-puppeteer/README.md#api)
-which is your best friend writing headless tests.
+which is your best friend when writing headless tests.
 
 To get started, open `testing/tests/headless.test.js` and make changes there.
 If you need a new page to open, you need to add that to
@@ -100,7 +100,7 @@ In a separate terminal, run all the tests:
 As you notice, that shell script actually does a lot. It prebuilds the
 assets, builds the actual documents, and it runs _all_ `jest` tests.
 
-To just run, all `jest` tests, just run the last command:
+To just run all `jest` tests, just run the last command:
 
 ```sh
 yarn workspace testing run test
@@ -122,7 +122,7 @@ the server as a setup (and teardown) step.
 
 ## Debugging headless tests
 
-What's very likely is that you might be sure what you and how to test
+It's very likely that you'll want to see and test
 what the headless browser sees. To help with that there are a couple of
 useful tricks.
 

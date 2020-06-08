@@ -63,7 +63,7 @@ jobs:
       - name: Functional testing
         run: |
           # Make this env var explicit for GitHub Actions because in local
-          # dev/debug you're encourage to start it yourself in a separate
+          # dev/debug you're encouraged to start it yourself in a separate
           # terminal.
           export TESTING_START_SERVER=true
           ./testing/scripts/functional-test.sh --runInBand
