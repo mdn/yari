@@ -67,11 +67,12 @@ jobs:
           # terminal.
           export TESTING_START_SERVER=true
 
-	  # In terms of the --maxWorkers option, it's not yet clear which is best.
-	  # See https://jestjs.io/docs/en/troubleshooting#tests-are-extremely-slow-on-docker-andor-continuous-integration-ci-server
-	  # and https://www.peterbe.com/plog/ideal-number-of-workers-in-jest-maxWorkers
-	  # CI tends to have fewer CPUs than laptops so let's stay conservative
-	  # for now.
-	  # Also note that `--runInBand` is the same as `--maxWorkers=1`
+          # In terms of the --maxWorkers option, it's not yet clear which
+          # is best.
+          # See https://jestjs.io/docs/en/troubleshooting#tests-are-extremely-slow-on-docker-andor-continuous-integration-ci-server
+          # and https://www.peterbe.com/plog/ideal-number-of-workers-in-jest-maxWorkers
+          # CI tends to have fewer CPUs than laptops so let's stay conservative
+          # for now.
+          # Also note that `--runInBand` is the same as `--maxWorkers=1`
 
           ./testing/scripts/functional-test.sh --runInBand
