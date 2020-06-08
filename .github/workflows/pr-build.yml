@@ -90,4 +90,5 @@ jobs:
 
           # Upload the lot!
           cd deployer
+          poetry install
           poetry run deployer upload --help
