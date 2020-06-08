@@ -79,4 +79,4 @@ jobs:
 
           # Upload the lot!
           cd deployer
-          poetry run deployer upload --help
+          run deployer upload --help
