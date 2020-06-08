@@ -21,7 +21,7 @@ jobs:
         run: |
           echo ${{ steps.git_diff_content.outputs.diff }}
 
-      - name: Setup Node.js environment
+      - name: Install Node
         uses: actions/setup-node@v2-beta
         with:
           node-version: "12"
@@ -29,6 +29,12 @@ jobs:
         run: |
           node --version
           yarn --version
+
+      - name: Install Python
+        if: steps.git_diff_content.outputs.diff
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
 
       - name: Install Python poetry
         if: steps.git_diff_content.outputs.diff
