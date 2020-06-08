@@ -1,0 +1,91 @@
+---
+title: Array.unobserve()
+slug: Web/JavaScript/Reference/Global_Objects/Array/unobserve
+summary: >-
+  The Array.unobserve() method was used to remove observers set by
+  Array.observe(), but has been deprecated and removed from Browsers. You can
+  use the more general Proxy object instead.
+tags:
+  - Array
+  - JavaScript
+  - Method
+  - Obsolete
+---
+<div>{{JSRef}} {{obsolete_header}}</div>
+
+<p>The Array<strong>.unobserve()</strong> method was used to remove observers set by {{jsxref("Array.observe()")}}, but has been deprecated and removed from Browsers. You can use the more general {{jsxref("Proxy")}} object instead.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox">Array.unobserve(<var>arr</var>, <var>callback</var>)</pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<dl>
+ <dt><code>arr</code></dt>
+ <dd>The array to stop observing.</dd>
+ <dt><code>callback</code></dt>
+ <dd>The reference to the observer to stop calling each time changes are made on the array <strong>arr</strong>.</dd>
+</dl>
+
+<h2 id="Description">Description</h2>
+
+<p><code>Array.unobserve()</code> should be called after {{jsxref("Array.observe()")}} in order to remove an observer from an array.</p>
+
+<p>The callback should be a reference to a function and not an anonymous function, because this reference will be used to unset the previous observer. It's useless to call <strong>Array.unobserve() </strong>with an anonymous function as callback, it will not remove any observer.</p>
+
+<h2 id="Examples">Examples</h2>
+
+<h3 id="Unobserving_an_array">Unobserving an array</h3>
+
+<pre class="brush: js">var arr = [1, 2, 3];
+
+var observer = function(changes) {
+  console.log(changes);
+}
+
+Array.observe(arr, observer);
+​
+arr.push(4);
+// [{type: "splice", object: &lt;arr&gt;, index: 3, removed:[], addedCount: 1}]
+
+Array.unobserve(arr, observer);
+
+arr.pop();
+// The callback wasn't called</pre>
+
+<h3 id="Using_an_anonymous_function">Using an anonymous function</h3>
+
+<pre class="brush: js">var persons = ['Khalid', 'Ahmed', 'Mohammed'];
+
+Array.observe(persons, function (changes) {
+  console.log(changes);
+});
+
+persons.shift(); 
+// [{type: "splice", object: &lt;arr&gt;, index: 0, removed: [ "Khalid" ], addedCount: 0 }]
+
+Array.unobserve(persons, function (changes) {
+  console.log(changes);
+});
+
+persons.push('Abdullah');
+// [{type: "splice", object: &lt;arr&gt;, index: 2, removed: [], addedCount: 1 }]
+// The callback will always be called
+</pre>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div>
+<div class="hidden">The compatibility table in this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.builtins.Array.unobserve")}}</p>
+</div>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("Array.observe()")}} {{obsolete_inline}}</li>
+ <li>{{jsxref("Object.observe()")}} {{obsolete_inline}}</li>
+ <li>{{jsxref("Object.unobserve()")}} {{obsolete_inline}}</li>
+</ul>

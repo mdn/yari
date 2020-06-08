@@ -1,0 +1,74 @@
+---
+title: Object.prototype.unwatch()
+slug: Web/JavaScript/Reference/Global_Objects/Object/unwatch
+summary: The unwatch() method removes a watchpoint set with the watch() method.
+tags:
+  - Debugging
+  - Deprecated
+  - JavaScript
+  - Method
+  - Object
+  - Obsolete
+  - Prototype
+  - Reference
+---
+<div>{{JSRef}}</div>
+
+<div class="warning">
+<p><strong>Deprecation warning:</strong> Do not use <code>unwatch()</code> and {{jsxref("Object.prototype.watch", "watch()")}}! These two methods were implemented only in Firefox prior to version 58, they're <strong>deprecated and removed in Firefox 58+</strong>. In addition, using watchpoints has a serious negative impact on performance, which is especially true when used on global objects, such as <code>window</code>. You can usually use <a href="/en-US/docs/Web/JavaScript/Guide/Working_with_Objects#Defining_getters_and_setters">setters and getters</a> or <a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy">proxies</a> instead.</p>
+</div>
+
+<p>The <code><strong>unwatch()</strong></code> method removes a watchpoint set with the {{jsxref("Object.prototype.watch", "watch()")}} method.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox"><code><var>obj</var>.unwatch(<var>prop</var>)</code></pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<dl>
+ <dt><code>prop</code></dt>
+ <dd>The name of a property of the object to stop watching.</dd>
+</dl>
+
+<h3 id="Return_value">Return value</h3>
+
+<p>{{jsxref("undefined")}}.</p>
+
+<h2 id="Description">Description</h2>
+
+<p>The JavaScript debugger has functionality similar to that provided by this method, as well as other debugging options. For information on the debugger, see <a href="/en-US/docs/Venkman">Venkman</a>.</p>
+
+<p>By default, this method is inherited by every object descended from {{jsxref("Object")}}.</p>
+
+<div class="note">
+<p><strong>Note:</strong> The reason for <code>unwatch()</code> to take the property name <em>prop</em> as its only parameter is due to the "single handler allowing" behavior of the {{jsxref("Object.watch", "watch()")}} method.</p>
+</div>
+
+<h2 id="Examples">Examples</h2>
+
+<p>See {{jsxref("Object.watch", "watch()")}}.</p>
+
+<h2 id="Specifications">Specifications</h2>
+
+<p>Not part of any specifications. Implemented in JavaScript 1.2.</p>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div>
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.builtins.Object.unwatch")}}</p>
+</div>
+
+<h2 id="Compatibility_notes">Compatibility notes</h2>
+
+<ul>
+ <li>Calling <code>unwatch()</code> on the <a href="/en-US/docs/Web/API/Document" title="The Document interface represents any web page loaded in the browser and serves as an entry point into the web page's content, which is the DOM tree."><code>Document</code></a> object throws a {{jsxref("TypeError")}} since Firefox 23 ({{bug(903332)}}). This regression has been fixed with Firefox 27.</li>
+</ul>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("Object.watch()")}}</li>
+</ul>

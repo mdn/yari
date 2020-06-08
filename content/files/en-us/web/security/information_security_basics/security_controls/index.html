@@ -1,0 +1,52 @@
+---
+title: Security Controls
+slug: Web/Security/Information_Security_Basics/Security_Controls
+summary: "Sensitive data should be protected based on the potential impact of a loss of confidentiality, integrity, or availability. Protection measures (otherwise known as security controls) tend to fall into two categories. First, security weaknesses in the system need to be resolved. For example, if a system has a known vulnerability\_that attackers could exploit, the system should be patched so that the vulnerability is removed or mitigated. Second, the system should offer only the required functionality to each authorized user, so that no one can use functions that are not necessary. This principle is known as least privilege. Limiting functionality and resolving security weaknesses have a common goal: give attackers as few opportunities as possible to breach a system."
+tags:
+  - Beginner
+  - Security
+  - Tutorial
+---
+<div class="summary" style="margin: 0px 0px 20px; padding: 20px; border: 0px; font-weight: 700; color: rgb(77, 78, 83); font-family: 'Open Sans', sans-serif; font-size: 14px; font-style: normal; font-variant: normal; letter-spacing: normal; line-height: 21px; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; background: rgb(244, 247, 248);">
+<p style="margin: 0px; padding: 0px; border: 0px;">This article discusses security controls, explaining the major categories and why they are all relevant, and exploring their weaknesses.</p>
+</div>
+
+<p>Sensitive data should be protected based on the potential impact of a loss of confidentiality, integrity, or availability. Protection measures (otherwise known as<em> security controls</em>) tend to fall into two categories. First, security weaknesses in the system need to be resolved. For example, if a system has a known vulnerability that attackers could exploit, the system should be patched so that the vulnerability is removed or mitigated. Second, the system should offer only the required functionality to each authorized user, so that no one can use functions that are not necessary. This principle is known as <em>least privilege</em>. Limiting functionality and resolving security weaknesses have a common goal: give attackers as few opportunities as possible to breach a system.</p>
+
+<p>There are three types of security controls, as follows:</p>
+
+<ul>
+ <li><em>Management controls</em>: The security controls that focus on the management of risk and the management of information system security.</li>
+ <li><em>Operational controls</em>: The security controls that are primarily implemented and executed by people (as opposed to systems).</li>
+ <li><em>Technical controls</em>: The security controls that are primarily implemented and executed by the system through the system's hardware, software, or firmware.</li>
+</ul>
+
+<p>All three types of controls are necessary for robust security. For example, a security policy is a management control, but its security requirements are implemented by people (operational controls) and systems (technical controls). Think of phishing attacks. An organization may have an acceptable use policy that specifies the conduct of users, including not visiting malicious websites. Security controls to help thwart phishing, besides the management control of the acceptable use policy itself, include operational controls, such as training users not to fall for phishing scams, and technical controls that monitor emails and web site usage for signs of phishing activity.</p>
+
+<p>A common problem with security controls is that they often make systems less convenient or more difficult to use.  When usability is an issue, many users will attempt to circumvent security controls; for example, if passwords must be long and complex, users may write them down.  Balancing security, functionality, and usability is often a challenge.  The goal should be to strike a proper balance: provide a reasonably secure solution while offering the functionality and usability that users require.</p>
+
+<p>Another fundamental principle with security controls is using multiple layers of security—<em>defense in depth</em>.  For example, sensitive data on a server may be protected from external attack by several controls, including a network-based firewall, a host-based firewall, and OS patching.  The motivation for having multiple layers is that if one layer fails or otherwise cannot counteract a certain threat, other layers might prevent the threat from successfully breaching the system.  A combination of network-based and host-based controls is generally most effective at providing consistent protection.</p>
+
+<div class="originaldocinfo">
+<h3 id="Original_Document_Information" name="Original_Document_Information">Original Document Information</h3>
+
+<ul>
+ <li>Author(s): U.S. Department of Commerce</li>
+ <li>Title: Federal Information Processing Standard Publication 200, Minimum Security Requirements for Federal Information and Information Systems</li>
+ <li>Last Updated Date: March 2006</li>
+ <li>Copyright Information: This document is not subject to copyright.</li>
+</ul>
+</div>
+
+<div class="originaldocinfo">
+<h3 id="Original_Document_Information" name="Original_Document_Information">Original Document Information</h3>
+
+<ul>
+ <li>Author(s): Karen Scarfone, Wayne Jansen, and Miles Tracy</li>
+ <li>Title: NIST Special Publication 800-123, Guide to General Server Security</li>
+ <li>Last Updated Date: July 2008</li>
+ <li>Copyright Information: This document is not subject to copyright.</li>
+</ul>
+</div>
+
+<p>{{QuickLinksWithSubpages("/en-US/docs/Web/Security")}}</p>

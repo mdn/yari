@@ -1,0 +1,78 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Testing Yari
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: technote-space/get-diff-action@v1
+        id: git_diff_kumascript
+        with:
+          PREFIX_FILTER: |
+            kumascript/
+
+      - name: Display Git diffs
+        run: echo ${{ steps.git_diff_kumascript.outputs.diff }}
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: "12"
+      - name: Display Node & Yarn version
+        run: |
+          node --version
+          yarn --version
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install all yarn packages
+        run: |
+          ./testing/scripts/yarn-install.sh
+          ./testing/scripts/yarn-lockfile-check.sh
+
+      - name: Lint checking
+        run: ./testing/scripts/lint-check.sh
+
+      - name: Unit testing client
+        run: yarn workspace client run test
+
+      - name: Unit testing kumascript
+        run: yarn workspace kumascript run test
+        if: steps.git_diff_kumascript.outputs.diff
+
+      - name: Functional testing
+        run: |
+          # Make this env var explicit for GitHub Actions because in local
+          # dev/debug you're encouraged to start it yourself in a separate
+          # terminal.
+          export TESTING_START_SERVER=true
+
+          # In terms of the --maxWorkers option, it's not yet clear which
+          # is best.
+          # See https://jestjs.io/docs/en/troubleshooting#tests-are-extremely-slow-on-docker-andor-continuous-integration-ci-server
+          # and https://www.peterbe.com/plog/ideal-number-of-workers-in-jest-maxWorkers
+          # CI tends to have fewer CPUs than laptops so let's stay conservative
+          # for now.
+          # Also note that `--runInBand` is the same as `--maxWorkers=1`
+
+          ./testing/scripts/functional-test.sh --runInBand

@@ -1,0 +1,67 @@
+---
+title: '@cc_on'
+slug: Web/JavaScript/Microsoft_Extensions/at-cc-on
+summary: >-
+  The @cc_on statement activates conditional compilation support within comments
+  in a script.
+tags:
+  - JavaScript
+  - 'JavaScript:Microsoft Extensions'
+  - Non-standard
+  - Obsolete
+  - Reference
+  - Statement
+---
+<div>{{JSRef}}{{Non-standard_Header}}{{Obsolete_Header}}
+<div class="warning"><strong>Warning: </strong><span style="font-size: 1.125rem;">Conditional compilation is not supported in Internet Explorer 11 Standards mode and Windows 8.x Store apps. Conditional compilation is supported in Internet Explorer 10 Standards mode and in all earlier versions.</span></div>
+</div>
+
+<p>The <strong><code>@cc_on</code> statement </strong>activates conditional compilation support within comments in a script.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="brush: js">@cc_on
+</pre>
+
+<h3 id="Remarks">Remarks</h3>
+
+<p>The <code>@cc_on</code> statement activates conditional compilation within comments in a script.</p>
+
+<p>It is not common to use conditional compilation variables in scripts written for ASP or ASP.NET pages or command-line programs because the capabilities of the compilers can be determined by using other methods.</p>
+
+<p>When you write a script for a Web page, always put conditional compilation code in comments. This enables hosts that do not support conditional compilation to ignore it.</p>
+
+<p>It is strongly recommended that you use the <code>@cc_on</code> statement in a comment, so that browsers that do not support conditional compilation will accept your script as valid syntax:</p>
+
+<p>An <code>@if</code> or <code>@set</code> statement outside of a comment also activates conditional compilation.</p>
+
+<h2 id="Example">Example</h2>
+
+<p>The following example illustrates the use of the <code>@cc_on</code> statement.</p>
+
+<pre class="brush: js">/*@cc_on @*/  
+/*@  
+    document.write("JavaScript version: " + @_jscript_version + ".");  
+    document.write("&lt;br /&gt;");  
+    @if (@_win32)  
+        document.write("Running on the 32-bit version of Windows.");  
+    @elif (@_win16)  
+        document.write("Running on the 16-bit version of Windows.");  
+    @else  
+        document.write("Running on a different operating system.");  
+    @end  
+@*/
+</pre>
+
+<h2 id="Requirements">Requirements</h2>
+
+<p>Supported in all versions of Internet Explorer, but not in Windows 8.x Store apps.</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><a href="https://docs.microsoft.com/en-us/scripting/javascript/advanced/conditional-compilation-javascript">Conditional Compilation</a></li>
+ <li><a href="https://docs.microsoft.com/en-us/scripting/javascript/advanced/conditional-compilation-variables-javascript">Conditional Compilation Variables</a></li>
+ <li><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/at-if">@if Statement</a></li>
+ <li><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/at-set">@set Statement</a></li>
+</ul>

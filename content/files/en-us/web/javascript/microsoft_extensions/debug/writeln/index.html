@@ -1,0 +1,57 @@
+---
+title: Debug.writeln
+slug: Web/JavaScript/Microsoft_Extensions/Debug/writeln
+summary: >-
+  The debug.writeln function sends strings to the script debugger, followed by a
+  newline character.
+tags:
+  - Beginner
+  - JavaScript
+  - Method
+---
+<p>The <code><strong>debug.writeln</strong></code> <strong>function</strong> sends strings to the script debugger, followed by a newline character.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre><code>Debug.writeln([str1 [, str2 [, ... [, strN]]]])
+</code></pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<dl>
+ <dt><code>str1, str2, ... , strN </code>{{optional_inline}}</dt>
+ <dd>Strings to send to the script debugger.</dd>
+</dl>
+
+<h3 id="Remarks">Remarks</h3>
+
+<p>The <code>Debug.writeln</code> function sends strings, followed by a newline character, to the Immediate window of the Microsoft Script Debugger at run time. If the script is not being debugged, the <code>Debug.writeln</code> function has no effect.</p>
+
+<p>The <code>Debug.writeln</code> function is almost identical to the <code>Debug.write</code> function. The only difference is that the <code>Debug.write</code> function does not send a newline character after sending the strings.</p>
+
+<h2 id="Example">Example</h2>
+
+<p>This example uses the <code>Debug.writeln</code> function to display the value of the variable in the Immediate window of the Microsoft Script Debugger.</p>
+
+<div class="note">
+<p><strong>Note: </strong>To run this example, you must have a script debugger installed and the script must run in debug mode.</p>
+
+<p>Internet Explorer 8 includes the JavaScript debugger. If you are using an earlier version of Internet Explorer, see <a href="http://go.microsoft.com/fwlink/?LinkId=133801">How to: Enable and Start Script Debugging from Internet Explorer</a>.</p>
+</div>
+
+<pre class="brush: js"><code>var counter = 42;
+Debug.writeln("The value of counter is " + counter); </code>
+</pre>
+
+<h2 id="Requirements">Requirements</h2>
+
+<p>Supported in the following document modes: Quirks, Internet Explorer 6 standards, Internet Explorer 7 standards, Internet Explorer 8 standards, Internet Explorer 9 standards, Internet Explorer 10 standards, Internet Explorer 11 standards. Also supported in Store apps (Windows 8 and Windows Phone 8.1).</p>
+
+<p><strong>Applies To</strong>: <a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/Debug">Debug</a></p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("Debug")}}</li>
+ <li><code><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/Debug/write">Debug.write Function</a></code></li>
+</ul>

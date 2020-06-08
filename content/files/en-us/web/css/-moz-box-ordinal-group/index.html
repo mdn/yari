@@ -1,0 +1,67 @@
+---
+title: '-moz-box-ordinal-group'
+slug: Web/CSS/-moz-box-ordinal-group
+summary: >-
+  Indicates the ordinal group the element belongs to. Elements with a lower
+  ordinal group are displayed before those with a higher ordinal group.
+tags:
+  - CSS
+  - 'CSS:Mozilla Extensions'
+  - Flexible Box
+  - Non-standard
+  - Reference
+---
+<p>{{CSSRef}}</p>
+
+<p><strong>Warning: This is a property of the original CSS Flexible Box Layout Module draft, and has been replaced in newer drafts. See <a href="/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Using_CSS_flexible_boxes">Flexbox</a> for more information on what you should be using instead of this property.</strong></p>
+
+<h2 id="Summary">Summary</h2>
+
+<p>Indicates the ordinal group the element belongs to. Elements with a lower ordinal group are displayed before those with a higher ordinal group.</p>
+
+<h2 id="Values">Values</h2>
+
+<p>Values must be integers greater than zero. The default value for this property is 1.</p>
+
+<h2 id="Examples">Examples</h2>
+
+<pre class="brush: html">&lt;style type="text/css"&gt;
+  #Flexbox {
+    display: -ms-box;
+    display: -moz-box;
+    display: -webkit-box;
+  }
+
+  #text1 {
+    background: red;
+    -ms-box-ordinal-group: 4;
+    -moz-box-ordinal-group: 4;
+    -webkit-box-ordinal-group: 4;
+  }
+
+  #text2 {
+    background: green;
+    -ms-box-ordinal-group: 3;
+    -moz-box-ordinal-group: 3;
+    -webkit-box-ordinal-group: 3;
+  }
+
+  #text3 {
+    background: blue;
+    -ms-box-ordinal-group: 2;
+    -moz-box-ordinal-group: 2;
+    -webkit-box-ordinal-group: 2;
+  }
+
+  #text4 {
+    background: orange;
+  }
+&lt;/style&gt;
+
+&lt;div id="Flexbox"&gt;
+  &lt;div id="text1"&gt;text 1&lt;/div&gt;
+  &lt;div id="text2"&gt;text 2&lt;/div&gt;
+  &lt;div id="text3"&gt;text 3&lt;/div&gt;
+  &lt;div id="text4"&gt;text 4&lt;/div&gt;
+&lt;/div&gt;
+</pre>

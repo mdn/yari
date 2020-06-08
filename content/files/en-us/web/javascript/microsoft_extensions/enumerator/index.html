@@ -1,0 +1,103 @@
+---
+title: Enumerator
+slug: Web/JavaScript/Microsoft_Extensions/Enumerator
+summary: "The Enumerator object\_enables enumeration of items in a collection."
+tags:
+  - JavaScript
+  - Microsoft
+  - enumerable
+---
+<div>{{JSRef}}</div>
+
+<div class="warning"><strong>Non-standard. Do not use!</strong><br>
+This object is a Microsoft extension. It is supported in Internet Explorer only, not in Windows 8.x Store apps.</div>
+
+<p>The <strong>Enumerator object </strong>enables enumeration of items in a collection.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre>enumObj = new Enumerator([collection])
+</pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<dl>
+ <dt><code>enumObj</code></dt>
+ <dd>The variable name to which the <code>Enumerator</code> object is assigned.</dd>
+ <dt><code>collection</code> {{optional_inline}}</dt>
+ <dd>Any Collection object.</dd>
+</dl>
+
+<h3 id="Remarks">Remarks</h3>
+
+<p>Collections differ from arrays in that the members of a collection are not directly accessible. Instead of using indexes, as you would with arrays, you can move the current item pointer only to the first or next element of a collection.</p>
+
+<p>The <code>Enumerator</code> object provides a way to access any member of a collection and behaves similarly to the <code>For...Each</code> statement in VBScript.</p>
+
+<h2 id="Example">Example</h2>
+
+<p>The following code shows the usage of the <code>Enumerator</code> object:</p>
+
+<pre class="brush: js">var bytesPerGB = 1024 * 1024 * 1024;  
+
+var fso = new ActiveXObject("Scripting.FileSystemObject");  
+
+document.write(fso.Drives);  
+var e = new Enumerator(fso.Drives);  
+
+var driveString = "";  
+
+e.moveFirst();  
+while (e.atEnd() == false)  
+{  
+    var drv = e.item();  
+
+    driveString += drv.Path + " - ";  
+
+    if (drv.IsReady){  
+        var freeGB = drv.FreeSpace / bytesPerGB;  
+        var totalGB = drv.TotalSize / bytesPerGB;  
+
+        driveString += freeGB.toFixed(3) + " GB free of ";  
+        driveString += totalGB.toFixed(3) + " GB";  
+    }  
+    else{  
+        driveString += "Not Ready";  
+    }  
+
+    driveString += "&lt;br /&gt;";;  
+
+    e.moveNext();  
+}  
+document.write(driveString);  
+
+// Output: &lt;drive information
+</pre>
+
+<h2 id="Properties">Properties</h2>
+
+<p>The <code>Enumerator</code> object has no properties.</p>
+
+<h2 id="Methods">Methods</h2>
+
+<dl>
+ <dt><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/Enumerator/atEnd"><code>Enumerator.atEnd</code></a></dt>
+ <dd>Returns a Boolean value indicating if the enumerator is at the end of the collection.</dd>
+ <dt><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/Enumerator/item"><code>Enumerator.item</code></a></dt>
+ <dd>Returns the current item in the collection.</dd>
+ <dt><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/Enumerator/moveFirst"><code>Enumerator.moveFirst</code></a></dt>
+ <dd>Resets the current item in the collection to the first item.</dd>
+ <dt><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/Enumerator/moveNext"><code>Enumerator.moveNext</code></a></dt>
+ <dd>Moves the current item to the next item in the collection.</dd>
+</dl>
+
+<h2 id="Requirements">Requirements</h2>
+
+<p>Supported in the following document modes: Quirks, Internet Explorer 6 standards, Internet Explorer 7 standards, Internet Explorer 8 standards, Internet Explorer 9 standards, and Internet Explorer 10 standards. Not supported in Windows 8.x Store apps.</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions">Microsoft JavaScript extensions</a></li>
+ <li><a href="/en-US/docs/Glossary/Boolean">Boolean Object</a></li>
+</ul>

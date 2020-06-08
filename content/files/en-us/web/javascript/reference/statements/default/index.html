@@ -1,0 +1,105 @@
+---
+title: default
+slug: Web/JavaScript/Reference/Statements/default
+summary: "The default keyword can be used in two situations in JavaScript: within a\_switch statement, or with an\_export statement."
+tags:
+  - JavaScript
+  - Keyword
+---
+<div>{{jsSidebar("Statements")}}</div>
+
+<p>The <strong>default keyword </strong>can be used in two situations in JavaScript: within a {{jsxref("Statements/switch", "switch")}} statement, or with an {{jsxref("Statements/export", "export")}} statement.</p>
+
+<div>{{EmbedInteractiveExample("pages/js/statement-default.html")}}</div>
+
+<p class="hidden">The source for this interactive example is stored in a GitHub repository. If you'd like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<p>Within a {{jsxref("Statements/switch", "switch")}} statement:</p>
+
+<pre class="syntaxbox">switch (expression) {
+  case value1:
+    //Statements executed when the result of expression matches value1
+    [break;]
+  default:
+    //Statements executed when none of the values match the value of the expression
+    [break;]
+}</pre>
+
+<p>With {{jsxref("Statements/export", "export")}} statement:</p>
+
+<pre class="syntaxbox">export default <em>nameN</em> </pre>
+
+<h2 id="Description">Description</h2>
+
+<p>For more details see the</p>
+
+<ul>
+ <li>{{jsxref("Statements/switch", "switch")}} statement and</li>
+ <li>{{jsxref("Statements/export", "export")}} statement pages.</li>
+</ul>
+
+<h2 id="Examples">Examples</h2>
+
+<h3 id="Using_default_in_switch_statements">Using <code>default</code> in <code>switch</code> statements</h3>
+
+<p>In the following example, if <code>expr</code> evaluates to "Oranges" or "Apples", the program matches the values with either the case "Oranges" or "Apples" and executes the corresponding statement. The <code>default</code> keyword will help in any other case and executes the associated statement.</p>
+
+<pre class="brush: js">switch (expr) {
+  case 'Oranges':
+    console.log('Oranges are $0.59 a pound.');
+    break;
+  case 'Apples':
+    console.log('Apples are $0.32 a pound.');
+    break;
+  default:
+    console.log('Sorry, we are out of ' + expr + '.');
+}</pre>
+
+<h3 id="Using_default_with_export">Using <code>default</code> with <code>export</code></h3>
+
+<p>If you want to export a single value or need a fallback value for a module, a default export can be used:</p>
+
+<pre class="brush: js">// module "my-module.js"
+let cube = function cube(x) {
+  return x * x * x;
+};
+export default cube;</pre>
+
+<p>Then, in another script, it will be straightforward to import the default export:</p>
+
+<pre class="brush: js">// module "another-module.js"
+import cube from 'my-module';
+// without default export we would need to write: import { cube } from 'my-module'
+console.log(cube(3)); // 27
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+  </tr>
+  <tr>
+   <td>{{SpecName('ESDraft', '#sec-switch-statement', 'switch statement')}}</td>
+  </tr>
+  <tr>
+   <td>{{SpecName('ESDraft', '#sec-exports', 'Exports')}}</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.statements.default")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("Statements/export", "export")}}</li>
+ <li>{{jsxref("Statements/switch", "switch")}}</li>
+</ul>

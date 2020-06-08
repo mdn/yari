@@ -1,0 +1,61 @@
+---
+title: Set.prototype.size
+slug: Web/JavaScript/Reference/Global_Objects/Set/size
+summary: >-
+  The size accessor property returns the number of (unique) elements in a Set
+  object.
+tags:
+  - ECMAScript 2015
+  - JavaScript
+  - Property
+  - Prototype
+  - set
+---
+<div>{{JSRef}}</div>
+
+<p>The <code><strong>size</strong></code> accessor property returns the number of (unique) elements in a {{jsxref("Set")}} object.</p>
+
+<div>{{EmbedInteractiveExample("pages/js/set-prototype-size.html")}}</div>
+
+<p class="hidden">The source for this interactive example is stored in a GitHub repository. If you'd like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</p>
+
+<h2 id="Description">Description</h2>
+
+<p>The value of <code>size</code> is an integer representing how many entries the <code>Set</code> object has. A set accessor function for <code>size</code> is <code>undefined</code>; you cannot change this property.</p>
+
+<h2 id="Examples">Examples</h2>
+
+<h3 id="Using_size">Using <code>size</code></h3>
+
+<pre class="brush:js">var mySet = new Set();
+mySet.add(1);
+mySet.add(5);
+mySet.add('some text')
+
+mySet.size; // 3
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+  </tr>
+  <tr>
+   <td>{{SpecName('ESDraft', '#sec-get-set.prototype.size', 'Set.prototype.size')}}</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.builtins.Set.size")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("Set")}}</li>
+</ul>

@@ -1,0 +1,90 @@
+---
+title: Intl.DateTimeFormat.prototype
+slug: Web/JavaScript/Reference/Global_Objects/DateTimeFormat/prototype
+summary: >-
+  The Intl.DateTimeFormat.prototype property represents the prototype object for
+  the Intl.DateTimeFormat constructor.
+tags:
+  - DateTimeFormat
+  - Internationalization
+  - Intl
+  - JavaScript
+  - Property
+  - Prototype
+---
+<div>{{JSRef}}</div>
+
+<p>The <strong><code>Intl.DateTimeFormat.prototype</code></strong> property represents the prototype object for the {{jsxref("DateTimeFormat", "Intl.DateTimeFormat")}} constructor.</p>
+
+<div>{{js_property_attributes(0, 0, 0)}}</div>
+
+<h2 id="Description">Description</h2>
+
+<p>See {{jsxref("DateTimeFormat")}} for a description of <code>Intl.DateTimeFormat</code> instances.</p>
+
+<p>{{jsxref("DateTimeFormat", "Intl.DateTimeFormat")}} instances inherit from <code>Intl.DateTimeFormat.prototype</code>. Modifications to the prototype object are inherited by all {{jsxref("DateTimeFormat", "Intl.DateTimeFormat")}} instances.</p>
+
+<h2 id="Properties">Properties</h2>
+
+<dl>
+ <dt><code>Intl.DateTimeFormat.prototype.constructor</code></dt>
+ <dd>A reference to {{jsxref("DateTimeFormat", "Intl.DateTimeFormat")}}.</dd>
+</dl>
+
+<h2 id="Methods">Methods</h2>
+
+<dl>
+ <dt>{{jsxref("DateTimeFormat.format", "Intl.DateTimeFormat.prototype.format()")}}</dt>
+ <dd>Getter function that formats a date according to the locale and formatting options of this {{jsxref("DateTimeFormat", "DateTimeFormat")}} object.</dd>
+ <dt>{{jsxref("DateTimeFormat.formatToParts", "Intl.DateTimeFormat.prototype.formatToParts()")}}</dt>
+ <dd>Returns an {{jsxref("Array")}} of objects representing the date string in parts that can be used for custom locale-aware formatting.</dd>
+ <dt>{{jsxref("DateTimeFormat.resolvedOptions", "Intl.DateTimeFormat.prototype.resolvedOptions()")}}</dt>
+ <dd>Returns a new object with properties reflecting the locale and formatting options computed during initialization of the object.</dd>
+ <dt>{{jsxref("DateTimeFormat.formatRange", "Intl.DateTimeFormat.prototype.formatRange()")}}</dt>
+ <dd>This method receives two <a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/">Dates</a> and formats the date range in the most concise way based on the locale and options provided when instantiating {{jsxref("DateTimeFormat", "DateTimeFormat")}}.</dd>
+ <dt>{{jsxref("DateTimeFormat.formatRangeToParts", "Intl.DateTimeFormat.prototype.formatRangeToParts()")}}</dt>
+ <dd>This method receives two <a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/">Dates</a> and returns an Array of objects containing the locale-specific tokens representing each part of the formatted date range.</dd>
+</dl>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('ES Int Draft', '#sec-intl.datetimeformat.prototype', 'Intl.DateTimeFormat.prototype')}}</td>
+   <td>{{Spec2('ES Int Draft')}}</td>
+   <td></td>
+  </tr>
+  <tr>
+   <td>{{SpecName('ES Int 2.0', '#sec-12.2.1', 'Intl.DateTimeFormat.prototype')}}</td>
+   <td>{{Spec2('ES Int 2.0')}}</td>
+   <td></td>
+  </tr>
+  <tr>
+   <td>{{SpecName('ES Int 1.0', '#sec-12.2.1', 'Intl.DateTimeFormat.prototype')}}</td>
+   <td>{{Spec2('ES Int 1.0')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div>
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.builtins.Intl.DateTimeFormat.prototype")}}</p>
+</div>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("DateTimeFormat", "Intl.DateTimeFormat")}}</li>
+</ul>

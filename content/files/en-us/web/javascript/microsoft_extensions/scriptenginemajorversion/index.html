@@ -1,0 +1,52 @@
+---
+title: ScriptEngineMajorVersion
+slug: Web/JavaScript/Microsoft_Extensions/ScriptEngineMajorVersion
+summary: >-
+  The ScriptEngineMajorVersion function gets the major version number of the
+  scripting engine in use.
+tags:
+  - Example
+  - Internet Explorer
+  - JavaScript
+  - Method
+  - Non-standard
+  - ScriptEngine
+  - ScriptEngineMajorVersion
+---
+<div>{{JSRef}}</div>
+
+<div class="warning"><strong>Non-standard. Do not use!</strong><br>
+This object is a Microsoft extension and is only supported in Internet Explorer.</div>
+
+<p>The <strong><code>ScriptEngineMajorVersion</code> function</strong> gets the major version number of the scripting engine in use.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre>ScriptEngineMajorVersion()</pre>
+
+<h3 id="Remarks">Remarks</h3>
+
+<p>The return value corresponds directly to the version information contained in the dynamic-link library (DLL) for the scripting language in use.</p>
+
+<h2 id="Example">Example</h2>
+
+<p>The following example illustrates the use of the <code>ScriptEngineMajorVersion</code> function:</p>
+
+<pre class="brush: js">if (window.ScriptEngineMajorVersion) {  
+    console.log(window.ScriptEngine());   
+}  
+
+Output: &lt;current major version&gt;
+</pre>
+
+<h2 id="Requirements">Requirements</h2>
+
+<p>Supported in the following document modes: Quirks, Internet Explorer 6 standards, Internet Explorer 7 standards, Internet Explorer 8 standards, Internet Explorer 9 standards, Internet Explorer 10 standards, Internet Explorer 11 standards. Also supported in Store apps (Windows 8 and Windows Phone 8.1).</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/ScriptEngine">ScriptEngine Function</a></li>
+ <li><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/ScriptEngineBuildVersion">ScriptEngineBuildVersion Function</a></li>
+ <li><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/ScriptEngineMinorVersion">ScriptEngineMinorVersion Function</a></li>
+</ul>

@@ -1,0 +1,48 @@
+---
+title: RTCIdentityEvent.assertion
+slug: Web/API/RTCIdentityEvent/assertion
+summary: >-
+  The read-only property RTCIdentityEvent.assertion returns the DOMString
+  containing a blob being the coded assertion associated with the event.
+tags:
+  - Experimental
+  - Expérimental(2)
+  - Property
+  - RTCIdentyEvent
+  - Read-only
+  - Reference
+  - Référence(2)
+  - WebRTC
+---
+<p>{{APIRef("WebRTC")}}{{obsolete_header}}</p>
+
+<p>The read-only property <code>RTCIdentityEvent.assertion</code> returns the {{domxref("DOMString")}} containing a blob being the coded assertion associated with the event.</p>
+
+<div class="note">
+<p>Firefox implements the interface this property belongs to under the following name: <code>RTCPeerConnectionIdentityEvent.</code> It is likely that it will correct this name when it will unprefix {{domxref("RTCPeerConnection")}}, once spec and implementation will have been stabilized.</p>
+</div>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox"> var blob = <em>event</em>.assertion;</pre>
+
+<h2 id="Example">Example</h2>
+
+<pre class="brush: js">pc.onidentityresult = function( ev ) {
+                         alert("A new identity assertion (blob: '" +
+                               ev.assertion +
+                               "') has been generated.");
+                      }</pre>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.RTCIdentityEvent.assertion")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{event("identityresult")}}</li>
+ <li>{{domxref("RTCPeerConnection")}}</li>
+</ul>

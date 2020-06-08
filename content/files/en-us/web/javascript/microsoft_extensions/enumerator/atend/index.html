@@ -1,0 +1,85 @@
+---
+title: Enumerator.atEnd
+slug: Web/JavaScript/Microsoft_Extensions/Enumerator/atEnd
+summary: "The Enumerator.atEnd\_method returns a Boolean value indicating if the enumerator is at the end of the collection."
+tags:
+  - Enumerator
+  - Internet Explorer
+  - JavaScript
+  - Method
+  - Non-standard
+  - atEnd
+---
+<div>{{JSRef}}</div>
+
+<div class="warning"><strong>Non-standard. Do not use!</strong><br>
+This object is a Microsoft extension and is only supported in Internet Explorer.</div>
+
+<p>The <strong><code>Enumerator.atEnd</code> </strong><strong>method r</strong>eturns a Boolean value indicating if the enumerator is at the end of the collection.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre><code>myEnum.atEnd() </code>
+</pre>
+
+<h3 id="Remarks">Remarks</h3>
+
+<p>The required <em>myEnum</em> reference is any <code>Enumerator</code> object.</p>
+
+<p>The <code>atEnd</code> method returns <strong>true</strong> if the current item is the last one in the collection, the collection is empty, or the current item is undefined. Otherwise, it returns <strong>false</strong>.</p>
+
+<h2 id="Example">Example</h2>
+
+<p>In following code, the <code>atEnd</code> method is used to determine if the end of a list of drives has been reached:</p>
+
+<pre class="brush: js">function ShowDrives()  
+{  
+    var s = "";  
+    var bytesPerGB = 1024 * 1024 * 1024;  
+
+    var fso = new ActiveXObject("Scripting.FileSystemObject");  
+    var e = new Enumerator(fso.Drives);  
+
+    e.moveFirst();  
+    while (e.atEnd() == false)  
+    {  
+        var drv = e.item();  
+
+        s += drv.Path + " - ";  
+
+        if (drv.IsReady)  
+        {  
+            var freeGB = drv.FreeSpace / bytesPerGB;  
+            var totalGB = drv.TotalSize / bytesPerGB;  
+
+            s += freeGB.toFixed(3) + " GB free of ";  
+            s += totalGB.toFixed(3) + " GB";  
+        }  
+        else  
+        {  
+            s += "Not Ready";  
+        }  
+
+        s += "&lt;br /&gt;";  
+
+        e.moveNext();  
+    }  
+    return(s);  
+}
+</pre>
+
+<h2 id="Requirements">Requirements</h2>
+
+<p>Supported in the following document modes: Quirks, Internet Explorer 6 standards, Internet Explorer 7 standards, Internet Explorer 8 standards, Internet Explorer 9 standards, and Internet Explorer 10 standards. Not supported in Windows 8.x Store apps.</p>
+
+<p><strong>Applies To</strong>: <a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/Enumerator">Enumerator Object</a></p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("Enumerator")}}</li>
+ <li><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/Enumerator/item">item Method (Enumerator)</a></li>
+ <li><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/Enumerator/moveFirst">moveFirst Method (Enumerator)</a></li>
+ <li><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/Enumerator/moveNext">moveNext Method (Enumerator)</a></li>
+ <li><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/Enumerator">Enumerator Object</a></li>
+</ul>

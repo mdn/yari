@@ -1,0 +1,2 @@
+# FROM-URL	TO-URL
+/bm/docs/Web/JavaScript/Reference/Global_Objects/Arraydd	/bm/docs/Web/JavaScript/Reference/Global_Objects/Array

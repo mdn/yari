@@ -1,0 +1,59 @@
+---
+title: Notification.onerror
+slug: Web/API/Notification/onerror
+summary: >-
+  The onerror property of the Notification interface specifies an event listener
+  to receive error events. These events occur when something goes wrong with a
+  Notification (in many cases an error preventing the notification from being
+  displayed.)
+tags:
+  - API
+  - DOM
+  - Notifications
+  - Property
+  - Reference
+  - onerror
+---
+<p>{{APIRef("Web Notifications")}}{{AvailableInWorkers}}{{securecontext_header}}</p>
+
+<p>The <strong><code>onerror</code></strong> property of the {{domxref("Notification")}} interface specifies an event listener to receive {{event("error")}} events. These events occur when something goes wrong with a {{domxref("Notification")}} (in many cases an error preventing the notification from being displayed.)</p>
+
+<h2 id="Syntax" name="Syntax">Syntax</h2>
+
+<pre class="syntaxbox"><em>Notification</em>.onerror = function() { ... };</pre>
+
+<h3 id="Value">Value</h3>
+
+<p>A {{jsxref("function")}} which serves as the event handler for the {{event("error")}} event. When an error occurs, the specified function will be called. If <code>null</code>, no error handler is in effect.</p>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('Web Notifications','#dom-notification-onerror','onerror')}}</td>
+   <td>{{Spec2('Web Notifications')}}</td>
+   <td>Initial specification.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.Notification.onerror")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{domxref("Notification")}}</li>
+ <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API/Using_the_Notifications_API">Using the Notifications API</a></li>
+</ul>

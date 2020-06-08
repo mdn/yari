@@ -1,0 +1,71 @@
+---
+title: Debug.msTraceAsyncCallbackStarting
+slug: Web/JavaScript/Microsoft_Extensions/Debug/msTraceAsyncCallbackStarting
+summary: >-
+  The debug.msTraceAsyncCallbackStarting function associates the callback stack
+  with a previously specified asynchronous operation.
+tags:
+  - Debug
+  - Example
+  - JavaScript
+  - Method
+  - msTraceAsyncCallbackStarting
+---
+<p>The <strong><code>debug.msTraceAsyncCallbackStarting</code> function</strong> associates the callback stack with a previously specified asynchronous operation.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre>Debug.msTraceAsyncCallbackStarting(asyncOperationId)</pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<dl>
+ <dt><code>asyncOperationId</code></dt>
+ <dd>The ID associated with the asynchronous operation.</dd>
+</dl>
+
+<h3 id="Remarks">Remarks</h3>
+
+<p>Call this function in the callback function for the asynchronous operation after the call to <code>Debug.msTraceAsyncOperationCompleted</code>.</p>
+
+<div class="note">
+<p><strong>Note: </strong>Some debugging tools do not display the information sent to the debugger.</p>
+</div>
+
+<p><code>asyncOperationId</code> must correspond to the operation name previously returned from <code>Debug.msTraceAsyncOperationStarting</code>.</p>
+
+<h2 id="Example">Example</h2>
+
+<p>The following code provides an example of tracing an asynchronous call for a Windows 8.x Store app.</p>
+
+<pre class="brush: js">function asyncWrapperFunction() {  
+    var opID = Debug.msTraceAsyncOperationStarting('async trace');  
+    doSomethingAsync().then(function (result) {  
+        Debug.msTraceAsyncOperationCompleted(opID, Debug.MS_ASYNC_OP_STATUS_SUCCESS);  
+        Debug.msTraceAsyncCallbackStarting(opID);  
+        // Process result of async operation.  
+    }, function (error) {  
+        Debug.msTraceAsyncOperationCompleted(opID, Debug.MS_ASYNC_OP_STATUS_ERROR);  
+        Debug.msTraceAsyncCallbackStarting(opID);  
+    });  
+
+    Debug.msTraceAsyncCallbackCompleted();  
+}  
+
+function doSomethingAsync() {  
+    return WinJS.Promise.as(true);  
+}  
+
+asyncWrapperFunction();
+</pre>
+
+<h2 id="Requirements">Requirements</h2>
+
+<p>Supported in the Internet Explorer 11 standards document mode. Also supported in Store apps (Windows 8.1 and Windows Phone 8.1).<br>
+ Not supported in the following document modes: Quirks, Internet Explorer 6 standards, Internet Explorer 7 standards, Internet Explorer 8 standards, Internet Explorer 9 standards, Internet Explorer 10 standards. Not supported in Windows 8.</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("Debug")}}</li>
+</ul>

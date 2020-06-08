@@ -1,0 +1,202 @@
+---
+title: Array comprehensions
+slug: Web/JavaScript/Reference/Operators/Array_comprehensions
+summary: >-
+  The array comprehension syntax was a JavaScript expression which allowed you
+  to quickly assemble a new array based on an existing one. However, it has been
+  removed from the standard and the Firefox implementation. Do not use it!
+tags:
+  - JavaScript
+  - Non-standard
+  - Obsolete
+  - Operator
+  - Reference
+---
+<div>{{jsSidebar("Operators")}}<div class="warning"><strong>Non-standard. Do not use!</strong><br>
+The array comprehensions syntax is non-standard and removed starting with Firefox 58. For future-facing usages, consider using {{jsxref("Array.prototype.map")}}, {{jsxref("Array.prototype.filter")}}, {{jsxref("Functions/Arrow_functions", "arrow functions", "", 1)}}, and {{jsxref("Operators/Spread_operator", "spread syntax", "", 1)}}.</div>
+{{Obsolete_Header(58)}}
+</div>
+
+<p>The <strong>array comprehension</strong> syntax was a JavaScript expression which allowed you to quickly assemble a new array based on an existing one. However, it has been removed from the standard and the Firefox implementation. Do not use it!</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox">[for (x of iterable) x]
+[for (x of iterable) if (condition) x]
+[for (x of iterable) for (y of iterable) x + y]
+</pre>
+
+<h2 id="Description">Description</h2>
+
+<p>Inside array comprehensions, these two kinds of components are allowed:</p>
+
+<ul>
+ <li>{{jsxref("Statements/for...of", "for...of")}} and</li>
+ <li>{{jsxref("Statements/if...else", "if")}}</li>
+</ul>
+
+<p>The for-of iteration is always the first component. Multiple for-of iterations or if statements are allowed.</p>
+
+<p>Array comprehension was previously proposed to be standardized in ECMAScript 2016, it provide a useful shortcut for constructing a new array based on the contents of another. Comprehensions can often be used in place of calls to {{jsxref("Array.prototype.map", "map()")}} and {{jsxref("Array.prototype.filter", "filter()")}}, or as a way of combining the two.</p>
+
+<p>The following comprehension takes an array of numbers and creates a new array of the double of each of those numbers.</p>
+
+<pre class="brush: js">var numbers = [1, 2, 3, 4];
+var doubled = [for (i of numbers) i * 2];
+console.log(doubled); // logs 2,4,6,8
+</pre>
+
+<p>This is equivalent to the following {{jsxref("Array.prototype.map", "map()")}} operation:</p>
+
+<pre class="brush: js">var doubled = numbers.map(i =&gt; i * 2);
+</pre>
+
+<p>Comprehensions can also be used to select items that match a particular expression. Here is a comprehension which selects only even numbers:</p>
+
+<pre class="brush: js">var numbers = [1, 2, 3, 21, 22, 30];
+var evens = [for (i of numbers) if (i % 2 === 0) i];
+console.log(evens); // logs 2,22,30
+</pre>
+
+<p>{{jsxref("Array.prototype.filter", "filter()")}} can be used for the same purpose:</p>
+
+<pre class="brush: js">var evens = numbers.filter(i =&gt; i % 2 === 0);
+</pre>
+
+<p>{{jsxref("Array.prototype.map", "map()")}} and {{jsxref("Array.prototype.filter", "filter()")}} style operations can be combined into a single array comprehension. Here is one that filters just the even numbers, then creates an array containing their doubles:</p>
+
+<pre class="brush: js">var numbers = [1, 2, 3, 21, 22, 30];
+var doubledEvens = [for (i of numbers) if (i % 2 === 0) i * 2];
+console.log(doubledEvens); // logs 4,44,60
+</pre>
+
+<p>The square brackets of an array comprehension introduce an implicit block for scoping purposes. New variables (such as i in the example) are treated as if they had been declared using {{jsxref("Statements/let","let")}}. This means that they will not be available outside of the comprehension.</p>
+
+<p>The input to an array comprehension does not itself need to be an array; <a href="/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators" title="en-US/docs/JavaScript/Guide/Iterators and Generators">iterators and generators</a> can also be used.</p>
+
+<p>Even strings may be used as input; to achieve the filter and map actions (under Array-like objects) above:</p>
+
+<pre class="brush: js">var str = 'abcdef';
+var consonantsOnlyStr = [for (c of str) if (!(/[aeiouAEIOU]/).test(c)) c].join(''); // 'bcdf'
+var interpolatedZeros = [for (c of str) c + '0' ].join(''); // 'a0b0c0d0e0f0'
+</pre>
+
+<p>Again, the input form is not preserved, so we have to use {{jsxref("Array.prototype.join", "join()")}} to revert back to a string.</p>
+
+<h2 id="Examples">Examples</h2>
+
+<h3 id="Simple_array_comprehensions">Simple array comprehensions</h3>
+
+<pre class="brush:js">[for (i of [1, 2, 3]) i * i ]; 
+// [1, 4, 9]
+
+var abc = ['A', 'B', 'C'];
+[for (letters of abc) letters.toLowerCase()];
+// ["a", "b", "c"]</pre>
+
+<h3 id="Array_comprehensions_with_if_statement">Array comprehensions with if statement</h3>
+
+<pre class="brush: js">var years = [1954, 1974, 1990, 2006, 2010, 2014];
+[for (year of years) if (year &gt; 2000) year];
+// [2006, 2010, 2014]
+[for (year of years) if (year &gt; 2000) if (year &lt; 2010) year];
+// [2006], the same as below:
+[for (year of years) if (year &gt; 2000 &amp;&amp; year &lt; 2010) year];
+// [2006] 
+</pre>
+
+<h3 id="Array_comprehensions_compared_to_map_and_filter">Array comprehensions compared to <code>map</code> and <code>filter</code></h3>
+
+<p>An easy way to understand array comprehension syntax, is to compare it with the Array {{jsxref("Array.map", "map")}} and {{jsxref("Array.filter", "filter")}} methods:</p>
+
+<pre class="brush: js">var numbers = [1, 2, 3];
+
+numbers.map(function (i) { return i * i });
+numbers.map(i =&gt; i * i);
+[for (i of numbers) i * i];
+// all are [1, 4, 9]
+
+numbers.filter(function (i) { return i &lt; 3 });
+numbers.filter(i =&gt; i &lt; 3);
+[for (i of numbers) if (i &lt; 3) i];
+// all are [1, 2]
+</pre>
+
+<h3 id="Array_comprehensions_with_two_arrays">Array comprehensions with two arrays</h3>
+
+<p>Using two for-of iterations to work with two arrays:</p>
+
+<pre class="brush: js">var numbers = [1, 2, 3];
+var letters = ['a', 'b', 'c'];
+
+var cross = [for (i of numbers) for (j of letters) i + j];
+// ["1a", "1b", "1c", "2a", "2b", "2c", "3a", "3b", "3c"]
+
+var grid = [for (i of numbers) [for (j of letters) i + j]];
+// [
+//  ["1a", "1b", "1c"],
+//  ["2a", "2b", "2c"],
+//  ["3a", "3b", "3c"]
+// ]
+
+[for (i of numbers) if (i &gt; 1) for (j of letters) if(j &gt; 'a') i + j]
+// ["2b", "2c", "3b", "3c"], the same as below:
+
+[for (i of numbers) for (j of letters) if (i &gt; 1) if(j &gt; 'a') i + j]
+// ["2b", "2c", "3b", "3c"]
+
+[for (i of numbers) if (i &gt; 1) [for (j of letters) if(j &gt; 'a') i + j]]
+// [["2b", "2c"], ["3b", "3c"]], not the same as below:
+
+[for (i of numbers) [for (j of letters) if (i &gt; 1) if(j &gt; 'a') i + j]]
+// [[], ["2b", "2c"], ["3b", "3c"]]
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<p>Was initially in the ECMAScript 2015 draft, but got removed in revision 27 (August 2014). Please see older revisions of ES2015 for specification semantics.</p>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.operators.array_comprehensions")}}</p>
+
+<h2 id="Differences_to_the_older_JS1.7JS1.8_comprehensions">Differences to the older JS1.7/JS1.8 comprehensions</h2>
+
+<div class="warning">JS1.7/JS1.8 comprehensions are removed from Gecko starting with version 46 ({{bug(1220564)}}).</div>
+
+<p><strong>Old comprehensions syntax (do not use anymore!):</strong></p>
+
+<pre class="brush: js example-bad">[X for (Y in Z)]
+[X for each (Y in Z)]
+[X for (Y of Z)]
+</pre>
+
+<p>Differences:</p>
+
+<ul>
+ <li>ESNext comprehensions create one scope per "for" node instead of the comprehension as a whole.
+  <ul>
+   <li>Old: <code>[()=&gt;x for (x of [0, 1, 2])][1]() // 2</code></li>
+   <li>New: <code>[for (x of [0, 1, 2]) ()=&gt;x][1]() // 1, each iteration creates a fresh binding for x. </code></li>
+  </ul>
+ </li>
+ <li>ESNext comprehensions start with "for" instead of the assignment expression.
+  <ul>
+   <li>Old: <code>[i * 2 for (i of numbers)]</code></li>
+   <li>New: <code>[for (i of numbers) i * 2]</code></li>
+  </ul>
+ </li>
+ <li>ESNext comprehensions can have multiple <code>if</code> and <code>for</code> components.</li>
+ <li>ESNext comprehensions only work with <code>{{jsxref("Statements/for...of", "for...of")}}</code> and not with <code>{{jsxref("Statements/for...in", "for...in")}}</code> iterations.</li>
+</ul>
+
+<p>See <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1220564#c42">Bug 1220564, comment 42</a> for suggestions on updating code.</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("Statements/for...of", "for...of")}}</li>
+ <li>{{jsxref("Operators/Generator_comprehensions", "Generator comprehensions", "" ,1)}}</li>
+</ul>

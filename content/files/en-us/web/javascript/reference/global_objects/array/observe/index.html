@@ -1,0 +1,95 @@
+---
+title: Array.observe()
+slug: Web/JavaScript/Reference/Global_Objects/Array/observe
+summary: >-
+  The Array.observe() method was used for asynchronously observing changes to
+  Arrays, similar to Object.observe() for objects. It provided a stream of
+  changes in order of occurrence. It's equivalent to Object.observe() invoked
+  with the accept type list ["add", "update", "delete", "splice"]. However, this
+  API has been deprecated and removed from Browsers. You can use the more
+  general Proxy object instead.
+tags:
+  - Array
+  - JavaScript
+  - Method
+  - Obsolete
+---
+<div>{{JSRef}} {{obsolete_header}}</div>
+
+<p>The <strong><code>Array.observe()</code></strong> method was used for asynchronously observing changes to Arrays, similar to {{jsxref("Object.observe()")}} for objects. It provided a stream of changes in order of occurrence. It's equivalent to <code>Object.observe()</code> invoked with the accept type list <code>["add", "update", "delete", "splice"]</code>. However, this API has been deprecated and removed from Browsers. You can use the more general {{jsxref("Proxy")}} object instead.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox">Array.observe(<var>arr</var>, <var>callback</var>)</pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<dl>
+ <dt><code>arr</code></dt>
+ <dd>The array to be observed.</dd>
+ <dt><code>callback</code></dt>
+ <dd>The function called each time changes are made, with the following argument:
+ <dl>
+  <dt><code>changes</code></dt>
+  <dd>An array of objects each representing a change. The properties of these change objects are:
+  <ul>
+   <li><strong><code>name</code></strong>: The name of the property which was changed.</li>
+   <li><strong><code>object</code></strong>: The changed array after the change was made.</li>
+   <li><strong><code>type</code></strong>: A string indicating the type of change taking place. One of <code>"add"</code>, <code>"update"</code>, <code>"delete"</code>, or <code>"splice"</code>.</li>
+   <li><strong><code>oldValue</code></strong>: Only for <code>"update"</code> and <code>"delete"</code> types. The value before the change.</li>
+   <li><strong><code>index</code></strong>: Only for the <code>"splice"</code> type. The index at which the change occurred.</li>
+   <li><strong><code>removed</code></strong>: Only for the <code>"splice"</code> type. An array of the removed elements.</li>
+   <li><strong><code>addedCount</code></strong>: Only for the <code>"splice"</code> type. The number of elements added.</li>
+  </ul>
+  </dd>
+ </dl>
+ </dd>
+</dl>
+
+<h2 id="Description">Description</h2>
+
+<p>The <code>callback</code> function is called each time a change is made to <code>arr</code>, with an array of all changes in the order in which they occurred.</p>
+
+<div class="note">
+<p>Changes done via Array methods, such as <a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/pop"><code>Array.prototype.pop()</code></a> will be reported as <code>"splice"</code> changes. Index assignment changes which do not change the length of the array may be reported as <code>"update"</code> changes.</p>
+</div>
+
+<h2 id="Examples">Examples</h2>
+
+<h3 id="Logging_different_change_types">Logging different change types</h3>
+
+<pre class="brush: js">var arr = ['a', 'b', 'c'];
+
+Array.observe(arr, function(changes) {
+  console.log(changes);
+});
+
+arr[1] = 'B';
+// [{type: 'update', object: &lt;arr&gt;, name: '1', oldValue: 'b'}]
+
+arr[3] = 'd';
+// [{type: 'splice', object: &lt;arr&gt;, index: 3, removed: [], addedCount: 1}]
+
+arr.splice(1, 2, 'beta', 'gamma', 'delta');
+// [{type: 'splice', object: &lt;arr&gt;, index: 1, removed: ['B', 'c'], addedCount: 3}]
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<p><a href="https://github.com/arv/ecmascript-object-observe">Strawman proposal specification</a>.</p>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div>
+<div class="hidden">The compatibility table in this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.builtins.Array.observe")}}</p>
+</div>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><a href="//stackoverflow.com/q/29269057/778272">Under what condition would Array.observe's “add” event trigger?</a></li>
+ <li>{{jsxref("Array.unobserve()")}} {{obsolete_inline}}</li>
+ <li>{{jsxref("Object.observe()")}} {{obsolete_inline}}</li>
+</ul>

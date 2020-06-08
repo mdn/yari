@@ -1,0 +1,76 @@
+---
+title: WebAssembly.Table.prototype
+slug: Web/JavaScript/Reference/Global_Objects/WebAssembly/Table/prototype
+summary: >-
+  The WebAssembly.Table.prototype property represents the prototype for the
+  WebAssembly.Table() constructor.
+tags:
+  - JavaScript
+  - Property
+  - Prototype
+  - WebAssembly
+  - table
+---
+<div>{{JSRef}} {{SeeCompatTable}}</div>
+
+<p>The <code><strong>WebAssembly.Table</strong></code><strong><code>.prototype</code></strong> property represents the prototype for the {{jsxref("WebAssembly.Table()")}} constructor.</p>
+
+<div>{{js_property_attributes(0, 0, 0)}}</div>
+
+<h2 id="Description">Description</h2>
+
+<p>All {{jsxref("WebAssembly.Table")}} instances inherit from <code>Table.prototype</code>. The prototype object of the {{jsxref("WebAssembly.Table()")}} constructor can be modified to affect all {{jsxref( "WebAssembly.Table")}} instances.</p>
+
+<h2 id="Properties">Properties</h2>
+
+<dl>
+ <dt><code>Table.prototype.constructor</code></dt>
+ <dd>Returns the function that created this object's instance. By default this is the {{jsxref("WebAssembly.Table()")}} constructor.</dd>
+ <dt>{{jsxref("WebAssembly/Table/length","Table.prototype.length")}}</dt>
+ <dd>Returns the length of the table, i.e. the number of references stored in the table.</dd>
+ <dt>
+ <h2 id="Methods">Methods</h2>
+ </dt>
+ <dt>{{jsxref("WebAssembly/Table/get","Table.prototype.get()")}}</dt>
+ <dd>Accessor function — gets a reference stored at a given index.</dd>
+ <dt>{{jsxref("WebAssembly/Table/grow","Table.prototype.grow()")}}</dt>
+ <dd>Increases the size of the Table instance by a specified number of references.</dd>
+ <dt>{{jsxref("WebAssembly/Table/set","Table.prototype.set()")}}</dt>
+ <dd>Mutates a reference stored at a given index to a different value.</dd>
+</dl>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('WebAssembly JS', '#table', 'Table')}}</td>
+   <td>{{Spec2('WebAssembly JS')}}</td>
+   <td>Initial draft definition.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div>
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.builtins.WebAssembly.Table.prototype")}}</p>
+</div>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("WebAssembly.Table")}}</li>
+ <li><a href="/en-US/docs/WebAssembly">WebAssembly</a> overview page</li>
+ <li><a href="/en-US/docs/WebAssembly/Concepts">WebAssembly concepts</a></li>
+ <li><a href="/en-US/docs/WebAssembly/Using_the_JavaScript_API">Using the WebAssembly JavaScript API</a></li>
+</ul>

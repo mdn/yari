@@ -1,0 +1,131 @@
+---
+title: break-inside
+slug: Web/CSS/break-inside
+summary: >-
+  The break-inside CSS property sets how page, column, or region breaks should
+  behave inside a generated box. If there is no generated box, the property is
+  ignored.
+tags:
+  - CSS
+  - CSS Fragmentation
+  - CSS Multi-column Layout
+  - CSS Property
+  - NeedsExample
+  - Reference
+---
+<div>{{CSSRef}}</div>
+
+<p>The <strong><code>break-inside</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property sets how page, column, or region breaks should behave inside a generated box. If there is no generated box, the property is ignored.</p>
+
+<pre class="brush:css no-line-numbers">/* Keyword values */
+break-inside: auto;
+break-inside: avoid;
+break-inside: avoid-page;
+break-inside: avoid-column;
+break-inside: avoid-region;
+
+/* Global values */
+break-inside: inherit;
+break-inside: initial;
+break-inside: unset;
+</pre>
+
+<p>Each possible break point (in other words, each element boundary) is affected by three properties: the {{cssxref("break-after")}} value of the previous element, the {{cssxref("break-before")}} value of the next element, and the <code>break-inside</code> value of the containing element.</p>
+
+<p>To determine if a break must be done, the following rules are applied:</p>
+
+<ol>
+ <li>If any of the three concerned values is a <em>forced break value</em> (<code>always</code>, <code>left</code>, <code>right</code>, <code>page</code>, <code>column</code>, or <code>region</code>), it has precedence. If more than one of them are such a break, the value of the element that appears the latest in the flow is used. Thus, the <code>break-before</code> value has precedence over the <code>break-after</code> value, which in turn has precedence over the <code>break-inside</code> value.</li>
+ <li>If any of the three concerned values is an <em>avoid break value</em> (<code>avoid</code>, <code>avoid-page</code>, <code>avoid-region</code>, or <code>avoid-column</code>), no such break will be applied at that point.</li>
+</ol>
+
+<p>Once forced breaks have been applied, soft breaks may be added if needed, but not on element boundaries that resolve in a corresponding <code>avoid</code> value.</p>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax" name="Syntax">Syntax</h2>
+
+<p>The <code>break-inside</code> property is specified as one of the keyword values from the list below.</p>
+
+<h3 id="Values">Values</h3>
+
+<dl>
+ <dt><code>auto</code></dt>
+ <dd>Allows, but does not force, any break (page, column, or region) to be be inserted within the principal box.</dd>
+ <dt><code>avoid</code></dt>
+ <dd>Avoids any break (page, column, or region) from being inserted within the principal box.</dd>
+ <dt><code>avoid-page</code></dt>
+ <dd>Avoids any page break within the principal box.</dd>
+ <dt><code>avoid-column</code></dt>
+ <dd>Avoids any column break within the principal box.</dd>
+ <dt><code>avoid-region</code> {{experimental_inline}}</dt>
+ <dd>Avoids any region break within the principal box.</dd>
+</dl>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h2 id="Page_break_aliases">Page break aliases</h2>
+
+<p>For compatibility reasons, the legacy {{cssxref("page-break-inside")}} property should be treated by browsers as an alias of <code>break-inside</code>. This ensures that sites using <code>page-break-inside</code> continue to work as designed. A subset of values should be aliased as follows:</p>
+
+<table>
+ <thead>
+  <tr>
+   <th scope="col">page-break-inside</th>
+   <th scope="col">break-inside</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><code>auto</code></td>
+   <td><code>auto</code></td>
+  </tr>
+  <tr>
+   <td><code>avoid</code></td>
+   <td><code>avoid</code></td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('CSS3 Fragmentation', '#break-within', 'break-inside')}}</td>
+   <td>{{Spec2('CSS3 Fragmentation')}}</td>
+   <td>No change.</td>
+  </tr>
+  <tr>
+   <td>{{SpecName('CSS3 Regions', '#region-flow-break', 'break-inside')}}</td>
+   <td>{{Spec2('CSS3 Regions')}}</td>
+   <td>Extends the property to handle region breaks.</td>
+  </tr>
+  <tr>
+   <td>{{SpecName('CSS3 Multicol', '#break-before-break-after-break-inside', 'break-inside')}}</td>
+   <td>{{Spec2('CSS3 Multicol')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility" name="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.properties.break-inside", 4)}}</p>
+
+<h3 id="Notes_on_compatibility">Notes on compatibility</h3>
+
+<p>Prior to Firefox 65, the older property of {{cssxref("page-break-inside")}} will work in Firefox to prevent breaks in columns, as well as pages. Add both properties for backwards compatibility.</p>
+
+<p>For older WebKit-based browsers, the prefixed property <code>-webkit-column-break-inside</code> can be used to control column breaks.</p>

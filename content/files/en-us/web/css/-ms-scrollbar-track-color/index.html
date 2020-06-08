@@ -1,0 +1,94 @@
+---
+title: '-ms-scrollbar-track-color'
+slug: Web/CSS/-ms-scrollbar-track-color
+summary: >-
+  The -ms-scrollbar-track-color CSS property is a Microsoft extension that
+  specifies the color of the track element of a scrollbar.
+tags:
+  - CSS
+  - CSS Property
+  - 'CSS:Microsoft extentions'
+  - Deprecated
+  - Non-standard
+  - Reference
+---
+<p>{{CSSRef}}{{Non-standard_Header}}{{Deprecated_Header}}</p>
+
+<p>The <strong><code>-ms-scrollbar-track-color</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property is a <a href="/en-US/docs/Web/CSS/Microsoft_CSS_extensions">Microsoft extension</a> that specifies the color of the track element of a scrollbar.</p>
+
+<p>{{CSSInfo}}</p>
+
+<h2 id="Syntax" name="Syntax">Syntax</h2>
+
+<h3 id="Values" name="Values">Values</h3>
+
+<dl>
+ <dt>{{CSSxRef("&lt;color&gt;")}}</dt>
+ <dd>
+ <p>The color of the track element.</p>
+ </dd>
+</dl>
+
+<h3 id="Formal_syntax" name="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{CSSSyntax}}</pre>
+
+<h2 id="Examples" name="Examples">Examples</h2>
+
+<p>This example uses <code>-ms-scrollbar-track-color</code>, {{CSSxRef("-ms-scrollbar-face-color")}}, and {{CSSxRef("-ms-scrollbar-arrow-color")}} to create two {{HTMLElement("div")}} elements with different scroll bar color schemes.</p>
+
+<pre class="brush: css">div {
+  width: 150px;
+  height: 150px;
+  border-style: solid;
+  border-width: thin;
+  overflow-y: scroll;
+  font-family: sans-serif;
+  float: left;
+  margin-right: 10px;
+}
+
+.blueScroll {
+  -ms-scrollbar-highlight-color: aqua;
+  -ms-scrollbar-face-color: blue;
+  -ms-scrollbar-arrow-color: blue;
+  border-color: blue;
+}
+
+.redScroll {
+  -ms-scrollbar-highlight-color: bisque;
+  -ms-scrollbar-face-color: red;
+  -ms-scrollbar-arrow-color: red;
+  border-color: red;
+}
+</pre>
+
+<pre class="brush: html">&lt;body&gt;
+  &lt;div class="blueScroll"&gt;
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+  &lt;/div&gt;
+  &lt;div class="redScroll"&gt;
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+  &lt;/div&gt;
+&lt;/body&gt;
+</pre>
+
+<p>{{EmbedLiveSample("Examples")}}</p>
+
+<p>The following image shows the result.</p>
+
+<p><img alt="Image for -scrollbar-track-color example" src="https://mdn.mozillademos.org/files/15828/Image%20for%20example.png" style="height: 166px; width: 328px;"></p>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.properties.-ms-scrollbar-track-color")}}</p>
+
+<h2 id="Remarks" name="Remarks">Remarks</h2>
+
+<p>In Windows Internet Explorer 8 the <code>-ms-scrollbar-track-color</code> attribute is an extension to CSS, and can be used as a synonym for <code>scrollbar-track-color</code> in IE8 Standards Mode.</p>
+
+<p>The track is the element of a scroll bar on which the scroll box can slide either up and down or left and right. The scroll box is the rectangular box within a scroll bar that can be moved either up and down or left and right on a track to change the position of the content on the screen.</p>
+
+<p>This property applies to elements that display a scroll bar. CSS enables scrolling on all objects through the {{CSSxRef("overflow")}} property.</p>

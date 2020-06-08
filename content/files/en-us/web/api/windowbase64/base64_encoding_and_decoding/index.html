@@ -1,0 +1,558 @@
+---
+title: Base64 encoding and decoding
+slug: Web/API/WindowBase64/Base64_encoding_and_decoding
+summary: "Base64 is a group of similar binary-to-text encoding schemes that represent binary data in an ASCII string format by translating it into a radix-64 representation. The term\_Base64 originates from a specific MIME content transfer encoding."
+tags:
+  - Advanced
+  - Base64
+  - JavaScript
+  - Typed Arrays
+  - URI
+  - URL
+  - Unicode Problem
+  - atob()
+  - btoa()
+---
+<p><strong>Base64</strong> is a group of similar <a href="https://en.wikipedia.org/wiki/Binary-to-text_encoding">binary-to-text encoding</a> schemes that represent binary data in an ASCII string format by translating it into a radix-64 representation. The term <em>Base64</em> originates from a specific <a href="https://en.wikipedia.org/wiki/MIME#Content-Transfer-Encoding">MIME content transfer encoding</a>.</p>
+
+<p>Base64 encoding schemes are commonly used when there is a need to encode binary data that needs to be stored and transferred over media that are designed to deal with textual data. This is to ensure that the data remain intact without modification during transport. Base64 is commonly used in a number of applications including email via <a href="https://en.wikipedia.org/wiki/MIME">MIME</a>, and storing complex data in <a href="/en-US/docs/XML">XML</a>.</p>
+
+<p>In JavaScript there are two functions respectively for decoding and encoding <em>base64</em> strings:</p>
+
+<ul>
+ <li>{{domxref("WindowBase64.atob","atob()")}}</li>
+ <li>{{domxref("WindowBase64.btoa","btoa()")}}</li>
+</ul>
+
+<p>The <code>atob()</code> function decodes a string of data which has been encoded using base-64 encoding. Conversely, the <code>btoa()</code> function creates a base-64 encoded ASCII string from a "string" of binary data.</p>
+
+<p>Both <code>atob()</code> and <code>btoa()</code> work on strings. If you want to work on <a href="/en-US/docs/Web/API/ArrayBuffer"><code>ArrayBuffers</code></a>, please, read <a href="/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding#Solution_5_–_rewrite_the_DOMs_atob()_and_btoa()_using_JavaScript's_TypedArrays_and_UTF-8">this paragraph</a>.</p>
+
+<h4 id="Encoded_size_increase">Encoded size increase</h4>
+
+<p>Each Base64 digit represents exactly 6 bits of data. So, three 8-bits bytes of the input string/binary file (3×8 bits = 24 bits) can be represented by four 6-bit Base64 digits (4×6 = 24 bits).</p>
+
+<p>This means that the Base64 version of a string or file will be at most 133% the size of its source (a ~33% increase). The increase may be larger if the encoded data is small. For example, the string <code>"a"</code> with <code>length === 1</code> gets encoded to <code>"YQ=="</code> with <code>length === 4</code> — a 300% increase.</p>
+
+<table class="topicpage-table">
+ <tbody>
+  <tr>
+   <td>
+    <h2 class="Documentation" id="Documentation" name="Documentation">Documentation</h2>
+
+    <dl>
+     <dt><a href="https://developer.mozilla.org/en-US/docs/data_URIs" title="https://developer.mozilla.org/en-US/docs/data_URIs"><code>data</code> URIs</a></dt>
+     <dd><small><code>data</code> URIs, defined by <a class="external" href="http://tools.ietf.org/html/rfc2397" title="http://tools.ietf.org/html/rfc2397">RFC 2397</a>, allow content creators to embed small files inline in documents.</small></dd>
+     <dt><a href="https://en.wikipedia.org/wiki/Base64" title="https://en.wikipedia.org/wiki/Base64">Base64</a></dt>
+     <dd><small>Wikipedia article about Base64 encoding.</small></dd>
+     <dt><a href="https://html.spec.whatwg.org/multipage/webappapis.html#windoworworkerglobalscope-mixin">WindowOrWorkerGlobalScope mixin</a></dt>
+     <dd>Specifies the <code>atob</code> and <code>btoa</code> methods and states that they encode to base64 as specified by <a href="https://tools.ietf.org/html/rfc4648">RFC 4648</a>.</dd>
+     <dt><a href="https://tools.ietf.org/html/rfc4648">RFC 4648</a></dt>
+     <dd>Specifies the base64 algorithm in section 4, and also defines an alternate base64url algorithm for URLs in section 5 (which is not the one used by <code>atob</code>/<code>btoa</code>).</dd>
+     <dt>{{domxref("WindowBase64.atob","atob()")}}</dt>
+     <dd><small>Decodes a string of data which has been encoded using base-64 encoding.</small></dd>
+     <dt>{{domxref("WindowBase64.btoa","btoa()")}}</dt>
+     <dd><small>Creates a base-64 encoded ASCII string from a "string" of binary data.</small></dd>
+     <dt><a href="#The_Unicode_Problem">The "Unicode Problem"</a></dt>
+     <dd><small>In most browsers, calling <code>btoa()</code> on a Unicode string will cause a <code>Character Out Of Range</code> exception. This paragraph shows some solutions.</small></dd>
+     <dt><a href="/en-US/docs/URIScheme" title="/en-US/docs/URIScheme">URIScheme</a></dt>
+     <dd><small>List of Mozilla supported URI schemes</small></dd>
+     <dt><a href="/en-US/docs/Web/JavaScript/Typed_arrays/StringView" title="/en-US/docs/Web/JavaScript/Typed_arrays/StringView"><code>StringView</code></a></dt>
+     <dd>In this article is published a library of ours whose aims are:
+     <ul>
+      <li>creating a <a class="external" href="http://en.wikipedia.org/wiki/C_%28programming_language%29" title="http://en.wikipedia.org/wiki/C_%28programming_language%29">C</a>-like interface for strings (i.e. array of characters codes —<a href="/en-US/docs/Web/JavaScript/Typed_arrays/ArrayBufferView" title="/en-US/docs/Web/JavaScript/Typed_arrays/ArrayBufferView"> <code>ArrayBufferView</code></a> in JavaScript) based upon the JavaScript <a href="/en-US/docs/Web/JavaScript/Typed_arrays/ArrayBuffer" title="/en-US/docs/Web/JavaScript/Typed_arrays/ArrayBuffer"><code>ArrayBuffer</code></a> interface,</li>
+      <li>creating a collection of methods for such string-like objects (since now: <code>stringView</code>s) which work <strong>strictly on array of numbers</strong> rather than on immutable JavaScript strings,</li>
+      <li>working with other Unicode encodings, different from default JavaScript's UTF-16 <a href="/en-US/docs/Web/API/DOMString" title="/en-US/docs/Web/API/DOMString"><code>DOMString</code></a>s,</li>
+     </ul>
+     </dd>
+    </dl>
+
+    <p><span class="alllinks"><a href="/en-US/docs/tag/Base64">View All...</a></span></p>
+   </td>
+   <td>
+    <h2 class="Tools" id="Tools" name="Tools">Tools</h2>
+
+    <ul>
+     <li><a href="#Solution_5_–_rewrite_the_DOMs_atob_and_btoa_using_JavaScripts_TypedArrays_and_UTF-8">Rewriting atob() and btoa() using TypedArrays and UTF-8</a></li>
+     <li><a href="/en-US/docs/Web/JavaScript/Typed_arrays/StringView" title="/en-US/docs/Web/JavaScript/Typed_arrays/StringView"><code>StringView</code> – a C-like representation of strings based on typed arrays</a></li>
+    </ul>
+
+    <p><span class="alllinks"><a href="/en-US/docs/tag/Base64">View All...</a></span></p>
+
+    <h2 class="Related_Topics" id="Related_Topics" name="Related_Topics">Related Topics</h2>
+
+    <ul>
+     <li><a href="/en-US/docs/Web/JavaScript/Typed_arrays/ArrayBuffer"><code>ArrayBuffer</code></a></li>
+     <li><a href="/en-US/docs/Web/JavaScript/Typed_arrays">Typed arrays</a></li>
+     <li><code><a href="/en-US/docs/Web/JavaScript/Typed_arrays/ArrayBufferView">ArrayBufferView</a></code></li>
+     <li><a href="/en-US/docs/Web/JavaScript/Typed_arrays/Uint8Array"><code>Uint8Array</code></a></li>
+     <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays/StringView" title="/en-US/docs/Web/JavaScript/Typed_arrays/StringView"><code>StringView</code> – a C-like representation of strings based on typed arrays</a></li>
+     <li><a href="/en-US/docs/Web/API/DOMString" title="/en-US/docs/Web/API/DOMString"><code>DOMString</code></a></li>
+     <li><a href="/en-US/docs/URI" title="/en-US/docs/URI"><code>URI</code></a></li>
+     <li><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURI" title="/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURI"><code>encodeURI()</code></a></li>
+    </ul>
+   </td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="The_Unicode_Problem">The "Unicode Problem"</h2>
+
+<p>Since <a href="/en-US/docs/Web/API/DOMString" title="/en-US/docs/Web/API/DOMString"><code>DOMString</code></a>s are 16-bit-encoded strings, in most browsers calling <code>window.btoa</code> on a Unicode string will cause a <code>Character Out Of Range</code> exception if a character exceeds the range of a 8-bit byte (0x00~0xFF). Here follow five possible methods to solve this problem:</p>
+
+<ul>
+ <li><a href="#Solution_1_–_JavaScript's_UTF-16_>_base64">the first method</a> consists in encoding JavaScript's native UTF-16 strings directly into base64 (fast, portable, clean)</li>
+ <li><a href="#Solution_2_–_JavaScript's_UTF-16_>_UTF-8_>_base64">the second method</a> consists in converting JavaScript's native UTF-16 strings to UTF-8 and then encode the latter into base64 (relatively fast, portable, clean)</li>
+ <li><a href="#Solution_3_–_JavaScript's_UTF-16_>_binary_string_>_base64">the third method</a> consists in encoding JavaScript's native UTF-16 strings directly into base64 via binary strings (very fast, relatively portable, very compact)</li>
+ <li><a href="#Solution_4_–_escaping_the_string_before_encoding_it">the fourth method</a> consists in escaping the whole string (with UTF-8, see {{jsxref("encodeURIComponent")}}) and then encode it (portable, non-standard)</li>
+ <li><a href="#Solution_5_–_rewrite_the_DOMs_atob()_and_btoa()_using_JavaScript's_TypedArrays_and_UTF-8">the fifth method</a> is similar to the second method, but uses third party libraries</li>
+</ul>
+
+<h3 id="Solution_1_–_JavaScripts_UTF-16_>_base64">Solution #1 – JavaScript's UTF-16 =&gt; base64</h3>
+
+<p>A very fast and widely useable way to solve the unicode problem is by encoding JavaScript native UTF-16 strings directly into base64. Please visit the URL <code>data:text/plain;charset=utf-16;base64,OCY5JjomOyY8Jj4mPyY=</code> for a demonstration (copy the data uri, open a new tab, paste the data URI into the address bar, then press enter to go to the page). This method is particularly efficient because it does not require any type of conversion, except mapping a string into an array. The following code is also useful to get an <a href="/en-US/docs/Web/JavaScript/Typed_arrays/ArrayBuffer">ArrayBuffer</a> from a <em>Base64</em> string and/or viceversa (<a href="#Appendix_to_Solution_1_Decode_a_Base64_string_to_Uint8Array_or_ArrayBuffer" title="Appendix to Solution #1: Decode a Base64 string to Uint8Array or ArrayBuffer">see below</a>).</p>
+
+<pre class="brush: js">"use strict";
+
+/*\
+|*|
+|*|  Base64 / binary data / UTF-8 strings utilities (#1)
+|*|
+|*|  https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
+|*|
+|*|  Author: madmurphy
+|*|
+\*/
+
+/* Array of bytes to base64 string decoding */
+
+function b64ToUint6 (nChr) {
+
+  return nChr &gt; 64 &amp;&amp; nChr &lt; 91 ?
+      nChr - 65
+    : nChr &gt; 96 &amp;&amp; nChr &lt; 123 ?
+      nChr - 71
+    : nChr &gt; 47 &amp;&amp; nChr &lt; 58 ?
+      nChr + 4
+    : nChr === 43 ?
+      62
+    : nChr === 47 ?
+      63
+    :
+      0;
+
+}
+
+function base64DecToArr (sBase64, nBlockSize) {
+
+  var
+    sB64Enc = sBase64.replace(/[^A-Za-z0-9\+\/]/g, ""), nInLen = sB64Enc.length,
+    nOutLen = nBlockSize ? Math.ceil((nInLen * 3 + 1 &gt;&gt;&gt; 2) / nBlockSize) * nBlockSize : nInLen * 3 + 1 &gt;&gt;&gt; 2, aBytes = new Uint8Array(nOutLen);
+
+  for (var nMod3, nMod4, nUint24 = 0, nOutIdx = 0, nInIdx = 0; nInIdx &lt; nInLen; nInIdx++) {
+    nMod4 = nInIdx &amp; 3;
+    nUint24 |= b64ToUint6(sB64Enc.charCodeAt(nInIdx)) &lt;&lt; 18 - 6 * nMod4;
+    if (nMod4 === 3 || nInLen - nInIdx === 1) {
+      for (nMod3 = 0; nMod3 &lt; 3 &amp;&amp; nOutIdx &lt; nOutLen; nMod3++, nOutIdx++) {
+        aBytes[nOutIdx] = nUint24 &gt;&gt;&gt; (16 &gt;&gt;&gt; nMod3 &amp; 24) &amp; 255;
+      }
+      nUint24 = 0;
+    }
+  }
+
+  return aBytes;
+}
+
+/* Base64 string to array encoding */
+
+function uint6ToB64 (nUint6) {
+
+  return nUint6 &lt; 26 ?
+      nUint6 + 65
+    : nUint6 &lt; 52 ?
+      nUint6 + 71
+    : nUint6 &lt; 62 ?
+      nUint6 - 4
+    : nUint6 === 62 ?
+      43
+    : nUint6 === 63 ?
+      47
+    :
+      65;
+
+}
+
+function base64EncArr (aBytes) {
+
+  var eqLen = (3 - (aBytes.length % 3)) % 3, sB64Enc = "";
+
+  for (var nMod3, nLen = aBytes.length, nUint24 = 0, nIdx = 0; nIdx &lt; nLen; nIdx++) {
+    nMod3 = nIdx % 3;
+    /* Uncomment the following line in order to split the output in lines 76-character long: */
+    /*
+    if (nIdx &gt; 0 &amp;&amp; (nIdx * 4 / 3) % 76 === 0) { sB64Enc += "\r\n"; }
+    */
+    nUint24 |= aBytes[nIdx] &lt;&lt; (16 &gt;&gt;&gt; nMod3 &amp; 24);
+    if (nMod3 === 2 || aBytes.length - nIdx === 1) {
+      sB64Enc += String.fromCharCode(uint6ToB64(nUint24 &gt;&gt;&gt; 18 &amp; 63), uint6ToB64(nUint24 &gt;&gt;&gt; 12 &amp; 63), uint6ToB64(nUint24 &gt;&gt;&gt; 6 &amp; 63), uint6ToB64(nUint24 &amp; 63));
+      nUint24 = 0;
+    }
+  }
+
+  return  eqLen === 0 ?
+      sB64Enc
+    :
+      sB64Enc.substring(0, sB64Enc.length - eqLen) + (eqLen === 1 ? "=" : "==");
+
+}
+</pre>
+
+<h4 id="Tests">Tests</h4>
+
+<pre class="brush: js">var myString = "☸☹☺☻☼☾☿";
+
+/* Part 1: Encode `myString` to base64 using native UTF-16 */
+
+var aUTF16CodeUnits = new Uint16Array(myString.length);
+Array.prototype.forEach.call(aUTF16CodeUnits, function (el, idx, arr) { arr[idx] = myString.charCodeAt(idx); });
+var sUTF16Base64 = base64EncArr(new Uint8Array(aUTF16CodeUnits.buffer));
+
+/* Show output */
+
+alert(sUTF16Base64); // "OCY5JjomOyY8Jj4mPyY="
+
+/* Part 2: Decode `sUTF16Base64` to UTF-16 */
+
+var sDecodedString = String.fromCharCode.apply(null, new Uint16Array(base64DecToArr(sUTF16Base64, 2).buffer));
+
+/* Show output */
+
+alert(sDecodedString); // "☸☹☺☻☼☾☿"</pre>
+
+<p>The produced string is fully portable, although represented as UTF-16. If you prefer UTF-8, see <a href="#Solution_2_–_JavaScript's_UTF-16_>_UTF-8_>_base64">the next solution</a>.</p>
+
+<h4 id="Appendix_to_Solution_1_Decode_a_Base64_string_to_Uint8Array_or_ArrayBuffer">Appendix to <a href="#Solution_1_–_JavaScript's_UTF-16_>_base64">Solution #1</a>: Decode a <em>Base64</em> string to <a href="/en-US/docs/Web/JavaScript/Typed_arrays/Uint8Array">Uint8Array</a> or <a href="/en-US/docs/Web/JavaScript/Typed_arrays/ArrayBuffer">ArrayBuffer</a></h4>
+
+<p>The functions above let us also create <a href="/en-US/docs/Web/JavaScript/Typed_arrays/Uint8Array">uint8Arrays</a> or <a href="/en-US/docs/Web/JavaScript/Typed_arrays/ArrayBuffer">arrayBuffers</a> from <em>base64</em>-encoded strings:</p>
+
+<pre class="brush: js">var myArray = base64DecToArr("QmFzZSA2NCDigJQgTW96aWxsYSBEZXZlbG9wZXIgTmV0d29yaw=="); // "Base 64 \u2014 Mozilla Developer Network" (as UTF-8)
+
+var myBuffer = base64DecToArr("QmFzZSA2NCDigJQgTW96aWxsYSBEZXZlbG9wZXIgTmV0d29yaw==").buffer; // "Base 64 \u2014 Mozilla Developer Network" (as UTF-8)
+
+alert(myBuffer.byteLength);</pre>
+
+<div class="note"><strong>Note:</strong> The function <code>base64DecToArr(sBase64[, <em>nBlockSize</em>])</code> returns an <a href="/en-US/docs/Web/JavaScript/Typed_arrays/Uint8Array"><code>uint8Array</code></a> of bytes. If your aim is to build a buffer of 16-bit / 32-bit / 64-bit raw data, use the <code>nBlockSize</code> argument, which is the number of bytes which the <code>uint8Array.buffer.bytesLength</code> property must result to be a multiple of (<code>1</code> or omitted for ASCII, binary content, <a href="https://developer.mozilla.org/en-US/docs/Web/API/DOMString/Binary">binary strings</a>, UTF-8-encoded strings; <code>2</code> for UTF-16 strings; <code>4</code> for UTF-32 strings).</div>
+
+<p>For a more complete library, see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays/StringView" title="/en-US/docs/Web/JavaScript/Typed_arrays/StringView"><code>StringView</code> – a C-like representation of strings based on typed arrays</a> (source code <a href="https://github.com/madmurphy/stringview.js">available on GitHub</a>).</p>
+
+<h3 id="Solution_2_–_JavaScripts_UTF-16_>_UTF-8_>_base64">Solution #2 – JavaScript's UTF-16 =&gt; UTF-8 =&gt; base64</h3>
+
+<p>This solution consists in converting a JavaScript's native UTF-16 string into a UTF-8 string and then encoding the latter into base64. This also grants that converting a pure ASCII string to base64 always produces the same output as the native <a href="https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/btoa" title="The documentation about this has not yet been written; please consider contributing!"><code>btoa()</code></a>.</p>
+
+<pre class="brush: js">"use strict";
+
+/*\
+|*|
+|*|  Base64 / binary data / UTF-8 strings utilities (#2)
+|*|
+|*|  https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
+|*|
+|*|  Author: madmurphy
+|*|
+\*/
+
+/* Array of bytes to base64 string decoding */
+
+function b64ToUint6 (nChr) {
+
+  return nChr &gt; 64 &amp;&amp; nChr &lt; 91 ?
+      nChr - 65
+    : nChr &gt; 96 &amp;&amp; nChr &lt; 123 ?
+      nChr - 71
+    : nChr &gt; 47 &amp;&amp; nChr &lt; 58 ?
+      nChr + 4
+    : nChr === 43 ?
+      62
+    : nChr === 47 ?
+      63
+    :
+      0;
+
+}
+
+function base64DecToArr (sBase64, nBlockSize) {
+
+  var
+    sB64Enc = sBase64.replace(/[^A-Za-z0-9\+\/]/g, ""), nInLen = sB64Enc.length,
+    nOutLen = nBlockSize ? Math.ceil((nInLen * 3 + 1 &gt;&gt;&gt; 2) / nBlockSize) * nBlockSize : nInLen * 3 + 1 &gt;&gt;&gt; 2, aBytes = new Uint8Array(nOutLen);
+
+  for (var nMod3, nMod4, nUint24 = 0, nOutIdx = 0, nInIdx = 0; nInIdx &lt; nInLen; nInIdx++) {
+    nMod4 = nInIdx &amp; 3;
+    nUint24 |= b64ToUint6(sB64Enc.charCodeAt(nInIdx)) &lt;&lt; 18 - 6 * nMod4;
+    if (nMod4 === 3 || nInLen - nInIdx === 1) {
+      for (nMod3 = 0; nMod3 &lt; 3 &amp;&amp; nOutIdx &lt; nOutLen; nMod3++, nOutIdx++) {
+        aBytes[nOutIdx] = nUint24 &gt;&gt;&gt; (16 &gt;&gt;&gt; nMod3 &amp; 24) &amp; 255;
+      }
+      nUint24 = 0;
+    }
+  }
+
+  return aBytes;
+}
+
+/* Base64 string to array encoding */
+
+function uint6ToB64 (nUint6) {
+
+  return nUint6 &lt; 26 ?
+      nUint6 + 65
+    : nUint6 &lt; 52 ?
+      nUint6 + 71
+    : nUint6 &lt; 62 ?
+      nUint6 - 4
+    : nUint6 === 62 ?
+      43
+    : nUint6 === 63 ?
+      47
+    :
+      65;
+
+}
+
+function base64EncArr (aBytes) {
+
+  var eqLen = (3 - (aBytes.length % 3)) % 3, sB64Enc = "";
+
+  for (var nMod3, nLen = aBytes.length, nUint24 = 0, nIdx = 0; nIdx &lt; nLen; nIdx++) {
+    nMod3 = nIdx % 3;
+    /* Uncomment the following line in order to split the output in lines 76-character long: */
+    /*
+    if (nIdx &gt; 0 &amp;&amp; (nIdx * 4 / 3) % 76 === 0) { sB64Enc += "\r\n"; }
+    */
+    nUint24 |= aBytes[nIdx] &lt;&lt; (16 &gt;&gt;&gt; nMod3 &amp; 24);
+    if (nMod3 === 2 || aBytes.length - nIdx === 1) {
+      sB64Enc += String.fromCharCode(uint6ToB64(nUint24 &gt;&gt;&gt; 18 &amp; 63), uint6ToB64(nUint24 &gt;&gt;&gt; 12 &amp; 63), uint6ToB64(nUint24 &gt;&gt;&gt; 6 &amp; 63), uint6ToB64(nUint24 &amp; 63));
+      nUint24 = 0;
+    }
+  }
+
+  return  eqLen === 0 ?
+      sB64Enc
+    :
+      sB64Enc.substring(0, sB64Enc.length - eqLen) + (eqLen === 1 ? "=" : "==");
+
+}
+
+/* UTF-8 array to DOMString and vice versa */
+
+function UTF8ArrToStr (aBytes) {
+
+  var sView = "";
+
+  for (var nPart, nLen = aBytes.length, nIdx = 0; nIdx &lt; nLen; nIdx++) {
+    nPart = aBytes[nIdx];
+    sView += String.fromCharCode(
+      nPart &gt; 251 &amp;&amp; nPart &lt; 254 &amp;&amp; nIdx + 5 &lt; nLen ? /* six bytes */
+        /* (nPart - 252 &lt;&lt; 30) may be not so safe in ECMAScript! So...: */
+        (nPart - 252) * 1073741824 + (aBytes[++nIdx] - 128 &lt;&lt; 24) + (aBytes[++nIdx] - 128 &lt;&lt; 18) + (aBytes[++nIdx] - 128 &lt;&lt; 12) + (aBytes[++nIdx] - 128 &lt;&lt; 6) + aBytes[++nIdx] - 128
+      : nPart &gt; 247 &amp;&amp; nPart &lt; 252 &amp;&amp; nIdx + 4 &lt; nLen ? /* five bytes */
+        (nPart - 248 &lt;&lt; 24) + (aBytes[++nIdx] - 128 &lt;&lt; 18) + (aBytes[++nIdx] - 128 &lt;&lt; 12) + (aBytes[++nIdx] - 128 &lt;&lt; 6) + aBytes[++nIdx] - 128
+      : nPart &gt; 239 &amp;&amp; nPart &lt; 248 &amp;&amp; nIdx + 3 &lt; nLen ? /* four bytes */
+        (nPart - 240 &lt;&lt; 18) + (aBytes[++nIdx] - 128 &lt;&lt; 12) + (aBytes[++nIdx] - 128 &lt;&lt; 6) + aBytes[++nIdx] - 128
+      : nPart &gt; 223 &amp;&amp; nPart &lt; 240 &amp;&amp; nIdx + 2 &lt; nLen ? /* three bytes */
+        (nPart - 224 &lt;&lt; 12) + (aBytes[++nIdx] - 128 &lt;&lt; 6) + aBytes[++nIdx] - 128
+      : nPart &gt; 191 &amp;&amp; nPart &lt; 224 &amp;&amp; nIdx + 1 &lt; nLen ? /* two bytes */
+        (nPart - 192 &lt;&lt; 6) + aBytes[++nIdx] - 128
+      : /* nPart &lt; 127 ? */ /* one byte */
+        nPart
+    );
+  }
+
+  return sView;
+
+}
+
+function strToUTF8Arr (sDOMStr) {
+
+  var aBytes, nChr, nStrLen = sDOMStr.length, nArrLen = 0;
+
+  /* mapping... */
+
+  for (var nMapIdx = 0; nMapIdx &lt; nStrLen; nMapIdx++) {
+    nChr = sDOMStr.charCodeAt(nMapIdx);
+    nArrLen += nChr &lt; 0x80 ? 1 : nChr &lt; 0x800 ? 2 : nChr &lt; 0x10000 ? 3 : nChr &lt; 0x200000 ? 4 : nChr &lt; 0x4000000 ? 5 : 6;
+  }
+
+  aBytes = new Uint8Array(nArrLen);
+
+  /* transcription... */
+
+  for (var nIdx = 0, nChrIdx = 0; nIdx &lt; nArrLen; nChrIdx++) {
+    nChr = sDOMStr.charCodeAt(nChrIdx);
+    if (nChr &lt; 128) {
+      /* one byte */
+      aBytes[nIdx++] = nChr;
+    } else if (nChr &lt; 0x800) {
+      /* two bytes */
+      aBytes[nIdx++] = 192 + (nChr &gt;&gt;&gt; 6);
+      aBytes[nIdx++] = 128 + (nChr &amp; 63);
+    } else if (nChr &lt; 0x10000) {
+      /* three bytes */
+      aBytes[nIdx++] = 224 + (nChr &gt;&gt;&gt; 12);
+      aBytes[nIdx++] = 128 + (nChr &gt;&gt;&gt; 6 &amp; 63);
+      aBytes[nIdx++] = 128 + (nChr &amp; 63);
+    } else if (nChr &lt; 0x200000) {
+      /* four bytes */
+      aBytes[nIdx++] = 240 + (nChr &gt;&gt;&gt; 18);
+      aBytes[nIdx++] = 128 + (nChr &gt;&gt;&gt; 12 &amp; 63);
+      aBytes[nIdx++] = 128 + (nChr &gt;&gt;&gt; 6 &amp; 63);
+      aBytes[nIdx++] = 128 + (nChr &amp; 63);
+    } else if (nChr &lt; 0x4000000) {
+      /* five bytes */
+      aBytes[nIdx++] = 248 + (nChr &gt;&gt;&gt; 24);
+      aBytes[nIdx++] = 128 + (nChr &gt;&gt;&gt; 18 &amp; 63);
+      aBytes[nIdx++] = 128 + (nChr &gt;&gt;&gt; 12 &amp; 63);
+      aBytes[nIdx++] = 128 + (nChr &gt;&gt;&gt; 6 &amp; 63);
+      aBytes[nIdx++] = 128 + (nChr &amp; 63);
+    } else /* if (nChr &lt;= 0x7fffffff) */ {
+      /* six bytes */
+      aBytes[nIdx++] = 252 + (nChr &gt;&gt;&gt; 30);
+      aBytes[nIdx++] = 128 + (nChr &gt;&gt;&gt; 24 &amp; 63);
+      aBytes[nIdx++] = 128 + (nChr &gt;&gt;&gt; 18 &amp; 63);
+      aBytes[nIdx++] = 128 + (nChr &gt;&gt;&gt; 12 &amp; 63);
+      aBytes[nIdx++] = 128 + (nChr &gt;&gt;&gt; 6 &amp; 63);
+      aBytes[nIdx++] = 128 + (nChr &amp; 63);
+    }
+  }
+
+  return aBytes;
+
+}</pre>
+
+<h4 id="Tests_2">Tests</h4>
+
+<pre class="brush: js">/* Tests */
+
+var sMyInput = "Base 64 \u2014 Mozilla Developer Network";
+
+var aMyUTF8Input = strToUTF8Arr(sMyInput);
+
+var sMyBase64 = base64EncArr(aMyUTF8Input);
+
+alert(sMyBase64); // "QmFzZSA2NCDigJQgTW96aWxsYSBEZXZlbG9wZXIgTmV0d29yaw=="
+
+var aMyUTF8Output = base64DecToArr(sMyBase64);
+
+var sMyOutput = UTF8ArrToStr(aMyUTF8Output);
+
+alert(sMyOutput); // "Base 64 — Mozilla Developer Network"</pre>
+
+<h3 id="Solution_3_–_JavaScripts_UTF-16_>_binary_string_>_base64">Solution #3 – JavaScript's UTF-16 =&gt; binary string =&gt; base64</h3>
+
+<p>The following is the fastest and most compact possible approach. The output is exactly the same produced by <a href="#Solution_1_–_JavaScript's_UTF-16_>_base64">Solution #1</a> (UTF-16 encoded strings), but instead of rewriting {{domxref("WindowBase64.atob","atob()")}} and {{domxref("WindowBase64.btoa","btoa()")}} it uses the native ones. This is made possible by the fact that instead of using typed arrays as encoding/decoding inputs this solution uses <a href="/en-US/docs/Web/API/DOMString/Binary">binary strings</a> as an intermediate format. It is a “dirty” workaround in comparison to <a href="#Solution_1_–_JavaScript's_UTF-16_>_base64">Solution #1</a> (<a href="/en-US/docs/Web/API/DOMString/Binary">binary strings</a> are a grey area), however it works pretty well and requires only a few lines of code.</p>
+
+<pre class="brush: js">"use strict";
+
+/*\
+|*|
+|*|  Base64 / binary data / UTF-8 strings utilities (#3)
+|*|
+|*|  https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
+|*|
+|*|  Author: madmurphy
+|*|
+\*/
+
+function btoaUTF16 (sString) {
+
+	var aUTF16CodeUnits = new Uint16Array(sString.length);
+	Array.prototype.forEach.call(aUTF16CodeUnits, function (el, idx, arr) { arr[idx] = sString.charCodeAt(idx); });
+	return btoa(String.fromCharCode.apply(null, new Uint8Array(aUTF16CodeUnits.buffer)));
+
+}
+
+function atobUTF16 (sBase64) {
+
+	var sBinaryString = atob(sBase64), aBinaryView = new Uint8Array(sBinaryString.length);
+	Array.prototype.forEach.call(aBinaryView, function (el, idx, arr) { arr[idx] = sBinaryString.charCodeAt(idx); });
+	return String.fromCharCode.apply(null, new Uint16Array(aBinaryView.buffer));
+
+}</pre>
+
+<h4 id="Tests_3">Tests</h4>
+
+<pre class="brush: js">var myString = "☸☹☺☻☼☾☿";
+
+/* Part 1: Encode `myString` to base64 using native UTF-16 */
+
+var sUTF16Base64 = btoaUTF16(myString);
+
+/* Show output */
+
+alert(sUTF16Base64); // "OCY5JjomOyY8Jj4mPyY="
+
+/* Part 2: Decode `sUTF16Base64` to UTF-16 */
+
+var sDecodedString = atobUTF16(sUTF16Base64);
+
+/* Show output */
+
+alert(sDecodedString); // "☸☹☺☻☼☾☿"
+</pre>
+
+<p>For a cleaner solution that uses typed arrays instead of binary strings, see solutions <a href="#Solution_1_–_JavaScript's_UTF-16_>_base64">#1</a> and <a href="#Solution_2_–_JavaScript's_UTF-16_>_UTF-8_>_base64">#2</a>.</p>
+
+<h3 id="Solution_4_–_escaping_the_string_before_encoding_it">Solution #4 – escaping the string before encoding it</h3>
+
+<pre class="brush:js">function b64EncodeUnicode(str) {
+    // first we use encodeURIComponent to get percent-encoded UTF-8,
+    // then we convert the percent encodings into raw bytes which
+    // can be fed into btoa.
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+        function toSolidBytes(match, p1) {
+            return String.fromCharCode('0x' + p1);
+    }));
+}
+
+b64EncodeUnicode('✓ à la mode'); // "4pyTIMOgIGxhIG1vZGU="
+b64EncodeUnicode('\n'); // "Cg=="
+</pre>
+
+<p>To decode the Base64-encoded value back into a String:</p>
+
+<pre class="brush: js">function b64DecodeUnicode(str) {
+    // Going backwards: from bytestream, to percent-encoding, to original string.
+    return decodeURIComponent(atob(str).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+}
+
+b64DecodeUnicode('4pyTIMOgIGxhIG1vZGU='); // "✓ à la mode"
+b64DecodeUnicode('Cg=='); // "\n"
+</pre>
+
+<p><a href="https://git.daplie.com/Daplie/unibabel-js">Unibabel</a> implements common conversions using this strategy.</p>
+
+<h3 id="Solution_5_–_rewrite_the_DOMs_atob_and_btoa_using_JavaScripts_TypedArrays_and_UTF-8">Solution #5 – rewrite the DOMs <code>atob()</code> and <code>btoa()</code> using JavaScript's <code>TypedArray</code>s and UTF-8</h3>
+
+<p>Use a <a href="/en-US/docs/Web/API/TextEncoder">TextEncoder</a> polyfill such as <a href="https://github.com/inexorabletash/text-encoding">TextEncoding</a> (also includes legacy windows, mac, and ISO encodings), <a href="https://github.com/coolaj86/TextEncoderLite">TextEncoderLite</a>, combined with a <a href="https://github.com/feross/buffer">Buffer</a> and a Base64 implementation such as <a href="https://github.com/beatgammit/base64-js">base64-js</a> or <a href="https://github.com/waitingsong/base64">TypeScript version of </a>base64-js for both modern browsers and Node.js.</p>
+
+<p>When a native <code>TextEncoder</code> implementation is not available, the most light-weight solution would be to use <a href="#Solution_3_–_JavaScript's_UTF-16_>_binary_string_>_base64">Solution #3</a> because in addition to being much faster, <a href="#Solution_3_–_JavaScript's_UTF-16_>_binary_string_>_base64">Solution #3</a> also works in IE9 "out of the box." Alternatively, use <a href="https://github.com/coolaj86/TextEncoderLite">TextEncoderLite</a> with <a href="https://github.com/beatgammit/base64-js">base64-js</a>. Use the browser implementation when you can.</p>
+
+<p>The following function implements such a strategy. It assumes base64-js imported as <code>&lt;script type="text/javascript" src="base64js.min.js"/&gt;</code>. Note that TextEncoderLite only works with UTF-8.</p>
+
+<pre class="brush: js">function Base64Encode(str, encoding = 'utf-8') {
+    var bytes = new (typeof TextEncoder === "undefined" ? TextEncoderLite : TextEncoder)(encoding).encode(str);        
+    return base64js.fromByteArray(bytes);
+}
+
+function Base64Decode(str, encoding = 'utf-8') {
+    var bytes = base64js.toByteArray(str);
+    return new (typeof TextDecoder === "undefined" ? TextDecoderLite : TextDecoder)(encoding).decode(bytes);
+}
+</pre>
+
+<p><strong>Note</strong>: <a href="https://github.com/coolaj86/TextEncoderLite">TextEncoderLite</a> parse 4 bytes UTF-8 character incorrectly,  such as '\uD842\uDFB7' or  '\u{20BB7}' in short, see <a href="https://github.com/solderjs/TextEncoderLite/issues/16">issue.</a><br>
+ Alternatively, use <a href="https://github.com/inexorabletash/text-encoding">text-encoding</a> instead.</p>
+
+<p>In some cases, the above conversion to UTF-8 and then to Base64 will not be very space efficient. UTF-8 produces longer output than UTF-16 when the text contains a large percentage of characters in the range U+0800-U+FFFF, which are encoded with three bytes in UTF-8 but two in UTF-16. In the case where the JavaScript string contains evenly-distributed UTF-16 code points, one might consider encoding to UTF-16 instead of UTF-8 before the conversion to Base64, for a 40% reduction in size.</p>

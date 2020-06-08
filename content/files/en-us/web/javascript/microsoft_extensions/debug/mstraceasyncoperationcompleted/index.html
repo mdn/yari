@@ -1,0 +1,88 @@
+---
+title: Debug.msTraceAsyncCallbackCompleted
+slug: Web/JavaScript/Microsoft_Extensions/Debug/msTraceAsyncOperationCompleted
+summary: >-
+  The debug.msTraceAsyncCallbackCompleted function indicates that an
+  asynchronous operation has completed.
+tags:
+  - Debug
+  - Example
+  - JavaScript
+  - Method
+  - msTraceAsyncCallbackCompleted
+---
+<p>The <strong><code>debug.msTraceAsyncCallbackCompleted</code> function</strong> indicates that an asynchronous operation has completed.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre>Debug.msTraceAsyncCallbackCompleted()
+</pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<dl>
+ <dt><code>asyncOperationId</code></dt>
+ <dd>The ID associated with the asynchronous operation.</dd>
+ <dt><code>status</code> {{optional_inline}}</dt>
+ <dd>The status of the asynchronous operation. If not specified, <code>Debug.MS_ASYNC_OP_STATUS_SUCCESS</code> is used.</dd>
+</dl>
+
+<h3 id="Remarks">Remarks</h3>
+
+<p>Call this function when the asynchronous operation completes.</p>
+
+<p><code>asyncOperationId</code> must correspond to the operation ID previously returned from <code>Debug.msTraceAsyncOperationStarting</code>.</p>
+
+<p>The possible values for <code>status</code> include:</p>
+
+<ul>
+ <li>
+  <p><code>Debug.MS_ASYNC_OP_STATUS_SUCCESS</code></p>
+ </li>
+ <li>
+  <p><code>Debug.MS_ASYNC_OP_STATUS_CANCELED</code></p>
+ </li>
+ <li>
+  <p><code>Debug.MS_ASYNC_OP_STATUS_ERROR</code></p>
+ </li>
+</ul>
+
+<div class="note">
+<p><strong>Note: </strong>Some debugging tools do not display the information sent to the debugger.</p>
+</div>
+
+<h2 id="Example">Example</h2>
+
+<p>The following code provides an example of tracing an asynchronous call for a Windows 8.x Store app.</p>
+
+<pre class="brush: js">function asyncWrapperFunction() {  
+    var opID = Debug.msTraceAsyncOperationStarting('async trace');  
+    doSomethingAsync().then(function (result) {  
+        Debug.msTraceAsyncOperationCompleted(opID, Debug.MS_ASYNC_OP_STATUS_SUCCESS);  
+        Debug.msTraceAsyncCallbackStarting(opID);  
+        // Process result of async operation.  
+    }, function (error) {  
+        Debug.msTraceAsyncOperationCompleted(opID, Debug.MS_ASYNC_OP_STATUS_ERROR);  
+        Debug.msTraceAsyncCallbackStarting(opID);  
+    });  
+
+    Debug.msTraceAsyncCallbackCompleted();  
+}  
+
+function doSomethingAsync() {  
+    return WinJS.Promise.as(true);  
+}  
+
+asyncWrapperFunction();
+</pre>
+
+<h2 id="Requirements">Requirements</h2>
+
+<p>Supported in the Internet Explorer 11 standards document mode. Also supported in Store apps (Windows 8.1 and Windows Phone 8.1).<br>
+ Not supported in the following document modes: Quirks, Internet Explorer 6 standards, Internet Explorer 7 standards, Internet Explorer 8 standards, Internet Explorer 9 standards, Internet Explorer 10 standards. Not supported in Windows 8.</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("Debug")}}</li>
+</ul>

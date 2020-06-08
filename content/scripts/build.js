@@ -12,7 +12,7 @@ const WebSocket = require("ws");
 // XXX does this work on Windows?
 const packageJson = require("../../package.json");
 
-require("dotenv").config();
+require("dotenv").config({ path: process.env.ENV_FILE });
 
 const cheerio = require("./monkeypatched-cheerio");
 const ProgressBar = require("./progress-bar");
@@ -1118,7 +1118,14 @@ class Builder {
             })
             .map(([uri, documentData]) => {
               if (!documentData.modified) {
-                throw new Error("No .modified in documentData");
+                // This is temporarily commented out because we don't yet
+                // have a solution to get the "last_modified" from the
+                // git logs. Until we have that, this breaks.
+                // See https://github.com/mdn/yari/issues/706
+                // throw new Error("No .modified in documentData");
+                return {
+                  loc: sitemapBaseUrl + uri,
+                };
               }
               return {
                 loc: sitemapBaseUrl + uri,
@@ -1619,6 +1626,10 @@ class Builder {
     // With the sidebar out of the way, go ahead and check the rest
     this.injectFlaws(source, doc, $);
 
+    // Post process HTML so that the right elements gets tagged so they
+    // *don't* get translated by tools like Google Translate.
+    this.injectNoTranslate($);
+
     doc.body = extractDocumentSections($, config);
 
     const titleData = this.allTitles.get(mdnUrlLC);
@@ -1683,6 +1694,16 @@ class Builder {
       jsonFile: outfileJson,
       doc,
     };
+  }
+
+  /**
+   * Find all tags that we need to change to tell tools like Google Translate
+   * to not translate.
+   *
+   * @param {Cheerio document instance} $
+   */
+  injectNoTranslate($) {
+    $("pre").addClass("notranslate");
   }
 
   /**

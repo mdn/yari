@@ -1,0 +1,82 @@
+---
+title: '@if'
+slug: Web/JavaScript/Microsoft_Extensions/at-if
+summary: "The @if\_statement conditionally executes a group of statements, depending on the value of an expression."
+tags:
+  - JavaScript
+  - 'JavaScript:Microsoft Extensions'
+  - Non-standard
+  - Obsolete
+  - Reference
+  - Statement
+---
+<div>{{JSRef}}{{Non-standard_Header}}{{Obsolete_Header}}
+<div class="warning"><strong>Warning: </strong><span style="font-size: 1.125rem;">Conditional compilation is not supported in Internet Explorer 11 Standards mode and Windows 8.x Store apps. Conditional compilation is supported in Internet Explorer 10 Standards mode and in all earlier versions.</span></div>
+</div>
+
+<p>The <strong><code>@if</code> statement</strong> conditionally executes a group of statements, depending on the value of an expression.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="brush: js">@if (  
+   condition1  
+)  
+   text1  
+[@elif (  
+   condition2  
+)  
+   text2]  
+[@else  
+   text3]  
+@end</pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<dl>
+ <dt><code>text1</code> {{optional_inline}}</dt>
+ <dd>Text to be parsed if <code>condition1</code> is <strong>true</strong>.</dd>
+ <dt><code>text2</code> {{optional_inline}}</dt>
+ <dd>Text to be parsed if <code>condition1</code> is <strong>false</strong> and <code>condition2</code> is <strong>true</strong>.</dd>
+ <dt><code>text3</code> {{optional_inline}}</dt>
+ <dd>Text to be parsed if both <code>condition1</code> and <code>condition2</code> are <strong>false</strong>.</dd>
+</dl>
+
+<h3 id="Remarks">Remarks</h3>
+
+<p>When you write an <code>@if</code> statement, you do not have to place each clause on a separate line. You can use multiple <strong>@elif</strong> clauses. However, all <strong>@elif</strong> clauses must come before an <strong>@else</strong>clause.</p>
+
+<p>The <code>@if</code> statement is typically used to determine which text among several options should be used for text output.</p>
+
+<p>It is not common to use conditional compilation variables in scripts written for ASP or ASP.NET pages or command-line programs. This is because the capabilities of the compilers can be determined by using other methods.</p>
+
+<p>When you write a script for a Web page, always add conditional compilation code in comments. This enables hosts that do not support conditional compilation to ignore it.</p>
+
+<h2 id="Example">Example</h2>
+
+<p>The following example illustrates the use of the <strong>@if...@elif...@else...@end</strong> statement.</p>
+
+<pre class="brush: js">/*@cc_on @*/  
+/*@  
+    document.write("JavaScript version: " + @_jscript_version + ".");  
+    document.write("&lt;br /&gt;");  
+    @if (@_win32)  
+        document.write("Running on a 32-bit version of Windows.");  
+    @elif (@_win16)  
+        document.write("Running on a 16-bit version of Windows.");  
+    @else  
+        document.write("Running on a different operating system.");  
+    @end  
+@*/</pre>
+
+<h2 id="Requirements">Requirements</h2>
+
+<p>Supported in all versions of Internet Explorer, but not in Windows 8.x Store apps.</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><a href="https://docs.microsoft.com/en-us/scripting/javascript/advanced/conditional-compilation-javascript">Conditional Compilation</a></li>
+ <li><a href="https://docs.microsoft.com/en-us/scripting/javascript/advanced/conditional-compilation-variables-javascript">Conditional Compilation Variables</a></li>
+ <li><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/at-cc-on">@cc_on Statement</a></li>
+ <li><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/at-set">@set Statement</a></li>
+</ul>

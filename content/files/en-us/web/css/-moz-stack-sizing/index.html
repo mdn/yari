@@ -1,0 +1,61 @@
+---
+title: '-moz-stack-sizing'
+slug: Web/CSS/-moz-stack-sizing
+summary: >-
+  -moz-stack-sizing is an extended CSS property. Normally, a xul:stack will
+  change its size so that all of its child elements are completely visible. For
+  example, moving a child of the stack far to the right will widen the stack so
+  the child remains visible.
+tags:
+  - CSS
+  - CSS Property
+  - NeedsCompatTable
+  - Non-standard
+  - Reference
+  - XUL
+---
+<div>{{CSSRef}}{{Non-standard_header}}{{gecko_minversion_header("1.9.1")}}</div>
+
+<p><strong><code>-moz-stack-sizing</code></strong> is an extended <a href="/en-US/docs/Web/CSS">CSS</a> property. Normally, a {{XULElem("stack")}} will change its size so that all of its child elements are completely visible. For example, moving a child of the stack far to the right will widen the stack so the child remains visible.</p>
+
+<pre class="brush:css">/* Keyword values */
+-moz-stack-sizing: auto;
+-moz-stack-sizing: ignore;
+
+/* Global values */
+-moz-stack-sizing: inherit;
+-moz-stack-sizing: initial;
+-moz-stack-sizing: unset;
+</pre>
+
+<p>If you wish to prevent the stack from resizing automatically to accommodate its children, you can set <code>-moz-stack-sizing</code> to <code>ignore</code> on the child element. The property is set not on the stack itself, but on the stack's children. This lets you ignore certain children, but not others.</p>
+
+<p class="note"><strong>Note:</strong> In previous versions of Gecko it was possible to work around the problem by setting very large negative bottom and right margins on the stack element and equally large positive bottom and right margins on the children whose size you didn't want to ignore. (The problem does not affect children moved above or to the left of the stack.)</p>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<h3 id="Values">Values</h3>
+
+<dl>
+ <dt><code>stretch-to-fit</code></dt>
+ <dd>The child will influence the stack's size.</dd>
+ <dt><code>ignore</code></dt>
+ <dd>The stack won't consider this child when calculating its size.</dd>
+</dl>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h2 id="Examples">Examples</h2>
+
+<pre class="brush:css">.mainsheet {
+  -moz-stack-sizing: ignore;
+}
+</pre>
+
+<h2 id="See_also">See also</h2>
+
+<p>{{bug("346189")}}</p>

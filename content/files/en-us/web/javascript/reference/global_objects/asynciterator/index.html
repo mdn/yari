@@ -1,0 +1,126 @@
+---
+title: AsyncIterator
+slug: Web/JavaScript/Reference/Global_Objects/AsyncIterator
+summary: >-
+  The AsyncIterator global object is an abstract class providing helper methods,
+  similar to the ones exposed on Array instances.
+tags:
+  - AsyncIterator
+  - Draft
+  - Experimental
+  - JavaScript
+  - NeedsCompatTable
+  - NeedsSubpages
+  - Reference
+---
+<p>{{JSRef}}{{Draft}}</p>
+
+<p>The <strong><code>AsyncIterator</code></strong> global object is an abstract class providing helper methods, similar to the ones exposed on {{JSxRef("Array")}} instances.</p>
+
+<h2 id="Constructor">Constructor</h2>
+
+<dl>
+	<dt>{{JSxRef("AsyncIterator.AsyncIterator", "AsyncIterator()")}} {{Experimental_Inline}}</dt>
+	<dd>A an abstract constructor that can only be invoked using a {{JSxRef("Operators/super", "super()")}} call.</dd>
+</dl>
+
+<h2 id="Properties">Properties</h2>
+
+<dl>
+	<dt><code>AsyncIterator.prototype</code></dt>
+	<dd>The <code>%AsyncIteratorPrototype%</code> intrinsic object.</dd>
+</dl>
+
+<h2 id="Methods">Methods</h2>
+
+<dl>
+	<dt>{{JSxRef("AsyncIterator.from()")}} {{Experimental_Inline}}</dt>
+	<dd>Equivalent to calling <code>@@asyncIterator</code> on the passed object.</dd>
+</dl>
+
+<h2 id="AsyncIterator_prototype"><code>AsyncIterator</code> prototype</h2>
+
+<h3 id="Prototype_properties">Prototype properties</h3>
+
+<dl>
+	<dt><code>AsyncIterator.prototype.constructor</code></dt>
+	<dd>Specifies the function that creates an object's prototype.</dd>
+	<dt><code>AsyncIterator.prototype[@@toStringTag]</code> {{Experimental_Inline}}</dt>
+	<dd>The string <code>"Iterator"</code>.</dd>
+</dl>
+
+<h3 id="Prototype_methods">Prototype methods</h3>
+
+<dl>
+	<dt>{{JSxRef("AsyncIterator.prototype.map()")}} {{Experimental_Inline}}</dt>
+	<dd>...</dd>
+	<dt>{{JSxRef("AsyncIterator.prototype.filter()")}} {{Experimental_Inline}}</dt>
+	<dd>...</dd>
+	<dt>{{JSxRef("AsyncIterator.prototype.take()")}} {{Experimental_Inline}}</dt>
+	<dd>...</dd>
+	<dt>{{JSxRef("AsyncIterator.prototype.drop()")}} {{Experimental_Inline}}</dt>
+	<dd>...</dd>
+	<dt>{{JSxRef("AsyncIterator.prototype.asIndexedPairs()")}} {{Experimental_Inline}}</dt>
+	<dd>...</dd>
+	<dt>{{JSxRef("AsyncIterator.prototype.flatMap()")}} {{Experimental_Inline}}</dt>
+	<dd>...</dd>
+	<dt>{{JSxRef("AsyncIterator.prototype.reduce()")}} {{Experimental_Inline}}</dt>
+	<dd>...</dd>
+	<dt>{{JSxRef("AsyncIterator.prototype.toArray()")}} {{Experimental_Inline}}</dt>
+	<dd>...</dd>
+	<dt>{{JSxRef("AsyncIterator.prototype.forEach()")}} {{Experimental_Inline}}</dt>
+	<dd>...</dd>
+	<dt>{{JSxRef("AsyncIterator.prototype.some()")}} {{Experimental_Inline}}</dt>
+	<dd>...</dd>
+	<dt>{{JSxRef("AsyncIterator.prototype.every()")}} {{Experimental_Inline}}</dt>
+	<dd>...</dd>
+	<dt>{{JSxRef("AsyncIterator.prototype.find()")}} {{Experimental_Inline}}</dt>
+	<dd>...</dd>
+	<dt>{{JSxRef("AsyncIterator.prototype.@@iterator()", "AsyncIterator.prototype[@@iterator]()")}}</dt>
+	<dd>Returns this <code>AsyncIterator</code> instance.</dd>
+</dl>
+
+<h2 id="Implementation_methods">Implementation methods</h2>
+
+<dl>
+	<dt>{{JSxRef("AsyncIterator.prototype.next()", "&lt;<var>implementation</var>&gt;.prototype.next()")}}</dt>
+	<dd>Gets the next item in the <code>AsyncIterator</code>.</dd>
+	<dt>{{JSxRef("AsyncIterator.prototype.return()", "&lt;<var>implementation</var>&gt;.prototype.next()")}}{{Optional_Inline}}</dt>
+	<dd>Returns the given value and finishes the iterator.</dd>
+	<dt>{{JSxRef("AsyncIterator.prototype.throw()", "&lt;<var>implementation</var>&gt;.prototype.next()")}}{{Optional_Inline}}</dt>
+	<dd>Throws an error to an iterator (also finishes the iterator, unless caught from within that iterator).</dd>
+</dl>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+	<thead>
+		<tr>
+			<th scope="col">Specification</th>
+			<th scope="col">Status</th>
+			<th scope="col">Comment</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><a href="https://tc39.es/proposal-iterator-helpers/#sec-asynciterator-constructor">ESNext Iterator Helpers Proposal</a></td>
+			<td><span class="spec-Draft">Stage 2 Draft</span></td>
+			<td>Initial definition</td>
+		</tr>
+	</tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table in this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.builtins.AsyncIterator")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+	<li>{{JSxRef("Iteration_protocols", "Iteration protocols", "", "1")}}</li>
+	<li>{{JSxRef("Generator")}}</li>
+	<li>{{JSxRef("Global_Objects/AsyncGenerator", "AsyncGenerator")}}</li>
+	<li>{{JSxRef("Iterator")}} {{Experimental_Inline}}</li>
+</ul>

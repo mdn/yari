@@ -1,0 +1,78 @@
+---
+title: '-ms-accelerator'
+slug: Web/CSS/-ms-accelerator
+summary: >-
+  The -ms-accelerator CSS property is a Microsoft extension that sets or
+  retrieves a string indicating whether the object represents a keyboard
+  shortcut.
+tags:
+  - CSS
+  - CSS Property
+  - Non-standard
+  - Reference
+---
+<div>{{CSSRef}}</div>
+
+<div>{{non-standard_header}}</div>
+
+<p>The <strong><code>-ms-accelerator</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property is a <a href="/en-US/docs/Web/CSS/Microsoft_CSS_extensions">Microsoft extension</a> that sets or retrieves a string indicating whether the object represents a keyboard shortcut.</p>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax" name="Syntax">Syntax</h2>
+
+<pre class="brush: css">/* The object is not a keyboard shortcut (the default) */
+-ms-accelerator: false
+/* The object is a keyboard shortcut */
+-ms-accelerator: true
+</pre>
+
+<h3 id="Values">Values</h3>
+
+<dl>
+ <dt><code>false</code></dt>
+ <dd>
+ <p>The object is not a keyboard shortcut.</p>
+ </dd>
+ <dt><code>true</code></dt>
+ <dd>
+ <p>The object is a keyboard shortcut.</p>
+ </dd>
+</dl>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h2 id="Examples" name="Examples">Examples</h2>
+
+<p>This example uses the <code>-ms-accelerator</code> attribute in a {{HTMLElement("u")}} element to specify that the "N" in the {{HTMLElement("label")}} element is a keyboard shortcut. When the option to "Hide keyboard navigation indicators until I use the Alt key" is enabled in the user's Display Properties, the "N" is not underlined until the user presses the <kbd>Alt</kbd> key. When <kbd>Alt</kbd> + <kbd>N</kbd> is pressed, the {{HTMLElement("input")}} element that defines an {{htmlattrxref("accessKey","input")}} attribute value of "N" receives the focus.</p>
+
+<pre class="brush: html">&lt;!DOCTYPE html&gt;
+
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Accelerator&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;label for="oName"&gt;&lt;u style="-ms-accelerator: true; accelerator: true"&gt;N&lt;/u&gt;ame: &lt;/label&gt;
+    &lt;input type="text"
+      id="oName"
+      size="25"
+      accesskey="N"
+      value="Your name here" /&gt;
+  &lt;/body&gt;
+&lt;/html&gt;<strong>
+</strong></pre>
+
+<h2 id="Specifications" name="Specifications">Specifications</h2>
+
+<p>Not part of any specification.</p>
+
+<h2 id="Remarks" name="Remarks">Remarks</h2>
+
+<p>This property is supported by Windows 2000 and later. It enables users to hide navigation indicators for menu items and controls until the <kbd>Alt</kbd> key is pressed.</p>
+
+<p>An access key is a single character used as a keyboard shortcut for selecting an object. The user presses the <kbd>Alt</kbd> key and holds it while pressing the character to move input focus to the object, and to invoke the default event associated with the object.</p>
+
+<p>In Internet Explorer 8 (IE8) the <code>-ms-accelerator</code> attribute is an extension to CSS, and can be used as a synonym for <code>accelerator</code><strong> </strong>in IE8 Standards mode.</p>

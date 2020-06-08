@@ -1,0 +1,49 @@
+---
+title: '-ms-ime-align'
+slug: Web/CSS/-ms-ime-align
+summary: "The -ms-ime-align CSS property is a Microsoft extension aligning the Input Method Editor (IME) candidate window box relative to the element on which the IME composition is active. The extension is implemented in Microsoft Edge and Internet Explorer\_11."
+tags:
+  - CSS
+  - CSS Property
+  - NeedsBrowserCompatibility
+  - Non-standard
+  - Reference
+---
+<div>{{CSSRef}}</div>
+
+<div>{{non-standard_header}}</div>
+
+<div> </div>
+
+<p>The <strong><code>-ms-ime-align</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property is a <a href="/en-US/docs/Web/CSS/Microsoft_CSS_extensions">Microsoft extension</a> aligning the Input Method Editor (IME) candidate window box relative to the element on which the IME composition is active. The extension is implemented in Microsoft Edge and Internet Explorer 11.</p>
+
+<p>IME candidate lists are positioned on the screen with sufficient size to allow basic text input. In some cases, the IME may enforce a reasonable minimum size.</p>
+
+<p>In the case of <code>-ms-ime-align: after</code>, an IME might adjust the candidate window and keyboard input behavior to provide a better user experience, such as using a horizontal candidate list and allowing some keys to be sent to the app for suggestion list navigation.</p>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax" name="Syntax">Syntax</h2>
+
+<pre class="brush: css">/* Keyword values */
+-ms-ime-align: auto;
+-ms-ime-align: after;
+</pre>
+
+<h3 id="Values" name="Values">Values</h3>
+
+<dl>
+ <dt><code>auto</code></dt>
+ <dd>Initial value. The IME may align the candidate window in any manner.</dd>
+ <dt><code>after</code></dt>
+ <dd>The IME should attempt to align the candidate window below the element (in left-to-right and right-to-left layouts).</dd>
+</dl>
+
+<h3 id="Formal_syntax" name="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">  {{csssyntax}}
+</pre>
+
+<h2 id="Specifications" name="Specifications">Specifications</h2>
+
+<p>Not part of any specification.</p>

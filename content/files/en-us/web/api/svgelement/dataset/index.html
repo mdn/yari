@@ -1,0 +1,106 @@
+---
+title: SVGElement.dataset
+slug: Web/API/SVGElement/dataset
+summary: >-
+  The SVGElement.dataset property allows access, both in reading and writing
+  mode, to all the custom data attributes (data-*) set on the element. It is a
+  map of DOMStrings representing keys to DOMStrings representing the values for
+  those keys, with one entry for each custom data attribute. Each key
+  corresponds to the name of a custom data attribute; for example, a custom
+  attribute named data-foo is in the map with the key "foo".
+tags:
+  - Property
+  - Reference
+  - SVG
+  - SVG Custom Attributes
+  - SVG2
+  - SVGElement
+  - dataset
+---
+<p>{{ APIRef("SVG") }}</p>
+
+<p>The <code><strong>SVGElement.dataset</strong></code> property allows access, both in reading and writing mode, to all the <a href="/en/HTML/Global_attributes#attr-data-*" title="https://developer.mozilla.org/en/HTML/Global_attributes#attr-data-*">custom data attributes</a> (<code>data-*</code>) set on the element. It is a map of {{domxref("DOMString")}}s representing keys to {{domxref("DOMString")}}s representing the values for those keys, with one entry for each custom data attribute. Each key corresponds to the name of a custom data attribute; for example, a custom attribute named <code>data-foo</code> is in the map with the key <code>"foo"</code>.</p>
+
+<p>The name of a custom data attribute begins with <code>"data-"</code>. It must contain only letters, numbers and the following characters: dash (<code>-</code>), dot (<code>.</code>), colon (<code>:</code>), underscore (<code>_</code>). Moreover, it should not contain ASCII capital letters (<code>A</code> to <code>Z</code>).</p>
+
+<p>A custom data attribute name is transformed to a key for the {{ domxref("DOMStringMap") }} entry with the following rules:</p>
+
+<ul>
+ <li>the prefix <code>"data-"</code> is removed (including the dash);</li>
+ <li>for any dash (<code>U+002D</code>) followed by an<span style="line-height: 1.5;"> ASCII lowercase letter </span><code>a</code><span style="line-height: 1.5;"> to </span><code>z</code><span style="line-height: 1.5;">, the dash is removed and the letter is transformed into its uppercase counterpart;</span></li>
+ <li>other characters (including other dashes) are left unchanged.</li>
+</ul>
+
+<p>The opposite transformation, that maps a key to an attribute name, uses the following rules:</p>
+
+<ul>
+ <li>Restriction: A dash must not be immediately followed by an ASCII lowercase letter <code>a</code> to <code>z</code> (before the transformation);</li>
+ <li>a prefix <code>"data-"</code> is added;</li>
+ <li>any ASCII uppercase letter <code>A</code> to <code>Z</code> is transformed into a dash followed by its lowercase counterpart;</li>
+ <li>other characters are left unchanged.</li>
+</ul>
+
+<p>The restrictions established in the rules above ensures that the two transformations are the inverse one of the other.</p>
+
+<p>For example, the attribute named <code>"data-abc-def"</code> corresponds to the key <code>"abcDef"</code>.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox"><em>string</em> = <em>SVGElement</em>.dataset.<em>camelCasedName</em>;
+
+<em>SVGElement.</em>dataset.<em>camelCasedName</em> = <em>string</em>;</pre>
+
+<h3 id="Value">Value</h3>
+
+<p>The value of dataset is a {{domxref("DOMStringMap")}} object mapping key names to values; both the key names and the values are, themselves, {{domxref("DOMString")}} objects. You can access an individual value by using the syntax <code><em>SVGElement</em>.dataset.<em>keyName</em></code> to refer to the key.</p>
+
+<h2 id="Examples">Examples</h2>
+
+<pre class="brush: html">&lt;!DOCTYPE html&gt;
+&lt;title&gt;Data attributes&lt;/title&gt;
+&lt;div id="user" data-id="1234567890" data-user="johndoe" data-date-of-birth&gt;John Doe&lt;/div&gt;</pre>
+
+<pre class="brush: js">const user = document.querySelector('#user');
+
+console.log(user.id === 'user');
+console.log(user.dataset.id === '1234567890');
+console.log(user.dataset.user === 'johndoe');
+console.log(user.dataset.dateOfBirth === '');
+
+user.dataset.dateOfBirth = '1960-10-03'; // set the DOB.
+console.log(user.dataset.dateOfBirth);
+
+console.log('someDataAttr' in user.dataset === false);
+user.dataset.someDataAttr = 'mydata';
+console.log('someDataAttr' in user.dataset === true);</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+  <tr>
+   <td>{{SpecName('HTML WHATWG', "#dom-dataset", "dataset")}}</td>
+   <td>{{Spec2('HTML WHATWG')}}</td>
+   <td></td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.SVGElement.dataset")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>The SVG {{SVGAttr("data-*")}} class of global attributes.</li>
+ <li>The HTML {{htmlattrxref("data-*")}} class of global attributes.</li>
+ <li>{{domxref("SVGElement")}}</li>
+</ul>

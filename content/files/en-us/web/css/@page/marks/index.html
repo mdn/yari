@@ -1,0 +1,88 @@
+---
+title: marks
+slug: Web/CSS/@page/marks
+summary: >-
+  The marks CSS at-rule descriptor, used with the @page at-rule, adds crop
+  and/or cross marks to the presentation of the document. Crop marks indicate
+  where the page should be cut. Cross marks are used to align sheets.
+tags:
+  - '@page'
+  - CSS
+  - CSS Descriptor
+  - Experimental
+  - Layout
+  - Reference
+  - Web
+---
+<div>{{CSSRef}}{{SeeCompatTable}}</div>
+
+<p>The <strong><code>marks</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> <a href="/en-US/docs/Web/CSS/At-rule">at-rule</a> descriptor, used with the {{cssxref("@page")}} at-rule, adds crop and/or cross marks to the presentation of the document. <em>Crop marks</em> indicate where the page should be cut. <em>Cross marks</em> are used to align sheets.</p>
+
+<p>Crop marks and cross marks are printed outside the page box. To have room to show crop and cross marks, the final pages will have to be somewhat bigger than the page box.</p>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="brush:css">/* Keyword values */
+marks: none;
+marks: crop;
+marks: cross;
+marks: crop cross;
+</pre>
+
+<h3 id="Values">Values</h3>
+
+<dl>
+	<dt><code>crop</code></dt>
+	<dd>Crop marks will be displayed.</dd>
+	<dt><code>cross</code></dt>
+	<dd>Cross marks will be displayed.</dd>
+	<dt><code>none</code></dt>
+	<dd>No marks will be displayed.</dd>
+</dl>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h2 id="Examples">Examples</h2>
+
+<pre class="brush: css">@page {
+  marks: crop cross;
+}
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+	<thead>
+		<tr>
+			<th scope="col">Specification</th>
+			<th scope="col">Status</th>
+			<th scope="col">Comment</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>{{SpecName('CSS3 Paged Media', '#marks', 'marks')}}</td>
+			<td>{{Spec2('CSS3 Paged Media')}}</td>
+			<td>Initial definition</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>This CSS property was initially proposed in CSS Level 2, but was dropped from CSS Level 2 (Revision 1).</p>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.at-rules.page.marks")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+	<li>{{Cssxref("@page/bleed", "bleed")}}</li>
+	<li>{{Cssxref("@page/size", "size")}}</li>
+</ul>

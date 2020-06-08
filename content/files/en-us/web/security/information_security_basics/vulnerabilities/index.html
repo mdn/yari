@@ -1,0 +1,104 @@
+---
+title: Vulnerabilities
+slug: Web/Security/Information_Security_Basics/Vulnerabilities
+summary: >-
+  A vulnerability is a weakness in a system that can be exploited to negatively
+  impact confidentiality, integrity, and/or availability. There are many ways in
+  which vulnerabilities can be categorized. This article uses three high-level
+  vulnerability categories: software flaws, security configuration issues, and
+  software feature misuse. These categories are described below.
+tags:
+  - Beginner
+  - Security
+  - Tutorial
+  - Vulnerabilities
+  - Web security
+---
+<div class="summary">
+<p>This article discusses vulnerabilities, explaining what they are and how they are present in all systems.</p>
+</div>
+
+<p>A vulnerability is a weakness in a system that can be exploited to negatively impact confidentiality, integrity, and/or availability. There are many ways in which vulnerabilities can be categorized. This article uses three high-level vulnerability categories: software flaws, security configuration issues, and software feature misuse. These categories are described below.</p>
+
+<h2 id="Vulnerability_Categories">Vulnerability Categories</h2>
+
+<p>A<em> software flaw vulnerability</em> is caused by an unintended error in the design or coding of software. An example is an input validation error, such as user-provided input not being properly evaluated for malicious character strings and overly long values associated with known attacks. Another example is a race condition error that allows the attacker to perform a specific action with elevated privileges.</p>
+
+<p>A security configuration setting is an element of a software’s security that can be altered through the software itself. Examples of settings are an operating system offering access to control lists that set the privileges that users have for files, and an application offering a setting to enable or disable the encryption of sensitive data stored by the application.</p>
+
+<p>A<em> security configuration issue vulnerability</em> involves the use of security configuration settings that negatively affect the security of the software.</p>
+
+<p>A software feature is a functional capability provided by software. A <em>software feature misuse vulnerability</em> is a vulnerability in which the feature also provides an avenue to compromise the security of a system. These vulnerabilities are caused by the software designer making trust assumptions that permit the software to provide beneficial features, while also introducing the possibility of someone violating the trust assumptions to compromise security.</p>
+
+<p>For example, email client software may contain a feature that renders HTML content in email messages. An attacker could craft a fraudulent email message that contains hyperlinks that, when rendered in HTML, appear to the recipient to be benign but actually take the recipient to a malicious web site when they are clicked on. One of the trust assumptions in the design of the HTML content rendering feature was that users would not receive malicious hyperlinks and click on them.</p>
+
+<p>Software feature misuse vulnerabilities are introduced during the design of the software or a component of the software (e.g., a protocol that the software implements). Trust assumptions may have been explicit—for example, a designer being aware of a security weakness and determining that a separate security control would compensate for it.</p>
+
+<p>However, trust assumptions are often implicit, such as creating a feature without first evaluating the risks it would introduce. Threats may also change over the lifetime of software or a protocol used in software.</p>
+
+<p>For example, the Address Resolution Protocol (ARP) trusts that an ARP reply contains the correct mapping between Media Access Control (MAC) and <a href="/en-US/docs/Glossary/IP_Address">Internet Protocol</a> (IP) addresses. The ARP cache uses that information to provide a useful service—to enable sending data between devices within a local network. However, an attacker could generate false ARP messages to poison a system’s ARP table and thereby launch a denial-of-service or a man-in-the-middle attack.</p>
+
+<p>The ARP protocol was standardized over 25 years ago, and threats have changed a great deal since then, so the trust assumptions inherent in its design then are unlikely to still be reasonable today.</p>
+
+<p>It may be hard to differentiate software feature misuse vulnerabilities from the other two categories. For example, both software flaws and misuse vulnerabilities may be caused by deficiencies in software design processes. However, software flaws are purely negative—they provide no positive benefit to security or functionality—while software feature misuse vulnerabilities occur as a result of providing additional features.</p>
+
+<p>There may also be confusion regarding misuse vulnerabilities for features that can be enabled or disabled—in a way, configured—versus security configuration issues. The key difference is that for a misuse vulnerability, the configuration setting enables or disables the entire feature and does not specifically alter just its security; for a security configuration issue vulnerability, the configuration setting alters only the software’s security.</p>
+
+<p>For example, a setting that disables all use of HTML in emails has a significant impact on both security and functionality, so a vulnerability related to this setting would be a misuse vulnerability. A setting that disables the use of an antiphishing feature in an email client has a significant impact on only security, so a vulnerability with that setting would be considered a security configuration issue vulnerability.</p>
+
+<h2 id="The_Presence_of_Vulnerabilities">The Presence of Vulnerabilities</h2>
+
+<p>No system is 100% secure: every system has vulnerabilities. At any given time, a system may not have any known software flaws, but security configuration issues and software feature misuse vulnerabilities are always present.</p>
+
+<p>Misuse vulnerabilities are inherent in software features because each feature must be based on trust assumptions—and those assumptions can be broken, albeit involving significant cost and effort in some cases. Security configuration issues are also unavoidable for two reasons.</p>
+
+<p>First, many configuration settings increase security at the expense of reducing functionality, so using the most secure settings could make the software useless or unusable. Second, many security settings have both positive and negative consequences for security.</p>
+
+<p>An example is the number of consecutive failed authentication attempts to permit before locking out a user account. Setting this to 1 would be the most secure setting against password guessing attacks, but it would also cause legitimate users to be locked out after mistyping a password once, and it would also permit attackers to perform denial-of-service attacks against users more easily by generating a single failed login attempt for each user account.</p>
+
+<p>Because of the number of vulnerabilities inherent in security configuration settings and software feature misuse possibilities, plus the number of software flaw vulnerabilities on a system at any given time, there may be dozens or hundreds of vulnerabilities on a single system.</p>
+
+<p>These vulnerabilities are likely to have a wide variety of characteristics. Some will be very easy to exploit, while others will only be exploitable under a combination of highly unlikely conditions.</p>
+
+<p>One vulnerability might provide root-level access to a system, while another vulnerability might only permit read access to an insignificant file.</p>
+
+<p>Ultimately, organizations need to know how difficult it is for someone to exploit each vulnerability and, if a vulnerability is exploited, what the possible impact would be.</p>
+
+<h2 id="Website_Vulnerabilities">Website Vulnerabilities</h2>
+
+<p>OWASP or Open Web Security Project is a non-profit charitable organization focused on improving the security of software and web applications. According to the Open Web Application Security Project, XSS was the <a class="external external-icon" href="https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf" rel="noopener">seventh most common Web app vulnerability</a> in 2017.</p>
+
+<p>The organization publishes a list of top web security vulnerabilities based on the data from various security organizations.</p>
+
+<p>The <a href="/en-US/docs/Web/Security">web security</a> vulnerabilities are prioritized depending on exploitability, detectability and impact on software which can be any CMS such as WordPress, Joomla, Magento, Wocommerce and more.</p>
+
+<p><span class="hs_cos_wrapper hs_cos_wrapper_meta_field hs_cos_wrapper_type_rich_text">Here are six of the most common website vulnerabilities you must protect yourself against.</span></p>
+
+<p>1. SQL Injections<br>
+ 2. <a href="/en-US/docs/Glossary/Cross-site_scripting">Cross Site Scripting (XSS)</a><br>
+ 3. Broken Authentication &amp; Session Management -<a href="https://developer.mozilla.org/en-US/docs/Archive/IdentityManager"> IdentityManager</a><br>
+ 4. Insecure Direct Object References -<a href="https://developer.mozilla.org/en-US/docs/Glossary/DOM"> DOM (Document Object Model)</a><br>
+ 5. Security Misconfiguration<br>
+ 6. <a href="/en-US/docs/Glossary/CSRF">Cross-Site Request Forgery (CSRF) </a></p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><a class="external" href="https://www.owasp.org/">Open Web Application Security Project (OWASP)</a></li>
+ <li><a href="https://cve.mitre.org/">Common Vulnerabilities and Exposures (CVE)</a></li>
+ <li><a href="https://secure.wphackedhelp.com/blog/wordpress-vulnerabilities-how-to-fix-guide-tools/">Common WordPress Security Vulnerabilities</a></li>
+ <li><a href="https://en.wikipedia.org/wiki/Vulnerability_database">Vulnerability database</a></li>
+</ul>
+
+<div class="originaldocinfo">
+<h3 id="Original_Document_Information" name="Original_Document_Information">Original Document Information</h3>
+
+<ul>
+ <li>Author(s): Elizabeth LeMay, Karen Scarfone, and Peter Mell</li>
+ <li>Title: National Institute of Standards and Technology (NIST) Interagency Report 7864, The Common Misuse Scoring System (CMSS): Metrics for Software Feature Misuse Vulnerabilities</li>
+ <li>Last Updated Date: July 2012</li>
+ <li>Copyright Information: This document is not subject to copyright.</li>
+</ul>
+</div>
+
+<p>{{QuickLinksWithSubpages("/en-US/docs/Web/Security")}}</p>

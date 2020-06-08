@@ -1,0 +1,57 @@
+---
+title: CSS Font Loading API
+slug: Web/API/CSS_Font_Loading_API
+summary: "The CSS Font Loading\_API provides events and interfaces for dynamically loading font resources."
+tags:
+  - API
+  - CSSFontLoading
+  - Experimental
+  - Fonts
+  - NeedsContent
+  - Reference
+---
+<div>{{DefaultAPISidebar("CSS Font Loading API")}}{{SeeCompatTable}}</div>
+
+<p class="summary">The CSS Font Loading API provides events and interfaces for dynamically loading font resources.</p>
+
+<h2 id="Interfaces">Interfaces</h2>
+
+<dl>
+ <dt>{{domxref('FontFace')}}</dt>
+ <dd>Represents a single usable font face.</dd>
+ <dt>{{domxref('FontFaceSet')}}</dt>
+ <dd>An interface loading font faces and checking their download statuses.</dd>
+ <dt>{{domxref('FontFaceSource')}}</dt>
+ <dd>A <a href="/en-US/docs/Glossary/Mixin">mixin</a> providing all of the fonts used in font-related operations, unless defined otherwise. It defines the {{domxref("FontFaceSources.fonts")}} property available to {{domxref("Document")}} and {{domxref("WorkerGlobalScope")}}.</dd>
+ <dt>{{event('FontFaceSetLoadEvent')}}</dt>
+ <dd>Fired whenever a {{domxref("FontFaceSet")}} loads.</dd>
+</dl>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+  <tr>
+   <td>{{SpecName('CSS3 Font Loading')}}</td>
+   <td>{{Spec2('CSS3 Font Loading')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div>
+<h3 id="FontFace_interface"><code>FontFace</code> interface</h3>
+
+<div>
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.FontFace")}}</p>
+</div>
+</div>

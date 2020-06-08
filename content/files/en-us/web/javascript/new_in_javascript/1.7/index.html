@@ -1,0 +1,40 @@
+---
+title: New in JavaScript 1.7
+slug: Web/JavaScript/New_in_JavaScript/1.7
+summary: >-
+  The following is a changelog for JavaScript 1.7. This version was included in
+  Firefox 2 (October 2006).
+tags:
+  - JavaScript
+  - Versions
+---
+<div>{{jsSidebar("New_in_JS")}}</div>
+
+<p>The following is a changelog for JavaScript 1.7. This version was included in <a href="/en-US/Firefox/Releases/2">Firefox 2</a> (October 2006).</p>
+
+<p>JavaScript 1.7 is a language update introducing several new features, in particular generators, iterators, array comprehensions, <code>let</code> expressions, and destructuring assignment.</p>
+
+<h2 id="Using_JavaScript_1.7">Using JavaScript 1.7</h2>
+
+<p>In order to use some of the new features of JavaScript 1.7, you need to specify that you wish to use JavaScript 1.7. In HTML or XUL code, use:</p>
+
+<pre class="brush: html">&lt;script type="application/javascript;version=1.7"&gt;&lt;/script&gt;</pre>
+
+<p>When using the <a href="/en-US/docs/Mozilla/Projects/SpiderMonkey/Introduction_to_the_JavaScript_shell" title="en-US/docs/Introduction_to_the_JavaScript_shell">JavaScript shell</a>, you need to set the version you wish to use using the <code>-version 170</code> switch on the command line or using the <code>version()</code> function:</p>
+
+<pre class="brush:js">version(170);
+</pre>
+
+<p>The features that require the use of the new keywords "yield" and "let" require you to specify version 1.7 because existing code might use those keywords as variable or function names. The features that do not introduce new keywords (destructuring assignment and array comprehensions) can be used without specifying the JavaScript version.</p>
+
+<h2 id="New_features_in_JavaScript_1.7">New features in JavaScript 1.7</h2>
+
+<p>The following features added with JavaScript 1.7 were not part of an ECMA-262 standard at the time. In more recent Firefox versions, the implementation is updated to work with semantics as specified in ECMAScript Edition 6. Please see the reference pages for differences.</p>
+
+<ul>
+ <li><a href="/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators">Iterators and generators</a></li>
+ <li><a href="/en-US/docs/Web/JavaScript/Reference/Operators/Array_comprehensions#Differences_to_the_older_JS1.7.2FJS1.8_comprehensions">Array comprehensions</a></li>
+ <li><a href="/en-US/docs/Web/JavaScript/Reference/Statements/let"><code>let</code> statement</a> (support for <code>let</code> expression was dropped in Gecko 41, see {{bug(1023609)}}).</li>
+ <li><a href="/en-US/docs/const">const statement</a></li>
+ <li><a href="/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment">Destructuring assignment</a> (support for JS1.7 style destructuring for-in was dropped in Gecko 40, see {{bug(1083498)}}).</li>
+</ul>

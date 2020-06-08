@@ -1,0 +1,47 @@
+---
+title: Object.prototype.__count__
+slug: Web/JavaScript/Reference/Global_Objects/Object/count
+summary: >-
+  The __count__ property used to store the count of enumerable properties on the
+  object, but it has been removed.
+tags:
+  - JavaScript
+  - Non-standard
+  - Object
+  - Obsolete
+  - Property
+  - Prototype
+---
+<div>{{JSRef}}{{Non-standard_Header}}{{obsolete_header("gecko2")}}</div>
+
+<p>The <strong><code>__count__</code></strong> property used to store the count of enumerable properties on the object, but it has been removed.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox"><var>obj</var>.__count__</pre>
+
+<h2 id="Examples">Examples</h2>
+
+<pre class="brush: js">{ 1: 1 }.__count__              // 1
+[].__count__                    // 0
+[1].__count__                   // 1
+[1, /* hole */, 2, 3].__count__ // 3
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<p>Not part of any specification.</p>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div>
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.builtins.Object.count")}}</p>
+</div>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><a class="external" href="http://whereswalden.com/2010/04/06/more-changes-coming-to-spidermonkey-the-magical-__count__-property-of-objects-is-being-removed/">[Blog post] More changes coming to SpiderMonkey: the magical __count__ property is being removed</a></li>
+</ul>

@@ -1,0 +1,49 @@
+---
+title: Debug.setNonUserCodeExceptions
+slug: Web/JavaScript/Microsoft_Extensions/Debug/setNonUserCodeExceptions
+summary: "If this property is set to\_true within a given scope, the debugger can then choose whether to take some specified action on exceptions thrown inside that scope: for instance, if the developer wishes to break on user-unhandled exceptions. Setting this property to\_false is the same as never having set the property."
+tags:
+  - Debug
+  - Example
+  - JavaScript
+  - Property
+  - setNonUserCodeExceptions
+---
+<div>{{JSRef}}</div>
+
+<div>The <strong><code>debug.setNonUserCodeExceptions</code> property</strong> determines whether any try-catch blocks in this scope are to be treated by the debugger as user-unhandled. Exceptions can be classified as thrown, user-unhandled or unhandled.</div>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre>Debug.setNonUserCodeExceptions [= bool];</pre>
+
+<h3 id="Remarks">Remarks</h3>
+
+<p>If this property is set to <code>true</code> within a given scope, the debugger can then choose whether to take some specified action on exceptions thrown inside that scope: for instance, if the developer wishes to break on user-unhandled exceptions. Setting this property to <code>false</code> is the same as never having set the property.</p>
+
+<p>For more information on debugging, see the <a href="http://go.microsoft.com/fwlink/p/?LinkId=249469">Active Script Debugging Overview</a>.</p>
+
+<h2 id="Example">Example</h2>
+
+<p>The following code shows how to set this property.</p>
+
+<pre class="brush: js">(function () {  
+    Debug.setNonUserCodeExceptions = true;  
+    try{  
+        var x = null;  
+        x.y();  
+    } catch (e) {  
+    // Catch the exception.  
+    }  
+})();</pre>
+
+<h2 id="Requirements">Requirements</h2>
+
+<p>Supported in the following document modes: Internet Explorer 10 standards and Internet Explorer 11 standards. Also supported in Store apps (Windows 8 and Windows Phone 8.1).<br>
+ Not supported in the following document modes: Quirks, Internet Explorer 6 standards, Internet Explorer 7 standards, Internet Explorer 8 standards, Internet Explorer 9 standards.</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("Debug")}}</li>
+</ul>

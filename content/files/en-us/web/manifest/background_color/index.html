@@ -1,0 +1,74 @@
+---
+title: background_color
+slug: Web/Manifest/background_color
+summary: >-
+  The background_color member defines a placeholder background color for the
+  application page to display before its stylesheet is loaded. This value is
+  used by the user agent to draw the background color of a shortcut when the
+  manifest is available before the stylesheet has loaded.
+tags:
+  - Manifest
+  - Web
+  - background_color
+---
+<div>{{QuickLinksWithSubpages("/en-US/docs/Web/Manifest")}}</div>
+
+<table class="properties">
+ <tbody>
+  <tr>
+   <th scope="row">Type</th>
+   <td><code>String</code></td>
+  </tr>
+  <tr>
+   <th scope="row">Mandatory</th>
+   <td>No</td>
+  </tr>
+ </tbody>
+</table>
+
+<p>The <code>background_color</code> member defines a placeholder background color for the application page to display before its stylesheet is loaded. This value is used by the user agent to draw the background color of a shortcut when the manifest is available before the stylesheet has loaded.</p>
+
+<p>Therefore <code>background_color</code> should match the {{cssxref("background-color")}} CSS property in the site’s stylesheet for a smooth transition between launching the web application and loading the site's content.</p>
+
+<div class="blockIndicator note">
+<p><strong>Note</strong>: The <code>background_color</code> member is only meant to improve the user experience while the main stylesheet is loading from the network or the storage media; it is not used by the user agent as the {{cssxref("background-color")}} CSS property when the progressive web app stylesheet is available.</p>
+</div>
+
+<h2 id="Examples">Examples</h2>
+
+<pre class="brush: json">"background_color": "red"</pre>
+
+<h2 id="Specification">Specification</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+   <th scope="col">Feedback</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    <p>{{SpecName('Manifest', '#background_color-member', 'background_color')}}</p>
+   </td>
+   <td>
+    <p>{{Spec2('Manifest')}}</p>
+   </td>
+   <td>
+    <p>Initial definition.</p>
+   </td>
+   <td>
+    <p><a href="https://github.com/w3c/manifest/issues/">Web App Manifest Working Group drafts</a></p>
+   </td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table in this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("html.manifest.background_color")}}</p>

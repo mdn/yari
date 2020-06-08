@@ -1,0 +1,108 @@
+---
+title: handler.enumerate()
+slug: Web/JavaScript/Reference/Global_Objects/Proxy/handler/enumerate
+summary: >-
+  The handler.enumerate() method used to be a trap for for...in statements, but
+  has been removed from the ECMAScript standard in ES2016 and is deprecated in
+  browsers.
+tags:
+  - ECMAScript 2015
+  - JavaScript
+  - Method
+  - Obsolete
+  - Proxy
+---
+<div>{{JSRef}} {{obsolete_header}}</div>
+
+<p>The <strong><code>handler.enumerate()</code></strong> method used to be a trap for {{jsxref("Statements/for...in", "for...in")}} statements, but has been removed from the ECMAScript standard in ES2016 and is deprecated in browsers.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="brush: js">var p = new Proxy(target, {
+  enumerate(target) {
+  }
+});
+</pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<p>The following parameter is passed to the <code>enumerate</code> method. <code>this</code> is bound to the handler.</p>
+
+<dl>
+ <dt><code>target</code></dt>
+ <dd>The target object.</dd>
+</dl>
+
+<h3 id="Return_value">Return value</h3>
+
+<p>An <a href="/en-US/docs/Web/JavaScript/Guide/The_Iterator_protocol">iterator</a> object.</p>
+
+<h2 id="Description">Description</h2>
+
+<p>The <code><strong>handler.enumerate</strong></code> method is a trap for {{jsxref("Statements/for...in", "for...in")}} statements.</p>
+
+<h3 id="Interceptions">Interceptions</h3>
+
+<p>This trap can intercept these operations:</p>
+
+<ul>
+ <li>Property enumeration / for...in: <code>for (var name in proxy) {...}</code></li>
+ <li>{{jsxref("Reflect.enumerate()")}}</li>
+</ul>
+
+<h3 id="Invariants">Invariants</h3>
+
+<p>If the following invariants are violated, the proxy will throw a {{jsxref("TypeError")}}:</p>
+
+<ul>
+ <li>The <code>enumerate</code> method must return an object.</li>
+</ul>
+
+<h2 id="Examples">Examples</h2>
+
+<p>The following code traps {{jsxref("Statements/for...in", "for...in")}} statements.</p>
+
+<pre class="brush: js">var p = new Proxy({}, {
+  enumerate(target) {
+    console.log('called');
+    return ['a', 'b', 'c'][Symbol.iterator]();
+  }
+});
+
+for (var x in p) { // "called"
+  console.log(x);  // "a"
+}                  // "b"
+                   // "c"
+</pre>
+
+<p>The following code violates the invariant.</p>
+
+<pre class="brush: js">var p = new Proxy({}, {
+  enumerate(target) {
+    return 1;
+  }
+});
+
+for (var x in p) {} // TypeError is thrown
+</pre>
+
+<p>Note: Both examples make use of the shorthand syntax for <a href="/en-US/docs/Web/JavaScript/Reference/Functions/Method_definitions">method definitions</a>.</p>
+
+<h2 id="Specifications">Specifications</h2>
+
+<p>Not part of any current specification or proposal.</p>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.builtins.Proxy.handler.enumerate")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("Proxy")}}</li>
+ <li>{{jsxref("Proxy.handler", "handler")}}</li>
+ <li>{{jsxref("Statements/for...in", "for...in")}} statements</li>
+ <li>{{jsxref("Reflect.enumerate()")}}</li>
+</ul>

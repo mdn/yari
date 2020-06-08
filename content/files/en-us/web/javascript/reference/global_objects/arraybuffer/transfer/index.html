@@ -1,0 +1,99 @@
+---
+title: ArrayBuffer.transfer()
+slug: Web/JavaScript/Reference/Global_Objects/ArrayBuffer/transfer
+summary: "The static ArrayBuffer.transfer() method returns a new ArrayBuffer whose contents have been\_taken from the oldBuffer's data and then is either truncated or zero-extended by newByteLength. If newByteLength is undefined, the byteLength of the oldBuffer is used. This operation leaves oldBuffer in a detached state."
+tags:
+  - ArrayBuffer
+  - Experimental
+  - JavaScript
+  - Method
+  - Reference
+  - TypedArrays
+---
+<div>{{JSRef}}{{Draft}}{{SeeCompatTable}}</div>
+
+<p>The static <code><strong>ArrayBuffer.transfer()</strong></code> method returns a new {{DOMxRef("ArrayBuffer")}} whose contents have been taken from the <code>oldBuffer</code>'s data and then is either truncated or zero-extended by <code>newByteLength</code>. If <code>newByteLength</code> is <code>undefined</code>, the <code>byteLength</code> of the <code>oldBuffer</code> is used. This operation leaves <code>oldBuffer</code> in a detached state.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox">ArrayBuffer.transfer(oldBuffer [, newByteLength]);</pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<dl>
+ <dt><code>oldBuffer</code></dt>
+ <dd>An {{jsxref("ArrayBuffer")}} object from which to transfer.</dd>
+ <dt><code>newByteLength</code></dt>
+ <dd>The byte length of the new <code>ArrayBuffer</code> object.</dd>
+</dl>
+
+<h3 id="Return_value">Return value</h3>
+
+<p>A new <code>ArrayBuffer</code> object.</p>
+
+<h2 id="Description">Description</h2>
+
+<p>The <code>ArrayBuffer.transfer()</code> method allows you to grow and detach <code>ArrayBuffer</code> objects. The ability to grow an <code>ArrayBuffer</code> without copying has the advantage of being much faster for large buffers (similar to realloc). The ability to detach an <code>ArrayBuffer</code> gives the developer explicit control over when the underlying memory is released.  This avoids having to drop all references and wait for garbage collection.</p>
+
+<h2 id="Examples">Examples</h2>
+
+<pre class="brush: js">var buf1 = new ArrayBuffer(40);
+new Int32Array(buf1)[0] = 42;
+
+var buf2 = ArrayBuffer.transfer(buf1, 80);
+buf1.byteLength; // 0 but if you use the polyfill then the value is still 40
+buf2.byteLength; // 80
+new Int32Array(buf2)[0]; // 42
+
+var buf3 = ArrayBuffer.transfer(buf2, 0);
+buf2.byteLength; // 0 but if you use the polyfill then the value is still 80
+buf3.byteLength; // 0
+</pre>
+
+<h2 id="Polyfill">Polyfill</h2>
+
+<p>You can partially work around this by inserting the following code at the beginning of your scripts, allowing use of much of the functionality of transfer<font face="Consolas, Liberation Mono, Courier, monospace">()</font> in browsers that do not natively support it. This is not the exact equivalent of this API because browsers that natively support it are be able to internally use the C++ function <font face="consolas, Liberation Mono, courier, monospace"><span style="background-color: rgba(220, 220, 220, 0.5);">realloc()</span></font> which extends the length of the memory and only copies it to a new location as-needed as opposed to the following pollyfill which always copies the whole thing to a new space of memory, but this function transfers data from one ArrayBuffer to another ArrayBuffer.</p>
+
+<pre class="brush: js">if (!ArrayBuffer.transfer) {
+    ArrayBuffer.transfer = function(source, length) {
+        if (!(source instanceof ArrayBuffer))
+            throw new TypeError('Source must be an instance of ArrayBuffer');
+        if (length &lt;= source.byteLength)
+            return source.slice(0, length);
+        var sourceView = new Uint8Array(source),
+            destView = new Uint8Array(new ArrayBuffer(length));
+        destView.set(sourceView);
+        return destView.buffer;
+    };
+}</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><code><a href="https://github.com/domenic/proposal-arraybuffer-transfer/#user-content-arraybufferprototypetransfer">ArrayBuffer.prototype.transfer</a></code> proposal</td>
+   <td>Draft</td>
+   <td>Stage 2 Draft</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.builtins.ArrayBuffer.transfer")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><a href="/en-US/docs/Web/JavaScript/Typed_arrays" title="en/JavaScript typed arrays">JavaScript typed arrays</a></li>
+</ul>

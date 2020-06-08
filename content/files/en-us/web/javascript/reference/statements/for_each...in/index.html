@@ -1,0 +1,84 @@
+---
+title: for each...in
+slug: Web/JavaScript/Reference/Statements/for_each...in
+summary: >-
+  The for each...in statement iterates a specified variable over all values of
+  object's properties. For each distinct property, a specified statement is
+  executed.
+tags:
+  - Deprecated
+  - E4X
+  - JavaScript
+  - Obsolete
+  - Statement
+---
+<div>{{jsSidebar("Statements")}}</div>
+
+<div class="warning">
+<p>The <code>for each...in</code> statement is deprecated as the part of ECMA-357 (<a href="/en-US/docs/Archive/Web/E4X" title="/en-US/docs/E4X">E4X</a>) standard. E4X support has been removed. Consider using <a href="/en-US/docs/Web/JavaScript/Reference/Statements/for...of">for...of</a> instead.<br>
+ <br>
+ <strong>Firefox now warns about the usage of <code>for each...in</code> and it no longer works starting with Firefox 57.<br>
+ Please see <a href="/en-US/docs/Web/JavaScript/Reference/Errors/For-each-in_loops_are_deprecated">Warning: JavaScript 1.6's for-each-in loops are deprecated</a> for migration help.</strong></p>
+</div>
+
+<p>The<code> <strong>for each...in</strong></code><strong> statement</strong> iterates a specified variable over all values of object's properties. For each distinct property, a specified statement is executed.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox">for each (<em>variable</em> in <em>object</em>) {
+  <em>statement</em>
+}</pre>
+
+<dl>
+ <dt><code>variable</code></dt>
+ <dd>Variable to iterate over property values, optionally declared with the <code>var</code> keyword. This variable is local to the function, not to the loop.</dd>
+</dl>
+
+<dl>
+ <dt><code>object</code></dt>
+ <dd>Object for which the properties are iterated.</dd>
+</dl>
+
+<dl>
+ <dt><code>statement</code></dt>
+ <dd>A statement to execute for each property. To execute multiple statements within the loop, use a <a href="/en-US/docs/Web/JavaScript/Reference/Statements/block">block</a> statement (<code>{ ... }</code>) to group those statements.</dd>
+</dl>
+
+<h2 id="Description">Description</h2>
+
+<p>Some built-in properties are not iterated over. These include all built-in methods of objects, e.g. <code>String</code>'s <code>indexOf</code> method. However, all user-defined properties are iterated over.</p>
+
+<h2 id="Examples">Examples</h2>
+
+<h3 id="Using_for_each...in">Using <code>for each...in</code></h3>
+
+<p><strong>Warning:</strong> Never use a loop like this on arrays. Only use it on objects. See <a href="/en-US/docs/Web/JavaScript/Reference/Statements/for...in"><code>for...in</code></a> for more details.</p>
+
+<p>The following snippet iterates over an object's properties, calculating their sum:</p>
+
+<pre class="brush:js">var sum = 0;
+var obj = {prop1: 5, prop2: 13, prop3: 8};
+
+for each (var item in obj) {
+  sum += item;
+}
+
+console.log(sum); // logs "26", which is 5+13+8</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<p>Not part of a current ECMA-262 specification. Implemented in JavaScript 1.6 and deprecated.</p>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.statements.for_each_in")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><code><a href="/en-US/docs/Web/JavaScript/Reference/Statements/for...in">for...in</a></code> - a similar statement that iterates over the property <em>names</em>.</li>
+ <li><code><a href="/en-US/docs/Web/JavaScript/Reference/Statements/for...of">for...of</a></code> - a similar statement that iterates over the property <em>values</em> but can only be used for iteratable types, so not for generic objects</li>
+ <li><code><a href="/en-US/docs/JavaScript/Reference/Statements/for">for</a></code></li>
+</ul>

@@ -1,0 +1,157 @@
+---
+title: Object.prototype.watch()
+slug: Web/JavaScript/Reference/Global_Objects/Object/watch
+summary: >-
+  The watch() method watches for a property to be assigned a value and runs a
+  function when that occurs.
+tags:
+  - Debugging
+  - Deprecated
+  - JavaScript
+  - Method
+  - Object
+  - Obsolete
+  - Prototype
+---
+<div>{{JSRef}}</div>
+
+<div class="warning">
+<p><strong>Deprecation warning:</strong> Do not use <code>watch()</code> and {{jsxref("Object.prototype.unwatch", "unwatch()")}}! These two methods were implemented only in Firefox prior to version 58, they're <strong>deprecated and removed in Firefox 58+</strong>. In addition, using watchpoints has a serious negative impact on performance, which is especially true when used on global objects, such as <code>window</code>. You can usually use <a href="/en-US/docs/Web/JavaScript/Guide/Working_with_Objects#Defining_getters_and_setters">setters and getters</a> or <a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy">proxies</a> instead.</p>
+</div>
+
+<p>The <code><strong>watch()</strong></code> method watches for a property to be assigned a value and runs a function when that occurs.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox"><code><var>obj</var>.watch(<var>prop</var>, <var>handler</var>)</code></pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<dl>
+ <dt><code>prop</code></dt>
+ <dd>The name of a property of the object on which you wish to monitor changes.</dd>
+ <dt><code>handler</code></dt>
+ <dd>A function to call when the specified property's value changes.</dd>
+</dl>
+
+<h3 id="Return_value">Return value</h3>
+
+<p>{{jsxref("undefined")}}.</p>
+
+<h2 id="Description">Description</h2>
+
+<p>Watches for assignment to a property named <code>prop</code> in this object, calling <code>handler(prop, oldval, newval)</code> whenever <code>prop</code> is set and storing the return value in that property. A watchpoint can filter (or nullify) the value assignment, by returning a modified <code>newval</code> (or by returning <code>oldval</code>).</p>
+
+<p>If you delete a property for which a watchpoint has been set, that watchpoint does not disappear. If you later recreate the property, the watchpoint is still in effect.</p>
+
+<p>To remove a watchpoint, use the {{jsxref("Object.unwatch", "unwatch()")}} method. By default, the <code>watch</code> method is inherited by every object descended from {{jsxref("Object")}}.</p>
+
+<p>The JavaScript debugger has functionality similar to that provided by this method, as well as other debugging options. For information on the debugger, see <a href="/en-US/docs/Venkman">Venkman</a>.</p>
+
+<p>In Firefox, <code>handler</code> is only called from assignments in script, not from native code. For example, <code>window.watch('location', myHandler)</code> will not call <code>myHandler</code> if the user clicks a link to an anchor within the current document. However, <code>window.location += '#myAnchor'</code> will call <code>myHandler</code>.</p>
+
+<div class="note">
+<p><strong>Note:</strong> Calling <code>watch()</code> on an object for a specific property overrides any previous handler attached for that property.</p>
+</div>
+
+<h2 id="Examples">Examples</h2>
+
+<h3 id="Using_watch_and_unwatch">Using <code>watch</code> and <code>unwatch</code></h3>
+
+<pre class="brush: js">var o = { p: 1 };
+
+o.watch('p', function (id, oldval, newval) {
+  console.log('o.' + id + ' changed from ' + oldval + ' to ' + newval);
+  return newval;
+});
+
+o.p = 2;
+o.p = 3;
+delete o.p;
+o.p = 4;
+
+o.unwatch('p');
+o.p = 5;
+</pre>
+
+<p>This script displays the following:</p>
+
+<pre>o.p changed from 1 to 2
+o.p changed from 2 to 3
+o.p changed from undefined to 4
+</pre>
+
+<h3 id="Using_watch_to_validate_an_objects_properties">Using <code>watch</code> to validate an object's properties</h3>
+
+<p>You can use <code>watch</code> to test any assignment to an object's properties. This example ensures that every Person always has a valid name and an age between 0 and 200.</p>
+
+<pre class="brush: js">Person = function(name, age) {
+  this.watch('age', Person.prototype._isValidAssignment);
+  this.watch('name', Person.prototype._isValidAssignment);
+  this.name = name;
+  this.age = age;
+};
+
+Person.prototype.toString = function() {
+  return this.name + ', ' + this.age;
+};
+
+Person.prototype._isValidAssignment = function(id, oldval, newval) {
+  if (id === 'name' &amp;&amp; (!newval || newval.length &gt; 30)) {
+    throw new RangeError('invalid name for ' + this);
+  }
+  if (id === 'age'  &amp;&amp; (newval &lt; 0 || newval &gt; 200)) {
+    throw new RangeError('invalid age for ' + this);
+  }
+  return newval;
+}
+
+will = new Person('Will', 29);
+console.log(will);   // Will, 29
+
+try {
+  will.name = '';
+} catch (e) {
+  console.log(e);
+}
+
+try {
+  will.age = -4;
+} catch (e) {
+  console.log(e);
+}
+</pre>
+
+<p>This script displays the following:</p>
+
+<pre>Will, 29
+RangeError: invalid name for Will, 29
+RangeError: invalid age for Will, 29
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<p>Not part of any specifications. Implemented in JavaScript 1.2.</p>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div>
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.builtins.Object.watch")}}</p>
+</div>
+
+<h2 id="Compatibility_notes">Compatibility notes</h2>
+
+<ul>
+ <li>This <a class="external link-https" href="https://gist.github.com/384583">Polyfill</a> offers <code>watch</code> to all ES5 compatible browsers.</li>
+ <li>Using a {{jsxref("Proxy")}} enables you do even deeper changes to how property assignments work.</li>
+ <li>Calling <code>watch()</code> on the <a href="/en-US/docs/Web/API/Document" title="The Document interface represents any web page loaded in the browser and serves as an entry point into the web page's content, which is the DOM tree."><code>Document</code></a> object throws a {{jsxref("TypeError")}} since Firefox 23 ({{bug(903332)}}). This regression has been fixed with Firefox 27.</li>
+</ul>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("Object.unwatch()")}}</li>
+ <li>{{jsxref("Object.observe()")}} {{obsolete_inline}}</li>
+</ul>

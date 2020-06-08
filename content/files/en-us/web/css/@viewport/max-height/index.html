@@ -1,0 +1,78 @@
+---
+title: max-height
+slug: Web/CSS/@viewport/max-height
+summary: >-
+  The max-height CSS descriptor specifies the maximum height of the viewport of
+  a document defined via the @viewport at-rule.
+tags:
+  - '@viewport'
+  - CSS
+  - CSS Descriptor
+  - Reference
+---
+<div>{{CSSRef}}</div>
+
+<p>The <code><strong>max-height</strong></code> CSS descriptor specifies the maximum height of the viewport of a document defined via the {{cssxref("@viewport")}} at-rule.</p>
+
+<p>The height will initially be set as close as possible to the initial viewport height considering the maximum height constraint.</p>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="brush: css">/* Keyword value */
+max-height: auto;
+
+/* &lt;length&gt; values */
+max-height: 400px;
+max-height: 50em;
+max-height: 20cm;
+
+/* &lt;percentage&gt; value */
+max-height: 75%;</pre>
+
+<h3 id="Values">Values</h3>
+
+<dl>
+ <dt><code>auto</code></dt>
+ <dd>The used value is calculated from the other CSS descriptors' values.</dd>
+ <dt><code>&lt;length&gt;</code></dt>
+ <dd>A non-negative absolute or relative length.</dd>
+ <dt><code>&lt;percentage&gt;</code></dt>
+ <dd>A percentage value relative to the height of the initial viewport at zoom factor 1.0 for vertical lengths. Must be non-negative.</dd>
+</dl>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h2 id="Example">Example</h2>
+
+<pre class="brush: css">@viewport {
+  max-height: 600px;
+}</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('CSS3 Device', '#descdef-viewport-max-height', '"max-height" descriptor')}}</td>
+   <td>{{Spec2('CSS3 Device')}}</td>
+   <td>Initial definition</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.at-rules.viewport.max-height")}}</p>

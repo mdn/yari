@@ -1,0 +1,53 @@
+---
+title: Window.applicationCache
+slug: Web/API/Window/applicationCache
+summary: Returns a reference to the application cache object for the window.
+tags:
+  - API
+  - Deprecated
+  - HTML DOM
+  - NeedsCompatTable
+  - NeedsExample
+  - NeedsSpecTable
+  - Property
+  - Reference
+  - Window
+---
+<p>{{DefaultAPISidebar("App Cache")}}{{Deprecated_Header}}{{SecureContext_Header}}{{Draft}}</p>
+
+<div class="warning">
+<p><strong>Important</strong>: Application Cache is deprecated as of Firefox 44, and is no longer available in insecure contexts from Firefox 60 onwards ({{bug(1354175)}}, currently Nightly/Beta only). Don't use it to offline websites — consider using <a href="/en-US/docs/Web/API/Service_Worker_API">service workers</a> instead.</p>
+</div>
+
+<div>{{APIRef}}</div>
+
+<p>Returns a reference to the application cache object for the window.</p>
+
+<h2 id="Syntax" name="Syntax">Syntax</h2>
+
+<pre class="syntaxbox"><var>cache</var> = window.applicationCache
+</pre>
+
+<h3 id="Parameters" name="Parameters">Parameters</h3>
+
+<ul>
+ <li><code>cache</code> is an object reference to an <code>OfflineResourceList</code>.</li>
+</ul>
+
+<h2 id="Specification" name="Specification">Specification</h2>
+
+<ul>
+ <li>{{spec("http://www.w3.org/TR/2008/WD-html5-20080122/#appcache","HTML 5","WD")}}</li>
+</ul>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table in this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.Window.applicationCache")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><a href="/en-US/docs/HTML/Using_the_application_cache">Using Application Cache</a></li>
+</ul>

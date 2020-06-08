@@ -1,0 +1,45 @@
+---
+title: ScriptEngine()
+slug: Web/JavaScript/Microsoft_Extensions/ScriptEngine
+summary: "The ScriptEngine function\_gets the name of the scripting language in use."
+tags:
+  - Deprecated
+  - JavaScript
+  - 'JavaScript:Microsoft Extensions'
+  - Method
+  - Non-standard
+---
+<div>{{JSRef}}{{Non-standard_Header}}{{Deprecated_Header}}</div>
+
+<p>The <strong><code>ScriptEngine</code> function </strong>gets the name of the scripting language in use.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre>ScriptEngine()</pre>
+
+<h3 id="Remarks">Remarks</h3>
+
+<p>The <code>ScriptEngine</code> function returns "JScript", which indicates that JavaScript is the current scripting engine.</p>
+
+<h2 id="Example">Example</h2>
+
+<p>The following example illustrates the use of the <code>ScriptEngine</code> function:</p>
+
+<pre class="brush: js">if (window.ScriptEngine) {  
+    console.log(window.ScriptEngine());  
+}  
+
+// Output: JScript
+</pre>
+
+<h2 id="Requirements">Requirements</h2>
+
+<p>Supported in the following document modes: Quirks, Internet Explorer 6 standards, Internet Explorer 7 standards, Internet Explorer 8 standards, Internet Explorer 9 standards, Internet Explorer 10 standards, Internet Explorer 11 standards. Also supported in Store apps (Windows 8 and Windows Phone 8.1).</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/ScriptEngineBuildVersion">ScriptEngineBuildVersion Function</a></li>
+ <li><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/ScriptEngineMajorVersion">ScriptEngineMajorVersion Function</a></li>
+ <li><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/ScriptEngineMinorVersion">ScriptEngineMinorVersion Function</a></li>
+</ul>

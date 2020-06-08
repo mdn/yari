@@ -1,0 +1,111 @@
+---
+title: VBArray
+slug: Web/JavaScript/Microsoft_Extensions/VBArray
+summary: "The VBArray object\_provides access to Visual Basic safe arrays."
+tags:
+  - Example
+  - JavaScript
+  - Non-standard
+  - Reference
+---
+<div>{{JSRef}}</div>
+
+<div class="warning"><strong>Non-standard. Do not use!</strong><br>
+This object is a Microsoft extension and is only supported in Internet Explorer.</div>
+
+<p>The <strong><code>VBArray</code> object </strong>provides access to Visual Basic safe arrays.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre>varName = new VBArray(safeArray)</pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<dl>
+ <dt><code>varName</code></dt>
+ <dd>The variable name to which the VBArray is assigned.</dd>
+ <dt><em>safeArray</em></dt>
+ <dd>A VBArray value.</dd>
+</dl>
+
+<h3 id="Remarks">Remarks</h3>
+
+<p>VBArrays are read-only, and cannot be created directly. The <em>safeArray</em> argument must have obtained a VBArray value before being passed to the VBArray constructor. This can only be done by retrieving the value from an existing ActiveX or other object.</p>
+
+<p>VBArrays can have multiple dimensions. The indices of each dimension can be different. The <strong>dimensions</strong> method retrieves the number of dimensions in the array; the <code>lbound</code> and <code>ubound</code> methods retrieve the range of indices used by each dimension.</p>
+
+<h2 id="Example">Example</h2>
+
+<p>The following example consists of three parts. The first part is VBScript code to create a Visual Basic safe array. The second part is JavaScript code that converts the Visual Basic safe array to a JavaScript array. Both of these parts go into the &lt;HEAD&gt; section of an HTML page. The third part is the JavaScript code that goes in the &lt;BODY&gt; section to run the other two parts.</p>
+
+<pre class="brush: js">&lt;head&gt;  
+&lt;script type="text/vbscript"&gt;  
+&lt;!--  
+Function CreateVBArray()  
+   Dim i, j, k  
+   Dim a(2, 2)  
+   k = 1  
+   For i = 0 To 2  
+      For j = 0 To 2  
+         a(j, i) = k  
+         document.writeln(k)  
+         k = k + 1  
+      Next  
+      document.writeln("&lt;br /&gt;")  
+   Next  
+   CreateVBArray = a  
+End Function  
+--&gt;  
+&lt;/script&gt;  
+
+&lt;script type="text/javascript"&gt;  
+&lt;!--  
+function VBArrayTest(vbarray){  
+   var a = new VBArray(vbarray);  
+   var b = a.toArray();  
+   var i;  
+   for (i = 0; i &lt; 9; i++)   
+   {  
+      document.writeln(b[i]);  
+   }  
+}  
+--&gt;  
+&lt;/script&gt;  
+&lt;/head&gt;  
+
+&lt;body&gt;  
+&lt;script type="text/javascript"&gt;  
+&lt;!--  
+   VBArrayTest(CreateVBArray());  
+--&gt;  
+&lt;/script&gt;  
+&lt;/body&gt;</pre>
+
+<h2 id="Properties">Properties</h2>
+
+<p>The <code>VBArray</code> object has no properties.</p>
+
+<h2 id="Methods">Methods</h2>
+
+<dl>
+ <dt><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/VBArray/dimensions"><code>VBArray.dimensions</code></a></dt>
+ <dd>Returns the number of dimensions in a VBArray.</dd>
+ <dt><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/VBArray/getItem"><code>VBArray.getItem</code></a></dt>
+ <dd>Returns the item at the specified location.</dd>
+ <dt><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/VBArray/lbound"><code>VBArray.lbound</code></a></dt>
+ <dd>Returns the lowest index value used in the specified dimension of a VBArray.</dd>
+ <dt><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/VBArray/toArray"><code>VBArray.toArray</code></a></dt>
+ <dd>Returns a standard JavaScript array converted from a VBArray.</dd>
+ <dt><a href="/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/VBArray/ubound"><code>VBArray.ubound</code></a></dt>
+ <dd>Returns the highest index value used in the specified dimension of the VBArray.</dd>
+</dl>
+
+<h2 id="Requirements">Requirements</h2>
+
+<p>Supported in the following document modes: Quirks, Internet Explorer 6 standards, Internet Explorer 7 standards, Internet Explorer 8 standards, Internet Explorer 9 standards, and Internet Explorer 10 standards. Not supported in Windows 8.x Store apps.</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><a href="/en-US/docs/Glossary/array">Array Object</a></li>
+</ul>
