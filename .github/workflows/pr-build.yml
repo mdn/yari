@@ -30,13 +30,24 @@ jobs:
           node --version
           yarn --version
 
-      - name: Install
-        uses: abatilo/actions-poetry@v1.5.0
-        with:
-          python_version: 3.8
-          poetry_version: 1.0
-          working_directory: ./deployer # Optional, defaults to '.'
-          args: install
+      # - name: Install
+      #   if: steps.git_diff_content.outputs.diff
+      #   uses: abatilo/actions-poetry@v1.5.0
+      #   with:
+      #     python_version: 3.8
+      #     poetry_version: 1.0
+      #     working_directory: ./deployer # Optional, defaults to '.'
+      #     args: install
+
+      - name: Install Python poetry
+        if: steps.git_diff_content.outputs.diff
+        uses: dschep/install-poetry-action@v1.3
+
+      - name: Display Python & Poetry version
+        if: steps.git_diff_content.outputs.diff
+        run: |
+          python --version
+          poetry --version
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -79,4 +90,4 @@ jobs:
 
           # Upload the lot!
           cd deployer
-          run deployer upload --help
+          poetry run deployer upload --help
