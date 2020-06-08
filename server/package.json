@@ -4,7 +4,6 @@
   "main": "index.js",
   "license": "MPL-2.0",
   "scripts": {
-    "#start": "nodemon index.js --exec babel-node --presets babel-preset-env",
     "start": "nodemon index.js"
   },
   "dependencies": {

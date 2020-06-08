@@ -7,4 +7,4 @@ yarn run prebuild
 
 node content build
 
-yarn workspace testing run test
+yarn workspace testing run test $@
