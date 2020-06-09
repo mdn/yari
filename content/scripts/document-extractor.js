@@ -29,7 +29,7 @@ function extractSidebar($) {
   return sidebarHtml;
 }
 
-function extractDocumentSections($, {}) {
+function extractDocumentSections($) {
   const sections = [];
   let section = cheerio
     .load("<div></div>", {
