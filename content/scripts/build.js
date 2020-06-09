@@ -3,6 +3,7 @@ const path = require("path");
 const crypto = require("crypto");
 const childProcess = require("child_process");
 const { performance } = require("perf_hooks");
+const zlib = require("zlib");
 
 const fm = require("front-matter");
 const chalk = require("chalk");
@@ -222,22 +223,32 @@ function extractLocale(source, folder) {
   return locale;
 }
 
-function getContent(source, folder, appendWikiHistory = false) {
+function getContent(source, folder, allWikiHistory, appendWikiHistory = false) {
   const rawHtmlFilepath = path.join(folder, "index.html");
   const rawContent = fs.readFileSync(rawHtmlFilepath, "utf8");
   const content = fm(rawContent);
   const metadata = content.attributes;
   const rawHtml = content.body;
   metadata.frontMatterOffset = content.bodyBegin;
-  if (appendWikiHistory) {
-    const wikiHistoryPath = path.join(folder, "wikihistory.json");
-    if (fs.existsSync(wikiHistoryPath)) {
-      const wikiMetadataRaw = fs.readFileSync(wikiHistoryPath);
-      const wikiMetadata = JSON.parse(wikiMetadataRaw);
-      metadata.modified = wikiMetadata.modified;
-    }
-  }
   metadata.locale = extractLocale(source, folder);
+  if (appendWikiHistory) {
+    const slugLC = metadata.slug.toLowerCase();
+    if (!allWikiHistory.size) {
+      throw new Error("allWikiHistory hasn't been populated");
+    }
+    const localeHistory = allWikiHistory.get(metadata.locale.toLowerCase());
+    if (localeHistory.has(slugLC)) {
+      metadata.modified = localeHistory.get(slugLC).modified;
+    }
+
+    // const wikiHistoryPath = path.join(folder, "wikihistory.json");
+    // if (fs.existsSync(wikiHistoryPath)) {
+    //   const wikiMetadataRaw = fs.readFileSync(wikiHistoryPath);
+    //   const wikiMetadata = JSON.parse(wikiMetadataRaw);
+    //   metadata.modified = wikiMetadata.modified;
+    // }
+  }
+
   return { metadata, rawHtml, rawContent, rawHtmlFilepath };
 }
 
@@ -353,6 +364,7 @@ class Builder {
     this.logger = logger;
     this.selfHash = null;
     this.allTitles = new Map();
+    this.allWikiHistory = new Map();
     this.allRedirects = new Map();
     this.flawsByType = new Map();
 
@@ -501,7 +513,7 @@ class Builder {
         );
         continue;
       }
-      const content = getContent(source, folder);
+      const content = getContent(source, folder, this.allWikiHistory);
       const { metadata, rawHtml, rawHtmlFilepath } = content;
       // When rendering prerequisites, we're only interested in
       // caching the results for later use. We don't care about
@@ -673,6 +685,9 @@ class Builder {
     if (!this.selfHash) {
       throw new Error("this.selfHash hasn't been set yet");
     }
+
+    this.ensureAllWikiHistory();
+
     if (
       this.allTitles.size &&
       this.allTitles.get("_hash") === this.selfHash &&
@@ -858,6 +873,40 @@ class Builder {
     this.logger.info(
       chalk.green(
         `Building map of all redirects took ${ppMilliseconds(t1 - t0)}`
+      )
+    );
+  }
+
+  ensureAllWikiHistory() {
+    if (this.allWikiHistory.size) {
+      // No reason to proceed, the wikihistory have already been loaded
+      // into memory.
+      return;
+    }
+
+    let t0 = new Date();
+    // Walk all the locale folders and gather all of the redirects.
+    for (const source of this.sources.entries()) {
+      for (const localeFolder of this.getLocaleRootFolders(source, {
+        allLocales: true,
+      })) {
+        const locale = path.basename(localeFolder).toLowerCase();
+        const map = new Map();
+        const filepath = path.join(localeFolder, "_wikihistory.json.gz");
+        if (fs.existsSync(filepath)) {
+          const all = JSON.parse(zlib.gunzipSync(fs.readFileSync(filepath)));
+          for (const [slug, data] of Object.entries(all)) {
+            map.set(slug.toLowerCase(), data);
+          }
+          this.allWikiHistory.set(locale, map);
+        }
+      }
+    }
+
+    let t1 = new Date();
+    this.logger.info(
+      chalk.green(
+        `Building map of all wiki history took ${ppMilliseconds(t1 - t0)}`
       )
     );
   }
@@ -1461,7 +1510,7 @@ class Builder {
         metadata: otherMetadata,
         rawHtml: otherRawHtml,
         rawHtmlFilepath: otherRawHtmlFilepath,
-      } = getContent(source, otherFolder);
+      } = getContent(source, otherFolder, this.allWikiHistory);
       const otherDestinationDir = path.join(
         this.destination,
         slugToFoldername(otherUri)
@@ -1492,7 +1541,8 @@ class Builder {
   async processFolder(source, folder, config) {
     const { metadata, rawHtml, rawContent, rawHtmlFilepath } = getContent(
       source,
-      folder
+      folder,
+      this.allWikiHistory
     );
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
     const mdnUrlLC = mdn_url.toLowerCase();
@@ -1857,7 +1907,7 @@ class Builder {
    * adding this document's uri and title to this.allTitles
    */
   processFolderTitle(source, folder, allPopularities) {
-    const { metadata } = getContent(source, folder, true);
+    const { metadata } = getContent(source, folder, this.allWikiHistory, true);
     let mdn_url;
     try {
       mdn_url = buildMDNUrl(metadata.locale, metadata.slug);

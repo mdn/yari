@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const stream = require("stream");
 const { promisify } = require("util");
+const zlib = require("zlib");
 
 const chalk = require("chalk");
 const mysql = require("mysql");
@@ -72,6 +73,17 @@ function startsWithArchivePrefix(uri) {
 
 function isArchiveRedirect(uri) {
   return redirectsToArchive.has(uri) || startsWithArchivePrefix(uri);
+}
+
+// Turn a Map instance into a object.
+// This is something you might need to do when serializing a Map
+// with JSON.stringify().
+function mapToObject(map) {
+  const obj = Object.create(null);
+  for (const [key, value] of map) {
+    obj[key] = value;
+  }
+  return obj;
 }
 
 async function populateRedirectInfo(pool, constraintsSQL, queryArgs) {
@@ -406,7 +418,7 @@ function uriToSlug(uri) {
 }
 
 async function prepareRoots(options) {
-  if (!options.archiveRoot) throw new Error("woot?!");
+  if (!options.archiveRoot) throw new Error("BUILD_ARCHIVE_ROOT not set");
   if (!options.root) throw new Error("waat?!");
   if (options.root === options.archiveRoot) throw new Error("eh?!");
   if (options.startClean) {
@@ -687,6 +699,7 @@ async function processDocument(
   doc,
   { archiveRoot, root, startClean },
   isArchive = false,
+  localeWikiHistory,
   { usernames, contributors, tags }
 ) {
   const { slug, locale, title, summary } = doc;
@@ -737,11 +750,16 @@ async function processDocument(
     wikiHistory.contributors = docContributors;
   }
 
+  if (!isArchive) {
+    localeWikiHistory.set(doc.slug, wikiHistory);
+  }
+
   Document.create(
     contentPath,
     isArchive ? doc.rendered_html : doc.html,
     meta,
-    wikiHistory,
+    isArchive ? wikiHistory : null,
+    null,
     isArchive ? doc.html : null
   );
 }
@@ -784,6 +802,37 @@ async function saveAllRedirects(redirects, root) {
   countPerLocale.sort((a, b) => b[1] - a[1]);
   for (const [locale, count] of countPerLocale) {
     console.log(`${locale.padEnd(10)}${count.toLocaleString()}`);
+  }
+}
+
+async function saveAllWikiHistory(allHistory, root) {
+  /**
+   * The 'allHistory' is an object that looks like this:
+   *
+   * {'en-us': {
+   *   'Games/Foo': {
+   *     modified: '2019-01-21T12:13:14',
+   *     contributors: ['Gregoor', 'peterbe', 'ryan']
+   *   }
+   *  }}
+   *
+   * But, it's a Map!
+   *
+   * Save these so that there's a _wikihistory.json in every locale folder.
+   */
+
+  for (const [locale, history] of allHistory) {
+    const localeFolder = path.join(root, locale);
+    const filePath = path.join(localeFolder, "_wikihistory.json.gz");
+
+    // fs.writeFileSync(filePath, JSON.stringify(mapToObject(history), null, 2));
+    const obj = Object.create(null);
+    const keys = Array.from(history.keys());
+    keys.sort();
+    for (const key of keys) {
+      obj[key] = history.get(key);
+    }
+    fs.writeFileSync(filePath, zlib.gzipSync(JSON.stringify(obj, null, 2)));
   }
 }
 
@@ -850,6 +899,8 @@ module.exports = async function runImporter(options) {
   let archivedRedirects = 0;
   let fastForwardedRedirects = 0;
 
+  const allWikiHistory = new Map();
+
   for await (const row of documents.stream) {
     processedDocumentsCount++;
 
@@ -894,11 +945,21 @@ module.exports = async function runImporter(options) {
           improvedRedirects++;
         }
       } else {
-        await processDocument(row, options, isArchive, {
-          usernames,
-          contributors,
-          tags,
-        });
+        assert(row.locale);
+        if (!allWikiHistory.has(row.locale)) {
+          allWikiHistory.set(row.locale, new Map());
+        }
+        await processDocument(
+          row,
+          options,
+          isArchive,
+          allWikiHistory.get(row.locale),
+          {
+            usernames,
+            contributors,
+            tags,
+          }
+        );
       }
     })()
       .catch((err) => {
@@ -917,6 +978,7 @@ module.exports = async function runImporter(options) {
   }
 
   pool.end();
+  await saveAllWikiHistory(allWikiHistory, options.root);
   await saveAllRedirects(redirects, options.root);
 
   if (improvedRedirects) {
