@@ -5,6 +5,7 @@ const childProcess = require("child_process");
 const { performance } = require("perf_hooks");
 
 const fm = require("front-matter");
+const ms = require("ms");
 const chalk = require("chalk");
 const sanitizeFilename = require("sanitize-filename");
 const chokidar = require("chokidar");
@@ -42,6 +43,10 @@ const ALL_TITLES_JSON_FILEPATH = path.join(
   "_all-titles.json"
 );
 
+function msLong(milliseconds) {
+  // https://github.com/vercel/ms/blob/master/readme.md
+  return ms(milliseconds, { long: true });
+}
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
 }
@@ -813,7 +818,7 @@ class Builder {
     this.dumpAllTitles();
     let t1 = new Date();
     this.logger.info(
-      chalk.green(`Building list of all titles took ${ppMilliseconds(t1 - t0)}`)
+      chalk.green(`Building list of all titles took ${msLong(t1 - t0)}`)
     );
   }
 
@@ -856,9 +861,7 @@ class Builder {
 
     let t1 = new Date();
     this.logger.info(
-      chalk.green(
-        `Building map of all redirects took ${ppMilliseconds(t1 - t0)}`
-      )
+      chalk.green(`Building map of all redirects took ${msLong(t1 - t0)}`)
     );
   }
 
@@ -872,7 +875,7 @@ class Builder {
       const { result, file, doc } = await this.processFolder(source, folder);
       const t1 = performance.now();
 
-      const tookStr = ppMilliseconds(t1 - t0);
+      const tookStr = msLong(t1 - t0);
       console.log(
         `${
           result === processing.PROCESSED
@@ -925,7 +928,7 @@ class Builder {
             chalk.yellow(
               `File watcher set up for ${watchdir}. ` +
                 `Watching over ${count.toLocaleString()} files in ${folders.length.toLocaleString()} folders. ` +
-                `Took ${ppMilliseconds(ageSinceStart)} to get ready.`
+                `Took ${msLong(ageSinceStart)} to get ready.`
             )
           );
           if (isTTY()) {
@@ -1053,7 +1056,7 @@ class Builder {
     const rate = (1000 * totalProcessed) / took; // per second
     console.log(
       chalk.yellow(
-        `Processed ${totalProcessed.toLocaleString()} in ${ppMilliseconds(
+        `Processed ${totalProcessed.toLocaleString()} in ${msLong(
           took
         )} (roughly ${rate.toFixed(1)} docs/sec)`
       )
@@ -1221,9 +1224,7 @@ class Builder {
     const t1 = new Date();
     console.log(
       chalk.yellow(
-        `Dumping all URLs to sitemaps and titles.json took ${ppMilliseconds(
-          t1 - t0
-        )}`
+        `Dumping all URLs to sitemaps and titles.json took ${msLong(t1 - t0)}`
       )
     );
   }
@@ -1964,21 +1965,6 @@ function* walker(root, depth = 0) {
       // Now go deeper
       yield* walker(filepath, depth + 1);
     }
-  }
-}
-
-function ppMilliseconds(ms) {
-  // If the number of millseconds is really large, use seconds. Or minutes
-  // even.
-  if (ms > 1000 * 60 * 5) {
-    const seconds = ms / 1000;
-    const minutes = seconds / 60;
-    return `${minutes.toFixed(1)} minutes`;
-  } else if (ms > 100) {
-    const seconds = ms / 1000;
-    return `${seconds.toFixed(1)} seconds`;
-  } else {
-    return `${ms.toFixed(1)} milliseconds`;
   }
 }
 
