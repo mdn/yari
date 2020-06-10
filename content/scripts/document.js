@@ -4,7 +4,6 @@ const path = require("path");
 const fm = require("front-matter");
 const glob = require("glob");
 const yaml = require("js-yaml");
-const rimraf = require('rimraf');
 
 const { VALID_LOCALES } = require("./constants");
 const { slugToFoldername } = require("./utils");
@@ -139,7 +138,7 @@ function update(contentRoot, folder, rawHtml, metadata) {
 }
 
 function del(folder) {
-  rimraf.sync(folder);
+  fs.rmdirSync(folder, {recursive: true});
 }
 
 module.exports = {
