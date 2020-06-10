@@ -1,3 +1,5 @@
+const { humanFileSize } = require("./utils");
+
 class ProgressBar {
   constructor({ prefix = "Progress: ", includeMemory = false }) {
     this.total;
@@ -46,7 +48,7 @@ class ProgressBar {
     let out = `${this.prefix}[${filledBar}${emptyBar}] | ${percentageProgress}`;
     if (this.includeMemory) {
       const bytes = process.memoryUsage().heapUsed;
-      out += ` | ${this.rJust(this.humanFileSize(bytes))}`;
+      out += ` | ${this.rJust(humanFileSize(bytes))}`;
     }
     process.stdout.clearLine();
     process.stdout.cursorTo(0);
@@ -57,14 +59,6 @@ class ProgressBar {
     process.stdout.write("\n\n");
   }
 
-  humanFileSize(size) {
-    if (size < 1024) return size + " B";
-    let i = Math.floor(Math.log(size) / Math.log(1024));
-    let num = size / Math.pow(1024, i);
-    let round = Math.round(num);
-    num = round < 10 ? num.toFixed(2) : round < 100 ? num.toFixed(1) : round;
-    return `${num} ${"KMGTPEZY"[i - 1]}B`;
-  }
   rJust(str, length) {
     while (str.length < length) {
       str = ` ${str}`;
