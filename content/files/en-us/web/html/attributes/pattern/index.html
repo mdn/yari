@@ -24,7 +24,7 @@ tags:
 
 <p>Some of the input types supporting the pattern attribute, notably the {{HTMLElement("input/email", "email")}} and {{HTMLElement("input/url", "url")}} input types, have expected value syntaxes that must be matched. If the pattern attribute isn't present, and the value doesn't match the expected syntax for that value type, the  <code>{{domxref('ValidityState')}}</code> object's read-only <code>{{domxref('ValidityState.typeMismatch','typeMismatch')}}</code> property will be true.</p>
 
-<h3 id="Usablity">Usablity</h3>
+<h3 id="Usability">Usability</h3>
 
 <p>When including a <code>pattern</code>, provide a description of the pattern in visible text near the control. Additionally, include a <code><a href="/en-US/docs/Web/HTML/Global_attributes/title">title</a></code> attribute which gives a description of the pattern. User agents may use the title contents during constraint validation to tell the user that the pattern is not matched. Some browsers show a tooltip with title contents, improving usability for sighted users. Additionally, assistive technology may read the title aloud when the control gains focus, but this should not be relied upon for accessibility.</p>
 
