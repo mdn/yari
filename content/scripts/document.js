@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const fm = require("front-matter");
+const glob = require("glob");
 const yaml = require("js-yaml");
 
 const { VALID_LOCALES } = require("./constants");
@@ -11,7 +12,8 @@ function buildPath(localeFolder, slug) {
   return path.join(localeFolder, slugToFoldername(slug));
 }
 
-const getHTMLPath = (folder) => path.join(folder, "index.html");
+const HTML_FILENAME = "index.html";
+const getHTMLPath = (folder) => path.join(folder, HTML_FILENAME);
 const getWikiHistoryPath = (folder) => path.join(folder, "wikihistory.json");
 
 function extractLocale(contentRoot, folder) {
@@ -30,13 +32,9 @@ function extractLocale(contentRoot, folder) {
   return locale;
 }
 
-function saveFile(folder, rawHtml, { slug, title, summary }) {
-  const combined = `---\n${yaml.safeDump({
-    slug,
-    title,
-    summary,
-  })}---\n${rawHtml.trim()}\n`;
-  fs.writeFileSync(getHTMLPath(folder), combined);
+function saveHTMLFile(filePath, rawHtml, attributes) {
+  const combined = `---\n${yaml.safeDump(attributes)}---\n${rawHtml.trim()}\n`;
+  fs.writeFileSync(filePath, combined);
 }
 
 function trimLineEndings(string) {
@@ -57,7 +55,7 @@ function create(
 
   fs.mkdirSync(folder, { recursive: true });
 
-  saveFile(folder, trimLineEndings(html), metadata);
+  saveHTMLFile(getHTMLPath(folder), trimLineEndings(html), metadata);
 
   // The `rawHtml` is only applicable in the importer when it saves
   // archived content. The archived content gets the *rendered* html
@@ -109,18 +107,11 @@ const read = (contentRoot, folder, includeTimestamp = false) => {
   };
 };
 
-function rmdirIfEmpty(folder) {
-  const dirIter = fs.opendirSync(folder);
-  const isEmpty = !dirIter.readSync();
-  dirIter.closeSync();
-  if (isEmpty) {
-    fs.rmdirSync(folder);
-  }
-}
-
 function update(contentRoot, folder, rawHtml, metadata) {
   const document = read(contentRoot, folder);
-  const isNewSlug = document.metadata.slug !== metadata.slug;
+  const oldSlug = document.metadata.slug;
+  const newSlug = metadata.slug;
+  const isNewSlug = oldSlug !== newSlug;
 
   if (
     isNewSlug ||
@@ -128,29 +119,26 @@ function update(contentRoot, folder, rawHtml, metadata) {
     document.metadata.title !== metadata.title ||
     document.metadata.summary !== metadata.summary
   ) {
-    saveFile(folder, rawHtml, metadata);
+    saveHTMLFile(getHTMLPath(folder), rawHtml, metadata);
   }
 
   if (isNewSlug) {
+    const childFilePaths = glob.sync(path.join(folder, "**", HTML_FILENAME));
+    for (const childFilePath of childFilePaths) {
+      const { attributes, body } = fm(fs.readFileSync(childFilePath, "utf8"));
+      attributes.slug = attributes.slug.replace(oldSlug, newSlug);
+      saveHTMLFile(childFilePath, body, attributes);
+    }
     const newFolder = buildPath(
       path.join(contentRoot, metadata.locale.toLowerCase()),
-      metadata.slug
+      newSlug
     );
-    fs.mkdirSync(newFolder, { recursive: true });
-    fs.renameSync(getHTMLPath(folder), getHTMLPath(newFolder));
-    const oldWikiHistoryPath = getWikiHistoryPath(folder);
-    if (fs.existsSync(oldWikiHistoryPath)) {
-      fs.renameSync(oldWikiHistoryPath, getWikiHistoryPath(newFolder));
-    }
-    rmdirIfEmpty(folder);
+    fs.renameSync(folder, newFolder);
   }
 }
 
 function del(folder) {
-  fs.unlinkSync(getHTMLPath(folder));
-  const wikiHistoryPath = getWikiHistoryPath(folder);
-  fs.existsSync(wikiHistoryPath) && fs.unlinkSync(wikiHistoryPath);
-  rmdirIfEmpty(folder);
+  fs.rmdirSync(folder);
 }
 
 module.exports = {

@@ -21,7 +21,9 @@ function getOrCreateBuilder(options) {
     // The server doesn't have command line arguments like the content CLI
     // does so we need to entirely rely on environment variables.
     if (process.env.BUILD_ROOT) {
-      sources.add(normalizeContentPath(process.env.BUILD_ROOT));
+      sources.add(normalizeContentPath(process.env.BUILD_ROOT), {
+        watch: true,
+      });
     }
     builder = new Builder(
       sources,
@@ -46,8 +48,11 @@ function getOrCreateBuilder(options) {
     builder.ensureAllTitles();
     builder.ensureAllRedirects();
     builder.prepareRoots();
+    builder.watch();
   }
   return builder;
 }
+
+getOrCreateBuilder();
 
 module.exports = { normalizeContentPath, getOrCreateBuilder };

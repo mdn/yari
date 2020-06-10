@@ -17,7 +17,11 @@ function addToBuilder(localeFolder, slug) {
   builder.ensureAllTitles();
   const source = builder.sources.entries()[0];
   const folder = Document.buildPath(localeFolder, slug);
-  builder.processFolderTitle(source, folder, []);
+  try {
+    builder.processFolderTitle(source, folder, []);
+  } catch (e) {
+    throw new Error(`Error when processing ${folder}: ${e.toString()}`);
+  }
   return builder.processFolder(source, folder);
 }
 
@@ -54,33 +58,52 @@ router.get("/", withDocFolder, (req, res) => {
   res.status(document ? 200 : 404).json(document);
 });
 
-router.put("/", withDocFolder, (req, res) => {
+router.put("/", withDocFolder, async (req, res) => {
   const { rawHtml, metadata } = req.body;
   if (metadata.title && rawHtml) {
     const document = Document.read(CONTENT_ROOT, req.docFolder);
+    const oldMetadata = document.metadata;
+    const oldSlug = oldMetadata.slug;
+    const newSlug = metadata.slug;
+    const isNewSlug = oldSlug !== newSlug;
+
+    const builder = getOrCreateBuilder();
+
+    if (isNewSlug) {
+      for (const watcher of builder.watchers) {
+        await watcher.close();
+      }
+    }
+
     Document.update(
       CONTENT_ROOT,
       req.docFolder,
       rawHtml.trim() + "\n",
       metadata
     );
-    const oldMetadata = document.metadata;
-    if (oldMetadata.slug !== metadata.slug) {
-      const builder = getOrCreateBuilder();
-      builder.removeFolderTitle(oldMetadata.locale, oldMetadata.slug);
-      builder.moveSlug(
-        CONTENT_ROOT,
-        metadata.locale,
-        oldMetadata.slug,
-        metadata.slug,
-        { redirectOldToNew: true }
-      );
 
-      addToBuilder(
-        path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
-        metadata.slug
+    if (isNewSlug) {
+      const urls = builder.removeURLs(oldMetadata.locale, oldSlug);
+
+      Promise.all(
+        urls
+          .map((url) =>
+            url
+              .split("/")
+              .slice(3)
+              .join("/")
+              .replace(oldSlug.toLowerCase(), newSlug.toLowerCase())
+          )
+          .map((slug) =>
+            addToBuilder(
+              path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
+              slug
+            )
+          )
       )
         .then(() => {
+          builder.moveURLs(CONTENT_ROOT, metadata.locale, oldSlug, newSlug);
+          builder.watch();
           res.sendStatus(200);
         })
         .catch((e) => {
@@ -96,7 +119,7 @@ router.put("/", withDocFolder, (req, res) => {
 router.delete("/", withDocFolder, (req, res) => {
   const { metadata } = Document.read(CONTENT_ROOT, req.docFolder);
   Document.del(req.docFolder);
-  getOrCreateBuilder().removeFolderTitle(metadata.locale, metadata.slug);
+  const urls = getOrCreateBuilder().removeURLs(metadata.locale, metadata.slug);
 
   const builtFile = path.join(
     STATIC_ROOT,

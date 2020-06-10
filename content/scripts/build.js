@@ -4,7 +4,6 @@ const crypto = require("crypto");
 const childProcess = require("child_process");
 const { performance } = require("perf_hooks");
 
-const fm = require("front-matter");
 const chalk = require("chalk");
 const sanitizeFilename = require("sanitize-filename");
 const chokidar = require("chokidar");
@@ -865,10 +864,10 @@ class Builder {
       }
     };
 
-    this.sources
+    this.watchers = this.sources
       .entries()
       .filter((source) => source.watch)
-      .forEach((source) => {
+      .map((source) => {
         const watchdir = path.resolve(source.filepath);
 
         console.log(chalk.yellow(`Setting up file watcher on ${watchdir}...`));
@@ -901,6 +900,8 @@ class Builder {
             console.log("Hit Ctrl-C to quit the watcher when ready.");
           }
         });
+
+        return watcher;
       });
   }
 
@@ -1832,9 +1833,11 @@ class Builder {
    * adding this document's uri and title to this.allTitles
    */
   processFolderTitle(source, folder, allPopularities) {
-    const { metadata } = Document.read(source.filepath, folder, true);
+    let metadata
     let mdn_url;
     try {
+      const document = Document.read(source.filepath, folder, true);
+      metadata = document.metadata;
       mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
     } catch (err) {
       console.warn(`The folder that caused the error was: ${folder}`);
@@ -1883,20 +1886,25 @@ class Builder {
     this.allTitles.set(mdnUrlLC, doc);
   }
 
-  removeFolderTitle(locale, slug) {
-    this.allTitles.delete(buildMDNUrl(locale, slug).toLowerCase());
+  removeURLs(locale, slug) {
+    const rootURL = buildMDNUrl(locale, slug).toLowerCase();
+    const urls = Array.from(this.allTitles.keys()).filter((key) =>
+      key.startsWith(rootURL)
+    );
+    for (const url of urls) {
+      this.allTitles.delete(url);
+    }
+    return urls;
   }
 
-  moveSlug(contentRoot, locale, oldSlug, newSlug, { redirectOldToNew }) {
+  moveURLs(contentRoot, locale, oldSlug, newSlug) {
     const oldURL = buildMDNUrl(locale, oldSlug);
     const newURL = buildMDNUrl(locale, newSlug);
     const pairs = Array.from(this.allRedirects.entries()).map(([from, to]) => [
       from,
-      to === oldURL ? newURL : to,
+      to.startsWith(oldURL) ? to.replace(oldURL, newURL) : to,
     ]);
-    if (redirectOldToNew) {
-      pairs.push([oldURL, newURL]);
-    }
+    pairs.push([oldURL, newURL]);
     this.allRedirects = new Map(pairs);
     writeRedirects(path.join(contentRoot, locale), pairs);
   }
