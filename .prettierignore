@@ -19,6 +19,8 @@ content/_all-titles.json
 /client/src/water.css/
 /archivecontent/
 /content/files/
+/testing/content/
+/testing/archivecontent/
 /kumascript/coverage/
 
 # Misc files to ignore

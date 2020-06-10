@@ -1,0 +1,73 @@
+---
+title: NotificationEvent.notification
+slug: Web/API/NotificationEvent/notification
+summary: "The notification read-only property of the NotificationEvent interface returns the instance of the\_Notification that was clicked to fire the event. The\_Notification provides read-only access to many properties that were set at the instantiation time of the Notification such as tag and data\_attributes that allow you to store information for defered use in the notificationclick event."
+tags:
+  - API
+  - Experimental
+  - NotificationEvent
+  - Notifications
+  - Property
+  - Reference
+  - Service Workers
+  - ServiceWorker
+---
+<p>{{APIRef("Service Workers API")}}</p>
+
+<p>The <code>notification</code> read-only property of the {{domxref("NotificationEvent")}} interface returns the instance of the {{domxref("Notification")}} that was clicked to fire the event. The {{domxref("Notification")}} provides read-only access to many properties that were set at the instantiation time of the Notification such as <code>tag</code> and <code>data</code> attributes that allow you to store information for defered use in the <code>notificationclick</code> event.</p>
+
+<h2 id="Returns">Returns</h2>
+
+<p>A {{domxref("Notification")}} object.</p>
+
+<h2 id="Example">Example</h2>
+
+<pre class="brush: js">self.addEventListener('notificationclick', function(event) {
+  console.log('On notification click');
+
+  // Data can be attached to the notification so that you
+  // can process it in the notificationclick handler.
+  console.log('Notification Tag:', event.notification.tag);
+  console.log('Notification Data:', event.notification.data);
+  event.notification.close();
+
+  // This looks to see if the current is already open and
+  // focuses if it is
+  event.waitUntil(clients.matchAll({
+    type: "window"
+  }).then(function(clientList) {
+    for (var i = 0; i &lt; clientList.length; i++) {
+      var client = clientList[i];
+      if (client.url == '/' &amp;&amp; 'focus' in client)
+        return client.focus();
+    }
+    if (clients.openWindow)
+      return clients.openWindow('/');
+  }));
+});
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table>
+ <tbody>
+  <tr>
+   <th scope="col"><font face="Open Sans, sans-serif"><span style="font-weight: normal;">Specification</span></font></th>
+   <th scope="col"><font face="Open Sans, sans-serif"><span style="font-weight: normal;">Status</span></font></th>
+   <th scope="col"><font face="Open Sans, sans-serif"><span style="font-weight: normal;">Comment</span></font></th>
+  </tr>
+  <tr>
+   <td>{{SpecName('Web Notifications','#dom-notificationevent-notification','notification')}}</td>
+   <td>{{Spec2('Web Notifications')}}</td>
+   <td>Living standard.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_Compatibility">Browser Compatibility</h2>
+
+<div>
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.NotificationEvent.notification")}}</p>
+</div>

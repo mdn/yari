@@ -1,0 +1,102 @@
+---
+title: azimuth
+slug: Web/CSS/azimuth
+summary: >-
+  In combination with elevation, the azimuth CSS property enables different
+  audio sources to be positioned spatially for aural presentation. This is
+  important in that it provides a natural way to tell several voices apart, as
+  each can be positioned to originate at a different location on the sound
+  stage. Stereo output produce a lateral sound stage, while binaural headphones
+  and multi-speaker setups allow for a fully three-dimensional stage.
+tags:
+  - CSS
+  - CSS Property
+  - Deprecated
+  - NeedsUpdate
+  - Reference
+---
+<div>{{CSSRef}} {{deprecated_header}}</div>
+
+<p>In combination with <code>elevation</code>, the <strong><code>azimuth</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property enables different audio sources to be positioned spatially for aural presentation. This is important in that it provides a natural way to tell several voices apart, as each can be positioned to originate at a different location on the sound stage. Stereo output produce a lateral sound stage, while binaural headphones and multi-speaker setups allow for a fully three-dimensional stage.</p>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h3 id="Values">Values</h3>
+
+<dl>
+ <dt>angle</dt>
+ <dd>Audible source position is described as an angle within the range <code>-360deg</code> to <code>360deg</code>. The value <code>0deg</code> means directly ahead in the center of the sound stage (this is the default value). <code>90deg</code> is to the right, <code>180deg</code> is behind, and <code>270deg</code> or <code>-90deg</code> is to the left.</dd>
+</dl>
+
+<p><img alt="Image:Azimuth.png" src="/@api/deki/files/37/=Azimuth.png"></p>
+
+<h4 id="Positional_keywords">Positional keywords</h4>
+
+<ul>
+ <li><strong><code>left-side</code></strong>: Same as <code>270deg</code>.</li>
+ <li><strong><code>left-side behind</code></strong>: Same as <code>270deg</code>.</li>
+ <li><strong><code>far-left</code></strong>: Same as <code>300deg</code>.</li>
+ <li><strong><code>far-left behind</code></strong>: Same as <code>240deg</code>.</li>
+ <li><strong><code>left</code></strong>: Same as <code>320deg</code>.</li>
+ <li><strong><code>left behind</code></strong>: Same as <code>220deg</code>.</li>
+ <li><strong><code>center-left</code></strong>: Same as <code>340deg</code>.</li>
+ <li><strong><code>center-left behind</code></strong>: Same as <code>200deg</code>.</li>
+ <li><strong><code>center</code></strong>: Same as <code>0deg</code>.</li>
+ <li><strong><code>center behind</code></strong>: Same as <code>180deg</code>.</li>
+ <li><strong><code>center-right</code></strong>: Same as <code>20deg</code>.</li>
+ <li><strong><code>center-right behind</code></strong>: Same as <code>160deg</code>.</li>
+ <li><strong><code>right</code></strong>: Same as <code>40deg</code>.</li>
+ <li><strong><code>right behind</code></strong>: Same as <code>140deg</code>.</li>
+ <li><strong><code>far-right</code></strong>: Same as <code>60deg</code>.</li>
+ <li><strong><code>far-right behind</code></strong>: Same as <code>120deg</code>.</li>
+ <li><strong><code>right-side</code></strong>: Same as <code>90deg</code>.</li>
+ <li><strong><code>right-side behind</code></strong>: Same as <code>90deg</code>.</li>
+ <li><strong><code>behind</code></strong>: Same as <code>180deg</code>. Also used as a modifier for other positional keyword values, as above.</li>
+ <li><strong><code>leftwards</code></strong>: Moves the sound counter-clockwise by 20 degrees, relative to the current angle.</li>
+ <li><strong><code>rightwards</code></strong>: Moves the sound clockwise by 20 degrees, relative to the current angle.</li>
+</ul>
+
+<h2 id="Examples">Examples</h2>
+
+<pre class="brush:css;">h1   { azimuth: 30deg; }
+td.a { azimuth: far-right; }         /*  60deg */
+#12  { azimuth: behind far-right; }  /* 120deg */
+p.comment { azimuth: behind; }       /* 180deg */
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('CSS2.1', 'aural.html#spatial-props', 'azimuth')}}</td>
+   <td>{{Spec2('CSS2.1')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div>
+<div class="hidden">The compatibility table in this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.properties.azimuth")}}</p>
+</div>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{Cssxref("elevation")}}</li>
+</ul>

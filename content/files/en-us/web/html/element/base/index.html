@@ -1,0 +1,136 @@
+---
+title: '<base>: The Document Base URL element'
+slug: Web/HTML/Element/base
+summary: >-
+  The HTML base element specifies the base URL to use for all relative URLs in a
+  document.
+tags:
+  - Element
+  - HTML
+  - HTML document metadata
+  - 'HTML:Metadata content'
+  - Reference
+---
+<div>{{HTMLRef}}</div>
+
+<p id="Summary"><span class="seoSummary">The <strong>HTML <code>&lt;base&gt;</code> element</strong> specifies the base URL to use for all relative URLs in a document.</span> There can be only one <code>&lt;base&gt;</code> element in a document.</p>
+
+<p>The used base URL of a document can be accessed from scripts with {{domxref('document.baseURI')}}. If the document contains no <code>&lt;base&gt;</code> elements, <code>baseURI</code> defaults to {{domxref("location.href")}}.</p>
+
+<table class="properties">
+ <tbody>
+  <tr>
+   <th scope="row"><a href="/en-US/docs/Web/HTML/Content_categories">Content categories</a></th>
+   <td>Metadata content.</td>
+  </tr>
+  <tr>
+   <th scope="row">Permitted content</th>
+   <td>None, it is an {{Glossary("empty element")}}.</td>
+  </tr>
+  <tr>
+   <th scope="row">Tag omission</th>
+   <td>There must be no closing tag.</td>
+  </tr>
+  <tr>
+   <th scope="row">Permitted parents</th>
+   <td>Any {{HTMLElement("head")}} that doesn't contain any other {{HTMLElement("base")}} element.</td>
+  </tr>
+  <tr>
+   <th scope="row">Implicit ARIA role</th>
+   <td><a href="https://www.w3.org/TR/html-aria/#dfn-no-corresponding-role">No corresponding role</a></td>
+  </tr>
+  <tr>
+   <th scope="row">Permitted ARIA roles</th>
+   <td>No <code>role</code> permitted</td>
+  </tr>
+  <tr>
+   <th scope="row">DOM interface</th>
+   <td>{{domxref("HTMLBaseElement")}}</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Attributes">Attributes</h2>
+
+<p>This element's attributes include the <a href="/en-US/docs/Web/HTML/Global_attributes">global attributes</a>.</p>
+
+<p>If either of the following attributes are specified, this element <strong>must</strong> come before other elements with attributes whose values are URLs, such as {{HTMLElement("link")}}’s <code>href</code> attribute.</p>
+
+<dl>
+ <dt>{{htmlattrdef("href")}}</dt>
+ <dd>The base URL to be used throughout the document for relative URLs. Absolute and relative URLs are allowed.</dd>
+ <dt>{{htmlattrdef("target")}}</dt>
+ <dd>A <strong>keyword</strong> or <strong>author-defined name</strong> of the default browsing context to display the result when links or forms cause navigation, for {{HTMLElement("a")}} or {{HTMLElement("form")}} elements without an explicit <code>target</code> attribute. The attribute value targets a <em>browsing context</em> (such as a tab, window, or {{HTMLElement("iframe")}}).</dd>
+ <dd>The following keywords have special meanings:
+ <ul>
+  <li><code>_self</code>: Load the result into the same browsing context as the current one. (This is the default.)</li>
+  <li><code>_blank</code>: Load the result into a new, unnamed browsing context.</li>
+  <li><code>_parent</code>: Load the result into the parent browsing context of the current one. (If the current page is inside a frame.) If there is no parent, behaves the same way as <code>_self</code>.</li>
+  <li><code>_top</code>: Load the result into the topmost browsing context (that is, the browsing context that is an ancestor of the current one, and has no parent). If there is no parent, behaves the same way as <code>_self</code>.</li>
+ </ul>
+ </dd>
+</dl>
+
+<h2 id="Usage_notes">Usage notes</h2>
+
+<h3 id="Multiple_&lt;base>_elements">Multiple <code>&lt;base&gt;</code> elements</h3>
+
+<p>If multiple <code>&lt;base&gt;</code> elements are used, only the first <code>href</code> and first <code>target</code> are obeyed — all others are ignored.</p>
+
+<h3 id="In-page_anchors">In-page anchors</h3>
+
+<p>Links pointing to a fragment in the document — e.g. <code>&lt;a href="#some-id"&gt;</code> — are resolved with the <code>&lt;base&gt;</code>, triggering an HTTP request to the base URL with the fragment attached.<br>
+ <br>
+ For example, given <code>&lt;base href="https://example.com"&gt;</code><br>
+ <br>
+ ...and this link: <code>&lt;a href="#anchor"&gt;Anker&lt;/a&gt;</code><br>
+ <br>
+ ...the link points to <code>https://example.com/#anchor</code>.</p>
+
+<h3 id="Open_Graph">Open Graph</h3>
+
+<p><a href="http://ogp.me/">Open Graph</a> tags do not acknowledge <code>&lt;base&gt;</code>, and should always have full absolute URLs. For example:</p>
+
+<pre class="brush: html">&lt;meta property="og:image" content="https://example.com/thumbnail.jpg"&gt;</pre>
+
+<h2 id="Examples">Examples</h2>
+
+<pre class="brush: html">&lt;base href="https://www.example.com/"&gt;
+&lt;base target="_blank"&gt;
+&lt;base target="_top" href="https://example.com/"&gt;
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('HTML WHATWG', 'semantics.html#the-base-element', '&lt;base&gt;')}}</td>
+   <td>{{Spec2('HTML WHATWG')}}</td>
+   <td>No change since last snapshot.</td>
+  </tr>
+  <tr>
+   <td>{{SpecName('HTML5 W3C', 'document-metadata#the-base-element', '&lt;base&gt;')}}</td>
+   <td>{{Spec2('HTML5 W3C')}}</td>
+   <td>Specified the behavior of <code>target</code></td>
+  </tr>
+  <tr>
+   <td>{{SpecName('HTML4.01', 'struct/links.html#h-12.4', '&lt;base&gt;')}}</td>
+   <td>{{Spec2('HTML4.01')}}</td>
+   <td>Added the <code>target</code> attribute</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table in this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("html.elements.base")}}</p>

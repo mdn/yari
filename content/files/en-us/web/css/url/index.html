@@ -1,0 +1,101 @@
+---
+title: <url>
+slug: Web/CSS/url
+summary: >-
+  The url CSS data type denotes a pointer to a resource, such as an image or a
+  font. URLs can be used in numerous CSS properties, such as background-image,
+  cursor, and list-style.
+tags:
+  - CSS
+  - CSS Data Type
+  - Layout
+  - Reference
+  - URI
+  - URL
+  - urn
+---
+<div>{{CssRef}}</div>
+
+<p>The <strong><code>&lt;url&gt;</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> <a href="/en-US/docs/Web/CSS/CSS_Types">data type</a> denotes a pointer to a resource, such as an image or a font. URLs can be used in numerous CSS properties, such as {{Cssxref("background-image")}}, {{Cssxref("cursor")}}, and {{cssxref("list-style")}}.</p>
+
+<div class="note">
+<p><strong>URI or URL?</strong> There is a difference between a {{Glossary("URI")}} and a {{Glossary("URL")}}. A URI simply identifies a resource. A URL is a type of URI, and describes the <em>location</em> of a resource. A URI can be either a URL or a name ({{Glossary("URN")}}) of a resource.</p>
+
+<p>In CSS Level 1, the <code>url()</code> functional notation described only true URLs. In CSS Level 2, the definition of <code>url()</code> was extended to describe any URI, whether a URL or a URN. Confusingly, this meant that <code>url()</code> could be used to create a <code>&lt;uri&gt;</code> CSS data type. This change was not only awkward but, debatably, unnecessary, since URNs are almost never used in actual CSS. To alleviate the confusion, CSS Level 3 returned to the narrower, initial definition. Now, <code>url()</code> denotes only true <code>&lt;url&gt;</code>s.</p>
+</div>
+
+<h2 id="Syntax">Syntax</h2>
+
+<p>The <code>&lt;url&gt;</code> data type is specified using the <code id="The_url()_functional_notation">url()</code> functional notation. It may be written without quotes, or surrounded by single or double quotes. Relative URLs are allowed, and are relative to the URL of the stylesheet (not to the URL of the web page).</p>
+
+<pre class="syntaxbox">&lt;a_css_property&gt;: url("http://mysite.example.com/mycursor.png")
+&lt;a_css_property&gt;: url('http://mysite.example.com/mycursor.png')
+&lt;a_css_property&gt;: url(http://mysite.example.com/mycursor.png)
+</pre>
+
+<div class="note">
+<p><strong>Note:</strong> Control characters above 0x7e are not allowed in unquoted URLs, starting with Firefox 15. See {{Bug(752230)}} for more details.</p>
+</div>
+
+<h2 id="Examples">Examples</h2>
+
+<pre class="brush: css">.topbanner {
+  background: url("topbanner.png") #00D no-repeat fixed;
+}
+</pre>
+
+<pre class="brush: css">ul {
+  list-style: square url(http://www.example.com/redball.png);
+}
+</pre>
+
+<h2 id="Specifications" name="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('CSS4 Values', '#urls', '&lt;url&gt;')}}</td>
+   <td>{{Spec2('CSS4 Values')}}</td>
+   <td></td>
+  </tr>
+  <tr>
+   <td>{{SpecName('CSS3 Values', '#urls', '&lt;url&gt;')}}</td>
+   <td>{{Spec2('CSS3 Values')}}</td>
+   <td>No significant change from CSS Level 2 (Revision 1).</td>
+  </tr>
+  <tr>
+   <td>{{Specname('CSS2.1', 'syndata.html#uri', '&lt;uri&gt;')}}</td>
+   <td>{{Spec2('CSS2.1')}}</td>
+   <td>No significant change from CSS Level 1.</td>
+  </tr>
+  <tr>
+   <td>{{SpecName('CSS1', '#url', '&lt;url&gt;')}}</td>
+   <td>{{Spec2('CSS1')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<div>{{Compat("css.types.url")}}</div>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{cssxref("url()", "url()")}}</li>
+ <li>{{cssxref("&lt;gradient&gt;")}}</li>
+ <li>{{cssxref("element()")}}</li>
+ <li>{{cssxref("_image","image()")}}</li>
+ <li>{{cssxref("image-set","image-set()")}}</li>
+ <li>{{cssxref("cross-fade")}}</li>
+</ul>

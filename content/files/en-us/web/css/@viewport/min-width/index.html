@@ -1,0 +1,73 @@
+---
+title: min-width
+slug: Web/CSS/@viewport/min-width
+summary: >-
+  The min-width CSS descriptor specifies the minimum width of the viewport of a
+  document defined via @viewport.
+tags:
+  - '@viewport'
+  - CSS
+  - CSS Descriptor
+  - Reference
+---
+<div>{{CSSRef}}</div>
+
+<p>The <strong><code>min-width</code></strong> CSS descriptor specifies the minimum width of the viewport of a document defined via {{cssxref("@viewport")}}.</p>
+
+<p>By default, <code>min-width</code> is set as close as possible to the initial viewport considering the minimum width constraint.</p>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="brush: css">/* Keyword value */
+min-width: auto;
+
+/* &lt;length&gt; values */
+min-width: 320px;
+min-width: 40em;
+min-width: 5cm;
+
+/* &lt;percentage&gt; value */
+min-width: 25%;
+</pre>
+
+<h3 id="Values">Values</h3>
+
+<dl>
+ <dt><code>auto</code></dt>
+ <dd>The used value is calculated from the other CSS descriptors' values.</dd>
+ <dt><code>&lt;length&gt;</code></dt>
+ <dd>A non-negative absolute or relative length.</dd>
+ <dt><code>&lt;percentage&gt;</code></dt>
+ <dd>A percentage value relative to the width or height of the initial viewport at zoom factor 1.0, for horizontal and vertical lengths respectively. Must be non-negative.</dd>
+</dl>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('CSS3 Device', '#descdef-viewport-min-width', '"min-width" descriptor')}}</td>
+   <td>{{Spec2('CSS3 Device')}}</td>
+   <td>Initial definition</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.at-rules.viewport.min-width")}}</p>

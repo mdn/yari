@@ -1,0 +1,54 @@
+---
+title: '-ms-hyphenate-limit-chars'
+slug: Web/CSS/-ms-hyphenate-limit-chars
+summary: >-
+  The -ms-hyphenate-limit-chars CSS property is a Microsoft extension that
+  specifies one to three values indicating the minimum number of characters in a
+  hyphenated word. If the word does not meet the required minimum number of
+  characters in the word, before the hyphen, or after the hyphen, then the word
+  is not hyphenated.
+tags:
+  - CSS
+  - CSS Property
+  - Non-standard
+  - Reference
+---
+<div>{{CSSRef}}</div>
+
+<div>{{non-standard_header}}</div>
+
+<div> </div>
+
+<p>The <strong><code>-ms-hyphenate-limit-chars</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property is a <a href="/en-US/docs/Web/CSS/Microsoft_CSS_extensions">Microsoft extension</a> that specifies one to three values indicating the minimum number of characters in a hyphenated word. If the word does not meet the required minimum number of characters in the word, before the hyphen, or after the hyphen, then the word is not hyphenated.</p>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax" name="Syntax">Syntax</h2>
+
+<h3 id="Values" name="Values">Values</h3>
+
+<dl>
+ <dt><code>auto</code></dt>
+ <dd>
+ <p>Corresponds to a value of 5 2 2, indicating a 5-character word limit, 2 characters required before a hyphenation break, and 2 characters required following a hyphenation break.</p>
+ </dd>
+ <dt>{{cssxref("integer")}}{1,3}</dt>
+ <dd>
+ <p>One to three integer values, corresponding to the word limit, the minimum number of characters required before a hyphenation break, and the minimum number of characters required following a hyphenation break, respectively.</p>
+
+ <p>If the third value is missing it is equal to the second.</p>
+
+ <p>If the second and third values are missing they are given a value of auto.</p>
+
+ <p>Negative values are not allowed.</p>
+ </dd>
+</dl>
+
+<h3 id="Formal_syntax" name="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">  {{csssyntax}}
+</pre>
+
+<h2 id="Specifications" name="Specifications">Specifications</h2>
+
+<p>Not part of any specification.</p>

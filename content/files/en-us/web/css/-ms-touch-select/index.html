@@ -1,0 +1,54 @@
+---
+title: '-ms-touch-select'
+slug: Web/CSS/-ms-touch-select
+summary: >-
+  The -ms-touch-select CSS property is a Microsoft extension that toggles the
+  gripper visual elements that enable touch text selection.
+tags:
+  - CSS
+  - CSS Property
+  - 'CSS:Microsoft Extensions'
+  - Non-standard
+  - Reference
+---
+<div>{{CSSRef}}{{non-standard_header}}</div>
+
+<div> </div>
+
+<p>The <strong><code>-ms-touch-select</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property is a <a href="/en-US/docs/Web/CSS/Microsoft_CSS_extensions">Microsoft extension</a> that toggles the gripper visual elements that enable touch text selection.</p>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax" name="Syntax">Syntax</h2>
+
+<h3 id="Values" name="Values">Values</h3>
+
+<dl>
+ <dt><code>grippers</code></dt>
+ <dd>
+ <p>The grippers are always on. In addition, selection will start even if an <code>onclick</code>, <code>onmsgesturetap</code>, or <code>onmouseup</code> handler is present. This is the initial value.</p>
+ </dd>
+ <dt><code>none</code></dt>
+ <dd>
+ <p>The grippers are always off and default touch selection functionality is not provided.</p>
+ </dd>
+</dl>
+
+<h3 id="Formal_syntax" name="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}
+</pre>
+
+<h2 id="Specifications" name="Specifications">Specifications</h2>
+
+<p>Not part of any specification.</p>
+
+<h2 id="Remarks" name="Remarks">Remarks</h2>
+
+<p>This property requires Windows 8 or later.</p>
+
+<p>The <code>-ms-touch-select</code> property should only be used by applications that provide their own selection experience. Most other applications should use the {{cssxref("-ms-user-select")}} property instead.</p>
+
+<p>If you choose to hide the grippers, you should ensure that users have a mechanism for selecting text via touch. To find out how to do this using JavaScript, see the HTML5 Selection APIs.</p>
+
+<p>This property has no effect on mouse, keyboard, or touchpad interaction.</p>

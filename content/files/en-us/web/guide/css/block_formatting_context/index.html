@@ -1,0 +1,190 @@
+---
+title: Block formatting context
+slug: Web/Guide/CSS/Block_formatting_context
+summary: >-
+  A block formatting context is a part of a visual CSS rendering of a web page.
+  It's the region in which the layout of block boxes occurs and in which floats
+  interact with other elements.
+tags:
+  - CSS
+  - Guide
+  - NeedsBeginnerUpdate
+  - NeedsExample
+  - Reference
+  - Web
+---
+<div>{{ CSSRef }}</div>
+
+<p>A <strong>block formatting context</strong> is a part of a visual CSS rendering of a web page. It's the region in which the layout of block boxes occurs and in which floats interact with other elements.</p>
+
+<p>A block formatting context is created by at least one of the following:</p>
+
+<ul>
+ <li>The root element of the document (<code>&lt;html&gt;</code>).</li>
+ <li>Floats (elements where {{ cssxref("float") }} isn't <code>none</code>).</li>
+ <li>Absolutely positioned elements (elements where {{ cssxref("position") }} is <code>absolute</code> or <code>fixed</code>).</li>
+ <li>Inline-blocks (elements with {{ cssxref("display") }}<code>: inline-block</code>).</li>
+ <li>Table cells (elements with {{ cssxref("display") }}<code>: table-cell</code>, which is the default for HTML table cells).</li>
+ <li>Table captions (elements with {{ cssxref("display") }}<code>: table-caption</code>, which is the default for HTML table captions).</li>
+ <li>Anonymous table cells implicitly created by the elements with {{ cssxref("display") }}<code>: table</code>, <code>table-row</code>, <code>table-row-group</code>, <code>table-header-group</code>, <code>table-footer-group</code> (which is the default for HTML tables, table rows, table bodies, table headers, and table footers, respectively), or <code>inline-table</code>.</li>
+ <li>Block elements where {{ cssxref("overflow") }} has a value other than <code>visible</code>.</li>
+ <li>{{ cssxref("display") }}<code>: <a href="https://drafts.csswg.org/css-display/#valdef-display-flow-root">flow-root</a></code>.</li>
+ <li>Elements with {{ cssxref("contain") }}<code>: layout</code>, <code>content</code>, or <code>paint</code>.</li>
+ <li>Flex items (direct children of the element with {{ cssxref("display") }}<code>: flex</code> or <code>inline-flex</code>) if they are neither <a href="/en-US/docs/Glossary/Flex_Container">flex</a> nor <a href="/en-US/docs/Glossary/Grid_Container">grid</a> nor <a href="/en-US/docs/Web/CSS/CSS_Table">table</a> containers themselves.</li>
+ <li>Grid items (direct children of the element with {{ cssxref("display") }}<code>: grid</code> or <code>inline-grid</code>) if they are neither <a href="/en-US/docs/Glossary/Flex_Container">flex</a> nor <a href="/en-US/docs/Glossary/Grid_Container">grid</a> nor <a href="/en-US/docs/Web/CSS/CSS_Table">table</a> containers themselves.</li>
+ <li>Multicol containers (elements where {{ cssxref("column-count") }} or {{ cssxref("column-width") }} isn't <code>auto</code>, including elements with <code>column-count: 1</code>).</li>
+ <li>{{ cssxref("column-span") }}<code>: all</code> should always create a new formatting context, even when the <code>column-span: all</code> element isn't contained by a multicol container (<a href="https://github.com/w3c/csswg-drafts/commit/a8634b96900279916bd6c505fda88dda71d8ec51">Spec change</a>, <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=709362">Chrome bug</a>).</li>
+</ul>
+
+<p>A block formatting context contains everything inside of the element creating it.</p>
+
+<p>Block formatting contexts are important for the positioning (see {{ cssxref("float") }}) and clearing (see {{ cssxref("clear") }}) of floats. The rules for positioning and clearing of floats apply only to things within the same block formatting context. Floats don't affect the layout of the content inside other block formatting contexts, and clear only clears past floats in the same block formatting context. <a href="/en-US/docs/Web/CSS/CSS_Box_Model/Mastering_margin_collapsing">Margin collapsing</a> also occurs only between blocks that belong to the same block formatting context.</p>
+
+<h2 id="Examples">Examples</h2>
+
+<h3 id="Make_float_content_and_alongside_content_the_same_height">Make float content and alongside content the same height</h3>
+
+<div id="example1">
+<p>Let's have a look at a couple of these in order to see the effect creating a new <abbr title="Block Formatting Context">BFC</abbr>.</p>
+
+<p>In the following example, we have a floated element inside a <code>&lt;div&gt;</code> with a <code>border</code> applied. The content of that <code>&lt;div&gt;</code> has floated alongside the floated element. As the content of the float is taller than the content alongside it, the border of the <code>&lt;div&gt;</code> now runs through the float. As explained in the <a href="/en-US/docs/Web/CSS/CSS_Flow_Layout/In_Flow_and_Out_of_Flow">guide to in-flow and out of flow elements</a>, the float has been taken out of flow so the <code>background</code> and <code>border</code> of the <code>&lt;div&gt;</code> only contain the content and not the float.</p>
+
+<h4 id="HTML">HTML</h4>
+
+<pre class="brush: html">&lt;div class="box"&gt;
+    &lt;div class="float"&gt;I am a floated box!&lt;/div&gt;
+    &lt;p&gt;I am content inside the container.&lt;/p&gt;
+&lt;/div&gt;</pre>
+
+<h4 id="CSS">CSS</h4>
+
+<pre class="brush: css">.box {
+    background-color: rgb(224, 206, 247);
+    border: 5px solid rebeccapurple;
+}
+.float {
+    float: left;
+    width: 200px;
+    height: 150px;
+    background-color: white;
+    border:1px solid black;
+    padding: 10px;
+}     </pre>
+
+<p>{{EmbedLiveSample("example1", 200, 200)}}</p>
+</div>
+
+<div id="With_overflow">
+<h3 id="Using_overflow_auto">Using <code>overflow: auto;</code></h3>
+
+<p>Creating a new <abbr title="Block Formatting Context">BFC</abbr> would contain the float. A typical way to do this in the past has been to set <code>overflow: auto</code> or set other values than the initial value of <code>overflow: visible</code>.</p>
+
+<h4 id="CSS_2">CSS</h4>
+
+<div class="hidden">
+<pre class="brush: html">&lt;div class="box"&gt;
+    &lt;div class="float"&gt;I am a floated box!&lt;/div&gt;
+    &lt;p&gt;I am content inside the container.&lt;/p&gt;
+&lt;/div&gt;</pre>
+</div>
+
+<pre class="brush: css">.box {
+    background-color: rgb(224, 206, 247);
+    border: 5px solid rebeccapurple;
+    overflow: auto;
+}
+.float {
+    float: left;
+    width: 200px;
+    height: 150px;
+    background-color: white;
+    border:1px solid black;
+    padding: 10px;
+}     </pre>
+
+<p>{{EmbedLiveSample("With_overflow", 200, 200)}}</p>
+</div>
+
+<p>Setting <code>overflow: auto</code> created a new <abbr title="Block Formatting Context">BFC</abbr> containing the float. Our <code>&lt;div&gt;</code> now becomes a mini-layout inside our layout. Any child element will be contained inside it.</p>
+
+<p>The problem with using <code>overflow</code> to create a new <abbr title="Block Formatting Context">BFC</abbr> is that the <code>overflow</code> property is meant for telling the browser how you want to deal with overflowing content. There are some occasions in which you will find you get unwanted scrollbars or clipped shadows when you use this property purely to create a <abbr title="Block Formatting Context">BFC</abbr>. In addition, it is potentially not readable for a future developer, as it might not be obvious why you used <code>overflow</code> for this purpose. If you use <code>overflow</code>, it is a good idea to comment the code to explain.</p>
+
+<h3 id="Using_display_flow-root">Using <code>display: flow-root</code></h3>
+
+<div id="flowroot">
+<p>A newer value of <code>display</code> lets us create a new <abbr title="Block Formatting Context">BFC</abbr> without any other potentially problematic side-effects. Using <code>display: flow-root</code> on the containing block creates a new <abbr title="Block Formatting Context">BFC</abbr> .</p>
+
+<h4 id="CSS_3">CSS</h4>
+
+<div class="hidden">
+<pre class="brush: html">&lt;div class="box"&gt;
+    &lt;div class="float"&gt;I am a floated box!&lt;/div&gt;
+    &lt;p&gt;I am content inside the container.&lt;/p&gt;
+&lt;/div&gt;</pre>
+</div>
+
+<pre class="brush: css">.box {
+    background-color: rgb(224, 206, 247);
+    border: 5px solid rebeccapurple;
+    display: flow-root
+}
+.float {
+    float: left;
+    width: 200px;
+    height: 150px;
+    background-color: white;
+    border:1px solid black;
+    padding: 10px;
+}     </pre>
+
+<p>{{EmbedLiveSample("flowroot", 200, 200)}}</p>
+</div>
+
+<p>With <code>display: flow-root;</code> on the <code>&lt;div&gt;</code>, everything inside that container participates in the block formatting context of that container, and floats will not poke out of the bottom of the element.</p>
+
+<p>The value name of <code>flow-root</code> makes sense when you understand you are creating something that acts like the <code>root</code> element (<code>&lt;html&gt;</code> element in browser) in terms of how it creates a new context for the flow layout inside it.</p>
+
+<h3 id="Margin_collapsing">Margin collapsing</h3>
+
+<p>Creating a new BFC to avoid the <a href="/en-US/docs/Web/CSS/CSS_Box_Model/Mastering_margin_collapsing">margin collapsing</a> between two neighbor div:</p>
+
+<h4 id="HTML_2">HTML</h4>
+
+<pre class="brush: html">&lt;div class="blue"&gt;&lt;/div&gt;
+&lt;div class="red-outer"&gt;
+  &lt;div class="red-inner"&gt;red inner&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+<h4 id="CSS_4">CSS</h4>
+
+<pre class="brush: css">.blue, .red-inner {
+  height: 50px;
+  margin: 10px 0;
+}
+
+.blue {
+  background: blue;
+}
+
+.red-outer {
+  overflow: hidden;
+  background: red;
+}
+</pre>
+
+<p>{{EmbedLiveSample("Margin_collapsing", 120, 120)}}</p>
+
+<h2 id="Specifications" name="Specifications">Specifications</h2>
+
+<ul>
+ <li><a class="external" href="http://www.w3.org/TR/CSS21/visuren.html#block-formatting">CSS 2.1</a></li>
+ <li><a class="external" href="https://drafts.csswg.org/css-display/#block-formatting-context">CSS Display Level 3</a></li>
+</ul>
+
+<h2 id="See_also" name="See_also">See also</h2>
+
+<ul>
+ <li>{{ cssxref("float") }}, {{ cssxref("clear") }}</li>
+ <li>{{css_key_concepts}}</li>
+</ul>

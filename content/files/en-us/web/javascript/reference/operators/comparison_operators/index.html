@@ -1,0 +1,231 @@
+---
+title: Comparison operators
+slug: Web/JavaScript/Reference/Operators/Comparison_Operators
+summary: >-
+  JavaScript has both strict and type–converting comparisons. A strict
+  comparison (e.g., ===) is only true if the operands are of the same type and
+  the contents match. The more commonly-used abstract comparison (e.g. ==)
+  converts the operands to the same type before making the comparison. For
+  relational abstract comparisons (e.g., =), the operands are first converted to
+  primitives, then to the same type, before comparison.
+tags:
+  - JavaScript
+  - Language feature
+  - Operator
+  - Reference
+---
+<div>{{jsSidebar("Operators")}}</div>
+
+<p>JavaScript has both strict and type–converting comparisons. A strict comparison (e.g., <code>===</code>) is only true if the operands are of the same type and the contents match. The more commonly-used abstract comparison (e.g. <code>==</code>) converts the operands to the same type before making the comparison. For relational abstract comparisons (e.g., <code>&lt;=</code>), the operands are first converted to primitives, then to the same type, before comparison.</p>
+
+<p>Strings are compared based on standard lexicographical ordering, using Unicode values.</p>
+
+<div>{{EmbedInteractiveExample("pages/js/expressions-comparisonoperators.html")}}</div>
+
+<p class="hidden">The source for this interactive example is stored in a GitHub repository. If you'd like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</p>
+
+<p>Features of comparisons:</p>
+
+<ul>
+ <li>Two strings are strictly equal when they have the same sequence of characters, same length, and same characters in corresponding positions.</li>
+ <li>Two numbers are strictly equal when they are numerically equal (have the same number value). <a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN" title="NaN">NaN</a> is not equal to anything, including NaN. Positive and negative zeros are equal to one another.</li>
+ <li>Two Boolean operands are strictly equal if both are <code>true</code> or both are <code>false</code>.</li>
+ <li>Two distinct objects are never equal for either strict or abstract comparisons.</li>
+ <li>An expression comparing Objects is only true if the operands reference the same Object.</li>
+ <li>Null and Undefined Types are strictly equal to themselves and abstractly equal to each other.</li>
+</ul>
+
+<h2 id="Equality_operators">Equality operators</h2>
+
+<h3 id="Equality" name="Equality">Equality (==)</h3>
+
+<p>The equality operator converts the operands if they are <strong>not of the same type</strong>, then applies strict comparison. If <strong>both operands are objects</strong>, then JavaScript compares internal references which are equal when operands refer to the same object in memory.</p>
+
+<h4 id="Syntax">Syntax</h4>
+
+<pre class="syntaxbox">x == y
+</pre>
+
+<h4 id="Examples">Examples</h4>
+
+<pre class="brush: js">1    ==  1         // true
+'1'  ==  1         // true
+1    == '1'        // true
+0    == false      // true
+0    == null       // false
+var object1 = {'key': 'value'}, object2 = {'key': 'value'};
+object1 == object2 // false
+0    == undefined  // false
+null == undefined  // true
+</pre>
+
+<h3 id="Inequality" name="Inequality">Inequality (!=)</h3>
+
+<p>The inequality operator returns true if the operands are not equal. If the two operands are <strong>not of the same type</strong>, JavaScript attempts to convert the operands to an appropriate type for the comparison. If <strong>both operands are objects</strong>, then JavaScript compares internal references which are not equal when operands refer to different objects in memory.</p>
+
+<h4 id="Syntax_2">Syntax</h4>
+
+<pre class="syntaxbox">x != y</pre>
+
+<h4 id="Examples_2">Examples</h4>
+
+<pre class="brush: js">1 !=   2     // true
+1 !=  '1'    // false
+1 !=  "1"    // false
+1 !=  true   // false
+0 !=  false  // false
+</pre>
+
+<h3 id="Identity" name="Identity">Identity / strict equality (===)</h3>
+
+<p>The identity operator returns true if the operands are strictly equal (see above) <strong>with no type conversion</strong>.</p>
+
+<h4 id="Syntax_3">Syntax</h4>
+
+<pre class="syntaxbox">x === y</pre>
+
+<h4 id="Examples_3">Examples</h4>
+
+<pre class="brush: js ">3 === 3   // true
+3 === '3' // false
+var object1 = {'key': 'value'}, object2 = {'key': 'value'};
+object1 === object2 //false</pre>
+
+<h3 id="Nonidentity" name="Nonidentity">Non-identity / strict inequality (!==)</h3>
+
+<p>The non-identity operator returns true if the operands <strong>are not equal and/or not of the same type</strong>.</p>
+
+<h4 id="Syntax_4">Syntax</h4>
+
+<pre class="syntaxbox">x !== y</pre>
+
+<h4 id="Examples_4">Examples</h4>
+
+<pre class="brush: js">3 !== '3' // true
+4 !== 3   // true
+</pre>
+
+<h2 id="Relational_operators">Relational operators</h2>
+
+<p>Each of these operators will {{Glossary("Type_coercion", "coerce")}} its operands to primitives before a comparison is made. If both end up as strings, they are compared using lexicographic order, otherwise they are cast to numbers to be compared. A comparison against <code>NaN</code> will always yield <code>false</code>.</p>
+
+<h3 id="Greater_than_operator" name="Greater_than_operator">Greater than operator (&gt;)</h3>
+
+<p>The greater than operator returns true if the left operand is greater than the right operand.</p>
+
+<h4 id="Syntax_5">Syntax</h4>
+
+<pre class="syntaxbox">x &gt; y</pre>
+
+<h4 id="Examples_5">Examples</h4>
+
+<pre class="brush: js">4 &gt; 3 // true
+</pre>
+
+<h3 id="Greater_than_or_equal_operator" name="Greater_than_or_equal_operator">Greater than or equal operator (&gt;=)</h3>
+
+<p>The greater than or equal operator returns true if the left operand is greater than or equal to the right operand.</p>
+
+<h4 id="Syntax_6">Syntax</h4>
+
+<pre class="syntaxbox"> x &gt;= y</pre>
+
+<h4 id="Examples_6">Examples</h4>
+
+<pre class="brush: js">4 &gt;= 3 // true
+3 &gt;= 3 // true
+</pre>
+
+<h3 id="Less_than_operator" name="Less_than_operator">Less than operator (&lt;)</h3>
+
+<p>The less than operator returns true if the left operand is less than the right operand.</p>
+
+<h4 id="Syntax_7">Syntax</h4>
+
+<pre class="syntaxbox"> x &lt; y</pre>
+
+<h4 id="Examples_7">Examples</h4>
+
+<pre class="brush: js">3 &lt; 4 // true
+</pre>
+
+<h3 id="Less_than_or_equal_operator" name="Less_than_or_equal_operator">Less than or equal operator (&lt;=)</h3>
+
+<p>The less than or equal operator returns true if the left operand is less than or equal to the right operand.</p>
+
+<h4 id="Syntax_8">Syntax</h4>
+
+<pre class="syntaxbox"> x &lt;= y</pre>
+
+<h4 id="Examples_8">Examples</h4>
+
+<pre class="brush: js">3 &lt;= 4 // true
+3 &lt;= 3 // true
+</pre>
+
+<h2 id="Using_the_equality_operators">Using the equality operators</h2>
+
+<p>The standard equality operators (<code>==</code> and <code>!=</code>) use the <a href="http://www.ecma-international.org/ecma-262/5.1/#sec-11.9.3">Abstract Equality Comparison Algorithm</a> to compare two operands. If the operands are of different types, it will attempt to convert them to the same type before making the comparison, e.g., in the expression <code>5 == '5'</code>, the string on the right is converted to {{jsxref("Number")}} before the comparison is made.</p>
+
+<p>The strict equality operators (<code>===</code> and <code>!==</code>) use the <a href="http://www.ecma-international.org/ecma-262/5.1/#sec-11.9.6">Strict Equality Comparison Algorithm</a> and are intended for performing equality comparisons on operands of the same type. If the operands are of different types, like <code>5</code> and <code>'5'</code>, an identity comparison <code>5 !== '5'</code> will evaluate to <code>true</code> and a check <code>5 === '5'</code> will evaluate to <code>false</code>.</p>
+
+<p>Use strict equality operators if the operands must be of a specific type as well as value or if the exact type of the operands is important. Otherwise, use the standard equality operators, which allow you to compare the identity of two operands even if they are not of the same type.</p>
+
+<p>When type conversion is involved in the comparison (i.e., non–strict comparison), JavaScript converts the types {{jsxref("String")}}, {{jsxref("Number")}}, {{jsxref("Boolean")}}, or {{jsxref("Object")}} operands as follows:</p>
+
+<ul>
+ <li>When comparing a number and a string, the string is converted to a number value. JavaScript attempts to convert the string numeric literal to a <code>Number</code> type value. First, a mathematical value is derived from the string numeric literal. Next, this value is rounded to nearest <code>Number</code> type value.</li>
+ <li>If one of the operands is <code>Boolean</code>, the Boolean operand is converted to 1 if it is <code>true</code> and +0 if it is <code>false</code>.</li>
+ <li>If an object is compared with a number or string, JavaScript attempts to return the default value for the object. Operators attempt to convert the object to a primitive value, a <code>String</code> or <code>Number</code> value, using the <code>valueOf</code> and <code>toString</code> methods of the objects. If this attempt to convert the object fails, a runtime error is generated.</li>
+ <li>Note that an object is converted into a primitive if, and only if, its comparand is a primitive. If both operands are objects, they're compared as objects, and the equality test is true only if both refer the same object.</li>
+</ul>
+
+<div class="note"><strong>Note:</strong> String objects are Type Object, not String! String objects are rarely used, so the following results might be surprising:</div>
+
+<pre class="brush:js">// true as both operands are type String (i.e. string primitives):
+'foo' === 'foo'
+
+var a = new String('foo');
+var b = new String('foo');
+
+// false as a and b are type Object and reference different objects
+a == b
+
+// false as a and b are type Object and reference different objects
+a === b
+
+// true as a and 'foo' are of different type and, the Object (a)
+// is converted to String 'foo' before comparison
+a == 'foo'</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('ESDraft', '#sec-equality-operators', 'Equality Operators')}}</td>
+  </tr>
+  <tr>
+   <td>{{SpecName('ESDraft', '#sec-relational-operators', 'Relational Operators')}}</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.operators.comparison")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("Object.is()")}}</li>
+ <li>{{jsxref("Math.sign()")}}</li>
+ <li><a href="/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness">Equality comparisons and sameness</a></li>
+</ul>

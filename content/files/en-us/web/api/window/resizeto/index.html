@@ -1,0 +1,70 @@
+---
+title: Window.resizeTo()
+slug: Web/API/Window/resizeTo
+summary: The Window.resizeTo() method dynamically resizes the window.
+tags:
+  - API
+  - CSSOM View
+  - Method
+  - Reference
+  - Window
+---
+<div>{{APIRef}}</div>
+
+<p>The <strong><code>Window.resizeTo()</code></strong> method dynamically resizes the window.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox">window.resizeTo(<em>width</em>, <em>height</em>)
+</pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<dl>
+ <dt><code>width</code></dt>
+ <dd>An integer representing the new {{domxref("window.outerWidth","outerWidth")}} in pixels (including scroll bars, title bars, etc).</dd>
+ <dt><code>height</code></dt>
+ <dd>An integer value representing the new {{domxref("window.outerHeight","outerHeight")}} in pixels (including scroll bars, title bars, etc).</dd>
+</dl>
+
+<h2 id="Example">Example</h2>
+
+<p>This function resizes the window so that it takes up one quarter of the available screen. See the {{domxref("Screen.availWidth")}} and {{domxref("Screen.availHeight")}} properties.</p>
+
+<pre class="brush:js">function quarter() {
+  window.resizeTo(
+    window.screen.availWidth / 2,
+    window.screen.availHeight / 2
+  );
+}</pre>
+
+<h2 id="Specification">Specification</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{ SpecName('CSSOM View', '#dom-window-resizeto', 'window.resizeTo()') }}</td>
+   <td>{{ Spec2('CSSOM View') }}</td>
+   <td></td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table in this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.Window.resizeTo")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{domxref("window.resizeBy()")}}</li>
+</ul>

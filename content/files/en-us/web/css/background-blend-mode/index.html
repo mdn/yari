@@ -1,0 +1,115 @@
+---
+title: background-blend-mode
+slug: Web/CSS/background-blend-mode
+summary: >-
+  The background-blend-mode CSS property sets how an element's background images
+  should blend with each other and with the element's background color.
+tags:
+  - CSS
+  - CSS Property
+  - Compositing and Blending
+---
+<div>{{CSSRef}}</div>
+
+<p>The <strong><code>background-blend-mode</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property sets how an element's background images should blend with each other and with the element's background color.</p>
+
+<div>{{EmbedInteractiveExample("pages/css/background-blend-mode.html")}}</div>
+
+<p class="hidden">The source for this interactive example is stored in a GitHub repository. If you'd like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</p>
+
+<p>Blending modes should be defined in the same order as the {{cssxref("background-image")}} property. If the blending modes' and background images' list lengths are not equal, it will be repeated and/or truncated until lengths match.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="brush:css no-line-numbers">/* One value */
+background-blend-mode: normal;
+
+/* Two values, one per background */
+background-blend-mode: darken, luminosity;
+
+/* Global values */
+background-blend-mode: initial;
+background-blend-mode: inherit;
+background-blend-mode: unset;
+</pre>
+
+<h3 id="Values">Values</h3>
+
+<dl>
+ <dt>{{cssxref("&lt;blend-mode&gt;")}}</dt>
+ <dd>The blending mode to be applied. There can be several values, separated by commas.</dd>
+</dl>
+
+<h3 id="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">{{csssyntax}}</pre>
+
+<h2 id="Examples">Examples</h2>
+
+<pre class="brush: html hidden">&lt;div id="div"&gt;&lt;/div&gt;
+&lt;select id="select"&gt;
+    &lt;option&gt;normal&lt;/option&gt;
+    &lt;option&gt;multiply&lt;/option&gt;
+    &lt;option selected&gt;screen&lt;/option&gt;
+    &lt;option&gt;overlay&lt;/option&gt;
+    &lt;option&gt;darken&lt;/option&gt;
+    &lt;option&gt;lighten&lt;/option&gt;
+    &lt;option&gt;color-dodge&lt;/option&gt;
+    &lt;option&gt;color-burn&lt;/option&gt;
+    &lt;option&gt;hard-light&lt;/option&gt;
+    &lt;option&gt;soft-light&lt;/option&gt;
+    &lt;option&gt;difference&lt;/option&gt;
+    &lt;option&gt;exclusion&lt;/option&gt;
+    &lt;option&gt;hue&lt;/option&gt;
+    &lt;option&gt;saturation&lt;/option&gt;
+    &lt;option&gt;color&lt;/option&gt;
+    &lt;option&gt;luminosity&lt;/option&gt;
+&lt;/select&gt;</pre>
+
+<pre class="brush: css hidden">#div {
+    width: 300px;
+    height: 300px;
+    background: url('https://mdn.mozillademos.org/files/8543/br.png'),url('https://mdn.mozillademos.org/files/8545/tr.png');
+    background-blend-mode: screen;
+}</pre>
+
+<pre class="brush: js hidden">document.getElementById("select").onchange = function(event) {
+    document.getElementById("div").style.backgroundBlendMode = document.getElementById("select").selectedOptions[0].innerHTML;
+}
+console.log(document.getElementById('div'));</pre>
+
+<p>{{ EmbedLiveSample('Examples', "330", "330") }}</p>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{ SpecName('Compositing', '#background-blend-mode', 'background-blend-mode') }}</td>
+   <td>{{ Spec2('Compositing') }}</td>
+   <td>Initial definition</td>
+  </tr>
+ </tbody>
+</table>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table in this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("css.properties.background-blend-mode")}}</p>
+
+<h2 id="See_also" name="See_also">See also</h2>
+
+<ul>
+ <li>{{cssxref("&lt;blend-mode&gt;")}}</li>
+ <li>{{cssxref("mix-blend-mode")}}</li>
+</ul>

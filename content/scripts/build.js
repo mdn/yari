@@ -12,7 +12,7 @@ const WebSocket = require("ws");
 // XXX does this work on Windows?
 const packageJson = require("../../package.json");
 
-require("dotenv").config();
+require("dotenv").config({ path: process.env.ENV_FILE });
 
 const cheerio = require("./monkeypatched-cheerio");
 const ProgressBar = require("./progress-bar");
@@ -783,7 +783,7 @@ class Builder {
       // or gets these references wrong.
 
       if (parentData) {
-        if (!parentData.hasOwnProperty("translations")) {
+        if (!("translations" in parentData)) {
           parentData.translations = [];
         }
         parentData.translations.push({
@@ -1149,7 +1149,14 @@ class Builder {
             })
             .map(([uri, documentData]) => {
               if (!documentData.modified) {
-                throw new Error(`No .modified in documentData (url: ${uri})`);
+                // This is temporarily commented out because we don't yet
+                // have a solution to get the "last_modified" from the
+                // git logs. Until we have that, this breaks.
+                // See https://github.com/mdn/yari/issues/706
+                // throw new Error("No .modified in documentData");
+                return {
+                  loc: sitemapBaseUrl + uri,
+                };
               }
               return {
                 loc: sitemapBaseUrl + uri,
@@ -1537,17 +1544,13 @@ class Builder {
       renderedHtml = rawHtml;
     } else {
       let flaws;
-      try {
-        [renderedHtml, flaws] = await this.renderMacrosAndBuildLiveSamples(
-          source,
-          mdnUrlLC,
-          metadata,
-          rawHtml,
-          destinationDir
-        );
-      } catch (err) {
-        throw err;
-      }
+      [renderedHtml, flaws] = await this.renderMacrosAndBuildLiveSamples(
+        source,
+        mdnUrlLC,
+        metadata,
+        rawHtml,
+        destinationDir
+      );
       if (flaws.length) {
         // The flaw objects might have a 'line' attribute, but the
         // original document it came from had front-matter in the file.
@@ -1650,7 +1653,11 @@ class Builder {
     // With the sidebar out of the way, go ahead and check the rest
     this.injectFlaws(source, doc, $);
 
-    doc.body = extractDocumentSections($, config);
+    // Post process HTML so that the right elements gets tagged so they
+    // *don't* get translated by tools like Google Translate.
+    this.injectNoTranslate($);
+
+    doc.body = extractDocumentSections($);
 
     const titleData = this.allTitles.get(mdnUrlLC);
     if (titleData === undefined) {
@@ -1717,6 +1724,16 @@ class Builder {
   }
 
   /**
+   * Find all tags that we need to change to tell tools like Google Translate
+   * to not translate.
+   *
+   * @param {Cheerio document instance} $
+   */
+  injectNoTranslate($) {
+    $("pre").addClass("notranslate");
+  }
+
+  /**
    * Validate the parsed HTML, with the sidebar removed.
    *
    * @param {folder} source
@@ -1739,7 +1756,7 @@ class Builder {
         if (href.startsWith("/") && !checked.has(href)) {
           checked.add(href);
           if (!this.allTitles.has(href.toLowerCase())) {
-            if (!doc.flaws.hasOwnProperty("broken_links")) {
+            if (!("broken_links" in doc.flaws)) {
               doc.flaws.broken_links = [];
             }
             doc.flaws.broken_links.push(href);
@@ -1755,7 +1772,7 @@ class Builder {
       $("div.bc-data").each((i, element) => {
         const dataQuery = $(element).attr("id");
         if (!dataQuery) {
-          if (!doc.flaws.hasOwnProperty("bad_bcd_queries")) {
+          if (!("bad_bcd_queries" in doc.flaws)) {
             doc.flaws.bad_bcd_queries = [];
           }
           doc.flaws.bad_bcd_queries.push("BCD table without an ID");
@@ -1763,7 +1780,7 @@ class Builder {
           const query = dataQuery.replace(/^bcd:/, "");
           const data = packageBCD(query);
           if (!data) {
-            if (!doc.flaws.hasOwnProperty("bad_bcd_queries")) {
+            if (!("bad_bcd_queries" in doc.flaws)) {
               doc.flaws.bad_bcd_queries = [];
             }
             doc.flaws.bad_bcd_queries.push(`No BCD data for query: ${query}`);
@@ -1783,9 +1800,7 @@ class Builder {
     };
   }
 
-  processStumptownFile(source, file, config) {
-    config = config || {};
-
+  processStumptownFile(source, file) {
     const hasher = crypto.createHash("md5");
     const docRaw = fs.readFileSync(file);
     const doc = JSON.parse(docRaw);
@@ -1917,9 +1932,8 @@ class Builder {
    *
    *
    * @param {String} folder - the current folder we're processing.
-   * @paraam {Bool} stumptown - source is from stumptown.
    */
-  getGitHubURL(source, folder, stumptown = false) {
+  getGitHubURL(source, folder) {
     const gitUrl = getCurretGitHubBaseURL();
     const branch = getCurrentGitBranch();
     const relativePath = path.relative(source.filepath, folder);

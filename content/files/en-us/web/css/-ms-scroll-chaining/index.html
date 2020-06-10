@@ -1,0 +1,74 @@
+---
+title: '-ms-scroll-chaining'
+slug: Web/CSS/-ms-scroll-chaining
+summary: >-
+  The -ms-scroll-chaining CSS property is a Microsoft extension that specifies
+  the scrolling behavior that occurs when a user hits the scroll limit during a
+  manipulation.
+tags:
+  - CSS
+  - CSS Property
+  - Non-standard
+  - Reference
+---
+<div>{{CSSRef}}</div>
+
+<div>{{non-standard_header}}</div>
+
+<div> </div>
+
+<p>The <code><strong>-ms-scroll-chaining</strong></code> <a href="/en-US/docs/Web/CSS">CSS</a> property is a <a href="/en-US/docs/Web/CSS/Microsoft_CSS_extensions">Microsoft extension</a> that specifies the scrolling behavior that occurs when a user hits the scroll limit during a manipulation.</p>
+
+<p>{{cssinfo}}</p>
+
+<h2 id="Syntax" name="Syntax">Syntax</h2>
+
+<h3 id="Values" name="Values">Values</h3>
+
+<dl>
+ <dt><code>chained</code></dt>
+ <dd>
+ <p>Initial value. The nearest scrollable parent element begins scrolling when the user hits a scroll limit during any manipulation. No bounce effect is shown.</p>
+ </dd>
+ <dt><code>none</code></dt>
+ <dd>
+ <p>A bounce effect is shown when the user hits a scroll limit during any manipulation.</p>
+ </dd>
+</dl>
+
+<h3 id="Formal_syntax" name="Formal_syntax">Formal syntax</h3>
+
+<pre class="syntaxbox">  {{csssyntax}}
+</pre>
+
+<h2 id="Examples" name="Examples">Examples</h2>
+
+<p>The following example illustrates the <code>-ms-scroll-chaining</code> property in use. In this case the image container has its <code>-ms-scroll-chaining property</code> set to <code>chained</code>, which means that when a user is scrolling through a nested scrollable element and it hits its boundary the parent scrollable element will begin to scroll in the same direction. Had the <code>-ms-scroll-chaining</code> property been set to <code>none</code>, the user would observe a bounce effect when the nested element reaches its boundary. For more information, see <a href="https://code.msdn.microsoft.com/windowsapps/scrolling-panning-and-47d70d4c">HTML scrolling, panning and zooming sample</a> or Internet Explorer 10 <a href="https://msdn.microsoft.com/en-us/library/hh920761(v=vs.85).aspx">Scrolling, panning, and zooming with touch</a>.</p>
+
+<pre class="brush: css">.imageContainer {
+  -ms-scroll-chaining: chained;
+  -ms-overflow-style: none;
+  -ms-content-zooming: zoom;
+  -ms-scroll-rails: none;
+  -ms-content-zoom-limit-min: 100%;
+  -ms-content-zoom-limit-max: 500%;
+  -ms-scroll-snap-type: proximity;
+  -ms-scroll-snap-points-x: snapList(100%, 200%, 300%, 400%, 500%);
+  -ms-overflow-style: none;
+  width: 480px;
+  height: 270px;
+  overflow: auto;
+}
+</pre>
+
+<h2 id="Specifications" name="Specifications">Specifications</h2>
+
+<p>Not part of any specification.</p>
+
+<h2 id="Remarks" name="Remarks">Remarks</h2>
+
+<p>This property only applies to touch and touchpad input. For keyboard input the scroll does not chain regardless of the <code>–ms-scroll-chaining</code> value, and for mouse input the scroll will always chain up to the nearest scrollable ancestor element.</p>
+
+<p>This property has no effect on non-scrollable elements.</p>
+
+<p>This property requires Windows 8 or later.</p>

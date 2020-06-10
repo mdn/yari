@@ -1,0 +1,92 @@
+---
+title: decodeURI()
+slug: Web/JavaScript/Reference/Global_Objects/decodeURI
+summary: >-
+  The decodeURI() function decodes a Uniform Resource Identifier (URI)
+  previously created by encodeURI() or by a similar routine.
+tags:
+  - Decode
+  - JavaScript
+  - Method
+  - String
+  - Text
+  - URI
+  - URL
+  - decodeURI
+  - decoding
+---
+<div>{{jsSidebar("Objects")}}</div>
+
+<p><span class="seoSummary">The <code><strong>decodeURI()</strong></code> function decodes a Uniform Resource Identifier (URI) previously created by {{jsxref("encodeURI", "encodeURI()")}} or by a similar routine.</span></p>
+
+<div>{{EmbedInteractiveExample("pages/js/globalprops-decodeuri.html")}}</div>
+
+<p class="hidden">The source for this interactive example is stored in a GitHub repository. If you'd like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox"><code>decodeURI(<em>encodedURI</em>)</code></pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<dl>
+ <dt><code>encodedURI</code></dt>
+ <dd>A complete, encoded Uniform Resource Identifier.</dd>
+</dl>
+
+<h3 id="Return_value">Return value</h3>
+
+<p>A new string representing the unencoded version of the given encoded Uniform Resource Identifier (URI).</p>
+
+<h3 id="Exceptions">Exceptions</h3>
+
+<p>Throws an {{jsxref("URIError")}} ("malformed URI sequence") exception when <code><em>encodedURI</em></code> contains invalid character sequences.</p>
+
+<h2 id="Description">Description</h2>
+
+<p>Replaces each escape sequence in the encoded URI with the character that it represents, but does not decode escape sequences that could not have been introduced by {{jsxref("encodeURI")}}. The character “<code>#</code>” is not decoded from escape sequences.</p>
+
+<h2 id="Examples">Examples</h2>
+
+<h3 id="Decoding_a_Cyrillic_URL">Decoding a Cyrillic URL</h3>
+
+<pre class="brush: js">decodeURI('https://developer.mozilla.org/ru/docs/JavaScript_%D1%88%D0%B5%D0%BB%D0%BB%D1%8B');
+// "https://developer.mozilla.org/ru/docs/JavaScript_шеллы"
+</pre>
+
+<h3 id="Catching_errors">Catching errors</h3>
+
+<pre>try {
+  var a = decodeURI('%E0%A4%A');
+} catch(e) {
+  console.error(e);
+}
+
+// URIError: malformed URI sequence</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+  </tr>
+  <tr>
+   <td>{{SpecName('ESDraft', '#sec-decodeuri-encodeduri', 'decodeURI')}}</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.builtins.decodeURI")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("decodeURIComponent", "decodeURIComponent()")}}</li>
+ <li>{{jsxref("encodeURI", "encodeURI()")}}</li>
+ <li>{{jsxref("encodeURIComponent", "encodeURIComponent()")}}</li>
+</ul>

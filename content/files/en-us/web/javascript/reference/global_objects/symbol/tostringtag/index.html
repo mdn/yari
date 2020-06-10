@@ -1,0 +1,91 @@
+---
+title: Symbol.toStringTag
+slug: Web/JavaScript/Reference/Global_Objects/Symbol/toStringTag
+summary: >-
+  The Symbol.toStringTag well-known symbol is a string valued property that is
+  used in the creation of the default string description of an object. It is
+  accessed internally by the Object.prototype.toString() method.
+tags:
+  - ECMAScript 2015
+  - JavaScript
+  - Property
+  - Reference
+  - Symbol
+---
+<div>{{JSRef}}</div>
+
+<p>The <strong><code>Symbol.toStringTag</code></strong> well-known symbol is a string valued property that is used in the creation of the default string description of an object. It is accessed internally by the {{jsxref("Object.prototype.toString()")}} method.</p>
+
+<div>{{EmbedInteractiveExample("pages/js/symbol-tostringtag.html")}}</div>
+
+<p class="hidden">The source for this interactive example is stored in a GitHub repository. If you'd like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</p>
+
+<div>{{js_property_attributes(0,0,0)}}</div>
+
+<h2 id="Examples">Examples</h2>
+
+<h3 id="Default_tags">Default tags</h3>
+
+<pre class="brush: js">Object.prototype.toString.call('foo');     // "[object String]"
+Object.prototype.toString.call([1, 2]);    // "[object Array]"
+Object.prototype.toString.call(3);         // "[object Number]"
+Object.prototype.toString.call(true);      // "[object Boolean]"
+Object.prototype.toString.call(undefined); // "[object Undefined]"
+Object.prototype.toString.call(null);      // "[object Null]"
+// ... and more
+</pre>
+
+<h3 id="Built-in_toStringTag_symbols">Built-in toStringTag symbols</h3>
+
+<pre class="brush: js">Object.prototype.toString.call(new Map());       // "[object Map]"
+Object.prototype.toString.call(function* () {}); // "[object GeneratorFunction]"
+Object.prototype.toString.call(Promise.resolve()); // "[object Promise]"
+// ... and more
+</pre>
+
+<h3 id="Custom_classes_default_to_object_tag">Custom classes default to object tag</h3>
+
+<p>When creating your own class, JavaScript defaults to the "Object" tag:</p>
+
+<pre class="brush: js">class ValidatorClass {}
+
+Object.prototype.toString.call(new ValidatorClass()); // "[object Object]"
+</pre>
+
+<h3 id="Custom_tag_with_toStringTag">Custom tag with toStringTag</h3>
+
+<p>Now, with the help of <code>toStringTag</code>, you are able to set your own custom tag:</p>
+
+<pre class="brush: js">class ValidatorClass {
+  get [Symbol.toStringTag]() {
+    return 'Validator';
+  }
+}
+
+Object.prototype.toString.call(new ValidatorClass()); // "[object Validator]"
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+  </tr>
+  <tr>
+   <td>{{SpecName('ESDraft', '#sec-symbol.tostringtag', 'Symbol.toStringTag')}}</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.builtins.Symbol.toStringTag")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("Object.prototype.toString()")}}</li>
+</ul>

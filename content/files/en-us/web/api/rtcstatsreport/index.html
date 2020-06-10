@@ -1,0 +1,77 @@
+---
+title: RTCStatsReport
+slug: Web/API/RTCStatsReport
+summary: >-
+  The RTCStatsReport dictionary is contains statistics data about WebRTC
+  connections as returned by the RTCPeerConnection.getStats(),
+  RTCRtpReceiver.getStats(), and RTCRtpSender.getStats() methods.
+tags:
+  - API
+  - Dictionary
+  - Draft
+  - Interface
+  - Media
+  - NeedsContent
+  - RTCStatsReport
+  - Reference
+  - WebRTC
+---
+<p>{{APIRef("WebRTC")}}</p>
+
+<p>{{draft("This page is currently incomplete and under active construction. Please be aware that it's not going to answer all of your questions just yet.")}}</p>
+
+<p><span class="seoSummary">The <code><strong>RTCStatsReport</strong></code> dictionary is contains statistics data about WebRTC connections as returned by the {{domxref("RTCPeerConnection.getStats()")}}, {{domxref("RTCRtpReceiver.getStats()")}}, and {{domxref("RTCRtpSender.getStats()")}} methods.</span> This object consists of a mapping of strings which identify a category of statistics to objects which contains the various measured values for each.</p>
+
+<p>Calling <code>getStats()</code> on an {{domxref("RTCPeerConnection")}} lets you specifiy whether you wish to obtain statistics for outbound, inbound, or all streams on the connection. The {{domxref("RTCRtpReceiver")}} and {{domxref("RTCRtpSender")}} versions of <code>getStats()</code> specifically only return the incoming and outgoing streams, respectively.</p>
+
+<h2 id="The_RTCStats_subdictionaries">The RTCStats subdictionaries</h2>
+
+<p>The full <code>RTCStatsReport</code> interface is made up of a mapping of strings to subdictionaries which contain the statistics for each category, such as ICE candidate or media stream statistics. Each of these subdictionaries has in common the following values:</p>
+
+<dl>
+ <dt><code>timestamp</code></dt>
+ <dd>A {{domxref("DOMHighResTimeStamp")}} object which indicates the time at which the data was handled by the local WebRTC layer; for example, for statistics related to received RCTP packets, this would indicate the time at which the data was received by the local endpoint (the remote timestamp is available as well in one of the fields defined within one of the other subdictionaries. The time is specified relative to the UNIX epoch (the first moment of January 1, 1970, UTC).</dd>
+ <dt><code>type</code></dt>
+ <dd>A string, taken from the enum type <code>{{anch("RTCStatsType")}}</code>,</dd>
+ <dt><code>id</code></dt>
+ <dd>A {{domxref("DOMString")}} which uniquely identifies the object which was inspected to produce this object based on <code>RTCStats</code>. This allows any two <code>RTCStats</code>-based objects which were produced from the same data to be correlated to one another. The format of this ID is not defined by the specification, so it cannot be relied upon to have any particular format, structure, or meaning beyond that.</dd>
+</dl>
+
+<p>From a definition standpoint, these values are defined in the <code>RTCStats</code> dictionary in <code>RTCStatsReport</code>'s WebIDL file.</p>
+
+<h2 id="Using_RTCStatsReport">Using RTCStatsReport</h2>
+
+<p> </p>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{ SpecName('WebRTC 1.0', '#rtcstatsreport-object', 'RTCStatsReport') }}</td>
+   <td>{{ Spec2('WebRTC 1.0') }}</td>
+   <td>Initial specification.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.RTCStatsReport")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li><a href="/en-US/docs/Web/API/WebRTC_API">WebRTC API</a></li>
+ <li>{{domxref("RTCPeerConnection")}}</li>
+ <li>{{domxref("RTCPeerConnection.getStats()")}}, {{domxref("RTCRtpReceiver.getStats()")}}, and {{domxref("RTCRtpSender.getStats()")}}</li>
+</ul>
