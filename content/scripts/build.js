@@ -292,8 +292,6 @@ async function runBuild(sources, options, logger) {
       }
       if (options.watch || options.buildAndWatch) {
         builder.watch();
-        console.log("Starting WebSocket (port 8080) to report on builds.");
-        webSocketServer = new WebSocket.Server({ port: 8080 });
       }
     }
   } catch (err) {
@@ -863,6 +861,11 @@ class Builder {
         this.dumpAllTitles();
       }
     };
+
+    if (!webSocketServer) {
+      console.log("Starting WebSocket (port 8080) to report on builds.");
+      webSocketServer = new WebSocket.Server({ port: 8080 });
+    }
 
     this.watchers = this.sources
       .entries()
