@@ -19,6 +19,7 @@
     "kumascript": "0.1.0",
     "mdn-browser-compat-data": "1.0.24",
     "mysql": "2.18.1",
+    "rimraf": "^3.0.2",
     "sanitize-filename": "^1.6.3",
     "ws": "7.3.0"
   }
