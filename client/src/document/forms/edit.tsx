@@ -74,9 +74,7 @@ export default function DocumentEdit() {
           onSave={handleSave}
         />
       )}
-      <div className="document-edited">
-        <Document />
-      </div>
+      <Document />
     </div>
   );
 }
