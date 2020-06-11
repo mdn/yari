@@ -4,7 +4,6 @@ function testURL(pathname = "/") {
   return "http://localhost:5000" + pathname;
 }
 
-const TIMEOUT = 5000;
 describe("Basic viewing of functional pages", () => {
   it("open the temporary home page", async () => {
     await page.goto(testURL("/"));
@@ -13,8 +12,8 @@ describe("Basic viewing of functional pages", () => {
   });
 
   it("search and find Foo page", async () => {
-    page.setDefaultTimeout(TIMEOUT);
     await page.goto(testURL("/"));
+    await page.waitForNavigation({ waitUntil: "domcontentloaded" });
     await expect(page).toFill('form input[type="search"]', "fo");
     await expect(page).toMatch("<foo>: A test tag");
     await expect(page).toClick("div.highlit");
