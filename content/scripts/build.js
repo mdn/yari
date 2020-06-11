@@ -44,9 +44,9 @@ const ALL_TITLES_JSON_FILEPATH = path.join(
 );
 
 function msLong(milliseconds) {
-  // https://github.com/vercel/ms/blob/master/readme.md
   return ms(milliseconds, { long: true });
 }
+
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
 }
