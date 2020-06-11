@@ -138,7 +138,7 @@ function update(contentRoot, folder, rawHtml, metadata) {
 }
 
 function del(folder) {
-  fs.rmdirSync(folder, {recursive: true});
+  fs.rmdirSync(folder, { recursive: true });
 }
 
 module.exports = {
