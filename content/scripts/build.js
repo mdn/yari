@@ -613,11 +613,7 @@ class Builder {
     );
 
     const reportProcessed = (processed) => {
-<<<<<<< HEAD
       const { result, file, doc, took } = processed;
-=======
-      const { result, file, doc } = processed;
->>>>>>> master
       this.printProcessing(result, file);
       counts[result]++;
       times[result] += took;
@@ -677,13 +673,8 @@ class Builder {
     }
 
     const t1 = new Date();
-<<<<<<< HEAD
     this.dumpAllURLs();
     this.summarizeResults(counts, flawCounts, t1 - t0, maxHeapMemory, times);
-=======
-    self.dumpAllURLs();
-    self.summarizeResults(counts, flawCounts, t1 - t0, maxHeapMemory);
->>>>>>> master
   }
 
   ensureAllTitles() {
@@ -1063,11 +1054,7 @@ class Builder {
     return {};
   }
 
-<<<<<<< HEAD
   summarizeResults(counts, flawCounts, took, maxHeapMemory, times) {
-=======
-  summarizeResults(counts, flawCounts, took, maxHeapMemory) {
->>>>>>> master
     console.log(chalk.green("\nSummary of build:"));
     console.log(chalk.yellow(`Total time: ${ppMilliseconds(took)}`));
     const totalProcessed = counts[processing.PROCESSED];
