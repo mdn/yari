@@ -1849,8 +1849,8 @@ class Builder {
 
   removeURLs(locale, slug) {
     const rootURL = buildMDNUrl(locale, slug).toLowerCase();
-    const urls = Array.from(this.allTitles.keys()).filter((key) =>
-      key.startsWith(rootURL)
+    const urls = Array.from(this.allTitles.keys()).filter(
+      (key) => key === rootURL || key.startsWith(rootURL + "/")
     );
     for (const url of urls) {
       this.allTitles.delete(url);
