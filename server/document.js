@@ -116,7 +116,7 @@ router.put("/", withDocFolder, async (req, res) => {
 router.delete("/", withDocFolder, (req, res) => {
   const { metadata } = Document.read(CONTENT_ROOT, req.docFolder);
   Document.del(req.docFolder);
-  const urls = builder.removeURLs(metadata.locale, metadata.slug);
+  builder.removeURLs(metadata.locale, metadata.slug);
 
   const builtFile = path.join(
     STATIC_ROOT,
