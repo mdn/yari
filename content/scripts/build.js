@@ -33,7 +33,7 @@ const {
   DEFAULT_LIVE_SAMPLES_BASE_URL,
   DEFAULT_INTERACTIVE_EXAMPLES_BASE_URL,
 } = require("./constants");
-const { slugToFoldername } = require("./utils");
+const { slugToFoldername, humanFileSize } = require("./utils");
 
 const kumascript = require("kumascript");
 
@@ -551,7 +551,7 @@ class Builder {
     const self = this;
 
     // Clear any cached results.
-    self.macroRenderer.clearCache();
+    this.macroRenderer.clearCache();
 
     if (specificFolders) {
       // Check that they all exist and are folders
@@ -574,9 +574,9 @@ class Builder {
       return allProcessed;
     }
 
-    self.describeActiveSources();
-    self.describeActiveFilters();
-    self.describeActiveFlawLevels();
+    this.describeActiveSources();
+    this.describeActiveFilters();
+    this.describeActiveFlawLevels();
 
     // To be able to make a progress bar we need to first count what we're
     // going to need to do.
@@ -595,6 +595,7 @@ class Builder {
       self.initProgressbar(countTodo);
     }
 
+    let maxHeapMemory = 0;
     let total = 0;
     let processed;
 
@@ -609,17 +610,21 @@ class Builder {
       [...VALID_FLAW_CHECKS].map((key) => [key, 0])
     );
 
-    function reportProcessed(processed) {
+    const reportProcessed = (processed) => {
       const { result, file, doc } = processed;
-      self.printProcessing(result, file);
+      this.printProcessing(result, file);
       counts[result]++;
       if (doc && doc.flaws) {
         Object.entries(doc.flaws).forEach(([key, value]) => {
           flawCounts[key] += value.length;
         });
       }
-      self.tickProgressbar(++total);
-    }
+      this.tickProgressbar(++total);
+      const heapUsed = process.memoryUsage().heapUsed;
+      if (heapUsed > maxHeapMemory) {
+        maxHeapMemory = heapUsed;
+      }
+    };
 
     // Start the real processing
     const t0 = new Date();
@@ -666,7 +671,7 @@ class Builder {
 
     const t1 = new Date();
     self.dumpAllURLs();
-    self.summarizeResults(counts, flawCounts, t1 - t0);
+    self.summarizeResults(counts, flawCounts, t1 - t0, maxHeapMemory);
   }
 
   ensureAllTitles() {
@@ -1046,7 +1051,7 @@ class Builder {
     return {};
   }
 
-  summarizeResults(counts, flawCounts, took) {
+  summarizeResults(counts, flawCounts, took, maxHeapMemory) {
     console.log(chalk.green("\nSummary of build:"));
     const totalProcessed = counts[processing.PROCESSED];
     // const totalDocuments = Object.values(counts).reduce((a, b) => a + b);
@@ -1065,6 +1070,11 @@ class Builder {
         const count = counts[key];
         console.log(`${key.padEnd(longestKey + 1)} ${count.toLocaleString()}`);
       });
+
+    // Report on the max. heap memory that was reached.
+    console.log(
+      chalk.yellow(`Max. heap memory reached: ${humanFileSize(maxHeapMemory)}`)
+    );
 
     const flawCountsTotal = Object.values(flawCounts).reduce(
       (a, b) => a + b,
