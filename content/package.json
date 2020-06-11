@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "caporal": "1.4.0",
-    "chalk": "4.0.0",
+    "chalk": "4.1.0",
     "cheerio": "1.0.0-rc.3",
     "chokidar": "^3.4.0",
     "dotenv": "8.2.0",
