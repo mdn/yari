@@ -10,7 +10,7 @@ const { FLAW_LEVELS } = require("content/scripts/constants.js");
 
 const { STATIC_ROOT } = require("./constants");
 const documentRouter = require("./document");
-const { getOrCreateBuilder, normalizeContentPath } = require("./utils");
+const { builder, normalizeContentPath } = require("./builder");
 
 const app = express();
 app.use(express.json());
@@ -22,7 +22,7 @@ if (!fs.existsSync(STATIC_ROOT)) {
 }
 
 function getFolderFromURI(uri) {
-  const data = getOrCreateBuilder().allTitles.get(decodeURI(uri.toLowerCase()));
+  const data = builder.allTitles.get(decodeURI(uri.toLowerCase()));
   if (data) {
     return data.file;
   }
@@ -113,7 +113,7 @@ app.get("/_open", (req, res) => {
         // This works because the builder created here in the server is hardcoded
         // to only have exactly one source which is the main process.env.BUILD_ROOT
         // but adjusted.
-        getOrCreateBuilder().sources.entries()[0].filepath,
+        builder.sources.entries()[0].filepath,
         filepath
       );
 
@@ -193,7 +193,6 @@ app.get("/_flaws", (req, res) => {
 
   const documents = [];
 
-  const builder = getOrCreateBuilder();
   for (const data of builder.allTitles.values()) {
     if (data.locale && data.locale.toLowerCase() === locale) {
       counts.possible++;
@@ -473,7 +472,7 @@ app.get("/*", async (req, res) => {
   }
 
   if (req.url.endsWith("/titles.json")) {
-    getOrCreateBuilder().dumpAllURLs();
+    builder.dumpAllURLs();
 
     // Let's see, did that generate the desired titles.json file?
     if (fs.existsSync(path.join(STATIC_ROOT, req.url))) {
@@ -517,7 +516,7 @@ app.get("/*", async (req, res) => {
     if (specificFolder) {
       const t0 = performance.now();
       try {
-        const built = await getOrCreateBuilder().start({
+        const built = await builder.start({
           specificFolders: [specificFolder],
         });
         const t1 = performance.now();

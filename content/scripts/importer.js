@@ -1,4 +1,5 @@
 const assert = require("assert").strict;
+const url = require("url");
 const fs = require("fs");
 const path = require("path");
 const stream = require("stream");
@@ -10,6 +11,7 @@ const cheerio = require("cheerio");
 const ProgressBar = require("./progress-bar");
 const { VALID_LOCALES } = require("./constants");
 const Document = require("./document");
+const { writeRedirects } = require("./utils");
 
 const MAX_OPEN_FILES = 256;
 
@@ -156,13 +158,13 @@ function getSQLConstraints(
   }
   if (excludePrefixes.length) {
     extra.push(
-      `NOT (${excludePrefixes.map(() => `${a}slug LIKE ?`).join(" OR ")})`
+      `NOT (${excludePrefixes.map((_) => `${a}slug LIKE ?`).join(" OR ")})`
     );
     queryArgs.push(...excludePrefixes.map((s) => `${s}%`));
     if (parentAlias) {
       extra.push(
         `((${parentAlias}.slug IS NULL) OR NOT (${excludePrefixes
-          .map(() => `${parentAlias}.slug LIKE ?`)
+          .map((_) => `${parentAlias}.slug LIKE ?`)
           .join(" OR ")}))`
       );
       queryArgs.push(...excludePrefixes.map((s) => `${s}%`));
@@ -461,7 +463,7 @@ function getRedirectURL(html) {
       href = hrefHref;
     }
     if (href.startsWith("https://developer.mozilla.org")) {
-      return new URL(href).pathname;
+      return url.parse(href).pathname;
     } else {
       return href;
     }
@@ -770,13 +772,7 @@ async function saveAllRedirects(redirects, root) {
         `No content for ${locale}, so skip ${pairs.length} redirects`
       );
     } else {
-      const filePath = path.join(localeFolder, "_redirects.txt");
-      const writeStream = fs.createWriteStream(filePath);
-      writeStream.write(`# FROM-URL\tTO-URL\n`);
-      pairs.forEach(([fromUrl, toUrl]) => {
-        writeStream.write(`${fromUrl}\t${toUrl}\n`);
-      });
-      writeStream.end();
+      writeRedirects(localeFolder, pairs);
     }
   }
 

@@ -1,3 +1,4 @@
+const fs = require("fs");
 const path = require("path");
 
 const sanitizeFilename = require("sanitize-filename");
@@ -21,6 +22,17 @@ function slugToFoldername(slug) {
   );
 }
 
+function writeRedirects(localeFolder, pairs) {
+  const filePath = path.join(localeFolder, "_redirects.txt");
+  const writeStream = fs.createWriteStream(filePath);
+  writeStream.write(`# FROM-URL\tTO-URL\n`);
+  pairs.forEach(([fromUrl, toUrl]) => {
+    writeStream.write(`${fromUrl}\t${toUrl}\n`);
+  });
+  writeStream.end();
+}
+
 module.exports = {
   slugToFoldername,
+  writeRedirects,
 };

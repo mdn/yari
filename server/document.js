@@ -6,14 +6,13 @@ const express = require("express");
 const Document = require("content/scripts/document");
 
 const { STATIC_ROOT } = require("./constants");
-const { getOrCreateBuilder, normalizeContentPath } = require("./utils");
+const { builder, normalizeContentPath } = require("./builder");
 
 const CONTENT_ROOT = path.join("..", process.env.BUILD_ROOT);
 
 const router = express();
 
 function addToBuilder(localeFolder, slug) {
-  const builder = getOrCreateBuilder();
   builder.ensureAllTitles();
   const source = builder.sources.entries()[0];
   const folder = Document.buildPath(localeFolder, slug);
@@ -45,7 +44,7 @@ function withDocFolder(req, res, next) {
     return res.status(400).send("No ?url= query param");
   }
   const mdn_url = req.query.url.toLowerCase();
-  const docData = getOrCreateBuilder().allTitles.get(mdn_url);
+  const docData = builder.allTitles.get(mdn_url);
   if (!docData) {
     return res.status(400).send(`No document by the URL ${req.query.url}`);
   }
@@ -66,8 +65,6 @@ router.put("/", withDocFolder, async (req, res) => {
     const oldSlug = oldMetadata.slug;
     const newSlug = metadata.slug;
     const isNewSlug = oldSlug !== newSlug;
-
-    const builder = getOrCreateBuilder();
 
     if (isNewSlug) {
       for (const watcher of builder.watchers) {
@@ -119,7 +116,7 @@ router.put("/", withDocFolder, async (req, res) => {
 router.delete("/", withDocFolder, (req, res) => {
   const { metadata } = Document.read(CONTENT_ROOT, req.docFolder);
   Document.del(req.docFolder);
-  const urls = getOrCreateBuilder().removeURLs(metadata.locale, metadata.slug);
+  const urls = builder.removeURLs(metadata.locale, metadata.slug);
 
   const builtFile = path.join(
     STATIC_ROOT,
