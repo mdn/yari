@@ -4,6 +4,7 @@ const crypto = require("crypto");
 const childProcess = require("child_process");
 const { performance } = require("perf_hooks");
 
+const ms = require("ms");
 const chalk = require("chalk");
 const sanitizeFilename = require("sanitize-filename");
 const chokidar = require("chokidar");
@@ -32,7 +33,7 @@ const {
   DEFAULT_LIVE_SAMPLES_BASE_URL,
   DEFAULT_INTERACTIVE_EXAMPLES_BASE_URL,
 } = require("./constants");
-const { slugToFoldername, writeRedirects } = require("./utils");
+const { slugToFoldername, humanFileSize, writeRedirects } = require("./utils");
 
 const kumascript = require("kumascript");
 
@@ -40,6 +41,10 @@ const ALL_TITLES_JSON_FILEPATH = path.join(
   path.dirname(__dirname),
   "_all-titles.json"
 );
+
+function msLong(milliseconds) {
+  return ms(milliseconds, { long: true });
+}
 
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
@@ -485,7 +490,7 @@ class Builder {
     const self = this;
 
     // Clear any cached results.
-    self.macroRenderer.clearCache();
+    this.macroRenderer.clearCache();
 
     if (specificFolders) {
       // Check that they all exist and are folders
@@ -508,9 +513,9 @@ class Builder {
       return allProcessed;
     }
 
-    self.describeActiveSources();
-    self.describeActiveFilters();
-    self.describeActiveFlawLevels();
+    this.describeActiveSources();
+    this.describeActiveFilters();
+    this.describeActiveFlawLevels();
 
     // To be able to make a progress bar we need to first count what we're
     // going to need to do.
@@ -529,6 +534,7 @@ class Builder {
       self.initProgressbar(countTodo);
     }
 
+    let maxHeapMemory = 0;
     let total = 0;
     let processed;
 
@@ -543,17 +549,21 @@ class Builder {
       [...VALID_FLAW_CHECKS].map((key) => [key, 0])
     );
 
-    function reportProcessed(processed) {
+    const reportProcessed = (processed) => {
       const { result, file, doc } = processed;
-      self.printProcessing(result, file);
+      this.printProcessing(result, file);
       counts[result]++;
       if (doc && doc.flaws) {
         Object.entries(doc.flaws).forEach(([key, value]) => {
           flawCounts[key] += value.length;
         });
       }
-      self.tickProgressbar(++total);
-    }
+      this.tickProgressbar(++total);
+      const heapUsed = process.memoryUsage().heapUsed;
+      if (heapUsed > maxHeapMemory) {
+        maxHeapMemory = heapUsed;
+      }
+    };
 
     // Start the real processing
     const t0 = new Date();
@@ -600,7 +610,7 @@ class Builder {
 
     const t1 = new Date();
     self.dumpAllURLs();
-    self.summarizeResults(counts, flawCounts, t1 - t0);
+    self.summarizeResults(counts, flawCounts, t1 - t0, maxHeapMemory);
   }
 
   ensureAllTitles() {
@@ -747,7 +757,7 @@ class Builder {
     this.dumpAllTitles();
     let t1 = new Date();
     this.logger.info(
-      chalk.green(`Building list of all titles took ${ppMilliseconds(t1 - t0)}`)
+      chalk.green(`Building list of all titles took ${msLong(t1 - t0)}`)
     );
   }
 
@@ -790,9 +800,7 @@ class Builder {
 
     let t1 = new Date();
     this.logger.info(
-      chalk.green(
-        `Building map of all redirects took ${ppMilliseconds(t1 - t0)}`
-      )
+      chalk.green(`Building map of all redirects took ${msLong(t1 - t0)}`)
     );
   }
 
@@ -806,7 +814,7 @@ class Builder {
       const { result, file, doc } = await this.processFolder(source, folder);
       const t1 = performance.now();
 
-      const tookStr = ppMilliseconds(t1 - t0);
+      const tookStr = msLong(t1 - t0);
       console.log(
         `${
           result === processing.PROCESSED
@@ -860,7 +868,7 @@ class Builder {
             chalk.yellow(
               `File watcher set up for ${watchdir}. ` +
                 `Watching over ${count.toLocaleString()} files in ${folders.length.toLocaleString()} folders. ` +
-                `Took ${ppMilliseconds(ageSinceStart)} to get ready.`
+                `Took ${msLong(ageSinceStart)} to get ready.`
             )
           );
           if (isTTY()) {
@@ -983,14 +991,14 @@ class Builder {
     return {};
   }
 
-  summarizeResults(counts, flawCounts, took) {
+  summarizeResults(counts, flawCounts, took, maxHeapMemory) {
     console.log(chalk.green("\nSummary of build:"));
     const totalProcessed = counts[processing.PROCESSED];
     // const totalDocuments = Object.values(counts).reduce((a, b) => a + b);
     const rate = (1000 * totalProcessed) / took; // per second
     console.log(
       chalk.yellow(
-        `Processed ${totalProcessed.toLocaleString()} in ${ppMilliseconds(
+        `Processed ${totalProcessed.toLocaleString()} in ${msLong(
           took
         )} (roughly ${rate.toFixed(1)} docs/sec)`
       )
@@ -1002,6 +1010,11 @@ class Builder {
         const count = counts[key];
         console.log(`${key.padEnd(longestKey + 1)} ${count.toLocaleString()}`);
       });
+
+    // Report on the max. heap memory that was reached.
+    console.log(
+      chalk.yellow(`Max. heap memory reached: ${humanFileSize(maxHeapMemory)}`)
+    );
 
     const flawCountsTotal = Object.values(flawCounts).reduce(
       (a, b) => a + b,
@@ -1158,9 +1171,7 @@ class Builder {
     const t1 = new Date();
     console.log(
       chalk.yellow(
-        `Dumping all URLs to sitemaps and titles.json took ${ppMilliseconds(
-          t1 - t0
-        )}`
+        `Dumping all URLs to sitemaps and titles.json took ${msLong(t1 - t0)}`
       )
     );
   }
@@ -1926,21 +1937,6 @@ function* walker(root, depth = 0) {
       // Now go deeper
       yield* walker(filepath, depth + 1);
     }
-  }
-}
-
-function ppMilliseconds(ms) {
-  // If the number of millseconds is really large, use seconds. Or minutes
-  // even.
-  if (ms > 1000 * 60 * 5) {
-    const seconds = ms / 1000;
-    const minutes = seconds / 60;
-    return `${minutes.toFixed(1)} minutes`;
-  } else if (ms > 100) {
-    const seconds = ms / 1000;
-    return `${seconds.toFixed(1)} seconds`;
-  } else {
-    return `${ms.toFixed(1)} milliseconds`;
   }
 }
 

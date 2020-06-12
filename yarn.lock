@@ -9387,7 +9387,7 @@ ms@2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
   integrity sha512-tgp+dl5cGk28utYktBsrFqA7HKgrhgPsg6Z/EfhWI4gl1Hwq8B/GmY/0oXZ6nF8hDVesS/FpnYaD/kOWhYQvyg==
 
-ms@^2.1.1:
+ms@2.1.2, ms@^2.1.1:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
@@ -12291,6 +12291,11 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
   dependencies:
     hash-base "^3.0.0"
     inherits "^2.0.1"
+
+rough-notation@0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/rough-notation/-/rough-notation-0.2.2.tgz#90f5978d6fb21e067ced5c349c3d5e37d5cbbb13"
+  integrity sha512-bs7UCrfR0l0E0mYLzw+zAdr/0Fk/NwA6o300oJdcntpCicdNo8/Ktiy+cTF8FPyA/kmxvC8aynBgFQd0jMlgZw==
 
 rsvp@^4.8.4:
   version "4.8.5"
