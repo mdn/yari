@@ -55,11 +55,11 @@ describe("render() function", () => {
     }
 
     let templates = new Templates(fixture("macros"));
-    let promise = render("{{async1}} {{async2}}", templates, { after });
+    let promise = render("{{asyncMacro}}", templates, { after });
     jest.runAllTimers();
     let [result, errors] = await promise;
     expect(errors.length).toBe(0);
-    expect(result).toEqual("one two");
+    expect(result).toEqual("yay!");
   });
 
   it("exposes the per-page env object", async () => {

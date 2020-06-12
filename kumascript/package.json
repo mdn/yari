@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "license": "MPL-2.0",
   "scripts": {
-    "test": "jest ./tests",
-    "test-coverage": "jest --coverage --collectCoverageFrom='./src/**' ./tests"
+    "test": "jest",
+    "test-coverage": "jest --coverage --collectCoverageFrom='./src/**'"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
