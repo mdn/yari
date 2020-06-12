@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useDebouncedCallback } from "use-debounce";
 
-import { SearchWidget } from "../../search";
-
 import "./form.scss";
+import useSWR from "swr";
 
 type DocumentFormData = {
   rawHtml: string;
@@ -33,7 +32,6 @@ export default function DocumentForm({
   const [slug, setSlug] = useState(
     initialSlug ? initialSlug + "/" : doc ? doc.metadata.slug : ""
   );
-  const [slugExists, setSlugExists] = useState(false);
   const [title, setTitle] = useState(doc ? doc.metadata.title : "");
   const [summary, setSummary] = useState(doc ? doc.metadata.summary : "");
   const [rawHtml, setRawHtml] = useState(doc ? doc.rawHtml : "");
@@ -41,6 +39,18 @@ export default function DocumentForm({
   const [autosaveEnabled, setAutoSaveEnabled] = useLocalStorage(
     "autosaveEdit",
     false
+  );
+
+  const { data: slugExists } = useSWR(
+    `exists:${slug}`,
+    async () =>
+      (
+        await fetch(
+          `/_document?${new URLSearchParams({
+            url: `/${locale}/docs/${slug}`,
+          }).toString()}`
+        )
+      ).ok
   );
 
   const isNew = !doc;
@@ -55,13 +65,10 @@ export default function DocumentForm({
 
   const invalidSlug = slug.endsWith("/");
 
-  // skip over the /:locale/docs/ parts of the URL
   function toggleAutoSave() {
     setAutoSaveEnabled(!autosaveEnabled);
   }
-  function setSlugFromURL(url: string) {
-    setSlug(url.split("/").slice(3).join("/"));
-  }
+
   const [onSaveDebounced] = useDebouncedCallback(onSave, 1000);
 
   useEffect(() => {
@@ -100,15 +107,13 @@ export default function DocumentForm({
     >
       <div>
         <label>
-          URL
-          <SearchWidget
-            value={`/${locale}/docs/${slug}`}
-            onChange={(url) => {
-              setSlugFromURL(url);
-            }}
-            onValueExistsChange={(exists) => {
-              setSlugExists(exists);
-            }}
+          Slug
+          <input
+            disabled={disableInputs}
+            type="text"
+            value={slug}
+            onChange={(event) => setSlug(event.target.value)}
+            style={{ width: "100%" }}
           />
         </label>
         {slugExists && !(doc && doc.metadata.slug === slug) && (
