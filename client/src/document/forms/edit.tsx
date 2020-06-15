@@ -36,7 +36,7 @@ export default function DocumentEdit() {
         }
       );
       if (!response.ok) {
-        setSavingError(new Error(`${response.status} on ${documentURL}`));
+        setSavingError(new Error(`${response.status} on ${response.url}`));
         return;
       }
       if (didSlugChange) {
