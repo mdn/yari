@@ -124,7 +124,7 @@ export default function DocumentForm({
         )}
         {invalidSlug && (
           <div className="form-warning">
-            URLs are not allowed to end in a slash
+            Slugs are not allowed to end in a slash
           </div>
         )}
       </div>
