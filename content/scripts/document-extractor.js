@@ -31,11 +31,7 @@ function extractSidebar($) {
 
 function extractDocumentSections($) {
   const sections = [];
-  let section = cheerio
-    .load("<div></div>", {
-      // decodeEntities: false
-    })("div")
-    .eq(0);
+  let section = cheerio.load("<div></div>")("div").eq(0);
 
   const iterable = [...$("#_body")[0].childNodes];
 

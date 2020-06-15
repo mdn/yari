@@ -112,12 +112,6 @@ const ALLOW_STALE_TITLES = JSON.parse(
 );
 assert(typeof ALLOW_STALE_TITLES === "boolean");
 
-const FLAW_LEVELS = Object.freeze({
-  WARN: "warn",
-  IGNORE: "ignore",
-  ERROR: "error",
-});
-
 // These names need to match what we have in the code where we have various
 // blocks of code that look something like this:
 //
