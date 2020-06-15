@@ -57,6 +57,17 @@ router.get("/", withDocFolder, (req, res) => {
   res.status(document ? 200 : 404).json(document);
 });
 
+function removeBuiltFiles(url) {
+  const jsonPath = path.join(STATIC_ROOT, url.toLowerCase(), "index.json");
+  if (fs.existsSync(jsonPath)) {
+    fs.unlinkSync(jsonPath);
+  }
+  const htmlPath = path.join(STATIC_ROOT, url.toLowerCase(), "index.html");
+  if (fs.existsSync(htmlPath)) {
+    fs.unlinkSync(htmlPath);
+  }
+}
+
 router.put("/", withDocFolder, async (req, res) => {
   const { rawHtml, metadata } = req.body;
   if (metadata.title && rawHtml) {
@@ -101,6 +112,7 @@ router.put("/", withDocFolder, async (req, res) => {
         .then(() => {
           builder.moveURLs(CONTENT_ROOT, metadata.locale, oldSlug, newSlug);
           builder.watch();
+          removeBuiltFiles(req.query.url);
           res.sendStatus(200);
         })
         .catch((e) => {
@@ -118,14 +130,8 @@ router.delete("/", withDocFolder, (req, res) => {
   Document.del(req.docFolder);
   builder.removeURLs(metadata.locale, metadata.slug);
 
-  const builtFile = path.join(
-    STATIC_ROOT,
-    req.query.url.toLowerCase(),
-    "index.json"
-  );
-  if (fs.existsSync(builtFile)) {
-    fs.unlinkSync(builtFile);
-  }
+  removeBuiltFiles(req.query.url);
+
   res.sendStatus(200);
 });
 

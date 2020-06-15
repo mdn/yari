@@ -32,8 +32,12 @@ function extractLocale(contentRoot, folder) {
   return locale;
 }
 
-function saveHTMLFile(filePath, rawHtml, attributes) {
-  const combined = `---\n${yaml.safeDump(attributes)}---\n${rawHtml.trim()}\n`;
+function saveHTMLFile(filePath, rawHtml, { slug, title, summary }) {
+  const combined = `---\n${yaml.safeDump({
+    slug,
+    title,
+    summary,
+  })}---\n${rawHtml.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 
