@@ -62,7 +62,7 @@ export default function DocumentEdit() {
 
       {!data && !error && <p>Loading source data...</p>}
       {error && (
-        <div>
+        <div className="attention">
           <h3>Error loading source</h3>
           <code>{error.toString()}</code>
         </div>
