@@ -1059,7 +1059,7 @@ class Builder {
 
   summarizeResults(counts, flawCounts, took, maxHeapMemory, times) {
     console.log(chalk.green("\nSummary of build:"));
-    console.log(chalk.yellow(`Total time: ${ppMilliseconds(took)}`));
+    console.log(chalk.yellow(`Total time: ${msLong(took)}`));
     const totalProcessed = counts[processing.PROCESSED];
     if (totalProcessed) {
       const totalProcessedTime = times[processing.PROCESSED];
