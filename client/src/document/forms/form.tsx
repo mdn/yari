@@ -119,7 +119,7 @@ export default function DocumentForm({
         {slugExists && !(doc && doc.metadata.slug === slug) && (
           <div className="form-warning">
             Warning! This slug already exists, creating this document will
-            override the other document using that URL.
+            override the other document using that slug.
           </div>
         )}
         {invalidSlug && (
