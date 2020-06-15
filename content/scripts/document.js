@@ -113,17 +113,20 @@ function update(contentRoot, folder, rawHtml, metadata) {
   const newSlug = metadata.slug;
   const isNewSlug = oldSlug !== newSlug;
 
+  const htmlPath = getHTMLPath(folder);
   if (
     isNewSlug ||
     document.rawHtml !== rawHtml ||
     document.metadata.title !== metadata.title ||
     document.metadata.summary !== metadata.summary
   ) {
-    saveHTMLFile(getHTMLPath(folder), rawHtml, metadata);
+    saveHTMLFile(htmlPath, rawHtml, metadata);
   }
 
   if (isNewSlug) {
-    const childFilePaths = glob.sync(path.join(folder, "**", HTML_FILENAME));
+    const childFilePaths = glob.sync(path.join(folder, "**", HTML_FILENAME), {
+      ignore: htmlPath, // The current document's slug is already updated above
+    });
     for (const childFilePath of childFilePaths) {
       const { attributes, body } = fm(fs.readFileSync(childFilePath, "utf8"));
       attributes.slug = attributes.slug.replace(oldSlug, newSlug);
