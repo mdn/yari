@@ -139,7 +139,8 @@ test("content built bar page", () => {
   const booleanLinks = $(
     'a[href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean"]:not([title])'
   );
-  expect(booleanLinks.length).toEqual(2);
+  expect(booleanLinks.length).toEqual(3);
   expect(booleanLinks.eq(0).text()).toBe("Flag");
   expect(booleanLinks.eq(1).text()).toBe("Boolean");
+  expect(booleanLinks.eq(2).text()).toBe("bOOleAn");
 });
