@@ -43,16 +43,22 @@ export function SearchNavigateWidget() {
   useFocusOnSlash(inputRef.current);
 
   return (
-    <SearchWidget
-      inputRef={inputRef}
-      pathname={pathname}
-      value={query}
-      onChange={(value) => setQuery(value)}
-      onSelect={(url) => {
-        navigate(url);
-        setQuery("");
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
       }}
-    />
+    >
+      <SearchWidget
+        inputRef={inputRef}
+        pathname={pathname}
+        value={query}
+        onChange={(value) => setQuery(value)}
+        onSelect={(url) => {
+          navigate(url);
+          setQuery("");
+        }}
+      />
+    </form>
   );
 }
 
