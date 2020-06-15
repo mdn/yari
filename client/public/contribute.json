@@ -1,32 +1,26 @@
 {
-    "name": "Yari",
-    "description": "The next-gen app powering MDN Web Docs.",
-    "repository": {
-        "url": "https://github.com/mdn/yari",
-        "license": "MPL-2.0",
-        "tests": "https://github.com/mdn/yari/actions"
-    },
-    "participate": {
-        "home": "https://wiki.mozilla.org/MDN",
-        "docs": "https://github.com/mdn/yari/blob/master/README.md",
-        "mailing-list": "https://discourse.mozilla.org/c/mdn",
-        "chat": {
-            "url": "https://mozilla.slack.com/archives/CLTBV3W9X"
-        }
-    },
-    "bugs": {
-        "list": "https://github.com/mdn/yari/issues",
-        "report": "https://github.com/mdn/yari/issues/new"
-    },
-    "urls": {
-        "prod": "https://developer.mozilla.org/",
-        "stage": "https://developer.allizom.org/"
-    },
-    "keywords": [
-        "react",
-        "node",
-        "scss",
-        "typescript",
-        "staticsite"
-    ]
+  "name": "Yari",
+  "description": "The next-gen app powering MDN Web Docs.",
+  "repository": {
+    "url": "https://github.com/mdn/yari",
+    "license": "MPL-2.0",
+    "tests": "https://github.com/mdn/yari/actions"
+  },
+  "participate": {
+    "home": "https://wiki.mozilla.org/MDN",
+    "docs": "https://github.com/mdn/yari/blob/master/README.md",
+    "mailing-list": "https://discourse.mozilla.org/c/mdn",
+    "chat": {
+      "url": "https://chat.mozilla.org/#/room/#mdn:mozilla.org"
+    }
+  },
+  "bugs": {
+    "list": "https://github.com/mdn/yari/issues",
+    "report": "https://github.com/mdn/yari/issues/new"
+  },
+  "urls": {
+    "prod": "https://developer.mozilla.org/",
+    "stage": "https://developer.allizom.org/"
+  },
+  "keywords": ["react", "node", "scss", "typescript", "staticsite"]
 }
