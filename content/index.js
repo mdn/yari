@@ -250,7 +250,7 @@ cli
     // We might need to parse the list of files because it's a string
     // with a space separator.
     if (options.files) {
-      console.log({ OPTIONS_FILES: options.files });
+      console.log({ BEFORE__OPTIONS_FILES: options.files });
       // The get-diff-action will make this a massive string that looks like
       // this: `'content/files/en-us/a/index.html' 'content/files/en-us/a/index.html'`
       // so we need to turn that into an array:
@@ -259,15 +259,16 @@ cli
         if (item.startsWith("'") || item.startsWith('"')) {
           item = item.slice(1, item.length - 1);
         }
-        // It's very likely that the file paths supplied were relative to
-        // the root of the project. This is what happens when we use
-        // `git diff` to get a list of file paths in the repo.
-        // When this is the case, fix them to become absolute file paths.
-        if (item.startsWith("content")) {
-          return path.join(process.cwd(), item);
-        }
+        // // It's very likely that the file paths supplied were relative to
+        // // the root of the project. This is what happens when we use
+        // // `git diff` to get a list of file paths in the repo.
+        // // When this is the case, fix them to become absolute file paths.
+        // if (item.startsWith("content")) {
+        //   return path.resolve(item);
+        // }
         return item;
       });
+      console.log({ AFTER__OPTIONS_FILES: options.files });
     }
 
     try {
