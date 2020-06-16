@@ -6,16 +6,16 @@
 //
 //  $0 - Interface name
 
-var lang = env.locale;
-
-var URL = "/" + lang + "/docs/Mozilla/Tech/XPCOM/Reference/Interface/" + $0;
+let lang = env.locale;
+let basePath = "/" + lang + "/docs/Mozilla/Tech/XPCOM/Reference/Interface/";
 
 switch(lang) {
   case 'de':
-    URL = "/de/docs/XPCOM_Interface_Referenz/" + $0;
+    basePath = "/de/docs/XPCOM_Interface_Referenz/";
     break;
 }
 
+const link = web.smartLink(basePath + $0, null, `<code>${$0}</code>`, $0, basePath);
+
 // Note: Tooltips are disabled at present. We need to fix how this works with pages that use the IFSummary template
-%>
-<%- await template("xref", [URL, $0, false]) %>
+%><%- link %>

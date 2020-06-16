@@ -143,3 +143,37 @@ carefully as the rest of the site.
 
 When doing local development, it's recommended to set this to
 `http://localhost:5000` in your personal `.env`.
+
+## Server
+
+### `SERVER_PORT`
+
+**Default: `5000`**
+
+Usually the `server` workspace is started with `foreman` (the `nf` command)
+and this is the default port.
+
+## Testing
+
+### `TESTING_OPEN_BROWSER`
+
+**Default: `false`**
+
+When running the `jest-puppeteer` test suites, if you set this to `true`,
+it will open a browser on every page navigation.
+
+It might just flash by too quickly, so consider putting in
+`await jestPuppeteer.debug()` inside the test function to slow it down.
+
+### `TESTING_START_SERVER`
+
+**Default: `false`**
+
+When `jest-puppeteer` starts the `jest` tests, if this variable is set
+to `true` it will execute `node ../server/index.js` to start the `server`
+on `localhost:5000`.
+
+In most cases, on your laptop it's better to start the server yourself
+in a separate terminal and then run the headless tests in another.
+
+For more information, see the `testing/README.md`.

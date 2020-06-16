@@ -1,6 +1,9 @@
 import React, { useEffect, useReducer, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useSWR from "swr";
+import { annotate, annotationGroup } from "rough-notation";
+import { RoughAnnotation } from "rough-notation/lib/model";
+
 import { humanizeFlawName } from "../../flaw-utils";
 import { Doc } from "../types";
 import "./flaws.scss";
@@ -105,17 +108,6 @@ function Flaws({ flaws }: { flaws: FlawCheck[] }) {
 }
 
 function BrokenLinks({ urls }: { urls: string[] }) {
-  // urls has repeats so turn it into a count for each
-  const urlsWithCount = Array.from(
-    urls
-      .reduce<Map<string, number>>(
-        (map, url) => map.set(url, (map.get(url) || 0) + 1),
-        new Map()
-      )
-      .entries()
-    // If we don't sort them, their visual presence isn't predictable.
-  ).sort(([url1], [url2]) => url1.localeCompare(url2));
-
   const { data, error } = useSWR(
     `/_redirects`,
     async (url) => {
@@ -146,6 +138,10 @@ function BrokenLinks({ urls }: { urls: string[] }) {
     if (!data) {
       return;
     }
+    const annotations: RoughAnnotation[] = [];
+    // If the anchor already had a title, put it into this map.
+    // That way, when we restore the titles, we know what it used to be.
+    const originalTitles = new Map();
     for (const anchor of [
       ...document.querySelectorAll<HTMLAnchorElement>("div.content a[href]"),
     ]) {
@@ -154,36 +150,46 @@ function BrokenLinks({ urls }: { urls: string[] }) {
       if (pathname in data.redirects) {
         // Trouble! But is it a redirect?
         let correctURI = data.redirects[pathname];
+        let annotationColor = "red";
+        originalTitles.set(anchor.href, anchor.title);
         if (correctURI) {
           if (hash) {
             correctURI += hash;
           }
           // It can be fixed!
-          anchor.classList.add("flawed--broken_link_redirect");
+          annotationColor = "orange";
           anchor.title = `Consider fixing! It's actually a redirect to ${correctURI}`;
         } else {
-          anchor.classList.add("flawed--broken_link_404");
           anchor.title = "Broken link! Links to a page that will not be found";
         }
+        annotations.push(
+          annotate(anchor, {
+            type: "box",
+            color: annotationColor,
+            animationDuration: 300,
+          })
+        );
       }
     }
+    const ag = annotationGroup(annotations);
+    ag.show();
+
     return () => {
-      // Undo setting those extra classes and titles
+      ag.hide();
+
+      // Now, restore any 'title' attributes that were overridden.
       for (const anchor of Array.from(
-        document.querySelectorAll<HTMLAnchorElement>(
-          `div.content a.flawed--broken_link_redirect`
-        )
+        document.querySelectorAll<HTMLAnchorElement>(`div.content a`)
       )) {
-        anchor.classList.remove("flawed--broken_link_redirect");
-        anchor.title = "";
-      }
-      for (const anchor of Array.from(
-        document.querySelectorAll<HTMLAnchorElement>(
-          `div.content a.flawed--broken_link_404`
-        )
-      )) {
-        anchor.classList.remove("flawed--broken_link_404");
-        anchor.title = "";
+        // Only look at anchors that were bothered with at all in the
+        // beginning of the effect.
+        if (originalTitles.has(anchor.href)) {
+          const currentTitle = anchor.title;
+          const originalTitle = originalTitles.get(anchor.href);
+          if (currentTitle !== originalTitle) {
+            anchor.title = originalTitle;
+          }
+        }
       }
     };
   }, [data, urls]);
@@ -203,18 +209,66 @@ function BrokenLinks({ urls }: { urls: string[] }) {
         </div>
       )}
       <ol>
-        {urlsWithCount.map(([url, count]) => (
+        {urls.map((url) => (
           <li key={url}>
-            <code>{url}</code>{" "}
-            <i>
-              {count} {count === 1 ? "time" : "times"}
-            </i>{" "}
+            <code>{url}</code>
             {data && data.redirects[url] && (
               <span>
-                <b>Actually a redirect!</b> to...{" "}
-                <code>{data.redirects[url]}</code>
+                Actually a redirect to... <code>{data.redirects[url]}</code>
               </span>
-            )}
+            )}{" "}
+            <span
+              role="img"
+              aria-label="Click to highlight broken link"
+              title="Click to highlight broken link anchor"
+              style={{ cursor: "zoom-in" }}
+              onClick={() => {
+                // Keep it simple! Clicking this little thing will scroll
+                // the FIRST such anchor element in the DOM into view.
+                // We COULD be fancy and remember which "n'th" one you clicked
+                // so that clicking again will scroll the next one into view.
+                // Perhaps another day.
+                const annotations: RoughAnnotation[] = [];
+                let firstOne = true;
+                for (const anchor of [
+                  ...document.querySelectorAll<HTMLAnchorElement>(
+                    "div.content a[href]"
+                  ),
+                ]) {
+                  const { pathname } = new URL(anchor.href);
+                  if (pathname === url) {
+                    if (firstOne) {
+                      anchor.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                      });
+                      firstOne = false;
+                    }
+                    if (anchor.parentElement) {
+                      annotations.push(
+                        annotate(anchor, {
+                          type: "circle",
+                          color: "purple",
+                          animationDuration: 500,
+                          strokeWidth: 2,
+                          padding: 6,
+                        })
+                      );
+                    }
+                  }
+                }
+                if (annotations.length) {
+                  const ag = annotationGroup(annotations);
+                  ag.show();
+                  // Only show this extra highlight temporarily
+                  window.setTimeout(() => {
+                    ag.hide();
+                  }, 2000);
+                }
+              }}
+            >
+              👀
+            </span>
           </li>
         ))}
       </ol>
