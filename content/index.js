@@ -252,10 +252,13 @@ cli
     if (options.files) {
       console.log({ BEFORE__OPTIONS_FILES: options.files });
       // The get-diff-action will make this a massive string that looks like
-      // this: `'content/files/en-us/a/index.html'\n'content/files/en-us/a/index.html'`
+      // this: `'content/files/en-us/a/index.html','content/files/en-us/a/index.html'`
       // so we need to turn that into an array:
       // ["content/files/en-us/a/index.html", "content/files/en-us/b/index.html"]`
-      options.files = options.files.split(" ").map((item) => {
+      // Note, when you use get-diff-action in GitHub Actions, it's a comma
+      // but if you use the manualy `git diff --name-only ...` on your command
+      // line it's a newline.
+      options.files = options.files.split(/[,\n]/).map((item) => {
         if (
           (item.startsWith("'") || item.startsWith('"')) &&
           item.charAt(0) === item.charAt(item.length - 1)
