@@ -372,8 +372,8 @@ class Builder {
     this.allRedirects = new Map();
     this.flawsByType = new Map();
 
-    // Turn the optional list of files into a set because sets are filter
-    // to look for presence in than an array.
+    // Turn the optional list of files into a set because sets are much faster
+    // to check for membership than arrays.
     // This function also validates that every file exists on disk.
     this.specificFiles = checkSpecificFiles(options.files || []);
 

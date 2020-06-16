@@ -261,7 +261,7 @@ cli
         // It's very likely that the file paths supplied were relative to
         // the root of the project. This is what happens when we use
         // `git diff` to get a list of file paths in the repo.
-        // When this is the case, fix them to become absolute file path.
+        // When this is the case, fix them to become absolute file paths.
         if (item.startsWith("content")) {
           return path.join(process.cwd(), item);
         }
