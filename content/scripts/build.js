@@ -196,7 +196,11 @@ function checkSpecificFiles(files) {
     if (!fs.existsSync(filepath)) {
       throw new Error(`${filepath} does not exist`);
     }
-    set.add(filepath);
+    // Just in case they weren't fully resolved paths, do that.
+    // This is because when this set gets used inside walkSources()
+    // generator (inside the start() method) the files that are
+    // compares for presence in this set is always fully resolved.
+    set.add(path.resolve(filepath));
   }
   return set;
 }
