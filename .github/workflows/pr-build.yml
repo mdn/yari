@@ -75,7 +75,7 @@ jobs:
           # real content exposes it.
 
           # TEMP
-          echo $GIT_DIFF
+          echo ${GIT_DIFF}
           echo ${{ GIT_DIFF }}
           echo ${{ steps.git_diff_content.outputs.diff }}
           echo $INPUT_SEPARATOR
