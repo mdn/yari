@@ -130,6 +130,12 @@ export function DocumentForm({
         )}
       </div>
 
+      {didSlugChange && shouldAutosave && (
+        <div>
+          Autosave has been temporarily disabled until the new slug is saved!
+        </div>
+      )}
+
       <p>
         <label>
           Title
