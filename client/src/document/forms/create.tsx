@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router";
-import DocumentForm, { DocumentOutData } from "./form";
+import { DocumentForm, DocumentOutData } from "./form";
 
 export default function DocumentCreate() {
   const location = useLocation();

@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import useSWR from "swr";
 import { Document } from "../index";
 import { useDocumentURL } from "../hooks";
-import DocumentForm, { DocumentOutData } from "./form";
+import { DocumentForm, DocumentOutData } from "./form";
 
 import "./edit.scss";
 

@@ -15,7 +15,7 @@ export type DocumentOutData = DocumentFormData & {
   metadata: DocumentFormData["metadata"] & { locale: string };
 };
 
-export default function DocumentForm({
+export function DocumentForm({
   onSave,
   initialSlug,
   doc,
