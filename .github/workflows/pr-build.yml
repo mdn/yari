@@ -74,4 +74,8 @@ jobs:
           # functional tests have a gap in them but actually building
           # real content exposes it.
 
+          # TEMP
+          echo $GIT_DIFF
+
+
           node content build --no-progressbar --files="${GIT_DIFF}"
