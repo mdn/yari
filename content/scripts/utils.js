@@ -33,7 +33,7 @@ function humanFileSize(size) {
 
 function writeRedirects(localeFolder, pairs) {
   const filePath = path.join(localeFolder, "_redirects.txt");
-  const writeStream = fs.createWriteStream(filePath);
+  const writeStream = fs.createWriteStream(filePath, { flags: "w" });
   writeStream.write(`# FROM-URL\tTO-URL\n`);
   pairs.forEach(([fromUrl, toUrl]) => {
     writeStream.write(`${fromUrl}\t${toUrl}\n`);

@@ -1878,7 +1878,12 @@ class Builder {
     ]);
     pairs.push([oldURL, newURL]);
     this.allRedirects = new Map(pairs);
-    writeRedirects(path.join(contentRoot, locale), pairs);
+    writeRedirects(
+      path.join(contentRoot, locale),
+      pairs.filter(
+        ([url]) => url.split("/")[1].toLowerCase() === locale.toLowerCase()
+      )
+    );
   }
 
   processStumptownFileTitle(source, file, allPopularities) {
