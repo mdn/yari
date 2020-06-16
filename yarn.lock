@@ -12274,10 +12274,10 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
-rough-notation@0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/rough-notation/-/rough-notation-0.3.1.tgz#6f3865f43b0b63c3118f3be18d4c3267c30b50d3"
-  integrity sha512-WrUTmZa1CxuW2KdghcppZ7WBk7An/ty1bQ5kpYwl5YtXSBCEINa6NO7wx+pViO9TwlMqmIZuRxCJiWtYcIOK0w==
+rough-notation@0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/rough-notation/-/rough-notation-0.3.3.tgz#abe82f464b3d5d990e6b2ccd11ca5e596b1b0d8e"
+  integrity sha512-u2wn53Re907g208tPOxNdlv3WYRaXmXxd7JNTbAzzrkG4/6Iw5ZdhdXol8/AiVreUgt3MiBWpPVt+SYJwkNkXQ==
 
 rsvp@^4.8.4:
   version "4.8.5"
