@@ -18,10 +18,6 @@ jobs:
           SUFFIX_FILTER: .html
           PREFIX_FILTER: content/files/
 
-      - name: Display Git diffs
-        run: |
-          echo ${{ steps.git_diff_content.outputs.diff }}
-
       - name: Setup Node.js environment
         uses: actions/setup-node@v2-beta
         with:
