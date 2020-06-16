@@ -7,6 +7,10 @@ const { assert, itMacro, describeMacro } = require("./utils");
 const js_ref_slug = "Web/JavaScript/Reference/";
 const js_ref_url = "/en-US/docs/" + js_ref_slug;
 
+function getPathname(url) {
+  return new URL(url, "https://example.com").pathname.replace(/\/$/, "");
+}
+
 describeMacro("jsxref", function () {
   itMacro("One argument (simple global object)", function (macro) {
     // Suggested in macro docstring, used on:
@@ -18,15 +22,17 @@ describeMacro("jsxref", function () {
       expected =
         '<a href="' + glob_url + '">' + "<code>" + name + "</code></a>";
 
-    macro.ctx.wiki.getPage = jest.fn(async (url) => {
+    macro.ctx.info.getPage = jest.fn((url) => {
       if (url === glob_url) {
         return {
+          url: glob_url,
           slug: js_ref_slug + partial_slug,
         };
       } else if (url === ref_url) {
         return {};
       }
     });
+    macro.ctx.info.getPathname = getPathname;
 
     return assert.eventually.equal(macro.call(name), expected);
   });
@@ -41,15 +47,17 @@ describeMacro("jsxref", function () {
       expected =
         '<a href="' + glob_url + '">' + "<code>" + name + "</code></a>";
 
-    macro.ctx.wiki.getPage = jest.fn(async (url) => {
+    macro.ctx.info.getPage = jest.fn((url) => {
       if (url === glob_url) {
         return {
+          url: glob_url,
           slug: js_ref_slug + partial_slug,
         };
       } else if (url === ref_url) {
         return {};
       }
     });
+    macro.ctx.info.getPathname = getPathname;
 
     return assert.eventually.equal(macro.call(name), expected);
   });
@@ -65,15 +73,17 @@ describeMacro("jsxref", function () {
       expected =
         '<a href="' + glob_url + '">' + "<code>" + name + "</code></a>";
 
-    macro.ctx.wiki.getPage = jest.fn(async (url) => {
+    macro.ctx.info.getPage = jest.fn((url) => {
       if (url === glob_url) {
         return {
+          url: glob_url,
           slug: js_ref_slug + partial_slug,
         };
       } else if (url === ref_url) {
         return {};
       }
     });
+    macro.ctx.info.getPathname = getPathname;
 
     return assert.eventually.equal(macro.call(partial_slug, name), expected);
   });
@@ -88,15 +98,17 @@ describeMacro("jsxref", function () {
       glob_url = js_ref_url + "Global_Objects/" + partial_slug,
       expected = '<a href="' + ref_url + '">' + "<code>" + name + "</code></a>";
 
-    macro.ctx.wiki.getPage = jest.fn(async (url) => {
+    macro.ctx.info.getPage = jest.fn((url) => {
       if (url === ref_url) {
         return {
+          url: ref_url,
           slug: js_ref_slug + partial_slug,
         };
       } else if (url === glob_url) {
         return {};
       }
     });
+    macro.ctx.info.getPathname = getPathname;
 
     return assert.eventually.equal(macro.call(partial_slug, name), expected);
   });
@@ -119,15 +131,18 @@ describeMacro("jsxref", function () {
         name +
         "</code></a>";
 
-    macro.ctx.wiki.getPage = jest.fn(async (url) => {
+    macro.ctx.info.getPage = jest.fn((url) => {
+      url = getPathname(url);
       if (url === glob_url) {
         return {
+          url: glob_url,
           slug: js_ref_slug + partial_slug,
         };
       } else if (url === ref_url) {
         return {};
       }
     });
+    macro.ctx.info.getPathname = getPathname;
 
     return assert.eventually.equal(
       macro.call(partial_slug, name, anchor),
@@ -152,7 +167,7 @@ describeMacro("jsxref", function () {
         '<a href="' +
         glob_url +
         "#" +
-        anchor +
+        "%D0%BC%D0%B0%D1%81%D1%81%D0%B8%D0%B2%D0%B0" +
         '">' +
         "<code>" +
         name +
@@ -160,15 +175,18 @@ describeMacro("jsxref", function () {
 
     macro.ctx.env.locale = "ru";
 
-    macro.ctx.wiki.getPage = jest.fn(async (url) => {
+    macro.ctx.info.getPage = jest.fn((url) => {
+      url = getPathname(url);
       if (url === glob_url) {
         return {
+          url: glob_url,
           slug: js_ref_slug + partial_slug,
         };
       } else if (url === ref_url) {
         return {};
       }
     });
+    macro.ctx.info.getPathname = getPathname;
 
     return assert.eventually.equal(
       macro.call(partial_slug, name, anchor),
@@ -188,15 +206,17 @@ describeMacro("jsxref", function () {
         glob_url = js_ref_url + "Global_Objects/" + partial_slug,
         expected = '<a href="' + ref_url + '">' + name + "</a>";
 
-      macro.ctx.wiki.getPage = jest.fn(async (url) => {
+      macro.ctx.info.getPage = jest.fn((url) => {
         if (url === ref_url) {
           return {
+            url: ref_url,
             slug: js_ref_slug + partial_slug,
           };
         } else if (url === glob_url) {
           return {};
         }
       });
+      macro.ctx.info.getPathname = getPathname;
 
       return assert.eventually.equal(
         macro.call(partial_slug, name, "", 1),
@@ -216,15 +236,17 @@ describeMacro("jsxref", function () {
       expected =
         '<a href="' + glob_url + '">' + "<code>" + name + "</code></a>";
 
-    macro.ctx.wiki.getPage = jest.fn(async (url) => {
+    macro.ctx.info.getPage = jest.fn((url) => {
       if (url === glob_url) {
         return {
+          url: glob_url,
           slug: js_ref_slug + partial_slug,
         };
       } else if (url === ref_url) {
         return {};
       }
     });
+    macro.ctx.info.getPathname = getPathname;
 
     return assert.eventually.equal(macro.call(partial_slug, name), expected);
   });
