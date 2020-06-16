@@ -25,7 +25,7 @@ jobs:
       - uses: technote-space/get-diff-action@v1
         id: git_diff_content
         with:
-          SEPARATOR: '\n'
+          SEPARATOR: ','
           SUFFIX_FILTER: .html
           PREFIX_FILTER: content/files/
 
@@ -74,17 +74,4 @@ jobs:
           # functional tests have a gap in them but actually building
           # real content exposes it.
 
-          # TEMP
-          echo "GIT_DIFF..."
-          echo ${GIT_DIFF}
-          echo "env.GIT_DIFF..."
-          echo ${{ env.GIT_DIFF }}
-          echo "steps.git_diff_content.outputs.diff..."
-          echo ${{ steps.git_diff_content.outputs.diff }}
-          echo "INPUT_SEPARATOR..."
-          echo $INPUT_SEPARATOR
-
-          echo "LET'S GO!!"
-
-          node content build --no-progressbar --files="${{ steps.git_diff_content.outputs.diff }}"
-          # node content build --no-progressbar --files="${GIT_DIFF}"
+          node content build --no-progressbar --files="${{ env.GIT_DIFF }}"

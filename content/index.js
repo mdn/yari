@@ -142,7 +142,7 @@ cli
   )
   .option(
     "--files <listoffilestobuild>",
-    "list of files to build (space separated). like --foldersearch but pickier"
+    "list of files to build (newline or command separated)"
   )
   .option(
     "--popularitiesfile <path>",
@@ -255,7 +255,7 @@ cli
       // this: `'content/files/en-us/a/index.html'\n'content/files/en-us/a/index.html'`
       // so we need to turn that into an array:
       // ["content/files/en-us/a/index.html", "content/files/en-us/b/index.html"]`
-      options.files = options.files.split("\n").map((item) => {
+      options.files = options.files.split(" ").map((item) => {
         if (
           (item.startsWith("'") || item.startsWith('"')) &&
           item.charAt(0) === item.charAt(item.length - 1)
