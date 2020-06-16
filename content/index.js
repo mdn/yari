@@ -250,7 +250,6 @@ cli
     // We might need to parse the list of files because it's a string
     // with a space separator.
     if (options.files) {
-      console.log({ BEFORE__OPTIONS_FILES: options.files });
       // The get-diff-action will make this a massive string that looks like
       // this: `'content/files/en-us/a/index.html'\n'content/files/en-us/a/index.html'`
       // so we need to turn that into an array:
@@ -264,7 +263,6 @@ cli
         }
         return item;
       });
-      console.log({ AFTER__OPTIONS_FILES: options.files });
     }
 
     try {
