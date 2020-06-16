@@ -10,7 +10,8 @@ type DocumentFormData = {
   metadata: { slug: string; title: string; summary: string };
 };
 
-export type DocumentOutData = Omit<DocumentFormData, "metadata"> & {
+// Same as DocumentFormData but metadata also includes the locale
+export type DocumentOutData = DocumentFormData & {
   metadata: DocumentFormData["metadata"] & { locale: string };
 };
 
