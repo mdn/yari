@@ -21,7 +21,7 @@
     "react-scripts": "3.4.1",
     "rough-notation": "0.3.1",
     "sockette": "2.0.6",
-    "swr": "0.2.2",
+    "swr": "0.2.3",
     "typeface-zilla-slab": "0.0.72",
     "typescript": "^3.9.5",
     "use-debounce": "^3.4.2"
