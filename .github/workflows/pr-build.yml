@@ -76,8 +76,8 @@ jobs:
 
           # TEMP
           echo ${GIT_DIFF}
-          echo ${{ GIT_DIFF }}
           echo ${{ steps.git_diff_content.outputs.diff }}
           echo $INPUT_SEPARATOR
 
+          node content build --no-progressbar --files="${{ steps.git_diff_content.outputs.diff }}"
           node content build --no-progressbar --files="${GIT_DIFF}"
