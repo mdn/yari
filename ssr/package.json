@@ -15,7 +15,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-router": "6.0.0-alpha.4",
-    "react-router-dom": "6.0.0-alpha.4",
+    "react-router-dom": "6.0.0-alpha.5",
     "source-map-support": "0.5.19",
     "typescript": "^3.9.5"
   },
