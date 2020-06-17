@@ -91,12 +91,14 @@ async function inlineCSSPostProcess(tasks, { root = buildRoot } = {}) {
         totalTimes.push(t1 - t0);
       })
     );
+    const T1 = new Date();
 
     if (skipped || failed) {
       console.log(chalk.yellow(`${skipped} skipped and ${failed}.`));
     }
     if (totalTimes.length) {
-      const totalTime = totalTimes.reduce((a, b) => a + b, 0);
+      // const totalTime = totalTimes.reduce((a, b) => a + b, 0);
+      const totalTime = T1 - T0;
       console.log(
         chalk.bold.green(
           `Processed ${totalTimes.length} files in ${msLong(totalTime)}.`
