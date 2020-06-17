@@ -258,13 +258,8 @@ cli
       // but if you use the manualy `git diff --name-only ...` on your command
       // line it's a newline.
       options.files = options.files.split(/[,\n]/).map((item) => {
-        if (
-          (item.startsWith("'") || item.startsWith('"')) &&
-          item.charAt(0) === item.charAt(item.length - 1)
-        ) {
-          item = item.slice(1, item.length - 1);
-        }
-        return item;
+        // Remove any single or double-quote bookends.
+        return item.replace(/^(['"])(.*)\1$/, "$2")
       });
     }
 
