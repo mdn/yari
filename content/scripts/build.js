@@ -1872,17 +1872,25 @@ class Builder {
   moveURLs(contentRoot, locale, oldSlug, newSlug) {
     const oldURL = buildMDNUrl(locale, oldSlug);
     const newURL = buildMDNUrl(locale, newSlug);
-    const pairs = Array.from(this.allRedirects.entries()).map(([from, to]) => [
-      from,
-      to.startsWith(oldURL) ? to.replace(oldURL, newURL) : to,
-    ]);
-    pairs.push([oldURL, newURL]);
-    this.allRedirects = new Map(pairs);
+    const localeFolder = path.join(contentRoot, locale);
     writeRedirects(
-      path.join(contentRoot, locale),
-      pairs.filter(
-        ([url]) => url.split("/")[1].toLowerCase() === locale.toLowerCase()
-      )
+      localeFolder,
+      [
+        ...fs
+          .readFileSync(path.join(localeFolder, "_redirects.txt"), "utf-8")
+          .split("\n")
+          .map((line) => line.split("\t"))
+          .slice(1, -1)
+          .map(([from, to]) => [
+            from,
+            to.startsWith(oldURL) ? to.replace(oldURL, newURL) : to,
+          ]),
+        [oldURL, newURL],
+      ].sort((a, b) => {
+        if (a[0] < b[0]) return -1;
+        if (a[0] > b[0]) return 1;
+        return 0;
+      })
     );
   }
 
