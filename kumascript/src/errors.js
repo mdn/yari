@@ -89,7 +89,7 @@ class MacroInvocationError extends SourceCodeError {
       source,
       error.location.start.line,
       error.location.start.column,
-      error.name // XXX does this work?
+      error.name
     );
   }
 }
@@ -149,10 +149,41 @@ class MacroExecutionError extends SourceCodeError {
   }
 }
 
+/**
+ * A MacroRedirectedLinkError is a special case of MacroExecutionError.
+ */
+class MacroRedirectedLinkError extends MacroExecutionError {
+  constructor(error, source, token, redirectInfo) {
+    super(error, source, token);
+    this.name = "MacroRedirectedLinkError";
+    this.macroSource = source.slice(
+      token.location.start.offset,
+      token.location.end.offset
+    );
+    this.redirectInfo = { ...redirectInfo };
+  }
+}
+
+/**
+ * A MacroBrokenLinkError is a special case of MacroExecutionError.
+ */
+class MacroBrokenLinkError extends MacroExecutionError {
+  constructor(error, source, token) {
+    super(error, source, token);
+    this.name = "MacroBrokenLinkError";
+    this.macroSource = source.slice(
+      token.location.start.offset,
+      token.location.end.offset
+    );
+  }
+}
+
 module.exports = {
   SourceCodeError,
   MacroInvocationError,
   MacroNotFoundError,
   MacroCompilationError,
   MacroExecutionError,
+  MacroRedirectedLinkError,
+  MacroBrokenLinkError,
 };

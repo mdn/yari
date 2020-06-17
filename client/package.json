@@ -6,7 +6,7 @@
   "main": "src/app.tsx",
   "dependencies": {
     "@types/jest": "^25.2.3",
-    "@types/react": "^16.9.36",
+    "@types/react": "^16.9.38",
     "@types/react-dom": "^16.9.8",
     "cross-env": "^7.0.2",
     "flexsearch": "0.6.32",
@@ -19,9 +19,9 @@
     "react-router": "6.0.0-alpha.4",
     "react-router-dom": "6.0.0-alpha.4",
     "react-scripts": "3.4.1",
-    "rough-notation": "0.2.2",
+    "rough-notation": "0.3.3",
     "sockette": "2.0.6",
-    "swr": "0.2.2",
+    "swr": "0.2.3",
     "typeface-zilla-slab": "0.0.72",
     "typescript": "^3.9.5",
     "use-debounce": "^3.4.2"
@@ -51,6 +51,6 @@
   "devDependencies": {
     "@testing-library/react": "^10.2.1",
     "jest-environment-jsdom-sixteen": "^1.0.3",
-    "mdn-browser-compat-data": "^1.0.24"
+    "mdn-browser-compat-data": "^1.0.25"
   }
 }

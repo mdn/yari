@@ -18,10 +18,9 @@ var globalAttrSlug = mdn.localString({
     "fr"   : "Attributs_universels"
 });
 
+const attrLC = $0.toLowerCase();
 
-$0 = $0.toLowerCase();
-
-var text = ($2 && ($2!=undefined))?$2:$0;
+var text = ($2 && ($2!=undefined)) ? $2 : attrLC;
 
 if ($1 && ($1 != undefined)) {
     url = '/' + lang + '/docs/Web/HTML/Element/' + $1;
@@ -29,9 +28,11 @@ if ($1 && ($1 != undefined)) {
     url = '/' + lang + '/docs/Web/HTML/' + globalAttrSlug;
 }
 
-var code    = !$3 ? '<code>'  : '';
-var endcode = !$3 ? '</code>' : '';
+if (!$3) {
+  text = `<code>${text}</code>`;
+}
 
-var result = code + '<a href="' + url + '#attr-' + $0 +'">' + text + '</a>'+ endcode;
+const result = web.smartLink(`${url}#attr-${attrLC}`, null, text, $0, url);
+
 %>
 <%- result %>

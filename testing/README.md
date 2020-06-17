@@ -36,7 +36,15 @@ Now you should be able to make edits and notice automatic reloading.
 But remember to unstage edits, otherwise it might break the automated
 test suite.
 
-To run the `jest` test suite:
+The first thing to do is to run the _whole_ test suite now:
+
+```bash
+./testing/scripts/functional-test.sh
+```
+
+That includes all the important pre-build, build, and starting the `jest`
+tests. But once you've run that once, you can "break it apart" and just
+run the `jest` test suite and this you can run repeatedly:
 
 ```bash
 yarn workspace testing run test
