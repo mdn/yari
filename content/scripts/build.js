@@ -14,6 +14,7 @@ const {
   extractSidebar,
 } = require("./document-extractor");
 const {
+  CONTENT_ROOT,
   VALID_LOCALES,
   FLAW_LEVELS,
   DEFAULT_LIVE_SAMPLES_BASE_URL,
@@ -120,10 +121,7 @@ const macroRenderer = new kumascript.Renderer({
 });
 
 macroRenderer.use({
-  get: (url) => {
-    //TODO Document.read?
-    return null;
-  },
+  get: (url) => findDocument(url).document,
   *[Symbol.iterator]() {},
 });
 
@@ -352,11 +350,7 @@ function addBreadcrumbData(contentRoot, url, document) {
 }
 
 async function buildDocument(url) {
-  const [, locale, , ...slugParts] = url.split("/");
-  const folder = path.join(locale, slugToFoldername(slugParts.join("/")));
-  const contentRoot = path.join("..", process.env.BUILD_ROOT);
-
-  const document = Document.read(contentRoot, path.join(contentRoot, folder));
+  const { contentRoot, folder, document } = Document.findByURL(url);
 
   const doc = {};
 
@@ -477,65 +471,6 @@ async function buildDocument(url) {
   return doc;
 }
 
-class Builder {
-  /** Similar to processFolder() but this time we're only interesting it
-   * adding this document's uri and title to this.allTitles
-   */
-  processFolderTitle(source, folder, allPopularities) {
-    let metadata;
-    let mdn_url;
-    try {
-      const document = Document.read(source.filepath, folder, true);
-      metadata = document.metadata;
-      mdn_url = buildURL(metadata.locale, metadata.slug);
-    } catch (err) {
-      console.warn(`The folder that caused the error was: ${folder}`);
-      throw err;
-    }
-    const mdnUrlLC = mdn_url.toLowerCase();
-
-    if (this.allTitles.has(mdnUrlLC)) {
-      // Already been added by stumptown probably.
-      // But, before we exit early, let's update some of the pieces of
-      // information that stumptown might not have, such as "modified"
-      // and "translation_of".
-      if (!this.allTitles.get(mdnUrlLC).modified) {
-        this.allTitles.get(mdnUrlLC).modified = metadata.modified;
-      }
-      if (!this.allTitles.get(mdnUrlLC).translation_of) {
-        this.allTitles.get(mdnUrlLC).translation_of = metadata.translation_of;
-      }
-      return;
-    }
-
-    const doc = {
-      mdn_url,
-      title: metadata.title,
-      popularity: allPopularities[mdn_url] || 0.0,
-      locale: metadata.locale,
-      summary: metadata.summary,
-      slug: metadata.slug,
-      // It's important that this is a full absolute path so that it
-      // will work more universally across builder, server, and watcher.
-      file: path.resolve(folder),
-      modified: metadata.modified,
-      translation_of: metadata.translation_of,
-      // XXX To be lean if either of these are false, perhaps not
-      // bother setting it.
-      excludeInTitlesJson: source.excludeInTitlesJson,
-      excludeInSitemaps: source.excludeInSitemaps,
-      source: path.resolve(source.filepath),
-    };
-    if (metadata.tags) {
-      // Unfortunately, some of the Kumascript macros (including some of the
-      // sidebar macros) depend on tags for proper operation, so we need to
-      // keep them for now.
-      doc.tags = metadata.tags;
-    }
-    this.allTitles.set(mdnUrlLC, doc);
-  }
-}
-
 function* walker(root, depth = 0) {
   const files = fs.readdirSync(root);
   if (!depth) {
@@ -561,6 +496,14 @@ function* walker(root, depth = 0) {
     }
   }
 }
+
+function buildAll() {
+  for (const thing of walker(CONTENT_ROOT)) {
+    console.log({ thing });
+  }
+}
+
+// buildAll();
 
 module.exports = {
   buildDocument,

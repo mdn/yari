@@ -135,7 +135,10 @@ const FLAW_LEVELS = Object.freeze({
   ERROR: "error",
 });
 
+const CONTENT_ROOT = path.join("..", process.env.BUILD_ROOT);
+
 module.exports = {
+  CONTENT_ROOT,
   // DEFAULT_ROOT,
   // DEFAULT_ARCHIVE_ROOT,
   // DEFAULT_DESTINATION,

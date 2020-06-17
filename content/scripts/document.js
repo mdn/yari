@@ -5,7 +5,7 @@ const fm = require("front-matter");
 const glob = require("glob");
 const yaml = require("js-yaml");
 
-const { VALID_LOCALES } = require("./constants");
+const { CONTENT_ROOT, VALID_LOCALES } = require("./constants");
 const { slugToFoldername } = require("./utils");
 
 function buildPath(localeFolder, slug) {
@@ -141,10 +141,20 @@ function del(folder) {
   fs.rmdirSync(folder, { recursive: true });
 }
 
+function findByURL(url) {
+  const [, locale, , ...slugParts] = url.split("/");
+  const folder = path.join(locale, slugToFoldername(slugParts.join("/")));
+
+  const document = read(CONTENT_ROOT, path.join(CONTENT_ROOT, folder));
+
+  return document ? { contentRoot: CONTENT_ROOT, folder, document } : null;
+}
+
 module.exports = {
   buildPath,
   create,
   read,
   update,
   del,
+  findByURL,
 };
