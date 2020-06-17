@@ -91,13 +91,13 @@ function prepareDoc(doc) {
   }
 }
 
-export function renderHTML(doc) {
+export function renderHTML(doc, url) {
   prepareDoc(doc);
   return render(
     React.createElement(
       StaticRouter,
-      { location: uri, context: options },
-      React.createElement(App, options)
+      { location: url, context: { doc } },
+      React.createElement(App, { doc })
     ),
     doc
   );

@@ -156,7 +156,8 @@ app.get("/*", async (req, res) => {
   if (extraSuffix.endsWith(".json")) {
     res.json(renderJSON(document));
   } else {
-    res.render(renderHTML(document));
+    res.set("Content-Type", "text/html");
+    res.send(renderHTML(document, lookupURL));
   }
 });
 

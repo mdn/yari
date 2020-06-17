@@ -350,7 +350,11 @@ function addBreadcrumbData(contentRoot, url, document) {
 }
 
 async function buildDocument(url) {
-  const { contentRoot, folder, document } = Document.findByURL(url);
+  const result = Document.findByURL(url);
+  if (!result) {
+    return null;
+  }
+  const { contentRoot, folder, document } = result;
 
   const doc = {};
 
