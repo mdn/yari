@@ -44,7 +44,7 @@ router.put("/", withDocument, async (req, res) => {
 });
 
 router.delete("/", withDocument, (req, res) => {
-  Document.del(path.basename(req.document.fileInfo.path));
+  Document.del(path.dirname(req.document.fileInfo.path));
   res.sendStatus(200);
 });
 
