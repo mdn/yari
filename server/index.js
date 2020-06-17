@@ -4,7 +4,7 @@ const path = require("path");
 const express = require("express");
 const openEditor = require("open-editor");
 
-const { buildDocument } = require("content/scripts/build");
+const { buildDocumentFromURL } = require("content/scripts/build");
 const { resolveRedirect } = require("content/scripts/redirects");
 const { slugToFoldername } = require("content/scripts/utils");
 const { renderHTML, renderJSON } = require("ssr");
@@ -140,20 +140,21 @@ app.get("/*", async (req, res) => {
     lookupURL = lookupURL.replace(extraSuffix, "");
   }
 
-  const redirectURL = resolveRedirect(lookupURL);
-  if (redirectURL !== lookupURL) {
-    return res.redirect(301, redirectURL + extraSuffix);
-  }
 
-  const document = await buildDocument(
-    lookupURL,
-    extraSuffix.endsWith(".json")
-  );
+  const isJSONRequest = extraSuffix.endsWith(".json");
+
+  const document = await buildDocumentFromURL(lookupURL, isJSONRequest);
   if (!document) {
+    // redirect resolving can take some time, so we only do it when there's no document
+    // for the current route
+    const redirectURL = resolveRedirect(lookupURL);
+    if (redirectURL !== lookupURL) {
+      return res.redirect(301, redirectURL + extraSuffix);
+    }
     return res.sendStatus(404);
   }
 
-  if (extraSuffix.endsWith(".json")) {
+  if (isJSONRequest) {
     res.json(renderJSON(document));
   } else {
     res.set("Content-Type", "text/html");

@@ -15,6 +15,7 @@ const {
 } = require("./document-extractor");
 const {
   CONTENT_ROOT,
+  DEFAULT_BUILD_DESTINATION,
   VALID_LOCALES,
   FLAW_LEVELS,
   DEFAULT_LIVE_SAMPLES_BASE_URL,
@@ -25,6 +26,8 @@ const { resolveRedirect } = require("./redirects");
 const { slugToFoldername } = require("./utils");
 
 const kumascript = require("kumascript");
+const {buildURL} = require("./utils");
+const { renderHTML } = require("ssr");
 
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
@@ -55,13 +58,6 @@ function getCurrentGitBranch(fallback = "master") {
     }
   }
   return _currentGitBranch;
-}
-
-/** Needs doc string */
-function buildURL(locale, slug) {
-  if (!locale) throw new Error("locale falsy!");
-  if (!slug) throw new Error("slug falsy!");
-  return `/${locale}/docs/${slug}`.toLowerCase();
 }
 
 /** Throw an error if the slug is insane.
@@ -134,7 +130,7 @@ async function renderMacros(contentRoot, { rawHtml, metadata, fileInfo }) {
         const folder = slugToFoldername(preCleanURL);
         const document = Document.read(contentRoot, folder);
         if (!document) {
-          throw new Error(`No document found for: ${folder}`);
+          return [];
         }
         // When rendering prerequisites, we're only interested in
         // caching the results for later use. We don't care about
@@ -232,8 +228,8 @@ async function renderMacrosAndBuildLiveSamples(
   // "/en-us/docs/learn/forms/how_to_build_custom_form_controls/example_5"
   for (const [slug, sampleIDs] of otherSampleIds || []) {
     const [{ context }] = sampleIDs;
-    const otherUri = buildURL(document.metadata.locale, slug);
-    const otherCleanUri = resolveRedirect(otherUri);
+    const otherURL = buildURL(document.metadata.locale, slug);
+    const otherCleanUri = resolveRedirect(otherURL);
     // TODO
     if (!"documentExists") {
       // I suppose we could use any, but let's use the context of the first
@@ -264,12 +260,13 @@ async function renderMacrosAndBuildLiveSamples(
       );
       continue;
     }
-    const {
-      fileInfo: { path: otherRawHtmlFilepath },
-    } = Document.read(contentRoot, otherFolder);
+    const otherDocument = Document.read(contentRoot, slugToFoldername(slug));
+    if (!otherDocument) {
+      continue;
+    }
     const otherResult = await renderMacrosAndBuildLiveSamples(
       contentRoot,
-      document,
+      otherDocument,
       url,
       {
         selectedSampleIDs: sampleIDs,
@@ -281,7 +278,7 @@ async function renderMacrosAndBuildLiveSamples(
     // a different level of recursion.
     for (const flaw of otherFlaws) {
       if (!flaw.filepath) {
-        flaw.filepath = otherRawHtmlFilepath;
+        flaw.filepath = otherDocument.fileInfo.path;
       }
       flaws.push(flaw);
     }
@@ -349,16 +346,12 @@ function addBreadcrumbData(contentRoot, url, document) {
   }
 }
 
-async function buildDocument(url) {
-  const result = Document.findByURL(url);
-  if (!result) {
-    return null;
-  }
-  const { contentRoot, folder, document } = result;
-
+async function buildDocument(contentRoot, folder, document) {
   const doc = {};
 
   doc.flaws = {};
+
+  const url = buildURL(document.metadata.locale, document.metadata.slug);
 
   let [renderedHtml, flaws] = await renderMacrosAndBuildLiveSamples(
     contentRoot,
@@ -385,7 +378,7 @@ async function buildDocument(url) {
       // Report and exit immediately on the first document with flaws.
       console.error(
         chalk.red.bold(
-          `Flaws (${flaws.length}) within ${url} while rendering macros:`
+          `Flaws (${flaws.length}) within ${document.metadata.slug} while rendering macros:`
         )
       );
       flaws.forEach((flaw, i) => {
@@ -448,10 +441,11 @@ async function buildDocument(url) {
   if (!otherTranslations.length && metadata.translation_of) {
     // But perhaps the parent has other translations?!
     const parentURL = buildURL("en-US", metadata.translation_of);
-    const parentData = Document.read(parentURL);
+    const parentResult = Document.findByURL(parentURL);
     // See note in 'ensureAllTitles()' about why we need this if statement.
-    if (parentData) {
-      const parentOtherTranslations = parentData.translations;
+    if (parentResult) {
+      const parentOtherTranslations =
+        parentResult.document.metadata.translations;
       if (parentOtherTranslations && parentOtherTranslations.length) {
         otherTranslations.push(
           ...parentOtherTranslations.filter(
@@ -469,10 +463,19 @@ async function buildDocument(url) {
 
   // The `titles` object should contain every possible URI->Title mapping.
   // We can use that generate the necessary information needed to build
-  // a breadcrumb in the React componentx.
+  // a breadcrumb in the React component
   addBreadcrumbData(contentRoot, url, doc);
 
   return doc;
+}
+
+async function buildDocumentFromURL(url) {
+  const result = Document.findByURL(url);
+  if (!result) {
+    return null;
+  }
+  const { contentRoot, folder, document } = result;
+  return buildDocument(contentRoot, folder, document);
 }
 
 function* walker(root, depth = 0) {
@@ -501,14 +504,32 @@ function* walker(root, depth = 0) {
   }
 }
 
-function buildAll() {
-  for (const thing of walker(CONTENT_ROOT)) {
-    console.log({ thing });
+async function renderDocuments() {
+  for (const [folder] of walker(CONTENT_ROOT)) {
+    const document = Document.read(CONTENT_ROOT, folder);
+    if (!document) {
+      continue;
+    }
+    try {
+      const doc = await buildDocument(CONTENT_ROOT, folder, document);
+      const html = renderHTML(doc);
+
+      const outFolder = path.join(
+        "..",
+        DEFAULT_BUILD_DESTINATION,
+        path.relative(CONTENT_ROOT, folder)
+      );
+      if (!fs.existsSync(outFolder)) {
+        fs.mkdirSync(outFolder, { recursive: true });
+      }
+      fs.writeFileSync(path.join(outFolder, "index.html"), html);
+    } catch (e) {
+      console.error(`error while building "${folder}":`, e);
+    }
   }
 }
 
-// buildAll();
-
 module.exports = {
-  buildDocument,
+  buildDocumentFromURL,
+  renderDocuments,
 };
