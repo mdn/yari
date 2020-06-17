@@ -5,6 +5,10 @@ const runImporter = require("./scripts/importer");
 const { runBuild } = require("./scripts/build");
 const { runMakePopularitiesFile } = require("./scripts/popularities");
 const { Sources } = require("./scripts/sources");
+const {
+  getMostPopularBuilds,
+  inlineCSSPostProcess,
+} = require("./scripts/postprocess");
 
 const {
   DEFAULT_DATABASE_URL,
@@ -267,6 +271,43 @@ cli
   .argument("csvfile", "Google Analytics pageviews CSV file", cli.PATH)
   .action((args, options, logger) => {
     return runMakePopularitiesFile(args.csvfile, options, logger);
+  })
+  .command("postprocess", "Perfect built pages")
+  .option(
+    "--build-root <path>",
+    "location of built HTML files",
+    cli.PATH,
+    DEFAULT_BUILD_DESTINATION
+  )
+  .option(
+    "-l, --locales <locale>",
+    "locales to limit on",
+    cli.ARRAY,
+    DEFAULT_BUILD_LOCALES
+  )
+  .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
+  .option(
+    "--max-files <number>",
+    "max number of built files to postprocess",
+    cli.INTEGER,
+    100
+  )
+  .action((args, options) => {
+    if (!options.locales.length) {
+      throw new Error("Must provide at least 1 locale");
+    }
+    const builds = getMostPopularBuilds(options);
+    if (!builds.length) {
+      throw new Error("No popular builds found to post process");
+    }
+    inlineCSSPostProcess(builds).catch(() => {
+      console.log(
+        chalk.bold.red(
+          `inlineCSSPostProcess failed on ${buildRoot} with ${subset.length} tasks`
+        )
+      );
+      // process.exitCode = 1;
+    });
   });
 
 cli.parse(process.argv);
