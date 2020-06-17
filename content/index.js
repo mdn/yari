@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+const path = require("path");
+
 const cli = require("caporal");
 
 const runImporter = require("./scripts/importer");
@@ -139,6 +141,10 @@ cli
     DEFAULT_FOLDER_SEARCHES
   )
   .option(
+    "--files <listoffilestobuild>",
+    "list of files to build (newline or command separated)"
+  )
+  .option(
     "--popularitiesfile <path>",
     "JSON file that maps URIs to popularities",
     cli.PATH,
@@ -239,6 +245,22 @@ cli
         `Folder search lowercased from '${options.foldersearch}' to '${newFoldersearch}'`
       );
       options.foldersearch = newFoldersearch;
+    }
+
+    // We might need to parse the list of files because it's a string
+    // with a space separator.
+    if (options.files) {
+      // The get-diff-action will make this a massive string that looks like
+      // this: `'content/files/en-us/a/index.html','content/files/en-us/a/index.html'`
+      // so we need to turn that into an array:
+      // ["content/files/en-us/a/index.html", "content/files/en-us/b/index.html"]`
+      // Note, when you use get-diff-action in GitHub Actions, it's a comma
+      // but if you use the manualy `git diff --name-only ...` on your command
+      // line it's a newline.
+      options.files = options.files.split(/[,\n]/).map((item) => {
+        // Remove any single or double-quote bookends.
+        return item.replace(/^(['"])(.*)\1$/, "$2");
+      });
     }
 
     try {

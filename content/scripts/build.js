@@ -190,6 +190,26 @@ function checkFlawLevels(flawChecks) {
   return checked;
 }
 
+/**
+ * Return a set of resolved file paths.
+ *
+ * Each file must exist
+ */
+function checkSpecificFiles(files) {
+  const set = new Set();
+  for (const filepath of files) {
+    if (!fs.existsSync(filepath)) {
+      throw new Error(`${filepath} does not exist`);
+    }
+    // Just in case they weren't fully resolved paths, do that.
+    // This is because when this set gets used inside the walkSources()
+    // loop inside the start() method, the files that are checked for
+    // membership in this set are always fully resolved.
+    set.add(path.resolve(filepath));
+  }
+  return set;
+}
+
 /** Needs doc string */
 function triggerTouch(filepath, document, root) {
   const changedFile = {
@@ -360,6 +380,11 @@ class Builder {
     this.allTitles = new Map();
     this.allRedirects = new Map();
     this.flawsByType = new Map();
+
+    // Turn the optional list of files into a set because sets are much faster
+    // to check for membership than arrays.
+    // This function also validates that every file exists on disk.
+    this.specificFiles = checkSpecificFiles(options.files || []);
 
     this.options.locales = cleanLocales(this.options.locales || []);
     this.options.notLocales = cleanLocales(this.options.notLocales || []);
@@ -635,7 +660,16 @@ class Builder {
     const t0 = new Date();
 
     for (const { source, localeFolder, folder, files } of self.walkSources()) {
-      if (self.excludeFolder(source, folder, localeFolder, files)) {
+      if (this.specificFiles.size) {
+        if (
+          !files
+            .map((f) => path.join(folder, f))
+            .some((f) => this.specificFiles.has(f))
+        ) {
+          counts[processing.EXCLUDED]++;
+          continue;
+        }
+      } else if (self.excludeFolder(source, folder, localeFolder, files)) {
         // If the folder was a Stumptown folder, what we're
         // actually excluding is all the .json files in the folder.
         if (source.isStumptown) {
