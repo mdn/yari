@@ -1,19 +1,13 @@
 const fs = require("fs");
 const path = require("path");
-const crypto = require("crypto");
 const childProcess = require("child_process");
 
-const ms = require("ms");
 const chalk = require("chalk");
-const sanitizeFilename = require("sanitize-filename");
-// XXX does this work on Windows?
 const packageJson = require("../../package.json");
 
 require("dotenv").config({ path: process.env.ENV_FILE });
 
 const cheerio = require("./monkeypatched-cheerio");
-const { packageBCD } = require("./resolve-bcd");
-const { buildHtmlAndJsonFromDoc } = require("ssr");
 const Document = require("./document");
 const {
   extractDocumentSections,
@@ -21,21 +15,15 @@ const {
 } = require("./document-extractor");
 const {
   VALID_LOCALES,
-  DEFAULT_POPULARITIES_FILEPATH,
   FLAW_LEVELS,
-  VALID_FLAW_CHECKS,
-  DEFAULT_FLAW_LEVELS,
-  DEFAULT_SITEMAP_BASE_URL,
   DEFAULT_LIVE_SAMPLES_BASE_URL,
   DEFAULT_INTERACTIVE_EXAMPLES_BASE_URL,
 } = require("./constants");
-const { slugToFoldername, humanFileSize, writeRedirects } = require("./utils");
+const { injectFlaws } = require("./flaws");
+const { resolveRedirect } = require("./redirects");
+const { slugToFoldername } = require("./utils");
 
 const kumascript = require("kumascript");
-
-function msLong(milliseconds) {
-  return ms(milliseconds, { long: true });
-}
 
 function getCurretGitHubBaseURL() {
   return packageJson.repository;
@@ -131,22 +119,29 @@ const macroRenderer = new kumascript.Renderer({
   interactiveExamplesBaseUrl: DEFAULT_INTERACTIVE_EXAMPLES_BASE_URL,
 });
 
-async function renderMacros(contentRoot, rawHtml, metadata) {
+macroRenderer.use({
+  get: (url) => {
+    //TODO Document.read?
+    return null;
+  },
+  *[Symbol.iterator]() {},
+});
+
+async function renderMacros(contentRoot, { rawHtml, metadata, fileInfo }) {
   // First, render all of the prerequisites of this document.
   const allPrerequisiteFlaws = (
     await Promise.all(
-      kumascript.getPrerequisites(rawHtml).map(async (preUri) => {
-        const preCleanUri = resolveRedirect(preUri);
-        const folder = slugToFoldername(preCleanUri);
-        const { metadata, rawHtml, fileInfo } = Document.read(
-          contentRoot,
-          folder,
-          false
-        );
+      Array.from(kumascript.getPrerequisites(rawHtml)).map(async (preURL) => {
+        const preCleanURL = resolveRedirect(preURL);
+        const folder = slugToFoldername(preCleanURL);
+        const document = Document.read(contentRoot, folder);
+        if (!document) {
+          throw new Error(`No document found for: ${folder}`);
+        }
         // When rendering prerequisites, we're only interested in
         // caching the results for later use. We don't care about
         // the results returned.
-        const [, preFlaws] = await renderMacros(contentRoot, rawHtml, metadata);
+        const [, preFlaws] = await renderMacros(contentRoot, document);
         // Flatten the flaws from this other document into the current flaws,
         // and set the filepath for flaws that haven't already been set at
         // a different level of recursion.
@@ -163,7 +158,7 @@ async function renderMacros(contentRoot, rawHtml, metadata) {
   const url = buildURL(metadata.locale, metadata.slug).toLowerCase();
   const [renderedHtml, flaws] = await macroRenderer.render(rawHtml, {
     path: url,
-    url: `${this.options.sitemapBaseUrl}${url}`,
+    url: `${"this.options.sitemapBaseUrl"}${url}`,
     locale: metadata.locale,
     slug: metadata.slug,
     title: metadata.title,
@@ -183,83 +178,47 @@ async function renderMacros(contentRoot, rawHtml, metadata) {
  * other documents referenced by this document.
  */
 async function renderMacrosAndBuildLiveSamples(
-  source,
-  uri,
-  metadata,
-  rawHtml,
-  destinationDir,
+  contentRoot,
+  document,
+  url,
   { selectedSampleIDs = null } = {}
 ) {
   // First, render the macros to get the rendered HTML.
-  const [renderedHtml, flaws] = await renderMacros(source, rawHtml, metadata);
+  const [renderedHtml, flaws] = await renderMacros(contentRoot, document);
 
   // Next, let's find any samples that we need to build, and note
   // that one or more or even all might be within other documents.
   let ownSampleIds;
   let otherSampleIds = null;
-  const liveSamplesDir = path.join(destinationDir, "_samples_");
   if (selectedSampleIDs) {
     ownSampleIds = selectedSampleIDs;
   } else {
     [ownSampleIds, otherSampleIds] = kumascript.getLiveSampleIDs(
-      metadata.slug,
-      rawHtml
+      document.metadata.slug,
+      document.rawHtml
     );
   }
 
   // Next, let's build the live sample pages from the current document, if any.
   if (ownSampleIds) {
-    // First, remove any live samples that no longer exist.
-    if (fs.existsSync(liveSamplesDir)) {
-      // Build a set of sampleID's from the list of sampleID objects.
-      const ownSampleIDSet = new Set(
-        ownSampleIds.map((x) => x.sampleID.toLowerCase())
-      );
-      for (const de of fs.readdirSync(liveSamplesDir, {
-        withFileTypes: true,
-      })) {
-        // All directories under the main live-samples directory for this
-        // document are specific live samples. If one exists that is not
-        // contained in the current set of live samples, remove it.
-        if (de.isDirectory() && !ownSampleIDSet.has(de.name)) {
-          fs.rmdirSync(path.join(liveSamplesDir, de.name), {
-            recursive: true,
-          });
-        }
-      }
-    }
     // Now, we'll either update or create new live sample pages.
     let liveSamplePageHTML;
     for (const sampleIDWithContext of ownSampleIds) {
       try {
         liveSamplePageHTML = kumascript.buildLiveSamplePage(
-          uri,
-          metadata.title,
+          url,
+          document.metadata.title,
           renderedHtml,
           sampleIDWithContext
         );
       } catch (e) {
         if (e instanceof kumascript.LiveSampleError) {
           flaws.push(e);
-          continue;
         } else {
           throw e;
         }
       }
-      const liveSampleDir = path.join(
-        liveSamplesDir,
-        sampleIDWithContext.sampleID.toLowerCase()
-      );
-      const liveSamplePath = path.join(liveSampleDir, "index.html");
-      if (!fs.existsSync(liveSampleDir)) {
-        fs.mkdirSync(liveSampleDir, { recursive: true });
-      }
-      fs.writeFileSync(liveSamplePath, liveSamplePageHTML);
     }
-  } else if (fs.existsSync(liveSamplesDir)) {
-    // The live samples within this document have been removed, so
-    // recursively remove the entire contents of the live-samples directory.
-    fs.rmdirSync(liveSamplesDir, { recursive: true });
   }
 
   // Finally, let's build any live sample pages within other documents.
@@ -275,15 +234,16 @@ async function renderMacrosAndBuildLiveSamples(
   // "/en-us/docs/learn/forms/how_to_build_custom_form_controls/example_5"
   for (const [slug, sampleIDs] of otherSampleIds || []) {
     const [{ context }] = sampleIDs;
-    const otherUri = buildURL(metadata.locale, slug);
+    const otherUri = buildURL(document.metadata.locale, slug);
     const otherCleanUri = resolveRedirect(otherUri);
-    if (!Document.exists(otherCleanUri)) {
+    // TODO
+    if (!"documentExists") {
       // I suppose we could use any, but let's use the context of the first
       // usage of the sampleID within the original source file.
       flaws.push(
         new kumascript.LiveSampleError(
           new Error(
-            `${uri} references live sample(s) from ${otherCleanUri}, which does not exist`
+            `${url} references live sample(s) from ${otherCleanUri}, which does not exist`
           ),
           context.source,
           context.token
@@ -291,15 +251,14 @@ async function renderMacrosAndBuildLiveSamples(
       );
       continue;
     }
-    const otherTitleData = this.allTitles.get(otherCleanUri);
-    const otherFolder = otherTitleData.file;
-    if (otherTitleData.source !== source.filepath) {
+    // TODO
+    if (!"isFromTheSameSource") {
       // Again let's just use the context of the first usage of sampleID within
       // the original source file.
       flaws.push(
         new kumascript.LiveSampleError(
           new Error(
-            `${uri} references live sample(s) from ${otherCleanUri}, which is from a different source`
+            `${url} references live sample(s) from ${otherCleanUri}, which is from a different source`
           ),
           context.source,
           context.token
@@ -308,21 +267,15 @@ async function renderMacrosAndBuildLiveSamples(
       continue;
     }
     const {
-      metadata: otherMetadata,
-      rawHtml: otherRawHtml,
       fileInfo: { path: otherRawHtmlFilepath },
-    } = Document.read(source.filepath, otherFolder, false);
-    const otherDestinationDir = path.join(
-      this.destination,
-      slugToFoldername(otherUri)
-    );
-    const otherResult = await this.renderMacrosAndBuildLiveSamples(
-      source,
-      otherCleanUri,
-      otherMetadata,
-      otherRawHtml,
-      otherDestinationDir,
-      { cacheResult: true, selectedSampleIDs: sampleIDs }
+    } = Document.read(contentRoot, otherFolder);
+    const otherResult = await renderMacrosAndBuildLiveSamples(
+      contentRoot,
+      document,
+      url,
+      {
+        selectedSampleIDs: sampleIDs,
+      }
     );
     const otherFlaws = otherResult[1];
     // Flatten the flaws from this other document into the current flaws,
@@ -353,35 +306,69 @@ function injectNoTranslate($) {
  * Return the full URL directly to the file in GitHub based on this folder.
  * @param {String} folder - the current folder we're processing.
  */
-function getGitHubURL(source, folder) {
-  const gitUrl = getCurretGitHubBaseURL();
+function getGitHubURL(folder) {
+  const gitURL = getCurretGitHubBaseURL();
   const branch = getCurrentGitBranch();
-  const relativePath = path.relative(source.filepath, folder);
-  return `${gitUrl}/blob/${branch}/content/files/${relativePath}/index.html`;
+  return `${gitURL}/blob/${branch}/content/files/${folder}/index.html`;
 }
 
-function injectSource(source, doc, folder) {
+function injectSource(doc, folder) {
   doc.source = {
-    folder: path.relative(source.filepath, folder),
-    github_url: getGitHubURL(source, folder),
+    folder,
+    github_url: getGitHubURL(folder),
   };
 }
 
 const options = { flawLevels: new Map() };
 
-async function processFolder(slug) {
-  const document = Document.read("?", slugToFoldername(slug), false);
-  const { metadata, fileInfo } = document;
-  const url = buildURL(metadata.locale, metadata.slug);
+/** The breadcrumb is an array of parents include the document itself.
+ * It only gets added to the document there are actual parents.
+ */
+function addBreadcrumbData(contentRoot, url, document) {
+  const parents = [];
+  let split = url.split("/");
+  let parentUri;
+  while (split.length > 2) {
+    split.pop();
+    parentUri = split.join("/");
+    // This test makes it possible to "skip" certain URIs that might not
+    // be a page on its own. For example: /en-US/docs/Web/ is a page,
+    // and so is /en-US/ but there might not be a page for /end-US/docs/.
+    const metadata = Document.read(contentRoot, parentUri);
+    if (metadata) {
+      parents.unshift({
+        uri: parentUri,
+        title: metadata.title,
+      });
+    }
+  }
+  if (parents.length) {
+    parents.push({
+      uri: url,
+      title: document.short_title || document.title,
+    });
+    document.parents = parents;
+  }
+}
+
+async function buildDocument(url) {
+  const [, locale, , ...slugParts] = url.split("/");
+  const folder = path.join(locale, slugToFoldername(slugParts.join("/")));
+  const contentRoot = path.join("..", process.env.BUILD_ROOT);
+
+  const document = Document.read(contentRoot, path.join(contentRoot, folder));
 
   const doc = {};
 
   doc.flaws = {};
 
   let [renderedHtml, flaws] = await renderMacrosAndBuildLiveSamples(
+    contentRoot,
     document,
     url
   );
+
+  const { metadata, fileInfo } = document;
   if (flaws.length) {
     // The flaw objects might have a 'line' attribute, but the
     // original document it came from had front-matter in the file.
@@ -400,7 +387,7 @@ async function processFolder(slug) {
       // Report and exit immediately on the first document with flaws.
       console.error(
         chalk.red.bold(
-          `Flaws (${flaws.length}) within ${mdnUrlLC} while rendering macros:`
+          `Flaws (${flaws.length}) within ${url} while rendering macros:`
         )
       );
       flaws.forEach((flaw, i) => {
@@ -448,7 +435,7 @@ async function processFolder(slug) {
   doc.sidebarHTML = extractSidebar($);
 
   // With the sidebar out of the way, go ahead and check the rest
-  injectFlaws(doc, $);
+  injectFlaws(contentRoot, doc, $);
 
   // Post process HTML so that the right elements gets tagged so they
   // *don't* get translated by tools like Google Translate.
@@ -480,65 +467,17 @@ async function processFolder(slug) {
     doc.other_translations = otherTranslations;
   }
 
-  injectSource(source, doc, folder);
+  injectSource(doc, folder);
+
+  // The `titles` object should contain every possible URI->Title mapping.
+  // We can use that generate the necessary information needed to build
+  // a breadcrumb in the React componentx.
+  addBreadcrumbData(contentRoot, url, doc);
 
   return doc;
 }
 
 class Builder {
-  processStumptownFile(source, file) {
-    const hasher = crypto.createHash("md5");
-    const docRaw = fs.readFileSync(file);
-    const doc = JSON.parse(docRaw);
-    if (this.excludeSlug(doc.mdn_url)) {
-      return { result: processing.EXCLUDED, file };
-    }
-    hasher.update(docRaw);
-
-    const { mdn_url } = doc;
-    const destinationDirRaw = path.join(
-      this.destination,
-      mdn_url.toLowerCase()
-    );
-    const destinationDir = destinationDirRaw
-      .split(path.sep)
-      .map(sanitizeFilename)
-      .join(path.sep);
-
-    const hashDestination = path.join(destinationDir, "_index.hash");
-
-    // Now let's see if the inputs have changed since last time
-    const docHash = hasher.digest("hex").slice(0, 12);
-    const combinedHash = `${this.selfHash}.${docHash}`;
-    if (
-      !this.options.noCache &&
-      fs.existsSync(destinationDir) &&
-      fs.existsSync(hashDestination) &&
-      fs.readFileSync(hashDestination, "utf8") === combinedHash
-    ) {
-      return {
-        result: processing.ALREADY,
-        file: path.join(destinationDir, "index.html"),
-      };
-    }
-
-    this.injectSource(source, doc, file);
-
-    const { outfileJson, outfileHtml } = buildHtmlAndJsonFromDoc({
-      doc,
-      destinationDir,
-      buildHtml: !this.options.buildJsonOnly,
-      allTitles: this.allTitles,
-    });
-
-    return {
-      result: processing.PROCESSED,
-      file: outfileHtml || outfileJson,
-      jsonFile: outfileJson,
-      doc,
-    };
-  }
-
   /** Similar to processFolder() but this time we're only interesting it
    * adding this document's uri and title to this.allTitles
    */
@@ -595,36 +534,6 @@ class Builder {
     }
     this.allTitles.set(mdnUrlLC, doc);
   }
-
-  removeURLs(locale, slug) {
-    const rootURL = buildURL(locale, slug).toLowerCase();
-    const urls = Array.from(this.allTitles.keys()).filter(
-      (key) => key === rootURL || key.startsWith(rootURL + "/")
-    );
-    for (const url of urls) {
-      this.allTitles.delete(url);
-    }
-    return urls;
-  }
-
-  processStumptownFileTitle(source, file, allPopularities) {
-    const metadata = JSON.parse(fs.readFileSync(file));
-    const { mdn_url, title } = metadata;
-    const doc = {
-      mdn_url,
-      title,
-      popularity: allPopularities[mdn_url] || 0.0,
-      locale: null,
-      slug: null,
-      modified: null,
-      parent: null,
-      excludeInTitlesJson: source.excludeInTitlesJson,
-      excludeInSitemaps: source.excludeInSitemaps,
-      source: source.filepath,
-    };
-
-    this.allTitles.set(mdn_url.toLowerCase(), doc);
-  }
 }
 
 function* walker(root, depth = 0) {
@@ -654,6 +563,5 @@ function* walker(root, depth = 0) {
 }
 
 module.exports = {
-  runBuild,
-  Builder,
+  buildDocument,
 };

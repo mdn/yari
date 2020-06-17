@@ -67,36 +67,6 @@ function fixRelatedContent(document) {
   }
 }
 
-/** The breadcrumb is an array of parents include the document itself.
- * It only gets added to the document there are actual parents.
- */
-function addBreadcrumbData(uri, document) {
-  const parents = [];
-  let split = uri.split("/");
-  let parentUri;
-  while (split.length > 2) {
-    split.pop();
-    parentUri = split.join("/");
-    // This test makes it possible to "skip" certain URIs that might not
-    // be a page on its own. For example: /en-US/docs/Web/ is a page,
-    // and so is /en-US/ but there might not be a page for /end-US/docs/.
-    const metadata = getMetadata(parentUri);
-    if (metadata) {
-      parents.unshift({
-        uri: parentUri,
-        title: metadata.title,
-      });
-    }
-  }
-  if (parents.length) {
-    parents.push({
-      uri: uri,
-      title: document.short_title || document.title,
-    });
-    document.parents = parents;
-  }
-}
-
 function prepareDoc(doc) {
   // always expect this to be a relative URL
   if (!doc.mdn_url.startsWith("/")) {
@@ -105,11 +75,6 @@ function prepareDoc(doc) {
     );
   }
   const uri = decodeURI(doc.mdn_url);
-
-  // The `titles` object should contain every possible URI->Title mapping.
-  // We can use that generate the necessary information needed to build
-  // a breadcrumb in the React componentx.
-  addBreadcrumbData(uri, doc);
 
   // Stumptown produces a `.related_content` for every document. But it
   // contains data that is either not needed or not appropriate for the way
@@ -126,7 +91,7 @@ function prepareDoc(doc) {
   }
 }
 
-export function buildHTML(doc) {
+export function renderHTML(doc) {
   prepareDoc(doc);
   return render(
     React.createElement(
@@ -138,9 +103,9 @@ export function buildHTML(doc) {
   );
 }
 
-export function buildJSON(doc) {
+export function renderJSON(doc) {
   prepareDoc(doc);
-  return process.env.NODE_ENV === "development"
-    ? JSON.stringify({ doc }, null, 2)
-    : JSON.stringify({ doc });
+  return {
+    doc,
+  };
 }

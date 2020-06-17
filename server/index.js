@@ -4,7 +4,10 @@ const path = require("path");
 const express = require("express");
 const openEditor = require("open-editor");
 
+const { buildDocument } = require("content/scripts/build");
+const { resolveRedirect } = require("content/scripts/redirects");
 const { slugToFoldername } = require("content/scripts/utils");
+const { renderHTML, renderJSON } = require("ssr");
 
 const { STATIC_ROOT } = require("./constants");
 const documentRouter = require("./document");
@@ -36,13 +39,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(
-  express.static(STATIC_ROOT, {
-    // https://expressjs.com/en/4x/api.html#express.static
-  })
-);
+app.use(express.static(STATIC_ROOT));
 
-// For submitting form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -117,7 +115,7 @@ app.get("/*", async (req, res) => {
   }
 
   if (req.url.endsWith("/titles.json")) {
-    res.json({});
+    res.json([]);
   }
 
   if (!req.url.includes("/docs/")) {
@@ -142,17 +140,24 @@ app.get("/*", async (req, res) => {
     lookupURL = lookupURL.replace(extraSuffix, "");
   }
 
-  const redirectURL = getRedirectURL(lookupURL);
-  if (redirectURL) {
+  const redirectURL = resolveRedirect(lookupURL);
+  if (redirectURL !== lookupURL) {
     return res.redirect(301, redirectURL + extraSuffix);
   }
 
-  const document = renderDocument(lookupURL, extraSuffix.endsWith(".json"));
+  const document = await buildDocument(
+    lookupURL,
+    extraSuffix.endsWith(".json")
+  );
   if (!document) {
     return res.sendStatus(404);
   }
 
-  res.sendFile(extraSuffix.endsWith(".json") ? renderJSON() : renderHTML());
+  if (extraSuffix.endsWith(".json")) {
+    res.json(renderJSON(document));
+  } else {
+    res.render(renderHTML(document));
+  }
 });
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");

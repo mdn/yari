@@ -129,6 +129,12 @@ const VALID_FLAW_CHECKS = new Set([
 // TODO (far future): Switch to "error" when number of flaws drops.
 const DEFAULT_FLAW_LEVELS = process.env.BUILD_FLAW_LEVELS || "*:warn";
 
+const FLAW_LEVELS = Object.freeze({
+  WARN: "warn",
+  IGNORE: "ignore",
+  ERROR: "error",
+});
+
 module.exports = {
   // DEFAULT_ROOT,
   // DEFAULT_ARCHIVE_ROOT,

@@ -50,7 +50,7 @@ function Header() {
       <h1>
         <Link to="/">MDN Web Docs</Link>
       </h1>
-      <SearchNavigateWidget />
+      {/*<SearchNavigateWidget />*/}
     </header>
   );
 }

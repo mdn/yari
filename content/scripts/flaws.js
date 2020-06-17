@@ -1,16 +1,13 @@
-const FLAW_LEVELS = Object.freeze({
-  WARN: "warn",
-  IGNORE: "ignore",
-  ERROR: "error",
-});
+const { FLAW_LEVELS } = require("./constants");
+const Document = require("./document");
+const { packageBCD } = require("./resolve-bcd");
+
+const options = { flawLevels: new Map() };
 
 /**
  * Validate the parsed HTML, with the sidebar removed.
- *
- * @param {Object} doc
- * @param {Cheerio document instance} $
  */
-function injectFlaws( doc, $) {
+function injectFlaws(contentRoot, doc, $) {
   // The 'broken_links' flaw check looks for internal links that
   // link to a document that's going to fail with a 404 Not Found.
   if (options.flawLevels.get("broken_links") !== FLAW_LEVELS.IGNORE) {
@@ -25,7 +22,7 @@ function injectFlaws( doc, $) {
       const href = a.attr("href").split("#")[0];
       if (href.startsWith("/") && !checked.has(href)) {
         checked.add(href);
-        if (!Document.read(href.toLowerCase())) {
+        if (!Document.read(contentRoot, href.toLowerCase())) {
           if (!("broken_links" in doc.flaws)) {
             doc.flaws.broken_links = [];
           }
@@ -33,12 +30,12 @@ function injectFlaws( doc, $) {
         }
       }
     });
-    if (this.options.flawLevels.get("broken_links") === FLAW_LEVELS.ERROR) {
+    if (options.flawLevels.get("broken_links") === FLAW_LEVELS.ERROR) {
       throw new Error(`broken_links flaws: ${doc.flaws.broken_links}`);
     }
   }
 
-  if (this.options.flawLevels.get("bad_bcd_queries") !== FLAW_LEVELS.IGNORE) {
+  if (options.flawLevels.get("bad_bcd_queries") !== FLAW_LEVELS.IGNORE) {
     $("div.bc-data").each((i, element) => {
       const dataQuery = $(element).attr("id");
       if (!dataQuery) {
@@ -57,8 +54,10 @@ function injectFlaws( doc, $) {
         }
       }
     });
-    if (this.options.flawLevels.get("bad_bcd_queries") === FLAW_LEVELS.ERROR) {
+    if (options.flawLevels.get("bad_bcd_queries") === FLAW_LEVELS.ERROR) {
       throw new Error(`bad_bcd_queries flaws: ${doc.flaws.bad_bcd_queries}`);
     }
   }
 }
+
+module.exports = { injectFlaws };

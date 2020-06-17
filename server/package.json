@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MPL-2.0",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js --watch . --watch ../content/scripts"
   },
   "dependencies": {
     "dotenv": "8.2.0",

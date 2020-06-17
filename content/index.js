@@ -2,7 +2,6 @@
 const cli = require("caporal");
 
 const runImporter = require("./scripts/importer");
-const { runBuild } = require("./scripts/build");
 const { runMakePopularitiesFile } = require("./scripts/popularities");
 const { Sources } = require("./scripts/sources");
 
@@ -241,12 +240,6 @@ cli
       options.foldersearch = newFoldersearch;
     }
 
-    try {
-      await runBuild(sources, options, logger);
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
   })
   .command(
     "popularities",
