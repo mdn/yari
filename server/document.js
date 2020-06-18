@@ -31,6 +31,8 @@ router.post("/", (req, res) => {
 
   addToBuilder(localeFolder, metadata.slug)
     .then(() => {
+      builder.dumpAllTitles();
+      builder.dumpAllURLs();
       res.sendStatus(201);
     })
     .catch((e) => {
@@ -97,16 +99,16 @@ router.put("/", withDocFolder, async (req, res) => {
         slug.replace(oldSlug, newSlug),
       ]);
       Promise.all(
-        changedSlugs.map(
-          ([oldSlug, newSlug]) =>
-            console.log({ oldSlug, newSlug }) ||
-            addToBuilder(
-              path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
-              newSlug
-            )
+        changedSlugs.map(([oldSlug, newSlug]) =>
+          addToBuilder(
+            path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
+            newSlug
+          )
         )
       )
         .then(() => {
+          builder.dumpAllTitles();
+          builder.dumpAllURLs();
           builder.moveURLs(CONTENT_ROOT, metadata.locale, changedSlugs);
           builder.watch();
           removeBuiltFiles(req.query.url);
@@ -126,6 +128,8 @@ router.delete("/", withDocFolder, (req, res) => {
   const { metadata } = Document.read(CONTENT_ROOT, req.docFolder);
   Document.del(req.docFolder);
   builder.removeURLs(metadata.locale, metadata.slug);
+  builder.dumpAllTitles();
+  builder.dumpAllURLs();
 
   removeBuiltFiles(req.query.url);
 
