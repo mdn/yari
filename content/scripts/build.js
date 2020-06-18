@@ -1917,8 +1917,8 @@ class Builder {
           .map((line) => line.split("\t"))
           .slice(1, -1)
           .map(([from, to]) => {
-            const redirect = changedURLs.find(([oldURL]) =>
-              to.startsWith(oldURL)
+            const redirect = changedURLs.find(
+              ([oldURL]) => to === oldURL || to.startsWith(oldURL + "/")
             );
             return [from, redirect ? to.replace(redirect[0], redirect[1]) : to];
           }),
