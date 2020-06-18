@@ -1654,7 +1654,7 @@ class Builder {
           if (newRawHtml !== rawHtml) {
             // It was improved!!
             if (this.options.fixFlawsVerbose) {
-              console.log(`In ${folder}...`);
+              console.log(`\nIn ${folder}...`);
               printBasicDiff(rawHtml, newRawHtml);
             }
             if (this.options.fixFlawsDryRun) {
