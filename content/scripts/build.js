@@ -1894,18 +1894,19 @@ class Builder {
 
   removeURLs(locale, slug) {
     const rootURL = buildMDNUrl(locale, slug).toLowerCase();
-    const urls = Array.from(this.allTitles.keys()).filter(
-      (key) => key === rootURL || key.startsWith(rootURL + "/")
-    );
-    for (const url of urls) {
-      this.allTitles.delete(url);
-    }
-    return urls;
+    return Array.from(this.allTitles.keys())
+      .filter((key) => key === rootURL || key.startsWith(rootURL + "/"))
+      .map((url) => {
+        const doc = this.allTitles.get(url);
+        this.allTitles.delete(url);
+        return doc.slug;
+      });
   }
 
-  moveURLs(contentRoot, locale, oldSlug, newSlug) {
-    const oldURL = buildMDNUrl(locale, oldSlug);
-    const newURL = buildMDNUrl(locale, newSlug);
+  moveURLs(contentRoot, locale, changedSlugs) {
+    const changedURLs = changedSlugs.map((pair) =>
+      pair.map((slug) => buildMDNUrl(locale, slug))
+    );
     const localeFolder = path.join(contentRoot, locale);
     writeRedirects(
       localeFolder,
@@ -1915,11 +1916,13 @@ class Builder {
           .split("\n")
           .map((line) => line.split("\t"))
           .slice(1, -1)
-          .map(([from, to]) => [
-            from,
-            to.startsWith(oldURL) ? to.replace(oldURL, newURL) : to,
-          ]),
-        [oldURL, newURL],
+          .map(([from, to]) => {
+            const redirect = changedURLs.find(([oldURL]) =>
+              to.startsWith(oldURL)
+            );
+            return [from, redirect ? to.replace(redirect[0], redirect[1]) : to];
+          }),
+        ...changedURLs,
       ].sort((a, b) => {
         if (a[0] < b[0]) return -1;
         if (a[0] > b[0]) return 1;

@@ -91,26 +91,23 @@ router.put("/", withDocFolder, async (req, res) => {
     );
 
     if (isNewSlug) {
-      const urls = builder.removeURLs(oldMetadata.locale, oldSlug);
-
+      const oldSlugs = builder.removeURLs(oldMetadata.locale, oldSlug);
+      const changedSlugs = oldSlugs.map((slug) => [
+        slug,
+        slug.replace(oldSlug, newSlug),
+      ]);
       Promise.all(
-        urls
-          .map((url) =>
-            url
-              .split("/")
-              .slice(3)
-              .join("/")
-              .replace(oldSlug.toLowerCase(), newSlug.toLowerCase())
-          )
-          .map((slug) =>
+        changedSlugs.map(
+          ([oldSlug, newSlug]) =>
+            console.log({ oldSlug, newSlug }) ||
             addToBuilder(
               path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
-              slug
+              newSlug
             )
-          )
+        )
       )
         .then(() => {
-          builder.moveURLs(CONTENT_ROOT, metadata.locale, oldSlug, newSlug);
+          builder.moveURLs(CONTENT_ROOT, metadata.locale, changedSlugs);
           builder.watch();
           removeBuiltFiles(req.query.url);
           res.sendStatus(200);
