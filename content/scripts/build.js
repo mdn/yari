@@ -17,6 +17,8 @@ require("dotenv").config({ path: process.env.ENV_FILE });
 
 const cheerio = require("./monkeypatched-cheerio");
 const ProgressBar = require("./progress-bar");
+const Document = require("./document");
+const { printBasicDiff } = require("./print-diff");
 const { packageBCD } = require("./resolve-bcd");
 const { buildHtmlAndJsonFromDoc } = require("ssr");
 const {
@@ -1609,6 +1611,69 @@ class Builder {
             flaw.line += metadata.frontMatterOffset - 1;
           }
         });
+
+        if (this.options.fixFlaws) {
+          // For flaws that can be changed, change the source itself.
+
+          // Copy of the original raw HTML that we're going to (potentially)
+          // repeatedly do string replaces on.
+          let newRawHtml = rawHtml;
+          flaws
+            .filter((flaw) => {
+              // Only interested in 'MacroRedirectedLinkError' flaws because
+              // them we can do something about.
+              // The flaw might be from a prerequisite, if so, leave it alone
+              // See https://github.com/mdn/yari/issues/772
+              return (
+                flaw.name === "MacroRedirectedLinkError" &&
+                (!flaw.filepath || path.dirname(flaw.filepath) === folder)
+              );
+            })
+            .forEach((flaw, i) => {
+              if (!rawHtml.includes(flaw.macroSource)) {
+                throw new Error(
+                  `rawHtml doesn't contain macrosSource (${flaw.macroSource})`
+                );
+              }
+              const newMacroSource = flaw.macroSource.replace(
+                flaw.redirectInfo.current,
+                flaw.redirectInfo.suggested
+              );
+              newRawHtml = newRawHtml.replace(flaw.macroSource, newMacroSource);
+
+              // If the flaw could be fixed, it's no longer a flaw. So remove
+              // it from the array.
+              // This means you could run the CLI like this:
+              // `build ... --fix-flaws --flaw-levels="macros:error"`
+              // it would only complain about this that couldn't be fixed.
+              if (newRawHtml !== rawHtml) {
+                flaws.splice(i, 1);
+              }
+            });
+
+          if (newRawHtml !== rawHtml) {
+            // It was improved!!
+            if (this.options.fixFlawsVerbose) {
+              console.log(`In ${folder}...`);
+              printBasicDiff(rawHtml, newRawHtml);
+            }
+            if (this.options.fixFlawsDryRun) {
+              console.log(chalk.yellow("Not changing any files in dry-run!"));
+            } else {
+              const { attributes: metadataUntouched } = fm(
+                fs.readFileSync(rawHtmlFilepath, "utf8")
+              );
+              Document.saveFile(
+                rawHtmlFilepath,
+                newRawHtml,
+                // Can't use the variable 'metadata' because it mutates, for
+                // good reasons, during the process of the rendering.
+                // So we refetch it "pure".
+                metadataUntouched
+              );
+            }
+          }
+        }
 
         if (this.options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
           // Report and exit immediately on the first document with flaws.
