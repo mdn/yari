@@ -40,10 +40,8 @@ export default function DocumentEdit() {
         return;
       }
       if (didSlugChange) {
-        navigate(
-          location.pathname.split("_edit")[0] + "_edit/" + data.metadata.slug,
-          { replace: true }
-        );
+        window.location.href =
+          location.pathname.split("_edit")[0] + "_edit/" + data.metadata.slug;
       }
     } catch (err) {
       setSavingError(err);
