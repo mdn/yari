@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import useSWR from "swr";
 import { Document } from "../index";
 import { useDocumentURL } from "../hooks";
@@ -9,7 +9,6 @@ import "./edit.scss";
 
 export default function DocumentEdit() {
   const location = useLocation();
-  const navigate = useNavigate();
   const documentURL = useDocumentURL();
   const fetchURL = `/_document?${new URLSearchParams({
     url: documentURL,
