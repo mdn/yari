@@ -1,6 +1,5 @@
 import React, { useEffect, useReducer, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import useSWR from "swr";
 import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
 
@@ -15,7 +14,7 @@ interface FlatFlaw {
 }
 
 const FLAWS_HASH = "#_flaws";
-export function ToggleDocumentFlaws({ flaws }: Pick<Doc, "flaws">) {
+export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [show, toggle] = useReducer((v) => !v, location.hash === FLAWS_HASH);
@@ -38,7 +37,7 @@ export function ToggleDocumentFlaws({ flaws }: Pick<Doc, "flaws">) {
     }
   }, [location, navigate, show]);
 
-  const flatFlaws: FlatFlaw[] = Object.entries(flaws)
+  const flatFlaws: FlatFlaw[] = Object.entries(doc.flaws)
     .map(([name, actualFlaws]) => ({
       name,
       flaws: actualFlaws,
@@ -64,7 +63,7 @@ export function ToggleDocumentFlaws({ flaws }: Pick<Doc, "flaws">) {
       )}
 
       {show ? (
-        <Flaws flaws={flatFlaws} />
+        <Flaws doc={doc} flaws={flatFlaws} />
       ) : (
         <small>
           {/* a one-liner about all the flaws */}
@@ -83,7 +82,7 @@ interface FlawCheck {
   flaws: any[]; // XXX fixme!
 }
 
-function Flaws({ flaws }: { flaws: FlawCheck[] }) {
+function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCheck[] }) {
   if (process.env.NODE_ENV !== "development") {
     throw new Error("This shouldn't be used in non-development builds");
   }
@@ -92,7 +91,9 @@ function Flaws({ flaws }: { flaws: FlawCheck[] }) {
       {flaws.map((flaw) => {
         switch (flaw.name) {
           case "broken_links":
-            return <BrokenLinks key="broken_links" urls={flaw.flaws} />;
+            return (
+              <BrokenLinks key="broken_links" doc={doc} links={flaw.flaws} />
+            );
           case "bad_bcd_queries":
             return (
               <BadBCDQueries key="bad_bcd_queries" messages={flaw.flaws} />
@@ -107,61 +108,95 @@ function Flaws({ flaws }: { flaws: FlawCheck[] }) {
   );
 }
 
-function BrokenLinks({ urls }: { urls: string[] }) {
-  const { data, error } = useSWR(
-    `/_redirects`,
-    async (url) => {
-      try {
-        const response = await fetch(url, {
-          method: "post",
-          body: JSON.stringify({ urls }),
-          headers: { "Content-Type": "application/json" },
-        });
-        if (!response.ok) {
-          throw new Error(`${response.status} on ${url}`);
-        }
-        return await response.json();
-      } catch (err) {
-        throw err;
-      }
-    },
-    {
-      // The chances of redirects to have changed since first load is
-      // just too small to justify using 'revalidateOnFocus'.
-      revalidateOnFocus: false,
+interface Link {
+  href: string;
+  line: number;
+  column: number;
+  suggestion: string | null;
+  nth: number;
+}
+
+function BrokenLinks({ doc, links }: { doc: Doc; links: Link[] }) {
+
+  // The `links` array will look something like this:
+  //  [
+  //    {href: 'foo', line: 12, ...},
+  //    {href: 'bar', line: 44, ...},
+  //    {href: 'foo', line: 53, ...},
+  //  ]
+  // So note that there are 2 'foo' in there. When we match this against
+  // the `document.querySelectorAll("a[href]")`, how are you supposed to
+  // which which of the 'foo' one you're referring to?
+  // This code, makes it so that each link in the array get's an 'nth'
+  // key too. It would, in our example, become:
+  //  [
+  //    {href: 'foo', nth: 0, line: 12, ...},
+  //    {href: 'bar', nth: 0, line: 44, ...},
+  //    {href: 'foo', nth: 1, line: 53, ...},
+  //  ]
+  // Now, when you've filtered the list of
+  // all `document.querySelectorAll("a[href]")` that matches 'foo'
+  // you know *which* one to pick.
+  const indexes = {};
+  links.forEach((link, i) => {
+    if (!(link.href in indexes)) {
+      indexes[link.href] = 0;
     }
-  );
+    link.nth = indexes[link.href];
+    indexes[link.href]++;
+  });
+
+  const [opening, setOpening] = React.useState<string | null>(null);
+  useEffect(() => {
+    let unsetOpeningTimer: ReturnType<typeof setTimeout>;
+    if (opening) {
+      unsetOpeningTimer = setTimeout(() => {
+        setOpening(null);
+      }, 3000);
+    }
+    return () => {
+      if (unsetOpeningTimer) {
+        clearTimeout(unsetOpeningTimer);
+      }
+    };
+  }, [opening]);
+
+  const filepath = doc.source.folder + "/index.html";
+
+  function openInEditor(key: string, line: number, column: number) {
+    const sp = new URLSearchParams();
+    sp.set("filepath", filepath);
+    sp.set("line", `${line}`);
+    sp.set("column", `${column}`);
+    console.log(
+      `Going to try to open ${filepath}:${line}:${column} in your editor`
+    );
+    setOpening(key);
+    fetch(`/_open?${sp.toString()}`).catch(err => {
+      console.warn(`Error trying to _open?${sp.toString()}:`, err);
+
+    });
+  }
 
   useEffect(() => {
-    // 'data' will be 'undefined' until the server has had a chance to
-    // compute all the redirects. Don't bother until we have that data.
-    if (!data) {
-      return;
-    }
     const annotations: RoughAnnotation[] = [];
     // If the anchor already had a title, put it into this map.
     // That way, when we restore the titles, we know what it used to be.
-    const originalTitles = new Map();
-    for (const anchor of [
-      ...document.querySelectorAll<HTMLAnchorElement>("div.content a[href]"),
-    ]) {
-      const hrefURL = new URL(anchor.href);
-      const { pathname, hash } = hrefURL;
-      if (pathname in data.redirects) {
-        // Trouble! But is it a redirect?
-        let correctURI = data.redirects[pathname];
-        let annotationColor = "red";
-        originalTitles.set(anchor.href, anchor.title);
-        if (correctURI) {
-          if (hash) {
-            correctURI += hash;
-          }
-          // It can be fixed!
-          annotationColor = "orange";
-          anchor.title = `Consider fixing! It's actually a redirect to ${correctURI}`;
-        } else {
-          anchor.title = "Broken link! Links to a page that will not be found";
-        }
+    links.forEach((link) => {
+      const matchedAnchors = [
+        ...document.querySelectorAll<HTMLAnchorElement>("div.content a[href]"),
+      ].filter(
+        (anchor) =>
+          anchor.href === link.href ||
+          new URL(anchor.href).pathname === link.href
+      );
+      const anchor = matchedAnchors[link.nth];
+      if (anchor) {
+        const annotationColor = link.suggestion ? "orange" : "red";
+        anchor.dataset.originalTitle = anchor.title
+        anchor.title = link.suggestion
+          ? `Consider fixing! Suggestion: ${link.suggestion}`
+          : "Broken link! Links to a page that will not be found";
         annotations.push(
           annotate(anchor, {
             type: "box",
@@ -170,7 +205,8 @@ function BrokenLinks({ urls }: { urls: string[] }) {
           })
         );
       }
-    }
+    });
+
     const ag = annotationGroup(annotations);
     ag.show();
 
@@ -181,69 +217,51 @@ function BrokenLinks({ urls }: { urls: string[] }) {
       for (const anchor of Array.from(
         document.querySelectorAll<HTMLAnchorElement>(`div.content a`)
       )) {
-        // Only look at anchors that were bothered with at all in the
-        // beginning of the effect.
-        if (originalTitles.has(anchor.href)) {
-          const currentTitle = anchor.title;
-          const originalTitle = originalTitles.get(anchor.href);
-          if (currentTitle !== originalTitle) {
-            anchor.title = originalTitle;
-          }
+        if (anchor.dataset.originalTitle !== undefined) {
+          anchor.title = anchor.dataset.originalTitle
         }
       }
     };
-  }, [data, urls]);
+  }, [links]);
 
   return (
     <div className="flaw flaw__broken_links">
       <h3>Broken Links</h3>
-      {!data && !error && (
-        <p>
-          <i>Checking all URLs for redirects...</i>
-        </p>
-      )}
-      {error && (
-        <div className="error-message fetch-error">
-          <p>Error checking for redirects:</p>
-          <pre>{error.toString()}</pre>
-        </div>
-      )}
       <ol>
-        {urls.map((url) => (
-          <li key={url}>
-            <code>{url}</code>
-            {data && data.redirects[url] && (
-              <span>
-                Actually a redirect to... <code>{data.redirects[url]}</code>
-              </span>
-            )}{" "}
-            <span
-              role="img"
-              aria-label="Click to highlight broken link"
-              title="Click to highlight broken link anchor"
-              style={{ cursor: "zoom-in" }}
-              onClick={() => {
-                // Keep it simple! Clicking this little thing will scroll
-                // the FIRST such anchor element in the DOM into view.
-                // We COULD be fancy and remember which "n'th" one you clicked
-                // so that clicking again will scroll the next one into view.
-                // Perhaps another day.
-                const annotations: RoughAnnotation[] = [];
-                let firstOne = true;
-                for (const anchor of [
-                  ...document.querySelectorAll<HTMLAnchorElement>(
-                    "div.content a[href]"
-                  ),
-                ]) {
-                  const { pathname } = new URL(anchor.href);
-                  if (pathname === url) {
-                    if (firstOne) {
-                      anchor.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                      });
-                      firstOne = false;
-                    }
+        {links.map((link) => {
+          const key = `${link.href}${link.line}${link.column}`;
+          return (
+            <li key={key}>
+              <code>{link.href}</code>{" "}
+              {link.suggestion && (
+                <span>
+                  Suggested fix: <code>{link.suggestion}</code>
+                </span>
+              )}{" "}
+              <span
+                role="img"
+                aria-label="Click to highlight broken link"
+                title="Click to highlight broken link anchor"
+                style={{ cursor: "zoom-in" }}
+                onClick={() => {
+                  const annotations: RoughAnnotation[] = [];
+
+                  const matchedAnchors = [
+                    ...document.querySelectorAll<HTMLAnchorElement>(
+                      "div.content a[href]"
+                    ),
+                  ].filter(
+                    (anchor) =>
+                      anchor.href === link.href ||
+                      new URL(anchor.href).pathname === link.href
+                  );
+                  const anchor = matchedAnchors[link.nth];
+                  if (anchor) {
+                    anchor.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                    });
+
                     if (anchor.parentElement) {
                       annotations.push(
                         annotate(anchor, {
@@ -256,21 +274,33 @@ function BrokenLinks({ urls }: { urls: string[] }) {
                       );
                     }
                   }
-                }
-                if (annotations.length) {
-                  const ag = annotationGroup(annotations);
-                  ag.show();
-                  // Only show this extra highlight temporarily
-                  window.setTimeout(() => {
-                    ag.hide();
-                  }, 2000);
-                }
-              }}
-            >
-              👀
-            </span>
-          </li>
-        ))}
+
+                  if (annotations.length) {
+                    const ag = annotationGroup(annotations);
+                    ag.show();
+                    // Only show this extra highlight temporarily
+                    window.setTimeout(() => {
+                      ag.hide();
+                    }, 2000);
+                  }
+                }}
+              >
+                👀
+              </span>{" "}
+              <a
+                href={`file://${filepath}`}
+                onClick={(event: React.MouseEvent) => {
+                  event.preventDefault();
+                  openInEditor(key, link.line, link.column);
+                }}
+                title="Click to open in your editor"
+              >
+                line {link.line}:{link.column}
+              </a>{" "}
+              {opening && opening === key && <small>Opening...</small>}
+            </li>
+          );
+        })}
       </ol>
     </div>
   );

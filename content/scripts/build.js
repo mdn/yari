@@ -19,6 +19,7 @@ const cheerio = require("./monkeypatched-cheerio");
 const ProgressBar = require("./progress-bar");
 const { packageBCD } = require("./resolve-bcd");
 const { buildHtmlAndJsonFromDoc } = require("ssr");
+const { findMatchesInText } = require("./matches-in-text");
 const {
   extractDocumentSections,
   extractSidebar,
@@ -1696,7 +1697,7 @@ class Builder {
     doc.sidebarHTML = extractSidebar($, config);
 
     // With the sidebar out of the way, go ahead and check the rest
-    this.injectFlaws(source, doc, $);
+    this.injectFlaws(source, doc, $, rawContent);
 
     // Post process HTML so that the right elements gets tagged so they
     // *don't* get translated by tools like Google Translate.
@@ -1780,12 +1781,8 @@ class Builder {
 
   /**
    * Validate the parsed HTML, with the sidebar removed.
-   *
-   * @param {folder} source
-   * @param {Object} doc
-   * @param {Cheerio document instance} $
    */
-  injectFlaws(source, doc, $) {
+  injectFlaws(source, doc, $, rawContent) {
     // The 'broken_links' flaw check looks for internal links that
     // link to a document that's going to fail with a 404 Not Found.
     if (this.options.flawLevels.get("broken_links") !== FLAW_LEVELS.IGNORE) {
@@ -1795,16 +1792,54 @@ class Builder {
       //    <a href="/foo/bar#two">
       const checked = new Set();
 
+      // A closure function to help making it easier to append flaws
+      function addBrokenLink(href, suggestion = null) {
+        if (!("broken_links" in doc.flaws)) {
+          doc.flaws.broken_links = [];
+        }
+
+        for (const match of findMatchesInText(href, rawContent, {
+          inQuotes: true,
+        })) {
+          doc.flaws.broken_links.push(
+            Object.assign({ href, suggestion }, match)
+          );
+        }
+      }
+
       $("a[href]").each((i, element) => {
         const a = $(element);
-        const href = a.attr("href").split("#")[0];
-        if (href.startsWith("/") && !checked.has(href)) {
-          checked.add(href);
+        const href = a.attr("href");
+        if (checked.has(href)) return;
+        checked.add(href);
+
+        if (href.startsWith("https://developer.mozilla.org/")) {
+          // It might be a working 200 OK link but the link just shouldn't
+          // have the full absolute URL part in it.
+          const absoluteURL = new URL(href);
+          addBrokenLink(
+            href,
+            absoluteURL.pathname + absoluteURL.search + absoluteURL.hash
+          );
+        } else if (href.startsWith("/") && !href.startsWith("//")) {
           if (!this.allTitles.has(href.toLowerCase())) {
-            if (!("broken_links" in doc.flaws)) {
-              doc.flaws.broken_links = [];
+            // Before we give up, check if it's a redirect
+            if (this.allRedirects.has(href.toLowerCase())) {
+              addBrokenLink(
+                href,
+                this.allTitles.get(this.allRedirects.get(href.toLowerCase()))
+                  .mdn_url
+              );
+            } else {
+              addBrokenLink(href);
             }
-            doc.flaws.broken_links.push(href);
+          } else {
+            // But does it have the correct case?!
+            const found = this.allTitles.get(href.toLowerCase());
+            if (found.mdn_url !== href) {
+              // Inconsistent case.
+              addBrokenLink(href, found.mdn_url);
+            }
           }
         }
       });
