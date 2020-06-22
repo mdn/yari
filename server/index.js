@@ -237,24 +237,6 @@ function getOrCreateBuilder(options) {
   return builder;
 }
 
-// Return about redirects based on a list of URLs.
-// This is used by the "<Flaws/>" component which displays information
-// about broken links in a page, as some of those broken links might just
-// be redirects.
-app.post("/_redirects", (req, res) => {
-  if (req.body === undefined) {
-    throw new Error("express.json middleware not installed");
-  }
-  const redirects = {};
-  if (!req.body.urls) {
-    return res.status(400).send("No .urls array sent in JSON");
-  }
-  for (const url of req.body.urls) {
-    redirects[url] = getRedirectUrl(url);
-  }
-  res.json({ redirects });
-});
-
 app.get("/_flaws", (req, res) => {
   const locale = req.query.locale.toLowerCase();
   if (!locale) {
