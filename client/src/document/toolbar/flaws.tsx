@@ -117,7 +117,6 @@ interface Link {
 }
 
 function BrokenLinks({ doc, links }: { doc: Doc; links: Link[] }) {
-
   // The `links` array will look something like this:
   //  [
   //    {href: 'foo', line: 12, ...},
@@ -172,9 +171,8 @@ function BrokenLinks({ doc, links }: { doc: Doc; links: Link[] }) {
       `Going to try to open ${filepath}:${line}:${column} in your editor`
     );
     setOpening(key);
-    fetch(`/_open?${sp.toString()}`).catch(err => {
+    fetch(`/_open?${sp.toString()}`).catch((err) => {
       console.warn(`Error trying to _open?${sp.toString()}:`, err);
-
     });
   }
 
@@ -193,7 +191,7 @@ function BrokenLinks({ doc, links }: { doc: Doc; links: Link[] }) {
       const anchor = matchedAnchors[link.nth];
       if (anchor) {
         const annotationColor = link.suggestion ? "orange" : "red";
-        anchor.dataset.originalTitle = anchor.title
+        anchor.dataset.originalTitle = anchor.title;
         anchor.title = link.suggestion
           ? `Consider fixing! Suggestion: ${link.suggestion}`
           : "Broken link! Links to a page that will not be found";
@@ -218,7 +216,7 @@ function BrokenLinks({ doc, links }: { doc: Doc; links: Link[] }) {
         document.querySelectorAll<HTMLAnchorElement>(`div.content a`)
       )) {
         if (anchor.dataset.originalTitle !== undefined) {
-          anchor.title = anchor.dataset.originalTitle
+          anchor.title = anchor.dataset.originalTitle;
         }
       }
     };
