@@ -12,6 +12,7 @@ const Document = require("content/scripts/document");
 const { Sources } = require("content/scripts/sources");
 const { slugToFoldername } = require("content/scripts/utils");
 const {
+  DEFAULT_BUILD_ROOT,
   DEFAULT_LIVE_SAMPLES_BASE_URL,
   DEFAULT_POPULARITIES_FILEPATH,
   FLAW_LEVELS,
@@ -206,10 +207,9 @@ function getOrCreateBuilder(options) {
   if (!builder) {
     const sources = new Sources();
     // The server doesn't have command line arguments like the content CLI
-    // does so we need to entirely rely on environment variables.
-    if (process.env.BUILD_ROOT) {
-      sources.add(normalizeContentPath(process.env.BUILD_ROOT));
-    }
+    // does so we need to entirely rely on defaults.
+    sources.add(normalizeContentPath(DEFAULT_BUILD_ROOT));
+
     builder = new Builder(
       sources,
       {
