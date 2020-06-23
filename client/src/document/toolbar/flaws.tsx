@@ -136,6 +136,12 @@ function BrokenLinks({ doc, links }: { doc: Doc; links: Link[] }) {
   // Now, when you've filtered the list of
   // all `document.querySelectorAll("a[href]")` that matches 'foo'
   // you know *which* one to pick.
+  console.log("PASSED IN:");
+  console.log("LINKS:", links);
+  console.log("DOC.flaws:", doc.flaws);
+
+
+
   const indexes = {};
   links.forEach((link, i) => {
     if (!(link.href in indexes)) {

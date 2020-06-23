@@ -1825,11 +1825,15 @@ class Builder {
           if (!this.allTitles.has(href.toLowerCase())) {
             // Before we give up, check if it's a redirect
             if (this.allRedirects.has(href.toLowerCase())) {
-              addBrokenLink(
-                href,
-                this.allTitles.get(this.allRedirects.get(href.toLowerCase()))
-                  .mdn_url
+              // Just because it's a redirect doesn't mean it ends up
+              // on a page we have.
+              // For example, there might be a redirect but where it
+              // goes to is not in this.allTitles.
+              // This can happen if it's a "fundamental redirect" for example.
+              const finalDocument = this.allTitles.get(
+                this.allRedirects.get(href.toLowerCase())
               );
+              addBrokenLink(href, finalDocument ? finalDocument.mdn_url : null);
             } else {
               addBrokenLink(href);
             }
