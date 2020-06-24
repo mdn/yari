@@ -4,12 +4,11 @@ import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
 
 import { humanizeFlawName } from "../../flaw-utils";
-import { Doc } from "../types";
+import { Doc, Link, MacroErrorMessage } from "../types";
 import "./flaws.scss";
 
-interface FlatFlaw {
+interface FlawCount {
   name: string;
-  flaws: string[];
   count: number;
 }
 
@@ -37,21 +36,22 @@ export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
     }
   }, [location, navigate, show]);
 
-  const flatFlaws: FlatFlaw[] = Object.entries(doc.flaws)
+  const flawsCounts: FlawCount[] = Object.entries(doc.flaws)
     .map(([name, actualFlaws]) => ({
       name,
-      flaws: actualFlaws,
       count: actualFlaws.length,
     }))
     .sort((a, b) => b.count - a.count);
 
   return (
     <div id={FLAWS_HASH.slice(1)} ref={rootElement}>
-      {flatFlaws.length > 0 ? (
+      {flawsCounts.length > 0 ? (
         <button type="submit" onClick={toggle}>
           {show
             ? "Hide flaws"
-            : `Show flaws (${flatFlaws.map((flaw) => flaw.count).join(" + ")})`}
+            : `Show flaws (${flawsCounts
+                .map((flaw) => flaw.count)
+                .join(" + ")})`}
         </button>
       ) : (
         <p>
@@ -63,11 +63,11 @@ export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
       )}
 
       {show ? (
-        <Flaws doc={doc} flaws={flatFlaws} />
+        <Flaws doc={doc} flaws={flawsCounts} />
       ) : (
         <small>
           {/* a one-liner about all the flaws */}
-          {flatFlaws
+          {flawsCounts
             .map((flaw) => `${humanizeFlawName(flaw.name)}: ${flaw.count}`)
             .join(" + ")}
         </small>
@@ -76,13 +76,7 @@ export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
   );
 }
 
-interface FlawCheck {
-  count: number;
-  name: string;
-  flaws: any[]; // XXX fixme!
-}
-
-function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCheck[] }) {
+function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
   if (process.env.NODE_ENV !== "development") {
     throw new Error("This shouldn't be used in non-development builds");
   }
@@ -92,14 +86,21 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCheck[] }) {
         switch (flaw.name) {
           case "broken_links":
             return (
-              <BrokenLinks key="broken_links" doc={doc} links={flaw.flaws} />
+              <BrokenLinks
+                key="broken_links"
+                sourceFolder={doc.source.folder}
+                links={doc.flaws.broken_links}
+              />
             );
           case "bad_bcd_queries":
             return (
-              <BadBCDQueries key="bad_bcd_queries" messages={flaw.flaws} />
+              <BadBCDQueries
+                key="bad_bcd_queries"
+                messages={doc.flaws.bad_bcd_queries}
+              />
             );
           case "macros":
-            return <Macros key="macros" messages={flaw.flaws} />;
+            return <Macros key="macros" messages={doc.flaws.macros} />;
           default:
             throw new Error(`Unknown flaw check '${flaw.name}'`);
         }
@@ -108,42 +109,42 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCheck[] }) {
   );
 }
 
-interface Link {
-  href: string;
-  line: number;
-  column: number;
-  suggestion: string | null;
-  nth: number;
-}
-
-function BrokenLinks({ doc, links }: { doc: Doc; links: Link[] }) {
+function BrokenLinks({
+  sourceFolder,
+  links,
+}: {
+  sourceFolder: string;
+  links: Link[];
+}) {
   // The `links` array will look something like this:
   //  [
   //    {href: 'foo', line: 12, ...},
   //    {href: 'bar', line: 44, ...},
   //    {href: 'foo', line: 53, ...},
   //  ]
-  // So note that there are 2 'foo' in there. When we match this against
+  // Note that there are 2 'foo' in there. When we match this against
   // the `document.querySelectorAll("a[href]")`, how are you supposed to
   // which which of the 'foo' one you're referring to?
-  // This code, makes it so that each link in the array get's an 'nth'
-  // key too. It would, in our example, become:
-  //  [
-  //    {href: 'foo', nth: 0, line: 12, ...},
-  //    {href: 'bar', nth: 0, line: 44, ...},
-  //    {href: 'foo', nth: 1, line: 53, ...},
-  //  ]
+  // The following forEach loop creates the `nths` array which matches
+  // the array elements in `links`.
+  // In this example, the value of the `nths` array will look like this:
+  //
+  //   [0, 0, 1]
+  //
+  // So when you loop over `links` you'll know many times the `link.href`
+  // has appeared before.
   // Now, when you've filtered the list of
   // all `document.querySelectorAll("a[href]")` that matches 'foo'
   // you know *which* one to pick.
   const indexes = {};
-  links.forEach((link, i) => {
+  const nths: number[] = [];
+  for (const link of links) {
     if (!(link.href in indexes)) {
       indexes[link.href] = 0;
     }
-    link.nth = indexes[link.href];
+    nths.push(indexes[link.href]);
     indexes[link.href]++;
-  });
+  }
 
   const [opening, setOpening] = React.useState<string | null>(null);
   useEffect(() => {
@@ -160,7 +161,7 @@ function BrokenLinks({ doc, links }: { doc: Doc; links: Link[] }) {
     };
   }, [opening]);
 
-  const filepath = doc.source.folder + "/index.html";
+  const filepath = sourceFolder + "/index.html";
 
   function openInEditor(key: string, line: number, column: number) {
     const sp = new URLSearchParams();
@@ -180,7 +181,7 @@ function BrokenLinks({ doc, links }: { doc: Doc; links: Link[] }) {
     const annotations: RoughAnnotation[] = [];
     // If the anchor already had a title, put it into this map.
     // That way, when we restore the titles, we know what it used to be.
-    links.forEach((link) => {
+    links.forEach((link, i) => {
       const matchedAnchors = [
         ...document.querySelectorAll<HTMLAnchorElement>("div.content a[href]"),
       ].filter(
@@ -188,7 +189,7 @@ function BrokenLinks({ doc, links }: { doc: Doc; links: Link[] }) {
           anchor.href === link.href ||
           new URL(anchor.href).pathname === link.href
       );
-      const anchor = matchedAnchors[link.nth];
+      const anchor = matchedAnchors[nths[i]];
       if (anchor) {
         const annotationColor = link.suggestion ? "orange" : "red";
         anchor.dataset.originalTitle = anchor.title;
@@ -220,13 +221,13 @@ function BrokenLinks({ doc, links }: { doc: Doc; links: Link[] }) {
         }
       }
     };
-  }, [links]);
+  }, [links, nths]);
 
   return (
     <div className="flaw flaw__broken_links">
       <h3>Broken Links</h3>
       <ol>
-        {links.map((link) => {
+        {links.map((link, i) => {
           const key = `${link.href}${link.line}${link.column}`;
           return (
             <li key={key}>
@@ -253,7 +254,7 @@ function BrokenLinks({ doc, links }: { doc: Doc; links: Link[] }) {
                       anchor.href === link.href ||
                       new URL(anchor.href).pathname === link.href
                   );
-                  const anchor = matchedAnchors[link.nth];
+                  const anchor = matchedAnchors[nths[i]];
                   if (anchor) {
                     anchor.scrollIntoView({
                       behavior: "smooth",
@@ -317,19 +318,6 @@ function BadBCDQueries({ messages }) {
       </ul>
     </div>
   );
-}
-
-interface MacroErrorMessage {
-  name: string;
-  error: {
-    path?: string;
-  };
-  errorMessage: string;
-  line: number;
-  column: number;
-  filepath: string;
-  sourceContext: string;
-  macroName: string;
 }
 
 function Macros({ messages }: { messages: MacroErrorMessage[] }) {
