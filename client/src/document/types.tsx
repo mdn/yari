@@ -3,7 +3,11 @@ export interface Source {
   folder: string;
 }
 
-type Flaws = { broken_links: Link[]; macros: MacroErrorMessage[]; bad_bcd_queries: string[] };
+type Flaws = {
+  broken_links: Link[];
+  macros: MacroErrorMessage[];
+  bad_bcd_queries: string[];
+};
 
 export interface Doc {
   title: string;
