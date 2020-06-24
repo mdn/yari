@@ -1,4 +1,6 @@
 function* findMatchesInText(needle, haystack, { inQuotes = false } = {}) {
+  // Need to remove any characters that can affect a regex if we're going
+  // use the string in a manually constructed regex.
   const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   let rex;
   if (inQuotes) {
