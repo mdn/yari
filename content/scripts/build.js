@@ -3,7 +3,6 @@ const path = require("path");
 const crypto = require("crypto");
 const childProcess = require("child_process");
 const { performance } = require("perf_hooks");
-const zlib = require("zlib");
 
 const ms = require("ms");
 const chalk = require("chalk");
@@ -859,9 +858,9 @@ class Builder {
       })) {
         const locale = path.basename(localeFolder).toLowerCase();
         const map = new Map();
-        const filepath = path.join(localeFolder, "_wikihistory.json.gz");
+        const filepath = path.join(localeFolder, "_wikihistory.json");
         if (fs.existsSync(filepath)) {
-          const all = JSON.parse(zlib.gunzipSync(fs.readFileSync(filepath)));
+          const all = JSON.parse(fs.readFileSync(filepath));
           for (const [slug, data] of Object.entries(all)) {
             map.set(slug.toLowerCase(), data);
           }
@@ -872,9 +871,7 @@ class Builder {
 
     let t1 = new Date();
     this.logger.info(
-      chalk.green(
-        `Building map of all wiki history took ${ppMilliseconds(t1 - t0)}`
-      )
+      chalk.green(`Building map of all wiki history took ${msLong(t1 - t0)}`)
     );
   }
 
@@ -1483,7 +1480,12 @@ class Builder {
         metadata: otherMetadata,
         rawHtml: otherRawHtml,
         fileInfo: { path: otherRawHtmlFilepath },
-      } = Document.read(source.filepath, otherFolder, false);
+      } = Document.read(
+        source.filepath,
+        otherFolder,
+        false,
+        this.allWikiHistory
+      );
       const otherDestinationDir = path.join(
         this.destination,
         slugToFoldername(otherUri)
@@ -1515,7 +1517,8 @@ class Builder {
     const { metadata, rawHtml, fileInfo } = Document.read(
       source.filepath,
       folder,
-      false
+      false,
+      this.allWikiHistory
     );
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
     const mdnUrlLC = mdn_url.toLowerCase();

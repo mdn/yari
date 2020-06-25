@@ -23,6 +23,22 @@ tags:
 
 <div>{{js_property_attributes(0,0,0)}}</div>
 
+<h2 id="Examples">Examples</h2>
+
+<h3 id="Using_Symbol.replace">Using Symbol.replace</h3>
+
+<pre class="brush: js">class CustomReplacer {
+  constructor(value) {
+    this.value = value;
+  }
+  [Symbol.replace](string) {
+    return string.replace(this.value, '#!@?');
+  }
+}
+
+console.log('football'.replace(new CustomReplacer('foo')));
+// expected output: "#!@?tball"</pre>
+
 <h2 id="Specifications">Specifications</h2>
 
 <table class="standard-table">

@@ -16,22 +16,22 @@ tags:
 
 <div>{{EmbedInteractiveExample("pages/css/left.html")}}</div>
 
-<p class="hidden">The source for this interactive example is stored in a GitHub repository. If you'd like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</p>
+<div class="hidden">The source for this interactive example is stored in a GitHub repository. If you'd like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</div>
 
 <p>The effect of <code>left</code> depends on how the element is positioned (i.e., the value of the {{cssxref("position")}} property):</p>
 
 <ul>
  <li>When <code>position</code> is set to <code>absolute</code> or <code>fixed</code>, the <code>left</code> property specifies the distance between the element's left edge and the left edge of its containing block. (The containing block is the ancestor to which the element is relatively positioned.)</li>
  <li>When <code>position</code> is set to <code>relative</code>, the <code>left</code> property specifies the distance the element's left edge is moved to the right from its normal position.</li>
- <li>When <code>position</code> is set to <code>sticky</code>, the <code>left</code> property is used to compute the sticky-constraint rectangle.</li>
+ <li>When <code>position</code> is set to <code>sticky</code>, the <code>left</code> property is used to compute the sticky-constraint rectangle.</li>
  <li>When <code>position</code> is set to <code>static</code>, the <code>left</code> property has <em>no effect</em>.</li>
 </ul>
 
-<p>When both <code>left</code> and {{cssxref("right")}} are defined, and width constraints don't prevent it, the element will stretch to satisfy both. If the element cannot stretch to satisfy both, the position of the element is<em> overspecified</em>. When this is the case, the <code>left</code> value has precedence when the container is left-to-right; the <code>right</code> value has precedence when the container is right-to-left.</p>
+<p>When both <code>left</code> and {{cssxref("right")}} are defined, and width constraints don't prevent it, the element will stretch to satisfy both. If the element cannot stretch to satisfy both, the position of the element is <em>overspecified</em>. When this is the case, the <code>left</code> value has precedence when the container is left-to-right; the <code>right</code> value has precedence when the container is right-to-left.</p>
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="brush:css no-line-numbers">/* &lt;length&gt; values */
+<pre class="brush:css no-line-numbers notranslate">/* &lt;length&gt; values */
 left: 3px;
 left: 2.4em;
 
@@ -72,13 +72,13 @@ left: unset;
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Examples">Examples</h2>
 
 <h3 id="CSS">CSS</h3>
 
-<pre class="brush: css">#wrap {
+<pre class="brush: css notranslate">#wrap {
   width: 700px;
   margin: 0 auto;
   background: #5C5C5C;
@@ -136,7 +136,7 @@ pre {
 
 <h3 id="HTML">HTML</h3>
 
-<pre class="brush: html">&lt;div id="wrap"&gt;
+<pre class="brush: html notranslate">&lt;div id="wrap"&gt;
   &lt;div id="example_1"&gt;
     &lt;pre&gt;
       position: absolute;
@@ -224,6 +224,6 @@ pre {
 
 <ul>
  <li>{{cssxref("top")}}, {{cssxref("right")}}, {{cssxref("bottom")}}</li>
- <li>The mapped logical properties: {{cssxref("inset-block-start")}}, {{cssxref("inset-block-end")}}, {{cssxref("inset-inline-start")}}, and {{cssxref("inset-inline-end")}} and the shorthands {{cssxref("inset-block")}} and {{cssxref("inset-inline")}}</li>
+ <li>The mapped logical properties: {{cssxref("inset-block-start")}}, {{cssxref("inset-block-end")}}, {{cssxref("inset-inline-start")}}, and {{cssxref("inset-inline-end")}} and the shorthands {{cssxref("inset-block")}} and {{cssxref("inset-inline")}}</li>
  <li>{{cssxref("position")}}</li>
 </ul>

@@ -2,10 +2,10 @@
 title: AudioDestinationNode
 slug: Web/API/AudioDestinationNode
 summary: >-
-  AudioDestinationNode has no output (as it is the output, no more AudioNode can
-  be linked after it in the audio graph) and one input. The number of channels
-  in the input must be between 0 and the maxChannelCount value or an exception
-  is raised.
+  The AudioDestinationNode interface represents the end destination of an audio
+  graph in a given context — usually the speakers of your device. It can also be
+  the node that will "record" the audio data when used with an
+  OfflineAudioContext.
 tags:
   - API
   - AudioDestinationNode
@@ -15,9 +15,7 @@ tags:
 ---
 <p>{{APIRef("Web Audio API")}}</p>
 
-<div>
 <p>The <code>AudioDestinationNode</code> interface represents the end destination of an audio graph in a given context — usually the speakers of your device. It can also be the node that will "record" the audio data when used with an <code>OfflineAudioContext</code>.</p>
-</div>
 
 <p><code>AudioDestinationNode</code> has no output (as it <em>is</em> the output, no more <code>AudioNode</code> can be linked after it in the audio graph) and one input. The number of channels in the input must be between <code>0</code> and the <code>maxChannelCount</code> value or an exception is raised.</p>
 
@@ -65,7 +63,7 @@ tags:
 
 <p>There is no complex set up for using an <code>AudioDestinationNode</code> — by default, this simply represents the output of the user's system (e.g. their speakers), so you can get it hooked up inside an audio graph using only a few lines of code:</p>
 
-<pre class="brush: js">var audioCtx = new AudioContext();
+<pre class="brush: js notranslate">var audioCtx = new AudioContext();
 var source = audioCtx.createMediaElementSource(myMediaElement);
 source.connect(gainNode);
 gainNode.connect(audioCtx.destination);</pre>

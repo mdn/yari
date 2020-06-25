@@ -25,7 +25,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">self.clients.openWindow(<em>url</em>).then(function(<em>windowClient</em>) {
+<pre class="syntaxbox notranslate">self.clients.openWindow(<em>url</em>).then(function(<em>windowClient</em>) {
   // Do something with your WindowClient
 });</pre>
 
@@ -44,7 +44,7 @@ tags:
 
 <h2 id="Examples">Examples</h2>
 
-<pre class="brush: js">// Send notification to OS if applicable
+<pre class="brush: js notranslate">// Send notification to OS if applicable
 if (self.Notification.permission === 'granted') {
   const notificationObject = {
     body: 'Click here to view your messages.',
@@ -78,7 +78,7 @@ self.addEventListener('notificationclick', e =&gt; {
    <th scope="col">Comment</th>
   </tr>
   <tr>
-   <td>{{SpecName('Service Workers', '#dom-clients-openwindow', 'Clients: openWindow')}}</td>
+   <td>{{SpecName('Service Workers', '#clients-openwindow', 'Clients: openWindow')}}</td>
    <td>{{Spec2('Service Workers')}}</td>
    <td>Initial definition.</td>
   </tr>

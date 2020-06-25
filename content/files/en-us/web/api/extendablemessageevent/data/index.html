@@ -19,7 +19,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">var myData = ExtendableMessageEventInstance.data;</pre>
+<pre class="syntaxbox notranslate">var <em>myData</em> = <em>extendableMessageEvent</em>.data;</pre>
 
 <h3 id="Value">Value</h3>
 
@@ -29,7 +29,7 @@ tags:
 
 <p>When the following code is used inside a service worker to respond to a push messages by sending the data received via {{domxref("PushMessageData")}} to the main context via a <a href="/en-US/docs/Web/API/Channel_Messaging_API">channel message</a>, the event object of <code>onmessage</code> will be a <code>ExtendableMessageEvent</code>.</p>
 
-<pre class="brush: js">var port;
+<pre class="brush: js notranslate">var port;
 
 self.addEventListener('push', function(e) {
   var obj = e.data.json();
@@ -75,7 +75,7 @@ self.onmessage = function(e) {
 <h2 id="See_also">See also</h2>
 
 <ul>
- <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorker_API/Using_Service_Workers">Using Service Workers</a></li>
+ <li><a href="/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers">Using Service Workers</a></li>
  <li><a class="external external-icon" href="https://github.com/mdn/sw-test">Service workers basic code example</a></li>
  <li><a class="external external-icon" href="https://jakearchibald.github.io/isserviceworkerready/">Is ServiceWorker ready?</a></li>
  <li><a href="/en-US/docs/Web/API/Channel_Messaging_API">Channel Messaging</a></li>

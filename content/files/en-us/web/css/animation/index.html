@@ -7,6 +7,7 @@ tags:
   - CSS Animations
   - CSS Property
   - Reference
+  - 'recipe:css-shorthand-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -16,7 +17,7 @@ tags:
 
 <p class="hidden">The source for this interactive example is stored in a GitHub repository. If you'd like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</p>
 
-<pre class="brush:css no-line-numbers">/* @keyframes duration | timing-function | delay |
+<pre class="brush:css no-line-numbers notranslate">/* @keyframes duration | timing-function | delay |
 iteration-count | direction | fill-mode | play-state | name */
 animation: 3s ease-in 1s 2 reverse both paused slidein;
 
@@ -28,7 +29,7 @@ animation: slidein 3s;
 </pre>
 
 <div class="hidden" id="animation">
-<pre class="brush: html">&lt;div class="grid"&gt;
+<pre class="brush: html notranslate">&lt;div class="grid"&gt;
   &lt;div class="col"&gt;
     &lt;div class="note"&gt;
       Given the following animation:
@@ -67,7 +68,7 @@ animation: slidein 3s;
   &lt;/div&gt;
 &lt;/div&gt;</pre>
 
-<pre class="brush: css">html,body {
+<pre class="brush: css notranslate">html,body {
   height: 100%;
   box-sizing: border-box;
 }
@@ -159,7 +160,7 @@ button.restart {
   transform-origin: left center;
 }</pre>
 
-<pre class="brush: js">window.addEventListener('load', function () {
+<pre class="brush: js notranslate">window.addEventListener('load', function () {
   var ANIMATION = Array.from(document.querySelectorAll('.animation'));
   var BUTTON    = Array.from(document.querySelectorAll('button'));
 
@@ -245,13 +246,13 @@ button.restart {
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Examples">Examples</h2>
 
 <h3 id="Cylon_Eye">Cylon Eye</h3>
 
-<pre class="brush: html">&lt;div class="view_port"&gt;
+<pre class="brush: html notranslate">&lt;div class="view_port"&gt;
   &lt;div class="polling_message"&gt;
     Listening for dispatches
   &lt;/div&gt;
@@ -259,7 +260,7 @@ button.restart {
 &lt;/div&gt;
 </pre>
 
-<pre class="brush: css">.polling_message {
+<pre class="brush: css notranslate">.polling_message {
   color: white;
   float: left;
   margin-right: 2%;

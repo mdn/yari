@@ -9,6 +9,7 @@ tags:
   - CSS Multi-column Layout
   - CSS Property
   - Reference
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -20,7 +21,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="brush: css no-line-numbers">/* Keyword values */
+<pre class="brush: css no-line-numbers notranslate">/* Keyword values */
 column-fill: auto;
 column-fill: balance;
 column-fill: balance-all;
@@ -46,13 +47,13 @@ column-fill: unset;
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Example">Example</h2>
 
 <h3 id="HTML">HTML</h3>
 
-<pre class="brush: html">&lt;p class="content-box"&gt;
+<pre class="brush: html notranslate">&lt;p class="content-box"&gt;
   This is a bunch of text split into multiple
   columns. The CSS `column-fill` property is
   used to spread the contents evenly across
@@ -62,7 +63,7 @@ column-fill: unset;
 
 <h3 id="CSS">CSS</h3>
 
-<pre class="brush:css; highlight=[4]">.content-box {
+<pre class="brush:css; highlight=[4] notranslate">.content-box {
   column-count: 4;
   column-rule: 1px solid black;
   column-fill: balance;
@@ -103,5 +104,5 @@ column-fill: unset;
 <div class="blockIndicator warning">
 <p>Note that there are some interoperability issues and bugs with <code>column-fill</code> across browsers, due to unresolved issues in the specification.</p>
 
-<p>In particular, when using column-fill: auto to fill columns sequentially, Chrome will only consult this property if the multicol container has a size in the block dimension (e.g. height in a horizontal writing mode). Firefox will always consult this property, therefore filling the first column with all of the content in cases where there is no size.</p>
+<p>In particular, when using <code>column-fill: auto</code> to fill columns sequentially, Chrome will only consult this property if the multicol container has a size in the block dimension (e.g. height in a horizontal writing mode). Firefox will always consult this property, therefore filling the first column with all of the content in cases where there is no size.</p>
 </div>

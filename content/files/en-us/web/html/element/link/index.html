@@ -150,9 +150,7 @@ tags:
  <dd>
  <p>For <code>rel="stylesheet"</code> only, the <code>disabled</code> Boolean attribute indicates whether or not the described stylesheet should be loaded and applied to the document. If <code>disabled</code> is specified in the HTML when it is loaded, the stylesheet will not be loaded during page load. Instead, the stylesheet will be loaded on-demand, if and when the <code>disabled</code> attribute is changed to <code>false</code> or removed.</p>
 
- <p>Once the stylesheet has been loaded, however, changes made to the value of the <code>disabled</code> property no longer have any relationship to the value of the {{domxref("StyleSheet.disabled")}} property. Changing the value of this property instead simply enables and disables the stylesheet form being applied to the document.</p>
-
- <p>This differs from <code>StyleSheet</code>'s <code>disabled</code> property; changing it to <code>true</code> removes the stylesheet from the document's {{domxref("document.styleSheets")}} list, and doesn't automatically reload the stylesheet when it's toggled back to <code>false</code>.</p>
+ <p>Setting the <code>disabled</code> property in the DOM causes the stylesheet to be removed from the document's {{domxref("document.styleSheets")}} list.</p>
  </dd>
  <dt>{{HTMLAttrDef("href")}}</dt>
  <dd>This attribute specifies the {{glossary("URL")}} of the linked resource. A URL can be absolute or relative.</dd>

@@ -33,12 +33,15 @@ function extractLocale(contentRoot, folder) {
 }
 
 function saveHTMLFile(filePath, rawHtml, { slug, title, summary, tags }) {
-  const combined = `---\n${yaml.safeDump({
+  const metadata = {
     title,
     slug,
     summary,
-    tags,
-  })}---\n${rawHtml.trim()}\n`;
+  };
+  if (tags) {
+    metadata.tags = tags;
+  }
+  const combined = `---\n${yaml.safeDump(metadata)}---\n${rawHtml.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 
@@ -78,7 +81,12 @@ function create(
   }
 }
 
-const read = (contentRoot, folder, includeTimestamp = false) => {
+const read = (
+  contentRoot,
+  folder,
+  includeTimestamp = false,
+  allWikiHistory
+) => {
   const filePath = getHTMLPath(folder);
   if (!fs.existsSync(filePath)) {
     return null;
@@ -89,18 +97,30 @@ const read = (contentRoot, folder, includeTimestamp = false) => {
     bodyBegin: frontMatterOffset,
   } = fm(fs.readFileSync(filePath, "utf8"));
 
+  metadata.locale = extractLocale(contentRoot, folder);
+
   if (includeTimestamp) {
+    // XXX the day we have a way of extracting the last modified date from
+    // git log data, it'd go here. Somewhere.
+    // At that point, every file will have a last modified from git (even
+    // though it was ever *edited* with a git commit) because it was *added*
+    // at some point.
+    // So we'd need to make that git log such that it never includes edits
+    // until after the critical day we make the final migration.
+
     metadata.modified = null;
-    const wikiHistoryPath = getWikiHistoryPath(folder);
-    if (fs.existsSync(wikiHistoryPath)) {
-      const wikiMetadata = JSON.parse(
-        fs.readFileSync(wikiHistoryPath, "utf-8")
-      );
-      metadata.modified = wikiMetadata.modified;
+
+    // const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
+    // const uri = mdn_url.toLowerCase();
+    if (!allWikiHistory.size) {
+      throw new Error("allWikiHistory hasn't been populated");
+    }
+    const localeHistory = allWikiHistory.get(metadata.locale.toLowerCase());
+    const slugLC = metadata.slug.toLowerCase();
+    if (localeHistory.has(slugLC)) {
+      metadata.modified = localeHistory.get(slugLC).modified;
     }
   }
-
-  metadata.locale = extractLocale(contentRoot, folder);
 
   return {
     metadata,

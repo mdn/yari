@@ -21,16 +21,16 @@ tags:
 
 <h3 id="Creating_strings">Creating strings</h3>
 
-<p>Strings can be created as primitives, from string literals, or as objects, using the {{jsxref("String/String")}} constructor:</p>
+<p>Strings can be created as primitives, from string literals, or as objects, using the {{jsxref("String/String", "String()")}} constructor:</p>
 
-<pre class="syntaxbox">const string1 = "A string primitive";
+<pre class="syntaxbox notranslate">const string1 = "A string primitive";
 const string2 = 'Also a string primitive';
 const string3 = `Yet another string primitive`;</pre>
 
-<pre class="syntaxbox">const string4 = new String("A String object");
+<pre class="syntaxbox notranslate">const string4 = new String("A String object");
 </pre>
 
-<p>String primitives and string objects can be used interchangeably in most situations. See "String primitives and <code>String</code> objects" below.</p>
+<p>String primitives and string objects can be used interchangeably in most situations. See "<a href="#String_primitives_and_String_objects">String primitives and String objects</a>" below.</p>
 
 <p>String literals can be specified using single or double quotes, which are treated identically, or using the backtick character <kbd>`</kbd>. This last form specifies a <a href="/en-US/docs/Web/JavaScript/Reference/Template_literals">template literal</a>: with this form you can interpolate expressions.</p>
 
@@ -38,12 +38,12 @@ const string3 = `Yet another string primitive`;</pre>
 
 <p>There are two ways to access an individual character in a string. The first is the {{jsxref("String.prototype.charAt()", "charAt()")}} method:</p>
 
-<pre class="brush: js">return 'cat'.charAt(1) // returns "a"
+<pre class="brush: js notranslate">return 'cat'.charAt(1) // returns "a"
 </pre>
 
 <p>The other way (introduced in ECMAScript 5) is to treat the string as an array-like object, where individual characters correspond to a numerical index:</p>
 
-<pre class="brush: js">return 'cat'[1] // returns "a"
+<pre class="brush: js notranslate">return 'cat'[1] // returns "a"
 </pre>
 
 <p>When using bracket notation for character access, attempting to delete or assign a value to these properties will not succeed. The properties involved are neither writable nor configurable. (See {{jsxref("Object.defineProperty()")}} for more information.)</p>
@@ -52,7 +52,7 @@ const string3 = `Yet another string primitive`;</pre>
 
 <p>In C, the <code>strcmp()</code> function is used for comparing strings. In JavaScript, you just use the <a href="/en-US/docs/Web/JavaScript/Reference/Operators/Comparison_Operators">less-than and greater-than operators</a>:</p>
 
-<pre class="brush: js">let a = 'a'
+<pre class="brush: js notranslate">let a = 'a'
 let b = 'b'
 if (a &lt; b) { // true
   console.log(a + ' is less than ' + b)
@@ -67,7 +67,7 @@ if (a &lt; b) { // true
 
 <p>Note that <code>a == b</code> compares the strings in <code><var>a</var></code> and <code><var>b</var></code> for being equal in the usual case-sensitive way. If you wish to compare without regard to upper or lower case characters, use a function similar to this:</p>
 
-<pre>function isEqual(str1, str2)
+<pre class="notranslate">function isEqual(str1, str2)
 {
     return str1.toUpperCase() === str2.toUpperCase()
 } // isEqual
@@ -81,7 +81,7 @@ if (a &lt; b) { // true
 
 <p>String literals (denoted by double or single quotes) and strings returned from <code>String</code> calls in a non-constructor context (that is, called without using the {{jsxref("Operators/new", "new")}} keyword) are primitive strings. JavaScript automatically converts primitives to <code>String</code> objects, so that it's possible to use <code>String</code> object methods for primitive strings. In contexts where a method is to be invoked on a primitive string or a property lookup occurs, JavaScript will automatically wrap the string primitive and call the method or perform the property lookup.</p>
 
-<pre class="brush: js">let s_prim = 'foo'
+<pre class="brush: js notranslate">let s_prim = 'foo'
 let s_obj = new String(s_prim)
 
 console.log(typeof s_prim) // Logs "string"
@@ -90,7 +90,7 @@ console.log(typeof s_obj)  // Logs "object"
 
 <p>String primitives and <code>String</code> objects also give different results when using {{jsxref("Global_Objects/eval", "eval()")}}. Primitives passed to <code>eval</code> are treated as source code; <code>String</code> objects are treated as all other objects are, by returning the object. For example:</p>
 
-<pre class="brush: js">let s1 = '2 + 2'              // creates a string primitive
+<pre class="brush: js notranslate">let s1 = '2 + 2'              // creates a string primitive
 let s2 = new String('2 + 2')  // creates a String object
 console.log(eval(s1))         // returns the number 4
 console.log(eval(s2))         // returns the string "2 + 2"
@@ -100,7 +100,7 @@ console.log(eval(s2))         // returns the string "2 + 2"
 
 <p>A <code>String</code> object can always be converted to its primitive counterpart with the {{jsxref("String.prototype.valueOf()", "valueOf()")}} method.</p>
 
-<pre class="brush: js">console.log(eval(s2.valueOf()))  // returns the number 4
+<pre class="brush: js notranslate">console.log(eval(s2.valueOf()))  // returns the number 4
 </pre>
 
 <h3 id="Escape_notation">Escape notation</h3>
@@ -179,9 +179,9 @@ console.log(eval(s2))         // returns the string "2 + 2"
 
 <h4 id="Method_1">Method 1</h4>
 
-<p>You can use the <a href="/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Addition_()">+</a> operator to append multiple strings together, like this:</p>
+<p>You can use the <a href="/en-US/docs/Web/JavaScript/Reference/Operators/Addition">+</a> operator to append multiple strings together, like this:</p>
 
-<pre class="brush: js">let longString = "This is a very long string which needs " +
+<pre class="brush: js notranslate">let longString = "This is a very long string which needs " +
                  "to wrap across multiple lines because " +
                  "otherwise my code is unreadable."
 </pre>
@@ -192,7 +192,7 @@ console.log(eval(s2))         // returns the string "2 + 2"
 
 <p>That form looks like this:</p>
 
-<pre class="brush: js">let longString = "This is a very long string which needs \
+<pre class="brush: js notranslate">let longString = "This is a very long string which needs \
 to wrap across multiple lines because \
 otherwise my code is unreadable."
 </pre>
@@ -314,31 +314,31 @@ otherwise my code is unreadable."
 
 <dl>
  <dt>{{jsxref("String.prototype.anchor()")}}</dt>
- <dd><code><a href="/en-US/docs/Web/HTML/Element/a#attr-name">&lt;a name="name"&gt;</a></code> (hypertext target)</dd>
+ <dd>{{htmlattrxref("name", "a", "&lt;a name=\"name\"&gt;")}} (hypertext target)</dd>
  <dt>{{jsxref("String.prototype.big()")}}</dt>
- <dd><a href="/en-US/docs/Web/HTML/Element/big" title="The obsolete HTML Big Element (&lt;big>) renders the enclosed text at a font size one level larger than the surrounding text (medium becomes large, for example)."><code>&lt;big&gt;</code></a></dd>
+ <dd>{{HTMLElement("big")}}</dd>
  <dt>{{jsxref("String.prototype.blink()")}}</dt>
- <dd><a href="/en-US/docs/Web/HTML/Element/blink" title="The HTML Blink Element (&lt;blink>) is a non-standard element which causes the enclosed text to flash slowly."><code>&lt;blink&gt;</code></a></dd>
+ <dd>{{HTMLElement("blink")}}</dd>
  <dt>{{jsxref("String.prototype.bold()")}}</dt>
- <dd><a href="/en-US/docs/Web/HTML/Element/b" title="The HTML Bring Attention To element (&lt;b>)  is used to draw the reader's attention to the element's contents, which are not otherwise granted special importance."><code>&lt;b&gt;</code></a></dd>
+ <dd>{{HTMLElement("b")}}</dd>
  <dt>{{jsxref("String.prototype.fixed()")}}</dt>
- <dd><a href="/en-US/docs/Web/HTML/Element/tt" title="The obsolete HTML Teletype Text element (&lt;tt>) creates inline text which is presented using the user agent's default monospace font face."><code>&lt;tt&gt;</code></a></dd>
+ <dd>{{HTMLElement("tt")}}</dd>
  <dt>{{jsxref("String.prototype.fontcolor()")}}</dt>
- <dd><code><a href="/en-US/docs/Web/HTML/Element/font#attr-color">&lt;font color="color"&gt;</a></code></dd>
+ <dd>{{htmlattrxref("color", "font", "&lt;font color=\"color\"&gt;")}}</dd>
  <dt>{{jsxref("String.prototype.fontsize()")}}</dt>
- <dd><code><a href="/en-US/docs/Web/HTML/Element/font#attr-size">&lt;font size="size"&gt;</a></code></dd>
+ <dd>{{htmlattrxref("size", "font", "&lt;font size=\"size\"&gt;")}}</dd>
  <dt>{{jsxref("String.prototype.italics()")}}</dt>
- <dd><a href="/en-US/docs/Web/HTML/Element/i" title="The HTML &lt;i> element represents a range of text that is set off from the normal text for some reason."><code>&lt;i&gt;</code></a></dd>
+ <dd>{{HTMLElement("i")}}</dd>
  <dt>{{jsxref("String.prototype.link()")}}</dt>
- <dd><code><a href="/en-US/docs/Web/HTML/Element/a#attr-href">&lt;a href="url"&gt;</a></code> (link to URL)</dd>
+ <dd>{{htmlattrxref("href", "a", "&lt;a href=\"url\"&gt;")}} (link to URL)</dd>
  <dt>{{jsxref("String.prototype.small()")}}</dt>
- <dd><a href="/en-US/docs/Web/HTML/Element/small" title="The HTML &lt;small> element represents side-comments and small print, like copyright and legal text, independent of its styled presentation. By default, it renders text within it one font-size smaller, such as from small to x-small."><code>&lt;small&gt;</code></a></dd>
+ <dd>{{HTMLElement("small")}}</dd>
  <dt>{{jsxref("String.prototype.strike()")}}</dt>
- <dd><a href="/en-US/docs/Web/HTML/Element/strike" title="The HTML &lt;strike> element (or HTML Strikethrough Element) places a strikethrough (horizontal line) over text."><code>&lt;strike&gt;</code></a></dd>
+ <dd>{{HTMLElement("strike")}}</dd>
  <dt>{{jsxref("String.prototype.sub()")}}</dt>
- <dd><a href="/en-US/docs/Web/HTML/Element/sub" title="The HTML Subscript element (&lt;sub>) specifies inline text which should be displayed as subscript for solely typographical reasons."><code>&lt;sub&gt;</code></a></dd>
+ <dd>{{HTMLElement("sub")}}</dd>
  <dt>{{jsxref("String.prototype.sup()")}}</dt>
- <dd><a href="/en-US/docs/Web/HTML/Element/sup" title="The HTML Superscript element (&lt;sup>) specifies inline text which is to be displayed as superscript for solely typographical reasons."><code>&lt;sup&gt;</code></a></dd>
+ <dd>{{HTMLElement("sup")}}</dd>
 </dl>
 </div>
 
@@ -348,7 +348,7 @@ otherwise my code is unreadable."
 
 <p>It's possible to use <code>String</code> as a more reliable {{jsxref("String.prototype.toString()", "toString()")}} alternative, as it works when used on {{jsxref("null")}}, {{jsxref("undefined")}}, and on {{jsxref("Symbol", "symbols")}}. For example:</p>
 
-<pre class="brush: js">let outputStrings = []
+<pre class="brush: js notranslate">let outputStrings = []
 for (let i = 0, n = inputValues.length; i &lt; n; ++i) {
   outputStrings.push(String(inputValues[i]));
 }
@@ -380,7 +380,7 @@ for (let i = 0, n = inputValues.length; i &lt; n; ++i) {
 <ul>
  <li><a href="/en-US/docs/Web/JavaScript/Guide/Text_formatting">Text formatting in the JavaScript Guide</a></li>
  <li>{{jsxref("RegExp")}}</li>
- <li><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></li>
+ <li>{{domxref("DOMString")}}</li>
  <li><a href="/en-US/Add-ons/Code_snippets/StringView"><code>StringView</code> — a C-like representation of strings based on typed arrays</a></li>
  <li><a href="/en-US/docs/Web/API/DOMString/Binary">Binary strings</a></li>
 </ul>

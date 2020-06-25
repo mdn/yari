@@ -42,7 +42,7 @@ tags:
 
 <p>Thus, WebXR was created. The most obvious difference, at the highest level, is that WebXR supports not just virtual reality applications, but also augmented reality, which blends virtual objects with the user's true physical environment.</p>
 
-<p>Another key difference is that WebXR has integrated support for the advanced <a href="/en-US/docs/Web/API/WebXR_Device_API/Inputs">input controllers</a> that are used with most mixed reality headsets, while WebVR relied on the <a href="/en-US/docs/Web/API/Gamepad_API">Gamepad API</a> to support the controllers. In WebXR, the primary select and squeeze actions are direclty supported using events, while other controls are available through a special WebXR-specific implementation of the {{domxref("Gamepad")}} object.</p>
+<p>Another key difference is that WebXR has integrated support for the advanced <a href="/en-US/docs/Web/API/WebXR_Device_API/Inputs">input controllers</a> that are used with most mixed reality headsets, while WebVR relied on the <a href="/en-US/docs/Web/API/Gamepad_API">Gamepad API</a> to support the controllers. In WebXR, the primary select and squeeze actions are directly supported using events, while other controls are available through a special WebXR-specific implementation of the {{domxref("Gamepad")}} object.</p>
 
 <h2 id="Basic_concepts">Basic concepts</h2>
 
@@ -54,7 +54,7 @@ tags:
 
 <h4 id="What_is_field_of_view">What is field of view?</h4>
 
-<p>The field of view is, at its essence, the extent of the environment you are able to see at any one time. The width of the field of view is measured the angle defining the arc from the far left edge of your field of view to the far right edge, and is specified in either degrees or radians.</p>
+<p>The field of view is, at its essence, the extent of the environment you are able to see at any one time. The width of the field of view is measured as the angle defining the arc from the far left edge of your field of view to the far right edge, and is specified in either degrees or radians.</p>
 
 <p>A human eye is typically able to take in a FOV of around 135°. Assuming a person has two healthy eyes, their total field of view is about 200° to 220° wide. Why is the FOV wider with two eyes, but not double the single-eye FOV? It's because the two eyes FOVs overlap a lot. That overlap is what gives us depth perception; within the overlap area — which is around 115° across — we have depth perception. Outside that overlap area, our vision is monocular and lacks good depth perception.</p>
 
@@ -84,7 +84,9 @@ tags:
 
 <p>In all of these cases, the viewer remains in the same location in space while pivoting on one or more of the three axes to alter the direction in which they're looking. A system with two degrees of freedom can sense when the user looks left and right or up and down, but can't report any other kind of movement.</p>
 
-<p><strong>&lt;&lt;&lt;--- image needed ---&gt;&gt;&gt;</strong></p>
+<p><img alt="Diagram showing rotation around each of the three axes in a WebXR setting" src="https://mdn.mozillademos.org/files/17274/xr-rotation-headset.png" style="height: 500px; width: 640px;"></p>
+
+<p><strong>&lt;&lt;&lt;--- replace this image with an SVG with similar content ---&gt;&gt;&gt;</strong></p>
 
 <p>A typical baseline headset offers three degrees of freedom, recognizing rotation around all three axes. This is often referred to by the shorthand <strong>3DoF</strong>.</p>
 
@@ -92,7 +94,11 @@ tags:
 
 <p>The other three degrees of freedom are translational, providing the ability to sense movement through space: forward and backward, left and right, up and down. Support for all six degrees of freedom is referred to as <strong>6DoF</strong>.</p>
 
-<p><strong>&lt;&lt;&lt;--- image needed ---&gt;&gt;&gt;</strong></p>
+<p><img alt="Diagram showing rotation around each of the three axes in a WebXR setting" src="https://mdn.mozillademos.org/files/17275/xr-translation-headset.png" style="height: 500px; width: 640px;"></p>
+
+<p><strong>&lt;&lt;&lt;--- replace image with an SVG for future translation work and consistency ---&gt;&gt;&gt;</strong></p>
+
+<p>Some more advanced headsets provide at least minimal support for translational movement detection, but to capture more substantial movement through the space, external sensors are usually required, such as cameras (etither using visible light or infrared).</p>
 
 <h3 id="WebXR_session_modes">WebXR session modes</h3>
 
@@ -125,13 +131,13 @@ tags:
 
 <h2 id="Types_of_WebXR_hardware">Types of WebXR hardware</h2>
 
-<p>The simplest XR presentation involves rendering the scene directly to the user's screen, either in the context of a web document, or in full screen mode.This is most common when the user either doesn't have a dedicated XR device, or when the user is viewing the AR or VR app on a phone or other handheld device.</p>
+<p>The simplest XR presentation involves rendering the scene directly to the user's screen, either in the context of a web document, or in full screen mode. This is most common when the user either doesn't have a dedicated XR device, or when the user is viewing the AR or VR app on a phone or other handheld device.</p>
 
 <p>Simpler and lower-priced XR devices typically use an integrated computer or connect to a smartphone, essentially using the mobile CPU and GPU to run apps, render images, and display them to the user. Higher-powered solutions typically offload application execution and graphics processing to an external device such as a desktop computer, and are either tethered to the computer using a cable or use a wireless network to receive the imagery to display to the user.</p>
 
 <h3 id="Headsets">Headsets</h3>
 
-<p>Most immersive VR experiences take place using goggles or a headset of some kind. A VR headset is worn on the head, with a strap that goes behind the head to fasten it in place, and one or two displays whose screens are focused into the eyes using lenses. By presenting a slightly different image to each eye, the illusion of depth is created, giving the user a simulated 3D experience.</p>
+<p><img alt="Drawing of a standard VR headset" src="https://mdn.mozillademos.org/files/17273/publicdomainq-virtual_reality_headset.svg" style="float: left; height: 270px; margin-bottom: 1em; margin-right: 1em; width: 360px;">Most immersive VR experiences take place using goggles or a headset of some kind. A VR headset is worn on the head, with a strap that goes behind the head to fasten it in place, and one or two displays whose screens are focused into the eyes using lenses. By presenting a slightly different image to each eye, the illusion of depth is created, giving the user a simulated 3D experience.</p>
 
 <p>The vast majority of headsets use a single display whose frame is divided in half, with one half focused onto each of the user's eyes. For example, if a headset uses a 2560x1440 screen, with the left half being used for the left eye's view and the right half or the right eye's view, the framebuffer is used like this:</p>
 
@@ -139,7 +145,7 @@ tags:
 
 <p>The simplest headsets have no integrated sensors, and simply focus each half of the screen into the corresponding eye. A common example of this is <a href="https://arvr.google.com/cardboard/">Google Cardboard</a>, a type of headset first created by Google which can be cheaply created using cardboard or other inexpensive materials. These devices often work by snapping your phone into the headset so that its screen and onboard graphics processor can be used to render and display the XR scene.</p>
 
-<p><img alt="Drawing of a standard VR headset" src="https://mdn.mozillademos.org/files/17273/publicdomainq-virtual_reality_headset.svg" style="">More advanced headsets have integrated displays and are strapped to the head using an elastic or strap or a strap with Velcro closure.  These headsets may include integrated speakers and microphone, and/or connectors to attach external ones. Additionally, these headsets may have various sensors for detecting when the headset moves through space. The types and number of sensors included will determine how many {{anch("degrees of freedom")}} the user has.</p>
+<p>More advanced headsets have integrated displays and are strapped to the head using an elastic or strap or a strap with Velcro closure.  These headsets may include integrated speakers and microphone, and/or connectors to attach external ones. Additionally, these headsets may have various sensors for detecting when the headset moves through space. The types and number of sensors included will determine how many {{anch("degrees of freedom")}} the user has.</p>
 
 <h3 id="Goggles_and_glasses">Goggles and glasses</h3>
 
@@ -202,4 +208,14 @@ tags:
 
 <ul>
  <li><a href="https://playcanvas.com/https://playcanvas.com/">PlayCanvas</a></li>
+</ul>
+
+<h2 id="Next_steps">Next steps</h2>
+
+<p>With these basic facts in hand, you're ready to take those next steps into the world of mixed reality. The following articles can help.</p>
+
+<ul>
+ <li><a href="/en-US/docs/Web/API/WebXR_Device_API/Lifecycle">WebXR application life cycle </a></li>
+ <li><a href="/en-US/docs/Web/API/WebXR_Device_API/Startup_and_shutdown">Starting up and shutting down a WebXR session</a></li>
+ <li><a href="/en-US/docs/Web/API/WebXR_Device_API/Movement_and_motion">Movement, orientation, and motion: A WebXR example</a></li>
 </ul>

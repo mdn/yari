@@ -2,9 +2,9 @@
 title: Number
 slug: Web/JavaScript/Reference/Global_Objects/Number
 summary: >-
-  The Number JavaScript object is a wrapper object allowing you to work with
-  numerical values. A Number object is created using the Number() constructor. A
-  primitive type object number is created using the Number() function.
+  The Number constructor contains constants and methods for working with
+  numbers. Values of other types can be converted to numbers using the Number()
+  function.
 tags:
   - Class
   - JavaScript
@@ -13,38 +13,45 @@ tags:
 ---
 <div>{{JSRef}}</div>
 
-<p>The <strong><code>Number</code></strong> JavaScript object is a wrapper object allowing you to work with numerical values. A <code>Number</code> object is created using the <strong><code>Number()</code> constructor</strong>. A primitive type object <strong>number </strong>is created using the<strong> </strong><strong><code>Number()</code> function</strong>.</p>
+<div><strong><code>Number</code></strong> is a <a href="/en-US/docs/Glossary/Primitive#Primitive_wrapper_objects_in_JavaScript">primitive wrapper object</a> used to represent and manipulate numbers like <code>37</code> or <code>-9.25</code>.</div>
 
-<p>The JavaScript <code>Number</code> type is <a href="https://en.wikipedia.org/wiki/Floating-point_arithmetic">double-precision 64-bit binary format IEEE 754</a> value. <em>There is no integer type. </em>In more recent implementations, JavaScript also supports arbitrarily large integers using the {{jsxref("BigInt")}} type.</p>
+<div></div>
+
+<div></div>
+
+<p>The <strong><code>Number</code></strong> constructor contains constants and methods for working with numbers. Values of other types can be converted to numbers using the<strong> </strong><strong><code>Number()</code> function</strong>.</p>
+
+<p>The JavaScript <strong>Number</strong> type is a <a href="https://en.wikipedia.org/wiki/Floating-point_arithmetic">double-precision 64-bit binary format IEEE 754</a> value, like <code>double</code> in Java or C#. This means it can represent fractional values, but there are some limits to what it can store. A Number only keeps about 17 decimal places of precision; arithmetic is subject to <a href="https://en.wikipedia.org/wiki/Floating-point_arithmetic#Representable_numbers,_conversion_and_rounding">rounding</a>. The largest value a Number can hold is about 1.8×10<sup>308</sup>. Numbers beyond that are replaced with the special Number constant {{jsxref("Infinity")}}.</p>
+
+<p>A number literal like <code>37</code> in JavaScript code is a floating-point value, not an integer. There is no separate integer type in common everyday use. (JavaScript now has a {{jsxref("BigInt")}} type, but it was not designed to replace Number for everyday uses. <code>37</code> is still a Number, not a BigInt.)</p>
 
 <dl>
 </dl>
 
 <h2 id="Description">Description</h2>
 
-<p>The primary uses of the <code>Number</code> object are:</p>
-
-<ul>
- <li>If the argument cannot be converted into a number, it returns {{jsxref("NaN")}}.</li>
- <li>In a non-constructor context (i.e., without the {{jsxref("Operators/new", "new")}} operator), <code>Number</code> can be used to perform a type conversion.</li>
-</ul>
+<p>When used as a function, <code>Number(value)</code> converts a string or other value to the Number type. If the value can't be converted, it returns {{jsxref("NaN")}}.</p>
 
 <h3 id="Literal_syntax">Literal syntax</h3>
 
-<pre class="brush: js">123    // one-hundred twenty-three
+<pre class="brush: js notranslate">123    // one-hundred twenty-three
 123.0  // same
 123 === 123.0  // true</pre>
 
-<h3 id="Constructor_syntax">Constructor syntax</h3>
+<h3 id="Function_syntax">Function syntax</h3>
 
-<pre class="brush: js">Number('123'); // creates number object 123
-Number('123') === 123 // true</pre>
+<pre class="brush: js notranslate">Number('123')  // returns the number 123
+Number('123') === 123  // true
+
+Number("unicorn")  // NaN
+Number(undefined)  // NaN
+</pre>
 
 <h2 id="Constructor">Constructor</h2>
 
 <dl>
  <dt><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/Number"><code>Number()</code></a></dt>
- <dd>Creates a new <code>Number</code> object.</dd>
+ <dd>Converts another value to a Number.</dd>
 </dl>
 
 <h2 id="Static_properties">Static properties</h2>
@@ -110,7 +117,7 @@ Number('123') === 123 // true</pre>
 
 <p>The following example uses the <code>Number</code> object's properties to assign values to several numeric variables:</p>
 
-<pre class="brush: js">const biggestNum     = Number.MAX_VALUE
+<pre class="brush: js notranslate">const biggestNum     = Number.MAX_VALUE
 const smallestNum    = Number.MIN_VALUE
 const infiniteNum    = Number.POSITIVE_INFINITY
 const negInfiniteNum = Number.NEGATIVE_INFINITY
@@ -121,7 +128,7 @@ const notANum        = Number.NaN
 
 <p>The following example shows the minimum and maximum integer values that can be represented as <code>Number</code> object. (More details on this are described in the ECMAScript standard, chapter <em><a href="https://tc39.github.io/ecma262/#sec-ecmascript-language-types-number-type">6.1.6 The Number Type</a>.</em>)</p>
 
-<pre class="brush: js">const biggestInt  = Number.MAX_SAFE_INTEGER  //  (<code>2<sup>53</sup> - 1</code>) =&gt;  9007199254740991
+<pre class="brush: js notranslate">const biggestInt  = Number.MAX_SAFE_INTEGER  //  (<code>2<sup>53</sup> - 1</code>) =&gt;  9007199254740991
 const smallestInt = Number.MIN_SAFE_INTEGER  // -(<code>2<sup>53</sup> - 1</code>) =&gt; -9007199254740991</pre>
 
 <p>When parsing data that has been serialized to JSON, integer values falling outside of this range can be expected to become corrupted when JSON parser coerces them to <code>Number</code> type.</p>
@@ -134,7 +141,7 @@ const smallestInt = Number.MIN_SAFE_INTEGER  // -(<code>2<sup>53</sup> - 1</code
 
 <p>The following example converts the {{jsxref("Date")}} object to a numerical value using <code>Number</code> as a function:</p>
 
-<pre class="brush: js">let d = new Date('December 17, 1995 03:24:00')
+<pre class="brush: js notranslate">let d = new Date('December 17, 1995 03:24:00')
 console.log(Number(d))
 </pre>
 
@@ -142,7 +149,7 @@ console.log(Number(d))
 
 <h3 id="Convert_numeric_strings_and_null_to_numbers">Convert numeric strings and null to numbers</h3>
 
-<pre class="brush: js" dir="rtl">Number('123')     // 123
+<pre class="brush: js notranslate" dir="rtl">Number('123')     // 123
 Number('123') === 123 /// true
 Number('12.3')    // 12.3
 Number('12.00')   // 12

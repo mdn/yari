@@ -9,6 +9,7 @@ tags:
   - CSS
   - CSS Property
   - Reference
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -20,7 +21,7 @@ tags:
 
 <p>The <code>text-overflow</code> property doesn't force an overflow to occur. To make text overflow its container you have to set other CSS properties: {{cssxref("overflow")}} and {{cssxref("white-space")}}. For example:</p>
 
-<pre class="brush: css no-line-numbers">overflow: hidden;
+<pre class="brush: css no-line-numbers notranslate">overflow: hidden;
 white-space: nowrap;</pre>
 
 <p>The <code>text-overflow</code> property only affects content that is overflowing a block container element in its <em>inline</em> progression direction (not text overflowing at the bottom of a box, for example).</p>
@@ -55,14 +56,14 @@ white-space: nowrap;</pre>
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}
+<pre class="syntaxbox notranslate">{{csssyntax}}
 </pre>
 
 <h2 id="Examples">Examples</h2>
 
 <h3 id="CSS">CSS</h3>
 
-<pre class="brush: css">p {
+<pre class="brush: css notranslate">p {
   width: 200px;
   border: 1px solid;
   padding: 2px 5px;
@@ -93,7 +94,7 @@ white-space: nowrap;</pre>
 
 <h3 id="HTML">HTML</h3>
 
-<pre class="brush: html">&lt;p class="overflow-visible"&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit.&lt;/p&gt;
+<pre class="brush: html notranslate">&lt;p class="overflow-visible"&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit.&lt;/p&gt;
 &lt;p class="overflow-clip"&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit.&lt;/p&gt;
 &lt;p class="overflow-ellipsis"&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit.&lt;/p&gt;
 &lt;p class="overflow-string"&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit.&lt;/p&gt;
@@ -146,11 +147,11 @@ white-space: nowrap;</pre>
    <td><code>text-overflow: ''</code></td>
    <td style="font-family: monospace;">12345</td>
    <td style="direction: ltr;">
-    <div style="">1234567890</div>
+    <div>1234567890</div>
    </td>
    <td style="font-family: monospace;">54321</td>
    <td style="direction: rtl;">
-    <div style="">1234567890</div>
+    <div>1234567890</div>
    </td>
   </tr>
   <tr>
@@ -168,11 +169,11 @@ white-space: nowrap;</pre>
    <td><code>text-overflow: '.'</code></td>
    <td style="font-family: monospace;">1234.</td>
    <td style="direction: ltr;">
-    <div style="">1234567890</div>
+    <div>1234567890</div>
    </td>
    <td style="font-family: monospace;">.4321</td>
    <td style="direction: rtl;">
-    <div style="">1234567890</div>
+    <div>1234567890</div>
    </td>
   </tr>
   <tr>
@@ -201,11 +202,11 @@ white-space: nowrap;</pre>
    <td><code>text-overflow: clip '.'</code></td>
    <td style="font-family: monospace;">1234.</td>
    <td style="direction: ltr;">
-    <div style="">1234567890</div>
+    <div>1234567890</div>
    </td>
    <td style="font-family: monospace;">6543.</td>
    <td style="direction: rtl;">
-    <div style="">1234567890</div>
+    <div>1234567890</div>
    </td>
   </tr>
   <tr>
@@ -234,44 +235,44 @@ white-space: nowrap;</pre>
    <td><code>text-overflow: ellipsis '.'</code></td>
    <td style="font-family: monospace;">…34.</td>
    <td style="direction: ltr;">
-    <div style="">1234567890</div>
+    <div>1234567890</div>
    </td>
    <td style="font-family: monospace;">…43.</td>
    <td style="direction: rtl;">
-    <div style="">1234567890</div>
+    <div>1234567890</div>
    </td>
   </tr>
   <tr>
    <td><code>text-overflow: ',' clip</code></td>
    <td style="font-family: monospace;">,3456</td>
    <td style="direction: ltr;">
-    <div style="">1234567890</div>
+    <div>1234567890</div>
    </td>
    <td style="font-family: monospace;">,4321</td>
    <td style="direction: rtl;">
-    <div style="">1234567890</div>
+    <div>1234567890</div>
    </td>
   </tr>
   <tr>
    <td><code>text-overflow: ',' ellipsis</code></td>
    <td style="font-family: monospace;">,34…</td>
    <td style="direction: ltr;">
-    <div style="">1234567890</div>
+    <div>1234567890</div>
    </td>
    <td style="font-family: monospace;">,43…</td>
    <td style="direction: rtl;">
-    <div style="">1234567890</div>
+    <div>1234567890</div>
    </td>
   </tr>
   <tr>
    <td><code>text-overflow: ',' '.'</code></td>
    <td style="font-family: monospace;">,34.</td>
    <td style="direction: ltr;">
-    <div style="">1234567890</div>
+    <div>1234567890</div>
    </td>
    <td style="font-family: monospace;">,43.</td>
    <td style="direction: rtl;">
-    <div style="">1234567890</div>
+    <div>1234567890</div>
    </td>
   </tr>
  </tbody>

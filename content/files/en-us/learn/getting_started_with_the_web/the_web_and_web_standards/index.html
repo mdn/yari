@@ -13,7 +13,7 @@ tags:
   - Web
   - Web Standards
 ---
-<p dir="ltr">{{learnsidebar}}{{draft}}</p>
+<p dir="ltr">{{learnsidebar}}</p>
 
 <p dir="ltr">This article provides some useful background on the Web — how it came about, what web standard technologies are, how they work together, why "web developer" is a great career to choose, and what kinds of best practices you'll learn about through the course.</p>
 
@@ -77,7 +77,7 @@ tags:
 
 <p>Hypertext Transfer Protocol, or <a href="/en-US/docs/Web/HTTP/Basics_of_HTTP">HTTP</a>, is a messaging protocol that allows web browsers to communicate with web servers (where web sites are stored). A typical conversation goes something like</p>
 
-<pre>"Hello web server. Can you give me the files I need to render bbc.co.uk"?
+<pre class="notranslate">"Hello web server. Can you give me the files I need to render bbc.co.uk"?
 
 "Sure thing web browser — here you go"
 
@@ -93,7 +93,7 @@ tags:
  <li>
   <p>Hypertext markup language, or <strong>HTML</strong>, is a markup language consisting of different elements you can wrap (mark up) content in to give it meaning (semantics) and structure. Simple HTML looks like this:</p>
 
-  <pre class="brush: html">&lt;h1&gt;This is a top-level heading&lt;/h1&gt;
+  <pre class="brush: html notranslate">&lt;h1&gt;This is a top-level heading&lt;/h1&gt;
 
 &lt;p&gt;This is a paragraph of text.&lt;/p&gt;
 
@@ -104,7 +104,7 @@ tags:
  <li>
   <p>Cascading Style Sheets (<strong>CSS</strong>) is a rule-based language used to apply styles to your HTML, for example setting text and background colors, adding borders, animating things, or laying out a page in a certain way. As a simple example, the following code would turn our HTML paragraph red:</p>
 
-  <pre class="brush: css">p  {
+  <pre class="brush: css notranslate">p  {
   color: red;
 }</pre>
 
@@ -113,7 +113,7 @@ tags:
  <li>
   <p><strong>JavaScript</strong> is the programming language we use to add interactivity to web sites, from dynamic style switching, to fetching updates from the server, right through to complex 3D graphics. The following simple JavaScript will store a reference to our paragraph in memory and change the text inside it:</p>
 
-  <pre class="brush: js">let pElem = document.querySelector('p');
+  <pre class="brush: js notranslate">let pElem = document.querySelector('p');
 pElem.textContent =  'We changed the text!';</pre>
 
   <p>In the house analogy, JavaScript is like the cooker, TV, Microwave, or hairdryer — the things that give your house useful functionality</p>

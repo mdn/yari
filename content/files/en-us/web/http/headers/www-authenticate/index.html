@@ -32,7 +32,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">WWW-Authenticate: &lt;type&gt; realm=&lt;realm&gt;
+<pre class="syntaxbox notranslate">WWW-Authenticate: &lt;type&gt; realm=&lt;realm&gt;[, charset="UTF-8"]
 </pre>
 
 <h2 id="Directives">Directives</h2>
@@ -50,7 +50,7 @@ tags:
 
 <p>Typically, a server response contains a <code>WWW-Authenticate</code> header that looks like these:</p>
 
-<pre>WWW-Authenticate: Basic
+<pre class="notranslate">WWW-Authenticate: Basic
 
 WWW-Authenticate: Basic realm="Access to the staging site", charset="UTF-8"
 </pre>

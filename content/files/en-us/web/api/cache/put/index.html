@@ -22,7 +22,7 @@ tags:
 
 <p>Often, you will just want to {{domxref("WindowOrWorkerGlobalScope.fetch","fetch()")}} one or more requests, then add the result straight to your cache. In such cases you are better off using {{domxref("Cache.add","Cache.add()")}}/{{domxref("Cache.addAll","Cache.addAll()")}}, as they are shorthand functions for one or more of these operations.</p>
 
-<pre class="brush: js">fetch(url).then(function(response) {
+<pre class="brush: js notranslate">fetch(url).then(function(response) {
   if (!response.ok) {
     throw new TypeError('Bad response status');
   }
@@ -41,7 +41,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox"><em>cache</em>.put(<em>request</em>, <em>response</em>).then(function() {
+<pre class="syntaxbox notranslate"><em>cache</em>.put(<em>request</em>, <em>response</em>).then(function() {
   // request/response pair has been added to the cache
 });
 </pre>
@@ -73,7 +73,7 @@ tags:
  <li>If this fails (e.g., because the network is down), return a fallback response.</li>
 </ol>
 
-<pre class="brush: js">var response;
+<pre class="brush: js notranslate">var response;
 var cachedResponse = caches.match(event.request).catch(function() {
   return fetch(event.request);
 }).then(function(r) {
@@ -96,7 +96,7 @@ var cachedResponse = caches.match(event.request).catch(function() {
    <th scope="col">Comment</th>
   </tr>
   <tr>
-   <td>{{SpecName('Service Workers', '#dom-cache-put', 'Cache: put')}}</td>
+   <td>{{SpecName('Service Workers', '#cache-put', 'Cache: put')}}</td>
    <td>{{Spec2('Service Workers')}}</td>
    <td>Initial definition.</td>
   </tr>

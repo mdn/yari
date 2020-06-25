@@ -3,7 +3,6 @@ const fs = require("fs");
 const path = require("path");
 const stream = require("stream");
 const { promisify } = require("util");
-const zlib = require("zlib");
 
 const chalk = require("chalk");
 const mysql = require("mysql");
@@ -818,16 +817,14 @@ async function saveAllWikiHistory(allHistory, root) {
 
   for (const [locale, history] of allHistory) {
     const localeFolder = path.join(root, locale);
-    const filePath = path.join(localeFolder, "_wikihistory.json.gz");
-
-    // fs.writeFileSync(filePath, JSON.stringify(mapToObject(history), null, 2));
+    const filePath = path.join(localeFolder, "_wikihistory.json");
     const obj = Object.create(null);
     const keys = Array.from(history.keys());
     keys.sort();
     for (const key of keys) {
       obj[key] = history.get(key);
     }
-    fs.writeFileSync(filePath, zlib.gzipSync(JSON.stringify(obj, null, 2)));
+    fs.writeFileSync(filePath, JSON.stringify(obj, null, 2));
   }
 }
 

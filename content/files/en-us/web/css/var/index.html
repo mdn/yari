@@ -30,7 +30,7 @@ tags:
 
 <p>The first argument to the function is the name of the custom property to be substituted. An optional second argument to the function serves as a fallback value. If the custom property referenced by the first argument is invalid, the function uses the second value.</p>
 
-<pre class="syntaxbox">{{csssyntax}}
+<pre class="syntaxbox notranslate">{{csssyntax}}
 </pre>
 
 <div class="note">
@@ -48,7 +48,7 @@ tags:
 
 <h2 id="Examples">Examples</h2>
 
-<pre class="brush: css">:root {
+<pre class="brush: css notranslate">:root {
   --main-bg-color: pink;
 }
 
@@ -57,7 +57,7 @@ body {
 }
 </pre>
 
-<pre class="brush: css">/* Fallback */
+<pre class="brush: css notranslate">/* Fallback */
 /* In the component’s style: */
 .component .header {
   color: var(--header-color, blue); /* header-color isn’t set, and so remains blue, the fallback value */
