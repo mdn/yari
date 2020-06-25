@@ -37,7 +37,7 @@ function saveHTMLFile(filePath, rawHtml, { slug, title, summary, tags }) {
     title,
     slug,
     summary,
-    tags
+    tags,
   })}---\n${rawHtml.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }

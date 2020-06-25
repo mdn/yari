@@ -61,11 +61,10 @@ export function DocumentForm({
 
   const didSlugChange = Boolean(doc && doc.metadata.slug !== slug);
 
-  const willAutosave = canAutosave && !didSlugChange
+  const willAutosave = canAutosave && !didSlugChange;
 
   // In auto-save mode inputs should still be changeable during saving
   const disableInputs = !willAutosave && isSaving;
-
 
   const invalidSlug = slug.endsWith("/");
 
