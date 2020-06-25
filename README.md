@@ -6,7 +6,7 @@
 
 ## Quickstart
 
-These steps should get you started, locally, straight away:
+To run Yari locally, you'll first need to install [git](https://git-scm.com/), [Node.js](https://nodejs.org) (>= 12.0.0) and [Yarn 1](https://classic.yarnpkg.com/en/docs/install). After that, run these commands in your bash:
 
     git clone https://github.com/mdn/yari.git
     cd yari
@@ -14,11 +14,8 @@ These steps should get you started, locally, straight away:
     yarn start
     open http://localhost:3000
 
-To really understand how it starts and how to break down the various
-tools, open `Procfile` or the `package.json`. Or, read on...
-
 If you prefer, you can fork the repo first and do the `git clone` with
-_your_ fork instead of the `mdn` one.
+*your* fork instead of the `mdn` one.
 
 ### How to stay up-to-date
 
@@ -62,7 +59,7 @@ The `yarn start` command encapsulates the front-end dev server
 (on `localhost:3000`) and the `server` (on `localhost:5000`)
 as well as the `watcher`. The `watcher` triggers a build when a
 file changes (or is added!).
-The `yarn start` command also first runs a command that gathers up _all_
+The `yarn start` command also first runs a command that gathers up *all*
 the document URLs and their titles (plus some other metadata). This can
 take a while but it's cached to disk and is automatically invalidated if
 any of the source code changes.
@@ -201,21 +198,21 @@ is case-insensitive.
 
 Every `index.html` becomes three files:
 
-- `index.html` fully formed and complete HTML file
-- `index.json` the React needed state to build the page in the client
-- `index.hash` a short hash digest of the cache key used to build this page
+* `index.html` fully formed and complete HTML file
+* `index.json` the React needed state to build the page in the client
+* `index.hash` a short hash digest of the cache key used to build this page
 
 ### Caching
 
 When building, we attempt to use a disk-based cache. It computes a hash
 for every document by combining...
 
-- The content of the `index.html` file.
-- The combined source code of all `.js`, `.tsx`, and also all `package.json`
+* The content of the `index.html` file.
+* The combined source code of all `.js`, `.tsx`, and also all `package.json`
   and `yarn.lock`.
 
-If you run `node content build -l en-us -f web/css` _twice_ you'll find it
-runs _much_ faster the second time. But any little change to any source
+If you run `node content build -l en-us -f web/css` *twice* you'll find it
+runs *much* faster the second time. But any little change to any source
 code file should invalidate the cache.
 
 ### Flaw checks
@@ -226,7 +223,7 @@ severe but they should never block a full build.
 
 More information about how to set flaws can be found in `docs/envvars.md`.
 
-Essentially, the default is to _warn_ about any flaw and you can see
+Essentially, the default is to *warn* about any flaw and you can see
 those flaws when using `http://localhost:3000`. But for completed builds,
 all flaws are ignored. This makes the build faster and there's also
 no good place to display the flaws in a production-grade build.
