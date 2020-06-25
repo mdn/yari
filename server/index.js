@@ -6,7 +6,7 @@ const express = require("express");
 const openEditor = require("open-editor");
 
 const { slugToFoldername } = require("content/scripts/utils");
-const { FLAW_LEVELS } = require("content/scripts/constants.js");
+const { FLAW_LEVELS } = require("content/scripts/constants");
 
 const { STATIC_ROOT } = require("./constants");
 const documentRouter = require("./document");
