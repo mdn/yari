@@ -759,7 +759,6 @@ async function processDocument(
     isArchive ? doc.rendered_html : doc.html,
     meta,
     isArchive ? wikiHistory : null,
-    null,
     isArchive ? doc.html : null
   );
 }
