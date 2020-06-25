@@ -8,6 +8,7 @@ tags:
   - CSS Property
   - Reference
   - display
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -21,7 +22,7 @@ tags:
 
 <p>The CSS <code>display</code> property is specified using keyword values. Keyword values are grouped into six value categories:</p>
 
-<pre class="brush: css">.container {
+<pre class="brush: css notranslate">.container {
   display:  [ &lt;display-outside&gt; || &lt;display-inside&gt; ] | &lt;display-listitem&gt; | &lt;display-internal&gt; | &lt;display-box&gt; | &lt;display-legacy&gt; ;
 }
 </pre>
@@ -86,13 +87,13 @@ tags:
 
 <p>The <code>&lt;display-legacy&gt;</code> methods allow the same results with single keyword values, and should be favoured by developers until the two keyword values are better supported. For example, using two values you might specify an inline flex container as follows:</p>
 
-<pre class="brush: css">.container {
+<pre class="brush: css notranslate">.container {
   display: inline flex;
 }</pre>
 
 <p>This can currently be specified using a single value.</p>
 
-<pre class="brush: css">.container {
+<pre class="brush: css notranslate">.container {
   display: inline-flex;
 }</pre>
 
@@ -100,7 +101,7 @@ tags:
 
 <h3 id="Global">Global</h3>
 
-<pre class="brush:css">/* Global values */
+<pre class="brush:css notranslate">/* Global values */
 display: inherit;
 display: initial;
 display: unset;

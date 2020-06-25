@@ -10,22 +10,23 @@ tags:
   - CSS Fonts
   - CSS Property
   - Reference
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
 <p>The <strong><code>font-variation-settings</code></strong> CSS property provides low-level control over <a href="/en-US/docs/Web/CSS/CSS_Fonts/Variable_Fonts_Guide">variable font</a> characteristics, by specifying the four letter axis names of the characteristics you want to vary, along with their values.</p>
 
+<div class="note"><strong>Note</strong>: This property is a low-level mechanism designed to set variable font features where no other way to enable or access those features exist. You should only use it when no basic properties exist to set those features (e.g. {{cssxref("font-weight")}}, {{cssxref("font-style")}}).</div>
+
 <div>{{EmbedInteractiveExample("pages/css/font-variation-settings.html")}}</div>
 
 <p class="hidden">The source for this interactive example is stored in a GitHub repository. If you'd like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</p>
 
-<div class="note"><strong>Note</strong>: This property is a low-level mechanism designed to set variable font features where no other way to enable or access those features exist. You should only use it when no basic properties exist to set those features (e.g. {{cssxref("font-weight")}}, {{cssxref("font-style")}}).</div>
-
-<div class="note"><strong>Note</strong>: font characteristics set using <code>font-variation-settings</code> will always override those set using the corresponding basic font properties, e.g. <code>font-weight</code>, no matter where they appear in the cascade. <span class="zhc-markdown-block zhc-markdown-block--html">In some browsers, this is currently only true when the <code>@font-face</code> declaration includes a <code>font-weight</code> range.</span></div>
+<div class="note"><strong>Note</strong>: Font characteristics set using <code>font-variation-settings</code> will always override those set using the corresponding basic font properties, e.g. <code>font-weight</code>, no matter where they appear in the cascade. <span class="zhc-markdown-block zhc-markdown-block--html">In some browsers, this is currently only true when the <code>@font-face</code> declaration includes a <code>font-weight</code> range.</span></div>
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="brush:css no-line-numbers">/* Use the default settings */
+<pre class="brush:css no-line-numbers notranslate">/* Use the default settings */
 font-variation-settings: normal;
 
 /* Set values for variable font axis names */
@@ -50,7 +51,7 @@ font-variation-settings: unset;
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Registered_and_custom_axes">Registered and custom axes</h2>
 

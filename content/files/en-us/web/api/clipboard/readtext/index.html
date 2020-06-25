@@ -22,11 +22,11 @@ tags:
 ---
 <div>{{APIRef("Clipboard API")}}</div>
 
-<p><span class="seoSummary">The <strong>{{domxref("Clipboard")}}</strong> interface's <strong><code>readText()</code></strong> method returns a {{jsxref("Promise")}} which resolves with a copy of the textual contents of the system clipboard.</span></p>
+<p><span class="seoSummary">The <strong>{{domxref("Clipboard")}}</strong> interface's <strong><code>readText()</code></strong> method returns a {{jsxref("Promise")}} which resolves with a copy of the textual contents of the system clipboard.</span>. The <code>"clipboard-read"</code> permission of the <a href="/en-US/docs/Web/API/Permissions_API">Permissions API</a> must be granted before you can read data from the clipboard.</p>
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">var <em>promise</em> = navigator.clipboard.readText()</pre>
+<pre class="syntaxbox notranslate">var <em>promise</em> = navigator.clipboard.readText()</pre>
 
 <h3 id="Parameters">Parameters</h3>
 
@@ -42,7 +42,7 @@ tags:
 
 <p>This example retrieves the textual contents of the clipboard and inserts the returned text into an element's contents.</p>
 
-<pre class="brush: js">navigator.clipboard.readText().then(
+<pre class="brush: js notranslate">navigator.clipboard.readText().then(
   clipText =&gt; document.getElementById("outbox").innerText = clipText);</pre>
 
 <h2 id="Specifications">Specifications</h2>

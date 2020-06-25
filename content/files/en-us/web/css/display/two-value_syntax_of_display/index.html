@@ -21,7 +21,7 @@ tags:
 
 <p>One of the first things we learn about CSS is that some elements are block-level and some are inline-level. For example, an <code>&lt;h1&gt;</code> or a <code>&lt;p&gt;</code> are block-level by default, and a <code>&lt;span&gt;</code> is inline-level. Using the {{cssxref("display")}} property we can switch between block and inline. For example to make a heading inline we would use the following CSS:</p>
 
-<pre class="brush: css"><code>h1 {
+<pre class="brush: css notranslate"><code>h1 {
   display: inline;
 } </code>
 </pre>
@@ -32,7 +32,7 @@ tags:
 
 <p>As an example, when we use <code>display: flex</code> we create a block-level container, with flex children. The children are described as participating in a flex formatting context. You can see this if you take a <code>&lt;span&gt;</code> — normally an inline-level element — and apply <code>display: flex</code> to it. The <code>&lt;span&gt;</code> becomes a block-level element. It behaves as block-level things do in relationship to other boxes in the layout. It’s as if you had applied <code>display: block</code> to the span, however we also get the changed behavior of the children.</p>
 
-<p>The live example below has a <code>&lt;span&gt;</code> with <code>display: flex</code> applied. It has become a block-level box taking up all available space in the inline direction. You can now use <code>justify-content: space-between;</code> to put this space between the two flex items. Try removing that line and see how the <code>&lt;span&gt;</code> returns to being an inline-level box.</p>
+<p>The live example below has a <code>&lt;span&gt;</code> with <code>display: flex</code> applied. It has become a block-level box taking up all available space in the inline direction. You can now use <code>justify-content: space-between;</code> to put this space between the two flex items.</p>
 
 <p>{{EmbedGHLiveSample("css-examples/display/two-value/span-flex.html", '100%', 440)}}</p>
 

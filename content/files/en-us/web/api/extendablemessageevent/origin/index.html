@@ -7,7 +7,7 @@ summary: >-
   origin
 
   read-only property of the ExtendableMessageEvent interface returns the origin
-  of the ServiceWorkerClient that sent the message.
+  of the Client that sent the message.
 tags:
   - API
   - Experimental
@@ -19,21 +19,21 @@ tags:
 ---
 <p>{{APIRef("Service Workers API")}}</p>
 
-<p>The <font face="Consolas, Liberation Mono, Courier, monospace"><strong>origin</strong></font> read-only property of the {{domxref("ExtendableMessageEvent")}} interface returns the origin of the {{domxref("ServiceWorkerClient")}} that sent the message.</p>
+<p>The <font face="Consolas, Liberation Mono, Courier, monospace"><strong>origin</strong></font> read-only property of the {{domxref("ExtendableMessageEvent")}} interface returns the origin of the {{domxref("Client")}} that sent the message.</p>
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">var myOrigin = ExtendableMessageEventInstance.origin;</pre>
+<pre class="syntaxbox notranslate">var <em>myOrigin</em> = <em>extendableMessageEvent</em>.origin;</pre>
 
 <h3 id="Value">Value</h3>
 
-<p>A {{domxref("DOMString")}}.</p>
+<p>A {{domxref("USVString")}}.</p>
 
 <h2 id="Examples">Examples</h2>
 
 <p>When the following code is used inside a service worker to respond to a push messages by sending the data received via {{domxref("PushMessageData")}} to the main context via a <a href="/en-US/docs/Web/API/Channel_Messaging_API">channel message</a>, the event object of <code>onmessage</code> will be a <code>ExtendableMessageEvent</code>.</p>
 
-<pre class="brush: js">var port;
+<pre class="brush: js notranslate">var port;
 
 self.addEventListener('push', function(e) {
   var obj = e.data.json();
@@ -79,7 +79,7 @@ self.onmessage = function(e) {
 <h2 id="See_also">See also</h2>
 
 <ul>
- <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorker_API/Using_Service_Workers">Using Service Workers</a></li>
+ <li><a href="/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers">Using Service Workers</a></li>
  <li><a class="external external-icon" href="https://github.com/mdn/sw-test">Service workers basic code example</a></li>
  <li><a class="external external-icon" href="https://jakearchibald.github.io/isserviceworkerready/">Is ServiceWorker ready?</a></li>
  <li><a href="/en-US/docs/Web/API/Channel_Messaging_API">Channel Messaging</a></li>

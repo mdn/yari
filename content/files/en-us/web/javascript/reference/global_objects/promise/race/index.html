@@ -22,13 +22,13 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">Promise.race(<var>iterable</var>);</pre>
+<pre class="syntaxbox notranslate">Promise.race(<var>iterable</var>);</pre>
 
 <h3 id="Parameters">Parameters</h3>
 
 <dl>
  <dt><code>iterable</code></dt>
- <dd>An iterable object, such as an {{jsxref("Array")}}. See <a href="/en-US/docs/Web/JavaScript/Guide/iterable">iterable</a>.</dd>
+ <dd>An iterable object, such as an {{jsxref("Array")}}. See <a href="/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterable_protocol">iterable</a>.</dd>
 </dl>
 
 <h3 id="Return_value">Return value</h3>
@@ -49,7 +49,7 @@ tags:
 
 <p>This following example demonstrates the asynchronicity of <code>Promise.race</code>:</p>
 
-<pre class="brush: js">// we are passing as argument an array of promises that are already resolved,
+<pre class="brush: js notranslate">// we are passing as argument an array of promises that are already resolved,
 // to trigger Promise.race as soon as possible
 var resolvedPromisesArray = [Promise.resolve(33), Promise.resolve(44)];
 
@@ -70,7 +70,7 @@ setTimeout(function(){
 
 <p>An empty iterable causes the returned promise to be forever pending:</p>
 
-<pre class="brush: js">var foreverPendingPromise = Promise.race([]);
+<pre class="brush: js notranslate">var foreverPendingPromise = Promise.race([]);
 console.log(foreverPendingPromise);
 setTimeout(function(){
     console.log('the stack is now empty');
@@ -85,11 +85,11 @@ setTimeout(function(){
 
 <p>If the iterable contains one or more non-promise value and/or an already settled promise, then <code>Promise.race</code> will resolve to the first of these values found in the array:</p>
 
-<pre class="brush: js">var foreverPendingPromise = Promise.race([]);
-var alreadyFulfilledProm = Promise.resolve(666);
+<pre class="brush: js notranslate">var foreverPendingPromise = Promise.race([]);
+var alreadyFulfilledProm = Promise.resolve(100);
 
 var arr = [foreverPendingPromise, alreadyFulfilledProm, "non-Promise value"];
-var arr2 = [foreverPendingPromise, "non-Promise value", Promise.resolve(666)];
+var arr2 = [foreverPendingPromise, "non-Promise value", Promise.resolve(100)];
 var p = Promise.race(arr);
 var p2 = Promise.race(arr2);
 
@@ -105,13 +105,13 @@ setTimeout(function(){
 // Promise { &lt;state&gt;: "pending" }
 // Promise { &lt;state&gt;: "pending" }
 // the stack is now empty
-// Promise { &lt;state&gt;: "fulfilled", &lt;value&gt;: 666 }
+// Promise { &lt;state&gt;: "fulfilled", &lt;value&gt;: 100 }
 // Promise { &lt;state&gt;: "fulfilled", &lt;value&gt;: "non-Promise value" }
 </pre>
 
 <h3 id="Using_Promise.race_–_examples_with_setTimeout">Using Promise.race – examples with setTimeout</h3>
 
-<pre class="brush: js">var p1 = new Promise(function(resolve, reject) {
+<pre class="brush: js notranslate">var p1 = new Promise(function(resolve, reject) {
     setTimeout(() =&gt; resolve('one'), 500);
 });
 var p2 = new Promise(function(resolve, reject) {

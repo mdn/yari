@@ -28,13 +28,13 @@ tags:
 
 <ul>
  <li>The Promise returned from <code>fetch()</code> <strong>won’t reject on HTTP error status</strong> even if the response is an HTTP 404 or 500. Instead, it will resolve normally (with <code>ok</code> status set to false), and it will only reject on network failure or if anything prevented the request from completing.</li>
- <li><code>fetch()</code> <strong>won't receive cross-site cookies; </strong>you can’t establish a cross site session using fetch. <code><a href="/en-US/docs/Web/HTTP/Headers/Set-Cookie">Set-Cookie</a></code> headers from other sites are silently ignored.</li>
+ <li><code>fetch()</code> <strong><s>won't</s> can receive cross-site cookies; </strong>you <s>can’t</s> can establish a cross site session using fetch. <s><code><a href="/en-US/docs/Web/HTTP/Headers/Set-Cookie">Set-Cookie</a></code> headers from other sites are silently ignored.</s></li>
  <li><code>fetch</code> <strong>won’t send cookies</strong>, unless you set the <em>credentials</em> <a href="https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters">init option</a>. (Since <a href="https://github.com/whatwg/fetch/pull/585" rel="nofollow noopener">Aug 25, 2017</a>. The spec changed the default credentials policy to <code>same-origin</code>. Firefox changed since 61.0b13.)</li>
 </ul>
 
 <p>A basic fetch request is really simple to set up. Have a look at the following code:</p>
 
-<pre class="brush: js">fetch('http://example.com/movies.json')
+<pre class="brush: js notranslate">fetch('http://example.com/movies.json')
   .then(response =&gt; response.json())
   .then(data =&gt; console.log(data));
 </pre>
@@ -58,7 +58,7 @@ tags:
 <ul>
 </ul>
 
-<pre class="brush: js">// Example POST method implementation:
+<pre class="brush: js notranslate">// Example POST method implementation:
 async function postData(url = '', data = {}) {
   // Default options are marked with *
   const response = await fetch(url, {
@@ -96,14 +96,14 @@ postData('https://example.com/answer', { answer: 42 })
 
 <p>To cause browsers to send a request with credentials included, even for a cross-origin call, add <code>credentials: 'include'</code> to the <code>init</code> object you pass to the <code>fetch()</code> method.</p>
 
-<pre class="brush: js">fetch('https://example.com', {
+<pre class="brush: js notranslate">fetch('https://example.com', {
   credentials: 'include'
 });
 </pre>
 
 <p>If you only want to send credentials if the request URL is on the same origin as the calling script, add <code>credentials: 'same-origin'</code>.</p>
 
-<pre class="brush: js">// The calling script is on the origin 'https://example.com'
+<pre class="brush: js notranslate">// The calling script is on the origin 'https://example.com'
 
 fetch('https://example.com', {
   credentials: 'same-origin'
@@ -112,7 +112,7 @@ fetch('https://example.com', {
 
 <p>To instead ensure browsers don’t include credentials in the request, use <code>credentials: 'omit'</code>.</p>
 
-<pre class="brush: js">fetch('https://example.com', {
+<pre class="brush: js notranslate">fetch('https://example.com', {
   credentials: 'omit'
 })</pre>
 
@@ -120,7 +120,7 @@ fetch('https://example.com', {
 
 <p>Use {{domxref("GlobalFetch.fetch","fetch()")}} to POST JSON-encoded data.</p>
 
-<pre class="brush: js">const data = { username: 'example' };
+<pre class="brush: js notranslate">const data = { username: 'example' };
 
 fetch('https://example.com/profile', {
   method: 'POST', // or 'PUT'
@@ -142,7 +142,7 @@ fetch('https://example.com/profile', {
 
 <p>Files can be uploaded using an HTML <code>&lt;input type="file" /&gt;</code> input element, {{domxref("FormData.FormData","FormData()")}} and {{domxref("WindowOrWorkerGlobalScope/fetch","fetch()")}}.</p>
 
-<pre class="brush: js">const formData = new FormData();
+<pre class="brush: js notranslate">const formData = new FormData();
 const fileField = document.querySelector('input[type="file"]');
 
 formData.append('username', 'abc123');
@@ -165,7 +165,7 @@ fetch('https://example.com/profile/avatar', {
 
 <p>Files can be uploaded using an HTML <code>&lt;input type="file" multiple /&gt;</code> input element, {{domxref("FormData.FormData","FormData()")}} and {{domxref("GlobalFetch.fetch","fetch()")}}.</p>
 
-<pre class="brush: js">const formData = new FormData();
+<pre class="brush: js notranslate">const formData = new FormData();
 const photos = document.querySelector('input[type="file"][multiple]');
 
 formData.append('title', 'My Vegas Vacation');
@@ -190,7 +190,7 @@ fetch('https://example.com/posts', {
 
 <p>The chunks that are read from a response are not broken neatly at line boundaries and are Uint8Arrays, not strings. If you want to fetch a text file and process it line by line, it is up to you to handle these complications. The following example shows one way to do this by creating a line iterator (for simplicity, it assumes the text is UTF-8, and doesn't handle fetch errors).</p>
 
-<pre class="brush: js">async function* makeTextFileLineIterator(fileURL) {
+<pre class="brush: js notranslate">async function* makeTextFileLineIterator(fileURL) {
   const utf8Decoder = new TextDecoder('utf-8');
   const response = await fetch(fileURL);
   const reader = response.body.getReader();
@@ -235,7 +235,7 @@ run();
 
 <p>A {{domxref("GlobalFetch.fetch","fetch()")}} promise will reject with a {{jsxref("TypeError")}} when a network error is encountered or CORS is misconfigured on the server-side, although this usually means permission issues or similar — a 404 does not constitute a network error, for example. An accurate check for a successful <code>fetch()</code> would include checking that the promise resolved, then checking that the {{domxref("Response.ok")}} property has a value of true. The code would look something like this:</p>
 
-<pre class="brush: js">fetch('flowers.jpg')
+<pre class="brush: js notranslate">fetch('flowers.jpg')
   .then(response =&gt; {
     if (!response.ok) {
       throw new Error('Network response was not ok');
@@ -254,7 +254,7 @@ run();
 
 <p>Instead of passing a path to the resource you want to request into the <code>fetch()</code> call, you can create a request object using the {{domxref("Request.Request","Request()")}} constructor, and pass that in as a <code>fetch()</code> method argument:</p>
 
-<pre class="brush: js">const myHeaders = new Headers();
+<pre class="brush: js notranslate">const myHeaders = new Headers();
 
 const myRequest = new Request('flowers.jpg', {
   method: 'GET',
@@ -272,7 +272,7 @@ fetch(myRequest)
 
 <p><code>Request()</code> accepts exactly the same parameters as the <code>fetch()</code> method. You can even pass in an existing request object to create a copy of it:</p>
 
-<pre class="brush: js">const anotherRequest = new Request(myRequest, myInit);
+<pre class="brush: js notranslate">const anotherRequest = new Request(myRequest, myInit);
 </pre>
 
 <p>This is pretty useful, as request and response bodies are one use only. Making a copy like this allows you to make use of the request/response again while varying the <code>init</code> options if desired. The copy must be made before the body is read, and reading the body in the copy will also mark it as read in the original request.</p>
@@ -285,7 +285,7 @@ fetch(myRequest)
 
 <p>The {{domxref("Headers")}} interface allows you to create your own headers object via the {{domxref("Headers.Headers","Headers()")}} constructor. A headers object is a simple multi-map of names to values:</p>
 
-<pre class="brush: js">const content = 'Hello World';
+<pre class="brush: js notranslate">const content = 'Hello World';
 const myHeaders = new Headers();
 myHeaders.append('Content-Type', 'text/plain');
 myHeaders.append('Content-Length', content.length.toString());
@@ -294,7 +294,7 @@ myHeaders.append('X-Custom-Header', 'ProcessThisImmediately');
 
 <p>The same can be achieved by passing an array of arrays or an object literal to the constructor:</p>
 
-<pre class="brush: js">const myHeaders = new Headers({
+<pre class="brush: js notranslate">const myHeaders = new Headers({
   'Content-Type': 'text/plain',
   'Content-Length': content.length.toString(),
   'X-Custom-Header': 'ProcessThisImmediately'
@@ -303,7 +303,7 @@ myHeaders.append('X-Custom-Header', 'ProcessThisImmediately');
 
 <p>The contents can be queried and retrieved:</p>
 
-<pre class="brush: js">console.log(myHeaders.has('Content-Type')); // true
+<pre class="brush: js notranslate">console.log(myHeaders.has('Content-Type')); // true
 console.log(myHeaders.has('Set-Cookie')); // false
 myHeaders.set('Content-Type', 'text/html');
 myHeaders.append('X-Custom-Header', 'AnotherValue');
@@ -319,7 +319,7 @@ console.log(myHeaders.get('X-Custom-Header')); // [ ]
 
 <p>All of the Headers methods throw a <code>TypeError</code> if a header name is used that is not a valid HTTP Header name. The mutation operations will throw a <code>TypeError</code> if there is an immutable guard (see below). Otherwise, they fail silently. For example:</p>
 
-<pre class="brush: js">const myResponse = Response.error();
+<pre class="brush: js notranslate">const myResponse = Response.error();
 try {
   myResponse.headers.set('Origin', 'http://mybank.com');
 } catch (e) {
@@ -329,7 +329,7 @@ try {
 
 <p>A good use case for headers is checking whether the content type is correct before you process it further. For example:</p>
 
-<pre class="brush: js">fetch(myRequest)
+<pre class="brush: js notranslate">fetch(myRequest)
   .then(response =&gt; {
      const contentType = response.headers.get('content-type');
      if (!contentType || !contentType.includes('application/json')) {
@@ -375,7 +375,7 @@ try {
 
 <p>They can also be created programmatically via JavaScript, but this is only really useful in {{domxref("ServiceWorker_API", "ServiceWorkers")}}, when you are providing a custom response to a received request using a {{domxref("FetchEvent.respondWith","respondWith()")}} method:</p>
 
-<pre class="brush: js">const myBody = new Blob();
+<pre class="brush: js notranslate">const myBody = new Blob();
 
 addEventListener('fetch', function(event) {
   // ServiceWorker intercepting a fetch
@@ -423,7 +423,7 @@ addEventListener('fetch', function(event) {
 
 <p>Request bodies can be set by passing body parameters:</p>
 
-<pre class="brush: js">const form = new FormData(document.getElementById('login-form'));
+<pre class="brush: js notranslate">const form = new FormData(document.getElementById('login-form'));
 fetch('/login', {
   method: 'POST',
   body: form
@@ -436,7 +436,7 @@ fetch('/login', {
 
 <p>Fetch API support can be detected by checking for the existence of {{domxref("Headers")}}, {{domxref("Request")}}, {{domxref("Response")}} or {{domxref("GlobalFetch.fetch","fetch()")}} on the {{domxref("Window")}} or {{domxref("Worker")}} scope. For example:</p>
 
-<pre class="brush: js">if (window.fetch) {
+<pre class="brush: js notranslate">if (window.fetch) {
   // run my fetch request here
 } else {
   // do something with XMLHttpRequest?

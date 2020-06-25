@@ -522,11 +522,11 @@ tags:
 
 <p>For {{SVGElement('svg')}}, <code>height</code> defines the vertical length for the rendering area of the SVG viewport.</p>
 
-<p> </p>
+
 
 <p class="note"><strong>Note:</strong> In an HTML document if both the {{SVGAttr('viewBox')}} and <code>height</code> attributes are omitted, <a href="https://svgwg.org/specs/integration/#svg-css-sizing">the svg element will be rendered with a height of <code>150px</code></a></p>
 
-<p> </p>
+
 
 <table class="standard-table">
  <tbody>
@@ -567,6 +567,10 @@ tags:
   </tr>
  </tbody>
 </table>
+
+<div class="note">
+<p><strong>Note:</strong>  <code>height</code>has no effect on <code>use</code> elements, unless the element referenced has a <a href="/en-US/docs/Web/SVG/Attribute/viewBox">viewbox</a> - i.e. they only have an effect when <code>use</code> refers to a <code>svg</code> or <code>symbol</code> element.</p>
+</div>
 
 <p class="note"><strong>Note:</strong> Starting with SVG2, <code>height</code> is a <em>Geometry Property</em> meaning this attribute can also be used as a CSS property for used elements.</p>
 

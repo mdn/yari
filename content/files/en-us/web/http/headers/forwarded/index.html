@@ -14,7 +14,7 @@ tags:
 ---
 <div>{{HTTPSidebar}}</div>
 
-<p>The <strong><code>Forwarded</code></strong> header contains information from the client-facing side of proxy servers that is altered or lost when a proxy is involved in the path of the request.</p>
+<p>The <strong><code>Forwarded</code></strong> header contains information from the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Proxy_servers_and_tunneling">reverse proxy servers</a> that is altered or lost when a proxy is involved in the path of the request.</p>
 
 <p>The alternative and de-facto standard versions of this header are the {{HTTPHeader("X-Forwarded-For")}}, {{HTTPHeader("X-Forwarded-Host")}} and {{HTTPHeader("X-Forwarded-Proto")}} headers.</p>
 
@@ -35,7 +35,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">Forwarded: by=&lt;identifier&gt;;for=&lt;identifier&gt;;host=&lt;host&gt;;proto=&lt;http|https&gt;
+<pre class="syntaxbox notranslate">Forwarded: by=&lt;identifier&gt;;for=&lt;identifier&gt;;host=&lt;host&gt;;proto=&lt;http|https&gt;
 </pre>
 
 <h2 id="Directives">Directives</h2>
@@ -65,7 +65,7 @@ tags:
 
 <h3 id="Using_the_Forwarded_header">Using the <code>Forwarded</code> header</h3>
 
-<pre>Forwarded: for="_mdn"
+<pre class="notranslate">Forwarded: for="_mdn"
 
 # case insensitive
 Forwarded: For="[2001:db8:cafe::17]:4711"
@@ -81,7 +81,7 @@ Forwarded: for=192.0.2.43, for=198.51.100.17
 
 <p>If your application, server, or proxy supports the standardized <code>Forwarded</code> header, the {{HTTPHeader("X-Forwarded-For")}} header can be replaced. Note that IPv6 address are quoted and enclosed in square brackets in <code>Forwarded</code>.</p>
 
-<pre>X-Forwarded-For: 123.34.567.89
+<pre class="notranslate">X-Forwarded-For: 123.34.567.89
 Forwarded: for=123.34.567.89
 
 X-Forwarded-For: 192.0.2.43, "[2001:db8:cafe::17]"

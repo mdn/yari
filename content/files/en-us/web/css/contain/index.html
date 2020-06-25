@@ -17,12 +17,13 @@ tags:
   - Reference
   - Style
   - Web
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
 <p>The <strong><code>contain</code></strong> CSS property allows an author to indicate that an element and its contents are, as much as possible, <em>independent</em> of the rest of the document tree. This allows the browser to recalculate layout, style, paint, size, or any combination of them for a limited area of the DOM and not the entire page, leading to obvious performance benefits.</p>
 
-<pre class="brush: css no-line-numbers">/* Keyword values */
+<pre class="brush: css no-line-numbers notranslate">/* Keyword values */
 contain: none;
 contain: strict;
 contain: content;
@@ -74,7 +75,7 @@ contain: unset;
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}
+<pre class="syntaxbox notranslate">{{csssyntax}}
 </pre>
 
 <h2 id="Examples">Examples</h2>
@@ -83,7 +84,7 @@ contain: unset;
 
 <p>The markup below consists of a number of articles, each with content:</p>
 
-<pre class="brush: html">&lt;h1&gt;My blog&lt;/h1&gt;
+<pre class="brush: html notranslate">&lt;h1&gt;My blog&lt;/h1&gt;
 &lt;article&gt;
   &lt;h2&gt;Heading of a nice article&lt;/h2&gt;
   &lt;p&gt;Content here.&lt;/p&gt;
@@ -96,7 +97,7 @@ contain: unset;
 
 <p>Each <code>&lt;article&gt;</code> and <code>&lt;img&gt;</code> is given a border, and the images are floated:</p>
 
-<pre class="brush: css">img {
+<pre class="brush: css notranslate">img {
   float: left;
   border: 3px solid black;
 }
@@ -111,7 +112,7 @@ article {
 
 <p>If we were to insert another image at the bottom of the first article, a large portion of the DOM tree may be re-laid out or repainted, and this would also interfere with the layout of the second article:</p>
 
-<pre class="brush: html">&lt;h1&gt;My blog&lt;/h1&gt;
+<pre class="brush: html notranslate">&lt;h1&gt;My blog&lt;/h1&gt;
 &lt;article&gt;
   &lt;h2&gt;Heading of a nice article&lt;/h2&gt;
   &lt;p&gt;Content here.&lt;/p&gt;
@@ -124,7 +125,7 @@ article {
 &lt;/article&gt;</pre>
 
 <div class="hidden">
-<pre class="brush: css">img {
+<pre class="brush: css notranslate">img {
   float: left;
   border: 3px solid black;
 }
@@ -143,7 +144,7 @@ article {
 <p>If we give each <code>article</code> the <code>contain</code> property with a value of <code>content</code>, when new elements are inserted the browser understands it only needs to recalculate the containing element's subtree, and not anything outside it:</p>
 
 <div class="hidden">
-<pre class="brush: html">&lt;h1&gt;My blog&lt;/h1&gt;
+<pre class="brush: html notranslate">&lt;h1&gt;My blog&lt;/h1&gt;
 &lt;article&gt;
   &lt;h2&gt;Heading of a nice article&lt;/h2&gt;
   &lt;p&gt;Content here.&lt;/p&gt;
@@ -156,7 +157,7 @@ article {
 &lt;/article&gt;</pre>
 </div>
 
-<pre class="brush: css">img {
+<pre class="brush: css notranslate">img {
   float: left;
   border: 3px solid black;
 }

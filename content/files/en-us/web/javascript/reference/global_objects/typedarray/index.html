@@ -27,37 +27,6 @@ tags:
 
 <p>When creating an instance of a <code><var>TypedArray</var></code> (e.g. <code>Int8Array</code>), an array buffer is created internally in memory or, if an <code>ArrayBuffer</code> object is given as constructor argument, then this is used instead.  The buffer address is saved as an internal property of the instance and all the methods of <code>%<var>TypedArray</var>%.prototype</code>, i.e. set value and get value etc., operate on that array buffer address.</p>
 
-<p>Starting with ECMAScript 2015, <code>TypedArray</code> constructors must be constructed with the {{jsxref("Operators/new", "new")}} operator. Calling a <code>TypedArray</code> constructor as a function without <code>new</code> will throw a {{jsxref("TypeError")}}.</p>
-
-<pre class="brush: js example-bad">var dv = Int8Array([1, 2, 3]);
-// TypeError: calling a builtin Int8Array constructor
-// without new is forbidden</pre>
-
-<pre class="brush: js example-good">var dv = new Int8Array([1, 2, 3]);</pre>
-
-<h3 id="Property_access">Property access</h3>
-
-<p>You can reference elements in the array using standard array index syntax (that is, using bracket notation). However, getting or setting indexed properties on typed arrays will not search in the prototype chain for this property, even when the indices are out of bound. Indexed properties will consult the {{jsxref("ArrayBuffer")}} and will never look at object properties. You can still use named properties, just like with all objects.</p>
-
-<pre class="brush: js">// Setting and getting using standard array syntax
-var int16 = new Int16Array(2);
-int16[0] = 42;
-console.log(int16[0]); // 42
-
-// Indexed properties on prototypes are not consulted (Fx 25)
-Int8Array.prototype[20] = 'foo';
-(new Int8Array(32))[20]; // 0
-// even when out of bound
-Int8Array.prototype[20] = 'foo';
-(new Int8Array(8))[20]; // undefined
-// or with negative integers
-Int8Array.prototype[-1] = 'foo';
-(new Int8Array(8))[-1]; // undefined
-
-// Named properties are allowed, though (Fx 30)
-Int8Array.prototype.foo = 'bar';
-(new Int8Array(32)).foo; // "bar"</pre>
-
 <h3 id="TypedArray_objects">TypedArray objects</h3>
 
 <table class="standard-table">
@@ -280,6 +249,41 @@ new <var>TypedArray</var>(<var>buffer</var> [, <var>byteOffset</var> [, <var>len
  <dt>{{jsxref("TypedArray.prototype.@@iterator()", "TypedArray.prototype[@@iterator]()")}}</dt>
  <dd>Returns a new <code>Array Iterator</code> object that contains the values for each index in the array.</dd>
 </dl>
+
+<h2 id="Examples">Examples</h2>
+
+<h3 id="New_is_required">New is required</h3>
+
+<p>Starting with ECMAScript 2015, <code>TypedArray</code> constructors must be constructed with the {{jsxref("Operators/new", "new")}} operator. Calling a <code>TypedArray</code> constructor as a function without <code>new</code> will throw a {{jsxref("TypeError")}}.</p>
+
+<pre class="brush: js example-bad">var dv = Int8Array([1, 2, 3]);
+// TypeError: calling a builtin Int8Array constructor
+// without new is forbidden</pre>
+
+<pre class="brush: js example-good">var dv = new Int8Array([1, 2, 3]);</pre>
+
+<h3 id="Property_access">Property access</h3>
+
+<p>You can reference elements in the array using standard array index syntax (that is, using bracket notation). However, getting or setting indexed properties on typed arrays will not search in the prototype chain for this property, even when the indices are out of bound. Indexed properties will consult the {{jsxref("ArrayBuffer")}} and will never look at object properties. You can still use named properties, just like with all objects.</p>
+
+<pre class="brush: js">// Setting and getting using standard array syntax
+var int16 = new Int16Array(2);
+int16[0] = 42;
+console.log(int16[0]); // 42
+
+// Indexed properties on prototypes are not consulted (Fx 25)
+Int8Array.prototype[20] = 'foo';
+(new Int8Array(32))[20]; // 0
+// even when out of bound
+Int8Array.prototype[20] = 'foo';
+(new Int8Array(8))[20]; // undefined
+// or with negative integers
+Int8Array.prototype[-1] = 'foo';
+(new Int8Array(8))[-1]; // undefined
+
+// Named properties are allowed, though (Fx 30)
+Int8Array.prototype.foo = 'bar';
+(new Int8Array(32)).foo; // "bar"</pre>
 
 <h2 id="Specifications">Specifications</h2>
 

@@ -21,7 +21,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox"><var>arr</var>.pop()</pre>
+<pre class="syntaxbox notranslate"><var>arrName</var>.pop()</pre>
 
 <h3 id="Return_value">Return value</h3>
 
@@ -43,7 +43,7 @@ tags:
 
 <p>The following code creates the <code>myFish</code> array containing four elements, then removes its last element.</p>
 
-<pre class="brush: js">var myFish = ['angel', 'clown', 'mandarin', 'sturgeon'];
+<pre class="brush: js notranslate">var myFish = ['angel', 'clown', 'mandarin', 'sturgeon'];
 
 var popped = myFish.pop();
 
@@ -55,7 +55,7 @@ console.log(popped); // 'sturgeon'</pre>
 
 <p>The following code creates the <code>myFish</code> array-like object containing four elements and a length parameter, then removes its last element and decrements the length parameter.</p>
 
-<pre class="brush: js">var myFish = {0:'angel', 1:'clown', 2:'mandarin', 3:'sturgeon', length: 4};
+<pre class="brush: js notranslate">var myFish = {0:'angel', 1:'clown', 2:'mandarin', 3:'sturgeon', length: 4};
 
 var popped = Array.prototype.pop.call(myFish); //same syntax for using apply( )
 
@@ -67,14 +67,14 @@ console.log(popped); // 'sturgeon'
 <h2 id="Specifications">Specifications</h2>
 
 <table class="standard-table">
- <tbody>
-  <tr>
-   <th scope="col">Specification</th>
-  </tr>
-  <tr>
-   <td>{{SpecName('ESDraft', '#sec-array.prototype.pop', 'Array.prototype.pop')}}</td>
-  </tr>
- </tbody>
+	<tbody>
+		<tr>
+			<th scope="col">Specification</th>
+		</tr>
+		<tr>
+			<td>{{SpecName('ESDraft', '#sec-array.prototype.pop', 'Array.prototype.pop')}}</td>
+		</tr>
+	</tbody>
 </table>
 
 <h2 id="Browser_compatibility">Browser compatibility</h2>
@@ -88,9 +88,9 @@ console.log(popped); // 'sturgeon'
 <h2 id="See_also">See also</h2>
 
 <ul>
- <li>{{jsxref("Array.prototype.push()")}}</li>
- <li>{{jsxref("Array.prototype.shift()")}}</li>
- <li>{{jsxref("Array.prototype.unshift()")}}</li>
- <li>{{jsxref("Array.prototype.concat()")}}</li>
- <li>{{jsxref("Array.prototype.splice()")}}</li>
+	<li>{{jsxref("Array.prototype.push()")}}</li>
+	<li>{{jsxref("Array.prototype.shift()")}}</li>
+	<li>{{jsxref("Array.prototype.unshift()")}}</li>
+	<li>{{jsxref("Array.prototype.concat()")}}</li>
+	<li>{{jsxref("Array.prototype.splice()")}}</li>
 </ul>

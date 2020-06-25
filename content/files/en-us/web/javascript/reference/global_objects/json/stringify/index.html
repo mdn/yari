@@ -24,7 +24,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox"><code>JSON.stringify(<var>value</var>[, <var>replacer</var>[, <var>space</var>]])</code></pre>
+<pre class="syntaxbox notranslate"><code>JSON.stringify(<var>value</var>[, <var>replacer</var>[, <var>space</var>]])</code></pre>
 
 <h3 id="Parameters">Parameters</h3>
 
@@ -32,7 +32,7 @@ tags:
  <dt><code><var>value</var></code></dt>
  <dd>The value to convert to a JSON string.</dd>
  <dt><code><var>replacer</var></code> {{optional_inline}}</dt>
- <dd>A function that alters the behavior of the stringification process, or an array of {{JSxRef("String")}} and {{JSxRef("Number")}} that serve as a whitelist for selecting/filtering the properties of the value object to be included in the JSON string. If this value is {{JSxRef("null")}} or not provided, all properties of the object are included in the resulting JSON string.</dd>
+ <dd>A function that alters the behavior of the stringification process, or an array of {{JSxRef("String")}} and {{JSxRef("Number")}} that serve as an allowlist for selecting/filtering the properties of the value object to be included in the JSON string. If this value is {{JSxRef("null")}} or not provided, all properties of the object are included in the resulting JSON string.</dd>
  <dt><code><var>space</var></code> {{optional_inline}}</dt>
  <dd>A {{JSxRef("String")}} or {{JSxRef("Number")}} object that's used to insert white space into the output JSON string for readability purposes.
  <p>If this is a <code>Number</code>, it indicates the number of space characters to use as white space; this number is capped at 10 (if it is greater, the value is just <code>10</code>). Values less than 1 indicate that no space should be used.</p>
@@ -70,7 +70,7 @@ tags:
 
 <h3 id="Using_JSON.stringify">Using JSON.stringify</h3>
 
-<pre class="brush: js">JSON.stringify({});                    // '{}'
+<pre class="brush: js notranslate">JSON.stringify({});                    // '{}'
 JSON.stringify(true);                  // 'true'
 JSON.stringify('foo');                 // '"foo"'
 JSON.stringify([1, 'false', false]);   // '[1,"false",false]'
@@ -160,7 +160,7 @@ JSON.stringify({x: 2n});
 
 <h4 id="Example_replacer_as_a_function">Example <var>replacer</var>, as a function</h4>
 
-<pre class="brush: js">function replacer(key, value) {
+<pre class="brush: js notranslate">function replacer(key, value) {
   // Filtering out properties
   if (typeof value === 'string') {
     return undefined;
@@ -177,7 +177,7 @@ JSON.stringify(foo, replacer);
 
 <p>If <code><var>replacer</var></code> is an array, the array's values indicate the names of the properties in the object that should be included in the resulting JSON string.</p>
 
-<pre class="brush: js">JSON.stringify(foo, ['week', 'month']);
+<pre class="brush: js notranslate">JSON.stringify(foo, ['week', 'month']);
 // '{"week":45,"month":7}', only keep "week" and "month" properties
 </pre>
 
@@ -190,7 +190,7 @@ JSON.stringify(foo, replacer);
  <li><strong>If it is a string</strong>, successive levels will be indented by this string (or the first ten characters of it).</li>
 </ul>
 
-<pre class="brush: js">JSON.stringify({ a: 2 }, null, ' ');
+<pre class="brush: js notranslate">JSON.stringify({ a: 2 }, null, ' ');
 // '{
 //  "a": 2
 // }'
@@ -198,7 +198,7 @@ JSON.stringify(foo, replacer);
 
 <p>Using a tab character mimics standard pretty-print appearance:</p>
 
-<pre class="brush: js">JSON.stringify({ uno: 1, dos: 2 }, null, '\t');
+<pre class="brush: js notranslate">JSON.stringify({ uno: 1, dos: 2 }, null, '\t');
 // returns the string:
 // '{
 //     "uno": 1,
@@ -218,7 +218,7 @@ JSON.stringify(foo, replacer);
 
 <p>For example:</p>
 
-<pre class="brush: js">var obj = {
+<pre class="brush: js notranslate">var obj = {
     data: 'data',
 
     toJSON (key) {
@@ -243,7 +243,7 @@ JSON.stringify([ obj ]);
 
 <p>Note that since the <a href="https://www.json.org/">JSON format</a> doesn't support object references (although an <a href="http://tools.ietf.org/html/draft-pbryan-zyp-json-ref-03">IETF draft exists</a>), a {{JSxRef("TypeError")}} will be thrown if one attempts to encode an object with circular references.</p>
 
-<pre class="brush: js example-bad">const circularReference = {};
+<pre class="brush: js example-bad notranslate">const circularReference = {};
 circularReference.myself = circularReference;
 
 // Serializing circular references throws "TypeError: cyclic object value"
@@ -258,7 +258,7 @@ JSON.stringify(circularReference);
 
 <p>Therefore, if compatibility with older JavaScript engines is required, it is perilous to directly substitute the string returned by <code>JSON.stringify</code> into a JavaScript string to be passed to <code>eval</code> or <code>new Function</code> or as part of a <a href="https://en.wikipedia.org/wiki/JSONP">JSONP</a> URL, and the following utility can be used:</p>
 
-<pre class="brush: js">function jsFriendlyJSONStringify (s) {
+<pre class="brush: js notranslate">function jsFriendlyJSONStringify (s) {
     return JSON.stringify(s).
         replace(/\u2028/g, '\\u2028').
         replace(/\u2029/g, '\\u2029');
@@ -286,7 +286,7 @@ alert(jsFriendlyJSONStringify(s)); // {"a":"\u2028","b":"\u2029"}
 <p><strong>Note</strong>: Properties of non-array objects are not guaranteed to be stringified in any particular order. Do not rely on ordering of properties within the same object within the stringification.</p>
 </div>
 
-<pre class="brush: js">var a = JSON.stringify({ foo: "bar", baz: "quux" })
+<pre class="brush: js notranslate">var a = JSON.stringify({ foo: "bar", baz: "quux" })
 //'{"foo":"bar","baz":"quux"}'
 var b = JSON.stringify({ baz: "quux", foo: "bar" })
 //'{"baz":"quux","foo":"bar"}'
@@ -300,7 +300,7 @@ console.log(a !== b) // true
 
 <p>In a case where you want to store an object created by your user and allowing it to be restored even after the browser has been closed, the following example is a model for the applicability of <code>JSON.stringify()</code>:</p>
 
-<pre class="brush: js">// Creating an example of JSON
+<pre class="brush: js notranslate">// Creating an example of JSON
 var session = {
   'screens': [],
   'state': true
@@ -329,11 +329,11 @@ console.log(restoredSession);
 
 <p>Engines implementing the <a href="https://github.com/tc39/proposal-well-formed-stringify">well-formed JSON.stringify specification</a> will stringify lone surrogates, any code point from U+D800 to U+DFFF, using Unicode escape sequences rather than literally. Before this change <code>JSON.stringify</code> would output lone surrogates if the input contained any lone surrogates; such strings could not be encoded in valid UTF-8 or UTF-16:</p>
 
-<pre class="brush: js; no-line-numbers">JSON.stringify("\uD800"); // '"�"'</pre>
+<pre class="brush: js; no-line-numbers notranslate">JSON.stringify("\uD800"); // '"�"'</pre>
 
 <p>But with this change <code>JSON.stringify</code> represents lone surrogates using JSON escape sequences that <em>can</em> be encoded in valid UTF-8 or UTF-16:</p>
 
-<pre class="brush: js; no-line-numbers">JSON.stringify("\uD800"); // '"\\ud800"'</pre>
+<pre class="brush: js; no-line-numbers notranslate">JSON.stringify("\uD800"); // '"\\ud800"'</pre>
 
 <p>This change should be backwards-compatible as long as you pass the result of <code>JSON.stringify</code> to APIs such as <code>JSON.parse</code> that will accept any valid JSON text, because they will treat Unicode escapes of lone surrogates as identical to the lone surrogates themselves. <em>Only</em> if you are directly interpreting the result of <code>JSON.stringify</code> do you need to carefully handle <code>JSON.stringify</code>'s two possible encodings of these code points.</p>
 

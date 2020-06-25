@@ -9,6 +9,7 @@ tags:
   - Layout
   - Reference
   - Web
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -20,7 +21,7 @@ tags:
 
 <h2 id="Syntax" name="Syntax">Syntax</h2>
 
-<pre class="brush:css no-line-numbers">/* Keyword value */
+<pre class="brush:css no-line-numbers notranslate">/* Keyword value */
 quotes: none;
 quotes: auto;
 
@@ -47,16 +48,16 @@ quotes: unset;
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Examples">Examples</h2>
 
 <h3 id="Basic_quote_marks">Basic quote marks</h3>
 
-<pre class="brush: html">&lt;q&gt;To be or not to be. That's the question!&lt;/q&gt;
+<pre class="brush: html notranslate">&lt;q&gt;To be or not to be. That's the question!&lt;/q&gt;
 </pre>
 
-<pre class="brush: css">q {
+<pre class="brush: css notranslate">q {
   quotes: '"' '"' "'" "'";
 }
 q::before {
@@ -70,7 +71,7 @@ q::after {
 
 <h3 id="Auto_quotes">Auto quotes</h3>
 
-<pre class="brush: html">&lt;div lang="fr"&gt;
+<pre class="brush: html notranslate">&lt;div lang="fr"&gt;
   &lt;q&gt;<span class="tlid-translation translation" lang="fr"><span title="">Ceci est une citation française.</span></span>&lt;/q&gt;
 &lt;div&gt;
 &lt;hr&gt;
@@ -87,7 +88,7 @@ q::after {
 &lt;div&gt;
 </pre>
 
-<pre class="brush: css">/*q {
+<pre class="brush: css notranslate">/*q {
   quotes: auto;
 }*/
 </pre>

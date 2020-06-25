@@ -21,10 +21,8 @@ tags:
 <h2 id="Syntax">Syntax</h2>
 
 <dl>
- <dt><code><dfn>no-preference</dfn></code></dt>
- <dd>Indicates that the user has made no preference known to the system. This keyword value evaluates to <code>false</code> in the <a href="https://drafts.csswg.org/mediaqueries-5/#boolean-context" id="ref-for-boolean-context④">boolean context</a>.</dd>
  <dt><code><dfn>light</dfn></code></dt>
- <dd>Indicates that user has notified the system that they prefer an interface that has a light theme.</dd>
+ <dd>Indicates that user has notified the system that they prefer an interface that has a light theme, or has not expressed an active preference.</dd>
  <dt><code><dfn>dark</dfn></code></dt>
  <dd>Indicates that user has notified the system that they prefer an interface that has a dark theme.</dd>
 </dl>
@@ -35,7 +33,7 @@ tags:
 
 <h3 id="HTML">HTML</h3>
 
-<pre class="brush: html">&lt;div class="day"&gt;Day (initial)&lt;/div&gt;
+<pre class="brush: html notranslate">&lt;div class="day"&gt;Day (initial)&lt;/div&gt;
 &lt;div class="day light-scheme"&gt;Day (changes in light scheme)&lt;/div&gt;
 &lt;div class="day dark-scheme"&gt;Day (changes in dark scheme)&lt;/div&gt; &lt;br&gt;
 
@@ -46,7 +44,7 @@ tags:
 
 <h3 id="CSS">CSS</h3>
 
-<pre class="brush: css">.day   { background: #eee; color: black; }
+<pre class="brush: css notranslate">.day   { background: #eee; color: black; }
 .night { background: #333; color: white; }
 
 @media (prefers-color-scheme: dark) {

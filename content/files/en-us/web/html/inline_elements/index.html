@@ -13,7 +13,9 @@ tags:
   - Layout
   - Reference
 ---
-<p>HTML (<strong>Hypertext Markup Language</strong>) elements historically were categorized as either <a href="/en-US/docs/Web/HTML/Block-level_elements">"block-level" elements</a> or "inline" elements. <span class="seoSummary">Inline elements are those which only occupy the space bounded by the tags defining the element, instead of breaking the flow of the content.</span> In this article, we'll examine HTML inline elements and how they differ from <a href="/en-US/docs/Web/HTML/Block-level_elements">block-level elements</a>.</p>
+<p>HTML (<strong>Hypertext Markup Language</strong>) elements historically were categorized as either "block-level" elements or "inline-level" elements. Since this is a presentational characteristic it is nowadays specified by CSS in the <a href="/en-US/docs/Web/CSS/CSS_Flow_Layout">Flow Layout</a>.
+
+<span class="seoSummary">Inline elements are those which only occupy the space bounded by the tags defining the element, instead of breaking the flow of the content.</span> In this article, we'll examine HTML inline-level elements and how they differ from <a href="/en-US/docs/Web/HTML/Block-level_elements">block-level elements</a>.</p>
 
 <div class="note">
 <p>An inline element does not start on a new line and only takes up as much width as necessary.</p>
@@ -23,7 +25,7 @@ tags:
 
 <p>This is most easily demonstrated with a simple example. First, some simple CSS that we'll be using:</p>
 
-<pre class="brush: css">.highlight {
+<pre class="brush: css notranslate">.highlight {
   background-color:#ee3;
 }</pre>
 
@@ -31,7 +33,7 @@ tags:
 
 <p>Let's look at the following example which demonstrates an inline element:</p>
 
-<pre class="brush: html">&lt;div&gt;The following span is an &lt;span class="highlight"&gt;inline element&lt;/span&gt;;
+<pre class="brush: html notranslate">&lt;div&gt;The following span is an &lt;span class="highlight"&gt;inline element&lt;/span&gt;;
 its background has been colored to display both the beginning and end of
 the inline element's influence.&lt;/div&gt;</pre>
 
@@ -42,7 +44,7 @@ the inline element's influence.&lt;/div&gt;</pre>
 <div class="hidden">
 <p>For looks, this CSS (not displayed in standard reading mode) is also used:</p>
 
-<pre class="brush: css">body {
+<pre class="brush: css notranslate">body {
   margin: 0;
   padding: 4px;
   border: 1px solid #333;
@@ -57,14 +59,14 @@ the inline element's influence.&lt;/div&gt;</pre>
 
 <p>Now let's change that <code>&lt;span&gt;</code> into a block-level element, such as {{HTMLElement("p")}}:</p>
 
-<pre class="brush: html">&lt;div&gt;The following paragraph is a &lt;p class="highlight"&gt;block-level element;&lt;/p&gt;
+<pre class="brush: html notranslate">&lt;div&gt;The following paragraph is a &lt;p class="highlight"&gt;block-level element;&lt;/p&gt;
 its background has been colored to display both the beginning and end of
 the block-level element's influence.&lt;/div&gt;</pre>
 
 <div class="hidden">
 <p>The CSS (not displayed in standard reading mode) is also used:</p>
 
-<pre class="brush: css">body {
+<pre class="brush: css notranslate">body {
   margin: 0;
   padding: 4px;
   border: 1px solid #333;

@@ -31,7 +31,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">var <em>promise</em> = navigator.clipboard.read();</pre>
+<pre class="syntaxbox notranslate">var <em>promise</em> = navigator.clipboard.read();</pre>
 
 <h3 id="Parameters">Parameters</h3>
 
@@ -43,9 +43,9 @@ tags:
 
 <h2 id="Example">Example</h2>
 
-<p>After using {{domxref("Permissions.query", "navigator.permissions.query()")}} to find out if we have (or if the user will be prompted to allow) <code>"clipboard-read"</code> access, this example fetches the data currently on the clipboard. If it's not plain text, an error message is presented. Otherwise, an element referred to using the variable <code>textElem</code> has its contents replaced with the clipboard's contents.</p>
+<p>After using {{domxref("Permissions.query", "navigator.permissions.query()")}} to find out if we have (or if the user will be prompted to allow) <code>"clipboard-read"</code> access, this example fetches the data currently on the clipboard. If it's not a png image, an error message is presented. Otherwise, an image element referred to using the variable <code>imgElem</code> has its source replaced with the clipboard's contents.</p>
 
-<pre class="brush: js">// First, ask the Permissions API if we have some kind of access to
+<pre class="brush: js notranslate">// First, ask the Permissions API if we have some kind of access to
 // the "clipboard-read" feature.
 
 navigator.permissions.query({name: "clipboard-read"}).then(result =&gt; {
@@ -55,10 +55,11 @@ navigator.permissions.query({name: "clipboard-read"}).then(result =&gt; {
   if (result.state == "granted" || result.state == "prompt") {
     navigator.clipboard.read().then(data =&gt; {
       for (let i=0; i&lt;data.items.length; i++) {
-        if (data.items[i].type != "text/plain") {
-          alert("Clipboard contains non-text data. Unable to access it.");
+        if (data.items[i].type != "image/png") {
+          alert("Clipboard contains non-image data. Unable to access it.");
         } else {
-          textElem.innerText = data.items[i].getAs("text/plain");
+          const blob = data.items[i].getType("image/png");
+          imgElem.src = URL.createObjectURL(blob);
         }
       }
     });

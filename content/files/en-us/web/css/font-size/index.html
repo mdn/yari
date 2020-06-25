@@ -1,16 +1,17 @@
 ---
 title: font-size
 slug: Web/CSS/font-size
-summary: The font-size CSS property sets the size of the font.
+summary: "The font-size CSS property sets the size of the font. Changing the font size also updates the sizes of the font size-relative length units, such as\_em, ex, and so forth."
 tags:
   - CSS
   - CSS Fonts
   - CSS Property
   - Reference
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
-<p><span class="seoSummary">The <strong><code>font-size</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property sets the size of the font.</span> This property is also used to compute the size of <code>em</code>, <code>ex</code>, and other relative {{cssxref("&lt;length&gt;")}} units.</p>
+<p><span class="seoSummary">The <strong><code>font-size</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property sets the size of the font. Changing the font size also updates the sizes of the font size-relative {{cssxref("&lt;length&gt;")}} units, such as <code>em</code>, <code>ex</code>, and so forth.</span></p>
 
 <div>{{EmbedInteractiveExample("pages/css/font-size.html")}}</div>
 
@@ -18,7 +19,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="brush:css no-line-numbers">/* &lt;absolute-size&gt; values */
+<pre class="brush:css no-line-numbers notranslate">/* &lt;absolute-size&gt; values */
 font-size: xx-small;
 font-size: x-small;
 font-size: small;
@@ -77,7 +78,7 @@ font-size: unset;
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Possible_approaches">Possible approaches</h2>
 
@@ -101,7 +102,7 @@ font-size: unset;
 
 <p>In order to calculate the em equivalent for any pixel value required, you can use this formula:</p>
 
-<pre class="brush: plain">em = desired element pixel value / parent element font-size in pixels</pre>
+<pre class="brush: plain notranslate">em = desired element pixel value / parent element font-size in pixels</pre>
 
 <p>For example, suppose the font-size of the body of the page is set to 16px. If the font-size you want is 12px, then you should specify 0.75em (because 12/16 = 0.75). Similarly, if you want a font size of 10px, then specify 0.625em (10/16 = 0.625); for 22px, specify 1.375em (22/16).</p>
 
@@ -109,14 +110,14 @@ font-size: unset;
 
 <p>One important fact to keep in mind: em values compound. Take the following HTML and CSS:</p>
 
-<pre class="brush: css">html {
+<pre class="brush: css notranslate">html {
   font-size: 62.5%; /* font-size 1em = 10px on default browser settings */
 }
 span {
   font-size: 1.6em;
 }</pre>
 
-<pre class="brush: html">&lt;div&gt;
+<pre class="brush: html notranslate">&lt;div&gt;
 &lt;span&gt;Outer &lt;span&gt;inner&lt;/span&gt; outer&lt;/span&gt;
 &lt;/div&gt;
 </pre>
@@ -133,7 +134,7 @@ span {
 
 <p>The CSS below is nearly identical to the previous example. The only exception is that the unit has been changed to <code>rem</code>.</p>
 
-<pre class="brush: css">html {
+<pre class="brush: css notranslate">html {
   font-size: 62.5%; /* font-size 1em = 10px on default browser settings */
 }
 span {
@@ -143,7 +144,7 @@ span {
 
 <p>Then we apply this CSS to the same HTML, which looks like this:</p>
 
-<pre class="brush: html">&lt;span&gt;Outer &lt;span&gt;inner&lt;/span&gt; outer&lt;/span&gt;</pre>
+<pre class="brush: html notranslate">&lt;span&gt;Outer &lt;span&gt;inner&lt;/span&gt; outer&lt;/span&gt;</pre>
 
 <p>{{EmbedLiveSample("Rems", 400, 40)}}</p>
 
@@ -153,7 +154,7 @@ span {
 
 <h3 id="Example_1">Example 1</h3>
 
-<pre class="brush: css">/* Sets paragraph text to be very large */
+<pre class="brush: css notranslate">/* Sets paragraph text to be very large */
 p { font-size: xx-large; }
 
 /* Sets &lt;h1&gt; text to be 2.5 times the size
@@ -168,7 +169,7 @@ span { font-size: 16px; }
 
 <h4 id="CSS">CSS</h4>
 
-<pre class="brush: css">.small {
+<pre class="brush: css notranslate">.small {
   font-size: xx-small;
 }
 .larger {
@@ -184,7 +185,7 @@ span { font-size: 16px; }
 
 <h4 id="HTML">HTML</h4>
 
-<pre class="brush: html">&lt;h1 class="small"&gt;Small H1&lt;/h1&gt;
+<pre class="brush: html notranslate">&lt;h1 class="small"&gt;Small H1&lt;/h1&gt;
 &lt;h1 class="larger"&gt;Larger H1&lt;/h1&gt;
 &lt;h1 class="point"&gt;24 point H1&lt;/h1&gt;
 &lt;h1 class="percent"&gt;200% H1&lt;/h1&gt;</pre>

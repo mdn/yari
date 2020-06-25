@@ -6,7 +6,6 @@ summary: >-
   promises in the iterable fulfils, returns a single promise that resolves with
   the value from that promise. If no promises in the iterable fulfil (if all of
   the given promises are rejected), then the returned promise is rejected with
-  an object that is still up for debate: either an array of rejection reasons or
   an AggregateError, a new subclass of Error that groups together individual
   errors. Essentially, this method is the opposite of Promise.all().
 tags:
@@ -19,7 +18,7 @@ tags:
 ---
 <div>{{JSRef}}</div>
 
-<p><code>Promise.any()</code> takes an iterable of {{JSxRef("Promise")}} objects and, as soon as one of the promises in the iterable fulfils, returns a single promise that resolves with the value from that promise. If no promises in the iterable fulfil (if all of the given promises are rejected), then the returned promise is rejected with an object that is still up for debate: either an array of rejection reasons or an {{JSxRef("AggregateError")}}, a new subclass of {{JSxRef("Error")}} that groups together individual errors. Essentially, this method is the opposite of {{JSxRef("Promise.all()")}}.</p>
+<p><code>Promise.any()</code> takes an iterable of {{JSxRef("Promise")}} objects and, as soon as one of the promises in the iterable fulfils, returns a single promise that resolves with the value from that promise. If no promises in the iterable fulfil (if all of the given promises are rejected), then the returned promise is rejected with an {{JSxRef("AggregateError")}}, a new subclass of {{JSxRef("Error")}} that groups together individual errors. Essentially, this method is the opposite of {{JSxRef("Promise.all()")}}.</p>
 
 <div class="blockIndicator warning">
 <p><strong>Warning!</strong> The <code>Promise.any()</code> method is experimental and not fully supported by all browsers. It is currently in the <a href="https://github.com/tc39/proposal-promise-any" rel="external">TC39 Candidate stage (Stage 3)</a>.</p>
@@ -27,13 +26,13 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre>Promise.any(<var>iterable</var>);</pre>
+<pre class="notranslate">Promise.any(<var>iterable</var>);</pre>
 
 <h3 id="Parameters">Parameters</h3>
 
 <dl>
- <dt><code>iterable</code></dt>
- <dd>An <a href="/en-US/docs/Web/JavaScript/Guide/iterable">iterable</a> object, such as an {{JSxRef("Array")}}.</dd>
+ <dt><code><var>iterable</var></code></dt>
+ <dd>An <a href="/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterable_protocol">iterable</a> object, such as an {{JSxRef("Array")}}.</dd>
 </dl>
 
 <h3 id="Return_value">Return value</h3>
@@ -59,12 +58,7 @@ tags:
 
 <h3 id="Rejection">Rejection</h3>
 
-<p>If all of the passed-in promises reject, <code>Promise.any</code> asynchronously rejects with one of two options (which have not yet been agreed upon): either</p>
-
-<ul>
- <li>an array containing <strong>all </strong>the rejection reasons of the <var>iterable</var> passed as the argument, or</li>
- <li>an {{JSxRef("AggregateError")}} object, which extends {{JSxRef("Error")}}, and contains a pointer to an array of exceptions.</li>
-</ul>
+<p>If all of the passed-in promises reject, <code>Promise.any</code> asynchronously rejects with an {{JSxRef("AggregateError")}} object, which extends {{JSxRef("Error")}}, and contains an <code>errors</code> property with an array of rejection values.</p>
 
 <h2 id="Examples">Examples</h2>
 
@@ -72,7 +66,7 @@ tags:
 
 <p><code>Promise.any()</code> resolves with the first promise to fulfil, even if a promise rejects first. This is in contrast to {{jsxref("Promise.race()")}}, which resolves or rejects with the first promise to settle.</p>
 
-<pre class="brush: js">const pErr = new Promise((resolve, reject) =&gt; {
+<pre class="brush: js notranslate">const pErr = new Promise((resolve, reject) =&gt; {
   reject("Always fails");
 });
 
@@ -91,11 +85,11 @@ Promise.any([pErr, pSlow, pFast]).then((value) =&gt; {
 // expected output: "Done quick"
 </pre>
 
-<h3 id="Rejections_with_AggregateError">Rejections with <code>AggregateError</code></h3>
+<h3 id="Rejections_with_AggregateError">Rejections with AggregateError</h3>
 
 <p><code>Promise.any()</code> rejects with an {{jsxref("AggregateError")}} if no promise fulfils.</p>
 
-<pre class="brush: js">const pErr = new Promise((resolve, reject) =&gt; {
+<pre class="brush: js notranslate">const pErr = new Promise((resolve, reject) =&gt; {
   reject('Always fails');
 });
 
@@ -109,7 +103,7 @@ Promise.any([pErr]).catch((err) =&gt; {
 
 <p>In this example, we have a function that fetches an image and returns a blob. We use <code>Promise.any()</code> to fetch a couple of images and display the first one available (i.e. whose promise has resolved).</p>
 
-<pre class="brush: js">function fetchAndDecode(url) {
+<pre class="brush: js notranslate">function fetchAndDecode(url) {
   return fetch(url).then(response =&gt; {
     if(!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

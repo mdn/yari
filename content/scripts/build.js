@@ -309,6 +309,7 @@ class Builder {
     this.logger = logger;
     this.selfHash = null;
     this.allTitles = new Map();
+    this.allWikiHistory = new Map();
     this.allRedirects = new Map();
     this.flawsByType = new Map();
 
@@ -465,7 +466,8 @@ class Builder {
       const { metadata, rawHtml, fileInfo } = Document.read(
         source.filepath,
         folder,
-        false
+        false,
+        this.allWikiHistory
       );
       // When rendering prerequisites, we're only interested in
       // caching the results for later use. We don't care about
@@ -651,6 +653,9 @@ class Builder {
     if (!this.selfHash) {
       throw new Error("this.selfHash hasn't been set yet");
     }
+
+    this.ensureAllWikiHistory();
+
     if (
       this.allTitles.size &&
       this.allTitles.get("_hash") === this.selfHash &&
@@ -835,6 +840,38 @@ class Builder {
     let t1 = new Date();
     this.logger.info(
       chalk.green(`Building map of all redirects took ${msLong(t1 - t0)}`)
+    );
+  }
+
+  ensureAllWikiHistory() {
+    if (this.allWikiHistory.size) {
+      // No reason to proceed, the wikihistory have already been loaded
+      // into memory.
+      return;
+    }
+
+    let t0 = new Date();
+    // Walk all the locale folders and gather all of the redirects.
+    for (const source of this.sources.entries()) {
+      for (const localeFolder of this.getLocaleRootFolders(source, {
+        allLocales: true,
+      })) {
+        const locale = path.basename(localeFolder).toLowerCase();
+        const map = new Map();
+        const filepath = path.join(localeFolder, "_wikihistory.json");
+        if (fs.existsSync(filepath)) {
+          const all = JSON.parse(fs.readFileSync(filepath));
+          for (const [slug, data] of Object.entries(all)) {
+            map.set(slug.toLowerCase(), data);
+          }
+          this.allWikiHistory.set(locale, map);
+        }
+      }
+    }
+
+    let t1 = new Date();
+    this.logger.info(
+      chalk.green(`Building map of all wiki history took ${msLong(t1 - t0)}`)
     );
   }
 
@@ -1443,7 +1480,12 @@ class Builder {
         metadata: otherMetadata,
         rawHtml: otherRawHtml,
         fileInfo: { path: otherRawHtmlFilepath },
-      } = Document.read(source.filepath, otherFolder, false);
+      } = Document.read(
+        source.filepath,
+        otherFolder,
+        false,
+        this.allWikiHistory
+      );
       const otherDestinationDir = path.join(
         this.destination,
         slugToFoldername(otherUri)
@@ -1475,7 +1517,8 @@ class Builder {
     const { metadata, rawHtml, fileInfo } = Document.read(
       source.filepath,
       folder,
-      false
+      false,
+      this.allWikiHistory
     );
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
     const mdnUrlLC = mdn_url.toLowerCase();
@@ -1842,7 +1885,12 @@ class Builder {
     let metadata;
     let mdn_url;
     try {
-      const document = Document.read(source.filepath, folder, true);
+      const document = Document.read(
+        source.filepath,
+        folder,
+        true,
+        this.allWikiHistory
+      );
       metadata = document.metadata;
       mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
     } catch (err) {

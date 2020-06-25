@@ -31,7 +31,7 @@ tags:
  <li>If the sub frame doesn't have the token <code>allow-storage-access-by-user-activation</code>, reject.</li>
  <li>If the sub frame's parent frame is not the top frame, reject.</li>
  <li>If the browser is not processing a user gesture, reject.</li>
- <li>Check any additional rules that the browser has. Examples: Whitelists, blacklists, on-device classification, user settings, anti-clickjacking heuristics, or prompting the user for explicit permission. Reject if some rule is not fulfilled.</li>
+ <li>Check any additional rules that the browser has. Examples: allow lists, block lists, on-device classification, user settings, anti-clickjacking heuristics, or prompting the user for explicit permission. Reject if some rule is not fulfilled.</li>
  <li>Grant the document access to cookies and other site storage and store that fact for the purposes of future calls to {{domxref("Document.hasStorageAccess()")}} and <code>requestStorageAccess()</code>.</li>
 </ol>
 

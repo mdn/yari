@@ -10,6 +10,7 @@ tags:
   - CSS Flexible Boxes
   - CSS Property
   - Reference
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -21,7 +22,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="brush:css no-line-numbers">/* &lt;integer&gt; values */
+<pre class="brush:css no-line-numbers notranslate">/* &lt;integer&gt; values */
 order: 5;
 order: -5;
 
@@ -43,13 +44,13 @@ order: unset;</pre>
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Example">Example</h2>
 
 <p>Here is a basic HTML chunk:</p>
 
-<pre class="brush:html;">&lt;header&gt;...&lt;/header&gt;
+<pre class="brush:html; notranslate">&lt;header&gt;...&lt;/header&gt;
 &lt;main&gt;
   &lt;article&gt;Article&lt;/article&gt;
   &lt;nav&gt;Nav&lt;/nav&gt;
@@ -59,7 +60,7 @@ order: unset;</pre>
 
 <p>The following CSS code creates a classic two-sidebar layout surrounding a content block. The Flexible Box Layout Module automatically creates blocks of equal vertical size and uses as much horizontal space as available.</p>
 
-<pre class="brush:css;">main { display: flex;  text-align:center; }
+<pre class="brush:css; notranslate">main { display: flex;  text-align:center; }
 main &gt; article { flex:1;        order: 2; }
 main &gt; nav     { width: 200px;  order: 1; }
 main &gt; aside   { width: 200px;  order: 3; }</pre>
