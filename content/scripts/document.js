@@ -32,11 +32,12 @@ function extractLocale(contentRoot, folder) {
   return locale;
 }
 
-function saveHTMLFile(filePath, rawHtml, { slug, title, summary }) {
+function saveHTMLFile(filePath, rawHtml, { slug, title, summary, tags }) {
   const combined = `---\n${yaml.safeDump({
-    slug,
     title,
+    slug,
     summary,
+    tags
   })}---\n${rawHtml.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
@@ -124,7 +125,7 @@ function update(contentRoot, folder, rawHtml, metadata) {
     document.metadata.title !== metadata.title ||
     document.metadata.summary !== metadata.summary
   ) {
-    saveHTMLFile(htmlPath, rawHtml, metadata);
+    saveHTMLFile(htmlPath, rawHtml, { ...document.metadata, ...metadata });
   }
 
   if (isNewSlug) {
