@@ -4,7 +4,7 @@
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
 // Basic const
-const CSS_BASE_SLUG = "/en-US/docs/Web/CSS";
+const CSS_BASE_URL = "/en-US/docs/Web/CSS";
 
 // Template utils
 function makeExpect(url, summary, label) {
@@ -13,6 +13,10 @@ function makeExpect(url, summary, label) {
   summary = summary.replace(/<[^>]+>/g, "");
 
   return `<a href="${url}" title="${summary}"><code>${label}</code></a>`;
+}
+
+function getPathname(url) {
+  return new URL(url, "https://example.com").pathname.replace(/\/$/, "");
 }
 
 // Mock Pages
@@ -24,48 +28,54 @@ function makeExpect(url, summary, label) {
 
 const MOCK_PAGES = {
   display: {
-    url: [CSS_BASE_SLUG, "display"].join("/"),
+    url: [CSS_BASE_URL, "display"].join("/"),
     data: {
+      url: [CSS_BASE_URL, "display"].join("/"),
       summary:
         'The <strong><code>display</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property specifies the type of rendering box used for an element.',
       tags: ["CSS", "CSS Property", "CSS Display"],
     },
   },
   attr: {
-    url: [CSS_BASE_SLUG, "attr"].join("/"),
+    url: [CSS_BASE_URL, "attr"].join("/"),
     data: {
+      url: [CSS_BASE_URL, "attr"].join("/"),
       summary:
         'The <strong><code>attr()</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> function is used to retrieve the value of an attribute of the selected element and use it in the style sheet.',
       tags: ["CSS", "Reference", "Web", "CSS Function", "Layout"],
     },
   },
   length: {
-    url: [CSS_BASE_SLUG, "length"].join("/"),
+    url: [CSS_BASE_URL, "length"].join("/"),
     data: {
+      url: [CSS_BASE_URL, "length"].join("/"),
       summary:
         'The <strong><code>&lt;length&gt;</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> <a href="/en-US/docs/Web/CSS/CSS_Types">data type</a> represents a distance value.',
       tags: ["CSS", "Reference", "Web", "Layout", "CSS Data Type", "length"],
     },
   },
   color_value: {
-    url: [CSS_BASE_SLUG, "color_value"].join("/"),
+    url: [CSS_BASE_URL, "color_value"].join("/"),
     data: {
+      url: [CSS_BASE_URL, "color_value"].join("/"),
       summary:
         'The <strong><code>&lt;color&gt;</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> <a href="/en-US/docs/Web/CSS/CSS_Types">data type</a> represents a color in the <a href="https://en.wikipedia.org/wiki/SRGB" class="external">sRGB color space</a>.',
       tags: ["CSS", "Reference", "Web", "CSS Data Type", "Layout"],
     },
   },
   flex_value: {
-    url: [CSS_BASE_SLUG, "flex_value"].join("/"),
+    url: [CSS_BASE_URL, "flex_value"].join("/"),
     data: {
+      url: [CSS_BASE_URL, "flex_value"].join("/"),
       summary:
         'The <strong><code>&lt;flex&gt;</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> <a href="/en-US/docs/Web/CSS/CSS_Types">data type</a> denotes a flexible length within a grid container.',
       tags: ["CSS", "Reference", "Web", "CSS Data Type", "Layout"],
     },
   },
   position_value: {
-    url: [CSS_BASE_SLUG, "position_value"].join("/"),
+    url: [CSS_BASE_URL, "position_value"].join("/"),
     data: {
+      url: [CSS_BASE_URL, "position_value"].join("/"),
       summary:
         'The <strong><code>&lt;position&gt;</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> <a href="/en-US/docs/Web/CSS/CSS_Types">data type</a> denotes a two-dimensional coordinate used to set a location relative to an element box.',
       tags: ["CSS", "Reference", "Web", "CSS Data Type", "Layout"],
@@ -127,9 +137,7 @@ const TEST_CASE = [
     input: ["display", "display flex"],
     output: makeExpect(
       MOCK_PAGES.display.url,
-      "The documentation about this has not yet been written; please consider contributing!",
-      // The macro is currently "broken", the expected value should be:
-      // MOCK_PAGES.display.data.summary,
+      MOCK_PAGES.display.data.summary,
       "display flex"
     ),
   },
@@ -173,13 +181,14 @@ const TEST_CASE = [
 describeMacro("cssxref", () => {
   beforeEachMacro((macro) => {
     // let's make sure we have a clean calls to wiki.getPage
-    macro.ctx.wiki.getPage = jest.fn((url) => {
+    macro.ctx.info.getPage = jest.fn((url) => {
       for (let page of Object.values(MOCK_PAGES)) {
-        if (page.url === url) {
+        if (page.url === getPathname(url)) {
           return page.data;
         }
       }
     });
+    macro.ctx.info.getPathname = getPathname;
   });
 
   TEST_CASE.forEach((test) => {

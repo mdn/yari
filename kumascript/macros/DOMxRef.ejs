@@ -19,7 +19,6 @@ let lang = env.locale;
 let api = $0;
 let str = $1 || $0;
 let rtlLocales = ['ar', 'he', 'fa'];
-let localStrings = string.deserialize(await template("L10n:Common"));
 
 api = api.replace(/ /g, '_')
     .replace(/\(\)/g, '')
@@ -35,7 +34,8 @@ if (rtlLocales.indexOf(lang) != -1) {
 // (important for red links to create correct new pages)
 api = api.charAt(0).toUpperCase() + api.slice(1);
 
-let URL = "/" + lang + '/docs/Web/API/' + api;
+const basePath = `/${lang}/docs/Web/API/`;
+let URL = basePath + api;
 
 let anch = '';
 
@@ -44,8 +44,10 @@ if ($2) {
   anch = '#' + $2;
 }
 
-let code = '';
-let endcode = '';
-if (!$3) { code = '<code>'; endcode = '</code>' }
+if (!$3) {
+  str = `<code>${str}</code>`;
+}
 
-%><a href="<%- URL+anch %>"><%- code %><%- str %><%- endcode %></a>
+const link = web.smartLink(URL + anch, null, str, $0, basePath);
+
+%><%- link %>
