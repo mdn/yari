@@ -57,12 +57,15 @@ export function DocumentForm({
   const isNew = !doc;
 
   // New documents should not autosave
-  const shouldAutosave = !isNew && autosaveEnabled;
-
-  // In auto-save mode inputs should still be changeable during saving
-  const disableInputs = !shouldAutosave && isSaving;
+  const canAutosave = !isNew && autosaveEnabled;
 
   const didSlugChange = Boolean(doc && doc.metadata.slug !== slug);
+
+  const willAutosave = canAutosave && !didSlugChange
+
+  // In auto-save mode inputs should still be changeable during saving
+  const disableInputs = !willAutosave && isSaving;
+
 
   const invalidSlug = slug.endsWith("/");
 
@@ -73,7 +76,7 @@ export function DocumentForm({
   const [onSaveDebounced] = useDebouncedCallback(onSave, 1000);
 
   useEffect(() => {
-    if (shouldAutosave && !didSlugChange) {
+    if (willAutosave) {
       onSaveDebounced(
         {
           rawHtml,
@@ -83,7 +86,7 @@ export function DocumentForm({
       );
     }
   }, [
-    shouldAutosave,
+    willAutosave,
     onSaveDebounced,
     slug,
     title,
@@ -130,7 +133,7 @@ export function DocumentForm({
         )}
       </div>
 
-      {didSlugChange && shouldAutosave && (
+      {didSlugChange && canAutosave && (
         <div>
           Autosave has been temporarily disabled until the new slug is saved!
         </div>
