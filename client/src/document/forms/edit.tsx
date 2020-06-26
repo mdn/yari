@@ -39,6 +39,7 @@ export default function DocumentEdit() {
         return;
       }
       if (didSlugChange) {
+        // Hack! We do a full-page transition so that the search index refreshes itself
         window.location.href =
           location.pathname.split("_edit")[0] + "_edit/" + data.metadata.slug;
       }
