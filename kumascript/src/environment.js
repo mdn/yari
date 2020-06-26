@@ -63,7 +63,7 @@ class Environment {
   //
   // The optional third argument is for use only by tests. Setting it to
   // true makes us not freeze the environment so that tests can stub out
-  // methods in the API like mdn.fetchJSONResources
+  // methods in the API.
   //
   constructor(perPageContext, templates, allPagesInfo = null, testing = false) {
     // Freeze an object unless we're in testing mode
@@ -79,8 +79,8 @@ class Environment {
      *
      * The binding means that the functions defined in this file can
      * use `this` to refer to the global kumascript environment and
-     * can use `this.env.locale` and `this.MDN.fetchJSONResource()`
-     * for example.
+     * can use `this.env.locale` and `this.MDN.getLocalString()` for
+     * example.
      *
      * The case-insensitive variants implement legacy behavior in
      * KumaScript, where macros can use case-insensitive names of
