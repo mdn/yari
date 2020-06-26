@@ -16,6 +16,22 @@ const HTML_FILENAME = "index.html";
 const getHTMLPath = (folder) => path.join(folder, HTML_FILENAME);
 const getWikiHistoryPath = (folder) => path.join(folder, "wikihistory.json");
 
+function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
+  const all = JSON.parse(
+    fs.readFileSync(path.join(localeContentRoot, "_wikihistory.json"))
+  );
+  if (oldSlug in all) {
+    if (newSlug) {
+      all[newSlug] = all[oldSlug];
+    }
+    delete all[oldSlug];
+    fs.writeFileSync(
+      path.join(localeContentRoot, "_wikihistory.json"),
+      JSON.stringify(all, null, 2)
+    );
+  }
+}
+
 function extractLocale(contentRoot, folder) {
   // E.g. 'pt-br/web/foo'
   const relativeToSource = path.relative(contentRoot, folder);
@@ -146,6 +162,13 @@ function update(contentRoot, folder, rawHtml, metadata) {
     document.metadata.summary !== metadata.summary
   ) {
     saveHTMLFile(htmlPath, rawHtml, { ...document.metadata, ...metadata });
+    if (isNewSlug) {
+      updateWikiHistory(
+        path.join(contentRoot, metadata.locale.toLowerCase()),
+        oldSlug,
+        newSlug
+      );
+    }
   }
 
   if (isNewSlug) {
@@ -154,19 +177,31 @@ function update(contentRoot, folder, rawHtml, metadata) {
     });
     for (const childFilePath of childFilePaths) {
       const { attributes, body } = fm(fs.readFileSync(childFilePath, "utf8"));
-      attributes.slug = attributes.slug.replace(oldSlug, newSlug);
+      const oldChildSlug = attributes.slug;
+      const newChildSlug = oldChildSlug.replace(oldSlug, newSlug);
+      attributes.slug = newChildSlug;
+      updateWikiHistory(
+        path.join(contentRoot, metadata.locale.toLowerCase()),
+        oldChildSlug,
+        newChildSlug
+      );
       saveHTMLFile(childFilePath, body, attributes);
     }
     const newFolder = buildPath(
       path.join(contentRoot, metadata.locale.toLowerCase()),
       newSlug
     );
+
+    // XXX we *could* call out to a shell here and attempt
+    // to execute `git mv $folder $newFolder` and only if that didn't work
+    // do we fall back on good old `fs.renameSync`.
     fs.renameSync(folder, newFolder);
   }
 }
 
-function del(folder) {
+function del(contentRoot, folder) {
   fs.rmdirSync(folder, { recursive: true });
+  updateWikiHistory(contentRoot, oldSlug);
 }
 
 module.exports = {
