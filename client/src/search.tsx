@@ -278,6 +278,17 @@ export class SearchWidget extends React.Component<{
     } else if (event.key === "Escape") {
       if (this.state.showSearchResults) {
         this.setState({ showSearchResults: false });
+      } else {
+        // If there's nothing left in the input field, force a blur.
+        // The reason for doing this is that you might have used
+        // a keyboard shortcut to trigger focus on the input field
+        // and there's no way to escape that focus.
+        if (!this.state.q) {
+          this.blurHandler();
+          if (this.inputRef.current) {
+            this.inputRef.current.blur();
+          }
+        }
       }
     } else if (event.key === "ArrowDown" || event.key === "Tab") {
       // Increment 'highlitResult' if possible.
