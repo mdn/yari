@@ -1,0 +1,91 @@
+---
+title: storage.sync
+slug: Mozilla/Add-ons/WebExtensions/API/storage/sync
+summary: >-
+  Represents the sync storage area. Items in sync storage are synced by the
+  browser, and are available across all instances of that browser that the user
+  is logged into (e.g. via Firefox sync, or a Google account), across different
+  devices.
+tags:
+  - API
+  - Add-ons
+  - Extensions
+  - Non-standard
+  - Property
+  - Reference
+  - Storage
+  - Sync
+  - WebExtensions
+---
+<div>{{AddonSidebar()}}</div>
+
+<p>Represents the <code>sync</code> storage area. Items in <code>sync</code> storage are synced by the browser, and are available across all instances of that browser that the user is logged into (e.g. via Firefox sync, or a Google account), across different devices.</p>
+
+<p>For Firefox a user must have <code>Add-ons</code> checked under the "Sync Settings" options in <code>"about:preferences"</code>.</p>
+
+<p>Note that the implementation of <code>storage.sync</code> in Firefox relies on the Add-on ID. If you use <code>storage.sync</code>, you must set an ID for your extension using the <code><a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings">browser_specific_settings</a></code> manifest.json key.</p>
+
+<p>The main use case of this API is to store preferences about your extension and allow the user to sync them to different profiles. You can store up to 100KB of data using this API. If you try to store more than this, the call will fail with an error message. The API is provided without any guarantees about uptime or performance.</p>
+
+<h2 id="Methods">Methods</h2>
+
+<p>The <code>sync</code> object implements the methods defined on the {{WebExtAPIRef("storage.StorageArea")}} type:</p>
+
+<dl>
+ <dt>{{WebExtAPIRef("storage.StorageArea.get()", "storage.<var>StorageArea</var>.get()")}}</dt>
+ <dd>Retrieves one or more items from the storage area.</dd>
+ <dt>{{WebExtAPIRef("storage.StorageArea.getBytesInUse()", "storage.<var>StorageArea</var>.getBytesInUse()")}}</dt>
+ <dd>Gets the amount of storage space (in bytes) used one or more items being stored in the storage area.</dd>
+ <dt>{{WebExtAPIRef("storage.StorageArea.set()", "storage.<var>StorageArea</var>.set()")}}</dt>
+ <dd>Stores one or more items in the storage area. If the item already exists, its value will be updated.</dd>
+ <dt>{{WebExtAPIRef("storage.StorageArea.remove()", "storage.<var>StorageArea</var>.remove()")}}</dt>
+ <dd>Removes one or more items from the storage area.</dd>
+ <dt>{{WebExtAPIRef("storage.StorageArea.clear()", "storage.<var>StorageArea</var>.clear()")}}</dt>
+ <dd>Removes all items from the storage area.</dd>
+</dl>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("webextensions.api.storage.sync")}}</p>
+
+<p>{{WebExtExamples}}</p>
+
+<div class="note"><strong>Acknowledgements</strong>
+
+<p>This API is based on Chromium's <a href="https://developer.chrome.com/extensions/storage#property-sync"><code>chrome.storage</code></a> API. This documentation is derived from <a href="https://chromium.googlesource.com/chromium/src/+/master/extensions/common/api/storage.json"><code>storage.json</code></a> in the Chromium code.</p>
+
+<p>Microsoft Edge compatibility data is supplied by Microsoft Corporation and is included here under the Creative Commons Attribution 3.0 United States License.</p>
+</div>
+
+<div class="hidden">
+<pre>// Copyright 2015 The Chromium Authors. All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//    * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//    * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//    * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre>
+</div>
