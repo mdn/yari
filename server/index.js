@@ -133,44 +133,6 @@ app.get("/_open", (req, res) => {
   res.status(200).send(`Tried to open ${spec} in ${process.env.EDITOR}`);
 });
 
-// Module level memoization
-let builder = null;
-function getOrCreateBuilder(options) {
-  options = options || {};
-  if (!builder) {
-    const sources = new Sources();
-    // The server doesn't have command line arguments like the content CLI
-    // does so we need to entirely rely on environment variables.
-    if (process.env.BUILD_ROOT) {
-      sources.add(normalizeContentPath(process.env.BUILD_ROOT));
-    }
-    builder = new Builder(
-      sources,
-      {
-        destination: normalizeContentPath(
-          process.env.BUILD_DESTINATION || "client/build"
-        ),
-        noSitemaps: true,
-        specificFolders: [],
-        buildJsonOnly: false,
-        locales: options.locales || [],
-        notLocales: [],
-        slugsearch: [],
-        noProgressbar: true,
-        foldersearch: options.foldersearch || [],
-        popularitiesfile: normalizeContentPath(DEFAULT_POPULARITIES_FILEPATH),
-        liveSamplesBaseUrl: DEFAULT_LIVE_SAMPLES_BASE_URL,
-      },
-      console
-    );
-    builder.initSelfHash();
-    builder.ensureAllTitles();
-    builder.ensureAllRedirects();
-    builder.prepareRoots();
-  }
-  return builder;
-}
-
 app.get("/_flaws", (req, res) => {
   const locale = req.query.locale.toLowerCase();
   if (!locale) {
