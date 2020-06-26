@@ -58,10 +58,10 @@ tags:
 
 <p>The following example illustrates what a link will behave like by default (the CSS is simply enlarging and centering the text to make it stand out more.)</p>
 
-<pre class="brush: html">&lt;p&gt;&lt;a href="#"&gt;A simple link&lt;/a&gt;&lt;/p&gt;
+<pre class="brush: html notranslate">&lt;p&gt;&lt;a href="#"&gt;A simple link&lt;/a&gt;&lt;/p&gt;
 </pre>
 
-<pre class="brush: css">p {
+<pre class="brush: css notranslate">p {
   font-size: 2rem;
   text-align: center;
 }</pre>
@@ -79,7 +79,7 @@ tags:
  <li>Unvisited links are blue.</li>
  <li>Visited links are purple.</li>
  <li>Hovering a link makes the mouse pointer change to a little hand icon.</li>
- <li>Focused links have an outline around them — you should be able to focus on the links on this page with the keyboard by pressing the tab key (On Mac, you may need enable the <em>Full Keyboard Access: All controls</em> option by pressing <kbd>Ctrl</kbd> + <kbd>F7</kbd> before this will work.)</li>
+ <li>Focused links have an outline around them — you should be able to focus on the links on this page with the keyboard by pressing the tab key (On Mac, you'll need to use <kbd>option</kbd> + <kbd>tab</kbd>, or enable the <em>Full Keyboard Access: All controls</em> option by pressing <kbd>Ctrl</kbd> + <kbd>F7</kbd>.)</li>
  <li>Active links are red (Try holding down the mouse button on the link as you click it.)</li>
 </ul>
 
@@ -108,7 +108,7 @@ tags:
 
 <p>To start off with, we'll write out our empty rulesets:</p>
 
-<pre class="brush: css">a {
+<pre class="brush: css notranslate">a {
 
 }
 
@@ -137,7 +137,7 @@ a:active {
 
 <p>Now let's add some more information to get this styled properly:</p>
 
-<pre class="brush: css">body {
+<pre class="brush: css notranslate">body {
   width: 300px;
   margin: 0 auto;
   font-size: 1.2rem;
@@ -179,7 +179,7 @@ a:active {
 
 <p>We'll also provide some sample HTML to apply the CSS to:</p>
 
-<pre class="brush: html">&lt;p&gt;There are several browsers available, such as &lt;a href="#"&gt;Mozilla
+<pre class="brush: html notranslate">&lt;p&gt;There are several browsers available, such as &lt;a href="#"&gt;Mozilla
 Firefox&lt;/a&gt;, &lt;a href="#"&gt;Google Chrome&lt;/a&gt;, and
 &lt;a href="#"&gt;Microsoft Edge&lt;/a&gt;.&lt;/p&gt;</pre>
 
@@ -211,7 +211,7 @@ Firefox&lt;/a&gt;, &lt;a href="#"&gt;Google Chrome&lt;/a&gt;, and
 <div class="hidden">
 <h6 id="Playable_code">Playable code</h6>
 
-<pre class="brush: html">&lt;div class="body-wrapper" style="font-family: 'Open Sans Light',Helvetica,Arial,sans-serif;"&gt;
+<pre class="brush: html notranslate">&lt;div class="body-wrapper" style="font-family: 'Open Sans Light',Helvetica,Arial,sans-serif;"&gt;
   &lt;h2&gt;HTML Input&lt;/h2&gt;
   &lt;textarea id="code" class="html-input" style="width: 90%;height: 10em;padding: 10px;border: 1px solid #0095dd;"&gt;&lt;p&gt;There are several browsers available, such as &lt;a href="#"&gt;Mozilla
  Firefox&lt;/a&gt;, &lt;a href="#"&gt;Google Chrome&lt;/a&gt;, and
@@ -251,7 +251,7 @@ a:active {
 &lt;/div&gt;
 </pre>
 
-<pre class="brush: js">var htmlInput = document.querySelector(".html-input");
+<pre class="brush: js notranslate">var htmlInput = document.querySelector(".html-input");
 var cssInput = document.querySelector(".css-input");
 var reset = document.getElementById("reset");
 var htmlCode = htmlInput.value;
@@ -294,13 +294,13 @@ window.addEventListener("load", drawOutput);
 
 <p>Let's look at some HTML and CSS that will give us the effect we want. First, some simple HTML to style:</p>
 
-<pre class="brush: html">&lt;p&gt;For more information on the weather, visit our &lt;a href="http://#"&gt;weather page&lt;/a&gt;,
+<pre class="brush: html notranslate">&lt;p&gt;For more information on the weather, visit our &lt;a href="#"&gt;weather page&lt;/a&gt;,
 look at &lt;a href="http://#"&gt;weather on Wikipedia&lt;/a&gt;, or check
 out &lt;a href="http://#"&gt;weather on Extreme Science&lt;/a&gt;.&lt;/p&gt;</pre>
 
 <p>Next, the CSS:</p>
 
-<pre class="brush: css">body {
+<pre class="brush: css notranslate">body {
   width: 300px;
   margin: 0 auto;
   font-family: sans-serif;
@@ -346,9 +346,13 @@ a[href*="http"] {
 
 <p>Finally, we set some {{cssxref("padding-right")}} on the links to make space for the background image to appear in, so we aren't overlapping it with the text.</p>
 
-<p>A final word — how did we select just external links? Well, if you are writing your <a href="/en-US/docs/Learn/HTML/Introduction_to_HTML/Creating_hyperlinks">HTML links</a> properly, you should only be using absolute URLs for external links — it is more efficient to use relative links to link to other parts of your own site. The text "http" should therefore only appear in external links, and we can select this with an <a href="/en-US/Learn/CSS/Introduction_to_CSS/Selectors#Attribute_selectors">attribute selector</a>: <code>a[href*="http"]</code> selects {{htmlelement("a")}} elements, but only if they have an {{htmlattrxref("href","a")}} attribute with a value that contains "http" somewhere inside it.</p>
+<p>A final word — how did we select just external links? Well, if you are writing your <a href="/en-US/docs/Learn/HTML/Introduction_to_HTML/Creating_hyperlinks">HTML links</a> properly, you should only be using absolute URLs for external links — it is more efficient to use relative links to link to other parts of your own site (as with the first link). The text "http" should therefore only appear in external links (like the second and third ones), and we can select this with an <a href="/en-US/Learn/CSS/Introduction_to_CSS/Selectors#Attribute_selectors">attribute selector</a>: <code>a[href*="http"]</code> selects {{htmlelement("a")}} elements, but only if they have an {{htmlattrxref("href","a")}} attribute with a value that contains "http" somewhere inside it.</p>
 
 <p>So that's it — try revisiting the active learning section above and trying this new technique out!</p>
+
+<div class="blockIndicator note">
+<p><strong>Note</strong>: The <code>href</code> values look strange — we've used dummy links here that don't really go anywhere. The reason for this is that if we used real links, you would be able to load an external site in the <code>&lt;iframe&gt;</code> the live example is embedded in, thereby losing the example.</p>
+</div>
 
 <div class="note">
 <p><strong>Note</strong>: Don't worry if you are not familiar with <a href="/en-US/docs/Learn/CSS/Styling_boxes">backgrounds</a> and <a href="/en-US/docs/Web/Apps/Progressive/Responsive/responsive_design_building_blocks">responsive web design</a> yet; these are explained in other places.</p>
@@ -362,13 +366,13 @@ a[href*="http"] {
 
 <p>First, some HTML:</p>
 
-<pre class="brush: html">&lt;ul&gt;
+<pre class="brush: html notranslate">&lt;ul&gt;
   &lt;li&gt;&lt;a href="#"&gt;Home&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#"&gt;Pizza&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#"&gt;Music&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#"&gt;Wombats&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#"&gt;Finland&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</pre>
 
 <p>And now our CSS:</p>
 
-<pre class="brush: css">body,html {
+<pre class="brush: css notranslate">body,html {
   margin: 0;
   font-family: sans-serif;
 }
@@ -444,8 +448,6 @@ a:active {
 <p>We hope this article has provided you with all you'll need to know about links — for now! The final article in our Styling text module details how to use custom fonts on your websites, or web fonts as they are better known.</p>
 
 <p>{{PreviousMenuNext("Learn/CSS/Styling_text/Styling_lists", "Learn/CSS/Styling_text/Web_fonts", "Learn/CSS/Styling_text")}}</p>
-
-
 
 <h2 id="In_this_module">In this module</h2>
 

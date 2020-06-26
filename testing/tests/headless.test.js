@@ -25,4 +25,119 @@ describe("Basic viewing of functional pages", () => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     await expect(page).toMatch("<foo>: A test tag");
   });
+
+  it("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction page", async () => {
+    const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction";
+    const flexSample1Uri = `${uri}/Flex/_samples_/Flex_1`;
+    const flexSample2Uri = `${uri}/Flex/_samples_/Flex_2`;
+    const gridSample1Uri = `${uri}/Grid/_samples_/Grid_1`;
+    const gridSample2Uri = `${uri}/_samples_/Grid_2`;
+    await page.goto(testURL(uri));
+    await expect(page).toMatch("A Test Introduction to CSS layout");
+    await expect(page).toMatchElement("h1", {
+      text: "A Test Introduction to CSS layout",
+    });
+    await expect(page).toMatchElement("#Flexbox", {
+      text: "Flexbox",
+    });
+    await expect(page).toMatchElement(
+      `iframe.live-sample-frame.sample-code-frame[src$="${flexSample1Uri}"]`
+    );
+    await expect(page).toMatchElement(
+      `iframe.live-sample-frame.sample-code-frame[src$="${flexSample2Uri}"]`
+    );
+    await expect(page).toMatchElement("#Grid_Layout", {
+      text: "Grid Layout",
+    });
+    await expect(page).toMatchElement(
+      `iframe.live-sample-frame.sample-code-frame[src$="${gridSample1Uri}"]`
+    );
+    await expect(page).toMatchElement("#Grid_2 > pre.css.notranslate", {
+      text: /\.wrapper\s*\{\s*display\:\s*grid\;/,
+    });
+    await expect(page).toMatchElement(
+      `iframe.live-sample-frame.sample-code-frame[src$="${gridSample2Uri}"]`
+    );
+    // Ensure that the live-sample pages were built.
+    for (const sampleUri of [
+      flexSample1Uri,
+      flexSample2Uri,
+      gridSample1Uri,
+      gridSample2Uri,
+    ]) {
+      await page.goto(testURL(sampleUri));
+      await expect(page).toMatchElement("body > div.wrapper > div.box1", {
+        text: "One",
+      });
+      await expect(page).toMatchElement("body > div.wrapper > div.box2", {
+        text: "Two",
+      });
+      await expect(page).toMatchElement("body > div.wrapper > div.box3", {
+        text: "Three",
+      });
+    }
+  });
+
+  it("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction/Flex page", async () => {
+    const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Flex";
+    const flexSample1Uri = `${uri}/_samples_/Flex_1`;
+    const flexSample2Uri = `${uri}/_samples_/Flex_2`;
+    await page.goto(testURL(uri));
+    await expect(page).toMatch("A Test Introduction to CSS Flexbox Layout");
+    await expect(page).toMatchElement("h1", {
+      text: "A Test Introduction to CSS Flexbox Layout",
+    });
+    await expect(page).toMatchElement("#Flexbox", {
+      text: "Flexbox",
+    });
+    await expect(page).toMatchElement("#Flex_1 > pre.css.notranslate", {
+      text: /\.wrapper\s*\{\s*display\:\s*flex\;\s*\}/,
+    });
+    await expect(page).toMatchElement(
+      `iframe.live-sample-frame.sample-code-frame[src$="${flexSample1Uri}"]`
+    );
+    await expect(page).toMatchElement("#Flex_2 > pre.css.notranslate", {
+      text: /\.wrapper\s*\{\s*display\:\s*flex\;\s*\}.+flex\:\s*1\;/,
+    });
+    await expect(page).toMatchElement(
+      `iframe.live-sample-frame.sample-code-frame[src$="${flexSample2Uri}"]`
+    );
+  });
+
+  it("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction/Grid page", async () => {
+    const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Grid";
+    const gridSample1Uri = `${uri}/_samples_/Grid_1`;
+    const gridSample2Uri = `${uri}/_samples_/Grid_2`;
+    await page.goto(testURL(uri));
+    await expect(page).toMatch("A Test Introduction to CSS Grid Layout");
+    await expect(page).toMatchElement("h1", {
+      text: "A Test Introduction to CSS Grid Layout",
+    });
+    await expect(page).toMatchElement("#Grid_Layout", {
+      text: "Grid Layout",
+    });
+    await expect(page).toMatchElement("#Grid_1 > pre.css.notranslate", {
+      text: /\.wrapper\s*\{\s*display\:\s*grid\;/,
+    });
+    await expect(page).toMatchElement(
+      `iframe.live-sample-frame.sample-code-frame[src$="${gridSample1Uri}"]`
+    );
+    await expect(page).toMatchElement("#Grid_2 > pre.css.notranslate", {
+      text: /\.wrapper\s*\{\s*display\:\s*grid\;.+\.box1\s*\{/,
+    });
+    await expect(page).toMatchElement(
+      `iframe.live-sample-frame.sample-code-frame[src$="${gridSample2Uri}"]`
+    );
+    // Ensure that the live-sample page "gridSample2Uri" was built.
+    await page.goto(testURL(gridSample2Uri));
+    await expect(page).toMatchElement("body > div.wrapper > div.box1", {
+      text: "One",
+    });
+    await expect(page).toMatchElement("body > div.wrapper > div.box2", {
+      text: "Two",
+    });
+    await expect(page).toMatchElement("body > div.wrapper > div.box3", {
+      text: "Three",
+    });
+  });
 });

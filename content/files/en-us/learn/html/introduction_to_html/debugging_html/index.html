@@ -71,7 +71,7 @@ tags:
  <li>First, download our <a href="https://github.com/mdn/learning-area/blob/master/html/introduction-to-html/debugging-html/debug-example.html">debug-example demo</a> and save it locally. This demo is deliberately written to have some errors in it for us to explore (the HTML markup is said to be <strong>badly-formed</strong>, as opposed to <strong>well-formed</strong>).</li>
  <li>Next, open it in a browser. You will see something like this:<img alt="A simple HTML document with a title of HTML debugging examples, and some information about common HTML errors, such as unclosed elements, badly nested elements, and unclosed attributes. " src="https://mdn.mozillademos.org/files/12437/badly-formed-html.png" style="display: block; margin: 0 auto;"></li>
  <li>This immediately doesn't look great; let's look at the source code to see if we can work out why (only the body contents are shown):
-  <pre class="brush: html">&lt;h1&gt;HTML debugging examples&lt;/h1&gt;
+  <pre class="brush: html notranslate">&lt;h1&gt;HTML debugging examples&lt;/h1&gt;
 
 &lt;p&gt;What causes errors in HTML?
 
@@ -103,13 +103,13 @@ tags:
    <li>The paragraphs and list items have been given closing tags.</li>
    <li>It isn't clear where the first <code>&lt;strong&gt;</code> element should be closed, so the browser has wrapped each separate block of text with its own strong tag, right down to the bottom of the document!</li>
    <li>The  incorrect nesting has been fixed by the browser like this:
-    <pre class="brush: html">&lt;strong&gt;strong
+    <pre class="brush: html notranslate">&lt;strong&gt;strong
   &lt;em&gt;strong emphasised?&lt;/em&gt;
 &lt;/strong&gt;
 &lt;em&gt; what is this?&lt;/em&gt;</pre>
    </li>
    <li>The link with the missing double quote has been deleted altogether. The last list item looks like this:
-    <pre class="brush: html">&lt;li&gt;
+    <pre class="brush: html notranslate">&lt;li&gt;
   &lt;strong&gt;Unclosed attributes: Another common source of HTML problems.
   Let's look at an example: &lt;/strong&gt;
 &lt;/li&gt;</pre>
@@ -148,12 +148,13 @@ tags:
 <p>The error messages are usually helpful, but sometimes they are not so helpful; with a bit of practice you can work out how to interpret these to fix your code. Let's go through the error messages and what they mean. You'll see that each message comes with a line and column number to help you to locate the error easily.</p>
 
 <ul>
+ <li>"<span>Consider adding a </span><code>lang</code><span> attribute to the </span><code>html</code><span> start tag to declare the language of this document.": This is not an error but a warning. The <a href="https://www.w3.org/International/questions/qa-html-language-declarations">recommendation</a> is to always define a language and the warning explains how to do it.</span></li>
  <li>"End tag <code>li</code> implied, but there were open elements" (2 instances): These messages indicate that an element is open that should be closed. The ending tag is implied, but not actually there. The line/column information points to the first line after the line where the closing tag should really be, but this is a good enough clue to see what is wrong.</li>
  <li>"Unclosed element <code>strong</code>": This is really easy to understand — a {{htmlelement("strong")}} element is unclosed, and the line/column information points right to where it is.</li>
  <li>"End tag <code>strong</code> violates nesting rules": This points out the incorrectly nested elements, and the line/column information points out where it is.</li>
  <li>"End of file reached when inside an attribute value. Ignoring tag": This one is rather cryptic; it refers to the fact that there is an attribute value not properly formed somewhere, possibly near the end of the file because the end of the file appears inside the attribute value. The fact that the browser doesn't render the link should give us a good clue as to what element is at fault.</li>
  <li>"End of file seen and there were open elements": This is a bit ambiguous, but basically refers to the fact there are open elements that need to be properly closed. The lines numbers point to the last few lines of the file, and this error message comes with a line of code that points out an example of an open element:
-  <pre>example: &lt;a href="https://www.mozilla.org/&gt;link to Mozilla homepage&lt;/a&gt; ↩ &lt;/ul&gt;↩ &lt;/body&gt;↩&lt;/html&gt;</pre>
+  <pre class="notranslate">example: &lt;a href="https://www.mozilla.org/&gt;link to Mozilla homepage&lt;/a&gt; ↩ &lt;/ul&gt;↩ &lt;/body&gt;↩&lt;/html&gt;</pre>
 
   <div class="note">
   <p><strong>Note</strong>: An attribute missing a closing quote can result in an open element because the rest of the document is interpreted as the attribute's content.</p>
@@ -174,8 +175,6 @@ tags:
 
 <p>{{PreviousMenuNext("Learn/HTML/Introduction_to_HTML/Document_and_website_structure", "Learn/HTML/Introduction_to_HTML/Marking_up_a_letter", "Learn/HTML/Introduction_to_HTML")}}</p>
 
-<p> </p>
-
 <h2 id="In_this_module">In this module</h2>
 
 <ul>
@@ -189,5 +188,3 @@ tags:
  <li><a href="/en-US/docs/Learn/HTML/Introduction_to_HTML/Marking_up_a_letter">Marking up a letter</a></li>
  <li><a href="/en-US/docs/Learn/HTML/Introduction_to_HTML/Structuring_a_page_of_content">Structuring a page of content</a></li>
 </ul>
-
-<p> </p>

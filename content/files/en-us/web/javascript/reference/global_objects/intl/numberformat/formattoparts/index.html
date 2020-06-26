@@ -18,7 +18,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">Intl.NumberFormat.prototype.formatToParts(number)</pre>
+<pre class="syntaxbox notranslate">Intl.NumberFormat.prototype.formatToParts(number)</pre>
 
 <h3 id="Parameters">Parameters</h3>
 
@@ -35,9 +35,9 @@ tags:
 
 <p>The <code>formatToParts()</code> method is useful for custom formatting of number strings. It returns an {{jsxref("Array")}} of objects containing the locale-specific tokens from which it possible to build custom strings while preserving the locale-specific parts. The structure the <code>formatToParts()</code> method returns, looks like this:</p>
 
-<pre class="brush: js">[
-  { type: "integer", value: "3" }
-  { type: "group", value: "." }
+<pre class="brush: js notranslate">[
+  { type: "integer", value: "3" },
+  { type: "group", value: "." },
   { type: "integer", value: "500" }
 ]</pre>
 
@@ -81,7 +81,7 @@ tags:
 
 <p><code>NumberFormat</code> outputs localized, opaque strings that cannot be manipulated directly:</p>
 
-<pre class="brush: js">var number = 3500;
+<pre class="brush: js notranslate">var number = 3500;
 
 var formatter = new Intl.NumberFormat('de-DE', {
   style: 'currency',
@@ -94,23 +94,23 @@ formatter.format(number);
 
 <p>However, in many User Interfaces there is a desire to customize the formatting of this string. The <code>formatToParts</code> method enables locale-aware formatting of strings produced by <code>NumberFormat</code> formatters by providing you the string in parts:</p>
 
-<pre class="brush: js">formatter.formatToParts(number);
+<pre class="brush: js notranslate">formatter.formatToParts(number);
 
 // return value:
 [
-  { type: "integer",  value: "3"   }
-  { type: "group",    value: "."   }
-  { type: "integer",  value: "500" }
-  { type: "decimal",  value: ","   }
-  { type: "fraction", value: "00"  }
-  { type: "literal",  value: " "   }
+  { type: "integer",  value: "3"   },
+  { type: "group",    value: "."   },
+  { type: "integer",  value: "500" },
+  { type: "decimal",  value: ","   },
+  { type: "fraction", value: "00"  },
+  { type: "literal",  value: " "   },
   { type: "currency", value: "€"   }
 ]
 </pre>
 
 <p>Now the information is available separately and it can be formatted and concatenated again in a customized way. For example by using {{jsxref("Array.prototype.map()")}}, <a href="/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions">arrow functions</a>, a <a href="/en-US/docs/Web/JavaScript/Reference/Statements/switch">switch statement</a>, <a href="/en-US/docs/Web/JavaScript/Reference/Template_literals">template literals</a>, and {{jsxref("Array.prototype.reduce()")}}.</p>
 
-<pre class="brush: js">var numberString = formatter.formatToParts(number).map(({type, value}) =&gt; {
+<pre class="brush: js notranslate">var numberString = formatter.formatToParts(number).map(({type, value}) =&gt; {
   switch (type) {
     case 'currency': return `&lt;strong&gt;${value}&lt;/strong&gt;`;
     default : return value;
@@ -120,7 +120,7 @@ formatter.format(number);
 
 <p>This will make the currency bold, when using the <code>formatToParts()</code> method.</p>
 
-<pre class="brush: js">console.log(numberString);
+<pre class="brush: js notranslate">console.log(numberString);
 // "3.500,00 &lt;strong&gt;€&lt;/strong&gt;"</pre>
 
 <h2 id="Specifications">Specifications</h2>

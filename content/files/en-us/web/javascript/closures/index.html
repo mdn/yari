@@ -24,7 +24,7 @@ tags:
 <p>Consider the following example code:</p>
 
 <div>
-<pre class="brush: js">function init() {
+<pre class="brush: js notranslate">function init() {
   var name = 'Mozilla'; // name is a local variable created by init
   function displayName() { // displayName() is the inner function, a closure
     alert(name); // use variable declared in the parent function
@@ -42,7 +42,7 @@ init();</pre>
 
 <p>Consider the following code example:</p>
 
-<pre class="brush: js">function makeFunc() {
+<pre class="brush: js notranslate">function makeFunc() {
   var name = 'Mozilla';
   function displayName() {
     alert(name);
@@ -62,7 +62,7 @@ myFunc();
 
 <p>Here's a slightly more interesting example—a <code>makeAdder</code> function:</p>
 
-<pre class="brush: js">function makeAdder(x) {
+<pre class="brush: js notranslate">function makeAdder(x) {
   return function(y) {
     return x + y;
   };
@@ -91,7 +91,7 @@ console.log(add10(2)); // 12
 
 <p>For instance, suppose we want to add buttons to a page to adjust the text size. One way of doing this is to specify the font-size of the <code>body</code> element (in pixels), and then set the size of the other elements on the page (such as headers) using the relative <code>em</code> unit:</p>
 
-<pre class="brush: css">body {
+<pre class="brush: css notranslate">body {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 12px;
 }
@@ -109,7 +109,7 @@ h2 {
 
 <p>Here's the JavaScript:</p>
 
-<pre class="brush: js">function makeSizer(size) {
+<pre class="brush: js notranslate">function makeSizer(size) {
   return function() {
     document.body.style.fontSize = size + 'px';
   };
@@ -122,12 +122,12 @@ var size16 = makeSizer(16);
 
 <p><code>size12</code>, <code>size14</code>, and <code>size16</code> are now functions that resize the body text to 12, 14, and 16 pixels, respectively. You can attach them to buttons (in this case hyperlinks) as demonstrated in the following code example.</p>
 
-<pre class="brush: js">document.getElementById('size-12').onclick = size12;
+<pre class="brush: js notranslate">document.getElementById('size-12').onclick = size12;
 document.getElementById('size-14').onclick = size14;
 document.getElementById('size-16').onclick = size16;
 </pre>
 
-<pre class="brush: html">&lt;a href="#" id="size-12"&gt;12&lt;/a&gt;
+<pre class="brush: html notranslate">&lt;a href="#" id="size-12"&gt;12&lt;/a&gt;
 &lt;a href="#" id="size-14"&gt;14&lt;/a&gt;
 &lt;a href="#" id="size-16"&gt;16&lt;/a&gt;
 </pre>
@@ -142,7 +142,7 @@ document.getElementById('size-16').onclick = size16;
 
 <p>The following code illustrates how to use closures to define public functions that can access private functions and variables. Note that these closures follow the <a class="external" href="http://www.google.com/search?q=javascript+module+pattern" title="http://www.google.com/search?q=javascript+module+pattern">Module Design Pattern</a>.</p>
 
-<pre class="brush: js">var counter = (function() {
+<pre class="brush: js notranslate">var counter = (function() {
   var privateCounter = 0;
   function changeBy(val) {
     privateCounter += val;
@@ -183,7 +183,7 @@ console.log(counter.value());  // 1.
 <p>Notice that I defined an anonymous function that creates a counter, and then I call it immediately and assign the result to the <code>counter</code> variable. You could store this function in a separate variable <code>makeCounter</code>, and then use it to create several counters.</p>
 </div>
 
-<pre class="brush: js">var makeCounter = function() {
+<pre class="brush: js notranslate">var makeCounter = function() {
   var privateCounter = 0;
   function changeBy(val) {
     privateCounter += val;
@@ -235,7 +235,7 @@ alert(counter2.value()); // 0.
 
 <p>A common mistake is not realizing that, in the case where the outer function is itself a nested function, access to the outer function's scope includes the enclosing scope of the outer function—effectively creating a chain of function scopes. To demonstrate, consider the following example code.</p>
 
-<pre class="brush: js">// global scope
+<pre class="brush: js notranslate">// global scope
 var e = 10;
 function sum(a){
   return function(b){
@@ -280,13 +280,13 @@ console.log(s3) //log 20
 
 <p>Prior to the introduction of the <a href="/en-US/docs/Web/JavaScript/Reference/Statements/let" title="let"><code>let</code> </a>keyword in ECMAScript 2015, a common problem with closures occurred when you created them inside a loop. To demonstrate, consider the following example code.</p>
 
-<pre class="brush: html">&lt;p id="help"&gt;Helpful notes will appear here&lt;/p&gt;
+<pre class="brush: html notranslate">&lt;p id="help"&gt;Helpful notes will appear here&lt;/p&gt;
 &lt;p&gt;E-mail: &lt;input type="text" id="email" name="email"&gt;&lt;/p&gt;
 &lt;p&gt;Name: &lt;input type="text" id="name" name="name"&gt;&lt;/p&gt;
 &lt;p&gt;Age: &lt;input type="text" id="age" name="age"&gt;&lt;/p&gt;
 </pre>
 
-<pre class="brush: js">function showHelp(help) {
+<pre class="brush: js notranslate">function showHelp(help) {
   document.getElementById('help').innerHTML = help;
 }
 
@@ -318,7 +318,7 @@ setupHelp();
 
 <p>One solution in this case is to use more closures: in particular, to use a function factory as described earlier:</p>
 
-<pre class="brush: js">function showHelp(help) {
+<pre class="brush: js notranslate">function showHelp(help) {
   document.getElementById('help').innerHTML = help;
 }
 
@@ -350,7 +350,7 @@ setupHelp();
 
 <p>One other way to write the above using anonymous closures is:</p>
 
-<pre class="brush: js">function showHelp(help) {
+<pre class="brush: js notranslate">function showHelp(help) {
   document.getElementById('help').innerHTML = help;
 }
 
@@ -373,9 +373,9 @@ function setupHelp() {
 
 setupHelp();</pre>
 
-<p>If you don't want to use more closures, you can use the <code><a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Statements/let">let</a></code> keyword introduced in ES2015 :</p>
+<p>If you don't want to use more closures, you can use the <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let">let</a></code> keyword introduced in ES2015 :</p>
 
-<pre class="brush: js">function showHelp(help) {
+<pre class="brush: js notranslate">function showHelp(help) {
   document.getElementById('help').innerHTML = help;
 }
 
@@ -400,7 +400,7 @@ setupHelp();</pre>
 
 <p>Another alternative could be to use <code>forEach()</code> to iterate over the <code>helpText</code> array and attach a listener to each <a href="/en-US/docs/Web/HTML/Element/p" title="The HTML &lt;p> element represents a paragraph."><code>&lt;p&gt;</code></a>, as shown:</p>
 
-<pre class="brush: js">function showHelp(help) {
+<pre class="brush: js notranslate">function showHelp(help) {
   document.getElementById('help').innerHTML = help;
 }
 
@@ -428,7 +428,7 @@ setupHelp();</pre>
 
 <p>Consider the following case:</p>
 
-<pre class="brush: js">function MyObject(name, message) {
+<pre class="brush: js notranslate">function MyObject(name, message) {
   this.name = name.toString();
   this.message = message.toString();
   this.getName = function() {
@@ -443,7 +443,7 @@ setupHelp();</pre>
 
 <p>Because the previous code does not take advantage of the benefits of using closures in this particular instance, we could instead rewrite it to avoid using closure as follows:</p>
 
-<pre class="brush: js">function MyObject(name, message) {
+<pre class="brush: js notranslate">function MyObject(name, message) {
   this.name = name.toString();
   this.message = message.toString();
 }
@@ -459,7 +459,7 @@ MyObject.prototype = {
 
 <p>However, redefining the prototype is not recommended. The following example instead appends to the existing prototype:</p>
 
-<pre class="brush: js">function MyObject(name, message) {
+<pre class="brush: js notranslate">function MyObject(name, message) {
   this.name = name.toString();
   this.message = message.toString();
 }

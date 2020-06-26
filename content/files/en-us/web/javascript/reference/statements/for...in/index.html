@@ -17,7 +17,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">for (<var>variable</var> in <var>object</var>)
+<pre class="syntaxbox notranslate">for (<var>variable</var> in <var>object</var>)
   statement</pre>
 
 <dl>
@@ -29,7 +29,7 @@ tags:
 
 <h2 id="Description">Description</h2>
 
-<p>A <code>for...in</code> loop only iterates over enumerable, non-Symbol properties. Objects created from built–in constructors like <code>Array</code> and <code>Object</code> have inherited non–enumerable properties from <code>Object.prototype</code> and <code>String.prototype</code>, such as {{jsxref("String")}}'s {{jsxref("String.indexOf", "indexOf()")}} method or {{jsxref("Object")}}'s {{jsxref("Object.toString", "toString()")}} method. The loop will iterate over all enumerable properties of the object itself and those the object inherits from its constructor's prototype (properties closer to the object in the prototype chain override prototypes' properties).</p>
+<p>A <code>for...in</code> loop only iterates over enumerable, non-Symbol properties. Objects created from built–in constructors like <code>Array</code> and <code>Object</code> have inherited non–enumerable properties from <code>Object.prototype</code> and <code>String.prototype</code>, such as {{jsxref("String")}}'s {{jsxref("String.indexOf", "indexOf()")}} method or {{jsxref("Object")}}'s {{jsxref("Object.toString", "toString()")}} method. The loop will iterate over all enumerable properties of the object itself and those the object inherits from its prototype chain (properties of nearer prototypes take precedence over those of prototypes further away from the object in its prototype chain).</p>
 
 <h3 id="Deleted_added_or_modified_properties">Deleted, added, or modified properties</h3>
 
@@ -65,7 +65,7 @@ tags:
 
 <p>The <code>for...in</code> loop below iterates over all of the object's enumerable, non-Symbol properties and logs a string of the property names and their values.</p>
 
-<pre class="brush: js">var obj = {a: 1, b: 2, c: 3};
+<pre class="brush: js notranslate">var obj = {a: 1, b: 2, c: 3};
 
 for (const prop in obj) {
   console.log(`obj.${prop} = ${obj[prop]}`);
@@ -80,7 +80,7 @@ for (const prop in obj) {
 
 <p>The following function illustrates the use of {{jsxref("Object.prototype.hasOwnProperty", "hasOwnProperty()")}}: the inherited properties are not displayed.</p>
 
-<pre class="brush: js">var triangle = {a: 1, b: 2, c: 3};
+<pre class="brush: js notranslate">var triangle = {a: 1, b: 2, c: 3};
 
 function ColoredTriangle() {
   this.color = 'red';
@@ -123,7 +123,7 @@ for (const prop in obj) {
 
 <p>Prior to Firefox 40, it was possible to use an initializer expression (<code>i=0</code>) in a <code>for...in</code> loop:</p>
 
-<pre class="brush: js example-bad">var obj = {a: 1, b: 2, c: 3};
+<pre class="brush: js example-bad notranslate">var obj = {a: 1, b: 2, c: 3};
 for (var i = 0 in obj) {
   console.log(obj[i]);
 }

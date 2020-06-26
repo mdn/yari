@@ -51,6 +51,7 @@ const {
   MacroExecutionError,
   MacroRedirectedLinkError,
   MacroBrokenLinkError,
+  MacroDeprecatedError,
 } = require("./errors.js");
 
 function normalizeMacroName(name) {
@@ -123,12 +124,18 @@ async function render(source, templates, pageEnvironment, allPagesInfo) {
   // This tracks the token for the "recordNonFatalError()" function.
   let currentToken;
 
-  function recordNonFatalError(message, redirectInfo = null) {
-    let NonFatalErrorClass = MacroBrokenLinkError;
+  function recordNonFatalError(kind, message, redirectInfo = null) {
+    let NonFatalErrorClass;
     let args = [new Error(message), source, currentToken];
-    if (redirectInfo) {
+    if (kind === "deprecated") {
+      NonFatalErrorClass = MacroDeprecatedError;
+    } else if (kind === "broken-link") {
+      NonFatalErrorClass = MacroBrokenLinkError;
+    } else if (kind === "redirected-link") {
       NonFatalErrorClass = MacroRedirectedLinkError;
       args.push(redirectInfo);
+    } else {
+      throw Error(`unsupported kind of non-fatal error requested: "${kind}"`);
     }
     nonFatalErrors.push(new NonFatalErrorClass(...args));
   }

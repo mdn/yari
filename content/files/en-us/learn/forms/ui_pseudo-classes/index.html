@@ -427,26 +427,28 @@ function toggleBilling() {
          value="Mr Soft" readonly&gt;
 &lt;/div&gt;</pre>
 
-<p>If you try the live example, you'll see that the top set of form elements are not focusable, however the values are submitted when the form is submitted. We've also styled the read-only form controls using the <code>:read-only</code> pseudo-class, like so:</p>
+<p>If you try the live example, you'll see that the top set of form elements are not focusable, however the values are submitted when the form is submitted. We've styled the form controls using the <code>:read-only</code> and <code>:read-white</code> pseudo-classes, like so:</p>
 
-<pre class="brush: css">input:-moz-read-only, textarea:-moz-read-only {
-  border: 0;
-  box-shadow: none;
-  resize: none;
-  background-color: white;
+<pre class="brush: css">input:-moz-read-only, textarea:-moz-read-only,
+input:read-only, textarea:read-only {
+  border: 0;
+  box-shadow: none;
+  background-color: white;
 }
 
-input:read-only, textarea:read-only {
-  border: 0;
-  box-shadow: none;
-  resize: none;
-  background-color: white;
-}</pre>
+textarea:-moz-read-write,
+textarea:read-write {
+  box-shadow: inset 1px 1px 3px #ccc;
+  border-radius: 5px;
+}
+</pre>
 
-<p>Yes, you've guessed it — Firefox only supports it with a prefix, hence having to double up the ruleset.</p>
+<p>Firefox only supported these pseudo-classes with a prefix up to version 78; at which point it started to support the unprefixed version. The full example looks like so:</p>
+
+<p>{{EmbedGHLiveSample("learning-area/html/forms/pseudo-classes/readonly-confirmation.html", '100%', 660)}}</p>
 
 <div class="blockIndicator note">
-<p><strong>Note</strong>: <code>:enabled</code> and <code>read-write</code> are two more pseudo-classes that you'll probably rarely use, given that they describe the default states of input elements.</p>
+<p><strong>Note</strong>: <code>:enabled</code> and <code>:read-write</code> are two more pseudo-classes that you'll probably rarely use, given that they describe the default states of input elements.</p>
 </div>
 
 <h2 id="Radio_and_checkbox_states_—_checked_default_indeterminate">Radio and checkbox states — checked, default, indeterminate</h2>

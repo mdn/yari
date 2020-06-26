@@ -23,7 +23,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">var<em> readerPromise = Bluetooth</em>.getAvailability();
+<pre class="syntaxbox notranslate">var<em> readerPromise = Bluetooth</em>.getAvailability();
 </pre>
 
 <h3 id="Parameters">Parameters</h3>
@@ -37,6 +37,17 @@ tags:
 <h2 id="Exceptions">Exceptions</h2>
 
 <p>This method doesn't throw any exceptions.</p>
+
+<h2 id="Examples">Examples</h2>
+
+<p>The following snippet prints out a message in the console specifying wheter or not Bluetooth is supported:</p>
+
+<pre class="notranslate">navigator.bluetooth.getAvailability().then(available =&gt; {
+  if (available)
+      console.log("This device supports Bluetooth!");
+  else
+      console.log("Doh! Bluetooth is not supported");
+});</pre>
 
 <h2 id="Specifications">Specifications</h2>
 

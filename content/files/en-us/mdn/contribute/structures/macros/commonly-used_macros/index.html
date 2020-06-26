@@ -42,7 +42,7 @@ tags:
  </li>
  <li>{{TemplateLink("anch")}} - creates link to in-page section:
   <ul>
-   <li><code style="font-size: 1rem; letter-spacing: -0.00278rem;">\{{anch("Linking to pages in references")}}</code><span style="font-size: 1rem; letter-spacing: -0.00278rem;">; </span></li>
+   <li><code style="">\{{anch("Linking to pages in references")}}</code><span style="">; </span></li>
    <li>
     <p>Demo: {{anch("Linking to pages in references")}}</p>
    </li>
@@ -211,19 +211,3 @@ tags:
 <p>The {{TemplateLink("AvailableInWorkers")}} macro inserts a localised note box indicating that a feature is available in a <a href="/en-US/docs/Web/API/Web_Workers_API">Web worker</a> context.</p>
 
 <p>{{AvailableInWorkers}}</p>
-
-<h2 id="Version_information_macros">Version information macros</h2>
-
-<p>These macros are used to indicate that content is relevant only to specific versions of a product.</p>
-
-<ul>
- <li>{{TemplateLink("gecko_minversion_inline")}}: For example: {{Gecko_MinVersion_Inline("999.9")}}</li>
- <li>{{TemplateLink("fx_minversion_inline")}}: For example: {{FX_MinVersion_Inline("999.9")}}</li>
-</ul>
-
-<p>These macros are not shown when the specified version is sufficiently older (currently 10 versions) than the current gecko release.</p>
-
-<ul>
- <li>{{TemplateLink("gecko_minversion_inline")}}(9.9): {{Gecko_MinVersion_Inline("9.9")}}</li>
- <li>{{TemplateLink("fx_minversion_inline")}}(9.9): {{FX_MinVersion_Inline("9.9")}}</li>
-</ul>

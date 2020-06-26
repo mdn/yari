@@ -11,6 +11,7 @@ tags:
   - Layout
   - Reference
   - Web
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -33,7 +34,7 @@ tags:
 
 <h2 id="Syntax" name="Syntax">Syntax</h2>
 
-<pre class="brush:css no-line-numbers">/* &lt;length&gt; values */
+<pre class="brush:css no-line-numbers notranslate">/* &lt;length&gt; values */
 right: 3px;
 right: 2.4em;
 
@@ -74,12 +75,12 @@ right: unset;
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Examples" name="Examples">Examples</h2>
 
 <div id="example1">
-<pre class="brush: css; highlight:[16]">#relative {
+<pre class="brush: css; highlight:[16] notranslate">#relative {
   width: 100px;
   height: 100px;
   background-color: #FFC7E4;
@@ -97,7 +98,7 @@ right: unset;
   right: 20px;
 }</pre>
 
-<pre class="brush: html">&lt;div id="relative"&gt;Relatively positioned&lt;/div&gt;
+<pre class="brush: html notranslate">&lt;div id="relative"&gt;Relatively positioned&lt;/div&gt;
 &lt;div id="absolute"&gt;Absolutely positioned&lt;/div&gt;
 </pre>
 
@@ -109,7 +110,7 @@ right: unset;
 <p>When both <code>left</code> and <code>right</code> are declared, the element will stretch to meet both, unless other constraints prevent it from doing so. If the element will not stretch or shrink to meet meet both. When the position of the element is<em> overspecified</em>, the precende is based on the container's direction: The <code>left</code> will take precendence if the container's direction is left-to-right. The <code>right</code> will take precedence if the container's direction is right-to-left.</p>
 
 <div id="example2">
-<pre class="brush: css;">div {
+<pre class="brush: css; notranslate">div {
   outline: 1px solid #CCCCCC;
 }
 #parent {
@@ -133,7 +134,7 @@ right: unset;
 }
 </pre>
 
-<pre class="brush: html">&lt;div id="parent"&gt;Parent
+<pre class="brush: html notranslate">&lt;div id="parent"&gt;Parent
   &lt;div id="noWidth"&gt;No width&lt;/div&gt;
   &lt;div id="width"&gt;width: 100px&lt;/div&gt;
 &lt;/div&gt;</pre>

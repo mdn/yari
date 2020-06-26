@@ -21,7 +21,7 @@ tags:
 
 <p><span class="seoSummary">The {{domxref("Clipboard")}} method <strong><code>write()</code></strong> writes arbitrary data, such as images, to the clipboard.</span> This can be used to implement cut and copy functionality.</p>
 
-<p>Before you can write to the clipboard, you need to use the <a href="/en-US/docs/Web/API/Permissions_API">Permissions API</a> to get the <code>"clipboard-write"</code> permission.</p>
+<p>The <code>"clipboard-write"</code> permission of the <a href="/en-US/docs/Web/API/Permissions_API">Permissions API</a>, is granted automatically to pages when they are in the active tab.</p>
 
 <div class="note">
 <p><strong>Note:</strong> Browser support for the asynchronous clipboard APIs is still in the process of being implemented. Be sure to check the {{anch("Browser compatibility", "compatibility table")}} as well as {{SectionOnPage("/en-US/docs/Web/API/Clipboard", "Clipboard availability")}} for more information.</p>
@@ -29,13 +29,13 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">var <em>promise</em> = navigator.clipboard.write(<em>data</em>)</pre>
+<pre class="syntaxbox notranslate">var <em>promise</em> = navigator.clipboard.write(<em>data</em>)</pre>
 
 <h3 id="Parameters">Parameters</h3>
 
 <dl>
  <dt><code>data</code></dt>
- <dd>A {{domxref("ClipboardItem")}} object containing data to be written to the clipboard.</dd>
+ <dd>An array of {{domxref("ClipboardItem")}} objects containing data to be written to the clipboard.</dd>
 </dl>
 
 <h3 id="Return_value">Return value</h3>
@@ -46,8 +46,8 @@ tags:
 
 <p>This example function replaces the current contents of the clipboard with a specified string.</p>
 
-<pre class="brush: js">function setClipboard(text) {
-  let data = new ClipboardItem({ "text/plain": text });
+<pre class="brush: js notranslate">function setClipboard(text) {
+  let data = [new ClipboardItem({ "text/plain": text })];
 
   navigator.clipboard.write(data).then(function() {
     /* success */
@@ -61,9 +61,9 @@ tags:
 
 <h3 id="Example_of_copying_canvas_contents_to_the_clipboard">Example of copying canvas contents to the clipboard</h3>
 
-<pre class="brush: js">function copyCanvasContentsToClipboard(canvas, onDone, onError) {
+<pre class="brush: js notranslate">function copyCanvasContentsToClipboard(canvas, onDone, onError) {
   canvas.toBlob(function (blob) {
-    let data = new ClipboardItem({ [blob.type]: blob });
+    let data = [new ClipboardItem({ [blob.type]: blob })];
 
     navigator.clipboard.write(data).then(function () {
       onDone();
@@ -72,6 +72,10 @@ tags:
     })
   });
 }</pre>
+
+<div class="note">
+<p><strong>Note</strong>: You can only pass in one clipboard item at a time.</p>
+</div>
 
 <h2 id="Specifications">Specifications</h2>
 

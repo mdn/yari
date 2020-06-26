@@ -17,9 +17,9 @@ tags:
 
 <h2 id="Concepts_and_usage">Concepts and usage</h2>
 
-<p>Fetch provides a generic definition of {{DOMxRef("Request")}} and {{DOMxRef("Response")}} objects (and other things involved with network requests). This will allow them to be used wherever they are needed in the future, whether it’s for service workers, Cache API, and other similar things that handle or modify requests and responses, or any kind of use case that might require you to generate your own responses programmatically(that is, the use of computer program or personal programming instructions).</p>
+<p>Fetch provides a generic definition of {{DOMxRef("Request")}} and {{DOMxRef("Response")}} objects (and other things involved with network requests). This will allow them to be used wherever they are needed in the future, whether it’s for service workers, Cache API, and other similar things that handle or modify requests and responses, or any kind of use case that might require you to generate your responses programmatically(that is, the use of computer program or personal programming instructions).</p>
 
-<p>It also provides a definition for related concepts such as CORS and the HTTP origin header semantics, supplanting their separate definitions elsewhere.</p>
+<p>It also defines related concepts such as CORS and the HTTP Origin header semantics, supplanting their separate definitions elsewhere.</p>
 
 <p>For making a request and fetching a resource, use the {{DOMxRef("WindowOrWorkerGlobalScope.fetch()")}} method. It is implemented in multiple interfaces, specifically {{DOMxRef("Window")}} and {{DOMxRef("WorkerGlobalScope")}}. This makes it available in pretty much any context you might want to fetch resources in.</p>
 
@@ -35,7 +35,7 @@ tags:
 
 <ul>
  <li>The Promise returned from <code>fetch()</code> <strong>won’t reject on HTTP error status</strong> even if the response is an HTTP <code>404</code> or <code>500</code>. Instead, it will resolve normally (with <code>ok</code> status set to <code>false</code>), and it will only reject on network failure or if anything prevented the request from completing.</li>
- <li><code>fetch()</code> <strong>won't receive cross-site cookies. </strong>You can’t establish a cross site session using <code>fetch()</code>. <code><a href="/en-US/docs/Web/HTTP/Headers/Set-Cookie">Set-Cookie</a></code> headers from other sites are silently ignored.</li>
+ <li><code>fetch()</code> <strong>won't receive cross-site cookies. </strong>You can’t establish a cross-site session using <code>fetch()</code>. <code><a href="/en-US/docs/Web/HTTP/Headers/Set-Cookie">Set-Cookie</a></code> headers from other sites are silently ignored.</li>
  <li><code>fetch()</code> <strong>won’t send cookies</strong>, unless you set the <code><var>credentials</var></code> <a href="https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters">init option</a>.
   <ul>
    <li>Since <a href="https://github.com/whatwg/fetch/pull/585" rel="nofollow noopener">Aug 25, 2017</a>: The spec changed the default credentials policy to <code>same-origin</code>. Firefox changed since 61.0b13.)</li>

@@ -1,0 +1,13 @@
+.document-form {
+  background-color: white;
+
+  textarea,
+  input {
+    font-family: monospace;
+  }
+
+  .form-warning {
+    font-weight: bold;
+    color: #ffaa00;
+  }
+}

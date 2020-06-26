@@ -56,12 +56,6 @@ const expectedFunctions = [
   "mdn.escapeQuotes",
   "MDN.escapeQuotes",
   "MDN.escapequotes",
-  "mdn.fetchJSONResource",
-  "MDN.fetchJSONResource",
-  "MDN.fetchjsonresource",
-  "mdn.fetchHTTPResource",
-  "MDN.fetchHTTPResource",
-  "MDN.fetchhttpresource",
   "mdn.siteURL",
   "MDN.siteURL",
   "MDN.siteurl",
@@ -153,12 +147,7 @@ const expectedFunctions = [
   "Page.translations",
 ];
 
-const expectedAsync = [
-  "MDN.fetchJSONResource",
-  "MDN.fetchHTTPResource",
-  "wiki.page",
-  "template",
-];
+const expectedAsync = ["wiki.page", "template"];
 
 describe("Environment class", () => {
   it.each(expectedObjects)("defines global object %s", (global) => {

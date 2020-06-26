@@ -7,6 +7,7 @@ tags:
   - CSS Grid
   - CSS Property
   - Reference
+  - 'recipe:css-shorthand-property'
 ---
 <p>The <strong><code>grid</code></strong> CSS property is a <a href="/en-US/docs/Web/CSS/Shorthand_properties">shorthand property</a> that sets all of the explicit grid properties ({{cssxref("grid-template-rows")}}, {{cssxref("grid-template-columns")}}, and {{cssxref("grid-template-areas")}}), and all the implicit grid properties ({{cssxref("grid-auto-rows")}}, {{cssxref("grid-auto-columns")}}, and {{cssxref("grid-auto-flow")}}), in a single declaration.</p>
 
@@ -20,7 +21,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="brush: css no-line-numbers">/* &lt;'grid-template'&gt; values */
+<pre class="brush: css no-line-numbers notranslate">/* &lt;'grid-template'&gt; values */
 grid: none;
 grid: "a" 100px "b" 1fr;
 grid: [linename1] "a" 100px [linename2];
@@ -66,13 +67,13 @@ grid: unset;
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Example">Example</h2>
 
 <h3 id="HTML_Content">HTML Content</h3>
 
-<pre class="brush: html">&lt;div id="container"&gt;
+<pre class="brush: html notranslate">&lt;div id="container"&gt;
   &lt;div&gt;&lt;/div&gt;
   &lt;div&gt;&lt;/div&gt;
   &lt;div&gt;&lt;/div&gt;
@@ -85,7 +86,7 @@ grid: unset;
 
 <h3 id="CSS_Content">CSS Content</h3>
 
-<pre class="brush: css">#container {
+<pre class="brush: css notranslate">#container {
   display: grid;
   grid: repeat(2, 60px) / auto-flow 80px;
 }

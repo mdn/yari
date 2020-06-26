@@ -2,11 +2,7 @@
  * @prettier
  */
 const url = require("url");
-const got = require("got");
-
 const util = require("./util.js");
-
-const cache = new Map();
 
 module.exports = {
   /**
@@ -122,54 +118,20 @@ module.exports = {
    */
   escapeQuotes: util.escapeQuotes,
 
-  // Fetch an HTTP resource with JSON representation, parse the JSON and
-  // return a JS object.
-  async fetchJSONResource(url, opts) {
-    if (cache.has(url)) {
-      return cache.get(url);
-    }
-    opts = util.defaults(opts || {}, {
-      headers: {
-        "Cache-Control": this.env.cache_control,
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
-    const result = JSON.parse(await this.MDN.fetchHTTPResource(url, opts));
-    cache.set(url, result);
-    return result;
-  },
-
-  // Fetch an HTTP resource, return the response body.
-  async fetchHTTPResource(url, opts) {
-    if (cache.has(url)) {
-      return cache.get(url);
-    }
-    opts = util.defaults(opts || {}, {
-      method: "GET",
-      headers: {
-        Accept: "text/plain",
-        "Content-Type": "text/plain",
-      },
-      url: url,
-    });
-
-    try {
-      const response = await got(opts);
-      if (response.statusCode == 200) {
-        cache.set(url, response.body);
-        return response.body;
-      }
-    } catch (e) {}
-
-    cache.set(url, null);
-    return null;
-  },
-
   /* Derive the site URL from the request URL */
   siteURL() {
     var p = url.parse(this.env.url, true),
       site_url = p.protocol + "//" + p.host;
     return site_url;
+  },
+
+  /**
+   * Throw a deprecation error.
+   */
+  deprecated() {
+    this.env.recordNonFatalError(
+      "deprecated",
+      "This macro has been deprecated, and should be removed."
+    );
   },
 };
