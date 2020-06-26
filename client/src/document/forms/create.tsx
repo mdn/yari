@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import { DocumentForm, DocumentOutData } from "./form";
 
 export default function DocumentCreate() {
   const location = useLocation();
-  const navigate = useNavigate();
   const [savingError, setSavingError] = useState<Error | null>(null);
 
   async function handleCreate(data: DocumentOutData) {
@@ -20,7 +19,8 @@ export default function DocumentCreate() {
         );
         return;
       }
-      navigate(`/${data.metadata.locale}/docs/${data.metadata.slug}`);
+      // Hack! We do a full-page transition so that the search index refreshes itself
+      window.location.href = `/${data.metadata.locale}/docs/${data.metadata.slug}`;
     } catch (err) {
       setSavingError(err);
     }

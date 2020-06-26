@@ -7,6 +7,7 @@ const {
   MacroNotFoundError,
   MacroBrokenLinkError,
   MacroRedirectedLinkError,
+  MacroDeprecatedError,
 } = require("../src/errors.js");
 
 describe("testing the Renderer class", () => {
@@ -36,6 +37,10 @@ describe("testing the Renderer class", () => {
       {{nonExistentMacro("yada")}}
       {{cssxref("dumber")}}
       {{cssxref("number")}}
+      <p id="fx-header">{{fx_minversion_header("36")}}</p>
+      <p id="fx-inline">{{fx_minversion_inline("36")}}</p>
+      <p id="gecko-header">{{gecko_minversion_header("36")}}</p>
+      <p id="gecko-inline">{{gecko_minversion_inline("36")}}</p>
     `.trim();
     const pageEnvironment = {
       locale: "en-US",
@@ -58,8 +63,18 @@ describe("testing the Renderer class", () => {
     expect(otherLinks.length).toBe(2);
     expect(otherLinks.eq(0).html()).toBe("<code>&lt;dumber&gt;</code>");
     expect(otherLinks.eq(1).html()).toBe("<code>&lt;number&gt;</code>");
+    for (deprecatedID of [
+      "fx-header",
+      "fx-inline",
+      "gecko-header",
+      "gecko-inline",
+    ]) {
+      const deprecated = $(`#${deprecatedID}`);
+      expect(deprecated.length).toBe(1);
+      expect(deprecated.html()).toBe("");
+    }
     // Next, let's check the errors.
-    expect(errors.length).toBe(3);
+    expect(errors.length).toBe(7);
     expect(errors[0]).toBeInstanceOf(MacroNotFoundError);
     expect(errors[0]).toHaveProperty("line", 2);
     expect(errors[0]).toHaveProperty("column", 7);
@@ -88,5 +103,37 @@ describe("testing the Renderer class", () => {
     expect(errors[2]).toHaveProperty("macroSource", '{{cssxref("dumber")}}');
     expect(errors[2]).toHaveProperty("redirectInfo.current", "dumber");
     expect(errors[2]).toHaveProperty("redirectInfo.suggested", "number");
+    expect(errors[3]).toBeInstanceOf(MacroDeprecatedError);
+    expect(errors[3]).toHaveProperty("line", 5);
+    expect(errors[3]).toHaveProperty("column", 25);
+    expect(errors[3]).toHaveProperty("macroName", "fx_minversion_header");
+    expect(errors[3]).toHaveProperty(
+      "errorMessage",
+      "This macro has been deprecated, and should be removed."
+    );
+    expect(errors[4]).toBeInstanceOf(MacroDeprecatedError);
+    expect(errors[4]).toHaveProperty("line", 6);
+    expect(errors[4]).toHaveProperty("column", 25);
+    expect(errors[4]).toHaveProperty("macroName", "fx_minversion_inline");
+    expect(errors[4]).toHaveProperty(
+      "errorMessage",
+      "This macro has been deprecated, and should be removed."
+    );
+    expect(errors[5]).toBeInstanceOf(MacroDeprecatedError);
+    expect(errors[5]).toHaveProperty("line", 7);
+    expect(errors[5]).toHaveProperty("column", 28);
+    expect(errors[5]).toHaveProperty("macroName", "gecko_minversion_header");
+    expect(errors[5]).toHaveProperty(
+      "errorMessage",
+      "This macro has been deprecated, and should be removed."
+    );
+    expect(errors[6]).toBeInstanceOf(MacroDeprecatedError);
+    expect(errors[6]).toHaveProperty("line", 8);
+    expect(errors[6]).toHaveProperty("column", 28);
+    expect(errors[6]).toHaveProperty("macroName", "gecko_minversion_inline");
+    expect(errors[6]).toHaveProperty(
+      "errorMessage",
+      "This macro has been deprecated, and should be removed."
+    );
   });
 });
