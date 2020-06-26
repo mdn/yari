@@ -9,6 +9,7 @@ tags:
   - CSS Fonts
   - CSS Property
   - Reference
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -20,7 +21,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="brush:css no-line-numbers">/* Keyword values */
+<pre class="brush:css no-line-numbers notranslate">/* Keyword values */
 font-weight: normal;
 font-weight: bold;
 
@@ -214,7 +215,7 @@ font-weight: unset;
 <h4 id="HTML">HTML</h4>
 
 <div id="variable-font-example">
-<pre class="brush: html">&lt;header&gt;
+<pre class="brush: html notranslate">&lt;header&gt;
     &lt;input type="range" id="weight" name="weight" min="1" max="1000" /&gt;
     &lt;label for="weight"&gt;Weight&lt;/label&gt;
 &lt;/header&gt;
@@ -225,7 +226,7 @@ font-weight: unset;
 
 <h4 id="CSS">CSS</h4>
 
-<pre class="brush: css">/*
+<pre class="brush: css notranslate">/*
 Mutator Sans is created by LettError (https://github.com/LettError/mutatorSans)
 and is used here under the terms of its license:
 https://github.com/LettError/mutatorSans/blob/master/LICENSE
@@ -254,7 +255,7 @@ label {
 </pre>
 
 <div class="hidden">
-<pre class="brush: css">html, body {
+<pre class="brush: css notranslate">html, body {
   max-height: 100vh;
   max-width: 100vw;
   overflow: hidden;
@@ -282,7 +283,7 @@ header {
 
 <h4 id="JavaScript">JavaScript</h4>
 
-<pre class="brush: js">let weightLabel = document.querySelector('label[for="weight"]');
+<pre class="brush: js notranslate">let weightLabel = document.querySelector('label[for="weight"]');
 let weightInput = document.querySelector('#weight');
 let sampleText = document.querySelector('.sample');
 
@@ -299,14 +300,14 @@ update();
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}
+<pre class="syntaxbox notranslate">{{csssyntax}}
 </pre>
 
 <h2 id="Examples" name="Examples">Examples</h2>
 
 <h3 id="HTML_2">HTML</h3>
 
-<pre class="brush: html">&lt;p&gt;
+<pre class="brush: html notranslate">&lt;p&gt;
   Alice was beginning to get very tired of sitting by her sister on the
   bank, and of having nothing to do: once or twice she had peeped into the
   book her sister was reading, but it had no pictures or conversations in
@@ -321,7 +322,7 @@ update();
 
 <h3 id="CSS_2">CSS</h3>
 
-<pre class="brush:css">/* Set paragraph text to be bold. */
+<pre class="brush:css notranslate">/* Set paragraph text to be bold. */
 p {
   font-weight: bold;
 }

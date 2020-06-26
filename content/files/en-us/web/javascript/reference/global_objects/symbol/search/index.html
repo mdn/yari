@@ -25,18 +25,18 @@ tags:
 
 <h2 id="Examples">Examples</h2>
 
-<h3 id="Exposing_Symbol.search">Exposing Symbol.search</h3>
+<h3 id="Custom_string_search">Custom string search</h3>
 
-<pre class="brush: js">class Search1 {
+<pre class="brush: js">class caseInsensitiveSearch {
   constructor(value) {
-    this.value = value;
+    this.value = value.toLowerCase();
   }
   [Symbol.search](string) {
-    return string.indexOf(this.value);
+    return string.toLowerCase().indexOf(this.value);
   }
 }
 
-console.log('foobar'.search(new Search1('bar')));
+console.log('foobar'.search(new caseInsensitiveSearch('BaR')));
 // expected output: 3</pre>
 
 <h2 id="Specifications">Specifications</h2>

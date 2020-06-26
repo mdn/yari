@@ -233,28 +233,6 @@ h1 {
 
 <p>The diffference between the two is that <code>:is()</code> counts towards the specificity of the overall selector (it takes the specificity of its most specific argument), whereas <code><a href="/en-US/docs/Web/CSS/:where">:where()</a></code> has a specificity value of 0. This is demonstrated by the <a href="/en-US/docs/Web/CSS/:where#Examples">example on the <code>:where()</code> reference page</a>.</p>
 
-<h2 id="Notes">Notes</h2>
-
-<h3 id="Issues_with_performance_and_specificity" name="Issues_with_performance_and_specificity">any(): — Issues with performance and specificity</h3>
-
-<p>{{Bug(561154)}} tracks an issue with Gecko where the specificity of <code>:-moz-any()</code> is incorrect. The current (as of Firefox 12) implementation puts <code>:-moz-any()</code> in the category of universal rules, meaning using it as the rightmost selector will be slower than using an ID, class, or tag as the rightmost selector.</p>
-
-<p>For example:</p>
-
-<pre class="brush: css">.a &gt; :-moz-any(.b, .c)
-</pre>
-
-<p>... is slower than:</p>
-
-<pre class="brush: css">.a &gt; .b, .a &gt; .c
-</pre>
-
-<p>... and the following is fast:</p>
-
-<pre class="brush: css">:-moz-any(.a, .d) &gt; .b, :-moz-any(.a, .d) &gt; .c</pre>
-
-<p><code>:is()</code> aims to fix such problems.</p>
-
 <h2 id="Specifications">Specifications</h2>
 
 <table class="standard-table">

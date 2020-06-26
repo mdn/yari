@@ -79,7 +79,8 @@ cd locallibrary</pre>
         __init__.py
         settings.py
         urls.py
-        wsgi.py</pre>
+        wsgi.py
+        asgi.py</pre>
 
 <p>Our current working directory should look something like this:</p>
 
@@ -90,15 +91,16 @@ cd locallibrary</pre>
 <ul>
  <li><strong>__init__.py </strong>is an empty file that instructs Python to treat this directory as a Python package.</li>
  <li><strong>settings.py</strong> contains all the website settings. This is where we register any applications we create, the location of our static files, database configuration details, etc.  </li>
- <li><strong>urls.py</strong> defines the site url-to-view mappings. While this could <span style="line-height: 1.5;">contain <em>all </em>the url mapping code, it is more common to delegate some of the mapping to particular applications, as you'll see later. </span></li>
- <li><strong style="line-height: 1.5;">wsgi.py</strong><span style="line-height: 1.5;"> is used to help your Django application communicate with the web server. You can treat this as boilerplate.</span></li>
+ <li><strong>urls.py</strong> defines the site URL-to-view mappings. While this could <span style="line-height: 1.5;">contain <em>all </em>the URL mapping code, it is more common to delegate some of the mappings to particular applications, as you'll see later. </span></li>
+ <li><strong style="line-height: 1.5;">wsgi.py</strong><span style="line-height: 1.5;"> is used to help your Django application communicate with the webserver. You can treat this as boilerplate.</span></li>
+ <li><strong>asgi.py</strong> is a standard for Python asynchronous web apps and servers to communicate with each other and positioned as an asynchronous successor to WSGI, where WSGI provided a standard for synchronous Python apps, ASGI provides one for both asynchronous and synchronous apps, with a WSGI backward-compatibility implementation and multiple servers and application frameworks.</li>
 </ul>
 
 <p>The <strong>manage.py</strong> script is used to create applications, work with databases, and start the development web server. </p>
 
 <h2 id="Creating_the_catalog_application">Creating the catalog application</h2>
 
-<p>Next, run the following command to create the <em>catalog</em> application that will live inside our localibrary project (this must be run in the same folder as your project's <strong>manage.py</strong>):</p>
+<p>Next, run the following command to create the <em>catalog</em> application that will live inside our locallibrary project (this must be run in the same folder as your project's <strong>manage.py</strong>):</p>
 
 <pre class="brush: bash">python3 manage.py startapp catalog</pre>
 

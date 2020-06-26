@@ -37,6 +37,10 @@ tags:
 
 <p>The {{domxref("Document/keydown_event", "keydown")}} and <code>keyup</code> events provide a code indicating which key is pressed, while {{domxref("Document/keypress_event", "keypress")}} indicates which <em>character</em> was entered. For example, a lowercase "a" will be reported as 65 by <code>keydown</code> and <code>keyup</code>, but as 97 by <code>keypress</code>. An uppercase "A" is reported as 65 by all events.</p>
 
+<div class="blockIndicator note">
+<p><strong>Note:</strong> If you're looking for a way to react to changes in an input's value, you should use the <a href="/en-US/docs/Web/API/HTMLElement/input_event"><code>input</code> event</a>. Some changes are not detectable by <code>keyup</code>, for example pasting text from the context menu in a text input.</p>
+</div>
+
 <p>Since Firefox 65, the {{domxref("Document/keydown_event", "keydown")}} and <code>keyup</code> events are now fired during IME composition, to improve cross-browser compatibility for CJKT users ({{bug(354358)}}, also see <a href="https://www.fxsitecompat.com/en-CA/docs/2018/keydown-and-keyup-events-are-now-fired-during-ime-composition/">keydown and keyup events are now fired during IME composition</a> for more useful details). To ignore all <code>keyup</code> events that are part of composition, do something like this (229 is a special value set for a <code>keyCode</code> relating to an event that has been processed by an IME):</p>
 
 <pre class="brush: js">eventTarget.addEventListener("keyup", event =&gt; {

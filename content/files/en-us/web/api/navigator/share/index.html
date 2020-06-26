@@ -15,20 +15,21 @@ tags:
 
 <h2 id="Syntax" name="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">var sharePromise = navigator.share(<var>data</var>);
+<pre class="syntaxbox notranslate">var sharePromise = navigator.share(<var>data</var>);
 </pre>
 
 <h3 id="Parameters">Parameters</h3>
 
 <dl>
-	<dt><code><var>data</var></code></dt>
-	<dd>An object containing data to share. At least one of the following fields must be specified. Available options are:</dd>
+ <dt><code><var>data</var></code></dt>
+ <dd>An object containing data to share. At least one of the following fields must be specified. Available options are:</dd>
 </dl>
 
 <ul>
-	<li><code>url</code>: A {{domxref("USVString")}} representing a URL to be shared.</li>
-	<li><code>text</code>: A {{domxref("USVString")}} representing text to be shared.</li>
-	<li><code>title</code>: A {{domxref("USVString")}} representing the title to be shared.</li>
+ <li><code>url</code>: A {{domxref("USVString")}} representing a URL to be shared.</li>
+ <li><code>text</code>: A {{domxref("USVString")}} representing text to be shared.</li>
+ <li><code>title</code>: A {{domxref("USVString")}} representing the title to be shared.</li>
+ <li><code>files</code>: A " FrozenArray" representing the array of file to be shared.</li>
 </ul>
 
 <dl>
@@ -42,7 +43,7 @@ tags:
 
 <p>In our <a href="https://mdn.github.io/dom-examples/web-share/">Web share test</a> (<a href="https://github.com/mdn/dom-examples/blob/master/web-share/index.html">see the source code</a>) there is a button which, when clicked, invokes the Web Share API to share MDN's URL. The JavaScript looks like this:</p>
 
-<pre class="brush: js">const shareData = {
+<pre class="brush: js notranslate">const shareData = {
   title: 'MDN',
   text: 'Learn web development on MDN!',
   url: 'https://developer.mozilla.org',
@@ -61,23 +62,41 @@ btn.addEventListener('click', async () =&gt; {
   }
 });</pre>
 
+<h4 id="Sharing_Files"><strong>Sharing Files</strong></h4>
+
+<p>To share files, first test for and call <code>navigator.canShare()</code>. Then include an array of files in the call to <code>navigator.share():</code> </p>
+
+<p>Notice: That the sample handles feature detection by testing for <code>naviagator.canShare()</code> rather than for <code>navigator.share()</code>. The data object passed to <code>canShare()</code> only supports the <code>files</code> property. Image, video, audio, and text files can be shared. </p>
+
+<pre class="brush: js notranslate">if (navigator.canShare &amp;&amp; navigator.canShare({ files: filesArray })) {
+  navigator.share({
+    files: filesArray,
+    title: 'Pictures',
+    text: 'Our Pictures.',
+  })
+  .then(() =&gt; console.log('Share was successful.'))
+  .catch((error) =&gt; console.log('Sharing failed', error));
+} else {
+  console.log(`Your system doesn't support sharing files.`);
+}</pre>
+
 <h2 id="Specifications">Specifications</h2>
 
 <table>
-	<thead>
-		<tr>
-			<th scope="col">Specification</th>
-			<th scope="col">Status</th>
-			<th scope="col">Comment</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>{{SpecName('Web Share API','#share-method','share()')}}</td>
-			<td>{{Spec2('Web Share API')}}</td>
-			<td></td>
-		</tr>
-	</tbody>
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('Web Share API','#share-method','share()')}}</td>
+   <td>{{Spec2('Web Share API')}}</td>
+   <td></td>
+  </tr>
+ </tbody>
 </table>
 
 <h2 id="Browser_compatibility">Browser compatibility</h2>
@@ -89,5 +108,5 @@ btn.addEventListener('click', async () =&gt; {
 <h2 id="See_Also">See Also</h2>
 
 <ul>
-	<li>{{domxref('navigator.canShare', 'navigator.canShare()')}}</li>
+ <li>{{domxref('navigator.canShare', 'navigator.canShare()')}}</li>
 </ul>

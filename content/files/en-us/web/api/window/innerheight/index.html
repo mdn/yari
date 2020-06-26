@@ -19,11 +19,11 @@ tags:
 
 <p>The read-only <code><strong>innerHeight</strong></code> property of the {{domxref("Window")}} interface returns the interior height of the window in pixels, including the height of the horizontal scroll bar, if present.</p>
 
-<p>The width can be obtained using the {{domxref("Window.innerWidth", "innerWidth")}} property.</p>
+<p>The value of <code>innerHeight</code> is taken from the height of the window's {{Glossary("layout viewport")}}. The width can be obtained using the {{domxref("Window.innerWidth", "innerWidth")}} property.</p>
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">let <var>intViewportHeight</var> = window.innerHeight;</pre>
+<pre class="syntaxbox notranslate">let <var>intViewportHeight</var> = window.innerHeight;</pre>
 
 <h3 id="Value">Value</h3>
 
@@ -41,7 +41,7 @@ tags:
 
 <h3 id="Assuming_a_frameset">Assuming a frameset</h3>
 
-<pre class="brush:js">var intFrameHeight = window.innerHeight; // or
+<pre class="brush:js notranslate">var intFrameHeight = window.innerHeight; // or
 
 var intFrameHeight = self.innerHeight;
 // will return the height of the frame viewport within the frameset

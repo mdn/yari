@@ -2,6 +2,10 @@
  * @prettier
  */
 const util = require("./util.js");
+const Templates = require("../templates.js");
+
+const DUMMY_BASE_URL = "https://example.com";
+const L10N_COMMON_STRINGS = new Templates().getLocalizedCommonStrings();
 
 module.exports = {
   // Insert a hyperlink.
@@ -17,6 +21,35 @@ module.exports = {
     }
     out.push(">", util.htmlEscape(text || uri), "</a>");
     return out.join("");
+  },
+
+  smartLink(href, title, content, subpath, basepath) {
+    const page = this.info.getPage(href);
+    // Get the pathname only (no hash) of the incoming "href" URI.
+    const hrefpath = this.info.getPathname(href);
+    // Save the hash portion, if any, for appending to the "href" attribute later.
+    const hrefhash = new URL(href, DUMMY_BASE_URL).hash;
+    if (page.url) {
+      if (hrefpath.toLowerCase() !== page.url.toLowerCase()) {
+        this.env.recordNonFatalError(
+          "redirected-link",
+          `${hrefpath} redirects to ${page.url}`,
+          {
+            current: subpath,
+            suggested: page.url.replace(basepath, ""),
+          }
+        );
+      }
+      const titleAttribute = title ? ` title="${title}"` : "";
+      return `<a href="${page.url + hrefhash}"${titleAttribute}>${content}</a>`;
+    }
+    this.env.recordNonFatalError("broken-link", `${hrefpath} does not exist`);
+    // Let's get a potentially localized title for when the document is missing.
+    const titleWhenMissing = this.mdn.getLocalString(
+      L10N_COMMON_STRINGS,
+      "summary"
+    );
+    return `<a class="new" title="${titleWhenMissing}">${content}</a>`;
   },
 
   // Try calling "decodeURIComponent", but if there's an error, just

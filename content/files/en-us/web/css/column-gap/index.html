@@ -12,6 +12,7 @@ tags:
   - CSS Property
   - Reference
   - column-gap
+  - 'recipe:css-property'
 ---
 <p>{{CSSRef}}</p>
 
@@ -31,7 +32,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="brush:css; no-line-numbers">/* Keyword value */
+<pre class="brush:css; no-line-numbers notranslate">/* Keyword value */
 column-gap: normal;
 
 /* &lt;length&gt; values */
@@ -62,7 +63,7 @@ column-gap: unset;
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{CSSSyntax}}</pre>
+<pre class="syntaxbox notranslate">{{CSSSyntax}}</pre>
 
 <h2 id="Examples">Examples</h2>
 
@@ -72,7 +73,7 @@ column-gap: unset;
 
 <h4 id="HTML">HTML</h4>
 
-<pre class="brush: html">&lt;div id="flexbox"&gt;
+<pre class="brush: html notranslate">&lt;div id="flexbox"&gt;
   &lt;div&gt;&lt;/div&gt;
   &lt;div&gt;&lt;/div&gt;
   &lt;div&gt;&lt;/div&gt;
@@ -81,7 +82,7 @@ column-gap: unset;
 
 <h4 id="CSS">CSS</h4>
 
-<pre class="brush: css; highlight[4]">#flexbox {
+<pre class="brush: css; highlight[4] notranslate">#flexbox {
   display: flex;
   height: 100px;
   column-gap: 20px;
@@ -102,7 +103,7 @@ column-gap: unset;
 
 <h4 id="HTML_2">HTML</h4>
 
-<pre class="brush: html">&lt;div id="grid"&gt;
+<pre class="brush: html notranslate">&lt;div id="grid"&gt;
   &lt;div&gt;&lt;/div&gt;
   &lt;div&gt;&lt;/div&gt;
   &lt;div&gt;&lt;/div&gt;
@@ -111,12 +112,12 @@ column-gap: unset;
 <h4 id="CSS_2">CSS</h4>
 
 <div class="hidden">
-<pre class="brush: css">#grid {
+<pre class="brush: css notranslate">#grid {
   grid-column-gap: 20px;
 }</pre>
 </div>
 
-<pre class="brush: css; highlight[6]">#grid {
+<pre class="brush: css; highlight[6] notranslate">#grid {
   display: grid;
   height: 100px;
   grid-template-columns: repeat(3, 1fr);
@@ -138,7 +139,7 @@ column-gap: unset;
 
 <h4 id="HTML_3">HTML</h4>
 
-<pre class="brush: html">&lt;p class="content-box"&gt;
+<pre class="brush: html notranslate">&lt;p class="content-box"&gt;
   This is some multi-column text with a 40px column
   gap created with the CSS `column-gap` property.
   Don't you think that's fun and exciting? I sure do!
@@ -147,7 +148,7 @@ column-gap: unset;
 
 <h4 id="CSS_3">CSS</h4>
 
-<pre class="brush:css">.content-box {
+<pre class="brush:css notranslate">.content-box {
   column-count: 3;
   column-gap: 40px;
 }

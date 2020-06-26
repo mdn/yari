@@ -4,23 +4,16 @@ const { performance } = require("perf_hooks");
 
 const express = require("express");
 const openEditor = require("open-editor");
-const yaml = require("js-yaml");
-const fm = require("front-matter");
 
-const { Builder } = require("content/scripts/build");
-const Document = require("content/scripts/document");
-const { Sources } = require("content/scripts/sources");
 const { slugToFoldername } = require("content/scripts/utils");
-const {
-  DEFAULT_LIVE_SAMPLES_BASE_URL,
-  DEFAULT_POPULARITIES_FILEPATH,
-  FLAW_LEVELS,
-} = require("content/scripts/constants.js");
+const { FLAW_LEVELS } = require("content/scripts/constants");
+
+const { STATIC_ROOT } = require("./constants");
+const documentRouter = require("./document");
+const { builder, normalizeContentPath } = require("./builder");
 
 const app = express();
 app.use(express.json());
-
-const STATIC_ROOT = path.join(__dirname, "../client/build");
 
 // The client/build directory won't exist at the very very first time
 // you start the server after a fresh git clone.
@@ -29,7 +22,7 @@ if (!fs.existsSync(STATIC_ROOT)) {
 }
 
 function getFolderFromURI(uri) {
-  const data = getOrCreateBuilder().allTitles.get(decodeURI(uri.toLowerCase()));
+  const data = builder.allTitles.get(decodeURI(uri.toLowerCase()));
   if (data) {
     return data.file;
   }
@@ -100,66 +93,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-function normalizeContentPath(start) {
-  return fs.existsSync(start) ? start : path.join(__dirname, "..", start);
-}
-
-app.get("/_document", (req, res) => {
-  if (!req.query.url) {
-    return res.status(400).send("No ?url= query param");
-  }
-  const mdn_url = req.query.url.toLowerCase();
-  const docData = getOrCreateBuilder().allTitles.get(mdn_url);
-  if (!docData) {
-    return res.status(400).send(`No document by the URL ${req.query.url}`);
-  }
-  const folder = normalizeContentPath(docData.file);
-  const rawContent = fs.readFileSync(path.join(folder, "index.html"), "utf8");
-  const content = fm(rawContent);
-  const metadata = content.attributes;
-  const html = content.body;
-  res.status(200).json({
-    html,
-    metadata,
-  });
-});
-
-app.put("/_document", (req, res) => {
-  if (!req.query.url) {
-    return res.status(400).send("No ?url= query param");
-  }
-  const mdn_url = req.query.url.toLowerCase();
-  const docData = getOrCreateBuilder().allTitles.get(mdn_url);
-  if (!docData) {
-    return res.status(400).send(`No document by the URL ${req.query.url}`);
-  }
-
-  if (req.body.title && req.body.html) {
-    const folder = normalizeContentPath(docData.file);
-    const htmlFile = path.join(folder, "index.html");
-    const rawContent = fs.readFileSync(htmlFile, "utf8");
-    const content = fm(rawContent);
-    const metadata = content.attributes;
-    const html = content.body;
-    let write = false;
-    if (html !== req.body.html) {
-      write = true;
-    }
-    if (
-      metadata.title !== req.body.title ||
-      metadata.summary !== req.body.summary
-    ) {
-      write = true;
-      metadata.title = req.body.title.trim();
-      metadata.summary = req.body.summary.trim();
-    }
-    if (write) {
-      Document.saveFile(htmlFile, req.body.html, metadata);
-    }
-  }
-
-  res.status(200).send("Ok");
-});
+app.use("/_document", documentRouter);
 
 app.get("/_open", (req, res) => {
   const { line, column, filepath } = req.query;
@@ -179,7 +113,7 @@ app.get("/_open", (req, res) => {
         // This works because the builder created here in the server is hardcoded
         // to only have exactly one source which is the main process.env.BUILD_ROOT
         // but adjusted.
-        getOrCreateBuilder().sources.entries()[0].filepath,
+        builder.sources.entries()[0].filepath,
         filepath
       );
 
@@ -198,44 +132,6 @@ app.get("/_open", (req, res) => {
   openEditor([spec]);
   res.status(200).send(`Tried to open ${spec} in ${process.env.EDITOR}`);
 });
-
-// Module level memoization
-let builder = null;
-function getOrCreateBuilder(options) {
-  options = options || {};
-  if (!builder) {
-    const sources = new Sources();
-    // The server doesn't have command line arguments like the content CLI
-    // does so we need to entirely rely on environment variables.
-    if (process.env.BUILD_ROOT) {
-      sources.add(normalizeContentPath(process.env.BUILD_ROOT));
-    }
-    builder = new Builder(
-      sources,
-      {
-        destination: normalizeContentPath(
-          process.env.BUILD_DESTINATION || "client/build"
-        ),
-        noSitemaps: true,
-        specificFolders: [],
-        buildJsonOnly: false,
-        locales: options.locales || [],
-        notLocales: [],
-        slugsearch: [],
-        noProgressbar: true,
-        foldersearch: options.foldersearch || [],
-        popularitiesfile: normalizeContentPath(DEFAULT_POPULARITIES_FILEPATH),
-        liveSamplesBaseUrl: DEFAULT_LIVE_SAMPLES_BASE_URL,
-      },
-      console
-    );
-    builder.initSelfHash();
-    builder.ensureAllTitles();
-    builder.ensureAllRedirects();
-    builder.prepareRoots();
-  }
-  return builder;
-}
 
 // Return about redirects based on a list of URLs.
 // This is used by the "<Flaws/>" component which displays information
@@ -297,7 +193,6 @@ app.get("/_flaws", (req, res) => {
 
   const documents = [];
 
-  const builder = getOrCreateBuilder();
   for (const data of builder.allTitles.values()) {
     if (data.locale && data.locale.toLowerCase() === locale) {
       counts.possible++;
@@ -577,7 +472,7 @@ app.get("/*", async (req, res) => {
   }
 
   if (req.url.endsWith("/titles.json")) {
-    getOrCreateBuilder().dumpAllURLs();
+    builder.dumpAllURLs();
 
     // Let's see, did that generate the desired titles.json file?
     if (fs.existsSync(path.join(STATIC_ROOT, req.url))) {
@@ -621,7 +516,7 @@ app.get("/*", async (req, res) => {
     if (specificFolder) {
       const t0 = performance.now();
       try {
-        const built = await getOrCreateBuilder().start({
+        const built = await builder.start({
           specificFolders: [specificFolder],
         });
         const t1 = performance.now();
@@ -653,8 +548,12 @@ app.get("/*", async (req, res) => {
           res.sendFile(built[0].file);
         }
       } catch (ex) {
+        const message = ex.toString();
+        if (message.includes("does not exist")) {
+          return res.sendStatus(404);
+        }
         console.error(ex);
-        res.status(500).send(ex.toString());
+        res.status(500).send(message);
       }
     } else {
       res

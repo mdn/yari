@@ -29,7 +29,7 @@ const fs = require("fs");
 const path = require("path");
 const ejs = require("ejs");
 
-DEFAULT_MACROS_DIRECTORY = path.normalize(`${__dirname}/../macros/`);
+const DEFAULT_MACROS_DIRECTORY = path.normalize(`${__dirname}/../macros/`);
 
 class Templates {
   constructor(macroDirectory = DEFAULT_MACROS_DIRECTORY) {
@@ -85,6 +85,11 @@ class Templates {
       }
       throw new Error(msg);
     }
+  }
+
+  getLocalizedCommonStrings() {
+    let path = this.macroNameToPath.get("l10n-common");
+    return JSON.parse(fs.readFileSync(path));
   }
 
   async render(name, args) {

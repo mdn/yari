@@ -18,6 +18,12 @@ tags:
 
 <p>Once you've successfully <a href="/en-US/docs/Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL">created a WebGL context</a>, you can start rendering into it. A simple thing we can do is draw a simple square untextured plane, so let's start there, by building code to draw a square plane.</p>
 
+<p>The complete source code for this project is <a href="https://github.com/mdn/webgl-examples/tree/gh-pages/tutorial/sample2">available on GitHub</a>.</p>
+
+<div class="blockIndicator note">
+<p>This project uses the <a href="http://glmatrix.net/">glMatrix</a> library to perform its matrix operations, so you will need to include that in your project.</p>
+</div>
+
 <h2 id="Drawing_the_scene">Drawing the scene</h2>
 
 <p>The most important thing to understand before we get started is that even though we're only rendering a square plane object in this example, we're still drawing in 3D space. It's just we're drawing a square and we're putting it directly in front of the camera perpendicular to the view direction. We need to define the shaders that will create the color for our simple scene as well as draw our object. These will establish how the square plane appears on the screen.</p>
@@ -40,7 +46,7 @@ tags:
 
 <p>Our vertex shader below receives vertex position values from an attribute we define called <code>aVertexPosition</code>. That position is then multiplied by two 4x4 matrices we provide called <code>uProjectionMatrix</code> and <code>uModelViewMatrix</code>; <code>gl_Position</code> is set to the result. For more info on projection and other matrixes <a href="https://webglfundamentals.org/webgl/lessons/webgl-3d-perspective.html">you might find this article useful</a>.</p>
 
-<pre class="brush: js">  // Vertex shader program
+<pre class="brush: js notranslate">  // Vertex shader program
 
   const vsSource = `
     attribute vec4 aVertexPosition;
@@ -64,7 +70,7 @@ tags:
 
 <p>In this case, we're simply returning white every time, since we're just drawing a white square, with no lighting in use.</p>
 
-<pre class="brush: js">  const fsSource = `
+<pre class="brush: js notranslate">  const fsSource = `
     void main() {
       gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
     }
@@ -75,7 +81,7 @@ tags:
 
 <p>Now that we've defined the two shaders we need to pass them to WebGL, compile them, and link them together. The code below creates the two shaders by calling <code>loadShader()</code>, passing the type and source for the shader. It then creates a program, attaches the shaders and links them together. If compiling or linking fails the code displays an alert.</p>
 
-<pre class="brush: js">//
+<pre class="brush: js notranslate">//
 // Initialize a shader program, so WebGL knows how to draw our data
 //
 function initShaderProgram(gl, vsSource, fsSource) {
@@ -138,12 +144,12 @@ function loadShader(gl, type, source) {
 
 <p>To use this code we call it like this</p>
 
-<pre class="brush: js">  const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
+<pre class="brush: js notranslate">  const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
 </pre>
 
 <p>After we've created a shader program we need to look up the locations that WebGL assigned to our inputs. In this case we have one attribute and two uniforms. Attributes receive values from buffers. Each iteration of the vertex shader receives the next value from the buffer assigned to that attribute. <a href="/en-US/docs/Web/API/WebGL_API/Data#Uniforms">Uniforms</a> are similar to JavaScript global variables. They stay the same value for all iterations of a shader. Since the attribute and uniform locations are specific to a single shader program we'll store them together to make them easy to pass around</p>
 
-<pre class="brush: js">  const programInfo = {
+<pre class="brush: js notranslate">  const programInfo = {
     program: shaderProgram,
     attribLocations: {
       vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
@@ -159,7 +165,7 @@ function loadShader(gl, type, source) {
 
 <p>Before we can render our square plane, we need to create the buffer that contains its vertex positions and put the vertex positions in it. We'll do that using a function we call <code>initBuffers()</code>; as we explore more advanced WebGL concepts, this routine will be augmented to create more -- and more complex -- 3D objects.</p>
 
-<pre class="brush: js">function initBuffers(gl) {
+<pre class="brush: js notranslate">function initBuffers(gl) {
 
   // Create a buffer for the square's positions.
 
@@ -201,11 +207,7 @@ function loadShader(gl, type, source) {
 
 <p>Once the shaders are established, the locations are looked up, and the square plane's vertex positions put in a buffer, we can actually render the scene. Since we're not animating anything in this example, our <code>drawScene()</code> function is very simple. It uses a few utility routines we'll cover shortly.</p>
 
-<div class="blockIndicator note">
-<p><strong>Note</strong>: You might get a JavaScript error saying " mat4 is not defined". This means there is a dependency on <code>glmatrix</code>. You can include <a href="https://mdn.github.io/webgl-examples/tutorial/gl-matrix.js">gl-matrix.js</a><a href="https://mdn.github.io/webgl-examples/tutorial/gl-matrix.js"> </a>to resolve this issue, as suggested <a href="https://github.com/mdn/webgl-examples/issues/20">here</a>.</p>
-</div>
-
-<pre class="brush: js">function drawScene(gl, programInfo, buffers) {
+<pre class="brush: js notranslate">function drawScene(gl, programInfo, buffers) {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Clear to black, fully opaque
   gl.clearDepth(1.0);                 // Clear everything
   gl.enable(gl.DEPTH_TEST);           // Enable depth testing
@@ -304,7 +306,7 @@ function loadShader(gl, type, source) {
 
 <p>Matrix operations might seem complicated but <a href="https://webglfundamentals.org/webgl/lessons/webgl-2d-matrices.html">they are actually pretty simple if you take them one step at a time</a>. Generally people use a matrix library rather than writing their own. In our case we're using the popular <a href="http://glmatrix.net/">glMatrix library</a>.</p>
 
-<p>See also</p>
+<h3 id="See_also">See also</h3>
 
 <ul>
  <li><a href="https://webglfundamentals.org/webgl/lessons/webgl-2d-matrices.html">Matrices</a> on WebGLFundamentals</li>

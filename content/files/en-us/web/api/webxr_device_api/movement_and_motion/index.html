@@ -47,7 +47,7 @@ tags:
 
 <p>This example has a number of options you can configure by adjusting the values of constants before you load it in the browser. The code looks like this:</p>
 
-<pre class="brush: js">const xRotationDegreesPerSecond = 25;
+<pre class="brush: js notranslate">const xRotationDegreesPerSecond = 25;
 const yRotationDegreesPerSecond = 15;
 const zRotationDegreesPerSecond = 35;
 const enableRotation = true;
@@ -60,26 +60,26 @@ const MOUSE_SPEED = 0.003;
 </pre>
 
 <dl>
-	<dt><code>xRotationDegreesPerSecond</code></dt>
-	<dd>The number of degrees of rotation to apply around the X axis per second.</dd>
-	<dt><code>yRotationDegreesPerSecond</code></dt>
-	<dd>The number of degrees to rotate around the Y axis each second.</dd>
-	<dt><code>zRotationDegreesPerSecond</code></dt>
-	<dd>The number of degrees per second to rotate around the Z axis.</dd>
-	<dt><code>enableRotation</code></dt>
-	<dd>A Boolean indicating whether or not to enable the rotation of the cube at all.</dd>
-	<dt><code>allowMouseRotation</code></dt>
-	<dd>If <code>true</code>, you can use the mouse to pitch and yaw the view angle.</dd>
-	<dt><code>allowKeyboardMotion</code></dt>
-	<dd>If <code>true</code>, the W, A, S, and D keys move the viewer forward, left, backward, and to the right, while the up and down arrow keys move up and down. If <code>false</code>, only XR device changes to the view are permitted.</dd>
-	<dt><code>enableForcePolyfill</code></dt>
-	<dd>If this Boolean is <code>true</code>, the example will attempt to use the WebXR polyfill even if the browser actually has support for WebXR. If <code>false</code>, the polyfill is only used if the browser doesn't implement {{domxref("navigator.xr")}}.</dd>
-	<dt><code>SESSION_TYPE</code></dt>
-	<dd>The type of XR session to create: <code>inline</code> for an inline session presented in the context of the document and <code>immersive-vr</code> to present the scene to an immersive VR headset.</dd>
-	<dt><code>MOUSE_SPEED</code></dt>
-	<dd>A multiplier used to scale the inputs from the mouse used for pitch and yaw control.</dd>
-	<dt><code>MOVE_DISTANCE</code></dt>
-	<dd>The distance to move in response to any of the keys used to move the viewer through the scene.</dd>
+ <dt><code>xRotationDegreesPerSecond</code></dt>
+ <dd>The number of degrees of rotation to apply around the X axis per second.</dd>
+ <dt><code>yRotationDegreesPerSecond</code></dt>
+ <dd>The number of degrees to rotate around the Y axis each second.</dd>
+ <dt><code>zRotationDegreesPerSecond</code></dt>
+ <dd>The number of degrees per second to rotate around the Z axis.</dd>
+ <dt><code>enableRotation</code></dt>
+ <dd>A Boolean indicating whether or not to enable the rotation of the cube at all.</dd>
+ <dt><code>allowMouseRotation</code></dt>
+ <dd>If <code>true</code>, you can use the mouse to pitch and yaw the view angle.</dd>
+ <dt><code>allowKeyboardMotion</code></dt>
+ <dd>If <code>true</code>, the W, A, S, and D keys move the viewer forward, left, backward, and to the right, while the up and down arrow keys move up and down. If <code>false</code>, only XR device changes to the view are permitted.</dd>
+ <dt><code>enableForcePolyfill</code></dt>
+ <dd>If this Boolean is <code>true</code>, the example will attempt to use the WebXR polyfill even if the browser actually has support for WebXR. If <code>false</code>, the polyfill is only used if the browser doesn't implement {{domxref("navigator.xr")}}.</dd>
+ <dt><code>SESSION_TYPE</code></dt>
+ <dd>The type of XR session to create: <code>inline</code> for an inline session presented in the context of the document and <code>immersive-vr</code> to present the scene to an immersive VR headset.</dd>
+ <dt><code>MOUSE_SPEED</code></dt>
+ <dd>A multiplier used to scale the inputs from the mouse used for pitch and yaw control.</dd>
+ <dt><code>MOVE_DISTANCE</code></dt>
+ <dd>The distance to move in response to any of the keys used to move the viewer through the scene.</dd>
 </dl>
 
 <div class="blockIndicator note">
@@ -90,7 +90,7 @@ const MOUSE_SPEED = 0.003;
 
 <p>Next, we declare the variables and constants used throughout the application, starting with those used to store WebGL and WebXR specific information:</p>
 
-<pre class="brush: js">let polyfill = null;
+<pre class="brush: js notranslate">let polyfill = null;
 let xrSession = null;
 let xrInputSources = null;
 let xrReferenceSpace = null;
@@ -107,7 +107,7 @@ let mousePitch = 0;
 
 <p>This is followed by a set of constants, mostly to contain various vectors and matrices used while rendering the scene.</p>
 
-<pre class="brush: js">const viewerStartPosition = vec3.fromValues(0, 0, -10);
+<pre class="brush: js notranslate">const viewerStartPosition = vec3.fromValues(0, 0, -10);
 const viewerStartOrientation = vec3.fromValues(0, 0, 1.0);
 
 const cubeOrientation = vec3.create();
@@ -127,7 +127,7 @@ const RADIANS_PER_DEGREE = Math.PI / 180.0;
 
 <p>A function called <code>LogGLError()</code> is implemented to provide an easily customized way to output logging information for errors that occur while executing WebGL functions.</p>
 
-<pre class="brush: js">function LogGLError(where) {
+<pre class="brush: js notranslate">function LogGLError(where) {
   let err = gl.getError();
   if (err) {
     console.error(`WebGL error returned by ${where}: ${err}`);
@@ -146,7 +146,7 @@ const RADIANS_PER_DEGREE = Math.PI / 180.0;
 
 <p>Upon initially loading the script, we install a handler for the {{domxref("Window.load_event", "load")}} event, so that we can perform initialization.</p>
 
-<pre class="brush: js">window.addEventListener("load", onLoad);
+<pre class="brush: js notranslate">window.addEventListener("load", onLoad);
 
 function onLoad() {
   xrButton = document.querySelector("#enter-xr");
@@ -172,7 +172,7 @@ function onLoad() {
 
 <p>Then we call the <code>setupXRButton()</code> function, which handles configuring the "Enter/Exit WebXR" button to enable or disable it as necessary depending on the availability of WebXR support for the session type specified in the <code>SESSION_TYPE</code> constant.</p>
 
-<pre class="brush: js">function setupXRButton() {
+<pre class="brush: js notranslate">function setupXRButton() {
   if (navigator.xr.isSessionSupported) {
     navigator.xr.isSessionSupported(SESSION_TYPE)
     .then((supported) =&gt; {
@@ -193,7 +193,7 @@ function onLoad() {
 
 <p>The WebXR session is toggled on and off by the handler for {{domxref("Element.click_event", "click")}} events on the button, whose label is appropriately set to either "Enter WebXR" or "Exit WebXR". This is done by the <code>onXRButtonClick()</code> event handler.</p>
 
-<pre class="brush: js">async function onXRButtonClick(event) {
+<pre class="brush: js notranslate">async function onXRButtonClick(event) {
   if (!xrSession) {
     navigator.xr.requestSession(SESSION_TYPE)
     .then(sessionStarted);
@@ -216,7 +216,7 @@ function onLoad() {
 
 <p>The <code>sessionStarted()</code> function handles actually setting up and starting the session, by setting up event handlers, compiling and installing the GLSL code for the vertex and fragment shaders, and attaching the WebGL layer to the WebXR session before kicking off the rendering loop. It gets called as the handler for the promise returned by {{domxref("XR.isSessionSupported", "isSessionSupported()")}}.</p>
 
-<pre class="brush: js">function sessionStarted(session) {
+<pre class="brush: js notranslate">function sessionStarted(session) {
   let refSpaceType;
 
   xrSession = session;
@@ -301,7 +301,7 @@ function onLoad() {
 
 <p>When the WebXR session ends—either because it's being shut down by the user or by calling {{domxref("XRSession.end()")}}—the {{domxref("XRSession.end_event", "end")}} event is sent; we have set this up to call a function called <code>sessionEnded()</code>.</p>
 
-<pre class="brush: js">function sessionEnded() {
+<pre class="brush: js notranslate">function sessionEnded() {
   xrButton.innerText = "Enter WebXR";
 
   if (animationFrameRequestID) {
@@ -323,7 +323,7 @@ function onLoad() {
 
 <p>In order to allow the user to move through the 3D world even if they don't have a WebXR device with the inputs to perform movement through space, our handler for {{domxref("Element.keydown_event", "keydown")}} events, <code>handleKeyDown()</code>, responds by updating offsets from the object's origin based on which key was pressed.</p>
 
-<pre class="brush: js">function handleKeyDown(event) {
+<pre class="brush: js notranslate">function handleKeyDown(event) {
   switch(event.key) {
     case "w":
     case "W":
@@ -360,13 +360,13 @@ function onLoad() {
 <p>The keys and their effects are:</p>
 
 <ul>
-	<li>The <kbd>W</kbd> key slides the viewer forward by <code>MOVE_DISTANCE</code>.</li>
-	<li>The <kbd>S</kbd> key slides the viewer backward <code>MOVE_DISTANCE</code>.</li>
-	<li>The <kbd>A</kbd> key slides the viewer to the left by <code>MOVE_DISTANCE</code>.</li>
-	<li>The <kbd>D</kbd> key slides the viewer to the right by <code>MOVE_DISTANCE</code>.</li>
-	<li>The up arrow key, <kbd>↑</kbd>, moves the viewer upward by <code>MOVE_DISTANCE</code>.</li>
-	<li>The down arrow key, <kbd>↓</kbd>, moves the viewer downward by <code>MOVE_DISTANCE</code>.</li>
-	<li>The <kbd>R</kbd> key resets the viewer to their starting position and orientation by resetting the transport offsets all to 0.</li>
+ <li>The <kbd>W</kbd> key slides the viewer forward by <code>MOVE_DISTANCE</code>.</li>
+ <li>The <kbd>S</kbd> key slides the viewer backward <code>MOVE_DISTANCE</code>.</li>
+ <li>The <kbd>A</kbd> key slides the viewer to the left by <code>MOVE_DISTANCE</code>.</li>
+ <li>The <kbd>D</kbd> key slides the viewer to the right by <code>MOVE_DISTANCE</code>.</li>
+ <li>The up arrow key, <kbd>↑</kbd>, moves the viewer upward by <code>MOVE_DISTANCE</code>.</li>
+ <li>The down arrow key, <kbd>↓</kbd>, moves the viewer downward by <code>MOVE_DISTANCE</code>.</li>
+ <li>The <kbd>R</kbd> key resets the viewer to their starting position and orientation by resetting the transport offsets all to 0.</li>
 </ul>
 
 <p>These offsets will be applied by the renderer starting with the next frame drawn.</p>
@@ -375,7 +375,7 @@ function onLoad() {
 
 <p>We also have a {{domxref("Element.mousedown_event", "mousedown")}} event handler which checks to see if the right mouse button is down, and if so, calls the <code>rotateViewBy()</code> function, defined next, to calculate and store the new pitch (looking up and down) and yaw (looking left and right) values.</p>
 
-<pre class="brush: js">function handlePointerMove(event) {
+<pre class="brush: js notranslate">function handlePointerMove(event) {
   if (event.buttons &amp; 2) {
     rotateViewBy(event.movementX, event.movementY);
   }
@@ -383,7 +383,7 @@ function onLoad() {
 
 <p>Calculating the new pitch and yaw values is handled by the function <code>rotateViewBy()</code>:</p>
 
-<pre class="brush: js">function rotateViewBy(dx, dy) {
+<pre class="brush: js notranslate">function rotateViewBy(dx, dy) {
   mouseYaw -= dx * MOUSE_SPEED;
   mousePitch -= dy * MOUSE_SPEED;
 
@@ -400,7 +400,7 @@ function onLoad() {
 
 <p>Our callback for {{domxref("XRSession.requestAnimationFrame()")}} is implemented in the <code>drawFrame()</code> function shown below. Its job is to obtain the viewer's reference space, compute how much movement needs to be applied to any animated objects given the amount of time that's elapsed since the last frame, and then to render each of the views specified by the viewer's {{domxref("XRPose")}}.</p>
 
-<pre class="brush: js">let lastFrameTime = 0;
+<pre class="brush: js notranslate">let lastFrameTime = 0;
 
 function drawFrame(time, frame) {
   let session = frame.session;
@@ -452,7 +452,7 @@ function drawFrame(time, frame) {
 
 <p>The <code>applyViewerControls()</code> function, which is called by <code>drawFrame()</code> before beginning to render anything, takes the offsets in each of the three directions, the yaw offset, and the pitch offset as recorded by the <code>handleKeyDown()</code> and <code>handlePointerMove()</code> functions in response to the user pressing keys and dragging their mouse with the right mouse button pressed. It takes as input the base reference space for the object, and returns a new reference space that alters the location and orientation of the object o match the result of the inputs.</p>
 
-<pre class="brush: js">function applyViewerControls(refSpace) {
+<pre class="brush: js notranslate">function applyViewerControls(refSpace) {
   if (!mouseYaw &amp;&amp; !mousePitch &amp;&amp; !axialDistance &amp;&amp;
       !transverseDistance &amp;&amp; !verticalDistance) {
     return refSpace;
@@ -484,7 +484,7 @@ function drawFrame(time, frame) {
 
 <p>Most of this code is typical WebGL rendering code, taken directly from the <code>drawScene()</code> function in the <a href="/en-US/docs/Web/API/WebGL_API/Tutorial/Lighting_in_WebGL">Lighting in WebGL</a> article, and it's there that you should look for details on the WebGL rendering parts of this example [<a href="https://github.com/mdn/webgl-examples/blob/gh-pages/tutorial/sample7/webgl-demo.js">view the code on GitHub</a>]. But here it begins with some code specific to this example, so we'll take a deeper look at that part.</p>
 
-<pre class="brush: js">const normalMatrix = mat4.create();
+<pre class="brush: js notranslate">const normalMatrix = mat4.create();
 const modelViewMatrix = mat4.create();
 
 function renderScene(gl, view, programInfo, buffers, texture, deltaTime) {
@@ -611,9 +611,9 @@ function renderScene(gl, view, programInfo, buffers, texture, deltaTime) {
 
 <h3 id="Displaying_a_matrix">Displaying a matrix</h3>
 
-<p>For instructive purposes, this example displays the contents of the important matrices used while rendering the scene. The <code>displayMatrix()</code> method is used for this, and uses MathML to render the matrix; this will fall back to a more array-like format if MathML isn't supported by the user's browser.</p>
+<p>For instructive purposes, this example displays the contents of the important matrices used while rendering the scene. The <code>displayMatrix()</code> method is used for this; this function uses MathML to render the matrix, falling back to a more array-like format if MathML isn't supported by the user's browser.</p>
 
-<pre class="brush: js">function displayMatrix(mat, rowLength, target) {
+<pre class="brush: js notranslate">function displayMatrix(mat, rowLength, target) {
   let outHTML = "";
 
   if (mat &amp;&amp; rowLength &amp;&amp; rowLength &lt;= mat.length) {
@@ -641,16 +641,16 @@ function renderScene(gl, view, programInfo, buffers, texture, deltaTime) {
 <p>The rest of the code is identical to that found in the earlier examples:</p>
 
 <dl>
-	<dt><code>initShaderProgram()</code></dt>
-	<dd>Initializes the GLSL shader program, calling <code>loadShader()</code> to load and compile each shader's program, then attaching each one to the WebGL context. Once they're compiled, the program is linked and returned to the caller.</dd>
-	<dt><code>loadShader()</code></dt>
-	<dd>Creates a shader object and loads the specified source code into it before compiling the code and checking to ensure that the compiler succeeded before returning the newly compiled shader to the caller. If an error occurs, <code>nil</code> is returned instead.</dd>
-	<dt><code>initBuffers()</code></dt>
-	<dd>Initializes the buffers that contain data to be passed into WebGL. These buffers include the array of vertex positions, the array of vertex normals, the texture coordinates for each surface of the cube, and the array of vertex indices (specifying which entry in the vertex list represents each corner of the cube). An object containing references to eard</dd>
-	<dt><code>loadTexture()</code></dt>
-	<dd>Loads the image at a given URL and creates a WebGL texture from it. If the image's dimensions aren't both powers of two (see the <code>isPowerOf2()</code> function), mipmapping is disabled and wrapping is clamped to the edges. This is because optimized rendering of mipmapped textures only works for textures whose dimensions are powers of two in WebGL 1. WebGL 2 supports arbitratily-sized textures for mipmapping.</dd>
-	<dt><code>isPowerOf2()</code></dt>
-	<dd>Returns <code>true</code> if the specified value is a power of two; otherwise returns <code>false</code>.</dd>
+ <dt><code>initShaderProgram()</code></dt>
+ <dd>Initializes the GLSL shader program, calling <code>loadShader()</code> to load and compile each shader's program, then attaching each one to the WebGL context. Once they're compiled, the program is linked and returned to the caller.</dd>
+ <dt><code>loadShader()</code></dt>
+ <dd>Creates a shader object and loads the specified source code into it before compiling the code and checking to ensure that the compiler succeeded before returning the newly compiled shader to the caller. If an error occurs, <code>nil</code> is returned instead.</dd>
+ <dt><code>initBuffers()</code></dt>
+ <dd>Initializes the buffers that contain data to be passed into WebGL. These buffers include the array of vertex positions, the array of vertex normals, the texture coordinates for each surface of the cube, and the array of vertex indices (specifying which entry in the vertex list represents each corner of the cube). An object containing references to eard</dd>
+ <dt><code>loadTexture()</code></dt>
+ <dd>Loads the image at a given URL and creates a WebGL texture from it. If the image's dimensions aren't both powers of two (see the <code>isPowerOf2()</code> function), mipmapping is disabled and wrapping is clamped to the edges. This is because optimized rendering of mipmapped textures only works for textures whose dimensions are powers of two in WebGL 1. WebGL 2 supports arbitratily-sized textures for mipmapping.</dd>
+ <dt><code>isPowerOf2()</code></dt>
+ <dd>Returns <code>true</code> if the specified value is a power of two; otherwise returns <code>false</code>.</dd>
 </dl>
 
 <h3 id="Putting_it_all_together">Putting it all together</h3>
@@ -666,7 +666,7 @@ function renderScene(gl, view, programInfo, buffers, texture, deltaTime) {
 <h2 id="See_also">See also</h2>
 
 <ul>
-	<li><a href="http://learnwebgl.brown37.net/#">Learn WebGL</a> (includes some great visualizations of the camera and how it relates to the virtual world)</li>
-	<li><a href="http://webglfundamentals.org">WebGL Fundamentals</a></li>
-	<li><a href="https://learnopengl.com/">Learn OpenGL</a></li>
+ <li><a href="http://learnwebgl.brown37.net/#">Learn WebGL</a> (includes some great visualizations of the camera and how it relates to the virtual world)</li>
+ <li><a href="http://webglfundamentals.org">WebGL Fundamentals</a></li>
+ <li><a href="https://learnopengl.com/">Learn OpenGL</a></li>
 </ul>

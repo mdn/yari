@@ -4,19 +4,21 @@ import { Routes, Route, Link } from "react-router-dom";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { NoMatch } from "./routing";
-import { SearchWidget } from "./search";
+import { SearchNavigateWidget } from "./search";
 const AllFlaws = lazy(() => import("./flaws"));
-const DocumentEdit = lazy(() => import("./document/edit"));
+const DocumentEdit = lazy(() => import("./document/forms/edit"));
+const DocumentCreate = lazy(() => import("./document/forms/create"));
 
 export function App(appProps) {
   const routes = (
     <Routes>
       <Route path="/" element={<Homepage />} />
       {process.env.NODE_ENV === "development" && (
-        <Route path="/:locale/_flaws" element={<AllFlaws />} />
-      )}
-      {process.env.NODE_ENV === "development" && (
-        <Route path="/:locale/_edit/*" element={<DocumentEdit />} />
+        <>
+          <Route path="/:locale/_flaws" element={<AllFlaws />} />
+          <Route path="/:locale/_create/*" element={<DocumentCreate />} />
+          <Route path="/:locale/_edit/*" element={<DocumentEdit />} />
+        </>
       )}
       <Route path="/:locale/docs/*" element={<Document {...appProps} />} />
       <Route path="*" element={<NoMatch />} />
@@ -48,7 +50,7 @@ function Header() {
       <h1>
         <Link to="/">MDN Web Docs</Link>
       </h1>
-      <SearchWidget />
+      <SearchNavigateWidget />
     </header>
   );
 }

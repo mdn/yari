@@ -1,4 +1,4 @@
-BASE_URL = "https://developer.mozilla.org";
+DUMMY_BASE_URL = "https://example.com";
 
 class AllPagesInfo {
   constructor(pageInfoByUri, uriTransform) {
@@ -132,15 +132,17 @@ class AllPagesInfo {
     }
   }
 
+  getPathname(url) {
+    // This function returns just the pathname of the given "url", removing
+    // any trailing "/".
+    return new URL(url, DUMMY_BASE_URL).pathname.replace(/\/$/, "");
+  }
+
   getUriKey(url) {
     // This function returns just the lowercase pathname of the given "url",
-    // removing any trailing "/". The BASE_URL is not important here, since
-    // we're only after the path of any incoming "url", but it's required by
-    // the URL constructor when the incoming "url" is relative.
-    const uri = new URL(url, BASE_URL).pathname
-      .replace(/\/$/, "")
-      .toLowerCase();
-    return this.uriTransform(uri);
+    // but potentially transformed (i.e., repaired and/or redirected).
+    const uri = this.getPathname(url);
+    return this.uriTransform(uri.toLowerCase());
   }
 
   getDescription(url) {
@@ -182,7 +184,9 @@ class AllPagesInfo {
   getPage(url) {
     const uriKey = this.getUriKey(url);
     if (!this.pagesByUri.has(uriKey)) {
-      throw new Error(`${this.getDescription(url)} does not exist`);
+      // Many of the macros expect an empty object
+      // when the requested document doesn't exist.
+      return {};
     }
     return this.pagesByUri.get(uriKey);
   }

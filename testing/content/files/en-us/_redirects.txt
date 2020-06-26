@@ -1,2 +1,7 @@
 # FROM-URL	TO-URL
 /en-US/docs/Web/Fuu	/en-US/docs/Web/Foo
+/en-US/docs/Web/CSS/dumber	/en-US/docs/Web/CSS/number
+/en-US/docs/Web/API/Bob	/en-US/docs/Web/API/Blob
+/en-US/docs/Web/HTML/Element/anchor	/en-US/docs/Web/HTML/Element/a
+/en-US/docs/Web/JavaScript/Reference/Stern_mode	/en-US/docs/Web/JavaScript/Reference/Strict_mode
+/en-US/docs/Web/JavaScript/Reference/Global_Objects/Flag /en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean

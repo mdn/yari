@@ -15,7 +15,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">window.resizeTo(<em>width</em>, <em>height</em>)
+<pre class="syntaxbox notranslate">window.resizeTo(<em>width</em>, <em>height</em>)
 </pre>
 
 <h3 id="Parameters">Parameters</h3>
@@ -31,7 +31,7 @@ tags:
 
 <p>This function resizes the window so that it takes up one quarter of the available screen. See the {{domxref("Screen.availWidth")}} and {{domxref("Screen.availHeight")}} properties.</p>
 
-<pre class="brush:js">function quarter() {
+<pre class="brush:js notranslate">function quarter() {
   window.resizeTo(
     window.screen.availWidth / 2,
     window.screen.availHeight / 2
@@ -62,6 +62,8 @@ tags:
 <div class="hidden">The compatibility table in this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
 
 <p>{{Compat("api.Window.resizeTo")}}</p>
+
+<p>Note: It's not possible to resize a window or tab that wasn’t created by <code><strong>window.open()</strong></code>. It's also not possible to resize when the window has multiple tabs.</p>
 
 <h2 id="See_also">See also</h2>
 

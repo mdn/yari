@@ -9,7 +9,7 @@
  * error occurs in and drawing an ASCII art arrow to point at it.
  */
 class SourceCodeError {
-  constructor(name, error, source, line, column, macroName) {
+  constructor(name, error, source, line, column, macroName, fatal = true) {
     this.name = name;
     this.error = error;
     // So it becomes available in JSON.stringfy when doing that on
@@ -20,6 +20,7 @@ class SourceCodeError {
     this.column = column;
     this.macroName = macroName;
     this.sourceContext = this.getSourceContext(source);
+    this.fatal = fatal;
   }
 
   // TODO(djf): a lot of our HTML documents have really long lines and
@@ -89,7 +90,7 @@ class MacroInvocationError extends SourceCodeError {
       source,
       error.location.start.line,
       error.location.start.column,
-      error.name // XXX does this work?
+      error.name
     );
   }
 }
@@ -137,14 +138,58 @@ class MacroCompilationError extends SourceCodeError {
  * from the underlying runtime error.
  */
 class MacroExecutionError extends SourceCodeError {
-  constructor(error, source, token) {
+  constructor(error, source, token, fatal = true) {
     super(
       "MacroExecutionError",
       error,
       source,
       token.location.start.line,
       token.location.start.column,
-      token.name
+      token.name,
+      fatal
+    );
+  }
+}
+
+/**
+ * A MacroRedirectedLinkError is a special case of MacroExecutionError.
+ */
+class MacroRedirectedLinkError extends MacroExecutionError {
+  constructor(error, source, token, redirectInfo) {
+    super(error, source, token, false);
+    this.name = "MacroRedirectedLinkError";
+    this.macroSource = source.slice(
+      token.location.start.offset,
+      token.location.end.offset
+    );
+    this.redirectInfo = { ...redirectInfo };
+  }
+}
+
+/**
+ * A MacroBrokenLinkError is a special case of MacroExecutionError.
+ */
+class MacroBrokenLinkError extends MacroExecutionError {
+  constructor(error, source, token) {
+    super(error, source, token, false);
+    this.name = "MacroBrokenLinkError";
+    this.macroSource = source.slice(
+      token.location.start.offset,
+      token.location.end.offset
+    );
+  }
+}
+
+/**
+ * A MacroDeprecatedError is a special case of MacroExecutionError.
+ */
+class MacroDeprecatedError extends MacroExecutionError {
+  constructor(error, source, token) {
+    super(error, source, token, false);
+    this.name = "MacroDeprecatedError";
+    this.macroSource = source.slice(
+      token.location.start.offset,
+      token.location.end.offset
     );
   }
 }
@@ -155,4 +200,7 @@ module.exports = {
   MacroNotFoundError,
   MacroCompilationError,
   MacroExecutionError,
+  MacroRedirectedLinkError,
+  MacroBrokenLinkError,
+  MacroDeprecatedError,
 };

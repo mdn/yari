@@ -6,16 +6,13 @@
 
 ## Quickstart
 
-These steps should get you started, locally, straight away:
+To run Yari locally, you'll first need to install [git](https://git-scm.com/), [Node.js](https://nodejs.org) (>= 12.0.0) and [Yarn 1](https://classic.yarnpkg.com/en/docs/install). After that, run these commands in your bash:
 
     git clone https://github.com/mdn/yari.git
     cd yari
     yarn
     yarn start
     open http://localhost:3000
-
-To really understand how it starts and how to break down the various
-tools, open `Procfile` or the `package.json`. Or, read on...
 
 If you prefer, you can fork the repo first and do the `git clone` with
 *your* fork instead of the `mdn` one.

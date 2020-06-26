@@ -11,6 +11,7 @@ tags:
   - CSS Property
   - Layout
   - Reference
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -24,7 +25,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="brush:css no-line-numbers">/* Keyword values */
+<pre class="brush:css no-line-numbers notranslate">/* Keyword values */
 writing-mode: horizontal-tb;
 writing-mode: vertical-rl;
 writing-mode: vertical-lr;
@@ -63,7 +64,7 @@ writing-mode: unset;</pre>
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Example">Example</h2>
 
@@ -73,7 +74,7 @@ writing-mode: unset;</pre>
 
 <p>The HTML is simply a {{HTMLElement("table")}} with each writing mode in a row with a column showing text in various scripts using that writing mode.</p>
 
-<pre class="brush: html">&lt;table&gt;
+<pre class="brush: html notranslate">&lt;table&gt;
   &lt;tr&gt;
     &lt;th&gt;Value&lt;/th&gt;
     &lt;th&gt;Vertical script&lt;/th&gt;
@@ -124,7 +125,7 @@ writing-mode: unset;</pre>
 <div class="hidden">
 <p>Some preparatory CSS just to make things look a little better:</p>
 
-<pre class="brush: css">table {
+<pre class="brush: css notranslate">table {
   border-collapse:collapse;
 }
 td, th {
@@ -141,7 +142,7 @@ th {
 
 <p>The CSS that adjusts the directionality of the content looks like this:</p>
 
-<pre class="brush:css;">.example.Text1 span, .example.Text1 {
+<pre class="brush:css; notranslate">.example.Text1 span, .example.Text1 {
   writing-mode: horizontal-tb;
   -webkit-writing-mode: horizontal-tb;
   -ms-writing-mode: horizontal-tb;

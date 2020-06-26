@@ -123,7 +123,7 @@ tags:
 <p> For security reasons, web authentication calls ({{domxref('CredentialsContainer.create','create()')}} and {{domxref('CredentialsContainer.get','get()')}}) are cancelled if the browser window loses focus while the call is pending.</p>
 </div>
 
-<pre class="brush: js">// sample arguments for registration
+<pre class="brush: js notranslate">// sample arguments for registration
 var createCredentialDefaultArgs = {
     publicKey: {
         // Relying Party (a.k.a. - Service):
@@ -214,7 +214,37 @@ navigator.credentials.create(createCredentialDefaultArgs)
 
 <h2 id="Browser_compatibility">Browser compatibility</h2>
 
-<p>For Web Authentication browser compatibility information, view each of the individual interface pages listed in the {{anch("Interfaces")}} section of this page.</p>
+<h3 id="Credential">Credential</h3>
+
+<p>{{Compat("api.Credential")}}</p>
+
+<h3 id="CredentialsContainer">CredentialsContainer</h3>
+
+<p>{{Compat("api.CredentialsContainer")}}</p>
+
+<h3 id="PublicKeyCredential">PublicKeyCredential</h3>
+
+<p>{{Compat("api.PublicKeyCredential")}}</p>
+
+<h3 id="AuthenticatorResponse">AuthenticatorResponse</h3>
+
+<p>{{Compat("api.AuthenticatorResponse")}}</p>
+
+<h3 id="AuthenticatorAttestationResponse">AuthenticatorAttestationResponse</h3>
+
+<p>{{Compat("api.AuthenticatorAttestationResponse")}}</p>
+
+<h3 id="AuthenticatorAssertionResponse">AuthenticatorAssertionResponse</h3>
+
+<p>{{Compat("api.AuthenticatorAssertionResponse")}}</p>
+
+<h3 id="PublicKeyCredentialCreationOptions">PublicKeyCredentialCreationOptions</h3>
+
+<p>{{Compat("api.PublicKeyCredentialCreationOptions")}}</p>
+
+<h3 id="PublicKeyCredentialRequestOptions">PublicKeyCredentialRequestOptions</h3>
+
+<p>{{Compat("api.PublicKeyCredentialRequestOptions")}}</p>
 
 <h2 id="See_also">See also</h2>
 
