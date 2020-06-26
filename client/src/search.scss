@@ -59,20 +59,28 @@ $search-border-color-focus: #0096bfab;
     width: 400px;
     top: 40px;
 
-    div {
+    > div {
       padding: 5px;
       border-bottom: 1px solid #efefef;
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover,
+      &.highlit {
+        background-color: #efefef;
+      }
+
+      > * {
+        pointer-events: none;
+      }
     }
-    div:hover,
-    div.highlit {
-      background-color: #efefef;
-    }
-    div:hover {
-      cursor: pointer;
-    }
-    div:last-child {
-      border-bottom: none;
-    }
+
     mark {
       background-color: #f3f7bd;
     }
