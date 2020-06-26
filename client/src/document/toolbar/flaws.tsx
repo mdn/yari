@@ -116,36 +116,6 @@ function BrokenLinks({
   sourceFolder: string;
   links: Link[];
 }) {
-  // The `links` array will look something like this:
-  //  [
-  //    {href: 'foo', line: 12, ...},
-  //    {href: 'bar', line: 44, ...},
-  //    {href: 'foo', line: 53, ...},
-  //  ]
-  // Note that there are 2 'foo' in there. When we match this against
-  // the `document.querySelectorAll("a[href]")`, how are you supposed to
-  // which which of the 'foo' one you're referring to?
-  // The following forEach loop creates the `nths` array which matches
-  // the array elements in `links`.
-  // In this example, the value of the `nths` array will look like this:
-  //
-  //   [0, 0, 1]
-  //
-  // So when you loop over `links` you'll know many times the `link.href`
-  // has appeared before.
-  // Now, when you've filtered the list of
-  // all `document.querySelectorAll("a[href]")` that matches 'foo'
-  // you know *which* one to pick.
-  const indexes = {};
-  const nths: number[] = [];
-  for (const link of links) {
-    if (!(link.href in indexes)) {
-      indexes[link.href] = 0;
-    }
-    nths.push(indexes[link.href]);
-    indexes[link.href]++;
-  }
-
   const [opening, setOpening] = React.useState<string | null>(null);
   useEffect(() => {
     let unsetOpeningTimer: ReturnType<typeof setTimeout>;
@@ -179,32 +149,35 @@ function BrokenLinks({
 
   useEffect(() => {
     const annotations: RoughAnnotation[] = [];
-    // If the anchor already had a title, put it into this map.
-    // That way, when we restore the titles, we know what it used to be.
-    links.forEach((link, i) => {
-      const matchedAnchors = [
-        ...document.querySelectorAll<HTMLAnchorElement>("div.content a[href]"),
-      ].filter(
-        (anchor) =>
-          anchor.href === link.href ||
-          new URL(anchor.href).pathname === link.href
-      );
-      const anchor = matchedAnchors[nths[i]];
-      if (anchor) {
-        const annotationColor = link.suggestion ? "orange" : "red";
-        anchor.dataset.originalTitle = anchor.title;
-        anchor.title = link.suggestion
-          ? `Consider fixing! Suggestion: ${link.suggestion}`
-          : "Broken link! Links to a page that will not be found";
-        annotations.push(
-          annotate(anchor, {
-            type: "box",
-            color: annotationColor,
-            animationDuration: 300,
-          })
-        );
+
+    let linkIndex = 0;
+    for (const anchor of [
+      ...document.querySelectorAll<HTMLAnchorElement>("div.content a[href]"),
+    ]) {
+      const link = links[linkIndex];
+      if (!link) {
+        break;
       }
-    });
+      if (
+        anchor.href !== link.href &&
+        new URL(anchor.href).pathname !== link.href
+      ) {
+        continue;
+      }
+      linkIndex++;
+      const annotationColor = link.suggestion ? "orange" : "red";
+      anchor.dataset.originalTitle = anchor.title;
+      anchor.title = link.suggestion
+        ? `Consider fixing! Suggestion: ${link.suggestion}`
+        : "Broken link! Links to a page that will not be found";
+      annotations.push(
+        annotate(anchor, {
+          type: "box",
+          color: annotationColor,
+          animationDuration: 300,
+        })
+      );
+    }
 
     const ag = annotationGroup(annotations);
     ag.show();
@@ -221,7 +194,7 @@ function BrokenLinks({
         }
       }
     };
-  }, [links, nths]);
+  }, [links]);
 
   return (
     <div className="flaw flaw__broken_links">
@@ -245,33 +218,42 @@ function BrokenLinks({
                 onClick={() => {
                   const annotations: RoughAnnotation[] = [];
 
-                  const matchedAnchors = [
+                  let linkIndex = 0;
+                  for (const anchor of [
                     ...document.querySelectorAll<HTMLAnchorElement>(
                       "div.content a[href]"
                     ),
-                  ].filter(
-                    (anchor) =>
-                      anchor.href === link.href ||
-                      new URL(anchor.href).pathname === link.href
-                  );
-                  const anchor = matchedAnchors[nths[i]];
-                  if (anchor) {
-                    anchor.scrollIntoView({
-                      behavior: "smooth",
-                      block: "center",
-                    });
-
-                    if (anchor.parentElement) {
-                      annotations.push(
-                        annotate(anchor, {
-                          type: "circle",
-                          color: "purple",
-                          animationDuration: 500,
-                          strokeWidth: 2,
-                          padding: 6,
-                        })
-                      );
+                  ]) {
+                    const link = links[linkIndex];
+                    if (!link) {
+                      break;
                     }
+                    if (
+                      anchor.href !== link.href &&
+                      new URL(anchor.href).pathname !== link.href
+                    ) {
+                      continue;
+                    }
+
+                    if (i === linkIndex) {
+                      anchor.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                      });
+
+                      if (anchor.parentElement) {
+                        annotations.push(
+                          annotate(anchor, {
+                            type: "circle",
+                            color: "purple",
+                            animationDuration: 500,
+                            strokeWidth: 2,
+                            padding: 6,
+                          })
+                        );
+                      }
+                    }
+                    linkIndex++;
                   }
 
                   if (annotations.length) {

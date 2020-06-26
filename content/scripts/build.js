@@ -1522,7 +1522,7 @@ class Builder {
 
   async processFolder(source, folder, config) {
     const t0 = performance.now();
-    const { metadata, rawHtml, fileInfo } = Document.read(
+    const { metadata, rawContent, rawHtml, fileInfo } = Document.read(
       source.filepath,
       folder,
       false,
