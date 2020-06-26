@@ -565,10 +565,12 @@ class Builder {
     let total = 0;
     let processed;
 
-    // Record of counts of all results
+    // Record of counts and times of all results
     const counts = {};
+    const times = {};
     Object.values(processing).forEach((key) => {
       counts[key] = 0;
+      times[key] = 0;
     });
 
     // Record of flaw counts recorded
@@ -577,9 +579,10 @@ class Builder {
     );
 
     const reportProcessed = (processed) => {
-      const { result, file, doc } = processed;
+      const { result, file, doc, took } = processed;
       this.printProcessing(result, file);
       counts[result]++;
+      times[result] += took;
       if (doc && doc.flaws) {
         Object.entries(doc.flaws).forEach(([key, value]) => {
           flawCounts[key] += value.length;
@@ -645,8 +648,8 @@ class Builder {
     }
 
     const t1 = new Date();
-    self.dumpAllURLs();
-    self.summarizeResults(counts, flawCounts, t1 - t0, maxHeapMemory);
+    this.dumpAllURLs();
+    this.summarizeResults(counts, flawCounts, t1 - t0, maxHeapMemory, times);
   }
 
   ensureAllTitles() {
@@ -1062,18 +1065,21 @@ class Builder {
     return {};
   }
 
-  summarizeResults(counts, flawCounts, took, maxHeapMemory) {
+  summarizeResults(counts, flawCounts, took, maxHeapMemory, times) {
     console.log(chalk.green("\nSummary of build:"));
+    console.log(chalk.yellow(`Total time: ${msLong(took)}`));
     const totalProcessed = counts[processing.PROCESSED];
-    // const totalDocuments = Object.values(counts).reduce((a, b) => a + b);
-    const rate = (1000 * totalProcessed) / took; // per second
-    console.log(
-      chalk.yellow(
-        `Processed ${totalProcessed.toLocaleString()} in ${msLong(
-          took
-        )} (roughly ${rate.toFixed(1)} docs/sec)`
-      )
-    );
+    if (totalProcessed) {
+      const totalProcessedTime = times[processing.PROCESSED];
+      const rate = (1000 * totalProcessed) / totalProcessedTime; // per second
+      console.log(
+        chalk.yellow(
+          `Processed ${totalProcessed.toLocaleString()} in ${msLong(
+            totalProcessedTime
+          )} (roughly ${rate.toFixed(1)} docs/sec)`
+        )
+      );
+    }
     const longestKey = Math.max(...Object.keys(counts).map((k) => k.length));
     Object.keys(counts)
       .sort()
@@ -1514,6 +1520,7 @@ class Builder {
   }
 
   async processFolder(source, folder, config) {
+    const t0 = performance.now();
     const { metadata, rawHtml, fileInfo } = Document.read(
       source.filepath,
       folder,
@@ -1533,7 +1540,11 @@ class Builder {
     }
 
     if (this.excludeSlug(mdn_url)) {
-      return { result: processing.EXCLUDED, file: folder };
+      return {
+        result: processing.EXCLUDED,
+        file: folder,
+        took: performance.now() - t0,
+      };
     }
 
     config = config || {};
@@ -1645,6 +1656,7 @@ class Builder {
         result: processing.ALREADY,
         file: path.join(destinationDir, "index.html"),
         jsonFile: path.join(destinationDir, "index.json"),
+        took: performance.now() - t0,
       };
     }
 
@@ -1745,6 +1757,7 @@ class Builder {
       file: outfileHtml || outfileJson,
       jsonFile: outfileJson,
       doc,
+      took: performance.now() - t0,
     };
   }
 
@@ -1826,11 +1839,16 @@ class Builder {
   }
 
   processStumptownFile(source, file) {
+    const t0 = performance.now();
     const hasher = crypto.createHash("md5");
     const docRaw = fs.readFileSync(file);
     const doc = JSON.parse(docRaw);
     if (this.excludeSlug(doc.mdn_url)) {
-      return { result: processing.EXCLUDED, file };
+      return {
+        result: processing.EXCLUDED,
+        file,
+        took: performance.now() - t0,
+      };
     }
     hasher.update(docRaw);
 
@@ -1858,6 +1876,7 @@ class Builder {
       return {
         result: processing.ALREADY,
         file: path.join(destinationDir, "index.html"),
+        took: performance.now() - t0,
       };
     }
 
@@ -1875,6 +1894,7 @@ class Builder {
       file: outfileHtml || outfileJson,
       jsonFile: outfileJson,
       doc,
+      took: performance.now() - t0,
     };
   }
 
