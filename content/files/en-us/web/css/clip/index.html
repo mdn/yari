@@ -11,12 +11,13 @@ tags:
   - CSS Property
   - Deprecated
   - Reference
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
-<p>The <strong><code>clip</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property defines what portion of an element is visible. The <code>clip</code> property applies only to absolutely positioned elements, that is elements with {{cssxref("position","position:absolute")}} or {{cssxref("position","position:fixed")}}.</p>
+<p><span class="seoSummary">The <strong><code>clip</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property defines a visible portion of an element. The <code>clip</code> property applies only to absolutely positioned elements — that is, elements with {{cssxref("position","position:absolute")}} or {{cssxref("position","position:fixed")}}.</span></p>
 
-<pre class="brush:css no-line-numbers">/* Keyword value */
+<pre class="brush:css no-line-numbers notranslate">/* Keyword value */
 clip: auto;
 
 /* &lt;shape&gt; values */
@@ -40,54 +41,54 @@ clip: unset;</pre>
 
 <dl>
  <dt>{{cssxref("&lt;shape&gt;")}}</dt>
- <dd>A rectangular {{cssxref("&lt;shape&gt;")}} of the form <code>rect(&lt;top&gt;, &lt;right&gt;, &lt;bottom&gt;, &lt;left&gt;)</code> or <code>rect(&lt;top&gt; &lt;right&gt; &lt;bottom&gt; &lt;left&gt;)</code> (which is a more backwards-compatible syntax). The <code>&lt;top&gt;</code> and <code>&lt;bottom&gt;</code> values specify offsets from the <em>inside top border edge</em> of the box, while <code>&lt;right&gt;</code> and <code>&lt;left&gt;</code> specify offsets from the <em>inside left border edge</em> of the box — that is, the extent of the padding box.</dd>
+ <dd>A rectangular {{cssxref("&lt;shape&gt;")}} of the form <code>rect(&lt;top&gt; &lt;right&gt; &lt;bottom&gt; &lt;left&gt;)</code>. The <code>&lt;top&gt;</code> and <code>&lt;bottom&gt;</code> values are offsets from the <em>inside top border edge</em> of the box, while <code>&lt;right&gt;</code> and <code>&lt;left&gt;</code> are offsets from the <em>inside left border edge</em> of the box — that is, the extent of the padding box.</dd>
  <dd>The <code>&lt;top&gt;</code>, <code>&lt;right&gt;</code>, <code>&lt;bottom&gt;</code>, and <code>&lt;left&gt;</code> values may be either a {{cssxref("&lt;length&gt;")}} or <code>auto</code>. If any side's value is <code>auto</code>, the element is clipped to that side's <em>inside border edge</em>.</dd>
  <dt><code>auto</code></dt>
- <dd>The element does not clip (default value). Note that this is distinct from <code>rect(auto, auto, auto, auto)</code>, which does clip to the inside border edges of the element.</dd>
+ <dd>The element does not clip (default). This is different from <code>rect(auto, auto, auto, auto)</code>, which clips to the element’s inside border edges.</dd>
 </dl>
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}
+<pre class="syntaxbox notranslate">{{csssyntax}}
 </pre>
 
 <h2 id="Examples">Examples</h2>
 
 <h3 id="CSS">CSS</h3>
 
-<pre class="brush:css">.dotted-border {
+<pre class="brush:css notranslate">.dotted-border {
   border: dotted;
   position: relative;
   width: 536px;
   height: 350px;
 }
 
-#top-left, #middle, #bottom-right {
+#top-left,
+#middle,
+#bottom-right {
   position: absolute;
-  top: 0px;
+  top: 0;
 }
 
 #top-left {
   left: 360px;
-  clip: rect(0px, 175px, 113px, 0px);
+  clip: rect(0 175px 113px 0);
 }
 
 
 #middle {
   left: 280px;
-  clip: rect(119px, 255px, 229px, 80px);
-  /* standard syntax, unsupported by Internet Explorer 4-7 */
+  clip: rect(119px 255px 229px 80px);
 }
 
 #bottom-right {
   left: 200px;
   clip: rect(235px 335px 345px 160px);
-  /* non-standard syntax, but supported by all major browsers*/
 }</pre>
 
 <h3 id="HTML">HTML</h3>
 
-<pre class="brush:html">&lt;p class="dotted-border"&gt;
+<pre class="brush:html notranslate">&lt;p class="dotted-border"&gt;
   &lt;img src="https://developer.mozilla.org/@api/deki/files/3613/=hut.jpg" title="Original graphic"&gt;
   &lt;img id="top-left" src="https://developer.mozilla.org/@api/deki/files/3613/=hut.jpg" title="Graphic clipped to upper left"&gt;
   &lt;img id="middle" src="https://developer.mozilla.org/@api/deki/files/3613/=hut.jpg" title="Graphic clipped towards middle"&gt;

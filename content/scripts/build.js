@@ -4,12 +4,10 @@ const crypto = require("crypto");
 const childProcess = require("child_process");
 const { performance } = require("perf_hooks");
 
-const fm = require("front-matter");
 const ms = require("ms");
 const chalk = require("chalk");
 const sanitizeFilename = require("sanitize-filename");
 const chokidar = require("chokidar");
-const WebSocket = require("ws");
 // XXX does this work on Windows?
 const packageJson = require("../../package.json");
 
@@ -19,6 +17,7 @@ const cheerio = require("./monkeypatched-cheerio");
 const ProgressBar = require("./progress-bar");
 const { packageBCD } = require("./resolve-bcd");
 const { buildHtmlAndJsonFromDoc } = require("ssr");
+const Document = require("./document");
 const {
   extractDocumentSections,
   extractSidebar,
@@ -34,7 +33,7 @@ const {
   DEFAULT_LIVE_SAMPLES_BASE_URL,
   DEFAULT_INTERACTIVE_EXAMPLES_BASE_URL,
 } = require("./constants");
-const { slugToFoldername, humanFileSize } = require("./utils");
+const { slugToFoldername, humanFileSize, writeRedirects } = require("./utils");
 
 const kumascript = require("kumascript");
 
@@ -211,59 +210,10 @@ function checkSpecificFiles(files) {
 }
 
 /** Needs doc string */
-function triggerTouch(filepath, document, root) {
-  const changedFile = {
-    path: filepath,
-    name: path.relative(root, filepath),
-  };
-  const data = {
-    documentURL: document.mdn_url,
-    changedFile,
-    hasEDITOR: Boolean(process.env.EDITOR),
-  };
-  broadcastWebsocketMessage(JSON.stringify(data));
-}
-
-/** Needs doc string */
 function buildMDNUrl(locale, slug) {
   if (!locale) throw new Error("locale falsy!");
   if (!slug) throw new Error("slug falsy!");
   return `/${locale}/docs/${slug}`;
-}
-
-function extractLocale(source, folder) {
-  // E.g. 'pt-br/web/foo'
-  const relativeToSource = path.relative(source.filepath, folder);
-  // E.g. 'pr-br'
-  const localeFolderName = relativeToSource.split(path.sep)[0];
-  // E.g. 'pt-BR'
-  const locale = VALID_LOCALES.get(localeFolderName);
-  // This checks that the extraction worked *and* that the locale found
-  // really is in VALID_LOCALES *and* it ultimately returns the
-  // locale as we prefer to spell it (e.g. 'pt-BR' not 'Pt-bR')
-  if (!locale) {
-    throw new Error(`Unable to figure out locale from ${folder}`);
-  }
-  return locale;
-}
-
-function getContent(source, folder, appendWikiHistory = false) {
-  const rawHtmlFilepath = path.join(folder, "index.html");
-  const rawContent = fs.readFileSync(rawHtmlFilepath, "utf8");
-  const content = fm(rawContent);
-  const metadata = content.attributes;
-  const rawHtml = content.body;
-  metadata.frontMatterOffset = content.bodyBegin;
-  if (appendWikiHistory) {
-    const wikiHistoryPath = path.join(folder, "wikihistory.json");
-    if (fs.existsSync(wikiHistoryPath)) {
-      const wikiMetadataRaw = fs.readFileSync(wikiHistoryPath);
-      const wikiMetadata = JSON.parse(wikiMetadataRaw);
-      metadata.modified = wikiMetadata.modified;
-    }
-  }
-  metadata.locale = extractLocale(source, folder);
-  return { metadata, rawHtml, rawContent, rawHtmlFilepath };
 }
 
 /** Throw an error if the slug is insane.
@@ -316,23 +266,6 @@ function repairUri(uri) {
   return uri;
 }
 
-let webSocketServer = null;
-function broadcastWebsocketMessage(msg) {
-  if (!webSocketServer) {
-    console.warn("No WebSocket server started");
-    return;
-  }
-  // let i = 0;
-  webSocketServer.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      // i++;
-      // console.log(`SENDING (${i})...`, msg);
-      client.send(msg);
-    }
-  });
-  // console.log(`Sent to ${i} open clients`);
-}
-
 async function runBuild(sources, options, logger) {
   try {
     const builder = new Builder(sources, options, logger);
@@ -352,8 +285,6 @@ async function runBuild(sources, options, logger) {
       }
       if (options.watch || options.buildAndWatch) {
         builder.watch();
-        console.log("Starting WebSocket (port 8080) to report on builds.");
-        webSocketServer = new WebSocket.Server({ port: 8080 });
       }
     }
   } catch (err) {
@@ -378,6 +309,7 @@ class Builder {
     this.logger = logger;
     this.selfHash = null;
     this.allTitles = new Map();
+    this.allWikiHistory = new Map();
     this.allRedirects = new Map();
     this.flawsByType = new Map();
 
@@ -531,8 +463,12 @@ class Builder {
         );
         continue;
       }
-      const content = getContent(source, folder);
-      const { metadata, rawHtml, rawHtmlFilepath } = content;
+      const { metadata, rawHtml, fileInfo } = Document.read(
+        source.filepath,
+        folder,
+        false,
+        this.allWikiHistory
+      );
       // When rendering prerequisites, we're only interested in
       // caching the results for later use. We don't care about
       // the results returned.
@@ -545,7 +481,7 @@ class Builder {
       // a different level of recursion.
       for (const flaw of preFlaws) {
         if (!flaw.filepath) {
-          flaw.filepath = rawHtmlFilepath;
+          flaw.filepath = fileInfo.path;
         }
         allPrerequisiteFlaws.push(flaw);
       }
@@ -629,10 +565,12 @@ class Builder {
     let total = 0;
     let processed;
 
-    // Record of counts of all results
+    // Record of counts and times of all results
     const counts = {};
+    const times = {};
     Object.values(processing).forEach((key) => {
       counts[key] = 0;
+      times[key] = 0;
     });
 
     // Record of flaw counts recorded
@@ -641,9 +579,10 @@ class Builder {
     );
 
     const reportProcessed = (processed) => {
-      const { result, file, doc } = processed;
+      const { result, file, doc, took } = processed;
       this.printProcessing(result, file);
       counts[result]++;
+      times[result] += took;
       if (doc && doc.flaws) {
         Object.entries(doc.flaws).forEach(([key, value]) => {
           flawCounts[key] += value.length;
@@ -709,14 +648,17 @@ class Builder {
     }
 
     const t1 = new Date();
-    self.dumpAllURLs();
-    self.summarizeResults(counts, flawCounts, t1 - t0, maxHeapMemory);
+    this.dumpAllURLs();
+    this.summarizeResults(counts, flawCounts, t1 - t0, maxHeapMemory, times);
   }
 
   ensureAllTitles() {
     if (!this.selfHash) {
       throw new Error("this.selfHash hasn't been set yet");
     }
+
+    this.ensureAllWikiHistory();
+
     if (
       this.allTitles.size &&
       this.allTitles.get("_hash") === this.selfHash &&
@@ -904,6 +846,38 @@ class Builder {
     );
   }
 
+  ensureAllWikiHistory() {
+    if (this.allWikiHistory.size) {
+      // No reason to proceed, the wikihistory have already been loaded
+      // into memory.
+      return;
+    }
+
+    let t0 = new Date();
+    // Walk all the locale folders and gather all of the redirects.
+    for (const source of this.sources.entries()) {
+      for (const localeFolder of this.getLocaleRootFolders(source, {
+        allLocales: true,
+      })) {
+        const locale = path.basename(localeFolder).toLowerCase();
+        const map = new Map();
+        const filepath = path.join(localeFolder, "_wikihistory.json");
+        if (fs.existsSync(filepath)) {
+          const all = JSON.parse(fs.readFileSync(filepath));
+          for (const [slug, data] of Object.entries(all)) {
+            map.set(slug.toLowerCase(), data);
+          }
+          this.allWikiHistory.set(locale, map);
+        }
+      }
+    }
+
+    let t1 = new Date();
+    this.logger.info(
+      chalk.green(`Building map of all wiki history took ${msLong(t1 - t0)}`)
+    );
+  }
+
   async watch() {
     const onChange = async (filepath, source) => {
       const folder = path.dirname(filepath);
@@ -924,7 +898,8 @@ class Builder {
       );
       if (result === processing.PROCESSED) {
         doc.modified = new Date().toISOString();
-        triggerTouch(filepath, doc, source.filepath);
+        this.options.onFileChange &&
+          this.options.onFileChange(filepath, doc, source.filepath);
 
         const titleData = this.allTitles.get(doc.mdn_url.toLowerCase());
         for (const [key, value] of Object.entries(titleData)) {
@@ -938,10 +913,10 @@ class Builder {
       }
     };
 
-    this.sources
+    this.watchers = this.sources
       .entries()
       .filter((source) => source.watch)
-      .forEach((source) => {
+      .map((source) => {
         const watchdir = path.resolve(source.filepath);
 
         console.log(chalk.yellow(`Setting up file watcher on ${watchdir}...`));
@@ -974,6 +949,8 @@ class Builder {
             console.log("Hit Ctrl-C to quit the watcher when ready.");
           }
         });
+
+        return watcher;
       });
   }
 
@@ -1088,18 +1065,21 @@ class Builder {
     return {};
   }
 
-  summarizeResults(counts, flawCounts, took, maxHeapMemory) {
+  summarizeResults(counts, flawCounts, took, maxHeapMemory, times) {
     console.log(chalk.green("\nSummary of build:"));
+    console.log(chalk.yellow(`Total time: ${msLong(took)}`));
     const totalProcessed = counts[processing.PROCESSED];
-    // const totalDocuments = Object.values(counts).reduce((a, b) => a + b);
-    const rate = (1000 * totalProcessed) / took; // per second
-    console.log(
-      chalk.yellow(
-        `Processed ${totalProcessed.toLocaleString()} in ${msLong(
-          took
-        )} (roughly ${rate.toFixed(1)} docs/sec)`
-      )
-    );
+    if (totalProcessed) {
+      const totalProcessedTime = times[processing.PROCESSED];
+      const rate = (1000 * totalProcessed) / totalProcessedTime; // per second
+      console.log(
+        chalk.yellow(
+          `Processed ${totalProcessed.toLocaleString()} in ${msLong(
+            totalProcessedTime
+          )} (roughly ${rate.toFixed(1)} docs/sec)`
+        )
+      );
+    }
     const longestKey = Math.max(...Object.keys(counts).map((k) => k.length));
     Object.keys(counts)
       .sort()
@@ -1505,8 +1485,13 @@ class Builder {
       const {
         metadata: otherMetadata,
         rawHtml: otherRawHtml,
-        rawHtmlFilepath: otherRawHtmlFilepath,
-      } = getContent(source, otherFolder);
+        fileInfo: { path: otherRawHtmlFilepath },
+      } = Document.read(
+        source.filepath,
+        otherFolder,
+        false,
+        this.allWikiHistory
+      );
       const otherDestinationDir = path.join(
         this.destination,
         slugToFoldername(otherUri)
@@ -1535,9 +1520,12 @@ class Builder {
   }
 
   async processFolder(source, folder, config) {
-    const { metadata, rawHtml, rawContent, rawHtmlFilepath } = getContent(
-      source,
-      folder
+    const t0 = performance.now();
+    const { metadata, rawHtml, fileInfo } = Document.read(
+      source.filepath,
+      folder,
+      false,
+      this.allWikiHistory
     );
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
     const mdnUrlLC = mdn_url.toLowerCase();
@@ -1552,7 +1540,11 @@ class Builder {
     }
 
     if (this.excludeSlug(mdn_url)) {
-      return { result: processing.EXCLUDED, file: folder };
+      return {
+        result: processing.EXCLUDED,
+        file: folder,
+        took: performance.now() - t0,
+      };
     }
 
     config = config || {};
@@ -1582,7 +1574,6 @@ class Builder {
     // post-processing instead.
 
     let renderedHtml;
-
     // When 'source.htmlAlreadyRendered' is true, it simply means that the 'index.html'
     // is already fully rendered HTML.
     if (source.htmlAlreadyRendered) {
@@ -1606,7 +1597,7 @@ class Builder {
           if (flaw.line) {
             // The extra `- 1` is because of the added newline that
             // is only present because of the serialized linebreak.
-            flaw.line += metadata.frontMatterOffset - 1;
+            flaw.line += fileInfo.frontMatterOffset - 1;
           }
         });
 
@@ -1629,7 +1620,7 @@ class Builder {
           // link to open that file directly in your $EDITOR.
           flaws.forEach((flaw) => {
             if (!flaw.filepath) {
-              flaw.filepath = rawHtmlFilepath;
+              flaw.filepath = fileInfo.path;
             }
           });
           doc.flaws.macros = flaws;
@@ -1642,7 +1633,7 @@ class Builder {
     // we have to compute this hash because on a cache miss, we need to
     // write it down after we've done the work.
     const hasher = crypto.createHash("md5");
-    hasher.update(rawContent);
+    hasher.update(JSON.stringify(metadata) + rawHtml);
     // I think we should use the "renderedHtml" instead of the "rawHtml" for
     // the document hash since it takes into account document prerequisites
     // (i.e. one document including parts of another document within itself).
@@ -1665,6 +1656,7 @@ class Builder {
         result: processing.ALREADY,
         file: path.join(destinationDir, "index.html"),
         jsonFile: path.join(destinationDir, "index.json"),
+        took: performance.now() - t0,
       };
     }
 
@@ -1765,6 +1757,7 @@ class Builder {
       file: outfileHtml || outfileJson,
       jsonFile: outfileJson,
       doc,
+      took: performance.now() - t0,
     };
   }
 
@@ -1846,11 +1839,16 @@ class Builder {
   }
 
   processStumptownFile(source, file) {
+    const t0 = performance.now();
     const hasher = crypto.createHash("md5");
     const docRaw = fs.readFileSync(file);
     const doc = JSON.parse(docRaw);
     if (this.excludeSlug(doc.mdn_url)) {
-      return { result: processing.EXCLUDED, file };
+      return {
+        result: processing.EXCLUDED,
+        file,
+        took: performance.now() - t0,
+      };
     }
     hasher.update(docRaw);
 
@@ -1878,6 +1876,7 @@ class Builder {
       return {
         result: processing.ALREADY,
         file: path.join(destinationDir, "index.html"),
+        took: performance.now() - t0,
       };
     }
 
@@ -1895,6 +1894,7 @@ class Builder {
       file: outfileHtml || outfileJson,
       jsonFile: outfileJson,
       doc,
+      took: performance.now() - t0,
     };
   }
 
@@ -1902,9 +1902,16 @@ class Builder {
    * adding this document's uri and title to this.allTitles
    */
   processFolderTitle(source, folder, allPopularities) {
-    const { metadata } = getContent(source, folder, true);
+    let metadata;
     let mdn_url;
     try {
+      const document = Document.read(
+        source.filepath,
+        folder,
+        true,
+        this.allWikiHistory
+      );
+      metadata = document.metadata;
       mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
     } catch (err) {
       console.warn(`The folder that caused the error was: ${folder}`);
@@ -1951,6 +1958,47 @@ class Builder {
       doc.tags = metadata.tags;
     }
     this.allTitles.set(mdnUrlLC, doc);
+  }
+
+  removeURLs(locale, slug) {
+    const rootURL = buildMDNUrl(locale, slug).toLowerCase();
+    return Array.from(this.allTitles.keys())
+      .filter((key) => key === rootURL || key.startsWith(rootURL + "/"))
+      .map((url) => {
+        const doc = this.allTitles.get(url);
+        this.allTitles.delete(url);
+        return doc.slug;
+      });
+  }
+
+  moveURLs(contentRoot, locale, changedSlugs) {
+    const changedURLs = changedSlugs.map((pair) =>
+      pair.map((slug) => buildMDNUrl(locale, slug))
+    );
+    const localeFolder = path.join(contentRoot, locale);
+    writeRedirects(
+      localeFolder,
+      [
+        ...fs
+          .readFileSync(path.join(localeFolder, "_redirects.txt"), "utf-8")
+          .split("\n")
+          .map((line) => line.split("\t"))
+          .slice(1, -1)
+          .map(([from, to]) => {
+            const redirect = changedURLs.find(
+              ([oldURL]) => to === oldURL || to.startsWith(oldURL + "/")
+            );
+            return [from, redirect ? to.replace(redirect[0], redirect[1]) : to];
+          }),
+        ...changedURLs,
+      ]
+        .filter(([oldURL, newURL]) => oldURL !== newURL)
+        .sort((a, b) => {
+          if (a[0] < b[0]) return -1;
+          if (a[0] > b[0]) return 1;
+          return 0;
+        })
+    );
   }
 
   processStumptownFileTitle(source, file, allPopularities) {

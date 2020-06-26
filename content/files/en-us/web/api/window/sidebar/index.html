@@ -2,7 +2,7 @@
 title: Window.sidebar
 slug: Web/API/Window/sidebar
 summary: >-
-  Returns a sidebar object, which contains several methods for registering
+  Returns a sidebar object which contains several methods for registering
   add-ons with the browser.
 tags:
   - HTML DOM
@@ -13,7 +13,7 @@ tags:
 ---
 <div>{{APIRef}} {{Non-standard_header}}</div>
 
-<p>Returns a sidebar object, which contains several methods for registering add-ons with the browser.</p>
+<p>Returns a sidebar object which contains several methods for registering add-ons with the browser.</p>
 
 <h2 id="Notes" name="Notes">Methods</h2>
 
@@ -38,7 +38,7 @@ tags:
   </tr>
   <tr>
    <td><code>AddSearchProvider(<em>descriptionURL)</em></code></td>
-   <td colspan="2">Installs a search provider (OpenSearch). <a href="/en-US/docs/Web/API/Window/sidebar/Adding_search_engines_from_Web_pages#Installing_OpenSearch_plugins" title="Adding_search_engines_from_web_pages">Adding OpenSearch search engines </a>contains more details. Added in Firefox 2.</td>
+   <td colspan="2">Dummy function; does nothing. See <a href="/en-US/docs/Web/OpenSearch#Autodiscovery_of_search_plugins">Autodiscovery of search plugins</a>.</td>
   </tr>
   <tr>
    <td><code>addSearchEngine(<var>engineURL</var>, <var>iconURL</var>, <var>suggestedTitle</var>, <var>suggestedCategory</var>)</code> {{Obsolete_inline(44)}}</td>
@@ -46,7 +46,7 @@ tags:
     <p>Installs a search engine (Sherlock). <a href="/en-US/docs/Web/API/Window/sidebar/Adding_search_engines_from_Web_pages#Installing_Sherlock_plugins" title="Adding_search_engines_from_web_pages">Adding Sherlock search engines </a>contains more details.</p>
 
     <div class="note">
-    <p><strong>Note</strong>: This was made obsolete in Firefox 44, and has been removed completely in Firefox 59. You should use <code>AddSearchProvider</code> instead.</p>
+    <p><strong>Note</strong>: This was made obsolete in Firefox 44, and has been removed completely in Firefox 59.</p>
     </div>
    </td>
   </tr>

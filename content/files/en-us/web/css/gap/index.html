@@ -12,6 +12,7 @@ tags:
   - CSS Property
   - Reference
   - gap
+  - 'recipe:css-property'
 ---
 <p>{{CSSRef}}</p>
 
@@ -27,7 +28,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="brush: css; no-line-numbers">/* One &lt;length&gt; value */
+<pre class="brush: css; no-line-numbers notranslate">/* One &lt;length&gt; value */
 gap: 20px;
 gap: 1em;
 gap: 3vmin;
@@ -64,15 +65,15 @@ gap: unset;
 <h3 id="Values">Values</h3>
 
 <dl>
-	<dt>{{CSSxRef("&lt;length&gt;")}}</dt>
-	<dd>Is the width of the gutter separating the grid lines.</dd>
-	<dt>{{CSSxRef("&lt;percentage&gt;")}}</dt>
-	<dd>Is the width of the gutter separating the grid lines, relative to the dimension of the element.</dd>
+ <dt>{{CSSxRef("&lt;length&gt;")}}</dt>
+ <dd>Is the width of the gutter separating the grid lines.</dd>
+ <dt>{{CSSxRef("&lt;percentage&gt;")}}</dt>
+ <dd>Is the width of the gutter separating the grid lines, relative to the dimension of the element.</dd>
 </dl>
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{CSSSyntax}}</pre>
+<pre class="syntaxbox notranslate">{{CSSSyntax}}</pre>
 
 <h2 id="Examples">Examples</h2>
 
@@ -80,7 +81,7 @@ gap: unset;
 
 <h4 id="HTML">HTML</h4>
 
-<pre class="brush: html;">&lt;div id="flexbox"&gt;
+<pre class="brush: html; notranslate">&lt;div id="flexbox"&gt;
   &lt;div&gt;&lt;/div&gt;
   &lt;div&gt;&lt;/div&gt;
   &lt;div&gt;&lt;/div&gt;
@@ -92,7 +93,7 @@ gap: unset;
 
 <h4 id="CSS">CSS</h4>
 
-<pre class="brush: css; highlight[5]">#flexbox {
+<pre class="brush: css; highlight[5] notranslate">#flexbox {
   display: flex;
   flex-wrap: wrap;
   width: 300px;
@@ -117,7 +118,7 @@ gap: unset;
 
 <h4 id="HTML_2">HTML</h4>
 
-<pre class="brush: html;">&lt;div id="grid"&gt;
+<pre class="brush: html; notranslate">&lt;div id="grid"&gt;
   &lt;div&gt;&lt;/div&gt;
   &lt;div&gt;&lt;/div&gt;
   &lt;div&gt;&lt;/div&gt;
@@ -132,13 +133,13 @@ gap: unset;
 <h4 id="CSS_2">CSS</h4>
 
 <div class="hidden">
-<pre class="brush: css">#grid {
+<pre class="brush: css notranslate">#grid {
   grid-gap: 20px 5px;
 }
 </pre>
 </div>
 
-<pre class="brush: css; highlight[5]">#grid {
+<pre class="brush: css; highlight[5] notranslate">#grid {
   display: grid;
   height: 200px;
   grid-template: repeat(3, 1fr) / repeat(3, 1fr);
@@ -159,7 +160,7 @@ gap: unset;
 
 <h4 id="HTML_3">HTML</h4>
 
-<pre class="brush: html;">&lt;p class="content-box"&gt;
+<pre class="brush: html; notranslate">&lt;p class="content-box"&gt;
   This is some multi-column text with a 40px column
   gap created with the CSS &lt;code&gt;gap&lt;/code&gt; property.
   Don't you think that's fun and exciting? I sure do!
@@ -168,7 +169,7 @@ gap: unset;
 
 <h4 id="CSS_3">CSS</h4>
 
-<pre class="brush: css; highlight[3]">.content-box {
+<pre class="brush: css; highlight[3] notranslate">.content-box {
   column-count: 3;
   gap: 40px;
 }
@@ -181,20 +182,20 @@ gap: unset;
 <h2 id="Specifications">Specifications</h2>
 
 <table class="standard-table">
-	<thead>
-		<tr>
-			<th scope="col">Specification</th>
-			<th scope="col">Status</th>
-			<th scope="col">Comment</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>{{SpecName("CSS3 Box Alignment", "#propdef-gap", "gap")}}</td>
-			<td>{{Spec2("CSS3 Box Alignment")}}</td>
-			<td>Initial definition</td>
-		</tr>
-	</tbody>
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName("CSS3 Box Alignment", "#propdef-gap", "gap")}}</td>
+   <td>{{Spec2("CSS3 Box Alignment")}}</td>
+   <td>Initial definition</td>
+  </tr>
+ </tbody>
 </table>
 
 <p>{{CSSInfo}}</p>
@@ -218,6 +219,6 @@ gap: unset;
 <h2 id="See_also">See also</h2>
 
 <ul>
-	<li>Related CSS properties: {{CSSxRef("row-gap")}}, {{CSSxRef("column-gap")}}</li>
-	<li>Grid Layout Guide: <em><a href="/en-US/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout#Gutters">Basic concepts of grid layout - Gutters</a></em></li>
+ <li>Related CSS properties: {{CSSxRef("row-gap")}}, {{CSSxRef("column-gap")}}</li>
+ <li>Grid Layout Guide: <em><a href="/en-US/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout#Gutters">Basic concepts of grid layout - Gutters</a></em></li>
 </ul>

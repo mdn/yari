@@ -20,7 +20,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox"><em>cache</em>.delete(<em>request</em>, {<em>options</em>}).then(function(<em>found</em>) {
+<pre class="syntaxbox notranslate"><em>cache</em>.delete(<em>request</em>, {<em>options</em>}).then(function(<em>found</em>) {
   // your cache entry has been deleted if found
 });
 </pre>
@@ -47,7 +47,7 @@ tags:
 
 <h2 id="Examples">Examples</h2>
 
-<pre class="brush: js">caches.open('v1').then(function(cache) {
+<pre class="brush: js notranslate">caches.open('v1').then(function(cache) {
   cache.delete('/images/image.png').then(function(response) {
     someUIUpdateFunction();
   });
@@ -63,7 +63,7 @@ tags:
    <th scope="col">Comment</th>
   </tr>
   <tr>
-   <td>{{SpecName('Service Workers', '#dom-cache-delete', 'Cache: delete')}}</td>
+   <td>{{SpecName('Service Workers', '#cache-delete', 'Cache: delete')}}</td>
    <td>{{Spec2('Service Workers')}}</td>
    <td>Initial definition.</td>
   </tr>

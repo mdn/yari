@@ -6,6 +6,7 @@ tags:
   - CSS
   - Layout
   - Pseudo-class
+  - Read-only
   - Reference
   - Web
 ---
@@ -13,50 +14,70 @@ tags:
 
 <p>The <strong><code>:read-only</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> <a href="/en-US/docs/CSS/Pseudo-classes" title="Pseudo-classes">pseudo-class</a> represents an element (such as <code>input</code> or <code>textarea</code>) that is not editable by the user.</p>
 
-<pre class="brush: css no-line-numbers">/* Selects any &lt;input&gt; element that is read-only */
-/* Supported in Firefox with a prefix */
-input:-moz-read-only {
+<pre class="brush: css no-line-numbers notranslate">input:read-only, textarea:read-only {
   background-color: #ccc;
 }
 
-/* Supported in Blink/WebKit/Edge without a prefix */
-input:read-only {
+p:read-only {
   background-color: #ccc;
-}</pre>
-
-<div class="note">
-<p><strong>Note</strong>: This selector doesn't just select {{htmlElement("input")}}/{{htmlElement("textarea")}} with {{htmlattrxref("readonly", "input")}} set on them; it will select <em>any</em> element that cannot be edited by the user.</p>
-</div>
+}
+</pre>
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
-<h2 id="Example" name="Example">Example</h2>
+<h2 id="Example" name="Example">Examples</h2>
 
-<h3 id="HTML">HTML</h3>
+<h3 id="Confirming_form_information_in_read-onlyread-write_controls">Confirming form information in read-only/read-write controls</h3>
 
-<pre class="brush: html">&lt;input type="text" value="Type whatever you want here."&gt;
-&lt;input type="text" value="This is a read-only field." readonly&gt;
-&lt;p&gt;This is a normal paragraph.&lt;/p&gt;
-&lt;p contenteditable="true"&gt;You can edit this paragraph!&lt;/p&gt;</pre>
+<p>One use of <code>readonly</code> form controls is to allow the user to check and verify information that they may have entered in an earlier form (for example, shipping details), while still being able to submit the information along with the rest of the form. We do just this in the example below.</p>
 
-<h3 id="CSS">CSS</h3>
+<p>The <code>:read-only</code> pseudo-class is used to remove all the styling that makes the inputs look like clickable fields, making them look more like read-only paragraphs.The <code>:read-write</code> pseudo-class on the other hand is used to provide some nicer styling to the editable <code>&lt;textarea&gt;</code>.</p>
 
-<pre class="brush: css">input { min-width: 25em; }
-input:-moz-read-only { background: cyan; }
-input:read-only { background: cyan; }
+<pre class="brush: css notranslate">input:-moz-read-only, textarea:-moz-read-only,
+input:read-only, textarea:read-only {
+  border: 0;
+  box-shadow: none;
+  background-color: white;
+}
 
-p:-moz-read-only { background: lightgray; }
-p:read-only { background: lightgray; }
-p[contenteditable="true"] { color: blue; }
-</pre>
+textarea:-moz-read-write,
+textarea:read-write {
+  box-shadow: inset 1px 1px 3px #ccc;
+  border-radius: 5px;
+}</pre>
 
-<h3 id="Result">Result</h3>
+<p>You can find the full source code at <a class="external external-icon" href="https://github.com/mdn/learning-area/blob/master/html/forms/pseudo-classes/readonly-confirmation.html" rel="noopener">readonly-confirmation.html</a>; this renders like so:</p>
 
-<p>{{EmbedLiveSample("Example")}}</p>
+<p>{{EmbedGHLiveSample("learning-area/html/forms/pseudo-classes/readonly-confirmation.html", '100%', 660)}}</p>
 
-<h2 class="editable" id="Specifications" name="Specifications">Specifications</h2>
+<h3 id="Styling_read-only_non-form_controls">Styling read-only non-form controls</h3>
+
+<p>This selector doesn't just select {{htmlElement("input")}}/{{htmlElement("textarea")}} elements — it will select <em>any</em> element that cannot be edited by the user.</p>
+
+<pre class="brush: html notranslate">&lt;p contenteditable&gt;This paragraph is editable; it is read-write.&lt;/p&gt;
+
+&lt;p&gt;This paragraph is not editable; it is read-only.&lt;/p&gt;</pre>
+
+<pre class="brush: css notranslate">p {
+  font-size: 150%;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+p:read-only {
+  background-color: red;
+  color: white;
+}
+
+p:read-write {
+  background-color: lime;
+}</pre>
+
+<p>{{EmbedLiveSample('Styling_read-only_non-form_controls', '100%', 400)}}</p>
+
+<h2 id="Specifications" name="Specifications">Specifications</h2>
 
 <table class="standard-table">
  <thead>

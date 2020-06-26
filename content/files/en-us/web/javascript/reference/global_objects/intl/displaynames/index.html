@@ -45,76 +45,76 @@ tags:
 
 <p>To create an <code>Intl.DisplayNames</code> for a locale and get the display name for a region code.</p>
 
-<pre class="brush: js">// Get display names of region in English
-var regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
-console.log(regionNames.of('419')); // "Latin America"
-console.log(regionNames.of('BZ')); // "Belize"
-console.log(regionNames.of('US')); // "United States"
-console.log(regionNames.of('BA')); // "Bosnia &amp; Herzegovina"
-console.log(regionNames.of('MM')); // "Myanmar (Burma)"
+<pre class="brush: js notranslate">// Get display names of region in English
+let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
+regionNames.of('419'); // "Latin America"
+regionNames.of('BZ');  // "Belize"
+regionNames.of('US');  // "United States"
+regionNames.of('BA');  // "Bosnia &amp; Herzegovina"
+regionNames.of('MM');  // "Myanmar (Burma)"
 
 // Get display names of region in Traditional Chinese
 regionNames = new Intl.DisplayNames(['zh-Hant'], {type: 'region'});
-console.log(regionNames.of('419')); // "拉丁美洲"
-console.log(regionNames.of('BZ')); // "貝里斯"
-console.log(regionNames.of('US')); // "美國"
-console.log(regionNames.of('BA')); // "波士尼亞與赫塞哥維納"
-console.log(regionNames.of('MM')); // "緬甸"</pre>
+regionNames.of('419'; // "拉丁美洲"
+regionNames.of('BZ'); // "貝里斯"
+regionNames.of('US'); // "美國"
+regionNames.of('BA'); // "波士尼亞與赫塞哥維納"
+regionNames.of('MM'); // "緬甸"</pre>
 
 <h3 id="Language_Display_Names">Language Display Names</h3>
 
 <p>To create an <code>Intl.DisplayNames</code> for a locale and get the display name for a language-script-region sequence.</p>
 
-<pre class="brush: js">// Get display names of language in English
-var languageNames = new Intl.DisplayNames(['en'], {type: 'language'});
-console.log(languageNames.of('fr')); // "French"
-console.log(languageNames.of('de')); // "German"
-console.log(languageNames.of('fr-CA')); // "Canadian French"
-console.log(languageNames.of('zh-Hant')); // "Traditional Chinese"
-console.log(languageNames.of('en-US')); // "American English"
-console.log(languageNames.of('zh-TW')); // "Chinese (Taiwan)"]
+<pre class="brush: js notranslate">// Get display names of language in English
+let languageNames = new Intl.DisplayNames(['en'], {type: 'language'});
+languageNames.of('fr');      // "French"
+languageNames.of('de');      // "German"
+languageNames.of('fr-CA');   // "Canadian French"
+languageNames.of('zh-Hant'); // "Traditional Chinese"
+languageNames.of('en-US');   // "American English"
+languageNames.of('zh-TW');   // "Chinese (Taiwan)"]
 
 // Get display names of language in Traditional Chinese
 languageNames = new Intl.DisplayNames(['zh-Hant'], {type: 'language'});
-console.log(languageNames.of('fr')); // "法文"
-console.log(languageNames.of('zh')); // "中文"
-console.log(languageNames.of('de')); // "德文"</pre>
+languageNames.of('fr'); // "法文"
+languageNames.of('zh'); // "中文"
+languageNames.of('de'); // "德文"</pre>
 
 <h3 id="Script_Code_Display_Names">Script Code Display Names</h3>
 
 <p>To create an <code>Intl.DisplayNames</code> for a locale and get the display name for a script code.</p>
 
-<pre class="brush: js">// Get display names of script in English
-var scriptNames = new Intl.DisplayNames(['en'], {type: 'script'});
+<pre class="brush: js notranslate">// Get display names of script in English
+let scriptNames = new Intl.DisplayNames(['en'], {type: 'script'});
 // Get script names
-console.log(scriptNames.of('Latn')); // "Latin"
-console.log(scriptNames.of('Arab')); // "Arabic"
-console.log(scriptNames.of('Kana')); // "Katakana"
+scriptNames.of('Latn'); // "Latin"
+scriptNames.of('Arab'); // "Arabic"
+scriptNames.of('Kana'); // "Katakana"
 
 // Get display names of script in Traditional Chinese
 scriptNames = new Intl.DisplayNames(['zh-Hant'], {type: 'script'});
-console.log(scriptNames.of('Latn')); // "拉丁文"
-console.log(scriptNames.of('Arab')); // "阿拉伯文"
-console.log(scriptNames.of('Kana')); // "片假名"</pre>
+scriptNames.of('Latn'); // "拉丁文"
+scriptNames.of('Arab'); // "阿拉伯文"
+scriptNames.of('Kana'); // "片假名"</pre>
 
 <h3 id="Currency_Code_Display_Names">Currency Code Display Names</h3>
 
 <p>To create an <code>Intl.DisplayNames</code> for a locale and get the display name for currency code.</p>
 
-<pre class="brush: js">// Get display names of currency code in English
-var currencyNames = new Intl.DisplayNames(['en'], {type: 'currency'});
+<pre class="brush: js notranslate">// Get display names of currency code in English
+let currencyNames = new Intl.DisplayNames(['en'], {type: 'currency'});
 // Get currency names
-console.log(currencyNames.of('USD')); // "US Dollar"
-console.log(currencyNames.of('EUR')); // "Euro"
-console.log(currencyNames.of('TWD')); // "New Taiwan Dollar"
-console.log(currencyNames.of('CNY')); // "Chinese Yuan"
+currencyNames.of('USD'); // "US Dollar"
+currencyNames.of('EUR'); // "Euro"
+currencyNames.of('TWD'); // "New Taiwan Dollar"
+currencyNames.of('CNY'); // "Chinese Yuan"
 
 // Get display names of currency code in Traditional Chinese
 currencyNames = new Intl.DisplayNames(['zh-Hant'], {type: 'currency'});
-console.log(currencyNames.of('USD')); // "美元"
-console.log(currencyNames.of('EUR')); // "歐元"
-console.log(currencyNames.of('TWD')); // "新台幣"
-console.log(currencyNames.of('CNY')); // "人民幣"</pre>
+currencyNames.of('USD'); // "美元"
+currencyNames.of('EUR'); // "歐元"
+currencyNames.of('TWD'); // "新台幣"
+currencyNames.of('CNY'); // "人民幣"</pre>
 
 <h2 id="Specifications">Specifications</h2>
 
@@ -148,5 +148,5 @@ console.log(currencyNames.of('CNY')); // "人民幣"</pre>
 <h2 id="See_also">See also</h2>
 
 <ul>
- <li><code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl">Intl</a></code></li>
+ <li>{{jsxref("Intl")}}</li>
 </ul>

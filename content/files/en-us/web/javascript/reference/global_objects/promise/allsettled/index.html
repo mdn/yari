@@ -5,6 +5,16 @@ summary: >-
   The Promise.allSettled() method returns a promise that resolves after all of
   the given promises have either fulfilled or rejected, with an array of objects
   that each describes the outcome of each promise.
+
+
+  It is typically used when you have multiple asynchronous tasks that are not
+  dependent on one another to complete successfully, or you'd always like to
+  know the result of each promise.
+
+
+  In comparison, the Promise returned by Promise.all() may be more appropriate
+  if the tasks are dependent on each other / if you'd like to immediately reject
+  upon any of them rejecting.
 tags:
   - JavaScript
   - Method
@@ -15,13 +25,17 @@ tags:
 ---
 <div>{{JSRef}}</div>
 
-<p>The <code><strong>Promise.allSettled()</strong></code> method returns a promise that resolves after all of the given promises have either fulfilled or rejected, with an array of objects that each describes the outcome of each promise.</p>
+<p>The <code><strong>Promise.allSettled()</strong></code> method returns a promise that resolves after all of the given promises have either fulfilled or rejected, with an array of objects that each describes the outcome of each promise.<br>
+ <br>
+ It is typically used when you have multiple asynchronous tasks that are not dependent on one another to complete successfully, or you'd always like to know the result of each promise.<br>
+ <br>
+ In comparison, the Promise returned by {{jsxref("Promise.all()")}} may be more appropriate if the tasks are dependent on each other / if you'd like to immediately reject upon any of them rejecting.</p>
 
 <div>{{EmbedInteractiveExample("pages/js/promise-allsettled.html")}}</div>
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox"><var>Promise</var>.allSettled(<var>iterable</var>);</pre>
+<pre class="syntaxbox notranslate"><var>Promise</var>.allSettled(<var>iterable</var>);</pre>
 
 <h3 id="Parameters">Parameters</h3>
 
@@ -42,7 +56,7 @@ tags:
 
 <h3 id="Using_Promise.allSettled">Using Promise.allSettled</h3>
 
-<pre class="brush: js">Promise.allSettled([
+<pre class="brush: js notranslate">Promise.allSettled([
   Promise.resolve(33),
   new Promise(resolve =&gt; setTimeout(() =&gt; resolve(66), 0)),
   99,

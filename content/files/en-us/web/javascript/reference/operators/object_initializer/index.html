@@ -66,6 +66,20 @@ let o = {
 
 <p>An object initializer is an expression that describes the initialization of an {{jsxref("Object")}}. Objects consist of <em>properties</em>, which are used to describe an object. Values of object properties can either contain <a href="/en-US/docs/Glossary/primitive">primitive</a> data types or other objects.</p>
 
+<h3 id="Object_literal_notation_vs_JSON">Object literal notation vs JSON</h3>
+
+<p>The object literal notation is not the same as the <strong>J</strong>ava<strong>S</strong>cript <strong>O</strong>bject <strong>N</strong>otation (<a href="/en-US/docs/Glossary/JSON">JSON</a>). Although they look similar, there are differences between them:</p>
+
+<ul>
+ <li>JSON permits <em>only</em> property definition using <code>"property": value</code> syntax.  The property name must be double-quoted, and the definition cannot be a shorthand.</li>
+ <li>In JSON the values can only be strings, numbers, arrays, <code>true</code>, <code>false</code>, <code>null</code>, or another (JSON) object.</li>
+ <li>A function value (see "Methods" above) can not be assigned to a value in JSON.</li>
+ <li>Objects like {{jsxref("Date")}} will be a string after {{jsxref("JSON.parse()")}}.</li>
+ <li>{{jsxref("JSON.parse()")}} will reject computed property names and an error will be thrown.</li>
+</ul>
+
+<h2 id="Examples">Examples</h2>
+
 <h3 id="Creating_objects">Creating objects</h3>
 
 <p>An empty object with no properties can be created like this:</p>
@@ -259,16 +273,7 @@ let obj3 = {['__prot' + 'o__']: 17}
 assert(obj3.__proto__ === 17)
 </pre>
 
-<h2 id="Object_literal_notation_vs_JSON">Object literal notation vs JSON</h2>
-
-<p>The object literal notation is not the same as the <strong>J</strong>ava<strong>S</strong>cript <strong>O</strong>bject <strong>N</strong>otation (<a href="/en-US/docs/Glossary/JSON">JSON</a>). Although they look similar, there are differences between them:</p>
-
 <ul>
- <li>JSON permits <em>only</em> property definition using <code>"property": value</code> syntax.  The property name must be double-quoted, and the definition cannot be a shorthand.</li>
- <li>In JSON the values can only be strings, numbers, arrays, <code>true</code>, <code>false</code>, <code>null</code>, or another (JSON) object.</li>
- <li>A function value (see "Methods" above) can not be assigned to a value in JSON.</li>
- <li>Objects like {{jsxref("Date")}} will be a string after {{jsxref("JSON.parse()")}}.</li>
- <li>{{jsxref("JSON.parse()")}} will reject computed property names and an error will be thrown.</li>
 </ul>
 
 <h2 id="Specifications">Specifications</h2>

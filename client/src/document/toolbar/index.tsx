@@ -1,4 +1,5 @@
 import React from "react";
+import { Link, useParams } from "react-router-dom";
 import { Doc } from "../types";
 import { EditActions } from "./edit-actions";
 import { ToggleDocumentFlaws } from "./flaws";
@@ -13,9 +14,15 @@ export default function Toolbar({
   doc: Doc;
   onDocumentUpdate: Function;
 }) {
+  const params = useParams();
   return (
     <div className="toolbar">
       <div className="toolbar-first-row">
+        <Link
+          to={`/en-US/_create?initial_slug=${encodeURIComponent(params["*"])}`}
+        >
+          Create new document
+        </Link>
         <EditActions folder={doc.source.folder} />
         <Watcher onDocumentUpdate={onDocumentUpdate} />
       </div>

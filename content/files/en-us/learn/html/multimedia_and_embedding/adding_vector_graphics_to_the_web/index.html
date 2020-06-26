@@ -27,7 +27,7 @@ tags:
 <div>{{PreviousMenuNext("Learn/HTML/Multimedia_and_embedding/Other_embedding_technologies", "Learn/HTML/Multimedia_and_embedding/Responsive_images", "Learn/HTML/Multimedia_and_embedding")}}</div>
 
 <div class="summary">
-<p>Vector graphics are very useful in many circumstances — they have small file sizes and are highly scalable, so they don't pixellate when zoomed in or blown up to a large size. In this article we'll show you how to include one in your webpage.</p>
+<p>Vector graphics are very useful in many circumstances — they have small file sizes and are highly scalable, so they don't pixelate when zoomed in or blown up to a large size. In this article we'll show you how to include one in your webpage.</p>
 </div>
 
 <table class="learn-box standard-table">
@@ -76,7 +76,7 @@ tags:
 
 <p>As a simple example, the following code creates a circle and a rectangle:</p>
 
-<pre class="brush: html">&lt;svg version="1.1"
+<pre class="brush: html notranslate">&lt;svg version="1.1"
      baseProfile="full"
      width="300" height="200"
      xmlns="http://www.w3.org/2000/svg"&gt;
@@ -119,7 +119,7 @@ tags:
 
 <p>To embed an SVG via an {{htmlelement("img")}} element, you just need to reference it in the src attribute as you'd expect. You will need a <code>height</code> or a <code>width</code> attribute (or both if your SVG has no inherent aspect ratio). If you have not already done so, please read <a href="/en-US/docs/Learn/HTML/Multimedia_and_embedding/Images_in_HTML">Images in HTML</a>.</p>
 
-<pre class="brush: html">&lt;img
+<pre class="brush: html notranslate">&lt;img
     src="equilateral.svg"
     alt="triangle with all three sides equal"
     height="87"
@@ -145,11 +145,11 @@ tags:
 
 <p>For browsers that don't support SVG (IE 8 and below, Android 2.3 and below), you could reference a PNG or JPG from your <code>src</code> attribute and use a {{htmlattrxref("srcset", "img")}} attribute (which only recent browsers recognize) to reference the SVG. This being the case, only supporting browsers will load the SVG — older browsers will load the PNG instead:</p>
 
-<pre class="brush: html">&lt;img src="equilateral.png" alt="triangle with equal sides" srcset="equilateral.svg"&gt;</pre>
+<pre class="brush: html notranslate">&lt;img src="equilateral.png" alt="triangle with equal sides" srcset="equilateral.svg"&gt;</pre>
 
 <p>You can also use SVGs as CSS background images, as shown below. In the below code, older browsers will stick with the PNG that they understand, while newer browsers will load the SVG:</p>
 
-<pre class="brush: css"><code>background: url("fallback.png") no-repeat center;</code>
+<pre class="brush: css notranslate"><code>background: url("fallback.png") no-repeat center;</code>
 <code>background-image: url("image.svg");
 background-size: contain;</code></pre>
 
@@ -161,7 +161,7 @@ background-size: contain;</code></pre>
 
 <p>You can also open up the SVG file in a text editor, copy the SVG code, and paste it into your HTML document — this is sometimes called putting your <strong>SVG inline</strong>, or <strong>inlining SVG</strong>. Make sure your SVG code snippet begins and ends with the <code><a href="/en-US/docs/Web/SVG/Element/svg">&lt;svg&gt;&lt;/svg&gt;</a></code> tags (don't include anything outside those.) Here's a very simple example of what you might paste into your document:</p>
 
-<pre class="brush: html">&lt;svg width="300" height="200"&gt;
+<pre class="brush: html notranslate">&lt;svg width="300" height="200"&gt;
     &lt;rect width="100%" height="100%" fill="green" /&gt;
 &lt;/svg&gt;
 </pre>
@@ -193,7 +193,7 @@ background-size: contain;</code></pre>
 
 <p>Here's a quick review:</p>
 
-<pre class="brush: html">&lt;iframe src="triangle.svg" width="500" height="500" sandbox&gt;
+<pre class="brush: html notranslate">&lt;iframe src="triangle.svg" width="500" height="500" sandbox&gt;
     &lt;img src="triangle.png" alt="Triangle with three unequal sides" /&gt;
 &lt;/iframe&gt;</pre>
 
@@ -215,7 +215,7 @@ background-size: contain;</code></pre>
 <div class="hidden">
 <h6 id="Playable_code">Playable code</h6>
 
-<pre class="brush: html">&lt;h2&gt;Live output&lt;/h2&gt;
+<pre class="brush: html notranslate">&lt;h2&gt;Live output&lt;/h2&gt;
 
 &lt;div class="output" style="min-height: 50px;"&gt;
 &lt;/div&gt;
@@ -240,7 +240,7 @@ background-size: contain;</code></pre>
   &lt;input id="solution" type="button" value="Show solution" disabled&gt;
 &lt;/div&gt;</pre>
 
-<pre class="brush: css">html {
+<pre class="brush: css notranslate">html {
   font-family: sans-serif;
 }
 
@@ -260,7 +260,7 @@ body {
   background: #f5f9fa;
 }</pre>
 
-<pre class="brush: js">const textarea = document.getElementById('code');
+<pre class="brush: js notranslate">const textarea = document.getElementById('code');
 const reset = document.getElementById('reset');
 const solution = document.getElementById('solution');
 const output = document.querySelector('.output');

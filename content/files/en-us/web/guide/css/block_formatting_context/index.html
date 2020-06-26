@@ -36,129 +36,153 @@ tags:
  <li>{{ cssxref("column-span") }}<code>: all</code> should always create a new formatting context, even when the <code>column-span: all</code> element isn't contained by a multicol container (<a href="https://github.com/w3c/csswg-drafts/commit/a8634b96900279916bd6c505fda88dda71d8ec51">Spec change</a>, <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=709362">Chrome bug</a>).</li>
 </ul>
 
-<p>A block formatting context contains everything inside of the element creating it.</p>
+<p>Formatting contexts affect layout, but typically, we create a new block formatting context for the positioning and clearing floats rather than changing the layout, because an element that establishes a new block formatting context will:</p>
 
-<p>Block formatting contexts are important for the positioning (see {{ cssxref("float") }}) and clearing (see {{ cssxref("clear") }}) of floats. The rules for positioning and clearing of floats apply only to things within the same block formatting context. Floats don't affect the layout of the content inside other block formatting contexts, and clear only clears past floats in the same block formatting context. <a href="/en-US/docs/Web/CSS/CSS_Box_Model/Mastering_margin_collapsing">Margin collapsing</a> also occurs only between blocks that belong to the same block formatting context.</p>
+<ul>
+ <li>contain internal floats.</li>
+ <li>exclude external floats.</li>
+ <li>suppress <a href="/en-US/docs/Web/CSS/CSS_Box_Model/Mastering_margin_collapsing">margin collapsing</a>.</li>
+</ul>
+
+<div class="blockIndicator note">
+<p>Note: a Flex/Grid container({{ cssxref("display") }}: flex/grid/inline-flex/inline-grid) establishes a new Flex/Grid formatting context, which is similar to block formatting context except layout. There's no floating children avaliable inside a flex/grid container, but exclude external floats and suppress margin collapsing still works.</p>
+</div>
 
 <h2 id="Examples">Examples</h2>
 
-<h3 id="Make_float_content_and_alongside_content_the_same_height">Make float content and alongside content the same height</h3>
+<h3 id="Contain_internal_floats">Contain internal floats</h3>
 
 <div id="example1">
+<p>Make float content and alongside content the same height.</p>
+
 <p>Let's have a look at a couple of these in order to see the effect creating a new <abbr title="Block Formatting Context">BFC</abbr>.</p>
 
 <p>In the following example, we have a floated element inside a <code>&lt;div&gt;</code> with a <code>border</code> applied. The content of that <code>&lt;div&gt;</code> has floated alongside the floated element. As the content of the float is taller than the content alongside it, the border of the <code>&lt;div&gt;</code> now runs through the float. As explained in the <a href="/en-US/docs/Web/CSS/CSS_Flow_Layout/In_Flow_and_Out_of_Flow">guide to in-flow and out of flow elements</a>, the float has been taken out of flow so the <code>background</code> and <code>border</code> of the <code>&lt;div&gt;</code> only contain the content and not the float.</p>
 
-<h4 id="HTML">HTML</h4>
+<p><strong>using <code>overflow: auto</code></strong></p>
 
-<pre class="brush: html">&lt;div class="box"&gt;
-    &lt;div class="float"&gt;I am a floated box!&lt;/div&gt;
-    &lt;p&gt;I am content inside the container.&lt;/p&gt;
-&lt;/div&gt;</pre>
-
-<h4 id="CSS">CSS</h4>
-
-<pre class="brush: css">.box {
-    background-color: rgb(224, 206, 247);
-    border: 5px solid rebeccapurple;
-}
-.float {
-    float: left;
-    width: 200px;
-    height: 150px;
-    background-color: white;
-    border:1px solid black;
-    padding: 10px;
-}     </pre>
-
-<p>{{EmbedLiveSample("example1", 200, 200)}}</p>
-</div>
-
-<div id="With_overflow">
-<h3 id="Using_overflow_auto">Using <code>overflow: auto;</code></h3>
-
-<p>Creating a new <abbr title="Block Formatting Context">BFC</abbr> would contain the float. A typical way to do this in the past has been to set <code>overflow: auto</code> or set other values than the initial value of <code>overflow: visible</code>.</p>
-
-<h4 id="CSS_2">CSS</h4>
-
-<div class="hidden">
-<pre class="brush: html">&lt;div class="box"&gt;
-    &lt;div class="float"&gt;I am a floated box!&lt;/div&gt;
-    &lt;p&gt;I am content inside the container.&lt;/p&gt;
-&lt;/div&gt;</pre>
-</div>
-
-<pre class="brush: css">.box {
-    background-color: rgb(224, 206, 247);
-    border: 5px solid rebeccapurple;
-    overflow: auto;
-}
-.float {
-    float: left;
-    width: 200px;
-    height: 150px;
-    background-color: white;
-    border:1px solid black;
-    padding: 10px;
-}     </pre>
-
-<p>{{EmbedLiveSample("With_overflow", 200, 200)}}</p>
-</div>
-
-<p>Setting <code>overflow: auto</code> created a new <abbr title="Block Formatting Context">BFC</abbr> containing the float. Our <code>&lt;div&gt;</code> now becomes a mini-layout inside our layout. Any child element will be contained inside it.</p>
+<p>Setting <code>overflow: auto</code> or set other values than the initial value of <code>overflow: visible</code> created a new <abbr title="Block Formatting Context">BFC</abbr> containing the float. Our <code>&lt;div&gt;</code> now becomes a mini-layout inside our layout. Any child element will be contained inside it.</p>
 
 <p>The problem with using <code>overflow</code> to create a new <abbr title="Block Formatting Context">BFC</abbr> is that the <code>overflow</code> property is meant for telling the browser how you want to deal with overflowing content. There are some occasions in which you will find you get unwanted scrollbars or clipped shadows when you use this property purely to create a <abbr title="Block Formatting Context">BFC</abbr>. In addition, it is potentially not readable for a future developer, as it might not be obvious why you used <code>overflow</code> for this purpose. If you use <code>overflow</code>, it is a good idea to comment the code to explain.</p>
 
-<h3 id="Using_display_flow-root">Using <code>display: flow-root</code></h3>
+<p><strong>using <code>display: flow-root</code></strong></p>
 
-<div id="flowroot">
 <p>A newer value of <code>display</code> lets us create a new <abbr title="Block Formatting Context">BFC</abbr> without any other potentially problematic side-effects. Using <code>display: flow-root</code> on the containing block creates a new <abbr title="Block Formatting Context">BFC</abbr> .</p>
-
-<h4 id="CSS_3">CSS</h4>
-
-<div class="hidden">
-<pre class="brush: html">&lt;div class="box"&gt;
-    &lt;div class="float"&gt;I am a floated box!&lt;/div&gt;
-    &lt;p&gt;I am content inside the container.&lt;/p&gt;
-&lt;/div&gt;</pre>
-</div>
-
-<pre class="brush: css">.box {
-    background-color: rgb(224, 206, 247);
-    border: 5px solid rebeccapurple;
-    display: flow-root
-}
-.float {
-    float: left;
-    width: 200px;
-    height: 150px;
-    background-color: white;
-    border:1px solid black;
-    padding: 10px;
-}     </pre>
-
-<p>{{EmbedLiveSample("flowroot", 200, 200)}}</p>
-</div>
 
 <p>With <code>display: flow-root;</code> on the <code>&lt;div&gt;</code>, everything inside that container participates in the block formatting context of that container, and floats will not poke out of the bottom of the element.</p>
 
 <p>The value name of <code>flow-root</code> makes sense when you understand you are creating something that acts like the <code>root</code> element (<code>&lt;html&gt;</code> element in browser) in terms of how it creates a new context for the flow layout inside it.</p>
 
+<h4 id="HTML">HTML</h4>
+
+<pre class="brush: html notranslate">&lt;section&gt;
+    &lt;div class="box"&gt;
+        &lt;div class="float"&gt;I am a floated box!&lt;/div&gt;
+        &lt;p&gt;I am content inside the container.&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/section&gt;
+&lt;section&gt;
+    &lt;div class="box" style="overflow:auto"&gt;
+        &lt;div class="float"&gt;I am a floated box!&lt;/div&gt;
+        &lt;p&gt;I am content inside the &lt;code&gt;overflow:auto&lt;/code&gt; container.&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/section&gt;
+&lt;section&gt;
+    &lt;div class="box" style="display:flow-root"&gt;
+        &lt;div class="float"&gt;I am a floated box!&lt;/div&gt;
+        &lt;p&gt;I am content inside the &lt;code&gt;display:flow-root&lt;/code&gt; container.&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/section&gt;</pre>
+
+<h4 id="CSS">CSS</h4>
+
+<pre class="brush: css notranslate">section {
+    height:150px;
+}
+.box {
+    background-color: rgb(224, 206, 247);
+    border: 5px solid rebeccapurple;
+}
+.box[style] {
+    background-color: aliceblue;
+    border: 5px solid steelblue;
+}
+.float {
+    float: left;
+    width: 200px;
+    height: 100px;
+    background-color: rgba(255, 255, 255, .5);
+    border:1px solid black;
+    padding: 10px;
+}</pre>
+
+<p>{{EmbedLiveSample("example1", 200, 450)}}</p>
+</div>
+
+<h3 id="Exclude_external_floats">Exclude external floats</h3>
+
+<div id="example2">
+<p>In the following example, we are using <code>display:flow-root</code> and floats to implement double columns layout, beacuse an element in the normal flow that establishes a new <abbr title="Block Formatting Context">BFC</abbr> must not overlap the margin box of any floats in the same block formatting context as the element itself.</p>
+
+<h4 id="HTML_2">HTML</h4>
+
+<pre class="brush: html notranslate">&lt;section&gt;
+  &lt;div class="float"&gt;Try to resize this outer float&lt;/div&gt;
+  &lt;div class="box"&gt;&lt;p&gt;Normal&lt;/p&gt;&lt;/div&gt;
+&lt;/section&gt;
+&lt;section&gt;
+  &lt;div class="float"&gt;Try to resize this outer float&lt;/div&gt;
+  &lt;div class="box" style="display:flow-root"&gt;&lt;p&gt;&lt;code&gt;display:flow-root&lt;/code&gt;&lt;p&gt;&lt;/div&gt;
+&lt;/section&gt;</pre>
+
+<h4 id="CSS_2">CSS</h4>
+
+<pre class="brush: css notranslate">section {
+    height:150px;
+}
+.box {
+    background-color: rgb(224, 206, 247);
+    border: 5px solid rebeccapurple;
+}
+.box[style] {
+    background-color: aliceblue;
+    border: 5px solid steelblue;
+}
+.float {
+    float: left;
+    overflow: hidden; /* required by resize:both */
+    resize: both;
+    margin-right:25px;
+    width: 200px;
+    height: 100px;
+    background-color: rgba(255, 255, 255, .75);
+    border: 1px solid black;
+    padding: 10px;
+}
+</pre>
+
+<p>{{EmbedLiveSample("example2", 200, 300)}}</p>
+
+<p>Rather than inline-blocks with width:&lt;percentage&gt;, in this case we don't have to specify the width of the right div.</p>
+
+<p>Note that flexbox is a more efficient way to implement muti columns layout in morden CSS.</p>
+</div>
+
 <h3 id="Margin_collapsing">Margin collapsing</h3>
 
 <p>Creating a new BFC to avoid the <a href="/en-US/docs/Web/CSS/CSS_Box_Model/Mastering_margin_collapsing">margin collapsing</a> between two neighbor div:</p>
 
-<h4 id="HTML_2">HTML</h4>
+<h4 id="HTML_3">HTML</h4>
 
-<pre class="brush: html">&lt;div class="blue"&gt;&lt;/div&gt;
+<pre class="brush: html notranslate">&lt;div class="blue"&gt;&lt;/div&gt;
 &lt;div class="red-outer"&gt;
   &lt;div class="red-inner"&gt;red inner&lt;/div&gt;
 &lt;/div&gt;
 </pre>
 
-<h4 id="CSS_4">CSS</h4>
+<h4 id="CSS_3">CSS</h4>
 
-<pre class="brush: css">.blue, .red-inner {
+<pre class="brush: css notranslate">.blue, .red-inner {
   height: 50px;
   margin: 10px 0;
 }
@@ -177,10 +201,27 @@ tags:
 
 <h2 id="Specifications" name="Specifications">Specifications</h2>
 
-<ul>
- <li><a class="external" href="http://www.w3.org/TR/CSS21/visuren.html#block-formatting">CSS 2.1</a></li>
- <li><a class="external" href="https://drafts.csswg.org/css-display/#block-formatting-context">CSS Display Level 3</a></li>
-</ul>
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('CSS3 Display', '#block-formatting-context', 'Block Formatting Context')}}</td>
+   <td>{{Spec2('CSS3 Display')}}</td>
+   <td>define BFC(abbr) etc.</td>
+  </tr>
+  <tr>
+   <td>{{SpecName('CSS2.1', 'visuren.html#block-formatting', 'Block Formatting Context')}}</td>
+   <td>{{Spec2('CSS2.1')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
+</table>
 
 <h2 id="See_also" name="See_also">See also</h2>
 

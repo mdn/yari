@@ -45,7 +45,7 @@ tags:
 
 <p>Here are some examples of URLs:</p>
 
-<pre>https://developer.mozilla.org
+<pre class="notranslate">https://developer.mozilla.org
 https://developer.mozilla.org/en-US/docs/Learn/
 https://developer.mozilla.org/en-US/search?q=URL</pre>
 
@@ -53,7 +53,7 @@ https://developer.mozilla.org/en-US/search?q=URL</pre>
 
 <p>A URL is composed of different parts, some mandatory and others optional. Let's see the most important parts using the following URL:</p>
 
-<pre>http://www.example.com:80/path/to/myfile.html?key1=value1&amp;key2=value2#SomewhereInTheDocument</pre>
+<pre class="notranslate">http://www.example.com:80/path/to/myfile.html?key1=value1&amp;key2=value2#SomewhereInTheDocument</pre>
 
 <dl>
  <dt><img alt="Protocol" src="https://mdn.mozillademos.org/files/15766/mdn-url-protocol@x2_update.png" style="height: 70px; width: 440px;"></dt>
@@ -83,12 +83,12 @@ https://developer.mozilla.org/en-US/search?q=URL</pre>
 <ul>
  <li>to create links to other documents with the {{HTMLElement("a")}} element;</li>
  <li>to link a document with its related resources through various elements such as {{HTMLElement("link")}} or {{HTMLElement("script")}};</li>
- <li>to display medias such as images (with the {{HTMLElement("img")}} element), videos (with the {{HTMLElement("video")}} element), sounds and music (with the {{HTMLElement("audio")}} element), etc.;</li>
+ <li>to display media such as images (with the {{HTMLElement("img")}} element), videos (with the {{HTMLElement("video")}} element), sounds and music (with the {{HTMLElement("audio")}} element), etc.;</li>
  <li>to display other HTML documents with the {{HTMLElement("iframe")}} element.</li>
 </ul>
 
 <div class="note">
-<p><strong>Note:</strong> When specifying URLs to load resources as part of a page (such as when using the <code>&lt;script&gt;</code>, <code>&lt;audio&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;video&gt;</code>, and the like), you should only use HTTP and HTTPS URLs. Using FTP, for example, is not particularly secure and is no longer supported by many browsers.</p>
+<p><strong>Note:</strong> When specifying URLs to load resources as part of a page (such as when using the <code>&lt;script&gt;</code>, <code>&lt;audio&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;video&gt;</code>, and the like), you should generally only use HTTP and HTTPS URLs, with few exceptions (one notable one being <code>data:</code>; see <a href="/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs">Data URLs</a>). Using FTP, for example, is not secure and is no longer supported by modern browsers.</p>
 </div>
 
 <p>Other technologies, such as {{Glossary("CSS")}} or {{Glossary("JavaScript")}}, use URLs extensively, and these are really the heart of the Web.</p>
@@ -108,17 +108,17 @@ https://developer.mozilla.org/en-US/search?q=URL</pre>
 <dl>
  <dt>Full URL (the same as the one we used before)</dt>
  <dd>
- <pre>https://developer.mozilla.org/en-US/docs/Learn</pre>
+ <pre class="notranslate">https://developer.mozilla.org/en-US/docs/Learn</pre>
  </dd>
  <dt>Implicit protocol</dt>
  <dd>
- <pre>//developer.mozilla.org/en-US/docs/Learn</pre>
+ <pre class="notranslate">//developer.mozilla.org/en-US/docs/Learn</pre>
 
  <p>In this case, the browser will call that URL with the same protocol as the one used to load the document hosting that URL.</p>
  </dd>
  <dt>Implicit domain name</dt>
  <dd>
- <pre>/en-US/docs/Learn</pre>
+ <pre class="notranslate">/en-US/docs/Learn</pre>
 
  <p>This is the most common use case for an absolute URL within an HTML document. The browser will use the same protocol and the same domain name as the one used to load the document hosting that URL. <strong>Note:</strong> <em>it isn't possible to omit the domain name without omitting the protocol as well</em>.</p>
  </dd>
@@ -131,12 +131,12 @@ https://developer.mozilla.org/en-US/search?q=URL</pre>
 <dl>
  <dt>Sub-resources</dt>
  <dd>
- <pre>Skills/Infrastructure/Understanding_URLs
+ <pre class="notranslate">Skills/Infrastructure/Understanding_URLs
 </pre>
  Because that URL does not start with <code>/</code>, the browser will attempt to find the document in a sub-directory of the one containing the current resource. So in this example,  we really want to reach this URL: <code>https://developer.mozilla.org/en-US/docs/Learn/Skills/Infrastructure/Understanding_URLs</code></dd>
  <dt>Going back in the directory tree</dt>
  <dd>
- <pre>../CSS/display</pre>
+ <pre class="notranslate">../CSS/display</pre>
 
  <p>In this case, we use the <code>../</code> writing convention — inherited from the UNIX file system world — to tell the browser we want to go up from one directory. Here we want to reach this URL: <code>https://developer.mozilla.org/en-US/docs/Learn/../CSS/display</code>, which can be simplified to: <code>https://developer.mozilla.org/en-US/docs/CSS/display</code></p>
  </dd>
@@ -146,7 +146,7 @@ https://developer.mozilla.org/en-US/search?q=URL</pre>
 
 <p>Despite their very technical flavor, URLs represent a human-readable entry point for a Web site. They can be memorized, and anyone can enter them into a browser's address bar. People are at the core of the Web, and so it is considered best practice to build what is called <a href="https://en.wikipedia.org/wiki/Semantic_URL"><em>semantic URLs</em></a>. Semantic URLs use words with inherent meaning that can be understood by anyone, regardless of their technical know-how.</p>
 
-<p>Linguistic semantics are of course irrelevant to computers. You've probably often seen URLs that look like mashups of random characters. But there are many advantages  to creating human-readable URLs:</p>
+<p>Linguistic semantics are of course irrelevant to computers. You've probably often seen URLs that look like mashups of random characters. But there are many advantages to creating human-readable URLs:</p>
 
 <ul>
  <li>It is easier for you to manipulate them.</li>
@@ -154,8 +154,6 @@ https://developer.mozilla.org/en-US/search?q=URL</pre>
  <li>Some search engines can use those semantics to improve the classification of the associated pages.</li>
 </ul>
 
-<h2 id="Next_steps">Next steps</h2>
+<h2 id="See_also">See also</h2>
 
-<ul>
- <li><a href="/en-US/docs/Learn/Common_questions/What_is_a_domain_name">Understanding domain names</a></li>
-</ul>
+<p><a href="/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs">Data URLs</a> — Data URLs, URLs prefixed with the <code>data:</code> scheme, allow content creators to embed small files inline in documents.</p>

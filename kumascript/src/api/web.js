@@ -31,15 +31,19 @@ module.exports = {
     const hrefhash = new URL(href, DUMMY_BASE_URL).hash;
     if (page.url) {
       if (hrefpath.toLowerCase() !== page.url.toLowerCase()) {
-        this.env.recordNonFatalError(`${hrefpath} redirects to ${page.url}`, {
-          current: subpath,
-          suggested: page.url.replace(basepath, ""),
-        });
+        this.env.recordNonFatalError(
+          "redirected-link",
+          `${hrefpath} redirects to ${page.url}`,
+          {
+            current: subpath,
+            suggested: page.url.replace(basepath, ""),
+          }
+        );
       }
       const titleAttribute = title ? ` title="${title}"` : "";
       return `<a href="${page.url + hrefhash}"${titleAttribute}>${content}</a>`;
     }
-    this.env.recordNonFatalError(`${hrefpath} does not exist`);
+    this.env.recordNonFatalError("broken-link", `${hrefpath} does not exist`);
     // Let's get a potentially localized title for when the document is missing.
     const titleWhenMissing = this.mdn.getLocalString(
       L10N_COMMON_STRINGS,

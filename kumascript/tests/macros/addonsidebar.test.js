@@ -154,7 +154,7 @@ describeMacro("AddonSidebar", function () {
       // This template will be tested on its own, so nothing needed here.
       return "";
     });
-    // Mock calls to MDN.fetchJSONResource, which indirectly mocks the
+    // Mock calls to info.getChildren, which indirectly mocks the
     // call to wiki.tree within AddonSidebar.ejs.
     macro.ctx.info.getChildren = jest.fn(getMockResultForGetChildren);
   });

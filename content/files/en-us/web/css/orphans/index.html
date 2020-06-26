@@ -10,12 +10,13 @@ tags:
   - CSS Multi-column Layout
   - CSS Property
   - Reference
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
 <p>The <strong><code>orphans</code></strong> <a href="/en-US/docs/CSS">CSS</a> property sets the minimum number of lines in a block container that must be shown at the <em>bottom</em> of a <a href="/en-US/docs/Web/CSS/Paged_Media">page</a>, region, or <a href="/en-US/docs/Web/CSS/CSS_Columns">column</a>.</p>
 
-<pre class="brush:css no-line-numbers">/* &lt;integer&gt; values */
+<pre class="brush:css no-line-numbers notranslate">/* &lt;integer&gt; values */
 orphans: 2;
 orphans: 3;
 
@@ -36,28 +37,28 @@ orphans: unset;
 <h3 id="Values" name="Values">Values</h3>
 
 <dl>
-	<dt>{{cssxref("&lt;integer&gt;")}}</dt>
-	<dd>The minimum number of lines that can stay by themselves at the bottom of a fragment before a fragmentation break. The value must be positive.</dd>
+ <dt>{{cssxref("&lt;integer&gt;")}}</dt>
+ <dd>The minimum number of lines that can stay by themselves at the bottom of a fragment before a fragmentation break. The value must be positive.</dd>
 </dl>
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Example">Example</h2>
 
 <h3 id="HTML">HTML</h3>
 
-<pre class="brush: html">&lt;div&gt;
+<pre class="brush: html notranslate">&lt;div&gt;
   &lt;p&gt;This is the first paragraph containing some text.&lt;/p&gt;
-  &lt;p&gt;This is the second paragraph containing some more text than the first one. It is used to demonstrate how widows work.&lt;/p&gt;
+  &lt;p&gt;This is the second paragraph containing some more text than the first one. It is used to demonstrate how orphans work.&lt;/p&gt;
   &lt;p&gt;This is the third paragraph. It has a little bit more text than the first one.&lt;/p&gt;
 &lt;/div&gt;
 </pre>
 
 <h3 id="CSS">CSS</h3>
 
-<pre class="brush: css; highlight[5]">div {
+<pre class="brush: css; highlight[5] notranslate">div {
   background-color: #8cffa0;
   height: 150px;
   columns: 3;
@@ -80,25 +81,25 @@ p:first-child {
 <h2 id="Specifications" name="Specifications">Specifications</h2>
 
 <table class="standard-table">
-	<thead>
-		<tr>
-			<th scope="col">Specification</th>
-			<th scope="col">Status</th>
-			<th scope="col">Comment</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>{{SpecName('CSS3 Fragmentation', '#widows-orphans', 'orphans')}}</td>
-			<td>{{Spec2('CSS3 Fragmentation')}}</td>
-			<td>Extends <code>orphans</code> to apply to any type of fragment, including pages, regions, or columns.</td>
-		</tr>
-		<tr>
-			<td>{{SpecName('CSS2.1', 'page.html#break-inside', 'orphans')}}</td>
-			<td>{{Spec2('CSS2.1')}}</td>
-			<td>Initial definition.</td>
-		</tr>
-	</tbody>
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('CSS3 Fragmentation', '#widows-orphans', 'orphans')}}</td>
+   <td>{{Spec2('CSS3 Fragmentation')}}</td>
+   <td>Extends <code>orphans</code> to apply to any type of fragment, including pages, regions, or columns.</td>
+  </tr>
+  <tr>
+   <td>{{SpecName('CSS2.1', 'page.html#break-inside', 'orphans')}}</td>
+   <td>{{Spec2('CSS2.1')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
 </table>
 
 <h2 id="Browser_compatibility" name="Browser_compatibility">Browser compatibility</h2>
@@ -112,6 +113,6 @@ p:first-child {
 <h2 id="See_also" name="See_also">See also</h2>
 
 <ul>
-	<li>{{cssxref("widows")}}</li>
-	<li><a href="/en-US/docs/Web/CSS/Paged_Media">Paged media</a></li>
+ <li>{{cssxref("widows")}}</li>
+ <li><a href="/en-US/docs/Web/CSS/Paged_Media">Paged media</a></li>
 </ul>

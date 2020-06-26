@@ -94,13 +94,11 @@ mod tests {
 
 <p>We won't use this test code at all, so go ahead and delete it.</p>
 
-<h3 id="Let's_write_some_Rust">Let's write some Rust</h3>
+<h3 id="Lets_write_some_Rust">Let's write some Rust</h3>
 
 <p>Let's put this code into <code>src/lib.rs</code> instead:</p>
 
-<pre class="brush: rust">extern crate wasm_bindgen;
-
-use wasm_bindgen::prelude::*;
+<pre class="brush: rust">use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 extern {
@@ -118,11 +116,9 @@ pub fn greet(name: &amp;str) {
 
 <p>The first part looks like this:</p>
 
-<pre class="brush: rust">extern crate wasm_bindgen;
+<pre class="brush: rust">use wasm_bindgen::prelude::*;</pre>
 
-use wasm_bindgen::prelude::*;</pre>
-
-<p>The first line says "hey Rust, we're using a library called <code>wasm_bindgen</code>." Libraries are called "crates" in Rust, and we're using an external one, so we use the <code>extern</code> keyword.</p>
+<p>Libraries are called "crates" in Rust.</p>
 
 <p>Get it? <em>Cargo</em> ships <em>crates</em>.</p>
 

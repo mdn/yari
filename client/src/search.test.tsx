@@ -1,7 +1,7 @@
 import React from "react";
 const { render, fireEvent, waitFor } = require("@testing-library/react");
 import { MemoryRouter } from "react-router-dom";
-import { SearchWidget } from "./search";
+import { SearchNavigateWidget } from "./search";
 
 declare var global: Window;
 
@@ -10,7 +10,7 @@ function renderWithRouter(component) {
 }
 
 it("renders without crashing", () => {
-  const { getByPlaceholderText } = renderWithRouter(<SearchWidget />);
+  const { getByPlaceholderText } = renderWithRouter(<SearchNavigateWidget />);
   expect(getByPlaceholderText(/Site search/)).toBeDefined();
 });
 
@@ -36,7 +36,7 @@ describe("Tests using XHR", () => {
   });
 
   test("input placeholder changes when focused", async () => {
-    const { getByPlaceholderText } = renderWithRouter(<SearchWidget />);
+    const { getByPlaceholderText } = renderWithRouter(<SearchNavigateWidget />);
     const input = getByPlaceholderText(/Site search/);
     fireEvent.focus(input);
     expect(getByPlaceholderText(/Initializing/));
@@ -44,7 +44,7 @@ describe("Tests using XHR", () => {
   });
 
   test("XHR request on focusing input the first time", () => {
-    const { getByPlaceholderText } = renderWithRouter(<SearchWidget />);
+    const { getByPlaceholderText } = renderWithRouter(<SearchNavigateWidget />);
     const input = getByPlaceholderText(/Site search/);
     // Fire initial focus event
     fireEvent.focus(input);
@@ -58,7 +58,7 @@ describe("Tests using XHR", () => {
   });
 
   test("should set titles in localStorage", async () => {
-    const { getByPlaceholderText } = renderWithRouter(<SearchWidget />);
+    const { getByPlaceholderText } = renderWithRouter(<SearchNavigateWidget />);
     const input = getByPlaceholderText(/Site search/);
     // Focus input to get titles from XHR
     fireEvent.focus(input);
@@ -67,7 +67,7 @@ describe("Tests using XHR", () => {
 
   test("should NOT get search results", async () => {
     const { getByPlaceholderText, getByText } = renderWithRouter(
-      <SearchWidget />
+      <SearchNavigateWidget />
     );
     const input = getByPlaceholderText(/Site search/);
     // Focus input to get titles from XHR
@@ -79,7 +79,7 @@ describe("Tests using XHR", () => {
 
   test("should get search results", async () => {
     const { getByPlaceholderText, getByText } = renderWithRouter(
-      <SearchWidget />
+      <SearchNavigateWidget />
     );
     const input = getByPlaceholderText(/Site search/);
     // Focus input to get titles from XHR
@@ -93,7 +93,7 @@ describe("Tests using XHR", () => {
 
   test("should get search results by URI", async () => {
     const { getByText, getByPlaceholderText } = renderWithRouter(
-      <SearchWidget />
+      <SearchNavigateWidget />
     );
     const input = getByPlaceholderText(/Site search/);
     // Focus input to get titles from XHR
@@ -108,7 +108,7 @@ describe("Tests using XHR", () => {
 
   test("should redirect when clicking a search result", async () => {
     const { container, getByText, getByPlaceholderText } = renderWithRouter(
-      <SearchWidget />
+      <SearchNavigateWidget />
     );
     const input = getByPlaceholderText(/Site search/);
     // Focus input to get titles from XHR

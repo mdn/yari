@@ -18,7 +18,7 @@ tags:
 
 <p><span class="seoSummary">The <strong><code>add()</code></strong> method of the {{domxref("Cache")}} interface takes a URL, retrieves it, and adds the resulting response object to the given cache. </span>The <code>add()</code> method is functionally equivalent to the following:</p>
 
-<pre class="brush: js">fetch(url).then(function(response) {
+<pre class="brush: js notranslate">fetch(url).then(function(response) {
   if (!response.ok) {
     throw new TypeError('bad response status');
   }
@@ -33,7 +33,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="sytaxbox"><em>cache</em>.add(<em>request</em>).then(function() {
+<pre class="sytaxbox notranslate"><em>cache</em>.add(<em>request</em>).then(function() {
   // request has been added to the cache
 });
 </pre>
@@ -74,7 +74,7 @@ tags:
 
 <p>This code block waits for an {{domxref("InstallEvent")}} to fire, then calls {{domxref("ExtendableEvent.waitUntil","waitUntil()")}} to handle the install process for the app. This consists of calling {{domxref("CacheStorage.open")}} to create a new cache, then using {{domxref("Cache.add")}} to add an asset to it.</p>
 
-<pre class="brush: js">this.addEventListener('install', function(event) {
+<pre class="brush: js notranslate">this.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open('v1').then(function(cache) {
       return cache.add('/sw-test/index.html');
@@ -93,7 +93,7 @@ tags:
    <th scope="col">Comment</th>
   </tr>
   <tr>
-   <td>{{SpecName('Service Workers', '#dom-cache-add', 'Cache: add')}}</td>
+   <td>{{SpecName('Service Workers', '#cache-add', 'Cache: add')}}</td>
    <td>{{Spec2('Service Workers')}}</td>
    <td>Initial definition.</td>
   </tr>

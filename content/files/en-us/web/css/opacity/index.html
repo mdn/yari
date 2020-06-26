@@ -10,6 +10,7 @@ tags:
   - CSS Property
   - Opacity
   - Reference
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -25,7 +26,7 @@ tags:
 
 <p>If you <a href="http://stackoverflow.com/questions/13508877/resetting-the-opacity-of-a-child-elements-maple-browser-samsung-tv-app">do not want to apply opacity to child elements</a>, use the {{cssxref("background")}} property instead. For example:</p>
 
-<pre class="brush:css">background: rgba(0, 0, 0, 0.4);</pre>
+<pre class="brush:css notranslate">background: rgba(0, 0, 0, 0.4);</pre>
 
 <h2 id="Syntax">Syntax</h2>
 
@@ -59,13 +60,13 @@ tags:
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Examples">Examples</h2>
 
 <h3 id="Basic_example">Basic example</h3>
 
-<pre class="brush: css">div { background-color: yellow; }
+<pre class="brush: css notranslate">div { background-color: yellow; }
 .light {
   opacity: 0.2; /* Barely see the text over the background */
 }
@@ -77,7 +78,7 @@ tags:
 }
 </pre>
 
-<pre class="brush: html">&lt;div class="light"&gt;You can barely see this.&lt;/div&gt;
+<pre class="brush: html notranslate">&lt;div class="light"&gt;You can barely see this.&lt;/div&gt;
 &lt;div class="medium"&gt;This is easier to see.&lt;/div&gt;
 &lt;div class="heavy"&gt;This is very easy to see.&lt;/div&gt;
 </pre>
@@ -86,7 +87,7 @@ tags:
 
 <h3 id="Different_opacity_with_hover">Different opacity with <code>:hover</code></h3>
 
-<pre class="brush: css">img.opacity {
+<pre class="brush: css notranslate">img.opacity {
   opacity: 1;
   filter: alpha(opacity=100); /* IE8 and lower */
   zoom: 1; /* Triggers "hasLayout" in IE 7 and lower */
@@ -98,7 +99,7 @@ img.opacity:hover {
   zoom: 1;
 }</pre>
 
-<pre class="brush: html">&lt;img src="<a href="https://developer.mozilla.org/static/img/opengraph-logo.png">//developer.mozilla.org/static/img/opengraph-logo.png</a>"
+<pre class="brush: html notranslate">&lt;img src="<a href="https://developer.mozilla.org/static/img/opengraph-logo.png">//developer.mozilla.org/static/img/opengraph-logo.png</a>"
   alt="MDN logo" width="128" height="146"
   class="opacity"&gt;
 </pre>
