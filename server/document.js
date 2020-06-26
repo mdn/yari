@@ -3,12 +3,13 @@ const path = require("path");
 
 const express = require("express");
 
+const { DEFAULT_BUILD_ROOT } = require("content/scripts/constants");
 const Document = require("content/scripts/document");
 
 const { STATIC_ROOT } = require("./constants");
 const { builder, normalizeContentPath } = require("./builder");
 
-const CONTENT_ROOT = path.join("..", process.env.BUILD_ROOT);
+const CONTENT_ROOT = path.resolve(path.join("..", DEFAULT_BUILD_ROOT));
 
 const router = express();
 
