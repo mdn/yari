@@ -3,6 +3,13 @@ export interface Source {
   folder: string;
 }
 
+export interface Link {
+  href: string;
+  line: number;
+  column: number;
+  suggestion: string | null;
+}
+
 type Flaws = {
   broken_links: Link[];
   macros: MacroErrorMessage[];
@@ -21,13 +28,6 @@ export interface Doc {
   parents?: Doc[];
   source: Source;
   contributors: string[];
-}
-
-export interface Link {
-  href: string;
-  line: number;
-  column: number;
-  suggestion: string | null;
 }
 
 export interface MacroErrorMessage {

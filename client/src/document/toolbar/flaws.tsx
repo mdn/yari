@@ -36,7 +36,7 @@ export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
     }
   }, [location, navigate, show]);
 
-  const flawsCounts: FlawCount[] = Object.entries(doc.flaws)
+  const flawsCounts = Object.entries(doc.flaws)
     .map(([name, actualFlaws]) => ({
       name,
       count: actualFlaws.length,
