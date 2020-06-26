@@ -17,24 +17,18 @@ const getHTMLPath = (folder) => path.join(folder, HTML_FILENAME);
 const getWikiHistoryPath = (folder) => path.join(folder, "wikihistory.json");
 
 function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
-  function read() {
-    return JSON.parse(
-      fs.readFileSync(path.join(localeContentRoot, "_wikihistory.json"))
-    );
-  }
-  function write(data) {
-    fs.writeFileSync(
-      path.join(localeContentRoot, "_wikihistory.json"),
-      JSON.stringify(data, null, 2)
-    );
-  }
-  const all = read();
+  const all = JSON.parse(
+    fs.readFileSync(path.join(localeContentRoot, "_wikihistory.json"))
+  );
   if (oldSlug in all) {
     if (newSlug) {
       all[newSlug] = all[oldSlug];
     }
     delete all[oldSlug];
-    write(all);
+    fs.writeFileSync(
+      path.join(localeContentRoot, "_wikihistory.json"),
+      JSON.stringify(all, null, 2)
+    );
   }
 }
 
