@@ -444,22 +444,22 @@ class Builder {
 
     // First, render all of the prerequisites of this document.
     let allPrerequisiteFlaws = [];
-    for (const preUri of prerequisites) {
-      const preCleanUri = this.cleanUri(preUri);
-      if (!this.allTitles.has(preCleanUri)) {
+    for (const prerequisite of prerequisites) {
+      const prerequisiteUri = this.cleanUri(prerequisite.uri);
+      if (!this.allTitles.has(prerequisiteUri)) {
         allPrerequisiteFlaws.push(
-          new Error(
-            `${uri} has the prerequisite ${preCleanUri}, which does not exist`
+          prerequisite.createFlaw(
+            `${uri} transcludes ${prerequisiteUri}, which does not exist`
           )
         );
         continue;
       }
-      const titleData = this.allTitles.get(preCleanUri);
+      const titleData = this.allTitles.get(prerequisiteUri);
       const folder = titleData.file;
       if (titleData.source !== source.filepath) {
         allPrerequisiteFlaws.push(
-          new Error(
-            `${uri} has the prerequisite ${preCleanUri}, which is from a different source`
+          prerequisite.createFlaw(
+            `${uri} transcludes ${prerequisiteUri}, which is from a different source`
           )
         );
         continue;
@@ -473,14 +473,19 @@ class Builder {
       // When rendering prerequisites, we're only interested in
       // caching the results for later use. We don't care about
       // the results returned.
-      const preResult = await this.renderMacros(source, rawHtml, metadata, {
-        cacheResult: true,
-      });
-      const preFlaws = preResult[1];
+      const prerequisiteResult = await this.renderMacros(
+        source,
+        rawHtml,
+        metadata,
+        {
+          cacheResult: true,
+        }
+      );
+      const prerequisiteFlaws = prerequisiteResult[1];
       // Flatten the flaws from this other document into the current flaws,
       // and set the filepath for flaws that haven't already been set at
       // a different level of recursion.
-      for (const flaw of preFlaws) {
+      for (const flaw of prerequisiteFlaws) {
         if (!flaw.filepath) {
           flaw.filepath = fileInfo.path;
         }
@@ -505,13 +510,7 @@ class Builder {
       cacheResult
     );
 
-    // Add the flaws from rendering the macros within all of the prerequisite
-    // documents to the flaws from rendering the macros within this document.
-    for (const flaw of allPrerequisiteFlaws) {
-      flaws.push(flaw);
-    }
-
-    return [renderedHtml, flaws];
+    return [renderedHtml, flaws.concat(allPrerequisiteFlaws)];
   }
 
   async start({ specificFolders = null } = {}) {
@@ -1359,7 +1358,7 @@ class Builder {
     { cacheResult = false, selectedSampleIDs = null } = {}
   ) {
     // First, render the macros to get the rendered HTML.
-    const [renderedHtml, flaws] = await this.renderMacros(
+    const [renderedHtml, macroFlaws] = await this.renderMacros(
       source,
       rawHtml,
       metadata,
@@ -1372,6 +1371,7 @@ class Builder {
     // that one or more or even all might be within other documents.
     let ownSampleIds;
     let otherSampleIds = null;
+    const liveSampleFlaws = [];
     const liveSamplesDir = path.join(destinationDir, "_samples_");
     if (selectedSampleIDs) {
       ownSampleIds = selectedSampleIDs;
@@ -1388,7 +1388,7 @@ class Builder {
       if (fs.existsSync(liveSamplesDir)) {
         // Build a set of sampleID's from the list of sampleID objects.
         const ownSampleIDSet = new Set(
-          ownSampleIds.map((x) => x.sampleID.toLowerCase())
+          ownSampleIds.map((s) => s.id.toLowerCase())
         );
         for (const de of fs.readdirSync(liveSamplesDir, {
           withFileTypes: true,
@@ -1404,32 +1404,27 @@ class Builder {
         }
       }
       // Now, we'll either update or create new live sample pages.
-      let liveSamplePageHtml;
-      for (const sampleIDWithContext of ownSampleIds) {
-        try {
-          liveSamplePageHtml = kumascript.buildLiveSamplePage(
-            uri,
-            metadata.title,
-            renderedHtml,
-            sampleIDWithContext
-          );
-        } catch (e) {
-          if (e instanceof kumascript.LiveSampleError) {
-            flaws.push(e);
-            continue;
-          } else {
-            throw e;
-          }
+      let liveSamplePage;
+      for (const sampleIDObject of ownSampleIds) {
+        liveSamplePage = kumascript.buildLiveSamplePage(
+          uri,
+          metadata.title,
+          renderedHtml,
+          sampleIDObject
+        );
+        if (liveSamplePage.flaw) {
+          liveSampleFlaws.push(liveSamplePage.flaw);
+          continue;
         }
         const liveSampleDir = path.join(
           liveSamplesDir,
-          sampleIDWithContext.sampleID.toLowerCase()
+          sampleIDObject.id.toLowerCase()
         );
         const liveSamplePath = path.join(liveSampleDir, "index.html");
         if (!fs.existsSync(liveSampleDir)) {
           fs.mkdirSync(liveSampleDir, { recursive: true });
         }
-        fs.writeFileSync(liveSamplePath, liveSamplePageHtml);
+        fs.writeFileSync(liveSamplePath, liveSamplePage.html);
       }
     } else if (fs.existsSync(liveSamplesDir)) {
       // The live samples within this document have been removed, so
@@ -1452,16 +1447,12 @@ class Builder {
       const otherUri = buildMDNUrl(metadata.locale, slug);
       const otherCleanUri = this.cleanUri(otherUri);
       if (!this.allTitles.has(otherCleanUri)) {
-        // I suppose we could use any, but let's use the context of the first
-        // usage of the sampleID within the original source file.
-        const context = sampleIDs[0].context;
-        flaws.push(
-          new kumascript.LiveSampleError(
-            new Error(
-              `${uri} references live sample(s) from ${otherCleanUri}, which does not exist`
-            ),
-            context.source,
-            context.token
+        // I suppose we could use any, but let's use the first
+        // mention of the sampleID within the original source file.
+        const firstSampleID = sampleIDs[0];
+        liveSampleFlaws.push(
+          firstSampleID.createFlaw(
+            `${uri} references live sample(s) from ${otherCleanUri}, which does not exist`
           )
         );
         continue;
@@ -1469,16 +1460,12 @@ class Builder {
       const otherTitleData = this.allTitles.get(otherCleanUri);
       const otherFolder = otherTitleData.file;
       if (otherTitleData.source !== source.filepath) {
-        // Again let's just use the context of the first usage of sampleID within
+        // Again let's just use the first mention of sampleID within
         // the original source file.
-        const context = sampleIDs[0].context;
-        flaws.push(
-          new kumascript.LiveSampleError(
-            new Error(
-              `${uri} references live sample(s) from ${otherCleanUri}, which is from a different source`
-            ),
-            context.source,
-            context.token
+        const firstSampleID = sampleIDs[0];
+        liveSampleFlaws.push(
+          firstSampleID.createFlaw(
+            `${uri} references live sample(s) from ${otherCleanUri}, which is from a different source`
           )
         );
         continue;
@@ -1513,11 +1500,11 @@ class Builder {
         if (!flaw.filepath) {
           flaw.filepath = otherRawHtmlFilepath;
         }
-        flaws.push(flaw);
+        liveSampleFlaws.push(flaw);
       }
     }
 
-    return [renderedHtml, flaws];
+    return [renderedHtml, macroFlaws.concat(liveSampleFlaws)];
   }
 
   async processFolder(source, folder, config) {

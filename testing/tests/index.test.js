@@ -179,3 +179,25 @@ test("broken links flaws", () => {
     "/en-US/docs/Web/API/Blob"
   );
 });
+
+test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page", () => {
+  expect(fs.existsSync(buildRoot)).toBeTruthy();
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "learn",
+    "css",
+    "css_layout",
+    "introduction",
+    "grid"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  expect(fs.existsSync(jsonFile)).toBeTruthy();
+
+  // Let's make sure there are only 3 "macros" flaws.
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.macros.length).toBe(3);
+});

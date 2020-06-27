@@ -194,6 +194,20 @@ class MacroDeprecatedError extends MacroExecutionError {
   }
 }
 
+/**
+ * A MacroLiveSampleError is a special case of MacroExecutionError.
+ */
+class MacroLiveSampleError extends MacroExecutionError {
+  constructor(error, source, token) {
+    super(error, source, token, true);
+    this.name = "MacroLiveSampleError";
+    this.macroSource = source.slice(
+      token.location.start.offset,
+      token.location.end.offset
+    );
+  }
+}
+
 module.exports = {
   SourceCodeError,
   MacroInvocationError,
@@ -203,4 +217,5 @@ module.exports = {
   MacroRedirectedLinkError,
   MacroBrokenLinkError,
   MacroDeprecatedError,
+  MacroLiveSampleError,
 };
