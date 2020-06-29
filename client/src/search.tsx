@@ -40,22 +40,33 @@ function useSearchIndex(): [null | SearchIndex, () => void] {
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
   const locale = useParams().locale || "en-US";
 
-  const { data: titles } = useSWR<Titles>(
-    shouldInitialize ? `/${locale}/titles.json` : null,
+  const url = `/${locale}/titles.json`;
+  const { data: fetchedTitles } = useSWR<Titles>(
+    shouldInitialize ? url : null,
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(await response.text());
       }
       const { titles } = await response.json();
+      localStorage.setItem(url, JSON.stringify(titles));
       return titles;
     },
     { revalidateOnFocus: false }
   );
 
   useEffect(() => {
-    if (!titles) {
+    if (!shouldInitialize) {
       return;
+    }
+
+    let titles = fetchedTitles;
+    if (!titles) {
+      const titlesRaw = localStorage.getItem(url);
+      if (!titlesRaw) {
+        return;
+      }
+      titles = JSON.parse(titlesRaw) as Titles;
     }
 
     const flex = new (FlexSearch as any)({
@@ -73,7 +84,7 @@ function useSearchIndex(): [null | SearchIndex, () => void] {
     const fuzzy = new FuzzySearch(urisSorted);
 
     setSearchIndex({ flex, fuzzy, titles });
-  }, [titles]);
+  }, [shouldInitialize, fetchedTitles]);
 
   return [searchIndex, () => setShouldInitialize(true)];
 }
