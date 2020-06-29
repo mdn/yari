@@ -144,3 +144,38 @@ test("content built bar page", () => {
   expect(booleanLinks.eq(1).text()).toBe("Boolean");
   expect(booleanLinks.eq(2).text()).toBe("bOOleAn");
 });
+
+test("broken links flaws", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "brokenlinks"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  // You have to be intimately familiar with the fixture to understand
+  // why these flaws come out as they do.
+  expect(flaws.broken_links.length).toBe(7);
+  // Map them by 'href'
+  const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
+  expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
+  expect(map.get("/en-US/docs/Web/CSS/dumber").line).toBe(11);
+  expect(map.get("/en-US/docs/Web/CSS/dumber").column).toBe(12);
+  expect(
+    map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob").suggestion
+  ).toBe("/en-US/docs/Web/API/Blob");
+  expect(
+    map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob#Anchor")
+      .suggestion
+  ).toBe("/en-US/docs/Web/API/Blob#Anchor");
+  expect(
+    map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob?a=b")
+      .suggestion
+  ).toBe("/en-US/docs/Web/API/Blob?a=b");
+  expect(map.get("/en-us/DOCS/Web/api/BLOB").suggestion).toBe(
+    "/en-US/docs/Web/API/Blob"
+  );
+});

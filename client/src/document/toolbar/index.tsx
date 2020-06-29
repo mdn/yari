@@ -26,7 +26,7 @@ export default function Toolbar({
         <EditActions folder={doc.source.folder} />
         <Watcher onDocumentUpdate={onDocumentUpdate} />
       </div>
-      <ToggleDocumentFlaws flaws={doc.flaws} />
+      <ToggleDocumentFlaws doc={doc} />
     </div>
   );
 }
