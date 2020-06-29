@@ -84,7 +84,7 @@ function useSearchIndex(): [null | SearchIndex, () => void] {
     const fuzzy = new FuzzySearch(urisSorted);
 
     setSearchIndex({ flex, fuzzy, titles });
-  }, [shouldInitialize, fetchedTitles]);
+  }, [shouldInitialize, fetchedTitles, url]);
 
   return [searchIndex, () => setShouldInitialize(true)];
 }
