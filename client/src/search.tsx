@@ -29,16 +29,19 @@ type Titles = {
   };
 };
 
-function useSearchIndex() {
-  const [searchIndex, setSearchIndex] = useState<null | {
-    flex: any;
-    fuzzy: FuzzySearch;
-    titles: Titles;
-  }>(null);
+type SearchIndex = {
+  flex: any;
+  fuzzy: FuzzySearch;
+  titles: Titles;
+};
+
+function useSearchIndex(): [null | SearchIndex, () => void] {
+  const [shouldInitialize, setShouldInitialize] = useState(false);
+  const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
   const locale = useParams().locale || "en-US";
 
   const { data: titles } = useSWR<Titles>(
-    `/${locale}/titles.json`,
+    shouldInitialize ? `/${locale}/titles.json` : null,
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
@@ -72,7 +75,7 @@ function useSearchIndex() {
     setSearchIndex({ flex, fuzzy, titles });
   }, [titles]);
 
-  return searchIndex;
+  return [searchIndex, () => setShouldInitialize(true)];
 }
 
 // The fuzzy search is engaged if the search term starts with a '/'
@@ -136,18 +139,35 @@ type ResultItem = {
   substrings: string[];
 };
 
-export function SearchWidget({
-  actionsRef,
-  inputRef,
-  onSelect,
-}: {
-  actionsRef: React.MutableRefObject<any>;
-  inputRef: React.MutableRefObject<HTMLInputElement | null>;
-  onSelect: (url: string) => unknown;
-}) {
-  const searchIndex = useSearchIndex();
+function useFocusOnSlash(inputRef: React.RefObject<null | HTMLInputElement>) {
+  useEffect(() => {
+    function focusOnSearchMaybe(event) {
+      const input = inputRef.current;
+      if (
+        event.code === "Slash" &&
+        !["TEXTAREA", "INPUT"].includes(event.target.tagName)
+      ) {
+        if (input && document.activeElement !== input) {
+          event.preventDefault();
+          input.focus();
+        }
+      }
+    }
+    document.addEventListener("keydown", focusOnSearchMaybe);
+    return () => {
+      document.removeEventListener("keydown", focusOnSearchMaybe);
+    };
+  }, [inputRef]);
+}
+
+export function SearchNavigateWidget() {
+  const navigate = useNavigate();
+
+  const [searchIndex, initializeSearchIndex] = useSearchIndex();
   const [resultItems, setResultItems] = useState<ResultItem[]>([]);
   const [isFocused, setIsFocused] = useState(false);
+
+  const inputRef = useRef<null | HTMLInputElement>(null);
 
   const updateResults = useCallback(
     (inputValue: string | undefined) => {
@@ -216,28 +236,37 @@ export function SearchWidget({
     },
     onSelectedItemChange: ({ selectedItem }) => {
       if (selectedItem) {
-        onSelect(selectedItem.uri);
+        navigate(selectedItem.uri);
+        reset();
       }
     },
   });
 
-  useEffect(() => {
-    actionsRef.current = { reset };
-  }, [actionsRef, reset]);
+  useFocusOnSlash(inputRef);
 
   return (
-    <div className="search-widget" {...getComboboxProps()}>
+    <form
+      {...getComboboxProps({
+        className: "search-widget",
+        onSubmit: (e) => {
+          e.preventDefault();
+        },
+      })}
+    >
       <input
         {...getInputProps({
           type: "search",
           className: isOpen ? "has-search-results" : undefined,
-          placeholder: !searchIndex
-            ? INITIALIZING_PLACEHOLDER
-            : isFocused
-            ? ACTIVE_PLACEHOLDER
+          placeholder: isFocused
+            ? searchIndex
+              ? ACTIVE_PLACEHOLDER
+              : INITIALIZING_PLACEHOLDER
             : INACTIVE_PLACEHOLDER,
-          // onMouseOver: this.initializeIndex,
-          onFocus: () => setIsFocused(true),
+          onMouseOver: initializeSearchIndex,
+          onFocus: () => {
+            initializeSearchIndex();
+            setIsFocused(true);
+          },
           onBlur: () => setIsFocused(false),
           onKeyDown: (event) => {
             if (event.key === "Escape" && inputRef.current) {
@@ -276,52 +305,6 @@ export function SearchWidget({
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-function useFocusOnSlash(inputRef: React.RefObject<null | HTMLInputElement>) {
-  useEffect(() => {
-    function focusOnSearchMaybe(event) {
-      const input = inputRef.current;
-      if (
-        event.code === "Slash" &&
-        !["TEXTAREA", "INPUT"].includes(event.target.tagName)
-      ) {
-        if (input && document.activeElement !== input) {
-          event.preventDefault();
-          input.focus();
-        }
-      }
-    }
-    document.addEventListener("keydown", focusOnSearchMaybe);
-    return () => {
-      document.removeEventListener("keydown", focusOnSearchMaybe);
-    };
-  }, [inputRef]);
-}
-
-export function SearchNavigateWidget() {
-  const navigate = useNavigate();
-  const actionsRef = useRef<any>();
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useFocusOnSlash(inputRef);
-
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-      }}
-    >
-      <SearchWidget
-        actionsRef={actionsRef}
-        inputRef={inputRef}
-        onSelect={(url) => {
-          navigate(url);
-          actionsRef.current.reset();
-        }}
-      />
     </form>
   );
 }
