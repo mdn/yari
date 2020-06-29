@@ -1,7 +1,7 @@
 const ejs = require("ejs");
 
 const Parser = require("./parser.js");
-const { SourceCodeError } = require("./errors.js");
+const { MacroLiveSampleError } = require("./errors.js");
 const { normalizeMacroName } = require("./render.js");
 const {
   HTMLTool,
@@ -9,19 +9,6 @@ const {
   safeDecodeURIComponent,
   KumascriptError,
 } = require("./api/util.js");
-
-class LiveSampleError extends SourceCodeError {
-  constructor(error, source, token) {
-    super(
-      "LiveSampleError",
-      error,
-      source,
-      token.location.start.line,
-      token.location.start.column,
-      token.name
-    );
-  }
-}
 
 const LIVE_SAMPLE_HTML = `
 <!DOCTYPE html>
@@ -33,11 +20,11 @@ const LIVE_SAMPLE_HTML = `
               padding: 0;
               margin: 0;
             }
-            
+
             svg:not(:root) {
               display: block;
             }
-            
+
             .playable-code {
               background-color: #f4f7f8;
               border: none;
@@ -48,18 +35,18 @@ const LIVE_SAMPLE_HTML = `
               width: 90%;
               padding: 10px 10px 0;
             }
-            
+
             .playable-canvas {
               border: 1px solid #4d4e53;
               border-radius: 2px;
             }
-            
+
             .playable-buttons {
               text-align: right;
               width: 90%;
               padding: 5px 10px 5px 26px;
             }
-        </style>        
+        </style>
         <% if (css) { %>
         <style type="text/css">
             <%- css %>
@@ -81,28 +68,27 @@ const LIVE_SAMPLE_HTML = `
 
 const liveSampleTemplate = ejs.compile(LIVE_SAMPLE_HTML);
 
-function buildLiveSamplePage(uri, title, source, sampleIDWithContext) {
+function buildLiveSamplePage(uri, title, source, sampleIDObject) {
   // Given the URI, title, and rendered HTML of a document, build
   // and return the HTML of the live-sample page for the given
-  // sampleID (with context) that this document or another references,
-  // or throw an instance of LiveSampleError.
+  // sampleID that this document or another references, or else
+  // return an instance of MacroLiveSampleError.
+  const result = { html: null, flaw: null };
   const tool = new HTMLTool(source, uri);
   let sampleData;
   try {
-    sampleData = tool.extractLiveSampleObject(sampleIDWithContext.sampleID);
+    sampleData = tool.extractLiveSampleObject(sampleIDObject.id);
   } catch (e) {
     if (e instanceof KumascriptError) {
-      throw new LiveSampleError(
-        e,
-        sampleIDWithContext.context.source,
-        sampleIDWithContext.context.token
-      );
+      result.flaw = sampleIDObject.createFlaw(e);
+      return result;
     } else {
       throw e;
     }
   }
-  sampleData.sampleTitle = `${title} - ${sampleIDWithContext.sampleID} - code sample`;
-  return liveSampleTemplate(sampleData);
+  sampleData.sampleTitle = `${title} - ${sampleIDObject.id} - code sample`;
+  result.html = liveSampleTemplate(sampleData);
+  return result;
 }
 
 function normalizeSlug(slug) {
@@ -112,6 +98,22 @@ function normalizeSlug(slug) {
     .trim()
     .replace(/^\/+|\/+$/g, "")
     .toLowerCase();
+}
+
+class LiveSampleID {
+  constructor(id, source, token) {
+    this.id = id;
+    this.source = source;
+    this.token = token;
+  }
+
+  createFlaw(message) {
+    return new MacroLiveSampleError(
+      message instanceof Error ? message : new Error(message),
+      this.source,
+      this.token
+    );
+  }
 }
 
 function getLiveSampleIDs(slug, source) {
@@ -144,7 +146,7 @@ function getLiveSampleIDs(slug, source) {
       // the live-sample ID, even though they don't need to do that,
       // so let's first call "safeDecodeURIComponent" just in case.
       const sampleID = slugify(safeDecodeURIComponent(token.args[0]));
-      const sampleIDWithContext = { sampleID, context: { source, token } };
+      const sampleIDObject = new LiveSampleID(sampleID, source, token);
       if (token.args.length > 4) {
         // Some calls to EmbedLiveSample explicitly specify a slug from which
         // to extract the live sample ID in the 5th argument (4th index), so
@@ -159,15 +161,15 @@ function getLiveSampleIDs(slug, source) {
         if (!ownSampleIDs) {
           ownSampleIDs = [];
         }
-        ownSampleIDs.push(sampleIDWithContext);
+        ownSampleIDs.push(sampleIDObject);
       } else {
         if (!otherSampleIDs) {
           otherSampleIDs = new Map();
         }
         if (otherSampleIDs.has(sampleSlug)) {
-          otherSampleIDs.get(sampleSlug).push(sampleIDWithContext);
+          otherSampleIDs.get(sampleSlug).push(sampleIDObject);
         } else {
-          otherSampleIDs.set(sampleSlug, [sampleIDWithContext]);
+          otherSampleIDs.set(sampleSlug, [sampleIDObject]);
         }
       }
     }
@@ -175,4 +177,4 @@ function getLiveSampleIDs(slug, source) {
   return [ownSampleIDs, otherSampleIDs];
 }
 
-module.exports = { buildLiveSamplePage, getLiveSampleIDs, LiveSampleError };
+module.exports = { buildLiveSamplePage, getLiveSampleIDs };

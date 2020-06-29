@@ -4,9 +4,8 @@ const { getPrerequisites, render: renderMacros } = require("./src/render.js");
 const {
   getLiveSampleIDs,
   buildLiveSamplePage,
-  LiveSampleError,
 } = require("./src/live-sample.js");
-const { HTMLTool, KumascriptError } = require("./src/api/util.js");
+const { HTMLTool } = require("./src/api/util.js");
 
 class Renderer {
   constructor({
@@ -63,7 +62,7 @@ class Renderer {
     //       attributes of any iframes.
     const tool = new HTMLTool(renderedHtml);
     tool.injectSectionIDs();
-    const result = [tool.html(), errors];
+    const result = [tool.html(), Object.freeze(errors)];
 
     if (cacheResult) {
       this.allPagesInfo.cacheResult(uri, result);
@@ -76,6 +75,5 @@ module.exports = {
   buildLiveSamplePage,
   getLiveSampleIDs,
   getPrerequisites,
-  LiveSampleError,
   Renderer,
 };
