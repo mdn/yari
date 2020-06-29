@@ -308,3 +308,5 @@ export function SearchNavigateWidget() {
     </form>
   );
 }
+
+export default SearchNavigateWidget;
