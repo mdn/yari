@@ -13822,10 +13822,10 @@ vm-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.0.tgz#bd76d6a23323e2ca8ffa12028dc04559c75f9019"
   integrity sha512-iq+S7vZJE60yejDYM0ek6zg308+UZsdtPExWP9VZoCFCz1zkJoXFnAX7aZfd/ZwrkidzdUZL0C/ryW+JwAiIGw==
 
-vnu-jar@^20.5.29:
-  version "20.5.29"
-  resolved "https://registry.yarnpkg.com/vnu-jar/-/vnu-jar-20.5.29.tgz#f7d34dd3fba4b29000f7ee7b9f9924e2d541e65b"
-  integrity sha512-//4B+FR0RlMul8YTQCDrC1Xxrm/meFKpD/cNaam6VU/bfjOiFIeNYVpCUsIiUWGqBiNcxtky+K5RIPzO1QSykg==
+vnu-jar@^20.6.30:
+  version "20.6.30"
+  resolved "https://registry.yarnpkg.com/vnu-jar/-/vnu-jar-20.6.30.tgz#897882d4502411e77a3f17a2e793b26396603109"
+  integrity sha512-zlNNe7jW6cTIrxVlZK9AcZiNWjxzjqi7LpTafBCi4OY4bsh2uyGhxXT2l6hZ3ibpxP0ZC/pQsBpFQEACS0ePIg==
 
 w3c-hr-time@^1.0.1, w3c-hr-time@^1.0.2:
   version "1.0.2"
