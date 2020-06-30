@@ -8895,15 +8895,15 @@ mdn-browser-compat-data@1.0.28, mdn-browser-compat-data@^1.0.28:
   dependencies:
     extend "3.0.2"
 
+mdn-data@2.0.10:
+  version "2.0.10"
+  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.10.tgz#ca10ecb91669304f0e4b32863f22e184a6d958c0"
+  integrity sha512-vm+yOqfnDfxQVyhFdIr/9YSS6ZTAWmamMhlz3GcPYtbyd1ZdJZLbLTwCSSlztqNLHZVoUAlZwzk6nd04GGitJg==
+
 mdn-data@2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.4.tgz#699b3c38ac6f1d728091a64650b65d388502fd5b"
   integrity sha512-iV3XNKw06j5Q7mi6h+9vbx23Tv7JkjEVgKHW4pimwyDGWm0OIQntJJ+u1C6mg6mK1EaTv42XQ7w76yuzH7M2cA==
-
-mdn-data@2.0.9:
-  version "2.0.9"
-  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.9.tgz#7bf9378aff611b4e853e86edf5f3864568f45133"
-  integrity sha512-VMhGyDiXLxVp5XuGdtf04fIEZtcvLvlB+kAIbxLAjfAYgvGTIeLNxa9ZpIriHWB1SkG7q02hrnTt4yzZH+7gyA==
 
 mdn-data@~1.1.0:
   version "1.1.4"
