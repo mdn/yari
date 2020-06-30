@@ -143,7 +143,10 @@ function del(folder) {
 
 function findByURL(url) {
   const [, locale, , ...slugParts] = url.split("/");
-  const folder = path.join(locale, slugToFoldername(slugParts.join("/")));
+  const folder = path.join(
+    locale.toLowerCase(),
+    slugToFoldername(slugParts.join("/"))
+  );
 
   const document = read(CONTENT_ROOT, path.join(CONTENT_ROOT, folder));
 

@@ -160,6 +160,8 @@ async function renderMacros(contentRoot, { rawHtml, metadata, fileInfo }) {
     selective_mode: false,
   });
 
+  console.log(flaws)
+
   // Add the flaws from rendering the macros within all of the prerequisite
   // documents to the flaws from rendering the macros within this document.
   return [renderedHtml, flaws.concat(allPrerequisiteFlaws)];

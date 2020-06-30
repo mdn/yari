@@ -29,22 +29,13 @@ class Renderer {
     }
   }
 
-  use(pageInfoByUri) {
-    this.allPagesInfo = new AllPagesInfo(pageInfoByUri, this.uriTransform);
+  use() {
+    this.allPagesInfo = new AllPagesInfo(this.uriTransform);
     return this;
   }
 
-  clearCache() {
-    this.allPagesInfo.clearCache();
-  }
-
-  async render(source, pageEnvironment, cacheResult = false) {
+  async render(source, pageEnvironment) {
     this.checkAllPagesInfo();
-    const uri = pageEnvironment.path.toLowerCase();
-    const cachedResult = this.allPagesInfo.getResultFromCache(uri);
-    if (cachedResult) {
-      return cachedResult;
-    }
     const [renderedHtml, errors] = await renderMacros(
       source,
       this.templates,
@@ -65,9 +56,6 @@ class Renderer {
     tool.injectSectionIDs();
     const result = [tool.html(), errors];
 
-    if (cacheResult) {
-      this.allPagesInfo.cacheResult(uri, result);
-    }
     return result;
   }
 }

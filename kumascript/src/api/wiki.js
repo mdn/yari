@@ -69,7 +69,7 @@ module.exports = {
       return html;
     }
 
-    let result = this.info.getResultFromCache(path);
+    let result = null; //TODO: macroRenderer.render(path);
     const pathDescription = this.info.getDescription(path);
 
     if (!result) {
@@ -80,10 +80,6 @@ module.exports = {
         `unable to find pre-rendered HTML for prerequisite ${pathDescription}`
       );
     }
-
-    // Let's just use the rendered HTML, the first part of the pair from
-    // the result, and ignore the second part, which is the list of errors.
-    result = result[0];
 
     const tool = new util.HTMLTool(result, pathDescription);
 
