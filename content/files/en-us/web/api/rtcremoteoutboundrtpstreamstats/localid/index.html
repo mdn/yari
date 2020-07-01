@@ -1,0 +1,75 @@
+---
+title: RTCRemoteOutboundRtpStreamStats.localId
+slug: Web/API/RTCRemoteOutboundRtpStreamStats/localId
+summary: >-
+  The {{domxref("RTCRemoteOutboundRtpStreamStats")}} dictionary's&nbsp;
+  <code><strong>localId</strong></code> property is a string which can be used
+  to identify the {{domxref("RTCInboundRtpStreamStats")}} object whose
+  {{domxref("RTCInboundRtpStreamStats.remoteId", "remoteId")}} matches this
+  value.
+---
+<p>{{APIRef("WebRTC")}}</p>
+
+<p><span class="seoSummary">The {{domxref("RTCRemoteOutboundRtpStreamStats")}} dictionary's&nbsp; <code><strong>localId</strong></code> property is a string which can be used to identify the {{domxref("RTCInboundRtpStreamStats")}} object whose {{domxref("RTCInboundRtpStreamStats.remoteId", "remoteId")}} matches this value. </span>Together, these two objects provide statistics about the inbound and outbound sides of the same synchronization source (SSRC).</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox notranslate">
+let <em>localId</em> = <em>rtcRemoteOutboundRtpStreamStats</em>.localId;</pre>
+
+<h3 id="Value">Value</h3>
+
+<p>A&nbsp;{{domxref("DOMString")}} which can be compared to the value of an {{domxref("RTCInboundRtpStreamStats")}} object's {{domxref("RTCInboundRtpStreamStats.remoteId", "remoteId")}} property to see if the two represent statistics for the inbound and outbound sides of the same stream.</p>
+
+<h2 id="Example">Example</h2>
+
+<p>In this example, statistics reports are collected before and after a network operation in order to determine how many packets are being sent and received by that operation each time it's executed. The network operation itself is handled by a function called <code>doSomeNetworkActivity()</code>, which returns a promise that resolves when the network activity is completed.</p>
+
+<pre class="brush: js notranslate">
+async function testNetwork(pc) {
+  let sender = pc.getSenders()[0];
+
+  let firstReport = await sender.getStats();
+  await doSomeNetworkActivity();
+  let secondReport = await sender.getStats();
+
+  for (let endStats of secondReport.values()) {
+    if (endStats.type === "outbound-rtp") {
+      let beginStats = firstReport.get(endStats.id);
+
+      if (beginStats) {
+        let remoteStart = firstReport[beginStats.remoteId];
+        let remoteEnd = secondReport[endStats.remoteId];
+
+        let packetsSent = endStats.packetsSent - beginStats.packetsSent;
+        let packetsReceived = endStats.packetsReceived - beginStats.packetsReceived;
+
+        console.log(`Sent ${packetsSent} packets; received ${packetsReceived}.`);
+      }
+    }
+  }
+}
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+  <tr>
+   <td>{{SpecName('WebRTC Statistics Identifiers', '#dom-rtcremoteoutboundrtpstreamstats-localid', 'RTCRemoteOutboundRtpStreamStats.localId')}}</td>
+   <td>{{Spec2('WebRTC Statistics Identifiers')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("api.RTCRemoteOutboundRtpStreamStats.localId")}}</p>
