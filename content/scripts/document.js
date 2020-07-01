@@ -202,8 +202,9 @@ function update(contentRoot, folder, rawHtml, metadata) {
 }
 
 function del(contentRoot, folder) {
+  const { metadata } = read(contentRoot, folder);
   fs.rmdirSync(folder, { recursive: true });
-  updateWikiHistory(contentRoot, oldSlug);
+  updateWikiHistory(path.join(contentRoot, metadata.locale), metadata.slug);
 }
 
 module.exports = {
