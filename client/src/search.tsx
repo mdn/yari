@@ -41,7 +41,7 @@ function useSearchIndex(): [null | SearchIndex, () => void] {
   const locale = useParams().locale || "en-US";
 
   const url = `/${locale}/titles.json`;
-  const { data: fetchedTitles } = useSWR<Titles>(
+  const { error, data: fetchedTitles } = useSWR<Titles>(
     shouldInitialize ? url : null,
     async (url) => {
       const response = await fetch(url);
@@ -54,6 +54,10 @@ function useSearchIndex(): [null | SearchIndex, () => void] {
     },
     { revalidateOnFocus: false }
   );
+
+  if (error) {
+    throw error;
+  }
 
   useEffect(() => {
     if (!shouldInitialize) {
@@ -171,7 +175,7 @@ function useFocusOnSlash(inputRef: React.RefObject<null | HTMLInputElement>) {
   }, [inputRef]);
 }
 
-export function SearchNavigateWidget() {
+function InnerSearchNavigateWidget() {
   const navigate = useNavigate();
 
   const [searchIndex, initializeSearchIndex] = useSearchIndex();
@@ -317,6 +321,30 @@ export function SearchNavigateWidget() {
         )}
       </div>
     </form>
+  );
+}
+
+class SearchErrorBoundary extends React.Component {
+  state = { hasError: false };
+
+  static getDerivedStateFromError(error) {
+    console.error("There was an error while trying to render search", error);
+    return { hasError: true };
+  }
+  render() {
+    return this.state.hasError ? (
+      <div>Error while rendering search. Check console for details.</div>
+    ) : (
+      this.props.children
+    );
+  }
+}
+
+export function SearchNavigateWidget() {
+  return (
+    <SearchErrorBoundary>
+      <InnerSearchNavigateWidget />
+    </SearchErrorBoundary>
   );
 }
 
