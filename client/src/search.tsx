@@ -345,7 +345,7 @@ export class SearchWidget extends React.Component<{
       if (!this.dismounted) {
         this.setState({ showSearchResults: false });
       }
-    }, 100);
+    }, 300);
   };
 
   submitHandler = () => {
