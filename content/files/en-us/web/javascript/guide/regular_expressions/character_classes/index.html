@@ -62,13 +62,13 @@ tags:
   <tr>
    <td><code>\w</code></td>
    <td>
-    <p>Matches any alphanumeric character from the basic Latin alphabet, including the underscore. Equivalent to <code>[A-Za-z0-9_]</code>. For example, <code>/\w/</code> matches "a" in "apple", "5" in "$5.28", and "3" in "3D".</p>
+    <p>Matches any alphanumeric character from the basic Latin alphabet, including the underscore. Equivalent to <code>[A-Za-z0-9_]</code>. For example, <code>/\w/</code> matches "a" in "apple", "5" in "$5.28", "3" in "3D" and "m" in "Émanuel".</p>
    </td>
   </tr>
   <tr>
    <td><code>\W</code></td>
    <td>
-    <p>Matches any character that is not a word character from the basic Latin alphabet. Equivalent to <code>[^A-Za-z0-9_]</code>. For example, <code>/\W/</code> or <code>/[^A-Za-z0-9_]/</code> matches "%" in "50%".</p>
+    <p>Matches any character that is not a word character from the basic Latin alphabet. Equivalent to <code>[^A-Za-z0-9_]</code>. For example, <code>/\W/</code> or <code>/[^A-Za-z0-9_]/</code> matches "%" in "50%" and "É" in "Émanuel".</p>
    </td>
   </tr>
   <tr>
@@ -151,7 +151,7 @@ tags:
 
 <h3 id="Looking_for_a_series_of_digits">Looking for a series of digits</h3>
 
-<pre class="brush: js">var randomData = "015 354 8787 687351 3512 8735";
+<pre class="brush: js notranslate">var randomData = "015 354 8787 687351 3512 8735";
 var regexpFourDigits = /\b\d{4}\b/g;
 // \b indicates a boundary (i.e. do not start matching in the middle of a word)
 // \d{4} indicates a digit, four times
@@ -164,7 +164,7 @@ console.table(randomData.match(regexpFourDigits));
 
 <h3 id="Looking_for_a_word_from_the_latin_alphabet_starting_with_A">Looking for a word (from the latin alphabet) starting with A</h3>
 
-<pre class="brush: js">var aliceExcerpt = "I’m sure I’m not Ada,’ she said, ‘for her hair goes in such long ringlets, and mine doesn’t go in ringlets at all.";
+<pre class="brush: js notranslate">var aliceExcerpt = "I’m sure I’m not Ada,’ she said, ‘for her hair goes in such long ringlets, and mine doesn’t go in ringlets at all.";
 var regexpWordStartingWithA = /\b[aA]\w+/g;
 // \b indicates a boundary (i.e. do not start matching in the middle of a word)
 // [aA] indicates the letter a or A
@@ -178,7 +178,7 @@ console.table(aliceExcerpt.match(regexpWordStartingWithA));
 
 <p>Instead of the Latin alphabet, we can use a range of Unicode characters to identify a word (thus being able to deal with text in other languages like Russian or Arabic). The "Basic Multilingual Plane" of Unicode contains most of the characters used around the world and we can use character classes and ranges to match words written with those characters.</p>
 
-<pre class="brush: js">var nonEnglishText = "Приключения Алисы в Стране чудес";
+<pre class="brush: js notranslate">var nonEnglishText = "Приключения Алисы в Стране чудес";
 var regexpBMPWord = /([\u0000-\u0019\u0021-\uFFFF])+/gu;
 // BMP goes through U+0000 to U+FFFF but space is U+0020
 

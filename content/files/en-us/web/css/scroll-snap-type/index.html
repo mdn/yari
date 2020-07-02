@@ -9,6 +9,7 @@ tags:
   - CSS Property
   - CSS Scroll Snap
   - Reference
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -20,7 +21,7 @@ tags:
 
 <p>Specifying any precise animations or physics used to enforce those snap points is not covered by this property but instead left up to the user agent.</p>
 
-<pre class="brush:css no-line-numbers">/* Keyword values */
+<pre class="brush:css no-line-numbers notranslate">/* Keyword values */
 scroll-snap-type: none;
 scroll-snap-type: x;
 scroll-snap-type: y;
@@ -48,33 +49,33 @@ scroll-snap-type: unset;
 <h3 id="Values">Values</h3>
 
 <dl>
-	<dt><code>none</code></dt>
-	<dd>When the visual {{Glossary("viewport")}} of this scroll container is scrolled, it must ignore snap points.</dd>
-	<dt><code>x</code></dt>
-	<dd>The scroll container snaps to snap positions in its horizontal axis only.</dd>
-	<dt><code>y</code></dt>
-	<dd>The scroll container snaps to snap positions in its vertical axis only.</dd>
-	<dt><code>block</code></dt>
-	<dd>The scroll container snaps to snap positions in its block axis only.</dd>
-	<dt><code>inline</code></dt>
-	<dd>The scroll container snaps to snap positions in its inline axis only.</dd>
-	<dt><code>both</code></dt>
-	<dd>The scroll container snaps to snap positions in both of its axes independently (potentially snapping to different elements in each axis).</dd>
-	<dt><code>mandatory</code></dt>
-	<dd>The visual viewport of this scroll container will rest on a snap point if it isn't currently scrolled. That means it snaps on that point when the scroll action finished, if possible. If content is added, moved, deleted or resized the scroll offset will be adjusted to maintain the resting on that snap point.</dd>
-	<dt><code>proximity</code></dt>
-	<dd>The visual viewport of this scroll container may come to rest on a snap point if it isn't currently scrolled considering the user agent's scroll parameters. If content is added, moved, deleted or resized the scroll offset may be adjusted to maintain the resting on that snap point.</dd>
+ <dt><code>none</code></dt>
+ <dd>When the visual {{Glossary("viewport")}} of this scroll container is scrolled, it must ignore snap points.</dd>
+ <dt><code>x</code></dt>
+ <dd>The scroll container snaps to snap positions in its horizontal axis only.</dd>
+ <dt><code>y</code></dt>
+ <dd>The scroll container snaps to snap positions in its vertical axis only.</dd>
+ <dt><code>block</code></dt>
+ <dd>The scroll container snaps to snap positions in its block axis only.</dd>
+ <dt><code>inline</code></dt>
+ <dd>The scroll container snaps to snap positions in its inline axis only.</dd>
+ <dt><code>both</code></dt>
+ <dd>The scroll container snaps to snap positions in both of its axes independently (potentially snapping to different elements in each axis).</dd>
+ <dt><code>mandatory</code></dt>
+ <dd>The visual viewport of this scroll container will rest on a snap point if it isn't currently scrolled. That means it snaps on that point when the scroll action finished, if possible. If content is added, moved, deleted or resized the scroll offset will be adjusted to maintain the resting on that snap point.</dd>
+ <dt><code>proximity</code></dt>
+ <dd>The visual viewport of this scroll container may come to rest on a snap point if it isn't currently scrolled considering the user agent's scroll parameters. If content is added, moved, deleted or resized the scroll offset may be adjusted to maintain the resting on that snap point.</dd>
 </dl>
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Example" name="Example">Example</h2>
 
 <h3 id="HTML_Content">HTML Content</h3>
 
-<pre class="brush: html">&lt;div class="holster"&gt;
+<pre class="brush: html notranslate">&lt;div class="holster"&gt;
 &lt;div class="container x mandatory-scroll-snapping" dir="ltr"&gt;
   &lt;div&gt;X Mand. LTR&lt;/div&gt;
   &lt;div&gt;2&lt;/div&gt;
@@ -143,7 +144,7 @@ scroll-snap-type: unset;
 
 <h3 id="CSS_Content">CSS Content</h3>
 
-<pre class="brush: css">/* setup */
+<pre class="brush: css notranslate">/* setup */
 html, body, .holster {
   height: 100%;
 }
@@ -229,20 +230,20 @@ html, body, .holster {
 <h2 id="Specification">Specification</h2>
 
 <table class="standard-table">
-	<thead>
-		<tr>
-			<th scope="col">Specification</th>
-			<th scope="col">Status</th>
-			<th scope="col">Comment</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>{{SpecName("CSS Scroll Snap Points", "#propdef-scroll-snap-type", "scroll-snap-type")}}</td>
-			<td>{{Spec2("CSS Scroll Snap Points")}}</td>
-			<td>Initial definition</td>
-		</tr>
-	</tbody>
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName("CSS Scroll Snap Points", "#propdef-scroll-snap-type", "scroll-snap-type")}}</td>
+   <td>{{Spec2("CSS Scroll Snap Points")}}</td>
+   <td>Initial definition</td>
+  </tr>
+ </tbody>
 </table>
 
 <h2 id="Browser_compatibility">Browser compatibility</h2>

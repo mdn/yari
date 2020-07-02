@@ -14,6 +14,8 @@ tags:
 
 <p>When a non-empty string is assigned to the <code>returnValue</code> Event property, a dialog box appears, asking the users for confirmation to leave the page (see example below). When no value is provided, the event is processed silently. Some implementations only show the dialog box if the frame or any embedded frame receives a user gesture or user interaction. See {{anch("Browser compatibility")}} for more information.</p>
 
+{{InheritanceDiagram(600, 120)}}
+
 <table class="properties">
  <tbody>
   <tr>
@@ -55,6 +57,23 @@ window.addEventListener("beforeunload", function( event ) {
   return confirmationMessage;                                /* Safari, Chrome, and other
                                                               * WebKit-derived browsers */
 });</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+  <tr>
+   <td>{{SpecName("HTML WHATWG", "browsing-the-web.html#the-beforeunloadevent-interface", "BeforeUnloadEvent")}}</td>
+   <td>{{Spec2("HTML WHATWG")}}</td>
+   <td>Initial definition</td>
+  </tr>
+ </tbody>
+</table>
 
 <h2 id="Browser_compatibility">Browser compatibility</h2>
 

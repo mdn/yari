@@ -3,7 +3,7 @@ title: AudioNode
 slug: Web/API/AudioNode
 summary: >-
   The AudioNode interface is a generic interface for representing an audio
-  processing module. Examples include:
+  processing module.
 tags:
   - API
   - AudioNode
@@ -13,7 +13,9 @@ tags:
 ---
 <div>{{APIRef("Web Audio API")}}</div>
 
-<p>The <strong><code>AudioNode</code></strong> interface is a generic interface for representing an audio processing module. Examples include:</p>
+<p>The <strong><code>AudioNode</code></strong> interface is a generic interface for representing an audio processing module.</p>
+
+<p>Examples include:</p>
 
 <ul>
  <li>an audio source (e.g. an HTML {{HTMLElement("audio")}} or {{HTMLElement("video")}} element, an {{domxref("OscillatorNode")}}, etc.),</li>
@@ -46,7 +48,7 @@ tags:
 
 <p>There are two ways to create an <code>AudioNode</code>: via the <em>constuctor</em> and via the <em>factory method</em>.</p>
 
-<pre class="brush: js;">// constructor
+<pre class="brush: js; notranslate">// constructor
 const analyserNode = new AnalyserNode(audioCtx, {
   fftSize: 2048,
   maxDecibels: -25,
@@ -73,7 +75,7 @@ analyserNode.smoothingTimeConstant = 0.5;</pre>
 
 <p><em>Brief history:</em> The first version of the Web Audio spec only defined the factory methods. After a <a href="https://github.com/WebAudio/web-audio-api/issues/250">design review in October 2013</a>, it was decided to add constructors because they have numerous benefits over factory methods. The constructors were added to the spec from August to October 2016. Factory methods continue to be included in the spec and are not deprecated.</p>
 
-<h2 id="Properties" style="">Properties</h2>
+<h2 id="Properties">Properties</h2>
 
 <dl>
  <dt>{{domxref("AudioNode.context")}} {{readonlyInline}}</dt>
@@ -118,7 +120,7 @@ analyserNode.smoothingTimeConstant = 0.5;</pre>
 
 <p>This simple snippet of code shows the creation of some audio nodes, and how the <code>AudioNode</code> properties and methods can be used. You can find examples of such usage on any of the examples linked to on the <a href="/en-US/docs/Web/API/Web_Audio_API">Web Audio API</a> landing page (for example <a href="https://github.com/mdn/violent-theremin">Violent Theremin</a>.)<span class="p"> </span></p>
 
-<pre class="brush: js;">const audioCtx = new AudioContext();
+<pre class="brush: js; notranslate">const audioCtx = new AudioContext();
 
 const oscillator = new OscillatorNode(audioCtx);
 const gainNode = new GainNode(audioCtx);
@@ -142,7 +144,7 @@ oscillator.channelCount;</pre>
   <tr>
    <td>{{SpecName('Web Audio API', '#audionode', 'AudioNode')}}</td>
    <td>{{Spec2('Web Audio API')}}</td>
-   <td> </td>
+   <td></td>
   </tr>
  </tbody>
 </table>

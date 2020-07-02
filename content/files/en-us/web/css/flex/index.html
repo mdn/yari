@@ -9,6 +9,7 @@ tags:
   - CSS Flexible Boxes
   - CSS Property
   - Reference
+  - 'recipe:css-shorthand-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -21,7 +22,7 @@ tags:
 <p>For most purposes, authors should set <code>flex</code> to one of the following values: <code>auto</code>, <code>initial</code>, <code>none</code>, or a positive unitless number. To see the effect of these values, try resizing the flex containers below:</p>
 
 <div id="flex">
-<pre class="hidden brush: html">&lt;div class="flex-container"&gt;
+<pre class="hidden brush: html notranslate">&lt;div class="flex-container"&gt;
   &lt;div class="item auto"&gt;auto&lt;/div&gt;
   &lt;div class="item auto"&gt;auto&lt;/div&gt;
   &lt;div class="item auto"&gt;auto&lt;/div&gt;
@@ -52,7 +53,7 @@ tags:
 &lt;/div&gt;
 </pre>
 
-<pre class="hidden brush: css">* {
+<pre class="hidden brush: css notranslate">* {
   box-sizing: border-box;
 }
 
@@ -107,7 +108,7 @@ tags:
 
 <h2 id="Syntax" name="Syntax">Syntax</h2>
 
-<pre class="brush:css no-line-numbers">/* Keyword values */
+<pre class="brush:css no-line-numbers notranslate">/* Keyword values */
 flex: auto;
 flex: initial;
 flex: none;
@@ -179,11 +180,11 @@ flex: unset;
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Example">Example</h2>
 
-<pre class="brush: css">#flex-container {
+<pre class="brush: css notranslate">#flex-container {
   display: flex;
   flex-direction: row;
 }
@@ -197,21 +198,21 @@ flex: unset;
 }
 </pre>
 
-<pre class="brush: html">&lt;div id="flex-container"&gt;
+<pre class="brush: html notranslate">&lt;div id="flex-container"&gt;
   &lt;div class="flex-item" id="flex"&gt;Flex box (click to toggle raw box)&lt;/div&gt;
   &lt;div class="raw-item" id="raw"&gt;Raw box&lt;/div&gt;
 &lt;/div&gt;
 </pre>
 
 <div class="hidden">
-<pre class="brush: js">var flex = document.getElementById("flex");
+<pre class="brush: js notranslate">var flex = document.getElementById("flex");
 var raw = document.getElementById("raw");
 flex.addEventListener("click", function() {
   raw.style.display = raw.style.display == "none" ? "block" : "none";
 });
 </pre>
 
-<pre class="brush: css">#flex-container {
+<pre class="brush: css notranslate">#flex-container {
   width: 100%;
   font-family: Consolas, Arial, sans-serif;
 }

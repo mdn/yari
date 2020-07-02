@@ -1,5 +1,5 @@
 ---
-title: Optional chaining
+title: Optional chaining (?.)
 slug: Web/JavaScript/Reference/Operators/Optional_chaining
 summary: >-
   The ?. operator functions similarly to the. chaining operator, except that
@@ -15,7 +15,7 @@ tags:
 ---
 <div>{{JSSidebar("Operators")}}</div>
 
-<p>The <strong>optional chaining</strong> operator <strong><code>?.</code></strong> permits reading the value of a property located deep within a chain of connected objects without having to expressly validate that each reference in the chain is valid. <span class="seoSummary">The <code>?.</code> operator functions similarly to the <code>.</code> chaining operator, except that instead of causing an error if a reference is <a href="/en-US/docs/Glossary/nullish">nullish</a> ({{JSxRef("null")}} or {{JSxRef("undefined")}}), the expression short-circuits with a return value of <code>undefined</code>.</span> When used with function calls, it returns <code>undefined</code> if the given function does not exist.</p>
+<p>The <strong>optional chaining</strong> operator (<strong><code>?.</code></strong>) permits reading the value of a property located deep within a chain of connected objects without having to expressly validate that each reference in the chain is valid. <span class="seoSummary">The <code>?.</code> operator functions similarly to the <code>.</code> chaining operator, except that instead of causing an error if a reference is <a href="/en-US/docs/Glossary/nullish">nullish</a> ({{JSxRef("null")}} or {{JSxRef("undefined")}}), the expression short-circuits with a return value of <code>undefined</code>.</span> When used with function calls, it returns <code>undefined</code> if the given function does not exist.</p>
 
 <p>This results in shorter and simpler expressions when accessing chained properties when the possibility exists that a reference may be missing. It can also be helpful while exploring the content of an object when there's no known guarantee as to which properties are required.</p>
 
@@ -25,7 +25,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox"><var>obj</var>?.<var>prop</var>
+<pre class="syntaxbox notranslate"><var>obj</var>?.<var>prop</var>
 <var>obj</var>?.[<var>expr</var>]
 <em>arr</em>?.[<var>index</var>]
 <var>func</var>?.(<var>args</var>)
@@ -37,19 +37,19 @@ tags:
 
 <p>For example, consider an object <code>obj</code> which has a nested structure. Without optional chaining, looking up a deeply-nested subproperty requires validating the references in between, such as:</p>
 
-<pre class="brush: js">let nestedProp = obj.first &amp;&amp; obj.first.second;</pre>
+<pre class="brush: js notranslate">let nestedProp = obj.first &amp;&amp; obj.first.second;</pre>
 
 <p>The value of <code>obj.first</code> is confirmed to be non-<code>null</code> (and non-<code>undefined</code>) before then accessing the value of <code>obj.first.second</code>. This prevents the error that would occur if you simply accessed <code>obj.first.second</code> directly without testing <code>obj.first</code>.</p>
 
 <p>With the optional chaining operator (<code>?.</code>), however, you don't have to explicitly test and short-circuit based on the state of <code>obj.first</code> before trying to access <code>obj.first.second</code>:</p>
 
-<pre class="brush: js">let nestedProp = obj.first?.second;</pre>
+<pre class="brush: js notranslate">let nestedProp = obj.first?.second;</pre>
 
 <p>By using the <code>?.</code> operator instead of just <code>.</code>, JavaScript knows to implicitly check to be sure <code>obj.first</code> is not <code>null</code> or <code>undefined</code> before attempting to access <code>obj.first.second</code>. If <code>obj.first</code> is <code>null</code> or <code>undefined</code>, the expression automatically short-circuits, returning <code>undefined</code>.</p>
 
 <p>This is equivalent to the following, except that the temporary variable is in fact not created:</p>
 
-<pre class="brush: js">let temp = obj.first;
+<pre class="brush: js notranslate">let temp = obj.first;
 let nestedProp = ((temp === null || temp === undefined) ? undefined : temp.second);
 </pre>
 
@@ -59,7 +59,7 @@ let nestedProp = ((temp === null || temp === undefined) ? undefined : temp.secon
 
 <p>Using optional chaining with function calls causes the expression to automatically return <code>undefined</code> instead of throwing an exception if the method isn't found:</p>
 
-<pre class="brush: js">let result = someInterface.customMethod?.();</pre>
+<pre class="brush: js notranslate">let result = someInterface.customMethod?.();</pre>
 
 <div class="blockIndicator note">
 <p><strong>Note:</strong> If there is a property with such a name and which is not a function, using <code>?.</code> will still raise a {{JSxRef("TypeError")}} exception (<code>x.y</code><code> is not a function</code>).</p>
@@ -69,7 +69,7 @@ let nestedProp = ((temp === null || temp === undefined) ? undefined : temp.secon
 
 <p>If you use callbacks or fetch methods from an object with <a href="/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#Object_destructuring">a destructuring assignment</a>, you may have non-existent values that you cannot call as functions unless you have tested their existence. Using <code>?.</code>, you can avoid this extra test:</p>
 
-<pre class="brush: js">// Written as of ES2019
+<pre class="brush: js notranslate">// Written as of ES2019
 function doSomething(onContent, onError) {
   try {
     // ... do something with the data
@@ -82,7 +82,7 @@ function doSomething(onContent, onError) {
 }
 </pre>
 
-<pre class="brush: js">// Using optional chaining with function calls
+<pre class="brush: js notranslate">// Using optional chaining with function calls
 function doSomething(onContent, onError) {
   try {
    // ... do something with the data
@@ -97,17 +97,17 @@ function doSomething(onContent, onError) {
 
 <p>You can also use the optional chaining operator when accessing properties with an expression using <a href="/en-US/docs/Web/JavaScript/Reference/Operators/Property_Accessors#Bracket_notation">the bracket notation of the property accessor</a>:</p>
 
-<pre class="brush: js">let nestedProp = obj?.['prop' + 'Name'];
+<pre class="brush: js notranslate">let nestedProp = obj?.['prop' + 'Name'];
 </pre>
 
 <h3 id="Optional_chaining_not_valid_on_the_left-hand_side_of_an_assignment">Optional chaining not valid on the left-hand side of an assignment</h3>
 
-<pre class="brush: js"><code>let object = {};
+<pre class="brush: js notranslate"><code>let object = {};
 object?.property = 1; // Uncaught SyntaxError: Invalid left-hand side in assignment</code></pre>
 
 <h3 id="Array_item_access_with_optional_chaining">Array item access with optional chaining</h3>
 
-<pre class="brush: js">let arrayItem = arr?.[42];</pre>
+<pre class="brush: js notranslate">let arrayItem = arr?.[42];</pre>
 
 <h2 id="Examples">Examples</h2>
 
@@ -115,7 +115,7 @@ object?.property = 1; // Uncaught SyntaxError: Invalid left-hand side in assignm
 
 <p>This example looks for the value of the <code>name</code> property for the member <code>bar</code> in a map when there is no such member. The result is therefore <code>undefined</code>.</p>
 
-<pre class="brush: js">let myMap = new Map();
+<pre class="brush: js notranslate">let myMap = new Map();
 myMap.set("foo", {name: "baz", desc: "inga"});
 
 let nameBar = myMap.get("bar")?.name;</pre>
@@ -124,7 +124,7 @@ let nameBar = myMap.get("bar")?.name;</pre>
 
 <p>When using optional chaining with expressions, if the left operand is <code>null</code> or <code>undefined</code>, the expression will not be evaluated. For instance:</p>
 
-<pre class="brush: js">let potentiallyNullObj = null;
+<pre class="brush: js notranslate">let potentiallyNullObj = null;
 let x = 0;
 let prop = potentiallyNullObj?.[x++];
 
@@ -135,7 +135,7 @@ console.log(x); // 0 as x was not incremented
 
 <p>With nested structures, it is possible to use optional chaining multiple times:</p>
 
-<pre class="brush: js">let customer = {
+<pre class="brush: js notranslate">let customer = {
   name: "Carl",
   details: {
     age: 82,
@@ -152,7 +152,7 @@ let duration = vacations.trip?.getTime?.();
 
 <p>The {{JSxRef("Operators/Nullish_Coalescing_Operator", "nullish coalescing operator", '', 1)}} may be used after optional chaining in order to build a default value when none was found:</p>
 
-<pre class="brush: js">let customer = {
+<pre class="brush: js notranslate">let customer = {
   name: "Carl",
   details: { age: 82 }
 };

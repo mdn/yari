@@ -78,39 +78,39 @@ tags:
 
 <p>For example, the following encodes the integer <code>314</code>:</p>
 
-<pre class="brush: js">00000000000000000000000100111010
+<pre class="brush: js notranslate">00000000000000000000000100111010
 </pre>
 
 <p>The following encodes <code>~314</code> (the <em>ones' complement</em> of <code>314</code>):</p>
 
-<pre class="brush: js">11111111111111111111111011000101
+<pre class="brush: js notranslate">11111111111111111111111011000101
 </pre>
 
 <p>Finally, the following encodes <code>-314</code>, (the <em>two's complement</em> of <code>314</code>):</p>
 
-<pre class="brush: js">11111111111111111111111011000110
+<pre class="brush: js notranslate">11111111111111111111111011000110
 </pre>
 
 <p>The two's complement guarantees that the left-most bit is <code>0</code> when the number is positive and <code>1</code> when the number is negative. Thus, it is called the <em>sign bit</em>.</p>
 
 <p>The number <code>0</code> is the integer that is composed completely of 0 bits.</p>
 
-<pre class="brush: js">0 (base 10) = 00000000000000000000000000000000 (base 2)
+<pre class="brush: js notranslate">0 (base 10) = 00000000000000000000000000000000 (base 2)
 </pre>
 
 <p>The number <code>-1</code> is the integer that is composed completely of 1 bits.</p>
 
-<pre class="brush: js">-1 (base 10) = 11111111111111111111111111111111 (base 2)
+<pre class="brush: js notranslate">-1 (base 10) = 11111111111111111111111111111111 (base 2)
 </pre>
 
 <p>The number <code>-2147483648</code> (hexadecimal representation: <code>-0x80000000</code>) is the integer that is composed completely of 0 bits, except the first (left-most) one.</p>
 
-<pre class="brush: js">-2147483648 (base 10) = 10000000000000000000000000000000 (base 2)
+<pre class="brush: js notranslate">-2147483648 (base 10) = 10000000000000000000000000000000 (base 2)
 </pre>
 
 <p>The number <code>2147483647</code> (hexadecimal representation: <code>0x7fffffff</code>) is the integer that is composed completely of 1 bits, except the first (left-most) one.</p>
 
-<pre class="brush: js">2147483647 (base 10) = 01111111111111111111111111111111 (base 2)
+<pre class="brush: js notranslate">2147483647 (base 10) = 01111111111111111111111111111111 (base 2)
 </pre>
 
 <p>The numbers <code>-2147483648</code> and <code>2147483647</code> are the minimum and the maximum integers representable through a 32-bit signed number.</p>
@@ -121,7 +121,7 @@ tags:
 
 <ul>
  <li>The operands are converted to 32-bit integers and expressed by a series of bits (zeroes and ones). Numbers with more than 32 bits get their most significant bits discarded. For example, the following integer with more than 32 bits will be converted to a 32 bit integer:
-  <pre class="brush: js">Before: 11100110111110100000000000000110000000000001
+  <pre class="brush: js notranslate">Before: 11100110111110100000000000000110000000000001
 After:              10100000000000000110000000000001</pre>
  </li>
  <li>Each bit in the first operand is paired with the corresponding bit in the second operand: <em>first bit</em> to <em>first bit</em>, <em>second bit</em> to <em>second bit</em>, and so on.</li>
@@ -164,7 +164,7 @@ After:              10100000000000000110000000000001</pre>
  </tbody>
 </table>
 
-<pre class="brush: js">.    9 (base 10) = 00000000000000000000000000001001 (base 2)
+<pre class="brush: js notranslate">.    9 (base 10) = 00000000000000000000000000001001 (base 2)
     14 (base 10) = 00000000000000000000000000001110 (base 2)
                    --------------------------------
 14 &amp; 9 (base 10) = 00000000000000000000000000001000 (base 2) = 8 (base 10)
@@ -208,7 +208,7 @@ After:              10100000000000000110000000000001</pre>
  </tbody>
 </table>
 
-<pre class="brush: js">.    9 (base 10) = 00000000000000000000000000001001 (base 2)
+<pre class="brush: js notranslate">.    9 (base 10) = 00000000000000000000000000001001 (base 2)
     14 (base 10) = 00000000000000000000000000001110 (base 2)
                    --------------------------------
 14 | 9 (base 10) = 00000000000000000000000000001111 (base 2) = 15 (base 10)
@@ -252,7 +252,7 @@ After:              10100000000000000110000000000001</pre>
  </tbody>
 </table>
 
-<pre class="brush: js">.    9 (base 10) = 00000000000000000000000000001001 (base 2)
+<pre class="brush: js notranslate">.    9 (base 10) = 00000000000000000000000000001001 (base 2)
     14 (base 10) = 00000000000000000000000000001110 (base 2)
                    --------------------------------
 14 ^ 9 (base 10) = 00000000000000000000000000000111 (base 2) = 7 (base 10)
@@ -283,7 +283,7 @@ After:              10100000000000000110000000000001</pre>
  </tbody>
 </table>
 
-<pre class="brush: js"> 9 (base 10) = 00000000000000000000000000001001 (base 2)
+<pre class="brush: js notranslate"> 9 (base 10) = 00000000000000000000000000001001 (base 2)
                --------------------------------
 ~9 (base 10) = 11111111111111111111111111110110 (base 2) = -10 (base 10)
 </pre>
@@ -304,7 +304,7 @@ After:              10100000000000000110000000000001</pre>
 
 <p>For example, <code>9 &lt;&lt; 2</code> yields 36:</p>
 
-<pre class="brush: js">.    9 (base 10): 00000000000000000000000000001001 (base 2)
+<pre class="brush: js notranslate">.    9 (base 10): 00000000000000000000000000001001 (base 2)
                   --------------------------------
 9 &lt;&lt; 2 (base 10): 00000000000000000000000000100100 (base 2) = 36 (base 10)
 </pre>
@@ -318,14 +318,14 @@ After:              10100000000000000110000000000001</pre>
 
 <p>For example, <code>9 &gt;&gt; 2</code> yields 2:</p>
 
-<pre class="brush: js">.    9 (base 10): 00000000000000000000000000001001 (base 2)
+<pre class="brush: js notranslate">.    9 (base 10): 00000000000000000000000000001001 (base 2)
                   --------------------------------
 9 &gt;&gt; 2 (base 10): 00000000000000000000000000000010 (base 2) = 2 (base 10)
 </pre>
 
 <p>Likewise, <code>-9 &gt;&gt; 2</code> yields <code>-3</code>, because the sign is preserved:</p>
 
-<pre class="brush: js">.    -9 (base 10): 11111111111111111111111111110111 (base 2)
+<pre class="brush: js notranslate">.    -9 (base 10): 11111111111111111111111111110111 (base 2)
                    --------------------------------
 -9 &gt;&gt; 2 (base 10): 11111111111111111111111111111101 (base 2) = -3 (base 10)
 </pre>
@@ -336,14 +336,14 @@ After:              10100000000000000110000000000001</pre>
 
 <p>For non-negative numbers, zero-fill right shift and sign-propagating right shift yield the same result. For example, <code>9 &gt;&gt;&gt; 2</code> yields 2, the same as <code>9 &gt;&gt; 2</code>:</p>
 
-<pre class="brush: js">.     9 (base 10): 00000000000000000000000000001001 (base 2)
+<pre class="brush: js notranslate">.     9 (base 10): 00000000000000000000000000001001 (base 2)
                    --------------------------------
 9 &gt;&gt;&gt; 2 (base 10): 00000000000000000000000000000010 (base 2) = 2 (base 10)
 </pre>
 
 <p>However, this is not the case for negative numbers. For example, <code>-9 &gt;&gt;&gt; 2</code> yields 1073741821, which is different than <code>-9 &gt;&gt; 2</code> (which yields <code>-3</code>):</p>
 
-<pre class="brush: js">.     -9 (base 10): 11111111111111111111111111110111 (base 2)
+<pre class="brush: js notranslate">.     -9 (base 10): 11111111111111111111111111110111 (base 2)
                     --------------------------------
 -9 &gt;&gt;&gt; 2 (base 10): 00111111111111111111111111111101 (base 2) = 1073741821 (base 10)
 </pre>
@@ -371,7 +371,7 @@ After:              10100000000000000110000000000001</pre>
 
 <p>Suppose a variable <code>flags</code> has the binary value <code>0101</code>:</p>
 
-<pre class="brush: js">let flags = 5;   // binary 0101
+<pre class="brush: js notranslate">let flags = 5;   // binary 0101
 </pre>
 
 <p>This value indicates:</p>
@@ -389,7 +389,7 @@ After:              10100000000000000110000000000001</pre>
 
 <p>A <em>bitmask</em> is a sequence of bits that can manipulate and/or read flags. Typically, a "primitive" bitmask for each flag is defined:</p>
 
-<pre class="brush: js">let FLAG_A = 1; // 0001
+<pre class="brush: js notranslate">let FLAG_A = 1; // 0001
 let FLAG_B = 2; // 0010
 let FLAG_C = 4; // 0100
 let FLAG_D = 8; // 1000
@@ -397,12 +397,12 @@ let FLAG_D = 8; // 1000
 
 <p>New bitmasks can be created by using the bitwise logical operators on these primitive bitmasks. For example, the bitmask <code>1011</code> can be created by ORing <code>FLAG_A</code>, <code>FLAG_B</code>, and <code>FLAG_D</code>:</p>
 
-<pre class="brush: js">let mask = FLAG_A | FLAG_B | FLAG_D; // 0001 | 0010 | 1000 =&gt; 1011
+<pre class="brush: js notranslate">let mask = FLAG_A | FLAG_B | FLAG_D; // 0001 | 0010 | 1000 =&gt; 1011
 </pre>
 
 <p>Individual flag values can be extracted by ANDing them with a bitmask, where each bit with the value of one will "extract" the corresponding flag. The bitmask <em>masks</em> out the non-relevant flags by ANDing with zeroes (hence the term "bitmask"). For example, the bitmask <code>0100</code> can be used to see if <code>FLAG_C</code> is set:</p>
 
-<pre class="brush: js">// if we own a cat
+<pre class="brush: js notranslate">// if we own a cat
 if (flags &amp; FLAG_C) { // 0101 &amp; 0100 =&gt; 0100 =&gt; true
    // do stuff
 }
@@ -410,14 +410,14 @@ if (flags &amp; FLAG_C) { // 0101 &amp; 0100 =&gt; 0100 =&gt; true
 
 <p>A bitmask with multiple set flags acts like an "either/or". For example, the following two are equivalent:</p>
 
-<pre class="brush: js">// if we own a bat or we own a cat
+<pre class="brush: js notranslate">// if we own a bat or we own a cat
 // (0101 &amp; 0010) || (0101 &amp; 0100) =&gt; 0000 || 0100 =&gt; true
 if ((flags &amp; FLAG_B) || (flags &amp; FLAG_C)) {
    // do stuff
 }
 </pre>
 
-<pre class="brush: js">// if we own a bat or cat
+<pre class="brush: js notranslate">// if we own a bat or cat
 let mask = FLAG_B | FLAG_C; // 0010 | 0100 =&gt; 0110
 if (flags &amp; mask) {         // 0101 &amp; 0110 =&gt; 0100 =&gt; true
    // do stuff
@@ -426,28 +426,28 @@ if (flags &amp; mask) {         // 0101 &amp; 0110 =&gt; 0100 =&gt; true
 
 <p>Flags can be set by ORing them with a bitmask, where each bit with the value one will set the corresponding flag, if that flag isn't already set. For example, the bitmask <code>1100</code> can be used to set <code>FLAG_C</code> and <code>FLAG_D</code>:</p>
 
-<pre class="brush: js">// yes, we own a cat and a duck
+<pre class="brush: js notranslate">// yes, we own a cat and a duck
 let mask = FLAG_C | FLAG_D; // 0100 | 1000 =&gt; 1100
 flags |= mask;              // 0101 | 1100 =&gt; 1101
 </pre>
 
 <p>Flags can be cleared by ANDing them with a bitmask, where each bit with the value zero will clear the corresponding flag, if it isn't already cleared. This bitmask can be created by NOTing primitive bitmasks. For example, the bitmask <code>1010</code> can be used to clear <code>FLAG_A</code> and <code>FLAG_C</code>:</p>
 
-<pre class="brush: js">// no, we don't have an ant problem or own a cat
+<pre class="brush: js notranslate">// no, we don't have an ant problem or own a cat
 let mask = ~(FLAG_A | FLAG_C); // ~0101 =&gt; 1010
 flags &amp;= mask;                 // 1101 &amp; 1010 =&gt; 1000
 </pre>
 
 <p>The mask could also have been created with <code>~FLAG_A &amp; ~FLAG_C</code> (De Morgan's law):</p>
 
-<pre class="brush: js">// no, we don't have an ant problem, and we don't own a cat
+<pre class="brush: js notranslate">// no, we don't have an ant problem, and we don't own a cat
 let mask = ~FLAG_A &amp; ~FLAG_C;
 flags &amp;= mask;                 // 1101 &amp; 1010 =&gt; 1000
 </pre>
 
 <p>Flags can be toggled by XORing them with a bitmask, where each bit with the value one will toggle the corresponding flag. For example, the bitmask <code>0110</code> can be used to toggle <code>FLAG_B</code> and <code>FLAG_C</code>:</p>
 
-<pre class="brush: js">// if we didn't have a bat, we have one now,
+<pre class="brush: js notranslate">// if we didn't have a bat, we have one now,
 // and if we did have one, bye-bye bat
 // same thing for cats
 let mask = FLAG_B | FLAG_C;
@@ -456,7 +456,7 @@ flags = flags ^ mask;          // 1100 ^ 0110 =&gt; 1010
 
 <p>Finally, the flags can all be flipped with the NOT operator:</p>
 
-<pre class="brush: js">// entering parallel universe...
+<pre class="brush: js notranslate">// entering parallel universe...
 flags = ~flags;               // ~1010 =&gt; 0101
 </pre>
 
@@ -464,14 +464,14 @@ flags = ~flags;               // ~1010 =&gt; 0101
 
 <p>Convert a binary <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" title="/en-US/docs/JavaScript/Reference/Global_Objects/String">String</a></code> to a decimal <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number" title="/en-US/docs/JavaScript/Reference/Global_Objects/Number">Number</a></code>:</p>
 
-<pre class="brush: js">let sBinString = '1011';
+<pre class="brush: js notranslate">let sBinString = '1011';
 let nMyNumber = parseInt(sBinString, 2);
 alert(nMyNumber); // prints 11, i.e. 1011
 </pre>
 
 <p>Convert a decimal <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number" title="/en-US/docs/JavaScript/Reference/Global_Objects/Number">Number</a></code> to a binary <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" title="/en-US/docs/JavaScript/Reference/Global_Objects/String">String</a></code>:</p>
 
-<pre class="brush: js">let nMyNumber = 11;
+<pre class="brush: js notranslate">let nMyNumber = 11;
 let sBinString = nMyNumber.toString(2);
 alert(sBinString); // prints 1011, i.e. 11
 </pre>
@@ -480,7 +480,7 @@ alert(sBinString); // prints 1011, i.e. 11
 
 <p>You can create multiple masks from a set of <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" title="/en-US/docs/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code> values, like this:</p>
 
-<pre class="brush: js">function createMask() {
+<pre class="brush: js notranslate">function createMask() {
   let nMask = 0, nFlag = 0, nLen = arguments.length &gt; 32 ? 32 : arguments.length;
   for (nFlag; nFlag &lt; nLen; nMask |= arguments[nFlag] &lt;&lt; nFlag++);
   return nMask;
@@ -497,12 +497,13 @@ alert(mask1);                                    // prints 11, i.e.: 1011
 
 <p>If you want to create an <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" title="/en-US/docs/JavaScript/Reference/Global_Objects/Array">Array</a></code> of <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" title="/en-US/docs/JavaScript/Reference/Global_Objects/Boolean">Booleans</a></code> from a mask you can use this code:</p>
 
-<pre class="brush: js">function arrayFromMask(nMask) {
+<pre class="brush: js notranslate">function arrayFromMask(nMask) {
   // nMask must be between -2147483648 and 2147483647
   if (nMask &gt; 0x7fffffff || nMask &lt; -0x80000000) {
     throw new TypeError('arrayFromMask - out of range');
   }
-  for (let nShifted = nMask, aFromMask = []; nShifted;
+  let aFromMask = [];
+  for (let nShifted = nMask; nShifted;
        aFromMask.push(Boolean(nShifted &amp; 1)), nShifted &gt;&gt;&gt;= 1);
   return aFromMask;
 }
@@ -517,7 +518,7 @@ alert('[' + array1.join(', ') + ']');
 
 <p>You can test both algorithms at the same time…</p>
 
-<pre class="brush: js">let nTest = 19; // our custom mask
+<pre class="brush: js notranslate">let nTest = 19; // our custom mask
 let nResult = createMask.apply(this, arrayFromMask(nTest));
 
 alert(nResult); // 19
@@ -525,9 +526,10 @@ alert(nResult); // 19
 
 <p>For the didactic purpose only (since there is the <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString" title="/en-US/docs/JavaScript/Reference/Global_Objects/Number/toString">Number.toString(2)</a></code> method), we show how it is possible to modify the <code>arrayFromMask</code> algorithm in order to create a <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" title="/en-US/docs/JavaScript/Reference/Global_Objects/String">String</a></code> containing the binary representation of a <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number" title="/en-US/docs/JavaScript/Reference/Global_Objects/Number">Number</a></code>, rather than an <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" title="/en-US/docs/JavaScript/Reference/Global_Objects/Array">Array</a></code> of <code><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" title="/en-US/docs/JavaScript/Reference/Global_Objects/Boolean">Booleans</a></code>:</p>
 
-<pre class="brush: js">function createBinaryString(nMask) {
+<pre class="brush: js notranslate">function createBinaryString(nMask) {
   // nMask must be between -2147483648 and 2147483647
-  for (let nFlag = 0, nShifted = nMask, sMask = ''; nFlag &lt; 32;
+  let sMask = '';
+  for (let nFlag = 0, nShifted = nMask; nFlag &lt; 32;
        nFlag++, sMask += String(nShifted &gt;&gt;&gt; 31), nShifted &lt;&lt;= 1);
   return sMask;
 }

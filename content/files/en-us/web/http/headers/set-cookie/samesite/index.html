@@ -48,11 +48,11 @@ tags:
 
 <p>The warning appears because any cookie that requests <code>SameSite=None</code> but is not marked <code>Secure</code> will be rejected.</p>
 
-<pre class="example-bad">Set-Cookie: flavor=choco; SameSite=None</pre>
+<pre class="example-bad notranslate">Set-Cookie: flavor=choco; SameSite=None</pre>
 
 <p>To fix this, you will have to add the <code>Secure</code> attribute to your <code>SameSite=None</code> cookies.</p>
 
-<pre class="example-good">Set-Cookie: flavor=choco; SameSite=None; <strong>Secure</strong></pre>
+<pre class="example-good notranslate">Set-Cookie: flavor=choco; SameSite=None; <strong>Secure</strong></pre>
 
 <p>A <a href="#Secure"><code>Secure</code></a> cookie is only sent to the server with an encrypted request over the HTTPS protocol. Note that insecure sites (<code>http:</code>) can't set cookies with the <code>Secure</code> directive.</p>
 
@@ -67,11 +67,24 @@ tags:
 
 <p>The warning appears because the <code>SameSite</code> policy for a cookie has not specified explicitly:</p>
 
-<pre class="example-bad">Set-Cookie: flavor=choco</pre>
+<pre class="example-bad notranslate">Set-Cookie: flavor=choco</pre>
 
 <p>While you could rely on modern browsers to apply <code>SameSite=Lax</code> automatically, you should rather specify it explicitly to clearly communicate your intent which <code>SameSite</code> policy applies to your cookie. This will also improve the experience across browsers as not all of them default to <code>Lax</code> yet.</p>
 
-<pre class="example-good">Set-Cookie: flavor=choco; <strong>SameSite=Lax</strong></pre>
+<pre class="example-good notranslate">Set-Cookie: flavor=choco; <strong>SameSite=Lax</strong></pre>
+
+<h2 id="Example"><strong>Example:</strong></h2>
+
+<pre class="notranslate">RewriteEngine on
+RewriteBase "/"
+RewriteCond "%{HTTP_HOST}"       "^example\.org$" [NC]
+RewriteRule "^(.*)"              "https://www.example.org/index.html" [R=301,L,QSA]
+RewriteRule "^(.*)\.ht$"         "index.php?nav=$1 [NC,L,QSA,CO=RewriteRule:01:https://www.example.org:30/:SameSite=None:Secure]
+RewriteRule "^(.*)\.htm$"        "index.php?nav=$1 [NC,L,QSA,CO=RewriteRule:02:https://www.example.org:30/:SameSite=None:Secure]
+RewriteRule "^(.*)\.html$"       "index.php?nav=$1 [NC,L,QSA,CO=RewriteRule:03:https://www.example.org:30/:SameSite=None:Secure]
+[...]
+RewriteRule "^admin/(.*)\.html$" "admin/index.php?nav=$1 [NC,L,QSA,CO=RewriteRule:09:https://www.example.org:30/:SameSite=Strict:Secure]
+</pre>
 
 <h2 id="Specifications">Specifications</h2>
 

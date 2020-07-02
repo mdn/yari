@@ -83,7 +83,7 @@ tags:
    <td>Indicates whether controls in this form can by default have their values automatically completed by the browser.</td>
   </tr>
   <tr>
-   <td><code><a href="/en-US/docs/Web/HTML/Attributes/autofocus">autofocus</a></code></td>
+   <td id="attr-autofocus"><code><a href="/en-US/docs/Web/HTML/Attributes/autofocus">autofocus</a></code></td>
    <td>{{ HTMLElement("button") }}, {{ HTMLElement("input") }}, {{ HTMLElement("keygen") }}, {{ HTMLElement("select") }}, {{ HTMLElement("textarea") }}</td>
    <td>The element should be automatically focused after the page loaded.</td>
   </tr>
@@ -298,7 +298,7 @@ tags:
    <td>Describes elements which belongs to this one.</td>
   </tr>
   <tr>
-   <td><code><a href="/en-US/docs/Web/HTML/Attributes/form">form</a></code></td>
+   <td id="attr-form"><code><a href="/en-US/docs/Web/HTML/Attributes/form">form</a></code></td>
    <td>{{ HTMLElement("button") }}, {{ HTMLElement("fieldset") }}, {{ HTMLElement("input") }}, {{ HTMLElement("keygen") }}, {{ HTMLElement("label") }}, {{ HTMLElement("meter") }}, {{ HTMLElement("object") }}, {{ HTMLElement("output") }}, {{ HTMLElement("progress") }}, {{ HTMLElement("select") }}, {{ HTMLElement("textarea") }}</td>
    <td>Indicates the form that is the owner of the element.</td>
   </tr>
@@ -753,7 +753,7 @@ tags:
 
 <p>HTML5 defines restrictions on the allowed values of boolean attributes: If the attribute is present, its value must either be the empty string (equivalently, the attribute may have an unassigned value), or a value that is an ASCII case-insensitive match for the attribute’s canonical name, with no leading or trailing whitespace. The following examples are valid ways to mark up a boolean attribute:</p>
 
-<pre>&lt;div itemscope&gt; This is valid HTML but invalid XML. &lt;/div&gt;
+<pre class="notranslate">&lt;div itemscope&gt; This is valid HTML but invalid XML. &lt;/div&gt;
 &lt;div itemscope=itemscope&gt; This is also valid HTML but invalid XML. &lt;/div&gt;
 &lt;div itemscope=""&gt; This is valid HTML and also valid XML. &lt;/div&gt;
 &lt;div itemscope="itemscope"&gt; This is also valid HTML and XML, but perhaps a bit verbose. &lt;/div&gt;</pre>

@@ -9,6 +9,7 @@ tags:
   - CSS Fonts
   - CSS Property
   - Reference
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -20,7 +21,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="brush:css no-line-numbers">/* Use the default settings */
+<pre class="brush:css no-line-numbers notranslate">/* Use the default settings */
 font-feature-settings: normal;
 
 /* Set values for OpenType feature tags */
@@ -44,17 +45,17 @@ These lead to more effective, predictable, understandable results than <code>fon
  <dt><code>normal</code></dt>
  <dd>Text is laid out using default settings.</dd>
  <dt><code>&lt;feature-tag-value&gt;</code></dt>
- <dd>When rendering text, the list of OpenType feature tag value is passed to the text layout engine to enable or disable font features. The tag is always a {{cssxref("&lt;string&gt;")}} of 4 ASCII characters. If it has more or less characters or contains characters outside the U+20 - U+7E codepoint range, the whole property is invalid.<br>
+ <dd>When rendering text, the list of OpenType feature tag value is passed to the text layout engine to enable or disable font features. The tag is always a {{cssxref("&lt;string&gt;")}} of 4 ASCII characters. If it has more or less characters, or if it contains characters outside the <code>U+20</code> – <code>U+7E</code> codepoint range, the whole property is invalid.<br>
  The value is a positive integer. The two keywords <code>on</code> and <code>off</code> are synonyms for <code>1</code> and <code>0</code> respectively. If no value is set, the default is <code>1</code>. For non-Boolean OpenType features (e.g. <a href="http://www.microsoft.com/typography/otspec/features_pt.htm#salt" title="http://www.microsoft.com/typography/otspec/features_pt.htm#salt">stylistic alternates</a>), the value implies a particular glyph to be selected; for Boolean values, it is a switch.</dd>
 </dl>
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Examples">Examples</h2>
 
-<pre class="brush:css">/* use small-cap alternate glyphs */
+<pre class="brush:css notranslate">/* use small-cap alternate glyphs */
 .smallcaps { font-feature-settings: "smcp" on; }
 
 /* convert both upper and lowercase to small caps (affects punctuation also) */
@@ -126,5 +127,6 @@ td.tabular { font-feature-settings: "tnum"; }
  <li>{{cssxref("@font-face/src", "src")}}</li>
  <li>{{cssxref("@font-face/unicode-range", "unicode-range")}}</li>
  <li><a href="http://www.microsoft.com/typography/otspec/featurelist.htm">OpenType Feature Tags</a> list</li>
- <li><a href="http://blogs.msdn.com/b/ie/archive/2012/01/09/css-corner-using-the-whole-font.aspx">Using the whole font</a> (The -moz syntax is the old one. On Gecko, use the -ms syntax but with -moz).</li>
+ <li><a href="http://blogs.msdn.com/b/ie/archive/2012/01/09/css-corner-using-the-whole-font.aspx">Using the whole font</a><br>
+  <em>(<strong>Note:</strong> The <code>-moz</code> syntax is the old one. On Gecko, use the <code>-ms</code> syntax but with <code>-moz</code>.)</em></li>
 </ul>

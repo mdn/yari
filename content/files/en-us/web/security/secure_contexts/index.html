@@ -2,17 +2,15 @@
 title: Secure contexts
 slug: Web/Security/Secure_Contexts
 summary: >-
-  A secure context is a Window or Worker for which there is reasonable
-  confidence that the content has been delivered securely (via HTTPS/TLS), and
-  for which the potential for communication with contexts that are not secure is
-  limited.
+  A secure context is a Window or Worker for which certain minimum standards of
+  authentication and confidentiality are met.
 tags:
   - Secure contexts
   - Security
 ---
-<p><span class="seoSummary">A <strong>secure context</strong> is a <code>Window</code> or <code>Worker</code> for which there is reasonable confidence that the content has been delivered securely (via HTTPS/TLS), and for which the potential for communication with contexts that are <strong>not</strong> secure is limited. </span>Many Web APIs and features are accessible only in a secure context. The primary goal of secure contexts is to prevent {{interwiki("wikipedia", "man-in-the-middle attack", "man-in-the-middle attackers")}} from accessing powerful APIs that could further compromise the victim of an attack.</p>
+<p><span class="seoSummary">A <strong>secure context</strong> is a <code>Window</code> or <code>Worker</code> for which certain minimum standards of authentication and confidentiality are met.</span> Many Web APIs and features are accessible only in a secure context. The primary goal of secure contexts is to prevent {{interwiki("wikipedia", "man-in-the-middle attack", "MITM attackers")}} from accessing powerful APIs that could further compromise the victim of an attack.</p>
 
-<h2 id="Why_should_some_features_be_restricted">Why should some features be restricted? </h2>
+<h2 id="Why_should_some_features_be_restricted">Why should some features be restricted?</h2>
 
 <p>Some APIs on the web are very powerful, giving an attacker the ability to do the following and more:</p>
 
@@ -24,13 +22,20 @@ tags:
 
 <h2 id="When_is_a_context_considered_secure">When is a context considered secure?</h2>
 
-<p>A context will be considered secure when it's delivered securely (or locally), and when it cannot be used to provide access to secure APIs to a context that is not secure. In practice, this means that for a page to have a secure context, it and all the pages along its parent and opener chain must have been delivered securely.</p>
+<p>A context is considered secure when it meets certain minimum standards of authentication and confidentiality defined in the <a href="https://w3c.github.io/webappsec-secure-contexts/">Secure Contexts</a> specification. A particular document is considered to be in a secure context when it is the <a href="https://html.spec.whatwg.org/multipage/browsers.html#active-document">active document</a> of a <a href="https://html.spec.whatwg.org/multipage/browsers.html#top-level-browsing-context">top-level browsing context</a> (basically, a containing window or tab) that is a secure context.</p>
 
-<p>For example, a page delivered securely over TLS is <strong>not</strong> considered a secure context if it has a parent or ancestor document that was not delivered securely; otherwise, the page would then be able to expose sensitive APIs to the non-securely delivered ancestor via <a href="/en-US/docs/Web/API/Window/postMessage">postMessage</a> messages. Similarly, if a TLS-delivered document is opened in a new window by an insecure context without <a href="/en-US/docs/Web/API/Window/open#noopener">noopener</a> being specified, then the opened window is <strong>not</strong> considered to be a secure context (since the opener and the opened window could communicate via postMessage).</p>
+<p>For example, even for a document delivered over TLS within an {{HTMLElement("iframe")}}, its context is <strong>not</strong> considered secure if it has an ancestor that was not also delivered over TLS.</p>
 
-<p>Locally delivered files such as <em>http://localhost</em> and <em>file://</em> paths are considered to have been delivered securely.</p>
+<p>However, it’s important to note that if a non-secure context causes a new window to be created (with or without specifying <a href="/en-US/docs/Web/API/Window/open#noopener">noopener</a>), then the fact that the opener was insecure has no effect on whether the new window is considered secure. That’s because the determination of whether or not a particular document is in a secure context is based only on considering it within the top-level browsing context with which it is associated — and not whether a non-secure context happened to be used to create it.</p>
 
-<p>Contexts that are not local must be served over <em>https://</em> or <em>wss://</em> and where the protocols used should not be considered deprecated. </p>
+<p>Locally-delivered resources such as those with <em>http://127.0.0.1</em> URLs, <em>http://localhost</em> URLs (under certain conditions), and <em>file://</em> URLs are also considered to have been delivered securely.</p>
+
+<p>Resources that are not local, to be considered secure, must meet the following criteria:</p>
+
+<ul>
+ <li>must be served over <em>https://</em> or <em>wss://</em> URLs</li>
+ <li>the security properties of the network channel used to deliver the resource must not be considered deprecated</li>
+</ul>
 
 <h2 id="Feature_detection">Feature detection</h2>
 

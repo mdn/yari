@@ -12,6 +12,7 @@ tags:
   - Performance
   - Reference
   - Transitions
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -21,7 +22,7 @@ tags:
 <p><strong>Important:</strong> <code>will-change</code> is intended to be used as a last resort, in order to try to deal with existing performance problems. It should not be used to anticipate performance problems.</p>
 </div>
 
-<pre class="brush:css no-line-numbers">/* Keyword values */
+<pre class="brush:css no-line-numbers notranslate">/* Keyword values */
 will-change: auto;
 will-change: scroll-position;
 will-change: contents;
@@ -79,18 +80,18 @@ will-change: unset;
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Examples">Examples</h2>
 
-<pre class="brush: css">.sidebar {
+<pre class="brush: css notranslate">.sidebar {
   will-change: transform;
 }
 </pre>
 
 <p>The above example adds the <code>will-change</code> property directly to the stylesheet, which will cause the browser to keep the optimization in memory for much longer than it is needed and we've already seen why that should be avoided. Below is another example showing how to apply the <code>will-change</code> property through scripting, which is probably what you should be doing in most cases.</p>
 
-<pre class="brush: js">var el = document.getElementById('element');
+<pre class="brush: js notranslate">var el = document.getElementById('element');
 
 // Set will-change when the element is hovered
 el.addEventListener('mouseenter', hintBrowser);
@@ -108,7 +109,7 @@ function removeHint() {
 
 <p>It may however be appropriate to include <code>will-change</code> in your style sheet for an application that does page flips on key presses like an album or a slide deck presentation where the pages are large and complex. This will let browser prepare the transition ahead of time and allow for snappy transitions between the pages as soon as the key is pressed.</p>
 
-<pre class="brush: css">.slide {
+<pre class="brush: css notranslate">.slide {
   will-change: transform;
 }</pre>
 

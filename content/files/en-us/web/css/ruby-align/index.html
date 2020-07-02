@@ -9,12 +9,13 @@ tags:
   - CSS Property
   - CSS Ruby
   - Reference
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}{{SeeCompatTable}}</div>
 
 <p>The <code><strong>ruby-align</strong></code> CSS property defines the distribution of the different ruby elements over the base.</p>
 
-<pre class="brush:css no-line-numbers">/* Keyword values */
+<pre class="brush:css no-line-numbers notranslate">/* Keyword values */
 ruby-align: start;
 ruby-align: center;
 ruby-align: space-between;
@@ -45,13 +46,13 @@ ruby-align: unset;
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Examples">Examples</h2>
 
 <p>This HTML will render differently with each value of <code>ruby-align</code>:</p>
 
-<pre class="brush: html">&lt;ruby&gt;
+<pre class="brush: html notranslate">&lt;ruby&gt;
   &lt;rb&gt;This is a long text to check&lt;/rb&gt;
   &lt;rp&gt;（&lt;/rp&gt;&lt;rt&gt;short ruby&lt;/rt&gt;&lt;rp&gt;）&lt;/rp&gt;
 &lt;/ruby&gt;
@@ -59,13 +60,13 @@ ruby-align: unset;
 
 <h3 id="Ruby_aligned_at_the_start_of_the_base_text">Ruby aligned at the start of the base text</h3>
 
-<pre class="brush: html" style="display: none;">&lt;ruby&gt;
+<pre class="brush: html notranslate" style="display: none;">&lt;ruby&gt;
   &lt;rb&gt;This is a long text to check&lt;/rb&gt;
   &lt;rp&gt;（&lt;/rp&gt;&lt;rt&gt;short ruby&lt;/rt&gt;&lt;rp&gt;）&lt;/rp&gt;
 &lt;/ruby&gt;
 </pre>
 
-<pre class="brush: css">ruby {
+<pre class="brush: css notranslate">ruby {
   ruby-align: start;
 }</pre>
 
@@ -75,13 +76,13 @@ ruby-align: unset;
 
 <h3 id="Ruby_aligned_at_the_center_of_the_base_text">Ruby aligned at the center of the base text</h3>
 
-<pre class="brush: html" style="display: none;">&lt;ruby&gt;
+<pre class="brush: html notranslate" style="display: none;">&lt;ruby&gt;
   &lt;rb&gt;This is a long text to check&lt;/rb&gt;
   &lt;rp&gt;（&lt;/rp&gt;&lt;rt&gt;short ruby&lt;/rt&gt;&lt;rp&gt;）&lt;/rp&gt;
 &lt;/ruby&gt;
 </pre>
 
-<pre class="brush: css">ruby {
+<pre class="brush: css notranslate">ruby {
   ruby-align: center;
 }</pre>
 
@@ -91,13 +92,13 @@ ruby-align: unset;
 
 <h3 id="Extra_space_distributed_between_ruby_elements">Extra space distributed between ruby elements</h3>
 
-<pre class="brush: html" style="display: none;">&lt;ruby&gt;
+<pre class="brush: html notranslate" style="display: none;">&lt;ruby&gt;
   &lt;rb&gt;This is a long text to check&lt;/rb&gt;
   &lt;rp&gt;（&lt;/rp&gt;&lt;rt&gt;short ruby&lt;/rt&gt;&lt;rp&gt;）&lt;/rp&gt;
 &lt;/ruby&gt;
 </pre>
 
-<pre class="brush: css">ruby {
+<pre class="brush: css notranslate">ruby {
   ruby-align: space-between;
 }</pre>
 
@@ -107,13 +108,13 @@ ruby-align: unset;
 
 <h3 id="Extra_space_distributed_between_and_around_ruby_elements">Extra space distributed between and around ruby elements</h3>
 
-<pre class="brush: html" style="display: none;">&lt;ruby&gt;
+<pre class="brush: html notranslate" style="display: none;">&lt;ruby&gt;
   &lt;rb&gt;This is a long text to check&lt;/rb&gt;
   &lt;rp&gt;（&lt;/rp&gt;&lt;rt&gt;short ruby&lt;/rt&gt;&lt;rp&gt;）&lt;/rp&gt;
 &lt;/ruby&gt;
 </pre>
 
-<pre class="brush: css">ruby {
+<pre class="brush: css notranslate">ruby {
   ruby-align: space-around;
 }</pre>
 

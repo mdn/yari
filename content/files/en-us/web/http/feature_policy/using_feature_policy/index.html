@@ -26,7 +26,7 @@ tags:
 <p>For each policy-controlled feature, the browser maintains a list of origins for which the feature is enabled, known as an allowlist. If you do not specify a policy for a feature, then a default allowlist will be used. The default allowlist is specific to each feature.</p>
 
 <div class="note">
-<p>The <code>Feature-Policy</code> {{experimental_inline}} header is still in an experimental state, and is subject to change at any time. Be wary of this when implementing Feature Policy on your website.</p>
+<p>The <code>Feature-Policy</code> header has now been renamed to <code>Permissions-Policy</code> in the spec, and this article will eventually be updated to reflect that change.</p>
 </div>
 
 <h2 id="Writing_a_policy">Writing a policy</h2>
@@ -70,17 +70,17 @@ tags:
 
 <p>You can send the <code>Feature-Policy</code> HTTP header with the response of a page. The value of this header is a policy to be enforced by the browser for the given page. It has the following structure.</p>
 
-<pre class="brush: bash">Feature-Policy: &lt;feature name&gt; &lt;allowlist of origin(s)&gt;</pre>
+<pre class="brush: bash notranslate">Feature-Policy: &lt;feature name&gt; &lt;allowlist of origin(s)&gt;</pre>
 
 <p>For example, to block all content from using the Geolocation API across your site:</p>
 
-<pre class="brush: bash">Feature-Policy: geolocation 'none'</pre>
+<pre class="brush: bash notranslate">Feature-Policy: geolocation 'none'</pre>
 
 <p>Several features can be controlled at the same time by sending the HTTP header with a semicolon-separated list of policy directives, or by sending a separate header for each policy.</p>
 
 <p>For example, the following are equivalent:</p>
 
-<pre class="brush: bash">Feature-Policy: unsized-media 'none'; geolocation 'self' https://example.com; camera *;
+<pre class="brush: bash notranslate">Feature-Policy: unsized-media 'none'; geolocation 'self' https://example.com; camera *;
 
 Feature-Policy: unsized-media 'none'
 Feature-Policy: geolocation 'self' https://example.com
@@ -93,15 +93,15 @@ Feature-Policy: camera *;
 
 <p>For example, allow all browsing contexts within this iframe to use fullscreen:</p>
 
-<pre class="brush: html">&lt;iframe src="https://example.com..." allow="fullscreen"&gt;&lt;/iframe&gt;</pre>
+<pre class="brush: html notranslate">&lt;iframe src="https://example.com..." allow="fullscreen"&gt;&lt;/iframe&gt;</pre>
 
 <p>This is equivalent to:</p>
 
-<pre class="brush: html">&lt;iframe src="https://example.com..." allow="fullscreen 'src'"&gt;&lt;/iframe&gt;</pre>
+<pre class="brush: html notranslate">&lt;iframe src="https://example.com..." allow="fullscreen 'src'"&gt;&lt;/iframe&gt;</pre>
 
 <p>This example allows <code>&lt;iframe&gt;</code> content on a particular origin to access the user's location:</p>
 
-<pre class="brush: html">&lt;iframe src="https://google-developers.appspot.com/demos/..."
+<pre class="brush: html notranslate">&lt;iframe src="https://google-developers.appspot.com/demos/..."
         allow="geolocation https://google-developers.appspot.com"&gt;&lt;/iframe&gt;
 </pre>
 
@@ -109,7 +109,7 @@ Feature-Policy: camera *;
 
 <p>For example, this blocks the <code>&lt;iframe&gt;</code> from using the camera and microphone:</p>
 
-<pre class="brush: html">&lt;iframe allow="camera 'none'; microphone 'none'"&gt;
+<pre class="brush: html notranslate">&lt;iframe allow="camera 'none'; microphone 'none'"&gt;
 </pre>
 
 <h2 id="Inheritance_of_policy_for_embedded_content">Inheritance of policy for embedded content</h2>
@@ -143,11 +143,11 @@ Feature-Policy: camera *;
 
 <p>Send the following the HTTP header:</p>
 
-<pre class="brush: bash">Feature-Policy: layout-animations 'none'; unoptimized-images 'none'; oversized-images 'none'; sync-script 'none'; sync-xhr 'none'; unsized-media 'none';</pre>
+<pre class="brush: bash notranslate">Feature-Policy: layout-animations 'none'; unoptimized-images 'none'; oversized-images 'none'; sync-script 'none'; sync-xhr 'none'; unsized-media 'none';</pre>
 
 <p>Using the <code>&lt;iframe&gt;</code> <code>allow</code> attribute:</p>
 
-<pre class="brush: html">&lt;iframe src="https://example.com..." allow="layout-animations 'none'; unoptimized-images 'none'; oversized-images 'none'; sync-script 'none'; sync-xhr 'none'; unsized-media 'none';"&gt;&lt;/iframe&gt;</pre>
+<pre class="brush: html notranslate">&lt;iframe src="https://example.com..." allow="layout-animations 'none'; unoptimized-images 'none'; oversized-images 'none'; sync-script 'none'; sync-xhr 'none'; unsized-media 'none';"&gt;&lt;/iframe&gt;</pre>
 
 <h2 id="See_also">See also</h2>
 

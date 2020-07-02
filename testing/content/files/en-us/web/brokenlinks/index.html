@@ -1,0 +1,22 @@
+---
+title: 'A page peppered with broken links'
+slug: Web/BrokenLinks
+summary: Some fixable (redirects, case, prefix) and some not fixable
+---
+
+<p><a href="/en-US/docs/Web/Foo">Nothing wrong with this one</a></p>
+
+<p><a href="/en-US/docs/Web/CSS/dumber" title="First title">Will redirect</a></p>
+
+<p><a href='/en-US/docs/Web/CSS/dumber' title="Second title">Also, make it appear as text too</a></p>
+
+<p><code>/en-US/docs/Web/CSS/dumber</code></p>
+
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Blob">Too verbose!</a></p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Blob#Anchor">Also, too verbose but with anchor</a></p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Blob?a=b">Also, too verbose but with query string</a></p>
+
+<p><a href="/en-us/DOCS/Web/api/BLOB">Wrong case</a></p>
+<p><a href='/en-US/docs/Hopeless/Case'>Will not have a suggestion</></p>
+
+<p><a href="//www.peterbe.com">Leave me alone! I'm actually external</a></p>

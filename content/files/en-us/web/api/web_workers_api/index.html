@@ -25,10 +25,10 @@ tags:
 <p>In addition to dedicated workers, there are other types of worker:</p>
 
 <ul>
-	<li>Shared workers are workers that can be utilized by multiple scripts running in different windows, IFrames, etc., as long as they are in the same domain as the worker. They are a little more complex than dedicated workers — scripts must communicate via an active port. See {{DOMxRef("SharedWorker")}} for more details.</li>
-	<li><a href="/en-US/docs/Web/API/ServiceWorker_API">ServiceWorkers</a> essentially act as proxy servers that sit between web applications, the browser, and the network (when available). They are intended, among other things, to enable the creation of effective offline experiences, intercept network requests and take appropriate action based on whether the network is available, and update assets residing on the server. They will also allow access to push notifications and background sync APIs.</li>
-	<li>Chrome Workers are a Firefox-only type of worker that you can use if you are developing add-ons and want to use workers in extensions and have access to <a href="https://developer.mozilla.org/en/js-ctypes">js-ctypes</a> in your worker. See {{DOMxRef("ChromeWorker")}} for more details. </li>
-	<li><a href="/en-US/docs/Web/API/Web_Audio_API#Audio_Workers">Audio Workers</a> provide the ability for direct scripted audio processing to be done inside a web worker context.</li>
+ <li>Shared workers are workers that can be utilized by multiple scripts running in different windows, IFrames, etc., as long as they are in the same domain as the worker. They are a little more complex than dedicated workers — scripts must communicate via an active port. See {{DOMxRef("SharedWorker")}} for more details.</li>
+ <li><a href="/en-US/docs/Web/API/ServiceWorker_API">ServiceWorkers</a> essentially act as proxy servers that sit between web applications, the browser, and the network (when available). They are intended, among other things, to enable the creation of effective offline experiences, intercept network requests and take appropriate action based on whether the network is available, and update assets residing on the server. They will also allow access to push notifications and background sync APIs.</li>
+ <li>Chrome Workers are a Firefox-only type of worker that you can use if you are developing add-ons and want to use workers in extensions and have access to <a href="https://developer.mozilla.org/en/js-ctypes">js-ctypes</a> in your worker. See {{DOMxRef("ChromeWorker")}} for more details. </li>
+ <li><a href="/en-US/docs/Web/API/Web_Audio_API#Audio_Workers">Audio Workers</a> provide the ability for direct scripted audio processing to be done inside a web worker context.</li>
 </ul>
 
 <div class="note">
@@ -38,22 +38,22 @@ tags:
 <h2 id="Web_Worker_interfaces">Web Worker interfaces</h2>
 
 <dl>
-	<dt>{{DOMxRef("AbstractWorker")}}</dt>
-	<dd>Abstracts properties and methods common to all kind of workers (i.e. {{DOMxRef("Worker")}} or {{DOMxRef("SharedWorker")}}).</dd>
-	<dt>{{DOMxRef("Worker")}}</dt>
-	<dd>Represents a running worker thread, allowing you to pass messages to the running worker code.</dd>
-	<dt>{{DOMxRef("WorkerLocation")}}</dt>
-	<dd>Defines the absolute location of the script executed by the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Worker" title="The Worker interface of the Web Workers API represents a background task that can be easily created and can send messages back to its creator. Creating a worker is as simple as calling the Worker() constructor and specifying a script to be run in the worker thread."><code>Worker</code></a>.</dd>
-	<dt>{{DOMxRef("SharedWorker")}}</dt>
-	<dd>Represents a specific kind of worker that can be <em>accessed</em> from several {{glossary("browsing context", "browsing contexts")}}, being several windows, iframes or even workers.</dd>
-	<dt>{{DOMxRef("WorkerGlobalScope")}}</dt>
-	<dd>Represents the generic scope of any worker (doing the same job as {{DOMxRef("Window")}} does for normal web content). Different types of worker have scope objects that inherit from this interface and add more specific features.</dd>
-	<dt>{{DOMxRef("DedicatedWorkerGlobalScope")}}</dt>
-	<dd>Represents the scope of a dedicated worker, inheriting from {{DOMxRef("WorkerGlobalScope")}} and adding some dedicated features.</dd>
-	<dt>{{DOMxRef("SharedWorkerGlobalScope")}}</dt>
-	<dd>Represents the scope of a shared worker, inheriting from {{DOMxRef("WorkerGlobalScope")}} and adding some dedicated features.</dd>
-	<dt>{{DOMxRef("WorkerNavigator")}}</dt>
-	<dd>Represents the identity and state of the user agent (the client):</dd>
+ <dt>{{DOMxRef("AbstractWorker")}}</dt>
+ <dd>Abstracts properties and methods common to all kind of workers (i.e. {{DOMxRef("Worker")}} or {{DOMxRef("SharedWorker")}}).</dd>
+ <dt>{{DOMxRef("Worker")}}</dt>
+ <dd>Represents a running worker thread, allowing you to pass messages to the running worker code.</dd>
+ <dt>{{DOMxRef("WorkerLocation")}}</dt>
+ <dd>Defines the absolute location of the script executed by the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Worker" title="The Worker interface of the Web Workers API represents a background task that can be easily created and can send messages back to its creator. Creating a worker is as simple as calling the Worker() constructor and specifying a script to be run in the worker thread."><code>Worker</code></a>.</dd>
+ <dt>{{DOMxRef("SharedWorker")}}</dt>
+ <dd>Represents a specific kind of worker that can be <em>accessed</em> from several {{glossary("browsing context", "browsing contexts")}}, being several windows, iframes or even workers.</dd>
+ <dt>{{DOMxRef("WorkerGlobalScope")}}</dt>
+ <dd>Represents the generic scope of any worker (doing the same job as {{DOMxRef("Window")}} does for normal web content). Different types of worker have scope objects that inherit from this interface and add more specific features.</dd>
+ <dt>{{DOMxRef("DedicatedWorkerGlobalScope")}}</dt>
+ <dd>Represents the scope of a dedicated worker, inheriting from {{DOMxRef("WorkerGlobalScope")}} and adding some dedicated features.</dd>
+ <dt>{{DOMxRef("SharedWorkerGlobalScope")}}</dt>
+ <dd>Represents the scope of a shared worker, inheriting from {{DOMxRef("WorkerGlobalScope")}} and adding some dedicated features.</dd>
+ <dt>{{DOMxRef("WorkerNavigator")}}</dt>
+ <dd>Represents the identity and state of the user agent (the client):</dd>
 </dl>
 
 <h2 id="Examples">Examples</h2>
@@ -61,9 +61,8 @@ tags:
 <p>We have created a couple of simple demos to show basic usage:</p>
 
 <ul>
-	<li><a href="https://github.com/mdn/simple-web-worker">Basic dedicated worker example</a> (<a href="http://mdn.github.io/simple-web-worker/">run dedicated worker</a>).</li>
-	<li><a href="https://github.com/mdn/simple-shared-worker">Basic shared worker example</a> (<a href="http://mdn.github.io/simple-shared-worker/">run shared worker</a>).</li>
-	<li><a href="https://github.com/a0m0rajab/LearningQuest/JS/webWorkers">Basic blocking/non blocking worker example</a> (<a href="https://a0m0rajab.github.io/LearningQuest/JS/webWorkers/simpleBlocking">Run the blocking example</a>).</li>
+ <li><a href="https://github.com/mdn/simple-web-worker">Basic dedicated worker example</a> (<a href="http://mdn.github.io/simple-web-worker/">run dedicated worker</a>).</li>
+ <li><a href="https://github.com/mdn/simple-shared-worker">Basic shared worker example</a> (<a href="http://mdn.github.io/simple-shared-worker/">run shared worker</a>).</li>
 </ul>
 
 <p>You can find out more information on how these demos work in <a href="/en-US/docs/Web/API/Web_Workers_API/Using_web_workers">Using web workers</a>.</p>
@@ -71,28 +70,28 @@ tags:
 <h2 id="Specifications">Specifications</h2>
 
 <table class="standard-table">
-	<tbody>
-		<tr>
-			<th scope="col">Specification</th>
-			<th scope="col">Status</th>
-			<th scope="col">Comment</th>
-		</tr>
-		<tr>
-			<td>{{SpecName("HTML WHATWG", "workers.html#workers", "Web Workers")}}</td>
-			<td>{{Spec2("HTML WHATWG")}}</td>
-			<td>Initial definition.</td>
-		</tr>
-	</tbody>
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+  <tr>
+   <td>{{SpecName("HTML WHATWG", "workers.html#workers", "Web Workers")}}</td>
+   <td>{{Spec2("HTML WHATWG")}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
 </table>
 
 <h2 id="See_also">See also</h2>
 
 <ul>
-	<li><a href="/en-US/docs/Web/API/Web_Workers_API/basic_usage">Using Web Workers</a></li>
-	<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Worker">Worker Interface</a></li>
-	<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker">SharedWorker interface</a></li>
-	<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorker_API">ServiceWorker API</a></li>
-	<li><a href="/en-US/docs/Web/API/Worker/Functions_and_classes_available_to_workers">Functions and classes available to workers</a></li>
-	<li><a href="/en-US/docs/Web/API/Web_Workers_API/Advanced_concepts_and_examples">Advanced concepts and examples</a></li>
-	<li><a href="/en-US/docs/Web/API/ChromeWorker">ChromeWorker</a>: for using workers in privileged/chrome code</li>
+ <li><a href="/en-US/docs/Web/API/Web_Workers_API/basic_usage">Using Web Workers</a></li>
+ <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Worker">Worker Interface</a></li>
+ <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker">SharedWorker interface</a></li>
+ <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorker_API">ServiceWorker API</a></li>
+ <li><a href="/en-US/docs/Web/API/Worker/Functions_and_classes_available_to_workers">Functions and classes available to workers</a></li>
+ <li><a href="/en-US/docs/Web/API/Web_Workers_API/Advanced_concepts_and_examples">Advanced concepts and examples</a></li>
+ <li><a href="/en-US/docs/Web/API/ChromeWorker">ChromeWorker</a>: for using workers in privileged/chrome code</li>
 </ul>

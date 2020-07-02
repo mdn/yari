@@ -10,15 +10,30 @@ h1.page-title {
   padding: 10px;
 }
 
+.main {
+  display: grid;
+  grid-template:
+    "nav nav" auto
+    "sidebar content" auto / 300px auto;
+
+  nav {
+    grid-area: nav;
+  }
+
+  .sidebar {
+    grid-area: sidebar;
+  }
+
+  .content {
+    grid-area: content;
+  }
+}
+
 div.sidebar {
-  float: left;
-  max-height: 100vh;
-  max-width: 300px;
   position: sticky;
-  top: 0;
   margin-bottom: 20px;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   font-size: 16px;
   font-size: 0.88889rem;
 
@@ -115,7 +130,7 @@ div.sidebar {
 }
 
 div.content {
-  margin-left: 22.75%;
+  padding-left: 10px;
 
   .hidden,
   .is-hidden {

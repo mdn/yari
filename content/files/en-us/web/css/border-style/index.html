@@ -9,6 +9,7 @@ tags:
   - CSS Borders
   - CSS Property
   - Reference
+  - 'recipe:css-shorthand-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -20,7 +21,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="brush: css no-line-numbers">/* Keyword values */
+<pre class="brush: css no-line-numbers notranslate">/* Keyword values */
 border-style: none;
 border-style: hidden;
 border-style: dotted;
@@ -68,70 +69,70 @@ border-style: unset;
    <tr>
     <td style="vertical-align: middle;"><code>none</code></td>
     <td style="vertical-align: middle;">
-     <div style="margin: 0.5em; width: 3em; height: 3em; border-style: none; background-color: palegreen;"> </div>
+     <div style="margin: 0.5em; width: 3em; height: 3em; border-style: none; background-color: palegreen;"></div>
     </td>
     <td style="vertical-align: middle;">Like the <code>hidden</code> keyword, displays no border. Unless a {{cssxref("background-image")}} is set, the computed value of the same side's {{cssxref("border-width")}} will be <code>0</code>, even if the specified value is something else. In the case of table cell and border collapsing, the <code>none</code> value has the <em>lowest</em> priority: if any other conflicting border is set, it will be displayed.</td>
    </tr>
    <tr>
     <td style="vertical-align: middle;"><code>hidden</code></td>
     <td style="vertical-align: middle;">
-     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: hidden; background-color: palegreen;"> </div>
+     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: hidden; background-color: palegreen;"></div>
     </td>
     <td style="vertical-align: middle;">Like the <code>none</code> keyword, displays no border. Unless a {{cssxref("background-image")}} is set, the computed value of the same side's {{cssxref("border-width")}} will be <code>0</code>, even if the specified value is something else. In the case of table cell and border collapsing, the <code>hidden</code> value has the <em>highest</em> priority: if any other conflicting border is set, it won't be displayed.</td>
    </tr>
    <tr>
     <td style="vertical-align: middle;"><code>dotted</code></td>
     <td style="vertical-align: middle;">
-     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: dotted; background-color: palegreen;"> </div>
+     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: dotted; background-color: palegreen;"></div>
     </td>
     <td style="vertical-align: middle;">Displays a series of rounded dots. The spacing of the dots is not defined by the specification and is implementation-specific. The radius of the dots is half the computed value of the same side's {{cssxref("border-width")}}.</td>
    </tr>
    <tr>
     <td style="vertical-align: middle;"><code>dashed</code></td>
     <td style="vertical-align: middle;">
-     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: dashed; background-color: palegreen;"> </div>
+     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: dashed; background-color: palegreen;"></div>
     </td>
     <td style="vertical-align: middle;">Displays a series of short square-ended dashes or line segments. The exact size and length of the segments are not defined by the specification and are implementation-specific.</td>
    </tr>
    <tr>
     <td style="vertical-align: middle;"><code>solid</code></td>
     <td style="vertical-align: middle;">
-     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: solid; background-color: palegreen;"> </div>
+     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: solid; background-color: palegreen;"></div>
     </td>
     <td style="vertical-align: middle;">Displays a single, straight, solid line.</td>
    </tr>
    <tr>
     <td style="vertical-align: middle;"><code>double</code></td>
     <td style="vertical-align: middle;">
-     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: double; background-color: palegreen;"> </div>
+     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: double; background-color: palegreen;"></div>
     </td>
     <td style="vertical-align: middle;">Displays two straight lines that add up to the pixel size defined by {{cssxref("border-width")}}.</td>
    </tr>
    <tr>
     <td style="vertical-align: middle;"><code>groove</code></td>
     <td style="vertical-align: middle;">
-     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: groove; background-color: palegreen;"> </div>
+     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: groove; background-color: palegreen;"></div>
     </td>
     <td style="vertical-align: middle;">Displays a border with a carved appearance. It is the opposite of <code>ridge</code>.</td>
    </tr>
    <tr>
     <td style="vertical-align: middle;"><code>ridge</code></td>
     <td style="vertical-align: middle;">
-     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: ridge; background-color: palegreen;"> </div>
+     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: ridge; background-color: palegreen;"></div>
     </td>
     <td style="vertical-align: middle;">Displays a border with an extruded appearance. It is the opposite of <code>groove</code>.</td>
    </tr>
    <tr>
     <td style="vertical-align: middle;"><code>inset</code></td>
     <td style="vertical-align: middle;">
-     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: inset; background-color: palegreen;"> </div>
+     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: inset; background-color: palegreen;"></div>
     </td>
     <td style="vertical-align: middle;">Displays a border that makes the element appear embedded. It is the opposite of <code>outset</code>. When applied to a table cell with {{cssxref("border-collapse")}} set to <code>collapsed</code>, this value behaves like <code>groove</code>.</td>
    </tr>
    <tr>
     <td style="vertical-align: middle;"><code>outset</code></td>
     <td style="vertical-align: middle;">
-     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: outset; background-color: palegreen;"> </div>
+     <div style="margin: 0.5em; width: 3em; height: 3em; border-width: 3px; border-style: outset; background-color: palegreen;"></div>
     </td>
     <td style="vertical-align: middle;">
      <p>Displays a border that makes the element appear embossed. It is the opposite of <code>inset</code>. When applied to a table cell with {{cssxref("border-collapse")}} set to <code>collapsed</code>, this value behaves like <code>ridge</code>.</p>
@@ -144,7 +145,7 @@ border-style: unset;
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Examples">Examples</h2>
 
@@ -154,7 +155,7 @@ border-style: unset;
 
 <h4 id="HTML">HTML</h4>
 
-<pre class="brush: html">&lt;table&gt;
+<pre class="brush: html notranslate">&lt;table&gt;
   &lt;tr&gt;
     &lt;td class="b1"&gt;none&lt;/td&gt;
     &lt;td class="b2"&gt;hidden&lt;/td&gt;
@@ -175,7 +176,7 @@ border-style: unset;
 
 <h4 id="CSS">CSS</h4>
 
-<pre class="brush: css">/* Define look of the table */
+<pre class="brush: css notranslate">/* Define look of the table */
 table {
   border-width: 3px;
   background-color: #52E396;
