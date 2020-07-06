@@ -188,7 +188,7 @@ cli
   )
   .option(
     "--fix-flaws",
-    "actually change the source of the document on fixable flaws",
+    "actually modify each document that contains fixable flaws",
     cli.BOOL,
     false
   )

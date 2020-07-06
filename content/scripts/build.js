@@ -1610,7 +1610,7 @@ class Builder {
             .forEach((flaw, i) => {
               if (!rawHtml.includes(flaw.macroSource)) {
                 throw new Error(
-                  `rawHtml doesn't contain macrosSource (${flaw.macroSource})`
+                  `rawHtml doesn't contain macroSource (${flaw.macroSource})`
                 );
               }
               const newMacroSource = flaw.macroSource.replace(
@@ -1623,7 +1623,7 @@ class Builder {
               // it from the array.
               // This means you could run the CLI like this:
               // `build ... --fix-flaws --flaw-levels="macros:error"`
-              // it would only complain about this that couldn't be fixed.
+              // it would only complain about the flaws that couldn't be fixed.
               if (newRawHtml !== rawHtml) {
                 flaws.splice(i, 1);
               }
@@ -1644,8 +1644,8 @@ class Builder {
               Document.saveFile(
                 rawHtmlFilepath,
                 newRawHtml,
-                // Can't use the variable 'metadata' because it mutates, for
-                // good reasons, during the process of the rendering.
+                // Can't use the variable 'metadata' because it contains attributes
+                // in addition to those defined within the document's front matter.
                 // So we refetch it "pure".
                 metadataUntouched
               );
