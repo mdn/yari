@@ -50,7 +50,7 @@ export default function Watcher({ onDocumentUpdate }) {
   }, [documentURL, onDocumentUpdate]);
 
   if (connected === null) {
-    return null;
+    return <div className="document-watcher" />;
   }
 
   return (
