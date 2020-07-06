@@ -146,6 +146,8 @@ async function render(source, templates, pageEnvironment, allPagesInfo) {
   let nonFatalErrors = [];
   // This tracks the token for the "recordNonFatalError()" function.
   let currentToken;
+  // The error ID has to be unique per document only.
+  let lastUsedErrorID = 0;
 
   function recordNonFatalError(kind, message, redirectInfo = null) {
     let NonFatalErrorClass;
@@ -160,7 +162,10 @@ async function render(source, templates, pageEnvironment, allPagesInfo) {
     } else {
       throw Error(`unsupported kind of non-fatal error requested: "${kind}"`);
     }
-    nonFatalErrors.push(new NonFatalErrorClass(...args));
+    const macroError = new NonFatalErrorClass(...args);
+    macroError.id = ++lastUsedErrorID;
+    nonFatalErrors.push(macroError);
+    return macroError.id;
   }
 
   // Create the Environment object that we'll use to render all of
