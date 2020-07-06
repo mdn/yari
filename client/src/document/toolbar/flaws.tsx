@@ -133,6 +133,13 @@ function BrokenLinks({
 
   const filepath = sourceFolder + "/index.html";
 
+  function equalUrls(url1: string, url2: string) {
+    return (
+      new URL(url1, "http://example.com").pathname ===
+      new URL(url2, "http://example.com").pathname
+    );
+  }
+
   function openInEditor(key: string, line: number, column: number) {
     const sp = new URLSearchParams();
     sp.set("filepath", filepath);
@@ -158,10 +165,10 @@ function BrokenLinks({
       if (!link) {
         break;
       }
-      if (
-        anchor.href !== link.href &&
-        new URL(anchor.href).pathname !== link.href
-      ) {
+      // A `anchor.href` is always absolute with `http//localhost/...`.
+      // But `link.href` is not necessarily so, but it might.
+      // The only "hashing" that matters is the pathname.
+      if (!equalUrls(anchor.href, link.href)) {
         continue;
       }
       linkIndex++;
@@ -228,10 +235,7 @@ function BrokenLinks({
                     if (!link) {
                       break;
                     }
-                    if (
-                      anchor.href !== link.href &&
-                      new URL(anchor.href).pathname !== link.href
-                    ) {
+                    if (!equalUrls(anchor.href, link.href)) {
                       continue;
                     }
 
