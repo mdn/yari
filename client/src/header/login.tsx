@@ -22,7 +22,7 @@ export default function Login() {
 
   if (!(userData.isAuthenticated && userData.username)) {
     // Otherwise, show a login prompt
-    return <SignInLink locale={locale} className="signin-link" />;
+    return <SignInLink className="signin-link" />;
   }
 
   // If we have user data and the user is logged in, show their

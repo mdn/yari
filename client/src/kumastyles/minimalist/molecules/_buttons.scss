@@ -76,7 +76,7 @@ button.primary,
     @extend .auth-button;
 
     &::before {
-        background: transparent url('../../../auth/github-auth.svg') 0 0
+        background: transparent url('./github-auth.svg') 0 0
             no-repeat;
     }
 }
@@ -87,7 +87,7 @@ button.primary,
     /* icon use based on the following guidelines:
        https://developers.google.com/identity/branding-guidelines */
     &::before {
-        background: transparent url('../../../auth/google-auth.svg') 0 0
+        background: transparent url('./google-auth.svg') 0 0
             no-repeat;
     }
 }
