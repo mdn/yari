@@ -1596,6 +1596,18 @@ class Builder {
           // Copy of the original raw HTML that we're going to (potentially)
           // repeatedly do string replaces on.
           let newRawHtml = rawHtml;
+
+          // XXX at the moment, due to a bug, if a bad macro call is repeated
+          // you only get 1 flaw object.
+          // See https://github.com/mdn/yari/issues/756#issuecomment-654313496
+          // So if you have:
+          //
+          //  <p>First time:  {{cssref("willredirect")}}</p>
+          //  <p>Second time: {{cssref("willredirect")}}</p>
+          //
+          // ...you actually only get 1 `MacroRedirectedLinkError` flaw
+          // for these two occurences.
+
           flaws
             .filter((flaw) => {
               // Only interested in 'MacroRedirectedLinkError' flaws because
@@ -1608,7 +1620,7 @@ class Builder {
               );
             })
             .forEach((flaw, i) => {
-              if (!rawHtml.includes(flaw.macroSource)) {
+              if (!newRawHtml.includes(flaw.macroSource)) {
                 throw new Error(
                   `rawHtml doesn't contain macroSource (${flaw.macroSource})`
                 );
@@ -1617,16 +1629,12 @@ class Builder {
                 flaw.redirectInfo.current,
                 flaw.redirectInfo.suggested
               );
+              // Remember, string replace will only the first occurence will
+              // be replaced in JavaScript.
               newRawHtml = newRawHtml.replace(flaw.macroSource, newMacroSource);
-
               // If the flaw could be fixed, it's no longer a flaw. So remove
               // it from the array.
-              // This means you could run the CLI like this:
-              // `build ... --fix-flaws --flaw-levels="macros:error"`
-              // it would only complain about the flaws that couldn't be fixed.
-              if (newRawHtml !== rawHtml) {
-                flaws.splice(i, 1);
-              }
+              flaws.splice(i, 1);
             });
 
           if (newRawHtml !== rawHtml) {
