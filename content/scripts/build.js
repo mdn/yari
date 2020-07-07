@@ -1634,6 +1634,9 @@ class Builder {
               newRawHtml = newRawHtml.replace(flaw.macroSource, newMacroSource);
               // If the flaw could be fixed, it's no longer a flaw. So remove
               // it from the array.
+              // We know the `newRawHtml.replace(flaw.macroSource` will always
+              // make a change because of the
+              // `newRawHtml.includes(flaw.macroSource)` line above.
               flaws.splice(i, 1);
             });
 
