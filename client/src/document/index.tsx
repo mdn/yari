@@ -139,38 +139,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
             {translations && !!translations.length && (
               <DocumentTranslations translations={translations} />
             )}
-            {/* <div className="dropdown-container language-menu">
-              <button
-                id="header-language-menu"
-                type="button"
-                className="dropdown-menu-label"
-                aria-haspopup="true"
-                aria-owns="language-menu"
-                aria-label="Current language is English. Choose your preferred language."
-              >
-                English
-                <span className="dropdown-arrow-down" aria-hidden="true">
-                  ▼
-                </span>
-              </button>
-
-              <ul
-                id="language-menu"
-                className="dropdown-menu-items right "
-                aria-expanded="false"
-                role="menu"
-              >
-                <li>
-                  <a
-                    href="http://wiki.localhost.org:8000/en-US/docs/Web/HTML/Element/video$locales"
-                    rel="nofollow"
-                    id="translations-add"
-                  >
-                    Add a translation
-                  </a>
-                </li>
-              </ul>
-            </div> */}
           </div>
         </div>
       </header>

@@ -161,7 +161,7 @@ div.bc-signal-block {
         }
 
         .left-block-header {
-            font-family: x-locale-heading-primary, zillaslab, Palatino, 'Palatino Linotype', x-locale-heading-secondary, serif;
+            font-family: x-locale-heading-primary, "Zilla Slab", Palatino, 'Palatino Linotype', x-locale-heading-secondary, serif;
             margin-top: 20px;
             font-size: 25px;
             font-weight: bold;
@@ -174,7 +174,7 @@ div.bc-signal-block {
         }
 
         .complete-left-block-header {
-            font-family: ZillaSlab;
+            font-family: "Zilla Slab";
             font-size: 37px;
             font-weight: normal;
             color: $blue;
@@ -210,7 +210,7 @@ div.bc-signal-block {
     }
 
     & > .right-block-header {
-        font-family: ZillaSlab;
+        font-family: "Zilla Slab";
         font-size: 37px;
         display: block;
         background-color: transparent;
