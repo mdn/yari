@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { useDocumentURL } from "../hooks";
 
@@ -71,6 +71,8 @@ export function EditActions({ folder }: { folder: string }) {
     }
   }
 
+  const { "*": slug } = useParams();
+
   if (!folder) {
     return null;
   }
@@ -88,6 +90,9 @@ export function EditActions({ folder }: { folder: string }) {
       <button className="delete" onClick={deleteDocument}>
         Delete document
       </button>
+      <Link to={`/en-US/_create?initial_slug=${encodeURIComponent(slug)}`}>
+        Create new document
+      </Link>
       <br />
       {editorOpeningError ? (
         <p className="error-message editor-opening-error">

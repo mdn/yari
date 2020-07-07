@@ -95,11 +95,20 @@ test("content built bar page", () => {
   expect(doc.popularity).toBe(0.51);
   expect(doc.modified).toBeTruthy();
   expect(doc.source).toBeTruthy();
+  expect(doc.flaws.macros.length).toBe(9);
+  // Ensure that each of the "macros" flaws with ID's, has a unique ID.
+  const flawsWithIds = doc.flaws.macros.filter((f) => f.id);
+  expect(flawsWithIds.length).toBe(9);
+  expect(new Set(flawsWithIds.map((f) => f.id)).size).toBe(9);
+
+  const mapID2Flaw = new Map(flawsWithIds.map((f) => [f.id, f]));
 
   const htmlFile = path.join(builtFolder, "index.html");
   expect(fs.existsSync(htmlFile)).toBeTruthy();
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
+  expect($("a[data-flaw-id]").length).toEqual(9);
+
   const brokenLinks = $("a.new");
   expect(brokenLinks.length).toEqual(4);
   brokenLinks.each((index, element) => {
@@ -108,21 +117,43 @@ test("content built bar page", () => {
     } else {
       expect($(element).text()).toBe("bigfoot");
     }
+    const flaw = mapID2Flaw.get($(element).data("flaw-id"));
+    expect(flaw.name).toBe("MacroBrokenLinkError");
+    expect(flaw.macroSource).toMatch(/\"bigfoot\"\)/);
     expect($(element).attr("title")).toMatch(
       /The documentation about this has not yet been written/
     );
   });
+
   const numberLinks = $('a[href="/en-US/docs/Web/CSS/number"]');
   expect(numberLinks.length).toEqual(2);
   numberLinks.each((index, element) => {
     expect($(element).attr("title")).toBe("This is the number test page.");
   });
   expect(numberLinks.eq(0).text()).toBe("<dumber>");
+  const dumberFlawID = numberLinks.eq(0).data("flaw-id");
+  expect(dumberFlawID).toBeTruthy();
+  const dumberFlaw = mapID2Flaw.get(dumberFlawID);
+  expect(dumberFlaw.name).toBe("MacroRedirectedLinkError");
+  expect(dumberFlaw.macroSource).toBe('{{CSSxRef("dumber")}}');
+  expect(dumberFlaw.redirectInfo.current).toBe("dumber");
+  expect(dumberFlaw.redirectInfo.suggested).toBe("number");
   expect(numberLinks.eq(1).text()).toBe("<number>");
+  expect(numberLinks.eq(1).data("flaw-id")).toBeFalsy();
+
   const blobLinks = $('a[href="/en-US/docs/Web/API/Blob"]:not([title])');
   expect(blobLinks.length).toEqual(2);
   expect(blobLinks.eq(0).text()).toBe("Bob");
+  const bobFlawID = blobLinks.eq(0).data("flaw-id");
+  expect(bobFlawID).toBeTruthy();
+  const bobFlaw = mapID2Flaw.get(bobFlawID);
+  expect(bobFlaw.name).toBe("MacroRedirectedLinkError");
+  expect(bobFlaw.macroSource).toBe('{{DOMxRef("Bob")}}');
+  expect(bobFlaw.redirectInfo.current).toBe("Bob");
+  expect(bobFlaw.redirectInfo.suggested).toBe("Blob");
   expect(blobLinks.eq(1).text()).toBe("Blob");
+  expect(blobLinks.eq(1).data("flaw-id")).toBeFalsy();
+
   const hrefLinks = $(
     'a[href="/en-US/docs/Web/HTML/Element/a#attr-href"]:not([title])'
   );
@@ -130,19 +161,46 @@ test("content built bar page", () => {
   hrefLinks.each((index, element) => {
     expect($(element).text()).toBe("href");
   });
+  const anchorFlawID = hrefLinks.eq(0).data("flaw-id");
+  expect(anchorFlawID).toBeTruthy();
+  const anchorFlaw = mapID2Flaw.get(anchorFlawID);
+  expect(anchorFlaw.name).toBe("MacroRedirectedLinkError");
+  expect(anchorFlaw.macroSource).toBe('{{htmlattrxref("href", "anchor")}}');
+  expect(anchorFlaw.redirectInfo.current).toBe("anchor");
+  expect(anchorFlaw.redirectInfo.suggested).toBe("a");
+  expect(hrefLinks.eq(1).data("flaw-id")).toBeFalsy();
+
   const strictModeLinks = $(
     'a[href="/en-US/docs/Web/JavaScript/Reference/Strict_mode"]:not([title])'
   );
   expect(strictModeLinks.length).toEqual(2);
   expect(strictModeLinks.eq(0).text()).toBe("Stern_mode");
+  const sternFlawID = strictModeLinks.eq(0).data("flaw-id");
+  expect(sternFlawID).toBeTruthy();
+  const sternFlaw = mapID2Flaw.get(sternFlawID);
+  expect(sternFlaw.name).toBe("MacroRedirectedLinkError");
+  expect(sternFlaw.macroSource).toBe('{{jsxref("Stern_mode")}}');
+  expect(sternFlaw.redirectInfo.current).toBe("Stern_mode");
+  expect(sternFlaw.redirectInfo.suggested).toBe("Strict_mode");
   expect(strictModeLinks.eq(1).text()).toBe("Strict_mode");
+  expect(strictModeLinks.eq(1).data("flaw-id")).toBeFalsy();
+
   const booleanLinks = $(
     'a[href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean"]:not([title])'
   );
   expect(booleanLinks.length).toEqual(3);
   expect(booleanLinks.eq(0).text()).toBe("Flag");
+  const flagFlawID = booleanLinks.eq(0).data("flaw-id");
+  expect(flagFlawID).toBeTruthy();
+  const flagFlaw = mapID2Flaw.get(flagFlawID);
+  expect(flagFlaw.name).toBe("MacroRedirectedLinkError");
+  expect(flagFlaw.macroSource).toBe('{{jsxref("Flag")}}');
+  expect(flagFlaw.redirectInfo.current).toBe("Flag");
+  expect(flagFlaw.redirectInfo.suggested).toBe("Boolean");
   expect(booleanLinks.eq(1).text()).toBe("Boolean");
+  expect(booleanLinks.eq(1).data("flaw-id")).toBeFalsy();
   expect(booleanLinks.eq(2).text()).toBe("bOOleAn");
+  expect(booleanLinks.eq(2).data("flaw-id")).toBeFalsy();
 });
 
 test("broken links flaws", () => {
@@ -158,7 +216,7 @@ test("broken links flaws", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.broken_links.length).toBe(7);
+  expect(flaws.broken_links.length).toBe(8);
   // Map them by 'href'
   const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
@@ -178,6 +236,9 @@ test("broken links flaws", () => {
   expect(map.get("/en-us/DOCS/Web/api/BLOB").suggestion).toBe(
     "/en-US/docs/Web/API/Blob"
   );
+  expect(
+    map.get("/en-US/docs/Web/HTML/Element/anchor#fragment").suggestion
+  ).toBe("/en-US/docs/Web/HTML/Element/a#fragment");
 });
 
 test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page", () => {

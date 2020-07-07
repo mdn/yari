@@ -16,7 +16,7 @@
     "glob": "^7.1.6",
     "js-yaml": "3.14.0",
     "kumascript": "0.1.0",
-    "mdn-browser-compat-data": "1.0.28",
+    "mdn-browser-compat-data": "1.0.29",
     "ms": "2.1.2",
     "mysql": "2.18.1",
     "sanitize-filename": "^1.6.3"

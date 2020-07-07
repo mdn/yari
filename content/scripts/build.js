@@ -1866,24 +1866,34 @@ class Builder {
             absoluteURL.pathname + absoluteURL.search + absoluteURL.hash
           );
         } else if (href.startsWith("/") && !href.startsWith("//")) {
-          if (!this.allTitles.has(href.toLowerCase())) {
+          // Got to fake the domain to sensible extract the .search and .hash
+          const absoluteURL = new URL(href, "http://www.example.com");
+          const hrefNormalized = href.split("#")[0].toLowerCase();
+          if (!this.allTitles.has(hrefNormalized)) {
             // Before we give up, check if it's a redirect
-            if (this.allRedirects.has(href.toLowerCase())) {
+            if (this.allRedirects.has(hrefNormalized)) {
               // Just because it's a redirect doesn't mean it ends up
               // on a page we have.
               // For example, there might be a redirect but where it
               // goes to is not in this.allTitles.
               // This can happen if it's a "fundamental redirect" for example.
               const finalDocument = this.allTitles.get(
-                this.allRedirects.get(href.toLowerCase())
+                this.allRedirects.get(hrefNormalized)
               );
-              addBrokenLink(href, finalDocument ? finalDocument.mdn_url : null);
+              addBrokenLink(
+                href,
+                finalDocument
+                  ? finalDocument.mdn_url +
+                      absoluteURL.search +
+                      absoluteURL.hash
+                  : null
+              );
             } else {
               addBrokenLink(href);
             }
           } else {
             // But does it have the correct case?!
-            const found = this.allTitles.get(href.toLowerCase());
+            const found = this.allTitles.get(hrefNormalized);
             if (found.mdn_url !== href) {
               // Inconsistent case.
               addBrokenLink(href, found.mdn_url);
