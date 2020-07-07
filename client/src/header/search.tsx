@@ -2,8 +2,8 @@ import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 
 import { useLocale } from "./hooks";
-import { ReactComponent as CloseIcon } from "../kumastyles/general/close.svg";
-import { ReactComponent as SearchIcon } from "../kumastyles/general/search.svg";
+import CloseIcon from "../kumastyles/general/close.svg";
+import SearchIcon from "../kumastyles/general/search.svg";
 
 export default function Search() {
   const locale = useLocale();
@@ -12,10 +12,10 @@ export default function Search() {
 
   // After our first render, set the input field's initial value
   // and show search form
-  const inpuRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
-    if (inpuRef.current && query) {
-      inpuRef.current.value = query;
+    if (inputRef.current && query) {
+      inputRef.current.value = query;
       setShowForm(true);
     }
   }, [query, showForm]);
@@ -26,12 +26,12 @@ export default function Search() {
     if (showForm) {
       setShowForm(false);
       setQuery("");
-      if (inpuRef.current) {
-        inpuRef.current.value = "";
+      if (inputRef.current) {
+        inputRef.current.value = "";
       }
     } else {
       setShowForm(true);
-      inpuRef.current && inpuRef.current.focus();
+      inputRef.current && inputRef.current.focus();
     }
   };
 
@@ -43,14 +43,14 @@ export default function Search() {
         method="get"
         role="search"
       >
-        <SearchIcon className="search-icon" />
+        <img src={SearchIcon} alt="search" className="search-icon" />
 
         <label htmlFor="main-q" className="visually-hidden">
           Search MDN
         </label>
         <input
           className="search-input-field"
-          ref={inpuRef}
+          ref={inputRef}
           type="search"
           id="main-q"
           name="q"
@@ -66,11 +66,17 @@ export default function Search() {
            `display: block` so, we use the `.hide` class which uses
            `visibility:hidden`
           */}
-        <CloseIcon className={showForm ? "close-icon" : "close-icon hide"} />
+        <img
+          src={CloseIcon}
+          alt="close"
+          className={showForm ? "close-icon" : "close-icon hide"}
+        />
 
         {/* The `SearchIcon` is not animated and so we can add/remove
             the SVG dynamically based on the `showForm` state */}
-        {!showForm && <SearchIcon className="search-icon" />}
+        {!showForm && (
+          <img src={SearchIcon} alt="search" className="search-icon" />
+        )}
 
         <span>{showForm ? "Close search" : "Open search"}</span>
       </button>

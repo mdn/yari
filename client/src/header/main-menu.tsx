@@ -137,7 +137,9 @@ export default function MainMenu() {
           {
             label: "Report a content problem",
             external: true,
-            url: `https://github.com/mdn/sprints/issues/new?template=issue-template.md&projects=mdn/sprints/2&labels=user-report&title=${window.location.pathname}`,
+            url: `https://github.com/mdn/sprints/issues/new?template=issue-template.md&projects=mdn/sprints/2&labels=user-report&title=${
+              typeof window === "undefined" ? "" : window.location.pathname
+            }`,
           },
           {
             label: "Report an issue",
