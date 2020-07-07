@@ -1510,12 +1510,13 @@ class Builder {
 
   async processFolder(source, folder, config) {
     const t0 = performance.now();
-    const { metadata, rawContent, rawHtml, fileInfo } = Document.read(
-      source.filepath,
-      folder,
-      false,
-      this.allWikiHistory
-    );
+    const {
+      metadata,
+      metadataUntouched,
+      rawContent,
+      rawHtml,
+      fileInfo,
+    } = Document.read(source.filepath, folder, false, this.allWikiHistory);
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
     const mdnUrlLC = mdn_url.toLowerCase();
 
@@ -1642,22 +1643,23 @@ class Builder {
 
           if (newRawHtml !== rawHtml) {
             // It was improved!!
-            if (this.options.fixFlawsVerbose) {
+            // If you're running in dry-run mode, always assume verbose.
+            if (this.options.fixFlawsVerbose || this.options.fixFlawsDryRun) {
               console.log(`\nIn ${folder}...`);
               printBasicDiff(rawHtml, newRawHtml);
             }
+            const rawHtmlFilepath = fileInfo.path;
             if (this.options.fixFlawsDryRun) {
-              console.log(chalk.yellow("Not changing any files in dry-run!"));
-            } else {
-              const { attributes: metadataUntouched } = fm(
-                fs.readFileSync(rawHtmlFilepath, "utf8")
+              console.log(
+                chalk.yellow(
+                  `Would have modified "${rawHtmlFilepath}", if this was not a dry run.`
+                )
               );
-              Document.saveFile(
-                rawHtmlFilepath,
+            } else {
+              Document.update(
+                source.filepath,
+                folder,
                 newRawHtml,
-                // Can't use the variable 'metadata' because it contains attributes
-                // in addition to those defined within the document's front matter.
-                // So we refetch it "pure".
                 metadataUntouched
               );
             }
