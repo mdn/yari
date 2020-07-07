@@ -15,7 +15,10 @@ function printBasicDiff(str1, str2) {
       console.log(lineNumber(i), chalk.red(`- ${line}`));
       console.log(lineNumber(i), chalk.green(`+ ${newLines[i]}`));
       console.log(lineNumber(i + 1), chalk.grey(`  ${oldLines[i + 1]}`));
-      console.log(lineNumber(i + 2), chalk.grey(`  ${oldLines[i + 2]}`));
+      // Don't print the last trailing line if the texts are too short.
+      if (oldLines.length > i + 2) {
+        console.log(lineNumber(i + 2), chalk.grey(`  ${oldLines[i + 2]}`));
+      }
     }
   });
 }
