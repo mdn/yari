@@ -1,0 +1,84 @@
+// div.content {
+//   padding-left: 10px;
+
+//   .hidden,
+//   .is-hidden {
+//     display: none;
+//   }
+
+//   h2::before {
+//     border-top: 3px solid #3d7e9a;
+//     content: "";
+//     display: block;
+//     margin: 40px 0 40px 0;
+//     width: 100%;
+//   }
+
+//   h3 {
+//     padding: 2px 4px 2px 40px;
+//     background-color: #333;
+//     color: #fff;
+//     font-weight: 400;
+//     line-height: 1.25;
+//     max-width: -moz-fit-content;
+//   }
+
+//   h3 {
+//     max-width: fit-content;
+//   }
+
+//   .interactive-example {
+//     box-sizing: border-box;
+//     background-color: #f5f9fa;
+//     color: #333;
+//     padding: 10px;
+//     border: 1px solid #eaf2f4;
+//     width: 100%;
+//     max-width: 70rem;
+//   }
+
+//   .live-sample-frame {
+//     border: 1px solid #3d7e9a;
+//     border-width: 1px 1px 1px 5px;
+//     padding: 10px;
+//   }
+
+//   p,
+//   dl,
+//   ul,
+//   ol,
+//   pre,
+//   .live-sample-frame {
+//     max-width: 42rem;
+//   }
+
+//   pre > code {
+//     background-color: #efefef;
+//     padding: 6px;
+//     border-radius: 3px;
+//   }
+
+// }
+
+// .external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external)
+// {
+//   white-space: pre-line;
+// }
+
+// .external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):before, .external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):after
+// {
+//   background-image: url("./icons/general/external-link.svg");
+//   background-size: 12px;
+//   width: 12px;
+//   height: 20px;
+//   margin-top: 3px;
+//   margin-right: 3px;
+//   vertical-align: text-top;
+// }
+
+// .external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):before, .external-icon:not([href^='https://mdn.mozillademos.org']):not(.ignore-external):before
+// {
+//   display: inline-block;
+//   content: "";
+//   background-repeat: no-repeat;
+// }

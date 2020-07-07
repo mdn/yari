@@ -113,7 +113,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   const { github_url, folder } = doc.source;
 
   return (
-    <>
+    <main>
       {process.env.NODE_ENV === "development" && (
         <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
           <Toolbar
@@ -124,13 +124,97 @@ export function Document(props /* TODO: define a TS interface for this */) {
           />
         </Suspense>
       )}
-      <h1 className="page-title">{doc.title}</h1>
-      {translations && !!translations.length && (
-        <DocumentTranslations translations={translations} />
-      )}
-      <div className="main">
-        <nav>{doc.parents && <Breadcrumbs parents={doc.parents} />}</nav>
+      <header className="documentation-page-header">
+        <div className="titlebar-container">
+          <div className="titlebar">
+            <h1 className="title">{doc.title}</h1>
+          </div>
+        </div>
+        <div className="full-width-row-container">
+          <div className="max-content-width-container">
+            <nav className="breadcrumbs" role="navigation">
+              {doc.parents && <Breadcrumbs parents={doc.parents} />}
+            </nav>
 
+            {translations && !!translations.length && (
+              <DocumentTranslations translations={translations} />
+            )}
+            {/* <div className="dropdown-container language-menu">
+              <button
+                id="header-language-menu"
+                type="button"
+                className="dropdown-menu-label"
+                aria-haspopup="true"
+                aria-owns="language-menu"
+                aria-label="Current language is English. Choose your preferred language."
+              >
+                English
+                <span className="dropdown-arrow-down" aria-hidden="true">
+                  ▼
+                </span>
+              </button>
+
+              <ul
+                id="language-menu"
+                className="dropdown-menu-items right "
+                aria-expanded="false"
+                role="menu"
+              >
+                <li>
+                  <a
+                    href="http://wiki.localhost.org:8000/en-US/docs/Web/HTML/Element/video$locales"
+                    rel="nofollow"
+                    id="translations-add"
+                  >
+                    Add a translation
+                  </a>
+                </li>
+              </ul>
+            </div> */}
+          </div>
+        </div>
+      </header>
+
+      <div className="wiki-left-present content-layout">
+        {/* <aside className="document-toc-container">
+                ... XXX MUCH MORE WORK NEEDED ...
+              </aside> */}
+        <div id="content" className="article text-content">
+          <article id="wikiArticle">
+            <RenderDocumentBody doc={doc} />
+          </article>
+
+          <div className="metadata">
+            <section className="document-meta">
+              <header className="visually-hidden">
+                <h4>Metadata</h4>
+              </header>
+              <ul>
+                <li className="last-modified">
+                  <b>Last modified:</b>{" "}
+                  <time dateTime="2020-05-16T12:25:38.091371">
+                    Xxx 01, 2020
+                    {doc.modified}
+                  </time>
+                  ,
+                  <a
+                    href={github_url}
+                    title={`Folder: ${folder}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Edit on <b>GitHub</b>
+                  </a>
+                </li>
+              </ul>
+            </section>
+          </div>
+        </div>
+        <div id="sidebar-quicklinks" className="sidebar">
+          <RenderSideBar doc={doc} />
+        </div>
+      </div>
+      {/* <div className="main">
         <div className="sidebar">
           <RenderSideBar doc={doc} />
         </div>
@@ -155,8 +239,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
           </a>
           {doc.contributors && <Contributors contributors={doc.contributors} />}
         </div>
-      </div>
-    </>
+      </div> */}
+    </main>
   );
 }
 
@@ -334,14 +418,14 @@ function RenderDocumentBody({ doc }) {
   });
 }
 
-function Contributors({ contributors }) {
-  return (
-    <div>
-      <b>Contributors to this page:</b>
-      <span dangerouslySetInnerHTML={{ __html: contributors }} />
-    </div>
-  );
-}
+// function Contributors({ contributors }) {
+//   return (
+//     <div>
+//       <b>Contributors to this page:</b>
+//       <span dangerouslySetInnerHTML={{ __html: contributors }} />
+//     </div>
+//   );
+// }
 
 function LoadingError({ error }) {
   return (
