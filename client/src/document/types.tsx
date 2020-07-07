@@ -16,6 +16,8 @@ type Flaws = {
   bad_bcd_queries: string[];
 };
 
+export type Translations = { locale: string; slug: string }[];
+
 export interface Doc {
   title: string;
   mdn_url: string;
@@ -23,7 +25,7 @@ export interface Doc {
   body: string;
   modified: string;
   flaws: Flaws;
-  other_translations?: object[];
+  other_translations?: Translations;
   translation_of?: string;
   parents?: Doc[];
   source: Source;
