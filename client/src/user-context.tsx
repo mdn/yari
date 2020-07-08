@@ -44,7 +44,7 @@ const defaultUserData: UserData = {
   },
 };
 
-const UserContext = React.createContext<UserData | null>(defaultUserData);
+const UserDataContext = React.createContext<UserData | null>(defaultUserData);
 
 export function UserDataProvider(props: { children: React.ReactNode }) {
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -82,12 +82,12 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <UserContext.Provider value={userData}>
+    <UserDataContext.Provider value={userData}>
       {props.children}
-    </UserContext.Provider>
+    </UserDataContext.Provider>
   );
 }
 
 export function useUserData() {
-  return useContext(UserContext);
+  return useContext(UserDataContext);
 }
