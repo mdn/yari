@@ -52,7 +52,12 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
   useEffect(() => {
     const controller = new AbortController();
     fetch("/api/v1/whoami", { signal: controller.signal })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`${response.status} on ${response.url}`);
+        }
+        return response.json();
+      })
       .then((data) => {
         setUserData({
           username: data.username || null,
