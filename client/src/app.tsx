@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 
 import { Homepage } from "./homepage";
 import { Document } from "./document";
+import Footer from "./footer";
 import Header from "./header";
 import { NoMatch } from "./routing";
 const AllFlaws = lazy(() => import("./flaws"));
@@ -14,6 +15,7 @@ function Layout({ children }) {
     <>
       <Header />
       <section className="section">{children}</section>
+      <Footer />
     </>
   );
 }
