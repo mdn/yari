@@ -95,31 +95,96 @@ test("content built bar page", () => {
   expect(doc.popularity).toBe(0.51);
   expect(doc.modified).toBeTruthy();
   expect(doc.source).toBeTruthy();
-  expect(doc.flaws.macros.length).toBe(9);
-  // Ensure that each of the "macros" flaws with ID's, has a unique ID.
-  const flawsWithIds = doc.flaws.macros.filter((f) => f.id);
-  expect(flawsWithIds.length).toBe(9);
-  expect(new Set(flawsWithIds.map((f) => f.id)).size).toBe(9);
-
-  const mapID2Flaw = new Map(flawsWithIds.map((f) => [f.id, f]));
+  expect(doc.flaws.macros.length).toBe(11);
+  expect(doc.flaws.macros[0].name).toBe("MacroBrokenLinkError");
+  expect(doc.flaws.macros[0].macroSource).toBe('{{CSSxRef("bigfoot")}}');
+  expect(doc.flaws.macros[0].line).toBe(10);
+  expect(doc.flaws.macros[0].column).toBe(6);
+  expect(doc.flaws.macros[1].name).toBe("MacroRedirectedLinkError");
+  expect(doc.flaws.macros[1].macroSource).toBe('{{CSSxRef("dumber")}}');
+  expect(doc.flaws.macros[1].line).toBe(11);
+  expect(doc.flaws.macros[1].column).toBe(6);
+  expect(doc.flaws.macros[1].redirectInfo).toBeTruthy();
+  expect(doc.flaws.macros[1].redirectInfo.current).toBe("dumber");
+  expect(doc.flaws.macros[1].redirectInfo.suggested).toBe("number");
+  expect(doc.flaws.macros[2].name).toBe("MacroBrokenLinkError");
+  expect(doc.flaws.macros[2].macroSource).toBe('{{DOMxRef("bigfoot")}}');
+  expect(doc.flaws.macros[2].line).toBe(13);
+  expect(doc.flaws.macros[2].column).toBe(6);
+  expect(doc.flaws.macros[3].name).toBe("MacroRedirectedLinkError");
+  expect(doc.flaws.macros[3].macroSource).toBe('{{DOMxRef("Bob")}}');
+  expect(doc.flaws.macros[3].line).toBe(14);
+  expect(doc.flaws.macros[3].column).toBe(6);
+  expect(doc.flaws.macros[3].redirectInfo).toBeTruthy();
+  expect(doc.flaws.macros[3].redirectInfo.current).toBe("Bob");
+  expect(doc.flaws.macros[3].redirectInfo.suggested).toBe("Blob");
+  expect(doc.flaws.macros[4].name).toBe("MacroBrokenLinkError");
+  expect(doc.flaws.macros[4].macroSource).toBe(
+    '{{htmlattrxref("href", "bigfoot")}}'
+  );
+  expect(doc.flaws.macros[4].line).toBe(16);
+  expect(doc.flaws.macros[4].column).toBe(6);
+  expect(doc.flaws.macros[5].name).toBe("MacroRedirectedLinkError");
+  expect(doc.flaws.macros[5].macroSource).toBe(
+    '{{htmlattrxref("href", "anchor")}}'
+  );
+  expect(doc.flaws.macros[5].line).toBe(17);
+  expect(doc.flaws.macros[5].column).toBe(6);
+  expect(doc.flaws.macros[5].redirectInfo).toBeTruthy();
+  expect(doc.flaws.macros[5].redirectInfo.current).toBe("anchor");
+  expect(doc.flaws.macros[5].redirectInfo.suggested).toBe("a");
+  expect(doc.flaws.macros[6].name).toBe("MacroBrokenLinkError");
+  expect(doc.flaws.macros[6].macroSource).toBe('{{jsxref("bigfoot")}}');
+  expect(doc.flaws.macros[6].line).toBe(19);
+  expect(doc.flaws.macros[6].column).toBe(6);
+  expect(doc.flaws.macros[7].name).toBe("MacroRedirectedLinkError");
+  expect(doc.flaws.macros[7].macroSource).toBe('{{jsxref("Stern_mode")}}');
+  expect(doc.flaws.macros[7].line).toBe(20);
+  expect(doc.flaws.macros[7].column).toBe(6);
+  expect(doc.flaws.macros[7].redirectInfo).toBeTruthy();
+  expect(doc.flaws.macros[7].redirectInfo.current).toBe("Stern_mode");
+  expect(doc.flaws.macros[7].redirectInfo.suggested).toBe("Strict_mode");
+  expect(doc.flaws.macros[8].name).toBe("MacroRedirectedLinkError");
+  expect(doc.flaws.macros[8].macroSource).toBe('{{jsxref("Flag")}}');
+  expect(doc.flaws.macros[8].line).toBe(22);
+  expect(doc.flaws.macros[8].column).toBe(6);
+  expect(doc.flaws.macros[8].redirectInfo).toBeTruthy();
+  expect(doc.flaws.macros[8].redirectInfo.current).toBe("Flag");
+  expect(doc.flaws.macros[8].redirectInfo.suggested).toBe("Boolean");
+  expect(doc.flaws.macros[9].name).toBe("MacroRedirectedLinkError");
+  expect(doc.flaws.macros[9].macroSource).toBe("{{ jsxref('Flag') }}");
+  expect(doc.flaws.macros[9].line).toBe(23);
+  expect(doc.flaws.macros[9].column).toBe(6);
+  expect(doc.flaws.macros[9].redirectInfo).toBeTruthy();
+  expect(doc.flaws.macros[9].redirectInfo.current).toBe("Flag");
+  expect(doc.flaws.macros[9].redirectInfo.suggested).toBe("Boolean");
+  expect(doc.flaws.macros[10].name).toBe("MacroRedirectedLinkError");
+  expect(doc.flaws.macros[10].macroSource).toBe('{{JSXref("Flag")}}');
+  expect(doc.flaws.macros[10].line).toBe(24);
+  expect(doc.flaws.macros[10].column).toBe(6);
+  expect(doc.flaws.macros[10].redirectInfo).toBeTruthy();
+  expect(doc.flaws.macros[10].redirectInfo.current).toBe("Flag");
+  expect(doc.flaws.macros[10].redirectInfo.suggested).toBe("Boolean");
 
   const htmlFile = path.join(builtFolder, "index.html");
   expect(fs.existsSync(htmlFile)).toBeTruthy();
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("a[data-flaw-id]").length).toEqual(9);
+  expect($("a[data-flaw-src]").length).toEqual(11);
 
   const brokenLinks = $("a.new");
   expect(brokenLinks.length).toEqual(4);
+  expect(brokenLinks.eq(0).data("flaw-src")).toBe('{{CSSxRef("bigfoot")}}');
+  expect(brokenLinks.eq(0).text()).toBe("bigfoot");
+  expect(brokenLinks.eq(1).data("flaw-src")).toBe('{{DOMxRef("bigfoot")}}');
+  expect(brokenLinks.eq(1).text()).toBe("bigfoot");
+  expect(brokenLinks.eq(2).data("flaw-src")).toBe(
+    '{{htmlattrxref("href", "bigfoot")}}'
+  );
+  expect(brokenLinks.eq(2).text()).toBe("href");
+  expect(brokenLinks.eq(3).data("flaw-src")).toBe('{{jsxref("bigfoot")}}');
+  expect(brokenLinks.eq(3).text()).toBe("bigfoot");
   brokenLinks.each((index, element) => {
-    if (index === 2) {
-      expect($(element).text()).toBe("href");
-    } else {
-      expect($(element).text()).toBe("bigfoot");
-    }
-    const flaw = mapID2Flaw.get($(element).data("flaw-id"));
-    expect(flaw.name).toBe("MacroBrokenLinkError");
-    expect(flaw.macroSource).toMatch(/\"bigfoot\"\)/);
     expect($(element).attr("title")).toMatch(
       /The documentation about this has not yet been written/
     );
@@ -131,28 +196,16 @@ test("content built bar page", () => {
     expect($(element).attr("title")).toBe("This is the number test page.");
   });
   expect(numberLinks.eq(0).text()).toBe("<dumber>");
-  const dumberFlawID = numberLinks.eq(0).data("flaw-id");
-  expect(dumberFlawID).toBeTruthy();
-  const dumberFlaw = mapID2Flaw.get(dumberFlawID);
-  expect(dumberFlaw.name).toBe("MacroRedirectedLinkError");
-  expect(dumberFlaw.macroSource).toBe('{{CSSxRef("dumber")}}');
-  expect(dumberFlaw.redirectInfo.current).toBe("dumber");
-  expect(dumberFlaw.redirectInfo.suggested).toBe("number");
+  expect(numberLinks.eq(0).data("flaw-src")).toBe('{{CSSxRef("dumber")}}');
   expect(numberLinks.eq(1).text()).toBe("<number>");
-  expect(numberLinks.eq(1).data("flaw-id")).toBeFalsy();
+  expect(numberLinks.eq(1).data("flaw-src")).toBeFalsy();
 
   const blobLinks = $('a[href="/en-US/docs/Web/API/Blob"]:not([title])');
   expect(blobLinks.length).toEqual(2);
   expect(blobLinks.eq(0).text()).toBe("Bob");
-  const bobFlawID = blobLinks.eq(0).data("flaw-id");
-  expect(bobFlawID).toBeTruthy();
-  const bobFlaw = mapID2Flaw.get(bobFlawID);
-  expect(bobFlaw.name).toBe("MacroRedirectedLinkError");
-  expect(bobFlaw.macroSource).toBe('{{DOMxRef("Bob")}}');
-  expect(bobFlaw.redirectInfo.current).toBe("Bob");
-  expect(bobFlaw.redirectInfo.suggested).toBe("Blob");
+  expect(blobLinks.eq(0).data("flaw-src")).toBe('{{DOMxRef("Bob")}}');
   expect(blobLinks.eq(1).text()).toBe("Blob");
-  expect(blobLinks.eq(1).data("flaw-id")).toBeFalsy();
+  expect(blobLinks.eq(1).data("flaw-src")).toBeFalsy();
 
   const hrefLinks = $(
     'a[href="/en-US/docs/Web/HTML/Element/a#attr-href"]:not([title])'
@@ -161,46 +214,36 @@ test("content built bar page", () => {
   hrefLinks.each((index, element) => {
     expect($(element).text()).toBe("href");
   });
-  const anchorFlawID = hrefLinks.eq(0).data("flaw-id");
-  expect(anchorFlawID).toBeTruthy();
-  const anchorFlaw = mapID2Flaw.get(anchorFlawID);
-  expect(anchorFlaw.name).toBe("MacroRedirectedLinkError");
-  expect(anchorFlaw.macroSource).toBe('{{htmlattrxref("href", "anchor")}}');
-  expect(anchorFlaw.redirectInfo.current).toBe("anchor");
-  expect(anchorFlaw.redirectInfo.suggested).toBe("a");
-  expect(hrefLinks.eq(1).data("flaw-id")).toBeFalsy();
+  expect(hrefLinks.eq(0).data("flaw-src")).toBe(
+    '{{htmlattrxref("href", "anchor")}}'
+  );
+  expect(hrefLinks.eq(1).data("flaw-src")).toBeFalsy();
 
   const strictModeLinks = $(
     'a[href="/en-US/docs/Web/JavaScript/Reference/Strict_mode"]:not([title])'
   );
   expect(strictModeLinks.length).toEqual(2);
   expect(strictModeLinks.eq(0).text()).toBe("Stern_mode");
-  const sternFlawID = strictModeLinks.eq(0).data("flaw-id");
-  expect(sternFlawID).toBeTruthy();
-  const sternFlaw = mapID2Flaw.get(sternFlawID);
-  expect(sternFlaw.name).toBe("MacroRedirectedLinkError");
-  expect(sternFlaw.macroSource).toBe('{{jsxref("Stern_mode")}}');
-  expect(sternFlaw.redirectInfo.current).toBe("Stern_mode");
-  expect(sternFlaw.redirectInfo.suggested).toBe("Strict_mode");
+  expect(strictModeLinks.eq(0).data("flaw-src")).toBe(
+    '{{jsxref("Stern_mode")}}'
+  );
   expect(strictModeLinks.eq(1).text()).toBe("Strict_mode");
-  expect(strictModeLinks.eq(1).data("flaw-id")).toBeFalsy();
+  expect(strictModeLinks.eq(1).data("flaw-src")).toBeFalsy();
 
   const booleanLinks = $(
     'a[href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean"]:not([title])'
   );
-  expect(booleanLinks.length).toEqual(3);
+  expect(booleanLinks.length).toEqual(5);
   expect(booleanLinks.eq(0).text()).toBe("Flag");
-  const flagFlawID = booleanLinks.eq(0).data("flaw-id");
-  expect(flagFlawID).toBeTruthy();
-  const flagFlaw = mapID2Flaw.get(flagFlawID);
-  expect(flagFlaw.name).toBe("MacroRedirectedLinkError");
-  expect(flagFlaw.macroSource).toBe('{{jsxref("Flag")}}');
-  expect(flagFlaw.redirectInfo.current).toBe("Flag");
-  expect(flagFlaw.redirectInfo.suggested).toBe("Boolean");
-  expect(booleanLinks.eq(1).text()).toBe("Boolean");
-  expect(booleanLinks.eq(1).data("flaw-id")).toBeFalsy();
-  expect(booleanLinks.eq(2).text()).toBe("bOOleAn");
-  expect(booleanLinks.eq(2).data("flaw-id")).toBeFalsy();
+  expect(booleanLinks.eq(0).data("flaw-src")).toBe('{{jsxref("Flag")}}');
+  expect(booleanLinks.eq(1).text()).toBe("Flag");
+  expect(booleanLinks.eq(1).data("flaw-src")).toBe("{{ jsxref('Flag') }}");
+  expect(booleanLinks.eq(2).text()).toBe("Flag");
+  expect(booleanLinks.eq(2).data("flaw-src")).toBe('{{JSXref("Flag")}}');
+  expect(booleanLinks.eq(3).text()).toBe("Boolean");
+  expect(booleanLinks.eq(3).data("flaw-src")).toBeFalsy();
+  expect(booleanLinks.eq(4).text()).toBe("bOOleAn");
+  expect(booleanLinks.eq(4).data("flaw-src")).toBeFalsy();
 });
 
 test("broken links flaws", () => {

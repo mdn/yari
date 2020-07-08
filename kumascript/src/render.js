@@ -135,19 +135,13 @@ async function render(source, templates, pageEnvironment, allPagesInfo) {
   // the results. We detect duplicate invocations and only render
   // those once, on the assumption that their output will be the
   // same each time.
-  let results = [];
-  // Keep track of fatal errors that occur when rendering the macros.
-  let fatalErrors = [];
-  // Map each macro signature to an index of "results" or "fatalErrors".
-  let signatureToIndex = new Map();
-  // There could be more than one non-fatal error per macro call, so we'll
-  // have to store those in a different array, since "fatalErrors" only
-  // accomodates one error per macro call.
-  let nonFatalErrors = [];
+  let output = "";
+  const errors = [];
+  const signatureToResult = new Map();
   // This tracks the token for the "recordNonFatalError()" function.
   let currentToken;
-  // The error ID has to be unique per document only.
-  let lastUsedErrorID = 0;
+  // This tracks the result object for the "recordNonFatalError()" function.
+  let currentResult;
 
   function recordNonFatalError(kind, message, redirectInfo = null) {
     let NonFatalErrorClass;
@@ -163,9 +157,11 @@ async function render(source, templates, pageEnvironment, allPagesInfo) {
       throw Error(`unsupported kind of non-fatal error requested: "${kind}"`);
     }
     const macroError = new NonFatalErrorClass(...args);
-    macroError.id = ++lastUsedErrorID;
-    nonFatalErrors.push(macroError);
-    return macroError.id;
+    if (!currentResult.errors.nonFatal) {
+      currentResult.errors.nonFatal = [];
+    }
+    currentResult.errors.nonFatal.push(macroError);
+    return macroError;
   }
 
   // Create the Environment object that we'll use to render all of
@@ -180,60 +176,81 @@ async function render(source, templates, pageEnvironment, allPagesInfo) {
     allPagesInfo
   );
 
-  // If we're only removing selected macros, we don't need to render anything.
-  if (selectiveMode !== "remove") {
-    // Loop through the tokens
-    for (let token of tokens) {
-      // We only care about macros; skip anything else
-      if (token.type !== "MACRO") {
-        continue;
-      }
+  // Loop through the tokens
+  for (let token of tokens) {
+    // We only care about macros; skip anything else
+    if (token.type !== "MACRO") {
+      // If it isn't a MACRO token, it's a TEXT token.
+      output += token.chars;
+      continue;
+    }
 
-      let macroName = normalizeMacroName(token.name);
+    let macroName = normalizeMacroName(token.name);
 
-      // If we're only rendering selected macros, ignore the rest.
-      if (selectiveMode === "render" && !selectMacros.includes(macroName)) {
-        continue;
-      }
-
-      // Check to see if we're already processing this exact
-      // macro invocation. To do that we need a signature for
-      // the macro. When the macro has json arguments we want to
-      // ignore their order, so we do some tricky stringification
-      // here in that case.
-      if (token.args.length === 1 && typeof token.args[0] === "object") {
-        // the json args case
-        let keys = Object.keys(token.args[0]);
-        keys.sort();
-        token.signature = macroName + JSON.stringify(token.args[0], keys);
+    if (selectiveMode) {
+      if (selectMacros.includes(macroName)) {
+        if (selectiveMode === "remove") {
+          continue;
+        }
       } else {
-        // the regular case: args is just an array of strings
-        token.signature = macroName + JSON.stringify(token.args);
-      }
-
-      // If this signature is already in the signature map, then we're
-      // already running the macro and don't need to do anything here.
-      if (signatureToIndex.has(token.signature)) {
+        // For un-selected macros, just use the original macro
+        // source text for the output.
+        output += source.slice(
+          token.location.start.offset,
+          token.location.end.offset
+        );
         continue;
       }
+    }
 
-      // Now start rendering this macro. We map this macro's
-      // signature to the index of its result or fatal error
-      // in the "results" or "fatalErrors" array, so that
-      // later we can build the output for each macro.
-      currentToken = token;
-      signatureToIndex.set(token.signature, results.length);
+    // Check to see if we're already processing this exact
+    // macro invocation. To do that we need a signature for
+    // the macro. When the macro has json arguments we want to
+    // ignore their order, so we do some tricky stringification
+    // here in that case.
+    if (token.args.length === 1 && typeof token.args[0] === "object") {
+      // the json args case
+      let keys = Object.keys(token.args[0]);
+      keys.sort();
+      token.signature = macroName + JSON.stringify(token.args[0], keys);
+    } else {
+      // the regular case: args is just an array of strings
+      token.signature = macroName + JSON.stringify(token.args);
+    }
 
+    currentToken = token;
+    currentResult = {
+      output: null,
+      errors: {
+        fatal: null,
+        nonFatal: null,
+      },
+    };
+
+    // If the token signature is already in the map, then we've
+    // already run the macro. We're only going to use the prior run
+    // if there were no errors. If there were errors in the prior run,
+    // let's re-run the macro in order to capture the context in fresh
+    // errors.
+    const priorResult = signatureToResult.get(token.signature);
+
+    if (
+      priorResult &&
+      !priorResult.errors.fatal &&
+      !priorResult.errors.nonFatal
+    ) {
+      currentResult.output = priorResult.output;
+    } else {
+      if (!priorResult) {
+        signatureToResult.set(token.signature, currentResult);
+      }
+      // Now start rendering this macro.
       try {
-        results.push(
-          await templates.render(
-            macroName,
-            environment.getExecutionContext(token.args)
-          )
+        currentResult.output = await templates.render(
+          macroName,
+          environment.getExecutionContext(token.args)
         );
-        fatalErrors.push(null);
       } catch (e) {
-        results.push(null);
         let macroError;
         if (
           e instanceof ReferenceError &&
@@ -248,51 +265,23 @@ async function render(source, templates, pageEnvironment, allPagesInfo) {
           // There was a runtime error executing the macro
           macroError = new MacroExecutionError(e, source, token);
         }
-        fatalErrors.push(macroError);
+        currentResult.errors.fatal = macroError;
+        // There was a fatal error while rendering this macro, so
+        // just use the original macro source text for the output.
+        currentResult.output = source.slice(
+          token.location.start.offset,
+          token.location.end.offset
+        );
       }
     }
+    output += currentResult.output;
+    if (currentResult.errors.fatal) {
+      errors.push(currentResult.errors.fatal);
+    } else if (currentResult.errors.nonFatal) {
+      errors.push(...currentResult.errors.nonFatal);
+    }
   }
-
-  // And assemble the output document
-  let output = tokens
-    .map((token) => {
-      if (token.type === "MACRO") {
-        if (selectiveMode) {
-          if (selectMacros.includes(normalizeMacroName(token.name))) {
-            if (selectiveMode === "remove") {
-              return "";
-            }
-          } else {
-            // For un-selected macros, just use the original macro
-            // source text for the output.
-            return source.slice(
-              token.location.start.offset,
-              token.location.end.offset
-            );
-          }
-        }
-        // We've reached this point if either we're rendering all macros
-        // or we're rendering selected macros and this is a macro we've
-        // selected.
-        const index = signatureToIndex.get(token.signature);
-        if (fatalErrors[index]) {
-          // If there was a fatal error rendering this macro, then we
-          // just use the original macro source text for the output.
-          return source.slice(
-            token.location.start.offset,
-            token.location.end.offset
-          );
-        }
-        return results[index];
-      } else {
-        // If it isn't a MACRO token, it is a TEXT token
-        return token.chars;
-      }
-    })
-    .join("");
-
-  // The return value is the rendered string plus an array of errors.
-  return [output, fatalErrors.filter((e) => e !== null).concat(nonFatalErrors)];
+  return [output, errors];
 }
 
 module.exports = { normalizeMacroName, getPrerequisites, render };
