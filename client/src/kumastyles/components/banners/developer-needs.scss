@@ -31,9 +31,9 @@
       text-align: left;
     }
 
-    @media #{$mq-large-desktop-and-up} {
-      @include bidi(((padding-left, 120px, padding-right, 120px)));
-    }
+    //@media #{$mq-large-desktop-and-up} {
+    //  @include bidi(((padding-left, 120px, padding-right, 120px)));
+    //}
   }
 
   .mdn-cta-title:before {
