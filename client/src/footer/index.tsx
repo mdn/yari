@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { useLocale } from "../header/hooks";
+import { useLocale } from "../hooks";
 import GithubIcon from "./github.svg";
 import TwitterIcon from "./twitter.svg";
 import InstagramIcon from "./instagram.svg";

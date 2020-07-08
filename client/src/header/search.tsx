@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 
-import { useLocale } from "./hooks";
+import { useLocale } from "../hooks";
 import CloseIcon from "../kumastyles/general/close.svg";
 import SearchIcon from "../kumastyles/general/search.svg";
 

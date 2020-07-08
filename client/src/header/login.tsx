@@ -1,9 +1,9 @@
 import * as React from "react";
 
 import Dropdown from "./dropdown";
-import { useLocale } from "./hooks";
+import { useLocale } from "../hooks";
 import SignInLink from "./signin-link";
-import { useUserData } from "./user-context";
+import { useUserData } from "../user-context";
 
 export default function Login() {
   const locale = useLocale();

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { useLocale } from "./hooks";
+import { useLocale } from "../hooks";
 import Login from "./login";
 import Logo from "./logo.svg";
 import MainMenu from "./main-menu";

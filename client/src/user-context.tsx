@@ -44,27 +44,17 @@ const defaultUserData: UserData = {
   },
 };
 
-const UserContext = React.createContext<UserData | null | undefined>(
-  defaultUserData
-);
+const UserContext = React.createContext<UserData | null>(defaultUserData);
 
-export default function UserProvider(props: {
-  children: React.ReactNode;
-}) {
-  const [userData, setUserData] = useState<UserData | null | undefined>(null);
+export function UserDataProvider(props: { children: React.ReactNode }) {
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
-    let dismounted = false;
-    fetch("/api/v1/whoami")
+    const controller = new AbortController();
+    fetch("/api/v1/whoami", { signal: controller.signal })
       .then((response) => response.json())
       .then((data) => {
-        // No point attempting to update state if the component
-        // is dismounted.
-        if (dismounted) {
-          // bail!
-          return;
-        }
-        let userData = {
+        setUserData({
           username: data.username || null,
           isAuthenticated: data.is_authenticated || false,
           isBetaTester: data.is_beta_tester || false,
@@ -79,21 +69,25 @@ export default function UserProvider(props: {
           // be re-fetched on client-side navigation, we'll
           // have to create a separate context for it.
           waffle: data.waffle,
-        };
-
-        // Set the userData as a state variable that we provide
-        // to anyone that calls `useContext(UserProvider.context)`
-        setUserData(userData);
-
+        });
+      })
+      .catch((error) => {
+        if (error.name !== "AbortError") {
+          console.error("error while fetching user data", error);
+        }
       });
     return () => {
-      dismounted = true;
+      controller.abort();
     };
   }, []);
 
-  return <UserContext.Provider value={userData}>{props.children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={userData}>
+      {props.children}
+    </UserContext.Provider>
+  );
 }
 
 export function useUserData() {
-  return useContext(UserContext)
+  return useContext(UserContext);
 }

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEffect, useMemo, useState } from "react";
 
-import { useLocale } from "./hooks";
+import { useLocale } from "../hooks";
 
 export default function MainMenu() {
   const locale = useLocale();

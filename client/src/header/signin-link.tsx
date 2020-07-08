@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useState } from "react";
 
-import { useLocale } from "./hooks";
+import { useLocale } from "../hooks";
 
 const AuthModal = lazy(() => import("./auth-modal"));
 
