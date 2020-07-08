@@ -278,7 +278,9 @@ async function render(source, templates, pageEnvironment, allPagesInfo) {
     if (currentResult.errors.fatal) {
       errors.push(currentResult.errors.fatal);
     } else if (currentResult.errors.nonFatal) {
-      errors.push(...currentResult.errors.nonFatal);
+      for (const error of currentResult.errors.nonFatal) {
+        errors.push(error);
+      }
     }
   }
   return [output, errors];

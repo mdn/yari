@@ -95,7 +95,7 @@ test("content built bar page", () => {
   expect(doc.popularity).toBe(0.51);
   expect(doc.modified).toBeTruthy();
   expect(doc.source).toBeTruthy();
-  expect(doc.flaws.macros.length).toBe(11);
+  expect(doc.flaws.macros.length).toBe(12);
   expect(doc.flaws.macros[0].name).toBe("MacroBrokenLinkError");
   expect(doc.flaws.macros[0].macroSource).toBe('{{CSSxRef("bigfoot")}}');
   expect(doc.flaws.macros[0].line).toBe(10);
@@ -104,7 +104,7 @@ test("content built bar page", () => {
   expect(doc.flaws.macros[1].macroSource).toBe('{{CSSxRef("dumber")}}');
   expect(doc.flaws.macros[1].line).toBe(11);
   expect(doc.flaws.macros[1].column).toBe(6);
-  expect(doc.flaws.macros[1].redirectInfo).toBeTruthy();
+  expect(doc.flaws.macros[1].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[1].redirectInfo.current).toBe("dumber");
   expect(doc.flaws.macros[1].redirectInfo.suggested).toBe("number");
   expect(doc.flaws.macros[2].name).toBe("MacroBrokenLinkError");
@@ -115,7 +115,7 @@ test("content built bar page", () => {
   expect(doc.flaws.macros[3].macroSource).toBe('{{DOMxRef("Bob")}}');
   expect(doc.flaws.macros[3].line).toBe(14);
   expect(doc.flaws.macros[3].column).toBe(6);
-  expect(doc.flaws.macros[3].redirectInfo).toBeTruthy();
+  expect(doc.flaws.macros[3].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[3].redirectInfo.current).toBe("Bob");
   expect(doc.flaws.macros[3].redirectInfo.suggested).toBe("Blob");
   expect(doc.flaws.macros[4].name).toBe("MacroBrokenLinkError");
@@ -130,7 +130,7 @@ test("content built bar page", () => {
   );
   expect(doc.flaws.macros[5].line).toBe(17);
   expect(doc.flaws.macros[5].column).toBe(6);
-  expect(doc.flaws.macros[5].redirectInfo).toBeTruthy();
+  expect(doc.flaws.macros[5].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[5].redirectInfo.current).toBe("anchor");
   expect(doc.flaws.macros[5].redirectInfo.suggested).toBe("a");
   expect(doc.flaws.macros[6].name).toBe("MacroBrokenLinkError");
@@ -141,36 +141,43 @@ test("content built bar page", () => {
   expect(doc.flaws.macros[7].macroSource).toBe('{{jsxref("Stern_mode")}}');
   expect(doc.flaws.macros[7].line).toBe(20);
   expect(doc.flaws.macros[7].column).toBe(6);
-  expect(doc.flaws.macros[7].redirectInfo).toBeTruthy();
+  expect(doc.flaws.macros[7].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[7].redirectInfo.current).toBe("Stern_mode");
   expect(doc.flaws.macros[7].redirectInfo.suggested).toBe("Strict_mode");
   expect(doc.flaws.macros[8].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[8].macroSource).toBe('{{jsxref("Flag")}}');
   expect(doc.flaws.macros[8].line).toBe(22);
   expect(doc.flaws.macros[8].column).toBe(6);
-  expect(doc.flaws.macros[8].redirectInfo).toBeTruthy();
+  expect(doc.flaws.macros[8].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[8].redirectInfo.current).toBe("Flag");
   expect(doc.flaws.macros[8].redirectInfo.suggested).toBe("Boolean");
   expect(doc.flaws.macros[9].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[9].macroSource).toBe("{{ jsxref('Flag') }}");
   expect(doc.flaws.macros[9].line).toBe(23);
   expect(doc.flaws.macros[9].column).toBe(6);
-  expect(doc.flaws.macros[9].redirectInfo).toBeTruthy();
+  expect(doc.flaws.macros[9].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[9].redirectInfo.current).toBe("Flag");
   expect(doc.flaws.macros[9].redirectInfo.suggested).toBe("Boolean");
   expect(doc.flaws.macros[10].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[10].macroSource).toBe('{{JSXref("Flag")}}');
   expect(doc.flaws.macros[10].line).toBe(24);
   expect(doc.flaws.macros[10].column).toBe(6);
-  expect(doc.flaws.macros[10].redirectInfo).toBeTruthy();
+  expect(doc.flaws.macros[10].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[10].redirectInfo.current).toBe("Flag");
   expect(doc.flaws.macros[10].redirectInfo.suggested).toBe("Boolean");
+  expect(doc.flaws.macros[11].name).toBe("MacroRedirectedLinkError");
+  expect(doc.flaws.macros[11].macroSource).toBe('{{JSXref("Flag")}}');
+  expect(doc.flaws.macros[11].line).toBe(25);
+  expect(doc.flaws.macros[11].column).toBe(6);
+  expect(doc.flaws.macros[11].redirectInfo).toBeDefined();
+  expect(doc.flaws.macros[11].redirectInfo.current).toBe("Flag");
+  expect(doc.flaws.macros[11].redirectInfo.suggested).toBe("Boolean");
 
   const htmlFile = path.join(builtFolder, "index.html");
   expect(fs.existsSync(htmlFile)).toBeTruthy();
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("a[data-flaw-src]").length).toEqual(11);
+  expect($("a[data-flaw-src]").length).toEqual(12);
 
   const brokenLinks = $("a.new");
   expect(brokenLinks.length).toEqual(4);
@@ -233,17 +240,19 @@ test("content built bar page", () => {
   const booleanLinks = $(
     'a[href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean"]:not([title])'
   );
-  expect(booleanLinks.length).toEqual(5);
+  expect(booleanLinks.length).toEqual(6);
   expect(booleanLinks.eq(0).text()).toBe("Flag");
   expect(booleanLinks.eq(0).data("flaw-src")).toBe('{{jsxref("Flag")}}');
   expect(booleanLinks.eq(1).text()).toBe("Flag");
   expect(booleanLinks.eq(1).data("flaw-src")).toBe("{{ jsxref('Flag') }}");
   expect(booleanLinks.eq(2).text()).toBe("Flag");
   expect(booleanLinks.eq(2).data("flaw-src")).toBe('{{JSXref("Flag")}}');
-  expect(booleanLinks.eq(3).text()).toBe("Boolean");
-  expect(booleanLinks.eq(3).data("flaw-src")).toBeFalsy();
-  expect(booleanLinks.eq(4).text()).toBe("bOOleAn");
+  expect(booleanLinks.eq(3).text()).toBe("Flag");
+  expect(booleanLinks.eq(3).data("flaw-src")).toBe('{{JSXref("Flag")}}');
+  expect(booleanLinks.eq(4).text()).toBe("Boolean");
   expect(booleanLinks.eq(4).data("flaw-src")).toBeFalsy();
+  expect(booleanLinks.eq(5).text()).toBe("bOOleAn");
+  expect(booleanLinks.eq(5).data("flaw-src")).toBeFalsy();
 });
 
 test("broken links flaws", () => {
