@@ -75,23 +75,23 @@ describe("testing the Renderer class", () => {
     }
     // Next, let's check the errors.
     expect(errors.length).toBe(7);
-    expect(errors[0]).toBeInstanceOf(MacroNotFoundError);
-    expect(errors[0]).toHaveProperty("line", 2);
-    expect(errors[0]).toHaveProperty("column", 7);
-    expect(errors[0]).toHaveProperty("macroName", "nonExistentMacro");
+    expect(errors[0]).toBeInstanceOf(MacroBrokenLinkError);
+    expect(errors[0]).toHaveProperty("line", 1);
+    expect(errors[0]).toHaveProperty("column", 1);
     expect(errors[0]).toHaveProperty(
-      "errorMessage",
-      "Unknown macro nonexistentmacro"
-    );
-    expect(errors[1]).toBeInstanceOf(MacroBrokenLinkError);
-    expect(errors[1]).toHaveProperty("line", 1);
-    expect(errors[1]).toHaveProperty("column", 1);
-    expect(errors[1]).toHaveProperty(
       "errorMessage",
       "/en-US/docs/Web/CSS/bigfoot does not exist"
     );
-    expect(errors[1]).toHaveProperty("macroName", "cssxref");
-    expect(errors[1]).toHaveProperty("macroSource", '{{cssxref("bigfoot")}}');
+    expect(errors[0]).toHaveProperty("macroName", "cssxref");
+    expect(errors[0]).toHaveProperty("macroSource", '{{cssxref("bigfoot")}}');
+    expect(errors[1]).toBeInstanceOf(MacroNotFoundError);
+    expect(errors[1]).toHaveProperty("line", 2);
+    expect(errors[1]).toHaveProperty("column", 7);
+    expect(errors[1]).toHaveProperty("macroName", "nonExistentMacro");
+    expect(errors[1]).toHaveProperty(
+      "errorMessage",
+      "Unknown macro nonexistentmacro"
+    );
     expect(errors[2]).toBeInstanceOf(MacroRedirectedLinkError);
     expect(errors[2]).toHaveProperty("line", 3);
     expect(errors[2]).toHaveProperty("column", 7);
