@@ -15,9 +15,10 @@
  * @flow
  */
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import CloseIcon from "../kumastyles/general/close.svg";
+import { CATEGORY_MONTHLY_PAYMENTS, useGA } from "../ga-context";
 import { useLocale } from "../hooks";
 import { useUserData } from "../user-context";
 
@@ -190,7 +191,17 @@ function DeveloperNeedsBanner() {
 }
 
 function SubscriptionBanner() {
+  const ga = useGA();
   const locale = useLocale();
+
+  useEffect(() => {
+    ga("send", {
+      hitType: "event",
+      eventCategory: CATEGORY_MONTHLY_PAYMENTS,
+      eventAction: "CTA shown",
+      eventLabel: "banner",
+    });
+  }, [ga]);
 
   return (
     <Banner

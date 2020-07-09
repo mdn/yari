@@ -1,11 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
+
 import { BrowserRouter as Router } from "react-router-dom";
+import { App } from "./app";
+import { GAProvider } from "./ga-context";
+import { interceptAndRedirectKumaURLs } from "./kuma-redirects";
+import { UserDataProvider } from "./user-context";
+
 import "typeface-zilla-slab";
 import "./index.scss";
-import { App } from "./app";
-import { UserDataProvider } from "./user-context";
-import { interceptAndRedirectKumaURLs } from "./kuma-redirects";
 // import * as serviceWorker from './serviceWorker';
 
 const container = document.getElementById("root");
@@ -22,11 +25,13 @@ interceptAndRedirectKumaURLs();
 
 const app = (
   <React.StrictMode>
-    <UserDataProvider>
-      <Router>
-        <App doc={docData} />
-      </Router>
-    </UserDataProvider>
+    <GAProvider>
+      <UserDataProvider>
+        <Router>
+          <App doc={docData} />
+        </Router>
+      </UserDataProvider>
+    </GAProvider>
   </React.StrictMode>
 );
 if (container.firstElementChild) {

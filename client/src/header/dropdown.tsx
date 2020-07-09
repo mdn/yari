@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
+import { useGA } from "../ga-context";
 
 type DropdownProps = {
   // A string set as the id attribute to uniquely identify this
@@ -32,6 +33,7 @@ type DropdownProps = {
 };
 
 export default function Dropdown(props: DropdownProps) {
+  const ga = useGA();
   const [showDropdownMenu, setShowDropdownMenu] = useState(false);
 
   function hideDropdownMenuIfVisible() {
@@ -73,6 +75,13 @@ export default function Dropdown(props: DropdownProps) {
         aria-label={props.ariaLabel}
         onClick={() => {
           setShowDropdownMenu(!showDropdownMenu);
+        }}
+        onFocus={function (event) {
+          ga("send", {
+            hitType: "event",
+            eventCategory: "MozMenu",
+            eventAction: event.target.id,
+          });
         }}
       >
         {props.label}

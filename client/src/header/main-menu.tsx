@@ -1,12 +1,40 @@
 import * as React from "react";
 import { useEffect, useMemo, useState } from "react";
 
+import { useGA } from "../ga-context";
 import { useLocale } from "../hooks";
 
 export default function MainMenu() {
   const locale = useLocale();
   const [showMainMenu, setShowMainMenu] = useState(false);
   const [visibleSubMenu, setVisibleSubMenu] = useState<string | null>(null);
+  const ga = useGA();
+
+  /**
+   * Send a signal to GA when there is an interaction on one
+   * of the main menu items.
+   * @param {Object} event - The event object that was triggered
+   */
+  function sendMenuItemInteraction(
+    event:
+      | React.FocusEvent<HTMLButtonElement>
+      | React.MouseEvent<HTMLAnchorElement>
+  ) {
+    if (!(event.target instanceof HTMLElement)) {
+      return;
+    }
+    const label =
+      event.target instanceof HTMLAnchorElement
+        ? event.target.href
+        : event.target.textContent;
+
+    ga("send", {
+      hitType: "event",
+      eventCategory: "Wiki",
+      eventAction: "MainNav",
+      eventLabel: label,
+    });
+  }
 
   function hideSubMenuIfVisible() {
     if (visibleSubMenu) {
@@ -168,6 +196,7 @@ export default function MainMenu() {
               type="button"
               className="top-level-entry"
               aria-haspopup="true"
+              onFocus={sendMenuItemInteraction}
               onClick={() => {
                 setVisibleSubMenu(
                   visibleSubMenu === menuEntry.label ? null : menuEntry.label
@@ -191,11 +220,19 @@ export default function MainMenu() {
                       target="_blank"
                       rel="noopener noreferrer"
                       href={item.url}
+                      onClick={sendMenuItemInteraction}
+                      onContextMenu={sendMenuItemInteraction}
                     >
                       {item.label} &#x1f310;
                     </a>
                   ) : (
-                    <a href={item.url}>{item.label}</a>
+                    <a
+                      href={item.url}
+                      onClick={sendMenuItemInteraction}
+                      onContextMenu={sendMenuItemInteraction}
+                    >
+                      {item.label}
+                    </a>
                   )}
                 </li>
               ))}
