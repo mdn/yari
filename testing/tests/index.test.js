@@ -339,12 +339,12 @@ describe("fixing flaws", () => {
       windowsHide: true,
     }).toString();
 
+    const regexPattern = /Would have modified "(.*)", if this was not a dry run/g;
     const dryRunNotices = dryrunStdout
       .split("\n")
-      .filter((line) => /Would have modified/.test(line));
+      .filter((line) => regexPattern.test(line));
     expect(dryRunNotices.length).toBe(1);
     expect(dryRunNotices[0]).toContain(pattern);
-
     const dryrunFiles = await getChangedFiles();
     expect(dryrunFiles.length).toBe(0);
 
@@ -357,7 +357,11 @@ describe("fixing flaws", () => {
 
     const files = await getChangedFiles();
     expect(files.length).toBe(1);
-    // We could be fancy and open `path.join(baseDir, files[0])` to
-    // inspect the actual changes it made but it's probably overkill for now.
+    const newRawHtml = fs.readFileSync(path.join(baseDir, files[0]), "utf-8");
+    expect(newRawHtml).toContain("{{CSSxRef('number')}}");
+    expect(newRawHtml).toContain('{{htmlattrxref("href", "a")}}');
+    // XXX Note, at the moment, we're only fixing macros.
+    // But as part of https://github.com/mdn/yari/issues/680 it is intended
+    // to fix other things such as broken links.
   });
 });
