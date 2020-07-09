@@ -113,6 +113,10 @@ const read = (
     body: rawHtml,
     bodyBegin: frontMatterOffset,
   } = fm(rawContent);
+  // Make a (shallow) clone of the metadata in case we need the metadata
+  // as it appears in the source before we add extra pieces of information.
+  // This is useful if you want to re-save the file as it *was*.
+  const metadataUntouched = Object.assign({}, metadata);
 
   metadata.locale = extractLocale(contentRoot, folder);
 
@@ -141,6 +145,7 @@ const read = (
 
   return {
     metadata,
+    metadataUntouched,
     rawHtml,
     rawContent,
     fileInfo: {

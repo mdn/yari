@@ -15,6 +15,7 @@ require("dotenv").config({ path: process.env.ENV_FILE });
 
 const cheerio = require("./monkeypatched-cheerio");
 const ProgressBar = require("./progress-bar");
+const { printBasicDiff } = require("./print-diff");
 const { packageBCD } = require("./resolve-bcd");
 const { buildHtmlAndJsonFromDoc } = require("ssr");
 const { findMatchesInText } = require("./matches-in-text");
@@ -1509,12 +1510,13 @@ class Builder {
 
   async processFolder(source, folder, config) {
     const t0 = performance.now();
-    const { metadata, rawContent, rawHtml, fileInfo } = Document.read(
-      source.filepath,
-      folder,
-      false,
-      this.allWikiHistory
-    );
+    const {
+      metadata,
+      metadataUntouched,
+      rawContent,
+      rawHtml,
+      fileInfo,
+    } = Document.read(source.filepath, folder, false, this.allWikiHistory);
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
     const mdnUrlLC = mdn_url.toLowerCase();
 
@@ -1588,6 +1590,80 @@ class Builder {
             flaw.line += fileInfo.frontMatterOffset - 1;
           }
         });
+
+        if (this.options.fixFlaws) {
+          // For flaws that can be changed, change the source itself.
+
+          // Copy of the original raw HTML that we're going to (potentially)
+          // repeatedly do string replaces on.
+          let newRawHtml = rawHtml;
+
+          // XXX at the moment, due to a bug, if a bad macro call is repeated
+          // you only get 1 flaw object.
+          // See https://github.com/mdn/yari/issues/756#issuecomment-654313496
+          // So if you have:
+          //
+          //  <p>First time:  {{cssref("willredirect")}}</p>
+          //  <p>Second time: {{cssref("willredirect")}}</p>
+          //
+          // ...you actually only get 1 `MacroRedirectedLinkError` flaw
+          // for these two occurences.
+
+          flaws
+            .filter((flaw) => {
+              // Only interested in 'MacroRedirectedLinkError' flaws because
+              // them we can do something about.
+              // The flaw might be from a prerequisite, if so, leave it alone
+              // See https://github.com/mdn/yari/issues/772
+              return (
+                flaw.name === "MacroRedirectedLinkError" &&
+                (!flaw.filepath || path.dirname(flaw.filepath) === folder)
+              );
+            })
+            .forEach((flaw, i) => {
+              if (!newRawHtml.includes(flaw.macroSource)) {
+                throw new Error(
+                  `rawHtml doesn't contain macroSource (${flaw.macroSource})`
+                );
+              }
+              const newMacroSource = flaw.macroSource.replace(
+                flaw.redirectInfo.current,
+                flaw.redirectInfo.suggested
+              );
+              // Remember, in JavaScript only the first occurrence will be replaced.
+              newRawHtml = newRawHtml.replace(flaw.macroSource, newMacroSource);
+              // If the flaw could be fixed, it's no longer a flaw. So remove
+              // it from the array.
+              // We know the `newRawHtml.replace(flaw.macroSource` will always
+              // make a change because of the
+              // `newRawHtml.includes(flaw.macroSource)` line above.
+              flaws.splice(i, 1);
+            });
+
+          if (newRawHtml !== rawHtml) {
+            // It was improved!!
+            // If you're running in dry-run mode, always assume verbose.
+            if (this.options.fixFlawsVerbose || this.options.fixFlawsDryRun) {
+              console.log(`\nIn ${folder}...`);
+              printBasicDiff(rawHtml, newRawHtml);
+            }
+            const rawHtmlFilepath = fileInfo.path;
+            if (this.options.fixFlawsDryRun) {
+              console.log(
+                chalk.yellow(
+                  `Would have modified "${rawHtmlFilepath}", if this was not a dry run.`
+                )
+              );
+            } else {
+              Document.update(
+                source.filepath,
+                folder,
+                newRawHtml,
+                metadataUntouched
+              );
+            }
+          }
+        }
 
         if (this.options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
           // Report and exit immediately on the first document with flaws.
