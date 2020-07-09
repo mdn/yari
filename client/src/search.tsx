@@ -41,7 +41,7 @@ function useSearchIndex(): [null | SearchIndex, () => void] {
   const locale = useParams().locale || "en-US";
 
   const url = `/${locale}/titles.json`;
-  const { error, data: fetchedTitles } = useSWR<Titles>(
+  const { error, data: titles } = useSWR<Titles>(
     shouldInitialize ? url : null,
     async (url) => {
       const response = await fetch(url);
@@ -49,7 +49,6 @@ function useSearchIndex(): [null | SearchIndex, () => void] {
         throw new Error(await response.text());
       }
       const { titles } = await response.json();
-      localStorage.setItem(url, JSON.stringify(titles));
       return titles;
     },
     { revalidateOnFocus: false }
@@ -60,19 +59,9 @@ function useSearchIndex(): [null | SearchIndex, () => void] {
   }
 
   useEffect(() => {
-    if (!shouldInitialize) {
+    if (!titles) {
       return;
     }
-
-    let titles = fetchedTitles;
-    if (!titles) {
-      const titlesRaw = localStorage.getItem(url);
-      if (!titlesRaw) {
-        return;
-      }
-      titles = JSON.parse(titlesRaw) as Titles;
-    }
-
     const flex = new (FlexSearch as any)({
       suggest: true,
       tokenize: "forward",
@@ -88,7 +77,7 @@ function useSearchIndex(): [null | SearchIndex, () => void] {
     const fuzzy = new FuzzySearch(urisSorted);
 
     setSearchIndex({ flex, fuzzy, titles });
-  }, [shouldInitialize, fetchedTitles, url]);
+  }, [shouldInitialize, titles, url]);
 
   return [searchIndex, () => setShouldInitialize(true)];
 }

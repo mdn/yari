@@ -4,7 +4,8 @@ import { Routes, Route, Link } from "react-router-dom";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { NoMatch } from "./routing";
-const SearchNavigateWidget = lazy(() => import("./search"));
+import SearchNavigateWidget from "./search";
+
 const AllFlaws = lazy(() => import("./flaws"));
 const DocumentEdit = lazy(() => import("./document/forms/edit"));
 const DocumentCreate = lazy(() => import("./document/forms/create"));
@@ -51,11 +52,7 @@ function Header() {
       <h1>
         <Link to="/">MDN Web Docs</Link>
       </h1>
-      {!isServer && (
-        <Suspense fallback={<div>Loading...</div>}>
-          <SearchNavigateWidget />
-        </Suspense>
-      )}
+      <SearchNavigateWidget />
     </header>
   );
 }
