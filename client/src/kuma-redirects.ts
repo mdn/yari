@@ -4,16 +4,16 @@ function isKumaURL(pathname) {
   return KUMA_PATH_ROOTS.includes(root1) || KUMA_PATH_ROOTS.includes(root2);
 }
 
-function toKumaURL(pathname) {
-  const url = new URL(pathname, "http://" + process.env.REACT_APP_KUMA_HOST);
-  url.searchParams.set("DEV_ORIGIN", window.location.origin);
-  return url.toString();
+function toKumaURL(url: URL) {
+  const newURL = new URL(url.toString());
+  newURL.host = process.env.REACT_APP_KUMA_HOST || "";
+  newURL.searchParams.set("DEV_ORIGIN", window.location.origin);
+  return newURL.toString();
 }
 
 function redirectKumaURLs() {
-  const { pathname } = window.location;
-  if (isKumaURL(pathname)) {
-    window.location.href = toKumaURL(pathname);
+  if (isKumaURL(window.location.pathname)) {
+    window.location.href = toKumaURL(new URL(window.location.href));
   }
 }
 
@@ -37,7 +37,7 @@ export function interceptAndRedirectKumaURLs() {
         return;
       }
       event.preventDefault();
-      form.action = toKumaURL(new URL(form.action).pathname);
+      form.action = toKumaURL(new URL(form.action));
       form.submit();
     });
   }

@@ -66,7 +66,10 @@ export default function Login() {
           <a href={`${viewProfileLink}/edit`}>{"Edit profile"}</a>
         </li>
         <li>
-          <form action={`/${locale}/users/signout`} method="post">
+          <form
+            action={`/${locale}/users/signout?next=${window.location.pathname}`}
+            method="post"
+          >
             <input name="next" type="hidden" value={LOCATION} />
             <button className="signout-button" type="submit">
               Sign out
