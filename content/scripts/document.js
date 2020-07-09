@@ -107,11 +107,12 @@ const read = (
   if (!fs.existsSync(filePath)) {
     return null;
   }
+  const rawContent = fs.readFileSync(filePath, "utf8");
   const {
     attributes: metadata,
     body: rawHtml,
     bodyBegin: frontMatterOffset,
-  } = fm(fs.readFileSync(filePath, "utf8"));
+  } = fm(rawContent);
 
   metadata.locale = extractLocale(contentRoot, folder);
 
@@ -141,6 +142,7 @@ const read = (
   return {
     metadata,
     rawHtml,
+    rawContent,
     fileInfo: {
       path: filePath,
       frontMatterOffset,
@@ -200,8 +202,9 @@ function update(contentRoot, folder, rawHtml, metadata) {
 }
 
 function del(contentRoot, folder) {
+  const { metadata } = read(contentRoot, folder);
   fs.rmdirSync(folder, { recursive: true });
-  updateWikiHistory(contentRoot, oldSlug);
+  updateWikiHistory(path.join(contentRoot, metadata.locale), metadata.slug);
 }
 
 module.exports = {

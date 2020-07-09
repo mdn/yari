@@ -1,21 +1,19 @@
 import React, { useEffect, useReducer, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import useSWR from "swr";
 import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
 
 import { humanizeFlawName } from "../../flaw-utils";
-import { Doc } from "../types";
+import { Doc, Link, MacroErrorMessage } from "../types";
 import "./flaws.scss";
 
-interface FlatFlaw {
+interface FlawCount {
   name: string;
-  flaws: string[];
   count: number;
 }
 
 const FLAWS_HASH = "#_flaws";
-export function ToggleDocumentFlaws({ flaws }: Pick<Doc, "flaws">) {
+export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [show, toggle] = useReducer((v) => !v, location.hash === FLAWS_HASH);
@@ -38,21 +36,22 @@ export function ToggleDocumentFlaws({ flaws }: Pick<Doc, "flaws">) {
     }
   }, [location, navigate, show]);
 
-  const flatFlaws: FlatFlaw[] = Object.entries(flaws)
+  const flawsCounts = Object.entries(doc.flaws)
     .map(([name, actualFlaws]) => ({
       name,
-      flaws: actualFlaws,
       count: actualFlaws.length,
     }))
     .sort((a, b) => b.count - a.count);
 
   return (
     <div id={FLAWS_HASH.slice(1)} ref={rootElement}>
-      {flatFlaws.length > 0 ? (
+      {flawsCounts.length > 0 ? (
         <button type="submit" onClick={toggle}>
           {show
             ? "Hide flaws"
-            : `Show flaws (${flatFlaws.map((flaw) => flaw.count).join(" + ")})`}
+            : `Show flaws (${flawsCounts
+                .map((flaw) => flaw.count)
+                .join(" + ")})`}
         </button>
       ) : (
         <p>
@@ -64,11 +63,11 @@ export function ToggleDocumentFlaws({ flaws }: Pick<Doc, "flaws">) {
       )}
 
       {show ? (
-        <Flaws flaws={flatFlaws} />
+        <Flaws doc={doc} flaws={flawsCounts} />
       ) : (
         <small>
           {/* a one-liner about all the flaws */}
-          {flatFlaws
+          {flawsCounts
             .map((flaw) => `${humanizeFlawName(flaw.name)}: ${flaw.count}`)
             .join(" + ")}
         </small>
@@ -77,13 +76,7 @@ export function ToggleDocumentFlaws({ flaws }: Pick<Doc, "flaws">) {
   );
 }
 
-interface FlawCheck {
-  count: number;
-  name: string;
-  flaws: any[]; // XXX fixme!
-}
-
-function Flaws({ flaws }: { flaws: FlawCheck[] }) {
+function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
   if (process.env.NODE_ENV !== "development") {
     throw new Error("This shouldn't be used in non-development builds");
   }
@@ -92,13 +85,22 @@ function Flaws({ flaws }: { flaws: FlawCheck[] }) {
       {flaws.map((flaw) => {
         switch (flaw.name) {
           case "broken_links":
-            return <BrokenLinks key="broken_links" urls={flaw.flaws} />;
+            return (
+              <BrokenLinks
+                key="broken_links"
+                sourceFolder={doc.source.folder}
+                links={doc.flaws.broken_links}
+              />
+            );
           case "bad_bcd_queries":
             return (
-              <BadBCDQueries key="bad_bcd_queries" messages={flaw.flaws} />
+              <BadBCDQueries
+                key="bad_bcd_queries"
+                messages={doc.flaws.bad_bcd_queries}
+              />
             );
           case "macros":
-            return <Macros key="macros" messages={flaw.flaws} />;
+            return <Macros key="macros" messages={doc.flaws.macros} />;
           default:
             throw new Error(`Unknown flaw check '${flaw.name}'`);
         }
@@ -107,70 +109,83 @@ function Flaws({ flaws }: { flaws: FlawCheck[] }) {
   );
 }
 
-function BrokenLinks({ urls }: { urls: string[] }) {
-  const { data, error } = useSWR(
-    `/_redirects`,
-    async (url) => {
-      try {
-        const response = await fetch(url, {
-          method: "post",
-          body: JSON.stringify({ urls }),
-          headers: { "Content-Type": "application/json" },
-        });
-        if (!response.ok) {
-          throw new Error(`${response.status} on ${url}`);
-        }
-        return await response.json();
-      } catch (err) {
-        throw err;
-      }
-    },
-    {
-      // The chances of redirects to have changed since first load is
-      // just too small to justify using 'revalidateOnFocus'.
-      revalidateOnFocus: false,
+function BrokenLinks({
+  sourceFolder,
+  links,
+}: {
+  sourceFolder: string;
+  links: Link[];
+}) {
+  const [opening, setOpening] = React.useState<string | null>(null);
+  useEffect(() => {
+    let unsetOpeningTimer: ReturnType<typeof setTimeout>;
+    if (opening) {
+      unsetOpeningTimer = setTimeout(() => {
+        setOpening(null);
+      }, 3000);
     }
-  );
+    return () => {
+      if (unsetOpeningTimer) {
+        clearTimeout(unsetOpeningTimer);
+      }
+    };
+  }, [opening]);
+
+  const filepath = sourceFolder + "/index.html";
+
+  function equalUrls(url1: string, url2: string) {
+    return (
+      new URL(url1, "http://example.com").pathname ===
+      new URL(url2, "http://example.com").pathname
+    );
+  }
+
+  function openInEditor(key: string, line: number, column: number) {
+    const sp = new URLSearchParams();
+    sp.set("filepath", filepath);
+    sp.set("line", `${line}`);
+    sp.set("column", `${column}`);
+    console.log(
+      `Going to try to open ${filepath}:${line}:${column} in your editor`
+    );
+    setOpening(key);
+    fetch(`/_open?${sp.toString()}`).catch((err) => {
+      console.warn(`Error trying to _open?${sp.toString()}:`, err);
+    });
+  }
 
   useEffect(() => {
-    // 'data' will be 'undefined' until the server has had a chance to
-    // compute all the redirects. Don't bother until we have that data.
-    if (!data) {
-      return;
-    }
     const annotations: RoughAnnotation[] = [];
-    // If the anchor already had a title, put it into this map.
-    // That way, when we restore the titles, we know what it used to be.
-    const originalTitles = new Map();
+
+    let linkIndex = 0;
     for (const anchor of [
       ...document.querySelectorAll<HTMLAnchorElement>("div.content a[href]"),
     ]) {
-      const hrefURL = new URL(anchor.href);
-      const { pathname, hash } = hrefURL;
-      if (pathname in data.redirects) {
-        // Trouble! But is it a redirect?
-        let correctURI = data.redirects[pathname];
-        let annotationColor = "red";
-        originalTitles.set(anchor.href, anchor.title);
-        if (correctURI) {
-          if (hash) {
-            correctURI += hash;
-          }
-          // It can be fixed!
-          annotationColor = "orange";
-          anchor.title = `Consider fixing! It's actually a redirect to ${correctURI}`;
-        } else {
-          anchor.title = "Broken link! Links to a page that will not be found";
-        }
-        annotations.push(
-          annotate(anchor, {
-            type: "box",
-            color: annotationColor,
-            animationDuration: 300,
-          })
-        );
+      const link = links[linkIndex];
+      if (!link) {
+        break;
       }
+      // A `anchor.href` is always absolute with `http//localhost/...`.
+      // But `link.href` is not necessarily so, but it might.
+      // The only "hashing" that matters is the pathname.
+      if (!equalUrls(anchor.href, link.href)) {
+        continue;
+      }
+      linkIndex++;
+      const annotationColor = link.suggestion ? "orange" : "red";
+      anchor.dataset.originalTitle = anchor.title;
+      anchor.title = link.suggestion
+        ? `Consider fixing! Suggestion: ${link.suggestion}`
+        : "Broken link! Links to a page that will not be found";
+      annotations.push(
+        annotate(anchor, {
+          type: "box",
+          color: annotationColor,
+          animationDuration: 300,
+        })
+      );
     }
+
     const ag = annotationGroup(annotations);
     ag.show();
 
@@ -181,96 +196,96 @@ function BrokenLinks({ urls }: { urls: string[] }) {
       for (const anchor of Array.from(
         document.querySelectorAll<HTMLAnchorElement>(`div.content a`)
       )) {
-        // Only look at anchors that were bothered with at all in the
-        // beginning of the effect.
-        if (originalTitles.has(anchor.href)) {
-          const currentTitle = anchor.title;
-          const originalTitle = originalTitles.get(anchor.href);
-          if (currentTitle !== originalTitle) {
-            anchor.title = originalTitle;
-          }
+        if (anchor.dataset.originalTitle !== undefined) {
+          anchor.title = anchor.dataset.originalTitle;
         }
       }
     };
-  }, [data, urls]);
+  }, [links]);
 
   return (
     <div className="flaw flaw__broken_links">
       <h3>Broken Links</h3>
-      {!data && !error && (
-        <p>
-          <i>Checking all URLs for redirects...</i>
-        </p>
-      )}
-      {error && (
-        <div className="error-message fetch-error">
-          <p>Error checking for redirects:</p>
-          <pre>{error.toString()}</pre>
-        </div>
-      )}
       <ol>
-        {urls.map((url) => (
-          <li key={url}>
-            <code>{url}</code>
-            {data && data.redirects[url] && (
-              <span>
-                Actually a redirect to... <code>{data.redirects[url]}</code>
-              </span>
-            )}{" "}
-            <span
-              role="img"
-              aria-label="Click to highlight broken link"
-              title="Click to highlight broken link anchor"
-              style={{ cursor: "zoom-in" }}
-              onClick={() => {
-                // Keep it simple! Clicking this little thing will scroll
-                // the FIRST such anchor element in the DOM into view.
-                // We COULD be fancy and remember which "n'th" one you clicked
-                // so that clicking again will scroll the next one into view.
-                // Perhaps another day.
-                const annotations: RoughAnnotation[] = [];
-                let firstOne = true;
-                for (const anchor of [
-                  ...document.querySelectorAll<HTMLAnchorElement>(
-                    "div.content a[href]"
-                  ),
-                ]) {
-                  const { pathname } = new URL(anchor.href);
-                  if (pathname === url) {
-                    if (firstOne) {
+        {links.map((link, i) => {
+          const key = `${link.href}${link.line}${link.column}`;
+          return (
+            <li key={key}>
+              <code>{link.href}</code>{" "}
+              {link.suggestion && (
+                <span>
+                  Suggested fix: <code>{link.suggestion}</code>
+                </span>
+              )}{" "}
+              <span
+                role="img"
+                aria-label="Click to highlight broken link"
+                title="Click to highlight broken link anchor"
+                style={{ cursor: "zoom-in" }}
+                onClick={() => {
+                  const annotations: RoughAnnotation[] = [];
+
+                  let linkIndex = 0;
+                  for (const anchor of [
+                    ...document.querySelectorAll<HTMLAnchorElement>(
+                      "div.content a[href]"
+                    ),
+                  ]) {
+                    const link = links[linkIndex];
+                    if (!link) {
+                      break;
+                    }
+                    if (!equalUrls(anchor.href, link.href)) {
+                      continue;
+                    }
+
+                    if (i === linkIndex) {
                       anchor.scrollIntoView({
                         behavior: "smooth",
                         block: "center",
                       });
-                      firstOne = false;
+
+                      if (anchor.parentElement) {
+                        annotations.push(
+                          annotate(anchor, {
+                            type: "circle",
+                            color: "purple",
+                            animationDuration: 500,
+                            strokeWidth: 2,
+                            padding: 6,
+                          })
+                        );
+                      }
                     }
-                    if (anchor.parentElement) {
-                      annotations.push(
-                        annotate(anchor, {
-                          type: "circle",
-                          color: "purple",
-                          animationDuration: 500,
-                          strokeWidth: 2,
-                          padding: 6,
-                        })
-                      );
-                    }
+                    linkIndex++;
                   }
-                }
-                if (annotations.length) {
-                  const ag = annotationGroup(annotations);
-                  ag.show();
-                  // Only show this extra highlight temporarily
-                  window.setTimeout(() => {
-                    ag.hide();
-                  }, 2000);
-                }
-              }}
-            >
-              👀
-            </span>
-          </li>
-        ))}
+
+                  if (annotations.length) {
+                    const ag = annotationGroup(annotations);
+                    ag.show();
+                    // Only show this extra highlight temporarily
+                    window.setTimeout(() => {
+                      ag.hide();
+                    }, 2000);
+                  }
+                }}
+              >
+                👀
+              </span>{" "}
+              <a
+                href={`file://${filepath}`}
+                onClick={(event: React.MouseEvent) => {
+                  event.preventDefault();
+                  openInEditor(key, link.line, link.column);
+                }}
+                title="Click to open in your editor"
+              >
+                line {link.line}:{link.column}
+              </a>{" "}
+              {opening && opening === key && <small>Opening...</small>}
+            </li>
+          );
+        })}
       </ol>
     </div>
   );
@@ -289,19 +304,6 @@ function BadBCDQueries({ messages }) {
       </ul>
     </div>
   );
-}
-
-interface MacroErrorMessage {
-  name: string;
-  error: {
-    path?: string;
-  };
-  errorMessage: string;
-  line: number;
-  column: number;
-  filepath: string;
-  sourceContext: string;
-  macroName: string;
 }
 
 function Macros({ messages }: { messages: MacroErrorMessage[] }) {

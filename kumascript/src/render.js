@@ -58,23 +58,46 @@ function normalizeMacroName(name) {
   return name.replace(/:/g, "-").toLowerCase();
 }
 
+class Prerequisite {
+  constructor(uri, source, token) {
+    this.uri = uri;
+    this.source = source;
+    this.token = token;
+  }
+
+  createFlaw(message) {
+    return new MacroExecutionError(
+      message instanceof Error ? message : new Error(message),
+      this.source,
+      this.token
+    );
+  }
+}
+
 function getPrerequisites(source) {
-  // Returns a set of URI's that must be rendered prior to
-  // rendering this source.
+  // Returns a list of objects that represent URI's that must be rendered prior to
+  // rendering this source. Each object contains the URI as well as the source and
+  // token for that URI. The token provides information like the line and column
+  // numbers at which the macro referencing the URI was found.
   const tokens = Parser.parse(source);
   // Loop through the tokens, looking for macros whose resolution
   // requires an already-rendered document. In other words, look
   // for prerequisites, or documents that need to be rendered prior
   // to the rendering of this document.
-  const result = new Set();
-  for (let token of tokens) {
+  const result = [];
+  const already = new Set();
+  for (const token of tokens) {
     if (token.type === "MACRO") {
       const macroName = normalizeMacroName(token.name);
       // The resolution of these macros requires a fully-rendered document
       // identified by their first argument.
       if (macroName === "page" || macroName === "includesubnav") {
         if (token.args.length) {
-          result.add(token.args[0]);
+          const uri = token.args[0];
+          if (!already.has(uri)) {
+            already.add(uri);
+            result.push(new Prerequisite(uri, source, token));
+          }
         }
       }
     }
