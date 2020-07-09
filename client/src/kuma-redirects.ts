@@ -6,7 +6,7 @@ function isKumaURL(pathname) {
 
 function toKumaURL(pathname) {
   const url = new URL(pathname, "http://" + process.env.REACT_APP_KUMA_HOST);
-  url.searchParams.set("DEV_ORIGIN_HOST", window.location.host);
+  url.searchParams.set("DEV_ORIGIN", window.location.origin);
   return url.toString();
 }
 
@@ -19,7 +19,7 @@ function redirectKumaURLs() {
 
 /**
  * Redirects URLs that should be handled within kuma for now. It also adds a
- * query parameter named DEV_ORIGIN_HOST which kuma checks for in dev mode
+ * query parameter named DEV_ORIGIN which kuma checks for in dev mode
  * to redirect back and set auth cookies for this domain as well.
  */
 export function interceptAndRedirectKumaURLs() {
@@ -28,6 +28,7 @@ export function interceptAndRedirectKumaURLs() {
     process.env.REACT_APP_KUMA_HOST
   ) {
     redirectKumaURLs();
+
     window.addEventListener("popstate", redirectKumaURLs);
 
     window.addEventListener("submit", (event) => {
