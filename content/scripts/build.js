@@ -1630,8 +1630,7 @@ class Builder {
                 flaw.redirectInfo.current,
                 flaw.redirectInfo.suggested
               );
-              // Remember, string replace will only the first occurence will
-              // be replaced in JavaScript.
+              // Remember, in JavaScript only the first occurrence will be replaced.
               newRawHtml = newRawHtml.replace(flaw.macroSource, newMacroSource);
               // If the flaw could be fixed, it's no longer a flaw. So remove
               // it from the array.
