@@ -6,7 +6,6 @@ import { Document } from "./document";
 import Footer from "./footer";
 import Header from "./header";
 import { NoMatch } from "./routing";
-import { UserDataProvider } from "./user-context";
 
 const ActiveBanner = lazy(() => import("./banners/active-banner"));
 const AllFlaws = lazy(() => import("./flaws"));
@@ -17,7 +16,7 @@ const isServer = typeof window === "undefined";
 
 function Layout({ children }) {
   return (
-    <UserDataProvider>
+    <>
       <Header />
       <section className="section">{children}</section>
       {!isServer && (
@@ -26,7 +25,7 @@ function Layout({ children }) {
         </Suspense>
       )}
       <Footer />
-    </UserDataProvider>
+    </>
   );
 }
 

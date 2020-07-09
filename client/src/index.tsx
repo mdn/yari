@@ -4,6 +4,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import "typeface-zilla-slab";
 import "./index.scss";
 import { App } from "./app";
+import { UserDataProvider } from "./user-context";
 // import * as serviceWorker from './serviceWorker';
 
 const container = document.getElementById("root");
@@ -17,9 +18,11 @@ if (documentDataElement) {
 }
 const app = (
   <React.StrictMode>
-    <Router>
-      <App doc={docData} />
-    </Router>
+    <UserDataProvider>
+      <Router>
+        <App doc={docData} />
+      </Router>
+    </UserDataProvider>
   </React.StrictMode>
 );
 if (container.firstElementChild) {

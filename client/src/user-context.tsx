@@ -50,8 +50,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
   const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
-    const controller = new AbortController();
-    fetch("/api/v1/whoami", { signal: controller.signal })
+    fetch("/api/v1/whoami")
       .then((response) => {
         if (!response.ok) {
           throw new Error(`${response.status} on ${response.url}`);
@@ -77,13 +76,8 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         });
       })
       .catch((error) => {
-        if (error.name !== "AbortError") {
-          console.error("error while fetching user data", error);
-        }
+        console.error("error while fetching user data", error);
       });
-    return () => {
-      controller.abort();
-    };
   }, []);
 
   return (
