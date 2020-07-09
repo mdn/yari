@@ -91,8 +91,8 @@ to `localhost.org` is automatically appended to the request.
 Note that the proxying is **hardcoding** the host (not to be confused with
 "host name" which includes the port number) `localhost.org:8000` and that's
 how it knows. But this value is only a hardcoded default. You can change it
-by setting the environment variable `SERVER_PROXY_HOSTNAME`. E.g.
+by setting the environment variable `REACT_APP_KUMA_HOST`. E.g.
 
 ```bash
-SERVER_PROXY_HOSTNAME=192.168.1.123:8000
+REACT_APP_KUMA_HOST=192.168.1.123:8000
 ```
