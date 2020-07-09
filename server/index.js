@@ -3,17 +3,32 @@ const path = require("path");
 const { performance } = require("perf_hooks");
 
 const express = require("express");
+const proxy = require("express-http-proxy");
 const openEditor = require("open-editor");
 
 const { slugToFoldername } = require("content/scripts/utils");
 const { FLAW_LEVELS } = require("content/scripts/constants");
 
-const { STATIC_ROOT } = require("./constants");
+const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
+const fakeV1APIRouter = require("./fake-v1-api");
 const { builder, normalizeContentPath } = require("./builder");
 
 const app = express();
 app.use(express.json());
+
+// Depending on if FAKE_V1_API is set, we either respond with JSON based
+// on `.json` files on disk or we proxy the requests to Kuma.
+app.use(
+  "/api/v1",
+  FAKE_V1_API
+    ? fakeV1APIRouter
+    : proxy(PROXY_HOSTNAME, {
+        // More options are available on
+        // https://www.npmjs.com/package/express-http-proxy#options
+        proxyReqPathResolver: (req) => "/api/v1" + req.url,
+      })
+);
 
 // The client/build directory won't exist at the very very first time
 // you start the server after a fresh git clone.
