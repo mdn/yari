@@ -5,6 +5,7 @@ import "typeface-zilla-slab";
 import "./index.scss";
 import { App } from "./app";
 import { UserDataProvider } from "./user-context";
+import { interceptAndRedirectKumaURLs } from "./kuma-redirects";
 // import * as serviceWorker from './serviceWorker';
 
 const container = document.getElementById("root");
@@ -16,6 +17,9 @@ const documentDataElement = document.getElementById("documentdata");
 if (documentDataElement) {
   docData = JSON.parse(documentDataElement.textContent || "");
 }
+
+interceptAndRedirectKumaURLs();
+
 const app = (
   <React.StrictMode>
     <UserDataProvider>
