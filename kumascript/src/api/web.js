@@ -24,8 +24,8 @@ module.exports = {
   },
 
   smartLink(href, title, content, subpath, basepath) {
-    let flawID;
-    let flawIDAttribute = "";
+    let flaw;
+    let flawAttribute = "";
     const page = this.info.getPage(href);
     // Get the pathname only (no hash) of the incoming "href" URI.
     const hrefpath = this.info.getPathname(href);
@@ -33,7 +33,7 @@ module.exports = {
     const hrefhash = new URL(href, DUMMY_BASE_URL).hash;
     if (page.url) {
       if (hrefpath.toLowerCase() !== page.url.toLowerCase()) {
-        flawID = this.env.recordNonFatalError(
+        flaw = this.env.recordNonFatalError(
           "redirected-link",
           `${hrefpath} redirects to ${page.url}`,
           {
@@ -41,24 +41,24 @@ module.exports = {
             suggested: page.url.replace(basepath, ""),
           }
         );
-        flawIDAttribute = ` data-flaw-id="${flawID}"`;
+        flawAttribute = ` data-flaw-src="${util.htmlEscape(flaw.macroSource)}"`;
       }
       const titleAttribute = title ? ` title="${title}"` : "";
       return `<a href="${
         page.url + hrefhash
-      }"${titleAttribute}${flawIDAttribute}>${content}</a>`;
+      }"${titleAttribute}${flawAttribute}>${content}</a>`;
     }
-    flawID = this.env.recordNonFatalError(
+    flaw = this.env.recordNonFatalError(
       "broken-link",
       `${hrefpath} does not exist`
     );
-    flawIDAttribute = ` data-flaw-id="${flawID}"`;
+    flawAttribute = ` data-flaw-src="${util.htmlEscape(flaw.macroSource)}"`;
     // Let's get a potentially localized title for when the document is missing.
     const titleWhenMissing = this.mdn.getLocalString(
       L10N_COMMON_STRINGS,
       "summary"
     );
-    return `<a class="new" title="${titleWhenMissing}"${flawIDAttribute}>${content}</a>`;
+    return `<a class="new" title="${titleWhenMissing}"${flawAttribute}>${content}</a>`;
   },
 
   // Try calling "decodeURIComponent", but if there's an error, just
