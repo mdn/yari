@@ -10,7 +10,7 @@ export default function SignInLink({ className }: { className?: string }) {
   return (
     <>
       <a
-        href={`/${locale}/users/account/signup-landing?next=${window.location.pathname}`}
+        href={`/${locale}/users/account/signup-landing?next=${window.location.href}`}
         rel="nofollow"
         className={className ? className : undefined}
         onClick={(event) => {
