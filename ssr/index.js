@@ -68,34 +68,26 @@ function fixRelatedContent(document) {
   }
 }
 
-/** The breadcrumb is an array of parents include the document itself.
- * It only gets added to the document there are actual parents.
- */
-function addBreadcrumbData(uri, document, allTitles) {
-  const parents = [];
-  let split = uri.split("/");
-  let parentUri;
-  let parentUriLC;
-  while (split.length > 2) {
-    split.pop();
-    parentUri = split.join("/");
-    parentUriLC = parentUri.toLowerCase();
-    // This test makes it possible to "skip" certain URIs that might not
-    // be a page on its own. For example: /en-US/docs/Web/ is a page,
-    // and so is /en-US/ but there might not be a page for /end-US/docs/.
-    if (allTitles.has(parentUriLC)) {
-      parents.unshift({
-        uri: parentUri,
-        title: allTitles.get(parentUriLC).title,
-      });
-    }
+function prepareDoc(doc) {
+  // always expect this to be a relative URL
+  if (!doc.mdn_url.startsWith("/")) {
+    throw new Error(
+      `Document's .mdn_url doesn't start with / (${doc.mdn_url})`
+    );
   }
-  if (parents.length) {
-    parents.push({
-      uri: uri,
-      title: document.short_title || document.title,
-    });
-    document.parents = parents;
+
+  // Stumptown produces a `.related_content` for every document. But it
+  // contains data that is either not needed or not appropriate for the way
+  // we're using it in the renderer. So mutate it for the specific needs
+  // of the renderer.
+  fixRelatedContent(doc);
+
+  if (doc.body) {
+    // Find blocks of code and transform it to syntax highlighted code.
+    fixSyntaxHighlighting(doc);
+    // Creates new mdn_url's for the browser-compatibility-table to link to
+    // pages within this project rather than use the absolute URLs
+    normalizeURLs(doc);
   }
 }
 
@@ -105,38 +97,14 @@ export function buildHtmlAndJsonFromDoc({
   buildHtml,
   allTitles,
 }) {
+  prepareDoc(doc);
+
   const options = { doc };
 
   let rendered = null;
 
-  // always expect this to be a relative URL
-  if (!options.doc.mdn_url.startsWith("/")) {
-    throw new Error(
-      `Document's .mdn_url doesn't start with / (${options.doc.mdn_url})`
-    );
-  }
   const uri = decodeURI(options.doc.mdn_url);
   fs.mkdirSync(destinationDir, { recursive: true });
-
-  // The `titles` object should contain every possible URI->Title mapping.
-  // We can use that generate the necessary information needed to build
-  // a breadcrumb in the React componentx.
-  addBreadcrumbData(uri, options.doc, allTitles);
-
-  // Stumptown produces a `.related_content` for every document. But it
-  // contains data that is either not needed or not appropriate for the way
-  // we're using it in the renderer. So mutate it for the specific needs
-  // of the renderer.
-  fixRelatedContent(options.doc);
-
-  if (options.doc.body) {
-    // Find blocks of code and transform it to syntax highlighted code.
-    fixSyntaxHighlighting(options.doc);
-    // Creates new mdn_url's for the browser-compatibility-table to link to
-    // pages within this project rather than use the absolute URLs
-    normalizeURLs(options.doc);
-  }
-
   const outfileHtml = path.join(destinationDir, "index.html");
   const outfileJson = path.join(destinationDir, "index.json");
 
@@ -147,7 +115,7 @@ export function buildHtmlAndJsonFromDoc({
         { location: uri, context: options },
         React.createElement(App, options)
       ),
-      options
+      doc
     );
   }
 
@@ -164,4 +132,23 @@ export function buildHtmlAndJsonFromDoc({
   );
 
   return { uri, wasRendered, outfileHtml, outfileJson };
+}
+
+export function renderHTML(doc, url) {
+  prepareDoc(doc);
+  return render(
+    React.createElement(
+      StaticRouter,
+      { location: url, context: { doc } },
+      React.createElement(App, { doc })
+    ),
+    doc
+  );
+}
+
+export function renderJSON(doc) {
+  prepareDoc(doc);
+  return {
+    doc,
+  };
 }

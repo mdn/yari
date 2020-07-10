@@ -5,7 +5,7 @@ const fm = require("front-matter");
 const glob = require("glob");
 const yaml = require("js-yaml");
 
-const { VALID_LOCALES } = require("./constants");
+const { DEFAULT_BUILD_ROOT, VALID_LOCALES } = require("./constants");
 const { slugToFoldername } = require("./utils");
 
 function buildPath(localeFolder, slug) {
@@ -32,9 +32,9 @@ function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
   }
 }
 
-function extractLocale(contentRoot, folder) {
+function extractLocale(folder) {
   // E.g. 'pt-br/web/foo'
-  const relativeToSource = path.relative(contentRoot, folder);
+  const relativeToSource = path.relative(DEFAULT_BUILD_ROOT, folder);
   // E.g. 'pr-br'
   const localeFolderName = relativeToSource.split(path.sep)[0];
   // E.g. 'pt-BR'
@@ -68,14 +68,16 @@ function trimLineEndings(string) {
     .join("\n");
 }
 
-function create(
-  contentRoot,
-  html,
-  metadata,
-  wikiHistory = null,
-  rawHtml = null
-) {
-  const folder = buildPath(contentRoot, metadata.slug);
+function urlToFolderPath(url) {
+  const [, locale, , ...slugParts] = url.split("/");
+  return path.join(locale.toLowerCase(), slugToFoldername(slugParts.join("/")));
+}
+
+function create(html, metadata, wikiHistory = null, rawHtml = null) {
+  const folder = buildPath(
+    path.join(DEFAULT_BUILD_ROOT, metadata.locale),
+    metadata.slug
+  );
 
   fs.mkdirSync(folder, { recursive: true });
 
@@ -97,12 +99,7 @@ function create(
   }
 }
 
-const read = (
-  contentRoot,
-  folder,
-  includeTimestamp = false,
-  allWikiHistory
-) => {
+const read = (folder, includeTimestamp = false) => {
   const filePath = getHTMLPath(folder);
   if (!fs.existsSync(filePath)) {
     return null;
@@ -118,7 +115,7 @@ const read = (
   // This is useful if you want to re-save the file as it *was*.
   const metadataUntouched = Object.assign({}, metadata);
 
-  metadata.locale = extractLocale(contentRoot, folder);
+  metadata.locale = extractLocale(folder);
 
   if (includeTimestamp) {
     // XXX the day we have a way of extracting the last modified date from
@@ -131,16 +128,11 @@ const read = (
 
     metadata.modified = null;
 
-    // const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
-    // const uri = mdn_url.toLowerCase();
-    if (!allWikiHistory.size) {
-      throw new Error("allWikiHistory hasn't been populated");
-    }
-    const localeHistory = allWikiHistory.get(metadata.locale.toLowerCase());
-    const slugLC = metadata.slug.toLowerCase();
-    if (localeHistory.has(slugLC)) {
-      metadata.modified = localeHistory.get(slugLC).modified;
-    }
+    // const localeHistory = allWikiHistory.get(metadata.locale.toLowerCase());
+    // const slugLC = metadata.slug.toLowerCase();
+    // if (localeHistory.has(slugLC)) {
+    //   metadata.modified = localeHistory.get(slugLC).modified;
+    // }
   }
 
   return {
@@ -155,23 +147,36 @@ const read = (
   };
 };
 
-function update(contentRoot, folder, rawHtml, metadata) {
-  const document = read(contentRoot, folder);
+function findChildren(url) {
+  const folder = urlToFolderPath(url);
+  const childPaths = glob.sync(
+    path.join(DEFAULT_BUILD_ROOT, folder, "*", HTML_FILENAME),
+    {
+      ignore: path.join(DEFAULT_BUILD_ROOT, getHTMLPath(folder)),
+    }
+  );
+  return childPaths.map((childFilePath) => read(path.dirname(childFilePath)));
+}
+
+function update(folder, rawHtml, metadata) {
+  const document = read(folder);
   const oldSlug = document.metadata.slug;
   const newSlug = metadata.slug;
   const isNewSlug = oldSlug !== newSlug;
 
-  const htmlPath = getHTMLPath(folder);
   if (
     isNewSlug ||
     document.rawHtml !== rawHtml ||
     document.metadata.title !== metadata.title ||
     document.metadata.summary !== metadata.summary
   ) {
-    saveHTMLFile(htmlPath, rawHtml, { ...document.metadata, ...metadata });
+    saveHTMLFile(getHTMLPath(folder), rawHtml, {
+      ...document.metadata,
+      ...metadata,
+    });
     if (isNewSlug) {
       updateWikiHistory(
-        path.join(contentRoot, metadata.locale.toLowerCase()),
+        path.join(DEFAULT_BUILD_ROOT, metadata.locale.toLowerCase()),
         oldSlug,
         newSlug
       );
@@ -179,23 +184,19 @@ function update(contentRoot, folder, rawHtml, metadata) {
   }
 
   if (isNewSlug) {
-    const childFilePaths = glob.sync(path.join(folder, "**", HTML_FILENAME), {
-      ignore: htmlPath, // The current document's slug is already updated above
-    });
-    for (const childFilePath of childFilePaths) {
-      const { attributes, body } = fm(fs.readFileSync(childFilePath, "utf8"));
-      const oldChildSlug = attributes.slug;
+    for (const { metadata, rawHtml, fileInfo } of findChildren(url)) {
+      const oldChildSlug = metadata.slug;
       const newChildSlug = oldChildSlug.replace(oldSlug, newSlug);
-      attributes.slug = newChildSlug;
+      metadata.slug = newChildSlug;
       updateWikiHistory(
-        path.join(contentRoot, metadata.locale.toLowerCase()),
+        path.join(DEFAULT_BUILD_ROOT, metadata.locale.toLowerCase()),
         oldChildSlug,
         newChildSlug
       );
-      saveHTMLFile(childFilePath, body, attributes);
+      saveHTMLFile(fileInfo.path, rawHtml, metadata);
     }
     const newFolder = buildPath(
-      path.join(contentRoot, metadata.locale.toLowerCase()),
+      path.join(DEFAULT_BUILD_ROOT, metadata.locale.toLowerCase()),
       newSlug
     );
 
@@ -206,10 +207,23 @@ function update(contentRoot, folder, rawHtml, metadata) {
   }
 }
 
-function del(contentRoot, folder) {
-  const { metadata } = read(contentRoot, folder);
+function del(folder) {
+  const { metadata } = read(folder);
   fs.rmdirSync(folder, { recursive: true });
-  updateWikiHistory(path.join(contentRoot, metadata.locale), metadata.slug);
+  updateWikiHistory(
+    path.join(DEFAULT_BUILD_ROOT, metadata.locale),
+    metadata.slug
+  );
+}
+
+function findByURL(url) {
+  const folder = urlToFolderPath(url);
+
+  const document = read(path.join(DEFAULT_BUILD_ROOT, folder));
+
+  return document
+    ? { contentRoot: DEFAULT_BUILD_ROOT, folder, document }
+    : null;
 }
 
 module.exports = {
@@ -218,4 +232,6 @@ module.exports = {
   read,
   update,
   del,
+  findByURL,
+  findChildren,
 };

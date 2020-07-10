@@ -4,8 +4,9 @@ const { getPrerequisites, render: renderMacros } = require("./src/render.js");
 const {
   getLiveSampleIDs,
   buildLiveSamplePage,
+  LiveSampleError,
 } = require("./src/live-sample.js");
-const { HTMLTool } = require("./src/api/util.js");
+const { HTMLTool, KumascriptError } = require("./src/api/util.js");
 
 class Renderer {
   constructor({
@@ -28,22 +29,13 @@ class Renderer {
     }
   }
 
-  use(pageInfoByUri) {
-    this.allPagesInfo = new AllPagesInfo(pageInfoByUri, this.uriTransform);
+  use() {
+    this.allPagesInfo = new AllPagesInfo(this.uriTransform);
     return this;
   }
 
-  clearCache() {
-    this.allPagesInfo.clearCache();
-  }
-
-  async render(source, pageEnvironment, cacheResult = false) {
+  async render(source, pageEnvironment) {
     this.checkAllPagesInfo();
-    const uri = pageEnvironment.path.toLowerCase();
-    const cachedResult = this.allPagesInfo.getResultFromCache(uri);
-    if (cachedResult) {
-      return cachedResult;
-    }
     const [renderedHtml, errors] = await renderMacros(
       source,
       this.templates,
@@ -62,11 +54,8 @@ class Renderer {
     //       attributes of any iframes.
     const tool = new HTMLTool(renderedHtml);
     tool.injectSectionIDs();
-    const result = [tool.html(), Object.freeze(errors)];
+    const result = [tool.html(), errors];
 
-    if (cacheResult) {
-      this.allPagesInfo.cacheResult(uri, result);
-    }
     return result;
   }
 }
@@ -75,5 +64,6 @@ module.exports = {
   buildLiveSamplePage,
   getLiveSampleIDs,
   getPrerequisites,
+  LiveSampleError,
   Renderer,
 };

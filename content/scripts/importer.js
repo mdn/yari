@@ -993,7 +993,6 @@ async function processDocument(
   }
 
   Document.create(
-    contentPath,
     isArchive ? doc.rendered_html : doc.html,
     meta,
     isArchive ? wikiHistory : null,

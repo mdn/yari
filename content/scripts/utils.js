@@ -1,7 +1,12 @@
-const fs = require("fs");
 const path = require("path");
 
 const sanitizeFilename = require("sanitize-filename");
+
+function buildURL(locale, slug) {
+  if (!locale) throw new Error("locale falsy!");
+  if (!slug) throw new Error("slug falsy!");
+  return `/${locale}/docs/${slug}`.toLowerCase();
+}
 
 function slugToFoldername(slug) {
   return (
@@ -31,18 +36,8 @@ function humanFileSize(size) {
   return `${num} ${"KMGTPEZY"[i - 1]}B`;
 }
 
-function writeRedirects(localeFolder, pairs) {
-  const filePath = path.join(localeFolder, "_redirects.txt");
-  const writeStream = fs.createWriteStream(filePath, { flags: "w" });
-  writeStream.write(`# FROM-URL\tTO-URL\n`);
-  pairs.forEach(([fromUrl, toUrl]) => {
-    writeStream.write(`${fromUrl}\t${toUrl}\n`);
-  });
-  writeStream.end();
-}
-
 module.exports = {
+  buildURL,
   slugToFoldername,
   humanFileSize,
-  writeRedirects,
 };

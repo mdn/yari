@@ -7,7 +7,7 @@ const DEFAULT_DATABASE_URL =
   process.env.DATABASE_URL || "mysql2://username:password@host/databasename";
 
 const DEFAULT_BUILD_ROOT =
-  process.env.BUILD_ROOT || path.join("content", "files");
+  path.join("..", process.env.BUILD_ROOT) || path.join("content", "files");
 
 // This doesn't have a default because it's a not for everyone.
 const DEFAULT_BUILD_ARCHIVE_ROOT = process.env.BUILD_ARCHIVE_ROOT;
