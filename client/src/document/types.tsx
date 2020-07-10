@@ -18,16 +18,27 @@ type Flaws = {
 
 export type Translations = { locale: string; slug: string }[];
 
+export type DocParent = {
+  uri: string;
+  title: string;
+};
+
+export type Toc = {
+  id: string;
+  text: string;
+};
+
 export interface Doc {
   title: string;
   mdn_url: string;
   sidebarHTML: string;
+  toc: Toc[];
   body: string;
   modified: string;
   flaws: Flaws;
   other_translations?: Translations;
   translation_of?: string;
-  parents?: Doc[];
+  parents?: DocParent[];
   source: Source;
   contributors: string[];
 }

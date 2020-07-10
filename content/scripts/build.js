@@ -23,6 +23,7 @@ const Document = require("./document");
 const {
   extractDocumentSections,
   extractSidebar,
+  extractTOC,
 } = require("./document-extractor");
 const {
   ALLOW_STALE_TITLES,
@@ -1750,6 +1751,9 @@ class Builder {
     // And if it finds a sidebar section, it gets removed from '$' too.
     // Also note, these operations mutate the `$`.
     doc.sidebarHTML = extractSidebar($, config);
+
+    // Extract all the <h2> tags as they appear into an array.
+    doc.toc = extractTOC($, config);
 
     // With the sidebar out of the way, go ahead and check the rest
     this.injectFlaws(source, doc, $, rawContent);

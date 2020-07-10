@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 
 import { NoMatch } from "../routing";
 import { useDocumentURL } from "./hooks";
-import { Doc } from "./types";
+import { Doc, DocParent } from "./types";
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
 import { InteractiveExample } from "./ingredients/interactive-example";
@@ -15,6 +15,7 @@ import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-t
 // Misc
 // Sub-components
 import { DocumentTranslations } from "./languages";
+import { TOC } from "./toc";
 
 import "./index.scss";
 
@@ -144,10 +145,15 @@ export function Document(props /* TODO: define a TS interface for this */) {
         </div>
       </header>
 
-      <div className="wiki-left-present content-layout">
-        {/* <aside className="document-toc-container">
-                ... XXX MUCH MORE WORK NEEDED ...
-              </aside> */}
+      <div
+        className={
+          (doc.toc && doc.toc.length) || doc.sidebarHTML
+            ? "wiki-left-present content-layout"
+            : "content-layout"
+        }
+      >
+        {doc.toc && doc.toc.length && <TOC toc={doc.toc} />}
+
         <div id="content" className="article text-content">
           <article id="wikiArticle">
             <RenderDocumentBody doc={doc} />
@@ -174,13 +180,17 @@ export function Document(props /* TODO: define a TS interface for this */) {
             </section>
           </div>
         </div>
-        <div id="sidebar-quicklinks" className="sidebar">
-          <RenderSideBar doc={doc} />
-        </div>
+
+        {doc.sidebarHTML && (
+          <div id="sidebar-quicklinks" className="sidebar">
+            <RenderSideBar doc={doc} />
+          </div>
+        )}
       </div>
     </main>
   );
 }
+
 function LastModified({ value, locale }) {
   if (!value) {
     return <span>Last modified date not known</span>;
@@ -201,7 +211,9 @@ function LastModified({ value, locale }) {
     </>
   );
 }
-function Breadcrumbs({ parents }) {
+
+// XXX Move this component to its own file. index.tsx is already too large.
+function Breadcrumbs({ parents }: { parents: DocParent[] }) {
   if (!parents.length) {
     throw new Error("Empty parents array");
   }
@@ -223,7 +235,7 @@ function Breadcrumbs({ parents }) {
             >
               <span property="name">{parent.title}</span>
             </Link>
-            <meta property="position" content={i + 1} />
+            <meta property="position" content={`${i + 1}`} />
           </li>
         );
       })}
