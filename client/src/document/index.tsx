@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { NoMatch } from "../routing";
 import { useDocumentURL } from "./hooks";
@@ -23,6 +23,7 @@ const Toolbar = lazy(() => import("./toolbar"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const documentURL = useDocumentURL();
+  const { locale } = useParams();
 
   const [doc, setDoc] = useState<Doc | null>(props.doc || null);
   const [loading, setLoading] = useState(false);
@@ -159,12 +160,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
               </header>
               <ul>
                 <li className="last-modified">
-                  <b>Last modified:</b>{" "}
-                  <time dateTime="2020-05-16T12:25:38.091371">
-                    Xxx 01, 2020
-                    {doc.modified}
-                  </time>
-                  ,
+                  <LastModified value={doc.modified} locale={locale} />,{" "}
                   <a
                     href={github_url}
                     title={`Folder: ${folder}`}
@@ -211,7 +207,26 @@ export function Document(props /* TODO: define a TS interface for this */) {
     </main>
   );
 }
-
+function LastModified({ value, locale }) {
+  if (!value) {
+    return <span>Last modified date not known</span>;
+  }
+  const date = new Date(value);
+  // Justification for these is to match historically
+  const dateStringOptions = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  };
+  return (
+    <>
+      <b>Last modified:</b>{" "}
+      <time dateTime={value}>
+        {date.toLocaleString(locale, dateStringOptions)}
+      </time>
+    </>
+  );
+}
 function Breadcrumbs({ parents }) {
   if (!parents.length) {
     throw new Error("Empty parents array");
