@@ -178,32 +178,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
           <RenderSideBar doc={doc} />
         </div>
       </div>
-      {/* <div className="main">
-        <div className="sidebar">
-          <RenderSideBar doc={doc} />
-        </div>
-        <div className="content">
-          <RenderDocumentBody doc={doc} />
-          <hr />
-          <a
-            href={github_url}
-            title={`Folder: ${folder}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Edit on <b>GitHub</b>
-          </a>
-          {" | "}
-          <a
-            href={`https://developer.mozilla.org${doc.mdn_url}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View on <b>MDN</b>
-          </a>
-          {doc.contributors && <Contributors contributors={doc.contributors} />}
-        </div>
-      </div> */}
     </main>
   );
 }
