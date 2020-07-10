@@ -39,6 +39,9 @@ export function TOC({ toc }: { toc: Toc[] }) {
             }}
           >
             Jump to section
+            {/* XXX This needs to NOT be an image but a real svg
+            See https://github.com/mdn/yari/issues/882
+             */}
             <img src={Caret} alt="Caret" />
           </button>
         </header>

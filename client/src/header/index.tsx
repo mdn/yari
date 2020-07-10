@@ -14,6 +14,9 @@ export default function Header() {
   return (
     <header className="page-header">
       <a href={`/${locale}/`} className="logo" aria-label="MDN Web Docs">
+        {/* XXX This needs to NOT be an image but a real svg
+            See https://github.com/mdn/yari/issues/882
+             */}
         <img src={Logo} alt="logo" />
       </a>
       <MainMenu />
