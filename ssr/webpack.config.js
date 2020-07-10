@@ -2,7 +2,7 @@ const path = require("path");
 
 const nodeExternals = require("webpack-node-externals");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const webpack = require("webpack");
+// const webpack = require("webpack");
 
 module.exports = {
   context: path.resolve(__dirname, "."),
@@ -31,6 +31,10 @@ module.exports = {
         options: {
           transpileOnly: true,
         },
+      },
+      {
+        test: /\.svg$/,
+        use: ["@svgr/webpack"],
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
