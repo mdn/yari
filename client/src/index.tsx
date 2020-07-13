@@ -4,7 +4,6 @@ import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import { App } from "./app";
 import { GAProvider } from "./ga-context";
-import { interceptAndRedirectKumaURLs } from "./kuma-redirects";
 import { UserDataProvider } from "./user-context";
 
 import "typeface-zilla-slab";
@@ -20,8 +19,6 @@ const documentDataElement = document.getElementById("documentdata");
 if (documentDataElement) {
   docData = JSON.parse(documentDataElement.textContent || "");
 }
-
-interceptAndRedirectKumaURLs();
 
 const app = (
   <React.StrictMode>

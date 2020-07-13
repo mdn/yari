@@ -3,6 +3,7 @@ import * as React from "react";
 import Dropdown from "./dropdown";
 import { useLocale } from "../hooks";
 import SignInLink from "./signin-link";
+import { getAuthURL } from "./auth-link";
 import { useUserData } from "../user-context";
 
 export default function Login() {
@@ -35,7 +36,10 @@ export default function Login() {
       alt={userData.username}
     />
   );
-  const viewProfileLink = `/${locale}/profiles/${userData.username}`;
+  const viewProfileLink = getAuthURL(
+    `/${locale}/profiles/${userData.username}`,
+    false
+  );
   return (
     <div className="auth-container">
       <Dropdown
@@ -47,9 +51,11 @@ export default function Login() {
         {!!userData.wikiContributions && (
           <li>
             <a
-              href={`/${locale}/dashboards/revisions?user=${encodeURIComponent(
-                userData.username
-              )}`}
+              href={getAuthURL(
+                `/${locale}/dashboards/revisions?user=${encodeURIComponent(
+                  userData.username
+                )}`
+              )}
               title={`You have ${
                 userData.wikiContributions &&
                 userData.wikiContributions.toLocaleString()
@@ -66,10 +72,7 @@ export default function Login() {
           <a href={`${viewProfileLink}/edit`}>{"Edit profile"}</a>
         </li>
         <li>
-          <form
-            action={`/${locale}/users/signout?next=${window.location.pathname}`}
-            method="post"
-          >
+          <form action={getAuthURL(`/${locale}/users/signout`)} method="post">
             <input name="next" type="hidden" value={LOCATION} />
             <button className="signout-button" type="submit">
               Sign out
