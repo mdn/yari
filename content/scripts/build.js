@@ -107,63 +107,6 @@ function repairUri(uri) {
   return uri;
 }
 
-const macroRenderer = new kumascript.Renderer({
-  uriTransform: resolveRedirect,
-  liveSamplesBaseUrl: DEFAULT_LIVE_SAMPLES_BASE_URL,
-  interactiveExamplesBaseUrl: DEFAULT_INTERACTIVE_EXAMPLES_BASE_URL,
-});
-
-macroRenderer.use({
-  get: (url) => findDocument(url).document,
-  *[Symbol.iterator]() {},
-});
-
-async function renderMacros({ rawHtml, metadata, fileInfo }) {
-  // First, render all of the prerequisites of this document.
-  const allPrerequisiteFlaws = (
-    await Promise.all(
-      Array.from(kumascript.getPrerequisites(rawHtml)).map(async (preURL) => {
-        const preCleanURL = resolveRedirect(preURL);
-        const folder = slugToFoldername(preCleanURL);
-        const document = Document.read(folder);
-        if (!document) {
-          return [];
-        }
-        // When rendering prerequisites, we're only interested in
-        // caching the results for later use. We don't care about
-        // the results returned.
-        const [, preFlaws] = await renderMacros(document);
-        // Flatten the flaws from this other document into the current flaws,
-        // and set the filepath for flaws that haven't already been set at
-        // a different level of recursion.
-        return preFlaws.map((flaw) => ({
-          ...flaw,
-          filepath: flaw.filepath || fileInfo.path,
-        }));
-      })
-    )
-  ).flat();
-
-  // Now that all of the prerequisites have been rendered, we can render
-  // this document and return the result.
-  const url = buildURL(metadata.locale, metadata.slug).toLowerCase();
-  const [renderedHtml, flaws] = await macroRenderer.render(rawHtml, {
-    path: url,
-    url: `${"this.options.sitemapBaseUrl"}${url}`,
-    locale: metadata.locale,
-    slug: metadata.slug,
-    title: metadata.title,
-    tags: metadata.tags || [],
-    selective_mode: false,
-  });
-
-  console.log(flaws);
-
-  // Add the flaws from rendering the macros within all of the prerequisite
-  // documents to the flaws from rendering the macros within this document.
-  return [renderedHtml, flaws.concat(allPrerequisiteFlaws)];
-}
-
 /**
  * Recursive method that renders the macros within the document
  * represented by this source, URI, metadata and raw HTML, as
@@ -171,12 +114,19 @@ async function renderMacros({ rawHtml, metadata, fileInfo }) {
  * other documents referenced by this document.
  */
 async function renderMacrosAndBuildLiveSamples(
-  document,
+  { rawHtml, metadata },
   url,
   { selectedSampleIDs = null } = {}
 ) {
   // First, render the macros to get the rendered HTML.
-  const [renderedHtml, flaws] = await renderMacros(document);
+  const [renderedHtml, flaws] = await kumascript.render(
+    buildURL(metadata.locale, metadata.slug),
+    {
+      uriTransform: resolveRedirect,
+      liveSamplesBaseUrl: DEFAULT_LIVE_SAMPLES_BASE_URL,
+      interactiveExamplesBaseUrl: DEFAULT_INTERACTIVE_EXAMPLES_BASE_URL,
+    }
+  );
 
   // Next, let's find any samples that we need to build, and note
   // that one or more or even all might be within other documents.
@@ -186,8 +136,8 @@ async function renderMacrosAndBuildLiveSamples(
     ownSampleIds = selectedSampleIDs;
   } else {
     [ownSampleIds, otherSampleIds] = kumascript.getLiveSampleIDs(
-      document.metadata.slug,
-      document.rawHtml
+      metadata.slug,
+      rawHtml
     );
   }
 
@@ -199,7 +149,7 @@ async function renderMacrosAndBuildLiveSamples(
       try {
         liveSamplePageHTML = kumascript.buildLiveSamplePage(
           url,
-          document.metadata.title,
+          metadata.title,
           renderedHtml,
           sampleIDWithContext
         );
@@ -226,7 +176,7 @@ async function renderMacrosAndBuildLiveSamples(
   // "/en-us/docs/learn/forms/how_to_build_custom_form_controls/example_5"
   for (const [slug, sampleIDs] of otherSampleIds || []) {
     const [{ context }] = sampleIDs;
-    const otherURL = buildURL(document.metadata.locale, slug);
+    const otherURL = buildURL(metadata.locale, slug);
     const otherCleanUri = resolveRedirect(otherURL);
     // TODO
     if (!"documentExists") {
@@ -262,13 +212,9 @@ async function renderMacrosAndBuildLiveSamples(
     if (!otherDocument) {
       continue;
     }
-    const otherResult = await renderMacrosAndBuildLiveSamples(
-      otherDocument,
-      url,
-      {
-        selectedSampleIDs: sampleIDs,
-      }
-    );
+    const otherResult = await renderMacrosAndBuildLiveSamples(otherDocument, {
+      selectedSampleIDs: sampleIDs,
+    });
     const otherFlaws = otherResult[1];
     // Flatten the flaws from this other document into the current flaws,
     // and set the filepath for flaws that haven't already been set at
@@ -320,10 +266,7 @@ async function buildDocument(folder, document) {
 
   const url = buildURL(document.metadata.locale, document.metadata.slug);
 
-  let [renderedHtml, flaws] = await renderMacrosAndBuildLiveSamples(
-    document,
-    url
-  );
+  let [renderedHtml, flaws] = await renderMacrosAndBuildLiveSamples(document);
 
   const { metadata, fileInfo } = document;
   if (flaws.length) {

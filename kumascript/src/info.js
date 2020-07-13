@@ -1,4 +1,3 @@
-const { DEFAULT_BUILD_ROOT } = require("content/scripts/constants");
 const Document = require("content/scripts/document");
 const { buildURL } = require("content/scripts/utils");
 

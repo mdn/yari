@@ -69,7 +69,7 @@ module.exports = {
       return html;
     }
 
-    let result = this.info.getResultFromCache(path);
+    let result = await this.renderFromURL(path);
     const pathDescription = this.info.getDescription(path);
 
     if (!result) {

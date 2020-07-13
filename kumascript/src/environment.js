@@ -65,7 +65,13 @@ class Environment {
   // true makes us not freeze the environment so that tests can stub out
   // methods in the API.
   //
-  constructor(perPageContext, templates, allPagesInfo = null, testing = false) {
+  constructor(
+    perPageContext,
+    templates,
+    allPagesInfo = null,
+    renderFromURL = null,
+    testing = false
+  ) {
     // Freeze an object unless we're in testing mode
     function freeze(o) {
       return testing ? o : Object.freeze(o);
@@ -133,6 +139,7 @@ class Environment {
     globals.page = globals.Page = freeze(page);
     globals.env = globals.Env = freeze(env);
     globals.info = freeze(info);
+    globals.renderFromURL = renderFromURL;
 
     // Macros use the global template() method to excute other
     // macros. This is the one function that we can't just

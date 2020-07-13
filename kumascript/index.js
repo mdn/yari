@@ -1,3 +1,5 @@
+const Document = require("content/scripts/document");
+
 const Templates = require("./src/templates.js");
 const AllPagesInfo = require("./src/info.js");
 const { getPrerequisites, render: renderMacros } = require("./src/render.js");
@@ -6,58 +8,43 @@ const {
   buildLiveSamplePage,
   LiveSampleError,
 } = require("./src/live-sample.js");
-const { HTMLTool, KumascriptError } = require("./src/api/util.js");
+const { HTMLTool } = require("./src/api/util.js");
 
-class Renderer {
-  constructor({
-    liveSamplesBaseUrl = null,
-    interactiveExamplesBaseUrl = null,
-    uriTransform = (uri) => uri,
-  } = {}) {
-    this.allPagesInfo = null;
-    this.uriTransform = uriTransform;
-    this.liveSamplesBaseUrl = liveSamplesBaseUrl;
-    this.interactiveExamplesBaseUrl = interactiveExamplesBaseUrl;
-    this.templates = new Templates();
-  }
-
-  checkAllPagesInfo() {
-    if (!this.allPagesInfo) {
-      throw new Error(
-        `You haven't yet specified the context for the render via Renderer().use(pageInfoByUri).`
-      );
-    }
-  }
-
-  use() {
-    this.allPagesInfo = new AllPagesInfo(this.uriTransform);
-    return this;
-  }
-
-  async render(source, pageEnvironment) {
-    this.checkAllPagesInfo();
-    const [renderedHtml, errors] = await renderMacros(
-      source,
-      this.templates,
-      {
-        ...pageEnvironment,
-        interactive_examples: {
-          base_url: this.interactiveExamplesBaseUrl,
-        },
-        live_samples: { base_url: this.liveSamplesBaseUrl },
+async function renderFromURL(url, config) {
+  const {
+    interactiveExamplesBaseUrl,
+    liveSamplesBaseUrl,
+    uriTransform,
+  } = config;
+  const { rawHtml, metadata } = Document.findByURL(url).document;
+  const [renderedHtml, errors] = await renderMacros(
+    rawHtml,
+    new Templates(),
+    {
+      ...{
+        path: url,
+        url: `${"this.options.sitemapBaseUrl"}${url}`,
+        locale: metadata.locale,
+        slug: metadata.slug,
+        title: metadata.title,
+        tags: metadata.tags || [],
+        selective_mode: false,
       },
-      this.allPagesInfo
-    );
+      interactive_examples: {
+        base_url: interactiveExamplesBaseUrl,
+      },
+      live_samples: { base_url: liveSamplesBaseUrl },
+    },
+    new AllPagesInfo(uriTransform),
+    (url) => renderFromURL(url, config)
+  );
 
-    // For now, we're just going to inject section ID's.
-    // TODO: Sanitize the HTML and also filter the "src"
-    //       attributes of any iframes.
-    const tool = new HTMLTool(renderedHtml);
-    tool.injectSectionIDs();
-    const result = [tool.html(), errors];
-
-    return result;
-  }
+  // For now, we're just going to inject section ID's.
+  // TODO: Sanitize the HTML and also filter the "src"
+  //       attributes of any iframes.
+  const tool = new HTMLTool(renderedHtml);
+  tool.injectSectionIDs();
+  return [tool.html(), errors];
 }
 
 module.exports = {
@@ -65,5 +52,5 @@ module.exports = {
   getLiveSampleIDs,
   getPrerequisites,
   LiveSampleError,
-  Renderer,
+  render: renderFromURL,
 };
