@@ -250,7 +250,7 @@ request.onupgradeneeded = function(event) {
 
 <h3 id="Using_a_key_generator">Using a key generator</h3>
 
-<p>Setting up an <code>autoIncrement </code>flag when creating the object store would enable the key generator for that object store. By default this flag is not set.</p>
+<p>Setting up an <code>autoIncrement</code> flag when creating the object store would enable the key generator for that object store. By default this flag is not set.</p>
 
 <p>With the key generator, the key would be generated automatically as you add the value to the object store. The current number of a key generator is always set to 1 when the object store for that key generator is first created. Basically the newly auto-generated key is increased by 1 based on the previous key. The current number for a key generator never decreases, other than as a result of database operations being reverted, for example, the database transaction is aborted. Therefore deleting a record or even clearing all records from an object store never affects the object store's key generator.</p>
 
