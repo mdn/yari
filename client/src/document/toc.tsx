@@ -45,15 +45,13 @@ export function TOC({ toc }: { toc: Toc[] }) {
             <img src={Caret} alt="Caret" />
           </button>
         </header>
-        {showTOC && (
-          <ul className="show-toc">
-            {toc.map((item) => (
-              <li key={item.id}>
-                <a href={`#${item.id}`}>{item.text}</a>
-              </li>
-            ))}
-          </ul>
-        )}
+        <ul className={showTOC ? "show-toc" : undefined}>
+          {toc.map((item) => (
+            <li key={item.id}>
+              <a href={`#${item.id}`}>{item.text}</a>
+            </li>
+          ))}
+        </ul>
       </section>
     </aside>
   );
