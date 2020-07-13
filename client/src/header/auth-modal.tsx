@@ -1,12 +1,11 @@
 import React from "react";
 import Modal from "react-modal";
 
+import { getAuthURL } from "./auth-link";
+
 import "../kumastyles/minimalist/components/auth-modal.scss";
 
 Modal.setAppElement("#root");
-
-const authURL = (provider) =>
-  `/users/${provider}/login/?next=${window.location.pathname}`;
 
 export default function AuthModal(props: Omit<Modal.Props, "isOpen">) {
   return (
@@ -24,10 +23,10 @@ export default function AuthModal(props: Omit<Modal.Props, "isOpen">) {
         created an MDN profile, you will be prompted to do so after signing in.
       </p>
       <div className="auth-button-container">
-        <a href={authURL("github")} className="github-auth">
+        <a href={getAuthURL("/users/github/login/")} className="github-auth">
           Sign in with Github
         </a>
-        <a href={authURL("google")} className="google-auth">
+        <a href={getAuthURL("/users/google/login/")} className="google-auth">
           Sign in with Google
         </a>
       </div>

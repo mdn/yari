@@ -1,6 +1,7 @@
 import React, { lazy, Suspense, useState } from "react";
 
 import { useLocale } from "../hooks";
+import { getAuthURL } from "./auth-link";
 
 const AuthModal = lazy(() => import("./auth-modal"));
 
@@ -10,7 +11,7 @@ export default function SignInLink({ className }: { className?: string }) {
   return (
     <>
       <a
-        href={`/${locale}/users/account/signup-landing?next=${window.location.pathname}`}
+        href={getAuthURL(`/${locale}/users/account/signup-landing`)}
         rel="nofollow"
         className={className ? className : undefined}
         onClick={(event) => {
