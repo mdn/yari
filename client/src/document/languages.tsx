@@ -48,7 +48,6 @@ export function DocumentTranslations({ translations }) {
   //     </ul>
   //   </div>
 
-
   return (
     <div className="document-languages">
       {showChoices ? (

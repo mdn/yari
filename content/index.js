@@ -186,6 +186,24 @@ cli
     cli.BOOL,
     false
   )
+  .option(
+    "--fix-flaws",
+    "actually modify each document that contains fixable flaws",
+    cli.BOOL,
+    false
+  )
+  .option(
+    "--fix-flaws-verbose",
+    "print the fixable flaws in verbose mode",
+    cli.BOOL,
+    false
+  )
+  .option(
+    "--fix-flaws-dry-run",
+    "don't actually change the files on disk",
+    cli.BOOL,
+    false
+  )
   .argument(
     "[destination]",
     "root folder to put built files into",
