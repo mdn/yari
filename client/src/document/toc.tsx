@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useGA } from "../ga-context";
 
 import { Toc } from "./types";
-import Caret from "../kumastyles/arrows/caret-down.svg";
+import { ReactComponent as Caret } from "../kumastyles/arrows/caret-down.svg";
 
 export function TOC({ toc }: { toc: Toc[] }) {
   const ga = useGA();
@@ -39,10 +39,7 @@ export function TOC({ toc }: { toc: Toc[] }) {
             }}
           >
             Jump to section
-            {/* XXX This needs to NOT be an image but a real svg
-            See https://github.com/mdn/yari/issues/882
-             */}
-            <img src={Caret} alt="Caret" />
+            <Caret/>
           </button>
         </header>
         <ul className={showTOC ? "show-toc" : undefined}>
