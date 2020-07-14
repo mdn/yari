@@ -6,7 +6,7 @@
   "main": "src/app.tsx",
   "dependencies": {
     "@types/jest": "^26.0.4",
-    "@types/react": "^16.9.42",
+    "@types/react": "^16.9.43",
     "@types/react-dom": "^16.9.8",
     "@types/react-modal": "^3.10.6",
     "cross-env": "^7.0.2",
@@ -51,7 +51,7 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/react": "^10.4.5",
+    "@testing-library/react": "^10.4.6",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "mdn-browser-compat-data": "^1.0.30"
   }
