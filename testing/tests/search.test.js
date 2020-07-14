@@ -11,9 +11,12 @@ describe("Site search", () => {
     await page.goto(testURL("/"));
     await expect(page).toFill(SEARCH_SELECTOR, "fo");
     await expect(page).toMatch("<foo>: A test tag");
-    await expect(page).toClick("div.highlit");
+    await expect(page).toClick('[aria-selected="true"]');
+    // expect puppeteer does not wait for url changes implicitly, so we
+    // have to make it explicit
+    await page.waitForNavigation();
     // Should have been redirected too...
-    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
+    await expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
     await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
   });
 
