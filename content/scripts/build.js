@@ -1076,7 +1076,7 @@ class Builder {
       console.log(
         chalk.yellow(
           `Processed ${totalProcessed.toLocaleString()} in ${msLong(
-            totalProcessedTime
+            Math.round(totalProcessedTime)
           )} (roughly ${rate.toFixed(1)} docs/sec)`
         )
       );
