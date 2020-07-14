@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const childProcess = require("child_process");
+const url = require("url");
 const { performance } = require("perf_hooks");
 
 const ms = require("ms");
@@ -19,6 +20,7 @@ const { printBasicDiff } = require("./print-diff");
 const { packageBCD } = require("./resolve-bcd");
 const { buildHtmlAndJsonFromDoc } = require("ssr");
 const { findMatchesInText } = require("./matches-in-text");
+
 const Document = require("./document");
 const {
   extractDocumentSections,
@@ -1760,6 +1762,10 @@ class Builder {
 
     doc.body = extractDocumentSections($);
 
+    // Creates new mdn_url's for the browser-compatibility-table to link to
+    // pages within this project rather than use the absolute URLs
+    this.normalizeBCDMdnURLs(doc);
+
     const titleData = this.allTitles.get(mdnUrlLC);
     if (titleData === undefined) {
       throw new Error(`${mdnUrlLC} is not present in this.allTitles`);
@@ -1826,6 +1832,117 @@ class Builder {
   }
 
   /**
+   * Loop over, and mutate, all 'browser_compatibility' sections.
+   * BCD data comes froms from a library with `mdn_url`'s that are absolute.
+   * This takes the `mdn_url` and sets it to a URI that can be used when
+   * rendering the BCD table to link to a relative path.
+   *
+   * Also, if enabled, check all of these inner `mdn_url` for flaws.
+   *
+   */
+  normalizeBCDMdnURLs(doc) {
+    let checkLinks = false;
+    // let throwOnLinks = false;
+
+    if (this.options.flawLevels.get("bad_bcd_links") !== FLAW_LEVELS.IGNORE) {
+      checkLinks = true;
+    }
+
+    // For function scoping
+    const allTitles = this.allTitles;
+    const allRedirects = this.allRedirects;
+
+    function addBrokenLink(query, slug, suggestion = null) {
+      if (!("bad_bcd_links" in doc.flaws)) {
+        doc.flaws.bad_bcd_links = [];
+      }
+      doc.flaws.bad_bcd_links.push({
+        slug,
+        suggestion,
+        query,
+      });
+    }
+
+    function getPathFromAbsoluteURL(query, absURL) {
+      // Because the compat data is mutated out of mdn-browser-compat-data,
+      // through our `packageBCD` function, it's very possible that
+      // the `doc[i].type === 'browser_compatibility` has already been
+      // processed.
+      if (!absURL.includes("://")) {
+        return [absURL, null];
+      }
+      const u = url.parse(absURL);
+      if (u.hostname !== "developer.mozilla.org") {
+        // If URL is from a different host, return without modifying it
+        return [absURL, null];
+      }
+      // Return the pathname without docs directory, the base path for the
+      // `Document` component the BCD table is within is /:locale/docs/ so it is
+      // not needed.
+      // The `mdn_url` field in BCD data is always like this:
+      // https://developer.mozilla.org/docs/Web/API/MediaTrackSettings/width
+      // So to get the appropriate slug, in Yari, we have to assume a locale.
+      let slug = u.pathname;
+      if (slug.startsWith("/docs/")) {
+        // Important! For now, to make this a slug we can understand we
+        // have to have a locale and we pick `en-US` as the default.
+        slug = `/en-US${slug}`;
+      } else {
+        throw new Error(`not implemented! ${slug}`);
+      }
+      if (checkLinks) {
+        const slugNormalized = slug.toLowerCase();
+        if (!allTitles.has(slugNormalized)) {
+          // Before we call this a broken link, we need to check if it redirects.
+          if (allRedirects.has(slugNormalized)) {
+            // Just because it's a redirect doesn't mean it ends up
+            // on a page we have.
+            // For example, there might be a redirect but where it
+            // goes to is not in this.allTitles.
+            // This can happen if it's a "fundamental redirect" for example.
+            const finalDocument = allTitles.get(
+              allRedirects.get(hrefNormalized)
+            );
+            const suggestion = finalDocument ? finalDocument.mdn_url : null;
+            addBrokenLink(query, slug, suggestion);
+            return [slug, suggestion];
+          } else {
+            addBrokenLink(query, slug);
+            return [null, null];
+          }
+        }
+      }
+      return [slug, null];
+    }
+
+    doc.body
+      .filter((section) => section.type === "browser_compatibility")
+      .forEach((section) => {
+        Object.entries(section.value.data).forEach(([, block]) => {
+          // First block from the BCD data does not have its name as the root key
+          // so mdn_url is accessible at the root. If the block has a key for
+          // `__compat` it is not the first block, and the information is nested
+          // under `__compat`.
+          if (block.__compat) {
+            block = block.__compat;
+          }
+          if (block.mdn_url) {
+            const [mdn_url, suggestion] = getPathFromAbsoluteURL(
+              section.value.query,
+              block.mdn_url
+            );
+            // console.log({ before: block.mdn_url, mdn_url, suggestion });
+            if (suggestion) {
+              block.mdn_url = suggestion;
+            } else {
+              block.mdn_url = mdn_url;
+            }
+          }
+        });
+      });
+  }
+
+  /**
    * Find all tags that we need to change to tell tools like Google Translate
    * to not translate.
    *
@@ -1850,13 +1967,12 @@ class Builder {
 
       // A closure function to help making it easier to append flaws
       function addBrokenLink(href, suggestion = null) {
-        if (!("broken_links" in doc.flaws)) {
-          doc.flaws.broken_links = [];
-        }
-
         for (const match of findMatchesInText(href, rawContent, {
           inQuotes: true,
         })) {
+          if (!("broken_links" in doc.flaws)) {
+            doc.flaws.broken_links = [];
+          }
           doc.flaws.broken_links.push(
             Object.assign({ href, suggestion }, match)
           );

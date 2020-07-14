@@ -6,7 +6,6 @@ import { StaticRouter } from "react-router-dom/server";
 import { App } from "../client/src/app";
 import render from "./render";
 import { fixSyntaxHighlighting } from "./syntax-highlighter";
-import { normalizeURLs } from "./browser-compatibility-table";
 
 // This is necessary because the ssr.js is in dist/ssr.js
 // and we need to reach the .env this way.
@@ -132,9 +131,6 @@ export function buildHtmlAndJsonFromDoc({
   if (options.doc.body) {
     // Find blocks of code and transform it to syntax highlighted code.
     fixSyntaxHighlighting(options.doc);
-    // Creates new mdn_url's for the browser-compatibility-table to link to
-    // pages within this project rather than use the absolute URLs
-    normalizeURLs(options.doc);
   }
 
   const outfileHtml = path.join(destinationDir, "index.html");

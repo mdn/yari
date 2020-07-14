@@ -10,10 +10,17 @@ export interface Link {
   suggestion: string | null;
 }
 
+export interface BadBCDLink {
+  slug: string;
+  suggestion: string | null;
+  query: string | null;
+}
+
 type Flaws = {
   broken_links: Link[];
   macros: MacroErrorMessage[];
   bad_bcd_queries: string[];
+  bad_bcd_links: BadBCDLink[];
 };
 
 export interface Doc {
