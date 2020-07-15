@@ -18,7 +18,10 @@ const ProgressBar = require("./progress-bar");
 const { printBasicDiff } = require("./print-diff");
 const { packageBCD } = require("./resolve-bcd");
 const { buildHtmlAndJsonFromDoc } = require("ssr");
-const { findMatchesInText } = require("./matches-in-text");
+const {
+  findMatchesInText,
+  replaceMatchesInText,
+} = require("./matches-in-text");
 const Document = require("./document");
 const {
   extractDocumentSections,
@@ -1564,6 +1567,7 @@ class Builder {
     // post-processing instead.
 
     let renderedHtml;
+    let newRawHtml = null;
     // When 'source.htmlAlreadyRendered' is true, it simply means that the 'index.html'
     // is already fully rendered HTML.
     if (source.htmlAlreadyRendered) {
@@ -1577,6 +1581,11 @@ class Builder {
         rawHtml,
         destinationDir
       );
+
+      // Copy of the original raw HTML that we're going to (potentially)
+      // repeatedly do string replaces on.
+      newRawHtml = rawHtml;
+
       if (flaws.length) {
         // The flaw objects might have a 'line' attribute, but the
         // original document it came from had front-matter in the file.
@@ -1593,21 +1602,6 @@ class Builder {
 
         if (this.options.fixFlaws) {
           // For flaws that can be changed, change the source itself.
-
-          // Copy of the original raw HTML that we're going to (potentially)
-          // repeatedly do string replaces on.
-          let newRawHtml = rawHtml;
-
-          // XXX at the moment, due to a bug, if a bad macro call is repeated
-          // you only get 1 flaw object.
-          // See https://github.com/mdn/yari/issues/756#issuecomment-654313496
-          // So if you have:
-          //
-          //  <p>First time:  {{cssref("willredirect")}}</p>
-          //  <p>Second time: {{cssref("willredirect")}}</p>
-          //
-          // ...you actually only get 1 `MacroRedirectedLinkError` flaw
-          // for these two occurences.
 
           flaws
             .filter((flaw) => {
@@ -1639,30 +1633,6 @@ class Builder {
               // `newRawHtml.includes(flaw.macroSource)` line above.
               flaws.splice(i, 1);
             });
-
-          if (newRawHtml !== rawHtml) {
-            // It was improved!!
-            // If you're running in dry-run mode, always assume verbose.
-            if (this.options.fixFlawsVerbose || this.options.fixFlawsDryRun) {
-              console.log(`\nIn ${folder}...`);
-              printBasicDiff(rawHtml, newRawHtml);
-            }
-            const rawHtmlFilepath = fileInfo.path;
-            if (this.options.fixFlawsDryRun) {
-              console.log(
-                chalk.yellow(
-                  `Would have modified "${rawHtmlFilepath}", if this was not a dry run.`
-                )
-              );
-            } else {
-              Document.update(
-                source.filepath,
-                folder,
-                newRawHtml,
-                metadataUntouched
-              );
-            }
-          }
         }
 
         if (this.options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
@@ -1753,6 +1723,45 @@ class Builder {
 
     // With the sidebar out of the way, go ahead and check the rest
     this.injectFlaws(source, doc, $, rawContent);
+    if (newRawHtml && this.options.fixFlaws) {
+      for (const flaw of doc.flaws.broken_links || []) {
+        if (flaw.suggestion) {
+          // The reason we're not using the parse HTML, as a cheerio object `$`
+          // is because the raw HTML we're dealing with isn't actually proper
+          // HTML. It's only proper HTML when the kumascript macros have been
+          // expanded.
+          newRawHtml = replaceMatchesInText(
+            flaw.href,
+            newRawHtml,
+            flaw.suggestion,
+            { inAttribute: "href" }
+          );
+        }
+      }
+    }
+
+    // If not caught by the cache and the `this.options.fixFlaws` changed
+    // rawHtml for the better, then deal with it.
+    // This can happened for any type of flaw. All we know, at this point,
+    // is that the string changed.
+    if (newRawHtml && newRawHtml !== rawHtml) {
+      // It was improved! Let's deal with that.
+      // If you're running in dry-run mode, always assume verbose.
+      if (this.options.fixFlawsVerbose || this.options.fixFlawsDryRun) {
+        console.log(`\nIn ${folder}...`);
+        printBasicDiff(rawHtml, newRawHtml);
+      }
+      const rawHtmlFilepath = fileInfo.path;
+      if (this.options.fixFlawsDryRun) {
+        console.log(
+          chalk.yellow(
+            `Would have modified "${rawHtmlFilepath}", if this was not a dry run.`
+          )
+        );
+      } else {
+        Document.update(source.filepath, folder, newRawHtml, metadataUntouched);
+      }
+    }
 
     // Post process HTML so that the right elements gets tagged so they
     // *don't* get translated by tools like Google Translate.
