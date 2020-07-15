@@ -1723,7 +1723,7 @@ class Builder {
 
     // With the sidebar out of the way, go ahead and check the rest
     this.injectFlaws(source, doc, $, rawContent);
-    if (this.options.fixFlaws) {
+    if (newRawHtml && this.options.fixFlaws) {
       for (const flaw of doc.flaws.broken_links || []) {
         if (flaw.suggestion) {
           // The reason we're not using the parse HTML, as a cheerio object `$`
