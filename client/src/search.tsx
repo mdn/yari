@@ -248,7 +248,7 @@ function InnerSearchNavigateWidget() {
 
   useFocusOnSlash(inputRef);
 
-  const displaySearchResults = isOpen || searchIndexError
+  const displaySearchResults = isOpen || searchIndexError;
 
   return (
     <form
