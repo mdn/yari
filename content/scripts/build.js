@@ -1223,7 +1223,7 @@ class Builder {
             title: documentData.title,
           };
           if (documentData.popularity) {
-            titles[uri].popularity = documentData.popularity.toPrecision(4);
+            titles[uri].popularity = Number(documentData.popularity.toFixed(4));
           }
         });
 
