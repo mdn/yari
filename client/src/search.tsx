@@ -248,6 +248,8 @@ function InnerSearchNavigateWidget() {
 
   useFocusOnSlash(inputRef);
 
+  const displaySearchResults = isOpen || searchIndexError
+
   return (
     <form
       {...getComboboxProps({
@@ -260,7 +262,7 @@ function InnerSearchNavigateWidget() {
       <input
         {...getInputProps({
           type: "search",
-          className: isOpen ? "has-search-results" : undefined,
+          className: displaySearchResults ? "has-search-results" : undefined,
           placeholder: isFocused
             ? searchIndex
               ? ACTIVE_PLACEHOLDER
@@ -284,7 +286,7 @@ function InnerSearchNavigateWidget() {
       />
 
       <div {...getMenuProps()}>
-        {(isOpen || searchIndexError) && (
+        {displaySearchResults && (
           <div className="search-results">
             {searchIndexError ? (
               <div className="searchindex-error">
