@@ -1218,10 +1218,13 @@ class Builder {
           // gets XHR downloaded by the React autocomplete search widget.
           // So, it's important to only inject the absolutely minimum because
           // network bytes matter.
+
           titles[uri] = {
             title: documentData.title,
-            popularity: documentData.popularity,
           };
+          if (documentData.popularity) {
+            titles[uri].popularity = documentData.popularity.toPrecision(4);
+          }
         });
 
       const localeFolder = path.join(this.destination, locale.toLowerCase());

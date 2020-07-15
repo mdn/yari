@@ -25,7 +25,7 @@ const INACTIVE_PLACEHOLDER = isMobileUserAgent()
 type Titles = {
   [url: string]: {
     title: string;
-    popularity: number;
+    popularity?: number;
   };
 };
 
@@ -67,7 +67,7 @@ function useSearchIndex(): [null | SearchIndex, () => void] {
       tokenize: "forward",
     });
     const urisSorted = Object.entries(titles)
-      .sort((a, b) => b[1].popularity - a[1].popularity)
+      .sort((a, b) => (b[1].popularity || 0) - (a[1].popularity || 0))
       .map(([uri, info]) => {
         // XXX investigate if it's faster to add all at once
         // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
@@ -210,7 +210,6 @@ function InnerSearchNavigateWidget() {
         results = indexResults.map((uri) => ({
           title: searchIndex.titles[uri].title,
           uri,
-          popularity: searchIndex.titles[uri].popularity,
         }));
       }
 
