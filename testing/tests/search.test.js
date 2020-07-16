@@ -14,6 +14,9 @@ describe("Site search", () => {
     await expect(page).toClick('[aria-selected="true"]');
     await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
     // Should have been redirected too...
+    // Note! It's important that this happens *after* the `.toMatchElement`
+    // on the line above because expect-puppeteer doesn't have a wait to
+    // properly wait for the (pushState) URL to have changed.
     expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
   });
 
