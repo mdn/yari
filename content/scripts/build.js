@@ -1508,7 +1508,21 @@ class Builder {
       }
     }
 
-    return [renderedHtml, macroFlaws.concat(liveSampleFlaws)];
+    // Remove duplicate flaws. During the rendering process, it's possible for identical
+    // flaws to be introduced when different dependency paths share common prerequisites.
+    // For example, document A may have prerequisite documents B and C, and in turn,
+    // document C may also have prerequisite B, and the rendering of document B generates
+    // one or more flaws.
+    const flaws = [
+      ...new Map(
+        macroFlaws.concat(liveSampleFlaws).map((f) => [
+          // This should ensure a unique key for each flaw.
+          [f.name, f.errorMessage, f.line, f.column, f.filepath].join("+"),
+          f,
+        ])
+      ).values(),
+    ];
+    return [renderedHtml, flaws];
   }
 
   async processFolder(source, folder, config) {
