@@ -39,7 +39,7 @@ export function TOC({ toc }: { toc: Toc[] }) {
             }}
           >
             Jump to section
-            <Caret/>
+            <Caret />
           </button>
         </header>
         <ul className={showTOC ? "show-toc" : undefined}>
