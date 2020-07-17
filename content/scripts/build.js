@@ -441,19 +441,26 @@ class Builder {
    * rendering all of this document's prerequisites, taking into
    * account that the prerequisites may have prerequisites and so on.
    */
-  async renderMacros(source, rawHtml, metadata, { cacheResult = false } = {}) {
-    const prerequisites = kumascript.getPrerequisites(rawHtml);
+  async renderMacros(
+    source,
+    rawHtml,
+    metadata,
+    fileInfo,
+    { cacheResult = false } = {}
+  ) {
     const mdn_url = buildMDNUrl(metadata.locale, metadata.slug);
     const uri = mdn_url.toLowerCase();
 
     // First, render all of the prerequisites of this document.
     let allPrerequisiteFlaws = [];
-    for (const prerequisite of prerequisites) {
+    for (const prerequisite of kumascript.getPrerequisites(rawHtml)) {
       const prerequisiteUri = this.cleanUri(prerequisite.uri);
       if (!this.allTitles.has(prerequisiteUri)) {
         allPrerequisiteFlaws.push(
-          prerequisite.createFlaw(
-            `${uri} transcludes ${prerequisiteUri}, which does not exist`
+          fileInfo.updateFlaw(
+            prerequisite.createFlaw(
+              `${uri} transcludes ${prerequisiteUri}, which does not exist`
+            )
           )
         );
         continue;
@@ -462,37 +469,33 @@ class Builder {
       const folder = titleData.file;
       if (titleData.source !== source.filepath) {
         allPrerequisiteFlaws.push(
-          prerequisite.createFlaw(
-            `${uri} transcludes ${prerequisiteUri}, which is from a different source`
+          fileInfo.updateFlaw(
+            prerequisite.createFlaw(
+              `${uri} transcludes ${prerequisiteUri}, which is from a different source`
+            )
           )
         );
         continue;
       }
-      const { metadata, rawHtml, fileInfo } = Document.read(
-        source.filepath,
-        folder,
-        false,
-        this.allWikiHistory
-      );
+      const {
+        metadata: prerequisiteMetadata,
+        rawHtml: prerequisiteRawHtml,
+        fileInfo: prerequisiteFileInfo,
+      } = Document.read(source.filepath, folder, false, this.allWikiHistory);
       // When rendering prerequisites, we're only interested in
       // caching the results for later use. We don't care about
       // the results returned.
       const prerequisiteResult = await this.renderMacros(
         source,
-        rawHtml,
-        metadata,
+        prerequisiteRawHtml,
+        prerequisiteMetadata,
+        prerequisiteFileInfo,
         {
           cacheResult: true,
         }
       );
       const prerequisiteFlaws = prerequisiteResult[1];
-      // Flatten the flaws from this other document into the current flaws,
-      // and set the filepath for flaws that haven't already been set at
-      // a different level of recursion.
       for (const flaw of prerequisiteFlaws) {
-        if (!flaw.filepath) {
-          flaw.filepath = fileInfo.path;
-        }
         allPrerequisiteFlaws.push(flaw);
       }
     }
@@ -513,6 +516,10 @@ class Builder {
       },
       cacheResult
     );
+
+    for (const flaw of flaws) {
+      fileInfo.updateFlaw(flaw);
+    }
 
     return [renderedHtml, flaws.concat(allPrerequisiteFlaws)];
   }
@@ -1357,6 +1364,7 @@ class Builder {
     source,
     uri,
     metadata,
+    fileInfo,
     rawHtml,
     destinationDir,
     { cacheResult = false, selectedSampleIDs = null } = {}
@@ -1366,6 +1374,7 @@ class Builder {
       source,
       rawHtml,
       metadata,
+      fileInfo,
       {
         cacheResult,
       }
@@ -1417,7 +1426,7 @@ class Builder {
           sampleIDObject
         );
         if (liveSamplePage.flaw) {
-          liveSampleFlaws.push(liveSamplePage.flaw);
+          liveSampleFlaws.push(fileInfo.updateFlaw(liveSamplePage.flaw));
           continue;
         }
         const liveSampleDir = path.join(
@@ -1455,8 +1464,10 @@ class Builder {
         // mention of the sampleID within the original source file.
         const firstSampleID = sampleIDs[0];
         liveSampleFlaws.push(
-          firstSampleID.createFlaw(
-            `${uri} references live sample(s) from ${otherCleanUri}, which does not exist`
+          fileInfo.updateFlaw(
+            firstSampleID.createFlaw(
+              `${uri} references live sample(s) from ${otherCleanUri}, which does not exist`
+            )
           )
         );
         continue;
@@ -1468,8 +1479,10 @@ class Builder {
         // the original source file.
         const firstSampleID = sampleIDs[0];
         liveSampleFlaws.push(
-          firstSampleID.createFlaw(
-            `${uri} references live sample(s) from ${otherCleanUri}, which is from a different source`
+          fileInfo.updateFlaw(
+            firstSampleID.createFlaw(
+              `${uri} references live sample(s) from ${otherCleanUri}, which is from a different source`
+            )
           )
         );
         continue;
@@ -1477,7 +1490,7 @@ class Builder {
       const {
         metadata: otherMetadata,
         rawHtml: otherRawHtml,
-        fileInfo: { path: otherRawHtmlFilepath },
+        fileInfo: otherFileInfo,
       } = Document.read(
         source.filepath,
         otherFolder,
@@ -1492,6 +1505,7 @@ class Builder {
         source,
         otherCleanUri,
         otherMetadata,
+        otherFileInfo,
         otherRawHtml,
         otherDestinationDir,
         { cacheResult: true, selectedSampleIDs: sampleIDs }
@@ -1501,9 +1515,6 @@ class Builder {
       // and set the filepath for flaws that haven't already been set at
       // a different level of recursion.
       for (const flaw of otherFlaws) {
-        if (!flaw.filepath) {
-          flaw.filepath = otherRawHtmlFilepath;
-        }
         liveSampleFlaws.push(flaw);
       }
     }
@@ -1592,6 +1603,7 @@ class Builder {
         source,
         mdnUrlLC,
         metadata,
+        fileInfo,
         rawHtml,
         destinationDir
       );
@@ -1601,22 +1613,8 @@ class Builder {
       newRawHtml = rawHtml;
 
       if (flaws.length) {
-        // The flaw objects might have a 'line' attribute, but the
-        // original document it came from had front-matter in the file.
-        // The KS renderer doesn't know about this, so we adjust it
-        // accordingly.
-        // Only applicable if the flaw has a 'line'
-        flaws.forEach((flaw) => {
-          if (flaw.line) {
-            // The extra `- 1` is because of the added newline that
-            // is only present because of the serialized linebreak.
-            flaw.line += fileInfo.frontMatterOffset - 1;
-          }
-        });
-
         if (this.options.fixFlaws) {
           // For flaws that can be changed, change the source itself.
-
           flaws
             .filter((flaw) => {
               // Only interested in 'MacroRedirectedLinkError' flaws because
@@ -1663,14 +1661,6 @@ class Builder {
           // XXX This is probably the wrong way to bubble up.
           process.exit(1);
         } else if (this.options.flawLevels.get("macros") === FLAW_LEVELS.WARN) {
-          // For each flaw, inject the path of the file that was used.
-          // This gets used in the dev UI so that you can get a shortcut
-          // link to open that file directly in your $EDITOR.
-          flaws.forEach((flaw) => {
-            if (!flaw.filepath) {
-              flaw.filepath = fileInfo.path;
-            }
-          });
           doc.flaws.macros = flaws;
         }
       }
