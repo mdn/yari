@@ -270,7 +270,7 @@ test("broken links flaws", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.broken_links.length).toBe(8);
+  expect(flaws.broken_links.length).toBe(9);
   // Map them by 'href'
   const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
@@ -293,6 +293,9 @@ test("broken links flaws", () => {
   expect(
     map.get("/en-US/docs/Web/HTML/Element/anchor#fragment").suggestion
   ).toBe("/en-US/docs/Web/HTML/Element/a#fragment");
+  expect(
+    map.get("/en-US/docs/glossary/bézier_curve#identifier").suggestion
+  ).toBe("/en-US/docs/Glossary/Bézier_curve#identifier");
 });
 
 test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page", () => {
