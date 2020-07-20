@@ -248,7 +248,7 @@ function InnerSearchNavigateWidget() {
 
   useFocusOnSlash(inputRef);
 
-  const displaySearchResults = isOpen || searchIndexError;
+  const showResults = isOpen || searchIndexError;
 
   return (
     <form
@@ -262,7 +262,7 @@ function InnerSearchNavigateWidget() {
       <input
         {...getInputProps({
           type: "search",
-          className: displaySearchResults ? "has-search-results" : undefined,
+          className: showResults ? "has-search-results" : undefined,
           placeholder: isFocused
             ? searchIndex
               ? ACTIVE_PLACEHOLDER
@@ -286,7 +286,7 @@ function InnerSearchNavigateWidget() {
       />
 
       <div {...getMenuProps()}>
-        {displaySearchResults && (
+        {showResults && (
           <div className="search-results">
             {searchIndexError ? (
               <div className="searchindex-error">
