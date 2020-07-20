@@ -1,12 +1,13 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 
-import { useLocale } from "../hooks";
+// import { useLocale } from "../hooks";
+import { SearchNavigateWidget } from '../search'
 import CloseIcon from "../kumastyles/general/close.svg";
 import SearchIcon from "../kumastyles/general/search.svg";
 
 export default function Search() {
-  const locale = useLocale();
+  // const locale = useLocale();
   const [showForm, setShowForm] = useState(false);
   const [query, setQuery] = useState("");
 
@@ -37,7 +38,8 @@ export default function Search() {
 
   return (
     <div className={`header-search ${showForm ? "show-form" : ""}`}>
-      <form
+      <SearchNavigateWidget  />
+      {/* <form
         id="nav-main-search"
         action={`/${locale}/search`}
         method="get"
@@ -58,7 +60,7 @@ export default function Search() {
           pattern="(.|\s)*\S(.|\s)*"
           required
         />
-      </form>
+      </form> */}
       <button className="toggle-form" onClick={handleClick}>
         {/* In order for transitions to work correctly we need
             the `CloseIcon` icon to be in the DOM prior to transitioning.
