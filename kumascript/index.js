@@ -1,5 +1,9 @@
-const Document = require("content/scripts/document");
+const { Document } = require("content");
 
+const {
+  INTERACTIVE_EXAMPLES_BASE_URL,
+  LIVE_SAMPLES_BASE_URL,
+} = require("./src/constants");
 const Templates = require("./src/templates.js");
 const AllPagesInfo = require("./src/info.js");
 const { getPrerequisites, render: renderMacros } = require("./src/render.js");
@@ -10,12 +14,7 @@ const {
 } = require("./src/live-sample.js");
 const { HTMLTool } = require("./src/api/util.js");
 
-async function renderFromURL(url, config) {
-  const {
-    interactiveExamplesBaseUrl,
-    liveSamplesBaseUrl,
-    uriTransform,
-  } = config;
+async function renderFromURL(url) {
   const { rawHtml, metadata } = Document.findByURL(url).document;
   const [renderedHtml, errors] = await renderMacros(
     rawHtml,
@@ -31,12 +30,11 @@ async function renderFromURL(url, config) {
         selective_mode: false,
       },
       interactive_examples: {
-        base_url: interactiveExamplesBaseUrl,
+        base_url: INTERACTIVE_EXAMPLES_BASE_URL,
       },
-      live_samples: { base_url: liveSamplesBaseUrl },
+      live_samples: { base_url: LIVE_SAMPLES_BASE_URL },
     },
-    new AllPagesInfo(uriTransform),
-    (url) => renderFromURL(url, config)
+    (url) => renderFromURL(url)
   );
 
   // For now, we're just going to inject section ID's.

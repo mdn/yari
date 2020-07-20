@@ -7,6 +7,7 @@
     "start": "nodemon index.js --watch . --watch ../content/scripts --watch ../kumascript"
   },
   "dependencies": {
+    "chokidar": "^3.4.1",
     "dotenv": "8.2.0",
     "express": "4.17.1",
     "open-editor": "2.0.1",

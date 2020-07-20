@@ -2,17 +2,12 @@ const path = require("path");
 
 const express = require("express");
 
-const { DEFAULT_BUILD_ROOT } = require("content/scripts/constants");
-const Document = require("content/scripts/document");
+const { Document } = require("content");
 
 const router = express();
 
 router.post("/", (req, res) => {
   const { rawHtml, metadata } = req.body;
-  const localeFolder = path.join(
-    DEFAULT_BUILD_ROOT,
-    metadata.locale.toLowerCase()
-  );
   Document.create(rawHtml, metadata);
   res.sendStatus(201);
 });
@@ -37,7 +32,6 @@ router.put("/", withDocument, async (req, res) => {
   const { rawHtml, metadata } = req.body;
   if (metadata.title && rawHtml) {
     Document.update(
-      DEFAULT_BUILD_ROOT,
       path.dirname(req.document.fileInfo.path),
       rawHtml.trim() + "\n",
       metadata

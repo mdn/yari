@@ -4,7 +4,7 @@ import { Routes, Route, Link } from "react-router-dom";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { NoMatch } from "./routing";
-// import SearchNavigateWidget from "./search";
+import SearchNavigateWidget from "./search";
 
 const AllFlaws = lazy(() => import("./flaws"));
 const DocumentEdit = lazy(() => import("./document/forms/edit"));
@@ -52,7 +52,7 @@ function Header() {
       <h1>
         <Link to="/">MDN Web Docs</Link>
       </h1>
-      {/*<SearchNavigateWidget />*/}
+      <SearchNavigateWidget />
     </header>
   );
 }

@@ -1,18 +1,18 @@
 {
-  "name": "content",
+  "name": "import",
   "version": "0.1.0",
   "license": "MPL-2.0",
-  "main": "index.js",
+  "scripts": {
+    "start": "node cli.js"
+  },
   "dependencies": {
     "caporal": "1.4.0",
     "chalk": "4.1.0",
     "cheerio": "1.0.0-rc.3",
-    "chokidar": "^3.4.1",
+    "content": "*",
     "dotenv": "8.2.0",
-    "front-matter": "4.0.2",
-    "glob": "^7.1.6",
-    "js-yaml": "3.14.0",
-    "kumascript": "*",
+    "fast-csv": "4.3.1",
+    "mysql": "2.18.1",
     "sanitize-filename": "^1.6.3"
   }
 }

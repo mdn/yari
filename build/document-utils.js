@@ -1,6 +1,4 @@
-const fs = require("fs");
-
-const Document = require("./document");
+const { Document } = require("content/");
 
 /** The breadcrumb is an array of parents include the document itself.
  * It only gets added to the document there are actual parents.

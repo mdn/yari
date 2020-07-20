@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCombobox } from "downshift";
 import FlexSearch from "flexsearch";
 import useSWR from "swr";
@@ -38,9 +38,8 @@ type SearchIndex = {
 function useSearchIndex(): [null | SearchIndex, () => void] {
   const [shouldInitialize, setShouldInitialize] = useState(false);
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
-  const locale = useParams().locale || "en-US";
 
-  const url = `/${locale}/titles.json`;
+  const url = `/api/titles`;
   const { error, data: titles } = useSWR<Titles>(
     shouldInitialize ? url : null,
     async (url) => {
@@ -51,7 +50,10 @@ function useSearchIndex(): [null | SearchIndex, () => void] {
       const { titles } = await response.json();
       return titles;
     },
-    { revalidateOnFocus: false }
+    {
+      refreshInterval: 5000,
+      revalidateOnFocus: false,
+    }
   );
 
   if (error) {

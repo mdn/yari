@@ -1,5 +1,6 @@
+const { Document } = require("content");
+
 const { FLAW_LEVELS } = require("./constants");
-const Document = require("./document");
 const { packageBCD } = require("./resolve-bcd");
 
 const options = { flawLevels: new Map() };
@@ -22,7 +23,7 @@ function injectFlaws(doc, $) {
       const href = a.attr("href").split("#")[0];
       if (href.startsWith("/") && !checked.has(href)) {
         checked.add(href);
-        if (!Document.read(href.toLowerCase())) {
+        if (!Document.findByURL(href.toLowerCase())) {
           if (!("broken_links" in doc.flaws)) {
             doc.flaws.broken_links = [];
           }

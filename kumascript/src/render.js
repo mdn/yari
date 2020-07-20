@@ -105,13 +105,7 @@ function getPrerequisites(source) {
   return result;
 }
 
-async function render(
-  source,
-  templates,
-  pageEnvironment,
-  allPagesInfo,
-  renderFromURL
-) {
+async function render(source, templates, pageEnvironment, renderFromURL) {
   // Parse the source document.
   let tokens;
   try {
@@ -179,7 +173,6 @@ async function render(
       recordNonFatalError,
     },
     templates,
-    allPagesInfo,
     renderFromURL
   );
 

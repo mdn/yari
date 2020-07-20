@@ -1,24 +1,44 @@
-const Document = require("content/scripts/document");
-const { buildURL } = require("content/scripts/utils");
+const { Document, Redirect } = require("content");
 
 const BASE_URL = "https://developer.mozilla.org";
 const DUMMY_BASE_URL = "https://example.com";
 
-class AllPagesInfo {
-  constructor(uriTransform) {
-    // This constructor requires a "pageInfoByUri" Map object (for example,
-    // "allTitles"), and a "uriTransform" function for cleaning/repairing
-    // URI's provided as arguments to the macros.
-    //
-    // NOTE: Assumes all of the keys of "pageInfoByUri" are lowercase.
-    this.uriTransform = uriTransform;
+function repairURL(url) {
+  // Returns a lowercase URI with common irregularities repaired.
+  url = url.trim().toLowerCase();
+  if (!url.startsWith("/")) {
+    // Ensure the URI starts with a "/".
+    url = "/" + url;
   }
+  // Remove redundant forward slashes, like "//".
+  url = url.replace(/\/{2,}/g, "/");
+  // Ensure the URI starts with a valid locale.
+  const maybeLocale = url.split("/")[1];
+  if (!VALID_LOCALES.has(maybeLocale)) {
+    if (maybeLocale === "en") {
+      // Converts URI's like "/en/..." to "/en-us/...".
+      url = url.replace(`/${maybeLocale}`, "/en-us");
+    } else {
+      // Converts URI's like "/web/..." to "/en-us/web/...", or
+      // URI's like "/docs/..." to "/en-us/docs/...".
+      url = "/en-us" + url;
+    }
+  }
+  // Ensure the locale is followed by "/docs".
+  const [locale, maybeDocs] = url.split("/").slice(1, 3);
+  if (maybeDocs !== "docs") {
+    // Converts URI's like "/en-us/web/..." to "/en-us/docs/web/...".
+    url = url.replace(`/${locale}`, `/${locale}/docs`);
+  }
+  return url;
+}
 
+const info = {
   getPathname(url) {
     // This function returns just the pathname of the given "url", removing
     // any trailing "/".
     return new URL(url, DUMMY_BASE_URL).pathname.replace(/\/$/, "");
-  }
+  },
 
   getUriKey(url) {
     // This function returns just the lowercase pathname of the given "url",
@@ -28,8 +48,8 @@ class AllPagesInfo {
     const uri = new URL(url, BASE_URL).pathname
       .replace(/\/$/, "")
       .toLowerCase();
-    return this.uriTransform(uri);
-  }
+    return Redirect.resolve(repairURL(uri));
+  },
 
   getDescription(url) {
     const uriKey = this.getUriKey(url);
@@ -38,7 +58,7 @@ class AllPagesInfo {
       description += ` (derived from "${url}")`;
     }
     return description;
-  }
+  },
 
   getChildren(url, includeSelf) {
     // We don't need "depth" since it's handled dynamically (lazily).
@@ -48,12 +68,12 @@ class AllPagesInfo {
     // it's re-created for each caller (so one caller can't mess with
     // another), but also should NOT be frozen since some macros sort
     // the list in-place.
-    const page = this.getPage(url);
+    const page = info.getPage(url);
     if (includeSelf) {
       return [page];
     }
     return page.subpages;
-  }
+  },
 
   // TODO
   getTranslations(url) {
@@ -98,18 +118,18 @@ class AllPagesInfo {
     // }
 
     return [];
-  }
+  },
 
   getPage(url) {
-    const result = Document.findByURL(url);
+    const result = Document.findByURL(url, { metadata: true });
     if (!result) {
       throw new Error(`${this.getDescription(url)} does not exist`);
     }
 
-    const self = this;
-    const { locale, slug, title, summary, tags } = result.document.metadata;
+    const { document } = result;
+    const { locale, slug, title, summary, tags } = document.metadata;
     return {
-      url: buildURL(locale, slug),
+      url: document.url,
       locale,
       slug,
       title,
@@ -117,12 +137,12 @@ class AllPagesInfo {
       tags: tags || [],
       translations: [], //TODO Object.freeze(buildTranslationObjects(data)),
       get subpages() {
-        return Document.findChildren(url).map((doc) =>
-          self.getPage(buildURL(locale, doc.metadata.slug))
+        return Document.findChildren(url, { metadata: true }).map((document) =>
+          info.getPage(document.url)
         );
       },
     };
-  }
-}
+  },
+};
 
-module.exports = AllPagesInfo;
+module.exports = info;

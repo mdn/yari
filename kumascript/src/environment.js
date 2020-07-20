@@ -43,6 +43,7 @@ const stringPrototype = require("./api/string.js");
 const wikiPrototype = require("./api/wiki.js");
 const webPrototype = require("./api/web.js");
 const pagePrototype = require("./api/page.js");
+const info = require("./info");
 
 class Environment {
   // Intialize an environment object that will be used to render
@@ -68,7 +69,6 @@ class Environment {
   constructor(
     perPageContext,
     templates,
-    allPagesInfo = null,
     renderFromURL = null,
     testing = false
   ) {
@@ -118,7 +118,6 @@ class Environment {
     let web = Object.create(prepareProto(webPrototype, globals));
     let page = Object.create(prepareProto(pagePrototype, globals));
     let env = Object.create(prepareProto(perPageContext));
-    let info = Object.create(allPagesInfo || null);
 
     // The page object also gets some properties copied from
     // the per-page context object

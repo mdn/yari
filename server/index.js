@@ -4,13 +4,13 @@ const path = require("path");
 const express = require("express");
 const openEditor = require("open-editor");
 
-const { buildDocumentFromURL } = require("content/scripts/build");
-const { resolveRedirect } = require("content/scripts/redirects");
-const { slugToFoldername } = require("content/scripts/utils");
+const { buildDocumentFromURL } = require("build");
+const { Redirect, slugToFoldername } = require("content");
 const { renderHTML, renderJSON } = require("ssr");
 
 const { STATIC_ROOT } = require("./constants");
 const documentRouter = require("./document");
+const titlesRoute = require("./titles");
 
 const app = express();
 app.use(express.json());
@@ -102,6 +102,8 @@ app.post("/_redirects", (req, res) => {
   res.json({ redirects });
 });
 
+app.get("/api/titles", titlesRoute);
+
 app.get("/*", async (req, res) => {
   if (req.url.startsWith("_")) {
     // URLs starting with _ is exclusively for the meta-work and if there
@@ -112,10 +114,6 @@ app.get("/*", async (req, res) => {
   // If the catch-all gets one of these something's gone wrong
   if (req.url.startsWith("/static")) {
     return res.status(404).send("Page not found");
-  }
-
-  if (req.url.endsWith("/titles.json")) {
-    res.json([]);
   }
 
   if (!req.url.includes("/docs/")) {
@@ -146,7 +144,7 @@ app.get("/*", async (req, res) => {
   if (!document) {
     // redirect resolving can take some time, so we only do it when there's no document
     // for the current route
-    const redirectURL = resolveRedirect(lookupURL);
+    const redirectURL = Redirect.resolve(lookupURL);
     if (redirectURL !== lookupURL) {
       return res.redirect(301, redirectURL + extraSuffix);
     }

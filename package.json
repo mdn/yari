@@ -19,11 +19,13 @@
   },
   "private": true,
   "workspaces": [
+    "build",
     "client",
-    "server",
-    "ssr",
     "content",
+    "import",
     "kumascript",
+    "ssr",
+    "server",
     "testing"
   ],
   "devDependencies": {

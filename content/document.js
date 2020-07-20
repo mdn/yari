@@ -5,8 +5,12 @@ const fm = require("front-matter");
 const glob = require("glob");
 const yaml = require("js-yaml");
 
-const { DEFAULT_BUILD_ROOT, VALID_LOCALES } = require("./constants");
-const { slugToFoldername } = require("./utils");
+const {
+  CONTENT_ARCHIVE_ROOT,
+  CONTENT_ROOT,
+  VALID_LOCALES,
+} = require("./constants");
+const { memoizeDuringBuild, slugToFoldername } = require("./utils");
 
 function buildPath(localeFolder, slug) {
   return path.join(localeFolder, slugToFoldername(slug));
@@ -33,10 +37,8 @@ function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
 }
 
 function extractLocale(folder) {
-  // E.g. 'pt-br/web/foo'
-  const relativeToSource = path.relative(DEFAULT_BUILD_ROOT, folder);
   // E.g. 'pr-br'
-  const localeFolderName = relativeToSource.split(path.sep)[0];
+  const localeFolderName = folder.split(path.sep)[0];
   // E.g. 'pt-BR'
   const locale = VALID_LOCALES.get(localeFolderName);
   // This checks that the extraction worked *and* that the locale found
@@ -73,34 +75,53 @@ function urlToFolderPath(url) {
   return path.join(locale.toLowerCase(), slugToFoldername(slugParts.join("/")));
 }
 
-function create(html, metadata, wikiHistory = null, rawHtml = null) {
+function create(html, metadata) {
   const folder = buildPath(
-    path.join(DEFAULT_BUILD_ROOT, metadata.locale),
+    path.join(CONTENT_ROOT, metadata.locale),
     metadata.slug
   );
 
   fs.mkdirSync(folder, { recursive: true });
 
   saveHTMLFile(getHTMLPath(folder), trimLineEndings(html), metadata);
+}
+
+function archive(renderedHTML, rawHTML, metadata, wikiHistory) {
+  const folder = buildPath(
+    path.join(CONTENT_ARCHIVE_ROOT, metadata.locale),
+    metadata.slug
+  );
+
+  fs.mkdirSync(folder, { recursive: true });
 
   // The `rawHtml` is only applicable in the importer when it saves
   // archived content. The archived content gets the *rendered* html
   // saved but by storing the raw html too we can potentially resurrect
   // the document if we decide to NOT archive it in the future.
-  if (rawHtml) {
-    fs.writeFileSync(path.join(folder, "raw.html"), trimLineEndings(rawHtml));
+  fs.writeFileSync(path.join(folder, "raw.html"), trimLineEndings(rawHTML));
+
+  fs.writeFileSync(
+    getWikiHistoryPath(folder),
+    JSON.stringify(wikiHistory, null, 2)
+  );
+
+  saveHTMLFile(getHTMLPath(folder), trimLineEndings(renderedHTML), metadata);
+}
+
+class Document {
+  constructor(attributes) {
+    Object.assign(this, attributes);
   }
 
-  if (wikiHistory) {
-    fs.writeFileSync(
-      getWikiHistoryPath(folder),
-      JSON.stringify(wikiHistory, null, 2)
-    );
+  get url() {
+    const { locale, slug } = this.metadata;
+    return `/${locale}/docs/${slug}`;
   }
 }
 
-const read = (folder, includeTimestamp = false) => {
-  const filePath = getHTMLPath(folder);
+const read = memoizeDuringBuild((folder, fields = null) => {
+  fields = fields ? { body: false, metadata: false, ...fields } : fields;
+  const filePath = path.join(CONTENT_ROOT, getHTMLPath(folder));
   if (!fs.existsSync(filePath)) {
     return null;
   }
@@ -110,53 +131,18 @@ const read = (folder, includeTimestamp = false) => {
     body: rawHtml,
     bodyBegin: frontMatterOffset,
   } = fm(rawContent);
-  // Make a (shallow) clone of the metadata in case we need the metadata
-  // as it appears in the source before we add extra pieces of information.
-  // This is useful if you want to re-save the file as it *was*.
-  const metadataUntouched = Object.assign({}, metadata);
 
   metadata.locale = extractLocale(folder);
 
-  if (includeTimestamp) {
-    // XXX the day we have a way of extracting the last modified date from
-    // git log data, it'd go here. Somewhere.
-    // At that point, every file will have a last modified from git (even
-    // though it was ever *edited* with a git commit) because it was *added*
-    // at some point.
-    // So we'd need to make that git log such that it never includes edits
-    // until after the critical day we make the final migration.
-
-    metadata.modified = null;
-
-    // const localeHistory = allWikiHistory.get(metadata.locale.toLowerCase());
-    // const slugLC = metadata.slug.toLowerCase();
-    // if (localeHistory.has(slugLC)) {
-    //   metadata.modified = localeHistory.get(slugLC).modified;
-    // }
-  }
-
-  return {
-    metadata,
-    metadataUntouched,
-    rawHtml,
-    rawContent,
+  return new Document({
+    ...(!fields || fields.metadata ? { metadata } : {}),
+    ...(!fields || fields.body ? { rawHtml, rawContent } : {}),
     fileInfo: {
       path: filePath,
       frontMatterOffset,
     },
-  };
-};
-
-function findChildren(url) {
-  const folder = urlToFolderPath(url);
-  const childPaths = glob.sync(
-    path.join(DEFAULT_BUILD_ROOT, folder, "*", HTML_FILENAME),
-    {
-      ignore: path.join(DEFAULT_BUILD_ROOT, getHTMLPath(folder)),
-    }
-  );
-  return childPaths.map((childFilePath) => read(path.dirname(childFilePath)));
-}
+  });
+});
 
 function update(folder, rawHtml, metadata) {
   const document = read(folder);
@@ -176,7 +162,7 @@ function update(folder, rawHtml, metadata) {
     });
     if (isNewSlug) {
       updateWikiHistory(
-        path.join(DEFAULT_BUILD_ROOT, metadata.locale.toLowerCase()),
+        path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
         oldSlug,
         newSlug
       );
@@ -189,14 +175,14 @@ function update(folder, rawHtml, metadata) {
       const newChildSlug = oldChildSlug.replace(oldSlug, newSlug);
       metadata.slug = newChildSlug;
       updateWikiHistory(
-        path.join(DEFAULT_BUILD_ROOT, metadata.locale.toLowerCase()),
+        path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
         oldChildSlug,
         newChildSlug
       );
       saveHTMLFile(fileInfo.path, rawHtml, metadata);
     }
     const newFolder = buildPath(
-      path.join(DEFAULT_BUILD_ROOT, metadata.locale.toLowerCase()),
+      path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
       newSlug
     );
 
@@ -208,30 +194,41 @@ function update(folder, rawHtml, metadata) {
 }
 
 function del(folder) {
-  const { metadata } = read(folder);
+  const { metadata } = read(folder, { metadata: true });
   fs.rmdirSync(folder, { recursive: true });
-  updateWikiHistory(
-    path.join(DEFAULT_BUILD_ROOT, metadata.locale),
-    metadata.slug
-  );
+  updateWikiHistory(path.join(CONTENT_ROOT, metadata.locale), metadata.slug);
 }
 
-function findByURL(url) {
+const findByURL = memoizeDuringBuild((url, fields = null) => {
   const folder = urlToFolderPath(url);
 
-  const document = read(path.join(DEFAULT_BUILD_ROOT, folder));
+  const document = read(folder, fields);
 
-  return document
-    ? { contentRoot: DEFAULT_BUILD_ROOT, folder, document }
-    : null;
+  return document ? { contentRoot: CONTENT_ROOT, folder, document } : null;
+});
+
+function findChildren(url, fields = null) {
+  const folder = urlToFolderPath(url);
+  const childPaths = glob.sync(
+    path.join(CONTENT_ROOT, folder, "*", HTML_FILENAME),
+    {
+      ignore: path.join(CONTENT_ROOT, getHTMLPath(folder)),
+    }
+  );
+  return childPaths
+    .map((childFilePath) =>
+      path.relative(CONTENT_ROOT, path.dirname(childFilePath))
+    )
+    .map((folder) => read(folder, fields));
 }
 
 module.exports = {
-  buildPath,
   create,
+  archive,
   read,
   update,
   del,
+
   findByURL,
   findChildren,
 };
