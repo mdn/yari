@@ -12,7 +12,7 @@
     "jest": "26.0.1",
     "jest-puppeteer": "4.4.0",
     "puppeteer": "2",
-    "simple-git": "2.13.2"
+    "simple-git": "2.14.0"
   },
   "jest": {
     "preset": "jest-puppeteer"
