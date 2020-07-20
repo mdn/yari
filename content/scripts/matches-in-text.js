@@ -17,4 +17,24 @@ function* findMatchesInText(needle, haystack, { inQuotes = false } = {}) {
   }
 }
 
-module.exports = { findMatchesInText };
+function replaceMatchesInText(
+  needle,
+  haystack,
+  replacement,
+  { inAttribute = null }
+) {
+  // Need to remove any characters that can affect a regex if we're going
+  // use the string in a manually constructed regex.
+  const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  let rex;
+  if (inAttribute) {
+    rex = new RegExp(`${inAttribute}=['"](${escaped})['"]`, "g");
+  } else {
+    rex = new RegExp(`(${escaped})`, "g");
+  }
+  return haystack.replace(rex, (match, p1) => {
+    return match.replace(p1, replacement);
+  });
+}
+
+module.exports = { findMatchesInText, replaceMatchesInText };
