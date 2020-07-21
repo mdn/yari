@@ -4,7 +4,7 @@ const path = require("path");
 const express = require("express");
 const openEditor = require("open-editor");
 
-const { buildDocumentFromURL } = require("build");
+const { buildDocumentFromURL, buildLiveSamplePageFromURL } = require("build");
 const { Redirect, slugToFoldername } = require("content");
 const { renderHTML, renderJSON } = require("ssr");
 
@@ -14,30 +14,6 @@ const titlesRoute = require("./titles");
 
 const app = express();
 app.use(express.json());
-
-// The client/build directory won't exist at the very very first time
-// you start the server after a fresh git clone.
-if (!fs.existsSync(STATIC_ROOT)) {
-  fs.mkdirSync(STATIC_ROOT);
-}
-
-// Lowercase every request because every possible file we might have
-// on disk is always in lowercase.
-// This only helps when you're on a filesystem (e.g. Linux) that is case
-// sensitive.
-app.use((req, res, next) => {
-  req.url = req.url.toLowerCase();
-
-  if (req.url.includes("/_samples_/")) {
-    // We need to convert incoming live-sample URL's like:
-    //   /en-us/docs/web/css/:indeterminate/_samples_/progress_bar
-    // to:
-    //   /en-us/docs/web/css/_colon_indeterminate/_samples_/progress_bar
-    // since they should be served directly by the static middleware.
-    req.url = slugToFoldername(req.url);
-  }
-  next();
-});
 
 app.use(express.static(STATIC_ROOT));
 
@@ -114,6 +90,10 @@ app.get("/*", async (req, res) => {
   // If the catch-all gets one of these something's gone wrong
   if (req.url.startsWith("/static")) {
     return res.status(404).send("Page not found");
+  }
+
+  if (req.url.includes("/_samples_/")) {
+    return res.send(await buildLiveSamplePageFromURL(req.url));
   }
 
   if (!req.url.includes("/docs/")) {

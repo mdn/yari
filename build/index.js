@@ -79,124 +79,6 @@ function validateSlug(slug) {
 }
 
 /**
- * Recursive method that renders the macros within the document
- * represented by this source, URI, metadata and raw HTML, as
- * well as builds any live samples within this document or within
- * other documents referenced by this document.
- */
-async function renderMacrosAndBuildLiveSamples(
-  { rawHtml, metadata },
-  url,
-  { selectedSampleIDs = null } = {}
-) {
-  // First, render the macros to get the rendered HTML.
-  const [renderedHtml, flaws] = await kumascript.render(
-    buildURL(metadata.locale, metadata.slug)
-  );
-
-  // Next, let's find any samples that we need to build, and note
-  // that one or more or even all might be within other documents.
-  let ownSampleIds;
-  let otherSampleIds = null;
-  if (selectedSampleIDs) {
-    ownSampleIds = selectedSampleIDs;
-  } else {
-    [ownSampleIds, otherSampleIds] = kumascript.getLiveSampleIDs(
-      metadata.slug,
-      rawHtml
-    );
-  }
-
-  // Next, let's build the live sample pages from the current document, if any.
-  if (ownSampleIds) {
-    // Now, we'll either update or create new live sample pages.
-    let liveSamplePageHTML;
-    for (const sampleIDWithContext of ownSampleIds) {
-      try {
-        liveSamplePageHTML = kumascript.buildLiveSamplePage(
-          url,
-          metadata.title,
-          renderedHtml,
-          sampleIDWithContext
-        );
-      } catch (e) {
-        if (e instanceof kumascript.LiveSampleError) {
-          flaws.push(e);
-        } else {
-          throw e;
-        }
-      }
-    }
-  }
-
-  // Finally, let's build any live sample pages within other documents.
-  // This document may rely on live sample pages from other documents,
-  // so if that's the case, we need to build the specific live sample
-  // pages in each of the other documents that this document references.
-  // Consider "/en-US/docs/learn/forms/how_to_build_custom_form_controls",
-  // which references live sample pages from each of the following:
-  // "/en-us/docs/learn/forms/how_to_build_custom_form_controls/example_1"
-  // "/en-us/docs/learn/forms/how_to_build_custom_form_controls/example_2"
-  // "/en-us/docs/learn/forms/how_to_build_custom_form_controls/example_3"
-  // "/en-us/docs/learn/forms/how_to_build_custom_form_controls/example_4"
-  // "/en-us/docs/learn/forms/how_to_build_custom_form_controls/example_5"
-  for (const [slug, sampleIDs] of otherSampleIds || []) {
-    const [{ context }] = sampleIDs;
-    const otherURL = buildURL(metadata.locale, slug);
-    const otherCleanUri = Redirect.resolve(otherURL);
-    // TODO
-    if (!"documentExists") {
-      // I suppose we could use any, but let's use the context of the first
-      // usage of the sampleID within the original source file.
-      flaws.push(
-        new kumascript.LiveSampleError(
-          new Error(
-            `${url} references live sample(s) from ${otherCleanUri}, which does not exist`
-          ),
-          context.source,
-          context.token
-        )
-      );
-      continue;
-    }
-    // TODO
-    if (!"isFromTheSameSource") {
-      // Again let's just use the context of the first usage of sampleID within
-      // the original source file.
-      flaws.push(
-        new kumascript.LiveSampleError(
-          new Error(
-            `${url} references live sample(s) from ${otherCleanUri}, which is from a different source`
-          ),
-          context.source,
-          context.token
-        )
-      );
-      continue;
-    }
-    const otherDocument = Document.read(slugToFoldername(slug));
-    if (!otherDocument) {
-      continue;
-    }
-    const otherResult = await renderMacrosAndBuildLiveSamples(otherDocument, {
-      selectedSampleIDs: sampleIDs,
-    });
-    const otherFlaws = otherResult[1];
-    // Flatten the flaws from this other document into the current flaws,
-    // and set the filepath for flaws that haven't already been set at
-    // a different level of recursion.
-    for (const flaw of otherFlaws) {
-      if (!flaw.filepath) {
-        flaw.filepath = otherDocument.fileInfo.path;
-      }
-      flaws.push(flaw);
-    }
-  }
-
-  return [renderedHtml, flaws];
-}
-
-/**
  * Find all tags that we need to change to tell tools like Google Translate
  * to not translate.
  *
@@ -226,13 +108,14 @@ function injectSource(doc, folder) {
 const options = { flawLevels: new Map() };
 
 async function buildDocument(document) {
+  const { metadata, fileInfo } = document;
+
   const doc = {};
 
   doc.flaws = {};
 
-  let [renderedHtml, flaws] = await renderMacrosAndBuildLiveSamples(document);
+  const [renderedHtml, flaws] = await kumascript.render(document.url);
 
-  const { rawHtml, metadata, fileInfo } = document;
   if (flaws.length) {
     // The flaw objects might have a 'line' attribute, but the
     // original document it came from had front-matter in the file.
@@ -350,8 +233,21 @@ async function buildDocumentFromURL(url) {
   return buildDocument(result.document);
 }
 
+async function buildLiveSamplePageFromURL(url) {
+  const [documentURL, sampleID] = url.split("/_samples_/");
+  const { document } = Document.findByURL(documentURL);
+  const liveSamplePage = kumascript.buildLiveSamplePage(
+    document.url,
+    document.metadata.title,
+    (await kumascript.render(document.url))[0],
+    { id: sampleID, createFlaw() {} }
+  );
+  return liveSamplePage.html;
+}
+
 module.exports = {
   buildDocumentFromURL,
+  buildLiveSamplePageFromURL,
 };
 
 function makeSitemapXML(locale, slugs) {
