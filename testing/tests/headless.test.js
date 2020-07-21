@@ -130,4 +130,23 @@ describe("Basic viewing of functional pages", () => {
       text: "Three",
     });
   });
+
+  it("should return to previous page on back-button press", async () => {
+    await page.goto(testURL("/en-US/docs/Web/Foo"));
+    await expect(page).toMatch("<foo>: A test tag");
+    await expect(page).toMatchElement("h1", {
+      text: "<foo>: A test tag",
+    });
+    await expect(page).toClick("nav li a", {
+      text: "Web technology for developers",
+    });
+    await expect(page).toMatchElement("h1", {
+      text: "Web technology for developers",
+    });
+    expect(page.url()).toBe(testURL("/en-US/docs/Web"));
+    await page.goBack();
+    await expect(page).toMatchElement("h1", {
+      text: "<foo>: A test tag",
+    });
+  });
 });
