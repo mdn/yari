@@ -63,6 +63,13 @@
       "wbamberg"
     ]
   },
+  "Web": {
+    "modified": "2020-01-01T01:01:01.550Z",
+    "contributors": [
+      "peterbe",
+      "ryan"
+    ]
+  },
   "Web/HTML/Element/a": {
     "modified": "2020-05-28T22:35:09.573Z",
     "contributors": [
