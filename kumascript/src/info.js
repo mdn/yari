@@ -1,4 +1,4 @@
-const { Document, Redirect } = require("content");
+const { VALID_LOCALES, Document, Redirect } = require("content");
 
 const BASE_URL = "https://developer.mozilla.org";
 const DUMMY_BASE_URL = "https://example.com";
