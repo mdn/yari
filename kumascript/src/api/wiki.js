@@ -73,11 +73,9 @@ module.exports = {
     const pathDescription = this.info.getDescription(path);
 
     if (!result) {
-      // There was no cached result for the path. One
-      // possibility is that the requested path was in archived
-      // content, so it was never pre-rendered and cached.
+      // If there was no cached result for the path, it doesn't exist.
       throw new Error(
-        `unable to find pre-rendered HTML for prerequisite ${pathDescription}`
+        `${this.env.path.toLowerCase()} transcludes ${pathDescription}, which does not exist`
       );
     }
 
@@ -105,6 +103,17 @@ module.exports = {
   // Returns the page object for the specified page.
   getPage(path) {
     return this.info.getPage(path || this.env.url);
+  },
+
+  // Throw an error if the given document path does not exist.
+  checkExistence(path) {
+    if (!this.info.hasPage(path)) {
+      throw new Error(
+        `${this.env.path.toLowerCase()} references ${this.info.getDescription(
+          path
+        )}, which does not exist`
+      );
+    }
   },
 
   // Retrieve the full uri of a given wiki page.

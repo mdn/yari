@@ -48,6 +48,14 @@ class SourceCodeError {
     }
   }
 
+  updateFileInfo(fileInfo) {
+    this.filepath = fileInfo.path;
+    // The extra `- 1` is because of the added newline that
+    // is only present because of the serialized linebreak.
+    this.updateOffset(fileInfo.frontMatterOffset - 1);
+    return this;
+  }
+
   // TODO(djf): a lot of our HTML documents have really long lines and
   // showing line-oriented errors when the column number is > 100
   // doesn't really make sense. Perhaps we can modify this function to

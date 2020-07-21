@@ -154,7 +154,7 @@ describeMacro("dekiscript-page", function () {
     itMacro("One argument (throws error)", function (macro) {
       const junk_url = "/en-US/docs/junk";
       expect(() => macro.ctx.page.translations(junk_url)).toThrow(
-        `"${junk_url.toLowerCase()}" does not exist`
+        `${junk_url.toLowerCase()} does not exist`
       );
     });
   });

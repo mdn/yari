@@ -151,14 +151,6 @@ const read = (
     fileInfo: {
       path: filePath,
       frontMatterOffset,
-      updateFlaw: (flaw) => {
-        // This is used to update flaws with this information.
-        flaw.filepath = filePath;
-        // The extra `- 1` is because of the added newline that
-        // is only present because of the serialized linebreak.
-        flaw.updateOffset(frontMatterOffset - 1);
-        return flaw;
-      },
     },
   };
 };

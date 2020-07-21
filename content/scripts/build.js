@@ -456,27 +456,9 @@ class Builder {
     for (const prerequisite of kumascript.getPrerequisites(rawHtml)) {
       const prerequisiteUri = this.cleanUri(prerequisite.uri);
       if (!this.allTitles.has(prerequisiteUri)) {
-        allPrerequisiteFlaws.push(
-          fileInfo.updateFlaw(
-            prerequisite.createFlaw(
-              `${uri} transcludes ${prerequisiteUri}, which does not exist`
-            )
-          )
-        );
         continue;
       }
-      const titleData = this.allTitles.get(prerequisiteUri);
-      const folder = titleData.file;
-      if (titleData.source !== source.filepath) {
-        allPrerequisiteFlaws.push(
-          fileInfo.updateFlaw(
-            prerequisite.createFlaw(
-              `${uri} transcludes ${prerequisiteUri}, which is from a different source`
-            )
-          )
-        );
-        continue;
-      }
+      const { file: folder } = this.allTitles.get(prerequisiteUri);
       const {
         metadata: prerequisiteMetadata,
         rawHtml: prerequisiteRawHtml,
@@ -518,7 +500,7 @@ class Builder {
     );
 
     for (const flaw of flaws) {
-      fileInfo.updateFlaw(flaw);
+      flaw.updateFileInfo(fileInfo);
     }
 
     return [renderedHtml, flaws.concat(allPrerequisiteFlaws)];
@@ -1426,7 +1408,7 @@ class Builder {
           sampleIDObject
         );
         if (liveSamplePage.flaw) {
-          liveSampleFlaws.push(fileInfo.updateFlaw(liveSamplePage.flaw));
+          liveSampleFlaws.push(liveSamplePage.flaw.updateFileInfo(fileInfo));
           continue;
         }
         const liveSampleDir = path.join(
@@ -1460,33 +1442,9 @@ class Builder {
       const otherUri = buildMDNUrl(metadata.locale, slug);
       const otherCleanUri = this.cleanUri(otherUri);
       if (!this.allTitles.has(otherCleanUri)) {
-        // I suppose we could use any, but let's use the first
-        // mention of the sampleID within the original source file.
-        const firstSampleID = sampleIDs[0];
-        liveSampleFlaws.push(
-          fileInfo.updateFlaw(
-            firstSampleID.createFlaw(
-              `${uri} references live sample(s) from ${otherCleanUri}, which does not exist`
-            )
-          )
-        );
         continue;
       }
-      const otherTitleData = this.allTitles.get(otherCleanUri);
-      const otherFolder = otherTitleData.file;
-      if (otherTitleData.source !== source.filepath) {
-        // Again let's just use the first mention of sampleID within
-        // the original source file.
-        const firstSampleID = sampleIDs[0];
-        liveSampleFlaws.push(
-          fileInfo.updateFlaw(
-            firstSampleID.createFlaw(
-              `${uri} references live sample(s) from ${otherCleanUri}, which is from a different source`
-            )
-          )
-        );
-        continue;
-      }
+      const { file: otherFolder } = this.allTitles.get(otherCleanUri);
       const {
         metadata: otherMetadata,
         rawHtml: otherRawHtml,
