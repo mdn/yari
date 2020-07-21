@@ -52,7 +52,7 @@ const info = {
   },
 
   getDescription(url) {
-    const uriKey = this.getUriKey(url);
+    const uriKey = info.getUriKey(url);
     let description = `"${uriKey}"`;
     if (uriKey !== url.toLowerCase()) {
       description += ` (derived from "${url}")`;
@@ -121,9 +121,9 @@ const info = {
   },
 
   getPage(url) {
-    const result = Document.findByURL(url, { metadata: true });
+    const result = Document.findByURL(info.getUriKey(url), { metadata: true });
     if (!result) {
-      throw new Error(`${this.getDescription(url)} does not exist`);
+      throw new Error(`${info.getDescription(url)} does not exist`);
     }
 
     const { document } = result;
