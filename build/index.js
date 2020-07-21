@@ -1,17 +1,14 @@
 const childProcess = require("child_process");
+const fs = require("fs");
+const path = require("path");
 
 const chalk = require("chalk");
+const cliProgress = require("cli-progress");
 const packageJSON = require("../package.json");
 
-const {
-  CONTENT_ROOT,
-  CONTENT_ARCHIVE_ROOT,
-  buildURL,
-  Document,
-  Redirect,
-  slugToFoldername,
-} = require("content");
+const { buildURL, Document, Redirect, slugToFoldername } = require("content");
 const kumascript = require("kumascript");
+const { renderHTML } = require("ssr");
 
 const { FLAW_LEVELS } = require("./constants");
 const {
@@ -21,6 +18,8 @@ const {
 const { addBreadcrumbData } = require("./document-utils");
 const { injectFlaws } = require("./flaws");
 const cheerio = require("./monkeypatched-cheerio");
+
+const BUILD_OUT_ROOT = path.join(__dirname, "..", "client", "build");
 
 function getCurrentGitHubBaseURL() {
   return packageJSON.repository;
@@ -220,7 +219,7 @@ function injectSource(doc, folder) {
 
 const options = { flawLevels: new Map() };
 
-async function buildDocument(folder, document) {
+async function buildDocument(document) {
   const doc = {};
 
   doc.flaws = {};
@@ -327,7 +326,7 @@ async function buildDocument(folder, document) {
     doc.other_translations = otherTranslations;
   }
 
-  injectSource(doc, folder);
+  injectSource(doc, document.fileInfo.folder);
 
   // The `titles` object should contain every possible URI->Title mapping.
   // We can use that generate the necessary information needed to build
@@ -342,10 +341,41 @@ async function buildDocumentFromURL(url) {
   if (!result) {
     return null;
   }
-  const { folder, document } = result;
-  return buildDocument(folder, document);
+  return buildDocument(result.document);
 }
 
 module.exports = {
   buildDocumentFromURL,
 };
+
+async function buildDocuments() {
+  const documents = Document.findAll();
+  const progressBar = new cliProgress.SingleBar(
+    {},
+    cliProgress.Presets.shades_grey
+  );
+  progressBar.start(documents.count);
+  for (const document of documents.iter()) {
+    const builtDocument = await buildDocument(document);
+    const outPath = path.join(BUILD_OUT_ROOT, slugToFoldername(document.url));
+    fs.mkdirSync(outPath, { recursive: true });
+    fs.writeFileSync(
+      path.join(outPath, "index.html"),
+      renderHTML(builtDocument, document.url)
+    );
+    fs.writeFileSync(
+      path.join(outPath, "index.json"),
+      // This is exploiting the fact that renderHTML has the side-effect of mutating builtDocument
+      // which makes this not great and refactor-worthy
+      JSON.stringify({ doc: builtDocument })
+    );
+    progressBar.increment();
+  }
+  progressBar.stop();
+}
+
+if (require.main === module) {
+  buildDocuments().catch((error) => {
+    console.error("error while building documents:", error);
+  });
+}

@@ -5,7 +5,7 @@ const {
 } = require("./constants");
 const Document = require("./document");
 const Redirect = require("./redirect");
-const { buildURL, slugToFoldername } = require("./utils");
+const { buildURL, memoize, slugToFoldername } = require("./utils");
 
 module.exports = {
   CONTENT_ROOT,
@@ -16,5 +16,6 @@ module.exports = {
   Redirect,
 
   buildURL,
+  memoize,
   slugToFoldername,
 };

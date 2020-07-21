@@ -10,7 +10,7 @@ const {
   CONTENT_ROOT,
   VALID_LOCALES,
 } = require("./constants");
-const { memoizeDuringBuild, slugToFoldername } = require("./utils");
+const { memoize, slugToFoldername } = require("./utils");
 
 function buildPath(localeFolder, slug) {
   return path.join(localeFolder, slugToFoldername(slug));
@@ -119,7 +119,7 @@ class Document {
   }
 }
 
-const read = memoizeDuringBuild((folder, fields = null) => {
+const read = memoize((folder, fields = null) => {
   fields = fields ? { body: false, metadata: false, ...fields } : fields;
   const filePath = path.join(CONTENT_ROOT, getHTMLPath(folder));
   if (!fs.existsSync(filePath)) {
@@ -138,6 +138,7 @@ const read = memoizeDuringBuild((folder, fields = null) => {
     ...(!fields || fields.metadata ? { metadata } : {}),
     ...(!fields || fields.body ? { rawHtml, rawContent } : {}),
     fileInfo: {
+      folder,
       path: filePath,
       frontMatterOffset,
     },
@@ -199,13 +200,29 @@ function del(folder) {
   updateWikiHistory(path.join(CONTENT_ROOT, metadata.locale), metadata.slug);
 }
 
-const findByURL = memoizeDuringBuild((url, fields = null) => {
+const findByURL = memoize((url, fields = null) => {
   const folder = urlToFolderPath(url);
 
   const document = read(folder, fields);
 
   return document ? { contentRoot: CONTENT_ROOT, folder, document } : null;
 });
+
+function findAll() {
+  // TODO: doesn't support archive content yet
+  const patterns = [CONTENT_ROOT, CONTENT_ARCHIVE_ROOT].map((root) =>
+    path.join(root, "**", HTML_FILENAME)
+  );
+  const filePaths = glob.sync(`{${patterns.join(",")}}`);
+  return {
+    count: filePaths.length,
+    iter: function* () {
+      for (const filePath of filePaths) {
+        yield read(path.relative(CONTENT_ROOT, path.dirname(filePath)));
+      }
+    },
+  };
+}
 
 function findChildren(url, fields = null) {
   const folder = urlToFolderPath(url);
@@ -230,5 +247,6 @@ module.exports = {
   del,
 
   findByURL,
+  findAll,
   findChildren,
 };

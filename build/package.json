@@ -3,9 +3,13 @@
   "version": "0.1.0",
   "license": "MPL-2.0",
   "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "chalk": "4.1.0",
     "cheerio": "1.0.0-rc.3",
+    "cli-progress": "^3.8.2",
     "dotenv": "8.2.0",
     "kumascript": "*",
     "mdn-browser-compat-data": "1.0.31"

@@ -27,7 +27,11 @@ function slugToFoldername(slug) {
   );
 }
 
-function memoizeDuringBuild(fn) {
+function isPromise(p) {
+  return p && Object.prototype.toString.call(p) === "[object Promise]";
+}
+
+function memoize(fn) {
   if (process.env.NODE_ENV === "development") {
     return fn;
   }
@@ -41,6 +45,12 @@ function memoizeDuringBuild(fn) {
     }
 
     const value = fn(...args);
+    if (isPromise(value)) {
+      return value.then((actualValue) => {
+        cache.set(key, actualValue);
+        return actualValue;
+      });
+    }
     cache.set(key, value);
     return value;
   };
@@ -49,5 +59,5 @@ function memoizeDuringBuild(fn) {
 module.exports = {
   buildURL,
   slugToFoldername,
-  memoizeDuringBuild,
+  memoize,
 };

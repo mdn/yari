@@ -1,11 +1,10 @@
-const { Document } = require("content");
+const { Document, memoize } = require("content");
 
 const {
   INTERACTIVE_EXAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
 } = require("./src/constants");
 const Templates = require("./src/templates.js");
-const AllPagesInfo = require("./src/info.js");
 const { getPrerequisites, render: renderMacros } = require("./src/render.js");
 const {
   getLiveSampleIDs,
@@ -14,7 +13,7 @@ const {
 } = require("./src/live-sample.js");
 const { HTMLTool } = require("./src/api/util.js");
 
-async function renderFromURL(url) {
+const renderFromURL = memoize(async (url) => {
   const { rawHtml, metadata } = Document.findByURL(url).document;
   const [renderedHtml, errors] = await renderMacros(
     rawHtml,
@@ -22,7 +21,7 @@ async function renderFromURL(url) {
     {
       ...{
         path: url,
-        url: `${"this.options.sitemapBaseUrl"}${url}`,
+        url: `https://developer.mozilla.org${url}`,
         locale: metadata.locale,
         slug: metadata.slug,
         title: metadata.title,
@@ -43,7 +42,7 @@ async function renderFromURL(url) {
   const tool = new HTMLTool(renderedHtml);
   tool.injectSectionIDs();
   return [tool.html(), errors];
-}
+});
 
 module.exports = {
   buildLiveSamplePage,
