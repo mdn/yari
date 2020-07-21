@@ -138,7 +138,7 @@ class Environment {
     globals.page = globals.Page = freeze(page);
     globals.env = globals.Env = freeze(env);
     globals.info = freeze(info);
-    globals.renderFromURL = renderFromURL;
+    globals.renderFromURL = (url) => renderFromURL(info.getUriKey(url));
 
     // Macros use the global template() method to excute other
     // macros. This is the one function that we can't just
