@@ -12,7 +12,6 @@
     "build:stumptown": "cd ${STUMPTOWN_CONTENT_ROOT:-stumptown} && npm run build-json",
     "build:client": "yarn workspace client build",
     "build:ssr": "yarn workspace ssr build",
-    "clean": "rm -fr client/build && rm -fr ssr/dist",
     "prebuild": "yarn build:client && yarn build:ssr",
     "build": "cross-env NODE_ENV=production yarn workspace build start",
     "start": "yarn build:client && yarn build:ssr && nf start",
