@@ -31,6 +31,13 @@ function isPromise(p) {
   return p && Object.prototype.toString.call(p) === "[object Promise]";
 }
 
+/**
+ * Memoizes the result of the given function call, mapping parameters to
+ * return values. If NODE_ENV is set to development it simply returns
+ * the function itself.
+ * Note: The parameter are turned into a cache key quite naively, so
+ * different object key order would lead to new cache entries.
+ */
 function memoize(fn) {
   if (process.env.NODE_ENV === "development") {
     return fn;
