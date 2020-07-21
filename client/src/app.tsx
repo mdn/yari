@@ -4,10 +4,13 @@ import { Routes, Route, Link } from "react-router-dom";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { NoMatch } from "./routing";
-import { SearchNavigateWidget } from "./search";
+import SearchNavigateWidget from "./search";
+
 const AllFlaws = lazy(() => import("./flaws"));
 const DocumentEdit = lazy(() => import("./document/forms/edit"));
 const DocumentCreate = lazy(() => import("./document/forms/create"));
+
+const isServer = typeof window === "undefined";
 
 export function App(appProps) {
   const routes = (
@@ -24,7 +27,6 @@ export function App(appProps) {
       <Route path="*" element={<NoMatch />} />
     </Routes>
   );
-  const isServer = typeof window === "undefined";
   return (
     <div>
       <Header />

@@ -270,7 +270,7 @@ test("broken links flaws", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.broken_links.length).toBe(8);
+  expect(flaws.broken_links.length).toBe(9);
   // Map them by 'href'
   const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
@@ -293,6 +293,9 @@ test("broken links flaws", () => {
   expect(
     map.get("/en-US/docs/Web/HTML/Element/anchor#fragment").suggestion
   ).toBe("/en-US/docs/Web/HTML/Element/a#fragment");
+  expect(
+    map.get("/en-US/docs/glossary/bézier_curve#identifier").suggestion
+  ).toBe("/en-US/docs/Glossary/Bézier_curve#identifier");
 });
 
 test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page", () => {
@@ -384,7 +387,12 @@ describe("fixing flaws", () => {
   // to change files on disk.
   // This is why this test does so much.
   test("build with --fix-flaws", async () => {
-    const command = `node content build --fix-flaws -f ${pattern}`;
+    // The --no-cache option is important because otherwise, on consecutive
+    // runs, the caching might claim that it's already been built, on disk,
+    // so the flaw detection stuff never gets a chance to fix anything
+    // afterwards.
+    const command = `node content build --fix-flaws -f ${pattern} --no-cache`;
+
     const dryrunCommand = command + " --fix-flaws-dry-run";
     const dryrunStdout = execSync(dryrunCommand, {
       cwd: baseDir,
@@ -412,8 +420,10 @@ describe("fixing flaws", () => {
     const newRawHtml = fs.readFileSync(path.join(baseDir, files[0]), "utf-8");
     expect(newRawHtml).toContain("{{CSSxRef('number')}}");
     expect(newRawHtml).toContain('{{htmlattrxref("href", "a")}}');
-    // XXX Note, at the moment, we're only fixing macros.
-    // But as part of https://github.com/mdn/yari/issues/680 it is intended
-    // to fix other things such as broken links.
+    // Broken links that get fixed.
+    expect(newRawHtml).toContain('href="/en-US/docs/Web/CSS/number"');
+    expect(newRawHtml).toContain("href='/en-US/docs/Web/CSS/number'");
+    expect(newRawHtml).toContain('href="/en-US/docs/Glossary/Bézier_curve"');
+    expect(newRawHtml).toContain('href="/en-US/docs/Web/Foo"');
   });
 });
