@@ -69,21 +69,10 @@ module.exports = {
       return html;
     }
 
-    let result = await this.renderFromURL(path);
-    const pathDescription = this.info.getDescription(path);
-
-    if (!result) {
-      // There was no cached result for the path. One
-      // possibility is that the requested path was in archived
-      // content, so it was never pre-rendered and cached.
-      throw new Error(
-        `unable to find pre-rendered HTML for prerequisite ${pathDescription}`
-      );
-    }
-
     // Let's just use the rendered HTML, the first part of the pair from
     // the result, and ignore the second part, which is the list of errors.
-    result = result[0];
+    let [result] = await this.renderFromURL(path);
+    const pathDescription = this.info.getDescription(path);
 
     const tool = new util.HTMLTool(result, pathDescription);
 
