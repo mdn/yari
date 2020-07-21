@@ -644,6 +644,7 @@ class Builder {
         try {
           processed = await self.processFolder(source, folder);
         } catch (err) {
+          this.progressBar.stop();
           self.logger.error(chalk.red(`Error while processing: ${folder}`));
           console.error(err);
           throw err;
@@ -1909,7 +1910,7 @@ class Builder {
             // goes to is not in this.allTitles.
             // This can happen if it's a "fundamental redirect" for example.
             const finalDocument = allTitles.get(
-              allRedirects.get(hrefNormalized)
+              allRedirects.get(slugNormalized)
             );
             const suggestion = finalDocument ? finalDocument.mdn_url : null;
             addBrokenLink(query, slug, suggestion);
