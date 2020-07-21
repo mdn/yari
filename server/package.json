@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MPL-2.0",
   "scripts": {
-    "start": "nodemon index.js --watch . --watch ../content/scripts --watch ../kumascript"
+    "start": "nodemon index.js --watch . --watch ../build --watch ../content --watch ../kumascript"
   },
   "dependencies": {
     "chokidar": "^3.4.1",
