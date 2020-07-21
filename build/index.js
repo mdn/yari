@@ -6,7 +6,13 @@ const chalk = require("chalk");
 const cliProgress = require("cli-progress");
 const packageJSON = require("../package.json");
 
-const { buildURL, Document, Redirect, slugToFoldername } = require("content");
+const {
+  CONTENT_ROOT,
+  buildURL,
+  Document,
+  Redirect,
+  slugToFoldername,
+} = require("content");
 const kumascript = require("kumascript");
 const { renderHTML } = require("ssr");
 
@@ -348,12 +354,38 @@ module.exports = {
   buildDocumentFromURL,
 };
 
+function makeSitemapXML(locale, slugs) {
+  const wikiHistory = JSON.parse(
+    fs.readFileSync(
+      path.join(CONTENT_ROOT, locale.toLowerCase(), "_wikihistory.json"),
+      "utf-8"
+    )
+  );
+  return [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...slugs
+      .filter((slug) => slug in wikiHistory)
+      .map((slug) =>
+        [
+          "<url>",
+          `<loc>https://developer.mozilla.org/${locale}/docs/${slug}</loc>`,
+          `<lastmod>${wikiHistory[slug].modified}</lastmod>`,
+          "</url>",
+        ].join("")
+      ),
+    "</urlset>",
+    "",
+  ].join("\n");
+}
+
 async function buildDocuments() {
   const documents = Document.findAll();
   const progressBar = new cliProgress.SingleBar(
     {},
     cliProgress.Presets.shades_grey
   );
+  const slugPerLocale = {};
   progressBar.start(documents.count);
   for (const document of documents.iter()) {
     const builtDocument = await buildDocument(document);
@@ -369,9 +401,29 @@ async function buildDocuments() {
       // which makes this not great and refactor-worthy
       JSON.stringify({ doc: builtDocument })
     );
+
+    const { locale, slug } = document.metadata;
+    if (!slugPerLocale[locale]) {
+      slugPerLocale[locale] = [];
+    }
+    slugPerLocale[locale].push(slug);
+
     progressBar.increment();
   }
   progressBar.stop();
+
+  for (const [locale, slugs] of Object.entries(slugPerLocale)) {
+    const sitemapDir = path.join(
+      BUILD_OUT_ROOT,
+      "sitemaps",
+      locale.toLowerCase()
+    );
+    fs.mkdirSync(sitemapDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(sitemapDir, "sitemap.xml"),
+      makeSitemapXML(locale, slugs)
+    );
+  }
 }
 
 if (require.main === module) {
