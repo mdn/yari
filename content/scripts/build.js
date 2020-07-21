@@ -1915,9 +1915,12 @@ class Builder {
           } else {
             // But does it have the correct case?!
             const found = this.allTitles.get(hrefNormalized);
-            if (found.mdn_url !== href) {
+            if (found.mdn_url !== href.split("#")[0]) {
               // Inconsistent case.
-              addBrokenLink(href, found.mdn_url);
+              addBrokenLink(
+                href,
+                found.mdn_url + absoluteURL.search + absoluteURL.hash
+              );
             }
           }
         }
