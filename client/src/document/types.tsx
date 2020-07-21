@@ -14,6 +14,7 @@ export interface BadBCDLink {
   slug: string;
   suggestion: string | null;
   query: string | null;
+  key: string;
 }
 
 type Flaws = {

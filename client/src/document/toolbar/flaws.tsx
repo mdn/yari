@@ -326,7 +326,8 @@ function BadBCDLinks({ links }: { links: BadBCDLink[] }) {
       <ul>
         {links.map((link) => (
           <li key={link.slug}>
-            <code>{JSON.stringify(link)}</code>
+            In <code>{link.query}</code> under key <code>{link.key}</code> can't
+            find document: <code>{link.slug}</code>
           </li>
         ))}
       </ul>
@@ -372,7 +373,6 @@ function Macros({
     <div className="flaw flaw__macros">
       <h3>{humanizeFlawName("macros")}</h3>
       {messages.map((msg) => {
-        console.log("COMPARE", sourceFolder, msg.filepath);
         const inPrerequisiteMacro = !msg.filepath.includes(
           `${sourceFolder}/index.html`
         );

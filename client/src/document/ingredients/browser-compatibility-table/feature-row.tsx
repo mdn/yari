@@ -4,6 +4,16 @@ import type bcd from "mdn-browser-compat-data/types";
 import { BrowserInfoContext, BrowserName } from "./browser-info";
 import { asList, getFirst, isTruthy } from "./utils";
 
+// Yari builder will attach extra keys from the compat data
+// it gets from mdn-browser-compat-data. These are "Yari'esque"
+// extras that helps us avoiding to have a separate data structure.
+interface CompatStatementExtended extends bcd.CompatStatement {
+  // When a compat statement has a .mdn_url but it's actually not a good
+  // one, the Yari builder will attach an extra boolean that indicates
+  // that it's not a valid link.
+  bad_slug?: boolean;
+}
+
 function getSupportClassName(
   support: bcd.SupportStatement | undefined
 ): string {
@@ -350,7 +360,7 @@ export const FeatureRow = React.memo(
     index: number;
     feature: {
       name: string;
-      compat: bcd.CompatStatement;
+      compat: CompatStatementExtended;
       isRoot: boolean;
     };
     browsers: bcd.BrowserNames[];
@@ -365,15 +375,25 @@ export const FeatureRow = React.memo(
     );
     const activeBrowser = activeCell !== null ? browsers[activeCell] : null;
 
+    let titleNode: string | React.ReactNode;
+
+    if (compat.bad_slug && compat.mdn_url) {
+      titleNode = (
+        <abbr className="new" title={`${compat.mdn_url} does not exist`}>
+          {title}
+        </abbr>
+      );
+    } else if (compat.mdn_url && !isRoot) {
+      titleNode = <Link to={compat.mdn_url}>{title}</Link>;
+    } else {
+      titleNode = title;
+    }
+
     return (
       <>
         <tr>
           <th scope="row">
-            {compat.mdn_url && !isRoot ? (
-              <Link to={compat.mdn_url}>{title}</Link>
-            ) : (
-              title
-            )}
+            {titleNode}
             {compat.status && <StatusIcons status={compat.status} />}
           </th>
           {browsers.map((browser, i) => (

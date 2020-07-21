@@ -367,6 +367,10 @@ class Builder {
     !this.progressBar && this.logger.info(`${result}: ${fileWritten}`);
   }
 
+  stopProgressbar() {
+    this.progressBar && this.progressBar.stop();
+  }
+
   cleanUri(uri) {
     // Attempts to both repair the incoming URI, as well as transform it
     // into a URI that represents an existing document within allTitles.
@@ -644,7 +648,7 @@ class Builder {
         try {
           processed = await self.processFolder(source, folder);
         } catch (err) {
-          this.progressBar.stop();
+          this.stopProgressbar();
           self.logger.error(chalk.red(`Error while processing: ${folder}`));
           console.error(err);
           throw err;
@@ -1851,7 +1855,6 @@ class Builder {
    */
   normalizeBCDMdnURLs(doc) {
     let checkLinks = false;
-    // let throwOnLinks = false;
 
     if (this.options.flawLevels.get("bad_bcd_links") !== FLAW_LEVELS.IGNORE) {
       checkLinks = true;
@@ -1861,7 +1864,7 @@ class Builder {
     const allTitles = this.allTitles;
     const allRedirects = this.allRedirects;
 
-    function addBrokenLink(query, slug, suggestion = null) {
+    function addBadBCDLink(query, key, slug, suggestion = null) {
       if (!("bad_bcd_links" in doc.flaws)) {
         doc.flaws.bad_bcd_links = [];
       }
@@ -1869,10 +1872,11 @@ class Builder {
         slug,
         suggestion,
         query,
+        key,
       });
     }
 
-    function getPathFromAbsoluteURL(query, absURL) {
+    function getPathFromAbsoluteURL(query, key, absURL) {
       // Because the compat data is mutated out of mdn-browser-compat-data,
       // through our `packageBCD` function, it's very possible that
       // the `doc[i].type === 'browser_compatibility` has already been
@@ -1901,6 +1905,7 @@ class Builder {
       }
       if (checkLinks) {
         const slugNormalized = slug.toLowerCase();
+        console.log({ slugNormalized });
         if (!allTitles.has(slugNormalized)) {
           // Before we call this a broken link, we need to check if it redirects.
           if (allRedirects.has(slugNormalized)) {
@@ -1913,10 +1918,10 @@ class Builder {
               allRedirects.get(slugNormalized)
             );
             const suggestion = finalDocument ? finalDocument.mdn_url : null;
-            addBrokenLink(query, slug, suggestion);
+            addBadBCDLink(query, key, slug, suggestion);
             return [slug, suggestion];
           } else {
-            addBrokenLink(query, slug);
+            addBadBCDLink(query, key, slug);
             return [null, null];
           }
         }
@@ -1927,7 +1932,7 @@ class Builder {
     doc.body
       .filter((section) => section.type === "browser_compatibility")
       .forEach((section) => {
-        Object.entries(section.value.data).forEach(([, block]) => {
+        Object.entries(section.value.data).forEach(([key, block]) => {
           // First block from the BCD data does not have its name as the root key
           // so mdn_url is accessible at the root. If the block has a key for
           // `__compat` it is not the first block, and the information is nested
@@ -1936,15 +1941,24 @@ class Builder {
             block = block.__compat;
           }
           if (block.mdn_url) {
-            const [mdn_url, suggestion] = getPathFromAbsoluteURL(
+            const [slug, suggestion] = getPathFromAbsoluteURL(
               section.value.query,
+              key,
               block.mdn_url
             );
-            // console.log({ before: block.mdn_url, mdn_url, suggestion });
             if (suggestion) {
               block.mdn_url = suggestion;
+            } else if (!slug) {
+              // If it turns out that the `slug` is null, it means an
+              // `block.mdn_url` was set but it's actually wrong and won't
+              // ever work as a link because it'll just 404 immediately.
+              // So, extend the block by putting an extra boolean on the
+              // block so we can remember to not make a link to it
+              // in the BCD table renderer.
+              block.bad_slug = true;
             } else {
-              block.mdn_url = mdn_url;
+              // It could be turned into a relative link (aka. slug)
+              block.mdn_url = slug;
             }
           }
         });
