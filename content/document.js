@@ -227,10 +227,7 @@ function findAll() {
 function findChildren(url, fields = null) {
   const folder = urlToFolderPath(url);
   const childPaths = glob.sync(
-    path.join(CONTENT_ROOT, folder, "*", HTML_FILENAME),
-    {
-      ignore: path.join(CONTENT_ROOT, getHTMLPath(folder)),
-    }
+    path.join(CONTENT_ROOT, folder, "*", HTML_FILENAME)
   );
   return childPaths
     .map((childFilePath) =>
