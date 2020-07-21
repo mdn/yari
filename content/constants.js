@@ -1,14 +1,16 @@
 const path = require("path");
 
-require("dotenv").config({ path: process.env.ENV_FILE || "../.env" });
+require("dotenv").config({
+  path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
+});
 
-const CONTENT_ROOT = path.join(__dirname, "..", "content", "files");
+const CONTENT_ROOT = process.env.CONTENT_ROOT
+  ? path.join(__dirname, "..", process.env.CONTENT_ROOT)
+  : path.join(__dirname, "..", "content", "files");
 
-const CONTENT_ARCHIVE_ROOT = path.join(
-  __dirname,
-  "..",
-  process.env.CONTENT_ARCHIVE_ROOT
-);
+const CONTENT_ARCHIVE_ROOT = process.env.CONTENT_ARCHIVE_ROOT
+  ? path.join(__dirname, "..", process.env.CONTENT_ARCHIVE_ROOT)
+  : null;
 
 const VALID_LOCALES = new Map(
   [

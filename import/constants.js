@@ -1,4 +1,6 @@
-require("dotenv").config({ path: process.env.ENV_FILE });
+require("dotenv").config({
+  path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
+});
 
 const DATABASE_URL =
   process.env.BUILD_DATABASE_URL ||

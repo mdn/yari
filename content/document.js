@@ -210,10 +210,7 @@ const findByURL = memoize((url, fields = null) => {
 
 function findAll() {
   // TODO: doesn't support archive content yet
-  const patterns = [CONTENT_ROOT, CONTENT_ARCHIVE_ROOT].map((root) =>
-    path.join(root, "**", HTML_FILENAME)
-  );
-  const filePaths = glob.sync(`{${patterns.join(",")}}`);
+  const filePaths = glob.sync(path.join(CONTENT_ROOT, "**", HTML_FILENAME));
   return {
     count: filePaths.length,
     iter: function* () {

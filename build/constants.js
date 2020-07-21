@@ -1,6 +1,8 @@
 const path = require("path");
 
-require("dotenv").config({ path: process.env.ENV_FILE || "../.env" });
+require("dotenv").config({
+  path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
+});
 
 const FLAW_LEVELS = Object.freeze({
   WARN: "warn",
