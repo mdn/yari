@@ -137,9 +137,9 @@ const info = {
       tags: tags || [],
       translations: [], //TODO Object.freeze(buildTranslationObjects(data)),
       get subpages() {
-        return Document.findChildren(url, { metadata: true }).map((document) =>
-          info.getPage(document.url)
-        );
+        return Document.findChildren(document.url, {
+          metadata: true,
+        }).map((document) => info.getPage(document.url));
       },
     };
   },
