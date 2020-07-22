@@ -40,7 +40,7 @@ const info = {
     return new URL(url, DUMMY_BASE_URL).pathname.replace(/\/$/, "");
   },
 
-  getUriKey(url) {
+  cleanURL(url) {
     // This function returns just the lowercase pathname of the given "url",
     // removing any trailing "/". The BASE_URL is not important here, since
     // we're only after the path of any incoming "url", but it's required by
@@ -52,9 +52,9 @@ const info = {
   },
 
   getDescription(url) {
-    const uriKey = info.getUriKey(url);
-    let description = `"${uriKey}"`;
-    if (uriKey !== url.toLowerCase()) {
+    const cleanedURL = info.cleanURL(url);
+    let description = `"${cleanedURL}"`;
+    if (cleanedURL !== url.toLowerCase()) {
       description += ` (derived from "${url}")`;
     }
     return description;
@@ -121,7 +121,7 @@ const info = {
   },
 
   getPage(url) {
-    const result = Document.findByURL(info.getUriKey(url), { metadata: true });
+    const result = Document.findByURL(info.cleanURL(url), { metadata: true });
     if (!result) {
       throw new Error(`${info.getDescription(url)} does not exist`);
     }
