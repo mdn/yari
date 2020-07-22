@@ -5,7 +5,7 @@ const express = require("express");
 const openEditor = require("open-editor");
 
 const { buildDocumentFromURL, buildLiveSamplePageFromURL } = require("build");
-const { Redirect, slugToFoldername } = require("content");
+const { CONTENT_ROOT, Redirect } = require("content");
 const { renderHTML, renderJSON } = require("ssr");
 
 const { STATIC_ROOT } = require("./constants");
@@ -34,15 +34,12 @@ app.get("/_open", (req, res) => {
   // page.
   // But sometimes, it's a relative path and if so, it's always relative
   // to the main builder source.
-  const absoluteFilepath = fs.existsSync(filepath)
-    ? filepath
-    : path.join(
-        // This works because the builder created here in the server is hardcoded
-        // to only have exactly one source which is the main process.env.BUILD_ROOT
-        // but adjusted.
-        // builder.sources.entries()[0].filepath,
-        filepath
-      );
+  let absoluteFilepath;
+  if (fs.existsSync(filepath)) {
+    absoluteFilepath = filepath;
+  } else {
+    absoluteFilepath = path.join(CONTENT_ROOT, filepath);
+  }
 
   // Double-check that the file can be found.
   if (!fs.existsSync(absoluteFilepath)) {

@@ -23,11 +23,10 @@ const INACTIVE_PLACEHOLDER = isMobileUserAgent()
   : 'Site search... (Press "/" to focus)';
 
 type Titles = {
-  [url: string]: {
-    title: string;
-    popularity: number;
-  };
-};
+  url: string;
+  title: string;
+  popularity: number;
+}[];
 
 type SearchIndex = {
   flex: any;
@@ -68,15 +67,15 @@ function useSearchIndex(): [null | SearchIndex, () => void] {
       suggest: true,
       tokenize: "forward",
     });
-    const urisSorted = Object.entries(titles)
-      .sort((a, b) => b[1].popularity - a[1].popularity)
-      .map(([uri, info]) => {
+    const urlSorted = titles
+      .sort((a, b) => b.popularity - a.popularity)
+      .map(({ url, title }, i) => {
         // XXX investigate if it's faster to add all at once
         // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
-        flex.add(uri, info.title);
-        return uri;
+        flex.add(i, title);
+        return url;
       });
-    const fuzzy = new FuzzySearch(urisSorted);
+    const fuzzy = new FuzzySearch(urlSorted);
 
     setSearchIndex({ flex, fuzzy, titles });
   }, [shouldInitialize, titles, url]);
@@ -140,7 +139,7 @@ function BreadcrumbURI({ uri, substrings }) {
 
 type ResultItem = {
   title: string;
-  uri: string;
+  url: string;
   popularity: any;
   substrings: string[];
 };
@@ -189,7 +188,7 @@ function InnerSearchNavigateWidget() {
       // overlaying search results don't trigger a scroll.
       const limit = window.innerHeight < 850 ? 5 : 10;
 
-      let results = null;
+      let results: ResultItem[] | null = null;
       if (isFuzzySearchString(inputValue)) {
         if (inputValue === "/") {
           setResultItems([]);
@@ -197,8 +196,7 @@ function InnerSearchNavigateWidget() {
         } else {
           const fuzzyResults = searchIndex.fuzzy.search(inputValue, { limit });
           results = fuzzyResults.map((fuzzyResult) => ({
-            title: searchIndex.titles[fuzzyResult.needle].title,
-            uri: fuzzyResult.needle,
+            ...searchIndex.titles[fuzzyResult.index],
             substrings: fuzzyResult.substrings,
           }));
         }
@@ -209,11 +207,7 @@ function InnerSearchNavigateWidget() {
           suggest: true, // This can give terrible result suggestions
         });
 
-        results = indexResults.map((uri) => ({
-          title: searchIndex.titles[uri].title,
-          uri,
-          popularity: searchIndex.titles[uri].popularity,
-        }));
+        results = indexResults.map((index) => searchIndex.titles[index]);
       }
 
       if (results) {
@@ -242,7 +236,7 @@ function InnerSearchNavigateWidget() {
     },
     onSelectedItemChange: ({ selectedItem }) => {
       if (selectedItem) {
-        navigate(selectedItem.uri);
+        navigate(selectedItem.url);
         reset();
       }
     },
@@ -294,7 +288,7 @@ function InnerSearchNavigateWidget() {
             {resultItems.map((item, i) => (
               <div
                 {...getItemProps({
-                  key: item.uri,
+                  key: item.url,
                   className: i === highlightedIndex ? "highlit" : undefined,
                   item,
                   index: i,
@@ -302,7 +296,7 @@ function InnerSearchNavigateWidget() {
               >
                 <HighlightMatch title={item.title} q={inputValue} />
                 <br />
-                <BreadcrumbURI uri={item.uri} substrings={item.substrings} />
+                <BreadcrumbURI uri={item.url} substrings={item.substrings} />
               </div>
             ))}
             {isFuzzySearchString(inputValue) && (

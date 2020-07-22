@@ -33,13 +33,13 @@ function isPromise(p) {
 
 /**
  * Memoizes the result of the given function call, mapping parameters to
- * return values. If NODE_ENV is set to development it simply returns
+ * return values. If NODE_ENV is not set to production it simply returns
  * the function itself.
  * Note: The parameter are turned into a cache key quite naively, so
  * different object key order would lead to new cache entries.
  */
 function memoize(fn) {
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV !== "production") {
     return fn;
   }
 

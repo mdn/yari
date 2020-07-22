@@ -76,36 +76,40 @@ function urlToFolderPath(url) {
 }
 
 function create(html, metadata) {
-  const folder = buildPath(
+  const folderPath = buildPath(
     path.join(CONTENT_ROOT, metadata.locale),
     metadata.slug
   );
 
-  fs.mkdirSync(folder, { recursive: true });
+  fs.mkdirSync(folderPath, { recursive: true });
 
-  saveHTMLFile(getHTMLPath(folder), trimLineEndings(html), metadata);
+  saveHTMLFile(getHTMLPath(folderPath), trimLineEndings(html), metadata);
 }
 
 function archive(renderedHTML, rawHTML, metadata, wikiHistory) {
-  const folder = buildPath(
+  const folderPath = buildPath(
     path.join(CONTENT_ARCHIVE_ROOT, metadata.locale),
     metadata.slug
   );
 
-  fs.mkdirSync(folder, { recursive: true });
+  fs.mkdirSync(folderPath, { recursive: true });
 
   // The `rawHtml` is only applicable in the importer when it saves
   // archived content. The archived content gets the *rendered* html
   // saved but by storing the raw html too we can potentially resurrect
   // the document if we decide to NOT archive it in the future.
-  fs.writeFileSync(path.join(folder, "raw.html"), trimLineEndings(rawHTML));
+  fs.writeFileSync(path.join(folderPath, "raw.html"), trimLineEndings(rawHTML));
 
   fs.writeFileSync(
-    getWikiHistoryPath(folder),
+    getWikiHistoryPath(folderPath),
     JSON.stringify(wikiHistory, null, 2)
   );
 
-  saveHTMLFile(getHTMLPath(folder), trimLineEndings(renderedHTML), metadata);
+  saveHTMLFile(
+    getHTMLPath(folderPath),
+    trimLineEndings(renderedHTML),
+    metadata
+  );
 }
 
 class Document {
@@ -146,6 +150,7 @@ const read = memoize((folder, fields = null) => {
 });
 
 function update(folder, rawHtml, metadata) {
+  const folderPath = path.join(CONTENT_ROOT, getHTMLPath(folder));
   const document = read(folder);
   const oldSlug = document.metadata.slug;
   const newSlug = metadata.slug;
@@ -157,7 +162,7 @@ function update(folder, rawHtml, metadata) {
     document.metadata.title !== metadata.title ||
     document.metadata.summary !== metadata.summary
   ) {
-    saveHTMLFile(getHTMLPath(folder), rawHtml, {
+    saveHTMLFile(folderPath, rawHtml, {
       ...document.metadata,
       ...metadata,
     });
@@ -182,7 +187,7 @@ function update(folder, rawHtml, metadata) {
       );
       saveHTMLFile(fileInfo.path, rawHtml, metadata);
     }
-    const newFolder = buildPath(
+    const newFolderPath = buildPath(
       path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
       newSlug
     );
@@ -190,13 +195,13 @@ function update(folder, rawHtml, metadata) {
     // XXX we *could* call out to a shell here and attempt
     // to execute `git mv $folder $newFolder` and only if that didn't work
     // do we fall back on good old `fs.renameSync`.
-    fs.renameSync(folder, newFolder);
+    fs.renameSync(folderPath, newFolderPath);
   }
 }
 
 function del(folder) {
-  const { metadata } = read(folder, { metadata: true });
-  fs.rmdirSync(folder, { recursive: true });
+  const { metadata, fileInfo } = read(folder, { metadata: true });
+  fs.rmdirSync(path.dirname(fileInfo.path), { recursive: true });
   updateWikiHistory(path.join(CONTENT_ROOT, metadata.locale), metadata.slug);
 }
 

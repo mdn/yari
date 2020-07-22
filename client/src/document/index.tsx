@@ -1,5 +1,6 @@
-import React, { lazy, Suspense, useCallback, useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { Link } from "react-router-dom";
+import useSWR, { mutate } from "swr";
 
 import { NoMatch } from "../routing";
 import { useDocumentURL } from "./hooks";
@@ -24,78 +25,38 @@ const Toolbar = lazy(() => import("./toolbar"));
 export function Document(props /* TODO: define a TS interface for this */) {
   const documentURL = useDocumentURL();
 
-  const [doc, setDoc] = useState<Doc | null>(props.doc || null);
-  const [loading, setLoading] = useState(false);
-  const [loadingError, setLoadingError] = useState<null | Error | Response>(
-    null
+  const { data: doc, error } = useSWR<Doc>(
+    `${documentURL}/index.json`,
+    async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`${response.status} on ${url}`);
+      }
+      return (await response.json()).doc;
+    },
+    { initialData: props.doc || null, revalidateOnFocus: false }
   );
 
   useEffect(() => {
     if (doc) {
       document.title = doc.title;
-      if (loading) {
-        setLoading(false);
-      }
-      if (loadingError) {
-        setLoadingError(null);
-      }
     }
-  }, [doc, loading, loadingError]);
+  }, [doc]);
 
-  useEffect(() => {
-    setLoading(false);
-  }, [loadingError]);
-
-  const fetchDocument = useCallback(async () => {
-    const url = `${documentURL}/index.json`;
-    console.log("OPENING", url);
-    let response: Response;
-    try {
-      response = await fetch(url);
-    } catch (ex) {
-      setLoadingError(ex);
-      return;
-    }
-    if (!response.ok) {
-      console.warn(response);
-      setLoadingError(response);
-    } else {
-      if (response.redirected) {
-        // Fetching that data required a redirect!
-        // XXX perhaps do a route redirect here in React?
-        console.warn(`${url} was redirected to ${response.url}`);
-      }
-      const data = await response.json();
-      setDoc(data.doc);
-    }
-  }, [documentURL]);
-
-  // There are 2 reasons why you'd want to call fetchDocument():
-  // - The slug/locale combo has *changed*
-  // - The page started with no props.doc
-  useEffect(() => {
-    if (
-      !props.doc ||
-      documentURL.toLowerCase() !== props.doc.mdn_url.toLowerCase()
-    ) {
-      setLoading(true);
-      fetchDocument();
-    }
-  }, [props.doc, documentURL, fetchDocument]);
-
-  if (loading) {
+  if (!doc && !error) {
     return <p>Loading...</p>;
   }
-  if (loadingError) {
+
+  if (error) {
     // Was it because of a 404?
     if (
       typeof window !== "undefined" &&
-      loadingError instanceof Response &&
-      loadingError.status === 404
+      error instanceof Response &&
+      error.status === 404
     ) {
       return <NoMatch />;
     } else {
-      return <LoadingError error={loadingError} />;
+      return <LoadingError error={error} />;
     }
   }
   if (!doc) {
@@ -119,7 +80,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
           <Toolbar
             doc={doc}
             onDocumentUpdate={() => {
-              fetchDocument();
+              mutate(documentURL);
             }}
           />
         </Suspense>

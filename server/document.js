@@ -32,7 +32,7 @@ router.put("/", withDocument, async (req, res) => {
   const { rawHtml, metadata } = req.body;
   if (metadata.title && rawHtml) {
     Document.update(
-      path.dirname(req.document.fileInfo.path),
+      req.document.fileInfo.folder,
       rawHtml.trim() + "\n",
       metadata
     );
@@ -41,7 +41,7 @@ router.put("/", withDocument, async (req, res) => {
 });
 
 router.delete("/", withDocument, (req, res) => {
-  Document.del(path.dirname(req.document.fileInfo.path));
+  Document.del(req.document.fileInfo.folder);
   res.sendStatus(200);
 });
 
