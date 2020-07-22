@@ -91,6 +91,9 @@ $search-border-color-focus: #0096bfab;
     div.nothing-found {
       font-style: italic;
     }
+    div.searchindex-error {
+      color: red;
+    }
     .fuzzy-engaged {
       font-size: 80%;
       font-style: italic;
