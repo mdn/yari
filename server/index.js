@@ -6,7 +6,7 @@ const openEditor = require("open-editor");
 
 const { buildDocumentFromURL, buildLiveSamplePageFromURL } = require("build");
 const { CONTENT_ROOT, Redirect } = require("content");
-const { renderHTML, renderJSON } = require("ssr");
+const { prepareDoc, renderHTML } = require("ssr");
 
 const { STATIC_ROOT } = require("./constants");
 const documentRouter = require("./document");
@@ -128,10 +128,10 @@ app.get("/*", async (req, res) => {
     return res.sendStatus(404);
   }
 
+  prepareDoc(document);
   if (isJSONRequest) {
-    res.json(renderJSON(document));
+    res.json({ doc: document });
   } else {
-    res.set("Content-Type", "text/html");
     res.send(renderHTML(document, lookupURL));
   }
 });

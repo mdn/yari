@@ -77,12 +77,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
     <>
       {process.env.NODE_ENV === "development" && (
         <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
-          <Toolbar
-            doc={doc}
-            onDocumentUpdate={() => {
-              mutate(documentURL);
-            }}
-          />
+          <Toolbar doc={doc} />
         </Suspense>
       )}
       <h1 className="page-title">{doc.title}</h1>

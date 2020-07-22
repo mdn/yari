@@ -67,18 +67,16 @@ function useSearchIndex(): [null | SearchIndex, () => void] {
       suggest: true,
       tokenize: "forward",
     });
-    const urlSorted = data.titles
-      .sort((a, b) => b.popularity - a.popularity)
-      .map(({ url, title }, i) => {
-        // XXX investigate if it's faster to add all at once
-        // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
-        flex.add(i, title);
-        return url;
-      });
+    const urlSorted = data.titles.map(({ url, title }, i) => {
+      // XXX investigate if it's faster to add all at once
+      // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
+      flex.add(i, title);
+      return url;
+    });
     const fuzzy = new FuzzySearch(urlSorted);
 
     setSearchIndex({ flex, fuzzy, ...data });
-  }, [shouldInitialize, data, url]);
+  }, [shouldInitialize, data]);
 
   return [searchIndex, () => setShouldInitialize(true)];
 }

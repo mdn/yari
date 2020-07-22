@@ -1,14 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import useSWR from "swr";
-
-import { useDocumentURL } from "../hooks";
+import useSWR, { mutate } from "swr";
 
 import "./watcher.scss";
 
-export default function Watcher({ onDocumentUpdate }) {
-  const documentURL = useDocumentURL();
-
+export default function Watcher() {
   const { error, data } = useSWR(
     "/_index/changes",
     async (url) => {
@@ -22,6 +18,15 @@ export default function Watcher({ onDocumentUpdate }) {
       refreshInterval: 1000,
     }
   );
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+    for (const change of data) {
+      mutate(change?.documentInfo?.url + "/index.json");
+    }
+  }, [data]);
 
   const [lastChange] = data || [];
 

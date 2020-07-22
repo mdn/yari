@@ -1,5 +1,4 @@
 import React from "react";
-import fs from "fs";
 import path from "path";
 import { StaticRouter } from "react-router-dom/server";
 
@@ -70,7 +69,7 @@ function fixRelatedContent(document) {
   }
 }
 
-function prepareDoc(doc) {
+export function prepareDoc(doc) {
   // always expect this to be a relative URL
   if (!doc.mdn_url.startsWith("/")) {
     throw new Error(
@@ -93,49 +92,6 @@ function prepareDoc(doc) {
   }
 }
 
-export function buildHtmlAndJsonFromDoc({
-  doc,
-  destinationDir,
-  buildHtml,
-  allTitles,
-}) {
-  prepareDoc(doc);
-
-  const options = { doc };
-
-  let rendered = null;
-
-  const uri = decodeURI(options.doc.mdn_url);
-  fs.mkdirSync(destinationDir, { recursive: true });
-  const outfileHtml = path.join(destinationDir, "index.html");
-  const outfileJson = path.join(destinationDir, "index.json");
-
-  if (buildHtml) {
-    rendered = render(
-      React.createElement(
-        StaticRouter,
-        { location: uri, context: options },
-        React.createElement(App, options)
-      ),
-      doc
-    );
-  }
-
-  let wasRendered = false;
-  if (rendered) {
-    fs.writeFileSync(outfileHtml, rendered);
-    wasRendered = true;
-  }
-  fs.writeFileSync(
-    outfileJson,
-    process.env.NODE_ENV === "development"
-      ? JSON.stringify(options, null, 2)
-      : JSON.stringify(options)
-  );
-
-  return { uri, wasRendered, outfileHtml, outfileJson };
-}
-
 export function renderHTML(doc, url) {
   prepareDoc(doc);
   return render(
@@ -146,11 +102,4 @@ export function renderHTML(doc, url) {
     ),
     doc
   );
-}
-
-export function renderJSON(doc) {
-  prepareDoc(doc);
-  return {
-    doc,
-  };
 }
