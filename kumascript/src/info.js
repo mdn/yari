@@ -147,7 +147,7 @@ class AllPagesInfo {
 
   getDescription(url) {
     const uriKey = this.getUriKey(url);
-    let description = `"${uriKey}"`;
+    let description = `${uriKey}`;
     if (uriKey !== url.toLowerCase()) {
       description += ` (derived from "${url}")`;
     }
@@ -189,6 +189,11 @@ class AllPagesInfo {
       return {};
     }
     return this.pagesByUri.get(uriKey);
+  }
+
+  hasPage(url) {
+    const uriKey = this.getUriKey(url);
+    return this.pagesByUri.has(uriKey);
   }
 
   cacheResult(uri, result) {

@@ -8,6 +8,7 @@ describeMacro("EmbedLiveSample", function () {
     macro.ctx.env.live_samples = {
       base_url: "https://mdn.mozillademos.org",
     };
+    macro.ctx.info.hasPage = jest.fn((path) => true);
   });
   itMacro("One argument: ID", function (macro) {
     macro.ctx.env.url =
@@ -239,6 +240,20 @@ describeMacro("EmbedLiveSample", function () {
         "</iframe>"
     );
   });
+  itMacro(
+    'Five arguments: ID, "", "", "", other non-existent slug',
+    async function (macro) {
+      macro.ctx.env.path = "/en-US/docs/Web/Events/focus";
+      macro.ctx.env.url = `https://developer.mozilla.org${macro.ctx.env.path}`;
+      macro.ctx.info.getDescription = jest.fn((url) => url.toLowerCase());
+      macro.ctx.info.hasPage = jest.fn((path) => false);
+      await expect(
+        macro.call("Event delegation", "", "", "", "Web/Events/blur")
+      ).rejects.toThrow(
+        "/en-us/docs/web/events/focus references /en-us/docs/web/events/blur, which does not exist"
+      );
+    }
+  );
   itMacro('Five arguments: ID, "", "", "", XSS Attempt (failed)', function (
     macro
   ) {

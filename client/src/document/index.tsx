@@ -31,6 +31,23 @@ export function Document(props /* TODO: define a TS interface for this */) {
   );
 
   useEffect(() => {
+    // In server-side rendered pages, the `documentURL` will change according
+    // to pushState stuff. So the changes to `documentURL` will trigger
+    // this effect.
+    // But a change to `documentURL` won't trigger a re-render since the
+    // state `doc` "gets stuck". That's why we need to compare if the
+    // props `doc` is now different from the existing state `doc`.
+    if (
+      props.doc &&
+      doc &&
+      documentURL === props.doc.mdn_url &&
+      props.doc.mdn_url !== doc.mdn_url
+    ) {
+      setDoc(props.doc);
+    }
+  }, [props.doc, doc, documentURL]);
+
+  useEffect(() => {
     if (doc) {
       document.title = doc.title;
       if (loading) {

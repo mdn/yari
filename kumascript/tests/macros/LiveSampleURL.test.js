@@ -1,9 +1,12 @@
 /**
  * @prettier
  */
-const { assert, itMacro, describeMacro } = require("./utils");
+const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
 describeMacro("LiveSampleURL", function () {
+  beforeEachMacro(function (macro) {
+    macro.ctx.info.hasPage = jest.fn((path) => true);
+  });
   itMacro("Production settings", function (macro) {
     macro.ctx.env.live_samples = {
       base_url: "https://mdn.mozillademos.org",
@@ -27,6 +30,23 @@ describeMacro("LiveSampleURL", function () {
         "https://developer.mozilla.org/en-US/docs/HTML/Forms/How_to_build_custom_form_widgets/Example_2"
       ),
       "https://mdn.mozillademos.org/en-US/docs/HTML/Forms/How_to_build_custom_form_widgets/Example_2/_samples_/No_JS"
+    );
+  });
+  itMacro("Override with nonexistent page URL)", async (macro) => {
+    macro.ctx.env.live_samples = {
+      base_url: "https://mdn.mozillademos.org",
+    };
+    macro.ctx.info.hasPage = jest.fn((path) => false);
+    macro.ctx.info.getDescription = jest.fn((url) => url.toLowerCase());
+    macro.ctx.env.path = "/en-US/docs/Learn/HTML";
+    macro.ctx.env.url = `https://developer.mozilla.org${macro.ctx.env.path}`;
+    await expect(
+      macro.call(
+        "No_JS",
+        "https://developer.mozilla.org/en-US/docs/does/not/exist"
+      )
+    ).rejects.toThrow(
+      "/en-us/docs/learn/html references /en-us/docs/does/not/exist, which does not exist"
     );
   });
   itMacro("Staging settings", function (macro) {
