@@ -32,22 +32,22 @@ type SearchIndex = {
   flex: any;
   fuzzy: FuzzySearch;
   titles: Titles;
+  isReady: boolean;
 };
 
 function useSearchIndex(): [null | SearchIndex, () => void] {
   const [shouldInitialize, setShouldInitialize] = useState(false);
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
 
-  const url = `/api/titles`;
-  const { error, data: titles } = useSWR<Titles>(
+  const url = `/_index/titles`;
+  const { error, data } = useSWR<{ titles: Titles; isReady: boolean }>(
     shouldInitialize ? url : null,
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(await response.text());
       }
-      const { titles } = await response.json();
-      return titles;
+      return await response.json();
     },
     {
       refreshInterval: 5000,
@@ -60,14 +60,14 @@ function useSearchIndex(): [null | SearchIndex, () => void] {
   }
 
   useEffect(() => {
-    if (!titles) {
+    if (!data) {
       return;
     }
     const flex = new (FlexSearch as any)({
       suggest: true,
       tokenize: "forward",
     });
-    const urlSorted = titles
+    const urlSorted = data.titles
       .sort((a, b) => b.popularity - a.popularity)
       .map(({ url, title }, i) => {
         // XXX investigate if it's faster to add all at once
@@ -77,8 +77,8 @@ function useSearchIndex(): [null | SearchIndex, () => void] {
       });
     const fuzzy = new FuzzySearch(urlSorted);
 
-    setSearchIndex({ flex, fuzzy, titles });
-  }, [shouldInitialize, titles, url]);
+    setSearchIndex({ flex, fuzzy, ...data });
+  }, [shouldInitialize, data, url]);
 
   return [searchIndex, () => setShouldInitialize(true)];
 }
@@ -301,6 +301,11 @@ function InnerSearchNavigateWidget() {
             ))}
             {isFuzzySearchString(inputValue) && (
               <div className="fuzzy-engaged">Fuzzy searching by URI</div>
+            )}
+            {!searchIndex?.isReady && (
+              <div>
+                Documents are still being indexed, results are not complete
+              </div>
             )}
           </div>
         )}

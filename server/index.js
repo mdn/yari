@@ -10,7 +10,7 @@ const { renderHTML, renderJSON } = require("ssr");
 
 const { STATIC_ROOT } = require("./constants");
 const documentRouter = require("./document");
-const titlesRoute = require("./titles");
+const documentIndexRouter = require("./document_index");
 
 const app = express();
 app.use(express.json());
@@ -75,7 +75,7 @@ app.post("/_redirects", (req, res) => {
   res.json({ redirects });
 });
 
-app.get("/api/titles", titlesRoute);
+app.use("/_index", documentIndexRouter);
 
 app.get("/*", async (req, res) => {
   if (req.url.startsWith("_")) {

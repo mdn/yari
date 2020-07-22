@@ -1,9 +1,6 @@
-/**
- * Needs a doc string.
- */
-import React, { useState, useEffect, useRef } from "react";
-import Sockette from "sockette";
+import React from "react";
 import { Link } from "react-router-dom";
+import useSWR from "swr";
 
 import { useDocumentURL } from "../hooks";
 
@@ -11,81 +8,59 @@ import "./watcher.scss";
 
 export default function Watcher({ onDocumentUpdate }) {
   const documentURL = useDocumentURL();
-  // null - never connected before
-  // true - connected
-  // false - no longer connected
-  const [connected, setConnected] = useState<boolean | null>(null);
-  const [lastMessage, setLastMessage] = useState(null);
-  const [websocketError, setWebsocketError] = useState<any>(null);
 
-  const wssRef = useRef<Sockette>();
-  useEffect(() => {
-    let mounted = true;
-    wssRef.current = new Sockette("ws://localhost:8080", {
-      timeout: 5e3,
-      maxAttempts: 25,
-      onopen: (e) => {
-        if (mounted) setConnected(true);
-      },
-      onmessage: (e) => {
-        const data = JSON.parse(e.data);
-        if (documentURL === data.documentURL) {
-          onDocumentUpdate();
-        }
-        if (mounted) setLastMessage(data);
-      },
-      onreconnect: (e) => {},
-      onmaximum: (e) => {},
-      onclose: (e) => {
-        if (mounted) setConnected(false);
-      },
-      onerror: (e) => {
-        if (mounted) setWebsocketError(e);
-      },
-    });
-    return () => {
-      mounted = false;
-      wssRef.current && wssRef.current.close();
-    };
-  }, [documentURL, onDocumentUpdate]);
+  const { error, data } = useSWR(
+    "/_index/changes",
+    async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+      return (await response.json()).changes;
+    },
+    {
+      refreshInterval: 1000,
+    }
+  );
 
-  if (connected === null) {
-    return <div className="document-watcher" />;
-  }
+  const [lastChange] = data || [];
 
   return (
-    <div
-      className={`document-watcher ${
-        connected ? "ws-connected" : "ws-not-connected"
-      }`}
-    >
-      {websocketError ? (
-        <span title={websocketError.toString()}>WebSocket error!</span>
+    <div className="document-watcher">
+      {error ? (
+        <span title={error.toString()}>Change checker error!</span>
       ) : (
-        <span>
-          {connected
-            ? "Watching file system for changes 👀"
-            : "Document watcher is not connected 👎🏽"}
-        </span>
-      )}{" "}
-      {lastMessage && <ShowLastMessage {...lastMessage} />}
+        <span>Watching file system for changes 👀</span>
+      )}
+      {lastChange && (
+        <LastChange hasEditorSet={data.hasEditorSet} change={lastChange} />
+      )}
     </div>
   );
 }
 
-function ShowLastMessage({ hasEDITOR, documentURL, changedFile }: any) {
+function LastChange({ hasEditorSet, change }: any) {
   function clickToOpenHandler(event) {
     event.preventDefault();
-    console.log(`Going to try to open ${changedFile.path} in your editor`);
-    fetch(`/_open?filepath=${changedFile.path}`);
+    console.log(`Going to try to open ${change.filePath} in your editor`);
+    fetch(`/_open?filepath=${change.filePath}`);
   }
+
+  if (change.type === "deleted") {
+    return <div>Last removed "{change.filePath}"</div>;
+  }
+
+  const { url } = change.documentInfo;
+
   return (
     <div>
-      Last changed URL <Link to={documentURL}>{documentURL}</Link>{" "}
-      {hasEDITOR && (
+      Last {change.type} document at URL:
+      <br />
+      <Link to={url}>{url}</Link>{" "}
+      {hasEditorSet && (
         <>
           (
-          <Link to={documentURL} onClick={clickToOpenHandler}>
+          <Link to={url} onClick={clickToOpenHandler}>
             <b>Open in your editor</b>
           </Link>
           )
