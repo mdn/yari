@@ -1,9 +1,9 @@
 import * as React from "react";
 
 import { useLocale } from "../hooks";
-import GithubIcon from "./github.svg";
-import TwitterIcon from "./twitter.svg";
-import InstagramIcon from "./instagram.svg";
+import { ReactComponent as GithubIcon } from "./github.svg";
+import { ReactComponent as TwitterIcon } from "./twitter.svg";
+import { ReactComponent as InstagramIcon } from "./instagram.svg";
 
 export default function Footer() {
   const locale = useLocale();
@@ -76,7 +76,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={TwitterIcon} alt="Twitter" />
+                <TwitterIcon />
               </a>
             </li>
             <li>
@@ -85,7 +85,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={GithubIcon} alt="GitHub" />
+                <GithubIcon />
               </a>
             </li>
           </ul>
@@ -100,7 +100,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={TwitterIcon} alt="Twitter" />
+                <TwitterIcon />
               </a>
             </li>
             <li>
@@ -109,7 +109,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={InstagramIcon} alt="Instagram" />
+                <InstagramIcon />
               </a>
             </li>
           </ul>
