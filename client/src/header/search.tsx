@@ -2,7 +2,7 @@ import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 
 // import { useLocale } from "../hooks";
-import { SearchNavigateWidget } from '../search'
+import { SearchNavigateWidget } from "../search";
 import CloseIcon from "../kumastyles/general/close.svg";
 import SearchIcon from "../kumastyles/general/search.svg";
 
@@ -38,7 +38,7 @@ export default function Search() {
 
   return (
     <div className={`header-search ${showForm ? "show-form" : ""}`}>
-      <SearchNavigateWidget  />
+      <SearchNavigateWidget />
       {/* <form
         id="nav-main-search"
         action={`/${locale}/search`}
