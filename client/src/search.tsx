@@ -280,6 +280,11 @@ function InnerSearchNavigateWidget() {
       <div {...getMenuProps()}>
         {isOpen && (
           <div className="search-results">
+            {!searchIndex?.isReady && (
+              <div className="indexing-warning">
+                <em>Indexing in process, results are not complete</em>
+              </div>
+            )}
             {resultItems.length === 0 && (
               <div className="nothing-found">nothing found</div>
             )}
@@ -287,7 +292,8 @@ function InnerSearchNavigateWidget() {
               <div
                 {...getItemProps({
                   key: item.url,
-                  className: i === highlightedIndex ? "highlit" : undefined,
+                  className:
+                    "result-item " + (i === highlightedIndex ? "highlit" : ""),
                   item,
                   index: i,
                 })}
@@ -299,11 +305,6 @@ function InnerSearchNavigateWidget() {
             ))}
             {isFuzzySearchString(inputValue) && (
               <div className="fuzzy-engaged">Fuzzy searching by URI</div>
-            )}
-            {!searchIndex?.isReady && (
-              <div>
-                Documents are still being indexed, results are not complete
-              </div>
             )}
           </div>
         )}

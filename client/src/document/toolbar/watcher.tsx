@@ -12,7 +12,7 @@ export default function Watcher() {
       if (!response.ok) {
         throw new Error(await response.text());
       }
-      return (await response.json()).changes;
+      return await response.json();
     },
     {
       refreshInterval: 1000,
@@ -23,17 +23,19 @@ export default function Watcher() {
     if (!data) {
       return;
     }
-    for (const change of data) {
+    for (const change of data.changes) {
       mutate(change?.documentInfo?.url + "/index.json");
     }
   }, [data]);
 
-  const [lastChange] = data || [];
+  const [lastChange] = data ? data.changes : [];
 
   return (
     <div className="document-watcher">
       {error ? (
         <span title={error.toString()}>Change checker error!</span>
+      ) : !data || !data.isReady ? (
+        <span>Watcher is still initializing ⏱</span>
       ) : (
         <span>Watching file system for changes 👀</span>
       )}

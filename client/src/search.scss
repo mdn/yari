@@ -59,15 +59,19 @@ $search-border-color-focus: #0096bfab;
     width: 400px;
     top: 40px;
 
+    .indexing-warning {
+      color: orange;
+    }
+
     div {
       padding: 5px;
       border-bottom: 1px solid #efefef;
     }
-    div:hover,
-    div.highlit {
+    .result-item:hover,
+    .result-item.highlit {
       background-color: #efefef;
     }
-    div:hover {
+    .result-item:hover {
       cursor: pointer;
     }
     div:last-child {
