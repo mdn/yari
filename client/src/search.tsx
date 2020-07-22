@@ -38,7 +38,7 @@ type SearchIndex = {
   titles: Titles;
 };
 
-function useSearchIndex(): [null | SearchIndex, () => void] {
+function useSearchIndex(): [null | SearchIndex, null | Error, () => void] {
   const [shouldInitialize, setShouldInitialize] = useState(false);
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
   const locale = useParams().locale || "en-US";
@@ -56,10 +56,6 @@ function useSearchIndex(): [null | SearchIndex, () => void] {
     },
     { revalidateOnFocus: false }
   );
-
-  if (error) {
-    throw error;
-  }
 
   useEffect(() => {
     if (!titles) {
@@ -82,7 +78,7 @@ function useSearchIndex(): [null | SearchIndex, () => void] {
     setSearchIndex({ flex, fuzzy, titles });
   }, [shouldInitialize, titles, url]);
 
-  return [searchIndex, () => setShouldInitialize(true)];
+  return [searchIndex, error, () => setShouldInitialize(true)];
 }
 
 // The fuzzy search is engaged if the search term starts with a '/'
@@ -171,7 +167,11 @@ function InnerSearchNavigateWidget() {
   const navigate = useNavigate();
   const locale = useLocale();
 
-  const [searchIndex, initializeSearchIndex] = useSearchIndex();
+  const [
+    searchIndex,
+    searchIndexError,
+    initializeSearchIndex,
+  ] = useSearchIndex();
   const [resultItems, setResultItems] = useState<ResultItem[]>([]);
   const [isFocused, setIsFocused] = useState(false);
 
@@ -252,6 +252,8 @@ function InnerSearchNavigateWidget() {
 
   useFocusOnSlash(inputRef);
 
+  const showResults = isOpen || searchIndexError;
+
   return (
     <form
       action={`/${locale}/search`}
@@ -301,11 +303,15 @@ function InnerSearchNavigateWidget() {
       />
 
       <div {...getMenuProps()}>
-        {isOpen && (
+        {showResults && (
           <div className="search-results">
-            {resultItems.length === 0 && (
+            {searchIndexError ? (
+              <div className="searchindex-error">
+                Error initializing search index
+              </div>
+            ) : resultItems.length === 0 && inputValue ? (
               <div className="nothing-found">nothing found</div>
-            )}
+            ) : null}
             {resultItems.map((item, i) => (
               <div
                 {...getItemProps({

@@ -1580,7 +1580,7 @@
   dependencies:
     debug "^4.1.1"
 
-"@kwsites/promise-deferred@^1.0.1":
+"@kwsites/promise-deferred@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@kwsites/promise-deferred/-/promise-deferred-1.1.1.tgz#8ace5259254426ccef57f3175bc64ed7095ed919"
   integrity sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==
@@ -1850,10 +1850,10 @@
     "@types/istanbul-lib-coverage" "*"
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@^26.0.4":
-  version "26.0.4"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-26.0.4.tgz#d2e513e85aca16992816f192582b5e67b0b15efb"
-  integrity sha512-4fQNItvelbNA9+sFgU+fhJo8ZFF+AS4Egk3GWwCW2jFtViukXbnztccafAdLhzE/0EiCogljtQQXP8aQ9J7sFg==
+"@types/jest@^26.0.5":
+  version "26.0.5"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-26.0.5.tgz#23a8eecf4764a770ea8d3a0d1ea16b96c822035d"
+  integrity sha512-heU+7w8snfwfjtcj2H458aTx3m5unIToOJhx75ebHilBiiQ39OIdA18WkG4LP08YKeAoWAGvWg8s+22w/PeJ6w==
   dependencies:
     jest-diff "^25.2.1"
     pretty-format "^25.2.1"
@@ -4827,10 +4827,10 @@ dotenv@8.2.0:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
   integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
 
-downshift@^5.4.6:
-  version "5.4.6"
-  resolved "https://registry.yarnpkg.com/downshift/-/downshift-5.4.6.tgz#916b6c079f3af273486a6b864b45459df991c1c6"
-  integrity sha512-GtSCmZUQMulQQ0gX3N3jvUAABJNU8IfAMLzFLu0E2fcOTt98xropy0iriYW2PSClRUqJ4QwKAov7FDy9Gk9aOA==
+downshift@^5.4.7:
+  version "5.4.7"
+  resolved "https://registry.yarnpkg.com/downshift/-/downshift-5.4.7.tgz#2ab7b0512cad33011ee6f29630f9a7bb74dff2b5"
+  integrity sha512-xaH0RNqwJ5pAsyk9qBmR9XJWmg1OOWMfrhzYv0NH2NjJxn77S3zBcfClw341UfhGyKg5v+qVqg/CQzvAgBNCXQ==
   dependencies:
     "@babel/runtime" "^7.10.2"
     compute-scroll-into-view "^1.0.14"
@@ -8941,10 +8941,10 @@ md5.js@^1.3.4:
     inherits "^2.0.1"
     safe-buffer "^5.1.2"
 
-mdn-browser-compat-data@1.0.30, mdn-browser-compat-data@^1.0.30:
-  version "1.0.30"
-  resolved "https://registry.yarnpkg.com/mdn-browser-compat-data/-/mdn-browser-compat-data-1.0.30.tgz#0180ce526da19d5816a067a996531fffb286fc2c"
-  integrity sha512-LBhVq0Nxu9Qk/MrwP6EmqhKKXfyM9TbgIhvFuPhx6jk4Z2C0CMDCZ0OlhyISV2NvhEI9tYSIjJhUUOISft0JNw==
+mdn-browser-compat-data@1.0.31, mdn-browser-compat-data@^1.0.31:
+  version "1.0.31"
+  resolved "https://registry.yarnpkg.com/mdn-browser-compat-data/-/mdn-browser-compat-data-1.0.31.tgz#4bc736252fafcafc182f9dd43b105d6795b9a28e"
+  integrity sha512-GVQQYWgoH3jbBaIy8M4hrg34qaNpPedtZvwAjUmkpHq4FXKKCea8Ji5rlS32YJSU9dt7TPvuWWX7Cce5mZyFPA==
   dependencies:
     extend "3.0.2"
 
@@ -12562,13 +12562,13 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
 
-simple-git@2.12.0:
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-2.12.0.tgz#b5978ec12cd56883185ef1475ec62e9207c1e1dc"
-  integrity sha512-64YrHYqHskWDumxM4thMGCkAd7rek4FEnxcugnpKzJZH6vCkietblsp7TUNdt9qU0pHAnJAanAmjyyQLE46k/Q==
+simple-git@2.14.0:
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-2.14.0.tgz#0dcd455451b9ad63542bf3f0599a01d57764d2e4"
+  integrity sha512-uhZUUrgw+5TlF6WYxGCbsnsdKeA8eu6UY48ynWk5/X5m/B2L5n/1eyc0e2G2hP6LFAIRGYnO3CCzgWng7OkOhg==
   dependencies:
     "@kwsites/file-exists" "^1.1.1"
-    "@kwsites/promise-deferred" "^1.0.1"
+    "@kwsites/promise-deferred" "^1.1.1"
     debug "^4.1.1"
 
 simple-swizzle@^0.2.2:
@@ -13606,10 +13606,10 @@ typeface-zilla-slab@0.0.72:
   resolved "https://registry.yarnpkg.com/typeface-zilla-slab/-/typeface-zilla-slab-0.0.72.tgz#6d101393e3137b3c8217a0b73ce189165e75a2a0"
   integrity sha512-sX85tUKZfb62DsrPcRC3tQIAm1bhA5+3O17yvAvfXKGaLYNBAHaj8aLmurCsHvLKAeivrjWgCjVokk2Oepbeyw==
 
-typescript@^3.9.6:
-  version "3.9.6"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.6.tgz#8f3e0198a34c3ae17091b35571d3afd31999365a"
-  integrity sha512-Pspx3oKAPJtjNwE92YS05HQoY7z2SFyOpHo9MqJor3BXAGNaPUs83CuVp9VISFkSjyRfiTpmKuAYGJB7S7hOxw==
+typescript@^3.9.7:
+  version "3.9.7"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.7.tgz#98d600a5ebdc38f40cb277522f12dc800e9e25fa"
+  integrity sha512-BLbiRkiBzAwsjut4x/dsibSTB6yWpwT5qWmC2OfuCg3GgVQCSgMs4vEctYPhsaGtd0AeuuHMkjZ2h2WG8MSzRw==
 
 uglify-js@^3.1.4:
   version "3.6.0"

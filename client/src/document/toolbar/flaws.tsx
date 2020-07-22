@@ -100,7 +100,13 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
               />
             );
           case "macros":
-            return <Macros key="macros" messages={doc.flaws.macros} />;
+            return (
+              <Macros
+                key="macros"
+                sourceFolder={doc.source.folder}
+                messages={doc.flaws.macros}
+              />
+            );
           default:
             throw new Error(`Unknown flaw check '${flaw.name}'`);
         }
@@ -306,7 +312,13 @@ function BadBCDQueries({ messages }) {
   );
 }
 
-function Macros({ messages }: { messages: MacroErrorMessage[] }) {
+function Macros({
+  messages,
+  sourceFolder,
+}: {
+  messages: MacroErrorMessage[];
+  sourceFolder: string;
+}) {
   const [opening, setOpening] = React.useState<string | null>(null);
   useEffect(() => {
     let unsetOpeningTimer: ReturnType<typeof setTimeout>;
@@ -333,10 +345,15 @@ function Macros({ messages }: { messages: MacroErrorMessage[] }) {
     setOpening(key);
     fetch(`/_open?${sp.toString()}`);
   }
+
   return (
     <div className="flaw flaw__macros">
       <h3>{humanizeFlawName("macros")}</h3>
       {messages.map((msg) => {
+        console.log("COMPARE", sourceFolder, msg.filepath);
+        const inPrerequisiteMacro = !msg.filepath.includes(
+          `${sourceFolder}/index.html`
+        );
         const key = `${msg.filepath}:${msg.line}:${msg.column}`;
 
         return (
@@ -352,13 +369,27 @@ function Macros({ messages }: { messages: MacroErrorMessage[] }) {
                 <code>{msg.name}</code> from <code>{msg.macroName}</code> in
                 line {msg.line}:{msg.column}
               </a>{" "}
-              {opening && opening === key && <small>Opening...</small>}
+              {opening && opening === key && <small>Opening...</small>}{" "}
+              {inPrerequisiteMacro && (
+                <small
+                  className="macro-filepath-in-prerequisite"
+                  title={`This page depends on a macro expansion inside ${msg.filepath}`}
+                >
+                  In prerequisite macro
+                </small>
+              )}
             </summary>
             <b>Context:</b>
             <pre>{msg.sourceContext}</pre>
             <b>Original error message:</b>
             <pre>{msg.errorMessage}</pre>
-            <b>Filepath:</b>
+            <b>Filepath:</b>{" "}
+            {inPrerequisiteMacro && (
+              <i className="macro-filepath-in-prerequisite">
+                Note that this is different from the page you're currently
+                viewing.
+              </i>
+            )}
             <br />
             <code>{msg.filepath}</code>
           </details>
