@@ -284,7 +284,7 @@ function InnerSearchNavigateWidget() {
           <div className="search-results">
             {!searchIndex?.isReady && (
               <div className="indexing-warning">
-                <em>Indexing in process, results are not complete</em>
+                <em>Initializing index, results are not complete</em>
               </div>
             )}
             {searchIndexError ? (
