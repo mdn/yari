@@ -52,7 +52,7 @@ test("content built foo page", () => {
   // Check that the line numbers in the source context have been adjusted by the offset.
   expect(doc.flaws.macros[1].sourceContext).toEqual(
     expect.stringContaining(
-      `   12 | <dic>{{ EmbedLiveSample('example', '300', '300', "", "does/not/exist") }}</div>`
+      `   12 | <div>{{ EmbedLiveSample('example', '300', '300', "", "does/not/exist") }}</div>`
     )
   );
   expect(doc.flaws.macros[1].filepath).toMatch(
