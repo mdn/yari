@@ -15,14 +15,15 @@ function addChange(event) {
   changes = [event, ...changes].slice(0, 10);
 }
 
-const getPopularity = (url) => popularities[url] || 0;
+const getPopularity = (document) =>
+  document.isArchive ? -1 : popularities[document.url] || 0;
 
 const worker = new Worker("./document_index.worker.js");
 worker.on("message", (event) => {
   switch (event.type) {
     case "ready":
       isReady = true;
-      titles.sort((a, b) => getPopularity(b.url) - getPopularity(a.url));
+      titles.sort((a, b) => getPopularity(b) - getPopularity(a));
       break;
 
     case "added":
@@ -31,7 +32,7 @@ worker.on("message", (event) => {
         url,
         metadata: { title },
       } = event.document;
-      titles.push({ url, title });
+      titles.unshift({ url, title });
       if (isReady) {
         addChange(event);
       }

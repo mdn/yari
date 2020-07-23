@@ -3,7 +3,7 @@ const { parentPort } = require("worker_threads");
 
 const chokidar = require("chokidar");
 
-const { CONTENT_ROOT, Document } = require("content");
+const { CONTENT_ROOT, CONTENT_ARCHIVE_ROOT, Document } = require("content");
 
 function postEvent(type, data = {}) {
   parentPort.postMessage({
@@ -15,8 +15,11 @@ function postEvent(type, data = {}) {
 
 function postDocumentInfo(filePath, changeType) {
   try {
+    const root = [CONTENT_ROOT, CONTENT_ARCHIVE_ROOT].find((root) =>
+      filePath.startsWith(path.resolve(root))
+    );
     const document = Document.read(
-      path.dirname(path.relative(CONTENT_ROOT, filePath)),
+      path.dirname(path.relative(root, filePath)),
       { metadata: true }
     );
     if (!document) {
@@ -29,6 +32,7 @@ function postDocumentInfo(filePath, changeType) {
       document: {
         url,
         metadata,
+        isArchive: document.isArchive,
       },
     });
   } catch (e) {
@@ -36,7 +40,11 @@ function postDocumentInfo(filePath, changeType) {
   }
 }
 
-const watcher = chokidar.watch(CONTENT_ROOT, "**/*.html");
+const watcher = chokidar.watch(
+  [CONTENT_ROOT, CONTENT_ARCHIVE_ROOT]
+    .filter(Boolean)
+    .map((root) => path.join(root, "**", "*.html"))
+);
 
 watcher.on("ready", () => {
   postEvent("ready");
