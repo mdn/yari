@@ -69,7 +69,7 @@ class Environment {
   constructor(
     perPageContext,
     templates,
-    renderFromURL = null,
+    renderPrerequisiteFromURL = null,
     testing = false
   ) {
     // Freeze an object unless we're in testing mode
@@ -138,7 +138,7 @@ class Environment {
     globals.page = globals.Page = freeze(page);
     globals.env = globals.Env = freeze(env);
     globals.info = freeze(info);
-    globals.renderFromURL = (url) => renderFromURL(info.cleanURL(url));
+    globals.renderPrerequisiteFromURL = renderPrerequisiteFromURL;
 
     // Macros use the global template() method to excute other
     // macros. This is the one function that we can't just
