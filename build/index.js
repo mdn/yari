@@ -110,7 +110,7 @@ const options = { flawLevels: new Map() };
 async function buildDocument(document) {
   const { metadata, fileInfo } = document;
 
-  const doc = {};
+  const doc = { isArchive: document.isArchive };
 
   doc.flaws = {};
 

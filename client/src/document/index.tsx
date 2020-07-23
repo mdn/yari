@@ -75,7 +75,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      {process.env.NODE_ENV === "development" && (
+      {process.env.NODE_ENV === "development" && !doc.isArchive && (
         <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
           <Toolbar doc={doc} />
         </Suspense>

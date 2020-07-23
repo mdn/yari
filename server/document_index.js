@@ -17,16 +17,12 @@ function addChange(event) {
 
 const getPopularity = (url) => popularities[url] || 0;
 
-function sortTitles() {
-  titles.sort((a, b) => getPopularity(b.url) - getPopularity(a.url));
-}
-
 const worker = new Worker("./document_index.worker.js");
 worker.on("message", (event) => {
   switch (event.type) {
     case "ready":
       isReady = true;
-      sortTitles();
+      titles.sort((a, b) => getPopularity(b.url) - getPopularity(a.url));
       break;
 
     case "added":
@@ -37,7 +33,6 @@ worker.on("message", (event) => {
       } = event.document;
       titles.push({ url, title });
       if (isReady) {
-        sortTitles();
         addChange(event);
       }
       break;

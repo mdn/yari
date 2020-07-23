@@ -28,6 +28,7 @@ export interface Doc {
   parents?: Doc[];
   source: Source;
   contributors: string[];
+  isArchive: boolean;
 }
 
 export interface MacroErrorMessage {

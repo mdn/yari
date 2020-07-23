@@ -38,14 +38,16 @@ function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
 
 function extractLocale(folder) {
   // E.g. 'pr-br'
-  const localeFolderName = folder.split(path.sep)[0];
+  const localeFolderName = folder.split(path.sep)[0].toLowerCase();
   // E.g. 'pt-BR'
   const locale = VALID_LOCALES.get(localeFolderName);
   // This checks that the extraction worked *and* that the locale found
   // really is in VALID_LOCALES *and* it ultimately returns the
   // locale as we prefer to spell it (e.g. 'pt-BR' not 'Pt-bR')
   if (!locale) {
-    throw new Error(`Unable to figure out locale from ${folder}`);
+    throw new Error(
+      `Unable to figure out locale from ${folder} with ${localeFolderName}`
+    );
   }
   return locale;
 }
@@ -125,10 +127,15 @@ class Document {
 
 const read = memoize((folder, fields = null) => {
   fields = fields ? { body: false, metadata: false, ...fields } : fields;
-  const filePath = path.join(CONTENT_ROOT, getHTMLPath(folder));
-  if (!fs.existsSync(filePath)) {
-    return null;
+
+  const filePath = [CONTENT_ROOT, CONTENT_ARCHIVE_ROOT]
+    .map((root) => path.join(root, getHTMLPath(folder)))
+    .find((filePath) => fs.existsSync(filePath));
+  if (!filePath) {
+    return;
   }
+  const isArchive = filePath.startsWith(CONTENT_ARCHIVE_ROOT);
+
   const rawContent = fs.readFileSync(filePath, "utf8");
   const {
     attributes: metadata,
@@ -141,6 +148,7 @@ const read = memoize((folder, fields = null) => {
   return new Document({
     ...(!fields || fields.metadata ? { metadata } : {}),
     ...(!fields || fields.body ? { rawHtml, rawContent } : {}),
+    isArchive,
     fileInfo: {
       folder,
       path: filePath,
