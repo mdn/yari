@@ -24,6 +24,7 @@ const {
 const { addBreadcrumbData } = require("./document-utils");
 const { injectFlaws } = require("./flaws");
 const cheerio = require("./monkeypatched-cheerio");
+const options = require("./build-options");
 
 const BUILD_OUT_ROOT = path.join(__dirname, "..", "client", "build");
 
@@ -105,8 +106,6 @@ function injectSource(doc, folder) {
   };
 }
 
-const options = { flawLevels: new Map() };
-
 async function buildDocument(document) {
   const { metadata, fileInfo } = document;
 
@@ -129,7 +128,6 @@ async function buildDocument(document) {
         flaw.line += fileInfo.frontMatterOffset - 1;
       }
     });
-
     if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
       // Report and exit immediately on the first document with flaws.
       console.error(
@@ -322,7 +320,20 @@ async function buildDocuments() {
   }
 }
 
+// function poorMansCLI() {
+//   require("dotenv").config();
+//   // XXX We need some form of CLI that can override and amend the `options`
+//   // object imported from ./build-options.js
+//   const argv = process.argv.slice(2);
+//   console.log("BUILD OPTIONS ARE NOW:");
+//   console.log(options);
+// }
+
 if (require.main === module) {
+  console.log("CURRENT BUILD OPTIONS:");
+  console.log(options);
+  console.log("\n");
+
   buildDocuments().catch((error) => {
     console.error("error while building documents:", error);
   });

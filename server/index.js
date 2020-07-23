@@ -117,7 +117,7 @@ app.get("/*", async (req, res) => {
 
   const isJSONRequest = extraSuffix.endsWith(".json");
 
-  const document = await buildDocumentFromURL(lookupURL, isJSONRequest);
+  const document = await buildDocumentFromURL(lookupURL);
   if (!document) {
     // redirect resolving can take some time, so we only do it when there's no document
     // for the current route

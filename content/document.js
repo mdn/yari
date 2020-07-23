@@ -215,7 +215,10 @@ const findByURL = memoize((url, fields = null) => {
 
 function findAll() {
   // TODO: doesn't support archive content yet
-  const filePaths = glob.sync(path.join(CONTENT_ROOT, "**", HTML_FILENAME));
+  console.warn("Currently hardcoded to only build 'en-us'");
+  const filePaths = glob.sync(
+    path.join(CONTENT_ROOT, "en-us", "**", HTML_FILENAME)
+  );
   return {
     count: filePaths.length,
     iter: function* () {
