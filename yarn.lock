@@ -8915,10 +8915,10 @@ md5.js@^1.3.4:
     inherits "^2.0.1"
     safe-buffer "^5.1.2"
 
-mdn-browser-compat-data@1.0.31, mdn-browser-compat-data@^1.0.31:
-  version "1.0.31"
-  resolved "https://registry.yarnpkg.com/mdn-browser-compat-data/-/mdn-browser-compat-data-1.0.31.tgz#4bc736252fafcafc182f9dd43b105d6795b9a28e"
-  integrity sha512-GVQQYWgoH3jbBaIy8M4hrg34qaNpPedtZvwAjUmkpHq4FXKKCea8Ji5rlS32YJSU9dt7TPvuWWX7Cce5mZyFPA==
+mdn-browser-compat-data@1.0.32, mdn-browser-compat-data@^1.0.32:
+  version "1.0.32"
+  resolved "https://registry.yarnpkg.com/mdn-browser-compat-data/-/mdn-browser-compat-data-1.0.32.tgz#05bdf6b8d49c55a5a2a1c370b68e169300abf56d"
+  integrity sha512-dqIstpk2ysqa6XcI8/fz1yB6bOKrIs61RIEE00Dj7+WHReXlGrCIiol1NBPsLUNE+HC/4y2f8va8vy1WsiCkAQ==
   dependencies:
     extend "3.0.2"
 
