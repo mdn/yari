@@ -7,7 +7,11 @@ on:
   push:
     branches: [master]
   pull_request:
-    branches: [master]
+    branches:
+      - master
+      # These line is temporary! At least until we're done using Gregor's
+      # reductio-reloaded branch instead of mdn.
+      - reductio-reloaded
 
 jobs:
   build:
