@@ -53,7 +53,7 @@ const info = {
 
   getDescription(url) {
     const cleanedURL = info.cleanURL(url);
-    let description = `"${cleanedURL}"`;
+    let description = `${cleanedURL}`;
     if (cleanedURL !== url.toLowerCase()) {
       description += ` (derived from "${url}")`;
     }
@@ -68,7 +68,7 @@ const info = {
     // it's re-created for each caller (so one caller can't mess with
     // another), but also should NOT be frozen since some macros sort
     // the list in-place.
-    const page = info.getPage(url);
+    const page = info.getPage(url, { throwIfDoesNotExist: true });
     if (includeSelf) {
       return [page];
     }
@@ -116,14 +116,18 @@ const info = {
     //   }
     //   return result;
     // }
-
-    return [];
+    return info.getPage(url, { throwIfDoesNotExist: true }).translations;
   },
 
-  getPage(url) {
+  getPage(url, { throwIfDoesNotExist = false } = {}) {
     const document = Document.findByURL(info.cleanURL(url), { metadata: true });
     if (!document) {
-      throw new Error(`${info.getDescription(url)} does not exist`);
+      // The macros expect an empty object if the URL does not exist, so
+      // "throwIfDoesNotExist" should only be used within "info" itself.
+      if (throwIfDoesNotExist) {
+        throw new Error(`${info.getDescription(url)} does not exist`);
+      }
+      return {};
     }
 
     const { locale, slug, title, summary, tags } = document.metadata;
@@ -141,6 +145,10 @@ const info = {
         }).map((document) => info.getPage(document.url));
       },
     };
+  },
+
+  hasPage(url) {
+    return Boolean(Document.findByURL(info.cleanURL(url)));
   },
 };
 

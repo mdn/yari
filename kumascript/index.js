@@ -4,8 +4,8 @@ const {
   INTERACTIVE_EXAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
 } = require("./src/constants");
-const Templates = require("./src/templates.js");
-const { getPrerequisites, render: renderMacros } = require("./src/render.js");
+const info = require("./src/info.js");
+const { render: renderMacros } = require("./src/render.js");
 const {
   getLiveSampleIDs,
   buildLiveSamplePage,
@@ -14,10 +14,10 @@ const {
 const { HTMLTool } = require("./src/api/util.js");
 
 const renderFromURL = memoize(async (url) => {
-  const { rawHtml, metadata } = Document.findByURL(url);
+  const prerequisiteErrorsByKey = new Map();
+  const { rawHtml, metadata, fileInfo } = Document.findByURL(url);
   const [renderedHtml, errors] = await renderMacros(
     rawHtml,
-    new Templates(),
     {
       ...{
         path: url,
@@ -33,7 +33,18 @@ const renderFromURL = memoize(async (url) => {
       },
       live_samples: { base_url: LIVE_SAMPLES_BASE_URL },
     },
-    (url) => renderFromURL(url)
+    async (url) => {
+      const [renderedHtml, errors] = await renderFromURL(info.cleanURL(url));
+      // Remove duplicate flaws. During the rendering process, it's possible for identical
+      // flaws to be introduced when different dependency paths share common prerequisites.
+      // For example, document A may have prerequisite documents B and C, and in turn,
+      // document C may also have prerequisite B, and the rendering of document B generates
+      // one or more flaws.
+      for (const error of errors) {
+        prerequisiteErrorsByKey.set(error.key, error);
+      }
+      return renderedHtml;
+    }
   );
 
   // For now, we're just going to inject section ID's.
@@ -41,13 +52,18 @@ const renderFromURL = memoize(async (url) => {
   //       attributes of any iframes.
   const tool = new HTMLTool(renderedHtml);
   tool.injectSectionIDs();
-  return [tool.html(), errors];
+  return [
+    tool.html(),
+    // The prerequisite errors have already been updated with their own file information.
+    [...prerequisiteErrorsByKey.values()].concat(
+      errors.map((e) => e.updateFileInfo(fileInfo))
+    ),
+  ];
 });
 
 module.exports = {
   buildLiveSamplePage,
   getLiveSampleIDs,
-  getPrerequisites,
   LiveSampleError,
   render: renderFromURL,
 };
