@@ -216,9 +216,9 @@ const findByURL = memoize((url, fields = null) => {
 function findAll(
   { files, folderSearch } = { files: new Set(), folderSearch: null }
 ) {
-  if (!files instanceof Set) throw new Error("TypeError: 'files' not a Set");
+  if (!files instanceof Set) throw new TypeError("'files' not a Set");
   if (folderSearch && typeof folderSearch !== "string")
-    throw new Error("TypeError: 'folderSearch' not a string");
+    throw new TypeError("'folderSearch' not a string");
 
   // TODO: doesn't support archive content yet
   console.warn("Currently hardcoded to only build 'en-us'");
