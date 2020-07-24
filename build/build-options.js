@@ -4,16 +4,49 @@ const {
   FLAW_LEVELS,
   DEFAULT_FLAW_LEVELS,
   VALID_FLAW_CHECKS,
+  FILES,
+  FOLDERSEARCH,
+  NO_PROGRESSBAR,
 } = require("./constants");
 
-// Core defaults
-const options = {
-  flawLevels: checkFlawLevels(DEFAULT_FLAW_LEVELS),
+module.exports = {
+  flawLevels: parseFlawLevels(DEFAULT_FLAW_LEVELS),
+  files: parseFiles(FILES),
+  foldersearch: parseFoldersearch(FOLDERSEARCH),
+  noProgressbar: NO_PROGRESSBAR,
 };
+
+function parseFiles(filesStringList) {
+  // The get-diff-action, which we use in the "PR Builds" CI,
+  // will make this a massive string that looks like
+  // this: `'content/files/en-us/a/index.html','content/files/en-us/a/index.html'`
+  // so we need to turn that into an array:
+  // ["content/files/en-us/a/index.html", "content/files/en-us/b/index.html"]`
+  // Note, when you use get-diff-action in GitHub Actions, it's a comma
+  // but if you use the manualy `git diff --name-only ...` on your command
+  // line it's a newline.
+  return new Set(
+    filesStringList
+      .split(/[,\n]/)
+      .map((item) => {
+        // Remove any single or double-quote bookends.
+        return item.replace(/^(['"])(.*)\1$/, "$2");
+      })
+      .filter((s) => s)
+  );
+}
+
+function parseFoldersearch(searchpattern) {
+  if (searchpattern) {
+    // TODO: Consider turning it into a regex if there are * or $ or ^ in it
+    return searchpattern;
+  }
+  return null;
+}
 
 // Override based on env vars but only for options that are *not*
 // exclusive to building everyhing.
-function checkFlawLevels(flawChecks) {
+function parseFlawLevels(flawChecks) {
   const checks = flawChecks
     .split(",")
     .map((x) => x.trim())
@@ -71,5 +104,3 @@ function checkFlawLevels(flawChecks) {
 
   return checked;
 }
-
-module.exports = options;

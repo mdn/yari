@@ -274,13 +274,21 @@ function makeSitemapXML(locale, slugs) {
 }
 
 async function buildDocuments() {
-  const documents = Document.findAll();
+  const documents = Document.findAll(options);
   const progressBar = new cliProgress.SingleBar(
     {},
     cliProgress.Presets.shades_grey
   );
   const slugPerLocale = {};
-  progressBar.start(documents.count);
+
+  console.log(options);
+
+  if (!documents.count) {
+    console.warn("No documents to build found");
+    return;
+  }
+
+  !options.noProgressbar && progressBar.start(documents.count);
   for (const document of documents.iter()) {
     const builtDocument = await buildDocument(document);
     const outPath = path.join(BUILD_OUT_ROOT, slugToFoldername(document.url));
@@ -302,9 +310,14 @@ async function buildDocuments() {
     }
     slugPerLocale[locale].push(slug);
 
-    progressBar.increment();
+    if (!options.noProgressbar) {
+      progressBar.increment();
+    } else {
+      console.log(outPath);
+    }
   }
-  progressBar.stop();
+
+  !options.noProgressbar && progressBar.stop();
 
   for (const [locale, slugs] of Object.entries(slugPerLocale)) {
     const sitemapDir = path.join(
@@ -320,20 +333,7 @@ async function buildDocuments() {
   }
 }
 
-// function poorMansCLI() {
-//   require("dotenv").config();
-//   // XXX We need some form of CLI that can override and amend the `options`
-//   // object imported from ./build-options.js
-//   const argv = process.argv.slice(2);
-//   console.log("BUILD OPTIONS ARE NOW:");
-//   console.log(options);
-// }
-
 if (require.main === module) {
-  console.log("CURRENT BUILD OPTIONS:");
-  console.log(options);
-  console.log("\n");
-
   buildDocuments().catch((error) => {
     console.error("error while building documents:", error);
   });

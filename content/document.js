@@ -213,12 +213,29 @@ const findByURL = memoize((url, fields = null) => {
   return document ? { contentRoot: CONTENT_ROOT, folder, document } : null;
 });
 
-function findAll() {
+function findAll(
+  { files, foldersearch } = { files: new Set(), foldersearch: null }
+) {
+  if (!files instanceof Set) throw new Error("TypeError: 'file' not a Set");
+  if (foldersearch && typeof foldersearch !== "string")
+    throw new Error("TypeError: 'file' not a Set");
+
   // TODO: doesn't support archive content yet
   console.warn("Currently hardcoded to only build 'en-us'");
-  const filePaths = glob.sync(
-    path.join(CONTENT_ROOT, "en-us", "**", HTML_FILENAME)
-  );
+  const filePaths = glob
+    .sync(path.join(CONTENT_ROOT, "en-us", "**", HTML_FILENAME))
+    .filter((filepath) => {
+      if (files.size) {
+        return files.has(filepath);
+      }
+      if (foldersearch) {
+        return filepath
+          .replace(CONTENT_ROOT, "")
+          .replace(HTML_FILENAME, "")
+          .includes(foldersearch);
+      }
+      return true;
+    });
   return {
     count: filePaths.length,
     iter: function* () {
