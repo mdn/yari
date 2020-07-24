@@ -12,6 +12,14 @@ const CONTENT_ARCHIVE_ROOT = process.env.CONTENT_ARCHIVE_ROOT
   ? path.join(__dirname, "..", process.env.CONTENT_ARCHIVE_ROOT)
   : null;
 
+// Make a combined array of all truthy roots. This way, you don't
+// need to constantly worry about CONTENT_ARCHIVE_ROOT potentially being
+// null.
+const ROOTS = [CONTENT_ROOT];
+if (CONTENT_ARCHIVE_ROOT) {
+  ROOTS.push(CONTENT_ARCHIVE_ROOT);
+}
+
 const VALID_LOCALES = new Map(
   [
     "ar",
@@ -54,5 +62,6 @@ const VALID_LOCALES = new Map(
 module.exports = {
   CONTENT_ROOT,
   CONTENT_ARCHIVE_ROOT,
+  ROOTS,
   VALID_LOCALES,
 };

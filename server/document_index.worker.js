@@ -3,7 +3,7 @@ const { parentPort } = require("worker_threads");
 
 const chokidar = require("chokidar");
 
-const { CONTENT_ROOT, CONTENT_ARCHIVE_ROOT, Document } = require("content");
+const { CONTENT_ROOT, Document } = require("content");
 
 function postEvent(type, data = {}) {
   parentPort.postMessage({
@@ -15,9 +15,7 @@ function postEvent(type, data = {}) {
 
 function postDocumentInfo(filePath, changeType) {
   try {
-    const root = [CONTENT_ROOT, CONTENT_ARCHIVE_ROOT].find((root) =>
-      filePath.startsWith(path.resolve(root))
-    );
+    const root = CONTENT_ROOT;
     const document = Document.read(
       path.dirname(path.relative(root, filePath)),
       { metadata: true }
@@ -32,7 +30,7 @@ function postDocumentInfo(filePath, changeType) {
       document: {
         url,
         metadata,
-        isArchive: document.isArchive,
+        isArchive: false,
       },
     });
   } catch (e) {
@@ -41,17 +39,25 @@ function postDocumentInfo(filePath, changeType) {
 }
 
 const watcher = chokidar.watch(
-  [CONTENT_ROOT, CONTENT_ARCHIVE_ROOT]
-    .filter(Boolean)
-    .map((root) => path.join(root, "**", "*.html"))
+  // For now, brutally hardcode it to only the 'en-us' folders
+  // until we have a resolution on L10n.
+  [path.join(CONTENT_ROOT, "en-us", "**", "*.html")]
 );
 
+let countWatchedFiles = 0;
+const t0 = new Date();
 watcher.on("ready", () => {
   postEvent("ready");
+  const took = new Date() - t0;
+  console.log(
+    `Watching over ${countWatchedFiles.toLocaleString()} files. ` +
+      `Took ${(took / 1000).toFixed(1)}s to set that up.`
+  );
 });
 
 watcher.on("add", (filePath) => {
   postDocumentInfo(filePath, "added");
+  countWatchedFiles++;
 });
 watcher.on("change", (filePath) => {
   postDocumentInfo(filePath, "updated");
