@@ -3,7 +3,7 @@ const { parentPort } = require("worker_threads");
 
 const chokidar = require("chokidar");
 
-const { ROOTS, Document } = require("content");
+const { CONTENT_ROOT, Document } = require("content");
 
 function postEvent(type, data = {}) {
   parentPort.postMessage({
@@ -15,7 +15,7 @@ function postEvent(type, data = {}) {
 
 function postDocumentInfo(filePath, changeType) {
   try {
-    const root = ROOTS.find((root) => filePath.startsWith(path.resolve(root)));
+    const root = CONTENT_ROOT;
     const document = Document.read(
       path.dirname(path.relative(root, filePath)),
       { metadata: true }
@@ -30,7 +30,7 @@ function postDocumentInfo(filePath, changeType) {
       document: {
         url,
         metadata,
-        isArchive: document.isArchive,
+        isArchive: false,
       },
     });
   } catch (e) {
@@ -41,7 +41,7 @@ function postDocumentInfo(filePath, changeType) {
 const watcher = chokidar.watch(
   // For now, brutally hardcode it to only the 'en-us' folders
   // until we have a resolution on L10n.
-  ROOTS.filter(Boolean).map((root) => path.join(root, "en-us", "**", "*.html"))
+  [path.join(CONTENT_ROOT, "en-us", "**", "*.html")]
 );
 
 let countWatchedFiles = 0;
