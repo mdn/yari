@@ -24,6 +24,7 @@ const {
 const { addBreadcrumbData } = require("./document-utils");
 const { injectFlaws } = require("./flaws");
 const cheerio = require("./monkeypatched-cheerio");
+const options = require("./build-options");
 
 const BUILD_OUT_ROOT = path.join(__dirname, "..", "client", "build");
 
@@ -105,8 +106,6 @@ function injectSource(doc, folder) {
   };
 }
 
-const options = { flawLevels: new Map() };
-
 async function buildDocument(document) {
   const { metadata, fileInfo } = document;
 
@@ -129,7 +128,6 @@ async function buildDocument(document) {
         flaw.line += fileInfo.frontMatterOffset - 1;
       }
     });
-
     if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
       // Report and exit immediately on the first document with flaws.
       console.error(
@@ -276,13 +274,21 @@ function makeSitemapXML(locale, slugs) {
 }
 
 async function buildDocuments() {
-  const documents = Document.findAll();
+  const documents = Document.findAll(options);
   const progressBar = new cliProgress.SingleBar(
     {},
     cliProgress.Presets.shades_grey
   );
   const slugPerLocale = {};
-  progressBar.start(documents.count);
+
+  console.log(options);
+
+  if (!documents.count) {
+    console.warn("No documents to build found");
+    return;
+  }
+
+  !options.noProgressbar && progressBar.start(documents.count);
   for (const document of documents.iter()) {
     const builtDocument = await buildDocument(document);
     const outPath = path.join(BUILD_OUT_ROOT, slugToFoldername(document.url));
@@ -304,9 +310,14 @@ async function buildDocuments() {
     }
     slugPerLocale[locale].push(slug);
 
-    progressBar.increment();
+    if (!options.noProgressbar) {
+      progressBar.increment();
+    } else {
+      console.log(outPath);
+    }
   }
-  progressBar.stop();
+
+  !options.noProgressbar && progressBar.stop();
 
   for (const [locale, slugs] of Object.entries(slugPerLocale)) {
     const sitemapDir = path.join(

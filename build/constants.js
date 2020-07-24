@@ -5,9 +5,9 @@ require("dotenv").config({
 });
 
 const FLAW_LEVELS = Object.freeze({
-  WARN: "warn",
-  IGNORE: "ignore",
   ERROR: "error",
+  IGNORE: "ignore",
+  WARN: "warn",
 });
 
 // These names need to match what we have in the code where we have various
@@ -27,8 +27,17 @@ const VALID_FLAW_CHECKS = new Set([
 // TODO (far future): Switch to "error" when number of flaws drops.
 const DEFAULT_FLAW_LEVELS = process.env.BUILD_FLAW_LEVELS || "*:warn";
 
+const FILES = process.env.BUILD_FILES || "";
+const FOLDERSEARCH = process.env.BUILD_FOLDERSEARCH || "";
+const NO_PROGRESSBAR = Boolean(
+  JSON.parse(process.env.BUILD_NO_PROGRESSBAR || process.env.CI || "false")
+);
+
 module.exports = {
-  VALID_FLAW_CHECKS,
-  FLAW_LEVELS,
   DEFAULT_FLAW_LEVELS,
+  FILES,
+  FLAW_LEVELS,
+  FOLDERSEARCH,
+  NO_PROGRESSBAR,
+  VALID_FLAW_CHECKS,
 };

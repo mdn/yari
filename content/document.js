@@ -221,9 +221,29 @@ const findByURL = memoize((url, fields = null) => {
   return document ? { contentRoot: CONTENT_ROOT, folder, document } : null;
 });
 
-function findAll() {
+function findAll(
+  { files, folderSearch } = { files: new Set(), folderSearch: null }
+) {
+  if (!files instanceof Set) throw new TypeError("'files' not a Set");
+  if (folderSearch && typeof folderSearch !== "string")
+    throw new TypeError("'folderSearch' not a string");
+
   // TODO: doesn't support archive content yet
-  const filePaths = glob.sync(path.join(CONTENT_ROOT, "**", HTML_FILENAME));
+  console.warn("Currently hardcoded to only build 'en-us'");
+  const filePaths = glob
+    .sync(path.join(CONTENT_ROOT, "en-us", "**", HTML_FILENAME))
+    .filter((filepath) => {
+      if (files.size) {
+        return files.has(filepath);
+      }
+      if (folderSearch) {
+        return filepath
+          .replace(CONTENT_ROOT, "")
+          .replace(HTML_FILENAME, "")
+          .includes(folderSearch);
+      }
+      return true;
+    });
   return {
     count: filePaths.length,
     iter: function* () {
