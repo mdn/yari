@@ -116,18 +116,6 @@ async function buildDocument(document) {
   const [renderedHtml, flaws] = await kumascript.render(document.url);
 
   if (flaws.length) {
-    // The flaw objects might have a 'line' attribute, but the
-    // original document it came from had front-matter in the file.
-    // The KS renderer doesn't know about this, so we adjust it
-    // accordingly.
-    // Only applicable if the flaw has a 'line'
-    flaws.forEach((flaw) => {
-      if (flaw.line) {
-        // The extra `- 1` is because of the added newline that
-        // is only present because of the serialized linebreak.
-        flaw.line += fileInfo.frontMatterOffset - 1;
-      }
-    });
     if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
       // Report and exit immediately on the first document with flaws.
       console.error(
@@ -142,14 +130,6 @@ async function buildDocument(document) {
       // XXX This is probably the wrong way to bubble up.
       process.exit(1);
     } else if (options.flawLevels.get("macros") === FLAW_LEVELS.WARN) {
-      // For each flaw, inject the path of the file that was used.
-      // This gets used in the dev UI so that you can get a shortcut
-      // link to open that file directly in your $EDITOR.
-      for (const flaw of flaws) {
-        if (!flaw.filepath) {
-          flaw.filepath = fileInfo.path;
-        }
-      }
       doc.flaws.macros = flaws;
     }
   }
