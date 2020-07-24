@@ -9,6 +9,7 @@ const {
   CONTENT_ARCHIVE_ROOT,
   CONTENT_ROOT,
   VALID_LOCALES,
+  ROOTS,
 } = require("./constants");
 const { memoize, slugToFoldername } = require("./utils");
 
@@ -89,6 +90,9 @@ function create(html, metadata) {
 }
 
 function archive(renderedHTML, rawHTML, metadata, wikiHistory) {
+  if (!CONTENT_ARCHIVE_ROOT) {
+    throw new Error("Can't archive when CONTENT_ARCHIVE_ROOT is not set");
+  }
   const folderPath = buildPath(
     path.join(CONTENT_ARCHIVE_ROOT, metadata.locale),
     metadata.slug
@@ -128,13 +132,14 @@ class Document {
 const read = memoize((folder, fields = null) => {
   fields = fields ? { body: false, metadata: false, ...fields } : fields;
 
-  const filePath = [CONTENT_ROOT, CONTENT_ARCHIVE_ROOT]
-    .map((root) => path.join(root, getHTMLPath(folder)))
-    .find((filePath) => fs.existsSync(filePath));
+  const filePath = ROOTS.map((root) =>
+    path.join(root, getHTMLPath(folder))
+  ).find((filePath) => fs.existsSync(filePath));
   if (!filePath) {
     return;
   }
-  const isArchive = filePath.startsWith(CONTENT_ARCHIVE_ROOT);
+  const isArchive =
+    CONTENT_ARCHIVE_ROOT && filePath.startsWith(CONTENT_ARCHIVE_ROOT);
 
   const rawContent = fs.readFileSync(filePath, "utf8");
   const {
