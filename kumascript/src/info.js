@@ -121,12 +121,11 @@ const info = {
   },
 
   getPage(url) {
-    const result = Document.findByURL(info.cleanURL(url), { metadata: true });
-    if (!result) {
+    const document = Document.findByURL(info.cleanURL(url), { metadata: true });
+    if (!document) {
       throw new Error(`${info.getDescription(url)} does not exist`);
     }
 
-    const { document } = result;
     const { locale, slug, title, summary, tags } = document.metadata;
     return {
       url: document.url,

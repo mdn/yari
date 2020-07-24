@@ -14,11 +14,11 @@ function withDocument(req, res, next) {
   if (!req.query.url) {
     return res.status(400).send("No ?url= query param");
   }
-  const result = Document.findByURL(req.query.url.toLowerCase());
-  if (!result) {
+  const document = Document.findByURL(req.query.url.toLowerCase());
+  if (!document) {
     return res.status(404).send(`No document by the URL ${req.query.url}`);
   }
-  req.document = result.document;
+  req.document = document;
   next();
 }
 

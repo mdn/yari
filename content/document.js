@@ -218,13 +218,7 @@ function del(folder) {
   updateWikiHistory(path.join(CONTENT_ROOT, metadata.locale), metadata.slug);
 }
 
-const findByURL = memoize((url, fields = null) => {
-  const folder = urlToFolderPath(url);
-
-  const document = read(folder, fields);
-
-  return document ? { contentRoot: CONTENT_ROOT, folder, document } : null;
-});
+const findByURL = (url, ...args) => read(urlToFolderPath(url), ...args);
 
 function findAll(
   { files, folderSearch } = { files: new Set(), folderSearch: null }

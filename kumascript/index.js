@@ -14,7 +14,7 @@ const {
 const { HTMLTool } = require("./src/api/util.js");
 
 const renderFromURL = memoize(async (url) => {
-  const { rawHtml, metadata } = Document.findByURL(url).document;
+  const { rawHtml, metadata } = Document.findByURL(url);
   const [renderedHtml, errors] = await renderMacros(
     rawHtml,
     new Templates(),

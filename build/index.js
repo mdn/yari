@@ -195,11 +195,10 @@ async function buildDocument(document) {
   if (!otherTranslations.length && metadata.translation_of) {
     // But perhaps the parent has other translations?!
     const parentURL = buildURL("en-US", metadata.translation_of);
-    const parentResult = Document.findByURL(parentURL);
+    const parentDocument = Document.findByURL(parentURL);
     // See note in 'ensureAllTitles()' about why we need this if statement.
-    if (parentResult) {
-      const parentOtherTranslations =
-        parentResult.document.metadata.translations;
+    if (parentDocument) {
+      const parentOtherTranslations = parentDocument.metadata.translations;
       if (parentOtherTranslations && parentOtherTranslations.length) {
         otherTranslations.push(
           ...parentOtherTranslations.filter(
@@ -224,16 +223,16 @@ async function buildDocument(document) {
 }
 
 async function buildDocumentFromURL(url) {
-  const result = Document.findByURL(url);
-  if (!result) {
+  const document = Document.findByURL(url);
+  if (!document) {
     return null;
   }
-  return buildDocument(result.document);
+  return buildDocument(document);
 }
 
 async function buildLiveSamplePageFromURL(url) {
   const [documentURL, sampleID] = url.split("/_samples_/");
-  const { document } = Document.findByURL(documentURL);
+  const document = Document.findByURL(documentURL);
   const liveSamplePage = kumascript.buildLiveSamplePage(
     document.url,
     document.metadata.title,
