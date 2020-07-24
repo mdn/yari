@@ -214,11 +214,11 @@ const findByURL = memoize((url, fields = null) => {
 });
 
 function findAll(
-  { files, foldersearch } = { files: new Set(), foldersearch: null }
+  { files, folderSearch } = { files: new Set(), folderSearch: null }
 ) {
-  if (!files instanceof Set) throw new Error("TypeError: 'file' not a Set");
-  if (foldersearch && typeof foldersearch !== "string")
-    throw new Error("TypeError: 'file' not a Set");
+  if (!files instanceof Set) throw new Error("TypeError: 'files' not a Set");
+  if (folderSearch && typeof folderSearch !== "string")
+    throw new Error("TypeError: 'folderSearch' not a string");
 
   // TODO: doesn't support archive content yet
   console.warn("Currently hardcoded to only build 'en-us'");
@@ -228,11 +228,11 @@ function findAll(
       if (files.size) {
         return files.has(filepath);
       }
-      if (foldersearch) {
+      if (folderSearch) {
         return filepath
           .replace(CONTENT_ROOT, "")
           .replace(HTML_FILENAME, "")
-          .includes(foldersearch);
+          .includes(folderSearch);
       }
       return true;
     });

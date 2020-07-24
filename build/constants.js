@@ -29,7 +29,9 @@ const DEFAULT_FLAW_LEVELS = process.env.BUILD_FLAW_LEVELS || "*:warn";
 
 const FILES = process.env.BUILD_FILES || "";
 const FOLDERSEARCH = process.env.BUILD_FOLDERSEARCH || "";
-const NO_PROGRESSBAR = JSON.parse(process.env.BUILD_NO_PROGRESSBAR || "false");
+const NO_PROGRESSBAR = Boolean(
+  JSON.parse(process.env.BUILD_NO_PROGRESSBAR || process.env.CI || "false")
+);
 
 module.exports = {
   DEFAULT_FLAW_LEVELS,

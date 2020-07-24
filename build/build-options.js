@@ -9,10 +9,10 @@ const {
   NO_PROGRESSBAR,
 } = require("./constants");
 
-module.exports = {
+const options = {
   flawLevels: parseFlawLevels(DEFAULT_FLAW_LEVELS),
   files: parseFiles(FILES),
-  foldersearch: parseFoldersearch(FOLDERSEARCH),
+  folderSearch: parseFoldersearch(FOLDERSEARCH),
   noProgressbar: NO_PROGRESSBAR,
 };
 
@@ -104,3 +104,5 @@ function parseFlawLevels(flawChecks) {
 
   return checked;
 }
+
+module.exports = options;
