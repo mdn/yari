@@ -38,7 +38,7 @@ const resolve = (() => {
       .readFileSync(redirectsFilePath, "utf-8")
       .split("\n")
       .slice(1, -1)
-      .map((line) => line.split("\t"));
+      .map((line) => line.trim().split(/\s+/));
     for (const [from, to] of redirectPairs) {
       redirects[from.toLowerCase()] = to;
     }
