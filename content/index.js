@@ -1,5 +1,3 @@
-const path = require("path");
-
 const {
   CONTENT_ROOT,
   CONTENT_ARCHIVE_ROOT,
@@ -7,6 +5,7 @@ const {
   VALID_LOCALES,
 } = require("./constants");
 const Document = require("./document");
+const popularities = require("./popularities");
 const Redirect = require("./redirect");
 const { buildURL, memoize, slugToFoldername } = require("./utils");
 
@@ -15,6 +14,8 @@ module.exports = {
   CONTENT_ARCHIVE_ROOT,
   ROOTS,
   VALID_LOCALES,
+
+  popularities,
 
   Document,
   Redirect,

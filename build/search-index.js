@@ -1,11 +1,4 @@
-const fs = require("fs");
-const path = require("path");
-
-const { CONTENT_ROOT } = require("content");
-
-const popularities = JSON.parse(
-  fs.readFileSync(path.join(CONTENT_ROOT, "popularities.json"), "utf-8")
-);
+const { popularities } = require("content");
 
 const getPopularity = (item) => popularities[item.url];
 

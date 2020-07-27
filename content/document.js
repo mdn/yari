@@ -11,6 +11,7 @@ const {
   VALID_LOCALES,
   ROOTS,
 } = require("./constants");
+const popularities = require("./popularities");
 const { memoize, slugToFoldername } = require("./utils");
 
 function buildPath(localeFolder, slug) {
@@ -137,12 +138,22 @@ const read = memoize((folder, fields = null) => {
     bodyBegin: frontMatterOffset,
   } = fm(rawContent);
 
-  metadata.locale = extractLocale(folder);
+  let fullMetadata = {};
+  if (!fields || fields.metadata) {
+    const locale = extractLocale(folder);
+    const url = `/${locale}/docs/${metadata.slug}`;
+    fullMetadata = {
+      metadata: {
+        ...metadata,
+        locale,
+        popularity: popularities[url] || 0.0,
+      },
+      url,
+    };
+  }
 
   return {
-    ...(!fields || fields.metadata
-      ? { metadata, url: `/${metadata.locale}/docs/${metadata.slug}` }
-      : {}),
+    ...fullMetadata,
     ...(!fields || fields.body ? { rawHtml, rawContent } : {}),
     isArchive,
     fileInfo: {
