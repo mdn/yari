@@ -38,7 +38,7 @@ function useSearchIndex(): [null | SearchIndex, null | Error, () => void] {
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
 
   const url = `/en-US/search-index.json`;
-  const { error, data } = useSWR<{ items: null | Item[] }>(
+  const { error, data } = useSWR<null | Item[]>(
     shouldInitialize ? url : null,
     async (url) => {
       const response = await fetch(url);
@@ -57,14 +57,14 @@ function useSearchIndex(): [null | SearchIndex, null | Error, () => void] {
   });
 
   useEffect(() => {
-    if (!data || !data.items) {
+    if (!data) {
       return;
     }
     const flex = new (FlexSearch as any)({
       suggest: true,
       tokenize: "forward",
     });
-    const urls = data.items.map(({ url, title }, i) => {
+    const urls = data.map(({ url, title }, i) => {
       // XXX investigate if it's faster to add all at once
       // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
       flex.add(i, title);
@@ -72,7 +72,7 @@ function useSearchIndex(): [null | SearchIndex, null | Error, () => void] {
     });
     const fuzzy = new FuzzySearch(urls);
 
-    setSearchIndex({ flex, fuzzy, ...data });
+    setSearchIndex({ flex, fuzzy, items: data });
   }, [shouldInitialize, data]);
 
   return [searchIndex, error, () => setShouldInitialize(true)];

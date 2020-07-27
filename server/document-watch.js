@@ -48,8 +48,6 @@ worker.on("message", (event) => {
 
 module.exports = {
   searchRoute(req, res) {
-    res.json({
-      items: isReady ? searchIndex.getItems()[req.params.locale] : null,
-    });
+    res.json(isReady ? searchIndex.getItems()[req.params.locale] : null);
   },
 };
