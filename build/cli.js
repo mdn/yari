@@ -47,8 +47,6 @@ async function buildDocuments() {
   const slugPerLocale = {};
   const searchIndex = new SearchIndex();
 
-  console.log(options);
-
   if (!documents.count) {
     console.warn("No documents to build found");
     return;

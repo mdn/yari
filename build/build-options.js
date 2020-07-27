@@ -45,7 +45,7 @@ function parseFiles(filesStringList) {
 function parseFoldersearch(searchpattern) {
   if (searchpattern) {
     // TODO: Consider turning it into a regex if there are * or $ or ^ in it
-    return searchpattern;
+    return searchpattern.toLowerCase();
   }
   return null;
 }

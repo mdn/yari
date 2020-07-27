@@ -122,6 +122,38 @@ function fixFixableFlaws(doc, options, document) {
 
   const loud = options.fixFlawsDryRun || options.fixFlawsVerbose;
 
+  // Any 'macros' of type "MacroRedirectedLinkError"...
+  for (const flaw of doc.flaws.macros || []) {
+    if (
+      flaw.name === "MacroRedirectedLinkError" &&
+      (!flaw.filepath || flaw.filepath === document.fileInfo.path)
+    ) {
+      // Sanity check that our understanding of flaws, filepaths, and sources
+      // work as expected.
+      if (!newRawHTML.includes(flaw.macroSource)) {
+        throw new Error(
+          `rawHtml doesn't contain macroSource (${flaw.macroSource})`
+        );
+      }
+      const newMacroSource = flaw.macroSource.replace(
+        flaw.redirectInfo.current,
+        flaw.redirectInfo.suggested
+      );
+      // Remember, in JavaScript only the first occurrence will be replaced.
+      newRawHTML = newRawHTML.replace(flaw.macroSource, newMacroSource);
+      if (loud) {
+        console.log(
+          chalk.grey(
+            `Fixed macro ${chalk.white.bold(
+              flaw.macroSource
+            )} to ${chalk.white.bold(newMacroSource)}`
+          )
+        );
+      }
+      flaw.fixed = true;
+    }
+  }
+
   // Any 'broken_links' with a suggestion...
   for (const flaw of doc.flaws.broken_links || []) {
     if (flaw.suggestion) {
@@ -129,14 +161,24 @@ function fixFixableFlaws(doc, options, document) {
       // is because the raw HTML we're dealing with isn't actually proper
       // HTML. It's only proper HTML when the kumascript macros have been
       // expanded.
+      const htmlBefore = newRawHTML;
       newRawHTML = replaceMatchesInText(
         flaw.href,
         newRawHTML,
         flaw.suggestion,
         { inAttribute: "href" }
       );
+      if (htmlBefore !== newRawHTML) {
+        flaw.fixed = true;
+      }
       if (loud) {
-        console.log(`Fixed broken_link '${flaw.href}' to '${flaw.suggestion}'`);
+        console.log(
+          chalk.grey(
+            `Fixed broken_link ${chalk.white.bold(
+              flaw.href
+            )} to ${chalk.white.bold(flaw.suggestion)}`
+          )
+        );
       }
     }
   }
@@ -146,7 +188,7 @@ function fixFixableFlaws(doc, options, document) {
     if (options.fixFlawsDryRun) {
       console.log(
         chalk.yellow(
-          `Would have modified "${document.fileInfo.folder}", if this was not a dry run.`
+          `Would have modified "${document.fileInfo.path}", if this was not a dry run.`
         )
       );
     } else {
@@ -154,7 +196,9 @@ function fixFixableFlaws(doc, options, document) {
       if (options.fixFlawsVerbose) {
         console.log(
           chalk.green(
-            `Modified "${document.fileInfo.folder}" from fixable flaws.`
+            `Modified "${chalk.bold(
+              document.fileInfo.path
+            )}" from fixable flaws.`
           )
         );
       }

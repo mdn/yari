@@ -8,6 +8,7 @@ export interface Link {
   line: number;
   column: number;
   suggestion: string | null;
+  fixed?: boolean;
 }
 
 type Flaws = {
@@ -42,4 +43,5 @@ export interface MacroErrorMessage {
   filepath: string;
   sourceContext: string;
   macroName: string;
+  fixed?: boolean;
 }
