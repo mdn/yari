@@ -7,14 +7,20 @@ const {
   FILES,
   FOLDERSEARCH,
   NO_PROGRESSBAR,
+  FIX_FLAWS,
+  FIX_FLAWS_DRY_RUN,
+  FIX_FLAWS_VERBOSE,
 } = require("./constants");
 
-const options = {
+const options = Object.freeze({
   flawLevels: parseFlawLevels(DEFAULT_FLAW_LEVELS),
   files: parseFiles(FILES),
   folderSearch: parseFoldersearch(FOLDERSEARCH),
   noProgressbar: NO_PROGRESSBAR,
-};
+  fixFlaws: FIX_FLAWS,
+  fixFlawsDryRun: FIX_FLAWS_DRY_RUN,
+  fixFlawsVerbose: FIX_FLAWS_VERBOSE,
+});
 
 function parseFiles(filesStringList) {
   // The get-diff-action, which we use in the "PR Builds" CI,
