@@ -104,6 +104,28 @@ async function buildDocument(document) {
 
   const [renderedHtml, flaws] = await kumascript.render(document.url);
 
+  let liveSamples = [];
+  const [sampleIds] = kumascript.getLiveSampleIDs(
+    document.metadata.slug,
+    document.rawHtml
+  );
+  for (const sampleIdObject of sampleIds) {
+    const liveSamplePage = kumascript.buildLiveSamplePage(
+      document.url,
+      document.metadata.title,
+      renderedHtml,
+      sampleIdObject
+    );
+    if (liveSamplePage.flaw) {
+      flaws.push(liveSamplePage.flaw.updateFileInfo(fileInfo));
+      continue;
+    }
+    liveSamples.push({
+      id: sampleIdObject.id.toLowerCase(),
+      html: liveSamplePage.html,
+    });
+  }
+
   if (flaws.length) {
     if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
       // Report and exit immediately on the first document with flaws.
@@ -188,7 +210,7 @@ async function buildDocument(document) {
   // a breadcrumb in the React component.
   addBreadcrumbData(document.url, doc);
 
-  return doc;
+  return [doc, liveSamples];
 }
 
 async function buildDocumentFromURL(url) {
@@ -196,7 +218,7 @@ async function buildDocumentFromURL(url) {
   if (!document) {
     return null;
   }
-  return buildDocument(document);
+  return (await buildDocument(document))[0];
 }
 
 async function buildLiveSamplePageFromURL(url) {

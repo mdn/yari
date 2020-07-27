@@ -56,9 +56,11 @@ async function buildDocuments() {
 
   !options.noProgressbar && progressBar.start(documents.count);
   for (const document of documents.iter()) {
-    const builtDocument = await buildDocument(document);
     const outPath = path.join(BUILD_OUT_ROOT, slugToFoldername(document.url));
     fs.mkdirSync(outPath, { recursive: true });
+
+    const [builtDocument, liveSamples] = await buildDocument(document);
+
     fs.writeFileSync(
       path.join(outPath, "index.html"),
       renderHTML(builtDocument, document.url)
@@ -69,6 +71,12 @@ async function buildDocuments() {
       // which makes this not great and refactor-worthy
       JSON.stringify({ doc: builtDocument })
     );
+
+    for (const { id, html } of liveSamples) {
+      const liveSamplePath = path.join(outPath, "_samples_", id, "index.html");
+      fs.mkdirSync(path.dirname(liveSamplePath), { recursive: true });
+      fs.writeFileSync(liveSamplePath, html);
+    }
 
     // Collect non-archived documents' slugs to be used in sitemap building and
     // search index building
