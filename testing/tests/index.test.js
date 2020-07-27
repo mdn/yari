@@ -299,9 +299,9 @@ test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page",
   const jsonFile = path.join(builtFolder, "index.json");
   expect(fs.existsSync(jsonFile)).toBeTruthy();
 
-  // Let's make sure there are only 3 "macros" flaws.
+  // Let's make sure there are only 2 "macros" flaws.
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(doc.flaws.macros.length).toBe(3);
+  expect(doc.flaws.macros.length).toBe(2);
 });
 
 describe("fixing flaws", () => {
