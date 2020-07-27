@@ -2,6 +2,7 @@ import React, { lazy, Suspense, useEffect } from "react";
 import { Link } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
+import { useWebSocketMessageHandler } from "../web-socket";
 import { NoMatch } from "../routing";
 import { useDocumentURL } from "./hooks";
 import { Doc } from "./types";
@@ -25,8 +26,9 @@ const Toolbar = lazy(() => import("./toolbar"));
 export function Document(props /* TODO: define a TS interface for this */) {
   const documentURL = useDocumentURL();
 
+  const dataURL = `${documentURL}/index.json`;
   const { data: doc, error } = useSWR<Doc>(
-    `${documentURL}/index.json`,
+    dataURL,
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
@@ -36,6 +38,15 @@ export function Document(props /* TODO: define a TS interface for this */) {
     },
     { initialData: props.doc || null, revalidateOnFocus: false }
   );
+
+  useWebSocketMessageHandler((message) => {
+    if (
+      message.type === "DOCUMENT_CHANGE" &&
+      message.change.document?.url === documentURL
+    ) {
+      mutate(dataURL);
+    }
+  });
 
   useEffect(() => {
     if (doc) {
@@ -59,6 +70,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       return <LoadingError error={error} />;
     }
   }
+
   if (!doc) {
     return null;
   }

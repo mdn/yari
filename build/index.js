@@ -10,7 +10,6 @@ const {
   CONTENT_ROOT,
   buildURL,
   Document,
-  Redirect,
   slugToFoldername,
 } = require("content");
 const kumascript = require("kumascript");
@@ -21,6 +20,7 @@ const {
   extractDocumentSections,
   extractSidebar,
 } = require("./document-extractor");
+const SearchIndex = require("./search-index");
 const { addBreadcrumbData } = require("./document-utils");
 const { injectFlaws } = require("./flaws");
 const cheerio = require("./monkeypatched-cheerio");
@@ -225,6 +225,8 @@ async function buildLiveSamplePageFromURL(url) {
 module.exports = {
   buildDocumentFromURL,
   buildLiveSamplePageFromURL,
+
+  SearchIndex,
 };
 
 function makeSitemapXML(locale, slugs) {
@@ -283,11 +285,15 @@ async function buildDocuments() {
       JSON.stringify({ doc: builtDocument })
     );
 
-    const { locale, slug } = document.metadata;
-    if (!slugPerLocale[locale]) {
-      slugPerLocale[locale] = [];
+    // Collect non-archived documents' slugs to be used in sitemap building and
+    // search index building
+    if (!document.isArchive) {
+      const { locale, slug } = document.metadata;
+      if (!slugPerLocale[locale]) {
+        slugPerLocale[locale] = [];
+      }
+      slugPerLocale[locale].push(slug);
     }
-    slugPerLocale[locale].push(slug);
 
     if (!options.noProgressbar) {
       progressBar.increment();

@@ -15,24 +15,15 @@ function postEvent(type, data = {}) {
 
 function postDocumentInfo(filePath, changeType) {
   try {
-    const root = CONTENT_ROOT;
     const document = Document.read(
-      path.dirname(path.relative(root, filePath)),
+      path.dirname(path.relative(CONTENT_ROOT, filePath)),
       { metadata: true }
     );
     if (!document) {
       return;
     }
-    const { metadata, url } = document;
 
-    postEvent(changeType, {
-      filePath,
-      document: {
-        url,
-        metadata,
-        isArchive: false,
-      },
-    });
+    postEvent(changeType, { filePath, document });
   } catch (e) {
     console.error(`Error while adding document ${filePath} to index:`, e);
   }

@@ -10,7 +10,7 @@ const { prepareDoc, renderHTML } = require("ssr");
 
 const { STATIC_ROOT } = require("./constants");
 const documentRouter = require("./document");
-const documentIndexRouter = require("./document_index");
+const { searchRoute } = require("./document-watch");
 
 const app = express();
 app.use(express.json());
@@ -75,7 +75,7 @@ app.post("/_redirects", (req, res) => {
   res.json({ redirects });
 });
 
-app.use("/_index", documentIndexRouter);
+app.use("/:locale/search-index.json", searchRoute);
 
 app.get("/*", async (req, res) => {
   if (req.url.startsWith("_")) {

@@ -118,17 +118,6 @@ function archive(renderedHTML, rawHTML, metadata, wikiHistory) {
   );
 }
 
-class Document {
-  constructor(attributes) {
-    Object.assign(this, attributes);
-  }
-
-  get url() {
-    const { locale, slug } = this.metadata;
-    return `/${locale}/docs/${slug}`;
-  }
-}
-
 const read = memoize((folder, fields = null) => {
   fields = fields ? { body: false, metadata: false, ...fields } : fields;
 
@@ -150,8 +139,10 @@ const read = memoize((folder, fields = null) => {
 
   metadata.locale = extractLocale(folder);
 
-  return new Document({
-    ...(!fields || fields.metadata ? { metadata } : {}),
+  return {
+    ...(!fields || fields.metadata
+      ? { metadata, url: `/${metadata.locale}/docs/${metadata.slug}` }
+      : {}),
     ...(!fields || fields.body ? { rawHtml, rawContent } : {}),
     isArchive,
     fileInfo: {
@@ -159,7 +150,7 @@ const read = memoize((folder, fields = null) => {
       path: filePath,
       frontMatterOffset,
     },
-  });
+  };
 });
 
 function update(folder, rawHtml, metadata) {

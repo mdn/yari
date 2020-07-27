@@ -4,6 +4,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import "./index.scss";
 import "typeface-zilla-slab";
 import { App } from "./app";
+const WSSProvider = React.lazy(() => import("./web-socket"));
 // import * as serviceWorker from './serviceWorker';
 
 const container = document.getElementById("root");
@@ -15,13 +16,24 @@ const documentDataElement = document.getElementById("documentdata");
 if (documentDataElement) {
   docData = JSON.parse(documentDataElement.textContent || "");
 }
-const app = (
-  <React.StrictMode>
-    <Router>
-      <App doc={docData} />
-    </Router>
-  </React.StrictMode>
+
+let app = (
+  <Router>
+    <App doc={docData} />
+  </Router>
 );
+
+if (process.env.NODE_ENV === "development") {
+  // We only use a WebSocket to listen for document changes in development
+  app = (
+    <React.Suspense fallback>
+      <WSSProvider>{app}</WSSProvider>
+    </React.Suspense>
+  );
+}
+
+app = <React.StrictMode>{app}</React.StrictMode>;
+
 if (container.firstElementChild) {
   ReactDOM.hydrate(app, container);
 } else {
