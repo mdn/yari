@@ -1,32 +1,21 @@
 const childProcess = require("child_process");
-const fs = require("fs");
-const path = require("path");
 
 const chalk = require("chalk");
-const cliProgress = require("cli-progress");
 const packageJSON = require("../package.json");
 
-const {
-  CONTENT_ROOT,
-  buildURL,
-  Document,
-  Redirect,
-  slugToFoldername,
-} = require("content");
+const { buildURL, Document } = require("content");
 const kumascript = require("kumascript");
-const { renderHTML } = require("ssr");
 
 const { FLAW_LEVELS } = require("./constants");
 const {
   extractDocumentSections,
   extractSidebar,
 } = require("./document-extractor");
+const SearchIndex = require("./search-index");
 const { addBreadcrumbData } = require("./document-utils");
 const { fixFixableFlaws, injectFlaws } = require("./flaws");
 const cheerio = require("./monkeypatched-cheerio");
 const options = require("./build-options");
-
-const BUILD_OUT_ROOT = path.join(__dirname, "..", "client", "build");
 
 function getCurrentGitHubBaseURL() {
   return packageJSON.repository;
@@ -115,19 +104,29 @@ async function buildDocument(document) {
 
   const [renderedHtml, flaws] = await kumascript.render(document.url);
 
-  if (flaws.length) {
-    // The flaw objects might have a 'line' attribute, but the
-    // original document it came from had front-matter in the file.
-    // The KS renderer doesn't know about this, so we adjust it
-    // accordingly.
-    // Only applicable if the flaw has a 'line'
-    flaws.forEach((flaw) => {
-      if (flaw.line) {
-        // The extra `- 1` is because of the added newline that
-        // is only present because of the serialized linebreak.
-        flaw.line += fileInfo.frontMatterOffset - 1;
-      }
+  let liveSamples = [];
+  const [sampleIds] = kumascript.getLiveSampleIDs(
+    document.metadata.slug,
+    document.rawHtml
+  );
+  for (const sampleIdObject of sampleIds) {
+    const liveSamplePage = kumascript.buildLiveSamplePage(
+      document.url,
+      document.metadata.title,
+      renderedHtml,
+      sampleIdObject
+    );
+    if (liveSamplePage.flaw) {
+      flaws.push(liveSamplePage.flaw.updateFileInfo(fileInfo));
+      continue;
+    }
+    liveSamples.push({
+      id: sampleIdObject.id.toLowerCase(),
+      html: liveSamplePage.html,
     });
+  }
+
+  if (flaws.length) {
     if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
       // Report and exit immediately on the first document with flaws.
       console.error(
@@ -142,14 +141,6 @@ async function buildDocument(document) {
       // XXX This is probably the wrong way to bubble up.
       process.exit(1);
     } else if (options.flawLevels.get("macros") === FLAW_LEVELS.WARN) {
-      // For each flaw, inject the path of the file that was used.
-      // This gets used in the dev UI so that you can get a shortcut
-      // link to open that file directly in your $EDITOR.
-      for (const flaw of flaws) {
-        if (!flaw.filepath) {
-          flaw.filepath = fileInfo.path;
-        }
-      }
       doc.flaws.macros = flaws;
     }
   }
@@ -223,7 +214,7 @@ async function buildDocument(document) {
   // a breadcrumb in the React component.
   addBreadcrumbData(document.url, doc);
 
-  return doc;
+  return [doc, liveSamples];
 }
 
 async function buildDocumentFromURL(url) {
@@ -231,7 +222,7 @@ async function buildDocumentFromURL(url) {
   if (!document) {
     return null;
   }
-  return buildDocument(document);
+  return (await buildDocument(document))[0];
 }
 
 async function buildLiveSamplePageFromURL(url) {
@@ -247,97 +238,10 @@ async function buildLiveSamplePageFromURL(url) {
 }
 
 module.exports = {
+  buildDocument,
+
   buildDocumentFromURL,
   buildLiveSamplePageFromURL,
+
+  SearchIndex,
 };
-
-function makeSitemapXML(locale, slugs) {
-  const wikiHistory = JSON.parse(
-    fs.readFileSync(
-      path.join(CONTENT_ROOT, locale.toLowerCase(), "_wikihistory.json"),
-      "utf-8"
-    )
-  );
-  return [
-    '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    ...slugs
-      .filter((slug) => slug in wikiHistory)
-      .map((slug) =>
-        [
-          "<url>",
-          `<loc>https://developer.mozilla.org/${locale}/docs/${slug}</loc>`,
-          `<lastmod>${wikiHistory[slug].modified}</lastmod>`,
-          "</url>",
-        ].join("")
-      ),
-    "</urlset>",
-    "",
-  ].join("\n");
-}
-
-async function buildDocuments() {
-  const documents = Document.findAll(options);
-  const progressBar = new cliProgress.SingleBar(
-    {},
-    cliProgress.Presets.shades_grey
-  );
-  const slugPerLocale = {};
-
-  console.log(options);
-
-  if (!documents.count) {
-    console.warn("No documents to build found");
-    return;
-  }
-
-  !options.noProgressbar && progressBar.start(documents.count);
-  for (const document of documents.iter()) {
-    const builtDocument = await buildDocument(document);
-    const outPath = path.join(BUILD_OUT_ROOT, slugToFoldername(document.url));
-    fs.mkdirSync(outPath, { recursive: true });
-    fs.writeFileSync(
-      path.join(outPath, "index.html"),
-      renderHTML(builtDocument, document.url)
-    );
-    fs.writeFileSync(
-      path.join(outPath, "index.json"),
-      // This is exploiting the fact that renderHTML has the side-effect of mutating builtDocument
-      // which makes this not great and refactor-worthy
-      JSON.stringify({ doc: builtDocument })
-    );
-
-    const { locale, slug } = document.metadata;
-    if (!slugPerLocale[locale]) {
-      slugPerLocale[locale] = [];
-    }
-    slugPerLocale[locale].push(slug);
-
-    if (!options.noProgressbar) {
-      progressBar.increment();
-    } else {
-      console.log(outPath);
-    }
-  }
-
-  !options.noProgressbar && progressBar.stop();
-
-  for (const [locale, slugs] of Object.entries(slugPerLocale)) {
-    const sitemapDir = path.join(
-      BUILD_OUT_ROOT,
-      "sitemaps",
-      locale.toLowerCase()
-    );
-    fs.mkdirSync(sitemapDir, { recursive: true });
-    fs.writeFileSync(
-      path.join(sitemapDir, "sitemap.xml"),
-      makeSitemapXML(locale, slugs)
-    );
-  }
-}
-
-if (require.main === module) {
-  buildDocuments().catch((error) => {
-    console.error("error while building documents:", error);
-  });
-}

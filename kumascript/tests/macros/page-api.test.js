@@ -8,30 +8,16 @@
 
 const fs = require("fs");
 const path = require("path");
-const AllPagesInfo = require("../../src/info.js");
+const { Document } = require("content");
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
-const fixture_dir = path.resolve(__dirname, "fixtures");
-
 // Load fixture data.
-const fixtures = {
-  all: {
-    data: null,
-    filename: "allTitles1.json",
-  },
-};
-for (const name in fixtures) {
-  fixtures[name].data = new Map(
-    Object.entries(
-      JSON.parse(
-        fs.readFileSync(
-          path.resolve(fixture_dir, fixtures[name].filename),
-          "utf8"
-        )
-      )
-    ).map(([key, value]) => [key.toLowerCase(), value])
-  );
-}
+const fixtureData = JSON.parse(
+  fs.readFileSync(
+    path.resolve(__dirname, "fixtures", "documentData1.json"),
+    "utf8"
+  )
+);
 const base_url = "https://developer.mozilla.org";
 const fix_url = "/en-US/docs/Web/HTTP/Basics_of_HTTP";
 const titles = [
@@ -55,38 +41,75 @@ function checkSubpagesResult(res) {
   assert.equal(res.length, 5);
   assert.sameMembers(getProps(res, "title"), titles);
   assert.sameMembers(res[0].tags, ["Guide", "HTTP", "URL"]);
-  assert.equal(res[0].translations.length, 2);
-  assert.sameMembers(getProps(res[0].translations, "locale"), ["es", "fr"]);
-  assert.sameMembers(getProps(res[0].translations, "url"), [
-    "/es/docs/Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs",
-    "/fr/docs/Web/HTTP/Basics_of_HTTP/Choisir_entre_les_URLs_www_sans_www",
-  ]);
-  assert.sameMembers(getProps(res[0].translations, "title"), [
-    "Elección entre www y no-www URLs",
-    "Choisir entre les URLs avec ou sans www",
-  ]);
-  assert.property(res[0].translations[0], "summary");
-  assert.property(res[0].translations[1], "summary");
+  assert.equal(res[0].translations.length, 0);
+  // TODO: Either remove or reinstate depending upon what we do with L10n.
+  // assert.equal(res[0].translations.length, 2);
+  // assert.sameMembers(getProps(res[0].translations, "locale"), ["es", "fr"]);
+  // assert.sameMembers(getProps(res[0].translations, "url"), [
+  //   "/es/docs/Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs",
+  //   "/fr/docs/Web/HTTP/Basics_of_HTTP/Choisir_entre_les_URLs_www_sans_www",
+  // ]);
+  // assert.sameMembers(getProps(res[0].translations, "title"), [
+  //   "Elección entre www y no-www URLs",
+  //   "Choisir entre les URLs avec ou sans www",
+  // ]);
+  // assert.property(res[0].translations[0], "summary");
+  // assert.property(res[0].translations[1], "summary");
   assert.equal(res[4].subpages.length, 1);
 }
 
-function checkTranslationsResult(res) {
-  assert.isArray(res);
-  assert.equal(res.length, 2);
-  assert.sameMembers(getProps(res, "locale"), ["es", "fr"]);
-  assert.sameMembers(getProps(res, "url"), [
-    "/es/docs/Web/HTTP/Basics_of_HTTP",
-    "/fr/docs/Web/HTTP/Basics_of_HTTP",
-  ]);
-  assert.sameMembers(getProps(res, "title"), [
-    "Conceptos básicos de HTTP",
-    "L'essentiel de HTTP",
-  ]);
-  assert.property(res[0], "summary");
-  assert.property(res[1], "summary");
-}
+// TODO: Either remove or reinstate depending upon what we do with L10n.
+// function checkTranslationsResult(res) {
+//   assert.isArray(res);
+//   assert.equal(res.length, 2);
+//   assert.sameMembers(getProps(res, "locale"), ["es", "fr"]);
+//   assert.sameMembers(getProps(res, "url"), [
+//     "/es/docs/Web/HTTP/Basics_of_HTTP",
+//     "/fr/docs/Web/HTTP/Basics_of_HTTP",
+//   ]);
+//   assert.sameMembers(getProps(res, "title"), [
+//     "Conceptos básicos de HTTP",
+//     "L'essentiel de HTTP",
+//   ]);
+//   assert.property(res[0], "summary");
+//   assert.property(res[1], "summary");
+// }
 
-describeMacro("dekiscript-page", function () {
+describeMacro("page API tests", function () {
+  beforeEachMacro(function (macro) {
+    macro.ctx.info.cleanURL = jest.fn((url) =>
+      new URL(url, "https://example.com").pathname.toLowerCase()
+    );
+    Document.findByURL = jest.fn((url) => {
+      const data = fixtureData[url.toLowerCase()];
+      if (!data) {
+        return null;
+      }
+      return {
+        url: data.url,
+        metadata: {
+          title: data.title,
+          locale: data.locale,
+          summary: data.summary,
+          slug: data.slug,
+          tags: data.tags,
+        },
+      };
+    });
+    Document.findChildren = jest.fn((url) => {
+      const result = [];
+      const parent = `${url.toLowerCase()}/`;
+      for (const [key, data] of Object.entries(fixtureData)) {
+        if (!key.replace(parent, "").includes("/")) {
+          key.replace(`${url.toLowerCase()}/`, "");
+          result.push({
+            url: data.url,
+          });
+        }
+      }
+      return result;
+    });
+  });
   itMacro("dummy", function (macro) {
     let pkg = macro.ctx.page;
     assert.isObject(pkg);
@@ -97,9 +120,6 @@ describeMacro("dekiscript-page", function () {
     assert.isFunction(pkg.translations);
   });
   describe('test "subpages"', function () {
-    beforeEachMacro(function (macro) {
-      macro.ctx.info = new AllPagesInfo(fixtures.all.data, (uri) => uri);
-    });
     itMacro("One argument (non-null)", function (macro) {
       const res = macro.ctx.page.subpages(fix_url);
       checkSubpagesResult(res);
@@ -118,9 +138,6 @@ describeMacro("dekiscript-page", function () {
     });
   });
   describe('test "subpagesExpand"', function () {
-    beforeEachMacro(function (macro) {
-      macro.ctx.info = new AllPagesInfo(fixtures.all.data, (uri) => uri);
-    });
     itMacro("One argument (non-null)", function (macro) {
       const res = macro.ctx.page.subpagesExpand(fix_url);
       checkSubpagesResult(res);
@@ -139,22 +156,23 @@ describeMacro("dekiscript-page", function () {
     });
   });
   describe('test "translations"', function () {
-    beforeEachMacro(function (macro) {
-      macro.ctx.info = new AllPagesInfo(fixtures.all.data, (uri) => uri);
-    });
     itMacro("One argument (non-null)", function (macro) {
       const res = macro.ctx.page.translations(fix_url);
-      checkTranslationsResult(res);
+      assert.equal(res.length, 0);
+      // TODO: Either remove or reinstate depending upon what we do with L10n.
+      // checkTranslationsResult(res);
     });
     itMacro("One argument (null)", function (macro) {
       macro.ctx.env.url = base_url + fix_url;
       const res = macro.ctx.page.translations(null);
-      checkTranslationsResult(res);
+      assert.equal(res.length, 0);
+      // TODO: Either remove or reinstate depending upon what we do with L10n.
+      // checkTranslationsResult(res);
     });
     itMacro("One argument (throws error)", function (macro) {
       const junk_url = "/en-US/docs/junk";
       expect(() => macro.ctx.page.translations(junk_url)).toThrow(
-        `"${junk_url.toLowerCase()}" does not exist`
+        `${junk_url.toLowerCase()} does not exist`
       );
     });
   });

@@ -69,9 +69,9 @@ module.exports = {
       return html;
     }
 
-    // Let's just use the rendered HTML, the first part of the pair from
-    // the result, and ignore the second part, which is the list of errors.
-    let [result] = await this.renderFromURL(path);
+    let result = await this.renderPrerequisiteFromURL(
+      this.wiki.ensureExistence(path)
+    );
     const pathDescription = this.info.getDescription(path);
 
     const tool = new util.HTMLTool(result, pathDescription);
@@ -94,6 +94,17 @@ module.exports = {
   // Returns the page object for the specified page.
   getPage(path) {
     return this.info.getPage(path || this.env.url);
+  },
+
+  ensureExistence(path) {
+    if (!this.info.hasPage(path)) {
+      throw new Error(
+        `${this.env.path.toLowerCase()} references ${this.info.getDescription(
+          path
+        )}, which does not exist`
+      );
+    }
+    return path;
   },
 
   // Retrieve the full uri of a given wiki page.

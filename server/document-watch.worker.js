@@ -15,24 +15,15 @@ function postEvent(type, data = {}) {
 
 function postDocumentInfo(filePath, changeType) {
   try {
-    const root = CONTENT_ROOT;
     const document = Document.read(
-      path.dirname(path.relative(root, filePath)),
+      path.dirname(path.relative(CONTENT_ROOT, filePath)),
       { metadata: true }
     );
     if (!document) {
       return;
     }
-    const { metadata, url } = document;
 
-    postEvent(changeType, {
-      filePath,
-      document: {
-        url,
-        metadata,
-        isArchive: false,
-      },
-    });
+    postEvent(changeType, { filePath, document });
   } catch (e) {
     console.error(`Error while adding document ${filePath} to index:`, e);
   }
@@ -44,20 +35,20 @@ const watcher = chokidar.watch(
   [path.join(CONTENT_ROOT, "en-us", "**", "*.html")]
 );
 
-let countWatchedFiles = 0;
-const t0 = new Date();
+const label = "Set up file watcher";
+console.time(label);
 watcher.on("ready", () => {
   postEvent("ready");
-  const took = new Date() - t0;
+  console.timeEnd(label);
   console.log(
-    `Watching over ${countWatchedFiles.toLocaleString()} files. ` +
-      `Took ${(took / 1000).toFixed(1)}s to set that up.`
+    `Watching over ${Object.keys(
+      watcher.getWatched()
+    ).length.toLocaleString()} files.`
   );
 });
 
 watcher.on("add", (filePath) => {
   postDocumentInfo(filePath, "added");
-  countWatchedFiles++;
 });
 watcher.on("change", (filePath) => {
   postDocumentInfo(filePath, "updated");

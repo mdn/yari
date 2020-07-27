@@ -133,8 +133,8 @@ function getLiveSampleIDs(slug, source) {
   // be an optional fifth argument that specifies a slug, that may or may not
   // be different than the current slug, from which to extract the sample ID.
   let sampleSlug;
-  let ownSampleIDs = null;
-  let otherSampleIDs = null;
+  let ownSampleIDs = [];
+  let otherSampleIDs = new Map();
   for (let token of tokens) {
     if (
       token.type === "MACRO" &&
@@ -158,14 +158,8 @@ function getLiveSampleIDs(slug, source) {
         }
       }
       if (sampleSlug === currentSlug) {
-        if (!ownSampleIDs) {
-          ownSampleIDs = [];
-        }
         ownSampleIDs.push(sampleIDObject);
       } else {
-        if (!otherSampleIDs) {
-          otherSampleIDs = new Map();
-        }
         if (otherSampleIDs.has(sampleSlug)) {
           otherSampleIDs.get(sampleSlug).push(sampleIDObject);
         } else {

@@ -2,9 +2,10 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCombobox } from "downshift";
 import FlexSearch from "flexsearch";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import FuzzySearch from "./fuzzy-search";
 import "./search.scss";
+import { useWebSocketMessageHandler } from "./web-socket";
 
 function isMobileUserAgent() {
   return (
@@ -14,7 +15,6 @@ function isMobileUserAgent() {
   );
 }
 
-const INITIALIZING_PLACEHOLDER = "Initializing search...";
 const ACTIVE_PLACEHOLDER = "Go ahead. Type your search...";
 // Make this one depend on figuring out if you're on a mobile device
 // because there you can't really benefit from keyboard shortcuts.
@@ -22,25 +22,23 @@ const INACTIVE_PLACEHOLDER = isMobileUserAgent()
   ? "Site search..."
   : 'Site search... (Press "/" to focus)';
 
-type Titles = {
+type Item = {
   url: string;
   title: string;
-  popularity: number;
-}[];
+};
 
 type SearchIndex = {
   flex: any;
   fuzzy: FuzzySearch;
-  titles: Titles;
-  isReady: boolean;
+  items: null | Item[];
 };
 
 function useSearchIndex(): [null | SearchIndex, null | Error, () => void] {
   const [shouldInitialize, setShouldInitialize] = useState(false);
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
 
-  const url = `/_index/titles`;
-  const { error, data } = useSWR<{ titles: Titles; isReady: boolean }>(
+  const url = `/en-US/search-index.json`;
+  const { error, data } = useSWR<{ items: null | Item[] }>(
     shouldInitialize ? url : null,
     async (url) => {
       const response = await fetch(url);
@@ -49,27 +47,30 @@ function useSearchIndex(): [null | SearchIndex, null | Error, () => void] {
       }
       return await response.json();
     },
-    {
-      refreshInterval: 5000,
-      revalidateOnFocus: false,
-    }
+    { revalidateOnFocus: false }
   );
 
+  useWebSocketMessageHandler((event) => {
+    if (event.type === "SEARCH_INDEX_READY") {
+      mutate(url);
+    }
+  });
+
   useEffect(() => {
-    if (!data) {
+    if (!data || !data.items) {
       return;
     }
     const flex = new (FlexSearch as any)({
       suggest: true,
       tokenize: "forward",
     });
-    const urlSorted = data.titles.map(({ url, title }, i) => {
+    const urls = data.items.map(({ url, title }, i) => {
       // XXX investigate if it's faster to add all at once
       // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
       flex.add(i, title);
       return url;
     });
-    const fuzzy = new FuzzySearch(urlSorted);
+    const fuzzy = new FuzzySearch(urls);
 
     setSearchIndex({ flex, fuzzy, ...data });
   }, [shouldInitialize, data]);
@@ -134,7 +135,6 @@ function BreadcrumbURI({ uri, substrings }) {
 type ResultItem = {
   title: string;
   url: string;
-  popularity: any;
   substrings: string[];
 };
 
@@ -194,7 +194,7 @@ function InnerSearchNavigateWidget() {
         } else {
           const fuzzyResults = searchIndex.fuzzy.search(inputValue, { limit });
           results = fuzzyResults.map((fuzzyResult) => ({
-            ...searchIndex.titles[fuzzyResult.index],
+            ...(searchIndex.items || [])[fuzzyResult.index],
             substrings: fuzzyResult.substrings,
           }));
         }
@@ -205,7 +205,7 @@ function InnerSearchNavigateWidget() {
           suggest: true, // This can give terrible result suggestions
         });
 
-        results = indexResults.map((index) => searchIndex.titles[index]);
+        results = indexResults.map((index) => (searchIndex.items || [])[index]);
       }
 
       if (results) {
@@ -257,11 +257,7 @@ function InnerSearchNavigateWidget() {
         {...getInputProps({
           type: "search",
           className: showResults ? "has-search-results" : undefined,
-          placeholder: isFocused
-            ? searchIndex
-              ? ACTIVE_PLACEHOLDER
-              : INITIALIZING_PLACEHOLDER
-            : INACTIVE_PLACEHOLDER,
+          placeholder: isFocused ? ACTIVE_PLACEHOLDER : INACTIVE_PLACEHOLDER,
           onMouseOver: initializeSearchIndex,
           onFocus: () => {
             initializeSearchIndex();
@@ -282,9 +278,9 @@ function InnerSearchNavigateWidget() {
       <div {...getMenuProps()}>
         {showResults && (
           <div className="search-results">
-            {!searchIndex?.isReady && (
+            {!searchIndex && (
               <div className="indexing-warning">
-                <em>Initializing index, results are not complete</em>
+                <em>Initializing index</em>
               </div>
             )}
             {searchIndexError ? (
@@ -293,7 +289,8 @@ function InnerSearchNavigateWidget() {
               </div>
             ) : (
               resultItems.length === 0 &&
-              inputValue && <div className="nothing-found">nothing found</div>
+              inputValue &&
+              searchIndex && <div className="nothing-found">nothing found</div>
             )}
             {resultItems.map((item, i) => (
               <div
