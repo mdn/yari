@@ -156,30 +156,28 @@ function fixFixableFlaws(doc, options, document) {
 
   // Any 'broken_links' with a suggestion...
   for (const flaw of doc.flaws.broken_links || []) {
-    if (flaw.suggestion) {
-      // The reason we're not using the parse HTML, as a cheerio object `$`
-      // is because the raw HTML we're dealing with isn't actually proper
-      // HTML. It's only proper HTML when the kumascript macros have been
-      // expanded.
-      const htmlBefore = newRawHTML;
-      newRawHTML = replaceMatchesInText(
-        flaw.href,
-        newRawHTML,
-        flaw.suggestion,
-        { inAttribute: "href" }
+    if (!flaw.suggestion) {
+      continue;
+    }
+    // The reason we're not using the parse HTML, as a cheerio object `$`
+    // is because the raw HTML we're dealing with isn't actually proper
+    // HTML. It's only proper HTML when the kumascript macros have been
+    // expanded.
+    const htmlBefore = newRawHTML;
+    newRawHTML = replaceMatchesInText(flaw.href, newRawHTML, flaw.suggestion, {
+      inAttribute: "href",
+    });
+    if (htmlBefore !== newRawHTML) {
+      flaw.fixed = true;
+    }
+    if (loud) {
+      console.log(
+        chalk.grey(
+          `Fixed broken_link ${chalk.white.bold(
+            flaw.href
+          )} to ${chalk.white.bold(flaw.suggestion)}`
+        )
       );
-      if (htmlBefore !== newRawHTML) {
-        flaw.fixed = true;
-      }
-      if (loud) {
-        console.log(
-          chalk.grey(
-            `Fixed broken_link ${chalk.white.bold(
-              flaw.href
-            )} to ${chalk.white.bold(flaw.suggestion)}`
-          )
-        );
-      }
     }
   }
 

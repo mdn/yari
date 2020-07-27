@@ -7,7 +7,7 @@ if (JSON.parse(process.env.TESTING_START_SERVER || "false")) {
     command: "ENV_FILE=.env node ../server/index.js",
     port: 5000,
     host: "localhost",
-    debug: true, // XXX Note sure that the harm is of having this on
+    debug: true, // XXX Not sure that the harm is of having this on
   };
 }
 

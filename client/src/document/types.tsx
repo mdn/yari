@@ -8,7 +8,7 @@ export interface Link {
   line: number;
   column: number;
   suggestion: string | null;
-  fixed?: boolean;
+  fixed?: true;
 }
 
 type Flaws = {
