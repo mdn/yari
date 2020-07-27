@@ -183,7 +183,7 @@ async function buildDocument(document) {
 
   doc.body = extractDocumentSections($);
 
-  doc.popularity = metadata.popularity || 0.0;
+  doc.popularity = metadata.popularity;
   doc.modified = metadata.modified || null;
 
   const otherTranslations = document.translations || [];
@@ -238,10 +238,14 @@ async function buildLiveSamplePageFromURL(url) {
 }
 
 module.exports = {
+  FLAW_LEVELS,
+
   buildDocument,
 
   buildDocumentFromURL,
   buildLiveSamplePageFromURL,
 
   SearchIndex,
+
+  options,
 };

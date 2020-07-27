@@ -25,7 +25,6 @@ interface Document {
   modified: string;
   title: string;
   popularity: DocumentPopularity;
-  folder: string;
   flaws: {
     [key: string]: string[];
   };
@@ -33,7 +32,6 @@ interface Document {
 
 interface Counts {
   found: number;
-  possible: number;
   built: number;
   pages: number;
 }
@@ -601,8 +599,7 @@ function DocumentsTable({
         <WarnAboutNothingBuilt />
       ) : (
         <h4 className="subheader">
-          {counts.built.toLocaleString()} documents built out of a possible{" "}
-          {counts.possible.toLocaleString()} ({locale})
+          {counts.built.toLocaleString()} documents built ({locale})
         </h4>
       )}
 
