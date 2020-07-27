@@ -260,7 +260,9 @@ async function buildDocuments() {
     {},
     cliProgress.Presets.shades_grey
   );
+
   const slugPerLocale = {};
+  const searchIndex = new SearchIndex();
 
   console.log(options);
 
@@ -293,6 +295,8 @@ async function buildDocuments() {
         slugPerLocale[locale] = [];
       }
       slugPerLocale[locale].push(slug);
+
+      searchIndex.add(document);
     }
 
     if (!options.noProgressbar) {
@@ -314,6 +318,13 @@ async function buildDocuments() {
     fs.writeFileSync(
       path.join(sitemapDir, "sitemap.xml"),
       makeSitemapXML(locale, slugs)
+    );
+  }
+
+  for (const [locale, items] of Object.entries(searchIndex.getItems())) {
+    fs.writeFileSync(
+      path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "search-index.json"),
+      JSON.stringify(items)
     );
   }
 }
