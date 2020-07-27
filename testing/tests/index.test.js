@@ -26,96 +26,96 @@ test("content built foo page", () => {
   expect(doc.source).toBeTruthy();
 
   expect(doc.flaws.macros.length).toBe(6);
-  expect(doc.flaws.macros[0].name).toBe("MacroExecutionError");
-  expect(doc.flaws.macros[0].errorMessage).toEqual(
-    expect.stringContaining(
-      '/en-us/docs/web/fubar transcludes /en-us/docs/does-not-exist (derived from "does-not-exist"), which does not exist'
-    )
-  );
-  expect(doc.flaws.macros[0].line).toBe(11);
-  expect(doc.flaws.macros[0].column).toBe(6);
-  // Check that the line numbers in the source context have been adjusted by the offset.
+  expect(doc.flaws.macros[0].name).toBe("MacroRedirectedLinkError");
+  expect(doc.flaws.macros[0].macroSource).toBe("{{CSSxRef('dumber')}}");
+  expect(doc.flaws.macros[0].line).toBe(9);
+  expect(doc.flaws.macros[0].column).toBe(7);
   expect(doc.flaws.macros[0].sourceContext).toEqual(
-    expect.stringContaining('   11 | <div>{{page("does-not-exist")}}</div>')
-  );
-  expect(doc.flaws.macros[0].filepath).toMatch(
-    /\/en-us\/web\/fubar\/index\.html$/
-  );
-  expect(doc.flaws.macros[1].name).toBe("MacroExecutionError");
-  expect(doc.flaws.macros[1].errorMessage).toEqual(
-    expect.stringContaining(
-      "/en-us/docs/web/fubar references /en-us/docs/does/not/exist, which does not exist"
-    )
-  );
-  expect(doc.flaws.macros[1].line).toBe(12);
-  expect(doc.flaws.macros[1].column).toBe(6);
-  // Check that the line numbers in the source context have been adjusted by the offset.
-  expect(doc.flaws.macros[1].sourceContext).toEqual(
-    expect.stringContaining(
-      `   12 | <div>{{ EmbedLiveSample('example', '300', '300', "", "does/not/exist") }}</div>`
-    )
-  );
-  expect(doc.flaws.macros[1].filepath).toMatch(
-    /\/en-us\/web\/fubar\/index\.html$/
-  );
-  expect(doc.flaws.macros[2].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[2].macroSource).toBe("{{CSSxRef('dumber')}}");
-  expect(doc.flaws.macros[2].line).toBe(9);
-  expect(doc.flaws.macros[2].column).toBe(7);
-  expect(doc.flaws.macros[2].sourceContext).toEqual(
     expect.stringContaining("    9 |   <li>{{CSSxRef('dumber')}}</li>")
   );
-  expect(doc.flaws.macros[2].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[2].redirectInfo.current).toBe("dumber");
-  expect(doc.flaws.macros[2].redirectInfo.suggested).toBe("number");
-  expect(doc.flaws.macros[2].filepath).toMatch(
+  expect(doc.flaws.macros[0].redirectInfo).toBeDefined();
+  expect(doc.flaws.macros[0].redirectInfo.current).toBe("dumber");
+  expect(doc.flaws.macros[0].redirectInfo.suggested).toBe("number");
+  expect(doc.flaws.macros[0].filepath).toMatch(
     /\/en-us\/web\/fixable_flaws\/index\.html$/
   );
-  expect(doc.flaws.macros[3].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[3].macroSource).toBe(
+  expect(doc.flaws.macros[1].name).toBe("MacroRedirectedLinkError");
+  expect(doc.flaws.macros[1].macroSource).toBe(
     '{{htmlattrxref("href", "anchor")}}'
   );
-  expect(doc.flaws.macros[3].line).toBe(10);
-  expect(doc.flaws.macros[3].column).toBe(7);
-  expect(doc.flaws.macros[3].sourceContext).toEqual(
+  expect(doc.flaws.macros[1].line).toBe(10);
+  expect(doc.flaws.macros[1].column).toBe(7);
+  expect(doc.flaws.macros[1].sourceContext).toEqual(
     expect.stringContaining(
       '   10 |   <li>{{htmlattrxref("href", "anchor")}}</li>'
     )
   );
-  expect(doc.flaws.macros[3].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[3].redirectInfo.current).toBe("anchor");
-  expect(doc.flaws.macros[3].redirectInfo.suggested).toBe("a");
-  expect(doc.flaws.macros[3].filepath).toMatch(
+  expect(doc.flaws.macros[1].redirectInfo).toBeDefined();
+  expect(doc.flaws.macros[1].redirectInfo.current).toBe("anchor");
+  expect(doc.flaws.macros[1].redirectInfo.suggested).toBe("a");
+  expect(doc.flaws.macros[1].filepath).toMatch(
     /\/en-us\/web\/fixable_flaws\/index\.html$/
   );
-  expect(doc.flaws.macros[4].name).toBe("MacroBrokenLinkError");
-  expect(doc.flaws.macros[4].macroSource).toBe(
+  expect(doc.flaws.macros[2].name).toBe("MacroBrokenLinkError");
+  expect(doc.flaws.macros[2].macroSource).toBe(
     '{{CSSxRef("will-never-be-fixable")}}'
   );
-  expect(doc.flaws.macros[4].line).toBe(11);
-  expect(doc.flaws.macros[4].column).toBe(7);
-  expect(doc.flaws.macros[4].sourceContext).toEqual(
+  expect(doc.flaws.macros[2].line).toBe(11);
+  expect(doc.flaws.macros[2].column).toBe(7);
+  expect(doc.flaws.macros[2].sourceContext).toEqual(
     expect.stringContaining(
       '   11 |   <li>{{CSSxRef("will-never-be-fixable")}}</li>'
     )
   );
-  expect(doc.flaws.macros[4].filepath).toMatch(
+  expect(doc.flaws.macros[2].filepath).toMatch(
     /\/en-us\/web\/fixable_flaws\/index\.html$/
   );
-  expect(doc.flaws.macros[5].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[5].macroSource).toBe("{{CSSxRef('dumber')}}");
-  expect(doc.flaws.macros[5].line).toBe(12);
-  expect(doc.flaws.macros[5].column).toBe(7);
-  expect(doc.flaws.macros[5].sourceContext).toEqual(
+  expect(doc.flaws.macros[3].name).toBe("MacroRedirectedLinkError");
+  expect(doc.flaws.macros[3].macroSource).toBe("{{CSSxRef('dumber')}}");
+  expect(doc.flaws.macros[3].line).toBe(12);
+  expect(doc.flaws.macros[3].column).toBe(7);
+  expect(doc.flaws.macros[3].sourceContext).toEqual(
     expect.stringContaining(
       "   12 |   <li>{{CSSxRef('dumber')}} second time!</li>"
     )
   );
-  expect(doc.flaws.macros[5].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[5].redirectInfo.current).toBe("dumber");
-  expect(doc.flaws.macros[5].redirectInfo.suggested).toBe("number");
-  expect(doc.flaws.macros[5].filepath).toMatch(
+  expect(doc.flaws.macros[3].redirectInfo).toBeDefined();
+  expect(doc.flaws.macros[3].redirectInfo.current).toBe("dumber");
+  expect(doc.flaws.macros[3].redirectInfo.suggested).toBe("number");
+  expect(doc.flaws.macros[3].filepath).toMatch(
     /\/en-us\/web\/fixable_flaws\/index\.html$/
+  );
+  expect(doc.flaws.macros[4].name).toBe("MacroExecutionError");
+  expect(doc.flaws.macros[4].errorMessage).toEqual(
+    expect.stringContaining(
+      '/en-us/docs/web/fubar references /en-us/docs/does-not-exist (derived from "does-not-exist"), which does not exist'
+    )
+  );
+  expect(doc.flaws.macros[4].line).toBe(11);
+  expect(doc.flaws.macros[4].column).toBe(6);
+  // Check that the line numbers in the source context have been adjusted by the offset.
+  expect(doc.flaws.macros[4].sourceContext).toEqual(
+    expect.stringContaining('   11 | <div>{{page("does-not-exist")}}</div>')
+  );
+  expect(doc.flaws.macros[4].filepath).toMatch(
+    /\/en-us\/web\/fubar\/index\.html$/
+  );
+  expect(doc.flaws.macros[5].name).toBe("MacroExecutionError");
+  expect(doc.flaws.macros[5].errorMessage).toEqual(
+    expect.stringContaining(
+      "/en-us/docs/web/fubar references /en-us/docs/does/not/exist, which does not exist"
+    )
+  );
+  expect(doc.flaws.macros[5].line).toBe(12);
+  expect(doc.flaws.macros[5].column).toBe(6);
+  // Check that the line numbers in the source context have been adjusted by the offset.
+  expect(doc.flaws.macros[5].sourceContext).toEqual(
+    expect.stringContaining(
+      `   12 | <div>{{ EmbedLiveSample('example', '300', '300', "", "does/not/exist") }}</div>`
+    )
+  );
+  expect(doc.flaws.macros[5].filepath).toMatch(
+    /\/en-us\/web\/fubar\/index\.html$/
   );
 
   const htmlFile = path.join(builtFolder, "index.html");
