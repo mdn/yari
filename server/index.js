@@ -12,9 +12,12 @@ const { STATIC_ROOT } = require("./constants");
 const documentRouter = require("./document");
 const { searchRoute } = require("./document-watch");
 const flawsRoute = require("./flaws");
+const { staticMiddlewares } = require("./middlewares");
 
 const app = express();
 app.use(express.json());
+
+app.use(staticMiddlewares);
 
 app.use(express.static(STATIC_ROOT));
 
@@ -120,7 +123,11 @@ app.get("/*", async (req, res) => {
 
   const isJSONRequest = extraSuffix.endsWith(".json");
 
+  // TODO: Do something prettier here so you can see, on stdout, what
+  // documents get built on-the-fly.
+  console.time(`buildDocumentFromURL(${lookupURL})`);
   const document = await buildDocumentFromURL(lookupURL);
+  console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
   if (!document) {
     // redirect resolving can take some time, so we only do it when there's no document
     // for the current route

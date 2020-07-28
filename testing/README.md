@@ -156,3 +156,24 @@ put this in anywhere:
 ```javascript
 console.log(await page.content());
 ```
+
+## Headless tests should only test static server
+
+To run the functional tests you need a server (on `localhost:5000`) and
+it should just be a static file server. You *can* use `yarn start:functional`
+but that server has many tricks such as building on-the-fly.
+
+A better server to use is:
+
+```sh
+yarn start:staticserver
+```
+
+Now you can run just the functional `jest` tests over and over:
+
+```sh
+export TESTING_START_SERVER=false  # should be false by default anyway
+./testing/scripts/functional-test.sh
+```
+
+If in doubt, look at the file `.github/workflows/testing.yml` and what it does.

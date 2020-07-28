@@ -39,6 +39,23 @@ can say where the location to the folder is.
 
 **Example: `/tmp/mdn-archive-content`**
 
+### `BUILD_FOLDERSEARCH`
+
+**Default: ``** (meaning, none)
+
+**Example: `web/css,web/html`**
+
+Applicable if you run batches of builds but want to limit it to only the
+folders you care about.
+When doing a batch build, it can be very time-consuming so just doing
+one or two sub-folders will speed things up.
+
+### `BUILD_OUT_ROOT`
+
+**Default: `client/build`**
+
+Location into which things should be built.
+
 ### `BUILD_FLAW_LEVELS`
 
 **Default: `*:warn`**
@@ -68,6 +85,23 @@ and throw an error. It will halt on the first flaw error encountered.
 If the level is `warn` it will inject the flaw message into the built
 `index.json` file which you can view when rendering the document on
 `http://localhost:3000/`.
+
+### `BUILD_FIX_FLAWS`
+
+**Default: `false`**
+
+Whether fixable flaws should be fixed when building documents.
+
+### `BUILD_FIX_FLAWS_DRY_RUN`
+
+**Default: `false`**
+
+When set to true (with the `BUILD_FIX_FLAWS` flag) it will only print out
+information about fixable flaws instead of actually fixing it on disk.
+
+### `BUILD_FIX_FLAWS_VERBOSE`
+
+**Default: `false`**
 
 ### `KS_LIVE_SAMPLES_BASE_URL`
 
