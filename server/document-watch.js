@@ -1,4 +1,6 @@
+const path = require("path");
 const { Worker } = require("worker_threads");
+
 const WebSocket = require("ws");
 
 const { SearchIndex } = require("build");
@@ -16,7 +18,7 @@ function sendWebSocketMessage(message) {
   }
 }
 
-const worker = new Worker("./document-watch.worker.js");
+const worker = new Worker(path.join(__dirname, "document-watch.worker.js"));
 worker.on("message", (event) => {
   switch (event.type) {
     case "ready":

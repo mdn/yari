@@ -9,7 +9,7 @@ describe("Site search", () => {
 
   test("find Foo page", async () => {
     await page.goto(testURL("/"));
-    await expect(page).toFill(SEARCH_SELECTOR, "fo");
+    await expect(page).toFill(SEARCH_SELECTOR, "foo");
     await expect(page).toMatch("<foo>: A test tag");
     await expect(page).toClick('[aria-selected="true"]');
     await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
