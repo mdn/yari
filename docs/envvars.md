@@ -148,3 +148,31 @@ In most cases, on your laptop it's better to start the server yourself
 in a separate terminal and then run the headless tests in another.
 
 For more information, see the `testing/README.md`.
+
+## Client
+
+### `HOST`
+
+**Default: `localhost`**
+
+Suggested value: `HOST=localhost.org`
+
+For browser cookies to work as expected, you need to use the same host name
+in Yari and in Kuma. The port numbers can be different. That means that any
+cookies you picked up (e.g. `sessionid`) over on `http://localhost.org:8000`
+will be automatically included in XHR calls on `http://localhost.org:3000`.
+
+Note that even if you set this, you can still continue to
+use `http://localhost:3000`.
+
+### `REACT_APP_KUMA_HOST`
+
+**Default: `not set`**
+
+When doing local development in Yari, the "Sign in" URL depends on this.
+If you're running the dev server (i.e. `localhost:3000` or `localhost.org:3000`)
+the link to sign in with Kuma needs this to be set.
+
+The suggested value is to set this to set
+`REACT_APP_KUMA_HOST=localhost.org:8000` and now sign in links go to that
+host name instead. That means you can log in *from* Yari with a single click.

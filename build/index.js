@@ -10,6 +10,7 @@ const { FLAW_LEVELS } = require("./constants");
 const {
   extractDocumentSections,
   extractSidebar,
+  extractTOC,
 } = require("./document-extractor");
 const SearchIndex = require("./search-index");
 const { addBreadcrumbData } = require("./document-utils");
@@ -169,6 +170,9 @@ async function buildDocument(document) {
   // And if it finds a sidebar section, it gets removed from '$' too.
   // Also note, these operations mutate the `$`.
   doc.sidebarHTML = extractSidebar($);
+
+  // Extract all the <h2> tags as they appear into an array.
+  doc.toc = extractTOC($);
 
   // With the sidebar out of the way, go ahead and check the rest
   injectFlaws(doc, $, options, document);

@@ -2,14 +2,16 @@ const fs = require("fs");
 const path = require("path");
 
 const express = require("express");
+const proxy = require("express-http-proxy");
 const openEditor = require("open-editor");
 
 const { buildDocumentFromURL, buildLiveSamplePageFromURL } = require("build");
 const { CONTENT_ROOT, Redirect } = require("content");
 const { prepareDoc, renderHTML } = require("ssr");
 
-const { STATIC_ROOT } = require("./constants");
+const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
+const fakeV1APIRouter = require("./fake-v1-api");
 const { searchRoute } = require("./document-watch");
 const flawsRoute = require("./flaws");
 const { staticMiddlewares } = require("./middlewares");
@@ -23,6 +25,19 @@ app.use(express.static(STATIC_ROOT));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  "/api/v1",
+  // Depending on if FAKE_V1_API is set, we either respond with JSON based
+  // on `.json` files on disk or we proxy the requests to Kuma.
+  FAKE_V1_API
+    ? fakeV1APIRouter
+    : proxy(PROXY_HOSTNAME, {
+        // More options are available on
+        // https://www.npmjs.com/package/express-http-proxy#options
+        proxyReqPathResolver: (req) => "/api/v1" + req.url,
+      })
+);
 
 app.use("/_document", documentRouter);
 

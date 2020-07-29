@@ -7,6 +7,9 @@ import FuzzySearch from "./fuzzy-search";
 import "./search.scss";
 import { useWebSocketMessageHandler } from "./web-socket";
 
+import { useLocale } from "./hooks";
+import SearchIcon from "./kumastyles/general/search.svg";
+
 function isMobileUserAgent() {
   return (
     typeof window !== "undefined" &&
@@ -161,6 +164,7 @@ function useFocusOnSlash(inputRef: React.RefObject<null | HTMLInputElement>) {
 
 function InnerSearchNavigateWidget() {
   const navigate = useNavigate();
+  const locale = useLocale();
 
   const [
     searchIndex,
@@ -244,17 +248,30 @@ function InnerSearchNavigateWidget() {
 
   return (
     <form
+      action={`/${locale}/search`}
       {...getComboboxProps({
         className: "search-widget",
-        onSubmit: (e) => {
-          e.preventDefault();
-        },
+        id: "nav-main-search",
+        role: "search",
+        // onSubmit: (e) => {
+        //   e.preventDefault();
+        // },
       })}
     >
+      <img src={SearchIcon} alt="search" className="search-icon" />
+
+      <label htmlFor="main-q" className="visually-hidden">
+        Search MDN
+      </label>
+
       <input
         {...getInputProps({
           type: "search",
-          className: isOpen ? "has-search-results" : undefined,
+          className: isOpen
+            ? "has-search-results search-input-field"
+            : "search-input-field",
+          id: "main-q",
+          name: "q",
           placeholder: isFocused ? ACTIVE_PLACEHOLDER : INACTIVE_PLACEHOLDER,
           onMouseOver: initializeSearchIndex,
           onFocus: () => {
@@ -338,5 +355,3 @@ export function SearchNavigateWidget() {
     </SearchErrorBoundary>
   );
 }
-
-export default SearchNavigateWidget;
