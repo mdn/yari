@@ -103,7 +103,7 @@ information about fixable flaws instead of actually fixing it on disk.
 
 **Default: `false`**
 
-### `KS_LIVE_SAMPLES_BASE_URL`
+### `BUILD_KS_LIVE_SAMPLES_BASE_URL`
 
 **Default: `https://mdn.mozillademos.org`**
 
