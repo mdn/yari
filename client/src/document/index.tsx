@@ -36,7 +36,13 @@ export function Document(props /* TODO: define a TS interface for this */) {
       }
       return (await response.json()).doc;
     },
-    { initialData: props.doc || null, revalidateOnFocus: false }
+    {
+      initialData:
+        props.doc && props.doc.mdn_url === documentURL.toLowerCase()
+          ? props.doc
+          : null,
+      revalidateOnFocus: false,
+    }
   );
 
   useWebSocketMessageHandler((message) => {
