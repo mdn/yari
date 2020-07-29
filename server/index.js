@@ -96,7 +96,11 @@ app.get("/*", async (req, res) => {
   }
 
   if (req.url.includes("/_samples_/")) {
-    return res.send(await buildLiveSamplePageFromURL(req.url));
+    try {
+      return res.send(await buildLiveSamplePageFromURL(req.url));
+    } catch (e) {
+      return res.status(404).send(e.toString());
+    }
   }
 
   if (!req.url.includes("/docs/")) {

@@ -105,7 +105,7 @@ async function buildDocument(document) {
   const [renderedHtml, flaws] = await kumascript.render(document.url);
 
   let liveSamples = [];
-  const [sampleIds] = kumascript.getLiveSampleIDs(
+  const sampleIds = kumascript.getLiveSampleIDs(
     document.metadata.slug,
     document.rawHtml
   );
@@ -228,13 +228,29 @@ async function buildDocumentFromURL(url) {
 async function buildLiveSamplePageFromURL(url) {
   const [documentURL, sampleID] = url.split("/_samples_/");
   const document = Document.findByURL(documentURL);
-  const liveSamplePage = kumascript.buildLiveSamplePage(
-    document.url,
-    document.metadata.title,
-    (await kumascript.render(document.url))[0],
-    { id: sampleID, createFlaw() {} }
-  );
-  return liveSamplePage.html;
+  if (!document) {
+    throw new Error(`No document found for ${documentURL}`);
+  }
+  // Convert the lower-case sampleID we extract from the incoming URL into
+  // the actual sampleID object with the properly-cased live-sample ID.
+  for (const sampleIDObject of kumascript.getLiveSampleIDs(
+    document.metadata.slug,
+    document.rawHtml
+  )) {
+    if (sampleIDObject.id.toLowerCase() === sampleID) {
+      const liveSamplePage = kumascript.buildLiveSamplePage(
+        document.url,
+        document.metadata.title,
+        (await kumascript.render(document.url))[0],
+        sampleIDObject
+      );
+      if (liveSamplePage.flaw) {
+        throw new Error(liveSamplePage.flaw.toString());
+      }
+      return liveSamplePage.html;
+    }
+  }
+  throw new Error(`No live-sample "${sampleID}" found within ${documentURL}`);
 }
 
 module.exports = {
