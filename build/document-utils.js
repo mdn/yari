@@ -1,4 +1,4 @@
-const { Document } = require("content/");
+const { Document } = require("content");
 
 /** The breadcrumb is an array of parents include the document itself.
  * It only gets added to the document there are actual parents.
@@ -6,18 +6,19 @@ const { Document } = require("content/");
 function addBreadcrumbData(url, document) {
   const parents = [];
   let split = url.split("/");
-  let parentUri;
+  let parentURL;
   while (split.length > 2) {
     split.pop();
-    parentUri = split.join("/");
+    parentURL = split.join("/");
     // This test makes it possible to "skip" certain URIs that might not
     // be a page on its own. For example: /en-US/docs/Web/ is a page,
     // and so is /en-US/ but there might not be a page for /end-US/docs/.
-    const metadata = Document.read(parentUri);
-    if (metadata) {
+
+    const parentDoc = Document.findByURL(parentURL, { metadata: true });
+    if (parentDoc) {
       parents.unshift({
-        uri: parentUri,
-        title: metadata.title,
+        uri: parentURL,
+        title: parentDoc.metadata.title,
       });
     }
   }

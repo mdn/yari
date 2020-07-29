@@ -157,4 +157,18 @@ describe("Basic viewing of functional pages", () => {
       text: "<foo>: A test tag",
     });
   });
+
+  it("should have a semantically valid breadcrumb trail", async () => {
+    await page.goto(testURL("/en-US/docs/Web/Foo"));
+    // Let's not get too technical about the name of the selectors and
+    // stuff but do note that the page you're on is always a valid link
+    await expect(page).toMatchElement("nav a[property=item][typeof=WebPage]", {
+      // Always includes a link to "self"
+      text: "<foo>: A test tag",
+    });
+    await expect(page).toMatchElement("nav a[property=item][typeof=WebPage]", {
+      // You gotta know your fixture documents
+      text: "Web technology for developers",
+    });
+  });
 });
