@@ -116,11 +116,31 @@ async function buildDocuments() {
       JSON.stringify(items)
     );
   }
+  return slugPerLocale;
 }
 
 if (require.main === module) {
-  buildDocuments().catch((error) => {
-    console.error("error while building documents:", error);
-    process.exit(1);
-  });
+  const t0 = new Date();
+  buildDocuments()
+    .then((slugPerLocale) => {
+      const t1 = new Date();
+      const count = Object.values(slugPerLocale).reduce(
+        (a, b) => a + b.length,
+        0
+      );
+      const seconds = (t1 - t0) / 1000;
+      const took =
+        seconds > 60
+          ? `${(seconds / 60).toFixed(1)} minutes`
+          : `${seconds.toFixed(1)} seconds`;
+      console.log(
+        `Built ${count.toLocaleString()} in ${took}, at a rate of ${(
+          count / seconds
+        ).toFixed(1)} documents per second.`
+      );
+    })
+    .catch((error) => {
+      console.error("error while building documents:", error);
+      process.exit(1);
+    });
 }
