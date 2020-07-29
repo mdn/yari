@@ -109,6 +109,7 @@ async function buildDocuments() {
     );
   }
 
+  searchIndex.sort();
   for (const [locale, items] of Object.entries(searchIndex.getItems())) {
     fs.writeFileSync(
       path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "search-index.json"),
