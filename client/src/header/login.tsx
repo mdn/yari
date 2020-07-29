@@ -6,6 +6,8 @@ import SignInLink from "./signin-link";
 import { getAuthURL } from "./auth-link";
 import { useUserData } from "../user-context";
 
+import avatarImage from './avatar.png'
+
 export default function Login() {
   const locale = useLocale();
   const userData = useUserData();
@@ -31,7 +33,7 @@ export default function Login() {
   // URL doesn't work.
   const label = (
     <img
-      src={userData.avatarUrl || "/static/img/avatar.png"}
+      src={userData.avatarUrl || avatarImage}
       className="avatar"
       alt={userData.username}
     />

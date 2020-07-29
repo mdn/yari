@@ -172,7 +172,7 @@ async function buildDocument(document) {
   doc.sidebarHTML = extractSidebar($);
 
   // Extract all the <h2> tags as they appear into an array.
-  doc.toc = extractTOC($, config);
+  doc.toc = extractTOC($);
 
   // With the sidebar out of the way, go ahead and check the rest
   injectFlaws(doc, $, options, document);
