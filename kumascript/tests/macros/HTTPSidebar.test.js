@@ -4,7 +4,7 @@
 const fs = require("fs");
 const path = require("path");
 const jsdom = require("jsdom");
-const AllPagesInfo = require("../../src/info.js");
+const { Document } = require("content");
 const {
   assert,
   itMacro,
@@ -14,15 +14,11 @@ const {
 } = require("./utils");
 
 // Load fixture data.
-const fixtureData = new Map(
-  Object.entries(
-    JSON.parse(
-      fs.readFileSync(
-        path.resolve(__dirname, "fixtures", "allTitles2.json"),
-        "utf8"
-      )
-    )
-  ).map(([key, value]) => [key.toLowerCase(), value])
+const fixtureData = JSON.parse(
+  fs.readFileSync(
+    path.resolve(__dirname, "fixtures", "documentData2.json"),
+    "utf8"
+  )
 );
 
 const locales = {
@@ -48,7 +44,35 @@ function checkSidebarDom(dom, locale) {
 describeMacro("HTTPSidebar", function () {
   beforeEachMacro(function (macro) {
     macro.ctx.env.path = "/en-US/docs/Web/HTTP/Overview";
-    macro.ctx.info = new AllPagesInfo(fixtureData, (uri) => uri);
+    Document.findByURL = jest.fn((url) => {
+      const data = fixtureData[url.toLowerCase()];
+      if (!data) {
+        return null;
+      }
+      return {
+        url: data.url,
+        metadata: {
+          title: data.title,
+          locale: data.locale,
+          summary: data.summary,
+          slug: data.slug,
+          tags: data.tags,
+        },
+      };
+    });
+    Document.findChildren = jest.fn((url) => {
+      const result = [];
+      const parent = `${url.toLowerCase()}/`;
+      for (const [key, data] of Object.entries(fixtureData)) {
+        if (!key.replace(parent, "").includes("/")) {
+          key.replace(`${url.toLowerCase()}/`, "");
+          result.push({
+            url: data.url,
+          });
+        }
+      }
+      return result;
+    });
   });
 
   itMacro("Creates a sidebar object for en-US", function (macro) {

@@ -16,4 +16,9 @@
     background-color: orange;
     padding: 1px 5px;
   }
+
+  details.fixed summary,
+  li.fixed {
+    text-decoration: line-through;
+  }
 }

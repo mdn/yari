@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCombobox } from "downshift";
 import FlexSearch from "flexsearch";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import FuzzySearch from "./fuzzy-search";
 import "./search.scss";
+import { useWebSocketMessageHandler } from "./web-socket";
 
 import { useLocale } from "./hooks";
 import SearchIcon from "./kumastyles/general/search.svg";
@@ -17,7 +18,6 @@ function isMobileUserAgent() {
   );
 }
 
-const INITIALIZING_PLACEHOLDER = "Initializing search...";
 const ACTIVE_PLACEHOLDER = "Go ahead. Type your search...";
 // Make this one depend on figuring out if you're on a mobile device
 // because there you can't really benefit from keyboard shortcuts.
@@ -25,58 +25,58 @@ const INACTIVE_PLACEHOLDER = isMobileUserAgent()
   ? "Site search..."
   : 'Site search... (Press "/" to focus)';
 
-type Titles = {
-  [url: string]: {
-    title: string;
-    popularity: number;
-  };
+type Item = {
+  url: string;
+  title: string;
 };
 
 type SearchIndex = {
   flex: any;
   fuzzy: FuzzySearch;
-  titles: Titles;
+  items: null | Item[];
 };
 
 function useSearchIndex(): [null | SearchIndex, null | Error, () => void] {
   const [shouldInitialize, setShouldInitialize] = useState(false);
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
-  const locale = useParams().locale || "en-US";
 
-  const url = `/${locale}/titles.json`;
-  const { error, data: titles } = useSWR<Titles>(
+  const url = `/en-US/search-index.json`;
+  const { error, data } = useSWR<null | Item[]>(
     shouldInitialize ? url : null,
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(await response.text());
       }
-      const { titles } = await response.json();
-      return titles;
+      return await response.json();
     },
     { revalidateOnFocus: false }
   );
 
+  useWebSocketMessageHandler((event) => {
+    if (event.type === "SEARCH_INDEX_READY") {
+      mutate(url);
+    }
+  });
+
   useEffect(() => {
-    if (!titles) {
+    if (!data) {
       return;
     }
     const flex = new (FlexSearch as any)({
       suggest: true,
       tokenize: "forward",
     });
-    const urisSorted = Object.entries(titles)
-      .sort((a, b) => b[1].popularity - a[1].popularity)
-      .map(([uri, info]) => {
-        // XXX investigate if it's faster to add all at once
-        // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
-        flex.add(uri, info.title);
-        return uri;
-      });
-    const fuzzy = new FuzzySearch(urisSorted);
+    const urls = data.map(({ url, title }, i) => {
+      // XXX investigate if it's faster to add all at once
+      // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
+      flex.add(i, title);
+      return url;
+    });
+    const fuzzy = new FuzzySearch(urls);
 
-    setSearchIndex({ flex, fuzzy, titles });
-  }, [shouldInitialize, titles, url]);
+    setSearchIndex({ flex, fuzzy, items: data });
+  }, [shouldInitialize, data]);
 
   return [searchIndex, error, () => setShouldInitialize(true)];
 }
@@ -137,8 +137,7 @@ function BreadcrumbURI({ uri, substrings }) {
 
 type ResultItem = {
   title: string;
-  uri: string;
-  popularity: any;
+  url: string;
   substrings: string[];
 };
 
@@ -191,7 +190,7 @@ function InnerSearchNavigateWidget() {
       // overlaying search results don't trigger a scroll.
       const limit = window.innerHeight < 850 ? 5 : 10;
 
-      let results = null;
+      let results: ResultItem[] | null = null;
       if (isFuzzySearchString(inputValue)) {
         if (inputValue === "/") {
           setResultItems([]);
@@ -199,8 +198,7 @@ function InnerSearchNavigateWidget() {
         } else {
           const fuzzyResults = searchIndex.fuzzy.search(inputValue, { limit });
           results = fuzzyResults.map((fuzzyResult) => ({
-            title: searchIndex.titles[fuzzyResult.needle].title,
-            uri: fuzzyResult.needle,
+            ...(searchIndex.items || [])[fuzzyResult.index],
             substrings: fuzzyResult.substrings,
           }));
         }
@@ -211,11 +209,7 @@ function InnerSearchNavigateWidget() {
           suggest: true, // This can give terrible result suggestions
         });
 
-        results = indexResults.map((uri) => ({
-          title: searchIndex.titles[uri].title,
-          uri,
-          popularity: searchIndex.titles[uri].popularity,
-        }));
+        results = indexResults.map((index) => (searchIndex.items || [])[index]);
       }
 
       if (results) {
@@ -244,15 +238,13 @@ function InnerSearchNavigateWidget() {
     },
     onSelectedItemChange: ({ selectedItem }) => {
       if (selectedItem) {
-        navigate(selectedItem.uri);
+        navigate(selectedItem.url);
         reset();
       }
     },
   });
 
   useFocusOnSlash(inputRef);
-
-  const showResults = isOpen || searchIndexError;
 
   return (
     <form
@@ -280,11 +272,7 @@ function InnerSearchNavigateWidget() {
             : "search-input-field",
           id: "main-q",
           name: "q",
-          placeholder: isFocused
-            ? searchIndex
-              ? ACTIVE_PLACEHOLDER
-              : INITIALIZING_PLACEHOLDER
-            : INACTIVE_PLACEHOLDER,
+          placeholder: isFocused ? ACTIVE_PLACEHOLDER : INACTIVE_PLACEHOLDER,
           onMouseOver: initializeSearchIndex,
           onFocus: () => {
             initializeSearchIndex();
@@ -303,27 +291,35 @@ function InnerSearchNavigateWidget() {
       />
 
       <div {...getMenuProps()}>
-        {showResults && (
+        {isOpen && (
           <div className="search-results">
+            {!searchIndex && !searchIndexError && (
+              <div className="indexing-warning">
+                <em>Initializing index</em>
+              </div>
+            )}
             {searchIndexError ? (
               <div className="searchindex-error">
                 Error initializing search index
               </div>
-            ) : resultItems.length === 0 && inputValue ? (
-              <div className="nothing-found">nothing found</div>
-            ) : null}
+            ) : (
+              resultItems.length === 0 &&
+              inputValue &&
+              searchIndex && <div className="nothing-found">nothing found</div>
+            )}
             {resultItems.map((item, i) => (
               <div
                 {...getItemProps({
-                  key: item.uri,
-                  className: i === highlightedIndex ? "highlit" : undefined,
+                  key: item.url,
+                  className:
+                    "result-item " + (i === highlightedIndex ? "highlit" : ""),
                   item,
                   index: i,
                 })}
               >
                 <HighlightMatch title={item.title} q={inputValue} />
                 <br />
-                <BreadcrumbURI uri={item.uri} substrings={item.substrings} />
+                <BreadcrumbURI uri={item.url} substrings={item.substrings} />
               </div>
             ))}
             {isFuzzySearchString(inputValue) && (

@@ -7,10 +7,15 @@ const { promisify } = require("util");
 const chalk = require("chalk");
 const mysql = require("mysql");
 const cheerio = require("cheerio");
+
+const {
+  CONTENT_ROOT,
+  CONTENT_ARCHIVE_ROOT,
+  VALID_LOCALES,
+  Document,
+  Redirect,
+} = require("content");
 const ProgressBar = require("./progress-bar");
-const { VALID_LOCALES } = require("./constants");
-const Document = require("./document");
-const { writeRedirects } = require("./utils");
 
 const MAX_OPEN_FILES = 256;
 
@@ -654,22 +659,23 @@ function uriToSlug(uri) {
 }
 
 async function prepareRoots(options) {
-  if (!options.archiveRoot) {
-    throw new Error("You need to set the BUILD_ARCHIVE_ROOT env var");
+  if (!CONTENT_ARCHIVE_ROOT) {
+    throw new Error("missing archive root");
   }
-  if (!options.root) throw new Error("waat?!");
-  if (options.root === options.archiveRoot) throw new Error("eh?!");
+  if (!CONTENT_ROOT) throw new Error("waat?!");
+  if (CONTENT_ROOT === CONTENT_ARCHIVE_ROOT) throw new Error("eh?!");
   if (options.startClean) {
     // Experimental new feature
     // https://nodejs.org/api/fs.html#fs_fs_rmdirsync_path_options
-    await withTimer(`Delete all of ${options.root}`, () =>
-      fs.rmdirSync(options.root, { recursive: true })
+    await withTimer(`Delete all of ${CONTENT_ROOT}`, () =>
+      fs.rmdirSync(CONTENT_ROOT, { recursive: true })
     );
-    await withTimer(`Delete all of ${options.archiveRoot}`, () =>
-      fs.rmdirSync(options.archiveRoot, { recursive: true })
+    await withTimer(`Delete all of ${CONTENT_ARCHIVE_ROOT}`, () =>
+      fs.rmdirSync(CONTENT_ARCHIVE_ROOT, { recursive: true })
     );
   }
-  fs.mkdirSync(options.root, { recursive: true });
+  fs.mkdirSync(CONTENT_ROOT, { recursive: true });
+  fs.mkdirSync(CONTENT_ARCHIVE_ROOT, { recursive: true });
 }
 
 function getRedirectURL(html) {
@@ -935,31 +941,25 @@ const allBuiltPaths = new Set();
 
 async function processDocument(
   doc,
-  { archiveRoot, root, startClean },
+  { startClean },
   isArchive = false,
   localeWikiHistory,
   { usernames, contributors, tags }
 ) {
   const { slug, locale, title, summary } = doc;
 
-  const contentPath = path.join(
-    isArchive ? archiveRoot : root,
-    locale.toLowerCase()
-  );
-  const documentPath = Document.buildPath(contentPath, slug);
-
-  if (startClean && allBuiltPaths.has(documentPath)) {
-    throw new Error(
-      `${path.resolve(documentPath)} already exists! slug:${slug}`
-    );
+  const docPath = path.join(locale, slug);
+  if (startClean && allBuiltPaths.has(docPath)) {
+    throw new Error(`${docPath} already exists!`);
   } else {
-    allBuiltPaths.add(documentPath);
+    allBuiltPaths.add(docPath);
   }
 
   const meta = {
     title,
     slug,
     summary,
+    locale,
   };
   if (doc.parent_slug) {
     assert(doc.parent_locale === "en-US");
@@ -988,20 +988,15 @@ async function processDocument(
     wikiHistory.contributors = docContributors;
   }
 
-  if (!isArchive) {
+  if (isArchive) {
+    Document.archive(doc.rendered_html, doc.html, meta, wikiHistory);
+  } else {
     localeWikiHistory.set(doc.slug, wikiHistory);
+    Document.create(doc.html, meta);
   }
-
-  Document.create(
-    contentPath,
-    isArchive ? doc.rendered_html : doc.html,
-    meta,
-    isArchive ? wikiHistory : null,
-    isArchive ? doc.html : null
-  );
 }
 
-async function saveAllRedirects(redirects, root) {
+async function saveAllRedirects(redirects) {
   const byLocale = {};
   for (const [fromUrl, toUrl] of Object.entries(redirects)) {
     const locale = fromUrl.split("/")[1];
@@ -1019,13 +1014,13 @@ async function saveAllRedirects(redirects, root) {
       return 0;
     });
     countPerLocale.push([locale, pairs.length]);
-    const localeFolder = path.join(root, locale);
+    const localeFolder = path.join(CONTENT_ROOT, locale);
     if (!fs.existsSync(localeFolder)) {
       console.log(
         `No content for ${locale}, so skip ${pairs.length} redirects`
       );
     } else {
-      writeRedirects(localeFolder, pairs);
+      Redirect.write(localeFolder, pairs);
     }
   }
 
@@ -1036,7 +1031,7 @@ async function saveAllRedirects(redirects, root) {
   }
 }
 
-async function saveAllWikiHistory(allHistory, root) {
+async function saveAllWikiHistory(allHistory) {
   /**
    * The 'allHistory' is an object that looks like this:
    *
@@ -1053,7 +1048,7 @@ async function saveAllWikiHistory(allHistory, root) {
    */
 
   for (const [locale, history] of allHistory) {
-    const localeFolder = path.join(root, locale);
+    const localeFolder = path.join(CONTENT_ROOT, locale);
     const filePath = path.join(localeFolder, "_wikihistory.json");
     const obj = Object.create(null);
     const keys = Array.from(history.keys());
@@ -1207,8 +1202,8 @@ module.exports = async function runImporter(options) {
   }
 
   pool.end();
-  await saveAllWikiHistory(allWikiHistory, options.root);
-  await saveAllRedirects(redirects, options.root);
+  await saveAllWikiHistory(allWikiHistory);
+  await saveAllRedirects(redirects);
 
   if (improvedRedirects) {
     console.log(

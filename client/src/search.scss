@@ -62,15 +62,19 @@ $search-border-color-focus: #0096bfab;
     // Consistency is nice :)
     box-shadow: 0 2px 8px 0 rgba(12, 12, 13, 0.1);
 
+    .indexing-warning {
+      color: orange;
+    }
+
     div {
       padding: 5px;
       border-bottom: 1px solid #efefef;
     }
-    div:hover,
-    div.highlit {
+    .result-item:hover,
+    .result-item.highlit {
       background-color: #efefef;
     }
-    div:hover {
+    .result-item:hover {
       cursor: pointer;
     }
     div:last-child {

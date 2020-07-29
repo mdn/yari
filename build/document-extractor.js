@@ -1,5 +1,5 @@
 const cheerio = require("./monkeypatched-cheerio");
-const { packageBCD } = require("./resolve-bcd");
+const { packageBCD } = require("build/resolve-bcd");
 
 /**
  * Given a cheerio doc, extract all the <h2> tags and make it a

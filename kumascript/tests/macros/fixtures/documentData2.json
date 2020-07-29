@@ -1,6 +1,6 @@
 {
-  "/en-US/docs/Web/HTTP/Headers": {
-    "mdn_url": "/en-US/docs/Web/HTTP/Headers",
+  "/en-us/docs/web/http/headers": {
+    "url": "/en-US/docs/Web/HTTP/Headers",
     "title": "HTTP headers",
     "locale": "en-US",
     "summary": "HTTP headers let the client and the server pass additional information with an HTTP request or response. An HTTP header consists of its case-insensitive name followed by a colon (:), then by its value.",
@@ -15,8 +15,8 @@
       "Reference"
     ]
   },
-  "/en-US/docs/Web/HTTP/Headers/Accept": {
-    "mdn_url": "/en-US/docs/Web/HTTP/Headers/Accept",
+  "/en-us/docs/web/http/headers/accept": {
+    "url": "/en-US/docs/Web/HTTP/Headers/Accept",
     "title": "Accept",
     "locale": "en-US",
     "summary": "The Accept request HTTP header advertises which content types, expressed as MIME types, the client is able to understand. Using content negotiation, the server then selects one of the proposals, uses it and informs the client of its choice with the Content-Type response header. Browsers set adequate values for this header depending on the context where the request is done: when fetching a CSS stylesheet a different value is set for the request than when fetching an image, video or a script.",
@@ -24,8 +24,8 @@
     "modified": "2020-01-10T03:23:22.577Z",
     "tags": ["HTTP", "HTTP Header", "Reference", "Request header"]
   },
-  "/en-US/docs/Web/HTTP/Headers/Cache-Control": {
-    "mdn_url": "/en-US/docs/Web/HTTP/Headers/Cache-Control",
+  "/en-us/docs/web/http/headers/cache-control": {
+    "url": "/en-US/docs/Web/HTTP/Headers/Cache-Control",
     "title": "Cache-Control",
     "locale": "en-US",
     "summary": "The Cache-Control HTTP header holds directives (instructions) for caching in both requests and responses. A given directive in a request does not mean the same directive should be in the response.",
@@ -39,8 +39,8 @@
       "Reference"
     ]
   },
-  "/en-US/docs/Web/HTTP/Methods": {
-    "mdn_url": "/en-US/docs/Web/HTTP/Methods",
+  "/en-us/docs/web/http/methods": {
+    "url": "/en-US/docs/Web/HTTP/Methods",
     "title": "HTTP request methods",
     "locale": "en-US",
     "summary": "HTTP defines a set of request methods to indicate the desired action to be performed for a given resource. Although they can also be nouns, these request methods are sometimes referred to as HTTP verbs. Each of them implements a different semantic, but some common features are shared by a group of them: e.g. a request method can be safe, idempotent, or cacheable.",
@@ -48,8 +48,8 @@
     "modified": "2020-02-01T18:46:58.526Z",
     "tags": ["HTTP", "Methods", "Reference"]
   },
-  "/en-US/docs/Web/HTTP/Methods/GET": {
-    "mdn_url": "/en-US/docs/Web/HTTP/Methods/GET",
+  "/en-us/docs/web/http/methods/get": {
+    "url": "/en-US/docs/Web/HTTP/Methods/GET",
     "title": "GET",
     "locale": "en-US",
     "summary": "The HTTP GET method requests a representation of the specified resource. Requests using GET should only retrieve data.",
@@ -57,8 +57,8 @@
     "modified": "2020-01-10T03:22:29.708Z",
     "tags": ["HTTP", "Reference", "Request method"]
   },
-  "/en-US/docs/Web/HTTP/Methods/DELETE": {
-    "mdn_url": "/en-US/docs/Web/HTTP/Methods/DELETE",
+  "/en-us/docs/web/http/methods/delete": {
+    "url": "/en-US/docs/Web/HTTP/Methods/DELETE",
     "title": "DELETE",
     "locale": "en-US",
     "summary": "The HTTP DELETE request method deletes the specified resource.",
@@ -67,8 +67,8 @@
     "tags": ["HTTP", "HTTP method", "Reference", "Request method"]
   },
 
-  "/en-US/docs/Web/HTTP/Status": {
-    "mdn_url": "/en-US/docs/Web/HTTP/Status",
+  "/en-us/docs/web/http/status": {
+    "url": "/en-US/docs/Web/HTTP/Status",
     "title": "HTTP response status codes",
     "locale": "en-US",
     "summary": "HTTP response status codes indicate whether a specific HTTP request has been successfully completed. Responses are grouped in five classes: Informational responses (100–199), Successful responses (200–299), Redirects (300–399), Client errors (400–499), and Server errors (500–599).",
@@ -76,8 +76,8 @@
     "modified": "2020-01-10T03:06:35.230Z",
     "tags": ["HTTP", "Landing", "Overview", "Reference", "Status code", "Web"]
   },
-  "/en-US/docs/Web/HTTP/Status/200": {
-    "mdn_url": "/en-US/docs/Web/HTTP/Status/200",
+  "/en-us/docs/web/http/status/200": {
+    "url": "/en-US/docs/Web/HTTP/Status/200",
     "title": "200 OK",
     "locale": "en-US",
     "summary": "The HTTP 200 OK success status response code indicates that the request has succeeded. A 200 response is cacheable by default.",
@@ -85,8 +85,8 @@
     "modified": "2020-01-10T03:22:50.043Z",
     "tags": ["HTTP", "Status code", "Success"]
   },
-  "/en-US/docs/Web/HTTP/Status/201": {
-    "mdn_url": "/en-US/docs/Web/HTTP/Status/201",
+  "/en-us/docs/web/http/status/201": {
+    "url": "/en-US/docs/Web/HTTP/Status/201",
     "title": "201 Created",
     "locale": "en-US",
     "summary": "The HTTP 201 Created success status response code indicates that the request has succeeded and has led to the creation of a resource. The new resource is effectively created before this response is sent back and the new resource is returned in the body of the message, its location being either the URL of the request, or the content of the Location header.",
@@ -95,8 +95,8 @@
     "tags": ["HTTP", "Reference", "Status code", "Success"]
   },
 
-  "/en-US/docs/Web/HTTP/Headers/Content-Security-Policy": {
-    "mdn_url": "/en-US/docs/Web/HTTP/Headers/Content-Security-Policy",
+  "/en-us/docs/web/http/headers/content-security-policy": {
+    "url": "/en-US/docs/Web/HTTP/Headers/Content-Security-Policy",
     "title": "Content-Security-Policy",
     "locale": "en-US",
     "summary": "The HTTP Content-Security-Policy response header allows web site administrators to control resources the user agent is allowed to load for a given page. With a few exceptions, policies mostly involve specifying server origins and script endpoints. This helps guard against cross-site scripting attacks (XSS).",
@@ -111,8 +111,8 @@
       "header"
     ]
   },
-  "/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/child-src": {
-    "mdn_url": "/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/child-src",
+  "/en-us/docs/web/http/headers/content-security-policy/child-src": {
+    "url": "/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/child-src",
     "title": "CSP: child-src",
     "locale": "en-US",
     "summary": "The HTTP Content-Security-Policy (CSP) child-src directive defines the valid sources for web workers and nested browsing contexts loaded using elements such as frame and iframe. For workers, non-compliant requests are treated as fatal network errors by the user agent.",
@@ -130,8 +130,8 @@
       "source"
     ]
   },
-  "/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/connect-src": {
-    "mdn_url": "/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/connect-src",
+  "/en-us/docs/web/http/headers/content-security-policy/connect-src": {
+    "url": "/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/connect-src",
     "title": "CSP: connect-src",
     "locale": "en-US",
     "summary": "The HTTP Content-Security-Policy (CSP) connect-src directive restricts the URLs which can be loaded using script interfaces. The APIs that are restricted are:",
@@ -148,8 +148,8 @@
       "source"
     ]
   },
-  "/en-US/docs/Web/HTTP/CORS/Errors": {
-    "mdn_url": "/en-US/docs/Web/HTTP/CORS/Errors",
+  "/en-us/docs/web/http/cors/errors": {
+    "url": "/en-US/docs/Web/HTTP/CORS/Errors",
     "title": "CORS errors",
     "locale": "en-US",
     "summary": "Cross-Origin Resource Sharing (CORS) is a standard that allows a server to relax the same-origin policy. This is used to explicitly allow some cross-origin requests while rejecting others.",
@@ -167,8 +167,8 @@
       "troubleshooting"
     ]
   },
-  "/en-US/docs/Web/HTTP/CORS/Errors/CORSDidNotSucceed": {
-    "mdn_url": "/en-US/docs/Web/HTTP/CORS/Errors/CORSDidNotSucceed",
+  "/en-us/docs/web/http/cors/errors/corsdidnotsucceed": {
+    "url": "/en-US/docs/Web/HTTP/CORS/Errors/CORSDidNotSucceed",
     "title": "Reason: CORS request did not succeed",
     "locale": "en-US",
     "summary": "The HTTP request which makes use of CORS failed because the HTTP connection failed at either the network or protocol level. The error is not directly related to CORS, but is a fundamental network error of some kind.",
@@ -188,8 +188,8 @@
       "troubleshooting"
     ]
   },
-  "/en-US/docs/Web/HTTP/CORS/Errors/CORSDisabled": {
-    "mdn_url": "/en-US/docs/Web/HTTP/CORS/Errors/CORSDisabled",
+  "/en-us/docs/web/http/cors/errors/corsdisabled": {
+    "url": "/en-US/docs/Web/HTTP/CORS/Errors/CORSDisabled",
     "title": "Reason: CORS disabled",
     "locale": "en-US",
     "summary": "A request that needs to use CORS was attempted, but CORS is disabled in the user's browser. When this happens, the user needs to turn CORS back on in their browser.",
@@ -215,8 +215,8 @@
       "troubleshooting"
     ]
   },
-  "/en-US/docs/Web/HTTP/Headers/Feature-Policy": {
-    "mdn_url": "/en-US/docs/Web/HTTP/Headers/Feature-Policy",
+  "/en-us/docs/web/http/headers/feature-policy": {
+    "url": "/en-US/docs/Web/HTTP/Headers/Feature-Policy",
     "title": "Feature-Policy",
     "locale": "en-US",
     "summary": "The HTTP Feature-Policy header provides a mechanism to allow and deny the use of browser features in its own frame, and in content within any iframe elements in the document.",
@@ -235,8 +235,8 @@
       "header"
     ]
   },
-  "/en-US/docs/Web/HTTP/Headers/Feature-Policy/accelerometer": {
-    "mdn_url": "/en-US/docs/Web/HTTP/Headers/Feature-Policy/accelerometer",
+  "/en-us/docs/web/http/headers/feature-policy/accelerometer": {
+    "url": "/en-US/docs/Web/HTTP/Headers/Feature-Policy/accelerometer",
     "title": "Feature-Policy: accelerometer",
     "locale": "en-US",
     "summary": "The HTTP Feature-Policy header accelerometer directive controls whether the current document is allowed to gather information about the acceleration of the device through the Accelerometer interface.",
@@ -250,8 +250,8 @@
       "Reference"
     ]
   },
-  "/en-US/docs/Web/HTTP/Headers/Feature-Policy/ambient-light-sensor": {
-    "mdn_url": "/en-US/docs/Web/HTTP/Headers/Feature-Policy/ambient-light-sensor",
+  "/en-us/docs/web/http/headers/feature-policy/ambient-light-sensor": {
+    "url": "/en-US/docs/Web/HTTP/Headers/Feature-Policy/ambient-light-sensor",
     "title": "Feature-Policy: ambient-light-sensor",
     "locale": "en-US",
     "summary": "The HTTP Feature-Policy header ambient-light-sensor directive controls whether the current document is allowed to gather information about the amount of light in the environment around the device through the AmbientLightSensor interface.",

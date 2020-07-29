@@ -21,7 +21,7 @@ if (process.env.NODE_ENV !== "development") {
   }
 }
 
-export default function render(renderApp, options) {
+export default function render(renderApp, doc) {
   if (process.env.NODE_ENV === "development") {
     // Reread on every request
     buildHtml = readBuildHtml();
@@ -31,8 +31,6 @@ export default function render(renderApp, options) {
   const rendered = renderToString(renderApp);
 
   let pageTitle = "MDN Web Docs"; // default
-
-  const { doc } = options;
 
   if (doc) {
     // Use the doc's title instead

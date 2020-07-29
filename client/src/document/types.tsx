@@ -8,6 +8,7 @@ export interface Link {
   line: number;
   column: number;
   suggestion: string | null;
+  fixed?: true;
 }
 
 type Flaws = {
@@ -41,6 +42,7 @@ export interface Doc {
   parents?: DocParent[];
   source: Source;
   contributors: string[];
+  isArchive: boolean;
 }
 
 export interface MacroErrorMessage {
@@ -54,4 +56,5 @@ export interface MacroErrorMessage {
   filepath: string;
   sourceContext: string;
   macroName: string;
+  fixed?: true;
 }
