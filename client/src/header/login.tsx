@@ -6,7 +6,7 @@ import SignInLink from "./signin-link";
 import { getAuthURL } from "./auth-link";
 import { useUserData } from "../user-context";
 
-import avatarImage from './avatar.png'
+import avatarImage from "./avatar.png";
 
 export default function Login() {
   const locale = useLocale();
