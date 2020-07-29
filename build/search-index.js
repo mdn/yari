@@ -6,10 +6,11 @@ module.exports = class SearchIndex {
   _itemsByLocale = {};
 
   add({ metadata: { locale, title }, url }) {
-    if (!this._itemsByLocale[locale]) {
-      this._itemsByLocale[locale] = [];
+    const localeLC = locale.toLowerCase();
+    if (!this._itemsByLocale[localeLC]) {
+      this._itemsByLocale[localeLC] = [];
     }
-    this._itemsByLocale[locale].push({ title, url });
+    this._itemsByLocale[localeLC].push({ title, url });
   }
 
   sort() {
