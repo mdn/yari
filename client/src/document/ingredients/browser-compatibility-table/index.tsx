@@ -8,6 +8,7 @@ import { Legend } from "./legend";
 import { listFeatures } from "./utils";
 
 import "./bcd.scss";
+// import "../../../kumastyles/wiki-compat-tables.scss";
 
 function gatherPlatformsAndBrowsers(category): [string[], bcd.BrowserNames[]] {
   let platforms = ["desktop", "mobile"];

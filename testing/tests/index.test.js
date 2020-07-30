@@ -1,9 +1,7 @@
 const fs = require("fs");
 const path = require("path");
-const { execSync } = require("child_process");
 
 const cheerio = require("cheerio");
-const simpleGit = require("simple-git");
 
 const buildRoot = path.join("..", "client", "build");
 
@@ -21,27 +19,122 @@ test("content built foo page", () => {
   expect(doc.title).toBe("<foo>: A test tag");
   expect(doc.summary).toBe("This is a sample page");
   expect(doc.mdn_url).toBe("/en-US/docs/Web/Foo");
-  expect(doc.popularity).toBe(0.5);
-  expect(doc.modified).toBeTruthy();
   expect(doc.source).toBeTruthy();
+
+  expect(doc.flaws.macros.length).toBe(6);
+  expect(doc.flaws.macros[0].name).toBe("MacroRedirectedLinkError");
+  expect(doc.flaws.macros[0].macroSource).toBe("{{CSSxRef('dumber')}}");
+  expect(doc.flaws.macros[0].line).toBe(9);
+  expect(doc.flaws.macros[0].column).toBe(7);
+  expect(doc.flaws.macros[0].sourceContext).toEqual(
+    expect.stringContaining("    9 |   <li>{{CSSxRef('dumber')}}</li>")
+  );
+  expect(doc.flaws.macros[0].redirectInfo).toBeDefined();
+  expect(doc.flaws.macros[0].redirectInfo.current).toBe("dumber");
+  expect(doc.flaws.macros[0].redirectInfo.suggested).toBe("number");
+  expect(doc.flaws.macros[0].filepath).toMatch(
+    /\/en-us\/web\/fixable_flaws\/index\.html$/
+  );
+  expect(doc.flaws.macros[1].name).toBe("MacroRedirectedLinkError");
+  expect(doc.flaws.macros[1].macroSource).toBe(
+    '{{htmlattrxref("href", "anchor")}}'
+  );
+  expect(doc.flaws.macros[1].line).toBe(10);
+  expect(doc.flaws.macros[1].column).toBe(7);
+  expect(doc.flaws.macros[1].sourceContext).toEqual(
+    expect.stringContaining(
+      '   10 |   <li>{{htmlattrxref("href", "anchor")}}</li>'
+    )
+  );
+  expect(doc.flaws.macros[1].redirectInfo).toBeDefined();
+  expect(doc.flaws.macros[1].redirectInfo.current).toBe("anchor");
+  expect(doc.flaws.macros[1].redirectInfo.suggested).toBe("a");
+  expect(doc.flaws.macros[1].filepath).toMatch(
+    /\/en-us\/web\/fixable_flaws\/index\.html$/
+  );
+  expect(doc.flaws.macros[2].name).toBe("MacroBrokenLinkError");
+  expect(doc.flaws.macros[2].macroSource).toBe(
+    '{{CSSxRef("will-never-be-fixable")}}'
+  );
+  expect(doc.flaws.macros[2].line).toBe(11);
+  expect(doc.flaws.macros[2].column).toBe(7);
+  expect(doc.flaws.macros[2].sourceContext).toEqual(
+    expect.stringContaining(
+      '   11 |   <li>{{CSSxRef("will-never-be-fixable")}}</li>'
+    )
+  );
+  expect(doc.flaws.macros[2].filepath).toMatch(
+    /\/en-us\/web\/fixable_flaws\/index\.html$/
+  );
+  expect(doc.flaws.macros[3].name).toBe("MacroRedirectedLinkError");
+  expect(doc.flaws.macros[3].macroSource).toBe("{{CSSxRef('dumber')}}");
+  expect(doc.flaws.macros[3].line).toBe(12);
+  expect(doc.flaws.macros[3].column).toBe(7);
+  expect(doc.flaws.macros[3].sourceContext).toEqual(
+    expect.stringContaining(
+      "   12 |   <li>{{CSSxRef('dumber')}} second time!</li>"
+    )
+  );
+  expect(doc.flaws.macros[3].redirectInfo).toBeDefined();
+  expect(doc.flaws.macros[3].redirectInfo.current).toBe("dumber");
+  expect(doc.flaws.macros[3].redirectInfo.suggested).toBe("number");
+  expect(doc.flaws.macros[3].filepath).toMatch(
+    /\/en-us\/web\/fixable_flaws\/index\.html$/
+  );
+  expect(doc.flaws.macros[4].name).toBe("MacroExecutionError");
+  expect(doc.flaws.macros[4].errorMessage).toEqual(
+    expect.stringContaining(
+      '/en-us/docs/web/fubar references /en-us/docs/does-not-exist (derived from "does-not-exist"), which does not exist'
+    )
+  );
+  expect(doc.flaws.macros[4].line).toBe(11);
+  expect(doc.flaws.macros[4].column).toBe(6);
+  // Check that the line numbers in the source context have been adjusted by the offset.
+  expect(doc.flaws.macros[4].sourceContext).toEqual(
+    expect.stringContaining('   11 | <div>{{page("does-not-exist")}}</div>')
+  );
+  expect(doc.flaws.macros[4].filepath).toMatch(
+    /\/en-us\/web\/fubar\/index\.html$/
+  );
+  expect(doc.flaws.macros[5].name).toBe("MacroExecutionError");
+  expect(doc.flaws.macros[5].errorMessage).toEqual(
+    expect.stringContaining(
+      "/en-us/docs/web/fubar references /en-us/docs/does/not/exist, which does not exist"
+    )
+  );
+  expect(doc.flaws.macros[5].line).toBe(12);
+  expect(doc.flaws.macros[5].column).toBe(6);
+  // Check that the line numbers in the source context have been adjusted by the offset.
+  expect(doc.flaws.macros[5].sourceContext).toEqual(
+    expect.stringContaining(
+      `   12 | <div>{{ EmbedLiveSample('example', '300', '300', "", "does/not/exist") }}</div>`
+    )
+  );
+  expect(doc.flaws.macros[5].filepath).toMatch(
+    /\/en-us\/web\/fubar\/index\.html$/
+  );
 
   const htmlFile = path.join(builtFolder, "index.html");
   expect(fs.existsSync(htmlFile)).toBeTruthy();
+});
+
+test("content built interactiveexample page", () => {
+  expect(fs.existsSync(buildRoot)).toBeTruthy();
+
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "interactiveexample"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+
+  const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("p").text()).toMatch(/Below is a sample interactive example/);
   expect($("iframe").length).toEqual(1);
-});
-
-test("content built titles.json file", () => {
-  const titlesFile = path.join(buildRoot, "en-us", "titles.json");
-  expect(fs.existsSync(titlesFile)).toBeTruthy();
-  const { titles } = JSON.parse(fs.readFileSync(titlesFile));
-  expect(titles["/en-US/docs/Web/Foo"].title).toEqual("<foo>: A test tag");
-  expect(titles["/en-US/docs/Web/Foo"].popularity).toEqual(0.5);
-
-  // The archived content's documents should be in there
-  expect(titles["/en-US/docs/XUL/ancientness"]).toBeFalsy();
 });
 
 test("the 'notranslate' class is correctly inserted", () => {
@@ -59,11 +152,6 @@ test("the 'notranslate' class is correctly inserted", () => {
 });
 
 test("content with non-ascii characters in the slug", () => {
-  const titlesFile = path.join(buildRoot, "en-us", "titles.json");
-  expect(fs.existsSync(titlesFile)).toBeTruthy();
-  const { titles } = JSON.parse(fs.readFileSync(titlesFile));
-  expect(titles["/en-US/docs/Glossary/Bézier_curve"]).toBeTruthy();
-
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -94,8 +182,8 @@ test("content built bar page", () => {
   expect(doc.title).toBe("bar: A collection of xref macro calls");
   expect(doc.summary).toBe("This is the Bar test page.");
   expect(doc.mdn_url).toBe("/en-US/docs/Web/Bar");
-  expect(doc.popularity).toBe(0.51);
-  expect(doc.modified).toBeTruthy();
+  // expect(doc.popularity).toBe(0.51);
+  // expect(doc.modified).toBeTruthy();
   expect(doc.source).toBeTruthy();
   expect(doc.flaws.macros.length).toBe(12);
   expect(doc.flaws.macros[0].name).toBe("MacroBrokenLinkError");
@@ -315,9 +403,9 @@ test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page",
   const jsonFile = path.join(builtFolder, "index.json");
   expect(fs.existsSync(jsonFile)).toBeTruthy();
 
-  // Let's make sure there are only 3 "macros" flaws.
+  // Let's make sure there are only 2 "macros" flaws.
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(doc.flaws.macros.length).toBe(3);
+  expect(doc.flaws.macros.length).toBe(2);
 });
 
 test("detect bad_bcd_links flaws from", () => {
@@ -341,112 +429,4 @@ test("detect bad_bcd_links flaws from", () => {
   expect(flaw.slug).toBe("/en-US/docs/Web/API/Document/visibilityState");
   expect(flaw.suggestion).toBeNull();
   expect(flaw.query).toBe("api.Document.visibilityState");
-});
-
-describe("fixing flaws", () => {
-  const basePattern = path.join("testing", "content", "files");
-  const pattern = path.join("web", "fixable_flaws");
-
-  // If we don't specify this, doing things like `await git.diffSummary()`
-  // will report files as they appear relative to the `.git/` root which
-  // might be different from the current `process.cwd()` which makes it
-  // impossible to look at file paths in a predictable way.
-  const baseDir = path.resolve("..");
-
-  async function getChangedFiles() {
-    const git = simpleGit();
-    const diff = await git.diffSummary();
-    return diff.files
-      .filter((f) => f.file.includes(basePattern) && f.file.includes(pattern))
-      .map((f) => f.file);
-  }
-
-  beforeAll(async () => {
-    // We assume we can test changes to the local git repo. If there were
-    // already existing fixes to the fixtures we intend to actually change,
-    // then tests are a no-go.
-    // We basically want to check that none of the files we intend to mess
-    // with, from jest, are already messed with.
-    const files = await getChangedFiles();
-    if (files.length) {
-      // This is draconian but necessary.
-      // See https://github.com/facebook/jest/issues/2713
-      // which is closed but it't still not a feature for our version of
-      // jest to have it so that it stops running the tests if you throw
-      // an error in here.
-      console.error(
-        `Can't test these things when ${files} already has its own changes`
-      );
-      // Basically, if the files that we care to test changing, were
-      // already changed (manually) then we can't run our tests and we
-      // want to bail hard.
-      process.exit(1);
-    }
-  });
-
-  // Aka. clean up by checking out any unstaged file changes made by the tests
-  afterAll(async () => {
-    // Undo any changed files of the interesting pattern
-    const git = simpleGit({
-      baseDir,
-    });
-    const diff = await git.diffSummary();
-    const files = diff.files
-      .map((f) => f.file)
-      .filter((f) => f.includes(basePattern) && f.includes(pattern));
-    if (files.length) {
-      try {
-        await git.checkout(files);
-      } catch (err) {
-        // Otherwise any error here would be swallowed
-        console.error(err);
-        throw err;
-      }
-    }
-  });
-
-  // Got to test dry-run mode and non-dry-run mode in serial otherwise
-  // test my run those two things in parallel and it's not thread-safe
-  // to change files on disk.
-  // This is why this test does so much.
-  test("build with --fix-flaws", async () => {
-    // The --no-cache option is important because otherwise, on consecutive
-    // runs, the caching might claim that it's already been built, on disk,
-    // so the flaw detection stuff never gets a chance to fix anything
-    // afterwards.
-    const command = `node content build --fix-flaws -f ${pattern} --no-cache`;
-
-    const dryrunCommand = command + " --fix-flaws-dry-run";
-    const dryrunStdout = execSync(dryrunCommand, {
-      cwd: baseDir,
-      windowsHide: true,
-    }).toString();
-
-    const regexPattern = /Would have modified "(.*)", if this was not a dry run/g;
-    const dryRunNotices = dryrunStdout
-      .split("\n")
-      .filter((line) => regexPattern.test(line));
-    expect(dryRunNotices.length).toBe(1);
-    expect(dryRunNotices[0]).toContain(pattern);
-    const dryrunFiles = await getChangedFiles();
-    expect(dryrunFiles.length).toBe(0);
-
-    // Now, let's do it without dry-run
-    const stdout = execSync(command + " --fix-flaws-verbose", {
-      cwd: baseDir,
-      windowsHide: true,
-    }).toString();
-    expect(stdout).toContain(pattern);
-
-    const files = await getChangedFiles();
-    expect(files.length).toBe(1);
-    const newRawHtml = fs.readFileSync(path.join(baseDir, files[0]), "utf-8");
-    expect(newRawHtml).toContain("{{CSSxRef('number')}}");
-    expect(newRawHtml).toContain('{{htmlattrxref("href", "a")}}');
-    // Broken links that get fixed.
-    expect(newRawHtml).toContain('href="/en-US/docs/Web/CSS/number"');
-    expect(newRawHtml).toContain("href='/en-US/docs/Web/CSS/number'");
-    expect(newRawHtml).toContain('href="/en-US/docs/Glossary/Bézier_curve"');
-    expect(newRawHtml).toContain('href="/en-US/docs/Web/Foo"');
-  });
 });

@@ -8,6 +8,7 @@
     "@types/jest": "^26.0.5",
     "@types/react": "^16.9.43",
     "@types/react-dom": "^16.9.8",
+    "@types/react-modal": "^3.10.6",
     "cross-env": "^7.0.2",
     "downshift": "^5.4.7",
     "flexsearch": "0.6.32",
@@ -17,11 +18,12 @@
     "prismjs": "1.20.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-modal": "^3.11.2",
     "react-router": "6.0.0-alpha.4",
     "react-router-dom": "6.0.0-alpha.4",
     "react-scripts": "3.4.1",
     "rough-notation": "0.4.0",
-    "sockette": "2.0.6",
+    "sockette": "^2.0.6",
     "swr": "0.2.3",
     "typeface-zilla-slab": "0.0.72",
     "typescript": "^3.9.7",
@@ -52,6 +54,6 @@
   "devDependencies": {
     "@testing-library/react": "^10.4.7",
     "jest-environment-jsdom-sixteen": "^1.0.3",
-    "mdn-browser-compat-data": "^1.0.31"
+    "mdn-browser-compat-data": "^1.0.32"
   }
 }

@@ -13,7 +13,11 @@ name: PR Build
 
 on:
   pull_request:
-    branches: [master]
+    branches:
+      - master
+      # These line is temporary! At least until we're done using Gregor's
+      # reductio-reloaded branch instead of mdn.
+      - reductio-reloaded
 
 jobs:
   build:
@@ -78,4 +82,6 @@ jobs:
           # functional tests have a gap in them but actually building
           # real content exposes it.
 
-          node content build --no-progressbar --files="${{ env.GIT_DIFF }}"
+          export BUILD_NO_PROGRESSBAR=true
+          export BUILD_FILES="${{ env.GIT_DIFF }}"
+          yarn build

@@ -4,10 +4,10 @@ if (JSON.parse(process.env.TESTING_START_SERVER || "false")) {
     // This is the .env file here inside the 'testing/' directory.
     // This is needed so that the server that gets started get the right
     // environment variables specifically for the functional test suite.
-    command: "ENV_FILE=.env node ../server/index.js",
+    command: "ENV_FILE=.env node ../server/static.js",
     port: 5000,
     host: "localhost",
-    debug: true, // XXX Note sure that the harm is of having this on
+    debug: true, // XXX Not sure that the harm is of having this on
   };
 }
 

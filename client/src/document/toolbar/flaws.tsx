@@ -223,7 +223,15 @@ function BrokenLinks({
         {links.map((link, i) => {
           const key = `${link.href}${link.line}${link.column}`;
           return (
-            <li key={key}>
+            <li
+              key={key}
+              className={link.fixed ? "fixed" : undefined}
+              title={
+                link.fixed
+                  ? "This broken link has been automatically fixed."
+                  : undefined
+              }
+            >
               <code>{link.href}</code>{" "}
               {link.suggestion && (
                 <span>
@@ -379,7 +387,15 @@ function Macros({
         const key = `${msg.filepath}:${msg.line}:${msg.column}`;
 
         return (
-          <details key={key}>
+          <details
+            key={key}
+            className={msg.fixed ? "fixed" : undefined}
+            title={
+              msg.fixed
+                ? "This macro flaw has been automatically fixed."
+                : undefined
+            }
+          >
             <summary>
               <a
                 href={`file://${msg.filepath}`}

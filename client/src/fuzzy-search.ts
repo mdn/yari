@@ -13,12 +13,17 @@ export default class FuzzySearch {
     });
     const fuzzyFindExp = `(.+)?${replChars.join("(.+)?")}(.+)?$`;
     const needleLower = needle.toLowerCase();
-    return this.haystack
-      .filter((item) => fuzzysearch(needleLower, item.toLowerCase()))
-      .slice(0, limit)
-      .map((item) => {
-        return { needle: item, ...getSubstrings(fuzzyFindExp, item) };
-      });
+
+    const results: { index: number; substrings: any[] }[] = [];
+    for (let i = 0; i < this.haystack.length && results.length < limit; i++) {
+      if (fuzzysearch(needleLower, this.haystack[i].toLowerCase())) {
+        results.push({
+          index: i,
+          substrings: getSubstrings(fuzzyFindExp, this.haystack[i]),
+        });
+      }
+    }
+    return results;
   }
 }
 
@@ -32,7 +37,7 @@ function getSubstrings(regexString, matchString) {
       substrings.push({ str, match });
     }
   });
-  return { substrings };
+  return substrings;
 }
 
 function escapeExp(term) {

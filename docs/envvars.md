@@ -19,72 +19,29 @@ opening the source in your preferred editor. It's needed for the
 ## Builder
 
 For the builder, a lot of environment variables can be overridden with
-CLI arguments. And
+CLI arguments.
 
 The general rule is that environment variables specific to the builder are
-all prefixed with `BUILD_`. E.g. `BUILD_LOCALES`
+all prefixed with `CONTENT_`. E.g. `CONTENT_ROOT`
 
-### `BUILD_ROOT`
+### `CONTENT_ROOT`
 
 **Default: `content/files`**
 
 Where the files are.
 
-### `BUILD_DESTINATION`
+### `CONTENT_ARCHIVE_ROOT`
 
-**Default: `client/build`**
+**Default: `null`** (meaning, not set nor included)
 
-Where the built `index.html` and `index.json` files go.
+If you want to build archive content (no KumaScript rendering) you
+can say where the location to the folder is.
 
-### `BUILD_POPULARITIES_FILEPATH`
+**Example: `/tmp/mdn-archive-content`**
 
-**Default: `content/popularities.json`**
+### `BUILD_FOLDERSEARCH`
 
-It's the location to a .json file that has popularities based on
-Google Analytics pageviews numbers.
-
-### `BUILD_ALLOW_STALE_TITLES`
-
-**Default: `false`**
-
-When you build, it needs to first generate a complete map of all documents
-with their URI as the keys. That map gets cached to disk as
-`content/_all-titles.json` and within there's a `hash` key which tells
-what digest of the code that it was built with. If the code (or
-things like `package.json` or `yarn.lock`) changes, this invalidates
-the stored file.
-Generating this can be time-consuming if you're doing rapid development.
-
-Setting this environment variable to `true` means it simply cares if
-the file exists or not independent of the hash digest.
-
-### `BUILD_LOCALES`
-
-**Default: `[]`** (meaning, all)
-
-**Example: `en-us,fr`**
-
-**Note** It's a comma separated string.
-
-Limits which locales to build when not specifying a specific folder or a
-specific locale. Can be useful when you often build large batches but
-only care about these specific locales.
-
-In the CLI you can override this with `-l ...` or `--locales=...`.
-
-### `BUILD_NOT_LOCALES`
-
-**Default: `[]`** (meaning, none)
-
-Same logic as `BUILD_LOCALES` except the opposite.
-Comes in handy if you want to keep building most locales but have a handful
-you specifically don't care about.
-
-In the CLI you can override this with `--not-locales=...`.
-
-### `BUILD_FOLDER_SEARCHES`
-
-**Default: `[]`** (meaning, none)
+**Default: ``** (meaning, none)
 
 **Example: `web/css,web/html`**
 
@@ -93,14 +50,11 @@ folders you care about.
 When doing a batch build, it can be very time-consuming so just doing
 one or two sub-folders will speed things up.
 
-### `BUILD_ARCHIVE_ROOT`
+### `BUILD_OUT_ROOT`
 
-**Default: `null`** (meaning, not set nor included)
+**Default: `client/build`**
 
-If you want to build archive content (no KumaScript rendering) you
-can say where the location to the folder is.
-
-**Example: `/tmp/mdn-archive-content`**
+Location into which things should be built.
 
 ### `BUILD_FLAW_LEVELS`
 
@@ -132,7 +86,24 @@ If the level is `warn` it will inject the flaw message into the built
 `index.json` file which you can view when rendering the document on
 `http://localhost:3000/`.
 
-### `BUILD_LIVE_SAMPLES_BASE_URL`
+### `BUILD_FIX_FLAWS`
+
+**Default: `false`**
+
+Whether fixable flaws should be fixed when building documents.
+
+### `BUILD_FIX_FLAWS_DRY_RUN`
+
+**Default: `false`**
+
+When set to true (with the `BUILD_FIX_FLAWS` flag) it will only print out
+information about fixable flaws instead of actually fixing it on disk.
+
+### `BUILD_FIX_FLAWS_VERBOSE`
+
+**Default: `false`**
+
+### `KS_LIVE_SAMPLES_BASE_URL`
 
 **Default: `https://mdn.mozillademos.org`**
 
@@ -177,3 +148,31 @@ In most cases, on your laptop it's better to start the server yourself
 in a separate terminal and then run the headless tests in another.
 
 For more information, see the `testing/README.md`.
+
+## Client
+
+### `HOST`
+
+**Default: `localhost`**
+
+Suggested value: `HOST=localhost.org`
+
+For browser cookies to work as expected, you need to use the same host name
+in Yari and in Kuma. The port numbers can be different. That means that any
+cookies you picked up (e.g. `sessionid`) over on `http://localhost.org:8000`
+will be automatically included in XHR calls on `http://localhost.org:3000`.
+
+Note that even if you set this, you can still continue to
+use `http://localhost:3000`.
+
+### `REACT_APP_KUMA_HOST`
+
+**Default: `not set`**
+
+When doing local development in Yari, the "Sign in" URL depends on this.
+If you're running the dev server (i.e. `localhost:3000` or `localhost.org:3000`)
+the link to sign in with Kuma needs this to be set.
+
+The suggested value is to set this to set
+`REACT_APP_KUMA_HOST=localhost.org:8000` and now sign in links go to that
+host name instead. That means you can log in *from* Yari with a single click.

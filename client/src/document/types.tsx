@@ -8,6 +8,7 @@ export interface Link {
   line: number;
   column: number;
   suggestion: string | null;
+  fixed?: true;
 }
 
 export interface BadBCDLink {
@@ -24,18 +25,32 @@ type Flaws = {
   bad_bcd_links: BadBCDLink[];
 };
 
+export type Translations = { locale: string; slug: string }[];
+
+export type DocParent = {
+  uri: string;
+  title: string;
+};
+
+export type Toc = {
+  id: string;
+  text: string;
+};
+
 export interface Doc {
   title: string;
   mdn_url: string;
   sidebarHTML: string;
+  toc: Toc[];
   body: string;
   modified: string;
   flaws: Flaws;
-  other_translations?: object[];
+  other_translations?: Translations;
   translation_of?: string;
-  parents?: Doc[];
+  parents?: DocParent[];
   source: Source;
   contributors: string[];
+  isArchive: boolean;
 }
 
 export interface MacroErrorMessage {
@@ -49,4 +64,5 @@ export interface MacroErrorMessage {
   filepath: string;
   sourceContext: string;
   macroName: string;
+  fixed?: true;
 }
