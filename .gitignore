@@ -29,6 +29,9 @@ titles.json
 /client/build/
 /ssr/dist/
 
+# Kumascript JSON file of cached web-extension examples.
+__cached-web-ext-examples.json
+
 # Can be removed once content lives in its own repo
 /archivecontent/files
 

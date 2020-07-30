@@ -1,8 +1,17 @@
 /**
  * @prettier
  */
+const fs = require("fs");
 const url = require("url");
+const path = require("path");
+const got = require("got");
 const util = require("./util.js");
+
+const CACHED_WEB_EXT_EXAMPLES_FILEPATH = path.join(
+  __dirname,
+  "__cached-web-ext-examples.json"
+);
+let webExtExamplesCached = null;
 
 module.exports = {
   /**
@@ -133,5 +142,43 @@ module.exports = {
       "deprecated",
       "This macro has been deprecated, and should be removed."
     );
+  },
+
+  async fetchWebExtExamples() {
+    if (!webExtExamplesCached) {
+      try {
+        webExtExamplesCached = await got(
+          "https://raw.githubusercontent.com/mdn/webextensions-examples/master/examples.json",
+          {
+            timeout: 10000,
+          }
+        ).json();
+        if (process.env.NODE_ENV === "development") {
+          fs.writeFileSync(
+            CACHED_WEB_EXT_EXAMPLES_FILEPATH,
+            JSON.stringify(webExtExamplesCached),
+            "utf-8"
+          );
+        }
+      } catch (e) {
+        if (
+          e instanceof got.RequestError &&
+          process.env.NODE_ENV === "development"
+        ) {
+          // The assumption here is that you may wish to work offline
+          // in development mode, so use the last cached data. If there
+          // is not cached data, it'll throw an error which will generate
+          // a macro flaw.
+          webExtExamplesCached = JSON.parse(
+            fs.readFileSync(CACHED_WEB_EXT_EXAMPLES_FILEPATH, "utf-8")
+          );
+        } else {
+          // This will generate macro flaws for all calls to the WebExtExamples and
+          // WebExtAllExamples macros.
+          throw e;
+        }
+      }
+    }
+    return webExtExamplesCached;
   },
 };
