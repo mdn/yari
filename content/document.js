@@ -54,7 +54,7 @@ function extractLocale(folder) {
   return locale;
 }
 
-function saveHTMLFile(filePath, rawHtml, { slug, title, summary, tags }) {
+function saveHTMLFile(filePath, rawHTML, { slug, title, summary, tags }) {
   const metadata = {
     title,
     slug,
@@ -63,7 +63,7 @@ function saveHTMLFile(filePath, rawHtml, { slug, title, summary, tags }) {
   if (tags) {
     metadata.tags = tags;
   }
-  const combined = `---\n${yaml.safeDump(metadata)}---\n${rawHtml.trim()}\n`;
+  const combined = `---\n${yaml.safeDump(metadata)}---\n${rawHTML.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 
@@ -101,7 +101,7 @@ function archive(renderedHTML, rawHTML, metadata, wikiHistory) {
 
   fs.mkdirSync(folderPath, { recursive: true });
 
-  // The `rawHtml` is only applicable in the importer when it saves
+  // The `rawHTML` is only applicable in the importer when it saves
   // archived content. The archived content gets the *rendered* html
   // saved but by storing the raw html too we can potentially resurrect
   // the document if we decide to NOT archive it in the future.
@@ -134,7 +134,7 @@ const read = memoize((folder, fields = null) => {
   const rawContent = fs.readFileSync(filePath, "utf8");
   const {
     attributes: metadata,
-    body: rawHtml,
+    body: rawHTML,
     bodyBegin: frontMatterOffset,
   } = fm(rawContent);
 
@@ -154,7 +154,7 @@ const read = memoize((folder, fields = null) => {
 
   return {
     ...fullMetadata,
-    ...(!fields || fields.body ? { rawHtml, rawContent } : {}),
+    ...(!fields || fields.body ? { rawHTML, rawContent } : {}),
     isArchive,
     fileInfo: {
       folder,
@@ -164,7 +164,7 @@ const read = memoize((folder, fields = null) => {
   };
 });
 
-function update(folder, rawHtml, metadata) {
+function update(folder, rawHTML, metadata) {
   const folderPath = path.join(CONTENT_ROOT, getHTMLPath(folder));
   const document = read(folder);
   const oldSlug = document.metadata.slug;
@@ -173,11 +173,11 @@ function update(folder, rawHtml, metadata) {
 
   if (
     isNewSlug ||
-    document.rawHtml !== rawHtml ||
+    document.rawHTML !== rawHTML ||
     document.metadata.title !== metadata.title ||
     document.metadata.summary !== metadata.summary
   ) {
-    saveHTMLFile(folderPath, rawHtml, {
+    saveHTMLFile(folderPath, rawHTML, {
       ...document.metadata,
       ...metadata,
     });
@@ -191,7 +191,7 @@ function update(folder, rawHtml, metadata) {
   }
 
   if (isNewSlug) {
-    for (const { metadata, rawHtml, fileInfo } of findChildren(url)) {
+    for (const { metadata, rawHTML, fileInfo } of findChildren(url)) {
       const oldChildSlug = metadata.slug;
       const newChildSlug = oldChildSlug.replace(oldSlug, newSlug);
       metadata.slug = newChildSlug;
@@ -200,7 +200,7 @@ function update(folder, rawHtml, metadata) {
         oldChildSlug,
         newChildSlug
       );
-      saveHTMLFile(fileInfo.path, rawHtml, metadata);
+      saveHTMLFile(fileInfo.path, rawHTML, metadata);
     }
     const newFolderPath = buildPath(
       path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),

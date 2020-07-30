@@ -108,7 +108,7 @@ async function buildDocument(document) {
   let liveSamples = [];
   const sampleIds = kumascript.getLiveSampleIDs(
     document.metadata.slug,
-    document.rawHtml
+    document.rawHTML
   );
   for (const sampleIdObject of sampleIds) {
     const liveSamplePage = kumascript.buildLiveSamplePage(
@@ -239,7 +239,7 @@ async function buildLiveSamplePageFromURL(url) {
   // the actual sampleID object with the properly-cased live-sample ID.
   for (const sampleIDObject of kumascript.getLiveSampleIDs(
     document.metadata.slug,
-    document.rawHtml
+    document.rawHTML
   )) {
     if (sampleIDObject.id.toLowerCase() === sampleID) {
       const liveSamplePage = kumascript.buildLiveSamplePage(
