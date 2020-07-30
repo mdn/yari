@@ -70,20 +70,23 @@ function normalizeBCDMdnURLs(doc, options) {
           block = block.__compat;
         }
         if (block.mdn_url) {
-          const slug = getPathFromAbsoluteURL(block.mdn_url);
-          block.mdn_url = slug;
-          if (checkLinks && slug.startsWith("/")) {
-            // Now we need to scrutinize if that's a slug we can fully
+          const url = getPathFromAbsoluteURL(block.mdn_url);
+          block.mdn_url = url;
+          if (checkLinks && url.startsWith("/")) {
+            // Now we need to scrutinize if that's a url we can fully
             // recognize. (But only if it's a relative link)
-            const slugNormalized = slug.toLowerCase();
-            const found = Document.findByURL(hrefNormalized, {
+            const urlLC = url.toLowerCase();
+            const found = Document.findByURL(urlLC, {
               metadata: true,
             });
+            const query = section.value.query;
             if (!found) {
               // That means trouble!
               // But can it be salvaged with a redirect?
-              const resolved = Redirect.resolve(slugNormalized);
-              if (resolved) {
+              const resolved = Redirect.resolve(urlLC);
+              // Remember that `Redirect.resolve()` will return the input
+              // if it couldn't be resolved to a *different* url.
+              if (resolved && resolved !== urlLC) {
                 // Just because it's a redirect doesn't mean it ends up
                 // on a page we have.
                 // For example, there might be a redirect but where it
@@ -93,15 +96,15 @@ function normalizeBCDMdnURLs(doc, options) {
                   metadata: true,
                 });
                 const suggestion = finalDocument ? finalDocument.url : null;
-                addBadBCDLink(query, key, slug, suggestion);
+                addBadBCDLink(query, key, url, suggestion);
                 block.mdn_url = suggestion;
               } else {
-                addBadBCDLink(section.value.query, key, slug);
-                // If the slug is bad, and can't be salvaged with a redirect,
+                addBadBCDLink(query, key, url);
+                // If the url is bad, and can't be salvaged with a redirect,
                 // we need to pass that information on so that it can be
                 // leveraged in the UI that displays the BCD table.
                 // That way, it knows to not attempt to make a link out of it.
-                block.bad_slug = true;
+                block.bad_url = true;
               }
             }
           }

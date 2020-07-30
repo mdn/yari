@@ -11,7 +11,7 @@ interface CompatStatementExtended extends bcd.CompatStatement {
   // When a compat statement has a .mdn_url but it's actually not a good
   // one, the Yari builder will attach an extra boolean that indicates
   // that it's not a valid link.
-  bad_slug?: boolean;
+  bad_url?: boolean;
 }
 
 function getSupportClassName(
@@ -377,7 +377,7 @@ export const FeatureRow = React.memo(
 
     let titleNode: string | React.ReactNode;
 
-    if (compat.bad_slug && compat.mdn_url) {
+    if (compat.bad_url && compat.mdn_url) {
       titleNode = (
         <abbr className="new" title={`${compat.mdn_url} does not exist`}>
           {title}
