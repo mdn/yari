@@ -28,8 +28,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      # - name: Install all yarn packages
-      #   run: yarn --frozen-lockfile
+      - name: Install all yarn packages
+        run: yarn --frozen-lockfile
 
       # - name: Install Python
       #   if: steps.git_diff_content.outputs.diff
