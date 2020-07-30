@@ -12,10 +12,10 @@ const {
   ROOTS,
 } = require("./constants");
 const popularities = require("./popularities");
-const { memoize, slugToFoldername } = require("./utils");
+const { memoize, slugToFolder } = require("./utils");
 
 function buildPath(localeFolder, slug) {
-  return path.join(localeFolder, slugToFoldername(slug));
+  return path.join(localeFolder, slugToFolder(slug));
 }
 
 const HTML_FILENAME = "index.html";
@@ -76,7 +76,7 @@ function trimLineEndings(string) {
 
 function urlToFolderPath(url) {
   const [, locale, , ...slugParts] = url.split("/");
-  return path.join(locale.toLowerCase(), slugToFoldername(slugParts.join("/")));
+  return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
 }
 
 function create(html, metadata) {

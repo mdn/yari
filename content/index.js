@@ -7,7 +7,7 @@ const {
 const Document = require("./document");
 const popularities = require("./popularities");
 const Redirect = require("./redirect");
-const { buildURL, memoize, slugToFoldername } = require("./utils");
+const { buildURL, memoize, slugToFolder } = require("./utils");
 
 module.exports = {
   CONTENT_ROOT,
@@ -22,5 +22,5 @@ module.exports = {
 
   buildURL,
   memoize,
-  slugToFoldername,
+  slugToFolder,
 };
