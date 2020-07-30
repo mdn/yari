@@ -23,11 +23,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
-      - name: Print information about build
-      - run: |
-          echo "Trigger notes: ${{ github.event.inputs.notes }}"
-
       - uses: actions/checkout@v2
       - name: Setup Node.js environment
         uses: actions/setup-node@v2-beta
@@ -64,6 +59,11 @@ jobs:
       # - name: Clone mdn-content
       #   run: |
       #     git clone https://github.com/mdn/mdn-content.git
+
+      - name: Print information about build
+      - run: |
+          echo "Trigger notes: ${{ github.event.inputs.notes }}"
+          echo "Trigger archivecontent: ${{ github.event.inputs.archivecontent }}"
 
       - name: Build everything
         run: |
