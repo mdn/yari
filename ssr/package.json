@@ -11,6 +11,7 @@
   "dependencies": {
     "cheerio": "1.0.0-rc.3",
     "dotenv": "8.2.0",
+    "jsesc": "3.0.1",
     "prismjs": "1.20.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",

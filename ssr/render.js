@@ -1,5 +1,7 @@
 import fs from "fs";
 import path from "path";
+
+import jsesc from "jsesc";
 import cheerio from "cheerio";
 import { renderToString } from "react-dom/server";
 
@@ -8,6 +10,13 @@ function readBuildHtml() {
     path.resolve(__dirname, "../../client/build/index.html"),
     "utf8"
   );
+}
+
+function serializeDocumentData(data) {
+  return jsesc(JSON.stringify(data), {
+    json: true,
+    isScriptContext: true,
+  });
 }
 
 let buildHtml = "";
@@ -36,12 +45,9 @@ export default function render(renderApp, doc) {
     // Use the doc's title instead
     pageTitle = doc.title;
 
-    // XXX We *could* just expose some absolute minimal here. Just enough
-    // for the React Document component to know it doesn't need to re-render.
-    const escapeDocumentJson = JSON.stringify(doc).replace("</", "<\\/");
-    const documentDataTag = `
-    <script id="documentdata" type="application/json">${escapeDocumentJson}</script>
-    `.trim();
+    const documentDataTag = `<script>window.__data__ = JSON.parse(${serializeDocumentData(
+      doc
+    )});</script>`;
     $("#root").after(documentDataTag);
   }
 
