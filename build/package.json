@@ -12,6 +12,6 @@
     "cli-progress": "^3.8.2",
     "dotenv": "8.2.0",
     "kumascript": "*",
-    "mdn-browser-compat-data": "1.0.31"
+    "mdn-browser-compat-data": "1.0.33"
   }
 }
