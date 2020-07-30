@@ -31,10 +31,12 @@ export default function render(renderApp, doc) {
   const rendered = renderToString(renderApp);
 
   let pageTitle = "MDN Web Docs"; // default
+  let canonicalURL = "https://developer.mozilla.org";
 
   if (doc) {
     // Use the doc's title instead
     pageTitle = doc.title;
+    canonicalURL += doc.mdn_url;
 
     // XXX We *could* just expose some absolute minimal here. Just enough
     // for the React Document component to know it doesn't need to re-render.
@@ -43,7 +45,12 @@ export default function render(renderApp, doc) {
     <script id="documentdata" type="application/json">${escapeDocumentJson}</script>
     `.trim();
     $("#root").after(documentDataTag);
+  } else {
+    // TODO: The day we have SPAs in Yari, we need to pass those details
+    // down to here too.
   }
+
+  $('link[rel="canonical"]').attr("href", canonicalURL);
 
   $("title").text(pageTitle);
 
