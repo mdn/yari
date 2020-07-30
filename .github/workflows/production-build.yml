@@ -13,6 +13,10 @@ on:
         description: 'Notes'
         required: false
         default: ''
+      archivecontent:
+        description: 'Build archived content'
+        required: false
+        default: 'false'
 
 jobs:
   build:
@@ -76,6 +80,18 @@ jobs:
           #      export CONTENT_ARCHIVE_ROOT=mdn-archive-content/content/files
           #    fi
           #
+          # ALTERNATIVELY...
+          # We can use Actions Inputs and make it a manual trigger.
+          #
+          #
+          #   if [ ${{ github.event.inputs.archivecontent }} -eq "true" ]; then
+          #      echo "Going to build with the archive content too"
+          #      git clone https://github.com/mdn/mdn-archive-content.git
+          #      export CONTENT_ARCHIVE_ROOT=mdn-archive-content/content/files
+          #    fi
+          #
+          # Or, we use a combination of both where we build archive content
+          # either on the 1st of every month OR if it's manually triggered.
 
           # TODO: Only relevant once github.com/mdn/mdn-content is a thing.
           # export CONTENT_ROOT=mdn-content/content/files
