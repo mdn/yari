@@ -4,13 +4,26 @@ on:
   schedule:
     # * is a special character in YAML so you have to quote this string
     # TODO: Figure out what the best possible frequency should be!
-    - cron:  '0 */12 * * *'
+    # - cron:  '0 */24 * * *'
+    - cron:  '0 */2 * * *'
+
+  workflow_dispatch:
+    inputs:
+      notes:
+        description: 'Notes'
+        required: false
+        default: ''
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+
+      - name: Print information about build
+      - run: |
+          echo "Trigger notes: ${{ github.event.inputs.notes }}"
+
       - uses: actions/checkout@v2
       - name: Setup Node.js environment
         uses: actions/setup-node@v2-beta
