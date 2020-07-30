@@ -21,7 +21,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">caches.keys().then(function(<em>keyList</em>) {
+<pre class="syntaxbox notranslate">caches.keys().then(function(<em>keyList</em>) {
   //do something with your keyList
 });
 </pre>
@@ -38,7 +38,7 @@ tags:
 
 <p>In this code snippet we wait for an {{domxref("ServiceWorkerGlobalScope.onactivate", "activate")}} event, and then run a {{domxref("ExtendableEvent.waitUntil","waitUntil()")}} block that clears up any old, unused caches before a new service worker is activated. Here we have a whitelist containing the names of the caches we want to keep (<code>cacheWhitelist</code>). We return the keys of the caches in the {{domxref("CacheStorage")}} object using <code>keys()</code>, then check each key to see if it is in the whitelist. If not, we delete it using {{domxref("CacheStorage.delete()")}}.</p>
 
-<pre class="brush: js">then.addEventListener('activate', function(event) {
+<pre class="brush: js notranslate">then.addEventListener('activate', function(event) {
   var cacheWhitelist = ['v2'];
 
   event.waitUntil(
@@ -62,7 +62,7 @@ tags:
    <th scope="col">Comment</th>
   </tr>
   <tr>
-   <td>{{SpecName('Service Workers', '#dom-cachestorage-keys', 'CacheStorage: keys')}}</td>
+   <td>{{SpecName('Service Workers', '#cache-storage-keys', 'CacheStorage: keys')}}</td>
    <td>{{Spec2('Service Workers')}}</td>
    <td>Initial definition.</td>
   </tr>

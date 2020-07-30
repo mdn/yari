@@ -1,10 +1,7 @@
 ---
 title: <color>
 slug: Web/CSS/color_value
-summary: >-
-  The color CSS data type represents a color in the sRGB color space. A color
-  may also include an alpha-channel transparency value, indicating how the color
-  should composite with its background.
+summary: ''
 tags:
   - CSS
   - CSS Data Type
@@ -18,7 +15,11 @@ tags:
   - rgba
   - unit
 ---
-<div>{{CSSRef}}</div>
+<div>{{CSSReF}}</div>
+
+<div>
+
+</div>
 
 <p>The <strong><code>&lt;color&gt;</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> <a href="/en-US/docs/Web/CSS/CSS_Types">data type</a> represents a color in the <a class="external" href="https://en.wikipedia.org/wiki/SRGB">sRGB color space</a>. A <code>&lt;color&gt;</code> may also include an <a class="external" href="https://en.wikipedia.org/wiki/Alpha_compositing">alpha-channel</a> <em>transparency value</em>, indicating how the color should <a class="external" href="https://www.w3.org/TR/2003/REC-SVG11-20030114/masking.html#SimpleAlphaBlending">composite</a> with its background.</p>
 
@@ -860,7 +861,7 @@ tags:
 
 <h5 id="HTML">HTML</h5>
 
-<pre class="brush: html">&lt;div style="color:blue; border: 1px dashed currentcolor;"&gt;
+<pre class="brush: html notranslate">&lt;div style="color:blue; border: 1px dashed currentcolor;"&gt;
   The color of this text is blue.
   &lt;div style="background:currentcolor; height:9px;"&gt;&lt;/div&gt;
   This block is surrounded by a blue border.
@@ -899,7 +900,7 @@ tags:
 
 <p>This example shows the many ways in which a single color can be created with the various RGB color syntaxes.</p>
 
-<pre>/* These syntax variations all specify the same color: a fully opaque hot pink. */
+<pre class="notranslate">/* These syntax variations all specify the same color: a fully opaque hot pink. */
 
 /* Hexadecimal syntax */
 #f09
@@ -937,7 +938,7 @@ rgb(1e2, .5e1, .5e0, +.25e2%)
 
 <h5 id="RGB_transparency_variations">RGB transparency variations</h5>
 
-<pre>/* Hexadecimal syntax */
+<pre class="notranslate">/* Hexadecimal syntax */
 #3a30                   <span style="background: #3a30;"> /*   0% opaque green */ </span>
 #3A3F                   <span style="background: #3A3F;"> /* full opaque green */ </span>
 #33aa3300               <span style="background: #33aa3300;"> /*   0% opaque green */ </span>
@@ -985,7 +986,7 @@ rgba(1e2, .5e1, .5e0, +.25e2%)
 
 <h5 id="HSL_syntax_variations">HSL syntax variations</h5>
 
-<pre>/* These examples all specify the same color: a lavender. */
+<pre class="notranslate">/* These examples all specify the same color: a lavender. */
 hsl(270,60%,70%)
 hsl(270, 60%, 70%)
 hsl(270 60% 70%)
@@ -1169,7 +1170,7 @@ hsl(270 60% 50% / 15%)
 
 <h5 id="HSL_transparency_variations">HSL transparency variations</h5>
 
-<pre>hsla(240, 100%, 50%, .05)    <span style="background: hsla(240,100%,50%,0.05);"> /*   5% opaque blue */ </span>
+<pre class="notranslate">hsla(240, 100%, 50%, .05)    <span style="background: hsla(240,100%,50%,0.05);"> /*   5% opaque blue */ </span>
 hsla(240, 100%, 50%, .4)     <span style="background: hsla(240,100%,50%,0.4);"> /*  40% opaque blue */ </span>
 hsla(240, 100%, 50%, .7)     <span style="background: hsla(240,100%,50%,0.7);"> /*  70% opaque blue */ </span>
 hsla(240, 100%, 50%, 1)      <span style="background: hsla(240,100%,50%,1);"> /* full opaque blue */ </span>
@@ -1194,51 +1195,51 @@ hsla(240 100% 50% / 5%)      <span style="background: hsla(240,100%,50%,0.05);">
 <dl>
  <dt>ActiveText</dt>
  <dd>
-  <p>Text of active links</p>
+ <p>Text of active links</p>
  </dd>
  <dt>ButtonFace</dt>
  <dd>
-  <p>Background of push buttons</p>
+ <p>Background of push buttons</p>
  </dd>
  <dt>ButtonText</dt>
  <dd>
-  <p>Text of push buttons</p>
+ <p>Text of push buttons</p>
  </dd>
  <dt>Canvas</dt>
  <dd>
-  <p>Background of application content or documents</p>
+ <p>Background of application content or documents</p>
  </dd>
  <dt>CanvasText</dt>
  <dd>
-  <p>Text in application content or documents</p>
+ <p>Text in application content or documents</p>
  </dd>
  <dt>Field</dt>
  <dd>
-  <p>Background of input fields</p>
+ <p>Background of input fields</p>
  </dd>
  <dt>FieldText</dt>
  <dd>
-  <p>Text in input fields</p>
+ <p>Text in input fields</p>
  </dd>
  <dt>GrayText</dt>
  <dd>
-  <p>Text that is disabled</p>
+ <p>Text that is disabled</p>
  </dd>
  <dt>Highlight</dt>
  <dd>
-  <p>Background of items that are selected in a control</p>
+ <p>Background of items that are selected in a control</p>
  </dd>
  <dt>HighlightText</dt>
  <dd>
-  <p>Text of items that are selected in a control</p>
+ <p>Text of items that are selected in a control</p>
  </dd>
  <dt>LinkText</dt>
  <dd>
-  <p>Text of non-active, non-visited links</p>
+ <p>Text of non-active, non-visited links</p>
  </dd>
  <dt>VisitedText</dt>
  <dd>
-  <p>Text of visited links</p>
+ <p>Text of visited links</p>
  </dd>
 </dl>
 
@@ -1250,95 +1251,95 @@ hsla(240 100% 50% / 5%)      <span style="background: hsla(240,100%,50%,0.05);">
 <dl>
  <dt>ActiveBorder</dt>
  <dd>
-  <p>Active window border.</p>
+ <p>Active window border.</p>
  </dd>
  <dt>ActiveCaption</dt>
  <dd>
-  <p>Active window caption. Should be used with <code>CaptionText</code> as foreground color.</p>
+ <p>Active window caption. Should be used with <code>CaptionText</code> as foreground color.</p>
  </dd>
  <dt>AppWorkspace</dt>
  <dd>
-  <p>Background color of multiple document interface.</p>
+ <p>Background color of multiple document interface.</p>
  </dd>
  <dt>Background</dt>
  <dd>
-  <p>Desktop background.</p>
+ <p>Desktop background.</p>
  </dd>
  <dt>ButtonHighlight</dt>
  <dd>
-  <p>The color of the border facing the light source for 3-D elements that appear 3-D due to that layer of surrounding border.</p>
+ <p>The color of the border facing the light source for 3-D elements that appear 3-D due to that layer of surrounding border.</p>
  </dd>
  <dt>ButtonShadow</dt>
  <dd>
-  <p>The color of the border away from the light source for 3-D elements that appear 3-D due to that layer of surrounding border.</p>
+ <p>The color of the border away from the light source for 3-D elements that appear 3-D due to that layer of surrounding border.</p>
  </dd>
  <dt>CaptionText</dt>
  <dd>
-  <p>Text in caption, size box, and scrollbar arrow box. Should be used with the <code>ActiveCaption</code> background color.</p>
+ <p>Text in caption, size box, and scrollbar arrow box. Should be used with the <code>ActiveCaption</code> background color.</p>
  </dd>
  <dt>InactiveBorder</dt>
  <dd>
-  <p>Inactive window border.</p>
+ <p>Inactive window border.</p>
  </dd>
  <dt>InactiveCaption</dt>
  <dd>
-  <p>Inactive window caption. Should be used with the <code>InactiveCaptionText</code> foreground color.</p>
+ <p>Inactive window caption. Should be used with the <code>InactiveCaptionText</code> foreground color.</p>
  </dd>
  <dt>InactiveCaptionText</dt>
  <dd>
-  <p>Color of text in an inactive caption. Should be used with the <code>InactiveCaption</code> background color.</p>
+ <p>Color of text in an inactive caption. Should be used with the <code>InactiveCaption</code> background color.</p>
  </dd>
  <dt>InfoBackground</dt>
  <dd>
-  <p>Background color for tooltip controls. Should be used with the <code>InfoText</code> foreground color.</p>
+ <p>Background color for tooltip controls. Should be used with the <code>InfoText</code> foreground color.</p>
  </dd>
  <dt>InfoText</dt>
  <dd>
-  <p>Text color for tooltip controls. Should be used with the <code>InfoBackground</code> background color.</p>
+ <p>Text color for tooltip controls. Should be used with the <code>InfoBackground</code> background color.</p>
  </dd>
  <dt>Menu</dt>
  <dd>
-  <p>Menu background. Should be used with the <code>MenuText</code> or <code>-moz-MenuBarText</code> foreground color.</p>
+ <p>Menu background. Should be used with the <code>MenuText</code> or <code>-moz-MenuBarText</code> foreground color.</p>
  </dd>
  <dt>MenuText</dt>
  <dd>
-  <p>Text in menus. Should be used with the <code>Menu</code> background color.</p>
+ <p>Text in menus. Should be used with the <code>Menu</code> background color.</p>
  </dd>
  <dt>Scrollbar</dt>
  <dd>
-  <p>Background color of scroll bars.</p>
+ <p>Background color of scroll bars.</p>
  </dd>
  <dt>ThreeDDarkShadow</dt>
  <dd>
-  <p>The color of the darker (generally outer) of the two borders away from the light source for 3-D elements that appear 3-D due to two concentric layers of surrounding border.</p>
+ <p>The color of the darker (generally outer) of the two borders away from the light source for 3-D elements that appear 3-D due to two concentric layers of surrounding border.</p>
  </dd>
  <dt>ThreeDFace</dt>
  <dd>
-  <p>The face background color for 3-D elements that appear 3-D due to two concentric layers of surrounding border. Should be used with the <code>ButtonText</code> foreground color.</p>
+ <p>The face background color for 3-D elements that appear 3-D due to two concentric layers of surrounding border. Should be used with the <code>ButtonText</code> foreground color.</p>
  </dd>
  <dt>ThreeDHighlight</dt>
  <dd>
-  <p>The color of the lighter (generally outer) of the two borders facing the light source for 3-D elements that appear 3-D due to two concentric layers of surrounding border.</p>
+ <p>The color of the lighter (generally outer) of the two borders facing the light source for 3-D elements that appear 3-D due to two concentric layers of surrounding border.</p>
  </dd>
  <dt>ThreeDLightShadow</dt>
  <dd>
-  <p>The color of the darker (generally inner) of the two borders facing the light source for 3-D elements that appear 3-D due to two concentric layers of surrounding border.</p>
+ <p>The color of the darker (generally inner) of the two borders facing the light source for 3-D elements that appear 3-D due to two concentric layers of surrounding border.</p>
  </dd>
  <dt>ThreeDShadow</dt>
  <dd>
-  <p>The color of the lighter (generally inner) of the two borders away from the light source for 3-D elements that appear 3-D due to two concentric layers of surrounding border.</p>
+ <p>The color of the lighter (generally inner) of the two borders away from the light source for 3-D elements that appear 3-D due to two concentric layers of surrounding border.</p>
  </dd>
  <dt>Window</dt>
  <dd>
-  <p>Window background. Should be used with the <code>WindowText</code> foreground color.</p>
+ <p>Window background. Should be used with the <code>WindowText</code> foreground color.</p>
  </dd>
  <dt>WindowFrame</dt>
  <dd>
-  <p>Window frame.</p>
+ <p>Window frame.</p>
  </dd>
  <dt>WindowText</dt>
  <dd>
-  <p>Text in windows. Should be used with the <code>Window</code> background color.</p>
+ <p>Text in windows. Should be used with the <code>Window</code> background color.</p>
  </dd>
 </dl>
 </div>
@@ -1349,52 +1350,52 @@ hsla(240 100% 50% / 5%)      <span style="background: hsla(240,100%,50%,0.05);">
 <dl>
  <dt>-moz-ButtonDefault</dt>
  <dd>
-  <p>The border color that goes around buttons that represent the default action for a dialog box.</p>
+ <p>The border color that goes around buttons that represent the default action for a dialog box.</p>
  </dd>
  <dt>-moz-ButtonHoverFace</dt>
  <dd>
-  <p>The background color of a button that the mouse pointer is over (which would be <code>ThreeDFace</code> or <code>ButtonFace</code> when the mouse pointer is not over it). Should be used with the <code>-moz-ButtonHoverText</code> foreground color.</p>
+ <p>The background color of a button that the mouse pointer is over (which would be <code>ThreeDFace</code> or <code>ButtonFace</code> when the mouse pointer is not over it). Should be used with the <code>-moz-ButtonHoverText</code> foreground color.</p>
  </dd>
  <dt>-moz-ButtonHoverText</dt>
  <dd>
-  <p>The text color of a button that the mouse pointer is over (which would be ButtonText when the mouse pointer is not over it). Should be used with the <code>-moz-ButtonHoverFace background</code> color.</p>
+ <p>The text color of a button that the mouse pointer is over (which would be ButtonText when the mouse pointer is not over it). Should be used with the <code>-moz-ButtonHoverFace background</code> color.</p>
  </dd>
  <dt>-moz-CellHighlight</dt>
  <dd>
-  <p>Background color for selected item in a tree widget. Should be used with the <code>-moz-CellHighlightText</code> foreground color. See also <code>-moz-html-CellHighlight</code>.</p>
+ <p>Background color for selected item in a tree widget. Should be used with the <code>-moz-CellHighlightText</code> foreground color. See also <code>-moz-html-CellHighlight</code>.</p>
  </dd>
  <dt>-moz-CellHighlightText</dt>
  <dd>
-  <p>Text color for a selected item in a tree. Should be used with the <code>-moz-CellHighlight background</code> color. See also <code>-moz-html-CellHighlightText</code>.</p>
+ <p>Text color for a selected item in a tree. Should be used with the <code>-moz-CellHighlight background</code> color. See also <code>-moz-html-CellHighlightText</code>.</p>
  </dd>
  <dt>-moz-Combobox</dt>
  <dd>
-  <p>{{Gecko_minversion_inline("1.9.2")}} Background color for combo-boxes. Should be used with the <code>-moz-ComboboxText</code> foreground color. In versions prior to 1.9.2, use <code>-moz-Field</code> instead.</p>
+ <p>{{Gecko_minversion_inline("1.9.2")}} Background color for combo-boxes. Should be used with the <code>-moz-ComboboxText</code> foreground color. In versions prior to 1.9.2, use <code>-moz-Field</code> instead.</p>
  </dd>
  <dt>-moz-ComboboxText</dt>
  <dd>
-  <p>{{Gecko_minversion_inline("1.9.2")}} Text color for combo-boxes. Should be used with the <code>-moz-Combobox</code> background color. In versions prior to 1.9.2, use <code>-moz-FieldText</code> instead.</p>
+ <p>{{Gecko_minversion_inline("1.9.2")}} Text color for combo-boxes. Should be used with the <code>-moz-Combobox</code> background color. In versions prior to 1.9.2, use <code>-moz-FieldText</code> instead.</p>
  </dd>
  <dt>-moz-Dialog</dt>
  <dd>
-  <p>Background color for dialog boxes. Should be used with the <code>-moz-DialogText</code> foreground color.</p>
+ <p>Background color for dialog boxes. Should be used with the <code>-moz-DialogText</code> foreground color.</p>
  </dd>
  <dt>-moz-DialogText</dt>
  <dd>
-  <p>Text color for dialog boxes. Should be used with the <code>-moz-Dialog</code> background color.</p>
+ <p>Text color for dialog boxes. Should be used with the <code>-moz-Dialog</code> background color.</p>
  </dd>
  <dt>-moz-dragtargetzone</dt>
  <dt>-moz-EvenTreeRow</dt>
  <dd>
-  <p>{{gecko_minversion_inline("1.9")}} Background color for even-numbered rows in a tree. Should be used with the <code>-moz-FieldText</code> foreground color. In Gecko versions prior to 1.9, use <code>-moz-Field</code>. See also <code>-moz-OddTreeRow</code>.</p>
+ <p>{{gecko_minversion_inline("1.9")}} Background color for even-numbered rows in a tree. Should be used with the <code>-moz-FieldText</code> foreground color. In Gecko versions prior to 1.9, use <code>-moz-Field</code>. See also <code>-moz-OddTreeRow</code>.</p>
  </dd>
  <dt>-moz-html-CellHighlight</dt>
  <dd>
-  <p>{{gecko_minversion_inline("1.9")}} Background color for highlighted item in HTML {{HTMLElement("select")}}s. Should be used with the <code>-moz-html-CellHighlightText</code> foreground color. Prior to Gecko 1.9, use <code>-moz-CellHighlight</code>.</p>
+ <p>{{gecko_minversion_inline("1.9")}} Background color for highlighted item in HTML {{HTMLElement("select")}}s. Should be used with the <code>-moz-html-CellHighlightText</code> foreground color. Prior to Gecko 1.9, use <code>-moz-CellHighlight</code>.</p>
  </dd>
  <dt>-moz-html-CellHighlightText</dt>
  <dd>
-  <p>{{gecko_minversion_inline("1.9")}} Text color for highlighted items in HTML {{HTMLElement("select")}}s. Should be used with the <code>-moz-html-CellHighlight</code> background color. Prior to Gecko 1.9, use <code>-moz-CellHighlightText</code>.</p>
+ <p>{{gecko_minversion_inline("1.9")}} Text color for highlighted items in HTML {{HTMLElement("select")}}s. Should be used with the <code>-moz-html-CellHighlight</code> background color. Prior to Gecko 1.9, use <code>-moz-CellHighlightText</code>.</p>
  </dd>
  <dt>-moz-mac-accentdarkestshadow</dt>
  <dt>-moz-mac-accentdarkshadow</dt>
@@ -1405,11 +1406,11 @@ hsla(240 100% 50% / 5%)      <span style="background: hsla(240,100%,50%,0.05);">
  <dt>-moz-mac-accentregularshadow</dt>
  <dt>-moz-mac-chrome-active</dt>
  <dd>
-  <p>{{Gecko_minversion_inline("1.9.1")}}</p>
+ <p>{{Gecko_minversion_inline("1.9.1")}}</p>
  </dd>
  <dt>-moz-mac-chrome-inactive</dt>
  <dd>
-  <p>{{Gecko_minversion_inline("1.9.1")}}</p>
+ <p>{{Gecko_minversion_inline("1.9.1")}}</p>
  </dd>
  <dt>-moz-mac-focusring</dt>
  <dt>-moz-mac-menuselect</dt>
@@ -1417,44 +1418,44 @@ hsla(240 100% 50% / 5%)      <span style="background: hsla(240,100%,50%,0.05);">
  <dt>-moz-mac-menutextselect</dt>
  <dt>-moz-MenuHover</dt>
  <dd>
-  <p>Background color for hovered menu items. Often similar to <code>Highlight</code>. Should be used with the <code>-moz-MenuHoverText</code> or <code>-moz-MenuBarHoverText</code> foreground color.</p>
+ <p>Background color for hovered menu items. Often similar to <code>Highlight</code>. Should be used with the <code>-moz-MenuHoverText</code> or <code>-moz-MenuBarHoverText</code> foreground color.</p>
  </dd>
  <dt>-moz-MenuHoverText</dt>
  <dd>
-  <p>Text color for hovered menu items. Often similar to <code>HighlightText</code>. Should be used with the <code>-moz-MenuHover</code> background color.</p>
+ <p>Text color for hovered menu items. Often similar to <code>HighlightText</code>. Should be used with the <code>-moz-MenuHover</code> background color.</p>
  </dd>
  <dt>-moz-MenuBarText</dt>
  <dd>
-  <p>{{Gecko_minversion_inline("1.9.2")}} Text color in menu bars. Often similar to <code>MenuText</code>. Should be used on top of <code>Menu</code> background.</p>
+ <p>{{Gecko_minversion_inline("1.9.2")}} Text color in menu bars. Often similar to <code>MenuText</code>. Should be used on top of <code>Menu</code> background.</p>
  </dd>
  <dt>-moz-MenuBarHoverText</dt>
  <dd>
-  <p>Color for hovered text in menu bars. Often similar to <code>-moz-MenuHoverText</code>. Should be used on top of <code>-moz-MenuHover</code> background.</p>
+ <p>Color for hovered text in menu bars. Often similar to <code>-moz-MenuHoverText</code>. Should be used on top of <code>-moz-MenuHover</code> background.</p>
  </dd>
  <dt>-moz-nativehyperlinktext</dt>
  <dd>
-  <p>{{Gecko_minversion_inline("1.9.1")}} Default platform hyperlink color.</p>
+ <p>{{Gecko_minversion_inline("1.9.1")}} Default platform hyperlink color.</p>
  </dd>
  <dt>-moz-OddTreeRow</dt>
  <dd>
-  <p>{{gecko_minversion_inline("1.9")}} Background color for odd-numbered rows in a tree. Should be used with the <code>-moz-FieldText</code> foreground color. In Gecko versions prior to 1.9, use <code>-moz-Field</code>. See also <code>-moz-EvenTreeRow</code>.</p>
+ <p>{{gecko_minversion_inline("1.9")}} Background color for odd-numbered rows in a tree. Should be used with the <code>-moz-FieldText</code> foreground color. In Gecko versions prior to 1.9, use <code>-moz-Field</code>. See also <code>-moz-EvenTreeRow</code>.</p>
  </dd>
  <dt>-moz-win-communicationstext</dt>
  <dd>
-  <p>{{gecko_minversion_inline("1.9")}} Should be used for text in objects with <code>{{cssxref("-moz-appearance")}}: -moz-win-communications-toolbox;</code>.</p>
+ <p>{{gecko_minversion_inline("1.9")}} Should be used for text in objects with <code>{{cssxref("-moz-appearance")}}: -moz-win-communications-toolbox;</code>.</p>
  </dd>
  <dt>-moz-win-mediatext</dt>
  <dd>
-  <p>{{gecko_minversion_inline("1.9")}} Should be used for text in objects with <code>{{cssxref("-moz-appearance")}}: -moz-win-media-toolbox</code>.</p>
+ <p>{{gecko_minversion_inline("1.9")}} Should be used for text in objects with <code>{{cssxref("-moz-appearance")}}: -moz-win-media-toolbox</code>.</p>
  </dd>
  <dt>-moz-win-accentcolor</dt>
  <dd>
-  <p>{{gecko_minversion_inline("56")}}<br>
- Used to access the Windows 10 custom accent color that you can set on the start menu, taskbar, title bars, etc.</p>
-</dd>
+ <p>{{gecko_minversion_inline("56")}}<br>
+  Used to access the Windows 10 custom accent color that you can set on the start menu, taskbar, title bars, etc.</p>
+ </dd>
  <dt>-moz-win-accentcolortext</dt>
  <dd>
-  <p>{{gecko_minversion_inline("56")}}<br>
+ <p>{{gecko_minversion_inline("56")}}<br>
   Used to access the color of text placed over the Windows 10 custom accent color in the start menu, taskbar, title bars, etc.</p>
  </dd>
 </dl>
@@ -1465,23 +1466,23 @@ hsla(240 100% 50% / 5%)      <span style="background: hsla(240,100%,50%,0.05);">
 <dl>
  <dt>-moz-activehyperlinktext</dt>
  <dd>
-  <p>User's preference for text color of active links. Should be used with the default document background color.</p>
+ <p>User's preference for text color of active links. Should be used with the default document background color.</p>
  </dd>
  <dt>-moz-default-background-color</dt>
  <dd>
-  <p>{{Gecko_minversion_inline("5.0")}} User's preference for the document background color.</p>
+ <p>{{Gecko_minversion_inline("5.0")}} User's preference for the document background color.</p>
  </dd>
  <dt>-moz-default-color</dt>
  <dd>
-  <p>{{Gecko_minversion_inline("5.0")}} User's preference for the text color.</p>
+ <p>{{Gecko_minversion_inline("5.0")}} User's preference for the text color.</p>
  </dd>
  <dt>-moz-hyperlinktext</dt>
  <dd>
-  <p>User's preference for the text color of unvisited links. Should be used with the default document background color.</p>
+ <p>User's preference for the text color of unvisited links. Should be used with the default document background color.</p>
  </dd>
  <dt>-moz-visitedhyperlinktext</dt>
  <dd>
-  <p>User's preference for the text color of visited links. Should be used with the default document background color.</p>
+ <p>User's preference for the text color of visited links. Should be used with the default document background color.</p>
  </dd>
 </dl>
 

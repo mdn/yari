@@ -21,7 +21,11 @@ tags:
 
 <p>Clicking on a row displays a new pane in the right-hand side of the network monitor, which provides more detailed information about the request.</p>
 
-<p><img alt="" src="https://mdn.mozillademos.org/files/16261/network_request_details.png" style="display: block; height: 741px; margin-left: auto; margin-right: auto; width: 930px;"></p>
+<p><img alt="Screenshot of the Network Request details pane, without callouts for the close-pane button and the detail tabs" src="https://mdn.mozillademos.org/files/17285/Network-details-Fx78.png" style="display: block; height: 399px; margin-left: auto; margin-right: auto; width: 520px;"></p>
+
+<div class="blockIndicator note">
+<p>The screenshots and descriptions in this section reflect Firefox 78. Earlier versions appeared similarly, but might not include some functionality.</p>
+</div>
 
 <p>The tabs at the top of this pane enable you to switch between the following pages:</p>
 
@@ -41,11 +45,11 @@ tags:
 
 <h3 id="Headers">Headers</h3>
 
-<p>You can copy some or all of the response header in json format by using the context menu:</p>
+<p>You can copy some or all of the response header in JSON format by using the context menu:</p>
 
-<p><img alt="" src="https://mdn.mozillademos.org/files/16731/response_headers_68.png" style="border: 1px solid black; display: block; height: 267px; margin: 0px auto; width: 397px;">If you select <strong>Copy</strong>, a single key word, value pair will be copied. If you select <strong>Copy All</strong>, the entire header will be copied in json format, giving you something like this (after running the results through a json validator):</p>
+<p><img alt='Screenshot showing the Response headers pane, and its context menu with "Copy" and "Copy all" items' src="https://mdn.mozillademos.org/files/17286/Copy-response-headers-Fx78.png" style="border: 1px solid black; display: block; height: 167px; margin: 0px auto; width: 514px;">If you select <strong>Copy</strong>, a single key word, value pair is copied. If you select <strong>Copy All</strong>, the entire header is copied in JSON format, giving you something like this (after running the results through a JSON validator):</p>
 
-<pre class="brush: json">{
+<pre class="brush: json notranslate">{
   "Response headers (1.113 KB)": {
     "headers": [
       {
@@ -200,38 +204,55 @@ tags:
   }
 }</pre>
 
-<p>The Headers tab has three main sections. The top section lists basic information about the request:</p>
+<p>The Headers tab has a toolbar, followed by three main sections.</p>
 
-<p><img alt="" src="https://mdn.mozillademos.org/files/16262/Network_Monitor_Closeup.png" style="border: 1px solid black; display: block; height: 747px; margin-left: auto; margin-right: auto; width: 900px;"></p>
+<p><img alt="Screenshot of the Headers tab of the Request details pane" src="https://mdn.mozillademos.org/files/17289/Request-details-headers-tab.png" style="height: 315px; width: 524px;"></p>
 
 <p>This includes:</p>
 
 <ul>
  <li>Information about the request</li>
- <li><strong>HTTP request</strong> header</li>
- <li><strong>Response header</strong></li>
+ <li><strong>HTTP Response headers</strong></li>
+ <li><strong>HTTP Request headers</strong></li>
+</ul>
+
+<p>Each section has a disclosure triangle to expand the section to show more information.</p>
+
+<h4 id="Headers_toolbar">Headers toolbar</h4>
+
+<p>Using the Headers toolbar, you can:</p>
+
+<ul>
+ <li>Filter the headers in the Response Headers and Request Headers sections.</li>
+ <li><strong>Block</strong> the domain involved in this request. The domain is added to the <a href="/en-US/docs/Tools/Network_Monitor/request_list#Blocking_specific_URLs">Blocking sidebar</a>.</li>
+ <li>Resend the request. The <strong>Resend</strong> button opens a menu with two items:
+  <ul>
+   <li><strong>Resend</strong>: Simply resends the request.</li>
+   <li><strong>Edit and Resend</strong>: Enables an editing mode, where you can modify the method, URL, request headers, or request body of the request. Click <strong>Send</strong> to send the modified request, or <strong>Cancel</strong> to cancel editing.</li>
+  </ul>
+ </li>
 </ul>
 
 <h4 id="Request_Information"><strong>Request Information</strong></h4>
 
+<p>The following information is shown only when the section is expanded:</p>
+
 <ul>
- <li><strong>Request URL</strong></li>
- <li><strong>Request method</strong></li>
- <li><strong>Remote IP address</strong> and <strong>port</strong></li>
- <li><strong>Status code</strong> with question mark icon linking to this is a link for more details about the particular status code, if available, in the MDN <a href="/en-US/docs/Web/HTTP/Headers">documentation of the HTTP headers</a>.</li>
- <li>An <strong>Edit and Resend</strong> button to <a href="/en-US/docs/Tools/Network_Monitor/request_list/#Edit_and_Resend">edit and resend</a> the request and</li>
- <li>A <strong>Raw headers</strong> button to display the raw request and response headers.</li>
- <li>The HTTP version used</li>
- <li>The <strong>Referrer Policy</strong>, which governs which referrer information, sent in the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer" title="The Referer request header contains the address of the previous web page from which a link to the currently requested page was followed. The Referer header allows servers to identify where people are visiting them from and may use that data for analytics, logging, or optimized caching, for example."><code>Referer</code></a> header, should be included with requests. (See <a href="/en-US/docs/Web/HTTP/Headers/Referrer-Policy">Referrer-Policy</a> for a description of possible values)</li>
+ <li><strong>Scheme</strong>: The scheme used in the URL</li>
+ <li><strong>Host</strong>: The server involved in the request</li>
+ <li><strong>Filename</strong>: The full path to the file requested</li>
+ <li><strong>Address</strong>: The IP address of the host</li>
 </ul>
 
-<p><img alt="" src="https://mdn.mozillademos.org/files/16266/network_headers.png" style="border: 1px solid black; display: block; height: 295px; margin-left: auto; margin-right: auto; width: 900px;"></p>
+<p>The following information is shown in both the collapsed and the expanded states:</p>
 
-<p>You can filter the headers that are displayed.</p>
-
-<p>In addition to showing information about known trackers in the list, the request information section of the Headers panel also shows an icon and a message if the request is to a site that is associated with a known tracker ({{bug("1485416")}}).</p>
-
-<p><img alt="" src="https://mdn.mozillademos.org/files/16600/tracker_in_header_panel.png" style="border: 1px solid black; display: block; height: 335px; margin: 0px auto; width: 402px;"></p>
+<ul>
+ <li><strong>Status: </strong>The <a href="/en-US/docs/Web/HTTP/Status">HTTP response code</a> for the request.</li>
+ <li><strong>Version</strong>: The HTTP version used</li>
+ <li><strong>Transferred</strong>: The amount of data transferred with the request</li>
+ <li>The <strong>Referrer Policy</strong>, which governs which referrer information, sent in the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer" title="The Referer request header contains the address of the previous web page from which a link to the currently requested page was followed. The Referer header allows servers to identify where people are visiting them from and may use that data for analytics, logging, or optimized caching, for example."><code>Referer</code></a> header, should be included with requests. (See <a href="/en-US/docs/Web/HTTP/Headers/Referrer-Policy">Referrer-Policy</a> for a description of possible values)</li>
+ <li><strong>Blocking</strong>: If the request is to a site that is associated with a known tracker, an icon and a message are shown; otherwise, this field is not shown.</li>
+</ul>
 
 <h4 id="Response_headers"><strong>Response headers</strong></h4>
 

@@ -25,15 +25,18 @@ let l10n = {
 let str = $1 || $0;
 
 let URL = "/" + env.locale + "/docs/Web/JavaScript/" + l10n.refslug + '/';
+let basePath = URL;
 
 let api  = $0.replace('()', '').replace('.prototype.', '.');
 
-let page = await wiki.getPage(URL + $0);
-let objectPage = await wiki.getPage(URL + l10n.slug + '/' +  $0);
+let page = wiki.getPage(URL + $0);
+let objectPage = wiki.getPage(URL + l10n.slug + '/' + $0);
 
 if ((api.indexOf("..") === -1) && (api.indexOf(".") !== -1)) { // Handle try...catch case
+    basePath += l10n.slug + '/';
     URL += l10n.slug + '/' + api.replace('.', '/');
 } else if (!page.slug && objectPage.slug) {
+    basePath += l10n.slug + '/';
     URL += l10n.slug + '/' + $0;
 } else {
     URL += $0;
@@ -44,7 +47,10 @@ if (anchor && anchor[0] != '#') {
     anchor = "#" + anchor;
 }
 
-let code    = !$3 ? '<code>'  : '';
-let endcode = !$3 ? '</code>' : '';
+if (!$3) {
+  str = `<code>${str}</code>`;
+}
 
-%><a href="<%- URL + anchor %>"><%- code %><%- str %><%- endcode %></a>
+const link = web.smartLink(URL + anchor, null, str, $0, basePath);
+
+%><%- link %>

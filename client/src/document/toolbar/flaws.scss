@@ -10,11 +10,15 @@
       font-weight: bold;
     }
   }
-}
 
-a.flawed--broken_link_404 {
-  border: 1px solid red;
-}
-a.flawed--broken_link_redirect {
-  border: 1px solid orange;
+  .macro-filepath-in-prerequisite {
+    font-size: 80%;
+    background-color: orange;
+    padding: 1px 5px;
+  }
+
+  details.fixed summary,
+  li.fixed {
+    text-decoration: line-through;
+  }
 }

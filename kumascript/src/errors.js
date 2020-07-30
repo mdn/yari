@@ -9,17 +9,61 @@
  * error occurs in and drawing an ASCII art arrow to point at it.
  */
 class SourceCodeError {
-  constructor(name, error, source, line, column, macroName) {
+  constructor(name, error, source, line, column, macroName, fatal = true) {
     this.name = name;
     this.error = error;
     // So it becomes available in JSON.stringfy when doing that on
     // instances of this class. Otherwise we'd need to monkey-patch
     // the `.toJSON` of `Error` which feels fragile.
     this.errorMessage = error.message;
+    this.offset = 0;
     this.line = line;
     this.column = column;
     this.macroName = macroName;
     this.sourceContext = this.getSourceContext(source);
+    this.fatal = fatal;
+  }
+
+  get key() {
+    // Generates a unique key for this error.
+    return [
+      this.name,
+      this.errorMessage,
+      this.line,
+      this.column,
+      this.filepath,
+    ].join("\n");
+  }
+
+  updateOffset(value) {
+    // Update the "offset" property to account for things like front-matter in the
+    // source. If the offset changes, this method will update related information.
+    // NOTE: We're not using a getter/setter for "offset", which would be a more
+    //       robust interface, so that the code that converts this instance to/from
+    //       JSON can remain simple.
+    if (this.offset !== value) {
+      // First, let's calculate the change in offset.
+      const offsetDelta = value - this.offset;
+      // Now, let's update things. First, the offset itself.
+      this.offset += offsetDelta;
+      // Next, let's update the line number.
+      this.line += offsetDelta;
+      // Finally, let's update the line numbers in the source context to reflect the new offset.
+      this.sourceContext = this.sourceContext.replace(
+        /^\s{0,4}(\d{1,5}) \| /gm,
+        (match, p1) => {
+          return (parseInt(p1) + offsetDelta).toString().padStart(5) + " | ";
+        }
+      );
+    }
+  }
+
+  updateFileInfo(fileInfo) {
+    this.filepath = fileInfo.path;
+    // The extra `- 1` is because of the added newline that
+    // is only present because of the serialized linebreak.
+    this.updateOffset(fileInfo.frontMatterOffset - 1);
+    return this;
   }
 
   // TODO(djf): a lot of our HTML documents have really long lines and
@@ -89,7 +133,7 @@ class MacroInvocationError extends SourceCodeError {
       source,
       error.location.start.line,
       error.location.start.column,
-      error.name // XXX does this work?
+      error.name
     );
   }
 }
@@ -137,14 +181,72 @@ class MacroCompilationError extends SourceCodeError {
  * from the underlying runtime error.
  */
 class MacroExecutionError extends SourceCodeError {
-  constructor(error, source, token) {
+  constructor(error, source, token, fatal = true) {
     super(
       "MacroExecutionError",
       error,
       source,
       token.location.start.line,
       token.location.start.column,
-      token.name
+      token.name,
+      fatal
+    );
+  }
+}
+
+/**
+ * A MacroRedirectedLinkError is a special case of MacroExecutionError.
+ */
+class MacroRedirectedLinkError extends MacroExecutionError {
+  constructor(error, source, token, redirectInfo) {
+    super(error, source, token, false);
+    this.name = "MacroRedirectedLinkError";
+    this.macroSource = source.slice(
+      token.location.start.offset,
+      token.location.end.offset
+    );
+    this.redirectInfo = { ...redirectInfo };
+  }
+}
+
+/**
+ * A MacroBrokenLinkError is a special case of MacroExecutionError.
+ */
+class MacroBrokenLinkError extends MacroExecutionError {
+  constructor(error, source, token) {
+    super(error, source, token, false);
+    this.name = "MacroBrokenLinkError";
+    this.macroSource = source.slice(
+      token.location.start.offset,
+      token.location.end.offset
+    );
+  }
+}
+
+/**
+ * A MacroDeprecatedError is a special case of MacroExecutionError.
+ */
+class MacroDeprecatedError extends MacroExecutionError {
+  constructor(error, source, token) {
+    super(error, source, token, false);
+    this.name = "MacroDeprecatedError";
+    this.macroSource = source.slice(
+      token.location.start.offset,
+      token.location.end.offset
+    );
+  }
+}
+
+/**
+ * A MacroLiveSampleError is a special case of MacroExecutionError.
+ */
+class MacroLiveSampleError extends MacroExecutionError {
+  constructor(error, source, token) {
+    super(error, source, token, true);
+    this.name = "MacroLiveSampleError";
+    this.macroSource = source.slice(
+      token.location.start.offset,
+      token.location.end.offset
     );
   }
 }
@@ -155,4 +257,8 @@ module.exports = {
   MacroNotFoundError,
   MacroCompilationError,
   MacroExecutionError,
+  MacroRedirectedLinkError,
+  MacroBrokenLinkError,
+  MacroDeprecatedError,
+  MacroLiveSampleError,
 };

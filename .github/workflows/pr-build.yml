@@ -1,8 +1,23 @@
+# Note that this workflow uses `get-diff-action` which is important.
+# It gives us an environment variable called `GIT_DIFF` which is a string
+# that is a list of file paths.
+# If you want to do what this workflow does on your laptop you can simulate
+# it like this:
+#
+#    export GIT_DIFF=`git diff --name-only master... | grep 'content/files' | grep '\.html$'`
+#    node content build --no-progressbar --files="${GIT_DIFF}"
+#
+# That way, you can behave on your laptop like, this action behaves here.
+
 name: PR Build
 
 on:
   pull_request:
-    branches: [master]
+    branches:
+      - master
+      # These line is temporary! At least until we're done using Gregor's
+      # reductio-reloaded branch instead of mdn.
+      - reductio-reloaded
 
 jobs:
   build:
@@ -14,39 +29,23 @@ jobs:
       - uses: technote-space/get-diff-action@v1
         id: git_diff_content
         with:
+          SEPARATOR: ','
           SUFFIX_FILTER: .html
           PREFIX_FILTER: content/files/
 
-      - name: Display Git diffs
-        run: |
-          echo ${{ steps.git_diff_content.outputs.diff }}
-
-      - name: Install Node
+      - name: Setup Node.js environment
+        if: steps.git_diff_content.outputs.diff
         uses: actions/setup-node@v2-beta
         with:
           node-version: "12"
       - name: Display Node & Yarn version
+        if: steps.git_diff_content.outputs.diff
         run: |
           node --version
           yarn --version
 
-      - name: Install Python
-        if: steps.git_diff_content.outputs.diff
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
-
-      - name: Install Python poetry
-        if: steps.git_diff_content.outputs.diff
-        uses: dschep/install-poetry-action@v1.3
-
-      - name: Display Python & Poetry version
-        if: steps.git_diff_content.outputs.diff
-        run: |
-          python --version
-          poetry --version
-
       - name: Get yarn cache directory path
+        if: steps.git_diff_content.outputs.diff
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
       - uses: actions/cache@v1
@@ -83,9 +82,6 @@ jobs:
           # functional tests have a gap in them but actually building
           # real content exposes it.
 
-          node content build --no-progressbar --files="${GIT_DIFF}"
-
-          # Upload the lot!
-          cd deployer
-          poetry install
-          poetry run deployer upload --help
+          export BUILD_NO_PROGRESSBAR=true
+          export BUILD_FILES="${{ env.GIT_DIFF }}"
+          yarn build

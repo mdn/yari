@@ -1,0 +1,80 @@
+---
+title: FinalizationRegistry.prototype.register()
+slug: Web/JavaScript/Reference/Global_Objects/FinalizationRegistry/register
+summary: >-
+  The register method registers an object with a FinalizationRegistry instance
+  so that if the object is garbage-collected, the registry's callback may get
+  called.
+tags:
+  - FinalizationRegistry
+  - JavaScript
+  - Method
+  - Prototype
+  - Reference
+---
+<div>{{JSRef}}</div>
+
+<p>The <code>register</code> method registers an object with a {{jsxref("FinalizationRegistry")}} instance so that if the object is garbage-collected, the registry's callback may get called.</p>
+
+<h2 id="Syntax">Syntax</h2>
+
+<pre class="syntaxbox"><code><var>registry</var>.register(<var>target</var>, <var>heldValue</var>, <var>[unregisterToken]</var>);</code>
+</pre>
+
+<h3 id="Parameters">Parameters</h3>
+
+<dl>
+ <dt><code>target</code></dt>
+ <dd>The target object to register.</dd>
+ <dt><code>heldValue</code></dt>
+ <dd>The value to pass to the finalizer for this object. This cannot be the <code>target</code> object.</dd>
+ <dt><code>unregisterToken</code> {{optional_inline}}</dt>
+ <dd>A token that may be used with the <code>unregister</code> method later to unregister the target object. If provided (and not <code>undefined</code>), this must be an object. If not provided, the target cannot be unregistered.</dd>
+</dl>
+
+<h3 id="Return_value">Return value</h3>
+
+<p><code>undefined</code>.</p>
+
+<h3 id="Notes">Notes</h3>
+
+<p>See the <a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/FinalizationRegistry#Avoid_where_possible">Avoid where possible</a> and <a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/FinalizationRegistry#Notes_on_cleanup_callbacks">Notes on cleanup callbacks</a> sections of the {{jsxref("FinalizationRegistry")}} page for important caveats.</p>
+
+<h3 id="Examples">Examples</h3>
+
+<p>The following registers the target object referenced by <code>target</code>, passing in the held value <code>"some value"</code> and passing the target object itself as the unregistration token:</p>
+
+<pre class="brush: js">registry.register(target, "some value", target);
+</pre>
+
+<p>The following registers the target object referenced by <code>target</code>, passing in another object as the held value, and not passing in any unregistration token (which means <code>target</code> can't be unregistered):</p>
+
+<pre class="brush: js">registry.register(target, {"useful": "info about target"});
+</pre>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><a href="https://github.com/tc39/proposal-weakrefs">WeakRefs proposal</a></td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<div class="hidden">The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>
+
+<p>{{Compat("javascript.builtins.FinalizationRegistry.register")}}</p>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>{{jsxref("FinalizationRegistry")}}</li>
+</ul>

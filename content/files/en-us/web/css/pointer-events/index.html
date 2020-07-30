@@ -10,6 +10,7 @@ tags:
   - Reference
   - SVG
   - pointer-events
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -25,7 +26,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="brush: css no-line-numbers">/* Keyword values */
+<pre class="brush: css no-line-numbers notranslate">/* Keyword values */
 pointer-events: auto;
 pointer-events: none;
 pointer-events: visiblePainted; /* SVG only */
@@ -77,7 +78,7 @@ pointer-events: unset;
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Examples">Examples</h2>
 
@@ -85,7 +86,7 @@ pointer-events: unset;
 
 <p>This example disables pointer events (clicking, dragging, hovering, etc.) on all images.</p>
 
-<pre class="brush:css">img {
+<pre class="brush:css notranslate">img {
   pointer-events: none;
 }</pre>
 
@@ -93,12 +94,12 @@ pointer-events: unset;
 
 <p>This example disables pointer events on the link to http://example.com.</p>
 
-<pre class="brush:html">&lt;ul&gt;
+<pre class="brush:html notranslate">&lt;ul&gt;
   &lt;li&gt;&lt;a href="https://developer.mozilla.org"&gt;MDN&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href="http://example.com"&gt;example.com&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</pre>
 
-<pre class="brush:css">a[href="http://example.com"] {
+<pre class="brush:css notranslate">a[href="http://example.com"] {
   pointer-events: none;
 }</pre>
 

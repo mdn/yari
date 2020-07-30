@@ -3,9 +3,9 @@
 $search-border-color: #ccc;
 $search-border-color-focus: #0096bfab;
 
-form.search-widget {
+.search-widget {
   position: relative;
-  // float: right;
+  z-index: 12;
 
   input {
     width: 400px;
@@ -49,25 +49,32 @@ form.search-widget {
 
   .search-results {
     position: absolute;
-    z-index: 12;
     background-color: white;
     opacity: 0.98;
-    border-bottom: 1px solid #0096bfab;
-    border-right: 1px solid #0096bfab;
-    border-left: 1px solid #0096bfab;
+    border: 2px solid black;
     border-radius: 0 0 4px 4px;
-    width: 400px;
-    top: 40px;
+    width: 305px;
+    top: 38px;
+    left: 20px;
+    border-top: 0;
+
+    // This is copied verbatim from the `.main-menu li ul` in the main styles.
+    // Consistency is nice :)
+    box-shadow: 0 2px 8px 0 rgba(12, 12, 13, 0.1);
+
+    .indexing-warning {
+      color: orange;
+    }
 
     div {
       padding: 5px;
       border-bottom: 1px solid #efefef;
     }
-    div:hover,
-    div.highlit {
+    .result-item:hover,
+    .result-item.highlit {
       background-color: #efefef;
     }
-    div:hover {
+    .result-item:hover {
       cursor: pointer;
     }
     div:last-child {
@@ -86,6 +93,9 @@ form.search-widget {
 
     div.nothing-found {
       font-style: italic;
+    }
+    div.searchindex-error {
+      color: red;
     }
     .fuzzy-engaged {
       font-size: 80%;

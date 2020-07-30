@@ -18,12 +18,12 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="brush: js">self.importScripts('foo.js');
+<pre class="brush: js notranslate">self.importScripts('foo.js');
 self.importScripts('foo.js', 'bar.js', ...);</pre>
 
 <h3 id="Parameters">Parameters</h3>
 
-<p>A comma-separated list of {{domxref("DOMString")}} objects representing the scripts to be imported.</p>
+<p>A comma-separated list of {{domxref("DOMString")}} objects representing the scripts to be imported. These paths are relative to <em>html document base URL</em>.</p>
 
 <h3 id="Return_value">Return value</h3>
 
@@ -50,7 +50,7 @@ self.importScripts('foo.js', 'bar.js', ...);</pre>
 
 <p>If you had some functionality written in a separate script called <code>foo.js</code> that you wanted to use inside worker.js, you could import it using the following line:</p>
 
-<pre class="brush: js">importScripts('foo.js');</pre>
+<pre class="brush: js notranslate">importScripts('foo.js');</pre>
 
 <p><code>importScripts()</code> and <code>self.importScripts()</code> are effectively equivalent — both represent <code>importScripts()</code> being called from inside the worker's inner scope.</p>
 
@@ -66,7 +66,7 @@ self.importScripts('foo.js', 'bar.js', ...);</pre>
   <tr>
    <td>{{SpecName('HTML WHATWG', '#dom-workerglobalscope-importscripts', 'importScripts()')}}</td>
    <td>{{Spec2('HTML WHATWG')}}</td>
-   <td> </td>
+   <td></td>
   </tr>
  </tbody>
 </table>

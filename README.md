@@ -6,7 +6,7 @@
 
 ## Quickstart
 
-These steps should get you started, locally, straight away:
+To run Yari locally, you'll first need to install [git](https://git-scm.com/), [Node.js](https://nodejs.org) (>= 12.0.0) and [Yarn 1](https://classic.yarnpkg.com/en/docs/install). After that, run these commands in your bash:
 
     git clone https://github.com/mdn/yari.git
     cd yari
@@ -14,11 +14,8 @@ These steps should get you started, locally, straight away:
     yarn start
     open http://localhost:3000
 
-To really understand how it starts and how to break down the various
-tools, open `Procfile` or the `package.json`. Or, read on...
-
 If you prefer, you can fork the repo first and do the `git clone` with
-*your* fork instead of the `mdn` one.
+_your_ fork instead of the `mdn` one.
 
 ### How to stay up-to-date
 
@@ -27,7 +24,6 @@ up-to-date with these commands:
 
     git pull origin master
     yarn
-    yarn clean
     yarn start
 
 These are also good steps to always take when you embark on making a change.
@@ -59,13 +55,7 @@ might expand with more documentation specifically for contributing to the
 content exclusively.
 
 The `yarn start` command encapsulates the front-end dev server
-(on `localhost:3000`) and the `server` (on `localhost:5000`)
-as well as the `watcher`. The `watcher` triggers a build when a
-file changes (or is added!).
-The `yarn start` command also first runs a command that gathers up *all*
-the document URLs and their titles (plus some other metadata). This can
-take a while but it's cached to disk and is automatically invalidated if
-any of the source code changes.
+(on `localhost:3000`) and the `server` (on `localhost:5000`).
 
 All the sub-commands of `yarn start` can be broken down and run individually
 if you want to work more rapidly.
@@ -89,15 +79,6 @@ The `server` has two main jobs:
 
 1. Simulate serving the site (e.g. from a server, S3 or a CDN).
 2. Trigger builds of documents that haven't been built, by URL.
-
-If you don't use the server you can manually use the CLI to build a page.
-For example:
-
-    node content build -l en-us -f web/html/element
-
-...will build all documents that match that folder prefix. But you don't
-need to do that up front since the server will "fill in the gaps" by
-triggering a build if you simply try to view it.
 
 ### Linting
 
@@ -185,38 +166,14 @@ in advance. One potential advantage is that you can get a more complete
 list of all possible "flaws" across all documents before you even visit them.
 The most fundamental CLI command is:
 
-    yarn prebuild  # if you haven't run 'yarn start' recently
-    node content build
-
-You can use `--help` to find various options such as filtering. For example,
-to build all `en-US` documents under the `Web/CSS/` subtree, you can run this:
-
-    node content build -l en-us -f web/css
-
-The files get put into the `client/build/` and that folder should be ready
-to be uploaded to static file hosting. Note the `-f` (aka `--foldersearch`)
-is case-insensitive.
+    yarn build
 
 ### What gets built
 
-Every `index.html` becomes three files:
+Every `index.html` becomes two files:
 
-* `index.html` fully formed and complete HTML file
-* `index.json` the React needed state to build the page in the client
-* `index.hash` a short hash digest of the cache key used to build this page
-
-### Caching
-
-When building, we attempt to use a disk-based cache. It computes a hash
-for every document by combining...
-
-* The content of the `index.html` file.
-* The combined source code of all `.js`, `.tsx`, and also all `package.json`
-  and `yarn.lock`.
-
-If you run `node content build -l en-us -f web/css` *twice* you'll find it
-runs *much* faster the second time. But any little change to any source
-code file should invalidate the cache.
+- `index.html` fully formed and complete HTML file
+- `index.json` the React needed state to build the page in the client
 
 ### Flaw checks
 
@@ -226,7 +183,7 @@ severe but they should never block a full build.
 
 More information about how to set flaws can be found in `docs/envvars.md`.
 
-Essentially, the default is to *warn* about any flaw and you can see
+Essentially, the default is to _warn_ about any flaw and you can see
 those flaws when using `http://localhost:3000`. But for completed builds,
 all flaws are ignored. This makes the build faster and there's also
 no good place to display the flaws in a production-grade build.

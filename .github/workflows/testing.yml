@@ -7,7 +7,11 @@ on:
   push:
     branches: [master]
   pull_request:
-    branches: [master]
+    branches:
+      - master
+      # These line is temporary! At least until we're done using Gregor's
+      # reductio-reloaded branch instead of mdn.
+      - reductio-reloaded
 
 jobs:
   build:
@@ -61,4 +65,18 @@ jobs:
         if: steps.git_diff_kumascript.outputs.diff
 
       - name: Functional testing
-        run: ./testing/scripts/functional-test.sh
+        run: |
+          # Make this env var explicit for GitHub Actions because in local
+          # dev/debug you're encouraged to start it yourself in a separate
+          # terminal.
+          export TESTING_START_SERVER=true
+
+          # In terms of the --maxWorkers option, it's not yet clear which
+          # is best.
+          # See https://jestjs.io/docs/en/troubleshooting#tests-are-extremely-slow-on-docker-andor-continuous-integration-ci-server
+          # and https://www.peterbe.com/plog/ideal-number-of-workers-in-jest-maxWorkers
+          # CI tends to have fewer CPUs than laptops so let's stay conservative
+          # for now.
+          # Also note that `--runInBand` is the same as `--maxWorkers=1`
+
+          ./testing/scripts/functional-test.sh --runInBand

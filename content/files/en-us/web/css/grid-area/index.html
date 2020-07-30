@@ -12,6 +12,7 @@ tags:
   - CSS Grid
   - CSS Property
   - Reference
+  - 'recipe:css-shorthand-property'
 ---
 <p>The <strong><code>grid-area</code></strong> CSS property is a <a href="/en-US/docs/Web/CSS/Shorthand_properties">shorthand</a> property for {{cssxref("grid-row-start")}}, {{cssxref("grid-column-start")}}, {{cssxref("grid-row-end")}} and {{cssxref("grid-column-end")}}, specifying a grid item’s size and location within the {{glossary("grid", "grid")}} by contributing a line, a span, or nothing (automatic) to its grid placement, thereby specifying the edges of its {{glossary("grid areas", "grid area")}}.</p>
 
@@ -31,7 +32,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="brush: css">/* Keyword values */
+<pre class="brush: css notranslate">/* Keyword values */
 grid-area: auto;
 grid-area: auto / auto;
 grid-area: auto / auto / auto;
@@ -82,13 +83,13 @@ grid-area: unset;</pre>
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Example">Example</h2>
 
 <h3 id="HTML_content">HTML content</h3>
 
-<pre class="brush: html">&lt;div id="grid"&gt;
+<pre class="brush: html notranslate">&lt;div id="grid"&gt;
   &lt;div id="item1"&gt;&lt;/div&gt;
   &lt;div id="item2"&gt;&lt;/div&gt;
   &lt;div id="item3"&gt;&lt;/div&gt;
@@ -96,7 +97,7 @@ grid-area: unset;</pre>
 
 <h3 id="CSS_content">CSS content</h3>
 
-<pre class="brush: css; highlight[9]">#grid {
+<pre class="brush: css; highlight[9] notranslate">#grid {
   display: grid;
   height: 100px;
   grid-template: repeat(4, 1fr) / 50px 100px;

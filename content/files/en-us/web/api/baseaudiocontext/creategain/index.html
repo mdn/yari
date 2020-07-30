@@ -25,7 +25,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">var <em>gainNode</em> = <em>AudioContext</em>.createGain();</pre>
+<pre class="syntaxbox notranslate">var <em>gainNode</em> = <em>AudioContext</em>.createGain();</pre>
 
 <h3 id="Description" name="Description">Return value</h3>
 
@@ -37,11 +37,11 @@ tags:
 
 <p>The below snippet wouldn't work as is — for a complete working example, check out our <a href="https://mdn.github.io/voice-change-o-matic/">Voice-change-O-matic</a> demo (<a href="https://github.com/mdn/voice-change-o-matic/blob/gh-pages/scripts/app.js">view source</a>.)</p>
 
-<pre class="brush: html">&lt;div&gt;
+<pre class="brush: html notranslate">&lt;div&gt;
   &lt;button class="mute"&gt;Mute button&lt;/button&gt;
 &lt;/div&gt;</pre>
 
-<pre class="brush: js">var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+<pre class="brush: js notranslate">var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 var gainNode = audioCtx.createGain();
 var mute = document.querySelector('.mute');
 var source;
@@ -77,7 +77,9 @@ mute.onclick = voiceMute;
 
 function voiceMute() {
   if(mute.id == "") {
-    gainNode.gain.setValueAtTime(-1, audioCtx.currentTime);
+    // 0 means mute. If you still hear something, make sure you haven't
+    // connected your source into the output in addition to using the GainNode.
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
     mute.id = "activated";
     mute.innerHTML = "Unmute";
   } else {

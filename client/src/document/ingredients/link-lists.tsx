@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import "./link-lists.scss";
+
 export function LinkList({ title, links }) {
   return (
     <div className="link-list">

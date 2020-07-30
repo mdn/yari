@@ -24,7 +24,12 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox">const newStr = <var>str</var>.replaceAll(<var>regexp</var>|<var>substr</var>, <var>newSubstr</var>|<var>function</var>)</pre>
+<pre class="syntaxbox notranslate">const newStr = <var>str</var>.replaceAll(<var>regexp</var>|<var>substr</var>, <var>newSubstr</var>|<var>function</var>)
+</pre>
+
+<div class="blockIndicator note">
+<p>when using a `<var>regexp</var>` you must have to set the global ("g") flag; otherwise, it will throw a <code>TypeError</code>: "replaceAll must be called with a global RegExp".</p>
+</div>
 
 <h3 id="Parameters">Parameters</h3>
 
@@ -123,20 +128,20 @@ tags:
 
 <h3 id="Using_replaceAll">Using replaceAll</h3>
 
-<pre class="brush: js">'aabbcc'.replaceAll('b', '.');
+<pre class="brush: js notranslate">'aabbcc'.replaceAll('b', '.');
 // 'aa..cc'</pre>
 
 <h3 id="Non-global_regex_throws">Non-global regex throws</h3>
 
 <p>When using a regular expression search value, it must be global. This won't work:</p>
 
-<pre class="brush: js; example-bad">'aabbcc'.replaceAll(/b/, '.');
+<pre class="brush: js; example-bad notranslate">'aabbcc'.replaceAll(/b/, '.');
 TypeError: replaceAll must be called with a global RegExp
 </pre>
 
 <p>This will work:</p>
 
-<pre class="brush: js; example-good">'aabbcc'.replaceAll(/b/g, '.');
+<pre class="brush: js; example-good notranslate">'aabbcc'.replaceAll(/b/g, '.');
 "aa..cc"
 </pre>
 

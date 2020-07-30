@@ -3,8 +3,6 @@ set -e
 
 export ENV_FILE=testing/.env
 
-yarn run prebuild
+yarn build
 
-node content build
-
-yarn workspace testing run test
+yarn workspace testing run test $@

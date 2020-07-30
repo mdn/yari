@@ -1,15 +1,12 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+node_modules/
 /.pnp
 .pnp.js
 
 # testing
 /coverage
-
-# production
-/build
 
 # misc
 .DS_Store
@@ -22,21 +19,15 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-/server/node_modules/
-/client/node_modules/
-/client/build/
-/server/dist/
-/ssr/node_modules/
-/ssr/dist/
-/watcher/node_modules/
-/content/node_modules/
-/content/build/
-/content/_all-titles.json
+.next/
+titles.json
 # Remove this once we're using `/testing/content/` fully.
 /ci-content/
 /kumascript/coverage/
 /kumascript/node_modules/
 /testing/node_modules/
+/client/build/
+/ssr/dist/
 
 # Can be removed once content lives in its own repo
 /archivecontent/files
@@ -79,3 +70,4 @@ yarn-error.log*
 
 /deployer/upload.log
 /deployer/src/deployer.egg-info/
+fake-v1-api/

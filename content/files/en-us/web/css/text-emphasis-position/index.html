@@ -10,12 +10,13 @@ tags:
   - CSS Property
   - CSS Text Decoration
   - Reference
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
 <p>The <strong><code>text-emphasis-position</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property sets where emphasis marks are drawn. Like ruby text, if there isn't enough room for emphasis marks, the line height is increased.</p>
 
-<pre class="brush:css no-line-numbers">/* Initial value */
+<pre class="brush:css no-line-numbers notranslate">/* Initial value */
 text-emphasis-position: over right;
 
 /* Keywords value */
@@ -96,21 +97,21 @@ text-emphasis-position: unset;
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}
+<pre class="syntaxbox notranslate">{{csssyntax}}
 </pre>
 
 <h2 id="Examples">Examples</h2>
 
 <p>Some editors prefer to hide emphasis marks when they conflict with ruby. In HTML, this can be done with the following style rule:</p>
 
-<pre class="brush: css">ruby {
+<pre class="brush: css notranslate">ruby {
   text-emphasis: none;
 }
 </pre>
 
 <p>Some other editors prefer to hide ruby when they conflict with emphasis marks. In HTML, this can be done with the following pattern:</p>
 
-<pre class="brush: css">em {
+<pre class="brush: css notranslate">em {
   text-emphasis: dot; /* Set text-emphasis for &lt;em&gt; elements */
 }
 

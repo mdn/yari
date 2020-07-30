@@ -21,16 +21,16 @@ tags:
 <p>In recent years however, CSS has evolved in order to better support different directionality of content, including right-to-left but also top-to-bottom content (such as Japanese) — these different directionalities are called <strong>writing modes</strong>. As you progress in your study and begin to work with layout, an understanding of writing modes will be very helpful to you, therefore we will introduce them now.</p>
 
 <table class="learn-box standard-table">
-	<tbody>
-		<tr>
-			<th scope="row">Prerequisites:</th>
-			<td>Basic computer literacy, <a href="https://developer.mozilla.org/en-US/Learn/Getting_started_with_the_web/Installing_basic_software">basic software installed</a>, basic knowledge of <a href="https://developer.mozilla.org/en-US/Learn/Getting_started_with_the_web/Dealing_with_files">working with files</a>, HTML basics (study <a href="/en-US/docs/Learn/HTML/Introduction_to_HTML">Introduction to HTML</a>), and an idea of how CSS works (study <a href="/en-US/docs/Learn/CSS/First_steps">CSS first steps</a>.)</td>
-		</tr>
-		<tr>
-			<th scope="row">Objective:</th>
-			<td>To understand the importance of writing modes to modern CSS.</td>
-		</tr>
-	</tbody>
+ <tbody>
+  <tr>
+   <th scope="row">Prerequisites:</th>
+   <td>Basic computer literacy, <a href="https://developer.mozilla.org/en-US/Learn/Getting_started_with_the_web/Installing_basic_software">basic software installed</a>, basic knowledge of <a href="https://developer.mozilla.org/en-US/Learn/Getting_started_with_the_web/Dealing_with_files">working with files</a>, HTML basics (study <a href="/en-US/docs/Learn/HTML/Introduction_to_HTML">Introduction to HTML</a>), and an idea of how CSS works (study <a href="/en-US/docs/Learn/CSS/First_steps">CSS first steps</a>.)</td>
+  </tr>
+  <tr>
+   <th scope="row">Objective:</th>
+   <td>To understand the importance of writing modes to modern CSS.</td>
+  </tr>
+ </tbody>
 </table>
 
 <h2 id="What_are_writing_modes">What are writing modes?</h2>
@@ -44,9 +44,9 @@ tags:
 <p>The three possible values for the <code><a href="/en-US/docs/Web/CSS/writing-mode">writing-mode</a></code> property are:</p>
 
 <ul>
-	<li><code>horizontal-tb</code>: Top-to-bottom block flow direction. Sentences run horizontally.</li>
-	<li><code>vertical-rl</code>: Right-to-left block flow direction. Sentences run vertically.</li>
-	<li><code>vertical-lr</code>: Left-to-right block flow direction. Sentences run vertically.</li>
+ <li><code>horizontal-tb</code>: Top-to-bottom block flow direction. Sentences run horizontally.</li>
+ <li><code>vertical-rl</code>: Right-to-left block flow direction. Sentences run vertically.</li>
+ <li><code>vertical-lr</code>: Left-to-right block flow direction. Sentences run vertically.</li>
 </ul>
 
 <p>So the <code>writing-mode</code> property is in reality setting the direction in which block-level elements are displayed on the page — either from top-to-bottom, right-to-left, or left-to-right. This then dictates the direction text flows in sentences.</p>
@@ -121,6 +121,10 @@ tags:
 
 <p>Here we are also using logical margin values to ensure the margin is in the correct place no matter what the writing mode is.</p>
 
+<div class="blockIndicator note">
+<p>Currently, only Firefox supports flow relative values  for <code>float</code>. If you are using <strong>Google Chrome</strong> or <strong>Microsoft Edge</strong>, you may find that the image did not float.</p>
+</div>
+
 <h3 id="Should_you_use_physical_or_logical_properties">Should you use physical or logical properties?</h3>
 
 <p>The logical properties and values are newer than their physical equivalents, and therefore have only recently been implemented in browsers. You can check any property page on MDN to see how far back the browser support goes. If you are not using multiple writing modes then for now you might prefer to use the physical versions. However, ultimately we expect that people will transition to the logical versions for most things, as they make a lot of sense once you start also dealing with layout methods such as flexbox and grid.</p>
@@ -140,23 +144,23 @@ tags:
 <h2 id="In_this_module">In this module</h2>
 
 <ol>
-	<li><a href="/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance">Cascade and inheritance</a></li>
-	<li><a href="/en-US/docs/Learn/CSS/Building_blocks/Selectors">CSS selectors</a>
-	<ul>
-		<li><a href="/en-US/docs/Learn/CSS/Building_blocks/Selectors/Type_Class_and_ID_Selectors">Type, class, and ID selectors</a></li>
-		<li><a href="/en-US/docs/Learn/CSS/Building_blocks/Selectors/Attribute_selectors">Attribute selectors</a></li>
-		<li><a href="/en-US/docs/Learn/CSS/Building_blocks/Selectors/Pseudo-classes_and_pseudo-elements">Pseudo-classes and pseudo-elements</a></li>
-		<li><a href="/en-US/docs/Learn/CSS/Building_blocks/Selectors/Combinators">Combinators</a></li>
-	</ul>
-	</li>
-	<li><a href="/en-US/docs/Learn/CSS/Building_blocks/The_box_model">The box model</a></li>
-	<li><a href="/en-US/docs/Learn/CSS/Building_blocks/Backgrounds_and_borders">Backgrounds and borders</a></li>
-	<li><a href="/en-US/docs/Learn/CSS/Building_blocks/Handling_different_text_directions">Handling different text directions</a></li>
-	<li><a href="/en-US/docs/Learn/CSS/Building_blocks/Overflowing_content">Overflowing content</a></li>
-	<li><a href="/en-US/docs/Learn/CSS/Building_blocks/Values_and_units">Values and units</a></li>
-	<li><a href="/en-US/docs/Learn/CSS/Building_blocks/Sizing_items_in_CSS">Sizing items in CSS</a></li>
-	<li><a href="/en-US/docs/Learn/CSS/Building_blocks/Images_media_form_elements">Images, media, and form elements</a></li>
-	<li><a href="/en-US/docs/Learn/CSS/Building_blocks/Styling_tables">Styling tables</a></li>
-	<li><a href="/en-US/docs/Learn/CSS/Building_blocks/Debugging_CSS">Debugging CSS</a></li>
-	<li><a href="/en-US/docs/Learn/CSS/Building_blocks/Organizing">Organizing your CSS</a></li>
+ <li><a href="/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance">Cascade and inheritance</a></li>
+ <li><a href="/en-US/docs/Learn/CSS/Building_blocks/Selectors">CSS selectors</a>
+  <ul>
+   <li><a href="/en-US/docs/Learn/CSS/Building_blocks/Selectors/Type_Class_and_ID_Selectors">Type, class, and ID selectors</a></li>
+   <li><a href="/en-US/docs/Learn/CSS/Building_blocks/Selectors/Attribute_selectors">Attribute selectors</a></li>
+   <li><a href="/en-US/docs/Learn/CSS/Building_blocks/Selectors/Pseudo-classes_and_pseudo-elements">Pseudo-classes and pseudo-elements</a></li>
+   <li><a href="/en-US/docs/Learn/CSS/Building_blocks/Selectors/Combinators">Combinators</a></li>
+  </ul>
+ </li>
+ <li><a href="/en-US/docs/Learn/CSS/Building_blocks/The_box_model">The box model</a></li>
+ <li><a href="/en-US/docs/Learn/CSS/Building_blocks/Backgrounds_and_borders">Backgrounds and borders</a></li>
+ <li><a href="/en-US/docs/Learn/CSS/Building_blocks/Handling_different_text_directions">Handling different text directions</a></li>
+ <li><a href="/en-US/docs/Learn/CSS/Building_blocks/Overflowing_content">Overflowing content</a></li>
+ <li><a href="/en-US/docs/Learn/CSS/Building_blocks/Values_and_units">Values and units</a></li>
+ <li><a href="/en-US/docs/Learn/CSS/Building_blocks/Sizing_items_in_CSS">Sizing items in CSS</a></li>
+ <li><a href="/en-US/docs/Learn/CSS/Building_blocks/Images_media_form_elements">Images, media, and form elements</a></li>
+ <li><a href="/en-US/docs/Learn/CSS/Building_blocks/Styling_tables">Styling tables</a></li>
+ <li><a href="/en-US/docs/Learn/CSS/Building_blocks/Debugging_CSS">Debugging CSS</a></li>
+ <li><a href="/en-US/docs/Learn/CSS/Building_blocks/Organizing">Organizing your CSS</a></li>
 </ol>

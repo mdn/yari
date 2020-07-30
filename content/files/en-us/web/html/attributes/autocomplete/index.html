@@ -85,7 +85,7 @@ tags:
  <dd>A company or organization name, such as "Acme Widget Company" or "Girl Scouts of America".</dd>
  <dt>"<code>street-address</code>"</dt>
  <dd>A street address. This can be multiple lines of text, and should fully identify the location of the address within its second administrative level (typically a city or town), but should not include the city name, ZIP or postal code, or country name.</dd>
- <dt>"<code>address-line1</code>", "<code>address-line2</code>", <code>"address-line3"</code></dt>
+ <dt>"<code>address-line1</code>", "<code>address-line2</code>", "<code>address-line3</code>"</dt>
  <dd>Each individual line of the street address. These should only be present if the "<code>street-address</code>" is not present.</dd>
  <dt>"<code>address-level4</code>"</dt>
  <dd>The finest-grained {{anch("Administrative levels in addresses", "administrative level")}}, in addresses which have four levels.</dd>
@@ -168,9 +168,9 @@ tags:
 
 <h2 id="Examples">Examples</h2>
 
-<pre class="brush: html">&lt;div&gt;
+<pre class="brush: html notranslate">&lt;div&gt;
   &lt;label for="cc-number"&gt;Enter your credit card number&lt;/label&gt;
-  &lt;input type="number" name="cc-number" id="cc-number" autocomplete="off"&gt;
+  &lt;input name="cc-number" id="cc-number" autocomplete="off"&gt;
 &lt;/div&gt;</pre>
 
 <h2 id="Administrative_levels_in_addresses">Administrative levels in addresses</h2>
@@ -212,8 +212,8 @@ tags:
 <p>The address levels are:</p>
 
 <ul>
- <li><code>address-level1</code>: The post town — "Winchelsea" in this case.</li>
- <li><code>address-line2</code>: The locality — "Upper-Wapping" in this case.</li>
+ <li><code>address-level1</code>: The post town — "Winchelsea" in this case.</li>
+ <li><code>address-line2</code>: The locality — "Upper-Wapping" in this case.</li>
  <li><code>address-line1</code>: The house/street particulars — "103 Frogmarch Street"</li>
 </ul>
 
@@ -222,6 +222,17 @@ tags:
 <h4 id="China">China</h4>
 
 <p>China can use as many as three administrative levels: the province, the city, and the district.</p>
+
+<h4 id="Japan">Japan</h4>
+
+<p>An address in Japan is typically <strong>written in one line</strong>, in an order from the least-specific to more-specific portions (in <strong>reverse order to the United States</strong>). There are two or three administrative levels in an address. Additional line can be used to show building names and room numbers. The postal code is separate. For example:</p>
+
+<p>〒381-0000<br>
+ 長野県長野市某町123</p>
+
+<p>"〒" and following seven digits shows the postal code.</p>
+
+<p><code>address-level1</code> is used for prefectures or the Tokyo Metropolis; "長野県" (Nagano Prefecture) is in this case. <code>address-level2</code> is typically used for cities, counties, towns and villages; "長野市" (Nagano City) in this case. "某町123" is <code>address-line1</code> which consists of an area name and a lot number.</p>
 
 <h2 id="Specifications">Specifications</h2>
 
@@ -235,12 +246,7 @@ tags:
  </thead>
  <tbody>
   <tr>
-   <td>{{SpecName('HTML5.2', "sec-forms.html#autofilling-form-controls-the-autocomplete-attribute", "autocomplete")}}</td>
-   <td>{{Spec2('HTML5.2')}}</td>
-   <td></td>
-  </tr>
-  <tr>
-   <td>{{SpecName('HTML WHATWG', "form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute", "autocomplete")}}</td>
+   <td>{{SpecName('HTML WHATWG', "#autofill")}}</td>
    <td>{{Spec2('HTML WHATWG')}}</td>
    <td></td>
   </tr>

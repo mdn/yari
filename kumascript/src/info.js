@@ -1,138 +1,46 @@
-BASE_URL = "https://developer.mozilla.org";
+const { VALID_LOCALES, Document, Redirect } = require("content");
 
-class AllPagesInfo {
-  constructor(pageInfoByUri, uriTransform) {
-    // This constructor requires a "pageInfoByUri" Map object (for example,
-    // "allTitles"), and a "uriTransform" function for cleaning/repairing
-    // URI's provided as arguments to the macros.
-    //
-    // NOTE: Assumes all of the keys of "pageInfoByUri" are lowercase.
-    this.resultCache = new Map();
-    this.uriTransform = uriTransform;
+const BASE_URL = "https://developer.mozilla.org";
+const DUMMY_BASE_URL = "https://example.com";
 
-    // Using the provided "pageInfoByUri" map, build the data structures
-    // needed to efficiently provide data suitable for consumption by
-    // the Kumascript macros.
-
-    const pagesByUri = new Map();
-    const childrenByUri = new Map();
-
-    // We'll build "pagesByUri" first, and then populate the "childrenByUri"
-    // object it references.
-
-    function buildTranslationObjects(data) {
-      // Builds a list of translation objects suitable for
-      // consumption by Kumascript macros, using the translation
-      // information from the given "data" as well as the "pageInfoByUri".
-      const result = [];
-      let rawTranslations = data.translations || [];
-      if (!rawTranslations.length && data.translation_of) {
-        const englishUri = `/en-US/docs/${data.translation_of}`;
-        const englishData = pageInfoByUri.get(englishUri.toLowerCase());
-        if (englishData) {
-          // First, add the English translation for this non-English locale.
-          result.push(
-            Object.freeze({
-              url: englishUri,
-              locale: "en-US",
-              title: englishData.title,
-              summary: englishData.summary,
-            })
-          );
-          rawTranslations = englishData.translations || [];
-        }
-      }
-      for (const { locale, slug } of rawTranslations) {
-        if (locale !== data.locale) {
-          // A locale is never a translation of itself.
-          const uri = `/${locale}/docs/${slug}`;
-          const pageData = pageInfoByUri.get(uri.toLowerCase());
-          result.push(
-            Object.freeze({
-              url: uri,
-              locale: locale,
-              title: pageData.title,
-              summary: pageData.summary,
-            })
-          );
-        }
-      }
-      return result;
-    }
-
-    // Assumes
-    for (const [uri, data] of pageInfoByUri) {
-      pagesByUri.set(
-        uri,
-        Object.freeze({
-          url: data.mdn_url,
-          locale: data.locale,
-          slug: data.slug,
-          title: data.title,
-          summary: data.summary,
-          tags: Object.freeze(data.tags || []),
-          translations: Object.freeze(buildTranslationObjects(data)),
-          get subpages() {
-            // Let's make this "subpages" property lazy, i.e. we'll only
-            // generate its value on demand. Most of the macros don't even
-            // use this property, so don't waste any time and memory until
-            // it's actually requested. IMPORTANT: The list returned does
-            // not need to be frozen since it's re-created for each caller
-            // (so one caller can't mess with another), but also should NOT
-            // be frozen since some macros sort the list in-place.
-            return (
-              childrenByUri.get(this.url.toLowerCase()) || []
-            ).map((childUriKey) => pagesByUri.get(childUriKey));
-          },
-        })
-      );
-    }
-
-    this.pagesByUri = Object.freeze(pagesByUri);
-
-    // Now let's populate "childrenByUri", a mapping of URI's to their
-    // immediate children. This is only used (referenced) within the
-    // lazy "subpages" getter of each page object within "pagesByUri".
-
-    const alreadyProcessed = new Set();
-    function addChild(childUri, locale, slugSegments) {
-      // Recursive function that adds each possible child
-      // URI of this incoming URI to its parent. The number
-      // of segments in the largest document URI is on the
-      // order of 10, so recursion is safe here.
-      if (alreadyProcessed.has(childUri)) {
-        return;
-      }
-      alreadyProcessed.add(childUri);
-      slugSegments.pop();
-      const parentUri = `/${locale}/docs/${slugSegments.join("/")}`;
-      if (pagesByUri.has(childUri)) {
-        // This URI is an actual document, so add it as a child of
-        // its parent URI.
-        if (childrenByUri.has(parentUri)) {
-          childrenByUri.get(parentUri).push(childUri);
-        } else {
-          childrenByUri.set(parentUri, [childUri]);
-        }
-      }
-      if (slugSegments.length > 1) {
-        addChild(parentUri, locale, slugSegments);
-      }
-    }
-
-    // Build "childrenByUri", a map of every possible parent URI
-    // to its list of actual child document URI's.
-    for (const uri of pagesByUri.keys()) {
-      const [locale, ...slugSegments] = uri
-        .replace("/docs/", " ")
-        .replace(/\//g, " ")
-        .trim()
-        .split(" ");
-      addChild(uri, locale, slugSegments);
+function repairURL(url) {
+  // Returns a lowercase URI with common irregularities repaired.
+  url = url.trim().toLowerCase();
+  if (!url.startsWith("/")) {
+    // Ensure the URI starts with a "/".
+    url = "/" + url;
+  }
+  // Remove redundant forward slashes, like "//".
+  url = url.replace(/\/{2,}/g, "/");
+  // Ensure the URI starts with a valid locale.
+  const maybeLocale = url.split("/")[1];
+  if (!VALID_LOCALES.has(maybeLocale)) {
+    if (maybeLocale === "en") {
+      // Converts URI's like "/en/..." to "/en-us/...".
+      url = url.replace(`/${maybeLocale}`, "/en-us");
+    } else {
+      // Converts URI's like "/web/..." to "/en-us/web/...", or
+      // URI's like "/docs/..." to "/en-us/docs/...".
+      url = "/en-us" + url;
     }
   }
+  // Ensure the locale is followed by "/docs".
+  const [locale, maybeDocs] = url.split("/").slice(1, 3);
+  if (maybeDocs !== "docs") {
+    // Converts URI's like "/en-us/web/..." to "/en-us/docs/web/...".
+    url = url.replace(`/${locale}`, `/${locale}/docs`);
+  }
+  return url;
+}
 
-  getUriKey(url) {
+const info = {
+  getPathname(url) {
+    // This function returns just the pathname of the given "url", removing
+    // any trailing "/".
+    return new URL(url, DUMMY_BASE_URL).pathname.replace(/\/$/, "");
+  },
+
+  cleanURL(url) {
     // This function returns just the lowercase pathname of the given "url",
     // removing any trailing "/". The BASE_URL is not important here, since
     // we're only after the path of any incoming "url", but it's required by
@@ -140,17 +48,17 @@ class AllPagesInfo {
     const uri = new URL(url, BASE_URL).pathname
       .replace(/\/$/, "")
       .toLowerCase();
-    return this.uriTransform(uri);
-  }
+    return Redirect.resolve(repairURL(uri));
+  },
 
   getDescription(url) {
-    const uriKey = this.getUriKey(url);
-    let description = `"${uriKey}"`;
-    if (uriKey !== url.toLowerCase()) {
+    const cleanedURL = info.cleanURL(url);
+    let description = `${cleanedURL}`;
+    if (cleanedURL !== url.toLowerCase()) {
       description += ` (derived from "${url}")`;
     }
     return description;
-  }
+  },
 
   getChildren(url, includeSelf) {
     // We don't need "depth" since it's handled dynamically (lazily).
@@ -160,46 +68,88 @@ class AllPagesInfo {
     // it's re-created for each caller (so one caller can't mess with
     // another), but also should NOT be frozen since some macros sort
     // the list in-place.
-    const uriKey = this.getUriKey(url);
-    if (!this.pagesByUri.has(uriKey)) {
-      throw new Error(`${this.getDescription(url)} does not exist`);
-    }
-    const pageData = this.pagesByUri.get(uriKey);
+    const page = info.getPage(url, { throwIfDoesNotExist: true });
     if (includeSelf) {
-      return [pageData];
+      return [page];
     }
-    return pageData.subpages;
-  }
+    return page.subpages;
+  },
 
+  // TODO
   getTranslations(url) {
-    const uriKey = this.getUriKey(url);
-    if (!this.pagesByUri.has(uriKey)) {
-      throw new Error(`${this.getDescription(url)} does not exist`);
+    // function buildTranslationObjects(data) {
+    //   // Builds a list of translation objects suitable for
+    //   // consumption by Kumascript macros, using the translation
+    //   // information from the given "data" as well as the "pageInfoByUri".
+    //   const result = [];
+    //   let rawTranslations = data.translations || [];
+    //   if (!rawTranslations.length && data.translation_of) {
+    //     const englishUri = `/en-US/docs/${data.translation_of}`;
+    //     const englishData = pageInfoByUri.get(englishUri.toLowerCase());
+    //     if (englishData) {
+    //       // First, add the English translation for this non-English locale.
+    //       result.push(
+    //         Object.freeze({
+    //           url: englishUri,
+    //           locale: "en-US",
+    //           title: englishData.title,
+    //           summary: englishData.summary,
+    //         })
+    //       );
+    //       rawTranslations = englishData.translations || [];
+    //     }
+    //   }
+    //   for (const { locale, slug } of rawTranslations) {
+    //     if (locale !== data.locale) {
+    //       // A locale is never a translation of itself.
+    //       const uri = `/${locale}/docs/${slug}`;
+    //       const pageData = pageInfoByUri.get(uri.toLowerCase());
+    //       result.push(
+    //         Object.freeze({
+    //           url: uri,
+    //           locale: locale,
+    //           title: pageData.title,
+    //           summary: pageData.summary,
+    //         })
+    //       );
+    //     }
+    //   }
+    //   return result;
+    // }
+    return info.getPage(url, { throwIfDoesNotExist: true }).translations;
+  },
+
+  getPage(url, { throwIfDoesNotExist = false } = {}) {
+    const document = Document.findByURL(info.cleanURL(url), { metadata: true });
+    if (!document) {
+      // The macros expect an empty object if the URL does not exist, so
+      // "throwIfDoesNotExist" should only be used within "info" itself.
+      if (throwIfDoesNotExist) {
+        throw new Error(`${info.getDescription(url)} does not exist`);
+      }
+      return {};
     }
-    return this.pagesByUri.get(uriKey).translations;
-  }
 
-  getPage(url) {
-    const uriKey = this.getUriKey(url);
-    if (!this.pagesByUri.has(uriKey)) {
-      throw new Error(`${this.getDescription(url)} does not exist`);
-    }
-    return this.pagesByUri.get(uriKey);
-  }
+    const { locale, slug, title, summary, tags } = document.metadata;
+    return {
+      url: document.url,
+      locale,
+      slug,
+      title,
+      summary,
+      tags: tags || [],
+      translations: [], //TODO Object.freeze(buildTranslationObjects(data)),
+      get subpages() {
+        return Document.findChildren(document.url, {
+          metadata: true,
+        }).map((document) => info.getPage(document.url));
+      },
+    };
+  },
 
-  cacheResult(uri, result) {
-    const uriKey = this.getUriKey(uri);
-    this.resultCache.set(uriKey, result);
-  }
+  hasPage(url) {
+    return Boolean(Document.findByURL(info.cleanURL(url)));
+  },
+};
 
-  getResultFromCache(uri) {
-    const uriKey = this.getUriKey(uri);
-    return this.resultCache.get(uriKey);
-  }
-
-  clearCache() {
-    this.resultCache.clear();
-  }
-}
-
-module.exports = AllPagesInfo;
+module.exports = info;

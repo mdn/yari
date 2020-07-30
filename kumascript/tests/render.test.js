@@ -19,6 +19,9 @@ describe("render() function", () => {
   function get(name) {
     return fs.readFileSync(fixture(name), "utf8");
   }
+  function renderPrerequisiteFromURL(url) {
+    throw new Error(`unexpected prerequisite: ${url}`);
+  }
 
   it("is a function", () => {
     expect(typeof render).toBe("function");
@@ -29,7 +32,9 @@ describe("render() function", () => {
     let input = get(casedir + "/input");
     let expected = get(casedir + "/output");
     let templates = new Templates(fixture(casedir + "/macros"));
-    let [result, errors] = await render(input, templates, {});
+    let [result, errors] = await render(input, {}, renderPrerequisiteFromURL, {
+      templates,
+    });
     expect(result).toEqual(expected);
     expect(errors).toEqual([]);
   });
@@ -41,7 +46,14 @@ describe("render() function", () => {
     let pageEnv = {
       selective_mode: [mode, ["Multi:Line:Macro", "頁尾附註", "MacroWithJson"]],
     };
-    let [result, errors] = await render(input, templates, pageEnv);
+    let [result, errors] = await render(
+      input,
+      pageEnv,
+      renderPrerequisiteFromURL,
+      {
+        templates,
+      }
+    );
     expect(result).toEqual(expected);
     expect(errors).toEqual([]);
   });
@@ -55,19 +67,33 @@ describe("render() function", () => {
     }
 
     let templates = new Templates(fixture("macros"));
-    let promise = render("{{async1}} {{async2}}", templates, { after });
+    let promise = render(
+      "{{asyncMacro}}",
+      { after },
+      renderPrerequisiteFromURL,
+      {
+        templates,
+      }
+    );
     jest.runAllTimers();
     let [result, errors] = await promise;
     expect(errors.length).toBe(0);
-    expect(result).toEqual("one two");
+    expect(result).toEqual("yay!");
   });
 
   it("exposes the per-page env object", async () => {
     let templates = new Templates(fixture("macros"));
-    let [result, errors] = await render("{{env}}", templates, {
-      x: 1,
-      y: 2,
-    });
+    let [result, errors] = await render(
+      "{{env}}",
+      {
+        x: 1,
+        y: 2,
+      },
+      renderPrerequisiteFromURL,
+      {
+        templates,
+      }
+    );
     expect(errors.length).toBe(0);
     expect(result).toEqual("3");
   });
@@ -76,7 +102,9 @@ describe("render() function", () => {
   it.each(syntaxCases)("handles syntax errors: %s", async (fn) => {
     let input = get(fn);
     // null templates since we expect errors before we render any
-    let [result, errors] = await render(input, null, {});
+    let [result, errors] = await render(input, {}, renderPrerequisiteFromURL, {
+      templates: null,
+    });
     expect(result).toEqual(input);
     expect(Array.isArray(errors)).toBe(true);
     expect(errors.length).toBe(1);
@@ -88,7 +116,14 @@ describe("render() function", () => {
 
   it("handles undefined templates", async () => {
     let templates = new Templates(fixture("macros"));
-    let [result, errors] = await render("foo{{nope}}bar", templates, {});
+    let [result, errors] = await render(
+      "foo{{nope}}bar",
+      {},
+      renderPrerequisiteFromURL,
+      {
+        templates,
+      }
+    );
     expect(result).toEqual("foo{{nope}}bar");
     expect(errors.length).toBe(1);
     expect(errors[0]).toBeInstanceOf(MacroNotFoundError);
@@ -99,7 +134,14 @@ describe("render() function", () => {
 
   it("handles compilation errors", async () => {
     let templates = new Templates(fixture("macros"));
-    let [result, errors] = await render("foo{{syntax}}bar", templates, {});
+    let [result, errors] = await render(
+      "foo{{syntax}}bar",
+      {},
+      renderPrerequisiteFromURL,
+      {
+        templates,
+      }
+    );
     expect(result).toEqual("foo{{syntax}}bar");
     expect(errors.length).toBe(1);
     expect(errors[0]).toBeInstanceOf(MacroCompilationError);
@@ -110,7 +152,14 @@ describe("render() function", () => {
 
   it("handles execution errors", async () => {
     let templates = new Templates(fixture("macros"));
-    let [result, errors] = await render("foo{{throw}}bar", templates, {});
+    let [result, errors] = await render(
+      "foo{{throw}}bar",
+      {},
+      renderPrerequisiteFromURL,
+      {
+        templates,
+      }
+    );
     expect(result).toEqual("foo{{throw}}bar");
     expect(errors.length).toBe(1);
     expect(errors[0]).toBeInstanceOf(MacroExecutionError);
@@ -123,8 +172,11 @@ describe("render() function", () => {
     let templates = new Templates(fixture("macros"));
     let [result, errors] = await render(
       "foo{{ undefined() }}bar",
-      templates,
-      {}
+      {},
+      renderPrerequisiteFromURL,
+      {
+        templates,
+      }
     );
     expect(result).toEqual("foo{{ undefined() }}bar");
     expect(errors.length).toBe(1);
@@ -138,8 +190,11 @@ describe("render() function", () => {
     let templates = new Templates(fixture("macros"));
     let [result, errors] = await render(
       "foo{{nope(1)}}bar{{throw(2)}}baz{{syntax(3)}}",
-      templates,
-      {}
+      {},
+      renderPrerequisiteFromURL,
+      {
+        templates,
+      }
     );
     expect(result).toEqual("foo{{nope(1)}}bar{{throw(2)}}baz{{syntax(3)}}");
     expect(errors.length).toBe(3);
@@ -152,8 +207,11 @@ describe("render() function", () => {
     let templates = new Templates(fixture("macros"));
     let [result, errors] = await render(
       'foo{{echo("!")}} bar{{ throw(1,2) }}baz{{echo("?")}}',
-      templates,
-      {}
+      {},
+      renderPrerequisiteFromURL,
+      {
+        templates,
+      }
     );
     expect(result).toEqual("foo! bar{{ throw(1,2) }}baz?");
     expect(errors.length).toBe(1);
@@ -164,7 +222,9 @@ describe("render() function", () => {
     let input = "foo {{bar}} baz";
     let expected = "foo (included words) baz";
     let templates = new Templates(fixture("macros"));
-    let [result, errors] = await render(input, templates, {});
+    let [result, errors] = await render(input, {}, renderPrerequisiteFromURL, {
+      templates,
+    });
     expect(result).toEqual(expected);
     expect(errors).toEqual([]);
   });
@@ -173,8 +233,11 @@ describe("render() function", () => {
     let templates = new Templates(fixture("macros"));
     let [result, errors] = await render(
       "foo{{includeError}}bar",
-      templates,
-      {}
+      {},
+      renderPrerequisiteFromURL,
+      {
+        templates,
+      }
     );
     expect(result).toEqual("foo{{includeError}}bar");
     expect(errors.length).toBe(1);

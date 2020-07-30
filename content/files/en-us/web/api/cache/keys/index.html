@@ -26,7 +26,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox"><em>cache</em>.keys(<em>request</em>, {<em>options</em>}).then(function(<em>keys</em>) {
+<pre class="syntaxbox notranslate"><em>cache</em>.keys(<em>request</em>, {<em>options</em>}).then(function(<em>keys</em>) {
   // do something with your array of requests
 });
 </pre>
@@ -53,7 +53,7 @@ tags:
 
 <h2 id="Examples">Examples</h2>
 
-<pre class="brush: js">caches.open('v1').then(function(cache) {
+<pre class="brush: js notranslate">caches.open('v1').then(function(cache) {
   cache.keys().then(function(keys) {
     keys.forEach(function(request, index, array) {
       cache.delete(request);
@@ -71,7 +71,7 @@ tags:
    <th scope="col">Comment</th>
   </tr>
   <tr>
-   <td>{{SpecName('Service Workers', '#dom-cache-keys', 'Cache: keys')}}</td>
+   <td>{{SpecName('Service Workers', '#cache-keys', 'Cache: keys')}}</td>
    <td>{{Spec2('Service Workers')}}</td>
    <td>Initial definition.</td>
   </tr>

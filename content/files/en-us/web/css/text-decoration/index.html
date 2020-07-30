@@ -9,6 +9,7 @@ tags:
   - CSS Property
   - CSS Text Decoration
   - Reference
+  - 'recipe:css-shorthand-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -27,23 +28,23 @@ tags:
 <h3 id="Values_2">Values</h3>
 
 <dl>
-	<dt>{{cssxref("text-decoration-line")}}</dt>
-	<dd>Sets the kind of decoration used, such as <code>underline</code> or <code>line-through</code>.</dd>
-	<dt>{{cssxref("text-decoration-color")}}</dt>
-	<dd>Sets the color of the decoration.</dd>
-	<dt>{{cssxref("text-decoration-style")}}</dt>
-	<dd>Sets the style of the line used for the decoration, such as <code>solid</code>, <code>wavy</code>, or <code>dashed</code>.</dd>
-	<dt>{{cssxref("text-decoration-thickness")}}</dt>
-	<dd>Sets the thickness of the line used for the decoration.</dd>
+ <dt>{{cssxref("text-decoration-line")}}</dt>
+ <dd>Sets the kind of decoration used, such as <code>underline</code> or <code>line-through</code>.</dd>
+ <dt>{{cssxref("text-decoration-color")}}</dt>
+ <dd>Sets the color of the decoration.</dd>
+ <dt>{{cssxref("text-decoration-style")}}</dt>
+ <dd>Sets the style of the line used for the decoration, such as <code>solid</code>, <code>wavy</code>, or <code>dashed</code>.</dd>
+ <dt>{{cssxref("text-decoration-thickness")}}</dt>
+ <dd>Sets the thickness of the line used for the decoration.</dd>
 </dl>
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Examples">Examples</h2>
 
-<pre class="brush: css">.under {
+<pre class="brush: css notranslate">.under {
   text-decoration: underline red;
 }
 
@@ -72,7 +73,7 @@ tags:
 }
 </pre>
 
-<pre class="brush: html">&lt;p class="under"&gt;This text has a line underneath it.&lt;/p&gt;
+<pre class="brush: html notranslate">&lt;p class="under"&gt;This text has a line underneath it.&lt;/p&gt;
 &lt;p class="over"&gt;This text has a line over it.&lt;/p&gt;
 &lt;p class="line"&gt;This text has a line going through it.&lt;/p&gt;
 &lt;p&gt;This &lt;a class="plain" href="#"&gt;link will not be underlined&lt;/a&gt;,
@@ -90,35 +91,35 @@ tags:
 <h2 id="Specifications">Specifications</h2>
 
 <table class="standard-table">
-	<thead>
-		<tr>
-			<th scope="col">Specification</th>
-			<th scope="col">Status</th>
-			<th scope="col">Comment</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>{{SpecName('CSS4 Text Decoration')}}</td>
-			<td>{{Spec2('CSS4 Text Decoration')}}</td>
-			<td>Adds {{cssxref("text-decoration-thickness")}}; note that this isn't yet officially part of the shorthand — this is as yet unspecified.</td>
-		</tr>
-		<tr>
-			<td>{{SpecName('CSS3 Text Decoration', '#text-decoration-property', 'text-decoration')}}</td>
-			<td>{{Spec2('CSS3 Text Decoration')}}</td>
-			<td>Transformed into a shorthand property. Added support for the value of {{cssxref('text-decoration-style')}}.</td>
-		</tr>
-		<tr>
-			<td>{{SpecName('CSS2.1', 'text.html#lining-striking-props', 'text-decoration')}}</td>
-			<td>{{Spec2('CSS2.1')}}</td>
-			<td>No significant changes.</td>
-		</tr>
-		<tr>
-			<td>{{SpecName('CSS1', '#text-decoration', 'text-decoration')}}</td>
-			<td>{{Spec2('CSS1')}}</td>
-			<td>Initial definition.</td>
-		</tr>
-	</tbody>
+ <thead>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>{{SpecName('CSS4 Text Decoration')}}</td>
+   <td>{{Spec2('CSS4 Text Decoration')}}</td>
+   <td>Adds {{cssxref("text-decoration-thickness")}}; note that this isn't yet officially part of the shorthand — this is as yet unspecified.</td>
+  </tr>
+  <tr>
+   <td>{{SpecName('CSS3 Text Decoration', '#text-decoration-property', 'text-decoration')}}</td>
+   <td>{{Spec2('CSS3 Text Decoration')}}</td>
+   <td>Transformed into a shorthand property. Added support for the value of {{cssxref('text-decoration-style')}}.</td>
+  </tr>
+  <tr>
+   <td>{{SpecName('CSS2.1', 'text.html#lining-striking-props', 'text-decoration')}}</td>
+   <td>{{Spec2('CSS2.1')}}</td>
+   <td>No significant changes.</td>
+  </tr>
+  <tr>
+   <td>{{SpecName('CSS1', '#text-decoration', 'text-decoration')}}</td>
+   <td>{{Spec2('CSS1')}}</td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
 </table>
 
 <p>{{cssinfo}}</p>
@@ -132,6 +133,6 @@ tags:
 <h2 id="See_also">See also</h2>
 
 <ul>
-	<li>The individual text-decoration properties are {{cssxref("text-decoration-line")}}, {{cssxref("text-decoration-color")}}, and {{cssxref("text-decoration-style")}}.</li>
-	<li>The {{cssxref("list-style")}} attribute controls the appearance of items in HTML {{HTMLElement("ol")}} and {{HTMLElement("ul")}} lists.</li>
+ <li>The individual text-decoration properties are {{cssxref("text-decoration-line")}}, {{cssxref("text-decoration-color")}}, and {{cssxref("text-decoration-style")}}.</li>
+ <li>The {{cssxref("list-style")}} attribute controls the appearance of items in HTML {{HTMLElement("ol")}} and {{HTMLElement("ul")}} lists.</li>
 </ul>

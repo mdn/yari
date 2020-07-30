@@ -43,6 +43,7 @@ const stringPrototype = require("./api/string.js");
 const wikiPrototype = require("./api/wiki.js");
 const webPrototype = require("./api/web.js");
 const pagePrototype = require("./api/page.js");
+const info = require("./info");
 
 class Environment {
   // Intialize an environment object that will be used to render
@@ -63,9 +64,14 @@ class Environment {
   //
   // The optional third argument is for use only by tests. Setting it to
   // true makes us not freeze the environment so that tests can stub out
-  // methods in the API like mdn.fetchJSONResources
+  // methods in the API.
   //
-  constructor(perPageContext, templates, allPagesInfo = null, testing = false) {
+  constructor(
+    perPageContext,
+    templates,
+    renderPrerequisiteFromURL = null,
+    testing = false
+  ) {
     // Freeze an object unless we're in testing mode
     function freeze(o) {
       return testing ? o : Object.freeze(o);
@@ -79,8 +85,8 @@ class Environment {
      *
      * The binding means that the functions defined in this file can
      * use `this` to refer to the global kumascript environment and
-     * can use `this.env.locale` and `this.MDN.fetchJSONResource()`
-     * for example.
+     * can use `this.env.locale` and `this.MDN.getLocalString()` for
+     * example.
      *
      * The case-insensitive variants implement legacy behavior in
      * KumaScript, where macros can use case-insensitive names of
@@ -112,7 +118,6 @@ class Environment {
     let web = Object.create(prepareProto(webPrototype, globals));
     let page = Object.create(prepareProto(pagePrototype, globals));
     let env = Object.create(prepareProto(perPageContext));
-    let info = Object.create(allPagesInfo || null);
 
     // The page object also gets some properties copied from
     // the per-page context object
@@ -133,6 +138,7 @@ class Environment {
     globals.page = globals.Page = freeze(page);
     globals.env = globals.Env = freeze(env);
     globals.info = freeze(info);
+    globals.renderPrerequisiteFromURL = renderPrerequisiteFromURL;
 
     // Macros use the global template() method to excute other
     // macros. This is the one function that we can't just

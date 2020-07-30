@@ -1,18 +1,19 @@
 import React, { useEffect, useReducer, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import useSWR from "swr";
+import { annotate, annotationGroup } from "rough-notation";
+import { RoughAnnotation } from "rough-notation/lib/model";
+
 import { humanizeFlawName } from "../../flaw-utils";
-import { Doc } from "../types";
+import { Doc, Link, MacroErrorMessage } from "../types";
 import "./flaws.scss";
 
-interface FlatFlaw {
+interface FlawCount {
   name: string;
-  flaws: string[];
   count: number;
 }
 
 const FLAWS_HASH = "#_flaws";
-export function ToggleDocumentFlaws({ flaws }: Pick<Doc, "flaws">) {
+export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [show, toggle] = useReducer((v) => !v, location.hash === FLAWS_HASH);
@@ -35,21 +36,22 @@ export function ToggleDocumentFlaws({ flaws }: Pick<Doc, "flaws">) {
     }
   }, [location, navigate, show]);
 
-  const flatFlaws: FlatFlaw[] = Object.entries(flaws)
+  const flawsCounts = Object.entries(doc.flaws)
     .map(([name, actualFlaws]) => ({
       name,
-      flaws: actualFlaws,
       count: actualFlaws.length,
     }))
     .sort((a, b) => b.count - a.count);
 
   return (
     <div id={FLAWS_HASH.slice(1)} ref={rootElement}>
-      {flatFlaws.length > 0 ? (
+      {flawsCounts.length > 0 ? (
         <button type="submit" onClick={toggle}>
           {show
             ? "Hide flaws"
-            : `Show flaws (${flatFlaws.map((flaw) => flaw.count).join(" + ")})`}
+            : `Show flaws (${flawsCounts
+                .map((flaw) => flaw.count)
+                .join(" + ")})`}
         </button>
       ) : (
         <p>
@@ -61,11 +63,11 @@ export function ToggleDocumentFlaws({ flaws }: Pick<Doc, "flaws">) {
       )}
 
       {show ? (
-        <Flaws flaws={flatFlaws} />
+        <Flaws doc={doc} flaws={flawsCounts} />
       ) : (
         <small>
           {/* a one-liner about all the flaws */}
-          {flatFlaws
+          {flawsCounts
             .map((flaw) => `${humanizeFlawName(flaw.name)}: ${flaw.count}`)
             .join(" + ")}
         </small>
@@ -74,13 +76,7 @@ export function ToggleDocumentFlaws({ flaws }: Pick<Doc, "flaws">) {
   );
 }
 
-interface FlawCheck {
-  count: number;
-  name: string;
-  flaws: any[]; // XXX fixme!
-}
-
-function Flaws({ flaws }: { flaws: FlawCheck[] }) {
+function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
   if (process.env.NODE_ENV !== "development") {
     throw new Error("This shouldn't be used in non-development builds");
   }
@@ -89,13 +85,28 @@ function Flaws({ flaws }: { flaws: FlawCheck[] }) {
       {flaws.map((flaw) => {
         switch (flaw.name) {
           case "broken_links":
-            return <BrokenLinks key="broken_links" urls={flaw.flaws} />;
+            return (
+              <BrokenLinks
+                key="broken_links"
+                sourceFolder={doc.source.folder}
+                links={doc.flaws.broken_links}
+              />
+            );
           case "bad_bcd_queries":
             return (
-              <BadBCDQueries key="bad_bcd_queries" messages={flaw.flaws} />
+              <BadBCDQueries
+                key="bad_bcd_queries"
+                messages={doc.flaws.bad_bcd_queries}
+              />
             );
           case "macros":
-            return <Macros key="macros" messages={flaw.flaws} />;
+            return (
+              <Macros
+                key="macros"
+                sourceFolder={doc.source.folder}
+                messages={doc.flaws.macros}
+              />
+            );
           default:
             throw new Error(`Unknown flaw check '${flaw.name}'`);
         }
@@ -104,119 +115,191 @@ function Flaws({ flaws }: { flaws: FlawCheck[] }) {
   );
 }
 
-function BrokenLinks({ urls }: { urls: string[] }) {
-  // urls has repeats so turn it into a count for each
-  const urlsWithCount = Array.from(
-    urls
-      .reduce<Map<string, number>>(
-        (map, url) => map.set(url, (map.get(url) || 0) + 1),
-        new Map()
-      )
-      .entries()
-    // If we don't sort them, their visual presence isn't predictable.
-  ).sort(([url1], [url2]) => url1.localeCompare(url2));
-
-  const { data, error } = useSWR(
-    `/_redirects`,
-    async (url) => {
-      try {
-        const response = await fetch(url, {
-          method: "post",
-          body: JSON.stringify({ urls }),
-          headers: { "Content-Type": "application/json" },
-        });
-        if (!response.ok) {
-          throw new Error(`${response.status} on ${url}`);
-        }
-        return await response.json();
-      } catch (err) {
-        throw err;
-      }
-    },
-    {
-      // The chances of redirects to have changed since first load is
-      // just too small to justify using 'revalidateOnFocus'.
-      revalidateOnFocus: false,
+function BrokenLinks({
+  sourceFolder,
+  links,
+}: {
+  sourceFolder: string;
+  links: Link[];
+}) {
+  const [opening, setOpening] = React.useState<string | null>(null);
+  useEffect(() => {
+    let unsetOpeningTimer: ReturnType<typeof setTimeout>;
+    if (opening) {
+      unsetOpeningTimer = setTimeout(() => {
+        setOpening(null);
+      }, 3000);
     }
-  );
+    return () => {
+      if (unsetOpeningTimer) {
+        clearTimeout(unsetOpeningTimer);
+      }
+    };
+  }, [opening]);
+
+  const filepath = sourceFolder + "/index.html";
+
+  function equalUrls(url1: string, url2: string) {
+    return (
+      new URL(url1, "http://example.com").pathname ===
+      new URL(url2, "http://example.com").pathname
+    );
+  }
+
+  function openInEditor(key: string, line: number, column: number) {
+    const sp = new URLSearchParams();
+    sp.set("filepath", filepath);
+    sp.set("line", `${line}`);
+    sp.set("column", `${column}`);
+    console.log(
+      `Going to try to open ${filepath}:${line}:${column} in your editor`
+    );
+    setOpening(key);
+    fetch(`/_open?${sp.toString()}`).catch((err) => {
+      console.warn(`Error trying to _open?${sp.toString()}:`, err);
+    });
+  }
 
   useEffect(() => {
-    // 'data' will be 'undefined' until the server has had a chance to
-    // compute all the redirects. Don't bother until we have that data.
-    if (!data) {
-      return;
-    }
+    const annotations: RoughAnnotation[] = [];
+
+    let linkIndex = 0;
     for (const anchor of [
       ...document.querySelectorAll<HTMLAnchorElement>("div.content a[href]"),
     ]) {
-      const hrefURL = new URL(anchor.href);
-      const { pathname, hash } = hrefURL;
-      if (pathname in data.redirects) {
-        // Trouble! But is it a redirect?
-        let correctURI = data.redirects[pathname];
-        if (correctURI) {
-          if (hash) {
-            correctURI += hash;
-          }
-          // It can be fixed!
-          anchor.classList.add("flawed--broken_link_redirect");
-          anchor.title = `Consider fixing! It's actually a redirect to ${correctURI}`;
-        } else {
-          anchor.classList.add("flawed--broken_link_404");
-          anchor.title = "Broken link! Links to a page that will not be found";
+      const link = links[linkIndex];
+      if (!link) {
+        break;
+      }
+      // A `anchor.href` is always absolute with `http//localhost/...`.
+      // But `link.href` is not necessarily so, but it might.
+      // The only "hashing" that matters is the pathname.
+      if (!equalUrls(anchor.href, link.href)) {
+        continue;
+      }
+      linkIndex++;
+      const annotationColor = link.suggestion ? "orange" : "red";
+      anchor.dataset.originalTitle = anchor.title;
+      anchor.title = link.suggestion
+        ? `Consider fixing! Suggestion: ${link.suggestion}`
+        : "Broken link! Links to a page that will not be found";
+      annotations.push(
+        annotate(anchor, {
+          type: "box",
+          color: annotationColor,
+          animationDuration: 300,
+        })
+      );
+    }
+
+    const ag = annotationGroup(annotations);
+    ag.show();
+
+    return () => {
+      ag.hide();
+
+      // Now, restore any 'title' attributes that were overridden.
+      for (const anchor of Array.from(
+        document.querySelectorAll<HTMLAnchorElement>(`div.content a`)
+      )) {
+        if (anchor.dataset.originalTitle !== undefined) {
+          anchor.title = anchor.dataset.originalTitle;
         }
       }
-    }
-    return () => {
-      // Undo setting those extra classes and titles
-      for (const anchor of Array.from(
-        document.querySelectorAll<HTMLAnchorElement>(
-          `div.content a.flawed--broken_link_redirect`
-        )
-      )) {
-        anchor.classList.remove("flawed--broken_link_redirect");
-        anchor.title = "";
-      }
-      for (const anchor of Array.from(
-        document.querySelectorAll<HTMLAnchorElement>(
-          `div.content a.flawed--broken_link_404`
-        )
-      )) {
-        anchor.classList.remove("flawed--broken_link_404");
-        anchor.title = "";
-      }
     };
-  }, [data, urls]);
+  }, [links]);
 
   return (
     <div className="flaw flaw__broken_links">
       <h3>Broken Links</h3>
-      {!data && !error && (
-        <p>
-          <i>Checking all URLs for redirects...</i>
-        </p>
-      )}
-      {error && (
-        <div className="error-message fetch-error">
-          <p>Error checking for redirects:</p>
-          <pre>{error.toString()}</pre>
-        </div>
-      )}
       <ol>
-        {urlsWithCount.map(([url, count]) => (
-          <li key={url}>
-            <code>{url}</code>{" "}
-            <i>
-              {count} {count === 1 ? "time" : "times"}
-            </i>{" "}
-            {data && data.redirects[url] && (
-              <span>
-                <b>Actually a redirect!</b> to...{" "}
-                <code>{data.redirects[url]}</code>
-              </span>
-            )}
-          </li>
-        ))}
+        {links.map((link, i) => {
+          const key = `${link.href}${link.line}${link.column}`;
+          return (
+            <li
+              key={key}
+              className={link.fixed ? "fixed" : undefined}
+              title={
+                link.fixed
+                  ? "This broken link has been automatically fixed."
+                  : undefined
+              }
+            >
+              <code>{link.href}</code>{" "}
+              {link.suggestion && (
+                <span>
+                  Suggested fix: <code>{link.suggestion}</code>
+                </span>
+              )}{" "}
+              <span
+                role="img"
+                aria-label="Click to highlight broken link"
+                title="Click to highlight broken link anchor"
+                style={{ cursor: "zoom-in" }}
+                onClick={() => {
+                  const annotations: RoughAnnotation[] = [];
+
+                  let linkIndex = 0;
+                  for (const anchor of [
+                    ...document.querySelectorAll<HTMLAnchorElement>(
+                      "div.content a[href]"
+                    ),
+                  ]) {
+                    const link = links[linkIndex];
+                    if (!link) {
+                      break;
+                    }
+                    if (!equalUrls(anchor.href, link.href)) {
+                      continue;
+                    }
+
+                    if (i === linkIndex) {
+                      anchor.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                      });
+
+                      if (anchor.parentElement) {
+                        annotations.push(
+                          annotate(anchor, {
+                            type: "circle",
+                            color: "purple",
+                            animationDuration: 500,
+                            strokeWidth: 2,
+                            padding: 6,
+                          })
+                        );
+                      }
+                    }
+                    linkIndex++;
+                  }
+
+                  if (annotations.length) {
+                    const ag = annotationGroup(annotations);
+                    ag.show();
+                    // Only show this extra highlight temporarily
+                    window.setTimeout(() => {
+                      ag.hide();
+                    }, 2000);
+                  }
+                }}
+              >
+                👀
+              </span>{" "}
+              <a
+                href={`file://${filepath}`}
+                onClick={(event: React.MouseEvent) => {
+                  event.preventDefault();
+                  openInEditor(key, link.line, link.column);
+                }}
+                title="Click to open in your editor"
+              >
+                line {link.line}:{link.column}
+              </a>{" "}
+              {opening && opening === key && <small>Opening...</small>}
+            </li>
+          );
+        })}
       </ol>
     </div>
   );
@@ -237,20 +320,13 @@ function BadBCDQueries({ messages }) {
   );
 }
 
-interface MacroErrorMessage {
-  name: string;
-  error: {
-    path?: string;
-  };
-  errorMessage: string;
-  line: number;
-  column: number;
-  filepath: string;
-  sourceContext: string;
-  macroName: string;
-}
-
-function Macros({ messages }: { messages: MacroErrorMessage[] }) {
+function Macros({
+  messages,
+  sourceFolder,
+}: {
+  messages: MacroErrorMessage[];
+  sourceFolder: string;
+}) {
   const [opening, setOpening] = React.useState<string | null>(null);
   useEffect(() => {
     let unsetOpeningTimer: ReturnType<typeof setTimeout>;
@@ -277,14 +353,26 @@ function Macros({ messages }: { messages: MacroErrorMessage[] }) {
     setOpening(key);
     fetch(`/_open?${sp.toString()}`);
   }
+
   return (
     <div className="flaw flaw__macros">
       <h3>{humanizeFlawName("macros")}</h3>
       {messages.map((msg) => {
+        const inPrerequisiteMacro = !msg.filepath.includes(
+          `${sourceFolder}/index.html`
+        );
         const key = `${msg.filepath}:${msg.line}:${msg.column}`;
 
         return (
-          <details key={key}>
+          <details
+            key={key}
+            className={msg.fixed ? "fixed" : undefined}
+            title={
+              msg.fixed
+                ? "This macro flaw has been automatically fixed."
+                : undefined
+            }
+          >
             <summary>
               <a
                 href={`file://${msg.filepath}`}
@@ -296,13 +384,27 @@ function Macros({ messages }: { messages: MacroErrorMessage[] }) {
                 <code>{msg.name}</code> from <code>{msg.macroName}</code> in
                 line {msg.line}:{msg.column}
               </a>{" "}
-              {opening && opening === key && <small>Opening...</small>}
+              {opening && opening === key && <small>Opening...</small>}{" "}
+              {inPrerequisiteMacro && (
+                <small
+                  className="macro-filepath-in-prerequisite"
+                  title={`This page depends on a macro expansion inside ${msg.filepath}`}
+                >
+                  In prerequisite macro
+                </small>
+              )}
             </summary>
             <b>Context:</b>
             <pre>{msg.sourceContext}</pre>
             <b>Original error message:</b>
             <pre>{msg.errorMessage}</pre>
-            <b>Filepath:</b>
+            <b>Filepath:</b>{" "}
+            {inPrerequisiteMacro && (
+              <i className="macro-filepath-in-prerequisite">
+                Note that this is different from the page you're currently
+                viewing.
+              </i>
+            )}
             <br />
             <code>{msg.filepath}</code>
           </details>

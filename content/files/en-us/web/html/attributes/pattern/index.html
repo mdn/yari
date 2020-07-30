@@ -24,7 +24,7 @@ tags:
 
 <p>Some of the input types supporting the pattern attribute, notably the {{HTMLElement("input/email", "email")}} and {{HTMLElement("input/url", "url")}} input types, have expected value syntaxes that must be matched. If the pattern attribute isn't present, and the value doesn't match the expected syntax for that value type, the  <code>{{domxref('ValidityState')}}</code> object's read-only <code>{{domxref('ValidityState.typeMismatch','typeMismatch')}}</code> property will be true.</p>
 
-<h3 id="Usablity">Usablity</h3>
+<h3 id="Usability">Usability</h3>
 
 <p>When including a <code>pattern</code>, provide a description of the pattern in visible text near the control. Additionally, include a <code><a href="/en-US/docs/Web/HTML/Global_attributes/title">title</a></code> attribute which gives a description of the pattern. User agents may use the title contents during constraint validation to tell the user that the pattern is not matched. Some browsers show a tooltip with title contents, improving usability for sighted users. Additionally, assistive technology may read the title aloud when the control gains focus, but this should not be relied upon for accessibility.</p>
 
@@ -38,7 +38,7 @@ tags:
 <p>Given the following:</p>
 
 <div id="example1">
-<pre class="brush: html">&lt;p&gt;
+<pre class="brush: html notranslate">&lt;p&gt;
  &lt;label&gt;Enter your phone number in the format (123)456-7890
   (&lt;input name="tel1" type="tel" pattern="[0-9]{3}" placeholder="###" aria-label="3-digit area code" size="2"/&gt;)-
    &lt;input name="tel2" type="tel" pattern="[0-9]{3}" placeholder="###" aria-label="3-digit prefix" size="2"/&gt; -
@@ -50,7 +50,7 @@ tags:
 
 <p>If the values are too long or too short, or contain characters that aren't digits, the patternMismatch will be true. When <code>true</code>, the element matches the {{cssxref(":invalid")}} CSS pseudo-classes.</p>
 
-<pre class="brush: css">input:invalid {
+<pre class="brush: css notranslate">input:invalid {
   border: red solid 3px;
 }</pre>
 
@@ -65,7 +65,7 @@ tags:
 
 <p>The example below restricts the value to 4-8 characters and requires that it contain only lower-case letters.</p>
 
-<pre class="brush: html">&lt;form&gt;
+<pre class="brush: html notranslate">&lt;form&gt;
   &lt;div&gt;
     &lt;label for="uname"&gt;Choose a username: &lt;/label&gt;
     &lt;input type="text" id="uname" name="name" required size="45"
@@ -79,7 +79,7 @@ tags:
 &lt;/form&gt;</pre>
 
 <div class="hidden">
-<pre class="brush: css">div {
+<pre class="brush: css notranslate">div {
   margin-bottom: 10px;
   position: relative;
 }

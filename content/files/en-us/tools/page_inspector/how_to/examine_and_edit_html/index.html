@@ -66,6 +66,41 @@ tags:
 
 <p>There is an ellipsis shown between the opening and closing tag of an element when the node is collapsed if it has larger contents. Now children are indicated in the tree with this icon: <img alt="" src="https://mdn.mozillademos.org/files/14925/child-node-indicator.png" style="height: 24px; width: 32px;"></p>
 
+<p>At the right side of some nodes there are markers shown indicating different pieces of information related to it:</p>
+
+<table class="standard-table" id="node-markers">
+ <tbody>
+  <tr>
+   <td><code>event</code></td>
+   <td>The element has one or several event listeners attached to it. Clicking the marker opens a tooltip listing the event listeners and allows you for each listener to switch to the line of JavaScript code in the <a href="/en-US/docs/Tools/Debugger">Debugger</a> where the listener is defined.</td>
+  </tr>
+  <tr>
+   <td><code>scroll</code></td>
+   <td>The element is a {{Glossary("scroll container")}}, i.e. it has <code>overflow: scroll</code> or <code>overflow: auto</code> applied to it, and it has scrollable overflow.</td>
+  </tr>
+  <tr>
+   <td><code>grid</code></td>
+   <td>The element is a {{Glossary("grid container")}}, i.e. it has <code><a href="/en-US/docs/Web/CSS/display">display: grid</a></code> applied to it. Clicking the marker enables the grid highlighter.</td>
+  </tr>
+  <tr>
+   <td><code>flex</code></td>
+   <td>The element is a {{Glossary("flex container")}}, i.e. it has <code><a href="/en-US/docs/Web/CSS/display">display: flex</a></code> applied to it. Clicking the marker enables the flexbox highlighter.</td>
+  </tr>
+  <tr>
+   <td><code>inline-grid</code></td>
+   <td>The element is an inline grid container, i.e. it has <code><a href="/en-US/docs/Web/CSS/display">display: inline-grid</a></code> or <code>display: inline grid</code> applied to it. Clicking the marker enables the grid highlighter.</td>
+  </tr>
+  <tr>
+   <td><code>inline-flex</code></td>
+   <td>The element is an inline flex container, i.e. it has <code><a href="/en-US/docs/Web/CSS/display">display: inline-flex</a></code> or <code>display: inline flex</code> applied to it. Clicking the marker enables the flexbox highlighter.</td>
+  </tr>
+  <tr>
+   <td><code>custom…</code></td>
+   <td>The element is a custom element. Clicking the marker switches to the line of JavaScript code in the Debugger where the custom element got defined.</td>
+  </tr>
+ </tbody>
+</table>
+
 <div class="note">
 <p><strong>Note</strong>: There are some useful keyboard shortcuts that can be used in the HTML tree — see the <a href="/en-US/docs/Tools/Keyboard_shortcuts#HTML_pane">HTML pane keyboard shortcuts list</a>.</p>
 </div>

@@ -1,5 +1,5 @@
 ---
-title: Comma operator
+title: 'Comma operator (,)'
 slug: Web/JavaScript/Reference/Operators/Comma_Operator
 summary: "The comma operator\_(,) evaluates each of its operands (from left to right) and returns the value of the last operand. This lets you create a compound expression in which multiple expressions are evaluated, with the compound expression's final value being the value of the rightmost of its member expressions. This is commonly used to provide multiple parameters to a for loop."
 tags:
@@ -21,7 +21,7 @@ tags:
 
 <h2 id="Syntax">Syntax</h2>
 
-<pre class="syntaxbox"><em>expr1</em>, <em>expr2, expr3...</em></pre>
+<pre class="syntaxbox notranslate"><em>expr1</em>, <em>expr2, expr3...</em></pre>
 
 <h3 id="Parameters">Parameters</h3>
 
@@ -42,12 +42,12 @@ tags:
 
 <p>The following code prints the values of the diagonal elements in the array:</p>
 
-<pre class="brush:js;highlight:[1]">for (var i = 0, j = 9; i &lt;= 9; i++, j--)
+<pre class="brush:js;highlight:[1] notranslate">for (var i = 0, j = 9; i &lt;= 9; i++, j--)
   console.log('a[' + i + '][' + j + '] = ' + a[i][j]);</pre>
 
 <p>Note that the comma operators in assignments may appear not to have the normal effect of comma operators because they don't exist within an expression. In the following example, <code>a</code> is set to the value of <code>b = 3</code> (which is 3), but the <code>c = 4</code> expression still evaluates and its result returned to console (i.e., 4). This is due to <a href="/en-US/docs/Web/JavaScript/Reference/Operators/Operator_Precedence">operator precedence and associativity</a>.</p>
 
-<pre class="brush: js">var a, b, c;
+<pre class="brush: js notranslate">var a, b, c;
 
 a = b = 3, c = 4; // Returns 4 in console
 console.log(a); // 3 (left-most)
@@ -62,7 +62,7 @@ console.log(x); // 6 (right-most)
 
 <p>Another example that one could make with comma operator is processing before returning. As stated, only the last element will be returned but all others are going to be evaluated as well. So, one could do:</p>
 
-<pre class="brush: js">function myFunc() {
+<pre class="brush: js notranslate">function myFunc() {
   var x = 0;
 
   return (x += 1, x); // the same as return ++x;

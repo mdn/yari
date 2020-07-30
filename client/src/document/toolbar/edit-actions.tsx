@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+
+import { useDocumentURL } from "../hooks";
 
 import "./edit-actions.scss";
 
 export function EditActions({ folder }: { folder: string }) {
   const location = useLocation();
+  const documentURL = useDocumentURL();
+  const navigate = useNavigate();
+
   const [opening, setOpening] = useState(false);
   const [editorOpeningError, setEditorOpeningError] = useState<Error | null>(
     null
@@ -46,6 +51,28 @@ export function EditActions({ folder }: { folder: string }) {
       setEditorOpeningError(err);
     }
   }
+
+  async function deleteDocument() {
+    if (!window.confirm("Are you sure you want to delete this document?")) {
+      return;
+    }
+    const response = await fetch(
+      `/_document?url=${encodeURIComponent(documentURL)}`,
+      {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    if (response.ok) {
+      window.alert("Document successfully deleted");
+      navigate("/");
+    } else {
+      window.alert(`Error while deleting document: ${response.statusText}`);
+    }
+  }
+
+  const { "*": slug } = useParams();
+
   if (!folder) {
     return null;
   }
@@ -60,6 +87,12 @@ export function EditActions({ folder }: { folder: string }) {
       <button title={`Folder: ${folder}`} onClick={openInEditorHandler}>
         in your <b>editor</b>
       </button>
+      <button className="delete" onClick={deleteDocument}>
+        Delete document
+      </button>
+      <Link to={`/en-US/_create?initial_slug=${encodeURIComponent(slug)}`}>
+        Create new document
+      </Link>
       <br />
       {editorOpeningError ? (
         <p className="error-message editor-opening-error">

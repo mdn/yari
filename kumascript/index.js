@@ -1,81 +1,69 @@
-const Templates = require("./src/templates.js");
-const AllPagesInfo = require("./src/info.js");
-const { getPrerequisites, render: renderMacros } = require("./src/render.js");
+const { Document, memoize } = require("content");
+
+const {
+  INTERACTIVE_EXAMPLES_BASE_URL,
+  LIVE_SAMPLES_BASE_URL,
+} = require("./src/constants");
+const info = require("./src/info.js");
+const { render: renderMacros } = require("./src/render.js");
 const {
   getLiveSampleIDs,
   buildLiveSamplePage,
   LiveSampleError,
 } = require("./src/live-sample.js");
-const { HTMLTool, KumascriptError } = require("./src/api/util.js");
+const { HTMLTool } = require("./src/api/util.js");
 
-class Renderer {
-  constructor({
-    liveSamplesBaseUrl = null,
-    interactiveExamplesBaseUrl = null,
-    uriTransform = (uri) => uri,
-  } = {}) {
-    this.allPagesInfo = null;
-    this.uriTransform = uriTransform;
-    this.liveSamplesBaseUrl = liveSamplesBaseUrl;
-    this.interactiveExamplesBaseUrl = interactiveExamplesBaseUrl;
-    this.templates = new Templates();
-  }
-
-  checkAllPagesInfo() {
-    if (!this.allPagesInfo) {
-      throw new Error(
-        `You haven't yet specified the context for the render via Renderer().use(pageInfoByUri).`
-      );
-    }
-  }
-
-  use(pageInfoByUri) {
-    this.allPagesInfo = new AllPagesInfo(pageInfoByUri, this.uriTransform);
-    return this;
-  }
-
-  clearCache() {
-    this.allPagesInfo.clearCache();
-  }
-
-  async render(source, pageEnvironment, cacheResult = false) {
-    this.checkAllPagesInfo();
-    const uri = pageEnvironment.path.toLowerCase();
-    const cachedResult = this.allPagesInfo.getResultFromCache(uri);
-    if (cachedResult) {
-      return cachedResult;
-    }
-    const [renderedHtml, errors] = await renderMacros(
-      source,
-      this.templates,
-      {
-        ...pageEnvironment,
-        interactive_examples: {
-          base_url: this.interactiveExamplesBaseUrl,
-        },
-        live_samples: { base_url: this.liveSamplesBaseUrl },
+const renderFromURL = memoize(async (url) => {
+  const prerequisiteErrorsByKey = new Map();
+  const { rawHtml, metadata, fileInfo } = Document.findByURL(url);
+  const [renderedHtml, errors] = await renderMacros(
+    rawHtml,
+    {
+      ...{
+        path: url,
+        url: `https://developer.mozilla.org${url}`,
+        locale: metadata.locale,
+        slug: metadata.slug,
+        title: metadata.title,
+        tags: metadata.tags || [],
+        selective_mode: false,
       },
-      this.allPagesInfo
-    );
-
-    // For now, we're just going to inject section ID's.
-    // TODO: Sanitize the HTML and also filter the "src"
-    //       attributes of any iframes.
-    const tool = new HTMLTool(renderedHtml);
-    tool.injectSectionIDs();
-    const result = [tool.html(), errors];
-
-    if (cacheResult) {
-      this.allPagesInfo.cacheResult(uri, result);
+      interactive_examples: {
+        base_url: INTERACTIVE_EXAMPLES_BASE_URL,
+      },
+      live_samples: { base_url: LIVE_SAMPLES_BASE_URL },
+    },
+    async (url) => {
+      const [renderedHtml, errors] = await renderFromURL(info.cleanURL(url));
+      // Remove duplicate flaws. During the rendering process, it's possible for identical
+      // flaws to be introduced when different dependency paths share common prerequisites.
+      // For example, document A may have prerequisite documents B and C, and in turn,
+      // document C may also have prerequisite B, and the rendering of document B generates
+      // one or more flaws.
+      for (const error of errors) {
+        prerequisiteErrorsByKey.set(error.key, error);
+      }
+      return renderedHtml;
     }
-    return result;
-  }
-}
+  );
+
+  // For now, we're just going to inject section ID's.
+  // TODO: Sanitize the HTML and also filter the "src"
+  //       attributes of any iframes.
+  const tool = new HTMLTool(renderedHtml);
+  tool.injectSectionIDs();
+  return [
+    tool.html(),
+    // The prerequisite errors have already been updated with their own file information.
+    [...prerequisiteErrorsByKey.values()].concat(
+      errors.map((e) => e.updateFileInfo(fileInfo))
+    ),
+  ];
+});
 
 module.exports = {
   buildLiveSamplePage,
   getLiveSampleIDs,
-  getPrerequisites,
   LiveSampleError,
-  Renderer,
+  render: renderFromURL,
 };

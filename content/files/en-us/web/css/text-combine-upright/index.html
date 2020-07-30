@@ -10,6 +10,7 @@ tags:
   - CSS Writing Modes
   - Experimental
   - Reference
+  - 'recipe:css-property'
 ---
 <div>{{CSSRef}}</div>
 
@@ -17,7 +18,7 @@ tags:
 
 <p>This is used to produce an effect that is known as tate-chū-yoko (<span lang="ja">縦中横</span>) in Japanese, or as <span lang="zh-Hant">直書橫向</span> in Chinese.</p>
 
-<pre class="brush:css no-line-numbers">/* Keyword values */
+<pre class="brush:css no-line-numbers notranslate">/* Keyword values */
 text-combine-upright: none;
 text-combine-upright: all;
 
@@ -48,16 +49,16 @@ text-combine-upright: unset;
 
 <h3 id="Formal_syntax">Formal syntax</h3>
 
-<pre class="syntaxbox">{{csssyntax}}</pre>
+<pre class="syntaxbox notranslate">{{csssyntax}}</pre>
 
 <h2 id="Example_digits">Example (digits)</h2>
 
 <p>The digits value requires less markup than the all value when digits are being combined, but it is currently not very widely supported by browsers.</p>
 
-<pre class="brush: html">&lt;p lang="ja" class="exampleText"&gt;平成20年4月16日に&lt;/p&gt;
+<pre class="brush: html notranslate">&lt;p lang="ja" class="exampleText"&gt;平成20年4月16日に&lt;/p&gt;
 </pre>
 
-<pre class="brush: css">.exampleText {
+<pre class="brush: css notranslate">.exampleText {
   writing-mode: vertical-lr;
   text-combine-upright: digits 2;
   font: 36px serif;
@@ -69,12 +70,12 @@ text-combine-upright: unset;
 
 <p>The all value requires markup around every piece of horizontal text, but it is currently supported by more browsers than the digits value.</p>
 
-<pre class="brush: html">&lt;p lang="zh-Hant"&gt;民國&lt;span class="num"&gt;105&lt;/span
+<pre class="brush: html notranslate">&lt;p lang="zh-Hant"&gt;民國&lt;span class="num"&gt;105&lt;/span
 &gt;年&lt;span class="num"&gt;4&lt;/span
 &gt;月&lt;span class="num"&gt;29&lt;/span&gt;日&lt;/p&gt;
 </pre>
 
-<pre class="brush: css">html { writing-mode: vertical-rl; font: 24px serif }
+<pre class="brush: css notranslate">html { writing-mode: vertical-rl; font: 24px serif }
 .num { text-combine-upright: all }
 </pre>
 

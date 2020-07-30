@@ -15,7 +15,7 @@ tags:
   - Games
   - Guide
 ---
-{{DefaultAPISidebar("Gamepad API")}}
+<p>{{DefaultAPISidebar("Gamepad API")}}</p>
 
 <p><span class="seoSummary">HTML5 introduced many of the necessary components for rich, interactive game development. Technologies like <code>&lt;canvas&gt;</code>, WebGL, <code>&lt;audio&gt;</code>, and <code>&lt;video&gt;</code>, along with JavaScript implementations, have matured to the point where they can now support many tasks previously requiring native code. The Gamepad API is a way for developers and designers to access and use gamepads and other game controllers.</span></p>
 
@@ -31,7 +31,7 @@ tags:
 
 <p>You can use {{event("gamepadconnected")}} like this:</p>
 
-<pre class="brush: js;">window.addEventListener("gamepadconnected", function(e) {
+<pre class="brush: js; notranslate">window.addEventListener("gamepadconnected", function(e) {
   console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
     e.gamepad.index, e.gamepad.id,
     e.gamepad.buttons.length, e.gamepad.axes.length);
@@ -44,14 +44,14 @@ tags:
 
 <p>When a gamepad is disconnected, and if a page has previously received data for that gamepad (e.g. {{ event("gamepadconnected") }}), a second event is dispatched to the focused window, {{ event("gamepaddisconnected") }}:</p>
 
-<pre class="brush: js">window.addEventListener("gamepaddisconnected", function(e) {
+<pre class="brush: js notranslate">window.addEventListener("gamepaddisconnected", function(e) {
   console.log("Gamepad disconnected from index %d: %s",
     e.gamepad.index, e.gamepad.id);
 });</pre>
 
 <p>The gamepad's {{domxref("Gamepad.index", "index")}} property will be unique per-device connected to the system, even if multiple controllers of the same type are used. The <code>index</code> property also functions as the index into the {{jsxref("Array")}} returned by {{ domxref("Navigator.getGamepads()") }}.</p>
 
-<pre class="brush: js">var gamepads = {};
+<pre class="brush: js notranslate">var gamepads = {};
 
 function gamepadHandler(event, connecting) {
   var gamepad = event.gamepad;
@@ -79,7 +79,7 @@ window.addEventListener("gamepaddisconnected", function(e) { gamepadHandler(e, f
 
 <p>The {{domxref("Navigator.getGamepads()")}} method returns an array of all devices currently visible to the webpage, as {{ domxref("Gamepad") }} objects (the first value is always <code>null</code>, so <code>null</code> will be returned if there are no gamepads connected.) This can then be used to get the same information. For example, the first code example above you be rewritten as shown below:</p>
 
-<pre class="brush: js">window.addEventListener("gamepadconnected", function(e) {
+<pre class="brush: js notranslate">window.addEventListener("gamepadconnected", function(e) {
   var gp = navigator.getGamepads()[e.gamepad.index];
   console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
     gp.index, gp.id,
@@ -113,7 +113,7 @@ window.addEventListener("gamepaddisconnected", function(e) { gamepadHandler(e, f
 
 <p>To start with, we declare some variables: The <code>gamepadInfo</code> paragraph that the connection info is written into, the <code>ball</code> that we want to move, the <code>start</code> variable that acts as the ID for <code>requestAnimation Frame</code>, the <code>a</code> and <code>b</code> variables that act as position modifiers for moving the ball, and the shorthand variables that will be used for the {{ domxref("Window.requestAnimationFrame", "requestAnimationFrame()") }} and {{ domxref("Window.cancelAnimationFrame", "cancelAnimationFrame()") }} cross browser forks.</p>
 
-<pre class="brush: js">var gamepadInfo = document.getElementById("gamepad-info");
+<pre class="brush: js notranslate">var gamepadInfo = document.getElementById("gamepad-info");
 var ball = document.getElementById("ball");
 var start;
 var a = 0;
@@ -122,7 +122,7 @@ var b = 0;
 
 <p>Next we use the {{event("gamepadconnected")}} event to check for a gamepad being connected. When one is connected, we grab the gamepad using {{ domxref("Navigator.getGamepads()") }}<code>[0]</code>, print information about the gamepad into our gamepad info <code>div</code>, and fire the <code>gameLoop()</code> function that starts the whole ball movement process up.</p>
 
-<pre class="brush: js">window.addEventListener("gamepadconnected", function(e) {
+<pre class="brush: js notranslate">window.addEventListener("gamepadconnected", function(e) {
   var gp = navigator.getGamepads()[e.gamepad.index];
   gamepadInfo.innerHTML = "Gamepad connected at index " + gp.index + ": " + gp.id + ". It has " + gp.buttons.length + " buttons and " + gp.axes.length + " axes.";
 
@@ -131,7 +131,7 @@ var b = 0;
 
 <p>Now we use the {{Event("gamepaddisconnected")}} event to check if the gamepad is disconnected again. If so, we stop the {{DOMxRef("Window.requestAnimationFrame", "requestAnimationFrame()")}} loop (see below) and revert the gamepad information back to what it was originally.</p>
 
-<pre class="brush: js">window.addEventListener("gamepaddisconnected", function(e) {
+<pre class="brush: js notranslate">window.addEventListener("gamepaddisconnected", function(e) {
   gamepadInfo.innerHTML = "Waiting for gamepad.";
 
   cancelRequestAnimationFrame(start);
@@ -139,7 +139,7 @@ var b = 0;
 
 <p>Chrome does things differently here. Instead of constantly storing the gamepad's latest state in a variable it only stores a snapshot, so to do the same thing in Chrome you have to keep polling it and then only use the {{ domxref("Gamepad") }} object in code when it is available. We have done this below using {{ domxref("Window.setInterval()") }}; once the object is available the gamepad info is outputted, the game loop is started, and the interval is cleared using {{ domxref("Window.clearInterval()") }}. Note that in older versions of Chrome {{ domxref("Navigator.getGamepads()") }} is implemented with a <code>webkit</code> prefix. We attempt to detect and handle both the prefixed version and the standard version of the function for backwards compatibility.</p>
 
-<pre class="brush: js">var interval;
+<pre class="brush: js notranslate">var interval;
 
 if (!('ongamepadconnected' in window)) {
   // No gamepad events available, poll instead.
@@ -163,11 +163,11 @@ function pollGamepads() {
 
 <p>After all this is done, we use our <font face="Consolas, Monaco, Andale Mono, monospace">requestAnimationFrame()</font> to request the next animation frame, running <code>gameLoop()</code> again.</p>
 
-<pre class="brush: js">function buttonPressed(b) {
-<span class="k">  if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"object"</span><span class="p">)</span> <span class="p">{</span>
-<span class="nx">    return</span> <span class="nx">b</span><span class="p">.</span><span class="nx">pressed</span><span class="p">;</span>
-<span class="nx">  </span><span class="p">}</span>
-<span class="p">  return</span> <span class="nx">b</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">;</span>
+<pre class="brush: js notranslate">function buttonPressed(b) {
+  if (typeof(b) == "object") {
+    return b.pressed;
+  }
+  return b == 1.0;
 }
 
 function gameLoop() {
@@ -194,141 +194,136 @@ function gameLoop() {
   start = requestAnimationFrame(gameLoop);
 }</pre>
 
-<h3 id="Using_axes_information">Using axes information</h3>
-
-<p><strong>TBD (basically the same, except using axes[i] rather than button[i].value for both Firefox and Chrome.)</strong></p>
-
 <h2 id="Complete_example_Displaying_gamepad_state">Complete example: Displaying gamepad state</h2>
 
 <p>This example shows how to use the {{ domxref("Gamepad") }} object, as well as the {{ event("gamepadconnected") }} and {{ event("gamepaddisconnected") }} events in order to display the state of all gamepads connected to the system. You can find a <a href="http://luser.github.io/gamepadtest/">working demo</a> and look at the <a href="https://github.com/luser/gamepadtest">full source code</a> on Github.</p>
 
-<pre class="brush: js">var haveEvents = 'ongamepadconnected' in window;
-var controllers = {};<span style="font-size: 1rem;">
+<pre class="brush: js notranslate">var haveEvents = 'ongamepadconnected' in window;
+var controllers = {};
 
-</span><span style="font-size: 1rem;">function connecthandler(e) {
-</span><span style="font-size: 1rem;">  addgamepad(e.gamepad);
-</span><span style="font-size: 1rem;">}
+function connecthandler(e) {
+  addgamepad(e.gamepad);
+}
 
-</span><span style="font-size: 1rem;">function addgamepad(gamepad) {
-</span><span style="font-size: 1rem;">  controllers[gamepad.index] = gamepad;
+function addgamepad(gamepad) {
+  controllers[gamepad.index] = gamepad;
 
   var d = document.createElement("div");
-</span><span style="font-size: 1rem;">  d.setAttribute("id", "controller" + gamepad.index);
+  d.setAttribute("id", "controller" + gamepad.index);
 
-</span><span style="font-size: 1rem;">  var t = document.createElement("h1");
-</span><span style="font-size: 1rem;">  t.appendChild(document.createTextNode("gamepad: " + gamepad.id));
-</span><span style="font-size: 1rem;">  d.appendChild(t);
+  var t = document.createElement("h1");
+  t.appendChild(document.createTextNode("gamepad: " + gamepad.id));
+  d.appendChild(t);
 
-</span><span style="font-size: 1rem;">  var b = document.createElement("div");
-</span><span style="font-size: 1rem;">  b.className = "buttons";
-</span><span style="font-size: 1rem;">  for (var i = 0; i &lt; gamepad.buttons.length; i++) {
-</span><span style="font-size: 1rem;">    var e = document.createElement("span");
-</span><span style="font-size: 1rem;">    e.className = "button";
-</span><span style="font-size: 1rem;">    //e.id = "b" + i;
-</span><span style="font-size: 1rem;">    e.innerHTML = i;
-</span><span style="font-size: 1rem;">    b.appendChild(e);
-</span><span style="font-size: 1rem;">  }
-
-</span><span style="font-size: 1rem;">  d.appendChild(b);
-
-</span><span style="font-size: 1rem;">  var a = document.createElement("div");
-</span><span style="font-size: 1rem;">  a.className = "axes";
-
-</span><span style="font-size: 1rem;">  for (var i = 0; i &lt; gamepad.axes.length; i++) {
-</span><span style="font-size: 1rem;">    var p = document.createElement("progress");
-</span><span style="font-size: 1rem;">    p.className = "axis";
-</span><span style="font-size: 1rem;">    //p.id = "a" + i;
-</span><span style="font-size: 1rem;">    p.setAttribute("max", "2");
-</span><span style="font-size: 1rem;">    p.setAttribute("value", "1");
-</span><span style="font-size: 1rem;">    p.innerHTML = i;
-</span><span style="font-size: 1rem;">    a.appendChild(p);
-</span><span style="font-size: 1rem;">  }
-
-</span><span style="font-size: 1rem;">  d.appendChild(a);
-
-  // See </span>https://github.com/luser/gamepadtest/blob/master/index.html<span style="font-size: 1rem;">
-  var start = </span><span style="font-size: 1rem;">document.getElementById("start");</span>
-<span style="font-size: 1rem;">  if (start) {
-</span><span style="font-size: 1rem;">    start.style.display = "none";
+  var b = document.createElement("div");
+  b.className = "buttons";
+  for (var i = 0; i &lt; gamepad.buttons.length; i++) {
+    var e = document.createElement("span");
+    e.className = "button";
+    //e.id = "b" + i;
+    e.innerHTML = i;
+    b.appendChild(e);
   }
-</span><span style="font-size: 1rem;">
-  document.body.appendChild(d);
-</span><span style="font-size: 1rem;">  requestAnimationFrame(updateStatus);
-</span><span style="font-size: 1rem;">}
-</span><span style="font-size: 1rem;">
+
+  d.appendChild(b);
+
+  var a = document.createElement("div");
+  a.className = "axes";
+
+  for (var i = 0; i &lt; gamepad.axes.length; i++) {
+    var p = document.createElement("progress");
+    p.className = "axis";
+    //p.id = "a" + i;
+    p.setAttribute("max", "2");
+    p.setAttribute("value", "1");
+    p.innerHTML = i;
+    a.appendChild(p);
+  }
+
+  d.appendChild(a);
+
+  // See https://github.com/luser/gamepadtest/blob/master/index.html
+  var start = document.getElementById("start");
+  if (start) {
+    start.style.display = "none";
+  }
+
+  document.body.appendChild(d);
+  requestAnimationFrame(updateStatus);
+}
+
 function disconnecthandler(e) {
-</span><span style="font-size: 1rem;">  removegamepad(e.gamepad);
-</span><span style="font-size: 1rem;">}
+  removegamepad(e.gamepad);
+}
 
-</span><span style="font-size: 1rem;">function removegamepad(gamepad) {
-</span><span style="font-size: 1rem;">  var d = document.getElementById("controller" + gamepad.index);
-</span><span style="font-size: 1rem;">  document.body.removeChild(d);
-</span><span style="font-size: 1rem;">  delete controllers[gamepad.index];
-</span><span style="font-size: 1rem;">}
+function removegamepad(gamepad) {
+  var d = document.getElementById("controller" + gamepad.index);
+  document.body.removeChild(d);
+  delete controllers[gamepad.index];
+}
 
-</span><span style="font-size: 1rem;">function updateStatus() {
-</span><span style="font-size: 1rem;">  if (!haveEvents) {
-</span><span style="font-size: 1rem;">    scangamepads();
-</span><span style="font-size: 1rem;">  }
+function updateStatus() {
+  if (!haveEvents) {
+    scangamepads();
+  }
 
   var i = 0;
   var j;
 
-</span><span style="font-size: 1rem;">  for (j in controllers) {
-</span><span style="font-size: 1rem;">    var controller = controllers[j];
-</span><span style="font-size: 1rem;">    var d = document.getElementById("controller" + j);
-</span><span style="font-size: 1rem;">    var buttons = d.getElementsByClassName("button");
-</span><span style="font-size: 1rem;">
-    for (i = 0; i &lt; controller.buttons.length; i++) {
-</span><span style="font-size: 1rem;">      var b = buttons[i];
-</span><span style="font-size: 1rem;">      var val = controller.buttons[i];
-</span><span style="font-size: 1rem;">      var pressed = val == 1.0;
-</span><span style="font-size: 1rem;">      if (typeof(val) == "object") {
-</span><span style="font-size: 1rem;">        pressed = val.pressed;
-</span><span style="font-size: 1rem;">        val = val.value;
-</span><span style="font-size: 1rem;">      }
+  for (j in controllers) {
+    var controller = controllers[j];
+    var d = document.getElementById("controller" + j);
+    var buttons = d.getElementsByClassName("button");
 
-</span><span style="font-size: 1rem;">      var pct = Math.round(val * 100) + "%";
-</span><span style="font-size: 1rem;">      b.style.backgroundSize = pct + " " + pct;
+    for (i = 0; i &lt; controller.buttons.length; i++) {
+      var b = buttons[i];
+      var val = controller.buttons[i];
+      var pressed = val == 1.0;
+      if (typeof(val) == "object") {
+        pressed = val.pressed;
+        val = val.value;
+      }
 
-</span><span style="font-size: 1rem;">      if (pressed) {
-</span><span style="font-size: 1rem;">        b.className = "button pressed";
-</span><span style="font-size: 1rem;">      } else {
-</span><span style="font-size: 1rem;">        b.className = "button";
-</span><span style="font-size: 1rem;">      }
-</span><span style="font-size: 1rem;">    }
+      var pct = Math.round(val * 100) + "%";
+      b.style.backgroundSize = pct + " " + pct;
 
-</span><span style="font-size: 1rem;">    var axes = d.getElementsByClassName("axis");
-</span><span style="font-size: 1rem;">    for (i = 0; i &lt; controller.axes.length; i++) {
-</span><span style="font-size: 1rem;">      var a = axes[i];
-</span><span style="font-size: 1rem;">      a.innerHTML = i + ": " + controller.axes[i].toFixed(4);
-</span><span style="font-size: 1rem;">      a.setAttribute("value", controller.axes[i] + 1);
-</span><span style="font-size: 1rem;">    }
-</span><span style="font-size: 1rem;">  }
+      if (pressed) {
+        b.className = "button pressed";
+      } else {
+        b.className = "button";
+      }
+    }
 
-</span><span style="font-size: 1rem;">  requestAnimationFrame(updateStatus);
-</span><span style="font-size: 1rem;">}
+    var axes = d.getElementsByClassName("axis");
+    for (i = 0; i &lt; controller.axes.length; i++) {
+      var a = axes[i];
+      a.innerHTML = i + ": " + controller.axes[i].toFixed(4);
+      a.setAttribute("value", controller.axes[i] + 1);
+    }
+  }
 
-</span><span style="font-size: 1rem;">function scangamepads() {
-</span><span style="font-size: 1rem;">  var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
-</span><span style="font-size: 1rem;">  for (var i = 0; i &lt; gamepads.length; i++) {
-</span><span style="font-size: 1rem;">    if (gamepads[i]) {
-</span><span style="font-size: 1rem;">      if (gamepads[i].index in controllers) {
-</span><span style="font-size: 1rem;">        </span><span style="font-size: 1rem;">controllers[gamepads[i].index] = gamepads[i];
-</span><span style="font-size: 1rem;">      } else {
-</span><span style="font-size: 1rem;">        </span><span style="font-size: 1rem;">addgamepad(gamepads[i]);
-</span><span style="font-size: 1rem;">      }
-</span><span style="font-size: 1rem;">    }
-</span><span style="font-size: 1rem;">  }
-</span><span style="font-size: 1rem;">}
+  requestAnimationFrame(updateStatus);
+}
 
-</span><span style="font-size: 1rem;">
+function scangamepads() {
+  var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
+  for (var i = 0; i &lt; gamepads.length; i++) {
+    if (gamepads[i]) {
+      if (gamepads[i].index in controllers) {
+        controllers[gamepads[i].index] = gamepads[i];
+      } else {
+        addgamepad(gamepads[i]);
+      }
+    }
+  }
+}
+
 window.addEventListener("gamepadconnected", connecthandler);
-</span><span style="font-size: 1rem;">window.addEventListener("gamepaddisconnected", disconnecthandler);
+window.addEventListener("gamepaddisconnected", disconnecthandler);
 
-</span><span style="font-size: 1rem;">if (!haveEvents) {
-</span><span style="font-size: 1rem;">  setInterval(scangamepads, 500);
-</span><span style="font-size: 1rem;">}</span></pre>
+if (!haveEvents) {
+ setInterval(scangamepads, 500);
+}</pre>
 
 <h2 id="Specifications">Specifications</h2>
 

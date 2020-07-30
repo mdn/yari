@@ -4,15 +4,16 @@
   "main": "index.js",
   "license": "MPL-2.0",
   "scripts": {
-    "#start": "nodemon index.js --exec babel-node --presets babel-preset-env",
-    "start": "nodemon index.js"
+    "start": "nodemon index.js --watch . --watch ../build --watch ../content --watch ../kumascript"
   },
   "dependencies": {
+    "chokidar": "^3.4.1",
     "dotenv": "8.2.0",
     "express": "4.17.1",
-    "open-editor": "2.0.1"
-  },
-  "devDependencies": {
-    "nodemon": "2.0.4"
+    "express-http-proxy": "1.6.0",
+    "glob": "^7.1.6",
+    "nodemon": "2.0.4",
+    "open-editor": "2.0.1",
+    "ws": "^7.3.1"
   }
 }

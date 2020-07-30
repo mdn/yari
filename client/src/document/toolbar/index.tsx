@@ -2,24 +2,18 @@ import React from "react";
 import { Doc } from "../types";
 import { EditActions } from "./edit-actions";
 import { ToggleDocumentFlaws } from "./flaws";
-import Watcher from "./watcher";
+import WatchInfo from "./watch-info";
 
 import "./index.scss";
 
-export default function Toolbar({
-  doc,
-  onDocumentUpdate,
-}: {
-  doc: Doc;
-  onDocumentUpdate: Function;
-}) {
+export default function Toolbar({ doc }: { doc: Doc }) {
   return (
     <div className="toolbar">
       <div className="toolbar-first-row">
         <EditActions folder={doc.source.folder} />
-        <Watcher onDocumentUpdate={onDocumentUpdate} />
+        <WatchInfo />
       </div>
-      <ToggleDocumentFlaws flaws={doc.flaws} />
+      <ToggleDocumentFlaws doc={doc} />
     </div>
   );
 }
