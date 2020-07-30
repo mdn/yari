@@ -9,7 +9,6 @@
     "prettier-check": "prettier --check '**/*.{js,ts,tsx,json,scss,html}'",
     "prettier-format": "prettier --write '**/*.{js,ts,tsx,json,scss,html}'",
     "test": "yarn prettier-check && yarn workspace client test",
-    "build:stumptown": "cd ${STUMPTOWN_CONTENT_ROOT:-stumptown} && npm run build-json",
     "build:client": "yarn workspace client build",
     "build:ssr": "yarn workspace ssr build",
     "prebuild": "yarn build:client && yarn build:ssr",
