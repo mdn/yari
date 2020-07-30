@@ -4,7 +4,7 @@ on:
   schedule:
     # * is a special character in YAML so you have to quote this string
     # TODO: Figure out what the best possible frequency should be!
-    - cron:  '*/15 * * * *'
+    - cron:  '0 */12 * * *'
 
 jobs:
   build:
@@ -28,27 +28,38 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      # - name: Install all yarn packages
-      #   run: yarn --frozen-lockfile
+      - name: Install all yarn packages
+        run: yarn --frozen-lockfile
 
       # - name: Install Python
-      #   if: steps.git_diff_content.outputs.diff
       #   uses: actions/setup-python@v2
       #   with:
       #     python-version: '3.8'
 
       # - name: Install Python poetry
-      #   if: steps.git_diff_content.outputs.diff
       #   uses: dschep/install-poetry-action@v1.3
 
       # - name: Display Python & Poetry version
-      #   if: steps.git_diff_content.outputs.diff
       #   run: |
       #     python --version
       #     poetry --version
 
       - name: Build everything
         run: |
+          # TODO: We might want to build the archived content too every now
+          # and then. Most likely very very rarely but here would be a
+          # good place to do it. Perhaps, as an example, we do it on the
+          # 1st of every month.
+          # Sample pseudo-code:
+          #
+          #    day_of_month=$(date +"%d")
+          #    if [ $day_of_month -eq "1" ]; then
+          #      echo "Going to build with the archive content too"
+          #      git clone https://github.com/mdn/mdn-archive-content.git
+          #      export CONTENT_ARCHIVE_ROOT=mdn-archive-content/content/files
+          #    fi
+          #
+
           # Now is not the time to worry about flaws.
           export BUILD_FLAW_LEVELS="*:ignore"
           yarn build
