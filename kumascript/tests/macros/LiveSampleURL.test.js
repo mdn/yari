@@ -32,7 +32,7 @@ describeMacro("LiveSampleURL", function () {
       "https://mdn.mozillademos.org/en-US/docs/HTML/Forms/How_to_build_custom_form_widgets/Example_2/_samples_/No_JS"
     );
   });
-  itMacro("Override with nonexistent page URL)", async (macro) => {
+  itMacro("Override with nonexistent page URL", async (macro) => {
     macro.ctx.env.live_samples = {
       base_url: "https://mdn.mozillademos.org",
     };

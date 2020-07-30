@@ -245,7 +245,7 @@ describeMacro("EmbedLiveSample", function () {
     async function (macro) {
       macro.ctx.env.path = "/en-US/docs/Web/Events/focus";
       macro.ctx.env.url = `https://developer.mozilla.org${macro.ctx.env.path}`;
-      macro.ctx.info.getDescription = jest.fn((url) => url.toLowerCase());
+      macro.ctx.info.cleanURL = jest.fn((url) => url.toLowerCase());
       macro.ctx.info.hasPage = jest.fn((path) => false);
       await expect(
         macro.call("Event delegation", "", "", "", "Web/Events/blur")

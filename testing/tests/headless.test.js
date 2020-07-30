@@ -16,6 +16,16 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatch("<foo>: A test tag");
   });
 
+  it("open the /en-US/docs/Web/InteractiveExample page", async () => {
+    await page.goto(testURL("/en-US/docs/Web/InteractiveExample"), {
+      // Be a bit less patient with this particular page because it contains
+      // an iframe, on an external URL,  which we're not particularly
+      // interested in waiting for.
+      waitUntil: "domcontentloaded",
+    });
+    await expect(page).toMatch("I Have an Interactive Example");
+  });
+
   it("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction page", async () => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction";
     const flexSample1Uri = `${uri}/Flex/_samples_/Flex_1`;
@@ -137,8 +147,21 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement("h1", {
       text: "<foo>: A test tag",
     });
-    await expect(page).toClick("nav li a", {
-      text: "Web technology for developers",
+    // Click the parent page in the breadcrumbs
+    // BUT due to some bug somewhere, you can't do
+    //
+    //    await expect(page).toClick("nav.breadcrumbs a")
+    //
+    // ...because you keep getting:
+    //
+    //   "Node is either not visible or not an HTMLElement"
+    //
+    // So, because of that, let's just do it "the pure puppeteer way."
+    //
+    // For more information, see
+    // https://github.com/puppeteer/puppeteer/issues/2977#issuecomment-412807613
+    await page.evaluate(() => {
+      document.querySelector("nav.breadcrumbs a").click();
     });
     await expect(page).toMatchElement("h1", {
       text: "Web technology for developers",
@@ -147,6 +170,20 @@ describe("Basic viewing of functional pages", () => {
     await page.goBack();
     await expect(page).toMatchElement("h1", {
       text: "<foo>: A test tag",
+    });
+  });
+
+  it("should have a semantically valid breadcrumb trail", async () => {
+    await page.goto(testURL("/en-US/docs/Web/Foo"));
+    // Let's not get too technical about the name of the selectors and
+    // stuff but do note that the page you're on is always a valid link
+    await expect(page).toMatchElement("nav a[property=item][typeof=WebPage]", {
+      // Always includes a link to "self"
+      text: "<foo>: A test tag",
+    });
+    await expect(page).toMatchElement("nav a[property=item][typeof=WebPage]", {
+      // You gotta know your fixture documents
+      text: "Web technology for developers",
     });
   });
 });

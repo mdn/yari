@@ -69,19 +69,10 @@ module.exports = {
       return html;
     }
 
-    let result = this.info.getResultFromCache(path);
+    let result = await this.renderPrerequisiteFromURL(
+      this.wiki.ensureExistence(path)
+    );
     const pathDescription = this.info.getDescription(path);
-
-    if (!result) {
-      // If there was no cached result for the path, it doesn't exist.
-      throw new Error(
-        `${this.env.path.toLowerCase()} transcludes ${pathDescription}, which does not exist`
-      );
-    }
-
-    // Let's just use the rendered HTML, the first part of the pair from
-    // the result, and ignore the second part, which is the list of errors.
-    result = result[0];
 
     const tool = new util.HTMLTool(result, pathDescription);
 
@@ -105,8 +96,7 @@ module.exports = {
     return this.info.getPage(path || this.env.url);
   },
 
-  // Throw an error if the given document path does not exist.
-  checkExistence(path) {
+  ensureExistence(path) {
     if (!this.info.hasPage(path)) {
       throw new Error(
         `${this.env.path.toLowerCase()} references ${this.info.getDescription(
@@ -114,6 +104,7 @@ module.exports = {
         )}, which does not exist`
       );
     }
+    return path;
   },
 
   // Retrieve the full uri of a given wiki page.

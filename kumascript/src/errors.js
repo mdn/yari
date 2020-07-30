@@ -24,16 +24,26 @@ class SourceCodeError {
     this.fatal = fatal;
   }
 
+  get key() {
+    // Generates a unique key for this error.
+    return [
+      this.name,
+      this.errorMessage,
+      this.line,
+      this.column,
+      this.filepath,
+    ].join("\n");
+  }
+
   updateOffset(value) {
     // Update the "offset" property to account for things like front-matter in the
     // source. If the offset changes, this method will update related information.
     // NOTE: We're not using a getter/setter for "offset", which would be a more
     //       robust interface, so that the code that converts this instance to/from
     //       JSON can remain simple.
-    const cleanValue = parseInt(value);
-    if (cleanValue >= 0 && this.offset !== cleanValue) {
+    if (this.offset !== value) {
       // First, let's calculate the change in offset.
-      const offsetDelta = cleanValue - this.offset;
+      const offsetDelta = value - this.offset;
       // Now, let's update things. First, the offset itself.
       this.offset += offsetDelta;
       // Next, let's update the line number.

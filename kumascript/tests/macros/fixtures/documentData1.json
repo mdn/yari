@@ -1,0 +1,329 @@
+{
+  "/en-us/docs/web/http/basics_of_http": {
+    "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP",
+    "title": "Basics of HTTP",
+    "locale": "en-US",
+    "summary": "HTTP is a pretty extensible protocol. It relies on a few basic concepts like the notion of resources and URIs, a simple structure of messages, and a client-server structure for the communication flow. On top of these basic concepts, numerous extensions have appeared over the years, adding new functionality and new semantics by creating new HTTP methods or headers.",
+    "slug": "Web/HTTP/Basics_of_HTTP",
+    "modified": "2019-11-22T17:20:06.565Z",
+    "tags": ["Guide", "HTTP", "Overview"],
+    "translations": [
+      {
+        "locale": "es",
+        "slug": "Web/HTTP/Basics_of_HTTP"
+      },
+      {
+        "locale": "fr",
+        "slug": "Web/HTTP/Basics_of_HTTP"
+      }
+    ]
+  },
+  "/en-us/docs/web/http/basics_of_http/choosing_between_www_and_non-www_urls": {
+    "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs",
+    "title": "Choosing between www and non-www URLs",
+    "locale": "en-US",
+    "summary": "A recurring question among website owners is whether to choose non-www or www URLs. This page provides some advice on what's best.",
+    "slug": "Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs",
+    "modified": "2019-03-24T02:31:11.174Z",
+    "tags": ["Guide", "HTTP", "URL"],
+    "translations": [
+      {
+        "locale": "es",
+        "slug": "Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs"
+      },
+      {
+        "locale": "fr",
+        "slug": "Web/HTTP/Basics_of_HTTP/Choisir_entre_les_URLs_www_sans_www"
+      }
+    ]
+  },
+  "/en-us/docs/web/http/basics_of_http/data_uris": {
+    "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs",
+    "title": "Data URLs",
+    "locale": "en-US",
+    "summary": "Data URLs, URLs prefixed with the data: scheme, allow content creators to embed small files inline in documents. They were formerly known as \"data URIs\" until that name was retired by the WHATWG.",
+    "slug": "Web/HTTP/Basics_of_HTTP/Data_URIs",
+    "modified": "2020-02-09T18:26:10.340Z",
+    "tags": ["Base64", "Guide", "HTTP", "Intermediate", "URL"],
+    "translations": [
+      {
+        "locale": "es",
+        "slug": "Web/HTTP/Basics_of_HTTP/Datos_URIs"
+      },
+      {
+        "locale": "fr",
+        "slug": "Web/HTTP/Basics_of_HTTP/Data_URIs"
+      }
+    ]
+  },
+  "/en-us/docs/web/http/basics_of_http/evolution_of_http": {
+    "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP",
+    "title": "Evolution of HTTP",
+    "locale": "en-US",
+    "summary": "HTTP (HyperText Transfer Protocol) is the underlying protocol of the World Wide Web. HTTP has evolved from an early protocol to exchange files in a semi-trusted laboratory environment, to the modern maze of the Internet, now carrying images, videos in high resolution and 3D.",
+    "slug": "Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP",
+    "modified": "2019-11-17T15:14:06.532Z",
+    "tags": ["Guide", "HTTP", "NeedsUpdate", "NeedsUpdate(HTTP/3)"],
+    "translations": [
+      {
+        "locale": "es",
+        "slug": "Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP"
+      },
+      {
+        "locale": "fr",
+        "slug": "Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP"
+      }
+    ]
+  },
+  "/en-us/docs/web/http/basics_of_http/identifying_resources_on_the_web": {
+    "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web",
+    "title": "Identifying resources on the Web",
+    "locale": "en-US",
+    "summary": "The target of an HTTP request is called a \"resource\", whose nature isn't defined further; it can be a document, a photo, or anything else. Each resource is identified by a Uniform Resource Identifier (URI) used throughout HTTP for identifying resources.",
+    "slug": "Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web",
+    "modified": "2019-10-02T13:03:20.976Z",
+    "tags": [
+      "Domain",
+      "HTTP",
+      "Path",
+      "Scheme",
+      "Syntax",
+      "URI",
+      "URL",
+      "URL Syntax",
+      "Web",
+      "fragment",
+      "port",
+      "query",
+      "resources"
+    ],
+    "translations": [
+      {
+        "locale": "es",
+        "slug": "Web/HTTP/Basics_of_HTTP/Identificación_recursos_en_la_Web"
+      },
+      {
+        "locale": "fr",
+        "slug": "Web/HTTP/Basics_of_HTTP/Identifier_des_ressources_sur_le_Web"
+      }
+    ]
+  },
+  "/en-us/docs/web/http/basics_of_http/mime_types": {
+    "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types",
+    "title": "MIME types (IANA media types)",
+    "locale": "en-US",
+    "summary": "A media type (also known as a Multipurpose Internet Mail Extensions or MIME type) is a standard that indicates the nature and format of a document, file, or assortment of bytes.",
+    "slug": "Web/HTTP/Basics_of_HTTP/MIME_types",
+    "modified": "2019-11-03T15:37:56.527Z",
+    "tags": [
+      "Content-Type",
+      "Guide",
+      "HTTP",
+      "MIME Types",
+      "Meta",
+      "Request header",
+      "Response Header",
+      "application/javascript",
+      "application/json",
+      "application/xml"
+    ],
+    "translations": [
+      {
+        "locale": "es",
+        "slug": "Web/HTTP/Basics_of_HTTP/MIME_types"
+      },
+      {
+        "locale": "fr",
+        "slug": "Web/HTTP/Basics_of_HTTP/MIME_types"
+      }
+    ]
+  },
+  "/en-us/docs/web/http/basics_of_http/mime_types/complete_list_of_mime_types": {
+    "url": "/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types",
+    "title": "Incomplete list of MIME types",
+    "locale": "en-US",
+    "summary": "Here is a list of MIME types, associated by type of documents, ordered by their common extensions.",
+    "slug": "Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types",
+    "modified": "2020-02-05T07:05:34.404Z",
+    "tags": [
+      "Audio",
+      "File Types",
+      "Files",
+      "HTTP",
+      "MIME",
+      "MIME Types",
+      "PHP",
+      "Reference",
+      "Text",
+      "Types",
+      "Video"
+    ],
+    "translations": [
+      {
+        "locale": "es",
+        "slug": "Web/HTTP/Basics_of_HTTP/MIME_types/Lista_completa_de_tipos_MIME"
+      },
+      {
+        "locale": "fr",
+        "slug": "Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types"
+      }
+    ]
+  },
+  "/es/docs/web/http/basics_of_http": {
+    "url": "/es/docs/Web/HTTP/Basics_of_HTTP",
+    "title": "Conceptos básicos de HTTP",
+    "locale": "es",
+    "summary": "El protocolo HTTP es un protocolo ampliable, es decir se puede añadir \"vocabulario\". HTTP está basado en unos pocos conceptos básicos como el concepto de recursos y URIs, una estructura sencilla de mensajes, y una arquitectura de cliente-servidor para ordenar el flujo de las comunicaciones. A demás de estos conceptos, a lo largo de su desarrollo han aparecido otros nuevos y se han añadido funcionalidades y reglas semánticas, creando nuevos métodos y cabeceras.",
+    "slug": "Web/HTTP/Basics_of_HTTP",
+    "modified": "2019-03-24T01:25:02.168Z",
+    "translation_of": "Web/HTTP/Basics_of_HTTP",
+    "tags": ["HTTP", "NeedsTranslation", "Overview", "TopicStub"]
+  },
+  "/es/docs/web/http/basics_of_http/choosing_between_www_and_non-www_urls": {
+    "url": "/es/docs/Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs",
+    "title": "Elección entre www y no-www URLs",
+    "locale": "es",
+    "summary": "Una cuestión recurrente entre los dueños de sitios web consiste en elegir entre un no-www y www URLs. Esta página contiene algunos consejos sobre qué es mejor.",
+    "slug": "Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs",
+    "modified": "2019-03-19T00:22:07.450Z",
+    "translation_of": "Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs",
+    "tags": ["Guía", "HTTP", "URL", "WWW", "no www"]
+  },
+  "/es/docs/web/http/basics_of_http/datos_uris": {
+    "url": "/es/docs/Web/HTTP/Basics_of_HTTP/Datos_URIs",
+    "title": "Datos URIs",
+    "locale": "es",
+    "summary": "Datos URIs, URLs prefijados con los datos: esquema, permiten a los creadores de contenido incorporar pequeños archivos en linea en los documentos.",
+    "slug": "Web/HTTP/Basics_of_HTTP/Datos_URIs",
+    "modified": "2019-03-24T01:24:54.977Z",
+    "translation_of": "Web/HTTP/Basics_of_HTTP/Data_URIs",
+    "tags": ["Base 64", "Guia(2)", "Intermedio", "URI", "URL"]
+  },
+  "/es/docs/web/http/basics_of_http/evolution_of_http": {
+    "url": "/es/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP",
+    "title": "Evolución del protocolo HTTP",
+    "locale": "es",
+    "summary": "HTTP es el protocolo en el que se basa la Web. Fue inventado por Tim Berners-Lee entre los años 1989-1991, HTTP ha visto muchos cambios, manteniendo la mayor parte de su simplicidad y desarrollando su flexibilidad. HTTP ha evolucionado, desde un protocolo destinado al intercambio de archivos en un entorno de un laboratorio semi-seguro, al actual laberinto de Internet, sirviendo ahora para el intercambio de imágenes, vídeos en alta resolución y en 3D.",
+    "slug": "Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP",
+    "modified": "2019-03-24T01:10:11.567Z",
+    "translation_of": "Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP"
+  },
+  "/es/docs/web/http/basics_of_http/identificación_recursos_en_la_web": {
+    "url": "/es/docs/Web/HTTP/Basics_of_HTTP/Identificación_recursos_en_la_Web",
+    "title": "Identificación de recursos web",
+    "locale": "es",
+    "summary": "El objetivo de una solicitud HTTP se denomina \"recurso\", (es decir: datos), y dicho recurso, no posee un tipo definido por defecto; puede ser un documento, o una foto, o cualquier otra posibilidad. Cada recurso es identificado por un Identificador Uniforme de Recursos (URI)  y es utilizado a través de HTTP, para la identificación del tipo de recurso.",
+    "slug": "Web/HTTP/Basics_of_HTTP/Identificación_recursos_en_la_Web",
+    "modified": "2019-03-24T01:24:51.387Z",
+    "translation_of": "Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web"
+  },
+  "/es/docs/web/http/basics_of_http/mime_types": {
+    "url": "/es/docs/Web/HTTP/Basics_of_HTTP/MIME_types",
+    "title": "Tipos MIME",
+    "locale": "es",
+    "summary": "El tipo Extensiones multipropósito de Correo de Internet (MIME) es una forma estandarizada de indicar la naturaleza y el formato de un documento, archivo o conjunto de datos. Está definido y estandarizado en IETF RFC 6838. La Autoridad de Números Asignados de Internet (IANA) es el organismo oficial responsable de realizar un seguimiento de todos los tipos MIME oficiales, y puede encontrar la lista más actualizada y completa en la página de tipos de medios (Media Types).",
+    "slug": "Web/HTTP/Basics_of_HTTP/MIME_types",
+    "modified": "2019-11-18T11:03:54.325Z",
+    "translation_of": "Web/HTTP/Basics_of_HTTP/MIME_types",
+    "tags": [
+      "Cabecera de solicitud",
+      "Guide",
+      "HTTP",
+      "Meta",
+      "Tipos MIME",
+      "Tipos de contenido",
+      "application/json"
+    ]
+  },
+  "/es/docs/web/http/basics_of_http/mime_types/lista_completa_de_tipos_mime": {
+    "url": "/es/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Lista_completa_de_tipos_MIME",
+    "title": "Lista completa de tipos MIME",
+    "locale": "es",
+    "summary": "Aquí está una lista completa de tipos de MIME, asociados por tipo de documentos y  ordenados por su extensión común.",
+    "slug": "Web/HTTP/Basics_of_HTTP/MIME_types/Lista_completa_de_tipos_MIME",
+    "modified": "2019-03-24T01:19:32.581Z",
+    "translation_of": "Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types",
+    "tags": [
+      "Archivos",
+      "Audio",
+      "HTTP",
+      "MIME",
+      "Referencia",
+      "Texto",
+      "Tipos",
+      "Tipos MIME",
+      "Tipos de archivo",
+      "Video"
+    ]
+  },
+  "/fr/docs/web/http/basics_of_http": {
+    "url": "/fr/docs/Web/HTTP/Basics_of_HTTP",
+    "title": "L'essentiel de HTTP",
+    "locale": "fr",
+    "summary": "HTTP est un protocole extensible. Il s'appuie sur quelques concepts basiques comme la notion de ressources et d'URI, une structure de messages simple et une structure client-serveur pour le flux de communication. En plus de ces concepts basiques, de nombreuses extensions du protocole sont apparues au fil des ans, ajoutant de nouvelles fonctionnalités et de nouvelle syntaxes en créant de nouvelles méthodes ou en-têtes HTTP.",
+    "slug": "Web/HTTP/Basics_of_HTTP",
+    "modified": "2019-03-24T01:24:52.804Z",
+    "translation_of": "Web/HTTP/Basics_of_HTTP",
+    "tags": ["Aperçu", "HTTP"]
+  },
+  "/fr/docs/web/http/basics_of_http/choisir_entre_les_urls_www_sans_www": {
+    "url": "/fr/docs/Web/HTTP/Basics_of_HTTP/Choisir_entre_les_URLs_www_sans_www",
+    "title": "Choisir entre les URLs avec ou sans www",
+    "locale": "fr",
+    "summary": "Une question récurrente chez les propriétaires de sites web est de choisir entre utiliser des URLs qui débutent ou non par www. Cette page fournit quelques conseils sur la meilleure approche à envisager.",
+    "slug": "Web/HTTP/Basics_of_HTTP/Choisir_entre_les_URLs_www_sans_www",
+    "modified": "2019-03-19T00:44:23.409Z",
+    "translation_of": "Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs",
+    "tags": ["Guide", "HTTP", "URL"]
+  },
+  "/fr/docs/web/http/basics_of_http/data_uris": {
+    "url": "/fr/docs/Web/HTTP/Basics_of_HTTP/Data_URIs",
+    "title": "URLs de données",
+    "locale": "fr",
+    "summary": "Les URLs de données, les URLs préfixées par le schéma data:, permettent aux créateurs de contenu d'intégrer de petits fichiers dans des documents.",
+    "slug": "Web/HTTP/Basics_of_HTTP/Data_URIs",
+    "modified": "2020-01-10T03:30:13.621Z",
+    "translation_of": "Web/HTTP/Basics_of_HTTP/Data_URIs",
+    "tags": ["Base64", "Guide", "HTTP", "Intermédiaire", "URL"]
+  },
+  "/fr/docs/web/http/basics_of_http/evolution_of_http": {
+    "url": "/fr/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP",
+    "title": "L'évolution du protocole HTTP",
+    "locale": "fr",
+    "summary": "",
+    "slug": "Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP",
+    "modified": "2020-01-18T17:19:52.795Z",
+    "translation_of": "Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP",
+    "tags": ["Guide", "HTTP"]
+  },
+  "/fr/docs/web/http/basics_of_http/identifier_des_ressources_sur_le_web": {
+    "url": "/fr/docs/Web/HTTP/Basics_of_HTTP/Identifier_des_ressources_sur_le_Web",
+    "title": "Identifier des ressources sur le Web",
+    "locale": "fr",
+    "summary": "La cible d'une requête HTTP est appelée une \"ressource\", elle ne possède pas de type particulier. Il peut s'agir d'un document, d'une photo ou de n'importe quoi d'autre. Chaque ressource est identifiée à l'aide d'une Uniform Resource Identifier (URI) utilisé au sein de HTTP pour identifier les ressources.",
+    "slug": "Web/HTTP/Basics_of_HTTP/Identifier_des_ressources_sur_le_Web",
+    "modified": "2019-03-19T00:41:54.222Z",
+    "translation_of": "Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web",
+    "tags": ["HTTP"]
+  },
+  "/fr/docs/web/http/basics_of_http/mime_types": {
+    "url": "/fr/docs/Web/HTTP/Basics_of_HTTP/MIME_types",
+    "title": "Types MIME",
+    "locale": "fr",
+    "summary": "Le type Multipurpose Internet Mail Extensions (type MIME) est un standard permettant d'indiquer la nature et le format d'un document. Il est défini au sein de la RFC 6838. L'Internet Assigned Numbers Authority (IANA) est l'organisme officiel responsable du suivi de l'ensemble des types MIME officiels existants. Une liste exhaustive et maintenue est consultable sur la page Media Types de l'IANA.",
+    "slug": "Web/HTTP/Basics_of_HTTP/MIME_types",
+    "modified": "2020-01-02T09:41:24.716Z",
+    "translation_of": "Web/HTTP/Basics_of_HTTP/MIME_types",
+    "tags": ["Content-Type", "Guide", "HTTP", "Types MIME"]
+  },
+  "/fr/docs/web/http/basics_of_http/mime_types/complete_list_of_mime_types": {
+    "url": "/fr/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types",
+    "title": "Liste des types MIME communs",
+    "locale": "fr",
+    "summary": "Voici une liste de types MIME, associés par type et ordonnée par extension.",
+    "slug": "Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types",
+    "modified": "2019-03-18T23:44:57.359Z",
+    "translation_of": "Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types",
+    "tags": ["Audio", "HTTP", "Reference", "Types MIME", "Video"]
+  }
+}
