@@ -44,6 +44,10 @@ jobs:
       #     python --version
       #     poetry --version
 
+      # - name: Clone mdn-content
+      #   run: |
+      #     git clone https://github.com/mdn/mdn-content.git
+
       - name: Build everything
         run: |
           # TODO: We might want to build the archived content too every now
@@ -59,6 +63,9 @@ jobs:
           #      export CONTENT_ARCHIVE_ROOT=mdn-archive-content/content/files
           #    fi
           #
+
+          # TODO: Only relevant once github.com/mdn/mdn-content is a thing.
+          # export CONTENT_ROOT=mdn-content/content/files
 
           # Now is not the time to worry about flaws.
           export BUILD_FLAW_LEVELS="*:ignore"
