@@ -11,7 +11,8 @@ interface CompatStatementExtended extends bcd.CompatStatement {
   // When a compat statement has a .mdn_url but it's actually not a good
   // one, the Yari builder will attach an extra boolean that indicates
   // that it's not a valid link.
-  bad_url?: boolean;
+  // Note, it's only 'true' if it's present, hence this interface definition.
+  bad_url?: true;
 }
 
 function getSupportClassName(
