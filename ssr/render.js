@@ -45,9 +45,6 @@ export default function render(renderApp, doc) {
     <script id="documentdata" type="application/json">${escapeDocumentJson}</script>
     `.trim();
     $("#root").after(documentDataTag);
-  } else {
-    // TODO: The day we have SPAs in Yari, we need to pass those details
-    // down to here too.
   }
 
   $('link[rel="canonical"]').attr("href", canonicalURL);
