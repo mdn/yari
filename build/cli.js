@@ -3,7 +3,7 @@ const path = require("path");
 
 const cliProgress = require("cli-progress");
 
-const { CONTENT_ROOT, Document, slugToFoldername } = require("content");
+const { CONTENT_ROOT, Document, slugToFolder } = require("content");
 const { renderHTML } = require("ssr");
 
 const options = require("./build-options");
@@ -53,7 +53,7 @@ async function buildDocuments() {
 
   !options.noProgressbar && progressBar.start(documents.count);
   for (const document of documents.iter()) {
-    const outPath = path.join(BUILD_OUT_ROOT, slugToFoldername(document.url));
+    const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
     fs.mkdirSync(outPath, { recursive: true });
 
     const [builtDocument, liveSamples] = await buildDocument(document);

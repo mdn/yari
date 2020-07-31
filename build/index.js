@@ -108,7 +108,7 @@ async function buildDocument(document) {
   let liveSamples = [];
   const sampleIds = kumascript.getLiveSampleIDs(
     document.metadata.slug,
-    document.rawHtml
+    document.rawHTML
   );
   for (const sampleIdObject of sampleIds) {
     const liveSamplePage = kumascript.buildLiveSamplePage(
@@ -149,7 +149,7 @@ async function buildDocument(document) {
   // TODO: The slug should always match the folder name.
   // If you edit the slug bug don't correctly edit the folder it's in
   // it's going to lead to confusion.
-  // We can use the utils.slugToFoldername() function and compare
+  // We can use the utils.slugToFolder() function and compare
   // its output with the `folder`.
   validateSlug(metadata.slug);
 
@@ -239,7 +239,7 @@ async function buildLiveSamplePageFromURL(url) {
   // the actual sampleID object with the properly-cased live-sample ID.
   for (const sampleIDObject of kumascript.getLiveSampleIDs(
     document.metadata.slug,
-    document.rawHtml
+    document.rawHTML
   )) {
     if (sampleIDObject.id.toLowerCase() === sampleID) {
       const liveSamplePage = kumascript.buildLiveSamplePage(

@@ -1,0 +1,105 @@
+name: Production Build
+
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    # TODO: Figure out what the best possible frequency should be!
+    # - cron:  '0 */24 * * *'
+    - cron: "0 */2 * * *"
+
+  workflow_dispatch:
+    inputs:
+      notes:
+        description: "Notes"
+        required: false
+        default: ""
+      archivecontent:
+        description: "Build archived content"
+        required: false
+        default: "false"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: "12"
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install all yarn packages
+        run: yarn --frozen-lockfile
+
+      # - name: Install Python
+      #   uses: actions/setup-python@v2
+      #   with:
+      #     python-version: '3.8'
+
+      # - name: Install Python poetry
+      #   uses: dschep/install-poetry-action@v1.3
+
+      # - name: Display Python & Poetry version
+      #   run: |
+      #     python --version
+      #     poetry --version
+
+      # - name: Clone mdn-content
+      #   run: |
+      #     git clone https://github.com/mdn/mdn-content.git
+
+      - name: Print information about build
+        run: |
+          echo "Trigger notes: ${{ github.event.inputs.notes }}"
+          echo "Trigger archivecontent: ${{ github.event.inputs.archivecontent }}"
+
+      - name: Build everything
+        run: |
+          # TODO: We might want to build the archived content too every now
+          # and then. Most likely very very rarely but here would be a
+          # good place to do it. Perhaps, as an example, we do it on the
+          # 1st of every month.
+          # Sample pseudo-code:
+          #
+          #    day_of_month=$(date +"%d")
+          #    if [ $day_of_month -eq "1" ]; then
+          #      echo "Going to build with the archive content too"
+          #      git clone https://github.com/mdn/mdn-archive-content.git
+          #      export CONTENT_ARCHIVE_ROOT=mdn-archive-content/content/files
+          #    fi
+          #
+          # ALTERNATIVELY...
+          # We can use Actions Inputs and make it a manual trigger.
+          #
+          #
+          #   if [ ${{ github.event.inputs.archivecontent }} -eq "true" ]; then
+          #      echo "Going to build with the archive content too"
+          #      git clone https://github.com/mdn/mdn-archive-content.git
+          #      export CONTENT_ARCHIVE_ROOT=mdn-archive-content/content/files
+          #    fi
+          #
+          # Or, we use a combination of both where we build archive content
+          # either on the 1st of every month OR if it's manually triggered.
+
+          # TODO: Only relevant once github.com/mdn/mdn-content is a thing.
+          # export CONTENT_ROOT=mdn-content/content/files
+
+          # Now is not the time to worry about flaws.
+          export BUILD_FLAW_LEVELS="*:ignore"
+          yarn build
+
+          # TODO: When the deployer is available this is where we
+          # would upload the whole content of client/build
+          du -sh client/build
