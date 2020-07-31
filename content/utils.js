@@ -8,7 +8,7 @@ function buildURL(locale, slug) {
   return `/${locale}/docs/${slug}`.toLowerCase();
 }
 
-function slugToFoldername(slug) {
+function slugToFolder(slug) {
   return (
     slug
       // We have slugs with these special characters that would be
@@ -65,6 +65,6 @@ function memoize(fn) {
 
 module.exports = {
   buildURL,
-  slugToFoldername,
+  slugToFolder,
   memoize,
 };

@@ -9,9 +9,11 @@
   "dependencies": {
     "chalk": "4.1.0",
     "cheerio": "1.0.0-rc.3",
+    "content": "*",
     "cli-progress": "^3.8.2",
     "dotenv": "8.2.0",
     "kumascript": "*",
-    "mdn-browser-compat-data": "1.0.31"
+    "mdn-browser-compat-data": "1.0.33",
+    "ssr": "*"
   }
 }

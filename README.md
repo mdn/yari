@@ -2,7 +2,8 @@
 
 <!-- https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#adding-a-workflow-status-badge-to-your-repository -->
 
-![](https://github.com/mdn/yari/workflows/Testing%20Yari/badge.svg)
+![Testing](https://github.com/mdn/yari/workflows/Testing%20Yari/badge.svg)
+![Production Build](https://github.com/mdn/yari/workflows/Production%20Build/badge.svg)
 
 ## Quickstart
 

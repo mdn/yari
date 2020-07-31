@@ -117,7 +117,7 @@ function injectFlaws(doc, $, options, { rawContent }) {
 function fixFixableFlaws(doc, options, document) {
   if (!options.fixFlaws || document.isArchive) return;
 
-  let newRawHTML = document.rawHtml;
+  let newRawHTML = document.rawHTML;
 
   const loud = options.fixFlawsDryRun || options.fixFlawsVerbose;
 
@@ -131,7 +131,7 @@ function fixFixableFlaws(doc, options, document) {
       // work as expected.
       if (!newRawHTML.includes(flaw.macroSource)) {
         throw new Error(
-          `rawHtml doesn't contain macroSource (${flaw.macroSource})`
+          `rawHTML doesn't contain macroSource (${flaw.macroSource})`
         );
       }
       const newMacroSource = flaw.macroSource.replace(
@@ -180,7 +180,7 @@ function fixFixableFlaws(doc, options, document) {
     }
   }
 
-  if (newRawHTML !== document.rawHtml) {
+  if (newRawHTML !== document.rawHTML) {
     // It changed the raw HTML of the source. So deal with this.
     if (options.fixFlawsDryRun) {
       console.log(

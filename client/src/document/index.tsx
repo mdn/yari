@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
 import { useWebSocketMessageHandler } from "../web-socket";
@@ -27,6 +27,7 @@ const Toolbar = lazy(() => import("./toolbar"));
 export function Document(props /* TODO: define a TS interface for this */) {
   const documentURL = useDocumentURL();
   const { locale } = useParams();
+  const navigate = useNavigate();
 
   const dataURL = `${documentURL}/index.json`;
   const { data: doc, error } = useSWR<Doc>(
@@ -36,7 +37,11 @@ export function Document(props /* TODO: define a TS interface for this */) {
       if (!response.ok) {
         throw new Error(`${response.status} on ${url}`);
       }
-      return (await response.json()).doc;
+      const { doc } = await response.json();
+      if (response.redirected) {
+        navigate(doc.mdn_url);
+      }
+      return doc;
     },
     {
       initialData:
