@@ -47,7 +47,7 @@ describe("testing the main render() function", () => {
             slug: "Web/A",
             tags: ["Web"],
           },
-          rawHtml: source,
+          rawHTML: source,
           fileInfo: {
             path: "testing/content/files/en-us/web/a",
             frontMatterOffset: 8,
@@ -62,7 +62,7 @@ describe("testing the main render() function", () => {
             slug: "Web/B",
             tags: ["Web"],
           },
-          rawHtml: '<p>{{cssxref("bigfoot")}}</p>',
+          rawHTML: '<p>{{cssxref("bigfoot")}}</p>',
           fileInfo: {
             path: "testing/content/files/en-us/web/b",
             frontMatterOffset: 4,
@@ -77,7 +77,7 @@ describe("testing the main render() function", () => {
             slug: "Web/C",
             tags: ["Web"],
           },
-          rawHtml: '{{page("/en-US/docs/Web/B")}}',
+          rawHTML: '{{page("/en-US/docs/Web/B")}}',
           fileInfo: {
             path: "testing/content/files/en-us/web/c",
             frontMatterOffset: 5,
@@ -92,7 +92,7 @@ describe("testing the main render() function", () => {
             slug: "Web/Number",
             tags: ["Web", "CSS", "CSS Data Type", "Layout", "Reference"],
           },
-          rawHtml: "<p>This is the number test page.</p>",
+          rawHTML: "<p>This is the number test page.</p>",
           fileInfo: {
             path: "testing/content/files/en-us/web/css/number",
             frontMatterOffset: 12,
