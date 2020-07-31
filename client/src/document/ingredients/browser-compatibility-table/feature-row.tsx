@@ -4,8 +4,20 @@ import type bcd from "mdn-browser-compat-data/types";
 import { BrowserInfoContext, BrowserName } from "./browser-info";
 import { asList, getFirst, isTruthy } from "./utils";
 
+// Extended for the fields, beyond the bcd types, that are extra-added
+// exclusively in Yari.
+interface SimpleSupportStatementExtended extends bcd.SimpleSupportStatement {
+  // Known for some support statements where the browser *version* is known,
+  // as opposed to just "true" and if the version release date is known.
+  release_date?: string;
+}
+
+type SupportStatementExtended =
+  | SimpleSupportStatementExtended
+  | SimpleSupportStatementExtended[];
+
 function getSupportClassName(
-  support: bcd.SupportStatement | undefined
+  support: SupportStatementExtended | undefined
 ): string {
   if (!support) {
     return "unknown";
@@ -31,6 +43,15 @@ function getSupportClassName(
   }
 
   return className;
+}
+
+function getSupportBrowserReleaseDate(
+  support: SupportStatementExtended | undefined
+): string | undefined {
+  if (!support) {
+    return undefined;
+  }
+  return getFirst(support).release_date;
 }
 
 function StatusIcons({ status }: { status: bcd.StatusBlock }) {
@@ -110,7 +131,8 @@ const CellText = React.memo(
       };
     }
 
-    let label, title;
+    let label: string | React.ReactNode;
+    let title = "";
     switch (status.isSupported) {
       case "yes":
         title = "Full support";
@@ -293,6 +315,7 @@ function CompatCell({
   onToggle: () => void;
 }) {
   const supportClassName = getSupportClassName(support);
+  const browserReleaseDate = getSupportBrowserReleaseDate(support);
   const hasNotes =
     support &&
     asList(support).some(
@@ -312,6 +335,9 @@ function CompatCell({
                 onToggle();
               }
             : undefined
+        }
+        title={
+          browserReleaseDate ? `Released ${browserReleaseDate}` : undefined
         }
       >
         <span className="bc-browser-name">
