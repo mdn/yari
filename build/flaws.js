@@ -22,13 +22,12 @@ function injectFlaws(doc, $, options, { rawContent }) {
 
     // A closure function to help making it easier to append flaws
     function addBrokenLink(href, suggestion = null) {
-      if (!("broken_links" in doc.flaws)) {
-        doc.flaws.broken_links = [];
-      }
-
       for (const match of findMatchesInText(href, rawContent, {
         inQuotes: true,
       })) {
+        if (!("broken_links" in doc.flaws)) {
+          doc.flaws.broken_links = [];
+        }
         doc.flaws.broken_links.push(Object.assign({ href, suggestion }, match));
       }
     }

@@ -11,10 +11,18 @@ export interface Link {
   fixed?: true;
 }
 
+export interface BadBCDLink {
+  slug: string;
+  suggestion: string | null;
+  query: string | null;
+  key: string;
+}
+
 type Flaws = {
   broken_links: Link[];
   macros: MacroErrorMessage[];
   bad_bcd_queries: string[];
+  bad_bcd_links: BadBCDLink[];
 };
 
 export type Translations = { locale: string; slug: string }[];

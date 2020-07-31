@@ -15,6 +15,7 @@ const {
 const SearchIndex = require("./search-index");
 const { addBreadcrumbData } = require("./document-utils");
 const { fixFixableFlaws, injectFlaws } = require("./flaws");
+const { normalizeBCDURLs } = require("./bcd-urls");
 const cheerio = require("./monkeypatched-cheerio");
 const options = require("./build-options");
 
@@ -186,6 +187,10 @@ async function buildDocument(document) {
   injectNoTranslate($);
 
   doc.body = extractDocumentSections($);
+
+  // Creates new mdn_url's for the browser-compatibility-table to link to
+  // pages within this project rather than use the absolute URLs
+  normalizeBCDURLs(doc, options);
 
   doc.popularity = metadata.popularity;
   doc.modified = metadata.modified || null;
