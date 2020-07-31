@@ -7,13 +7,16 @@
     "start": "nodemon index.js --watch . --watch ../build --watch ../content --watch ../kumascript"
   },
   "dependencies": {
+    "build": "*",
     "chokidar": "^3.4.1",
+    "content": "*",
     "dotenv": "8.2.0",
     "express": "4.17.1",
     "express-http-proxy": "1.6.2",
     "glob": "^7.1.6",
     "nodemon": "2.0.4",
     "open-editor": "2.0.1",
+    "ssr": "*",
     "ws": "^7.3.1"
   }
 }

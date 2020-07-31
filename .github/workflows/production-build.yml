@@ -5,18 +5,18 @@ on:
     # * is a special character in YAML so you have to quote this string
     # TODO: Figure out what the best possible frequency should be!
     # - cron:  '0 */24 * * *'
-    - cron:  '0 */2 * * *'
+    - cron: "0 */2 * * *"
 
   workflow_dispatch:
     inputs:
       notes:
-        description: 'Notes'
+        description: "Notes"
         required: false
-        default: ''
+        default: ""
       archivecontent:
-        description: 'Build archived content'
+        description: "Build archived content"
         required: false
-        default: 'false'
+        default: "false"
 
 jobs:
   build:
