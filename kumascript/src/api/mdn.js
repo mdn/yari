@@ -7,11 +7,8 @@ const path = require("path");
 const got = require("got");
 const util = require("./util.js");
 
-const CACHED_WEB_EXT_EXAMPLES_FILEPATH = path.join(
-  __dirname,
-  "__cached-web-ext-examples.json"
-);
-let webExtExamplesCached = null;
+// Module level caching for repeat calls to fetchWebExtExamples().
+let webExtExamples = null;
 
 module.exports = {
   /**
@@ -145,40 +142,25 @@ module.exports = {
   },
 
   async fetchWebExtExamples() {
-    if (!webExtExamplesCached) {
+    if (!webExtExamples) {
       try {
-        webExtExamplesCached = await got(
+        webExtExamples = await got(
           "https://raw.githubusercontent.com/mdn/webextensions-examples/master/examples.json",
           {
-            timeout: 10000,
+            timeout: 1000,
+            retry: 5,
           }
         ).json();
-        if (process.env.NODE_ENV === "development") {
-          fs.writeFileSync(
-            CACHED_WEB_EXT_EXAMPLES_FILEPATH,
-            JSON.stringify(webExtExamplesCached),
-            "utf-8"
-          );
-        }
-      } catch (e) {
-        if (
-          e instanceof got.RequestError &&
-          process.env.NODE_ENV === "development"
-        ) {
-          // The assumption here is that you may wish to work offline
-          // in development mode, so use the last cached data. If there
-          // is not cached data, it'll throw an error which will generate
-          // a macro flaw.
-          webExtExamplesCached = JSON.parse(
-            fs.readFileSync(CACHED_WEB_EXT_EXAMPLES_FILEPATH, "utf-8")
-          );
-        } else {
-          // This will generate macro flaws for all calls to the WebExtExamples and
-          // WebExtAllExamples macros.
-          throw e;
-        }
+      } catch (error) {
+        webExtExamples = error;
       }
     }
-    return webExtExamplesCached;
+    if (webExtExamples instanceof Error) {
+      // This will result in a macro flaw for every call of the WebExtExamples or
+      // WebExtAllExamples macro. We create a fresh instance of Error each time,
+      // because the EJS code will add traceback information to its message.
+      throw new Error(webExtExamples.toString());
+    }
+    return webExtExamples;
   },
 };
