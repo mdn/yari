@@ -251,7 +251,7 @@ function _addSingleSectionBCD($) {
   // use it to augment the `__compat` blocks for the latest version
   // when (if known) it was added.
   const browserReleaseData = new Map();
-  Object.entries(browsers).forEach(([name, browser]) => {
+  for (const [name, browser] of Object.entries(browsers)) {
     const releaseData = new Map();
     for (const [version, data] of Object.entries(browser.releases || [])) {
       if (data) {
@@ -259,7 +259,7 @@ function _addSingleSectionBCD($) {
       }
     }
     browserReleaseData.set(name, releaseData);
-  });
+  }
 
   // We never need this data, after the release info has been extracted
   // for each 'version_added'.
