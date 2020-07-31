@@ -1,0 +1,55 @@
+{
+  "name": "mdn-fiori",
+  "version": "0.1.0",
+  "description": "MDN Web Docs Style Guide",
+  "scripts": {
+    "build-storybook": "build-storybook -s ../node_modules/mdn-minimalist",
+    "start": "start-storybook -s ../node_modules/mdn-minimalist -p 6006"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mdn/mdn-fiori.git"
+  },
+  "author": "Mozilla",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/mdn/mdn-fiori/issues"
+  },
+  "homepage": "https://github.com/mdn/mdn-fiori/#readme",
+  "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@storybook/addon-a11y": "^5.3.19",
+    "@storybook/addon-docs": "^5.3.19",
+    "@storybook/addon-knobs": "^5.3.19",
+    "@storybook/addon-links": "^5.3.19",
+    "@storybook/addon-storysource": "^5.3.19",
+    "@storybook/addon-viewport": "^5.3.19",
+    "@storybook/addons": "^5.3.18",
+    "@storybook/preset-typescript": "^3.0.0",
+    "@storybook/react": "^5.3.19",
+    "@storybook/source-loader": "^5.3.19",
+    "@storybook/theming": "^5.3.19",
+    "@svgr/webpack": "^5.4.0",
+    "@typescript-eslint/eslint-plugin": "2.x",
+    "@typescript-eslint/parser": "2.x",
+    "babel-eslint": "10.x",
+    "babel-loader": "^8.1.0",
+    "eslint": "6.x",
+    "eslint-config-react-app": "^5.2.1",
+    "eslint-plugin-flowtype": "4.x",
+    "eslint-plugin-import": "2.x",
+    "eslint-plugin-jsx-a11y": "6.x",
+    "eslint-plugin-react": "7.x",
+    "eslint-plugin-react-hooks": "^4.0.8",
+    "fork-ts-checker-webpack-plugin": "^5.0.12",
+    "node-sass-chokidar": "^1.5.0",
+    "sass-loader": "^9.0.2",
+    "ts-loader": "^8.0.1"
+  },
+  "dependencies": {
+    "mdn-minimalist": "^0.1.48"
+  },
+  "calavera": {
+    "eslint": true
+  }
+}

@@ -1,0 +1,7 @@
+@import "~mdn-minimalist/sass/mdn-minimalist";
+
+/* This makes Storybook's background changer and grid work */
+html,
+body {
+  background-color: initial;
+}

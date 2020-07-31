@@ -1,0 +1,147 @@
+@import "~mdn-minimalist/sass/vars/color-palette";
+@import "~mdn-minimalist/sass/vars/media-queries";
+@import "~mdn-minimalist/sass/vars/typography";
+
+$menu-zindex: 500;
+$menu-box-shadow: 0 2px 8px 0 $neutral-500;
+$menu-border: solid 1px $neutral-400;
+$menu-border-radius: 4px;
+$dropdown-item-background-color: $primary-200;
+
+.main-menu-toggle {
+  background: none;
+  padding: 10px 20px;
+
+  &::before {
+    display: block;
+    content: "";
+    background: transparent url("../../dinocons/navigation/menu-open.svg") 0 0
+      no-repeat;
+    background-size: 21px;
+    width: 21px;
+    height: 21px;
+  }
+
+  &.expanded::before {
+    background-image: url("../../dinocons/navigation/menu-close.svg");
+  }
+
+  @media #{$mq-tablet-and-up} {
+    display: none;
+  }
+}
+
+ul.main-menu {
+  display: none;
+  box-sizing: border-box;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  background-color: $text-color-inverted;
+  padding: 20px;
+  padding-top: 0;
+  width: 100%;
+  font-weight: bold;
+  z-index: $menu-zindex;
+
+  @media #{$mq-tablet-and-up} {
+    position: relative;
+    top: inherit;
+    display: flex;
+    justify-content: space-evenly;
+    width: inherit;
+    height: inherit;
+  }
+
+  @media #{$mq-small-desktop-and-up} {
+    padding: 0;
+  }
+
+  li ul {
+    display: none;
+    background-color: #fff;
+    margin: 0;
+    padding: 4px 0;
+    font-size: $smaller-font-size;
+
+    @media #{$mq-tablet-and-up} {
+      box-shadow: $menu-box-shadow;
+      border: $menu-border;
+      border-radius: $menu-border-radius;
+    }
+
+    a {
+      display: block;
+      padding: 6px 16px;
+      width: 100%;
+
+      &:hover {
+        background-color: $dropdown-item-background-color;
+        color: #fff;
+        text-decoration: none;
+      }
+
+      @media #{$mq-tablet-and-up} {
+        width: unset;
+      }
+    }
+
+    li {
+      width: 100%;
+
+      @media #{$mq-tablet-and-up} {
+        width: unset;
+      }
+    }
+  }
+
+  .top-level-entry-container {
+    position: relative;
+
+    ul.show {
+      display: block;
+
+      @media #{$mq-tablet-and-up} {
+        position: absolute;
+        right: 0;
+        min-width: 220px;
+        min-width: max-content;
+        z-index: 99;
+      }
+
+      @media #{$mq-small-desktop-and-up} {
+        right: inherit;
+      }
+    }
+
+    button {
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      padding: 10px 10px 15px 0;
+
+      &::after {
+        display: inline-block;
+        content: "▼";
+        margin-left: 5px;
+        width: 12px;
+        height: 12px;
+        font-size: $tiny-text;
+      }
+
+      @media #{$mq-tablet-and-up} {
+        padding: 10px;
+        width: unset;
+      }
+    }
+  }
+
+  &.show {
+    display: block;
+
+    @media #{$mq-tablet-and-up} {
+      display: flex;
+    }
+  }
+}

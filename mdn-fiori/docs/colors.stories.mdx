@@ -1,0 +1,53 @@
+import { Meta, ColorPalette, ColorItem } from "@storybook/addon-docs/blocks";
+
+<Meta title="Docs|Colors" />
+
+# MDN Color Palette
+
+Below follows the official [MDN Web Docs](https://developer.mozilla.org/) color palette. Also included below is the relevant `hex` color codes as well as the relevant `scss` variable names. Even though the `hex` codes are provided, always use the `scss` variable names unless indicated differently.
+
+## Primary Colors
+
+<ColorPalette>
+  <ColorItem title="$primary-100" colors={["#1e7f9d"]} />
+  <ColorItem title="$primary-200" colors={["#216b82"]} />
+  <ColorItem title="$primary-300" colors={["#d75752"]} />
+  <ColorItem title="$primary-400" colors={["#c14238"]} />
+  <ColorItem title="$primary-500" colors={["#4d9f0c"]} />
+  <ColorItem title="$primary-600" colors={["#3b7b08"]} />
+</ColorPalette>
+
+## Neutral Colors
+
+<ColorPalette>
+  <ColorItem title="$neutral-100" colors={["#212121"]} />
+  <ColorItem title="$neutral-200" colors={["#333"]} />
+  <ColorItem title="$neutral-300" colors={["#626262"]} />
+  <ColorItem title="$neutral-400" colors={["#8e8e8e"]} />
+  <ColorItem title="$neutral-500" colors={["#c9c9c9"]} />
+  <ColorItem title="$neutral-600" colors={["#fff"]} />
+</ColorPalette>
+
+## Text Colors
+
+<ColorPalette>
+  <ColorItem
+    title="$text-color"
+    subtitle="Uses the variable $neutral-100"
+    colors={["#212121"]}
+  />
+  <ColorItem
+    title="$text-color-inverted"
+    subtitle="Uses the variable $neutral-600"
+    colors={["#fff"]}
+  />
+  <ColorItem
+    title="$link-color"
+    subtitle="Uses the variable $primary-100"
+    colors={["#1e7f9d"]}
+  />
+</ColorPalette>
+
+## Accessibility
+
+Below are approved color combinations to ensure we always meet at least an `AA` (mid range) accessibility color contrast level.

@@ -1,0 +1,16 @@
+{
+  "extends": ["eslint:recommended", "plugin:import/errors", "react-app"],
+  "rules": {
+    "no-console": 1
+  },
+  "plugins": ["import"],
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  }
+}

@@ -1,0 +1,32 @@
+{
+    "name": "mdn-fiori",
+    "description": "Front-End style guide and pattern library for MDN Web Docs - Built with cupper",
+    "repository": {
+        "url": "https://github.com/mdn/mdn-fiori",
+        "license": "MIT"
+    },
+    "participate": {
+        "mailing-list": "https://discourse.mozilla.org/c/mdn",
+        "irc": "irc://irc.mozilla.org/#mdndev",
+        "irc-contacts": [
+            "espressive",
+            "jwhitlock",
+            "rjohnson"
+        ]
+    },
+    "bugs": {
+        "list": "https://github.com/mdn/mdn-fiori/issues",
+        "report": "https://github.com/mdn/mdn-fiori/issues/new"
+    },
+    "urls": {
+        "prod": "https://mdn.github.io/mdn-fiori"
+    },
+    "keywords": [
+        "styleguide",
+        "pattern library",
+        "best practice",
+        "code style",
+        "hugo",
+        "cupper"
+    ]
+}
