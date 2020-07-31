@@ -61,7 +61,7 @@ jobs:
       #     git clone https://github.com/mdn/mdn-content.git
 
       - name: Print information about build
-      - run: |
+        run: |
           echo "Trigger notes: ${{ github.event.inputs.notes }}"
           echo "Trigger archivecontent: ${{ github.event.inputs.archivecontent }}"
 
