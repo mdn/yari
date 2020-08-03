@@ -2,10 +2,7 @@ const path = require("path");
 
 module.exports = {
   addons: [
-    "@storybook/addon-viewport",
-    "@storybook/preset-typescript",
-    "@storybook/addon-a11y/register",
-    "@storybook/addon-knobs/register",
+    "@storybook/preset-create-react-app",
     {
       name: "@storybook/addon-docs",
       options: {

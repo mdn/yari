@@ -1,7 +1,7 @@
 import { Meta, Story, Preview } from "@storybook/addon-docs/blocks";
-import Logo from "./logo.tsx";
+import Logo from "../src/atoms/logo";
 
-<Meta title="Atoms|Logo" component={Logo} />
+<Meta title="Docs/Atoms/Logo" component={Logo} />
 
 # Logo
 
@@ -11,8 +11,8 @@ This is the main brand logo used in the header of the website.
 
 The logo is added to a page using the `Logo` component.
 
-<Preview withToolbar>
-  <Story name="logo">
+<Preview>
+  <Story name="Logo">
     <Logo />
   </Story>
 </Preview>

@@ -11,12 +11,12 @@
     "test": "yarn prettier-check && yarn workspace client test",
     "build:stumptown": "cd ${STUMPTOWN_CONTENT_ROOT:-stumptown} && npm run build-json",
     "build:client": "yarn workspace client build",
-    "build:fiori": "yarn workspace mdn-fiori build-storybook",
+    "build:fiori": "yarn workspace client build-storybook",
     "build:ssr": "yarn workspace ssr build",
     "prebuild": "yarn build:client && yarn build:ssr",
     "build": "cross-env NODE_ENV=production yarn workspace build start",
     "start": "yarn build:client && yarn build:ssr && nf start",
-    "start:fiori": "yarn workspace mdn-fiori start",
+    "start:fiori": "yarn workspace client storybook",
     "start:functional": "cross-env ENV_FILE=testing/.env yarn run prebuild && nf -e testing/.env start",
     "start:staticserver": "cross-env ENV_FILE=testing/.env node server/static.js"
   },
@@ -27,7 +27,6 @@
     "content",
     "import",
     "kumascript",
-    "mdn-fiori",
     "ssr",
     "server",
     "testing"
