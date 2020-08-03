@@ -132,7 +132,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
             : "content-layout"
         }
       >
-        {doc.toc && doc.toc.length && <TOC toc={doc.toc} />}
+        {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
         <div id="content" className="article text-content">
           <article id="wikiArticle">
