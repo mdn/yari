@@ -115,7 +115,14 @@ test("content built foo page", () => {
   );
 
   const htmlFile = path.join(builtFolder, "index.html");
-  expect(fs.existsSync(htmlFile)).toBeTruthy();
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  // Every page, should have a `link[rel=canonical]` whose `href` always
+  // starts with 'https://developer.mozilla.org' and ends with doc's URL.
+  expect($("link[rel=canonical]").attr("href")).toBe(
+    `https://developer.mozilla.org${doc.mdn_url}`
+  );
 });
 
 test("content built interactiveexample page", () => {
