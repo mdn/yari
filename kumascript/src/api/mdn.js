@@ -1,9 +1,7 @@
 /**
  * @prettier
  */
-const fs = require("fs");
 const url = require("url");
-const path = require("path");
 const got = require("got");
 const util = require("./util.js");
 
