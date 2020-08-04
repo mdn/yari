@@ -78,10 +78,8 @@ async function buildDocuments() {
     }
 
     for (const filePath of fileAttachments) {
-      // TODO: Consider using symlinks instead. At least as an option.
-      // The assumption is that writing a symlink is much faster than
-      // cloning the image to another location on disk.
-      // Let's punt on this until it starts to matter.
+      // We *could* use symlinks instead. But, there's no point :)
+      // Yes, a symlink is less disk I/O but it's nominal.
       fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
     }
 
