@@ -12,7 +12,7 @@
     "fs-extra": "9.0.1",
     "jest": "26.0.1",
     "jest-puppeteer": "4.4.0",
-    "puppeteer": "2",
+    "puppeteer": "5",
     "tempy": "0.6.0"
   },
   "jest": {
