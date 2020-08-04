@@ -160,13 +160,13 @@ console.log(await page.content());
 ## Headless tests should only test static server
 
 To run the functional tests you need a server (on `localhost:5000`) and
-it should just be a static file server. You *can* use `yarn start:functional`
+it should just be a static file server. You _can_ use `yarn start:functional`
 but that server has many tricks such as building on-the-fly.
 
 A better server to use is:
 
 ```sh
-yarn start:staticserver
+yarn start:static-server
 ```
 
 Now you can run just the functional `jest` tests over and over:

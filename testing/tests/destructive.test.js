@@ -78,7 +78,7 @@ describe("fixing flaws", () => {
   });
 
   it("can be run in dry-run mode", () => {
-    const stdout = execSync("yarn workspace build start", {
+    const stdout = execSync("yarn build", {
       cwd: baseDir,
       windowsHide: true,
       env: Object.assign(
@@ -104,7 +104,7 @@ describe("fixing flaws", () => {
   });
 
   it("can actually change the files", () => {
-    const stdout = execSync("yarn workspace build start", {
+    const stdout = execSync("yarn build", {
       cwd: baseDir,
       windowsHide: true,
       env: Object.assign(
