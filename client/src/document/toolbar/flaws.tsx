@@ -4,12 +4,99 @@ import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
 
 import { humanizeFlawName } from "../../flaw-utils";
-import { Doc, Link, MacroErrorMessage, BadBCDLink } from "../types";
+import {
+  Doc,
+  Link,
+  MacroErrorMessage,
+  BadBCDLink,
+  ImageReferenceFlaw,
+  GenericFlaw,
+} from "../types";
 import "./flaws.scss";
 
 interface FlawCount {
   name: string;
   count: number;
+}
+
+function useAnnotations(genericFlaws: GenericFlaw[]) {
+  useEffect(() => {
+    const annotations: RoughAnnotation[] = [];
+    const elements: HTMLElement[] = [];
+    for (const flaw of genericFlaws) {
+      const element: HTMLElement | null = document.querySelector(
+        `[data-flaw="${flaw.id}"]`
+      );
+      if (!element) {
+        console.warn(`Flaw ID '${flaw.id}' does not exist in the DOM`);
+        continue;
+      }
+      elements.push(element);
+      const annotationColor = flaw.suggestion ? "orange" : "red";
+      element.dataset.originalTitle = element.title;
+
+      element.title = flaw.suggestion
+        ? `Flaw suggestion: ${flaw.suggestion}`
+        : `Flaw explanation: ${flaw.explanation}`;
+      annotations.push(
+        annotate(element, {
+          type: "box",
+          color: annotationColor,
+          animationDuration: 300,
+        })
+      );
+    }
+    const ag = annotationGroup(annotations);
+    ag.show();
+
+    return () => {
+      ag.hide();
+
+      // Now, restore any 'title' attributes that were overridden.
+      for (const element of elements) {
+        if (element.dataset.originalTitle !== undefined) {
+          element.title = element.dataset.originalTitle;
+        }
+      }
+    };
+  }, [genericFlaws]);
+
+  function focus(flawID: string) {
+    const element: HTMLElement | null = document.querySelector(
+      `[data-flaw="${flawID}"]`
+    );
+    if (!element) return;
+    const annotations: RoughAnnotation[] = [];
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+
+    if (element.parentElement) {
+      annotations.push(
+        annotate(element, {
+          type: "circle",
+          color: "purple",
+          animationDuration: 500,
+          strokeWidth: 2,
+          padding: 6,
+        })
+      );
+    }
+
+    if (annotations.length) {
+      const ag = annotationGroup(annotations);
+      ag.show();
+      // Only show this extra highlight temporarily
+      window.setTimeout(() => {
+        ag.hide();
+      }, 2000);
+    }
+  }
+
+  return {
+    focus,
+  };
 }
 
 const FLAWS_HASH = "#_flaws";
@@ -112,6 +199,14 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
                 key="macros"
                 sourceFolder={doc.source.folder}
                 messages={doc.flaws.macros}
+              />
+            );
+          case "images":
+            return (
+              <Images
+                key="images"
+                sourceFolder={doc.source.folder}
+                images={doc.flaws.images}
               />
             );
           default:
@@ -433,6 +528,91 @@ function Macros({
           </details>
         );
       })}
+    </div>
+  );
+}
+
+function Images({
+  sourceFolder,
+  images,
+}: {
+  sourceFolder: string;
+  images: ImageReferenceFlaw[];
+}) {
+  // XXX rewrite to a hook
+  const [opening, setOpening] = React.useState<string | null>(null);
+  useEffect(() => {
+    let unsetOpeningTimer: ReturnType<typeof setTimeout>;
+    if (opening) {
+      unsetOpeningTimer = setTimeout(() => {
+        setOpening(null);
+      }, 3000);
+    }
+    return () => {
+      if (unsetOpeningTimer) {
+        clearTimeout(unsetOpeningTimer);
+      }
+    };
+  }, [opening]);
+
+  const filepath = sourceFolder + "/index.html";
+
+  function openInEditor(key: string, line: number, column: number) {
+    const sp = new URLSearchParams();
+    sp.set("filepath", filepath);
+    sp.set("line", `${line}`);
+    sp.set("column", `${column}`);
+    console.log(
+      `Going to try to open ${filepath}:${line}:${column} in your editor`
+    );
+    setOpening(key);
+    fetch(`/_open?${sp.toString()}`).catch((err) => {
+      console.warn(`Error trying to _open?${sp.toString()}:`, err);
+    });
+  }
+
+  const { focus } = useAnnotations(images);
+
+  return (
+    <div className="flaw flaw__images">
+      <h3>{humanizeFlawName("images")}</h3>
+      <ul>
+        {images.map((image, i) => {
+          const key = `${image.src}${image.line}${image.column}`;
+          return (
+            <li key={key}>
+              <code>{image.src}</code>{" "}
+              <span
+                role="img"
+                aria-label="Click to highlight image"
+                title="Click to highlight image"
+                style={{ cursor: "zoom-in" }}
+                onClick={() => {
+                  focus(image.id);
+                }}
+              >
+                👀
+              </span>{" "}
+              <a
+                href={`file://${filepath}`}
+                onClick={(event: React.MouseEvent) => {
+                  event.preventDefault();
+                  openInEditor(key, image.line, image.column);
+                }}
+                title="Click to open in your editor"
+              >
+                line {image.line}:{image.column}
+              </a>{" "}
+              <small>{image.explanation}</small>{" "}
+              {image.suggestion && (
+                <span>
+                  Suggested fix: <code>{image.suggestion}</code>
+                </span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
