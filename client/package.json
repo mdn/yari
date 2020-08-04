@@ -54,13 +54,10 @@
     ]
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^6.0.0-rc.23",
-    "@storybook/addon-controls": "^6.0.0-rc.23",
-    "@storybook/addon-docs": "^6.0.0-rc.23",
-    "@storybook/addon-links": "^6.0.0-rc.23",
-    "@storybook/addons": "^6.0.0-rc.23",
+    "@storybook/addon-essentials": "^6.0.0-rc.26",
+    "@storybook/addons": "^6.0.0-rc.26",
     "@storybook/preset-create-react-app": "^3.1.4",
-    "@storybook/react": "^6.0.0-rc.23",
+    "@storybook/react": "^6.0.0-rc.26",
     "@testing-library/react": "^10.4.7",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "mdn-browser-compat-data": "^1.0.32",

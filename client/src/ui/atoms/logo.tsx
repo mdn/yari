@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { useLocale } from "../hooks";
-import { ReactComponent as LogoSVG } from "../assets/logo.svg";
+import { useLocale } from "../../hooks";
+import { ReactComponent as LogoSVG } from "../../assets/logo.svg";
 
 import "./logo.scss";
 

@@ -4,13 +4,13 @@ type ButtonProps = {
   /**
    * Label text for the button
    */
-  label: string,
+  label: string;
   /**
    * The `type` of the button.
    * Available options are:
    * `button` or `submit`
    */
-  type?: "button",
+  type?: "button";
   /**
    * The button state.
    * Available options are:
@@ -18,11 +18,13 @@ type ButtonProps = {
    * Combinations are also possible such as:
    * `outline positive`
    */
-  state?: "primary"
-}
+  state?: "primary";
+};
 
 export default function Button({ label, type, state }: ButtonProps) {
   return (
-      <button type={type} className={`button ${state}`}>{label}</button>
+    <button type={type} className={`button ${state}`}>
+      {label}
+    </button>
   );
 }

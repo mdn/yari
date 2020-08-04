@@ -1,56 +1,66 @@
-import { ArgsTable, Canvas, Meta, Story, Preview, Source } from "@storybook/addon-docs/blocks";
-import Button from "../src/atoms/button.tsx";
+import {
+  ArgsTable,
+  Canvas,
+  Meta,
+  Story,
+  Preview,
+  Source,
+} from "@storybook/addon-docs/blocks";
+import Button from "../src/ui/atoms/button.tsx";
 
-<Meta title="Docs/Atoms/Button" 
-      component={Button}
-      argTypes={
-          {
-            label: { control: {
-                    type: "text" 
-                }
-            },
-            state: {
-                control: {
-                    type: 'inline-radio',
-                    options: ['primary', 'positive', 'danger', 'outline', 'inactive'] 
-                }
-            },
-          }
-      }
+<Meta
+  title="Docs/Atoms/Button"
+  component={Button}
+  argTypes={{
+    label: {
+      control: {
+        type: "text",
+      },
+    },
+    state: {
+      control: {
+        type: "inline-radio",
+        options: ["primary", "positive", "danger", "outline", "inactive"],
+      },
+    },
+  }}
 />
 
-export const Template = (args) => <Button {...args} />
+export const Template = (args) => <Button {...args} />;
 
 export const wrapper = {
   display: "flex",
   flexWrap: "wrap",
-  gap: "20px"
+  gap: "20px",
+};
+
+export const props = {
+  of: Button,
+  compact: true,
 };
 
 # Buttons
 
 TBD
 
-<Story name="Interactive" args={
-    { label: "Primary button ", state: "primary"}}
->
-  { Template.bind() }
+<Story name="Interactive" args={{ label: "Primary button ", state: "primary" }}>
+  {Template.bind()}
 </Story>
 
-<ArgsTable of={Button} />
+<ArgsTable />
 
 ## Usage
 
 Prmary buttons are used for primary calls to action.
 
 <Preview>
-<Button label="Primary button" />
+  <Button label="Primary button" />
 </Preview>
 
 For secondary calls to action, use the `outline` button.
 
 <Preview>
-<Button label="Secondary button" state="outline" />
+  <Button label="Secondary button" state="outline" />
 </Preview>
 
 ## Forms and Modals
@@ -60,19 +70,19 @@ Forms and modals often have more than one action a user can take. Secondary acti
 When the result of an action is positive and non-destructive, use either one of the following buttons.
 
 <Preview>
-<div style={wrapper}>
+  <div style={wrapper}>
     <Button label="Back" state="outline positive" />
     <Button label="Subscribe" state="positive" />
-</div>
+  </div>
 </Preview>
 
 When the result of an action is negative or destructive, use one of the following buttons.
 
 <Preview>
-<div style={wrapper}>
+  <div style={wrapper}>
     <Button label="Cancel" state="outline danger" />
     <Button label="Close account" state="danger" />
-</div>
+  </div>
 </Preview>
 
 For some interactions there may be some fields we want a user to complete before they can submit a form or complete a task. Also, it is generally a good practice to disable a button once a user has clicked it to prevent duplicate submissions.
@@ -80,5 +90,5 @@ For some interactions there may be some fields we want a user to complete before
 In these instances you should use the `inactive` state button.
 
 <Preview>
-<Button label="Processing..." state="inactive" />
+  <Button label="Processing..." state="inactive" />
 </Preview>

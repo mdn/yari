@@ -1,58 +1,66 @@
 import * as React from "react";
-import { memo, useContext, useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-import GAProvider from "../utils/ga-provider.jsx";
-
-import { gettext } from "../utils/l10n.js";
-import type { DocumentData } from "../types/document-data.js";
+import { useGA } from "../../ga-context";
+import { useLocale } from "../../hooks";
 
 import "./main-menu.scss";
 
-type Props = {
-  documentData: ?DocumentData,
-  locale: string
-};
-
-const _MainMenu = ({ documentData, locale }: Props) => {
-  const mainMenuToggleRef = useRef(null);
-  const previousActiveElement = useRef(null);
+export default function MainMenu() {
+  const locale = useLocale();
+  const mainMenuToggleRef = useRef<null | HTMLButtonElement>(null);
+  const previousActiveElement = useRef<null | HTMLButtonElement>(null);
   const [showMainMenu, setShowMainMenu] = useState(false);
-  const [showSubMenu, setShowSubMenu] = useState(null);
-  const ga = useContext(GAProvider.context);
+  const [visibleSubMenu, setVisibleSubMenu] = useState<string | null>(null);
+  const ga = useGA();
 
   /**
    * Send a signal to GA when there is an interaction on one
    * of the main menu items.
    * @param {Object} event - The event object that was triggered
    */
-  function sendMenuItemInteraction(event) {
-    const label = event.target.href || event.target.textContent;
+  function sendMenuItemInteraction(
+    event:
+      | React.FocusEvent<HTMLButtonElement>
+      | React.MouseEvent<HTMLAnchorElement>
+  ) {
+    if (!(event.target instanceof HTMLElement)) {
+      return;
+    }
+    const label =
+      event.target instanceof HTMLAnchorElement
+        ? event.target.href
+        : event.target.textContent;
 
     ga("send", {
       hitType: "event",
       eventCategory: "Wiki",
       eventAction: "MainNav",
-      eventLabel: label
+      eventLabel: label,
     });
   }
 
   function hideSubMenuIfVisible() {
-    if (showSubMenu) {
-      if (previousActiveElement.current) {
-        previousActiveElement.current.focus();
-      }
-      setShowSubMenu(false);
+    if (visibleSubMenu) {
+      setVisibleSubMenu(null);
+    }
+
+    if (previousActiveElement.current) {
+      previousActiveElement.current.focus();
     }
   }
 
   function toggleMainMenu() {
     const pageOverlay = document.querySelector(".page-overlay");
-    let mainMenuButton = mainMenuToggleRef.current;
+    const mainMenuButton = mainMenuToggleRef.current;
 
     if (mainMenuButton) {
       mainMenuButton.classList.toggle("expanded");
-      pageOverlay.classList.toggle("hidden");
       setShowMainMenu(!showMainMenu);
+    }
+
+    if (pageOverlay) {
+      pageOverlay.classList.toggle("hidden");
     }
   }
 
@@ -63,24 +71,24 @@ const _MainMenu = ({ documentData, locale }: Props) => {
    * @param {String} menuLabel - The current top-level menu item label
    */
   function toggleSubMenu(event, menuLabel) {
-    const expandedState = showSubMenu === menuLabel ? false : true;
+    const expandedState = visibleSubMenu === menuLabel ? false : true;
 
     // store the current activeElement
     previousActiveElement.current = event.target;
     event.target.setAttribute("aria-expanded", expandedState);
 
-    setShowSubMenu(showSubMenu === menuLabel ? null : menuLabel);
+    setVisibleSubMenu(visibleSubMenu === menuLabel ? null : menuLabel);
     sendMenuItemInteraction(event);
   }
 
   useEffect(() => {
-    document.addEventListener("keyup", (event: KeyboardEvent) => {
+    document.addEventListener("keyup", (event) => {
       if (event.key === "Escape") {
         hideSubMenuIfVisible();
       }
     });
 
-    document.addEventListener("click", (event: MouseEvent) => {
+    document.addEventListener("click", (event) => {
       if (
         event.target &&
         event.target instanceof HTMLElement &&
@@ -93,138 +101,126 @@ const _MainMenu = ({ documentData, locale }: Props) => {
 
   // The menus array includes objects that define the set of
   // menus displayed by this header component. The data structure
-  // is defined here during rendering so that the gettext() calls
   // happen after the string catalog is available. And we're using
   // useMemo() so that localization only happens when the locale
   // changes.
   const menus = useMemo(
     () => [
       {
-        label: gettext("Technologies"),
+        label: "Technologies",
         labelId: "technologies",
         items: [
           {
             url: `/${locale}/docs/Web`,
-            label: gettext("Technologies Overview")
+            label: "Technologies Overview",
           },
           {
             url: `/${locale}/docs/Web/HTML`,
-            label: gettext("HTML")
+            label: "HTML",
           },
           {
             url: `/${locale}/docs/Web/CSS`,
-            label: gettext("CSS")
+            label: "CSS",
           },
           {
             url: `/${locale}/docs/Web/JavaScript`,
-            label: gettext("JavaScript")
+            label: "JavaScript",
           },
           {
             url: `/${locale}/docs/Web/Guide/Graphics`,
-            label: gettext("Graphics")
+            label: "Graphics",
           },
           {
             url: `/${locale}/docs/Web/HTTP`,
-            label: gettext("HTTP")
+            label: "HTTP",
           },
           {
             url: `/${locale}/docs/Web/API`,
-            label: gettext("APIs / DOM")
+            label: "APIs",
           },
           {
             url: `/${locale}/docs/Mozilla/Add-ons/WebExtensions`,
-            label: gettext("Browser Extensions")
+            label: "Browser Extensions",
           },
           {
             url: `/${locale}/docs/Web/MathML`,
-            label: gettext("MathML")
-          }
-        ]
+            label: "MathML",
+          },
+        ],
       },
       {
-        label: gettext("References & Guides"),
+        label: "References & Guides",
         labelId: "references-guides",
         items: [
           {
             url: `/${locale}/docs/Learn`,
-            label: gettext("Learn web development")
+            label: "Learn web development",
           },
           {
             url: `/${locale}/docs/Web/Tutorials`,
-            label: gettext("Tutorials")
+            label: "Tutorials",
           },
           {
             url: `/${locale}/docs/Web/Reference`,
-            label: gettext("References")
+            label: "References",
           },
           {
             url: `/${locale}/docs/Web/Guide`,
-            label: gettext("Developer Guides")
+            label: "Developer Guides",
           },
           {
             url: `/${locale}/docs/Web/Accessibility`,
-            label: gettext("Accessibility")
+            label: "Accessibility",
           },
           {
             url: `/${locale}/docs/Games`,
-            label: gettext("Game development")
+            label: "Game development",
           },
           {
             url: `/${locale}/docs/Web`,
-            label: gettext("...more docs")
-          }
-        ]
+            label: "...more docs",
+          },
+        ],
       },
       {
-        label: gettext("Feedback"),
+        label: "Feedback",
         labelId: "feedback",
         items: [
           {
             url: `/${locale}/docs/MDN/Feedback`,
-            label: gettext("Send Feedback")
+            label: "Send Feedback",
           },
           {
             url: "https://support.mozilla.org/",
-            label: gettext("Get Firefox help"),
-            external: true
+            label: "Get Firefox help",
+            external: true,
           },
           {
             url: "https://stackoverflow.com/",
-            label: gettext("Get web development help"),
-            external: true
+            label: "Get web development help",
+            external: true,
           },
           {
             url: `/${locale}/docs/MDN/Community`,
-            label: gettext("Join the MDN community")
+            label: "Join the MDN community",
           },
           {
-            label: gettext("Report a content problem"),
+            label: "Report a content problem",
             external: true,
-            url:
-              "https://github.com/mdn/sprints/issues/new?template=issue-template.md&projects=mdn/sprints/2&labels=user-report&title={{PATH}}"
+            url: `https://github.com/mdn/sprints/issues/new?template=issue-template.md&projects=mdn/sprints/2&labels=user-report&title=${
+              typeof window === "undefined" ? "" : window.location.pathname
+            }`,
           },
           {
-            label: gettext("Report an issue"),
+            label: "Report an issue",
             external: true,
-            url: "https://github.com/mdn/kuma/issues/new/choose"
-          }
-        ]
-      }
+            url: "https://github.com/mdn/kuma/issues/new/choose",
+          },
+        ],
+      },
     ],
     [locale]
   );
-
-  // One of the menu items has a URL that we need to substitute
-  // the current document path into. Compute that now, if possible.
-  // In SPAs (e.g. the home page) there is no `documentData` but the
-  // useEffect below will take care of it anyway.
-  const [currentAbsoluteUrl, setCurrentAbsoluteUrl] = useState(
-    documentData ? documentData.absoluteURL : ""
-  );
-
-  useEffect(() => {
-    setCurrentAbsoluteUrl(window.location.href);
-  }, []);
 
   return (
     <nav className="main-nav" aria-label="Main menu">
@@ -235,10 +231,9 @@ const _MainMenu = ({ documentData, locale }: Props) => {
         aria-haspopup="true"
         aria-label="Show Menu"
         onClick={toggleMainMenu}
-        data-locale={locale}
       />
       <ul className={`main-menu ${showMainMenu ? "show" : ""}`}>
-        {menus.map(menuEntry => (
+        {menus.map((menuEntry) => (
           <li key={menuEntry.label} className="top-level-entry-container">
             <button
               id={`${menuEntry.labelId}-button`}
@@ -246,24 +241,27 @@ const _MainMenu = ({ documentData, locale }: Props) => {
               className="top-level-entry"
               aria-haspopup="menu"
               aria-expanded="false"
-              onClick={event => {
+              onFocus={sendMenuItemInteraction}
+              onClick={(event) => {
                 toggleSubMenu(event, menuEntry.label);
               }}
             >
               {menuEntry.label}
             </button>
             <ul
-              className={menuEntry.label === showSubMenu ? "show" : null}
+              className={
+                menuEntry.label === visibleSubMenu ? "show" : undefined
+              }
               role="menu"
               aria-labelledby={`${menuEntry.labelId}-button`}
             >
-              {menuEntry.items.map(item => (
-                <li key={item.url} data-item={menuEntry.label} role="none">
+              {menuEntry.items.map((item) => (
+                <li key={item.url} role="none">
                   {item.external ? (
                     <a
                       target="_blank"
                       rel="noopener noreferrer"
-                      href={item.url.replace("{{PATH}}", currentAbsoluteUrl)}
+                      href={item.url}
                       onClick={sendMenuItemInteraction}
                       onContextMenu={sendMenuItemInteraction}
                       role="menuitem"
@@ -288,7 +286,4 @@ const _MainMenu = ({ documentData, locale }: Props) => {
       </ul>
     </nav>
   );
-};
-
-const MainMenu = memo(_MainMenu);
-export default MainMenu;
+}
