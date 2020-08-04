@@ -34,7 +34,7 @@ function* walker(root) {
 
 describe("fixing flaws", () => {
   const pattern = path.join("web", "fixable_flaws");
-  const baseDir = path.resolve("..");
+  const baseDir = path.resolve(".");
 
   let tempdir;
   let tempContentDir;

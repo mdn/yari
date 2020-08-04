@@ -8,8 +8,8 @@
     "prettier-check": "prettier --check '**/*.{js,ts,tsx,json,scss,html}'",
     "prettier-format": "prettier --write '**/*.{js,ts,tsx,json,scss,html}'",
     "test:client": "cd client && tsc --noEmit && react-scripts test --env=jest-environment-jsdom-sixteen",
-    "test:kumascript": "cd kumascript && jest",
-    "test:testing": "cd testing && jest",
+    "test:kumascript": "jest kumascript",
+    "test:testing": "jest testing",
     "test": "yarn prettier-check && yarn test:client && yarn test:kumascript && yarn test:testing",
     "build:client": "cd client && cross-env INLINE_RUNTIME_CHUNK=false react-scripts build",
     "build:ssr": "cd ssr && webpack --config webpack.config.js --mode=production",
@@ -67,7 +67,9 @@
     "use-debounce": "^3.4.3",
     "webpack-cli": "3.3.12",
     "webpack-node-externals": "2.5.0",
-    "ws": "^7.3.1"
+    "ws": "^7.3.1",
+    "@fast-csv/parse": "^4.3.1",
+    "mysql": "2.18.1"
   },
   "devDependencies": {
     "@testing-library/react": "^10.4.7",

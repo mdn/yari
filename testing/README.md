@@ -22,7 +22,7 @@ wait for CI to run your every commit in a pull request (PR).
 Also, you can start the full development environment with:
 
 ```bash
-yarn start:functional
+yarn start:static-server
 ```
 
 That will start the `watcher` (long-running), the `server` (Express
