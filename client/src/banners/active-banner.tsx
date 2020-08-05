@@ -223,6 +223,17 @@ export default function ActiveBanner() {
     return null;
   }
 
+  const enabled = (id: string) => userData.waffle.flags[id] && !isEmbargoed(id);
+
+  if (enabled(L10N_SURVEY_ID)) {
+    return <L10NSurveyBanner />;
+  } else if (enabled(DEVELOPER_NEEDS_ID)) {
+    return <DeveloperNeedsBanner />;
+  } else if (enabled(SUBSCRIPTION_ID) && !userData.isSubscriber) {
+    return <SubscriptionBanner />;
+  }
+  return null;
+
   for (const id in userData.waffle.flags) {
     if (!userData.waffle.flags[id] || isEmbargoed(id)) {
       continue;
