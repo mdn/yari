@@ -61,8 +61,6 @@ jobs:
       - name: Build changed content
         if: steps.git_diff_content.outputs.diff
         run: |
-          yarn prebuild
-
           # Some day, when our number of flaws have reached 0 we'll change
           # this to "*:error" which means the slightest flaw in the build
           # will break the build.
@@ -81,4 +79,5 @@ jobs:
 
           export BUILD_NO_PROGRESSBAR=true
           export BUILD_FILES="${{ env.GIT_DIFF }}"
+          yarn prepare-build
           yarn build
