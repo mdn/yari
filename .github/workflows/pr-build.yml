@@ -15,9 +15,6 @@ on:
   pull_request:
     branches:
       - master
-      # These line is temporary! At least until we're done using Gregor's
-      # reductio-reloaded branch instead of mdn.
-      - reductio-reloaded
 
 jobs:
   build:
@@ -29,7 +26,7 @@ jobs:
       - uses: technote-space/get-diff-action@v1
         id: git_diff_content
         with:
-          SEPARATOR: ','
+          SEPARATOR: ","
           SUFFIX_FILTER: .html
           PREFIX_FILTER: content/files/
 
