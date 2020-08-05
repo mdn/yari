@@ -3,9 +3,7 @@ name: Production Build
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    # TODO: Figure out what the best possible frequency should be!
-    # - cron:  '0 */24 * * *'
-    - cron: "0 */2 * * *"
+    - cron: "0 */24 * * *"
 
   workflow_dispatch:
     inputs:
