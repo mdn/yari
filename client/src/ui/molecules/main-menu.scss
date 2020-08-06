@@ -51,6 +51,7 @@ ul.main-menu {
     justify-content: space-evenly;
     width: inherit;
     height: inherit;
+    z-index: inherit;
   }
 
   @media #{$mq-small-desktop-and-up} {

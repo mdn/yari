@@ -35,7 +35,7 @@
     "build": "cross-env INLINE_RUNTIME_CHUNK=false react-scripts build",
     "test": "tsc --noEmit && react-scripts test --env=jest-environment-jsdom-sixteen",
     "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 9009 -s public"
+    "storybook": "start-storybook -p 6006 -s public"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -54,13 +54,21 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "@babel/plugin-syntax-nullish-coalescing-operator": "^7.8.3",
+    "@storybook/addon-actions": "^6.0.0-rc.26",
     "@storybook/addon-essentials": "^6.0.0-rc.26",
+    "@storybook/addon-links": "^6.0.0-rc.26",
     "@storybook/addons": "^6.0.0-rc.26",
+    "@storybook/node-logger": "^6.0.0-rc.26",
     "@storybook/preset-create-react-app": "^3.1.4",
     "@storybook/react": "^6.0.0-rc.26",
+    "@svgr/webpack": "^5.4.0",
     "@testing-library/react": "^10.4.7",
+    "babel-loader": "^8.1.0",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "mdn-browser-compat-data": "^1.0.32",
-    "mdn-minimalist": "^0.1.48"
+    "mdn-minimalist": "^0.1.48",
+    "react-is": "^16.13.1"
   }
 }

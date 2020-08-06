@@ -2,15 +2,9 @@ import * as React from "react";
 
 type ButtonProps = {
   /**
-   * Label text for the button
+   * The `type` of the button
    */
-  label: string;
-  /**
-   * The `type` of the button.
-   * Available options are:
-   * `button` or `submit`
-   */
-  type?: "button";
+  buttonType?: "button" | "submit" | "reset";
   /**
    * The button state.
    * Available options are:
@@ -18,13 +12,18 @@ type ButtonProps = {
    * Combinations are also possible such as:
    * `outline positive`
    */
-  state?: "primary";
+  state?: string;
+  children: React.ReactNode;
 };
 
-export default function Button({ label, type, state }: ButtonProps) {
+export const Button = ({
+  buttonType = "button",
+  state = "primary",
+  children,
+}: ButtonProps) => {
   return (
-    <button type={type} className={`button ${state}`}>
-      {label}
+    <button type={buttonType} className={`button ${state}`}>
+      {children}
     </button>
   );
-}
+};

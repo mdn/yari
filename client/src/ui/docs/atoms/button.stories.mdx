@@ -1,0 +1,119 @@
+import {
+  ArgsTable,
+  Canvas,
+  Meta,
+  Story,
+  Source,
+} from "@storybook/addon-docs/blocks";
+
+import { Button } from "../../atoms/button.tsx";
+import { ReactComponent as Arrow } from "../../dinocons/arrows/arrow.svg";
+import { ReactComponent as Github } from "../../dinocons/brands/github-mark-small.svg";
+
+<Meta title="Docs/Atoms/Button" component={Button} />
+
+export const Template = (args) => <Button {...args} />;
+
+export const wrapper = {
+  display: "flex",
+  flexWrap: "wrap",
+  gap: "20px",
+};
+
+# Buttons
+
+TBD
+
+<Canvas>
+  <Story name="Interactive">{<Button>Primary button</Button>}</Story>
+</Canvas>
+
+<ArgsTable />
+
+## Usage
+
+Prmary buttons are used for primary calls to action.
+
+<Canvas>
+  <Story name="Primary button" args={{ state: "primary" }}>
+    {(args) => <Button {...args}>Primary button</Button>}
+  </Story>
+</Canvas>
+
+For secondary calls to action, use the `outline` button.
+
+<Canvas>
+  <Story name="Secondary button" args={{ state: "outline" }}>
+    {(args) => <Button {...args}>Secondary button</Button>}
+  </Story>
+</Canvas>
+
+## Forms and Modals
+
+Forms and modals often have more than one action a user can take. Secondary actions should use an `outline` button while primary actions should use a solid variant.
+
+When the result of an action is positive and non-destructive, use either one of the following buttons.
+
+<Canvas>
+  <div style={wrapper}>
+    <Button state="outline positive">Back</Button>
+    <Button state="positive">Subscribe</Button>
+  </div>
+</Canvas>
+
+When the result of an action is negative or destructive, use one of the following buttons.
+
+<Canvas>
+  <div style={wrapper}>
+    <Button state="outline danger">Cancel</Button>
+    <Button state="danger">Close account</Button>
+  </div>
+</Canvas>
+
+For some interactions there may be some fields we want a user to complete before they can submit a form or complete a task. Also, it is generally a good practice to disable a button once a user has clicked it to prevent duplicate submissions.
+
+In these instances you should use the `inactive` state button.
+
+<Canvas>
+  <Story name="Inactive button" args={{ state: "inactive" }}>
+    {(args) => <Button {...args}>Processing...</Button>}
+  </Story>
+</Canvas>
+
+## Icon buttons
+
+When using an icon within a button you have the option of showing the icon either on the left or right of the label text.
+
+#### Icon on the right
+
+<Canvas>
+  <Story
+    name="Icon right button"
+    args={{
+      state: "positive icon right",
+    }}
+  >
+    {(args) => (
+      <Button {...args}>
+        Icon on right <Arrow />
+      </Button>
+    )}
+  </Story>
+</Canvas>
+
+#### Icon on the left
+
+<Canvas>
+  <Story
+    name="Icon left button"
+    args={{
+      state: "positive icon left",
+    }}
+  >
+    {(args) => (
+      <Button {...args}>
+        <Github /> Icon on right
+      </Button>
+    )}
+  </Story>
+</Canvas>
