@@ -55,10 +55,10 @@ jobs:
         run: ./testing/scripts/lint-check.sh
 
       - name: Unit testing client
-        run: yarn workspace client run test
+        run: yarn test:client
 
       - name: Unit testing kumascript
-        run: yarn workspace kumascript run test
+        run: yarn test:kumascript
         if: steps.git_diff_kumascript.outputs.diff
 
       - name: Functional testing

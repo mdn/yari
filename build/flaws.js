@@ -1,6 +1,6 @@
 const chalk = require("chalk");
 
-const { Document, Redirect } = require("content");
+const { Document, Redirect } = require("../content");
 const { FLAW_LEVELS } = require("./constants");
 const { packageBCD } = require("./resolve-bcd");
 const {

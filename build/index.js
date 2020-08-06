@@ -3,8 +3,8 @@ const childProcess = require("child_process");
 const chalk = require("chalk");
 const packageJSON = require("../package.json");
 
-const { buildURL, Document } = require("content");
-const kumascript = require("kumascript");
+const { buildURL, Document } = require("../content");
+const kumascript = require("../kumascript");
 
 const { FLAW_LEVELS } = require("./constants");
 const {

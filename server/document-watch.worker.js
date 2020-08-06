@@ -3,7 +3,7 @@ const { parentPort } = require("worker_threads");
 
 const chokidar = require("chokidar");
 
-const { CONTENT_ROOT, Document } = require("content");
+const { CONTENT_ROOT, Document } = require("../content");
 
 function postEvent(type, data = {}) {
   parentPort.postMessage({
