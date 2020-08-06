@@ -98,6 +98,7 @@ jobs:
 
           # Now is not the time to worry about flaws.
           export BUILD_FLAW_LEVELS="*:ignore"
+          yarn prepare-build
           yarn build
 
           # TODO: When the deployer is available this is where we
