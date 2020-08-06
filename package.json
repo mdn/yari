@@ -26,7 +26,7 @@
   "dependencies": {
     "chalk": "4.1.0",
     "cheerio": "1.0.0-rc.3",
-    "chokidar": "^3.4.1",
+    "chokidar": "^3.4.2",
     "clean-webpack-plugin": "3.0.0",
     "cli-progress": "^3.8.2",
     "cross-env": "^7.0.2",
