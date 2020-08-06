@@ -5,9 +5,12 @@ const express = require("express");
 const proxy = require("express-http-proxy");
 const openEditor = require("open-editor");
 
-const { buildDocumentFromURL, buildLiveSamplePageFromURL } = require("build");
-const { CONTENT_ROOT, Redirect } = require("content");
-const { prepareDoc, renderHTML } = require("ssr");
+const {
+  buildDocumentFromURL,
+  buildLiveSamplePageFromURL,
+} = require("../build");
+const { CONTENT_ROOT, Redirect } = require("../content");
+const { prepareDoc, renderHTML } = require("../ssr/dist/main");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");

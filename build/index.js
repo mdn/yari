@@ -1,10 +1,9 @@
 const childProcess = require("child_process");
-
 const chalk = require("chalk");
-const packageJSON = require("../package.json");
+const PACKAGE_REPOSITORY_URL = require("../package.json").repository;
 
-const { buildURL, Document } = require("content");
-const kumascript = require("kumascript");
+const { buildURL, Document } = require("../content");
+const kumascript = require("../kumascript");
 
 const { FLAW_LEVELS } = require("./constants");
 const {
@@ -19,18 +18,17 @@ const { normalizeBCDURLs } = require("./bcd-urls");
 const cheerio = require("./monkeypatched-cheerio");
 const options = require("./build-options");
 
-function getCurrentGitHubBaseURL() {
-  return packageJSON.repository;
-}
+const DEFAULT_BRANCH_NAME = "master"; // TODO: 'main' is a better name.
 
 // Module level global that gets set once and reused repeatedly
-let _currentGitBranch = null;
-function getCurrentGitBranch(fallback = "master") {
-  if (!_currentGitBranch) {
+const currentGitBranch =
+  (() => {
     // XXX Fixme with what you'd get in the likes of TravisCI!
     if (process.env.CI_CURRENT_BRANCH) {
-      _currentGitBranch = process.env.CI_CURRENT_BRANCH;
+      return process.env.CI_CURRENT_BRANCH;
     } else {
+      // If you're in detached head, (e.g. "d6a6c3f17") instead of a named
+      // branch, this will fail. But that's why we rely on a default.
       const spawned = childProcess.spawnSync("git", [
         "branch",
         "--show-current",
@@ -40,15 +38,11 @@ function getCurrentGitBranch(fallback = "master") {
           "\nUnable to run 'git branch' to find out name of the current branch:\n",
           spawned.error ? spawned.error : spawned.stderr.toString().trim()
         );
-        // I don't think it makes sense to keep trying, so let's cache the fallback.
-        _currentGitBranch = fallback;
       } else {
-        _currentGitBranch = spawned.stdout.toString().trim();
+        return spawned.stdout.toString().trim();
       }
     }
-  }
-  return _currentGitBranch;
-}
+  })() || DEFAULT_BRANCH_NAME;
 
 /** Throw an error if the slug is insane.
  * This helps breaking the build if someone has put in faulty data into
@@ -85,9 +79,7 @@ function injectNoTranslate($) {
  * @param {String} folder - the current folder we're processing.
  */
 function getGitHubURL(folder) {
-  const gitURL = getCurrentGitHubBaseURL();
-  const branch = getCurrentGitBranch();
-  return `${gitURL}/blob/${branch}/content/files/${folder}/index.html`;
+  return `${PACKAGE_REPOSITORY_URL}/blob/${currentGitBranch}/content/files/${folder}/index.html`;
 }
 
 function injectSource(doc, folder) {

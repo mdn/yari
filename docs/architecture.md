@@ -19,13 +19,10 @@ are served locally.
 
 ## Modules
 
-The codebase is subdivided into multiple different modules. We use [Yarn's
-workspace feature](https://classic.yarnpkg.com/en/docs/workspaces/) for
-managing inter-dependencies of these workspaces (which is Yarn's word for
-modules). That allows us to have clearer lines between the different pieces
-of code and their external dependencies. These are the modules, ordered from
-least to most interdependencies, meaning **content** has no dependencies on
-other internal modules, while **testing** depends on all of them:
+The codebase is subdivided into multiple different modules. These are the
+modules, ordered from least to most interdependencies, meaning **content** has
+no dependencies on other internal modules, while **testing** depends on all of
+them:
 
 ### content
 

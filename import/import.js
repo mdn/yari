@@ -14,7 +14,7 @@ const {
   VALID_LOCALES,
   Document,
   Redirect,
-} = require("content");
+} = require("../content");
 const ProgressBar = require("./progress-bar");
 
 const MAX_OPEN_FILES = 256;

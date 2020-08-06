@@ -2,7 +2,7 @@
  * @prettier
  */
 const cheerio = require("cheerio");
-const { Document } = require("content");
+const { Document } = require("../../content");
 const info = require("../src/info.js");
 const { render } = require("../index.js");
 const {
