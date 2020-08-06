@@ -68,3 +68,4 @@ yarn-error.log*
 /deployer/src/deployer.egg-info/
 fake-v1-api/
 mdn-yari-*.tgz
+lambda/**/*.zip
