@@ -18,7 +18,9 @@
     "start": "yarn build:client && yarn build:ssr && nf start",
     "start:client": "cd client && cross-env BROWSER=none PORT=3000 react-scripts start",
     "start:dev-server": "nodemon server --watch server --watch build --watch content --watch kumascript",
-    "start:static-server": "cross-env ENV_FILE=testing/.env node server/static.js"
+    "start:static-server": "cross-env ENV_FILE=testing/.env node server/static.js",
+    "storybook:start": "cd client && start-storybook -p 6006",
+    "storybook:build": "cd client && build-storybook"
   },
   "engines": {
     "node": ">=12.0.0"
@@ -68,11 +70,19 @@
     "ws": "^7.3.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "@storybook/addon-actions": "^6.0.0-rc.28",
+    "@storybook/addon-essentials": "^6.0.0-rc.28",
+    "@storybook/addon-links": "^6.0.0-rc.28",
+    "@storybook/node-logger": "^6.0.0-rc.28",
+    "@storybook/preset-create-react-app": "^3.1.4",
+    "@storybook/react": "^6.0.0-rc.28",
     "@testing-library/react": "^10.4.7",
     "@types/jest": "^26.0.5",
     "@types/react": "^16.9.44",
     "@types/react-dom": "^16.9.8",
     "@types/react-modal": "^3.10.6",
+    "babel-loader": "^8.1.0",
     "cheerio": "1.0.0-rc.3",
     "extend": "^3.0.2",
     "foreman": "3.0.1",
@@ -84,11 +94,13 @@
     "jest-junit-reporter": "^1.1.0",
     "jest-puppeteer": "4.4.0",
     "jsdom": "^16.3.0",
+    "mdn-minimalist": "^0.1.49",
     "nodemon": "2.0.4",
     "pegjs": "^0.10.0",
     "prettier": "2.0.5",
     "pretty-quick": "2.0.1",
     "puppeteer": "2",
+    "react-is": "^16.13.1",
     "tempy": "0.6.0",
     "vnu-jar": "^20.6.30"
   },
