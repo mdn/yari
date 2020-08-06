@@ -1,6 +1,6 @@
 # Functional tests
 
-This is a workspace dedicated to simulating all of Yari but with a
+This is a module dedicated to simulating all of Yari but with a
 fixed set of content files.
 
 Unlike testing the real content, this content "never changes". I.e. we
@@ -47,7 +47,7 @@ tests. But once you've run that once, you can "break it apart" and just
 run the `jest` test suite and this you can run repeatedly:
 
 ```bash
-yarn workspace testing run test
+yarn test:testing
 ```
 
 This assumes you've set the appropriate environment variables and built the
@@ -111,14 +111,14 @@ assets, builds the actual documents, and it runs _all_ `jest` tests.
 To just run all `jest` tests, just run the last command:
 
 ```sh
-yarn workspace testing run test
+yarn test;testing
 ```
 
 Which is just an alias to start `jest` which means you can apply your own
 parameters. For example, this starts the `jest` watcher:
 
 ```sh
-yarn workspace testing run test --watch
+yarn test:testing --watch
 ```
 
 Once the `jest` watcher has started press <kbd>p</kbd> and type `headless`
@@ -138,7 +138,7 @@ The first trick is to set the `TESTING_OPEN_BROWSER=true` environment
 variable.
 
 ```sh
-TESTING_OPEN_BROWSER=true yarn workspace testing run test --watch
+TESTING_OPEN_BROWSER=true yarn test:testing --watch
 ```
 
 Now, you'll see a browser window open and shut as the tests run.
