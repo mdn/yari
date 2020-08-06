@@ -6,7 +6,7 @@ import "./form.scss";
 import useSWR from "swr";
 
 type DocumentFormData = {
-  rawHtml: string;
+  rawHTML: string;
   metadata: { slug: string; title: string; summary: string };
 };
 
@@ -35,7 +35,7 @@ export function DocumentForm({
   );
   const [title, setTitle] = useState(doc ? doc.metadata.title : "");
   const [summary, setSummary] = useState(doc ? doc.metadata.summary : "");
-  const [rawHtml, setRawHtml] = useState(doc ? doc.rawHtml : "");
+  const [rawHTML, setRawHtml] = useState(doc ? doc.rawHTML : "");
 
   const [autosaveEnabled, setAutoSaveEnabled] = useLocalStorage(
     "autosaveEdit",
@@ -78,7 +78,7 @@ export function DocumentForm({
     if (willAutosave) {
       onSaveDebounced(
         {
-          rawHtml,
+          rawHTML,
           metadata: { slug, title, summary, locale },
         },
         didSlugChange
@@ -90,7 +90,7 @@ export function DocumentForm({
     slug,
     title,
     summary,
-    rawHtml,
+    rawHTML,
     didSlugChange,
     locale,
   ]);
@@ -101,7 +101,7 @@ export function DocumentForm({
         event.preventDefault();
         onSave(
           {
-            rawHtml,
+            rawHTML,
             metadata: { slug, title, summary, locale },
           },
           didSlugChange
@@ -165,7 +165,7 @@ export function DocumentForm({
 
       <textarea
         disabled={disableInputs}
-        value={rawHtml}
+        value={rawHTML}
         onChange={(event) => setRawHtml(event.target.value)}
         rows={30}
         style={{ width: "100%" }}
@@ -179,7 +179,7 @@ export function DocumentForm({
             !slug ||
             invalidSlug ||
             !summary ||
-            !rawHtml
+            !rawHTML
           }
         >
           {isNew ? "Create" : "Save"}

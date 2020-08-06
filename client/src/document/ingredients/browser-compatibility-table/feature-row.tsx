@@ -4,8 +4,31 @@ import type bcd from "mdn-browser-compat-data/types";
 import { BrowserInfoContext, BrowserName } from "./browser-info";
 import { asList, getFirst, isTruthy } from "./utils";
 
+// Yari builder will attach extra keys from the compat data
+// it gets from mdn-browser-compat-data. These are "Yari'esque"
+// extras that helps us avoiding to have a separate data structure.
+interface CompatStatementExtended extends bcd.CompatStatement {
+  // When a compat statement has a .mdn_url but it's actually not a good
+  // one, the Yari builder will attach an extra boolean that indicates
+  // that it's not a valid link.
+  // Note, it's only 'true' if it's present, hence this interface definition.
+  bad_url?: true;
+}
+
+// Extended for the fields, beyond the bcd types, that are extra-added
+// exclusively in Yari.
+interface SimpleSupportStatementExtended extends bcd.SimpleSupportStatement {
+  // Known for some support statements where the browser *version* is known,
+  // as opposed to just "true" and if the version release date is known.
+  release_date?: string;
+}
+
+type SupportStatementExtended =
+  | SimpleSupportStatementExtended
+  | SimpleSupportStatementExtended[];
+
 function getSupportClassName(
-  support: bcd.SupportStatement | undefined
+  support: SupportStatementExtended | undefined
 ): string {
   if (!support) {
     return "unknown";
@@ -31,6 +54,15 @@ function getSupportClassName(
   }
 
   return className;
+}
+
+function getSupportBrowserReleaseDate(
+  support: SupportStatementExtended | undefined
+): string | undefined {
+  if (!support) {
+    return undefined;
+  }
+  return getFirst(support).release_date;
 }
 
 function StatusIcons({ status }: { status: bcd.StatusBlock }) {
@@ -110,7 +142,8 @@ const CellText = React.memo(
       };
     }
 
-    let label, title;
+    let label: string | React.ReactNode;
+    let title = "";
     switch (status.isSupported) {
       case "yes":
         title = "Full support";
@@ -293,6 +326,7 @@ function CompatCell({
   onToggle: () => void;
 }) {
   const supportClassName = getSupportClassName(support);
+  const browserReleaseDate = getSupportBrowserReleaseDate(support);
   const hasNotes =
     support &&
     asList(support).some(
@@ -312,6 +346,9 @@ function CompatCell({
                 onToggle();
               }
             : undefined
+        }
+        title={
+          browserReleaseDate ? `Released ${browserReleaseDate}` : undefined
         }
       >
         <span className="bc-browser-name">
@@ -350,7 +387,7 @@ export const FeatureRow = React.memo(
     index: number;
     feature: {
       name: string;
-      compat: bcd.CompatStatement;
+      compat: CompatStatementExtended;
       isRoot: boolean;
     };
     browsers: bcd.BrowserNames[];
@@ -365,15 +402,25 @@ export const FeatureRow = React.memo(
     );
     const activeBrowser = activeCell !== null ? browsers[activeCell] : null;
 
+    let titleNode: string | React.ReactNode;
+
+    if (compat.bad_url && compat.mdn_url) {
+      titleNode = (
+        <abbr className="new" title={`${compat.mdn_url} does not exist`}>
+          {title}
+        </abbr>
+      );
+    } else if (compat.mdn_url && !isRoot) {
+      titleNode = <Link to={compat.mdn_url}>{title}</Link>;
+    } else {
+      titleNode = title;
+    }
+
     return (
       <>
         <tr>
           <th scope="row">
-            {compat.mdn_url && !isRoot ? (
-              <Link to={compat.mdn_url}>{title}</Link>
-            ) : (
-              title
-            )}
+            {titleNode}
             {compat.status && <StatusIcons status={compat.status} />}
           </th>
           {browsers.map((browser, i) => (

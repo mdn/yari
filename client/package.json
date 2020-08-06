@@ -1,42 +1,7 @@
 {
   "name": "client",
-  "version": "0.1.0",
   "private": true,
   "license": "MPL-2.0",
-  "main": "src/app.tsx",
-  "dependencies": {
-    "@types/jest": "^26.0.5",
-    "@types/react": "^16.9.43",
-    "@types/react-dom": "^16.9.8",
-    "@types/react-modal": "^3.10.6",
-    "cross-env": "^7.0.2",
-    "downshift": "^5.4.7",
-    "flexsearch": "0.6.32",
-    "fuzzysearch": "1.0.3",
-    "include-media": "1.4.9",
-    "node-sass": "4.14.1",
-    "prismjs": "1.20.0",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
-    "react-modal": "^3.11.2",
-    "react-router": "6.0.0-alpha.4",
-    "react-router-dom": "6.0.0-alpha.4",
-    "react-scripts": "3.4.1",
-    "rough-notation": "0.4.0",
-    "sockette": "^2.0.6",
-    "swr": "0.2.3",
-    "typeface-zilla-slab": "0.0.72",
-    "typescript": "^3.9.7",
-    "use-debounce": "^3.4.3"
-  },
-  "scripts": {
-    "build-storybook": "build-storybook -s public",
-    "start": "cross-env BROWSER=none react-scripts start",
-    "build": "cross-env INLINE_RUNTIME_CHUNK=false react-scripts build",
-    "test": "tsc --noEmit && react-scripts test --env=jest-environment-jsdom-sixteen",
-    "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 6006 -s public"
-  },
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -52,23 +17,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@babel/core": "^7.11.1",
-    "@babel/plugin-syntax-nullish-coalescing-operator": "^7.8.3",
-    "@storybook/addon-actions": "^6.0.0-rc.26",
-    "@storybook/addon-essentials": "^6.0.0-rc.26",
-    "@storybook/addon-links": "^6.0.0-rc.26",
-    "@storybook/addons": "^6.0.0-rc.26",
-    "@storybook/node-logger": "^6.0.0-rc.26",
-    "@storybook/preset-create-react-app": "^3.1.4",
-    "@storybook/react": "^6.0.0-rc.26",
-    "@svgr/webpack": "^5.4.0",
-    "@testing-library/react": "^10.4.7",
-    "babel-loader": "^8.1.0",
-    "jest-environment-jsdom-sixteen": "^1.0.3",
-    "mdn-browser-compat-data": "^1.0.32",
-    "mdn-minimalist": "^0.1.48",
-    "react-is": "^16.13.1"
   }
 }

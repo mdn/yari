@@ -15,9 +15,6 @@ on:
   pull_request:
     branches:
       - master
-      # These line is temporary! At least until we're done using Gregor's
-      # reductio-reloaded branch instead of mdn.
-      - reductio-reloaded
 
 jobs:
   build:
@@ -29,7 +26,7 @@ jobs:
       - uses: technote-space/get-diff-action@v1
         id: git_diff_content
         with:
-          SEPARATOR: ','
+          SEPARATOR: ","
           SUFFIX_FILTER: .html
           PREFIX_FILTER: content/files/
 
@@ -64,8 +61,6 @@ jobs:
       - name: Build changed content
         if: steps.git_diff_content.outputs.diff
         run: |
-          yarn prebuild
-
           # Some day, when our number of flaws have reached 0 we'll change
           # this to "*:error" which means the slightest flaw in the build
           # will break the build.
@@ -84,4 +79,5 @@ jobs:
 
           export BUILD_NO_PROGRESSBAR=true
           export BUILD_FILES="${{ env.GIT_DIFF }}"
+          yarn prepare-build
           yarn build

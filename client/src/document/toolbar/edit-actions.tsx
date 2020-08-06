@@ -71,7 +71,7 @@ export function EditActions({ folder }: { folder: string }) {
     }
   }
 
-  const { "*": slug } = useParams();
+  const { locale, "*": slug } = useParams();
 
   if (!folder) {
     return null;
@@ -79,6 +79,9 @@ export function EditActions({ folder }: { folder: string }) {
 
   return (
     <div className="edit-actions">
+      <a href={`https://developer.mozilla.org/${locale}/docs/${slug}`}>
+        View on MDN
+      </a>{" "}
       Edit{" "}
       <Link to={location.pathname.replace("/docs/", "/_edit/")}>
         in your <b>browser</b>

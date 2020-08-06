@@ -115,7 +115,14 @@ test("content built foo page", () => {
   );
 
   const htmlFile = path.join(builtFolder, "index.html");
-  expect(fs.existsSync(htmlFile)).toBeTruthy();
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  // Every page, should have a `link[rel=canonical]` whose `href` always
+  // starts with 'https://developer.mozilla.org' and ends with doc's URL.
+  expect($("link[rel=canonical]").attr("href")).toBe(
+    `https://developer.mozilla.org${doc.mdn_url}`
+  );
 });
 
 test("content built interactiveexample page", () => {
@@ -406,4 +413,27 @@ test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page",
   // Let's make sure there are only 2 "macros" flaws.
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.flaws.macros.length).toBe(2);
+});
+
+test("detect bad_bcd_links flaws from", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "api",
+    "page_visibility_api"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.bad_bcd_links.length).toBe(1);
+  // The reasons it's a bad link is because the mdn-browser-compat-data,
+  // for the query `api.Document.visibilityState` refers to a page
+  // with mdn_url `/en-US/docs/Web/API/Document/visibilityState` which we
+  // don't have. At least not in the testing content :)
+  const flaw = doc.flaws.bad_bcd_links[0];
+  expect(flaw.slug).toBe("/en-US/docs/Web/API/Document/visibilityState");
+  expect(flaw.suggestion).toBeNull();
+  expect(flaw.query).toBe("api.Document.visibilityState");
 });

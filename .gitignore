@@ -67,4 +67,7 @@ titles.json
 /content/files/vi/
 /content/files/zh-cn/
 /content/files/zh-tw/
+
+/deployer/upload.log
+/deployer/src/deployer.egg-info/
 fake-v1-api/

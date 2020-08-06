@@ -1,6 +1,6 @@
 # Functional tests
 
-This is a workspace dedicated to simulating all of Yari but with a
+This is a module dedicated to simulating all of Yari but with a
 fixed set of content files.
 
 Unlike testing the real content, this content "never changes". I.e. we
@@ -22,7 +22,7 @@ wait for CI to run your every commit in a pull request (PR).
 Also, you can start the full development environment with:
 
 ```bash
-yarn start:functional
+yarn start:static-server
 ```
 
 That will start the `watcher` (long-running), the `server` (Express
@@ -47,7 +47,7 @@ tests. But once you've run that once, you can "break it apart" and just
 run the `jest` test suite and this you can run repeatedly:
 
 ```bash
-yarn workspace testing run test
+yarn test:testing
 ```
 
 This assumes you've set the appropriate environment variables and built the
@@ -111,14 +111,14 @@ assets, builds the actual documents, and it runs _all_ `jest` tests.
 To just run all `jest` tests, just run the last command:
 
 ```sh
-yarn workspace testing run test
+yarn test;testing
 ```
 
 Which is just an alias to start `jest` which means you can apply your own
 parameters. For example, this starts the `jest` watcher:
 
 ```sh
-yarn workspace testing run test --watch
+yarn test:testing --watch
 ```
 
 Once the `jest` watcher has started press <kbd>p</kbd> and type `headless`
@@ -138,7 +138,7 @@ The first trick is to set the `TESTING_OPEN_BROWSER=true` environment
 variable.
 
 ```sh
-TESTING_OPEN_BROWSER=true yarn workspace testing run test --watch
+TESTING_OPEN_BROWSER=true yarn test:testing --watch
 ```
 
 Now, you'll see a browser window open and shut as the tests run.
@@ -160,13 +160,13 @@ console.log(await page.content());
 ## Headless tests should only test static server
 
 To run the functional tests you need a server (on `localhost:5000`) and
-it should just be a static file server. You *can* use `yarn start:functional`
+it should just be a static file server. You _can_ use `yarn start:functional`
 but that server has many tricks such as building on-the-fly.
 
 A better server to use is:
 
 ```sh
-yarn start:staticserver
+yarn start:static-server
 ```
 
 Now you can run just the functional `jest` tests over and over:

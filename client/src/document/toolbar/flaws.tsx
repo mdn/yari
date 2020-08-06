@@ -4,7 +4,7 @@ import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
 
 import { humanizeFlawName } from "../../flaw-utils";
-import { Doc, Link, MacroErrorMessage } from "../types";
+import { Doc, Link, MacroErrorMessage, BadBCDLink } from "../types";
 import "./flaws.scss";
 
 interface FlawCount {
@@ -90,6 +90,13 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
                 key="broken_links"
                 sourceFolder={doc.source.folder}
                 links={doc.flaws.broken_links}
+              />
+            );
+          case "bad_bcd_links":
+            return (
+              <BadBCDLinks
+                key="bad_bcd_links"
+                links={doc.flaws.bad_bcd_links}
               />
             );
           case "bad_bcd_queries":
@@ -313,6 +320,22 @@ function BadBCDQueries({ messages }) {
         {messages.map((message) => (
           <li key={message}>
             <code>{message}</code>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function BadBCDLinks({ links }: { links: BadBCDLink[] }) {
+  return (
+    <div className="flaw flaw__bad_bcd_links">
+      <h3>{humanizeFlawName("bad_bcd_links")}</h3>
+      <ul>
+        {links.map((link) => (
+          <li key={link.slug}>
+            In <code>{link.query}</code> under key <code>{link.key}</code> can't
+            find document: <code>{link.slug}</code>
           </li>
         ))}
       </ul>

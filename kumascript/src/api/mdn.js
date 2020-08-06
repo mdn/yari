@@ -2,7 +2,11 @@
  * @prettier
  */
 const url = require("url");
+const got = require("got");
 const util = require("./util.js");
+
+// Module level caching for repeat calls to fetchWebExtExamples().
+let webExtExamples = null;
 
 module.exports = {
   /**
@@ -133,5 +137,28 @@ module.exports = {
       "deprecated",
       "This macro has been deprecated, and should be removed."
     );
+  },
+
+  async fetchWebExtExamples() {
+    if (!webExtExamples) {
+      try {
+        webExtExamples = await got(
+          "https://raw.githubusercontent.com/mdn/webextensions-examples/master/examples.json",
+          {
+            timeout: 1000,
+            retry: 5,
+          }
+        ).json();
+      } catch (error) {
+        webExtExamples = error;
+      }
+    }
+    if (webExtExamples instanceof Error) {
+      // This will result in a macro flaw for every call of the WebExtExamples or
+      // WebExtAllExamples macro. We create a fresh instance of Error each time,
+      // because the EJS code will add traceback information to its message.
+      throw new Error(webExtExamples.toString());
+    }
+    return webExtExamples;
   },
 };
