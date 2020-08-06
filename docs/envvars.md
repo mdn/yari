@@ -121,7 +121,7 @@ When doing local development, it's recommended to set this to
 
 **Default: `5000`**
 
-Usually the `server` module workspace is started with `foreman` (the `nf` command)
+Usually the `server` module is started with `foreman` (the `nf` command)
 and this is the default port.
 
 ## Testing
