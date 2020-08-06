@@ -24,7 +24,6 @@
     "node": ">=12.0.0"
   },
   "dependencies": {
-    "caporal": "1.4.0",
     "chalk": "4.1.0",
     "cheerio": "1.0.0-rc.3",
     "chokidar": "^3.4.1",
@@ -69,7 +68,6 @@
     "ws": "^7.3.1"
   },
   "devDependencies": {
-    "@fast-csv/parse": "^4.3.1",
     "@testing-library/react": "^10.4.7",
     "@types/jest": "^26.0.5",
     "@types/react": "^16.9.44",
@@ -86,7 +84,6 @@
     "jest-junit-reporter": "^1.1.0",
     "jest-puppeteer": "4.4.0",
     "jsdom": "^16.3.0",
-    "mysql": "2.18.1",
     "nodemon": "2.0.4",
     "pegjs": "^0.10.0",
     "prettier": "2.0.5",
