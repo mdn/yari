@@ -1,4 +1,4 @@
-const { popularities } = require("content");
+const { popularities } = require("../content");
 
 const getPopularity = (item) => popularities[item.url] || 0;
 

@@ -13,7 +13,7 @@ const express = require("express");
 const router = express();
 
 router.get("*", (req, res) => {
-  const folder = path.resolve(path.join("..", "fake-v1-api"));
+  const folder = path.resolve("./fake-v1-api");
   if (!fs.existsSync(folder)) {
     throw new Error(
       `If you're going to fake v1 API requests you have to create the folder: ${folder}`

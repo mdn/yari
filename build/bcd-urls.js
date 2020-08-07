@@ -1,4 +1,4 @@
-const { Document, Redirect } = require("content");
+const { Document, Redirect } = require("../content");
 const { FLAW_LEVELS } = require("./constants");
 /**
  * Loop over, and mutate, all 'browser_compatibility' sections.

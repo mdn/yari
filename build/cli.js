@@ -3,8 +3,8 @@ const path = require("path");
 
 const cliProgress = require("cli-progress");
 
-const { CONTENT_ROOT, Document, slugToFolder } = require("content");
-const { renderHTML } = require("ssr");
+const { CONTENT_ROOT, Document, slugToFolder } = require("../content");
+const { renderHTML } = require("../ssr/dist/main");
 
 const options = require("./build-options");
 const { buildDocument } = require("./index");
