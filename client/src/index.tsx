@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
-import "./index.scss";
-import "typeface-zilla-slab";
 import { App } from "./app";
 import { GAProvider } from "./ga-context";
 import { UserDataProvider } from "./user-context";
+
+import "./index.scss";
 
 const WSSProvider = React.lazy(() => import("./web-socket"));
 // import * as serviceWorker from './serviceWorker';

@@ -15,7 +15,7 @@ $dropdown-item-background-color: $primary-200;
   &::before {
     display: block;
     content: "";
-    background: transparent url("../dinocons/navigation/menu-open.svg") 0 0
+    background: transparent url("~@mdn/dinocons/navigation/menu-open.svg") 0 0
       no-repeat;
     background-size: 21px;
     width: 21px;
@@ -23,7 +23,7 @@ $dropdown-item-background-color: $primary-200;
   }
 
   &.expanded::before {
-    background-image: url("../dinocons/navigation/menu-close.svg");
+    background-image: url("~@mdn/dinocons/navigation/menu-close.svg");
   }
 
   @media #{$mq-tablet-and-up} {
