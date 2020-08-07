@@ -1,0 +1,69 @@
+# Note that this workflow uses `get-diff-action` which is important.
+# It gives us an environment variable called `GIT_DIFF` which is a string
+# that is a list of file paths.
+# If you want to do what this workflow does on your laptop you can simulate
+# it like this:
+#
+#    export GIT_DIFF=`git diff --name-only master... | grep 'content/files' | grep -v '\.html$'`
+#    node content build --no-progressbar --files="${GIT_DIFF}"
+#
+# That way, you can behave on your laptop like, this action behaves here.
+
+# TODO: Consider calling this "Imagecheck"
+name: PR Filecheck
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: technote-space/get-diff-action@v1
+        id: git_diff_content
+        with:
+          SEPARATOR: ","
+          SUFFIX_FILTER: "!.html"
+          PREFIX_FILTER: content/files/
+
+      - name: Setup Node.js environment
+        if: steps.git_diff_content.outputs.diff
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: "12"
+      - name: Display Node & Yarn version
+        if: steps.git_diff_content.outputs.diff
+        run: |
+          node --version
+          yarn --version
+
+      - name: Get yarn cache directory path
+        if: steps.git_diff_content.outputs.diff
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        if: steps.git_diff_content.outputs.diff
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install all yarn packages
+        if: steps.git_diff_content.outputs.diff
+        run: |
+          cd filecheck
+          yarn --frozen-lockfile
+
+      - name: Check changed files
+        if: steps.git_diff_content.outputs.diff
+        run: |
+          # export CHECK_FILES="${{ env.GIT_DIFF }}"
+          cd filecheck
+          yarn start --files="${{ env.GIT_DIFF }}"

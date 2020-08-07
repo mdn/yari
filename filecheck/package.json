@@ -1,0 +1,11 @@
+{
+  "name": "filecheck",
+  "version": "0.1.0",
+  "license": "MPL-2.0",
+  "scripts": {
+    "start": "node cli.js"
+  },
+  "dependencies": {
+    "caporal": "1.4.0"
+  }
+}
