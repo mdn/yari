@@ -27,6 +27,7 @@ jobs:
       - uses: technote-space/get-diff-action@v1
         id: git_diff_content
         with:
+          # Hoping for https://github.com/technote-space/get-diff-action/issues/101 !!
           SUFFIX_FILTER: |
             .png
             .jpeg
