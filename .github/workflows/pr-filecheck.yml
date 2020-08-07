@@ -28,7 +28,13 @@ jobs:
         id: git_diff_content
         with:
           SEPARATOR: ","
-          SUFFIX_FILTER: "!.html"
+          SUFFIX_FILTER: |
+            .PNG
+            .JPEG
+            .JPG
+            .GIF
+            .SVG
+            .webp
           PREFIX_FILTER: content/files/
 
       - name: Setup Node.js environment
