@@ -27,7 +27,7 @@ jobs:
       - uses: technote-space/get-diff-action@v1
         id: git_diff_content
         with:
-          SEPARATOR: ","
+          # SEPARATOR: " "
           SUFFIX_FILTER: |
             .png
             .jpeg
@@ -71,4 +71,4 @@ jobs:
         run: |
           # export CHECK_FILES="${{ env.GIT_DIFF }}"
           cd filecheck
-          yarn start --files="${{ env.GIT_DIFF }}"
+          yarn start "${{ env.GIT_DIFF }}"
