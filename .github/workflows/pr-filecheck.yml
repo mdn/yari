@@ -29,12 +29,11 @@ jobs:
         with:
           SEPARATOR: ","
           SUFFIX_FILTER: |
-            .PNG
-            .JPEG
-            .JPG
-            .GIF
-            .SVG
-            .webp
+            .png
+            .jpeg
+            .jpg
+            .gif
+            .svg
           PREFIX_FILTER: content/files/
 
       - name: Setup Node.js environment
