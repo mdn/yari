@@ -9,14 +9,10 @@ function urlToFilePath(url) {
   return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
 }
 
-const find = memoize((relpath) => {
-  const filePath = ROOTS.map((root) =>
-    path.join(root, relpath)
-  ).find((filePath) => fs.existsSync(filePath));
-  if (!filePath) {
-    return;
-  }
-  return filePath;
+const find = memoize((relativePath) => {
+  return ROOTS.map((root) => path.join(root, relativePath)).find((filePath) =>
+    fs.existsSync(filePath)
+  );
 });
 
 function findByURL(url) {

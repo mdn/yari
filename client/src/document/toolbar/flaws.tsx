@@ -24,9 +24,9 @@ function useAnnotations(genericFlaws: GenericFlaw[]) {
     const annotations: RoughAnnotation[] = [];
     const elements: HTMLElement[] = [];
     for (const flaw of genericFlaws) {
-      const element: HTMLElement | null = document.querySelector(
+      const element = document.querySelector(
         `[data-flaw="${flaw.id}"]`
-      );
+      ) as HTMLElement;
       if (!element) {
         console.warn(`Flaw ID '${flaw.id}' does not exist in the DOM`);
         continue;
@@ -62,9 +62,9 @@ function useAnnotations(genericFlaws: GenericFlaw[]) {
   }, [genericFlaws]);
 
   function focus(flawID: string) {
-    const element: HTMLElement | null = document.querySelector(
+    const element = document.querySelector(
       `[data-flaw="${flawID}"]`
-    );
+    ) as HTMLElement;
     if (!element) return;
     const annotations: RoughAnnotation[] = [];
     element.scrollIntoView({
