@@ -32,6 +32,12 @@ async function checkFile(filePath) {
 
   // Check that the file extension matches the file header.
   const fileType = await FileType.fromFile(filePath);
+  if (!fileType) {
+    throw new Error(
+      `${filePath} file-type could not be extracted at all ` +
+        `(probably not a ${path.extname(filePath)} file)`
+    );
+  }
   console.log(filePath, fileType);
 }
 

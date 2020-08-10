@@ -2,11 +2,6 @@
 const cli = require("caporal");
 const path = require("path");
 
-// const {
-//   DATABASE_URL,
-//   EXCLUDE_SLUG_PREFIXES,
-//   IMPORT_LOCALES,
-// } = require("./constants");
 const { runChecker } = require("./checker");
 
 cli
