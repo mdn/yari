@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { promisify } = require("util");
 
+const cheerio = require("cheerio");
 const FileType = require("file-type");
 
 const { MAX_FILE_SIZE } = require("./constants");
@@ -50,7 +51,11 @@ async function checkFile(filePath) {
     fileType.mime === "application/xml" &&
     path.extname(filePath) === ".svg"
   ) {
-    console.warn("NEED TO CHECK .SVG FOR SCRIPT TAGS");
+    // SVGs must not contain any script tags
+    const $ = cheerio.load(fs.readFileSync(filePath, "utf-8"));
+    if ($("script").length) {
+      throw new Error(`${filePath} contains a <script> tag`);
+    }
   } else if (!VALID_MIME_TYPES.has(fileType.mime)) {
     throw new Error(
       `${filePath} has an unrecognized mime type: ${fileType.mime}`

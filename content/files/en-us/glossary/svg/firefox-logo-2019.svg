@@ -10,6 +10,9 @@
    id="svg1008"
    version="1.1"
    viewBox="0 0 87.418564 81.96698">
+<script>
+alert(1)
+</script>
   <metadata
      id="metadata1012">
     <rdf:RDF>
