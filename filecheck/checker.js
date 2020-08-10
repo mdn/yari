@@ -6,6 +6,12 @@ const FileType = require("file-type");
 
 const { MAX_FILE_SIZE } = require("./constants");
 
+const VALID_MIME_TYPES = new Set([
+  "image/png",
+  "image/jpeg", // this is what you get for .jpeg *and* .jpg file extensions
+  "image/gif",
+]);
+
 async function checkFile(filePath) {
   // Check that the filename is always lowercase.
   if (path.basename(filePath) !== path.basename(filePath).toLowerCase()) {
@@ -32,13 +38,24 @@ async function checkFile(filePath) {
 
   // Check that the file extension matches the file header.
   const fileType = await FileType.fromFile(filePath);
+  console.log(filePath, { extname: path.extname(filePath) }, fileType);
   if (!fileType) {
+    // This can easily happen if the .png (for example) file is actually just
+    // a text file and not a binary.
     throw new Error(
       `${filePath} file-type could not be extracted at all ` +
         `(probably not a ${path.extname(filePath)} file)`
     );
+  } else if (
+    fileType.mime === "application/xml" &&
+    path.extname(filePath) === ".svg"
+  ) {
+    console.warn("NEED TO CHECK .SVG FOR SCRIPT TAGS");
+  } else if (!VALID_MIME_TYPES.has(fileType.mime)) {
+    throw new Error(
+      `${filePath} has an unrecognized mime type: ${fileType.mime}`
+    );
   }
-  console.log(filePath, fileType);
 }
 
 async function runChecker(files, options) {
