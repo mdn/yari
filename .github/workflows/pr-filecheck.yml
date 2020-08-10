@@ -22,12 +22,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: technote-space/get-diff-action@v1
         id: git_diff_content
         with:
-          # Hoping for https://github.com/technote-space/get-diff-action/issues/101 !!
           SUFFIX_FILTER: |
             .png
             .jpeg
@@ -35,6 +34,7 @@ jobs:
             .gif
             .svg
           PREFIX_FILTER: content/files/
+          ABSOLUTE: true
 
       - name: Setup Node.js environment
         if: steps.git_diff_content.outputs.diff
