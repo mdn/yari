@@ -6,6 +6,7 @@
     "start": "node cli.js"
   },
   "dependencies": {
-    "caporal": "1.4.0"
+    "caporal": "1.4.0",
+    "file-type": "14.7.1"
   }
 }

@@ -2,6 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const { promisify } = require("util");
 
+const FileType = require("file-type");
+
 const { MAX_FILE_SIZE } = require("./constants");
 
 async function checkFile(filePath) {
@@ -29,6 +31,8 @@ async function checkFile(filePath) {
   }
 
   // Check that the file extension matches the file header.
+  const fileType = await FileType.fromFile(filePath);
+  console.log(filePath, fileType);
 }
 
 async function runChecker(files, options) {

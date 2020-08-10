@@ -15,11 +15,9 @@ cli
   .argument("[files...]", "list of files to check")
   .action((args, options) => {
     const cwd = options.cwd || process.cwd();
-    return runChecker(
-      args.files.map((f) => path.resolve(cwd, f)),
-      options
-    ).catch((error) => {
-      console.error("Error while checking files:", error);
+    const allFilePaths = args.files.map((f) => path.resolve(cwd, f));
+    return runChecker(allFilePaths, options).catch((error) => {
+      console.error(error);
       process.exit(1);
     });
   });
