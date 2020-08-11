@@ -68,6 +68,17 @@ async function checkFile(filePath) {
       );
     }
 
+    // The image must be mentioned (as a string) in the 'index.html' file.
+    // Note that it might not be in a <img src> attribute but it could be
+    // used in a code example. Either way, it needs to be mentioned by
+    // name at least once.
+    // Yes, this is pretty easy to fake if you really wanted to, but why
+    // bother?
+    const html = fs.readFileSync(htmlFilePath, "utf-8");
+    if (!html.includes(path.basename(filePath))) {
+      throw new Error(`${filePath} is not mentioned in ${htmlFilePath}`);
+    }
+
     console.log(filePath, { extname: path.extname(filePath) }, fileType);
   }
 }
