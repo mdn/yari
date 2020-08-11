@@ -7,6 +7,7 @@ const {
 const Document = require("./document");
 const popularities = require("./popularities");
 const Redirect = require("./redirect");
+const Image = require("./image");
 const { buildURL, memoize, slugToFolder } = require("./utils");
 
 module.exports = {
@@ -19,6 +20,7 @@ module.exports = {
 
   Document,
   Redirect,
+  Image,
 
   buildURL,
   memoize,

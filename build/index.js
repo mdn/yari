@@ -15,6 +15,7 @@ const SearchIndex = require("./search-index");
 const { addBreadcrumbData } = require("./document-utils");
 const { fixFixableFlaws, injectFlaws } = require("./flaws");
 const { normalizeBCDURLs } = require("./bcd-urls");
+const { checkImageReferences } = require("./check-images");
 const cheerio = require("./monkeypatched-cheerio");
 const options = require("./build-options");
 
@@ -98,7 +99,7 @@ async function buildDocument(document) {
 
   const [renderedHtml, flaws] = await kumascript.render(document.url);
 
-  let liveSamples = [];
+  const liveSamples = [];
   const sampleIds = kumascript.getLiveSampleIDs(
     document.metadata.slug,
     document.rawHTML
@@ -167,6 +168,9 @@ async function buildDocument(document) {
   // Extract all the <h2> tags as they appear into an array.
   doc.toc = extractTOC($);
 
+  // Check and scrutinize any local image references
+  const fileAttachments = checkImageReferences(doc, $, options, document);
+
   // With the sidebar out of the way, go ahead and check the rest
   injectFlaws(doc, $, options, document);
 
@@ -215,7 +219,7 @@ async function buildDocument(document) {
   // a breadcrumb in the React component.
   addBreadcrumbData(document.url, doc);
 
-  return [doc, liveSamples];
+  return [doc, liveSamples, fileAttachments];
 }
 
 async function buildDocumentFromURL(url) {
