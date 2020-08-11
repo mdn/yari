@@ -11,12 +11,14 @@ const imageminPngquant = require("imagemin-pngquant");
 const imageminMozjpeg = require("imagemin-mozjpeg");
 const imageminGifsicle = require("imagemin-gifsicle");
 const imageminSvgo = require("imagemin-svgo");
+const isSvg = require("is-svg");
 
 const {
   MAX_FILE_SIZE,
   VALID_MIME_TYPES,
   MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
 } = require("./constants");
+const { svg } = require("mdn-browser-compat-data");
 
 function formatSize(bytes) {
   if (bytes > 1024 * 1024) {
@@ -52,40 +54,43 @@ async function checkFile(filePath, options) {
     );
   }
 
-  // Check that the file extension matches the file header.
-  const fileType = await FileType.fromFile(filePath);
-  if (!fileType) {
-    // This can easily happen if the .png (for example) file is actually just
-    // a text file and not a binary.
-    throw new Error(
-      `${filePath} file-type could not be extracted at all ` +
-        `(probably not a ${path.extname(filePath)} file)`
-    );
-  }
-
-  // Special check for .svg files
-  if (
-    fileType.mime === "application/xml" &&
-    path.extname(filePath) === ".svg"
-  ) {
+  // FileType can't check for .svg files.
+  // So use special case for files called '*.svg'
+  if (path.extname(filePath) === ".svg") {
     // SVGs must not contain any script tags
-    const $ = cheerio.load(fs.readFileSync(filePath, "utf-8"));
+    const content = fs.readFileSync(filePath, "utf-8");
+    if (!isSvg(content)) {
+      throw new Error(`${filePath} does not appear to be an SVG`);
+    }
+    const $ = cheerio.load(content);
     if ($("script").length) {
       throw new Error(`${filePath} contains a <script> tag`);
     }
-  } else if (!VALID_MIME_TYPES.has(fileType.mime)) {
-    throw new Error(
-      `${filePath} has an unrecognized mime type: ${fileType.mime}`
-    );
-  } else if (
-    path.extname(filePath).replace(".jpeg", ".jpg").slice(1) !== fileType.ext
-  ) {
-    // If the file is a 'image/png' but called '.jpe?g', that's wrong.
-    throw new Error(
-      `${filePath} is type '${
-        fileType.mime
-      }' but named extension is '${path.extname(filePath)}'`
-    );
+  } else {
+    // Check that the file extension matches the file header.
+    const fileType = await FileType.fromFile(filePath);
+    if (!fileType) {
+      // This can easily happen if the .png (for example) file is actually just
+      // a text file and not a binary.
+      throw new Error(
+        `${filePath} file-type could not be extracted at all ` +
+          `(probably not a ${path.extname(filePath)} file)`
+      );
+    }
+    if (!VALID_MIME_TYPES.has(fileType.mime)) {
+      throw new Error(
+        `${filePath} has an unrecognized mime type: ${fileType.mime}`
+      );
+    } else if (
+      path.extname(filePath).replace(".jpeg", ".jpg").slice(1) !== fileType.ext
+    ) {
+      // If the file is a 'image/png' but called '.jpe?g', that's wrong.
+      throw new Error(
+        `${filePath} is type '${
+          fileType.mime
+        }' but named extension is '${path.extname(filePath)}'`
+      );
+    }
   }
 
   // The image has to be mentioned in the adjacent index.html document
@@ -108,18 +113,19 @@ async function checkFile(filePath, options) {
   }
 
   const tempdir = tempy.directory();
+  const extension = path.extname(filePath);
   try {
     const plugins = [];
-    if (fileType.mime === "image/png") {
-      plugins.push(imageminPngquant());
-    } else if (fileType.mime === "image/jpeg") {
+    if ((extension === ".jpg") | (extension === ".jpeg")) {
       plugins.push(imageminMozjpeg());
-    } else if (fileType.mime === "image/gif") {
+    } else if (extension === ".png") {
+      plugins.push(imageminPngquant());
+    } else if (extension === ".gif") {
       plugins.push(imageminGifsicle());
-    } else if (path.extname(filePath) === ".svg") {
+    } else if (extension === ".svg") {
       plugins.push(imageminSvgo());
     } else {
-      throw new Error(`No plugin for ${fileType.mime} (${fileType.ext})`);
+      throw new Error(`No plugin for ${extension}`);
     }
     const files = await imagemin([filePath], {
       destination: tempdir,

@@ -16,6 +16,7 @@
     "imagemin-mozjpeg": "9.0.0",
     "imagemin-pngquant": "9.0.0",
     "imagemin-svgo": "8.0.0",
+    "is-svg": "4.2.1",
     "tempy": "0.6.0"
   }
 }
