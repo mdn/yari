@@ -11,10 +11,32 @@ export interface Link {
   fixed?: true;
 }
 
+export interface BadBCDLink {
+  slug: string;
+  suggestion: string | null;
+  query: string | null;
+  key: string;
+}
+
+export interface GenericFlaw {
+  id: string;
+  explanation: string;
+  suggestion: string | null;
+}
+
+export interface ImageReferenceFlaw extends GenericFlaw {
+  src: string;
+  line: number;
+  column: number;
+  fixed?: true;
+}
+
 type Flaws = {
   broken_links: Link[];
   macros: MacroErrorMessage[];
   bad_bcd_queries: string[];
+  bad_bcd_links: BadBCDLink[];
+  images: ImageReferenceFlaw[];
 };
 
 export type Translations = { locale: string; slug: string }[];

@@ -2,12 +2,16 @@ const fs = require("fs");
 const path = require("path");
 
 const express = require("express");
+const send = require("send");
 const proxy = require("express-http-proxy");
 const openEditor = require("open-editor");
 
-const { buildDocumentFromURL, buildLiveSamplePageFromURL } = require("build");
-const { CONTENT_ROOT, Redirect } = require("content");
-const { prepareDoc, renderHTML } = require("ssr");
+const {
+  buildDocumentFromURL,
+  buildLiveSamplePageFromURL,
+} = require("../build");
+const { CONTENT_ROOT, Redirect, Image } = require("../content");
+const { prepareDoc, renderHTML } = require("../ssr/dist/main");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
@@ -126,6 +130,19 @@ app.get("/*", async (req, res) => {
     return;
   }
 
+  // TODO: Would be nice to have a list of all supported file extensions
+  // in a constants file.
+  if (/\.(png|webp|gif|jpeg|svg)$/.test(req.url)) {
+    // Remember, Image.findByURL() will return the absolute file path
+    // iff it exists on disk.
+    const filePath = Image.findByURL(req.url);
+    if (filePath) {
+      return send(req, filePath).pipe(res);
+    } else {
+      return res.status(404).send("File not found on disk");
+    }
+  }
+
   let lookupURL = req.url;
   let extraSuffix = "";
 
@@ -142,11 +159,16 @@ app.get("/*", async (req, res) => {
 
   const isJSONRequest = extraSuffix.endsWith(".json");
 
-  // TODO: Do something prettier here so you can see, on stdout, what
-  // documents get built on-the-fly.
-  console.time(`buildDocumentFromURL(${lookupURL})`);
-  const document = await buildDocumentFromURL(lookupURL);
-  console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
+  let document;
+  try {
+    console.time(`buildDocumentFromURL(${lookupURL})`);
+    document = await buildDocumentFromURL(lookupURL);
+    console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
+  } catch (error) {
+    console.error(`Error in buildDocumentFromURL(${lookupURL})`, error);
+    return res.status(500).send(error.toString());
+  }
+
   if (!document) {
     // redirect resolving can take some time, so we only do it when there's no document
     // for the current route

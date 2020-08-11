@@ -1,10 +1,9 @@
 const childProcess = require("child_process");
-
 const chalk = require("chalk");
-const packageJSON = require("../package.json");
+const PACKAGE_REPOSITORY_URL = require("../package.json").repository;
 
-const { buildURL, Document } = require("content");
-const kumascript = require("kumascript");
+const { buildURL, Document } = require("../content");
+const kumascript = require("../kumascript");
 
 const { FLAW_LEVELS } = require("./constants");
 const {
@@ -15,21 +14,22 @@ const {
 const SearchIndex = require("./search-index");
 const { addBreadcrumbData } = require("./document-utils");
 const { fixFixableFlaws, injectFlaws } = require("./flaws");
+const { normalizeBCDURLs } = require("./bcd-urls");
+const { checkImageReferences } = require("./check-images");
 const cheerio = require("./monkeypatched-cheerio");
 const options = require("./build-options");
 
-function getCurrentGitHubBaseURL() {
-  return packageJSON.repository;
-}
+const DEFAULT_BRANCH_NAME = "master"; // TODO: 'main' is a better name.
 
 // Module level global that gets set once and reused repeatedly
-let _currentGitBranch = null;
-function getCurrentGitBranch(fallback = "master") {
-  if (!_currentGitBranch) {
+const currentGitBranch =
+  (() => {
     // XXX Fixme with what you'd get in the likes of TravisCI!
     if (process.env.CI_CURRENT_BRANCH) {
-      _currentGitBranch = process.env.CI_CURRENT_BRANCH;
+      return process.env.CI_CURRENT_BRANCH;
     } else {
+      // If you're in detached head, (e.g. "d6a6c3f17") instead of a named
+      // branch, this will fail. But that's why we rely on a default.
       const spawned = childProcess.spawnSync("git", [
         "branch",
         "--show-current",
@@ -39,15 +39,11 @@ function getCurrentGitBranch(fallback = "master") {
           "\nUnable to run 'git branch' to find out name of the current branch:\n",
           spawned.error ? spawned.error : spawned.stderr.toString().trim()
         );
-        // I don't think it makes sense to keep trying, so let's cache the fallback.
-        _currentGitBranch = fallback;
       } else {
-        _currentGitBranch = spawned.stdout.toString().trim();
+        return spawned.stdout.toString().trim();
       }
     }
-  }
-  return _currentGitBranch;
-}
+  })() || DEFAULT_BRANCH_NAME;
 
 /** Throw an error if the slug is insane.
  * This helps breaking the build if someone has put in faulty data into
@@ -84,9 +80,7 @@ function injectNoTranslate($) {
  * @param {String} folder - the current folder we're processing.
  */
 function getGitHubURL(folder) {
-  const gitURL = getCurrentGitHubBaseURL();
-  const branch = getCurrentGitBranch();
-  return `${gitURL}/blob/${branch}/content/files/${folder}/index.html`;
+  return `${PACKAGE_REPOSITORY_URL}/blob/${currentGitBranch}/content/files/${folder}/index.html`;
 }
 
 function injectSource(doc, folder) {
@@ -105,10 +99,10 @@ async function buildDocument(document) {
 
   const [renderedHtml, flaws] = await kumascript.render(document.url);
 
-  let liveSamples = [];
+  const liveSamples = [];
   const sampleIds = kumascript.getLiveSampleIDs(
     document.metadata.slug,
-    document.rawHtml
+    document.rawHTML
   );
   for (const sampleIdObject of sampleIds) {
     const liveSamplePage = kumascript.buildLiveSamplePage(
@@ -149,7 +143,7 @@ async function buildDocument(document) {
   // TODO: The slug should always match the folder name.
   // If you edit the slug bug don't correctly edit the folder it's in
   // it's going to lead to confusion.
-  // We can use the utils.slugToFoldername() function and compare
+  // We can use the utils.slugToFolder() function and compare
   // its output with the `folder`.
   validateSlug(metadata.slug);
 
@@ -174,6 +168,9 @@ async function buildDocument(document) {
   // Extract all the <h2> tags as they appear into an array.
   doc.toc = extractTOC($);
 
+  // Check and scrutinize any local image references
+  const fileAttachments = checkImageReferences(doc, $, options, document);
+
   // With the sidebar out of the way, go ahead and check the rest
   injectFlaws(doc, $, options, document);
 
@@ -186,6 +183,10 @@ async function buildDocument(document) {
   injectNoTranslate($);
 
   doc.body = extractDocumentSections($);
+
+  // Creates new mdn_url's for the browser-compatibility-table to link to
+  // pages within this project rather than use the absolute URLs
+  normalizeBCDURLs(doc, options);
 
   doc.popularity = metadata.popularity;
   doc.modified = metadata.modified || null;
@@ -218,7 +219,7 @@ async function buildDocument(document) {
   // a breadcrumb in the React component.
   addBreadcrumbData(document.url, doc);
 
-  return [doc, liveSamples];
+  return [doc, liveSamples, fileAttachments];
 }
 
 async function buildDocumentFromURL(url) {
@@ -239,7 +240,7 @@ async function buildLiveSamplePageFromURL(url) {
   // the actual sampleID object with the properly-cased live-sample ID.
   for (const sampleIDObject of kumascript.getLiveSampleIDs(
     document.metadata.slug,
-    document.rawHtml
+    document.rawHTML
   )) {
     if (sampleIDObject.id.toLowerCase() === sampleID) {
       const liveSamplePage = kumascript.buildLiveSamplePage(

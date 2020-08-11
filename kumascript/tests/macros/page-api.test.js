@@ -8,7 +8,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const { Document } = require("content");
+const { Document } = require("../../../content");
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
 // Load fixture data.

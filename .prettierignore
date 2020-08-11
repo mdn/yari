@@ -7,7 +7,6 @@ Makefile
 Procfile
 content/_all-titles.json
 # exclude these directories
-/stumptown/
 /client/build/
 /ssr/dist/
 /node_modules/

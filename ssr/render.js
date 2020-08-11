@@ -40,16 +40,20 @@ export default function render(renderApp, doc) {
   const rendered = renderToString(renderApp);
 
   let pageTitle = "MDN Web Docs"; // default
+  let canonicalURL = "https://developer.mozilla.org";
 
   if (doc) {
     // Use the doc's title instead
     pageTitle = doc.title;
+    canonicalURL += doc.mdn_url;
 
     const documentDataTag = `<script>window.__data__ = JSON.parse(${serializeDocumentData(
       doc
     )});</script>`;
     $("#root").after(documentDataTag);
   }
+
+  $('link[rel="canonical"]').attr("href", canonicalURL);
 
   $("title").text(pageTitle);
 

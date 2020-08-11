@@ -1,12 +1,12 @@
 const express = require("express");
 
-const { Document } = require("content");
+const { Document } = require("../content");
 
 const router = express();
 
 router.post("/", (req, res) => {
-  const { rawHtml, metadata } = req.body;
-  Document.create(rawHtml, metadata);
+  const { rawHTML, metadata } = req.body;
+  Document.create(rawHTML, metadata);
   res.sendStatus(201);
 });
 
@@ -27,11 +27,11 @@ router.get("/", withDocument, (req, res) => {
 });
 
 router.put("/", withDocument, async (req, res) => {
-  const { rawHtml, metadata } = req.body;
-  if (metadata.title && rawHtml) {
+  const { rawHTML, metadata } = req.body;
+  if (metadata.title && rawHTML) {
     Document.update(
       req.document.fileInfo.folder,
-      rawHtml.trim() + "\n",
+      rawHTML.trim() + "\n",
       metadata
     );
   }

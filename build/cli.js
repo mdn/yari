@@ -3,8 +3,8 @@ const path = require("path");
 
 const cliProgress = require("cli-progress");
 
-const { CONTENT_ROOT, Document, slugToFoldername } = require("content");
-const { renderHTML } = require("ssr");
+const { CONTENT_ROOT, Document, slugToFolder } = require("../content");
+const { renderHTML } = require("../ssr/dist/main");
 
 const options = require("./build-options");
 const { buildDocument } = require("./index");
@@ -53,10 +53,12 @@ async function buildDocuments() {
 
   !options.noProgressbar && progressBar.start(documents.count);
   for (const document of documents.iter()) {
-    const outPath = path.join(BUILD_OUT_ROOT, slugToFoldername(document.url));
+    const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
     fs.mkdirSync(outPath, { recursive: true });
 
-    const [builtDocument, liveSamples] = await buildDocument(document);
+    const [builtDocument, liveSamples, fileAttachments] = await buildDocument(
+      document
+    );
 
     fs.writeFileSync(
       path.join(outPath, "index.html"),
@@ -73,6 +75,12 @@ async function buildDocuments() {
       const liveSamplePath = path.join(outPath, "_samples_", id, "index.html");
       fs.mkdirSync(path.dirname(liveSamplePath), { recursive: true });
       fs.writeFileSync(liveSamplePath, html);
+    }
+
+    for (const filePath of fileAttachments) {
+      // We *could* use symlinks instead. But, there's no point :)
+      // Yes, a symlink is less disk I/O but it's nominal.
+      fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
     }
 
     // Collect non-archived documents' slugs to be used in sitemap building and
@@ -116,11 +124,31 @@ async function buildDocuments() {
       JSON.stringify(items)
     );
   }
+  return slugPerLocale;
 }
 
 if (require.main === module) {
-  buildDocuments().catch((error) => {
-    console.error("error while building documents:", error);
-    process.exit(1);
-  });
+  const t0 = new Date();
+  buildDocuments()
+    .then((slugPerLocale) => {
+      const t1 = new Date();
+      const count = Object.values(slugPerLocale).reduce(
+        (a, b) => a + b.length,
+        0
+      );
+      const seconds = (t1 - t0) / 1000;
+      const took =
+        seconds > 60
+          ? `${(seconds / 60).toFixed(1)} minutes`
+          : `${seconds.toFixed(1)} seconds`;
+      console.log(
+        `Built ${count.toLocaleString()} in ${took}, at a rate of ${(
+          count / seconds
+        ).toFixed(1)} documents per second.`
+      );
+    })
+    .catch((error) => {
+      console.error("error while building documents:", error);
+      process.exit(1);
+    });
 }

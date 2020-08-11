@@ -30,9 +30,12 @@ cli
     cli.STRING,
     DATABASE_URL
   )
-  .action((args, options, logger) => {
+  .action((args, options) => {
     options.dbURL = args.url;
-    return runImporter(options);
+    return runImporter(options).catch((error) => {
+      console.error("error while importing documents:", error);
+      process.exit(1);
+    });
   });
 
 cli.parse(process.argv);

@@ -1,6 +1,6 @@
 const url = require("url");
 
-export function normalizeURLs(doc) {
+export function normalizeBCDURLs(doc) {
   // Loop over, and mutate, all 'browser_compatibility' sections.
   // BCD data comes froms from a library with `mdn_url`'s that are absolute.
   // This takes the `mdn_url` and sets it to a URI that can be used when

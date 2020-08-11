@@ -3,8 +3,8 @@ const path = require("path");
 
 const glob = require("glob");
 
-const { popularities } = require("content");
-const { FLAW_LEVELS, options: buildOptions } = require("build");
+const { popularities } = require("../content");
+const { FLAW_LEVELS, options: buildOptions } = require("../build");
 
 const BUILD_OUT_ROOT = path.join(__dirname, "..", "client", "build");
 

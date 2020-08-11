@@ -1,4 +1,4 @@
-const { Document, memoize } = require("content");
+const { Document, memoize } = require("../content");
 
 const {
   INTERACTIVE_EXAMPLES_BASE_URL,
@@ -15,9 +15,9 @@ const { HTMLTool } = require("./src/api/util.js");
 
 const renderFromURL = memoize(async (url) => {
   const prerequisiteErrorsByKey = new Map();
-  const { rawHtml, metadata, fileInfo } = Document.findByURL(url);
+  const { rawHTML, metadata, fileInfo } = Document.findByURL(url);
   const [renderedHtml, errors] = await renderMacros(
-    rawHtml,
+    rawHTML,
     {
       ...{
         path: url,
