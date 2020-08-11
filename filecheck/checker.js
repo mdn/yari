@@ -39,7 +39,6 @@ async function checkFile(filePath) {
 
   // Check that the file extension matches the file header.
   const fileType = await FileType.fromFile(filePath);
-  console.log(filePath, { extname: path.extname(filePath) }, fileType);
   if (!fileType) {
     // This can easily happen if the .png (for example) file is actually just
     // a text file and not a binary.
@@ -60,6 +59,16 @@ async function checkFile(filePath) {
     throw new Error(
       `${filePath} has an unrecognized mime type: ${fileType.mime}`
     );
+  } else {
+    // The image has to be mentioned in the adjacent index.html document
+    const htmlFilePath = path.join(path.dirname(filePath), "index.html");
+    if (!fs.existsSync(htmlFilePath)) {
+      throw new Error(
+        `${filePath} is not located in a folder with an 'index.html' file.`
+      );
+    }
+
+    console.log(filePath, { extname: path.extname(filePath) }, fileType);
   }
 }
 
