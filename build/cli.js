@@ -56,7 +56,9 @@ async function buildDocuments() {
     const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
     fs.mkdirSync(outPath, { recursive: true });
 
-    const [builtDocument, liveSamples] = await buildDocument(document);
+    const [builtDocument, liveSamples, fileAttachments] = await buildDocument(
+      document
+    );
 
     fs.writeFileSync(
       path.join(outPath, "index.html"),
@@ -73,6 +75,12 @@ async function buildDocuments() {
       const liveSamplePath = path.join(outPath, "_samples_", id, "index.html");
       fs.mkdirSync(path.dirname(liveSamplePath), { recursive: true });
       fs.writeFileSync(liveSamplePath, html);
+    }
+
+    for (const filePath of fileAttachments) {
+      // We *could* use symlinks instead. But, there's no point :)
+      // Yes, a symlink is less disk I/O but it's nominal.
+      fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
     }
 
     // Collect non-archived documents' slugs to be used in sitemap building and

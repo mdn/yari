@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const express = require("express");
+const send = require("send");
 const proxy = require("express-http-proxy");
 const openEditor = require("open-editor");
 
@@ -9,7 +10,7 @@ const {
   buildDocumentFromURL,
   buildLiveSamplePageFromURL,
 } = require("../build");
-const { CONTENT_ROOT, Redirect } = require("../content");
+const { CONTENT_ROOT, Redirect, Image } = require("../content");
 const { prepareDoc, renderHTML } = require("../ssr/dist/main");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
@@ -127,6 +128,19 @@ app.get("/*", async (req, res) => {
     // `if (req.url.includes("/docs/"))` test above.
     res.sendFile(path.join(STATIC_ROOT, "/index.html"));
     return;
+  }
+
+  // TODO: Would be nice to have a list of all supported file extensions
+  // in a constants file.
+  if (/\.(png|webp|gif|jpeg|svg)$/.test(req.url)) {
+    // Remember, Image.findByURL() will return the absolute file path
+    // iff it exists on disk.
+    const filePath = Image.findByURL(req.url);
+    if (filePath) {
+      return send(req, filePath).pipe(res);
+    } else {
+      return res.status(404).send("File not found on disk");
+    }
   }
 
   let lookupURL = req.url;
