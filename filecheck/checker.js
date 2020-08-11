@@ -135,11 +135,14 @@ async function checkFile(filePath, options) {
     const sizeAfter = fs.statSync(compressed.destinationPath).size;
     const reductionPercentage = 100 - (100 * sizeAfter) / sizeBefore;
 
-    console.log("SIZES", [sizeBefore, sizeAfter, reductionPercentage]);
     if (reductionPercentage > MAX_COMPRESSION_DIFFERENCE_PERCENTAGE) {
       if (options.saveCompression) {
-        console.log("SAVE!!");
-        console.log(compressed);
+        console.log(
+          `Compressed ${filePath}. New file is ${reductionPercentage.toFixed(
+            0
+          )}% smaller.`
+        );
+        fse.copyFileSync(compressed.destinationPath, filePath);
       } else {
         const msg = `${filePath} is ${formatSize(
           sizeBefore
