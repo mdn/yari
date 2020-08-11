@@ -53,7 +53,7 @@
     "react-modal": "^3.11.2",
     "react-router": "6.0.0-alpha.4",
     "react-router-dom": "6.0.0-alpha.4",
-    "react-scripts": "3.4.1",
+    "react-scripts": "3.4.2",
     "rough-notation": "0.4.0",
     "sanitize-filename": "^1.6.3",
     "sockette": "^2.0.6",
