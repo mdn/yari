@@ -60,6 +60,17 @@ async function checkFile(filePath) {
       `${filePath} has an unrecognized mime type: ${fileType.mime}`
     );
   } else {
+    // If the file is a 'image/png' but called '.jpe?g', that's wrong.
+    if (
+      path.extname(filePath).replace(".jpeg", ".jpg").slice(1) !== fileType.ext
+    ) {
+      throw new Error(
+        `${filePath} is type '${
+          fileType.mime
+        }' but named extension is '${path.extname(filePath)}'`
+      );
+    }
+
     // The image has to be mentioned in the adjacent index.html document
     const htmlFilePath = path.join(path.dirname(filePath), "index.html");
     if (!fs.existsSync(htmlFilePath)) {
@@ -79,7 +90,7 @@ async function checkFile(filePath) {
       throw new Error(`${filePath} is not mentioned in ${htmlFilePath}`);
     }
 
-    console.log(filePath, { extname: path.extname(filePath) }, fileType);
+    // console.log(filePath, { extname: path.extname(filePath) }, fileType);
   }
 }
 
