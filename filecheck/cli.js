@@ -5,7 +5,6 @@ const path = require("path");
 const { runChecker } = require("./checker");
 const { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } = require("./constants");
 
-console.log({ MAX_COMPRESSION_DIFFERENCE_PERCENTAGE });
 cli
   .version(require("./package.json").version)
   .option("--cwd <path>", "Explicit current-working-directory", cli.PATH)
