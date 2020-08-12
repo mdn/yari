@@ -40,7 +40,9 @@ describeMacro("Compat", function () {
     function (macro) {
       let actual = macro.call("foo.bar");
       let expected =
-        'No compatibility data found. Please contribute data for "foo.bar" (depth: 1) to the <a href="https://github.com/mdn/browser-compat-data">MDN compatibility data repository</a>.';
+        '<div class="bc-data" id="bcd:foo.bar">No compatibility data found. ' +
+        'Please contribute data for "foo.bar" (depth: 1) to the ' +
+        '<a href="https://github.com/mdn/browser-compat-data">MDN compatibility data repository</a>.</div>';
       return assert.eventually.equal(actual, expected);
     }
   );

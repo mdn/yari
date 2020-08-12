@@ -99,7 +99,7 @@ function injectFlaws(doc, $, options, { rawContent }) {
         doc.flaws.bad_bcd_queries.push("BCD table without an ID");
       } else {
         const query = dataQuery.replace(/^bcd:/, "");
-        const data = packageBCD(query);
+        const { data } = packageBCD(query);
         if (!data) {
           if (!("bad_bcd_queries" in doc.flaws)) {
             doc.flaws.bad_bcd_queries = [];
