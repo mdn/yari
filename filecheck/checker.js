@@ -18,7 +18,6 @@ const {
   VALID_MIME_TYPES,
   MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
 } = require("./constants");
-const { svg } = require("mdn-browser-compat-data");
 
 function formatSize(bytes) {
   if (bytes > 1024 * 1024) {
