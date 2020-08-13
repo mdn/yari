@@ -12,7 +12,7 @@ function makeExpect(url, summary, label) {
 
   summary = summary.replace(/<[^>]+>/g, "");
 
-  return `<a href="${url}" title="${summary}"><code>${label}</code></a>`;
+  return `<a href="${url}"><code>${label}</code></a>`;
 }
 
 function getPathname(url) {

@@ -119,9 +119,7 @@ describe("testing the main render() function", () => {
     );
     expect(brokenLink.length).toBe(3);
     expect(brokenLink.html()).toBe("<code>bigfoot</code>");
-    const otherLinks = $(
-      `a[href="/en-US/docs/Web/CSS/number"][title="This is the number test page."]`
-    );
+    const otherLinks = $(`a[href="/en-US/docs/Web/CSS/number"]`);
     expect(otherLinks.length).toBe(2);
     expect(otherLinks.eq(0).html()).toBe("<code>&lt;dumber&gt;</code>");
     expect(otherLinks.eq(1).html()).toBe("<code>&lt;number&gt;</code>");
