@@ -29,9 +29,6 @@ let title = kuma.htmlEscape(page.title);
 let commonLocalStrings = string.deserialize(await template("L10n:Common"));
 let localize = mdn.getLocalString;
 
-let summary = (page && page.summary) ? mdn.escapeQuotes(page.summary) :
-    localize(commonLocalStrings, "summary");
-
 if (!title || title == undefined || title == "undefined") {
     title = localize(commonLocalStrings, "MissingPage");
 }
@@ -53,10 +50,10 @@ url = url.replace(":", "");             // Remove colons
 
 switch(lang) {
     case "ru":
-        text = `<a href="${url}" title="${summary}">${section}</a> в <a href="${$0}" title="${summary}">${title}</a>`;
+        text = `<a href="${url}">${section}</a> в <a href="${$0}">${title}</a>`;
         break;
     default:
-        text = `<a href="${url}" title="${summary}">${section}</a> in <a href=${$0} title="${summary}">${title}</a>`;
+        text = `<a href="${url}">${section}</a> in <a href="${$0}">${title}</a>`;
         break;
 }
 %>

@@ -33,10 +33,16 @@ export default function render(renderApp, doc) {
   let pageTitle = "MDN Web Docs"; // default
   let canonicalURL = "https://developer.mozilla.org";
 
+  let pageDescription = "";
+
   if (doc) {
     // Use the doc's title instead
     pageTitle = doc.title;
     canonicalURL += doc.mdn_url;
+
+    if (doc.summary) {
+      pageDescription = doc.summary;
+    }
 
     // XXX We *could* just expose some absolute minimal here. Just enough
     // for the React Document component to know it doesn't need to re-render.
@@ -45,6 +51,12 @@ export default function render(renderApp, doc) {
     <script id="documentdata" type="application/json">${escapeDocumentJson}</script>
     `.trim();
     $("#root").after(documentDataTag);
+  }
+
+  if (pageDescription) {
+    // This overrides the default description. Also assumes there's always
+    // one tag there already.
+    $('meta[name="description"]').attr("content", pageDescription);
   }
 
   $('link[rel="canonical"]').attr("href", canonicalURL);

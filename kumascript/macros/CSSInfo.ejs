@@ -47,12 +47,7 @@ async function createLink(apiName, area, linkName) {
         formattedLinkName = "&lt;" + formattedLinkName + "&gt;";
     }
 
-    let summary = (thisPage && thisPage.summary) ?
-        escapeQuotes(thisPage.summary) :
-        localize(commonLocalStrings, "summary");
-
-    return "<a href=\"" + url + "\"" +
-        (summary ? " title=\"" + summary + "\"" : "") + "><code>" +
+    return "<a href=\"" + url + "\"" + "><code>" +
         formattedLinkName + "</code></a>";
 }
 
@@ -154,11 +149,9 @@ async function getValueOutput(cssInfo, property, atRule) {
     if (property === "relatedAtRule") {
         let url = "/" + locale + "/docs/Web/CSS/" + atRule;
         let page = await localWiki.getPage(url);
-        let summary = (page && page.summary) ? escapeQuotes(page.summary) :
-            localize(commonLocalStrings, "summary");
 
         return "<a href=\"/" + locale + "/docs/Web/CSS/" + atRule +
-            "\" title=\"" + summary + "\"><code>" + atRule + "</code></a>";
+            "\"><code>" + atRule + "</code></a>";
     }
 
     var value = cssInfo[property];
