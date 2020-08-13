@@ -101,8 +101,6 @@ function makeExpect(data, locale = "en-US") {
     if (elements.length > 0) permittedContent.push(elements.join(SEPARATOR));
   }
 
-  console.log(permittedContent);
-
   var output = [
     '<table class="properties">',
     "<tbody>",

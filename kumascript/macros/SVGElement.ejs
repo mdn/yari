@@ -17,4 +17,4 @@ let term = $0;
 let page = await wiki.getPage(URL);
 
 %>
-<a href="<%- URL %>" <%- wiki.pageExists(URL) ? '' : ' class="new"' %>><code>&lt;<%= term %>&gt;</code></a>
+<a href="<%- URL %>"<%- wiki.pageExists(URL) ? '' : ' class="new"' %>><code>&lt;<%= term %>&gt;</code></a>
