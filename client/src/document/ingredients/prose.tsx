@@ -8,7 +8,7 @@ export function ProseWithHeading({ id, section }) {
   return (
     <>
       <h2 id={id}>
-        <a href={`#${id}`} title={`Permalink to {section.title}`}>
+        <a href={`#${id}`} title={`Permalink to ${section.title}`}>
           {section.title}
         </a>
       </h2>
