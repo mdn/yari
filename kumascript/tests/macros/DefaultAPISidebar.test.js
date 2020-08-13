@@ -219,10 +219,6 @@ function checkGuideItem(expected, actual, locale) {
   // Check the target
   const itemLink = actual.querySelector("a");
   expect(itemLink.href).toEqual(expectedItem.target);
-  // Check the title
-  if (expectedItem.title) {
-    expect(itemLink.getAttribute("title")).toEqual(expectedItem.title);
-  }
 }
 
 /**
@@ -232,11 +228,7 @@ function checkGuideItem(expected, actual, locale) {
 function checkSubList(name, config, details, checker, next) {
   const hasSubList = config.expected.details[name];
   if (hasSubList) {
-    // Check the summary
-    const expectedSummary = commonL10nJSON[name][config.locale];
     const actual = details[next];
-    const actualSummary = actual.querySelector("summary");
-    expect(actualSummary.textContent).toEqual(expectedSummary);
     // Check the list
     const actualItems = actual.querySelectorAll("ol>li");
     const expectedItems = config.expected.details[name];
