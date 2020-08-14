@@ -15,10 +15,12 @@
     "build:ssr": "cd ssr && webpack --config webpack.config.js --mode=production",
     "prepare-build": "yarn build:client && yarn build:ssr",
     "build": "cd build && cross-env NODE_ENV=production node cli.js",
-    "start": "yarn build:client && yarn build:ssr && nf start",
+    "start": "node waitforit.js 0.0.0.0:3000 0.0.0.0:5000",
+    "dev": "nf start",
     "start:client": "cd client && cross-env BROWSER=none PORT=3000 react-scripts start",
     "start:dev-server": "nodemon server --watch server --watch build --watch content --watch kumascript",
-    "start:static-server": "cross-env ENV_FILE=testing/.env node server/static.js"
+    "start:static-server": "cross-env ENV_FILE=testing/.env node server/static.js",
+    "start:ssr": "cd ssr && webpack --config webpack.config.js --mode=production --watch"
   },
   "engines": {
     "node": ">=12.0.0"
