@@ -64,15 +64,15 @@ function syntaxHighlight($, doc) {
       // Seems to exist a couple of these in our docs. Just bail.
       return;
     }
-    const prismLang = Prism.languages[name];
-    if (!prismLang) {
+    const grammar = Prism.languages[name];
+    if (!grammar) {
       console.warn(
-        `Unable to find a Prism language for '${name}' found in ${doc.mdn_url}`
+        `Unable to find a Prism grammar for '${name}' found in ${doc.mdn_url}`
       );
       return; // bail!
     }
     const code = $pre.text();
-    const html = Prism.highlight(code, prismLang, name);
+    const html = Prism.highlight(code, grammar, name);
     $pre.html(html);
   });
 }
