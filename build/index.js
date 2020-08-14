@@ -16,6 +16,7 @@ const { addBreadcrumbData } = require("./document-utils");
 const { fixFixableFlaws, injectFlaws } = require("./flaws");
 const { normalizeBCDURLs } = require("./bcd-urls");
 const { checkImageReferences } = require("./check-images");
+const { syntaxHighlight } = require("./syntax-highlight");
 const cheerio = require("./monkeypatched-cheerio");
 const options = require("./build-options");
 
@@ -177,6 +178,9 @@ async function buildDocument(document) {
   // If fixFlaws is on and the doc has fixable flaws, this returned
   // raw HTML string will be different.
   fixFixableFlaws(doc, options, document);
+
+  // Apply syntax highlighting all <pre> tags.
+  syntaxHighlight($, doc);
 
   // Post process HTML so that the right elements gets tagged so they
   // *don't* get translated by tools like Google Translate.
