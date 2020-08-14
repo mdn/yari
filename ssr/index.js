@@ -4,7 +4,6 @@ import { StaticRouter } from "react-router-dom/server";
 
 import { App } from "../client/src/app";
 import render from "./render";
-// import { fixSyntaxHighlighting } from "./syntax-highlighter";
 
 // This is necessary because the ssr.js is in dist/ssr.js
 // and we need to reach the .env this way.
