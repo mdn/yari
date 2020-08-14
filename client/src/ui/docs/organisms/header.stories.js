@@ -1,11 +1,9 @@
 import React from "react";
-import { withA11y } from "@storybook/addon-a11y";
 
-import Header from "./header.jsx";
+import Header from "../../organisms/header";
 
 export default {
-  title: "Organisms|Header",
-  decorators: [withA11y]
+  title: "Organisms/Header",
 };
 
 export const header = () => (

@@ -96,12 +96,12 @@ $icon-size: 24px;
   }
 
   .open-search {
-    background-image: url("../dinocons/general/search.svg");
+    background-image: url("~@mdn/dinocons/general/search.svg");
   }
 
   .close-search {
     top: $icon-size;
-    background-image: url("../dinocons/general/close.svg");
+    background-image: url("~@mdn/dinocons/general/close.svg");
   }
 
   &.show-form {

@@ -1,17 +1,17 @@
 import React from "react";
 
-import Arrow from "../../dinocons/arrows/arrow.svg";
-import Chevron from "../../dinocons/arrows/chevron.svg";
-import Triangle from "../../dinocons/arrows/triangle.svg";
+import { ReactComponent as Arrow } from "@mdn/dinocons/arrows/arrow.svg";
+import { ReactComponent as Chevron } from "@mdn/dinocons/arrows/chevron.svg";
+import { ReactComponent as Triangle } from "@mdn/dinocons/arrows/triangle.svg";
 
 export default {
-  title: "Atoms|Dinocons|Arrows"
+  title: "Atoms/Dinocons/Arrows",
 };
 
 const wrapperStyle = {
   display: "flex",
   flexWrap: "wrap",
-  gap: "20px"
+  gap: "20px",
 };
 
 const iconContainer = {
@@ -22,7 +22,7 @@ const iconContainer = {
   padding: "5px",
   border: "1px solid #212121",
   width: "100px",
-  height: "100px"
+  height: "100px",
 };
 
 export const arrows = () => (
