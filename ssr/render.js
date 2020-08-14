@@ -15,7 +15,7 @@ const lazy = (creator) => {
 };
 
 const readBuildHTML = lazy(() => {
-  html = fs.readFileSync(
+  const html = fs.readFileSync(
     path.resolve(__dirname, "../../client/build/index.html"),
     "utf8"
   );
