@@ -70,14 +70,16 @@ export function fixSyntaxHighlighting(document) {
 
       if (!mutations) {
         // Legacy ones that haven't come from Markdown
-        $("pre[class^=brush]").each((_, blob) => {
+        $("pre[class*=brush]").each((_, blob) => {
+          // The language is whatever string comes after the `brush(:)`
+          // portion of the class name.
           const elem = $(blob);
-          const name = elem
-            .attr("class")
-            .replace(/^brush:/, "")
-            .trim()
-            .split(" ")[0]
-            .replace("'", "");
+          const className = elem.attr("class");
+          const match = className.match(/brush:?\s([\w_-]+)/);
+          if (!match) {
+            return;
+          }
+          const name = match[1];
           const prismLang = Prism.languages[name];
           if (!prismLang) {
             return; // bail!
