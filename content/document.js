@@ -233,12 +233,24 @@ function findAll(
   console.warn("Currently hardcoded to only build 'en-us'");
   const filePaths = glob
     .sync(path.join(CONTENT_ROOT, "en-us", "**", HTML_FILENAME))
-    .filter((filepath) => {
+    .filter((filePath) => {
+      // The 'files' set is either a list of absolute full paths or a
+      // list of endings.
+      // Why endings? Because it's highly useful when you use git and the
+      // filepath might be relative to the git repo root.
       if (files.size) {
-        return files.has(filepath);
+        if (files.has(filePath)) {
+          return true;
+        }
+        for (fp of files) {
+          if (filePath.endsWith(fp)) {
+            return true;
+          }
+        }
+        return false;
       }
       if (folderSearch) {
-        return filepath
+        return filePath
           .replace(CONTENT_ROOT, "")
           .replace(HTML_FILENAME, "")
           .includes(folderSearch);

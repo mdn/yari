@@ -23,7 +23,7 @@ function injectFlaws(doc, $, options, { rawContent }) {
     // A closure function to help making it easier to append flaws
     function addBrokenLink(href, suggestion = null) {
       for (const match of findMatchesInText(href, rawContent, {
-        inQuotes: true,
+        attribute: "href",
       })) {
         if (!("broken_links" in doc.flaws)) {
           doc.flaws.broken_links = [];
@@ -99,7 +99,7 @@ function injectFlaws(doc, $, options, { rawContent }) {
         doc.flaws.bad_bcd_queries.push("BCD table without an ID");
       } else {
         const query = dataQuery.replace(/^bcd:/, "");
-        const data = packageBCD(query);
+        const { data } = packageBCD(query);
         if (!data) {
           if (!("bad_bcd_queries" in doc.flaws)) {
             doc.flaws.bad_bcd_queries = [];

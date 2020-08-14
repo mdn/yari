@@ -697,17 +697,18 @@ if (!compatData) {
 
 traverseFeatures(compatData, depth, '');
 
+output = `<div class="bc-data" id="bcd:${query}">`;
 if (features.length > 0) {
-    output = `<div class="bc-data" id="bcd:${query}">`;
     output += '<a class="bc-github-link" href="https://github.com/mdn/browser-compat-data">Update compatibility data on GitHub</a>';
     output += `<table class="bc-table bc-table-${bcCategory}">`;
     output += writeCompatHead();
     output += writeCompatBody();
     output += '</table>';
     output += writeLegend();
-    output += '</div>';
+
 } else {
-    output = s_no_data_found;
+    output += s_no_data_found;
 }
+output += '</div>';
 %>
 <%-output%>

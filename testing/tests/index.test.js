@@ -370,7 +370,7 @@ test("broken links flaws", () => {
   const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
   expect(map.get("/en-US/docs/Web/CSS/dumber").line).toBe(11);
-  expect(map.get("/en-US/docs/Web/CSS/dumber").column).toBe(12);
+  expect(map.get("/en-US/docs/Web/CSS/dumber").column).toBe(13);
   expect(
     map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob").suggestion
   ).toBe("/en-US/docs/Web/API/Blob");
@@ -415,6 +415,26 @@ test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page",
   expect(doc.flaws.macros.length).toBe(2);
 });
 
+test("detect bad_bcd_queries flaws", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "badbcdqueries"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.bad_bcd_queries.length).toBe(1);
+  // If the flaw is there, it's always an array because a document could
+  // potentially have multiple bad BCD queries.
+  expect(doc.flaws.bad_bcd_queries.length).toBe(1);
+  expect(doc.flaws.bad_bcd_queries[0]).toBe(
+    "No BCD data for query: api.Does.Not.exist"
+  );
+});
+
 test("detect bad_bcd_links flaws from", () => {
   const builtFolder = path.join(
     buildRoot,
@@ -436,4 +456,75 @@ test("detect bad_bcd_links flaws from", () => {
   expect(flaw.slug).toBe("/en-US/docs/Web/API/Document/visibilityState");
   expect(flaw.suggestion).toBeNull();
   expect(flaw.query).toBe("api.Document.visibilityState");
+});
+
+test("image flaws", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "docs", "web", "images");
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  // You have to be intimately familiar with the fixture to understand
+  // why these flaws come out as they do.
+  expect(flaws.images.length).toBe(7);
+  const map = new Map(flaws.images.map((x) => [x.src, x]));
+
+  let flaw = map.get("idontexist.png");
+  expect(flaw.explanation).toBe("File not present on disk");
+  expect(flaw.suggestion).toBeNull();
+  expect(flaw.line).toBe(35);
+  expect(flaw.column).toBe(13);
+
+  flaw = map.get("/en-US/docs/Web/Images/florian.png");
+  expect(flaw.explanation).toBe("Pathname should be relative to document");
+  expect(flaw.suggestion).toBe("florian.png");
+  expect(flaw.line).toBe(40);
+  expect(flaw.column).toBe(13);
+
+  flaw = map.get("Florian.PNG");
+  expect(flaw.explanation).toBe("Pathname should always be lowercase");
+  expect(flaw.suggestion).toBe("florian.png");
+  expect(flaw.line).toBe(45);
+  expect(flaw.column).toBe(13);
+
+  flaw = map.get("http://www.peterbe.com/static/images/favicon-32.png");
+  expect(flaw.explanation).toBe("Insecure URL");
+  expect(flaw.suggestion).toBe(
+    "https://www.peterbe.com/static/images/favicon-32.png"
+  );
+  expect(flaw.line).toBe(50);
+  expect(flaw.column).toBe(13);
+
+  flaw = map.get(
+    "https://developer.mozilla.org/en-US/docs/Web/Foo/screenshot.png"
+  );
+  expect(flaw.explanation).toBe("Unnecessarily absolute URL");
+  expect(flaw.suggestion).toBe("/en-US/docs/Web/Foo/screenshot.png");
+  expect(flaw.line).toBe(55);
+  expect(flaw.column).toBe(13);
+
+  flaw = map.get("/en-US/docs/Web/Foo/screenshot.png");
+  expect(flaw.explanation).toBe("Pathname should be relative to document");
+  expect(flaw.suggestion).toBe("../Foo/screenshot.png");
+  expect(flaw.line).toBe(60);
+  expect(flaw.column).toBe(13);
+
+  flaw = map.get("../Foo/nonexistent.png");
+  expect(flaw.explanation).toBe("File not present on disk");
+  expect(flaw.suggestion).toBeNull();
+  expect(flaw.line).toBe(65);
+  expect(flaw.column).toBe(13);
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  $("#content img[src]").each((i, element) => {
+    const img = $(element);
+    const src = img.attr("src");
+    if (src.includes("www.peterbe.com/")) {
+      // These are forced to be https
+      expect(src.startsWith("https://")).toBeTruthy();
+    } else {
+      expect(src.startsWith("/en-US/docs/Web/")).toBeTruthy();
+    }
+  });
 });

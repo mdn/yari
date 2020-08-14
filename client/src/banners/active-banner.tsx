@@ -155,24 +155,8 @@ function Banner(props: BannerProps) {
   );
 }
 
-export const DEVELOPER_NEEDS_ID = "developer_needs";
-export const L10N_SURVEY_ID = "l10n_survey";
-export const SUBSCRIPTION_ID = "subscription_banner";
-
-function L10NSurveyBanner() {
-  return (
-    <Banner
-      id={L10N_SURVEY_ID}
-      classname="l10n-survey"
-      copy={
-        "👋 Do you use Chrome’s automatic translation tool on MDN? Help us improve by answering a short 5-minute survey."
-      }
-      cta={"Take the survey"}
-      url="https://s2.userzoom.com/m/MSBDNTgxMlMxMzMg"
-      newWindow
-    />
-  );
-}
+const DEVELOPER_NEEDS_ID = "developer_needs";
+const SUBSCRIPTION_ID = "subscription_banner";
 
 function DeveloperNeedsBanner() {
   return (
@@ -208,7 +192,7 @@ function SubscriptionBanner() {
       id={SUBSCRIPTION_ID}
       classname="mdn-subscriptions"
       title={"Become a monthly supporter"}
-      copy={"Support MDN with a 5$ monthly subscription"}
+      copy={"Support MDN with a $5 monthly subscription"}
       cta={"Learn more"}
       url={`/${locale}/payments/`}
       embargoDays={7}
@@ -223,23 +207,15 @@ export default function ActiveBanner() {
     return null;
   }
 
-  for (const id in userData.waffle.flags) {
-    if (!userData.waffle.flags[id] || isEmbargoed(id)) {
-      continue;
-    }
+  const isEnabled = (id: string) =>
+    userData.waffle.flags[id] && !isEmbargoed(id);
 
-    switch (id) {
-      case L10N_SURVEY_ID:
-        return <L10NSurveyBanner />;
-
-      case DEVELOPER_NEEDS_ID:
-        return <DeveloperNeedsBanner />;
-
-      case SUBSCRIPTION_ID:
-        return userData.isSubscriber ? null : <SubscriptionBanner />;
-    }
+  // The order of the if statements is important and it's our source of
+  // truth about which banner is "more important" than the other.
+  if (isEnabled(DEVELOPER_NEEDS_ID)) {
+    return <DeveloperNeedsBanner />;
+  } else if (isEnabled(SUBSCRIPTION_ID) && !userData.isSubscriber) {
+    return <SubscriptionBanner />;
   }
-
-  // No banner found in the waffle flags, so we have nothing to render
   return null;
 }
