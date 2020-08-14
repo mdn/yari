@@ -74,8 +74,8 @@ export function fixSyntaxHighlighting(document) {
           // The language is whatever string comes after the `brush(:)`
           // portion of the class name.
           const elem = $(blob);
-          const className = elem.attr("class");
-          const match = className.match(/brush:?\s([\w_-]+)/);
+          const className = elem.attr("class").toLowerCase();
+          const match = className.match(/brush:?\s*([\w_-]+)/);
           if (!match) {
             return;
           }
