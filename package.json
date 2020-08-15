@@ -69,7 +69,7 @@
   },
   "devDependencies": {
     "@testing-library/react": "^10.4.7",
-    "@types/jest": "^26.0.9",
+    "@types/jest": "^26.0.10",
     "@types/react": "^16.9.46",
     "@types/react-dom": "^16.9.8",
     "@types/react-modal": "^3.10.6",
