@@ -79,7 +79,7 @@
     "fs-extra": "9.0.1",
     "got": "^11.5.2",
     "husky": "4.2.5",
-    "jest": "^24.0.0",
+    "jest": "^26.4.0",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "jest-junit-reporter": "^1.1.0",
     "jest-puppeteer": "4.4.0",
