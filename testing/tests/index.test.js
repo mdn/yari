@@ -415,6 +415,26 @@ test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page",
   expect(doc.flaws.macros.length).toBe(2);
 });
 
+test("detect bad_bcd_queries flaws", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "badbcdqueries"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.bad_bcd_queries.length).toBe(1);
+  // If the flaw is there, it's always an array because a document could
+  // potentially have multiple bad BCD queries.
+  expect(doc.flaws.bad_bcd_queries.length).toBe(1);
+  expect(doc.flaws.bad_bcd_queries[0]).toBe(
+    "No BCD data for query: api.Does.Not.exist"
+  );
+});
+
 test("detect bad_bcd_links flaws from", () => {
   const builtFolder = path.join(
     buildRoot,

@@ -5,12 +5,29 @@ import jsesc from "jsesc";
 import cheerio from "cheerio";
 import { renderToString } from "react-dom/server";
 
-function readBuildHtml() {
-  return fs.readFileSync(
+const lazy = (creator) => {
+  let res;
+  let processed = false;
+  return () => {
+    if (processed) return res;
+    res = creator.apply(this, arguments);
+    processed = true;
+    return res;
+  };
+};
+
+const readBuildHTML = lazy(() => {
+  const html = fs.readFileSync(
     path.resolve(__dirname, "../../client/build/index.html"),
     "utf8"
   );
-}
+  if (!html.includes('<div id="root"></div>')) {
+    throw new Error(
+      'The render depends on being able to inject into <div id="root"></div>'
+    );
+  }
+  return html;
+});
 
 function serializeDocumentData(data) {
   return jsesc(JSON.stringify(data), {
@@ -19,22 +36,8 @@ function serializeDocumentData(data) {
   });
 }
 
-let buildHtml = "";
-if (process.env.NODE_ENV !== "development") {
-  // read it once
-  buildHtml = readBuildHtml();
-  if (!buildHtml.includes('<div id="root"></div>')) {
-    throw new Error(
-      'The render depends on being able to inject into <div id="root"></div>'
-    );
-  }
-}
-
 export default function render(renderApp, doc) {
-  if (process.env.NODE_ENV === "development") {
-    // Reread on every request
-    buildHtml = readBuildHtml();
-  }
+  const buildHtml = readBuildHTML();
   const $ = cheerio.load(buildHtml);
 
   const rendered = renderToString(renderApp);

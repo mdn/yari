@@ -7,7 +7,11 @@ export function Prose({ section }) {
 export function ProseWithHeading({ id, section }) {
   return (
     <>
-      <h2 id={id}>{section.title}</h2>
+      <h2 id={id}>
+        <a href={`#${id}`} title={`Permalink to ${section.title}`}>
+          {section.title}
+        </a>
+      </h2>
       <Prose section={section} />
     </>
   );
