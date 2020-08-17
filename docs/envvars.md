@@ -103,7 +103,7 @@ information about fixable flaws instead of actually fixing it on disk.
 
 **Default: `false`**
 
-### `KS_LIVE_SAMPLES_BASE_URL`
+### `BUILD_LIVE_SAMPLES_BASE_URL`
 
 **Default: `https://mdn.mozillademos.org`**
 
@@ -114,6 +114,12 @@ carefully as the rest of the site.
 
 When doing local development, it's recommended to set this to
 `http://localhost:5000` in your personal `.env`.
+
+### `BUILD_INTERACTIVE_EXAMPLES_BASE_URL`
+
+**Default: `https://interactive-examples.mdn.mozilla.net`**
+
+The base URL used in the Interactive Example iframes.
 
 ## Server
 
