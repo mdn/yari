@@ -64,7 +64,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   useEffect(() => {
     if (doc) {
-      document.title = doc.title;
+      document.title = doc.pageTitle;
     }
   }, [doc]);
 

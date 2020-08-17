@@ -53,6 +53,7 @@ export type Toc = {
 
 export interface Doc {
   title: string;
+  pageTitle: string;
   mdn_url: string;
   sidebarHTML: string;
   toc: Toc[];
