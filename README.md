@@ -2,7 +2,8 @@
 
 <!-- https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#adding-a-workflow-status-badge-to-your-repository -->
 
-![](https://github.com/mdn/yari/workflows/Testing%20Yari/badge.svg)
+![Testing](https://github.com/mdn/yari/workflows/Testing%20Yari/badge.svg)
+![Production Build](https://github.com/mdn/yari/workflows/Production%20Build/badge.svg)
 
 ## Quickstart
 
@@ -98,23 +99,6 @@ commit.
 
 If in doubt about formatting, you can create a pull request and if you have
 formatting flaws, the pull request checks should catch it.
-
-### Adding dependencies
-
-To add a new `yarn` dependency into one of the workspaces, start
-a shell in the root directory. From there, type:
-
-    yarn workspace client add some-lib
-    # or...
-    yarn workspace ssr add --dev some-package@1.2.4
-
-This will update the `/yarn.lock` file and your `/node_modules`.
-
-**Note!** Due to a bug in `yarn` v1, you have to run `yarn install --ignore-scripts`
-one extra time so that the `/yarn.lock` file gets corrected. We hope to remove
-this requirement when we can switch to `yarn` v2 in 2020. For now, to make it
-easier for you, we have this added as a `huskey` `pre-commit` hook so simply
-committing your changes will fix it for you automatically.
 
 ### Upgrading Packages
 

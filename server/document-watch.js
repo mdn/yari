@@ -3,7 +3,7 @@ const { Worker } = require("worker_threads");
 
 const WebSocket = require("ws");
 
-const { SearchIndex } = require("build");
+const { SearchIndex } = require("../build");
 
 let isReady = false;
 const searchIndex = new SearchIndex();

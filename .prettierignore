@@ -7,7 +7,6 @@ Makefile
 Procfile
 content/_all-titles.json
 # exclude these directories
-/stumptown/
 /client/build/
 /ssr/dist/
 /node_modules/
@@ -22,6 +21,7 @@ content/_all-titles.json
 /testing/content/
 /testing/archivecontent/
 /kumascript/coverage/
+/client/src/kumastyles/
 
 # Misc files to ignore
 /client/src/serviceWorker.js

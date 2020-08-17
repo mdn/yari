@@ -118,30 +118,20 @@ class LiveSampleID {
 
 function getLiveSampleIDs(slug, source) {
   // Given a slug and its raw source HTML, parses the source and returns
-  // an object with two properties, "ownSampleIDs" and "otherSampleIDs". The
-  // "ownSampleIDs" property is either a set of live-sample ID's to be
-  // extracted from this document, or null if there were none, and the
-  // "otherSampleIDs" property, if not null, means this document embeds
-  // live samples that must be extracted from other documents. Specifically,
-  // the "otherSampleIDs" property, if not null, is a map where each key is
-  // a normalized slug and each value is the set of live-sample ID's to be
-  // extracted from the rendered document signified by that slug.
+  // a list of live-sample ID's to be extracted from this document.
   const tokens = Parser.parse(source);
   const currentSlug = normalizeSlug(slug);
   // Loop through the tokens, looking for calls to the EmbedLiveSample macro.
   // The first argument to the call is the live-sample ID, and there may also
   // be an optional fifth argument that specifies a slug, that may or may not
-  // be different than the current slug, from which to extract the sample ID.
-  let sampleSlug;
-  let ownSampleIDs = [];
-  let otherSampleIDs = new Map();
+  // be different from the current slug, from which to extract the sample ID.
+  let result = [];
   for (let token of tokens) {
     if (
       token.type === "MACRO" &&
       normalizeMacroName(token.name) === "embedlivesample" &&
       token.args.length
     ) {
-      sampleSlug = currentSlug;
       // Some of the localized pages URI-encode their first argument,
       // the live-sample ID, even though they don't need to do that,
       // so let's first call "safeDecodeURIComponent" just in case.
@@ -153,22 +143,16 @@ function getLiveSampleIDs(slug, source) {
         // we can't just assume that all of the sample ID's are to be extracted
         // from the current document.
         const slugArg = normalizeSlug(token.args[4]);
-        if (slugArg) {
-          sampleSlug = slugArg;
+        if (slugArg && slugArg !== currentSlug) {
+          // If this live-sample is to be extracted from another document,
+          // don't return it as part of this document's list of sample ID's.
+          continue;
         }
       }
-      if (sampleSlug === currentSlug) {
-        ownSampleIDs.push(sampleIDObject);
-      } else {
-        if (otherSampleIDs.has(sampleSlug)) {
-          otherSampleIDs.get(sampleSlug).push(sampleIDObject);
-        } else {
-          otherSampleIDs.set(sampleSlug, [sampleIDObject]);
-        }
-      }
+      result.push(sampleIDObject);
     }
   }
-  return [ownSampleIDs, otherSampleIDs];
+  return result;
 }
 
 module.exports = { buildLiveSamplePage, getLiveSampleIDs };

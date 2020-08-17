@@ -101,5 +101,13 @@
   "Web/Fixable_Flaws": {
     "modified": "2019-01-01T01:01:01.550Z",
     "contributors": ["cmills", "wbamberg"]
+  },
+  "Web/API/Page_Visibility_API": {
+    "modified": "2020-07-20T01:01:01.550Z",
+    "contributors": ["peterbe"]
+  },
+  "Web/BadBCDQueries": {
+    "modified": "2020-08-10T01:01:01.550Z",
+    "contributors": ["peterbe"]
   }
 }

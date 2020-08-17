@@ -747,3 +747,14 @@ td[tabindex].bc-supports-yes:hover .ic-history:before {
     display: none;
   }
 }
+
+// In the BCD table, in the first column we link to other MDN pages
+// based on the APIs that it links to. Sometimes, these links refer to
+// a `mdn_url` that doesn't actually, exist. Instead of making a link to
+// page that will just 404, we annotate it so it's clear that it's not
+// going to work. So it needs to stand out a bit.
+// This color comes from the old Kuma code which is used for all links
+// that link to page that doesn't exist.
+.bc-table .new {
+  color: #900;
+}

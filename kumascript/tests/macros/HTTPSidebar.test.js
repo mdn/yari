@@ -4,7 +4,7 @@
 const fs = require("fs");
 const path = require("path");
 const jsdom = require("jsdom");
-const { Document } = require("content");
+const { Document } = require("../../../content");
 const {
   assert,
   itMacro,

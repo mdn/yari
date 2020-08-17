@@ -1,3 +1,3 @@
-server: yarn workspace server start
-typecheck: yarn workspace client tsc --noEmit --watch
-web: yarn cross-env PORT=3000 yarn workspace client start
+server: yarn start:dev-server
+type-check: cd client && tsc --noEmit --watch
+web: yarn start:client

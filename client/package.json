@@ -1,38 +1,7 @@
 {
   "name": "client",
-  "version": "0.1.0",
   "private": true,
   "license": "MPL-2.0",
-  "main": "src/app.tsx",
-  "dependencies": {
-    "@types/jest": "^26.0.5",
-    "@types/react": "^16.9.43",
-    "@types/react-dom": "^16.9.8",
-    "cross-env": "^7.0.2",
-    "downshift": "^5.4.7",
-    "flexsearch": "0.6.32",
-    "fuzzysearch": "1.0.3",
-    "include-media": "1.4.9",
-    "node-sass": "4.14.1",
-    "prismjs": "1.20.0",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
-    "react-router": "6.0.0-alpha.4",
-    "react-router-dom": "6.0.0-alpha.4",
-    "react-scripts": "3.4.1",
-    "rough-notation": "0.4.0",
-    "sockette": "^2.0.6",
-    "swr": "0.2.3",
-    "typeface-zilla-slab": "0.0.72",
-    "typescript": "^3.9.7",
-    "use-debounce": "^3.4.3"
-  },
-  "scripts": {
-    "start": "cross-env BROWSER=none react-scripts start",
-    "build": "cross-env INLINE_RUNTIME_CHUNK=false react-scripts build",
-    "test": "tsc --noEmit && react-scripts test --env=jest-environment-jsdom-sixteen",
-    "eject": "react-scripts eject"
-  },
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -48,10 +17,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@testing-library/react": "^10.4.7",
-    "jest-environment-jsdom-sixteen": "^1.0.3",
-    "mdn-browser-compat-data": "^1.0.32"
   }
 }

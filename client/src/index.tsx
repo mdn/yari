@@ -4,6 +4,9 @@ import { BrowserRouter as Router } from "react-router-dom";
 import "./index.scss";
 import "typeface-zilla-slab";
 import { App } from "./app";
+import { GAProvider } from "./ga-context";
+import { UserDataProvider } from "./user-context";
+
 const WSSProvider = React.lazy(() => import("./web-socket"));
 // import * as serviceWorker from './serviceWorker';
 
@@ -18,9 +21,13 @@ if (documentDataElement) {
 }
 
 let app = (
-  <Router>
-    <App doc={docData} />
-  </Router>
+  <GAProvider>
+    <UserDataProvider>
+      <Router>
+        <App doc={docData} />
+      </Router>
+    </UserDataProvider>
+  </GAProvider>
 );
 
 if (process.env.NODE_ENV === "development") {

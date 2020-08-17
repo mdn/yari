@@ -1,5 +1,24 @@
 const cheerio = require("./monkeypatched-cheerio");
-const { packageBCD } = require("build/resolve-bcd");
+const { packageBCD } = require("./resolve-bcd");
+
+/**
+ * Given a cheerio doc, extract all the <h2> tags and make it a
+ * structured thing.
+ */
+function extractTOC($) {
+  const toc = [];
+  // Use .each() instead of .map() so we can do filtering lazily
+  // within each callback instead of having to .filter() first.
+  $("h2").each((i, element) => {
+    const $element = $(element);
+    const text = $element.text();
+    const id = $element.attr("id");
+    if (text && id) {
+      toc.push({ text, id });
+    }
+  });
+  return toc;
+}
 
 /** Extract and mutate the $ if it as a "Quick_Links" section.
  * But only if it exists.
@@ -217,6 +236,60 @@ function _addSingleSectionBCD($) {
   if (data === undefined) {
     return [];
   }
+
+  // First extract a map of all release data, keyed by (normalized) browser
+  // name and the versions.
+  // You'll have a map that looks like this:
+  //
+  //   'chrome_android': {
+  //      '28': {
+  //        release_data: '2012-06-01',
+  //        release_notes: '...',
+  //        ...
+  //
+  // The reason we extract this to a locally scoped map, is so we can
+  // use it to augment the `__compat` blocks for the latest version
+  // when (if known) it was added.
+  const browserReleaseData = new Map();
+  for (const [name, browser] of Object.entries(browsers)) {
+    const releaseData = new Map();
+    for (const [version, data] of Object.entries(browser.releases || [])) {
+      if (data) {
+        releaseData.set(version, data);
+      }
+    }
+    browserReleaseData.set(name, releaseData);
+  }
+
+  // We never need this data, after the release info has been extracted
+  // for each 'version_added'.
+  Object.values(browsers).forEach((browser) => {
+    // Remove because it's added weight which we don't need in the
+    // state data sent to the client eventually.
+    delete browser.releases;
+  });
+
+  for (const [key, compat] of Object.entries(data)) {
+    let block;
+    if (key === "__compat") {
+      block = compat;
+    } else if (compat.__compat) {
+      block = compat.__compat;
+    }
+    if (block) {
+      for (const [browser, info] of Object.entries(block.support)) {
+        const added = info.version_added;
+        if (browserReleaseData.has(browser)) {
+          if (browserReleaseData.get(browser).has(added)) {
+            info.release_date = browserReleaseData
+              .get(browser)
+              .get(added).release_date;
+          }
+        }
+      }
+    }
+  }
+
   return [
     {
       type: "browser_compatibility",
@@ -262,4 +335,5 @@ function _addSectionProse($) {
 module.exports = {
   extractSidebar,
   extractDocumentSections,
+  extractTOC,
 };

@@ -1,11 +1,11 @@
 import React, { lazy, Suspense, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
 import { useWebSocketMessageHandler } from "../web-socket";
 import { NoMatch } from "../routing";
 import { useDocumentURL } from "./hooks";
-import { Doc } from "./types";
+import { Doc, DocParent } from "./types";
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
 import { InteractiveExample } from "./ingredients/interactive-example";
@@ -17,6 +17,7 @@ import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-t
 // Misc
 // Sub-components
 import { DocumentTranslations } from "./languages";
+import { TOC } from "./toc";
 
 import "./index.scss";
 
@@ -25,6 +26,8 @@ const Toolbar = lazy(() => import("./toolbar"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const documentURL = useDocumentURL();
+  const { locale } = useParams();
+  const navigate = useNavigate();
 
   const dataURL = `${documentURL}/index.json`;
   const { data: doc, error } = useSWR<Doc>(
@@ -34,9 +37,20 @@ export function Document(props /* TODO: define a TS interface for this */) {
       if (!response.ok) {
         throw new Error(`${response.status} on ${url}`);
       }
-      return (await response.json()).doc;
+      const { doc } = await response.json();
+      if (response.redirected) {
+        navigate(doc.mdn_url);
+      }
+      return doc;
     },
-    { initialData: props.doc || null, revalidateOnFocus: false }
+    {
+      initialData:
+        props.doc &&
+        props.doc.mdn_url.toLowerCase() === documentURL.toLowerCase()
+          ? props.doc
+          : null,
+      revalidateOnFocus: false,
+    }
   );
 
   useWebSocketMessageHandler((message) => {
@@ -86,49 +100,100 @@ export function Document(props /* TODO: define a TS interface for this */) {
   const { github_url, folder } = doc.source;
 
   return (
-    <>
+    <main>
       {process.env.NODE_ENV === "development" && !doc.isArchive && (
         <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
           <Toolbar doc={doc} />
         </Suspense>
       )}
-      <h1 className="page-title">{doc.title}</h1>
-      {translations && !!translations.length && (
-        <DocumentTranslations translations={translations} />
-      )}
-      <div className="main">
-        <nav>{doc.parents && <Breadcrumbs parents={doc.parents} />}</nav>
+      <header className="documentation-page-header">
+        <div className="titlebar-container">
+          <div className="titlebar">
+            <h1 className="title">{doc.title}</h1>
+          </div>
+        </div>
+        <div className="full-width-row-container">
+          <div className="max-content-width-container">
+            <nav className="breadcrumbs" role="navigation">
+              {doc.parents && <Breadcrumbs parents={doc.parents} />}
+            </nav>
 
-        <div className="sidebar">
-          <RenderSideBar doc={doc} />
+            {translations && !!translations.length && (
+              <DocumentTranslations translations={translations} />
+            )}
+          </div>
         </div>
-        <div className="content">
-          <RenderDocumentBody doc={doc} />
-          <hr />
-          <a
-            href={github_url}
-            title={`Folder: ${folder}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Edit on <b>GitHub</b>
-          </a>
-          {" | "}
-          <a
-            href={`https://developer.mozilla.org${doc.mdn_url}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View on <b>MDN</b>
-          </a>
-          {doc.contributors && <Contributors contributors={doc.contributors} />}
+      </header>
+
+      <div
+        className={
+          (doc.toc && doc.toc.length) || doc.sidebarHTML
+            ? "wiki-left-present content-layout"
+            : "content-layout"
+        }
+      >
+        {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+
+        <div id="content" className="article text-content">
+          <article id="wikiArticle">
+            <RenderDocumentBody doc={doc} />
+          </article>
+
+          <div className="metadata">
+            <section className="document-meta">
+              <header className="visually-hidden">
+                <h4>Metadata</h4>
+              </header>
+              <ul>
+                <li className="last-modified">
+                  <LastModified value={doc.modified} locale={locale} />,{" "}
+                  <a
+                    href={github_url}
+                    title={`Folder: ${folder}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Edit on <b>GitHub</b>
+                  </a>
+                </li>
+              </ul>
+            </section>
+          </div>
         </div>
+
+        {doc.sidebarHTML && (
+          <div id="sidebar-quicklinks" className="sidebar">
+            <RenderSideBar doc={doc} />
+          </div>
+        )}
       </div>
+    </main>
+  );
+}
+
+function LastModified({ value, locale }) {
+  if (!value) {
+    return <span>Last modified date not known</span>;
+  }
+  const date = new Date(value);
+  // Justification for these is to match historically
+  const dateStringOptions = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  };
+  return (
+    <>
+      <b>Last modified:</b>{" "}
+      <time dateTime={value}>
+        {date.toLocaleString(locale, dateStringOptions)}
+      </time>
     </>
   );
 }
 
-function Breadcrumbs({ parents }) {
+// XXX Move this component to its own file. index.tsx is already too large.
+function Breadcrumbs({ parents }: { parents: DocParent[] }) {
   if (!parents.length) {
     throw new Error("Empty parents array");
   }
@@ -150,7 +215,7 @@ function Breadcrumbs({ parents }) {
             >
               <span property="name">{parent.title}</span>
             </Link>
-            <meta property="position" content={i + 1} />
+            <meta property="position" content={`${i + 1}`} />
           </li>
         );
       })}
@@ -302,14 +367,14 @@ function RenderDocumentBody({ doc }) {
   });
 }
 
-function Contributors({ contributors }) {
-  return (
-    <div>
-      <b>Contributors to this page:</b>
-      <span dangerouslySetInnerHTML={{ __html: contributors }} />
-    </div>
-  );
-}
+// function Contributors({ contributors }) {
+//   return (
+//     <div>
+//       <b>Contributors to this page:</b>
+//       <span dangerouslySetInnerHTML={{ __html: contributors }} />
+//     </div>
+//   );
+// }
 
 function LoadingError({ error }) {
   return (

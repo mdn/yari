@@ -3,6 +3,7 @@ set -e
 
 export ENV_FILE=testing/.env
 
+yarn prepare-build
 yarn build
 
-yarn workspace testing run test $@
+yarn test:testing $@

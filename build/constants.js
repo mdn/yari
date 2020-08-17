@@ -25,6 +25,8 @@ const VALID_FLAW_CHECKS = new Set([
   "macros",
   "broken_links",
   "bad_bcd_queries",
+  "bad_bcd_links",
+  "images",
 ]);
 
 // TODO (far future): Switch to "error" when number of flaws drops.

@@ -11,22 +11,57 @@ export interface Link {
   fixed?: true;
 }
 
+export interface BadBCDLink {
+  slug: string;
+  suggestion: string | null;
+  query: string | null;
+  key: string;
+}
+
+export interface GenericFlaw {
+  id: string;
+  explanation: string;
+  suggestion: string | null;
+}
+
+export interface ImageReferenceFlaw extends GenericFlaw {
+  src: string;
+  line: number;
+  column: number;
+  fixed?: true;
+}
+
 type Flaws = {
   broken_links: Link[];
   macros: MacroErrorMessage[];
   bad_bcd_queries: string[];
+  bad_bcd_links: BadBCDLink[];
+  images: ImageReferenceFlaw[];
+};
+
+export type Translations = { locale: string; slug: string }[];
+
+export type DocParent = {
+  uri: string;
+  title: string;
+};
+
+export type Toc = {
+  id: string;
+  text: string;
 };
 
 export interface Doc {
   title: string;
   mdn_url: string;
   sidebarHTML: string;
+  toc: Toc[];
   body: string;
   modified: string;
   flaws: Flaws;
-  other_translations?: object[];
+  other_translations?: Translations;
   translation_of?: string;
-  parents?: Doc[];
+  parents?: DocParent[];
   source: Source;
   contributors: string[];
   isArchive: boolean;
