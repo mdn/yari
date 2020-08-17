@@ -1190,10 +1190,10 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.3", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4":
-  version "7.10.5"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.10.5.tgz#303d8bd440ecd5a491eae6117fd3367698674c5c"
-  integrity sha512-otddXKhdNn7d0ptoFRHtMLa8LqDxLYwTjB4nYgM1yy5N6gU/MUf8zqyyLltCH3yAVitBzmwK4us+DD0l/MauAg==
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.3", "@babel/runtime@^7.11.2", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4":
+  version "7.11.2"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.11.2.tgz#f549c13c754cc40b87644b9fa9f09a6a95fe0736"
+  integrity sha512-TeWkU52so0mPtDcaCTxNBI/IHiz0pZgr8VEFqXFtZWpYD08ZB6FaSwVAS8MKRQAP3bYKiVjwysOJgMFY28o6Tw==
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -4433,12 +4433,12 @@ dotenv@8.2.0:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
   integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
 
-downshift@^5.4.7:
-  version "5.4.7"
-  resolved "https://registry.yarnpkg.com/downshift/-/downshift-5.4.7.tgz#2ab7b0512cad33011ee6f29630f9a7bb74dff2b5"
-  integrity sha512-xaH0RNqwJ5pAsyk9qBmR9XJWmg1OOWMfrhzYv0NH2NjJxn77S3zBcfClw341UfhGyKg5v+qVqg/CQzvAgBNCXQ==
+downshift@^6.0.5:
+  version "6.0.5"
+  resolved "https://registry.yarnpkg.com/downshift/-/downshift-6.0.5.tgz#a4f8b135c53d51cac232540988f401caf2a0c13a"
+  integrity sha512-GfoHu/zBuMROHipgkCE4r+bf+u+liGpeX4D+/McBODy0HBJJ4c87Ipkzv3HJOrAz1KeP7+6WszBPsTftEuY8fA==
   dependencies:
-    "@babel/runtime" "^7.10.2"
+    "@babel/runtime" "^7.11.2"
     compute-scroll-into-view "^1.0.14"
     prop-types "^15.7.2"
     react-is "^16.13.1"
