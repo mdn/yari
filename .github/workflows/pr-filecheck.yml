@@ -4,12 +4,13 @@
 # If you want to do what this workflow does on your laptop you can simulate
 # it like this:
 #
-#    export GIT_DIFF=`git diff --name-only master... | grep 'content/files' | grep '\.html$'`
+#    export GIT_DIFF=`git diff --name-only master... | grep 'content/files' | grep -v '\.html$'`
 #    node content build --no-progressbar --files="${GIT_DIFF}"
 #
 # That way, you can behave on your laptop like, this action behaves here.
 
-name: PR Build
+# TODO: Consider calling this "Imagecheck"
+name: PR Filecheck
 
 on:
   pull_request:
@@ -26,9 +27,14 @@ jobs:
       - uses: technote-space/get-diff-action@v3
         id: git_diff_content
         with:
-          SEPARATOR: ","
-          SUFFIX_FILTER: .html
+          SUFFIX_FILTER: |
+            .png
+            .jpeg
+            .jpg
+            .gif
+            .svg
           PREFIX_FILTER: content/files/
+          ABSOLUTE: true
 
       - name: Setup Node.js environment
         if: steps.git_diff_content.outputs.diff
@@ -56,28 +62,12 @@ jobs:
 
       - name: Install all yarn packages
         if: steps.git_diff_content.outputs.diff
-        run: yarn --frozen-lockfile
+        run: |
+          cd filecheck
+          yarn --frozen-lockfile
 
-      - name: Build changed content
+      - name: Check changed files
         if: steps.git_diff_content.outputs.diff
         run: |
-          # Some day, when our number of flaws have reached 0 we'll change
-          # this to "*:error" which means the slightest flaw in the build
-          # will break the build.
-          # See https://github.com/mdn/yari/issues/715
-          export BUILD_FLAW_LEVELS="*:ignore"
-
-          # Note, it might be interesting to explore building *some*
-          # pages in a PR build if the diff doesn't have any index.html
-          # files changed.
-          # Instead of building the git diff, you build some known typical
-          # folders that you know don't take too long and do cover a lot
-          # of interesting macros etc.
-          # This way, when an edit to the source code comes in, perhaps the
-          # functional tests have a gap in them but actually building
-          # real content exposes it.
-
-          export BUILD_NO_PROGRESSBAR=true
-          export BUILD_FILES="${{ env.GIT_DIFF }}"
-          yarn prepare-build
-          yarn build
+          cd filecheck
+          yarn start ${{ env.GIT_DIFF }}

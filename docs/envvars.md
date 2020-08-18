@@ -50,6 +50,13 @@ folders you care about.
 When doing a batch build, it can be very time-consuming so just doing
 one or two sub-folders will speed things up.
 
+### `BUILD_FILES`
+
+**Default: `[]`**
+
+A comma or newline separated list of file paths. Can be absolute or relative
+to the `CONTENT_ROOT`.
+
 ### `BUILD_OUT_ROOT`
 
 **Default: `client/build`**
@@ -129,6 +136,12 @@ The base URL used in the Interactive Example iframes.
 
 Usually the `server` module is started with `foreman` (the `nf` command)
 and this is the default port.
+
+### `SERVER_STATIC_ROOT`
+
+**Default `../client/build`**
+
+If you want to serve static files some a completely different directory.
 
 ## Testing
 
