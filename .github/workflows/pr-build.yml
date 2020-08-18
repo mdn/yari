@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: technote-space/get-diff-action@v1
+      - uses: technote-space/get-diff-action@v3
         id: git_diff_content
         with:
           SEPARATOR: ","
