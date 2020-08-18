@@ -42,7 +42,9 @@ if (process.env.NODE_ENV === "development") {
 app = <React.StrictMode>{app}</React.StrictMode>;
 
 if (container.firstElementChild) {
-  ReactDOM.hydrate(app, container);
+  if (window.origin !== "https://translate.googleusercontent.com") {
+    ReactDOM.hydrate(app, container);
+  }
 } else {
   ReactDOM.render(app, container);
 }
