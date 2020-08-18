@@ -17,6 +17,7 @@ test("content built foo page", () => {
   // We should be able to read it and expect certain values
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.title).toBe("<foo>: A test tag");
+  expect(doc.pageTitle).toBe(`${doc.title} | MDN`);
   expect(doc.summary).toBe("This is a sample page");
   expect(doc.mdn_url).toBe("/en-US/docs/Web/Foo");
   expect(doc.source).toBeTruthy();
@@ -123,6 +124,28 @@ test("content built foo page", () => {
   expect($("link[rel=canonical]").attr("href")).toBe(
     `https://developer.mozilla.org${doc.mdn_url}`
   );
+});
+
+test("pageTitle on deeper docs within 'Web'", () => {
+  const { doc: parentDoc } = JSON.parse(
+    fs.readFileSync(
+      path.join(buildRoot, "en-us", "docs", "web", "api", "index.json")
+    )
+  );
+  const { doc } = JSON.parse(
+    fs.readFileSync(
+      path.join(
+        buildRoot,
+        "en-us",
+        "docs",
+        "web",
+        "api",
+        "page_visibility_api",
+        "index.json"
+      )
+    )
+  );
+  expect(doc.pageTitle).toBe(`${doc.title} - ${parentDoc.title} | MDN`);
 });
 
 test("content built interactiveexample page", () => {

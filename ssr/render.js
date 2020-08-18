@@ -38,7 +38,7 @@ export default function render(renderApp, doc) {
 
   if (doc) {
     // Use the doc's title instead
-    pageTitle = doc.title;
+    pageTitle = doc.pageTitle;
     canonicalURL += doc.mdn_url;
 
     // XXX We *could* just expose some absolute minimal here. Just enough
