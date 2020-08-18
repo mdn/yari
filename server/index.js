@@ -10,7 +10,7 @@ const {
   buildDocumentFromURL,
   buildLiveSamplePageFromURL,
 } = require("../build");
-const { CONTENT_ROOT, Redirect, Image } = require("../content");
+const { CONTENT_ROOT, Document, Redirect, Image } = require("../content");
 const { prepareDoc, renderHTML } = require("../ssr/dist/main");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
@@ -176,7 +176,15 @@ app.get("/*", async (req, res) => {
     if (redirectURL !== lookupURL) {
       return res.redirect(301, redirectURL + extraSuffix);
     }
-    return res.sendStatus(404);
+
+    // It doesn't resolve to a file on disk and it's not a redirect.
+    // Try to send a slightly better error at least.
+    return res
+      .status(404)
+      .send(
+        `From URL ${lookupURL} no folder on disk could be found. ` +
+          `Tried to find a folder called ${Document.urlToFolderPath(lookupURL)}`
+      );
   }
 
   prepareDoc(document);
