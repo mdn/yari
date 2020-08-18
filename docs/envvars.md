@@ -50,6 +50,13 @@ folders you care about.
 When doing a batch build, it can be very time-consuming so just doing
 one or two sub-folders will speed things up.
 
+### `BUILD_FILES`
+
+**Default: `[]`**
+
+A comma or newline separated list of file paths. Can be absolute or relative
+to the `CONTENT_ROOT`.
+
 ### `BUILD_OUT_ROOT`
 
 **Default: `client/build`**
