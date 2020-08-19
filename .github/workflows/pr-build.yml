@@ -32,7 +32,7 @@ jobs:
 
       - name: Setup Node.js environment
         if: steps.git_diff_content.outputs.diff
-        uses: actions/setup-node@v2-beta
+        uses: actions/setup-node@v2.1.1
         with:
           node-version: "12"
       - name: Display Node & Yarn version
