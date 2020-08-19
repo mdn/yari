@@ -142,7 +142,9 @@ const info = {
       get subpages() {
         return Document.findChildren(document.url, {
           metadata: true,
-        }).map((document) => info.getPage(document.url));
+        })
+          .map((document) => info.getPage(document.url))
+          .filter((p) => p && p.url);
       },
     };
   },
