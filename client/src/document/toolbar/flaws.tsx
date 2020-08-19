@@ -514,8 +514,8 @@ function Macros({
             </summary>
             <b>Context:</b>
             <pre>{msg.sourceContext}</pre>
-            <b>Original error message:</b>
-            <pre>{msg.errorMessage}</pre>
+            <b>Original error stack:</b>
+            <pre>{msg.errorStack}</pre>
             <b>Filepath:</b>{" "}
             {inPrerequisiteMacro && (
               <i className="macro-filepath-in-prerequisite">

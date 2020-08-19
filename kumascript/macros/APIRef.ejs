@@ -94,6 +94,9 @@ if (impl.length > 0) {
 }
 
 function APISort(a, b) {
+  if (!a.title || !b.title) {
+  console.log({a: a, b:b})
+  }
   var aSplit = a.title.split('.');
   var a = aSplit[aSplit.length - 1];
   var bSplit = b.title.split('.');

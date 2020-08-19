@@ -15,7 +15,8 @@ class SourceCodeError {
     // So it becomes available in JSON.stringfy when doing that on
     // instances of this class. Otherwise we'd need to monkey-patch
     // the `.toJSON` of `Error` which feels fragile.
-    this.errorMessage = error.message;
+    this.errorStack = error.stack;
+
     this.offset = 0;
     this.line = line;
     this.column = column;
@@ -28,7 +29,7 @@ class SourceCodeError {
     // Generates a unique key for this error.
     return [
       this.name,
-      this.errorMessage,
+      this.errorStack,
       this.line,
       this.column,
       this.filepath,

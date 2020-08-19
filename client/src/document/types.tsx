@@ -73,7 +73,7 @@ export interface MacroErrorMessage {
   error: {
     path?: string;
   };
-  errorMessage: string;
+  errorStack: string;
   line: number;
   column: number;
   filepath: string;
