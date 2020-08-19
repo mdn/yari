@@ -283,6 +283,7 @@ module.exports = {
   read,
   update,
   del,
+  urlToFolderPath,
 
   findByURL,
   findAll,

@@ -17,6 +17,8 @@ const { addBreadcrumbData } = require("./document-utils");
 const { fixFixableFlaws, injectFlaws } = require("./flaws");
 const { normalizeBCDURLs } = require("./bcd-urls");
 const { checkImageReferences } = require("./check-images");
+const { getPageTitle } = require("./page-title");
+const { syntaxHighlight } = require("./syntax-highlight");
 const cheerio = require("./monkeypatched-cheerio");
 const options = require("./build-options");
 
@@ -178,6 +180,9 @@ async function buildDocument(document) {
   // raw HTML string will be different.
   fixFixableFlaws(doc, options, document);
 
+  // Apply syntax highlighting all <pre> tags.
+  syntaxHighlight($, doc);
+
   // Post process HTML so that the right elements gets tagged so they
   // *don't* get translated by tools like Google Translate.
   injectNoTranslate($);
@@ -230,6 +235,8 @@ async function buildDocument(document) {
   // We can use that generate the necessary information needed to build
   // a breadcrumb in the React component.
   addBreadcrumbData(document.url, doc);
+
+  doc.pageTitle = getPageTitle(doc);
 
   return [doc, liveSamples, fileAttachments];
 }

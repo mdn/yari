@@ -15,7 +15,14 @@ const { HTMLTool } = require("./src/api/util.js");
 
 const renderFromURL = memoize(async (url) => {
   const prerequisiteErrorsByKey = new Map();
-  const { rawHTML, metadata, fileInfo } = Document.findByURL(url);
+  const document = Document.findByURL(url);
+  if (!document) {
+    throw new Error(
+      `From URL ${url} no folder on disk could be found. ` +
+        `Tried to find a folder called ${Document.urlToFolderPath(url)}`
+    );
+  }
+  const { rawHTML, metadata, fileInfo } = document;
   const [renderedHtml, errors] = await renderMacros(
     rawHTML,
     {
