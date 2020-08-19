@@ -252,6 +252,21 @@ class MacroLiveSampleError extends MacroExecutionError {
   }
 }
 
+/**
+ * A MacroPagesError is when we try to get other sub-pages in sidebars
+ * based on optimistically combining names to make URLs.
+ */
+class MacroPagesError extends MacroExecutionError {
+  constructor(error, source, token) {
+    super(error, source, token, true);
+    this.name = "MacroPagesError";
+    this.macroSource = source.slice(
+      token.location.start.offset,
+      token.location.end.offset
+    );
+  }
+}
+
 module.exports = {
   SourceCodeError,
   MacroInvocationError,
@@ -262,4 +277,5 @@ module.exports = {
   MacroBrokenLinkError,
   MacroDeprecatedError,
   MacroLiveSampleError,
+  MacroPagesError,
 };

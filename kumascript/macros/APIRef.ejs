@@ -88,16 +88,7 @@ collect(mainIFPages);
 
 if (impl.length > 0) {
   for (var i = 0; i < impl.length; i++) {
-    var implementPages
-    try {
-      implementPages = await page.subpagesExpand('/en-US/docs/Web/API/' + impl[i]);
-    } catch(error) {
-      console.warn("WHAT THE HECK!!!!!!!", '/en-US/docs/Web/API/' + impl[i], error.toString());
-      // The fact that `page.subpagesExpand()` crashes will be dealt with
-      // inside that function. For now, we just want to move on with the
-      // rest of the working pages.
-      continue;
-    }
+    var implementPages = await page.subpagesExpand('/en-US/docs/Web/API/' + impl[i]);
     collect(implementPages);
   }
 }

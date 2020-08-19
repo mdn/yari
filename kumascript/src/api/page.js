@@ -56,7 +56,23 @@ module.exports = {
   // the results
   //
   subpagesExpand(path, depth, self) {
-    return this.info.getChildren(path || this.env.url, self);
+    try {
+      return this.info.getChildren(path || this.env.url, self);
+    } catch (error) {
+      try {
+        flaw = this.env.recordNonFatalError(
+          "bad-pages",
+          `${path} could not be transformed into a document (${this.env.url}).`
+        );
+        console.log(flaw);
+      } catch (e) {
+        console.error(e);
+        throw e;
+      }
+      // We allow ourselves to be forgiving with this function because
+      // we justify it by the fact that at least we record a flaw!
+      return [];
+    }
   },
 
   // Flatten subPages list

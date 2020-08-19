@@ -52,6 +52,7 @@ const {
   MacroRedirectedLinkError,
   MacroBrokenLinkError,
   MacroDeprecatedError,
+  MacroPagesError,
 } = require("./errors.js");
 
 const defaultTemplates = new Templates();
@@ -115,6 +116,9 @@ async function render(
       NonFatalErrorClass = MacroBrokenLinkError;
     } else if (kind === "redirected-link") {
       NonFatalErrorClass = MacroRedirectedLinkError;
+      args.push(redirectInfo);
+    } else if (kind === "bad-pages") {
+      NonFatalErrorClass = MacroPagesError;
       args.push(redirectInfo);
     } else {
       throw Error(`unsupported kind of non-fatal error requested: "${kind}"`);

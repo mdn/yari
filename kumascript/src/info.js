@@ -125,15 +125,6 @@ const info = {
       // The macros expect an empty object if the URL does not exist, so
       // "throwIfDoesNotExist" should only be used within "info" itself.
       if (throwIfDoesNotExist) {
-        console.log("About to record a non-fatal flaw!");
-        flaw = this.env.recordNonFatalError(
-          "bad-page",
-          `${url} could not be transformed into a document.`
-        );
-        console.log(
-          "WARNING!!",
-          `${info.getDescription(url)} (url: ${url}) does not exist`
-        );
         throw new Error(
           `${info.getDescription(url)} (url: ${url}) does not exist`
         );
