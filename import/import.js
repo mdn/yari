@@ -579,7 +579,6 @@ async function queryDocuments(pool, options) {
       w.is_redirect,
       w.html,
       w.rendered_html,
-      w.summary_text AS summary,
       w.modified,
       p.id AS parent_id,
       p.slug AS parent_slug,
@@ -946,7 +945,7 @@ async function processDocument(
   localeWikiHistory,
   { usernames, contributors, tags }
 ) {
-  const { slug, locale, title, summary } = doc;
+  const { slug, locale, title } = doc;
 
   const docPath = path.join(locale, slug);
   if (startClean && allBuiltPaths.has(docPath)) {
@@ -958,7 +957,6 @@ async function processDocument(
   const meta = {
     title,
     slug,
-    summary,
     locale,
   };
   if (doc.parent_slug) {

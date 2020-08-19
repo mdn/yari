@@ -555,14 +555,6 @@ for (var characterIndex in characters) {
 
     for (var i = 0; i < index[character].length; i++) {
         var url = baseURL + index[character][i].urlPath;
-        /*
-        //var thisPage = await wiki.getPage(url);   Getting the summary this way is too slow
-        var summary = "";
-        if (thisPage && thisPage.summary) {
-            summary = mdn.escapeQuotes(thisPage.summary);
-        } else {
-            summary = mdn.getLocalString(localStrings, "summary");
-        }*/
         var summary = "";
         output += "<li><a href=\"" + url + "\"" +
             (summary ? " title=\"" + summary + "\"" : "") + "><code>" +

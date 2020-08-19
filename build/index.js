@@ -7,9 +7,10 @@ const kumascript = require("../kumascript");
 
 const { FLAW_LEVELS } = require("./constants");
 const {
-  extractDocumentSections,
+  extractSections,
   extractSidebar,
   extractTOC,
+  extractSummary,
 } = require("./document-extractor");
 const SearchIndex = require("./search-index");
 const { addBreadcrumbData } = require("./document-utils");
@@ -156,7 +157,6 @@ async function buildDocument(document) {
   $("span.alllinks").remove();
 
   doc.title = metadata.title;
-  doc.summary = metadata.summary;
   doc.mdn_url = document.url;
   if (metadata.translation_of) {
     doc.translation_of = metadata.translation_of;
@@ -187,13 +187,25 @@ async function buildDocument(document) {
   // *don't* get translated by tools like Google Translate.
   injectNoTranslate($);
 
-  doc.body = extractDocumentSections($);
+  // Turn the $ instance into an array of section blocks. Most of the
+  // section blocks are of type "prose" and their value is a string blob
+  // of HTML.
+  doc.body = extractSections($);
+
+  // The summary comes from the HTML and potentially the <h2>Summary</h2>
+  // section. It's always a plain text string.
+  doc.summary = extractSummary(doc.body);
 
   // Creates new mdn_url's for the browser-compatibility-table to link to
   // pages within this project rather than use the absolute URLs
   normalizeBCDURLs(doc, options);
 
-  doc.popularity = metadata.popularity;
+  // If the document has a `.popularity` make sure don't bother with too
+  // many significant figures on it.
+  doc.popularity = metadata.popularity
+    ? Number(metadata.popularity.toFixed(4))
+    : 0.0;
+
   doc.modified = metadata.modified || null;
 
   const otherTranslations = document.translations || [];
