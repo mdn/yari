@@ -79,6 +79,9 @@ function trimTitle(title) {
 
 function createLink(item) {
     var result = '';
+    if (!item.url) {
+        return '';
+    }
 
     var url = item.url.replace('en-US', locale);
     var title = htmlEscape(trimTitle(item.title));
