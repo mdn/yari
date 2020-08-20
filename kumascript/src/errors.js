@@ -16,7 +16,6 @@ class SourceCodeError {
     // instances of this class. Otherwise we'd need to monkey-patch
     // the `.toJSON` of `Error` which feels fragile.
     this.errorStack = error.stack;
-
     this.offset = 0;
     this.line = line;
     this.column = column;
@@ -29,7 +28,7 @@ class SourceCodeError {
     // Generates a unique key for this error.
     return [
       this.name,
-      this.errorStack,
+      this.error.message,
       this.line,
       this.column,
       this.filepath,
