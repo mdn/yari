@@ -77,7 +77,7 @@ test("content built foo page", () => {
     /\/en-us\/web\/fixable_flaws\/index\.html$/
   );
   expect(doc.flaws.macros[4].name).toBe("MacroExecutionError");
-  expect(doc.flaws.macros[4].errorMessage).toEqual(
+  expect(doc.flaws.macros[4].errorStack).toEqual(
     expect.stringContaining(
       '/en-us/docs/web/fubar references /en-us/docs/does-not-exist (derived from "does-not-exist"), which does not exist'
     )
@@ -92,7 +92,7 @@ test("content built foo page", () => {
     /\/en-us\/web\/fubar\/index\.html$/
   );
   expect(doc.flaws.macros[5].name).toBe("MacroExecutionError");
-  expect(doc.flaws.macros[5].errorMessage).toEqual(
+  expect(doc.flaws.macros[5].errorStack).toEqual(
     expect.stringContaining(
       "/en-us/docs/web/fubar references /en-us/docs/does/not/exist, which does not exist"
     )
