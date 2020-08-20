@@ -43,7 +43,6 @@ describe("testing the main render() function", () => {
           metadata: {
             title: "A",
             locale: "en-US",
-            summary: "This is the A test page.",
             slug: "Web/A",
             tags: ["Web"],
           },
@@ -58,7 +57,6 @@ describe("testing the main render() function", () => {
           metadata: {
             title: "B",
             locale: "en-US",
-            summary: "This is the B test page.",
             slug: "Web/B",
             tags: ["Web"],
           },
@@ -73,7 +71,6 @@ describe("testing the main render() function", () => {
           metadata: {
             title: "C",
             locale: "en-US",
-            summary: "This is the C test page.",
             slug: "Web/C",
             tags: ["Web"],
           },
@@ -88,7 +85,6 @@ describe("testing the main render() function", () => {
           metadata: {
             title: "<number>",
             locale: "en-US",
-            summary: "This is the number test page.",
             slug: "Web/Number",
             tags: ["Web", "CSS", "CSS Data Type", "Layout", "Reference"],
           },
@@ -143,8 +139,8 @@ describe("testing the main render() function", () => {
       "testing/content/files/en-us/web/b"
     );
     expect(errors[0]).toHaveProperty(
-      "errorMessage",
-      "/en-US/docs/Web/CSS/bigfoot does not exist"
+      "errorStack",
+      expect.stringContaining("/en-US/docs/Web/CSS/bigfoot does not exist")
     );
     expect(errors[0]).toHaveProperty("macroName", "cssxref");
     expect(errors[0]).toHaveProperty("macroSource", '{{cssxref("bigfoot")}}');
@@ -156,8 +152,8 @@ describe("testing the main render() function", () => {
       "testing/content/files/en-us/web/a"
     );
     expect(errors[1]).toHaveProperty(
-      "errorMessage",
-      "/en-US/docs/Web/CSS/bigfoot does not exist"
+      "errorStack",
+      expect.stringContaining("/en-US/docs/Web/CSS/bigfoot does not exist")
     );
     expect(errors[1]).toHaveProperty("macroName", "cssxref");
     expect(errors[1]).toHaveProperty("macroSource", '{{cssxref("bigfoot")}}');
@@ -170,8 +166,8 @@ describe("testing the main render() function", () => {
     );
     expect(errors[2]).toHaveProperty("macroName", "nonExistentMacro");
     expect(errors[2]).toHaveProperty(
-      "errorMessage",
-      "Unknown macro nonexistentmacro"
+      "errorStack",
+      expect.stringContaining("Unknown macro nonexistentmacro")
     );
     expect(errors[3]).toBeInstanceOf(MacroRedirectedLinkError);
     expect(errors[3]).toHaveProperty("line", 10);
@@ -181,8 +177,10 @@ describe("testing the main render() function", () => {
       "testing/content/files/en-us/web/a"
     );
     expect(errors[3]).toHaveProperty(
-      "errorMessage",
-      "/en-US/docs/Web/CSS/dumber redirects to /en-US/docs/Web/CSS/number"
+      "errorStack",
+      expect.stringContaining(
+        "/en-US/docs/Web/CSS/dumber redirects to /en-US/docs/Web/CSS/number"
+      )
     );
     expect(errors[3]).toHaveProperty("macroName", "cssxref");
     expect(errors[3]).toHaveProperty("macroSource", '{{cssxref("dumber")}}');
@@ -197,8 +195,10 @@ describe("testing the main render() function", () => {
     );
     expect(errors[4]).toHaveProperty("macroName", "fx_minversion_header");
     expect(errors[4]).toHaveProperty(
-      "errorMessage",
-      "This macro has been deprecated, and should be removed."
+      "errorStack",
+      expect.stringContaining(
+        "This macro has been deprecated, and should be removed."
+      )
     );
     expect(errors[5]).toBeInstanceOf(MacroDeprecatedError);
     expect(errors[5]).toHaveProperty("line", 13);
@@ -209,8 +209,10 @@ describe("testing the main render() function", () => {
     );
     expect(errors[5]).toHaveProperty("macroName", "fx_minversion_inline");
     expect(errors[5]).toHaveProperty(
-      "errorMessage",
-      "This macro has been deprecated, and should be removed."
+      "errorStack",
+      expect.stringContaining(
+        "This macro has been deprecated, and should be removed."
+      )
     );
     expect(errors[6]).toBeInstanceOf(MacroDeprecatedError);
     expect(errors[6]).toHaveProperty("line", 14);
@@ -221,8 +223,10 @@ describe("testing the main render() function", () => {
     );
     expect(errors[6]).toHaveProperty("macroName", "gecko_minversion_header");
     expect(errors[6]).toHaveProperty(
-      "errorMessage",
-      "This macro has been deprecated, and should be removed."
+      "errorStack",
+      expect.stringContaining(
+        "This macro has been deprecated, and should be removed."
+      )
     );
     expect(errors[7]).toBeInstanceOf(MacroDeprecatedError);
     expect(errors[7]).toHaveProperty("line", 15);
@@ -233,8 +237,10 @@ describe("testing the main render() function", () => {
     );
     expect(errors[7]).toHaveProperty("macroName", "gecko_minversion_inline");
     expect(errors[7]).toHaveProperty(
-      "errorMessage",
-      "This macro has been deprecated, and should be removed."
+      "errorStack",
+      expect.stringContaining(
+        "This macro has been deprecated, and should be removed."
+      )
     );
     expect(errors[8]).toBeInstanceOf(MacroExecutionError);
     expect(errors[8]).toHaveProperty("line", 16);
@@ -245,7 +251,7 @@ describe("testing the main render() function", () => {
     );
     expect(errors[8]).toHaveProperty("macroName", "page");
     expect(errors[8]).toHaveProperty(
-      "errorMessage",
+      "errorStack",
       expect.stringContaining(
         "/en-us/docs/web/a references bogus, which does not exist"
       )
@@ -259,7 +265,7 @@ describe("testing the main render() function", () => {
     );
     expect(errors[9]).toHaveProperty("macroName", "page");
     expect(errors[9]).toHaveProperty(
-      "errorMessage",
+      "errorStack",
       expect.stringContaining(
         'unable to find an HTML element with an "id" of "bogus-section" within /en-us/docs/web/b'
       )
