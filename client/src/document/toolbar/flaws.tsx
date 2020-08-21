@@ -6,7 +6,7 @@ import { RoughAnnotation } from "rough-notation/lib/model";
 import { humanizeFlawName } from "../../flaw-utils";
 import {
   Doc,
-  Link,
+  BrokenLink,
   MacroErrorMessage,
   BadBCDLink,
   ImageReferenceFlaw,
@@ -222,7 +222,7 @@ function BrokenLinks({
   links,
 }: {
   sourceFolder: string;
-  links: Link[];
+  links: BrokenLink[];
 }) {
   const [opening, setOpening] = React.useState<string | null>(null);
   useEffect(() => {
@@ -241,13 +241,6 @@ function BrokenLinks({
 
   const filepath = sourceFolder + "/index.html";
 
-  function equalUrls(url1: string, url2: string) {
-    return (
-      new URL(url1, "http://example.com").pathname ===
-      new URL(url2, "http://example.com").pathname
-    );
-  }
-
   function openInEditor(key: string, line: number, column: number) {
     const sp = new URLSearchParams();
     sp.set("filepath", filepath);
@@ -262,54 +255,7 @@ function BrokenLinks({
     });
   }
 
-  useEffect(() => {
-    const annotations: RoughAnnotation[] = [];
-
-    let linkIndex = 0;
-    for (const anchor of [
-      ...document.querySelectorAll<HTMLAnchorElement>("div.content a[href]"),
-    ]) {
-      const link = links[linkIndex];
-      if (!link) {
-        break;
-      }
-      // A `anchor.href` is always absolute with `http//localhost/...`.
-      // But `link.href` is not necessarily so, but it might.
-      // The only "hashing" that matters is the pathname.
-      if (!equalUrls(anchor.href, link.href)) {
-        continue;
-      }
-      linkIndex++;
-      const annotationColor = link.suggestion ? "orange" : "red";
-      anchor.dataset.originalTitle = anchor.title;
-      anchor.title = link.suggestion
-        ? `Consider fixing! Suggestion: ${link.suggestion}`
-        : "Broken link! Links to a page that will not be found";
-      annotations.push(
-        annotate(anchor, {
-          type: "box",
-          color: annotationColor,
-          animationDuration: 300,
-        })
-      );
-    }
-
-    const ag = annotationGroup(annotations);
-    ag.show();
-
-    return () => {
-      ag.hide();
-
-      // Now, restore any 'title' attributes that were overridden.
-      for (const anchor of Array.from(
-        document.querySelectorAll<HTMLAnchorElement>(`div.content a`)
-      )) {
-        if (anchor.dataset.originalTitle !== undefined) {
-          anchor.title = anchor.dataset.originalTitle;
-        }
-      }
-    };
-  }, [links]);
+  const { focus } = useAnnotations(links);
 
   return (
     <div className="flaw flaw__broken_links">
@@ -339,51 +285,7 @@ function BrokenLinks({
                 title="Click to highlight broken link anchor"
                 style={{ cursor: "zoom-in" }}
                 onClick={() => {
-                  const annotations: RoughAnnotation[] = [];
-
-                  let linkIndex = 0;
-                  for (const anchor of [
-                    ...document.querySelectorAll<HTMLAnchorElement>(
-                      "div.content a[href]"
-                    ),
-                  ]) {
-                    const link = links[linkIndex];
-                    if (!link) {
-                      break;
-                    }
-                    if (!equalUrls(anchor.href, link.href)) {
-                      continue;
-                    }
-
-                    if (i === linkIndex) {
-                      anchor.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                      });
-
-                      if (anchor.parentElement) {
-                        annotations.push(
-                          annotate(anchor, {
-                            type: "circle",
-                            color: "purple",
-                            animationDuration: 500,
-                            strokeWidth: 2,
-                            padding: 6,
-                          })
-                        );
-                      }
-                    }
-                    linkIndex++;
-                  }
-
-                  if (annotations.length) {
-                    const ag = annotationGroup(annotations);
-                    ag.show();
-                    // Only show this extra highlight temporarily
-                    window.setTimeout(() => {
-                      ag.hide();
-                    }, 2000);
-                  }
+                  focus(link.id);
                 }}
               >
                 👀

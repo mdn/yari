@@ -3,7 +3,13 @@ export interface Source {
   folder: string;
 }
 
-export interface Link {
+export interface GenericFlaw {
+  id: string;
+  explanation: string;
+  suggestion: string | null;
+}
+
+export interface BrokenLink extends GenericFlaw {
   href: string;
   line: number;
   column: number;
@@ -18,12 +24,6 @@ export interface BadBCDLink {
   key: string;
 }
 
-export interface GenericFlaw {
-  id: string;
-  explanation: string;
-  suggestion: string | null;
-}
-
 export interface ImageReferenceFlaw extends GenericFlaw {
   src: string;
   line: number;
@@ -32,7 +32,7 @@ export interface ImageReferenceFlaw extends GenericFlaw {
 }
 
 type Flaws = {
-  broken_links: Link[];
+  broken_links: BrokenLink[];
   macros: MacroErrorMessage[];
   bad_bcd_queries: string[];
   bad_bcd_links: BadBCDLink[];
