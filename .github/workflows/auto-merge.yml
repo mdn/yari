@@ -9,5 +9,3 @@ jobs:
     if: github.actor == 'dependabot[bot]'
     steps:
       - uses: ahmadnassri/action-dependabot-auto-merge@v1
-        with:
-          github-token: ${{ github.token }}
