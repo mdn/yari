@@ -191,6 +191,34 @@ function fixFixableFlaws(doc, options, document) {
     }
   }
 
+  // Any 'images' flaws with a suggestion...
+  for (const flaw of doc.flaws.images || []) {
+    if (!flaw.suggestion) {
+      continue;
+    }
+    // The reason we're not using the parse HTML, as a cheerio object `$`
+    // is because the raw HTML we're dealing with isn't actually proper
+    // HTML. It's only proper HTML when the kumascript macros have been
+    // expanded.
+    const htmlBefore = newRawHTML;
+    newRawHTML = replaceMatchesInText(flaw.src, newRawHTML, flaw.suggestion, {
+      inAttribute: "src",
+    });
+    if (htmlBefore !== newRawHTML) {
+      flaw.fixed = true;
+    }
+    if (loud) {
+      console.log(
+        chalk.grey(
+          `Fixed image ${chalk.white.bold(flaw.src)} to ${chalk.white.bold(
+            flaw.suggestion
+          )}`
+        )
+      );
+    }
+  }
+
+  // Finally, summarized what happened...
   if (newRawHTML !== document.rawHTML) {
     // It changed the raw HTML of the source. So deal with this.
     if (options.fixFlawsDryRun) {
