@@ -18,7 +18,8 @@
     "start": "yarn build:client && yarn build:ssr && nf start",
     "start:client": "cd client && cross-env BROWSER=none PORT=3000 react-scripts start",
     "start:dev-server": "nodemon server --watch server --watch build --watch content --watch kumascript",
-    "start:static-server": "cross-env ENV_FILE=testing/.env node server/static.js"
+    "start:static-server": "cross-env ENV_FILE=testing/.env node server/static.js",
+    "filecheck": "cd filecheck && yarn start"
   },
   "engines": {
     "node": ">=12.0.0"
@@ -33,7 +34,7 @@
     "cssesc": "^3.0.0",
     "dotenv": "8.2.0",
     "downshift": "^5.4.7",
-    "ejs": "3.1.3",
+    "ejs": "3.1.5",
     "express": "4.17.1",
     "express-http-proxy": "1.6.2",
     "flexsearch": "0.6.32",
@@ -59,7 +60,7 @@
     "sanitize-filename": "^1.6.3",
     "sockette": "^2.0.6",
     "source-map-support": "0.5.19",
-    "swr": "0.2.3",
+    "swr": "0.3.1",
     "ts-loader": "^8.0.2",
     "typeface-zilla-slab": "0.0.72",
     "typescript": "^3.9.7",
@@ -88,7 +89,7 @@
     "nodemon": "2.0.4",
     "pegjs": "^0.10.0",
     "prettier": "2.0.5",
-    "pretty-quick": "2.0.1",
+    "pretty-quick": "3.0.0",
     "puppeteer": "2",
     "tempy": "0.6.0",
     "vnu-jar": "^20.6.30"

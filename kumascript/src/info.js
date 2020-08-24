@@ -125,7 +125,9 @@ const info = {
       // The macros expect an empty object if the URL does not exist, so
       // "throwIfDoesNotExist" should only be used within "info" itself.
       if (throwIfDoesNotExist) {
-        throw new Error(`${info.getDescription(url)} does not exist`);
+        throw new Error(
+          `${info.getDescription(url)} (url: ${url}) does not exist`
+        );
       }
       return {};
     }
@@ -142,7 +144,9 @@ const info = {
       get subpages() {
         return Document.findChildren(document.url, {
           metadata: true,
-        }).map((document) => info.getPage(document.url));
+        })
+          .map((document) => info.getPage(document.url))
+          .filter((p) => p && p.url);
       },
     };
   },

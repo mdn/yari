@@ -35,7 +35,6 @@ function buildSublist(pages, title, ignoreBadges) {
 
   for (var i in pages) {
     var aPage = pages[i];
-    var summary = escapeQuotes(aPage.summary) || '';
     var url = aPage.url.replace('en-US', locale);
     var title = htmlEscape(aPage.title);
 
@@ -49,7 +48,6 @@ function buildSublist(pages, title, ignoreBadges) {
     if (locale != 'en-US') {
         aPage.translations.forEach(function(translation) {
             if(translation.locale === locale) {
-                summary = escapeQuotes(translation.summary) || '';
                 url = translation.url;
                 title = htmlEscape(translation.title);
                 translated = true;
@@ -92,7 +90,7 @@ function buildSublist(pages, title, ignoreBadges) {
     if (slug == aPage.slug) {
         result += '<em><code>' + apiComponentName + '</code></em>'
     } else {
-        result += '<a href="' + url + '" title="' + summary + '"><code>' + apiComponentName + '</code></a>' + cta;
+        result += '<a href="' + url + '"><code>' + apiComponentName + '</code></a>' + cta;
     }
 
     if (rtlLocales.indexOf(locale) != -1) {

@@ -288,8 +288,7 @@ async function buildLink(match, type) {
             title = typeInfo[type].title;
         } else {
             let page = await localWiki.getPage(link);
-            title = (page && page.summary) ? escapeQuotes(page.summary) :
-                localize(commonLocalStrings, "summary");
+            title = "";
         }
 
     // Handle types which we want to describe using a link to a different page

@@ -17,17 +17,18 @@ test("content built foo page", () => {
   // We should be able to read it and expect certain values
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.title).toBe("<foo>: A test tag");
-  expect(doc.summary).toBe("This is a sample page");
+  expect(doc.pageTitle).toBe(`${doc.title} | MDN`);
+  expect(doc.summary).toBe("This becomes the summary.");
   expect(doc.mdn_url).toBe("/en-US/docs/Web/Foo");
   expect(doc.source).toBeTruthy();
 
   expect(doc.flaws.macros.length).toBe(6);
   expect(doc.flaws.macros[0].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[0].macroSource).toBe("{{CSSxRef('dumber')}}");
-  expect(doc.flaws.macros[0].line).toBe(9);
+  expect(doc.flaws.macros[0].line).toBe(8);
   expect(doc.flaws.macros[0].column).toBe(7);
   expect(doc.flaws.macros[0].sourceContext).toEqual(
-    expect.stringContaining("    9 |   <li>{{CSSxRef('dumber')}}</li>")
+    expect.stringContaining("<li>{{CSSxRef('dumber')}}</li>")
   );
   expect(doc.flaws.macros[0].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[0].redirectInfo.current).toBe("dumber");
@@ -39,12 +40,10 @@ test("content built foo page", () => {
   expect(doc.flaws.macros[1].macroSource).toBe(
     '{{htmlattrxref("href", "anchor")}}'
   );
-  expect(doc.flaws.macros[1].line).toBe(10);
+  expect(doc.flaws.macros[1].line).toBe(9);
   expect(doc.flaws.macros[1].column).toBe(7);
   expect(doc.flaws.macros[1].sourceContext).toEqual(
-    expect.stringContaining(
-      '   10 |   <li>{{htmlattrxref("href", "anchor")}}</li>'
-    )
+    expect.stringContaining('<li>{{htmlattrxref("href", "anchor")}}</li>')
   );
   expect(doc.flaws.macros[1].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[1].redirectInfo.current).toBe("anchor");
@@ -56,24 +55,20 @@ test("content built foo page", () => {
   expect(doc.flaws.macros[2].macroSource).toBe(
     '{{CSSxRef("will-never-be-fixable")}}'
   );
-  expect(doc.flaws.macros[2].line).toBe(11);
+  expect(doc.flaws.macros[2].line).toBe(10);
   expect(doc.flaws.macros[2].column).toBe(7);
   expect(doc.flaws.macros[2].sourceContext).toEqual(
-    expect.stringContaining(
-      '   11 |   <li>{{CSSxRef("will-never-be-fixable")}}</li>'
-    )
+    expect.stringContaining('<li>{{CSSxRef("will-never-be-fixable")}}</li>')
   );
   expect(doc.flaws.macros[2].filepath).toMatch(
     /\/en-us\/web\/fixable_flaws\/index\.html$/
   );
   expect(doc.flaws.macros[3].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[3].macroSource).toBe("{{CSSxRef('dumber')}}");
-  expect(doc.flaws.macros[3].line).toBe(12);
+  expect(doc.flaws.macros[3].line).toBe(11);
   expect(doc.flaws.macros[3].column).toBe(7);
   expect(doc.flaws.macros[3].sourceContext).toEqual(
-    expect.stringContaining(
-      "   12 |   <li>{{CSSxRef('dumber')}} second time!</li>"
-    )
+    expect.stringContaining("<li>{{CSSxRef('dumber')}} second time!</li>")
   );
   expect(doc.flaws.macros[3].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[3].redirectInfo.current).toBe("dumber");
@@ -82,32 +77,32 @@ test("content built foo page", () => {
     /\/en-us\/web\/fixable_flaws\/index\.html$/
   );
   expect(doc.flaws.macros[4].name).toBe("MacroExecutionError");
-  expect(doc.flaws.macros[4].errorMessage).toEqual(
+  expect(doc.flaws.macros[4].errorStack).toEqual(
     expect.stringContaining(
       '/en-us/docs/web/fubar references /en-us/docs/does-not-exist (derived from "does-not-exist"), which does not exist'
     )
   );
-  expect(doc.flaws.macros[4].line).toBe(11);
+  expect(doc.flaws.macros[4].line).toBe(10);
   expect(doc.flaws.macros[4].column).toBe(6);
   // Check that the line numbers in the source context have been adjusted by the offset.
   expect(doc.flaws.macros[4].sourceContext).toEqual(
-    expect.stringContaining('   11 | <div>{{page("does-not-exist")}}</div>')
+    expect.stringContaining('<div>{{page("does-not-exist")}}</div>')
   );
   expect(doc.flaws.macros[4].filepath).toMatch(
     /\/en-us\/web\/fubar\/index\.html$/
   );
   expect(doc.flaws.macros[5].name).toBe("MacroExecutionError");
-  expect(doc.flaws.macros[5].errorMessage).toEqual(
+  expect(doc.flaws.macros[5].errorStack).toEqual(
     expect.stringContaining(
       "/en-us/docs/web/fubar references /en-us/docs/does/not/exist, which does not exist"
     )
   );
-  expect(doc.flaws.macros[5].line).toBe(12);
+  expect(doc.flaws.macros[5].line).toBe(11);
   expect(doc.flaws.macros[5].column).toBe(6);
   // Check that the line numbers in the source context have been adjusted by the offset.
   expect(doc.flaws.macros[5].sourceContext).toEqual(
     expect.stringContaining(
-      `   12 | <div>{{ EmbedLiveSample('example', '300', '300', "", "does/not/exist") }}</div>`
+      `<div>{{ EmbedLiveSample('example', '300', '300', "", "does/not/exist") }}</div>`
     )
   );
   expect(doc.flaws.macros[5].filepath).toMatch(
@@ -118,11 +113,63 @@ test("content built foo page", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
 
+  expect($('meta[name="description"]').attr("content")).toBe(
+    "This becomes the summary."
+  );
+
   // Every page, should have a `link[rel=canonical]` whose `href` always
   // starts with 'https://developer.mozilla.org' and ends with doc's URL.
   expect($("link[rel=canonical]").attr("href")).toBe(
     `https://developer.mozilla.org${doc.mdn_url}`
   );
+});
+
+test("summary extracted correctly by span class", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "seo_summarized"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  expect(fs.existsSync(jsonFile)).toBeTruthy();
+
+  // We should be able to read it and expect certain values
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.summary).toBe("This is going to be the summary.");
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  expect($('meta[name="description"]').attr("content")).toBe(
+    "This is going to be the summary."
+  );
+});
+
+test("pageTitle on deeper docs within 'Web'", () => {
+  const { doc: parentDoc } = JSON.parse(
+    fs.readFileSync(
+      path.join(buildRoot, "en-us", "docs", "web", "api", "index.json")
+    )
+  );
+  const { doc } = JSON.parse(
+    fs.readFileSync(
+      path.join(
+        buildRoot,
+        "en-us",
+        "docs",
+        "web",
+        "api",
+        "page_visibility_api",
+        "index.json"
+      )
+    )
+  );
+  expect(doc.pageTitle).toBe(`${doc.title} - ${parentDoc.title} | MDN`);
 });
 
 test("content built interactiveexample page", () => {
@@ -187,7 +234,7 @@ test("content built bar page", () => {
   // We should be able to read it and expect certain values
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.title).toBe("bar: A collection of xref macro calls");
-  expect(doc.summary).toBe("This is the Bar test page.");
+  expect(doc.summary).toBe("Here is the summary of the document.");
   expect(doc.mdn_url).toBe("/en-US/docs/Web/Bar");
   // expect(doc.popularity).toBe(0.51);
   // expect(doc.modified).toBeTruthy();
@@ -195,22 +242,22 @@ test("content built bar page", () => {
   expect(doc.flaws.macros.length).toBe(12);
   expect(doc.flaws.macros[0].name).toBe("MacroBrokenLinkError");
   expect(doc.flaws.macros[0].macroSource).toBe('{{CSSxRef("bigfoot")}}');
-  expect(doc.flaws.macros[0].line).toBe(10);
+  expect(doc.flaws.macros[0].line).toBe(9);
   expect(doc.flaws.macros[0].column).toBe(6);
   expect(doc.flaws.macros[1].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[1].macroSource).toBe('{{CSSxRef("dumber")}}');
-  expect(doc.flaws.macros[1].line).toBe(11);
+  expect(doc.flaws.macros[1].line).toBe(10);
   expect(doc.flaws.macros[1].column).toBe(6);
   expect(doc.flaws.macros[1].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[1].redirectInfo.current).toBe("dumber");
   expect(doc.flaws.macros[1].redirectInfo.suggested).toBe("number");
   expect(doc.flaws.macros[2].name).toBe("MacroBrokenLinkError");
   expect(doc.flaws.macros[2].macroSource).toBe('{{DOMxRef("bigfoot")}}');
-  expect(doc.flaws.macros[2].line).toBe(13);
+  expect(doc.flaws.macros[2].line).toBe(12);
   expect(doc.flaws.macros[2].column).toBe(6);
   expect(doc.flaws.macros[3].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[3].macroSource).toBe('{{DOMxRef("Bob")}}');
-  expect(doc.flaws.macros[3].line).toBe(14);
+  expect(doc.flaws.macros[3].line).toBe(13);
   expect(doc.flaws.macros[3].column).toBe(6);
   expect(doc.flaws.macros[3].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[3].redirectInfo.current).toBe("Bob");
@@ -219,52 +266,52 @@ test("content built bar page", () => {
   expect(doc.flaws.macros[4].macroSource).toBe(
     '{{htmlattrxref("href", "bigfoot")}}'
   );
-  expect(doc.flaws.macros[4].line).toBe(16);
+  expect(doc.flaws.macros[4].line).toBe(15);
   expect(doc.flaws.macros[4].column).toBe(6);
   expect(doc.flaws.macros[5].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[5].macroSource).toBe(
     '{{htmlattrxref("href", "anchor")}}'
   );
-  expect(doc.flaws.macros[5].line).toBe(17);
+  expect(doc.flaws.macros[5].line).toBe(16);
   expect(doc.flaws.macros[5].column).toBe(6);
   expect(doc.flaws.macros[5].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[5].redirectInfo.current).toBe("anchor");
   expect(doc.flaws.macros[5].redirectInfo.suggested).toBe("a");
   expect(doc.flaws.macros[6].name).toBe("MacroBrokenLinkError");
   expect(doc.flaws.macros[6].macroSource).toBe('{{jsxref("bigfoot")}}');
-  expect(doc.flaws.macros[6].line).toBe(19);
+  expect(doc.flaws.macros[6].line).toBe(18);
   expect(doc.flaws.macros[6].column).toBe(6);
   expect(doc.flaws.macros[7].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[7].macroSource).toBe('{{jsxref("Stern_mode")}}');
-  expect(doc.flaws.macros[7].line).toBe(20);
+  expect(doc.flaws.macros[7].line).toBe(19);
   expect(doc.flaws.macros[7].column).toBe(6);
   expect(doc.flaws.macros[7].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[7].redirectInfo.current).toBe("Stern_mode");
   expect(doc.flaws.macros[7].redirectInfo.suggested).toBe("Strict_mode");
   expect(doc.flaws.macros[8].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[8].macroSource).toBe('{{jsxref("Flag")}}');
-  expect(doc.flaws.macros[8].line).toBe(22);
+  expect(doc.flaws.macros[8].line).toBe(21);
   expect(doc.flaws.macros[8].column).toBe(6);
   expect(doc.flaws.macros[8].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[8].redirectInfo.current).toBe("Flag");
   expect(doc.flaws.macros[8].redirectInfo.suggested).toBe("Boolean");
   expect(doc.flaws.macros[9].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[9].macroSource).toBe("{{ jsxref('Flag') }}");
-  expect(doc.flaws.macros[9].line).toBe(23);
+  expect(doc.flaws.macros[9].line).toBe(22);
   expect(doc.flaws.macros[9].column).toBe(6);
   expect(doc.flaws.macros[9].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[9].redirectInfo.current).toBe("Flag");
   expect(doc.flaws.macros[9].redirectInfo.suggested).toBe("Boolean");
   expect(doc.flaws.macros[10].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[10].macroSource).toBe('{{JSXref("Flag")}}');
-  expect(doc.flaws.macros[10].line).toBe(24);
+  expect(doc.flaws.macros[10].line).toBe(23);
   expect(doc.flaws.macros[10].column).toBe(6);
   expect(doc.flaws.macros[10].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[10].redirectInfo.current).toBe("Flag");
   expect(doc.flaws.macros[10].redirectInfo.suggested).toBe("Boolean");
   expect(doc.flaws.macros[11].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[11].macroSource).toBe('{{JSXref("Flag")}}');
-  expect(doc.flaws.macros[11].line).toBe(25);
+  expect(doc.flaws.macros[11].line).toBe(24);
   expect(doc.flaws.macros[11].column).toBe(6);
   expect(doc.flaws.macros[11].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[11].redirectInfo.current).toBe("Flag");
@@ -296,9 +343,6 @@ test("content built bar page", () => {
 
   const numberLinks = $('a[href="/en-US/docs/Web/CSS/number"]');
   expect(numberLinks.length).toEqual(2);
-  numberLinks.each((index, element) => {
-    expect($(element).attr("title")).toBe("This is the number test page.");
-  });
   expect(numberLinks.eq(0).text()).toBe("<dumber>");
   expect(numberLinks.eq(0).data("flaw-src")).toBe('{{CSSxRef("dumber")}}');
   expect(numberLinks.eq(1).text()).toBe("<number>");
@@ -369,7 +413,7 @@ test("broken links flaws", () => {
   // Map them by 'href'
   const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
-  expect(map.get("/en-US/docs/Web/CSS/dumber").line).toBe(11);
+  expect(map.get("/en-US/docs/Web/CSS/dumber").line).toBe(10);
   expect(map.get("/en-US/docs/Web/CSS/dumber").column).toBe(13);
   expect(
     map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob").suggestion
@@ -465,25 +509,33 @@ test("image flaws", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.images.length).toBe(7);
+  expect(flaws.images.length).toBe(8);
   const map = new Map(flaws.images.map((x) => [x.src, x]));
 
-  let flaw = map.get("idontexist.png");
+  let flaw = map.get(
+    "https://www.peterbe.com/static/images/howsmywifi-scr.png"
+  );
+  expect(flaw.explanation).toBe("External image URL");
+  expect(flaw.suggestion).toBeNull();
+  expect(flaw.line).toBe(19);
+  expect(flaw.column).toBe(13);
+
+  flaw = map.get("idontexist.png");
   expect(flaw.explanation).toBe("File not present on disk");
   expect(flaw.suggestion).toBeNull();
-  expect(flaw.line).toBe(35);
+  expect(flaw.line).toBe(34);
   expect(flaw.column).toBe(13);
 
   flaw = map.get("/en-US/docs/Web/Images/florian.png");
   expect(flaw.explanation).toBe("Pathname should be relative to document");
   expect(flaw.suggestion).toBe("florian.png");
-  expect(flaw.line).toBe(40);
+  expect(flaw.line).toBe(39);
   expect(flaw.column).toBe(13);
 
   flaw = map.get("Florian.PNG");
   expect(flaw.explanation).toBe("Pathname should always be lowercase");
   expect(flaw.suggestion).toBe("florian.png");
-  expect(flaw.line).toBe(45);
+  expect(flaw.line).toBe(44);
   expect(flaw.column).toBe(13);
 
   flaw = map.get("http://www.peterbe.com/static/images/favicon-32.png");
@@ -491,27 +543,27 @@ test("image flaws", () => {
   expect(flaw.suggestion).toBe(
     "https://www.peterbe.com/static/images/favicon-32.png"
   );
-  expect(flaw.line).toBe(50);
+  expect(flaw.line).toBe(49);
   expect(flaw.column).toBe(13);
 
   flaw = map.get(
-    "https://developer.mozilla.org/en-US/docs/Web/Foo/screenshot.png"
+    "https://developer.mozilla.org/en-US/docs/Web/Images/screenshot.png"
   );
   expect(flaw.explanation).toBe("Unnecessarily absolute URL");
-  expect(flaw.suggestion).toBe("/en-US/docs/Web/Foo/screenshot.png");
-  expect(flaw.line).toBe(55);
+  expect(flaw.suggestion).toBe("screenshot.png");
+  expect(flaw.line).toBe(54);
   expect(flaw.column).toBe(13);
 
   flaw = map.get("/en-US/docs/Web/Foo/screenshot.png");
   expect(flaw.explanation).toBe("Pathname should be relative to document");
   expect(flaw.suggestion).toBe("../Foo/screenshot.png");
-  expect(flaw.line).toBe(60);
+  expect(flaw.line).toBe(59);
   expect(flaw.column).toBe(13);
 
   flaw = map.get("../Foo/nonexistent.png");
   expect(flaw.explanation).toBe("File not present on disk");
   expect(flaw.suggestion).toBeNull();
-  expect(flaw.line).toBe(65);
+  expect(flaw.line).toBe(64);
   expect(flaw.column).toBe(13);
 
   const htmlFile = path.join(builtFolder, "index.html");

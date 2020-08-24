@@ -159,7 +159,6 @@ function buildSublist(pages, title, opened) {
     var aPage = pages[i];
     result += '<li>';
 
-    var summary = escapeQuotes(aPage.summary) || '';
     var url = aPage.url.replace('en-US', locale);
     var title = aPage.title;
     var translated = false;
@@ -167,7 +166,6 @@ function buildSublist(pages, title, opened) {
     if (locale != 'en-US') {
         aPage.translations.forEach(function(translation){
             if(translation.locale === locale) {
-                summary = escapeQuotes(translation.summary) || '';
                 url = translation.url;
                 title = translation.title;
                 translated = true;
@@ -206,7 +204,6 @@ function buildSublist(pages, title, opened) {
     } else {
         result += '<a href="'
                + url
-               + '" title="' + summary
                + '"><code>' + title + '</code></a>' + cta;
     }
 

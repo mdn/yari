@@ -18,12 +18,14 @@ var csscl  = $0 && $0.css ? $0.css : "";
 var pages  = page.subPagesFlatten(await page.subpagesExpand(URL, 2));
 var locale = env.locale;
 
-// Retrieve locale pages when accurate and simplify the data model {url, title, summary}
+// Retrieve locale pages when accurate and simplify the data model {url, title}
 pages = pages.map(function (p) {
+    if (!p.url) {
+        return;
+    }
     var result = {
         url    : p.url.replace('en-US', locale),
         title  : p.title,
-        summary: mdn.escapeQuotes(p.summary)
     };
 
     if (locale !== 'en-US' && Array.isArray(p.translations)) {
@@ -32,7 +34,6 @@ pages = pages.map(function (p) {
                 result = {
                     url    : loc.url,
                     title  : loc.title,
-                    summary: mdn.escapeQuotes(loc.summary)
                 };
 
                 return true;
@@ -43,6 +44,8 @@ pages = pages.map(function (p) {
     }
 
     return result;
+}).filter(function(p) {
+    return p;
 });
 
 var UCKeys = pages.map(function (p) { return p.title; });
@@ -108,14 +111,14 @@ for (i = 0, l = list.length; i < l; i++) {
 <%
         }
     }
-    
+
     else if (i === 0) {
 %>
     <ul class="<%= csscl %>">
 <%
     }
 %>
-        <li><a href="<%- list[i].url %>" title="<%- list[i].summary %>"><%= list[i].title %></a></li>
+        <li><a href="<%- list[i].url %>" title="<%- list[i].summary || '' %>"><%= list[i].title %></a></li>
 <%
     if (i === l-1) {
 %>

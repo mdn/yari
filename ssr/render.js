@@ -45,15 +45,27 @@ export default function render(renderApp, doc) {
   let pageTitle = "MDN Web Docs"; // default
   let canonicalURL = "https://developer.mozilla.org";
 
+  let pageDescription = "";
+
   if (doc) {
     // Use the doc's title instead
-    pageTitle = doc.title;
+    pageTitle = doc.pageTitle;
     canonicalURL += doc.mdn_url;
+
+    if (doc.summary) {
+      pageDescription = doc.summary;
+    }
 
     const documentDataTag = `<script>window.__data__ = JSON.parse(${serializeDocumentData(
       doc
     )});</script>`;
     $("#root").after(documentDataTag);
+  }
+
+  if (pageDescription) {
+    // This overrides the default description. Also assumes there's always
+    // one tag there already.
+    $('meta[name="description"]').attr("content", pageDescription);
   }
 
   $('link[rel="canonical"]').attr("href", canonicalURL);

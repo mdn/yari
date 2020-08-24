@@ -54,11 +54,10 @@ function extractLocale(folder) {
   return locale;
 }
 
-function saveHTMLFile(filePath, rawHTML, { slug, title, summary, tags }) {
+function saveHTMLFile(filePath, rawHTML, { slug, title, tags }) {
   const metadata = {
     title,
     slug,
-    summary,
   };
   if (tags) {
     metadata.tags = tags;
@@ -174,8 +173,7 @@ function update(folder, rawHTML, metadata) {
   if (
     isNewSlug ||
     document.rawHTML !== rawHTML ||
-    document.metadata.title !== metadata.title ||
-    document.metadata.summary !== metadata.summary
+    document.metadata.title !== metadata.title
   ) {
     saveHTMLFile(folderPath, rawHTML, {
       ...document.metadata,
@@ -285,6 +283,7 @@ module.exports = {
   read,
   update,
   del,
+  urlToFolderPath,
 
   findByURL,
   findAll,
