@@ -509,10 +509,18 @@ test("image flaws", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.images.length).toBe(7);
+  expect(flaws.images.length).toBe(8);
   const map = new Map(flaws.images.map((x) => [x.src, x]));
 
-  let flaw = map.get("idontexist.png");
+  let flaw = map.get(
+    "https://www.peterbe.com/static/images/howsmywifi-scr.png"
+  );
+  expect(flaw.explanation).toBe("External image URL");
+  expect(flaw.suggestion).toBeNull();
+  expect(flaw.line).toBe(19);
+  expect(flaw.column).toBe(13);
+
+  flaw = map.get("idontexist.png");
   expect(flaw.explanation).toBe("File not present on disk");
   expect(flaw.suggestion).toBeNull();
   expect(flaw.line).toBe(34);
@@ -539,10 +547,10 @@ test("image flaws", () => {
   expect(flaw.column).toBe(13);
 
   flaw = map.get(
-    "https://developer.mozilla.org/en-US/docs/Web/Foo/screenshot.png"
+    "https://developer.mozilla.org/en-US/docs/Web/Images/screenshot.png"
   );
   expect(flaw.explanation).toBe("Unnecessarily absolute URL");
-  expect(flaw.suggestion).toBe("/en-US/docs/Web/Foo/screenshot.png");
+  expect(flaw.suggestion).toBe("screenshot.png");
   expect(flaw.line).toBe(54);
   expect(flaw.column).toBe(13);
 
