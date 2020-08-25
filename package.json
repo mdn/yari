@@ -19,12 +19,13 @@
     "start:client": "cd client && cross-env BROWSER=none PORT=3000 react-scripts start",
     "start:dev-server": "nodemon server --watch server --watch build --watch content --watch kumascript",
     "start:static-server": "cross-env ENV_FILE=testing/.env node server/static.js",
-    "filecheck": "cd filecheck && yarn start"
+    "filecheck": "cd filecheck && node cli.js"
   },
   "engines": {
     "node": ">=12.0.0"
   },
   "dependencies": {
+    "caporal": "1.4.0",
     "chalk": "4.1.0",
     "cheerio": "1.0.0-rc.3",
     "chokidar": "^3.4.2",
@@ -37,12 +38,20 @@
     "ejs": "3.1.5",
     "express": "4.17.1",
     "express-http-proxy": "1.6.2",
+    "file-type": "14.7.1",
     "flexsearch": "0.6.32",
     "front-matter": "4.0.2",
     "fuzzysearch": "1.0.3",
     "glob": "^7.1.6",
     "ignore-loader": "0.1.2",
+    "imagemin": "7.0.1",
+    "imagemin-gifsicle": "7.0.0",
+    "imagemin-jpegtran": "7.0.0",
+    "imagemin-mozjpeg": "9.0.0",
+    "imagemin-pngquant": "9.0.0",
+    "imagemin-svgo": "8.0.0",
     "include-media": "1.4.9",
+    "is-svg": "4.2.1",
     "js-yaml": "3.14.0",
     "jsesc": "3.0.1",
     "mdn-browser-compat-data": "1.0.34",

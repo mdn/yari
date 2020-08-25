@@ -4,12 +4,10 @@
 # If you want to do what this workflow does on your laptop you can simulate
 # it like this:
 #
-#    export GIT_DIFF=`git diff --name-only master... | grep 'content/files' | grep -v '\.html$'`
-#    node content build --no-progressbar --files="${GIT_DIFF}"
+#    yarn filecheck $(git diff master... '--diff-filter=AM' --name-only | rg '\.(png|svg|jpe?g|svg|gif|webp)')
 #
 # That way, you can behave on your laptop like, this action behaves here.
 
-# TODO: Consider calling this "Imagecheck"
 name: PR Filecheck
 
 on:
@@ -62,12 +60,8 @@ jobs:
 
       - name: Install all yarn packages
         if: steps.git_diff_content.outputs.diff
-        run: |
-          cd filecheck
-          yarn --frozen-lockfile
+        run: yarn --frozen-lockfile
 
       - name: Check changed files
         if: steps.git_diff_content.outputs.diff
-        run: |
-          cd filecheck
-          yarn start ${{ env.GIT_DIFF }}
+        run: yarn filecheck ${{ env.GIT_DIFF }}
