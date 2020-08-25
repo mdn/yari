@@ -77,6 +77,12 @@ jobs:
           # functional tests have a gap in them but actually building
           # real content exposes it.
 
+          # This environment variable actually only matters if you're going
+          # to be browsing the pages that are built but *if* we some day
+          # decide to ship PR builds to a public URL, it's good that it's
+          # using public base URL that could work outside people's laptops.
+          export BUILD_LIVE_SAMPLES_BASE_URL=https://mdn.mozillademos.org
+
           export BUILD_NO_PROGRESSBAR=true
           export BUILD_FILES="${{ env.GIT_DIFF }}"
           yarn prepare-build

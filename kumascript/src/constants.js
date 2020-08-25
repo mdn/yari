@@ -1,5 +1,5 @@
 const LIVE_SAMPLES_BASE_URL =
-  process.env.BUILD_LIVE_SAMPLES_BASE_URL || "https://mdn.mozillademos.org";
+  process.env.BUILD_LIVE_SAMPLES_BASE_URL || "http://localhost:5000";
 
 const INTERACTIVE_EXAMPLES_BASE_URL =
   process.env.BUILD_INTERACTIVE_EXAMPLES_BASE_URL ||
