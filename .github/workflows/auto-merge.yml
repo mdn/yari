@@ -11,3 +11,4 @@ jobs:
       - uses: ahmadnassri/action-dependabot-auto-merge@v1
         with:
           github-token: ${{ secrets.AUTOMERGE_TOKEN }}
+          command: "squash and merge"
