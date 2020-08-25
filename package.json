@@ -97,7 +97,7 @@
     "jsdom": "^16.4.0",
     "nodemon": "2.0.4",
     "pegjs": "^0.10.0",
-    "prettier": "2.0.5",
+    "prettier": "2.1.0",
     "pretty-quick": "3.0.0",
     "puppeteer": "2",
     "tempy": "0.6.0",
