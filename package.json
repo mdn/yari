@@ -38,7 +38,7 @@
     "ejs": "3.1.5",
     "express": "4.17.1",
     "express-http-proxy": "1.6.2",
-    "file-type": "14.7.1",
+    "file-type": "15.0.0",
     "flexsearch": "0.6.32",
     "front-matter": "4.0.2",
     "fuzzysearch": "1.0.3",
