@@ -7,15 +7,18 @@ const kumascript = require("../kumascript");
 
 const { FLAW_LEVELS } = require("./constants");
 const {
-  extractDocumentSections,
+  extractSections,
   extractSidebar,
   extractTOC,
+  extractSummary,
 } = require("./document-extractor");
 const SearchIndex = require("./search-index");
 const { addBreadcrumbData } = require("./document-utils");
 const { fixFixableFlaws, injectFlaws } = require("./flaws");
 const { normalizeBCDURLs } = require("./bcd-urls");
 const { checkImageReferences } = require("./check-images");
+const { getPageTitle } = require("./page-title");
+const { syntaxHighlight } = require("./syntax-highlight");
 const cheerio = require("./monkeypatched-cheerio");
 const options = require("./build-options");
 
@@ -154,7 +157,6 @@ async function buildDocument(document) {
   $("span.alllinks").remove();
 
   doc.title = metadata.title;
-  doc.summary = metadata.summary;
   doc.mdn_url = document.url;
   if (metadata.translation_of) {
     doc.translation_of = metadata.translation_of;
@@ -178,17 +180,32 @@ async function buildDocument(document) {
   // raw HTML string will be different.
   fixFixableFlaws(doc, options, document);
 
+  // Apply syntax highlighting all <pre> tags.
+  syntaxHighlight($, doc);
+
   // Post process HTML so that the right elements gets tagged so they
   // *don't* get translated by tools like Google Translate.
   injectNoTranslate($);
 
-  doc.body = extractDocumentSections($);
+  // Turn the $ instance into an array of section blocks. Most of the
+  // section blocks are of type "prose" and their value is a string blob
+  // of HTML.
+  doc.body = extractSections($);
+
+  // The summary comes from the HTML and potentially the <h2>Summary</h2>
+  // section. It's always a plain text string.
+  doc.summary = extractSummary(doc.body);
 
   // Creates new mdn_url's for the browser-compatibility-table to link to
   // pages within this project rather than use the absolute URLs
   normalizeBCDURLs(doc, options);
 
-  doc.popularity = metadata.popularity;
+  // If the document has a `.popularity` make sure don't bother with too
+  // many significant figures on it.
+  doc.popularity = metadata.popularity
+    ? Number(metadata.popularity.toFixed(4))
+    : 0.0;
+
   doc.modified = metadata.modified || null;
 
   const otherTranslations = document.translations || [];
@@ -218,6 +235,8 @@ async function buildDocument(document) {
   // We can use that generate the necessary information needed to build
   // a breadcrumb in the React component.
   addBreadcrumbData(document.url, doc);
+
+  doc.pageTitle = getPageTitle(doc);
 
   return [doc, liveSamples, fileAttachments];
 }

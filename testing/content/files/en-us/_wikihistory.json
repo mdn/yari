@@ -1,10 +1,13 @@
 {
   "Glossary/Bézier_curve": {
     "modified": "2019-06-30T19:32:06.402Z",
-    "_generated": "2020-05-28T21:00:27.915Z",
     "contributors": [
       "Sebastianz"
     ]
+  },
+  "Web/SEO_Summarized": {
+    "modified": "2020-08-17T19:32:06.402Z",
+    "contributors": ["peterbe"]
   },
   "Learn/CSS/CSS_layout/Introduction": {
     "modified": "2020-04-21T08:33:20.154Z",

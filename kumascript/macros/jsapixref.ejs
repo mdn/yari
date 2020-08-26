@@ -18,10 +18,6 @@ var summary = null;
 
 page = wiki.getPage(URL);
 
-if (page && page.summary) {
-    summary = mdn.escapeQuotes(page.summary);
-}
-
 if (!$3) {
     str = `<code>${str}</code>`;
 }

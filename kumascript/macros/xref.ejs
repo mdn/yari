@@ -10,19 +10,14 @@
  * $2 - Show tooltip summary (optional - Default is True except when the URL contains an anchor)
  *      This should only be set to false for content areas where the summary is consistantly poor as a short term solution
  */
- 
+
 // Get the page summary
 let summary = "";
-    
+
 if (($2 !== false && $0.indexOf("#") === -1) || $2 === true) {
     let page = await wiki.getPage($0);
-    if (page && page.summary) {
-        summary = mdn.escapeQuotes(page.summary);
-    } else {
-        switch(lang) {
-            default:
-            summary = "This article hasn't been written yet. Please consider contributing!";
-        }
+    if (!page) {
+        summary = "This article hasn't been written yet. Please consider contributing!";
     }
 }
 

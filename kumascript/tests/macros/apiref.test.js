@@ -331,7 +331,6 @@ function checkInterfaceItem(actual, expected, config) {
     expect(actual.textContent).toEqual(expected.text);
     const methodLink = actual.querySelector("a");
     expect(methodLink.href).toEqual(expected.target);
-    expect(methodLink.getAttribute("title")).toEqual(expected.title);
   } else {
     // If we are on the current page, the item is just an <i>
     // and the text contents omits the CTA

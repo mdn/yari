@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: technote-space/get-diff-action@v1
+      - uses: technote-space/get-diff-action@v3
         id: git_diff_content
         with:
           SEPARATOR: ","
@@ -32,7 +32,7 @@ jobs:
 
       - name: Setup Node.js environment
         if: steps.git_diff_content.outputs.diff
-        uses: actions/setup-node@v2-beta
+        uses: actions/setup-node@v2.1.1
         with:
           node-version: "12"
       - name: Display Node & Yarn version
@@ -45,7 +45,7 @@ jobs:
         if: steps.git_diff_content.outputs.diff
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2.1.1
         if: steps.git_diff_content.outputs.diff
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:

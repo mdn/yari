@@ -21,14 +21,22 @@ function injectFlaws(doc, $, options, { rawContent }) {
     const checked = new Set();
 
     // A closure function to help making it easier to append flaws
-    function addBrokenLink(href, suggestion = null) {
+    function addBrokenLink($element, href, suggestion = null) {
       for (const match of findMatchesInText(href, rawContent, {
         attribute: "href",
       })) {
         if (!("broken_links" in doc.flaws)) {
           doc.flaws.broken_links = [];
         }
-        doc.flaws.broken_links.push(Object.assign({ href, suggestion }, match));
+        const id = `link${doc.flaws.broken_links.length + 1}`;
+        const explanation = `Can't resolve ${href}`;
+        if (suggestion) {
+          $element.attr("href", suggestion);
+        }
+        $element.attr("data-flaw", id);
+        doc.flaws.broken_links.push(
+          Object.assign({ explanation, id, href, suggestion }, match)
+        );
       }
     }
 
@@ -43,6 +51,7 @@ function injectFlaws(doc, $, options, { rawContent }) {
         // have the full absolute URL part in it.
         const absoluteURL = new URL(href);
         addBrokenLink(
+          a,
           href,
           absoluteURL.pathname + absoluteURL.search + absoluteURL.hash
         );
@@ -64,19 +73,21 @@ function injectFlaws(doc, $, options, { rawContent }) {
               metadata: true,
             });
             addBrokenLink(
+              a,
               href,
               finalDocument
                 ? finalDocument.url + absoluteURL.search + absoluteURL.hash
                 : null
             );
           } else {
-            addBrokenLink(href);
+            addBrokenLink(a, href);
           }
         } else {
           // But does it have the correct case?!
           if (found.url !== href.split("#")[0]) {
             // Inconsistent case.
             addBrokenLink(
+              a,
               href,
               found.url + absoluteURL.search + absoluteURL.hash
             );
@@ -180,6 +191,34 @@ function fixFixableFlaws(doc, options, document) {
     }
   }
 
+  // Any 'images' flaws with a suggestion...
+  for (const flaw of doc.flaws.images || []) {
+    if (!flaw.suggestion) {
+      continue;
+    }
+    // The reason we're not using the parse HTML, as a cheerio object `$`
+    // is because the raw HTML we're dealing with isn't actually proper
+    // HTML. It's only proper HTML when the kumascript macros have been
+    // expanded.
+    const htmlBefore = newRawHTML;
+    newRawHTML = replaceMatchesInText(flaw.src, newRawHTML, flaw.suggestion, {
+      inAttribute: "src",
+    });
+    if (htmlBefore !== newRawHTML) {
+      flaw.fixed = true;
+    }
+    if (loud) {
+      console.log(
+        chalk.grey(
+          `Fixed image ${chalk.white.bold(flaw.src)} to ${chalk.white.bold(
+            flaw.suggestion
+          )}`
+        )
+      );
+    }
+  }
+
+  // Finally, summarized what happened...
   if (newRawHTML !== document.rawHTML) {
     // It changed the raw HTML of the source. So deal with this.
     if (options.fixFlawsDryRun) {

@@ -35,7 +35,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error(`${response.status} on ${url}`);
+        const text = await response.text();
+        throw new Error(`${response.status} on ${url}: ${text}`);
       }
       const { doc } = await response.json();
       if (response.redirected) {
@@ -64,7 +65,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   useEffect(() => {
     if (doc) {
-      document.title = doc.title;
+      document.title = doc.pageTitle;
     }
   }, [doc]);
 

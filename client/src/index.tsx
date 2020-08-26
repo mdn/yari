@@ -14,11 +14,14 @@ const container = document.getElementById("root");
 if (!container) {
   throw new Error("missing root element");
 }
-let docData = null;
-const documentDataElement = document.getElementById("documentdata");
-if (documentDataElement) {
-  docData = JSON.parse(documentDataElement.textContent || "");
-}
+
+// The SSR rendering will put
+// a `<script>window.__data__ = JSON.parse(...)</script>` into the HTML.
+// If it's there, great, if it's not there, this'll be `undefined` the
+// components will know to fetch it with XHR.
+// TODO: When we have TS types fo `docData` this would become
+// something like `(window as any).__data__ as DocData`.
+const docData = (window as any).__data__;
 
 let app = (
   <GAProvider>
@@ -42,7 +45,9 @@ if (process.env.NODE_ENV === "development") {
 app = <React.StrictMode>{app}</React.StrictMode>;
 
 if (container.firstElementChild) {
-  ReactDOM.hydrate(app, container);
+  if (window.origin !== "https://translate.googleusercontent.com") {
+    ReactDOM.hydrate(app, container);
+  }
 } else {
   ReactDOM.render(app, container);
 }
