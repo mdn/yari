@@ -397,7 +397,6 @@ function BrokenLinks({
                 <small>
                   <b>Suggestion:</b>
                   <ShowDiff before={flaw.href} after={flaw.suggestion} />
-                  <code>{flaw.suggestion}</code>
                 </small>
               )}{" "}
             </li>
