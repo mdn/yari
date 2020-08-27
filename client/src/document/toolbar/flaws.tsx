@@ -517,11 +517,6 @@ function Macros({
               <>
                 <b>Suggestion:</b>
                 <ShowDiff before={flaw.macroSource} after={flaw.suggestion} />
-                <pre>
-                  <del>{flaw.macroSource}</del>
-                  <br />
-                  <ins>{flaw.suggestion}</ins>
-                </pre>
               </>
             )}
             <b>Context:</b>
