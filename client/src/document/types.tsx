@@ -42,6 +42,7 @@ export interface MacroErrorMessage extends GenericFlaw {
   column: number;
   filepath: string;
   sourceContext: string;
+  macroSource: string;
   macroName: string;
   fixed?: true;
 }

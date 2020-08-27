@@ -10,6 +10,21 @@
       font-weight: bold;
     }
   }
+  .flaw {
+    li {
+      margin-bottom: 15px;
+    }
+  }
+
+  .flaw__macros {
+    ins {
+      background-color: #d4fcbc;
+    }
+    del {
+      text-decoration: none;
+      background-color: #fbb;
+    }
+  }
 
   .macro-filepath-in-prerequisite {
     font-size: 80%;

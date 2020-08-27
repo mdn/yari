@@ -213,7 +213,7 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
               <Macros
                 key="macros"
                 sourceFolder={doc.source.folder}
-                messages={doc.flaws.macros}
+                flaws={doc.flaws.macros}
               />
             );
           case "images":
@@ -286,6 +286,17 @@ function FixableFlawsAction({ count }: { count: number }) {
   );
 }
 
+function FixableFlawBadge() {
+  return (
+    <small className="macro-fixable" title="This flaw is fixable.">
+      Fixable{" "}
+      <span role="img" aria-label="Thumbs up">
+        👍🏼
+      </span>
+    </small>
+  );
+}
+
 function BrokenLinks({
   sourceFolder,
   links,
@@ -330,31 +341,26 @@ function BrokenLinks({
     <div className="flaw flaw__broken_links">
       <h3>Broken Links</h3>
       <ol>
-        {links.map((link, i) => {
-          const key = `${link.href}${link.line}${link.column}`;
+        {links.map((flaw, i) => {
+          const key = `${flaw.href}${flaw.line}${flaw.column}`;
           return (
             <li
               key={key}
-              className={link.fixed ? "fixed_flaw" : undefined}
+              className={flaw.fixed ? "fixed_flaw" : undefined}
               title={
-                link.fixed
+                flaw.fixed
                   ? "This broken link has been automatically fixed."
                   : undefined
               }
             >
-              <code>{link.href}</code>{" "}
-              {link.suggestion && (
-                <span>
-                  Suggested fix: <code>{link.suggestion}</code>
-                </span>
-              )}{" "}
+              <code>{flaw.href}</code>{" "}
               <span
                 role="img"
                 aria-label="Click to highlight broken link"
                 title="Click to highlight broken link anchor"
                 style={{ cursor: "zoom-in" }}
                 onClick={() => {
-                  focus(link.id);
+                  focus(flaw.id);
                 }}
               >
                 👀
@@ -363,13 +369,21 @@ function BrokenLinks({
                 href={`file://${filepath}`}
                 onClick={(event: React.MouseEvent) => {
                   event.preventDefault();
-                  openInEditor(key, link.line, link.column);
+                  openInEditor(key, flaw.line, flaw.column);
                 }}
                 title="Click to open in your editor"
               >
-                line {link.line}:{link.column}
+                line {flaw.line}:{flaw.column}
               </a>{" "}
+              {flaw.fixable && <FixableFlawBadge />}{" "}
               {opening && opening === key && <small>Opening...</small>}
+              <br />
+              {flaw.suggestion && (
+                <small>
+                  <b>Suggested fix:</b>
+                  <code>{flaw.suggestion}</code>
+                </small>
+              )}{" "}
             </li>
           );
         })}
@@ -410,10 +424,10 @@ function BadBCDLinks({ links }: { links: BadBCDLinkFlaw[] }) {
 }
 
 function Macros({
-  messages,
+  flaws,
   sourceFolder,
 }: {
-  messages: MacroErrorMessage[];
+  flaws: MacroErrorMessage[];
   sourceFolder: string;
 }) {
   const [opening, setOpening] = React.useState<string | null>(null);
@@ -446,47 +460,58 @@ function Macros({
   return (
     <div className="flaw flaw__macros">
       <h3>{humanizeFlawName("macros")}</h3>
-      {messages.map((msg) => {
-        const inPrerequisiteMacro = !msg.filepath.includes(
+      {flaws.map((flaw) => {
+        const inPrerequisiteMacro = !flaw.filepath.includes(
           `${sourceFolder}/index.html`
         );
-        const key = `${msg.filepath}:${msg.line}:${msg.column}`;
+        const key = `${flaw.filepath}:${flaw.line}:${flaw.column}`;
 
         return (
           <details
             key={key}
-            className={msg.fixed ? "fixed_flaw" : undefined}
+            className={flaw.fixed ? "fixed_flaw" : undefined}
             title={
-              msg.fixed
+              flaw.fixed
                 ? "This macro flaw has been automatically fixed."
                 : undefined
             }
           >
             <summary>
               <a
-                href={`file://${msg.filepath}`}
+                href={`file://${flaw.filepath}`}
                 onClick={(event: React.MouseEvent) => {
                   event.preventDefault();
-                  openInEditor(msg, key);
+                  openInEditor(flaw, key);
                 }}
               >
-                <code>{msg.name}</code> from <code>{msg.macroName}</code> in
-                line {msg.line}:{msg.column}
+                <code>{flaw.name}</code> from <code>{flaw.macroName}</code> in
+                line {flaw.line}:{flaw.column}
               </a>{" "}
               {opening && opening === key && <small>Opening...</small>}{" "}
               {inPrerequisiteMacro && (
                 <small
                   className="macro-filepath-in-prerequisite"
-                  title={`This page depends on a macro expansion inside ${msg.filepath}`}
+                  title={`This page depends on a macro expansion inside ${flaw.filepath}`}
                 >
                   In prerequisite macro
                 </small>
-              )}
+              )}{" "}
+              {flaw.fixable && <FixableFlawBadge />}{" "}
             </summary>
+            {flaw.fixable && flaw.suggestion && (
+              <>
+                <b>Suggestion:</b>
+                <pre>
+                  <del>{flaw.macroSource}</del>
+                  <br />
+                  <ins>{flaw.suggestion}</ins>
+                </pre>
+              </>
+            )}
             <b>Context:</b>
-            <pre>{msg.sourceContext}</pre>
+            <pre>{flaw.sourceContext}</pre>
             <b>Original error stack:</b>
-            <pre>{msg.errorStack}</pre>
+            <pre>{flaw.errorStack}</pre>
             <b>Filepath:</b>{" "}
             {inPrerequisiteMacro && (
               <i className="macro-filepath-in-prerequisite">
@@ -495,7 +520,7 @@ function Macros({
               </i>
             )}
             <br />
-            <code>{msg.filepath}</code>
+            <code>{flaw.filepath}</code>
           </details>
         );
       })}

@@ -98,7 +98,7 @@ function normalizeBCDURLs(doc, options) {
           metadata: true,
         });
         const suggestion = finalDocument ? finalDocument.url : null;
-        addBadBCDLinkFlawFlaw(query, key, url, suggestion);
+        addBadBCDLinkFlaw(query, key, url, suggestion);
         block.mdn_url = suggestion;
       } else {
         addBadBCDLinkFlaw(query, key, url);

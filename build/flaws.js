@@ -30,12 +30,14 @@ function injectFlaws(doc, $, options, { rawContent }) {
         }
         const id = `link${doc.flaws.broken_links.length + 1}`;
         const explanation = `Can't resolve ${href}`;
+        let fixable = false;
         if (suggestion) {
           $element.attr("href", suggestion);
+          fixable = true;
         }
         $element.attr("data-flaw", id);
         doc.flaws.broken_links.push(
-          Object.assign({ explanation, id, href, suggestion }, match)
+          Object.assign({ explanation, id, href, suggestion, fixable }, match)
         );
       }
     }
