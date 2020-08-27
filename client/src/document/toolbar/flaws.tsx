@@ -2,6 +2,7 @@ import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
+import { diffWords } from "diff";
 
 import { humanizeFlawName } from "../../flaw-utils";
 import { useDocumentURL } from "../hooks";
@@ -297,6 +298,20 @@ function FixableFlawBadge() {
   );
 }
 
+function ShowDiff({ before, after }: { before: string; after: string }) {
+  const diff = diffWords(before, after);
+  const bits = diff.map((part, i) => {
+    if (part.added) {
+      return <ins key={i}>{part.value}</ins>;
+    } else if (part.removed) {
+      return <del key={i}>{part.value}</del>;
+    } else {
+      return <span key={i}>{part.value}</span>;
+    }
+  });
+  return <code>{bits}</code>;
+}
+
 function BrokenLinks({
   sourceFolder,
   links,
@@ -380,7 +395,8 @@ function BrokenLinks({
               <br />
               {flaw.suggestion && (
                 <small>
-                  <b>Suggested fix:</b>
+                  <b>Suggestion:</b>
+                  <ShowDiff before={flaw.href} after={flaw.suggestion} />
                   <code>{flaw.suggestion}</code>
                 </small>
               )}{" "}
@@ -501,6 +517,7 @@ function Macros({
             {flaw.fixable && flaw.suggestion && (
               <>
                 <b>Suggestion:</b>
+                <ShowDiff before={flaw.macroSource} after={flaw.suggestion} />
                 <pre>
                   <del>{flaw.macroSource}</del>
                   <br />
@@ -573,18 +590,18 @@ function Images({
     <div className="flaw flaw__images">
       <h3>{humanizeFlawName("images")}</h3>
       <ul>
-        {images.map((image, i) => {
-          const key = `${image.src}${image.line}${image.column}`;
+        {images.map((flaw, i) => {
+          const key = `${flaw.src}${flaw.line}${flaw.column}`;
           return (
             <li key={key}>
-              <code>{image.src}</code>{" "}
+              <code>{flaw.src}</code>{" "}
               <span
                 role="img"
                 aria-label="Click to highlight image"
                 title="Click to highlight image"
                 style={{ cursor: "zoom-in" }}
                 onClick={() => {
-                  focus(image.id);
+                  focus(flaw.id);
                 }}
               >
                 👀
@@ -593,18 +610,20 @@ function Images({
                 href={`file://${filepath}`}
                 onClick={(event: React.MouseEvent) => {
                   event.preventDefault();
-                  openInEditor(key, image.line, image.column);
+                  openInEditor(key, flaw.line, flaw.column);
                 }}
                 title="Click to open in your editor"
               >
-                line {image.line}:{image.column}
+                line {flaw.line}:{flaw.column}
               </a>{" "}
-              <small>{image.explanation}</small>{" "}
-              {image.suggestion && (
-                <span>
-                  Suggested fix: <code>{image.suggestion}</code>
-                </span>
-              )}
+              {flaw.fixable && <FixableFlawBadge />} <br />
+              {flaw.suggestion && (
+                <small>
+                  <b>Suggestion:</b>
+                  <ShowDiff before={flaw.src} after={flaw.suggestion} />
+                </small>
+              )}{" "}
+              <small>{flaw.explanation}</small>
             </li>
           );
         })}
