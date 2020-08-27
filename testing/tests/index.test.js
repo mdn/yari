@@ -498,9 +498,10 @@ test("detect bad_bcd_queries flaws", () => {
   // If the flaw is there, it's always an array because a document could
   // potentially have multiple bad BCD queries.
   expect(doc.flaws.bad_bcd_queries.length).toBe(1);
-  expect(doc.flaws.bad_bcd_queries[0]).toBe(
+  expect(doc.flaws.bad_bcd_queries[0].explanation).toBe(
     "No BCD data for query: api.Does.Not.exist"
   );
+  expect(doc.flaws.bad_bcd_queries[0].suggestion).toBeNull();
 });
 
 test("detect bad_bcd_links flaws from", () => {

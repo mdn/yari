@@ -300,7 +300,7 @@ function FixableFlawBadge() {
 
 function ShowDiff({ before, after }: { before: string; after: string }) {
   const diff = diffWords(before, after);
-  const bits = diff.map((part, i) => {
+  const bits = diff.map((part, i: number) => {
     if (part.added) {
       return <ins key={i}>{part.value}</ins>;
     } else if (part.removed) {
