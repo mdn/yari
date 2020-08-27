@@ -16,7 +16,9 @@ const options = Object.freeze({
   flawLevels: parseFlawLevels(DEFAULT_FLAW_LEVELS),
   files: parseFiles(FILES),
   folderSearch: parseFoldersearch(FOLDERSEARCH),
-  noProgressbar: NO_PROGRESSBAR,
+  // Obviously false if the env var for NO_PROGRESSBAR was set but also,
+  // if you're going to display flaws, it's going to use stdout anyway.
+  noProgressbar: NO_PROGRESSBAR || FIX_FLAWS_DRY_RUN || FIX_FLAWS_VERBOSE,
   fixFlaws: FIX_FLAWS,
   fixFlawsDryRun: FIX_FLAWS_DRY_RUN,
   fixFlawsVerbose: FIX_FLAWS_VERBOSE,

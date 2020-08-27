@@ -13,11 +13,12 @@ function normalizeBCDURLs(doc, options) {
   const checkLinks =
     options.flawLevels.get("bad_bcd_links") !== FLAW_LEVELS.IGNORE;
 
-  function addBadBCDLink(query, key, slug, suggestion = null) {
+  function addBadBCDLinkFlaw(query, key, slug, suggestion = null) {
     if (!("bad_bcd_links" in doc.flaws)) {
       doc.flaws.bad_bcd_links = [];
     }
     doc.flaws.bad_bcd_links.push({
+      id: `bad_bcd_link${doc.flaws.bad_bcd_links.length}`,
       slug,
       suggestion,
       query,
@@ -97,10 +98,10 @@ function normalizeBCDURLs(doc, options) {
           metadata: true,
         });
         const suggestion = finalDocument ? finalDocument.url : null;
-        addBadBCDLink(query, key, url, suggestion);
+        addBadBCDLinkFlaw(query, key, url, suggestion);
         block.mdn_url = suggestion;
       } else {
-        addBadBCDLink(query, key, url);
+        addBadBCDLinkFlaw(query, key, url);
         // If the url is bad, and can't be salvaged with a redirect,
         // we need to pass that information on so that it can be
         // leveraged in the UI that displays the BCD table.
