@@ -1,7 +1,8 @@
 const childProcess = require("child_process");
-const chalk = require("chalk");
-const PACKAGE_REPOSITORY_URL = require("../package.json").repository;
 
+const chalk = require("chalk");
+
+const PACKAGE_REPOSITORY_URL = require("../package.json").repository;
 const { buildURL, Document } = require("../content");
 const kumascript = require("../kumascript");
 
@@ -198,7 +199,12 @@ async function buildDocument(document, documentOptions = {}) {
 
   // If fixFlaws is on and the doc has fixable flaws, this returned
   // raw HTML string will be different.
-  fixFixableFlaws(doc, options, document);
+  try {
+    await fixFixableFlaws(doc, options, document);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 
   // Apply syntax highlighting all <pre> tags.
   syntaxHighlight($, doc);
