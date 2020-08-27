@@ -15,16 +15,39 @@ function injectFlaws(doc, $, options, { rawContent }) {
   // link to a document that's going to fail with a 404 Not Found.
   if (options.flawLevels.get("broken_links") !== FLAW_LEVELS.IGNORE) {
     // This is needed because the same href can occur multiple time.
-    // Especially when there's...
-    //    <a href="/foo/bar#one">
-    //    <a href="/foo/bar#two">
-    const checked = new Set();
+    // For example:
+    //    <a href="/foo/bar">
+    //    <a href="/foo/other">
+    //    <a href="/foo/bar">  (again!)
+    // In this case, when we call `addBrokenLink()` that third time, we know
+    // this refers to the second time it appears. That's important for the
+    // sake of finding which match, in the original source (rawContent),
+    // it belongs to.
+    const checked = new Map();
+
+    // Our cache for looking things up by `href`. This basically protects
+    // us from calling `findMatchesInText()` more than once.
+    const matches = new Map();
 
     // A closure function to help making it easier to append flaws
-    function addBrokenLink($element, href, suggestion = null) {
-      for (const match of findMatchesInText(href, rawContent, {
-        attribute: "href",
-      })) {
+    function addBrokenLink($element, index, href, suggestion = null) {
+      if (!matches.has(href)) {
+        matches.set(
+          href,
+          Array.from(
+            findMatchesInText(href, rawContent, {
+              attribute: "href",
+            })
+          )
+        );
+      }
+      // findMatchesInText() is a generator function so use `Array.from()`
+      // to turn it into an array so we can use `.forEach()` because that
+      // gives us an `i` for every loop.
+      matches.get(href).forEach((match, i) => {
+        if (i !== index) {
+          return;
+        }
         if (!("broken_links" in doc.flaws)) {
           doc.flaws.broken_links = [];
         }
@@ -37,14 +60,18 @@ function injectFlaws(doc, $, options, { rawContent }) {
         doc.flaws.broken_links.push(
           Object.assign({ explanation, id, href, suggestion }, match)
         );
-      }
+      });
     }
 
     $("a[href]").each((i, element) => {
       const a = $(element);
       const href = a.attr("href");
-      if (checked.has(href)) return;
-      checked.add(href);
+
+      // This gives us insight into how many times this exact `href`
+      // has been encountered in the doc.
+      // Then, when we call addBrokenLink() we can include an index so that
+      // that function knows which match it's referring to.
+      checked.set(href, checked.has(href) ? checked.get(href) + 1 : 0);
 
       if (href.startsWith("https://developer.mozilla.org/")) {
         // It might be a working 200 OK link but the link just shouldn't
@@ -52,6 +79,7 @@ function injectFlaws(doc, $, options, { rawContent }) {
         const absoluteURL = new URL(href);
         addBrokenLink(
           a,
+          checked.get(href),
           href,
           absoluteURL.pathname + absoluteURL.search + absoluteURL.hash
         );
@@ -74,6 +102,7 @@ function injectFlaws(doc, $, options, { rawContent }) {
             });
             addBrokenLink(
               a,
+              checked.get(href),
               href,
               finalDocument
                 ? finalDocument.url + absoluteURL.search + absoluteURL.hash
@@ -88,6 +117,7 @@ function injectFlaws(doc, $, options, { rawContent }) {
             // Inconsistent case.
             addBrokenLink(
               a,
+              checked.get(href),
               href,
               found.url + absoluteURL.search + absoluteURL.hash
             );
