@@ -20,7 +20,7 @@ const { checkImageReferences } = require("./check-images");
 const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
 const cheerio = require("./monkeypatched-cheerio");
-const options = require("./build-options");
+const buildOptions = require("./build-options");
 
 const DEFAULT_BRANCH_NAME = "master"; // TODO: 'main' is a better name.
 
@@ -93,7 +93,11 @@ function injectSource(doc, folder) {
   };
 }
 
-async function buildDocument(document) {
+async function buildDocument(document, documentOptions = {}) {
+  // Important that the "local" document options comes last.
+  // And use Object.assign to create a new object instead of mutating the
+  // global one.
+  const options = Object.assign({}, buildOptions, documentOptions);
   const { metadata, fileInfo } = document;
 
   const doc = { isArchive: document.isArchive };
@@ -139,7 +143,23 @@ async function buildDocument(document) {
       // XXX This is probably the wrong way to bubble up.
       process.exit(1);
     } else if (options.flawLevels.get("macros") === FLAW_LEVELS.WARN) {
-      doc.flaws.macros = flaws;
+      // doc.flaws.macros = flaws;
+      // The 'flaws' array don't have everything we need from the
+      // kumascript rendering, so we "beef it up" to have convenient
+      // attributes needed.
+      doc.flaws.macros = flaws.map((flaw, i) => {
+        const fixable =
+          flaw.name === "MacroRedirectedLinkError" &&
+          (!flaw.filepath || flaw.filepath === document.fileInfo.path);
+        const suggestion = fixable
+          ? flaw.macroSource.replace(
+              flaw.redirectInfo.current,
+              flaw.redirectInfo.suggested
+            )
+          : null;
+        const id = `macro_flaw${i}`;
+        return Object.assign({ id, fixable, suggestion }, flaw);
+      });
     }
   }
 
@@ -287,5 +307,5 @@ module.exports = {
 
   SearchIndex,
 
-  options,
+  options: buildOptions,
 };

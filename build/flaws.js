@@ -107,7 +107,11 @@ function injectFlaws(doc, $, options, { rawContent }) {
         if (!("bad_bcd_queries" in doc.flaws)) {
           doc.flaws.bad_bcd_queries = [];
         }
-        doc.flaws.bad_bcd_queries.push("BCD table without an ID");
+        doc.flaws.bad_bcd_queries.push({
+          id: `bad_bcd_queries${doc.flaws.bad_bcd_queries.length}`,
+          explanation: "BCD table without an ID",
+          suggestion: null,
+        });
       } else {
         const query = dataQuery.replace(/^bcd:/, "");
         const { data } = packageBCD(query);
@@ -115,12 +119,20 @@ function injectFlaws(doc, $, options, { rawContent }) {
           if (!("bad_bcd_queries" in doc.flaws)) {
             doc.flaws.bad_bcd_queries = [];
           }
-          doc.flaws.bad_bcd_queries.push(`No BCD data for query: ${query}`);
+          doc.flaws.bad_bcd_queries.push({
+            id: `bad_bcd_queries${doc.flaws.bad_bcd_queries.length}`,
+            explanation: `No BCD data for query: ${query}`,
+            suggestion: null,
+          });
         }
       }
     });
     if (options.flawLevels.get("broken_links") === FLAW_LEVELS.ERROR) {
-      throw new Error(`bad_bcd_queries flaws: ${doc.flaws.bad_bcd_queries}`);
+      throw new Error(
+        `bad_bcd_queries flaws: ${doc.flaws.bad_bcd_queries.map(
+          (f) => f.explanation
+        )}`
+      );
     }
   }
 }
@@ -134,10 +146,7 @@ function fixFixableFlaws(doc, options, document) {
 
   // Any 'macros' of type "MacroRedirectedLinkError"...
   for (const flaw of doc.flaws.macros || []) {
-    if (
-      flaw.name === "MacroRedirectedLinkError" &&
-      (!flaw.filepath || flaw.filepath === document.fileInfo.path)
-    ) {
+    if (flaw.fixable) {
       // Sanity check that our understanding of flaws, filepaths, and sources
       // work as expected.
       if (!newRawHTML.includes(flaw.macroSource)) {
@@ -145,10 +154,7 @@ function fixFixableFlaws(doc, options, document) {
           `rawHTML doesn't contain macroSource (${flaw.macroSource})`
         );
       }
-      const newMacroSource = flaw.macroSource.replace(
-        flaw.redirectInfo.current,
-        flaw.redirectInfo.suggested
-      );
+      const newMacroSource = flaw.suggestion;
       // Remember, in JavaScript only the first occurrence will be replaced.
       newRawHTML = newRawHTML.replace(flaw.macroSource, newMacroSource);
       if (loud) {
@@ -160,7 +166,7 @@ function fixFixableFlaws(doc, options, document) {
           )
         );
       }
-      flaw.fixed = true;
+      // flaw.fixed = !options.fixFlawsDryRun;
     }
   }
 
@@ -178,7 +184,7 @@ function fixFixableFlaws(doc, options, document) {
       inAttribute: "href",
     });
     if (htmlBefore !== newRawHTML) {
-      flaw.fixed = true;
+      // flaw.fixed = !options.fixFlawsDryRun;
     }
     if (loud) {
       console.log(
@@ -205,7 +211,7 @@ function fixFixableFlaws(doc, options, document) {
       inAttribute: "src",
     });
     if (htmlBefore !== newRawHTML) {
-      flaw.fixed = true;
+      // flaw.fixed = !options.fixFlawsDryRun;
     }
     if (loud) {
       console.log(

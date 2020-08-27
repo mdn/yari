@@ -1,6 +1,7 @@
 const express = require("express");
 
 const { Document } = require("../content");
+const { buildDocument } = require("../build");
 
 const router = express();
 
@@ -21,6 +22,18 @@ function withDocument(req, res, next) {
   req.document = document;
   next();
 }
+
+router.put("/fixfixableflaws", withDocument, async (req, res) => {
+  if (req.document.isArchive) {
+    return res.status(400).send("Can't fix archived documents");
+  }
+  // To get the 'doc' we have to find the built art
+  await buildDocument(req.document, {
+    fixFlaws: true,
+    fixFlawsVerbose: true,
+  });
+  res.sendStatus(200);
+});
 
 router.get("/", withDocument, (req, res) => {
   res.json(req.document);

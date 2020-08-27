@@ -1,16 +1,18 @@
-import React, { useEffect, useReducer, useRef } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
 
 import { humanizeFlawName } from "../../flaw-utils";
+import { useDocumentURL } from "../hooks";
 import {
   Doc,
   BrokenLink,
   MacroErrorMessage,
-  BadBCDLink,
+  BadBCDLinkFlaw,
   ImageReferenceFlaw,
   GenericFlaw,
+  BadBCDQueryFlaw,
 } from "../types";
 import "./flaws.scss";
 
@@ -167,8 +169,21 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
   if (process.env.NODE_ENV !== "development") {
     throw new Error("This shouldn't be used in non-development builds");
   }
+
+  const fixableFlaws = Object.values(doc.flaws)
+    .map((flaws) => {
+      return flaws.filter(
+        (flaw) => !flaw.fixed && (flaw.suggestion || flaw.fixable)
+      );
+    })
+    .flat();
+
   return (
     <div id="document-flaws">
+      {!!fixableFlaws.length && (
+        <FixableFlawsAction count={fixableFlaws.length} />
+      )}
+
       {flaws.map((flaw) => {
         switch (flaw.name) {
           case "broken_links":
@@ -190,7 +205,7 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
             return (
               <BadBCDQueries
                 key="bad_bcd_queries"
-                messages={doc.flaws.bad_bcd_queries}
+                flaws={doc.flaws.bad_bcd_queries}
               />
             );
           case "macros":
@@ -213,6 +228,60 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
             throw new Error(`Unknown flaw check '${flaw.name}'`);
         }
       })}
+    </div>
+  );
+}
+
+function FixableFlawsAction({ count }: { count: number }) {
+  const [fixing, setFixing] = useState(false);
+  const [fixed, setFixed] = useState(false);
+  const [fixingError, setFixingError] = useState<Error | null>(null);
+
+  const documentURL = useDocumentURL();
+
+  async function fix() {
+    try {
+      const response = await fetch(
+        `/_document/fixfixableflaws?${new URLSearchParams({
+          url: documentURL,
+        }).toString()}`,
+        {
+          method: "PUT",
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`${response.status} on ${response.url}`);
+      }
+      setFixed(true);
+    } catch (error) {
+      console.error("Error trying to fix fixable flaws");
+
+      setFixingError(error);
+    } finally {
+      setFixing(false);
+    }
+  }
+
+  if (!count) {
+    return null;
+  }
+  return (
+    <div>
+      {fixingError && (
+        <p style={{ color: "red" }}>
+          <b>Error:</b> <code>{fixingError.toString()}</code>
+        </p>
+      )}
+      <button
+        type="button"
+        onClick={async () => {
+          setFixing((prev) => !prev);
+          await fix();
+        }}
+      >
+        {fixing ? "Fixing..." : `Fix fixable flaws (${count})`}
+      </button>{" "}
+      {fixed && <b style={{ color: "darkgreen" }}>Fixed!</b>}
     </div>
   );
 }
@@ -266,7 +335,7 @@ function BrokenLinks({
           return (
             <li
               key={key}
-              className={link.fixed ? "fixed" : undefined}
+              className={link.fixed ? "fixed_flaw" : undefined}
               title={
                 link.fixed
                   ? "This broken link has been automatically fixed."
@@ -309,14 +378,14 @@ function BrokenLinks({
   );
 }
 
-function BadBCDQueries({ messages }) {
+function BadBCDQueries({ flaws }: { flaws: BadBCDQueryFlaw[] }) {
   return (
     <div className="flaw flaw__bad_bcd_queries">
       <h3>{humanizeFlawName("bad_bcd_queries")}</h3>
       <ul>
-        {messages.map((message) => (
-          <li key={message}>
-            <code>{message}</code>
+        {flaws.map((flaw) => (
+          <li key={flaw.id}>
+            <code>{flaw.explanation}</code>
           </li>
         ))}
       </ul>
@@ -324,7 +393,7 @@ function BadBCDQueries({ messages }) {
   );
 }
 
-function BadBCDLinks({ links }: { links: BadBCDLink[] }) {
+function BadBCDLinks({ links }: { links: BadBCDLinkFlaw[] }) {
   return (
     <div className="flaw flaw__bad_bcd_links">
       <h3>{humanizeFlawName("bad_bcd_links")}</h3>
@@ -386,7 +455,7 @@ function Macros({
         return (
           <details
             key={key}
-            className={msg.fixed ? "fixed" : undefined}
+            className={msg.fixed ? "fixed_flaw" : undefined}
             title={
               msg.fixed
                 ? "This macro flaw has been automatically fixed."
