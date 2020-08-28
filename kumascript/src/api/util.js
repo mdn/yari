@@ -219,7 +219,10 @@ class HTMLTool {
   }
 
   html() {
-    return this.$.html();
+    // Cheerio will always replace all `&nbsp;` with a `\xa0` (`\u00a0`)
+    // when you serialize the `.html()` or the `.text()`. This is
+    // independent of decoding entities.
+    return this.$.html().replace(/\u00a0/g, " ");
   }
 }
 
