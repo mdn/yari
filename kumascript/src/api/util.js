@@ -206,9 +206,7 @@ class HTMLTool {
       // The string replacements below have been carried forward from Kuma:
       //   * Bugzilla 819999: &nbsp; gets decoded to \xa0, which trips up CSS.
       //   * Bugzilla 1284781: &nbsp; is incorrectly parsed on embed sample.
-      result[part] = src
-        ? src.replace("\xa0", " ").replace("&nbsp;", " ")
-        : null;
+      result[part] = src ? src.replace(/\u00a0/g, " ") : null;
     }
     if (!LIVE_SAMPLE_PARTS.some((part) => result[part])) {
       throw new KumascriptError(
@@ -219,10 +217,7 @@ class HTMLTool {
   }
 
   html() {
-    // Cheerio will always replace all `&nbsp;` with a `\xa0` (`\u00a0`)
-    // when you serialize the `.html()` or the `.text()`. This is
-    // independent of decoding entities.
-    return this.$.html().replace(/\u00a0/g, " ");
+    return this.$.html();
   }
 }
 
