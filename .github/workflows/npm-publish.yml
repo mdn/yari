@@ -23,9 +23,8 @@ jobs:
       - name: Dry-run publish to see which files are included
         run: |
           npm publish --access public --dry-run
-          echo ${{ secrets.NPM_AUTH_TOKEN }}
 
-      - name: publish
+      - name: Publish to npmjs
         uses: mikeal/merge-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
