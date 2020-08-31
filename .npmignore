@@ -15,3 +15,5 @@ import/
 .github/
 /docs/
 kumascript/AUTHORS
+README.md
+client/search-experimentation.js

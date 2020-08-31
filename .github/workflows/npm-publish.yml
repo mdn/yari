@@ -23,7 +23,6 @@ jobs:
       # XXX Replace with mikeal/merge-release@v4
       - name: Dry-run publish to see which files are included
         run: |
-          #
           npm publish --access public --dry-run
 
       # - name: publish
