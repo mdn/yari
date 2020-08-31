@@ -1,0 +1,31 @@
+name: NPM Publish
+
+on:
+  push:
+    branches: [master]
+
+  # These 3 lines are temporary!
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Prep .npmignore
+        run: |
+          cat .gitignore >> .npmignore
+
+      - name: Dry-run publish to see which files are included
+        run: |
+          npm publish --access public --dry-run
+
+      - name: Publish to npmjs
+        uses: mikeal/merge-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
