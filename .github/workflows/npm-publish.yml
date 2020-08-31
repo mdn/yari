@@ -26,7 +26,7 @@ jobs:
       #     npm publish --access public --dry-run
 
       - name: publish
-        uses: mikeal/merge-release
+        uses: mikeal/merge-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
