@@ -8,7 +8,7 @@ import { ReactComponent as InstagramIcon } from "./instagram.svg";
 export default function Footer() {
   const locale = useLocale();
   return (
-    <footer id="nav-footer" className="nav-footer">
+    <footer id="nav-footer" className="page-footer">
       <div className="content-container">
         <a href={`/${locale}/`} className="nav-footer-logo">
           MDN Web Docs
