@@ -12,3 +12,6 @@ kumascript/tests
 testing/
 import/
 /mdn-web-docs.svg
+.github/
+/docs/
+kumascript/AUTHORS

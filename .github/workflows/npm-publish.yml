@@ -16,24 +16,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # - name: Setup Node.js environment
-      #   if: steps.git_diff_content.outputs.diff
-      #   uses: actions/setup-node@v2.1.1
-      #   with:
-      #     node-version: "12"
-      # - name: Display Node & Yarn version
-      #   if: steps.git_diff_content.outputs.diff
-      #   run: |
-      #     node --version
-      #     yarn --version
-
       - name: Prep .npmignore
         run: |
           cat .gitignore >> .npmignore
+
+      # XXX Replace with mikeal/merge-release@v4
+      - name: Dry-run publish to see which files are included
+        run: |
+          #
           npm publish --access public --dry-run
 
       # - name: publish
-      #   uses: mikeal/merge-release@master
+      #   uses: mikeal/merge-release@v4
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       #     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
