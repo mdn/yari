@@ -26,12 +26,21 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
       if (!("images" in doc.flaws)) {
         doc.flaws.images = [];
       }
+      let fixable = false;
       if (suggestion) {
         $img.attr("src", suggestion);
+        fixable = true;
       }
       const id = `image${doc.flaws.images.length + 1}`;
       $img.attr("data-flaw", id);
-      doc.flaws.images.push({ id, src, suggestion, explanation, ...match });
+      doc.flaws.images.push({
+        id,
+        src,
+        fixable,
+        suggestion,
+        explanation,
+        ...match,
+      });
     }
   }
 
