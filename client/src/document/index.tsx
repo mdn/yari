@@ -16,6 +16,7 @@ import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 // Misc
 // Sub-components
+import Titlebar from "../ui/atoms/titlebar";
 import { TOC } from "./toc";
 
 import "./index.scss";
@@ -98,9 +99,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      <div className="titlebar-container">
-        <h1 className="title">{doc.title}</h1>
-      </div>
+      <Titlebar docTitle={doc.title} />
+
       <nav className="breadcrumb-locale-container">
         {doc.parents && <Breadcrumbs parents={doc.parents} />}
       </nav>
