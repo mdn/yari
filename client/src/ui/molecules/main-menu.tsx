@@ -44,10 +44,6 @@ export default function MainMenu() {
     if (visibleSubMenu) {
       setVisibleSubMenu(null);
     }
-
-    if (previousActiveElement.current) {
-      previousActiveElement.current.focus();
-    }
   }
 
   function toggleMainMenu() {
@@ -85,6 +81,10 @@ export default function MainMenu() {
     document.addEventListener("keyup", (event) => {
       if (event.key === "Escape") {
         hideSubMenuIfVisible();
+
+        if (previousActiveElement.current) {
+          previousActiveElement.current.focus();
+        }
       }
     });
 
