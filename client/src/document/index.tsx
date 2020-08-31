@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
@@ -16,13 +16,9 @@ import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 // Misc
 // Sub-components
-import { DocumentTranslations } from "./languages";
 import { TOC } from "./toc";
 
 import "./index.scss";
-
-// Lazy sub-components
-const Toolbar = lazy(() => import("./toolbar"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const documentURL = useDocumentURL();
@@ -35,7 +31,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error(`${response.status} on ${url}`);
+        const text = await response.text();
+        throw new Error(`${response.status} on ${url}: ${text}`);
       }
       const { doc } = await response.json();
       if (response.redirected) {
@@ -64,7 +61,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   useEffect(() => {
     if (doc) {
-      document.title = doc.title;
+      document.title = doc.pageTitle;
     }
   }, [doc]);
 
@@ -100,45 +97,19 @@ export function Document(props /* TODO: define a TS interface for this */) {
   const { github_url, folder } = doc.source;
 
   return (
-    <main>
-      {process.env.NODE_ENV === "development" && !doc.isArchive && (
-        <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
-          <Toolbar doc={doc} />
-        </Suspense>
-      )}
-      <header className="documentation-page-header">
-        <div className="titlebar-container">
-          <div className="titlebar">
-            <h1 className="title">{doc.title}</h1>
-          </div>
-        </div>
-        <div className="full-width-row-container">
-          <div className="max-content-width-container">
-            <nav className="breadcrumbs" role="navigation">
-              {doc.parents && <Breadcrumbs parents={doc.parents} />}
-            </nav>
+    <>
+      <div className="titlebar-container">
+        <h1 className="title">{doc.title}</h1>
+      </div>
+      <nav className="breadcrumb-locale-container">
+        {doc.parents && <Breadcrumbs parents={doc.parents} />}
+      </nav>
 
-            {translations && !!translations.length && (
-              <DocumentTranslations translations={translations} />
-            )}
-          </div>
-        </div>
-      </header>
+      {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
-      <div
-        className={
-          (doc.toc && doc.toc.length) || doc.sidebarHTML
-            ? "wiki-left-present content-layout"
-            : "content-layout"
-        }
-      >
-        {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
-
-        <div id="content" className="article text-content">
-          <article id="wikiArticle">
-            <RenderDocumentBody doc={doc} />
-          </article>
-
+      <main className="main-content" role="main">
+        <article className="article">
+          <RenderDocumentBody doc={doc} />
           <div className="metadata">
             <section className="document-meta">
               <header className="visually-hidden">
@@ -159,15 +130,15 @@ export function Document(props /* TODO: define a TS interface for this */) {
               </ul>
             </section>
           </div>
-        </div>
+        </article>
+      </main>
 
-        {doc.sidebarHTML && (
-          <div id="sidebar-quicklinks" className="sidebar">
-            <RenderSideBar doc={doc} />
-          </div>
-        )}
-      </div>
-    </main>
+      {doc.sidebarHTML && (
+        <div id="sidebar-quicklinks" className="sidebar">
+          <RenderSideBar doc={doc} />
+        </div>
+      )}
+    </>
   );
 }
 

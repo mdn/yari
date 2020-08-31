@@ -7,7 +7,7 @@ import useSWR from "swr";
 
 type DocumentFormData = {
   rawHTML: string;
-  metadata: { slug: string; title: string; summary: string };
+  metadata: { slug: string; title: string };
 };
 
 // Same as DocumentFormData but metadata also includes the locale
@@ -34,7 +34,6 @@ export function DocumentForm({
     initialSlug ? initialSlug + "/" : doc ? doc.metadata.slug : ""
   );
   const [title, setTitle] = useState(doc ? doc.metadata.title : "");
-  const [summary, setSummary] = useState(doc ? doc.metadata.summary : "");
   const [rawHTML, setRawHtml] = useState(doc ? doc.rawHTML : "");
 
   const [autosaveEnabled, setAutoSaveEnabled] = useLocalStorage(
@@ -79,7 +78,7 @@ export function DocumentForm({
       onSaveDebounced(
         {
           rawHTML,
-          metadata: { slug, title, summary, locale },
+          metadata: { slug, title, locale },
         },
         didSlugChange
       );
@@ -89,7 +88,6 @@ export function DocumentForm({
     onSaveDebounced,
     slug,
     title,
-    summary,
     rawHTML,
     didSlugChange,
     locale,
@@ -102,7 +100,7 @@ export function DocumentForm({
         onSave(
           {
             rawHTML,
-            metadata: { slug, title, summary, locale },
+            metadata: { slug, title, locale },
           },
           didSlugChange
         );
@@ -151,18 +149,6 @@ export function DocumentForm({
         </label>
       </p>
 
-      <label>
-        Summary
-        <textarea
-          disabled={disableInputs}
-          value={summary}
-          onChange={(event) => setSummary(event.target.value)}
-          placeholder="Summary"
-          rows={2}
-          style={{ width: "100%" }}
-        />
-      </label>
-
       <textarea
         disabled={disableInputs}
         value={rawHTML}
@@ -173,14 +159,7 @@ export function DocumentForm({
       <p>
         <button
           type="submit"
-          disabled={
-            disableInputs ||
-            !title ||
-            !slug ||
-            invalidSlug ||
-            !summary ||
-            !rawHTML
-          }
+          disabled={disableInputs || !title || !slug || invalidSlug || !rawHTML}
         >
           {isNew ? "Create" : "Save"}
         </button>

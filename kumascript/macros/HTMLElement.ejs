@@ -27,8 +27,6 @@ let sectionName = mdn.localString({
 let url = "/" + env.locale + "/docs/Web/HTML/" + sectionName + "/" +
     elementName;
 let page = await wiki.getPage(url);
-let summary = (page && page.summary) ? mdn.escapeQuotes(page.summary) :
-    mdn.getLocalString(commonLocalStrings, "summary");
 
 // Add anchor after fetching the page contents
 url += $2;
@@ -37,6 +35,5 @@ if (linkText === elementName && elementName.indexOf(" ") === -1) {
     linkText = "<code>&lt;" + linkText + "&gt;</code>";
 }
 
-let link = "<a href=\"" + url + "\" title=\"" + summary + "\">" + linkText +
-    "</a>";
+let link = "<a href=\"" + url + "\">" + linkText + "</a>";
 %><%- link %>

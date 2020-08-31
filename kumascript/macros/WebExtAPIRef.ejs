@@ -7,13 +7,13 @@
  * @param
  *   The path of the page to link to, relative to the
  * /en-US/docs/Mozilla/Add-ons/WebExtensions/API documentation path.
- * @param [optional] 
+ * @param [optional]
  *   The text to use for the link.  If omitted, the value of the first
  *   parameter will be used
- * @param [optional] 
- *   An anchor to link to on the page. Link text will display as $0.$2 or $1.$2 
- * @param [optional] 
- *   If set, do not put the wexref text in code 
+ * @param [optional]
+ *   An anchor to link to on the page. Link text will display as $0.$2 or $1.$2
+ * @param [optional]
+ *   If set, do not put the wexref text in code
  */
 
 /* get a page's language (Don't use page.language!) */
@@ -42,18 +42,9 @@ if ($2) {
 // Now that we have the URL, let's gather the page summary for our tooltip
 
 let page = await wiki.getPage(URL);
-let summary = "";
-
-if (!$2) {
-    if (page && page.summary) {
-        summary = mdn.escapeQuotes(page.summary);
-    } else {
-        summary = mdn.getLocalString(localStrings, "summary");
-    }
-}
 
 let code = '';
 let endcode = '';
 if (!$3) { code = '<code>'; endcode = '</code>' }
 
-%><a href="<%- URL+anch %>" title="<%-summary%>"><%- code %><%- str %><%- endcode %></a>
+%><a href="<%- URL+anch %>"><%- code %><%- str %><%- endcode %></a>

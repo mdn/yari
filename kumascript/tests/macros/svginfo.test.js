@@ -55,28 +55,6 @@ function camelToSnake(str, upFirst = true) {
   return str;
 }
 
-// Extract the summary of a given page in a given locale if it exists
-//
-// @param key    <string>  The key of the page to retrieve
-// @param locale <string>  The locale in which the summary must be provided
-// @param clean  <boolean> Indicate if HTML tags must be striped (true by default)
-// @return <string>
-function getSummary(key, locale, clean = true) {
-  if (
-    !MOCK_PAGES[locale] ||
-    !MOCK_PAGES[locale][key] ||
-    !MOCK_PAGES[locale][key].data ||
-    !MOCK_PAGES[locale][key].data.summary
-  )
-    return "";
-
-  var str = MOCK_PAGES[locale][key].data.summary;
-
-  if (clean) str = str.replace(/<[^>]+>/g, "");
-
-  return str;
-}
-
 // Test utilities
 // ----------------------------------------------------------------------------
 // Set up expected output based on the expected input data
@@ -101,11 +79,7 @@ function makeExpect(data, locale = "en-US") {
         if (value.indexOf("&lt;") !== -1) {
           let key = value.replace(/&lt;|&gt;/g, "");
           let url = URL(locale, SVG_BASE_SLUG, "Element", key);
-          let summary = getSummary(key, locale);
-
-          acc.elements.push(
-            `<a href="${url}"  title="${summary}"><code>${value}</code></a>`
-          );
+          acc.elements.push(`<a href="${url}"><code>${value}</code></a>`);
         } else {
           let anchor = "#" + camelToSnake(value);
           let label = _(value, locale);
@@ -165,144 +139,108 @@ const MOCK_PAGES = {
     a: {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "a"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>&lt;a&gt;</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
     altGlyphDef: {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "altGlyphDef"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>altGlyphDef</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
     clipPath: {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "clipPath"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>clipPath</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
     "color-profile": {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "color-profile"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>color</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
     cursor: {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "cursor"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>cursor</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
     filter: {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "filter"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>filter</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
     font: {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "font"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>font</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
     "font-face": {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "font-face"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>font</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
     foreignObject: {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "foreignObject"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>foreignObject</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
     image: {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "image"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>image</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
     marker: {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "marker"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>marker</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
     mask: {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "mask"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>mask</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
     pattern: {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "pattern"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>pattern</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
     script: {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "script"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>script</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
     style: {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "style"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>style</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
     switch: {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "switch"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>switch</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
     text: {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "text"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>text</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
     view: {
       url: ["/en-US", SVG_BASE_SLUG, "Element", "view"].join("/"),
       data: {
-        summary:
-          "This is a mock for the SVG <strong><code>view</code></strong> element.",
         tags: ["SVG", "Element"],
       },
     },
@@ -311,127 +249,108 @@ const MOCK_PAGES = {
     a: {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "a"].join("/"),
       data: {
-        summary: "这是SVG <strong><code>a</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },
     altGlyphDef: {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "altGlyphDef"].join("/"),
       data: {
-        summary: "这是SVG <strong><code>altGlyphDef</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },
     clipPath: {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "clipPath"].join("/"),
       data: {
-        summary: "这是SVG <strong><code>clipPath</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },
     "color-profile": {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "color-profile"].join("/"),
       data: {
-        summary: "这是SVG <strong><code>color</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },
     cursor: {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "cursor"].join("/"),
       data: {
-        summary: "这是SVG <strong><code>cursor</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },
     filter: {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "filter"].join("/"),
       data: {
-        summary: "这是SVG <strong><code>filter</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },
     font: {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "font"].join("/"),
       data: {
-        summary: "这是SVG <strong><code>font</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },
     "font-face": {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "font-face"].join("/"),
       data: {
-        summary: "这是SVG <strong><code>font</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },
     foreignObject: {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "foreignObject"].join("/"),
       data: {
-        summary:
-          "这是SVG <strong><code>foreignObject</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },
     image: {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "image"].join("/"),
       data: {
-        summary: "这是SVG <strong><code>image</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },
     marker: {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "marker"].join("/"),
       data: {
-        summary: "这是SVG <strong><code>marker</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },
     mask: {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "mask"].join("/"),
       data: {
-        summary: "这是SVG <strong><code>mask</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },
     pattern: {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "pattern"].join("/"),
       data: {
-        summary: "这是SVG <strong><code>pattern</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },
     script: {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "script"].join("/"),
       data: {
-        summary: "这是SVG <strong><code>script</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },
     style: {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "style"].join("/"),
       data: {
-        summary: "这是SVG <strong><code>style</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },
     switch: {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "switch"].join("/"),
       data: {
-        summary: "这是SVG <strong><code>switch</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },
     text: {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "text"].join("/"),
       data: {
-        summary: "这是SVG <strong><code>text</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },
     view: {
       url: ["/zh-CN", SVG_BASE_SLUG, "Element", "view"].join("/"),
       data: {
-        summary: "这是SVG <strong><code>view</code></strong>元素的模拟",
         tags: ["SVG", "Element"],
       },
     },

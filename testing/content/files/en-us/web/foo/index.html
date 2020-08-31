@@ -1,12 +1,17 @@
 ---
 title: '<foo>: A test tag'
 slug: Web/Foo
-summary: This is a sample page
 tags:
   - Tag1
   - Tag2
 ---
 <p>{{HTMLRef}}</p>
+
+<div class="blockIndicator">
+  <p>This should not become the summary.</p>
+</div>
+
+<p>This becomes the summary.</p>
 
 <p>Let's include some other pages:</p>
 <div>{{page("web/fubar")}}</div>

@@ -1,4 +1,4 @@
-@import "~mdn-minimalist/sass/mdn-minimalist";
+@import "~@mdn/minimalist/sass/mdn-minimalist";
 
 /* This makes Storybook's background changer and grid work */
 html,
@@ -8,4 +8,40 @@ body {
 
 code {
   background-color: #262626;
+}
+
+/* Grids */
+
+.reference-page {
+  .page-header,
+  .titlebar-container,
+  .breadcrumb-locale-container,
+  .main-content,
+  .document-toc-container,
+  .sidebar,
+  .page-footer {
+    min-height: 100px;
+  }
+
+  .page-header {
+    background-color: #fabba7;
+  }
+
+  .titlebar-container,
+  .main-content {
+    background-color: #d2e4b7;
+  }
+
+  .breadcrumb-locale-container {
+    background-color: #a7dddb;
+  }
+
+  .document-toc-container,
+  .sidebar {
+    background-color: #fffabc;
+  }
+
+  .page-footer {
+    background-color: #5e799a;
+  }
 }

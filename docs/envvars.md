@@ -50,6 +50,13 @@ folders you care about.
 When doing a batch build, it can be very time-consuming so just doing
 one or two sub-folders will speed things up.
 
+### `BUILD_FILES`
+
+**Default: `[]`**
+
+A comma or newline separated list of file paths. Can be absolute or relative
+to the `CONTENT_ROOT`.
+
 ### `BUILD_OUT_ROOT`
 
 **Default: `client/build`**
@@ -103,7 +110,7 @@ information about fixable flaws instead of actually fixing it on disk.
 
 **Default: `false`**
 
-### `KS_LIVE_SAMPLES_BASE_URL`
+### `BUILD_LIVE_SAMPLES_BASE_URL`
 
 **Default: `https://mdn.mozillademos.org`**
 
@@ -115,6 +122,12 @@ carefully as the rest of the site.
 When doing local development, it's recommended to set this to
 `http://localhost:5000` in your personal `.env`.
 
+### `BUILD_INTERACTIVE_EXAMPLES_BASE_URL`
+
+**Default: `https://interactive-examples.mdn.mozilla.net`**
+
+The base URL used in the Interactive Example iframes.
+
 ## Server
 
 ### `SERVER_PORT`
@@ -123,6 +136,12 @@ When doing local development, it's recommended to set this to
 
 Usually the `server` module is started with `foreman` (the `nf` command)
 and this is the default port.
+
+### `SERVER_STATIC_ROOT`
+
+**Default `../client/build`**
+
+If you want to serve static files some a completely different directory.
 
 ## Testing
 

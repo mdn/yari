@@ -4,7 +4,6 @@ import { StaticRouter } from "react-router-dom/server";
 
 import { App } from "../client/src/app";
 import render from "./render";
-import { fixSyntaxHighlighting } from "./syntax-highlighter";
 
 // This is necessary because the ssr.js is in dist/ssr.js
 // and we need to reach the .env this way.
@@ -81,11 +80,6 @@ export function prepareDoc(doc) {
   // we're using it in the renderer. So mutate it for the specific needs
   // of the renderer.
   fixRelatedContent(doc);
-
-  if (doc.body) {
-    // Find blocks of code and transform it to syntax highlighted code.
-    fixSyntaxHighlighting(doc);
-  }
 }
 
 export function renderHTML(doc, url) {

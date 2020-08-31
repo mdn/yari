@@ -1,31 +1,43 @@
 import fs from "fs";
 import path from "path";
+
+import jsesc from "jsesc";
 import cheerio from "cheerio";
 import { renderToString } from "react-dom/server";
 
-function readBuildHtml() {
-  return fs.readFileSync(
+const lazy = (creator) => {
+  let res;
+  let processed = false;
+  return () => {
+    if (processed) return res;
+    res = creator.apply(this, arguments);
+    processed = true;
+    return res;
+  };
+};
+
+const readBuildHTML = lazy(() => {
+  const html = fs.readFileSync(
     path.resolve(__dirname, "../../client/build/index.html"),
     "utf8"
   );
-}
-
-let buildHtml = "";
-if (process.env.NODE_ENV !== "development") {
-  // read it once
-  buildHtml = readBuildHtml();
-  if (!buildHtml.includes('<div id="root"></div>')) {
+  if (!html.includes('<div id="root"></div>')) {
     throw new Error(
       'The render depends on being able to inject into <div id="root"></div>'
     );
   }
+  return html;
+});
+
+function serializeDocumentData(data) {
+  return jsesc(JSON.stringify(data), {
+    json: true,
+    isScriptContext: true,
+  });
 }
 
 export default function render(renderApp, doc) {
-  if (process.env.NODE_ENV === "development") {
-    // Reread on every request
-    buildHtml = readBuildHtml();
-  }
+  const buildHtml = readBuildHTML();
   const $ = cheerio.load(buildHtml);
 
   const rendered = renderToString(renderApp);
@@ -33,18 +45,27 @@ export default function render(renderApp, doc) {
   let pageTitle = "MDN Web Docs"; // default
   let canonicalURL = "https://developer.mozilla.org";
 
+  let pageDescription = "";
+
   if (doc) {
     // Use the doc's title instead
-    pageTitle = doc.title;
+    pageTitle = doc.pageTitle;
     canonicalURL += doc.mdn_url;
 
-    // XXX We *could* just expose some absolute minimal here. Just enough
-    // for the React Document component to know it doesn't need to re-render.
-    const escapeDocumentJson = JSON.stringify(doc).replace("</", "<\\/");
-    const documentDataTag = `
-    <script id="documentdata" type="application/json">${escapeDocumentJson}</script>
-    `.trim();
+    if (doc.summary) {
+      pageDescription = doc.summary;
+    }
+
+    const documentDataTag = `<script>window.__data__ = JSON.parse(${serializeDocumentData(
+      doc
+    )});</script>`;
     $("#root").after(documentDataTag);
+  }
+
+  if (pageDescription) {
+    // This overrides the default description. Also assumes there's always
+    // one tag there already.
+    $('meta[name="description"]').attr("content", pageDescription);
   }
 
   $('link[rel="canonical"]').attr("href", canonicalURL);
