@@ -1,0 +1,14 @@
+# In GitHub Actions, all the content of the .gitignore gets added to
+# this file.
+# If there's both a `.gitignore` *and* `.npmignore` file, and a file
+# might mentioned in `.gitignore` but not in `.npmignore` it will be
+# included.
+# And we don't want to have maintain both. So right before it runs the
+# `npm publish` step it will combine these two files.
+
+/content/files/
+/deployer
+kumascript/tests
+testing/
+import/
+/mdn-web-docs.svg
