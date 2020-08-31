@@ -20,10 +20,9 @@ jobs:
         run: |
           cat .gitignore >> .npmignore
 
-      # # XXX Replace with mikeal/merge-release@v4
-      # - name: Dry-run publish to see which files are included
-      #   run: |
-      #     npm publish --access public --dry-run
+      - name: Dry-run publish to see which files are included
+        run: |
+          npm publish --access public --dry-run
 
       - name: publish
         uses: mikeal/merge-release@master
