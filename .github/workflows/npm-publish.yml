@@ -4,11 +4,6 @@ on:
   push:
     branches: [master]
 
-  # These 3 lines are temporary!
-  pull_request:
-    branches:
-      - master
-
 jobs:
   build:
     runs-on: ubuntu-latest
