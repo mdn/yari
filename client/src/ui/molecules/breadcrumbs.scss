@@ -1,0 +1,76 @@
+@import "~@mdn/minimalist/sass/mixins/utils";
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/media-queries";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+ol.breadcrumbs {
+  padding: 0 24px;
+  font-size: $smaller-font-size;
+
+  li {
+    display: inline;
+    hyphens: auto;
+
+    .breadcrumb,
+    .breadcrumb-current-page {
+      @include visually-hidden();
+
+      @media #{$mq-small-desktop-and-up} {
+        @include reset-visually-hidden();
+      }
+    }
+
+    .breadcrumb,
+    .breadcrumb-previous {
+      &::after {
+        content: "";
+        background: transparent url("~@mdn/dinocons/arrows/chevron.svg") 0 0
+          no-repeat;
+        background-size: 12px;
+        margin: 0 5px;
+        width: 12px;
+        height: 12px;
+        transform: rotate(90deg);
+      }
+    }
+
+    .breadcrumb {
+      &::after {
+        display: inline-block;
+      }
+    }
+
+    .breadcrumb-previous {
+      &::before {
+        display: inline-block;
+        content: "";
+        background: transparent url("~@mdn/dinocons/arrows/chevron.svg") 0 0
+          no-repeat;
+        background-size: 12px;
+        margin-right: 5px;
+        width: 12px;
+        height: 12px;
+        transform: rotate(-90deg);
+
+        @media #{$mq-small-desktop-and-up} {
+          display: none;
+        }
+      }
+
+      &::after {
+        display: none;
+
+        @media #{$mq-small-desktop-and-up} {
+          display: inline-block;
+        }
+      }
+    }
+
+    &:last-child {
+      a:link,
+      a:visited {
+        color: $text-color;
+      }
+    }
+  }
+}

@@ -5,8 +5,6 @@ import { App } from "./app";
 import { GAProvider } from "./ga-context";
 import { UserDataProvider } from "./user-context";
 
-import "./index.scss";
-
 const WSSProvider = React.lazy(() => import("./web-socket"));
 // import * as serviceWorker from './serviceWorker';
 
