@@ -5,7 +5,7 @@ import useSWR, { mutate } from "swr";
 import { useWebSocketMessageHandler } from "../web-socket";
 import { NoMatch } from "../routing";
 import { useDocumentURL } from "./hooks";
-import { Doc, DocParent } from "./types";
+import { Doc } from "./types";
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
 import { InteractiveExample } from "./ingredients/interactive-example";
@@ -16,7 +16,8 @@ import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 // Misc
 // Sub-components
-import Titlebar from "../ui/atoms/titlebar";
+import Breadcrumbs from "../ui/molecules/breadcrumbs";
+import Titlebar from "../ui/molecules/titlebar";
 import { TOC } from "./toc";
 
 import "./index.scss";
@@ -160,37 +161,6 @@ function LastModified({ value, locale }) {
         {date.toLocaleString(locale, dateStringOptions)}
       </time>
     </>
-  );
-}
-
-// XXX Move this component to its own file. index.tsx is already too large.
-function Breadcrumbs({ parents }: { parents: DocParent[] }) {
-  if (!parents.length) {
-    throw new Error("Empty parents array");
-  }
-  return (
-    <ol
-      typeof="BreadcrumbList"
-      vocab="https://schema.org/"
-      aria-label="breadcrumbs"
-    >
-      {parents.map((parent, i) => {
-        const isLast = i + 1 === parents.length;
-        return (
-          <li key={parent.uri} property="itemListElement" typeof="ListItem">
-            <Link
-              to={parent.uri}
-              className={isLast ? "crumb-current-page" : "breadcrumb-chevron"}
-              property="item"
-              typeof="WebPage"
-            >
-              <span property="name">{parent.title}</span>
-            </Link>
-            <meta property="position" content={`${i + 1}`} />
-          </li>
-        );
-      })}
-    </ol>
   );
 }
 

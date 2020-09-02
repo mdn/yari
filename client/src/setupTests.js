@@ -1,4 +1,6 @@
 import React from "react";
+// Custom Jest matchers that allow for declarative testing
+import "@testing-library/jest-dom";
 
 // localStorage mock for tests
 const mockLocalStorage = () => {

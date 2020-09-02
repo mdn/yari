@@ -1,6 +1,10 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 
+// we include our base SASS here to ensure it is loaded
+// and applied before any component specific style
+import "./app.scss";
+
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import Footer from "./footer";
