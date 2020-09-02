@@ -19,7 +19,11 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
 
   const checkImages = options.flawLevels.get("images") !== FLAW_LEVELS.IGNORE;
 
-  function addImageFlaw($img, src, { explanation, suggestion = null }) {
+  function addImageFlaw(
+    $img,
+    src,
+    { explanation, externalImage = false, suggestion = null }
+  ) {
     for (const match of findMatchesInText(src, rawContent, {
       attribute: "src",
     })) {
@@ -39,6 +43,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
         fixable,
         suggestion,
         explanation,
+        externalImage,
         ...match,
       });
     }
@@ -94,18 +99,9 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
         } else {
           addImageFlaw(img, src, {
             explanation: "External image URL",
+            externalImage: true,
           });
         }
-
-        // TODO: It might be prudent to cease allowing any remote images.
-        // If you rely on an external domain that isn't our designated
-        // default domain, we should probably download it and check it in.
-        // It means less SSL and network overheads if we can download all
-        // images on an existing HTTP2 connection, and if the domain is
-        // something out of our control we're potentially at mercy of the
-        // images suddenly disappearing.
-        // Due to so much else going on, let's not make a huge stink about
-        // it at the moment (peterbe, Aug 2020).
       }
     } else {
       // Remember, you can not have search parameters on local images.

@@ -174,7 +174,8 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
   const fixableFlaws = Object.values(doc.flaws)
     .map((flaws) => {
       return flaws.filter(
-        (flaw) => !flaw.fixed && (flaw.suggestion || flaw.fixable)
+        (flaw) =>
+          !flaw.fixed && (flaw.suggestion || flaw.fixable || flaw.externalImage)
       );
     })
     .flat();
@@ -611,7 +612,8 @@ function Images({
               >
                 line {flaw.line}:{flaw.column}
               </a>{" "}
-              {flaw.fixable && <FixableFlawBadge />} <br />
+              {(flaw.fixable || flaw.externalImage) && <FixableFlawBadge />}{" "}
+              <br />
               {flaw.suggestion && (
                 <small>
                   <b>Suggestion:</b>
