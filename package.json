@@ -15,8 +15,10 @@
     "build:ssr": "cd ssr && webpack --config webpack.config.js --mode=production",
     "prepare-build": "yarn build:client && yarn build:ssr",
     "build": "cd build && cross-env NODE_ENV=production node cli.js",
-    "start": "yarn build:client && yarn build:ssr && nf start",
+    "start": "(test -f client/build/index.html || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && nf -j Procfile.start start",
+    "dev": "yarn build:client && yarn build:ssr && nf -j Procfile.dev start",
     "start:client": "cd client && cross-env BROWSER=none PORT=3000 react-scripts start",
+    "start:server": "node server",
     "start:dev-server": "nodemon server --watch server --watch build --watch content --watch kumascript",
     "start:static-server": "cross-env ENV_FILE=testing/.env node server/static.js",
     "filecheck": "cd filecheck && node cli.js"
