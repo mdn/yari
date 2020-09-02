@@ -257,7 +257,7 @@ class MacroLiveSampleError extends MacroExecutionError {
  */
 class MacroPagesError extends MacroExecutionError {
   constructor(error, source, token) {
-    super(error, source, token, true);
+    super(error, source, token, false);
     this.name = "MacroPagesError";
     this.macroSource = source.slice(
       token.location.start.offset,
