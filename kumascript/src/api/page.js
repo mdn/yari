@@ -44,7 +44,7 @@ module.exports = {
   // This is not called by any macros, and is only used here by
   // wiki.tree(), so we could move it to be part of that function.
   subpages(path, depth, self) {
-    return this.info.getChildren(path || this.env.url, self);
+    return this.subpagesExpand(path, depth, self);
   },
 
   // Optional path, defaults to current page
