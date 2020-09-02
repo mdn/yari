@@ -9,6 +9,7 @@ export interface GenericFlaw {
   suggestion: string | null;
   fixable?: boolean;
   fixed?: true;
+  externalImage?: boolean;
 }
 
 export interface BrokenLink extends GenericFlaw {

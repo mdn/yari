@@ -32,10 +32,15 @@ router.put("/fixfixableflaws", withDocument, async (req, res) => {
     return res.status(400).send("Can't fix archived documents");
   }
   // To get the 'doc' we have to find the built art
-  await buildDocument(req.document, {
-    fixFlaws: true,
-    fixFlawsVerbose: true,
-  });
+  try {
+    await buildDocument(req.document, {
+      fixFlaws: true,
+      fixFlawsVerbose: true,
+    });
+  } catch (error) {
+    console.error(`Error in buildDocument(${req.document.url})`, error);
+    return res.status(500).send(error.toString());
+  }
 
   // Just because you *build* document, doesn't mean it writes the new
   // built content to disk. So, if *was* already built, with all the flaws

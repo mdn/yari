@@ -1,4 +1,8 @@
+const fs = require("fs");
+const path = require("path");
+
 const chalk = require("chalk");
+const got = require("got");
 
 const { Document, Redirect } = require("../content");
 const { FLAW_LEVELS } = require("./constants");
@@ -7,6 +11,7 @@ const {
   findMatchesInText,
   replaceMatchesInText,
 } = require("./matches-in-text");
+const { fstat } = require("fs-extra");
 
 function injectFlaws(doc, $, options, { rawContent }) {
   if (doc.isArchive) return;
@@ -169,7 +174,7 @@ function injectFlaws(doc, $, options, { rawContent }) {
   }
 }
 
-function fixFixableFlaws(doc, options, document) {
+async function fixFixableFlaws(doc, options, document) {
   if (!options.fixFlaws || document.isArchive) return;
 
   let newRawHTML = document.rawHTML;
@@ -229,9 +234,9 @@ function fixFixableFlaws(doc, options, document) {
     }
   }
 
-  // Any 'images' flaws with a suggestion...
+  // Any 'images' flaws with a suggestion or external image...
   for (const flaw of doc.flaws.images || []) {
-    if (!flaw.suggestion) {
+    if (!(flaw.suggestion || flaw.externalImage)) {
       continue;
     }
     // The reason we're not using the parse HTML, as a cheerio object `$`
@@ -239,17 +244,42 @@ function fixFixableFlaws(doc, options, document) {
     // HTML. It's only proper HTML when the kumascript macros have been
     // expanded.
     const htmlBefore = newRawHTML;
-    newRawHTML = replaceMatchesInText(flaw.src, newRawHTML, flaw.suggestion, {
+    let newSrc;
+    if (flaw.externalImage) {
+      // Sanity check that it's an external image
+      const url = new URL(flaw.src);
+      if (url.protocol !== "https:") {
+        throw new Error(`Insecure image URL ${flaw.src}`);
+      }
+      try {
+        const imageBuffer = await got(flaw.src, {
+          responseType: "buffer",
+          resolveBodyOnly: true,
+          timeout: 10000,
+          retry: 3,
+        });
+        const destination = path.join(
+          Document.getFolderPath(document.metadata),
+          path.basename(url.pathname)
+        );
+        fs.writeFileSync(destination, imageBuffer);
+        console.log(`Downloaded ${flaw.src} to ${destination}`);
+        newSrc = path.basename(destination);
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    } else {
+      newSrc = flaw.suggestion;
+    }
+    newRawHTML = replaceMatchesInText(flaw.src, newRawHTML, newSrc, {
       inAttribute: "src",
     });
-    if (htmlBefore !== newRawHTML) {
-      // flaw.fixed = !options.fixFlawsDryRun;
-    }
     if (loud) {
       console.log(
         chalk.grey(
           `Fixed image ${chalk.white.bold(flaw.src)} to ${chalk.white.bold(
-            flaw.suggestion
+            newSrc
           )}`
         )
       );
