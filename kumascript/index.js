@@ -38,7 +38,7 @@ const renderFromURL = memoize(async (url) => {
       interactive_examples: {
         base_url: INTERACTIVE_EXAMPLES_BASE_URL,
       },
-      live_samples: { base_url: LIVE_SAMPLES_BASE_URL },
+      live_samples: { base_url: LIVE_SAMPLES_BASE_URL || url },
     },
     async (url) => {
       const [renderedHtml, errors] = await renderFromURL(info.cleanURL(url));

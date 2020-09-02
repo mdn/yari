@@ -77,15 +77,17 @@ jobs:
           # functional tests have a gap in them but actually building
           # real content exposes it.
 
-          # Setting this will mean that every live sample will be served
-          # like this:
-          #  <iframe src="//en-US/docs/Foo/_samples_/index.html">
+          # Setting this to and empty string effectively means that the
+          # <iframe> src will end up being the relative URL of the current
+          # document as a base.
+          # I.e. like this, if the current document is '/en-US/docs/Foo':
+          #  <iframe src="/en-US/docs/Foo/_samples_/index.html">
           # ...for example.
           # Yes, it's potentially "insecure" because the iframe will execute
           # whatever code is inserted into the code example. But since the
           # whole (possible) domain for PR builds will never be somewhere
           # where there are interesting cookies, it's a safe choice.
-          export BUILD_LIVE_SAMPLES_BASE_URL=/
+          export BUILD_LIVE_SAMPLES_BASE_URL=
 
           export BUILD_NO_PROGRESSBAR=true
           export BUILD_FILES="${{ env.GIT_DIFF }}"
