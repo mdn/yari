@@ -279,7 +279,7 @@ async function fixFixableFlaws(doc, options, document) {
       console.log(
         chalk.grey(
           `Fixed image ${chalk.white.bold(flaw.src)} to ${chalk.white.bold(
-            flaw.suggestion
+            newSrc
           )}`
         )
       );
