@@ -1,16 +1,19 @@
-import React, { useEffect, useReducer, useRef } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
+import { diffWords } from "diff";
 
 import { humanizeFlawName } from "../../flaw-utils";
+import { useDocumentURL } from "../hooks";
 import {
   Doc,
-  Link,
+  BrokenLink,
   MacroErrorMessage,
-  BadBCDLink,
+  BadBCDLinkFlaw,
   ImageReferenceFlaw,
   GenericFlaw,
+  BadBCDQueryFlaw,
 } from "../types";
 import "./flaws.scss";
 
@@ -167,8 +170,22 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
   if (process.env.NODE_ENV !== "development") {
     throw new Error("This shouldn't be used in non-development builds");
   }
+
+  const fixableFlaws = Object.values(doc.flaws)
+    .map((flaws) => {
+      return flaws.filter(
+        (flaw) =>
+          !flaw.fixed && (flaw.suggestion || flaw.fixable || flaw.externalImage)
+      );
+    })
+    .flat();
+
   return (
     <div id="document-flaws">
+      {!!fixableFlaws.length && (
+        <FixableFlawsAction count={fixableFlaws.length} />
+      )}
+
       {flaws.map((flaw) => {
         switch (flaw.name) {
           case "broken_links":
@@ -190,7 +207,7 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
             return (
               <BadBCDQueries
                 key="bad_bcd_queries"
-                messages={doc.flaws.bad_bcd_queries}
+                flaws={doc.flaws.bad_bcd_queries}
               />
             );
           case "macros":
@@ -198,7 +215,7 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
               <Macros
                 key="macros"
                 sourceFolder={doc.source.folder}
-                messages={doc.flaws.macros}
+                flaws={doc.flaws.macros}
               />
             );
           case "images":
@@ -217,12 +234,91 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
   );
 }
 
+function FixableFlawsAction({ count }: { count: number }) {
+  const [fixing, setFixing] = useState(false);
+  const [fixed, setFixed] = useState(false);
+  const [fixingError, setFixingError] = useState<Error | null>(null);
+
+  const documentURL = useDocumentURL();
+
+  async function fix() {
+    try {
+      const response = await fetch(
+        `/_document/fixfixableflaws?${new URLSearchParams({
+          url: documentURL,
+        }).toString()}`,
+        {
+          method: "PUT",
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`${response.status} on ${response.url}`);
+      }
+      setFixed(true);
+    } catch (error) {
+      console.error("Error trying to fix fixable flaws");
+
+      setFixingError(error);
+    } finally {
+      setFixing(false);
+    }
+  }
+
+  if (!count) {
+    return null;
+  }
+  return (
+    <div>
+      {fixingError && (
+        <p style={{ color: "red" }}>
+          <b>Error:</b> <code>{fixingError.toString()}</code>
+        </p>
+      )}
+      <button
+        type="button"
+        onClick={async () => {
+          setFixing((prev) => !prev);
+          await fix();
+        }}
+      >
+        {fixing ? "Fixing..." : `Fix fixable flaws (${count})`}
+      </button>{" "}
+      {fixed && <b style={{ color: "darkgreen" }}>Fixed!</b>}
+    </div>
+  );
+}
+
+function FixableFlawBadge() {
+  return (
+    <small className="macro-fixable" title="This flaw is fixable.">
+      Fixable{" "}
+      <span role="img" aria-label="Thumbs up">
+        👍🏼
+      </span>
+    </small>
+  );
+}
+
+function ShowDiff({ before, after }: { before: string; after: string }) {
+  const diff = diffWords(before, after);
+  const bits = diff.map((part, i: number) => {
+    if (part.added) {
+      return <ins key={i}>{part.value}</ins>;
+    } else if (part.removed) {
+      return <del key={i}>{part.value}</del>;
+    } else {
+      return <span key={i}>{part.value}</span>;
+    }
+  });
+  return <code>{bits}</code>;
+}
+
 function BrokenLinks({
   sourceFolder,
   links,
 }: {
   sourceFolder: string;
-  links: Link[];
+  links: BrokenLink[];
 }) {
   const [opening, setOpening] = React.useState<string | null>(null);
   useEffect(() => {
@@ -241,13 +337,6 @@ function BrokenLinks({
 
   const filepath = sourceFolder + "/index.html";
 
-  function equalUrls(url1: string, url2: string) {
-    return (
-      new URL(url1, "http://example.com").pathname ===
-      new URL(url2, "http://example.com").pathname
-    );
-  }
-
   function openInEditor(key: string, line: number, column: number) {
     const sp = new URLSearchParams();
     sp.set("filepath", filepath);
@@ -262,128 +351,32 @@ function BrokenLinks({
     });
   }
 
-  useEffect(() => {
-    const annotations: RoughAnnotation[] = [];
-
-    let linkIndex = 0;
-    for (const anchor of [
-      ...document.querySelectorAll<HTMLAnchorElement>("div.content a[href]"),
-    ]) {
-      const link = links[linkIndex];
-      if (!link) {
-        break;
-      }
-      // A `anchor.href` is always absolute with `http//localhost/...`.
-      // But `link.href` is not necessarily so, but it might.
-      // The only "hashing" that matters is the pathname.
-      if (!equalUrls(anchor.href, link.href)) {
-        continue;
-      }
-      linkIndex++;
-      const annotationColor = link.suggestion ? "orange" : "red";
-      anchor.dataset.originalTitle = anchor.title;
-      anchor.title = link.suggestion
-        ? `Consider fixing! Suggestion: ${link.suggestion}`
-        : "Broken link! Links to a page that will not be found";
-      annotations.push(
-        annotate(anchor, {
-          type: "box",
-          color: annotationColor,
-          animationDuration: 300,
-        })
-      );
-    }
-
-    const ag = annotationGroup(annotations);
-    ag.show();
-
-    return () => {
-      ag.hide();
-
-      // Now, restore any 'title' attributes that were overridden.
-      for (const anchor of Array.from(
-        document.querySelectorAll<HTMLAnchorElement>(`div.content a`)
-      )) {
-        if (anchor.dataset.originalTitle !== undefined) {
-          anchor.title = anchor.dataset.originalTitle;
-        }
-      }
-    };
-  }, [links]);
+  const { focus } = useAnnotations(links);
 
   return (
     <div className="flaw flaw__broken_links">
       <h3>Broken Links</h3>
       <ol>
-        {links.map((link, i) => {
-          const key = `${link.href}${link.line}${link.column}`;
+        {links.map((flaw, i) => {
+          const key = `${flaw.href}${flaw.line}${flaw.column}`;
           return (
             <li
               key={key}
-              className={link.fixed ? "fixed" : undefined}
+              className={flaw.fixed ? "fixed_flaw" : undefined}
               title={
-                link.fixed
+                flaw.fixed
                   ? "This broken link has been automatically fixed."
                   : undefined
               }
             >
-              <code>{link.href}</code>{" "}
-              {link.suggestion && (
-                <span>
-                  Suggested fix: <code>{link.suggestion}</code>
-                </span>
-              )}{" "}
+              <code>{flaw.href}</code>{" "}
               <span
                 role="img"
                 aria-label="Click to highlight broken link"
                 title="Click to highlight broken link anchor"
                 style={{ cursor: "zoom-in" }}
                 onClick={() => {
-                  const annotations: RoughAnnotation[] = [];
-
-                  let linkIndex = 0;
-                  for (const anchor of [
-                    ...document.querySelectorAll<HTMLAnchorElement>(
-                      "div.content a[href]"
-                    ),
-                  ]) {
-                    const link = links[linkIndex];
-                    if (!link) {
-                      break;
-                    }
-                    if (!equalUrls(anchor.href, link.href)) {
-                      continue;
-                    }
-
-                    if (i === linkIndex) {
-                      anchor.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                      });
-
-                      if (anchor.parentElement) {
-                        annotations.push(
-                          annotate(anchor, {
-                            type: "circle",
-                            color: "purple",
-                            animationDuration: 500,
-                            strokeWidth: 2,
-                            padding: 6,
-                          })
-                        );
-                      }
-                    }
-                    linkIndex++;
-                  }
-
-                  if (annotations.length) {
-                    const ag = annotationGroup(annotations);
-                    ag.show();
-                    // Only show this extra highlight temporarily
-                    window.setTimeout(() => {
-                      ag.hide();
-                    }, 2000);
-                  }
+                  focus(flaw.id);
                 }}
               >
                 👀
@@ -392,13 +385,21 @@ function BrokenLinks({
                 href={`file://${filepath}`}
                 onClick={(event: React.MouseEvent) => {
                   event.preventDefault();
-                  openInEditor(key, link.line, link.column);
+                  openInEditor(key, flaw.line, flaw.column);
                 }}
                 title="Click to open in your editor"
               >
-                line {link.line}:{link.column}
+                line {flaw.line}:{flaw.column}
               </a>{" "}
+              {flaw.fixable && <FixableFlawBadge />}{" "}
               {opening && opening === key && <small>Opening...</small>}
+              <br />
+              {flaw.suggestion && (
+                <small>
+                  <b>Suggestion:</b>
+                  <ShowDiff before={flaw.href} after={flaw.suggestion} />
+                </small>
+              )}{" "}
             </li>
           );
         })}
@@ -407,14 +408,14 @@ function BrokenLinks({
   );
 }
 
-function BadBCDQueries({ messages }) {
+function BadBCDQueries({ flaws }: { flaws: BadBCDQueryFlaw[] }) {
   return (
     <div className="flaw flaw__bad_bcd_queries">
       <h3>{humanizeFlawName("bad_bcd_queries")}</h3>
       <ul>
-        {messages.map((message) => (
-          <li key={message}>
-            <code>{message}</code>
+        {flaws.map((flaw) => (
+          <li key={flaw.id}>
+            <code>{flaw.explanation}</code>
           </li>
         ))}
       </ul>
@@ -422,7 +423,7 @@ function BadBCDQueries({ messages }) {
   );
 }
 
-function BadBCDLinks({ links }: { links: BadBCDLink[] }) {
+function BadBCDLinks({ links }: { links: BadBCDLinkFlaw[] }) {
   return (
     <div className="flaw flaw__bad_bcd_links">
       <h3>{humanizeFlawName("bad_bcd_links")}</h3>
@@ -439,10 +440,10 @@ function BadBCDLinks({ links }: { links: BadBCDLink[] }) {
 }
 
 function Macros({
-  messages,
+  flaws,
   sourceFolder,
 }: {
-  messages: MacroErrorMessage[];
+  flaws: MacroErrorMessage[];
   sourceFolder: string;
 }) {
   const [opening, setOpening] = React.useState<string | null>(null);
@@ -475,47 +476,55 @@ function Macros({
   return (
     <div className="flaw flaw__macros">
       <h3>{humanizeFlawName("macros")}</h3>
-      {messages.map((msg) => {
-        const inPrerequisiteMacro = !msg.filepath.includes(
+      {flaws.map((flaw) => {
+        const inPrerequisiteMacro = !flaw.filepath.includes(
           `${sourceFolder}/index.html`
         );
-        const key = `${msg.filepath}:${msg.line}:${msg.column}`;
+        const key = `${flaw.filepath}:${flaw.line}:${flaw.column}`;
 
         return (
           <details
             key={key}
-            className={msg.fixed ? "fixed" : undefined}
+            className={flaw.fixed ? "fixed_flaw" : undefined}
             title={
-              msg.fixed
+              flaw.fixed
                 ? "This macro flaw has been automatically fixed."
                 : undefined
             }
           >
             <summary>
               <a
-                href={`file://${msg.filepath}`}
+                href={`file://${flaw.filepath}`}
                 onClick={(event: React.MouseEvent) => {
                   event.preventDefault();
-                  openInEditor(msg, key);
+                  openInEditor(flaw, key);
                 }}
               >
-                <code>{msg.name}</code> from <code>{msg.macroName}</code> in
-                line {msg.line}:{msg.column}
+                <code>{flaw.name}</code> from <code>{flaw.macroName}</code> in
+                line {flaw.line}:{flaw.column}
               </a>{" "}
               {opening && opening === key && <small>Opening...</small>}{" "}
               {inPrerequisiteMacro && (
                 <small
                   className="macro-filepath-in-prerequisite"
-                  title={`This page depends on a macro expansion inside ${msg.filepath}`}
+                  title={`This page depends on a macro expansion inside ${flaw.filepath}`}
                 >
                   In prerequisite macro
                 </small>
-              )}
+              )}{" "}
+              {flaw.fixable && <FixableFlawBadge />}{" "}
             </summary>
+            {flaw.fixable && flaw.suggestion && (
+              <>
+                <b>Suggestion:</b>
+                <ShowDiff before={flaw.macroSource} after={flaw.suggestion} />
+                <br />
+              </>
+            )}
             <b>Context:</b>
-            <pre>{msg.sourceContext}</pre>
+            <pre>{flaw.sourceContext}</pre>
             <b>Original error stack:</b>
-            <pre>{msg.errorStack}</pre>
+            <pre>{flaw.errorStack}</pre>
             <b>Filepath:</b>{" "}
             {inPrerequisiteMacro && (
               <i className="macro-filepath-in-prerequisite">
@@ -524,7 +533,7 @@ function Macros({
               </i>
             )}
             <br />
-            <code>{msg.filepath}</code>
+            <code>{flaw.filepath}</code>
           </details>
         );
       })}
@@ -577,18 +586,18 @@ function Images({
     <div className="flaw flaw__images">
       <h3>{humanizeFlawName("images")}</h3>
       <ul>
-        {images.map((image, i) => {
-          const key = `${image.src}${image.line}${image.column}`;
+        {images.map((flaw, i) => {
+          const key = `${flaw.src}${flaw.line}${flaw.column}`;
           return (
             <li key={key}>
-              <code>{image.src}</code>{" "}
+              <code>{flaw.src}</code>{" "}
               <span
                 role="img"
                 aria-label="Click to highlight image"
                 title="Click to highlight image"
                 style={{ cursor: "zoom-in" }}
                 onClick={() => {
-                  focus(image.id);
+                  focus(flaw.id);
                 }}
               >
                 👀
@@ -597,18 +606,21 @@ function Images({
                 href={`file://${filepath}`}
                 onClick={(event: React.MouseEvent) => {
                   event.preventDefault();
-                  openInEditor(key, image.line, image.column);
+                  openInEditor(key, flaw.line, flaw.column);
                 }}
                 title="Click to open in your editor"
               >
-                line {image.line}:{image.column}
+                line {flaw.line}:{flaw.column}
               </a>{" "}
-              <small>{image.explanation}</small>{" "}
-              {image.suggestion && (
-                <span>
-                  Suggested fix: <code>{image.suggestion}</code>
-                </span>
-              )}
+              {(flaw.fixable || flaw.externalImage) && <FixableFlawBadge />}{" "}
+              <br />
+              {flaw.suggestion && (
+                <small>
+                  <b>Suggestion:</b>
+                  <ShowDiff before={flaw.src} after={flaw.suggestion} />
+                </small>
+              )}{" "}
+              <small>{flaw.explanation}</small>
             </li>
           );
         })}

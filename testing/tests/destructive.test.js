@@ -72,8 +72,8 @@ describe("fixing flaws", () => {
     // deleting things from the temp directory natively and we strictly
     // don't need to stick around to wait for this.
     // See https://github.com/sindresorhus/tempy#why-doesnt-it-have-a-cleanup-method
-    // But when doing local dev it's nice to not go crazy on your laptops
-    // temp directory if you run this over and over.
+    // But when doing local dev it's nice to not go crazy on your laptop's
+    // tmp directory if you run this over and over.
     fse.removeSync(tempdir);
   });
 
@@ -97,8 +97,9 @@ describe("fixing flaws", () => {
     const dryRunNotices = stdout
       .split("\n")
       .filter((line) => regexPattern.test(line));
-    expect(dryRunNotices.length).toBe(1);
-    expect(dryRunNotices[0]).toContain(pattern);
+    expect(dryRunNotices.length).toBe(2);
+    expect(dryRunNotices[1]).toContain(pattern);
+    expect(dryRunNotices[0]).toContain(path.join(pattern, "images"));
     const dryrunFiles = getChangedFiles(tempContentDir);
     expect(dryrunFiles.length).toBe(0);
   });
@@ -121,8 +122,15 @@ describe("fixing flaws", () => {
     expect(stdout).toContain(pattern);
 
     const files = getChangedFiles(tempContentDir);
-    expect(files.length).toBe(1);
-    const newRawHtml = fs.readFileSync(files[0], "utf-8");
+    expect(files.length).toBe(2);
+    const imagesFile = files.find((f) =>
+      f.includes(path.join(pattern, "images"))
+    );
+    const newRawHtmlImages = fs.readFileSync(imagesFile, "utf-8");
+    expect(newRawHtmlImages).toContain('src="fixable.png"');
+
+    const regularFile = files.find((f) => f !== imagesFile);
+    const newRawHtml = fs.readFileSync(regularFile, "utf-8");
     expect(newRawHtml).toContain("{{CSSxRef('number')}}");
     expect(newRawHtml).toContain('{{htmlattrxref("href", "a")}}');
     // Broken links that get fixed.

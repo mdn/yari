@@ -437,6 +437,30 @@ test("broken links flaws", () => {
   ).toBe("/en-US/docs/Glossary/Bézier_curve#identifier");
 });
 
+test("repeated broken links flaws", () => {
+  // This fixture has the same broken link, that redirects, 3 times.
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "brokenlinks_repeats"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  // You have to be intimately familiar with the fixture to understand
+  // why these flaws come out as they do.
+  expect(flaws.broken_links.length).toBe(3);
+
+  // Map them by 'id'
+  const map = new Map(flaws.broken_links.map((x) => [x.id, x]));
+  expect(map.size).toBe(3);
+  expect(map.get("link1").suggestion).toBe("/en-US/docs/Web/CSS/number");
+  expect(map.get("link2").suggestion).toBe("/en-US/docs/Web/CSS/number");
+  expect(map.get("link3").suggestion).toBe("/en-US/docs/Web/CSS/number");
+});
+
 test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page", () => {
   expect(fs.existsSync(buildRoot)).toBeTruthy();
   const builtFolder = path.join(
@@ -474,9 +498,10 @@ test("detect bad_bcd_queries flaws", () => {
   // If the flaw is there, it's always an array because a document could
   // potentially have multiple bad BCD queries.
   expect(doc.flaws.bad_bcd_queries.length).toBe(1);
-  expect(doc.flaws.bad_bcd_queries[0]).toBe(
+  expect(doc.flaws.bad_bcd_queries[0].explanation).toBe(
     "No BCD data for query: api.Does.Not.exist"
   );
+  expect(doc.flaws.bad_bcd_queries[0].suggestion).toBeNull();
 });
 
 test("detect bad_bcd_links flaws from", () => {
@@ -509,10 +534,18 @@ test("image flaws", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.images.length).toBe(7);
+  expect(flaws.images.length).toBe(8);
   const map = new Map(flaws.images.map((x) => [x.src, x]));
 
-  let flaw = map.get("idontexist.png");
+  let flaw = map.get(
+    "https://www.peterbe.com/static/images/howsmywifi-scr.png"
+  );
+  expect(flaw.explanation).toBe("External image URL");
+  expect(flaw.suggestion).toBeNull();
+  expect(flaw.line).toBe(19);
+  expect(flaw.column).toBe(13);
+
+  flaw = map.get("idontexist.png");
   expect(flaw.explanation).toBe("File not present on disk");
   expect(flaw.suggestion).toBeNull();
   expect(flaw.line).toBe(34);
@@ -539,10 +572,10 @@ test("image flaws", () => {
   expect(flaw.column).toBe(13);
 
   flaw = map.get(
-    "https://developer.mozilla.org/en-US/docs/Web/Foo/screenshot.png"
+    "https://developer.mozilla.org/en-US/docs/Web/Images/screenshot.png"
   );
   expect(flaw.explanation).toBe("Unnecessarily absolute URL");
-  expect(flaw.suggestion).toBe("/en-US/docs/Web/Foo/screenshot.png");
+  expect(flaw.suggestion).toBe("screenshot.png");
   expect(flaw.line).toBe(54);
   expect(flaw.column).toBe(13);
 

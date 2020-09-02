@@ -68,8 +68,8 @@ describe("test viewing a simple document", () => {
       </MemoryRouter>
     );
 
-    expect(xhrSpy).toHaveBeenCalledTimes(1);
     await waitFor(() => getByText(/Hello World!/));
     await waitFor(() => getByText(/Sample Page/));
+    expect(xhrSpy).toHaveBeenCalledTimes(1);
   });
 });

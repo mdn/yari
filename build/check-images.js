@@ -19,14 +19,33 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
 
   const checkImages = options.flawLevels.get("images") !== FLAW_LEVELS.IGNORE;
 
-  function addImageFlaw(src, id, { explanation, suggestion = null }) {
+  function addImageFlaw(
+    $img,
+    src,
+    { explanation, externalImage = false, suggestion = null }
+  ) {
     for (const match of findMatchesInText(src, rawContent, {
       attribute: "src",
     })) {
       if (!("images" in doc.flaws)) {
         doc.flaws.images = [];
       }
-      doc.flaws.images.push({ id, src, suggestion, explanation, ...match });
+      let fixable = false;
+      if (suggestion) {
+        $img.attr("src", suggestion);
+        fixable = true;
+      }
+      const id = `image${doc.flaws.images.length + 1}`;
+      $img.attr("data-flaw", id);
+      doc.flaws.images.push({
+        id,
+        src,
+        fixable,
+        suggestion,
+        explanation,
+        externalImage,
+        ...match,
+      });
     }
   }
 
@@ -46,9 +65,6 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
     const baseURL = `http://yari.placeholder${url}/`;
     const absoluteURL = new URL(src, baseURL);
 
-    const flawIdentifier = `images${i}`;
-    let countFlaws = 0;
-
     // NOTE: Checking for lacking 'alt' text is to be done as part
     // of https://github.com/mdn/yari/issues/1018 which would need
     // a new function dedicated to that.
@@ -60,30 +76,32 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
         if (absoluteURL.protocol === "http:") {
           // Force the image to be HTTPS
           absoluteURL.protocol = "https:";
-          img.attr("src", absoluteURL.toString());
-          addImageFlaw(src, flawIdentifier, {
+          addImageFlaw(img, src, {
             explanation: "Insecure URL",
             suggestion: absoluteURL.toString(),
           });
-          countFlaws++;
         } else if (absoluteURL.hostname === "developer.mozilla.org") {
-          img.attr("src", absoluteURL.pathname);
-          addImageFlaw(src, flawIdentifier, {
+          // Suppose they typed this:
+          // <img src=https://developer.mozilla.org/en-US/docs/Foo/img.png>
+          // and the current page you're on is /en-US/docs/Foo then the
+          // suggestion should be just `img.png`.
+          const suggestion = absoluteURL.pathname.includes(`${doc.mdn_url}/`)
+            ? absoluteURL.pathname.replace(`${doc.mdn_url}/`, "")
+            : absoluteURL.pathname;
+          addImageFlaw(img, src, {
             explanation: "Unnecessarily absolute URL",
-            suggestion: absoluteURL.pathname,
+            suggestion,
           });
-          countFlaws++;
+          // This one's a bit of an exception. Going forward the suggestion
+          // might be something like `screenshot.png` for the sake of rendering
+          // it now, we still want the full relative URL.
+          img.attr("src", absoluteURL.pathname);
+        } else {
+          addImageFlaw(img, src, {
+            explanation: "External image URL",
+            externalImage: true,
+          });
         }
-
-        // TODO: It might be prudent to cease allowing any remote images.
-        // If you rely on an external domain that isn't our designated
-        // default domain, we should probably download it and check it in.
-        // It means less SSL and network overheads if we can download all
-        // images on an existing HTTP2 connection, and if the domain is
-        // something out of our control we're potentially at mercy of the
-        // images suddenly disappearing.
-        // Due to so much else going on, let's not make a huge stink about
-        // it at the moment (peterbe, Aug 2020).
       }
     } else {
       // Remember, you can not have search parameters on local images.
@@ -101,10 +119,9 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
       if (checkImages) {
         if (!filePath) {
           // E.g. <img src="doesnotexist.png"
-          addImageFlaw(src, flawIdentifier, {
+          addImageFlaw(img, src, {
             explanation: "File not present on disk",
           });
-          countFlaws++;
         } else {
           if (!src.includes("/") || src.startsWith("./")) {
             // Always build the `finalSrc` based on correct case.
@@ -112,11 +129,10 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
             // Clearly, it worked but was the wrong case used?
             if (finalSrc !== path.join(`${url}/`, src)) {
               // E.g. <img src="wRonGCaSE.PNg"> or <img src="./WrONgcAse.pnG">
-              addImageFlaw(src, flawIdentifier, {
+              addImageFlaw(img, src, {
                 explanation: "Pathname should always be lowercase",
                 suggestion: src.toLowerCase(),
               });
-              countFlaws++;
             }
           } else {
             // This will always be non-null because independent of the
@@ -136,20 +152,17 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
                 path.relative(url, parentDocument.url),
                 path.basename(finalSrc)
               );
-              addImageFlaw(src, flawIdentifier, {
+              addImageFlaw(img, src, {
                 explanation: "Pathname should be relative to document",
                 suggestion,
               });
-              countFlaws++;
             }
           }
         }
       }
       img.attr("src", finalSrc);
     }
-    if (countFlaws) {
-      img.attr("data-flaw", flawIdentifier);
-
+    if (doc.flaws.images && doc.flaws.images.length) {
       if (options.flawLevels.get("images") === FLAW_LEVELS.ERROR) {
         throw new Error(`images flaws: ${JSON.stringify(doc.flaws.images)}`);
       }

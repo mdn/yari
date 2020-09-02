@@ -10,6 +10,19 @@
       font-weight: bold;
     }
   }
+  .flaw {
+    li {
+      margin-bottom: 15px;
+    }
+
+    ins {
+      background-color: #d4fcbc;
+    }
+    del {
+      text-decoration: none;
+      background-color: #fbb;
+    }
+  }
 
   .macro-filepath-in-prerequisite {
     font-size: 80%;
@@ -17,8 +30,8 @@
     padding: 1px 5px;
   }
 
-  details.fixed summary,
-  li.fixed {
+  details.fixed_flaw summary,
+  li.fixed_flaw {
     text-decoration: line-through;
   }
 }

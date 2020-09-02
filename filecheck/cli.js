@@ -6,8 +6,13 @@ const { runChecker } = require("./checker");
 const { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } = require("./constants");
 
 cli
-  .version(require("./package.json").version)
-  .option("--cwd <path>", "Explicit current-working-directory", cli.PATH)
+  .version("0.0.0")
+  .option(
+    "--cwd <path>",
+    "Explicit current-working-directory",
+    cli.PATH,
+    path.join(process.cwd(), "..")
+  )
   .option(
     "--max-compression-difference-percentage <amount>",
     "Max percentage for reduction after compression",
@@ -23,6 +28,9 @@ cli
   .action((args, options) => {
     const cwd = options.cwd || process.cwd();
     const allFilePaths = args.files.map((f) => path.resolve(cwd, f));
+    if (!allFilePaths.length) {
+      throw new Error("no files to check");
+    }
     return runChecker(allFilePaths, options).catch((error) => {
       console.error(error);
       process.exit(1);

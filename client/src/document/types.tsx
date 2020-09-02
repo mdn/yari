@@ -3,39 +3,56 @@ export interface Source {
   folder: string;
 }
 
-export interface Link {
-  href: string;
-  line: number;
-  column: number;
-  suggestion: string | null;
-  fixed?: true;
-}
-
-export interface BadBCDLink {
-  slug: string;
-  suggestion: string | null;
-  query: string | null;
-  key: string;
-}
-
 export interface GenericFlaw {
   id: string;
   explanation: string;
   suggestion: string | null;
+  fixable?: boolean;
+  fixed?: true;
+  externalImage?: boolean;
+}
+
+export interface BrokenLink extends GenericFlaw {
+  href: string;
+  line: number;
+  column: number;
+  suggestion: string | null;
+}
+
+export interface BadBCDLinkFlaw extends GenericFlaw {
+  slug: string;
+  query: string | null;
+  key: string;
 }
 
 export interface ImageReferenceFlaw extends GenericFlaw {
   src: string;
   line: number;
   column: number;
+}
+
+export interface BadBCDQueryFlaw extends GenericFlaw {}
+
+export interface MacroErrorMessage extends GenericFlaw {
+  name: string;
+  error: {
+    path?: string;
+  };
+  errorStack: string;
+  line: number;
+  column: number;
+  filepath: string;
+  sourceContext: string;
+  macroSource: string;
+  macroName: string;
   fixed?: true;
 }
 
 type Flaws = {
-  broken_links: Link[];
+  broken_links: BrokenLink[];
   macros: MacroErrorMessage[];
-  bad_bcd_queries: string[];
-  bad_bcd_links: BadBCDLink[];
+  bad_bcd_queries: BadBCDQueryFlaw[];
+  bad_bcd_links: BadBCDLinkFlaw[];
   images: ImageReferenceFlaw[];
 };
 
@@ -66,18 +83,4 @@ export interface Doc {
   source: Source;
   contributors: string[];
   isArchive: boolean;
-}
-
-export interface MacroErrorMessage {
-  name: string;
-  error: {
-    path?: string;
-  };
-  errorStack: string;
-  line: number;
-  column: number;
-  filepath: string;
-  sourceContext: string;
-  macroName: string;
-  fixed?: true;
 }
