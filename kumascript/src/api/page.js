@@ -59,10 +59,7 @@ module.exports = {
     try {
       return this.info.getChildren(path || this.env.url, self);
     } catch (error) {
-      this.env.recordNonFatalError(
-        "bad-pages",
-        `${path} could not be transformed into a document (${this.env.url}).`
-      );
+      this.env.recordNonFatalError("bad-pages", error.message);
       // We allow ourselves to be forgiving with this function because
       // we justify it by the fact that at least we record a flaw!
       return [];
