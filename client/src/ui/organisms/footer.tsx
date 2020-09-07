@@ -1,17 +1,21 @@
 import * as React from "react";
 
-import { useLocale } from "../hooks";
-import { ReactComponent as GithubIcon } from "./github.svg";
-import { ReactComponent as TwitterIcon } from "./twitter.svg";
-import { ReactComponent as InstagramIcon } from "./instagram.svg";
+import { useLocale } from "../../hooks";
+import Logo from "../atoms/logo";
+
+import { ReactComponent as GithubIcon } from "@mdn/dinocons/brands/github-mark-small.svg";
+import { ReactComponent as TwitterIcon } from "@mdn/dinocons/social/twitter.svg";
+import { ReactComponent as InstagramIcon } from "@mdn/dinocons/social/instagram.svg";
+
+import "./footer.scss";
 
 export default function Footer() {
   const locale = useLocale();
   return (
     <footer id="nav-footer" className="page-footer">
       <div className="content-container">
-        <a href={`/${locale}/`} className="nav-footer-logo">
-          MDN Web Docs
+        <a href={`/${locale}/`} className="page-footer-logo">
+          <Logo />
         </a>
         <ul className="link-list-mdn">
           <li>
