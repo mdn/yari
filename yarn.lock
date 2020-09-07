@@ -2776,10 +2776,18 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@*", "@types/jest@^26.0.12":
+"@types/jest@*":
   version "26.0.12"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-26.0.12.tgz#0f20fef9e74f55a312530284e6178f3b3254f501"
   integrity sha512-vZOFjm562IPb1EmaKxMjdcouxVb1l3NqoUH4XC4tDQ2R/AWde+0HXBUhyfc6L+7vc3mJ393U+5vr3nH2CLSVVg==
+  dependencies:
+    jest-diff "^25.2.1"
+    pretty-format "^25.2.1"
+
+"@types/jest@^26.0.13":
+  version "26.0.13"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-26.0.13.tgz#5a7b9d5312f5dd521a38329c38ee9d3802a0b85e"
+  integrity sha512-sCzjKow4z9LILc6DhBvn5AkIfmQzDZkgtVVKmGwVrs5tuid38ws281D4l+7x1kP487+FlKDh5kfMZ8WSPAdmdA==
   dependencies:
     jest-diff "^25.2.1"
     pretty-format "^25.2.1"
@@ -11228,10 +11236,10 @@ mdast-util-to-string@^1.0.0:
   resolved "https://registry.yarnpkg.com/mdast-util-to-string/-/mdast-util-to-string-1.1.0.tgz#27055500103f51637bd07d01da01eb1967a43527"
   integrity sha512-jVU0Nr2B9X3MU4tSK7JP1CMkSvOj7X5l/GboG1tKRw52lLF1x2Ju92Ms9tNetCcbfX3hzlM73zYo2NKkWSfF/A==
 
-mdn-browser-compat-data@1.0.35:
-  version "1.0.35"
-  resolved "https://registry.yarnpkg.com/mdn-browser-compat-data/-/mdn-browser-compat-data-1.0.35.tgz#f0e97bd84acb044e8e99905c97ddad9edbf528fa"
-  integrity sha512-7SMAEZgBaElDNcqFhmInBnSo+c+MOzprt7hrGNcEo9hMhDiPQ7L4dwEt6gunudjI0jXenPJaW0S8U4ckeP2uhw==
+mdn-browser-compat-data@1.0.36:
+  version "1.0.36"
+  resolved "https://registry.yarnpkg.com/mdn-browser-compat-data/-/mdn-browser-compat-data-1.0.36.tgz#73b2e14eef64e3484c717eec01a01fe01d1f7dc9"
+  integrity sha512-3Z4VTxSROuJGs0Q7ZDTXBBgqiNM8KnsJtpKwWVGUJLNnIGzZBHg1UsFtcgD907+YEOPH8a4XXd7m8x+bbM4X6w==
   dependencies:
     extend "3.0.2"
 
