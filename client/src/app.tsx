@@ -7,7 +7,7 @@ import "./app.scss";
 
 import { Homepage } from "./homepage";
 import { Document } from "./document";
-import Footer from "./footer";
+import Footer from "./ui/organisms/footer";
 import Header from "./header";
 import { NoMatch } from "./routing";
 
