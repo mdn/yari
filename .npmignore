@@ -6,6 +6,13 @@
 # And we don't want to have maintain both. So right before it runs the
 # `npm publish` step it will combine these two files.
 
+/node_modules/
+client/node_modules/
+ssr/node_modules/
+kumascript/node_modules/
+content/node_modules/
+server/node_modules/
+
 /content/files/
 /deployer
 kumascript/tests
@@ -14,6 +21,7 @@ import/
 /mdn-web-docs.svg
 .github/
 /docs/
-kumascript/AUTHORS
 README.md
 client/search-experimentation.js
+yarn-error.log
+content/files/
