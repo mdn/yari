@@ -1,7 +1,6 @@
 /**
  * @prettier
  */
-const util = require("./util.js");
 
 module.exports = {
   // Determines whether or not the page has the specified tag. Returns
@@ -44,7 +43,7 @@ module.exports = {
   // This is not called by any macros, and is only used here by
   // wiki.tree(), so we could move it to be part of that function.
   subpages(path, depth, self) {
-    return this.info.getChildren(path || this.env.url, self);
+    return this.page.subpagesExpand(path, depth, self);
   },
 
   // Optional path, defaults to current page
@@ -56,7 +55,14 @@ module.exports = {
   // the results
   //
   subpagesExpand(path, depth, self) {
-    return this.info.getChildren(path || this.env.url, self);
+    try {
+      return this.info.getChildren(path || this.env.url, self);
+    } catch (error) {
+      this.env.recordNonFatalError("bad-pages", error.message);
+      // We allow ourselves to be forgiving with this function because
+      // we justify it by the fact that at least we record a flaw!
+      return [];
+    }
   },
 
   // Flatten subPages list

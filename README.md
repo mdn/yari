@@ -12,11 +12,17 @@ To run Yari locally, you'll first need to install [git](https://git-scm.com/), [
     git clone https://github.com/mdn/yari.git
     cd yari
     yarn
-    yarn start
+    yarn dev
     open http://localhost:3000
 
 If you prefer, you can fork the repo first and do the `git clone` with
 _your_ fork instead of the `mdn` one.
+
+The `yarn dev` command will compile and prepare certain files. This always
+takes a little extra time. If you prefer you can use `yarn start` which
+will re-use any previously compiled files which is "riskier" but faster.
+The `yarn start` command will also start a server which doesn't automatically
+reload when its source code files change, so use with caution.
 
 ### How to stay up-to-date
 
@@ -25,7 +31,7 @@ up-to-date with these commands:
 
     git pull origin master
     yarn
-    yarn start
+    yarn dev
 
 These are also good steps to always take when you embark on making a change.
 Then, the only extra command needed is `git checkout -b my-new-branch`

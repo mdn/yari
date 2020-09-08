@@ -79,14 +79,15 @@ function urlToFolderPath(url) {
 }
 
 function create(html, metadata) {
-  const folderPath = buildPath(
-    path.join(CONTENT_ROOT, metadata.locale),
-    metadata.slug
-  );
+  const folderPath = getFolderPath(metadata);
 
   fs.mkdirSync(folderPath, { recursive: true });
 
   saveHTMLFile(getHTMLPath(folderPath), trimLineEndings(html), metadata);
+}
+
+function getFolderPath(metadata) {
+  return buildPath(path.join(CONTENT_ROOT, metadata.locale), metadata.slug);
 }
 
 function archive(renderedHTML, rawHTML, metadata, wikiHistory) {
@@ -284,6 +285,7 @@ module.exports = {
   update,
   del,
   urlToFolderPath,
+  getFolderPath,
 
   findByURL,
   findAll,
