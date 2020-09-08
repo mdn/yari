@@ -19,7 +19,8 @@ jobs:
       - name: Prep .npmignore
         run: |
           cat .gitignore >> .npmignore
-          sed '/ssr\/dist/d' .npmignore
+          sed -i '/ssr\/dist/d' .npmignore
+          cat .npmignore
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.1
