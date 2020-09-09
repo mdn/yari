@@ -18,7 +18,6 @@ const fixtureData = JSON.parse(
     "utf8"
   )
 );
-const base_url = "https://developer.mozilla.org";
 const fix_url = "/en-US/docs/Web/HTTP/Basics_of_HTTP";
 const titles = [
   "Choosing between www and non-www URLs",
@@ -125,7 +124,7 @@ describeMacro("page API tests", function () {
       checkSubpagesResult(res);
     });
     itMacro("One argument (null)", function (macro) {
-      macro.ctx.env.url = base_url + fix_url;
+      macro.ctx.env.url = fix_url;
       const res = macro.ctx.page.subpages(null);
       checkSubpagesResult(res);
     });
@@ -143,7 +142,7 @@ describeMacro("page API tests", function () {
       checkSubpagesResult(res);
     });
     itMacro("One argument (null)", function (macro) {
-      macro.ctx.env.url = base_url + fix_url;
+      macro.ctx.env.url = fix_url;
       const res = macro.ctx.page.subpagesExpand(null);
       checkSubpagesResult(res);
     });
@@ -163,7 +162,7 @@ describeMacro("page API tests", function () {
       // checkTranslationsResult(res);
     });
     itMacro("One argument (null)", function (macro) {
-      macro.ctx.env.url = base_url + fix_url;
+      macro.ctx.env.url = fix_url;
       const res = macro.ctx.page.translations(null);
       assert.equal(res.length, 0);
       // TODO: Either remove or reinstate depending upon what we do with L10n.

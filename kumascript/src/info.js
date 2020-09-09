@@ -1,6 +1,5 @@
 const { VALID_LOCALES, Document, Redirect } = require("../../content");
 
-const BASE_URL = "https://developer.mozilla.org";
 const DUMMY_BASE_URL = "https://example.com";
 
 function repairURL(url) {
@@ -42,10 +41,10 @@ const info = {
 
   cleanURL(url) {
     // This function returns just the lowercase pathname of the given "url",
-    // removing any trailing "/". The BASE_URL is not important here, since
+    // removing any trailing "/". The DUMMY_BASE_URL is not important here, since
     // we're only after the path of any incoming "url", but it's required by
     // the URL constructor when the incoming "url" is relative.
-    const uri = new URL(url, BASE_URL).pathname
+    const uri = new URL(url, DUMMY_BASE_URL).pathname
       .replace(/\/$/, "")
       .toLowerCase();
     return Redirect.resolve(repairURL(uri));

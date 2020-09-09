@@ -27,8 +27,7 @@ const renderFromURL = memoize(async (url) => {
     rawHTML,
     {
       ...{
-        path: url,
-        url: `https://developer.mozilla.org${url}`,
+        url: url,
         locale: metadata.locale,
         slug: metadata.slug,
         title: metadata.title,

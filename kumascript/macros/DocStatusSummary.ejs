@@ -105,7 +105,7 @@ getPages(pageList);
       var href = metrics[key][1];
       var title = metrics[key][0].replace(/_/g, " ");
       if (href.indexOf('#', 0) === 0) {
-        href = env.path + metrics[key][1];
+        href = env.url + metrics[key][1];
       }
 %>
     <th><a href="<%=href%>"><%=title%></a></th>
