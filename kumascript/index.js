@@ -27,7 +27,7 @@ const renderFromURL = memoize(async (url) => {
     rawHTML,
     {
       ...{
-        url: url,
+        url,
         locale: metadata.locale,
         slug: metadata.slug,
         title: metadata.title,
