@@ -91,6 +91,12 @@ jobs:
           # Or, we use a combination of both where we build archive content
           # either on the 1st of every month OR if it's manually triggered.
 
+          # The default for this environment variable is geared for writers
+          # (aka. local development). Usually defaults are supposed to be for
+          # secure production but this is an exception and default
+          # is not insecure.
+          export BUILD_LIVE_SAMPLES_BASE_URL=https://mdn.mozillademos.org
+
           # TODO: Only relevant once github.com/mdn/mdn-content is a thing.
           # export CONTENT_ROOT=mdn-content/content/files
 
