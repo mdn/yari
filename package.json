@@ -46,7 +46,7 @@
     "front-matter": "4.0.2",
     "fuzzysearch": "1.0.3",
     "glob": "^7.1.6",
-    "got": "11.5.2",
+    "got": "11.6.1",
     "ignore-loader": "0.1.2",
     "imagemin": "7.0.1",
     "imagemin-gifsicle": "7.0.0",
