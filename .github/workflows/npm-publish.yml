@@ -18,8 +18,12 @@ jobs:
 
       - name: Prep .npmignore
         run: |
+          set -e
           cat .gitignore >> .npmignore
+          # Make an exception of general build artifacts that we actually
+          # do want to keep in the npm tarball.
           sed -i '/ssr\/dist/d' .npmignore
+          sed -i '/client\/build/d' .npmignore
           cat .npmignore
 
       - name: Setup Node.js environment
