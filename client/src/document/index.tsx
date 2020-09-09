@@ -105,40 +105,41 @@ export function Document(props /* TODO: define a TS interface for this */) {
       <nav className="breadcrumb-locale-container">
         {doc.parents && <Breadcrumbs parents={doc.parents} />}
       </nav>
+      <div className="page-content-container">
+        {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
-      {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+        <main className="main-content" role="main">
+          <article className="article">
+            <RenderDocumentBody doc={doc} />
+            <div className="metadata">
+              <section className="document-meta">
+                <header className="visually-hidden">
+                  <h4>Metadata</h4>
+                </header>
+                <ul>
+                  <li className="last-modified">
+                    <LastModified value={doc.modified} locale={locale} />,{" "}
+                    <a
+                      href={github_url}
+                      title={`Folder: ${folder}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Edit on <b>GitHub</b>
+                    </a>
+                  </li>
+                </ul>
+              </section>
+            </div>
+          </article>
+        </main>
 
-      <main className="main-content" role="main">
-        <article className="article">
-          <RenderDocumentBody doc={doc} />
-          <div className="metadata">
-            <section className="document-meta">
-              <header className="visually-hidden">
-                <h4>Metadata</h4>
-              </header>
-              <ul>
-                <li className="last-modified">
-                  <LastModified value={doc.modified} locale={locale} />,{" "}
-                  <a
-                    href={github_url}
-                    title={`Folder: ${folder}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Edit on <b>GitHub</b>
-                  </a>
-                </li>
-              </ul>
-            </section>
+        {doc.sidebarHTML && (
+          <div id="sidebar-quicklinks" className="sidebar">
+            <RenderSideBar doc={doc} />
           </div>
-        </article>
-      </main>
-
-      {doc.sidebarHTML && (
-        <div id="sidebar-quicklinks" className="sidebar">
-          <RenderSideBar doc={doc} />
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 }
