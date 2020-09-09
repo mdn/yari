@@ -8,7 +8,7 @@ import "./app.scss";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import Footer from "./ui/organisms/footer";
-import Header from "./header";
+import Header from "./ui/organisms/header";
 import { NoMatch } from "./routing";
 
 const ActiveBanner = lazy(() => import("./banners/active-banner"));

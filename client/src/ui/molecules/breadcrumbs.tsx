@@ -5,7 +5,7 @@ import { DocParent } from "../../document/types";
 
 import "./breadcrumbs.scss";
 
-export default function Breadcrumbs({ parents }: { parents: DocParent[] }) {
+export function Breadcrumbs({ parents }: { parents: DocParent[] }) {
   if (!parents.length) {
     throw new Error("Empty parents array");
   }
@@ -18,7 +18,7 @@ export default function Breadcrumbs({ parents }: { parents: DocParent[] }) {
       className="breadcrumbs"
     >
       {parents.map((parent, i) => {
-        let currentCrumb = i + 1;
+        const currentCrumb = i + 1;
         const isLast = currentCrumb === parents.length;
         const isPrevious = currentCrumb === parents.length - 1;
 

@@ -16,7 +16,7 @@ import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 // Misc
 // Sub-components
-import Breadcrumbs from "../ui/molecules/breadcrumbs";
+import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
 import Titlebar from "../ui/molecules/titlebar";
 import { TOC } from "./toc";
 
