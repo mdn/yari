@@ -77,7 +77,7 @@ jobs:
           # functional tests have a gap in them but actually building
           # real content exposes it.
 
-          # Setting this to and empty string effectively means that the
+          # Setting this to an empty string effectively means that the
           # <iframe> src will end up being the relative URL of the current
           # document as a base.
           # I.e. like this, if the current document is '/en-US/docs/Foo':
