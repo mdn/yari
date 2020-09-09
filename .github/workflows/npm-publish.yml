@@ -15,12 +15,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          # Needs to be a bit more than 1 otherwise it might fail to push
+          # a new tag.
+          # With `fetch-depth: 1` which is the default you might get
+          # [remote rejected]   v0.x.x -> v0.x.y (shallow update not allowed)
+          # in the GitHub Action.
+          # So not sure what the number is but let's try something beyond 1.
+          fetch-depth: 10
 
       - name: Prep .npmignore
         run: |
           set -e
           cat .gitignore >> .npmignore
-          # Make an exception of general build artifacts that we actually
+          # Make exceptions of general build artifacts that we actually
           # do want to keep in the npm tarball.
           sed -i '/ssr\/dist/d' .npmignore
           sed -i '/client\/build/d' .npmignore
