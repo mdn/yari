@@ -7,8 +7,20 @@ import { getAuthURL } from "./auth-link";
 import { useUserData } from "../user-context";
 
 import avatarImage from "./avatar.png";
+import { DISABLE_AUTH } from "../constants";
 
 export default function Login() {
+  // For example, if you're Yari purely for previewing your content edits,
+  // it might not make sense to do any auth.
+  if (DISABLE_AUTH) {
+    return null;
+  }
+  // The reason the <Login/> wraps <LoginInner/> is to be able to
+  // potentially exit early depending on `DISABLE_AUTH`.
+  return <LoginInner />;
+}
+
+function LoginInner() {
   const locale = useLocale();
   const userData = useUserData();
 
