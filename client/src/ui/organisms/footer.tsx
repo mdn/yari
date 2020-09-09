@@ -13,7 +13,9 @@ export default function Footer() {
   return (
     <footer id="nav-footer" className="page-footer">
       <div className="content-container">
-        <Logo className="page-footer-logo" />
+        <div className="page-footer-logo">
+          <Logo />
+        </div>
         <ul className="link-list-mdn">
           <li>
             <a href={`/${locale}/docs/Web`}>Web Technologies</a>
