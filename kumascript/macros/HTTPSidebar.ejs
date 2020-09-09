@@ -1,7 +1,7 @@
 <%
 var currentSection = $0;
 var locale = env.locale;
-var path = env.path;
+var path = env.url;
 
 function state(section) {
   if (path.indexOf("Content-Security-Policy") !== -1 && (section === "Web/HTTP/Headers")) {
