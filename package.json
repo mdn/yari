@@ -142,9 +142,5 @@
     "hooks": {
       "pre-commit": "pretty-quick --staged && yarn install --ignore-scripts"
     }
-  },
-  "calavera": {
-    "sass": true,
-    "prettier": true
   }
 }
