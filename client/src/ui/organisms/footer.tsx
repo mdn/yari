@@ -8,7 +8,7 @@ import { useLocale } from "../../hooks";
 import { Logo } from "../atoms/logo";
 import "./footer.scss";
 
-export default function Footer() {
+export function Footer() {
   const locale = useLocale();
   return (
     <footer id="nav-footer" className="page-footer">
