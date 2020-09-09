@@ -5,11 +5,15 @@ import { ReactComponent as LogoSVG } from "../../assets/logo.svg";
 
 import "./logo.scss";
 
-export default function Logo() {
+export function Logo({ className }: { className?: string }) {
   const locale = useLocale();
 
   return (
-    <a href={`/${locale}`} className="logo" aria-label="MDN Web Docs">
+    <a
+      href={`/${locale}`}
+      className={className || "logo"}
+      aria-label="MDN Web Docs"
+    >
       <LogoSVG />
     </a>
   );
