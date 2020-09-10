@@ -13,3 +13,4 @@ jobs:
           github-token: ${{ secrets.AUTOMERGE_TOKEN }}
           command: "squash and merge"
           approve: false
+          target: minor
