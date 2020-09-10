@@ -10,7 +10,7 @@ import avatarImage from "./avatar.png";
 import { DISABLE_AUTH } from "../constants";
 
 export default function Login() {
-  // For example, if you're Yari purely for previewing your content edits,
+  // For example, if you're using Yari purely for previewing your content edits,
   // it might not make sense to do any auth.
   if (DISABLE_AUTH) {
     return null;

@@ -200,6 +200,5 @@ host name instead. That means you can log in _from_ Yari with a single click.
 
 **Default: `false`**
 
-This entirely removes the sign-in and then `whoami` XHR fetching.
-Useful when using Yari purely for doing content editing and not interested
-in testing how Yari works for end users.
+This removes sign-in and `whoami` XHR fetching.
+Useful when using Yari purely for content editing as authentication is then not required.
