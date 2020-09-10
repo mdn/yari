@@ -56,9 +56,6 @@ const expectedFunctions = [
   "mdn.escapeQuotes",
   "MDN.escapeQuotes",
   "MDN.escapequotes",
-  "mdn.siteURL",
-  "MDN.siteURL",
-  "MDN.siteurl",
 
   "string.StartsWith",
   "String.StartsWith",
