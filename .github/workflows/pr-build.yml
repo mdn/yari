@@ -89,6 +89,10 @@ jobs:
           # where there are interesting cookies, it's a safe choice.
           export BUILD_LIVE_SAMPLES_BASE_URL=
 
+          # In these builds we never care for or need the ability to sign in.
+          # This environment variable will disable that functionality entirely.
+          export REACT_APP_DISABLE_AUTH=true
+
           export BUILD_NO_PROGRESSBAR=true
           export BUILD_FILES="${{ env.GIT_DIFF }}"
           yarn prepare-build

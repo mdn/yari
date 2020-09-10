@@ -195,3 +195,10 @@ the link to sign in with Kuma needs this to be set.
 The suggested value is to set this to set
 `REACT_APP_KUMA_HOST=localhost.org:8000` and now sign in links go to that
 host name instead. That means you can log in _from_ Yari with a single click.
+
+### `REACT_APP_DISABLE_AUTH`
+
+**Default: `false`**
+
+This removes sign-in and `whoami` XHR fetching.
+Useful when using Yari purely for content editing as authentication is then not required.
