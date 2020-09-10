@@ -152,23 +152,6 @@ function Banner(props: BannerProps) {
 
 const DEVELOPER_NEEDS_ID = "developer_needs";
 const SUBSCRIPTION_ID = "subscription_banner";
-const USER_INTERVIEWS_ID = "user_interviews";
-
-function UserInterviewsBanner() {
-  return (
-    <Banner
-      id={USER_INTERVIEWS_ID}
-      classname="user-interviews"
-      title={"Help us improve MDN"}
-      copy={"Sign up to participate in a 30-minute desktop interview session"}
-      cta={"Sign up"}
-      url={
-        "https://validately.com/moderated/e9086e05-092b-4453-8efd-360f434bf820"
-      }
-      newWindow
-    />
-  );
-}
 
 function DeveloperNeedsBanner() {
   return (
@@ -224,9 +207,7 @@ export default function ActiveBanner() {
 
   // The order of the if statements is important and it's our source of
   // truth about which banner is "more important" than the other.
-  if (isEnabled(USER_INTERVIEWS_ID)) {
-    return <UserInterviewsBanner />;
-  } else if (isEnabled(DEVELOPER_NEEDS_ID)) {
+  if (isEnabled(DEVELOPER_NEEDS_ID)) {
     return <DeveloperNeedsBanner />;
   } else if (isEnabled(SUBSCRIPTION_ID) && !userData.isSubscriber) {
     return <SubscriptionBanner />;
