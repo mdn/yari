@@ -1,6 +1,7 @@
-const { popularities } = require("../content");
+const { getPopularities } = require("../content");
 
-const getPopularity = (item) => popularities[item.url] || 0;
+// getPopularities() is memoized so it's fast to call repeatedly
+const getPopularity = (item) => getPopularities().get(item.url) || 0;
 
 module.exports = class SearchIndex {
   _itemsByLocale = {};

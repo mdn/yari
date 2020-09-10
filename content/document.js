@@ -119,9 +119,6 @@ function archive(renderedHTML, rawHTML, metadata, wikiHistory) {
   );
 }
 
-// The module level cache
-let popularities = null;
-
 const read = memoize((folder, fields = null) => {
   fields = fields ? { body: false, metadata: false, ...fields } : fields;
 
@@ -145,14 +142,11 @@ const read = memoize((folder, fields = null) => {
   if (!fields || fields.metadata) {
     const locale = extractLocale(folder);
     const url = `/${locale}/docs/${metadata.slug}`;
-    if (!popularities) {
-      popularities = getPopularities();
-    }
     fullMetadata = {
       metadata: {
         ...metadata,
         locale,
-        popularity: popularities[url] || 0.0,
+        popularity: getPopularities().get(url) || 0.0,
       },
       url,
     };
