@@ -5,7 +5,7 @@ import { ReactComponent as LogoSVG } from "../../assets/logo.svg";
 
 import "./logo.scss";
 
-export default function Logo() {
+export function Logo() {
   const locale = useLocale();
 
   return (
