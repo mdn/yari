@@ -7,7 +7,7 @@ and moved on with our post-Wiki life, we can burn this.
 ## import
 
 You can set `CONTENT_ROOT` and `CONTENT_ARCHIVE_ROOT` to any folder
-but **it's important that directories exists** otherwise Yari will
+but **it's important that the directories exist** otherwise Yari will
 assume you're referring to relative folders.
 
 ```bash
