@@ -122,13 +122,6 @@ module.exports = {
    */
   escapeQuotes: util.escapeQuotes,
 
-  /* Derive the site URL from the request URL */
-  siteURL() {
-    var p = url.parse(this.env.url, true),
-      site_url = p.protocol + "//" + p.host;
-    return site_url;
-  },
-
   /**
    * Throw a deprecation error.
    */

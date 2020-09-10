@@ -43,7 +43,7 @@ function checkSidebarDom(dom, locale) {
 
 describeMacro("HTTPSidebar", function () {
   beforeEachMacro(function (macro) {
-    macro.ctx.env.path = "/en-US/docs/Web/HTTP/Overview";
+    macro.ctx.env.url = "/en-US/docs/Web/HTTP/Overview";
     Document.findByURL = jest.fn((url) => {
       const data = fixtureData[url.toLowerCase()];
       if (!data) {

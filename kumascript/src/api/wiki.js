@@ -99,7 +99,7 @@ module.exports = {
   ensureExistence(path) {
     if (!this.info.hasPage(path)) {
       throw new Error(
-        `${this.env.path.toLowerCase()} references ${this.info.getDescription(
+        `${this.env.url.toLowerCase()} references ${this.info.getDescription(
           path
         )}, which does not exist`
       );
@@ -107,10 +107,9 @@ module.exports = {
     return path;
   },
 
-  // Retrieve the full uri of a given wiki page.
+  // Build the URI of a given wiki page.
   uri(path, query) {
-    const parts = url.parse(this.env.url);
-    var out = parts.protocol + "//" + parts.host + util.preparePath(path);
+    var out = util.preparePath(path);
     if (query) {
       out += "?" + query;
     }

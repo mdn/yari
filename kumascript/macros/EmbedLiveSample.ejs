@@ -26,7 +26,7 @@ var hasScreenshot = (screenshotUrl && (screenshotUrl.length > 0));
 
 var sampleUrl = "";
 if (sampleSlug) {
-    sampleUrl = "https://developer.mozilla.org/" + env.locale + "/docs";
+    sampleUrl = `/${env.locale}/docs`;
     if (sampleSlug.charAt(0) != "/") {
         sampleUrl += "/";
     }
