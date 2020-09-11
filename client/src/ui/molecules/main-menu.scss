@@ -13,13 +13,13 @@ $dropdown-item-background-color: $primary-200;
   padding: 10px 20px;
 
   &::before {
-    display: block;
-    content: "";
     background: transparent url("~@mdn/dinocons/navigation/menu-open.svg") 0 0
       no-repeat;
     background-size: 21px;
-    width: 21px;
+    content: "";
+    display: block;
     height: 21px;
+    width: 21px;
   }
 
   &.expanded::before {
@@ -45,12 +45,12 @@ ul.main-menu {
   z-index: $menu-zindex;
 
   @media #{$mq-tablet-and-up} {
+    display: flex;
+    height: inherit;
+    justify-content: space-evenly;
     position: relative;
     top: inherit;
-    display: flex;
-    justify-content: space-evenly;
     width: inherit;
-    height: inherit;
     z-index: inherit;
   }
 
@@ -63,7 +63,7 @@ ul.main-menu {
     background-color: #fff;
     margin: 0;
     padding: 4px 0;
-    font-size: $smaller-font-size;
+    font-size: $small-font-size;
 
     @media #{$mq-tablet-and-up} {
       box-shadow: $menu-box-shadow;

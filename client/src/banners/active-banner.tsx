@@ -17,16 +17,13 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 
-import CloseIcon from "../kumastyles/general/close.svg";
+import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import { CATEGORY_MONTHLY_PAYMENTS, useGA } from "../ga-context";
 import { useLocale } from "../hooks";
 import { useUserData } from "../user-context";
 
 // TODO: split up banners into separate lazy-loaded component files
-import "../kumastyles/components/banners/base.scss";
-import "../kumastyles/components/banners/developer-needs.scss";
-import "../kumastyles/components/banners/l10n-survey.scss";
-import "../kumastyles/components/banners/mdn-subscriptions.scss";
+import "./banner.scss";
 
 // Set a localStorage key with a timestamp the specified number of
 // days into the future. When the user dismisses a banner we use this
@@ -120,9 +117,7 @@ function Banner(props: BannerProps) {
     <div className={containerClassNames}>
       <div id="mdn-cta-content" className="mdn-cta-content">
         <div id={props.id} className="mdn-cta-content-container">
-          {props.title && (
-            <h2 className="mdn-cta-title slab-text">{props.title}</h2>
-          )}
+          {props.title && <h2 className="mdn-cta-title">{props.title}</h2>}
           <p className="mdn-cta-copy">{props.copy}</p>
         </div>
         <p className="mdn-cta-button-container">
@@ -148,7 +143,7 @@ function Banner(props: BannerProps) {
             setEmbargoed(props.id, props.embargoDays || 5);
           }}
         >
-          <img src={CloseIcon} alt="close" className="icon icon-close" />
+          <CloseIcon />
         </button>
       </div>
     </div>

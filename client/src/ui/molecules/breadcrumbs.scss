@@ -4,8 +4,8 @@
 @import "~@mdn/minimalist/sass/vars/typography";
 
 ol.breadcrumbs {
+  font-size: $small-font-size;
   padding: 0 24px;
-  font-size: $smaller-font-size;
 
   li {
     display: inline;
