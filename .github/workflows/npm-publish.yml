@@ -24,15 +24,15 @@ jobs:
           # So not sure what the number is but let's try something beyond 1.
           fetch-depth: 10
 
-      - name: Prep .npmignore
-        run: |
-          set -e
-          cat .gitignore >> .npmignore
-          # Make exceptions of general build artifacts that we actually
-          # do want to keep in the npm tarball.
-          sed -i '/ssr\/dist/d' .npmignore
-          sed -i '/client\/build/d' .npmignore
-          cat .npmignore
+      # - name: Prep .npmignore
+      #   run: |
+      #     set -e
+      #     cat .gitignore >> .npmignore
+      #     # Make exceptions of general build artifacts that we actually
+      #     # do want to keep in the npm tarball.
+      #     sed -i '/ssr\/dist/d' .npmignore
+      #     sed -i '/client\/build/d' .npmignore
+      #     cat .npmignore
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.1

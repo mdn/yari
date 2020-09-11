@@ -32,8 +32,6 @@ if (CONTENT_ARCHIVE_ROOT) {
   ROOTS.push(CONTENT_ARCHIVE_ROOT);
 }
 
-console.log({ CONTENT_ROOT, CONTENT_ARCHIVE_ROOT });
-
 const VALID_LOCALES = new Map(
   [
     "ar",
