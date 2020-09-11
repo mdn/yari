@@ -11,8 +11,7 @@ describeMacro("EmbedLiveSample", function () {
     macro.ctx.info.hasPage = jest.fn((path) => true);
   });
   itMacro("One argument: ID", function (macro) {
-    macro.ctx.env.url =
-      "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure";
+    macro.ctx.env.url = "/en-US/docs/Web/HTML/Element/figure";
     return assert.eventually.equal(
       macro.call("Quotations"),
       '<iframe class="live-sample-frame sample-code-frame"' +
@@ -23,8 +22,7 @@ describeMacro("EmbedLiveSample", function () {
   });
   itMacro("One argument: ID with HTML entities (bug?)", function (macro) {
     // Kuma doesn't serve the sample for the generated URL
-    macro.ctx.env.url =
-      "https://developer.mozilla.org/en-US/docs/Web/SVG/Element/switch";
+    macro.ctx.env.url = "/en-US/docs/Web/SVG/Element/switch";
     return assert.eventually.equal(
       macro.call("SVG_&lt;switch&gt;_example"),
       '<iframe class="live-sample-frame sample-code-frame"' +
@@ -34,8 +32,7 @@ describeMacro("EmbedLiveSample", function () {
     );
   });
   itMacro("One argument: percent-encoded ID", function (macro) {
-    macro.ctx.env.url =
-      "https://developer.mozilla.org/en-US/docs/Web/SVG/Element/switch";
+    macro.ctx.env.url = "/en-US/docs/Web/SVG/Element/switch";
     return assert.eventually.equal(
       macro.call("SVG_%3Cswitch%3E_example"),
       '<iframe class="live-sample-frame sample-code-frame"' +
@@ -46,7 +43,7 @@ describeMacro("EmbedLiveSample", function () {
   });
   itMacro("One argument: ID with percent-encoded page URL", function (macro) {
     macro.ctx.env.url =
-      "https://developer.mozilla.org/fr/docs/Web/CSS/Utilisation_de_d%C3%A9grad%C3%A9s_CSS";
+      "/fr/docs/Web/CSS/Utilisation_de_d%C3%A9grad%C3%A9s_CSS";
     return assert.eventually.equal(
       macro.call("Dégradés_linéaires_simples"),
       '<iframe class="live-sample-frame sample-code-frame"' +
@@ -56,8 +53,7 @@ describeMacro("EmbedLiveSample", function () {
     );
   });
   itMacro("One argument: XSS attempt (failed)", function (macro) {
-    macro.ctx.env.url =
-      "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure";
+    macro.ctx.env.url = "/en-US/docs/Web/HTML/Element/figure";
     return assert.eventually.equal(
       macro.call('"><script>alert("XSS");</script>'),
       '<iframe class="live-sample-frame sample-code-frame"' +
@@ -67,8 +63,7 @@ describeMacro("EmbedLiveSample", function () {
     );
   });
   itMacro("Two arguments: ID, width", function (macro) {
-    macro.ctx.env.url =
-      "https://developer.mozilla.org/en-US/docs/Web/CSS/border-top-width";
+    macro.ctx.env.url = "/en-US/docs/Web/CSS/border-top-width";
     return assert.eventually.equal(
       macro.call("Example", "100%"),
       '<iframe class="live-sample-frame sample-code-frame"' +
@@ -79,8 +74,7 @@ describeMacro("EmbedLiveSample", function () {
     );
   });
   itMacro("Two arguments: ID, XSS attempt (failed)", function (macro) {
-    macro.ctx.env.url =
-      "https://developer.mozilla.org/en-US/docs/Web/CSS/border-top-width";
+    macro.ctx.env.url = "/en-US/docs/Web/CSS/border-top-width";
     return assert.eventually.equal(
       macro.call("Example", '"><script>alert("XSS");</script>'),
       '<iframe class="live-sample-frame sample-code-frame"' +
@@ -91,8 +85,7 @@ describeMacro("EmbedLiveSample", function () {
     );
   });
   itMacro("Three arguments: ID, width, height", function (macro) {
-    macro.ctx.env.url =
-      "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure";
+    macro.ctx.env.url = "/en-US/docs/Web/HTML/Element/figure";
     return assert.eventually.equal(
       macro.call("Images", "100%", 250),
       '<iframe class="live-sample-frame sample-code-frame"' +
@@ -104,7 +97,7 @@ describeMacro("EmbedLiveSample", function () {
   });
   itMacro("Three arguments: unicode ID, width, height", function (macro) {
     macro.ctx.env.url =
-      "https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Animations/Using_CSS_animations";
+      "/zh-CN/docs/Web/CSS/CSS_Animations/Using_CSS_animations";
     return assert.eventually.equal(
       macro.call("增加关键帧", "100%", "250"),
       '<iframe class="live-sample-frame sample-code-frame"' +
@@ -115,8 +108,7 @@ describeMacro("EmbedLiveSample", function () {
     );
   });
   itMacro("Three arguments: url-encoded ID, width, height", function (macro) {
-    macro.ctx.env.url =
-      "https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API/Tutorial/Basic_usage";
+    macro.ctx.env.url = "/zh-CN/docs/Web/API/Canvas_API/Tutorial/Basic_usage";
     return assert.eventually.equal(
       macro.call(
         "%E4%B8%80%E4%B8%AA%E6%A8%A1%E6%9D%BF%E9%AA%A8%E6%9E%B6",
@@ -131,8 +123,7 @@ describeMacro("EmbedLiveSample", function () {
     );
   });
   itMacro("Three arguments: ID, width, XSS attempt (failed)", function (macro) {
-    macro.ctx.env.url =
-      "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure";
+    macro.ctx.env.url = "/en-US/docs/Web/HTML/Element/figure";
     return assert.eventually.equal(
       macro.call("Images", "100%", '"><script>alert("XSS");</script>'),
       '<iframe class="live-sample-frame sample-code-frame"' +
@@ -143,8 +134,7 @@ describeMacro("EmbedLiveSample", function () {
     );
   });
   itMacro('Four arguments: ID, width, height, ""', function (macro) {
-    macro.ctx.env.url =
-      "https://developer.mozilla.org/en-US/docs/Web/CSS/::before";
+    macro.ctx.env.url = "/en-US/docs/Web/CSS/::before";
     return assert.eventually.equal(
       macro.call("Adding_quotation_marks", "500", "50", ""),
       '<iframe class="live-sample-frame sample-code-frame"' +
@@ -155,8 +145,7 @@ describeMacro("EmbedLiveSample", function () {
     );
   });
   itMacro("Four arguments: ID, width, height, screenshot", function (macro) {
-    macro.ctx.env.url =
-      "https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Gradients";
+    macro.ctx.env.url = "/en-US/docs/Web/SVG/Tutorial/Gradients";
     return assert.eventually.equal(
       macro.call(
         "SVGLinearGradient",
@@ -181,8 +170,7 @@ describeMacro("EmbedLiveSample", function () {
   itMacro("Four arguments: ID, width, height, XSS attempt (failed)", function (
     macro
   ) {
-    macro.ctx.env.url =
-      "https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Gradients";
+    macro.ctx.env.url = "/en-US/docs/Web/SVG/Tutorial/Gradients";
     return assert.eventually.equal(
       macro.call(
         "SVGLinearGradient",
@@ -211,8 +199,7 @@ describeMacro("EmbedLiveSample", function () {
     ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/flex-wrap/_samples_/Examples">' +
     "</iframe>";
   itMacro('Five arguments: ID, width, height, "", same slug', function (macro) {
-    macro.ctx.env.url =
-      "https://developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap";
+    macro.ctx.env.url = "/en-US/docs/Web/CSS/flex-wrap";
     return assert.eventually.equal(
       macro.call("Examples", "700px", "700px", "", "Web/CSS/flex-wrap"),
       same_slug_iframe
@@ -221,8 +208,7 @@ describeMacro("EmbedLiveSample", function () {
   itMacro(
     "Three arguments: ID, width, height (same as Five arg, same slug)",
     function (macro) {
-      macro.ctx.env.url =
-        "https://developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap";
+      macro.ctx.env.url = "/en-US/docs/Web/CSS/flex-wrap";
       return assert.eventually.equal(
         macro.call("Examples", "700px", "700px"),
         same_slug_iframe
@@ -230,8 +216,7 @@ describeMacro("EmbedLiveSample", function () {
     }
   );
   itMacro('Five arguments: ID, "", "", "", other slug', function (macro) {
-    macro.ctx.env.url =
-      "https://developer.mozilla.org/en-US/docs/Web/Events/focus";
+    macro.ctx.env.url = "/en-US/docs/Web/Events/focus";
     return assert.eventually.equal(
       macro.call("Event delegation", "", "", "", "Web/Events/blur"),
       '<iframe class="live-sample-frame sample-code-frame"' +
@@ -243,8 +228,7 @@ describeMacro("EmbedLiveSample", function () {
   itMacro(
     'Five arguments: ID, "", "", "", other non-existent slug',
     async function (macro) {
-      macro.ctx.env.path = "/en-US/docs/Web/Events/focus";
-      macro.ctx.env.url = `https://developer.mozilla.org${macro.ctx.env.path}`;
+      macro.ctx.env.url = "/en-US/docs/Web/Events/focus";
       macro.ctx.info.cleanURL = jest.fn((url) => url.toLowerCase());
       macro.ctx.info.hasPage = jest.fn((path) => false);
       await expect(
@@ -257,8 +241,7 @@ describeMacro("EmbedLiveSample", function () {
   itMacro('Five arguments: ID, "", "", "", XSS Attempt (failed)', function (
     macro
   ) {
-    macro.ctx.env.url =
-      "https://developer.mozilla.org/en-US/docs/Web/Events/focus";
+    macro.ctx.env.url = "/en-US/docs/Web/Events/focus";
     return assert.eventually.equal(
       macro.call(
         "Event_delegation",
@@ -274,8 +257,7 @@ describeMacro("EmbedLiveSample", function () {
     );
   });
   itMacro('Six arguments: ID, width, height, "", "", class', function (macro) {
-    macro.ctx.env.url =
-      "https://developer.mozilla.org/en-US/docs/Web/CSS/-moz-appearance";
+    macro.ctx.env.url = "/en-US/docs/Web/CSS/-moz-appearance";
     return assert.eventually.equal(
       macro.call("sampleNone", 100, 50, "", "", "nobutton"),
       '<iframe class="live-sample-frame nobutton"' +
@@ -288,8 +270,7 @@ describeMacro("EmbedLiveSample", function () {
   itMacro(
     'Six arguments: ID, width, height, "", "", XSS attempt (failed)',
     function (macro) {
-      macro.ctx.env.url =
-        "https://developer.mozilla.org/en-US/docs/Web/CSS/-moz-appearance";
+      macro.ctx.env.url = "/en-US/docs/Web/CSS/-moz-appearance";
       return assert.eventually.equal(
         macro.call(
           "sampleNone",
@@ -310,8 +291,7 @@ describeMacro("EmbedLiveSample", function () {
   itMacro('Seven arguments: ID, width, height, "", "", "", features', function (
     macro
   ) {
-    macro.ctx.env.url =
-      "https://developer.mozilla.org/en-US/docs/Web/API/Media_Streams_API/Constraints";
+    macro.ctx.env.url = "/en-US/docs/Web/API/Media_Streams_API/Constraints";
     return assert.eventually.equal(
       macro.call(
         "Example_Constraint_exerciser",
@@ -333,8 +313,7 @@ describeMacro("EmbedLiveSample", function () {
   itMacro(
     'Seven arguments: ID, width, height, "", "", "", XSS Attempt (failed)',
     function (macro) {
-      macro.ctx.env.url =
-        "https://developer.mozilla.org/en-US/docs/Web/API/Media_Streams_API/Constraints";
+      macro.ctx.env.url = "/en-US/docs/Web/API/Media_Streams_API/Constraints";
       return assert.eventually.equal(
         macro.call(
           "Example_Constraint_exerciser",

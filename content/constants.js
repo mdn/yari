@@ -16,9 +16,13 @@ const CONTENT_ROOT = (() => {
   return root;
 })();
 
-const CONTENT_ARCHIVE_ROOT = process.env.CONTENT_ARCHIVE_ROOT
-  ? path.join(__dirname, "..", process.env.CONTENT_ARCHIVE_ROOT)
-  : null;
+const CONTENT_ARCHIVE_ROOT = (() => {
+  const root = process.env.CONTENT_ARCHIVE_ROOT;
+  if (root && !fs.existsSync(root)) {
+    return path.join(__dirname, "..", root);
+  }
+  return root;
+})();
 
 // Make a combined array of all truthy roots. This way, you don't
 // need to constantly worry about CONTENT_ARCHIVE_ROOT potentially being

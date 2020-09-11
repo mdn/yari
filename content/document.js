@@ -11,7 +11,7 @@ const {
   VALID_LOCALES,
   ROOTS,
 } = require("./constants");
-const popularities = require("./popularities");
+const getPopularities = require("./popularities");
 const { memoize, slugToFolder } = require("./utils");
 
 function buildPath(localeFolder, slug) {
@@ -146,7 +146,7 @@ const read = memoize((folder, fields = null) => {
       metadata: {
         ...metadata,
         locale,
-        popularity: popularities[url] || 0.0,
+        popularity: getPopularities().get(url) || 0.0,
       },
       url,
     };

@@ -5,7 +5,7 @@ const {
   VALID_LOCALES,
 } = require("./constants");
 const Document = require("./document");
-const popularities = require("./popularities");
+const getPopularities = require("./popularities");
 const Redirect = require("./redirect");
 const Image = require("./image");
 const { buildURL, memoize, slugToFolder } = require("./utils");
@@ -16,7 +16,7 @@ module.exports = {
   ROOTS,
   VALID_LOCALES,
 
-  popularities,
+  getPopularities,
 
   Document,
   Redirect,

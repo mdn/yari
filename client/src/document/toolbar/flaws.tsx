@@ -4,6 +4,7 @@ import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
 import { diffWords } from "diff";
 
+import { CRUD_MODE } from "../../constants";
 import { humanizeFlawName } from "../../flaw-utils";
 import { useDocumentURL } from "../hooks";
 import {
@@ -167,7 +168,7 @@ export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
 }
 
 function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
-  if (process.env.NODE_ENV !== "development") {
+  if (!CRUD_MODE) {
     throw new Error("This shouldn't be used in non-development builds");
   }
 

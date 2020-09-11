@@ -3,10 +3,22 @@ const path = require("path");
 
 const glob = require("glob");
 
-const { popularities } = require("../content");
+const { getPopularities } = require("../content");
 const { FLAW_LEVELS, options: buildOptions } = require("../build");
 
 const BUILD_OUT_ROOT = path.join(__dirname, "..", "client", "build");
+
+// Module-level cache
+const allPopularityValues = [];
+
+function getAllPopularityValues() {
+  if (!allPopularityValues.length) {
+    for (const value of getPopularities().values()) {
+      allPopularityValues.push(value);
+    }
+  }
+  return allPopularityValues;
+}
 
 function anyMatchSearchFlaws(searchFlaws, flaws) {
   for (const [flaw, search] of searchFlaws) {
@@ -84,7 +96,7 @@ function packageDocument(doc) {
   const popularity = {
     value: doc.popularity,
     ranking: doc.popularity
-      ? 1 + Object.values(popularities).filter((p) => p > doc.popularity).length
+      ? 1 + getAllPopularityValues().filter((p) => p > doc.popularity).length
       : NaN,
   };
   const flaws = packageFlaws(doc.flaws);
@@ -171,8 +183,7 @@ module.exports = (req, res) => {
     }
     if (popularityFilter) {
       const docRanking = doc.popularity
-        ? 1 +
-          Object.values(popularities).filter((p) => p > doc.popularity).length
+        ? 1 + getAllPopularityValues().filter((p) => p > doc.popularity).length
         : NaN;
       if (popularityFilter.min) {
         if (isNaN(docRanking) || docRanking > popularityFilter.min) {

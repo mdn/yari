@@ -10,14 +10,6 @@
 
 let iClass = "interactive";
 let url = kuma.url.resolve(env.interactive_examples.base_url, $0);
-let siteURL = mdn.siteURL();
-if (siteURL != 'https://developer.mozilla.org') {
-    if (url.includes('?')) {
-        url += '&origin=' + siteURL;
-    } else {
-        url += '?origin=' + siteURL;
-    }
-}
 
 if ($0.includes('/js/')) {
     iClass += " interactive-js";

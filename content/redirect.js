@@ -21,31 +21,34 @@ function add(locale, oldSlug, newSlug) {
   writeStream.end();
 }
 
-const resolve = (() => {
-  const redirects = {};
+// The module level cache
+const redirects = new Map();
 
-  const localeFolders = fs
-    .readdirSync(CONTENT_ROOT)
-    .map((n) => path.join(CONTENT_ROOT, n))
-    .filter((filepath) => fs.statSync(filepath).isDirectory());
-  for (const folder of localeFolders) {
-    const redirectsFilePath = path.join(folder, "_redirects.txt");
-    if (!fs.existsSync(redirectsFilePath)) {
-      continue;
-    }
+const resolve = (url) => {
+  if (!redirects.size) {
+    const localeFolders = fs
+      .readdirSync(CONTENT_ROOT)
+      .map((n) => path.join(CONTENT_ROOT, n))
+      .filter((filepath) => fs.statSync(filepath).isDirectory());
 
-    const redirectPairs = fs
-      .readFileSync(redirectsFilePath, "utf-8")
-      .split("\n")
-      .slice(1, -1)
-      .map((line) => line.trim().split(/\s+/));
-    for (const [from, to] of redirectPairs) {
-      redirects[from.toLowerCase()] = to;
+    for (const folder of localeFolders) {
+      const redirectsFilePath = path.join(folder, "_redirects.txt");
+      if (!fs.existsSync(redirectsFilePath)) {
+        continue;
+      }
+
+      const redirectPairs = fs
+        .readFileSync(redirectsFilePath, "utf-8")
+        .split("\n")
+        .slice(1, -1)
+        .map((line) => line.trim().split(/\s+/));
+      for (const [from, to] of redirectPairs) {
+        redirects.set(from.toLowerCase(), to);
+      }
     }
   }
-
-  return (url) => redirects[url.toLowerCase()] || url;
-})();
+  return redirects.get(url.toLowerCase()) || url;
+};
 
 function write(localeFolder, pairs) {
   const filePath = path.join(localeFolder, "_redirects.txt");

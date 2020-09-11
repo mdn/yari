@@ -8,18 +8,21 @@
 // $1   The URL from which to pull the sample; if not provided,
 //      the current page is assumed.
 
-var pageUrl = env.url;
-var base = pageUrl;
+var pagePath = env.url;
 
 if ($1 && $1.length > 0) {
-    base = $1;
+    pagePath = $1;
 }
 
-let url = new kuma.url.URL(base);
-wiki.ensureExistence(url.pathname);
-let liveSampleUrl = new kuma.url.URL(env.live_samples.base_url);
-url.host = liveSampleUrl.host;
-url.protocol = liveSampleUrl.protocol;
-url.pathname = url.pathname + '/_samples_/' + web.slugify(web.safeDecodeURIComponent($0));
+wiki.ensureExistence(pagePath);
+const samplePath = pagePath + '/_samples_/' + web.slugify(web.safeDecodeURIComponent($0));
+
+let url;
+if (env.live_samples.base_url.includes('://')) {
+    url = new kuma.url.URL(env.live_samples.base_url);
+    url.pathname = samplePath;
+} else {
+    url = samplePath;
+}
 %>
 <%= url %>
