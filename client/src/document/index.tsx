@@ -2,6 +2,7 @@ import React, { lazy, Suspense, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
+import { CRUD_MODE } from "../constants";
 import { useWebSocketMessageHandler } from "../web-socket";
 import { NoMatch } from "../routing";
 import { useDocumentURL } from "./hooks";
@@ -100,9 +101,11 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   const { github_url, folder } = doc.source;
 
+  const isServer = typeof window === "undefined";
+
   return (
     <main>
-      {process.env.NODE_ENV === "development" && !doc.isArchive && (
+      {!isServer && CRUD_MODE && !doc.isArchive && (
         <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
           <Toolbar doc={doc} />
         </Suspense>
