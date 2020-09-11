@@ -54,7 +54,12 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Build the build
-        run: yarn prepare-build
+        run: |
+          # What this does is it makes sure the built client is made for
+          # doing CRUD work (e.g. previewing, toolbar, flaws UI, etc)
+          export REACT_APP_CRUD_MODE=true
+
+          yarn prepare-build
 
       - name: Dry-run publish to see which files are included
         run: |
