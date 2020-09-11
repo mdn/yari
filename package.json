@@ -91,7 +91,7 @@
     "@types/jest": "^26.0.13",
     "extend": "^3.0.2",
     "fs-extra": "9.0.1",
-    "husky": "4.2.5",
+    "husky": "4.3.0",
     "jest": "^24.0.0",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "jest-junit-reporter": "^1.1.0",
