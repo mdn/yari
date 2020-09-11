@@ -1,6 +1,8 @@
 import * as React from "react";
 import { useContext, useEffect, useState } from "react";
 
+import { DISABLE_AUTH } from "./constants";
+
 export type UserData = {
   username: string | null | undefined;
   isAuthenticated: boolean;
@@ -50,6 +52,8 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
   const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
+    if (DISABLE_AUTH) return;
+
     fetch("/api/v1/whoami")
       .then((response) => {
         if (!response.ok) {
