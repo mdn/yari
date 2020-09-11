@@ -128,6 +128,18 @@ When doing local development, it's recommended to set this to
 
 The base URL used in the Interactive Example iframes.
 
+### `BUILD_LOG_MACROS_USED`
+
+**Default `not set`**
+
+This needs to be be a file path.
+E.g. `export BUILD_LOG_MACROS_USED=/tmp/macros-used.log`
+It will write one line for every (normalized) macro name used and its
+arguments in rendering.
+
+This is an advanced feature to help potentially figuring out which
+kumascript macros, in the source, that aren't used.
+
 ## Server
 
 ### `SERVER_PORT`

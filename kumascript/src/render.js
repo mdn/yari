@@ -40,7 +40,8 @@
  *
  * @prettier
  */
-const info = require("./info");
+const fs = require("fs");
+
 const Parser = require("./parser.js");
 const Templates = require("./templates.js");
 const Environment = require("./environment.js");
@@ -209,6 +210,13 @@ async function render(
     } else {
       if (!priorResult) {
         signatureToResult.set(token.signature, currentResult);
+      }
+      if (process.env.BUILD_LOG_MACROS_USED) {
+        fs.appendFileSync(
+          process.env.BUILD_LOG_MACROS_USED,
+          `${macroName}|${token.args}\n`,
+          "utf-8"
+        );
       }
       // Now start rendering this macro.
       try {
