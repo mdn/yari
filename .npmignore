@@ -1,0 +1,32 @@
+# In GitHub Actions, all the content of the .gitignore gets added to
+# this file.
+# If there's both a `.gitignore` *and* `.npmignore` file, and a file
+# might mentioned in `.gitignore` but not in `.npmignore` it will be
+# included.
+# And we don't want to have maintain both. So right before it runs the
+# `npm publish` step it will combine these two files.
+
+/node_modules/
+client/node_modules/
+ssr/node_modules/
+kumascript/node_modules/
+content/node_modules/
+server/node_modules/
+
+# This won't be relevant or needed once the content is gone.
+/content/files/en-us/
+
+/deployer
+kumascript/tests
+testing/
+import/
+/mdn-web-docs.svg
+.github/
+/docs/
+README.md
+client/search-experimentation.js
+yarn-error.log
+content/files/
+
+# Since we ship the built stuff, we actually no longer need any of the source
+/src/
