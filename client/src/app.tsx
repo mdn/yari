@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 
+import { CRUD_MODE } from "./constants";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import Footer from "./footer";
@@ -46,7 +47,7 @@ export function App(appProps) {
         element={
           <Layout>
             <Routes>
-              {process.env.NODE_ENV === "development" && (
+              {CRUD_MODE && (
                 <>
                   <Route path="/_flaws" element={<AllFlaws />} />
                   <Route path="/_create/*" element={<DocumentCreate />} />
