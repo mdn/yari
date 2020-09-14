@@ -5,6 +5,7 @@ const fm = require("front-matter");
 const glob = require("glob");
 const yaml = require("js-yaml");
 
+const { markdownToHTML } = require("./markdown-converter");
 const {
   CONTENT_ARCHIVE_ROOT,
   CONTENT_ROOT,
@@ -19,7 +20,9 @@ function buildPath(localeFolder, slug) {
 }
 
 const HTML_FILENAME = "index.html";
+const MARKDOWN_FILENAME = "index.md";
 const getHTMLPath = (folder) => path.join(folder, HTML_FILENAME);
+const getMarkdownPath = (folder) => path.join(folder, MARKDOWN_FILENAME);
 const getWikiHistoryPath = (folder) => path.join(folder, "wikihistory.json");
 
 function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
@@ -122,9 +125,19 @@ function archive(renderedHTML, rawHTML, metadata, wikiHistory) {
 const read = memoize((folder, fields = null) => {
   fields = fields ? { body: false, metadata: false, ...fields } : fields;
 
-  const filePath = ROOTS.map((root) =>
-    path.join(root, getHTMLPath(folder))
-  ).find((filePath) => fs.existsSync(filePath));
+  let filePath = null;
+  for (const root of ROOTS) {
+    const htmlFilePath = path.join(root, getHTMLPath(folder));
+    if (fs.existsSync(htmlFilePath)) {
+      filePath = htmlFilePath;
+      break;
+    }
+    const markdownFilePath = path.join(root, getMarkdownPath(folder));
+    if (fs.existsSync(markdownFilePath)) {
+      filePath = markdownFilePath;
+      break;
+    }
+  }
   if (!filePath) {
     return;
   }
@@ -132,11 +145,11 @@ const read = memoize((folder, fields = null) => {
     CONTENT_ARCHIVE_ROOT && filePath.startsWith(CONTENT_ARCHIVE_ROOT);
 
   const rawContent = fs.readFileSync(filePath, "utf8");
-  const {
-    attributes: metadata,
-    body: rawHTML,
-    bodyBegin: frontMatterOffset,
-  } = fm(rawContent);
+  const { attributes: metadata, body, bodyBegin: frontMatterOffset } = fm(
+    rawContent
+  );
+
+  const rawHTML = filePath.endsWith(".md") ? markdownToHTML(body) : body;
 
   let fullMetadata = {};
   if (!fields || fields.metadata) {
@@ -231,7 +244,7 @@ function findAll(
   // TODO: doesn't support archive content yet
   console.warn("Currently hardcoded to only build 'en-us'");
   const filePaths = glob
-    .sync(path.join(CONTENT_ROOT, "en-us", "**", HTML_FILENAME))
+    .sync(path.join(CONTENT_ROOT, "en-us", "**", "index.{html,md}"))
     .filter((filePath) => {
       // The 'files' set is either a list of absolute full paths or a
       // list of endings.
@@ -252,6 +265,7 @@ function findAll(
         return filePath
           .replace(CONTENT_ROOT, "")
           .replace(HTML_FILENAME, "")
+          .replace(MARKDOWN_FILENAME, "")
           .includes(folderSearch);
       }
       return true;
