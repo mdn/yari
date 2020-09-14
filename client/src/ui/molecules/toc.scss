@@ -1,0 +1,85 @@
+@import "~@mdn/minimalist/sass/vars/media-queries";
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+.document-toc {
+  position: relative;
+
+  h2 {
+    display: none;
+
+    @media #{$mq-small-desktop-and-up} {
+      display: block;
+      font-size: $medium-font-size;
+    }
+  }
+
+  .toc-trigger-mobile {
+    border: 0;
+    border-bottom: 2px solid $primary-100;
+    color: $link-color;
+    font-weight: normal;
+    margin-top: $gutter-width / 2;
+    padding: 10px 0;
+    text-align: left;
+    width: 100%;
+
+    @media #{$mq-small-desktop-and-up} {
+      display: none;
+    }
+
+    &::after {
+      background: transparent url("~@mdn/dinocons/arrows/triangle.svg") 0 0
+        no-repeat;
+      background-size: 16px;
+      content: "";
+      display: inline-block;
+      height: 16px;
+      margin-left: 5px;
+      transform: rotate(180deg);
+      vertical-align: sub;
+      width: 16px;
+
+      @media #{$mq-small-desktop-and-up} {
+        display: none;
+      }
+    }
+  }
+
+  ul {
+    background-color: #fff;
+    border: 2px solid $primary-100;
+    display: none;
+    list-style: none;
+    padding: 0 20px;
+    position: absolute;
+    top: 60px;
+    width: calc(100% - 40px);
+    z-index: 99;
+
+    @media #{$mq-small-desktop-and-up} {
+      background-color: inherit;
+      border: 0;
+      display: block;
+      padding-left: 0;
+      position: inherit;
+      top: inherit;
+      width: auto;
+      z-index: inherit;
+    }
+
+    li {
+      line-height: 1.2;
+      margin: 20px 0;
+
+      @media #{$mq-small-desktop-and-up} {
+        margin: 10px 0;
+      }
+    }
+  }
+
+  .show-toc {
+    display: block;
+  }
+}

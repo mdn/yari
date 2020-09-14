@@ -18,19 +18,11 @@ const AllFlaws = lazy(() => import("./flaws"));
 const DocumentEdit = lazy(() => import("./document/forms/edit"));
 const DocumentCreate = lazy(() => import("./document/forms/create"));
 
-// Lazy sub-components
-// const Toolbar = lazy(() => import("./toolbar"));
-
 const isServer = typeof window === "undefined";
 
 function Layout({ pageType, children }) {
   return (
     <>
-      {/* {process.env.NODE_ENV === "development" && !doc.isArchive && (
-        <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
-          <Toolbar doc={doc} />
-        </Suspense>
-      )} */}
       <div className={`page-wrapper ${pageType}`}>
         <Header />
         {children}

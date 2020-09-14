@@ -9,7 +9,7 @@
         "stylelint-scss"
     ],
     "rules": {
-        "max-nesting-depth": 2,
+        "max-nesting-depth": 3,
         "declaration-no-important": true,
         "font-weight-notation": "named-where-possible"
     }

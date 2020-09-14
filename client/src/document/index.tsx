@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
@@ -19,9 +19,12 @@ import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-t
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
 import Titlebar from "../ui/molecules/titlebar";
-import { TOC } from "./toc";
+import { TOC } from "../ui/molecules/toc";
 
 import "./index.scss";
+
+// Lazy sub-components
+const Toolbar = lazy(() => import("./toolbar"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const documentURL = useDocumentURL();
@@ -98,10 +101,17 @@ export function Document(props /* TODO: define a TS interface for this */) {
   }
 
   const { github_url, folder } = doc.source;
+  const isServer = typeof window === "undefined";
 
   return (
     <>
       <Titlebar docTitle={doc.title} />
+
+      {!isServer && CRUD_MODE && !doc.isArchive && (
+        <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
+          <Toolbar doc={doc} />
+        </Suspense>
+      )}
 
       <nav className="breadcrumb-locale-container">
         {doc.parents && <Breadcrumbs parents={doc.parents} />}
