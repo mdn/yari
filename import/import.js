@@ -6,16 +6,20 @@ const { promisify } = require("util");
 
 const chalk = require("chalk");
 const mysql = require("mysql");
-const cheerio = require("cheerio");
 
 const {
   CONTENT_ROOT,
-  CONTENT_ARCHIVE_ROOT,
+  CONTENT_ARCHIVED_ROOT,
+  CONTENT_TRANSLATED_ROOT,
   VALID_LOCALES,
   Document,
   Redirect,
 } = require("../content");
+
+const cheerio = require("../build/monkeypatched-cheerio");
 const ProgressBar = require("./progress-bar");
+
+console.assert(CONTENT_ROOT, "CONTENT_ROOT must be set");
 
 const MAX_OPEN_FILES = 256;
 
@@ -658,23 +662,30 @@ function uriToSlug(uri) {
 }
 
 async function prepareRoots(options) {
-  if (!CONTENT_ARCHIVE_ROOT) {
-    throw new Error("missing archive root");
-  }
-  if (!CONTENT_ROOT) throw new Error("waat?!");
-  if (CONTENT_ROOT === CONTENT_ARCHIVE_ROOT) throw new Error("eh?!");
+  console.assert(CONTENT_ARCHIVED_ROOT, "CONTENT_ARCHIVED_ROOT must be set");
+  console.assert(
+    CONTENT_TRANSLATED_ROOT,
+    "CONTENT_TRANSLATED_ROOT must be set"
+  );
+
+  if (CONTENT_ROOT === CONTENT_ARCHIVED_ROOT) throw new Error("eh?!");
+  if (CONTENT_ROOT === CONTENT_TRANSLATED_ROOT) throw new Error("eh?!");
   if (options.startClean) {
     // Experimental new feature
     // https://nodejs.org/api/fs.html#fs_fs_rmdirsync_path_options
     await withTimer(`Delete all of ${CONTENT_ROOT}`, () =>
       fs.rmdirSync(CONTENT_ROOT, { recursive: true })
     );
-    await withTimer(`Delete all of ${CONTENT_ARCHIVE_ROOT}`, () =>
-      fs.rmdirSync(CONTENT_ARCHIVE_ROOT, { recursive: true })
+    await withTimer(`Delete all of ${CONTENT_ARCHIVED_ROOT}`, () =>
+      fs.rmdirSync(CONTENT_ARCHIVED_ROOT, { recursive: true })
+    );
+    await withTimer(`Delete all of ${CONTENT_TRANSLATED_ROOT}`, () =>
+      fs.rmdirSync(CONTENT_TRANSLATED_ROOT, { recursive: true })
     );
   }
   fs.mkdirSync(CONTENT_ROOT, { recursive: true });
-  fs.mkdirSync(CONTENT_ARCHIVE_ROOT, { recursive: true });
+  fs.mkdirSync(CONTENT_ARCHIVED_ROOT, { recursive: true });
+  fs.mkdirSync(CONTENT_TRANSLATED_ROOT, { recursive: true });
 }
 
 function getRedirectURL(html) {
@@ -987,11 +998,66 @@ async function processDocument(
   }
 
   if (isArchive) {
-    Document.archive(doc.rendered_html, doc.html, meta, wikiHistory);
+    const html = getCleanedRenderedHTML(doc.rendered_html);
+    Document.archive(
+      html !== null ? html : doc.rendered_html,
+      doc.html,
+      meta,
+      wikiHistory
+    );
   } else {
+    const html = getCleanedKumaHTML(doc.html);
     localeWikiHistory.set(doc.slug, wikiHistory);
-    Document.create(doc.html, meta);
+    // Document.create(html !== null ? html : doc.html, meta);
+    Document.create(html, meta);
   }
+}
+
+function getCleanedRenderedHTML(html) {
+  const $ = cheerio.load(`<div id="_body">${html}</div>`, {
+    // If you use decodeEntities:true (which is the default),
+    // it will turn HTML characters into HTML entities. E.g.
+    //   `<pre>console.log('hi')</pre>`
+    // would become:
+    //   `<pre>console.log(&apos;hi&apos;)</pre>`
+    decodeEntities: false,
+  });
+  let mutations = 0;
+
+  // This will only happen for fully rendered HTML.
+  // https://github.com/mdn/yari/issues/1248
+  $("#Quick_Links a[title]").each((i, element) => {
+    const $element = $(element);
+    $element.removeAttr("title");
+    mutations++;
+  });
+
+  if (mutations) {
+    return $("#_body").html();
+  }
+  return null;
+}
+
+// https://github.com/mdn/yari/issues/1191
+const _DELETE_STRINGS = [
+  new RegExp(
+    '<div class="hidden">The compatibility table on this page is generated from structured data. If you\'d like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>'
+  ),
+  new RegExp(
+    '<div class="hidden">The compatibility table in this page is generated from structured data. If you\'d like to contribute to the data, please check out <a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a> and send us a pull request.</div>'
+  ),
+  new RegExp(
+    '<p class="hidden">The source for this interactive example is stored in a GitHub repository. If you\'d like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</p>'
+  ),
+  ``,
+];
+function getCleanedKumaHTML(html) {
+  // You can't parse the Kuma HTML because it's not actually HTML. It's
+  // HTML peppered with KS macros. So here we need to treat it as a string.
+  for (const rex of _DELETE_STRINGS) {
+    html = html.replace(rex, "");
+  }
+  return html;
 }
 
 async function saveAllRedirects(redirects) {
@@ -1012,7 +1078,9 @@ async function saveAllRedirects(redirects) {
       return 0;
     });
     countPerLocale.push([locale, pairs.length]);
-    const localeFolder = path.join(CONTENT_ROOT, locale);
+    const root = locale === "en-US" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+    const localeFolder = path.join(root, locale);
+    console.log("LOCALE", locale, "TO", localeFolder);
     if (!fs.existsSync(localeFolder)) {
       console.log(
         `No content for ${locale}, so skip ${pairs.length} redirects`
@@ -1046,7 +1114,8 @@ async function saveAllWikiHistory(allHistory) {
    */
 
   for (const [locale, history] of allHistory) {
-    const localeFolder = path.join(CONTENT_ROOT, locale);
+    const root = locale === "en-US" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+    const localeFolder = path.join(root, locale.toLowerCase());
     const filePath = path.join(localeFolder, "_wikihistory.json");
     const obj = Object.create(null);
     const keys = Array.from(history.keys());

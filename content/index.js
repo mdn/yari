@@ -1,6 +1,7 @@
 const {
   CONTENT_ROOT,
-  CONTENT_ARCHIVE_ROOT,
+  CONTENT_ARCHIVED_ROOT,
+  CONTENT_TRANSLATED_ROOT,
   ROOTS,
   VALID_LOCALES,
 } = require("./constants");
@@ -12,7 +13,8 @@ const { buildURL, memoize, slugToFolder } = require("./utils");
 
 module.exports = {
   CONTENT_ROOT,
-  CONTENT_ARCHIVE_ROOT,
+  CONTENT_ARCHIVED_ROOT,
+  CONTENT_TRANSLATED_ROOT,
   ROOTS,
   VALID_LOCALES,
 

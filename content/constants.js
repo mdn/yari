@@ -5,31 +5,21 @@ require("dotenv").config({
   path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
 });
 
-const CONTENT_ROOT = (() => {
-  const root =
-    process.env.CONTENT_ROOT || path.join(__dirname, "..", "content", "files");
-  // If the CONTENT_ROOT wasn't an absolute (existing) directory, it's
-  // assumed to be relative to the project root.
-  if (!fs.existsSync(root)) {
-    return path.join(__dirname, "..", root);
-  }
-  return root;
-})();
+const CONTENT_ROOT = process.env.CONTENT_ROOT;
+console.assert(CONTENT_ROOT, "Env var CONTENT_ROOT must be set");
 
-const CONTENT_ARCHIVE_ROOT = (() => {
-  const root = process.env.CONTENT_ARCHIVE_ROOT;
-  if (root && !fs.existsSync(root)) {
-    return path.join(__dirname, "..", root);
-  }
-  return root;
-})();
+const CONTENT_ARCHIVED_ROOT = process.env.CONTENT_ARCHIVED_ROOT;
+const CONTENT_TRANSLATED_ROOT = process.env.CONTENT_TRANSLATED_ROOT;
 
 // Make a combined array of all truthy roots. This way, you don't
-// need to constantly worry about CONTENT_ARCHIVE_ROOT potentially being
+// need to constantly worry about CONTENT_ARCHIVED_ROOT potentially being
 // null.
 const ROOTS = [CONTENT_ROOT];
-if (CONTENT_ARCHIVE_ROOT) {
-  ROOTS.push(CONTENT_ARCHIVE_ROOT);
+if (CONTENT_ARCHIVED_ROOT) {
+  ROOTS.push(CONTENT_ARCHIVED_ROOT);
+}
+if (CONTENT_TRANSLATED_ROOT) {
+  ROOTS.push(CONTENT_TRANSLATED_ROOT);
 }
 
 const VALID_LOCALES = new Map(
@@ -73,7 +63,8 @@ const VALID_LOCALES = new Map(
 
 module.exports = {
   CONTENT_ROOT,
-  CONTENT_ARCHIVE_ROOT,
+  CONTENT_ARCHIVED_ROOT,
+  CONTENT_TRANSLATED_ROOT,
   ROOTS,
   VALID_LOCALES,
 };
