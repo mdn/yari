@@ -47,8 +47,7 @@ async function buildDocuments() {
   const searchIndex = new SearchIndex();
 
   if (!documents.count) {
-    console.warn("No documents to build found");
-    return;
+    throw new Error("No documents to build found");
   }
 
   !options.noProgressbar && progressBar.start(documents.count);
