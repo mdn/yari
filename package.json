@@ -87,7 +87,7 @@
     "ws": "^7.3.1"
   },
   "devDependencies": {
-    "@testing-library/react": "^11.0.2",
+    "@testing-library/react": "^11.0.4",
     "@types/jest": "^26.0.13",
     "extend": "^3.0.2",
     "fs-extra": "9.0.1",
