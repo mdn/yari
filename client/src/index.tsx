@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
+
+import { CRUD_MODE } from "./constants";
 import { App } from "./app";
 import { GAProvider } from "./ga-context";
 import { UserDataProvider } from "./user-context";
@@ -31,7 +33,15 @@ let app = (
   </GAProvider>
 );
 
-if (process.env.NODE_ENV === "development") {
+const isServer = typeof window === "undefined";
+
+// Remember, CRUD_MODE, if not explicitly set, will be that
+// of NODE_ENV==='development' which is what you get when you use the
+// create-react-app dev server.
+// But you might be using CRUD_MODE without create-react-app's dev server,
+// and in that case you still need to avoid using React.Suspense because
+// that only works in client rendering.
+if (!isServer && CRUD_MODE) {
   // We only use a WebSocket to listen for document changes in development
   app = (
     <React.Suspense fallback>

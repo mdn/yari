@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
+import { CRUD_MODE } from "./constants";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { Footer } from "./ui/organisms/footer";
@@ -59,7 +60,7 @@ export function App(appProps) {
         path="/:locale/*"
         element={
           <Routes>
-            {process.env.NODE_ENV === "development" && (
+            {CRUD_MODE && (
               <>
                 <Route path="/_flaws" element={<AllFlaws />} />
                 <Route path="/_create/*" element={<DocumentCreate />} />

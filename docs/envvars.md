@@ -202,3 +202,15 @@ host name instead. That means you can log in _from_ Yari with a single click.
 
 This removes sign-in and `whoami` XHR fetching.
 Useful when using Yari purely for content editing as authentication is then not required.
+
+### `REACT_APP_CRUD_MODE`
+
+**Default: `NODE_ENV==='development'`**
+
+Basically, these are the optional, lazy-loaded features of the app that only
+make sense when you're working on authoring the content. For example the
+Toolbar bar appears based on this.
+
+It defaults to `NODE_ENV==='development'` if not set which means that
+it's enable by default when doing development with the `localhost:3000`
+dev server.
