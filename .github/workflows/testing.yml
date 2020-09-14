@@ -61,8 +61,10 @@ jobs:
         run: yarn test:client
 
       - name: Unit testing kumascript
-        run: yarn test:kumascript
         if: steps.git_diff_kumascript.outputs.diff
+        run: |
+          export CONTENT_ROOT=testing/content/files
+          yarn test:kumascript
 
       - name: Functional testing
         run: |
