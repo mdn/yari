@@ -30,7 +30,7 @@ all prefixed with `CONTENT_`. E.g. `CONTENT_ROOT`
 
 Where the files are.
 
-### `CONTENT_ARCHIVE_ROOT`
+### `CONTENT_ARCHIVED_ROOT`
 
 **Default: `null`** (meaning, not set nor included)
 

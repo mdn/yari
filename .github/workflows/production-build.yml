@@ -75,7 +75,7 @@ jobs:
           #    if [ $day_of_month -eq "1" ]; then
           #      echo "Going to build with the archive content too"
           #      git clone https://github.com/mdn/mdn-archive-content.git
-          #      export CONTENT_ARCHIVE_ROOT=mdn-archive-content/content/files
+          #      export CONTENT_ARCHIVED_ROOT=mdn-archive-content/content/files
           #    fi
           #
           # ALTERNATIVELY...
@@ -85,7 +85,7 @@ jobs:
           #   if [ ${{ github.event.inputs.archivecontent }} -eq "true" ]; then
           #      echo "Going to build with the archive content too"
           #      git clone https://github.com/mdn/mdn-archive-content.git
-          #      export CONTENT_ARCHIVE_ROOT=mdn-archive-content/content/files
+          #      export CONTENT_ARCHIVED_ROOT=mdn-archive-content/content/files
           #    fi
           #
           # Or, we use a combination of both where we build archive content

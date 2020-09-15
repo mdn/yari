@@ -6,7 +6,8 @@ const glob = require("glob");
 const yaml = require("js-yaml");
 
 const {
-  CONTENT_ARCHIVE_ROOT,
+  CONTENT_ARCHIVED_ROOT,
+  CONTENT_TRANSLATED_ROOT,
   CONTENT_ROOT,
   VALID_LOCALES,
   ROOTS,
@@ -87,15 +88,20 @@ function create(html, metadata) {
 }
 
 function getFolderPath(metadata) {
-  return buildPath(path.join(CONTENT_ROOT, metadata.locale), metadata.slug);
+  const root =
+    metadata.locale === "en-US" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+  return buildPath(
+    path.join(root, metadata.locale.toLowerCase()),
+    metadata.slug
+  );
 }
 
 function archive(renderedHTML, rawHTML, metadata, wikiHistory) {
-  if (!CONTENT_ARCHIVE_ROOT) {
-    throw new Error("Can't archive when CONTENT_ARCHIVE_ROOT is not set");
+  if (!CONTENT_ARCHIVED_ROOT) {
+    throw new Error("Can't archive when CONTENT_ARCHIVED_ROOT is not set");
   }
   const folderPath = buildPath(
-    path.join(CONTENT_ARCHIVE_ROOT, metadata.locale),
+    path.join(CONTENT_ARCHIVED_ROOT, metadata.locale.toLowerCase()),
     metadata.slug
   );
 
@@ -125,11 +131,12 @@ const read = memoize((folder, fields = null) => {
   const filePath = ROOTS.map((root) =>
     path.join(root, getHTMLPath(folder))
   ).find((filePath) => fs.existsSync(filePath));
+
   if (!filePath) {
     return;
   }
   const isArchive =
-    CONTENT_ARCHIVE_ROOT && filePath.startsWith(CONTENT_ARCHIVE_ROOT);
+    CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT);
 
   const rawContent = fs.readFileSync(filePath, "utf8");
   const {
