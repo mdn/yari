@@ -998,18 +998,15 @@ async function processDocument(
   }
 
   if (isArchive) {
-    const html = getCleanedRenderedHTML(doc.rendered_html);
     Document.archive(
-      html !== null ? html : doc.rendered_html,
+      getCleanedRenderedHTML(doc.rendered_html),
       doc.html,
       meta,
       wikiHistory
     );
   } else {
-    const html = getCleanedKumaHTML(doc.html);
     localeWikiHistory.set(doc.slug, wikiHistory);
-    // Document.create(html !== null ? html : doc.html, meta);
-    Document.create(html, meta);
+    Document.create(getCleanedKumaHTML(doc.html), meta);
   }
 }
 
@@ -1035,7 +1032,7 @@ function getCleanedRenderedHTML(html) {
   if (mutations) {
     return $("#_body").html();
   }
-  return null;
+  return html;
 }
 
 // https://github.com/mdn/yari/issues/1191

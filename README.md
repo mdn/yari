@@ -10,7 +10,7 @@
 Before you can begin with Yari, you need [Content](https://github.com/mdn/content).
 See its README which basically, says something like this:
 
-    git clone https://github.com/mdn/yari.git mdn/content
+    git clone https://github.com/mdn/content.git mdn/content
 
 Now, you just need to note where that folder is before you can start Yari.
 
