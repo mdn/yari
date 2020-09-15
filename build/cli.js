@@ -50,6 +50,8 @@ async function buildDocuments() {
     throw new Error("No documents to build found");
   }
 
+  let peakHeapBytes = 0;
+
   !options.noProgressbar && progressBar.start(documents.count);
   for (const document of documents.iter()) {
     const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
@@ -99,6 +101,10 @@ async function buildDocuments() {
     } else {
       console.log(outPath);
     }
+    const heapBytes = process.memoryUsage().heapUsed;
+    if (heapBytes > peakHeapBytes) {
+      peakHeapBytes = heapBytes;
+    }
   }
 
   !options.noProgressbar && progressBar.stop();
@@ -123,13 +129,22 @@ async function buildDocuments() {
       JSON.stringify(items)
     );
   }
-  return slugPerLocale;
+  return { slugPerLocale, peakHeapBytes };
+}
+
+function humanFileSize(size) {
+  if (size < 1024) return size + " B";
+  let i = Math.floor(Math.log(size) / Math.log(1024));
+  let num = size / Math.pow(1024, i);
+  let round = Math.round(num);
+  num = round < 10 ? num.toFixed(2) : round < 100 ? num.toFixed(1) : round;
+  return `${num} ${"KMGTPEZY"[i - 1]}B`;
 }
 
 if (require.main === module) {
   const t0 = new Date();
   buildDocuments()
-    .then((slugPerLocale) => {
+    .then(({ slugPerLocale, peakHeapBytes }) => {
       const t1 = new Date();
       const count = Object.values(slugPerLocale).reduce(
         (a, b) => a + b.length,
@@ -145,6 +160,7 @@ if (require.main === module) {
           count / seconds
         ).toFixed(1)} documents per second.`
       );
+      console.log(`Peak heap memory usage: ${humanFileSize(peakHeapBytes)}`);
     })
     .catch((error) => {
       console.error("error while building documents:", error);
