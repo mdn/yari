@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { useGA } from "../ga-context";
+import { useGA } from "../../ga-context";
 
-import { Toc } from "./types";
-import { ReactComponent as Caret } from "../kumastyles/arrows/caret-down.svg";
+import { Toc } from "../../document/types";
+
+import "./toc.scss";
 
 export function TOC({ toc }: { toc: Toc[] }) {
   const ga = useGA();
@@ -30,19 +31,20 @@ export function TOC({ toc }: { toc: Toc[] }) {
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions */}
       <section className="document-toc" onClick={sendTOCClicks}>
         <header>
-          <h2>On this Page</h2>
+          <h2>Jump to section</h2>
           <button
             type="button"
-            className="toc-trigger-mobile"
+            className="ghost toc-trigger-mobile"
             onClick={() => {
               setShowTOC(!showTOC);
             }}
+            aria-controls="toc-entries"
+            aria-expanded={showTOC}
           >
             Jump to section
-            <Caret />
           </button>
         </header>
-        <ul className={showTOC ? "show-toc" : undefined}>
+        <ul id="toc-entries" className={showTOC ? "show-toc" : undefined}>
           {toc.map((item) => (
             <li key={item.id}>
               <a href={`#${item.id}`}>{item.text}</a>
