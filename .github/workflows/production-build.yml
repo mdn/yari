@@ -32,6 +32,19 @@ jobs:
           repository: mdn/content
           path: mdn/content
 
+      - name: DEBUG WHERE WE ARE
+        run: |
+          echo "PWD"
+          pwd
+          echo "LS -L"
+          ls -l
+          echo "LS -L mdn"
+          ls -l mdn
+          echo "LS -L mdn/content"
+          ls -l mdn/content
+          echo "LS -L mdn/content/files"
+          ls -l mdn/content/files
+
       # XXX WORK IN PROGRESS
       # - uses: actions/checkout@v2
       #   if: ${{ github.event.inputs.archived_content }} == "true"
@@ -89,7 +102,7 @@ jobs:
       - name: Build everything
         run: |
           # Set the absolute path for CONTENT_ROOT
-          export CONTENT_ROOT=$(pwd)/mdn/files
+          export CONTENT_ROOT=$(pwd)/mdn/content/files
           echo "CONTENT_ROOT=$CONTENT_ROOT"
 
           # TODO:
