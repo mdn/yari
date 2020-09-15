@@ -29,7 +29,9 @@
       display: none;
     }
 
+    /* we already disable all animation and transitions globally via a reset so */
     &::after {
+      /* stylelint-disable-line a11y/media-prefers-reduced-motion */
       background: transparent url("~@mdn/dinocons/arrows/triangle.svg") 0 0
         no-repeat;
       background-size: 16px;
@@ -38,11 +40,19 @@
       height: 16px;
       margin-left: 5px;
       transform: rotate(180deg);
+      transform-origin: 50%;
+      transition: transform 0.3s ease-in;
       vertical-align: sub;
       width: 16px;
 
       @media #{$mq-small-desktop-and-up} {
         display: none;
+      }
+    }
+
+    &[aria-expanded="true"] {
+      &::after {
+        transform: rotate(0deg);
       }
     }
   }

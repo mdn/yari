@@ -38,11 +38,13 @@ export function TOC({ toc }: { toc: Toc[] }) {
             onClick={() => {
               setShowTOC(!showTOC);
             }}
+            aria-controls="toc-entries"
+            aria-expanded={showTOC}
           >
             Jump to section
           </button>
         </header>
-        <ul className={showTOC ? "show-toc" : undefined}>
+        <ul id="toc-entries" className={showTOC ? "show-toc" : undefined}>
           {toc.map((item) => (
             <li key={item.id}>
               <a href={`#${item.id}`}>{item.text}</a>
