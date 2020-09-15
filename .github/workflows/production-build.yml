@@ -89,7 +89,12 @@ jobs:
       - name: Build everything
         run: |
           # This is that second cloned repo.
-          export CONTENT_ROOT=mdn/content/files
+          export CONTENT_ROOT=$(pwd)/mdn/content/files
+          echo $CONTENT_ROOT
+          pwd
+          ls -l
+          ls mdn
+          ls mdn/content/
 
           # TODO:
           # The building of archived and translated content depends
