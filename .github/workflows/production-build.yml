@@ -11,8 +11,12 @@ on:
         description: "Notes"
         required: false
         default: ""
-      archivecontent:
+      archived_content:
         description: "Build archived content"
+        required: false
+        default: "false"
+      translated_content:
+        description: "Build translated content"
         required: false
         default: "false"
 
@@ -22,6 +26,24 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v2
+        with:
+          repository: mdn/content
+          path: mdn/content
+
+      # XXX WORK IN PROGRESS
+      # - uses: actions/checkout@v2
+      #   if: ${{ github.event.inputs.archived_content }} == "true"
+      #   with:
+      #     repository: mdn/archived-content
+      #     path: mdn/archived-content
+      # - uses: actions/checkout@v2
+      #   if: ${{ github.event.inputs.translated_content }} == "true"
+      #   with:
+      #     repository: mdn/translated-content
+      #     path: mdn/translated-content
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.1
         with:
@@ -61,31 +83,36 @@ jobs:
       - name: Print information about build
         run: |
           echo "Trigger notes: ${{ github.event.inputs.notes }}"
-          echo "Trigger archivecontent: ${{ github.event.inputs.archivecontent }}"
+          echo "Trigger archived-content: ${{ github.event.inputs.archived_content }}"
+          echo "Trigger translated-content: ${{ github.event.inputs.translated_content }}"
 
       - name: Build everything
         run: |
-          # TODO: We might want to build the archived content too every now
-          # and then. Most likely very very rarely but here would be a
-          # good place to do it. Perhaps, as an example, we do it on the
-          # 1st of every month.
+          # This is that second cloned repo.
+          export CONTENT_ROOT=mdn/content/files
+
+          # TODO:
+          # The building of archived and translated content depends
+          # on ${{ github.event.inputs.archived_content }} and
+          # ${{ github.event.inputs.translated_content }}
+          # And we might consider leveraging that here to set the appropriate
+          # env vars so they get built too.
+          # Another interesting option is to only build them sometimes.
+          # For example, every 1st of the month or every 1st day of the week.
           # Sample pseudo-code:
           #
           #    day_of_month=$(date +"%d")
           #    if [ $day_of_month -eq "1" ]; then
           #      echo "Going to build with the archive content too"
-          #      git clone https://github.com/mdn/mdn-archive-content.git
-          #      export CONTENT_ARCHIVED_ROOT=mdn-archive-content/content/files
+          #      export CONTENT_ARCHIVED_ROOT=archived-content/files
           #    fi
           #
           # ALTERNATIVELY...
           # We can use Actions Inputs and make it a manual trigger.
           #
-          #
-          #   if [ ${{ github.event.inputs.archivecontent }} -eq "true" ]; then
+          #   if [ ${{ github.event.inputs.archived_content }} -eq "true" ]; then
           #      echo "Going to build with the archive content too"
-          #      git clone https://github.com/mdn/mdn-archive-content.git
-          #      export CONTENT_ARCHIVED_ROOT=mdn-archive-content/content/files
+          #      export CONTENT_ARCHIVED_ROOT=archived-content/files
           #    fi
           #
           # Or, we use a combination of both where we build archive content
