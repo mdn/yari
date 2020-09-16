@@ -9,7 +9,7 @@ import { useDocumentURL } from "./hooks";
 import { Doc } from "./types";
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
-import { InteractiveExample } from "./ingredients/interactive-example";
+import { InteractiveExample } from "../ui/molecules/interactive-example";
 import { Attributes } from "./ingredients/attributes";
 import { Examples } from "./ingredients/examples";
 import { LinkList, LinkLists } from "./ingredients/link-lists";
@@ -18,7 +18,7 @@ import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-t
 // Misc
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
-import Titlebar from "../ui/molecules/titlebar";
+import { Titlebar } from "../ui/molecules/titlebar";
 import { TOC } from "../ui/molecules/toc";
 
 import "./index.scss";

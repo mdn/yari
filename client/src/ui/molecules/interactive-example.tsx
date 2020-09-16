@@ -1,5 +1,7 @@
 import React from "react";
 
+import "./interactive-example.scss";
+
 export function InteractiveExample({ title, url, height }) {
   return (
     <div>

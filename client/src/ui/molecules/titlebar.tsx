@@ -2,7 +2,7 @@ import React from "react";
 
 import "./titlebar.scss";
 
-export default function Titlebar({ docTitle }) {
+export function Titlebar({ docTitle }) {
   return (
     <div className="titlebar-container">
       <h1 className="title">{docTitle}</h1>
