@@ -1,4 +1,3 @@
-@import "~@mdn/minimalist/sass/vars/media-queries";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/typography";
@@ -20,7 +19,7 @@
     border-bottom: 2px solid $primary-100;
     color: $link-color;
     font-weight: normal;
-    margin-top: $gutter-width / 2;
+    margin-top: $gap-width / 2;
     padding: 10px 0;
     text-align: left;
     width: 100%;
@@ -65,7 +64,7 @@
     padding: 0 20px;
     position: absolute;
     top: 60px;
-    width: calc(100% - 40px);
+    width: 100%;
     z-index: 99;
 
     @media #{$mq-small-desktop-and-up} {

@@ -26,12 +26,12 @@ function Layout({ pageType, children }) {
       <div className={`page-wrapper ${pageType}`}>
         <Header />
         {children}
+        <Footer />
         {!isServer && (
           <Suspense fallback={null}>
             <ActiveBanner />
           </Suspense>
         )}
-        <Footer />
       </div>
     </>
   );
