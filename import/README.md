@@ -6,14 +6,21 @@ and moved on with our post-Wiki life, we can burn this.
 
 ## import
 
-You can set `CONTENT_ROOT` and `CONTENT_ARCHIVE_ROOT` to any folder
-but **it's important that the directories exist** otherwise Yari will
-assume you're referring to relative folders.
+Takes all the MySQL content and splits it into 3 buckets:
+
+1. Archive content (goes into `CONTENT_ARCHIVED_ROOT`) independent of locale.
+1. Active (non-archive) English content (goes into `CONTENT_ROOT`)
+1. All other non-English content (goes into `CONTENT_TRANSLATED_ROOT`)
+
+You have to set `CONTENT_ROOT` and `CONTENT_ARCHIVED_ROOT` and
+`CONTENT_TRANSLATED_ROOT`. If they don't already exist, they will be
+created.
 
 ```bash
 cd import
 export CONTENT_ROOT=/Users/peterbe/dev/MOZILLA/MDN/content/files
-export CONTENT_ARCHIVE_ROOT=/Users/peterbe/dev/MOZILLA/MDN/archivecontent/files
+export CONTENT_ARCHIVED_ROOT=/Users/peterbe/dev/MOZILLA/MDN/archived-content/files
+export CONTENT_TRANSLATED_ROOT=/Users/peterbe/dev/MOZILLA/MDN/translated-content/files
 node cli.js import
 ```
 

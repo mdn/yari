@@ -103,6 +103,16 @@ export function BrowserCompatibilityTable({
           </tbody>
         </table>
         <Legend compat={data} />
+
+        {/* https://github.com/mdn/yari/issues/1191 */}
+        <div className="hidden">
+          The compatibility table on this page is generated from structured
+          data. If you'd like to contribute to the data, please check out{" "}
+          <a href="https://github.com/mdn/browser-compat-data">
+            https://github.com/mdn/browser-compat-data
+          </a>{" "}
+          and send us a pull request.
+        </div>
       </BrowserInfoContext.Provider>
     </BrowserCompatibilityErrorBoundary>
   );
