@@ -1,7 +1,5 @@
 # Yari
 
-<!-- https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#adding-a-workflow-status-badge-to-your-repository -->
-
 ![Testing](https://github.com/mdn/yari/workflows/Testing%20Yari/badge.svg)
 ![Production Build](https://github.com/mdn/yari/workflows/Production%20Build/badge.svg)
 
@@ -40,7 +38,7 @@ will re-use any previously compiled files which is "riskier" but faster.
 The `yarn start` command will also start a server which doesn't automatically
 reload when its source code files change, so use with caution.
 
-### How to stay up-to-date
+### How to stay up-to-date????
 
 Periodically, the code and the content changes. Make sure you're staying
 up-to-date with these commands:
