@@ -30,21 +30,3 @@ content/files/
 
 # Since we ship the built stuff, we actually no longer need any of the source
 client/src/
-# git ls-files --others --exclude-from=.git/info/exclude
-# Lines that start with '#' are comments.
-# For a project mostly in C, the following would be a good set of
-# exclude patterns (uncomment them if you want to use them):
-# *.[oa]
-# *~
-dummy.js
-peterbe_*
-dummy.*
-isolate-*.log
-processed.txt
-sidebar.html
-fake-v1-api
-macros.log
-read-files.log
-times.json
-image-downloader/
-.env
