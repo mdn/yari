@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import type bcd from "mdn-browser-compat-data/types";
+import type bcd from "@mdn/browser-compat-data/types";
 
 export const BrowserInfoContext = React.createContext<bcd.Browsers | null>(
   null

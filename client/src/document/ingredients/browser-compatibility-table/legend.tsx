@@ -1,5 +1,5 @@
 import React from "react";
-import type bcd from "mdn-browser-compat-data/types";
+import type bcd from "@mdn/browser-compat-data/types";
 import { asList, listFeatures } from "./utils";
 
 // Also specifies the order in which the legend appears

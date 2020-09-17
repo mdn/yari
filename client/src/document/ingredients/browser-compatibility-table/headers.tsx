@@ -1,5 +1,5 @@
 import React from "react";
-import type bcd from "mdn-browser-compat-data/types";
+import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserName } from "./browser-info";
 
 export const PLATFORM_BROWSERS: { [key: string]: bcd.BrowserNames[] } = {
