@@ -45,10 +45,11 @@ reader.
 
 ### `// @ts-nocheck`
 
-When you're starting to notice that a file is becoming cluttered with type coercions
-and you fighting TypeScript, you can use `// @ts-nocheck` at the beginning of the file
-to tell TypeScript to back off completely. The file then effectively becomes a JS file,
-though you can still do use all the TypeScript syntax.
+When you're starting to notice that a file is becoming cluttered with type
+coercions and you fighting TypeScript, you can use `// @ts-nocheck` at
+the beginning of the file to tell TypeScript to back off completely. The
+file then effectively becomes a JS file, though you can still do use all
+the TypeScript syntax.
 
 ## Common Pitfalls
 
