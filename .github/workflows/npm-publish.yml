@@ -44,6 +44,11 @@ jobs:
           # doing CRUD work (e.g. previewing, toolbar, flaws UI, etc)
           export REACT_APP_CRUD_MODE=true
 
+          # This makes sure the auth is disabled. I.e. the "Sign in" link
+          # in the header. It also disables any XHR checks to the server's
+          # whoami endpoint.
+          export REACT_APP_DISABLE_AUTH=true
+
           yarn prepare-build
 
       - name: Dry-run publish to see which files are included
