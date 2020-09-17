@@ -1,19 +1,33 @@
 # Yari
 
-<!-- https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#adding-a-workflow-status-badge-to-your-repository -->
-
 ![Testing](https://github.com/mdn/yari/workflows/Testing%20Yari/badge.svg)
 ![Production Build](https://github.com/mdn/yari/workflows/Production%20Build/badge.svg)
 
 ## Quickstart
 
-To run Yari locally, you'll first need to install [git](https://git-scm.com/), [Node.js](https://nodejs.org) (>= 12.0.0) and [Yarn 1](https://classic.yarnpkg.com/en/docs/install). After that, run these commands in your bash:
+Before you can begin with Yari, you need [Content](https://github.com/mdn/content).
+See its README which basically, says something like this:
+
+    git clone https://github.com/mdn/content.git mdn/content
+
+Now, you just need to note where that folder is before you can start Yari.
+
+To run Yari locally, you'll first need to install [git](https://git-scm.com/),
+[Node.js](https://nodejs.org) (>= 12.0.0) and
+[Yarn 1](https://classic.yarnpkg.com/en/docs/install).
+After that, run these commands in your bash:
 
     git clone https://github.com/mdn/yari.git
     cd yari
     yarn
+    export CONTENT_ROOT=/path/to/mdn/content/files
     yarn dev
     open http://localhost:3000
+
+Instead of having to type `export CONTENT_ROOT=/path/to/mdn/content/files`
+for `yarn dev` every time, you can put into `.env` file:
+
+    CONTENT_ROOT=/path/to/mdn/content/files
 
 If you prefer, you can fork the repo first and do the `git clone` with
 _your_ fork instead of the `mdn` one.

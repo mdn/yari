@@ -1,4 +1,4 @@
-import type bcd from "mdn-browser-compat-data/types";
+import type bcd from "@mdn/browser-compat-data/types";
 
 export function getFirst<T>(a: T | T[]): T;
 export function getFirst<T>(a: T | T[] | undefined): T | undefined {

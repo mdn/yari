@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "private": true,
+  "private": false,
   "license": "MPL-2.0",
   "eslintConfig": {
     "extends": "react-app"
