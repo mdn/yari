@@ -65,7 +65,7 @@
     "source-map-support": "0.5.19",
     "swr": "0.3.2",
     "typeface-zilla-slab": "0.0.72",
-    "use-debounce": "^3.4.3",
+    "use-debounce": "^4.0.0",
     "webpack-cli": "3.3.12",
     "webpack-node-externals": "2.5.2",
     "ws": "^7.3.1"
