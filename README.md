@@ -38,7 +38,7 @@ will re-use any previously compiled files which is "riskier" but faster.
 The `yarn start` command will also start a server which doesn't automatically
 reload when its source code files change, so use with caution.
 
-### How to stay up-to-date????
+### How to stay up-to-date
 
 Periodically, the code and the content changes. Make sure you're staying
 up-to-date with these commands:
