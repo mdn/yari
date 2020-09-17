@@ -80,5 +80,6 @@ Now, go to `~/content` and run:
 
 Make sure you actually test it out fully. For example, just because
 `yarn start` starts the server OK, doesn't mean it can do all things
-it needs to do. The best place to start is to navigate in http://localhost:5000
-to an actual page which will need to built-on-the-fly.
+it needs to do. The best place to start is to navigate into
+[http://localhost:5000](http://localhost:5000) to an actual page which
+will need to built-on-the-fly.
