@@ -1,5 +1,5 @@
 import React, { useReducer } from "react";
-import type bcd from "mdn-browser-compat-data/types";
+import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
 import { FeatureRow } from "./feature-row";

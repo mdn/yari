@@ -517,7 +517,7 @@ test("detect bad_bcd_links flaws from", () => {
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.flaws.bad_bcd_links.length).toBe(1);
-  // The reasons it's a bad link is because the mdn-browser-compat-data,
+  // The reasons it's a bad link is because the @mdn/browser-compat-data,
   // for the query `api.Document.visibilityState` refers to a page
   // with mdn_url `/en-US/docs/Web/API/Document/visibilityState` which we
   // don't have. At least not in the testing content :)

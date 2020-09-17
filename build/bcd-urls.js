@@ -27,7 +27,7 @@ function normalizeBCDURLs(doc, options) {
   }
 
   function getPathFromAbsoluteURL(absURL) {
-    // Because the compat data is mutated out of mdn-browser-compat-data,
+    // Because the compat data is mutated out of @mdn/browser-compat-data,
     // through our `packageBCD` function, it's very possible that
     // the `doc[i].type === 'browser_compatibility` has already been
     // processed.

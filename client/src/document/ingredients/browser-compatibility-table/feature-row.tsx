@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import type bcd from "mdn-browser-compat-data/types";
+import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext, BrowserName } from "./browser-info";
 import { asList, getFirst, isTruthy } from "./utils";
 
 // Yari builder will attach extra keys from the compat data
-// it gets from mdn-browser-compat-data. These are "Yari'esque"
+// it gets from @mdn/browser-compat-data. These are "Yari'esque"
 // extras that helps us avoiding to have a separate data structure.
 interface CompatStatementExtended extends bcd.CompatStatement {
   // When a compat statement has a .mdn_url but it's actually not a good
