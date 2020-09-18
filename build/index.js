@@ -22,6 +22,7 @@ const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
 const cheerio = require("./monkeypatched-cheerio");
 const buildOptions = require("./build-options");
+const { renderCache } = require("../kumascript");
 
 const DEFAULT_BRANCH_NAME = "master"; // TODO: 'main' is a better name.
 
@@ -105,6 +106,10 @@ async function buildDocument(document, documentOptions = {}) {
 
   doc.flaws = {};
 
+  // XXX call it "clearKumascriptRenderCache"??
+  if (options.clearRenderCache) {
+    renderCache.clear();
+  }
   const [renderedHtml, flaws] = await kumascript.render(document.url);
 
   const liveSamples = [];
@@ -267,12 +272,12 @@ async function buildDocument(document, documentOptions = {}) {
   return [doc, liveSamples, fileAttachments];
 }
 
-async function buildDocumentFromURL(url) {
+async function buildDocumentFromURL(url, documentOptions = {}) {
   const document = Document.findByURL(url);
   if (!document) {
     return null;
   }
-  return (await buildDocument(document))[0];
+  return (await buildDocument(document, documentOptions))[0];
 }
 
 async function buildLiveSamplePageFromURL(url) {

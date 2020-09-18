@@ -162,7 +162,11 @@ app.get("/*", async (req, res) => {
   let document;
   try {
     console.time(`buildDocumentFromURL(${lookupURL})`);
-    document = await buildDocumentFromURL(lookupURL);
+    document = await buildDocumentFromURL(lookupURL, {
+      // The only times the server builds on the fly is basically when
+      // you're in development mode.
+      clearRenderCache: true,
+    });
     console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
   } catch (error) {
     console.error(`Error in buildDocumentFromURL(${lookupURL})`, error);
