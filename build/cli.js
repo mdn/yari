@@ -100,7 +100,6 @@ async function buildDocuments() {
       progressBar.increment();
     } else {
       console.log(outPath);
-      console.log("\n");
     }
     const heapBytes = process.memoryUsage().heapUsed;
     if (heapBytes > peakHeapBytes) {
