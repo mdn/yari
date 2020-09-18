@@ -38,14 +38,14 @@ function isPromise(p) {
  * Note: The parameter are turned into a cache key quite naively, so
  * different object key order would lead to new cache entries.
  */
-function memoize(fn) {
+function memoize(fn, cacheKeyFunc = null) {
   if (process.env.NODE_ENV !== "production") {
     return fn;
   }
 
   const cache = new Map();
   return (...args) => {
-    const key = JSON.stringify(args);
+    const key = cacheKeyFunc ? cacheKeyFunc(...args) : JSON.stringify(args);
 
     if (cache.has(key)) {
       return cache.get(key);
