@@ -17,15 +17,15 @@ const DEPENDENCY_LOOP_INTRO =
   'The following documents form a circular dependency when rendering (via the "page" and/or "IncludeSubnav" macros):';
 
 const renderFromURL = memoize(
-  async (url, urls_seen = null) => {
+  async (url, urlsSeen = null) => {
     url = url.toLowerCase();
-    urls_seen = urls_seen || new Set([]);
-    if (urls_seen.has(url)) {
+    urlsSeen = urlsSeen || new Set([]);
+    if (urlsSeen.has(url)) {
       throw new Error(
-        `${DEPENDENCY_LOOP_INTRO}\n${[...urls_seen, url].join(" ⭢ ")}`
+        `${DEPENDENCY_LOOP_INTRO}\n${[...urlsSeen, url].join(" ⭢ ")}`
       );
     }
-    urls_seen.add(url);
+    urlsSeen.add(url);
     const prerequisiteErrorsByKey = new Map();
     const document = Document.findByURL(url);
     if (!document) {
@@ -54,7 +54,7 @@ const renderFromURL = memoize(
       async (url) => {
         const [renderedHtml, errors] = await renderFromURL(
           info.cleanURL(url),
-          urls_seen
+          urlsSeen
         );
         // Remove duplicate flaws. During the rendering process, it's possible for identical
         // flaws to be introduced when different dependency paths share common prerequisites.
