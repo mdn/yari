@@ -101,7 +101,7 @@
     "react-scripts": "3.4.3",
     "rough-notation": "0.4.0",
     "tempy": "0.7.0",
-    "ts-loader": "^8.0.3",
+    "ts-loader": "^8.0.4",
     "typescript": "^3.9.7",
     "vnu-jar": "^20.6.30"
   },
