@@ -605,3 +605,23 @@ test("image flaws", () => {
     }
   });
 });
+
+test("chicken_and_egg page should build with flaws", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "docs", "chicken_and_egg");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.macros.length).toBe(1);
+  // The filepath will be that of the "egg" or the "childen" page.
+  // Let's not try to predict which one exactly, because that'd mean this
+  // test would need to use the exact same sort order as the glob used
+  // when we ran "yarn build" to set up the build fixtures.
+  const flaw = doc.flaws.macros[0];
+  console.log(flaw);
+  expect(flaw.name).toBe("MacroExecutionError");
+  expect(
+    flaw.errorStack.includes(
+      "documents form a circular dependency when rendering"
+    )
+  ).toBeTruthy();
+});
