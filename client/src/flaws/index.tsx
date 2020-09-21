@@ -30,10 +30,20 @@ interface Document {
   };
 }
 
+type Count = { [key: string]: number };
+
+interface FlawsCounts {
+  total: number;
+  fixable: number;
+  type: Count;
+  macros: Count;
+}
+
 interface Counts {
   found: number;
   built: number;
   pages: number;
+  flaws: FlawsCounts;
 }
 
 interface Times {
@@ -238,6 +248,7 @@ export default function AllFlaws() {
           )}
         </div>
       )}
+      {data && data.counts && <AllFlawCounts counts={data.counts.flaws} />}
       {data && <BuildTimes times={data.times} />}
     </div>
   );
@@ -692,6 +703,85 @@ function WarnAboutNothingBuilt() {
         At the moment, you have to use the command line tools to build documents
         that we can analyze.
       </p>
+    </div>
+  );
+}
+
+function AllFlawCounts({ counts }: { counts: FlawsCounts }) {
+  const typesSorted = Object.entries(counts.type).sort((a, b) => {
+    return a[1] - b[1];
+  });
+  const macrosSorted = Object.entries(counts.macros).sort((a, b) => {
+    return a[1] - b[1];
+  });
+  return (
+    <div className="flaw-counts">
+      <h3>Flaws counts</h3>
+      <table>
+        <tbody>
+          <tr>
+            <td>Total</td>
+            <td>
+              <b>{counts.total.toLocaleString()}</b>
+            </td>
+          </tr>
+          <tr>
+            <td>Fixable</td>
+            <td>
+              <b>{counts.fixable.toLocaleString()}</b>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Breakdown by type</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {typesSorted.map(([key, value]) => {
+            return (
+              <tr key={key}>
+                <td>
+                  <code>{key}</code>
+                </td>
+                <td>
+                  <b>{value.toLocaleString()}</b>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <h4>
+        Breakdown by <code>macros</code> flaws
+      </h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {macrosSorted.map(([key, value]) => {
+            return (
+              <tr key={key}>
+                <td>
+                  <code>{key}</code>
+                </td>
+                <td>
+                  <b>{value.toLocaleString()}</b>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }

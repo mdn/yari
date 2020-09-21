@@ -11,7 +11,6 @@ const {
   findMatchesInText,
   replaceMatchesInText,
 } = require("./matches-in-text");
-const { fstat } = require("fs-extra");
 
 function injectFlaws(doc, $, options, { rawContent }) {
   if (doc.isArchive) return;
@@ -216,13 +215,9 @@ async function fixFixableFlaws(doc, options, document) {
     // is because the raw HTML we're dealing with isn't actually proper
     // HTML. It's only proper HTML when the kumascript macros have been
     // expanded.
-    const htmlBefore = newRawHTML;
     newRawHTML = replaceMatchesInText(flaw.href, newRawHTML, flaw.suggestion, {
       inAttribute: "href",
     });
-    if (htmlBefore !== newRawHTML) {
-      // flaw.fixed = !options.fixFlawsDryRun;
-    }
     if (loud) {
       console.log(
         chalk.grey(
@@ -243,7 +238,6 @@ async function fixFixableFlaws(doc, options, document) {
     // is because the raw HTML we're dealing with isn't actually proper
     // HTML. It's only proper HTML when the kumascript macros have been
     // expanded.
-    const htmlBefore = newRawHTML;
     let newSrc;
     if (flaw.externalImage) {
       // Sanity check that it's an external image
