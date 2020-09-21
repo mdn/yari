@@ -11,7 +11,6 @@ const {
   findMatchesInText,
   replaceMatchesInText,
 } = require("./matches-in-text");
-const { trace } = require("console");
 
 function injectFlaws(doc, $, options, { rawContent }) {
   if (doc.isArchive) return;
