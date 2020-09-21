@@ -617,7 +617,6 @@ test("chicken_and_egg page should build with flaws", () => {
   // test would need to use the exact same sort order as the glob used
   // when we ran "yarn build" to set up the build fixtures.
   const flaw = doc.flaws.macros[0];
-  console.log(flaw);
   expect(flaw.name).toBe("MacroExecutionError");
   expect(
     flaw.errorStack.includes(

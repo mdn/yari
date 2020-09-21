@@ -19,18 +19,18 @@ const DEPENDENCY_LOOP_INTRO =
 const renderCache = new Map();
 
 const renderFromURL = async (url, urlsSeen = null) => {
-  url = url.toLowerCase();
-  if (renderCache.has(url)) {
-    return renderCache.get(url);
+  const urlLC = url.toLowerCase();
+  if (renderCache.has(urlLC)) {
+    return renderCache.get(urlLC);
   }
 
   urlsSeen = urlsSeen || new Set([]);
-  if (urlsSeen.has(url)) {
+  if (urlsSeen.has(urlLC)) {
     throw new Error(
       `${DEPENDENCY_LOOP_INTRO}\n${[...urlsSeen, url].join(" ⭢ ")}`
     );
   }
-  urlsSeen.add(url);
+  urlsSeen.add(urlLC);
   const prerequisiteErrorsByKey = new Map();
   const document = Document.findByURL(url);
   if (!document) {
@@ -78,14 +78,14 @@ const renderFromURL = async (url, urlsSeen = null) => {
   //       attributes of any iframes.
   const tool = new HTMLTool(renderedHtml);
   tool.injectSectionIDs();
-  renderCache.set(url, [
+  renderCache.set(urlLC, [
     tool.html(),
     // The prerequisite errors have already been updated with their own file information.
     [...prerequisiteErrorsByKey.values()].concat(
       errors.map((e) => e.updateFileInfo(fileInfo))
     ),
   ]);
-  return renderCache.get(url);
+  return renderCache.get(urlLC);
 };
 
 module.exports = {
