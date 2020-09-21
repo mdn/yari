@@ -16,8 +16,7 @@ function postEvent(type, data = {}) {
 function postDocumentInfo(filePath, changeType) {
   try {
     const document = Document.read(
-      path.dirname(path.relative(CONTENT_ROOT, filePath)),
-      { metadata: true }
+      path.dirname(path.relative(CONTENT_ROOT, filePath))
     );
     if (!document) {
       return;
