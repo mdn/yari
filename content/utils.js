@@ -42,6 +42,7 @@ function memoize(fn) {
   if (process.env.NODE_ENV !== "production") {
     return fn;
   }
+
   const cache = new Map();
   return (...args) => {
     const key = JSON.stringify(args);
