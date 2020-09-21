@@ -5,7 +5,13 @@ name: Testing Yari
 
 on:
   push:
+    branches:
+      - master
+      # Temporary whilst the super-project "MDN Fiori" is being developed.
+      - mdn-fiori
   pull_request:
+    branches:
+      - master
 
 jobs:
   build:
