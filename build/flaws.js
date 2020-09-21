@@ -93,7 +93,7 @@ function injectFlaws(doc, $, options, { rawContent }) {
         // Got to fake the domain to sensible extract the .search and .hash
         const absoluteURL = new URL(href, "http://www.example.com");
         const hrefNormalized = href.split("#")[0];
-        const found = Document.findByURL(hrefNormalized, { metadata: true });
+        const found = Document.findByURL(hrefNormalized);
         if (!found) {
           // Before we give up, check if it's a redirect
           const resolved = Redirect.resolve(hrefNormalized);
@@ -103,9 +103,7 @@ function injectFlaws(doc, $, options, { rawContent }) {
             // For example, there might be a redirect but where it
             // goes to is not in this.allTitles.
             // This can happen if it's a "fundamental redirect" for example.
-            const finalDocument = Document.findByURL(resolved, {
-              metadata: true,
-            });
+            const finalDocument = Document.findByURL(resolved);
             addBrokenLink(
               a,
               checked.get(href),

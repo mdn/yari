@@ -125,9 +125,7 @@ function archive(renderedHTML, rawHTML, metadata, wikiHistory) {
   );
 }
 
-const read = memoize((folder, fields = null) => {
-  fields = fields ? { body: false, metadata: false, ...fields } : fields;
-
+const read = memoize((folder) => {
   const filePath = ROOTS.map((root) =>
     path.join(root, getHTMLPath(folder))
   ).find((filePath) => fs.existsSync(filePath));
@@ -145,23 +143,20 @@ const read = memoize((folder, fields = null) => {
     bodyBegin: frontMatterOffset,
   } = fm(rawContent);
 
-  let fullMetadata = {};
-  if (!fields || fields.metadata) {
-    const locale = extractLocale(folder);
-    const url = `/${locale}/docs/${metadata.slug}`;
-    fullMetadata = {
-      metadata: {
-        ...metadata,
-        locale,
-        popularity: getPopularities().get(url) || 0.0,
-      },
-      url,
-    };
-  }
+  const locale = extractLocale(folder);
+  const url = `/${locale}/docs/${metadata.slug}`;
+  const fullMetadata = {
+    metadata: {
+      ...metadata,
+      locale,
+      popularity: getPopularities().get(url) || 0.0,
+    },
+    url,
+  };
 
   return {
     ...fullMetadata,
-    ...(!fields || fields.body ? { rawHTML, rawContent } : {}),
+    ...{ rawHTML, rawContent },
     isArchive,
     fileInfo: {
       folder,
@@ -221,7 +216,7 @@ function update(folder, rawHTML, metadata) {
 }
 
 function del(folder) {
-  const { metadata, fileInfo } = read(folder, { metadata: true });
+  const { metadata, fileInfo } = read(folder);
   fs.rmdirSync(path.dirname(fileInfo.path), { recursive: true });
   updateWikiHistory(path.join(CONTENT_ROOT, metadata.locale), metadata.slug);
 }
@@ -273,7 +268,7 @@ function findAll(
   };
 }
 
-function findChildren(url, fields = null) {
+function findChildren(url) {
   const folder = urlToFolderPath(url);
   const childPaths = glob.sync(
     path.join(CONTENT_ROOT, folder, "*", HTML_FILENAME)
@@ -282,7 +277,7 @@ function findChildren(url, fields = null) {
     .map((childFilePath) =>
       path.relative(CONTENT_ROOT, path.dirname(childFilePath))
     )
-    .map((folder) => read(folder, fields));
+    .map((folder) => read(folder));
 }
 
 module.exports = {
