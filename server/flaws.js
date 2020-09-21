@@ -103,6 +103,14 @@ function packageDocument(doc) {
   return { popularity, flaws, modified, mdn_url, title };
 }
 
+function strMapToObject(map) {
+  const obj = Object.create(null);
+  for (const [key, value] of map) {
+    obj[key] = value;
+  }
+  return obj;
+}
+
 module.exports = (req, res) => {
   const locale = req.query.locale.toLowerCase();
   if (!locale) {
@@ -138,6 +146,17 @@ module.exports = (req, res) => {
     built: 0,
     // Used by the pagination
     pages: 0,
+
+    flaws: {
+      // For every encountered flaw.
+      total: 0,
+      // To know how many of the flaws we encounter are fixable.
+      fixable: 0,
+      // To keep track of and count *number* of flaws encountered by *type*.
+      type: new Map(),
+      // To keep track of the various `macros` flaws.
+      macros: new Map(),
+    },
   };
 
   const documents = [];
@@ -169,6 +188,35 @@ module.exports = (req, res) => {
 
     const { doc } = JSON.parse(fs.readFileSync(filePath));
 
+    if (doc.flaws) {
+      for (const [flawKey, actualFlaws] of Object.entries(doc.flaws)) {
+        if (!counts.flaws.type.has(flawKey)) {
+          counts.flaws.type.set(flawKey, 0);
+        }
+        counts.flaws.type.set(flawKey, counts.flaws.type.get(flawKey) + 1);
+
+        for (const flaw of actualFlaws) {
+          counts.flaws.total++;
+          if (flaw.fixable) {
+            counts.flaws.fixable++;
+          }
+
+          // Dig a little extra deep into these because their flaws
+          // always have a `.name` attribute which is interesting.
+          if (flawKey === "macros") {
+            console.assert(flaw.name, "must have a .name attribute");
+            if (!counts.flaws.macros.has(flaw.name)) {
+              counts.flaws.macros.set(flaw.name, 0);
+            }
+            counts.flaws.macros.set(
+              flaw.name,
+              counts.flaws.macros.get(flaw.name) + 1
+            );
+          }
+        }
+      }
+    }
+
     if (
       !(doc.flaws && Object.keys(doc.flaws).length) ||
       (filters.mdn_url &&
@@ -196,6 +244,9 @@ module.exports = (req, res) => {
     counts.found++;
     documents.push(packageDocument(doc));
   }
+
+  counts.flaws.type = strMapToObject(counts.flaws.type);
+  counts.flaws.macros = strMapToObject(counts.flaws.macros);
 
   counts.pages = Math.ceil(counts.found / DOCUMENTS_PER_PAGE);
 
@@ -240,7 +291,6 @@ module.exports = (req, res) => {
     counts,
     times,
     flawLevels: serializeFlawLevels(buildOptions.flawLevels),
-
     documents: documents.slice(m, n),
   });
 };
