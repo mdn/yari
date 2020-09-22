@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@mdn/browser-compat-data": "2.0.0-1",
+    "caporal": "1.4.0",
     "chalk": "4.1.0",
     "cheerio": "1.0.0-rc.3",
     "chokidar": "^3.4.2",
@@ -64,6 +65,7 @@
     "sockette": "^2.0.6",
     "source-map-support": "0.5.19",
     "swr": "0.3.3",
+    "tempy": "0.7.0",
     "typeface-zilla-slab": "0.0.72",
     "use-debounce": "^3.4.3",
     "webpack-cli": "3.3.12",
@@ -76,7 +78,6 @@
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
     "@types/react-modal": "^3.10.6",
-    "caporal": "1.4.0",
     "extend": "^3.0.2",
     "flexsearch": "0.6.32",
     "foreman": "3.0.1",
@@ -100,7 +101,6 @@
     "react-router-dom": "6.0.0-alpha.4",
     "react-scripts": "3.4.3",
     "rough-notation": "0.4.0",
-    "tempy": "0.7.0",
     "ts-loader": "^8.0.4",
     "typescript": "^3.9.7",
     "vnu-jar": "^20.6.30"
