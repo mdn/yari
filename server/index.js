@@ -137,7 +137,11 @@ app.get("/*", async (req, res) => {
     // iff it exists on disk.
     const filePath = Image.findByURL(req.url);
     if (filePath) {
-      return send(req, filePath).pipe(res);
+      // The second parameter to `send()` has to be either a full absolute
+      // path or a path that doesn't start with `../` otherwise you'd
+      // get a 403 Forbidden.
+      // See https://github.com/mdn/yari/issues/1297
+      return send(req, path.resolve(filePath)).pipe(res);
     } else {
       return res.status(404).send("File not found on disk");
     }
