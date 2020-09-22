@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
+const chalk = require("chalk");
 const express = require("express");
 const send = require("send");
 const proxy = require("express-http-proxy");
@@ -206,4 +207,16 @@ app.get("/*", async (req, res) => {
 });
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
+  if (process.env.EDITOR) {
+    console.log(`Your EDITOR is set to: ${chalk.bold(process.env.EDITOR)}`);
+  } else {
+    console.warn(
+      chalk.yellow(
+        "Warning! You have not set an EDITOR environment variable. " +
+          'Using the "Edit in your editor" button will probably fail.'
+      )
+    );
+  }
+});
