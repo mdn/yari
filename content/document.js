@@ -96,12 +96,20 @@ function getFolderPath(metadata) {
   );
 }
 
-function archive(renderedHTML, rawHTML, metadata, wikiHistory) {
+function archive(renderedHTML, rawHTML, metadata, isTranslatedContent = false) {
+  const root = isTranslatedContent
+    ? CONTENT_TRANSLATED_ROOT
+    : CONTENT_ARCHIVED_ROOT;
   if (!CONTENT_ARCHIVED_ROOT) {
     throw new Error("Can't archive when CONTENT_ARCHIVED_ROOT is not set");
   }
+  if (isTranslatedContent && !CONTENT_TRANSLATED_ROOT) {
+    throw new Error(
+      "Can't archive translated content when CONTENT_TRANSLATED_ROOT is not set"
+    );
+  }
   const folderPath = buildPath(
-    path.join(CONTENT_ARCHIVED_ROOT, metadata.locale.toLowerCase()),
+    path.join(root, metadata.locale.toLowerCase()),
     metadata.slug
   );
 
@@ -112,11 +120,6 @@ function archive(renderedHTML, rawHTML, metadata, wikiHistory) {
   // saved but by storing the raw html too we can potentially resurrect
   // the document if we decide to NOT archive it in the future.
   fs.writeFileSync(path.join(folderPath, "raw.html"), trimLineEndings(rawHTML));
-
-  fs.writeFileSync(
-    getWikiHistoryPath(folderPath),
-    JSON.stringify(wikiHistory, null, 2)
-  );
 
   saveHTMLFile(
     getHTMLPath(folderPath),

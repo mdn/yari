@@ -990,12 +990,14 @@ async function processDocument(
   }
 
   localeWikiHistory.set(doc.slug, wikiHistory);
-  if (isArchive) {
+  if (isArchive || doc.locale !== "en-US") {
     Document.archive(
       getCleanedRenderedHTML(doc.rendered_html),
       doc.html,
       meta,
-      wikiHistory
+      // The Document.archive() is used for genuinely archived content,
+      // but we also treat translated content the same way ultimately.
+      !isArchive
     );
   } else {
     Document.create(getCleanedKumaHTML(doc.html), meta);
@@ -1110,7 +1112,6 @@ async function saveWikiHistory(allHistory, isArchive) {
       : CONTENT_TRANSLATED_ROOT;
     const localeFolder = path.join(root, locale.toLowerCase());
     const filePath = path.join(localeFolder, "_wikihistory.json");
-    console.log(filePath); // XXX TEMPORARY
     const obj = Object.create(null);
     const keys = Array.from(history.keys());
     keys.sort();
