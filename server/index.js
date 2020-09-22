@@ -206,6 +206,18 @@ app.get("/*", async (req, res) => {
   }
 });
 
+if (!fs.existsSync(path.resolve(CONTENT_ROOT))) {
+  console.log(chalk.red(`${path.resolve(CONTENT_ROOT)} does not exist!`));
+  process.exit(1);
+}
+
+console.log(
+  `CONTENT_ROOT: ${chalk.bold(CONTENT_ROOT)}`,
+  path.resolve(CONTENT_ROOT) !== CONTENT_ROOT
+    ? chalk.grey(`(absolute path: ${path.resolve(CONTENT_ROOT)})`)
+    : ""
+);
+
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
