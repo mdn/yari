@@ -77,7 +77,7 @@ class StopWatch:
     @property
     def elapsed(self):
         if self.t_stop < self.t_start:
-            raise Exception(f"StopWatch was never stopped")
+            raise Exception("StopWatch was never stopped")
         return self.t_stop - self.t_start
 
     def __repr__(self):

@@ -1,18 +1,15 @@
 import concurrent.futures
 import hashlib
 import mimetypes
-import os
 import re
 from dataclasses import dataclass
-from functools import cached_property, partial
-from itertools import takewhile
+from functools import cached_property
 
 import boto3
 from boto3.s3.transfer import S3TransferConfig
 
 import click
 
-from . import __version__
 from .constants import (
     DEFAULT_CACHE_CONTROL,
     HASHED_CACHE_CONTROL,
@@ -122,13 +119,13 @@ class UploadFileTask(UploadTask):
                 md5s.append(hashlib.md5(chunk))
 
         if not md5s:
-            return '"{}"'.format(hashlib.md5().hexdigest())
+            return f'"{hashlib.md5().hexdigest()}"'
 
         if len(md5s) == 1:
-            return '"{}"'.format(md5s[0].hexdigest())
+            return f'"{md5s[0].hexdigest()}"'
 
         digests_md5 = hashlib.md5(b"".join(m.digest() for m in md5s))
-        return '"{}-{}"'.format(digests_md5.hexdigest(), len(md5s))
+        return f'"{digests_md5.hexdigest()}-{len(md5s)}"'
 
     @property
     def mime_type(self):
@@ -241,7 +238,7 @@ class BucketManager:
         # Walk the build_directory and yield file upload tasks.
         for fp in iterdir(build_directory):
             # Exclude any files that aren't artifacts of the build.
-            if (fp.name == ".DS_Store") or fp.name.endswith("~"):
+            if fp.name.startswith(".") or fp.name.endswith("~"):
                 continue
             elif for_counting_only:
                 yield 1
@@ -251,9 +248,7 @@ class BucketManager:
     def iter_redirect_tasks(self, content_roots, for_counting_only=False):
         # Walk the content roots and yield redirect upload tasks.
         for content_root in content_roots:
-            for fp in iterdir(content_root, max_depth=1):
-                if fp.name != "_redirects.txt":
-                    continue
+            for fp in content_root.glob("*/_redirects.txt"):
                 for line_num, line in enumerate(fp.read_text().split("\n"), start=1):
                     line = line.strip()
                     if line and not line.startswith("#"):
@@ -339,7 +334,7 @@ def upload_content(build_directory, content_roots, config):
 
     dry_run = config["dry_run"]
     bucket_name = config["bucket"]
-    bucket_prefix = config["folder"]
+    bucket_prefix = config["prefix"]
     refresh = config["force_refresh"]
     show_progress_bar = not config["no_progressbar"]
 

@@ -14,6 +14,24 @@ from .upload import upload_content
 from .utils import log
 
 
+def validate_directory(ctx, param, value):
+    path = Path(value)
+    if not path.exists():
+        raise click.BadParameter(f"{value} does not exist")
+    elif not path.is_dir():
+        raise click.BadParameter(f"{value} is not a directory")
+    return path
+
+
+def validate_root(ctx, param, value):
+    return validate_directory(ctx, param, value)
+
+
+def validate_optional_root(ctx, param, value):
+    if value:
+        return validate_directory(ctx, param, value)
+
+
 @click.group()
 @click.option(
     "--dry-run",
@@ -39,12 +57,12 @@ def update_lambda_functions(ctx):
 @cli.command()
 @click.option(
     "--bucket",
-    help='Name of the S3 bucket or one of "dev", "stage", or "prod"',
+    help='Name of the S3 bucket or one of the bucket nicknames "dev", "stage", or "prod"',
     default=DEFAULT_BUCKET_NAME,
     show_default=True,
 )
 @click.option(
-    "--folder", help="Upload into this folder of the S3 bucket instead of its root",
+    "--prefix", help="Upload into this folder of the S3 bucket instead of its root",
 )
 @click.option(
     "--force-refresh",
@@ -58,12 +76,14 @@ def update_lambda_functions(ctx):
     help="The path to the root folder of the main content (defaults to CONTENT_ROOT)",
     default=CONTENT_ROOT,
     show_default=True,
+    callback=validate_root,
 )
 @click.option(
     "--content-translated-root",
     help="The path to the root folder of the translated content (defaults to CONTENT_TRANSLATED_ROOT)",
     default=CONTENT_TRANSLATED_ROOT,
     show_default=True,
+    callback=validate_optional_root,
 )
 @click.option(
     "--no-progressbar",
@@ -72,28 +92,12 @@ def update_lambda_functions(ctx):
     show_default=True,
     is_flag=True,
 )
-@click.argument("directory", type=click.Path())
+@click.argument("directory", type=click.Path(), callback=validate_directory)
 @click.pass_context
-def upload(ctx, directory, **kwargs):
+def upload(ctx, directory: Path, **kwargs):
     log.info(f"Deployer ({__version__})", bold=True)
-    content_roots = []
-    for name in ("content_root", "content_translated_root"):
-        value = kwargs.pop(name)
-        if not value:
-            log.warning(f"Warning: No {name.replace('_', '-')} has been specified.")
-            continue
-        content_root = Path(value)
-        if not content_root.is_dir():
-            raise click.ClickException(
-                f'The {name_hyphenated} "{content_root}" does not exist or is '
-                "not a directory."
-            )
-        content_roots.append(content_root)
-
-    dirpath = Path(directory)
-
-    if not dirpath.exists():
-        raise click.ClickException(f"{directory} does not exist")
-
+    content_roots = [kwargs["content_root"]]
+    if kwargs["content_translated_root"]:
+        content_roots.append(kwargs["content_translated_root"])
     ctx.obj.update(kwargs)
-    upload_content(dirpath, content_roots, ctx.obj)
+    upload_content(directory, content_roots, ctx.obj)

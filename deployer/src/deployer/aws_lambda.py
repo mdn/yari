@@ -108,4 +108,4 @@ def update_all(dry_run=False):
                         f"as {info['FunctionArn']}",
                     )
             else:
-                log.info(f" no change (matches the latest version in AWS)")
+                log.info(" no change (matches the latest version in AWS)")
