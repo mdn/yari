@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 
 import jsesc from "jsesc";
-import cheerio from "cheerio";
+import cheerio from "./monkeypatched-cheerio";
 import { renderToString } from "react-dom/server";
 
 const lazy = (creator) => {
@@ -38,6 +38,7 @@ function serializeDocumentData(data) {
 
 export default function render(renderApp, doc) {
   const buildHtml = readBuildHTML();
+  // const $ = cheerio.load(buildHtml, { decodeEntities: false });
   const $ = cheerio.load(buildHtml);
 
   const rendered = renderToString(renderApp);
