@@ -16,17 +16,14 @@ class PackageError(Exception):
     pass
 
 
-AWS_LAMBDA_FUNCTIONS_DIR = Path(__file__).joinpath("../../../../aws-lambda").resolve()
-
-
 def get_sha256_hash(zip_file_bytes):
     hasher = hashlib.sha256()
     hasher.update(zip_file_bytes)
     return base64.b64encode(hasher.digest()).decode()
 
 
-def get_lambda_function_dirs():
-    for lambda_function_dir in AWS_LAMBDA_FUNCTIONS_DIR.glob("*"):
+def get_lambda_function_dirs(directory):
+    for lambda_function_dir in directory.glob("*"):
         if (
             lambda_function_dir.is_dir()
             and lambda_function_dir.joinpath("package.json").is_file()
@@ -87,10 +84,10 @@ def update(lambda_function_dir, dry_run=False):
     return None
 
 
-def update_all(dry_run=False):
-    log.info(f"Updating all lambda functions within: {AWS_LAMBDA_FUNCTIONS_DIR}")
+def update_all(directory: Path, dry_run=False):
+    log.info(f"Updating all lambda functions within: {directory}")
 
-    for lambda_function_dir in get_lambda_function_dirs():
+    for lambda_function_dir in get_lambda_function_dirs(directory):
         log.info(f"Found {lambda_function_dir.stem}: ", nl=False)
         try:
             info = update(lambda_function_dir, dry_run=dry_run)
