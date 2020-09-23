@@ -136,8 +136,11 @@ const read = memoize((folder) => {
   if (!filePath) {
     return;
   }
+  const isTranslated =
+    CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT);
   const isArchive =
-    CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT);
+    isTranslated ||
+    (CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT));
 
   const rawContent = fs.readFileSync(filePath, "utf8");
   const {
@@ -161,6 +164,7 @@ const read = memoize((folder) => {
     ...fullMetadata,
     ...{ rawHTML, rawContent },
     isArchive,
+    isTranslated,
     fileInfo: {
       folder,
       path: filePath,
@@ -234,38 +238,56 @@ function findAll(
     throw new TypeError("'folderSearch' not a string");
 
   // TODO: doesn't support archive content yet
-  console.warn("Currently hardcoded to only build 'en-us'");
-  const filePaths = glob
-    .sync(path.join(CONTENT_ROOT, "en-us", "**", HTML_FILENAME))
-    .filter((filePath) => {
-      // The 'files' set is either a list of absolute full paths or a
-      // list of endings.
-      // Why endings? Because it's highly useful when you use git and the
-      // filepath might be relative to the git repo root.
-      if (files.size) {
-        if (files.has(filePath)) {
-          return true;
-        }
-        for (fp of files) {
-          if (filePath.endsWith(fp)) {
-            return true;
+  // console.warn("Currently hardcoded to only build 'en-us'");
+  const filePaths = [];
+  const roots = [];
+  if (CONTENT_ARCHIVED_ROOT) {
+    // roots.push({ path: CONTENT_ARCHIVED_ROOT, isArchive: true });
+    roots.push(CONTENT_ARCHIVED_ROOT);
+  }
+  if (CONTENT_TRANSLATED_ROOT) {
+    roots.push(CONTENT_TRANSLATED_ROOT);
+  }
+  roots.push(CONTENT_ROOT);
+  console.log("Building roots:", roots);
+  for (const root of roots) {
+    filePaths.push(
+      ...glob
+        .sync(path.join(root, "**", HTML_FILENAME))
+        .filter((filePath) => {
+          // The 'files' set is either a list of absolute full paths or a
+          // list of endings.
+          // Why endings? Because it's highly useful when you use git and the
+          // filepath might be relative to the git repo root.
+          if (files.size) {
+            if (files.has(filePath)) {
+              return true;
+            }
+            for (fp of files) {
+              if (filePath.endsWith(fp)) {
+                return true;
+              }
+            }
+            return false;
           }
-        }
-        return false;
-      }
-      if (folderSearch) {
-        return filePath
-          .replace(CONTENT_ROOT, "")
-          .replace(HTML_FILENAME, "")
-          .includes(folderSearch);
-      }
-      return true;
-    });
+          if (folderSearch) {
+            return filePath
+              .replace(CONTENT_ROOT, "")
+              .replace(HTML_FILENAME, "")
+              .includes(folderSearch);
+          }
+          return true;
+        })
+        .map((filePath) => {
+          return path.relative(root, path.dirname(filePath));
+        })
+    );
+  }
   return {
     count: filePaths.length,
     iter: function* () {
       for (const filePath of filePaths) {
-        yield read(path.relative(CONTENT_ROOT, path.dirname(filePath)));
+        yield read(filePath);
       }
     },
   };

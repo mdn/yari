@@ -102,69 +102,79 @@ async function buildDocument(document, documentOptions = {}) {
   const options = Object.assign({}, buildOptions, documentOptions);
   const { metadata, fileInfo } = document;
 
-  const doc = { isArchive: document.isArchive };
+  const doc = {
+    isArchive: document.isArchive,
+    isTranslated: document.isTranslated,
+  };
 
   doc.flaws = {};
 
-  if (options.clearKumascriptRenderCache) {
-    renderKumascriptCache.clear();
-  }
-  const [renderedHtml, flaws] = await kumascript.render(document.url);
-
+  let renderedHtml = "";
+  let flaws = [];
   const liveSamples = [];
-  const sampleIds = kumascript.getLiveSampleIDs(
-    document.metadata.slug,
-    document.rawHTML
-  );
-  for (const sampleIdObject of sampleIds) {
-    const liveSamplePage = kumascript.buildLiveSamplePage(
-      document.url,
-      document.metadata.title,
-      renderedHtml,
-      sampleIdObject
-    );
-    if (liveSamplePage.flaw) {
-      flaws.push(liveSamplePage.flaw.updateFileInfo(fileInfo));
-      continue;
-    }
-    liveSamples.push({
-      id: sampleIdObject.id.toLowerCase(),
-      html: liveSamplePage.html,
-    });
-  }
 
-  if (flaws.length) {
-    if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
-      // Report and exit immediately on the first document with flaws.
-      console.error(
-        chalk.red.bold(
-          `Flaws (${flaws.length}) within ${document.metadata.slug} while rendering macros:`
-        )
+  if (doc.isArchive) {
+    renderedHtml = document.rawHTML;
+  } else {
+    if (options.clearKumascriptRenderCache) {
+      renderKumascriptCache.clear();
+    }
+    [renderedHtml, flaws] = await kumascript.render(document.url);
+
+    const sampleIds = kumascript.getLiveSampleIDs(
+      document.metadata.slug,
+      document.rawHTML
+    );
+    for (const sampleIdObject of sampleIds) {
+      const liveSamplePage = kumascript.buildLiveSamplePage(
+        document.url,
+        document.metadata.title,
+        renderedHtml,
+        sampleIdObject
       );
-      flaws.forEach((flaw, i) => {
-        console.error(chalk.bold.red(`${i + 1}: ${flaw.name}`));
-        console.error(chalk.red(`${flaw}\n`));
+      if (liveSamplePage.flaw) {
+        flaws.push(liveSamplePage.flaw.updateFileInfo(fileInfo));
+        continue;
+      }
+      liveSamples.push({
+        id: sampleIdObject.id.toLowerCase(),
+        html: liveSamplePage.html,
       });
-      // XXX This is probably the wrong way to bubble up.
-      process.exit(1);
-    } else if (options.flawLevels.get("macros") === FLAW_LEVELS.WARN) {
-      // doc.flaws.macros = flaws;
-      // The 'flaws' array don't have everything we need from the
-      // kumascript rendering, so we "beef it up" to have convenient
-      // attributes needed.
-      doc.flaws.macros = flaws.map((flaw, i) => {
-        const fixable =
-          flaw.name === "MacroRedirectedLinkError" &&
-          (!flaw.filepath || flaw.filepath === document.fileInfo.path);
-        const suggestion = fixable
-          ? flaw.macroSource.replace(
-              flaw.redirectInfo.current,
-              flaw.redirectInfo.suggested
-            )
-          : null;
-        const id = `macro_flaw${i}`;
-        return Object.assign({ id, fixable, suggestion }, flaw);
-      });
+    }
+
+    if (flaws.length) {
+      if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
+        // Report and exit immediately on the first document with flaws.
+        console.error(
+          chalk.red.bold(
+            `Flaws (${flaws.length}) within ${document.metadata.slug} while rendering macros:`
+          )
+        );
+        flaws.forEach((flaw, i) => {
+          console.error(chalk.bold.red(`${i + 1}: ${flaw.name}`));
+          console.error(chalk.red(`${flaw}\n`));
+        });
+        // XXX This is probably the wrong way to bubble up.
+        process.exit(1);
+      } else if (options.flawLevels.get("macros") === FLAW_LEVELS.WARN) {
+        // doc.flaws.macros = flaws;
+        // The 'flaws' array don't have everything we need from the
+        // kumascript rendering, so we "beef it up" to have convenient
+        // attributes needed.
+        doc.flaws.macros = flaws.map((flaw, i) => {
+          const fixable =
+            flaw.name === "MacroRedirectedLinkError" &&
+            (!flaw.filepath || flaw.filepath === document.fileInfo.path);
+          const suggestion = fixable
+            ? flaw.macroSource.replace(
+                flaw.redirectInfo.current,
+                flaw.redirectInfo.suggested
+              )
+            : null;
+          const id = `macro_flaw${i}`;
+          return Object.assign({ id, fixable, suggestion }, flaw);
+        });
+      }
     }
   }
 
