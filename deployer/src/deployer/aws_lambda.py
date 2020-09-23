@@ -1,11 +1,10 @@
 import base64
 import hashlib
+import json
 import subprocess
 from pathlib import Path
 
 import boto3
-
-import yaml
 
 from .utils import log
 
@@ -23,20 +22,22 @@ def get_sha256_hash(zip_file_bytes):
 
 
 def get_lambda_function_dirs(directory):
-    for lambda_function_dir in directory.glob("*"):
+    for lambda_function_dir in directory.iterdir():
         if (
             lambda_function_dir.is_dir()
             and lambda_function_dir.joinpath("package.json").is_file()
             and lambda_function_dir.joinpath("index.js").is_file()
-            and lambda_function_dir.joinpath("aws.yaml").is_file()
         ):
             yield lambda_function_dir
 
 
-def get_yaml_info(lambda_function_dir):
-    aws_yaml_file = lambda_function_dir.joinpath("aws.yaml")
-    aws_config = yaml.load(aws_yaml_file.read_text(), Loader=yaml.FullLoader)
-    return (aws_config["name"], aws_config["region"])
+def get_aws_info(lambda_function_dir):
+    with open(lambda_function_dir.joinpath("package.json")) as f:
+        aws_config = json.load(f)["aws"]
+    return (
+        aws_config.get("name", lambda_function_dir.name),
+        aws_config.get("region", "us-east-1"),
+    )
 
 
 def make_package(lambda_function_dir):
@@ -51,7 +52,6 @@ def make_package(lambda_function_dir):
         check=True,
         text=True,
         stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
     )
     # If we created a zip package, return the filename.
     for zip_filename in lambda_function_dir.glob("*.zip"):
@@ -66,7 +66,7 @@ def make_package(lambda_function_dir):
 
 def update(lambda_function_dir, dry_run=False):
     zip_filename = make_package(lambda_function_dir)
-    function_name, region_name = get_yaml_info(lambda_function_dir)
+    function_name, region_name = get_aws_info(lambda_function_dir)
     client = boto3.client("lambda", region_name=region_name)
     # Get the function info for the latest version.
     function_info = client.get_function(FunctionName=function_name)

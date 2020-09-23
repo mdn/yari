@@ -13,7 +13,7 @@
     "node": ">=12.x"
   },
   "aws": {
-    "name": "mdn-content-origin-request",
+    "name": "peterbe-yari-content-origin-request",
     "region": "us-east-1"
   }
 }

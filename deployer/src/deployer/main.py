@@ -49,7 +49,7 @@ def cli(ctx, **kwargs):
 
 @cli.command()
 @click.argument(
-    "directory", type=click.Path(), callback=validate_directory, default="xxx"
+    "directory", type=click.Path(), callback=validate_directory, default="aws-lambda"
 )
 @click.pass_context
 def update_lambda_functions(ctx, directory):
