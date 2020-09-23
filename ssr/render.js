@@ -38,7 +38,6 @@ function serializeDocumentData(data) {
 
 export default function render(renderApp, doc) {
   const buildHtml = readBuildHTML();
-  // const $ = cheerio.load(buildHtml, { decodeEntities: false });
   const $ = cheerio.load(buildHtml);
 
   const rendered = renderToString(renderApp);
