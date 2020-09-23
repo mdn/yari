@@ -48,10 +48,13 @@ def cli(ctx, **kwargs):
 
 
 @cli.command()
+@click.argument(
+    "directory", type=click.Path(), callback=validate_directory, default="aws-lambda"
+)
 @click.pass_context
-def update_lambda_functions(ctx):
+def update_lambda_functions(ctx, directory):
     log.info(f"Deployer ({__version__})", bold=True)
-    update_all_lambda_functions(dry_run=ctx.obj["dry_run"])
+    update_all_lambda_functions(directory, dry_run=ctx.obj["dry_run"])
 
 
 @cli.command()

@@ -71,3 +71,4 @@ yarn-error.log*
 fake-v1-api/
 mdn-yari-*.tgz
 lambda/**/*.zip
+function.zip

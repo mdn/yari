@@ -26,18 +26,12 @@ Lambda function if it contains the following:
     },
     "engines": {
       "node": "12.x"
+    },
+    "aws": {
+      "name": "mdn-content-origin-request",
+      "region": "us-east-1"
     }
   }
-  ```
-
-- an `aws.yaml` file that specifies two things: the `name` of the Lambda
-  function in AWS, and the AWS `region` in which the Lambda function resides
-
-  Here's an example `aws.yml` file:
-
-  ```yaml
-  name: mdn-content-origin-request
-  region: us-east-1
   ```
 
 ## Updating Lambda Functions in AWS
