@@ -19,4 +19,4 @@ function getPopularities() {
   return popularities;
 }
 
-module.exports = getPopularities;
+module.exports = { getPopularities };

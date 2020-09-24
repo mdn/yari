@@ -6,7 +6,7 @@ const {
   VALID_LOCALES,
 } = require("./constants");
 const Document = require("./document");
-const getPopularities = require("./popularities");
+const { getPopularities } = require("./popularities");
 const Redirect = require("./redirect");
 const Image = require("./image");
 const { buildURL, memoize, slugToFolder } = require("./utils");

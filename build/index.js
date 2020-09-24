@@ -101,6 +101,8 @@ async function buildDocument(document, documentOptions = {}) {
   // global one.
   const options = Object.assign({}, buildOptions, documentOptions);
   const { metadata, fileInfo } = document;
+  console.log(metadata);
+  console.log(fileInfo);
 
   const doc = {
     isArchive: document.isArchive,

@@ -12,7 +12,9 @@ const {
   VALID_LOCALES,
   ROOTS,
 } = require("./constants");
-const getPopularities = require("./popularities");
+const { getPopularities } = require("./popularities");
+const { getWikiHistories } = require("./wikihistories");
+
 const { memoize, slugToFolder } = require("./utils");
 
 function buildPath(localeFolder, slug) {
@@ -21,7 +23,6 @@ function buildPath(localeFolder, slug) {
 
 const HTML_FILENAME = "index.html";
 const getHTMLPath = (folder) => path.join(folder, HTML_FILENAME);
-const getWikiHistoryPath = (folder) => path.join(folder, "wikihistory.json");
 
 function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
   const all = JSON.parse(
@@ -129,10 +130,16 @@ function archive(renderedHTML, rawHTML, metadata, isTranslatedContent = false) {
 }
 
 const read = memoize((folder) => {
-  const filePath = ROOTS.map((root) =>
-    path.join(root, getHTMLPath(folder))
-  ).find((filePath) => fs.existsSync(filePath));
-
+  let filePath = null;
+  let root = null;
+  for (const possibleRoot of ROOTS) {
+    const possibleFilePath = path.join(possibleRoot, getHTMLPath(folder));
+    if (fs.existsSync(possibleFilePath)) {
+      root = possibleRoot;
+      filePath = possibleFilePath;
+      break;
+    }
+  }
   if (!filePath) {
     return;
   }
@@ -151,11 +158,13 @@ const read = memoize((folder) => {
 
   const locale = extractLocale(folder);
   const url = `/${locale}/docs/${metadata.slug}`;
+  const wikiHistories = getWikiHistories(root, locale);
   const fullMetadata = {
     metadata: {
       ...metadata,
       locale,
       popularity: getPopularities().get(url) || 0.0,
+      modified: wikiHistories.has(url) ? wikiHistories.get(url).modified : null,
     },
     url,
   };
@@ -169,6 +178,7 @@ const read = memoize((folder) => {
       folder,
       path: filePath,
       frontMatterOffset,
+      root,
     },
   };
 });

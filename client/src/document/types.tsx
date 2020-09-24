@@ -83,4 +83,5 @@ export interface Doc {
   source: Source;
   contributors: string[];
   isArchive: boolean;
+  isTranslated: boolean;
 }
