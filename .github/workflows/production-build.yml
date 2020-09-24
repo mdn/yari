@@ -133,7 +133,12 @@ jobs:
           # Now is not the time to worry about flaws.
           export BUILD_FLAW_LEVELS="*:ignore"
           yarn prepare-build
-          export BUILD_FOLDERSEARCH=web/html
+
+          # Uncomment when hacking on this workflow. It means the `yarn build`
+          # finishes much sooner, which can be helpful debugging the other stuff
+          # the workflow needs to do.
+          # export BUILD_FOLDERSEARCH=web/html
+
           yarn build
 
           # TODO: When the deployer is available this is where we
