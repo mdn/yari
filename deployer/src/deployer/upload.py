@@ -26,6 +26,19 @@ S3_MULTIPART_CHUNKSIZE = S3TransferConfig().multipart_chunksize
 hashed_filename_regex = re.compile(r"\.[a-f0-9]{8,32}\.")
 
 
+def log_task(task):
+    if task.error:
+        if task.is_redirect:
+            # With redirect upload tasks, we have to embellish the
+            # error message.
+            log.error(f"Failed to upload {task}: {task.error}")
+        else:
+            # With file upload tasks, the error message says it all.
+            log.error(task.error)
+    else:
+        log.success(task)
+
+
 @dataclass
 class Totals:
     """Class for keeping track of some useful totals."""
@@ -65,7 +78,7 @@ class DisplayProgress:
         if self.progress_bar:
             self.progress_bar.update(1)
         else:
-            log.success(f"  {task}")
+            log_task(task)
 
 
 class UploadTask:
@@ -388,10 +401,10 @@ def upload_content(build_directory, content_roots, config):
                 on_task_complete=on_task_complete,
             )
 
-    if failed_tasks:
-        log.error(f"Total failures: {len(failed_tasks):,}")
+    log.error(f"Total failures: {len(failed_tasks):,}")
+    if failed_tasks and show_progress_bar:
         for task in failed_tasks:
-            log.error(f"{task} failed: {task.error}")
+            log_task(task)
 
     log.info(
         f"Total uploaded files: {totals.uploaded_files:,} "
