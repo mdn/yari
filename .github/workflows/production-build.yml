@@ -142,14 +142,16 @@ jobs:
 
       - name: Deploy with deployer
         run: |
+          # Set the CONTENT_ROOT first
+          export CONTENT_ROOT=$(pwd)/mdn/content/files
+          echo "CONTENT_ROOT=$CONTENT_ROOT"
+
+          # XXX Set the CONTENT_TRANSLATED_ROOT and CONTENT_ARCHIVED_ROOT
+
           cd deployer
           export DEPLOYER_BUCKET_NAME=mdn-content-dev
           export DEPLOYER_BUCKET_PREFIX=main
           # poetry run deployer --help
-
-          # Temporary...
-          echo "Debugging CONTENT_ROOT"
-          echo "CONTENT_ROOT=$CONTENT_ROOT"
 
           poetry run deployer upload --help
           poetry run deployer upload ../client/build
