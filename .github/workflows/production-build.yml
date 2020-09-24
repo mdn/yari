@@ -63,22 +63,18 @@ jobs:
       - name: Install all yarn packages
         run: yarn --frozen-lockfile
 
-      # - name: Install Python
-      #   uses: actions/setup-python@v2
-      #   with:
-      #     python-version: '3.8'
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
 
-      # - name: Install Python poetry
-      #   uses: dschep/install-poetry-action@v1.3
+      - name: Install Python poetry
+        uses: dschep/install-poetry-action@v1.3
 
-      # - name: Display Python & Poetry version
-      #   run: |
-      #     python --version
-      #     poetry --version
-
-      # - name: Clone mdn-content
-      #   run: |
-      #     git clone https://github.com/mdn/mdn-content.git
+      - name: Display Python & Poetry version
+        run: |
+          python --version
+          poetry --version
 
       - name: Print information about build
         run: |
@@ -137,3 +133,8 @@ jobs:
           # TODO: When the deployer is available this is where we
           # would upload the whole content of client/build
           du -sh client/build
+
+      - name: Deploy with deployer
+        run: |
+          cd deployer
+          poetry run deployer --help
