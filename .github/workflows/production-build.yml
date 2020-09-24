@@ -151,7 +151,9 @@ jobs:
           cd deployer
           export DEPLOYER_BUCKET_NAME=mdn-content-dev
           export DEPLOYER_BUCKET_PREFIX=main
-          # poetry run deployer --help
+
+          export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+          export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
           poetry run deployer upload --help
           poetry run deployer upload ../client/build
