@@ -146,4 +146,4 @@ jobs:
           export DEPLOYER_BUCKET_NAME=mdn-content-dev
           export DEPLOYER_BUCKET_PREFIX=main
           # poetry run deployer --help
-          poetry run deployer upload
+          poetry run deployer upload ../client/build
