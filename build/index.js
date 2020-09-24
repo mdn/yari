@@ -24,12 +24,11 @@ const cheerio = require("./monkeypatched-cheerio");
 const buildOptions = require("./build-options");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
 
-const DEFAULT_BRANCH_NAME = "master"; // TODO: 'main' is a better name.
+const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/content
 
 // Module level global that gets set once and reused repeatedly
 const currentGitBranch =
   (() => {
-    // XXX Fixme with what you'd get in the likes of TravisCI!
     if (process.env.CI_CURRENT_BRANCH) {
       return process.env.CI_CURRENT_BRANCH;
     } else {
