@@ -391,7 +391,7 @@ def upload_content(build_directory, content_roots, config):
     if failed_tasks:
         log.error(f"Total failures: {len(failed_tasks):,}")
         for task in failed_tasks:
-            log.error(f"\n{task} failed:\n{task.error}")
+            log.error(f"{task} failed: {task.error}")
 
     log.info(
         f"Total uploaded files: {totals.uploaded_files:,} "
