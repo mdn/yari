@@ -128,6 +128,7 @@ jobs:
           # Now is not the time to worry about flaws.
           export BUILD_FLAW_LEVELS="*:ignore"
           yarn prepare-build
+          export BUILD_FOLDERSEARCH=web/html
           yarn build
 
           # TODO: When the deployer is available this is where we
@@ -137,4 +138,7 @@ jobs:
       - name: Deploy with deployer
         run: |
           cd deployer
-          poetry run deployer --help
+          export DEPLOYER_BUCKET_NAME=mdn-content-dev
+          export DEPLOYER_BUCKET_PREFIX=main
+          # poetry run deployer --help
+          poetry run deployer upload --content-root $CONTENT_ROOT --no-progressbar
