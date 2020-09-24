@@ -146,5 +146,11 @@ jobs:
           export DEPLOYER_BUCKET_NAME=mdn-content-dev
           export DEPLOYER_BUCKET_PREFIX=main
           # poetry run deployer --help
+
+          # Temporary...
+          echo "Debugging CONTENT_ROOT"
+          echo "CONTENT_ROOT=$CONTENT_ROOT"
+
+
           poetry run deployer upload ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
