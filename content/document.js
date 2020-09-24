@@ -56,13 +56,20 @@ function extractLocale(folder) {
   return locale;
 }
 
-function saveHTMLFile(filePath, rawHTML, { slug, title, tags }) {
+function saveHTMLFile(
+  filePath,
+  rawHTML,
+  { slug, title, translation_of, tags }
+) {
   const metadata = {
     title,
     slug,
   };
   if (tags) {
     metadata.tags = tags;
+  }
+  if (translation_of) {
+    metadata.translation_of = translation_of;
   }
   const combined = `---\n${yaml.safeDump(metadata)}---\n${rawHTML.trim()}\n`;
   fs.writeFileSync(filePath, combined);
