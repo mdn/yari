@@ -9,7 +9,8 @@ config = AutoConfig(os.curdir)
 CONTENT_ROOT = config("CONTENT_ROOT", default=None)
 CONTENT_TRANSLATED_ROOT = config("CONTENT_TRANSLATED_ROOT", default=None)
 
-DEFAULT_BUCKET_NAME = config("DEPLOYER_BUCKET_NAME", default="dev")
+DEFAULT_BUCKET_NAME = config("DEPLOYER_BUCKET_NAME", default="mdn-content-dev")
+DEFAULT_BUCKET_PREFIX = config("DEPLOYER_BUCKET_PREFIX", default="main")
 
 # When uploading a bunch of files, the work is done in a thread pool.
 # If you use too many "workers" it might saturate your network meaning it's

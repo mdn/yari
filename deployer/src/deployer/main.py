@@ -3,18 +3,21 @@ from pathlib import Path
 import click
 
 from . import __version__
-from .aws_lambda import update_all as update_all_lambda_functions
 from .constants import (
     CONTENT_ROOT,
     CONTENT_TRANSLATED_ROOT,
     DEFAULT_BUCKET_NAME,
+    DEFAULT_BUCKET_PREFIX,
     DEFAULT_NO_PROGRESSBAR,
 )
+from .update_lambda_functions import update_all
 from .upload import upload_content
 from .utils import log
 
 
 def validate_directory(ctx, param, value):
+    if not value:
+        raise click.BadParameter(f"{value!r}")
     path = Path(value)
     if not path.exists():
         raise click.BadParameter(f"{value} does not exist")
@@ -23,11 +26,7 @@ def validate_directory(ctx, param, value):
     return path
 
 
-def validate_root(ctx, param, value):
-    return validate_directory(ctx, param, value)
-
-
-def validate_optional_root(ctx, param, value):
+def validate_optional_directory(ctx, param, value):
     if value:
         return validate_directory(ctx, param, value)
 
@@ -49,23 +48,26 @@ def cli(ctx, **kwargs):
 
 @cli.command()
 @click.argument(
-    "directory", type=click.Path(), callback=validate_directory, default="aws-lambda"
+    "directory", type=click.Path(), callback=validate_directory, default="aws-lambda",
 )
 @click.pass_context
 def update_lambda_functions(ctx, directory):
     log.info(f"Deployer ({__version__})", bold=True)
-    update_all_lambda_functions(directory, dry_run=ctx.obj["dry_run"])
+    update_all(directory, dry_run=ctx.obj["dry_run"])
 
 
 @cli.command()
 @click.option(
     "--bucket",
-    help='Name of the S3 bucket or one of the bucket nicknames "dev", "stage", or "prod"',
+    help="Name of the S3 bucket",
     default=DEFAULT_BUCKET_NAME,
     show_default=True,
 )
 @click.option(
-    "--prefix", help="Upload into this folder of the S3 bucket instead of its root",
+    "--prefix",
+    help="Upload into this folder of the S3 bucket instead of its root",
+    default=DEFAULT_BUCKET_PREFIX,
+    show_default=True,
 )
 @click.option(
     "--force-refresh",
@@ -79,14 +81,14 @@ def update_lambda_functions(ctx, directory):
     help="The path to the root folder of the main content (defaults to CONTENT_ROOT)",
     default=CONTENT_ROOT,
     show_default=True,
-    callback=validate_root,
+    callback=validate_directory,
 )
 @click.option(
     "--content-translated-root",
     help="The path to the root folder of the translated content (defaults to CONTENT_TRANSLATED_ROOT)",
     default=CONTENT_TRANSLATED_ROOT,
     show_default=True,
-    callback=validate_optional_root,
+    callback=validate_optional_directory,
 )
 @click.option(
     "--no-progressbar",

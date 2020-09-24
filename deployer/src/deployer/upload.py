@@ -4,6 +4,7 @@ import mimetypes
 import re
 from dataclasses import dataclass
 from functools import cached_property
+from itertools import chain
 
 import boto3
 from boto3.s3.transfer import S3TransferConfig
@@ -51,8 +52,8 @@ class DisplayProgress:
     def __enter__(self):
         if self.progress_bar:
             # Forces the progress-bar to show-up immediately.
-            self.progress_bar.update(0)
             self.progress_bar.__enter__()
+            self.progress_bar.update(0)
         return self
 
     def __exit__(self, *exc_args):
@@ -205,6 +206,7 @@ class BucketManager:
 
     @cached_property
     def client(self):
+        # According to the boto3 docs, this low-level client is thread-safe.
         return boto3.client("s3")
 
     def get_key(self, build_directory, file_path):
@@ -213,7 +215,7 @@ class BucketManager:
     def get_redirect_keys(self, from_url, to_url):
         return (
             f"{self.key_prefix}{from_url.strip('/').lower()}/index.html",
-            f"/{to_url.strip('/').lower()}",
+            f"/{to_url.strip('/')}",
         )
 
     def get_bucket_objects(self):
@@ -248,11 +250,17 @@ class BucketManager:
     def iter_redirect_tasks(self, content_roots, for_counting_only=False):
         # Walk the content roots and yield redirect upload tasks.
         for content_root in content_roots:
-            for fp in content_root.glob("*/_redirects.txt"):
+            # Look for "_redirects.txt" files up to two levels deep to
+            # accommodate the content root specified as the root of the
+            # repo or the "files" sub-directory of the root of the repo.
+            for fp in chain(
+                content_root.glob("*/_redirects.txt"),
+                content_root.glob("*/*/_redirects.txt"),
+            ):
                 for line_num, line in enumerate(fp.read_text().split("\n"), start=1):
                     line = line.strip()
                     if line and not line.startswith("#"):
-                        parts = line.lower().split("\t")
+                        parts = line.split("\t")
                         if len(parts) != 2:
                             raise Exception(
                                 f"Unable to parse {fp}:{line_num} into a from/to URL pair"
@@ -275,25 +283,9 @@ class BucketManager:
         self,
         build_directory,
         content_roots,
-        on_list_bucket_start=None,
-        on_list_bucket_complete=None,
+        existing_bucket_objects=None,
         on_task_complete=None,
-        dry_run=False,
-        force_refresh=False,
     ):
-        if force_refresh:
-            bucket_objects = None
-        else:
-            if on_list_bucket_start:
-                on_list_bucket_start()
-            with StopWatch() as timer:
-                bucket_objects = self.get_bucket_objects()
-            if on_list_bucket_complete:
-                on_list_bucket_complete(bucket_objects, timer)
-
-        if dry_run:
-            return StopWatch()
-
         with concurrent.futures.ThreadPoolExecutor(
             max_workers=MAX_WORKERS_PARALLEL_UPLOADS
         ) as executor, StopWatch() as timer:
@@ -306,8 +298,8 @@ class BucketManager:
                 futures = {}
                 for task in task_iter():
                     # Note: redirect upload tasks are never skipped.
-                    if bucket_objects and not task.is_redirect:
-                        s3_obj = bucket_objects.get(task.key)
+                    if existing_bucket_objects and not task.is_redirect:
+                        s3_obj = existing_bucket_objects.get(task.key)
                         if s3_obj and s3_obj["ETag"] == task.etag:
                             task.skipped = True
                             if on_task_complete:
@@ -335,11 +327,8 @@ def upload_content(build_directory, content_roots, config):
     dry_run = config["dry_run"]
     bucket_name = config["bucket"]
     bucket_prefix = config["prefix"]
-    refresh = config["force_refresh"]
+    force_refresh = config["force_refresh"]
     show_progress_bar = not config["no_progressbar"]
-
-    if bucket_name in ("dev", "stage", "prod"):
-        bucket_name = f"mdn-content-{bucket_name}"
 
     log.info(f"Upload files from: {build_directory}")
     log.info(f"Upload redirects from: {', '.join(str(fp) for fp in content_roots)}")
@@ -352,46 +341,52 @@ def upload_content(build_directory, content_roots, config):
 
     with StopWatch() as timer:
         total_redirects = mgr.count_redirect_tasks(content_roots)
+        if not total_redirects:
+            raise click.ClickException(
+                "unable to find any redirects to upload (did you specify the right content-root?)"
+            )
     log.info(f"Total pending redirect uploads: {total_redirects:,} ({timer})")
 
     with StopWatch() as timer:
         total_possible_files = mgr.count_file_tasks(build_directory)
     log.info(f"Total pending file uploads: {total_possible_files:,} ({timer})")
 
+    if force_refresh:
+        existing_bucket_objects = None
+    else:
+        log.info("Total existing S3 objects: ", nl=False)
+        with StopWatch() as timer:
+            existing_bucket_objects = mgr.get_bucket_objects()
+        log.info(f"{len(existing_bucket_objects):,} ({timer})")
+
     totals = Totals()
     failed_tasks = []
 
-    def on_list_bucket_start():
-        log.info("Total existing S3 objects: ", nl=False)
+    if dry_run:
+        upload_timer = StopWatch()
+    else:
+        with DisplayProgress(
+            total_redirects + total_possible_files, show_progress_bar
+        ) as progress:
 
-    def on_list_bucket_complete(bucket_objects, timer):
-        log.info(f"{len(bucket_objects):,} ({timer})")
+            def on_task_complete(task):
+                progress.update(task)
+                if task.skipped:
+                    totals.skipped += 1
+                elif task.error:
+                    failed_tasks.append(task)
+                elif task.is_redirect:
+                    totals.uploaded_redirects += 1
+                else:
+                    totals.uploaded_files += 1
+                    totals.uploaded_files_size += task.size
 
-    with DisplayProgress(
-        total_redirects + total_possible_files, show_progress_bar
-    ) as progress:
-
-        def on_task_complete(task):
-            progress.update(task)
-            if task.skipped:
-                totals.skipped += 1
-            elif task.error:
-                failed_tasks.append(task)
-            elif task.is_redirect:
-                totals.uploaded_redirects += 1
-            else:
-                totals.uploaded_files += 1
-                totals.uploaded_files_size += task.size
-
-        upload_timer = mgr.upload(
-            build_directory,
-            content_roots,
-            on_list_bucket_start=on_list_bucket_start,
-            on_list_bucket_complete=on_list_bucket_complete,
-            on_task_complete=on_task_complete,
-            dry_run=dry_run,
-            force_refresh=refresh,
-        )
+            upload_timer = mgr.upload(
+                build_directory,
+                content_roots,
+                existing_bucket_objects,
+                on_task_complete=on_task_complete,
+            )
 
     if failed_tasks:
         log.error(f"Total failures: {len(failed_tasks):,}")

@@ -45,6 +45,8 @@ exports.handler = async (event, context) => {
     // When reviewing PR's, each PR gets its own subdomain, and
     // all of its content is prefixed with that subdomain in S3.
     request.origin.custom.path = `/${host.split(".")[0]}`;
+  } else {
+    request.origin.custom.path = "/main";
   }
   return request;
 };
