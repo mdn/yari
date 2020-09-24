@@ -64,7 +64,7 @@
     "sanitize-filename": "^1.6.3",
     "sockette": "^2.0.6",
     "source-map-support": "0.5.19",
-    "swr": "0.3.3",
+    "swr": "0.3.4",
     "tempy": "0.7.0",
     "typeface-zilla-slab": "0.0.72",
     "use-debounce": "^3.4.3",
