@@ -151,6 +151,6 @@ jobs:
           echo "Debugging CONTENT_ROOT"
           echo "CONTENT_ROOT=$CONTENT_ROOT"
 
-
+          poetry run deployer upload --help
           poetry run deployer upload ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
