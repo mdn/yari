@@ -8,6 +8,12 @@ function buildURL(locale, slug) {
   return `/${locale}/docs/${slug}`.toLowerCase();
 }
 
+/*
+ * NOTE: A nearly identical copy of this function is used within
+ *       ./lambda/content-origin-request/index.js. If you make a
+ *       change to this function, you must replicate the change
+ *       there as well.
+ */
 function slugToFolder(slug) {
   return (
     slug
