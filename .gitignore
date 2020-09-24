@@ -25,7 +25,6 @@ yarn-error.log*
 /testing/node_modules/
 /client/build/
 /ssr/dist/
-/aws-lambda/**/*.zip
 
 # Can be removed once content lives in its own repo
 /archivecontent/files
@@ -70,5 +69,4 @@ yarn-error.log*
 /deployer/src/deployer.egg-info/
 fake-v1-api/
 mdn-yari-*.tgz
-lambda/**/*.zip
 function.zip
