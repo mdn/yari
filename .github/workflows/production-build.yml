@@ -71,6 +71,11 @@ jobs:
       - name: Install Python poetry
         uses: dschep/install-poetry-action@v1.3
 
+      - name: Install deployer
+        run: |
+          cd deployer
+          poetry install
+
       - name: Display Python & Poetry version
         run: |
           python --version
