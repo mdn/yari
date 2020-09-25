@@ -56,7 +56,10 @@ type Flaws = {
   images: ImageReferenceFlaw[];
 };
 
-export type Translations = { locale: string; slug: string }[];
+export type Translation = {
+  locale: string;
+  slug: string;
+};
 
 export type DocParent = {
   uri: string;
@@ -77,7 +80,7 @@ export interface Doc {
   body: string;
   modified: string;
   flaws: Flaws;
-  other_translations?: Translations;
+  other_translations?: Translation[];
   translation_of?: string;
   parents?: DocParent[];
   source: Source;

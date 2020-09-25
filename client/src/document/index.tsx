@@ -17,7 +17,8 @@ import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 // Misc
 // Sub-components
-import { DocumentTranslations } from "./languages";
+// import { DocumentTranslations } from "./languages";
+import LanguageMenu from "../header/language-menu";
 import { TOC } from "./toc";
 
 import "./index.scss";
@@ -91,13 +92,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
     return null;
   }
 
-  const translations = [...(doc.other_translations || [])];
-  if (doc.translation_of) {
-    translations.unshift({
-      locale: "en-US",
-      slug: doc.translation_of,
-    });
-  }
+  const translations = doc.other_translations || [];
 
   const { github_url, folder } = doc.source;
 
@@ -124,7 +119,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
             </nav>
 
             {translations && !!translations.length && (
-              <DocumentTranslations translations={translations} />
+              <LanguageMenu translations={translations} locale={locale} />
             )}
           </div>
         </div>

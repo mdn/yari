@@ -3,7 +3,7 @@ const childProcess = require("child_process");
 const chalk = require("chalk");
 
 const PACKAGE_REPOSITORY_URL = require("../package.json").repository;
-const { buildURL, Document } = require("../content");
+const { Document } = require("../content");
 const kumascript = require("../kumascript");
 
 const { FLAW_LEVELS } = require("./constants");
@@ -100,8 +100,6 @@ async function buildDocument(document, documentOptions = {}) {
   // global one.
   const options = Object.assign({}, buildOptions, documentOptions);
   const { metadata, fileInfo } = document;
-  console.log(metadata);
-  console.log(fileInfo);
 
   const doc = {
     isArchive: document.isArchive,
@@ -194,9 +192,6 @@ async function buildDocument(document, documentOptions = {}) {
 
   doc.title = metadata.title;
   doc.mdn_url = document.url;
-  if (metadata.translation_of) {
-    doc.translation_of = metadata.translation_of;
-  }
 
   // Note that 'extractSidebar' will always return a string.
   // And if it finds a sidebar section, it gets removed from '$' too.
@@ -251,21 +246,12 @@ async function buildDocument(document, documentOptions = {}) {
 
   const otherTranslations = document.translations || [];
   if (!otherTranslations.length && metadata.translation_of) {
-    // But perhaps the parent has other translations?!
-    const parentURL = buildURL("en-US", metadata.translation_of);
-    const parentDocument = Document.findByURL(parentURL);
-    // See note in 'ensureAllTitles()' about why we need this if statement.
-    if (parentDocument) {
-      const parentOtherTranslations = parentDocument.metadata.translations;
-      if (parentOtherTranslations && parentOtherTranslations.length) {
-        otherTranslations.push(
-          ...parentOtherTranslations.filter(
-            (translation) => translation.locale !== metadata.locale
-          )
-        );
-      }
-    }
+    // If built just-in-time, we won't have a record of all the other translations
+    // available. But if the current document has a translation_of, we can
+    // at least use that.
+    otherTranslations.push({ locale: "en-US", slug: metadata.translation_of });
   }
+
   if (otherTranslations.length) {
     doc.other_translations = otherTranslations;
   }

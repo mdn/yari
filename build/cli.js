@@ -52,10 +52,37 @@ async function buildDocuments() {
 
   let peakHeapBytes = 0;
 
+  // This builds up a mapping from en-US slugs to
+  const translationsOf = new Map();
+
   !options.noProgressbar && progressBar.start(documents.count);
   for (const document of documents.iter()) {
     const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
     fs.mkdirSync(outPath, { recursive: true });
+
+    const { translation_of } = document.metadata;
+
+    // If it's a non-en-US document, it'll most likely have a `translation_of`.
+    // If so, add it to the map so that when we build the en-US one, we can
+    // get an index of the *other* translations available.
+    if (translation_of) {
+      if (!translationsOf.has(translation_of)) {
+        translationsOf.set(translation_of, []);
+      }
+      translationsOf.set(translation_of, [
+        ...translationsOf.get(translation_of),
+        { slug: document.metadata.slug, locale: document.metadata.locale },
+      ]);
+      // This is a shortcoming. If this is a translated document, we don't have a
+      // complete mapping of all other translations. So, the best we can do is
+      // at least link to the English version.
+      // In 2021, when we refactor localization entirely, this will need to change.
+      // Perhaps, then, we'll do a complete scan through all content first to build
+      // up the map before we process each one.
+      document.translations = [];
+    } else {
+      document.translations = translationsOf.get(document.metadata.slug);
+    }
 
     const [builtDocument, liveSamples, fileAttachments] = await buildDocument(
       document
