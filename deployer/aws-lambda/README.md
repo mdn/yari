@@ -8,7 +8,9 @@ Lambda function if it contains the following:
 - a `package.json` file which defines the Lambda function's dependencies as
   well as a `make-package` command that when run creates an AWS Lambda
   deployment package (Zip file) containing the function's code (`index.js`)
-  and dependencies (`node_modules/*`).
+  and dependencies (`node_modules/*`). Also, you'll need to specify the
+  function's AWS `name` and `region` under the `aws` property within the
+  `package.json` file (see example below).
 
   Here's an example `package.json` file:
 
