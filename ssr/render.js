@@ -68,6 +68,12 @@ export default function render(renderApp, doc) {
     $('meta[name="description"]').attr("content", pageDescription);
   }
 
+  if (doc.isArchive && !doc.isTranslated) {
+    $('<meta name="robots" content="noindex, nofollow">').insertAfter(
+      $("meta").eq(-1)
+    );
+  }
+
   $('link[rel="canonical"]').attr("href", canonicalURL);
 
   $("title").text(pageTitle);
