@@ -421,5 +421,5 @@ def upload_content(build_directory, content_roots, config):
 
     if totals.failed:
         raise click.ClickException(
-            "There were failures. Exiting with a non-zero exit code."
+            f"There were {totals.failed} failures."
         )
