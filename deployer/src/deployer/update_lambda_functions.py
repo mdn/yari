@@ -89,20 +89,17 @@ def update_all(directory: Path, dry_run=False):
 
     for lambda_function_dir in get_lambda_function_dirs(directory):
         log.info(f"Found {lambda_function_dir.stem}: ", nl=False)
-        try:
-            info = update(lambda_function_dir, dry_run=dry_run)
-        except PackageError as error:
-            log.error(error)
-        else:
-            if info:
-                if dry_run:
-                    log.info(
-                        f"would have published a new version of {info['FunctionName']}"
-                    )
-                else:
-                    log.success(
-                        f"published version {info['Version']} of {info['FunctionName']} "
-                        f"as {info['FunctionArn']}",
-                    )
+
+        info = update(lambda_function_dir, dry_run=dry_run)
+        if info:
+            if dry_run:
+                log.info(
+                    f"would have published a new version of {info['FunctionName']}"
+                )
             else:
-                log.info(" no change (matches the latest version in AWS)")
+                log.success(
+                    f"published version {info['Version']} of {info['FunctionName']} "
+                    f"as {info['FunctionArn']}",
+                )
+        else:
+            log.info(" no change (matches the latest version in AWS)")

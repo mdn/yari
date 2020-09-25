@@ -26,10 +26,24 @@ S3_MULTIPART_CHUNKSIZE = S3TransferConfig().multipart_chunksize
 hashed_filename_regex = re.compile(r"\.[a-f0-9]{8,32}\.")
 
 
+def log_task(task):
+    if task.error:
+        if task.is_redirect:
+            # With redirect upload tasks, we have to embellish the
+            # error message.
+            log.error(f"Failed to upload {task}: {task.error}")
+        else:
+            # With file upload tasks, the error message says it all.
+            log.error(task.error)
+    else:
+        log.success(task)
+
+
 @dataclass
 class Totals:
     """Class for keeping track of some useful totals."""
 
+    failed: int = 0
     skipped: int = 0
     uploaded_files: int = 0
     uploaded_redirects: int = 0
@@ -65,7 +79,7 @@ class DisplayProgress:
         if self.progress_bar:
             self.progress_bar.update(1)
         else:
-            log.success(f"  {task}")
+            log_task(task)
 
 
 class UploadTask:
@@ -374,7 +388,9 @@ def upload_content(build_directory, content_roots, config):
                 if task.skipped:
                     totals.skipped += 1
                 elif task.error:
-                    failed_tasks.append(task)
+                    totals.failed += 1
+                    if show_progress_bar:
+                        failed_tasks.append(task)
                 elif task.is_redirect:
                     totals.uploaded_redirects += 1
                 else:
@@ -388,10 +404,9 @@ def upload_content(build_directory, content_roots, config):
                 on_task_complete=on_task_complete,
             )
 
-    if failed_tasks:
-        log.error(f"Total failures: {len(failed_tasks):,}")
-        for task in failed_tasks:
-            log.error(f"\n{task} failed:\n{task.error}")
+    # Failed tasks are reported here if we're using the progress bar.
+    for task in failed_tasks:
+        log_task(task)
 
     log.info(
         f"Total uploaded files: {totals.uploaded_files:,} "
@@ -401,3 +416,8 @@ def upload_content(build_directory, content_roots, config):
     log.info(f"Total skipped files: {totals.skipped:,} matched existing S3 objects")
     log.info(f"Total upload/skip time: {upload_timer}")
     log.info(f"Done in {full_timer.stop()}.")
+
+    if totals.failed:
+        raise click.ClickException(
+            f"There were {totals.failed} failures."
+        )
