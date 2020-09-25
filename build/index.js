@@ -2,8 +2,7 @@ const childProcess = require("child_process");
 
 const chalk = require("chalk");
 
-const PACKAGE_REPOSITORY_URL = require("../package.json").repository;
-const { Document } = require("../content");
+const { Document, CONTENT_ROOT, REPOSITORY_URLS } = require("../content");
 const kumascript = require("../kumascript");
 
 const { FLAW_LEVELS } = require("./constants");
@@ -26,28 +25,42 @@ const { renderCache: renderKumascriptCache } = require("../kumascript");
 
 const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/content
 
-// Module level global that gets set once and reused repeatedly
-const currentGitBranch =
-  (() => {
-    if (process.env.CI_CURRENT_BRANCH) {
-      return process.env.CI_CURRENT_BRANCH;
-    } else {
-      // If you're in detached head, (e.g. "d6a6c3f17") instead of a named
-      // branch, this will fail. But that's why we rely on a default.
-      const spawned = childProcess.spawnSync("git", [
-        "branch",
-        "--show-current",
-      ]);
-      if (spawned.error || spawned.status) {
-        console.warn(
-          "\nUnable to run 'git branch' to find out name of the current branch:\n",
-          spawned.error ? spawned.error : spawned.stderr.toString().trim()
-        );
+// Module-level cache
+const rootToGitBranchMap = new Map();
+
+function getCurrentGitBranch(root) {
+  if (!rootToGitBranchMap.has(root)) {
+    // If this is running in a GitHub Action "PR Build" workflow the current
+    // branch name will be set in `GITHUB_REF_NAME_SLUG`.
+    let name = DEFAULT_BRANCH_NAME;
+    // Only bother getting fancy if the root is CONTENT_ROOT.
+    // For other possible roots, just leave it to the default.
+    if (root === CONTENT_ROOT) {
+      if (process.env.GITHUB_REF_NAME_SLUG) {
+        name = process.env.GITHUB_REF_NAME_SLUG;
       } else {
-        return spawned.stdout.toString().trim();
+        // Most probably, you're hacking on the content, using Yari to preview,
+        // in a topic branch. Then figure this out using a child-process.
+        // Note, if you're in detached head, (e.g. "d6a6c3f17") instead of a named
+        // branch, this will fail. But that's why we rely on a default.
+        const spawned = childProcess.spawnSync(
+          "git",
+          ["branch", "--show-current"],
+          {
+            cwd: root,
+          }
+        );
+        const output = spawned.stdout.toString().trim();
+        if (output) {
+          name = output;
+        }
       }
     }
-  })() || DEFAULT_BRANCH_NAME;
+
+    rootToGitBranchMap.set(root, name);
+  }
+  return rootToGitBranchMap.get(root);
+}
 
 /** Throw an error if the slug is insane.
  * This helps breaking the build if someone has put in faulty data into
@@ -83,14 +96,18 @@ function injectNoTranslate($) {
  * Return the full URL directly to the file in GitHub based on this folder.
  * @param {String} folder - the current folder we're processing.
  */
-function getGitHubURL(folder) {
-  return `${PACKAGE_REPOSITORY_URL}/blob/${currentGitBranch}/content/files/${folder}/index.html`;
+function getGitHubURL(root, folder) {
+  const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
+  return `${baseURL}/blob/${getCurrentGitBranch(
+    root
+  )}/files/${folder}/index.html`;
 }
 
-function injectSource(doc, folder) {
+function injectSource(doc, document) {
+  const folder = document.fileInfo.folder;
   doc.source = {
     folder,
-    github_url: getGitHubURL(folder),
+    github_url: getGitHubURL(document.fileInfo.root, folder),
   };
 }
 
@@ -256,7 +273,7 @@ async function buildDocument(document, documentOptions = {}) {
     doc.other_translations = otherTranslations;
   }
 
-  injectSource(doc, document.fileInfo.folder);
+  injectSource(doc, document);
 
   // The `titles` object should contain every possible URI->Title mapping.
   // We can use that generate the necessary information needed to build
