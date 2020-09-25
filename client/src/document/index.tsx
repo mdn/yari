@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useEffect } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
@@ -9,7 +9,7 @@ import { useDocumentURL } from "./hooks";
 import { Doc } from "./types";
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
-import { InteractiveExample } from "../ui/molecules/interactive-example";
+import { InteractiveExample } from "./ingredients/interactive-example";
 import { Attributes } from "./ingredients/attributes";
 import { Examples } from "./ingredients/examples";
 import { LinkList, LinkLists } from "./ingredients/link-lists";
@@ -20,6 +20,7 @@ import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-t
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
 import { Titlebar } from "../ui/molecules/titlebar";
 import { TOC } from "../ui/molecules/toc";
+import { RenderSideBar } from "../ui/organisms/sidebar";
 
 import "./index.scss";
 
@@ -145,11 +146,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
           </article>
         </main>
 
-        {doc.sidebarHTML && (
-          <div id="sidebar-quicklinks" className="sidebar">
-            <RenderSideBar doc={doc} />
-          </div>
-        )}
+        {doc.sidebarHTML && <RenderSideBar doc={doc} />}
       </div>
     </>
   );
@@ -173,73 +170,6 @@ function LastModified({ value, locale }) {
         {date.toLocaleString(locale, dateStringOptions)}
       </time>
     </>
-  );
-}
-
-function RenderSideBar({ doc }) {
-  if (!doc.related_content) {
-    if (doc.sidebarHTML) {
-      return <div dangerouslySetInnerHTML={{ __html: doc.sidebarHTML }} />;
-    }
-    return null;
-  }
-  return doc.related_content.map((node) => (
-    <SidebarLeaf key={node.title} parent={node} />
-  ));
-}
-
-function SidebarLeaf({ parent }) {
-  return (
-    <div>
-      <h3>{parent.title}</h3>
-      <ul>
-        {parent.content.map((node) => {
-          if (node.content) {
-            return (
-              <li key={node.title}>
-                <SidebarLeaflets node={node} />
-              </li>
-            );
-          } else {
-            return (
-              <li key={node.uri}>
-                <Link to={node.uri}>{node.title}</Link>
-              </li>
-            );
-          }
-        })}
-      </ul>
-    </div>
-  );
-}
-
-function SidebarLeaflets({ node }) {
-  return (
-    <details open={node.open}>
-      <summary>
-        {node.uri ? <Link to={node.uri}>{node.title}</Link> : node.title}
-      </summary>
-      <ol>
-        {node.content.map((childNode) => {
-          if (childNode.content) {
-            return (
-              <li key={childNode.title}>
-                <SidebarLeaflets node={childNode} />
-              </li>
-            );
-          } else {
-            return (
-              <li
-                key={childNode.uri}
-                className={childNode.isActive && "active"}
-              >
-                <Link to={childNode.uri}>{childNode.title}</Link>
-              </li>
-            );
-          }
-        })}
-      </ol>
-    </details>
   );
 }
 

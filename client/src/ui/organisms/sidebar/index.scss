@@ -1,0 +1,29 @@
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/mixins/utils";
+
+.sidebar {
+  ol {
+    @include reset-list();
+  }
+
+  summary,
+  li {
+    margin-bottom: ($gap-width / 4);
+  }
+
+  a {
+    hyphens: auto;
+  }
+
+  code {
+    background-color: transparent;
+  }
+
+  summary {
+    cursor: pointer;
+  }
+
+  details {
+    margin: ($gap-width / 2) 0;
+  }
+}
