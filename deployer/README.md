@@ -32,7 +32,7 @@ into an existing S3 bucket. Currently, we have three main S3 buckets that we
 upload into: `mdn-content-dev` (for variations or experimental versions of
 the site), `mdn-content-stage`, and `mdn-content-prod`.
 
-As input, the `poetry run deployer upload` command takes a directory which
+As input, the `upload` command takes a directory which
 contains the files that should be uploaded, but it needs to know where to
 find any redirects that should be uploaded as well. By default it searches
 for redirects within the content directories specified by `--content-root`
