@@ -3,7 +3,7 @@
 The Yari deployer does two things. First, it's used to upload document
 redirects, pre-built document pages, static files (e.g. JS, CSS, and
 image files), and sitemap files into an existing AWS S3 bucket. Since
-we serve MDN document pages from a S3 bucket via a CloudFront CDN,
+we serve MDN document pages from an S3 bucket via a CloudFront CDN,
 this is the way we upload a new version of the site.
 
 Second, it is used to update and publish changes to existing AWS Lambda
