@@ -17,7 +17,6 @@ import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 // Misc
 // Sub-components
-// import { DocumentTranslations } from "./languages";
 import LanguageMenu from "../header/language-menu";
 import { TOC } from "./toc";
 
