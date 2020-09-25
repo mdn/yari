@@ -404,7 +404,6 @@ def upload_content(build_directory, content_roots, config):
                 on_task_complete=on_task_complete,
             )
 
-    log.error(f"Total failures: {totals.failed:,}")
 
     # Failed tasks are reported here if we're using the progress bar.
     for task in failed_tasks:
