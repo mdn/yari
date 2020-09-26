@@ -49,6 +49,17 @@ class Totals:
     uploaded_redirects: int = 0
     uploaded_files_size: int = 0
 
+    def count(self, task):
+        if task.skipped:
+            self.skipped += 1
+        elif task.error:
+            self.failed += 1
+        elif task.is_redirect:
+            self.uploaded_redirects += 1
+        else:
+            self.uploaded_files += 1
+            self.uploaded_files_size += task.size
+
 
 class DisplayProgress:
     def __init__(self, total_count, show_progress_bar=True):
@@ -60,24 +71,31 @@ class DisplayProgress:
                 show_percent=True,
                 length=total_count,
             )
+            self.failed_tasks = []
         else:
             self.progress_bar = None
 
     def __enter__(self):
         if self.progress_bar:
-            # Forces the progress-bar to show-up immediately.
             self.progress_bar.__enter__()
+            # Forces the progress-bar to show-up immediately.
             self.progress_bar.update(0)
         return self
 
     def __exit__(self, *exc_args):
         if self.progress_bar:
-            return self.progress_bar.__exit__(*exc_args)
+            self.progress_bar.__exit__(*exc_args)
+            # Now that we've left the progress bar, let's report
+            # any failed tasks.
+            for task in self.failed_tasks:
+                log_task(task)
         return False
 
     def update(self, task):
         if self.progress_bar:
             self.progress_bar.update(1)
+            if task.error:
+                self.failed_tasks.append(task)
         else:
             log_task(task)
 
@@ -374,7 +392,6 @@ def upload_content(build_directory, content_roots, config):
         log.info(f"{len(existing_bucket_objects):,} ({timer})")
 
     totals = Totals()
-    failed_tasks = []
 
     if dry_run:
         upload_timer = StopWatch()
@@ -385,17 +402,7 @@ def upload_content(build_directory, content_roots, config):
 
             def on_task_complete(task):
                 progress.update(task)
-                if task.skipped:
-                    totals.skipped += 1
-                elif task.error:
-                    totals.failed += 1
-                    if show_progress_bar:
-                        failed_tasks.append(task)
-                elif task.is_redirect:
-                    totals.uploaded_redirects += 1
-                else:
-                    totals.uploaded_files += 1
-                    totals.uploaded_files_size += task.size
+                totals.count(task)
 
             upload_timer = mgr.upload(
                 build_directory,
@@ -403,10 +410,6 @@ def upload_content(build_directory, content_roots, config):
                 existing_bucket_objects,
                 on_task_complete=on_task_complete,
             )
-
-    # Failed tasks are reported here if we're using the progress bar.
-    for task in failed_tasks:
-        log_task(task)
 
     log.info(
         f"Total uploaded files: {totals.uploaded_files:,} "
@@ -418,6 +421,4 @@ def upload_content(build_directory, content_roots, config):
     log.info(f"Done in {full_timer.stop()}.")
 
     if totals.failed:
-        raise click.ClickException(
-            f"There were {totals.failed} failures."
-        )
+        raise click.ClickException(f"There were {totals.failed} failures.")
