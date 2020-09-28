@@ -16,11 +16,12 @@ export function RenderSideBar({ doc }) {
     if (doc.sidebarHTML) {
       return (
         <SidebarContainer>
+          <h4>Related Topics</h4>
           <span
             dangerouslySetInnerHTML={{
-              __html: `<h4>Related Topics</h4>${doc.sidebarHTML}`,
+              __html: `${doc.sidebarHTML}`,
             }}
-          ></span>
+          />
         </SidebarContainer>
       );
     }
