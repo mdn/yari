@@ -1,14 +1,24 @@
 @import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
 @import "~@mdn/minimalist/sass/mixins/utils";
 
 .sidebar {
+  h4 {
+    margin-bottom: $base-spacing;
+  }
+
   ol {
     @include reset-list();
+
+    ol,
+    ul {
+      padding-left: $base-unit * 3;
+    }
   }
 
   summary,
   li {
-    margin-bottom: ($gap-width / 4);
+    margin-bottom: $base-unit * 3;
   }
 
   a {
@@ -24,6 +34,6 @@
   }
 
   details {
-    margin: ($gap-width / 2) 0;
+    margin: $base-spacing 0;
   }
 }
