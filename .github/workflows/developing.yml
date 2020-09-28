@@ -35,6 +35,13 @@ jobs:
         run: |
           ./testing/scripts/yarn-install.sh
 
+      - name: Setup kernel for react native, increase watchers
+        run: |
+          # When running Yari on Linux, you might get the
+          # "Error: ENOSPC: System limit for number of file watchers reached" error.
+          # This, resolves that.
+          echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
       - name: Start the dev server
         run: |
           # Remember, the mdn/content repo got cloned into `pwd` into a
@@ -43,7 +50,7 @@ jobs:
           echo "CONTENT_ROOT=$CONTENT_ROOT"
 
           yarn prepare-build
-          yarn start > /tmp/output.log &
+          yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
 
       - name: Wait for servers
         run: |
@@ -53,7 +60,7 @@ jobs:
           curl --retry-connrefused --retry 5 --silent http://localhost:5000
           curl --retry-connrefused --retry 5 --silent http://localhost:3000
 
-      - name: View the kitchensink
+      - name: Test viewing the dev server
         run: |
           # This will make sure the tests in `testing/tests/*.test.js` only run
           # if the development server is up and ready to be tested.
@@ -62,4 +69,11 @@ jobs:
           # The first argument makes it filter by file name.
           yarn test:testing developing
 
-          cat /tmp/output.log
+      - name: Dump server logs
+        run: |
+          # When we started the server(s) in the background, we dumped their
+          # stdout and stderr to temp files. Let's display them afterwards.
+          echo "STDOUT..................................................."
+          cat /tmp/stdout.log
+          echo "STDERR..................................................."
+          cat /tmp/stderr.log
