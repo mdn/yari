@@ -12,7 +12,9 @@ const {
   VALID_LOCALES,
   ROOTS,
 } = require("./constants");
-const getPopularities = require("./popularities");
+const { getPopularities } = require("./popularities");
+const { getWikiHistories } = require("./wikihistories");
+
 const { memoize, slugToFolder } = require("./utils");
 
 function buildPath(localeFolder, slug) {
@@ -21,7 +23,6 @@ function buildPath(localeFolder, slug) {
 
 const HTML_FILENAME = "index.html";
 const getHTMLPath = (folder) => path.join(folder, HTML_FILENAME);
-const getWikiHistoryPath = (folder) => path.join(folder, "wikihistory.json");
 
 function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
   const all = JSON.parse(
@@ -55,13 +56,20 @@ function extractLocale(folder) {
   return locale;
 }
 
-function saveHTMLFile(filePath, rawHTML, { slug, title, tags }) {
+function saveHTMLFile(
+  filePath,
+  rawHTML,
+  { slug, title, translation_of, tags }
+) {
   const metadata = {
     title,
     slug,
   };
   if (tags) {
     metadata.tags = tags;
+  }
+  if (translation_of) {
+    metadata.translation_of = translation_of;
   }
   const combined = `---\n${yaml.safeDump(metadata)}---\n${rawHTML.trim()}\n`;
   fs.writeFileSync(filePath, combined);
@@ -129,15 +137,24 @@ function archive(renderedHTML, rawHTML, metadata, isTranslatedContent = false) {
 }
 
 const read = memoize((folder) => {
-  const filePath = ROOTS.map((root) =>
-    path.join(root, getHTMLPath(folder))
-  ).find((filePath) => fs.existsSync(filePath));
-
+  let filePath = null;
+  let root = null;
+  for (const possibleRoot of ROOTS) {
+    const possibleFilePath = path.join(possibleRoot, getHTMLPath(folder));
+    if (fs.existsSync(possibleFilePath)) {
+      root = possibleRoot;
+      filePath = possibleFilePath;
+      break;
+    }
+  }
   if (!filePath) {
     return;
   }
+  const isTranslated =
+    CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT);
   const isArchive =
-    CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT);
+    isTranslated ||
+    (CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT));
 
   const rawContent = fs.readFileSync(filePath, "utf8");
   const {
@@ -148,11 +165,13 @@ const read = memoize((folder) => {
 
   const locale = extractLocale(folder);
   const url = `/${locale}/docs/${metadata.slug}`;
+  const wikiHistories = getWikiHistories(root, locale);
   const fullMetadata = {
     metadata: {
       ...metadata,
       locale,
       popularity: getPopularities().get(url) || 0.0,
+      modified: wikiHistories.has(url) ? wikiHistories.get(url).modified : null,
     },
     url,
   };
@@ -161,10 +180,12 @@ const read = memoize((folder) => {
     ...fullMetadata,
     ...{ rawHTML, rawContent },
     isArchive,
+    isTranslated,
     fileInfo: {
       folder,
       path: filePath,
       frontMatterOffset,
+      root,
     },
   };
 });
@@ -234,38 +255,56 @@ function findAll(
     throw new TypeError("'folderSearch' not a string");
 
   // TODO: doesn't support archive content yet
-  console.warn("Currently hardcoded to only build 'en-us'");
-  const filePaths = glob
-    .sync(path.join(CONTENT_ROOT, "en-us", "**", HTML_FILENAME))
-    .filter((filePath) => {
-      // The 'files' set is either a list of absolute full paths or a
-      // list of endings.
-      // Why endings? Because it's highly useful when you use git and the
-      // filepath might be relative to the git repo root.
-      if (files.size) {
-        if (files.has(filePath)) {
-          return true;
-        }
-        for (fp of files) {
-          if (filePath.endsWith(fp)) {
-            return true;
+  // console.warn("Currently hardcoded to only build 'en-us'");
+  const filePaths = [];
+  const roots = [];
+  if (CONTENT_ARCHIVED_ROOT) {
+    // roots.push({ path: CONTENT_ARCHIVED_ROOT, isArchive: true });
+    roots.push(CONTENT_ARCHIVED_ROOT);
+  }
+  if (CONTENT_TRANSLATED_ROOT) {
+    roots.push(CONTENT_TRANSLATED_ROOT);
+  }
+  roots.push(CONTENT_ROOT);
+  console.log("Building roots:", roots);
+  for (const root of roots) {
+    filePaths.push(
+      ...glob
+        .sync(path.join(root, "**", HTML_FILENAME))
+        .filter((filePath) => {
+          // The 'files' set is either a list of absolute full paths or a
+          // list of endings.
+          // Why endings? Because it's highly useful when you use git and the
+          // filepath might be relative to the git repo root.
+          if (files.size) {
+            if (files.has(filePath)) {
+              return true;
+            }
+            for (fp of files) {
+              if (filePath.endsWith(fp)) {
+                return true;
+              }
+            }
+            return false;
           }
-        }
-        return false;
-      }
-      if (folderSearch) {
-        return filePath
-          .replace(CONTENT_ROOT, "")
-          .replace(HTML_FILENAME, "")
-          .includes(folderSearch);
-      }
-      return true;
-    });
+          if (folderSearch) {
+            return filePath
+              .replace(CONTENT_ROOT, "")
+              .replace(HTML_FILENAME, "")
+              .includes(folderSearch);
+          }
+          return true;
+        })
+        .map((filePath) => {
+          return path.relative(root, path.dirname(filePath));
+        })
+    );
+  }
   return {
     count: filePaths.length,
     iter: function* () {
       for (const filePath of filePaths) {
-        yield read(path.relative(CONTENT_ROOT, path.dirname(filePath)));
+        yield read(filePath);
       }
     },
   };

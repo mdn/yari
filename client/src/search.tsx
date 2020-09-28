@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import FlexSearch from "flexsearch";
 import useSWR, { mutate } from "swr";
@@ -39,8 +39,11 @@ type SearchIndex = {
 function useSearchIndex(): [null | SearchIndex, null | Error, () => void] {
   const [shouldInitialize, setShouldInitialize] = useState(false);
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
+  const { locale } = useParams();
 
-  const url = `/en-US/search-index.json`;
+  // Default to 'en-US' if you're on the home page without the locale prefix.
+  const url = `/${locale || "en-US"}/search-index.json`;
+
   const { error, data } = useSWR<null | Item[]>(
     shouldInitialize ? url : null,
     async (url) => {

@@ -1,40 +1,18 @@
 const fs = require("fs");
 const path = require("path");
+const zlib = require("zlib");
 
 const cliProgress = require("cli-progress");
 
-const { CONTENT_ROOT, Document, slugToFolder } = require("../content");
+const { Document, slugToFolder } = require("../content");
 const { renderHTML } = require("../ssr/dist/main");
 
 const options = require("./build-options");
 const { buildDocument } = require("./index");
 const SearchIndex = require("./search-index");
 const { BUILD_OUT_ROOT } = require("./constants");
-
-function makeSitemapXML(locale, slugs) {
-  const wikiHistory = JSON.parse(
-    fs.readFileSync(
-      path.join(CONTENT_ROOT, locale.toLowerCase(), "_wikihistory.json"),
-      "utf-8"
-    )
-  );
-  return [
-    '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    ...slugs
-      .filter((slug) => slug in wikiHistory)
-      .map((slug) =>
-        [
-          "<url>",
-          `<loc>https://developer.mozilla.org/${locale}/docs/${slug}</loc>`,
-          `<lastmod>${wikiHistory[slug].modified}</lastmod>`,
-          "</url>",
-        ].join("")
-      ),
-    "</urlset>",
-    "",
-  ].join("\n");
-}
+const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
+const { CONTENT_TRANSLATED_ROOT } = require("../content/constants");
 
 async function buildDocuments() {
   const documents = Document.findAll(options);
@@ -43,7 +21,7 @@ async function buildDocuments() {
     cliProgress.Presets.shades_grey
   );
 
-  const slugPerLocale = {};
+  const docPerLocale = {};
   const searchIndex = new SearchIndex();
 
   if (!documents.count) {
@@ -52,10 +30,37 @@ async function buildDocuments() {
 
   let peakHeapBytes = 0;
 
+  // This builds up a mapping from en-US slugs to their translated slugs.
+  const translationsOf = new Map();
+
   !options.noProgressbar && progressBar.start(documents.count);
   for (const document of documents.iter()) {
     const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
     fs.mkdirSync(outPath, { recursive: true });
+
+    const { translation_of } = document.metadata;
+
+    // If it's a non-en-US document, it'll most likely have a `translation_of`.
+    // If so, add it to the map so that when we build the en-US one, we can
+    // get an index of the *other* translations available.
+    if (translation_of) {
+      if (!translationsOf.has(translation_of)) {
+        translationsOf.set(translation_of, []);
+      }
+      translationsOf.get(translation_of).push({
+        slug: document.metadata.slug,
+        locale: document.metadata.locale,
+      });
+      // This is a shortcoming. If this is a translated document, we don't have a
+      // complete mapping of all other translations. So, the best we can do is
+      // at least link to the English version.
+      // In 2021, when we refactor localization entirely, this will need to change.
+      // Perhaps, then, we'll do a complete scan through all content first to build
+      // up the map before we process each one.
+      document.translations = [];
+    } else {
+      document.translations = translationsOf.get(document.metadata.slug);
+    }
 
     const [builtDocument, liveSamples, fileAttachments] = await buildDocument(
       document
@@ -86,12 +91,15 @@ async function buildDocuments() {
 
     // Collect non-archived documents' slugs to be used in sitemap building and
     // search index building
-    if (!document.isArchive) {
+    if (!document.isArchive || document.isTranslated) {
       const { locale, slug } = document.metadata;
-      if (!slugPerLocale[locale]) {
-        slugPerLocale[locale] = [];
+      if (!docPerLocale[locale]) {
+        docPerLocale[locale] = [];
       }
-      slugPerLocale[locale].push(slug);
+      docPerLocale[locale].push({
+        slug,
+        modified: document.metadata.modified,
+      });
 
       searchIndex.add(document);
     }
@@ -109,16 +117,33 @@ async function buildDocuments() {
 
   !options.noProgressbar && progressBar.stop();
 
-  for (const [locale, slugs] of Object.entries(slugPerLocale)) {
+  const sitemapsBuilt = [];
+  for (const [locale, docs] of Object.entries(docPerLocale)) {
     const sitemapDir = path.join(
       BUILD_OUT_ROOT,
       "sitemaps",
       locale.toLowerCase()
     );
     fs.mkdirSync(sitemapDir, { recursive: true });
+    const sitemapFilePath = path.join(sitemapDir, "sitemap.xml.gz");
     fs.writeFileSync(
-      path.join(sitemapDir, "sitemap.xml"),
-      makeSitemapXML(locale, slugs)
+      sitemapFilePath,
+      zlib.gzipSync(makeSitemapXML(locale, docs))
+    );
+    sitemapsBuilt.push(sitemapFilePath);
+  }
+
+  // Only if you've just built all of CONTENT_ROOT and all of CONTENT_TRANSLATED_ROOT
+  // do we bother generating the combined sitemaps index file.
+  // That means, that if you've done this at least once, consequent runs of
+  // *only* CONTENT_ROOT will just keep overwriting the sitemaps/en-us/sitemap.xml.gz.
+  if (CONTENT_TRANSLATED_ROOT) {
+    const sitemapIndexFilePath = path.join(BUILD_OUT_ROOT, "sitemaps.xml");
+    fs.writeFileSync(
+      sitemapIndexFilePath,
+      makeSitemapIndexXML(
+        sitemapsBuilt.map((fp) => fp.replace(BUILD_OUT_ROOT, ""))
+      )
     );
   }
 
@@ -129,7 +154,7 @@ async function buildDocuments() {
       JSON.stringify(items)
     );
   }
-  return { slugPerLocale, peakHeapBytes };
+  return { slugPerLocale: docPerLocale, peakHeapBytes };
 }
 
 function humanFileSize(size) {

@@ -1005,14 +1005,7 @@ async function processDocument(
 }
 
 function getCleanedRenderedHTML(html) {
-  const $ = cheerio.load(`<div id="_body">${html}</div>`, {
-    // If you use decodeEntities:true (which is the default),
-    // it will turn HTML characters into HTML entities. E.g.
-    //   `<pre>console.log('hi')</pre>`
-    // would become:
-    //   `<pre>console.log(&apos;hi&apos;)</pre>`
-    decodeEntities: false,
-  });
+  const $ = cheerio.load(`<div id="_body">${html}</div>`);
   let mutations = 0;
 
   // This will only happen for fully rendered HTML.
