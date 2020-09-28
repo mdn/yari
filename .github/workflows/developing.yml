@@ -42,7 +42,8 @@ jobs:
           export CONTENT_ROOT=$(pwd)/mdn/content/files
           echo "CONTENT_ROOT=$CONTENT_ROOT"
 
-          yarn dev &
+          yarn prepare-build
+          yarn start &
 
       - name: Wait for servers
         run: |
