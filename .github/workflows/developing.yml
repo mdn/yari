@@ -1,0 +1,65 @@
+name: Developing with Yari
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v2
+        with:
+          repository: mdn/content
+          path: mdn/content
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.1
+        with:
+          node-version: "12"
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v2.1.1
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install all yarn packages
+        run: |
+          ./testing/scripts/yarn-install.sh
+
+      - name: Start the dev server
+        run: |
+          # Remember, the mdn/content repo got cloned into `pwd` into a
+          # sub-folder called "mdn/content"
+          export CONTENT_ROOT=$(pwd)/mdn/content/files
+          echo "CONTENT_ROOT=$CONTENT_ROOT"
+
+          yarn dev &
+
+      - name: Wait for servers
+        run: |
+          # On a laptop, as of Sept 2020, it takes about 15-25 seconds from
+          # typing `yarn dev` until you can reach the dev server on localhost:3000.
+          # Instead of cluttering with curl retry errors, don't even start until
+          # after a little sleep.
+          sleep 15
+
+          curl --retry-connrefused --retry 5 http://localhost:5000
+          curl --retry-connrefused --retry 5 http://localhost:3000
+
+      - name: View the kitchensink
+        run: |
+          # This will make sure the tests in `testing/tests/*.test.js` only run
+          # if the development server is up and ready to be tested.
+          export TESTING_DEVELOPING=true
+
+          # The first argument makes it filter by file name.
+          yarn test:testing developing
