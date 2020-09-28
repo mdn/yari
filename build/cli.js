@@ -30,7 +30,7 @@ async function buildDocuments() {
 
   let peakHeapBytes = 0;
 
-  // This builds up a mapping from en-US slugs to
+  // This builds up a mapping from en-US slugs to their translated slugs.
   const translationsOf = new Map();
 
   !options.noProgressbar && progressBar.start(documents.count);
@@ -47,10 +47,9 @@ async function buildDocuments() {
       if (!translationsOf.has(translation_of)) {
         translationsOf.set(translation_of, []);
       }
-      translationsOf.set(translation_of, [
-        ...translationsOf.get(translation_of),
-        { slug: document.metadata.slug, locale: document.metadata.locale },
-      ]);
+      translationsOf.get(translation_of).push(
+        { slug: document.metadata.slug, locale: document.metadata.locale }
+      );
       // This is a shortcoming. If this is a translated document, we don't have a
       // complete mapping of all other translations. So, the best we can do is
       // at least link to the English version.
