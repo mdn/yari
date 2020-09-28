@@ -47,9 +47,10 @@ async function buildDocuments() {
       if (!translationsOf.has(translation_of)) {
         translationsOf.set(translation_of, []);
       }
-      translationsOf.get(translation_of).push(
-        { slug: document.metadata.slug, locale: document.metadata.locale }
-      );
+      translationsOf.get(translation_of).push({
+        slug: document.metadata.slug,
+        locale: document.metadata.locale,
+      });
       // This is a shortcoming. If this is a translated document, we don't have a
       // complete mapping of all other translations. So, the best we can do is
       // at least link to the English version.
