@@ -3,18 +3,25 @@ import { Link } from "react-router-dom";
 
 import "./index.scss";
 
+function SidebarContainer({ children }) {
+  return (
+    <aside id="sidebar-quicklinks" className="sidebar">
+      {children}
+    </aside>
+  );
+}
+
 export function RenderSideBar({ doc }) {
-  console.log(doc);
   if (!doc.related_content) {
     if (doc.sidebarHTML) {
       return (
-        <aside
-          id="sidebar-quicklinks"
-          className="sidebar"
-          dangerouslySetInnerHTML={{
-            __html: `<h4>Related Topics</h4>${doc.sidebarHTML}`,
-          }}
-        />
+        <SidebarContainer>
+          <span
+            dangerouslySetInnerHTML={{
+              __html: `<h4>Related Topics</h4>${doc.sidebarHTML}`,
+            }}
+          ></span>
+        </SidebarContainer>
       );
     }
     return null;
@@ -26,7 +33,7 @@ export function RenderSideBar({ doc }) {
 
 function SidebarLeaf({ parent }) {
   return (
-    <aside id="sidebar-quicklinks" className="sidebar">
+    <SidebarContainer>
       <h4>{parent.title}</h4>
       <ul>
         {parent.content.map((node) => {
@@ -45,7 +52,7 @@ function SidebarLeaf({ parent }) {
           }
         })}
       </ul>
-    </aside>
+    </SidebarContainer>
   );
 }
 

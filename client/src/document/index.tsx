@@ -20,7 +20,7 @@ import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-t
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
 import { Titlebar } from "../ui/molecules/titlebar";
 import { TOC } from "../ui/molecules/toc";
-import { RenderSideBar } from "../ui/organisms/sidebar";
+import { RenderSideBar } from "./organisms/sidebar";
 
 import "./index.scss";
 

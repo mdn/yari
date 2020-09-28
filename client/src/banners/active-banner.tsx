@@ -150,25 +150,8 @@ function Banner(props: BannerProps) {
   );
 }
 
-export const MDN_BROWSER_COMPAT_REPORT_ID = "mdn_browser_compat_report";
 const DEVELOPER_NEEDS_ID = "developer_needs";
 const SUBSCRIPTION_ID = "subscription_banner";
-
-function MDNBrowserCompatReportBanner() {
-  return (
-    <Banner
-      id={MDN_BROWSER_COMPAT_REPORT_ID}
-      classname="developer-needs"
-      title={"MDN Browser Compatibility Report"}
-      copy={
-        "A deep dive into web compatibility frustrations, with useful insights into how they could be overcome."
-      }
-      cta={"Read the report"}
-      url={"https://insights.developer.mozilla.org/"}
-      newWindow
-    />
-  );
-}
 
 function DeveloperNeedsBanner() {
   return (
@@ -225,9 +208,7 @@ export default function ActiveBanner() {
 
   // The order of the if statements is important and it's our source of
   // truth about which banner is "more important" than the other.
-  if (isEnabled(MDN_BROWSER_COMPAT_REPORT_ID)) {
-    return <MDNBrowserCompatReportBanner />;
-  } else if (isEnabled(DEVELOPER_NEEDS_ID)) {
+  if (isEnabled(DEVELOPER_NEEDS_ID)) {
     return <DeveloperNeedsBanner />;
   } else if (isEnabled(SUBSCRIPTION_ID) && !userData.isSubscriber) {
     return <SubscriptionBanner />;
