@@ -5,7 +5,7 @@ const { setDefaultOptions } = require("expect-puppeteer");
 // The default it 500ms. Building and running these pages can be pretty slow
 // since the rendering both involves create-react-app bundling the test page,
 // and then the server building of the page can be pretty heavy.
-setDefaultOptions({ timeout: 1000 });
+setDefaultOptions({ timeout: 5000 });
 
 function devURL(pathname = "/") {
   return "http://localhost:3000" + pathname;
