@@ -40,6 +40,7 @@ jobs:
           # When running Yari on Linux, you might get the
           # "Error: ENOSPC: System limit for number of file watchers reached" error.
           # This, resolves that.
+          # Source https://github.com/expo/expo-github-action/issues/20#issuecomment-541676895
           echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
       - name: Start the dev server
@@ -57,8 +58,8 @@ jobs:
           # Just a slight delay to
           sleep 5
 
-          curl --retry-connrefused --retry 5 --silent http://localhost:5000
-          curl --retry-connrefused --retry 5 --silent http://localhost:3000
+          curl --retry-connrefused --retry 5 http://localhost:5000 > /dev/null
+          curl --retry-connrefused --retry 5 --silent http://localhost:3000 > /dev/null
 
       - name: Test viewing the dev server
         run: |
