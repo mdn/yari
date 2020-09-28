@@ -43,18 +43,15 @@ jobs:
           echo "CONTENT_ROOT=$CONTENT_ROOT"
 
           yarn prepare-build
-          yarn start &
+          yarn start > /tmp/output.log &
 
       - name: Wait for servers
         run: |
-          # On a laptop, as of Sept 2020, it takes about 15-25 seconds from
-          # typing `yarn dev` until you can reach the dev server on localhost:3000.
-          # Instead of cluttering with curl retry errors, don't even start until
-          # after a little sleep.
-          sleep 15
+          # Just a slight delay to
+          sleep 5
 
-          curl --retry-connrefused --retry 5 http://localhost:5000
-          curl --retry-connrefused --retry 5 http://localhost:3000
+          curl --retry-connrefused --retry 5 --silent http://localhost:5000
+          curl --retry-connrefused --retry 5 --silent http://localhost:3000
 
       - name: View the kitchensink
         run: |
@@ -64,3 +61,5 @@ jobs:
 
           # The first argument makes it filter by file name.
           yarn test:testing developing
+
+          cat /tmp/output.log
