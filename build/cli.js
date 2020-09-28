@@ -8,7 +8,7 @@ const { Document, slugToFolder } = require("../content");
 const { renderHTML } = require("../ssr/dist/main");
 
 const options = require("./build-options");
-const { buildDocument } = require("./index");
+const { buildDocument, renderContributorsTxt } = require("./index");
 const SearchIndex = require("./search-index");
 const { BUILD_OUT_ROOT } = require("./constants");
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
@@ -75,6 +75,10 @@ async function buildDocuments() {
       // This is exploiting the fact that renderHTML has the side-effect of mutating builtDocument
       // which makes this not great and refactor-worthy
       JSON.stringify({ doc: builtDocument })
+    );
+    fs.writeFileSync(
+      path.join(outPath, "contributors.txt"),
+      renderContributorsTxt(document.metadata.contributors)
     );
 
     for (const { id, html } of liveSamples) {

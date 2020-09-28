@@ -321,6 +321,11 @@ async function buildLiveSamplePageFromURL(url) {
   throw new Error(`No live-sample "${sampleID}" found within ${documentURL}`);
 }
 
+// This is used by the builder (yarn build) and by the server (JIT).
+function renderContributorsTxt(names) {
+  return `# Contributors to this:\n${names.join("\n")}\n`;
+}
+
 module.exports = {
   FLAW_LEVELS,
 
@@ -328,6 +333,7 @@ module.exports = {
 
   buildDocumentFromURL,
   buildLiveSamplePageFromURL,
+  renderContributorsTxt,
 
   SearchIndex,
 
