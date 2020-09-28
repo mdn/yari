@@ -53,9 +53,10 @@ Then, the only extra command needed is `git checkout -b my-new-branch`
 
 ## License
 
-All source code is MPL-2.0.
+All source code is [MPL-2.0](https://www.mozilla.org/en-US/MPL/2.0/).
 
-For content, see [issue #408](https://github.com/mdn/yari/issues/408).
+For content, see its [license](https://github.com/mdn/content/blob/main/LICENSE.md)
+in the [mdn/content repository](https://github.com/mdn/content).
 
 ## How it works
 
