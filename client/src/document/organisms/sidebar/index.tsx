@@ -5,9 +5,9 @@ import "./index.scss";
 
 function SidebarContainer({ children }) {
   return (
-    <aside id="sidebar-quicklinks" className="sidebar">
+    <nav id="sidebar-quicklinks" className="sidebar">
       {children}
-    </aside>
+    </nav>
   );
 }
 
@@ -17,7 +17,7 @@ export function RenderSideBar({ doc }) {
       return (
         <SidebarContainer>
           <h4>Related Topics</h4>
-          <span
+          <div
             dangerouslySetInnerHTML={{
               __html: `${doc.sidebarHTML}`,
             }}
