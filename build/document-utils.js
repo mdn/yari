@@ -14,7 +14,7 @@ function addBreadcrumbData(url, document) {
     // be a page on its own. For example: /en-US/docs/Web/ is a page,
     // and so is /en-US/ but there might not be a page for /end-US/docs/.
 
-    const parentDoc = Document.findByURL(parentURL, { metadata: true });
+    const parentDoc = Document.findByURL(parentURL);
     if (parentDoc) {
       parents.unshift({
         uri: parentURL,

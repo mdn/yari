@@ -1,101 +1,108 @@
-import functools
-import pkg_resources
 from pathlib import Path
 
 import click
 
+from . import __version__
 from .constants import (
-    DEFAULT_NAME,
-    DEFAULT_NAME_PATTERN,
-    DEFAULT_BUCKET,
-    S3_DEFAULT_BUCKET_LOCATION,
+    CONTENT_ROOT,
+    CONTENT_TRANSLATED_ROOT,
+    DEFAULT_BUCKET_NAME,
+    DEFAULT_BUCKET_PREFIX,
     DEFAULT_NO_PROGRESSBAR,
 )
-from .exceptions import CoreException
-from .upload import upload_site
-from .utils import error, info
-from . import __version__
+from .update_lambda_functions import update_all
+from .upload import upload_content
+from .utils import log
 
 
-def cli_wrap(fn):
-    @functools.wraps(fn)
-    def inner(*args, **kwargs):
-        try:
-            fn(*args, **kwargs)
-        except CoreException as exception:
-            info(exception.__class__.__name__)
-            error(str(exception))
-            raise click.Abort
+def validate_directory(ctx, param, value):
+    if not value:
+        raise click.BadParameter(f"{value!r}")
+    path = Path(value)
+    if not path.exists():
+        raise click.BadParameter(f"{value} does not exist")
+    elif not path.is_dir():
+        raise click.BadParameter(f"{value} is not a directory")
+    return path
 
-    return inner
+
+def validate_optional_directory(ctx, param, value):
+    if value:
+        return validate_directory(ctx, param, value)
 
 
 @click.group()
-@click.option("--debug/--no-debug", default=False)
-@click.version_option(version=__version__)
-@click.pass_context
-def cli(ctx, debug):
-    ctx.ensure_object(dict)
-    ctx.obj["debug"] = debug
-
-
-@cli.command()
-@click.pass_context
-@cli_wrap
-@click.option(
-    "--bucket",
-    default=DEFAULT_BUCKET,
-    help=f"Name of the bucket (default {DEFAULT_BUCKET!r})",
-)
-@click.option(
-    "--name",
-    default=DEFAULT_NAME,
-    help=f"Name of the site (default {DEFAULT_NAME_PATTERN!r})",
-)
-@click.option(
-    "--bucket-location",
-    default=S3_DEFAULT_BUCKET_LOCATION,
-    help=(
-        f"Name of the S3 bucket location (like 'us-east-1') "
-        f"(default {S3_DEFAULT_BUCKET_LOCATION!r})"
-    ),
-)
-@click.option(
-    "--refresh",  # XXX consider renaming this to "force-refresh"
-    default=False,
-    help="Ignores checking if files exist already",
-    show_default=True,
-    is_flag=True,
-)
-@click.option(
-    "--bucket-lifecycle-days",
-    required=False,
-    type=int,
-    help=(
-        "If specified, the number of days until uploaded objects are deleted. "
-        "(Only applicable when buckets are created!)"
-    ),
-)
 @click.option(
     "--dry-run",
     default=False,
-    help="No actual uploading",
+    help="Show what would be done, but don't actually do it.",
     show_default=True,
     is_flag=True,
+)
+@click.version_option(version=__version__)
+@click.pass_context
+def cli(ctx, **kwargs):
+    ctx.ensure_object(dict)
+    ctx.obj.update(kwargs)
+
+
+@cli.command()
+@click.argument(
+    "directory", type=click.Path(), callback=validate_directory, default="aws-lambda",
+)
+@click.pass_context
+def update_lambda_functions(ctx, directory):
+    log.info(f"Deployer ({__version__})", bold=True)
+    update_all(directory, dry_run=ctx.obj["dry_run"])
+
+
+@cli.command()
+@click.option(
+    "--bucket",
+    help="Name of the S3 bucket",
+    default=DEFAULT_BUCKET_NAME,
+    show_default=True,
+)
+@click.option(
+    "--prefix",
+    help="Upload into this folder of the S3 bucket instead of its root",
+    default=DEFAULT_BUCKET_PREFIX,
+    show_default=True,
+)
+@click.option(
+    "--force-refresh",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="Forces all files to be uploaded even if they already match what is in S3",
+)
+@click.option(
+    "--content-root",
+    help="The path to the root folder of the main content (defaults to CONTENT_ROOT)",
+    default=CONTENT_ROOT,
+    show_default=True,
+    callback=validate_directory,
+)
+@click.option(
+    "--content-translated-root",
+    help="The path to the root folder of the translated content (defaults to CONTENT_TRANSLATED_ROOT)",
+    default=CONTENT_TRANSLATED_ROOT,
+    show_default=True,
+    callback=validate_optional_directory,
 )
 @click.option(
     "--no-progressbar",
+    help="Don't show the progress bar",
     default=DEFAULT_NO_PROGRESSBAR,
-    help="Don't use an iteractive progress bar",
     show_default=True,
     is_flag=True,
 )
-@click.argument("directory", type=click.Path())
-def upload(ctx, directory, **kwargs):
-    p = Path(directory)
-    if not p.exists():
-        error(f"{directory} does not exist")
-        raise click.Abort
-
+@click.argument("directory", type=click.Path(), callback=validate_directory)
+@click.pass_context
+def upload(ctx, directory: Path, **kwargs):
+    log.info(f"Deployer ({__version__})", bold=True)
+    content_roots = [kwargs["content_root"]]
+    if kwargs["content_translated_root"]:
+        content_roots.append(kwargs["content_translated_root"])
     ctx.obj.update(kwargs)
-    upload_site(directory, ctx.obj)
+    upload_content(directory, content_roots, ctx.obj)

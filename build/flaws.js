@@ -11,7 +11,6 @@ const {
   findMatchesInText,
   replaceMatchesInText,
 } = require("./matches-in-text");
-const { fstat } = require("fs-extra");
 
 function injectFlaws(doc, $, options, { rawContent }) {
   if (doc.isArchive) return;
@@ -94,7 +93,7 @@ function injectFlaws(doc, $, options, { rawContent }) {
         // Got to fake the domain to sensible extract the .search and .hash
         const absoluteURL = new URL(href, "http://www.example.com");
         const hrefNormalized = href.split("#")[0];
-        const found = Document.findByURL(hrefNormalized, { metadata: true });
+        const found = Document.findByURL(hrefNormalized);
         if (!found) {
           // Before we give up, check if it's a redirect
           const resolved = Redirect.resolve(hrefNormalized);
@@ -104,9 +103,7 @@ function injectFlaws(doc, $, options, { rawContent }) {
             // For example, there might be a redirect but where it
             // goes to is not in this.allTitles.
             // This can happen if it's a "fundamental redirect" for example.
-            const finalDocument = Document.findByURL(resolved, {
-              metadata: true,
-            });
+            const finalDocument = Document.findByURL(resolved);
             addBrokenLink(
               a,
               checked.get(href),
@@ -216,13 +213,9 @@ async function fixFixableFlaws(doc, options, document) {
     // is because the raw HTML we're dealing with isn't actually proper
     // HTML. It's only proper HTML when the kumascript macros have been
     // expanded.
-    const htmlBefore = newRawHTML;
     newRawHTML = replaceMatchesInText(flaw.href, newRawHTML, flaw.suggestion, {
       inAttribute: "href",
     });
-    if (htmlBefore !== newRawHTML) {
-      // flaw.fixed = !options.fixFlawsDryRun;
-    }
     if (loud) {
       console.log(
         chalk.grey(
@@ -243,7 +236,6 @@ async function fixFixableFlaws(doc, options, document) {
     // is because the raw HTML we're dealing with isn't actually proper
     // HTML. It's only proper HTML when the kumascript macros have been
     // expanded.
-    const htmlBefore = newRawHTML;
     let newSrc;
     if (flaw.externalImage) {
       // Sanity check that it's an external image

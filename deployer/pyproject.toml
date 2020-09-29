@@ -17,9 +17,9 @@ python-decouple = "^3.3"
 black = "^19.10b0"
 flake8 = "^3.8.2"
 
+[tool.poetry.scripts]
+deployer = "deployer.main:cli"
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
 
-[tool.poetry.scripts]
-deployer = "deployer.main:cli"

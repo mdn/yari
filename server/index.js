@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
+const chalk = require("chalk");
 const express = require("express");
 const send = require("send");
 const proxy = require("express-http-proxy");
@@ -137,7 +138,11 @@ app.get("/*", async (req, res) => {
     // iff it exists on disk.
     const filePath = Image.findByURL(req.url);
     if (filePath) {
-      return send(req, filePath).pipe(res);
+      // The second parameter to `send()` has to be either a full absolute
+      // path or a path that doesn't start with `../` otherwise you'd
+      // get a 403 Forbidden.
+      // See https://github.com/mdn/yari/issues/1297
+      return send(req, path.resolve(filePath)).pipe(res);
     } else {
       return res.status(404).send("File not found on disk");
     }
@@ -162,7 +167,13 @@ app.get("/*", async (req, res) => {
   let document;
   try {
     console.time(`buildDocumentFromURL(${lookupURL})`);
-    document = await buildDocumentFromURL(lookupURL);
+    document = await buildDocumentFromURL(lookupURL, {
+      // The only times the server builds on the fly is basically when
+      // you're in "development mode". And when you're not building
+      // to ship you don't want the cache to stand have any hits
+      // since it might prevent reading fresh data from disk.
+      clearKumascriptRenderCache: true,
+    });
     console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
   } catch (error) {
     console.error(`Error in buildDocumentFromURL(${lookupURL})`, error);
@@ -195,5 +206,29 @@ app.get("/*", async (req, res) => {
   }
 });
 
+if (!fs.existsSync(path.resolve(CONTENT_ROOT))) {
+  console.log(chalk.red(`${path.resolve(CONTENT_ROOT)} does not exist!`));
+  process.exit(1);
+}
+
+console.log(
+  `CONTENT_ROOT: ${chalk.bold(CONTENT_ROOT)}`,
+  path.resolve(CONTENT_ROOT) !== CONTENT_ROOT
+    ? chalk.grey(`(absolute path: ${path.resolve(CONTENT_ROOT)})`)
+    : ""
+);
+
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
+  if (process.env.EDITOR) {
+    console.log(`Your EDITOR is set to: ${chalk.bold(process.env.EDITOR)}`);
+  } else {
+    console.warn(
+      chalk.yellow(
+        "Warning! You have not set an EDITOR environment variable. " +
+          'Using the "Edit in your editor" button will probably fail.'
+      )
+    );
+  }
+});

@@ -23,6 +23,9 @@ console.assert(CONTENT_ROOT, "CONTENT_ROOT must be set");
 
 const MAX_OPEN_FILES = 256;
 
+// Contributors, from the revisions, that we deliberately ignore.
+const IGNORABLE_CONTRIBUTORS = new Set(["mdnwebdocs-bot"]);
+
 // Any slug that starts with one of these prefixes goes into a different
 // folder; namely the archive folder.
 // Case matters but 100% of Prod slugs are spelled like this. I.e.
@@ -318,17 +321,6 @@ function startsWithArchivePrefix(uri) {
 
 function isArchiveRedirect(uri) {
   return redirectsToArchive.has(uri) || startsWithArchivePrefix(uri);
-}
-
-// Turn a Map instance into a object.
-// This is something you might need to do when serializing a Map
-// with JSON.stringify().
-function mapToObject(map) {
-  const obj = Object.create(null);
-  for (const [key, value] of map) {
-    obj[key] = value;
-  }
-  return obj;
 }
 
 async function populateRedirectInfo(pool, constraintsSQL, queryArgs) {
@@ -990,35 +982,30 @@ async function processDocument(
     meta.tags = docTags.sort();
   }
 
-  const docContributors = (contributors[doc.id] || []).map(
-    (userId) => usernames[userId]
-  );
+  const docContributors = (contributors[doc.id] || [])
+    .map((userId) => usernames[userId])
+    .filter((username) => !IGNORABLE_CONTRIBUTORS.has(username));
   if (docContributors.length) {
     wikiHistory.contributors = docContributors;
   }
 
-  if (isArchive) {
+  localeWikiHistory.set(doc.slug, wikiHistory);
+  if (isArchive || doc.locale !== "en-US") {
     Document.archive(
       getCleanedRenderedHTML(doc.rendered_html),
       doc.html,
       meta,
-      wikiHistory
+      // The Document.archive() is used for genuinely archived content,
+      // but we also treat translated content the same way ultimately.
+      !isArchive
     );
   } else {
-    localeWikiHistory.set(doc.slug, wikiHistory);
     Document.create(getCleanedKumaHTML(doc.html), meta);
   }
 }
 
 function getCleanedRenderedHTML(html) {
-  const $ = cheerio.load(`<div id="_body">${html}</div>`, {
-    // If you use decodeEntities:true (which is the default),
-    // it will turn HTML characters into HTML entities. E.g.
-    //   `<pre>console.log('hi')</pre>`
-    // would become:
-    //   `<pre>console.log(&apos;hi&apos;)</pre>`
-    decodeEntities: false,
-  });
+  const $ = cheerio.load(`<div id="_body">${html}</div>`);
   let mutations = 0;
 
   // This will only happen for fully rendered HTML.
@@ -1027,6 +1014,11 @@ function getCleanedRenderedHTML(html) {
     const $element = $(element);
     $element.removeAttr("title");
     mutations++;
+  });
+
+  $("div.bc-data[id]").each((i, element) => {
+    const $element = $(element);
+    $element.empty();
   });
 
   if (mutations) {
@@ -1094,7 +1086,7 @@ async function saveAllRedirects(redirects) {
   }
 }
 
-async function saveAllWikiHistory(allHistory) {
+async function saveWikiHistory(allHistory, isArchive) {
   /**
    * The 'allHistory' is an object that looks like this:
    *
@@ -1111,7 +1103,11 @@ async function saveAllWikiHistory(allHistory) {
    */
 
   for (const [locale, history] of allHistory) {
-    const root = locale === "en-US" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+    const root = isArchive
+      ? CONTENT_ARCHIVED_ROOT
+      : locale === "en-US"
+      ? CONTENT_ROOT
+      : CONTENT_TRANSLATED_ROOT;
     const localeFolder = path.join(root, locale.toLowerCase());
     const filePath = path.join(localeFolder, "_wikihistory.json");
     const obj = Object.create(null);
@@ -1188,6 +1184,7 @@ module.exports = async function runImporter(options) {
   let fastForwardedRedirects = 0;
 
   const allWikiHistory = new Map();
+  const archiveWikiHistory = new Map();
 
   for await (const row of documents.stream) {
     processedDocumentsCount++;
@@ -1234,14 +1231,22 @@ module.exports = async function runImporter(options) {
         }
       } else {
         assert(row.locale);
-        if (!allWikiHistory.has(row.locale)) {
-          allWikiHistory.set(row.locale, new Map());
+        if (isArchive) {
+          if (!archiveWikiHistory.has(row.locale)) {
+            archiveWikiHistory.set(row.locale, new Map());
+          }
+        } else {
+          if (!allWikiHistory.has(row.locale)) {
+            allWikiHistory.set(row.locale, new Map());
+          }
         }
         await processDocument(
           row,
           options,
           isArchive,
-          allWikiHistory.get(row.locale),
+          isArchive
+            ? archiveWikiHistory.get(row.locale)
+            : allWikiHistory.get(row.locale),
           {
             usernames,
             contributors,
@@ -1266,7 +1271,8 @@ module.exports = async function runImporter(options) {
   }
 
   pool.end();
-  await saveAllWikiHistory(allWikiHistory);
+  await saveWikiHistory(allWikiHistory, false);
+  await saveWikiHistory(archiveWikiHistory, true);
   await saveAllRedirects(redirects);
 
   if (improvedRedirects) {

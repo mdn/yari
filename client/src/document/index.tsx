@@ -17,7 +17,7 @@ import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 // Misc
 // Sub-components
-import { DocumentTranslations } from "./languages";
+import LanguageMenu from "../header/language-menu";
 import { TOC } from "./toc";
 
 import "./index.scss";
@@ -91,13 +91,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
     return null;
   }
 
-  const translations = [...(doc.other_translations || [])];
-  if (doc.translation_of) {
-    translations.unshift({
-      locale: "en-US",
-      slug: doc.translation_of,
-    });
-  }
+  const translations = doc.other_translations || [];
 
   const { github_url, folder } = doc.source;
 
@@ -105,6 +99,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <main>
+      {doc.isArchive && <Archived doc={doc} />}
       {!isServer && CRUD_MODE && !doc.isArchive && (
         <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
           <Toolbar doc={doc} />
@@ -123,7 +118,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
             </nav>
 
             {translations && !!translations.length && (
-              <DocumentTranslations translations={translations} />
+              <LanguageMenu translations={translations} locale={locale} />
             )}
           </div>
         </div>
@@ -150,16 +145,20 @@ export function Document(props /* TODO: define a TS interface for this */) {
               </header>
               <ul>
                 <li className="last-modified">
-                  <LastModified value={doc.modified} locale={locale} />,{" "}
-                  <a
-                    href={github_url}
-                    title={`Folder: ${folder}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Edit on <b>GitHub</b>
-                  </a>
+                  <LastModified value={doc.modified} locale={locale} />
                 </li>
+                {!doc.isArchive && (
+                  <li className="edit-on-github">
+                    <a
+                      href={github_url}
+                      title={`Folder: ${folder}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Edit on <b>GitHub</b>
+                    </a>
+                  </li>
+                )}
               </ul>
             </section>
           </div>
@@ -193,6 +192,29 @@ function LastModified({ value, locale }) {
         {date.toLocaleString(locale, dateStringOptions)}
       </time>
     </>
+  );
+}
+
+function Archived({ doc }: { doc: Doc }) {
+  return (
+    <div className={`archived ${doc.isTranslated ? "translated" : ""}`}>
+      {doc.isTranslated ? (
+        <p>
+          <b>This is an archived translation.</b>{" "}
+          <a
+            href="https://blogpost.example.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            No more edits are being accepted.
+          </a>
+        </p>
+      ) : (
+        <p>
+          <b>This is an archived page.</b> It's not actively maintained.
+        </p>
+      )}
+    </div>
   );
 }
 
