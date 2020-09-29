@@ -1739,10 +1739,10 @@
   resolved "https://registry.yarnpkg.com/@mdn/dinocons/-/dinocons-0.0.7.tgz#da8bad885b4c1a4c4ca4ae89c74e4c7beb0307d1"
   integrity sha512-Z6Ie0yOtlcC8WgLunqC4ztkdyKoyh/35gt4H1gYWxa7+TjCzVC9er4MeOOf85MxPwcYDCRUXJFryY4rrKPamRA==
 
-"@mdn/minimalist@^0.0.28":
-  version "0.0.28"
-  resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-0.0.28.tgz#7666788c37304747ff88969940fc1aac7e6ff0a7"
-  integrity sha512-LeDVHNIyIB+JG7abC/SO9zOxVxh8eC6l+iDcRmYmuqQL0MRsD9JiNfw8EYbUArajUILQvPSi3QPQppGfiGxKWQ==
+"@mdn/minimalist@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-0.0.41.tgz#a5b9fe47c862e1f0bf565b8aa600080743045597"
+  integrity sha512-wZvkjc697jy95Lz8snj/cXdGBIQX0eSlokPGj4fvtPlrUyUp3YZrCcPEr1pMRT65adNKDuDdtbIbb9oWfKeLBg==
 
 "@mdx-js/loader@^1.5.1":
   version "1.6.16"
@@ -2839,10 +2839,10 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@^26.0.13":
-  version "26.0.13"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-26.0.13.tgz#5a7b9d5312f5dd521a38329c38ee9d3802a0b85e"
-  integrity sha512-sCzjKow4z9LILc6DhBvn5AkIfmQzDZkgtVVKmGwVrs5tuid38ws281D4l+7x1kP487+FlKDh5kfMZ8WSPAdmdA==
+"@types/jest@^26.0.14":
+  version "26.0.14"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-26.0.14.tgz#078695f8f65cb55c5a98450d65083b2b73e5a3f3"
+  integrity sha512-Hz5q8Vu0D288x3iWXePSn53W7hAjP0H7EQ6QvDO9c7t46mR0lNOLlfuwQ+JkVxuhygHzlzPX+0jKdA3ZgSh+Vg==
   dependencies:
     jest-diff "^25.2.1"
     pretty-format "^25.2.1"

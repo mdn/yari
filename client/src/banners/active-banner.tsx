@@ -203,7 +203,8 @@ export default function ActiveBanner() {
   }
 
   const isEnabled = (id: string) =>
-    userData.waffle.flags[id] && !isEmbargoed(id);
+    (userData.waffle.flags[id] || userData.waffle.switches[id]) &&
+    !isEmbargoed(id);
 
   // The order of the if statements is important and it's our source of
   // truth about which banner is "more important" than the other.

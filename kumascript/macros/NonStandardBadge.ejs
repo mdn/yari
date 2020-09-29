@@ -40,46 +40,13 @@ var titleAttrValue = mdn.localString({
     "zh-TW": "This API has not been standardized.",
     "en-US": "This API has not been standardized."
 });
-
-var str = "";
-
-if ($0) {
-    %><span title="<%=titleAttrValue%>" class="icon-only-inline"><i class="icon-warning-sign"> </i></span><%
-} else {
-    str = mdn.localString({
-        "ca": "Non-standard",
-        "cs": "Non-standard",
-        "de": "Non-standard",
-        "el": "Non-standard",
-        "es": "Non-standard",
-        "fa": "Non-standard",
-        "fi": "Non-standard",
-        "fr": "Non standard",
-        "he": "לא סטנדרטי",
-        "hr": "Non-standard",
-        "hu": "Non-standard",
-        "id": "Non-standard",
-        "it": "Non-standard",
-        "ja": "非標準",
-        "ka": "Non-standard",
-        "ko": "Non-standard",
-        "ms": "Non-standard",
-        "nl": "Non-standard",
-        "pl": "Non-standard",
-        "ro": "Non-standard",
-        "ru": "Нестандартное",
-        "sq": "Non-standard",
-        "th": "Non-standard",
-        "tr": "Non-standard",
-        "vi": "Non-standard",
-        "bn-BD": "Non-standard",
-        "fy-NL": "Non-standard",
-        "ga-IE": "Non-standard",
-        "pt-BR": "Non-standard",
-        "pt-PT": "Non-standard",
-        "zh-CN": "非标准",
-        "zh-TW": "非標準",
-        "en-US": "Non-standard"
-    });
-    %><%-await template("SimpleBadge", [str, "nonstandardBadge", titleAttrValue])%><%
-}%>
+%>
+<svg class="icon experimental" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+    role="img">
+    <title><%=titleAttrValue%></title>
+    <path
+        d="M50 92.5H6.09a4.47 4.47 0 01-3.87-6.71l22-38 22-38a4.46 4.46 0 017.74 0l22 38 22 38a4.47 4.47 0 01-3.87 6.71z" />
+    <path
+        d="M57.41 78.1A7.41 7.41 0 1150 70.7a7.39 7.39 0 017.41 7.4zm-2.14-14.89H44.81l-1.72-36h13.82z"
+        fill="#fff" />
+</svg>
