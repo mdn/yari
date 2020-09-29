@@ -128,12 +128,12 @@ When doing local development, it's recommended to set this to
 
 The base URL used in the Interactive Example iframes.
 
-### `BUILD_LOG_MACROS_USED_LOGFILE`
+### `BUILD_MACROS_USED_LOGFILE`
 
 **Default `not set`**
 
 This needs to be be a file path.
-E.g. `export BUILD_LOG_MACROS_USED_LOGFILE=/tmp/macros-used.log`
+E.g. `export BUILD_MACROS_USED_LOGFILE=/tmp/macros-used.log`
 It will write one line for every (normalized) macro name used and its
 arguments in rendering.
 
