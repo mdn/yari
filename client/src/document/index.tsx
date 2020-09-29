@@ -149,9 +149,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
             </div>
           </article>
         </main>
+        {doc.sidebarHTML && <RenderSideBar doc={doc} />}
       </div>
-
-      {doc.sidebarHTML && <RenderSideBar doc={doc} />}
     </>
   );
 }
