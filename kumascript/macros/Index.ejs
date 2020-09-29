@@ -42,12 +42,23 @@ var section = $0;
 
 var pageList = await page.subpagesExpand(section, '', true);
 var result = [];
+var urlsSeen = new Set();
 
 function getPages(pageList) {
     if (pageList) {
         for (var i = 0; i < pageList.length; i++) {
-            result.push({title: pageList[i].title.replace(/</g,'&lt;').replace(/>/g,'&gt;'), url: pageList[i].url, tags: [...pageList[i].tags].sort(), summary: pageList[i].summary || '<strong>No summary!</strong>'})
-            var subpage = getPages(pageList[i].subpages);
+            var page = pageList[i];
+            if (urlsSeen.has(page.url)) {
+                continue;
+            }
+            urlsSeen.add(page.url);
+            result.push({
+                title: page.title.replace(/</g,'&lt;').replace(/>/g,'&gt;'),
+                url: page.url,
+                tags: [...page.tags].sort(),
+                summary: page.summary || '<strong>No summary!</strong>'
+            })
+            getPages(pageList[i].subpages);
         }
     }
 }
