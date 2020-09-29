@@ -322,8 +322,13 @@ async function buildLiveSamplePageFromURL(url) {
 }
 
 // This is used by the builder (yarn build) and by the server (JIT).
-function renderContributorsTxt(names) {
-  return `# Contributors to this:\n${names.join("\n")}\n`;
+function renderContributorsTxt(names, githubURL = null) {
+  let txt = "";
+  if (githubURL) {
+    // Always show this first
+    txt += `# Contributors by commit history\n${githubURL}\n\n`;
+  }
+  return txt + `# Original Wiki contributors\n${names.join("\n")}\n`;
 }
 
 module.exports = {

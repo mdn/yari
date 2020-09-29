@@ -76,10 +76,17 @@ async function buildDocuments() {
       // which makes this not great and refactor-worthy
       JSON.stringify({ doc: builtDocument })
     );
-    fs.writeFileSync(
-      path.join(outPath, "contributors.txt"),
-      renderContributorsTxt(document.metadata.contributors)
-    );
+    if (document.metadata.contributors) {
+      fs.writeFileSync(
+        path.join(outPath, "contributors.txt"),
+        renderContributorsTxt(
+          document.metadata.contributors,
+          !document.isArchive
+            ? builtDocument.source.github_url.replace("/blob/", "/commits/")
+            : null
+        )
+      );
+    }
 
     for (const { id, html } of liveSamples) {
       const liveSamplePath = path.join(outPath, "_samples_", id, "index.html");
