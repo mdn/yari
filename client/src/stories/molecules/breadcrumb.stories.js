@@ -1,11 +1,13 @@
-import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
+import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import { Breadcrumbs } from "../../ui/molecules/breadcrumbs";
 
-<Meta title="Docs/Molecules/Breadcrumbs" component={Breadcrumbs} />
+export default {
+  title: "Molecules/Breadcrumbs",
+};
 
-export const parents = [
+const parents = [
   {
     uri: "/en-US/docs/Web",
     title: "Web technology for developers",
@@ -24,12 +26,10 @@ export const parents = [
   },
 ];
 
-# Breadcrumbs
-
-<Canvas>
-  <Story name="Breadcrumbs">
+export const breadcrumbs = () => {
+  return (
     <Router>
       <Breadcrumbs parents={parents} />
     </Router>
-  </Story>
-</Canvas>
+  );
+};

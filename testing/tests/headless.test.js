@@ -161,7 +161,7 @@ describe("Basic viewing of functional pages", () => {
     // For more information, see
     // https://github.com/puppeteer/puppeteer/issues/2977#issuecomment-412807613
     await page.evaluate(() => {
-      document.querySelector("nav.breadcrumbs a").click();
+      document.querySelector(".breadcrumbs a").click();
     });
     await expect(page).toMatchElement("h1", {
       text: "Web technology for developers",
