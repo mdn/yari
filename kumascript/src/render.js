@@ -211,13 +211,6 @@ async function render(
       if (!priorResult) {
         signatureToResult.set(token.signature, currentResult);
       }
-      if (process.env.BUILD_LOG_MACROS_USED) {
-        fs.appendFileSync(
-          process.env.BUILD_LOG_MACROS_USED,
-          `${macroName}|${token.args}\n`,
-          "utf-8"
-        );
-      }
       // Now start rendering this macro.
       try {
         currentResult.output = await templates.render(
