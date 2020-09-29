@@ -13,52 +13,6 @@ For [more on Sass head over to the website](https://sass-lang.com/).
 ## Formatting
 
 All formatting for `SCSS` and `CSS` files are auto formatted using [Prettier](https://prettier.io) defaults.
-All projects should have the following dependencies installed and base configuration.
-
-In the root of the project should be a file called `.prettierrc` with the following contents:
-
-```json
-{}
-```
-
-### Dependencies
-
-- [Prettier](https://www.npmjs.com/package/prettier)
-- [pretty-quick](https://www.npmjs.com/package/pretty-quick)
-- [husky](https://www.npmjs.com/package/husky)
-
-Install the above with:
-
-```bash
-yarn add prettier pretty-quick husky --dev
-```
-
-### NPM scripts
-
-Inside `package.json` add the following inside the `scripts` block:
-
-```json
-...
-"scripts": {
-  ...
-  "precommit": "npm run prettier:staged",
-  "prettier:check": "prettier --check **/*.scss",
-  "prettier:format": "prettier --write **/*.scss",
-  "prettier:staged": "pretty-quick --staged --pattern \"**/*.scss\"",
-  ...
-},
-...
-```
-
-You also need to tell Husky to run our `precommit` hook. Add the following to the end of your `package.json`
-
-```json
-"husky": {
-  "hooks": {
-    "pre-commit": "yarn run precommit"
-  }
-}
-```
 
 ### Configure your editor
 
@@ -71,62 +25,6 @@ can simply let Prettier take care of it o/\o
 ## Linting
 
 Besides code style, we also enforce some general code quality via [Stylelint](https://stylelint.io/).
-
-The following configuration and dependencies need to be present for all projects.
-
-In the root of the project add a file named `.stylelintrc.json` with the following contents:
-
-```json
-{
-  "extends": [
-    "stylelint-config-recommended",
-    "stylelint-config-recommended-scss",
-    "stylelint-config-sass-guidelines",
-    "stylelint-a11y/recommended",
-    "stylelint-prettier/recommended"
-  ],
-  "rules": {
-    "max-nesting-depth": 2,
-    "declaration-no-important": true,
-    "font-weight-notation": "named-where-possible",
-    "color-hex-length": "short",
-    "selector-pseudo-element-colon-notation": "double"
-  }
-}
-```
-
-### Dependencies
-
-- [stylelint](https://www.npmjs.com/package/stylelint)
-- [stylelint-a11y](https://www.npmjs.com/package/stylelint-a11y)
-- [stylelint-prettier](https://www.npmjs.com/package/stylelint-prettier)
-- [stylelint-config-prettier](https://www.npmjs.com/package/stylelint-config-prettier)
-- [stylelint-config-recommended](https://www.npmjs.com/package/stylelint-config-recommended)
-
-Because we use [`Sass\SCSS`](https://sass-lang.com/) to write our `CSS`, you also need the following:
-
-- [stylelint-scss](https://www.npmjs.com/package/stylelint-scss)
-- [stylelint-config-sass-guidelines](https://www.npmjs.com/package/stylelint-config-sass-guidelines)
-
-For details on the rules enabled by `stylelint-config-sass-guidelines`, please see the [SASS Guidelines website](https://sass-guidelin.es/).
-
-```bash
-yarn add stylelint stylelint-a11y stylelint-prettier stylelint-config-prettier stylelint-config-recommended stylelint-scss stylelint-config-sass-guidelines --dev
-```
-
-### NPM scripts
-
-Inside `package.json` add the following inside the `scripts` block:
-
-```json
-...
-"scripts": {
-  ...
-  "lint": "stylelint sass/**/*.scss",
-  ...
-},
-...
-```
 
 ### Configure your editor
 

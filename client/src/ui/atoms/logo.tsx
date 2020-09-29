@@ -5,12 +5,12 @@ import { ReactComponent as LogoSVG } from "../../assets/logo.svg";
 
 import "./logo.scss";
 
-export function Logo() {
+export function Logo({ mode }: { mode?: string }) {
   const locale = useLocale();
 
   return (
     <a href={`/${locale}`} className="logo" aria-label="MDN Web Docs">
-      <LogoSVG />
+      <LogoSVG fill={mode === "dark" ? "#fff" : undefined} />
     </a>
   );
 }
