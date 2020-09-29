@@ -517,7 +517,7 @@ test("detect bad_bcd_links flaws from", () => {
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.flaws.bad_bcd_links.length).toBe(1);
-  // The reasons it's a bad link is because the mdn-browser-compat-data,
+  // The reasons it's a bad link is because the @mdn/browser-compat-data,
   // for the query `api.Document.visibilityState` refers to a page
   // with mdn_url `/en-US/docs/Web/API/Document/visibilityState` which we
   // don't have. At least not in the testing content :)
@@ -604,4 +604,23 @@ test("image flaws", () => {
       expect(src.startsWith("/en-US/docs/Web/")).toBeTruthy();
     }
   });
+});
+
+test("chicken_and_egg page should build with flaws", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "docs", "chicken_and_egg");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.macros.length).toBe(1);
+  // The filepath will be that of the "egg" or the "childen" page.
+  // Let's not try to predict which one exactly, because that'd mean this
+  // test would need to use the exact same sort order as the glob used
+  // when we ran "yarn build" to set up the build fixtures.
+  const flaw = doc.flaws.macros[0];
+  expect(flaw.name).toBe("MacroExecutionError");
+  expect(
+    flaw.errorStack.includes(
+      "documents form a circular dependency when rendering"
+    )
+  ).toBeTruthy();
 });

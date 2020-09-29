@@ -27,7 +27,7 @@ function normalizeBCDURLs(doc, options) {
   }
 
   function getPathFromAbsoluteURL(absURL) {
-    // Because the compat data is mutated out of mdn-browser-compat-data,
+    // Because the compat data is mutated out of @mdn/browser-compat-data,
     // through our `packageBCD` function, it's very possible that
     // the `doc[i].type === 'browser_compatibility` has already been
     // processed.
@@ -76,9 +76,7 @@ function normalizeBCDURLs(doc, options) {
       // Now we need to scrutinize if that's a url we can fully
       // recognize. (But only if it's a relative link)
       const urlLC = url.toLowerCase();
-      const found = Document.findByURL(urlLC, {
-        metadata: true,
-      });
+      const found = Document.findByURL(urlLC);
       if (found) {
         continue;
       }
@@ -94,9 +92,7 @@ function normalizeBCDURLs(doc, options) {
         // For example, there might be a redirect but where it
         // goes to is not in this.allTitles.
         // This can happen if it's a "fundamental redirect" for example.
-        const finalDocument = Document.findByURL(resolved, {
-          metadata: true,
-        });
+        const finalDocument = Document.findByURL(resolved);
         const suggestion = finalDocument ? finalDocument.url : null;
         addBadBCDLinkFlaw(query, key, url, suggestion);
         block.mdn_url = suggestion;

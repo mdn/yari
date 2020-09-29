@@ -17,9 +17,7 @@ function getPageTitle(doc) {
   const rootParentURL = getRootURL(docURL);
   let title = doc.title;
   if (rootParentURL && rootParentURL !== docURL) {
-    const parentDoc = Document.findByURL(rootParentURL.toLowerCase(), {
-      metadata: true,
-    });
+    const parentDoc = Document.findByURL(rootParentURL.toLowerCase());
     if (parentDoc && parentDoc.metadata && parentDoc.metadata.title) {
       title += ` - ${parentDoc.metadata.title}`;
     }

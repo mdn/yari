@@ -2,7 +2,8 @@ name: NPM Publish
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
 
 jobs:
   build:
@@ -43,6 +44,11 @@ jobs:
           # What this does is it makes sure the built client is made for
           # doing CRUD work (e.g. previewing, toolbar, flaws UI, etc)
           export REACT_APP_CRUD_MODE=true
+
+          # This makes sure the auth is disabled. I.e. the "Sign in" link
+          # in the header. It also disables any XHR checks to the server's
+          # whoami endpoint.
+          export REACT_APP_DISABLE_AUTH=true
 
           yarn prepare-build
 

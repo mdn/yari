@@ -137,9 +137,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
           } else {
             // This will always be non-null because independent of the
             // image name, if the file didn't exist the document doesn't exist.
-            const parentDocument = Document.findByURL(path.dirname(finalSrc), {
-              metadata: true,
-            });
+            const parentDocument = Document.findByURL(path.dirname(finalSrc));
 
             // Base the final URL on the parent document + image file name lowercase.
             finalSrc = `${parentDocument.url}/${path

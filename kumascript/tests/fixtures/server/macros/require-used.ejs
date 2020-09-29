@@ -1,6 +1,6 @@
 <%
 var queryString = $0,
-    bcd = require('mdn-browser-compat-data');
+    bcd = require('@mdn/browser-compat-data');
 
 function getData() {
   return queryString.split('.').reduce(function(prev, curr) {

@@ -119,7 +119,7 @@ const info = {
   },
 
   getPage(url, { throwIfDoesNotExist = false } = {}) {
-    const document = Document.findByURL(info.cleanURL(url), { metadata: true });
+    const document = Document.findByURL(info.cleanURL(url));
     if (!document) {
       // The macros expect an empty object if the URL does not exist, so
       // "throwIfDoesNotExist" should only be used within "info" itself.
@@ -141,9 +141,7 @@ const info = {
       tags: tags || [],
       translations: [], //TODO Object.freeze(buildTranslationObjects(data)),
       get subpages() {
-        return Document.findChildren(document.url, {
-          metadata: true,
-        })
+        return Document.findChildren(document.url)
           .map((document) => info.getPage(document.url))
           .filter((p) => p && p.url);
       },

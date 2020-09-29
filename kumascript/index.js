@@ -13,7 +13,24 @@ const {
 } = require("./src/live-sample.js");
 const { HTMLTool } = require("./src/api/util.js");
 
-const renderFromURL = memoize(async (url) => {
+const DEPENDENCY_LOOP_INTRO =
+  'The following documents form a circular dependency when rendering (via the "page" and/or "IncludeSubnav" macros):';
+
+const renderCache = new Map();
+
+const renderFromURL = async (url, urlsSeen = null) => {
+  const urlLC = url.toLowerCase();
+  if (renderCache.has(urlLC)) {
+    return renderCache.get(urlLC);
+  }
+
+  urlsSeen = urlsSeen || new Set([]);
+  if (urlsSeen.has(urlLC)) {
+    throw new Error(
+      `${DEPENDENCY_LOOP_INTRO}\n${[...urlsSeen, url].join(" ⭢ ")}`
+    );
+  }
+  urlsSeen.add(urlLC);
   const prerequisiteErrorsByKey = new Map();
   const document = Document.findByURL(url);
   if (!document) {
@@ -40,7 +57,10 @@ const renderFromURL = memoize(async (url) => {
       live_samples: { base_url: LIVE_SAMPLES_BASE_URL || url },
     },
     async (url) => {
-      const [renderedHtml, errors] = await renderFromURL(info.cleanURL(url));
+      const [renderedHtml, errors] = await renderFromURL(
+        info.cleanURL(url),
+        urlsSeen
+      );
       // Remove duplicate flaws. During the rendering process, it's possible for identical
       // flaws to be introduced when different dependency paths share common prerequisites.
       // For example, document A may have prerequisite documents B and C, and in turn,
@@ -58,18 +78,20 @@ const renderFromURL = memoize(async (url) => {
   //       attributes of any iframes.
   const tool = new HTMLTool(renderedHtml);
   tool.injectSectionIDs();
-  return [
+  renderCache.set(urlLC, [
     tool.html(),
     // The prerequisite errors have already been updated with their own file information.
     [...prerequisiteErrorsByKey.values()].concat(
       errors.map((e) => e.updateFileInfo(fileInfo))
     ),
-  ];
-});
+  ]);
+  return renderCache.get(urlLC);
+};
 
 module.exports = {
   buildLiveSamplePage,
   getLiveSampleIDs,
   LiveSampleError,
   render: renderFromURL,
+  renderCache,
 };

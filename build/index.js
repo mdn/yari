@@ -2,8 +2,7 @@ const childProcess = require("child_process");
 
 const chalk = require("chalk");
 
-const PACKAGE_REPOSITORY_URL = require("../package.json").repository;
-const { buildURL, Document } = require("../content");
+const { Document, CONTENT_ROOT, REPOSITORY_URLS } = require("../content");
 const kumascript = require("../kumascript");
 
 const { FLAW_LEVELS } = require("./constants");
@@ -22,32 +21,46 @@ const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
 const cheerio = require("./monkeypatched-cheerio");
 const buildOptions = require("./build-options");
+const { renderCache: renderKumascriptCache } = require("../kumascript");
 
-const DEFAULT_BRANCH_NAME = "master"; // TODO: 'main' is a better name.
+const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/content
 
-// Module level global that gets set once and reused repeatedly
-const currentGitBranch =
-  (() => {
-    // XXX Fixme with what you'd get in the likes of TravisCI!
-    if (process.env.CI_CURRENT_BRANCH) {
-      return process.env.CI_CURRENT_BRANCH;
-    } else {
-      // If you're in detached head, (e.g. "d6a6c3f17") instead of a named
-      // branch, this will fail. But that's why we rely on a default.
-      const spawned = childProcess.spawnSync("git", [
-        "branch",
-        "--show-current",
-      ]);
-      if (spawned.error || spawned.status) {
-        console.warn(
-          "\nUnable to run 'git branch' to find out name of the current branch:\n",
-          spawned.error ? spawned.error : spawned.stderr.toString().trim()
-        );
+// Module-level cache
+const rootToGitBranchMap = new Map();
+
+function getCurrentGitBranch(root) {
+  if (!rootToGitBranchMap.has(root)) {
+    // If this is running in a GitHub Action "PR Build" workflow the current
+    // branch name will be set in `GITHUB_REF_NAME_SLUG`.
+    let name = DEFAULT_BRANCH_NAME;
+    // Only bother getting fancy if the root is CONTENT_ROOT.
+    // For other possible roots, just leave it to the default.
+    if (root === CONTENT_ROOT) {
+      if (process.env.GITHUB_REF_NAME_SLUG) {
+        name = process.env.GITHUB_REF_NAME_SLUG;
       } else {
-        return spawned.stdout.toString().trim();
+        // Most probably, you're hacking on the content, using Yari to preview,
+        // in a topic branch. Then figure this out using a child-process.
+        // Note, if you're in detached head, (e.g. "d6a6c3f17") instead of a named
+        // branch, this will fail. But that's why we rely on a default.
+        const spawned = childProcess.spawnSync(
+          "git",
+          ["branch", "--show-current"],
+          {
+            cwd: root,
+          }
+        );
+        const output = spawned.stdout.toString().trim();
+        if (output) {
+          name = output;
+        }
       }
     }
-  })() || DEFAULT_BRANCH_NAME;
+
+    rootToGitBranchMap.set(root, name);
+  }
+  return rootToGitBranchMap.get(root);
+}
 
 /** Throw an error if the slug is insane.
  * This helps breaking the build if someone has put in faulty data into
@@ -83,14 +96,18 @@ function injectNoTranslate($) {
  * Return the full URL directly to the file in GitHub based on this folder.
  * @param {String} folder - the current folder we're processing.
  */
-function getGitHubURL(folder) {
-  return `${PACKAGE_REPOSITORY_URL}/blob/${currentGitBranch}/content/files/${folder}/index.html`;
+function getGitHubURL(root, folder) {
+  const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
+  return `${baseURL}/blob/${getCurrentGitBranch(
+    root
+  )}/files/${folder}/index.html`;
 }
 
-function injectSource(doc, folder) {
+function injectSource(doc, document) {
+  const folder = document.fileInfo.folder;
   doc.source = {
     folder,
-    github_url: getGitHubURL(folder),
+    github_url: getGitHubURL(document.fileInfo.root, folder),
   };
 }
 
@@ -101,66 +118,79 @@ async function buildDocument(document, documentOptions = {}) {
   const options = Object.assign({}, buildOptions, documentOptions);
   const { metadata, fileInfo } = document;
 
-  const doc = { isArchive: document.isArchive };
+  const doc = {
+    isArchive: document.isArchive,
+    isTranslated: document.isTranslated,
+  };
 
   doc.flaws = {};
 
-  const [renderedHtml, flaws] = await kumascript.render(document.url);
-
+  let renderedHtml = "";
+  let flaws = [];
   const liveSamples = [];
-  const sampleIds = kumascript.getLiveSampleIDs(
-    document.metadata.slug,
-    document.rawHTML
-  );
-  for (const sampleIdObject of sampleIds) {
-    const liveSamplePage = kumascript.buildLiveSamplePage(
-      document.url,
-      document.metadata.title,
-      renderedHtml,
-      sampleIdObject
-    );
-    if (liveSamplePage.flaw) {
-      flaws.push(liveSamplePage.flaw.updateFileInfo(fileInfo));
-      continue;
-    }
-    liveSamples.push({
-      id: sampleIdObject.id.toLowerCase(),
-      html: liveSamplePage.html,
-    });
-  }
 
-  if (flaws.length) {
-    if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
-      // Report and exit immediately on the first document with flaws.
-      console.error(
-        chalk.red.bold(
-          `Flaws (${flaws.length}) within ${document.metadata.slug} while rendering macros:`
-        )
+  if (doc.isArchive) {
+    renderedHtml = document.rawHTML;
+  } else {
+    if (options.clearKumascriptRenderCache) {
+      renderKumascriptCache.clear();
+    }
+    [renderedHtml, flaws] = await kumascript.render(document.url);
+
+    const sampleIds = kumascript.getLiveSampleIDs(
+      document.metadata.slug,
+      document.rawHTML
+    );
+    for (const sampleIdObject of sampleIds) {
+      const liveSamplePage = kumascript.buildLiveSamplePage(
+        document.url,
+        document.metadata.title,
+        renderedHtml,
+        sampleIdObject
       );
-      flaws.forEach((flaw, i) => {
-        console.error(chalk.bold.red(`${i + 1}: ${flaw.name}`));
-        console.error(chalk.red(`${flaw}\n`));
+      if (liveSamplePage.flaw) {
+        flaws.push(liveSamplePage.flaw.updateFileInfo(fileInfo));
+        continue;
+      }
+      liveSamples.push({
+        id: sampleIdObject.id.toLowerCase(),
+        html: liveSamplePage.html,
       });
-      // XXX This is probably the wrong way to bubble up.
-      process.exit(1);
-    } else if (options.flawLevels.get("macros") === FLAW_LEVELS.WARN) {
-      // doc.flaws.macros = flaws;
-      // The 'flaws' array don't have everything we need from the
-      // kumascript rendering, so we "beef it up" to have convenient
-      // attributes needed.
-      doc.flaws.macros = flaws.map((flaw, i) => {
-        const fixable =
-          flaw.name === "MacroRedirectedLinkError" &&
-          (!flaw.filepath || flaw.filepath === document.fileInfo.path);
-        const suggestion = fixable
-          ? flaw.macroSource.replace(
-              flaw.redirectInfo.current,
-              flaw.redirectInfo.suggested
-            )
-          : null;
-        const id = `macro_flaw${i}`;
-        return Object.assign({ id, fixable, suggestion }, flaw);
-      });
+    }
+
+    if (flaws.length) {
+      if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
+        // Report and exit immediately on the first document with flaws.
+        console.error(
+          chalk.red.bold(
+            `Flaws (${flaws.length}) within ${document.metadata.slug} while rendering macros:`
+          )
+        );
+        flaws.forEach((flaw, i) => {
+          console.error(chalk.bold.red(`${i + 1}: ${flaw.name}`));
+          console.error(chalk.red(`${flaw}\n`));
+        });
+        // XXX This is probably the wrong way to bubble up.
+        process.exit(1);
+      } else if (options.flawLevels.get("macros") === FLAW_LEVELS.WARN) {
+        // doc.flaws.macros = flaws;
+        // The 'flaws' array don't have everything we need from the
+        // kumascript rendering, so we "beef it up" to have convenient
+        // attributes needed.
+        doc.flaws.macros = flaws.map((flaw, i) => {
+          const fixable =
+            flaw.name === "MacroRedirectedLinkError" &&
+            (!flaw.filepath || flaw.filepath === document.fileInfo.path);
+          const suggestion = fixable
+            ? flaw.macroSource.replace(
+                flaw.redirectInfo.current,
+                flaw.redirectInfo.suggested
+              )
+            : null;
+          const id = `macro_flaw${i}`;
+          return Object.assign({ id, fixable, suggestion }, flaw);
+        });
+      }
     }
   }
 
@@ -179,9 +209,6 @@ async function buildDocument(document, documentOptions = {}) {
 
   doc.title = metadata.title;
   doc.mdn_url = document.url;
-  if (metadata.translation_of) {
-    doc.translation_of = metadata.translation_of;
-  }
 
   // Note that 'extractSidebar' will always return a string.
   // And if it finds a sidebar section, it gets removed from '$' too.
@@ -236,26 +263,17 @@ async function buildDocument(document, documentOptions = {}) {
 
   const otherTranslations = document.translations || [];
   if (!otherTranslations.length && metadata.translation_of) {
-    // But perhaps the parent has other translations?!
-    const parentURL = buildURL("en-US", metadata.translation_of);
-    const parentDocument = Document.findByURL(parentURL);
-    // See note in 'ensureAllTitles()' about why we need this if statement.
-    if (parentDocument) {
-      const parentOtherTranslations = parentDocument.metadata.translations;
-      if (parentOtherTranslations && parentOtherTranslations.length) {
-        otherTranslations.push(
-          ...parentOtherTranslations.filter(
-            (translation) => translation.locale !== metadata.locale
-          )
-        );
-      }
-    }
+    // If built just-in-time, we won't have a record of all the other translations
+    // available. But if the current document has a translation_of, we can
+    // at least use that.
+    otherTranslations.push({ locale: "en-US", slug: metadata.translation_of });
   }
+
   if (otherTranslations.length) {
     doc.other_translations = otherTranslations;
   }
 
-  injectSource(doc, document.fileInfo.folder);
+  injectSource(doc, document);
 
   // The `titles` object should contain every possible URI->Title mapping.
   // We can use that generate the necessary information needed to build
@@ -267,12 +285,12 @@ async function buildDocument(document, documentOptions = {}) {
   return [doc, liveSamples, fileAttachments];
 }
 
-async function buildDocumentFromURL(url) {
+async function buildDocumentFromURL(url, documentOptions = {}) {
   const document = Document.findByURL(url);
   if (!document) {
     return null;
   }
-  return (await buildDocument(document))[0];
+  return (await buildDocument(document, documentOptions))[0];
 }
 
 async function buildLiveSamplePageFromURL(url) {

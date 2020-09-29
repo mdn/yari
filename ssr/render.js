@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 
 import jsesc from "jsesc";
-import cheerio from "cheerio";
+import cheerio from "./monkeypatched-cheerio";
 import { renderToString } from "react-dom/server";
 
 const lazy = (creator) => {
@@ -66,6 +66,12 @@ export default function render(renderApp, doc) {
     // This overrides the default description. Also assumes there's always
     // one tag there already.
     $('meta[name="description"]').attr("content", pageDescription);
+  }
+
+  if (doc.isArchive && !doc.isTranslated) {
+    $('<meta name="robots" content="noindex, nofollow">').insertAfter(
+      $("meta").eq(-1)
+    );
   }
 
   $('link[rel="canonical"]').attr("href", canonicalURL);

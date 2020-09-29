@@ -15,9 +15,11 @@ import { Examples } from "./ingredients/examples";
 import { LinkList, LinkLists } from "./ingredients/link-lists";
 import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
+
 // Misc
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
+import LanguageMenu from "../header/language-menu";
 import { Titlebar } from "../ui/molecules/titlebar";
 import { TOC } from "../ui/molecules/toc";
 import { RenderSideBar } from "./organisms/sidebar";
@@ -93,13 +95,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
     return null;
   }
 
-  const translations = [...(doc.other_translations || [])];
-  if (doc.translation_of) {
-    translations.unshift({
-      locale: "en-US",
-      slug: doc.translation_of,
-    });
-  }
+  const translations = doc.other_translations || [];
 
   const { github_url, folder } = doc.source;
   const isServer = typeof window === "undefined";
@@ -108,6 +104,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
     <>
       <Titlebar docTitle={doc.title} />
 
+      {doc.isArchive && <Archived doc={doc} />}
       {!isServer && CRUD_MODE && !doc.isArchive && (
         <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
           <Toolbar doc={doc} />
@@ -116,6 +113,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
       <nav className="breadcrumb-locale-container">
         {doc.parents && <Breadcrumbs parents={doc.parents} />}
+        {translations && !!translations.length && (
+          <LanguageMenu translations={translations} locale={locale} />
+        )}
       </nav>
       <div className="page-content-container">
         {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
@@ -130,24 +130,28 @@ export function Document(props /* TODO: define a TS interface for this */) {
                 </header>
                 <ul>
                   <li className="last-modified">
-                    <LastModified value={doc.modified} locale={locale} />,{" "}
-                    <a
-                      href={github_url}
-                      title={`Folder: ${folder}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Edit on <b>GitHub</b>
-                    </a>
+                    <LastModified value={doc.modified} locale={locale} />
                   </li>
+                  {!doc.isArchive && (
+                    <li className="edit-on-github">
+                      <a
+                        href={github_url}
+                        title={`Folder: ${folder}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Edit on <b>GitHub</b>
+                      </a>
+                    </li>
+                  )}
                 </ul>
               </section>
             </div>
           </article>
         </main>
-
-        {doc.sidebarHTML && <RenderSideBar doc={doc} />}
       </div>
+
+      {doc.sidebarHTML && <RenderSideBar doc={doc} />}
     </>
   );
 }
@@ -170,6 +174,29 @@ function LastModified({ value, locale }) {
         {date.toLocaleString(locale, dateStringOptions)}
       </time>
     </>
+  );
+}
+
+function Archived({ doc }: { doc: Doc }) {
+  return (
+    <div className={`archived ${doc.isTranslated ? "translated" : ""}`}>
+      {doc.isTranslated ? (
+        <p>
+          <b>This is an archived translation.</b>{" "}
+          <a
+            href="https://blogpost.example.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            No more edits are being accepted.
+          </a>
+        </p>
+      ) : (
+        <p>
+          <b>This is an archived page.</b> It's not actively maintained.
+        </p>
+      )}
+    </div>
   );
 }
 

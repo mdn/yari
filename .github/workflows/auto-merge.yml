@@ -2,6 +2,8 @@ name: auto-merge
 
 on:
   pull_request:
+    branches:
+      - master
 
 jobs:
   auto-merge:
