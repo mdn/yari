@@ -1016,6 +1016,11 @@ function getCleanedRenderedHTML(html) {
     mutations++;
   });
 
+  $("div.bc-data[id]").each((i, element) => {
+    const $element = $(element);
+    $element.empty();
+  });
+
   if (mutations) {
     return $("#_body").html();
   }
