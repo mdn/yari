@@ -1,12 +1,12 @@
 @import "~@mdn/minimalist/sass/vars/layout";
 
 .page-header {
-  padding: $gap-width;
+  padding: $base-spacing;
   position: relative;
 
   @supports (display: grid) {
     display: grid;
-    gap: $gap-width;
+    gap: $base-spacing;
     grid-template-columns: 40px 2fr 80px;
 
     @media #{$mq-tablet-and-up} {

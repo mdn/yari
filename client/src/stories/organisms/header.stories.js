@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Header } from "../../organisms/header";
+import { Header } from "../../ui/organisms/header";
 
 export default {
   title: "Organisms/Header",
