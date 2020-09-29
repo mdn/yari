@@ -58,7 +58,7 @@ function getPages(pageList) {
                 tags: [...page.tags].sort(),
                 summary: page.summary || '<strong>No summary!</strong>'
             })
-            getPages(pageList[i].subpages);
+            getPages(page.subpages);
         }
     }
 }
