@@ -1,3 +1,5 @@
+const assert = require("assert").strict;
+
 const { VALID_LOCALES, Document, Redirect } = require("../../content");
 
 const DUMMY_BASE_URL = "https://example.com";
@@ -32,6 +34,16 @@ function repairURL(url) {
   return url;
 }
 
+function immediateChildURL(parentURL, childURL) {
+  // Return true iff the `childURL` is the exact same as the `parentURL` but with
+  // one additional path split by '/'.
+  // E.g. '/foo/bar/buzz' is a parent URL of '/foo/bar'.
+  // This function assumes that the URLs never end in a `/`.
+  assert(!parentURL.endsWith("/"), parentURL);
+  assert(!childURL.endsWith("/"), childURL);
+  return parentURL === childURL.split("/").slice(0, -1).join("/");
+}
+
 const info = {
   getPathname(url) {
     // This function returns just the pathname of the given "url", removing
@@ -47,7 +59,16 @@ const info = {
     const uri = new URL(url, DUMMY_BASE_URL).pathname
       .replace(/\/$/, "")
       .toLowerCase();
-    return Redirect.resolve(repairURL(uri));
+    const repairedURL = repairURL(uri);
+    const resolvedURL = Redirect.resolve(repairedURL);
+    if (resolvedURL !== repairedURL) {
+      // The `Redirect.resolve()` returned an actual redirect!
+      // Remember, it defaults to the URL you passed in if nothing was found
+      // in the redirects lookup.
+      // That redirect needs to be "repaired" too.
+      return repairURL(resolvedURL);
+    }
+    return resolvedURL;
   },
 
   getDescription(url) {
@@ -141,8 +162,30 @@ const info = {
       tags: tags || [],
       translations: [], //TODO Object.freeze(buildTranslationObjects(data)),
       get subpages() {
+        const parentURL = document.url.toLowerCase();
         return Document.findChildren(document.url)
-          .map((document) => info.getPage(document.url))
+          .map((document) => {
+            // Because of redirects, the `Document.findChildren()` might return
+            // URLs that are not *immediate* children of the parent as a URL string.
+            // For example, the you might get:
+            //
+            //   Document.findChildren('/foo/bar') ==> ['/foo/bar/buzz', '/other/page']
+            //
+            // or, a page that is "grand-child"
+            //
+            //   Document.findChildren('/foo/bar') ==> ['/foo/bar/buzz/deeper']
+            //
+            // or, a page that is actually a parent of the "parent"
+            //
+            //   Document.findChildren('/foo/bar') ==> ['/foo']
+            //
+            // So, for any of these cases we want to reject those that aren't
+            // immediate children.
+            if (!immediateChildURL(parentURL, info.cleanURL(document.url))) {
+              return;
+            }
+            return info.getPage(document.url);
+          })
           .filter((p) => p && p.url);
       },
     };

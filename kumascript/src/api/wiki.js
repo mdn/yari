@@ -128,7 +128,6 @@ module.exports = {
     if (path.substr(-1, 1) === "/") {
       path = path.slice(0, -1);
     }
-
     var pages = this.page.subpages(path, depth, self);
 
     if (reverse == 0) {
