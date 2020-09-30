@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import LANGUAGES from "../languages.json";
+import LANGUAGES_RAW from "../languages.json";
 import { Translation } from "../document/types";
+
+const LANGUAGES = new Map(
+  Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
+    return [locale.toLowerCase(), data];
+  })
+);
 
 export default function LanguageMenu({
   locale,
@@ -12,6 +18,7 @@ export default function LanguageMenu({
   translations: Translation[];
 }) {
   const navigate = useNavigate();
+  const [localeURL, setLocaleURL] = useState(locale);
 
   // For the menu label, we want to use the name of the document language.
   // We need a special case for English because English documents can
@@ -19,22 +26,27 @@ export default function LanguageMenu({
   // translation for the word "English". In all other cases, the
   // locale of the page and the locale of the document should match
   // and we can just use the document language string without translation.
-  const verbose = LANGUAGES[locale];
+  const verbose = LANGUAGES.get(locale.toLowerCase());
 
   return (
-    <form>
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        // The default is the current locale itself. If that's what's chosen,
+        // don't bother redirecting.
+        if (localeURL !== locale) {
+          navigate(localeURL);
+        }
+      }}
+    >
       <label htmlFor="select_language">Change language</label>{" "}
       <select
         id="select_language"
         name="language"
-        defaultValue={locale}
+        value={localeURL}
         onChange={(event) => {
-          const { value: url } = event.target;
-          // If the selection was the existing document, do nothing
-          if (url !== locale) {
-            // Redirect
-            navigate(url);
-          }
+          const { value } = event.target;
+          setLocaleURL(value);
         }}
       >
         {/*
@@ -47,7 +59,7 @@ export default function LanguageMenu({
          */}
         <option value={locale}>{verbose ? verbose.native : locale}</option>
         {translations.map((t) => {
-          const verbose = LANGUAGES[t.locale];
+          const verbose = LANGUAGES.get(t.locale.toLowerCase());
           const url = `/${t.locale}/docs/${t.slug}`;
           return (
             <option key={url} value={url}>
@@ -55,7 +67,8 @@ export default function LanguageMenu({
             </option>
           );
         })}
-      </select>
+      </select>{" "}
+      <button type="submit">Change</button>
     </form>
   );
 }
