@@ -48,7 +48,15 @@ const info = {
       new URL(url, DUMMY_BASE_URL).pathname.replace(/\/$/, "").toLowerCase()
     );
     if (followRedirects) {
-      return Redirect.resolve(repairedURL);
+      const resolvedURL = Redirect.resolve(repairedURL);
+      if (resolvedURL !== repairedURL) {
+        // The `Redirect.resolve()` returned an actual redirect, and that needs
+        // to be "repaired" as well.
+        // Remember, it defaults to the URL you passed in if nothing was found
+        // in the redirects lookup.
+        return repairURL(resolvedURL);
+      }
+      return resolvedURL;
     }
     return repairedURL;
   },
