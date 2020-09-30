@@ -309,6 +309,10 @@ assert(
   )
 );
 
+function makeURL(locale, slug) {
+  return `/${locale}/docs/${encodeURI(slug)}`;
+}
+
 const redirectsToArchive = new Set();
 const redirectFinalDestinations = new Map();
 const archiveSlugPrefixes = [...ARCHIVE_SLUG_ENGLISH_PREFIXES];
@@ -369,10 +373,22 @@ async function populateRedirectInfo(pool, constraintsSQL, queryArgs) {
   const redirects = new Map();
 
   for await (const row of redirectDocs) {
-    const fromUri = `/${row.locale}/docs/${row.slug}`;
+    if (row.slug.startsWith("/")) {
+      console.warn("Bad redirect (slug starts with /)", [row.locale, row.slug]);
+      continue;
+    }
+    if (row.slug.includes("//")) {
+      console.warn("Bad redirect (slug contains '//')", [row.locale, row.slug]);
+      continue;
+    }
+    const fromUri = makeURL(row.locale, row.slug);
     const redirect = processRedirect(row, fromUri);
     if (redirect && redirect.url) {
-      redirects.set(fromUri, redirect.url);
+      if (fromUri.toLowerCase() === redirect.url.toLowerCase()) {
+        console.log("Bad redirect (from===to)", [fromUri]);
+      } else {
+        redirects.set(fromUri, redirect.url);
+      }
     }
   }
 
@@ -639,10 +655,10 @@ function isArchiveDoc(row) {
         row.slug.startsWith(prefix) ||
         (row.parent_slug && row.parent_slug.startsWith(prefix))
     ) ||
-    (row.is_redirect && isArchiveRedirect(`/${row.locale}/docs/${row.slug}`)) ||
+    (row.is_redirect && isArchiveRedirect(makeURL(row.locale, row.slug))) ||
     (row.parent_slug &&
       row.parent_is_redirect &&
-      isArchiveRedirect(`/${row.parent_locale}/docs/${row.parent_slug}`))
+      isArchiveRedirect(makeURL(row.parent_locale, row.parent_slug)))
   );
 }
 
@@ -965,7 +981,7 @@ async function processDocument(
   if (doc.parent_slug) {
     assert(doc.parent_locale === "en-US");
     if (doc.parent_is_redirect) {
-      const parentUri = `/${doc.parent_locale}/docs/${doc.parent_slug}`;
+      const parentUri = makeURL(doc.parent_locale, doc.parent_slug);
       const finalUri = redirectFinalDestinations.get(parentUri);
       meta.translation_of = uriToSlug(finalUri);
     } else {
@@ -1211,7 +1227,7 @@ module.exports = async function runImporter(options) {
           archivedRedirects++;
           return;
         }
-        const absoluteUrl = `/${row.locale}/docs/${row.slug}`;
+        const absoluteUrl = makeURL(row.locale, row.slug);
         const redirect = processRedirect(row, absoluteUrl);
         if (!redirect) {
           discardedRedirects++;
