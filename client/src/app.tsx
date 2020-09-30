@@ -54,6 +54,7 @@ export function App(appProps) {
                   <Route path="/_edit/*" element={<DocumentEdit />} />
                 </>
               )}
+              <Route path="/" element={<Homepage />} />
               <Route path="/docs/*" element={<Document {...appProps} />} />
             </Routes>
           </Layout>
