@@ -37,37 +37,13 @@ const resolve = (url) => {
         continue;
       }
 
-      const content = fs.readFileSync(redirectsFilePath, "utf-8");
-
-      const redirectPairs = content
+      const redirectPairs = fs
+        .readFileSync(redirectsFilePath, "utf-8")
         .split("\n")
         .slice(1, -1)
         .map((line) => line.trim().split(/\s+/));
-
-      const normalizedPairs = new Map();
       for (const [from, to] of redirectPairs) {
-        normalizedPairs.set(from.toLowerCase(), to.toLowerCase());
-      }
-
-      for (const [from, to] of redirectPairs) {
-        let toNormalized = to.toLowerCase();
-        if (normalizedPairs.has(toNormalized)) {
-          // It loops back on itself!
-          // console.log("ROGUE", [from, to]);
-          const chain = [toNormalized];
-          let skip = false;
-          while (toNormalized && normalizedPairs.has(toNormalized)) {
-            toNormalized = normalizedPairs.get(toNormalized);
-            chain.push(toNormalized);
-            if (chain.length > 2) {
-              // console.log("REALLY ROGUE", [from, to], chain);
-              skip = true;
-              break;
-            }
-          }
-        } else {
-          redirects.set(from.toLowerCase(), to);
-        }
+        redirects.set(from.toLowerCase(), to);
       }
     }
   }
