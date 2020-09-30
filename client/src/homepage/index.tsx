@@ -8,8 +8,11 @@ export function Homepage() {
     <div id="homepage">
       <h2>Welcome to MDN</h2>
       <Search />
-      <h3>Sample pages:</h3>
+      <h3>Sample pages</h3>
       <ul>
+        <li>
+          <Link to="/en-US/docs/MDN/Kitchensink">The Kitchensink</Link>
+        </li>
         <li>
           <Link to="/en-US/docs/Web/HTML">Web/HTML index</Link>
           <ul>
