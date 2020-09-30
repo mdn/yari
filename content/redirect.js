@@ -24,28 +24,61 @@ function add(locale, oldSlug, newSlug) {
 // The module level cache
 const redirects = new Map();
 
-const resolve = (url) => {
-  if (!redirects.size) {
+function load(files = null, verbose = false) {
+  if (!files) {
     const localeFolders = fs
       .readdirSync(CONTENT_ROOT)
       .map((n) => path.join(CONTENT_ROOT, n))
       .filter((filepath) => fs.statSync(filepath).isDirectory());
 
-    for (const folder of localeFolders) {
-      const redirectsFilePath = path.join(folder, "_redirects.txt");
-      if (!fs.existsSync(redirectsFilePath)) {
-        continue;
-      }
+    files = localeFolders
+      .map((folder) => path.join(folder, "_redirects.txt"))
+      .filter((filePath) => fs.existsSync(filePath));
+  }
 
-      const redirectPairs = fs
-        .readFileSync(redirectsFilePath, "utf-8")
-        .split("\n")
-        .slice(1, -1)
-        .map((line) => line.trim().split(/\s+/));
-      for (const [from, to] of redirectPairs) {
-        redirects.set(from.toLowerCase(), to);
-      }
+  for (const redirectsFilePath of files) {
+    if (verbose) {
+      console.log(`Checking ${redirectsFilePath}`);
     }
+    const content = fs.readFileSync(redirectsFilePath, "utf-8");
+    // const normalizedPairs = new Map();
+    const pairs = new Map();
+    // Parse and collect all and throw errors on bad lines
+    content.split("\n").forEach((line, i) => {
+      if (!line.trim() || line.startsWith("#")) return;
+      const split = line.trim().split(/\s+/);
+      if (split.length !== 2) {
+        console.log(split);
+        throw new Error(
+          `Invalid line: Not two strings split by whitespace. (${
+            i + 1
+          }) ${line}`
+        );
+      }
+      const [from, to] = split;
+      // normalizedPairs.set(from.toLowerCase(), to.toLowerCase());
+      pairs.set(from.toLowerCase(), to);
+    });
+    // Now that all have been collected, transfer them to the `redirects` map
+    // but also do invariance checking.
+    for (const [from, to] of pairs) {
+      console.log("CHECK", [from, to]);
+      redirects.set(from.toLowerCase(), to);
+    }
+
+    const redirectPairs = content
+      .split("\n")
+      .slice(1, -1)
+      .map((line) => line.trim().split(/\s+/));
+    for (const [from, to] of redirectPairs) {
+      redirects.set(from.toLowerCase(), to);
+    }
+  }
+}
+
+const resolve = (url) => {
+  if (!redirects.size) {
+    load();
   }
   return redirects.get(url.toLowerCase()) || url;
 };
@@ -64,4 +97,5 @@ module.exports = {
   add,
   resolve,
   write,
+  load,
 };
