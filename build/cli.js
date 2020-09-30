@@ -76,7 +76,9 @@ async function buildDocuments() {
       // which makes this not great and refactor-worthy
       JSON.stringify({ doc: builtDocument })
     );
-    if (document.metadata.contributors) {
+    // There are some archived documents that, due to possible corruption or other
+    // unknown reasons, don't have a list of contributors.
+    if (document.metadata.contributors || !document.isArchive) {
       fs.writeFileSync(
         path.join(outPath, "contributors.txt"),
         renderContributorsTxt(
