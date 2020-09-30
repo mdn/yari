@@ -1,66 +1,62 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Search from "./header/search";
+import "./homepage.scss";
 
 export function Homepage() {
   return (
-    <div>
+    <div id="homepage">
       <h2>Welcome to MDN</h2>
-      <h3>
-        HTML Elements (sample, <code>en-US</code>)
-      </h3>
+      <Search />
+      <h3>Sample pages:</h3>
       <ul>
         <li>
-          <Link to="/en-US/docs/Web/HTML/Element/audio">HTML/audio</Link>
+          <Link to="/en-US/docs/Web/HTML">Web/HTML index</Link>
+          <ul>
+            <li>
+              <Link to="/en-US/docs/Web/HTML/Element/video">HTML/video</Link>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <Link to="/en-US/docs/Web/API">Web/API index</Link>
+          <ul>
+            <li>
+              <Link to="/en-US/docs/Web/API/Fetch_API/Using_Fetch">
+                Using Fetch API
+              </Link>
+            </li>
+          </ul>
         </li>
         <li>
-          <Link to="/en-US/docs/Web/HTML/Element/video">HTML/video</Link>
+          <Link to="/en-US/docs/Web/CSS">Web/CSS index</Link>
+          <ul>
+            <li>
+              <Link to="/en-US/docs/Web/CSS/Specificity">CSS Specificity</Link>
+            </li>
+          </ul>
         </li>
         <li>
-          <Link to="/en-US/docs/Web/HTML/Element/canvas">HTML/canvas</Link>
-        </li>
-      </ul>
-      <h3>
-        HTML Elements (sample, <code>fr</code>)
-      </h3>
-      <ul>
-        <li>
-          <Link to="/fr/docs/Web/HTML/Element">HTML</Link>
-        </li>
-        <li>
-          <Link to="/fr/docs/Web/HTML/Element/abbr">HTML/abbr</Link>
+          <Link to="/en-US/docs/Web/JavaScript">Web/JavaScript index</Link>
+          <ul>
+            <li>
+              <Link to="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach">
+                Array.prototype.forEach()
+              </Link>
+            </li>
+          </ul>
         </li>
         <li>
-          <Link to="/fr/docs/Web/HTML/Element/video">HTML/video</Link>
-        </li>
-      </ul>
-      <h3>Flaws</h3>
-      <ul>
-        <li>
-          <Link to="/en-US/_flaws">All (en-US) flaws</Link>
-        </li>
-      </ul>
-      <h3>HTML Guide Pages</h3>
-      <ul>
-        <li>
-          <Link to="/en-US/docs/Web/HTML/Element">Index of HTML elements</Link>
-        </li>
-        <li>
-          <Link to="/en-US/docs/Learn/HTML/Introduction_to_HTML">
-            Introduction to HTML
-          </Link>
-        </li>
-        <li>
-          <Link to="/en-US/docs/Web/HTML/Applying_color">
-            Applying color to HTML elements using CSS
+          <Link to="/en-US/docs/Mozilla/Add-ons/WebExtensions/Browser_support_for_JavaScript_APIs">
+            Page with lots of BCD tables
           </Link>
         </li>
       </ul>
-      <h3>JavaScript Reference</h3>
+      <h3>Tools</h3>
       <ul>
         <li>
-          <Link to="/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt">
-            BigInt
-          </Link>
+          <Link to="/en-US/_flaws">Flaws Dashboard</Link>
         </li>
       </ul>
     </div>
