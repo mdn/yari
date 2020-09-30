@@ -23,7 +23,9 @@ export default function LanguageMenu({
 
   return (
     <form>
+      <label htmlFor="select_language">Change language</label>{" "}
       <select
+        id="select_language"
         name="language"
         defaultValue={locale}
         onChange={(event) => {
