@@ -62,10 +62,10 @@ const info = {
     const repairedURL = repairURL(uri);
     const resolvedURL = Redirect.resolve(repairedURL);
     if (resolvedURL !== repairedURL) {
-      // The `Redirect.resolve()` returned an actual redirect!
+      // The `Redirect.resolve()` returned an actual redirect, and that needs
+      // to be "repaired" as well.
       // Remember, it defaults to the URL you passed in if nothing was found
       // in the redirects lookup.
-      // That redirect needs to be "repaired" too.
       return repairURL(resolvedURL);
     }
     return resolvedURL;
