@@ -321,6 +321,21 @@ async function buildLiveSamplePageFromURL(url) {
   throw new Error(`No live-sample "${sampleID}" found within ${documentURL}`);
 }
 
+// This is used by the builder (yarn build) and by the server (JIT).
+// Someday, this function might change if we decide to include the list
+// of GitHub usernames that have contributed to it since it moved to GitHub.
+function renderContributorsTxt(wikiContributorNames = null, githubURL = null) {
+  let txt = "";
+  if (githubURL) {
+    // Always show this first
+    txt += `# Contributors by commit history\n${githubURL}\n\n`;
+  }
+  if (wikiContributorNames) {
+    txt += `# Original Wiki contributors\n${wikiContributorNames.join("\n")}\n`;
+  }
+  return txt;
+}
+
 module.exports = {
   FLAW_LEVELS,
 
@@ -328,6 +343,7 @@ module.exports = {
 
   buildDocumentFromURL,
   buildLiveSamplePageFromURL,
+  renderContributorsTxt,
 
   SearchIndex,
 
