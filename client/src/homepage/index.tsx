@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Search from "./header/search";
-import "./homepage.scss";
+import Search from "../header/search";
+import "./index.scss";
 
 export function Homepage() {
   return (
