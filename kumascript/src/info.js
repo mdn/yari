@@ -39,15 +39,18 @@ const info = {
     return new URL(url, DUMMY_BASE_URL).pathname.replace(/\/$/, "");
   },
 
-  cleanURL(url) {
+  cleanURL(url, followRedirects = true) {
     // This function returns just the lowercase pathname of the given "url",
     // removing any trailing "/". The DUMMY_BASE_URL is not important here, since
     // we're only after the path of any incoming "url", but it's required by
     // the URL constructor when the incoming "url" is relative.
-    const uri = new URL(url, DUMMY_BASE_URL).pathname
-      .replace(/\/$/, "")
-      .toLowerCase();
-    return Redirect.resolve(repairURL(uri));
+    const repairedURL = repairURL(
+      new URL(url, DUMMY_BASE_URL).pathname.replace(/\/$/, "").toLowerCase()
+    );
+    if (followRedirects) {
+      return Redirect.resolve(repairedURL);
+    }
+    return repairedURL;
   },
 
   getDescription(url) {
@@ -118,8 +121,8 @@ const info = {
     return info.getPage(url, { throwIfDoesNotExist: true }).translations;
   },
 
-  getPage(url, { throwIfDoesNotExist = false } = {}) {
-    const document = Document.findByURL(info.cleanURL(url));
+  getPage(url, { throwIfDoesNotExist = false, followRedirects = true } = {}) {
+    const document = Document.findByURL(info.cleanURL(url, followRedirects));
     if (!document) {
       // The macros expect an empty object if the URL does not exist, so
       // "throwIfDoesNotExist" should only be used within "info" itself.
@@ -142,7 +145,19 @@ const info = {
       translations: [], //TODO Object.freeze(buildTranslationObjects(data)),
       get subpages() {
         return Document.findChildren(document.url)
-          .map((document) => info.getPage(document.url))
+          .map((document) =>
+            info.getPage(document.url, {
+              // By default, the `getPage()` method will follow any redirects
+              // in it's pursuit to turn a URL into a "page object". But,
+              // the `subpages()` getter should not do this. It doesn't make
+              // sense to as a page: "What are your sub-pages?" and then,
+              // potentially, get pages that are not actually sub-pages.
+              // This way, sub-pages is strictly the result of
+              // purely calling `Document.findChildren()` but dressing it up
+              // according to how `getPage()` returns it.
+              followRedirects: false,
+            })
+          )
           .filter((p) => p && p.url);
       },
     };
