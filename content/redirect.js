@@ -63,7 +63,7 @@ function load(files = null, verbose = false) {
       }
       const [from, to] = split;
       if (!from.startsWith("/")) {
-        throwError("From-URL must start with a /.", i + 1, line);
+        throwError("From-URL must start with a /", i + 1, line);
       }
       if (!from.includes("/docs/")) {
         throwError("From-URL must contain '/docs/'", i + 1, line);
