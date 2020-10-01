@@ -32,48 +32,28 @@ jobs:
           repository: mdn/content
           path: mdn/content
 
-      # - name: Figure out if to build archived content
-      #   id: build-archived-content
-      #   run: echo "::set-output name=build::contains(github.event.inputs.archived_content, 'true')"
-
-      # - name: Figure out if to build archived content (2)
-      #   id: build-archived-content-2
-      #   if: ${{ github.event.inputs.archived_content }} == "true"
-      #   run: echo "::set-output name=build::yes"
-
       - uses: actions/checkout@v2
-        if: "contains(github.event.inputs.archived_content, 'true')"
+        # if: "contains(github.event.inputs.archived_content, 'true')"
+        if: ${{ github.event.inputs.archived_content }} == "true"
         with:
           repository: mdn/archived-content
           path: mdn/archived-content
-
-      # XXX WORK IN PROGRESS
-      # - uses: actions/checkout@v2
-      #   if: ${{ github.event.inputs.archived_content }} == "true"
-      #   with:
-      #     repository: mdn/archived-content
-      #     path: mdn/archived-content
-      # - uses: actions/checkout@v2
-      #   if: ${{ github.event.inputs.translated_content }} == "true"
-      #   with:
-      #     repository: mdn/translated-content
-      #     path: mdn/translated-content
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.1
         with:
           node-version: "12"
 
-      # - name: Get yarn cache directory path
-      #   id: yarn-cache-dir-path
-      #   run: echo "::set-output name=dir::$(yarn cache dir)"
-      # - uses: actions/cache@v2.1.1
-      #   id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-      #   with:
-      #     path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-      #     key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-yarn-
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v2.1.1
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       # - name: Install all yarn packages
       #   run: yarn --frozen-lockfile
@@ -107,13 +87,17 @@ jobs:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
           export CONTENT_ROOT=$(pwd)/mdn/content/files
-          echo "CONTENT_ROOT=$CONTENT_ROOT"
 
           if [ ${{ github.event.inputs.archived_content }} == "true" ]; then
-            echo "YES, BUILD ARCHIVED CONTENT TOO"
+            echo "Will build mdn/archived-content too"
+            export CONTENT_ARCHIVED_ROOT=$(pwd)/mdn/archived-content/files
           else
-            echo "NO, DON'T BUILD ARCHIVED CONTENT"
+            echo "Will NOT build mdn/archived-content too"
           fi
+
+          # Debug which CONTENT_* environment variables were set and to what.
+          echo "CONTENT_ROOT=$CONTENT_ROOT"
+          echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
 
           # TODO:
           # The building of archived and translated content depends
@@ -148,12 +132,9 @@ jobs:
           # is not insecure.
           export BUILD_LIVE_SAMPLES_BASE_URL=https://mdn.mozillademos.org
 
-          # TODO: Only relevant once github.com/mdn/mdn-content is a thing.
-          # export CONTENT_ROOT=mdn-content/content/files
-
           # Now is not the time to worry about flaws.
           export BUILD_FLAW_LEVELS="*:ignore"
-          yarn prepare-build
+          #TEMPORARYILY COMMENTED OUT!!!!!!!!!!!!!!! yarn prepare-build
 
           # Uncomment when hacking on this workflow. It means the `yarn build`
           # finishes much sooner, which can be helpful debugging the other stuff
