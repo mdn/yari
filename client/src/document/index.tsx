@@ -93,8 +93,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   const translations = doc.other_translations || [];
 
-  const { github_url, folder } = doc.source;
-
   const isServer = typeof window === "undefined";
 
   return (
@@ -152,14 +150,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
                 </li>
                 {!doc.isArchive && (
                   <li className="edit-on-github">
-                    <a
-                      href={github_url}
-                      title={`Folder: ${folder}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Edit on <b>GitHub</b>
-                    </a>
+                    <EditOnGitHubLink doc={doc} />
+                  </li>
+                )}
+                {!doc.isArchive && (
+                  <li className="new-issue-on-github">
+                    <NewIssueOnGitHubLink doc={doc} />
                   </li>
                 )}
               </ul>
@@ -174,6 +170,72 @@ export function Document(props /* TODO: define a TS interface for this */) {
         )}
       </div>
     </main>
+  );
+}
+
+function EditOnGitHubLink({ doc }: { doc: Doc }) {
+  const { github_url, folder } = doc.source;
+  return (
+    <a
+      href={github_url}
+      title={`Folder: ${folder}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Edit on <b>GitHub</b>
+    </a>
+  );
+}
+
+const NEW_ISSUE_TEMPLATE = `
+MDN URL: https://developer.mozilla.org$PATHNAME
+
+#### What information was incorrect, unhelpful, or incomplete?
+
+
+#### Specific section or headline?
+
+
+#### What did you expect to see?
+
+
+#### Did you test this? If so, how?
+
+
+<!-- Do not make changes below this line -->
+<details>
+<summary>MDN Content page report details</summary>
+* Folder: $FOLDER
+* MDN URL: https://developer.mozilla.org$PATHNAME
+* GitHub URL: $GITHUB_URL
+* Report started: $DATE
+</details>
+`;
+
+function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
+  const baseURL = "https://github.com/mdn/content/issues/new";
+  const sp = new URLSearchParams();
+
+  const { github_url, folder } = doc.source;
+  const body = NEW_ISSUE_TEMPLATE.replace(/\$PATHNAME/g, doc.mdn_url)
+    .replace(/\$FOLDER/g, folder)
+    .replace(/\$GITHUB_URL/g, github_url)
+    .replace(/\$DATE/g, new Date().toISOString())
+    .trim();
+  sp.set("body", body);
+  sp.set("title", `Problem with content - ${doc.mdn_url}`);
+
+  const href = `${baseURL}?${sp.toString()}`;
+
+  return (
+    <a
+      href={href}
+      title="This will take you to https://github.com/mdn/content to file a new issue"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Report a problem with this content on <b>GitHub</b>
+    </a>
   );
 }
 
@@ -395,15 +457,6 @@ function RenderDocumentBody({ doc }) {
     }
   });
 }
-
-// function Contributors({ contributors }) {
-//   return (
-//     <div>
-//       <b>Contributors to this page:</b>
-//       <span dangerouslySetInnerHTML={{ __html: contributors }} />
-//     </div>
-//   );
-// }
 
 function LoadingError({ error }) {
   return (
