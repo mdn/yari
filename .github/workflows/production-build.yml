@@ -32,6 +32,21 @@ jobs:
           repository: mdn/content
           path: mdn/content
 
+      # - name: Figure out if to build archived content
+      #   id: build-archived-content
+      #   run: echo "::set-output name=build::contains(github.event.inputs.archived_content, 'true')"
+
+      # - name: Figure out if to build archived content (2)
+      #   id: build-archived-content-2
+      #   if: ${{ github.event.inputs.archived_content }} == "true"
+      #   run: echo "::set-output name=build::yes"
+
+      - uses: actions/checkout@v2
+        if: "contains(github.event.inputs.archived_content, 'true')"
+        with:
+          repository: mdn/archived-content
+          path: mdn/archived-content
+
       # XXX WORK IN PROGRESS
       # - uses: actions/checkout@v2
       #   if: ${{ github.event.inputs.archived_content }} == "true"
@@ -94,6 +109,12 @@ jobs:
           export CONTENT_ROOT=$(pwd)/mdn/content/files
           echo "CONTENT_ROOT=$CONTENT_ROOT"
 
+          if [ ${{ github.event.inputs.archived_content }} == "true" ]; then
+            echo "YES, BUILD ARCHIVED CONTENT TOO"
+          else
+            echo "NO, DON'T BUILD ARCHIVED CONTENT"
+          fi
+
           # TODO:
           # The building of archived and translated content depends
           # on ${{ github.event.inputs.archived_content }} and
@@ -139,27 +160,27 @@ jobs:
           # the workflow needs to do.
           # export BUILD_FOLDERSEARCH=web/html
 
-          yarn build
+      #     yarn build
 
-          # TODO: When the deployer is available this is where we
-          # would upload the whole content of client/build
-          du -sh client/build
+      #     # TODO: When the deployer is available this is where we
+      #     # would upload the whole content of client/build
+      #     du -sh client/build
 
-      - name: Deploy with deployer
-        run: |
-          # Set the CONTENT_ROOT first
-          export CONTENT_ROOT=$(pwd)/mdn/content/files
-          echo "CONTENT_ROOT=$CONTENT_ROOT"
+      # - name: Deploy with deployer
+      #   run: |
+      #     # Set the CONTENT_ROOT first
+      #     export CONTENT_ROOT=$(pwd)/mdn/content/files
+      #     echo "CONTENT_ROOT=$CONTENT_ROOT"
 
-          # XXX Set the CONTENT_TRANSLATED_ROOT and CONTENT_ARCHIVED_ROOT
+      #     # XXX Set the CONTENT_TRANSLATED_ROOT and CONTENT_ARCHIVED_ROOT
 
-          cd deployer
-          export DEPLOYER_BUCKET_NAME=mdn-content-dev
-          export DEPLOYER_BUCKET_PREFIX=main
+      #     cd deployer
+      #     export DEPLOYER_BUCKET_NAME=mdn-content-dev
+      #     export DEPLOYER_BUCKET_PREFIX=main
 
-          export AWS_ACCESS_KEY_ID=${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
-          export AWS_SECRET_ACCESS_KEY=${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
+      #     export AWS_ACCESS_KEY_ID=${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
+      #     export AWS_SECRET_ACCESS_KEY=${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
 
-          poetry run deployer upload --help
-          poetry run deployer upload ../client/build
-          poetry run deployer update-lambda-functions ./aws-lambda
+      #     poetry run deployer upload --help
+      #     poetry run deployer upload ../client/build
+      #     poetry run deployer update-lambda-functions ./aws-lambda
