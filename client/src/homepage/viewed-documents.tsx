@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 
 import { usePageVisibility } from "./hooks";
 
+import "./viewed-documents.scss";
+
 type Entry = {
   url: string;
   title: string;
@@ -57,8 +59,11 @@ export default function ViewedDocuments() {
   }, [isVisible]);
 
   return (
-    <div>
-      <h3>Recently viewed documents</h3>
+    <article
+      id="recently-viewed-documents"
+      aria-labelledby="recently-viewed-documents"
+    >
+      <h2>Recently viewed documents</h2>
       {!entries ? (
         <Banner>Loading recently viewed documents</Banner>
       ) : entries.length ? (
@@ -74,7 +79,9 @@ export default function ViewedDocuments() {
               return (
                 <tr key={entry.url}>
                   <td>
-                    <Link to={entry.url}>{entry.title}</Link>
+                    <Link to={entry.url}>
+                      {entry.title} <small>{entry.url}</small>
+                    </Link>
                   </td>
                   <td>{friendlyDateDisplay(new Date(entry.timestamp))}</td>
                 </tr>
@@ -85,10 +92,10 @@ export default function ViewedDocuments() {
       ) : (
         <Banner>No recently viewed documents at the moment</Banner>
       )}
-    </div>
+    </article>
   );
 }
 
 function Banner({ children }) {
-  return <p style={{ margin: 30, fontStyle: "italic" }}>{children}</p>;
+  return <p className="notification">{children}</p>;
 }
