@@ -1,4 +1,5 @@
 import React, { useReducer } from "react";
+import { useLocation } from "react-router-dom";
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
@@ -9,6 +10,29 @@ import { listFeatures } from "./utils";
 
 import "./bcd.scss";
 // import "../../../kumastyles/wiki-compat-tables.scss";
+
+// This string is used to prefill the body when clicking to file a new BCD
+// issue over on github.com/mdn/browser-compat-data
+const NEW_ISSUE_TEMPLATE = `
+<!-- Tips: where applicable, specify browser name, browser version, and mobile operating system version -->
+
+#### What information was incorrect, unhelpful, or incomplete?
+
+#### What did you expect to see?
+
+#### Did you test this? If so, how?
+
+
+<!-- Do not make changes below this line -->
+<details>
+<summary>MDN page report details</summary>
+
+* Query: \`$QUERY_ID\`
+* MDN URL: https://developer.mozilla.org$PATHNAME
+* Report started: $DATE
+
+</details>
+`;
 
 function gatherPlatformsAndBrowsers(category): [string[], bcd.BrowserNames[]] {
   let platforms = ["desktop", "mobile"];
@@ -70,6 +94,8 @@ export function BrowserCompatibilityTable({
   data: bcd.Identifier;
   browsers: bcd.Browsers;
 }) {
+  const location = useLocation();
+
   if (!data || !Object.keys(data).length) {
     throw new Error(
       "BrowserCompatibilityTable component called with empty data"
@@ -82,16 +108,29 @@ export function BrowserCompatibilityTable({
 
   const [platforms, browsers] = gatherPlatformsAndBrowsers(category);
 
+  function getNewIssueURL() {
+    const url = "https://github.com/mdn/browser-compat-data/issues/new";
+    const sp = new URLSearchParams();
+    const body = NEW_ISSUE_TEMPLATE.replace(/\$PATHNAME/g, location.pathname)
+      .replace(/\$DATE/g, new Date().toISOString())
+      .replace(/\$QUERY_ID/g, query)
+      .trim();
+    sp.set("body", body);
+    sp.set("title", query);
+    return `${url}?${sp.toString()}`;
+  }
+
   return (
     <BrowserCompatibilityErrorBoundary>
       <BrowserInfoContext.Provider value={browserInfo}>
         {title && <h2 id={id}>{title}</h2>}
         <a
           className="bc-github-link external external-icon"
-          href="https://github.com/mdn/browser-compat-data"
+          href={getNewIssueURL()}
           rel="noopener"
+          title="Report an issue with this compatability data"
         >
-          Update compatibility data on GitHub
+          See something? Say something ...on GitHub
         </a>
         <table key="bc-table" className="bc-table bc-table-web">
           <Headers {...{ platforms, browsers }} />
