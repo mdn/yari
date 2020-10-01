@@ -34,7 +34,6 @@ jobs:
 
       - uses: actions/checkout@v2
         if: "contains(github.event.inputs.archived_content, 'true')"
-        # if: ${{ github.event.inputs.archived_content }} == "true"
         with:
           repository: mdn/archived-content
           path: mdn/archived-content
@@ -95,36 +94,9 @@ jobs:
             echo "Will NOT build mdn/archived-content too"
           fi
 
-          # Debug which CONTENT_* environment variables were set and to what.
+          # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
-
-          # TODO:
-          # The building of archived and translated content depends
-          # on ${{ github.event.inputs.archived_content }} and
-          # ${{ github.event.inputs.translated_content }}
-          # And we might consider leveraging that here to set the appropriate
-          # env vars so they get built too.
-          # Another interesting option is to only build them sometimes.
-          # For example, every 1st of the month or every 1st day of the week.
-          # Sample pseudo-code:
-          #
-          #    day_of_month=$(date +"%d")
-          #    if [ $day_of_month -eq "1" ]; then
-          #      echo "Going to build with the archive content too"
-          #      export CONTENT_ARCHIVED_ROOT=archived-content/files
-          #    fi
-          #
-          # ALTERNATIVELY...
-          # We can use Actions Inputs and make it a manual trigger.
-          #
-          #   if [ ${{ github.event.inputs.archived_content }} -eq "true" ]; then
-          #      echo "Going to build with the archive content too"
-          #      export CONTENT_ARCHIVED_ROOT=archived-content/files
-          #    fi
-          #
-          # Or, we use a combination of both where we build archive content
-          # either on the 1st of every month OR if it's manually triggered.
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
@@ -134,18 +106,19 @@ jobs:
 
           # Now is not the time to worry about flaws.
           export BUILD_FLAW_LEVELS="*:ignore"
-          #TEMPORARYILY COMMENTED OUT!!!!!!!!!!!!!!! yarn prepare-build
+          yarn prepare-build
 
           # Uncomment when hacking on this workflow. It means the `yarn build`
           # finishes much sooner, which can be helpful debugging the other stuff
           # the workflow needs to do.
           # export BUILD_FOLDERSEARCH=web/html
+          export BUILD_FOLDERSEARCH=thunderbird
 
-      #     yarn build
+          yarn build
 
-      #     # TODO: When the deployer is available this is where we
-      #     # would upload the whole content of client/build
-      #     du -sh client/build
+          # TODO: When the deployer is available this is where we
+          # would upload the whole content of client/build
+          du -sh client/build
 
       # - name: Deploy with deployer
       #   run: |
