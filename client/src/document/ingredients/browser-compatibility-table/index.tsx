@@ -116,7 +116,7 @@ export function BrowserCompatibilityTable({
       .replace(/\$QUERY_ID/g, query)
       .trim();
     sp.set("body", body);
-    sp.set("title", query);
+    sp.set("title", `${query} - <PUT TITLE HERE>`);
     return `${url}?${sp.toString()}`;
   }
 
@@ -130,7 +130,7 @@ export function BrowserCompatibilityTable({
           rel="noopener"
           title="Report an issue with this compatability data"
         >
-          See something? Say something ...on GitHub
+          Report problems with this data on GitHub
         </a>
         <table key="bc-table" className="bc-table bc-table-web">
           <Headers {...{ platforms, browsers }} />
