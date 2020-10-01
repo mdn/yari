@@ -205,10 +205,12 @@ MDN URL: https://developer.mozilla.org$PATHNAME
 <!-- Do not make changes below this line -->
 <details>
 <summary>MDN Content page report details</summary>
-* Folder: $FOLDER
+
+* Folder: \`$FOLDER\`
 * MDN URL: https://developer.mozilla.org$PATHNAME
 * GitHub URL: $GITHUB_URL
 * Report started: $DATE
+
 </details>
 `;
 
