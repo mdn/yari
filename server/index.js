@@ -9,7 +9,9 @@ const openEditor = require("open-editor");
 
 const {
   buildDocumentFromURL,
+  buildDocument,
   buildLiveSamplePageFromURL,
+  renderContributorsTxt,
 } = require("../build");
 const { CONTENT_ROOT, Document, Redirect, Image } = require("../content");
 const { prepareDoc, renderHTML } = require("../ssr/dist/main");
@@ -102,6 +104,28 @@ app.post("/_redirects", (req, res) => {
 app.use("/:locale/search-index.json", searchRoute);
 
 app.get("/_flaws", flawsRoute);
+
+app.get("/*/contributors.txt", async (req, res) => {
+  const url = req.url.replace(/\/contributors\.txt$/, "");
+  const document = Document.findByURL(url);
+  res.setHeader("content-type", "text/plain");
+  if (!document) {
+    return res.status(404).send(`Document not found by URL (${url})`);
+  }
+  const [builtDocument] = await buildDocument(document);
+  if (document.metadata.contributors || !document.isArchive) {
+    res.send(
+      renderContributorsTxt(
+        document.metadata.contributors,
+        !document.isArchive
+          ? builtDocument.source.github_url.replace("/blob/", "/commits/")
+          : null
+      )
+    );
+  } else {
+    res.status(410).send("Contributors not known for this document.\n");
+  }
+});
 
 app.get("/*", async (req, res) => {
   if (req.url.startsWith("_")) {

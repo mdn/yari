@@ -123,6 +123,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         <main className="main-content" role="main">
           <article className="article">
             <RenderDocumentBody doc={doc} />
+
             <div className="metadata">
               <section className="document-meta">
                 <header className="visually-hidden">
@@ -130,7 +131,10 @@ export function Document(props /* TODO: define a TS interface for this */) {
                 </header>
                 <ul>
                   <li className="last-modified">
-                    <LastModified value={doc.modified} locale={locale} />
+                    <LastModified value={doc.modified} locale={locale} />,{" "}
+                    <a href={`${doc.mdn_url}/contributors.txt`}>
+                      by MDN contributors
+                    </a>
                   </li>
                   {!doc.isArchive && (
                     <li className="edit-on-github">

@@ -165,13 +165,14 @@ const read = memoize((folder) => {
 
   const locale = extractLocale(folder);
   const url = `/${locale}/docs/${metadata.slug}`;
-  const wikiHistories = getWikiHistories(root, locale);
+  const wikiHistory = getWikiHistories(root, locale).get(url);
   const fullMetadata = {
     metadata: {
       ...metadata,
       locale,
       popularity: getPopularities().get(url) || 0.0,
-      modified: wikiHistories.has(url) ? wikiHistories.get(url).modified : null,
+      modified: wikiHistory ? wikiHistory.modified : null,
+      contributors: wikiHistory ? wikiHistory.contributors : [],
     },
     url,
   };
