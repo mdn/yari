@@ -57,23 +57,23 @@ jobs:
       - name: Install all yarn packages
         run: yarn --frozen-lockfile
 
-      # - name: Install Python
-      #   uses: actions/setup-python@v2
-      #   with:
-      #     python-version: "3.8"
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
 
-      # - name: Install Python poetry
-      #   uses: dschep/install-poetry-action@v1.3
+      - name: Install Python poetry
+        uses: dschep/install-poetry-action@v1.3
 
-      # - name: Install deployer
-      #   run: |
-      #     cd deployer
-      #     poetry install
+      - name: Install deployer
+        run: |
+          cd deployer
+          poetry install
 
-      # - name: Display Python & Poetry version
-      #   run: |
-      #     python --version
-      #     poetry --version
+      - name: Display Python & Poetry version
+        run: |
+          python --version
+          poetry --version
 
       - name: Print information about build
         run: |
@@ -112,7 +112,6 @@ jobs:
           # finishes much sooner, which can be helpful debugging the other stuff
           # the workflow needs to do.
           # export BUILD_FOLDERSEARCH=web/html
-          export BUILD_FOLDERSEARCH=thunderbird
 
           yarn build
 
@@ -120,21 +119,29 @@ jobs:
           # would upload the whole content of client/build
           du -sh client/build
 
-      # - name: Deploy with deployer
-      #   run: |
-      #     # Set the CONTENT_ROOT first
-      #     export CONTENT_ROOT=$(pwd)/mdn/content/files
-      #     echo "CONTENT_ROOT=$CONTENT_ROOT"
+      - name: Deploy with deployer
+        run: |
+          # Set the CONTENT_ROOT first
+          export CONTENT_ROOT=$(pwd)/mdn/content/files
 
-      #     # XXX Set the CONTENT_TRANSLATED_ROOT and CONTENT_ARCHIVED_ROOT
+          if [ ${{ github.event.inputs.archived_content }} == "true" ]; then
+            echo "Will build mdn/archived-content too"
+            export CONTENT_ARCHIVED_ROOT=$(pwd)/mdn/archived-content/files
+          else
+            echo "Will NOT build mdn/archived-content too"
+          fi
 
-      #     cd deployer
-      #     export DEPLOYER_BUCKET_NAME=mdn-content-dev
-      #     export DEPLOYER_BUCKET_PREFIX=main
+          # Info about which CONTENT_* environment variables were set and to what.
+          echo "CONTENT_ROOT=$CONTENT_ROOT"
+          echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
 
-      #     export AWS_ACCESS_KEY_ID=${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
-      #     export AWS_SECRET_ACCESS_KEY=${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
+          cd deployer
+          export DEPLOYER_BUCKET_NAME=mdn-content-dev
+          export DEPLOYER_BUCKET_PREFIX=main
 
-      #     poetry run deployer upload --help
-      #     poetry run deployer upload ../client/build
-      #     poetry run deployer update-lambda-functions ./aws-lambda
+          export AWS_ACCESS_KEY_ID=${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
+          export AWS_SECRET_ACCESS_KEY=${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
+
+          poetry run deployer upload --help
+          poetry run deployer upload ../client/build
+          poetry run deployer update-lambda-functions ./aws-lambda
