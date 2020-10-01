@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const { CONTENT_ROOT, VALID_LOCALES } = require("./constants");
+const { resolveFundamental } = require("./fundamental-redirects");
 const { buildURL } = require("./utils");
 
 function add(locale, oldSlug, newSlug) {
@@ -90,7 +91,7 @@ const resolve = (url) => {
   if (!redirects.size) {
     load();
   }
-  return redirects.get(url.toLowerCase()) || url;
+  return redirects.get(url.toLowerCase()) || resolveFundamental(url) || url;
 };
 
 function write(localeFolder, pairs) {

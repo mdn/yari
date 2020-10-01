@@ -147,6 +147,7 @@ app.get("/*", async (req, res) => {
     }
   }
 
+  /*
   if (!req.url.includes("/docs/")) {
     // This should really only be expected for "single page apps".
     // All *documents* should be handled by the
@@ -154,6 +155,7 @@ app.get("/*", async (req, res) => {
     res.sendFile(path.join(STATIC_ROOT, "/index.html"));
     return;
   }
+  */
 
   // TODO: Would be nice to have a list of all supported file extensions
   // in a constants file.
