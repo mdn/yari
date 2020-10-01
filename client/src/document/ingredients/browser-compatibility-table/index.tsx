@@ -127,8 +127,9 @@ export function BrowserCompatibilityTable({
         <a
           className="bc-github-link external external-icon"
           href={getNewIssueURL()}
-          rel="noopener"
-          title="Report an issue with this compatability data"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Report an issue with this compatibility data"
         >
           Report problems with this data on GitHub
         </a>
