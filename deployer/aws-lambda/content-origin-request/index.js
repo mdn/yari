@@ -19,26 +19,41 @@ function slugToFolder(slug) {
     .join("/");
 }
 
+function redirect(location, { permanent = false } = {}) {
+  /*
+   * Create and return a redirect response.
+   */
+  return {
+    status: permanent ? "301" : "302",
+    statusDescription: permanent ? "Moved Permanently" : "Found",
+    headers: {
+      location: [
+        {
+          key: "Location",
+          value: location,
+        },
+      ],
+    },
+  };
+}
+
 exports.handler = async (event, context) => {
   /*
    * Modify the request before it's passed to the S3 origin.
    */
   const request = event.Records[0].cf.request;
   const host = request.headers.host[0].value.toLowerCase();
+  // A document URL with a trailing slash should redirect
+  // to the same URL without the trailing slash.
+  if (
+    request.uri.endsWith("/") &&
+    request.uri.toLowerCase().includes("/docs/")
+  ) {
+    return redirect(request.uri.slice(0, -1), { permanent: true });
+  }
   // Rewrite the URI to match the keys in S3.
   // NOTE: The incoming URI should remain URI-encoded.
-  let newURI = slugToFolder(request.uri);
-  if (
-    newURI.includes("/docs/") &&
-    !newURI.endsWith("/index.json") &&
-    !newURI.endsWith("/contributors.txt")
-  ) {
-    if (!newURI.endsWith("/")) {
-      newURI += "/";
-    }
-    newURI += "index.html";
-  }
-  request.uri = newURI;
+  request.uri = slugToFolder(request.uri);
   // Rewrite the HOST header to match the S3 bucket website domain.
   // This is required only because we're using S3 as a website, which
   // we need in order to do redirects from S3. NOTE: The origin is

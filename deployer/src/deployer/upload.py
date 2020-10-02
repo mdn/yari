@@ -242,6 +242,9 @@ class BucketManager:
         return boto3.client("s3")
 
     def get_key(self, build_directory, file_path):
+        if file_path.name == "index.html":
+            # This simplifies our Lambda@Edge function that tansforms URL's to S3 keys.
+            file_path = file_path.parent
         return f"{self.key_prefix}{str(file_path.relative_to(build_directory)).lower()}"
 
     def get_redirect_keys(self, from_url, to_url):
