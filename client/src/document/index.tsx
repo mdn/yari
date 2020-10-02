@@ -19,7 +19,7 @@ import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-t
 // Misc
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
-import LanguageMenu from "../header/language-menu";
+import LanguageMenu from "../ui/molecules/language-menu";
 import { Titlebar } from "../ui/molecules/titlebar";
 import { TOC } from "../ui/molecules/toc";
 import { RenderSideBar } from "./organisms/sidebar";
@@ -111,12 +111,16 @@ export function Document(props /* TODO: define a TS interface for this */) {
         </Suspense>
       )}
 
-      <nav className="breadcrumb-locale-container">
+      <div className="breadcrumb-container">
         {doc.parents && <Breadcrumbs parents={doc.parents} />}
+      </div>
+
+      <div className="locale-container">
         {translations && !!translations.length && (
           <LanguageMenu translations={translations} locale={locale} />
         )}
-      </nav>
+      </div>
+
       <div className="page-content-container">
         {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 

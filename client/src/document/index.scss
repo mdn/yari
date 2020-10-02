@@ -1,12 +1,1 @@
-.loading-toolbar {
-  position: absolute;
-  font-size: 70%;
-  top: 0;
-  right: 5px;
-}
-
-#content h2 a {
-  color: rgb(51, 51, 51);
-}
-
-@import "./prism-overrides.scss";
+@import "./prism-overrides";

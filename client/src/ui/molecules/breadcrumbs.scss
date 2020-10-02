@@ -3,9 +3,13 @@
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
-ol.breadcrumbs {
+.breadcrumbs {
   font-size: $small-font-size;
-  padding: 0 24px;
+  padding: $base-spacing;
+
+  ol {
+    @include reset-list();
+  }
 
   li {
     display: inline;
