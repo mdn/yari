@@ -19,7 +19,7 @@ jobs:
 
       - name: Setup Node.js environment
         if: env.GIT_DIFF
-        uses: actions/setup-node@v2.1.1
+        uses: actions/setup-node@v2.1.2
         with:
           node-version: "12"
 
