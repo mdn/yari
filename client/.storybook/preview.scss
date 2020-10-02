@@ -11,7 +11,8 @@ body {
 .reference-page {
   .page-header,
   .titlebar-container,
-  .breadcrumb-locale-container,
+  .breadcrumb-container,
+  .locale-container,
   .main-content,
   .document-toc-container,
   .sidebar,
@@ -28,8 +29,12 @@ body {
     background-color: #d2e4b7;
   }
 
-  .breadcrumb-locale-container {
+  .breadcrumb-container {
     background-color: #a7dddb;
+  }
+
+  .locale-container {
+    background-color: #c8f1f0;
   }
 
   .document-toc-container,

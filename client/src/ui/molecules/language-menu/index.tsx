@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import LANGUAGES_RAW from "../languages.json";
-import { Translation } from "../document/types";
+import LANGUAGES_RAW from "../../../languages.json";
+import { Translation } from "../../../document/types";
+
+import "./index.scss";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -30,6 +32,7 @@ export default function LanguageMenu({
 
   return (
     <form
+      className="language-menu"
       onSubmit={(event) => {
         event.preventDefault();
         // The default is the current locale itself. If that's what's chosen,
@@ -39,7 +42,9 @@ export default function LanguageMenu({
         }
       }}
     >
-      <label htmlFor="select_language">Change language</label>{" "}
+      <label htmlFor="select_language" className="visually-hidden">
+        Select your preferred language
+      </label>{" "}
       <select
         id="select_language"
         name="language"
@@ -68,7 +73,9 @@ export default function LanguageMenu({
           );
         })}
       </select>{" "}
-      <button type="submit">Change</button>
+      <button type="submit" className="button minimal">
+        Change language
+      </button>
     </form>
   );
 }

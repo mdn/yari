@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Search from "../header/search";
+import Search from "../ui/molecules/search-header";
 import "./index.scss";
 
 export function Homepage() {
