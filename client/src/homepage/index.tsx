@@ -1,13 +1,25 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
 import Search from "../ui/molecules/search-header";
 import "./index.scss";
 
+// Lazy sub-components
+const ViewedDocuments = lazy(() => import("./viewed-documents"));
+
 export function Homepage() {
+  const isServer = typeof window === "undefined";
+
   return (
     <div id="homepage">
       <h2>Welcome to MDN</h2>
       <Search />
+
+      {!isServer && (
+        <Suspense fallback={null}>
+          <ViewedDocuments />
+        </Suspense>
+      )}
+
       <h3>Sample pages</h3>
       <ul>
         <li>
