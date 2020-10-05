@@ -24,7 +24,7 @@ jobs:
         run: echo ${{ steps.git_diff_kumascript.outputs.diff }}
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.1
+        uses: actions/setup-node@v2.1.2
         with:
           node-version: "12"
       - name: Display Node & Yarn version
