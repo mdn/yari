@@ -6,8 +6,24 @@ body {
   background-color: initial;
 }
 
-/* Grids */
+.color-palette,
+.color-names {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 
+.swatch {
+  margin: ($base-unit * 2) 0;
+  padding: $base-spacing;
+  width: 100%;
+
+  code {
+    background-color: transparent;
+  }
+}
+
+/* Grids */
 .reference-page {
   .page-header,
   .titlebar-container,
