@@ -233,7 +233,12 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
     .replace(/\$DATE/g, new Date().toISOString())
     .trim();
   sp.set("body", body);
-  sp.set("title", `Issue with "${doc.title}": ...`);
+  const maxLength = 50;
+  const titleShort =
+    doc.title.length > maxLength
+      ? `${doc.title.slice(0, maxLength)}…`
+      : doc.title;
+  sp.set("title", `Issue with "${titleShort}": …`);
 
   const href = `${baseURL}?${sp.toString()}`;
 
