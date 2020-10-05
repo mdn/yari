@@ -74,6 +74,7 @@ const CONTENT_LABELS_PREFIXES = [
   ["mozilla/add-ons/webextensions", "WebExt"],
   ["web/accessibility", "A11y"],
   ["learn", "Learn"],
+  ["tools", "DevTools"],
 ];
 
 function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
