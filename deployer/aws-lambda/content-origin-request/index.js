@@ -28,7 +28,11 @@ exports.handler = async (event, context) => {
   // Rewrite the URI to match the keys in S3.
   // NOTE: The incoming URI should remain URI-encoded.
   let newURI = slugToFolder(request.uri);
-  if (newURI.includes("/docs/") && !newURI.endsWith("/index.json")) {
+  if (
+    newURI.includes("/docs/") &&
+    !newURI.endsWith("/index.json") &&
+    !newURI.endsWith("/contributors.txt")
+  ) {
     if (!newURI.endsWith("/")) {
       newURI += "/";
     }
