@@ -115,7 +115,11 @@ jobs:
           # (aka. local development). Usually defaults are supposed to be for
           # secure production but this is an exception and default
           # is not insecure.
-          export BUILD_LIVE_SAMPLES_BASE_URL=https://mdn.mozillademos.org
+          #export BUILD_LIVE_SAMPLES_BASE_URL=https://mdn.mozillademos.org
+          # WARNING: The following is temporary, only because, for now, we're
+          #          deploying to the mdn-content-dev S3 bucket. Remove once
+          #          we start deploying to the mdn-content-prod S3 bucket!
+          export BUILD_LIVE_SAMPLES_BASE_URL=
 
           # Now is not the time to worry about flaws.
           export BUILD_FLAW_LEVELS="*:ignore"
