@@ -21,7 +21,8 @@
     "start:server": "node server",
     "start:dev-server": "nodemon server --watch server --watch build --watch content --watch kumascript",
     "start:static-server": "cross-env ENV_FILE=testing/.env node server/static.js",
-    "filecheck": "cd filecheck && node cli.js"
+    "filecheck": "cd filecheck && node cli.js",
+    "redirects": "node redirects/cli.js"
   },
   "engines": {
     "node": ">=12.0.0"
