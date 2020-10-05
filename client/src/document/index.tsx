@@ -148,17 +148,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
                     by MDN contributors
                   </a>
                 </li>
-                {!doc.isArchive && (
-                  <li className="edit-on-github">
-                    <EditOnGitHubLink doc={doc} />
-                  </li>
-                )}
-                {!doc.isArchive && (
-                  <li className="new-issue-on-github">
-                    <NewIssueOnGitHubLink doc={doc} />
-                  </li>
-                )}
               </ul>
+              {!doc.isArchive && <OnGitHubLink doc={doc} />}
             </section>
           </div>
         </div>
@@ -173,7 +164,24 @@ export function Document(props /* TODO: define a TS interface for this */) {
   );
 }
 
-function EditOnGitHubLink({ doc }: { doc: Doc }) {
+function OnGitHubLink({ doc }: { doc: Doc }) {
+  return (
+    <div id="on-github">
+      <p>
+        <b>Found a problem with this page?</b>
+      </p>
+      <ul>
+        <li>
+          <SourceOnGitHubLink doc={doc} />
+        </li>
+        <li>
+          <NewIssueOnGitHubLink doc={doc} />
+        </li>
+      </ul>
+    </div>
+  );
+}
+function SourceOnGitHubLink({ doc }: { doc: Doc }) {
   const { github_url, folder } = doc.source;
   return (
     <a
@@ -182,7 +190,7 @@ function EditOnGitHubLink({ doc }: { doc: Doc }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      Edit on <b>GitHub</b>
+      Source on <b>GitHub</b>
     </a>
   );
 }
