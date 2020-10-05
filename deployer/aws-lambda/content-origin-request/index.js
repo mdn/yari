@@ -19,18 +19,40 @@ function slugToFolder(slug) {
     .join("/");
 }
 
-function redirect(location, { permanent = false } = {}) {
+function redirect(
+  location,
+  { permanent = false, cacheControlSeconds = 0 } = {}
+) {
   /*
    * Create and return a redirect response.
    */
+  let status, statusDescription, cacheControlValue;
+  if (permanent) {
+    status = 301;
+    statusDescription = "Moved Permanently";
+  } else {
+    status = 302;
+    statusDescription = "Found";
+  }
+  if (cacheControlSeconds) {
+    cacheControlValue = `max-age=${cacheControlSeconds},public`;
+  } else {
+    cacheControlValue = "no-store";
+  }
   return {
-    status: permanent ? "301" : "302",
-    statusDescription: permanent ? "Moved Permanently" : "Found",
+    status,
+    statusDescription,
     headers: {
       location: [
         {
           key: "Location",
           value: location,
+        },
+      ],
+      "cache-control": [
+        {
+          key: "Cache-Control",
+          value: cacheControlValue,
         },
       ],
     },
@@ -49,7 +71,10 @@ exports.handler = async (event, context) => {
     request.uri.endsWith("/") &&
     request.uri.toLowerCase().includes("/docs/")
   ) {
-    return redirect(request.uri.slice(0, -1), { permanent: true });
+    return redirect(request.uri.slice(0, -1), {
+      permanent: true,
+      cacheControlSeconds: 3600 * 24 * 30,
+    });
   }
   // Rewrite the URI to match the keys in S3.
   // NOTE: The incoming URI should remain URI-encoded.

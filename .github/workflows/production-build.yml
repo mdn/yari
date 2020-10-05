@@ -126,7 +126,9 @@ jobs:
           # secure production but this is an exception and default
           # is not insecure.
           #export BUILD_LIVE_SAMPLES_BASE_URL=https://mdn.mozillademos.org
-          # Temporary, for deployments to the mdn-content-dev bucket only.
+          # WARNING: The following is temporary, only because, for now, we're
+          #          deploying to the mdn-content-dev S3 bucket. Remove once
+          #          we start deploying to the mdn-content-prod S3 bucket!
           export BUILD_LIVE_SAMPLES_BASE_URL=
 
           # TODO: Only relevant once github.com/mdn/mdn-content is a thing.
