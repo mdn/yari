@@ -222,6 +222,22 @@ MDN URL: https://developer.mozilla.org$PATHNAME
 </details>
 `;
 
+// These are the hardcoded prefixes that get their own new-issue label in
+// in GitHub. The prefix is matched all in lower-case but the label itself
+// can have case.
+// The labels do not not needs to exist in advance on the GitHub repo.
+// If not matched to any of these labels, it will default to "Other" as the label.
+const CONTENT_LABELS_PREFIXES = [
+  ["web/javascript", "JavaScript"],
+  ["web/css", "CSS"],
+  ["web/html", "HTML"],
+  ["web/api", "WebAPI"],
+  ["web/http", "HTTP"],
+  ["mozilla/add-ons/webextensions", "WebExt"],
+  ["web/accessibility", "A11y"],
+  ["learn", "Learn"],
+];
+
 function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   const baseURL = "https://github.com/mdn/content/issues/new";
   const sp = new URLSearchParams();
@@ -239,6 +255,20 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
       ? `${doc.title.slice(0, maxLength)}…`
       : doc.title;
   sp.set("title", `Issue with "${titleShort}": …`);
+  sp.append("labels", "needs triage");
+
+  const slug = doc.mdn_url.split("/docs/")[1].toLowerCase();
+  let contentLabel = "";
+  for (const [prefix, label] of CONTENT_LABELS_PREFIXES) {
+    if (slug.startsWith(prefix)) {
+      contentLabel = label;
+      break;
+    }
+  }
+  if (!contentLabel) {
+    contentLabel = "Other";
+  }
+  sp.append("labels", `Content: ${contentLabel}`);
 
   const href = `${baseURL}?${sp.toString()}`;
 
