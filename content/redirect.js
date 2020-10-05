@@ -52,7 +52,6 @@ function load(files = null, verbose = false) {
         `${redirectsFilePath} must have a trailing newline character.`
       );
     }
-    // const normalizedPairs = new Map();
     const pairs = new Map();
     // Parse and collect all and throw errors on bad lines
     content.split("\n").forEach((line, i) => {
@@ -77,7 +76,6 @@ function load(files = null, verbose = false) {
           line
         );
       }
-      // normalizedPairs.set(from.toLowerCase(), to.toLowerCase());
       pairs.set(from.toLowerCase(), to);
     });
     // Now that all have been collected, transfer them to the `redirects` map

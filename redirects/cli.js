@@ -8,7 +8,6 @@ cli
   .version("0.0.0")
   .command("validate", "Check the _redirects.txt file(s)")
   .action((args, options, logger) => {
-    // console.log(args);
     try {
       load(null, true);
       logger.info(chalk.green("🍾 All is well in the world of redirects 🥂"));
@@ -21,7 +20,6 @@ cli
   .command("test", "Test a URL (pathname) to see if it redirects")
   .argument("[urls...]")
   .action((args, options, logger) => {
-    // console.log(args);
     try {
       for (const url of args.urls) {
         const resolved = resolve(url);
