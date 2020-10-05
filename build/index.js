@@ -9,7 +9,6 @@ const { FLAW_LEVELS } = require("./constants");
 const {
   extractSections,
   extractSidebar,
-  extractTOC,
   extractSummary,
 } = require("./document-extractor");
 const SearchIndex = require("./search-index");
@@ -109,6 +108,30 @@ function injectSource(doc, document) {
     folder,
     github_url: getGitHubURL(document.fileInfo.root, folder),
   };
+}
+
+/**
+ * Return an array of objects like this [{text: ..., id: ...}, ...]
+ * from a document's body.
+ * This will be used for the "Table of Contents" menu which expects to be able
+ * to link to each section with anchor links.
+ *
+ * @param {Document} doc
+ */
+function makeTOC(doc) {
+  return doc.body
+    .map((section) => {
+      if (
+        (section.type === "prose" ||
+          section.type === "browser_compatibility") &&
+        section.value.id &&
+        section.value.title
+      ) {
+        return { text: section.value.title, id: section.value.id };
+      }
+      return null;
+    })
+    .filter(Boolean);
 }
 
 async function buildDocument(document, documentOptions = {}) {
@@ -215,9 +238,6 @@ async function buildDocument(document, documentOptions = {}) {
   // Also note, these operations mutate the `$`.
   doc.sidebarHTML = extractSidebar($);
 
-  // Extract all the <h2> tags as they appear into an array.
-  doc.toc = extractTOC($);
-
   // Check and scrutinize any local image references
   const fileAttachments = checkImageReferences(doc, $, options, document);
 
@@ -244,6 +264,9 @@ async function buildDocument(document, documentOptions = {}) {
   // section blocks are of type "prose" and their value is a string blob
   // of HTML.
   doc.body = extractSections($);
+
+  // Extract all the <h2> tags as they appear into an array.
+  doc.toc = makeTOC(doc);
 
   // The summary comes from the HTML and potentially the <h2>Summary</h2>
   // section. It's always a plain text string.
