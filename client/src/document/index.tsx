@@ -233,7 +233,7 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
     .replace(/\$DATE/g, new Date().toISOString())
     .trim();
   sp.set("body", body);
-  sp.set("title", `Problem with content - ${doc.mdn_url}`);
+  sp.set("title", `Issue with "${doc.title}": ...`);
 
   const href = `${baseURL}?${sp.toString()}`;
 
