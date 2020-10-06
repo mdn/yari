@@ -173,8 +173,6 @@ jobs:
           cd deployer
           export DEPLOYER_BUCKET_NAME=mdn-content-dev
           export DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix }}
-
-          # TEMPORARY DEBUGGING
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
           export AWS_ACCESS_KEY_ID=${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
