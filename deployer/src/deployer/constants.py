@@ -1,13 +1,12 @@
 import json
 import os
 import sys
-import bisect
 
 from decouple import AutoConfig
 
 config = AutoConfig(os.curdir)
 
-CONTENT_ROOT = config('CONTENT_ROOT', default=None)
+CONTENT_ROOT = config("CONTENT_ROOT", default=None)
 CONTENT_TRANSLATED_ROOT = config("CONTENT_TRANSLATED_ROOT", default=None)
 
 DEFAULT_BUCKET_NAME = config("DEPLOYER_BUCKET_NAME", default="mdn-content-dev")
