@@ -7,7 +7,6 @@ import { FeatureRow } from "./feature-row";
 import { PLATFORM_BROWSERS, Headers } from "./headers";
 import { Legend } from "./legend";
 import { listFeatures } from "./utils";
-import { DisplayH2 } from "../utils";
 
 import "./bcd.scss";
 // import "../../../kumastyles/wiki-compat-tables.scss";
@@ -124,7 +123,6 @@ export default function BrowserCompatibilityTable({
   return (
     <BrowserCompatibilityErrorBoundary>
       <BrowserInfoContext.Provider value={browserInfo}>
-        {title && <DisplayH2 id={id} title={title} />}
         <a
           className="bc-github-link external external-icon"
           href={getNewIssueURL()}

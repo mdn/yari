@@ -190,9 +190,6 @@ app.get("/*", async (req, res) => {
     lookupURL = lookupURL.replace(/\/bcd__\d+\.json$/, "");
   }
 
-  console.log({ lookupURL });
-  console.log({ bcdDataURL });
-
   const isJSONRequest = extraSuffix.endsWith(".json");
 
   let document;

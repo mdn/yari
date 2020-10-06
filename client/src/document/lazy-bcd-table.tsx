@@ -1,6 +1,8 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import useSWR from "swr";
 
+import { DisplayH2 } from "./ingredients/utils";
+
 const BrowserCompatibilityTable = lazy(
   () => import("./ingredients/browser-compatibility-table")
 );
@@ -18,6 +20,15 @@ export function LazyBrowserCompatibilityTable({
   query: string;
   dataURL: string;
 }) {
+  return (
+    <>
+      {title && <DisplayH2 id={id} title={title} />}
+      <LazyBrowserCompatibilityTableInner dataURL={dataURL} />
+    </>
+  );
+}
+
+function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
   const [bcdDataURL, setBCDDataURL] = useState("");
 
   const { error, data } = useSWR(
@@ -43,7 +54,7 @@ export function LazyBrowserCompatibilityTable({
     return <Loading />;
   }
   if (error) {
-    return <p>Error loading BCD data :(</p>;
+    return <p>Error loading BCD data</p>;
   }
   return (
     <Suspense fallback={<Loading />}>
@@ -51,7 +62,7 @@ export function LazyBrowserCompatibilityTable({
     </Suspense>
   );
 }
-function Wrap({ id, title }: { id: string; title: string }) {}
+
 function Loading() {
   return <p>Loading BCD table...</p>;
 }

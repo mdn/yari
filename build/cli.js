@@ -62,9 +62,12 @@ async function buildDocuments() {
       document.translations = translationsOf.get(document.metadata.slug);
     }
 
-    const [builtDocument, liveSamples, fileAttachments] = await buildDocument(
-      document
-    );
+    const {
+      doc: builtDocument,
+      liveSamples,
+      fileAttachments,
+      bcdData,
+    } = await buildDocument(document);
 
     fs.writeFileSync(
       path.join(outPath, "index.html"),
@@ -87,6 +90,12 @@ async function buildDocuments() {
             ? builtDocument.source.github_url.replace("/blob/", "/commits/")
             : null
         )
+      );
+    }
+    for (const { url, data } of bcdData) {
+      fs.writeFileSync(
+        path.join(outPath, path.basename(url)),
+        JSON.stringify(data)
       );
     }
 
