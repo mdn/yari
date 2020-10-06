@@ -97,6 +97,7 @@ jobs:
           echo "Trigger notes: ${{ github.event.inputs.notes }}"
           echo "Trigger archived-content: ${{ github.event.inputs.archived_content }}"
           echo "Trigger translated-content: ${{ github.event.inputs.translated_content }}"
+          echo "Deployment prefix: ${{ github.event.inputs.deployment_prefix }}"
 
       - name: Build everything
         run: |
@@ -173,6 +174,7 @@ jobs:
           cd deployer
           export DEPLOYER_BUCKET_NAME=mdn-content-dev
           export DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix }}
+          # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
           export AWS_ACCESS_KEY_ID=${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
