@@ -81,7 +81,7 @@ function FeatureListAccordion({
   );
 }
 
-export function BrowserCompatibilityTable({
+export default function BrowserCompatibilityTable({
   id,
   title,
   query,
