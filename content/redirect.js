@@ -126,7 +126,7 @@ function shortCuts(pairs, throws = false) {
 }
 
 function write(localeFolder, pairs) {
-  const transitivePairs = shortCuts(paris);
+  const transitivePairs = shortCuts(pairs);
   const filePath = path.join(localeFolder, "_redirects.txt");
   const writeStream = fs.createWriteStream(filePath);
   writeStream.write(`# FROM-URL\tTO-URL\n`);
