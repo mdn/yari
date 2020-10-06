@@ -13,7 +13,13 @@ const {
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 } = require("../build");
-const { CONTENT_ROOT, Document, Redirect, Image } = require("../content");
+const {
+  CONTENT_ROOT,
+  Document,
+  Redirect,
+  Image,
+  resolveFundamental,
+} = require("../content");
 const { prepareDoc, renderHTML } = require("../ssr/dist/main");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
@@ -147,7 +153,12 @@ app.get("/*", async (req, res) => {
     }
   }
 
-  /*
+  // If we have a fundamental redirect mimic out Lambda@Edge and redirect.
+  const fundamentalRedirect = resolveFundamental(req.url);
+  if (fundamentalRedirect) {
+    return res.redirect(301, fundamentalRedirect);
+  }
+
   if (!req.url.includes("/docs/")) {
     // This should really only be expected for "single page apps".
     // All *documents* should be handled by the
@@ -155,7 +166,6 @@ app.get("/*", async (req, res) => {
     res.sendFile(path.join(STATIC_ROOT, "/index.html"));
     return;
   }
-  */
 
   // TODO: Would be nice to have a list of all supported file extensions
   // in a constants file.

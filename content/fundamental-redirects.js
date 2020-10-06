@@ -49,38 +49,38 @@ const SCL3_REDIRECT_PATTERNS = [
   // RewriteRule ^/media/(redesign/)?css/(.*)-min.css$
   // /static/build/styles/$2.css [L,R=301]
   redirect(
-    /^media\/(?:redesign\/)?css\/(?<doc>.*)-min.css$/,
+    /^media\/(?:redesign\/)?css\/(?<doc>.*)-min.css$/i,
     ({ doc }) => `"/static/build/styles/${doc}.css`,
     { permanent: true }
   ),
   // RewriteRule ^/media/(redesign/)?js/(.*)-min.js$ /static/build/js/$2.js
   // [L,R=301]
   redirect(
-    /^media\/(?:redesign\/)?js\/(?<doc>.*)-min.js$/,
+    /^media\/(?:redesign\/)?js\/(?<doc>.*)-min.js$/i,
     ({ doc }) => `"/static/build/js/${doc}.js`,
     { permanent: true }
   ),
   // RewriteRule ^/media/(redesign/)?img(.*) /static/img$2 [L,R=301]
   redirect(
-    /^media\/(?:redesign\/)?img(?<suffix>.*)$/,
+    /^media\/(?:redesign\/)?img(?<suffix>.*)$/i,
     ({ suffix }) => `"/static/img${suffix}`,
     { permanent: true }
   ),
   // RewriteRule ^/media/(redesign/)?css(.*) /static/styles$2 [L,R=301]
   redirect(
-    /^media\/(?:redesign\/)?css(?<suffix>.*)$/,
+    /^media\/(?:redesign\/)?css(?<suffix>.*)$/i,
     ({ suffix }) => `"/static/styles${suffix}`,
     { permanent: true }
   ),
   // RewriteRule ^/media/(redesign/)?js(.*) /static/js$2 [L,R=301]
   redirect(
-    /^media\/(?:redesign\/)?js(?<suffix>.*)$/,
+    /^media\/(?:redesign\/)?js(?<suffix>.*)$/i,
     ({ suffix }) => `"/static/js${suffix}`,
     { permanent: true }
   ),
   // RewriteRule ^/media/(redesign/)?fonts(.*) /static/fonts$2 [L,R=301]
   redirect(
-    /^media\/(?:redesign\/)?fonts(?<suffix>.*)$/,
+    /^media\/(?:redesign\/)?fonts(?<suffix>.*)$/i,
     ({ suffix }) => `"/static/fonts${suffix}`,
     { permanent: true }
   ),
@@ -88,7 +88,7 @@ const SCL3_REDIRECT_PATTERNS = [
   // https://developer.mozilla.org/docs/Web/Demos_of_open_web_technologies/
   // Django will then redirect based on Accept-Language
   redirect(
-    /^media\/uploads\/demos\/(?:.*)$/,
+    /^media\/uploads\/demos\/(?:.*)$/i,
     "/docs/Web/Demos_of_open_web_technologies/",
     { permanent: false }
   ),
@@ -623,16 +623,16 @@ const SCL3_REDIRECT_PATTERNS = [
   // Old landing pages. The regex, adapted from Bedrock, captures locale prefixes.
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?mobile/?$ /$1docs/Mozilla/Mobile
   // [R=301,L]
-  localeRedirect(/^mobile\/?$/, "/docs/Mozilla/Mobile", { permanent: true }),
+  localeRedirect(/^mobile\/?$/i, "/docs/Mozilla/Mobile", { permanent: true }),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?addons/?$ /$1Add-ons [R=301,L]
-  localeRedirect(/^addons\/?$/, "/Add-ons", { permanent: true }),
+  localeRedirect(/^addons\/?$/i, "/Add-ons", { permanent: true }),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?mozilla/?$ /$1docs/Mozilla [R=301,L]
-  localeRedirect(/^mozilla\/?$/, "/docs/Mozilla", { permanent: true }),
+  localeRedirect(/^mozilla\/?$/i, "/docs/Mozilla", { permanent: true }),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?web/?$ /$1docs/Web [R=301,L]
-  localeRedirect(/^web\/?$/, "/docs/Web", { permanent: true }),
+  localeRedirect(/^web\/?$/i, "/docs/Web", { permanent: true }),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?learn/html5/?$
   // /$1docs/Web/Guide/HTML/HTML5 [R=301,L]
-  localeRedirect(/^learn\/html5\/?$/, "/docs/Web/Guide/HTML/HTML5", {
+  localeRedirect(/^learn\/html5\/?$/i, "/docs/Web/Guide/HTML/HTML5", {
     permanent: true,
   }),
   // Some blanket section moves / renames
@@ -669,7 +669,7 @@ const SCL3_REDIRECT_PATTERNS = [
   // RewriteRule web-tech/2008/09/12/css-transforms
   // /docs/CSS/Using_CSS_transforms [R=301,L]
   redirect(
-    /^web-tech\/2008\/09\/12\/css-transforms$/,
+    /^web-tech\/2008\/09\/12\/css-transforms$/i,
     "/docs/CSS/Using_CSS_transforms",
     { permanent: true }
   ),
@@ -679,27 +679,27 @@ const SCL3_REDIRECT_PATTERNS = [
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?devnews/index.php/feed.*
   // https://blog.mozilla.org/feed/ [R=301,L]
   localeRedirect(
-    /^devnews\/index.php\/feed.*/,
+    /^devnews\/index.php\/feed.*/i,
     "https://blog.mozilla.org/feed/",
     { prepend_locale: false, permanent: true }
   ),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?devnews.*
   // https://wiki.mozilla.org/Releases [R=301,L]
-  localeRedirect(/^devnews.*/, "https://wiki.mozilla.org/Releases", {
+  localeRedirect(/^devnews.*/i, "https://wiki.mozilla.org/Releases", {
     prepend_locale: false,
     permanent: true,
   }),
   // Old "Learn" pages
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?learn/html /$1Learn/HTML [R=301,L]
   localeRedirect(
-    /^learn\/html/,
+    /^learn\/html/i,
     // TODO: new path '/docs/Learn/HTML',
     "/Learn/HTML",
     { permanent: true }
   ),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?learn/css /$1Learn/CSS [R=301,L]
   localeRedirect(
-    /^learn\/css/,
+    /^learn\/css/i,
     // TODO: new path '/docs/Learn/CSS',
     "/Learn/CSS",
     { permanent: true }
@@ -707,14 +707,14 @@ const SCL3_REDIRECT_PATTERNS = [
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?learn/javascript /$1Learn/JavaScript
   // [R=301,L]
   localeRedirect(
-    /^learn\/javascript/,
+    /^learn\/javascript/i,
     // TODO: new path '/docs/Learn/JavaScript',
     "/Learn/JavaScript",
     { permanent: true }
   ),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?learn /$1Learn [R=301,L]
   localeRedirect(
-    /^learn/,
+    /^learn/i,
     // TODO: new path '/docs/Learn',
     "/Learn",
     { permanent: true }
@@ -723,28 +723,28 @@ const SCL3_REDIRECT_PATTERNS = [
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?demos/detail/bananabread$
   // https://github.com/kripken/BananaBread/ [R=301,L]
   localeRedirect(
-    /^demos\/detail\/bananabread$/,
+    /^demos\/detail\/bananabread$/i,
     "https://github.com/kripken/BananaBread/",
     { prepend_locale: false, permanent: true }
   ),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?demos/detail/bananabread/launch$
   // https://kripken.github.io/BananaBread/cube2/index.html [R=301,L]
   localeRedirect(
-    /^demos\/detail\/bananabread\/launch$/,
+    /^demos\/detail\/bananabread\/launch$/i,
     "https://kripken.github.io/BananaBread/cube2/index.html",
     { prepend_locale: false, permanent: true }
   ),
   // All other Demo Studio and Dev Derby paths (bug 1238037)
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?demos
   // /$1docs/Web/Demos_of_open_web_technologies? [R=301,L]
-  localeRedirect(/^demos/, "/docs/Web/Demos_of_open_web_technologies", {
+  localeRedirect(/^demos/i, "/docs/Web/Demos_of_open_web_technologies", {
     permanent: true,
   }),
   // Legacy off-site redirects (bug 1362438)
   // RewriteRule ^contests/ http://www.mozillalabs.com/ [R=302,L]
-  redirect(/^contests/, "http://www.mozillalabs.com/", { permanent: false }),
+  redirect(/^contests/i, "http://www.mozillalabs.com/", { permanent: false }),
   // RewriteRule ^es4 http://www.ecma-international.org/memento/TC39.htm [R=302,L]
-  redirect(/^es4/, "http://www.ecma-international.org/memento/TC39.htm", {
+  redirect(/^es4/i, "http://www.ecma-international.org/memento/TC39.htm", {
     permanent: false,
   }),
 ];
@@ -824,16 +824,16 @@ const zoneRedirects = [
   [
     "Apps",
     "Web/Apps",
-    ["en-US", "fa", "f/, /ja", "th", "zh-CN", "zh-TW", null],
+    ["en-US", "fa", "fr", "ja", "th", "zh-CN", "zh-TW", null],
   ],
   ["Apps", "Web/Aplicaciones", ["es"]],
-  ["Apps", "Apps", ["bn", "de", "it", "ko", "pt-B/, /ru"]],
+  ["Apps", "Apps", ["bn", "de", "it", "ko", "pt-Br", "ru"]],
   ["Learn", "Learn", ["ca", "de", null]],
   ["Apprendre", "Apprendre", ["fr"]],
   [
     "Marketplace",
     "Mozilla/Marketplace",
-    ["de", "en-US", "es", "f/, /it", "ja", "zh-CN", null],
+    ["de", "en-US", "es", "fr", "it", "ja", "zh-CN", null],
   ],
   ["Marketplace", "Mozilla/بازار", ["fa"]],
 ];
@@ -1068,15 +1068,15 @@ for (const [aoPath, ewPath] of [
 
 const FIREFOX_ACCOUNTS_REDIRECT_PATTERNS = [
   externalRedirect(
-    /(?:docs\/)?Mozilla\/Firefox_Accounts_OAuth_Dashboard(?:\/|$)/,
+    /(?:docs\/)?Mozilla\/Firefox_Accounts_OAuth_Dashboard(?:\/|$)/i,
     "https://mozilla.github.io/ecosystem-platform/docs/welcome"
   ),
   externalRedirect(
-    /(?:docs\/)?Mozilla\/(?:Tech\/)?Firefox_Accounts(?:\/|$)/,
+    /(?:docs\/)?Mozilla\/(?:Tech\/)?Firefox_Accounts(?:\/|$)/i,
     "https://mozilla.github.io/ecosystem-platform/docs/welcome"
   ),
   externalRedirect(
-    /(?:docs\/)?Archive\/Mozilla\/Firefox\/Accounts(?:\/|$)/,
+    /(?:docs\/)?Archive\/Mozilla\/Firefox\/Accounts(?:\/|$)/i,
     "https://mozilla.github.io/ecosystem-platform/docs/welcome"
   ),
 ];
@@ -1093,23 +1093,23 @@ for (const [pattern, path] of [
     "/contributing/debugging/debugging_firefox_with_gdb.html",
   ],
   [
-    /(?:docs\/)?Debugging_Mozilla_with_lldb(?:\/|$)/,
+    /(?:docs\/)?Debugging_Mozilla_with_lldb(?:\/|$)/i,
     "/contributing/debugging/debugging_firefox_with_lldb.html",
   ],
   [
-    /(?:docs\/)?Understanding_crash_reports(?:\/|$)/,
+    /(?:docs\/)?Understanding_crash_reports(?:\/|$)/i,
     "/contributing/debugging/understanding_crash_reports.html",
   ],
   [
-    /(?:docs\/)?Debugging_a_minidump(?:\/|$)/,
+    /(?:docs\/)?Debugging_a_minidump(?:\/|$)/i,
     "/contributing/debugging/debugging_a_minidump.html",
   ],
   [
-    /(?:docs\/)?Debugging_Mozilla_with_Valgrind(?:\/|$)/,
+    /(?:docs\/)?Debugging_Mozilla_with_Valgrind(?:\/|$)/i,
     "/contributing/debugging/debugging_firefox_with_valgrind.html",
   ],
   [
-    /(?:docs\/)?Debugging\/Record_and_Replay_Debugging_Firefox(?:\/|$)/,
+    /(?:docs\/)?Debugging\/Record_and_Replay_Debugging_Firefox(?:\/|$)/i,
     "/contributing/debugging/debugging_firefox_with_rr.html",
   ],
 ]) {
@@ -1126,9 +1126,13 @@ const REDIRECT_PATTERNS = [].concat(
   FIREFOX_ACCOUNTS_REDIRECT_PATTERNS,
   FIREFOX_SOURCE_DOCS_REDIRECT_PATTERNS,
   [
-    localeRedirect(/^fellowship/, "/docs/Archive/2015_MDN_Fellowship_Program", {
-      permanent: true,
-    }),
+    localeRedirect(
+      /^fellowship/i,
+      "/docs/Archive/2015_MDN_Fellowship_Program",
+      {
+        permanent: true,
+      }
+    ),
   ]
 );
 
