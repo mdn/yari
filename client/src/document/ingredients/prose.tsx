@@ -1,5 +1,7 @@
 import React from "react";
 
+import { DisplayH2 } from "./utils";
+
 export function Prose({ section }) {
   return <div dangerouslySetInnerHTML={{ __html: section.content }} />;
 }
@@ -7,11 +9,7 @@ export function Prose({ section }) {
 export function ProseWithHeading({ id, section }) {
   return (
     <>
-      <h2 id={id}>
-        <a href={`#${id}`} title={`Permalink to ${section.title}`}>
-          {section.title}
-        </a>
-      </h2>
+      <DisplayH2 id={id} title={section.title} />
       <Prose section={section} />
     </>
   );

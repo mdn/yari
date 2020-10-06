@@ -242,6 +242,18 @@ class BucketManager:
         return boto3.client("s3")
 
     def get_key(self, build_directory, file_path):
+        if file_path.name == "index.html":
+            # NOTE: All incoming requests, unless immediately served from the CDN
+            # cache, are first handled by our "origin-request" Lambda@Edge function,
+            # which tansforms incoming URL's to S3 keys. This line of code allows
+            # that function to remain as simple as possible, because we no longer
+            # have to determine when to add an "/index.html" suffix when transforming
+            # the incoming URL to it corresponding S3 key. We will simply store
+            # "/en-us/docs/web/index.html" as "/en-us/docs/web", which mirrors
+            # its URL. Also, note that the content type is not determined by the
+            # suffix of the S3 key, but is explicitly set from the full filepath
+            # when uploading the file.
+            file_path = file_path.parent
         return f"{self.key_prefix}{str(file_path.relative_to(build_directory)).lower()}"
 
     def get_redirect_keys(self, from_url, to_url):

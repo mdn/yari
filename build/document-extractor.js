@@ -1,25 +1,6 @@
 const cheerio = require("./monkeypatched-cheerio");
 const { packageBCD } = require("./resolve-bcd");
 
-/**
- * Given a cheerio doc, extract all the <h2> tags and make it a
- * structured thing.
- */
-function extractTOC($) {
-  const toc = [];
-  // Use .each() instead of .map() so we can do filtering lazily
-  // within each callback instead of having to .filter() first.
-  $("h2").each((i, element) => {
-    const $element = $(element);
-    const text = $element.text();
-    const id = $element.attr("id");
-    if (text && id) {
-      toc.push({ text, id });
-    }
-  });
-  return toc;
-}
-
 /** Extract and mutate the $ if it as a "Quick_Links" section.
  * But only if it exists.
  *
@@ -389,6 +370,5 @@ function extractSummary(sections) {
 module.exports = {
   extractSidebar,
   extractSections,
-  extractTOC,
   extractSummary,
 };

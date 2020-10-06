@@ -23,7 +23,8 @@
     "start:static-server": "cross-env ENV_FILE=testing/.env node server/static.js",
     "fiori:start": "cd client && start-storybook -p 6006",
     "fiori:build": "cd client && build-storybook",
-    "filecheck": "cd filecheck && node cli.js"
+    "filecheck": "cd filecheck && node cli.js",
+    "redirects": "node redirects/cli.js"
   },
   "engines": {
     "node": ">=12.0.0"
@@ -87,7 +88,7 @@
     "@storybook/react": "^6.0.22",
     "@testing-library/react": "^11.0.4",
     "@types/jest": "^26.0.14",
-    "@types/react": "^16.9.50",
+    "@types/react": "^16.9.51",
     "@types/react-dom": "^16.9.8",
     "@types/react-modal": "^3.10.6",
     "babel-loader": "^8.1.0",
