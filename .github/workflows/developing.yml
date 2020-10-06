@@ -55,7 +55,7 @@ jobs:
 
       - name: Wait for servers
         run: |
-          # Just a slight delay to
+          # Just a slight delay to wait until the dev server is ready.
           sleep 5
 
           curl --retry-connrefused --retry 5 http://localhost:5000 > /dev/null
