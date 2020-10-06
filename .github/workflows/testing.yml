@@ -76,3 +76,37 @@ jobs:
           # Also note that `--runInBand` is the same as `--maxWorkers=1`
 
           ./testing/scripts/functional-test.sh --runInBand
+
+  deployer:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: technote-space/get-diff-action@v3
+        id: git_diff_content
+        with:
+          PREFIX_FILTER: deployer/
+
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+
+      - name: Install Python poetry
+        uses: dschep/install-poetry-action@v1.3
+
+      - name: Install deployer
+        run: |
+          cd deployer
+          poetry install
+
+      - name: Display Python & Poetry version
+        run: |
+          python --version
+          poetry --version
+
+      - name: Basic run of deployer
+        run: |
+          cd deployer
+          poetry run deployer --help
