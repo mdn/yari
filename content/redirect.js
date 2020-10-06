@@ -94,7 +94,7 @@ function sortTuples([a, b], [c, d]) {
   return 0;
 }
 
-function shortCuts(pairs) {
+function shortCuts(pairs, throws = false) {
   const dag = new Map(pairs);
 
   // Expand all "edges" and keep track of the nodes we traverse.
@@ -102,7 +102,11 @@ function shortCuts(pairs) {
     let next = dag.get(s);
     if (next) {
       if (froms.includes(next)) {
-        console.error(`redirect cycle [${froms.join(", ")}] → ${next}`);
+        const msg = `redirect cycle [${froms.join(", ")}] → ${next}`;
+        if (throws) {
+          throw new Error(msg);
+        }
+        console.warn(msg);
         return [];
       }
       return transit(next, [...froms, s]);
