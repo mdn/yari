@@ -49,6 +49,14 @@ export const primaryColors = () => {
             color={style.neutral100}
           />
         </li>
+        <li>
+          <ColorItem
+            backgroundColor={style.primary500}
+            sassVariable="$primary-500"
+            jsVariable="primary500"
+            color={style.neutral100}
+          />
+        </li>
       </ul>
     </>
   );
