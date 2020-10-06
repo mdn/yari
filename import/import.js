@@ -1096,7 +1096,7 @@ async function saveAllRedirects(redirects) {
     });
     countPerLocale.push([locale, pairs.length]);
     const root = locale === "en-US" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
-    const localeFolder = path.join(root, locale);
+    const localeFolder = path.join(root, locale.toLowerCase());
     console.log("LOCALE", locale, "TO", localeFolder);
     if (!fs.existsSync(localeFolder)) {
       console.log(

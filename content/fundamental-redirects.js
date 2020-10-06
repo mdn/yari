@@ -1,4 +1,4 @@
-const startRe = /^\^]\/?/;
+const startRe = /^\^\/?/;
 const startTemplate = /^\//;
 
 function redirect(pattern, template, options = {}) {
@@ -22,13 +22,13 @@ function localeRedirect(
 ) {
   const patternStrWithLocale = pattern.source.replace(
     startRe,
-    "^(?<locale>w{2,3}(?:-w{2})?/)?"
+    "^(?<locale>\\w{2,3}(?:-\\w{2})?/)?"
   );
   const patternWithLocale = new RegExp(patternStrWithLocale, pattern.flags);
   let _template = template;
   if (prependLocale) {
     _template = ({ locale, ...group } = {}) =>
-      `/${locale ? ` ${locale}/` : ""}${(typeof template === "string"
+      `/${locale ? `${locale}` : ""}${(typeof template === "string"
         ? template
         : template(group)
       ).replace(startTemplate, "")}`;
@@ -691,34 +691,16 @@ const SCL3_REDIRECT_PATTERNS = [
   }),
   // Old "Learn" pages
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?learn/html /$1Learn/HTML [R=301,L]
-  localeRedirect(
-    /^learn\/html/i,
-    // TODO: new path '/docs/Learn/HTML',
-    "/Learn/HTML",
-    { permanent: true }
-  ),
+  localeRedirect(/^learn\/html/i, "/docs/Learn/HTML", { permanent: true }),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?learn/css /$1Learn/CSS [R=301,L]
-  localeRedirect(
-    /^learn\/css/i,
-    // TODO: new path '/docs/Learn/CSS',
-    "/Learn/CSS",
-    { permanent: true }
-  ),
+  localeRedirect(/^learn\/css/i, "/docs/Learn/CSS", { permanent: true }),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?learn/javascript /$1Learn/JavaScript
   // [R=301,L]
-  localeRedirect(
-    /^learn\/javascript/i,
-    // TODO: new path '/docs/Learn/JavaScript',
-    "/Learn/JavaScript",
-    { permanent: true }
-  ),
+  localeRedirect(/^learn\/javascript/i, "/docs/Learn/JavaScript", {
+    permanent: true,
+  }),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?learn /$1Learn [R=301,L]
-  localeRedirect(
-    /^learn/i,
-    // TODO: new path '/docs/Learn',
-    "/Learn",
-    { permanent: true }
-  ),
+  localeRedirect(/^learn/i, "/docs/Learn", { permanent: true }),
   // BananaBread demo (bug 1238041)
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?demos/detail/bananabread$
   // https://github.com/kripken/BananaBread/ [R=301,L]
@@ -839,8 +821,8 @@ const zoneRedirects = [
 ];
 
 const zonePatternFmt = (prefix, zoneRootPattern) =>
-  new RegExp(`${prefix}${zoneRootPattern}(?:\/?|(?<sub_path>[\/$].+))$`);
-const subPathFmt = (prefix, wikiSlug) => ({ sub_path: subPath = "" } = {}) =>
+  new RegExp(`^${prefix}${zoneRootPattern}(?:\\/?|(?<subPath>[\\/$].+))$`);
+const subPathFmt = (prefix, wikiSlug) => ({ subPath = "" } = {}) =>
   `/${prefix}docs/${wikiSlug}${subPath}`;
 
 const ZONE_REDIRECT_PATTERNS = [];
@@ -1060,7 +1042,7 @@ for (const [aoPath, ewPath] of [
 ]) {
   WEBEXTENSIONS_REDIRECT_PATTERNS.push(
     externalRedirect(
-      new RegExp(`docs\/Mozilla\/Add-ons\/${aoPath}$`, "i"),
+      new RegExp(`docs\\/Mozilla\\/Add-ons\\/${aoPath}$`, "i"),
       `https://extensionworkshop.com/documentation/${ewPath}`
     )
   );
