@@ -13599,10 +13599,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typeface-zilla-slab@0.0.72:
-  version "0.0.72"
-  resolved "https://registry.yarnpkg.com/typeface-zilla-slab/-/typeface-zilla-slab-0.0.72.tgz#6d101393e3137b3c8217a0b73ce189165e75a2a0"
-  integrity sha512-sX85tUKZfb62DsrPcRC3tQIAm1bhA5+3O17yvAvfXKGaLYNBAHaj8aLmurCsHvLKAeivrjWgCjVokk2Oepbeyw==
+typeface-zilla-slab@1.1.13:
+  version "1.1.13"
+  resolved "https://registry.yarnpkg.com/typeface-zilla-slab/-/typeface-zilla-slab-1.1.13.tgz#3cae461c85bd82aa226352306a5de6aa35a05959"
+  integrity sha512-u6fGAsLM5diJnwr+aASBO+eFp+1jx1f6UmOCN/YmfldqrCCD+70wriBDibaZJaUUKcN5WtealeAhPU1tOUDYZg==
 
 typescript@^3.9.7:
   version "3.9.7"
