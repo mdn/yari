@@ -5,6 +5,8 @@ name: Testing Yari
 
 on:
   push:
+    branches:
+      - master
   pull_request:
 
 jobs:
