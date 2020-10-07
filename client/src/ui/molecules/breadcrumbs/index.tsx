@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { DocParent } from "../../document/types";
+import { DocParent } from "../../../document/types";
 
-import "./breadcrumbs.scss";
+import "./index.scss";
 
 export function Breadcrumbs({ parents }: { parents: DocParent[] }) {
   if (!parents.length) {

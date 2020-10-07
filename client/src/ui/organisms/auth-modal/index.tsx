@@ -1,9 +1,9 @@
 import React from "react";
 import Modal from "react-modal";
 
-import { getAuthURL } from "./auth-link";
+import { getAuthURL } from "../../../utils/auth-link";
 
-import "../kumastyles/minimalist/components/auth-modal.scss";
+import "../../../kumastyles/minimalist/components/auth-modal.scss";
 
 Modal.setAppElement("#root");
 

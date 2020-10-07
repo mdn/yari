@@ -1,9 +1,9 @@
 import * as React from "react";
 
-import { useLocale } from "../../hooks";
-import { ReactComponent as LogoSVG } from "../../assets/logo.svg";
+import { useLocale } from "../../../hooks";
+import { ReactComponent as LogoSVG } from "../../../assets/logo.svg";
 
-import "./logo.scss";
+import "./index.scss";
 
 export function Logo({ mode }: { mode?: string }) {
   const locale = useLocale();

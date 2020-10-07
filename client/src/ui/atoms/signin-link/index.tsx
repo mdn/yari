@@ -1,9 +1,9 @@
 import React, { lazy, Suspense, useState } from "react";
 
-import { useLocale } from "../hooks";
-import { getAuthURL } from "./auth-link";
+import { useLocale } from "../../../hooks";
+import { getAuthURL } from "../../../utils/auth-link";
 
-const AuthModal = lazy(() => import("./auth-modal"));
+const AuthModal = lazy(() => import("../../organisms/auth-modal"));
 
 export default function SignInLink({ className }: { className?: string }) {
   const locale = useLocale();

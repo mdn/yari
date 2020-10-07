@@ -1,6 +1,6 @@
 import React from "react";
 
-import "./titlebar.scss";
+import "./index.scss";
 
 export function Titlebar({ docTitle }) {
   return (
