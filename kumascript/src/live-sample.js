@@ -129,9 +129,19 @@ function getLiveSampleIDs(slug, source) {
   for (let token of tokens) {
     if (
       token.type === "MACRO" &&
-      normalizeMacroName(token.name) === "embedlivesample" &&
-      token.args.length
+      ((normalizeMacroName(token.name) === "embedlivesample" &&
+        token.args.length) ||
+        token.name === "InheritanceDiagram")
     ) {
+      // The InheritanceDiagram is a special macro that, unlike other EmbedLiveSample
+      // macros in that it itself renders the "EmbedLiveSample" with a set of
+      // hardcoded options. The only thing that is variable and comes from the
+      // the raw HTML is the size. So make an exception for this otherwise, the
+      // HTML element ID is lost and this function won't discovered that it is
+      // in fact a live sample here.
+      if (token.name === "InheritanceDiagram") {
+        token.args = ["inheritance_diagram", ...token.args];
+      }
       // Some of the localized pages URI-encode their first argument,
       // the live-sample ID, even though they don't need to do that,
       // so let's first call "safeDecodeURIComponent" just in case.
