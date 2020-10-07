@@ -21,6 +21,14 @@ const EXCLUDE_SLUG_PREFIXES = [
   "User:",
   "User_talk:",
   "Trash",
+  "azsdfvg",
+  "doc_temp",
+  "tempjenzed",
+  "Junk",
+  "Temp_input",
+  "Admin:groovecoder",
+  "temp_gamepad",
+  "temp",
 
   // The following come from 'NOINDEX_SLUG_PREFIXES' in
   // https://github.com/mdn/kuma/blob/master/kuma/wiki/constants.py#L668
