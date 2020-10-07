@@ -50,38 +50,38 @@ const SCL3_REDIRECT_PATTERNS = [
   // /static/build/styles/$2.css [L,R=301]
   redirect(
     /^media\/(?:redesign\/)?css\/(?<doc>.*)-min.css$/i,
-    ({ doc }) => `"/static/build/styles/${doc}.css`,
+    ({ doc }) => `/static/build/styles/${doc}.css`,
     { permanent: true }
   ),
   // RewriteRule ^/media/(redesign/)?js/(.*)-min.js$ /static/build/js/$2.js
   // [L,R=301]
   redirect(
     /^media\/(?:redesign\/)?js\/(?<doc>.*)-min.js$/i,
-    ({ doc }) => `"/static/build/js/${doc}.js`,
+    ({ doc }) => `/static/build/js/${doc}.js`,
     { permanent: true }
   ),
   // RewriteRule ^/media/(redesign/)?img(.*) /static/img$2 [L,R=301]
   redirect(
     /^media\/(?:redesign\/)?img(?<suffix>.*)$/i,
-    ({ suffix }) => `"/static/img${suffix}`,
+    ({ suffix }) => `/static/img${suffix}`,
     { permanent: true }
   ),
   // RewriteRule ^/media/(redesign/)?css(.*) /static/styles$2 [L,R=301]
   redirect(
     /^media\/(?:redesign\/)?css(?<suffix>.*)$/i,
-    ({ suffix }) => `"/static/styles${suffix}`,
+    ({ suffix }) => `/static/styles${suffix}`,
     { permanent: true }
   ),
   // RewriteRule ^/media/(redesign/)?js(.*) /static/js$2 [L,R=301]
   redirect(
     /^media\/(?:redesign\/)?js(?<suffix>.*)$/i,
-    ({ suffix }) => `"/static/js${suffix}`,
+    ({ suffix }) => `/static/js${suffix}`,
     { permanent: true }
   ),
   // RewriteRule ^/media/(redesign/)?fonts(.*) /static/fonts$2 [L,R=301]
   redirect(
     /^media\/(?:redesign\/)?fonts(?<suffix>.*)$/i,
-    ({ suffix }) => `"/static/fonts${suffix}`,
+    ({ suffix }) => `/static/fonts${suffix}`,
     { permanent: true }
   ),
   // RedirectMatch 302 /media/uploads/demos/(.*)$
@@ -95,11 +95,11 @@ const SCL3_REDIRECT_PATTERNS = [
   // RewriteRule ^(.*)//(.*)//(.*)$ $1_$2_$3 [R=301,L,NC]
   redirect(
     /^(?<one>.*)\/\/(?<two>.*)\/\/(?<three>.*)$/i,
-    ({ one, two, three }) => `"/${one}_${two}_${three}`,
+    ({ one, two, three }) => `/${one}_${two}_${three}`,
     { permanent: true }
   ),
   // RewriteRule ^(.*)//(.*)$ $1_$2 [R=301,L,NC]
-  redirect(/^(?<one>.*)\/\/(?<two>.*)$/i, ({ one, two }) => `"/${one}_${two}`, {
+  redirect(/^(?<one>.*)\/\/(?<two>.*)$/i, ({ one, two }) => `/${one}_${two}`, {
     permanent: true,
   }),
   // The remaining redirects don't show explicit RewriteRule as comments,
@@ -1119,8 +1119,12 @@ const REDIRECT_PATTERNS = [].concat(
 );
 
 const STARTING_SLASH = /^\//;
+const ABSOLUTE_URL = /^https?:\/\/.*/;
 
 function resolveFundamental(path) {
+  if (ABSOLUTE_URL.exec(path)) {
+    return null;
+  }
   const trimmedPath = path.replace(STARTING_SLASH, "");
   for (const resolve of REDIRECT_PATTERNS) {
     const redirect = resolve(trimmedPath);
