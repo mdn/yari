@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-const cli = require("caporal");
+const program = require("@caporal/core").default;
 const chalk = require("chalk");
 
 const { add, resolve, load } = require("../content/redirect");
 
-cli
+program
   .version("0.0.0")
   .command("validate", "Check the _redirects.txt file(s)")
-  .action((args, options, logger) => {
+  .action(({ logger }) => {
     try {
       load(null, true);
       logger.info(chalk.green("🍾 All is well in the world of redirects 🥂"));
@@ -19,7 +19,7 @@ cli
 
   .command("test", "Test a URL (pathname) to see if it redirects")
   .argument("[urls...]")
-  .action((args, options, logger) => {
+  .action(({ args, logger }) => {
     try {
       for (const url of args.urls) {
         const resolved = resolve(url);
@@ -37,9 +37,11 @@ cli
 
   .command("add", "Add a new redirect")
   .option("--locale", "Which locale (defaults to 'en-US')")
-  .argument("[from, to]")
-  .action((args, options) => {
-    throw new Error("not implemented yet");
+  .argument("<from>", "From-URL")
+  .argument("<to>", "To-URL")
+  .action(({ args }) => {
+    const { from, to } = args;
+    throw new Error(`not implemented yet ('${from}' → '${to}')`);
   });
 
-cli.parse(process.argv);
+program.run();

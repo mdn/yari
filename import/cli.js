@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const path = require("path");
 
-const cli = require("caporal");
+const program = require("@caporal/core").default;
 
 const {
   DATABASE_URL,
@@ -13,31 +13,30 @@ const { VALID_LOCALES } = require("../content");
 const runImporter = require("./import");
 const runMakePopularitiesFile = require("./popularities");
 
-cli
+program
   .version(require("./package.json").version)
   .command("import")
   .help("Turn MySQL data into files on disk")
-  .option(
-    "-l, --locales <locale>",
-    "locales to limit on",
-    cli.ARRAY,
-    IMPORT_LOCALES
-  )
-  .option("--no-progressbar", "no progress bar but listing instead", cli.BOOL)
-  .option("--start-clean", "delete anything created first", cli.BOOL)
+  .option("-l, --locales <locale>", "locales to limit on", {
+    validator: program.ARRAY,
+    default: IMPORT_LOCALES,
+  })
+  .option("--no-progressbar", "no progress bar but listing instead", {
+    validator: program.BOOL,
+  })
+  .option("--start-clean", "delete anything created first", {
+    validator: program.BOOL,
+  })
   .option(
     "--exclude-prefixes <prefixes>",
     "slug prefixes to exclude (commas)",
-    cli.ARRAY,
-    EXCLUDE_SLUG_PREFIXES.join(",")
+    { validator: program.ARRAY, default: EXCLUDE_SLUG_PREFIXES.join(",") }
   )
-  .argument(
-    "[URL]",
-    "database url for connecting to MySQL",
-    cli.STRING,
-    DATABASE_URL
-  )
-  .action((args, options) => {
+  .argument("[URL]", "database url for connecting to MySQL", {
+    validator: program.STRING,
+    default: DATABASE_URL,
+  })
+  .action(({ args, options }) => {
     options.dbURL = args.url;
     return runImporter(options).catch((error) => {
       console.error("error while importing documents:", error);
@@ -50,13 +49,10 @@ cli
   .option(
     "--exclude-prefixes <prefixes>",
     "slug prefixes to exclude (commas)",
-    cli.ARRAY,
-    EXCLUDE_SLUG_PREFIXES.join(",")
+    { validator: program.ARRAY, default: EXCLUDE_SLUG_PREFIXES.join(",") }
   )
-  .option(
-    "-l, --locales <locale>",
-    "locales to limit on",
-    (value) => {
+  .option("-l, --locales <locale>", "locales to limit on", {
+    validator: (value) => {
       const checked = [];
       const locales = Array.isArray(value) ? value : Array(value);
       for (const locale of locales) {
@@ -68,24 +64,18 @@ cli
       }
       return checked;
     },
-    []
-  )
-  .option(
-    "-m, --max-uris <number>",
-    "Number of URIs. Defaults to 20,000",
-    cli.INTEGER,
-    20000
-  )
-  .option(
-    "-o, --outfile <path>",
-    "Defaults to ./popularities.json",
-    cli.STRING,
-    path.resolve("popularities.json")
-  )
+    default: [],
+  })
+  .option("-m, --max-uris <number>", "Number of URIs. Defaults to 20,000", {
+    validator: program.INTEGER,
+    default: 20000,
+  })
+  .option("-o, --outfile <path>", "Defaults to ./popularities.json", {
+    validator: program.STRING,
+    default: path.resolve("popularities.json"),
+  })
   .argument("csvfile", "Google Analytics pages report CSV file")
-  .action((args, options, logger) => {
-    // console.log("ARGS", args);
-    // console.log("OPTIONS", options);
+  .action(({ args, options, logger }) => {
     return runMakePopularitiesFile(args.csvfile, options, logger).catch(
       (error) => {
         console.error("error generating JSON file:", error);
@@ -94,4 +84,4 @@ cli
     );
   });
 
-cli.parse(process.argv);
+program.run();
