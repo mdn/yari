@@ -98,20 +98,7 @@ function injectFlaws(doc, $, options, { rawContent }) {
           // Before we give up, check if it's a redirect
           const resolved = Redirect.resolve(hrefNormalized);
           if (resolved) {
-            // Just because it's a redirect doesn't mean it ends up
-            // on a page we have.
-            // For example, there might be a redirect but where it
-            // goes to is not in this.allTitles.
-            // This can happen if it's a "fundamental redirect" for example.
-            const finalDocument = Document.findByURL(resolved);
-            addBrokenLink(
-              a,
-              checked.get(href),
-              href,
-              finalDocument
-                ? finalDocument.url + absoluteURL.search + absoluteURL.hash
-                : null
-            );
+            addBrokenLink(a, checked.get(href), href, resolved);
           } else {
             addBrokenLink(a, href);
           }
