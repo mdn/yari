@@ -681,12 +681,12 @@ const SCL3_REDIRECT_PATTERNS = [
   localeRedirect(
     /^devnews\/index.php\/feed.*/i,
     "https://blog.mozilla.org/feed/",
-    { prepend_locale: false, permanent: true }
+    { prependLocale: false, permanent: true }
   ),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?devnews.*
   // https://wiki.mozilla.org/Releases [R=301,L]
   localeRedirect(/^devnews.*/i, "https://wiki.mozilla.org/Releases", {
-    prepend_locale: false,
+    prependLocale: false,
     permanent: true,
   }),
   // Old "Learn" pages
@@ -707,14 +707,14 @@ const SCL3_REDIRECT_PATTERNS = [
   localeRedirect(
     /^demos\/detail\/bananabread$/i,
     "https://github.com/kripken/BananaBread/",
-    { prepend_locale: false, permanent: true }
+    { prependLocale: false, permanent: true }
   ),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?demos/detail/bananabread/launch$
   // https://kripken.github.io/BananaBread/cube2/index.html [R=301,L]
   localeRedirect(
     /^demos\/detail\/bananabread\/launch$/i,
     "https://kripken.github.io/BananaBread/cube2/index.html",
-    { prepend_locale: false, permanent: true }
+    { prependLocale: false, permanent: true }
   ),
   // All other Demo Studio and Dev Derby paths (bug 1238037)
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?demos
@@ -1114,6 +1114,11 @@ const REDIRECT_PATTERNS = [].concat(
       {
         permanent: true,
       }
+    ),
+    localeRedirect(
+      /^docs\/(ServerJS|CommonJS)(?<subPath>$|\/.+)/i,
+      ({ subPath }) => `https://wiki.mozilla.org/docs/ServerJS${subPath}`,
+      { prependLocale: false, permanent: true }
     ),
   ]
 );
