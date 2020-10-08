@@ -97,10 +97,15 @@ function injectFlaws(doc, $, options, { rawContent }) {
         if (!found) {
           // Before we give up, check if it's a redirect
           const resolved = Redirect.resolve(hrefNormalized);
-          if (resolved) {
-            addBrokenLink(a, checked.get(href), href, resolved);
+          if (resolved !== hrefNormalized) {
+            addBrokenLink(
+              a,
+              checked.get(href),
+              href,
+              resolved + absoluteURL.search + absoluteURL.hash
+            );
           } else {
-            addBrokenLink(a, href);
+            addBrokenLink(a, checked.get(href), href);
           }
         } else {
           // But does it have the correct case?!
