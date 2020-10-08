@@ -2,7 +2,7 @@
 const cli = require("caporal");
 const chalk = require("chalk");
 
-const { resolve, load } = require("../content/redirect");
+const { add, resolve, load } = require("../content/redirect");
 
 cli
   .version("0.0.0")

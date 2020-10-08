@@ -1,13 +1,26 @@
 const fs = require("fs");
 const path = require("path");
-const { textChangeRangeIsUnchanged } = require("typescript");
 
 const { CONTENT_ROOT, VALID_LOCALES } = require("./constants");
-const { resolveFundamental } = require("./fundamental-redirects");
 const { buildURL } = require("./utils");
+const { resolveFundamental } = require("./fundamental-redirects");
 
 // The module level cache
 const redirects = new Map();
+
+function add(locale, oldSlug, newSlug) {
+  if (redirects.size === 0) {
+    load();
+  }
+  const oldURL = buildURL(locale, oldSlug);
+  const newURL = buildURL(locale, newSlug);
+  const pairs = Array.from(redirects.entries()).map(([from, to]) => [
+    from,
+    to.startsWith(oldURL) ? to.replace(oldURL, newURL) : to,
+  ]);
+  pairs.push([oldURL, newURL]);
+  write(path.join(CONTENT_ROOT, locale), pairs);
+}
 
 function load(files = null, verbose = false) {
   if (!files) {
@@ -137,6 +150,7 @@ function write(localeFolder, pairs) {
 }
 
 module.exports = {
+  add,
   resolve,
   write,
   load,

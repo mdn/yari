@@ -19,8 +19,6 @@ const {
 
 const cheerio = require("../build/monkeypatched-cheerio");
 const ProgressBar = require("./progress-bar");
-const { red } = require("chalk");
-const { log } = require("console");
 
 console.assert(CONTENT_ROOT, "CONTENT_ROOT must be set");
 
