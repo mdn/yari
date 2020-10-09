@@ -1,4 +1,4 @@
-const { Document, memoize } = require("../content");
+const { Document } = require("../content");
 
 const {
   INTERACTIVE_EXAMPLES_BASE_URL,

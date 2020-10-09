@@ -73,7 +73,8 @@ function syntaxHighlight($, doc) {
     }
     const code = $pre.text();
     const html = Prism.highlight(code, grammar, name);
-    $pre.html(html);
+    const $code = $("<code>").html(html);
+    $pre.empty().append($code);
   });
 }
 

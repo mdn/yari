@@ -150,6 +150,9 @@ const read = memoize((folder) => {
   if (!filePath) {
     return;
   }
+  if (filePath.includes(" ")) {
+    throw new Error("Folder contains whitespace which is not allowed.");
+  }
   const isTranslated =
     CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT);
   const isArchive =
