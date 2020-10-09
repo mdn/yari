@@ -136,7 +136,6 @@ function getLiveSampleIDs(slug, source) {
       // the raw HTML is the size. So make an exception for this otherwise, the
       // HTML element ID is lost and this function won't discovered that it is
       // in fact a live sample here.
-      token.args = ["inheritance_diagram", ...token.args];
       result.push(new LiveSampleID("inheritance_diagram", source, token));
     } else if (normalizedMacroName === "embedlivesample" && token.args.length) {
       // Some of the localized pages URI-encode their first argument,
