@@ -118,7 +118,10 @@ function extractBCDData(doc) {
   let nextId = 0;
   for (const section of doc.body) {
     if (section.type === "browser_compatibility") {
-      const dataURL = `${doc.mdn_url}/bcd__${nextId++}.json`;
+      // Most pages only have exactly 1 so no need to put the prefix on them.
+      const fileName = nextId ? `bcd-${nextId}.json` : "bcd.json";
+      nextId++;
+      const dataURL = `${doc.mdn_url}/${fileName}`;
       data.push({
         url: dataURL,
         data: Object.assign({}, section.value),
