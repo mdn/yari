@@ -68,7 +68,7 @@ export default function render(renderApp, doc) {
     $('meta[name="description"]').attr("content", pageDescription);
   }
 
-  if (doc.isArchive && !doc.isTranslated) {
+  if (!doc.noIndexing) {
     $('<meta name="robots" content="noindex, nofollow">').insertAfter(
       $("meta").eq(-1)
     );
