@@ -1138,7 +1138,7 @@ function resolveFundamental(path) {
       return redirect;
     }
   }
-  return null;
+  return {};
 }
 
 module.exports = {

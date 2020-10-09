@@ -384,13 +384,13 @@ async function populateRedirectInfo(pool, constraintsSQL, queryArgs) {
     }
     let redirect = null;
     const fromUri = makeURL(row.locale, row.slug);
-    const fundamentalRedirect = resolveFundamental(fromUri)?.url;
+    const fundamentalRedirect = resolveFundamental(fromUri).url;
     if (fundamentalRedirect) {
       redirect = fundamentalRedirect;
     } else {
-      const processedRedirectUrl = processRedirect(row, fromUri)?.url;
+      const processedRedirectUrl = (processRedirect(row, fromUri) || {}).url;
       const fundamentalTargetRedirect =
-        processedRedirectUrl && resolveFundamental(processedRedirectUrl)?.url;
+        processedRedirectUrl && resolveFundamental(processedRedirectUrl).url;
       redirect = fundamentalTargetRedirect || processedRedirectUrl;
     }
     if (redirect) {
@@ -1230,7 +1230,7 @@ module.exports = async function runImporter(options) {
       }
 
       const absoluteUrl = makeURL(row.locale, row.slug);
-      const isFundamentalRedirect = resolveFundamental(absoluteUrl)?.url;
+      const isFundamentalRedirect = resolveFundamental(absoluteUrl).url;
       if (isFundamentalRedirect) {
         fundamentalRedirects++;
         return;
