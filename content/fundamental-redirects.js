@@ -674,7 +674,7 @@ const SCL3_REDIRECT_PATTERNS = [
     { permanent: true }
   ),
   // RewriteRule ^([\w\-]*)/docs/?$ $1/docs/Web [R=301,L,NC]
-  localeRedirect(/^\/docs\/?$/i, "/docs/Web", { permanent: true }),
+  localeRedirect(/^docs\/?$/i, "/docs/Web", { permanent: true }),
   // DevNews
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?devnews/index.php/feed.*
   // https://blog.mozilla.org/feed/ [R=301,L]
