@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@caporal/core": "2.0.2",
-    "@mdn/browser-compat-data": "2.0.1",
+    "@mdn/browser-compat-data": "2.0.2",
     "braces": "^3.0.2",
     "chalk": "4.1.0",
     "cheerio": "1.0.0-rc.3",
