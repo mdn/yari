@@ -156,7 +156,7 @@ app.get("/*", async (req, res) => {
   // If we have a fundamental redirect mimic out Lambda@Edge and redirect.
   const fundamentalRedirect = resolveFundamental(req.url);
   if (fundamentalRedirect) {
-    return res.redirect(301, fundamentalRedirect);
+    return res.redirect(fundamentalRedirect.status, fundamentalRedirect.url);
   }
 
   if (!req.url.includes("/docs/")) {

@@ -88,7 +88,9 @@ const resolve = (url) => {
   if (!redirects.size) {
     load();
   }
-  return redirects.get(url.toLowerCase()) || resolveFundamental(url) || url;
+  return (
+    redirects.get(url.toLowerCase()) || resolveFundamental(url)?.url || url
+  );
 };
 
 function sortTuples([a, b], [c, d]) {

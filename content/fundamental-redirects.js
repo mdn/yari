@@ -7,11 +7,12 @@ function redirect(pattern, template, options = {}) {
     if (match === null) {
       return null;
     }
+    const status = options.permanent ? 301 : 302;
     if (typeof template === "string") {
-      return template;
+      return { url: template, status };
     }
     const { groups } = match;
-    return template({ ...groups });
+    return { url: template({ ...groups }), status };
   };
 }
 
