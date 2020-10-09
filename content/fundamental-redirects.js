@@ -821,7 +821,7 @@ const zoneRedirects = [
 ];
 
 const zonePatternFmt = (prefix, zoneRootPattern) =>
-  new RegExp(`^${prefix}${zoneRootPattern}(?:\\/?|(?<subPath>[\\/$].+))$`);
+  new RegExp(`^${prefix}${zoneRootPattern}(?:\\/?|(?<subPath>[\\/$].+))$`, "i");
 const subPathFmt = (prefix, wikiSlug) => ({ subPath = "" } = {}) =>
   `/${prefix}docs/${wikiSlug}${subPath}`;
 
