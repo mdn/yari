@@ -17,7 +17,7 @@ function url_test(from, to, { statusCode = 301, ...options } = {}) {
       });
       expect(res.statusCode).toBe(statusCode);
       to &&
-        expect(res.headers?.location.toLowerCase()).toBe(
+        expect((res.headers.location || "").toLowerCase()).toBe(
           encodeURI(to).toLowerCase()
         );
     },
