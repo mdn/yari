@@ -1,13 +1,10 @@
-const fs = require("fs");
-const path = require("path");
 const cliProgress = require("cli-progress");
 
 const { Client } = require("@elastic/elasticsearch");
 
-const { Document, slugToFolder } = require("../content");
+const { Document } = require("../content");
 const options = require("../build/build-options");
 const { analyzeDocument } = require("./analyze");
-const { BUILD_OUT_ROOT } = require("./constants");
 
 const client = new Client({ node: "http://localhost:9200" });
 
@@ -28,8 +25,6 @@ async function analyzeDocuments() {
 
   !options.noProgressbar && progressBar.start(documents.count);
   for (const document of documents.iter()) {
-    const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
-    fs.mkdirSync(outPath, { recursive: true });
     const { translation_of } = document.metadata;
 
     // If it's a non-en-US document, it'll most likely have a `translation_of`.
@@ -54,55 +49,18 @@ async function analyzeDocuments() {
       document.translations = translationsOf.get(document.metadata.slug);
     }
 
-    const analyzedDocument = await analyzeDocument(document);
-
-    // const outPathFile = path.join(outPath, "index.json");
-    // fs.writeFileSync(
-    //   outPathFile,
-    //   // This is exploiting the fact that renderHTML has the side-effect of mutating builtDocument
-    //   // which makes this not great and refactor-worthy
-    //   JSON.stringify(analysis)
-    // );
-    // // There are some archived documents that, due to possible corruption or other
-    // // unknown reasons, don't have a list of contributors.
-    // if (document.metadata.contributors || !document.isArchive) {
-    //   fs.writeFileSync(
-    //     path.join(outPath, "contributors.txt"),
-    //     renderContributorsTxt(
-    //       document.metadata.contributors,
-    //       !document.isArchive
-    //         ? builtDocument.source.github_url.replace("/blob/", "/commits/")
-    //         : null
-    //     )
-    //   );
-    // }
-
-    // for (const { id, html } of liveSamples) {
-    //   const liveSamplePath = path.join(outPath, "_samples_", id, "index.html");
-    //   fs.mkdirSync(path.dirname(liveSamplePath), { recursive: true });
-    //   fs.writeFileSync(liveSamplePath, html);
-    // }
-
-    // for (const filePath of fileAttachments) {
-    //   // We *could* use symlinks instead. But, there's no point :)
-    //   // Yes, a symlink is less disk I/O but it's nominal.
-    //   fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
-    // }
-
     // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
     document.noIndexing =
       (document.isArchive && !document.isTranslated) ||
       document.metadata.slug === "MDN/Kitchensink";
-
-    if (!document.noIndexing) {
-      analyzedDocuments.push(analyzedDocument);
+    if (document.noIndexing) {
+      continue;
     }
+
+    analyzedDocuments.push(await analyzeDocument(document));
 
     if (!options.noProgressbar) {
       progressBar.increment();
-    } else {
-      // console.log(outPathFile);
-      console.log(document.fileInfo.path);
     }
   }
 
