@@ -244,7 +244,10 @@ async function fixFixableFlaws(doc, options, document) {
         });
         const destination = path.join(
           Document.getFolderPath(document.metadata),
-          path.basename(url.pathname)
+          path
+            .basename(decodeURI(url.pathname))
+            .replace(/\s+/g, "_")
+            .toLowerCase()
         );
         fs.writeFileSync(destination, imageBuffer);
         console.log(`Downloaded ${flaw.src} to ${destination}`);
