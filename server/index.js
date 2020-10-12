@@ -18,6 +18,7 @@ const { prepareDoc, renderHTML } = require("../ssr/dist/main");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
+const documentTraitsRouter = require("./traits");
 const fakeV1APIRouter = require("./fake-v1-api");
 const { searchRoute } = require("./document-watch");
 const flawsRoute = require("./flaws");
@@ -47,6 +48,8 @@ app.use(
 );
 
 app.use("/_document", documentRouter);
+
+app.use("/_traits", documentTraitsRouter);
 
 app.get("/_open", (req, res) => {
   const { line, column, filepath } = req.query;

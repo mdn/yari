@@ -71,6 +71,9 @@ export function Homepage() {
       <h3>Tools</h3>
       <ul>
         <li>
+          <Link to="/en-US/_traits">All Documents Traits</Link>
+        </li>
+        <li>
           <Link to="/en-US/_flaws">Flaws Dashboard</Link>
         </li>
       </ul>

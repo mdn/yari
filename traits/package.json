@@ -1,9 +1,0 @@
-{
-  "name": "traits",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "dependencies": {
-    "@elastic/elasticsearch": "7.9.1"
-  }
-}

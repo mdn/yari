@@ -11,6 +11,7 @@ import { NoMatch } from "./routing";
 const ActiveBanner = lazy(() => import("./banners/active-banner"));
 
 const AllFlaws = lazy(() => import("./flaws"));
+const AllTraits = lazy(() => import("./traits"));
 const DocumentEdit = lazy(() => import("./document/forms/edit"));
 const DocumentCreate = lazy(() => import("./document/forms/create"));
 
@@ -50,6 +51,7 @@ export function App(appProps) {
               {CRUD_MODE && (
                 <>
                   <Route path="/_flaws" element={<AllFlaws />} />
+                  <Route path="/_traits" element={<AllTraits />} />
                   <Route path="/_create/*" element={<DocumentCreate />} />
                   <Route path="/_edit/*" element={<DocumentEdit />} />
                 </>

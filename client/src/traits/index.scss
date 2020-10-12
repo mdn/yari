@@ -1,0 +1,12 @@
+#all-traits {
+  .loading {
+    text-align: center;
+    margin: 200px;
+
+    progress {
+      width: 600px;
+      height: 30px;
+      border-radius: 2px;
+    }
+  }
+}
