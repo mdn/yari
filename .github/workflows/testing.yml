@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: technote-space/get-diff-action@v3
+      - uses: technote-space/get-diff-action@v4
         id: git_diff_kumascript
         with:
           PATTERNS: |
@@ -85,7 +85,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: technote-space/get-diff-action@v3
+      - uses: technote-space/get-diff-action@v4
         id: git_diff_content
         with:
           PATTERNS: deployer/**
