@@ -5,7 +5,7 @@ specific to the client and some are specific to the builder etc.
 
 This document attempts to describe each environment variable.
 
-## General
+##### General
 
 ### `EDITOR`
 

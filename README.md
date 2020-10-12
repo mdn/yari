@@ -5,8 +5,6 @@
 
 ## Quickstart
 
-NOT AN ERROR BUT SHOULD RUN.
-
 Before you can begin with Yari, you need [Content](https://github.com/mdn/content).
 See its README which basically, says something like this:
 
