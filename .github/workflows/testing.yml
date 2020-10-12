@@ -140,5 +140,7 @@ jobs:
       - name: Lint markdown files
         if: env.GIT_DIFF
         run: |
+          echo "GIT DIFF:"
           echo "${{ env.GIT_DIFF }}"
+          echo ""
           npx markdownlint-cli ${{ env.GIT_DIFF }}
