@@ -11,6 +11,7 @@ const { getPopularities } = require("./popularities");
 const Redirect = require("./redirect");
 const Image = require("./image");
 const { buildURL, memoize, slugToFolder } = require("./utils");
+const { resolveFundamental } = require("./fundamental-redirects");
 
 module.exports = {
   CONTENT_ROOT,
@@ -29,4 +30,5 @@ module.exports = {
   buildURL,
   memoize,
   slugToFolder,
+  resolveFundamental,
 };
