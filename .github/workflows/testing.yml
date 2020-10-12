@@ -86,34 +86,39 @@ jobs:
       - uses: actions/checkout@v2
 
       - uses: technote-space/get-diff-action@v4
-        id: git_diff_content
         with:
           PATTERNS: deployer/**
 
       - name: Install Python
+        if: env.GIT_DIFF
         uses: actions/setup-python@v2
         with:
           python-version: "3.8"
 
       - name: Install Python poetry
+        if: env.GIT_DIFF
         uses: dschep/install-poetry-action@v1.3
 
       - name: Install deployer
+        if: env.GIT_DIFF
         run: |
           cd deployer
           poetry install
 
       - name: Display Python & Poetry version
+        if: env.GIT_DIFF
         run: |
           python --version
           poetry --version
 
       - name: Lint Python code
+        if: env.GIT_DIFF
         run: |
           flake8 deployer
           black --check deployer
 
       - name: Basic run of deployer
+        if: env.GIT_DIFF
         run: |
           cd deployer
           poetry run deployer --help
