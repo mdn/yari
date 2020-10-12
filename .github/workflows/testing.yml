@@ -19,8 +19,8 @@ jobs:
       - uses: technote-space/get-diff-action@v3
         id: git_diff_kumascript
         with:
-          PREFIX_FILTER: |
-            kumascript/
+          PATTERNS: |
+            kumascript/**
 
       - name: Display Git diffs
         run: echo ${{ steps.git_diff_kumascript.outputs.diff }}
@@ -88,7 +88,7 @@ jobs:
       - uses: technote-space/get-diff-action@v3
         id: git_diff_content
         with:
-          PREFIX_FILTER: deployer/
+          PATTERNS: deployer/**
 
       - name: Install Python
         uses: actions/setup-python@v2
@@ -126,8 +126,7 @@ jobs:
 
       - uses: technote-space/get-diff-action@v4
         with:
-          PREFIX_FILTER: docs/
-          SUFFIX_FILTER: .md
+          PATTERNS: docs/**/*.md
           FILES: |
             README.md
 
