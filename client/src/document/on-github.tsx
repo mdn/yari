@@ -4,7 +4,7 @@ import { Doc } from "./types";
 
 export function OnGitHubLink({ doc }: { doc: Doc }) {
   return (
-    <div id="on-github">
+    <div id="on-github" className="on-github">
       <h4>Found a problem with this page?</h4>
       <ul>
         <li>
@@ -22,7 +22,7 @@ function SourceOnGitHubLink({ doc }: { doc: Doc }) {
   return (
     <a
       href={github_url}
-      title={`Folder: ${folder}`}
+      title={`Folder: ${folder} (Opens in a new tab)`}
       target="_blank"
       rel="noopener noreferrer"
     >
