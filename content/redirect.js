@@ -1,26 +1,89 @@
 const fs = require("fs");
 const path = require("path");
 
-const { CONTENT_ROOT, VALID_LOCALES } = require("./constants");
-const { buildURL } = require("./utils");
+const { CONTENT_ROOT, VALID_LOCALES, Document } = require(".");
 const { resolveFundamental } = require("./fundamental-redirects");
 
-// The module level cache
-const redirects = new Map();
+// Throw if this can't be a redirect from-URL.
+function validateFromURL(url) {
+  validateURLLocale(url);
+  const document = Document.findByURL(url);
+  if (document) {
+    throw new Error(
+      `From-URL resolves to a file on disk (${document.fileInfo.path})`
+    );
+  }
+  const resolved = resolve(url);
+  if (resolved !== url) {
+    throw new Error(
+      `${url} is already matched as a redirect (to: '${resolved}')`
+    );
+  }
+}
 
-function add(locale, oldSlug, newSlug) {
+// Throw if this can't be a redirect to-URL.
+function validateToURL(url) {
+  // If it's not external, it has to go to a valid document
+  if (url.includes("://")) {
+    // If this throws, conveniently the validator will do its job.
+    const url = new URL(url);
+    if (url.protocol !== "https:") {
+      throw new Error("We only redirect to https://");
+    }
+  } else {
+    validateURLLocale(url);
+
+    // Can't point to something that redirects to something
+    const resolved = resolve(url);
+    if (resolved !== url) {
+      throw new Error(
+        `${url} is already matched as a redirect (to: '${resolved}')`
+      );
+    }
+    // XXX Commented out because how else are going to be able
+    // redirect to archived documents.
+    // // It has to match a document
+    // const document = Document.findByURL(url);
+    // if (!document) {
+    //   throw new Error(
+    //     `To-URL has to resolve to a file on disk (${document.fileInfo.path})`
+    //   );
+    // }
+  }
+}
+
+function validateURLLocale(url) {
+  // Check that it's a valid document URL
+  const locale = url.split("/")[1];
+  if (!locale || url.split("/")[2] !== "docs") {
+    throw new Error("The from-URL is expected to be /$locale/docs/");
+  }
+  const validValues = [...VALID_LOCALES.values()];
+  if (!validValues.includes(locale)) {
+    throw new Error(`'${locale}' not in ${validValues}`);
+  }
+}
+
+function add(locale, oldURL, newURL) {
+  // We can't use t)
   if (redirects.size === 0) {
     load();
   }
-  const oldURL = buildURL(locale, oldSlug);
-  const newURL = buildURL(locale, newSlug);
-  const pairs = Array.from(redirects.entries()).map(([from, to]) => [
-    from,
-    to.startsWith(oldURL) ? to.replace(oldURL, newURL) : to,
-  ]);
+  // Copied from the load() function but without any checking and preserving
+  // sort order.
+  const redirectsFilePath = path.join(CONTENT_ROOT, locale, "_redirects.txt");
+  const content = fs.readFileSync(redirectsFilePath, "utf-8");
+  const pairs = content
+    .split("\n")
+    .map((line) => line.trim().split(/\s+/))
+    .filter((line, i) => i > 0);
   pairs.push([oldURL, newURL]);
-  write(path.join(CONTENT_ROOT, locale), pairs);
+  pairs.sort();
+  save(path.join(CONTENT_ROOT, locale), pairs);
 }
+
+// The module level cache
+const redirects = new Map();
 
 function load(files = null, verbose = false) {
   if (!files) {
@@ -139,11 +202,14 @@ function shortCuts(pairs, throws = false) {
 }
 
 function write(localeFolder, pairs) {
-  const transitivePairs = shortCuts(pairs);
+  save(localeFolder, shortCuts(pairs));
+}
+
+function save(localeFolder, pairs) {
   const filePath = path.join(localeFolder, "_redirects.txt");
   const writeStream = fs.createWriteStream(filePath);
   writeStream.write(`# FROM-URL\tTO-URL\n`);
-  for (const [fromURL, toURL] of transitivePairs) {
+  for (const [fromURL, toURL] of pairs) {
     writeStream.write(`${fromURL}\t${toURL}\n`);
   }
   writeStream.end();
@@ -154,4 +220,6 @@ module.exports = {
   resolve,
   write,
   load,
+  validateFromURL,
+  validateToURL,
 };
