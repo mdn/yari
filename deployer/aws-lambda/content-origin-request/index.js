@@ -95,10 +95,18 @@ exports.handler = async (event, context) => {
     });
   }
 
-  // Starting with /docs/ should redirect to a locale.
-  if (request.uri.startsWith("/docs/")) {
+  // Starting with /docs/ or empty path (/) should redirect to a locale.
+  // Also trim a trailing slash to avoid a double redirect.
+  if (
+    request.uri.startsWith("/docs/") ||
+    request.uri === "/" ||
+    request.uri === ""
+  ) {
+    const path = request.uri.endsWith("/")
+      ? request.uri.slice(0, -1)
+      : request.uri;
     const language = guessLanguage(request);
-    return redirect(`/${language}${request.uri}`, {
+    return redirect(`/${language}${path}`, {
       permanent: false,
     });
   }
