@@ -130,7 +130,13 @@ const info = {
   },
 
   getPage(url, { throwIfDoesNotExist = false, followRedirects = true } = {}) {
-    const document = Document.findByURL(info.cleanURL(url, followRedirects));
+    // Always start by looking it up *without* following redirects.
+    let document = Document.findByURL(info.cleanURL(url, false));
+    // Usually, `followRedirects` is disabled if the caller definitely is not
+    // not interested in following redirects (e.g. listing sub-pages)
+    if (!document && followRedirects) {
+      document = Document.findByURL(info.cleanURL(url, true));
+    }
     if (!document) {
       // The macros expect an empty object if the URL does not exist, so
       // "throwIfDoesNotExist" should only be used within "info" itself.

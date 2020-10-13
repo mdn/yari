@@ -1,0 +1,80 @@
+name: Developing with Yari
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v2
+        with:
+          repository: mdn/content
+          path: mdn/content
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.1
+        with:
+          node-version: "12"
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v2.1.2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install all yarn packages
+        run: |
+          ./testing/scripts/yarn-install.sh
+
+      - name: Setup kernel for react native, increase watchers
+        run: |
+          # When running Yari on Linux, you might get the
+          # "Error: ENOSPC: System limit for number of file watchers reached" error.
+          # This, resolves that.
+          # Source https://github.com/expo/expo-github-action/issues/20#issuecomment-541676895
+          echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+      - name: Start the dev server
+        run: |
+          # Remember, the mdn/content repo got cloned into `pwd` into a
+          # sub-folder called "mdn/content"
+          export CONTENT_ROOT=$(pwd)/mdn/content/files
+          echo "CONTENT_ROOT=$CONTENT_ROOT"
+
+          yarn prepare-build
+          yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
+
+      - name: Wait for servers
+        run: |
+          # Just a slight delay to wait until the dev server is ready.
+          sleep 5
+
+          curl --retry-connrefused --retry 5 http://localhost:5000 > /dev/null
+          curl --retry-connrefused --retry 5 --silent http://localhost:3000 > /dev/null
+
+      - name: Test viewing the dev server
+        run: |
+          # This will make sure the tests in `testing/tests/*.test.js` only run
+          # if the development server is up and ready to be tested.
+          export TESTING_DEVELOPING=true
+
+          # The first argument makes it filter by file name.
+          yarn test:testing developing
+
+      - name: Dump server logs
+        run: |
+          # When we started the server(s) in the background, we dumped their
+          # stdout and stderr to temp files. Let's display them afterwards.
+          echo "STDOUT..................................................."
+          cat /tmp/stdout.log
+          echo "STDERR..................................................."
+          cat /tmp/stderr.log
