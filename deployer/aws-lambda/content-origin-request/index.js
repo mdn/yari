@@ -9,10 +9,12 @@ const VALID_LOCALES_LIST = [...VALID_LOCALES.values()];
 
 function guessLanguage(request) {
   // Do we want to support a language cookie? Add it here!
-  const { value = null } = request.headers["accept-language"] || {};
+  // Each header in request.headers is always a list of objects.
+  const acceptLangHeaders = request.headers["accept-language"];
+  const { value = null } = (acceptLangHeaders && acceptLangHeaders[0]) || {};
   const language =
     value &&
-    acceptLanguageParser.pick([VALID_LOCALES_LIST], value, { loose: true });
+    acceptLanguageParser.pick(VALID_LOCALES_LIST, value, { loose: true });
   return language || DEFAULT_LOCALE;
 }
 
@@ -33,19 +35,14 @@ function slugToFolder(slug) {
     .join("/");
 }
 
-function redirect(
-  location,
-  { permanent = false, cacheControlSeconds = 0 } = {}
-) {
+function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
   /*
    * Create and return a redirect response.
    */
-  let status, statusDescription, cacheControlValue;
-  if (permanent) {
-    status = 301;
+  let statusDescription, cacheControlValue;
+  if (status === 301) {
     statusDescription = "Moved Permanently";
   } else {
-    status = 302;
     statusDescription = "Found";
   }
   if (cacheControlSeconds) {
@@ -83,7 +80,7 @@ exports.handler = async (event, context) => {
   let { url, status } = resolveFundamental(request.uri);
   if (url) {
     return redirect(url, {
-      permanent: status === 301,
+      status,
       cacheControlSeconds: 3600 * 24 * 30,
     });
   }
@@ -99,9 +96,7 @@ exports.handler = async (event, context) => {
       ? request.uri.slice(0, -1)
       : request.uri;
     const language = guessLanguage(request);
-    return redirect(`/${language}${path}`, {
-      permanent: false,
-    });
+    return redirect(`/${language}${path}`);
   }
 
   // A document URL with a trailing slash should redirect
@@ -111,7 +106,7 @@ exports.handler = async (event, context) => {
     request.uri.toLowerCase().includes("/docs/")
   ) {
     return redirect(request.uri.slice(0, -1), {
-      permanent: true,
+      status: 301,
       cacheControlSeconds: 3600 * 24 * 30,
     });
   }
