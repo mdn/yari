@@ -109,38 +109,33 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
       if (!found) {
         // Before we give up, check if it's a redirect
         const resolved = Redirect.resolve(hrefNormalized);
-        if (resolved) {
-          // Just because it's a redirect doesn't mean it ends up
-          // on a page we have.
-          // For example, there might be a redirect but where it
-          // goes to is not in this.allTitles.
-          // This can happen if it's a "fundamental redirect" for example.
-          const finalDocument = Document.findByURL(resolved);
+        if (resolved !== hrefNormalized) {
           addBrokenLink(
             a,
             checked.get(href),
             href,
-            finalDocument
-              ? finalDocument.url + absoluteURL.search + absoluteURL.hash
-              : null
+            resolved + absoluteURL.search + absoluteURL.hash
           );
         } else {
-          addBrokenLink(a, href);
+          addBrokenLink(a, checked.get(href), href);
         }
       } else {
-        // But does it have the correct case?!
-        if (found.url !== href.split("#")[0]) {
-          // Inconsistent case.
-          addBrokenLink(
-            a,
-            checked.get(href),
-            href,
-            found.url + absoluteURL.search + absoluteURL.hash
-          );
-        }
+        addBrokenLink(a, href);
+      }
+    } else {
+      // But does it have the correct case?!
+      if (found.url !== href.split("#")[0]) {
+        // Inconsistent case.
+        addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          found.url + absoluteURL.search + absoluteURL.hash
+        );
       }
     }
   });
+
   if (
     level === FLAW_LEVELS.ERROR &&
     doc.flaws.broken_links &&
@@ -281,7 +276,10 @@ async function fixFixableFlaws(doc, options, document) {
         });
         const destination = path.join(
           Document.getFolderPath(document.metadata),
-          path.basename(url.pathname)
+          path
+            .basename(decodeURI(url.pathname))
+            .replace(/\s+/g, "_")
+            .toLowerCase()
         );
         fs.writeFileSync(destination, imageBuffer);
         console.log(`Downloaded ${flaw.src} to ${destination}`);
