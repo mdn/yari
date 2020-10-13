@@ -71,16 +71,6 @@ export default function MainMenu() {
         }
       }
     });
-
-    document.addEventListener("click", (event) => {
-      if (
-        event.target &&
-        event.target instanceof HTMLElement &&
-        !event.target.classList.contains("top-level-entry")
-      ) {
-        hideSubMenuIfVisible();
-      }
-    });
   });
 
   // The menus array includes objects that define the set of
