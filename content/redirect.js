@@ -91,22 +91,6 @@ const resolve = (url) => {
   return redirects.get(url.toLowerCase()) || resolveFundamental(url).url || url;
 };
 
-function sortTuples([a, b], [c, d]) {
-  if (a > c) {
-    return 1;
-  }
-  if (a < c) {
-    return -1;
-  }
-  if (b > d) {
-    return 1;
-  }
-  if (b < d) {
-    return -1;
-  }
-  return 0;
-}
-
 function shortCuts(pairs, throws = false) {
   const dag = new Map(pairs);
 
@@ -127,6 +111,23 @@ function shortCuts(pairs, throws = false) {
       return [froms, s];
     }
   };
+
+  const sortTuples = ([a, b], [c, d]) => {
+    if (a > c) {
+      return 1;
+    }
+    if (a < c) {
+      return -1;
+    }
+    if (b > d) {
+      return 1;
+    }
+    if (b < d) {
+      return -1;
+    }
+    return 0;
+  };
+
   for (const [from, _] of pairs) {
     const [froms = [], to] = transit(from);
     for (const from of froms) {
