@@ -1789,6 +1789,9 @@
   dependencies:
     extend "3.0.2"
 
+"@mdn/fundamental-redirects@file:./libs/fundamental-redirects":
+  version "0.0.1"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"

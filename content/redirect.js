@@ -3,7 +3,7 @@ const path = require("path");
 
 const { CONTENT_ROOT, VALID_LOCALES } = require("./constants");
 const { buildURL } = require("./utils");
-const { resolveFundamental } = require("./fundamental-redirects");
+const { resolveFundamental } = require("@mdn/fundamental-redirects");
 
 // The module level cache
 const redirects = new Map();

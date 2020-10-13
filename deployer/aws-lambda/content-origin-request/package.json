@@ -7,6 +7,7 @@
     "make-package": "yarn install && zip -r -X function.zip . -i index.js 'node_modules/*'"
   },
   "dependencies": {
+    "@mdn/fundamental-redirects": "file:../../../libs/fundamental-redirects",
     "sanitize-filename": "^1.6.3"
   },
   "engines": {

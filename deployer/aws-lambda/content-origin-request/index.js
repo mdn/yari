@@ -1,4 +1,5 @@
 const sanitizeFilename = require("sanitize-filename");
+const { resolveFundamental } = require("@mdn/fundamental-redirects");
 
 const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
 
@@ -65,6 +66,15 @@ exports.handler = async (event, context) => {
    */
   const request = event.Records[0].cf.request;
   const host = request.headers.host[0].value.toLowerCase();
+
+  let { url, status } = resolveFundamental(request.uri);
+  if (url) {
+    return redirect(url, {
+      permanent: status === 301,
+      cacheControlSeconds: 3600 * 24 * 30,
+    });
+  }
+
   // A document URL with a trailing slash should redirect
   // to the same URL without the trailing slash.
   if (

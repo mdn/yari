@@ -2,6 +2,9 @@
 # yarn lockfile v1
 
 
+"@mdn/fundamental-redirects@file:../../../libs/fundamental-redirects":
+  version "0.0.1"
+
 sanitize-filename@^1.6.3:
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/sanitize-filename/-/sanitize-filename-1.6.3.tgz#755ebd752045931977e30b2025d340d7c9090378"
