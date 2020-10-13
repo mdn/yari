@@ -1,7 +1,27 @@
 const sanitizeFilename = require("sanitize-filename");
 const { resolveFundamental } = require("@mdn/fundamental-redirects");
+const { VALID_LOCALES } = require("@mdn/global-constants");
+const acceptLanguageParser = require("accept-language-parser");
 
 const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
+
+const VALID_LOCALES_LIST = [...VALID_LOCALES.values()];
+
+function guessLanguage(request) {
+  // Do we want to support a language cookie? Add it here!
+  const { value = null } = request.headers["accept-language"] || {};
+  if (value) {
+    const acceptLanguage = acceptLanguageParser.pick(
+      [VALID_LOCALES_LIST],
+      value,
+      { loose: true }
+    );
+    if (acceptLanguage) {
+      return acceptLanguage;
+    }
+  }
+  return null;
+}
 
 /*
  * NOTE: This function is derived from the function of the same name within
@@ -72,6 +92,14 @@ exports.handler = async (event, context) => {
     return redirect(url, {
       permanent: status === 301,
       cacheControlSeconds: 3600 * 24 * 30,
+    });
+  }
+
+  // Starting with /docs/ should redirect to a locale.
+  if (request.uri.startsWith("/docs/")) {
+    const language = guessLanguage(request);
+    return redirect(`/${language}${request.uri}`, {
+      permanent: false,
     });
   }
 

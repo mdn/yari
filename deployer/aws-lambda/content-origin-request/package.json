@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "@mdn/fundamental-redirects": "file:../../../libs/fundamental-redirects",
+    "@mdn/global-constants": "file:../../../libs/global-constants",
+    "accept-language-parser": "^1.5.0",
     "sanitize-filename": "^1.6.3"
   },
   "engines": {
