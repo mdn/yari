@@ -75,6 +75,7 @@
     "ws": "^7.3.1"
   },
   "devDependencies": {
+    "@elastic/elasticsearch": "7.9.1",
     "@testing-library/react": "^11.0.4",
     "@types/jest": "^26.0.14",
     "@types/react": "^16.9.52",

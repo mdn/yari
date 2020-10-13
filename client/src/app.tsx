@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import { CRUD_MODE } from "./constants";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
+import { SiteSearch } from "./site-search";
 import Footer from "./footer";
 import Header from "./header";
 import { NoMatch } from "./routing";
@@ -55,6 +56,7 @@ export function App(appProps) {
                 </>
               )}
               <Route path="/" element={<Homepage />} />
+              <Route path="/search" element={<SiteSearch />} />
               <Route path="/docs/*" element={<Document {...appProps} />} />
             </Routes>
           </Layout>

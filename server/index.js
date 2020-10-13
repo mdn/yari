@@ -24,6 +24,7 @@ const { prepareDoc, renderHTML } = require("../ssr/dist/main");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
+const searchRouter = require("./search");
 const fakeV1APIRouter = require("./fake-v1-api");
 const { searchRoute } = require("./document-watch");
 const flawsRoute = require("./flaws");
@@ -57,6 +58,7 @@ app.use(
       })
 );
 
+app.use("/_search", searchRouter);
 app.use("/_document", documentRouter);
 
 app.get("/_open", (req, res) => {
