@@ -13,6 +13,17 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
         <li>
           <NewIssueOnGitHubLink doc={doc} />
         </li>
+        <li>
+          If you want to fix the content problem yourself, get started with{" "}
+          <a
+            href="https://github.com/mdn/content/blob/main/CONTRIBUTING.md"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            our Contribution guide
+          </a>
+          .
+        </li>
       </ul>
     </div>
   );
