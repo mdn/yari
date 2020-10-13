@@ -120,18 +120,16 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
           addBrokenLink(a, checked.get(href), href);
         }
       } else {
-        addBrokenLink(a, href);
-      }
-    } else {
-      // But does it have the correct case?!
-      if (found.url !== href.split("#")[0]) {
-        // Inconsistent case.
-        addBrokenLink(
-          a,
-          checked.get(href),
-          href,
-          found.url + absoluteURL.search + absoluteURL.hash
-        );
+        // But does it have the correct case?!
+        if (found.url !== href.split("#")[0]) {
+          // Inconsistent case.
+          addBrokenLink(
+            a,
+            checked.get(href),
+            href,
+            found.url + absoluteURL.search + absoluteURL.hash
+          );
+        }
       }
     }
   });
