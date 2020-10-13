@@ -139,3 +139,9 @@ ul.main-menu {
     }
   }
 }
+
+@media #{$mq-tablet-and-up} {
+  .page-overlay {
+    display: none;
+  }
+}

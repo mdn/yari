@@ -42,7 +42,6 @@
 
   input.search-input-field {
     border: 2px solid $text-color;
-    border-radius: $base-unit * 4;
     color: $text-color;
     min-width: 60px;
     padding: $base-unit ($base-unit * 2);
@@ -61,15 +60,11 @@
     border-radius: 0 0 $base-unit $base-unit;
     border-top: 0;
     box-shadow: 0 2px 8px 0 $neutral-500;
-    left: 20px;
+    left: 0;
     position: absolute;
     top: 45px;
-    width: 325px;
+    width: 100%;
     z-index: $top-layer;
-
-    @media #{$mq-tablet-and-up} {
-      width: 90%;
-    }
 
     .indexing-warning {
       color: $yellow-100;
