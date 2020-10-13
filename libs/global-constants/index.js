@@ -37,6 +37,9 @@ const VALID_LOCALES = new Map(
   ].map((x) => [x.toLowerCase(), x])
 );
 
+const DEFAULT_LOCALE = "en-US";
+
 module.exports = {
   VALID_LOCALES,
+  DEFAULT_LOCALE,
 };

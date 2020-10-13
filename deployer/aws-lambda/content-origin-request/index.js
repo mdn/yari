@@ -1,6 +1,6 @@
 const sanitizeFilename = require("sanitize-filename");
 const { resolveFundamental } = require("@mdn/fundamental-redirects");
-const { VALID_LOCALES } = require("@mdn/global-constants");
+const { DEFAULT_LOCALE, VALID_LOCALES } = require("@mdn/global-constants");
 const acceptLanguageParser = require("accept-language-parser");
 
 const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
@@ -10,17 +10,10 @@ const VALID_LOCALES_LIST = [...VALID_LOCALES.values()];
 function guessLanguage(request) {
   // Do we want to support a language cookie? Add it here!
   const { value = null } = request.headers["accept-language"] || {};
-  if (value) {
-    const acceptLanguage = acceptLanguageParser.pick(
-      [VALID_LOCALES_LIST],
-      value,
-      { loose: true }
-    );
-    if (acceptLanguage) {
-      return acceptLanguage;
-    }
-  }
-  return null;
+  const language =
+    value &&
+    acceptLanguageParser.pick([VALID_LOCALES_LIST], value, { loose: true });
+  return language || DEFAULT_LOCALE;
 }
 
 /*
