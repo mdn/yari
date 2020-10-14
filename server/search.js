@@ -11,11 +11,22 @@ router.get("/", async (req, res) => {
   if (!q.trim()) {
     return res.status(400).send("No 'q'");
   }
+
+  // If it wasn't present in the querystring, default to `[en-US]`.
+  // Otherwise `req.query.locale` can be an array or a string. Thanks Express!
+  // Either way, make sure it's always an array with at least one valid value.
+  const locales = !locale
+    ? ["en-US"]
+    : !Array.isArray(locale)
+    ? [locale]
+    : locale;
+  // XXX cross check the values against our VALID_LOCALES
+
   const params = {
     size: 10,
     page: 1,
     query: q.trim(),
-    locale,
+    locales,
   };
 
   try {
@@ -34,6 +45,10 @@ router.get("/", async (req, res) => {
 async function searchDocuments(url, index, params) {
   const client = new Client({ node: url });
 
+  console.assert(
+    Array.isArray(params.locales),
+    "params.locales has to be an array"
+  );
   const result = await client.search({
     index,
     body: {
@@ -49,7 +64,7 @@ async function searchDocuments(url, index, params) {
       },
       query: {
         bool: {
-          filter: [{ term: { locale: params.locale } }],
+          filter: [{ terms: { locale: params.locales } }],
           must: [
             {
               multi_match: {

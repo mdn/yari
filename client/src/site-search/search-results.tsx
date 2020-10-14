@@ -61,7 +61,8 @@ function Results({
   return (
     <div className="search-results">
       <p>
-        Found {metadata.total.value.toLocaleString()} matches in {metadata.took}{" "}
+        Found {metadata.total.relation === "gt" && "more than"}{" "}
+        {metadata.total.value.toLocaleString()} matches in {metadata.took}{" "}
         milliseconds.
       </p>
       {documents.map((document) => {

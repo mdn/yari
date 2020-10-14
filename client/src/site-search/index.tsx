@@ -7,21 +7,26 @@ const SearchResults = lazy(() => import("./search-results"));
 
 type Query = {
   q: string;
-  locale: string;
+  locale: string[];
 };
 
 export function SiteSearch() {
   const isServer = typeof window === "undefined";
 
   const locale = useLocale();
-
-  const [searchParams] = (useSearchParams as any)();
-  const [q, setQ] = useState((searchParams.get("q") as string) || "");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [q, setQ] = useState(searchParams.get("q") || "");
 
   const [query, setQuery] = useState<Query>({
     q,
-    locale,
+    locale: [locale || "en-US"],
   });
+
+  useEffect(() => {
+    setQuery((state) => {
+      return Object.assign({}, state, { q: searchParams.get("q") || "" });
+    });
+  }, [searchParams]);
 
   useEffect(() => {
     if (query.q) {
@@ -39,7 +44,7 @@ export function SiteSearch() {
         action={`/${locale}/search`}
         onSubmit={(event) => {
           event.preventDefault();
-          setQuery(Object.assign({}, query, { q }));
+          setSearchParams({ q });
         }}
       >
         <input
@@ -48,14 +53,30 @@ export function SiteSearch() {
           value={q}
           onChange={(event) => setQ(event.target.value)}
         />
-        <button type="submit">Search again</button>
+        {/* <button type="submit">{q ? "Search again" : "Search"}</button> */}
+        <button type="submit">Search</button>
       </form>
 
       {!isServer && query.q && (
         <Suspense fallback={<p>Loading...</p>}>
-          <SearchResults query={new URLSearchParams(query)} />
+          <SearchResults query={new URLSearchParams(queryToSequence(query))} />
         </Suspense>
       )}
     </div>
   );
+}
+
+type SequenceTuple = [string, string];
+
+function queryToSequence(obj: Query): SequenceTuple[] {
+  const sequence: SequenceTuple[] = [];
+  Object.entries(obj).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      const expanded: SequenceTuple[] = value.map((v) => [key, `${v}`]);
+      sequence.push(...expanded);
+    } else {
+      sequence.push([key, `${value}`]);
+    }
+  });
+  return sequence;
 }
