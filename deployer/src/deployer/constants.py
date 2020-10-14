@@ -19,8 +19,8 @@ MAX_WORKERS_PARALLEL_UPLOADS = config(
     "DEPLOYER_MAX_WORKERS_PARALLEL_UPLOADS", default=50, cast=int
 )
 
-# E.g. /en-US/docs/Foo/Bar/index.html
-DEFAULT_CACHE_CONTROL = config("DEPLOYER_CACHE_CONTROL", default=60 * 60, cast=int)
+# E.g. /en-US/docs/Foo/Bar
+DEFAULT_CACHE_CONTROL = config("DEPLOYER_CACHE_CONTROL", default=60 * 60 * 24, cast=int)
 # E.g. '2.02b14290.chunk.css'
 HASHED_CACHE_CONTROL = config(
     "DEPLOYER_HASHED_CACHE_CONTROL", default=60 * 60 * 24 * 365, cast=int

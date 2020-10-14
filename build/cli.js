@@ -156,7 +156,7 @@ async function buildDocuments() {
   // That means, that if you've done this at least once, consequent runs of
   // *only* CONTENT_ROOT will just keep overwriting the sitemaps/en-us/sitemap.xml.gz.
   if (CONTENT_TRANSLATED_ROOT) {
-    const sitemapIndexFilePath = path.join(BUILD_OUT_ROOT, "sitemaps.xml");
+    const sitemapIndexFilePath = path.join(BUILD_OUT_ROOT, "sitemap.xml");
     fs.writeFileSync(
       sitemapIndexFilePath,
       makeSitemapIndexXML(
