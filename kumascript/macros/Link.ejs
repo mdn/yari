@@ -4,7 +4,7 @@
 // Parameters:
 //  $0  Page link
 
-let page = await wiki.getPage($0);
+let page = await wiki.getPageByURL($0);
 let title = page.title;
 let url = page.url
 %>

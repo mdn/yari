@@ -23,7 +23,7 @@ let allowedWrappers = [
 let section = $1;
 let lang = env.locale;
 let text = "";
-let page = await wiki.getPage($0);
+let page = await wiki.getPageByURL($0);
 let title = kuma.htmlEscape(page.title);
 
 let commonLocalStrings = string.deserialize(await template("L10n:Common"));

@@ -13,7 +13,7 @@ if ($2) {
   anch = '#' + $2;
 }
 
-let page = await wiki.getPage(URL);
+let page = await wiki.getPageByURL(URL);
 
 let code = '';
 let endcode = '';

@@ -16,7 +16,7 @@ const basePath = `/${env.locale}/docs/Mozilla/Projects/SpiderMonkey/JSAPI_refere
 var URL = basePath + api;
 var summary = null;
 
-page = wiki.getPage(URL);
+page = wiki.getPageByURL(URL);
 
 if (!$3) {
     str = `<code>${str}</code>`;
