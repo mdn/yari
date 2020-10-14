@@ -101,7 +101,7 @@ function withoutDefaultFilters(filters: Filters): Partial<Filters> {
  * NOTE: This only changes the given filters, and doesn't reset what is missing
  */
 function useFiltersURL(): [Filters, (filters: Partial<Filters>) => void] {
-  const [searchParams, setSearchParams] = (useSearchParams as any)();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   function groupParamsByKey(params: URLSearchParams): any {
     return [...params.entries()].reduce((acc, tuple) => {
@@ -134,7 +134,11 @@ function useFiltersURL(): [Filters, (filters: Partial<Filters>) => void] {
 
   const updateFiltersURL = useCallback(
     (partialFilters: Partial<Filters>) => {
-      setSearchParams(withoutDefaultFilters({ ...filters, ...partialFilters }));
+      const newSearchParams = withoutDefaultFilters({
+        ...filters,
+        ...partialFilters,
+      }) as Record<string, string | string[]>;
+      setSearchParams(newSearchParams);
     },
     [filters, setSearchParams]
   );
