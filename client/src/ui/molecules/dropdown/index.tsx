@@ -1,6 +1,8 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { useGA } from "../ga-context";
+import { useGA } from "../../../ga-context";
+
+import "./index.scss";
 
 type DropdownProps = {
   // A string set as the id attribute to uniquely identify this
@@ -48,16 +50,6 @@ export default function Dropdown(props: DropdownProps) {
         hideDropdownMenuIfVisible();
       }
     });
-
-    document.addEventListener("click", (event: MouseEvent) => {
-      if (
-        event.target &&
-        event.target instanceof HTMLElement &&
-        !event.target.classList.contains("dropdown-menu-label")
-      ) {
-        hideDropdownMenuIfVisible();
-      }
-    });
   });
 
   return (
@@ -69,7 +61,7 @@ export default function Dropdown(props: DropdownProps) {
       <button
         id={props.id}
         type="button"
-        className="dropdown-menu-label"
+        className="ghost dropdown-menu-label"
         aria-haspopup="true"
         aria-owns={props.ariaOwns}
         aria-label={props.ariaLabel}

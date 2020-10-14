@@ -1,16 +1,14 @@
 import * as React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { useGA } from "../../ga-context";
-import { useLocale } from "../../hooks";
+import { useGA } from "../../../ga-context";
+import { useLocale } from "../../../hooks";
 
-import "./main-menu.scss";
+import "./index.scss";
 
 export default function MainMenu() {
   const locale = useLocale();
-  const mainMenuToggleRef = useRef<null | HTMLButtonElement>(null);
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
-  const [showMainMenu, setShowMainMenu] = useState(false);
   const [visibleSubMenu, setVisibleSubMenu] = useState<string | null>(null);
   const ga = useGA();
 
@@ -46,20 +44,6 @@ export default function MainMenu() {
     }
   }
 
-  function toggleMainMenu() {
-    const pageOverlay = document.querySelector(".page-overlay");
-    const mainMenuButton = mainMenuToggleRef.current;
-
-    if (mainMenuButton) {
-      mainMenuButton.classList.toggle("expanded");
-      setShowMainMenu(!showMainMenu);
-    }
-
-    if (pageOverlay) {
-      pageOverlay.classList.toggle("hidden");
-    }
-  }
-
   /**
    * Show and hide submenus in the main menu, send GA events and updates
    * the ARIA state.
@@ -85,16 +69,6 @@ export default function MainMenu() {
         if (previousActiveElement.current) {
           previousActiveElement.current.focus();
         }
-      }
-    });
-
-    document.addEventListener("click", (event) => {
-      if (
-        event.target &&
-        event.target instanceof HTMLElement &&
-        !event.target.classList.contains("top-level-entry")
-      ) {
-        hideSubMenuIfVisible();
       }
     });
   });
@@ -224,15 +198,7 @@ export default function MainMenu() {
 
   return (
     <nav className="main-nav" aria-label="Main menu">
-      <button
-        ref={mainMenuToggleRef}
-        type="button"
-        className="ghost main-menu-toggle"
-        aria-haspopup="true"
-        aria-label="Show Menu"
-        onClick={toggleMainMenu}
-      />
-      <ul className={`main-menu ${showMainMenu ? "show" : ""}`}>
+      <ul className="main-menu">
         {menus.map((menuEntry) => (
           <li key={menuEntry.label} className="top-level-entry-container">
             <button
@@ -249,9 +215,9 @@ export default function MainMenu() {
               {menuEntry.label}
             </button>
             <ul
-              className={
-                menuEntry.label === visibleSubMenu ? "show" : undefined
-              }
+              className={`${menuEntry.labelId} ${
+                menuEntry.label === visibleSubMenu ? "show" : ""
+              }`}
               role="menu"
               aria-labelledby={`${menuEntry.labelId}-button`}
             >

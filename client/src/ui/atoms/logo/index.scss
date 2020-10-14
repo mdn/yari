@@ -9,4 +9,9 @@
     height: 44px;
     width: 200px;
   }
+
+  @media #{$mq-large-desktop-and-up} {
+    flex-basis: 200px;
+    height: inherit;
+  }
 }

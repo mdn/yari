@@ -1,0 +1,136 @@
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+
+.main-menu-toggle {
+  background: none;
+  padding: 10px 20px;
+  position: absolute;
+  right: 0;
+  top: $base-spacing;
+
+  &::before {
+    background: transparent url("~@mdn/dinocons/navigation/menu-open.svg") 0 0
+      no-repeat;
+    background-size: 21px;
+    content: "";
+    display: block;
+    height: 21px;
+    width: 21px;
+  }
+
+  &.expanded::before {
+    background-image: url("~@mdn/dinocons/navigation/menu-close.svg");
+  }
+
+  @media #{$mq-tablet-and-up} {
+    display: none;
+  }
+}
+
+.page-header {
+  margin: 0 auto;
+  max-width: $max-width-default;
+  padding: $base-spacing;
+  position: relative;
+  width: 100%;
+
+  @media #{$mq-tablet-and-up} {
+    display: flex;
+    flex-flow: column;
+  }
+
+  @media #{$mq-large-desktop-and-up} {
+    flex-flow: row;
+  }
+}
+
+.page-header-main {
+  background-color: $neutral-600;
+  display: none;
+  left: 0;
+  padding: 0 $base-spacing $base-spacing;
+  position: absolute;
+  top: 70px;
+  width: 100%;
+  z-index: $top-layer;
+
+  @media #{$mq-tablet-and-up} {
+    display: block;
+    grid-template-columns: 70% 30%;
+    left: inherit;
+    padding: 0;
+    position: relative;
+    top: inherit;
+
+    @supports (display: grid) {
+      display: grid;
+    }
+  }
+
+  @media #{$mq-large-desktop-and-up} {
+    grid-template-columns: 2fr 1fr 60px;
+  }
+
+  .main-nav,
+  .header-search,
+  .auth-container {
+    grid-column: 1/2;
+  }
+
+  .main-nav {
+    grid-row: 2/3;
+  }
+
+  .header-search {
+    grid-row: 1/2;
+  }
+
+  .auth-container {
+    grid-row: 3/4;
+  }
+
+  @media #{$mq-tablet-and-up} {
+    .main-nav {
+      grid-column: 1/3;
+      grid-row: 1/2;
+    }
+
+    .header-search {
+      grid-column: 1/2;
+      grid-row: 2/3;
+    }
+
+    .auth-container {
+      grid-column: 2/3;
+      grid-row: 2/3;
+      justify-self: flex-end;
+    }
+  }
+
+  @media #{$mq-large-desktop-and-up} {
+    .main-nav,
+    .header-search,
+    .auth-container {
+      grid-row: 1/2;
+    }
+
+    .main-nav {
+      grid-column: 1/2;
+    }
+
+    .header-search {
+      grid-column: 2/3;
+    }
+
+    .auth-container {
+      grid-column: 3/4;
+    }
+  }
+}
+
+.show {
+  display: block;
+  @supports (display: grid) {
+    display: grid;
+  }
+}

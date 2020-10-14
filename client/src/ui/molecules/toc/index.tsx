@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useGA } from "../../ga-context";
+import { useGA } from "../../../ga-context";
 
-import { Toc } from "../../document/types";
+import { Toc } from "../../../document/types";
 
-import "./toc.scss";
+import "./index.scss";
 
 export function TOC({ toc }: { toc: Toc[] }) {
   const ga = useGA();

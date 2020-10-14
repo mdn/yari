@@ -1,0 +1,108 @@
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+@import "~@mdn/minimalist/sass/mixins/utils";
+
+.header-search {
+  background-color: $neutral-600;
+
+  @media #{$mq-tablet-and-up} {
+    height: 40px;
+    min-width: 80px;
+    width: inherit;
+  }
+
+  .search-widget {
+    margin: $base-spacing 0;
+    position: relative;
+    width: 100%;
+
+    @media #{$mq-tablet-and-up} {
+      margin: ($base-spacing / 2) 0;
+      min-width: 80px;
+    }
+
+    @media #{$mq-large-desktop-and-up} {
+      margin: 0;
+    }
+
+    &::after {
+      background: $neutral-600 url("~@mdn/dinocons/general/search.svg") 0 0
+        no-repeat;
+      background-size: 24px;
+      content: "";
+      display: inline-block;
+      height: 24px;
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      width: 24px;
+    }
+  }
+
+  input.search-input-field {
+    border: 2px solid $text-color;
+    color: $text-color;
+    min-width: 60px;
+    padding: $base-unit ($base-unit * 2);
+    width: 100%;
+  }
+
+  .server-error {
+    color: $red-100;
+    font-size: $small-font-size;
+    margin: 0;
+  }
+
+  .search-results {
+    background-color: $neutral-600;
+    border: 2px solid $neutral-100;
+    border-radius: 0 0 $base-unit $base-unit;
+    border-top: 0;
+    box-shadow: 0 2px 8px 0 $neutral-500;
+    left: 0;
+    position: absolute;
+    top: 45px;
+    width: 100%;
+    z-index: $top-layer;
+
+    .indexing-warning {
+      color: $yellow-100;
+    }
+
+    div {
+      border-bottom: 1px solid $neutral-550;
+      padding: $base-unit;
+    }
+
+    .result-item:hover,
+    .result-item.highlit {
+      background-color: $neutral-550;
+    }
+
+    .result-item:hover,
+    .result-item:focus {
+      cursor: pointer;
+    }
+
+    div:last-child {
+      border-bottom: 0;
+    }
+
+    mark {
+      background-color: $yellow-300;
+    }
+
+    small {
+      overflow-wrap: break-word;
+    }
+
+    a {
+      text-overflow: ellipsis;
+    }
+
+    div.searchindex-error {
+      color: $red-100;
+    }
+  }
+}

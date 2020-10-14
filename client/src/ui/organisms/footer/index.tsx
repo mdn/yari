@@ -4,9 +4,9 @@ import { ReactComponent as GithubIcon } from "@mdn/dinocons/brands/github-mark-s
 import { ReactComponent as TwitterIcon } from "@mdn/dinocons/social/twitter.svg";
 import { ReactComponent as InstagramIcon } from "@mdn/dinocons/social/instagram.svg";
 
-import { useLocale } from "../../hooks";
-import { Logo } from "../atoms/logo";
-import "./footer.scss";
+import { useLocale } from "../../../hooks";
+import { Logo } from "../../atoms/logo";
+import "./index.scss";
 
 export function Footer() {
   const locale = useLocale();

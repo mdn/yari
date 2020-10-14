@@ -5,7 +5,11 @@
 
 .breadcrumbs {
   font-size: $small-font-size;
-  padding: $base-spacing;
+  padding: $base-unit $base-spacing;
+
+  @media #{$mq-small-desktop-and-up} {
+    padding: $base-spacing;
+  }
 
   ol {
     @include reset-list();
