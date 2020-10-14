@@ -102,9 +102,14 @@ async function buildDocuments() {
       fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
     }
 
+    // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
+    document.noIndexing =
+      (document.isArchive && !document.isTranslated) ||
+      document.metadata.slug === "MDN/Kitchensink";
+
     // Collect non-archived documents' slugs to be used in sitemap building and
-    // search index building
-    if (!document.isArchive || document.isTranslated) {
+    // search index building.
+    if (!document.noIndexing) {
       const { locale, slug } = document.metadata;
       if (!docPerLocale[locale]) {
         docPerLocale[locale] = [];
@@ -151,7 +156,7 @@ async function buildDocuments() {
   // That means, that if you've done this at least once, consequent runs of
   // *only* CONTENT_ROOT will just keep overwriting the sitemaps/en-us/sitemap.xml.gz.
   if (CONTENT_TRANSLATED_ROOT) {
-    const sitemapIndexFilePath = path.join(BUILD_OUT_ROOT, "sitemaps.xml");
+    const sitemapIndexFilePath = path.join(BUILD_OUT_ROOT, "sitemap.xml");
     fs.writeFileSync(
       sitemapIndexFilePath,
       makeSitemapIndexXML(

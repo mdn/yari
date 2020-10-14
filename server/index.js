@@ -13,7 +13,13 @@ const {
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 } = require("../build");
-const { CONTENT_ROOT, Document, Redirect, Image } = require("../content");
+const {
+  CONTENT_ROOT,
+  Document,
+  Redirect,
+  Image,
+  resolveFundamental,
+} = require("../content");
 const { prepareDoc, renderHTML } = require("../ssr/dist/main");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
@@ -26,11 +32,16 @@ const { staticMiddlewares } = require("./middlewares");
 const app = express();
 app.use(express.json());
 
+app.use((req, res, next) => {
+  // If we have a fundamental redirect mimic out Lambda@Edge and redirect.
+  const { url: fundamentalRedirectUrl, status } = resolveFundamental(req.url);
+  if (fundamentalRedirectUrl && status) {
+    return res.redirect(status, fundamentalRedirectUrl);
+  }
+  return next();
+});
 app.use(staticMiddlewares);
 
-app.use(express.static(STATIC_ROOT));
-
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(

@@ -15,159 +15,181 @@ const {
 function injectFlaws(doc, $, options, { rawContent }) {
   if (doc.isArchive) return;
 
-  // The 'broken_links' flaw check looks for internal links that
-  // link to a document that's going to fail with a 404 Not Found.
-  if (options.flawLevels.get("broken_links") !== FLAW_LEVELS.IGNORE) {
-    // This is needed because the same href can occur multiple time.
-    // For example:
-    //    <a href="/foo/bar">
-    //    <a href="/foo/other">
-    //    <a href="/foo/bar">  (again!)
-    // In this case, when we call `addBrokenLink()` that third time, we know
-    // this refers to the second time it appears. That's important for the
-    // sake of finding which match, in the original source (rawContent),
-    // it belongs to.
-    const checked = new Map();
+  injectBrokenLinksFlaws(
+    options.flawLevels.get("broken_links"),
+    doc,
+    $,
+    rawContent
+  );
 
-    // Our cache for looking things up by `href`. This basically protects
-    // us from calling `findMatchesInText()` more than once.
-    const matches = new Map();
+  injectBadBCDQueriesFlaws(options.flawLevels.get("bad_bcd_queries"), doc, $);
+}
 
-    // A closure function to help making it easier to append flaws
-    function addBrokenLink($element, index, href, suggestion = null) {
-      if (!matches.has(href)) {
-        matches.set(
-          href,
-          Array.from(
-            findMatchesInText(href, rawContent, {
-              attribute: "href",
-            })
-          )
-        );
-      }
-      // findMatchesInText() is a generator function so use `Array.from()`
-      // to turn it into an array so we can use `.forEach()` because that
-      // gives us an `i` for every loop.
-      matches.get(href).forEach((match, i) => {
-        if (i !== index) {
-          return;
-        }
-        if (!("broken_links" in doc.flaws)) {
-          doc.flaws.broken_links = [];
-        }
-        const id = `link${doc.flaws.broken_links.length + 1}`;
-        const explanation = `Can't resolve ${href}`;
-        let fixable = false;
-        if (suggestion) {
-          $element.attr("href", suggestion);
-          fixable = true;
-        }
-        $element.attr("data-flaw", id);
-        doc.flaws.broken_links.push(
-          Object.assign({ explanation, id, href, suggestion, fixable }, match)
-        );
-      });
+// The 'broken_links' flaw check looks for internal links that
+// link to a document that's going to fail with a 404 Not Found.
+function injectBrokenLinksFlaws(level, doc, $, rawContent) {
+  if (level === FLAW_LEVELS.IGNORE) return;
+
+  // This is needed because the same href can occur multiple time.
+  // For example:
+  //    <a href="/foo/bar">
+  //    <a href="/foo/other">
+  //    <a href="/foo/bar">  (again!)
+  // In this case, when we call `addBrokenLink()` that third time, we know
+  // this refers to the second time it appears. That's important for the
+  // sake of finding which match, in the original source (rawContent),
+  // it belongs to.
+  const checked = new Map();
+
+  // Our cache for looking things up by `href`. This basically protects
+  // us from calling `findMatchesInText()` more than once.
+  const matches = new Map();
+
+  // A closure function to help making it easier to append flaws
+  function addBrokenLink($element, index, href, suggestion = null) {
+    if (!matches.has(href)) {
+      matches.set(
+        href,
+        Array.from(
+          findMatchesInText(href, rawContent, {
+            attribute: "href",
+          })
+        )
+      );
     }
-
-    $("a[href]").each((i, element) => {
-      const a = $(element);
-      const href = a.attr("href");
-
-      // This gives us insight into how many times this exact `href`
-      // has been encountered in the doc.
-      // Then, when we call addBrokenLink() we can include an index so that
-      // that function knows which match it's referring to.
-      checked.set(href, checked.has(href) ? checked.get(href) + 1 : 0);
-
-      if (href.startsWith("https://developer.mozilla.org/")) {
-        // It might be a working 200 OK link but the link just shouldn't
-        // have the full absolute URL part in it.
-        const absoluteURL = new URL(href);
-        addBrokenLink(
-          a,
-          checked.get(href),
-          href,
-          absoluteURL.pathname + absoluteURL.search + absoluteURL.hash
-        );
-      } else if (href.startsWith("/") && !href.startsWith("//")) {
-        // Got to fake the domain to sensible extract the .search and .hash
-        const absoluteURL = new URL(href, "http://www.example.com");
-        const hrefNormalized = href.split("#")[0];
-        const found = Document.findByURL(hrefNormalized);
-        if (!found) {
-          // Before we give up, check if it's a redirect
-          const resolved = Redirect.resolve(hrefNormalized);
-          if (resolved) {
-            // Just because it's a redirect doesn't mean it ends up
-            // on a page we have.
-            // For example, there might be a redirect but where it
-            // goes to is not in this.allTitles.
-            // This can happen if it's a "fundamental redirect" for example.
-            const finalDocument = Document.findByURL(resolved);
-            addBrokenLink(
-              a,
-              checked.get(href),
-              href,
-              finalDocument
-                ? finalDocument.url + absoluteURL.search + absoluteURL.hash
-                : null
-            );
-          } else {
-            addBrokenLink(a, href);
-          }
-        } else {
-          // But does it have the correct case?!
-          if (found.url !== href.split("#")[0]) {
-            // Inconsistent case.
-            addBrokenLink(
-              a,
-              checked.get(href),
-              href,
-              found.url + absoluteURL.search + absoluteURL.hash
-            );
-          }
-        }
+    // findMatchesInText() is a generator function so use `Array.from()`
+    // to turn it into an array so we can use `.forEach()` because that
+    // gives us an `i` for every loop.
+    matches.get(href).forEach((match, i) => {
+      if (i !== index) {
+        return;
       }
+      if (!("broken_links" in doc.flaws)) {
+        doc.flaws.broken_links = [];
+      }
+      const id = `link${doc.flaws.broken_links.length + 1}`;
+      const explanation = `Can't resolve ${href}`;
+      let fixable = false;
+      if (suggestion) {
+        $element.attr("href", suggestion);
+        fixable = true;
+      }
+      $element.attr("data-flaw", id);
+      doc.flaws.broken_links.push(
+        Object.assign({ explanation, id, href, suggestion, fixable }, match)
+      );
     });
-    if (options.flawLevels.get("broken_links") === FLAW_LEVELS.ERROR) {
-      throw new Error(`broken_links flaws: ${doc.flaws.broken_links}`);
-    }
   }
 
-  if (options.flawLevels.get("bad_bcd_queries") !== FLAW_LEVELS.IGNORE) {
-    $("div.bc-data").each((i, element) => {
-      const dataQuery = $(element).attr("id");
-      if (!dataQuery) {
+  $("a[href]").each((i, element) => {
+    const a = $(element);
+    const href = a.attr("href");
+
+    // This gives us insight into how many times this exact `href`
+    // has been encountered in the doc.
+    // Then, when we call addBrokenLink() we can include an index so that
+    // that function knows which match it's referring to.
+    checked.set(href, checked.has(href) ? checked.get(href) + 1 : 0);
+
+    if (href.startsWith("https://developer.mozilla.org/")) {
+      // It might be a working 200 OK link but the link just shouldn't
+      // have the full absolute URL part in it.
+      const absoluteURL = new URL(href);
+      addBrokenLink(
+        a,
+        checked.get(href),
+        href,
+        absoluteURL.pathname + absoluteURL.search + absoluteURL.hash
+      );
+    } else if (href.startsWith("/") && !href.startsWith("//")) {
+      // Got to fake the domain to sensible extract the .search and .hash
+      const absoluteURL = new URL(href, "http://www.example.com");
+      const hrefNormalized = href.split("#")[0];
+      const found = Document.findByURL(hrefNormalized);
+      if (!found) {
+        // Before we give up, check if it's a redirect
+        const resolved = Redirect.resolve(hrefNormalized);
+        if (resolved !== hrefNormalized) {
+          addBrokenLink(
+            a,
+            checked.get(href),
+            href,
+            resolved + absoluteURL.search + absoluteURL.hash
+          );
+        } else {
+          addBrokenLink(a, checked.get(href), href);
+        }
+      } else {
+        // But does it have the correct case?!
+        if (found.url !== href.split("#")[0]) {
+          // Inconsistent case.
+          addBrokenLink(
+            a,
+            checked.get(href),
+            href,
+            found.url + absoluteURL.search + absoluteURL.hash
+          );
+        }
+      }
+    }
+  });
+
+  if (
+    level === FLAW_LEVELS.ERROR &&
+    doc.flaws.broken_links &&
+    doc.flaws.broken_links.length
+  ) {
+    throw new Error(
+      `broken_links flaws: ${doc.flaws.broken_links.map(JSON.stringify)}`
+    );
+  }
+}
+
+// Bad BCD queries are when the `<div class="bc-data">` tags have an
+// ID (or even lack the `id` attribute) that don't match anything in the
+// @mdn/browser-compat-data package. E.g. Something like this:
+//
+//    <div class="bc-data" id="bcd:never.ever.heard.of">
+//
+function injectBadBCDQueriesFlaws(level, doc, $) {
+  if (level === FLAW_LEVELS.IGNORE) return;
+
+  $("div.bc-data").each((i, element) => {
+    const dataQuery = $(element).attr("id");
+    if (!dataQuery) {
+      if (!("bad_bcd_queries" in doc.flaws)) {
+        doc.flaws.bad_bcd_queries = [];
+      }
+      doc.flaws.bad_bcd_queries.push({
+        id: `bad_bcd_queries${doc.flaws.bad_bcd_queries.length}`,
+        explanation: "BCD table without an ID",
+        suggestion: null,
+      });
+    } else {
+      const query = dataQuery.replace(/^bcd:/, "");
+      const { data } = packageBCD(query);
+      if (!data) {
         if (!("bad_bcd_queries" in doc.flaws)) {
           doc.flaws.bad_bcd_queries = [];
         }
         doc.flaws.bad_bcd_queries.push({
           id: `bad_bcd_queries${doc.flaws.bad_bcd_queries.length}`,
-          explanation: "BCD table without an ID",
+          explanation: `No BCD data for query: ${query}`,
           suggestion: null,
         });
-      } else {
-        const query = dataQuery.replace(/^bcd:/, "");
-        const { data } = packageBCD(query);
-        if (!data) {
-          if (!("bad_bcd_queries" in doc.flaws)) {
-            doc.flaws.bad_bcd_queries = [];
-          }
-          doc.flaws.bad_bcd_queries.push({
-            id: `bad_bcd_queries${doc.flaws.bad_bcd_queries.length}`,
-            explanation: `No BCD data for query: ${query}`,
-            suggestion: null,
-          });
-        }
       }
-    });
-    if (options.flawLevels.get("broken_links") === FLAW_LEVELS.ERROR) {
-      throw new Error(
-        `bad_bcd_queries flaws: ${doc.flaws.bad_bcd_queries.map(
-          (f) => f.explanation
-        )}`
-      );
     }
+  });
+  if (
+    level === FLAW_LEVELS.ERROR &&
+    doc.flaws.bad_bcd_queries &&
+    doc.flaws.bad_bcd_queries.length
+  ) {
+    throw new Error(
+      `bad_bcd_queries flaws: ${doc.flaws.bad_bcd_queries.map(
+        (f) => f.explanation
+      )}`
+    );
   }
 }
 
@@ -252,7 +274,10 @@ async function fixFixableFlaws(doc, options, document) {
         });
         const destination = path.join(
           Document.getFolderPath(document.metadata),
-          path.basename(url.pathname)
+          path
+            .basename(decodeURI(url.pathname))
+            .replace(/\s+/g, "_")
+            .toLowerCase()
         );
         fs.writeFileSync(destination, imageBuffer);
         console.log(`Downloaded ${flaw.src} to ${destination}`);
