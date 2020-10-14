@@ -37,24 +37,37 @@ async function searchDocuments(url, index, params) {
   const result = await client.search({
     index,
     body: {
+      _source: { excludes: ["body"] },
+      from: 0,
       highlight: {
-        encoder: "html",
-        fields: { body: {}, title: {} },
-        fragment_size: 80,
-        number_of_fragments: 4,
+        fields: { body: { type: "unified" }, title: {} },
+        fragment_size: 120,
+        number_of_fragments: 3,
         post_tags: ["</mark>"],
         pre_tags: ["<mark>"],
+        encoder: "html",
       },
       query: {
-        multi_match: { fields: ["title^10", "body"], query: params.query },
+        bool: {
+          filter: [{ term: { locale: params.locale } }],
+          must: [
+            {
+              multi_match: {
+                fields: ["title^10", "body"],
+                query: params.query,
+              },
+            },
+          ],
+        },
       },
       size: params.size,
-      // sort: [{ popularity: { order: "desc" } }, "_score"],
-      // IT ONLY MAKES SENSE TO SORT BY POPULARITY FIRST IF THE SEARCH IS TOO SHORT
       sort: ["_score", { popularity: { order: "desc" } }],
     },
   });
   // console.log(result);
+
+  // XXX Not great.
+  console.assert(result.statusCode === 200, result.statusCode);
 
   const metadata = {
     took: result.body.took,
@@ -72,6 +85,7 @@ async function searchDocuments(url, index, params) {
       popularity: hit._source.popularity,
       highlight: {
         body: hit.highlight ? hit.highlight.body : [],
+        title: hit.highlight ? hit.highlight.title : [],
       },
     };
   });

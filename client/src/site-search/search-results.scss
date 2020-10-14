@@ -1,0 +1,17 @@
+.search-results {
+  a.title {
+    color: black;
+    font-weight: bold;
+  }
+  //   a.url {
+  //   }
+  span.highlight {
+    display: block;
+    font-style: italic;
+    font-size: 0.9rem;
+  }
+  span.nerd-data {
+    margin-left: 20px;
+    font-size: 80%;
+  }
+}
