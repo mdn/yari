@@ -136,6 +136,15 @@ function archive(renderedHTML, rawHTML, metadata, isTranslatedContent = false) {
   );
 }
 
+const readWithHash = (folderWithHash) => {
+  const [folder, hash = ""] = folderWithHash.split("#", 2);
+  const doc = read(folder);
+  if (hash) {
+    doc.url = `${doc.url}#${hash}`;
+  }
+  return doc;
+};
+
 const read = memoize((folder) => {
   let filePath = null;
   let root = null;
@@ -196,7 +205,7 @@ const read = memoize((folder) => {
 
 function update(folder, rawHTML, metadata) {
   const folderPath = path.join(CONTENT_ROOT, getHTMLPath(folder));
-  const document = read(folder);
+  const document = readWithHash(folder);
   const oldSlug = document.metadata.slug;
   const newSlug = metadata.slug;
   const isNewSlug = oldSlug !== newSlug;
@@ -244,12 +253,12 @@ function update(folder, rawHTML, metadata) {
 }
 
 function del(folder) {
-  const { metadata, fileInfo } = read(folder);
+  const { metadata, fileInfo } = readWithHash(folder);
   fs.rmdirSync(path.dirname(fileInfo.path), { recursive: true });
   updateWikiHistory(path.join(CONTENT_ROOT, metadata.locale), metadata.slug);
 }
 
-const findByURL = (url, ...args) => read(urlToFolderPath(url), ...args);
+const findByURL = (url, ...args) => readWithHash(urlToFolderPath(url), ...args);
 
 function findAll(
   { files, folderSearch } = { files: new Set(), folderSearch: null }
@@ -308,7 +317,7 @@ function findAll(
     count: filePaths.length,
     iter: function* () {
       for (const filePath of filePaths) {
-        yield read(filePath);
+        yield readWithHash(filePath);
       }
     },
   };
@@ -323,7 +332,7 @@ function findChildren(url) {
     .map((childFilePath) =>
       path.relative(CONTENT_ROOT, path.dirname(childFilePath))
     )
-    .map((folder) => read(folder));
+    .map((folder) => readWithHash(folder));
 }
 
 module.exports = {
