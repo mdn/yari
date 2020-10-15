@@ -9,4 +9,36 @@
       border-radius: 2px;
     }
   }
+
+  .all-macros-used {
+    th.filter {
+      min-width: 350px;
+      .filter-macros {
+        text-align: right;
+      }
+    }
+
+    td.mdn_url {
+      font-size: 80%;
+      text-align: right;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    td.count,
+    th.macro {
+      max-width: 22px;
+      font-size: 90%;
+    }
+    td.count {
+      span.zero {
+        color: #a4a4a4;
+      }
+    }
+    th.macro {
+      text-align: center;
+      transform-origin: left;
+      transform: rotate(-90deg);
+      vertical-align: bottom;
+    }
+  }
 }
