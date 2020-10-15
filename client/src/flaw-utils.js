@@ -10,6 +10,7 @@ export function humanizeFlawName(name) {
     // function.
     bad_bcd_queries: "Bad BCD queries",
     bad_bcd_links: "Bad BCD links",
+    pre_with_html: "<pre> with HTML",
   };
   function fallback() {
     return name.charAt(0).toUpperCase() + name.slice(1).replace(/_/g, " ");

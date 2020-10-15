@@ -15,6 +15,7 @@ import {
   ImageReferenceFlaw,
   GenericFlaw,
   BadBCDQueryFlaw,
+  PreWithHTMLFlaw,
 } from "../types";
 import "./flaws.scss";
 
@@ -209,6 +210,14 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
               <BadBCDQueries
                 key="bad_bcd_queries"
                 flaws={doc.flaws.bad_bcd_queries}
+              />
+            );
+          case "pre_with_html":
+            return (
+              <PreWithHTML
+                key="pre_with_html"
+                sourceFolder={doc.source.folder}
+                flaws={doc.flaws.pre_with_html}
               />
             );
           case "macros":
@@ -433,6 +442,85 @@ function BadBCDLinks({ links }: { links: BadBCDLinkFlaw[] }) {
           <li key={link.slug}>
             In <code>{link.query}</code> under key <code>{link.key}</code> can't
             find document: <code>{link.slug}</code>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function PreWithHTML({
+  flaws,
+  sourceFolder,
+}: {
+  flaws: PreWithHTMLFlaw[];
+  sourceFolder: string;
+}) {
+  const { focus } = useAnnotations(flaws);
+
+  const filepath = sourceFolder + "/index.html";
+
+  const [opening, setOpening] = React.useState<string | null>(null);
+  useEffect(() => {
+    let unsetOpeningTimer: ReturnType<typeof setTimeout>;
+    if (opening) {
+      unsetOpeningTimer = setTimeout(() => {
+        setOpening(null);
+      }, 3000);
+    }
+    return () => {
+      if (unsetOpeningTimer) {
+        clearTimeout(unsetOpeningTimer);
+      }
+    };
+  }, [opening]);
+
+  function openInEditor(key: string, line: number, column: number) {
+    const sp = new URLSearchParams();
+    sp.set("filepath", filepath);
+    sp.set("line", `${line}`);
+    sp.set("column", `${column}`);
+    console.log(
+      `Going to try to open ${filepath}:${line}:${column} in your editor`
+    );
+    setOpening(key);
+    fetch(`/_open?${sp.toString()}`).catch((err) => {
+      console.warn(`Error trying to _open?${sp.toString()}:`, err);
+    });
+  }
+
+  return (
+    <div className="flaw flaw__pre_with_html">
+      <h3>{humanizeFlawName("pre_with_html")}</h3>
+      <ul>
+        {flaws.map((flaw) => (
+          <li key={flaw.id}>
+            {flaw.explanation}{" "}
+            <span
+              role="img"
+              aria-label="Click to highlight broken link"
+              title="Click to highlight broken link anchor"
+              style={{ cursor: "zoom-in" }}
+              onClick={() => {
+                focus(flaw.id);
+              }}
+            >
+              👀
+            </span>{" "}
+            {flaw.line && flaw.column ? (
+              <a
+                href={`file://${filepath}`}
+                onClick={(event: React.MouseEvent) => {
+                  event.preventDefault();
+                  if (flaw.line && flaw.column)
+                    openInEditor(flaw.id, flaw.line, flaw.column);
+                }}
+                title="Click to open in your editor"
+              >
+                line {flaw.line}:{flaw.column}
+              </a>
+            ) : null}{" "}
+            {flaw.fixable && <FixableFlawBadge />}{" "}
           </li>
         ))}
       </ul>
