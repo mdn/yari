@@ -1,1 +1,34 @@
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+@import "~@mdn/minimalist/sass/mixins/utils";
+
 @import "./prism-overrides";
+
+.article {
+  margin-bottom: $large-spacing;
+
+  p,
+  ul,
+  ol,
+  dl {
+    @include readable-line-length();
+  }
+
+  h2,
+  h3 {
+    a {
+      color: $neutral-100;
+    }
+  }
+
+  h2 {
+    margin-bottom: ($base-unit * 6);
+  }
+
+  a:active {
+    background-color: $primary-200;
+    color: $text-color-inverted;
+  }
+}
