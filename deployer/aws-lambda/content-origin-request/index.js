@@ -1,9 +1,6 @@
 const sanitizeFilename = require("sanitize-filename");
 const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
-const {
-  DEFAULT_LOCALE,
-  VALID_LOCALES,
-} = require("@yari-internal/global-constants");
+const { DEFAULT_LOCALE, VALID_LOCALES } = require("@yari-internal/constants");
 const acceptLanguageParser = require("accept-language-parser");
 
 const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
