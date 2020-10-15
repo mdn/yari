@@ -23,6 +23,13 @@ function injectFlaws(doc, $, options, { rawContent }) {
   );
 
   injectBadBCDQueriesFlaws(options.flawLevels.get("bad_bcd_queries"), doc, $);
+
+  injectPreWithHTMLFlaws(
+    options.flawLevels.get("pre_with_html"),
+    doc,
+    $,
+    rawContent
+  );
 }
 
 // The 'broken_links' flaw check looks for internal links that
@@ -133,7 +140,6 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
       }
     }
   });
-
   if (
     level === FLAW_LEVELS.ERROR &&
     doc.flaws.broken_links &&
@@ -193,6 +199,106 @@ function injectBadBCDQueriesFlaws(level, doc, $) {
   }
 }
 
+// Over the years, we've accumulated a lot of Kuma-HTML where the <pre> tags
+// are actually full of HTML. Almost exclusively we've observed <pre> tags whose
+// content is the HTML produced by Prism in the browser. Instead, in these cases,
+// we should just have the code that it will syntax highlight.
+// Note! Having HTML in a <pre> tag is nothing weird or wrong. But if you have
+//
+//  <pre class="language-js">
+//    <code class="language-js">
+//     <span class="keyword">foo</span>
+//   </code>
+//  </pre>
+//
+// It's better just have the text itself inside the <pre> block:
+//  <pre class="language-js">
+//    foo
+//  </pre>
+//
+// This makes it easier to edit the code in raw form. It also makes it less
+// heavy because any HTML will be replaced with Prism HTML anyway.
+function injectPreWithHTMLFlaws(level, doc, $, rawContent) {
+  if (level === FLAW_LEVELS.IGNORE) return;
+
+  function escapeHTML(s) {
+    return s
+      .replace(/&/g, "&amp;")
+      .replace(/"/g, "&quot;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  function addFlaw($pre) {
+    if (!("pre_with_html" in doc.flaws)) {
+      doc.flaws.pre_with_html = [];
+    }
+
+    const id = `pre_with_html${doc.flaws.pre_with_html.length + 1}`;
+    const explanation = `<pre><code>CODE can be just <pre>CODE`;
+    const suggestion = escapeHTML($pre.text());
+
+    let fixable = false;
+    let html = $pre.html();
+    if (rawContent.includes(html)) {
+      fixable = true;
+    } else {
+      // Many times, the HTML found in the sources is what Cheerio would
+      // serialize as HTML but with the small difference that some entities
+      // are unnecessarily HTML encoded as entities. So, we try to ignore
+      // that and see if we can match it as serialized.
+      const htmlFixed = html.replace(/&apos;/g, "'");
+      if (rawContent.includes(htmlFixed)) {
+        html = htmlFixed;
+        fixable = true;
+      }
+    }
+
+    const flaw = { explanation, id, fixable, html, suggestion };
+
+    if (fixable) {
+      // Only if it's fixable, is the `html` perfectly findable in the raw content.
+      for (const { line, column } of findMatchesInText(html, rawContent)) {
+        flaw.line = line;
+        flaw.column = column;
+      }
+    }
+
+    // Actually mutate the cheerio instance so we benefit from the
+    // flaw detection immediately.
+    // Note that `$pre.text()` might contain unescaped HTML, but Cheerio will
+    // take care of that.
+    $pre.html(suggestion); // strips all other HTML but preserves whitespace
+    $pre.attr("data-flaw", id);
+
+    doc.flaws.pre_with_html.push(flaw);
+  }
+
+  // Matches all <code> that are preceded by
+  // a <pre class="...brush...">
+  // Note, when we (in Node) syntax highlight code, the first thing
+  // we look for is the `$("pre[class*=brush]")` selector.
+  // Note, in jQuery you can do `$("pre + code")` which means it only selects
+  // the `<code>` tags that are *immediately preceeding*. This is not supported
+  // in Cheerio :( but the `>` operator works. And since we're only looking
+  // at a specific classname on the <pre> the chances of picking up the wrong
+  // selectors is small.
+  $("pre[class*=brush] > code").each((i, element) => {
+    const $pre = $(element).parent();
+    addFlaw($pre);
+  });
+
+  if (
+    level === FLAW_LEVELS.ERROR &&
+    doc.flaws.pre_with_html &&
+    doc.flaws.pre_with_html.length
+  ) {
+    throw new Error(
+      `pre_with_html flaws: ${doc.flaws.pre_with_html.map(JSON.stringify)}`
+    );
+  }
+}
+
 async function fixFixableFlaws(doc, options, document) {
   if (!options.fixFlaws || document.isArchive) return;
 
@@ -222,7 +328,6 @@ async function fixFixableFlaws(doc, options, document) {
           )
         );
       }
-      // flaw.fixed = !options.fixFlawsDryRun;
     }
   }
 
@@ -246,6 +351,24 @@ async function fixFixableFlaws(doc, options, document) {
           )} to ${chalk.white.bold(flaw.suggestion)}`
         )
       );
+    }
+  }
+
+  // Any 'pre_with_html' with a suggestion...
+  for (const flaw of doc.flaws.pre_with_html || []) {
+    if (!flaw.suggestion || !flaw.fixable) {
+      continue;
+    }
+
+    if (!newRawHTML.includes(flaw.html)) {
+      throw new Error(`rawHTML doesn't contain flaw HTML (${flaw.html})`);
+    }
+    // It's not feasible to pin point exactly which `<pre>` tag this
+    // refers to, so do the same query we use when we find the
+    // flaw, but this time actually make the mutation.
+    newRawHTML = newRawHTML.replace(flaw.html, flaw.suggestion);
+    if (loud) {
+      console.log(chalk.grey(`Fixed pre_with_html`));
     }
   }
 
