@@ -1,21 +1,24 @@
 const sanitizeFilename = require("sanitize-filename");
-const { resolveFundamental } = require("@mdn/fundamental-redirects");
-const { DEFAULT_LOCALE, VALID_LOCALES } = require("@mdn/global-constants");
+const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
+const {
+  DEFAULT_LOCALE,
+  VALID_LOCALES,
+} = require("@yari-internal/global-constants");
 const acceptLanguageParser = require("accept-language-parser");
 
 const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
 
 const VALID_LOCALES_LIST = [...VALID_LOCALES.values()];
 
-function guessLanguage(request) {
+function guessLocale(request) {
   // Do we want to support a language cookie? Add it here!
   // Each header in request.headers is always a list of objects.
   const acceptLangHeaders = request.headers["accept-language"];
   const { value = null } = (acceptLangHeaders && acceptLangHeaders[0]) || {};
-  const language =
+  const locale =
     value &&
     acceptLanguageParser.pick(VALID_LOCALES_LIST, value, { loose: true });
-  return language || DEFAULT_LOCALE;
+  return locale || DEFAULT_LOCALE;
 }
 
 /*
@@ -70,14 +73,14 @@ function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
   };
 }
 
-exports.handler = async (event, context) => {
+exports.handler = async (event, _context) => {
   /*
    * Modify the request before it's passed to the S3 origin.
    */
   const request = event.Records[0].cf.request;
   const host = request.headers.host[0].value.toLowerCase();
 
-  let { url, status } = resolveFundamental(request.uri);
+  const { url, status } = resolveFundamental(request.uri);
   if (url) {
     return redirect(url, {
       status,
@@ -95,8 +98,8 @@ exports.handler = async (event, context) => {
     const path = request.uri.endsWith("/")
       ? request.uri.slice(0, -1)
       : request.uri;
-    const language = guessLanguage(request);
-    return redirect(`/${language}${path}`);
+    const locale = guessLocale(request);
+    return redirect(`/${locale}${path}`);
   }
 
   // A document URL with a trailing slash should redirect

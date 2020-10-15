@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@mdn/fundamental-redirects@file:../../../libs/fundamental-redirects":
+"@yari-internal/fundamental-redirects@file:../../../libs/fundamental-redirects":
   version "0.0.1"
 
-"@mdn/global-constants@file:../../../libs/global-constants":
+"@yari-internal/global-constants@file:../../../libs/global-constants":
   version "0.0.1"
 
 accept-language-parser@^1.5.0:

@@ -1,5 +1,5 @@
 {
-  "name": "@mdn/global-constants",
+  "name": "@yari-internal/global-constants",
   "license": "MPL-2.0",
   "private": true,
   "version": "0.0.1",
