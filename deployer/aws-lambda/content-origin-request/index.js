@@ -7,7 +7,7 @@ const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
 
 const VALID_LOCALES_LIST = [...VALID_LOCALES.values()];
 
-function guessLocale(request) {
+function getLocale(request, fallback = DEFAULT_LOCALE) {
   // Do we want to support a language cookie? Add it here!
   // Each header in request.headers is always a list of objects.
   const acceptLangHeaders = request.headers["accept-language"];
@@ -15,7 +15,7 @@ function guessLocale(request) {
   const locale =
     value &&
     acceptLanguageParser.pick(VALID_LOCALES_LIST, value, { loose: true });
-  return locale || DEFAULT_LOCALE;
+  return locale || fallback;
 }
 
 /*
@@ -95,7 +95,7 @@ exports.handler = async (event, _context) => {
     const path = request.uri.endsWith("/")
       ? request.uri.slice(0, -1)
       : request.uri;
-    const locale = guessLocale(request);
+    const locale = getLocale(request);
     return redirect(`/${locale}${path}`);
   }
 
