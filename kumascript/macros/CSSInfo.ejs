@@ -38,7 +38,7 @@ let localStrings = require('mdn-data/l10n/css');
 async function createLink(apiName, area, linkName) {
     let formattedLinkName = linkName || apiName;
     let url = "/" + locale + "/docs/Web/" + (area || "CSS") + "/" + apiName;
-    let thisPage = await localWiki.getPageByURL(url);
+    let thisPage = await localWiki.getPage(url);
 
     if (currentPage.hasTag(thisPage, "CSS Function")) {
         formattedLinkName += "()";
@@ -148,7 +148,7 @@ function addAdditionalAppliesToOutput(output, property, cssInfo) {
 async function getValueOutput(cssInfo, property, atRule) {
     if (property === "relatedAtRule") {
         let url = "/" + locale + "/docs/Web/CSS/" + atRule;
-        let page = await localWiki.getPageByURL(url);
+        let page = await localWiki.getPage(url);
 
         return "<a href=\"/" + locale + "/docs/Web/CSS/" + atRule +
             "\"><code>" + atRule + "</code></a>";
