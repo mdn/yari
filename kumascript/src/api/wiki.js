@@ -93,7 +93,7 @@ module.exports = {
 
   // Returns the page object for the specified page.
   getPage(path) {
-    return this.info.getPage(path || this.env.url);
+    return this.info.getPageByURL(path || this.env.url);
   },
 
   ensureExistence(path) {
