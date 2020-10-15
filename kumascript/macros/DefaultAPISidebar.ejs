@@ -39,7 +39,7 @@ var groupGuides = webAPIGroups[0][group].guides || [];
 var guides = [];
 
 for (let guideUrl of groupGuides) {
-    const page = await wiki.getPageByURL(guideUrl);
+    const page = await wiki.getPage(guideUrl);
     if (page && page.url) {
         guides.push(page);
     }

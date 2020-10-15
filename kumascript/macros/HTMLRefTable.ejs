@@ -28,7 +28,7 @@ let l10n = {
         "zh-CN": "描述",
         "ru"   : "Описание"
     }),
-    
+
     deprecated : mdn.localString({
         "de"   : "Dieses Element ist veraltet.",
         "en-US": "This element is deprecated.",
@@ -36,7 +36,7 @@ let l10n = {
         "zh-CN": "该元素已被废弃",
         "ru"   : "Этот элемент устарел."
     }),
-    
+
     experimental : mdn.localString({
         "de"   : "Dieses Element wird als experimentell erachtet.",
         "en-US": "This element is considered experimental.",
@@ -44,7 +44,7 @@ let l10n = {
         "zh-CN": "该元素仍处于试验阶段",
         "ru"   : "Этот элемент считается экспериментальным."
     }),
-    
+
     html5 : mdn.localString({
         "de"   : "Dieses Element wurde mit HTML5 eingeführt.",
         "en-US": "This element has been introduced with HTML5.",
@@ -52,7 +52,7 @@ let l10n = {
         "zh-CN": "该元素于 HTML5 规范中引入",
         "ru"   : "Этот элемент не был представлен в HTML5."
     }),
-    
+
     components : mdn.localString({
         "de"   : "Dieses Element wurde mit den Web Components Spezifikationen eingeführt.",
         "en-US": "This element has been introduced with the Web Components specifications.",
@@ -75,13 +75,13 @@ function lowerMe(S) {
 // Function to check is two Arrays has at least one value in common.
 function hasCommonTag(A, B) {
     if (!Array.isArray(A) || !Array.isArray(A)) return false;
-    
+
     // To fasten check, we make sure b is always the smaller array.
     var a = A.length >= B.length ? A : B;
     var b = A.length >= B.length ? B : A;
-    
+
     for (var i in b) {
-        if (a.indexOf(b[i]) > -1) return true;    
+        if (a.indexOf(b[i]) > -1) return true;
     }
 
     return false;
@@ -121,7 +121,7 @@ for(let page of HTMLDocPages) {
     if (ForcedElements.indexOf(t) > -1
     || ((TagFilters.include.length === 0 ||  hasCommonTag(tags, TagFilters.include))
     &&  (TagFilters.exclude.length === 0 || !hasCommonTag(tags, TagFilters.exclude)))){
-        p = await wiki.getPageByURL(HTMLLocalBaseURL + t);
+        p = await wiki.getPage(HTMLLocalBaseURL + t);
 
         HTMLTags.push({
             tagName      : t,

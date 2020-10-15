@@ -49,7 +49,7 @@ for(let name of groupNames) {
   }
   let overviewName = groupObj.overview;
   let groupUrl = APIHref + "/" + spacesToUnderscores(htmlEscape(overviewName));
-  let page = await wiki.getPageByURL(groupUrl);
+  let page = await wiki.getPage(groupUrl);
 
   // Go through the tags and build badges if there are any to add
 

@@ -154,13 +154,6 @@ const info = {
   },
 
   getPage(document) {
-    // Because so many macros are still relying on things like:
-    //
-    //  await wiki.getPage(someURL)
-    //
-    // It's inconvenient to have to edit all of them in one sweep.
-    // So we have this convenience to tie us over until all macros have
-    // been fixed.
     if (typeof document === "string") {
       console.trace(
         "getPage() was called with a string, presumably a URL. " +

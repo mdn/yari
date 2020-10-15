@@ -22,7 +22,7 @@ var count = urllist.length;
 var page;
 
 for (var i=0; i<count; i++) {
-    page = await wiki.getPageByURL(urllist[i]);
+    page = await wiki.getPage(urllist[i]);
 
     if (page && page.url) {
         url = urllist[i];

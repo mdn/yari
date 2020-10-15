@@ -15,7 +15,7 @@
 let summary = "";
 
 if (($2 !== false && $0.indexOf("#") === -1) || $2 === true) {
-    let page = await wiki.getPageByURL($0);
+    let page = await wiki.getPage($0);
     if (!page) {
         summary = "This article hasn't been written yet. Please consider contributing!";
     }

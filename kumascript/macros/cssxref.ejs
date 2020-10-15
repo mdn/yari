@@ -56,7 +56,7 @@ const basePath = `/${lang}/docs/Web/CSS/`;
 urlWithoutAnchor = basePath + slug;
 url = urlWithoutAnchor + $2;
 
-const thisPage = (!$1 || !$2) ? wiki.getPageByURL(urlWithoutAnchor) : null;
+const thisPage = (!$1 || !$2) ? wiki.getPage(urlWithoutAnchor) : null;
 
 if (!$1) {
     // Append parameter brackets to CSS functions
