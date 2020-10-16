@@ -19,6 +19,7 @@ import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-t
 // Sub-components
 import LanguageMenu from "../header/language-menu";
 import { TOC } from "./toc";
+import { PreloadingDocumentLink } from "./preloading-link";
 
 import "./index.scss";
 
@@ -236,14 +237,14 @@ function Breadcrumbs({ parents }: { parents: DocParent[] }) {
         const isLast = i + 1 === parents.length;
         return (
           <li key={parent.uri} property="itemListElement" typeof="ListItem">
-            <Link
+            <PreloadingDocumentLink
               to={parent.uri}
               className={isLast ? "crumb-current-page" : "breadcrumb-chevron"}
               property="item"
               typeof="WebPage"
             >
               <span property="name">{parent.title}</span>
-            </Link>
+            </PreloadingDocumentLink>
             <meta property="position" content={`${i + 1}`} />
           </li>
         );
