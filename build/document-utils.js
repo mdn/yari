@@ -5,9 +5,14 @@ const { Document } = require("../content");
  */
 function addBreadcrumbData(url, document) {
   const parents = [];
-  let split = url.split("/");
+  const split = url.split("/");
   let parentURL;
-  while (split.length > 2) {
+  // If the URL was something like `/en-US/docs/Foo/Bar` when you split
+  // that, the array becomes `['', 'en-US', 'docs', 'Foo', 'Bar']`
+  // And as length, that's `[1, 2, 3, 4, 5]`. Therefore, there's never
+  // any point of going for 1, 2, or 3 since that's just the home page
+  // which we don't ever include in the breadcrumb trail.
+  while (split.length > 4) {
     split.pop();
     parentURL = split.join("/");
     // This test makes it possible to "skip" certain URIs that might not

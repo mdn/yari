@@ -181,7 +181,7 @@ const TEST_CASE = [
 describeMacro("cssxref", () => {
   beforeEachMacro((macro) => {
     // let's make sure we have a clean calls to wiki.getPage
-    macro.ctx.info.getPage = jest.fn((url) => {
+    macro.ctx.info.getPageByURL = jest.fn((url) => {
       for (let page of Object.values(MOCK_PAGES)) {
         if (page.url === getPathname(url)) {
           return page.data;

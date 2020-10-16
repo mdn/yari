@@ -22,7 +22,7 @@ describeMacro("jsxref", function () {
       expected =
         '<a href="' + glob_url + '">' + "<code>" + name + "</code></a>";
 
-    macro.ctx.info.getPage = jest.fn((url) => {
+    macro.ctx.info.getPageByURL = jest.fn((url) => {
       if (url === glob_url) {
         return {
           url: glob_url,
@@ -47,7 +47,7 @@ describeMacro("jsxref", function () {
       expected =
         '<a href="' + glob_url + '">' + "<code>" + name + "</code></a>";
 
-    macro.ctx.info.getPage = jest.fn((url) => {
+    macro.ctx.info.getPageByURL = jest.fn((url) => {
       if (url === glob_url) {
         return {
           url: glob_url,
@@ -73,7 +73,7 @@ describeMacro("jsxref", function () {
       expected =
         '<a href="' + glob_url + '">' + "<code>" + name + "</code></a>";
 
-    macro.ctx.info.getPage = jest.fn((url) => {
+    macro.ctx.info.getPageByURL = jest.fn((url) => {
       if (url === glob_url) {
         return {
           url: glob_url,
@@ -98,7 +98,7 @@ describeMacro("jsxref", function () {
       glob_url = js_ref_url + "Global_Objects/" + partial_slug,
       expected = '<a href="' + ref_url + '">' + "<code>" + name + "</code></a>";
 
-    macro.ctx.info.getPage = jest.fn((url) => {
+    macro.ctx.info.getPageByURL = jest.fn((url) => {
       if (url === ref_url) {
         return {
           url: ref_url,
@@ -131,7 +131,7 @@ describeMacro("jsxref", function () {
         name +
         "</code></a>";
 
-    macro.ctx.info.getPage = jest.fn((url) => {
+    macro.ctx.info.getPageByURL = jest.fn((url) => {
       url = getPathname(url);
       if (url === glob_url) {
         return {
@@ -175,7 +175,7 @@ describeMacro("jsxref", function () {
 
     macro.ctx.env.locale = "ru";
 
-    macro.ctx.info.getPage = jest.fn((url) => {
+    macro.ctx.info.getPageByURL = jest.fn((url) => {
       url = getPathname(url);
       if (url === glob_url) {
         return {
@@ -206,7 +206,7 @@ describeMacro("jsxref", function () {
         glob_url = js_ref_url + "Global_Objects/" + partial_slug,
         expected = '<a href="' + ref_url + '">' + name + "</a>";
 
-      macro.ctx.info.getPage = jest.fn((url) => {
+      macro.ctx.info.getPageByURL = jest.fn((url) => {
         if (url === ref_url) {
           return {
             url: ref_url,
@@ -236,7 +236,7 @@ describeMacro("jsxref", function () {
       expected =
         '<a href="' + glob_url + '">' + "<code>" + name + "</code></a>";
 
-    macro.ctx.info.getPage = jest.fn((url) => {
+    macro.ctx.info.getPageByURL = jest.fn((url) => {
       if (url === glob_url) {
         return {
           url: glob_url,
