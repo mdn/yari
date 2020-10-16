@@ -51,6 +51,12 @@ function getPages(pageList) {
             if (urlsSeen.has(page.url)) {
                 continue;
             }
+            // Never include a page that is called "Index" because it's usually
+            // pointless since it's clearly the page you're already on.
+            // See https://github.com/mdn/yari/issues/1468
+            if (section + '/Index' === page.url) {
+                continue;
+            }
             urlsSeen.add(page.url);
             result.push({
                 title: page.title.replace(/</g,'&lt;').replace(/>/g,'&gt;'),
