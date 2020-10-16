@@ -19,6 +19,7 @@ import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-t
 // Sub-components
 import LanguageMenu from "../header/language-menu";
 import { TOC } from "./toc";
+import { OnGitHubLink } from "./on-github";
 
 import "./index.scss";
 
@@ -93,8 +94,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   const translations = doc.other_translations || [];
 
-  const { github_url, folder } = doc.source;
-
   const isServer = typeof window === "undefined";
 
   return (
@@ -150,19 +149,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
                     by MDN contributors
                   </a>
                 </li>
-                {!doc.isArchive && (
-                  <li className="edit-on-github">
-                    <a
-                      href={github_url}
-                      title={`Folder: ${folder}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Edit on <b>GitHub</b>
-                    </a>
-                  </li>
-                )}
               </ul>
+              {!doc.isArchive && <OnGitHubLink doc={doc} />}
             </section>
           </div>
         </div>
@@ -395,15 +383,6 @@ function RenderDocumentBody({ doc }) {
     }
   });
 }
-
-// function Contributors({ contributors }) {
-//   return (
-//     <div>
-//       <b>Contributors to this page:</b>
-//       <span dangerouslySetInnerHTML={{ __html: contributors }} />
-//     </div>
-//   );
-// }
 
 function LoadingError({ error }) {
   return (
