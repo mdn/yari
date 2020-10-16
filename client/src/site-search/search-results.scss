@@ -3,8 +3,6 @@
     color: black;
     font-weight: bold;
   }
-  //   a.url {
-  //   }
   span.highlight {
     display: block;
     font-style: italic;
@@ -13,5 +11,10 @@
   span.nerd-data {
     margin-left: 20px;
     font-size: 80%;
+  }
+
+  .loading-wrapper {
+    min-height: 500px;
+    margin: 100px;
   }
 }

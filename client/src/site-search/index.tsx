@@ -53,7 +53,6 @@ export function SiteSearch() {
           value={q}
           onChange={(event) => setQ(event.target.value)}
         />
-        {/* <button type="submit">{q ? "Search again" : "Search"}</button> */}
         <button type="submit">Search</button>
       </form>
 
