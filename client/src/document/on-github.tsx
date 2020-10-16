@@ -14,7 +14,7 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
           <NewIssueOnGitHubLink doc={doc} />
         </li>
         <li>
-          If you want to fix the content problem yourself, get started with{" "}
+          Want to fix the problem yourself? See{" "}
           <a
             href="https://github.com/mdn/content/blob/main/CONTRIBUTING.md"
             target="_blank"
