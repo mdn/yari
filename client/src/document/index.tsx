@@ -14,7 +14,6 @@ import { Attributes } from "./ingredients/attributes";
 import { Examples } from "./ingredients/examples";
 import { LinkList, LinkLists } from "./ingredients/link-lists";
 import { Specifications } from "./ingredients/specifications";
-// import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
 // Misc
 // Sub-components
 import LanguageMenu from "../header/language-menu";
