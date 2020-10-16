@@ -151,7 +151,7 @@ function ShowTotal({ total }: { total: Total }) {
   return (
     <>
       {total.relation === "gt" && "more than"} {total.value.toLocaleString()}{" "}
-      matches
+      {total.value === 1 ? "match" : "matches"}
     </>
   );
 }

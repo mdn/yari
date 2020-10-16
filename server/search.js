@@ -1,4 +1,7 @@
 const express = require("express");
+
+const { DEFAULT_LOCALE, VALID_LOCALES } = require("@yari-internal/constants");
+
 const { Client } = require("@elastic/elasticsearch");
 
 const router = express();
@@ -6,43 +9,14 @@ const router = express();
 router.get("/", async (req, res) => {
   const URL = process.env.ELASTICSEARCH_URL || "http://localhost:9200";
   const INDEX = process.env.ELASTICSEARCH_INDEX || "yari_doc";
-  const VALID_INCLUDE_VALUES = ["archived", "translated"];
 
-  const { q, locale, include } = req.query;
-  if (!q.trim()) {
-    return res.status(400).json({ error: "No 'q'" });
+  // const { q, locale, include } = req.query;
+  let params;
+  try {
+    params = makeParams(req.query);
+  } catch (err) {
+    return res.status(400).json({ error: err.toString() });
   }
-
-  // If it wasn't present in the querystring, default to `[en-US]`.
-  // Otherwise `req.query.locale` can be an array or a string. Thanks Express!
-  // Either way, make sure it's always an array with at least one valid value.
-  const locales = !locale
-    ? ["en-US"]
-    : !Array.isArray(locale)
-    ? [locale]
-    : locale;
-  // XXX cross check the values against our VALID_LOCALES
-
-  // By default there's no `?include=...` but it might be an array too.
-  // Validate the input and finalize it as an array.
-  const includes = !include
-    ? []
-    : !Array.isArray(include)
-    ? [include]
-    : include;
-  if (includes.some((value) => !VALID_INCLUDE_VALUES.includes(value))) {
-    return res
-      .status(400)
-      .json({ error: `invalid 'include' value (${includes})` });
-  }
-
-  const params = {
-    size: 10,
-    page: 1,
-    query: q.trim(),
-    locales,
-    includeArchive: includes.includes("archived"), // funky
-  };
 
   try {
     const results = await searchDocuments(URL, INDEX, params);
@@ -52,6 +26,75 @@ router.get("/", async (req, res) => {
     res.status(500).send(err.toString());
   }
 });
+
+function makeParams({ q, locale, include, size, page }) {
+  const VALID_INCLUDE_VALUES = ["archived", "translated"];
+  const DEFAULT_SIZE = 10;
+  const query = q.trim();
+  if (!query) {
+    throw new Error("No 'q'");
+  }
+
+  // If it wasn't present in the querystring, default to `[en-US]`.
+  // Otherwise `req.query.locale` can be an array or a string. Thanks Express!
+  // Either way, make sure it's always an array with at least one valid value.
+  // Also, note that the `locale` is ALWAYS stored in lowercase so
+  const locales = !locale
+    ? [DEFAULT_LOCALE]
+    : !Array.isArray(locale)
+    ? [locale.toLowerCase()]
+    : locale.map((each) => each.toLowerCase());
+  if (locales.some((value) => !VALID_LOCALES.has(value))) {
+    throw new Error(`invalid 'locale' value (${locales})`);
+  }
+
+  // By default there's no `?include=...` but it might be an array too.
+  // Validate the input and finalize it as an array.
+  const includes = !include
+    ? []
+    : !Array.isArray(include)
+    ? [include]
+    : include;
+  if (includes.some((value) => !VALID_INCLUDE_VALUES.includes(value))) {
+    throw new Error(`invalid 'include' value (${includes})`);
+  }
+
+  if (size) {
+    // if it's supplied, check it
+    try {
+      size = parseInt(size);
+      if (size < 1 || size > 100) {
+        throw new Error("Invalid number");
+      }
+    } catch (err) {
+      throw new Error(`invalid 'size' value (${size})`);
+    }
+  } else {
+    size = DEFAULT_SIZE;
+  }
+
+  if (page) {
+    // if it's supplied, check it
+    try {
+      page = parseInt(page);
+      if (page < 1 || page > 10) {
+        throw new Error("Invalid number");
+      }
+    } catch (err) {
+      throw new Error(`invalid 'size' value (${size})`);
+    }
+  } else {
+    page = 1;
+  }
+
+  return {
+    size,
+    page: 1,
+    query,
+    locales,
+    includeArchive: includes.includes("archived"), // funky
+  };
+}
 
 // Imagine this sitting somewhere else. Like a Lambda function. It doesn't
 // understand "HTTP". Just pure JS. If something didn't work, it throws.
