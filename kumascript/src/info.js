@@ -162,15 +162,55 @@ const info = {
       return this.getPageByURL(document);
     }
 
-    const { locale, slug, title, summary, tags } = document.metadata;
+    const { locale, slug, title, tags } = document.metadata;
     return {
       url: document.url,
       locale,
       slug,
       title,
-      summary,
       tags: tags || [],
       translations: [], //TODO Object.freeze(buildTranslationObjects(data)),
+      get summary() {
+        // Back in the old Kuma days we used to store the summary as another piece
+        // of metadata on each document. It was always available, with any kumascript
+        // macros rendered out.
+        // In Yari, this is not possible. We don't duplicate the summary in every
+        // document. Instead, we extract it from the document when we build it.
+        // So, to avoid the whole chicken-and-egg problem, instead, we're going to
+        // use regular expressions to try to extract it on-the-fly, from the
+        // raw HTML.
+        // Note, we can't use Cheerio here because the `document.rawHTML` is
+        // actually not valid HTML, hence the desperate fall back on regex.
+        // A lot of times, you'll actually find that the first paragraph isn't
+        // a <p> tag. But often, in those cases it'll have that `seoSummary`
+        // <span> tag. Like this for example:
+        //
+        //   <div><span class="seoSummary">The <code>window.stop()</code> ...
+        //
+        // So that's why we always start by looking for that tag first.
+        try {
+          const seoSummaryMatch = document.rawHTML.match(
+            /<span class="seoSummary">(.*?)<\/span>/
+          );
+          if (seoSummaryMatch) {
+            return seoSummaryMatch[1];
+          }
+
+          const matches = document.rawHTML.matchAll(/<p[^>]*>(.*?)<\/p>/gs);
+          for (const match of matches) {
+            // A lot of times, the first paragrah is just a (or two) call to
+            // a KS macro. E.g. `<p>{{AddonSidebar}}</p>`.
+            // In these cases, ignore those.
+            const summary = match[1].replace(/{{.*?}}/g, "").trim();
+            if (summary) {
+              return summary;
+            }
+          }
+        } catch (error) {
+          console.warn("Error trying to extract summary from rawHTML", error);
+        }
+        return "";
+      },
       get subpages() {
         return Document.findChildren(document.url)
           .map((document) => info.getPage(document))
