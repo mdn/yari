@@ -26,7 +26,7 @@ module.exports = {
   smartLink(href, title, content, subpath, basepath) {
     let flaw;
     let flawAttribute = "";
-    const page = this.info.getPage(href);
+    const page = this.info.getPageByURL(href);
     // Get the pathname only (no hash) of the incoming "href" URI.
     const hrefpath = this.info.getPathname(href);
     // Save the hash portion, if any, for appending to the "href" attribute later.

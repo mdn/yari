@@ -3,26 +3,24 @@ const path = require("path");
 
 const { CONTENT_ROOT, VALID_LOCALES } = require("./constants");
 const { buildURL } = require("./utils");
+const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
+
+// The module level cache
+const redirects = new Map();
 
 function add(locale, oldSlug, newSlug) {
+  if (redirects.size === 0) {
+    load();
+  }
   const oldURL = buildURL(locale, oldSlug);
   const newURL = buildURL(locale, newSlug);
-  const pairs = Array.from(this.allRedirects.entries()).map(([from, to]) => [
+  const pairs = Array.from(redirects.entries()).map(([from, to]) => [
     from,
     to.startsWith(oldURL) ? to.replace(oldURL, newURL) : to,
   ]);
   pairs.push([oldURL, newURL]);
-  const filePath = path.join(path.join(contentRoot, locale), "_redirects.txt");
-  const writeStream = fs.createWriteStream(filePath);
-  writeStream.write(`# FROM-URL\tTO-URL\n`);
-  for (const [fromURL, toURL] of pairs) {
-    writeStream.write(`${fromURL}\t${toURL}\n`);
-  }
-  writeStream.end();
+  write(path.join(CONTENT_ROOT, locale), pairs);
 }
-
-// The module level cache
-const redirects = new Map();
 
 function load(files = null, verbose = false) {
   if (!files) {
@@ -90,14 +88,63 @@ const resolve = (url) => {
   if (!redirects.size) {
     load();
   }
-  return redirects.get(url.toLowerCase()) || url;
+  return redirects.get(url.toLowerCase()) || resolveFundamental(url).url || url;
 };
 
+function shortCuts(pairs, throws = false) {
+  const dag = new Map(pairs);
+
+  // Expand all "edges" and keep track of the nodes we traverse.
+  const transit = (s, froms = []) => {
+    let next = dag.get(s);
+    if (next) {
+      if (froms.includes(next)) {
+        const msg = `redirect cycle [${froms.join(", ")}] → ${next}`;
+        if (throws) {
+          throw new Error(msg);
+        }
+        console.warn(msg);
+        return [];
+      }
+      return transit(next, [...froms, s]);
+    } else {
+      return [froms, s];
+    }
+  };
+
+  const sortTuples = ([a, b], [c, d]) => {
+    if (a > c) {
+      return 1;
+    }
+    if (a < c) {
+      return -1;
+    }
+    if (b > d) {
+      return 1;
+    }
+    if (b < d) {
+      return -1;
+    }
+    return 0;
+  };
+
+  for (const [from, _] of pairs) {
+    const [froms = [], to] = transit(from);
+    for (const from of froms) {
+      dag.set(from, to);
+    }
+  }
+  const transitivePairs = [...dag.entries()];
+  transitivePairs.sort(sortTuples);
+  return transitivePairs;
+}
+
 function write(localeFolder, pairs) {
+  const transitivePairs = shortCuts(pairs);
   const filePath = path.join(localeFolder, "_redirects.txt");
   const writeStream = fs.createWriteStream(filePath);
   writeStream.write(`# FROM-URL\tTO-URL\n`);
-  for (const [fromURL, toURL] of pairs) {
+  for (const [fromURL, toURL] of transitivePairs) {
     writeStream.write(`${fromURL}\t${toURL}\n`);
   }
   writeStream.end();

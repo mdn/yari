@@ -48,7 +48,7 @@ function anyMatchSearchFlaws(searchFlaws, flaws) {
 function validPopularityFilter(value) {
   let filter = null;
   if (value) {
-    if (/[^\d<>]/.test(value)) {
+    if (/[^\d<>]/.test(value.replace(/\s+/g, ""))) {
       return [null, "popularity contains unrecognized characters"];
     }
     if (value.startsWith("<")) {

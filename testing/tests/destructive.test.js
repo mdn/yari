@@ -97,7 +97,7 @@ describe("fixing flaws", () => {
     const dryRunNotices = stdout
       .split("\n")
       .filter((line) => regexPattern.test(line));
-    expect(dryRunNotices.length).toBe(2);
+    expect(dryRunNotices.length).toBe(3);
     expect(dryRunNotices[1]).toContain(pattern);
     expect(dryRunNotices[0]).toContain(path.join(pattern, "images"));
     const dryrunFiles = getChangedFiles(tempContentDir);
@@ -122,14 +122,22 @@ describe("fixing flaws", () => {
     expect(stdout).toContain(pattern);
 
     const files = getChangedFiles(tempContentDir);
-    expect(files.length).toBe(2);
+    expect(files.length).toBe(3);
     const imagesFile = files.find((f) =>
       f.includes(path.join(pattern, "images"))
     );
     const newRawHtmlImages = fs.readFileSync(imagesFile, "utf-8");
     expect(newRawHtmlImages).toContain('src="fixable.png"');
 
-    const regularFile = files.find((f) => f !== imagesFile);
+    const preWithHTMLFile = files.find((f) =>
+      f.includes(path.join(pattern, "pre_with_html"))
+    );
+    const newRawHtmlPreWithHTML = fs.readFileSync(preWithHTMLFile, "utf-8");
+    expect(newRawHtmlPreWithHTML).not.toContain("<code>");
+
+    const regularFile = files.find(
+      (f) => f !== imagesFile && f !== preWithHTMLFile
+    );
     const newRawHtml = fs.readFileSync(regularFile, "utf-8");
     expect(newRawHtml).toContain("{{CSSxRef('number')}}");
     expect(newRawHtml).toContain('{{htmlattrxref("href", "a")}}');

@@ -33,6 +33,12 @@ export interface ImageReferenceFlaw extends GenericFlaw {
 
 export interface BadBCDQueryFlaw extends GenericFlaw {}
 
+export interface PreWithHTMLFlaw extends GenericFlaw {
+  html: string;
+  line?: number;
+  column?: number;
+}
+
 export interface MacroErrorMessage extends GenericFlaw {
   name: string;
   error: {
@@ -54,6 +60,7 @@ type Flaws = {
   bad_bcd_queries: BadBCDQueryFlaw[];
   bad_bcd_links: BadBCDLinkFlaw[];
   images: ImageReferenceFlaw[];
+  pre_with_html: PreWithHTMLFlaw[];
 };
 
 export type Translation = {

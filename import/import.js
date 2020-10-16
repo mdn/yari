@@ -14,6 +14,7 @@ const {
   VALID_LOCALES,
   Document,
   Redirect,
+  resolveFundamental,
 } = require("../content");
 
 const cheerio = require("../build/monkeypatched-cheerio");
@@ -381,13 +382,22 @@ async function populateRedirectInfo(pool, constraintsSQL, queryArgs) {
       console.warn("Bad redirect (slug contains '//')", [row.locale, row.slug]);
       continue;
     }
+    let redirect = null;
     const fromUri = makeURL(row.locale, row.slug);
-    const redirect = processRedirect(row, fromUri);
-    if (redirect && redirect.url) {
-      if (fromUri.toLowerCase() === redirect.url.toLowerCase()) {
+    const fundamentalRedirect = resolveFundamental(fromUri).url;
+    if (fundamentalRedirect) {
+      redirect = fundamentalRedirect;
+    } else {
+      const processedRedirectUrl = (processRedirect(row, fromUri) || {}).url;
+      const fundamentalTargetRedirect =
+        processedRedirectUrl && resolveFundamental(processedRedirectUrl).url;
+      redirect = fundamentalTargetRedirect || processedRedirectUrl;
+    }
+    if (redirect) {
+      if (fromUri.toLowerCase() === redirect.toLowerCase()) {
         console.log("Bad redirect (from===to)", [fromUri]);
       } else {
-        redirects.set(fromUri, redirect.url);
+        redirects.set(fromUri, redirect);
       }
     }
   }
@@ -1084,7 +1094,7 @@ async function saveAllRedirects(redirects) {
     });
     countPerLocale.push([locale, pairs.length]);
     const root = locale === "en-US" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
-    const localeFolder = path.join(root, locale);
+    const localeFolder = path.join(root, locale.toLowerCase());
     console.log("LOCALE", locale, "TO", localeFolder);
     if (!fs.existsSync(localeFolder)) {
       console.log(
@@ -1197,6 +1207,7 @@ module.exports = async function runImporter(options) {
   let messedupRedirects = 0;
   let discardedRedirects = 0;
   let archivedRedirects = 0;
+  let fundamentalRedirects = 0;
   let fastForwardedRedirects = 0;
 
   const allWikiHistory = new Map();
@@ -1218,6 +1229,12 @@ module.exports = async function runImporter(options) {
         progressBar.update(currentDocumentIndex);
       }
 
+      const absoluteUrl = makeURL(row.locale, row.slug);
+      const isFundamentalRedirect = resolveFundamental(absoluteUrl).url;
+      if (isFundamentalRedirect) {
+        fundamentalRedirects++;
+        return;
+      }
       const isArchive = isArchiveDoc(row);
       if (row.is_redirect) {
         if (isArchive) {
@@ -1227,7 +1244,6 @@ module.exports = async function runImporter(options) {
           archivedRedirects++;
           return;
         }
-        const absoluteUrl = makeURL(row.locale, row.slug);
         const redirect = processRedirect(row, absoluteUrl);
         if (!redirect) {
           discardedRedirects++;
@@ -1319,6 +1335,12 @@ module.exports = async function runImporter(options) {
     console.log(
       chalk.bold(fastForwardedRedirects.toLocaleString()),
       "redirects were fast-forwarded directly to their final destination."
+    );
+  }
+  if (fundamentalRedirects) {
+    console.log(
+      chalk.bold(fundamentalRedirects.toLocaleString()),
+      "fundamental redirects were skipped."
     );
   }
 

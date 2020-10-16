@@ -242,7 +242,14 @@ async function buildDocument(document, documentOptions = {}) {
   const fileAttachments = checkImageReferences(doc, $, options, document);
 
   // With the sidebar out of the way, go ahead and check the rest
-  injectFlaws(doc, $, options, document);
+  try {
+    injectFlaws(doc, $, options, document);
+  } catch (error) {
+    console.warn(
+      `Injecting flaws into ${document.fileInfo.path} (${document.url}) failed.`
+    );
+    throw error;
+  }
 
   // If fixFlaws is on and the doc has fixable flaws, this returned
   // raw HTML string will be different.
