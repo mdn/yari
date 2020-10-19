@@ -10,6 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
+          # Needed because of
+          # https://github.com/GoogleChrome/lighthouse-ci/issues/172
           ref: ${{ github.event.pull_request.head.sha }}
 
       - uses: actions/checkout@v2
@@ -56,28 +58,6 @@ jobs:
           curl --retry-connrefused --retry 5 \
             http://localhost:5000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/ > /dev/null
 
-          # # See https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/configuration.md#collect
-          # # for other things you can set.
-          # # The reason this file gets created on-the-fly here in the workflow instead
-          # # of checked into the project is because right here is the only place
-          # # where it's needed so there's little point is cluttering up the
-          # # repo root.
-          # cat > lighthouserc.js <<CONFIGURATION
-          # module.exports = {
-          #   ci: {
-          #     collect: {
-          #       staticDistDir: 'client/build',
-          #     },
-          #     upload: {
-          #       target: 'temporary-public-storage',
-          #     },
-          #   },
-          # };
-          # CONFIGURATION
-
-          # npm install -g @lhci/cli@next
-          # lhci autorun
-
           npm install -g @lhci/cli@next
 
           # Note, we can supply multiple `--collect.url=...` to have lhci test
@@ -89,3 +69,8 @@ jobs:
           lhci autorun \
             --upload.target=temporary-public-storage \
             --collect.url="http://localhost:5000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/"
+
+          # TODO (as of Oct 2020)
+          # Once our Lighthouse score starts to not be so terrible, we can start
+          # adding assertions here.
+          # See https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/configuration.md#categories
