@@ -1,0 +1,70 @@
+name: Performance
+
+on:
+  pull_request:
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v2
+        with:
+          repository: mdn/content
+          path: mdn/content
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: "12"
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v2.1.2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install all yarn packages
+        run: |
+          ./testing/scripts/yarn-install.sh
+
+      - name: Build select important pages
+        run: |
+          # Remember, the mdn/content repo got cloned into `pwd` into a
+          # sub-folder called "mdn/content"
+          export CONTENT_ROOT=$(pwd)/mdn/content/files
+
+          yarn prepare-build
+          BUILD_FOLDERSEARCH=mdn/kitchensink yarn build
+          BUILD_FOLDERSEARCH=web/javascript/reference/global_objects/array/foreach yarn build
+
+      - name: Install and run lhci
+        run: |
+          # Temp debugging
+          ls -lR client/build/
+
+          cat > lighthouserc.js <<CONFIGURATION
+          module.exports = {
+            ci: {
+              collect: {
+                staticDistDir: 'client/build',
+              },
+              upload: {
+                target: 'temporary-public-storage',
+              },
+            },
+          };
+          CONFIGURATION
+
+
+          # XXX Why can't this be `@next`?
+
+          npm install -g @lhci/cli@0.5.x
+          lhci autorun
