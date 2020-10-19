@@ -47,9 +47,6 @@ jobs:
 
       - name: Install and run lhci
         run: |
-          # Temp debugging
-          ls -lR client/build/
-
           cat > lighthouserc.js <<CONFIGURATION
           module.exports = {
             ci: {
@@ -63,8 +60,5 @@ jobs:
           };
           CONFIGURATION
 
-
-          # XXX Why can't this be `@next`?
-
-          npm install -g @lhci/cli@0.5.x
+          npm install -g @lhci/cli@next
           lhci autorun
