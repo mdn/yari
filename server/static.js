@@ -3,12 +3,14 @@
  */
 
 const express = require("express");
+var compression = require("compression");
 
 const { staticMiddlewares } = require("./middlewares");
 const { resolveFundamental } = require("../content");
 
 const app = express();
 app.use(express.json());
+app.use(compression());
 
 app.use((req, res, next) => {
   // If we have a fundamental redirect mimic out Lambda@Edge and redirect.
