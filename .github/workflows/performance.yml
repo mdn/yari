@@ -47,6 +47,12 @@ jobs:
 
       - name: Install and run lhci
         run: |
+          # See https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/configuration.md#collect
+          # for other things you can set.
+          # The reason this file gets created on-the-fly here in the workflow instead
+          # of checked into the project is because right here is the only place
+          # where it's needed so there's little point is cluttering up the
+          # repo root.
           cat > lighthouserc.js <<CONFIGURATION
           module.exports = {
             ci: {
