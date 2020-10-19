@@ -2,7 +2,8 @@ const fs = require("fs");
 const path = require("path");
 
 const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
-const { CONTENT_ROOT, VALID_LOCALES, Document } = require(".");
+const { CONTENT_ROOT, VALID_LOCALES } = require("./constants");
+const Document = require("./document");
 
 // Throw if this can't be a redirect from-URL.
 function validateFromURL(url) {
@@ -64,22 +65,24 @@ function validateURLLocale(url) {
   }
 }
 
-function add(locale, oldURL, newURL) {
-  // We can't use t)
-  if (redirects.size === 0) {
-    load();
-  }
+function add(locale, urlPairs) {
   // Copied from the load() function but without any checking and preserving
   // sort order.
-  const redirectsFilePath = path.join(CONTENT_ROOT, locale, "_redirects.txt");
+  const redirectsFilePath = path.join(
+    CONTENT_ROOT,
+    locale.toLowerCase(),
+    "_redirects.txt"
+  );
   const content = fs.readFileSync(redirectsFilePath, "utf-8");
   const pairs = content
+    .trim()
     .split("\n")
-    .map((line) => line.trim().split(/\s+/))
-    .filter((line, i) => i > 0);
-  pairs.push([oldURL, newURL]);
+    // Skip the header line.
+    .slice(1)
+    .map((line) => line.trim().split(/\s+/));
+  pairs.push(...urlPairs);
   pairs.sort();
-  save(path.join(CONTENT_ROOT, locale), pairs);
+  save(path.join(CONTENT_ROOT, locale.toLowerCase()), pairs);
 }
 
 // The module level cache
@@ -159,7 +162,7 @@ function shortCuts(pairs, throws = false) {
 
   // Expand all "edges" and keep track of the nodes we traverse.
   const transit = (s, froms = []) => {
-    let next = dag.get(s);
+    const next = dag.get(s);
     if (next) {
       if (froms.includes(next)) {
         const msg = `redirect cycle [${froms.join(", ")}] → ${next}`;
@@ -191,7 +194,7 @@ function shortCuts(pairs, throws = false) {
     return 0;
   };
 
-  for (const [from, _] of pairs) {
+  for (const [from] of pairs) {
     const [froms = [], to] = transit(from);
     for (const from of froms) {
       dag.set(from, to);

@@ -439,7 +439,7 @@ async function fixFixableFlaws(doc, options, document) {
         )
       );
     } else {
-      Document.update(document.fileInfo.folder, newRawHTML, document.metadata);
+      Document.update(document.url, newRawHTML, document.metadata);
       if (options.fixFlawsVerbose) {
         console.log(
           chalk.green(

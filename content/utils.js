@@ -5,7 +5,7 @@ const sanitizeFilename = require("sanitize-filename");
 function buildURL(locale, slug) {
   if (!locale) throw new Error("locale falsy!");
   if (!slug) throw new Error("slug falsy!");
-  return `/${locale}/docs/${slug}`.toLowerCase();
+  return `/${locale}/docs/${slug}`;
 }
 
 /*
