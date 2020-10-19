@@ -45,14 +45,6 @@ jobs:
           # BUILD_FOLDERSEARCH=mdn/kitchensink yarn build
           BUILD_FOLDERSEARCH=web/javascript/reference/global_objects/array/foreach yarn build
 
-      # - name: Start static server
-      #   run: |
-
-      # #         yarn serve-ssr & npx wait-on http://localhost:3000/ping && lhci autorun \
-      # # --upload.target=temporary-public-storage \
-      # # --collect.url="http://localhost:3000/" \
-      # # --collect.numberOfRuns=3
-
       - name: Serve and lhci
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
@@ -84,9 +76,14 @@ jobs:
           # npm install -g @lhci/cli@next
           # lhci autorun
 
+          npm install -g @lhci/cli@next
+
           # Note, we can supply multiple `--collect.url=...` to have lhci test
           # a variety of URLs and then assume a average (or median?) across them.
+
+          # All options for "collect" here:
+          # https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/configuration.md#collect
+
           lhci autorun \
             --upload.target=temporary-public-storage \
-            --collect.url="http://localhost:5000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/" \
-            --collect.numberOfRuns=3
+            --collect.url="http://localhost:5000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/"
