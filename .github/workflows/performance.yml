@@ -46,6 +46,8 @@ jobs:
           BUILD_FOLDERSEARCH=web/javascript/reference/global_objects/array/foreach yarn build
 
       - name: Install and run lhci
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
         run: |
           # See https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/configuration.md#collect
           # for other things you can set.
