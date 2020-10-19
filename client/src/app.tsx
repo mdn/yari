@@ -7,8 +7,7 @@ import { Document } from "./document";
 import Footer from "./footer";
 import Header from "./header";
 import { NoMatch } from "./routing";
-
-const ActiveBanner = lazy(() => import("./banners/active-banner"));
+import { ActiveBanner } from "./banners/active-banner";
 
 const AllFlaws = lazy(() => import("./flaws"));
 const DocumentEdit = lazy(() => import("./document/forms/edit"));
@@ -21,11 +20,7 @@ function Layout({ children }) {
     <>
       <Header />
       <section className="section">{children}</section>
-      {!isServer && (
-        <Suspense fallback={null}>
-          <ActiveBanner />
-        </Suspense>
-      )}
+      {!isServer && <ActiveBanner />}
       <Footer />
     </>
   );
