@@ -42,31 +42,51 @@ jobs:
           export CONTENT_ROOT=$(pwd)/mdn/content/files
 
           yarn prepare-build
-          BUILD_FOLDERSEARCH=mdn/kitchensink yarn build
+          # BUILD_FOLDERSEARCH=mdn/kitchensink yarn build
           BUILD_FOLDERSEARCH=web/javascript/reference/global_objects/array/foreach yarn build
 
-      - name: Install and run lhci
+      # - name: Start static server
+      #   run: |
+
+      # #         yarn serve-ssr & npx wait-on http://localhost:3000/ping && lhci autorun \
+      # # --upload.target=temporary-public-storage \
+      # # --collect.url="http://localhost:3000/" \
+      # # --collect.numberOfRuns=3
+
+      - name: Serve and lhci
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
         run: |
-          # See https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/configuration.md#collect
-          # for other things you can set.
-          # The reason this file gets created on-the-fly here in the workflow instead
-          # of checked into the project is because right here is the only place
-          # where it's needed so there's little point is cluttering up the
-          # repo root.
-          cat > lighthouserc.js <<CONFIGURATION
-          module.exports = {
-            ci: {
-              collect: {
-                staticDistDir: 'client/build',
-              },
-              upload: {
-                target: 'temporary-public-storage',
-              },
-            },
-          };
-          CONFIGURATION
+          yarn start:static-server &
+          sleep 1
+          curl --retry-connrefused --retry 5 \
+            http://localhost:5000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/ > /dev/null
 
-          npm install -g @lhci/cli@next
-          lhci autorun
+          # # See https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/configuration.md#collect
+          # # for other things you can set.
+          # # The reason this file gets created on-the-fly here in the workflow instead
+          # # of checked into the project is because right here is the only place
+          # # where it's needed so there's little point is cluttering up the
+          # # repo root.
+          # cat > lighthouserc.js <<CONFIGURATION
+          # module.exports = {
+          #   ci: {
+          #     collect: {
+          #       staticDistDir: 'client/build',
+          #     },
+          #     upload: {
+          #       target: 'temporary-public-storage',
+          #     },
+          #   },
+          # };
+          # CONFIGURATION
+
+          # npm install -g @lhci/cli@next
+          # lhci autorun
+
+          # Note, we can supply multiple `--collect.url=...` to have lhci test
+          # a variety of URLs and then assume a average (or median?) across them.
+          lhci autorun \
+            --upload.target=temporary-public-storage \
+            --collect.url="http://localhost:5000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/" \
+            --collect.numberOfRuns=3
