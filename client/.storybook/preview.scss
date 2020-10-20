@@ -4,6 +4,7 @@
 html,
 body {
   background-color: initial;
+  padding: 0 !important; /* stylelint-disable-line declaration-no-important */
 }
 
 .color-palette,
@@ -24,41 +25,43 @@ body {
 }
 
 /* Grids */
-.reference-page {
-  .page-header,
-  .titlebar-container,
-  .breadcrumb-container,
-  .locale-container,
-  .main-content,
-  .document-toc-container,
-  .sidebar,
-  .page-footer {
-    min-height: 100px;
-  }
+.docs {
+  .reference-page {
+    .page-header,
+    .titlebar-container,
+    .breadcrumb-container,
+    .locale-container,
+    .main-content,
+    .document-toc-container,
+    .sidebar,
+    .page-footer {
+      min-height: 100px;
+    }
 
-  .page-header {
-    background-color: #fabba7;
-  }
+    .page-header {
+      background-color: #fabba7;
+    }
 
-  .titlebar-container,
-  .main-content {
-    background-color: #d2e4b7;
-  }
+    .titlebar-container,
+    .main-content {
+      background-color: #d2e4b7;
+    }
 
-  .breadcrumb-container {
-    background-color: #a7dddb;
-  }
+    .breadcrumb-container {
+      background-color: #a7dddb;
+    }
 
-  .locale-container {
-    background-color: #c8f1f0;
-  }
+    .locale-container {
+      background-color: #c8f1f0;
+    }
 
-  .document-toc-container,
-  .sidebar {
-    background-color: #fffabc;
-  }
+    .document-toc-container,
+    .sidebar {
+      background-color: #fffabc;
+    }
 
-  .page-footer {
-    background-color: #5e799a;
+    .page-footer {
+      background-color: #5e799a;
+    }
   }
 }

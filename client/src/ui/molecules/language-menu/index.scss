@@ -1,7 +1,7 @@
 @import "~@mdn/minimalist/sass/vars/layout";
 
 .language-menu {
-  padding: $base-spacing;
+  padding: ($base-spacing / 2) $base-spacing;
 
   @media #{$mq-large-desktop-and-up} {
     text-align: right;

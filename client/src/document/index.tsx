@@ -111,14 +111,16 @@ export function Document(props /* TODO: define a TS interface for this */) {
         </Suspense>
       )}
 
-      <div className="breadcrumb-container">
-        {doc.parents && <Breadcrumbs parents={doc.parents} />}
-      </div>
+      <div className="breadcrumbs-locale-container">
+        <div className="breadcrumb-container">
+          {doc.parents && <Breadcrumbs parents={doc.parents} />}
+        </div>
 
-      <div className="locale-container">
-        {translations && !!translations.length && (
-          <LanguageMenu translations={translations} locale={locale} />
-        )}
+        <div className="locale-container">
+          {translations && !!translations.length && (
+            <LanguageMenu translations={translations} locale={locale} />
+          )}
+        </div>
       </div>
 
       <div className="page-content-container">

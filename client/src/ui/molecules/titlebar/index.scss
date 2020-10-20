@@ -1,8 +1,19 @@
+@import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/color-palette";
 
 .titlebar-container {
   background-color: $neutral-550;
-  padding: 24px;
-  border-top: 1px solid $neutral-525;
   border-bottom: 1px solid $neutral-525;
+  border-top: 1px solid $neutral-525;
+  padding: ($base-spacing / 2) $base-spacing;
+
+  @media #{$mq-tablet-and-up} {
+    padding: 0;
+
+    h1 {
+      margin: 0 auto;
+      max-width: $max-width-default;
+      padding: $base-spacing;
+    }
+  }
 }
