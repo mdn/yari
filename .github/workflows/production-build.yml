@@ -31,7 +31,7 @@ on:
         required: false
         default: "main"
 
-      log_each_successul_upload:
+      log_each_successful_upload:
         description: "Deployer logs each success"
         required: false
         default: "false"
@@ -102,7 +102,7 @@ jobs:
           echo "Trigger notes: ${{ github.event.inputs.notes }}"
           echo "Trigger archived-content: ${{ github.event.inputs.archived_content }}"
           echo "Trigger translated-content: ${{ github.event.inputs.translated_content }}"
-          echo "Trigger log_each_successul_upload: ${{ github.event.inputs.log_each_successul_upload }}"
+          echo "Trigger log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload }}"
           echo "Deployment prefix: ${{ github.event.inputs.deployment_prefix }}"
 
       - name: Build everything
@@ -180,7 +180,7 @@ jobs:
           cd deployer
           export DEPLOYER_BUCKET_NAME=mdn-content-dev
           export DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix }}
-          export DEPLOYER_LOG_EACH_SUCCESSUL_UPLOAD=${{ github.event.inputs.log_each_successul_upload }}
+          export DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload }}
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 

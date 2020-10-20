@@ -33,6 +33,6 @@ DEFAULT_NO_PROGRESSBAR = config(
 )
 
 # If true, it will log every successul upload task as it happens.
-LOG_EACH_SUCCESSUL_UPLOAD = config(
-    "DEPLOYER_LOG_EACH_SUCCESSUL_UPLOAD", default=False, cast=bool
+LOG_EACH_SUCCESSFUL_UPLOAD = config(
+    "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD", default=False, cast=bool
 )

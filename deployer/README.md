@@ -112,7 +112,7 @@ The following environment variables are supported.
   uploaded (the default is `31536000` or one year)
 - `DEPLOYER_MAX_WORKERS_PARALLEL_UPLOADS` controls the number of worker
   threads used when uploading (the default is `50`)
-- `DEPLOYER_LOG_EACH_SUCCESSUL_UPLOAD` will print event successul upload
+- `DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD` will print successful upload
   tasks to `stdout`. The default is that this is `False`.
 - `CONTENT_ROOT` is equivalent to using `--content-root` (there is no
   default)
