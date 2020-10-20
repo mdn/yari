@@ -9,7 +9,6 @@ import { useUserData } from "../user-context";
 // <ActiveBanner>, at least the CSS will be ready.
 import "../kumastyles/components/banners/base.scss";
 import "../kumastyles/components/banners/developer-needs.scss";
-import "../kumastyles/components/banners/l10n-survey.scss";
 import "../kumastyles/components/banners/mdn-subscriptions.scss";
 
 import { DEVELOPER_NEEDS_ID, SUBSCRIPTION_ID } from "./ids";
