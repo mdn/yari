@@ -1,21 +1,4 @@
-/**
- * This file defines a React Banner component that renders a
- * call-to-action banner fixed to the bottom of the screen. The props
- * of the Banner component allow customization of the title,
- * description and button call-to-action text of the banner, as well
- * as the URL of the page that clicking on the call-to-action button
- * takes the user to. The Banner component is not exported,
- * however. Instead, we export an ActiveBanner component that pages should
- * use. It loops through an array of banner IDs for the first banner that is enabled by
- * Waffle and has not been dismissed by the user. If it finds such a
- * banner, it displays it with a <Banner>. Otherwise, if none of the
- * specified banners is enabled, or if all enabled banners have been
- * recently dismissed, then it displays nothing.
- *
- * @flow
- */
-import * as React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import CloseIcon from "../kumastyles/general/close.svg";
 import { CATEGORY_MONTHLY_PAYMENTS, useGA } from "../ga-context";
@@ -140,11 +123,14 @@ function SubscriptionBanner({ onDismissed }: { onDismissed: () => void }) {
       cta={"Learn more"}
       url={`/${locale}/payments/`}
       onDismissed={onDismissed}
-      // embargoDays={7}
     />
   );
 }
 
+// The reason we're not just exporting each individual banner is because to
+// be able to lazy-load the contents of this file it needs to export a
+// default function. This this one function is the link between the <App>
+// and all the individual banner components.
 export default function ActiveBanner({
   id,
   onDismissed,
@@ -152,8 +138,6 @@ export default function ActiveBanner({
   id: string;
   onDismissed: () => void;
 }) {
-  // The order of the if statements is important and it's our source of
-  // truth about which banner is "more important" than the other.
   if (id === DEVELOPER_NEEDS_ID) {
     return <DeveloperNeedsBanner onDismissed={onDismissed} />;
   } else if (id === SUBSCRIPTION_ID) {

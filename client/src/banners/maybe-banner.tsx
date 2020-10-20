@@ -72,6 +72,9 @@ export function MaybeBanner() {
     (userData.waffle.flags[id] || userData.waffle.switches[id]) &&
     !isEmbargoed(id);
 
+  // The order of the if statements is important and it's our source of
+  // truth about which banner is "more important" than the other.
+
   if (isEnabled(DEVELOPER_NEEDS_ID)) {
     return (
       <Suspense fallback={null}>
