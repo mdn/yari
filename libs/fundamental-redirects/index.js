@@ -1129,7 +1129,7 @@ const ABSOLUTE_URL = /^https?:\/\/.*/;
 
 function resolveFundamental(path) {
   if (ABSOLUTE_URL.exec(path)) {
-    return null;
+    return {};
   }
   const trimmedPath = path.replace(STARTING_SLASH, "");
   for (const resolve of REDIRECT_PATTERNS) {
