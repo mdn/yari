@@ -20,6 +20,7 @@ import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-t
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
 import LanguageMenu from "../ui/molecules/language-menu";
+import { OnGitHubLink } from "./on-github";
 import { Titlebar } from "../ui/molecules/titlebar";
 import { TOC } from "../ui/molecules/toc";
 import { RenderSideBar } from "./organisms/sidebar";
@@ -142,24 +143,18 @@ export function Document(props /* TODO: define a TS interface for this */) {
                       by MDN contributors
                     </a>
                   </li>
-                  {!doc.isArchive && (
-                    <li className="edit-on-github">
-                      <a
-                        href={github_url}
-                        title={`Folder: ${folder}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Edit on <b>GitHub</b>
-                      </a>
-                    </li>
-                  )}
                 </ul>
+                {!doc.isArchive && <OnGitHubLink doc={doc} />}
               </section>
             </div>
           </article>
         </main>
-        {doc.sidebarHTML && <RenderSideBar doc={doc} />}
+
+        {doc.sidebarHTML && (
+          <div id="sidebar-quicklinks" className="sidebar">
+            <RenderSideBar doc={doc} />
+          </div>
+        )}
       </div>
     </>
   );
@@ -285,15 +280,6 @@ function RenderDocumentBody({ doc }) {
     }
   });
 }
-
-// function Contributors({ contributors }) {
-//   return (
-//     <div>
-//       <b>Contributors to this page:</b>
-//       <span dangerouslySetInnerHTML={{ __html: contributors }} />
-//     </div>
-//   );
-// }
 
 function LoadingError({ error }) {
   return (

@@ -78,7 +78,7 @@ const info = {
     // it's re-created for each caller (so one caller can't mess with
     // another), but also should NOT be frozen since some macros sort
     // the list in-place.
-    const page = info.getPage(url, { throwIfDoesNotExist: true });
+    const page = info.getPageByURL(url, { throwIfDoesNotExist: true });
     if (includeSelf) {
       return [page];
     }
@@ -126,10 +126,13 @@ const info = {
     //   }
     //   return result;
     // }
-    return info.getPage(url, { throwIfDoesNotExist: true }).translations;
+    return info.getPageByURL(url, { throwIfDoesNotExist: true }).translations;
   },
 
-  getPage(url, { throwIfDoesNotExist = false, followRedirects = true } = {}) {
+  getPageByURL(
+    url,
+    { throwIfDoesNotExist = false, followRedirects = true } = {}
+  ) {
     // Always start by looking it up *without* following redirects.
     let document = Document.findByURL(info.cleanURL(url, false));
     // Usually, `followRedirects` is disabled if the caller definitely is not
@@ -147,6 +150,17 @@ const info = {
       }
       return {};
     }
+    return this.getPage(document);
+  },
+
+  getPage(document) {
+    if (typeof document === "string") {
+      console.trace(
+        "getPage() was called with a string, presumably a URL. " +
+          "This is deprecated in favor of getPageByURL()."
+      );
+      return this.getPageByURL(document);
+    }
 
     const { locale, slug, title, summary, tags } = document.metadata;
     return {
@@ -159,19 +173,7 @@ const info = {
       translations: [], //TODO Object.freeze(buildTranslationObjects(data)),
       get subpages() {
         return Document.findChildren(document.url)
-          .map((document) =>
-            info.getPage(document.url, {
-              // By default, the `getPage()` method will follow any redirects
-              // in it's pursuit to turn a URL into a "page object". But,
-              // the `subpages()` getter should not do this. It doesn't make
-              // sense to as a page: "What are your sub-pages?" and then,
-              // potentially, get pages that are not actually sub-pages.
-              // This way, sub-pages is strictly the result of
-              // purely calling `Document.findChildren()` but dressing it up
-              // according to how `getPage()` returns it.
-              followRedirects: false,
-            })
-          )
+          .map((document) => info.getPage(document))
           .filter((p) => p && p.url);
       },
     };
