@@ -106,6 +106,12 @@ ul.main-menu {
     text-align: left;
     width: 100%;
 
+    @media #{$mq-tablet-and-up} {
+      padding: ($base-unit * 2);
+      padding-left: 0;
+      width: unset;
+    }
+
     &::before {
       background: transparent url("~@mdn/dinocons/arrows/triangle.svg") 0 0
         no-repeat;
@@ -123,11 +129,6 @@ ul.main-menu {
       &::before {
         transform: rotate(180deg);
       }
-    }
-
-    @media #{$mq-tablet-and-up} {
-      padding: ($base-unit * 2);
-      width: unset;
     }
   }
 
