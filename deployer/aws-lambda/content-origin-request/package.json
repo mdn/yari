@@ -8,7 +8,6 @@
   },
   "dependencies": {
     "@yari-internal/constants": "file:../../../libs/constants",
-    "@yari-internal/debug-api": "file:../../../libs/debug-api",
     "@yari-internal/fundamental-redirects": "file:../../../libs/fundamental-redirects",
     "accept-language-parser": "^1.5.0",
     "sanitize-filename": "^1.6.3"

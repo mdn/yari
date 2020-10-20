@@ -5,9 +5,6 @@
 "@yari-internal/constants@file:../../../libs/constants":
   version "0.0.1"
 
-"@yari-internal/debug-api@file:../../../libs/debug-api":
-  version "0.0.1"
-
 "@yari-internal/fundamental-redirects@file:../../../libs/fundamental-redirects":
   version "0.0.1"
 
