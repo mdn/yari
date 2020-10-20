@@ -19,14 +19,39 @@ router.get("*", (req, res) => {
       `If you're going to fake v1 API requests you have to create the folder: ${folder}`
     );
   }
-  const filepath = path.join(folder, `${req.url.slice(1)}.json`);
-
-  if (fs.existsSync(filepath)) {
-    const payload = fs.readFileSync(filepath);
-    res.json(JSON.parse(payload));
+  if (
+    Object.keys(req.query).filter((key) => key.startsWith("_whoami.")).length
+  ) {
+    // Build the payload based on the query string
+    const payload = {
+      waffle: {
+        flags: {},
+        switches: {},
+        samples: {},
+      },
+    };
+    for (const [key, value] of Object.entries(req.query)) {
+      if (key.startsWith("_whoami.")) {
+        key
+          .replace("_whoami.", "")
+          .split(".")
+          .reduce((r, e, i, arr) => {
+            return (r[e] = r[e] || (arr[i + 1] ? {} : value));
+          }, payload);
+      }
+    }
+    console.log("whoami payload:", JSON.stringify(payload, undefined, 2));
+    res.json(payload);
   } else {
-    console.warn(`Tried to fake ${req.url} but ${filepath} doesn't exist.`);
-    res.status(404).json({ folder, filepath });
+    const filepath = path.join(folder, `${req.url.slice(1)}.json`);
+
+    if (fs.existsSync(filepath)) {
+      const payload = fs.readFileSync(filepath);
+      res.json(JSON.parse(payload));
+    } else {
+      console.warn(`Tried to fake ${req.url} but ${filepath} doesn't exist.`);
+      res.status(404).json({ folder, filepath });
+    }
   }
 });
 

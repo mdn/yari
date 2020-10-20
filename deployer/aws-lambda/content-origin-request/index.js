@@ -1,6 +1,7 @@
 const sanitizeFilename = require("sanitize-filename");
 const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("@yari-internal/constants");
+const { fakeWhoami } = require("@yari-internal/debug-api");
 const acceptLanguageParser = require("accept-language-parser");
 
 const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
@@ -83,6 +84,16 @@ exports.handler = async (event, _context) => {
       status,
       cacheControlSeconds: 3600 * 24 * 30,
     });
+  }
+
+  // *Exclusively* when on the dev domain (or one of its sub-domains)
+  // we hijack the `/api/v1/whoami` endpoint so it behaves in a predictable
+  // way without having to actually reach Kuma Django.
+  if (
+    host.endsWith(CONTENT_DEVELOPMENT_DOMAIN) &&
+    request.uri.startsWith("/api/v1/whoami")
+  ) {
+    return fakeWhoami(request);
   }
 
   // Starting with /docs/ or empty path (/) should redirect to a locale.

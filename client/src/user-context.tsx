@@ -54,7 +54,21 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
   useEffect(() => {
     if (DISABLE_AUTH) return;
 
-    fetch("/api/v1/whoami")
+    let url = "/api/v1/whoami";
+    // If the current location contains query string parameters that match
+    // certain patterns, tack it on to the whoami endpoint URL.
+    const location = window.location;
+    const sp = new URLSearchParams();
+    for (const [key, value] of new URLSearchParams(location.search)) {
+      if (key.startsWith("_whoami.")) {
+        sp.set(key, value);
+      }
+    }
+    if (sp.toString()) {
+      url += `?${sp.toString()}`;
+    }
+
+    fetch(url)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`${response.status} on ${response.url}`);
