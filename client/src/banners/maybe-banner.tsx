@@ -2,11 +2,6 @@ import React, { Suspense, lazy } from "react";
 
 import { useUserData } from "../user-context";
 
-export const DEVELOPER_NEEDS_ID = "developer_needs";
-export const SUBSCRIPTION_ID = "subscription_banner";
-
-const ActiveBanner = lazy(() => import("./active-banner"));
-
 // We may or may not load any active banner. But if there's a small chance
 // that we might, it's best practice to not have to lazy-load the CSS
 // because lazy loading the CSS will put itself as blocking on the critical
@@ -16,6 +11,9 @@ import "../kumastyles/components/banners/base.scss";
 import "../kumastyles/components/banners/developer-needs.scss";
 import "../kumastyles/components/banners/l10n-survey.scss";
 import "../kumastyles/components/banners/mdn-subscriptions.scss";
+
+const ActiveBanner = lazy(() => import("./active-banner"));
+import { DEVELOPER_NEEDS_ID, SUBSCRIPTION_ID } from "./ids";
 
 // Set a localStorage key with a timestamp the specified number of
 // days into the future. When the user dismisses a banner we use this
