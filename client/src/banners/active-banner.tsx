@@ -22,12 +22,6 @@ import { CATEGORY_MONTHLY_PAYMENTS, useGA } from "../ga-context";
 import { useLocale } from "../hooks";
 import { DEVELOPER_NEEDS_ID, SUBSCRIPTION_ID } from "./ids";
 
-// TODO: split up banners into separate lazy-loaded component files
-import "../kumastyles/components/banners/base.scss";
-import "../kumastyles/components/banners/developer-needs.scss";
-import "../kumastyles/components/banners/l10n-survey.scss";
-import "../kumastyles/components/banners/mdn-subscriptions.scss";
-
 // The <Banner> component displays a simple call-to-action banner at
 // the bottom of the window. The following props allow it to be customized.
 //

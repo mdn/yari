@@ -7,6 +7,16 @@ export const SUBSCRIPTION_ID = "subscription_banner";
 
 const ActiveBanner = lazy(() => import("./active-banner"));
 
+// We may or may not load any active banner. But if there's a small chance
+// that we might, it's best practice to not have to lazy-load the CSS
+// because lazy loading the CSS will put itself as blocking on the critical
+// rendering. So, basically, if there's a >0% chance that we might load
+// <ActiveBanner>, at least the CSS will be ready.
+import "../kumastyles/components/banners/base.scss";
+import "../kumastyles/components/banners/developer-needs.scss";
+import "../kumastyles/components/banners/l10n-survey.scss";
+import "../kumastyles/components/banners/mdn-subscriptions.scss";
+
 // Set a localStorage key with a timestamp the specified number of
 // days into the future. When the user dismisses a banner we use this
 // to prevent the redisplay of the banner for a while.
