@@ -1,7 +1,7 @@
 import React from "react";
 
 export default {
-  title: "Docs/Tables",
+  title: "Atoms/Tables",
 };
 
 export const standardTable = () => {

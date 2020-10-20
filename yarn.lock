@@ -1975,15 +1975,15 @@
   dependencies:
     extend "3.0.2"
 
-"@mdn/dinocons@^0.0.9":
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/@mdn/dinocons/-/dinocons-0.0.9.tgz#db4a4363fda7c1e14d5324208443235766a234b4"
-  integrity sha512-5pi/LmVwoWxwnP9Cot+W+1OBHc32orgiQw4+1R4wNsxAJTxgtfWJwdnMp8nvrjtFQPk0MTetxu93glh8p80gvQ==
+"@mdn/dinocons@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@mdn/dinocons/-/dinocons-0.1.1.tgz#43f15996bd4c5eeb7604a564dce48ec1412f6a8a"
+  integrity sha512-V5JxnXFgU6nYRlX7x1mUEFAXIY102CHt9lIwvUzUuSpof+tSgnsPXxhWgihB5QRSTH1i9rnSJtgvODCJNid9Ag==
 
-"@mdn/minimalist@^0.1.23":
-  version "0.1.23"
-  resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-0.1.23.tgz#378a573ac3cd29c954ac30d87eec8012e420e35b"
-  integrity sha512-hyKlRurddh0frW/OuR3Y3K1eNs3eEjwPbP2f2yVLEBofJygAdGm4Lyg4PQauOtgdzfDolMcaogITEEKOBVMXgQ==
+"@mdn/minimalist@^0.1.40":
+  version "0.1.40"
+  resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-0.1.40.tgz#00134363b5debe6ed592cf3620078d6c53ab4552"
+  integrity sha512-gOiLQw4sRR9yIcE9E2VKdDnT+j4lu1pNVB9rX00+SFdd/rIBZ2yAJNsLH15NF6jlCsJZhXsEP6R552TtsG2hEA==
 
 "@mdx-js/loader@^1.5.1":
   version "1.6.16"

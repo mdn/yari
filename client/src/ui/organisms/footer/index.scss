@@ -3,17 +3,13 @@
 @import "~@mdn/minimalist/sass/vars/typography";
 
 .page-footer-logo {
-  margin-bottom: 30px;
+  margin-bottom: $base-spacing;
 }
 
 .page-footer {
   background-color: $neutral-100;
   color: $text-color-inverted;
-  padding: 40px 20px;
-
-  @media #{$mq-tablet-and-up} {
-    padding: 40px;
-  }
+  padding: ($base-spacing * 2) $base-spacing;
 
   .content-container {
     margin: 0 auto;

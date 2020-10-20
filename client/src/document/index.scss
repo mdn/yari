@@ -1,1 +1,56 @@
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/borders";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+@import "~@mdn/minimalist/sass/mixins/utils";
+
 @import "./prism-overrides";
+
+.article {
+  margin-bottom: $base-spacing;
+  padding: $base-spacing;
+
+  @media #{$mq-small-desktop-and-up} {
+    margin-bottom: $large-spacing;
+  }
+
+  p,
+  ul,
+  ol,
+  dl {
+    @include readable-line-length();
+  }
+
+  a {
+    code {
+      color: $neutral-100;
+      text-decoration: underline;
+    }
+
+    &:active {
+      background-color: $primary-200;
+      color: $text-color-inverted;
+    }
+  }
+
+  h2,
+  h3 {
+    a {
+      color: $neutral-100;
+    }
+  }
+
+  h2 {
+    margin-bottom: ($base-unit * 6);
+  }
+
+  pre {
+    background-color: $neutral-550;
+    border-left: $code-example-border;
+    max-width: 100%;
+    overflow: auto;
+    padding: $base-spacing;
+    width: 100%;
+  }
+}

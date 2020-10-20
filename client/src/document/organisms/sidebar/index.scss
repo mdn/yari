@@ -3,6 +3,8 @@
 @import "~@mdn/minimalist/sass/mixins/utils";
 
 .sidebar {
+  padding: ($base-spacing / 2) $base-spacing;
+
   h4 {
     margin-bottom: $base-spacing;
   }
