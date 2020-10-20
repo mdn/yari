@@ -46,7 +46,7 @@ const extractWebFontURLs = lazy(() => {
       return url.endsWith(".woff2");
     });
     for (const url of generator) {
-      console.log("URL:", url);
+      urls.push(url);
     }
   }
   return urls;
