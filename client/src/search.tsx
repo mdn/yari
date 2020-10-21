@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import FlexSearch from "flexsearch";
 import useSWR, { mutate } from "swr";
-import FuzzySearch from "./fuzzy-search";
+import { FuzzySearch, Doc, Substring } from "./fuzzy-search";
 import "./search.scss";
 import { useWebSocketMessageHandler } from "./web-socket";
 
@@ -34,6 +34,12 @@ type SearchIndex = {
   flex: any;
   fuzzy: FuzzySearch;
   items: null | Item[];
+};
+
+type ResultItem = {
+  title: string;
+  url: string;
+  substrings: Substring[];
 };
 
 function useSearchIndex(): [null | SearchIndex, null | Error, () => void] {
@@ -70,13 +76,18 @@ function useSearchIndex(): [null | SearchIndex, null | Error, () => void] {
       suggest: true,
       tokenize: "forward",
     });
-    const urls = data.map(({ url, title }, i) => {
+    // const urls = data.map(({ url, title }, i) => {
+    //   // XXX investigate if it's faster to add all at once
+    //   // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
+    //   flex.add(i, title);
+    //   return url;
+    // });
+    data.forEach(({ title }, i) => {
       // XXX investigate if it's faster to add all at once
       // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
       flex.add(i, title);
-      return url;
     });
-    const fuzzy = new FuzzySearch(urls);
+    const fuzzy = new FuzzySearch(data as Doc[]);
 
     setSearchIndex({ flex, fuzzy, items: data });
   }, [shouldInitialize, data]);
@@ -138,12 +149,6 @@ function BreadcrumbURI({ uri, substrings }) {
   return <small>{keep.join(" / ")}</small>;
 }
 
-type ResultItem = {
-  title: string;
-  url: string;
-  substrings: string[];
-};
-
 function useFocusOnSlash(inputRef: React.RefObject<null | HTMLInputElement>) {
   useEffect(() => {
     function focusOnSearchMaybe(event) {
@@ -201,7 +206,8 @@ function InnerSearchNavigateWidget() {
         } else {
           const fuzzyResults = searchIndex.fuzzy.search(inputValue, { limit });
           results = fuzzyResults.map((fuzzyResult) => ({
-            ...(searchIndex.items || [])[fuzzyResult.index],
+            url: fuzzyResult.url,
+            title: fuzzyResult.title,
             substrings: fuzzyResult.substrings,
           }));
         }
