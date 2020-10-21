@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useSWR from "swr";
 
-// import { DisplayDataTable } from "./data-table";
 import { SQLTable } from "./sql-table";
 import { Data, Document, MacroInfo } from "./types";
 import "./index.scss";
@@ -132,7 +131,6 @@ function DisplayData({ data }: { data: Data }) {
     <div>
       {/* <AllMacroUses macros={data.allMacros} documents={data.documents} /> */}
       <SQLTable documents={data.documents} />
-      {/* <DisplayDataTable documents={data.documents} /> */}
     </div>
   );
 }
