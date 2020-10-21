@@ -1,6 +1,7 @@
 const path = require("path");
-
+const childProcess = require("child_process");
 const sanitizeFilename = require("sanitize-filename");
+const { CONTENT_ROOT } = require("./constants");
 
 function buildURL(locale, slug) {
   if (!locale) throw new Error("locale falsy!");
@@ -69,8 +70,24 @@ function memoize(fn) {
   };
 }
 
+function execGit(args, opts = {}) {
+  const { status, error, stdout, stderr } = childProcess.spawnSync(
+    "git",
+    args,
+    {
+      cwd: CONTENT_ROOT,
+      ...opts,
+    }
+  );
+  if (error || status !== 0) {
+    throw new Error(`git command failed:\n${stderr.toString()}`);
+  }
+  return stdout.toString().trim();
+}
+
 module.exports = {
   buildURL,
   slugToFolder,
   memoize,
+  execGit,
 };

@@ -15,7 +15,7 @@ const {
 const { getPopularities } = require("./popularities");
 const { getWikiHistories } = require("./wikihistories");
 
-const { buildURL, memoize, slugToFolder } = require("./utils");
+const { buildURL, memoize, slugToFolder, execGit } = require("./utils");
 const Redirects = require("./redirect");
 
 function buildPath(localeFolder, slug) {
@@ -251,10 +251,7 @@ function update(url, rawHTML, metadata) {
       oldSlug
     );
 
-    // XXX we *could* call out to a shell here and attempt
-    // to execute `git mv $folder $newFolder` and only if that didn't work
-    // do we fall back on good old `fs.renameSync`.
-    fs.renameSync(oldFolderPath, newFolderPath);
+    execGit(["mv", oldFolderPath, newFolderPath]);
     Redirects.add(locale, [...redirects.entries()]);
   }
 }
@@ -367,9 +364,13 @@ function remove(
   { recursive = false, dry = false, redirect = "" } = {}
 ) {
   const url = buildURL(locale, slug);
+  const { metadata, fileInfo } = findByURL(url) || {};
+  if (!metadata) {
+    throw new Error(`document does not exists: ${url}`);
+  }
 
   const children = findChildren(url);
-  if ((redirect && children.length > 0) || !recursive) {
+  if (children.length > 0 && (redirect || !recursive)) {
     throw new Error("unable to remove and redirect a document with children");
   }
   const docs = [slug, ...children.map(({ metadata }) => metadata.slug)];
@@ -390,8 +391,7 @@ function remove(
     Redirects.add(locale, [[url, redirect]]);
   }
 
-  const { metadata, fileInfo } = findByURL(url);
-  fs.rmdirSync(path.dirname(fileInfo.path), { recursive: true });
+  execGit(["rm", "-r", path.dirname(fileInfo.path)]);
 
   updateWikiHistory(
     path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),

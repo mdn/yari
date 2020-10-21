@@ -11,7 +11,7 @@ function tryOrExit(f) {
     try {
       await f(...args);
     } catch (error) {
-      console.error(error);
+      console.error(chalk.red(error.message));
       process.exit(1);
     }
   };

@@ -1,8 +1,11 @@
-const childProcess = require("child_process");
-
 const chalk = require("chalk");
 
-const { Document, CONTENT_ROOT, REPOSITORY_URLS } = require("../content");
+const {
+  Document,
+  CONTENT_ROOT,
+  REPOSITORY_URLS,
+  execGit,
+} = require("../content");
 const kumascript = require("../kumascript");
 
 const { FLAW_LEVELS } = require("./constants");
@@ -42,14 +45,9 @@ function getCurrentGitBranch(root) {
         // in a topic branch. Then figure this out using a child-process.
         // Note, if you're in detached head, (e.g. "d6a6c3f17") instead of a named
         // branch, this will fail. But that's why we rely on a default.
-        const spawned = childProcess.spawnSync(
-          "git",
-          ["branch", "--show-current"],
-          {
-            cwd: root,
-          }
-        );
-        const output = spawned.stdout.toString().trim();
+        const output = execGit(["branch", "--show-current"], {
+          cwd: root,
+        });
         if (output) {
           name = output;
         }
