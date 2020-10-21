@@ -2,39 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useSWR from "swr";
 
-import { DisplayDataTable } from "./data-table";
-
+// import { DisplayDataTable } from "./data-table";
+import { SQLTable } from "./sql-table";
+import { Data, Document, MacroInfo } from "./types";
 import "./index.scss";
-
-interface Document {
-  mdn_url: string;
-  modified: string;
-  title: string;
-  popularity: number;
-  flaws: {
-    [key: string]: string[];
-  };
-  normalizedMacrosCount: {
-    [key: string]: number;
-  };
-}
-
-interface MacroInfo {
-  sourceName: string;
-  normalizedName: string;
-  totalCount: number;
-}
-
-type Metadata = {
-  tookSeconds: number;
-  count: number;
-};
-
-interface Data {
-  documents: Document[];
-  metadata: Metadata;
-  allMacros: MacroInfo[];
-}
 
 export default function AllTraits() {
   const [startLoadingTime, setStartLoadingTime] = useState<Date | null>(null);
@@ -159,7 +130,8 @@ function Loading({ startLoadingTime }: { startLoadingTime: Date }) {
 function DisplayData({ data }: { data: Data }) {
   return (
     <div>
-      <AllMacroUses macros={data.allMacros} documents={data.documents} />
+      {/* <AllMacroUses macros={data.allMacros} documents={data.documents} /> */}
+      <SQLTable documents={data.documents} />
       {/* <DisplayDataTable documents={data.documents} /> */}
     </div>
   );

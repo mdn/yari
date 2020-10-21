@@ -18,11 +18,11 @@ router.get("/", async (req, res) => {
   const metadata = {};
   const t0 = new Date();
   try {
-    // const documents = _cachedAnalyzedDocuments
-    //   ? _cachedAnalyzedDocuments
-    //   : await analyzeDocuments();
-    // _cachedAnalyzedDocuments = documents;
-    const documents = await analyzeDocuments();
+    const documents = _cachedAnalyzedDocuments
+      ? _cachedAnalyzedDocuments
+      : await analyzeDocuments();
+    _cachedAnalyzedDocuments = documents;
+    // const documents = await analyzeDocuments();
     const allMacros = getAllMacros(documents);
     const t1 = new Date();
     metadata.tookSeconds = (t1 - t0) / 1000;
@@ -31,6 +31,7 @@ router.get("/", async (req, res) => {
       documents,
       metadata,
       allMacros,
+      fromCache: !!_cachedAnalyzedDocuments,
     });
   } catch (error) {
     console.error(error);

@@ -393,6 +393,12 @@ async function analyzeDocument(document) {
   doc.tags = document.metadata.tags || [];
 
   doc.fileSize = fs.statSync(document.fileInfo.path).size;
+  doc.wordCount = document.rawHTML
+    .replace(/(<([^>]+)>)/g, "")
+    .split(/\s+/).length;
+
+  doc.h2s = (document.rawHTML.match(/<\/h2>/g) || []).length;
+  doc.h3s = (document.rawHTML.match(/<\/h3>/g) || []).length;
   doc.title = metadata.title;
   doc.mdn_url = document.url;
 
