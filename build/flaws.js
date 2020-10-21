@@ -255,7 +255,6 @@ function injectPreWithHTMLFlaws(level, doc, $, rawContent) {
     }
 
     const flaw = { explanation, id, fixable, html, suggestion };
-
     if (fixable) {
       // Only if it's fixable, is the `html` perfectly findable in the raw content.
       for (const { line, column } of findMatchesInText(html, rawContent)) {
@@ -285,7 +284,11 @@ function injectPreWithHTMLFlaws(level, doc, $, rawContent) {
   // selectors is small.
   $("pre[class*=brush] > code").each((i, element) => {
     const $pre = $(element).parent();
-    addFlaw($pre);
+    // Because Cheerio doesn't support selectors like `pre + code` we have to
+    // manually (double) check that the parent really is a `<pre>` tag.
+    if ($pre.length && $pre.get(0).tagName === "pre") {
+      addFlaw($pre);
+    }
   });
 
   if (

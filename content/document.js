@@ -249,7 +249,14 @@ function del(folder) {
   updateWikiHistory(path.join(CONTENT_ROOT, metadata.locale), metadata.slug);
 }
 
-const findByURL = (url, ...args) => read(urlToFolderPath(url), ...args);
+function findByURL(url, ...args) {
+  const [bareURL, hash = ""] = url.split("#", 2);
+  const doc = read(urlToFolderPath(bareURL), ...args);
+  if (doc && hash) {
+    doc.url = `${doc.url}#${hash}`;
+  }
+  return doc;
+}
 
 function findAll(
   { files, folderSearch } = { files: new Set(), folderSearch: null }

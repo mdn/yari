@@ -16,11 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: technote-space/get-diff-action@v3
+      - uses: technote-space/get-diff-action@v4
         id: git_diff_kumascript
         with:
-          PREFIX_FILTER: |
-            kumascript/
+          PATTERNS: |
+            kumascript/**
 
       - name: Display Git diffs
         run: echo ${{ steps.git_diff_kumascript.outputs.diff }}
@@ -85,35 +85,66 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: technote-space/get-diff-action@v3
-        id: git_diff_content
+      - uses: technote-space/get-diff-action@v4
         with:
-          PREFIX_FILTER: deployer/
+          PATTERNS: deployer/**
 
       - name: Install Python
+        if: env.GIT_DIFF
         uses: actions/setup-python@v2
         with:
           python-version: "3.8"
 
       - name: Install Python poetry
+        if: env.GIT_DIFF
         uses: dschep/install-poetry-action@v1.3
 
       - name: Install deployer
+        if: env.GIT_DIFF
         run: |
           cd deployer
           poetry install
 
       - name: Display Python & Poetry version
+        if: env.GIT_DIFF
         run: |
           python --version
           poetry --version
 
       - name: Lint Python code
+        if: env.GIT_DIFF
         run: |
           flake8 deployer
           black --check deployer
 
       - name: Basic run of deployer
+        if: env.GIT_DIFF
         run: |
           cd deployer
           poetry run deployer --help
+
+  docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: technote-space/get-diff-action@v4
+        with:
+          PATTERNS: docs/**/*.md
+          FILES: |
+            README.md
+
+      - name: Setup Node.js environment
+        if: env.GIT_DIFF
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: "12"
+
+      - name: Lint markdown files
+        if: env.GIT_DIFF
+        run: |
+          echo "GIT DIFF:"
+          echo "${{ env.GIT_DIFF }}"
+          echo ""
+          npx markdownlint-cli ${{ env.GIT_DIFF }}

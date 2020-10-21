@@ -103,6 +103,13 @@ describeMacro("page API tests", function () {
           key.replace(`${url.toLowerCase()}/`, "");
           result.push({
             url: data.url,
+            metadata: {
+              title: data.title,
+              locale: data.locale,
+              summary: data.summary,
+              slug: data.slug,
+              tags: data.tags,
+            },
           });
         }
       }
