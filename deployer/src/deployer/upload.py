@@ -15,6 +15,7 @@ from .constants import (
     DEFAULT_CACHE_CONTROL,
     HASHED_CACHE_CONTROL,
     MAX_WORKERS_PARALLEL_UPLOADS,
+    LOG_EACH_SUCCESSFUL_UPLOAD,
 )
 from .utils import StopWatch, fmt_size, iterdir, log
 
@@ -35,7 +36,7 @@ def log_task(task):
         else:
             # With file upload tasks, the error message says it all.
             log.error(task.error)
-    else:
+    elif LOG_EACH_SUCCESSFUL_UPLOAD:
         log.success(task)
 
 
