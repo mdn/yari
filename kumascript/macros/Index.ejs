@@ -62,7 +62,7 @@ function getPages(pageList) {
                 title: page.title.replace(/</g,'&lt;').replace(/>/g,'&gt;'),
                 url: page.url,
                 tags: [...page.tags].sort(),
-                summary: page.summary || '<strong>No summary!</strong>'
+                summary: page.summary || '<i>No summary!</i>'
             })
             getPages(page.subpages);
         }
