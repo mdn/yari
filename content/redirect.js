@@ -81,8 +81,7 @@ function add(locale, urlPairs) {
     .slice(1)
     .map((line) => line.trim().split(/\s+/));
   pairs.push(...urlPairs);
-  pairs.sort();
-  save(path.join(CONTENT_ROOT, locale.toLowerCase()), pairs);
+  write(path.join(CONTENT_ROOT, locale.toLowerCase()), pairs);
 }
 
 // The module level cache

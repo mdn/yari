@@ -336,37 +336,62 @@ function findChildren(url) {
     .map((folder) => read(folder));
 }
 
-function move(oldSlug, newSlug, locale) {
+function move(oldSlug, newSlug, locale, { dry = false } = {}) {
   const oldUrl = buildURL(locale, oldSlug);
-  const doc = Document.findByURL(oldUrl);
-  doc.metadata.slug = newSlug;
+  const doc = findByURL(oldUrl);
+  const realOldSlug = doc.metadata.slug;
+  const paris = [doc, ...findChildren(oldUrl)].map(({ metadata }) => [
+    metadata.slug,
+    metadata.slug.replace(realOldSlug, newSlug),
+  ]);
+  if (dry) {
+    return paris;
+  }
 
+  doc.metadata.slug = newSlug;
   update(oldUrl, doc.rawHTML, doc.metadata);
+
+  return paris;
 }
 
-function remove(slug, locale, redirect = "") {
+function remove(
+  slug,
+  locale,
+  { recursive = false, dry = false, redirect = "" } = {}
+) {
   const url = buildURL(locale, slug);
 
   const children = findChildren(url);
-  if (redirect && children.length > 0) {
+  if ((redirect && children.length > 0) || !recursive) {
     throw new Error("unable to remove and redirect a document with children");
   }
-  for (const { metadata, fileInfo } of children) {
+  const docs = [slug, ...children.map(({ metadata }) => metadata.slug)];
+
+  if (dry) {
+    return docs;
+  }
+
+  for (const { metadata } of children) {
     const slug = metadata.slug;
     updateWikiHistory(
       path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
       slug
     );
   }
+
   if (redirect) {
-    Redirects.add(url, redirect);
+    Redirects.add(locale, [[url, redirect]]);
   }
+
   const { metadata, fileInfo } = findByURL(url);
   fs.rmdirSync(path.dirname(fileInfo.path), { recursive: true });
+
   updateWikiHistory(
     path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
     metadata.slug
   );
+
+  return docs;
 }
 
 module.exports = {
