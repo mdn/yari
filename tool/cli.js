@@ -65,11 +65,11 @@ program
   )
 
   .command("content delete")
-  .argument("<locale>", "Locale", {
+  .argument("<slug>", "Slug")
+  .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
     validator: [...VALID_LOCALES.values()],
   })
-  .argument("<slug>", "Slug")
   .option("-r, --recursive", "Delete content recursively", { default: false })
   .option("--redirect <redirect>", "Redirect document to <redirect>")
   .option("-y, --yes", "Assume yes", { default: false })
@@ -98,12 +98,12 @@ program
   )
 
   .command("content move")
-  .argument("<locale>", "Locale", {
+  .argument("<oldSlug>", "Old slug")
+  .argument("<newSlug>", "New slug")
+  .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
     validator: [...VALID_LOCALES.values()],
   })
-  .argument("<oldSlug>", "Old slug")
-  .argument("<newSlug>", "New slug")
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
     tryOrExit(async ({ args, options }) => {
