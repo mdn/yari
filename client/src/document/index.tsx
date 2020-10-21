@@ -98,7 +98,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   const translations = doc.other_translations || [];
 
-  const { github_url, folder } = doc.source;
   const isServer = typeof window === "undefined";
 
   return (
