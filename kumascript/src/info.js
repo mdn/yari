@@ -190,13 +190,15 @@ const info = {
         // So that's why we always start by looking for that tag first.
         try {
           const seoSummaryMatch = document.rawHTML.match(
-            /<span class="seoSummary">(.*?)<\/span>/
+            /<span class="seoSummary">(.*?)<\/span>/s
           );
           if (seoSummaryMatch) {
             return seoSummaryMatch[1];
           }
 
-          const matches = document.rawHTML.matchAll(/<p[^>]*>(.*?)<\/p>/gs);
+          const matches = document.rawHTML.matchAll(
+            /(?<!<div class="blockIndicator warning">\s*)<p[^>]*>(.*?)<\/p>/gs
+          );
           for (const match of matches) {
             // A lot of times, the first paragrah is just a (or two) call to
             // a KS macro. E.g. `<p>{{AddonSidebar}}</p>`.
