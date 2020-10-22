@@ -1,0 +1,40 @@
+.sql-table {
+  padding-bottom: 50px;
+
+  form.query {
+    textarea {
+      font-family: monospace;
+      width: 99%;
+    }
+  }
+  .query-error {
+    background-color: rgb(255, 125, 125);
+  }
+  .too-many-to-display {
+    background-color: rgb(232, 147, 116);
+    padding: 10px 20px;
+    p {
+      margin: 0;
+      text-align: center;
+      font-weight: bold;
+    }
+  }
+
+  .no-results {
+    margin: 40px;
+  }
+  .results {
+    margin-top: 10px;
+    margin-bottom: 40px;
+
+    .results-count {
+      font-size: 120%;
+    }
+  }
+
+  table {
+    thead th {
+      font-weight: bold;
+    }
+  }
+}

@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import alasql from "alasql";
+
+// Necessary hack due to https://github.com/agershun/alasql/issues/930
+// import alasql from "alasql";
+import alasql from "../../../node_modules/alasql/dist/alasql.min.js";
 
 import { Document } from "./types";
+import "./sql-table.scss";
 
 const DEFAULT_QUERY = "SELECT title FROM ? ORDER BY popularity DESC LIMIT 10";
 const ADVANCED_QUERIES: string[] = [];
@@ -15,6 +19,11 @@ ADVANCED_QUERIES.push(`SELECT title->length AS len, title, mdn_url
 FROM ?
 ORDER BY len DESC
 LIMIT 100`);
+ADVANCED_QUERIES.push(`SELECT mdn_url, title, wordCount, fileSize
+FROM ?
+WHERE mdn_url like '%/Web/http%'
+ORDER BY fileSize desc
+LIMIT 25`);
 
 export function SQLTable({ documents }: { documents: Document[] }) {
   const [query, setQuery] = useState("");
@@ -30,10 +39,12 @@ export function SQLTable({ documents }: { documents: Document[] }) {
       try {
         const res = alasql(query, [documents]);
         setResult(res);
-        setPastQueries((state) => [
-          { query, results: res.length },
-          ...state.filter((q) => q.query !== query),
-        ]);
+        setPastQueries((state) =>
+          [
+            { query, results: res.length },
+            ...state.filter((q) => q.query !== query),
+          ].slice(0, 50)
+        );
       } catch (error) {
         setQueryError(error);
       }
@@ -43,8 +54,9 @@ export function SQLTable({ documents }: { documents: Document[] }) {
   }, [query, documents]);
 
   return (
-    <div>
+    <div className="sql-table">
       <form
+        className="query"
         onSubmit={(event) => {
           event.preventDefault();
           setQuery(queryDraft.trim());
@@ -54,10 +66,10 @@ export function SQLTable({ documents }: { documents: Document[] }) {
           value={queryDraft}
           onChange={(event) => setQueryDraft(event.target.value)}
           rows={Math.max(5, queryDraft.split("\n").length + 1)}
-          style={{ width: "100%" }}
+          spellCheck={false}
         ></textarea>
         {queryError && (
-          <div style={{ backgroundColor: "pink" }}>
+          <div className="query-error">
             <h4>Query error</h4>
             <code>{queryError.toString()}</code>
           </div>
@@ -65,10 +77,22 @@ export function SQLTable({ documents }: { documents: Document[] }) {
         <button type="submit" disabled={!!(result && queryDraft === query)}>
           Run query
         </button>{" "}
-        <button type="button" onClick={() => toggleShowHelp((s) => !s)}>
+        <button
+          type="button"
+          onClick={() => {
+            toggleShowHelp((s) => !s);
+            toggleShowPastQueries(false);
+          }}
+        >
           {showHelp ? "Close help" : "Show help"}
         </button>{" "}
-        <button type="button" onClick={() => toggleShowPastQueries((s) => !s)}>
+        <button
+          type="button"
+          onClick={() => {
+            toggleShowPastQueries((s) => !s);
+            toggleShowHelp(false);
+          }}
+        >
           {showPastQueries
             ? "Close past queries"
             : `Show past queries (${pastQueries.length})`}
@@ -79,6 +103,11 @@ export function SQLTable({ documents }: { documents: Document[] }) {
           document={documents[0]}
           loadQuery={(q) => {
             setQueryDraft(q);
+            const formElement = document.querySelector("form.query");
+            if (formElement) {
+              formElement.scrollIntoView({ behavior: "smooth" });
+            }
+            toggleShowHelp(false);
           }}
         />
       )}
@@ -87,12 +116,20 @@ export function SQLTable({ documents }: { documents: Document[] }) {
           queries={pastQueries}
           loadQuery={(q) => {
             setQueryDraft(q);
+            const formElement = document.querySelector("form.query");
+            if (formElement) {
+              formElement.scrollIntoView({ behavior: "smooth" });
+            }
+            toggleShowPastQueries(false);
+          }}
+          resetPastQueries={() => {
+            setPastQueries([]);
+            toggleShowPastQueries(false);
           }}
         />
       )}
 
-      {/* {result ? `${result.length.toLocaleString()} results` : "no results"} */}
-      {result && <Table rows={result} />}
+      {result && <Results rows={result} />}
     </div>
   );
 }
@@ -135,6 +172,36 @@ function ShowHelp({
           </div>
         );
       })}
+
+      <h4>
+        Whatever <code>alasql</code> does
+      </h4>
+      <p>
+        The SQL parser is based on{" "}
+        <a
+          href="https://github.com/agershun/alasql/wiki"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          AlaSQL
+        </a>
+        . See its documentation for how to make queries. For example{" "}
+        <a
+          href="https://github.com/agershun/alasql/wiki/Data-manipulation"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Data manipulation Q&amp;A
+        </a>{" "}
+        and{" "}
+        <a
+          href="https://github.com/agershun/alasql/wiki/JSON"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Search in JSON arrays and objects
+        </a>
+      </p>
     </div>
   );
 }
@@ -142,13 +209,18 @@ function ShowHelp({
 function ShowPastQueries({
   queries,
   loadQuery,
+  resetPastQueries,
 }: {
   queries: any[];
   loadQuery: (s: string) => void;
+  resetPastQueries: () => void;
 }) {
   return (
-    <div className="help">
-      <p>Past queries</p>
+    <div className="past-queries">
+      <h3>Past queries</h3>
+      <button type="button" onClick={() => resetPastQueries()}>
+        Clear past queries
+      </button>
       <table>
         <thead>
           <tr>
@@ -166,7 +238,12 @@ function ShowPastQueries({
                 <code>{query.query}</code>
               </td>
               <td>
-                <button type="button" onClick={() => loadQuery(query.query)}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    loadQuery(query.query);
+                  }}
+                >
                   Load again
                 </button>
               </td>
@@ -178,20 +255,49 @@ function ShowPastQueries({
   );
 }
 
-function Table({ rows }: { rows: any[] }) {
+const Results = React.memo(({ rows }: { rows: any[] }) => {
+  function triggerJSONDownload() {
+    const blob = new Blob([JSON.stringify(rows, undefined, 2)], {
+      type: "application/json",
+    });
+    // create hidden link, just force a click on it and then remove it from the DOM.
+    const element = document.createElement("a");
+    document.body.appendChild(element);
+    element.setAttribute("href", window.URL.createObjectURL(blob));
+    element.setAttribute("download", "results.json");
+    element.style.display = "none";
+    element.click();
+    document.body.removeChild(element);
+  }
+
   if (!rows.length) {
     return (
-      <p>
+      <p className="no-results">
         <i>Nothing found.</i>
       </p>
     );
   }
+
   const keys = Object.keys(rows[0]);
 
+  const MAX_ROWS = 1000;
+
   return (
-    <div>
-      <hr />
-      <p>{rows.length.toLocaleString()} results.</p>
+    <div className="results">
+      <p>
+        <span className="results-count">
+          <b>{rows.length.toLocaleString()}</b> results.
+        </span>{" "}
+        <button
+          type="button"
+          title="Click to start downloading as a .json file"
+          onClick={() => {
+            triggerJSONDownload();
+          }}
+        >
+          Download as JSON
+        </button>
+      </p>
       <table>
         <thead>
           <tr>
@@ -202,16 +308,17 @@ function Table({ rows }: { rows: any[] }) {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, i) => {
+          {rows.slice(0, MAX_ROWS).map((row, i) => {
             const key = row.mdn_url || `${row[keys[0]]}:${i}`;
             return (
               <tr key={key}>
                 <td>{i + 1}</td>
                 {keys.map((key) => {
                   const value = row[key];
+
                   return (
                     <td key={key}>
-                      {key === "mdn_url" ? (
+                      {key === "mdn_url" && value ? (
                         <Link to={value} target="_blank">
                           {value}
                         </Link>
@@ -230,9 +337,17 @@ function Table({ rows }: { rows: any[] }) {
           })}
         </tbody>
       </table>
+      {rows.length > MAX_ROWS && (
+        <div className="too-many-to-display">
+          <p>
+            Only displaying the first {MAX_ROWS.toLocaleString()} rows in the
+            table.
+          </p>
+        </div>
+      )}
     </div>
   );
-}
+});
 
 /**
  * From https://usehooks.com/useLocalStorage/

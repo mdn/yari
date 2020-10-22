@@ -50,7 +50,16 @@ export default function AllTraits() {
     <div id="all-traits">
       <h1>All Documents Traits</h1>
       {data && (
-        <p>Data loaded ({data.metadata.count.toLocaleString()} documents)</p>
+        <p>
+          {data.metadata.count.toLocaleString()} documents loaded.{" "}
+          {startLoadingTime && endLoadingTime && (
+            <Took
+              milliseconds={
+                endLoadingTime.getTime() - startLoadingTime.getTime()
+              }
+            />
+          )}
+        </p>
       )}
       {data && <DisplayData data={data} />}
       {error && (
@@ -58,11 +67,7 @@ export default function AllTraits() {
           Error loading data: <code>{error.toString()}</code>
         </p>
       )}
-      {startLoadingTime && endLoadingTime && (
-        <Took
-          milliseconds={endLoadingTime.getTime() - startLoadingTime.getTime()}
-        />
-      )}
+
       {!data && !error && startLoadingTime ? (
         <Loading startLoadingTime={startLoadingTime} />
       ) : null}
@@ -72,11 +77,7 @@ export default function AllTraits() {
 
 function Took({ milliseconds }: { milliseconds: number }) {
   const seconds = milliseconds / 1000;
-  return (
-    <p>
-      <small>Took {seconds.toFixed(1)} seconds to load.</small>
-    </p>
-  );
+  return <small>Took {seconds.toFixed(1)} seconds to load.</small>;
 }
 
 function Loading({ startLoadingTime }: { startLoadingTime: Date }) {
