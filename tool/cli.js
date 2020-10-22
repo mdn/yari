@@ -2,6 +2,9 @@
 const program = require("@caporal/core").default;
 const chalk = require("chalk");
 const prompts = require("prompts");
+const openEditor = require("open-editor");
+const fs = require("fs");
+const path = require("path");
 
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("@yari-internal/constants");
 const { Redirect, Document } = require("../content");
@@ -129,6 +132,35 @@ program
         const moved = Document.move(oldSlug, newSlug, locale);
         console.log(chalk.green(`Moved ${moved.length} documents.`));
       }
+    })
+  )
+
+  .command("content edit")
+  .argument("<slug>", "Slug of the document in question")
+  .argument("[locale]", "Locale", {
+    default: DEFAULT_LOCALE,
+    validator: [...VALID_LOCALES.values()],
+  })
+  .action(
+    tryOrExit(({ args }) => {
+      const { slug, locale } = args;
+      const filePath = Document.fileForSlug(slug, locale);
+      openEditor([filePath]);
+    })
+  )
+
+  .command("content create")
+  .argument("<slug>", "Slug of the document in question")
+  .argument("[locale]", "Locale", {
+    default: DEFAULT_LOCALE,
+    validator: [...VALID_LOCALES.values()],
+  })
+  .action(
+    tryOrExit(({ args }) => {
+      const { slug, locale } = args;
+      const filePath = Document.fileForSlug(slug, locale);
+      fs.mkdirSync(path.basename(filePath), { recursive: true });
+      openEditor([filePath]);
     })
   );
 

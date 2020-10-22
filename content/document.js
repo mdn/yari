@@ -358,6 +358,10 @@ function move(oldSlug, newSlug, locale, { dry = false } = {}) {
   return paris;
 }
 
+function fileForSlug(slug, locale) {
+  return getHTMLPath(getFolderPath({ slug, locale }));
+}
+
 function remove(
   slug,
   locale,
@@ -410,6 +414,7 @@ module.exports = {
   move,
   urlToFolderPath,
   getFolderPath,
+  fileForSlug,
 
   findByURL,
   findAll,
