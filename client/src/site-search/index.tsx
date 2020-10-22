@@ -8,6 +8,7 @@ const SearchResults = lazy(() => import("./search-results"));
 type Query = {
   q: string;
   locale: string[];
+  page?: string;
 };
 
 export function SiteSearch() {
@@ -15,22 +16,21 @@ export function SiteSearch() {
 
   const locale = useLocale();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [q, setQ] = useState(searchParams.get("q") || "");
+  const [q, setQ] = useState("");
 
-  const [query, setQuery] = useState<Query>({
-    q,
+  const query: Query = {
+    q: searchParams.get("q") || "",
     locale: [locale || "en-US"],
-  });
-
-  useEffect(() => {
-    setQuery((state) => {
-      return Object.assign({}, state, { q: searchParams.get("q") || "" });
-    });
-  }, [searchParams]);
+    page: searchParams.get("page") || "",
+  };
 
   useEffect(() => {
     if (query.q) {
-      document.title = `Search results for: "${query.q}"`;
+      let title = `Search: "${query.q}"`;
+      if (query.page && query.page !== "1") {
+        title += ` (page ${query.page})`;
+      }
+      document.title = title;
     } else {
       document.title = "No query, no results.";
     }
@@ -38,7 +38,16 @@ export function SiteSearch() {
 
   return (
     <div id="site-search">
-      {query.q ? <h1>Results: {query.q}</h1> : <h1>No query, no results.</h1>}
+      {query.q ? (
+        <h1>
+          Results: {query.q}{" "}
+          {query.page && query.page !== "1" && (
+            <small className="current-page">Page {query.page}</small>
+          )}
+        </h1>
+      ) : (
+        <h1>No query, no results.</h1>
+      )}
 
       <form
         action={`/${locale}/search`}

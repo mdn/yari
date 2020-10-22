@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 
 import "./search-results.scss";
@@ -55,8 +55,29 @@ export default function SearchResults({ query }: { query: URLSearchParams }) {
       </div>
     );
   }
+
   if (data) {
-    return <Results {...data} query={query} />;
+    const currentPage = data.metadata.page;
+    const pageSize = data.metadata.size;
+    const hitCount = data.metadata.total.value;
+
+    return (
+      <div>
+        <Results {...data} query={query} />
+        <Pagination
+          currentPage={currentPage}
+          hitCount={hitCount}
+          pageSize={pageSize}
+          maxPage={10}
+          onPaginate={() => {
+            const resultsElement = document.querySelector("#site-search");
+            if (resultsElement) {
+              resultsElement.scrollIntoView({ behavior: "smooth" });
+            }
+          }}
+        />
+      </div>
+    );
   }
   // else...
   return (
@@ -175,7 +196,7 @@ function FadeIn(props: FadeInProps) {
     return () => clearInterval(interval);
   });
 
-  const transitionDuration = 300;
+  const transitionDuration = 250;
   return (
     <div>
       {React.Children.map(props.children, (child, i) => {
@@ -193,4 +214,75 @@ function FadeIn(props: FadeInProps) {
       })}
     </div>
   );
+}
+
+function Pagination({
+  currentPage,
+  maxPage,
+  hitCount,
+  pageSize,
+  onPaginate,
+}: {
+  currentPage: number;
+  maxPage: number;
+  hitCount: number;
+  pageSize: number;
+  onPaginate: () => void;
+}) {
+  const [searchParams] = useSearchParams();
+
+  if (!hitCount) {
+    return null;
+  }
+  if (hitCount <= pageSize) {
+    return null;
+  }
+  let previousPage: number | null = null;
+  let nextPage: number | null = null;
+  if (hitCount > currentPage * pageSize && currentPage < maxPage) {
+    nextPage = currentPage + 1;
+  }
+  if (currentPage > 1) {
+    previousPage = currentPage - 1;
+  }
+
+  function makeNewQuery(page: number) {
+    const sp = new URLSearchParams(searchParams);
+    if (page === 1) {
+      sp.delete("page");
+    } else {
+      sp.set("page", `${page}`);
+    }
+    return sp.toString();
+  }
+
+  if (nextPage || previousPage !== null) {
+    return (
+      <div className="pagination">
+        {previousPage ? (
+          <Link
+            to={`?${makeNewQuery(previousPage)}`}
+            className="button"
+            onClick={(event) => {
+              onPaginate();
+            }}
+          >
+            Previous
+          </Link>
+        ) : null}{" "}
+        {nextPage ? (
+          <Link
+            to={`?${makeNewQuery(nextPage)}`}
+            className="button"
+            onClick={(event) => {
+              onPaginate();
+            }}
+          >
+            Next
+          </Link>
+        ) : null}
+      </div>
+    );
+  }
+  return null;
 }

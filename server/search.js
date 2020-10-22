@@ -89,7 +89,7 @@ function makeParams({ q, locale, include, size, page }) {
 
   return {
     size,
-    page: 1,
+    page,
     query,
     locales,
     includeArchive: includes.includes("archived"), // funky
@@ -170,6 +170,7 @@ async function search(
       query,
       suggest,
       size: params.size,
+      from: params.page - 1,
       sort: ["_score", { popularity: { order: "desc" } }],
     },
   });
