@@ -123,7 +123,7 @@ function Banner(props: BannerProps) {
         <p className="mdn-cta-button-container">
           <a
             href={props.url}
-            className="mdn-cta-button"
+            className="button light"
             target={props.newWindow ? "_blank" : undefined}
             rel={props.newWindow ? "noopener noreferrer" : undefined}
             onClick={props.onCTAClick}

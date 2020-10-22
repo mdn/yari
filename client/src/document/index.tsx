@@ -149,11 +149,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
           </article>
         </main>
 
-        {doc.sidebarHTML && (
-          <div id="sidebar-quicklinks" className="sidebar">
-            <RenderSideBar doc={doc} />
-          </div>
-        )}
+        {doc.sidebarHTML && <RenderSideBar doc={doc} />}
       </div>
     </>
   );

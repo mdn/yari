@@ -9,8 +9,30 @@ export default {
   title: "Atoms/Buttons",
 };
 
-export const primaryButton = () => <Button>Primary button</Button>;
+const dark = {
+  backgroundColor: "#212121",
+  padding: "24px",
+};
+
+export const primary = () => <Button>Primary button</Button>;
 export const outline = () => <Button state="outline">Primary button</Button>;
+
+export const minimal = () => <Button state="minimal">Minimal button</Button>;
+export const minimalOutline = () => (
+  <Button state="minimal outline">Minimal button</Button>
+);
+
+export const light = () => (
+  <div style={dark}>
+    <Button state="light">Minimal button</Button>
+  </div>
+);
+
+export const lightOutline = () => (
+  <div style={dark}>
+    <Button state="light outline">Minimal button</Button>
+  </div>
+);
 
 export const postive = () => <Button state="positive">Subscribe</Button>;
 export const positiveOutline = () => (

@@ -2,6 +2,8 @@
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
+@import "~@mdn/minimalist/sass/mixins/buttons";
+
 .mdn-cta-container {
   display: none;
 
@@ -31,20 +33,14 @@
       margin: 12px 0;
     }
 
-    .mdn-cta-button,
-    .mdn-cta-button:link,
-    .mdn-cta-button:visited {
-      background-color: #fff;
-      border: 2px solid $primary-100;
-      border-radius: 3px;
-      color: $primary-100;
-      display: inline-block;
-      font-weight: bold;
-      height: 45px;
-      line-height: 1;
-      max-width: 185px;
-      padding: 12px;
-      width: 70%;
+    .button {
+      @include bordered($border-color: $neutral-100);
+
+      &:hover,
+      &:focus,
+      &:active {
+        @include bordered($border-color: $neutral-100);
+      }
     }
 
     .mdn-cta-close {
