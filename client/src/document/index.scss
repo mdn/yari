@@ -34,15 +34,30 @@
     }
   }
 
-  h2,
-  h3 {
-    a {
+  h2 {
+    margin-bottom: ($base-unit * 6);
+
+    a:link,
+    a:visited {
       color: $neutral-100;
+    }
+
+    a:active {
+      background-color: transparent;
+      color: $link-color;
     }
   }
 
-  h2 {
-    margin-bottom: ($base-unit * 6);
+  h3 {
+    a:link,
+    a:visited {
+      color: $neutral-600;
+    }
+
+    a:active {
+      background-color: transparent;
+      color: $neutral-600;
+    }
   }
 
   pre {
@@ -53,5 +68,23 @@
     overflow: auto;
     padding: $base-spacing;
     width: 100%;
+  }
+
+  /* top navigational elements on tutorial pages */
+  .prev-next {
+    @media #{$mq-tablet-and-up} {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: $base-spacing;
+    }
+
+    a.button {
+      margin-bottom: ($base-spacing / 2);
+      max-width: inherit;
+
+      @media #{$mq-tablet-and-up} {
+        margin-bottom: inherit;
+      }
+    }
   }
 }
