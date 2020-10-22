@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-function makeParams({ q, locale, include, size, page }) {
+function makeParams({ q, locale, include, size, page, sort }) {
   const VALID_INCLUDE_VALUES = ["archived", "translated"];
   const DEFAULT_SIZE = 10;
   const query = q.trim();
@@ -87,11 +87,19 @@ function makeParams({ q, locale, include, size, page }) {
     page = 1;
   }
 
+  if (sort) {
+    // if it's supplied, check it
+    if (!["popularity", "relevance", "best"].includes(sort)) {
+      throw new Error(`invalid 'size' value (${size})`);
+    }
+  }
+
   return {
     size,
     page,
     query,
     locales,
+    sort,
     includeArchive: includes.includes("archived"), // funky
   };
 }
@@ -118,11 +126,11 @@ async function search(
 ) {
   const matchQuery = {
     multi_match: {
-      fields: ["title^10", "body"],
+      fields: ["title^20", "body"],
       query: params.query,
     },
   };
-  const query = {};
+  let query = {};
   if (params.locales.length || params.includeArchive) {
     const filter = [];
     if (params.locales.length) {
@@ -151,6 +159,31 @@ async function search(
     };
   }
 
+  const sort = [];
+  if (params.sort === "relevance") {
+    // Sort by 1) score and 2) popularity
+    sort.push("_score");
+    sort.push({ popularity: { order: "desc" } });
+  } else if (params.sort === "popularity") {
+    // Sort by 1) popularity and 2) score
+    sort.push({ popularity: { order: "desc" } });
+    sort.push("_score");
+  } else {
+    // Combination of popularity AND score
+    // See https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-function-score-query.html
+    query = {
+      function_score: {
+        field_value_factor: {
+          field: "popularity",
+          factor: 10.0,
+          missing: 0.0,
+        },
+        boost_mode: "sum",
+        query: query,
+      },
+    };
+  }
+
   // console.log("QUERY:");
   // console.log(JSON.stringify(query, undefined, 3));
 
@@ -171,7 +204,7 @@ async function search(
       suggest,
       size: params.size,
       from: params.page - 1,
-      sort: ["_score", { popularity: { order: "desc" } }],
+      sort,
     },
   });
   // console.log(result);

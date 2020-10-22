@@ -9,6 +9,7 @@ type Query = {
   q: string;
   locale: string[];
   page?: string;
+  sort?: string;
 };
 
 export function SiteSearch() {
@@ -16,12 +17,13 @@ export function SiteSearch() {
 
   const locale = useLocale();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(searchParams.get("q") || "");
 
   const query: Query = {
     q: searchParams.get("q") || "",
     locale: [locale || "en-US"],
     page: searchParams.get("page") || "",
+    sort: searchParams.get("sort") || "",
   };
 
   useEffect(() => {
