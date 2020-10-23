@@ -362,6 +362,30 @@ function fileForSlug(slug, locale) {
   return getHTMLPath(getFolderPath({ slug, locale }));
 }
 
+function exists(slug, locale) {
+  return Boolean(read(buildPath(locale.toLowerCase(), slug)));
+}
+
+function parentSlug(slug) {
+  return slug.split("/").slice(0, -1).join("/");
+}
+
+function validate(slug, locale) {
+  const errors = [];
+  const file = buildPath(locale.toLowerCase(), slug);
+
+  const doc = read(file);
+
+  if (doc.metadata.slug.toLowerCase() !== slug.toLowerCase()) {
+    errors.push("slug mismatch");
+  }
+  // Add more validations here.
+
+  if (errors.length > 0) {
+    throw new Error(errors.join(", "));
+  }
+}
+
 function remove(
   slug,
   locale,
@@ -410,11 +434,15 @@ module.exports = {
   archive,
   read,
   update,
+  exists,
   remove,
   move,
+  validate,
+
   urlToFolderPath,
   getFolderPath,
   fileForSlug,
+  parentSlug,
 
   findByURL,
   findAll,

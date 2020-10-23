@@ -3,11 +3,12 @@ const program = require("@caporal/core").default;
 const chalk = require("chalk");
 const prompts = require("prompts");
 const openEditor = require("open-editor");
+const open = require("open");
 const fs = require("fs");
 const path = require("path");
 
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("@yari-internal/constants");
-const { Redirect, Document } = require("../content");
+const { Redirect, Document, buildURL } = require("../content");
 
 function tryOrExit(f) {
   return async (...args) => {
@@ -22,6 +23,7 @@ function tryOrExit(f) {
 
 program
   .version("0.0.0")
+  .disableGlobalOption("--silent")
   .command("redirect validate", "Check the _redirects.txt file(s)")
   .action(
     tryOrExit(({ logger }) => {
@@ -154,6 +156,9 @@ program
   .action(
     tryOrExit(({ args }) => {
       const { slug, locale } = args;
+      if (!Document.exists(slug, locale)) {
+        throw new Error(`${slug} does not exists for ${locale}`);
+      }
       const filePath = Document.fileForSlug(slug, locale);
       openEditor([filePath]);
     })
@@ -168,9 +173,44 @@ program
   .action(
     tryOrExit(({ args }) => {
       const { slug, locale } = args;
+      const parentSlug = Document.parentSlug(slug);
+      if (!Document.exists(parentSlug, locale)) {
+        throw new Error(`Parent ${parentSlug} does not exists for ${locale}`);
+      }
+      if (Document.exists(slug, locale)) {
+        throw new Error(`${slug} already exists for ${locale}`);
+      }
       const filePath = Document.fileForSlug(slug, locale);
       fs.mkdirSync(path.basename(filePath), { recursive: true });
       openEditor([filePath]);
+    })
+  )
+
+  .command("content validate")
+  .argument("<slug>", "Slug of the document in question")
+  .argument("[locale]", "Locale", {
+    default: DEFAULT_LOCALE,
+    validator: [...VALID_LOCALES.values()],
+  })
+  .action(
+    tryOrExit(async ({ args }) => {
+      const { slug, locale } = args;
+      Document.validate(slug, locale);
+      console.log(chalk.green("✓ All seems fine"));
+    })
+  )
+
+  .command("content preview")
+  .argument("<slug>", "Slug of the document in question")
+  .argument("[locale]", "Locale", {
+    default: DEFAULT_LOCALE,
+    validator: [...VALID_LOCALES.values()],
+  })
+  .action(
+    tryOrExit(async ({ args }) => {
+      const { slug, locale } = args;
+      const url = `http://localhost:5000${buildURL(locale, slug)}`;
+      await open(url);
     })
   );
 

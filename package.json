@@ -64,6 +64,7 @@
     "js-yaml": "3.14.0",
     "jsesc": "3.0.1",
     "mdn-data": "2.0.12",
+    "open": "^7.3.0",
     "open-editor": "2.0.1",
     "prismjs": "1.22.0",
     "prompts": "^2.3.2",
