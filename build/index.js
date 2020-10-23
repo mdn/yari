@@ -45,11 +45,15 @@ function getCurrentGitBranch(root) {
         // in a topic branch. Then figure this out using a child-process.
         // Note, if you're in detached head, (e.g. "d6a6c3f17") instead of a named
         // branch, this will fail. But that's why we rely on a default.
-        const output = execGit(["branch", "--show-current"], {
-          cwd: root,
-        });
-        if (output) {
-          name = output;
+        try {
+          const output = execGit(["branch", "--show-current"], {
+            cwd: root,
+          });
+          if (output) {
+            name = output;
+          }
+        } catch (e) {
+          /* allowed to fail for non git content root */
         }
       }
     }
