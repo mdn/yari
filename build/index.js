@@ -38,8 +38,8 @@ function getCurrentGitBranch(root) {
     // Only bother getting fancy if the root is CONTENT_ROOT.
     // For other possible roots, just leave it to the default.
     if (root === CONTENT_ROOT) {
-      if (process.env.GITHUB_REF_NAME_SLUG) {
-        name = process.env.GITHUB_REF_NAME_SLUG;
+      if (process.env.GITHUB_REF) {
+        name = process.env.GITHUB_REF.split("/").slice(2).join("/");
       } else {
         // Most probably, you're hacking on the content, using Yari to preview,
         // in a topic branch. Then figure this out using a child-process.
