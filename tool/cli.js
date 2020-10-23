@@ -92,7 +92,12 @@ program
       }
       const { run } = yes
         ? true
-        : await prompts({ type: "confirm", message: "Proceed?", name: "run" });
+        : await prompts({
+            type: "confirm",
+            message: "Proceed?",
+            name: "run",
+            initial: true,
+          });
       if (run) {
         const removed = Document.remove(slug, locale, { recursive, redirect });
         console.log(chalk.green(`Moved ${removed.length} documents.`));
@@ -127,7 +132,12 @@ program
       );
       const { run } = yes
         ? true
-        : await prompts({ type: "confirm", message: "Proceed?", name: "run" });
+        : await prompts({
+            type: "confirm",
+            message: "Proceed?",
+            name: "run",
+            initial: true,
+          });
       if (run) {
         const moved = Document.move(oldSlug, newSlug, locale);
         console.log(chalk.green(`Moved ${moved.length} documents.`));
