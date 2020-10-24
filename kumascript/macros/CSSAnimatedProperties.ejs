@@ -13,7 +13,7 @@ var animatedProps = [];
 // the animatedProps array.
 for (var property in data.properties) {
     if (data.properties.hasOwnProperty(property)) {
-        if (data.properties[property].animationType !== "discrete") {
+        if (data.properties[property].animationType !== "discrete" && data.properties[property].animationType !== "notAnimatable") {
             animatedProps.push(property);
         }
     }
