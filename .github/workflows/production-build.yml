@@ -179,7 +179,7 @@ jobs:
 
           cd deployer
 
-          poetry run deployer whatsdeployed --output ../client/build/whatsdeployed/code.json
+          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/code.json
           poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/content.json $CONTENT_ROOT
 
           export DEPLOYER_BUCKET_NAME=mdn-content-dev
