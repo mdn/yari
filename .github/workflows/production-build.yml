@@ -156,8 +156,6 @@ jobs:
 
       - name: Dump Whatsdeployed files
         run: |
-          # Set the CONTENT_ROOT first
-          export CONTENT_ROOT=$(pwd)/mdn/content/files
           poetry run deployer whatsdeployed --output client/build/_whatsdeployed-code.json
           poetry run deployer whatsdeployed --output client/build/_whatsdeployed-content.json $(pwd)/mdn/content/
 
