@@ -12,6 +12,7 @@ from .constants import (
 )
 from .update_lambda_functions import update_all
 from .upload import upload_content
+from .whatsdeployed import dump as dump_whatsdeployed
 from .utils import log
 
 
@@ -54,6 +55,25 @@ def cli(ctx, **kwargs):
 def update_lambda_functions(ctx, directory):
     log.info(f"Deployer ({__version__})", bold=True)
     update_all(directory, dry_run=ctx.obj["dry_run"])
+
+
+@cli.command(
+    help="Create a whatsdeployed.json file "
+    "by asking git what the current HEAD sha is and what branch you're on."
+)
+@click.option(
+    "--output",
+    type=click.Path(),
+    help="Name of JSON file to create",
+    default="whatsdeployed.json",
+)
+@click.argument(
+    "directory", type=click.Path(), callback=validate_directory, default=".",
+)
+@click.pass_context
+def whatsdeployed(ctx, directory: Path, output: Path):
+    # TODO: `ctx.obj["dry_run"]` can't actually be set. Figure out why.
+    dump_whatsdeployed(directory, output, dry_run=ctx.obj["dry_run"])
 
 
 @cli.command()

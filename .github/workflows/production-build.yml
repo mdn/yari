@@ -154,6 +154,13 @@ jobs:
           # would upload the whole content of client/build
           du -sh client/build
 
+      - name: Dump Whatsdeployed files
+        run: |
+          # Set the CONTENT_ROOT first
+          export CONTENT_ROOT=$(pwd)/mdn/content/files
+          poetry run deployer whatsdeployed --output client/build/_whatsdeployed-code.json
+          poetry run deployer whatsdeployed --output client/build/_whatsdeployed-content.json $(pwd)/mdn/content/
+
       - name: Deploy with deployer
         run: |
           # Set the CONTENT_ROOT first
