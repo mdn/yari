@@ -154,6 +154,15 @@ jobs:
           # would upload the whole content of client/build
           du -sh client/build
 
+          # The root index.html file is never useful. It's not the "home page"
+          # because the home page is actually `/$locale/` since `/` is handled
+          # specifically by the CDN.
+          # The client/build/index.html is actually just a template from
+          # create-react-app, used to server-side render all the other pages.
+          # But we don't want to upload it S3. So, delete it before doing the
+          # deployment step.
+          rm client/build/index.html
+
       - name: Deploy with deployer
         run: |
           # Set the CONTENT_ROOT first
