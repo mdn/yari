@@ -101,14 +101,14 @@ const expectedMethods = {
         "The MyTestMethod1 property of the TestInterface interface is experimental.",
     },
     {
-      badges: ["deprecated", "nonStandard"],
+      badges: ["deprecated", "non-standard"],
       text: "MyTestMethod2",
       target: "/en-US/docs/Web/API/TestInterface/TestMethod2",
       title:
         "The MyTestMethod2 property of the TestInterface interface is deprecated and non-standard.",
     },
     {
-      badges: ["experimental", "deprecated", "nonStandard", "obsolete"],
+      badges: ["experimental", "deprecated", "non-standard", "obsolete"],
       text: "MyTestMethod3",
       target: "/en-US/docs/Web/API/TestInterface/TestMethod3",
       title:
@@ -124,14 +124,14 @@ const expectedMethods = {
         "The MyTestMethod1 property of the TestInterface interface is experimental.",
     },
     {
-      badges: ["deprecated", "nonStandard"],
+      badges: ["deprecated", "non-standard"],
       text: "MyTestMethod2 [Traduire]",
       target: "/fr/docs/Web/API/TestInterface/TestMethod2",
       title:
         "The MyTestMethod2 property of the TestInterface interface is deprecated and non-standard.",
     },
     {
-      badges: ["experimental", "deprecated", "nonStandard", "obsolete"],
+      badges: ["experimental", "deprecated", "non-standard", "obsolete"],
       text: "MyTestMethod3 [Traduire]",
       target: "/fr/docs/Web/API/TestInterface/TestMethod3",
       title:
@@ -147,14 +147,14 @@ const expectedMethods = {
         "The MyTestMethod1 property of the TestInterface interface is experimental (ja translation).",
     },
     {
-      badges: ["deprecated", "nonStandard"],
+      badges: ["deprecated", "non-standard"],
       text: "MyTestMethod2",
       target: "/ja/docs/Web/API/TestInterface/TestMethod2",
       title:
         "The MyTestMethod2 property of the TestInterface interface is deprecated and non-standard (ja translation).",
     },
     {
-      badges: ["experimental", "deprecated", "nonStandard", "obsolete"],
+      badges: ["experimental", "deprecated", "non-standard", "obsolete"],
       text: "MyTestMethod3",
       target: "/ja/docs/Web/API/TestInterface/TestMethod3",
       title:
@@ -173,7 +173,7 @@ const expectedEvents = {
         "The MyTestEvent1 event of the TestInterface interface has no badges.",
     },
     {
-      badges: ["deprecated", "nonStandard"],
+      badges: ["deprecated", "non-standard"],
       text: "TestEvent2",
       target: "/en-US/docs/Web/API/TestInterface/TestEvent2",
       title:
@@ -196,7 +196,7 @@ const expectedEvents = {
         "The MyTestEvent1 event of the TestInterface interface has no badges.",
     },
     {
-      badges: ["deprecated", "nonStandard"],
+      badges: ["deprecated", "non-standard"],
       text: "TestEvent2 [Traduire]",
       target: "/fr/docs/Web/API/TestInterface/TestEvent2",
       title:
@@ -219,7 +219,7 @@ const expectedEvents = {
         "The MyTestEvent1 event of the TestInterface interface has no badges (ja translation).",
     },
     {
-      badges: ["deprecated", "nonStandard"],
+      badges: ["deprecated", "non-standard"],
       text: "TestEvent2",
       target: "/ja/docs/Web/API/TestInterface/TestEvent2",
       title:
