@@ -8,8 +8,10 @@ from .utils import log
 
 
 def dump(directory: Path, output: Path, dry_run=False):
+    command = "git log -n 1 --pretty=medium"
+    log.info(f"Executing {command!r} in {directory}")
     subprocess_result = subprocess.run(
-        "git log -n 1 --pretty=medium",
+        command,
         cwd=directory,
         shell=True,
         check=True,
@@ -30,6 +32,7 @@ def dump(directory: Path, output: Path, dry_run=False):
         if dry_run:
             log.info(f"Write {json.dumps(data)!r} to {output}")
         else:
+            output.parent.mkdir(parents=True, exist_ok=True)
             with open(output, "w") as f:
                 json.dump(data, f, indent=2)
             log.info(f"Wrote {json.dumps(data)!r} to {output}")

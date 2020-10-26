@@ -154,11 +154,6 @@ jobs:
           # would upload the whole content of client/build
           du -sh client/build
 
-      - name: Dump Whatsdeployed files
-        run: |
-          poetry run deployer whatsdeployed --output client/build/_whatsdeployed-code.json
-          poetry run deployer whatsdeployed --output client/build/_whatsdeployed-content.json $(pwd)/mdn/content/
-
       - name: Deploy with deployer
         run: |
           # Set the CONTENT_ROOT first
@@ -183,6 +178,10 @@ jobs:
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
 
           cd deployer
+
+          poetry run deployer whatsdeployed --output client/build/_whatsdeployed/code.json
+          poetry run deployer whatsdeployed --output client/build/_whatsdeployed/content.json $CONTENT_ROOT
+
           export DEPLOYER_BUCKET_NAME=mdn-content-dev
           export DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix }}
           export DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload }}
