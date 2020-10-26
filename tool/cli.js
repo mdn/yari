@@ -13,11 +13,14 @@ const { Redirect, Document, buildURL } = require("../content");
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
 
 function tryOrExit(f) {
-  return async (...args) => {
+  return async ({ options = {}, ...args }) => {
     try {
-      await f(...args);
+      await f({ options, ...args });
     } catch (error) {
       console.error(chalk.red(error.message));
+      if (options.verbose) {
+        console.error(chalk.red(error.stack));
+      }
       process.exit(1);
     }
   };

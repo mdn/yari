@@ -343,6 +343,9 @@ function findChildren(url) {
 function move(oldSlug, newSlug, locale, { dry = false } = {}) {
   const oldUrl = buildURL(locale, oldSlug);
   const doc = findByURL(oldUrl);
+  if (!doc) {
+    throw new Error(`document for ${oldSlug} does not exist`);
+  }
   const realOldSlug = doc.metadata.slug;
   const paris = [doc, ...findChildren(oldUrl)].map(({ metadata }) => [
     metadata.slug,
