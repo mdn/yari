@@ -10,6 +10,8 @@ const path = require("path");
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("@yari-internal/constants");
 const { Redirect, Document, buildURL } = require("../content");
 
+const PORT = parseInt(process.env.SERVER_PORT || "5000");
+
 function tryOrExit(f) {
   return async (...args) => {
     try {
@@ -69,7 +71,7 @@ program
     })
   )
 
-  .command("content delete")
+  .command("content delete", "Delete content")
   .argument("<slug>", "Slug")
   .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
@@ -107,7 +109,7 @@ program
     })
   )
 
-  .command("content move")
+  .command("content move", "Move content to a new slug")
   .argument("<oldSlug>", "Old slug")
   .argument("<newSlug>", "New slug")
   .argument("[locale]", "Locale", {
@@ -147,7 +149,7 @@ program
     })
   )
 
-  .command("content edit")
+  .command("content edit", "Spawn your EDITOR for an existing slug")
   .argument("<slug>", "Slug of the document in question")
   .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
@@ -164,7 +166,7 @@ program
     })
   )
 
-  .command("content create")
+  .command("content create", "Spawn your Editor for a new slug")
   .argument("<slug>", "Slug of the document in question")
   .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
@@ -186,7 +188,7 @@ program
     })
   )
 
-  .command("content validate")
+  .command("content validate", "Validate a document")
   .argument("<slug>", "Slug of the document in question")
   .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
@@ -200,7 +202,7 @@ program
     })
   )
 
-  .command("content preview")
+  .command("content preview", "Open a preview of a slug")
   .argument("<slug>", "Slug of the document in question")
   .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
@@ -209,7 +211,7 @@ program
   .action(
     tryOrExit(async ({ args }) => {
       const { slug, locale } = args;
-      const url = `http://localhost:5000${buildURL(locale, slug)}`;
+      const url = `http://localhost:${PORT}${buildURL(locale, slug)}`;
       await open(url);
     })
   );
