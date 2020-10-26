@@ -3,12 +3,13 @@ const path = require("path");
 
 const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
 const { CONTENT_ROOT, VALID_LOCALES } = require("./constants");
-const Document = require("./document");
 
 // Throw if this can't be a redirect from-URL.
 function validateFromURL(url) {
+  // This is a circular dependency we should solve that in another way.
+  const { findByURL } = require("./document");
   validateURLLocale(url);
-  const document = Document.findByURL(url);
+  const document = findByURL(url);
   if (document) {
     throw new Error(
       `From-URL resolves to a file on disk (${document.fileInfo.path})`
