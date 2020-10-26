@@ -106,7 +106,7 @@
     "react-router-dom": "6.0.0-beta.0",
     "react-scripts": "3.4.4",
     "rough-notation": "0.4.0",
-    "ts-loader": "^8.0.6",
+    "ts-loader": "^8.0.7",
     "typescript": "^3.9.7",
     "vnu-jar": "^20.6.30"
   },
