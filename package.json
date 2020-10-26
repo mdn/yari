@@ -81,7 +81,7 @@
   "devDependencies": {
     "@babel/core": "^7.11.1",
     "@mdn/dinocons": "^0.1.1",
-    "@mdn/minimalist": "^0.1.42",
+    "@mdn/minimalist": "^0.1.46",
     "@storybook/addon-a11y": "^6.0.26",
     "@storybook/addon-actions": "^6.0.26",
     "@storybook/addon-essentials": "^6.0.26",
