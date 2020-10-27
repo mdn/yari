@@ -27,3 +27,8 @@ export interface Data {
   metadata: Metadata;
   allMacros: MacroInfo[];
 }
+
+export interface PastQuery {
+  query: string;
+  results: number;
+}

@@ -8,7 +8,7 @@ import "prismjs/components/prism-sql";
 // import alasql from "alasql";
 import alasql from "../../../node_modules/alasql/dist/alasql.min.js";
 
-import { Document } from "./types";
+import { Document, PastQuery } from "./types";
 import "./sql-table.scss";
 
 const DEFAULT_QUERY = "SELECT title FROM ? ORDER BY popularity DESC LIMIT 10";
@@ -31,7 +31,10 @@ LIMIT 25`);
 export function SQLTable({ documents }: { documents: Document[] }) {
   const [query, setQuery] = useState("");
   const [queryDraft, setQueryDraft] = useSessionStorage("query", DEFAULT_QUERY);
-  const [pastQueries, setPastQueries] = useLocalStorage("past-queries", []);
+  const [pastQueries, setPastQueries] = useLocalStorage<PastQuery[]>(
+    "past-queries",
+    []
+  );
   const [result, setResult] = useState<any[] | null>(null);
   const [queryError, setQueryError] = useState<Error | null>(null);
   const [showHelp, toggleShowHelp] = useState(false);
@@ -45,7 +48,7 @@ export function SQLTable({ documents }: { documents: Document[] }) {
       try {
         const res = alasql(query, [documents]);
         setResult(res);
-        setPastQueries((state) =>
+        setPastQueries((state: PastQuery[]) =>
           [
             { query, results: res.length },
             ...state.filter((q) => q.query !== query),
@@ -206,7 +209,11 @@ function ShowHelp({
       <h4>Sample queries</h4>
       <div>
         <pre>
-          <code>{DEFAULT_QUERY}</code>
+          <code
+            dangerouslySetInnerHTML={{
+              __html: highlight(DEFAULT_QUERY, languages.sql),
+            }}
+          ></code>
         </pre>
         <button type="button" onClick={() => loadQuery(DEFAULT_QUERY)}>
           Load
@@ -216,7 +223,11 @@ function ShowHelp({
         return (
           <div key={query}>
             <pre>
-              <code>{query}</code>
+              <code
+                dangerouslySetInnerHTML={{
+                  __html: highlight(query, languages.sql),
+                }}
+              ></code>
             </pre>
             <button type="button" onClick={() => loadQuery(query)}>
               Load
@@ -287,7 +298,13 @@ function ShowPastQueries({
               <td>{query.results.toLocaleString()}</td>
 
               <td>
-                <code>{query.query}</code>
+                <pre>
+                  <code
+                    dangerouslySetInnerHTML={{
+                      __html: highlight(query.query, languages.sql),
+                    }}
+                  ></code>
+                </pre>
               </td>
               <td>
                 <button
@@ -401,32 +418,70 @@ const Results = React.memo(({ rows }: { rows: any[] }) => {
   );
 });
 
-/**
- * From https://usehooks.com/useLocalStorage/
- */
-function useLocalStorage(
+// /**
+//  * From https://usehooks.com/useLocalStorage/
+//  */
+// function useLocalStorage(
+//   key: string,
+//   initialValue,
+//   storage = window.localStorage
+// ) {
+//   // State to store our value
+//   // Pass initial state function to useState so logic is only executed once
+//   const [storedValue, setStoredValue] = useState(() => {
+//     try {
+//       // Get from local storage by key
+//       const item = storage.getItem(key);
+//       // Parse stored json or if none return initialValue
+//       return item ? JSON.parse(item) : initialValue;
+//     } catch (error) {
+//       // If error also return initialValue
+//       console.log(error);
+//       return initialValue;
+//     }
+//   });
+
+//   // Return a wrapped version of useState's setter function that ...
+//   // ... persists the new value to localStorage.
+//   const setValue = (value) => {
+//     try {
+//       // Allow value to be a function so we have same API as useState
+//       const valueToStore =
+//         value instanceof Function ? value(storedValue) : value;
+//       // Save state
+//       setStoredValue(valueToStore);
+//       // Save to local storage
+//       storage.setItem(key, JSON.stringify(valueToStore));
+//     } catch (error) {
+//       // A more advanced implementation would handle the error case
+//       console.log(error);
+//     }
+//   };
+//   return [storedValue, setValue];
+// }
+
+// https://usehooks-typescript.com/use-local-storage/
+function useLocalStorage<T>(
   key: string,
-  initialValue,
+  initialValue: T,
   storage = window.localStorage
 ) {
   // State to store our value
   // Pass initial state function to useState so logic is only executed once
   const [storedValue, setStoredValue] = useState(() => {
+    // Get from local storage then
+    // parse stored json or return initialValue
     try {
-      // Get from local storage by key
       const item = storage.getItem(key);
-      // Parse stored json or if none return initialValue
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
-      // If error also return initialValue
       console.log(error);
       return initialValue;
     }
   });
-
   // Return a wrapped version of useState's setter function that ...
   // ... persists the new value to localStorage.
-  const setValue = (value) => {
+  const setValue = (value: T) => {
     try {
       // Allow value to be a function so we have same API as useState
       const valueToStore =
@@ -436,10 +491,10 @@ function useLocalStorage(
       // Save to local storage
       storage.setItem(key, JSON.stringify(valueToStore));
     } catch (error) {
-      // A more advanced implementation would handle the error case
       console.log(error);
     }
   };
+
   return [storedValue, setValue];
 }
 
