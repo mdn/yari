@@ -22,7 +22,6 @@
     "start:dev-server": "nodemon server --watch server --watch build --watch content --watch kumascript",
     "start:static-server": "cross-env ENV_FILE=testing/.env node server/static.js",
     "filecheck": "cd filecheck && node cli.js",
-    "redirects": "node tool/cli.js redirect",
     "tool": "node tool/cli.js"
   },
   "engines": {
