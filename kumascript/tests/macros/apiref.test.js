@@ -94,27 +94,22 @@ const expectedProperties = {
 const expectedMethods = {
   "en-US": [
     {
-      badges: ["icon-beaker"],
-      text: " MyTestMethod1",
+      badges: ["experimental"],
+      text: "MyTestMethod1",
       target: "/en-US/docs/Web/API/TestInterface/TestMethod1",
       title:
         "The MyTestMethod1 property of the TestInterface interface is experimental.",
     },
     {
-      badges: ["icon-thumbs-down-alt", "icon-warning-sign"],
-      text: "  MyTestMethod2",
+      badges: ["deprecated", "non-standard"],
+      text: "MyTestMethod2",
       target: "/en-US/docs/Web/API/TestInterface/TestMethod2",
       title:
         "The MyTestMethod2 property of the TestInterface interface is deprecated and non-standard.",
     },
     {
-      badges: [
-        "icon-beaker",
-        "icon-thumbs-down-alt",
-        "icon-warning-sign",
-        "icon-trash",
-      ],
-      text: "    MyTestMethod3",
+      badges: ["experimental", "deprecated", "non-standard", "obsolete"],
+      text: "MyTestMethod3",
       target: "/en-US/docs/Web/API/TestInterface/TestMethod3",
       title:
         "The MyTestMethod3 property of the TestInterface interface has all the badges.",
@@ -122,27 +117,22 @@ const expectedMethods = {
   ],
   fr: [
     {
-      badges: ["icon-beaker"],
-      text: " MyTestMethod1 [Traduire]",
+      badges: ["experimental"],
+      text: "MyTestMethod1 [Traduire]",
       target: "/fr/docs/Web/API/TestInterface/TestMethod1",
       title:
         "The MyTestMethod1 property of the TestInterface interface is experimental.",
     },
     {
-      badges: ["icon-thumbs-down-alt", "icon-warning-sign"],
-      text: "  MyTestMethod2 [Traduire]",
+      badges: ["deprecated", "non-standard"],
+      text: "MyTestMethod2 [Traduire]",
       target: "/fr/docs/Web/API/TestInterface/TestMethod2",
       title:
         "The MyTestMethod2 property of the TestInterface interface is deprecated and non-standard.",
     },
     {
-      badges: [
-        "icon-beaker",
-        "icon-thumbs-down-alt",
-        "icon-warning-sign",
-        "icon-trash",
-      ],
-      text: "    MyTestMethod3 [Traduire]",
+      badges: ["experimental", "deprecated", "non-standard", "obsolete"],
+      text: "MyTestMethod3 [Traduire]",
       target: "/fr/docs/Web/API/TestInterface/TestMethod3",
       title:
         "The MyTestMethod3 property of the TestInterface interface has all the badges.",
@@ -150,27 +140,22 @@ const expectedMethods = {
   ],
   ja: [
     {
-      badges: ["icon-beaker"],
-      text: " MyTestMethod1",
+      badges: ["experimental"],
+      text: "MyTestMethod1",
       target: "/ja/docs/Web/API/TestInterface/TestMethod1",
       title:
         "The MyTestMethod1 property of the TestInterface interface is experimental (ja translation).",
     },
     {
-      badges: ["icon-thumbs-down-alt", "icon-warning-sign"],
-      text: "  MyTestMethod2",
+      badges: ["deprecated", "non-standard"],
+      text: "MyTestMethod2",
       target: "/ja/docs/Web/API/TestInterface/TestMethod2",
       title:
         "The MyTestMethod2 property of the TestInterface interface is deprecated and non-standard (ja translation).",
     },
     {
-      badges: [
-        "icon-beaker",
-        "icon-thumbs-down-alt",
-        "icon-warning-sign",
-        "icon-trash",
-      ],
-      text: "    MyTestMethod3",
+      badges: ["experimental", "deprecated", "non-standard", "obsolete"],
+      text: "MyTestMethod3",
       target: "/ja/docs/Web/API/TestInterface/TestMethod3",
       title:
         "The MyTestMethod3 property of the TestInterface interface has all the badges (ja translation).",
@@ -188,8 +173,8 @@ const expectedEvents = {
         "The MyTestEvent1 event of the TestInterface interface has no badges.",
     },
     {
-      badges: ["icon-thumbs-down-alt", "icon-warning-sign"],
-      text: "  TestEvent2",
+      badges: ["deprecated", "non-standard"],
+      text: "TestEvent2",
       target: "/en-US/docs/Web/API/TestInterface/TestEvent2",
       title:
         "The MyTestEvent2 event of the TestInterface interface is deprecated and non-standard.",
@@ -211,8 +196,8 @@ const expectedEvents = {
         "The MyTestEvent1 event of the TestInterface interface has no badges.",
     },
     {
-      badges: ["icon-thumbs-down-alt", "icon-warning-sign"],
-      text: "  TestEvent2 [Traduire]",
+      badges: ["deprecated", "non-standard"],
+      text: "TestEvent2 [Traduire]",
       target: "/fr/docs/Web/API/TestInterface/TestEvent2",
       title:
         "The MyTestEvent2 event of the TestInterface interface is deprecated and non-standard.",
@@ -234,8 +219,8 @@ const expectedEvents = {
         "The MyTestEvent1 event of the TestInterface interface has no badges (ja translation).",
     },
     {
-      badges: ["icon-thumbs-down-alt", "icon-warning-sign"],
-      text: "  TestEvent2",
+      badges: ["deprecated", "non-standard"],
+      text: "TestEvent2",
       target: "/ja/docs/Web/API/TestInterface/TestEvent2",
       title:
         "The MyTestEvent2 event of the TestInterface interface is deprecated and non-standard (ja translation).",
@@ -328,7 +313,7 @@ function checkInterfaceItem(actual, expected, config) {
     // If we are not on this page, the item contains a link
     // and the text contents includes a CTA if one should be present
     // (CTA is specified in the test data in the cases where it is expected)
-    expect(actual.textContent).toEqual(expected.text);
+    expect(actual.textContent).toContain(expected.text);
     const methodLink = actual.querySelector("a");
     expect(methodLink.href).toEqual(expected.target);
   } else {
@@ -336,15 +321,19 @@ function checkInterfaceItem(actual, expected, config) {
     // and the text contents omits the CTA
     const methodLink = actual.querySelector("a");
     expect(methodLink).toBeNull();
-    const methodName = actual.querySelector("i");
+    const methodName = actual.querySelector("svg");
     expect(actual.textContent).toContain(methodName.textContent);
   }
 
   // Test that the badges are what we expect
-  const badgeClasses = actual.querySelectorAll("i");
+  const badgeClasses = actual.querySelectorAll("svg");
   expect(badgeClasses.length).toEqual(expected.badges.length);
   for (let badgeClass of badgeClasses) {
-    expect(expected.badges).toContain(badgeClass.getAttribute("class"));
+    badgeClass.classList.forEach((value) => {
+      if (value !== "icon") {
+        expect(expected.badges).toContain(value);
+      }
+    });
   }
 }
 
