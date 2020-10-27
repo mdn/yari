@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import CloseIcon from "../kumastyles/general/close.svg";
+import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import { CATEGORY_MONTHLY_PAYMENTS, useGA } from "../ga-context";
 import { useLocale } from "../hooks";
 import { DEVELOPER_NEEDS_ID, SUBSCRIPTION_ID } from "./ids";
@@ -49,15 +49,13 @@ function Banner(props: BannerProps) {
     <div className={containerClassNames}>
       <div id="mdn-cta-content" className="mdn-cta-content">
         <div id={props.id} className="mdn-cta-content-container">
-          {props.title && (
-            <h2 className="mdn-cta-title slab-text">{props.title}</h2>
-          )}
+          {props.title && <h2 className="mdn-cta-title">{props.title}</h2>}
           <p className="mdn-cta-copy">{props.copy}</p>
         </div>
         <p className="mdn-cta-button-container">
           <a
             href={props.url}
-            className="mdn-cta-button"
+            className="button light"
             target={props.newWindow ? "_blank" : undefined}
             rel={props.newWindow ? "noopener noreferrer" : undefined}
             onClick={props.onCTAClick}
@@ -77,7 +75,7 @@ function Banner(props: BannerProps) {
             props.onDismissed();
           }}
         >
-          <img src={CloseIcon} alt="close" className="icon icon-close" />
+          <CloseIcon />
         </button>
       </div>
     </div>

@@ -288,25 +288,27 @@ function getNotes(browser: bcd.BrowserNames, support: bcd.SupportStatement) {
       return (
         (i === 0 || hasNotes) && (
           <React.Fragment key={i}>
-            <dt
-              className={`bc-supports-${getSupportClassName(
-                support
-              )} bc-supports`}
-            >
-              <CellText support={item} />
-              <CellIcons support={item} />
-            </dt>
-            {supportNotes.map(({ iconName, label }, i) => (
-              <dd key={i}>
-                <Icon name={iconName} />{" "}
-                {typeof label === "string" ? (
-                  <span dangerouslySetInnerHTML={{ __html: label }} />
-                ) : (
-                  label
-                )}
-              </dd>
-            ))}
-            {!hasNotes && <dd />}
+            <div className="bc-notes-wrapper">
+              <dt
+                className={`bc-supports-${getSupportClassName(
+                  support
+                )} bc-supports`}
+              >
+                <CellText support={item} />
+                <CellIcons support={item} />
+              </dt>
+              {supportNotes.map(({ iconName, label }, i) => (
+                <dd key={i}>
+                  <Icon name={iconName} />{" "}
+                  {typeof label === "string" ? (
+                    <span dangerouslySetInnerHTML={{ __html: label }} />
+                  ) : (
+                    label
+                  )}
+                </dd>
+              ))}
+              {!hasNotes && <dd />}
+            </div>
           </React.Fragment>
         )
       );
@@ -370,7 +372,9 @@ function CompatCell({
         )}
       </td>
       {showNotes && (
-        <td className="bc-history">{getNotes(browser, support!)}</td>
+        <section className="bc-history bc-history-mobile">
+          <dl>{getNotes(browser, support!)}</dl>
+        </section>
       )}
     </>
   );
@@ -435,8 +439,7 @@ export const FeatureRow = React.memo(
         </tr>
         {activeBrowser && (
           <tr className="bc-history">
-            <th scope="row" />
-            <td colSpan={browsers.length}>
+            <td colSpan={browsers.length + 1}>
               <dl>{getNotes(activeBrowser, compat.support[activeBrowser]!)}</dl>
             </td>
           </tr>

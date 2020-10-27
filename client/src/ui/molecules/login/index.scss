@@ -1,0 +1,32 @@
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/color-palette";
+
+.auth-container {
+  margin-top: $base-unit * 2;
+
+  @media #{$mq-large-desktop-and-up} {
+    margin-top: 0;
+  }
+}
+
+.avatar {
+  border-radius: 50%;
+  height: 40px;
+  /* avoid click events being sent from
+     the avatar image */
+  pointer-events: none;
+  width: 40px;
+}
+
+.avatar-username {
+  margin-left: $base-unit;
+
+  @media #{$mq-large-desktop-and-up} {
+    display: none;
+  }
+}
+
+a.signin-link {
+  color: $neutral-100;
+  font-weight: bold;
+}

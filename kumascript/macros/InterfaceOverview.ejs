@@ -146,12 +146,11 @@ if (slug) {
     // Preconstructed HTML for each type of badge
 
     var badges = {
-        ExperimentalBadge : '<span class="sidebar-icon">' + await template("ExperimentalBadge", [1]) + '</span>',
-        NonStandardBadge  : '<span class="sidebar-icon">' + await template("NonStandardBadge", [1]) + '</span>',
-        DeprecatedBadge   : '<span class="sidebar-icon">' + await template("DeprecatedBadge", [1]) + '</span>',
-        ObsoleteBadge     : '<span class="sidebar-icon">' + await template("ObsoleteBadge", [1]) + '</span>',
-        ReadOnlyBadge     : await template("ReadOnlyInline"),
-    };
+      ExperimentalBadge : await template("ExperimentalBadge"),
+      NonStandardBadge : await template("NonStandardBadge"),
+      DeprecatedBadge : await template("DeprecatedBadge"),
+      ObsoleteBadge : await template("ObsoleteBadge"),
+    }
 
     // Function to construct one section of the page, given
     // its title and an array of the pages in the section.

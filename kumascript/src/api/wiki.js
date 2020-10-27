@@ -137,7 +137,7 @@ module.exports = {
       pages.sort(alphanumBackward);
     }
 
-    return process_array(null, pages, ordered != 0, this.env.locale);
+    return process_array(null, pages, depth, ordered != 0, this.env.locale);
 
     function chunkify(t) {
       var tz = [],
@@ -190,7 +190,7 @@ module.exports = {
       return aa.length - bb.length;
     }
 
-    function process_array(folderItem, arr, ordered, locale) {
+    function process_array(folderItem, arr, depth, ordered, locale) {
       var result = "";
       var openTag = "<ul>";
       var closeTag = "</ul>";
@@ -223,13 +223,23 @@ module.exports = {
           if (ordered && item.locale != locale) {
             return;
           }
+          let subList = "";
+          if (depth > 1) {
+            subList = process_array(
+              item,
+              item.subpages || [],
+              depth - 1,
+              ordered,
+              locale
+            );
+          }
           result +=
             '<li><a href="' +
             item.url +
             '">' +
             util.htmlEscape(item.title) +
             "</a>" +
-            process_array(item, item.subpages || [], ordered, locale) +
+            subList +
             "</li>";
         });
         result += closeTag;
