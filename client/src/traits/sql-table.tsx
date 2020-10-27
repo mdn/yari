@@ -33,6 +33,9 @@ export function SQLTable({ documents }: { documents: Document[] }) {
   const [queryError, setQueryError] = useState<Error | null>(null);
   const [showHelp, toggleShowHelp] = useState(false);
   const [showPastQueries, toggleShowPastQueries] = useState(false);
+  const [showSQLParserError, toggleShowSQLParserError] = useState(false);
+
+  const [sqlParserError, setSQLParserError] = useState<Error | null>(null);
 
   useEffect(() => {
     if (query) {
@@ -45,6 +48,7 @@ export function SQLTable({ documents }: { documents: Document[] }) {
             ...state.filter((q) => q.query !== query),
           ].slice(0, 50)
         );
+        setQueryError(null);
       } catch (error) {
         setQueryError(error);
       }
@@ -52,6 +56,18 @@ export function SQLTable({ documents }: { documents: Document[] }) {
       setResult(null);
     }
   }, [query, documents]);
+
+  useEffect(() => {
+    if (queryDraft) {
+      let statement;
+      try {
+        statement = alasql.parse(queryDraft);
+        setSQLParserError(null);
+      } catch (err) {
+        setSQLParserError(err);
+      }
+    }
+  }, [queryDraft]);
 
   return (
     <div className="sql-table">
@@ -64,10 +80,16 @@ export function SQLTable({ documents }: { documents: Document[] }) {
       >
         <textarea
           value={queryDraft}
+          className={sqlParserError ? "has-sql-error" : ""}
           onChange={(event) => setQueryDraft(event.target.value)}
           rows={Math.max(5, queryDraft.split("\n").length + 1)}
           spellCheck={false}
         ></textarea>
+        {showSQLParserError && sqlParserError && (
+          <div className="sql-error">
+            <pre>{sqlParserError.toString()}</pre>
+          </div>
+        )}
         {queryError && (
           <div className="query-error">
             <h4>Query error</h4>
@@ -96,6 +118,17 @@ export function SQLTable({ documents }: { documents: Document[] }) {
           {showPastQueries
             ? "Close past queries"
             : `Show past queries (${pastQueries.length})`}
+        </button>{" "}
+        <button
+          type="button"
+          disabled={!sqlParserError}
+          onClick={() => {
+            toggleShowSQLParserError((s) => !s);
+          }}
+        >
+          {showSQLParserError
+            ? "Close error"
+            : `SQL error${sqlParserError ? "!" : ""}`}
         </button>
       </form>
       {showHelp && (

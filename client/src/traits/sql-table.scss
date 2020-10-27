@@ -5,10 +5,19 @@
     textarea {
       font-family: monospace;
       width: 99%;
+      border: 1px solid black;
+    }
+    textarea.has-sql-error {
+      border: 1px solid rgb(255, 148, 148);
+    }
+    .sql-error {
+      background-color: rgb(255, 148, 148);
+      border-radius: 2px;
+      margin-bottom: 10px;
     }
   }
   .query-error {
-    background-color: rgb(255, 125, 125);
+    background-color: rgb(255, 148, 148);
   }
   .too-many-to-display {
     background-color: rgb(232, 147, 116);
