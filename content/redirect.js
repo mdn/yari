@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
+const { resolveFundamental } = require("../libs/fundamental-redirects");
 const { CONTENT_ROOT, VALID_LOCALES } = require("./constants");
 
 // Throw if this can't be a redirect from-URL.
