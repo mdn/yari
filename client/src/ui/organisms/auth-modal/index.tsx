@@ -3,7 +3,7 @@ import Modal from "react-modal";
 
 import { getAuthURL } from "../../../utils/auth-link";
 
-import "../../../kumastyles/minimalist/components/auth-modal.scss";
+import "./index.scss";
 
 Modal.setAppElement("#root");
 

@@ -68,7 +68,7 @@
   }
 
   @media #{$mq-large-desktop-and-up} {
-    grid-template-columns: 2fr 1fr 60px;
+    grid-template-columns: 2fr 1fr 70px;
   }
 
   .main-nav,
@@ -101,6 +101,7 @@
     }
 
     .auth-container {
+      align-self: center;
       grid-column: 2/3;
       grid-row: 2/3;
       justify-self: flex-end;
