@@ -7,9 +7,7 @@ import { useUserData } from "../user-context";
 // because lazy loading the CSS will put itself as blocking on the critical
 // rendering. So, basically, if there's a >0% chance that we might load
 // <ActiveBanner>, at least the CSS will be ready.
-import "../kumastyles/components/banners/base.scss";
-import "../kumastyles/components/banners/developer-needs.scss";
-import "../kumastyles/components/banners/mdn-subscriptions.scss";
+import "./banner.scss";
 
 import { DEVELOPER_NEEDS_ID, SUBSCRIPTION_ID } from "./ids";
 
