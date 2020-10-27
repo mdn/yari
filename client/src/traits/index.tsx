@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import useSWR from "swr";
 
 import { SQLTable } from "./sql-table";
-import { Data, Document, MacroInfo } from "./types";
+import { AllMacroUses } from "./all-macros";
+import { Data } from "./types";
 import "./index.scss";
 
 export default function AllTraits() {
@@ -47,8 +48,8 @@ export default function AllTraits() {
   }, [data, error]);
 
   return (
-    <div id="all-traits">
-      <h1>All Documents Traits</h1>
+    <div className="all-traits">
+      <h2>All Documents Traits</h2>
       {data && (
         <p>
           {data.metadata.count.toLocaleString()} documents loaded.{" "}
@@ -130,153 +131,38 @@ function Loading({ startLoadingTime }: { startLoadingTime: Date }) {
 function DisplayData({ data }: { data: Data }) {
   return (
     <div>
-      {/* <AllMacroUses macros={data.allMacros} documents={data.documents} /> */}
-      <SQLTable documents={data.documents} />
+      <Routes>
+        <Route
+          path="macros"
+          element={
+            <AllMacroUses macros={data.allMacros} documents={data.documents} />
+          }
+        />
+        <Route
+          path="database"
+          element={<SQLTable documents={data.documents} />}
+        />
+        <Route path="*" element={<SubNav />} />
+      </Routes>
     </div>
   );
 }
 
-function AllMacroUses({
-  macros,
-  documents,
-}: {
-  macros: MacroInfo[];
-  documents: Document[];
-}) {
-  const [sortMacros, setSortMacros] = useState("alphabetically");
-  const [filterMacros, setFilterMacros] = useState("");
-  const [hideNeverused, setHideNeverused] = useState(false);
-
-  const displayMacros = macros
-    .sort((a, b) => {
-      if (sortMacros === "popularity") {
-        return b.totalCount - a.totalCount;
-      } else if (sortMacros === "popularityReverse") {
-        return a.totalCount - b.totalCount;
-      }
-      let reverse = sortMacros === "alphabeticallyReverse" ? -1 : 1;
-      return reverse * a.normalizedName.localeCompare(b.normalizedName);
-    })
-    .filter((m) => {
-      const search = filterMacros.trim().toLowerCase();
-      if (hideNeverused && !m.totalCount) return false;
-      return (
-        !(search && search.length > 1) || m.normalizedName.includes(search)
-      );
-    });
-
-  const [filterDocuments, setFilterDocuments] = useState("");
-  const displayDocuments = documents
-    .filter((d) => {
-      const search = filterDocuments.trim().toLowerCase();
-      return (
-        !(search && search.length > 2) ||
-        d.mdn_url.toLowerCase().includes(search)
-      );
-    })
-    .slice(0, 25);
-
+function SubNav() {
   return (
-    <div className="all-macros-used">
-      <h4>Every Macro Used</h4>
-      <small>
-        This is only the <i>immediate</i> uses of macros. A macro might call
-        another macro inside itself, and never mentioned in a document.
-      </small>
-      <table>
-        <thead>
-          <tr>
-            <th className="filter">
-              <div className="filter-macros">
-                <input
-                  type="search"
-                  placeholder="Filter macros"
-                  value={filterMacros}
-                  onChange={(event) => {
-                    setFilterMacros(event.target.value);
-                  }}
-                />
-                <br />
-                <label htmlFor="id_sort_macros">Sort by:</label>
-                <select
-                  id="id_sort_macros"
-                  value={sortMacros}
-                  onChange={(event) => {
-                    const { value } = event.target;
-                    setSortMacros(value);
-                  }}
-                >
-                  <option value="alphabetically">A-Z</option>
-                  <option value="alphabeticallyReverse">Z-A</option>
-                  <option value="popularity">Frequent</option>
-                  <option value="popularityReverse">Rare</option>
-                </select>
-                <br />
-                <label htmlFor="id_hide_neverused">Hide never-used</label>
-                <input
-                  type="checkbox"
-                  checked={hideNeverused}
-                  onChange={(event) => {
-                    setHideNeverused(event.target.checked);
-                  }}
-                />
-              </div>
-
-              <div className="filter-documents">
-                <input
-                  type="search"
-                  placeholder="Filter documents"
-                  value={filterDocuments}
-                  onChange={(event) => {
-                    setFilterDocuments(event.target.value);
-                  }}
-                />
-              </div>
-            </th>
-            {displayMacros.map((macro) => {
-              return (
-                <th
-                  className="macro"
-                  key={macro.normalizedName}
-                  title={`Total count across ALL documents: ${macro.totalCount.toLocaleString()}`}
-                >
-                  <span className="name">{macro.sourceName}</span>
-                </th>
-              );
-            })}
-          </tr>
-        </thead>
-        <tbody>
-          {displayDocuments.map((document) => {
-            return (
-              <tr key={document.mdn_url}>
-                <td className="mdn_url">
-                  <Link to={document.mdn_url} title={`"${document.title}"`}>
-                    {document.mdn_url.replace("/en-US/docs", "…")}
-                  </Link>
-                </td>
-                {displayMacros.map((macro) => {
-                  const count =
-                    document.normalizedMacrosCount[macro.normalizedName] || 0;
-                  return (
-                    <td
-                      className="count"
-                      key={macro.normalizedName}
-                      title={macro.sourceName}
-                    >
-                      {count ? (
-                        <b>{count}</b>
-                      ) : (
-                        <span className="zero">{count}</span>
-                      )}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+    <div className="sub-nav">
+      <ul>
+        <li>
+          <Link to="macros" className="button">
+            Every Macro Used
+          </Link>
+        </li>
+        <li>
+          <Link to="database" className="button">
+            Searchable Database
+          </Link>
+        </li>
+      </ul>
     </div>
   );
 }

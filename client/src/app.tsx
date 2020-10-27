@@ -51,7 +51,7 @@ export function App(appProps) {
               {CRUD_MODE && (
                 <>
                   <Route path="/_flaws" element={<AllFlaws />} />
-                  <Route path="/_traits" element={<AllTraits />} />
+                  <Route path="/_traits/*" element={<AllTraits />} />
                   <Route path="/_create/*" element={<DocumentCreate />} />
                   <Route path="/_edit/*" element={<DocumentEdit />} />
                 </>

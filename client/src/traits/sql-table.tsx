@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
 import "prismjs/components/prism-sql";
@@ -28,12 +28,28 @@ WHERE mdn_url like '%/Web/http%'
 ORDER BY fileSize desc
 LIMIT 25`);
 
+function storageDump(key: string, value: any, session = false) {
+  const storage = session ? window.sessionStorage : window.localStorage;
+  storage.setItem(key, JSON.stringify(value));
+}
+
+function storageLoad<T>(key: string, fallback: T, session = false): T {
+  const storage = session ? window.sessionStorage : window.localStorage;
+  const past = storage.getItem(key);
+  if (past) {
+    return JSON.parse(past) as T;
+  }
+  return fallback;
+}
+
 export function SQLTable({ documents }: { documents: Document[] }) {
   const [query, setQuery] = useState("");
-  const [queryDraft, setQueryDraft] = useSessionStorage("query", DEFAULT_QUERY);
-  const [pastQueries, setPastQueries] = useLocalStorage<PastQuery[]>(
-    "past-queries",
-    []
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [queryDraft, setQueryDraft] = useState(
+    searchParams.get("query") || storageLoad("query", DEFAULT_QUERY, true)
+  );
+  const [pastQueries, setPastQueries] = useState<PastQuery[]>(
+    storageLoad("past-queries", [])
   );
   const [result, setResult] = useState<any[] | null>(null);
   const [queryError, setQueryError] = useState<Error | null>(null);
@@ -42,6 +58,22 @@ export function SQLTable({ documents }: { documents: Document[] }) {
   const [showSQLParserError, toggleShowSQLParserError] = useState(false);
 
   const [sqlParserError, setSQLParserError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    storageDump("past-queries", pastQueries);
+  }, [pastQueries]);
+  useEffect(() => {
+    storageDump("query", queryDraft, true);
+  }, [queryDraft]);
+
+  useEffect(() => {
+    if (searchParams.get("query")) {
+      // If it's been edited since, it doesn't make sense to keep it there
+      if (queryDraft !== searchParams.get("query")) {
+        setSearchParams({});
+      }
+    }
+  }, [queryDraft, searchParams]);
 
   useEffect(() => {
     if (query) {
@@ -73,6 +105,32 @@ export function SQLTable({ documents }: { documents: Document[] }) {
       }
     }
   }, [queryDraft]);
+
+  const location = useLocation();
+
+  const [sharedQueryURL, setSharedQueryURL] = useState("");
+  function shareQuery() {
+    const sp = new URLSearchParams({ query: queryDraft });
+    const url = `${location.pathname}?${sp.toString()}`;
+    const absoluteURL = new URL(url, window.location.href).toString();
+    setSharedQueryURL(absoluteURL);
+  }
+
+  const [copiedToClipboard, setCopiedToClipboard] = useState(false);
+  useEffect(() => {
+    let timer: number | null = null;
+    if (sharedQueryURL) {
+      setCopiedToClipboard(true);
+      setTimeout(() => {
+        setCopiedToClipboard(false);
+      }, 3 * 1000);
+    }
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [sharedQueryURL]);
 
   return (
     <div className="sql-table">
@@ -119,7 +177,7 @@ export function SQLTable({ documents }: { documents: Document[] }) {
             disabled={!!((result && queryDraft === query) || sqlParserError)}
           >
             Run query
-          </button>{" "}
+          </button>
           <button
             type="button"
             onClick={() => {
@@ -128,7 +186,7 @@ export function SQLTable({ documents }: { documents: Document[] }) {
             }}
           >
             {showHelp ? "Close help" : "Show help"}
-          </button>{" "}
+          </button>
           <button
             type="button"
             onClick={() => {
@@ -139,7 +197,7 @@ export function SQLTable({ documents }: { documents: Document[] }) {
             {showPastQueries
               ? "Close past queries"
               : `Show past queries (${pastQueries.length})`}
-          </button>{" "}
+          </button>
           <button
             type="button"
             disabled={!sqlParserError}
@@ -151,8 +209,33 @@ export function SQLTable({ documents }: { documents: Document[] }) {
               ? "Close error"
               : `SQL error${sqlParserError ? "!" : ""}`}
           </button>
+
+          <button
+            type="button"
+            disabled={Boolean(sqlParserError || !queryDraft)}
+            onClick={() => {
+              shareQuery();
+            }}
+          >
+            Share query
+          </button>
         </div>
       </form>
+      {sharedQueryURL && (
+        <div className="share-url">
+          <a href={sharedQueryURL}>{sharedQueryURL}</a>{" "}
+          <button
+            type="button"
+            onClick={() => {
+              setSharedQueryURL("");
+            }}
+          >
+            Close
+          </button>
+          <br />
+          <p>{copiedToClipboard ? "Copied to your clipboard!" : ""}</p>
+        </div>
+      )}
       {showHelp && (
         <ShowHelp
           document={documents[0]}
@@ -417,87 +500,3 @@ const Results = React.memo(({ rows }: { rows: any[] }) => {
     </div>
   );
 });
-
-// /**
-//  * From https://usehooks.com/useLocalStorage/
-//  */
-// function useLocalStorage(
-//   key: string,
-//   initialValue,
-//   storage = window.localStorage
-// ) {
-//   // State to store our value
-//   // Pass initial state function to useState so logic is only executed once
-//   const [storedValue, setStoredValue] = useState(() => {
-//     try {
-//       // Get from local storage by key
-//       const item = storage.getItem(key);
-//       // Parse stored json or if none return initialValue
-//       return item ? JSON.parse(item) : initialValue;
-//     } catch (error) {
-//       // If error also return initialValue
-//       console.log(error);
-//       return initialValue;
-//     }
-//   });
-
-//   // Return a wrapped version of useState's setter function that ...
-//   // ... persists the new value to localStorage.
-//   const setValue = (value) => {
-//     try {
-//       // Allow value to be a function so we have same API as useState
-//       const valueToStore =
-//         value instanceof Function ? value(storedValue) : value;
-//       // Save state
-//       setStoredValue(valueToStore);
-//       // Save to local storage
-//       storage.setItem(key, JSON.stringify(valueToStore));
-//     } catch (error) {
-//       // A more advanced implementation would handle the error case
-//       console.log(error);
-//     }
-//   };
-//   return [storedValue, setValue];
-// }
-
-// https://usehooks-typescript.com/use-local-storage/
-function useLocalStorage<T>(
-  key: string,
-  initialValue: T,
-  storage = window.localStorage
-) {
-  // State to store our value
-  // Pass initial state function to useState so logic is only executed once
-  const [storedValue, setStoredValue] = useState(() => {
-    // Get from local storage then
-    // parse stored json or return initialValue
-    try {
-      const item = storage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
-    } catch (error) {
-      console.log(error);
-      return initialValue;
-    }
-  });
-  // Return a wrapped version of useState's setter function that ...
-  // ... persists the new value to localStorage.
-  const setValue = (value: T) => {
-    try {
-      // Allow value to be a function so we have same API as useState
-      const valueToStore =
-        value instanceof Function ? value(storedValue) : value;
-      // Save state
-      setStoredValue(valueToStore);
-      // Save to local storage
-      storage.setItem(key, JSON.stringify(valueToStore));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  return [storedValue, setValue];
-}
-
-function useSessionStorage(key: string, initialValue) {
-  return useLocalStorage(key, initialValue, window.sessionStorage);
-}

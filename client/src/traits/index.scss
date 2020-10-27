@@ -1,4 +1,10 @@
-#all-traits {
+.all-traits {
+  .sub-nav {
+    margin: 100px;
+    li {
+      margin: 20px;
+    }
+  }
   .loading {
     text-align: center;
     margin: 200px;

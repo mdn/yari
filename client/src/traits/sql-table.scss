@@ -20,6 +20,13 @@
       margin-bottom: 10px;
     }
   }
+  .share-url {
+    a {
+      font-size: 80%;
+      font-family: monospace;
+      line-height: 1.5;
+    }
+  }
   .query-error {
     background-color: rgb(255, 148, 148);
   }
