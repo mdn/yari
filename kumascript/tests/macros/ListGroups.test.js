@@ -41,9 +41,10 @@ const expectedHTML = `<div class="index">
         <li>
             <a href='/en-US/docs/Web/API/A2TestInterface_overview'>A2TestInterface</a>
             <span class='indexListBadges'>
-                <span title="This is an experimental API that should not be used in production code." class="icon-only-inline">
-                    <i class="icon-beaker"></i>
-                </span>
+              <svg class="icon experimental" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img">
+                <title>This is an experimental API that should not be used in production code.</title>
+                <path d="M90.72 82.34c4.4 7 1.29 12.66-7 12.66H16.25C8 95 4.88 89.31 9.28 82.34l29.47-46.46V12.5H35A3.75 3.75 0 0135 5h30a3.75 3.75 0 010 7.5h-3.75v23.38zM45.08 39.86L29.14 65h41.72L54.92 39.86l-1.17-1.81V12.5h-7.5v25.55z" />
+              </svg
             </span>
         </li>
         <li>
@@ -74,7 +75,7 @@ function compareNode(actual, expected) {
     actual.nodeName === "A" ||
     (actual.nodeName === "SPAN" && expected.textContent.trim())
   ) {
-    expect(actual.textContent).toEqual(expected.textContent);
+    expect(actual.textContent.trim()).toEqual(expected.textContent.trim());
   }
 }
 

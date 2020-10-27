@@ -1,0 +1,86 @@
+$bc-no-support: #fbdfe0;
+$bc-partial-support: #f9d8bb;
+$bc-no-support-cross: rgba(94, 3, 6, 0.1);
+$bc-partial-support-cross: rgba(144, 99, 18, 0.2);
+
+.bc-supports {
+  border: 1px solid $neutral-100;
+  display: inline-block;
+  min-width: 120px;
+  padding: $base-unit;
+  position: relative;
+  text-align: center;
+}
+
+.bc-supports-yes {
+  background-color: $green-400;
+}
+
+.bc-supports-partial {
+  background-color: $bc-partial-support;
+  background-image: linear-gradient(
+    to bottom right,
+    $bc-partial-support-cross 0,
+    $bc-partial-support-cross 1px,
+    transparent 1px,
+    transparent 67px,
+    $bc-partial-support-cross 67px,
+    $bc-partial-support-cross 73px,
+    transparent 73px,
+    transparent 138px,
+    $bc-partial-support-cross 138px,
+    $bc-partial-support-cross 144px,
+    transparent 144px
+  );
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: 100px 100px;
+}
+
+.bc-supports-no,
+.bc-supports-partial,
+.bc-supports-unknown,
+.bc-supports-yes,
+.bc-table .bc-history {
+  color: $neutral-100;
+}
+
+.bc-supports-no {
+  background-color: $bc-no-support;
+  background-image: linear-gradient(
+      to bottom right,
+      $bc-no-support-cross 0,
+      $bc-no-support-cross 1px,
+      transparent 1px,
+      transparent 67px,
+      $bc-no-support-cross 67px,
+      $bc-no-support-cross 73px,
+      transparent 73px,
+      transparent 138px,
+      $bc-no-support-cross 138px,
+      $bc-no-support-cross 144px,
+      transparent 144px
+    ),
+    linear-gradient(
+      to bottom left,
+      $bc-no-support-cross 0,
+      $bc-no-support-cross 1px,
+      transparent 1px,
+      transparent 67px,
+      $bc-no-support-cross 67px,
+      $bc-no-support-cross 73px,
+      transparent 73px,
+      transparent 138px,
+      $bc-no-support-cross 138px,
+      $bc-no-support-cross 144px,
+      transparent 144px
+    );
+  background-position: 50% 50%, 50% 50%;
+  background-repeat: no-repeat;
+  background-size: 100px 100px, 100px 100px;
+  font-weight: bold;
+}
+
+.bc-supports-unknown {
+  background-color: $neutral-550;
+}
