@@ -38,7 +38,7 @@ program
   )
 
   .command("redirect-test", "Test a URL (pathname) to see if it redirects")
-  .argument("[urls...]", "Urls to test")
+  .argument("[urls...]", "URLs to test")
   .action(
     tryOrExit(({ args, logger }) => {
       for (const url of args.urls) {
