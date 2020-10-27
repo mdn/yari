@@ -1,0 +1,117 @@
+.bc-browsers {
+  th {
+    border-top: 0;
+    height: 200px;
+    padding: $base-unit 0;
+    vertical-align: bottom;
+
+    &:nth-child(2) {
+      border-left: 0;
+    }
+  }
+
+  .bc-head-txt-label {
+    bottom: 0;
+    display: inline-block;
+    font-weight: normal;
+    height: 20px;
+    margin: 0 0 $base-spacing ($base-spacing / 2);
+    padding: 0;
+    text-align: left;
+    transform: rotate(-90deg);
+    transform-origin: left;
+    white-space: nowrap;
+    width: 20px;
+
+    &::before {
+      background-repeat: no-repeat;
+      content: "";
+      display: inline-block;
+      left: -28px;
+      position: absolute;
+      transform: rotate(90deg);
+    }
+  }
+}
+
+/* stylelint-disable selector-class-pattern */
+.bc-head-icon-chrome,
+.bc-head-icon-chrome_android,
+.bc-head-icon-edge,
+.bc-head-icon-edge_mobile,
+.bc-head-icon-firefox,
+.bc-head-icon-firefox_android,
+.bc-head-icon-ie,
+.bc-head-icon-opera,
+.bc-head-icon-opera_android,
+.bc-head-icon-safari,
+.bc-head-icon-safari_ios,
+.bc-head-icon-webview_android,
+.bc-head-icon-samsunginternet_android,
+.bc-head-icon-nodejs {
+  &::before {
+    background-size: 20px;
+    height: 24px;
+    width: 20px;
+  }
+}
+
+.bc-browsers .bc-head-icon-chrome,
+.bc-browsers .bc-head-icon-chrome_android {
+  &::before {
+    background-image: url("~@mdn/dinocons/browsers/chrome.svg");
+  }
+}
+
+.bc-browsers .bc-head-icon-edge,
+.bc-browsers .bc-head-icon-edge_mobile {
+  &::before {
+    background-image: url("~@mdn/dinocons/browsers/edge.svg");
+  }
+}
+
+.bc-browsers .bc-head-icon-firefox,
+.bc-browsers .bc-head-icon-firefox_android {
+  &::before {
+    background-image: url("~@mdn/dinocons/browsers/firefox.svg");
+  }
+}
+
+.bc-browsers .bc-head-icon-ie {
+  &::before {
+    background-image: url("~@mdn/dinocons/browsers/internet-explorer.svg");
+  }
+}
+
+.bc-browsers .bc-head-icon-opera,
+.bc-browsers .bc-head-icon-opera_android {
+  &::before {
+    background-image: url("~@mdn/dinocons/browsers/opera.svg");
+  }
+}
+
+.bc-browsers .bc-head-icon-safari,
+.bc-browsers .bc-head-icon-safari_ios {
+  &::before {
+    background-image: url("~@mdn/dinocons/browsers/safari.svg");
+  }
+}
+
+.bc-browsers .bc-head-icon-webview_android {
+  &::before {
+    background-image: url("~@mdn/dinocons/platforms/android.svg");
+  }
+}
+
+.bc-browsers .bc-head-icon-samsunginternet_android {
+  &::before {
+    background-image: url("~@mdn/dinocons/browsers/samsung-internet.svg");
+  }
+}
+/* stylelint-enable */
+
+.bc-browsers .bc-head-icon-nodejs {
+  &::before {
+    background-image: url("~@mdn/dinocons/platforms/nodejs.svg");
+  }
+}

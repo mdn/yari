@@ -4,11 +4,10 @@ import { useCombobox } from "downshift";
 import FlexSearch from "flexsearch";
 import useSWR, { mutate } from "swr";
 import FuzzySearch from "./fuzzy-search";
-import "./search.scss";
+
 import { useWebSocketMessageHandler } from "./web-socket";
 
 import { useLocale } from "./hooks";
-import SearchIcon from "./kumastyles/general/search.svg";
 
 function isMobileUserAgent() {
   return (
@@ -261,8 +260,6 @@ function InnerSearchNavigateWidget() {
         // },
       })}
     >
-      <img src={SearchIcon} alt="search" className="search-icon" />
-
       <label htmlFor="main-q" className="visually-hidden">
         Search MDN
       </label>
