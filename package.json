@@ -80,6 +80,10 @@
     "webpack-node-externals": "2.5.2",
     "ws": "^7.3.1"
   },
+  "bundledDependencies": [
+    "@yari-internal/constants",
+    "@yari-internal/fundamental-redirects"
+  ],
   "devDependencies": {
     "@babel/core": "^7.11.1",
     "@mdn/dinocons": "^0.1.1",
