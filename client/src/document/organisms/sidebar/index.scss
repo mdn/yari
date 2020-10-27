@@ -3,7 +3,7 @@
 @import "~@mdn/minimalist/sass/mixins/utils";
 
 .sidebar {
-  padding: ($base-spacing / 2) $base-spacing;
+  padding: $base-spacing;
 
   h4 {
     margin-bottom: $base-spacing;
@@ -11,10 +11,13 @@
 
   ol {
     @include reset-list();
+    width: 100%;
 
     ol,
     ul {
-      padding-left: $base-unit * 3;
+      @media #{$mq-tablet-and-up} {
+        padding-left: $base-unit * 3;
+      }
     }
   }
 

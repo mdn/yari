@@ -8,7 +8,6 @@
 @import "./prism-overrides";
 
 .article {
-  margin-bottom: $base-spacing;
   padding: $base-spacing;
 
   @media #{$mq-small-desktop-and-up} {
@@ -35,7 +34,11 @@
   }
 
   h2 {
-    margin-bottom: ($base-unit * 6);
+    margin-bottom: ($base-unit * 2);
+
+    @media #{$mq-tablet-and-up} {
+      margin-bottom: ($base-unit * 6);
+    }
 
     a:link,
     a:visited {
