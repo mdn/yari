@@ -58,7 +58,7 @@ function isEmbargoed(id: string) {
   }
 }
 
-export function MaybeBanner() {
+export function Banner() {
   const userData = useUserData();
 
   if (!userData) {
