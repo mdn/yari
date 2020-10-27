@@ -7,7 +7,7 @@ const open = require("open");
 const fs = require("fs");
 const path = require("path");
 
-const { DEFAULT_LOCALE, VALID_LOCALES } = require("@yari-internal/constants");
+const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
 const { Redirect, Document, buildURL } = require("../content");
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");

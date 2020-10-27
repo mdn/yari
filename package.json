@@ -32,8 +32,6 @@
   "dependencies": {
     "@caporal/core": "2.0.2",
     "@mdn/browser-compat-data": "2.0.3",
-    "@yari-internal/constants": "file:./libs/constants",
-    "@yari-internal/fundamental-redirects": "file:./libs/fundamental-redirects",
     "braces": "^3.0.2",
     "chalk": "4.1.0",
     "cheerio": "1.0.0-rc.3",
@@ -80,10 +78,6 @@
     "webpack-node-externals": "2.5.2",
     "ws": "^7.3.1"
   },
-  "bundledDependencies": [
-    "@yari-internal/constants",
-    "@yari-internal/fundamental-redirects"
-  ],
   "devDependencies": {
     "@babel/core": "^7.11.1",
     "@mdn/dinocons": "^0.1.1",
