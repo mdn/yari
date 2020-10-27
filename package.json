@@ -24,7 +24,7 @@
     "fiori:start": "cd client && start-storybook -p 6006 --no-dll",
     "fiori:build": "cd client && build-storybook",
     "filecheck": "cd filecheck && node cli.js",
-    "redirects": "node redirects/cli.js"
+    "tool": "node tool/cli.js"
   },
   "engines": {
     "node": ">=12.0.0"
@@ -65,8 +65,10 @@
     "js-yaml": "3.14.0",
     "jsesc": "3.0.1",
     "mdn-data": "2.0.12",
+    "open": "^7.3.0",
     "open-editor": "2.0.1",
     "prismjs": "1.22.0",
+    "prompts": "^2.3.2",
     "sanitize-filename": "^1.6.3",
     "sockette": "^2.0.6",
     "source-map-support": "0.5.19",
