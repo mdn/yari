@@ -2,8 +2,12 @@
   padding-bottom: 50px;
 
   form.query {
+    .query-buttons {
+      margin-top: 10px;
+    }
     textarea {
       font-family: monospace;
+      background-color: green;
       width: 99%;
       border: 1px solid black;
     }
@@ -44,6 +48,7 @@
   table {
     thead th {
       font-weight: bold;
+      padding-right: 5px;
     }
   }
 }

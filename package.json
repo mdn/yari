@@ -107,6 +107,7 @@
     "react-router": "6.0.0-beta.0",
     "react-router-dom": "6.0.0-beta.0",
     "react-scripts": "3.4.4",
+    "react-simple-code-editor": "0.11.0",
     "rough-notation": "0.4.0",
     "ts-loader": "^8.0.7",
     "typescript": "^3.9.7",

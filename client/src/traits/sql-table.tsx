@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Editor from "react-simple-code-editor";
+import { highlight, languages } from "prismjs/components/prism-core";
+import "prismjs/components/prism-sql";
 
 // Necessary hack due to https://github.com/agershun/alasql/issues/930
 // import alasql from "alasql";
@@ -59,9 +62,8 @@ export function SQLTable({ documents }: { documents: Document[] }) {
 
   useEffect(() => {
     if (queryDraft) {
-      let statement;
       try {
-        statement = alasql.parse(queryDraft);
+        alasql.parse(queryDraft);
         setSQLParserError(null);
       } catch (err) {
         setSQLParserError(err);
@@ -78,58 +80,75 @@ export function SQLTable({ documents }: { documents: Document[] }) {
           setQuery(queryDraft.trim());
         }}
       >
-        <textarea
+        {/* <textarea
           value={queryDraft}
           className={sqlParserError ? "has-sql-error" : ""}
           onChange={(event) => setQueryDraft(event.target.value)}
           rows={Math.max(5, queryDraft.split("\n").length + 1)}
           spellCheck={false}
-        ></textarea>
-        {showSQLParserError && sqlParserError && (
-          <div className="sql-error">
-            <pre>{sqlParserError.toString()}</pre>
-          </div>
-        )}
-        {queryError && (
-          <div className="query-error">
-            <h4>Query error</h4>
-            <code>{queryError.toString()}</code>
-          </div>
-        )}
-        <button type="submit" disabled={!!(result && queryDraft === query)}>
-          Run query
-        </button>{" "}
-        <button
-          type="button"
-          onClick={() => {
-            toggleShowHelp((s) => !s);
-            toggleShowPastQueries(false);
+        ></textarea> */}
+        <Editor
+          value={queryDraft}
+          onValueChange={(code) => setQueryDraft(code)}
+          highlight={(code) => highlight(code, languages.sql)}
+          textareaClassName={sqlParserError ? "has-sql-error" : ""}
+          padding={10}
+          style={{
+            fontFamily: '"Fira code", "Fira Mono", monospace',
+            backgroundColor: "#efefef",
           }}
-        >
-          {showHelp ? "Close help" : "Show help"}
-        </button>{" "}
-        <button
-          type="button"
-          onClick={() => {
-            toggleShowPastQueries((s) => !s);
-            toggleShowHelp(false);
-          }}
-        >
-          {showPastQueries
-            ? "Close past queries"
-            : `Show past queries (${pastQueries.length})`}
-        </button>{" "}
-        <button
-          type="button"
-          disabled={!sqlParserError}
-          onClick={() => {
-            toggleShowSQLParserError((s) => !s);
-          }}
-        >
-          {showSQLParserError
-            ? "Close error"
-            : `SQL error${sqlParserError ? "!" : ""}`}
-        </button>
+          // rows={Math.max(5, queryDraft.split("\n").length + 1)}
+        />
+        <div className="query-buttons">
+          {showSQLParserError && sqlParserError && (
+            <div className="sql-error">
+              <pre>{sqlParserError.toString()}</pre>
+            </div>
+          )}
+          {queryError && (
+            <div className="query-error">
+              <h4>Query error</h4>
+              <code>{queryError.toString()}</code>
+            </div>
+          )}
+          <button
+            type="submit"
+            disabled={!!((result && queryDraft === query) || sqlParserError)}
+          >
+            Run query
+          </button>{" "}
+          <button
+            type="button"
+            onClick={() => {
+              toggleShowHelp((s) => !s);
+              toggleShowPastQueries(false);
+            }}
+          >
+            {showHelp ? "Close help" : "Show help"}
+          </button>{" "}
+          <button
+            type="button"
+            onClick={() => {
+              toggleShowPastQueries((s) => !s);
+              toggleShowHelp(false);
+            }}
+          >
+            {showPastQueries
+              ? "Close past queries"
+              : `Show past queries (${pastQueries.length})`}
+          </button>{" "}
+          <button
+            type="button"
+            disabled={!sqlParserError}
+            onClick={() => {
+              toggleShowSQLParserError((s) => !s);
+            }}
+          >
+            {showSQLParserError && sqlParserError
+              ? "Close error"
+              : `SQL error${sqlParserError ? "!" : ""}`}
+          </button>
+        </div>
       </form>
       {showHelp && (
         <ShowHelp
