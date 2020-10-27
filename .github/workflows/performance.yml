@@ -45,6 +45,10 @@ jobs:
           # sub-folder called "mdn/content"
           export CONTENT_ROOT=$(pwd)/mdn/content/files
 
+          # Make sure it's set to something so that the build uses the
+          # Google Analytics tag which is most realistic.
+          export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-00000000-0
+
           yarn prepare-build
           # BUILD_FOLDERSEARCH=mdn/kitchensink yarn build
           BUILD_FOLDERSEARCH=web/javascript/reference/global_objects/array/foreach yarn build

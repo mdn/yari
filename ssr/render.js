@@ -5,6 +5,11 @@ import jsesc from "jsesc";
 import cheerio from "./monkeypatched-cheerio";
 import { renderToString } from "react-dom/server";
 
+import {
+  GOOGLE_ANALYTICS_ACCOUNT,
+  GOOGLE_ANALYTICS_DEBUG,
+} from "../build/constants";
+
 const lazy = (creator) => {
   let res;
   let processed = false;
@@ -27,6 +32,26 @@ const readBuildHTML = lazy(() => {
     );
   }
   return html;
+});
+
+const getGoogleAnalyticsJS = lazy(() => {
+  // The reason for the `path.join(__dirname, ".."` is because this file you're
+  // reading gets compiled by Webpack into ssr/dist/*.js
+  const dntHelperCode = fs
+    .readFileSync(
+      path.join(__dirname, "..", "mozilla.dnthelper.min.js"),
+      "utf-8"
+    )
+    .trim();
+  return `
+  // Mozilla DNT Helper
+  ${dntHelperCode}
+  // only load GA if DNT is not enabled
+  if (Mozilla && !Mozilla.dntEnabled()) {
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', '${GOOGLE_ANALYTICS_ACCOUNT}', 'mozilla.org');
+      ga('set', 'anonymizeIp', true);
+  }`.trim();
 });
 
 function serializeDocumentData(data) {
@@ -75,6 +100,18 @@ export default function render(renderApp, doc) {
   }
 
   $('link[rel="canonical"]').attr("href", canonicalURL);
+
+  if (GOOGLE_ANALYTICS_ACCOUNT) {
+    const googleAnalyticsJS = getGoogleAnalyticsJS();
+    if (googleAnalyticsJS) {
+      $("<script>").text(`\n${googleAnalyticsJS}\n`).appendTo($("head"));
+      $(
+        `<script src="https://www.google-analytics.com/${
+          GOOGLE_ANALYTICS_DEBUG ? "anaytics_debug" : "analytics"
+        }.js"></script>`
+      ).appendTo($("head"));
+    }
+  }
 
   $("title").text(pageTitle);
 

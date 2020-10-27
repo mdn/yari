@@ -148,6 +148,12 @@ jobs:
           # the workflow needs to do.
           # export BUILD_FOLDERSEARCH=web/html
 
+          # This is the Google Analytics account ID for developer.mozilla.org
+          # If it's used on other domains (e.g. stage or dev builds), it's OK
+          # because ultimately Google Analytics will filter it out since the
+          # origin domain isn't what that account expects.
+          export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-36116321-5
+
           yarn build
 
           # TODO: When the deployer is available this is where we

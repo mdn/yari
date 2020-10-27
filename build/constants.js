@@ -35,6 +35,11 @@ const DEFAULT_FLAW_LEVELS = process.env.BUILD_FLAW_LEVELS || "*:warn";
 
 const FILES = process.env.BUILD_FILES || "";
 const FOLDERSEARCH = process.env.BUILD_FOLDERSEARCH || "";
+const GOOGLE_ANALYTICS_ACCOUNT =
+  process.env.BUILD_GOOGLE_ANALYTICS_ACCOUNT || "";
+const GOOGLE_ANALYTICS_DEBUG = JSON.parse(
+  process.env.BUILD_GOOGLE_ANALYTICS_DEBUG || "false"
+);
 const NO_PROGRESSBAR = Boolean(
   JSON.parse(process.env.BUILD_NO_PROGRESSBAR || process.env.CI || "false")
 );
@@ -54,6 +59,8 @@ module.exports = {
   FILES,
   FLAW_LEVELS,
   FOLDERSEARCH,
+  GOOGLE_ANALYTICS_ACCOUNT,
+  GOOGLE_ANALYTICS_DEBUG,
   NO_PROGRESSBAR,
   VALID_FLAW_CHECKS,
   FIX_FLAWS,
