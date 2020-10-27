@@ -1,0 +1,148 @@
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+$menu-box-shadow: 0 2px 8px 0 $neutral-500;
+$menu-border: solid 1px $neutral-400;
+$menu-border-radius: $base-unit;
+$dropdown-item-background-color: $primary-200;
+
+ul.main-menu {
+  background-color: $text-color-inverted;
+  box-sizing: border-box;
+  font-weight: bold;
+  width: 100%;
+
+  @media #{$mq-tablet-and-up} {
+    display: flex;
+    justify-content: space-between;
+    width: inherit;
+
+    li {
+      &:last-child {
+        flex-basis: inherit;
+      }
+    }
+  }
+
+  @media #{$mq-large-desktop-and-up} {
+    justify-content: space-around;
+
+    li {
+      flex-basis: inherit;
+    }
+  }
+
+  li ul {
+    background-color: $neutral-600;
+    display: none;
+    margin: 0;
+    padding: $base-unit 0;
+
+    @media #{$mq-tablet-and-up} {
+      border: $menu-border;
+      border-radius: $menu-border-radius;
+      box-shadow: $menu-box-shadow;
+    }
+
+    a {
+      display: block;
+      padding: 6px 16px;
+      width: 100%;
+
+      &:hover,
+      &:focus {
+        background-color: $dropdown-item-background-color;
+        color: #fff;
+        text-decoration: none;
+      }
+
+      @media #{$mq-tablet-and-up} {
+        width: unset;
+      }
+    }
+
+    li {
+      width: 100%;
+
+      @media #{$mq-tablet-and-up} {
+        width: unset;
+      }
+    }
+  }
+
+  .top-level-entry-container {
+    position: relative;
+  }
+
+  ul.show {
+    display: block;
+
+    @media #{$mq-tablet-and-up} {
+      min-width: 220px;
+      min-width: max-content;
+      position: absolute;
+      z-index: $top-layer;
+
+      &.feedback {
+        right: 0;
+      }
+    }
+
+    @media #{$mq-small-desktop-and-up} {
+      right: inherit;
+
+      &.feedback {
+        right: inherit;
+      }
+    }
+  }
+
+  .top-level-entry {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    padding: 10px 10px 15px 0;
+    text-align: left;
+    width: 100%;
+
+    @media #{$mq-tablet-and-up} {
+      padding: ($base-unit * 2);
+      padding-left: 0;
+      width: unset;
+    }
+
+    &::before {
+      background: transparent url("~@mdn/dinocons/arrows/triangle.svg") 0 0
+        no-repeat;
+      background-size: ($base-unit * 2);
+      content: "";
+      display: inline-block;
+      font-size: $tiny-text;
+      height: ($base-unit * 2);
+      margin-right: $base-unit;
+      transform: rotate(90deg);
+      width: ($base-unit * 2);
+    }
+
+    &[aria-expanded="true"] {
+      &::before {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  &.show {
+    display: block;
+
+    @media #{$mq-tablet-and-up} {
+      display: flex;
+    }
+  }
+}
+
+@media #{$mq-tablet-and-up} {
+  .page-overlay {
+    display: none;
+  }
+}

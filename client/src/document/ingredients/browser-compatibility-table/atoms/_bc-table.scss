@@ -1,0 +1,137 @@
+.bc-table {
+  background-color: $neutral-550;
+  border: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 0;
+  table-layout: fixed;
+  width: 100%;
+
+  a {
+    &:link,
+    &:visited {
+      color: $neutral-100;
+      text-decoration: underline;
+    }
+  }
+
+  abbr {
+    cursor: help;
+    text-decoration: none;
+  }
+
+  td,
+  th {
+    border-bottom: 0 solid transparent;
+    border-left: 1px solid $neutral-100;
+    border-right: 0;
+    border-top: 1px solid $neutral-100;
+    padding: $base-unit;
+    position: relative;
+    text-align: center;
+  }
+
+  th {
+    background-color: transparent;
+    border-left: 0;
+    border-right: 1px solid $neutral-100;
+    overflow: hidden;
+    padding: $base-unit;
+  }
+
+  thead {
+    display: none;
+
+    @media #{$mq-small-desktop-and-up} {
+      display: table-header-group;
+    }
+
+    td {
+      border-left: 0;
+      border-right: 2px solid $neutral-100;
+      border-top: 0;
+      overflow: hidden;
+
+      @media #{$mq-small-desktop-and-up} {
+        width: 200px;
+      }
+    }
+  }
+
+  tbody {
+    th,
+    td {
+      border-left: 0;
+      border-right: 0;
+      display: block;
+      max-width: 100%;
+      text-align: left;
+      width: 100%;
+    }
+
+    th {
+      @media #{$mq-small-desktop-and-up} {
+        border-right: 2px solid $neutral-100;
+        display: table-cell;
+        font-weight: normal;
+        overflow: hidden;
+        width: 200px;
+      }
+    }
+
+    td {
+      @media #{$mq-small-desktop-and-up} {
+        border-right: 1px solid $neutral-100;
+        display: table-cell;
+        overflow: hidden;
+        padding: ($base-spacing / 2) $base-unit;
+        text-align: center;
+        vertical-align: middle;
+      }
+    }
+
+    tr:nth-child(even) {
+      background-color: $neutral-550;
+    }
+  }
+
+  .bc-browser-name {
+    display: inline-block;
+    width: 75%;
+
+    @media #{$mq-small-desktop-and-up} {
+      display: none;
+    }
+  }
+
+  /*
+   * In the BCD table, in the first column we link to other MDN pages
+   * based on the APIs that it links to. Sometimes, these links refer to
+   * a `mdn_url` that doesn't actually, exist. Instead of making a link to
+   * page that will just 404, we annotate it so it's clear that it's not
+   * going to work. So it needs to stand out a bit.
+   * This color comes from the old Kuma code which is used for all links
+   * that link to page that doesn't exist.
+   */
+  .new {
+    color: $red-100;
+  }
+}
+
+@media #{$mq-small-desktop-and-up} {
+  .bc-table-web {
+    thead {
+      th:nth-child(7) {
+        border-right: 1px solid $neutral-100;
+      }
+
+      th:nth-child(8) {
+        border-left: 1px solid $neutral-100;
+      }
+    }
+
+    td:nth-child(8) {
+      border-left: 1px solid $neutral-100;
+    }
+  }
+}
