@@ -1,0 +1,31 @@
+.bc-legend {
+  margin-bottom: $base-spacing;
+  margin-top: $base-spacing;
+
+  dl {
+    align-items: center;
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    line-height: 1.2;
+
+    dt {
+      margin: ($base-spacing / 2) 0;
+    }
+
+    dd {
+      margin: ($base-spacing / 2);
+    }
+  }
+
+  abbr {
+    cursor: help;
+    display: inline-block;
+    padding: $base-spacing / 2;
+  }
+
+  .bc-supports {
+    display: inline-block;
+    min-height: 30px;
+    min-width: 30px;
+  }
+}

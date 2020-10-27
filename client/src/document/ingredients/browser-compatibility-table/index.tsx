@@ -9,8 +9,7 @@ import { Legend } from "./legend";
 import { listFeatures } from "./utils";
 import { DisplayH2 } from "../utils";
 
-import "./bcd.scss";
-// import "../../../kumastyles/wiki-compat-tables.scss";
+import "./index.scss";
 
 // This string is used to prefill the body when clicking to file a new BCD
 // issue over on github.com/mdn/browser-compat-data
