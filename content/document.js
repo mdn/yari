@@ -16,7 +16,7 @@ const { getPopularities } = require("./popularities");
 const { getWikiHistories } = require("./wikihistories");
 
 const { buildURL, memoize, slugToFolder, execGit } = require("./utils");
-const Redirects = require("./redirect");
+const Redirect = require("./redirect");
 
 function buildPath(localeFolder, slug) {
   return path.join(localeFolder, slugToFolder(slug));
@@ -252,7 +252,7 @@ function update(url, rawHTML, metadata) {
     );
 
     execGit(["mv", oldFolderPath, newFolderPath]);
-    Redirects.add(locale, [...redirects.entries()]);
+    Redirect.add(locale, [...redirects.entries()]);
   }
 }
 
@@ -419,7 +419,7 @@ function remove(
   }
 
   if (redirect) {
-    Redirects.add(locale, [[url, redirect]]);
+    Redirect.add(locale, [[url, redirect]]);
   }
 
   execGit(["rm", "-r", path.dirname(fileInfo.path)]);
