@@ -186,6 +186,7 @@ app.get("/*", async (req, res) => {
   let lookupURL = req.url;
   let extraSuffix = "";
   let bcdDataURL = "";
+  const bcdDataURLRegex = /\/(bcd-\d+|bcd)\.json$/;
 
   if (req.url.endsWith("index.json")) {
     // It's a bit special then.
@@ -196,9 +197,9 @@ app.get("/*", async (req, res) => {
     // temporarily remove it and remember to but it back when we're done.
     extraSuffix = "/index.json";
     lookupURL = lookupURL.replace(extraSuffix, "");
-  } else if (/bcd__\d+\.json$/.test(req.url)) {
+  } else if (bcdDataURLRegex.test(req.url)) {
     bcdDataURL = req.url;
-    lookupURL = lookupURL.replace(/\/bcd__\d+\.json$/, "");
+    lookupURL = lookupURL.replace(bcdDataURLRegex, "");
   }
 
   const isJSONRequest = extraSuffix.endsWith(".json");
