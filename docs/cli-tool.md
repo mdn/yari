@@ -4,14 +4,14 @@
 
 Install dependencies:
 
-```
-$ yarn
+```sh
+yarn
 ```
 
 Run the CLI tool:
 
-```
-$ yarn tool --help
+```sh
+yarn tool --help
 
   cli.js 0.0.0
 
@@ -43,7 +43,8 @@ $ yarn tool --help
 
 ### validate-redirect
 
-Validates the content of the `_redirects.txt` files(s). (This does not verify that _to URLs_ exist)
+Validates the content of the `_redirects.txt` files(s). (This does not verify
+that _to URLs_ exist)
 
 ### test-redirect
 
@@ -55,20 +56,24 @@ Add a redirect to the `_redirects.txt`.
 
 ### delete
 
-Delete a document (and optionally all children) by its slug. Optionally add an redirect if deleting a single document.
-Also stages changes in git (except for redirects).
+Delete a document (and optionally all children) by its slug. Optionally add an
+redirect if deleting a single document. Also stages changes in git (except for
+redirects).
 
 ### move
 
-Move a document and its children. Adds the according redirects and stages changes in git (except for redirects).
+Move a document and its children. Adds the according redirects and stages
+changes in git (except for redirects).
 
 ### edit
 
-Open a document by its slug in the preferred editor (as per the EDITOR environment variable).
+Open a document by its slug in the preferred editor (as per the EDITOR
+environment variable).
 
 ### crate
 
-Open a new document by its slug in the preferred editor (as per the EDITOR environment variable).
+Open a new document by its slug in the preferred editor (as per the EDITOR
+environment variable).
 
 ### validate
 
@@ -76,4 +81,5 @@ Run basic validation for a document (only verifies the slug for now).
 
 ### preview
 
-Spawn a preview of a given slug in your browser. This depends on a running dev-server (`yarn start`).
+Spawn a preview of a given slug in your browser. This depends on a running
+dev-server (`yarn start`).
