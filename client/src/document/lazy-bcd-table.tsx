@@ -3,6 +3,15 @@ import useSWR from "swr";
 
 import { DisplayH2 } from "./ingredients/utils";
 
+// Because it's bad for web performance to lazy-load CSS during the initial render
+// (because the page is saying "Wait! Stop rendering, now that I've downloaded
+// some JS I decided I need more CSSOM to block the rendering.")
+// Therefore, we import all the necessary CSS here in this file so that
+// the BCD table CSS becomes part of the core bundle.
+// That means that when the lazy-loading happens, it only needs to lazy-load
+// the JS (and the JSON XHR fetch of course)
+import "./ingredients/browser-compatibility-table/index.scss";
+
 const BrowserCompatibilityTable = lazy(
   () => import("./ingredients/browser-compatibility-table")
 );
