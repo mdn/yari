@@ -13,17 +13,18 @@ Run the CLI tool:
 ```sh
 yarn tool --help
 
-  cli.js 0.0.0
+  tool 0.0.0
 
   USAGE
 
-    ▸ cli.js <command> [ARGUMENTS...] [OPTIONS...]
+    ▸ yarn tool <command> [ARGUMENTS...] [OPTIONS...]
 
 
-  COMMANDS — Type 'cli.js help <command>' to get some help about a command
+  COMMANDS — Type 'yarn tool help <command>' to get some help about a command
 
     validate-redirect                    Check the _redirects.txt file(s)
-    test-redirect                        Test a URL (pathname) to see if it redirects
+    test-redirect                        Test a URL (pathname) to see if it
+                                         redirects
     add-redirect                         Add a new redirect
     delete                               Delete content
     move                                 Move content to a new slug
@@ -34,11 +35,14 @@ yarn tool --help
 
   GLOBAL OPTIONS
 
-    -h, --help                           Display global help or command-related help.
+    -h, --help                           Display global help or command-related
+                                         help.
     -V, --version                        Display version.
     --no-color                           Disable use of colors in output.
-    -v, --verbose                        Verbose mode: will also output debug messages.
-    --quiet                              Quiet mode - only displays warn and error messages.
+    -v, --verbose                        Verbose mode: will also output debug
+                                         messages.
+    --quiet                              Quiet mode - only displays warn and error
+                                         messages.
 ```
 
 ### validate-redirect

@@ -27,6 +27,8 @@ function tryOrExit(f) {
 }
 
 program
+  .bin("yarn tool")
+  .name("tool")
   .version("0.0.0")
   .disableGlobalOption("--silent")
   .command("validate-redirect", "Check the _redirects.txt file(s)")
