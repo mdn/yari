@@ -8,7 +8,7 @@ Install dependencies:
 $ yarn
 ```
 
-Run the cli tool:
+Run the CLI tool:
 
 ```
 $ yarn tool --help
