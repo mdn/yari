@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
-import Search from "../header/search";
+import Search from "../ui/molecules/search";
 import "./index.scss";
 
 // Lazy sub-components

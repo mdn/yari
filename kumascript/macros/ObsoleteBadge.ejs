@@ -39,48 +39,10 @@ var titleAttrValue = mdn.localString({
     "zh-TW": "This is an obsolete API and is no longer guaranteed to work.",
     "en-US": "This is an obsolete API and is no longer guaranteed to work."
 });
-
-var str = "";
-
-if ($0) {
-    %><span title="<%=titleAttrValue%>" class="icon-only-inline"><i class="icon-trash"> </i></span><%
-} else {
-str = mdn.localString({
-    "ca": "Obsolete",
-    "cs": "Obsolete",
-    "de": "Veraltet",
-    "el": "Obsolete",
-    "es": "Obsolete",
-    "fa": "Obsolete",
-    "fi": "Obsolete",
-    "fr": "Obsolete",
-    "he": "Obsolete",
-    "hr": "Obsolete",
-    "hu": "Obsolete",
-    "id": "Obsolete",
-    "it": "Obsolete",
-    "ja": "廃止",
-    "ka": "Obsolete",
-    "ko": "Obsolete",
-    "ms": "Obsolete",
-    "nl": "Obsolete",
-    "pl": "Obsolete",
-    "ro": "Obsolete",
-    "ru": "Вышел из употребления",
-    "sq": "Obsolete",
-    "th": "Obsolete",
-    "tr": "Obsolete",
-    "vi": "Obsolete",
-    "bn-BD": "Obsolete",
-    "fy-NL": "Obsolete",
-    "ga-IE": "Obsolete",
-    "pt-BR": "Obsolete",
-    "pt-PT": "Obsolete",
-    "zh-CN": "Obsolete",
-    "zh-TW": "Obsolete",
-    "en-US": "Obsolete"
-});
-
-%><%-await template("SimpleBadge", [str, "obsoleteBadge", titleAttrValue])%><%
-}
 %>
+<svg class="icon obsolete" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+    role="img">
+    <title><%=titleAttrValue%></title>
+    <path
+        d="M38.75 78.13V36.88A1.85 1.85 0 0036.88 35h-3.75a1.85 1.85 0 00-1.88 1.88v41.25A1.85 1.85 0 0033.13 80h3.75a1.85 1.85 0 001.87-1.87zm15 0V36.88A1.85 1.85 0 0051.88 35h-3.75a1.85 1.85 0 00-1.88 1.88v41.25A1.85 1.85 0 0048.13 80h3.75a1.85 1.85 0 001.87-1.87zm15 0V36.88A1.85 1.85 0 0066.88 35h-3.75a1.85 1.85 0 00-1.88 1.88v41.25A1.85 1.85 0 0063.13 80h3.75a1.85 1.85 0 001.87-1.87zM36.88 20h26.25l-2.82-6.85a2.35 2.35 0 00-1-.65H40.74a2 2 0 00-1 .65zm54.37 1.88v3.75a1.85 1.85 0 01-1.87 1.87h-5.63v55.55c0 6.44-4.22 12-9.37 12H25.63c-5.16 0-9.38-5.27-9.38-11.72V27.5h-5.62a1.85 1.85 0 01-1.88-1.83v-3.8A1.85 1.85 0 0110.63 20h18.1l4.1-9.78A9.12 9.12 0 0140.63 5h18.75a9.1 9.1 0 017.79 5.22l4.1 9.78h18.11a1.85 1.85 0 011.87 1.87z" />
+</svg>

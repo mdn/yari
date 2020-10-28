@@ -1,8 +1,11 @@
-const childProcess = require("child_process");
-
 const chalk = require("chalk");
 
-const { Document, CONTENT_ROOT, REPOSITORY_URLS } = require("../content");
+const {
+  Document,
+  CONTENT_ROOT,
+  REPOSITORY_URLS,
+  execGit,
+} = require("../content");
 const kumascript = require("../kumascript");
 
 const { FLAW_LEVELS } = require("./constants");
@@ -35,23 +38,22 @@ function getCurrentGitBranch(root) {
     // Only bother getting fancy if the root is CONTENT_ROOT.
     // For other possible roots, just leave it to the default.
     if (root === CONTENT_ROOT) {
-      if (process.env.GITHUB_REF_NAME_SLUG) {
-        name = process.env.GITHUB_REF_NAME_SLUG;
+      if (process.env.GITHUB_REF) {
+        name = process.env.GITHUB_REF.split("/").slice(2).join("/");
       } else {
         // Most probably, you're hacking on the content, using Yari to preview,
         // in a topic branch. Then figure this out using a child-process.
         // Note, if you're in detached head, (e.g. "d6a6c3f17") instead of a named
         // branch, this will fail. But that's why we rely on a default.
-        const spawned = childProcess.spawnSync(
-          "git",
-          ["branch", "--show-current"],
-          {
+        try {
+          const output = execGit(["branch", "--show-current"], {
             cwd: root,
+          });
+          if (output) {
+            name = output;
           }
-        );
-        const output = spawned.stdout.toString().trim();
-        if (output) {
-          name = output;
+        } catch (e) {
+          /* allowed to fail for non git content root */
         }
       }
     }

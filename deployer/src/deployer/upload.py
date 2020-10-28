@@ -15,6 +15,7 @@ from .constants import (
     DEFAULT_CACHE_CONTROL,
     HASHED_CACHE_CONTROL,
     MAX_WORKERS_PARALLEL_UPLOADS,
+    LOG_EACH_SUCCESSFUL_UPLOAD,
 )
 from .utils import StopWatch, fmt_size, iterdir, log
 
@@ -35,7 +36,7 @@ def log_task(task):
         else:
             # With file upload tasks, the error message says it all.
             log.error(task.error)
-    else:
+    elif LOG_EACH_SUCCESSFUL_UPLOAD:
         log.success(task)
 
 
@@ -281,15 +282,35 @@ class BucketManager:
         return result
 
     def iter_file_tasks(self, build_directory, for_counting_only=False):
+        # Prepare a computation of what the root /index.html file would be
+        # called as a S3 key. Do this once so it becomes a quicker operation
+        # later when we compare *each* generated key to see if it matches this.
+        root_index_html_as_key = self.get_key(
+            build_directory, build_directory / "index.html"
+        )
+
         # Walk the build_directory and yield file upload tasks.
         for fp in iterdir(build_directory):
             # Exclude any files that aren't artifacts of the build.
             if fp.name.startswith(".") or fp.name.endswith("~"):
                 continue
-            elif for_counting_only:
+
+            key = self.get_key(build_directory, fp)
+
+            # The root index.html file is never useful. It's not the "home page"
+            # because the home page is actually `/$locale/` since `/` is handled
+            # specifically by the CDN.
+            # The client/build/index.html is actually just a template from
+            # create-react-app, used to server-side render all the other pages.
+            # But we don't want to upload it S3. So, delete it before doing the
+            # deployment step.
+            if root_index_html_as_key == key:
+                continue
+
+            if for_counting_only:
                 yield 1
             else:
-                yield UploadFileTask(fp, self.get_key(build_directory, fp))
+                yield UploadFileTask(fp, key)
 
     def iter_redirect_tasks(self, content_roots, for_counting_only=False):
         # Walk the content roots and yield redirect upload tasks.

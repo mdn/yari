@@ -31,3 +31,8 @@ DEFAULT_NO_PROGRESSBAR = config(
     default=not sys.stdout.isatty() or bool(json.loads(os.environ.get("CI", "false"))),
     cast=bool,
 )
+
+# If true, it will log every successul upload task as it happens.
+LOG_EACH_SUCCESSFUL_UPLOAD = config(
+    "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD", default=False, cast=bool
+)

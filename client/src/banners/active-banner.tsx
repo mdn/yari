@@ -1,77 +1,9 @@
-/**
- * This file defines a React Banner component that renders a
- * call-to-action banner fixed to the bottom of the screen. The props
- * of the Banner component allow customization of the title,
- * description and button call-to-action text of the banner, as well
- * as the URL of the page that clicking on the call-to-action button
- * takes the user to. The Banner component is not exported,
- * however. Instead, we export an ActiveBanner component that pages should
- * use. It loops through an array of banner IDs for the first banner that is enabled by
- * Waffle and has not been dismissed by the user. If it finds such a
- * banner, it displays it with a <Banner>. Otherwise, if none of the
- * specified banners is enabled, or if all enabled banners have been
- * recently dismissed, then it displays nothing.
- *
- * @flow
- */
-import * as React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import CloseIcon from "../kumastyles/general/close.svg";
+import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import { CATEGORY_MONTHLY_PAYMENTS, useGA } from "../ga-context";
 import { useLocale } from "../hooks";
-import { useUserData } from "../user-context";
-
-// TODO: split up banners into separate lazy-loaded component files
-import "../kumastyles/components/banners/base.scss";
-import "../kumastyles/components/banners/developer-needs.scss";
-import "../kumastyles/components/banners/l10n-survey.scss";
-import "../kumastyles/components/banners/mdn-subscriptions.scss";
-
-// Set a localStorage key with a timestamp the specified number of
-// days into the future. When the user dismisses a banner we use this
-// to prevent the redisplay of the banner for a while.
-function setEmbargoed(id, days) {
-  try {
-    let key = `banner.${id}.embargoed_until`;
-    localStorage.setItem(
-      key,
-      String(Date.now() + Math.round(days * 24 * 60 * 60 * 1000))
-    );
-  } catch (e) {
-    // If localStorage is not supported, then embargos are not supported.
-  }
-}
-
-// See whether the specified id was passed to setEmbargoed() fewer than the
-// specified number of days ago. We check this before displaying a banner
-// so a user does not see a banner they recently dismissed.
-function isEmbargoed(id) {
-  try {
-    let key = `banner.${id}.embargoed_until`;
-    let value = localStorage.getItem(key);
-    // If it is not set, then the banner has never been dismissed
-    if (!value) {
-      return false;
-    }
-    // The value from localStorage is a timestamp that we compare to
-    // the current time
-    if (parseInt(value) > Date.now()) {
-      // If the timestamp is in the future then the banner has been
-      // dismissed and the embargo has not yet expired.
-      return true;
-    } else {
-      // Otherwise, the banner was dismissed, but the embargo has
-      // expired and we can show it again.
-      localStorage.removeItem(key);
-      return false;
-    }
-  } catch (e) {
-    // If localStorage is not supported, then the embargo feature
-    // just won't work
-    return false;
-  }
-}
+import { DEVELOPER_NEEDS_ID, SUBSCRIPTION_ID } from "./ids";
 
 // The <Banner> component displays a simple call-to-action banner at
 // the bottom of the window. The following props allow it to be customized.
@@ -96,16 +28,13 @@ export type BannerProps = {
   cta: string;
   // The URL of the page to open when the button is clicked
   url: string;
-  // An optional property. If present, it specifies the number of days
-  // for which a dismissed banner will not be shown. If omitted, the
-  // default is 5 days.
-  embargoDays?: number;
   // An optional property. If present, it should be set to true to indicate
   // that the main cta link should open in a new window
   newWindow?: boolean;
   // an optional property. If present, it will be called when the CTA
   // link is clicked
   onCTAClick?: (event: React.SyntheticEvent<HTMLAnchorElement>) => any;
+  onDismissed: () => void;
 };
 
 function Banner(props: BannerProps) {
@@ -120,15 +49,13 @@ function Banner(props: BannerProps) {
     <div className={containerClassNames}>
       <div id="mdn-cta-content" className="mdn-cta-content">
         <div id={props.id} className="mdn-cta-content-container">
-          {props.title && (
-            <h2 className="mdn-cta-title slab-text">{props.title}</h2>
-          )}
+          {props.title && <h2 className="mdn-cta-title">{props.title}</h2>}
           <p className="mdn-cta-copy">{props.copy}</p>
         </div>
         <p className="mdn-cta-button-container">
           <a
             href={props.url}
-            className="mdn-cta-button"
+            className="button light"
             target={props.newWindow ? "_blank" : undefined}
             rel={props.newWindow ? "noopener noreferrer" : undefined}
             onClick={props.onCTAClick}
@@ -145,20 +72,17 @@ function Banner(props: BannerProps) {
           aria-label={"Close banner"}
           onClick={() => {
             setDismissed(true);
-            setEmbargoed(props.id, props.embargoDays || 5);
+            props.onDismissed();
           }}
         >
-          <img src={CloseIcon} alt="close" className="icon icon-close" />
+          <CloseIcon />
         </button>
       </div>
     </div>
   );
 }
 
-const DEVELOPER_NEEDS_ID = "developer_needs";
-const SUBSCRIPTION_ID = "subscription_banner";
-
-function DeveloperNeedsBanner() {
+function DeveloperNeedsBanner({ onDismissed }: { onDismissed: () => void }) {
   return (
     <Banner
       id={DEVELOPER_NEEDS_ID}
@@ -170,11 +94,12 @@ function DeveloperNeedsBanner() {
       cta={"Take the survey"}
       url={"https://qsurvey.mozilla.com/s3/Developer-Needs-Assessment-2019"}
       newWindow
+      onDismissed={onDismissed}
     />
   );
 }
 
-function SubscriptionBanner() {
+function SubscriptionBanner({ onDismissed }: { onDismissed: () => void }) {
   const ga = useGA();
   const locale = useLocale();
 
@@ -195,27 +120,26 @@ function SubscriptionBanner() {
       copy={"Support MDN with a $5 monthly subscription"}
       cta={"Learn more"}
       url={`/${locale}/payments/`}
-      embargoDays={7}
+      onDismissed={onDismissed}
     />
   );
 }
 
-export default function ActiveBanner() {
-  const userData = useUserData();
-
-  if (!userData) {
-    return null;
+// The reason we're not just exporting each individual banner is because to
+// be able to lazy-load the contents of this file it needs to export a
+// default function. This this one function is the link between the <App>
+// and all the individual banner components.
+export default function ActiveBanner({
+  id,
+  onDismissed,
+}: {
+  id: string;
+  onDismissed: () => void;
+}) {
+  if (id === DEVELOPER_NEEDS_ID) {
+    return <DeveloperNeedsBanner onDismissed={onDismissed} />;
+  } else if (id === SUBSCRIPTION_ID) {
+    return <SubscriptionBanner onDismissed={onDismissed} />;
   }
-
-  const isEnabled = (id: string) =>
-    userData.waffle.flags[id] && !isEmbargoed(id);
-
-  // The order of the if statements is important and it's our source of
-  // truth about which banner is "more important" than the other.
-  if (isEnabled(DEVELOPER_NEEDS_ID)) {
-    return <DeveloperNeedsBanner />;
-  } else if (isEnabled(SUBSCRIPTION_ID) && !userData.isSubscriber) {
-    return <SubscriptionBanner />;
-  }
-  return null;
+  throw new Error(`Unrecognized banner to display (${id})`);
 }
