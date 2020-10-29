@@ -11,8 +11,7 @@ import { Document } from "./document";
 import { Footer } from "./ui/organisms/footer";
 import { Header } from "./ui/organisms/header";
 import { NoMatch } from "./routing";
-
-const ActiveBanner = lazy(() => import("./banners/active-banner"));
+import { Banner } from "./banners";
 
 const AllFlaws = lazy(() => import("./flaws"));
 const DocumentEdit = lazy(() => import("./document/forms/edit"));
@@ -27,11 +26,7 @@ function Layout({ pageType, children }) {
         <Header />
         {children}
         <Footer />
-        {!isServer && (
-          <Suspense fallback={null}>
-            <ActiveBanner />
-          </Suspense>
-        )}
+        {!isServer && <Banner />}
       </div>
       {/* Shown on mobile when main navigation is expanded to provide a clear distinction between the foreground menu and the page content */}
       <div className="page-overlay hidden"></div>
