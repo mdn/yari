@@ -72,7 +72,6 @@ def update_lambda_functions(ctx, directory):
 )
 @click.pass_context
 def whatsdeployed(ctx, directory: Path, output: str):
-    # TODO: `ctx.obj["dry_run"]` can't actually be set. Figure out why.
     dump_whatsdeployed(directory, Path(output), dry_run=ctx.obj["dry_run"])
 
 
