@@ -11,6 +11,23 @@ import alasql from "../../../node_modules/alasql/dist/alasql.min.js";
 import { Document, PastQuery } from "./types";
 import "./sql-table.scss";
 
+// These are temporary things because you can't currently import types from
+// alasql. See above hack and link to issue
+type FauxAlaSQLStatementColumn = {
+  columnid: string;
+  as?: string;
+};
+type FauxAlaSQLStatementFrom = {
+  tableid: string;
+  as?: string;
+};
+type FauxAlaSQLStatement = {
+  columns: FauxAlaSQLStatementColumn[];
+  from: FauxAlaSQLStatementFrom[];
+  order?: any[];
+  limit?: any[];
+};
+
 const DEFAULT_QUERY = "SELECT title FROM ? ORDER BY popularity DESC LIMIT 10";
 const ADVANCED_QUERIES: string[] = [];
 ADVANCED_QUERIES.push(`SELECT mdn_url, normalizedMacrosCount -> jsxref, popularity
@@ -95,16 +112,50 @@ export function SQLTable({ documents }: { documents: Document[] }) {
     }
   }, [query, documents]);
 
+  const [
+    parsedStatement,
+    setParsedStatement,
+  ] = useState<FauxAlaSQLStatement | null>(null);
+
   useEffect(() => {
     if (queryDraft) {
       try {
-        alasql.parse(queryDraft);
+        const parsed = alasql.parse(queryDraft);
+        setParsedStatement(parsed.statements[0]);
         setSQLParserError(null);
       } catch (err) {
         setSQLParserError(err);
       }
     }
   }, [queryDraft]);
+
+  const [statementWarnings, setStatementWarnings] = useState<string[]>([]);
+  useEffect(() => {
+    const newWarnings: string[] = [];
+    if (parsedStatement !== null) {
+      const document = documents[0];
+      const knownKeysLC = Object.keys(document).map((x) => x.toLowerCase());
+      for (const column of parsedStatement.columns) {
+        if (!knownKeysLC.includes(column.columnid.toLowerCase())) {
+          newWarnings.push(
+            `Column '${column.columnid}' is probably not in any document.`
+          );
+        }
+      }
+      if (!parsedStatement.from) {
+        newWarnings.push(`Missing the 'FROM ?' part of the query.`);
+      } else {
+        if (
+          !parsedStatement.from.find(
+            (table) => table.as && table.as === "default"
+          )
+        ) {
+          newWarnings.push(`Probably the 'FROM ?' part of the query.`);
+        }
+      }
+    }
+    setStatementWarnings(newWarnings);
+  }, [parsedStatement, documents]);
 
   const location = useLocation();
 
@@ -160,6 +211,20 @@ export function SQLTable({ documents }: { documents: Document[] }) {
           }}
           // rows={Math.max(5, queryDraft.split("\n").length + 1)}
         />
+        {!sqlParserError && !!statementWarnings.length && (
+          <div className="query-statement-warnings">
+            <p>Warnings</p>
+            <ul>
+              {statementWarnings.map((warning) => {
+                return (
+                  <li key={warning}>
+                    <code>{warning}</code>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
         <div className="query-buttons">
           {showSQLParserError && sqlParserError && (
             <div className="sql-error">
@@ -204,6 +269,11 @@ export function SQLTable({ documents }: { documents: Document[] }) {
             onClick={() => {
               toggleShowSQLParserError((s) => !s);
             }}
+            style={
+              sqlParserError && !showSQLParserError
+                ? { color: "red" }
+                : undefined
+            }
           >
             {showSQLParserError && sqlParserError
               ? "Close error"

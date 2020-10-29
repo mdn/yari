@@ -20,6 +20,16 @@
       margin-bottom: 10px;
     }
   }
+
+  .query-statement-warnings {
+    background-color: rgb(255, 226, 226);
+    p {
+      margin-bottom: 0;
+    }
+    ul {
+      margin: 2px;
+    }
+  }
   .share-url {
     a {
       font-size: 80%;
