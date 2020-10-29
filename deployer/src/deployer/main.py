@@ -59,7 +59,7 @@ def update_lambda_functions(ctx, directory):
 
 @cli.command(
     help="Create a whatsdeployed.json file "
-    "by asking git what the current HEAD sha is and what branch you're on."
+    "by asking git for the date and commit hash of HEAD."
 )
 @click.option(
     "--output",
