@@ -27,9 +27,11 @@ function tryOrExit(f) {
 }
 
 program
+  .bin("yarn tool")
+  .name("tool")
   .version("0.0.0")
   .disableGlobalOption("--silent")
-  .command("redirect-validate", "Check the _redirects.txt file(s)")
+  .command("validate-redirects", "Check the _redirects.txt file(s)")
   .action(
     tryOrExit(({ logger }) => {
       Redirect.load(null, true);
@@ -37,7 +39,7 @@ program
     })
   )
 
-  .command("redirect-test", "Test a URL (pathname) to see if it redirects")
+  .command("test-redirects", "Test URLs (pathnames) to see if they redirect")
   .argument("[urls...]", "URLs to test")
   .action(
     tryOrExit(({ args, logger }) => {
@@ -52,7 +54,7 @@ program
     })
   )
 
-  .command("redirect-add", "Add a new redirect")
+  .command("add-redirect", "Add a new redirect")
   .argument("<from>", "From-URL", {
     validator: (value) => {
       Redirect.validateFromURL(value);
@@ -74,7 +76,7 @@ program
     })
   )
 
-  .command("content-delete", "Delete content")
+  .command("delete", "Delete content")
   .argument("<slug>", "Slug")
   .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
@@ -112,7 +114,7 @@ program
     })
   )
 
-  .command("content-move", "Move content to a new slug")
+  .command("move", "Move content to a new slug")
   .argument("<oldSlug>", "Old slug")
   .argument("<newSlug>", "New slug")
   .argument("[locale]", "Locale", {
@@ -152,7 +154,7 @@ program
     })
   )
 
-  .command("content-edit", "Spawn your EDITOR for an existing slug")
+  .command("edit", "Spawn your EDITOR for an existing slug")
   .argument("<slug>", "Slug of the document in question")
   .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
@@ -169,7 +171,7 @@ program
     })
   )
 
-  .command("content-create", "Spawn your Editor for a new slug")
+  .command("create", "Spawn your Editor for a new slug")
   .argument("<slug>", "Slug of the document in question")
   .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
@@ -191,7 +193,7 @@ program
     })
   )
 
-  .command("content-validate", "Validate a document")
+  .command("validate", "Validate a document")
   .argument("<slug>", "Slug of the document in question")
   .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
@@ -205,7 +207,7 @@ program
     })
   )
 
-  .command("content-preview", "Open a preview of a slug")
+  .command("preview", "Open a preview of a slug")
   .argument("<slug>", "Slug of the document in question")
   .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
