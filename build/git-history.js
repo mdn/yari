@@ -1,32 +1,52 @@
-const childProcess = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
-const { execGit } = require("../content");
+const { CONTENT_ROOT, execGit } = require("../content");
 
 function getFromGit() {
-  const output = execGit([
-    "log",
-    "--name-only",
-    "--no-decorate",
-    '--format="←→ %ci"',
-    "--date-order",
-    "--reverse",
-  ]);
+  const repoRoot = execGit(["rev-parse", "--show-toplevel"], {
+    cwd: CONTENT_ROOT,
+  });
+
+  const MARKER = "COMMIT:";
+  const output = execGit(
+    [
+      "log",
+      "--name-only",
+      "--no-decorate",
+      `--format=${MARKER}%cI`,
+      "--date-order",
+      "--reverse",
+    ],
+    {
+      cwd: repoRoot,
+    }
+  );
+
   const map = new Map();
-  output
-    .split("←→")
-    .slice(1)
-    .forEach((commit) => {
-      const [date, , ...files] = commit.trim().split("\n");
-      const iso = new Date(date).toISOString();
-      for (const file of files) {
-        map.set(file, iso);
-      }
-    });
+  let date = null;
+  for (let line of output.split("\n")) {
+    // Happens to file paths that contain non-ascii or control charaters.
+    // E.g. "files/en-us/glossary/b\303\251zier_curve/index.html"
+    if (line.startsWith('"') && line.endsWith('"')) {
+      line = line.slice(1, -1);
+    }
+    if (line.startsWith(MARKER)) {
+      date = new Date(line.replace(MARKER, ""));
+    } else if (line) {
+      map.set(line, date);
+    }
+  }
   return map;
 }
-function gather(outputfile, previousfile = null) {}
+function gather(outputfile, previousfile = null) {
+  // Every key in this map
+  const map = getFromGit();
+  for (const [key, date] of map) {
+    if (!key.includes("files/en-us/")) console.log({ key, date });
+    // console.log({ key, date });
+  }
+}
 
 module.exports = {
   gather,
