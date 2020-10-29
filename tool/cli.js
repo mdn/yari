@@ -31,7 +31,7 @@ program
   .name("tool")
   .version("0.0.0")
   .disableGlobalOption("--silent")
-  .command("validate-redirect", "Check the _redirects.txt file(s)")
+  .command("validate-redirects", "Check the _redirects.txt file(s)")
   .action(
     tryOrExit(({ logger }) => {
       Redirect.load(null, true);
@@ -39,7 +39,7 @@ program
     })
   )
 
-  .command("test-redirect", "Test a URL (pathname) to see if it redirects")
+  .command("test-redirects", "Test URLs (pathnames) to see if they redirect")
   .argument("[urls...]", "URLs to test")
   .action(
     tryOrExit(({ args, logger }) => {

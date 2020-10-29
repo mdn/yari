@@ -2,48 +2,13 @@
 
 ## Basic usage
 
-Install dependencies:
-
-```sh
-yarn
-```
-
 Run the CLI tool:
 
 ```sh
 yarn tool --help
-
-  tool 0.0.0
-
-  USAGE
-
-    ▸ yarn tool <command> [ARGUMENTS...] [OPTIONS...]
-
-
-  COMMANDS — Type 'yarn tool help <command>' to get some help about a command
-
-    validate-redirect                    Check the _redirects.txt file(s)
-    test-redirect                        Test a URL (pathname) to see if it
-                                         redirects
-    add-redirect                         Add a new redirect
-    delete                               Delete content
-    move                                 Move content to a new slug
-    edit                                 Spawn your EDITOR for an existing slug
-    create                               Spawn your Editor for a new slug
-    validate                             Validate a document
-    preview                              Open a preview of a slug
-
-  GLOBAL OPTIONS
-
-    -h, --help                           Display global help or command-related
-                                         help.
-    -V, --version                        Display version.
-    --no-color                           Disable use of colors in output.
-    -v, --verbose                        Verbose mode: will also output debug
-                                         messages.
-    --quiet                              Quiet mode - only displays warn and error
-                                         messages.
 ```
+
+## Commands
 
 ### validate-redirect
 
@@ -61,22 +26,22 @@ Add a redirect to the `_redirects.txt`.
 ### delete
 
 Delete a document (and optionally all children) by its slug. Optionally add an
-redirect if deleting a single document. Also stages changes in git (except for
+redirect if deleting a single document. Also stages changes in `git` (except for
 redirects).
 
 ### move
 
 Move a document and its children. Adds the according redirects and stages
-changes in git (except for redirects).
+changes in `git` (except for redirects).
 
 ### edit
 
-Open a document by its slug in the preferred editor (as per the EDITOR
+Open a document by its slug in the preferred editor (as per the `EDITOR`
 environment variable).
 
-### crate
+### create
 
-Open a new document by its slug in the preferred editor (as per the EDITOR
+Open a _new_ document by its slug in the preferred editor (as per the `EDITOR`
 environment variable).
 
 ### validate
@@ -85,5 +50,5 @@ Run basic validation for a document (only verifies the slug for now).
 
 ### preview
 
-Spawn a preview of a given slug in your browser. This depends on a running
+Open a preview of a given slug in your browser. This depends on a running
 dev-server (`yarn start`).
