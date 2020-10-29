@@ -10,8 +10,8 @@ const Document = require("./document");
 const { getPopularities } = require("./popularities");
 const Redirect = require("./redirect");
 const Image = require("./image");
-const { buildURL, memoize, slugToFolder } = require("./utils");
-const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
+const { buildURL, memoize, slugToFolder, execGit } = require("./utils");
+const { resolveFundamental } = require("../libs/fundamental-redirects");
 
 module.exports = {
   CONTENT_ROOT,
@@ -31,4 +31,5 @@ module.exports = {
   memoize,
   slugToFolder,
   resolveFundamental,
+  execGit,
 };

@@ -66,17 +66,15 @@ router.get("/", withDocument, (req, res) => {
 router.put("/", withDocument, async (req, res) => {
   const { rawHTML, metadata } = req.body;
   if (metadata.title && rawHTML) {
-    Document.update(
-      req.document.fileInfo.folder,
-      rawHTML.trim() + "\n",
-      metadata
-    );
+    Document.update(req.document.url, rawHTML.trim() + "\n", metadata);
   }
   res.sendStatus(200);
 });
 
 router.delete("/", withDocument, (req, res) => {
-  Document.del(req.document.fileInfo.folder);
+  Document.remove(req.document.metadata.slug, req.document.metadata.locale, {
+    recursive: true,
+  });
   res.sendStatus(200);
 });
 
