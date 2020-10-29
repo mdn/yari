@@ -9,6 +9,7 @@ const path = require("path");
 
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
 const { Redirect, Document, buildURL } = require("../content");
+const { gatherGitHistory } = require("../build");
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
 
@@ -218,6 +219,20 @@ program
       const { slug, locale } = args;
       const url = `http://localhost:${PORT}${buildURL(locale, slug)}`;
       await open(url);
+    })
+  )
+
+  .command(
+    "gather-git-history",
+    "Extract all last-modified dates from the git logs"
+  )
+  .argument("<outputfile>", "Where to dump the JSON file with all the data")
+  .argument("[previousfile]", "Optional old file to extend")
+  .action(
+    tryOrExit(async ({ args }) => {
+      const { outputfile, previousfile } = args;
+      const data = gatherGitHistory(outputfile, previousfile);
+      console.log(chalk.green(data));
     })
   );
 
