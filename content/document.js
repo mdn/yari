@@ -14,6 +14,7 @@ const {
 } = require("./constants");
 const { getPopularities } = require("./popularities");
 const { getWikiHistories } = require("./wikihistories");
+const { getGitHistories } = require("./githistories");
 
 const { buildURL, memoize, slugToFolder, execGit } = require("./utils");
 const Redirect = require("./redirect");
@@ -169,13 +170,21 @@ const read = memoize((folder) => {
 
   const locale = extractLocale(folder);
   const url = `/${locale}/docs/${metadata.slug}`;
+
+  // The last-modified is always coming from the git logs. Independent of
+  // which root it is.
+  const gitHistory = getGitHistories(root, locale).get(
+    path.relative(root, filePath)
+  );
+  const modified = (gitHistory && gitHistory.modified) || null;
+  // Use the wiki histories for a list of legacy contributors.
   const wikiHistory = getWikiHistories(root, locale).get(url);
   const fullMetadata = {
     metadata: {
       ...metadata,
       locale,
       popularity: getPopularities().get(url) || 0.0,
-      modified: wikiHistory ? wikiHistory.modified : null,
+      modified,
       contributors: wikiHistory ? wikiHistory.contributors : [],
     },
     url,
