@@ -3,9 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import FlexSearch from "flexsearch";
 import useSWR, { mutate } from "swr";
-import FuzzySearch from "./fuzzy-search";
 
+import FuzzySearch from "./fuzzy-search";
 import { useWebSocketMessageHandler } from "./web-socket";
+import { preload, preloadSupported } from "./document/preloading";
 
 import { useLocale } from "./hooks";
 
@@ -315,6 +316,11 @@ function InnerSearchNavigateWidget() {
                     "result-item " + (i === highlightedIndex ? "highlit" : ""),
                   item,
                   index: i,
+                  onMouseOver: () => {
+                    if (preloadSupported()) {
+                      preload(`${item.url}/index.json`);
+                    }
+                  },
                 })}
               >
                 <HighlightMatch title={item.title} q={inputValue} />

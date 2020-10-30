@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 import { DocParent } from "../../../document/types";
+import { PreloadingDocumentLink } from "../../../document/preloading";
 
 import "./index.scss";
 
@@ -25,28 +25,28 @@ export function Breadcrumbs({ parents }: { parents: DocParent[] }) {
           if (!isLast) {
             return (
               <li key={parent.uri} property="itemListElement" typeof="ListItem">
-                <Link
+                <PreloadingDocumentLink
                   to={parent.uri}
                   className={isPrevious ? "breadcrumb-previous" : "breadcrumb"}
                   property="item"
                   typeof="WebPage"
                 >
                   <span property="name">{parent.title}</span>
-                </Link>
+                </PreloadingDocumentLink>
                 <meta property="position" content={`${i + 1}`} />
               </li>
             );
           } else {
             return (
               <li key={parent.uri} property="itemListElement" typeof="ListItem">
-                <Link
+                <PreloadingDocumentLink
                   to={parent.uri}
                   className="breadcrumb-current-page"
                   property="item"
                   typeof="WebPage"
                 >
                   <span property="name">{parent.title}</span>
-                </Link>
+                </PreloadingDocumentLink>
                 <meta property="position" content={`${i + 1}`} />
               </li>
             );
