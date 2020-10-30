@@ -73,7 +73,7 @@
     "swr": "0.3.7",
     "tempy": "1.0.0",
     "typeface-zilla-slab": "0.0.72",
-    "use-debounce": "^3.4.3",
+    "use-debounce": "^5.0.1",
     "webpack-cli": "4.1.0",
     "webpack-node-externals": "2.5.2",
     "ws": "^7.3.1"
