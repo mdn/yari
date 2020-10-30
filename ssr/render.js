@@ -2,8 +2,8 @@ import fs from "fs";
 import path from "path";
 
 import jsesc from "jsesc";
-import cheerio from "./monkeypatched-cheerio";
 import { renderToString } from "react-dom/server";
+import cheerio from "./monkeypatched-cheerio";
 
 const lazy = (creator) => {
   let res;
@@ -16,9 +16,11 @@ const lazy = (creator) => {
   };
 };
 
+const clientBuildRoot = path.resolve(__dirname, "../../client/build");
+
 const readBuildHTML = lazy(() => {
   const html = fs.readFileSync(
-    path.resolve(__dirname, "../../client/build/index.html"),
+    path.join(clientBuildRoot, "index.html"),
     "utf8"
   );
   if (!html.includes('<div id="root"></div>')) {
@@ -29,6 +31,32 @@ const readBuildHTML = lazy(() => {
   return html;
 });
 
+const extractWebFontURLs = lazy(() => {
+  const urls = [];
+  const manifest = JSON.parse(
+    fs.readFileSync(path.join(clientBuildRoot, "asset-manifest.json"), "utf8")
+  );
+  for (const entrypoint of manifest.entrypoints) {
+    if (!entrypoint.endsWith(".css")) continue;
+    const css = fs.readFileSync(
+      path.join(clientBuildRoot, entrypoint),
+      "utf-8"
+    );
+    const generator = extractCSSURLs(css, (url) => url.endsWith(".woff2"));
+    urls.push(...generator);
+  }
+  return urls;
+});
+
+function* extractCSSURLs(css, filterFunction) {
+  for (const match of css.matchAll(/url\((.*?)\)/g)) {
+    const url = match[1];
+    if (filterFunction(url)) {
+      yield url;
+    }
+  }
+}
+
 function serializeDocumentData(data) {
   return jsesc(JSON.stringify(data), {
     json: true,
@@ -38,6 +66,7 @@ function serializeDocumentData(data) {
 
 export default function render(renderApp, doc) {
   const buildHtml = readBuildHTML();
+  const webfontURLs = extractWebFontURLs();
   const $ = cheerio.load(buildHtml);
 
   const rendered = renderToString(renderApp);
@@ -76,7 +105,14 @@ export default function render(renderApp, doc) {
 
   $('link[rel="canonical"]').attr("href", canonicalURL);
 
-  $("title").text(pageTitle);
+  const $title = $("title");
+  $title.text(pageTitle);
+
+  for (const webfontURL of webfontURLs) {
+    $('<link rel="preload" as="font" type="font/woff2" crossorigin>')
+      .attr("href", webfontURL)
+      .insertAfter($title);
+  }
 
   $("#root").html(rendered);
 

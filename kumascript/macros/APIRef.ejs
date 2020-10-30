@@ -133,10 +133,10 @@ getImplementedBy(webAPIData[0]);
 // output helpers
 
 var badges = {
-  ExperimentalBadge : '<span class="sidebar-icon">' + await template("ExperimentalBadge", [1]) + '</span>',
-  NonStandardBadge  : '<span class="sidebar-icon">' + await template("NonStandardBadge", [1]) + '</span>',
-  DeprecatedBadge   : '<span class="sidebar-icon">' + await template("DeprecatedBadge", [1]) + '</span>',
-  ObsoleteBadge     : '<span class="sidebar-icon">' + await template("ObsoleteBadge", [1]) + '</span>',
+  ExperimentalBadge : await template("ExperimentalBadge"),
+  NonStandardBadge : await template("NonStandardBadge"),
+  DeprecatedBadge : await template("DeprecatedBadge"),
+  ObsoleteBadge : await template("ObsoleteBadge"),
 }
 
 function buildSublist(pages, title) {

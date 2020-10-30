@@ -1,26 +1,92 @@
 const fs = require("fs");
 const path = require("path");
 
+const { resolveFundamental } = require("../libs/fundamental-redirects");
 const { CONTENT_ROOT, VALID_LOCALES } = require("./constants");
-const { buildURL } = require("./utils");
-const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
+
+// Throw if this can't be a redirect from-URL.
+function validateFromURL(url) {
+  // This is a circular dependency we should solve that in another way.
+  const { findByURL } = require("./document");
+  validateURLLocale(url);
+  const document = findByURL(url);
+  if (document) {
+    throw new Error(
+      `From-URL resolves to a file on disk (${document.fileInfo.path})`
+    );
+  }
+  const resolved = resolve(url);
+  if (resolved !== url) {
+    throw new Error(
+      `${url} is already matched as a redirect (to: '${resolved}')`
+    );
+  }
+}
+
+// Throw if this can't be a redirect to-URL.
+function validateToURL(url) {
+  // If it's not external, it has to go to a valid document
+  if (url.includes("://")) {
+    // If this throws, conveniently the validator will do its job.
+    const url = new URL(url);
+    if (url.protocol !== "https:") {
+      throw new Error("We only redirect to https://");
+    }
+  } else {
+    validateURLLocale(url);
+
+    // Can't point to something that redirects to something
+    const resolved = resolve(url);
+    if (resolved !== url) {
+      throw new Error(
+        `${url} is already matched as a redirect (to: '${resolved}')`
+      );
+    }
+    // XXX Commented out because how else are going to be able
+    // redirect to archived documents.
+    // // It has to match a document
+    // const document = Document.findByURL(url);
+    // if (!document) {
+    //   throw new Error(
+    //     `To-URL has to resolve to a file on disk (${document.fileInfo.path})`
+    //   );
+    // }
+  }
+}
+
+function validateURLLocale(url) {
+  // Check that it's a valid document URL
+  const locale = url.split("/")[1];
+  if (!locale || url.split("/")[2] !== "docs") {
+    throw new Error("The from-URL is expected to be /$locale/docs/");
+  }
+  const validValues = [...VALID_LOCALES.values()];
+  if (!validValues.includes(locale)) {
+    throw new Error(`'${locale}' not in ${validValues}`);
+  }
+}
+
+function add(locale, urlPairs) {
+  // Copied from the load() function but without any checking and preserving
+  // sort order.
+  const redirectsFilePath = path.join(
+    CONTENT_ROOT,
+    locale.toLowerCase(),
+    "_redirects.txt"
+  );
+  const content = fs.readFileSync(redirectsFilePath, "utf-8");
+  const pairs = content
+    .trim()
+    .split("\n")
+    // Skip the header line.
+    .slice(1)
+    .map((line) => line.trim().split(/\s+/));
+  pairs.push(...urlPairs);
+  write(path.join(CONTENT_ROOT, locale.toLowerCase()), pairs);
+}
 
 // The module level cache
 const redirects = new Map();
-
-function add(locale, oldSlug, newSlug) {
-  if (redirects.size === 0) {
-    load();
-  }
-  const oldURL = buildURL(locale, oldSlug);
-  const newURL = buildURL(locale, newSlug);
-  const pairs = Array.from(redirects.entries()).map(([from, to]) => [
-    from,
-    to.startsWith(oldURL) ? to.replace(oldURL, newURL) : to,
-  ]);
-  pairs.push([oldURL, newURL]);
-  write(path.join(CONTENT_ROOT, locale), pairs);
-}
 
 function load(files = null, verbose = false) {
   if (!files) {
@@ -96,7 +162,7 @@ function shortCuts(pairs, throws = false) {
 
   // Expand all "edges" and keep track of the nodes we traverse.
   const transit = (s, froms = []) => {
-    let next = dag.get(s);
+    const next = dag.get(s);
     if (next) {
       if (froms.includes(next)) {
         const msg = `redirect cycle [${froms.join(", ")}] → ${next}`;
@@ -128,7 +194,7 @@ function shortCuts(pairs, throws = false) {
     return 0;
   };
 
-  for (const [from, _] of pairs) {
+  for (const [from] of pairs) {
     const [froms = [], to] = transit(from);
     for (const from of froms) {
       dag.set(from, to);
@@ -140,11 +206,14 @@ function shortCuts(pairs, throws = false) {
 }
 
 function write(localeFolder, pairs) {
-  const transitivePairs = shortCuts(pairs);
+  save(localeFolder, shortCuts(pairs));
+}
+
+function save(localeFolder, pairs) {
   const filePath = path.join(localeFolder, "_redirects.txt");
   const writeStream = fs.createWriteStream(filePath);
   writeStream.write(`# FROM-URL\tTO-URL\n`);
-  for (const [fromURL, toURL] of transitivePairs) {
+  for (const [fromURL, toURL] of pairs) {
     writeStream.write(`${fromURL}\t${toURL}\n`);
   }
   writeStream.end();
@@ -155,4 +224,6 @@ module.exports = {
   resolve,
   write,
   load,
+  validateFromURL,
+  validateToURL,
 };

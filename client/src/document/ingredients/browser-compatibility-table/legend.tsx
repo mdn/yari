@@ -77,8 +77,8 @@ function getActiveLegendItems(compat: bcd.Identifier) {
 export function Legend({ compat }: { compat: bcd.Identifier }) {
   return (
     <section className="bc-legend">
-      <h3 className="offscreen highlight-spanned" id="Legend">
-        <span className="highlight-span">Legend</span>
+      <h3 className="visually-hidden" id="Legend">
+        Legend
       </h3>
       <dl>
         {getActiveLegendItems(compat).map(([key, label]) =>
@@ -101,7 +101,7 @@ export function Legend({ compat }: { compat: bcd.Identifier }) {
               <dt>
                 <abbr className="only-icon" title={label}>
                   <span>{label}</span>
-                  <i className={`ic-${key}`} />
+                  <i className={`legend-icons ic-${key}`} />
                 </abbr>
               </dt>
               <dd>{label}</dd>

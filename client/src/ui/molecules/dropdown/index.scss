@@ -1,0 +1,64 @@
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+
+$menu-box-shadow: 0 2px 8px 0 $neutral-500;
+$menu-border: solid 1px $neutral-400;
+$menu-border-radius: 4px;
+
+.dropdown-container {
+  position: relative;
+
+  .dropdown-menu-label {
+    align-items: center;
+    border: 0;
+    color: $text-color;
+    display: flex;
+    flex-direction: row;
+    font-weight: bold;
+    padding: 0;
+    white-space: nowrap;
+
+    @media #{$mq-tablet-and-up} {
+      padding: 0 $base-unit $base-unit;
+    }
+  }
+
+  .dropdown-menu-items {
+    background-color: $neutral-600;
+    display: none;
+    flex-direction: column;
+    margin: ($base-unit * 2) 0;
+    min-width: 100%;
+
+    @media #{$mq-tablet-and-up} {
+      border: $menu-border;
+      border-radius: $menu-border-radius;
+      box-shadow: $menu-box-shadow;
+      position: absolute;
+      right: 0;
+      z-index: $top-layer;
+    }
+
+    a,
+    button {
+      color: $neutral-100;
+      display: inline-block;
+      padding: $base-unit ($base-unit * 2);
+      /* buttons have centered text by default */
+      text-align: left;
+      white-space: nowrap;
+      width: 100%;
+
+      &:hover,
+      &:focus {
+        background-color: $primary-200;
+        color: $neutral-600;
+        text-decoration: none;
+      }
+    }
+  }
+
+  .show {
+    display: block;
+  }
+}

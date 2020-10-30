@@ -1,0 +1,86 @@
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+@import "~@mdn/minimalist/sass/mixins/buttons";
+
+.mdn-cta-container {
+  display: none;
+
+  @media #{$mq-tablet-and-up} {
+    background-image: $standard-gradient;
+    bottom: 0;
+    display: block;
+    height: 190px;
+    padding: 24px;
+    position: fixed;
+    text-align: center;
+    width: 100%;
+    z-index: 99;
+
+    .mdn-cta-title {
+      background-color: $neutral-100;
+      color: $text-color-inverted;
+      display: inline-block;
+      font-size: $large-font-size;
+      font-weight: normal;
+      margin: 0;
+      padding: 0 10px 0 20px;
+      position: relative;
+    }
+
+    .mdn-cta-copy {
+      margin: 12px 0;
+    }
+
+    .button {
+      @include bordered($border-color: $neutral-100);
+
+      &:hover,
+      &:focus,
+      &:active {
+        @include bordered($border-color: $neutral-100);
+      }
+    }
+
+    .mdn-cta-close {
+      background-color: transparent;
+      border: 0;
+      cursor: pointer;
+      position: absolute;
+      right: 20px;
+      top: 10px;
+    }
+  }
+
+  @media #{$mq-small-desktop-and-up} {
+    height: 130px;
+    padding: inherit;
+
+    .mdn-cta-content {
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      justify-content: center;
+      margin: 0 auto;
+      max-width: (1199px / 16px) * 1em;
+      padding-top: 0;
+    }
+
+    .mdn-cta-content-container {
+      display: flex;
+      flex-basis: 80%;
+      justify-content: space-around;
+    }
+  }
+
+  .mdn-cta-button-container {
+    position: relative;
+
+    @media #{$mq-small-desktop-and-up} {
+      flex-basis: 20%;
+      margin: 0;
+    }
+  }
+}

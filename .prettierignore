@@ -21,7 +21,6 @@ content/_all-titles.json
 /testing/content/
 /testing/archivecontent/
 /kumascript/coverage/
-/client/src/kumastyles/
 
 # Misc files to ignore
 /client/src/serviceWorker.js

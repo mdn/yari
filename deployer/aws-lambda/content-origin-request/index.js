@@ -110,21 +110,32 @@ exports.handler = async (event, _context) => {
       cacheControlSeconds: 3600 * 24 * 30,
     });
   }
-  // Rewrite the URI to match the keys in S3.
-  // NOTE: The incoming URI should remain URI-encoded.
-  request.uri = slugToFolder(request.uri);
-  // Rewrite the HOST header to match the S3 bucket website domain.
-  // This is required only because we're using S3 as a website, which
-  // we need in order to do redirects from S3. NOTE: The origin is
-  // considered a "custom" origin because we're using S3 as a website.
-  request.headers.host[0].value = request.origin.custom.domainName;
-  // Conditionally rewrite the path (prefix) of the origin.
-  if (host.endsWith(CONTENT_DEVELOPMENT_DOMAIN)) {
-    // When reviewing PR's, each PR gets its own subdomain, and
-    // all of its content is prefixed with that subdomain in S3.
-    request.origin.custom.path = `/${host.split(".")[0]}`;
-  } else {
-    request.origin.custom.path = "/main";
+  // This condition exists to accommodate AWS origin-groups, which
+  // include two origins, the primary and the secondary, where the
+  // secondary origin is only attempted if the primary fails. Since
+  // origin groups introduce multiple origins for the same CloudFront
+  // behavior, we have to ensure we only make adjustments for custom
+  // S3 origins.
+  if (
+    request.origin.custom &&
+    request.origin.custom.domainName.includes("s3")
+  ) {
+    // Rewrite the URI to match the keys in S3.
+    // NOTE: The incoming URI should remain URI-encoded.
+    request.uri = slugToFolder(request.uri);
+    // Rewrite the HOST header to match the S3 bucket website domain.
+    // This is required only because we're using S3 as a website, which
+    // we need in order to do redirects from S3. NOTE: The origin is
+    // considered a "custom" origin because we're using S3 as a website.
+    request.headers.host[0].value = request.origin.custom.domainName;
+    // Conditionally rewrite the path (prefix) of the origin.
+    if (host.endsWith(CONTENT_DEVELOPMENT_DOMAIN)) {
+      // When reviewing PR's, each PR gets its own subdomain, and
+      // all of its content is prefixed with that subdomain in S3.
+      request.origin.custom.path = `/${host.split(".")[0]}`;
+    } else {
+      request.origin.custom.path = "/main";
+    }
   }
   return request;
 };

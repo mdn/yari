@@ -1,12 +1,12 @@
 import React, { lazy, Suspense, useEffect } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
 import { useWebSocketMessageHandler } from "../web-socket";
 import { NoMatch } from "../routing";
 import { useDocumentURL } from "./hooks";
-import { Doc, DocParent } from "./types";
+import { Doc } from "./types";
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
 import { InteractiveExample } from "./ingredients/interactive-example";
@@ -15,12 +15,15 @@ import { Examples } from "./ingredients/examples";
 import { LinkList, LinkLists } from "./ingredients/link-lists";
 import { Specifications } from "./ingredients/specifications";
 import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
+
 // Misc
 // Sub-components
-import LanguageMenu from "../header/language-menu";
-import { TOC } from "./toc";
-import { PreloadingDocumentLink } from "./preloading-link";
+import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
+import LanguageMenu from "../ui/molecules/language-menu";
 import { OnGitHubLink } from "./on-github";
+import { Titlebar } from "../ui/molecules/titlebar";
+import { TOC } from "../ui/molecules/toc";
+import { RenderSideBar } from "./organisms/sidebar";
 
 import "./index.scss";
 
@@ -98,71 +101,57 @@ export function Document(props /* TODO: define a TS interface for this */) {
   const isServer = typeof window === "undefined";
 
   return (
-    <main>
+    <>
+      <Titlebar docTitle={doc.title} />
+
       {doc.isArchive && <Archived doc={doc} />}
       {!isServer && CRUD_MODE && !doc.isArchive && (
         <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
           <Toolbar doc={doc} />
         </Suspense>
       )}
-      <header className="documentation-page-header">
-        <div className="titlebar-container">
-          <div className="titlebar">
-            <h1 className="title">{doc.title}</h1>
-          </div>
-        </div>
-        <div className="full-width-row-container">
-          <div className="max-content-width-container">
-            <nav className="breadcrumbs" role="navigation">
-              {doc.parents && <Breadcrumbs parents={doc.parents} />}
-            </nav>
 
-            {translations && !!translations.length && (
-              <LanguageMenu translations={translations} locale={locale} />
-            )}
-          </div>
+      <div className="breadcrumbs-locale-container">
+        <div className="breadcrumb-container">
+          {doc.parents && <Breadcrumbs parents={doc.parents} />}
         </div>
-      </header>
 
-      <div
-        className={
-          (doc.toc && doc.toc.length) || doc.sidebarHTML
-            ? "wiki-left-present content-layout"
-            : "content-layout"
-        }
-      >
+        <div className="locale-container">
+          {translations && !!translations.length && (
+            <LanguageMenu translations={translations} locale={locale} />
+          )}
+        </div>
+      </div>
+
+      <div className="page-content-container">
         {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
-        <div id="content" className="article text-content">
-          <article id="wikiArticle">
+        <main className="main-content" role="main">
+          <article className="article">
             <RenderDocumentBody doc={doc} />
+
+            <div className="metadata">
+              <section className="document-meta">
+                <header className="visually-hidden">
+                  <h4>Metadata</h4>
+                </header>
+                <ul>
+                  <li className="last-modified">
+                    <LastModified value={doc.modified} locale={locale} />,{" "}
+                    <a href={`${doc.mdn_url}/contributors.txt`}>
+                      by MDN contributors
+                    </a>
+                  </li>
+                </ul>
+                {!doc.isArchive && <OnGitHubLink doc={doc} />}
+              </section>
+            </div>
           </article>
+        </main>
 
-          <div className="metadata">
-            <section className="document-meta">
-              <header className="visually-hidden">
-                <h4>Metadata</h4>
-              </header>
-              <ul>
-                <li className="last-modified">
-                  <LastModified value={doc.modified} locale={locale} />,{" "}
-                  <a href={`${doc.mdn_url}/contributors.txt`}>
-                    by MDN contributors
-                  </a>
-                </li>
-              </ul>
-              {!doc.isArchive && <OnGitHubLink doc={doc} />}
-            </section>
-          </div>
-        </div>
-
-        {doc.sidebarHTML && (
-          <div id="sidebar-quicklinks" className="sidebar">
-            <RenderSideBar doc={doc} />
-          </div>
-        )}
+        {doc.sidebarHTML && <RenderSideBar doc={doc} />}
       </div>
-    </main>
+    </>
   );
 }
 
@@ -207,104 +196,6 @@ function Archived({ doc }: { doc: Doc }) {
         </p>
       )}
     </div>
-  );
-}
-
-// XXX Move this component to its own file. index.tsx is already too large.
-function Breadcrumbs({ parents }: { parents: DocParent[] }) {
-  if (!parents.length) {
-    throw new Error("Empty parents array");
-  }
-  return (
-    <ol
-      typeof="BreadcrumbList"
-      vocab="https://schema.org/"
-      aria-label="breadcrumbs"
-    >
-      {parents.map((parent, i) => {
-        const isLast = i + 1 === parents.length;
-        return (
-          <li key={parent.uri} property="itemListElement" typeof="ListItem">
-            <PreloadingDocumentLink
-              to={parent.uri}
-              className={isLast ? "crumb-current-page" : "breadcrumb-chevron"}
-              property="item"
-              typeof="WebPage"
-            >
-              <span property="name">{parent.title}</span>
-            </PreloadingDocumentLink>
-            <meta property="position" content={`${i + 1}`} />
-          </li>
-        );
-      })}
-    </ol>
-  );
-}
-
-function RenderSideBar({ doc }) {
-  if (!doc.related_content) {
-    if (doc.sidebarHTML) {
-      return <div dangerouslySetInnerHTML={{ __html: doc.sidebarHTML }} />;
-    }
-    return null;
-  }
-  return doc.related_content.map((node) => (
-    <SidebarLeaf key={node.title} parent={node} />
-  ));
-}
-
-function SidebarLeaf({ parent }) {
-  return (
-    <div>
-      <h3>{parent.title}</h3>
-      <ul>
-        {parent.content.map((node) => {
-          if (node.content) {
-            return (
-              <li key={node.title}>
-                <SidebarLeaflets node={node} />
-              </li>
-            );
-          } else {
-            return (
-              <li key={node.uri}>
-                <Link to={node.uri}>{node.title}</Link>
-              </li>
-            );
-          }
-        })}
-      </ul>
-    </div>
-  );
-}
-
-function SidebarLeaflets({ node }) {
-  return (
-    <details open={node.open}>
-      <summary>
-        {node.uri ? <Link to={node.uri}>{node.title}</Link> : node.title}
-      </summary>
-      <ol>
-        {node.content.map((childNode) => {
-          if (childNode.content) {
-            return (
-              <li key={childNode.title}>
-                <SidebarLeaflets node={childNode} />
-              </li>
-            );
-          } else {
-            return (
-              <li
-                key={childNode.uri}
-                className={childNode.isActive && "active"}
-              >
-                <Link to={childNode.uri}>{childNode.title}</Link>
-              </li>
-            );
-          }
-        })}
-      </ol>
-    </details>
   );
 }
 
