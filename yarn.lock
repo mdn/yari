@@ -1824,10 +1824,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@mdn/browser-compat-data@2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-2.0.3.tgz#582603cd7793d765954c1eac0af01090bbee2bda"
-  integrity sha512-lj5M4JRzOOCFdjkAVU746EpPEj9v4IbSd2Mq/2BQTa02Opno98DOD/FjPrjBhF6CRLUHHF6ITSZVZASRDb2jJQ==
+"@mdn/browser-compat-data@2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-2.0.4.tgz#e3cbe84436d07fcf179eac90c016e70303e40eec"
+  integrity sha512-wlOOuQW8tzld2W4MC9Y3HaZC5BUctVjmGNDUQEG1zzketXBKWZYgI0F8YBi+1b2AyMnbjj3nHLSeD2+n1cW4oA==
   dependencies:
     extend "3.0.2"
 
