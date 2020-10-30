@@ -51,6 +51,7 @@ function LoginInner() {
         src={userData.avatarUrl || avatarImage}
         className="avatar"
         alt={userData.username}
+        loading="lazy"
       />
       <span className="avatar-username">{userData.username}</span>
     </>

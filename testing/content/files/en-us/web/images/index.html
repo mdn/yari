@@ -6,22 +6,22 @@ slug: Web/Images
 <h3>No flaws</h3>
 
 <figure>
-  <img src="florian.png" alt="Mugshot picture">
+  <img src="florian.png" alt="Mugshot picture" loading="lazy" >
   <figcaption>A perfectly good picture using <code>florian.png</code></figcaption>
 </figure>
 
 <figure>
-  <img src="./florian.png" alt="Mugshot picture">
+  <img src="./florian.png" alt="Mugshot picture" loading="lazy" >
   <figcaption>A perfectly good picture using <code>./florian.png</code></figcaption>
 </figure>
 
 <figure>
-  <img src="https://www.peterbe.com/static/images/howsmywifi-scr.png" alt="Screenshot of an app">
+  <img src="https://www.peterbe.com/static/images/howsmywifi-scr.png" alt="Screenshot of an app" loading="lazy" >
   <figcaption>A remote URL with <code>https://</code></figcaption>
 </figure>
 
 <figure>
-  <img src="../foo/screenshot.png" alt="Screenshot from sibling document">
+  <img src="../foo/screenshot.png" alt="Screenshot from sibling document" loading="lazy" >
   <figcaption>An image in a sibling document using <code>../foo/screenshot.png</code></figcaption>
 </figure>
 
@@ -31,36 +31,36 @@ slug: Web/Images
 <h3>Flaws all over the shop</h3>
 
 <figure>
-  <img src="idontexist.png" alt="Deliberately not working image">
+  <img src="idontexist.png" alt="Deliberately not working image" loading="lazy" >
   <figcaption>An image reference that doesn't exist on disk</figcaption>
 </figure>
 
 <figure>
-  <img src="/en-US/docs/Web/Images/florian.png" alt="Mugshot picture">
+  <img src="/en-US/docs/Web/Images/florian.png" alt="Mugshot picture" loading="lazy" >
   <figcaption>An overly verbose reference to image using <code>/en-US/docs/Web/Images/florian.png</code></figcaption>
 </figure>
 
 <figure>
-  <img src="Florian.PNG" alt="Mugshot picture">
+  <img src="Florian.PNG" alt="Mugshot picture" loading="lazy" >
   <figcaption>Valid picture reference but wrong cASe <code>Florian.PNG</code></figcaption>
 </figure>
 
 <figure>
-  <img src="http://www.peterbe.com/static/images/favicon-32.png" alt="Tiny mugshot favicon">
+  <img src="http://www.peterbe.com/static/images/favicon-32.png" alt="Tiny mugshot favicon" loading="lazy" >
   <figcaption>An external image with a <code>http://</code> protocol</figcaption>
 </figure>
 
 <figure>
-  <img src="https://developer.mozilla.org/en-US/docs/Web/Images/screenshot.png" alt="Devedition logo">
+  <img src="https://developer.mozilla.org/en-US/docs/Web/Images/screenshot.png" alt="Devedition logo" loading="lazy" >
   <figcaption>An external image with the <code>https://developer.mozilla.org</code> prefix</figcaption>
 </figure>
 
 <figure>
-  <img src="/en-US/docs/Web/Foo/screenshot.png" alt="Screenshot from sibling document">
+  <img src="/en-US/docs/Web/Foo/screenshot.png" alt="Screenshot from sibling document" loading="lazy" >
   <figcaption>An image in a sibling document unnecessarily verbose</figcaption>
 </figure>
 
 <figure>
-  <img src="../Foo/nonexistent.png" alt="Screenshot from sibling document">
+  <img src="../Foo/nonexistent.png" alt="Screenshot from sibling document" loading="lazy" >
   <figcaption>An image in a sibling document that doesn't exist</figcaption>
 </figure>

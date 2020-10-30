@@ -202,7 +202,7 @@ if (withBadges) {
     badge = HTMLTags[i].deprecated   ? '<span title="' + l10n.deprecated   + '">' + await template("FontAwesomeIcon", ["icon-thumbs-down-alt"]) + '<span>'
           : HTMLTags[i].experimental ? '<span title="' + l10n.experimental + '">' + await template("FontAwesomeIcon", ["icon-beaker"]) + '<span>'
           : HTMLTags[i].component    ? '<span title="' + l10n.components   + '">' + await template("FontAwesomeIcon", ["icon-cogs"]) + '<span>'
-          : HTMLTags[i].html5        ? '<a href="/' + env.locale + '/docs/HTML/HTML5"><img alt="HTML5" title="' + l10n.html5 + '" src="/files/3843/HTML5_Badge_32.png" width="16" height="16"></a>'
+          : HTMLTags[i].html5        ? '<a href="/' + env.locale + '/docs/HTML/HTML5"><img alt="HTML5" title="' + l10n.html5 + '" src="/files/3843/HTML5_Badge_32.png" width="16" height="16" loading="lazy" ></a>'
           : '&nbsp;';
 %>
    <td style="vertical-align: top;"><%- badge %></td>

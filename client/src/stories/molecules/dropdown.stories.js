@@ -10,7 +10,7 @@ export default {
 export const dropdown = () => {
   const label = (
     <>
-      <img src={avatarImage} className="avatar" alt="username" />
+      <img src={avatarImage} className="avatar" alt="username" loading="lazy" />
       <span className="avatar-username">username</span>
     </>
   );

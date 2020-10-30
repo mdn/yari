@@ -158,7 +158,7 @@ describeMacro("EmbedLiveSample", function () {
         '<th scope="col" style="text-align: center;">Live sample</th>' +
         "</tr></thead>" +
         "<tbody><tr><td>" +
-        '<img alt="" class="internal" src="/files/722/SVG_Linear_Gradient_Example.png" />' +
+        '<img alt="" class="internal" src="/files/722/SVG_Linear_Gradient_Example.png" loading="lazy" />' +
         "</td><td>" +
         '<iframe class="live-sample-frame sample-code-frame" ' +
         'id="frame_SVGLinearGradient" frameborder="0"' +
@@ -183,7 +183,7 @@ describeMacro("EmbedLiveSample", function () {
         '<th scope="col" style="text-align: center;">Live sample</th>' +
         "</tr></thead>" +
         "<tbody><tr><td>" +
-        '<img alt="" class="internal" src="&#34;&gt;&lt;script&gt;alert(&#34;XSS&#34;);&lt;/script&gt;" />' +
+        '<img alt="" class="internal" src="&#34;&gt;&lt;script&gt;alert(&#34;XSS&#34;);&lt;/script&gt;" loading="lazy" />' +
         "</td><td>" +
         '<iframe class="live-sample-frame sample-code-frame" ' +
         'id="frame_SVGLinearGradient" frameborder="0"' +
