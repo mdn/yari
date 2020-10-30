@@ -43,31 +43,31 @@ function SourceOnGitHubLink({ doc }: { doc: Doc }) {
 }
 
 const NEW_ISSUE_TEMPLATE = `
-  MDN URL: https://developer.mozilla.org$PATHNAME
+MDN URL: https://developer.mozilla.org$PATHNAME
 
-  #### What information was incorrect, unhelpful, or incomplete?
-
-
-  #### Specific section or headline?
+#### What information was incorrect, unhelpful, or incomplete?
 
 
-  #### What did you expect to see?
+#### Specific section or headline?
 
 
-  #### Did you test this? If so, how?
+#### What did you expect to see?
 
 
-  <!-- Do not make changes below this line -->
-  <details>
-  <summary>MDN Content page report details</summary>
+#### Did you test this? If so, how?
 
-  * Folder: \`$FOLDER\`
-  * MDN URL: https://developer.mozilla.org$PATHNAME
-  * GitHub URL: $GITHUB_URL
-  * Report started: $DATE
 
-  </details>
-  `;
+<!-- Do not make changes below this line -->
+<details>
+<summary>MDN Content page report details</summary>
+
+* Folder: \`$FOLDER\`
+* MDN URL: https://developer.mozilla.org$PATHNAME
+* GitHub URL: $GITHUB_URL
+* Report started: $DATE
+
+</details>
+  `.trim();
 
 // These are the hardcoded prefixes that get their own new-issue label in
 // in GitHub. The prefix is matched all in lower-case but the label itself
