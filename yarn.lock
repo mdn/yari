@@ -8433,6 +8433,11 @@ fuse.js@^3.6.1:
   resolved "https://registry.yarnpkg.com/fuse.js/-/fuse.js-3.6.1.tgz#7de85fdd6e1b3377c23ce010892656385fd9b10c"
   integrity sha512-hT9yh/tiinkmirKrlv4KWOjztdoZo1mx9Qh4KvWqC7isoXwdUY3PNWUxceF4/qO9R6riA2C29jdTOeQOIROjgw==
 
+fuzzyjs@4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/fuzzyjs/-/fuzzyjs-4.0.4.tgz#f63b173ef06d85425dce67f9c4999d848cf7a359"
+  integrity sha512-/qzlaZA+6HgztCGWR2yUKH4NYbmS4SjcOlrxQH9mZNpNWo6A32uqSchfGuKeki6LMABxkOxwLyDVNWdj5o60qg==
+
 fuzzysearch@1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/fuzzysearch/-/fuzzysearch-1.0.3.tgz#dffc80f6d6b04223f2226aa79dd194231096d008"
