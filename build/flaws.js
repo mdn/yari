@@ -111,7 +111,15 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
     } else if (href.startsWith("/") && !href.startsWith("//")) {
       // Got to fake the domain to sensible extract the .search and .hash
       const absoluteURL = new URL(href, "http://www.example.com");
-      const hrefNormalized = href.split("#")[0];
+      // Note, a lot of links are like this:
+      //  <a href="/docs/Learn/Front-end_web_developer">
+      // which means the author wanted the link to work in any language.
+      // When checking it against disk, we'll have to assume a locale.
+      let hrefNormalized = href.split("#")[0];
+      if (hrefNormalized.startsWith("/docs/")) {
+        const thisDocumentLocale = doc.mdn_url.split("/")[1];
+        hrefNormalized = `/${thisDocumentLocale}${hrefNormalized}`;
+      }
       const found = Document.findByURL(hrefNormalized);
       if (!found) {
         // Before we give up, check if it's a redirect
@@ -439,7 +447,7 @@ async function fixFixableFlaws(doc, options, document) {
         )
       );
     } else {
-      Document.update(document.fileInfo.folder, newRawHTML, document.metadata);
+      Document.update(document.url, newRawHTML, document.metadata);
       if (options.fixFlawsVerbose) {
         console.log(
           chalk.green(

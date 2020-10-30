@@ -12,6 +12,7 @@ from .constants import (
 )
 from .update_lambda_functions import update_all
 from .upload import upload_content
+from .whatsdeployed import dump as dump_whatsdeployed
 from .utils import log
 
 
@@ -54,6 +55,24 @@ def cli(ctx, **kwargs):
 def update_lambda_functions(ctx, directory):
     log.info(f"Deployer ({__version__})", bold=True)
     update_all(directory, dry_run=ctx.obj["dry_run"])
+
+
+@cli.command(
+    help="Create a whatsdeployed.json file "
+    "by asking git for the date and commit hash of HEAD."
+)
+@click.option(
+    "--output",
+    type=click.Path(),
+    help="Name of JSON file to create",
+    default="whatsdeployed.json",
+)
+@click.argument(
+    "directory", type=click.Path(), callback=validate_directory, default=".",
+)
+@click.pass_context
+def whatsdeployed(ctx, directory: Path, output: str):
+    dump_whatsdeployed(directory, Path(output), dry_run=ctx.obj["dry_run"])
 
 
 @cli.command()
