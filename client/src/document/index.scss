@@ -7,6 +7,11 @@
 
 @import "./prism-overrides";
 
+.loading-document-placeholder article {
+  // Any huge margin bottom to keep the footer away when loading
+  margin-bottom: 1200px;
+}
+
 .article {
   padding: $base-spacing;
 

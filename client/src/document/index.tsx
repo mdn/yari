@@ -76,7 +76,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   }, [doc]);
 
   if (!doc && !error) {
-    return <p>Loading...</p>;
+    return <LoadingDocumentPlaceholder />;
   }
 
   if (error) {
@@ -150,6 +150,32 @@ export function Document(props /* TODO: define a TS interface for this */) {
         </main>
 
         {doc.sidebarHTML && <RenderSideBar doc={doc} />}
+      </div>
+    </>
+  );
+}
+
+function LoadingDocumentPlaceholder() {
+  return (
+    <>
+      <Titlebar docTitle={"Loading…"} />
+
+      <div className="breadcrumbs-locale-container">
+        <div className="breadcrumb-container">
+          <p>&nbsp;</p>
+        </div>
+      </div>
+      <div className="page-content-container loading-document-placeholder">
+        <main className="main-content" role="main">
+          <article className="article">
+            <p>
+              <span role="img" aria-label="Hourglass">
+                ⏳
+              </span>{" "}
+              Loading…
+            </p>
+          </article>
+        </main>
       </div>
     </>
   );
