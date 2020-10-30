@@ -20,15 +20,7 @@ function preload(url: string) {
   prefetches.add(url);
 }
 
-const prefetchElement = document.createElement("link");
-const isSupported =
-  prefetchElement.relList &&
-  prefetchElement.relList.supports &&
-  prefetchElement.relList.supports("prefetch") &&
-  window.IntersectionObserver &&
-  "isIntersecting" in IntersectionObserverEntry.prototype;
-
-const DEFAULT_DELAY = 5000;
+const DEFAULT_DELAY = 500;
 
 const INJECT_WAITING_CLASSNAME = "preloading";
 // const INJECT_NAVIGATING_CLASSNAME = "navigating";
@@ -75,12 +67,23 @@ export function PreloadingDocumentLink(props: PreloadingLinkProps) {
 
   const { className, toggleClassName } = useClassname(props.className || "");
 
+  function isSupported() {
+    const prefetchElement = document.createElement("link");
+    return (
+      prefetchElement.relList &&
+      prefetchElement.relList.supports &&
+      prefetchElement.relList.supports("prefetch") &&
+      window.IntersectionObserver &&
+      "isIntersecting" in IntersectionObserverEntry.prototype
+    );
+  }
+
   return (
     <Link
       {...props}
       className={className as string}
       onClick={(event) => {
-        if (isSupported) {
+        if (isSupported()) {
           if (globalWaitingFor) {
             window.clearTimeout(globalWaitingFor);
           }

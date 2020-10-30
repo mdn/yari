@@ -3,6 +3,9 @@
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
+a.preloading::after {
+  content: "⏳";
+}
 .breadcrumbs {
   font-size: $small-font-size;
   padding: $base-unit $base-spacing;
