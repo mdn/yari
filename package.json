@@ -119,7 +119,7 @@
     "react-router": "6.0.0-beta.0",
     "react-router-dom": "6.0.0-beta.0",
     "react-scripts": "3.4.4",
-    "rough-notation": "0.4.0",
+    "rough-notation": "0.5.1",
     "sass": "^1.28.0",
     "stylelint": "^13.7.2",
     "stylelint-a11y": "^1.2.3",
