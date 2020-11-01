@@ -20,37 +20,27 @@ export function Breadcrumbs({ parents }: { parents: DocParent[] }) {
         {parents.map((parent, i) => {
           const currentCrumb = i + 1;
           const isLast = currentCrumb === parents.length;
-          const isPrevious = currentCrumb === parents.length - 1;
+          const isPenultimate = currentCrumb === parents.length - 1;
 
-          if (!isLast) {
-            return (
-              <li key={parent.uri} property="itemListElement" typeof="ListItem">
-                <Link
-                  to={parent.uri}
-                  className={isPrevious ? "breadcrumb-previous" : "breadcrumb"}
-                  property="item"
-                  typeof="WebPage"
-                >
-                  <span property="name">{parent.title}</span>
-                </Link>
-                <meta property="position" content={`${i + 1}`} />
-              </li>
-            );
-          } else {
-            return (
-              <li key={parent.uri} property="itemListElement" typeof="ListItem">
-                <Link
-                  to={parent.uri}
-                  className="breadcrumb-current-page"
-                  property="item"
-                  typeof="WebPage"
-                >
-                  <span property="name">{parent.title}</span>
-                </Link>
-                <meta property="position" content={`${i + 1}`} />
-              </li>
-            );
-          }
+          return (
+            <li key={parent.uri} property="itemListElement" typeof="ListItem">
+              <Link
+                to={parent.uri}
+                className={
+                  isLast
+                    ? "breadcrumb-current-page"
+                    : isPenultimate
+                    ? "breadcrumb-penultimate"
+                    : "breadcrumb"
+                }
+                property="item"
+                typeof="WebPage"
+              >
+                <span property="name">{parent.title}</span>
+              </Link>
+              <meta property="position" content={`${currentCrumb}`} />
+            </li>
+          );
         })}
       </ol>
     </nav>
