@@ -14,7 +14,7 @@ import { Attributes } from "./ingredients/attributes";
 import { Examples } from "./ingredients/examples";
 import { LinkList, LinkLists } from "./ingredients/link-lists";
 import { Specifications } from "./ingredients/specifications";
-import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
+import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 
 // Misc
 // Sub-components
@@ -273,7 +273,7 @@ function RenderDocumentBody({ doc }) {
       );
     } else if (section.type === "browser_compatibility") {
       return (
-        <BrowserCompatibilityTable
+        <LazyBrowserCompatibilityTable
           key={`browser_compatibility${i}`}
           {...section.value}
         />
