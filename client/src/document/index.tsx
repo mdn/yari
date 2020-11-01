@@ -70,10 +70,14 @@ export function Document(props /* TODO: define a TS interface for this */) {
   });
 
   useEffect(() => {
-    if (doc) {
+    if (!doc && !error) {
+      document.title = "⏳ Loading…";
+    } else if (error) {
+      document.title = "💔 Loading error";
+    } else if (doc) {
       document.title = doc.pageTitle;
     }
-  }, [doc]);
+  }, [doc, error]);
 
   if (!doc && !error) {
     return <p>Loading...</p>;
