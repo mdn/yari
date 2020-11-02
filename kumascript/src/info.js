@@ -1,3 +1,5 @@
+const cheerio = require("./monkeypatched-cheerio.js");
+
 const Parser = require("./parser.js");
 const { VALID_LOCALES, Document, Redirect } = require("../../content");
 
@@ -178,9 +180,8 @@ const info = {
         // In Yari, this is not possible. We don't duplicate the summary in every
         // document. Instead, we extract it from the document when we build it.
         // So, to avoid the whole chicken-and-egg problem, instead, we're going to
-        // use regular expressions to try to extract it on-the-fly, from the
-        // raw HTML.
-        // Note, we can't use Cheerio here because the `document.rawHTML` is
+        //  try to extract it on-the-fly, from raw HTML.
+        // Note, we can't always use Cheerio here because the `document.rawHTML` is
         // actually not valid HTML, hence the desperate fall back on regex.
         // A lot of times, you'll actually find that the first paragraph isn't
         // a <p> tag. But often, in those cases it'll have that `seoSummary`
@@ -189,12 +190,45 @@ const info = {
         //   <div><span class="seoSummary">The <code>window.stop()</code> ...
         //
         // So that's why we always start by looking for that tag first.
+        let $ = null;
+        try {
+          let summary = null;
+          $ = cheerio.load(document.rawHTML);
+          $("span.seoSummary").each((i, element) => {
+            summary = postProcessSummaryHTMLSnippet(
+              $(element).text(),
+              document
+            );
+          });
+          if (!summary) {
+            // To avoid <p> tags that are inside things like
+            // `<div class="blockIndicator>`, just remove those divs first.
+            $("div.blockIndicator, div.note").remove();
+            $("p").each((i, element) => {
+              if (!summary) {
+                summary = postProcessSummaryHTMLSnippet(
+                  $(element).text(),
+                  document
+                );
+              }
+            });
+          }
+          if (summary) {
+            return summary;
+          }
+        } catch (er) {
+          console.warn(
+            `Cheerio on document.rawHTML (${document.url}) failed to parse`,
+            er
+          );
+        }
+
         try {
           const seoSummaryMatch = document.rawHTML.match(
             /<span class="seoSummary">(.*?)<\/span>/s
           );
           if (seoSummaryMatch) {
-            return postProcessSummaryHTMLSnippet(seoSummaryMatch[1]);
+            return postProcessSummaryHTMLSnippet(seoSummaryMatch[1], document);
           }
 
           const matches = document.rawHTML.matchAll(
@@ -207,15 +241,16 @@ const info = {
             // In these cases, ignore those.
             // This essentially means we're keeping all macro calls that
             // has arguments. E.g. `{{Glossary("foo", "bar")}}`.
-            const summary = match[1]
-              .replace(/{{[^\(]+}}|{{[\w-]+\(\)}}/g, "")
-              .trim();
+            const summary = postProcessSummaryHTMLSnippet(match[1], document);
             if (summary) {
-              return postProcessSummaryHTMLSnippet(summary);
+              return summary;
             }
           }
         } catch (error) {
-          console.warn("Error trying to extract summary from rawHTML", error);
+          console.warn(
+            `Error trying to extract summary from rawHTML (${document.url})`,
+            error
+          );
         }
         return "";
       },
@@ -241,33 +276,104 @@ const info = {
  *
  * @param {string} text The summary as taken from the raw HTML.
  */
-function postProcessSummaryHTMLSnippet(text) {
+// const seen = new Set();
+function postProcessSummaryHTMLSnippet(text, document) {
+  if (!text.trim()) {
+    return "";
+  }
   let tokens;
   try {
     tokens = Parser.parse(text);
   } catch (e) {
     // Unfortunate, but not the right time to flag this as a flaw.
-    console.warn(`Unable to Parser.parse() text '${text}' due to error:`, e);
+    console.warn(
+      `(${document.url}) Unable to Parser.parse() text '${text}' due to error:`,
+      e
+    );
     return text;
   }
   let output = "";
+
+  // const discardMacros = new Set(
+  //   ["AddonsSidebar", "ApiRef", "SeeCompatTable"].map((x) => x.toLowerCase())
+  // );
+
+  // console.log();
+
   for (let token of tokens) {
     if (token.type !== "MACRO") {
       // If it isn't a MACRO token, it's a TEXT token.
       output += token.chars;
       continue;
     }
+    if (!token.args.length) {
+      // Any macro that doesn't have arguments should just be ignored.
+      // Examples are:
+      //  {{AddonsSidebar }}
+      //  {{ SeeCompatTable() }}
+      //  {{Non-standard_header}}
+      //  {{Non-standard_header()}}
+      continue;
+    }
+
     let macroName = token.name.toLowerCase();
-    if (macroName === "glossary") {
+
+    // Some macros do have arguments, but there's no good reason to render them out
+    // for the benefit of a summary, in this context.
+    if (
+      [
+        "apiref",
+        "jsref",
+        "compat",
+        "index",
+        "page",
+        "gecko_minversion_inline",
+        "obsolete_header",
+        "gecko_minversion_header",
+        "deprecated_header",
+        "previousnext",
+        "wiki.localize",
+        "quicklinkswithsubpages",
+      ].includes(macroName)
+    ) {
+      continue;
+    }
+    // if (
+    //   macroName === "quicklinkswithsubpages" ||
+    //   macroName === "wiki.localize" ||
+    //   macroName === "previousnext"
+    // ) {
+    //   console.log(document.url);
+    //   console.log({ text });
+    //   throw new Error("??");
+    // }
+
+    if (["draft", "glossary", "anch"].includes(macroName)) {
       output += token.args[0];
+    } else if (macroName === "interwiki") {
+      // Include the last one. E.g.
+      //   {{Interwiki("wikipedia","Flynn%27s_taxonomy","classification of computer")}}
+      output += token.args[token.args.length - 1];
     } else if (!token.args.length) {
-      console.warn(`Macro has no arguments: ${token}`);
-      output += token.chars;
+      // console.log({ text });
+      // console.log(token);
+      // console.warn(`Macro has no arguments: ${token}`);
+      // throw new Error("??");
+      // output += token.chars;
+      // if (!seen.has(macroName)) {
+      //   console.log("NO ARGUMENTS", { macroName, text });
+      // }
+      // seen.add(macroName);
     } else {
+      // if (!seen.has(macroName)) {
+      //   console.log({ macroName, text });
+      // }
+      // seen.add(macroName);
+
       output += `<code>${token.args[0]}</code>`;
     }
   }
-  return output;
+  return output.trim();
 }
 
 module.exports = info;
