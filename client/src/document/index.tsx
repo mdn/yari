@@ -14,7 +14,7 @@ import { Attributes } from "./ingredients/attributes";
 import { Examples } from "./ingredients/examples";
 import { LinkList, LinkLists } from "./ingredients/link-lists";
 import { Specifications } from "./ingredients/specifications";
-import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
+import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 
 // Misc
 // Sub-components
@@ -70,13 +70,17 @@ export function Document(props /* TODO: define a TS interface for this */) {
   });
 
   useEffect(() => {
-    if (doc) {
+    if (!doc && !error) {
+      document.title = "⏳ Loading…";
+    } else if (error) {
+      document.title = "💔 Loading error";
+    } else if (doc) {
       document.title = doc.pageTitle;
     }
-  }, [doc]);
+  }, [doc, error]);
 
   if (!doc && !error) {
-    return <p>Loading...</p>;
+    return <LoadingDocumentPlaceholder />;
   }
 
   if (error) {
@@ -150,6 +154,32 @@ export function Document(props /* TODO: define a TS interface for this */) {
         </main>
 
         {doc.sidebarHTML && <RenderSideBar doc={doc} />}
+      </div>
+    </>
+  );
+}
+
+function LoadingDocumentPlaceholder() {
+  return (
+    <>
+      <Titlebar docTitle={"Loading…"} />
+
+      <div className="breadcrumbs-locale-container">
+        <div className="breadcrumb-container">
+          <p>&nbsp;</p>
+        </div>
+      </div>
+      <div className="page-content-container loading-document-placeholder">
+        <main className="main-content" role="main">
+          <article className="article">
+            <p>
+              <span role="img" aria-label="Hourglass">
+                ⏳
+              </span>{" "}
+              Loading…
+            </p>
+          </article>
+        </main>
       </div>
     </>
   );
@@ -243,7 +273,7 @@ function RenderDocumentBody({ doc }) {
       );
     } else if (section.type === "browser_compatibility") {
       return (
-        <BrowserCompatibilityTable
+        <LazyBrowserCompatibilityTable
           key={`browser_compatibility${i}`}
           {...section.value}
         />

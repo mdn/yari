@@ -136,7 +136,10 @@ export function SQLTable({ documents }: { documents: Document[] }) {
       const document = documents[0];
       const knownKeysLC = Object.keys(document).map((x) => x.toLowerCase());
       for (const column of parsedStatement.columns) {
-        if (!knownKeysLC.includes(column.columnid.toLowerCase())) {
+        if (
+          column.columnid &&
+          !knownKeysLC.includes(column.columnid.toLowerCase())
+        ) {
           newWarnings.push(
             `Column '${column.columnid}' is probably not in any document.`
           );

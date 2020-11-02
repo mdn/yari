@@ -70,13 +70,20 @@ function memoize(fn) {
   };
 }
 
-function execGit(args, opts = {}) {
+function execGit(args, opts = {}, root = null) {
+  let gitRoot = root;
+  if (!gitRoot) {
+    gitRoot = execGit(
+      ["rev-parse", "--show-toplevel"],
+      opts,
+      opts.cwd || CONTENT_ROOT
+    );
+  }
   const { status, error, stdout, stderr } = childProcess.spawnSync(
     "git",
     args,
     {
-      cwd: CONTENT_ROOT,
-      ...opts,
+      cwd: gitRoot,
     }
   );
   if (error || status !== 0) {

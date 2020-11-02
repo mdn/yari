@@ -21,7 +21,7 @@ const {
 const SearchIndex = require("./search-index");
 const { addBreadcrumbData } = require("./document-utils");
 const { fixFixableFlaws, injectFlaws } = require("./flaws");
-const { normalizeBCDURLs } = require("./bcd-urls");
+const { normalizeBCDURLs, extractBCDData } = require("./bcd-urls");
 const { checkImageReferences } = require("./check-images");
 const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
@@ -289,6 +289,8 @@ async function buildDocument(document, documentOptions = {}) {
   // pages within this project rather than use the absolute URLs
   normalizeBCDURLs(doc, options);
 
+  const bcdData = extractBCDData(doc);
+
   // If the document has a `.popularity` make sure don't bother with too
   // many significant figures on it.
   doc.popularity = metadata.popularity
@@ -318,7 +320,7 @@ async function buildDocument(document, documentOptions = {}) {
 
   doc.pageTitle = getPageTitle(doc);
 
-  return [doc, liveSamples, fileAttachments];
+  return { doc, liveSamples, fileAttachments, bcdData };
 }
 
 async function buildDocumentFromURL(url, documentOptions = {}) {
@@ -326,7 +328,7 @@ async function buildDocumentFromURL(url, documentOptions = {}) {
   if (!document) {
     return null;
   }
-  return (await buildDocument(document, documentOptions))[0];
+  return await buildDocument(document, documentOptions);
 }
 
 async function buildLiveSamplePageFromURL(url) {

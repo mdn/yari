@@ -261,7 +261,7 @@ class BucketManager:
 
     def get_redirect_keys(self, from_url, to_url):
         return (
-            f"{self.key_prefix}{from_url.strip('/').lower()}/index.html",
+            f"{self.key_prefix}{from_url.strip('/').lower()}",
             f"/{to_url.strip('/')}",
         )
 

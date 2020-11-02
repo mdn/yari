@@ -108,4 +108,29 @@ function normalizeBCDURLs(doc, options) {
   }
 }
 
-module.exports = { normalizeBCDURLs };
+/**
+ * Return an array of BCD data blocks like [{url: ..., data: ...},]
+ * for each BCD section in the doc and mutate it from the doc itself.
+ * @param {Doc} doc
+ */
+function extractBCDData(doc) {
+  const data = [];
+  let nextId = 0;
+  for (const section of doc.body) {
+    if (section.type === "browser_compatibility") {
+      // Most pages only have exactly 1 so no need to put the prefix on them.
+      const fileName = ++nextId > 1 ? `bcd-${nextId}.json` : "bcd.json";
+      const dataURL = `${doc.mdn_url}/${fileName}`;
+      data.push({
+        url: dataURL,
+        data: Object.assign({}, section.value),
+      });
+      section.value.dataURL = dataURL;
+      delete section.value.data;
+      delete section.value.browsers;
+    }
+  }
+  return data;
+}
+
+module.exports = { normalizeBCDURLs, extractBCDData };
