@@ -202,10 +202,14 @@ const info = {
           );
           for (const match of matches) {
             // A lot of times, the first paragrah is just a (or two) call to
-            // a KS macro. E.g. `<p>{{AddonSidebar}}</p>`.
-            // In these cases, ignore those. Note, if it's `<p>{{SomeSidebar()}}</p>`
-            // it will be left alone because if presence of the bracket characters.
-            const summary = match[1].replace(/{{\w+}}/g, "").trim();
+            // a KS macro. E.g. `<p>{{AddonSidebar}}</p>` or
+            // spelled `<p>{{AddonSidebar()}}</p>`.
+            // In these cases, ignore those.
+            // This essentially means we're keeping all macro calls that
+            // has arguments. E.g. `{{Glossary("foo", "bar")}}`.
+            const summary = match[1]
+              .replace(/{{[^\(]+}}|{{[\w-]+\(\)}}/g, "")
+              .trim();
             if (summary) {
               return postProcessSummaryHTMLSnippet(summary);
             }
