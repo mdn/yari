@@ -1,3 +1,4 @@
+const Parser = require("./parser.js");
 const { VALID_LOCALES, Document, Redirect } = require("../../content");
 
 const DUMMY_BASE_URL = "https://example.com";
@@ -193,7 +194,7 @@ const info = {
             /<span class="seoSummary">(.*?)<\/span>/s
           );
           if (seoSummaryMatch) {
-            return seoSummaryMatch[1];
+            return postProcessSummaryHTMLSnippet(seoSummaryMatch[1]);
           }
 
           const matches = document.rawHTML.matchAll(
@@ -202,10 +203,11 @@ const info = {
           for (const match of matches) {
             // A lot of times, the first paragrah is just a (or two) call to
             // a KS macro. E.g. `<p>{{AddonSidebar}}</p>`.
-            // In these cases, ignore those.
-            const summary = match[1].replace(/{{.*?}}/g, "").trim();
+            // In these cases, ignore those. Note, if it's `<p>{{SomeSidebar()}}</p>`
+            // it will be left alone because if presence of the bracket characters.
+            const summary = match[1].replace(/{{\w+}}/g, "").trim();
             if (summary) {
-              return summary;
+              return postProcessSummaryHTMLSnippet(summary);
             }
           }
         } catch (error) {
@@ -225,5 +227,43 @@ const info = {
     return Boolean(Document.findByURL(info.cleanURL(url)));
   },
 };
+
+/**
+ * Return the HTML string as if we had it KumaScript rendered. When we extract
+ * a summary from the raw HTML, we sometimes get things like KS macros in it.
+ * We can't fully/properly render these because it can easily get us into an
+ * infinite recursion problem. So we have to make the most of it we can from
+ * the raw HTML.
+ *
+ * @param {string} text The summary as taken from the raw HTML.
+ */
+function postProcessSummaryHTMLSnippet(text) {
+  let tokens;
+  try {
+    tokens = Parser.parse(text);
+  } catch (e) {
+    // Unfortunate, but not the right time to flag this as a flaw.
+    console.warn(`Unable to Parser.parse() text '${text}' due to error:`, e);
+    return text;
+  }
+  let output = "";
+  for (let token of tokens) {
+    if (token.type !== "MACRO") {
+      // If it isn't a MACRO token, it's a TEXT token.
+      output += token.chars;
+      continue;
+    }
+    let macroName = token.name.toLowerCase();
+    if (macroName === "glossary") {
+      output += token.args[0];
+    } else if (!token.args.length) {
+      console.warn(`Macro has no arguments: ${token}`);
+      output += token.chars;
+    } else {
+      output += `<code>${token.args[0]}</code>`;
+    }
+  }
+  return output;
+}
 
 module.exports = info;
