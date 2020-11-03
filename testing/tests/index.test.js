@@ -512,6 +512,27 @@ test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page",
   expect(doc.flaws.macros.length).toBe(2);
 });
 
+test("check built flaws for /en-us/learn/css/css_layout/introduction/flex page", () => {
+  expect(fs.existsSync(buildRoot)).toBeTruthy();
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "learn",
+    "css",
+    "css_layout",
+    "introduction",
+    "flex"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  // The css_layout/introduction/flex page has 2 iframes
+  expect($('iframe[loading="lazy"]').length).toBe(2);
+});
+
 test("detect bad_bcd_queries flaws", () => {
   const builtFolder = path.join(
     buildRoot,

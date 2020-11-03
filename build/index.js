@@ -99,7 +99,7 @@ function injectNoTranslate($) {
  * @param {Cheerio document instance} $
  */
 function injectLoadingLazyAttributes($) {
-  $("img:not([loading])").attr("loading", "lazy");
+  $("img:not([loading]), iframe:not([loading])").attr("loading", "lazy");
 }
 
 /**
