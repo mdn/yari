@@ -100,7 +100,6 @@ export default function BrowserCompatibilityTable({
 
   const breadcrumbs = query.split(".");
   const category = breadcrumbs[0];
-  const name = breadcrumbs[breadcrumbs.length - 1];
 
   const [platforms, browsers] = gatherPlatformsAndBrowsers(category);
 

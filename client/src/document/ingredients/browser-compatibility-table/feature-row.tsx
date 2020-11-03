@@ -401,7 +401,9 @@ export const FeatureRow = React.memo(
     const { name, compat, isRoot } = feature;
     const title = compat.description ? (
       <span
-        dangerouslySetInnerHTML={{ __html: `${name}: ${compat.description}` }}
+        dangerouslySetInnerHTML={{
+          __html: `<code>${name.split(".")[0]}</code>: ${compat.description}`,
+        }}
       />
     ) : (
       <code>{name}</code>
