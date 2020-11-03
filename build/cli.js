@@ -216,6 +216,6 @@ if (require.main === module) {
     })
     .catch((error) => {
       console.error("error while building documents:", error);
-      process.exit(1);
+      process.exitCode = 1;
     });
 }

@@ -1,8 +1,6 @@
 /**
  * @prettier
  */
-const url = require("url");
-
 const util = require("./util.js");
 
 module.exports = {
