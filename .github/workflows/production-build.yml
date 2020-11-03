@@ -32,7 +32,7 @@ on:
       deployment_prefix:
         description: "Deployment prefix (default ${{ env.DEFAULT_DEPLOYMENT_PREFIX }})"
         required: false
-        default: ${{ env.DEFAULT_DEPLOYMENT_PREFIX }}
+        default: $DEFAULT_DEPLOYMENT_PREFIX
 
       log_each_successful_upload:
         description: "Deployer logs each success"
