@@ -82,14 +82,10 @@ function FeatureListAccordion({
 }
 
 export default function BrowserCompatibilityTable({
-  id,
-  title,
   query,
   data,
   browsers: browserInfo,
 }: {
-  id: string;
-  title: string;
   query: string;
   data: bcd.Identifier;
   browsers: bcd.Browsers;
@@ -137,7 +133,7 @@ export default function BrowserCompatibilityTable({
           <tbody>
             <FeatureListAccordion
               browsers={browsers}
-              features={listFeatures(data, name)}
+              features={listFeatures(data)}
             />
           </tbody>
         </table>
