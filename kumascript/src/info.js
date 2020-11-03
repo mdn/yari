@@ -5,6 +5,30 @@ const { VALID_LOCALES, Document, Redirect } = require("../../content");
 
 const DUMMY_BASE_URL = "https://example.com";
 
+const MACROS_IN_SUMMARY_TO_IGNORE = new Set([
+  "apiref",
+  "jsref",
+  "compat",
+  "index",
+  "page",
+  "gecko_minversion_inline",
+  "obsolete_header",
+  "gecko_minversion_header",
+  "deprecated_header",
+  "previous",
+  "previousmenu",
+  "previousnext",
+  "previousmenunext",
+  "wiki.localize",
+  "quicklinkswithsubpages",
+]);
+
+const MACROS_IN_SUMMARY_TO_REPLACE_WITH_FIRST_ARGUMENT = new Set([
+  "draft",
+  "glossary",
+  "anch",
+]);
+
 function repairURL(url) {
   // Returns a lowercase URI with common irregularities repaired.
   url = url.trim().toLowerCase();
@@ -191,14 +215,16 @@ const info = {
         //
         // So that's why we always start by looking for that tag first.
         let $ = null;
+        let summary = "";
         try {
-          let summary = null;
           $ = cheerio.load(document.rawHTML);
-          $("span.seoSummary").each((i, element) => {
-            summary = postProcessSummaryHTMLSnippet(
-              $(element).text(),
-              document
-            );
+          $("span.seoSummary, .summary").each((i, element) => {
+            if (!summary) {
+              summary = postProcessSummaryHTMLSnippet(
+                $(element).text(),
+                document
+              );
+            }
           });
           if (!summary) {
             // To avoid <p> tags that are inside things like
@@ -213,46 +239,13 @@ const info = {
               }
             });
           }
-          if (summary) {
-            return summary;
-          }
         } catch (er) {
           console.warn(
             `Cheerio on document.rawHTML (${document.url}) failed to parse`,
             er
           );
         }
-
-        try {
-          const seoSummaryMatch = document.rawHTML.match(
-            /<span class="seoSummary">(.*?)<\/span>/s
-          );
-          if (seoSummaryMatch) {
-            return postProcessSummaryHTMLSnippet(seoSummaryMatch[1], document);
-          }
-
-          const matches = document.rawHTML.matchAll(
-            /(?<!<div class="blockIndicator warning">\s*)<p[^>]*>(.*?)<\/p>/gs
-          );
-          for (const match of matches) {
-            // A lot of times, the first paragrah is just a (or two) call to
-            // a KS macro. E.g. `<p>{{AddonSidebar}}</p>` or
-            // spelled `<p>{{AddonSidebar()}}</p>`.
-            // In these cases, ignore those.
-            // This essentially means we're keeping all macro calls that
-            // has arguments. E.g. `{{Glossary("foo", "bar")}}`.
-            const summary = postProcessSummaryHTMLSnippet(match[1], document);
-            if (summary) {
-              return summary;
-            }
-          }
-        } catch (error) {
-          console.warn(
-            `Error trying to extract summary from rawHTML (${document.url})`,
-            error
-          );
-        }
-        return "";
+        return summary;
       },
       get subpages() {
         return Document.findChildren(document.url)
@@ -276,7 +269,6 @@ const info = {
  *
  * @param {string} text The summary as taken from the raw HTML.
  */
-// const seen = new Set();
 function postProcessSummaryHTMLSnippet(text, document) {
   if (!text.trim()) {
     return "";
@@ -292,13 +284,8 @@ function postProcessSummaryHTMLSnippet(text, document) {
     );
     return text;
   }
+
   let output = "";
-
-  // const discardMacros = new Set(
-  //   ["AddonsSidebar", "ApiRef", "SeeCompatTable"].map((x) => x.toLowerCase())
-  // );
-
-  // console.log();
 
   for (let token of tokens) {
     if (token.type !== "MACRO") {
@@ -320,56 +307,17 @@ function postProcessSummaryHTMLSnippet(text, document) {
 
     // Some macros do have arguments, but there's no good reason to render them out
     // for the benefit of a summary, in this context.
-    if (
-      [
-        "apiref",
-        "jsref",
-        "compat",
-        "index",
-        "page",
-        "gecko_minversion_inline",
-        "obsolete_header",
-        "gecko_minversion_header",
-        "deprecated_header",
-        "previousnext",
-        "wiki.localize",
-        "quicklinkswithsubpages",
-      ].includes(macroName)
-    ) {
+    if (MACROS_IN_SUMMARY_TO_IGNORE.has(macroName)) {
       continue;
     }
-    // if (
-    //   macroName === "quicklinkswithsubpages" ||
-    //   macroName === "wiki.localize" ||
-    //   macroName === "previousnext"
-    // ) {
-    //   console.log(document.url);
-    //   console.log({ text });
-    //   throw new Error("??");
-    // }
 
-    if (["draft", "glossary", "anch"].includes(macroName)) {
+    if (MACROS_IN_SUMMARY_TO_REPLACE_WITH_FIRST_ARGUMENT.has(macroName)) {
       output += token.args[0];
     } else if (macroName === "interwiki") {
       // Include the last one. E.g.
       //   {{Interwiki("wikipedia","Flynn%27s_taxonomy","classification of computer")}}
       output += token.args[token.args.length - 1];
-    } else if (!token.args.length) {
-      // console.log({ text });
-      // console.log(token);
-      // console.warn(`Macro has no arguments: ${token}`);
-      // throw new Error("??");
-      // output += token.chars;
-      // if (!seen.has(macroName)) {
-      //   console.log("NO ARGUMENTS", { macroName, text });
-      // }
-      // seen.add(macroName);
     } else {
-      // if (!seen.has(macroName)) {
-      //   console.log({ macroName, text });
-      // }
-      // seen.add(macroName);
-
       output += `<code>${token.args[0]}</code>`;
     }
   }
