@@ -30,7 +30,7 @@ on:
       # of the branch, you can deploy that entire branch to its own prefix
       # in S3 which means that it can be fully hosted as its own site.
       deployment_prefix:
-        description: "Deployment prefix (default ${{ env.DEFAULT_DEPLOYMENT_PREFIX }})"
+        description: "Deployment prefix"
         required: false
         default: $DEFAULT_DEPLOYMENT_PREFIX
 
