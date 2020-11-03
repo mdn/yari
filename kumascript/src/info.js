@@ -220,10 +220,11 @@ const info = {
           $ = cheerio.load(document.rawHTML);
           $("span.seoSummary, .summary").each((i, element) => {
             if (!summary) {
-              summary = postProcessSummaryHTMLSnippet(
-                $(element).text(),
-                document
-              );
+              const html = $(element)
+                .html()
+                .replace(/&quot;/g, '"')
+                .replace(/&apos;/g, "'");
+              summary = postProcessSummaryHTMLSnippet(html, document);
             }
           });
           if (!summary) {
@@ -232,10 +233,11 @@ const info = {
             $("div.blockIndicator, div.note").remove();
             $("p").each((i, element) => {
               if (!summary) {
-                summary = postProcessSummaryHTMLSnippet(
-                  $(element).text(),
-                  document
-                );
+                const html = $(element)
+                  .html()
+                  .replace(/&quot;/g, '"')
+                  .replace(/&apos;/g, "'");
+                summary = postProcessSummaryHTMLSnippet(html, document);
               }
             });
           }
