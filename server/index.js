@@ -185,6 +185,8 @@ app.get("/*", async (req, res) => {
 
   let lookupURL = req.url;
   let extraSuffix = "";
+  let bcdDataURL = "";
+  const bcdDataURLRegex = /\/(bcd-\d+|bcd)\.json$/;
 
   if (req.url.endsWith("index.json")) {
     // It's a bit special then.
@@ -195,14 +197,18 @@ app.get("/*", async (req, res) => {
     // temporarily remove it and remember to but it back when we're done.
     extraSuffix = "/index.json";
     lookupURL = lookupURL.replace(extraSuffix, "");
+  } else if (bcdDataURLRegex.test(req.url)) {
+    bcdDataURL = req.url;
+    lookupURL = lookupURL.replace(bcdDataURLRegex, "");
   }
 
   const isJSONRequest = extraSuffix.endsWith(".json");
 
   let document;
+  let bcdData;
   try {
     console.time(`buildDocumentFromURL(${lookupURL})`);
-    document = await buildDocumentFromURL(lookupURL, {
+    const built = await buildDocumentFromURL(lookupURL, {
       // The only times the server builds on the fly is basically when
       // you're in "development mode". And when you're not building
       // to ship you don't want the cache to stand have any hits
@@ -210,6 +216,8 @@ app.get("/*", async (req, res) => {
       clearKumascriptRenderCache: true,
     });
     console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
+    document = built.doc;
+    bcdData = built.bcdData;
   } catch (error) {
     console.error(`Error in buildDocumentFromURL(${lookupURL})`, error);
     return res.status(500).send(error.toString());
@@ -231,6 +239,12 @@ app.get("/*", async (req, res) => {
         `From URL ${lookupURL} no folder on disk could be found. ` +
           `Tried to find a folder called ${Document.urlToFolderPath(lookupURL)}`
       );
+  }
+
+  if (bcdDataURL) {
+    return res.json(
+      bcdData.find((data) => data.url.toLowerCase() === bcdDataURL).data
+    );
   }
 
   prepareDoc(document);

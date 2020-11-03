@@ -67,6 +67,11 @@ export function Homepage() {
             Page with lots of BCD tables
           </Link>
         </li>
+        <li>
+          <Link to="/en-US/docs/Web/API/Document/#Browser_compatibility">
+            Largest BCD table
+          </Link>
+        </li>
       </ul>
       <h3>Tools</h3>
       <ul>
