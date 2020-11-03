@@ -94,6 +94,15 @@ function injectNoTranslate($) {
 }
 
 /**
+ * For every image and iframe, where appropriate add the `loading="lazy"` attribute.
+ *
+ * @param {Cheerio document instance} $
+ */
+function injectLoadingLazyAttributes($) {
+  $("img:not([loading])").attr("loading", "lazy");
+}
+
+/**
  * Return the full URL directly to the file in GitHub based on this folder.
  * @param {String} folder - the current folder we're processing.
  */
@@ -268,6 +277,9 @@ async function buildDocument(document, documentOptions = {}) {
   // Post process HTML so that the right elements gets tagged so they
   // *don't* get translated by tools like Google Translate.
   injectNoTranslate($);
+
+  // Add the `loading=lazy` HTML attribute to the appropriate elements.
+  injectLoadingLazyAttributes($);
 
   // Turn the $ instance into an array of section blocks. Most of the
   // section blocks are of type "prose" and their value is a string blob
