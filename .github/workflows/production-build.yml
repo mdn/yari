@@ -1,7 +1,8 @@
 name: Production Build
 
 env:
-  DEFAULT_DEPLOYMENT_PREFIX: "mainy"
+  DEFAULT_DISPATCH_DEPLOYMENT_PREFIX: "mainy"
+  DEFAULT_DISPATCH_NOTES: ""
 
 on:
   schedule:
@@ -13,7 +14,7 @@ on:
       notes:
         description: "Notes"
         required: false
-        default: ""
+        default: ${DEFAULT_DISPATCH_NOTES}
       archived_content:
         description: "Build archived content"
         required: false
@@ -30,9 +31,9 @@ on:
       # of the branch, you can deploy that entire branch to its own prefix
       # in S3 which means that it can be fully hosted as its own site.
       deployment_prefix:
-        description: "Deployment prefix"
+        description: "Deployment prefix (${DEFAULT_DISPATCH_DEPLOYMENT_PREFIX})"
         required: false
-        default: ${DEFAULT_DEPLOYMENT_PREFIX}
+        default: ${DEFAULT_DISPATCH_DEPLOYMENT_PREFIX}
 
       log_each_successful_upload:
         description: "Deployer logs each success"
@@ -112,7 +113,7 @@ jobs:
         run: |
           # export DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix }}
           echo ${{ github.event.inputs.deployment_prefix }}
-          echo ${{ env.DEFAULT_DEPLOYMENT_PREFIX }}
+          echo ${{ env.DEFAULT_DISPATCH_DEPLOYMENT_PREFIX }}
 
       # - name: Build everything
       #   run: |
