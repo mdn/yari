@@ -117,6 +117,10 @@ test("content built foo page", () => {
     "This becomes the summary."
   );
 
+  // The 'Foo' page has 1 image. It should have been given the `loading="lazy"`
+  // attribute.
+  expect($('img[loading="lazy"]').length).toBe(1);
+
   // Every page, should have a `link[rel=canonical]` whose `href` always
   // starts with 'https://developer.mozilla.org' and ends with doc's URL.
   expect($("link[rel=canonical]").attr("href")).toBe(
