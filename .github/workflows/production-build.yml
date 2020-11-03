@@ -1,7 +1,7 @@
 name: Production Build
 
 env:
-  DEFAULT_DISPATCH_DEPLOYMENT_PREFIX: "mainy"
+  DEFAULT_DISPATCH_DEPLOYMENT_PREFIX: "main"
   DEFAULT_DISPATCH_NOTES: ""
   DEFAULT_DISPATCH_ARCHIVED_CONTENT: "false"
   DEFAULT_DISPATCH_TRANSLATED_CONTENT: "false"
@@ -10,7 +10,9 @@ env:
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron: "0 */24 * * *"
+    # - cron: "0 */24 * * *"
+    # TEMPORARY
+    - cron: "*/15 * * * *"
 
   workflow_dispatch:
     inputs:
