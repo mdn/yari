@@ -3,6 +3,9 @@ name: Production Build
 env:
   DEFAULT_DISPATCH_DEPLOYMENT_PREFIX: "mainy"
   DEFAULT_DISPATCH_NOTES: ""
+  DEFAULT_DISPATCH_ARCHIVED_CONTENT: "false"
+  DEFAULT_DISPATCH_TRANSLATED_CONTENT: "false"
+  DEFAULT_DISPATCH_LOG_EACH_SUCCESSFUL_UPLOAD: "false"
 
 on:
   schedule:
@@ -18,11 +21,11 @@ on:
       archived_content:
         description: "Build archived content"
         required: false
-        default: "false"
+        default: ${DEFAULT_DISPATCH_ARCHIVED_CONTENT}
       translated_content:
         description: "Build translated content"
         required: false
-        default: "false"
+        default: ${DEFAULT_DISPATCH_TRANSLATED_CONTENT}
 
       # This is very useful when combined with the "Use workflow from"
       # feature that is built into the "Run workflow" button on
@@ -31,14 +34,14 @@ on:
       # of the branch, you can deploy that entire branch to its own prefix
       # in S3 which means that it can be fully hosted as its own site.
       deployment_prefix:
-        description: "Deployment prefix (${DEFAULT_DISPATCH_DEPLOYMENT_PREFIX})"
+        description: "Deployment prefix"
         required: false
         default: ${DEFAULT_DISPATCH_DEPLOYMENT_PREFIX}
 
       log_each_successful_upload:
         description: "Deployer logs each success"
         required: false
-        default: "false"
+        default: ${DEFAULT_DISPATCH_LOG_EACH_SUCCESSFUL_UPLOAD}
 
 jobs:
   build:
@@ -103,11 +106,11 @@ jobs:
 
       - name: Print information about build
         run: |
-          echo "Trigger notes: ${{ github.event.inputs.notes }}"
-          echo "Trigger archived-content: ${{ github.event.inputs.archived_content }}"
-          echo "Trigger translated-content: ${{ github.event.inputs.translated_content }}"
-          echo "Trigger log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload }}"
-          echo "Deployment prefix: ${{ github.event.inputs.deployment_prefix }}"
+          echo "notes: ${{ github.event.inputs.notes }}"
+          echo "archived_content: ${{ github.event.inputs.archived_content }}"
+          echo "translated_content: ${{ github.event.inputs.translated_content }}"
+          echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload }}"
+          echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix }}"
 
       - name: DEBIGGG
         run: |
