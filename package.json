@@ -119,7 +119,7 @@
     "react-modal": "^3.11.2",
     "react-router": "6.0.0-beta.0",
     "react-router-dom": "6.0.0-beta.0",
-    "react-scripts": "3.4.4",
+    "react-scripts": "4.0.0",
     "rough-notation": "0.5.1",
     "sass": "^1.28.0",
     "stylelint": "^13.7.2",
