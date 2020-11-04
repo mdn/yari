@@ -71,11 +71,11 @@ export function DocumentForm({
     setAutoSaveEnabled(!autosaveEnabled);
   }
 
-  const [onSaveDebounced] = useDebouncedCallback(onSave, 1000);
+  const { callback: debounceCallback } = useDebouncedCallback(onSave, 1000);
 
   useEffect(() => {
     if (willAutosave) {
-      onSaveDebounced(
+      debounceCallback(
         {
           rawHTML,
           metadata: { slug, title, locale },
@@ -85,13 +85,14 @@ export function DocumentForm({
     }
   }, [
     willAutosave,
-    onSaveDebounced,
+    debounceCallback,
     slug,
     title,
     rawHTML,
     didSlugChange,
     locale,
   ]);
+
   return (
     <form
       className="document-form"
