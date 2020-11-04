@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 import { DocParent } from "../../../document/types";
+import { PreloadingDocumentLink } from "../../../document/preloading";
 
 import "./index.scss";
 
@@ -24,7 +24,7 @@ export function Breadcrumbs({ parents }: { parents: DocParent[] }) {
 
           return (
             <li key={parent.uri} property="itemListElement" typeof="ListItem">
-              <Link
+              <PreloadingDocumentLink
                 to={parent.uri}
                 className={
                   isLast
@@ -37,7 +37,7 @@ export function Breadcrumbs({ parents }: { parents: DocParent[] }) {
                 typeof="WebPage"
               >
                 <span property="name">{parent.title}</span>
-              </Link>
+              </PreloadingDocumentLink>
               <meta property="position" content={`${currentCrumb}`} />
             </li>
           );
