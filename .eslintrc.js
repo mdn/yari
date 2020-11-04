@@ -2,7 +2,7 @@ module.exports = {
   env: {
     browser: false,
     commonjs: true,
-    es6: true,
+    es2020: true,
   },
   extends: ["eslint:recommended", "plugin:node/recommended"],
   globals: {
@@ -10,7 +10,7 @@ module.exports = {
     SharedArrayBuffer: "readonly",
   },
   parserOptions: {
-    ecmaVersion: 2020,
+    ecmaVersion: 2019,
   },
   rules: {},
 };
