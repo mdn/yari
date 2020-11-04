@@ -2,9 +2,11 @@ import React from "react";
 
 import { Logo } from "../../ui/atoms/logo";
 
-export default {
+const config = {
   title: "Atoms/Logo",
 };
+
+export default config;
 
 const wrapper = {
   backgroundColor: "#212121",

@@ -5,9 +5,11 @@ import LanguageMenu from "../../ui/molecules/language-menu";
 
 import { languageMenuData } from "../mocks/language-menu";
 
-export default {
+const config = {
   title: "Molecules/Language Menu",
 };
+
+export default config;
 
 export const languageMenu = () => {
   return (

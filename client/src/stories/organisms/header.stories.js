@@ -2,9 +2,11 @@ import React from "react";
 
 import { Header } from "../../ui/organisms/header";
 
-export default {
+const config = {
   title: "Organisms/Header",
 };
+
+export default config;
 
 export const header = () => (
   <>

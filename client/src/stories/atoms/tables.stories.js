@@ -1,8 +1,10 @@
 import React from "react";
 
-export default {
+const config = {
   title: "Atoms/Tables",
 };
+
+export default config;
 
 export const standardTable = () => {
   return (

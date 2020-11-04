@@ -7,9 +7,11 @@ import { sidebarHTMLLearn } from "../mocks/sidebar-learn";
 
 import { RenderSideBar } from "../../document/organisms/sidebar";
 
-export default {
+const config = {
   title: "Organisms/Sidebar",
 };
+
+export default config;
 
 export const sidebar = () => <RenderSideBar doc={sidebarHTML} />;
 
