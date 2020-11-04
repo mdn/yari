@@ -315,6 +315,8 @@ async function fixFixableFlaws(doc, options, document) {
 
   let newRawHTML = document.rawHTML;
 
+  const phrasing = options.fixFlawsDryRun ? "Would fix" : "Fixed";
+
   const loud = options.fixFlawsDryRun || options.fixFlawsVerbose;
 
   // Any 'macros' of type "MacroRedirectedLinkError"...
@@ -333,7 +335,7 @@ async function fixFixableFlaws(doc, options, document) {
       if (loud) {
         console.log(
           chalk.grey(
-            `Fixed macro ${chalk.white.bold(
+            `${phrasing} (${flaw.id}) macro ${chalk.white.bold(
               flaw.macroSource
             )} to ${chalk.white.bold(newMacroSource)}`
           )
@@ -357,7 +359,7 @@ async function fixFixableFlaws(doc, options, document) {
     if (loud) {
       console.log(
         chalk.grey(
-          `Fixed broken_link ${chalk.white.bold(
+          `${phrasing} (${flaw.id}) broken_link ${chalk.white.bold(
             flaw.href
           )} to ${chalk.white.bold(flaw.suggestion)}`
         )
@@ -379,7 +381,7 @@ async function fixFixableFlaws(doc, options, document) {
     // flaw, but this time actually make the mutation.
     newRawHTML = newRawHTML.replace(flaw.html, flaw.suggestion);
     if (loud) {
-      console.log(chalk.grey(`Fixed pre_with_html`));
+      console.log(chalk.grey(`${phrasing} (${flaw.id}) pre_with_html`));
     }
   }
 
@@ -429,9 +431,9 @@ async function fixFixableFlaws(doc, options, document) {
     if (loud) {
       console.log(
         chalk.grey(
-          `Fixed image ${chalk.white.bold(flaw.src)} to ${chalk.white.bold(
-            newSrc
-          )}`
+          `${phrasing} (${flaw.id}) image ${chalk.white.bold(
+            flaw.src
+          )} to ${chalk.white.bold(newSrc)}`
         )
       );
     }
@@ -440,10 +442,10 @@ async function fixFixableFlaws(doc, options, document) {
   // Finally, summarized what happened...
   if (newRawHTML !== document.rawHTML) {
     // It changed the raw HTML of the source. So deal with this.
-    if (options.fixFlawsDryRun) {
+    if (options.fixFlawsDryRun && options.fixFlawsVerbose) {
       console.log(
         chalk.yellow(
-          `Would have modified "${document.fileInfo.path}", if this was not a dry run.`
+          `Would modify "${document.fileInfo.path}" from fixable flaws.`
         )
       );
     } else {

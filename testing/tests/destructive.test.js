@@ -93,7 +93,7 @@ describe("fixing flaws", () => {
       ),
     }).toString();
 
-    const regexPattern = /Would have modified "(.*)", if this was not a dry run/g;
+    const regexPattern = /Would modify "(.*)"./g;
     const dryRunNotices = stdout
       .split("\n")
       .filter((line) => regexPattern.test(line));

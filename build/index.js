@@ -212,7 +212,7 @@ async function buildDocument(document, documentOptions = {}) {
                 flaw.redirectInfo.suggested
               )
             : null;
-          const id = `macro_flaw${i}`;
+          const id = `macro${i}`;
           return Object.assign({ id, fixable, suggestion }, flaw);
         });
       }
