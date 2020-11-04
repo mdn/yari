@@ -202,7 +202,12 @@ class HTMLTool {
     for (const part of LIVE_SAMPLE_PARTS) {
       const src = $(
         `.${part},pre[class*="brush:${part}"],pre[class*="${part};"]`
-      ).text();
+      )
+        .map((i, element) => {
+          return $(element).text();
+        })
+        .get()
+        .join("\n");
       // The string replacements below have been carried forward from Kuma:
       //   * Bugzilla 819999: &nbsp; gets decoded to \xa0, which trips up CSS.
       //   * Bugzilla 1284781: &nbsp; is incorrectly parsed on embed sample.
