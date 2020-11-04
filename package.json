@@ -129,7 +129,7 @@
     "stylelint-config-sass-guidelines": "^7.1.0",
     "stylelint-prettier": "^1.1.2",
     "stylelint-scss": "^3.18.0",
-    "ts-loader": "^8.0.7",
+    "ts-loader": "^8.0.8",
     "typescript": "^3.9.7",
     "vnu-jar": "^20.6.30"
   },
