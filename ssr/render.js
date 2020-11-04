@@ -89,7 +89,10 @@ function serializeDocumentData(data) {
   });
 }
 
-export default function render(renderApp, doc) {
+export default function render(
+  renderApp,
+  { doc = null, pageNotFound = false } = {}
+) {
   const buildHtml = readBuildHTML();
   const webfontURLs = extractWebFontURLs();
   const $ = cheerio.load(buildHtml);
@@ -101,7 +104,11 @@ export default function render(renderApp, doc) {
 
   let pageDescription = "";
 
-  if (doc) {
+  if (pageNotFound) {
+    pageTitle = `Page Not Found | ${pageTitle}`;
+    const documentDataTag = `<script>window.__pageNotFound__ = true;</script>`;
+    $("#root").after(documentDataTag);
+  } else if (doc) {
     // Use the doc's title instead
     pageTitle = doc.pageTitle;
     canonicalURL += doc.mdn_url;
@@ -122,13 +129,15 @@ export default function render(renderApp, doc) {
     $('meta[name="description"]').attr("content", pageDescription);
   }
 
-  if (!doc.noIndexing) {
+  if ((doc && !doc.noIndexing) || pageNotFound) {
     $('<meta name="robots" content="noindex, nofollow">').insertAfter(
       $("meta").eq(-1)
     );
   }
 
-  $('link[rel="canonical"]').attr("href", canonicalURL);
+  if (!pageNotFound) {
+    $('link[rel="canonical"]').attr("href", canonicalURL);
+  }
 
   if (GOOGLE_ANALYTICS_ACCOUNT) {
     const googleAnalyticsJS = getGoogleAnalyticsJS();

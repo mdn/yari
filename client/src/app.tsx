@@ -10,7 +10,7 @@ import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { Footer } from "./ui/organisms/footer";
 import { Header } from "./ui/organisms/header";
-import { NoMatch } from "./routing";
+import { NoMatch } from "./no-match";
 import { Banner } from "./banners";
 
 const AllFlaws = lazy(() => import("./flaws"));
@@ -37,6 +37,12 @@ function Layout({ pageType, children }) {
 export function App(appProps) {
   const routes = (
     <Routes>
+      {/*
+        Note, this can only happen in local development.
+        In production, all traffic at `/` is redirected to at least
+        having a locale. So it'll be `/en-US` (for example) by the
+        time it hits any React code.
+       */}
       <Route
         path="/"
         element={
@@ -56,24 +62,41 @@ export function App(appProps) {
                 <Route path="/_edit/*" element={<DocumentEdit />} />
               </>
             )}
-            <Route path="/" element={<Homepage />} />
+            <Route
+              path="/"
+              element={
+                <Layout pageType="home-page">
+                  <Homepage />
+                </Layout>
+              }
+            />
             <Route
               path="/docs/*"
               element={
-                <Layout pageType="reference-page">
-                  <Document {...appProps} />
+                // It's important to do this so if the server-side render says
+                // this render is for a page not found.
+                // Otherwise, the document route will take over and start to try to
+                // download the `./index.json` thinking that was all that was missing.
+                appProps.pageNotFound ? (
+                  <Layout pageType="error-page">
+                    <NoMatch />
+                  </Layout>
+                ) : (
+                  <Layout pageType="reference-page">
+                    <Document {...appProps} />
+                  </Layout>
+                )
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <Layout pageType="error-page">
+                  <NoMatch />
                 </Layout>
               }
             />
           </Routes>
-        }
-      />
-      <Route
-        path="*"
-        element={
-          <Layout pageType="error-page">
-            <NoMatch />
-          </Layout>
         }
       />
     </Routes>

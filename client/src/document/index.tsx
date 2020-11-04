@@ -4,7 +4,7 @@ import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
 import { useWebSocketMessageHandler } from "../web-socket";
-import { NoMatch } from "../routing";
+import { NoMatch } from "../no-match";
 import { useDocumentURL } from "./hooks";
 import { Doc } from "./types";
 // Ingredients

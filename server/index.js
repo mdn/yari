@@ -20,7 +20,7 @@ const {
   Image,
   resolveFundamental,
 } = require("../content");
-const { prepareDoc, renderHTML } = require("../ssr/dist/main");
+const { prepareDoc, renderDocHTML } = require("../ssr/dist/main");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
@@ -216,6 +216,11 @@ app.get("/*", async (req, res) => {
       clearKumascriptRenderCache: true,
     });
     console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
+    if (!built) {
+      return res
+        .status(404)
+        .sendFile(path.join(STATIC_ROOT, "en-us", "_errorpages", "404.html"));
+    }
     document = built.doc;
     bcdData = built.bcdData;
   } catch (error) {
@@ -251,7 +256,7 @@ app.get("/*", async (req, res) => {
   if (isJSONRequest) {
     res.json({ doc: document });
   } else {
-    res.send(renderHTML(document, lookupURL));
+    res.send(renderDocHTML(document, lookupURL));
   }
 });
 
