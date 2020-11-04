@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-
-import { useDocumentURL } from "../hooks";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 import "./edit-actions.scss";
 
 export function EditActions({ folder }: { folder: string }) {
   const location = useLocation();
-  const documentURL = useDocumentURL();
-  const navigate = useNavigate();
 
   const [opening, setOpening] = useState(false);
   const [editorOpeningError, setEditorOpeningError] = useState<Error | null>(
@@ -52,25 +48,6 @@ export function EditActions({ folder }: { folder: string }) {
     }
   }
 
-  async function deleteDocument() {
-    if (!window.confirm("Are you sure you want to delete this document?")) {
-      return;
-    }
-    const response = await fetch(
-      `/_document?url=${encodeURIComponent(documentURL)}`,
-      {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    if (response.ok) {
-      window.alert("Document successfully deleted");
-      navigate("/");
-    } else {
-      window.alert(`Error while deleting document: ${response.statusText}`);
-    }
-  }
-
   const { locale, "*": slug } = useParams();
 
   if (!folder) {
@@ -78,24 +55,38 @@ export function EditActions({ folder }: { folder: string }) {
   }
 
   return (
-    <div className="edit-actions">
-      <a href={`https://developer.mozilla.org/${locale}/docs/${slug}`}>
-        View on MDN
-      </a>{" "}
-      Edit{" "}
-      <Link to={location.pathname.replace("/docs/", "/_edit/")}>
-        in your <b>browser</b>
-      </Link>
-      {" or "}
-      <button title={`Folder: ${folder}`} onClick={openInEditorHandler}>
-        in your <b>editor</b>
-      </button>
-      <button className="delete" onClick={deleteDocument}>
-        Delete document
-      </button>
-      <Link to={`/en-US/_create?initial_slug=${encodeURIComponent(slug)}`}>
-        Create new document
-      </Link>
+    <ul className="edit-actions">
+      <li>
+        <a href={`https://developer.mozilla.org/${locale}/docs/${slug}`}>
+          View on MDN
+        </a>
+      </li>
+
+      <li>
+        <Link to={location.pathname.replace("/docs/", "/_edit/")}>
+          Quick-edit
+        </Link>
+      </li>
+      <li>
+        <button title={`Folder: ${folder}`} onClick={openInEditorHandler}>
+          Edit in your <b>editor</b>
+        </button>
+      </li>
+      <li>
+        <Link to={location.pathname.replace("/docs/", "/_manage/")}>
+          Manage document
+        </Link>
+      </li>
+      <li>
+        <Link
+          to={`${location.pathname.replace(
+            "/docs/",
+            "/_create/"
+          )}?initial_slug=${encodeURIComponent(slug)}`}
+        >
+          Create new document
+        </Link>
+      </li>
       <br />
       {editorOpeningError ? (
         <p className="error-message editor-opening-error">
@@ -106,6 +97,6 @@ export function EditActions({ folder }: { folder: string }) {
       ) : (
         opening && <small>Trying to your editor now...</small>
       )}
-    </div>
+    </ul>
   );
 }

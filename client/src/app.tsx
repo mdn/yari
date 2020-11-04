@@ -16,6 +16,7 @@ import { Banner } from "./banners";
 const AllFlaws = lazy(() => import("./flaws"));
 const DocumentEdit = lazy(() => import("./document/forms/edit"));
 const DocumentCreate = lazy(() => import("./document/forms/create"));
+const DocumentManage = lazy(() => import("./document/forms/manage"));
 
 const isServer = typeof window === "undefined";
 
@@ -54,6 +55,7 @@ export function App(appProps) {
                 <Route path="/_flaws" element={<AllFlaws />} />
                 <Route path="/_create/*" element={<DocumentCreate />} />
                 <Route path="/_edit/*" element={<DocumentEdit />} />
+                <Route path="/_manage/*" element={<DocumentManage />} />
               </>
             )}
             <Route path="/" element={<Homepage />} />

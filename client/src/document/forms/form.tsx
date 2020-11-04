@@ -111,7 +111,7 @@ export function DocumentForm({
         <label>
           Slug
           <input
-            disabled={disableInputs}
+            disabled={!isNew}
             type="text"
             value={slug}
             onChange={(event) => setSlug(event.target.value)}
@@ -154,7 +154,7 @@ export function DocumentForm({
         disabled={disableInputs}
         value={rawHTML}
         onChange={(event) => setRawHtml(event.target.value)}
-        rows={30}
+        rows={20}
         style={{ width: "100%" }}
       />
       <p>

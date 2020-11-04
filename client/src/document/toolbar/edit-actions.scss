@@ -3,4 +3,11 @@
   p.editor-opening-error {
     font-weight: bold;
   }
+
+  li {
+    margin-left: 1em;
+    margin-right: 1em;
+  }
+  display: flex;
+  align-items: baseline;
 }

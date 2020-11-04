@@ -1,6 +1,25 @@
 .document-edit {
-  h2 .close {
-    font-size: 70%;
-    margin-left: 20px;
+  .edit-header {
+    .close {
+      font-size: 70%;
+      margin-left: 20px;
+    }
   }
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.document-edit-forms {
+  margin: 1em;
+  grid-row: 2/3;
+  grid-column: 1/2;
+}
+
+.document-preview {
+  border: 2px solid red;
+  grid-row: 2/3;
+  grid-column: 2/3;
+  max-height: 90vh;
+  overflow-y: scroll;
 }

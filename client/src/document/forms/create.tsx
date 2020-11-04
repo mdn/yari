@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router";
+import { Link } from "react-router-dom";
+import { useDocumentURL } from "../hooks";
 import { DocumentForm, DocumentOutData } from "./form";
+import "./create.scss";
 
 export default function DocumentCreate() {
   const location = useLocation();
   const [savingError, setSavingError] = useState<Error | null>(null);
+  const documentURL = useDocumentURL();
 
   async function handleCreate(data: DocumentOutData) {
     try {
@@ -27,10 +31,18 @@ export default function DocumentCreate() {
   }
 
   return (
-    <DocumentForm
-      initialSlug={new URLSearchParams(location.search).get("initial_slug")}
-      onSave={handleCreate}
-      savingError={savingError}
-    />
+    <section className="document-create">
+      <h2>
+        Create new Document
+        <Link to={documentURL} className="close">
+          close
+        </Link>
+      </h2>
+      <DocumentForm
+        initialSlug={new URLSearchParams(location.search).get("initial_slug")}
+        onSave={handleCreate}
+        savingError={savingError}
+      />
+    </section>
   );
 }

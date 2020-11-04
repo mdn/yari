@@ -106,14 +106,17 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      <Titlebar docTitle={doc.title} />
+      <Titlebar docTitle={doc.title}>
+        {!isServer && CRUD_MODE && !props.isPreview && !doc.isArchive && (
+          <Suspense
+            fallback={<p className="loading-toolbar">Loading toolbar</p>}
+          >
+            <Toolbar doc={doc} />
+          </Suspense>
+        )}
+      </Titlebar>
 
       {doc.isArchive && <Archived doc={doc} />}
-      {!isServer && CRUD_MODE && !doc.isArchive && (
-        <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
-          <Toolbar doc={doc} />
-        </Suspense>
-      )}
 
       <div className="breadcrumbs-locale-container">
         <div className="breadcrumb-container">
