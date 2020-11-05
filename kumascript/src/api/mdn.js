@@ -1,7 +1,6 @@
 /**
  * @prettier
  */
-const url = require("url");
 const got = require("got");
 const util = require("./util.js");
 
@@ -71,7 +70,7 @@ module.exports = {
    *   => "Hallo!" (in case the locale is 'de')
    */
   getLocalString(strings, key) {
-    if (!strings.hasOwnProperty(key)) {
+    if (!Object.prototype.hasOwnProperty.call(strings, key)) {
       return key;
     }
 

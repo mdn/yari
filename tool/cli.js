@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 const program = require("@caporal/core").default;
 const chalk = require("chalk");
 const prompts = require("prompts");
@@ -17,11 +16,10 @@ function tryOrExit(f) {
     try {
       await f({ options, ...args });
     } catch (error) {
-      console.error(chalk.red(error.message));
       if (options.verbose) {
         console.error(chalk.red(error.stack));
       }
-      process.exit(1);
+      throw error;
     }
   };
 }

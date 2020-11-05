@@ -20,6 +20,7 @@ const {
   Image,
   resolveFundamental,
 } = require("../content");
+// eslint-disable-next-line node/no-missing-require
 const { prepareDoc, renderHTML } = require("../ssr/dist/main");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
@@ -92,24 +93,6 @@ app.get("/_open", (req, res) => {
   }
   openEditor([spec]);
   res.status(200).send(`Tried to open ${spec} in ${process.env.EDITOR}`);
-});
-
-// Return about redirects based on a list of URLs.
-// This is used by the "<Flaws/>" component which displays information
-// about broken links in a page, as some of those broken links might just
-// be redirects.
-app.post("/_redirects", (req, res) => {
-  if (req.body === undefined) {
-    throw new Error("express.json middleware not installed");
-  }
-  const redirects = {};
-  if (!req.body.urls) {
-    return res.status(400).send("No .urls array sent in JSON");
-  }
-  for (const url of req.body.urls) {
-    redirects[url] = getRedirectURL(url);
-  }
-  res.json({ redirects });
 });
 
 app.use("/:locale/search-index.json", searchRoute);
@@ -256,8 +239,7 @@ app.get("/*", async (req, res) => {
 });
 
 if (!fs.existsSync(path.resolve(CONTENT_ROOT))) {
-  console.log(chalk.red(`${path.resolve(CONTENT_ROOT)} does not exist!`));
-  process.exit(1);
+  throw new Error(`${path.resolve(CONTENT_ROOT)} does not exist!`);
 }
 
 console.log(

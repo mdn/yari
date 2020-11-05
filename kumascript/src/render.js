@@ -40,7 +40,6 @@
  *
  * @prettier
  */
-
 const Parser = require("./parser.js");
 const Templates = require("./templates.js");
 const Environment = require("./environment.js");
