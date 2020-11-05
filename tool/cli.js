@@ -256,7 +256,7 @@ program
       const { yes } = options;
       const document = Document.findByURL(buildURL(locale, slug));
       if (!document) {
-        throw new Error(`Slug ${slug} does not exists for ${locale}`);
+        throw new Error(`Slug ${slug} does not exist for ${locale}`);
       }
       const { doc } = await buildDocument(document, {
         fixFlaws: true,
