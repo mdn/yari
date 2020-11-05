@@ -183,7 +183,7 @@ app.get("/*", async (req, res) => {
     }
   }
 
-  let lookupURL = req.url;
+  let lookupURL = decodeURI(req.url);
   let extraSuffix = "";
   let bcdDataURL = "";
   const bcdDataURLRegex = /\/(bcd-\d+|bcd)\.json$/;
