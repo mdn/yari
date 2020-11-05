@@ -28,7 +28,6 @@ const fakeV1APIRouter = require("./fake-v1-api");
 const { searchRoute } = require("./document-watch");
 const flawsRoute = require("./flaws");
 const { staticMiddlewares } = require("./middlewares");
-const { decode } = require("querystring");
 
 const app = express();
 app.use(express.json());
