@@ -101,7 +101,7 @@ program
         console.log(chalk.green(`redirecting to: ${redirect}`));
       }
       const { run } = yes
-        ? true
+        ? { run: true }
         : await prompts({
             type: "confirm",
             message: "Proceed?",
@@ -141,7 +141,7 @@ program
           .join("\n")
       );
       const { run } = yes
-        ? true
+        ? { run: true }
         : await prompts({
             type: "confirm",
             message: "Proceed?",
@@ -205,6 +205,9 @@ program
       const { slug, locale } = args;
       let okay = true;
       const document = Document.findByURL(buildURL(locale, slug));
+      if (!document) {
+        throw new Error(`Slug ${slug} does not exists for ${locale}`);
+      }
       const { doc } = await buildDocument(document);
 
       if (doc.flaws) {
@@ -222,8 +225,6 @@ program
       }
       if (okay) {
         console.log(chalk.green("✓ All seems fine"));
-      } else {
-        console.log(chalk.red("✗ Found some issues"));
       }
     })
   )
@@ -254,6 +255,9 @@ program
       const { slug, locale } = args;
       const { yes } = options;
       const document = Document.findByURL(buildURL(locale, slug));
+      if (!document) {
+        throw new Error(`Slug ${slug} does not exists for ${locale}`);
+      }
       const { doc } = await buildDocument(document, {
         fixFlaws: true,
         fixFlawsDryRun: true,
@@ -263,7 +267,7 @@ program
         .map((a) => a.filter((f) => f.fixable).length || 0)
         .reduce((a, b) => a + b);
       const { run } = yes
-        ? true
+        ? { run: true }
         : await prompts({
             type: "confirm",
             message: `Proceed fixing ${flaws} flaws?`,
