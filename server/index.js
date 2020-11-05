@@ -219,7 +219,7 @@ app.get("/*", async (req, res) => {
     if (!built) {
       return res
         .status(404)
-        .sendFile(path.join(STATIC_ROOT, "en-us", "_errorpages", "404.html"));
+        .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
     }
     document = built.doc;
     bcdData = built.bcdData;

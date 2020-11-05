@@ -4,7 +4,6 @@ import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
 import { useWebSocketMessageHandler } from "../web-socket";
-import { NoMatch } from "../no-match";
 import { useDocumentURL } from "./hooks";
 import { Doc } from "./types";
 // Ingredients
@@ -41,6 +40,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error(`${response.status} on ${url}: Page not found`);
+        }
         const text = await response.text();
         throw new Error(`${response.status} on ${url}: ${text}`);
       }
@@ -84,16 +86,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   }
 
   if (error) {
-    // Was it because of a 404?
-    if (
-      typeof window !== "undefined" &&
-      error instanceof Response &&
-      error.status === 404
-    ) {
-      return <NoMatch />;
-    } else {
-      return <LoadingError error={error} />;
-    }
+    return <LoadingError error={error} />;
   }
 
   if (!doc) {

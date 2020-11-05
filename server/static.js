@@ -24,7 +24,7 @@ app.use(staticMiddlewares);
 
 // To mimic what CloudFront does.
 app.get("/*", async (req, res) => {
-  res.status(404).sendFile(path.join(STATIC_ROOT, "_errorpages", "404.html"));
+  res.status(404).sendFile(path.join(STATIC_ROOT, "_spas", "404.html"));
 });
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");

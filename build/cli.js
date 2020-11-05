@@ -192,7 +192,7 @@ async function buildDocuments(files = null) {
 }
 
 async function buildOtherSPAs() {
-  const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_errorpages");
+  const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_spas");
   fs.mkdirSync(outPath, { recursive: true });
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
@@ -217,18 +217,21 @@ function humanFileSize(size) {
 program
   .name("build")
   .option("--spas", "Build the SPA pages", { default: true }) // PR builds
+  .option("--spas-only", "Only build the SPA pages", { default: false })
   .argument("[files...]", "specific files to build")
   .action(async ({ args, options }) => {
-    const t0 = new Date();
-
     try {
       if (options.spas) {
         console.log("\nBuilding SPAs...");
         await buildOtherSPAs();
       }
+      if (options.spasOnly) {
+        return;
+      }
 
       console.log("\nBuilding Documents...");
       const { files } = args;
+      const t0 = new Date();
       const { slugPerLocale, peakHeapBytes } = await buildDocuments(files);
       const t1 = new Date();
       const count = Object.values(slugPerLocale).reduce(
