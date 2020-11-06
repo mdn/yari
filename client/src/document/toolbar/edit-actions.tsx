@@ -68,7 +68,11 @@ export function EditActions({ folder }: { folder: string }) {
         </Link>
       </li>
       <li>
-        <button title={`Folder: ${folder}`} onClick={openInEditorHandler}>
+        <button
+          type="button"
+          title={`Folder: ${folder}`}
+          onClick={openInEditorHandler}
+        >
           Edit in your <b>editor</b>
         </button>
       </li>
@@ -87,7 +91,6 @@ export function EditActions({ folder }: { folder: string }) {
           Create new document
         </Link>
       </li>
-      <br />
       {editorOpeningError ? (
         <p className="error-message editor-opening-error">
           <b>Error opening page in your editor!</b>

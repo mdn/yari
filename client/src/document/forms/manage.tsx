@@ -31,7 +31,9 @@ function DocumentDelete({ slug, locale }) {
 
   return (
     <div>
-      <button onClick={deleteDocument}>delete</button>
+      <button type="button" onClick={deleteDocument}>
+        delete
+      </button>
       {slug} and all of its children
     </div>
   );
@@ -62,7 +64,9 @@ function DocumentMove({ slug, locale }) {
 
   return (
     <div>
-      <button onClick={moveDocument}>move</button>
+      <button type="button" onClick={moveDocument}>
+        move
+      </button>
       {slug} and all of its children
     </div>
   );

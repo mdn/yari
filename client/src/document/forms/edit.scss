@@ -1,8 +1,12 @@
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+
 .document-edit {
   .edit-header {
     .close {
-      font-size: 70%;
-      margin-left: 20px;
+      font-size: $tiny-text;
+      margin-left: $base-spacing;
     }
   }
 
@@ -17,7 +21,7 @@
 }
 
 .document-preview {
-  border: 2px solid red;
+  border: 2px solid $red-300;
   grid-row: 2/3;
   grid-column: 2/3;
   max-height: 90vh;
