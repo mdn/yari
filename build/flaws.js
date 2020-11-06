@@ -419,8 +419,14 @@ async function fixFixableFlaws(doc, options, document) {
         console.log(`Downloaded ${flaw.src} to ${destination}`);
         newSrc = path.basename(destination);
       } catch (error) {
-        console.error(error);
-        throw error;
+        const { response } = error;
+        if (response && response.statusCode === 404) {
+          console.log(chalk.yellow(`Skipping ${flaw.src} (404)`));
+          continue;
+        } else {
+          console.error(error);
+          throw error;
+        }
       }
     } else {
       newSrc = flaw.suggestion;
