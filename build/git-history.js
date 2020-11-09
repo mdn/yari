@@ -20,7 +20,8 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
     ],
     {
       cwd: repoRoot,
-    }
+    },
+    repoRoot
   );
 
   const map = new Map();

@@ -84,10 +84,17 @@ function execGit(args, opts = {}, root = null) {
     args,
     {
       cwd: gitRoot,
+      maxBuffer: 1024 * 1024 * 100, // 100MB
     }
   );
   if (error || status !== 0) {
-    throw new Error(`git command failed:\n${stderr.toString()}`);
+    if (stderr) {
+      console.error(stderr);
+    }
+    if (error) {
+      throw error;
+    }
+    throw new Error(`git command failed: ${error.toString()}`);
   }
   return stdout.toString().trim();
 }
