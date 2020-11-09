@@ -4,7 +4,9 @@ const { getPopularities } = require("../content");
 const getPopularity = (item) => getPopularities().get(item.url) || 0;
 
 module.exports = class SearchIndex {
-  _itemsByLocale = {};
+  constructor() {
+    this._itemsByLocale = {};
+  }
 
   add({ metadata: { locale, title }, url }) {
     const localeLC = locale.toLowerCase();

@@ -355,6 +355,15 @@ function move(oldSlug, newSlug, locale, { dry = false } = {}) {
   if (!doc) {
     throw new Error(`document for ${oldSlug} does not exist`);
   }
+  const newParentSlug = parentSlug(newSlug);
+  // Otherwise we have a top level slug.
+  if (newParentSlug) {
+    const newParent = findByURL(buildURL(locale, newParentSlug));
+    if (!newParent) {
+      throw new Error(`Parent document for ${newSlug} does not exist`);
+    }
+  }
+
   const realOldSlug = doc.metadata.slug;
   const paris = [doc, ...findChildren(oldUrl)].map(({ metadata }) => [
     metadata.slug,

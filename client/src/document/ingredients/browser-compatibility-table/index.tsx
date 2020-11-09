@@ -7,9 +7,9 @@ import { FeatureRow } from "./feature-row";
 import { PLATFORM_BROWSERS, Headers } from "./headers";
 import { Legend } from "./legend";
 import { listFeatures } from "./utils";
-import { DisplayH2 } from "../utils";
 
-import "./index.scss";
+// Note! Don't import any SCSS here inside *this* component.
+// It's done in the component that lazy-loads this component.
 
 // This string is used to prefill the body when clicking to file a new BCD
 // issue over on github.com/mdn/browser-compat-data
@@ -81,15 +81,11 @@ function FeatureListAccordion({
   );
 }
 
-export function BrowserCompatibilityTable({
-  id,
-  title,
+export default function BrowserCompatibilityTable({
   query,
   data,
   browsers: browserInfo,
 }: {
-  id: string;
-  title: string;
   query: string;
   data: bcd.Identifier;
   browsers: bcd.Browsers;
@@ -104,7 +100,6 @@ export function BrowserCompatibilityTable({
 
   const breadcrumbs = query.split(".");
   const category = breadcrumbs[0];
-  const name = breadcrumbs[breadcrumbs.length - 1];
 
   const [platforms, browsers] = gatherPlatformsAndBrowsers(category);
 
@@ -123,7 +118,6 @@ export function BrowserCompatibilityTable({
   return (
     <BrowserCompatibilityErrorBoundary>
       <BrowserInfoContext.Provider value={browserInfo}>
-        {title && <DisplayH2 id={id} title={title} />}
         <a
           className="bc-github-link external external-icon"
           href={getNewIssueURL()}
@@ -138,7 +132,7 @@ export function BrowserCompatibilityTable({
           <tbody>
             <FeatureListAccordion
               browsers={browsers}
-              features={listFeatures(data, name)}
+              features={listFeatures(data)}
             />
           </tbody>
         </table>

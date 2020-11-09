@@ -29,7 +29,7 @@
     }
 
     .breadcrumb,
-    .breadcrumb-previous {
+    .breadcrumb-penultimate {
       &::after {
         content: "";
         background: transparent url("~@mdn/dinocons/arrows/chevron.svg") 0 0
@@ -48,7 +48,7 @@
       }
     }
 
-    .breadcrumb-previous {
+    .breadcrumb-penultimate {
       &::before {
         display: inline-block;
         content: "";
