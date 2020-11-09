@@ -34,7 +34,9 @@ const NEW_ISSUE_TEMPLATE = `
 </details>
 `;
 
-function gatherPlatformsAndBrowsers(category): [string[], bcd.BrowserNames[]] {
+function gatherPlatformsAndBrowsers(
+  category: string
+): [string[], bcd.BrowserNames[]] {
   let platforms = ["desktop", "mobile"];
   if (category === "javascript") {
     platforms.push("server");
