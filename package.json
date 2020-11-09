@@ -75,7 +75,6 @@
     "source-map-support": "0.5.19",
     "swr": "0.3.8",
     "tempy": "1.0.0",
-    "typeface-zilla-slab": "0.0.72",
     "use-debounce": "^5.0.3",
     "webpack-cli": "4.2.0",
     "webpack-node-externals": "2.5.2",
