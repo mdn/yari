@@ -22,7 +22,7 @@ import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
 import LanguageMenu from "../ui/molecules/language-menu";
 import { OnGitHubLink } from "./on-github";
 import { Titlebar } from "../ui/molecules/titlebar";
-import { TOC } from "../ui/molecules/toc";
+import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
 
 import "./index.scss";
