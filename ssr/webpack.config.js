@@ -2,7 +2,7 @@ const path = require("path");
 
 const nodeExternals = require("webpack-node-externals");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-// const webpack = require("webpack");
+const webpack = require("webpack");
 
 module.exports = {
   context: path.resolve(__dirname, "."),
@@ -38,21 +38,26 @@ module.exports = {
           {
             loader: "@svgr/webpack",
             options: {
-              svgo: true,
+              svgo: false,
               titleProp: true,
             },
           },
         ],
       },
       {
-        test: /\.(png|svg|jpg|gif)$/,
-        use: ["file-loader?outputPath=/distimages/"],
+        test: /\.svg$/,
+        use: ["file-loader?outputPath=/dev/null"],
       },
-      // { test: /\.css$/, loader: "style-loader!css-loader" }
+      { test: /\.(png|jpe?g|gif)$/, loader: "ignore-loader" },
       { test: /\.(css|scss)$/, loader: "ignore-loader" },
     ],
   },
   externals: nodeExternals(),
   devtool: "source-map",
-  plugins: [new CleanWebpackPlugin()],
+  plugins: [
+    new CleanWebpackPlugin(),
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1,
+    }),
+  ],
 };

@@ -13,9 +13,6 @@ kumascript/node_modules/
 content/node_modules/
 server/node_modules/
 
-# This won't be relevant or needed once the content is gone.
-/content/files/en-us/
-
 /deployer
 kumascript/tests
 testing/
@@ -26,7 +23,6 @@ import/
 README.md
 client/search-experimentation.js
 yarn-error.log
-content/files/
 
 # Since we ship the built stuff, we actually no longer need any of the source
 client/src/
