@@ -302,7 +302,7 @@ program
       );
       console.log(
         chalk.green(
-          `Wrote ${Object.keys(
+          `Saved ${Object.keys(
             allHistory
           ).length.toLocaleString()} paths into ${saveHistory}`
         )
