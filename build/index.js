@@ -162,10 +162,19 @@ async function buildDocument(document, documentOptions = {}) {
     }
     [renderedHtml, flaws] = await kumascript.render(document.url);
 
-    const sampleIds = kumascript.getLiveSampleIDs(
-      document.metadata.slug,
-      document.rawHTML
-    );
+    let sampleIds = [];
+    try {
+      sampleIds = kumascript.getLiveSampleIDs(
+        document.metadata.slug,
+        document.rawHTML
+      );
+    } catch (error) {
+      console.warn(
+        `Failure to build sampleIds on ${document.url}: "${error.message}"`,
+        error.message
+      );
+      // console.error(error);
+    }
     for (const sampleIdObject of sampleIds) {
       const liveSamplePage = kumascript.buildLiveSamplePage(
         document.url,
