@@ -1406,6 +1406,9 @@ module.exports = async function runImporter(options) {
 
   console.log("\nThe following documents existed before but were NOT built");
   for (const filePath of existingFilePaths) {
+    if (filePath.includes("kitchensink")) {
+      continue;
+    }
     if (!builtFilePaths.has(filePath)) {
       console.log("\t", `rm ${filePath}`);
     }
