@@ -71,7 +71,14 @@ jobs:
           yarn test:testing developing
 
           status=$?
-          [ $status -eq 0 ] && echo "COMMAND WORKED" || echo "COMMAND FAILED"
+          if [ $status -eq 0 ]; then
+            echo "Testin failed! Going to dump stdout and stderr"
+            echo "STDOUT..................................................."
+            cat /tmp/stdout.log
+            echo "STDERR..................................................."
+            cat /tmp/stderr.log
+          fi
+          exit $status
 
       - name: Dump server logs
         run: |
