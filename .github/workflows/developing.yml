@@ -71,8 +71,8 @@ jobs:
           yarn test:testing developing
 
           status=$?
-          if [ $status -eq 0 ]; then
-            echo "Testin failed! Going to dump stdout and stderr"
+          if [ $status -ne 0 ]; then
+            echo "Testing failed! Going to dump stdout and stderr"
             echo "STDOUT..................................................."
             cat /tmp/stdout.log
             echo "STDERR..................................................."
