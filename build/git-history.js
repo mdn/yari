@@ -19,6 +19,7 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
       "--reverse",
       // "Separate the commits with NULs instead of with new newlines."
       // So each line isn't, possibly, wrapped in "quotation marks".
+      // Now we just need to split the output, as a string, by \0.
       "-z",
     ],
     {
