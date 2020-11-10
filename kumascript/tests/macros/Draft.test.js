@@ -8,7 +8,7 @@ describeMacro("Draft", () => {
   itMacro("No arguments (en-US)", function (macro) {
     return assert.eventually.equal(
       macro.call(),
-      `<div class="blockIndicator draft">\n    <p><strong>Draft</strong><br/>\n    This page is not complete.</p>\n    \n</div>`
+      `<div class="notecard draft">\n    <p><strong>Draft</strong><br/>\n    This page is not complete.</p>\n    \n</div>`
     );
   });
 
@@ -16,7 +16,7 @@ describeMacro("Draft", () => {
     macro.ctx.env.locale = "es";
     return assert.eventually.equal(
       macro.call(),
-      `<div class="blockIndicator draft">\n    <p><strong>Borrador</strong><br/>\n    Esta página no está completa.</p>\n    \n</div>`
+      `<div class="notecard draft">\n    <p><strong>Borrador</strong><br/>\n    Esta página no está completa.</p>\n    \n</div>`
     );
   });
 
@@ -24,7 +24,7 @@ describeMacro("Draft", () => {
     macro.ctx.env.locale = "fr";
     return assert.eventually.equal(
       macro.call(),
-      `<div class="blockIndicator draft">\n    <p><strong>Brouillon</strong><br/>\n    Cette page n&#39;est pas terminée.</p>\n    \n</div>`
+      `<div class="notecard draft">\n    <p><strong>Brouillon</strong><br/>\n    Cette page n&#39;est pas terminée.</p>\n    \n</div>`
     );
   });
 
@@ -32,7 +32,7 @@ describeMacro("Draft", () => {
     macro.ctx.env.locale = "ja";
     return assert.eventually.equal(
       macro.call(),
-      `<div class="blockIndicator draft">\n    <p><strong>草案</strong><br/>\n    このページは完成していません。</p>\n    \n</div>`
+      `<div class="notecard draft">\n    <p><strong>草案</strong><br/>\n    このページは完成していません。</p>\n    \n</div>`
     );
   });
 
@@ -40,7 +40,7 @@ describeMacro("Draft", () => {
     macro.ctx.env.locale = "ko";
     return assert.eventually.equal(
       macro.call(),
-      `<div class="blockIndicator draft">\n    <p><strong>초안</strong><br/>\n    이 문서는 작성중입니다.</p>\n    \n</div>`
+      `<div class="notecard draft">\n    <p><strong>초안</strong><br/>\n    이 문서는 작성중입니다.</p>\n    \n</div>`
     );
   });
 
@@ -48,7 +48,7 @@ describeMacro("Draft", () => {
     macro.ctx.env.locale = "pl";
     return assert.eventually.equal(
       macro.call(),
-      `<div class="blockIndicator draft">\n    <p><strong>Szkic</strong><br/>\n    Strona ta nie jest jeszcze ukończona.</p>\n    \n</div>`
+      `<div class="notecard draft">\n    <p><strong>Szkic</strong><br/>\n    Strona ta nie jest jeszcze ukończona.</p>\n    \n</div>`
     );
   });
 
@@ -56,7 +56,7 @@ describeMacro("Draft", () => {
     macro.ctx.env.locale = "zh-CN";
     return assert.eventually.equal(
       macro.call(),
-      `<div class="blockIndicator draft">\n    <p><strong>草案</strong><br/>\n    本页尚未完工.</p>\n    \n</div>`
+      `<div class="notecard draft">\n    <p><strong>草案</strong><br/>\n    本页尚未完工.</p>\n    \n</div>`
     );
   });
 
@@ -64,7 +64,7 @@ describeMacro("Draft", () => {
     macro.ctx.env.locale = "zh-TW";
     return assert.eventually.equal(
       macro.call(),
-      `<div class="blockIndicator draft">\n    <p><strong>編撰中</strong><br/>\n    本頁仍未完成</p>\n    \n</div>`
+      `<div class="notecard draft">\n    <p><strong>編撰中</strong><br/>\n    本頁仍未完成</p>\n    \n</div>`
     );
   });
 
@@ -72,7 +72,7 @@ describeMacro("Draft", () => {
     macro.ctx.env.locale = "pt-PT";
     return assert.eventually.equal(
       macro.call(),
-      `<div class="blockIndicator draft">\n    <p><strong>Esboço</strong><br/>\n    Esta página está incompleta.</p>\n    \n</div>`
+      `<div class="notecard draft">\n    <p><strong>Esboço</strong><br/>\n    Esta página está incompleta.</p>\n    \n</div>`
     );
   });
 
@@ -80,7 +80,7 @@ describeMacro("Draft", () => {
     macro.ctx.env.locale = "pt-BR";
     return assert.eventually.equal(
       macro.call(),
-      `<div class="blockIndicator draft">\n    <p><strong>Rascunho</strong><br/>\n    Esta página está incompleta.</p>\n    \n</div>`
+      `<div class="notecard draft">\n    <p><strong>Rascunho</strong><br/>\n    Esta página está incompleta.</p>\n    \n</div>`
     );
   });
 
@@ -88,14 +88,14 @@ describeMacro("Draft", () => {
     macro.ctx.env.locale = "ru";
     return assert.eventually.equal(
       macro.call(),
-      `<div class="blockIndicator draft">\n    <p><strong>Черновик</strong><br/>\n    Эта страница не завершена.</p>\n    \n</div>`
+      `<div class="notecard draft">\n    <p><strong>Черновик</strong><br/>\n    Эта страница не завершена.</p>\n    \n</div>`
     );
   });
 
   itMacro("One argument (en-US)", function (macro) {
     return assert.eventually.equal(
       macro.call("The reason is shrouded in mystery (escattone)."),
-      `<div class="blockIndicator draft">\n    <p><strong>Draft</strong><br/>\n    This page is not complete.</p>\n    <em>The reason is shrouded in mystery (escattone).</em>\n</div>`
+      `<div class="notecard draft">\n    <p><strong>Draft</strong><br/>\n    This page is not complete.</p>\n    <em>The reason is shrouded in mystery (escattone).</em>\n</div>`
     );
   });
 
@@ -108,8 +108,8 @@ describeMacro("Draft", () => {
           let dom = JSDOM.fragment(result);
           expect(dom.childElementCount).toBeGreaterThanOrEqual(1);
           assert(
-            dom.firstElementChild.classList.contains("blockIndicator"),
-            "Root element is a 'blockIndicator'"
+            dom.firstElementChild.classList.contains("notecard"),
+            "Root element is a 'notecard'"
           );
           assert(
             dom.firstElementChild.classList.contains("draft"),
@@ -143,8 +143,8 @@ describeMacro("Draft", () => {
           let dom = JSDOM.fragment(result);
           expect(dom.childElementCount).toBeGreaterThanOrEqual(1);
           assert(
-            dom.firstElementChild.classList.contains("blockIndicator"),
-            "Root element is a 'blockIndicator'"
+            dom.firstElementChild.classList.contains("notecard"),
+            "Root element is a 'notecard'"
           );
           assert(
             dom.firstElementChild.classList.contains("draft"),
@@ -176,8 +176,8 @@ describeMacro("Draft", () => {
         let dom = JSDOM.fragment(result);
         expect(dom.childElementCount).toBeGreaterThanOrEqual(1);
         assert(
-          dom.firstElementChild.classList.contains("blockIndicator"),
-          "Root element is a 'blockIndicator'"
+          dom.firstElementChild.classList.contains("notecard"),
+          "Root element is a 'notecard'"
         );
         assert(
           dom.firstElementChild.classList.contains("draft"),

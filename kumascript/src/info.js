@@ -229,8 +229,8 @@ const info = {
           });
           if (!summary) {
             // To avoid <p> tags that are inside things like
-            // `<div class="blockIndicator>`, just remove those divs first.
-            $("div.blockIndicator, div.note").remove();
+            // `<div class="notecard>`, just remove those divs first.
+            $("div.notecard, div.note").remove();
             $("p").each((i, element) => {
               if (!summary) {
                 const html = $(element)
