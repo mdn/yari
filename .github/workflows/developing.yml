@@ -58,6 +58,12 @@ jobs:
           # Just a slight delay to wait until the dev server is ready.
           sleep 4
 
+          # TEMPORARY
+          echo "STDOUT..................................................."
+          cat /tmp/stdout.log
+          echo "STDERR..................................................."
+          cat /tmp/stderr.log
+
           curl --retry-connrefused --retry 5 http://localhost:5000 > /dev/null
           curl --retry-connrefused --retry 5 --silent http://localhost:3000 > /dev/null
 
