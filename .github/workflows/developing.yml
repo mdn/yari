@@ -70,9 +70,8 @@ jobs:
           # The first argument makes it filter by file name.
           yarn test:testing developing
 
-          echo $?
-
-          echo "Did it fail?"
+          status=$?
+          [ $status -eq 0 ] && echo "COMMAND WORKED" || echo "COMMAND FAILED"
 
       - name: Dump server logs
         run: |
