@@ -13,21 +13,26 @@ export function isTruthy<T>(t: T | false | undefined | null): t is T {
   return Boolean(t);
 }
 
-export function listFeatures(identifier: bcd.Identifier, name: string = "") {
-  return [
-    identifier.__compat && {
-      name,
-      compat: identifier.__compat,
-      isRoot: true,
-    },
-    ...Object.entries(identifier).map(
-      ([name, subIdentifier]) =>
-        name !== "__compat" &&
-        subIdentifier.__compat && {
-          name,
-          compat: subIdentifier.__compat,
-          isRoot: false,
-        }
-    ),
-  ].filter(isTruthy);
+interface Feature {
+  name: string;
+  compat: bcd.CompatStatement;
+  isRoot: boolean;
+}
+
+export function listFeatures(
+  identifier: bcd.Identifier,
+  parentName: string = ""
+): Feature[] {
+  const features: Feature[] = [];
+  for (const [subName, subIdentifier] of Object.entries(identifier)) {
+    if (subName !== "__compat" && subIdentifier.__compat) {
+      features.push({
+        name: parentName ? `${parentName}.${subName}` : subName,
+        compat: subIdentifier.__compat,
+        isRoot: parentName !== "",
+      });
+      features.push(...listFeatures(subIdentifier, subName));
+    }
+  }
+  return features;
 }

@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 const program = require("@caporal/core").default;
 const chalk = require("chalk");
 const prompts = require("prompts");
@@ -9,6 +8,7 @@ const path = require("path");
 
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
 const { Redirect, Document, buildURL } = require("../content");
+const { buildDocument } = require("../build");
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
 
@@ -17,11 +17,10 @@ function tryOrExit(f) {
     try {
       await f({ options, ...args });
     } catch (error) {
-      console.error(chalk.red(error.message));
       if (options.verbose) {
         console.error(chalk.red(error.stack));
       }
-      process.exit(1);
+      throw error;
     }
   };
 }
@@ -100,7 +99,7 @@ program
         console.log(chalk.green(`redirecting to: ${redirect}`));
       }
       const { run } = yes
-        ? true
+        ? { run: true }
         : await prompts({
             type: "confirm",
             message: "Proceed?",
@@ -140,7 +139,7 @@ program
           .join("\n")
       );
       const { run } = yes
-        ? true
+        ? { run: true }
         : await prompts({
             type: "confirm",
             message: "Proceed?",
@@ -202,8 +201,29 @@ program
   .action(
     tryOrExit(async ({ args }) => {
       const { slug, locale } = args;
-      Document.validate(slug, locale);
-      console.log(chalk.green("✓ All seems fine"));
+      let okay = true;
+      const document = Document.findByURL(buildURL(locale, slug));
+      if (!document) {
+        throw new Error(`Slug ${slug} does not exist for ${locale}`);
+      }
+      const { doc } = await buildDocument(document);
+
+      if (doc.flaws) {
+        const flaws = Object.values(doc.flaws)
+          .map((a) => a.length || 0)
+          .reduce((a, b) => a + b);
+        console.log(chalk.red(`Found ${flaws} flaws.`));
+        okay = false;
+      }
+      try {
+        Document.validate(slug, locale);
+      } catch (e) {
+        console.log(chalk.red(e));
+        okay = false;
+      }
+      if (okay) {
+        console.log(chalk.green("✓ All seems fine"));
+      }
     })
   )
 
@@ -218,6 +238,43 @@ program
       const { slug, locale } = args;
       const url = `http://localhost:${PORT}${buildURL(locale, slug)}`;
       await open(url);
+    })
+  )
+
+  .command("flaws", "Find (and fix) flaws in a document")
+  .argument("<slug>", "Slug of the document in question")
+  .argument("[locale]", "Locale", {
+    default: DEFAULT_LOCALE,
+    validator: [...VALID_LOCALES.values()],
+  })
+  .option("-y, --yes", "Assume yes", { default: false })
+  .action(
+    tryOrExit(async ({ args, options }) => {
+      const { slug, locale } = args;
+      const { yes } = options;
+      const document = Document.findByURL(buildURL(locale, slug));
+      if (!document) {
+        throw new Error(`Slug ${slug} does not exist for ${locale}`);
+      }
+      const { doc } = await buildDocument(document, {
+        fixFlaws: true,
+        fixFlawsDryRun: true,
+      });
+
+      const flaws = Object.values(doc.flaws)
+        .map((a) => a.filter((f) => f.fixable).length || 0)
+        .reduce((a, b) => a + b);
+      const { run } = yes
+        ? { run: true }
+        : await prompts({
+            type: "confirm",
+            message: `Proceed fixing ${flaws} flaws?`,
+            name: "run",
+            initial: true,
+          });
+      if (run) {
+        buildDocument(document, { fixFlaws: true, fixFlawsVerbose: true });
+      }
     })
   );
 

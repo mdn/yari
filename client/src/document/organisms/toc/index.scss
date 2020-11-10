@@ -3,6 +3,7 @@
 @import "~@mdn/minimalist/sass/vars/typography";
 
 .document-toc {
+  font-size: $default-font-size;
   padding: ($base-spacing / 2) $base-spacing;
   position: relative;
 
