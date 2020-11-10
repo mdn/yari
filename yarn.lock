@@ -1831,10 +1831,10 @@
   dependencies:
     extend "3.0.2"
 
-"@mdn/dinocons@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@mdn/dinocons/-/dinocons-0.1.1.tgz#43f15996bd4c5eeb7604a564dce48ec1412f6a8a"
-  integrity sha512-V5JxnXFgU6nYRlX7x1mUEFAXIY102CHt9lIwvUzUuSpof+tSgnsPXxhWgihB5QRSTH1i9rnSJtgvODCJNid9Ag==
+"@mdn/dinocons@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@mdn/dinocons/-/dinocons-0.1.2.tgz#9f6711b997cdc00c077a56d4c75c01ae56b4b8da"
+  integrity sha512-BggZ5AIIT8QARy0KUe8U+6OXRC3fyrv9EQuXh+GgV17ikjOgmwNuiQ/r/5khG8NExQnwF/9xGRis3tWBSUBfUQ==
 
 "@mdn/minimalist@^0.2.2":
   version "0.2.2"
