@@ -17,6 +17,9 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
       `--format=${MARKER}%cI`,
       "--date-order",
       "--reverse",
+      // "Separate the commits with NULs instead of with new newlines."
+      // So each line isn't, possibly, wrapped in "quotation marks".
+      "-z",
     ],
     {
       cwd: repoRoot,
@@ -26,12 +29,7 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
 
   const map = new Map();
   let date = null;
-  for (let line of output.split("\n")) {
-    // Happens to file paths that contain non-ascii or control charaters.
-    // E.g. "files/en-us/glossary/b\303\251zier_curve/index.html"
-    if (line.startsWith('"') && line.endsWith('"')) {
-      line = line.slice(1, -1);
-    }
+  for (let line of output.split("\0")) {
     if (line.startsWith(MARKER)) {
       date = new Date(line.replace(MARKER, ""));
     } else if (line) {
