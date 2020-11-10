@@ -67,7 +67,6 @@ jobs:
           # if the development server is up and ready to be tested.
           export TESTING_DEVELOPING=true
 
-          # The first argument makes it filter by file name.
           status=0
           yarn test:testing developing || (
             status=$?
