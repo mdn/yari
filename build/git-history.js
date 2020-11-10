@@ -41,6 +41,7 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
   }
   return map;
 }
+
 function gather(contentRoot, previousFile = null) {
   const map = new Map();
   if (previousFile) {

@@ -84,6 +84,8 @@ function execGit(args, opts = {}, root = null) {
     args,
     {
       cwd: gitRoot,
+      // Default is 1MB
+      // That's rarely big enough for what we're using Yari for.
       maxBuffer: 1024 * 1024 * 100, // 100MB
     }
   );
