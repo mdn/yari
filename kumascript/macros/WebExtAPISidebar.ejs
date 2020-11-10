@@ -44,22 +44,14 @@ function buildSublist(pages, title, ignoreBadges) {
       apiComponentName = titlePieces[1];
     }
 
-    var translated = false;
     if (locale != 'en-US') {
         aPage.translations.forEach(function(translation) {
             if(translation.locale === locale) {
                 url = translation.url;
                 title = htmlEscape(translation.title);
-                translated = true;
             }
         });
     }
-
-    var cta = '';
-     if (!translated && locale != 'en-US') {
-        cta += ' <a href="'+ url +'$translate" style="opacity:0.5" title="'+ text['title'] + '">' + text['translate'] + '</a>';
-    }
-
 
     result += '<li>';
 
@@ -90,7 +82,7 @@ function buildSublist(pages, title, ignoreBadges) {
     if (slug == aPage.slug) {
         result += '<em><code>' + apiComponentName + '</code></em>'
     } else {
-        result += '<a href="' + url + '"><code>' + apiComponentName + '</code></a>' + cta;
+        result += '<a href="' + url + '"><code>' + apiComponentName + '</code></a>';
     }
 
     if (rtlLocales.indexOf(locale) != -1) {

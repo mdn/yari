@@ -171,12 +171,6 @@ function buildSublist(pages, title) {
         }
     }
 
-    var cta = '';
-     if (!translated && locale != 'en-US') {
-        cta += ' <a href="'+ url +'$translate" style="opacity:0.5" title="'+ text['title'] + '">' + text['translate'] + '</a>';
-    }
-
-
     result += '<li>';
 
     if (hasTag(aPage, 'Experimental')) {
@@ -203,7 +197,7 @@ function buildSublist(pages, title) {
     if (slug == aPage.slug) {
         result += '<em><code>' + title + '</code></em>'
     } else {
-        result += '<a href="' + url + '"><code>' + title + '</code></a>' + cta;
+        result += '<a href="' + url + '"><code>' + title + '</code></a>';
     }
 
     if (rtlLocales.indexOf(locale) != -1) {

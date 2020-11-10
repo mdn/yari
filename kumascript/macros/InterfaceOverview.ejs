@@ -56,7 +56,7 @@ if (slug) {
     var strAlsoInherits = localString({
       "en-US": "Also inherits $1 from: $2"
     });
-    
+
   // Get translations of strings we need
 
     var text = {
@@ -72,7 +72,7 @@ if (slug) {
 
     // Get the information about this API specifically out of the
     // databases, as well as from the subtree below this page.
-    
+
     var mainIFPages = await page.subpagesExpand('/en-US/docs/Web/API/' + mainIF);
     var events = [];
 
@@ -104,7 +104,7 @@ if (slug) {
             }
         }
     }
-    
+
     collect(mainIFPages);
 
     // Build inheritance information, if any
@@ -117,7 +117,7 @@ if (slug) {
     if (inh) {
       inherited.push(inh);
     }
-    
+
     impl.forEach(function(value, index, ar) {
       inherited.push(value);
     });
@@ -131,7 +131,7 @@ if (slug) {
         b = bSplit[bSplit.length - 1];
         return a.toLowerCase().localeCompare(b.toLowerCase());
     }
-    
+
     eventHandlers.sort(APISort);
     properties.sort(APISort);
     methods.sort(APISort);
@@ -161,39 +161,39 @@ if (slug) {
         }
         var result = '<h' + headLevel + '>' + title + '</h' + headLevel + '>';
         var inheritText = '';
-        
+
         if (title != text.Constructor) {
             // If there are any items in the section and there are
             // inherited interfaces:
-            
+
             if (pages.length && inherited.length) {
               inheritText = strAlsoInherits.replace(/\$1/ig,
                             title.toLocaleLowerCase());
               inheritText = inheritText.replace(/\$2/ig, inheritanceList);
             }
-    
+
             // ... if there are no items in the section and no inherited
             // interfaces:
             else if (!pages.length && !inherited.length) {
               inheritText = strNone.replace(/\$1/ig, title.toLocaleLowerCase());
             }
-    
+
             // ... if there are no items in the section but there are inherited
             // interfaces:
-    
+
             else if (!pages.length) {
               inheritText = strInherits.replace(/\$1/ig, title.toLocaleLowerCase());
               inheritText = inheritText.replace(/\$2/ig, inheritanceList);
             }
-    
+
             // ... otherwise, there are items in the section but none inherited,
             // so we don't have any special text at all.
-    
+
             if (inheritText.length) {
               result += '<p><em>' + inheritText + '</em></p>';
             }
         }
-        
+
         result += '<dl>';
 
         for (var i in pages) {
@@ -207,7 +207,6 @@ if (slug) {
             // Has the page been translated? If so, we need to use its
             // text instead of the text for English.
 
-            var translated = false;
             if (locale != 'en-US') {
                 aPage.translations.forEach(function(translation) {
                     if (translation.locale === locale) {
@@ -215,16 +214,8 @@ if (slug) {
                         url = translation.url;
                         titleSplit = htmlEscape(aPage.title).split('.');
                         title = titleSplit[titleSplit.length-1];
-                        translated = true;
                     }
                 });
-            }
-
-            // If the page hasn't been translated, we need a call to action!
-
-            var cta = '';
-             if (!translated && locale != 'en-US') {
-                cta += ' <a href="'+ url +'$translate" style="opacity:0.5" title="'+ text['title'] + '">' + text['translate'] + '</a>';
             }
 
             // Strike through items which are obsolete
@@ -271,7 +262,7 @@ if (slug) {
 
             // Add the call to action, if any, and close the title
 
-            result += cta + '</dt>';
+            result += '</dt>';
 
             // Add the summary
 
@@ -280,7 +271,7 @@ if (slug) {
 
         return result;
     }
-    
+
     // Time to do the output of the whole thing!
 
     if (ctors.length > 0) {

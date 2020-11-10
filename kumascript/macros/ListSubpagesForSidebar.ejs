@@ -86,20 +86,13 @@ function createLink(item) {
     var url = item.url.replace('en-US', locale);
     var title = htmlEscape(trimTitle(item.title));
 
-    var translated = false;
     if (locale != 'en-US') {
         item.translations.forEach(function(translation){
             if(translation.locale === locale) {
                 url = translation.url;
                 title = htmlEscape(trimTitle(translation.title));
-                translated = true;
             }
         });
-    }
-
-    var cta = '';
-     if (!translated && locale != 'en-US') {
-        cta += ' <a href="'+ url +'$translate" style="opacity:0.5" title="'+ text['title'] + '">' + text['translate'] + '</a>';
     }
 
     result += '<li>';
@@ -120,7 +113,7 @@ function createLink(item) {
         result += badges.ObsoleteBadge;
     }
 
-    result += '<a href="' + url + '">' + code + title + endcode + '</a>' + cta + '</li>';
+    result += '<a href="' + url + '">' + code + title + endcode + '</a></li>';
     return result;
 }
 

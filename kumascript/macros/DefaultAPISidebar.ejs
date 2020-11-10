@@ -53,24 +53,17 @@ function buildSublist(pages, title) {
     var url = aPage.url.replace('en-US', locale);
     var title = htmlEscape(aPage.title);
 
-    var translated = false;
     if (locale != 'en-US' && aPage.translations) {
         aPage.translations.forEach(function(translation){
             if(translation.locale === locale) {
                 url = translation.url;
                 title = htmlEscape(translation.title);
-                translated = true;
             }
         });
     }
 
-    var cta = '';
-     if (!translated && locale != 'en-US' && aPage.translations) {
-        cta += ' <a href="'+ url +'$translate" style="opacity:0.5" title="'+ text['title'] + '">' + text['translate'] + '</a>';
-    }
-
     result += '<li>';
-    result += '<a href="' + url + '">' + title + '</a>' + cta;
+    result += '<a href="' + url + '">' + title + '</a>';
     result += '</li>';
   }
 

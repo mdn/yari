@@ -198,11 +198,6 @@ if (slug) {
             });
         }
 
-        var cta = '';
-         if (!translated && locale != 'en-US') {
-            cta += ' <a href="'+ url +'$translate" style="opacity:0.5" title="'+ text['title'] + '">' + text['translate'] + '</a>';
-        }
-
         result += '<li>';
 
         if (hasTag(aPage, 'Experimental')) {
@@ -229,7 +224,7 @@ if (slug) {
         if (slug == aPage.slug) {
             result += '<em>' + code + title + endcode + '</em>'
         } else {
-            result += '<a href="' + url + '">' + code + title + endcode + '</a>' + cta;
+            result += '<a href="' + url + '">' + code + title + endcode + '</a>';
         }
 
         if (rtlLocales.indexOf(locale) != -1) {

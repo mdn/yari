@@ -161,21 +161,14 @@ function buildSublist(pages, title, opened) {
 
     var url = aPage.url.replace('en-US', locale);
     var title = aPage.title;
-    var translated = false;
 
     if (locale != 'en-US') {
         aPage.translations.forEach(function(translation){
             if(translation.locale === locale) {
                 url = translation.url;
                 title = translation.title;
-                translated = true;
             }
         });
-    }
-
-    var cta = '';
-     if (!translated && locale != 'en-US') {
-        cta += ' <a href="'+ url +'$translate" style="opacity:0.5" title="'+ text['translationCTA'] + '">' + text['translate'] + '</a>';
     }
 
     if (containsTag(aPage, 'Experimental')) {
@@ -204,7 +197,7 @@ function buildSublist(pages, title, opened) {
     } else {
         result += '<a href="'
                + url
-               + '"><code>' + title + '</code></a>' + cta;
+               + '"><code>' + title + '</code></a>';
     }
 
     if (rtlLocales.indexOf(locale) != -1) {
