@@ -97,4 +97,13 @@ jobs:
           export TESTING_DEVELOPING=true
 
           # The first argument makes it filter by file name.
-          yarn test:testing developing
+          yarn test:testing developing || echo "FAILED THE END-TO-END TESTS"
+
+      - name: Dump server logs
+        run: |
+          # When we started the server(s) in the background, we dumped their
+          # stdout and stderr to temp files. Let's display them afterwards.
+          echo "STDOUT..................................................."
+          cat /tmp/stdout.log
+          echo "STDERR..................................................."
+          cat /tmp/stderr.log
