@@ -76,5 +76,7 @@ jobs:
             cat /tmp/stdout.log
             echo "STDERR..................................................."
             cat /tmp/stderr.log
+            echo $status
+            exit $status
           )
           exit $status
