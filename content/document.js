@@ -94,6 +94,7 @@ function create(html, metadata) {
   fs.mkdirSync(folderPath, { recursive: true });
 
   saveHTMLFile(getHTMLPath(folderPath), trimLineEndings(html), metadata);
+  return folderPath;
 }
 
 function getFolderPath(metadata) {
@@ -135,6 +136,7 @@ function archive(renderedHTML, rawHTML, metadata, isTranslatedContent = false) {
     trimLineEndings(renderedHTML),
     metadata
   );
+  return folderPath;
 }
 
 const read = memoize((folder) => {
