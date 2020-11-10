@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useGA } from "../../../ga-context";
 
-import { Toc } from "../../../document/types";
+import { Toc } from "../../types";
 
 import "./index.scss";
 

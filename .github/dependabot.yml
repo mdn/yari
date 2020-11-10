@@ -11,3 +11,11 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+
+    # This forces the Dependabot commit messages to conform to something
+    # our auto-merge workflow can always cope with.
+    # See https://github.com/ahmadnassri/action-dependabot-auto-merge/issues/31#issuecomment-718779806
+    commit-message:
+      prefix: build
+      prefix-development: chore
+      include: scope

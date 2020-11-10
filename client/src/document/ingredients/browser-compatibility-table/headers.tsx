@@ -13,7 +13,7 @@ export const PLATFORM_BROWSERS: { [key: string]: bcd.BrowserNames[] } = {
     "samsunginternet_android",
   ],
   server: ["nodejs"],
-  "webextensions-desktop": ["chrome", "edge", "firefox", "opera"],
+  "webextensions-desktop": ["chrome", "edge", "firefox", "opera", "safari"],
   "webextensions-mobile": ["firefox_android"],
 };
 

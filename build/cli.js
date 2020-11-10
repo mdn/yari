@@ -5,6 +5,7 @@ const zlib = require("zlib");
 const cliProgress = require("cli-progress");
 
 const { Document, slugToFolder } = require("../content");
+// eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 
 const options = require("./build-options");
@@ -216,6 +217,6 @@ if (require.main === module) {
     })
     .catch((error) => {
       console.error("error while building documents:", error);
-      process.exit(1);
+      process.exitCode = 1;
     });
 }

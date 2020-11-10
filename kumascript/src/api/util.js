@@ -13,7 +13,7 @@ const H1_TO_H6_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 const HEADING_TAGS = new Set([...H1_TO_H6_TAGS, "hgroup"]);
 const INJECT_SECTION_ID_TAGS = new Set([...HEADING_TAGS, "section"]);
 const LIVE_SAMPLE_PARTS = ["html", "css", "js"];
-const SECTION_ID_DISALLOWED = /["#$%&+,/:;=?@[\]\^`{|}~')(\\]/g;
+const SECTION_ID_DISALLOWED = /["#$%&+,/:;=?@[\]^`{|}~')(\\]/g;
 
 class KumascriptError extends Error {
   constructor(message) {

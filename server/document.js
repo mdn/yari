@@ -71,8 +71,13 @@ router.put("/", withDocument, async (req, res) => {
   res.sendStatus(200);
 });
 
-router.delete("/", withDocument, (req, res) => {
-  Document.remove(req.document.metadata.slug, req.document.metadata.locale, {
+router.put("/move", async (req, res) => {
+  Document.move(req.query.slug, req.query.newSlug, req.query.locale);
+  res.sendStatus(200);
+});
+
+router.delete("/", (req, res) => {
+  Document.remove(req.query.slug, req.query.locale, {
     recursive: true,
   });
   res.sendStatus(200);
