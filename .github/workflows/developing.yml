@@ -63,18 +63,23 @@ jobs:
           cat /tmp/stdout.log
           echo "STDERR..................................................."
           cat /tmp/stderr.log
+          sleep 4
+
+          # TEMPORARY
+          echo "STDOUT..................................................."
+          cat /tmp/stdout.log
+          echo "STDERR..................................................."
+          cat /tmp/stderr.log
+          sleep 4
+
+          # TEMPORARY
+          echo "STDOUT..................................................."
+          cat /tmp/stdout.log
+          echo "STDERR..................................................."
+          cat /tmp/stderr.log
 
           curl --retry-connrefused --retry 5 http://localhost:5000 > /dev/null
           curl --retry-connrefused --retry 5 --silent http://localhost:3000 > /dev/null
-
-      - name: Test viewing the dev server
-        run: |
-          # This will make sure the tests in `testing/tests/*.test.js` only run
-          # if the development server is up and ready to be tested.
-          export TESTING_DEVELOPING=true
-
-          # The first argument makes it filter by file name.
-          yarn test:testing developing
 
       - name: Dump server logs
         run: |
@@ -84,3 +89,12 @@ jobs:
           cat /tmp/stdout.log
           echo "STDERR..................................................."
           cat /tmp/stderr.log
+
+      - name: Test viewing the dev server
+        run: |
+          # This will make sure the tests in `testing/tests/*.test.js` only run
+          # if the development server is up and ready to be tested.
+          export TESTING_DEVELOPING=true
+
+          # The first argument makes it filter by file name.
+          yarn test:testing developing
