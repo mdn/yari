@@ -56,39 +56,10 @@ jobs:
       - name: Wait for servers
         run: |
           # Just a slight delay to wait until the dev server is ready.
-          sleep 4
-
-          # TEMPORARY
-          echo "STDOUT..................................................."
-          cat /tmp/stdout.log
-          echo "STDERR..................................................."
-          cat /tmp/stderr.log
-          sleep 4
-
-          # TEMPORARY
-          echo "STDOUT..................................................."
-          cat /tmp/stdout.log
-          echo "STDERR..................................................."
-          cat /tmp/stderr.log
-          sleep 4
-
-          # TEMPORARY
-          echo "STDOUT..................................................."
-          cat /tmp/stdout.log
-          echo "STDERR..................................................."
-          cat /tmp/stderr.log
+          sleep 5
 
           curl --retry-connrefused --retry 5 http://localhost:5000 > /dev/null
           curl --retry-connrefused --retry 5 --silent http://localhost:3000 > /dev/null
-
-      - name: Dump server logs
-        run: |
-          # When we started the server(s) in the background, we dumped their
-          # stdout and stderr to temp files. Let's display them afterwards.
-          echo "STDOUT..................................................."
-          cat /tmp/stdout.log
-          echo "STDERR..................................................."
-          cat /tmp/stderr.log
 
       - name: Test viewing the dev server
         run: |
@@ -97,7 +68,11 @@ jobs:
           export TESTING_DEVELOPING=true
 
           # The first argument makes it filter by file name.
-          yarn test:testing developing || echo "FAILED THE END-TO-END TESTS"
+          yarn test:testing developing
+
+          echo $?
+
+          echo "Did it fail?"
 
       - name: Dump server logs
         run: |
