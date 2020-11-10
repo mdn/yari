@@ -107,6 +107,12 @@ export class FuzzySearch {
 // ...in the final rendering of the search results.
 function getSubstringsFromRanges(string: string, ranges: Range[]): Substring[] {
   const substrings: Substring[] = [];
+  if (ranges[0].start !== 0) {
+    substrings.push({
+      str: string.slice(0, ranges[0].start),
+      match: false,
+    });
+  }
   ranges.forEach((range, i) => {
     const { start, stop } = range;
     substrings.push({ str: string.slice(start, stop), match: true });

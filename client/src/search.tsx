@@ -210,7 +210,10 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           setResultItems([]);
           return;
         } else {
-          const fuzzyResults = searchIndex.fuzzy.search(inputValue, { limit });
+          const fuzzyResults = searchIndex.fuzzy.search(
+            inputValue.substring(1),
+            { limit }
+          );
           results = fuzzyResults.map((fuzzyResult) => ({
             url: fuzzyResult.url,
             title: fuzzyResult.title,
