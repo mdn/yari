@@ -706,6 +706,35 @@ async function prepareRoots(options) {
   fs.mkdirSync(CONTENT_TRANSLATED_ROOT, { recursive: true });
 }
 
+function populateExistingFilePaths() {
+  // Populate the global set `existingFilePaths` with every existing folder path
+  // that currently exists in all the roots.
+  for (const root of [
+    CONTENT_ROOT,
+    CONTENT_ARCHIVED_ROOT,
+    CONTENT_TRANSLATED_ROOT,
+  ]) {
+    for (const filepath of walker(root)) {
+      if (filepath.endsWith("index.html")) {
+        existingFilePaths.add(filepath);
+      }
+    }
+  }
+}
+
+function* walker(root) {
+  const files = fs.readdirSync(root);
+  for (const name of files) {
+    const filepath = path.join(root, name);
+    const isDirectory = fs.statSync(filepath).isDirectory();
+    if (isDirectory) {
+      yield* walker(filepath);
+    } else {
+      yield filepath;
+    }
+  }
+}
+
 function getRedirectURL(html) {
   /**
    * Sometimes the HTML is like this:
@@ -1016,8 +1045,12 @@ async function processDocument(
   }
 
   localeWikiHistory.set(doc.slug, wikiHistory);
+
+  // If we're building this page, we can remove
+  let builtFolderPath;
+
   if (isArchive || doc.locale !== "en-US") {
-    Document.archive(
+    builtFolderPath = Document.archive(
       getCleanedRenderedHTML(doc.rendered_html),
       doc.html,
       meta,
@@ -1026,8 +1059,9 @@ async function processDocument(
       !isArchive
     );
   } else {
-    Document.create(getCleanedKumaHTML(doc.html), meta);
+    builtFolderPath = Document.create(getCleanedKumaHTML(doc.html), meta);
   }
+  builtFilePaths.add(path.join(builtFolderPath, "index.html"));
 }
 
 function getCleanedRenderedHTML(html) {
@@ -1156,10 +1190,23 @@ function formatSeconds(s) {
   }
 }
 
+const builtFilePaths = new Set();
+const existingFilePaths = new Set();
+
 module.exports = async function runImporter(options) {
   options = { locales: [], excludePrefixes: [], ...options };
 
   await prepareRoots(options);
+
+  if (!options.startClean) {
+    // Having this set makes it possible to eventually compare with the Set
+    // `builtFolderPath` and you can see which ones were NOT built this time.
+    // That complement represents the files we can delete now.
+    populateExistingFilePaths(options);
+    console.log(
+      `NOTE! We found ${existingFilePaths.size.toLocaleString()} existing file paths`
+    );
+  }
 
   const pool = mysql.createPool(options.dbURL);
 
@@ -1356,4 +1403,11 @@ module.exports = async function runImporter(options) {
   console.log(
     `Roughly ${(processedDocumentsCount / secondsTook).toFixed(1)} rows/sec.`
   );
+
+  console.log("\nThe following documents existed before but were NOT built");
+  for (const filePath of existingFilePaths) {
+    if (!builtFilePaths.has(filePath)) {
+      console.log("\t", `rm ${filePath}`);
+    }
+  }
 };
