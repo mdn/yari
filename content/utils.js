@@ -91,6 +91,7 @@ function execGit(args, opts = {}, root = null) {
   );
   if (error || status !== 0) {
     if (stderr) {
+      console.log(`Error running git ${args}`);
       console.error(stderr);
     }
     if (error) {
