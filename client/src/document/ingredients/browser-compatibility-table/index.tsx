@@ -34,7 +34,9 @@ const NEW_ISSUE_TEMPLATE = `
 </details>
 `;
 
-function gatherPlatformsAndBrowsers(category): [string[], bcd.BrowserNames[]] {
+function gatherPlatformsAndBrowsers(
+  category: string
+): [string[], bcd.BrowserNames[]] {
   let platforms = ["desktop", "mobile"];
   if (category === "javascript") {
     platforms.push("server");
@@ -82,14 +84,10 @@ function FeatureListAccordion({
 }
 
 export default function BrowserCompatibilityTable({
-  id,
-  title,
   query,
   data,
   browsers: browserInfo,
 }: {
-  id: string;
-  title: string;
   query: string;
   data: bcd.Identifier;
   browsers: bcd.Browsers;
@@ -104,7 +102,6 @@ export default function BrowserCompatibilityTable({
 
   const breadcrumbs = query.split(".");
   const category = breadcrumbs[0];
-  const name = breadcrumbs[breadcrumbs.length - 1];
 
   const [platforms, browsers] = gatherPlatformsAndBrowsers(category);
 
@@ -137,7 +134,7 @@ export default function BrowserCompatibilityTable({
           <tbody>
             <FeatureListAccordion
               browsers={browsers}
-              features={listFeatures(data, name)}
+              features={listFeatures(data)}
             />
           </tbody>
         </table>

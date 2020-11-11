@@ -135,7 +135,7 @@ describeMacro("Compat", function () {
           Array.from(dom.querySelector(".bc-table").classList),
           "bc-table-ext"
         );
-        assert.equal(dom.querySelector(".bc-platform-desktop").colSpan, 4);
+        assert.equal(dom.querySelector(".bc-platform-desktop").colSpan, 5);
         assert.equal(dom.querySelector(".bc-platform-mobile").colSpan, 1);
       });
     }

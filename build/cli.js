@@ -6,6 +6,7 @@ const cliProgress = require("cli-progress");
 const program = require("@caporal/core").default;
 
 const { Document, slugToFolder } = require("../content");
+// eslint-disable-next-line node/no-missing-require
 const { renderDocHTML, renderHTML } = require("../ssr/dist/main");
 
 const options = require("./build-options");
