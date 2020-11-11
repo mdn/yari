@@ -10,9 +10,7 @@ env:
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    # - cron: "0 */24 * * *"
-    # TEMPORARY
-    - cron: "*/30 * * * *"
+    - cron: "0 */24 * * *"
 
   workflow_dispatch:
     inputs:
@@ -113,17 +111,6 @@ jobs:
           echo "translated_content: ${{ github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT }}"
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}"
-
-      - name: DEBUG
-        run: |
-          export DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}
-          export DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}
-
-          echo "DEPLOYER_BUCKET_PREFIX"
-          echo $DEPLOYER_BUCKET_PREFIX
-          echo
-          echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD"
-          echo $DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD
 
       - name: Build everything
         run: |
