@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { DEFAULT_LOCALE, VALID_LOCALES } = require("@yari-internal/constants");
+const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
 
 const { Client } = require("@elastic/elasticsearch");
 

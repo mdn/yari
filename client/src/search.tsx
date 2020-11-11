@@ -240,7 +240,6 @@ function InnerSearchNavigateWidget() {
 
     reset,
   } = useCombobox({
-    defaultHighlightedIndex: 0,
     items: resultItems,
     onInputValueChange: ({ inputValue }) => {
       updateResults(inputValue);
@@ -262,9 +261,14 @@ function InnerSearchNavigateWidget() {
         className: "search-widget",
         id: "nav-main-search",
         role: "search",
-        // onSubmit: (e) => {
-        //   e.preventDefault();
-        // },
+        onSubmit: (e) => {
+          // This comes into effect if the input is completely empty and the
+          // user hits Enter, which triggers the native form submission.
+          // When something *is* entered, the onKeyDown event is triggered
+          // on the <input> and within that handler you can
+          // access `event.key === 'Enter'` as a signal to submit the form.
+          e.preventDefault();
+        },
       })}
     >
       <label htmlFor="main-q" className="visually-hidden">
@@ -289,6 +293,11 @@ function InnerSearchNavigateWidget() {
           onKeyDown: (event) => {
             if (event.key === "Escape" && inputRef.current) {
               inputRef.current.blur();
+            } else if (event.key === "Enter" && inputValue.trim()) {
+              // Redirect to the search page!
+              const sp = new URLSearchParams();
+              sp.set("q", inputValue.trim());
+              navigate(`/${locale}/search?${sp.toString()}`);
             }
           },
           ref: (input) => {
