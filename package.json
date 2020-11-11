@@ -82,7 +82,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
-    "@mdn/dinocons": "^0.1.2",
+    "@mdn/dinocons": "^0.1.3",
     "@mdn/minimalist": "^0.2.5",
     "@storybook/addon-a11y": "^6.0.28",
     "@storybook/addon-actions": "^6.0.28",
