@@ -1,24 +1,33 @@
 name: Production Build
 
+env:
+  DEFAULT_DEPLOYMENT_PREFIX: "main"
+  DEFAULT_NOTES: ""
+  DEFAULT_ARCHIVED_CONTENT: "false"
+  DEFAULT_TRANSLATED_CONTENT: "false"
+  DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD: "false"
+
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron: "0 */24 * * *"
+    # - cron: "0 */24 * * *"
+    # TEMPORARY
+    - cron: "*/30 * * * *"
 
   workflow_dispatch:
     inputs:
       notes:
         description: "Notes"
         required: false
-        default: ""
+        default: ${DEFAULT_NOTES}
       archived_content:
         description: "Build archived content"
         required: false
-        default: "false"
+        default: ${DEFAULT_ARCHIVED_CONTENT}
       translated_content:
         description: "Build translated content"
         required: false
-        default: "false"
+        default: ${DEFAULT_TRANSLATED_CONTENT}
 
       # This is very useful when combined with the "Use workflow from"
       # feature that is built into the "Run workflow" button on
@@ -29,12 +38,12 @@ on:
       deployment_prefix:
         description: "Deployment prefix"
         required: false
-        default: "main"
+        default: ${DEFAULT_DEPLOYMENT_PREFIX}
 
       log_each_successful_upload:
         description: "Deployer logs each success"
         required: false
-        default: "false"
+        default: ${DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD}
 
 jobs:
   build:
@@ -99,11 +108,11 @@ jobs:
 
       - name: Print information about build
         run: |
-          echo "Trigger notes: ${{ github.event.inputs.notes }}"
-          echo "Trigger archived-content: ${{ github.event.inputs.archived_content }}"
-          echo "Trigger translated-content: ${{ github.event.inputs.translated_content }}"
-          echo "Trigger log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload }}"
-          echo "Deployment prefix: ${{ github.event.inputs.deployment_prefix }}"
+          echo "notes: ${{ github.event.inputs.notes }}"
+          echo "archived_content: ${{ github.event.inputs.archived_content }}"
+          echo "translated_content: ${{ github.event.inputs.translated_content }}"
+          echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload }}"
+          echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix }}"
 
       - name: Build everything
         run: |
