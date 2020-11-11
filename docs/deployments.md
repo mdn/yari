@@ -13,7 +13,7 @@ Prod and stage are supposed to be as similar as possible.
 All environments are as separate from each other as possible.
 
 You can manually trigger a build for any environment (using the GitHub UI)
-but only prod and stage are building on a cron job.
+but only prod and stage build on a cron job.
 
 ## The details
 
