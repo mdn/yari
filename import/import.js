@@ -1350,8 +1350,10 @@ module.exports = async function runImporter(options) {
   }
 
   pool.end();
-  await saveWikiHistory(allWikiHistory, false);
-  await saveWikiHistory(archiveWikiHistory, true);
+  if (!options.skipWikiHistories) {
+    await saveWikiHistory(allWikiHistory, false);
+    await saveWikiHistory(archiveWikiHistory, true);
+  }
   await saveAllRedirects(redirects);
 
   if (improvedRedirects) {
