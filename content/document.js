@@ -15,7 +15,8 @@ const {
 const { getPopularities } = require("./popularities");
 const { getWikiHistories } = require("./wikihistories");
 
-const { memoize, slugToFolder } = require("./utils");
+const { buildURL, memoize, slugToFolder, execGit } = require("./utils");
+const Redirect = require("./redirect");
 
 function buildPath(localeFolder, slug) {
   return path.join(localeFolder, slugToFolder(slug));
@@ -93,6 +94,7 @@ function create(html, metadata) {
   fs.mkdirSync(folderPath, { recursive: true });
 
   saveHTMLFile(getHTMLPath(folderPath), trimLineEndings(html), metadata);
+  return folderPath;
 }
 
 function getFolderPath(metadata) {
@@ -134,6 +136,7 @@ function archive(renderedHTML, rawHTML, metadata, isTranslatedContent = false) {
     trimLineEndings(renderedHTML),
     metadata
   );
+  return folderPath;
 }
 
 const read = memoize((folder) => {
@@ -194,8 +197,9 @@ const read = memoize((folder) => {
   };
 });
 
-function update(folder, rawHTML, metadata) {
-  const folderPath = path.join(CONTENT_ROOT, getHTMLPath(folder));
+function update(url, rawHTML, metadata) {
+  const folder = urlToFolderPath(url);
+  const indexPath = path.join(CONTENT_ROOT, getHTMLPath(folder));
   const document = read(folder);
   const oldSlug = document.metadata.slug;
   const newSlug = metadata.slug;
@@ -206,7 +210,7 @@ function update(folder, rawHTML, metadata) {
     document.rawHTML !== rawHTML ||
     document.metadata.title !== metadata.title
   ) {
-    saveHTMLFile(folderPath, rawHTML, {
+    saveHTMLFile(indexPath, rawHTML, {
       ...document.metadata,
       ...metadata,
     });
@@ -220,7 +224,11 @@ function update(folder, rawHTML, metadata) {
   }
 
   if (isNewSlug) {
+    const locale = metadata.locale;
+    const redirects = new Map();
+    const url = buildURL(locale, oldSlug);
     for (const { metadata, rawHTML, fileInfo } of findChildren(url)) {
+      const childLocale = metadata.locale;
       const oldChildSlug = metadata.slug;
       const newChildSlug = oldChildSlug.replace(oldSlug, newSlug);
       metadata.slug = newChildSlug;
@@ -230,23 +238,24 @@ function update(folder, rawHTML, metadata) {
         newChildSlug
       );
       saveHTMLFile(fileInfo.path, rawHTML, metadata);
+      redirects.set(
+        buildURL(childLocale, oldChildSlug),
+        buildURL(childLocale, newChildSlug)
+      );
     }
+    redirects.set(buildURL(locale, oldSlug), buildURL(locale, newSlug));
     const newFolderPath = buildPath(
-      path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
+      path.join(CONTENT_ROOT, locale.toLowerCase()),
       newSlug
     );
+    const oldFolderPath = buildPath(
+      path.join(CONTENT_ROOT, locale.toLowerCase()),
+      oldSlug
+    );
 
-    // XXX we *could* call out to a shell here and attempt
-    // to execute `git mv $folder $newFolder` and only if that didn't work
-    // do we fall back on good old `fs.renameSync`.
-    fs.renameSync(folderPath, newFolderPath);
+    execGit(["mv", oldFolderPath, newFolderPath]);
+    Redirect.add(locale, [...redirects.entries()]);
   }
-}
-
-function del(folder) {
-  const { metadata, fileInfo } = read(folder);
-  fs.rmdirSync(path.dirname(fileInfo.path), { recursive: true });
-  updateWikiHistory(path.join(CONTENT_ROOT, metadata.locale), metadata.slug);
 }
 
 function findByURL(url, ...args) {
@@ -261,7 +270,7 @@ function findByURL(url, ...args) {
 function findAll(
   { files, folderSearch } = { files: new Set(), folderSearch: null }
 ) {
-  if (!files instanceof Set) throw new TypeError("'files' not a Set");
+  if (!(files instanceof Set)) throw new TypeError("'files' not a Set");
   if (folderSearch && typeof folderSearch !== "string")
     throw new TypeError("'folderSearch' not a string");
 
@@ -291,7 +300,7 @@ function findAll(
             if (files.has(filePath)) {
               return true;
             }
-            for (fp of files) {
+            for (const fp of files) {
               if (filePath.endsWith(fp)) {
                 return true;
               }
@@ -333,14 +342,121 @@ function findChildren(url) {
     .map((folder) => read(folder));
 }
 
+function move(oldSlug, newSlug, locale, { dry = false } = {}) {
+  const oldUrl = buildURL(locale, oldSlug);
+  const doc = findByURL(oldUrl);
+  if (!doc) {
+    throw new Error(`document for ${oldSlug} does not exist`);
+  }
+  const newParentSlug = parentSlug(newSlug);
+  // Otherwise we have a top level slug.
+  if (newParentSlug) {
+    const newParent = findByURL(buildURL(locale, newParentSlug));
+    if (!newParent) {
+      throw new Error(`Parent document for ${newSlug} does not exist`);
+    }
+  }
+
+  const realOldSlug = doc.metadata.slug;
+  const paris = [doc, ...findChildren(oldUrl)].map(({ metadata }) => [
+    metadata.slug,
+    metadata.slug.replace(realOldSlug, newSlug),
+  ]);
+  if (dry) {
+    return paris;
+  }
+
+  doc.metadata.slug = newSlug;
+  update(oldUrl, doc.rawHTML, doc.metadata);
+
+  return paris;
+}
+
+function fileForSlug(slug, locale) {
+  return getHTMLPath(getFolderPath({ slug, locale }));
+}
+
+function exists(slug, locale) {
+  return Boolean(read(buildPath(locale.toLowerCase(), slug)));
+}
+
+function parentSlug(slug) {
+  return slug.split("/").slice(0, -1).join("/");
+}
+
+function validate(slug, locale) {
+  const errors = [];
+  const file = buildPath(locale.toLowerCase(), slug);
+
+  const doc = read(file);
+
+  if (doc.metadata.slug.toLowerCase() !== slug.toLowerCase()) {
+    errors.push("slug mismatch");
+  }
+  // Add more validations here.
+
+  if (errors.length > 0) {
+    throw new Error(errors.join(", "));
+  }
+}
+
+function remove(
+  slug,
+  locale,
+  { recursive = false, dry = false, redirect = "" } = {}
+) {
+  const url = buildURL(locale, slug);
+  const { metadata, fileInfo } = findByURL(url) || {};
+  if (!metadata) {
+    throw new Error(`document does not exists: ${url}`);
+  }
+
+  const children = findChildren(url);
+  if (children.length > 0 && (redirect || !recursive)) {
+    throw new Error("unable to remove and redirect a document with children");
+  }
+  const docs = [slug, ...children.map(({ metadata }) => metadata.slug)];
+
+  if (dry) {
+    return docs;
+  }
+
+  for (const { metadata } of children) {
+    const slug = metadata.slug;
+    updateWikiHistory(
+      path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
+      slug
+    );
+  }
+
+  if (redirect) {
+    Redirect.add(locale, [[url, redirect]]);
+  }
+
+  execGit(["rm", "-r", path.dirname(fileInfo.path)]);
+
+  updateWikiHistory(
+    path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
+    metadata.slug
+  );
+
+  return docs;
+}
+
 module.exports = {
   create,
   archive,
   read,
   update,
-  del,
+  exists,
+  remove,
+  move,
+  validate,
+
   urlToFolderPath,
   getFolderPath,
+  fileForSlug,
+  parentSlug,
 
   findByURL,
   findAll,

@@ -1,0 +1,47 @@
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+@import "~@mdn/minimalist/sass/mixins/utils";
+
+.sidebar {
+  font-size: $default-font-size;
+  padding: $base-spacing;
+
+  h4 {
+    font-family: $heading-font-family;
+    font-size: $medium-font-size;
+    margin-bottom: $base-spacing;
+  }
+
+  ol {
+    @include reset-list();
+    width: 100%;
+
+    ol,
+    ul {
+      @media #{$mq-tablet-and-up} {
+        padding-left: $base-spacing / 2;
+      }
+    }
+  }
+
+  summary,
+  li {
+    margin-bottom: $base-spacing / 2;
+  }
+
+  a {
+    hyphens: auto;
+  }
+
+  code {
+    background-color: transparent;
+  }
+
+  summary {
+    cursor: pointer;
+  }
+
+  details {
+    margin: $base-spacing 0;
+  }
+}

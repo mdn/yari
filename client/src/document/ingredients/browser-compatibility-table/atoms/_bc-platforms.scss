@@ -1,0 +1,49 @@
+.bc-platforms {
+  th {
+    border-bottom: 2px solid $neutral-100;
+    border-left: 1px solid $neutral-100;
+    border-right: 1px solid $neutral-100;
+    border-top: 0;
+    padding: $base-unit 0;
+    width: auto;
+
+    &:nth-child(2) {
+      border-left: 0;
+    }
+  }
+
+  span {
+    @include visually-hidden();
+  }
+
+  .bc-platform-desktop,
+  .bc-platform-mobile,
+  .bc-platform-server {
+    &::before {
+      background-size: 24px;
+      content: "";
+      display: inline-block;
+      height: 24px;
+      margin-top: $base-spacing / 2;
+      width: 24px;
+    }
+  }
+
+  .bc-platform-desktop {
+    &::before {
+      background-image: url("~@mdn/dinocons/platforms/desktop.svg");
+    }
+  }
+
+  .bc-platform-mobile {
+    &::before {
+      background-image: url("~@mdn/dinocons/platforms/mobile.svg");
+    }
+  }
+
+  .bc-platform-server {
+    &::before {
+      background-image: url("~@mdn/dinocons/platforms/server.svg");
+    }
+  }
+}

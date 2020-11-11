@@ -23,7 +23,7 @@ jobs:
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v2.1.2
+      - uses: actions/cache@v2.1.3
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -67,14 +67,15 @@ jobs:
           # if the development server is up and ready to be tested.
           export TESTING_DEVELOPING=true
 
-          # The first argument makes it filter by file name.
-          yarn test:testing developing
-
-      - name: Dump server logs
-        run: |
-          # When we started the server(s) in the background, we dumped their
-          # stdout and stderr to temp files. Let's display them afterwards.
-          echo "STDOUT..................................................."
-          cat /tmp/stdout.log
-          echo "STDERR..................................................."
-          cat /tmp/stderr.log
+          status=0
+          yarn test:testing developing || (
+            status=$?
+            echo "Testing failed! Going to dump stdout and stderr"
+            echo "STDOUT..................................................."
+            cat /tmp/stdout.log
+            echo "STDERR..................................................."
+            cat /tmp/stderr.log
+            echo $status
+            exit $status
+          )
+          exit $status

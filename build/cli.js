@@ -5,6 +5,7 @@ const zlib = require("zlib");
 const cliProgress = require("cli-progress");
 
 const { Document, slugToFolder } = require("../content");
+// eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 
 const options = require("./build-options");
@@ -62,9 +63,12 @@ async function buildDocuments() {
       document.translations = translationsOf.get(document.metadata.slug);
     }
 
-    const [builtDocument, liveSamples, fileAttachments] = await buildDocument(
-      document
-    );
+    const {
+      doc: builtDocument,
+      liveSamples,
+      fileAttachments,
+      bcdData,
+    } = await buildDocument(document);
 
     fs.writeFileSync(
       path.join(outPath, "index.html"),
@@ -87,6 +91,12 @@ async function buildDocuments() {
             ? builtDocument.source.github_url.replace("/blob/", "/commits/")
             : null
         )
+      );
+    }
+    for (const { url, data } of bcdData) {
+      fs.writeFileSync(
+        path.join(outPath, path.basename(url)),
+        JSON.stringify(data)
       );
     }
 
@@ -207,6 +217,6 @@ if (require.main === module) {
     })
     .catch((error) => {
       console.error("error while building documents:", error);
-      process.exit(1);
+      process.exitCode = 1;
     });
 }

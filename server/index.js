@@ -20,6 +20,7 @@ const {
   Image,
   resolveFundamental,
 } = require("../content");
+// eslint-disable-next-line node/no-missing-require
 const { prepareDoc, renderHTML } = require("../ssr/dist/main");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
@@ -96,24 +97,6 @@ app.get("/_open", (req, res) => {
   res.status(200).send(`Tried to open ${spec} in ${process.env.EDITOR}`);
 });
 
-// Return about redirects based on a list of URLs.
-// This is used by the "<Flaws/>" component which displays information
-// about broken links in a page, as some of those broken links might just
-// be redirects.
-app.post("/_redirects", (req, res) => {
-  if (req.body === undefined) {
-    throw new Error("express.json middleware not installed");
-  }
-  const redirects = {};
-  if (!req.body.urls) {
-    return res.status(400).send("No .urls array sent in JSON");
-  }
-  for (const url of req.body.urls) {
-    redirects[url] = getRedirectURL(url);
-  }
-  res.json({ redirects });
-});
-
 app.use("/:locale/search-index.json", searchRoute);
 
 app.get("/_flaws", flawsRoute);
@@ -185,8 +168,10 @@ app.get("/*", async (req, res) => {
     }
   }
 
-  let lookupURL = req.url;
+  let lookupURL = decodeURI(req.url);
   let extraSuffix = "";
+  let bcdDataURL = "";
+  const bcdDataURLRegex = /\/(bcd-\d+|bcd)\.json$/;
 
   if (req.url.endsWith("index.json")) {
     // It's a bit special then.
@@ -197,14 +182,18 @@ app.get("/*", async (req, res) => {
     // temporarily remove it and remember to but it back when we're done.
     extraSuffix = "/index.json";
     lookupURL = lookupURL.replace(extraSuffix, "");
+  } else if (bcdDataURLRegex.test(req.url)) {
+    bcdDataURL = req.url;
+    lookupURL = lookupURL.replace(bcdDataURLRegex, "");
   }
 
   const isJSONRequest = extraSuffix.endsWith(".json");
 
   let document;
+  let bcdData;
   try {
     console.time(`buildDocumentFromURL(${lookupURL})`);
-    document = await buildDocumentFromURL(lookupURL, {
+    const built = await buildDocumentFromURL(lookupURL, {
       // The only times the server builds on the fly is basically when
       // you're in "development mode". And when you're not building
       // to ship you don't want the cache to stand have any hits
@@ -212,6 +201,8 @@ app.get("/*", async (req, res) => {
       clearKumascriptRenderCache: true,
     });
     console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
+    document = built.doc;
+    bcdData = built.bcdData;
   } catch (error) {
     console.error(`Error in buildDocumentFromURL(${lookupURL})`, error);
     return res.status(500).send(error.toString());
@@ -235,6 +226,12 @@ app.get("/*", async (req, res) => {
       );
   }
 
+  if (bcdDataURL) {
+    return res.json(
+      bcdData.find((data) => data.url.toLowerCase() === bcdDataURL).data
+    );
+  }
+
   prepareDoc(document);
   if (isJSONRequest) {
     res.json({ doc: document });
@@ -244,8 +241,7 @@ app.get("/*", async (req, res) => {
 });
 
 if (!fs.existsSync(path.resolve(CONTENT_ROOT))) {
-  console.log(chalk.red(`${path.resolve(CONTENT_ROOT)} does not exist!`));
-  process.exit(1);
+  throw new Error(`${path.resolve(CONTENT_ROOT)} does not exist!`);
 }
 
 console.log(

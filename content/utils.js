@@ -1,11 +1,12 @@
 const path = require("path");
-
+const childProcess = require("child_process");
 const sanitizeFilename = require("sanitize-filename");
+const { CONTENT_ROOT } = require("./constants");
 
 function buildURL(locale, slug) {
   if (!locale) throw new Error("locale falsy!");
   if (!slug) throw new Error("slug falsy!");
-  return `/${locale}/docs/${slug}`.toLowerCase();
+  return `/${locale}/docs/${slug}`;
 }
 
 /*
@@ -69,8 +70,31 @@ function memoize(fn) {
   };
 }
 
+function execGit(args, opts = {}, root = null) {
+  let gitRoot = root;
+  if (!gitRoot) {
+    gitRoot = execGit(
+      ["rev-parse", "--show-toplevel"],
+      opts,
+      opts.cwd || CONTENT_ROOT
+    );
+  }
+  const { status, error, stdout, stderr } = childProcess.spawnSync(
+    "git",
+    args,
+    {
+      cwd: gitRoot,
+    }
+  );
+  if (error || status !== 0) {
+    throw new Error(`git command failed:\n${stderr.toString()}`);
+  }
+  return stdout.toString().trim();
+}
+
 module.exports = {
   buildURL,
   slugToFolder,
   memoize,
+  execGit,
 };

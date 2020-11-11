@@ -1,12 +1,98 @@
-.loading-toolbar {
-  position: absolute;
-  font-size: 70%;
-  top: 0;
-  right: 5px;
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/borders";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+@import "~@mdn/minimalist/sass/mixins/utils";
+
+@import "./prism-overrides";
+
+.loading-document-placeholder article {
+  // Any huge margin bottom to keep the footer away when loading
+  margin-bottom: 1200px;
 }
 
-#content h2 a {
-  color: rgb(51, 51, 51);
-}
+.article {
+  padding: $base-spacing;
 
-@import "./prism-overrides.scss";
+  @media #{$mq-small-desktop-and-up} {
+    margin-bottom: $large-spacing;
+  }
+
+  p,
+  ul,
+  ol,
+  dl {
+    @include readable-line-length();
+  }
+
+  a {
+    code {
+      color: $neutral-100;
+      text-decoration: underline;
+    }
+
+    &:active {
+      background-color: $primary-200;
+      color: $text-color-inverted;
+    }
+  }
+
+  h2 {
+    margin-bottom: ($base-unit * 2);
+
+    @media #{$mq-tablet-and-up} {
+      margin-bottom: ($base-unit * 6);
+    }
+
+    a:link,
+    a:visited {
+      color: $neutral-100;
+    }
+
+    a:active {
+      background-color: transparent;
+      color: $link-color;
+    }
+  }
+
+  h3 {
+    a:link,
+    a:visited {
+      color: $neutral-600;
+    }
+
+    a:active {
+      background-color: transparent;
+      color: $neutral-600;
+    }
+  }
+
+  pre {
+    background-color: $neutral-550;
+    border-left: $code-example-border;
+    line-height: $code-example-line-height;
+    max-width: 100%;
+    overflow: auto;
+    padding: $base-spacing;
+    width: 100%;
+  }
+
+  /* top navigational elements on tutorial pages */
+  .prev-next {
+    @media #{$mq-tablet-and-up} {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: $base-spacing;
+    }
+
+    a.button {
+      margin-bottom: ($base-spacing / 2);
+      max-width: inherit;
+
+      @media #{$mq-tablet-and-up} {
+        margin-bottom: inherit;
+      }
+    }
+  }
+}

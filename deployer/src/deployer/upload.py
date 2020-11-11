@@ -5,20 +5,19 @@ import re
 from dataclasses import dataclass
 from functools import cached_property
 from itertools import chain
+from pathlib import Path
 
 import boto3
-from boto3.s3.transfer import S3TransferConfig
-
 import click
+from boto3.s3.transfer import S3TransferConfig
 
 from .constants import (
     DEFAULT_CACHE_CONTROL,
     HASHED_CACHE_CONTROL,
-    MAX_WORKERS_PARALLEL_UPLOADS,
     LOG_EACH_SUCCESSFUL_UPLOAD,
+    MAX_WORKERS_PARALLEL_UPLOADS,
 )
 from .utils import StopWatch, fmt_size, iterdir, log
-
 
 S3_MULTIPART_THRESHOLD = S3TransferConfig().multipart_threshold
 S3_MULTIPART_CHUNKSIZE = S3TransferConfig().multipart_chunksize
@@ -119,7 +118,7 @@ class UploadFileTask(UploadTask):
     Class for file upload tasks.
     """
 
-    def __init__(self, file_path, key):
+    def __init__(self, file_path: Path, key: str):
         self.key = key
         self.file_path = file_path
 
@@ -130,7 +129,7 @@ class UploadFileTask(UploadTask):
         return self.key
 
     @property
-    def size(self):
+    def size(self) -> int:
         return self.file_path.stat().st_size
 
     @property
@@ -172,6 +171,9 @@ class UploadFileTask(UploadTask):
     @property
     def cache_control(self):
         if self.file_path.name == "service-worker.js":
+            return "no-cache"
+
+        if self.file_path.parent.name == "_whatsdeployed":
             return "no-cache"
 
         if self.is_hashed:
@@ -259,7 +261,7 @@ class BucketManager:
 
     def get_redirect_keys(self, from_url, to_url):
         return (
-            f"{self.key_prefix}{from_url.strip('/').lower()}/index.html",
+            f"{self.key_prefix}{from_url.strip('/').lower()}",
             f"/{to_url.strip('/')}",
         )
 
@@ -282,15 +284,35 @@ class BucketManager:
         return result
 
     def iter_file_tasks(self, build_directory, for_counting_only=False):
+        # Prepare a computation of what the root /index.html file would be
+        # called as a S3 key. Do this once so it becomes a quicker operation
+        # later when we compare *each* generated key to see if it matches this.
+        root_index_html_as_key = self.get_key(
+            build_directory, build_directory / "index.html"
+        )
+
         # Walk the build_directory and yield file upload tasks.
         for fp in iterdir(build_directory):
             # Exclude any files that aren't artifacts of the build.
             if fp.name.startswith(".") or fp.name.endswith("~"):
                 continue
-            elif for_counting_only:
+
+            key = self.get_key(build_directory, fp)
+
+            # The root index.html file is never useful. It's not the "home page"
+            # because the home page is actually `/$locale/` since `/` is handled
+            # specifically by the CDN.
+            # The client/build/index.html is actually just a template from
+            # create-react-app, used to server-side render all the other pages.
+            # But we don't want to upload it S3. So, delete it before doing the
+            # deployment step.
+            if root_index_html_as_key == key:
+                continue
+
+            if for_counting_only:
                 yield 1
             else:
-                yield UploadFileTask(fp, self.get_key(build_directory, fp))
+                yield UploadFileTask(fp, key)
 
     def iter_redirect_tasks(self, content_roots, for_counting_only=False):
         # Walk the content roots and yield redirect upload tasks.

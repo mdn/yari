@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
-import Search from "../header/search";
+import Search from "../ui/molecules/search";
 import "./index.scss";
 
 // Lazy sub-components
@@ -65,6 +65,11 @@ export function Homepage() {
         <li>
           <Link to="/en-US/docs/Mozilla/Add-ons/WebExtensions/Browser_support_for_JavaScript_APIs">
             Page with lots of BCD tables
+          </Link>
+        </li>
+        <li>
+          <Link to="/en-US/docs/Web/API/Document/#Browser_compatibility">
+            Largest BCD table
           </Link>
         </li>
       </ul>
