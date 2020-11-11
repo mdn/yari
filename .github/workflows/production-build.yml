@@ -12,7 +12,7 @@ on:
     # * is a special character in YAML so you have to quote this string
     # - cron: "0 */24 * * *"
     # TEMPORARY
-    - cron: "*/10 * * * *"
+    - cron: "*/30 * * * *"
 
   workflow_dispatch:
     inputs:
@@ -85,26 +85,26 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      # - name: Install all yarn packages
-      #   run: yarn --frozen-lockfile
+      - name: Install all yarn packages
+        run: yarn --frozen-lockfile
 
-      # - name: Install Python
-      #   uses: actions/setup-python@v2
-      #   with:
-      #     python-version: "3.8"
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
 
-      # - name: Install Python poetry
-      #   uses: dschep/install-poetry-action@v1.3
+      - name: Install Python poetry
+        uses: dschep/install-poetry-action@v1.3
 
-      # - name: Install deployer
-      #   run: |
-      #     cd deployer
-      #     poetry install
+      - name: Install deployer
+        run: |
+          cd deployer
+          poetry install
 
-      # - name: Display Python & Poetry version
-      #   run: |
-      #     python --version
-      #     poetry --version
+      - name: Display Python & Poetry version
+        run: |
+          python --version
+          poetry --version
 
       - name: Print information about build
         run: |
@@ -125,97 +125,97 @@ jobs:
           echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD"
           echo $DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD
 
-      # - name: Build everything
-      #   run: |
-      #     # Remember, the mdn/content repo got cloned into `pwd` into a
-      #     # sub-folder called "mdn/content"
-      #     export CONTENT_ROOT=$(pwd)/mdn/content/files
+      - name: Build everything
+        run: |
+          # Remember, the mdn/content repo got cloned into `pwd` into a
+          # sub-folder called "mdn/content"
+          export CONTENT_ROOT=$(pwd)/mdn/content/files
 
-      #     if [ ${{ github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT }} == "true" ]; then
-      #       echo "Will build mdn/archived-content too"
-      #       export CONTENT_ARCHIVED_ROOT=$(pwd)/mdn/archived-content/files
-      #     else
-      #       echo "Will NOT build mdn/archived-content too"
-      #     fi
-      #     if [ ${{ github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT }} == "true" ]; then
-      #       echo "Will build mdn/translated-content too"
-      #       export CONTENT_TRANSLATED_ROOT=$(pwd)/mdn/translated-content/files
-      #     else
-      #       echo "Will NOT build mdn/translated-content too"
-      #     fi
+          if [ ${{ github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT }} == "true" ]; then
+            echo "Will build mdn/archived-content too"
+            export CONTENT_ARCHIVED_ROOT=$(pwd)/mdn/archived-content/files
+          else
+            echo "Will NOT build mdn/archived-content too"
+          fi
+          if [ ${{ github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT }} == "true" ]; then
+            echo "Will build mdn/translated-content too"
+            export CONTENT_TRANSLATED_ROOT=$(pwd)/mdn/translated-content/files
+          else
+            echo "Will NOT build mdn/translated-content too"
+          fi
 
-      #     # Info about which CONTENT_* environment variables were set and to what.
-      #     echo "CONTENT_ROOT=$CONTENT_ROOT"
-      #     echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
-      #     echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
+          # Info about which CONTENT_* environment variables were set and to what.
+          echo "CONTENT_ROOT=$CONTENT_ROOT"
+          echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
+          echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
 
-      #     # The default for this environment variable is geared for writers
-      #     # (aka. local development). Usually defaults are supposed to be for
-      #     # secure production but this is an exception and default
-      #     # is not insecure.
-      #     #export BUILD_LIVE_SAMPLES_BASE_URL=https://mdn.mozillademos.org
-      #     # WARNING: The following is temporary, only because, for now, we're
-      #     #          deploying to the mdn-content-dev S3 bucket. Remove once
-      #     #          we start deploying to the mdn-content-prod S3 bucket!
-      #     export BUILD_LIVE_SAMPLES_BASE_URL=
+          # The default for this environment variable is geared for writers
+          # (aka. local development). Usually defaults are supposed to be for
+          # secure production but this is an exception and default
+          # is not insecure.
+          #export BUILD_LIVE_SAMPLES_BASE_URL=https://mdn.mozillademos.org
+          # WARNING: The following is temporary, only because, for now, we're
+          #          deploying to the mdn-content-dev S3 bucket. Remove once
+          #          we start deploying to the mdn-content-prod S3 bucket!
+          export BUILD_LIVE_SAMPLES_BASE_URL=
 
-      #     # Now is not the time to worry about flaws.
-      #     export BUILD_FLAW_LEVELS="*:ignore"
-      #     yarn prepare-build
+          # Now is not the time to worry about flaws.
+          export BUILD_FLAW_LEVELS="*:ignore"
+          yarn prepare-build
 
-      #     # Uncomment when hacking on this workflow. It means the `yarn build`
-      #     # finishes much sooner, which can be helpful debugging the other stuff
-      #     # the workflow needs to do.
-      #     # export BUILD_FOLDERSEARCH=web/html
+          # Uncomment when hacking on this workflow. It means the `yarn build`
+          # finishes much sooner, which can be helpful debugging the other stuff
+          # the workflow needs to do.
+          # export BUILD_FOLDERSEARCH=web/html
 
-      #     # This is the Google Analytics account ID for developer.mozilla.org
-      #     # If it's used on other domains (e.g. stage or dev builds), it's OK
-      #     # because ultimately Google Analytics will filter it out since the
-      #     # origin domain isn't what that account expects.
-      #     export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-36116321-5
+          # This is the Google Analytics account ID for developer.mozilla.org
+          # If it's used on other domains (e.g. stage or dev builds), it's OK
+          # because ultimately Google Analytics will filter it out since the
+          # origin domain isn't what that account expects.
+          export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-36116321-5
 
-      #     yarn build
+          yarn build
 
-      #     # TODO: When the deployer is available this is where we
-      #     # would upload the whole content of client/build
-      #     du -sh client/build
+          # TODO: When the deployer is available this is where we
+          # would upload the whole content of client/build
+          du -sh client/build
 
-      # - name: Deploy with deployer
-      #   run: |
-      #     # Set the CONTENT_ROOT first
-      #     export CONTENT_ROOT=$(pwd)/mdn/content/files
+      - name: Deploy with deployer
+        run: |
+          # Set the CONTENT_ROOT first
+          export CONTENT_ROOT=$(pwd)/mdn/content/files
 
-      #     if [ ${{ github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT }} == "true" ]; then
-      #       echo "Will build mdn/archived-content too"
-      #       export CONTENT_ARCHIVED_ROOT=$(pwd)/mdn/archived-content/files
-      #     else
-      #       echo "Will NOT build mdn/archived-content too"
-      #     fi
-      #     if [ ${{ github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT }} == "true" ]; then
-      #       echo "Will build mdn/translated-content too"
-      #       export CONTENT_TRANSLATED_ROOT=$(pwd)/mdn/translated-content/files
-      #     else
-      #       echo "Will NOT build mdn/translated-content too"
-      #     fi
+          if [ ${{ github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT }} == "true" ]; then
+            echo "Will build mdn/archived-content too"
+            export CONTENT_ARCHIVED_ROOT=$(pwd)/mdn/archived-content/files
+          else
+            echo "Will NOT build mdn/archived-content too"
+          fi
+          if [ ${{ github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT }} == "true" ]; then
+            echo "Will build mdn/translated-content too"
+            export CONTENT_TRANSLATED_ROOT=$(pwd)/mdn/translated-content/files
+          else
+            echo "Will NOT build mdn/translated-content too"
+          fi
 
-      #     # Info about which CONTENT_* environment variables were set and to what.
-      #     echo "CONTENT_ROOT=$CONTENT_ROOT"
-      #     echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
-      #     echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
+          # Info about which CONTENT_* environment variables were set and to what.
+          echo "CONTENT_ROOT=$CONTENT_ROOT"
+          echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
+          echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
 
-      #     cd deployer
+          cd deployer
 
-      #     poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/code.json
-      #     poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/content.json $CONTENT_ROOT
+          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/code.json
+          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/content.json $CONTENT_ROOT
 
-      #     export DEPLOYER_BUCKET_NAME=mdn-content-dev
-      #     export DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}
-      #     export DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}
-      #     # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
-      #     echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
+          export DEPLOYER_BUCKET_NAME=mdn-content-dev
+          export DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}
+          export DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}
+          # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
+          echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
-      #     export AWS_ACCESS_KEY_ID=${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
-      #     export AWS_SECRET_ACCESS_KEY=${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
+          export AWS_ACCESS_KEY_ID=${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
+          export AWS_SECRET_ACCESS_KEY=${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
 
-      #     poetry run deployer upload ../client/build
-      #     poetry run deployer update-lambda-functions ./aws-lambda
+          poetry run deployer upload ../client/build
+          poetry run deployer update-lambda-functions ./aws-lambda
