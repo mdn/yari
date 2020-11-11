@@ -312,6 +312,7 @@ function InnerSearchNavigateWidget() {
             ) : (
               resultItems.length === 0 &&
               inputValue &&
+              inputValue !== "/" &&
               searchIndex && <div className="nothing-found">nothing found</div>
             )}
             {resultItems.map((item, i) => (
