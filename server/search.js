@@ -191,7 +191,6 @@ async function search(
     index,
     body: {
       _source: { excludes: ["body"] },
-      from: 0,
       highlight: {
         fields: { body: { type: "unified" }, title: {} },
         fragment_size: 120,
