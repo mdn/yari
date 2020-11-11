@@ -18,7 +18,9 @@
     },
     "AnalyserNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": [
+        "AudioNodePassThrough"
+      ]
     },
     "AnimationEvent": {
       "inh": "Event",
@@ -34,7 +36,9 @@
     },
     "AudioBufferSourceNode": {
       "inh": "AudioScheduledSourceNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": [
+        "AudioNodePassThrough"
+      ]
     },
     "AudioChannelManager": {
       "inh": "EventTarget",
@@ -98,7 +102,9 @@
     },
     "BiquadFilterNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": [
+        "AudioNodePassThrough"
+      ]
     },
     "BlobEvent": {
       "inh": "Event",
@@ -158,7 +164,10 @@
     },
     "BrowserElement": {
       "inh": "",
-      "impl": ["BrowserElementCommon", "BrowserElementPrivileged"]
+      "impl": [
+        "BrowserElementCommon",
+        "BrowserElementPrivileged"
+      ]
     },
     "CDATASection": {
       "inh": "Text",
@@ -242,7 +251,10 @@
     },
     "CharacterData": {
       "inh": "Node",
-      "impl": ["ChildNode", "NonDocumentTypeChildNode"]
+      "impl": [
+        "ChildNode",
+        "NonDocumentTypeChildNode"
+      ]
     },
     "ChromeWorker": {
       "inh": "Worker",
@@ -286,7 +298,9 @@
     },
     "ConvolverNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": [
+        "AudioNodePassThrough"
+      ]
     },
     "Crypto": {
       "inh": "",
@@ -306,7 +320,9 @@
     },
     "DOMCursor": {
       "inh": "EventTarget",
-      "impl": ["DOMRequestShared"]
+      "impl": [
+        "DOMRequestShared"
+      ]
     },
     "DOMDownload": {
       "inh": "EventTarget",
@@ -318,7 +334,9 @@
     },
     "DOMException": {
       "inh": "",
-      "impl": ["ExceptionMembers"]
+      "impl": [
+        "ExceptionMembers"
+      ]
     },
     "DOMImplementation": {
       "inh": "",
@@ -346,7 +364,9 @@
     },
     "DOMRequest": {
       "inh": "EventTarget",
-      "impl": ["DOMRequestShared"]
+      "impl": [
+        "DOMRequestShared"
+      ]
     },
     "DOMSettableTokenList": {
       "inh": "DOMTokenList",
@@ -386,7 +406,9 @@
     },
     "DelayNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": [
+        "AudioNodePassThrough"
+      ]
     },
     "DesktopNotification": {
       "inh": "EventTarget",
@@ -430,11 +452,15 @@
     },
     "DocumentFragment": {
       "inh": "Node",
-      "impl": ["ParentNode"]
+      "impl": [
+        "ParentNode"
+      ]
     },
     "DocumentType": {
       "inh": "Node",
-      "impl": ["ChildNode"]
+      "impl": [
+        "ChildNode"
+      ]
     },
     "DownloadEvent": {
       "inh": "Event",
@@ -446,7 +472,9 @@
     },
     "DynamicsCompressorNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": [
+        "AudioNodePassThrough"
+      ]
     },
     "Element": {
       "inh": "Node",
@@ -476,7 +504,9 @@
     },
     "Exception": {
       "inh": "",
-      "impl": ["ExceptionMembers"]
+      "impl": [
+        "ExceptionMembers"
+      ]
     },
     "ExtendableEvent": {
       "inh": "Event",
@@ -516,7 +546,9 @@
     },
     "GainNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": [
+        "AudioNodePassThrough"
+      ]
     },
     "GamepadAxisMoveEvent": {
       "inh": "GamepadEvent",
@@ -540,7 +572,10 @@
     },
     "HTMLAnchorElement": {
       "inh": "HTMLElement",
-      "impl": ["HTMLHyperlinkElementUtils", "URLUtilsSearchParams"]
+      "impl": [
+        "HTMLHyperlinkElementUtils",
+        "URLUtilsSearchParams"
+      ]
     },
     "HTMLAppletElement": {
       "inh": "HTMLElement",
@@ -552,7 +587,10 @@
     },
     "HTMLAreaElement": {
       "inh": "HTMLElement",
-      "impl": ["HTMLHyperlinkElementUtils", "URLUtilsSearchParams"]
+      "impl": [
+        "HTMLHyperlinkElementUtils",
+        "URLUtilsSearchParams"
+      ]
     },
     "HTMLAudioElement": {
       "inh": "HTMLMediaElement",
@@ -568,7 +606,9 @@
     },
     "HTMLBodyElement": {
       "inh": "HTMLElement",
-      "impl": ["WindowEventHandlers"]
+      "impl": [
+        "WindowEventHandlers"
+      ]
     },
     "HTMLButtonElement": {
       "inh": "HTMLElement",
@@ -644,11 +684,15 @@
     },
     "HTMLFrameElement": {
       "inh": "HTMLElement",
-      "impl": ["MozFrameLoaderOwner"]
+      "impl": [
+        "MozFrameLoaderOwner"
+      ]
     },
     "HTMLFrameSetElement": {
       "inh": "HTMLElement",
-      "impl": ["WindowEventHandlers"]
+      "impl": [
+        "WindowEventHandlers"
+      ]
     },
     "HTMLHRElement": {
       "inh": "HTMLElement",
@@ -668,15 +712,23 @@
     },
     "HTMLIFrameElement": {
       "inh": "HTMLElement",
-      "impl": ["MozFrameLoaderOwner", "BrowserElement"]
+      "impl": [
+        "MozFrameLoaderOwner",
+        "BrowserElement"
+      ]
     },
     "HTMLImageElement": {
       "inh": "HTMLElement",
-      "impl": ["MozImageLoadingContent"]
+      "impl": [
+        "MozImageLoadingContent"
+      ]
     },
     "HTMLInputElement": {
       "inh": "HTMLElement",
-      "impl": ["MozImageLoadingContent", "MozPhonetic"]
+      "impl": [
+        "MozImageLoadingContent",
+        "MozPhonetic"
+      ]
     },
     "HTMLLIElement": {
       "inh": "HTMLElement",
@@ -692,7 +744,9 @@
     },
     "HTMLLinkElement": {
       "inh": "HTMLElement",
-      "impl": ["LinkStyle"]
+      "impl": [
+        "LinkStyle"
+      ]
     },
     "HTMLMapElement": {
       "inh": "HTMLElement",
@@ -800,7 +854,9 @@
     },
     "HTMLStyleElement": {
       "inh": "HTMLElement",
-      "impl": ["LinkStyle"]
+      "impl": [
+        "LinkStyle"
+      ]
     },
     "HTMLTableCaptionElement": {
       "inh": "HTMLElement",
@@ -936,7 +992,9 @@
     },
     "KeyboardEvent": {
       "inh": "UIEvent",
-      "impl": ["KeyEvent"]
+      "impl": [
+        "KeyEvent"
+      ]
     },
     "LinearAccelerationSensor": {
       "inh": "Accelerometer",
@@ -964,7 +1022,9 @@
     },
     "MediaElementAudioSourceNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": [
+        "AudioNodePassThrough"
+      ]
     },
     "MediaEncryptedEvent": {
       "inh": "Event",
@@ -1000,7 +1060,9 @@
     },
     "MediaStreamAudioSourceNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": [
+        "AudioNodePassThrough"
+      ]
     },
     "MediaStreamEvent": {
       "inh": "Event",
@@ -1024,7 +1086,9 @@
     },
     "MessagePort": {
       "inh": "EventTarget",
-      "impl": ["Transferable"]
+      "impl": [
+        "Transferable"
+      ]
     },
     "MimeTypeArray": {
       "inh": "",
@@ -1116,7 +1180,9 @@
     },
     "MozNFC": {
       "inh": "EventTarget",
-      "impl": ["MozNFCManager"]
+      "impl": [
+        "MozNFCManager"
+      ]
     },
     "MozNFCPeerEvent": {
       "inh": "Event",
@@ -1251,7 +1317,9 @@
     },
     "OscillatorNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": [
+        "AudioNodePassThrough"
+      ]
     },
     "PageTransitionEvent": {
       "inh": "Event",
@@ -1267,7 +1335,9 @@
     },
     "PannerNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": [
+        "AudioNodePassThrough"
+      ]
     },
     "PaymentAddress": {
       "inh": "",
@@ -1371,7 +1441,9 @@
     },
     "PseudoElement": {
       "inh": "",
-      "impl": ["GeometryUtils"]
+      "impl": [
+        "GeometryUtils"
+      ]
     },
     "RelativeOrientationSensor": {
       "inh": "OrientationSensor",
@@ -1431,11 +1503,15 @@
     },
     "Request": {
       "inh": "",
-      "impl": ["Body"]
+      "impl": [
+        "Body"
+      ]
     },
     "Response": {
       "inh": "",
-      "impl": ["Body"]
+      "impl": [
+        "Body"
+      ]
     },
     "SensorErrorEvent": {
       "inh": "Event",
@@ -1451,11 +1527,15 @@
     },
     "SVGAElement": {
       "inh": "SVGGraphicsElement",
-      "impl": ["SVGURIReference"]
+      "impl": [
+        "SVGURIReference"
+      ]
     },
     "SVGAltGlyphElement": {
       "inh": "SVGTextPositioningElement",
-      "impl": ["SVGURIReference"]
+      "impl": [
+        "SVGURIReference"
+      ]
     },
     "SVGAnimateElement": {
       "inh": "SVGAnimationElement",
@@ -1495,7 +1575,9 @@
     },
     "SVGAnimationElement": {
       "inh": "SVGElement",
-      "impl": ["SVGTests"]
+      "impl": [
+        "SVGTests"
+      ]
     },
     "SVGCircleElement": {
       "inh": "SVGGeometryElement",
@@ -1503,7 +1585,9 @@
     },
     "SVGClipPathElement": {
       "inh": "SVGElement",
-      "impl": ["SVGUnitTypes"]
+      "impl": [
+        "SVGUnitTypes"
+      ]
     },
     "SVGComponentTransferFunctionElement": {
       "inh": "SVGElement",
@@ -1511,7 +1595,9 @@
     },
     "SVGCursorElement": {
       "inh": "SVGElement",
-      "impl": ["SVGURIReference"]
+      "impl": [
+        "SVGURIReference"
+      ]
     },
     "SVGDefsElement": {
       "inh": "SVGGraphicsElement",
@@ -1539,31 +1625,45 @@
     },
     "SVGFEBlendElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFilterPrimitiveStandardAttributes"]
+      "impl": [
+        "SVGFilterPrimitiveStandardAttributes"
+      ]
     },
     "SVGFEColorMatrixElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFilterPrimitiveStandardAttributes"]
+      "impl": [
+        "SVGFilterPrimitiveStandardAttributes"
+      ]
     },
     "SVGFEComponentTransferElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFilterPrimitiveStandardAttributes"]
+      "impl": [
+        "SVGFilterPrimitiveStandardAttributes"
+      ]
     },
     "SVGFECompositeElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFilterPrimitiveStandardAttributes"]
+      "impl": [
+        "SVGFilterPrimitiveStandardAttributes"
+      ]
     },
     "SVGFEConvolveMatrixElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFilterPrimitiveStandardAttributes"]
+      "impl": [
+        "SVGFilterPrimitiveStandardAttributes"
+      ]
     },
     "SVGFEDiffuseLightingElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFilterPrimitiveStandardAttributes"]
+      "impl": [
+        "SVGFilterPrimitiveStandardAttributes"
+      ]
     },
     "SVGFEDisplacementMapElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFilterPrimitiveStandardAttributes"]
+      "impl": [
+        "SVGFilterPrimitiveStandardAttributes"
+      ]
     },
     "SVGFEDistantLightElement": {
       "inh": "SVGElement",
@@ -1571,11 +1671,15 @@
     },
     "SVGFEDropShadowElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFilterPrimitiveStandardAttributes"]
+      "impl": [
+        "SVGFilterPrimitiveStandardAttributes"
+      ]
     },
     "SVGFEFloodElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFilterPrimitiveStandardAttributes"]
+      "impl": [
+        "SVGFilterPrimitiveStandardAttributes"
+      ]
     },
     "SVGFEFuncAElement": {
       "inh": "SVGComponentTransferFunctionElement",
@@ -1595,15 +1699,22 @@
     },
     "SVGFEGaussianBlurElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFilterPrimitiveStandardAttributes"]
+      "impl": [
+        "SVGFilterPrimitiveStandardAttributes"
+      ]
     },
     "SVGFEImageElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFilterPrimitiveStandardAttributes", "SVGURIReference"]
+      "impl": [
+        "SVGFilterPrimitiveStandardAttributes",
+        "SVGURIReference"
+      ]
     },
     "SVGFEMergeElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFilterPrimitiveStandardAttributes"]
+      "impl": [
+        "SVGFilterPrimitiveStandardAttributes"
+      ]
     },
     "SVGFEMergeNodeElement": {
       "inh": "SVGElement",
@@ -1611,11 +1722,15 @@
     },
     "SVGFEMorphologyElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFilterPrimitiveStandardAttributes"]
+      "impl": [
+        "SVGFilterPrimitiveStandardAttributes"
+      ]
     },
     "SVGFEOffsetElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFilterPrimitiveStandardAttributes"]
+      "impl": [
+        "SVGFilterPrimitiveStandardAttributes"
+      ]
     },
     "SVGFEPointLightElement": {
       "inh": "SVGElement",
@@ -1623,7 +1738,9 @@
     },
     "SVGFESpecularLightingElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFilterPrimitiveStandardAttributes"]
+      "impl": [
+        "SVGFilterPrimitiveStandardAttributes"
+      ]
     },
     "SVGFESpotLightElement": {
       "inh": "SVGElement",
@@ -1631,15 +1748,22 @@
     },
     "SVGFETileElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFilterPrimitiveStandardAttributes"]
+      "impl": [
+        "SVGFilterPrimitiveStandardAttributes"
+      ]
     },
     "SVGFETurbulenceElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFilterPrimitiveStandardAttributes"]
+      "impl": [
+        "SVGFilterPrimitiveStandardAttributes"
+      ]
     },
     "SVGFilterElement": {
       "inh": "SVGElement",
-      "impl": ["SVGURIReference", "SVGUnitTypes"]
+      "impl": [
+        "SVGURIReference",
+        "SVGUnitTypes"
+      ]
     },
     "SVGForeignObjectElement": {
       "inh": "SVGGraphicsElement",
@@ -1655,15 +1779,23 @@
     },
     "SVGGradientElement": {
       "inh": "SVGElement",
-      "impl": ["SVGURIReference", "SVGUnitTypes"]
+      "impl": [
+        "SVGURIReference",
+        "SVGUnitTypes"
+      ]
     },
     "SVGGraphicsElement": {
       "inh": "SVGElement",
-      "impl": ["SVGTests"]
+      "impl": [
+        "SVGTests"
+      ]
     },
     "SVGImageElement": {
       "inh": "SVGGraphicsElement",
-      "impl": ["MozImageLoadingContent", "SVGURIReference"]
+      "impl": [
+        "MozImageLoadingContent",
+        "SVGURIReference"
+      ]
     },
     "SVGLengthList": {
       "inh": "",
@@ -1679,15 +1811,21 @@
     },
     "SVGMPathElement": {
       "inh": "SVGElement",
-      "impl": ["SVGURIReference"]
+      "impl": [
+        "SVGURIReference"
+      ]
     },
     "SVGMarkerElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFitToViewBox"]
+      "impl": [
+        "SVGFitToViewBox"
+      ]
     },
     "SVGMaskElement": {
       "inh": "SVGElement",
-      "impl": ["SVGUnitTypes"]
+      "impl": [
+        "SVGUnitTypes"
+      ]
     },
     "SVGMetadataElement": {
       "inh": "SVGElement",
@@ -1699,7 +1837,9 @@
     },
     "SVGPathElement": {
       "inh": "SVGGeometryElement",
-      "impl": ["SVGAnimatedPathData"]
+      "impl": [
+        "SVGAnimatedPathData"
+      ]
     },
     "SVGPathSegArcAbs": {
       "inh": "SVGPathSeg",
@@ -1783,7 +1923,11 @@
     },
     "SVGPatternElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFitToViewBox", "SVGURIReference", "SVGUnitTypes"]
+      "impl": [
+        "SVGFitToViewBox",
+        "SVGURIReference",
+        "SVGUnitTypes"
+      ]
     },
     "SVGPoint": {
       "inh": "",
@@ -1795,11 +1939,15 @@
     },
     "SVGPolygonElement": {
       "inh": "SVGGeometryElement",
-      "impl": ["SVGAnimatedPoints"]
+      "impl": [
+        "SVGAnimatedPoints"
+      ]
     },
     "SVGPolylineElement": {
       "inh": "SVGGeometryElement",
-      "impl": ["SVGAnimatedPoints"]
+      "impl": [
+        "SVGAnimatedPoints"
+      ]
     },
     "SVGPreserveAspectRatio": {
       "inh": "",
@@ -1819,11 +1967,16 @@
     },
     "SVGSVGElement": {
       "inh": "SVGGraphicsElement",
-      "impl": ["SVGFitToViewBox", "SVGZoomAndPan"]
+      "impl": [
+        "SVGFitToViewBox",
+        "SVGZoomAndPan"
+      ]
     },
     "SVGScriptElement": {
       "inh": "SVGElement",
-      "impl": ["SVGURIReference"]
+      "impl": [
+        "SVGURIReference"
+      ]
     },
     "SVGSetElement": {
       "inh": "SVGAnimationElement",
@@ -1847,7 +2000,10 @@
     },
     "SVGSymbolElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFitToViewBox", "SVGTests"]
+      "impl": [
+        "SVGFitToViewBox",
+        "SVGTests"
+      ]
     },
     "SVGTSpanElement": {
       "inh": "SVGTextPositioningElement",
@@ -1863,7 +2019,9 @@
     },
     "SVGTextPathElement": {
       "inh": "SVGTextContentElement",
-      "impl": ["SVGURIReference"]
+      "impl": [
+        "SVGURIReference"
+      ]
     },
     "SVGTextPositioningElement": {
       "inh": "SVGTextContentElement",
@@ -1879,11 +2037,16 @@
     },
     "SVGUseElement": {
       "inh": "SVGGraphicsElement",
-      "impl": ["SVGURIReference"]
+      "impl": [
+        "SVGURIReference"
+      ]
     },
     "SVGViewElement": {
       "inh": "SVGElement",
-      "impl": ["SVGFitToViewBox", "SVGZoomAndPan"]
+      "impl": [
+        "SVGFitToViewBox",
+        "SVGZoomAndPan"
+      ]
     },
     "SVGZoomEvent": {
       "inh": "UIEvent",
@@ -1895,7 +2058,9 @@
     },
     "ScriptProcessorNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": [
+        "AudioNodePassThrough"
+      ]
     },
     "ScrollAreaEvent": {
       "inh": "UIEvent",
@@ -1919,7 +2084,9 @@
     },
     "ServiceWorker": {
       "inh": "EventTarget",
-      "impl": ["AbstractWorker"]
+      "impl": [
+        "AbstractWorker"
+      ]
     },
     "ServiceWorkerContainer": {
       "inh": "EventTarget",
@@ -1927,7 +2094,9 @@
     },
     "ServiceWorkerGlobalScope": {
       "inh": "WorkerGlobalScope",
-      "impl": ["GlobalFetch"]
+      "impl": [
+        "GlobalFetch"
+      ]
     },
     "ServiceWorkerRegistration": {
       "inh": "EventTarget",
@@ -1947,7 +2116,9 @@
     },
     "SharedWorker": {
       "inh": "EventTarget",
-      "impl": ["AbstractWorker"]
+      "impl": [
+        "AbstractWorker"
+      ]
     },
     "SharedWorkerGlobalScope": {
       "inh": "WorkerGlobalScope",
@@ -1987,7 +2158,9 @@
     },
     "StereoPannerNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": [
+        "AudioNodePassThrough"
+      ]
     },
     "StorageEvent": {
       "inh": "Event",
@@ -2063,7 +2236,9 @@
     },
     "Text": {
       "inh": "CharacterData",
-      "impl": ["GeometryUtils"]
+      "impl": [
+        "GeometryUtils"
+      ]
     },
     "TextTrack": {
       "inh": "EventTarget",
@@ -2123,7 +2298,10 @@
     },
     "URL": {
       "inh": "",
-      "impl": ["URLUtils", "URLUtilsSearchParams"]
+      "impl": [
+        "URLUtils",
+        "URLUtilsSearchParams"
+      ]
     },
     "USSDReceivedEvent": {
       "inh": "Event",
@@ -2159,7 +2337,9 @@
     },
     "WaveShaperNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": [
+        "AudioNodePassThrough"
+      ]
     },
     "WebGL2RenderingContext": {
       "inh": "WebGLRenderingContext",
@@ -2201,15 +2381,22 @@
     },
     "Worker": {
       "inh": "EventTarget",
-      "impl": ["AbstractWorker"]
+      "impl": [
+        "AbstractWorker"
+      ]
     },
     "WorkerGlobalScope": {
       "inh": "EventTarget",
-      "impl": ["GlobalCrypto", "WindowOrWorkerGlobalScope"]
+      "impl": [
+        "GlobalCrypto",
+        "WindowOrWorkerGlobalScope"
+      ]
     },
     "WorkerLocation": {
       "inh": "",
-      "impl": ["URLUtilsReadOnly"]
+      "impl": [
+        "URLUtilsReadOnly"
+      ]
     },
     "WorkerNavigator": {
       "inh": "",
