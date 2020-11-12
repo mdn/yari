@@ -1847,10 +1847,10 @@
   resolved "https://registry.yarnpkg.com/@mdn/dinocons/-/dinocons-0.1.3.tgz#9d98121d97d698a334818d2d49abbe31660f2e4b"
   integrity sha512-NjpMS8vUTP/o9o3zLg+nG8Ye4hJg/x3CmAG3XFs2kgqAMWG95EZgIDCSraA6NAUdPfdq0Kso5HhoyW9ALx3CUw==
 
-"@mdn/minimalist@^0.2.7":
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-0.2.7.tgz#1d39c23af130c002f77a5b1f1b9d3208b2ce02ee"
-  integrity sha512-wf1Ed8ha2fA7zKCzfI+u6S60CLpog6zwqLzhpNQtz0zcP4NamOwuWDuW1Febcyzm6cz5mPaD4eAEuvca+zFkiw==
+"@mdn/minimalist@^0.2.8":
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-0.2.8.tgz#91bf5b0f4b6a68819c27c9c82f55bf933dda0d85"
+  integrity sha512-iVV/k9ADNYA1tgP4revL/HcDNWle6i5pIv2euKVT7ImbH1rBT5ZmB46V9sqbUi7DbFQmzLtScFP+saq48yYaUw==
 
 "@mdx-js/loader@^1.5.1":
   version "1.6.16"
@@ -11818,10 +11818,10 @@ mdast-util-to-string@^1.0.0:
   resolved "https://registry.yarnpkg.com/mdast-util-to-string/-/mdast-util-to-string-1.1.0.tgz#27055500103f51637bd07d01da01eb1967a43527"
   integrity sha512-jVU0Nr2B9X3MU4tSK7JP1CMkSvOj7X5l/GboG1tKRw52lLF1x2Ju92Ms9tNetCcbfX3hzlM73zYo2NKkWSfF/A==
 
-mdn-data@2.0.13:
-  version "2.0.13"
-  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.13.tgz#e418a5b701c71064561cae7ea5c66548ca23279e"
-  integrity sha512-MyjPYDFwHK+mKHVGWVmY0DkvH67Qy8eLrF9Xc3TKLxrE0T+KtbdqE1oNrqtCu0llIqGq3ax/4ajWqEoCLu48hA==
+mdn-data@2.0.14:
+  version "2.0.14"
+  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.14.tgz#7113fc4281917d63ce29b43446f701e68c25ba50"
+  integrity sha512-dn6wd0uw5GsdswPFfsgMp5NSB0/aDe6fK94YJV/AJDYXL6HVLWBsxeq7js7Ad+mU2K9LAlwpk6kN2D5mwCPVow==
 
 mdn-data@2.0.4:
   version "2.0.4"

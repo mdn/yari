@@ -25,7 +25,7 @@ export function NoMatch() {
 
   return (
     <div className="no-match">
-      <div className="page-content-container">
+      <main className="page-content-container" role="main">
         {/* This string should match the `pageTitle` set in ssr/render.js */}
         <h1>Page not found</h1>
         {url && (
@@ -36,7 +36,7 @@ export function NoMatch() {
         <p>
           <a href="/">Go back to the home page</a>
         </p>
-      </div>
+      </main>
     </div>
   );
 }
