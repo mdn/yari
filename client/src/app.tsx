@@ -8,6 +8,7 @@ import "./app.scss";
 import { CRUD_MODE } from "./constants";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
+import { A11yNav } from "./ui/molecules/a11y-nav";
 import { Footer } from "./ui/organisms/footer";
 import { Header } from "./ui/organisms/header";
 import { NoMatch } from "./routing";
@@ -23,6 +24,7 @@ const isServer = typeof window === "undefined";
 function Layout({ pageType, children }) {
   return (
     <>
+      <A11yNav />
       <div className={`page-wrapper ${pageType}`}>
         <Header />
         {children}
