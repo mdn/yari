@@ -88,7 +88,7 @@ export default function DocumentManage() {
 
   return (
     (data && (
-      <section className="document-manage">
+      <main className="page-content-container document-manage" role="main">
         <h2>
           Manage {data.metadata.slug}
           <Link to={documentURL} className="close">
@@ -97,7 +97,12 @@ export default function DocumentManage() {
         </h2>
         <DocumentDelete {...{ slug: data.metadata.slug, locale }} />
         <DocumentMove {...{ slug: data.metadata.slug, locale }} />
-      </section>
-    )) || <section> Loading … </section>
+      </main>
+    )) || (
+      <main className="page-content-container document-manage" role="main">
+        {" "}
+        Loading …{" "}
+      </main>
+    )
   );
 }
