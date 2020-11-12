@@ -35,6 +35,13 @@ function Layout({ pageType, children }) {
   );
 }
 
+function StandardLayout({ children }) {
+  return <Layout pageType="standard-page">{children}</Layout>;
+}
+function DocumentLayout({ children }) {
+  return <Layout pageType="reference-page">{children}</Layout>;
+}
+
 export function App(appProps) {
   const routes = (
     <Routes>
@@ -55,33 +62,33 @@ export function App(appProps) {
                 <Route
                   path="/_flaws"
                   element={
-                    <Layout pageType="standard-page">
+                    <StandardLayout>
                       <AllFlaws />
-                    </Layout>
+                    </StandardLayout>
                   }
                 />
                 <Route
                   path="/_create/*"
                   element={
-                    <Layout pageType="standard-page">
+                    <StandardLayout>
                       <DocumentCreate />
-                    </Layout>
+                    </StandardLayout>
                   }
                 />
                 <Route
                   path="/_edit/*"
                   element={
-                    <Layout pageType="standard-page">
+                    <StandardLayout>
                       <DocumentEdit />
-                    </Layout>
+                    </StandardLayout>
                   }
                 />
                 <Route
                   path="/_manage/*"
                   element={
-                    <Layout pageType="standard-page">
+                    <StandardLayout>
                       <DocumentManage />
-                    </Layout>
+                    </StandardLayout>
                   }
                 />
               </>
@@ -89,17 +96,17 @@ export function App(appProps) {
             <Route
               path="/"
               element={
-                <Layout pageType="standard-page">
+                <StandardLayout>
                   <Homepage />
-                </Layout>
+                </StandardLayout>
               }
             />
             <Route
               path="/docs/*"
               element={
-                <Layout pageType="reference-page">
+                <DocumentLayout>
                   <Document {...appProps} />
-                </Layout>
+                </DocumentLayout>
               }
             />
           </Routes>
@@ -108,9 +115,9 @@ export function App(appProps) {
       <Route
         path="*"
         element={
-          <Layout pageType="standard-page">
+          <StandardLayout>
             <NoMatch />
-          </Layout>
+          </StandardLayout>
         }
       />
     </Routes>
