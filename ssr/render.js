@@ -105,7 +105,7 @@ export default function render(
   let pageDescription = "";
 
   if (pageNotFound) {
-    pageTitle = `Page Not Found | ${pageTitle}`;
+    pageTitle = `🤷🏽‍♀️ Page not found | ${pageTitle}`;
     const documentDataTag = `<script>window.__pageNotFound__ = true;</script>`;
     $("#root").after(documentDataTag);
   } else if (doc) {

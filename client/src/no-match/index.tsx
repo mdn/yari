@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import { Titlebar } from "../ui/molecules/titlebar";
-
 import "./index.scss";
 
 export function NoMatch() {
@@ -17,22 +15,27 @@ export function NoMatch() {
     setURL(location.pathname);
   }, [location]);
 
+  // TODO IDEA
+  // Use https://www.npmjs.com/package/string-similarity
+  // to download the /$locale/search-index.json to get a list of all possible
+  // URLs and see if we can compare the current URL with one of those
+  // for making a great suggestion,
+  // like "Did you mean: <a href=$url>$doctitle</a>?"
+  // All of this should be done in a lazy-loaded module.
+
   return (
     <div className="no-match">
       <div className="page-content-container">
-        <main className="main-content" role="main">
-          {/* This string should match the `pageTitle` set in ssr/render.js */}
-          <Titlebar docTitle="Page Not Found" />
-          {url && (
-            <p className="sorry-message">
-              Sorry, the page <code>{url}</code> you requested doesn't appear to
-              live here anymore.
-            </p>
-          )}
-          <p>
-            <a href="/">Go back to the home page</a>
+        {/* This string should match the `pageTitle` set in ssr/render.js */}
+        <h1>Page not found</h1>
+        {url && (
+          <p className="sorry-message">
+            Sorry, the page <code>{url}</code> could not be found.
           </p>
-        </main>
+        )}
+        <p>
+          <a href="/">Go back to the home page</a>
+        </p>
       </div>
     </div>
   );

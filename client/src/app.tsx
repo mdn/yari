@@ -80,7 +80,7 @@ export function App(appProps) {
                 // Otherwise, the document route will take over and start to try to
                 // download the `./index.json` thinking that was all that was missing.
                 appProps.pageNotFound ? (
-                  <Layout pageType="error-page">
+                  <Layout pageType="standard-page">
                     <NoMatch />
                   </Layout>
                 ) : (
@@ -93,7 +93,7 @@ export function App(appProps) {
             <Route
               path="*"
               element={
-                <Layout pageType="error-page">
+                <Layout pageType="standard-page">
                   <NoMatch />
                 </Layout>
               }
