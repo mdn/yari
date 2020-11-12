@@ -97,6 +97,21 @@ export function App(appProps) {
                     </StandardLayout>
                   }
                 />
+                {/*
+                This route exclusively exists for development on the <NoMatch>
+                component itself.
+                Because it's impossible to trigger a 404 when using the React dev
+                server, the one on localhost:3000, you can use this endpoint
+                to simulate it.
+                 */}
+                <Route
+                  path="/_404/*"
+                  element={
+                    <StandardLayout>
+                      <NoMatch />
+                    </StandardLayout>
+                  }
+                />
               </>
             )}
             <Route

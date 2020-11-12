@@ -3,6 +3,13 @@ import { useLocation } from "react-router-dom";
 
 import "./index.scss";
 
+// NOTE! To hack on this component, you have to use a trick to even get to this
+// unless you use the Express server on localhost:5000.
+// To get here, use http://localhost:3000/en-US/_404/Whatever/you/like
+// Now hot-reloading works and you can iterate faster.
+// Otherwise, you can use http://localhost:5000/en-US/docs/Whatever/you/like
+// (note the :5000 port) and that'll test it a bit more realistically.
+
 export function NoMatch() {
   const location = useLocation();
   const [url, setURL] = useState("");
