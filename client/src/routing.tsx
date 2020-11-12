@@ -8,12 +8,12 @@ export function NoMatch() {
     document.title = "Page Not Found";
   });
   return (
-    <div>
+    <main className="page-content-container" role="main">
       <h3>Page Not Found</h3>
       <p>{message ? message : `Sorry, no document for ${pathname}.`}</p>
       <p>
         <Link to="/">Go back to the home page</Link>
       </p>
-    </div>
+    </main>
   );
 }

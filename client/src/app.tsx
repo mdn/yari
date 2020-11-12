@@ -41,7 +41,7 @@ export function App(appProps) {
       <Route
         path="/"
         element={
-          <Layout pageType="home-page">
+          <Layout pageType="standard-page">
             <Homepage />
           </Layout>
         }
@@ -52,13 +52,48 @@ export function App(appProps) {
           <Routes>
             {CRUD_MODE && (
               <>
-                <Route path="/_flaws" element={<AllFlaws />} />
-                <Route path="/_create/*" element={<DocumentCreate />} />
-                <Route path="/_edit/*" element={<DocumentEdit />} />
-                <Route path="/_manage/*" element={<DocumentManage />} />
+                <Route
+                  path="/_flaws"
+                  element={
+                    <Layout pageType="standard-page">
+                      <AllFlaws />
+                    </Layout>
+                  }
+                />
+                <Route
+                  path="/_create/*"
+                  element={
+                    <Layout pageType="standard-page">
+                      <DocumentCreate />
+                    </Layout>
+                  }
+                />
+                <Route
+                  path="/_edit/*"
+                  element={
+                    <Layout pageType="standard-page">
+                      <DocumentEdit />
+                    </Layout>
+                  }
+                />
+                <Route
+                  path="/_manage/*"
+                  element={
+                    <Layout pageType="standard-page">
+                      <DocumentManage />
+                    </Layout>
+                  }
+                />
               </>
             )}
-            <Route path="/" element={<Homepage />} />
+            <Route
+              path="/"
+              element={
+                <Layout pageType="standard-page">
+                  <Homepage />
+                </Layout>
+              }
+            />
             <Route
               path="/docs/*"
               element={
@@ -73,7 +108,7 @@ export function App(appProps) {
       <Route
         path="*"
         element={
-          <Layout pageType="error-page">
+          <Layout pageType="standard-page">
             <NoMatch />
           </Layout>
         }

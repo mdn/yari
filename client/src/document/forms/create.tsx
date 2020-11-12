@@ -31,7 +31,7 @@ export default function DocumentCreate() {
   }
 
   return (
-    <section className="document-create">
+    <main className="page-content-container document-create" role="main">
       <h2>
         Create new Document
         <Link to={documentURL} className="close">
@@ -43,6 +43,6 @@ export default function DocumentCreate() {
         onSave={handleCreate}
         savingError={savingError}
       />
-    </section>
+    </main>
   );
 }
