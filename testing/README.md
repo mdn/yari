@@ -121,7 +121,7 @@ parameters. For example, this starts the `jest` watcher:
 yarn test:testing --watch
 ```
 
-Once the `jest` watcher has started press <kbd>p</kbd> and type `headless`
+Once the `jest` watcher has started press "p" and type `headless`
 and now it only (re-runs) tests the headless tests.
 
 **Note!** that only in local development do you need to start the functional
