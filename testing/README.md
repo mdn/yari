@@ -111,7 +111,7 @@ assets, builds the actual documents, and it runs _all_ `jest` tests.
 To just run all `jest` tests, just run the last command:
 
 ```sh
-yarn test;testing
+yarn test:testing
 ```
 
 Which is just an alias to start `jest` which means you can apply your own
