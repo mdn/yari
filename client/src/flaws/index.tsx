@@ -224,7 +224,7 @@ export default function AllFlaws() {
   const { page } = filters;
   const pageCount = lastData ? lastData.counts.pages : 0;
   return (
-    <div id="all-flaws">
+    <main id="all-flaws" className="page-content-container" role="main">
       {loading}
       {error && <ShowSearchError error={error} />}
       {lastData && (
@@ -254,7 +254,7 @@ export default function AllFlaws() {
       )}
       {data && data.counts && <AllFlawCounts counts={data.counts.flaws} />}
       {data && <BuildTimes times={data.times} />}
-    </div>
+    </main>
   );
 }
 

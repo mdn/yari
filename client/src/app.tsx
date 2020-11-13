@@ -35,13 +35,20 @@ function Layout({ pageType, children }) {
   );
 }
 
+function StandardLayout({ children }) {
+  return <Layout pageType="standard-page">{children}</Layout>;
+}
+function DocumentLayout({ children }) {
+  return <Layout pageType="reference-page">{children}</Layout>;
+}
+
 export function App(appProps) {
   const routes = (
     <Routes>
       <Route
         path="/"
         element={
-          <Layout pageType="home-page">
+          <Layout pageType="standard-page">
             <Homepage />
           </Layout>
         }
@@ -52,19 +59,54 @@ export function App(appProps) {
           <Routes>
             {CRUD_MODE && (
               <>
-                <Route path="/_flaws" element={<AllFlaws />} />
-                <Route path="/_create/*" element={<DocumentCreate />} />
-                <Route path="/_edit/*" element={<DocumentEdit />} />
-                <Route path="/_manage/*" element={<DocumentManage />} />
+                <Route
+                  path="/_flaws"
+                  element={
+                    <StandardLayout>
+                      <AllFlaws />
+                    </StandardLayout>
+                  }
+                />
+                <Route
+                  path="/_create/*"
+                  element={
+                    <StandardLayout>
+                      <DocumentCreate />
+                    </StandardLayout>
+                  }
+                />
+                <Route
+                  path="/_edit/*"
+                  element={
+                    <StandardLayout>
+                      <DocumentEdit />
+                    </StandardLayout>
+                  }
+                />
+                <Route
+                  path="/_manage/*"
+                  element={
+                    <StandardLayout>
+                      <DocumentManage />
+                    </StandardLayout>
+                  }
+                />
               </>
             )}
-            <Route path="/" element={<Homepage />} />
+            <Route
+              path="/"
+              element={
+                <StandardLayout>
+                  <Homepage />
+                </StandardLayout>
+              }
+            />
             <Route
               path="/docs/*"
               element={
-                <Layout pageType="reference-page">
+                <DocumentLayout>
                   <Document {...appProps} />
-                </Layout>
+                </DocumentLayout>
               }
             />
           </Routes>
@@ -73,9 +115,9 @@ export function App(appProps) {
       <Route
         path="*"
         element={
-          <Layout pageType="error-page">
+          <StandardLayout>
             <NoMatch />
-          </Layout>
+          </StandardLayout>
         }
       />
     </Routes>
