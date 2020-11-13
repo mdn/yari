@@ -4,7 +4,9 @@ import { AUTOCOMPLETE_SEARCH_WIDGET } from "../../../constants";
 import { useLocale } from "../../../hooks";
 
 import "./index.scss";
+
 // The temporary solution... See below around the BasicSearchWidget component.
+import "./basic-search-widget.scss";
 // import { SearchNavigateWidget } from "../../../search";
 const LazySearchNavigateWidget = lazy(() => import("./lazy-search-widget"));
 
