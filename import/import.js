@@ -1076,9 +1076,26 @@ function getCleanedRenderedHTML(html) {
     mutations++;
   });
 
+  $("div.warning, div.blockIndicator").each((i, element) => {
+    const $element = $(element);
+    $element.addClass("notecard");
+    $element.removeClass("blockIndicator");
+    mutations++;
+  });
+
+  $("span.inlineIndicator, span.indicatorInHeadline").each((i, element) => {
+    const $element = $(element);
+    $element.addClass("notecard");
+    $element.addClass("inline");
+    $element.removeClass("inlineIndicator");
+    $element.removeClass("indicatorInHeadline");
+    mutations++;
+  });
+
   $("div.bc-data[id]").each((i, element) => {
     const $element = $(element);
     $element.empty();
+    mutations++;
   });
 
   if (mutations) {
