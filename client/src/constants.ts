@@ -8,5 +8,5 @@ export const CRUD_MODE = JSON.parse(
 );
 
 export const AUTOCOMPLETE_SEARCH_WIDGET = JSON.parse(
-  process.env.REACT_APP_AUTOCOMPLETE_SEARCH_WIDGET || JSON.stringify(!CRUD_MODE)
+  process.env.REACT_APP_AUTOCOMPLETE_SEARCH_WIDGET || JSON.stringify(CRUD_MODE)
 );

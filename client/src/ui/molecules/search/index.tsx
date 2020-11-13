@@ -1,6 +1,9 @@
 import * as React from "react";
 
-import { SearchNavigateWidget } from "../../../search";
+// The temporary solution... See below around the BasicSearchWidget component.
+// import { SearchNavigateWidget } from "../../../search";
+import LazySearchNavigateWidget from "./lazy-search-widget";
+
 import { AUTOCOMPLETE_SEARCH_WIDGET } from "../../../constants";
 import { useLocale } from "../../../hooks";
 
@@ -11,7 +14,7 @@ export function Search(props) {
     <div className="header-search">
       {/* See the code comment next to the <BasicSearchWidget> component */}
       {AUTOCOMPLETE_SEARCH_WIDGET ? (
-        <SearchNavigateWidget {...props} />
+        <LazySearchNavigateWidget {...props} />
       ) : (
         <BasicSearchWidget />
       )}
