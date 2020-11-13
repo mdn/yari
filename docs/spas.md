@@ -1,8 +1,7 @@
 # Single Page Apps
 
 Single Page Apps (aka SPAs) are pages that we render, that are _not_ documents.
-For example the `404` page. These are rendered with server-side rendered but
-without a "doc".
+For example the `404` page. These are rendered server-side but without a "doc".
 
 To build these you run:
 
@@ -45,12 +44,12 @@ UNDER DEVELOPMENT. Watch this space!
 
 ## Site search
 
-UNDER DEVELOPMENT. What this space!
+UNDER DEVELOPMENT. Watch this space!
 
 ## Sign-up
 
-UNDER DEVELOPMENT. What this space!
+UNDER DEVELOPMENT. Watch this space!
 
 ## User profile
 
-UNDER DEVELOPMENT. What this space!
+UNDER DEVELOPMENT. Watch this space!
