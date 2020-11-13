@@ -47,13 +47,15 @@ if (fxosCheck == 0) {
 
 switch($0) {
   case 'inline':
-    %><span class="inlineIndicator nonStandard nonStandardInline"><%-str_inline%></span><%
+    %><span class="notecard inline warning"><%-str_inline%></span><%
     break;
   case 'header':
-    %><div class="blockIndicator nonStandard nonStandardHeader">
-      <p><strong><%-str_inline%></strong><br/>
-      <%-str_long%></p>
-      </div><%
+    %>
+      <div class="notecard warning">
+        <h4><%-str_inline%></h4>
+        <p><%-str_long%></p>
+      </div>
+    <%
     break;
 }
 
@@ -61,13 +63,15 @@ switch($0) {
 
 switch($0) {
   case 'inline':
-    %><span class="inlineIndicator nonStandard nonStandardInline"><%-str_inline%></span><%
+    %><span class="notecard inline warning"><%-str_inline%></span><%
     break;
   case 'header':
-    %><div class="blockIndicator nonStandard nonStandardHeader">
-      <p><strong><%-str_inline%></strong><br/>
-      <%-str_fxos_long%></p>
-      </div><%
+    %>
+      <div class="notecard warning">
+        <h4><%-str_inline%></h4>
+        <p><%-str_fxos_long%></p>
+      </div>
+    <%
     break;
 }
 
