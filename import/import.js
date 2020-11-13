@@ -1087,7 +1087,7 @@ function getCleanedRenderedHTML(html) {
     const $element = $(element);
     $element.addClass("notecard");
     $element.addClass("inline");
-    $element.removeClass("inlinedIndicator");
+    $element.removeClass("inlineIndicator");
     $element.removeClass("indicatorInHeadline");
     mutations++;
   });
