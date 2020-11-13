@@ -36,12 +36,7 @@ async function buildDocuments() {
 
   function appendTotalFlaws(flaws) {
     for (const [key, actualFlaws] of Object.entries(flaws)) {
-      if (!Array.isArray(actualFlaws)) {
-        console.log(actualFlaws);
-        console.log("WHAT THE HELL?!");
-        throw new Error("??");
-      }
-      const count = Array.isArray(actualFlaws) ? actualFlaws.length : 0;
+      const count = actualFlaws.length;
       if (!totalFlaws.has(key)) {
         totalFlaws.set(key, 0);
       }
