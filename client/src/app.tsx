@@ -127,7 +127,7 @@ export function App(appProps) {
             <Route
               path="/docs/*"
               element={
-                // It's important to do this so if the server-side render says
+                // It's important to do this so the server-side renderer says
                 // this render is for a page not found.
                 // Otherwise, the document route will take over and start to try to
                 // download the `./index.json` thinking that was all that was missing.

@@ -10,13 +10,13 @@ yarn build --spas-only
 ```
 
 By default, running only `yarn build` will build all documents _and_ all SPAs.
-You can also opt to _not_ build them and only build the documents. To do that use:
+Should you wish to only build documents, use:
 
 ```sh
 yarn build --no-spas
 ```
 
-The SPAs are also built when run `yarn prepare-build` or `yarn start`.
+The SPAs are also built when running `yarn prepare-build` or `yarn start`.
 
 Below we describe each SPA and this is a work in progress.
 
