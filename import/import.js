@@ -1076,9 +1076,26 @@ function getCleanedRenderedHTML(html) {
     mutations++;
   });
 
+  $("div.warning, div.blockIndicator").each((i, element) => {
+    const $element = $(element);
+    $element.addClass("notecard");
+    $element.removeClass("blockIndicator");
+    mutations++;
+  });
+
+  $("span.inlineIndicator, span.indicatorInHeadline").each((i, element) => {
+    const $element = $(element);
+    $element.addClass("notecard");
+    $element.addClass("inline");
+    $element.removeClass("inlineIndicator");
+    $element.removeClass("indicatorInHeadline");
+    mutations++;
+  });
+
   $("div.bc-data[id]").each((i, element) => {
     const $element = $(element);
     $element.empty();
+    mutations++;
   });
 
   if (mutations) {
@@ -1098,7 +1115,6 @@ const _DELETE_STRINGS = [
   new RegExp(
     '<p class="hidden">The source for this interactive example is stored in a GitHub repository. If you\'d like to contribute to the interactive examples project, please clone <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> and send us a pull request.</p>'
   ),
-  ``,
 ];
 function getCleanedKumaHTML(html) {
   // You can't parse the Kuma HTML because it's not actually HTML. It's
