@@ -1,20 +1,31 @@
-import * as React from "react";
-
-// The temporary solution... See below around the BasicSearchWidget component.
-// import { SearchNavigateWidget } from "../../../search";
-import LazySearchNavigateWidget from "./lazy-search-widget";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 
 import { AUTOCOMPLETE_SEARCH_WIDGET } from "../../../constants";
 import { useLocale } from "../../../hooks";
 
 import "./index.scss";
+// The temporary solution... See below around the BasicSearchWidget component.
+// import { SearchNavigateWidget } from "../../../search";
+const LazySearchNavigateWidget = lazy(() => import("./lazy-search-widget"));
 
 export function Search(props) {
+  const [
+    useAutocompleteSearchWidget,
+    setUseAutocompleteSearchWidget,
+  ] = useState(false);
+  useEffect(() => {
+    if (AUTOCOMPLETE_SEARCH_WIDGET) {
+      setUseAutocompleteSearchWidget(true);
+    }
+  }, []);
+
   return (
     <div className="header-search">
       {/* See the code comment next to the <BasicSearchWidget> component */}
-      {AUTOCOMPLETE_SEARCH_WIDGET ? (
-        <LazySearchNavigateWidget {...props} />
+      {useAutocompleteSearchWidget ? (
+        <Suspense fallback={<BasicSearchWidget />}>
+          <LazySearchNavigateWidget {...props} />
+        </Suspense>
       ) : (
         <BasicSearchWidget />
       )}
