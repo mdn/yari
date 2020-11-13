@@ -11,7 +11,7 @@ import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
 import { Footer } from "./ui/organisms/footer";
 import { Header } from "./ui/organisms/header";
-import { NoMatch } from "./no-match";
+import { PageNotFound } from "./page-not-found";
 import { Banner } from "./banners";
 
 const AllFlaws = lazy(() => import("./flaws"));
@@ -100,7 +100,7 @@ export function App(appProps) {
                   }
                 />
                 {/*
-                This route exclusively exists for development on the <NoMatch>
+                This route exclusively exists for development on the <PageNotFound>
                 component itself.
                 Because it's impossible to trigger a 404 when using the React dev
                 server, the one on localhost:3000, you can use this endpoint
@@ -110,7 +110,7 @@ export function App(appProps) {
                   path="/_404/*"
                   element={
                     <StandardLayout>
-                      <NoMatch />
+                      <PageNotFound />
                     </StandardLayout>
                   }
                 />
@@ -133,7 +133,7 @@ export function App(appProps) {
                 // download the `./index.json` thinking that was all that was missing.
                 appProps.pageNotFound ? (
                   <StandardLayout>
-                    <NoMatch />
+                    <PageNotFound />
                   </StandardLayout>
                 ) : (
                   <DocumentLayout>
@@ -146,7 +146,7 @@ export function App(appProps) {
               path="*"
               element={
                 <StandardLayout>
-                  <NoMatch />
+                  <PageNotFound />
                 </StandardLayout>
               }
             />

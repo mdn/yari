@@ -10,7 +10,7 @@ import "./index.scss";
 // Otherwise, you can use http://localhost:5000/en-US/docs/Whatever/you/like
 // (note the :5000 port) and that'll test it a bit more realistically.
 
-export function NoMatch() {
+export function PageNotFound() {
   const location = useLocation();
   const [url, setURL] = useState("");
 
@@ -31,7 +31,7 @@ export function NoMatch() {
   // All of this should be done in a lazy-loaded module.
 
   return (
-    <div className="no-match">
+    <div className="page-not-found">
       <main className="page-content-container" role="main">
         {/* This string should match the `pageTitle` set in ssr/render.js */}
         <h1>Page not found</h1>

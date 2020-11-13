@@ -23,7 +23,7 @@ Below we describe each SPA and this is a work in progress.
 
 ## 404 - Page not found
 
-The React component is actually called `<NoMatch>` and it generates a file
+The React component is actually called `<PageNotFound>` and it generates a file
 called `404.html`.
 
 This page gets used by CloudFront as an "Error page" on the distribution
