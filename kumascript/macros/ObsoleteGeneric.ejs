@@ -115,17 +115,24 @@ var str_desc = mdn.localString({
 
 switch($0) {
     case 'inline':
-        %><span title="<%=tip%>" class="inlineIndicator obsolete obsoleteInline"><%-str%></span><%
+        %><span title="<%=tip%>" class="notecard inline obsolete"><%-str%></span><%
         break;
     case 'header':
         if (string.length(tip)) { str = str + " " + tip; }
-        %><div class="blockIndicator obsolete obsoleteHeader"><p><strong><%-str%></strong><br/><%-str_desc%></p></div><%
+        %>
+            <div class="notecard obsolete">
+                <h4><%-str%></h4>
+                <p><%-str_desc%></p>
+            </div>
+        <%
         break;
     case 'method':
         if (string.length(tip)) { str = str + " " + tip; }
-        %><div class="headingWithIndicator">
-        <h3><%- $2 %>()</h3>
-        <span class="indicatorInHeadline obsolete obsoleteMethod"><%- str %></span>
-        </div><%
+        %>
+        <div class="headingWithIndicator">
+            <h4><%- $2 %>()</h4>
+            <span class="notecard inline obsolete"><%- str %></span>
+        </div>
+        <%
         break;
 }%>

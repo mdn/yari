@@ -38,6 +38,19 @@ async function buildDocuments(files = null) {
 
   let peakHeapBytes = 0;
 
+  // For keeping track of the total counts of flaws
+  const totalFlaws = new Map();
+
+  function appendTotalFlaws(flaws) {
+    for (const [key, actualFlaws] of Object.entries(flaws)) {
+      const count = actualFlaws.length;
+      if (!totalFlaws.has(key)) {
+        totalFlaws.set(key, 0);
+      }
+      totalFlaws.set(key, totalFlaws.get(key) + count);
+    }
+  }
+
   // This builds up a mapping from en-US slugs to their translated slugs.
   const translationsOf = new Map();
 
@@ -76,6 +89,10 @@ async function buildDocuments(files = null) {
       fileAttachments,
       bcdData,
     } = await buildDocument(document);
+
+    if (builtDocument.flaws) {
+      appendTotalFlaws(builtDocument.flaws);
+    }
 
     fs.writeFileSync(
       path.join(outPath, "index.html"),
@@ -189,7 +206,7 @@ async function buildDocuments(files = null) {
       JSON.stringify(items)
     );
   }
-  return { slugPerLocale: docPerLocale, peakHeapBytes };
+  return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
 }
 
 async function buildOtherSPAs() {
@@ -215,6 +232,23 @@ function humanFileSize(size) {
   return `${num} ${"KMGTPEZY"[i - 1]}B`;
 }
 
+function formatTotalFlaws(flawsCountMap, header = "Total_Flaws_Count") {
+  if (!flawsCountMap.size) {
+    return "";
+  }
+  const keys = [...flawsCountMap.keys()];
+  const longestKey = Math.max(...keys.map((k) => k.length));
+  const out = ["\n"];
+  out.push(header);
+  for (const key of keys.sort()) {
+    out.push(
+      `${key.padEnd(longestKey + 1)} ${flawsCountMap.get(key).toLocaleString()}`
+    );
+  }
+  out.push("\n");
+  return out.join("\n");
+}
+
 program
   .name("build")
   .option("--spas", "Build the SPA pages", { default: true }) // PR builds
@@ -233,7 +267,9 @@ program
       console.log("\nBuilding Documents...");
       const { files } = args;
       const t0 = new Date();
-      const { slugPerLocale, peakHeapBytes } = await buildDocuments(files);
+      const { slugPerLocale, peakHeapBytes, totalFlaws } = await buildDocuments(
+        files
+      );
       const t1 = new Date();
       const count = Object.values(slugPerLocale).reduce(
         (a, b) => a + b.length,
@@ -250,6 +286,7 @@ program
         ).toFixed(1)} documents per second.`
       );
       console.log(`Peak heap memory usage: ${humanFileSize(peakHeapBytes)}`);
+      console.log(formatTotalFlaws(totalFlaws));
     } catch (error) {
       // So you get a stacktrace in the CLI output
       console.error(error);

@@ -126,7 +126,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       <div className="page-content-container">
         {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
-        <main className="main-content" role="main">
+        <main id="content" className="main-content" role="main">
           <article className="article">
             <RenderDocumentBody doc={doc} />
 
