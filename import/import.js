@@ -1092,6 +1092,11 @@ function getCleanedRenderedHTML(html) {
     mutations++;
   });
 
+  $("div.prevnext a").each((i, element) => {
+    $(element).addClass("button");
+    mutations++;
+  });
+
   $("div.bc-data[id]").each((i, element) => {
     const $element = $(element);
     $element.empty();
