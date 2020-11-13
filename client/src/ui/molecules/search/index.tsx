@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { SearchNavigateWidget } from "../../../search";
-import { BASIC_SEARCH_WIDGET } from "../../../constants";
+import { AUTOCOMPLETE_SEARCH_WIDGET } from "../../../constants";
 import { useLocale } from "../../../hooks";
 
 import "./index.scss";
@@ -10,10 +10,10 @@ export function Search(props) {
   return (
     <div className="header-search">
       {/* See the code comment next to the <BasicSearchWidget> component */}
-      {BASIC_SEARCH_WIDGET ? (
-        <BasicSearchWidget />
-      ) : (
+      {AUTOCOMPLETE_SEARCH_WIDGET ? (
         <SearchNavigateWidget {...props} />
+      ) : (
+        <BasicSearchWidget />
       )}
     </div>
   );
