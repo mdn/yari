@@ -62,8 +62,9 @@ async function buildDocuments() {
         translationsOf.set(translation_of, []);
       }
       translationsOf.get(translation_of).push({
-        slug: document.metadata.slug,
+        url: document.url,
         locale: document.metadata.locale,
+        title: document.metadata.title,
       });
       // This is a shortcoming. If this is a translated document, we don't have a
       // complete mapping of all other translations. So, the best we can do is
