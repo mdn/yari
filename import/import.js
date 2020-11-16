@@ -1092,6 +1092,11 @@ function getCleanedRenderedHTML(html) {
     mutations++;
   });
 
+  $("div.prevnext a").each((i, element) => {
+    $(element).addClass("button");
+    mutations++;
+  });
+
   $("div.bc-data[id]").each((i, element) => {
     const $element = $(element);
     $element.empty();
@@ -1428,7 +1433,7 @@ module.exports = async function runImporter(options) {
       continue;
     }
     if (!builtFilePaths.has(filePath)) {
-      console.log("\t", `rm ${filePath}`);
+      console.log("\t", `rm "${filePath}"`);
     }
   }
 };
