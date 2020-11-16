@@ -18,7 +18,7 @@ import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 // Misc
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
-import { MainContentContainer } from "../ui/atoms/main-content";
+import { PageContentContainer } from "../ui/atoms/page-content";
 import LanguageMenu from "../ui/molecules/language-menu";
 import { OnGitHubLink } from "./on-github";
 import { Titlebar } from "../ui/molecules/titlebar";
@@ -124,10 +124,16 @@ export function Document(props /* TODO: define a TS interface for this */) {
         </div>
       </div>
 
-      <div className="page-content-container">
+      <PageContentContainer>
         {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
-        <MainContentContainer>
+        <main
+          // This exists for the benefit of a11y navigation which
+          // uses anchor links to focus in on the content.
+          id="content"
+          className="main-content"
+          role="main"
+        >
           <article className="article">
             <RenderDocumentBody doc={doc} />
 
@@ -148,10 +154,10 @@ export function Document(props /* TODO: define a TS interface for this */) {
               </section>
             </div>
           </article>
-        </MainContentContainer>
+        </main>
 
         {doc.sidebarHTML && <RenderSideBar doc={doc} />}
-      </div>
+      </PageContentContainer>
     </>
   );
 }

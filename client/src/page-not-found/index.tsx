@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import { MainContentContainer } from "../ui/atoms/main-content";
+import { PageContentContainer } from "../ui/atoms/page-content";
 import "./index.scss";
 
 // NOTE! To hack on this component, you have to use a trick to even get to this
@@ -32,7 +32,7 @@ export function PageNotFound() {
   // All of this should be done in a lazy-loaded module.
 
   return (
-    <MainContentContainer extraClassName="page-not-found">
+    <PageContentContainer extraClassName="page-not-found">
       {/* This string should match the `pageTitle` set in ssr/render.js */}
       <h1>Page not found</h1>
 
@@ -44,6 +44,6 @@ export function PageNotFound() {
       <p>
         <a href="/">Go back to the home page</a>
       </p>
-    </MainContentContainer>
+    </PageContentContainer>
   );
 }
