@@ -18,6 +18,7 @@ import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 // Misc
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
+import { MainContentContainer } from "../ui/atoms/main-content";
 import LanguageMenu from "../ui/molecules/language-menu";
 import { OnGitHubLink } from "./on-github";
 import { Titlebar } from "../ui/molecules/titlebar";
@@ -126,7 +127,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       <div className="page-content-container">
         {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
-        <main id="content" className="main-content" role="main">
+        <MainContentContainer>
           <article className="article">
             <RenderDocumentBody doc={doc} />
 
@@ -147,7 +148,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
               </section>
             </div>
           </article>
-        </main>
+        </MainContentContainer>
 
         {doc.sidebarHTML && <RenderSideBar doc={doc} />}
       </div>
