@@ -1433,7 +1433,7 @@ module.exports = async function runImporter(options) {
       continue;
     }
     if (!builtFilePaths.has(filePath)) {
-      console.log("\t", `rm ${filePath}`);
+      console.log("\t", `rm "${filePath}"`);
     }
   }
 };
