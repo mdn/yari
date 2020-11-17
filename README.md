@@ -210,7 +210,7 @@ and then re-upload that to realfavicongenerator.net.
 
 Some common issues and how to resolve them.
 
-### Error: ENOSPC: System limit for number of file watchers reached
+### `Error: ENOSPC: System limit for number of file watchers reached`
 
 There are two options to resolve this.
 
