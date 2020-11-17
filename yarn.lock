@@ -17701,10 +17701,10 @@ use-composed-ref@^1.0.0:
   dependencies:
     ts-essentials "^2.0.3"
 
-use-debounce@^5.0.4:
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-5.0.4.tgz#9cd1aaa43505ea37ba666e512abfc80bfbf69df6"
-  integrity sha512-gqlRJ4ppvdXAZhOV2eRFasOTBqRkWcss751HFXUJdRav0O6tHyEmKuZNphJssMlHw98RTTpuhgV5KzhUVzPusA==
+use-debounce@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-5.1.0.tgz#3df34bd7449da7dd2dbb10a6513efe701fc79d02"
+  integrity sha512-fU7O7iel2bA19fxSiPfRkieVGxrow503phSUAGZ/EqiJtCPrU9AdUdrKOAdgh803IrjdIzhj+8eDsDGn4OPy8g==
 
 use-isomorphic-layout-effect@^1.0.0:
   version "1.0.0"
