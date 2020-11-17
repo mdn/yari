@@ -214,7 +214,7 @@ Some common issues and how to resolve them.
 
 There are two options to resolve this.
 
-1. Disable the watcher via [`REACT_APP_NOW_WATCHER`](docs/envvars.md#react_app_no_watcher)
+1. Disable the watcher via [`REACT_APP_NO_WATCHER`](docs/envvars.md#react_app_no_watcher)
 
    export REACT_APP_NO_WATCHER=true
 
