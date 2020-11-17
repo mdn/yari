@@ -18,12 +18,12 @@ import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 // Misc
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
-import { PageContentContainer } from "../ui/atoms/page-content";
 import LanguageMenu from "../ui/molecules/language-menu";
 import { OnGitHubLink } from "./on-github";
 import { Titlebar } from "../ui/molecules/titlebar";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
+import { MainContentContainer } from "../ui/atoms/page-content";
 
 import "./index.scss";
 
@@ -124,16 +124,10 @@ export function Document(props /* TODO: define a TS interface for this */) {
         </div>
       </div>
 
-      <PageContentContainer>
+      <div className="page-content-container">
         {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
-        <main
-          // This exists for the benefit of a11y navigation which
-          // uses anchor links to focus in on the content.
-          id="content"
-          className="main-content"
-          role="main"
-        >
+        <MainContentContainer>
           <article className="article">
             <RenderDocumentBody doc={doc} />
 
@@ -154,10 +148,10 @@ export function Document(props /* TODO: define a TS interface for this */) {
               </section>
             </div>
           </article>
-        </main>
+        </MainContentContainer>
 
         {doc.sidebarHTML && <RenderSideBar doc={doc} />}
-      </PageContentContainer>
+      </div>
     </>
   );
 }
@@ -173,7 +167,7 @@ function LoadingDocumentPlaceholder() {
         </div>
       </div>
       <div className="page-content-container loading-document-placeholder">
-        <main className="main-content" role="main">
+        <MainContentContainer>
           <article className="article">
             <p>
               <span role="img" aria-label="Hourglass">
@@ -182,7 +176,7 @@ function LoadingDocumentPlaceholder() {
               Loading…
             </p>
           </article>
-        </main>
+        </MainContentContainer>
       </div>
     </>
   );

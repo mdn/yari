@@ -32,18 +32,20 @@ export function PageNotFound() {
   // All of this should be done in a lazy-loaded module.
 
   return (
-    <PageContentContainer extraClassName="page-not-found">
-      {/* This string should match the `pageTitle` set in ssr/render.js */}
-      <h1>Page not found</h1>
+    <div className="page-not-found">
+      <PageContentContainer>
+        {/* This string should match the `pageTitle` set in ssr/render.js */}
+        <h1>Page not found</h1>
 
-      {url && (
-        <p className="sorry-message">
-          Sorry, the page <code>{url}</code> could not be found.
+        {url && (
+          <p className="sorry-message">
+            Sorry, the page <code>{url}</code> could not be found.
+          </p>
+        )}
+        <p>
+          <a href="/">Go back to the home page</a>
         </p>
-      )}
-      <p>
-        <a href="/">Go back to the home page</a>
-      </p>
-    </PageContentContainer>
+      </PageContentContainer>
+    </div>
   );
 }
