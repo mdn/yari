@@ -967,6 +967,47 @@ const FIREFOX_SOURCE_DOCS_URLS = [].concat(
   )
 );
 
+const LOCALE_ALIAS_URLS = [].concat(
+  url_test("/en/docs/Web", "/en-US/docs/Web"),
+  url_test("/En/docs/Web", "/en-US/docs/Web"),
+  url_test("/zh/docs/Web", "/zh-CN/docs/Web"),
+  url_test("/ZH/docs/Web", "/zh-CN/docs/Web"),
+  url_test("/cn/docs/Web", "/zh-CN/docs/Web"),
+  url_test("/Cn/docs/Web", "/zh-CN/docs/Web"),
+  url_test("/zh_cn/docs/Web", "/zh-CN/docs/Web"),
+  url_test("/zh_CN/docs/Web", "/zh-CN/docs/Web"),
+  url_test("/zh-hans/docs/Web", "/zh-CN/docs/Web"),
+  url_test("/zh-HANS/docs/Web", "/zh-CN/docs/Web"),
+  url_test("/zh_tw/docs/Web", "/zh-TW/docs/Web"),
+  url_test("/zh_TW/docs/Web", "/zh-TW/docs/Web"),
+  url_test("/zh-hant/docs/Web", "/zh-TW/docs/Web"),
+  url_test("/zh-HANT/docs/Web", "/zh-TW/docs/Web"),
+  url_test("/pt/docs/Web", "/pt-PT/docs/Web"),
+  url_test("/PT/docs/Web", "/pt-PT/docs/Web"),
+  url_test("/es-es/docs/Web", "/es/docs/Web"),
+  url_test("/es-ES/docs/Web", "/es/docs/Web"),
+  url_test("/ja-ja/docs/Web", "/ja/docs/Web"),
+  url_test("/ja-JA/docs/Web", "/ja/docs/Web"),
+  url_test("/fr-fr/docs/Web", "/fr/docs/Web"),
+  url_test("/fr-FR/docs/Web", "/fr/docs/Web"),
+  url_test("/ru-ru/docs/Web", "/ru/docs/Web"),
+  url_test("/ru-RU/docs/Web", "/ru/docs/Web"),
+  url_test("/de-de/docs/Web", "/de/docs/Web"),
+  url_test("/de-DE/docs/Web", "/de/docs/Web"),
+  url_test("/ko-ko/docs/Web", "/ko/docs/Web"),
+  url_test("/ko-KO/docs/Web", "/ko/docs/Web"),
+  url_test("/pl-pl/docs/Web", "/pl/docs/Web"),
+  url_test("/pl-PL/docs/Web", "/pl/docs/Web"),
+  url_test("/it-it/docs/Web", "/it/docs/Web"),
+  url_test("/it-IT/docs/Web", "/it/docs/Web"),
+  url_test("/nl-nl/docs/Web", "/nl/docs/Web"),
+  url_test("/nl-NL/docs/Web", "/nl/docs/Web"),
+  url_test("/tr-tr/docs/Web", "/tr/docs/Web"),
+  url_test("/tr-TR/docs/Web", "/tr/docs/Web"),
+  url_test("/vi-vi/docs/Web", "/vi/docs/Web"),
+  url_test("/vi-VI/docs/Web", "/vi/docs/Web")
+);
+
 describe("scl3 redirects", () => {
   for (const [url, t] of SCL3_REDIRECT_URLS) {
     it(url, t);
@@ -1029,6 +1070,12 @@ describe("firefox accounts redirects", () => {
 
 describe("firefox src docs redirects", () => {
   for (const [url, t] of FIREFOX_SOURCE_DOCS_URLS) {
+    it(url, t);
+  }
+});
+
+describe("locale alias redirects", () => {
+  for (const [url, t] of LOCALE_ALIAS_URLS) {
     it(url, t);
   }
 });

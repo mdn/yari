@@ -1,5 +1,34 @@
 const startRe = /^\^\/?/;
 const startTemplate = /^\//;
+const localesWithoutCountryCodes = [
+  "ar",
+  "bg",
+  "bm",
+  "bn",
+  "ca",
+  "de",
+  "el",
+  "es",
+  "fa",
+  "fi",
+  "fr",
+  "he",
+  "hu",
+  "id",
+  "it",
+  "ja",
+  "kab",
+  "ko",
+  "ms",
+  "my",
+  "nl",
+  "pl",
+  "ru",
+  "th",
+  "tr",
+  "uk",
+  "vi",
+];
 
 function redirect(pattern, template, options = {}) {
   return (path) => {
@@ -1101,6 +1130,38 @@ for (const [pattern, path] of [
   );
 }
 
+const LOCALE_ALIAS_PATTERNS = [
+  redirect(/^en\/(?<suffix>.*)$/i, ({ suffix }) => `/en-US/${suffix}`, {
+    permanent: true,
+  }),
+  redirect(
+    /^(?:cn|zh_cn|zh-hans|zh)\/(?<suffix>.*)$/i,
+    ({ suffix }) => `/zh-CN/${suffix}`,
+    {
+      permanent: true,
+    }
+  ),
+  redirect(
+    /^(?:zh_tw|zh-hant)\/(?<suffix>.*)$/i,
+    ({ suffix }) => `/zh-TW/${suffix}`,
+    {
+      permanent: true,
+    }
+  ),
+  redirect(/^pt\/(?<suffix>.*)$/i, ({ suffix }) => `/pt-PT/${suffix}`, {
+    permanent: true,
+  }),
+  ...localesWithoutCountryCodes.map((loc) => {
+    return redirect(
+      new RegExp(`^${loc}-${loc}\/(?<suffix>.*)$`, "i"),
+      ({ suffix }) => `/${loc}/${suffix}`,
+      {
+        permanent: true,
+      }
+    );
+  }),
+];
+
 const REDIRECT_PATTERNS = [].concat(
   SCL3_REDIRECT_PATTERNS,
   ZONE_REDIRECT_PATTERNS,
@@ -1108,6 +1169,7 @@ const REDIRECT_PATTERNS = [].concat(
   WEBEXTENSIONS_REDIRECT_PATTERNS,
   FIREFOX_ACCOUNTS_REDIRECT_PATTERNS,
   FIREFOX_SOURCE_DOCS_REDIRECT_PATTERNS,
+  LOCALE_ALIAS_PATTERNS,
   [
     localeRedirect(
       /^fellowship/i,
