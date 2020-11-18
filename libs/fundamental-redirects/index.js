@@ -1,3 +1,5 @@
+const { VALID_LOCALES, LOCALE_ALIASES } = require("../constants");
+
 const startRe = /^\^\/?/;
 const startTemplate = /^\//;
 
@@ -44,6 +46,40 @@ function externalRedirect(pattern, template, options = {}) {
     ...options,
   });
 }
+
+const fixableLocales = new Map();
+for (const locale of VALID_LOCALES.keys()) {
+  if (locale.includes("-")) {
+    // E.g. `en-US` becomes alias `en_US`
+    fixableLocales.set(locale.replace("-", "_").toLowerCase(), locale);
+  } else {
+    // E.g. `fr` becomes alias `fr-fr`
+    fixableLocales.set(`${locale}-${locale}`.toLowerCase(), locale);
+  }
+}
+
+for (const [alias, correct] of LOCALE_ALIASES) {
+  // E.g. things like `en` -> `en-us` or `pt` -> `pt-pt`
+  fixableLocales.set(alias, correct);
+}
+
+// All things like `/en_Us/docs/...` -> `/en-US/docs/...`
+const LOCALE_PATTERNS = [
+  redirect(
+    new RegExp(
+      `^(?<locale>${Array.from(fixableLocales.keys()).join(
+        "|"
+      )})/(?<suffix>.*)`,
+      "i"
+    ),
+    ({ locale, suffix }) => {
+      return `/${VALID_LOCALES.get(
+        fixableLocales.get(locale.toLowerCase()).toLowerCase()
+      )}/${suffix}`;
+    },
+    { permanent: true }
+  ),
+];
 
 // Redirects/rewrites/aliases migrated from SCL3 httpd config
 const SCL3_REDIRECT_PATTERNS = [
@@ -1102,6 +1138,7 @@ for (const [pattern, path] of [
 }
 
 const REDIRECT_PATTERNS = [].concat(
+  LOCALE_PATTERNS,
   SCL3_REDIRECT_PATTERNS,
   ZONE_REDIRECT_PATTERNS,
   MARIONETTE_REDIRECT_PATTERNS,

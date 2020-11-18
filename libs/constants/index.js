@@ -2,7 +2,6 @@ const VALID_LOCALES = new Map(
   [
     "ar",
     "bg",
-    "bm",
     "bn",
     "ca",
     "de",
@@ -39,7 +38,18 @@ const VALID_LOCALES = new Map(
 
 const DEFAULT_LOCALE = "en-US";
 
+const LOCALE_ALIASES = new Map([
+  // Case is not important on either the keys or the values.
+  ["en", "en-us"],
+  ["bn-bd", "bn"],
+  ["ja-jp", "ja"],
+  ["pt", "pt-PT"], // Note! Portugal Portugese is the default
+  ["cn", "zh-cn"],
+  ["zh", "zh-tw"],
+]);
+
 module.exports = {
   VALID_LOCALES,
   DEFAULT_LOCALE,
+  LOCALE_ALIASES,
 };
