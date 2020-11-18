@@ -1,7 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
-import Search from "../ui/molecules/search";
-import "./index.scss";
+import { Search } from "../ui/molecules/search";
 
 // Lazy sub-components
 const ViewedDocuments = lazy(() => import("./viewed-documents"));
@@ -10,7 +9,7 @@ export function Homepage() {
   const isServer = typeof window === "undefined";
 
   return (
-    <div id="homepage">
+    <main id="homepage" role="main" className="page-content-container">
       <h2>Welcome to MDN</h2>
       <Search />
 
@@ -82,6 +81,6 @@ export function Homepage() {
           <Link to="/en-US/_flaws">Flaws Dashboard</Link>
         </li>
       </ul>
-    </div>
+    </main>
   );
 }

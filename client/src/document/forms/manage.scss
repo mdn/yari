@@ -1,0 +1,12 @@
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+.document-manage {
+  display: flex;
+  flex-direction: column;
+
+  .close {
+    font-size: $tiny-text;
+    margin-left: $base-spacing;
+  }
+}

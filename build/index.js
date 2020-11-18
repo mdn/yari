@@ -199,8 +199,9 @@ async function buildDocument(document, documentOptions = {}) {
           console.error(chalk.bold.red(`${i + 1}: ${flaw.name}`));
           console.error(chalk.red(`${flaw}\n`));
         });
-        // XXX This is probably the wrong way to bubble up.
-        process.exit(1);
+        // // XXX This is probably the wrong way to bubble up.
+        // process.exit(1);
+        throw new Error("Flaw error encountered");
       } else if (options.flawLevels.get("macros") === FLAW_LEVELS.WARN) {
         // doc.flaws.macros = flaws;
         // The 'flaws' array don't have everything we need from the
@@ -216,7 +217,7 @@ async function buildDocument(document, documentOptions = {}) {
                 flaw.redirectInfo.suggested
               )
             : null;
-          const id = `macro_flaw${i}`;
+          const id = `macro${i}`;
           return Object.assign({ id, fixable, suggestion }, flaw);
         });
       }

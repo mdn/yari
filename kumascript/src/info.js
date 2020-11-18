@@ -1,6 +1,33 @@
+const cheerio = require("./monkeypatched-cheerio.js");
+
+const Parser = require("./parser.js");
 const { VALID_LOCALES, Document, Redirect } = require("../../content");
 
 const DUMMY_BASE_URL = "https://example.com";
+
+const MACROS_IN_SUMMARY_TO_IGNORE = new Set([
+  "apiref",
+  "jsref",
+  "compat",
+  "index",
+  "page",
+  "gecko_minversion_inline",
+  "obsolete_header",
+  "gecko_minversion_header",
+  "deprecated_header",
+  "previous",
+  "previousmenu",
+  "previousnext",
+  "previousmenunext",
+  "wiki.localize",
+  "quicklinkswithsubpages",
+]);
+
+const MACROS_IN_SUMMARY_TO_REPLACE_WITH_FIRST_ARGUMENT = new Set([
+  "draft",
+  "glossary",
+  "anch",
+]);
 
 function repairURL(url) {
   // Returns a lowercase URI with common irregularities repaired.
@@ -177,9 +204,8 @@ const info = {
         // In Yari, this is not possible. We don't duplicate the summary in every
         // document. Instead, we extract it from the document when we build it.
         // So, to avoid the whole chicken-and-egg problem, instead, we're going to
-        // use regular expressions to try to extract it on-the-fly, from the
-        // raw HTML.
-        // Note, we can't use Cheerio here because the `document.rawHTML` is
+        //  try to extract it on-the-fly, from raw HTML.
+        // Note, we can't always use Cheerio here because the `document.rawHTML` is
         // actually not valid HTML, hence the desperate fall back on regex.
         // A lot of times, you'll actually find that the first paragraph isn't
         // a <p> tag. But often, in those cases it'll have that `seoSummary`
@@ -188,30 +214,40 @@ const info = {
         //   <div><span class="seoSummary">The <code>window.stop()</code> ...
         //
         // So that's why we always start by looking for that tag first.
+        let $ = null;
+        let summary = "";
         try {
-          const seoSummaryMatch = document.rawHTML.match(
-            /<span class="seoSummary">(.*?)<\/span>/s
-          );
-          if (seoSummaryMatch) {
-            return seoSummaryMatch[1];
-          }
-
-          const matches = document.rawHTML.matchAll(
-            /(?<!<div class="blockIndicator warning">\s*)<p[^>]*>(.*?)<\/p>/gs
-          );
-          for (const match of matches) {
-            // A lot of times, the first paragrah is just a (or two) call to
-            // a KS macro. E.g. `<p>{{AddonSidebar}}</p>`.
-            // In these cases, ignore those.
-            const summary = match[1].replace(/{{.*?}}/g, "").trim();
-            if (summary) {
-              return summary;
+          $ = cheerio.load(document.rawHTML);
+          $("span.seoSummary, .summary").each((i, element) => {
+            if (!summary) {
+              const html = $(element)
+                .html()
+                .replace(/&quot;/g, '"')
+                .replace(/&apos;/g, "'");
+              summary = postProcessSummaryHTMLSnippet(html, document);
             }
+          });
+          if (!summary) {
+            // To avoid <p> tags that are inside things like
+            // `<div class="notecard>`, just remove those divs first.
+            $("div.notecard, div.note, div.blockIndicator").remove();
+            $("p").each((i, element) => {
+              if (!summary) {
+                const html = $(element)
+                  .html()
+                  .replace(/&quot;/g, '"')
+                  .replace(/&apos;/g, "'");
+                summary = postProcessSummaryHTMLSnippet(html, document);
+              }
+            });
           }
-        } catch (error) {
-          console.warn("Error trying to extract summary from rawHTML", error);
+        } catch (er) {
+          console.warn(
+            `Cheerio on document.rawHTML (${document.url}) failed to parse`,
+            er
+          );
         }
-        return "";
+        return summary;
       },
       get subpages() {
         return Document.findChildren(document.url)
@@ -225,5 +261,69 @@ const info = {
     return Boolean(Document.findByURL(info.cleanURL(url)));
   },
 };
+
+/**
+ * Return the HTML string as if we had it KumaScript rendered. When we extract
+ * a summary from the raw HTML, we sometimes get things like KS macros in it.
+ * We can't fully/properly render these because it can easily get us into an
+ * infinite recursion problem. So we have to make the most of it we can from
+ * the raw HTML.
+ *
+ * @param {string} text The summary as taken from the raw HTML.
+ */
+function postProcessSummaryHTMLSnippet(text, document) {
+  if (!text.trim()) {
+    return "";
+  }
+  let tokens;
+  try {
+    tokens = Parser.parse(text);
+  } catch (e) {
+    // Unfortunate, but not the right time to flag this as a flaw.
+    console.warn(
+      `(${document.url}) Unable to Parser.parse() text '${text}' due to error:`,
+      e
+    );
+    return text;
+  }
+
+  let output = "";
+
+  for (let token of tokens) {
+    if (token.type !== "MACRO") {
+      // If it isn't a MACRO token, it's a TEXT token.
+      output += token.chars;
+      continue;
+    }
+    if (!token.args.length) {
+      // Any macro that doesn't have arguments should just be ignored.
+      // Examples are:
+      //  {{AddonsSidebar }}
+      //  {{ SeeCompatTable() }}
+      //  {{Non-standard_header}}
+      //  {{Non-standard_header()}}
+      continue;
+    }
+
+    let macroName = token.name.toLowerCase();
+
+    // Some macros do have arguments, but there's no good reason to render them out
+    // for the benefit of a summary, in this context.
+    if (MACROS_IN_SUMMARY_TO_IGNORE.has(macroName)) {
+      continue;
+    }
+
+    if (MACROS_IN_SUMMARY_TO_REPLACE_WITH_FIRST_ARGUMENT.has(macroName)) {
+      output += token.args[0];
+    } else if (macroName === "interwiki") {
+      // Include the last one. E.g.
+      //   {{Interwiki("wikipedia","Flynn%27s_taxonomy","classification of computer")}}
+      output += token.args[token.args.length - 1];
+    } else {
+      output += `<code>${token.args[0]}</code>`;
+    }
+  }
+  return output.trim();
+}
 
 module.exports = info;

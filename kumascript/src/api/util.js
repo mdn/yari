@@ -13,7 +13,7 @@ const H1_TO_H6_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 const HEADING_TAGS = new Set([...H1_TO_H6_TAGS, "hgroup"]);
 const INJECT_SECTION_ID_TAGS = new Set([...HEADING_TAGS, "section"]);
 const LIVE_SAMPLE_PARTS = ["html", "css", "js"];
-const SECTION_ID_DISALLOWED = /["#$%&+,/:;=?@[\]\^`{|}~')(\\]/g;
+const SECTION_ID_DISALLOWED = /["#$%&+,/:;=?@[\]^`{|}~')(\\]/g;
 
 class KumascriptError extends Error {
   constructor(message) {
@@ -202,7 +202,12 @@ class HTMLTool {
     for (const part of LIVE_SAMPLE_PARTS) {
       const src = $(
         `.${part},pre[class*="brush:${part}"],pre[class*="${part};"]`
-      ).text();
+      )
+        .map((i, element) => {
+          return $(element).text();
+        })
+        .get()
+        .join("\n");
       // The string replacements below have been carried forward from Kuma:
       //   * Bugzilla 819999: &nbsp; gets decoded to \xa0, which trips up CSS.
       //   * Bugzilla 1284781: &nbsp; is incorrectly parsed on embed sample.

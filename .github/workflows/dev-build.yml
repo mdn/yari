@@ -1,10 +1,16 @@
-name: Production Build
+name: Dev Build
 
+# NOTE! This is the *DEV* workflow.
+# Keep in mind that much of the configuration is repeated in `prod-build.yml`
+# and `stage-build.yml`
+#
+# For a complete picture of all environments, see:
+#
+#  https://docs.google.com/spreadsheets/d/1VnnEl-iTtKYmlyN02FiEXygxZCgE4o_ZO8wSleebne4/edit?usp=sharing
+#
+
+# NOTE! Unlike prod and stage, this work only works on manual dispatch
 on:
-  schedule:
-    # * is a special character in YAML so you have to quote this string
-    - cron: "0 */24 * * *"
-
   workflow_dispatch:
     inputs:
       notes:
@@ -68,7 +74,7 @@ jobs:
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v2.1.2
+      - uses: actions/cache@v2.1.3
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -85,7 +91,7 @@ jobs:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: dschep/install-poetry-action@v1.3
+        uses: snok/install-poetry@v1.1.1
 
       - name: Install deployer
         run: |
@@ -99,11 +105,11 @@ jobs:
 
       - name: Print information about build
         run: |
-          echo "Trigger notes: ${{ github.event.inputs.notes }}"
-          echo "Trigger archived-content: ${{ github.event.inputs.archived_content }}"
-          echo "Trigger translated-content: ${{ github.event.inputs.translated_content }}"
-          echo "Trigger log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload }}"
-          echo "Deployment prefix: ${{ github.event.inputs.deployment_prefix }}"
+          echo "notes: ${{ github.event.inputs.notes }}"
+          echo "archived_content: ${{ github.event.inputs.archived_content }}"
+          echo "translated_content: ${{ github.event.inputs.translated_content }}"
+          echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload }}"
+          echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix }}"
 
       - name: Build everything
         run: |
@@ -129,14 +135,9 @@ jobs:
           echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
 
-          # The default for this environment variable is geared for writers
-          # (aka. local development). Usually defaults are supposed to be for
-          # secure production but this is an exception and default
-          # is not insecure.
-          #export BUILD_LIVE_SAMPLES_BASE_URL=https://mdn.mozillademos.org
-          # WARNING: The following is temporary, only because, for now, we're
-          #          deploying to the mdn-content-dev S3 bucket. Remove once
-          #          we start deploying to the mdn-content-prod S3 bucket!
+          # This basically means that all live-sample iframes run on the same
+          # host as the page that includes the iframe. Not great security but the
+          # context is that this is Dev and it's not connected to a real backend.
           export BUILD_LIVE_SAMPLES_BASE_URL=
 
           # Now is not the time to worry about flaws.
@@ -148,11 +149,9 @@ jobs:
           # the workflow needs to do.
           # export BUILD_FOLDERSEARCH=web/html
 
-          # This is the Google Analytics account ID for developer.mozilla.org
-          # If it's used on other domains (e.g. stage or dev builds), it's OK
-          # because ultimately Google Analytics will filter it out since the
-          # origin domain isn't what that account expects.
-          export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-36116321-5
+          # This just makes sure the Google Analytics script gets used even if
+          # it goes nowhere.
+          export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-00000000-0
 
           yarn build
 
@@ -194,8 +193,15 @@ jobs:
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
-          export AWS_ACCESS_KEY_ID=${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
-          export AWS_SECRET_ACCESS_KEY=${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
+          export AWS_ACCESS_KEY_ID=${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
+          export AWS_SECRET_ACCESS_KEY=${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
 
           poetry run deployer upload ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
+          # TODO
+          # Execute command to tell the Dev CloudFront distribution to use the
+          # latest and greatest *version* of the updated lambda functions.
+          # (Or, make it an optional flag to the `update-lambda-functions` command)
+
+          # TODO
+          # Execute command to publish built content to Elasticsearch

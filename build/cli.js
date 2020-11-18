@@ -5,6 +5,7 @@ const zlib = require("zlib");
 const cliProgress = require("cli-progress");
 
 const { Document, slugToFolder } = require("../content");
+// eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 
 const options = require("./build-options");
@@ -29,6 +30,19 @@ async function buildDocuments() {
   }
 
   let peakHeapBytes = 0;
+
+  // For keeping track of the total counts of flaws
+  const totalFlaws = new Map();
+
+  function appendTotalFlaws(flaws) {
+    for (const [key, actualFlaws] of Object.entries(flaws)) {
+      const count = actualFlaws.length;
+      if (!totalFlaws.has(key)) {
+        totalFlaws.set(key, 0);
+      }
+      totalFlaws.set(key, totalFlaws.get(key) + count);
+    }
+  }
 
   // This builds up a mapping from en-US slugs to their translated slugs.
   const translationsOf = new Map();
@@ -68,6 +82,10 @@ async function buildDocuments() {
       fileAttachments,
       bcdData,
     } = await buildDocument(document);
+
+    if (builtDocument.flaws) {
+      appendTotalFlaws(builtDocument.flaws);
+    }
 
     fs.writeFileSync(
       path.join(outPath, "index.html"),
@@ -181,7 +199,7 @@ async function buildDocuments() {
       JSON.stringify(items)
     );
   }
-  return { slugPerLocale: docPerLocale, peakHeapBytes };
+  return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
 }
 
 function humanFileSize(size) {
@@ -193,10 +211,27 @@ function humanFileSize(size) {
   return `${num} ${"KMGTPEZY"[i - 1]}B`;
 }
 
+function formatTotalFlaws(flawsCountMap, header = "Total_Flaws_Count") {
+  if (!flawsCountMap.size) {
+    return "";
+  }
+  const keys = [...flawsCountMap.keys()];
+  const longestKey = Math.max(...keys.map((k) => k.length));
+  const out = ["\n"];
+  out.push(header);
+  for (const key of keys.sort()) {
+    out.push(
+      `${key.padEnd(longestKey + 1)} ${flawsCountMap.get(key).toLocaleString()}`
+    );
+  }
+  out.push("\n");
+  return out.join("\n");
+}
+
 if (require.main === module) {
   const t0 = new Date();
   buildDocuments()
-    .then(({ slugPerLocale, peakHeapBytes }) => {
+    .then(({ slugPerLocale, peakHeapBytes, totalFlaws }) => {
       const t1 = new Date();
       const count = Object.values(slugPerLocale).reduce(
         (a, b) => a + b.length,
@@ -213,9 +248,10 @@ if (require.main === module) {
         ).toFixed(1)} documents per second.`
       );
       console.log(`Peak heap memory usage: ${humanFileSize(peakHeapBytes)}`);
+      console.log(formatTotalFlaws(totalFlaws));
     })
     .catch((error) => {
       console.error("error while building documents:", error);
-      process.exit(1);
+      process.exitCode = 1;
     });
 }

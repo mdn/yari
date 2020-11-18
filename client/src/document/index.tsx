@@ -22,7 +22,7 @@ import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
 import LanguageMenu from "../ui/molecules/language-menu";
 import { OnGitHubLink } from "./on-github";
 import { Titlebar } from "../ui/molecules/titlebar";
-import { TOC } from "../ui/molecules/toc";
+import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
 
 import "./index.scss";
@@ -106,14 +106,17 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      <Titlebar docTitle={doc.title} />
+      <Titlebar docTitle={doc.title}>
+        {!isServer && CRUD_MODE && !props.isPreview && !doc.isArchive && (
+          <Suspense
+            fallback={<p className="loading-toolbar">Loading toolbar</p>}
+          >
+            <Toolbar doc={doc} />
+          </Suspense>
+        )}
+      </Titlebar>
 
       {doc.isArchive && <Archived doc={doc} />}
-      {!isServer && CRUD_MODE && !doc.isArchive && (
-        <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
-          <Toolbar doc={doc} />
-        </Suspense>
-      )}
 
       <div className="breadcrumbs-locale-container">
         <div className="breadcrumb-container">
@@ -130,7 +133,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       <div className="page-content-container">
         {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
-        <main className="main-content" role="main">
+        <main id="content" className="main-content" role="main">
           <article className="article">
             <RenderDocumentBody doc={doc} />
 
@@ -308,7 +311,7 @@ function RenderDocumentBody({ doc }) {
 
 function LoadingError({ error }) {
   return (
-    <div className="loading-error">
+    <div className="page-content-container loading-error">
       <h3>Loading Error</h3>
       {error instanceof window.Response ? (
         <p>

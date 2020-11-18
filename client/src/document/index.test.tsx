@@ -1,8 +1,7 @@
+import { Document } from "./index";
+import { Route, Routes, MemoryRouter } from "react-router-dom";
 import React from "react";
 const { render, waitFor } = require("@testing-library/react");
-import { Route, Routes, MemoryRouter } from "react-router-dom";
-
-import { Document } from "./index";
 
 declare var global: Window;
 

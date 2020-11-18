@@ -52,3 +52,7 @@ Run basic validation for a document (only verifies the slug for now).
 
 Open a preview of a given slug in your browser. This depends on a running
 dev-server (`yarn start`).
+
+### flaws
+
+Show and optionally fix fixable flaws for a given slug.

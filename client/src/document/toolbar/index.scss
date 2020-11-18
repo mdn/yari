@@ -1,5 +1,9 @@
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+
 .toolbar {
-  padding: 0 10px;
+  padding: 0 $base-spacing;
+  border: 1px solid $red-300;
 }
 
 .toolbar-first-row {

@@ -3,9 +3,12 @@
 @import "~@mdn/minimalist/sass/mixins/utils";
 
 .sidebar {
+  font-size: $default-font-size;
   padding: $base-spacing;
 
   h4 {
+    font-family: $heading-font-family;
+    font-size: $medium-font-size;
     margin-bottom: $base-spacing;
   }
 
@@ -16,14 +19,14 @@
     ol,
     ul {
       @media #{$mq-tablet-and-up} {
-        padding-left: $base-unit * 3;
+        padding-left: $base-spacing / 2;
       }
     }
   }
 
   summary,
   li {
-    margin-bottom: $base-unit * 3;
+    margin-bottom: $base-spacing / 2;
   }
 
   a {
