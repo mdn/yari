@@ -1144,7 +1144,6 @@ for (const [pattern, path] of [
 }
 
 const REDIRECT_PATTERNS = [].concat(
-  LOCALE_PATTERNS,
   SCL3_REDIRECT_PATTERNS,
   ZONE_REDIRECT_PATTERNS,
   MARIONETTE_REDIRECT_PATTERNS,
@@ -1165,6 +1164,7 @@ const REDIRECT_PATTERNS = [].concat(
       { prependLocale: false, permanent: true }
     ),
   ]
+  // LOCALE_PATTERNS
 );
 
 const STARTING_SLASH = /^\//;
