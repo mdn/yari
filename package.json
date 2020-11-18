@@ -73,7 +73,7 @@
     "send": "0.17.1",
     "sockette": "^2.0.6",
     "source-map-support": "0.5.19",
-    "swr": "0.3.8",
+    "swr": "0.3.9",
     "tempy": "1.0.0",
     "use-debounce": "^5.1.0",
     "webpack-cli": "4.2.0",
