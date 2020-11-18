@@ -262,7 +262,7 @@ function findByURL(url, ...args) {
   const [bareURL, hash = ""] = url.split("#", 2);
   const doc = read(urlToFolderPath(bareURL), ...args);
   if (doc && hash) {
-    return { url: `${doc.url}#${hash}`, ...doc };
+    return { ...doc, url: `${doc.url}#${hash}` };
   }
   return doc;
 }
