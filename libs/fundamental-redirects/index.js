@@ -1163,8 +1163,8 @@ const REDIRECT_PATTERNS = [].concat(
       ({ subPath }) => `https://wiki.mozilla.org/docs/ServerJS${subPath}`,
       { prependLocale: false, permanent: true }
     ),
-  ]
-  // LOCALE_PATTERNS
+  ],
+  LOCALE_PATTERNS
 );
 
 const STARTING_SLASH = /^\//;

@@ -967,6 +967,28 @@ const FIREFOX_SOURCE_DOCS_URLS = [].concat(
   )
 );
 
+const LOCALE_ALIAS_URLS = [].concat(
+  url_test("/en-US/docs/Foo/bar", null, { statusCode: 404 }),
+  url_test("/eN-uS/docs/Foo/bar", null, { statusCode: 404 }),
+  url_test("/en-au/docs/Foo/bar", null, { statusCode: 404 }),
+  url_test("/en-gb/docs/Foo/bar", null, { statusCode: 404 }),
+  url_test("/en_gb/docs/Foo/bar", null, { statusCode: 404 }),
+
+  url_test("/PT-PT/docs/Foo/bar", null, { statusCode: 404 }),
+  url_test("/XY-PQ/docs/Foo/bar", null, { statusCode: 404 }),
+
+  url_test("/en/docs/Foo/bar", "/en-US/docs/Foo/bar"),
+  url_test("/En_uS/docs/Foo/bar", "/en-US/docs/Foo/bar"),
+  url_test("/pt/docs/Foo/bar", "/pt-PT/docs/Foo/bar"),
+  url_test("/Fr-FR/docs/Foo/bar", "/fr/docs/Foo/bar"),
+  url_test("/JA-JP/docs/Foo/bar", "/ja/docs/Foo/bar"),
+  url_test("/JA-JA/docs/Foo/bar", "/ja/docs/Foo/bar"),
+  url_test("/JA-JX/docs/Foo/bar", "/ja/docs/Foo/bar"),
+  url_test("/fR-SW/docs/Foo/bar", "/fr/docs/Foo/bar"),
+  url_test("/zh-HAnt/docs/Foo/bar", "/zh-TW/docs/Foo/bar"),
+  url_test("/zH-HAns/docs/Foo/bar", "/zh-CN/docs/Foo/bar")
+);
+
 describe("scl3 redirects", () => {
   for (const [url, t] of SCL3_REDIRECT_URLS) {
     it(url, t);
@@ -1029,6 +1051,12 @@ describe("firefox accounts redirects", () => {
 
 describe("firefox src docs redirects", () => {
   for (const [url, t] of FIREFOX_SOURCE_DOCS_URLS) {
+    it(url, t);
+  }
+});
+
+describe("locale alias redirects", () => {
+  for (const [url, t] of LOCALE_ALIAS_URLS) {
     it(url, t);
   }
 });
