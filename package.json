@@ -124,7 +124,7 @@
     "react-scripts": "3.4.4",
     "rough-notation": "0.5.1",
     "sass": "^1.29.0",
-    "stylelint": "^13.7.2",
+    "stylelint": "^13.8.0",
     "stylelint-a11y": "^1.2.3",
     "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-recommended": "^3.0.0",
