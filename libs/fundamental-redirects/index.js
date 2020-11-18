@@ -53,8 +53,8 @@ for (const locale of VALID_LOCALES.keys()) {
     // E.g. `en-US` becomes alias `en_US`
     fixableLocales.set(locale.replace("-", "_").toLowerCase(), locale);
   } else {
-    // E.g. `fr` becomes alias `fr-fr`
-    fixableLocales.set(`${locale}-${locale}`.toLowerCase(), locale);
+    // E.g. `fr` becomes alias `fr-XX`
+    fixableLocales.set(`${locale}-\\w{2}`.toLowerCase(), locale);
   }
 }
 
@@ -73,9 +73,15 @@ const LOCALE_PATTERNS = [
       "i"
     ),
     ({ locale, suffix }) => {
-      return `/${VALID_LOCALES.get(
-        fixableLocales.get(locale.toLowerCase()).toLowerCase()
-      )}/${suffix}`;
+      if (fixableLocales.has(locale.toLowerCase())) {
+        // E.g. it was something like `en_Us`
+        return `/${VALID_LOCALES.get(
+          fixableLocales.get(locale.toLowerCase()).toLowerCase()
+        )}/${suffix}`;
+      }
+      // E.g. it was something like `Fr-sW` (Swiss French)
+      locale = locale.split("-")[0];
+      return `/${VALID_LOCALES.get(locale.toLowerCase())}/${suffix}`;
     },
     { permanent: true }
   ),
