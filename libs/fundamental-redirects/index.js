@@ -69,19 +69,20 @@ const LOCALE_PATTERNS = [
     new RegExp(
       `^(?<locale>${Array.from(fixableLocales.keys()).join(
         "|"
-      )})/(?<suffix>.*)`,
+      )})(/(?<suffix>.*)|$)`,
       "i"
     ),
     ({ locale, suffix }) => {
-      if (fixableLocales.has(locale.toLowerCase())) {
+      locale = locale.toLowerCase();
+      if (fixableLocales.has(locale)) {
         // E.g. it was something like `en_Us`
-        return `/${VALID_LOCALES.get(
-          fixableLocales.get(locale.toLowerCase()).toLowerCase()
-        )}/${suffix}`;
+        locale = VALID_LOCALES.get(fixableLocales.get(locale).toLowerCase());
+      } else {
+        // E.g. it was something like `Fr-sW` (Swiss French)
+        locale = locale.split("-")[0];
+        locale = VALID_LOCALES.get(locale);
       }
-      // E.g. it was something like `Fr-sW` (Swiss French)
-      locale = locale.split("-")[0];
-      return `/${VALID_LOCALES.get(locale.toLowerCase())}/${suffix}`;
+      return `/${locale}/${suffix || ""}`;
     },
     { permanent: true }
   ),
