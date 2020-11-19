@@ -131,4 +131,5 @@ var unknown_label = mdn.localString({
     'pt-BR' : 'Desconhecido'
 });
 
-%><span class="spec-<%- status[$0] || ''  %>"><%= (status[$0] && label[status[$0]]) || unknown_label %></span>
+%>
+<span class="spec-<%- status[$0] && status[$0].toLowerCase() || ''  %>"><%= (status[$0] && label[status[$0]]) || unknown_label %></span>
