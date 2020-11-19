@@ -149,5 +149,3 @@ And to check that all files are formatted according to `black` run:
 ```sh
 black --check deployer
 ```
-
-.TEST CHANGE. Delete me.
