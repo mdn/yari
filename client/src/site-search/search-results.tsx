@@ -12,7 +12,7 @@ interface Document {
   mdn_url: string;
   title: string;
   highlight: Highlight;
-  _score: number;
+  score: number;
   popularity: number;
 }
 
@@ -22,7 +22,10 @@ type Total = {
 };
 
 interface Metadata {
-  took: number;
+  // The time it took Elasticsearch query
+  took_ms: number;
+  // The time it took Kuma's API to wrap the Elasticsearch query
+  api_took_ms: number;
   total: Total;
 }
 
@@ -32,7 +35,7 @@ interface Suggestion {
 }
 
 export default function SearchResults({ query }: { query: URLSearchParams }) {
-  const fetchURL = `/_search?${query.toString()}`;
+  const fetchURL = `/api/v1/search/?${query.toString()}`;
   const { data, error } = useSWR(
     fetchURL,
     async (url) => {
@@ -102,7 +105,7 @@ function Results({
     <FadeIn delay={50}>
       <div className="search-results">
         <p>
-          Found <ShowTotal total={metadata.total} /> in {metadata.took}{" "}
+          Found <ShowTotal total={metadata.total} /> in {metadata.took_ms}{" "}
           milliseconds.
         </p>
 
@@ -155,7 +158,7 @@ function Results({
                 </Link>
                 {process.env.NODE_ENV === "development" && (
                   <span className="nerd-data">
-                    <b>score:</b> <code>{document._score}</code>,{" "}
+                    <b>score:</b> <code>{document.score}</code>,{" "}
                     <b>popularity:</b> <code>{document.popularity}</code>,{" "}
                   </span>
                 )}

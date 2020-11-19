@@ -13,6 +13,15 @@
     font-size: 80%;
   }
 
+  .suggestions {
+    p {
+      margin-bottom: 2px;
+    }
+    ul {
+      margin-top: 0;
+    }
+  }
+
   .loading-wrapper {
     min-height: 500px;
     margin: 100px;

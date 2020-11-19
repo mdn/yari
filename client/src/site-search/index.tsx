@@ -1,6 +1,7 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import { PageContentContainer } from "../ui/atoms/page-content";
 import { useLocale } from "../hooks";
 import "./index.scss";
 const SearchResults = lazy(() => import("./search-results"));
@@ -17,7 +18,8 @@ export function SiteSearch() {
 
   const locale = useLocale();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [q, setQ] = useState(searchParams.get("q") || "");
+  // const [q, setQ] = useState(searchParams.get("q") || "");
+  const [newQ, setNewQ] = useState("");
 
   const query: Query = {
     q: searchParams.get("q") || "",
@@ -38,40 +40,50 @@ export function SiteSearch() {
     }
   }, [query]);
 
+  useEffect(() => {
+    if (query.q) {
+      setNewQ(query.q);
+    }
+  }, [query.q]);
+
   return (
-    <div id="site-search">
-      {query.q ? (
-        <h1>
-          Results: {query.q}{" "}
-          {query.page && query.page !== "1" && (
-            <small className="current-page">Page {query.page}</small>
-          )}
-        </h1>
-      ) : (
-        <h1>No query, no results.</h1>
-      )}
+    <div className="site-search">
+      <PageContentContainer>
+        {query.q ? (
+          <h1>
+            Results: {query.q}{" "}
+            {query.page && query.page !== "1" && (
+              <small className="current-page">Page {query.page}</small>
+            )}
+          </h1>
+        ) : (
+          <h1>No query, no results.</h1>
+        )}
 
-      <form
-        action={`/${locale}/search`}
-        onSubmit={(event) => {
-          event.preventDefault();
-          setSearchParams({ q });
-        }}
-      >
-        <input
-          type="search"
-          name="q"
-          value={q}
-          onChange={(event) => setQ(event.target.value)}
-        />
-        <button type="submit">Search</button>
-      </form>
+        <form
+          action={`/${locale}/search`}
+          onSubmit={(event) => {
+            event.preventDefault();
+            setSearchParams({ q: newQ });
+          }}
+        >
+          <input
+            type="search"
+            name="q"
+            value={newQ}
+            onChange={(event) => setNewQ(event.target.value)}
+          />
+          <button type="submit">Search</button>
+        </form>
 
-      {!isServer && query.q && (
-        <Suspense fallback={<p>Loading...</p>}>
-          <SearchResults query={new URLSearchParams(queryToSequence(query))} />
-        </Suspense>
-      )}
+        {!isServer && query.q && (
+          <Suspense fallback={<p>Loading...</p>}>
+            <SearchResults
+              query={new URLSearchParams(queryToSequence(query))}
+            />
+          </Suspense>
+        )}
+      </PageContentContainer>
     </div>
   );
 }

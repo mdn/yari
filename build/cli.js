@@ -210,14 +210,27 @@ async function buildDocuments(files = null) {
 }
 
 async function buildOtherSPAs() {
-  const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_spas");
-  fs.mkdirSync(outPath, { recursive: true });
+  (() => {
+    // The URL isn't very important as long as it triggers the right route in the <App/>
+    const url = "/en-US/404.html";
+    const html = renderHTML(url, { pageNotFound: true });
+    const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_spas");
+    fs.mkdirSync(outPath, { recursive: true });
+    fs.writeFileSync(path.join(outPath, path.basename(url)), html);
+    console.log("Wrote", path.join(outPath, path.basename(url)));
+  })();
 
-  // The URL isn't very important as long as it triggers the right route in the <App/>
-  const url = "/en-US/404.html";
-  const html = renderHTML(url, { pageNotFound: true });
-  fs.writeFileSync(path.join(outPath, path.basename(url)), html);
-  console.log("Wrote", path.join(outPath, path.basename(url)));
+  (() => {
+    const url = "/en-US/search";
+    const html = renderHTML(url);
+    // XXX Loop over all the locales distinct that are going to be built.
+    // XXX so it's not just en-US.
+    const outPath = path.join(BUILD_OUT_ROOT, "en-us", "search");
+    fs.mkdirSync(outPath, { recursive: true });
+    const filePath = path.join(outPath, "index.html");
+    fs.writeFileSync(filePath, html);
+    console.log("Wrote", filePath);
+  })();
 
   // XXX Here, build things like the home page, site-search etc.
   // ...
