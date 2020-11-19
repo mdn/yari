@@ -12,8 +12,8 @@ from .constants import (
 )
 from .update_lambda_functions import update_all
 from .upload import upload_content
-from .whatsdeployed import dump as dump_whatsdeployed
 from .utils import log
+from .whatsdeployed import dump as dump_whatsdeployed
 
 
 def validate_directory(ctx, param, value):
