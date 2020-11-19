@@ -3,10 +3,11 @@ const path = require("path");
 const zlib = require("zlib");
 
 const cliProgress = require("cli-progress");
+const program = require("@caporal/core").default;
 
 const { Document, slugToFolder } = require("../content");
 // eslint-disable-next-line node/no-missing-require
-const { renderHTML } = require("../ssr/dist/main");
+const { renderDocHTML, renderHTML } = require("../ssr/dist/main");
 
 const options = require("./build-options");
 const { buildDocument, renderContributorsTxt } = require("./index");
@@ -15,8 +16,14 @@ const { BUILD_OUT_ROOT } = require("./constants");
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
 const { CONTENT_TRANSLATED_ROOT } = require("../content/constants");
 
-async function buildDocuments() {
-  const documents = Document.findAll(options);
+async function buildDocuments(files = null) {
+  // If a list of files was set, it came from the CLI.
+  // Override whatever was in the build options.
+  const findAllOptions = files
+    ? Object.assign({}, options, { files: new Set(files) })
+    : options;
+
+  const documents = Document.findAll(findAllOptions);
   const progressBar = new cliProgress.SingleBar(
     {},
     cliProgress.Presets.shades_grey
@@ -89,12 +96,12 @@ async function buildDocuments() {
 
     fs.writeFileSync(
       path.join(outPath, "index.html"),
-      renderHTML(builtDocument, document.url)
+      renderDocHTML(builtDocument, document.url)
     );
     fs.writeFileSync(
       path.join(outPath, "index.json"),
-      // This is exploiting the fact that renderHTML has the side-effect of mutating builtDocument
-      // which makes this not great and refactor-worthy
+      // This is exploiting the fact that renderDocHTML has the side-effect of
+      // mutating the built document which makes this not great and refactor-worthy.
       JSON.stringify({ doc: builtDocument })
     );
     // There are some archived documents that, due to possible corruption or other
@@ -202,6 +209,20 @@ async function buildDocuments() {
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
 }
 
+async function buildOtherSPAs() {
+  const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_spas");
+  fs.mkdirSync(outPath, { recursive: true });
+
+  // The URL isn't very important as long as it triggers the right route in the <App/>
+  const url = "/en-US/404.html";
+  const html = renderHTML(url, { pageNotFound: true });
+  fs.writeFileSync(path.join(outPath, path.basename(url)), html);
+  console.log("Wrote", path.join(outPath, path.basename(url)));
+
+  // XXX Here, build things like the home page, site-search etc.
+  // ...
+}
+
 function humanFileSize(size) {
   if (size < 1024) return size + " B";
   let i = Math.floor(Math.log(size) / Math.log(1024));
@@ -228,10 +249,27 @@ function formatTotalFlaws(flawsCountMap, header = "Total_Flaws_Count") {
   return out.join("\n");
 }
 
-if (require.main === module) {
-  const t0 = new Date();
-  buildDocuments()
-    .then(({ slugPerLocale, peakHeapBytes, totalFlaws }) => {
+program
+  .name("build")
+  .option("--spas", "Build the SPA pages", { default: true }) // PR builds
+  .option("--spas-only", "Only build the SPA pages", { default: false })
+  .argument("[files...]", "specific files to build")
+  .action(async ({ args, options }) => {
+    try {
+      if (options.spas) {
+        console.log("\nBuilding SPAs...");
+        await buildOtherSPAs();
+      }
+      if (options.spasOnly) {
+        return;
+      }
+
+      console.log("\nBuilding Documents...");
+      const { files } = args;
+      const t0 = new Date();
+      const { slugPerLocale, peakHeapBytes, totalFlaws } = await buildDocuments(
+        files
+      );
       const t1 = new Date();
       const count = Object.values(slugPerLocale).reduce(
         (a, b) => a + b.length,
@@ -249,9 +287,12 @@ if (require.main === module) {
       );
       console.log(`Peak heap memory usage: ${humanFileSize(peakHeapBytes)}`);
       console.log(formatTotalFlaws(totalFlaws));
-    })
-    .catch((error) => {
-      console.error("error while building documents:", error);
-      process.exitCode = 1;
-    });
-}
+    } catch (error) {
+      // So you get a stacktrace in the CLI output
+      console.error(error);
+      // So that the CLI ultimately fails
+      throw error;
+    }
+  });
+
+program.run();

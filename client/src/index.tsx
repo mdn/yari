@@ -22,12 +22,13 @@ if (!container) {
 // TODO: When we have TS types fo `docData` this would become
 // something like `(window as any).__data__ as DocData`.
 const docData = (window as any).__data__;
+const pageNotFound = (window as any).__pageNotFound__;
 
 let app = (
   <GAProvider>
     <UserDataProvider>
       <Router>
-        <App doc={docData} />
+        <App doc={docData} pageNotFound={pageNotFound} />
       </Router>
     </UserDataProvider>
   </GAProvider>

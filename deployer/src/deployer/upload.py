@@ -161,8 +161,15 @@ class UploadFileTask(UploadTask):
         return f'"{digests_md5.hexdigest()}-{len(md5s)}"'
 
     @property
-    def mime_type(self):
-        return mimetypes.guess_type(str(self.file_path))[0] or "binary/octet-stream"
+    def content_type(self):
+        mime_type = (
+            mimetypes.guess_type(str(self.file_path))[0] or "binary/octet-stream"
+        )
+        if mime_type.startswith("text/") or (
+            mime_type in ("application/json", "application/javascript")
+        ):
+            mime_type += "; charset=utf-8"
+        return mime_type
 
     @property
     def is_hashed(self):
@@ -190,7 +197,7 @@ class UploadFileTask(UploadTask):
             self.key,
             ExtraArgs={
                 "ACL": "public-read",
-                "ContentType": self.mime_type,
+                "ContentType": self.content_type,
                 "CacheControl": self.cache_control,
             },
         )

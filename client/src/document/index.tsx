@@ -4,7 +4,6 @@ import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
 import { useWebSocketMessageHandler } from "../web-socket";
-import { NoMatch } from "../routing";
 import { useDocumentURL } from "./hooks";
 import { Doc } from "./types";
 // Ingredients
@@ -24,6 +23,7 @@ import { OnGitHubLink } from "./on-github";
 import { Titlebar } from "../ui/molecules/titlebar";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
+import { MainContentContainer } from "../ui/atoms/page-content";
 
 import "./index.scss";
 
@@ -41,6 +41,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error(`${response.status} on ${url}: Page not found`);
+        }
         const text = await response.text();
         throw new Error(`${response.status} on ${url}: ${text}`);
       }
@@ -84,16 +87,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   }
 
   if (error) {
-    // Was it because of a 404?
-    if (
-      typeof window !== "undefined" &&
-      error instanceof Response &&
-      error.status === 404
-    ) {
-      return <NoMatch />;
-    } else {
-      return <LoadingError error={error} />;
-    }
+    return <LoadingError error={error} />;
   }
 
   if (!doc) {
@@ -133,7 +127,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       <div className="page-content-container">
         {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
-        <main id="content" className="main-content" role="main">
+        <MainContentContainer>
           <article className="article">
             <RenderDocumentBody doc={doc} />
 
@@ -154,7 +148,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
               </section>
             </div>
           </article>
-        </main>
+        </MainContentContainer>
 
         {doc.sidebarHTML && <RenderSideBar doc={doc} />}
       </div>
@@ -173,7 +167,7 @@ function LoadingDocumentPlaceholder() {
         </div>
       </div>
       <div className="page-content-container loading-document-placeholder">
-        <main className="main-content" role="main">
+        <MainContentContainer>
           <article className="article">
             <p>
               <span role="img" aria-label="Hourglass">
@@ -182,7 +176,7 @@ function LoadingDocumentPlaceholder() {
               Loading…
             </p>
           </article>
-        </main>
+        </MainContentContainer>
       </div>
     </>
   );

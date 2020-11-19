@@ -192,4 +192,10 @@ describe("Basic viewing of functional pages", () => {
       text: "Web technology for developers",
     });
   });
+
+  it("should say which page was not found", async () => {
+    await page.goto(testURL("/en-US/docs/Doesnot/exist"));
+    await expect(page).toMatch("Page not found");
+    await expect(page).toMatch("/en-US/docs/Doesnot/exist could not be found");
+  });
 });
