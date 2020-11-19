@@ -5,38 +5,77 @@
 
 ## Quickstart
 
+### Prerequisites
+
 Before you can begin with Yari, you need [Content](https://github.com/mdn/content).
 See its README which basically, says something like this:
 
-    git clone https://github.com/mdn/content.git mdn/content
+```bash
+git clone https://github.com/mdn/content.git mdn/content
+```
 
 Now, you just need to note where that folder is before you can start Yari.
 
-To run Yari locally, you'll first need to install [git](https://git-scm.com/),
-[Node.js](https://nodejs.org) (>= 12.0.0) and
-[Yarn 1](https://classic.yarnpkg.com/en/docs/install).
+To run Yari locally, you'll first need to install
+
+- [git](https://git-scm.com/)
+- [Node.js](https://nodejs.org) (>= 12.0.0)
+- [Yarn 1](https://classic.yarnpkg.com/en/docs/install)
+
+#### Yarn
+
+```bash
+npm install -g yarn
+```
+
+### Getting started
+
 After that, run these commands in your bash:
 
+#### Terminal 1
+
+```bash
     git clone https://github.com/mdn/yari.git
     cd yari
     yarn
-    export CONTENT_ROOT=/path/to/mdn/content/files
+    export CONTENT_ROOT=../mdn/content/files
     yarn dev
-    open http://localhost:3000
+```
 
-Instead of having to type `export CONTENT_ROOT=/path/to/mdn/content/files`
+#### Terminal 2
+
+```bash
+    open http://localhost:3000
+```
+
+or
+
+```bash
+    start http://localhost:3000
+```
+
+### Local environment
+
+Instead of having to type `export CONTENT_ROOT=../mdn/content/files`
 for `yarn dev` every time, you can put into `.env` file:
 
-    CONTENT_ROOT=/path/to/mdn/content/files
+```
+CONTENT_ROOT=../mdn/content/files
+```
 
 If you prefer, you can fork the repo first and do the `git clone` with
 _your_ fork instead of the `mdn` one.
 
-The `yarn dev` command will compile and prepare certain files. This always
-takes a little extra time. If you prefer you can use `yarn start` which
+### Scripts
+
+| Command      | Note                                                                                       |
+| ------------ | ------------------------------------------------------------------------------------------ |
+| `yarn dev`   | The command will compile and prepare certain files. This always takes a little extra time. |
+| `yarn start` | If you prefer you can use `yarn start` which                                               |
+
 will re-use any previously compiled files which is "riskier" but faster.
 The `yarn start` command will also start a server which doesn't automatically
-reload when its source code files change, so use with caution.
+reload when its source code files change, so use with caution.|
 
 ### How to stay up-to-date
 
