@@ -671,3 +671,13 @@ test("chicken_and_egg page should build with flaws", () => {
     )
   ).toBeTruthy();
 });
+
+test("404 page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "_spas");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "404.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("title").text()).toContain("Page not found");
+  expect($("h1").text()).toContain("Page not found");
+});

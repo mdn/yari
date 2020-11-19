@@ -11,7 +11,7 @@ import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
 import { Footer } from "./ui/organisms/footer";
 import { Header } from "./ui/organisms/header";
-import { NoMatch } from "./routing";
+import { PageNotFound } from "./page-not-found";
 import { Banner } from "./banners";
 
 const AllFlaws = lazy(() => import("./flaws"));
@@ -47,6 +47,12 @@ function DocumentLayout({ children }) {
 export function App(appProps) {
   const routes = (
     <Routes>
+      {/*
+        Note, this can only happen in local development.
+        In production, all traffic at `/` is redirected to at least
+        having a locale. So it'll be `/en-US` (for example) by the
+        time it hits any React code.
+       */}
       <Route
         path="/"
         element={
@@ -93,6 +99,21 @@ export function App(appProps) {
                     </StandardLayout>
                   }
                 />
+                {/*
+                This route exclusively exists for development on the <PageNotFound>
+                component itself.
+                Because it's impossible to trigger a 404 when using the React dev
+                server, the one on localhost:3000, you can use this endpoint
+                to simulate it.
+                 */}
+                <Route
+                  path="/_404/*"
+                  element={
+                    <StandardLayout>
+                      <PageNotFound />
+                    </StandardLayout>
+                  }
+                />
               </>
             )}
             <Route
@@ -106,20 +127,30 @@ export function App(appProps) {
             <Route
               path="/docs/*"
               element={
-                <DocumentLayout>
-                  <Document {...appProps} />
-                </DocumentLayout>
+                // It's important to do this so the server-side renderer says
+                // this render is for a page not found.
+                // Otherwise, the document route will take over and start to try to
+                // download the `./index.json` thinking that was all that was missing.
+                appProps.pageNotFound ? (
+                  <StandardLayout>
+                    <PageNotFound />
+                  </StandardLayout>
+                ) : (
+                  <DocumentLayout>
+                    <Document {...appProps} />
+                  </DocumentLayout>
+                )
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <StandardLayout>
+                  <PageNotFound />
+                </StandardLayout>
               }
             />
           </Routes>
-        }
-      />
-      <Route
-        path="*"
-        element={
-          <StandardLayout>
-            <NoMatch />
-          </StandardLayout>
         }
       />
     </Routes>
