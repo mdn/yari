@@ -168,7 +168,7 @@ class UploadFileTask(UploadTask):
         if mime_type.startswith("text/") or (
             mime_type in ("application/json", "application/javascript")
         ):
-            return f"{mime_type}; charset=utf-8"
+            mime_type += "; charset=utf-8"
         return mime_type
 
     @property
