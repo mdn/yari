@@ -103,6 +103,7 @@ jobs:
           virtualenvs-in-project: true
 
       - name: Load cached venv
+        if: env.GIT_DIFF
         id: cached-poetry-dependencies
         uses: actions/cache@v2
         with:
@@ -126,7 +127,7 @@ jobs:
         run: |
           ls -la
           ls -la deployer
-          source .venv/bin/activate
+          source deployer/.venv/bin/activate
           flake8 deployer
           black --check deployer
 
