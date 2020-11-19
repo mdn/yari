@@ -986,7 +986,16 @@ const LOCALE_ALIAS_URLS = [].concat(
   url_test("/JA-JX/docs/Foo/bar", "/ja/docs/Foo/bar"),
   url_test("/fR-SW/docs/Foo/bar", "/fr/docs/Foo/bar"),
   url_test("/zh-HAnt/docs/Foo/bar", "/zh-TW/docs/Foo/bar"),
-  url_test("/zH-HAns/docs/Foo/bar", "/zh-CN/docs/Foo/bar")
+  url_test("/zH-HAns/docs/Foo/bar", "/zh-CN/docs/Foo/bar"),
+  url_test("/zh/docs/Foo/bar", "/zh-CN/docs/Foo/bar"),
+  url_test("/cn/docs/Foo/bar", "/zh-CN/docs/Foo/bar"),
+
+  // No suffix
+  url_test("/en", "/en-US/"),
+  url_test("/en/", "/en-US/"),
+  url_test("/En_uS", "/en-US/"),
+  url_test("/Fr-FR", "/fr/"),
+  url_test("/zh", "/zh-CN/")
 );
 
 describe("scl3 redirects", () => {
