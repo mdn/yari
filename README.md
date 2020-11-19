@@ -1,7 +1,7 @@
 # Yari
 
 ![Testing](https://github.com/mdn/yari/workflows/Testing%20Yari/badge.svg)
-![Production Build](https://github.com/mdn/yari/workflows/Production%20Build/badge.svg
+![Production Build](https://github.com/mdn/yari/workflows/Production%20Build/badge.svg)
 
 ## Prerequisites
 
@@ -57,7 +57,9 @@ start http://localhost:3000
 Instead of having to type `export CONTENT_ROOT=../mdn/content/files`
 for `yarn dev` every time, you can put into `.env` file:
 
-    CONTENT_ROOT=../mdn/content/files
+```ruby
+CONTENT_ROOT=../mdn/content/files
+```
 
 If you prefer, you can fork the repo first and do the `git clone` with
 _your_ fork instead of the `mdn` one.
@@ -78,9 +80,11 @@ reload when its source code files change, so use with caution.|
 Periodically, the code and the content changes. Make sure you're staying
 up-to-date with these commands:
 
-    git pull origin master
-    yarn
-    yarn dev
+```bash
+git pull origin master
+yarn
+yarn dev
+```
 
 These are also good steps to always take when you embark on making a change.
 Then, the only extra command needed is `git checkout -b my-new-branch`
@@ -124,7 +128,9 @@ system as a whole or in the root `.env` file, it can be used in the development
 server to link to sources which, when clicked, opens in
 your preferred editor/IDE. For example, in the root:
 
-    echo 'EDITOR=code' >> .env
+```bash
+echo 'EDITOR=code' >> .env
+```
 
 Now clicking certain links will open files directly in the currently open
 VSCode IDE. To test it, view any document on `http://localhost:3000` and
@@ -142,11 +148,15 @@ The `server` has two main jobs:
 All JavaScript and TypeScript code needs to be formatted with `prettier`
 and it's easy to test this with:
 
-    yarn prettier-check
+```bash
+yarn prettier-check
+```
 
 And conveniently, if you're not even interested in what the flaws were, run:
 
-    yarn prettier-format
+```bash
+yarn prettier-format
+```
 
 But automatically when you ran `yarn` the first time (`yarn` is an alias for
 `yarn install`) it set up a `git` pre-commit hook that uses `pretty-quick`
@@ -161,12 +171,16 @@ formatting flaws, the pull request checks should catch it.
 We maintain the dependencies using `Dependabot` in GitHub but if you want
 to manually upgrade some you can use:
 
-    yarn outdated
+```bash
+yarn outdated
+```
 
 If it mentions outdated packages, run and select the packages you want to
 upgrade:
 
-    yarn upgrade-interactive
+```bash
+yarn upgrade-interactive
+```
 
 ### Sharing your dev environment with `ngrok`
 
@@ -184,6 +198,7 @@ be fairly feature complete.
 
 This will display something like this:
 
+```bash
     Session Status                online
     Account                        (Plan: Free)
     Version                       2.3.35
@@ -194,6 +209,7 @@ This will display something like this:
 
     Connections                   ttl     opn     rt1     rt5     p50     p90
                                 0       0       0.00    0.00    0.00    0.00
+```
 
 Now, take that "Forwarding" URL `https://920ba2108da8.ngrok.io` (in this
 example) and share it.
@@ -206,7 +222,9 @@ in advance. One potential advantage is that you can get a more complete
 list of all possible "flaws" across all documents before you even visit them.
 The most fundamental CLI command is:
 
-    yarn build
+```bash
+yarn build
+```
 
 ### What gets built
 
