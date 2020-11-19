@@ -2,4 +2,15 @@
   p {
     margin-top: 50px;
   }
+
+  .fallback-document {
+    p {
+      margin-top: 10px;
+    }
+
+    .fallback-link {
+      text-align: center;
+      font-size: 120%;
+    }
+  }
 }
