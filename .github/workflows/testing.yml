@@ -97,7 +97,7 @@ jobs:
 
       - name: Install Python poetry
         if: env.GIT_DIFF
-        uses: dschep/install-poetry-action@v1.3
+        uses: snok/install-poetry@v1.1.1
 
       - name: Install deployer
         if: env.GIT_DIFF
