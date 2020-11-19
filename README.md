@@ -1,11 +1,9 @@
 # Yari
 
 ![Testing](https://github.com/mdn/yari/workflows/Testing%20Yari/badge.svg)
-![Production Build](https://github.com/mdn/yari/workflows/Production%20Build/badge.svg)
+![Production Build](https://github.com/mdn/yari/workflows/Production%20Build/badge.svg
 
-## Quickstart
-
-### Prerequisites
+## Prerequisites
 
 Before you can begin with Yari, you need [Content](https://github.com/mdn/content).
 See its README which basically, says something like this:
@@ -22,36 +20,36 @@ To run Yari locally, you'll first need to install
 - [Node.js](https://nodejs.org) (>= 12.0.0)
 - [Yarn 1](https://classic.yarnpkg.com/en/docs/install)
 
-#### Yarn
+### Yarn
 
 ```bash
 npm install -g yarn
 ```
 
-### Getting started
+## Getting started
 
 After that, run these commands in your bash:
 
-#### Terminal 1
+### Terminal 1
 
 ```bash
-    git clone https://github.com/mdn/yari.git
-    cd yari
-    yarn
-    export CONTENT_ROOT=../mdn/content/files
-    yarn dev
+git clone https://github.com/mdn/yari.git
+cd yari
+yarn
+export CONTENT_ROOT=../mdn/content/files
+yarn dev
 ```
 
-#### Terminal 2
+### Terminal 2
 
 ```bash
-    open http://localhost:3000
+open http://localhost:3000
 ```
 
 or
 
 ```bash
-    start http://localhost:3000
+start http://localhost:3000
 ```
 
 ### Local environment
@@ -59,9 +57,7 @@ or
 Instead of having to type `export CONTENT_ROOT=../mdn/content/files`
 for `yarn dev` every time, you can put into `.env` file:
 
-```
-CONTENT_ROOT=../mdn/content/files
-```
+    CONTENT_ROOT=../mdn/content/files
 
 If you prefer, you can fork the repo first and do the `git clone` with
 _your_ fork instead of the `mdn` one.
