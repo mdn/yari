@@ -124,6 +124,8 @@ jobs:
       - name: Lint Python code
         if: env.GIT_DIFF
         run: |
+          ls -la
+          ls -la deployer
           source .venv/bin/activate
           flake8 deployer
           black --check deployer
