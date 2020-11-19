@@ -1,33 +1,30 @@
-name: Production Build
+name: Dev Build
 
-env:
-  DEFAULT_DEPLOYMENT_PREFIX: "main"
-  DEFAULT_NOTES: ""
-  DEFAULT_ARCHIVED_CONTENT: "false"
-  DEFAULT_TRANSLATED_CONTENT: "false"
-  DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD: "false"
+# NOTE! This is the *DEV* workflow.
+# Keep in mind that much of the configuration is repeated in `prod-build.yml`
+# and `stage-build.yml`
+#
+# For a complete picture of all environments, see:
+#
+#  https://docs.google.com/spreadsheets/d/1VnnEl-iTtKYmlyN02FiEXygxZCgE4o_ZO8wSleebne4/edit?usp=sharing
+#
 
+# NOTE! Unlike prod and stage, this work only works on manual dispatch
 on:
-  schedule:
-    # * is a special character in YAML so you have to quote this string
-    # - cron: "0 */24 * * *"
-    # TEMPORARY
-    - cron: "*/30 * * * *"
-
   workflow_dispatch:
     inputs:
       notes:
         description: "Notes"
         required: false
-        default: ${DEFAULT_NOTES}
+        default: ""
       archived_content:
         description: "Build archived content"
         required: false
-        default: ${DEFAULT_ARCHIVED_CONTENT}
+        default: "false"
       translated_content:
         description: "Build translated content"
         required: false
-        default: ${DEFAULT_TRANSLATED_CONTENT}
+        default: "false"
 
       # This is very useful when combined with the "Use workflow from"
       # feature that is built into the "Run workflow" button on
@@ -38,12 +35,12 @@ on:
       deployment_prefix:
         description: "Deployment prefix"
         required: false
-        default: ${DEFAULT_DEPLOYMENT_PREFIX}
+        default: "main"
 
       log_each_successful_upload:
         description: "Deployer logs each success"
         required: false
-        default: ${DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD}
+        default: "false"
 
 jobs:
   build:
@@ -58,13 +55,13 @@ jobs:
           path: mdn/content
 
       - uses: actions/checkout@v2
-        if: "contains(github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT, 'true')"
+        if: "contains(github.event.inputs.archived_content, 'true')"
         with:
           repository: mdn/archived-content
           path: mdn/archived-content
 
       - uses: actions/checkout@v2
-        if: "contains(github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT, 'true')"
+        if: "contains(github.event.inputs.translated_content, 'true')"
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
@@ -94,7 +91,7 @@ jobs:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: dschep/install-poetry-action@v1.3
+        uses: snok/install-poetry@v1.1.1
 
       - name: Install deployer
         run: |
@@ -108,22 +105,11 @@ jobs:
 
       - name: Print information about build
         run: |
-          echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
-          echo "archived_content: ${{ github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT }}"
-          echo "translated_content: ${{ github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT }}"
-          echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}"
-          echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}"
-
-      - name: DEBUG
-        run: |
-          export DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}
-          export DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}
-
-          echo "DEPLOYER_BUCKET_PREFIX"
-          echo $DEPLOYER_BUCKET_PREFIX
-          echo
-          echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD"
-          echo $DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD
+          echo "notes: ${{ github.event.inputs.notes }}"
+          echo "archived_content: ${{ github.event.inputs.archived_content }}"
+          echo "translated_content: ${{ github.event.inputs.translated_content }}"
+          echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload }}"
+          echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix }}"
 
       - name: Build everything
         run: |
@@ -131,13 +117,13 @@ jobs:
           # sub-folder called "mdn/content"
           export CONTENT_ROOT=$(pwd)/mdn/content/files
 
-          if [ ${{ github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT }} == "true" ]; then
+          if [ ${{ github.event.inputs.archived_content }} == "true" ]; then
             echo "Will build mdn/archived-content too"
             export CONTENT_ARCHIVED_ROOT=$(pwd)/mdn/archived-content/files
           else
             echo "Will NOT build mdn/archived-content too"
           fi
-          if [ ${{ github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT }} == "true" ]; then
+          if [ ${{ github.event.inputs.translated_content }} == "true" ]; then
             echo "Will build mdn/translated-content too"
             export CONTENT_TRANSLATED_ROOT=$(pwd)/mdn/translated-content/files
           else
@@ -149,14 +135,9 @@ jobs:
           echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
 
-          # The default for this environment variable is geared for writers
-          # (aka. local development). Usually defaults are supposed to be for
-          # secure production but this is an exception and default
-          # is not insecure.
-          #export BUILD_LIVE_SAMPLES_BASE_URL=https://mdn.mozillademos.org
-          # WARNING: The following is temporary, only because, for now, we're
-          #          deploying to the mdn-content-dev S3 bucket. Remove once
-          #          we start deploying to the mdn-content-prod S3 bucket!
+          # This basically means that all live-sample iframes run on the same
+          # host as the page that includes the iframe. Not great security but the
+          # context is that this is Dev and it's not connected to a real backend.
           export BUILD_LIVE_SAMPLES_BASE_URL=
 
           # Now is not the time to worry about flaws.
@@ -168,11 +149,9 @@ jobs:
           # the workflow needs to do.
           # export BUILD_FOLDERSEARCH=web/html
 
-          # This is the Google Analytics account ID for developer.mozilla.org
-          # If it's used on other domains (e.g. stage or dev builds), it's OK
-          # because ultimately Google Analytics will filter it out since the
-          # origin domain isn't what that account expects.
-          export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-36116321-5
+          # This just makes sure the Google Analytics script gets used even if
+          # it goes nowhere.
+          export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-00000000-0
 
           yarn build
 
@@ -185,13 +164,13 @@ jobs:
           # Set the CONTENT_ROOT first
           export CONTENT_ROOT=$(pwd)/mdn/content/files
 
-          if [ ${{ github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT }} == "true" ]; then
+          if [ ${{ github.event.inputs.archived_content }} == "true" ]; then
             echo "Will build mdn/archived-content too"
             export CONTENT_ARCHIVED_ROOT=$(pwd)/mdn/archived-content/files
           else
             echo "Will NOT build mdn/archived-content too"
           fi
-          if [ ${{ github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT }} == "true" ]; then
+          if [ ${{ github.event.inputs.translated_content }} == "true" ]; then
             echo "Will build mdn/translated-content too"
             export CONTENT_TRANSLATED_ROOT=$(pwd)/mdn/translated-content/files
           else
@@ -209,13 +188,20 @@ jobs:
           poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/content.json $CONTENT_ROOT
 
           export DEPLOYER_BUCKET_NAME=mdn-content-dev
-          export DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}
-          export DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}
+          export DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix }}
+          export DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload }}
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
-          export AWS_ACCESS_KEY_ID=${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
-          export AWS_SECRET_ACCESS_KEY=${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
+          export AWS_ACCESS_KEY_ID=${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
+          export AWS_SECRET_ACCESS_KEY=${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
 
           poetry run deployer upload ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
+          # TODO
+          # Execute command to tell the Dev CloudFront distribution to use the
+          # latest and greatest *version* of the updated lambda functions.
+          # (Or, make it an optional flag to the `update-lambda-functions` command)
+
+          # TODO
+          # Execute command to publish built content to Elasticsearch

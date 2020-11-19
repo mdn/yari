@@ -286,10 +286,6 @@ if (name === "preview-wiki-content") {
     }
 
     properties = properties.concat({
-        name: "media",
-        label: localize(localStrings, "media")
-    },
-    {
         name: "computed",
         label: await template("Xref_csscomputed")
     });
@@ -300,11 +296,6 @@ if (name === "preview-wiki-content") {
             label: localize(localStrings, "animationType")
         });
     }
-
-    properties = properties.concat({
-        name: "order",
-        label: localize(localStrings, "canonicalOrder")
-    });
 
     if (cssInfo.stacking) {
         properties = properties.concat({
