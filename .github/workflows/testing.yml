@@ -114,6 +114,9 @@ jobs:
       - name: Lint Python code
         if: env.GIT_DIFF
         run: |
+          pwd
+          ls
+          poetry run
           flake8 deployer
           black --check deployer
 
