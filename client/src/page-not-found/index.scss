@@ -5,12 +5,12 @@
 
   .fallback-document {
     p {
-      margin-top: 10px;
+      margin-top: @base-spacing / 2;
     }
 
     .fallback-link {
+      font-size: $small-medium-font-size;
       text-align: center;
-      font-size: 120%;
     }
   }
 }
