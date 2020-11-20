@@ -107,6 +107,7 @@ function FallbackLink({ url }: { url: string }) {
   if (error) {
     return (
       <div className="fallback-document notecard negative">
+        <h4>Oh no!</h4>
         <p>
           Unfortunately, when trying to look to see if there was an English
           fallback, that check failed. This is either because of a temporary
@@ -119,7 +120,7 @@ function FallbackLink({ url }: { url: string }) {
     );
   } else if (document) {
     return (
-      <div className="fallback-document notecard note">
+      <div className="fallback-document notecard success">
         <h4>Good news!</h4>
         <p>
           The page you requested doesn't exist in{" "}
