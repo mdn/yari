@@ -205,6 +205,20 @@ test("the 'notranslate' class is correctly inserted", () => {
   expect($("pre.notranslate").length).toEqual($("pre").length);
 });
 
+test("the 'notecard' class is correctly inserted", () => {
+  const folder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "donttranslatethese"
+  );
+  const htmlFile = path.join(folder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("div.warning.notecard").length).toEqual($("div.warning").length);
+});
+
 test("content with non-ascii characters in the slug", () => {
   const builtFolder = path.join(
     buildRoot,
