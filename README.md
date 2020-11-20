@@ -66,14 +66,16 @@ _your_ fork instead of the `mdn` one.
 
 ### Scripts
 
-| Command      | Note                                                                                       |
-| ------------ | ------------------------------------------------------------------------------------------ |
-| `yarn dev`   | The command will compile and prepare certain files. This always takes a little extra time. |
-| `yarn start` | If you prefer you can use `yarn start` which                                               |
+| Command      | Note           |
+| ------------ | -------------- |
+| `yarn dev`   | Compiles       |
+| `yarn start` | Start a server |
 
-will re-use any previously compiled files which is "riskier" but faster.
-The `yarn start` command will also start a server which doesn't automatically
-reload when its source code files change, so use with caution.|
+#### Notes
+
+- The server serves the last compiled files
+- The server does not watch for file changes
+- So You have to `build` every change
 
 ### How to stay up-to-date
 
