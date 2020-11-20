@@ -94,6 +94,17 @@ function injectNoTranslate($) {
 }
 
 /**
+ * Find all `<div class="warning">` and turn them into `<div class="warning notecard">`
+ * and keep in mind that if it was already been manually fixed so, you
+ * won't end up with `<div class="warning notecard notecard">`.
+ *
+ * @param {Cheerio document instance} $
+ */
+function injectNotecardOnWarnings($) {
+  $("div.warning").addClass("notecard");
+}
+
+/**
  * Return the full URL directly to the file in GitHub based on this folder.
  * @param {String} folder - the current folder we're processing.
  */
@@ -269,6 +280,14 @@ async function buildDocument(document, documentOptions = {}) {
   // Post process HTML so that the right elements gets tagged so they
   // *don't* get translated by tools like Google Translate.
   injectNoTranslate($);
+
+  // All content that uses `<div class="warning">` needs to become
+  // `<div class="warning notecard">` instead.
+  // Some day, we can hopefully do a mass search-and-replace so we never
+  // need to do this code here.
+  // We might want to delete this injection in 2021 some time when all content's
+  // raw HTML has been fixed to always have it in there already.
+  injectNotecardOnWarnings($);
 
   // Turn the $ instance into an array of section blocks. Most of the
   // section blocks are of type "prose" and their value is a string blob
