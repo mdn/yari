@@ -138,7 +138,8 @@ function makeTOC(doc) {
         (section.type === "prose" ||
           section.type === "browser_compatibility") &&
         section.value.id &&
-        section.value.title
+        section.value.title &&
+        !section.value.isH3
       ) {
         return { text: section.value.title, id: section.value.id };
       }
