@@ -1,0 +1,9 @@
+# HTML and CSS visual testing width Water.css
+
+If you want to make a visual test on the correct use of HTML tags, you can use Water.css's Bookmarklet.
+This bookmarklet transforms the page into a basic style without any effect on the classes.
+This allows you to visually see if there may be issues with the correct use of the HTML TAGs.
+
+## Link
+
+<https://watercss.kognise.dev/#bookmarklet>
