@@ -21,6 +21,7 @@ const { normalizeBCDURLs, extractBCDData } = require("./bcd-urls");
 const { checkImageReferences } = require("./check-images");
 const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
+const { headingHighlight } = require("./heading-highlight");
 const cheerio = require("./monkeypatched-cheerio");
 const buildOptions = require("./build-options");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
@@ -276,6 +277,9 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Apply syntax highlighting all <pre> tags.
   syntaxHighlight($, doc);
+
+  // Apply direct permalinks to all <h3> tags.
+  headingHighlight($, doc);
 
   // Post process HTML so that the right elements gets tagged so they
   // *don't* get translated by tools like Google Translate.
