@@ -91,7 +91,7 @@
     "@storybook/node-logger": "^6.1.1",
     "@storybook/preset-create-react-app": "^3.1.5",
     "@storybook/react": "^6.0.26",
-    "@testing-library/react": "^11.2.1",
+    "@testing-library/react": "^11.2.2",
     "@types/jest": "^26.0.15",
     "@types/react": "^16.9.56",
     "@types/react-dom": "^16.9.9",
