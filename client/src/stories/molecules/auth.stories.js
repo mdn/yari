@@ -2,9 +2,11 @@ import React from "react";
 
 import Login from "../../ui/molecules/login";
 
-export default {
+const defaults = {
   title: "Molecules/Auth",
 };
+
+export default defaults;
 
 export const signIn = () => {
   return (
