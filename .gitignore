@@ -73,3 +73,6 @@ function.zip
 
 # tabnine
 .dccache
+
+# eslintcache
+client/.eslintcache
