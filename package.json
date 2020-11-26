@@ -21,7 +21,7 @@
     "start:server": "node server",
     "start:dev-server": "nodemon server --watch server --watch build --watch content --watch kumascript",
     "start:static-server": "cross-env ENV_FILE=testing/.env node server/static.js",
-    "fiori:start": "cd client && start-storybook -p 6006 --no-dll",
+    "fiori:start": "cd client && start-storybook -p 6006",
     "fiori:build": "cd client && build-storybook",
     "filecheck": "cd filecheck && node cli.js",
     "tool": "node tool/cli.js",

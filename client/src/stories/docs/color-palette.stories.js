@@ -3,9 +3,11 @@ import React from "react";
 import { ColorItem } from "../components/color-item";
 import style from "@mdn/minimalist/sass/shared-variables.module.scss";
 
-export default {
+const defaults = {
   title: "Docs/Color Palette",
 };
+
+export default defaults;
 
 export const primaryColors = () => {
   return (

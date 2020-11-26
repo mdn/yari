@@ -5,9 +5,11 @@ import { Button } from "../../ui/atoms/button/index.tsx";
 import { ReactComponent as Arrow } from "@mdn/dinocons/arrows/arrow.svg";
 import { ReactComponent as Github } from "@mdn/dinocons/brands/github-mark-small.svg";
 
-export default {
+const defaults = {
   title: "Atoms/Buttons",
 };
+
+export default defaults;
 
 const dark = {
   backgroundColor: "#212121",
