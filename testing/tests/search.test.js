@@ -45,7 +45,7 @@ describe("Site search", () => {
     await expect(page).not.toMatchElement(".nothing-found", {
       text: "nothing found",
     });
-    await expect(page).toFill(SEARCH_SELECTOR, "/wbfoo");
+    await expect(page).toFill(SEARCH_SELECTOR, "/wboo");
     await expect(page).toMatch("<foo>: A test tag");
     await expect(page).toClick('[aria-selected="true"]');
     await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
