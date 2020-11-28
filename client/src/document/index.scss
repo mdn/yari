@@ -102,4 +102,12 @@
       }
     }
   }
+
+  /*
+   * multi-column layout on pages with an index such as
+   * https://developer.mozilla.org/en-US/docs/Web/API#Specifications
+  */
+  .index {
+    columns: 300px;
+  }
 }
