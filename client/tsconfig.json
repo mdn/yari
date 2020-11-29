@@ -14,7 +14,8 @@
     "isolatedModules": true,
     "noImplicitAny": false,
     "noEmit": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "jsx": "react-jsx"
   },
   "include": ["src"]
 }
