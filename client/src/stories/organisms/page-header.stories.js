@@ -11,9 +11,11 @@ import { breadcrumbParents } from "../mocks/breadcrumbs";
 import { languageMenuData } from "../mocks/language-menu";
 import { toc } from "../mocks/toc";
 
-export default {
+const defaults = {
   title: "Organisms/Page Header",
 };
+
+export default defaults;
 
 export const pageHeader = () => (
   <>

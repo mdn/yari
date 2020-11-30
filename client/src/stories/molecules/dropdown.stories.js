@@ -3,9 +3,11 @@ import React from "react";
 import Dropdown from "../../ui/molecules/dropdown";
 import avatarImage from "../../assets/avatar.png";
 
-export default {
+const defaults = {
   title: "Molecules/Dropdown",
 };
+
+export default defaults;
 
 export const dropdown = () => {
   const label = (
