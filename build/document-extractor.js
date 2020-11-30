@@ -41,7 +41,7 @@ function extractSections($) {
 
   let c = 0;
   iterable.forEach((child) => {
-    if (child.tagName === "h2") {
+    if (child.tagName === "h2" || child.tagName === "h3") {
       if (c) {
         sections.push(...addSections(section.clone()));
         section.empty();
@@ -181,8 +181,14 @@ function addSections($) {
       return subSections;
     } else {
       const bcdSections = _addSingleSectionBCD($);
-      // If it comes back as an empty array, it means it couldn't be
-      // turned into structured content. So don't bother.
+
+      // The _addSingleSectionBCD() function will have sucked up the <h2>
+      // and the div.bc-data to turn it into a BCD section.
+      // First remove that, then put whatever HTML is left as a prose
+      // section underneath.
+      $.find("div.bc-data, h2").remove();
+      bcdSections.push(..._addSectionProse($));
+
       if (bcdSections.length) {
         return bcdSections;
       }
@@ -288,17 +294,24 @@ function _addSingleSectionBCD($) {
 function _addSectionProse($) {
   let id = null;
   let title = null;
+  let isH3 = false;
+
   // Maybe this should check that the h2 is first??
   const h2s = $.find("h2");
   if (h2s.length === 1) {
     id = h2s.attr("id");
     title = h2s.text();
-    // XXX Maybe this is a bad idea.
-    // See https://wiki.developer.mozilla.org/en-US/docs/MDN/Contribute/Structures/Page_types/API_reference_page_template
-    // where the <h2> needs to be INSIDE the `<div class="note">`.
     h2s.remove();
-    // } else if (h2s.length > 1) {
-    //     throw new Error("Too many H2 tags");
+  } else {
+    const h3s = $.find("h3");
+    if (h3s.length === 1) {
+      id = h3s.attr("id");
+      title = h3s.text();
+      if (id && title) {
+        isH3 = true;
+        h3s.remove();
+      }
+    }
   }
 
   return [
@@ -307,6 +320,7 @@ function _addSectionProse($) {
       value: {
         id,
         title,
+        isH3,
         content: $.html().trim(),
       },
     },
