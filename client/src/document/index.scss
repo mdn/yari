@@ -22,8 +22,13 @@
   }
 }
 
+/* override rule from reset as it does not work for MDN */
+article > * + * {
+  margin-top: inherit;
+}
+
 .article {
-  padding: $base-spacing;
+  padding: ($base-spacing / 2) $base-spacing $base-spacing;
 
   @media #{$mq-small-desktop-and-up} {
     margin-bottom: $large-spacing;
