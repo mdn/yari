@@ -34,6 +34,11 @@ article > * + * {
     margin-bottom: $large-spacing;
   }
 
+  /* if the article starts with a notecard, remove the top margin */
+  .notecard:first-of-type {
+    margin-top: 0;
+  }
+
   p,
   ul,
   ol,
