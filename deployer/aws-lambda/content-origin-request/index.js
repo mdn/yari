@@ -57,7 +57,7 @@ function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
       location: [
         {
           key: "Location",
-          value: location,
+          value: encodeURI(location),
         },
       ],
       "cache-control": [
