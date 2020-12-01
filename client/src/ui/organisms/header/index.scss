@@ -61,6 +61,7 @@
     padding: 0;
     position: relative;
     top: inherit;
+    z-index: inherit;
 
     @supports (display: grid) {
       display: grid;

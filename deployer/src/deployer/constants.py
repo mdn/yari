@@ -13,8 +13,8 @@ DEFAULT_BUCKET_NAME = config("DEPLOYER_BUCKET_NAME", default="mdn-content-dev")
 DEFAULT_BUCKET_PREFIX = config("DEPLOYER_BUCKET_PREFIX", default="main")
 
 # When uploading a bunch of files, the work is done in a thread pool.
-# If you use too many "workers" it might saturate your network meaning it's
-# slower.
+# If you use too many "workers" it might saturate your network, meaning it's
+# ultimately slower.
 MAX_WORKERS_PARALLEL_UPLOADS = config(
     "DEPLOYER_MAX_WORKERS_PARALLEL_UPLOADS", default=50, cast=int
 )

@@ -50,7 +50,7 @@ export default function DocumentEdit() {
   }
 
   return (
-    <div className="document-edit">
+    <main className="page-content-container document-edit" role="main">
       <h2 className="edit-header">
         Edit view
         <Link to={documentURL} className="close">
@@ -77,6 +77,6 @@ export default function DocumentEdit() {
       <div className="document-preview">
         <Document isPreview={true} />
       </div>
-    </div>
+    </main>
   );
 }

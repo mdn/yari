@@ -21,9 +21,18 @@ interface Feature {
 
 export function listFeatures(
   identifier: bcd.Identifier,
-  parentName: string = ""
+  parentName: string = "",
+  rootName: string = ""
 ): Feature[] {
   const features: Feature[] = [];
+  if (rootName && identifier.__compat) {
+    features.push({
+      name: rootName,
+      compat: identifier.__compat,
+      isRoot: true,
+    });
+  }
+
   for (const [subName, subIdentifier] of Object.entries(identifier)) {
     if (subName !== "__compat" && subIdentifier.__compat) {
       features.push({

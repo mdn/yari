@@ -94,6 +94,17 @@ function injectNoTranslate($) {
 }
 
 /**
+ * Find all `<div class="warning">` and turn them into `<div class="warning notecard">`
+ * and keep in mind that if it was already been manually fixed so, you
+ * won't end up with `<div class="warning notecard notecard">`.
+ *
+ * @param {Cheerio document instance} $
+ */
+function injectNotecardOnWarnings($) {
+  $("div.warning").addClass("notecard");
+}
+
+/**
  * Return the full URL directly to the file in GitHub based on this folder.
  * @param {String} folder - the current folder we're processing.
  */
@@ -127,7 +138,8 @@ function makeTOC(doc) {
         (section.type === "prose" ||
           section.type === "browser_compatibility") &&
         section.value.id &&
-        section.value.title
+        section.value.title &&
+        !section.value.isH3
       ) {
         return { text: section.value.title, id: section.value.id };
       }
@@ -270,6 +282,14 @@ async function buildDocument(document, documentOptions = {}) {
   // *don't* get translated by tools like Google Translate.
   injectNoTranslate($);
 
+  // All content that uses `<div class="warning">` needs to become
+  // `<div class="warning notecard">` instead.
+  // Some day, we can hopefully do a mass search-and-replace so we never
+  // need to do this code here.
+  // We might want to delete this injection in 2021 some time when all content's
+  // raw HTML has been fixed to always have it in there already.
+  injectNotecardOnWarnings($);
+
   // Turn the $ instance into an array of section blocks. Most of the
   // section blocks are of type "prose" and their value is a string blob
   // of HTML.
@@ -301,7 +321,17 @@ async function buildDocument(document, documentOptions = {}) {
     // If built just-in-time, we won't have a record of all the other translations
     // available. But if the current document has a translation_of, we can
     // at least use that.
-    otherTranslations.push({ locale: "en-US", slug: metadata.translation_of });
+    const translationOf = Document.findByURL(
+      `/en-US/docs/${metadata.translation_of}`
+    );
+    if (translationOf) {
+      otherTranslations.push({
+        locale: "en-US",
+        // slug: translationOf.metadata.slug,
+        url: translationOf.url,
+        title: translationOf.metadata.title,
+      });
+    }
   }
 
   if (otherTranslations.length) {

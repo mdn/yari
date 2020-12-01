@@ -21,15 +21,19 @@ function PlatformHeaders({ platforms }) {
   return (
     <tr className="bc-platforms">
       <td />
-      {platforms.map((platform) => (
-        <th
-          key={platform}
-          className={`bc-platform-${platform}`}
-          colSpan={Object.keys(PLATFORM_BROWSERS[platform]).length}
-        >
-          <span>{platform}</span>
-        </th>
-      ))}
+      {platforms.map((platform) => {
+        const platformCount = Object.keys(PLATFORM_BROWSERS[platform]).length;
+        const platformId = platform.replace("webextensions-", "");
+        return (
+          <th
+            key={platform}
+            className={`bc-platform-${platformId}`}
+            colSpan={platformCount}
+          >
+            <span>{platform}</span>
+          </th>
+        );
+      })}
     </tr>
   );
 }

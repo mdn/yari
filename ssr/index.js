@@ -82,14 +82,18 @@ export function prepareDoc(doc) {
   fixRelatedContent(doc);
 }
 
-export function renderHTML(doc, url) {
+export function renderDocHTML(doc, url) {
   prepareDoc(doc);
+  return renderHTML(url, { doc });
+}
+
+export function renderHTML(url, context) {
   return render(
     React.createElement(
       StaticRouter,
-      { location: url, context: { doc } },
-      React.createElement(App, { doc })
+      { location: url, context },
+      React.createElement(App, context)
     ),
-    doc
+    context
   );
 }

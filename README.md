@@ -24,7 +24,8 @@ After that, run these commands in your bash:
     yarn dev
     open http://localhost:3000
 
-Instead of having to type `export CONTENT_ROOT=/path/to/mdn/content/files`
+Make sure you point to the `/files` folder inside your clone of the content
+repo. Instead of having to type `export CONTENT_ROOT=/path/to/mdn/content/files`
 for `yarn dev` every time, you can put into `.env` file:
 
     CONTENT_ROOT=/path/to/mdn/content/files

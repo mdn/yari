@@ -170,7 +170,13 @@ function useFocusOnSlash(inputRef: React.RefObject<null | HTMLInputElement>) {
   }, [inputRef]);
 }
 
-function InnerSearchNavigateWidget() {
+type InnerSearchNavigateWidgetProps = {
+  onResultPicked?: () => void;
+};
+
+function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
+  const { onResultPicked } = props;
+
   const navigate = useNavigate();
   const locale = useLocale();
 
@@ -249,6 +255,9 @@ function InnerSearchNavigateWidget() {
       if (selectedItem) {
         navigate(selectedItem.url);
         reset();
+        if (onResultPicked) {
+          onResultPicked();
+        }
       }
     },
   });
@@ -312,6 +321,7 @@ function InnerSearchNavigateWidget() {
             ) : (
               resultItems.length === 0 &&
               inputValue &&
+              inputValue !== "/" &&
               searchIndex && <div className="nothing-found">nothing found</div>
             )}
             {resultItems.map((item, i) => (
@@ -360,10 +370,10 @@ class SearchErrorBoundary extends React.Component {
   }
 }
 
-export function SearchNavigateWidget() {
+export function SearchNavigateWidget(props) {
   return (
     <SearchErrorBoundary>
-      <InnerSearchNavigateWidget />
+      <InnerSearchNavigateWidget {...props} />
     </SearchErrorBoundary>
   );
 }
