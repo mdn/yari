@@ -1,4 +1,3 @@
-const fs = require("fs");
 const cheerio = require("./monkeypatched-cheerio");
 const { packageBCD } = require("./resolve-bcd");
 
@@ -191,11 +190,10 @@ function addSections($) {
       }
       if (countBCDDataDivsFound !== countPotentialBCDDataDivs) {
         const leftoverCount = countPotentialBCDDataDivs - countBCDDataDivsFound;
-        flaws.push(
-          `${leftoverCount} 'div.bc-data' element${
-            leftoverCount > 1 ? "s" : ""
-          } found but deeply nested.`
-        );
+        const explanation = `${leftoverCount} 'div.bc-data' element${
+          leftoverCount > 1 ? "s" : ""
+        } found but deeply nested.`;
+        flaws.push(explanation);
       }
       return [subSections, flaws];
     } else {

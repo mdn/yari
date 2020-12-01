@@ -41,8 +41,9 @@ function injectSectionFlaws(doc, flaws, options) {
   if (level === FLAW_LEVELS.ERROR) {
     throw new Error(flaws.join(" "));
   } else if (level === FLAW_LEVELS.WARN) {
-    doc.flaws.sectioning = flaws.map((flaw) => {
-      return { id: flaw, explanation: flaw };
+    doc.flaws.sectioning = flaws.map((explanation, i) => {
+      const id = `sectioning${i + 1}`;
+      return { id, explanation };
     });
   }
 }

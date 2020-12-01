@@ -463,7 +463,8 @@ function Sectioning({ flaws }: { flaws: SectioningFlaw[] }) {
             <br />
             <small>
               Usually this means there's something in the raw content that makes
-              it hard to split up the rendered HTML.
+              it hard to split up the rendered HTML. Perhaps delete unnecessary
+              empty divs.
             </small>
           </li>
         ))}
