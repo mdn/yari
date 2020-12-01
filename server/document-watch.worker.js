@@ -1,5 +1,5 @@
 const path = require("path");
-const { parentPort } = require("worker_threads");
+const { parentPort, workerData } = require("worker_threads");
 
 const chokidar = require("chokidar");
 
@@ -38,6 +38,12 @@ function postDocumentInfo(filePath, changeType) {
     console.error(`Error while adding document ${filePath} to index:`, e);
   }
 }
+
+console.log("START THE CHOKIDAR!", workerData);
+console.log(
+  "process.env.REACT_APP_NO_WATCHER",
+  process.env.REACT_APP_NO_WATCHER
+);
 
 const watcher = chokidar.watch(
   // For now, brutally hardcode it to only the 'en-us' folders
