@@ -1,7 +1,8 @@
 const path = require("path");
-const { parentPort, workerData } = require("worker_threads");
+const { parentPort } = require("worker_threads");
 
 const chokidar = require("chokidar");
+const glob = require("glob");
 
 const { CONTENT_ROOT, Document } = require("../content");
 
@@ -39,37 +40,51 @@ function postDocumentInfo(filePath, changeType) {
   }
 }
 
-console.log("START THE CHOKIDAR!", workerData);
-console.log(
-  "process.env.REACT_APP_NO_WATCHER",
-  process.env.REACT_APP_NO_WATCHER
-);
+const NO_WATCHER = JSON.parse(process.env.REACT_APP_NO_WATCHER || "false");
+const SEARCH_PATTERN = path.join(CONTENT_ROOT, "en-us", "**", "*.html");
 
-const watcher = chokidar.watch(
-  // For now, brutally hardcode it to only the 'en-us' folders
-  // until we have a resolution on L10n.
-  [path.join(CONTENT_ROOT, "en-us", "**", "*.html")]
-);
-
-const label = "Set up file watcher";
-console.time(label);
-watcher.on("ready", () => {
+if (NO_WATCHER) {
+  const label = "Populate search-index with glob";
+  console.time(label);
+  let count = 0;
+  glob.sync(SEARCH_PATTERN).forEach((filePath) => {
+    postDocumentInfo(filePath, "added");
+    count++;
+  });
   postEvent("ready");
   console.timeEnd(label);
   console.log(
-    `Watching over ${Object.keys(
-      watcher.getWatched()
-    ).length.toLocaleString()} files.`
+    `Populated search-index with ${count.toLocaleString()} found files.`
   );
-});
+} else {
+  // The default is to use chokidar to constantly watch the files.
 
-watcher.on("add", (filePath) => {
-  postDocumentInfo(filePath, "added");
-});
-watcher.on("change", (filePath) => {
-  postDocumentInfo(filePath, "updated");
-});
+  const watcher = chokidar.watch(
+    // For now, brutally hardcode it to only the 'en-us' folders
+    // until we have a resolution on L10n.
+    [SEARCH_PATTERN]
+  );
 
-watcher.on("unlink", (filePath) => {
-  postEvent("deleted", { filePath });
-});
+  const label = "Set up file watcher";
+  console.time(label);
+  watcher.on("ready", () => {
+    postEvent("ready");
+    console.timeEnd(label);
+    console.log(
+      `Watching over ${Object.keys(
+        watcher.getWatched()
+      ).length.toLocaleString()} files.`
+    );
+  });
+
+  watcher.on("add", (filePath) => {
+    postDocumentInfo(filePath, "added");
+  });
+  watcher.on("change", (filePath) => {
+    postDocumentInfo(filePath, "updated");
+  });
+
+  watcher.on("unlink", (filePath) => {
+    postEvent("deleted", { filePath });
+  });
+}
