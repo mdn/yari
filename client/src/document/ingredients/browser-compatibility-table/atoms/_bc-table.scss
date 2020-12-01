@@ -59,7 +59,8 @@
   }
 
   .bc-table-row-header {
-    padding: ($base-spacing / 2) ($base-spacing / 4);
+    display: inline-block;
+    padding: ($base-spacing / 2);
 
     code {
       text-decoration: none;
@@ -67,7 +68,11 @@
   }
 
   a.bc-table-row-header {
-    display: block;
+    color: $primary-50;
+
+    code {
+      color: $primary-50;
+    }
 
     &:link,
     &:visited {
@@ -76,7 +81,7 @@
 
     &:hover,
     &:focus {
-      background-color: $neutral-500;
+      text-decoration: underline;
     }
   }
 
