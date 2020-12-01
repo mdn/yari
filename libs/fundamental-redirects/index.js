@@ -853,7 +853,7 @@ const zoneRedirects = [
     ["en-US", "fa", "fr", "ja", "th", "zh-CN", "zh-TW", null],
   ],
   ["Apps", "Web/Aplicaciones", ["es"]],
-  ["Apps", "Apps", ["bn", "de", "it", "ko", "pt-Br", "ru"]],
+  ["Apps", "Apps", ["bn", "de", "it", "ko", "pt-BR", "ru"]],
   ["Learn", "Learn", ["ca", "de", null]],
   ["Apprendre", "Apprendre", ["fr"]],
   [

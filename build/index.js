@@ -325,7 +325,17 @@ async function buildDocument(document, documentOptions = {}) {
     // If built just-in-time, we won't have a record of all the other translations
     // available. But if the current document has a translation_of, we can
     // at least use that.
-    otherTranslations.push({ locale: "en-US", slug: metadata.translation_of });
+    const translationOf = Document.findByURL(
+      `/en-US/docs/${metadata.translation_of}`
+    );
+    if (translationOf) {
+      otherTranslations.push({
+        locale: "en-US",
+        // slug: translationOf.metadata.slug,
+        url: translationOf.url,
+        title: translationOf.metadata.title,
+      });
+    }
   }
 
   if (otherTranslations.length) {
