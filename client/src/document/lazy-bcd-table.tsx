@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import useSWR from "swr";
 
-import { DisplayH2 } from "./ingredients/utils";
+import { DisplayH2, DisplayH3 } from "./ingredients/utils";
 
 // Because it's bad for web performance to lazy-load CSS during the initial render
 // (because the page is saying "Wait! Stop rendering, now that I've downloaded
@@ -21,17 +21,20 @@ const isServer = typeof window === "undefined";
 export function LazyBrowserCompatibilityTable({
   id,
   title,
+  isH3,
   query,
   dataURL,
 }: {
   id: string;
   title: string;
+  isH3: boolean;
   query: string;
   dataURL: string;
 }) {
   return (
     <>
-      {title && <DisplayH2 id={id} title={title} />}
+      {title && !isH3 && <DisplayH2 id={id} title={title} />}
+      {title && isH3 && <DisplayH3 id={id} title={title} />}
       <LazyBrowserCompatibilityTableInner dataURL={dataURL} />
     </>
   );

@@ -1,3 +1,4 @@
+const fs = require("fs");
 const cheerio = require("./monkeypatched-cheerio");
 const { packageBCD } = require("./resolve-bcd");
 
@@ -30,6 +31,7 @@ function extractSidebar($) {
 }
 
 function extractSections($) {
+  const flaws = [];
   const sections = [];
   let section = cheerio
     .load("<div></div>", {
@@ -43,7 +45,9 @@ function extractSections($) {
   iterable.forEach((child) => {
     if (child.tagName === "h2" || child.tagName === "h3") {
       if (c) {
-        sections.push(...addSections(section.clone()));
+        const [subSections, subFlaws] = addSections(section.clone());
+        sections.push(...subSections);
+        flaws.push(...subFlaws);
         section.empty();
       }
       c = 0;
@@ -56,9 +60,11 @@ function extractSections($) {
   });
   if (c) {
     // last straggler
-    sections.push(...addSections(section));
+    const [subSections, subFlaws] = addSections(section);
+    sections.push(...subSections);
+    flaws.push(...subFlaws);
   }
-  return sections;
+  return [sections, flaws];
 }
 
 /** Return an array of new sections to be added to the complete document.
@@ -103,7 +109,10 @@ function extractSections($) {
  * and if all else fails, just leave it as HTML as is.
  */
 function addSections($) {
-  if ($.find("div.bc-data").length) {
+  const flaws = [];
+
+  const countPotentialBCDDataDivs = $.find("div.bc-data").length;
+  if (countPotentialBCDDataDivs) {
     /** If there's exactly 1 BCD table the only section to add is something
      * like this:
      *    {
@@ -111,8 +120,8 @@ function addSections($) {
      *     "value": {
      *       "title": "Browser compatibility",
      *       "id": "browser_compatibility",
-     *        "query": "html.elements.video",
-     *        "data": {....}
+     *       "query": "html.elements.video",
+     *       "data": {....}
      *    }
      *
      * Where the 'title' and 'id' values comes from the <h2> tag (if available).
@@ -139,7 +148,7 @@ function addSections($) {
      *       "content": "Any other stuff before table maybe"
      *    },
      */
-    if ($.find("div.bc-data").length > 1) {
+    if (countPotentialBCDDataDivs > 1) {
       const subSections = [];
       let section = cheerio
         .load("<div></div>", {
@@ -152,6 +161,7 @@ function addSections($) {
       // add that to the stack, clear and repeat.
       let iterable = [...$[0].childNodes];
       let c = 0;
+      let countBCDDataDivsFound = 0;
       iterable.forEach((child) => {
         if (
           child.tagName === "div" &&
@@ -159,6 +169,7 @@ function addSections($) {
           child.attribs.class &&
           /bc-data/.test(child.attribs.class)
         ) {
+          countBCDDataDivsFound++;
           if (c) {
             subSections.push(..._addSectionProse(section.clone()));
             section.empty();
@@ -178,35 +189,51 @@ function addSections($) {
       if (c) {
         subSections.push(..._addSectionProse(section.clone()));
       }
-      return subSections;
+      if (countBCDDataDivsFound !== countPotentialBCDDataDivs) {
+        const leftoverCount = countPotentialBCDDataDivs - countBCDDataDivsFound;
+        flaws.push(
+          `${leftoverCount} 'div.bc-data' element${
+            leftoverCount > 1 ? "s" : ""
+          } found but deeply nested.`
+        );
+      }
+      return [subSections, flaws];
     } else {
       const bcdSections = _addSingleSectionBCD($);
 
-      // The _addSingleSectionBCD() function will have sucked up the <h2>
-      // and the div.bc-data to turn it into a BCD section.
+      // The _addSingleSectionBCD() function will have sucked up the <h2> or <h3>
+      // and the `div.bc-data` to turn it into a BCD section.
       // First remove that, then put whatever HTML is left as a prose
       // section underneath.
-      $.find("div.bc-data, h2").remove();
+      $.find("div.bc-data, h2, h3").remove();
       bcdSections.push(..._addSectionProse($));
 
       if (bcdSections.length) {
-        return bcdSections;
+        return [bcdSections, flaws];
       }
     }
   }
 
   // all else, leave as is
-  return _addSectionProse($);
+  return [_addSectionProse($), flaws];
 }
 
 function _addSingleSectionBCD($) {
   let id = null;
   let title = null;
+  let isH3 = false;
 
   const h2s = $.find("h2");
   if (h2s.length === 1) {
     id = h2s.attr("id");
     title = h2s.text();
+  } else {
+    const h3s = $.find("h3");
+    if (h3s.length === 1) {
+      id = h3s.attr("id");
+      title = h3s.text();
+      isH3 = true;
+    }
   }
 
   const dataQuery = $.find("div.bc-data").attr("id");
@@ -283,6 +310,7 @@ function _addSingleSectionBCD($) {
       value: {
         title,
         id,
+        isH3,
         data,
         query,
         browsers,

@@ -16,7 +16,7 @@ const {
 } = require("./document-extractor");
 const SearchIndex = require("./search-index");
 const { addBreadcrumbData } = require("./document-utils");
-const { fixFixableFlaws, injectFlaws } = require("./flaws");
+const { fixFixableFlaws, injectFlaws, injectSectionFlaws } = require("./flaws");
 const { normalizeBCDURLs, extractBCDData } = require("./bcd-urls");
 const { checkImageReferences } = require("./check-images");
 const { getPageTitle } = require("./page-title");
@@ -293,7 +293,11 @@ async function buildDocument(document, documentOptions = {}) {
   // Turn the $ instance into an array of section blocks. Most of the
   // section blocks are of type "prose" and their value is a string blob
   // of HTML.
-  doc.body = extractSections($);
+  const [sections, sectionFlaws] = extractSections($);
+  doc.body = sections;
+  if (sectionFlaws.length) {
+    injectSectionFlaws(doc, sectionFlaws, options);
+  }
 
   // Extract all the <h2> tags as they appear into an array.
   doc.toc = makeTOC(doc);
