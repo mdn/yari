@@ -266,6 +266,21 @@ async function buildDocument(document, documentOptions = {}) {
     throw error;
   }
 
+  // Some hyperlinks are not easily fixable and we should never include them
+  // because they're potentially evil.
+  $("a[href]").each((i, a) => {
+    // See https://github.com/mdn/kuma/issues/7647
+    // Ideally we should manually remove this from all sources (archived or not)
+    // but that's not immediately feasible. So at least make sure we never
+    // present the link in any rendered HTML.
+    if (
+      a.attribs.href.startsWith("http") &&
+      a.attribs.href.includes("fxsitecompat.com")
+    ) {
+      $(a).attr("href", "https://github.com/mdn/kuma/issues/7647");
+    }
+  });
+
   // If fixFlaws is on and the doc has fixable flaws, this returned
   // raw HTML string will be different.
   try {
