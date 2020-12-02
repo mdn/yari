@@ -14,6 +14,9 @@
   }
 
   a {
+    display: flex;
+    align-items: center;
+
     &:active {
       @include highlighted-link-state();
 
@@ -29,7 +32,7 @@
   }
 
   li {
-    display: inline;
+    display: inline-flex;
     hyphens: auto;
 
     .breadcrumb,
