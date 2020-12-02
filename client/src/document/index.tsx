@@ -18,7 +18,7 @@ import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 // Misc
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
-import LanguageMenu from "../ui/molecules/language-menu";
+import { LanguageMenu } from "../ui/molecules/language-menu";
 import { OnGitHubLink } from "./on-github";
 import { Titlebar } from "../ui/molecules/titlebar";
 import { TOC } from "./organisms/toc";
