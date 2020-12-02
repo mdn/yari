@@ -58,6 +58,28 @@
     }
   }
 
+  .bc-table-row-header {
+    padding: ($base-spacing / 2) ($base-spacing / 4);
+
+    code {
+      text-decoration: none;
+    }
+  }
+
+  a.bc-table-row-header {
+    display: block;
+
+    &:link,
+    &:visited {
+      text-decoration: none;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: $neutral-500;
+    }
+  }
+
   tbody {
     th,
     td {
@@ -70,6 +92,8 @@
     }
 
     th {
+      padding: 0;
+
       @media #{$mq-small-desktop-and-up} {
         border-right: 2px solid $neutral-100;
         display: table-cell;

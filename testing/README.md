@@ -111,7 +111,7 @@ assets, builds the actual documents, and it runs _all_ `jest` tests.
 To just run all `jest` tests, just run the last command:
 
 ```sh
-yarn test;testing
+yarn test:testing
 ```
 
 Which is just an alias to start `jest` which means you can apply your own
@@ -121,7 +121,7 @@ parameters. For example, this starts the `jest` watcher:
 yarn test:testing --watch
 ```
 
-Once the `jest` watcher has started press <kbd>p</kbd> and type `headless`
+Once the `jest` watcher has started press "p" and type `headless`
 and now it only (re-runs) tests the headless tests.
 
 **Note!** that only in local development do you need to start the functional

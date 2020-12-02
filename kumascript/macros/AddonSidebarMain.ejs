@@ -1,0 +1,82 @@
+<%
+var currentSection = $0;
+var locale = env.locale;
+var slug = env.slug;
+var baseURL = '/' + locale + '/docs/Mozilla/Add-ons/';
+
+function currentPageIsUnder(root) {
+  rootSlug = 'Mozilla/Add-ons/' + root;
+  if (slug && slug.indexOf(rootSlug) != -1) {
+    return 'open';
+  }
+  return '';
+}
+
+var text = mdn.localStringMap({
+  'en-US': {
+    'WebExtensions': 'Browser extensions',
+    'Themes': 'Themes',
+    'Community_and_Support': 'Community and Support',
+    'Channels': 'Channels',
+    'Blog': 'Add-ons blog',
+    'Forums': 'Add-on forums',
+    '#Contact_us': 'Contact us'
+  },
+  'fr': {
+    'WebExtensions': 'WebExtensions',
+    'Themes': 'Thèmes',
+    'Community_and_Support': 'Communauté et Support',
+    'Channels': 'Canaux de discussions',
+    'Blog': 'Blog extensions',
+    'Forums': 'Forum extensions',
+    '#Contact_us': 'Nous contacter'
+  },
+  'ja': {
+    'WebExtensions': 'ブラウザー拡張機能',
+    'Themes': 'テーマ',
+    'Community_and_Support': 'コミュニティとサポート',
+    'Channels': 'チャンネル',
+    'Blog': 'ブログ',
+    'Forums': 'フォーラム',
+    '#Contact_us': 'コンタクト'
+  },
+  'ko': {
+    'WebExtensions': '브라우저 확장 기능',
+   'Themes': '테마',
+    'Community_and_Support': '커뮤니티와 지원',
+    'Channels': '채널',
+    'Blog': '부가 기능 블로그',
+    'Forums': '부가 기능 포럼',
+    '#Contact_us': '연락하기'
+  },
+  'zh-CN': {
+    'WebExtensions': '浏览器扩展程序',
+    'Themes': '主题',
+    'Channels': '渠道',
+    'Blog': 'Add-ons博客',
+    'Forums': 'Add-ons论坛',
+    'Chat': 'Add-ons chat',
+    'Contact_us': '联系我们'
+  }
+});
+
+%>
+
+<section class="Quick_links" id="Quick_Links">
+  <ol>
+    <li><a href="<%=baseURL%>WebExtensions"><strong><%=text['WebExtensions']%></strong></a></li>
+    <li><a href="<%=baseURL%>Themes"><strong><%=text['Themes']%></strong></a></li>
+    <li><a href="https://discourse.mozilla.org/c/add-ons"><strong><%=text['Community_and_Support']%></strong></a></li>
+    <li class="toggle">
+      <details>
+        <summary><%=text['Channels']%></summary>
+        <ol>
+          <li><a href="https://blog.mozilla.org/addons"><%=text['Blog']%></a></li>
+          <li><a href="https://discourse.mozilla.org/c/add-ons"><%=text['Forums']%></a></li>
+          <li><a href="https://stackoverflow.com/questions/tagged/firefox-addon">Stack Overflow</a></li>
+          <li><a href="<%=baseURL%>#Contact_us"><%=text['#Contact_us']%></a></li>
+        </ol>
+      </details>
+    </li>
+  </ol>
+</section>
