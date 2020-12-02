@@ -7,14 +7,6 @@
   table-layout: fixed;
   width: 100%;
 
-  a {
-    &:link,
-    &:visited {
-      color: $neutral-100;
-      text-decoration: underline;
-    }
-  }
-
   abbr {
     cursor: help;
     text-decoration: none;
@@ -63,20 +55,6 @@
 
     code {
       text-decoration: none;
-    }
-  }
-
-  a.bc-table-row-header {
-    display: block;
-
-    &:link,
-    &:visited {
-      text-decoration: none;
-    }
-
-    &:hover,
-    &:focus {
-      background-color: $neutral-500;
     }
   }
 
