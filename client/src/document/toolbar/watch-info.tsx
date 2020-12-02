@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useWebSocketMessageHandler } from "../../web-socket";
+import { NO_WATCHER } from "../../constants";
 
 import "./watch-info.scss";
 
@@ -16,27 +17,11 @@ export default function WatchInfo() {
 
   return (
     <div className="document-watch-info">
-      {
-        {
-          error: <span>Change checker error!</span>,
-          disconnected: (
-            <span>
-              Watcher is still initializing{" "}
-              <span role="img" aria-label="Stopwatch">
-                ⏱
-              </span>
-            </span>
-          ),
-          connected: (
-            <span>
-              Watching file system for changes{" "}
-              <span role="img" aria-label="Eyes">
-                👀
-              </span>
-            </span>
-          ),
-        }[status]
-      }
+      {NO_WATCHER ? (
+        <span>File watcher disabled.</span>
+      ) : (
+        <DisplayStatus status={status} />
+      )}
       {lastChange && (
         <LastChange
           hasEditorSet={lastChange.hasEditorSet}
@@ -45,6 +30,28 @@ export default function WatchInfo() {
       )}
     </div>
   );
+}
+
+function DisplayStatus({ status }: { status: string }) {
+  return {
+    error: <span>Change checker error!</span>,
+    disconnected: (
+      <span>
+        Watcher is still initializing{" "}
+        <span role="img" aria-label="Stopwatch">
+          ⏱
+        </span>
+      </span>
+    ),
+    connected: (
+      <span>
+        Watching file system for changes{" "}
+        <span role="img" aria-label="Eyes">
+          👀
+        </span>
+      </span>
+    ),
+  }[status];
 }
 
 function LastChange({ hasEditorSet, changeEvent }: any) {
