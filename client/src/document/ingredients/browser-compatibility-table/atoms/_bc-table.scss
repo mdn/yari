@@ -7,14 +7,6 @@
   table-layout: fixed;
   width: 100%;
 
-  a {
-    &:link,
-    &:visited {
-      color: $neutral-100;
-      text-decoration: underline;
-    }
-  }
-
   abbr {
     cursor: help;
     text-decoration: none;
@@ -59,29 +51,10 @@
   }
 
   .bc-table-row-header {
-    display: inline-block;
-    padding: ($base-spacing / 2);
+    padding: ($base-spacing / 2) ($base-spacing / 4);
 
     code {
       text-decoration: none;
-    }
-  }
-
-  a.bc-table-row-header {
-    color: $primary-50;
-
-    code {
-      color: $primary-50;
-    }
-
-    &:link,
-    &:visited {
-      text-decoration: none;
-    }
-
-    &:hover,
-    &:focus {
-      text-decoration: underline;
     }
   }
 
