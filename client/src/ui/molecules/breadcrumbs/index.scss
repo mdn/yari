@@ -15,11 +15,8 @@
 
   a {
     &:active {
-      @include highlighted-link-state();
-
-      &::after {
-        /* a hack in modern browsers to change the icon to white */
-        filter: invert(100%);
+      span {
+        @include highlighted-link-state();
       }
     }
   }
