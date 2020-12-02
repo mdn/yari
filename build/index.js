@@ -110,7 +110,9 @@ function injectLoadingLazyAttributes($) {
  * @param {Cheerio document instance} $
  */
 function injectNotecardOnWarnings($) {
-  $("div.warning").addClass("notecard");
+  $("div.warning, div.blockIndicator")
+    .addClass("notecard")
+    .removeClass("blockIndicator");
 }
 
 /**
