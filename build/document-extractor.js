@@ -397,7 +397,7 @@ function extractSummary(sections) {
       }
       const $ = cheerio.load(section.value.content);
       // Remove non-p tags that we should not be looking inside.
-      $(".blockIndicator").remove();
+      $(".notecard").remove();
       summary = extractFirstGoodParagraph($);
       if (summary) {
         break;
