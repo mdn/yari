@@ -62,7 +62,7 @@
     box-shadow: 0 2px 8px 0 $neutral-500;
     left: 0;
     position: absolute;
-    top: 45px;
+    top: 42px;
     width: 100%;
     z-index: $top-layer;
 
@@ -70,9 +70,10 @@
       color: $yellow-100;
     }
 
-    div {
+    .result-item {
       border-bottom: 1px solid $neutral-550;
       padding: $base-unit;
+      word-break: break-word;
     }
 
     .result-item:hover,
