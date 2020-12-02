@@ -30,10 +30,9 @@ Example calls
 
 */
 
-const bcd = require('@mdn/browser-compat-data');
 var query = $0;
 var depth = $1 || 1;
-var output = `<div class="bc-data" id="bcd:${query}">
+var output = `<div class="bc-data" id="bcd:${query}" data-depth="${depth}">
   If you're able to see this, something went wrong on this page.
 </div>`;
 %>
