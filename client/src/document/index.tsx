@@ -110,7 +110,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         )}
       </Titlebar>
 
-      {doc.isArchive && <Archived doc={doc} />}
+      {doc.isArchive && !doc.isTranslated && <Archived />}
 
       <div className="breadcrumbs-locale-container">
         <div className="breadcrumb-container">
@@ -203,25 +203,12 @@ function LastModified({ value, locale }) {
   );
 }
 
-function Archived({ doc }: { doc: Doc }) {
+function Archived() {
   return (
-    <div className={`archived ${doc.isTranslated ? "translated" : ""}`}>
-      {doc.isTranslated ? (
-        <p>
-          <b>This is an archived translation.</b>{" "}
-          <a
-            href="https://blogpost.example.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            No more edits are being accepted.
-          </a>
-        </p>
-      ) : (
-        <p>
-          <b>This is an archived page.</b> It's not actively maintained.
-        </p>
-      )}
+    <div className="archived">
+      <p>
+        <b>This is an archived page.</b> It's not actively maintained.
+      </p>
     </div>
   );
 }
