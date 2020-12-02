@@ -2,7 +2,7 @@ import React, { lazy, Suspense, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
-import { CRUD_MODE } from "../constants";
+import { CRUD_MODE, NO_WATCHER } from "../constants";
 import { useWebSocketMessageHandler } from "../web-socket";
 import { useDocumentURL } from "./hooks";
 import { Doc } from "./types";
@@ -59,7 +59,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         props.doc.mdn_url.toLowerCase() === documentURL.toLowerCase()
           ? props.doc
           : null,
-      revalidateOnFocus: false,
+      revalidateOnFocus: !!NO_WATCHER,
     }
   );
 

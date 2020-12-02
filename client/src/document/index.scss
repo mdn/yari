@@ -85,6 +85,11 @@
     }
   }
 
+  /* readonly inline badges needs a slightly darker background color in general article content  */
+  .inline.readonly {
+    background-color: $neutral-550;
+  }
+
   /* top navigational elements on tutorial pages */
   .prev-next {
     @media #{$mq-tablet-and-up} {
@@ -109,5 +114,22 @@
   */
   .index {
     columns: 300px;
+  }
+}
+
+/*
+ * style for archived content banner
+ * http://localhost:3000/en-us/docs/BrowserID/Specify_an_Email_Address
+ */
+.archived {
+  background-color: $yellow-400;
+  padding: $base-spacing / 4;
+  position: fixed;
+  text-align: center;
+  top: 0;
+  width: 100%;
+
+  p {
+    margin: 0;
   }
 }

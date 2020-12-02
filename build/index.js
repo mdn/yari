@@ -16,7 +16,7 @@ const {
 } = require("./document-extractor");
 const SearchIndex = require("./search-index");
 const { addBreadcrumbData } = require("./document-utils");
-const { fixFixableFlaws, injectFlaws } = require("./flaws");
+const { fixFixableFlaws, injectFlaws, injectSectionFlaws } = require("./flaws");
 const { normalizeBCDURLs, extractBCDData } = require("./bcd-urls");
 const { checkImageReferences } = require("./check-images");
 const { getPageTitle } = require("./page-title");
@@ -91,6 +91,15 @@ function validateSlug(slug) {
  */
 function injectNoTranslate($) {
   $("pre").addClass("notranslate");
+}
+
+/**
+ * For every image and iframe, where appropriate add the `loading="lazy"` attribute.
+ *
+ * @param {Cheerio document instance} $
+ */
+function injectLoadingLazyAttributes($) {
+  $("img:not([loading]), iframe:not([loading])").attr("loading", "lazy");
 }
 
 /**
@@ -266,6 +275,21 @@ async function buildDocument(document, documentOptions = {}) {
     throw error;
   }
 
+  // Some hyperlinks are not easily fixable and we should never include them
+  // because they're potentially evil.
+  $("a[href]").each((i, a) => {
+    // See https://github.com/mdn/kuma/issues/7647
+    // Ideally we should manually remove this from all sources (archived or not)
+    // but that's not immediately feasible. So at least make sure we never
+    // present the link in any rendered HTML.
+    if (
+      a.attribs.href.startsWith("http") &&
+      a.attribs.href.includes("fxsitecompat.com")
+    ) {
+      $(a).attr("href", "https://github.com/mdn/kuma/issues/7647");
+    }
+  });
+
   // If fixFlaws is on and the doc has fixable flaws, this returned
   // raw HTML string will be different.
   try {
@@ -282,6 +306,9 @@ async function buildDocument(document, documentOptions = {}) {
   // *don't* get translated by tools like Google Translate.
   injectNoTranslate($);
 
+  // Add the `loading=lazy` HTML attribute to the appropriate elements.
+  injectLoadingLazyAttributes($);
+
   // All content that uses `<div class="warning">` needs to become
   // `<div class="warning notecard">` instead.
   // Some day, we can hopefully do a mass search-and-replace so we never
@@ -293,7 +320,11 @@ async function buildDocument(document, documentOptions = {}) {
   // Turn the $ instance into an array of section blocks. Most of the
   // section blocks are of type "prose" and their value is a string blob
   // of HTML.
-  doc.body = extractSections($);
+  const [sections, sectionFlaws] = extractSections($);
+  doc.body = sections;
+  if (sectionFlaws.length) {
+    injectSectionFlaws(doc, sectionFlaws, options);
+  }
 
   // Extract all the <h2> tags as they appear into an array.
   doc.toc = makeTOC(doc);
