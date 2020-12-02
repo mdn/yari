@@ -163,7 +163,8 @@ instead which triggers additional console logging which is useful for developers
 
 This exists so we can forcibly always include
 `<meta name="robots" content="noindex, nofollow">` into the HTML nomatter what.
-For example, on our stage or dev builds, we don't want it to matter what document we're building because it should never be indexed anyway.
+For example, on our stage or dev builds, we don't want it to matter what
+document we're building because it should never be indexed anyway.
 
 We use this to make absolutely sure that no dev or stage build ever gets into
 the Google index. Thankfully we _always_ used a canonical URL
