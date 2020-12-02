@@ -8,6 +8,7 @@ import cheerio from "./monkeypatched-cheerio";
 import {
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
+  ALWAYS_NO_ROBOTS,
 } from "../build/constants";
 
 // When there are multiple options for a given language, this gives the
@@ -176,7 +177,7 @@ export default function render(
     $('meta[name="description"]').attr("content", pageDescription);
   }
 
-  if ((doc && !doc.noIndexing) || pageNotFound) {
+  if (ALWAYS_NO_ROBOTS || (doc && doc.noIndexing) || pageNotFound) {
     $('<meta name="robots" content="noindex, nofollow">').insertAfter(
       $("meta").eq(-1)
     );

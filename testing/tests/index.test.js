@@ -127,6 +127,9 @@ test("content built foo page", () => {
   expect($("link[rel=canonical]").attr("href")).toBe(
     `https://developer.mozilla.org${doc.mdn_url}`
   );
+
+  // There should NOT be a 'robots' meta tag at all.
+  expect($('meta[name="robots"]').length).toBeFalsy();
 });
 
 test("summary extracted correctly by span class", () => {
@@ -720,6 +723,8 @@ test("404 page", () => {
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Page not found");
   expect($("h1").text()).toContain("Page not found");
+  expect($('meta[name="robots"]')).toBeTruthy();
+  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
 test("bcd table extraction followed by h3", () => {
