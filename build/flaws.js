@@ -40,6 +40,22 @@ function injectFlaws(doc, $, options, { rawContent }) {
   );
 }
 
+function injectSectionFlaws(doc, flaws, options) {
+  if (doc.isArchive || !flaws.length) {
+    return;
+  }
+
+  const level = options.flawLevels.get("sectioning");
+  if (level === FLAW_LEVELS.ERROR) {
+    throw new Error(flaws.join(" "));
+  } else if (level === FLAW_LEVELS.WARN) {
+    doc.flaws.sectioning = flaws.map((explanation, i) => {
+      const id = `sectioning${i + 1}`;
+      return { id, explanation };
+    });
+  }
+}
+
 // The 'broken_links' flaw check looks for internal links that
 // link to a document that's going to fail with a 404 Not Found.
 function injectBrokenLinksFlaws(level, doc, $, rawContent) {
@@ -562,4 +578,4 @@ async function fixFixableFlaws(doc, options, document) {
   }
 }
 
-module.exports = { injectFlaws, fixFixableFlaws };
+module.exports = { injectFlaws, injectSectionFlaws, fixFixableFlaws };

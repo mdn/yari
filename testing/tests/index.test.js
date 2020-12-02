@@ -695,3 +695,40 @@ test("404 page", () => {
   expect($("title").text()).toContain("Page not found");
   expect($("h1").text()).toContain("Page not found");
 });
+
+test("bcd table extraction followed by h3", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "bcd_table_extraction"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.body[0].type).toBe("prose");
+  expect(doc.body[1].type).toBe("prose");
+  expect(doc.body[2].type).toBe("browser_compatibility");
+  expect(doc.body[2].value.isH3).toBeFalsy();
+  expect(doc.body[3].type).toBe("prose");
+  expect(doc.body[4].type).toBe("prose");
+  expect(doc.body[4].value.isH3).toBeTruthy();
+});
+
+test("bcd table extraction when overly nested is a flaw", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "bcd_table_extraction",
+    "nested_divs"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.sectioning[0].explanation).toBe(
+    "2 'div.bc-data' elements found but deeply nested."
+  );
+});
