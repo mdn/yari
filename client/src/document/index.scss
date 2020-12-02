@@ -85,6 +85,11 @@
     }
   }
 
+  /* readonly inline badges needs a slightly darker background color in general article content  */
+  .inline.readonly {
+    background-color: $neutral-550;
+  }
+
   /* top navigational elements on tutorial pages */
   .prev-next {
     @media #{$mq-tablet-and-up} {
