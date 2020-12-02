@@ -117,6 +117,10 @@ test("content built foo page", () => {
     "This becomes the summary."
   );
 
+  // The 'Foo' page has 1 image. It should have been given the `loading="lazy"`
+  // attribute.
+  expect($('img[loading="lazy"]').length).toBe(1);
+
   // Every page, should have a `link[rel=canonical]` whose `href` always
   // starts with 'https://developer.mozilla.org' and ends with doc's URL.
   expect($("link[rel=canonical]").attr("href")).toBe(
@@ -520,6 +524,27 @@ test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page",
   // Let's make sure there are only 2 "macros" flaws.
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.flaws.macros.length).toBe(2);
+});
+
+test("check built flaws for /en-us/learn/css/css_layout/introduction/flex page", () => {
+  expect(fs.existsSync(buildRoot)).toBeTruthy();
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "learn",
+    "css",
+    "css_layout",
+    "introduction",
+    "flex"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  // The css_layout/introduction/flex page has 2 iframes
+  expect($('iframe[loading="lazy"]').length).toBe(2);
 });
 
 test("detect bad_bcd_queries flaws", () => {

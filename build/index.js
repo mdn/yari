@@ -94,6 +94,15 @@ function injectNoTranslate($) {
 }
 
 /**
+ * For every image and iframe, where appropriate add the `loading="lazy"` attribute.
+ *
+ * @param {Cheerio document instance} $
+ */
+function injectLoadingLazyAttributes($) {
+  $("img:not([loading]), iframe:not([loading])").attr("loading", "lazy");
+}
+
+/**
  * Find all `<div class="warning">` and turn them into `<div class="warning notecard">`
  * and keep in mind that if it was already been manually fixed so, you
  * won't end up with `<div class="warning notecard notecard">`.
@@ -296,6 +305,9 @@ async function buildDocument(document, documentOptions = {}) {
   // Post process HTML so that the right elements gets tagged so they
   // *don't* get translated by tools like Google Translate.
   injectNoTranslate($);
+
+  // Add the `loading=lazy` HTML attribute to the appropriate elements.
+  injectLoadingLazyAttributes($);
 
   // All content that uses `<div class="warning">` needs to become
   // `<div class="warning notecard">` instead.
