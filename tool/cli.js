@@ -263,7 +263,6 @@ program
   .action(
     tryOrExit(async ({ options }) => {
       const { root, saveHistory, loadHistory } = options;
-      console.log({ root });
       if (fs.existsSync(loadHistory)) {
         console.log(
           chalk.yellow(`Reusing exising history from ${loadHistory}`)
