@@ -68,12 +68,4 @@ describe("Site search", () => {
       placeholder: /Go ahead/,
     });
   });
-
-  test("should NOT get search results", async () => {
-    await page.goto(testURL("/"));
-    await expect(page).toFill(SEARCH_SELECTOR, "div");
-    await expect(page).toMatchElement(".nothing-found", {
-      text: "nothing found",
-    });
-  });
 });
