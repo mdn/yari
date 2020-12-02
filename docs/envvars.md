@@ -243,3 +243,10 @@ Toolbar bar appears based on this.
 It defaults to `NODE_ENV==='development'` if not set which means that
 it's enable by default when doing development with the `localhost:3000`
 dev server.
+
+### `REACT_APP_NO_WATCHER`
+
+**Default: `false`**
+
+Disable file watching and hot reloading on content change.
+Also disables search index updates.

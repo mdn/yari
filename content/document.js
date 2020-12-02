@@ -95,6 +95,7 @@ function create(html, metadata) {
   fs.mkdirSync(folderPath, { recursive: true });
 
   saveHTMLFile(getHTMLPath(folderPath), trimLineEndings(html), metadata);
+  return folderPath;
 }
 
 function getFolderPath(metadata) {
@@ -136,6 +137,7 @@ function archive(renderedHTML, rawHTML, metadata, isTranslatedContent = false) {
     trimLineEndings(renderedHTML),
     metadata
   );
+  return folderPath;
 }
 
 const read = memoize((folder) => {
@@ -269,7 +271,7 @@ function findByURL(url, ...args) {
   const [bareURL, hash = ""] = url.split("#", 2);
   const doc = read(urlToFolderPath(bareURL), ...args);
   if (doc && hash) {
-    doc.url = `${doc.url}#${hash}`;
+    return { ...doc, url: `${doc.url}#${hash}` };
   }
   return doc;
 }

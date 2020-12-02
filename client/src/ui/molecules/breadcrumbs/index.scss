@@ -1,4 +1,6 @@
 @import "~@mdn/minimalist/sass/mixins/utils";
+@import "~@mdn/minimalist/sass/mixins/links";
+
 @import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
@@ -11,12 +13,26 @@
     padding: $base-spacing;
   }
 
+  a {
+    display: flex;
+    align-items: center;
+
+    &:active {
+      @include highlighted-link-state();
+
+      &::after {
+        /* a hack in modern browsers to change the icon to white */
+        filter: invert(100%);
+      }
+    }
+  }
+
   ol {
     @include reset-list();
   }
 
   li {
-    display: inline;
+    display: inline-flex;
     hyphens: auto;
 
     .breadcrumb,
@@ -31,14 +47,14 @@
     .breadcrumb,
     .breadcrumb-penultimate {
       &::after {
-        content: "";
         background: transparent url("~@mdn/dinocons/arrows/chevron.svg") 0 0
           no-repeat;
         background-size: 12px;
-        margin: 0 5px;
-        width: 12px;
+        content: "";
         height: 12px;
+        margin: 0 5px;
         transform: rotate(90deg);
+        width: 12px;
       }
     }
 
@@ -50,15 +66,15 @@
 
     .breadcrumb-penultimate {
       &::before {
-        display: inline-block;
-        content: "";
         background: transparent url("~@mdn/dinocons/arrows/chevron.svg") 0 0
           no-repeat;
         background-size: 12px;
-        margin-right: 5px;
-        width: 12px;
+        content: "";
+        display: inline-block;
         height: 12px;
+        margin-right: $base-spacing / 4;
         transform: rotate(-90deg);
+        width: 12px;
 
         @media #{$mq-small-desktop-and-up} {
           display: none;

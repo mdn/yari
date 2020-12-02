@@ -88,7 +88,6 @@ export default function Dropdown(props: DropdownProps) {
         className={`dropdown-menu-items ${props.right ? "right" : ""} ${
           showDropdownMenu ? "show" : ""
         }`}
-        aria-expanded={showDropdownMenu}
         role="menu"
       >
         {props.children}

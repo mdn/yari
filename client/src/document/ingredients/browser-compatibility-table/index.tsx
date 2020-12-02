@@ -34,7 +34,9 @@ const NEW_ISSUE_TEMPLATE = `
 </details>
 `;
 
-function gatherPlatformsAndBrowsers(category): [string[], bcd.BrowserNames[]] {
+function gatherPlatformsAndBrowsers(
+  category: string
+): [string[], bcd.BrowserNames[]] {
   let platforms = ["desktop", "mobile"];
   if (category === "javascript") {
     platforms.push("server");
@@ -100,6 +102,7 @@ export default function BrowserCompatibilityTable({
 
   const breadcrumbs = query.split(".");
   const category = breadcrumbs[0];
+  const name = breadcrumbs[breadcrumbs.length - 1];
 
   const [platforms, browsers] = gatherPlatformsAndBrowsers(category);
 
@@ -132,7 +135,7 @@ export default function BrowserCompatibilityTable({
           <tbody>
             <FeatureListAccordion
               browsers={browsers}
-              features={listFeatures(data)}
+              features={listFeatures(data, "", name)}
             />
           </tbody>
         </table>

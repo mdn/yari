@@ -33,6 +33,8 @@ export interface ImageReferenceFlaw extends GenericFlaw {
 
 export interface BadBCDQueryFlaw extends GenericFlaw {}
 
+export interface SectioningFlaw extends GenericFlaw {}
+
 export interface PreWithHTMLFlaw extends GenericFlaw {
   html: string;
   line?: number;
@@ -61,6 +63,7 @@ type Flaws = {
   bad_bcd_links: BadBCDLinkFlaw[];
   images: ImageReferenceFlaw[];
   pre_with_html: PreWithHTMLFlaw[];
+  sectioning: SectioningFlaw[];
 };
 
 export type Translation = {

@@ -1,0 +1,212 @@
+name: Dev Build
+
+# NOTE! This is the *DEV* workflow.
+# Keep in mind that much of the configuration is repeated in `prod-build.yml`
+# and `stage-build.yml`
+#
+# For a complete picture of all environments, see:
+#
+#  https://docs.google.com/spreadsheets/d/1VnnEl-iTtKYmlyN02FiEXygxZCgE4o_ZO8wSleebne4/edit?usp=sharing
+#
+
+# NOTE! Unlike prod and stage, this work only works on manual dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      notes:
+        description: "Notes"
+        required: false
+        default: ""
+      archived_content:
+        description: "Build archived content"
+        required: false
+        default: "false"
+      translated_content:
+        description: "Build translated content"
+        required: false
+        default: "false"
+
+      # This is very useful when combined with the "Use workflow from"
+      # feature that is built into the "Run workflow" button on
+      # https://github.com/mdn/yari/actions?query=workflow%3A%22Production+Build%22
+      # If you override the deployment prefix to something like the name
+      # of the branch, you can deploy that entire branch to its own prefix
+      # in S3 which means that it can be fully hosted as its own site.
+      deployment_prefix:
+        description: "Deployment prefix"
+        required: false
+        default: "main"
+
+      log_each_successful_upload:
+        description: "Deployer logs each success"
+        required: false
+        default: "false"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v2
+        with:
+          repository: mdn/content
+          path: mdn/content
+          # Yes, this means fetch EVERY COMMIT EVER.
+          # It's probably not sustainable in the far future (e.g. past 2021)
+          # but for now it's good enough. We'll need all the history
+          # so we can figure out each document's last-modified date.
+          fetch-depth: 0
+
+      - uses: actions/checkout@v2
+        if: "contains(github.event.inputs.archived_content, 'true')"
+        with:
+          repository: mdn/archived-content
+          path: mdn/archived-content
+
+      - uses: actions/checkout@v2
+        if: "contains(github.event.inputs.translated_content, 'true')"
+        with:
+          repository: mdn/translated-content
+          path: mdn/translated-content
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: "12"
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v2.1.3
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install all yarn packages
+        run: yarn --frozen-lockfile
+
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+
+      - name: Install Python poetry
+        uses: snok/install-poetry@v1.1.1
+
+      - name: Install deployer
+        run: |
+          cd deployer
+          poetry install
+
+      - name: Display Python & Poetry version
+        run: |
+          python --version
+          poetry --version
+
+      - name: Print information about build
+        run: |
+          echo "notes: ${{ github.event.inputs.notes }}"
+          echo "archived_content: ${{ github.event.inputs.archived_content }}"
+          echo "translated_content: ${{ github.event.inputs.translated_content }}"
+          echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload }}"
+          echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix }}"
+
+      - name: Build everything
+        run: |
+          # Remember, the mdn/content repo got cloned into `pwd` into a
+          # sub-folder called "mdn/content"
+          export CONTENT_ROOT=$(pwd)/mdn/content/files
+
+          if [ ${{ github.event.inputs.archived_content }} == "true" ]; then
+            echo "Will build mdn/archived-content too"
+            export CONTENT_ARCHIVED_ROOT=$(pwd)/mdn/archived-content/files
+          else
+            echo "Will NOT build mdn/archived-content too"
+          fi
+          if [ ${{ github.event.inputs.translated_content }} == "true" ]; then
+            echo "Will build mdn/translated-content too"
+            export CONTENT_TRANSLATED_ROOT=$(pwd)/mdn/translated-content/files
+          else
+            echo "Will NOT build mdn/translated-content too"
+          fi
+
+          # Info about which CONTENT_* environment variables were set and to what.
+          echo "CONTENT_ROOT=$CONTENT_ROOT"
+          echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
+          echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
+
+          # This basically means that all live-sample iframes run on the same
+          # host as the page that includes the iframe. Not great security but the
+          # context is that this is Dev and it's not connected to a real backend.
+          export BUILD_LIVE_SAMPLES_BASE_URL=
+
+          # Now is not the time to worry about flaws.
+          export BUILD_FLAW_LEVELS="*:ignore"
+          yarn prepare-build
+
+          # Uncomment when hacking on this workflow. It means the `yarn build`
+          # finishes much sooner, which can be helpful debugging the other stuff
+          # the workflow needs to do.
+          # export BUILD_FOLDERSEARCH=web/html
+
+          # This just makes sure the Google Analytics script gets used even if
+          # it goes nowhere.
+          export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-00000000-0
+
+          yarn build
+
+          # TODO: When the deployer is available this is where we
+          # would upload the whole content of client/build
+          du -sh client/build
+
+      - name: Deploy with deployer
+        run: |
+          # Set the CONTENT_ROOT first
+          export CONTENT_ROOT=$(pwd)/mdn/content/files
+
+          if [ ${{ github.event.inputs.archived_content }} == "true" ]; then
+            echo "Will build mdn/archived-content too"
+            export CONTENT_ARCHIVED_ROOT=$(pwd)/mdn/archived-content/files
+          else
+            echo "Will NOT build mdn/archived-content too"
+          fi
+          if [ ${{ github.event.inputs.translated_content }} == "true" ]; then
+            echo "Will build mdn/translated-content too"
+            export CONTENT_TRANSLATED_ROOT=$(pwd)/mdn/translated-content/files
+          else
+            echo "Will NOT build mdn/translated-content too"
+          fi
+
+          # Info about which CONTENT_* environment variables were set and to what.
+          echo "CONTENT_ROOT=$CONTENT_ROOT"
+          echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
+          echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
+
+          cd deployer
+
+          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/code.json
+          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/content.json $CONTENT_ROOT
+
+          export DEPLOYER_BUCKET_NAME=mdn-content-dev
+          export DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix }}
+          export DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload }}
+          # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
+          echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
+
+          export AWS_ACCESS_KEY_ID=${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
+          export AWS_SECRET_ACCESS_KEY=${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
+
+          poetry run deployer upload ../client/build
+          poetry run deployer update-lambda-functions ./aws-lambda
+          # TODO
+          # Execute command to tell the Dev CloudFront distribution to use the
+          # latest and greatest *version* of the updated lambda functions.
+          # (Or, make it an optional flag to the `update-lambda-functions` command)
+
+          # TODO
+          # Execute command to publish built content to Elasticsearch

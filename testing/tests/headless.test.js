@@ -193,4 +193,23 @@ describe("Basic viewing of functional pages", () => {
       text: "Web technology for developers",
     });
   });
+
+  it("should say which page was not found", async () => {
+    await page.goto(testURL("/en-US/docs/Doesnot/exist"));
+    await expect(page).toMatch("Page not found");
+    await expect(page).toMatch("/en-US/docs/Doesnot/exist could not be found");
+  });
+
+  it("should suggest the en-US equivalent on non-en-US pages not found", async () => {
+    await page.goto(testURL("/sv-SE/docs/Web/foo"));
+    await expect(page).toMatch("Page not found");
+    await expect(page).toMatch("/sv-SE/docs/Web/foo could not be found");
+    // Simply by swapping the "sv-SE" for "en-US" it's able to find the index.json
+    // for that slug and present a link to it.
+    await expect(page).toMatch("Good news!");
+    await expect(page).toMatchElement("a", {
+      text: "<foo>: A test tag",
+      href: "/en-US/docs/Web/Foo",
+    });
+  });
 });

@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import Login from "../../molecules/login";
 import { Logo } from "../../atoms/logo";
 import MainMenu from "../../molecules/main-menu";
-import Search from "../../molecules/search";
+import { Search } from "../../molecules/search";
 
 import "./index.scss";
 
@@ -39,7 +39,11 @@ export function Header() {
       />
       <div className={`page-header-main ${showMainMenu ? "show" : ""}`}>
         <MainMenu />
-        <Search />
+        <Search
+          onResultPicked={() => {
+            toggleMainMenu();
+          }}
+        />
         <div className="auth-container">
           <Login />
         </div>

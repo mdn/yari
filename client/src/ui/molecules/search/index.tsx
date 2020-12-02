@@ -4,10 +4,10 @@ import { SearchNavigateWidget } from "../../../search";
 
 import "./index.scss";
 
-export default function Search() {
+export function Search(props) {
   return (
     <div className="header-search">
-      <SearchNavigateWidget />
+      <SearchNavigateWidget {...props} />
     </div>
   );
 }

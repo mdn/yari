@@ -1,8 +1,10 @@
 import React from "react";
 
-export default {
+const defaults = {
   title: "Atoms/Typography",
 };
+
+export default defaults;
 
 export const typography = () => {
   return (

@@ -13,7 +13,7 @@ export const PLATFORM_BROWSERS: { [key: string]: bcd.BrowserNames[] } = {
     "samsunginternet_android",
   ],
   server: ["nodejs"],
-  "webextensions-desktop": ["chrome", "edge", "firefox", "opera"],
+  "webextensions-desktop": ["chrome", "edge", "firefox", "opera", "safari"],
   "webextensions-mobile": ["firefox_android"],
 };
 
@@ -21,15 +21,19 @@ function PlatformHeaders({ platforms }) {
   return (
     <tr className="bc-platforms">
       <td />
-      {platforms.map((platform) => (
-        <th
-          key={platform}
-          className={`bc-platform-${platform}`}
-          colSpan={Object.keys(PLATFORM_BROWSERS[platform]).length}
-        >
-          <span>{platform}</span>
-        </th>
-      ))}
+      {platforms.map((platform) => {
+        const platformCount = Object.keys(PLATFORM_BROWSERS[platform]).length;
+        const platformId = platform.replace("webextensions-", "");
+        return (
+          <th
+            key={platform}
+            className={`bc-platform-${platformId}`}
+            colSpan={platformCount}
+          >
+            <span>{platform}</span>
+          </th>
+        );
+      })}
     </tr>
   );
 }

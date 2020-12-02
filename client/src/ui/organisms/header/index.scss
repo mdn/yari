@@ -30,7 +30,7 @@
 .page-header {
   margin: 0 auto;
   max-width: $max-width-default;
-  padding: $base-spacing;
+  padding: ($base-unit * 6) $base-spacing $base-spacing;
   position: relative;
   width: 100%;
 
@@ -61,6 +61,7 @@
     padding: 0;
     position: relative;
     top: inherit;
+    z-index: inherit;
 
     @supports (display: grid) {
       display: grid;

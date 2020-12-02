@@ -27,9 +27,9 @@ var str_desc = mdn.localString({
 });
 
 if($0 === 'inline') {
-  result = "<span class='inlineIndicator secureContexts' title='" + str_tooltip + "'>" + str_title + "</span>";
+  result = "<span class='notecard inline secure' title='" + str_tooltip + "'>" + str_title + "</span>";
 } else if($0 === 'header') {
-  result = "<div class='blockIndicator secureContexts'><p><strong>" + str_title + "</strong><br/>" + str_desc + "</p></div>";
+  result = "<div class='notecard secure'><h4>" + str_title + "</h4><p>" + str_desc + "</p></div>";
 }
 %>
 

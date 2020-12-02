@@ -71,4 +71,9 @@ fake-v1-api/
 mdn-yari-*.tgz
 function.zip
 
+<<<<<<< HEAD
 testing/content/files/en-us/_githistory.json
+=======
+# eslintcache
+client/.eslintcache
+>>>>>>> master
