@@ -20,6 +20,7 @@ test("content built foo page", () => {
   expect(doc.pageTitle).toBe(`${doc.title} | MDN`);
   expect(doc.summary).toBe("This becomes the summary.");
   expect(doc.mdn_url).toBe("/en-US/docs/Web/Foo");
+  expect(new Date(doc.modified)).toBeTruthy();
   expect(doc.source).toBeTruthy();
 
   expect(doc.flaws.macros.length).toBe(6);
