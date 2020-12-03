@@ -41,6 +41,13 @@ export interface PreWithHTMLFlaw extends GenericFlaw {
   column?: number;
 }
 
+export interface NotPrettierFlaw extends GenericFlaw {
+  before: string;
+  error?: string;
+  line?: number;
+  column?: number;
+}
+
 export interface MacroErrorMessage extends GenericFlaw {
   name: string;
   error: {
@@ -64,6 +71,7 @@ type Flaws = {
   images: ImageReferenceFlaw[];
   pre_with_html: PreWithHTMLFlaw[];
   sectioning: SectioningFlaw[];
+  not_prettier: NotPrettierFlaw[];
 };
 
 export type Translation = {

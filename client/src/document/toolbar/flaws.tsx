@@ -17,6 +17,7 @@ import {
   BadBCDQueryFlaw,
   PreWithHTMLFlaw,
   SectioningFlaw,
+  NotPrettierFlaw,
 } from "../types";
 import "./flaws.scss";
 
@@ -235,6 +236,14 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
                 key="images"
                 sourceFolder={doc.source.folder}
                 images={doc.flaws.images}
+              />
+            );
+          case "not_prettier":
+            return (
+              <NotPrettier
+                key="not_prettier"
+                sourceFolder={doc.source.folder}
+                flaws={doc.flaws.not_prettier}
               />
             );
           case "sectioning":
@@ -738,6 +747,101 @@ function Images({
           );
         })}
       </ul>
+    </div>
+  );
+}
+
+function NotPrettier({
+  sourceFolder,
+  flaws,
+}: {
+  sourceFolder: string;
+  flaws: NotPrettierFlaw[];
+}) {
+  // XXX rewrite to a hook
+  const [opening, setOpening] = React.useState<string | null>(null);
+  useEffect(() => {
+    let unsetOpeningTimer: ReturnType<typeof setTimeout>;
+    if (opening) {
+      unsetOpeningTimer = setTimeout(() => {
+        setOpening(null);
+      }, 3000);
+    }
+    return () => {
+      if (unsetOpeningTimer) {
+        clearTimeout(unsetOpeningTimer);
+      }
+    };
+  }, [opening]);
+
+  const filepath = sourceFolder + "/index.html";
+
+  function openInEditor(key: string, line?: number, column?: number) {
+    const sp = new URLSearchParams();
+    sp.set("filepath", filepath);
+    if (line) sp.set("line", `${line}`);
+    if (column) sp.set("column", `${column}`);
+    console.log(
+      `Going to try to open ${filepath}:${line}:${column} in your editor`
+    );
+    setOpening(key);
+    fetch(`/_open?${sp.toString()}`).catch((err) => {
+      console.warn(`Error trying to _open?${sp.toString()}:`, err);
+    });
+  }
+
+  const { focus } = useAnnotations(flaws);
+
+  return (
+    <div className="flaw flaw__not_prettier">
+      <h3>{humanizeFlawName("not_prettier")}</h3>
+
+      {flaws.map((flaw, i) => {
+        const key = flaw.id;
+        return (
+          <details key={key}>
+            <summary>
+              <code>{flaw.explanation}</code>{" "}
+              <a
+                href={`file://${filepath}`}
+                onClick={(event: React.MouseEvent) => {
+                  event.preventDefault();
+                  openInEditor(key, flaw.line, flaw.column);
+                }}
+              >
+                line{" "}
+                {flaw.line && flaw.column
+                  ? `${flaw.line}:${flaw.column}`
+                  : "line unknown"}
+              </a>{" "}
+              {opening && opening === key && <small>Opening...</small>}{" "}
+              <span
+                role="img"
+                aria-label="Click to highlight"
+                title="Click to highlight"
+                style={{ cursor: "zoom-in" }}
+                onClick={() => {
+                  focus(key);
+                }}
+              >
+                👀
+              </span>{" "}
+              {flaw.fixable && <FixableFlawBadge />}{" "}
+            </summary>
+            {flaw.error && (
+              <div className="not_prettier_error">
+                <p>Failed to execute Prettier on the code</p>
+                <pre>{flaw.error}</pre>
+              </div>
+            )}
+            {flaw.before && flaw.suggestion && (
+              <pre className="not_prettier_diff">
+                <ShowDiff before={flaw.before} after={flaw.suggestion} />
+              </pre>
+            )}
+          </details>
+        );
+      })}
     </div>
   );
 }

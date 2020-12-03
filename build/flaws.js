@@ -253,14 +253,6 @@ function injectBadBCDQueriesFlaws(level, doc, $) {
 function injectPreWithHTMLFlaws(level, doc, $, rawContent) {
   if (level === FLAW_LEVELS.IGNORE) return;
 
-  function escapeHTML(s) {
-    return s
-      .replace(/&/g, "&amp;")
-      .replace(/"/g, "&quot;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
-  }
-
   function addFlaw($pre) {
     if (!("pre_with_html" in doc.flaws)) {
       doc.flaws.pre_with_html = [];
@@ -334,6 +326,22 @@ function injectPreWithHTMLFlaws(level, doc, $, rawContent) {
   }
 }
 
+function escapeHTML(s) {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function unescapeHTML(h) {
+  return h
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
+
 function injectNotPrettierFlaws(level, doc, $, rawContent) {
   if (level === FLAW_LEVELS.IGNORE) return;
 
@@ -355,6 +363,7 @@ function injectNotPrettierFlaws(level, doc, $, rawContent) {
     }
     const codeBefore = $pre.text();
     let codeAfter = "";
+    let errorString = "";
     if (match[1] === "js") {
       try {
         codeAfter = prettier.format(codeBefore, {
@@ -362,49 +371,44 @@ function injectNotPrettierFlaws(level, doc, $, rawContent) {
           parser: "babel",
         });
       } catch (error) {
-        if (!("not_prettier" in doc.flaws)) {
-          doc.flaws.not_prettier = [];
-        }
-        const id = getNextId();
-        const explanation = "Can't even be formatted with Prettier";
-
-        doc.flaws.not_prettier.push({
-          id,
-          explanation,
-          error: error.toString(),
-          fixable: false,
-        });
-        return;
+        errorString = error.toString();
       }
     }
-    if (codeAfter) {
-      if (codeBefore.trim() !== codeAfter.trim()) {
-        // We have a flaw with some hope of fixing!
-        if (!("not_prettier" in doc.flaws)) {
-          doc.flaws.not_prettier = [];
-        }
-        const id = getNextId();
+    if ((codeAfter && codeBefore.trim() !== codeAfter.trim()) || errorString) {
+      if (!("not_prettier" in doc.flaws)) {
+        doc.flaws.not_prettier = [];
+      }
+      const id = getNextId();
+      const flaw = {
+        id,
+        fixable: false,
+        before: codeBefore,
+      };
+      for (const { line, column } of findMatchesInText(
+        codeBefore,
+        unescapeHTML(rawContent)
+      )) {
+        flaw.line = line;
+        flaw.column = column;
+        flaw.fixable = true;
+      }
 
-        const flaw = {
-          id,
-          explanation: "Prettier would like to disagree",
-          suggestion: codeAfter,
-          fixable: false,
-          before: codeBefore,
-          after: codeAfter,
-        };
-        for (const { line, column } of findMatchesInText(
-          codeBefore,
-          rawContent
-        )) {
-          flaw.line = line;
-          flaw.column = column;
+      if (errorString) {
+        flaw.explanation = "Can't even be formatted with Prettier";
+        flaw.error = errorString;
+      } else {
+        // We have a flaw with some hope of fixing!
+        (flaw.explanation = "Prettier would like to disagree"),
+          (flaw.suggestion = codeAfter);
+        if (flaw.line && flaw.column) {
           flaw.fixable = true;
         }
-        doc.flaws.not_prettier.push(flaw);
+
         // But always update it
         $pre.text(codeAfter);
       }
+      doc.flaws.not_prettier.push(flaw);
+      $pre.attr("data-flaw", id);
     }
   });
 
