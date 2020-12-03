@@ -24,6 +24,7 @@
     a {
       display: block;
       padding: 10px 0;
+      width: fit-content;
     }
   }
 
@@ -41,6 +42,10 @@
     li {
       display: inline-block;
       margin-right: 10px;
+    }
+
+    ul {
+      padding-inline-start: $base-spacing / 4;
     }
 
     svg {
@@ -76,7 +81,6 @@
     a {
       display: block;
       padding: 0 20px 0 0;
-      text-decoration: underline;
     }
   }
 }
