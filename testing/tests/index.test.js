@@ -129,6 +129,24 @@ test("content built foo page", () => {
   );
 });
 
+test("content built French foo page", () => {
+  expect(fs.existsSync(buildRoot)).toBeTruthy();
+
+  const builtFolder = path.join(buildRoot, "fr", "docs", "web", "foo");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  expect(fs.existsSync(jsonFile)).toBeTruthy();
+
+  // We should be able to read it and expect certain values
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.title).toBe("<foo>: Une page de test");
+  expect(doc.isTranslated).toBe(true);
+  expect(doc.other_translations[0].locale).toBe("en-US");
+  expect(doc.other_translations[0].url).toBe("/en-US/docs/Web/Foo");
+  expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
+});
+
 test("summary extracted correctly by span class", () => {
   const builtFolder = path.join(
     buildRoot,

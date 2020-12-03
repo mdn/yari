@@ -23,6 +23,21 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement(".document-meta time", { visible: true });
   });
 
+  it("open the French /fr/docs/Web/Foo page and navigate to English", async () => {
+    await page.goto(testURL("/fr/docs/Web/Foo"));
+    await expect(page).toMatchElement("h1", {
+      text: "<foo>: Une page de test",
+    });
+    await expect(page).toSelect('select[name="language"]', "English (US)");
+    await expect(page).toClick("button", { text: "Change language" });
+    await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
+    // Should have been redirected too...
+    // Note! It's important that this happens *after* the `.toMatchElement`
+    // on the line above because expect-puppeteer doesn't have a wait to
+    // properly wait for the (pushState) URL to have changed.
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
+  });
+
   it("open the /en-US/docs/Web/InteractiveExample page", async () => {
     await page.goto(testURL("/en-US/docs/Web/InteractiveExample"), {
       // Be a bit less patient with this particular page because it contains

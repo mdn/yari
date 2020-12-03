@@ -12,7 +12,7 @@ const LANGUAGES = new Map(
   })
 );
 
-export default function LanguageMenu({
+export function LanguageMenu({
   locale,
   translations,
 }: {
@@ -65,9 +65,8 @@ export default function LanguageMenu({
         <option value={locale}>{verbose ? verbose.native : locale}</option>
         {translations.map((t) => {
           const verbose = LANGUAGES.get(t.locale.toLowerCase());
-          const url = `/${t.locale}/docs/${t.slug}`;
           return (
-            <option key={url} value={url}>
+            <option key={t.url} value={t.url}>
               {verbose ? verbose.native : t.locale}
             </option>
           );
