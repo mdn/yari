@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext, BrowserName } from "./browser-info";
 import { asList, getFirst, isTruthy } from "./utils";
@@ -419,10 +418,10 @@ export const FeatureRow = React.memo(
       );
     } else if (compat.mdn_url && !isRoot) {
       titleNode = (
-        <Link to={compat.mdn_url} className="bc-table-row-header">
+        <a href={compat.mdn_url} className="bc-table-row-header">
           {title}
           {compat.status && <StatusIcons status={compat.status} />}
-        </Link>
+        </a>
       );
     } else {
       titleNode = (
