@@ -33,6 +33,7 @@
   "dependencies": {
     "@caporal/core": "2.0.2",
     "@mdn/browser-compat-data": "2.0.7",
+    "accept-language-parser": "1.5.0",
     "braces": "^3.0.2",
     "chalk": "4.1.0",
     "cheerio": "1.0.0-rc.3",
@@ -40,6 +41,8 @@
     "clean-webpack-plugin": "3.0.0",
     "cli-progress": "^3.8.2",
     "compression": "1.7.4",
+    "cookie": "0.4.1",
+    "cookie-parser": "1.4.5",
     "cross-env": "^7.0.3",
     "cssesc": "^3.0.0",
     "diff": "5.0.0",

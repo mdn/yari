@@ -7,9 +7,11 @@
     "make-package": "yarn install && zip -r -X function.zip . -i index.js 'node_modules/*'"
   },
   "dependencies": {
-    "@yari-internal/fundamental-redirects": "file:../../../libs/fundamental-redirects",
     "@yari-internal/constants": "file:../../../libs/constants",
+    "@yari-internal/fundamental-redirects": "file:../../../libs/fundamental-redirects",
+    "@yari-internal/get-locale": "file:../../../libs/get-locale",
     "accept-language-parser": "^1.5.0",
+    "cookie": "0.4.1",
     "sanitize-filename": "^1.6.3"
   },
   "engines": {

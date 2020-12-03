@@ -12,6 +12,9 @@ const LANGUAGES = new Map(
   })
 );
 
+// This needs to match what's set in 'libs/constants.js' on the server/builder!
+const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
+
 export function LanguageMenu({
   locale,
   translations,
@@ -38,6 +41,13 @@ export function LanguageMenu({
         // The default is the current locale itself. If that's what's chosen,
         // don't bother redirecting.
         if (localeURL !== locale) {
+          for (const translation of translations) {
+            if (translation.url === localeURL) {
+              document.cookie = `${PREFERRED_LOCALE_COOKIE_NAME}=${
+                translation.locale
+              };max-age=${60 * 60 * 24 * 365 * 3};path=/`;
+            }
+          }
           navigate(localeURL);
         }
       }}

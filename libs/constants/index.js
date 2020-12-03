@@ -48,8 +48,11 @@ const LOCALE_ALIASES = new Map([
   ["zh-hant", "zh-tw"],
 ]);
 
+const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
+
 module.exports = {
   VALID_LOCALES,
   DEFAULT_LOCALE,
   LOCALE_ALIASES,
+  PREFERRED_LOCALE_COOKIE_NAME,
 };
