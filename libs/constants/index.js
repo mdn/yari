@@ -48,6 +48,8 @@ const LOCALE_ALIASES = new Map([
   ["zh-hant", "zh-tw"],
 ]);
 
+// This must match what we do in `language-menu/index.tsx` where the cookie
+// gets set in the client!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
 
 module.exports = {

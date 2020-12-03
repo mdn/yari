@@ -15,7 +15,7 @@ const slugRewrite = (req, res, next) => {
 
 /**
  * This function is returns an object with {url:string, status:number}
- * if there's someplace to redirect. Otherwise an empty object.
+ * if there's some place to redirect to, otherwise an empty object.
  */
 const originRequest = (req, res, next) => {
   const { url: fundamentalRedirectUrl, status } = resolveFundamental(req.url);

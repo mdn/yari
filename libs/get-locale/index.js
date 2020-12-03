@@ -34,7 +34,7 @@ function getLocale(request, fallback = DEFAULT_LOCALE) {
   const cookieLocale = getCookie(request.headers, PREFERRED_LOCALE_COOKIE_NAME);
   if (cookieLocale) {
     // If it's valid, stick to it.
-    if (VALID_LOCALES.get(cookieLocale.toLowerCase())) {
+    if (VALID_LOCALES.has(cookieLocale.toLowerCase())) {
       return VALID_LOCALES.get(cookieLocale.toLowerCase());
     }
   }
