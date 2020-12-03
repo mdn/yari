@@ -137,15 +137,13 @@ export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
     }))
     .sort((a, b) => b.count - a.count);
 
+  const flawsCountsSum = flawsCounts.reduce((a, b) => a + b.count, 0);
+
   return (
     <div id={FLAWS_HASH.slice(1)} ref={rootElement}>
       {flawsCounts.length > 0 ? (
         <button type="submit" onClick={toggle}>
-          {show
-            ? "Hide flaws"
-            : `Show flaws (${flawsCounts
-                .map((flaw) => flaw.count)
-                .join(" + ")})`}
+          {show ? "Hide flaws" : `Show flaws (${flawsCountsSum})`}
         </button>
       ) : (
         <p>
@@ -154,8 +152,7 @@ export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
             🍾
           </span>
         </p>
-      )}
-
+      )}{" "}
       {show ? (
         <Flaws doc={doc} flaws={flawsCounts} />
       ) : (
