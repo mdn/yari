@@ -177,11 +177,13 @@ export default function render(
     $('meta[name="description"]').attr("content", pageDescription);
   }
 
-  if (ALWAYS_NO_ROBOTS || (doc && doc.noIndexing) || pageNotFound) {
-    $('<meta name="robots" content="noindex, nofollow">').insertAfter(
-      $("meta").eq(-1)
-    );
-  }
+  const robotsContent =
+    ALWAYS_NO_ROBOTS || (doc && doc.noIndexing) || pageNotFound
+      ? "noindex, nofollow"
+      : "index, follow";
+  $(`<meta name="robots" content="${robotsContent}">`).insertAfter(
+    $("meta").eq(-1)
+  );
 
   if (!pageNotFound) {
     $('link[rel="canonical"]').attr("href", canonicalURL);
