@@ -68,7 +68,7 @@ type Flaws = {
 
 export type Translation = {
   locale: string;
-  slug: string;
+  url: string;
 };
 
 export type DocParent = {

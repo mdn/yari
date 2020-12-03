@@ -53,6 +53,11 @@ jobs:
         with:
           repository: mdn/content
           path: mdn/content
+          # Yes, this means fetch EVERY COMMIT EVER.
+          # It's probably not sustainable in the far future (e.g. past 2021)
+          # but for now it's good enough. We'll need all the history
+          # so we can figure out each document's last-modified date.
+          fetch-depth: 0
 
       - uses: actions/checkout@v2
         if: "contains(github.event.inputs.archived_content, 'true')"

@@ -23,6 +23,7 @@ const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
 const cheerio = require("./monkeypatched-cheerio");
 const buildOptions = require("./build-options");
+const { gather: gatherGitHistory } = require("./git-history");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
 
 const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/content
@@ -94,6 +95,15 @@ function injectNoTranslate($) {
 }
 
 /**
+ * For every image and iframe, where appropriate add the `loading="lazy"` attribute.
+ *
+ * @param {Cheerio document instance} $
+ */
+function injectLoadingLazyAttributes($) {
+  $("img:not([loading]), iframe:not([loading])").attr("loading", "lazy");
+}
+
+/**
  * Find all `<div class="warning">` and turn them into `<div class="warning notecard">`
  * and keep in mind that if it was already been manually fixed so, you
  * won't end up with `<div class="warning notecard notecard">`.
@@ -101,7 +111,9 @@ function injectNoTranslate($) {
  * @param {Cheerio document instance} $
  */
 function injectNotecardOnWarnings($) {
-  $("div.warning").addClass("notecard");
+  $("div.warning, div.blockIndicator")
+    .addClass("notecard")
+    .removeClass("blockIndicator");
 }
 
 /**
@@ -266,6 +278,21 @@ async function buildDocument(document, documentOptions = {}) {
     throw error;
   }
 
+  // Some hyperlinks are not easily fixable and we should never include them
+  // because they're potentially evil.
+  $("a[href]").each((i, a) => {
+    // See https://github.com/mdn/kuma/issues/7647
+    // Ideally we should manually remove this from all sources (archived or not)
+    // but that's not immediately feasible. So at least make sure we never
+    // present the link in any rendered HTML.
+    if (
+      a.attribs.href.startsWith("http") &&
+      a.attribs.href.includes("fxsitecompat.com")
+    ) {
+      $(a).attr("href", "https://github.com/mdn/kuma/issues/7647");
+    }
+  });
+
   // If fixFlaws is on and the doc has fixable flaws, this returned
   // raw HTML string will be different.
   try {
@@ -281,6 +308,9 @@ async function buildDocument(document, documentOptions = {}) {
   // Post process HTML so that the right elements gets tagged so they
   // *don't* get translated by tools like Google Translate.
   injectNoTranslate($);
+
+  // Add the `loading=lazy` HTML attribute to the appropriate elements.
+  injectLoadingLazyAttributes($);
 
   // All content that uses `<div class="warning">` needs to become
   // `<div class="warning notecard">` instead.
@@ -417,4 +447,5 @@ module.exports = {
   SearchIndex,
 
   options: buildOptions,
+  gatherGitHistory,
 };

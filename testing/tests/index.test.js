@@ -20,6 +20,7 @@ test("content built foo page", () => {
   expect(doc.pageTitle).toBe(`${doc.title} | MDN`);
   expect(doc.summary).toBe("This becomes the summary.");
   expect(doc.mdn_url).toBe("/en-US/docs/Web/Foo");
+  expect(new Date(doc.modified)).toBeTruthy();
   expect(doc.source).toBeTruthy();
 
   expect(doc.flaws.macros.length).toBe(6);
@@ -117,11 +118,33 @@ test("content built foo page", () => {
     "This becomes the summary."
   );
 
+  // The 'Foo' page has 1 image. It should have been given the `loading="lazy"`
+  // attribute.
+  expect($('img[loading="lazy"]').length).toBe(1);
+
   // Every page, should have a `link[rel=canonical]` whose `href` always
   // starts with 'https://developer.mozilla.org' and ends with doc's URL.
   expect($("link[rel=canonical]").attr("href")).toBe(
     `https://developer.mozilla.org${doc.mdn_url}`
   );
+});
+
+test("content built French foo page", () => {
+  expect(fs.existsSync(buildRoot)).toBeTruthy();
+
+  const builtFolder = path.join(buildRoot, "fr", "docs", "web", "foo");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  expect(fs.existsSync(jsonFile)).toBeTruthy();
+
+  // We should be able to read it and expect certain values
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.title).toBe("<foo>: Une page de test");
+  expect(doc.isTranslated).toBe(true);
+  expect(doc.other_translations[0].locale).toBe("en-US");
+  expect(doc.other_translations[0].url).toBe("/en-US/docs/Web/Foo");
+  expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
 });
 
 test("summary extracted correctly by span class", () => {
@@ -520,6 +543,27 @@ test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page",
   // Let's make sure there are only 2 "macros" flaws.
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.flaws.macros.length).toBe(2);
+});
+
+test("check built flaws for /en-us/learn/css/css_layout/introduction/flex page", () => {
+  expect(fs.existsSync(buildRoot)).toBeTruthy();
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "learn",
+    "css",
+    "css_layout",
+    "introduction",
+    "flex"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  // The css_layout/introduction/flex page has 2 iframes
+  expect($('iframe[loading="lazy"]').length).toBe(2);
 });
 
 test("detect bad_bcd_queries flaws", () => {

@@ -2,7 +2,7 @@ import React, { lazy, Suspense, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
-import { CRUD_MODE } from "../constants";
+import { CRUD_MODE, NO_WATCHER } from "../constants";
 import { useWebSocketMessageHandler } from "../web-socket";
 import { useDocumentURL } from "./hooks";
 import { Doc } from "./types";
@@ -18,7 +18,7 @@ import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 // Misc
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
-import LanguageMenu from "../ui/molecules/language-menu";
+import { LanguageMenu } from "../ui/molecules/language-menu";
 import { OnGitHubLink } from "./on-github";
 import { Titlebar } from "../ui/molecules/titlebar";
 import { TOC } from "./organisms/toc";
@@ -59,7 +59,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         props.doc.mdn_url.toLowerCase() === documentURL.toLowerCase()
           ? props.doc
           : null,
-      revalidateOnFocus: false,
+      revalidateOnFocus: !!NO_WATCHER,
     }
   );
 
@@ -110,7 +110,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         )}
       </Titlebar>
 
-      {doc.isArchive && <Archived doc={doc} />}
+      {doc.isArchive && !doc.isTranslated && <Archived />}
 
       <div className="breadcrumbs-locale-container">
         <div className="breadcrumb-container">
@@ -203,25 +203,12 @@ function LastModified({ value, locale }) {
   );
 }
 
-function Archived({ doc }: { doc: Doc }) {
+function Archived() {
   return (
-    <div className={`archived ${doc.isTranslated ? "translated" : ""}`}>
-      {doc.isTranslated ? (
-        <p>
-          <b>This is an archived translation.</b>{" "}
-          <a
-            href="https://blogpost.example.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            No more edits are being accepted.
-          </a>
-        </p>
-      ) : (
-        <p>
-          <b>This is an archived page.</b> It's not actively maintained.
-        </p>
-      )}
+    <div className="archived">
+      <p>
+        <b>This is an archived page.</b> It's not actively maintained.
+      </p>
     </div>
   );
 }

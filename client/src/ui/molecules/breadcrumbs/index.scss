@@ -14,12 +14,12 @@
   }
 
   a {
-    &:active {
-      @include highlighted-link-state();
+    display: flex;
+    align-items: center;
 
-      &::after {
-        /* a hack in modern browsers to change the icon to white */
-        filter: invert(100%);
+    &:active {
+      span {
+        @include highlighted-link-state();
       }
     }
   }
@@ -29,7 +29,7 @@
   }
 
   li {
-    display: inline;
+    display: inline-flex;
     hyphens: auto;
 
     .breadcrumb,

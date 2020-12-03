@@ -50,6 +50,14 @@ jobs:
           # whoami endpoint.
           export REACT_APP_DISABLE_AUTH=true
 
+          # The 'yarn prepare-build' command is going to try to build up a
+          # file for the git history so it can have an index of each files.
+          # This makes sense in most of the cases where you have a CONTENT_ROOT
+          # which you'll want to build. But the CONTENT_ROOT can't be empty
+          # so you have to set it to something. So let's (ab)use the content
+          # we use for the end-to-end testing.
+          export CONTENT_ROOT=testing/content/files
+
           yarn prepare-build
 
       - name: Dry-run publish to see which files are included
