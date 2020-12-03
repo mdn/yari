@@ -166,6 +166,11 @@ jobs:
           # origin domain isn't what that account expects.
           export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-36116321-5
 
+          # Make sure every built page always has
+          # '<meta name="robots" content="noindex, nofollow">' nomatter what
+          # kind of document it is.
+          export BUILD_ALWAYS_NO_ROBOTS=true
+
           yarn build
 
           du -sh client/build

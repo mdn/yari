@@ -127,6 +127,8 @@ test("content built foo page", () => {
   expect($("link[rel=canonical]").attr("href")).toBe(
     `https://developer.mozilla.org${doc.mdn_url}`
   );
+
+  expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
 });
 
 test("content built French foo page", () => {
@@ -738,6 +740,7 @@ test("404 page", () => {
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Page not found");
   expect($("h1").text()).toContain("Page not found");
+  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
 test("bcd table extraction followed by h3", () => {

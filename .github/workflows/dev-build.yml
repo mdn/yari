@@ -158,6 +158,11 @@ jobs:
           # it goes nowhere.
           export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-00000000-0
 
+          # Make sure every built page always has
+          # '<meta name="robots" content="noindex, nofollow">' nomatter what
+          # kind of document it is.
+          export BUILD_ALWAYS_NO_ROBOTS=true
+
           yarn build
 
           # TODO: When the deployer is available this is where we
