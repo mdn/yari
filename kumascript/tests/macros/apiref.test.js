@@ -74,7 +74,7 @@ const expectedProperties = {
   fr: [
     {
       badges: [],
-      text: "MyTestProperty1 [Traduire]",
+      text: "MyTestProperty1",
       target: "/fr/docs/Web/API/TestInterface/TestProperty1",
       title:
         "The MyTestProperty1 property of the TestInterface interface has no badges.",
@@ -118,21 +118,21 @@ const expectedMethods = {
   fr: [
     {
       badges: ["experimental"],
-      text: "MyTestMethod1 [Traduire]",
+      text: "MyTestMethod1",
       target: "/fr/docs/Web/API/TestInterface/TestMethod1",
       title:
         "The MyTestMethod1 property of the TestInterface interface is experimental.",
     },
     {
       badges: ["deprecated", "non-standard"],
-      text: "MyTestMethod2 [Traduire]",
+      text: "MyTestMethod2",
       target: "/fr/docs/Web/API/TestInterface/TestMethod2",
       title:
         "The MyTestMethod2 property of the TestInterface interface is deprecated and non-standard.",
     },
     {
       badges: ["experimental", "deprecated", "non-standard", "obsolete"],
-      text: "MyTestMethod3 [Traduire]",
+      text: "MyTestMethod3",
       target: "/fr/docs/Web/API/TestInterface/TestMethod3",
       title:
         "The MyTestMethod3 property of the TestInterface interface has all the badges.",
@@ -190,21 +190,21 @@ const expectedEvents = {
   fr: [
     {
       badges: [],
-      text: "TestEvent1 [Traduire]",
+      text: "TestEvent1",
       target: "/fr/docs/Web/API/TestInterface/TestEvent1",
       title:
         "The MyTestEvent1 event of the TestInterface interface has no badges.",
     },
     {
       badges: ["deprecated", "non-standard"],
-      text: "TestEvent2 [Traduire]",
+      text: "TestEvent2",
       target: "/fr/docs/Web/API/TestInterface/TestEvent2",
       title:
         "The MyTestEvent2 event of the TestInterface interface is deprecated and non-standard.",
     },
     {
       badges: [],
-      text: "TestEvent3_another_suffix [Traduire]",
+      text: "TestEvent3_another_suffix",
       target: "/fr/docs/Web/API/TestInterface/TestEvent3",
       title:
         "The MyTestEvent3 event of the TestInterface interface has no badges.",

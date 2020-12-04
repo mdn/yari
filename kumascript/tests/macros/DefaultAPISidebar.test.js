@@ -92,11 +92,11 @@ const expectedGuides = {
   },
   fr: {
     "A Guide in another place": {
-      text: "A Guide in another place [Traduire]",
+      text: "A Guide in another place",
       target: "/fr/docs/Web/AnotherPlace/A_guide",
     },
     "A Guide listed in GroupData and also a subpage": {
-      text: "A Guide listed in GroupData and also a subpage [Traduire]",
+      text: "A Guide listed in GroupData and also a subpage",
       target: "/fr/docs/Web/API/TestInterface_API/MyGuidePage1",
       title: "The MyGuidePage1 ...",
     },
