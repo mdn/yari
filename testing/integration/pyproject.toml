@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "integration-testing"
+version = "0.1.0"
+license = "MPL-2.0"
+description = "Integration testing for Yari"
+authors = ["MDN Devs <mdn-dev@mozilla.com>"]
+repository = "https://github.com/mdn/yari"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+pytest = "^6.1.2"
+pytest-base-url = "^1.4.2"
+pytest-rerunfailures = "^9.1.1"
+requests = "^2.25.0"
+pyquery = "^1.4.1"
+braceexpand = "^0.1.6"
+
+[tool.poetry.dev-dependencies]
+black = "^19.10b0"
+flake8 = "^3.8.2"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
