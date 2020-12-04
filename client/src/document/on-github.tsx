@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Doc } from "./types";
 
 export function OnGitHubLink({ doc }: { doc: Doc }) {

@@ -1,5 +1,3 @@
-import React from "react";
-
 export function DisplayH2({ id, title }: { id: string; title: string }) {
   return (
     <h2 id={id}>
