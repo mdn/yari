@@ -13,7 +13,10 @@ def is_cloudfront_cache_hit(response):
 
 def is_cloudfront_cache_miss(response):
     """CloudFront specific check for evidence of a cache miss."""
-    return response.headers["x-cache"] == "Miss from cloudfront"
+    return response.headers["x-cache"] in (
+        "Miss from cloudfront",
+        "RefreshHit from cloudfront",
+    )
 
 
 def is_cloudfront_error(response):
@@ -131,6 +134,8 @@ def assert_cached(
     [
         ("/miel", 500, None),
         ("/_kuma_status.json", 200, None),
+        ("/_whatsdeployed/code.json", 200, None),
+        ("/_whatsdeployed/content.json", 200, None),
         ("/healthz", 204, None),
         ("/readiness", 204, None),
         ("/api/v1/whoami", 200, None),
@@ -178,13 +183,6 @@ def assert_cached(
         ),
         ("/admin/login/", 200, None),
         ("/admin/users/user/1/", 302, "/admin/login/?next=/admin/users/user/1/"),
-        (
-            "/admin/wiki/document/purge/",
-            302,
-            "/en-US/users/signin?next=/admin/wiki/document/purge/",
-        ),
-        ("/media/revision.txt", 200, None),
-        ("/media/kumascript-revision.txt", 200, None),
         ("/en-US/docs/Learn/CSS/Styling_text/Fundamentals$samples/Color", 403, None),
     ],
 )

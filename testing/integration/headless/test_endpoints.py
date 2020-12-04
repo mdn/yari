@@ -96,13 +96,6 @@ def test_api_basic(base_url, uri, expected_keys):
             assert sub_key in data[key]
 
 
-def test_api_doc_404(base_url):
-    """Ensure that the beta site's doc api returns 404 for unknown docs."""
-    url = base_url + "/api/v1/doc/en-US/NoSuchPage"
-    resp = request("get", url)
-    assert resp.status_code == 404
-
-
 # Test value tuple is:
 # - Expected locale prefix
 # - Accept-Language header value
