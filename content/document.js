@@ -160,8 +160,7 @@ const read = memoize((folder) => {
   const isTranslated =
     CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT);
   const isArchive =
-    isTranslated ||
-    (CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT));
+    CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT);
 
   const rawContent = fs.readFileSync(filePath, "utf8");
   const {
