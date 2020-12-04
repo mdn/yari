@@ -41,7 +41,7 @@ function postDocumentInfo(filePath, changeType) {
 }
 
 const NO_WATCHER = JSON.parse(process.env.REACT_APP_NO_WATCHER || "false");
-const SEARCH_PATTERN = path.join(CONTENT_ROOT, "en-us", "**", "*.html");
+const SEARCH_PATTERN = path.join(CONTENT_ROOT, "**", "*.html");
 
 if (NO_WATCHER) {
   const label = "Populate search-index with glob";

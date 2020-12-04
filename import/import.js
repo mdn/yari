@@ -1049,7 +1049,8 @@ async function processDocument(
   // If we're building this page, we can remove
   let builtFolderPath;
 
-  if (isArchive || doc.locale !== "en-US") {
+  // if (isArchive || doc.locale !== "en-US") {
+  if (isArchive) {
     builtFolderPath = Document.archive(
       getCleanedRenderedHTML(doc.rendered_html),
       doc.html,
