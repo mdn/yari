@@ -194,7 +194,7 @@ export default function render(
     if (googleAnalyticsJS) {
       $("<script>").text(`\n${googleAnalyticsJS}\n`).appendTo($("head"));
       $(
-        `<script src="https://www.google-analytics.com/${
+        `<script async src="https://www.google-analytics.com/${
           GOOGLE_ANALYTICS_DEBUG ? "anaytics_debug" : "analytics"
         }.js"></script>`
       ).appendTo($("head"));
