@@ -16,13 +16,14 @@ const {
 } = require("./document-extractor");
 const SearchIndex = require("./search-index");
 const { addBreadcrumbData } = require("./document-utils");
-const { fixFixableFlaws, injectFlaws } = require("./flaws");
+const { fixFixableFlaws, injectFlaws, injectSectionFlaws } = require("./flaws");
 const { normalizeBCDURLs, extractBCDData } = require("./bcd-urls");
 const { checkImageReferences } = require("./check-images");
 const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
 const cheerio = require("./monkeypatched-cheerio");
 const buildOptions = require("./build-options");
+const { gather: gatherGitHistory } = require("./git-history");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
 
 const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/content
@@ -94,6 +95,28 @@ function injectNoTranslate($) {
 }
 
 /**
+ * For every image and iframe, where appropriate add the `loading="lazy"` attribute.
+ *
+ * @param {Cheerio document instance} $
+ */
+function injectLoadingLazyAttributes($) {
+  $("img:not([loading]), iframe:not([loading])").attr("loading", "lazy");
+}
+
+/**
+ * Find all `<div class="warning">` and turn them into `<div class="warning notecard">`
+ * and keep in mind that if it was already been manually fixed so, you
+ * won't end up with `<div class="warning notecard notecard">`.
+ *
+ * @param {Cheerio document instance} $
+ */
+function injectNotecardOnWarnings($) {
+  $("div.warning, div.blockIndicator")
+    .addClass("notecard")
+    .removeClass("blockIndicator");
+}
+
+/**
  * Return the full URL directly to the file in GitHub based on this folder.
  * @param {String} folder - the current folder we're processing.
  */
@@ -127,7 +150,8 @@ function makeTOC(doc) {
         (section.type === "prose" ||
           section.type === "browser_compatibility") &&
         section.value.id &&
-        section.value.title
+        section.value.title &&
+        !section.value.isH3
       ) {
         return { text: section.value.title, id: section.value.id };
       }
@@ -263,6 +287,21 @@ async function buildDocument(document, documentOptions = {}) {
     throw error;
   }
 
+  // Some hyperlinks are not easily fixable and we should never include them
+  // because they're potentially evil.
+  $("a[href]").each((i, a) => {
+    // See https://github.com/mdn/kuma/issues/7647
+    // Ideally we should manually remove this from all sources (archived or not)
+    // but that's not immediately feasible. So at least make sure we never
+    // present the link in any rendered HTML.
+    if (
+      a.attribs.href.startsWith("http") &&
+      a.attribs.href.includes("fxsitecompat.com")
+    ) {
+      $(a).attr("href", "https://github.com/mdn/kuma/issues/7647");
+    }
+  });
+
   // If fixFlaws is on and the doc has fixable flaws, this returned
   // raw HTML string will be different.
   try {
@@ -279,10 +318,25 @@ async function buildDocument(document, documentOptions = {}) {
   // *don't* get translated by tools like Google Translate.
   injectNoTranslate($);
 
+  // Add the `loading=lazy` HTML attribute to the appropriate elements.
+  injectLoadingLazyAttributes($);
+
+  // All content that uses `<div class="warning">` needs to become
+  // `<div class="warning notecard">` instead.
+  // Some day, we can hopefully do a mass search-and-replace so we never
+  // need to do this code here.
+  // We might want to delete this injection in 2021 some time when all content's
+  // raw HTML has been fixed to always have it in there already.
+  injectNotecardOnWarnings($);
+
   // Turn the $ instance into an array of section blocks. Most of the
   // section blocks are of type "prose" and their value is a string blob
   // of HTML.
-  doc.body = extractSections($);
+  const [sections, sectionFlaws] = extractSections($);
+  doc.body = sections;
+  if (sectionFlaws.length) {
+    injectSectionFlaws(doc, sectionFlaws, options);
+  }
 
   // Extract all the <h2> tags as they appear into an array.
   doc.toc = makeTOC(doc);
@@ -310,7 +364,17 @@ async function buildDocument(document, documentOptions = {}) {
     // If built just-in-time, we won't have a record of all the other translations
     // available. But if the current document has a translation_of, we can
     // at least use that.
-    otherTranslations.push({ locale: "en-US", slug: metadata.translation_of });
+    const translationOf = Document.findByURL(
+      `/en-US/docs/${metadata.translation_of}`
+    );
+    if (translationOf) {
+      otherTranslations.push({
+        locale: "en-US",
+        // slug: translationOf.metadata.slug,
+        url: translationOf.url,
+        title: translationOf.metadata.title,
+      });
+    }
   }
 
   if (otherTranslations.length) {
@@ -392,4 +456,5 @@ module.exports = {
   SearchIndex,
 
   options: buildOptions,
+  gatherGitHistory,
 };

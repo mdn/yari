@@ -18,17 +18,21 @@ var str = mdn.localString({
 
 if ($1) attr = await template("geckoRelease", [$1]);
 
+/*
+ * NOTE: This macro is used by /kumascript/macros/optional_inline.ejs
+ * The `method` case is never used
+ */
 switch($0) {
     case 'inline':
-        %><span class="inlineIndicator optional optionalInline"><%- str %></span><%
+        %><span class="badge inline optional"><%- str %></span><%
         break;
     case 'method':
         %><div>
-            <span class="indicatorInHeadline optional optionalMethod"><%- str %></span>
+            <span class="badge inline optional"><%- str %></span>
             <h<%-hLevel%>><%= $2 %></h<%-hLevel%>>
         </div><%
         break;
     default :
-        %><span class="inlineIndicator optional optionalInline"><%- str %></span><%
+        %><span class="badge inline optional"><%- str %></span><%
         break;
 }%>

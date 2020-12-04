@@ -27,14 +27,18 @@
   }
 
   a {
-    code {
-      color: $neutral-100;
-      text-decoration: underline;
-    }
-
     &:active {
-      background-color: $primary-200;
+      background-color: $primary-50;
       color: $text-color-inverted;
+    }
+  }
+
+  h2,
+  h3 {
+    code {
+      background-color: transparent;
+      color: $neutral-100;
+      text-decoration: none;
     }
   }
 
@@ -43,6 +47,10 @@
 
     @media #{$mq-tablet-and-up} {
       margin-bottom: ($base-unit * 6);
+    }
+
+    code {
+      color: $neutral-100;
     }
 
     a:link,
@@ -57,6 +65,10 @@
   }
 
   h3 {
+    code {
+      color: $neutral-600;
+    }
+
     a:link,
     a:visited {
       color: $neutral-600;
@@ -68,14 +80,9 @@
     }
   }
 
-  pre {
+  /* readonly inline badges needs a slightly darker background color in general article content  */
+  .inline.readonly {
     background-color: $neutral-550;
-    border-left: $code-example-border;
-    line-height: $code-example-line-height;
-    max-width: 100%;
-    overflow: auto;
-    padding: $base-spacing;
-    width: 100%;
   }
 
   /* top navigational elements on tutorial pages */
@@ -94,5 +101,30 @@
         margin-bottom: inherit;
       }
     }
+  }
+
+  /*
+   * multi-column layout on pages with an index such as
+   * https://developer.mozilla.org/en-US/docs/Web/API#Specifications
+  */
+  .index {
+    columns: 300px;
+  }
+}
+
+/*
+ * style for archived content banner
+ * http://localhost:3000/en-us/docs/BrowserID/Specify_an_Email_Address
+ */
+.archived {
+  background-color: $yellow-400;
+  padding: $base-spacing / 4;
+  position: fixed;
+  text-align: center;
+  top: 0;
+  width: 100%;
+
+  p {
+    margin: 0;
   }
 }

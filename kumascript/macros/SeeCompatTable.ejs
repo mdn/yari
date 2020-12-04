@@ -12,6 +12,8 @@ var str = mdn.localString({
     "ru"    : "<strong>Это экспериментальная технология</strong><br />Так как спецификация этой технологии ещё не стабилизировалась, смотрите <a href='#Browser_compatibility'>таблицу совместимости</a> по поводу использования в различных браузерах. Также заметьте, что синтаксис и поведение экспериментальной технологии может измениться в будущих версиях браузеров, вслед за изменениями спецификации."
 });
 
-%><div class="blockIndicator experimental indicator-warning">
+%>
+<div class="notecard experimental">
+    <h4>Experimental</h4>
     <p><%- str %></p>
 </div>

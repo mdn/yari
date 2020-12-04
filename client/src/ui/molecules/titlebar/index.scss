@@ -9,8 +9,12 @@
 
   @media #{$mq-tablet-and-up} {
     padding: 0;
+  }
 
-    h1 {
+  h1 {
+    word-break: break-word;
+
+    @media #{$mq-tablet-and-up} {
       margin: 0 auto;
       max-width: $max-width-default;
       padding: $base-spacing;

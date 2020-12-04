@@ -16,6 +16,7 @@ import {
   GenericFlaw,
   BadBCDQueryFlaw,
   PreWithHTMLFlaw,
+  SectioningFlaw,
 } from "../types";
 import "./flaws.scss";
 
@@ -236,6 +237,8 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
                 images={doc.flaws.images}
               />
             );
+          case "sectioning":
+            return <Sectioning key="sectioning" flaws={doc.flaws.sectioning} />;
           default:
             throw new Error(`Unknown flaw check '${flaw.name}'`);
         }
@@ -442,6 +445,27 @@ function BadBCDLinks({ links }: { links: BadBCDLinkFlaw[] }) {
           <li key={link.slug}>
             In <code>{link.query}</code> under key <code>{link.key}</code> can't
             find document: <code>{link.slug}</code>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function Sectioning({ flaws }: { flaws: SectioningFlaw[] }) {
+  return (
+    <div className="flaw flaw__sectioning">
+      <h3>{humanizeFlawName("sectioning")}</h3>
+      <ul>
+        {flaws.map((flaw) => (
+          <li key={flaw.id}>
+            <code>{flaw.explanation}</code>
+            <br />
+            <small>
+              Usually this means there's something in the raw content that makes
+              it hard to split up the rendered HTML. Perhaps delete unnecessary
+              empty divs.
+            </small>
           </li>
         ))}
       </ul>

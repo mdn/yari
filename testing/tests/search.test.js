@@ -17,7 +17,7 @@ describe("Site search", () => {
     await expect(page).toMatch("<foo>: A test tag");
   });
 
-  test("find Foo page", async () => {
+  test("find Foo page by title search", async () => {
     await page.goto(testURL("/"));
     await expect(page).toFill(SEARCH_SELECTOR, "foo");
     await expect(page).toMatch("<foo>: A test tag");
@@ -30,6 +30,35 @@ describe("Site search", () => {
     expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
   });
 
+  test("find nothing by title search", async () => {
+    await page.goto(testURL("/"));
+    await expect(page).toFill(SEARCH_SELECTOR, "gooblyg00k");
+    await expect(page).toMatchElement(".nothing-found", {
+      text: "nothing found",
+    });
+  });
+
+  test("find Foo page by fuzzy-search", async () => {
+    await page.goto(testURL("/"));
+    await expect(page).toFill(SEARCH_SELECTOR, "/");
+    await expect(page).toMatch("Fuzzy searching by URI");
+    await expect(page).not.toMatchElement(".nothing-found", {
+      text: "nothing found",
+    });
+    await expect(page).toFill(SEARCH_SELECTOR, "/wboo");
+    await expect(page).toMatch("<foo>: A test tag");
+    await expect(page).toClick('[aria-selected="true"]');
+    await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
+  });
+
+  test("find nothing by fuzzy-search", async () => {
+    await page.goto(testURL("/"));
+    await expect(page).toFill(SEARCH_SELECTOR, "/gooblygook");
+    await expect(page).toMatchElement(".nothing-found", {
+      text: "nothing found",
+    });
+  });
+
   test("input placeholder changes when focused", async () => {
     await expect(page).toMatchElement(SEARCH_SELECTOR, {
       placeholder: /Site search/,
@@ -37,14 +66,6 @@ describe("Site search", () => {
     await expect(page).toClick(SEARCH_SELECTOR);
     await expect(page).toMatchElement(SEARCH_SELECTOR, {
       placeholder: /Go ahead/,
-    });
-  });
-
-  test("should NOT get search results", async () => {
-    await page.goto(testURL("/"));
-    await expect(page).toFill(SEARCH_SELECTOR, "div");
-    await expect(page).toMatchElement(".nothing-found", {
-      text: "nothing found",
     });
   });
 });

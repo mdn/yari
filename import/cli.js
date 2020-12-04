@@ -28,6 +28,13 @@ program
     validator: program.BOOL,
   })
   .option(
+    "--skip-wiki-histories",
+    "don't dump the $locale/_wikihistory.json files",
+    {
+      validator: program.BOOL,
+    }
+  )
+  .option(
     "--exclude-prefixes <prefixes>",
     "slug prefixes to exclude (commas)",
     { validator: program.ARRAY, default: EXCLUDE_SLUG_PREFIXES.join(",") }

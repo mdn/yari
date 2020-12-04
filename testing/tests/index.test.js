@@ -20,6 +20,7 @@ test("content built foo page", () => {
   expect(doc.pageTitle).toBe(`${doc.title} | MDN`);
   expect(doc.summary).toBe("This becomes the summary.");
   expect(doc.mdn_url).toBe("/en-US/docs/Web/Foo");
+  expect(new Date(doc.modified)).toBeTruthy();
   expect(doc.source).toBeTruthy();
 
   expect(doc.flaws.macros.length).toBe(6);
@@ -117,11 +118,35 @@ test("content built foo page", () => {
     "This becomes the summary."
   );
 
+  // The 'Foo' page has 1 image. It should have been given the `loading="lazy"`
+  // attribute.
+  expect($('img[loading="lazy"]').length).toBe(1);
+
   // Every page, should have a `link[rel=canonical]` whose `href` always
   // starts with 'https://developer.mozilla.org' and ends with doc's URL.
   expect($("link[rel=canonical]").attr("href")).toBe(
     `https://developer.mozilla.org${doc.mdn_url}`
   );
+
+  expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
+});
+
+test("content built French foo page", () => {
+  expect(fs.existsSync(buildRoot)).toBeTruthy();
+
+  const builtFolder = path.join(buildRoot, "fr", "docs", "web", "foo");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  expect(fs.existsSync(jsonFile)).toBeTruthy();
+
+  // We should be able to read it and expect certain values
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.title).toBe("<foo>: Une page de test");
+  expect(doc.isTranslated).toBe(true);
+  expect(doc.other_translations[0].locale).toBe("en-US");
+  expect(doc.other_translations[0].url).toBe("/en-US/docs/Web/Foo");
+  expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
 });
 
 test("summary extracted correctly by span class", () => {
@@ -203,6 +228,20 @@ test("the 'notranslate' class is correctly inserted", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("pre.notranslate").length).toEqual($("pre").length);
+});
+
+test("the 'notecard' class is correctly inserted", () => {
+  const folder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "donttranslatethese"
+  );
+  const htmlFile = path.join(folder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("div.warning.notecard").length).toEqual($("div.warning").length);
 });
 
 test("content with non-ascii characters in the slug", () => {
@@ -508,6 +547,27 @@ test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page",
   expect(doc.flaws.macros.length).toBe(2);
 });
 
+test("check built flaws for /en-us/learn/css/css_layout/introduction/flex page", () => {
+  expect(fs.existsSync(buildRoot)).toBeTruthy();
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "learn",
+    "css",
+    "css_layout",
+    "introduction",
+    "flex"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  // The css_layout/introduction/flex page has 2 iframes
+  expect($('iframe[loading="lazy"]').length).toBe(2);
+});
+
 test("detect bad_bcd_queries flaws", () => {
   const builtFolder = path.join(
     buildRoot,
@@ -670,4 +730,52 @@ test("chicken_and_egg page should build with flaws", () => {
       "documents form a circular dependency when rendering"
     )
   ).toBeTruthy();
+});
+
+test("404 page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "_spas");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "404.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("title").text()).toContain("Page not found");
+  expect($("h1").text()).toContain("Page not found");
+  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
+});
+
+test("bcd table extraction followed by h3", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "bcd_table_extraction"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.body[0].type).toBe("prose");
+  expect(doc.body[1].type).toBe("prose");
+  expect(doc.body[2].type).toBe("browser_compatibility");
+  expect(doc.body[2].value.isH3).toBeFalsy();
+  expect(doc.body[3].type).toBe("prose");
+  expect(doc.body[4].type).toBe("prose");
+  expect(doc.body[4].value.isH3).toBeTruthy();
+});
+
+test("bcd table extraction when overly nested is a flaw", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "bcd_table_extraction",
+    "nested_divs"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.sectioning[0].explanation).toBe(
+    "2 'div.bc-data' elements found but deeply nested."
+  );
 });
