@@ -182,7 +182,7 @@ module.exports = (req, res) => {
   }
 
   for (const filePath of glob.sync(
-    path.join(BUILD_OUT_ROOT, "**", "index.json")
+    path.join(BUILD_OUT_ROOT, locale, "**", "index.json")
   )) {
     counts.built++;
 
