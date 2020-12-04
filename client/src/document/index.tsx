@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from "react";
+import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
@@ -28,7 +28,7 @@ import { MainContentContainer } from "../ui/atoms/page-content";
 import "./index.scss";
 
 // Lazy sub-components
-const Toolbar = lazy(() => import("./toolbar"));
+const Toolbar = React.lazy(() => import("./toolbar"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const documentURL = useDocumentURL();
@@ -72,7 +72,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
     }
   });
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!doc && !error) {
       document.title = "⏳ Loading…";
     } else if (error) {
@@ -102,11 +102,11 @@ export function Document(props /* TODO: define a TS interface for this */) {
     <>
       <Titlebar docTitle={doc.title}>
         {!isServer && CRUD_MODE && !props.isPreview && !doc.isArchive && (
-          <Suspense
+          <React.Suspense
             fallback={<p className="loading-toolbar">Loading toolbar</p>}
           >
             <Toolbar doc={doc} />
-          </Suspense>
+          </React.Suspense>
         )}
       </Titlebar>
 

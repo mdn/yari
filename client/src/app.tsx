@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 // we include our base SASS here to ensure it is loaded
@@ -14,10 +14,10 @@ import { Header } from "./ui/organisms/header";
 import { PageNotFound } from "./page-not-found";
 import { Banner } from "./banners";
 
-const AllFlaws = lazy(() => import("./flaws"));
-const DocumentEdit = lazy(() => import("./document/forms/edit"));
-const DocumentCreate = lazy(() => import("./document/forms/create"));
-const DocumentManage = lazy(() => import("./document/forms/manage"));
+const AllFlaws = React.lazy(() => import("./flaws"));
+const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
+const DocumentCreate = React.lazy(() => import("./document/forms/create"));
+const DocumentManage = React.lazy(() => import("./document/forms/manage"));
 
 const isServer = typeof window === "undefined";
 
@@ -157,11 +157,11 @@ export function App(appProps) {
   );
   /* This might look a bit odd but it's actually quite handy.
    * This way, when rendering client-side, we wrap all the routes in
-   * <Suspense> but in server-side rendering that goes away.
+   * <React.Suspense> but in server-side rendering that goes away.
    */
   return isServer ? (
     routes
   ) : (
-    <Suspense fallback={<div>Loading...</div>}>{routes}</Suspense>
+    <React.Suspense fallback={<div>Loading...</div>}>{routes}</React.Suspense>
   );
 }

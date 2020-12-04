@@ -1,5 +1,3 @@
-import React from "react";
-
 import { DisplayH2, DisplayH3 } from "./utils";
 
 export function Prose({ section }) {
