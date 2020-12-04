@@ -181,14 +181,14 @@ export default function MainMenu() {
           {
             label: "Report a content problem",
             external: true,
-            url: `https://github.com/mdn/sprints/issues/new?template=issue-template.md&projects=mdn/sprints/2&labels=user-report&title=${
+            url: `https://github.com/mdn/content/issues/new?title=${
               typeof window === "undefined" ? "" : window.location.pathname
             }`,
           },
           {
             label: "Report an issue",
             external: true,
-            url: "https://github.com/mdn/kuma/issues/new/choose",
+            url: "https://github.com/mdn/yari/issues/new/choose",
           },
         ],
       },
