@@ -1,4 +1,3 @@
-import React from "react";
 import { useDocumentURL } from "../hooks";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";

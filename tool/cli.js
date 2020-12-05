@@ -1,14 +1,16 @@
+const fs = require("fs");
+const path = require("path");
+const os = require("os");
+
 const program = require("@caporal/core").default;
 const chalk = require("chalk");
 const prompts = require("prompts");
 const openEditor = require("open-editor");
 const open = require("open");
-const fs = require("fs");
-const path = require("path");
 
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
-const { Redirect, Document, buildURL } = require("../content");
-const { buildDocument } = require("../build");
+const { CONTENT_ROOT, Redirect, Document, buildURL } = require("../content");
+const { buildDocument, gatherGitHistory } = require("../build");
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
 
@@ -238,6 +240,73 @@ program
       const { slug, locale } = args;
       const url = `http://localhost:${PORT}${buildURL(locale, slug)}`;
       await open(url);
+    })
+  )
+
+  .command(
+    "gather-git-history",
+    "Extract all last-modified dates from the git logs"
+  )
+  .option("--root <directory>", "Which content root", {
+    default: CONTENT_ROOT,
+  })
+  .option("--save-history <path>", `File to save all previous history`, {
+    default: path.join(os.tmpdir(), "yari-git-history.json"),
+  })
+  .option(
+    "--load-history <path>",
+    `Optional file to load all previous history`,
+    {
+      default: path.join(os.tmpdir(), "yari-git-history.json"),
+    }
+  )
+  .action(
+    tryOrExit(async ({ options }) => {
+      const { root, saveHistory, loadHistory } = options;
+      if (fs.existsSync(loadHistory)) {
+        console.log(
+          chalk.yellow(`Reusing exising history from ${loadHistory}`)
+        );
+      }
+      const map = gatherGitHistory(
+        root,
+        fs.existsSync(loadHistory) ? loadHistory : null
+      );
+      const historyPerLocale = {};
+
+      // Someplace to put the map into an object so it can be saved into `saveHistory`
+      const allHistory = {};
+      for (const [relPath, value] of map) {
+        allHistory[relPath] = value;
+        const locale = relPath.split("/")[0];
+        if (!historyPerLocale[locale]) {
+          historyPerLocale[locale] = {};
+        }
+        historyPerLocale[locale][relPath] = value;
+      }
+      for (const [locale, history] of Object.entries(historyPerLocale)) {
+        const outputFile = path.join(root, locale, "_githistory.json");
+        fs.writeFileSync(outputFile, JSON.stringify(history, null, 2), "utf-8");
+        console.log(
+          chalk.green(
+            `Wrote '${locale}' ${Object.keys(
+              history
+            ).length.toLocaleString()} paths into ${outputFile}`
+          )
+        );
+      }
+      fs.writeFileSync(
+        saveHistory,
+        JSON.stringify(allHistory, null, 2),
+        "utf-8"
+      );
+      console.log(
+        chalk.green(
+          `Saved ${Object.keys(
+            allHistory
+          ).length.toLocaleString()} paths into ${saveHistory}`
+        )
+      );
     })
   )
 

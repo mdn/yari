@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
+import { PageContentContainer } from "../ui/atoms/page-content";
 import { Search } from "../ui/molecules/search";
 
 // Lazy sub-components
@@ -9,7 +10,7 @@ export function Homepage() {
   const isServer = typeof window === "undefined";
 
   return (
-    <main id="homepage" role="main" className="page-content-container">
+    <PageContentContainer>
       <h2>Welcome to MDN</h2>
       <Search />
 
@@ -78,6 +79,6 @@ export function Homepage() {
           <Link to="/en-US/_flaws">Flaws Dashboard</Link>
         </li>
       </ul>
-    </main>
+    </PageContentContainer>
   );
 }

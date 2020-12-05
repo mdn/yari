@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 
-import { CRUD_MODE } from "./constants";
+import { CRUD_MODE, NO_WATCHER } from "./constants";
 import { App } from "./app";
 import { GAProvider } from "./ga-context";
 import { UserDataProvider } from "./user-context";
@@ -22,12 +22,13 @@ if (!container) {
 // TODO: When we have TS types fo `docData` this would become
 // something like `(window as any).__data__ as DocData`.
 const docData = (window as any).__data__;
+const pageNotFound = (window as any).__pageNotFound__;
 
 let app = (
   <GAProvider>
     <UserDataProvider>
       <Router>
-        <App doc={docData} />
+        <App doc={docData} pageNotFound={pageNotFound} />
       </Router>
     </UserDataProvider>
   </GAProvider>
@@ -41,7 +42,7 @@ const isServer = typeof window === "undefined";
 // But you might be using CRUD_MODE without create-react-app's dev server,
 // and in that case you still need to avoid using React.Suspense because
 // that only works in client rendering.
-if (!isServer && CRUD_MODE) {
+if (!isServer && CRUD_MODE && !NO_WATCHER) {
   // We only use a WebSocket to listen for document changes in development
   app = (
     <React.Suspense fallback>

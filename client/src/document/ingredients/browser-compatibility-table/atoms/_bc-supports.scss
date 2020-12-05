@@ -1,5 +1,5 @@
-$bc-no-support: #fbdfe0;
-$bc-partial-support: #f9d8bb;
+@import "~@mdn/minimalist/sass/vars/color-palette";
+
 $bc-no-support-cross: rgba(94, 3, 6, 0.1);
 $bc-partial-support-cross: rgba(144, 99, 18, 0.2);
 
@@ -17,7 +17,7 @@ $bc-partial-support-cross: rgba(144, 99, 18, 0.2);
 }
 
 .bc-supports-partial {
-  background-color: $bc-partial-support;
+  background-color: $orange-400;
   background-image: linear-gradient(
     to bottom right,
     $bc-partial-support-cross 0,
@@ -46,7 +46,7 @@ $bc-partial-support-cross: rgba(144, 99, 18, 0.2);
 }
 
 .bc-supports-no {
-  background-color: $bc-no-support;
+  background-color: $red-400;
   background-image: linear-gradient(
       to bottom right,
       $bc-no-support-cross 0,

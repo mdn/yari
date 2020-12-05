@@ -20,6 +20,22 @@ describe("Basic viewing of functional pages", () => {
   it("open the /en-US/docs/Web/Foo page", async () => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     await expect(page).toMatch("<foo>: A test tag");
+    await expect(page).toMatchElement(".document-meta time", { visible: true });
+  });
+
+  it("open the French /fr/docs/Web/Foo page and navigate to English", async () => {
+    await page.goto(testURL("/fr/docs/Web/Foo"));
+    await expect(page).toMatchElement("h1", {
+      text: "<foo>: Une page de test",
+    });
+    await expect(page).toSelect('select[name="language"]', "English (US)");
+    await expect(page).toClick("button", { text: "Change language" });
+    await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
+    // Should have been redirected too...
+    // Note! It's important that this happens *after* the `.toMatchElement`
+    // on the line above because expect-puppeteer doesn't have a wait to
+    // properly wait for the (pushState) URL to have changed.
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
   });
 
   it("open the /en-US/docs/Web/InteractiveExample page", async () => {
@@ -190,6 +206,25 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement("nav a[property=item][typeof=WebPage]", {
       // You gotta know your fixture documents
       text: "Web technology for developers",
+    });
+  });
+
+  it("should say which page was not found", async () => {
+    await page.goto(testURL("/en-US/docs/Doesnot/exist"));
+    await expect(page).toMatch("Page not found");
+    await expect(page).toMatch("/en-US/docs/Doesnot/exist could not be found");
+  });
+
+  it("should suggest the en-US equivalent on non-en-US pages not found", async () => {
+    await page.goto(testURL("/sv-SE/docs/Web/foo"));
+    await expect(page).toMatch("Page not found");
+    await expect(page).toMatch("/sv-SE/docs/Web/foo could not be found");
+    // Simply by swapping the "sv-SE" for "en-US" it's able to find the index.json
+    // for that slug and present a link to it.
+    await expect(page).toMatch("Good news!");
+    await expect(page).toMatchElement("a", {
+      text: "<foo>: A test tag",
+      href: "/en-US/docs/Web/Foo",
     });
   });
 });

@@ -2,9 +2,11 @@ import React from "react";
 
 import { Header } from "../../ui/organisms/header";
 
-export default {
+const defaults = {
   title: "Organisms/Header",
 };
+
+export default defaults;
 
 export const header = () => (
   <>
