@@ -134,7 +134,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
             <div className="metadata">
               <section className="document-meta">
                 <header className="visually-hidden">
-                  <h4>Metadata</h4>
+                  <h3>Metadata</h3>
                 </header>
                 <ul>
                   <li className="last-modified">
