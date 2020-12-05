@@ -2,12 +2,16 @@
 @import "~@mdn/minimalist/sass/vars/layout";
 
 .toolbar {
-  padding: 0 $base-spacing;
-  border: 1px solid $red-300;
+  background-color: $neutral-100;
+  color: $neutral-600;
+  padding: $base-spacing;
+
+  .button {
+    max-width: inherit;
+  }
 }
 
 .toolbar-first-row {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
 }

@@ -137,9 +137,9 @@ export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
     .sort((a, b) => b.count - a.count);
 
   return (
-    <div id={FLAWS_HASH.slice(1)} ref={rootElement}>
+    <div id={FLAWS_HASH.slice(1)} className="toolbar-flaws" ref={rootElement}>
       {flawsCounts.length > 0 ? (
-        <button type="submit" onClick={toggle}>
+        <button type="submit" onClick={toggle} className="button minimal light">
           {show
             ? "Hide flaws"
             : `Show flaws (${flawsCounts
@@ -158,12 +158,12 @@ export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
       {show ? (
         <Flaws doc={doc} flaws={flawsCounts} />
       ) : (
-        <small>
+        <>
           {/* a one-liner about all the flaws */}
           {flawsCounts
             .map((flaw) => `${humanizeFlawName(flaw.name)}: ${flaw.count}`)
             .join(" + ")}
-        </small>
+        </>
       )}
     </div>
   );
@@ -184,7 +184,7 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
     .flat();
 
   return (
-    <div id="document-flaws">
+    <div id="document-flaws" className="document-flaws">
       {!!fixableFlaws.length && (
         <FixableFlawsAction count={fixableFlaws.length} />
       )}
@@ -283,7 +283,7 @@ function FixableFlawsAction({ count }: { count: number }) {
   return (
     <div>
       {fixingError && (
-        <p style={{ color: "red" }}>
+        <p className="error">
           <b>Error:</b> <code>{fixingError.toString()}</code>
         </p>
       )}
@@ -293,10 +293,11 @@ function FixableFlawsAction({ count }: { count: number }) {
           setFixing((prev) => !prev);
           await fix();
         }}
+        className="button minimal light"
       >
         {fixing ? "Fixing..." : `Fix fixable flaws (${count})`}
       </button>{" "}
-      {fixed && <b style={{ color: "darkgreen" }}>Fixed!</b>}
+      {fixed && <b className="success">Fixed!</b>}
     </div>
   );
 }
@@ -406,12 +407,11 @@ function BrokenLinks({
               </a>{" "}
               {flaw.fixable && <FixableFlawBadge />}{" "}
               {opening && opening === key && <small>Opening...</small>}
-              <br />
               {flaw.suggestion && (
-                <small>
-                  <b>Suggestion:</b>
+                <div className="flaw-fix-suggestion">
+                  <h5>Suggestion:</h5>
                   <ShowDiff before={flaw.href} after={flaw.suggestion} />
-                </small>
+                </div>
               )}{" "}
             </li>
           );
@@ -629,14 +629,14 @@ function Macros({
             </summary>
             {flaw.fixable && flaw.suggestion && (
               <>
-                <b>Suggestion:</b>
+                <h4>Suggestion:</h4>
                 <ShowDiff before={flaw.macroSource} after={flaw.suggestion} />
                 <br />
               </>
             )}
-            <b>Context:</b>
+            <h4>Context:</h4>
             <pre>{flaw.sourceContext}</pre>
-            <b>Original error stack:</b>
+            <h5>Original error stack:</h5>
             <pre>{flaw.errorStack}</pre>
             <b>Filepath:</b>{" "}
             {inPrerequisiteMacro && (

@@ -1,26 +1,60 @@
-#document-flaws {
-  margin: 20px;
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/typography";
 
-  details {
-    margin-bottom: 20px;
+.toolbar-flaws {
+  margin: $base-spacing 0;
+
+  .button {
+    margin-right: $base-spacing / 4;
   }
 
-  .flaw .fetch-error {
-    p {
-      font-weight: bold;
+  .document-flaws {
+    margin: $base-spacing 0;
+  }
+
+  a {
+    &:link,
+    &:visited {
+      color: $neutral-600;
     }
   }
+
+  pre {
+    background-color: $neutral-200;
+  }
+
+  code {
+    color: $neutral-100;
+    margin-right: $base-spacing / 4;
+    padding: $base-spacing / 4;
+  }
+
+  details,
+  summary {
+    margin-bottom: $base-spacing;
+  }
+
   .flaw {
     li {
-      margin-bottom: 15px;
+      margin-bottom: $base-spacing;
     }
 
     ins {
-      background-color: #d4fcbc;
+      background-color: $green-400;
     }
+
     del {
+      background-color: $red-400;
       text-decoration: none;
-      background-color: #fbb;
+    }
+  }
+
+  .flaw-fix-suggestion {
+    margin: ($base-spacing / 4) 0;
+
+    h5 {
+      font-size: $small-font-size;
     }
   }
 

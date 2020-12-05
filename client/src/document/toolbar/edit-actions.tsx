@@ -57,13 +57,19 @@ export function EditActions({ folder }: { folder: string }) {
   return (
     <ul className="edit-actions">
       <li>
-        <a href={`https://developer.mozilla.org/${locale}/docs/${slug}`}>
+        <a
+          href={`https://developer.mozilla.org/${locale}/docs/${slug}`}
+          className="button minimal light"
+        >
           View on MDN
         </a>
       </li>
 
       <li>
-        <Link to={location.pathname.replace("/docs/", "/_edit/")}>
+        <Link
+          to={location.pathname.replace("/docs/", "/_edit/")}
+          className="button minimal light"
+        >
           Quick-edit
         </Link>
       </li>
@@ -72,12 +78,16 @@ export function EditActions({ folder }: { folder: string }) {
           type="button"
           title={`Folder: ${folder}`}
           onClick={openInEditorHandler}
+          className="button minimal light"
         >
           Edit in your <b>editor</b>
         </button>
       </li>
       <li>
-        <Link to={location.pathname.replace("/docs/", "/_manage/")}>
+        <Link
+          to={location.pathname.replace("/docs/", "/_manage/")}
+          className="button minimal light"
+        >
           Manage document
         </Link>
       </li>
@@ -87,6 +97,7 @@ export function EditActions({ folder }: { folder: string }) {
             "/docs/",
             "/_create/"
           )}?initial_slug=${encodeURIComponent(slug)}`}
+          className="button minimal light"
         >
           Create new document
         </Link>

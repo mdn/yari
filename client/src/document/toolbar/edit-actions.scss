@@ -1,16 +1,12 @@
 @import "~@mdn/minimalist/sass/vars/layout";
 
 .edit-actions {
-  text-align: center;
-  display: flex;
   align-items: baseline;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 
   p.editor-opening-error {
     font-weight: bold;
-  }
-
-  li {
-    margin-left: $base-spacing;
-    margin-right: $base-spacing;
   }
 }

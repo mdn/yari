@@ -1,8 +1,13 @@
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+
 .document-watch-info {
-  font-size: 70%;
-  max-width: 200px;
-  width: 100%;
-  padding: 3px;
-  border-radius: 0 0 3px 3px;
+  color: $neutral-100;
+  font-size: $small-font-size;
+  position: absolute;
+  right: $base-spacing;
   text-align: right;
+  top: 6px;
+  width: 100%;
 }
