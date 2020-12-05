@@ -101,7 +101,10 @@ const extractWebFontURLs = lazy(() => {
       path.join(clientBuildRoot, entrypoint),
       "utf-8"
     );
-    const generator = extractCSSURLs(css, (url) => url.endsWith(".woff2"));
+    const generator = extractCSSURLs(
+      css,
+      (url) => url.endsWith(".woff2") && /Bold/i.test(url)
+    );
     urls.push(...generator);
   }
   return urls;
