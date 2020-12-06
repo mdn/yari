@@ -25,6 +25,8 @@ import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
 import { MainContentContainer } from "../ui/atoms/page-content";
 
+import { ReactComponent as Dino } from "../assets/dino.svg";
+
 import "./index.scss";
 
 // Lazy sub-components
@@ -160,24 +162,7 @@ function LoadingDocumentPlaceholder() {
   return (
     <>
       <Titlebar docTitle={"Loading…"} />
-
-      <div className="breadcrumbs-locale-container">
-        <div className="breadcrumb-container">
-          <p>&nbsp;</p>
-        </div>
-      </div>
-      <div className="page-content-container loading-document-placeholder">
-        <MainContentContainer>
-          <article className="article">
-            <p>
-              <span role="img" aria-label="Hourglass">
-                ⏳
-              </span>{" "}
-              Loading…
-            </p>
-          </article>
-        </MainContentContainer>
-      </div>
+      <Dino className="page-content-container loading-document-placeholder" />
     </>
   );
 }
