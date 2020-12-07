@@ -20,7 +20,7 @@ export default defaults;
 export const pageHeader = () => (
   <>
     <Router>
-      <div className={`page-wrapper reference-page`}>
+      <div className={`page-wrapper document-page`}>
         <Header />
 
         <Titlebar docTitle="Type selectors" />

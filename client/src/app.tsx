@@ -41,7 +41,7 @@ function StandardLayout({ children }) {
   return <Layout pageType="standard-page">{children}</Layout>;
 }
 function DocumentLayout({ children }) {
-  return <Layout pageType="reference-page">{children}</Layout>;
+  return <Layout pageType="document-page">{children}</Layout>;
 }
 
 export function App(appProps) {

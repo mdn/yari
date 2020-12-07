@@ -19,11 +19,11 @@ import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
 import { LanguageMenu } from "../ui/molecules/language-menu";
-import { OnGitHubLink } from "./on-github";
 import { Titlebar } from "../ui/molecules/titlebar";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
 import { MainContentContainer } from "../ui/atoms/page-content";
+import { Metadata } from "./organisms/metadata";
 
 import "./index.scss";
 
@@ -130,28 +130,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
         <MainContentContainer>
           <article className="article">
             <RenderDocumentBody doc={doc} />
-
-            <div className="metadata">
-              <section className="document-meta">
-                <header className="visually-hidden">
-                  <h4>Metadata</h4>
-                </header>
-                <ul>
-                  <li className="last-modified">
-                    <LastModified value={doc.modified} locale={locale} />,{" "}
-                    <a href={`${doc.mdn_url}/contributors.txt`}>
-                      by MDN contributors
-                    </a>
-                  </li>
-                </ul>
-                {!doc.isArchive && <OnGitHubLink doc={doc} />}
-              </section>
-            </div>
           </article>
         </MainContentContainer>
 
         {doc.sidebarHTML && <RenderSideBar doc={doc} />}
       </div>
+      <Metadata doc={doc} locale={locale} />
     </>
   );
 }
@@ -178,27 +162,6 @@ function LoadingDocumentPlaceholder() {
           </article>
         </MainContentContainer>
       </div>
-    </>
-  );
-}
-
-function LastModified({ value, locale }) {
-  if (!value) {
-    return <span>Last modified date not known</span>;
-  }
-  const date = new Date(value);
-  // Justification for these is to match historically
-  const dateStringOptions = {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  };
-  return (
-    <>
-      <b>Last modified:</b>{" "}
-      <time dateTime={value}>
-        {date.toLocaleString(locale, dateStringOptions)}
-      </time>
     </>
   );
 }
