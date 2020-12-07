@@ -3,13 +3,25 @@
 @import "~@mdn/minimalist/sass/vars/borders";
 @import "~@mdn/minimalist/sass/vars/typography";
 
+@import "~@mdn/minimalist/sass/mixins/animation";
 @import "~@mdn/minimalist/sass/mixins/utils";
 
 @import "./prism-overrides";
 
-.loading-document-placeholder article {
-  // Any huge margin bottom to keep the footer away when loading
-  margin-bottom: 1200px;
+.page-content-container {
+  &.loading-document-placeholder {
+    @include slow-pulse();
+    fill: $neutral-550;
+    min-height: 55vh;
+    width: 100%;
+
+    @media #{$mq-small-desktop-and-up} {
+      margin: $base-spacing auto;
+      max-width: $max-width-default;
+      min-height: 75vh;
+      width: 50%;
+    }
+  }
 }
 
 .article {
