@@ -63,6 +63,9 @@ function saveHTMLFile(
   rawHTML,
   { slug, title, translation_of, tags }
 ) {
+  if (slug.includes("#")) {
+    throw new Error("newSlug can not contain the '#' character");
+  }
   const metadata = {
     title,
     slug,
@@ -356,9 +359,6 @@ function move(oldSlug, newSlug, locale, { dry = false } = {}) {
   const doc = findByURL(oldUrl);
   if (!doc) {
     throw new Error(`document for ${oldSlug} does not exist`);
-  }
-  if (newSlug.includes("#")) {
-    throw new Error("newSlug can not contain the '#' character");
   }
   const newParentSlug = parentSlug(newSlug);
   // Otherwise we have a top level slug.
