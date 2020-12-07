@@ -8,11 +8,10 @@
 
 @import "./prism-overrides";
 
-/* we already disable all animation and transitions globally via a reset so */
 .page-content-container {
-  /* stylelint-disable a11y/media-prefers-reduced-motion */
   &.loading-document-placeholder {
     @include slow-pulse();
+    fill: $neutral-550;
     min-height: 55vh;
     width: 100%;
 
@@ -25,7 +24,6 @@
   }
 }
 
-/* stylelint-enable */
 .article {
   padding: $base-spacing;
 
