@@ -159,7 +159,7 @@ export default function MainMenu({
       labelId: "feedback",
       items: [
         {
-          url: `/${locale}/docs/MDN/Feedback`,
+          url: `/${locale}/docs/MDN/Contribute/Feedback`,
           label: "Send Feedback",
         },
         {
