@@ -1,3 +1,4 @@
+@import "~@mdn/minimalist/sass/vars/typography";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/color-palette";
 
@@ -13,11 +14,13 @@
 
   h1 {
     word-break: break-word;
+    font-size: $large-font-size-mobile;
 
     @media #{$mq-tablet-and-up} {
       margin: 0 auto;
       max-width: $max-width-default;
       padding: $base-spacing;
+      font-size: $xl-font-size;
     }
   }
 }
