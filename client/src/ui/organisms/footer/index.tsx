@@ -78,7 +78,7 @@ export function Footer() {
                 href="https://twitter.com/mozdevnet"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Follow MDN on Twitter"
+                aria-label="Twitter"
               >
                 <TwitterIcon />
               </a>
@@ -88,7 +88,7 @@ export function Footer() {
                 href="https://github.com/mdn/"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Contribute on Github"
+                aria-label="Github"
               >
                 <GithubIcon />
               </a>
@@ -104,7 +104,7 @@ export function Footer() {
                 href="https://twitter.com/mozilla"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Follow Mozilla on Twitter"
+                aria-label="Twitter"
               >
                 <TwitterIcon />
               </a>
@@ -114,7 +114,7 @@ export function Footer() {
                 href="https://www.instagram.com/mozillagram/"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Follow Mozilla on Instagram"
+                aria-label="Instagram"
               >
                 <InstagramIcon />
               </a>
