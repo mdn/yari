@@ -12,7 +12,7 @@
   }
 
   h1 {
-    word-break: break-all;
+    word-break: break-word;
 
     @media #{$mq-tablet-and-up} {
       margin: 0 auto;

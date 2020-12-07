@@ -35,7 +35,11 @@ describe("Testing the kitchensink page", () => {
 
   withDeveloping("server-side render HTML", async () => {
     // You can go to the page directly via the server
-    await page.goto(serverURL("/en-US/docs/MDN/Kitchensink"));
+    await page.goto(serverURL("/en-US/docs/MDN/Kitchensink"), {
+      // This is necessary because the page contains lazy loading iframes
+      // to external domains.
+      waitUntil: "networkidle0",
+    });
     await expect(page).toMatch("The MDN Content Kitchensink");
   });
 

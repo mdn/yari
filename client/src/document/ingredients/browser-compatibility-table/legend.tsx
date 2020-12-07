@@ -1,4 +1,3 @@
-import React from "react";
 import type bcd from "@mdn/browser-compat-data/types";
 import { asList, listFeatures } from "./utils";
 
@@ -80,10 +79,10 @@ export function Legend({ compat }: { compat: bcd.Identifier }) {
       <h3 className="visually-hidden" id="Legend">
         Legend
       </h3>
-      <dl>
+      <dl className="bc-legend-items-container">
         {getActiveLegendItems(compat).map(([key, label]) =>
           ["yes", "partial", "no", "unknown"].includes(key) ? (
-            <React.Fragment key={key}>
+            <div className="bc-legend-item" key={key}>
               <dt key={key}>
                 <span className={`bc-supports-${key} bc-supports`}>
                   <abbr
@@ -95,17 +94,17 @@ export function Legend({ compat }: { compat: bcd.Identifier }) {
                 </span>
               </dt>
               <dd>{label}</dd>
-            </React.Fragment>
+            </div>
           ) : (
-            <React.Fragment key={key}>
+            <div className="bc-legend-item" key={key}>
               <dt>
-                <abbr className="only-icon" title={label}>
-                  <span>{label}</span>
-                  <i className={`legend-icons ic-${key}`} />
-                </abbr>
+                <abbr
+                  className={`only-icon legend-icons ic-${key}`}
+                  title={label}
+                ></abbr>
               </dt>
               <dd>{label}</dd>
-            </React.Fragment>
+            </div>
           )
         )}
       </dl>

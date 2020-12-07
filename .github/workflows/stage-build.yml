@@ -63,6 +63,11 @@ jobs:
         with:
           repository: mdn/content
           path: mdn/content
+          # Yes, this means fetch EVERY COMMIT EVER.
+          # It's probably not sustainable in the far future (e.g. past 2021)
+          # but for now it's good enough. We'll need all the history
+          # so we can figure out each document's last-modified date.
+          fetch-depth: 0
 
       - uses: actions/checkout@v2
         if: "contains(github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT, 'true')"
@@ -160,6 +165,11 @@ jobs:
           # because ultimately Google Analytics will filter it out since the
           # origin domain isn't what that account expects.
           export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-36116321-5
+
+          # Make sure every built page always has
+          # '<meta name="robots" content="noindex, nofollow">' nomatter what
+          # kind of document it is.
+          export BUILD_ALWAYS_NO_ROBOTS=true
 
           yarn build
 

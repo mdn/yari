@@ -84,10 +84,20 @@ function execGit(args, opts = {}, root = null) {
     args,
     {
       cwd: gitRoot,
+      // Default is 1MB
+      // That's rarely big enough for what we're using Yari for.
+      maxBuffer: 1024 * 1024 * 100, // 100MB
     }
   );
   if (error || status !== 0) {
-    throw new Error(`git command failed:\n${stderr.toString()}`);
+    if (stderr) {
+      console.log(`Error running git ${args}`);
+      console.error(stderr);
+    }
+    if (error) {
+      throw error;
+    }
+    throw new Error(`git command failed: ${error.toString()}`);
   }
   return stdout.toString().trim();
 }
