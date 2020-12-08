@@ -163,16 +163,6 @@ export default function MainMenu({
           label: "Send Feedback",
         },
         {
-          url: "https://support.mozilla.org/",
-          label: "Get Firefox help",
-          external: true,
-        },
-        {
-          url: "https://stackoverflow.com/",
-          label: "Get web development help",
-          external: true,
-        },
-        {
           url: `/${locale}/docs/MDN/Community`,
           label: "Join the MDN community",
         },
