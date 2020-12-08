@@ -20,7 +20,7 @@ describe("Basic viewing of functional pages", () => {
   it("open the /en-US/docs/Web/Foo page", async () => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     await expect(page).toMatch("<foo>: A test tag");
-    await expect(page).toMatchElement(".last-modified-date time", {
+    await expect(page).toMatchElement(".metadata time", {
       visible: true,
     });
   });
