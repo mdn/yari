@@ -24,7 +24,7 @@ on:
       translated_content:
         description: "Build translated content"
         required: false
-        default: "false"
+        default: "true"
 
       # This is very useful when combined with the "Use workflow from"
       # feature that is built into the "Run workflow" button on
@@ -68,7 +68,7 @@ jobs:
       - uses: actions/checkout@v2
         if: "contains(github.event.inputs.translated_content, 'true')"
         with:
-          repository: mdn/translated-content
+          repository: mdn/translated-content-rendered
           path: mdn/translated-content
 
       - name: Setup Node.js environment
