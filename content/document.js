@@ -63,6 +63,9 @@ function saveHTMLFile(
   rawHTML,
   { slug, title, translation_of, tags }
 ) {
+  if (slug.includes("#")) {
+    throw new Error("newSlug can not contain the '#' character");
+  }
   const metadata = {
     title,
     slug,
