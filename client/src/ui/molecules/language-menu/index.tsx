@@ -43,9 +43,13 @@ export function LanguageMenu({
         if (localeURL !== locale) {
           for (const translation of translations) {
             if (translation.url === localeURL) {
-              document.cookie = `${PREFERRED_LOCALE_COOKIE_NAME}=${
+              let cookieValue = `${PREFERRED_LOCALE_COOKIE_NAME}=${
                 translation.locale
               };max-age=${60 * 60 * 24 * 365 * 3};path=/`;
+              if (document.location.hostname !== "localhost") {
+                cookieValue += ";secure";
+              }
+              document.cookie = cookieValue;
             }
           }
           navigate(localeURL);
