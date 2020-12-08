@@ -55,14 +55,18 @@ function LoginInner() {
       <span className="avatar-username">{userData.username}</span>
     </>
   );
-  const editProfileLink = getAuthURL(
-    `/${locale}/profiles/${userData.username}/edit`,
+  const viewProfileURL = getAuthURL(
+    `/${locale}/profiles/${userData.username}`,
     false
   );
+  const editProfileURL = viewProfileURL + "/edit";
   return (
     <Dropdown id="user-avatar-menu" label={label} right={true} hideArrow={true}>
       <li>
-        <a href={editProfileLink}>{"Edit profile"}</a>
+        <a href={editProfileURL}>Edit profile</a>
+      </li>
+      <li>
+        <a href={viewProfileURL}>View profile</a>
       </li>
       <li>
         <form action={getAuthURL(`/${locale}/users/signout`)} method="post">
