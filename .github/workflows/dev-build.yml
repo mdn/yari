@@ -140,11 +140,6 @@ jobs:
           echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
 
-          ls -l
-          ls -l mdn/translated-content
-          echo "STOP DEBUGGING"
-          exit 1
-
           # This basically means that all live-sample iframes run on the same
           # host as the page that includes the iframe. Not great security but the
           # context is that this is Dev and it's not connected to a real backend.
