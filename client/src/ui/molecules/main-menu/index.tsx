@@ -1,12 +1,16 @@
 import * as React from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useGA } from "../../../ga-context";
 import { useLocale } from "../../../hooks";
 
 import "./index.scss";
 
-export default function MainMenu() {
+export default function MainMenu({
+  toggleMainMenu,
+}: {
+  toggleMainMenu?: () => void;
+}) {
   const locale = useLocale();
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
   const [visibleSubMenu, setVisibleSubMenu] = useState<string | null>(null);
@@ -73,128 +77,128 @@ export default function MainMenu() {
     });
   });
 
-  // The menus array includes objects that define the set of
-  // menus displayed by this header component. The data structure
-  // happen after the string catalog is available. And we're using
-  // useMemo() so that localization only happens when the locale
-  // changes.
-  const menus = useMemo(
-    () => [
-      {
-        label: "Technologies",
-        labelId: "technologies",
-        items: [
-          {
-            url: `/${locale}/docs/Web`,
-            label: "Technologies Overview",
+  const menus = [
+    {
+      label: "Technologies",
+      labelId: "technologies",
+      items: [
+        {
+          url: `/${locale}/docs/Web`,
+          label: "Technologies Overview",
+        },
+        {
+          url: `/${locale}/docs/Web/HTML`,
+          label: "HTML",
+        },
+        {
+          url: `/${locale}/docs/Web/CSS`,
+          label: "CSS",
+        },
+        {
+          url: `/${locale}/docs/Web/JavaScript`,
+          label: "JavaScript",
+        },
+        {
+          url: `/${locale}/docs/Web/Guide/Graphics`,
+          label: "Graphics",
+        },
+        {
+          url: `/${locale}/docs/Web/HTTP`,
+          label: "HTTP",
+        },
+        {
+          url: `/${locale}/docs/Web/API`,
+          label: "APIs",
+        },
+        {
+          url: `/${locale}/docs/Mozilla/Add-ons/WebExtensions`,
+          label: "Browser Extensions",
+        },
+        {
+          url: `/${locale}/docs/Web/MathML`,
+          label: "MathML",
+        },
+      ],
+    },
+    {
+      label: "References & Guides",
+      labelId: "references-guides",
+      items: [
+        {
+          url: `/${locale}/docs/Learn`,
+          label: "Learn web development",
+        },
+        {
+          url: `/${locale}/docs/Web/Tutorials`,
+          label: "Tutorials",
+        },
+        {
+          url: `/${locale}/docs/Web/Reference`,
+          label: "References",
+        },
+        {
+          url: `/${locale}/docs/Web/Guide`,
+          label: "Developer Guides",
+        },
+        {
+          url: `/${locale}/docs/Web/Accessibility`,
+          label: "Accessibility",
+        },
+        {
+          url: `/${locale}/docs/Games`,
+          label: "Game development",
+        },
+        {
+          url: `/${locale}/docs/Web`,
+          label: "...more docs",
+        },
+      ],
+    },
+    {
+      label: "Feedback",
+      labelId: "feedback",
+      items: [
+        {
+          url: `/${locale}/docs/MDN/Contribute/Feedback`,
+          label: "Send Feedback",
+        },
+        {
+          url: "https://support.mozilla.org/",
+          label: "Get Firefox help",
+          external: true,
+        },
+        {
+          url: "https://stackoverflow.com/",
+          label: "Get web development help",
+          external: true,
+        },
+        {
+          url: `/${locale}/docs/MDN/Community`,
+          label: "Join the MDN community",
+        },
+        {
+          label: "Report a content issue",
+          external: true,
+          url: "https://github.com/mdn/content/issues/new",
+          onClick: (event) => {
+            const onGithubElement = document.querySelector("#on-github");
+            if (onGithubElement) {
+              event.preventDefault();
+              if (toggleMainMenu) {
+                toggleMainMenu();
+              }
+              onGithubElement.scrollIntoView({ behavior: "smooth" });
+            }
           },
-          {
-            url: `/${locale}/docs/Web/HTML`,
-            label: "HTML",
-          },
-          {
-            url: `/${locale}/docs/Web/CSS`,
-            label: "CSS",
-          },
-          {
-            url: `/${locale}/docs/Web/JavaScript`,
-            label: "JavaScript",
-          },
-          {
-            url: `/${locale}/docs/Web/Guide/Graphics`,
-            label: "Graphics",
-          },
-          {
-            url: `/${locale}/docs/Web/HTTP`,
-            label: "HTTP",
-          },
-          {
-            url: `/${locale}/docs/Web/API`,
-            label: "APIs",
-          },
-          {
-            url: `/${locale}/docs/Mozilla/Add-ons/WebExtensions`,
-            label: "Browser Extensions",
-          },
-          {
-            url: `/${locale}/docs/Web/MathML`,
-            label: "MathML",
-          },
-        ],
-      },
-      {
-        label: "References & Guides",
-        labelId: "references-guides",
-        items: [
-          {
-            url: `/${locale}/docs/Learn`,
-            label: "Learn web development",
-          },
-          {
-            url: `/${locale}/docs/Web/Tutorials`,
-            label: "Tutorials",
-          },
-          {
-            url: `/${locale}/docs/Web/Reference`,
-            label: "References",
-          },
-          {
-            url: `/${locale}/docs/Web/Guide`,
-            label: "Developer Guides",
-          },
-          {
-            url: `/${locale}/docs/Web/Accessibility`,
-            label: "Accessibility",
-          },
-          {
-            url: `/${locale}/docs/Games`,
-            label: "Game development",
-          },
-          {
-            url: `/${locale}/docs/Web`,
-            label: "...more docs",
-          },
-        ],
-      },
-      {
-        label: "Feedback",
-        labelId: "feedback",
-        items: [
-          {
-            url: `/${locale}/docs/MDN/Feedback`,
-            label: "Send Feedback",
-          },
-          {
-            url: "https://support.mozilla.org/",
-            label: "Get Firefox help",
-            external: true,
-          },
-          {
-            url: "https://stackoverflow.com/",
-            label: "Get web development help",
-            external: true,
-          },
-          {
-            url: `/${locale}/docs/MDN/Community`,
-            label: "Join the MDN community",
-          },
-          {
-            label: "Report a content problem",
-            external: true,
-            url: `https://github.com/mdn/sprints/issues/new?template=issue-template.md&projects=mdn/sprints/2&labels=user-report&title=${
-              typeof window === "undefined" ? "" : window.location.pathname
-            }`,
-          },
-          {
-            label: "Report an issue",
-            external: true,
-            url: "https://github.com/mdn/kuma/issues/new/choose",
-          },
-        ],
-      },
-    ],
-    [locale]
-  );
+        },
+        {
+          label: "Report a platform issue",
+          external: true,
+          url: "https://github.com/mdn/yari/issues/new",
+        },
+      ],
+    },
+  ];
 
   return (
     <nav className="main-nav" aria-label="Main menu">
@@ -228,7 +232,11 @@ export default function MainMenu() {
                       target="_blank"
                       rel="noopener noreferrer"
                       href={item.url}
-                      onClick={sendMenuItemInteraction}
+                      onClick={(event) => {
+                        item.onClick
+                          ? item.onClick(event)
+                          : sendMenuItemInteraction(event);
+                      }}
                       onContextMenu={sendMenuItemInteraction}
                       role="menuitem"
                     >
@@ -237,7 +245,11 @@ export default function MainMenu() {
                   ) : (
                     <a
                       href={item.url}
-                      onClick={sendMenuItemInteraction}
+                      onClick={(event) => {
+                        item.onClick
+                          ? item.onClick(event)
+                          : sendMenuItemInteraction(event);
+                      }}
                       onContextMenu={sendMenuItemInteraction}
                       role="menuitem"
                     >
