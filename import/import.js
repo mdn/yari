@@ -17,6 +17,10 @@ const {
   resolveFundamental,
 } = require("../content");
 
+// This is unique to the importer
+const CONTENT_TRANSLATED_RENDERED_ROOT =
+  process.env.CONTENT_TRANSLATED_RENDERED_ROOT;
+
 const cheerio = require("../build/monkeypatched-cheerio");
 const ProgressBar = require("./progress-bar");
 
@@ -685,9 +689,15 @@ async function prepareRoots(options) {
     CONTENT_TRANSLATED_ROOT,
     "CONTENT_TRANSLATED_ROOT must be set"
   );
+  console.assert(
+    CONTENT_TRANSLATED_RENDERED_ROOT,
+    "CONTENT_TRANSLATED_RENDERED_ROOT must be set"
+  );
 
   if (CONTENT_ROOT === CONTENT_ARCHIVED_ROOT) throw new Error("eh?!");
   if (CONTENT_ROOT === CONTENT_TRANSLATED_ROOT) throw new Error("eh?!");
+  if (CONTENT_TRANSLATED_ROOT === CONTENT_TRANSLATED_RENDERED_ROOT)
+    throw new Error("that ain't right");
   if (options.startClean) {
     // Experimental new feature
     // https://nodejs.org/api/fs.html#fs_fs_rmdirsync_path_options
@@ -700,10 +710,14 @@ async function prepareRoots(options) {
     await withTimer(`Delete all of ${CONTENT_TRANSLATED_ROOT}`, () =>
       fs.rmdirSync(CONTENT_TRANSLATED_ROOT, { recursive: true })
     );
+    await withTimer(`Delete all of ${CONTENT_TRANSLATED_RENDERED_ROOT}`, () =>
+      fs.rmdirSync(CONTENT_TRANSLATED_RENDERED_ROOT, { recursive: true })
+    );
   }
   fs.mkdirSync(CONTENT_ROOT, { recursive: true });
   fs.mkdirSync(CONTENT_ARCHIVED_ROOT, { recursive: true });
   fs.mkdirSync(CONTENT_TRANSLATED_ROOT, { recursive: true });
+  fs.mkdirSync(CONTENT_TRANSLATED_RENDERED_ROOT, { recursive: true });
 }
 
 function populateExistingFilePaths() {
@@ -713,6 +727,7 @@ function populateExistingFilePaths() {
     CONTENT_ROOT,
     CONTENT_ARCHIVED_ROOT,
     CONTENT_TRANSLATED_ROOT,
+    CONTENT_TRANSLATED_RENDERED_ROOT,
   ]) {
     for (const filepath of walker(root)) {
       if (filepath.endsWith("index.html")) {
@@ -1049,19 +1064,32 @@ async function processDocument(
   // If we're building this page, we can remove
   let builtFolderPath;
 
+  // If it's not archived and its not en-US dump it twice!
   if (isArchive || doc.locale !== "en-US") {
     builtFolderPath = Document.archive(
       getCleanedRenderedHTML(doc.rendered_html),
-      doc.html,
+      isArchive ? doc.html : null,
       meta,
       // The Document.archive() is used for genuinely archived content,
-      // but we also treat translated content the same way ultimately.
-      !isArchive
+      // but we also treat translated content the same way kinda.
+      !isArchive,
+      isArchive ? CONTENT_ARCHIVED_ROOT : CONTENT_TRANSLATED_RENDERED_ROOT
     );
+    builtFilePaths.add(path.join(builtFolderPath, "index.html"));
+
+    // If it's not archive, dump it a second time.
+    if (doc.locale !== "en-US") {
+      builtFolderPath = Document.create(
+        getCleanedKumaHTML(doc.html),
+        meta,
+        CONTENT_TRANSLATED_ROOT
+      );
+      builtFilePaths.add(path.join(builtFolderPath, "index.html"));
+    }
   } else {
     builtFolderPath = Document.create(getCleanedKumaHTML(doc.html), meta);
+    builtFilePaths.add(path.join(builtFolderPath, "index.html"));
   }
-  builtFilePaths.add(path.join(builtFolderPath, "index.html"));
 }
 
 function getCleanedRenderedHTML(html) {
@@ -1150,6 +1178,13 @@ async function saveAllRedirects(redirects) {
     countPerLocale.push([locale, pairs.length]);
     const root = locale === "en-US" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
     const localeFolder = path.join(root, locale.toLowerCase());
+    let extraLocaleFolder = null;
+    if (locale !== "en-US") {
+      extraLocaleFolder = path.join(
+        CONTENT_TRANSLATED_RENDERED_ROOT,
+        locale.toLowerCase()
+      );
+    }
     console.log("LOCALE", locale, "TO", localeFolder);
     if (!fs.existsSync(localeFolder)) {
       console.log(
@@ -1157,6 +1192,9 @@ async function saveAllRedirects(redirects) {
       );
     } else {
       Redirect.write(localeFolder, pairs);
+      if (extraLocaleFolder) {
+        Redirect.write(extraLocaleFolder, pairs);
+      }
     }
   }
 
@@ -1190,7 +1228,18 @@ async function saveWikiHistory(allHistory, isArchive) {
       ? CONTENT_ROOT
       : CONTENT_TRANSLATED_ROOT;
     const localeFolder = path.join(root, locale.toLowerCase());
+    let extraLocaleFolder = null;
+    if (!isArchive && locale !== "en-US") {
+      extraLocaleFolder = path.join(
+        CONTENT_TRANSLATED_RENDERED_ROOT,
+        locale.toLowerCase()
+      );
+    }
     const filePath = path.join(localeFolder, "_wikihistory.json");
+    let extraFilePath = null;
+    if (extraLocaleFolder) {
+      extraFilePath = path.join(extraLocaleFolder, "_wikihistory.json");
+    }
     const obj = Object.create(null);
     const keys = Array.from(history.keys());
     keys.sort();
@@ -1198,6 +1247,9 @@ async function saveWikiHistory(allHistory, isArchive) {
       obj[key] = history.get(key);
     }
     fs.writeFileSync(filePath, JSON.stringify(obj, null, 2));
+    if (extraFilePath) {
+      fs.writeFileSync(extraFilePath, JSON.stringify(obj, null, 2));
+    }
   }
 }
 
