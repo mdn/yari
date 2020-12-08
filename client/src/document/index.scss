@@ -6,8 +6,6 @@
 @import "~@mdn/minimalist/sass/mixins/animation";
 @import "~@mdn/minimalist/sass/mixins/utils";
 
-@import "./prism-overrides";
-
 .page-content-container {
   &.loading-document-placeholder {
     @include slow-pulse();
