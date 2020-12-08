@@ -101,7 +101,7 @@
     "fuzzyjs": "4.0.4",
     "fuzzysearch": "1.0.3",
     "history": "5.0.0",
-    "husky": "4.3.4",
+    "husky": "4.3.5",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "jest-junit-reporter": "^1.1.0",
     "jest-puppeteer": "4.4.0",
