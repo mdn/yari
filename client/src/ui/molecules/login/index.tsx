@@ -63,10 +63,10 @@ function LoginInner() {
   return (
     <Dropdown id="user-avatar-menu" label={label} right={true} hideArrow={true}>
       <li>
-        <a href={editProfileURL}>Edit profile</a>
+        <a href={viewProfileURL}>View profile</a>
       </li>
       <li>
-        <a href={viewProfileURL}>View profile</a>
+        <a href={editProfileURL}>Edit profile</a>
       </li>
       <li>
         <form action={getAuthURL(`/${locale}/users/signout`)} method="post">
