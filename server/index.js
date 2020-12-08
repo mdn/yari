@@ -5,6 +5,7 @@ const chalk = require("chalk");
 const express = require("express");
 const send = require("send");
 const proxy = require("express-http-proxy");
+const cookieParser = require("cookie-parser");
 const openEditor = require("open-editor");
 
 const {
@@ -13,13 +14,7 @@ const {
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 } = require("../build");
-const {
-  CONTENT_ROOT,
-  Document,
-  Redirect,
-  Image,
-  resolveFundamental,
-} = require("../content");
+const { CONTENT_ROOT, Document, Redirect, Image } = require("../content");
 // eslint-disable-next-line node/no-missing-require
 const { prepareDoc, renderDocHTML } = require("../ssr/dist/main");
 
@@ -28,19 +23,17 @@ const documentRouter = require("./document");
 const fakeV1APIRouter = require("./fake-v1-api");
 const { searchRoute } = require("./document-watch");
 const flawsRoute = require("./flaws");
-const { staticMiddlewares } = require("./middlewares");
+const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
 
 const app = express();
+
 app.use(express.json());
 
-app.use((req, res, next) => {
-  // If we have a fundamental redirect mimic out Lambda@Edge and redirect.
-  const { url: fundamentalRedirectUrl, status } = resolveFundamental(req.url);
-  if (fundamentalRedirectUrl && status) {
-    return res.redirect(status, fundamentalRedirectUrl);
-  }
-  return next();
-});
+// Needed because we read cookies in the code that mimics what we do in Lambda@Edge.
+app.use(cookieParser());
+
+app.use(originRequestMiddleware);
+
 app.use(staticMiddlewares);
 
 app.use(express.urlencoded({ extended: true }));
