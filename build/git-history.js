@@ -4,8 +4,14 @@ const path = require("path");
 const { CONTENT_ROOT, execGit } = require("../content");
 
 function getFromGit(contentRoot = CONTENT_ROOT) {
+  // If `contentRoot` was a symlink, the `repoRoot` won't be. That'll make it
+  // impossible to compute the relative path for files within when we get
+  // output back from `git log ...`.
+  // So, always normalize to the real path.
+  const realContentRoot = fs.realpathSync(contentRoot);
+
   const repoRoot = execGit(["rev-parse", "--show-toplevel"], {
-    cwd: contentRoot,
+    cwd: realContentRoot,
   });
 
   const MARKER = "COMMIT:";
@@ -30,11 +36,15 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
 
   const map = new Map();
   let date = null;
-  for (let line of output.split("\0")) {
+  // Even if we specified the `-z` option to `git log ...` above, sometimes
+  // it seems `git log` prefers to use a newline character.
+  // At least as of git version 2.28.0 (Dec 2020). So let's split on both
+  // characters to be safe.
+  for (const line of output.split(/\0|\n/)) {
     if (line.startsWith(MARKER)) {
       date = new Date(line.replace(MARKER, ""));
     } else if (line) {
-      const relPath = path.relative(contentRoot, path.join(repoRoot, line));
+      const relPath = path.relative(realContentRoot, path.join(repoRoot, line));
       map.set(relPath, date);
     }
   }

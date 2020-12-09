@@ -101,7 +101,10 @@ const extractWebFontURLs = lazy(() => {
       path.join(clientBuildRoot, entrypoint),
       "utf-8"
     );
-    const generator = extractCSSURLs(css, (url) => url.endsWith(".woff2"));
+    const generator = extractCSSURLs(
+      css,
+      (url) => url.endsWith(".woff2") && /Bold/i.test(url)
+    );
     urls.push(...generator);
   }
   return urls;
@@ -194,7 +197,7 @@ export default function render(
     if (googleAnalyticsJS) {
       $("<script>").text(`\n${googleAnalyticsJS}\n`).appendTo($("head"));
       $(
-        `<script src="https://www.google-analytics.com/${
+        `<script async src="https://www.google-analytics.com/${
           GOOGLE_ANALYTICS_DEBUG ? "anaytics_debug" : "analytics"
         }.js"></script>`
       ).appendTo($("head"));

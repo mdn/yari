@@ -1,4 +1,3 @@
-import React from "react";
 import type bcd from "@mdn/browser-compat-data/types";
 import { asList, listFeatures } from "./utils";
 

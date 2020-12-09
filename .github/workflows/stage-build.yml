@@ -13,7 +13,7 @@ env:
   DEFAULT_DEPLOYMENT_PREFIX: "main"
   DEFAULT_NOTES: ""
   DEFAULT_ARCHIVED_CONTENT: "false"
-  DEFAULT_TRANSLATED_CONTENT: "false"
+  DEFAULT_TRANSLATED_CONTENT: "true"
   DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD: "false"
 
 on:
@@ -78,7 +78,7 @@ jobs:
       - uses: actions/checkout@v2
         if: "contains(github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT, 'true')"
         with:
-          repository: mdn/translated-content
+          repository: mdn/translated-content-rendered
           path: mdn/translated-content
 
       - name: Setup Node.js environment

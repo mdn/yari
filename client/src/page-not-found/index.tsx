@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import useSWR from "swr";
 
 import LANGUAGES_RAW from "../languages.json";
@@ -128,11 +128,11 @@ function FallbackLink({ url }: { url: string }) {
           <b>English</b>
         </p>
         <p className="fallback-link">
-          <Link to={document.mdn_url}>
+          <a href={document.mdn_url}>
             <b>{document.title}</b>
             <br />
             <small>{document.mdn_url}</small>
-          </Link>
+          </a>
         </p>
       </div>
     );

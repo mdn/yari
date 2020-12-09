@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from "react";
+import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
@@ -19,16 +19,18 @@ import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
 import { LanguageMenu } from "../ui/molecules/language-menu";
-import { OnGitHubLink } from "./on-github";
 import { Titlebar } from "../ui/molecules/titlebar";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
 import { MainContentContainer } from "../ui/atoms/page-content";
+import { Metadata } from "./organisms/metadata";
+
+import { ReactComponent as Dino } from "../assets/dino.svg";
 
 import "./index.scss";
 
 // Lazy sub-components
-const Toolbar = lazy(() => import("./toolbar"));
+const Toolbar = React.lazy(() => import("./toolbar"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const documentURL = useDocumentURL();
@@ -72,7 +74,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
     }
   });
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!doc && !error) {
       document.title = "⏳ Loading…";
     } else if (error) {
@@ -102,11 +104,11 @@ export function Document(props /* TODO: define a TS interface for this */) {
     <>
       <Titlebar docTitle={doc.title}>
         {!isServer && CRUD_MODE && !props.isPreview && !doc.isArchive && (
-          <Suspense
+          <React.Suspense
             fallback={<p className="loading-toolbar">Loading toolbar</p>}
           >
             <Toolbar doc={doc} />
-          </Suspense>
+          </React.Suspense>
         )}
       </Titlebar>
 
@@ -130,28 +132,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
         <MainContentContainer>
           <article className="article">
             <RenderDocumentBody doc={doc} />
-
-            <div className="metadata">
-              <section className="document-meta">
-                <header className="visually-hidden">
-                  <h4>Metadata</h4>
-                </header>
-                <ul>
-                  <li className="last-modified">
-                    <LastModified value={doc.modified} locale={locale} />,{" "}
-                    <a href={`${doc.mdn_url}/contributors.txt`}>
-                      by MDN contributors
-                    </a>
-                  </li>
-                </ul>
-                {!doc.isArchive && <OnGitHubLink doc={doc} />}
-              </section>
-            </div>
           </article>
         </MainContentContainer>
 
         {doc.sidebarHTML && <RenderSideBar doc={doc} />}
       </div>
+      <Metadata doc={doc} locale={locale} />
     </>
   );
 }
@@ -160,45 +146,7 @@ function LoadingDocumentPlaceholder() {
   return (
     <>
       <Titlebar docTitle={"Loading…"} />
-
-      <div className="breadcrumbs-locale-container">
-        <div className="breadcrumb-container">
-          <p>&nbsp;</p>
-        </div>
-      </div>
-      <div className="page-content-container loading-document-placeholder">
-        <MainContentContainer>
-          <article className="article">
-            <p>
-              <span role="img" aria-label="Hourglass">
-                ⏳
-              </span>{" "}
-              Loading…
-            </p>
-          </article>
-        </MainContentContainer>
-      </div>
-    </>
-  );
-}
-
-function LastModified({ value, locale }) {
-  if (!value) {
-    return <span>Last modified date not known</span>;
-  }
-  const date = new Date(value);
-  // Justification for these is to match historically
-  const dateStringOptions = {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  };
-  return (
-    <>
-      <b>Last modified:</b>{" "}
-      <time dateTime={value}>
-        {date.toLocaleString(locale, dateStringOptions)}
-      </time>
+      <Dino className="page-content-container loading-document-placeholder" />
     </>
   );
 }

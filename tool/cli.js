@@ -117,7 +117,14 @@ program
 
   .command("move", "Move content to a new slug")
   .argument("<oldSlug>", "Old slug")
-  .argument("<newSlug>", "New slug")
+  .argument("<newSlug>", "New slug", {
+    validator: (value) => {
+      if (value.includes("#")) {
+        throw new Error("slug can not contain the '#' character");
+      }
+      return value;
+    },
+  })
   .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
     validator: [...VALID_LOCALES.values()],

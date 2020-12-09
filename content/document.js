@@ -63,6 +63,9 @@ function saveHTMLFile(
   rawHTML,
   { slug, title, translation_of, tags }
 ) {
+  if (slug.includes("#")) {
+    throw new Error("newSlug can not contain the '#' character");
+  }
   const metadata = {
     title,
     slug,
@@ -89,8 +92,8 @@ function urlToFolderPath(url) {
   return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
 }
 
-function create(html, metadata) {
-  const folderPath = getFolderPath(metadata);
+function create(html, metadata, root = null) {
+  const folderPath = getFolderPath(metadata, root);
 
   fs.mkdirSync(folderPath, { recursive: true });
 
@@ -98,19 +101,28 @@ function create(html, metadata) {
   return folderPath;
 }
 
-function getFolderPath(metadata) {
-  const root =
-    metadata.locale === "en-US" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+function getFolderPath(metadata, root = null) {
+  if (!root) {
+    root = metadata.locale === "en-US" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+  }
   return buildPath(
     path.join(root, metadata.locale.toLowerCase()),
     metadata.slug
   );
 }
 
-function archive(renderedHTML, rawHTML, metadata, isTranslatedContent = false) {
-  const root = isTranslatedContent
-    ? CONTENT_TRANSLATED_ROOT
-    : CONTENT_ARCHIVED_ROOT;
+function archive(
+  renderedHTML,
+  rawHTML,
+  metadata,
+  isTranslatedContent = false,
+  root = null
+) {
+  if (!root) {
+    root = isTranslatedContent
+      ? CONTENT_TRANSLATED_ROOT
+      : CONTENT_ARCHIVED_ROOT;
+  }
   if (!CONTENT_ARCHIVED_ROOT) {
     throw new Error("Can't archive when CONTENT_ARCHIVED_ROOT is not set");
   }
@@ -130,7 +142,12 @@ function archive(renderedHTML, rawHTML, metadata, isTranslatedContent = false) {
   // archived content. The archived content gets the *rendered* html
   // saved but by storing the raw html too we can potentially resurrect
   // the document if we decide to NOT archive it in the future.
-  fs.writeFileSync(path.join(folderPath, "raw.html"), trimLineEndings(rawHTML));
+  if (rawHTML) {
+    fs.writeFileSync(
+      path.join(folderPath, "raw.html"),
+      trimLineEndings(rawHTML)
+    );
+  }
 
   saveHTMLFile(
     getHTMLPath(folderPath),

@@ -1,5 +1,3 @@
-import React from "react";
-
 export function Specifications({ specifications }) {
   const title = <h2>Specifications</h2>;
   if (specifications === "non-standard") {

@@ -4,7 +4,12 @@ module.exports = {
     commonjs: true,
     es2020: true,
   },
-  extends: ["eslint:recommended", "plugin:node/recommended"],
+  extends: [
+    "eslint:recommended",
+    "plugin:node/recommended",
+    "plugin:package-json/recommended",
+  ],
+  plugins: ["package-json"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",

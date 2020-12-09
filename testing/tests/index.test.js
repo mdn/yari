@@ -779,3 +779,22 @@ test("bcd table extraction when overly nested is a flaw", () => {
     "2 'div.bc-data' elements found but deeply nested."
   );
 });
+
+test("img tags with an empty 'src' should be a flaw", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "empty_image"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.images.length).toBe(1);
+  expect(doc.flaws.images[0].explanation).toBe("Empty img 'src' attribute");
+  expect(doc.flaws.images[0].fixable).toBeFalsy();
+  expect(doc.flaws.images[0].externalImage).toBeFalsy();
+  expect(doc.flaws.images[0].line).toBe(8);
+  expect(doc.flaws.images[0].column).toBe(13);
+});
