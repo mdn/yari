@@ -1098,7 +1098,7 @@ function getCleanedRenderedHTML(html) {
 
   // This will only happen for fully rendered HTML.
   // https://github.com/mdn/yari/issues/1248
-  $("#Quick_Links a[title], div.index a[title], ul a[title]").each(
+  $("#Quick_Links a[title], div.index a[title], ul a[title], td a[title]").each(
     (i, element) => {
       const $element = $(element);
       $element.removeAttr("title");
