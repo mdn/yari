@@ -35,12 +35,18 @@ export function LazyBrowserCompatibilityTable({
     <>
       {title && !isH3 && <DisplayH2 id={id} title={title} />}
       {title && isH3 && <DisplayH3 id={id} title={title} />}
-      <LazyBrowserCompatibilityTableInner dataURL={dataURL} />
+      <LazyBrowserCompatibilityTableInner dataURL={dataURL} query={query} />
     </>
   );
 }
 
-function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
+function LazyBrowserCompatibilityTableInner({
+  dataURL,
+  query,
+}: {
+  dataURL: string;
+  query: string;
+}) {
   const [bcdDataURL, setBCDDataURL] = useState("");
 
   const { error, data } = useSWR(
@@ -68,6 +74,15 @@ function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
   if (error) {
     return <p>Error loading BCD data</p>;
   }
+  if (!data.data) {
+    return (
+      <p>
+        Error loading BCD table because there's no known data for{" "}
+        <code>{query}</code>
+      </p>
+    );
+  }
+
   return (
     <Suspense fallback={<Loading />}>
       <BrowserCompatibilityTable {...data} />
