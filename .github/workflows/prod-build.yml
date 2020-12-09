@@ -78,7 +78,7 @@ jobs:
       - uses: actions/checkout@v2
         if: "contains(github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT, 'true')"
         with:
-          repository: mdn/translated-content-rendered
+          repository: mdn/translated-content
           path: mdn/translated-content
 
       - name: Setup Node.js environment
