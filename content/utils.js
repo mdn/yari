@@ -63,6 +63,7 @@ function memoize(fn) {
     // This avoids unnecessary out-of-memory crashes.
     // See https://github.com/mdn/yari/issues/2030
     if (cache.size > 10_000) {
+      console.warn("Cache size limit reached. Clearing the cache.");
       cache.clear();
     }
 
