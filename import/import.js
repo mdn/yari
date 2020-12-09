@@ -1078,7 +1078,7 @@ async function processDocument(
     builtFilePaths.add(path.join(builtFolderPath, "index.html"));
 
     // If it's not archive, dump it a second time.
-    if (doc.locale !== "en-US") {
+    if (!isArchive && doc.locale !== "en-US") {
       builtFolderPath = Document.create(
         getCleanedKumaHTML(doc.html),
         meta,
@@ -1098,11 +1098,13 @@ function getCleanedRenderedHTML(html) {
 
   // This will only happen for fully rendered HTML.
   // https://github.com/mdn/yari/issues/1248
-  $("#Quick_Links a[title]").each((i, element) => {
-    const $element = $(element);
-    $element.removeAttr("title");
-    mutations++;
-  });
+  $("#Quick_Links a[title], div.index a[title], ul a[title]").each(
+    (i, element) => {
+      const $element = $(element);
+      $element.removeAttr("title");
+      mutations++;
+    }
+  );
 
   $("div.warning, div.blockIndicator").each((i, element) => {
     const $element = $(element);
