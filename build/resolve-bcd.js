@@ -4,7 +4,9 @@ const bcd = require("@mdn/browser-compat-data");
 
 function packageBCD(query) {
   let data = query.split(".").reduce((prev, curr) => {
-    return prev && prev.hasOwnProperty(curr) ? prev[curr] : undefined;
+    return prev && Object.prototype.hasOwnProperty.call(prev, "curr")
+      ? prev[curr]
+      : undefined;
   }, bcd);
   return { browsers: bcd.browsers, data };
 }
