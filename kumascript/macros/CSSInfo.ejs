@@ -13,7 +13,6 @@ let atRule = $1;
 
 var data = require('mdn-data/css');
 let formattedError = "<span style=\"color:red;\">$1$</span>";
-let commonLocalStrings = string.deserialize(await template("L10n:Common"));
 let locale = env.locale;
 let escapeQuotes = mdn.escapeQuotes;
 let localize = mdn.getLocalString;
