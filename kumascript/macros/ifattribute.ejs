@@ -9,12 +9,7 @@ var destOldType = "/" + lang + '/docs/' + $0;
 var apiString = $0 + '.' + $1;
 var html = "";
 
-if (wiki.pageExists(destNewType)) { /* the page exists from the dekiwiki age */
-    html = web.link(wiki.uri(destNewType) + '#' + $1, apiString);
-} else if (wiki.pageExists(destOldType)) { /* the page exists from the mediawiki age */
-    html = web.link(wiki.uri(destOldType) + '#' + $1, apiString);
-} else { /* the page doesn't exist */
-  html = web.link(wiki.uri(destNewType) + '#' + $1, apiString);
-}
+/* the page doesn't exist */
+html = web.link(wiki.uri(destNewType) + '#' + $1, apiString);
 %>
 <code><%-html%></code>
