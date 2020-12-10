@@ -85,7 +85,7 @@ async function buildDocuments(files = null) {
       // Perhaps, then, we'll do a complete scan through all content first to build
       // up the map before we process each one.
       document.translations = [];
-    } else {
+    } else if (translationsOf.has(document.metadata.slug)) {
       document.translations = uniqifyTranslationsOf(
         translationsOf.get(document.metadata.slug),
         document.url
