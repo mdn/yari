@@ -157,6 +157,20 @@ the Google Analytics script tag it will use
 `<script src="https://www.google-analytics.com/anaytics_debug.js"></script>`
 instead which triggers additional console logging which is useful for developers.
 
+### `BUILD_ALWAYS_NO_ROBOTS`
+
+**Default: `false`**
+
+This exists so we can forcibly always include
+`<meta name="robots" content="noindex, nofollow">` into the HTML no matter what.
+For example, on our stage or dev builds, none of the documents should be indexed,
+so we'll set `BUILD_ALWAYS_NO_ROBOTS` to `true`.
+
+We use this to make absolutely sure that no dev or stage build ever gets into
+the Google index. Thankfully we _always_ used a canonical URL
+(`<link rel="canonical" href="https://developer.mozilla.org/$uri">`) as a "second
+line of defense" for dev/stage URLs that are public.
+
 ## Server
 
 ### `SERVER_PORT`

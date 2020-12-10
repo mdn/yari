@@ -127,6 +127,8 @@ test("content built foo page", () => {
   expect($("link[rel=canonical]").attr("href")).toBe(
     `https://developer.mozilla.org${doc.mdn_url}`
   );
+
+  expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
 });
 
 test("content built French foo page", () => {
@@ -738,6 +740,7 @@ test("404 page", () => {
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Page not found");
   expect($("h1").text()).toContain("Page not found");
+  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
 test("bcd table extraction followed by h3", () => {
@@ -775,4 +778,23 @@ test("bcd table extraction when overly nested is a flaw", () => {
   expect(doc.flaws.sectioning[0].explanation).toBe(
     "2 'div.bc-data' elements found but deeply nested."
   );
+});
+
+test("img tags with an empty 'src' should be a flaw", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "empty_image"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.images.length).toBe(1);
+  expect(doc.flaws.images[0].explanation).toBe("Empty img 'src' attribute");
+  expect(doc.flaws.images[0].fixable).toBeFalsy();
+  expect(doc.flaws.images[0].externalImage).toBeFalsy();
+  expect(doc.flaws.images[0].line).toBe(8);
+  expect(doc.flaws.images[0].column).toBe(13);
 });

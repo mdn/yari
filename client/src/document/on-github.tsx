@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Doc } from "./types";
 
 export function OnGitHubLink({ doc }: { doc: Doc }) {
@@ -16,7 +14,7 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
         <li>
           Want to fix the problem yourself? See{" "}
           <a
-            href="https://github.com/mdn/content/blob/main/CONTRIBUTING.md"
+            href="https://github.com/mdn/content/blob/main/README.md"
             target="_blank"
             rel="noopener noreferrer"
           >

@@ -24,7 +24,7 @@ on:
       translated_content:
         description: "Build translated content"
         required: false
-        default: "false"
+        default: "true"
 
       # This is very useful when combined with the "Use workflow from"
       # feature that is built into the "Run workflow" button on
@@ -68,7 +68,7 @@ jobs:
       - uses: actions/checkout@v2
         if: "contains(github.event.inputs.translated_content, 'true')"
         with:
-          repository: mdn/translated-content
+          repository: mdn/translated-content-rendered
           path: mdn/translated-content
 
       - name: Setup Node.js environment
@@ -157,6 +157,11 @@ jobs:
           # This just makes sure the Google Analytics script gets used even if
           # it goes nowhere.
           export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-00000000-0
+
+          # Make sure every built page always has
+          # '<meta name="robots" content="noindex, nofollow">' nomatter what
+          # kind of document it is.
+          export BUILD_ALWAYS_NO_ROBOTS=true
 
           yarn build
 

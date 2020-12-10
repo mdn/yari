@@ -54,6 +54,11 @@ const FIX_FLAWS_VERBOSE = JSON.parse(
   process.env.BUILD_FIX_FLAWS_VERBOSE || "true"
 );
 
+// See explanation in docs/envvars.md
+const ALWAYS_NO_ROBOTS = JSON.parse(
+  process.env.BUILD_ALWAYS_NO_ROBOTS || "false"
+);
+
 module.exports = {
   BUILD_OUT_ROOT,
   DEFAULT_FLAW_LEVELS,
@@ -67,4 +72,5 @@ module.exports = {
   FIX_FLAWS,
   FIX_FLAWS_DRY_RUN,
   FIX_FLAWS_VERBOSE,
+  ALWAYS_NO_ROBOTS,
 };

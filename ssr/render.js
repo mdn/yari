@@ -8,6 +8,7 @@ import cheerio from "./monkeypatched-cheerio";
 import {
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
+  ALWAYS_NO_ROBOTS,
 } from "../build/constants";
 
 // When there are multiple options for a given language, this gives the
@@ -100,7 +101,10 @@ const extractWebFontURLs = lazy(() => {
       path.join(clientBuildRoot, entrypoint),
       "utf-8"
     );
-    const generator = extractCSSURLs(css, (url) => url.endsWith(".woff2"));
+    const generator = extractCSSURLs(
+      css,
+      (url) => url.endsWith(".woff2") && /Bold/i.test(url)
+    );
     urls.push(...generator);
   }
   return urls;
@@ -176,11 +180,13 @@ export default function render(
     $('meta[name="description"]').attr("content", pageDescription);
   }
 
-  if ((doc && !doc.noIndexing) || pageNotFound) {
-    $('<meta name="robots" content="noindex, nofollow">').insertAfter(
-      $("meta").eq(-1)
-    );
-  }
+  const robotsContent =
+    ALWAYS_NO_ROBOTS || (doc && doc.noIndexing) || pageNotFound
+      ? "noindex, nofollow"
+      : "index, follow";
+  $(`<meta name="robots" content="${robotsContent}">`).insertAfter(
+    $("meta").eq(-1)
+  );
 
   if (!pageNotFound) {
     $('link[rel="canonical"]').attr("href", canonicalURL);
@@ -191,7 +197,7 @@ export default function render(
     if (googleAnalyticsJS) {
       $("<script>").text(`\n${googleAnalyticsJS}\n`).appendTo($("head"));
       $(
-        `<script src="https://www.google-analytics.com/${
+        `<script async src="https://www.google-analytics.com/${
           GOOGLE_ANALYTICS_DEBUG ? "anaytics_debug" : "analytics"
         }.js"></script>`
       ).appendTo($("head"));

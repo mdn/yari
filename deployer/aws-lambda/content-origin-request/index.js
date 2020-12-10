@@ -1,22 +1,8 @@
 const sanitizeFilename = require("sanitize-filename");
 const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
-const { DEFAULT_LOCALE, VALID_LOCALES } = require("@yari-internal/constants");
-const acceptLanguageParser = require("accept-language-parser");
+const { getLocale } = require("@yari-internal/get-locale");
 
 const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
-
-const VALID_LOCALES_LIST = [...VALID_LOCALES.values()];
-
-function getLocale(request, fallback = DEFAULT_LOCALE) {
-  // Do we want to support a language cookie? Add it here!
-  // Each header in request.headers is always a list of objects.
-  const acceptLangHeaders = request.headers["accept-language"];
-  const { value = null } = (acceptLangHeaders && acceptLangHeaders[0]) || {};
-  const locale =
-    value &&
-    acceptLanguageParser.pick(VALID_LOCALES_LIST, value, { loose: true });
-  return locale || fallback;
-}
 
 /*
  * NOTE: This function is derived from the function of the same name within
@@ -96,7 +82,9 @@ exports.handler = async (event, _context) => {
       ? request.uri.slice(0, -1)
       : request.uri;
     const locale = getLocale(request);
-    return redirect(`/${locale}${path}`);
+    // The only time we actually want a trailing slash is when the URL is just
+    // the locale. E.g. `/en-US/` (not `/en-US`)
+    return redirect(`/${locale}${path || "/"}`);
   }
 
   // A document URL with a trailing slash should redirect

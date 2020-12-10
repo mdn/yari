@@ -51,7 +51,6 @@ let rawSyntax = "";
 let formattedSyntax = "";
 let localize = mdn.getLocalString;
 
-let commonLocalStrings = string.deserialize(await template("L10n:Common"));
 let localStrings = string.deserialize(await template("L10n:CSS"));
 
 let s_missing = mdn.localString({
