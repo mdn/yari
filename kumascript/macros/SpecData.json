@@ -939,6 +939,11 @@
     "url": "https://www.w3.org/TR/html52/",
     "status": "REC"
   },
+  "HTML Sanitizer API": {
+    "name": "HTML Sanitizer API",
+    "url": "https://wicg.github.io/sanitizer-api/",
+    "status": "WD"
+  },
   "HTML WHATWG": {
     "name": "HTML Living Standard",
     "url": "https://html.spec.whatwg.org/multipage/",

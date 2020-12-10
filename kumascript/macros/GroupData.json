@@ -772,6 +772,13 @@
         "HTMLElement: dragend"
       ]
     },
+    "HTML Sanitizer API": {
+      "overview": ["HTML Sanitizer API"],
+      "interfaces": ["Sanitizer"],
+      "methods": ["Sanitizer.sanitize", "Sanitizer.sanitizeToString"],
+      "properties": [],
+      "events": []
+    },
     "Image Capture API": {
       "overview": ["MediaStream Image Capture API"],
       "interfaces": ["ImageCapture", "PhotoCapabilities"],
