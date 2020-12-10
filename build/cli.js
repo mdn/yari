@@ -282,7 +282,7 @@ program
           ? `${(seconds / 60).toFixed(1)} minutes`
           : `${seconds.toFixed(1)} seconds`;
       console.log(
-        `Built ${count.toLocaleString()} in ${took}, at a rate of ${(
+        `Built ${count.toLocaleString()} pages in ${took}, at a rate of ${(
           count / seconds
         ).toFixed(1)} documents per second.`
       );
