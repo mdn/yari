@@ -34,12 +34,4 @@ var destOldest = lang + '/docs/XUL:' + attrName + ':' + $0;
 var destOld = lang + '/docs/XUL/' + attrName + '/' + $0;
 var destNew = lang + "/docs/" + newPath + "/" + $0;
 
-if (wiki.pageExists(destNew)) {
-    %><code id="<%= anch %>"><%-(web.link(wiki.uri(destNew), dispApi))%></code><%
-} else if (wiki.pageExists(destOld)) {
-    %><code id="<%= anch %>"><%-(web.link(wiki.uri(destOld), dispApi))%></code><%
-} else if (wiki.pageExists(destOldest)) {
-    %><code id="<%= anch %>"><%-(web.link(wiki.uri(destOldest), dispApi))%></code><%
-} else {
-    %><code id="<%= anch %>"><%-(web.link(wiki.uri(destNew), dispApi))%></code><%
-}%>
+
