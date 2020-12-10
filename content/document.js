@@ -61,7 +61,7 @@ function extractLocale(folder) {
 function saveHTMLFile(
   filePath,
   rawHTML,
-  { slug, title, translation_of, tags }
+  { slug, title, translation_of, tags, translation_of_original }
 ) {
   if (slug.includes("#")) {
     throw new Error("newSlug can not contain the '#' character");
@@ -75,6 +75,11 @@ function saveHTMLFile(
   }
   if (translation_of) {
     metadata.translation_of = translation_of;
+  }
+  if (translation_of_original) {
+    // This will only make sense during the period where we're importing from
+    // MySQL to disk. Once we're over that period we can delete this if-statement.
+    metadata.translation_of_original = translation_of_original;
   }
   const combined = `---\n${yaml.safeDump(metadata)}---\n${rawHTML.trim()}\n`;
   fs.writeFileSync(filePath, combined);
