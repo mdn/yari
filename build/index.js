@@ -108,11 +108,10 @@ function injectLoadingLazyAttributes($) {
  * to be just `callout`, no more need to mark them as `webdev`
  * @param {Cheerio document instance} $
  */
-function rewriteInPageCallout($) {
-  $("div.in-page-callout").each((i, element) => {
-    $(element).removeClass("in-page-callout webdev");
-    $(element).addClass("callout");
-  });
+function injectInPageCallout($) {
+  $("div.in-page-callout")
+    .addClass("callout")
+    .removeClass("in-page-callout webdev");
 }
 
 /**
@@ -330,7 +329,7 @@ async function buildDocument(document, documentOptions = {}) {
   // need to do this code here.
   // We might want to delete this injection in 2021 some time when all content's
   // raw HTML has been fixed to always have it in there already.
-  rewriteInPageCallout($);
+  injectInPageCallout($);
 
   // All content that uses `<div class="warning">` needs to become
   // `<div class="warning notecard">` instead.
