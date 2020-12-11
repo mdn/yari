@@ -101,7 +101,7 @@ article > * + * {
   }
 
   table {
-    margin-bottom: $base-spacing;
+    margin-bottom: $base-spacing * 2;
   }
 
   /* readonly inline badges needs a slightly darker background color in general article content  */
