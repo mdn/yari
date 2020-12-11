@@ -8,6 +8,7 @@ import cheerio from "./monkeypatched-cheerio";
 import {
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
+  SPEEDCURVE_LUX_ID,
   ALWAYS_NO_ROBOTS,
 } from "../build/constants";
 
@@ -88,6 +89,16 @@ const getGoogleAnalyticsJS = lazy(() => {
       ga('create', '${GOOGLE_ANALYTICS_ACCOUNT}', 'mozilla.org');
       ga('set', 'anonymizeIp', true);
   }`.trim();
+});
+
+const getSpeedcurveJS = lazy(() => {
+  return fs
+    .readFileSync(
+      // The file is called `...js.txt` so that Prettier never touches it.
+      path.join(__dirname, "..", "speedcurve-lux-snippet.js.txt"),
+      "utf-8"
+    )
+    .trim();
 });
 
 const extractWebFontURLs = lazy(() => {
@@ -190,6 +201,16 @@ export default function render(
 
   if (!pageNotFound) {
     $('link[rel="canonical"]').attr("href", canonicalURL);
+  }
+
+  if (SPEEDCURVE_LUX_ID) {
+    // The snippet is always the same, if it's present, but the ID varies
+    // See LUX settings here https://speedcurve.com/mozilla-add-ons/mdn/settings/lux/
+    const speedcurveJS = getSpeedcurveJS();
+    $("<script>").text(`\n${speedcurveJS}\n`).appendTo($("head"));
+    $(
+      `<script src="https://cdn.speedcurve.com/js/lux.js?id=${SPEEDCURVE_LUX_ID}" async defer crossorigin="anonymous"></script>`
+    ).appendTo($("head"));
   }
 
   if (GOOGLE_ANALYTICS_ACCOUNT) {

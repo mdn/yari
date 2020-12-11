@@ -129,6 +129,18 @@ test("content built foo page", () => {
   );
 
   expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
+
+  // The HTML should contain the Google Analytics snippet.
+  // The ID should match what's set in `testing/.env`.
+  expect(
+    $('script[src="https://www.google-analytics.com/analytics.js"]').length
+  ).toBe(1);
+
+  // The HTML should contain the Speedcurve LUX snippet.
+  // The ID should match what's set in `testing/.env`.
+  expect($('script[src^="https://cdn.speedcurve.com/"]').attr("src")).toContain(
+    "012345"
+  );
 });
 
 test("content built French foo page", () => {
