@@ -157,6 +157,14 @@ the Google Analytics script tag it will use
 `<script src="https://www.google-analytics.com/anaytics_debug.js"></script>`
 instead which triggers additional console logging which is useful for developers.
 
+### `BUILD_SPEEDCURVE_LUX_ID`
+
+**Default: `''`**
+
+You can get it here on [this settings page](https://speedcurve.com/mozilla-add-ons/mdn/settings/lux/) which will give you the ID in
+the snippet shown there. Also, try to match this with the domains in
+those settings to match where we deploy it.
+
 ### `BUILD_ALWAYS_NO_ROBOTS`
 
 **Default: `false`**

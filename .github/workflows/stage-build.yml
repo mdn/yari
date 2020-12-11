@@ -180,6 +180,11 @@ jobs:
           # origin domain isn't what that account expects.
           export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-36116321-5
 
+          # See the code for a further explanation for this.
+          # You get the ID from
+          # https://speedcurve.com/mozilla-add-ons/mdn/settings/updated/#lux
+          export BUILD_SPEEDCURVE_LUX_ID=108906238
+
           # Make sure every built page always has
           # '<meta name="robots" content="noindex, nofollow">' nomatter what
           # kind of document it is.
