@@ -362,7 +362,7 @@ program
 
   .command("redundant-translations", "Find redundant translations")
   .action(
-    tryOrExit(async ({}) => {
+    tryOrExit(async () => {
       if (!CONTENT_TRANSLATED_ROOT) {
         throw new Error("CONTENT_TRANSLATED_ROOT not set");
       }
