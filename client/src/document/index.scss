@@ -22,21 +22,11 @@
   }
 }
 
-/* override rule from reset as it does not work for MDN */
-article > * + * {
-  margin-top: 0;
-}
-
 .article {
   padding: ($base-spacing / 2) $base-spacing $base-spacing;
 
   @media #{$mq-small-desktop-and-up} {
     margin-bottom: $large-spacing;
-  }
-
-  /* if the article starts with a notecard, remove the top margin */
-  .notecard:first-of-type {
-    margin-top: 0;
   }
 
   p,
