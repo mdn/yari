@@ -234,5 +234,15 @@ jobs:
           poetry run deployer upload ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
 
+          # Note, command will pick up the site ID and deployment API key
+          # from environment variables and if either of them is falsy, the
+          # command will *not* fail. It will simply not deploy anything.
+          export SPEEDCURVE_DEPLOY_API_KEY=${{ secrets.SPEEDCURVE_DEPLOY_API_KEY }}
+          # Based on https://api.speedcurve.com/#get-all-sites using the API key
+          export SPEEDCURVE_DEPLOY_SITE_ID=354836
+          poetry run deployer speedcurve-deploy \
+            --note "${{ env.GITHUB_SHA }}"\
+            --detail "run_id=${{ env.GITHUB_RUN_ID }} action=${{ env.GITHUB_ACTION }}"
+
           # TODO
           # Execute command to publish built content to Elasticsearch
