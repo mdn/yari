@@ -24,7 +24,7 @@
 
 /* override rule from reset as it does not work for MDN */
 article > * + * {
-  margin-top: inherit;
+  margin-top: 0;
 }
 
 .article {
@@ -98,6 +98,10 @@ article > * + * {
       background-color: transparent;
       color: $neutral-600;
     }
+  }
+
+  table {
+    margin-bottom: $base-spacing;
   }
 
   /* readonly inline badges needs a slightly darker background color in general article content  */
