@@ -1106,7 +1106,7 @@ function getCleanedRenderedHTML(html) {
     }
   );
 
-  $("div.warning, div.blockIndicator").each((i, element) => {
+  $("div.warning, div.note, div.blockIndicator").each((i, element) => {
     const $element = $(element);
     $element.addClass("notecard");
     $element.removeClass("blockIndicator");

@@ -122,7 +122,7 @@ function injectInPageCallout($) {
  * @param {Cheerio document instance} $
  */
 function injectNotecardOnWarnings($) {
-  $("div.warning, div.blockIndicator")
+  $("div.warning, div.note, div.blockIndicator")
     .addClass("notecard")
     .removeClass("blockIndicator");
 }
