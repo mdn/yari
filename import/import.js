@@ -1127,6 +1127,12 @@ function getCleanedRenderedHTML(html) {
     mutations++;
   });
 
+  $("div.in-page-callout").each((i, element) => {
+    $(element).removeClass("in-page-callout webdev");
+    $(element).addClass("callout");
+    mutations++;
+  });
+
   $("div.bc-data[id]").each((i, element) => {
     const $element = $(element);
     $element.empty();
