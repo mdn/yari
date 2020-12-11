@@ -77,8 +77,7 @@ function LazyBrowserCompatibilityTableInner({
   if (!data.data) {
     return (
       <p>
-        Error loading BCD table because there's no known data for{" "}
-        <code>{query}</code>
+        No compatibility data found for <code>{query}</code>. Check the spelling or contribute data to <a href="https://github.com/mdn/browser-compat-data">mdn/browser-compat-data</a>.
       </p>
     );
   }
