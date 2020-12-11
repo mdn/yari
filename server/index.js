@@ -256,7 +256,7 @@ app.listen(PORT, () => {
     console.warn(
       chalk.yellow(
         "Warning! You have not set an EDITOR environment variable. " +
-          'Using the "Edit in your editor" button will probably fail.'
+          'Using the "Open in your editor" button will probably fail.'
       )
     );
   }

@@ -140,11 +140,8 @@ export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
     <div id={FLAWS_HASH.slice(1)} ref={rootElement}>
       {flawsCounts.length > 0 ? (
         <button type="submit" onClick={toggle}>
-          {show
-            ? "Hide flaws"
-            : `Show flaws (${flawsCounts
-                .map((flaw) => flaw.count)
-                .join(" + ")})`}
+          {show ? "Hide flaws" : "Show flaws"} (
+          {flawsCounts.reduce((acc, flaw) => flaw.count + acc, 0)})
         </button>
       ) : (
         <p>
@@ -153,8 +150,7 @@ export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
             🍾
           </span>
         </p>
-      )}
-
+      )}{" "}
       {show ? (
         <Flaws doc={doc} flaws={flawsCounts} />
       ) : (
