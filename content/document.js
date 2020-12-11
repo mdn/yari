@@ -200,9 +200,12 @@ const read = memoize((folder) => {
   const gitHistory = getGitHistories(root, locale).get(
     path.relative(root, filePath)
   );
-  const modified = (gitHistory && gitHistory.modified) || null;
+  let modified = (gitHistory && gitHistory.modified) || null;
   // Use the wiki histories for a list of legacy contributors.
   const wikiHistory = getWikiHistories(root, locale).get(url);
+  if (!modified && wikiHistory && wikiHistory.modified) {
+    modified = wikiHistory.modified;
+  }
   const fullMetadata = {
     metadata: {
       ...metadata,
