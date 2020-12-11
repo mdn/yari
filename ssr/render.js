@@ -94,7 +94,8 @@ const getGoogleAnalyticsJS = lazy(() => {
 const getSpeedcurveJS = lazy(() => {
   return fs
     .readFileSync(
-      path.join(__dirname, "..", "speedcurve-lux-snippet.js"),
+      // The file is called `...js.txt` so that Prettier never touches it.
+      path.join(__dirname, "..", "speedcurve-lux-snippet.js.txt"),
       "utf-8"
     )
     .trim();
