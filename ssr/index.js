@@ -1,5 +1,6 @@
-import React from "react";
 import path from "path";
+
+import React from "react";
 import { StaticRouter } from "react-router-dom/server";
 
 import { App } from "../client/src/app";

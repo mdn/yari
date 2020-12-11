@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 10
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v2.1.3
         with:
           node-version: "12"
 
@@ -49,6 +49,14 @@ jobs:
           # in the header. It also disables any XHR checks to the server's
           # whoami endpoint.
           export REACT_APP_DISABLE_AUTH=true
+
+          # The 'yarn prepare-build' command is going to try to build up a
+          # file for the git history so it can have an index of each files.
+          # This makes sense in most of the cases where you have a CONTENT_ROOT
+          # which you'll want to build. But the CONTENT_ROOT can't be empty
+          # so you have to set it to something. So let's (ab)use the content
+          # we use for the end-to-end testing.
+          export CONTENT_ROOT=testing/content/files
 
           yarn prepare-build
 

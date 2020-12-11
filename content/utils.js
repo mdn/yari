@@ -58,6 +58,15 @@ function memoize(fn) {
       return cache.get(key);
     }
 
+    // Before proceeding, what might happen when building a huge swath of documents,
+    // the cache starts to fill up too much. So let's clear it every now and then.
+    // This avoids unnecessary out-of-memory crashes.
+    // See https://github.com/mdn/yari/issues/2030
+    if (cache.size > 10000) {
+      console.warn("Cache size limit reached. Clearing the cache.");
+      cache.clear();
+    }
+
     const value = fn(...args);
     if (isPromise(value)) {
       return value.then((actualValue) => {
@@ -84,10 +93,20 @@ function execGit(args, opts = {}, root = null) {
     args,
     {
       cwd: gitRoot,
+      // Default is 1MB
+      // That's rarely big enough for what we're using Yari for.
+      maxBuffer: 1024 * 1024 * 100, // 100MB
     }
   );
   if (error || status !== 0) {
-    throw new Error(`git command failed:\n${stderr.toString()}`);
+    if (stderr) {
+      console.log(`Error running git ${args}`);
+      console.error(stderr);
+    }
+    if (error) {
+      throw error;
+    }
+    throw new Error(`git command failed: ${error.toString()}`);
   }
   return stdout.toString().trim();
 }

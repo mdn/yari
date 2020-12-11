@@ -1,26 +1,40 @@
 .bc-legend {
-  margin-bottom: $base-spacing;
-  margin-top: $base-spacing;
+  margin: ($base-spacing * 2) 0;
 
-  dl {
+  dl.bc-legend-items-container {
     align-items: center;
-    display: grid;
-    grid-template-columns: 40px 1fr;
+    display: flex;
+    flex-wrap: wrap;
+    gap: $base-spacing * 2;
     line-height: 1.2;
+    max-width: inherit;
 
-    dt {
-      margin: ($base-spacing / 2) 0;
+    .bc-legend-item {
+      flex-basis: 100%;
+
+      @media #{$mq-tablet-and-up} {
+        flex-basis: 45%;
+      }
     }
 
+    dt,
     dd {
-      margin: ($base-spacing / 2);
+      display: inline-block;
+      margin: 0;
+      max-width: 275px;
+      min-height: 30px;
+      min-width: 30px;
+    }
+
+    dt {
+      margin-right: $base-spacing / 2;
+      vertical-align: middle;
     }
   }
 
   abbr {
     cursor: help;
     display: inline-block;
-    padding: $base-spacing / 2;
   }
 
   .bc-supports {

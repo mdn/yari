@@ -8,7 +8,41 @@ import cheerio from "./monkeypatched-cheerio";
 import {
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
+  ALWAYS_NO_ROBOTS,
 } from "../build/constants";
+
+// When there are multiple options for a given language, this gives the
+// preferred locale for that language (language => preferred locale).
+const PREFERRED_LOCALE = {
+  pt: "pt-PT",
+  zh: "zh-CN",
+};
+
+function getHrefLang(locale, otherLocales) {
+  // In most cases, just return the language code, removing the country
+  // code if present (so, for example, 'en-US' becomes 'en').
+  let hreflang = locale.split("-")[0];
+
+  // Suppose the locale is one that is ambiguous, we need to fall back on a
+  // a preferred one. For example, if the document is available in 'zh-CN' and
+  // in 'zh-TW', we need to output something like this:
+  //   <link rel=alternate hreflang=zh href=...>
+  //   <link rel=alternate hreflang=zh-TW href=...>
+  //
+  // But other bother if both ambigious locale-to-hreflang are present.
+  const preferred = PREFERRED_LOCALE[hreflang];
+  if (preferred) {
+    // e.g. `preferred===zh-CN` if hreflang was `zh`
+    if (locale !== preferred) {
+      // e.g. `locale===zh-TW`
+      if (otherLocales.includes(preferred)) {
+        // If the more preferred one was there, use the locale + region format.
+        return locale;
+      }
+    }
+  }
+  return hreflang;
+}
 
 const lazy = (creator) => {
   let res;
@@ -67,7 +101,10 @@ const extractWebFontURLs = lazy(() => {
       path.join(clientBuildRoot, entrypoint),
       "utf-8"
     );
-    const generator = extractCSSURLs(css, (url) => url.endsWith(".woff2"));
+    const generator = extractCSSURLs(
+      css,
+      (url) => url.endsWith(".woff2") && /Bold/i.test(url)
+    );
     urls.push(...generator);
   }
   return urls;
@@ -121,6 +158,20 @@ export default function render(
       doc
     )});</script>`;
     $("#root").after(documentDataTag);
+
+    if (doc.other_translations) {
+      const allOtherLocales = doc.other_translations.map((t) => t.locale);
+      for (const translation of doc.other_translations) {
+        // The locale used in `<link rel="alternate">` needs to be the ISO-639-1
+        // code. For example, it's "en", not "en-US". And it's "sv" not "sv-SE".
+        // See https://developers.google.com/search/docs/advanced/crawling/localized-versions?hl=en&visit_id=637411409912568511-3980844248&rd=1#language-codes
+        $('<link rel="alternate">')
+          .attr("title", translation.title)
+          .attr("href", `https://developer.mozilla.org${translation.url}`)
+          .attr("hreflang", getHrefLang(translation.locale, allOtherLocales))
+          .insertAfter("title");
+      }
+    }
   }
 
   if (pageDescription) {
@@ -129,11 +180,13 @@ export default function render(
     $('meta[name="description"]').attr("content", pageDescription);
   }
 
-  if ((doc && !doc.noIndexing) || pageNotFound) {
-    $('<meta name="robots" content="noindex, nofollow">').insertAfter(
-      $("meta").eq(-1)
-    );
-  }
+  const robotsContent =
+    ALWAYS_NO_ROBOTS || (doc && doc.noIndexing) || pageNotFound
+      ? "noindex, nofollow"
+      : "index, follow";
+  $(`<meta name="robots" content="${robotsContent}">`).insertAfter(
+    $("meta").eq(-1)
+  );
 
   if (!pageNotFound) {
     $('link[rel="canonical"]').attr("href", canonicalURL);
@@ -144,7 +197,7 @@ export default function render(
     if (googleAnalyticsJS) {
       $("<script>").text(`\n${googleAnalyticsJS}\n`).appendTo($("head"));
       $(
-        `<script src="https://www.google-analytics.com/${
+        `<script async src="https://www.google-analytics.com/${
           GOOGLE_ANALYTICS_DEBUG ? "anaytics_debug" : "analytics"
         }.js"></script>`
       ).appendTo($("head"));

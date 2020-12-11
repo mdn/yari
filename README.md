@@ -24,7 +24,8 @@ After that, run these commands in your bash:
     yarn dev
     open http://localhost:3000
 
-Instead of having to type `export CONTENT_ROOT=/path/to/mdn/content/files`
+Make sure you point to the `/files` folder inside your clone of the content
+repo. Instead of having to type `export CONTENT_ROOT=/path/to/mdn/content/files`
 for `yarn dev` every time, you can put into `.env` file:
 
     CONTENT_ROOT=/path/to/mdn/content/files
@@ -205,3 +206,18 @@ from the file `mdn-web-docs.svg` in the repository root. This file is then
 converted to favicons using [realfavicongenerator.net](https://realfavicongenerator.net/).
 To generate new favicons, edit or replace the `mdn-web-docs.svg` file
 and then re-upload that to realfavicongenerator.net.
+
+## Troubleshooting
+
+Some common issues and how to resolve them.
+
+### `Error: ENOSPC: System limit for number of file watchers reached`
+
+There are two options to resolve this.
+
+1. Disable the watcher via [`REACT_APP_NO_WATCHER`](docs/envvars.md#react_app_no_watcher)
+
+   export REACT_APP_NO_WATCHER=true
+
+2. Increase `max_user_watches`:\
+   See [github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers](https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers)

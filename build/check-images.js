@@ -70,7 +70,13 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
     // a new function dedicated to that.
     let finalSrc = null;
 
-    if (absoluteURL.host !== "yari.placeholder") {
+    if (!src.trim()) {
+      if (checkImages) {
+        addImageFlaw(img, src, {
+          explanation: "Empty img 'src' attribute",
+        });
+      }
+    } else if (absoluteURL.host !== "yari.placeholder") {
       // It's a remote file. Don't bother much with this. Unless...
       if (checkImages) {
         if (absoluteURL.protocol === "http:") {

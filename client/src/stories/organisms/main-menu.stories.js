@@ -2,8 +2,10 @@ import React from "react";
 
 import MainMenu from "../../ui/molecules/main-menu";
 
-export default {
-  title: "Molecules/Main Menu",
+const defaults = {
+  title: "Organisms/Main Menu",
 };
+
+export default defaults;
 
 export const mainMenu = () => <MainMenu />;

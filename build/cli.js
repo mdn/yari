@@ -69,8 +69,9 @@ async function buildDocuments(files = null) {
         translationsOf.set(translation_of, []);
       }
       translationsOf.get(translation_of).push({
-        slug: document.metadata.slug,
+        url: document.url,
         locale: document.metadata.locale,
+        title: document.metadata.title,
       });
       // This is a shortcoming. If this is a translated document, we don't have a
       // complete mapping of all other translations. So, the best we can do is
@@ -281,7 +282,7 @@ program
           ? `${(seconds / 60).toFixed(1)} minutes`
           : `${seconds.toFixed(1)} seconds`;
       console.log(
-        `Built ${count.toLocaleString()} in ${took}, at a rate of ${(
+        `Built ${count.toLocaleString()} pages in ${took}, at a rate of ${(
           count / seconds
         ).toFixed(1)} documents per second.`
       );

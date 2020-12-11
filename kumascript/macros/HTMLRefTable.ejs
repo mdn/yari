@@ -7,7 +7,6 @@
 //      * include : An array of tags, the HTML Element page must have one of them to be listed
 //      * exclude : An array of tags, the HTML Element page must NOT have any of them to be listed
 //      * elements: An array of elements name to add to the list of HTML elements (useful for custom list or not documented elements)
-// $1 : An optional extra boolean flag to display status badges as the first column
 
 
 // LOCALISATION
@@ -93,7 +92,6 @@ function hasCommonTag(A, B) {
 
 let tag;
 let badge;
-let withBadges = $1 || false;
 let TagFilters = {
        include : typeof $0 === 'string' ? [lowerMe($0)]
                 : $0 && $0.include && Array.isArray($0.include) ? $0.include.map(lowerMe)
@@ -182,11 +180,7 @@ HTMLTags.sort(function (a, b) {
  <thead>
   <tr>
 <%
-if (withBadges) {
-%>
-   <th scope="col">&nbsp;</th>
-<%
-}
+
 %>
    <th scope="col"><%- l10n.element %></th>
    <th scope="col"><%- l10n.description %></th>
@@ -197,18 +191,6 @@ if (withBadges) {
  for (let i = 0, l = HTMLTags.length; i < l; i++) {
  %>
   <tr>
-<%
-if (withBadges) {
-    badge = HTMLTags[i].deprecated   ? '<span title="' + l10n.deprecated   + '">' + await template("FontAwesomeIcon", ["icon-thumbs-down-alt"]) + '<span>'
-          : HTMLTags[i].experimental ? '<span title="' + l10n.experimental + '">' + await template("FontAwesomeIcon", ["icon-beaker"]) + '<span>'
-          : HTMLTags[i].component    ? '<span title="' + l10n.components   + '">' + await template("FontAwesomeIcon", ["icon-cogs"]) + '<span>'
-          : HTMLTags[i].html5        ? '<a href="/' + env.locale + '/docs/HTML/HTML5"><img alt="HTML5" title="' + l10n.html5 + '" src="/files/3843/HTML5_Badge_32.png" width="16" height="16"></a>'
-          : '&nbsp;';
-%>
-   <td style="vertical-align: top;"><%- badge %></td>
-<%
-}
-%>
    <td style="vertical-align: top;"><%- HTMLTags[i].tagLink %></td>
    <td><%- HTMLTags[i].summary %></td>
   </tr>

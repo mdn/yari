@@ -1,0 +1,11 @@
+// This file just exists to make the temporary basic search widget
+// look and act like Kuma.
+
+input.search-input-field {
+  border-width: 0;
+  &:focus,
+  &:invalid {
+    outline: none;
+    box-shadow: none;
+  }
+}

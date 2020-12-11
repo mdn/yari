@@ -1,8 +1,10 @@
 import React from "react";
 
-export default {
+const defaults = {
   title: "Atoms/Forms",
 };
+
+export default defaults;
 
 export const form = () => {
   return (

@@ -38,7 +38,11 @@ export function Header() {
         onClick={toggleMainMenu}
       />
       <div className={`page-header-main ${showMainMenu ? "show" : ""}`}>
-        <MainMenu />
+        <MainMenu
+          toggleMainMenu={() => {
+            toggleMainMenu();
+          }}
+        />
         <Search
           onResultPicked={() => {
             toggleMainMenu();

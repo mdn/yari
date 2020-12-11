@@ -1,5 +1,3 @@
-import React from "react";
-
 import { DocParent } from "../../../document/types";
 import { PreloadingDocumentLink } from "../../../document/preloading";
 
