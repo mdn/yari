@@ -158,7 +158,7 @@ jobs:
           # it goes nowhere.
           export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-00000000-0
           # Same with the Speedcurve LUX
-          export export BUILD_SPEEDCURVE_LUX_ID=000000000
+          export BUILD_SPEEDCURVE_LUX_ID=000000000
 
           # Make sure every built page always has
           # '<meta name="robots" content="noindex, nofollow">' nomatter what
