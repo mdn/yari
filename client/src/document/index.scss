@@ -23,10 +23,17 @@
 }
 
 .article {
-  padding: $base-spacing;
+  padding: ($base-spacing / 2) $base-spacing $base-spacing;
 
   @media #{$mq-small-desktop-and-up} {
     margin-bottom: $large-spacing;
+  }
+
+  h2,
+  h3,
+  h4,
+  h5 {
+    margin-top: 0;
   }
 
   p,
@@ -88,6 +95,10 @@
       background-color: transparent;
       color: $neutral-600;
     }
+  }
+
+  table {
+    margin-bottom: $base-spacing * 2;
   }
 
   /* readonly inline badges needs a slightly darker background color in general article content  */
