@@ -102,8 +102,11 @@
   }
 
   /* readonly inline badges needs a slightly darker background color in general article content  */
-  .inline.readonly {
-    background-color: $neutral-550;
+  .inline {
+    &.optional,
+    &.readonly {
+      background-color: $neutral-550;
+    }
   }
 
   /* 
