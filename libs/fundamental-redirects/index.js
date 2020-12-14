@@ -13,8 +13,11 @@ function redirect(pattern, template, options = {}) {
     if (typeof template === "string") {
       return { url: template, status };
     }
-    const { groups } = match;
-    return { url: template({ ...groups }), status };
+    const { [0]: subString, index, groups } = match;
+    const before = path.substring(0, index);
+    const after = path.substring(index + subString.length);
+    const to = template({ ...groups });
+    return { url: `${before}${to}${after}`, status };
   };
 }
 
