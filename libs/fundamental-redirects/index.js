@@ -1,6 +1,6 @@
 const { VALID_LOCALES, LOCALE_ALIASES } = require("../constants");
 
-const startRe = /^\^\/?/;
+const startRe = /^\^?\/?/;
 const startTemplate = /^\//;
 
 function redirect(pattern, template, options = {}) {
