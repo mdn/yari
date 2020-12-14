@@ -766,14 +766,14 @@ const SCL3_REDIRECT_PATTERNS = [
   // All other Demo Studio and Dev Derby paths (bug 1238037)
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?demos
   // /$1docs/Web/Demos_of_open_web_technologies? [R=301,L]
-  localeRedirect(/^demos/i, "/docs/Web/Demos_of_open_web_technologies", {
+  localeRedirect(/^demos.*/i, "/docs/Web/Demos_of_open_web_technologies", {
     permanent: true,
   }),
   // Legacy off-site redirects (bug 1362438)
   // RewriteRule ^contests/ http://www.mozillalabs.com/ [R=302,L]
-  redirect(/^contests/i, "http://www.mozillalabs.com/", { permanent: false }),
+  redirect(/^contests.*/i, "http://www.mozillalabs.com/", { permanent: false }),
   // RewriteRule ^es4 http://www.ecma-international.org/memento/TC39.htm [R=302,L]
-  redirect(/^es4/i, "http://www.ecma-international.org/memento/TC39.htm", {
+  redirect(/^es4.*/i, "http://www.ecma-international.org/memento/TC39.htm", {
     permanent: false,
   }),
 ];
@@ -1156,7 +1156,7 @@ const REDIRECT_PATTERNS = [].concat(
   FIREFOX_SOURCE_DOCS_REDIRECT_PATTERNS,
   [
     localeRedirect(
-      /^fellowship/i,
+      /^fellowship.*/i,
       "/docs/Archive/2015_MDN_Fellowship_Program",
       {
         permanent: true,
