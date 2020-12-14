@@ -634,6 +634,12 @@ function Macros({
                 <br />
               </>
             )}
+            {flaw.explanation && (
+              <>
+                <b>Explanation:</b> <code>{flaw.explanation}</code>
+                <br />
+              </>
+            )}
             <b>Context:</b>
             <pre>{flaw.sourceContext}</pre>
             <b>Original error stack:</b>

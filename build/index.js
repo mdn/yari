@@ -249,7 +249,8 @@ async function buildDocument(document, documentOptions = {}) {
               )
             : null;
           const id = `macro${i}`;
-          return Object.assign({ id, fixable, suggestion }, flaw);
+          const explanation = flaw.error.message;
+          return Object.assign({ id, fixable, suggestion, explanation }, flaw);
         });
       }
     }
