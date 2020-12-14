@@ -164,11 +164,7 @@ test("content built French foo page", () => {
   expect(doc.other_translations[0].locale).toBe("en-US");
   expect(doc.other_translations[0].url).toBe("/en-US/docs/Web/Foo");
   expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
-});
 
-test("test presence of link[rel=alternate] in translated docs", () => {
-  // The en-US Web/Foo page should mention the French translation.
-  const builtFolder = path.join(buildRoot, "fr", "docs", "web", "foo");
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
