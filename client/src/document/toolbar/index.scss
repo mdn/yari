@@ -2,9 +2,14 @@
 @import "~@mdn/minimalist/sass/vars/layout";
 
 .toolbar {
-  background-color: $neutral-100;
-  color: $neutral-600;
-  padding: $base-spacing;
+  display: none;
+
+  @media #{$mq-small-desktop-and-up} {
+    background-color: $neutral-100;
+    color: $neutral-600;
+    display: block;
+    padding: $base-spacing;
+  }
 
   .button {
     max-width: inherit;
