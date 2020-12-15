@@ -304,12 +304,12 @@ function FixableFlawsAction({ count }: { count: number }) {
 
 function FixableFlawBadge() {
   return (
-    <small className="macro-fixable" title="This flaw is fixable.">
+    <span className="macro-fixable" title="This flaw is fixable.">
       Fixable{" "}
       <span role="img" aria-label="Thumbs up">
         👍🏼
       </span>
-    </small>
+    </span>
   );
 }
 
