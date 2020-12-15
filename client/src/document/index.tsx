@@ -28,6 +28,7 @@ import { Metadata } from "./organisms/metadata";
 import { ReactComponent as Dino } from "../assets/dino.svg";
 
 import "./index.scss";
+// import "./document-print.scss";
 
 // Lazy sub-components
 const Toolbar = React.lazy(() => import("./toolbar"));
