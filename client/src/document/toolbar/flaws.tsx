@@ -137,9 +137,13 @@ export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
     .sort((a, b) => b.count - a.count);
 
   return (
-    <div id={FLAWS_HASH.slice(1)} ref={rootElement}>
+    <div
+      id={FLAWS_HASH.slice(1)}
+      ref={rootElement}
+      className="toggle-show-flaws"
+    >
       {flawsCounts.length > 0 ? (
-        <button type="submit" onClick={toggle}>
+        <button type="button" className="button" onClick={toggle}>
           {show ? "Hide flaws" : "Show flaws"} (
           {flawsCounts.reduce((acc, flaw) => flaw.count + acc, 0)})
         </button>

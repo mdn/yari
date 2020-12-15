@@ -59,6 +59,7 @@ export function EditActions({ folder }: { folder: string }) {
       <li>
         <button
           type="button"
+          className="button"
           title={`Folder: ${folder}`}
           onClick={openInEditorHandler}
         >
@@ -67,13 +68,19 @@ export function EditActions({ folder }: { folder: string }) {
       </li>
 
       <li>
-        <a href={`https://developer.mozilla.org/${locale}/docs/${slug}`}>
+        <a
+          href={`https://developer.mozilla.org/${locale}/docs/${slug}`}
+          className="button"
+        >
           View on MDN
         </a>
       </li>
 
       <li>
-        <Link to={location.pathname.replace("/docs/", "/_edit/")}>
+        <Link
+          to={location.pathname.replace("/docs/", "/_edit/")}
+          className="button"
+        >
           Quick-edit
         </Link>
       </li>
