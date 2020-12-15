@@ -289,6 +289,7 @@ function FixableFlawsAction({ count }: { count: number }) {
       )}
       <button
         type="button"
+        className="button"
         onClick={async () => {
           setFixing((prev) => !prev);
           await fix();
