@@ -1622,7 +1622,7 @@
   "EXT_texture_norm16": {
     "name": "EXT_texture_norm16",
     "url": "https://www.khronos.org/registry/webgl/extensions/EXT_texture_norm16/",
-    "stats": "REC"
+    "status": "REC"
   },
   "KHR_parallel_shader_compile": {
     "name": "KHR_parallel_shader_compile",
