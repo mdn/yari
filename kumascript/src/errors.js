@@ -225,7 +225,7 @@ class MacroBrokenLinkError extends MacroExecutionError {
 
 class MacroWrongXRefError extends MacroBrokenLinkError {
   constructor(error, source, token) {
-    super(error, source, token, false);
+    super(error, source, token);
     this.name = "MacroWrongXRefError";
   }
 }
