@@ -9,7 +9,7 @@ let isReady = false;
 const searchIndex = new SearchIndex();
 
 const webSocketServer = new WebSocket.Server({
-  port: process.env.PORT || 8080,
+  port: parseInt(process.env.SERVER_WS_PORT || 8080),
 });
 
 function sendWebSocketMessage(message) {
