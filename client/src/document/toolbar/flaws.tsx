@@ -137,14 +137,15 @@ export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
     .sort((a, b) => b.count - a.count);
 
   return (
-    <div id={FLAWS_HASH.slice(1)} ref={rootElement}>
+    <div
+      id={FLAWS_HASH.slice(1)}
+      ref={rootElement}
+      className="toggle-show-flaws"
+    >
       {flawsCounts.length > 0 ? (
-        <button type="submit" onClick={toggle}>
-          {show
-            ? "Hide flaws"
-            : `Show flaws (${flawsCounts
-                .map((flaw) => flaw.count)
-                .join(" + ")})`}
+        <button type="button" className="button" onClick={toggle}>
+          {show ? "Hide flaws" : "Show flaws"} (
+          {flawsCounts.reduce((acc, flaw) => flaw.count + acc, 0)})
         </button>
       ) : (
         <p>
@@ -153,8 +154,7 @@ export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
             🍾
           </span>
         </p>
-      )}
-
+      )}{" "}
       {show ? (
         <Flaws doc={doc} flaws={flawsCounts} />
       ) : (
@@ -289,6 +289,7 @@ function FixableFlawsAction({ count }: { count: number }) {
       )}
       <button
         type="button"
+        className="button"
         onClick={async () => {
           setFixing((prev) => !prev);
           await fix();
@@ -303,12 +304,12 @@ function FixableFlawsAction({ count }: { count: number }) {
 
 function FixableFlawBadge() {
   return (
-    <small className="macro-fixable" title="This flaw is fixable.">
+    <span className="macro-fixable" title="This flaw is fixable.">
       Fixable{" "}
       <span role="img" aria-label="Thumbs up">
         👍🏼
       </span>
-    </small>
+    </span>
   );
 }
 
