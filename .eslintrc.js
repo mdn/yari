@@ -3,13 +3,14 @@ module.exports = {
     browser: false,
     commonjs: true,
     es2020: true,
+    "jest/globals": true,
   },
   extends: [
     "eslint:recommended",
     "plugin:node/recommended",
     "plugin:package-json/recommended",
   ],
-  plugins: ["package-json"],
+  plugins: ["package-json", "jest"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",

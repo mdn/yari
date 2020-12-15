@@ -3,8 +3,10 @@
 const bcd = require("@mdn/browser-compat-data");
 
 function packageBCD(query) {
-  let data = query.split(".").reduce(function (prev, curr) {
-    return prev ? prev[curr] : undefined;
+  let data = query.split(".").reduce((prev, curr) => {
+    return prev && Object.prototype.hasOwnProperty.call(prev, curr)
+      ? prev[curr]
+      : undefined;
   }, bcd);
   return { browsers: bcd.browsers, data };
 }

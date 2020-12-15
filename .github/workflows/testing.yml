@@ -53,6 +53,9 @@ jobs:
       - name: Lint checking
         run: ./testing/scripts/lint-check.sh
 
+      - name: Unit testing build
+        run: yarn test:build
+
       - name: Unit testing client
         run: yarn test:client
 
