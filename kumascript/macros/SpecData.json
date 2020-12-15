@@ -1619,6 +1619,11 @@
     "url": "https://www.khronos.org/registry/webgl/extensions/EXT_texture_filter_anisotropic/",
     "status": "REC"
   },
+  "EXT_texture_norm16": {
+    "name": "EXT_texture_norm16",
+    "url": "https://www.khronos.org/registry/webgl/extensions/EXT_texture_norm16/",
+    "stats": "REC"
+  },
   "KHR_parallel_shader_compile": {
     "name": "KHR_parallel_shader_compile",
     "url": "https://www.khronos.org/registry/webgl/extensions/KHR_parallel_shader_compile/",
