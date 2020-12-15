@@ -188,7 +188,7 @@ line of defense" for dev/stage URLs that are public.
 Usually the `server` module is started with `foreman` (the `nf` command)
 and this is the default port.
 
-### `SERVER_WS_PORT`
+### `SERVER_WEBSOCKET_PORT`
 
 **Default: `8080`**
 
