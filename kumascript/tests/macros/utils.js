@@ -21,6 +21,7 @@ assert.equal = (x, y) => {
 
 assert.eventually = {
   async equal(x, y) {
+    // eslint-disable-next-line jest/no-standalone-expect
     expect(await x).toEqual(y);
   },
 };
@@ -189,6 +190,7 @@ function lintHTML(html) {
 }
 
 // ### Exported public API
+// eslint-disable-next-line jest/no-export
 module.exports = {
   assert,
   itMacro,

@@ -17,6 +17,13 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2019,
   },
+  settings: {
+    node: {
+      allowModules: ["expect-puppeteer"],
+      resolvePaths: [__dirname],
+      tryExtensions: [".js", ".json", ".node"],
+    },
+  },
   overrides: [
     {
       files: ["**/package.json"],
@@ -24,9 +31,27 @@ module.exports = {
       extends: "plugin:package-json/recommended",
     },
     {
-      files: ["**/*.test.js"],
+      files: ["**/*.test.js", "kumascript/tests/macros/utils.js"],
+      globals: {
+        page: true,
+      },
       plugins: ["jest"],
       extends: "plugin:jest/recommended",
+      rules: {
+        "jest/no-standalone-expect": [
+          "error",
+          {
+            additionalTestBlockFunctions: ["itMacro", "withDeveloping"],
+          },
+        ],
+        "no-unused-vars": 0,
+        "node/no-deprecated-api": 0,
+        "jest/valid-title": 0,
+        "no-useless-escape": 0,
+        "no-undef": 0,
+        "jest/expect-expect": 0,
+        "jest/no-conditional-expect": 0,
+      },
     },
   ],
 };
