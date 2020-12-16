@@ -3,14 +3,13 @@ module.exports = {
     browser: false,
     commonjs: true,
     es2020: true,
-    "jest/globals": true,
   },
   extends: [
     "eslint:recommended",
     "plugin:node/recommended",
-    "plugin:package-json/recommended",
+    "plugin:import/recommended",
   ],
-  plugins: ["package-json", "jest"],
+  plugins: ["node"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
@@ -18,5 +17,16 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2019,
   },
-  rules: {},
+  overrides: [
+    {
+      files: ["**/package.json"],
+      plugins: ["package-json"],
+      extends: "plugin:package-json/recommended",
+    },
+    {
+      files: ["**/*.test.js"],
+      plugins: ["jest"],
+      extends: "plugin:jest/recommended",
+    },
+  ],
 };
