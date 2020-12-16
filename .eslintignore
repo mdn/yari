@@ -1,0 +1,6 @@
+*.min.js
+client/
+deployer/
+import/
+libs/
+ssr/
