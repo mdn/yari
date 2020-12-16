@@ -293,12 +293,14 @@ function update(url, rawHTML, metadata) {
 }
 
 function findByURL(url, ...args) {
-  const [bareURL, hash = ""] = url.split("#", 2);
+  const [queryWithoutHash, hash = ""] = url.split("#", 2);
+  const [bareURL, query = ""] = queryWithoutHash.split("?", 2);
   const doc = read(urlToFolderPath(bareURL), ...args);
-  if (doc && hash) {
-    return { ...doc, url: `${doc.url}#${hash}` };
-  }
-  return doc;
+  if (!doc) return doc;
+  return {
+    ...doc,
+    url: doc.url + (query ? `?${query}` : "") + (hash ? `#${hash}` : ""),
+  };
 }
 
 function findAll(

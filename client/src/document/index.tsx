@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE, NO_WATCHER } from "../constants";
@@ -28,6 +28,7 @@ import { Metadata } from "./organisms/metadata";
 import { ReactComponent as Dino } from "../assets/dino.svg";
 
 import "./index.scss";
+import { Summary } from "./ingredients/summary";
 
 // Lazy sub-components
 const Toolbar = React.lazy(() => import("./toolbar"));
@@ -36,6 +37,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
   const documentURL = useDocumentURL();
   const { locale } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const rawContent = searchParams.get("raw") === "" || searchParams.get("raw");
 
   const dataURL = `${documentURL}/index.json`;
   const { data: doc, error } = useSWR<Doc>(
@@ -100,6 +103,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   const isServer = typeof window === "undefined";
 
+  if (rawContent) {
+    return <RenderDocumentBody doc={doc} />;
+  }
   return (
     <>
       <Titlebar docTitle={doc.title}>
@@ -165,6 +171,15 @@ function Archived() {
 const PROSE_NO_HEADING = ["short_description", "overview"];
 
 function RenderDocumentBody({ doc }) {
+  const [searchParams] = useSearchParams();
+  const summary =
+    searchParams.get("summary") === "" || searchParams.get("summary");
+  if (summary) {
+    const firstPara = doc.body.find((section) => section.type === "prose");
+    if (firstPara) {
+      return <Summary section={firstPara.value} />;
+    }
+  }
   return doc.body.map((section, i) => {
     if (section.type === "prose") {
       // Only exceptional few should use the <Prose/> component,

@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useSearchParams } from "react-router-dom";
 
 // we include our base SASS here to ensure it is loaded
 // and applied before any component specific style
@@ -56,6 +56,8 @@ function DocumentOrPageNotFound(props) {
   // It's true by default if the SSR rendering says so.
   const [notFound, setNotFound] = React.useState<boolean>(!!props.pageNotFound);
   const { pathname } = useLocation();
+  const [searchParams] = useSearchParams();
+  const rawContent = searchParams.get("raw") === "" || searchParams.get("raw");
   const initialPathname = React.useRef(pathname);
   React.useEffect(() => {
     if (initialPathname.current && initialPathname.current !== pathname) {
@@ -63,7 +65,13 @@ function DocumentOrPageNotFound(props) {
     }
   }, [pathname]);
 
-  return notFound ? (
+  return rawContent ? (
+    notFound ? (
+      <PageNotFound />
+    ) : (
+      <Document {...props} />
+    )
+  ) : notFound ? (
     <StandardLayout>
       <PageNotFound />
     </StandardLayout>
