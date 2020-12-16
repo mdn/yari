@@ -204,12 +204,9 @@ async function buildDocument(document, documentOptions = {}) {
         // But considering that this might just be one of many documents you're
         // building, let's at least help by setting a more user-friendly error
         // message.
+        error.updateFileInfo(document.fileInfo);
         throw new Error(
-          `MacroInvocationError trying to parse ${
-            document.fileInfo.path
-          }, line ${error.line + document.fileInfo.frontMatterOffset} column ${
-            error.column
-          } (${error.error.message})`
+          `MacroInvocationError trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
         );
       }
 
