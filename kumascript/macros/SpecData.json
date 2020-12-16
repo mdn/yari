@@ -1744,6 +1744,11 @@
     "url": "https://www.khronos.org/registry/webgl/extensions/WEBGL_lose_context/",
     "status": "REC"
   },
+  "WEBGL_multi_draw": {
+    "name": "WEBGL_multi_draw",
+    "url": "https://www.khronos.org/registry/webgl/extensions/WEBGL_multi_draw/",
+    "status": "REC"
+  },
   "WebIDL": {
     "name": "Web IDL",
     "url": "https://heycam.github.io/webidl/",
