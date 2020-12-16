@@ -4,6 +4,11 @@
   "repository": "https://github.com/mdn/yari",
   "license": "MPL-2.0",
   "author": "MDN Web Docs",
+  "bin": {
+    "yari-build": "./build/cli.js",
+    "yari-filecheck": "./filecheck/cli.js",
+    "yari-tool": "./tool/cli.js"
+  },
   "scripts": {
     "build": "cross-env NODE_ENV=production node build/cli.js",
     "build:client": "cd client && cross-env INLINE_RUNTIME_CHUNK=false react-scripts build",
