@@ -40,15 +40,15 @@ jobs:
           ./testing/scripts/yarn-install.sh
 
       - name: Build select important pages
-        run: |
+        env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
-          export CONTENT_ROOT=$(pwd)/mdn/content/files
+          CONTENT_ROOT: "${{ github.workspace }}/mdn/content/files"
 
           # Make sure it's set to something so that the build uses the
           # Google Analytics tag which is most realistic.
-          export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-00000000-0
-
+          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-00000000-0
+        run: |
           yarn prepare-build
           # BUILD_FOLDERSEARCH=mdn/kitchensink yarn build
           BUILD_FOLDERSEARCH=web/javascript/reference/global_objects/array/foreach yarn build

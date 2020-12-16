@@ -64,17 +64,18 @@ jobs:
 
       - name: Unit testing kumascript
         if: steps.git_diff_kumascript.outputs.diff
+        env:
+          CONTENT_ROOT: testing/content/files
         run: |
-          export CONTENT_ROOT=testing/content/files
           yarn test:kumascript
 
       - name: Functional testing
-        run: |
+        env:
           # Make this env var explicit for GitHub Actions because in local
           # dev/debug you're encouraged to start it yourself in a separate
           # terminal.
-          export TESTING_START_SERVER=true
-
+          TESTING_START_SERVER: true
+        run: |
           # In terms of the --maxWorkers option, it's not yet clear which
           # is best.
           # See https://jestjs.io/docs/en/troubleshooting#tests-are-extremely-slow-on-docker-andor-continuous-integration-ci-server
