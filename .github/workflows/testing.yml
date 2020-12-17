@@ -50,8 +50,11 @@ jobs:
           ./testing/scripts/yarn-install.sh
           ./testing/scripts/yarn-lockfile-check.sh
 
-      - name: Lint checking
-        run: ./testing/scripts/lint-check.sh
+      - name: Lint prettier
+        run: yarn prettier-check
+
+      - name: Lint ESLint
+        run: yarn eslint
 
       - name: Unit testing build
         run: yarn test:build
