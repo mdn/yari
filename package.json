@@ -80,7 +80,6 @@
     "prompts": "^2.4.0",
     "sanitize-filename": "^1.6.3",
     "send": "0.17.1",
-    "source-map-support": "0.5.19",
     "tempy": "1.0.0",
     "use-debounce": "^5.2.0",
     "ws": "^7.4.2"
