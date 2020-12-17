@@ -16,8 +16,10 @@ export function DisplayH3({ id, title }: { id: string; title: string }) {
 
 function Permalink({ id, title }: { id: string; title: string }) {
   return (
-    <a href={`#${id}`} title={`Permalink to ${title}`}>
-      {title}
-    </a>
+    <a
+      href={`#${id}`}
+      title={`Permalink to ${title}`}
+      dangerouslySetInnerHTML={{ __html: title }}
+    ></a>
   );
 }

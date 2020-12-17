@@ -327,12 +327,16 @@ function _addSectionProse($) {
   if (h2s.length === 1) {
     id = h2s.attr("id");
     title = h2s.text();
+    // title = h2s.html();
+    var titleAsHtml = h2s.html();
+    if (title !== titleAsHtml)
+      console.log("CHEK IT OUT!", title === titleAsHtml, [title, titleAsHtml]);
     h2s.remove();
   } else {
     const h3s = $.find("h3");
     if (h3s.length === 1) {
       id = h3s.attr("id");
-      title = h3s.text();
+      title = h3s.html();
       if (id && title) {
         isH3 = true;
         h3s.remove();
