@@ -70,7 +70,6 @@
     "imagemin-mozjpeg": "9.0.0",
     "imagemin-pngquant": "9.0.1",
     "imagemin-svgo": "8.0.0",
-    "include-media": "1.4.9",
     "is-svg": "4.2.1",
     "js-yaml": "4.0.0",
     "jsesc": "3.0.2",
