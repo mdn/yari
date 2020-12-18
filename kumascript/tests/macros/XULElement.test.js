@@ -10,7 +10,7 @@ describeMacro("XULElem", () => {
         macro.ctx.env.locale = locale;
         return assert.eventually.equal(
           macro.call(element),
-          `<code><a href="/${locale}/docs/Mozilla/Tech/XUL/${element}">&lt;xul:${element}&gt;</a></code>`
+          `<code><a href="">&lt;xul:${element}&gt;</a></code>`
         );
       });
     }
