@@ -27,8 +27,8 @@
       "properties": ["Navigator.battery"],
       "events": []
     },
-    "Barcode Detector API": {
-      "overview": ["Barcode Detector API"],
+    "Barcode Detection API": {
+      "overview": ["Barcode Detection API"],
       "guides": [],
       "interfaces": ["BarcodeDetector"],
       "methods": [
