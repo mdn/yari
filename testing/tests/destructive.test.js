@@ -37,6 +37,7 @@ describe("fixing flaws", () => {
   const baseDir = path.resolve("..");
 
   let tempdir;
+  let tempBuildDir;
   let tempContentDir;
   let filesBefore = new Map();
 

@@ -119,7 +119,7 @@ describe("testing the main render() function", () => {
     expect(otherLinks.length).toBe(2);
     expect(otherLinks.eq(0).html()).toBe("<code>&lt;dumber&gt;</code>");
     expect(otherLinks.eq(1).html()).toBe("<code>&lt;number&gt;</code>");
-    for (deprecatedID of [
+    for (const deprecatedID of [
       "fx-header",
       "fx-inline",
       "gecko-header",
