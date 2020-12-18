@@ -53,5 +53,12 @@ module.exports = {
         "jest/no-conditional-expect": 0,
       },
     },
+    {
+      files: ["**/cli.js"],
+      rules: {
+        "node/shebang": 0,
+        "no-process-exit": 0,
+      },
+    },
   ],
 };

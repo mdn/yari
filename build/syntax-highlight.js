@@ -6,6 +6,7 @@ const lazy = (creator) => {
   let processed = false;
   return () => {
     if (processed) return res;
+    // eslint-disable-next-line no-undef
     res = creator.apply(this, arguments);
     processed = true;
     return res;
