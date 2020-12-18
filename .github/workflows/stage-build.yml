@@ -131,15 +131,16 @@ jobs:
           poetry --version
 
       - name: Debug stuff
+        env:
+          GITHUB_SHA: ${{ env.GITHUB_SHA }}
+          GITHUB_RUN_ID: ${{ env.GITHUB_RUN_ID }}
+          GITHUB_ACTION: ${{ env.GITHUB_ACTION }}
         run: |
           cd deployer
 
           export SPEEDCURVE_DEPLOY_API_KEY=${{ secrets.SPEEDCURVE_DEPLOY_API_KEY }}
           # Based on https://api.speedcurve.com/#get-all-sites using the API key
           export SPEEDCURVE_DEPLOY_SITE_ID=354836
-          export GITHUB_SHA=${{ env.GITHUB_SHA }}
-          export GITHUB_RUN_ID=${{ env.GITHUB_RUN_ID }}
-          export GITHUB_ACTION=${{ env.GITHUB_ACTION }}
           poetry run deployer --dry-run speedcurve-deploy \
             --note "${GITHUB_SHA}" \
             --detail "run_id=${GITHUB_RUN_ID} action=${GITHUB_ACTION}"
