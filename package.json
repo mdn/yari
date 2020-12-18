@@ -15,7 +15,7 @@
     "prettier-format": "prettier --write '**/*.{js,ts,tsx,json,scss,html}'",
     "start": "(test -f client/build/index.html || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && (test -d client/build/en-us/_spas || yarn build --spas-only) && nf -j Procfile.start start",
     "start:client": "cd client && cross-env BROWSER=none PORT=3000 react-scripts start",
-    "start:dev-server": "nodemon server --watch server --watch build --watch content --watch kumascript",
+    "start:dev-server": "nodemon server --watch server --watch build --watch content --watch kumascript --ext js,ejs",
     "start:server": "node server",
     "start:static-server": "cross-env ENV_FILE=testing/.env node server/static.js",
     "test": "yarn prettier-check && yarn test:client && yarn test:kumascript && yarn test:build && yarn test:testing",
