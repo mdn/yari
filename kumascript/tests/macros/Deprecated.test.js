@@ -44,7 +44,7 @@ describeMacro("Deprecated_Inline", function () {
   itMacro("JS-prefixed version (en-US)", function (macro) {
     return assert.eventually.equal(
       macro.call("js1.7"),
-      `<span class="notecard inline deprecated" title="">Deprecated since <a href="/en-US/docs/JavaScript/New_in_JavaScript/1.7">JavaScript 1.7</a></span>`
+      `<span class="notecard inline deprecated" title="">Deprecated since JavaScript 1.7</span>`
     );
   });
   itMacro("CSS-prefixed version (en-US)", function (macro) {
