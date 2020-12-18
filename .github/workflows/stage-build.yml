@@ -132,6 +132,7 @@ jobs:
 
       - name: Debug stuff
         env:
+          GITHUB_SHA: ${{ env.GITHUB_SHA }}
           GITHUB_RUN_ID: ${{ env.GITHUB_RUN_ID }}
           GITHUB_ACTION: ${{ env.GITHUB_ACTION }}
         run: |
@@ -144,8 +145,8 @@ jobs:
           # Based on https://api.speedcurve.com/#get-all-sites using the API key
           export SPEEDCURVE_DEPLOY_SITE_ID=354836
           poetry run deployer --dry-run speedcurve-deploy \
-            --note "${{ env.GITHUB_SHA }}"\
-            --detail "run_id=${{ env.GITHUB_RUN_ID }} action=${{ env.GITHUB_ACTION }}"
+            --note "${GITHUB_SHA}" \
+            --detail "run_id=${GITHUB_RUN_ID} action=${GITHUB_ACTION}"
 
       # - name: Print information about build
       #   run: |
