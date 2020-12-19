@@ -55,7 +55,7 @@ export default function MainMenu({
    * @param {Object} event - onClick event triggered on top-level menu item
    * @param {String} menuLabel - The current top-level menu item label
    */
-  function toggleSubMenu(event, menuLabel) {
+  function toggleSubMenu(event, menuLabel, menuLabelId) {
     const expandedState = visibleSubMenu === menuLabel ? false : true;
 
     // store the current activeElement
@@ -64,6 +64,17 @@ export default function MainMenu({
 
     setVisibleSubMenu(visibleSubMenu === menuLabel ? null : menuLabel);
     sendMenuItemInteraction(event);
+
+    if (expandedState) {
+      setTimeout(() => {
+        const firstSubmenuLink = mainMenuRef.current?.querySelector(
+          `ul.${menuLabelId} a`
+        ) as HTMLAnchorElement;
+        if (firstSubmenuLink) {
+          firstSubmenuLink.focus();
+        }
+      });
+    }
   }
 
   useEffect(() => {
@@ -215,7 +226,7 @@ export default function MainMenu({
               aria-expanded="false"
               onFocus={sendMenuItemInteraction}
               onClick={(event) => {
-                toggleSubMenu(event, menuEntry.label);
+                toggleSubMenu(event, menuEntry.label, menuEntry.labelId);
               }}
             >
               {menuEntry.label}
@@ -231,6 +242,7 @@ export default function MainMenu({
                 <li key={item.url} role="none">
                   {item.external ? (
                     <a
+                      tabIndex={-1}
                       target="_blank"
                       rel="noopener noreferrer"
                       href={item.url}
@@ -246,6 +258,7 @@ export default function MainMenu({
                     </a>
                   ) : (
                     <a
+                      tabIndex={-1}
                       href={item.url}
                       onClick={(event) => {
                         item.onClick
