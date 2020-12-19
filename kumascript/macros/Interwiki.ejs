@@ -9,6 +9,9 @@
 var path = $1;
 var title = $2 || path;
 
+// Uppercase first character in path, replace all spaces with underscores.
+path = ($1.charAt(0).toUpperCase() + $1.slice(1)).replace(/ /g, "_");
+
 var lang = env.locale.substr(0, 2);
 var prefix = $0;
 
