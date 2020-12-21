@@ -19,14 +19,27 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
 
   const checkImages = options.flawLevels.get("images") !== FLAW_LEVELS.IGNORE;
 
+  const checked = new Map();
+
   function addImageFlaw(
     $img,
     src,
     { explanation, externalImage = false, suggestion = null }
   ) {
-    for (const match of findMatchesInText(src, rawContent, {
-      attribute: "src",
-    })) {
+    // If the document has *two* `<img src="XXX">` tags, and assume there's
+    // something wrong with that 'XXX' value, this inner function will only be
+    // called once. But when it runs `findMatchesInText()` it might refer to the
+    // image multiple times in the document.
+    const matches = [
+      ...findMatchesInText(src, rawContent, {
+        attribute: "src",
+      }),
+    ];
+    const checkedBefore = checked.get(src) || 0;
+    matches.forEach((match, i) => {
+      if (i !== checkedBefore) {
+        return;
+      }
       if (!("images" in doc.flaws)) {
         doc.flaws.images = [];
       }
@@ -46,20 +59,15 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
         externalImage,
         ...match,
       });
-    }
+
+      // Use this to remember which in the list of matches we've dealt with.
+      checked.set(src, checkedBefore + 1);
+    });
   }
 
-  const checked = new Set();
   $("img[src]").each((i, element) => {
     const img = $(element);
     const src = img.attr("src");
-
-    // If the HTML contains the exact same 'src' value more than once,
-    // it will be found exactly that many times within the addImageFlaw()
-    // function which uses `findMatchesInText` so if it's repeated,
-    // it'll be logged for each individual occurance.
-    if (checked.has(src)) return;
-    checked.add(src);
 
     // These two lines is to simulate what a browser would do.
     const baseURL = `http://yari.placeholder${url}/`;
@@ -112,7 +120,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
     } else {
       // Remember, you can not have search parameters on local images.
       // It might make sense on something like `https://unsplash.it/image/abc?size=100`
-      // but all our images are going to static.
+      // but all our images are going to be static.
       finalSrc = absoluteURL.pathname;
       // We can use the `finalSrc` to look up and find the image independent
       // of the correct case because `Image.findByURL` operates case
