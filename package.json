@@ -55,6 +55,7 @@
     "glob": "^7.1.6",
     "got": "11.8.1",
     "ignore-loader": "0.1.2",
+    "image-size": "0.9.3",
     "imagemin": "7.0.1",
     "imagemin-gifsicle": "7.0.0",
     "imagemin-jpegtran": "7.0.0",

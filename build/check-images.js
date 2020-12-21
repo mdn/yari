@@ -4,6 +4,8 @@
 
 const path = require("path");
 
+const sizeOf = require("image-size");
+
 const { Document, Image } = require("../content");
 const { FLAW_LEVELS } = require("./constants");
 const { findMatchesInText } = require("./matches-in-text");
@@ -117,6 +119,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
       // We can use the `finalSrc` to look up and find the image independent
       // of the correct case because `Image.findByURL` operates case
       // insensitively.
+      console.log("A", { finalSrc });
       const filePath = Image.findByURL(finalSrc);
       if (filePath) {
         filePaths.add(filePath);
@@ -176,4 +179,89 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
   return filePaths;
 }
 
-module.exports = { checkImageReferences };
+/**
+ * Mutate the `$` instance for image reference and if appropriate,
+ * log them as flaws if they're not passing linting.
+ * Look for <img> tags that set a `style="width: XXXpx; height: YYYpx"`
+ * and or not have the `width="XXX" height="XXX"` plain attributes.
+ *
+ * Don't check the `src` attribute.
+ *
+ * TODO: Perhaps in the future, we can also check if the `style` attribute
+ * has some hardcoded patterns for margins and borders that would be
+ * best to set "centrally" with a style sheet.
+ */
+function checkImageTags(doc, $, options, { url, rawContent }) {
+  const filePaths = new Set();
+  if (doc.isArchive) return filePaths;
+
+  const checkImages =
+    options.flawLevels.get("image_widths") !== FLAW_LEVELS.IGNORE;
+
+  $("img").each((i, element) => {
+    const img = $(element);
+    const suggestion = {};
+    // If it already has a `width` attribute, leave this as is.
+    if (!img.attr("width")) {
+      // Remove any `width` or `height` specified in the `style` attribute
+      // because this is best to leave so the browser doesn't stretch
+      // the image if its specified dimension (even if it's accurate!)
+      // can't be kept in the given context.
+      if (img.attr("style")) {
+        if (img.attr("style").includes("@")) {
+          console.warn(
+            "Dare to use regex on inline `img[style]` values that use media queries of any kind.",
+            img.attr("style")
+          );
+          return;
+        }
+        // The confidence to use a regex instead of a proper CSS parser is
+        // because we're only ever looking at the CSS in `img[style]` contexts.
+        // These are much simpler than the kind of CSS you should never go
+        // near with a regex.
+        const originalStyleValue = img.attr("style");
+        const newStyleValue = originalStyleValue
+          .split(";")
+          .map((each) => each.split(":"))
+          .filter((parts) => {
+            return !["width", "height"].includes(parts[0].trim());
+          })
+          .map((parts) => parts.join(":"))
+          .join(";");
+
+        if (newStyleValue !== originalStyleValue) {
+          // If there's nothing left, don't just set a new value, make
+          // it delete the 'style' attribute altogether.
+          if (newStyleValue) {
+            img.attr("style", newStyleValue);
+            suggestion.style = newStyleValue;
+          } else {
+            img.removeAttr("style");
+            suggestion.style = null;
+          }
+        }
+      }
+
+      // If image is local, get its dimension and set the `width` and `height`
+      // HTML attributes.
+      if (!img.attr("src").includes("://")) {
+        console.log("B", img.attr("src"));
+        // const filePath = Image.findByURL(img.attr("src"));
+        // if (filePath) {
+        //   const dimensions = sizeOf(filePath);
+        //   // console.log("GET SIZE FROM", img.attr("src"), filePath, dimensions);
+        // }
+      }
+    }
+  });
+
+  if (doc.flaws.image_widths && doc.flaws.image_widths.length) {
+    if (options.flawLevels.get("image_widths") === FLAW_LEVELS.ERROR) {
+      throw new Error(
+        `images width flaws: ${JSON.stringify(doc.flaws.image_widths)}`
+      );
+    }
+  }
+}
+
+module.exports = { checkImageReferences, checkImageTags };
