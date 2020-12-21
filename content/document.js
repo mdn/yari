@@ -184,8 +184,11 @@ const read = memoize((folder) => {
       `Folder contains zero width whitespace which is not allowed (${filePath})`
     );
   }
-  const isTranslated =
-    CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT);
+  // Use Boolean() because otherwise, `isTranslated` might become `undefined`
+  // rather than an actuall boolean value.
+  const isTranslated = Boolean(
+    CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT)
+  );
   const isArchive =
     isTranslated ||
     (CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT));

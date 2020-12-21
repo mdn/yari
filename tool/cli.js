@@ -12,6 +12,7 @@ const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  CONTENT_ARCHIVED_ROOT,
   Redirect,
   Document,
   buildURL,
@@ -418,6 +419,66 @@ program
       console.log(
         `In total, ${sumTotal} translations that share the same translation_of`
       );
+    })
+  )
+
+  .command(
+    "unarchive",
+    "Move content from CONTENT_ARCHIVED_ROOT to CONTENT_ROOT"
+  )
+  .option("--foldersearch <pattern>", "simple pattern for folders", {
+    default: "",
+  })
+  .option("--move", "(git) delete from archive repo", { default: false })
+  .argument("[files...]", "specific files")
+  .action(
+    tryOrExit(async ({ args, options }) => {
+      if (!CONTENT_ARCHIVED_ROOT) {
+        throw new Error("CONTENT_ARCHIVED_ROOT not set");
+      }
+      if (!CONTENT_TRANSLATED_ROOT) {
+        throw new Error("CONTENT_TRANSLATED_ROOT not set");
+      }
+      const { files } = args;
+      const { foldersearch, move } = options;
+      if (!foldersearch && !files) {
+        throw new Error("Must specify either files or --foldersearch pattern");
+      }
+      const filters = {
+        folderSearch: foldersearch || null,
+        files: new Set(files || []),
+      };
+      const documents = Document.findAll(filters);
+      if (!documents.count) {
+        throw new Error("No documents found");
+      }
+      let countCreated = 0;
+      for (const document of documents.iter()) {
+        console.assert(document.isArchive, document.fileInfo);
+        console.assert(!document.isTranslated, document.fileInfo);
+        if (document.metadata.locale !== "en-US") {
+          continue;
+        }
+        // You can't use `document.rawHTML` because, rather confusingly,
+        // it's actually the rendered (from the migration) HTML. Instead,
+        // you need seek out the `raw.html` equivalent and use that.
+        // This is because when we ran the migration, for every document we
+        // archived, we created a `index.html` file (front-matter and rendered
+        // HTML) and a `raw.html` file (kumascript raw HTML).
+        const rawFilePath = path.join(
+          path.dirname(document.fileInfo.path),
+          "raw.html"
+        );
+        const rawHTML = fs.readFileSync(rawFilePath, "utf-8");
+        const created = Document.create(rawHTML, document.metadata);
+        console.log(`Created ${created}`);
+        countCreated++;
+        if (move) {
+          execGit(["rm", document.fileInfo.path]);
+          execGit(["rm", rawFilePath]);
+        }
+      }
+      console.log(`Created ${countCreated} new files`);
     })
   );
 
