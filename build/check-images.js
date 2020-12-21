@@ -119,7 +119,6 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
       // We can use the `finalSrc` to look up and find the image independent
       // of the correct case because `Image.findByURL` operates case
       // insensitively.
-      console.log("A", { finalSrc });
       const filePath = Image.findByURL(finalSrc);
       if (filePath) {
         filePaths.add(filePath);
@@ -245,12 +244,12 @@ function checkImageTags(doc, $, options, { url, rawContent }) {
       // If image is local, get its dimension and set the `width` and `height`
       // HTML attributes.
       if (!img.attr("src").includes("://")) {
-        console.log("B", img.attr("src"));
-        // const filePath = Image.findByURL(img.attr("src"));
-        // if (filePath) {
-        //   const dimensions = sizeOf(filePath);
-        //   // console.log("GET SIZE FROM", img.attr("src"), filePath, dimensions);
-        // }
+        const filePath = Image.findByURL(img.attr("src"));
+        if (filePath) {
+          const dimensions = sizeOf(filePath);
+          img.attr("width", `${dimensions.width}`);
+          img.attr("height", `${dimensions.height}`);
+        }
       }
     }
   });
