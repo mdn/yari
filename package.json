@@ -67,7 +67,7 @@
     "jsesc": "3.0.2",
     "mdn-data": "2.0.14",
     "open": "^7.3.0",
-    "open-editor": "2.0.1",
+    "open-editor": "3.0.0",
     "prismjs": "1.22.0",
     "prompts": "^2.4.0",
     "sanitize-filename": "^1.6.3",
