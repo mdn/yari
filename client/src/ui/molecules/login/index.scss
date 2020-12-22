@@ -4,8 +4,14 @@
 .auth-container {
   margin-top: $base-unit * 2;
 
-  @media #{$mq-large-desktop-and-up} {
-    margin-top: 0;
+  /* This media condition could be removed as margin-top isn't changing from above */
+  // @media #{$mq-large-desktop-and-up} {
+  //   margin-top: 0;
+  // }
+
+  /* Handling < 1199px Sign in button alignment, if there is a $var then use that instead */
+  @media (max-width: 74.9375em) and (min-width: 768px) {
+    margin-top: $base-unit * 3;
   }
 }
 
