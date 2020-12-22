@@ -225,10 +225,6 @@ app.get("/*", async (req, res) => {
   }
 });
 
-if (!fs.existsSync(path.resolve(CONTENT_ROOT))) {
-  throw new Error(`${path.resolve(CONTENT_ROOT)} does not exist!`);
-}
-
 console.log(
   `CONTENT_ROOT: ${chalk.bold(CONTENT_ROOT)}`,
   path.resolve(CONTENT_ROOT) !== CONTENT_ROOT

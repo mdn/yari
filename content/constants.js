@@ -1,12 +1,25 @@
 const path = require("path");
+const fs = require("fs");
 const { VALID_LOCALES } = require("../libs/constants");
 
 require("dotenv").config({
   path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
 });
 
-const CONTENT_ROOT = process.env.CONTENT_ROOT;
-console.assert(CONTENT_ROOT, "Env var CONTENT_ROOT must be set");
+const attemptedContentRoot = process.env.CONTENT_ROOT;
+let CONTENT_ROOT;
+if (!attemptedContentRoot) {
+  throw "Env var CONTENT_ROOT must be set";
+}
+if (!fs.existsSync(attemptedContentRoot)) {
+  throw new Error(`${path.resolve(attemptedContentRoot)} does not exist!`);
+}
+if (fs.existsSync(`${attemptedContentRoot}/files`)) {
+  CONTENT_ROOT = `${attemptedContentRoot}/files`;
+  console.warn("Add '/files' to your content root");
+} else {
+  CONTENT_ROOT = attemptedContentRoot;
+}
 
 const CONTENT_ARCHIVED_ROOT = process.env.CONTENT_ARCHIVED_ROOT;
 const CONTENT_TRANSLATED_ROOT = process.env.CONTENT_TRANSLATED_ROOT;
