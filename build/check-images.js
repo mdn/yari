@@ -190,7 +190,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
  * has some hardcoded patterns for margins and borders that would be
  * best to set "centrally" with a style sheet.
  */
-function checkImageWidths(doc, $, options, { url, rawContent }) {
+function checkImageWidths(doc, $, options, { rawContent }) {
   const filePaths = new Set();
   if (doc.isArchive) return filePaths;
 
