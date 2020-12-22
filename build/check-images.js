@@ -190,16 +190,56 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
  * has some hardcoded patterns for margins and borders that would be
  * best to set "centrally" with a style sheet.
  */
-function checkImageTags(doc, $, options, { url, rawContent }) {
+function checkImageWidths(doc, $, options, { url, rawContent }) {
   const filePaths = new Set();
   if (doc.isArchive) return filePaths;
 
   const checkImages =
     options.flawLevels.get("image_widths") !== FLAW_LEVELS.IGNORE;
 
+  const checked = new Map();
+
+  function addStyleFlaw($img, style, suggestion) {
+    if (!("image_widths" in doc.flaws)) {
+      doc.flaws.image_widths = [];
+    }
+    const id = `image_widths${doc.flaws.image_widths.length + 1}`;
+    $img.attr("data-flaw", id);
+    const matches = [
+      ...findMatchesInText(style, rawContent, {
+        attribute: "style",
+      }),
+    ];
+    const checkedBefore = checked.get(style) || 0;
+    matches.forEach((match, i) => {
+      if (i !== checkedBefore) {
+        return;
+      }
+      const fixable = suggestion !== null;
+      let explanation = "";
+      if (style.includes("width") && style.includes("height")) {
+        explanation = "'width' and 'height'";
+      } else if (style.includes("height")) {
+        explanation = "'height'";
+      } else {
+        explanation = "'height'";
+      }
+      explanation += " set in 'style' attribute on <img> tag.";
+      doc.flaws.image_widths.push({
+        id,
+        style,
+        fixable,
+        suggestion,
+        explanation,
+        ...match,
+      });
+      // Use this to remember which in the list of matches we've dealt with.
+      checked.set(style, checkedBefore + 1);
+    });
+  }
+
   $("img").each((i, element) => {
     const img = $(element);
-    const suggestion = {};
     // If it already has a `width` attribute, leave this as is.
     if (!img.attr("width")) {
       // Remove any `width` or `height` specified in the `style` attribute
@@ -226,17 +266,24 @@ function checkImageTags(doc, $, options, { url, rawContent }) {
             return !["width", "height"].includes(parts[0].trim());
           })
           .map((parts) => parts.join(":"))
-          .join(";");
+          .join(";")
+          .trim();
 
+        let suggestion = null;
         if (newStyleValue !== originalStyleValue) {
           // If there's nothing left, don't just set a new value, make
           // it delete the 'style' attribute altogether.
           if (newStyleValue) {
+            suggestion = newStyleValue;
             img.attr("style", newStyleValue);
-            suggestion.style = newStyleValue;
           } else {
+            suggestion = "";
             img.removeAttr("style");
-            suggestion.style = null;
+          }
+          // Remember, only if you're interested in checking for flaws, do we
+          // record this. But we also apply the fix nomatter what.
+          if (checkImages) {
+            addStyleFlaw(img, originalStyleValue, suggestion);
           }
         }
       }
@@ -252,9 +299,6 @@ function checkImageTags(doc, $, options, { url, rawContent }) {
         }
       }
     }
-    if (checkImages && Object.keys(suggestion).length) {
-      console.log("IT's A FLAW!");
-    }
   });
 
   if (
@@ -268,4 +312,4 @@ function checkImageTags(doc, $, options, { url, rawContent }) {
   }
 }
 
-module.exports = { checkImageReferences, checkImageTags };
+module.exports = { checkImageReferences, checkImageWidths };
