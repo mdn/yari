@@ -252,14 +252,19 @@ function checkImageTags(doc, $, options, { url, rawContent }) {
         }
       }
     }
+    if (checkImages && Object.keys(suggestion).length) {
+      console.log("IT's A FLAW!");
+    }
   });
 
-  if (doc.flaws.image_widths && doc.flaws.image_widths.length) {
-    if (options.flawLevels.get("image_widths") === FLAW_LEVELS.ERROR) {
-      throw new Error(
-        `images width flaws: ${JSON.stringify(doc.flaws.image_widths)}`
-      );
-    }
+  if (
+    doc.flaws.image_widths &&
+    doc.flaws.image_widths.length &&
+    options.flawLevels.get("image_widths") === FLAW_LEVELS.ERROR
+  ) {
+    throw new Error(
+      `images width flaws: ${JSON.stringify(doc.flaws.image_widths)}`
+    );
   }
 }
 
