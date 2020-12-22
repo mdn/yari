@@ -16,6 +16,7 @@ const {
   Redirect,
   Document,
   buildURL,
+  execGit,
 } = require("../content");
 const { buildDocument, gatherGitHistory } = require("../build");
 
@@ -474,8 +475,8 @@ program
         console.log(`Created ${created}`);
         countCreated++;
         if (move) {
-          execGit(["rm", document.fileInfo.path]);
-          execGit(["rm", rawFilePath]);
+          execGit(["rm", document.fileInfo.path], {}, CONTENT_ARCHIVED_ROOT);
+          execGit(["rm", rawFilePath], {}, CONTENT_ARCHIVED_ROOT);
         }
       }
       console.log(`Created ${countCreated} new files`);
