@@ -290,8 +290,15 @@ function checkImageWidths(doc, $, options, { rawContent }) {
 
       // If image is local, get its dimension and set the `width` and `height`
       // HTML attributes.
-      if (!img.attr("src").includes("://")) {
-        const filePath = Image.findByURL(img.attr("src"));
+      const imgSrc = img.attr("src");
+      // Only proceed if it's not an external image.
+      // But beyond that, suppose the `<img>` tag looks anything other than
+      // `<img src="/local/docs/slug">` then we can't assume the `img[src]` can
+      // be resolved. For example, suppose the HTML contains `<img src="404.png">`
+      // then it's a broken image and it's handled by the `checkImageReferences()`
+      // function. Stay away from those.
+      if (!imgSrc.includes("://") && imgSrc.startsWith("/")) {
+        const filePath = Image.findByURL(imgSrc);
         if (filePath) {
           const dimensions = sizeOf(filePath);
           img.attr("width", `${dimensions.width}`);
