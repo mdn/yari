@@ -83,8 +83,8 @@ function Took({ milliseconds }: { milliseconds: number }) {
 
 function Loading({ startLoadingTime }: { startLoadingTime: Date }) {
   const [estimateEndTime, setEstimateEndTime] = useState(
-    // 10 seconds
-    new Date(startLoadingTime.getTime() + 1000 * 10)
+    // 15 seconds
+    new Date(startLoadingTime.getTime() + 1000 * 15)
   );
   useEffect(() => {
     if (sessionStorage.getItem(SESSIONSTORAGE_KEY)) {
@@ -122,7 +122,8 @@ function Loading({ startLoadingTime }: { startLoadingTime: Date }) {
       </progress>
       <br />
       <small>
-        Estimated time to finish: {((distance - elapsed) / 1000).toFixed(0)}s
+        Estimated time to finish: {((distance - elapsed) / 1000).toFixed(0)}s{" "}
+        {elapsed > distance ? <span>🙃</span> : null}
       </small>
     </div>
   );
