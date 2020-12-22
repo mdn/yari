@@ -13,7 +13,7 @@ env:
   DEFAULT_DEPLOYMENT_PREFIX: "main"
   DEFAULT_NOTES: ""
   DEFAULT_ARCHIVED_CONTENT: "false"
-  DEFAULT_TRANSLATED_CONTENT: "false"
+  DEFAULT_TRANSLATED_CONTENT: "true"
   DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD: "false"
 
 on:
@@ -69,20 +69,32 @@ jobs:
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
 
+      # Our usecase is a bit complicated. When the cron schedule runs this workflow,
+      # we rely on the env vars defined at the top of the file. But if it's a manual
+      # trigger we rely on the inputs and only the inputs. That way, the user can
+      # opt to type in 'false'.
+      # It's not possible to express this with GitHub Workflow syntax, so we
+      # have a dedicate set that conveniently sets these as env vars which we
+      # can refer to later in `if: ....` lines or in bash with the `run: ...` blocks.
+      - name: Figure out what we'll need to build
+        run: |
+          echo "BUILD_TRANSLATED_CONTENT=${{ github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT }}" >> $GITHUB_ENV
+          echo "BUILD_ARCHIVED_CONTENT=${{ github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT }}" >> $GITHUB_ENV
+
       - uses: actions/checkout@v2
-        if: "contains(github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT, 'true')"
+        if: "contains(env.BUILD_ARCHIVED_CONTENT, 'true')"
         with:
           repository: mdn/archived-content
           path: mdn/archived-content
 
       - uses: actions/checkout@v2
-        if: "contains(github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT, 'true')"
+        if: "contains(env.BUILD_TRANSLATED_CONTENT, 'true')"
         with:
-          repository: mdn/translated-content
+          repository: mdn/translated-content-rendered
           path: mdn/translated-content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v2.1.4
         with:
           node-version: "12"
 
@@ -125,6 +137,8 @@ jobs:
           echo "translated_content: ${{ github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT }}"
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}"
+          echo "BUILD_TRANSLATED_CONTENT: ${{ env.BUILD_TRANSLATED_CONTENT }}"
+          echo "BUILD_ARCHIVED_CONTENT: ${{ env.BUILD_ARCHIVED_CONTENT }}"
 
       - name: Build everything
         run: |
@@ -132,13 +146,13 @@ jobs:
           # sub-folder called "mdn/content"
           export CONTENT_ROOT=$(pwd)/mdn/content/files
 
-          if [ ${{ github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT }} == "true" ]; then
+          if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
             echo "Will build mdn/archived-content too"
             export CONTENT_ARCHIVED_ROOT=$(pwd)/mdn/archived-content/files
           else
             echo "Will NOT build mdn/archived-content too"
           fi
-          if [ ${{ github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT }} == "true" ]; then
+          if [ ${{ env.BUILD_TRANSLATED_CONTENT }} == "true" ]; then
             echo "Will build mdn/translated-content too"
             export CONTENT_TRANSLATED_ROOT=$(pwd)/mdn/translated-content/files
           else
@@ -166,6 +180,11 @@ jobs:
           # origin domain isn't what that account expects.
           export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-36116321-5
 
+          # See the code for a further explanation for this.
+          # You get the ID from
+          # https://speedcurve.com/mozilla-add-ons/mdn/settings/updated/#lux
+          export BUILD_SPEEDCURVE_LUX_ID=108906238
+
           # Make sure every built page always has
           # '<meta name="robots" content="noindex, nofollow">' nomatter what
           # kind of document it is.
@@ -176,17 +195,21 @@ jobs:
           du -sh client/build
 
       - name: Deploy with deployer
+        env:
+          GITHUB_SHA: ${{ env.GITHUB_SHA }}
+          GITHUB_RUN_ID: ${{ env.GITHUB_RUN_ID }}
+          GITHUB_ACTION: ${{ env.GITHUB_ACTION }}
         run: |
           # Set the CONTENT_ROOT first
           export CONTENT_ROOT=$(pwd)/mdn/content/files
 
-          if [ ${{ github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT }} == "true" ]; then
+          if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
             echo "Will build mdn/archived-content too"
             export CONTENT_ARCHIVED_ROOT=$(pwd)/mdn/archived-content/files
           else
             echo "Will NOT build mdn/archived-content too"
           fi
-          if [ ${{ github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT }} == "true" ]; then
+          if [ ${{ env.BUILD_TRANSLATED_CONTENT }} == "true" ]; then
             echo "Will build mdn/translated-content too"
             export CONTENT_TRANSLATED_ROOT=$(pwd)/mdn/translated-content/files
           else
@@ -214,6 +237,16 @@ jobs:
 
           poetry run deployer upload ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
+
+          # Note, command will pick up the site ID and deployment API key
+          # from environment variables and if either of them is falsy, the
+          # command will *not* fail. It will simply not deploy anything.
+          export SPEEDCURVE_DEPLOY_API_KEY=${{ secrets.SPEEDCURVE_DEPLOY_API_KEY }}
+          # Based on https://api.speedcurve.com/#get-all-sites using the API key
+          export SPEEDCURVE_DEPLOY_SITE_ID=354836
+          poetry run deployer speedcurve-deploy \
+            --note "${GITHUB_SHA}" \
+            --detail "run_id=${GITHUB_RUN_ID} action=${GITHUB_ACTION}"
 
           # TODO
           # Execute command to publish built content to Elasticsearch

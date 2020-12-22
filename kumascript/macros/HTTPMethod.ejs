@@ -4,7 +4,6 @@ let lang = env.locale;
 let method = $0.toUpperCase(); // Methods are always uppercase
 let str = $1 || $0;
 let rtlLocales = ['ar', 'he', 'fa'];
-let localStrings = string.deserialize(await template("L10n:Common"));
 let URL = "/" + lang + '/docs/Web/HTTP/Methods/' + method;
 let anch = '';
 

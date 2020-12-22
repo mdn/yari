@@ -129,6 +129,23 @@ test("content built foo page", () => {
   );
 
   expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
+
+  // The HTML should contain the Google Analytics snippet.
+  // The ID should match what's set in `testing/.env`.
+  expect(
+    $('script[src="https://www.google-analytics.com/analytics.js"]').length
+  ).toBe(1);
+
+  // The HTML should contain the Speedcurve LUX snippet.
+  // The ID should match what's set in `testing/.env`.
+  expect($('script[src^="https://cdn.speedcurve.com/"]').attr("src")).toContain(
+    "012345"
+  );
+
+  // Because this en-US page has a French translation
+  expect($('link[rel="alternate"]').length).toBe(2);
+  expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
+  expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
 });
 
 test("content built French foo page", () => {
@@ -147,6 +164,33 @@ test("content built French foo page", () => {
   expect(doc.other_translations[0].locale).toBe("en-US");
   expect(doc.other_translations[0].url).toBe("/en-US/docs/Web/Foo");
   expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($('link[rel="alternate"]').length).toBe(2);
+  expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
+  expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
+});
+
+test("wrong xref macro errors", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "wrong_xref_macro"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  // Expect the first flaw to be that we're using the wrong xref macro.
+  expect(doc.flaws.macros[0].name).toBe("MacroBrokenLinkError");
+  expect(doc.flaws.macros[0].macroSource).toBe('{{DOMxRef("Promise")}}');
+  expect(doc.flaws.macros[0].line).toBe(7);
+  expect(doc.flaws.macros[0].column).toBe(51);
+  expect(doc.flaws.macros[0].sourceContext).toEqual(
+    expect.stringContaining('Web API: {{DOMxRef("Promise")}}')
+  );
 });
 
 test("summary extracted correctly by span class", () => {
@@ -778,4 +822,23 @@ test("bcd table extraction when overly nested is a flaw", () => {
   expect(doc.flaws.sectioning[0].explanation).toBe(
     "2 'div.bc-data' elements found but deeply nested."
   );
+});
+
+test("img tags with an empty 'src' should be a flaw", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "empty_image"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.images.length).toBe(1);
+  expect(doc.flaws.images[0].explanation).toBe("Empty img 'src' attribute");
+  expect(doc.flaws.images[0].fixable).toBeFalsy();
+  expect(doc.flaws.images[0].externalImage).toBeFalsy();
+  expect(doc.flaws.images[0].line).toBe(8);
+  expect(doc.flaws.images[0].column).toBe(13);
 });

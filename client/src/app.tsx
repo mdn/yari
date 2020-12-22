@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 
 // we include our base SASS here to ensure it is loaded
 // and applied before any component specific style
@@ -45,6 +45,36 @@ function DocumentLayout({ children }) {
   return <Layout pageType="document-page">{children}</Layout>;
 }
 
+/** This component exists so you can dynamically change which sub-component to
+ * render depending on the conditions. In particular, we need to be able to
+ * render the <PageNotFound> component, in server-side rendering, if told to do
+ * so. But if the client then changes the location (by clicking a <Link>
+ * or a react-router navigate() call) we need to ignore the fact that it was
+ * originally not found. Perhaps, this new location that the client is
+ * requesting is going to work.
+ */
+function DocumentOrPageNotFound(props) {
+  // It's true by default if the SSR rendering says so.
+  const [notFound, setNotFound] = React.useState<boolean>(!!props.pageNotFound);
+  const { pathname } = useLocation();
+  const initialPathname = React.useRef(pathname);
+  React.useEffect(() => {
+    if (initialPathname.current && initialPathname.current !== pathname) {
+      setNotFound(false);
+    }
+  }, [pathname]);
+
+  return notFound ? (
+    <StandardLayout>
+      <PageNotFound />
+    </StandardLayout>
+  ) : (
+    <DocumentLayout>
+      <Document {...props} />
+    </DocumentLayout>
+  );
+}
+
 export function App(appProps) {
   const routes = (
     <Routes>
@@ -85,18 +115,22 @@ export function App(appProps) {
                   }
                 />
                 <Route
-                  path="/_create/*"
-                  element={
-                    <StandardLayout>
-                      <DocumentCreate />
-                    </StandardLayout>
-                  }
-                />
-                <Route
                   path="/_edit/*"
                   element={
                     <StandardLayout>
                       <DocumentEdit />
+                    </StandardLayout>
+                  }
+                />
+
+                {/* The following two are not "enabled". I.e. no link to them.
+                    See https://github.com/mdn/yari/issues/1614
+                 */}
+                <Route
+                  path="/_create/*"
+                  element={
+                    <StandardLayout>
+                      <DocumentCreate />
                     </StandardLayout>
                   }
                 />
@@ -108,6 +142,7 @@ export function App(appProps) {
                     </StandardLayout>
                   }
                 />
+
                 {/*
                 This route exclusively exists for development on the <PageNotFound>
                 component itself.
@@ -135,21 +170,7 @@ export function App(appProps) {
             />
             <Route
               path="/docs/*"
-              element={
-                // It's important to do this so the server-side renderer says
-                // this render is for a page not found.
-                // Otherwise, the document route will take over and start to try to
-                // download the `./index.json` thinking that was all that was missing.
-                appProps.pageNotFound ? (
-                  <StandardLayout>
-                    <PageNotFound />
-                  </StandardLayout>
-                ) : (
-                  <DocumentLayout>
-                    <Document {...appProps} />
-                  </DocumentLayout>
-                )
-              }
+              element={<DocumentOrPageNotFound {...appProps} />}
             />
             <Route
               path="*"

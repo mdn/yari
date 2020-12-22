@@ -17,6 +17,10 @@ const {
   resolveFundamental,
 } = require("../content");
 
+// This is unique to the importer
+const CONTENT_TRANSLATED_RENDERED_ROOT =
+  process.env.CONTENT_TRANSLATED_RENDERED_ROOT;
+
 const cheerio = require("../build/monkeypatched-cheerio");
 const ProgressBar = require("./progress-bar");
 
@@ -685,9 +689,15 @@ async function prepareRoots(options) {
     CONTENT_TRANSLATED_ROOT,
     "CONTENT_TRANSLATED_ROOT must be set"
   );
+  console.assert(
+    CONTENT_TRANSLATED_RENDERED_ROOT,
+    "CONTENT_TRANSLATED_RENDERED_ROOT must be set"
+  );
 
   if (CONTENT_ROOT === CONTENT_ARCHIVED_ROOT) throw new Error("eh?!");
   if (CONTENT_ROOT === CONTENT_TRANSLATED_ROOT) throw new Error("eh?!");
+  if (CONTENT_TRANSLATED_ROOT === CONTENT_TRANSLATED_RENDERED_ROOT)
+    throw new Error("that ain't right");
   if (options.startClean) {
     // Experimental new feature
     // https://nodejs.org/api/fs.html#fs_fs_rmdirsync_path_options
@@ -700,10 +710,14 @@ async function prepareRoots(options) {
     await withTimer(`Delete all of ${CONTENT_TRANSLATED_ROOT}`, () =>
       fs.rmdirSync(CONTENT_TRANSLATED_ROOT, { recursive: true })
     );
+    await withTimer(`Delete all of ${CONTENT_TRANSLATED_RENDERED_ROOT}`, () =>
+      fs.rmdirSync(CONTENT_TRANSLATED_RENDERED_ROOT, { recursive: true })
+    );
   }
   fs.mkdirSync(CONTENT_ROOT, { recursive: true });
   fs.mkdirSync(CONTENT_ARCHIVED_ROOT, { recursive: true });
   fs.mkdirSync(CONTENT_TRANSLATED_ROOT, { recursive: true });
+  fs.mkdirSync(CONTENT_TRANSLATED_RENDERED_ROOT, { recursive: true });
 }
 
 function populateExistingFilePaths() {
@@ -713,6 +727,7 @@ function populateExistingFilePaths() {
     CONTENT_ROOT,
     CONTENT_ARCHIVED_ROOT,
     CONTENT_TRANSLATED_ROOT,
+    CONTENT_TRANSLATED_RENDERED_ROOT,
   ]) {
     for (const filepath of walker(root)) {
       if (filepath.endsWith("index.html")) {
@@ -1023,6 +1038,22 @@ async function processDocument(
       const parentUri = makeURL(doc.parent_locale, doc.parent_slug);
       const finalUri = redirectFinalDestinations.get(parentUri);
       meta.translation_of = uriToSlug(finalUri);
+
+      // What might have happened is the following timeline...
+      // 1. Some writes an English document at SlugA
+      // 2. Someone translates that SlugA English document into Japanese
+      // 3. Someone decides to move that English document to SlugB, and makes
+      //    SlugA redirect to SlugB.
+      // 4. Someone translates that SlugB English document into Japanese
+      // 5. Now you have 2 Japanese translations. One whose parent is
+      //    SlugA and one whose parent is SlugB. But if you follow the redirects
+      //    for SlugA you end up on SlugB and, voila! you now have 2 Japanese
+      //    documents that claim to be a translation of SlugB.
+      // This code here is why it sets the `.translation_of_original`.
+      // More context on https://github.com/mdn/yari/issues/2034
+      if (doc.parent_slug !== meta.translation_of) {
+        meta.translation_of_original = doc.parent_slug;
+      }
     } else {
       meta.translation_of = doc.parent_slug;
     }
@@ -1049,19 +1080,32 @@ async function processDocument(
   // If we're building this page, we can remove
   let builtFolderPath;
 
+  // If it's not archived and its not en-US dump it twice!
   if (isArchive || doc.locale !== "en-US") {
     builtFolderPath = Document.archive(
       getCleanedRenderedHTML(doc.rendered_html),
-      doc.html,
+      isArchive ? doc.html : null,
       meta,
       // The Document.archive() is used for genuinely archived content,
-      // but we also treat translated content the same way ultimately.
-      !isArchive
+      // but we also treat translated content the same way kinda.
+      !isArchive,
+      isArchive ? CONTENT_ARCHIVED_ROOT : CONTENT_TRANSLATED_RENDERED_ROOT
     );
+    builtFilePaths.add(path.join(builtFolderPath, "index.html"));
+
+    // If it's not archive, dump it a second time.
+    if (!isArchive && doc.locale !== "en-US") {
+      builtFolderPath = Document.create(
+        getCleanedKumaHTML(doc.html),
+        meta,
+        CONTENT_TRANSLATED_ROOT
+      );
+      builtFilePaths.add(path.join(builtFolderPath, "index.html"));
+    }
   } else {
     builtFolderPath = Document.create(getCleanedKumaHTML(doc.html), meta);
+    builtFilePaths.add(path.join(builtFolderPath, "index.html"));
   }
-  builtFilePaths.add(path.join(builtFolderPath, "index.html"));
 }
 
 function getCleanedRenderedHTML(html) {
@@ -1070,13 +1114,15 @@ function getCleanedRenderedHTML(html) {
 
   // This will only happen for fully rendered HTML.
   // https://github.com/mdn/yari/issues/1248
-  $("#Quick_Links a[title]").each((i, element) => {
-    const $element = $(element);
-    $element.removeAttr("title");
-    mutations++;
-  });
+  $("#Quick_Links a[title], div.index a[title], ul a[title], td a[title]").each(
+    (i, element) => {
+      const $element = $(element);
+      $element.removeAttr("title");
+      mutations++;
+    }
+  );
 
-  $("div.warning, div.blockIndicator").each((i, element) => {
+  $("div.warning, div.note, div.blockIndicator").each((i, element) => {
     const $element = $(element);
     $element.addClass("notecard");
     $element.removeClass("blockIndicator");
@@ -1094,6 +1140,12 @@ function getCleanedRenderedHTML(html) {
 
   $("div.prevnext a").each((i, element) => {
     $(element).addClass("button");
+    mutations++;
+  });
+
+  $("div.in-page-callout").each((i, element) => {
+    $(element).removeClass("in-page-callout webdev");
+    $(element).addClass("callout");
     mutations++;
   });
 
@@ -1150,6 +1202,13 @@ async function saveAllRedirects(redirects) {
     countPerLocale.push([locale, pairs.length]);
     const root = locale === "en-US" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
     const localeFolder = path.join(root, locale.toLowerCase());
+    let extraLocaleFolder = null;
+    if (locale !== "en-US") {
+      extraLocaleFolder = path.join(
+        CONTENT_TRANSLATED_RENDERED_ROOT,
+        locale.toLowerCase()
+      );
+    }
     console.log("LOCALE", locale, "TO", localeFolder);
     if (!fs.existsSync(localeFolder)) {
       console.log(
@@ -1157,6 +1216,9 @@ async function saveAllRedirects(redirects) {
       );
     } else {
       Redirect.write(localeFolder, pairs);
+      if (extraLocaleFolder) {
+        Redirect.write(extraLocaleFolder, pairs);
+      }
     }
   }
 
@@ -1190,7 +1252,18 @@ async function saveWikiHistory(allHistory, isArchive) {
       ? CONTENT_ROOT
       : CONTENT_TRANSLATED_ROOT;
     const localeFolder = path.join(root, locale.toLowerCase());
+    let extraLocaleFolder = null;
+    if (!isArchive && locale !== "en-US") {
+      extraLocaleFolder = path.join(
+        CONTENT_TRANSLATED_RENDERED_ROOT,
+        locale.toLowerCase()
+      );
+    }
     const filePath = path.join(localeFolder, "_wikihistory.json");
+    let extraFilePath = null;
+    if (extraLocaleFolder) {
+      extraFilePath = path.join(extraLocaleFolder, "_wikihistory.json");
+    }
     const obj = Object.create(null);
     const keys = Array.from(history.keys());
     keys.sort();
@@ -1198,6 +1271,9 @@ async function saveWikiHistory(allHistory, isArchive) {
       obj[key] = history.get(key);
     }
     fs.writeFileSync(filePath, JSON.stringify(obj, null, 2));
+    if (extraFilePath) {
+      fs.writeFileSync(extraFilePath, JSON.stringify(obj, null, 2));
+    }
   }
 }
 

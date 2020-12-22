@@ -108,6 +108,17 @@ function injectLoadingLazyAttributes($) {
 }
 
 /**
+ * Find all `in-page-callout` div elements and rewrite
+ * to be just `callout`, no more need to mark them as `webdev`
+ * @param {Cheerio document instance} $
+ */
+function injectInPageCallout($) {
+  $("div.in-page-callout")
+    .addClass("callout")
+    .removeClass("in-page-callout webdev");
+}
+
+/**
  * Find all `<div class="warning">` and turn them into `<div class="warning notecard">`
  * and keep in mind that if it was already been manually fixed so, you
  * won't end up with `<div class="warning notecard notecard">`.
@@ -115,7 +126,7 @@ function injectLoadingLazyAttributes($) {
  * @param {Cheerio document instance} $
  */
 function injectNotecardOnWarnings($) {
-  $("div.warning, div.blockIndicator")
+  $("div.warning, div.note, div.blockIndicator")
     .addClass("notecard")
     .removeClass("blockIndicator");
 }
@@ -188,7 +199,24 @@ async function buildDocument(document, documentOptions = {}) {
     if (options.clearKumascriptRenderCache) {
       renderKumascriptCache.clear();
     }
-    [renderedHtml, flaws] = await kumascript.render(document.url);
+    try {
+      [renderedHtml, flaws] = await kumascript.render(document.url);
+    } catch (error) {
+      if (error.name === "MacroInvocationError") {
+        // The source HTML couldn't even be parsed! There's no point allowing
+        // anything else move on.
+        // But considering that this might just be one of many documents you're
+        // building, let's at least help by setting a more user-friendly error
+        // message.
+        error.updateFileInfo(document.fileInfo);
+        throw new Error(
+          `MacroInvocationError trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
+        );
+      }
+
+      // Any other unexpected error re-thrown.
+      throw error;
+    }
 
     const sampleIds = kumascript.getLiveSampleIDs(
       document.metadata.slug,
@@ -242,7 +270,8 @@ async function buildDocument(document, documentOptions = {}) {
               )
             : null;
           const id = `macro${i}`;
-          return Object.assign({ id, fixable, suggestion }, flaw);
+          const explanation = flaw.error.message;
+          return Object.assign({ id, fixable, suggestion, explanation }, flaw);
         });
       }
     }
@@ -263,6 +292,7 @@ async function buildDocument(document, documentOptions = {}) {
 
   doc.title = metadata.title;
   doc.mdn_url = document.url;
+  doc.locale = metadata.locale;
 
   // Note that 'extractSidebar' will always return a string.
   // And if it finds a sidebar section, it gets removed from '$' too.
@@ -315,6 +345,14 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Add the `loading=lazy` HTML attribute to the appropriate elements.
   injectLoadingLazyAttributes($);
+
+  // All content that uses `<div class="in-page-callout">` needs to
+  // become `<div class="callout">`
+  // Some day, we can hopefully do a mass search-and-replace so we never
+  // need to do this code here.
+  // We might want to delete this injection in 2021 some time when all content's
+  // raw HTML has been fixed to always have it in there already.
+  injectInPageCallout($);
 
   // All content that uses `<div class="warning">` needs to become
   // `<div class="warning notecard">` instead.

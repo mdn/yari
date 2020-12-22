@@ -8,6 +8,7 @@ import cheerio from "./monkeypatched-cheerio";
 import {
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
+  SPEEDCURVE_LUX_ID,
   ALWAYS_NO_ROBOTS,
 } from "../build/constants";
 
@@ -90,6 +91,16 @@ const getGoogleAnalyticsJS = lazy(() => {
   }`.trim();
 });
 
+const getSpeedcurveJS = lazy(() => {
+  return fs
+    .readFileSync(
+      // The file is called `...js.txt` so that Prettier never touches it.
+      path.join(__dirname, "..", "speedcurve-lux-snippet.js.txt"),
+      "utf-8"
+    )
+    .trim();
+});
+
 const extractWebFontURLs = lazy(() => {
   const urls = [];
   const manifest = JSON.parse(
@@ -161,7 +172,14 @@ export default function render(
 
     if (doc.other_translations) {
       const allOtherLocales = doc.other_translations.map((t) => t.locale);
-      for (const translation of doc.other_translations) {
+      // Note, we also always include "self" as a locale. That's why we concat
+      // this doc's locale plus doc.other_translations.
+      const thisLocale = {
+        locale: doc.locale,
+        title: doc.title,
+        url: doc.mdn_url,
+      };
+      for (const translation of [...doc.other_translations, thisLocale]) {
         // The locale used in `<link rel="alternate">` needs to be the ISO-639-1
         // code. For example, it's "en", not "en-US". And it's "sv" not "sv-SE".
         // See https://developers.google.com/search/docs/advanced/crawling/localized-versions?hl=en&visit_id=637411409912568511-3980844248&rd=1#language-codes
@@ -190,6 +208,16 @@ export default function render(
 
   if (!pageNotFound) {
     $('link[rel="canonical"]').attr("href", canonicalURL);
+  }
+
+  if (SPEEDCURVE_LUX_ID) {
+    // The snippet is always the same, if it's present, but the ID varies
+    // See LUX settings here https://speedcurve.com/mozilla-add-ons/mdn/settings/lux/
+    const speedcurveJS = getSpeedcurveJS();
+    $("<script>").text(`\n${speedcurveJS}\n`).appendTo($("head"));
+    $(
+      `<script src="https://cdn.speedcurve.com/js/lux.js?id=${SPEEDCURVE_LUX_ID}" async defer crossorigin="anonymous"></script>`
+    ).appendTo($("head"));
   }
 
   if (GOOGLE_ANALYTICS_ACCOUNT) {

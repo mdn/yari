@@ -6,7 +6,7 @@ function state(section) {
   if (section == currentSection) {
     return "open";
   }
-  return "closed";
+  return "";
 }
 
 var text = mdn.localStringMap({
@@ -35,7 +35,6 @@ var text = mdn.localStringMap({
     'Useful_lists': 'Useful lists',
     'Canvas_tag': 'Pages tagged "Canvas"',
     'Contribute': 'Contribute',
-    'Doc_status': 'Canvas doc status',
     'The_MDN_project': 'The MDN project',
   },
   'zh-CN': {
@@ -63,7 +62,6 @@ var text = mdn.localStringMap({
     'Useful_lists': '常用页面列表',
     'Canvas_tag': '拥有 "Canvas" 标签的页面',
     'Contribute': '贡献',
-    'Doc_status': 'Canvas 文档翻译状态',
     'The_MDN_project': 'MDN 项目',
   },
   'ru': {
@@ -91,7 +89,6 @@ var text = mdn.localStringMap({
     'Useful_lists': 'Полезные списки',
     'Canvas_tag': 'Страницы отмеченные "Canvas"',
     'Contribute': 'Внести свой вклад',
-    'Doc_status': 'Статус документации по Canvas',
     'The_MDN_project': 'Проект MDN',
   },
   'ko': {
@@ -119,7 +116,6 @@ var text = mdn.localStringMap({
     'Useful_lists': '유용한 리스트',
     'Canvas_tag': '"Canvas"가 태그된 페이지',
     'Contribute': '기여하기',
-    'Doc_status': 'Canvas 문서 상태',
     'The_MDN_project': 'MDN 프로젝트',
   }
 });
@@ -185,7 +181,6 @@ var text = mdn.localStringMap({
     <details <%=state('Contribute')%>>
       <summary><%=text['Contribute']%></summary>
       <ol>
-        <li><a href="/<%=locale%>/docs/MDN/Doc_status/API/Canvas"><%=text['Doc_status']%></a></li>
         <li><a href="/<%=locale%>/docs/MDN"><%=text['The_MDN_project']%></a></li>
       </ol>
     </details>

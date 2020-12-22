@@ -22,6 +22,7 @@ from .utils import StopWatch, fmt_size, iterdir, log
 S3_MULTIPART_THRESHOLD = S3TransferConfig().multipart_threshold
 S3_MULTIPART_CHUNKSIZE = S3TransferConfig().multipart_chunksize
 
+NO_CACHE_VALUE = "no-store, must-revalidate"
 
 hashed_filename_regex = re.compile(r"\.[a-f0-9]{8,32}\.")
 
@@ -177,11 +178,15 @@ class UploadFileTask(UploadTask):
 
     @property
     def cache_control(self):
+
         if self.file_path.name == "service-worker.js":
-            return "no-cache"
+            return NO_CACHE_VALUE
+
+        if self.file_path.name == "404.html":
+            return NO_CACHE_VALUE
 
         if self.file_path.parent.name == "_whatsdeployed":
-            return "no-cache"
+            return NO_CACHE_VALUE
 
         if self.is_hashed:
             cache_control_seconds = HASHED_CACHE_CONTROL
@@ -269,7 +274,7 @@ class BucketManager:
     def get_redirect_keys(self, from_url, to_url):
         return (
             f"{self.key_prefix}{from_url.strip('/').lower()}",
-            f"/{to_url.strip('/')}",
+            f"/{to_url.strip('/')}" if to_url.startswith("/") else to_url,
         )
 
     def get_bucket_objects(self):
