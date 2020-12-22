@@ -20,7 +20,8 @@ let api = $0;
 let str = $1 || $0;
 let rtlLocales = ['ar', 'he', 'fa'];
 
-api = api.replace(/ /g, '_')
+api = api.replace(/: /g, '/')
+    .replace(/ /g, '_')
     .replace(/\(\)/g, '')
     .replace(/\.prototype\./g, '.')
     .replace(/\./g, '/');
