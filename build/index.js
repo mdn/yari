@@ -505,16 +505,14 @@ async function analyzeDocument(document) {
     .replace(/(<([^>]+)>)/g, "")
     .split(/\s+/).length;
   const $ = cheerio.load(document.rawHTML);
-  doc.images = $("img[src]").length;
+  const imageCounts = countImages($);
+  doc.images = imageCounts.total;
+  doc.externalImages = imageCounts.external;
+  doc.internalImages = imageCounts.internal;
   doc.h2s = $("h2").length;
   doc.h3s = $("h3").length;
-  // doc.images = (document.rawHTML.match(/<img/g) || []).length;
-  // doc.h2s = (document.rawHTML.match(/<\/h2>/g) || []).length;
-  // doc.h3s = (document.rawHTML.match(/<\/h3>/g) || []).length;
   doc.title = metadata.title;
   doc.mdn_url = document.url;
-
-  // XXX would be nice to have a piece of information about the images here
 
   // If the document has a `.popularity` make sure don't bother with too
   // many significant figures on it.
@@ -537,6 +535,24 @@ async function analyzeDocument(document) {
   }
 
   return doc;
+}
+
+function countImages($) {
+  const counts = {
+    external: 0,
+    internal: 0,
+    total: 0,
+  };
+  $("img[src]").each((i, img) => {
+    const src = $(img).attr("src");
+    if (src.includes("://")) {
+      counts.external++;
+    } else {
+      counts.internal++;
+    }
+  });
+  counts.total = counts.external + counts.internal;
+  return counts;
 }
 
 module.exports = {
