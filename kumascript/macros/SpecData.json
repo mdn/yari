@@ -192,7 +192,7 @@
   "CSS3 Box": {
     "name": "CSS Basic Box Model",
     "url": "https://drafts.csswg.org/css-box-3/",
-    "status": "WD"
+    "status": "CR"
   },
   "CSS3 Box Alignment": {
     "name": "CSS Box Alignment Module Level 3",
@@ -347,7 +347,7 @@
   "CSS3 Text": {
     "name": "CSS Text Module Level&nbsp;3",
     "url": "https://drafts.csswg.org/css-text-3/",
-    "status": "WD"
+    "status": "CR"
   },
   "CSS3 Text Decoration": {
     "name": "CSS Text Decoration Module Level&nbsp;3",
