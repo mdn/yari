@@ -242,16 +242,24 @@ program
     })
   )
 
-  .command("preview", "Open a preview of a slug")
-  .argument("<slug>", "Slug of the document in question")
+  .command("preview", "Open a preview, given a slug or pathname or URL")
+  .argument(
+    "<slugOrPathnameOrUrl>",
+    "Slug or pathname or URL of the document in question"
+  )
   .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
     validator: [...VALID_LOCALES.values()],
   })
   .action(
     tryOrExit(async ({ args }) => {
-      const { slug, locale } = args;
+      const { slugOrPathnameOrUrl, locale } = args;
+      const slug = slugOrPathnameOrUrl.replace(
+        /(https:\/\/([^/]+\/en-US(\/docs)?\/)|files\/en-us\/)?(.+?)(\/index.html)?/g,
+        "$4"
+      );
       const url = `http://localhost:${PORT}${buildURL(locale, slug)}`;
+      console.log(`Previewing files/en-us/${slug}/index.html`.toLowerCase());
       await open(url);
     })
   )
