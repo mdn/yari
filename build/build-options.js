@@ -53,7 +53,7 @@ function parseFolderSearch(searchpattern) {
 }
 
 // Override based on env vars but only for options that are *not*
-// exclusive to building everyhing.
+// exclusive to building everything.
 function parseFlawLevels(flawChecks) {
   const checks = flawChecks
     .split(",")
