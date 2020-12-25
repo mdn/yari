@@ -55,7 +55,7 @@ the TypeScript syntax.
 
 ### `import` is throwing `Cannot find module 'x'` despite it being installed
 
-What TS means to say is that it is not finding types for it. For some dependecies
+What TS means to say is that it is not finding types for it. For some dependencies
 this can be solved by running `yarn add @types/x` (`x` being the dependecy's name).
 Some dependencies might not have type declarations though, in which case you can
 either [write your own](https://www.typescriptlang.org/docs/handbook/modules.html#ambient-modules)
