@@ -60,7 +60,7 @@ In GitHub Actions, instead of trying to optimize certain tests, just skip
 them if none of the files that affect the tests have changed.
 
 One such example is the tests for the `kumascript` source code plus macros.
-Use this technique heartly to speed up the continuous integration.
+Use this technique heartily to speed up the continuous integration.
 
 ## Caveats
 
