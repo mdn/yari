@@ -46,7 +46,7 @@ const pagePrototype = require("./api/page.js");
 const info = require("./info");
 
 class Environment {
-  // Intialize an environment object that will be used to render
+  // Initialize an environment object that will be used to render
   // all of the macros in one document or page. We pass in a context
   // object (which may come from HTTP request headers) that gives
   // details like the page title and URL. These are available to macros
