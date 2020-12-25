@@ -793,7 +793,7 @@ test("chicken_and_egg page should build with flaws", () => {
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.flaws.macros.length).toBe(1);
-  // The filepath will be that of the "egg" or the "childen" page.
+  // The filepath will be that of the "egg" or the "chicken" page.
   // Let's not try to predict which one exactly, because that'd mean this
   // test would need to use the exact same sort order as the glob used
   // when we ran "yarn build" to set up the build fixtures.
