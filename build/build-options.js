@@ -31,7 +31,7 @@ function parseFiles(filesStringList) {
   // so we need to turn that into an array:
   // ["content/files/en-us/a/index.html", "content/files/en-us/b/index.html"]`
   // Note, when you use get-diff-action in GitHub Actions, it's a comma
-  // but if you use the manualy `git diff --name-only ...` on your command
+  // but if you use the manually `git diff --name-only ...` on your command
   // line it's a newline.
   return new Set(
     filesStringList
