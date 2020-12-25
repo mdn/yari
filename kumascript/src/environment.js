@@ -142,7 +142,7 @@ class Environment {
 
     // Macros use the global template() method to execute other
     // macros. This is the one function that we can't just
-    // implement on globalsPrototype because it needs acccess to
+    // implement on globalsPrototype because it needs access to
     // this.templates.
     globals.template = this._renderTemplate.bind(this);
 
