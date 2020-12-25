@@ -15,7 +15,7 @@ const {
 const options = Object.freeze({
   flawLevels: parseFlawLevels(DEFAULT_FLAW_LEVELS),
   files: parseFiles(FILES),
-  folderSearch: parseFoldersearch(FOLDERSEARCH),
+  folderSearch: parseFolderSearch(FOLDERSEARCH),
   // Obviously false if the env var for NO_PROGRESSBAR was set but also,
   // if you're going to display flaws, it's going to use stdout anyway.
   noProgressbar: NO_PROGRESSBAR || FIX_FLAWS_DRY_RUN || FIX_FLAWS_VERBOSE,
@@ -44,7 +44,7 @@ function parseFiles(filesStringList) {
   );
 }
 
-function parseFoldersearch(searchpattern) {
+function parseFolderSearch(searchpattern) {
   if (searchpattern) {
     // TODO: Consider turning it into a regex if there are * or $ or ^ in it
     return searchpattern.toLowerCase();
