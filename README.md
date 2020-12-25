@@ -220,4 +220,4 @@ There are two options to resolve this.
    export REACT_APP_NO_WATCHER=true
 
 2. Increase `max_user_watches`:\
-   See [github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers](https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers)
+   See <https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers>

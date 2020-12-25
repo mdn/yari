@@ -29,7 +29,7 @@ That will start the `watcher` (long-running), the `server` (Express
 serve on `localhost:5000`), and the client (`create-react-app` on
 `localhost:3000`).
 To test it go to:
-[http://localhost:3000/en-US/docs/Web/Foo](http://localhost:3000/en-US/docs/Web/Foo)
+<http://localhost:3000/en-US/docs/Web/Foo>
 for example.
 
 Now you should be able to make edits and notice automatic reloading.
