@@ -140,7 +140,7 @@ class Environment {
     globals.info = freeze(info);
     globals.renderPrerequisiteFromURL = renderPrerequisiteFromURL;
 
-    // Macros use the global template() method to excute other
+    // Macros use the global template() method to execute other
     // macros. This is the one function that we can't just
     // implement on globalsPrototype because it needs acccess to
     // this.templates.
