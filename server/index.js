@@ -99,7 +99,7 @@ app.get("/*/contributors.txt", async (req, res) => {
   if (!document) {
     return res.status(404).send(`Document not found by URL (${url})`);
   }
-  const [builtDocument] = await buildDocument(document);
+  const { doc: builtDocument } = await buildDocument(document);
   if (document.metadata.contributors || !document.isArchive) {
     res.send(
       renderContributorsTxt(
