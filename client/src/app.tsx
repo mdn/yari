@@ -74,7 +74,16 @@ function DocumentOrPageNotFound(props) {
   );
 }
 
+function Content({ pathname, appProps }) {
+  if (/\.(png|webp|gif|jpeg|svg)$/.test(pathname)) {
+    return <img src={pathname} alt={pathname} />;
+  } else {
+    return <DocumentOrPageNotFound {...appProps} />;
+  }
+}
+
 export function App(appProps) {
+  const { pathname } = useLocation();
   const routes = (
     <Routes>
       {/*
@@ -161,7 +170,7 @@ export function App(appProps) {
             />
             <Route
               path="/docs/*"
-              element={<DocumentOrPageNotFound {...appProps} />}
+              element={<Content pathname={pathname} appProps={appProps} />}
             />
             <Route
               path="*"
