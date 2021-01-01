@@ -75,7 +75,7 @@ function DocumentOrPageNotFound(props) {
 }
 
 function Content({ pathname, appProps }) {
-  if (/\.(png|webp|gif|jpeg|svg)$/.test(pathname)) {
+  if (/\.(png|webp|gif|jpe?g|svg)$/.test(pathname)) {
     return <img src={pathname} alt={pathname} />;
   } else {
     return <DocumentOrPageNotFound {...appProps} />;
