@@ -30,12 +30,7 @@ function injectFlaws(doc, $, options, { rawContent }) {
 
   injectBadBCDQueriesFlaws(options.flawLevels.get("bad_bcd_queries"), doc, $);
 
-  injectPreWithHTMLFlaws(
-    options.flawLevels.get("pre_with_html"),
-    doc,
-    $,
-    rawContent
-  );
+  injectPreTagFlaws(options.flawLevels.get("bad_pre_tags"), doc, $, rawContent);
 }
 
 function injectSectionFlaws(doc, flaws, options) {
@@ -229,26 +224,7 @@ function injectBadBCDQueriesFlaws(level, doc, $) {
   }
 }
 
-// Over the years, we've accumulated a lot of Kuma-HTML where the <pre> tags
-// are actually full of HTML. Almost exclusively we've observed <pre> tags whose
-// content is the HTML produced by Prism in the browser. Instead, in these cases,
-// we should just have the code that it will syntax highlight.
-// Note! Having HTML in a <pre> tag is nothing weird or wrong. But if you have
-//
-//  <pre class="language-js">
-//    <code class="language-js">
-//     <span class="keyword">foo</span>
-//   </code>
-//  </pre>
-//
-// It's better just have the text itself inside the <pre> block:
-//  <pre class="language-js">
-//    foo
-//  </pre>
-//
-// This makes it easier to edit the code in raw form. It also makes it less
-// heavy because any HTML will be replaced with Prism HTML anyway.
-function injectPreWithHTMLFlaws(level, doc, $, rawContent) {
+function injectPreTagFlaws(level, doc, $, rawContent) {
   if (level === FLAW_LEVELS.IGNORE) return;
 
   function escapeHTML(s) {
@@ -259,12 +235,32 @@ function injectPreWithHTMLFlaws(level, doc, $, rawContent) {
       .replace(/>/g, "&gt;");
   }
 
-  function addFlaw($pre) {
-    if (!("pre_with_html" in doc.flaws)) {
-      doc.flaws.pre_with_html = [];
+  // Over the years, we've accumulated a lot of Kuma-HTML where the <pre> tags
+  // are actually full of HTML. Almost exclusively we've observed <pre> tags whose
+  // content is the HTML produced by Prism in the browser. Instead, in these cases,
+  // we should just have the code that it will syntax highlight.
+  // Note! Having HTML in a <pre> tag is nothing weird or wrong. But if you have
+  //
+  //  <pre class="language-js">
+  //    <code class="language-js">
+  //     <span class="keyword">foo</span>
+  //   </code>
+  //  </pre>
+  //
+  // It's better just have the text itself inside the <pre> block:
+  //  <pre class="language-js">
+  //    foo
+  //  </pre>
+  //
+  // This makes it easier to edit the code in raw form. It also makes it less
+  // heavy because any HTML will be replaced with Prism HTML anyway.
+  function addCodeTagFlaw($pre) {
+    if (!("bad_pre_tags" in doc.flaws)) {
+      doc.flaws.bad_pre_tags = [];
     }
 
-    const id = `pre_with_html${doc.flaws.pre_with_html.length + 1}`;
+    const id = `bad_pre_tags${doc.flaws.bad_pre_tags.length + 1}`;
+    const type = "pre_with_html";
     const explanation = `<pre><code>CODE can be just <pre>CODE`;
     const suggestion = escapeHTML($pre.text());
 
@@ -284,7 +280,7 @@ function injectPreWithHTMLFlaws(level, doc, $, rawContent) {
       }
     }
 
-    const flaw = { explanation, id, fixable, html, suggestion };
+    const flaw = { explanation, id, fixable, html, suggestion, type };
     if (fixable) {
       // Only if it's fixable, is the `html` perfectly findable in the raw content.
       for (const { line, column } of findMatchesInText(html, rawContent)) {
@@ -300,8 +296,12 @@ function injectPreWithHTMLFlaws(level, doc, $, rawContent) {
     $pre.html(suggestion); // strips all other HTML but preserves whitespace
     $pre.attr("data-flaw", id);
 
-    doc.flaws.pre_with_html.push(flaw);
+    doc.flaws.bad_pre_tags.push(flaw);
   }
+
+  // We chain flaw checks and surface only the first one to make sure it's fixable
+  // See: https://github.com/mdn/yari/pull/2144#issuecomment-748346489
+  let flawsFound = false;
 
   // Matches all <code> that are preceded by
   // a <pre class="...brush...">
@@ -317,17 +317,22 @@ function injectPreWithHTMLFlaws(level, doc, $, rawContent) {
     // Because Cheerio doesn't support selectors like `pre + code` we have to
     // manually (double) check that the parent really is a `<pre>` tag.
     if ($pre.length && $pre.get(0).tagName === "pre") {
-      addFlaw($pre);
+      addCodeTagFlaw($pre);
+      flawsFound = true;
     }
   });
 
+  if (!flawsFound) {
+    // more checks
+  }
+
   if (
     level === FLAW_LEVELS.ERROR &&
-    doc.flaws.pre_with_html &&
-    doc.flaws.pre_with_html.length
+    doc.flaws.bad_pre_tags &&
+    doc.flaws.bad_pre_tags.length
   ) {
     throw new Error(
-      `pre_with_html flaws: ${doc.flaws.pre_with_html.map(JSON.stringify)}`
+      `bad_pre_tags flaws: ${doc.flaws.bad_pre_tags.map(JSON.stringify)}`
     );
   }
 }
@@ -389,8 +394,8 @@ async function fixFixableFlaws(doc, options, document) {
     }
   }
 
-  // Any 'pre_with_html' with a suggestion...
-  for (const flaw of doc.flaws.pre_with_html || []) {
+  // Any 'bad_pre_tags' with a suggestion...
+  for (const flaw of doc.flaws.bad_pre_tags || []) {
     if (!flaw.suggestion || !flaw.fixable) {
       continue;
     }
@@ -403,7 +408,7 @@ async function fixFixableFlaws(doc, options, document) {
     // flaw, but this time actually make the mutation.
     newRawHTML = newRawHTML.replace(flaw.html, flaw.suggestion);
     if (loud) {
-      console.log(chalk.grey(`${phrasing} (${flaw.id}) pre_with_html`));
+      console.log(chalk.grey(`${phrasing} (${flaw.id}) bad_pre_tags`));
     }
   }
 
