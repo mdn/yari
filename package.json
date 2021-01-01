@@ -68,7 +68,7 @@
     "mdn-data": "2.0.14",
     "open": "^7.3.0",
     "open-editor": "3.0.0",
-    "prismjs": "1.22.0",
+    "prismjs": "1.23.0",
     "prompts": "^2.4.0",
     "sanitize-filename": "^1.6.3",
     "send": "0.17.1",
