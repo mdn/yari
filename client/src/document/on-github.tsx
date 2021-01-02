@@ -3,7 +3,8 @@ import { Doc } from "./types";
 export function OnGitHubLink({ doc }: { doc: Doc }) {
   return (
     <div id="on-github" className="on-github">
-      <h4>Found a problem with this page?</h4>
+      <h4>Contribution</h4>
+<p>We contribute using GitHub platform.</p>
       <ul>
         <li>
           <SourceOnGitHubLink doc={doc} />
@@ -12,13 +13,12 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
           <NewIssueOnGitHubLink doc={doc} />
         </li>
         <li>
-          Want to fix the problem yourself? See{" "}
           <a
             href="https://github.com/mdn/content/blob/main/README.md"
             target="_blank"
             rel="noopener noreferrer"
           >
-            our Contribution guide
+            Contribution guide
           </a>
           .
         </li>
@@ -35,7 +35,7 @@ function SourceOnGitHubLink({ doc }: { doc: Doc }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      Source on <b>GitHub</b>
+      Source
     </a>
   );
 }
@@ -125,7 +125,7 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      Report a problem with this content on <b>GitHub</b>
+      File a new issue
     </a>
   );
 }
