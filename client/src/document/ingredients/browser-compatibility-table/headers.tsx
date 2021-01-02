@@ -42,7 +42,7 @@ function BrowserHeaders({ browsers }: { browsers }) {
     <tr className="bc-browsers">
       <td />
       {browsers.map((browser) => (
-        <th key={browser} className={`bc-browser-${browser}`}>
+        <th key={browser} data-browser={browser}>
           <span className={`bc-head-txt-label bc-head-icon-${browser}`}>
             <BrowserName id={browser} />
           </span>
