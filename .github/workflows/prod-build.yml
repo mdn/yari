@@ -76,10 +76,12 @@ jobs:
       # It's not possible to express this with GitHub Workflow syntax, so we
       # have a dedicate set that conveniently sets these as env vars which we
       # can refer to later in `if: ....` lines or in bash with the `run: ...` blocks.
-      - name: Figure out what we'll need to build
+      - name: Merge dispatch inputs with default env vars
         run: |
           echo "BUILD_TRANSLATED_CONTENT=${{ github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT }}" >> $GITHUB_ENV
           echo "BUILD_ARCHIVED_CONTENT=${{ github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT }}" >> $GITHUB_ENV
+          echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
+          echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
 
       - uses: actions/checkout@v2
         if: "contains(env.BUILD_ARCHIVED_CONTENT, 'true')"
@@ -199,8 +201,6 @@ jobs:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
 
           DEPLOYER_BUCKET_NAME: mdn-content-prod
-          DEPLOYER_BUCKET_PREFIX: ${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}
-          DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD: ${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}
 
           AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYER_PROD_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_PROD_AWS_SECRET_ACCESS_KEY }}
