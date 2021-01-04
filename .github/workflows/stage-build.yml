@@ -111,8 +111,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Install all yarn packages
-        run: yarn --frozen-lockfile
+      # - name: Install all yarn packages
+      #   run: yarn --frozen-lockfile
 
       - name: Install Python
         uses: actions/setup-python@v2
@@ -122,10 +122,10 @@ jobs:
       - name: Install Python poetry
         uses: snok/install-poetry@v1.1.1
 
-      - name: Install deployer
-        run: |
-          cd deployer
-          poetry install
+      # - name: Install deployer
+      #   run: |
+      #     cd deployer
+      #     poetry install
 
       - name: Display Python & Poetry version
         run: |
