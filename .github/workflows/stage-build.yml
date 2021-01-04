@@ -190,11 +190,11 @@ jobs:
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
-          # yarn prepare-build
+          yarn prepare-build
 
-          # yarn build
+          yarn build
 
-          # du -sh client/build
+          du -sh client/build
 
       - name: Deploy with deployer
         env:
@@ -217,6 +217,7 @@ jobs:
           # Based on https://api.speedcurve.com/#get-all-sites using the API key
           SPEEDCURVE_DEPLOY_SITE_ID: 354836
         run: |
+
           if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
             echo "Will build mdn/archived-content too"
             export CONTENT_ARCHIVED_ROOT=${{ github.workspace }}/mdn/archived-content/files
