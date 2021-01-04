@@ -687,7 +687,7 @@ test("detect pre_with_html flaws", () => {
   expect(flaw.column).toBe(50);
 });
 
-test("image flaws", () => {
+test("image flaws kitchen sink", () => {
   const builtFolder = path.join(buildRoot, "en-us", "docs", "web", "images");
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
@@ -764,6 +764,36 @@ test("image flaws", () => {
       expect(src.startsWith("/en-US/docs/Web/")).toBeTruthy();
     }
   });
+});
+
+test("image flaws with repeated external images", () => {
+  // This test exists because of https://github.com/mdn/yari/issues/2247
+  // which showed that if a document has an external URL repeated more than
+  // once, our flaw detection only found it once.
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "repeated_external_images"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  console.log(flaws);
+  // You have to be intimately familiar with the fixture to understand
+  // why these flaws come out as they do.
+  expect(flaws.images.length).toBe(3);
+
+  const flaw1 = flaws.images[0];
+  const flaw2 = flaws.images[1];
+  const flaw3 = flaws.images[2];
+  expect(flaw1.src).toBe(flaw2.src);
+  expect(flaw2.src).toBe(flaw3.src);
+  expect(flaw1.line).toBe(8);
+  expect(flaw2.line).toBe(13);
+  expect(flaw3.line).toBe(18);
 });
 
 test("chicken_and_egg page should build with flaws", () => {

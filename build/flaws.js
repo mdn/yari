@@ -534,7 +534,7 @@ async function fixFixableFlaws(doc, options, document) {
 }
 
 function getImageminPlugin(fileName) {
-  const extension = path.extname(fileName);
+  const extension = path.extname(fileName).toLowerCase();
   if (extension === ".jpg" || extension === ".jpeg") {
     return imageminMozjpeg();
   }
