@@ -144,7 +144,7 @@ app.get("/*", async (req, res) => {
 
   // TODO: Would be nice to have a list of all supported file extensions
   // in a constants file.
-  if (/\.(png|webp|gif|jpeg|svg)$/.test(req.url)) {
+  if (/\.(png|webp|gif|jpe?g|svg)$/.test(req.url)) {
     // Remember, Image.findByURL() will return the absolute file path
     // iff it exists on disk.
     const filePath = Image.findByURL(req.url);
