@@ -26,10 +26,10 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
     src,
     { explanation, externalImage = false, suggestion = null }
   ) {
-    // If the document has *two* `<img src="XXX">` tags, and assume there's
-    // something wrong with that 'XXX' value, this inner function will only be
-    // called once. But when it runs `findMatchesInText()` it might refer to the
-    // image multiple times in the document.
+    // If the document has *two* `<img src="XXX">` tags, this function
+    // (addImageFlaw) is called two times. We can then assume the
+    // findMatchesInText() will find it two times too. For each call,
+    // we need to match the call based in counting matches from findMatchesInText().
     const matches = [
       ...findMatchesInText(src, rawContent, {
         attribute: "src",
