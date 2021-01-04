@@ -118,8 +118,8 @@ class Templates {
       }
     }
     let rendered = await ejs.renderFile(path, args, {
-      cache: true,
       async: true,
+      cache: process.env.NODE_ENV === "production",
     });
     return rendered.trim();
   }
