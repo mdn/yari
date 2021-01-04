@@ -74,7 +74,8 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
     // Make a special exception for the legacy images that start with `/@api/deki...`
     // If you just pretend their existing URL is static external domain, it
     // will be recognized as an external image (which is fixable).
-    const absoluteURL = src.startsWith("/@api/deki")
+    // Also any `<img src="/files/1234/foo.png">` should match.
+    const absoluteURL = /^\/(@api\/deki\/|files\/\d+)/.test(src)
       ? `https://mdn.mozillademos.org${src}`
       : new URL(src, baseURL);
 
