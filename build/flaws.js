@@ -407,6 +407,19 @@ async function fixFixableFlaws(doc, options, document) {
     }
   }
 
+  // We have a lot of images that *should* be external, at least for the sake
+  // of cleaning up, but aren't. E.g. `/@api/deki/files/247/=HTMLBlinkElement.gif`
+  // These get logged as external images by the flaw detection, but to actually
+  // be able to process them and fix the problem we need to "temporarily"
+  // pretend they were hosted on a remote working full domain.
+  // See https://github.com/mdn/yari/issues/1103
+  function forceExternalURL(url) {
+    if (url.startsWith("/")) {
+      return `https://mdn.mozillademos.org${url}`;
+    }
+    return url;
+  }
+
   // Any 'images' flaws with a suggestion or external image...
   for (const flaw of doc.flaws.images || []) {
     if (!(flaw.suggestion || flaw.externalImage)) {
@@ -419,12 +432,12 @@ async function fixFixableFlaws(doc, options, document) {
     let newSrc;
     if (flaw.externalImage) {
       // Sanity check that it's an external image
-      const url = new URL(flaw.src);
+      const url = new URL(forceExternalURL(flaw.src));
       if (url.protocol !== "https:") {
         throw new Error(`Insecure image URL ${flaw.src}`);
       }
       try {
-        const imageBuffer = await got(flaw.src, {
+        const imageBuffer = await got(forceExternalURL(flaw.src), {
           responseType: "buffer",
           resolveBodyOnly: true,
           timeout: 10000,
@@ -435,6 +448,10 @@ async function fixFixableFlaws(doc, options, document) {
           path
             .basename(decodeURI(url.pathname))
             .replace(/\s+/g, "_")
+            // From legacy we have a lot of images that are named like
+            // `/@api/deki/files/247/=HTMLBlinkElement.gif` for example.
+            // Take this opportunity to clean that odd looking leading `=`.
+            .replace(/^=/, "")
             .toLowerCase()
         );
         // Before writing to disk, run it through the same imagemin

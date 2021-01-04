@@ -71,7 +71,13 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
 
     // These two lines is to simulate what a browser would do.
     const baseURL = `http://yari.placeholder${url}/`;
-    const absoluteURL = new URL(src, baseURL);
+    // Make a special exception for the legacy images that start with `/@api/deki...`
+    // If you just pretend their existing URL is static external domain, it
+    // will be recognized as an external image (which is fixable).
+    // Also any `<img src="/files/1234/foo.png">` should match.
+    const absoluteURL = /^\/(@api\/deki\/|files\/\d+)/.test(src)
+      ? `https://mdn.mozillademos.org${src}`
+      : new URL(src, baseURL);
 
     // NOTE: Checking for lacking 'alt' text is to be done as part
     // of https://github.com/mdn/yari/issues/1018 which would need
