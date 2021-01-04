@@ -781,7 +781,6 @@ test("image flaws with repeated external images", () => {
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   const { flaws } = doc;
-  console.log(flaws);
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
   expect(flaws.images.length).toBe(3);
@@ -932,10 +931,10 @@ test("img tags should always have their 'width' and 'height' set", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("img").length).toBe(5);
   // There are 5 images, so can expect there 2 be 5x2 checks in the loop...
-  expect.assertions(5 * 2);
-  // XXX THIS IS BLOCKED ON https://github.com/mdn/yari/pull/2249
+  // But we have to account for ALL expect() calls too.
+  expect.assertions(5 * 2 + 1);
+  expect($("img").length).toBe(5);
   $("img").each((i, img) => {
     const $img = $(img);
     if ($img.attr("src").endsWith("florian.png")) {
