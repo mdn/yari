@@ -131,6 +131,11 @@ export default function BrowserCompatibilityTable({
           Report problems with this compatibility data on GitHub
         </a>
         <table key="bc-table" className="bc-table bc-table-web">
+<colgroup>
+<col>
+<col span="6" class="desktop">
+<col span="6" class="mobile">
+</colgroup>
           <Headers {...{ platforms, browsers }} />
           <tbody>
             <FeatureListAccordion
