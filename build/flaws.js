@@ -491,7 +491,6 @@ async function fixFixableFlaws(doc, options, document) {
       inAttribute: "style",
       removeEntireAttribute: flaw.suggestion === "",
     });
-    console.log(flaw);
     if (loud) {
       console.log(
         flaw.suggestion === ""
