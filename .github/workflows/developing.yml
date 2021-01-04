@@ -44,12 +44,11 @@ jobs:
           echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
       - name: Start the dev server
-        run: |
+        env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
-          export CONTENT_ROOT=$(pwd)/mdn/content/files
-          echo "CONTENT_ROOT=$CONTENT_ROOT"
-
+          CONTENT_ROOT: "${{ github.workspace }}/mdn/content/files"
+        run: |
           yarn prepare-build
           yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
 
@@ -62,11 +61,11 @@ jobs:
           curl --retry-connrefused --retry 5 --silent http://localhost:3000 > /dev/null
 
       - name: Test viewing the dev server
-        run: |
+        env:
           # This will make sure the tests in `testing/tests/*.test.js` only run
           # if the development server is up and ready to be tested.
-          export TESTING_DEVELOPING=true
-
+          TESTING_DEVELOPING: true
+        run: |
           status=0
           yarn test:testing developing || (
             status=$?
