@@ -188,11 +188,11 @@ jobs:
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
-          yarn prepare-build
+          # yarn prepare-build
 
-          yarn build
+          # yarn build
 
-          du -sh client/build
+          # du -sh client/build
 
       - name: Deploy with deployer
         env:
@@ -217,37 +217,39 @@ jobs:
           # Based on https://api.speedcurve.com/#get-all-sites using the API key
           SPEEDCURVE_DEPLOY_SITE_ID: 354836
         run: |
+          echo "DEBUGGING"
+          echo $DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD
 
-          if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
-            echo "Will build mdn/archived-content too"
-            export CONTENT_ARCHIVED_ROOT=${{ github.workspace }}/mdn/archived-content/files
-          else
-            echo "Will NOT build mdn/archived-content too"
-          fi
-          if [ ${{ env.BUILD_TRANSLATED_CONTENT }} == "true" ]; then
-            echo "Will build mdn/translated-content too"
-            export CONTENT_TRANSLATED_ROOT=${{ github.workspace }}/mdn/translated-content/files
-          else
-            echo "Will NOT build mdn/translated-content too"
-          fi
+          # if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
+          #   echo "Will build mdn/archived-content too"
+          #   export CONTENT_ARCHIVED_ROOT=${{ github.workspace }}/mdn/archived-content/files
+          # else
+          #   echo "Will NOT build mdn/archived-content too"
+          # fi
+          # if [ ${{ env.BUILD_TRANSLATED_CONTENT }} == "true" ]; then
+          #   echo "Will build mdn/translated-content too"
+          #   export CONTENT_TRANSLATED_ROOT=${{ github.workspace }}/mdn/translated-content/files
+          # else
+          #   echo "Will NOT build mdn/translated-content too"
+          # fi
 
-          # Info about which CONTENT_* environment variables were set and to what.
-          echo "CONTENT_ROOT=$CONTENT_ROOT"
-          echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
-          echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
+          # # Info about which CONTENT_* environment variables were set and to what.
+          # echo "CONTENT_ROOT=$CONTENT_ROOT"
+          # echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
+          # echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
 
-          cd deployer
+          # cd deployer
 
-          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/code.json
-          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/content.json $CONTENT_ROOT
-          # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
-          echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
+          # poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/code.json
+          # poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/content.json $CONTENT_ROOT
+          # # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
+          # echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
-          poetry run deployer upload ../client/build
-          poetry run deployer update-lambda-functions ./aws-lambda
-          poetry run deployer speedcurve-deploy \
-            --note "${GITHUB_SHA}" \
-            --detail "run_id=${GITHUB_RUN_ID} action=${GITHUB_ACTION}"
+          # poetry run deployer upload ../client/build
+          # poetry run deployer update-lambda-functions ./aws-lambda
+          # poetry run deployer speedcurve-deploy \
+          #   --note "${GITHUB_SHA}" \
+          #   --detail "run_id=${GITHUB_RUN_ID} action=${GITHUB_ACTION}"
 
-          # TODO
-          # Execute command to publish built content to Elasticsearch
+          # # TODO
+          # # Execute command to publish built content to Elasticsearch
