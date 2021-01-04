@@ -432,7 +432,6 @@ async function fixFixableFlaws(doc, options, document) {
     let newSrc;
     if (flaw.externalImage) {
       // Sanity check that it's an external image
-      console.log({ src: flaw.src, forced: forceExternalURL(flaw.src) });
       const url = new URL(forceExternalURL(flaw.src));
       if (url.protocol !== "https:") {
         throw new Error(`Insecure image URL ${flaw.src}`);
