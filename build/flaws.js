@@ -412,6 +412,7 @@ async function fixFixableFlaws(doc, options, document) {
   // These get logged as external images by the flaw detection, but to actually
   // be able to process them and fix the problem we need to "temporarily"
   // pretend they were hosted on a remote working full domain.
+  // See https://github.com/mdn/yari/issues/1103
   function forceExternalURL(url) {
     if (url.startsWith("/")) {
       return `https://mdn.mozillademos.org${url}`;
