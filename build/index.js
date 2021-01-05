@@ -1,4 +1,5 @@
 const chalk = require("chalk");
+const cheerio = require("cheerio");
 
 const {
   Document,
@@ -21,7 +22,6 @@ const { normalizeBCDURLs, extractBCDData } = require("./bcd-urls");
 const { checkImageReferences } = require("./check-images");
 const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
-const cheerio = require("./monkeypatched-cheerio");
 const buildOptions = require("./build-options");
 const { gather: gatherGitHistory } = require("./git-history");
 const { renderCache: renderKumascriptCache } = require("../kumascript");

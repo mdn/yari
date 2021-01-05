@@ -1,4 +1,4 @@
-const cheerio = require("./monkeypatched-cheerio.js");
+const cheerio = require("cheerio");
 
 const Parser = require("./parser.js");
 const { VALID_LOCALES, Document, Redirect } = require("../../content");
