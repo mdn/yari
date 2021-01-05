@@ -32,7 +32,7 @@ DEFAULT_NO_PROGRESSBAR = config(
     cast=bool,
 )
 
-# If true, it will log every successul upload task as it happens.
+# If true, it will log every successful upload task as it happens.
 LOG_EACH_SUCCESSFUL_UPLOAD = config(
     "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD", default=False, cast=bool
 )
