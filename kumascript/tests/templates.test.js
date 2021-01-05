@@ -75,40 +75,46 @@ describe("Templates class", () => {
     expect(result).toEqual("3");
   });
 
-  it("only loads files once", async () => {
-    const EJS = require("ejs");
-    /**
-     * Without `JSON.stringify(…)`, `\` in the file path would be treated
-     * as part of an escape sequence (e.g.:
-     * `C:\nodejs\...\kumascript\tests\fixtures\templates\test.ejs`
-     * would be interpreted as:
-     *
-     * ```none
-     * C:
-     * odejs...kumascript	ests␌ixtures	emplates	est.ejs
-     * ```
-     */
-    const mockLoader = jest.fn(
-      (filename) => `<%= ${JSON.stringify(filename)} -%>`
-    );
-    EJS.clearCache();
-    EJS.fileLoader = mockLoader;
-    const directory = dir("macros");
-    const macros = new Templates(directory);
+  ["development", "production"].forEach((mode) => {
+    it(`loads files ${
+      mode === "production" ? "only once" : "for each call"
+    } in ${mode} mode`, async () => {
+      process.env.NODE_ENV = mode;
+      const EJS = require("ejs");
+      /**
+       * Without `JSON.stringify(…)`, `\` in the file path would be treated
+       * as part of an escape sequence (e.g.:
+       * `C:\nodejs\...\kumascript\tests\fixtures\templates\test.ejs`
+       * would be interpreted as:
+       *
+       * ```none
+       * C:
+       * odejs...kumascript	ests␌ixtures	emplates	est.ejs
+       * ```
+       */
+      const mockLoader = jest.fn(
+        (filename) => `<%= ${JSON.stringify(filename)} -%>`
+      );
+      EJS.clearCache();
+      EJS.fileLoader = mockLoader;
+      const directory = dir("macros");
+      const macros = new Templates(directory);
 
-    let result1 = await macros.render("test1");
-    expect(result1).toBe(path.resolve(directory, "test1.ejs"));
-    expect(mockLoader.mock.calls.length).toBe(1);
+      let result1 = await macros.render("test1");
+      expect(result1).toBe(path.resolve(directory, "test1.ejs"));
+      expect(mockLoader.mock.calls.length).toBe(1);
 
-    let result2 = await macros.render("test2");
-    expect(result2).toBe(path.resolve(directory, "Test2.ejs"));
-    expect(mockLoader.mock.calls.length).toBe(2);
+      let result2 = await macros.render("test2");
+      expect(result2).toBe(path.resolve(directory, "Test2.ejs"));
+      expect(mockLoader.mock.calls.length).toBe(2);
 
-    // Render the macros again, but don't expect any more loads
-    await macros.render("test1");
-    await macros.render("test2");
-    await macros.render("test1");
-    await macros.render("test2");
-    expect(mockLoader.mock.calls.length).toBe(2);
+      // Render the macros again, but don't expect any more loads
+      // when we're in production mode.
+      await macros.render("test1");
+      await macros.render("test2");
+      await macros.render("test1");
+      await macros.render("test2");
+      expect(mockLoader.mock.calls.length).toBe(mode === "production" ? 2 : 6);
+    });
   });
 });

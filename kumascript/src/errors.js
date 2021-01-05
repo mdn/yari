@@ -1,5 +1,5 @@
 /**
- * Error classes that can be thown when trying to render the macros on a page.
+ * Error classes that can be thrown when trying to render the macros on a page.
  * @prettier
  */
 

@@ -337,7 +337,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                 {...getItemProps({
                   key: item.url,
                   className:
-                    "result-item " + (i === highlightedIndex ? "highlit" : ""),
+                    "result-item " +
+                    (i === highlightedIndex ? "highlight" : ""),
                   item,
                   index: i,
                   onMouseOver: () => {

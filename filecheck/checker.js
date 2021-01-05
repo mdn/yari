@@ -112,7 +112,7 @@ async function checkFile(filePath, options) {
   }
 
   const tempdir = tempy.directory();
-  const extension = path.extname(filePath);
+  const extension = path.extname(filePath).toLowerCase();
   try {
     const plugins = [];
     if ((extension === ".jpg") | (extension === ".jpeg")) {
