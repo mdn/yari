@@ -499,6 +499,32 @@ async function fixFixableFlaws(doc, options, document) {
     }
   }
 
+  // Any 'image_widths' flaws with a suggestion
+  for (const flaw of doc.flaws.image_widths || []) {
+    if (!flaw.fixable) {
+      continue;
+    }
+    newRawHTML = replaceMatchesInText(flaw.style, newRawHTML, flaw.suggestion, {
+      inAttribute: "style",
+      removeEntireAttribute: flaw.suggestion === "",
+    });
+    if (loud) {
+      console.log(
+        flaw.suggestion === ""
+          ? chalk.grey(
+              `${phrasing} (${flaw.id}) image_widths ${chalk.white.bold(
+                "remove entire 'style' attribute"
+              )}`
+            )
+          : chalk.grey(
+              `${phrasing} (${flaw.id}) image_widths style="${chalk.white.bold(
+                flaw.style
+              )}" to style="${chalk.white.bold(flaw.suggestion)}"`
+            )
+      );
+    }
+  }
+
   // Finally, summarized what happened...
   if (newRawHTML !== document.rawHTML) {
     // It changed the raw HTML of the source. So deal with this.
