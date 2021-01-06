@@ -6,6 +6,7 @@ const { promisify } = require("util");
 
 const chalk = require("chalk");
 const mysql = require("mysql");
+const cheerio = require("cheerio");
 
 const {
   CONTENT_ROOT,
@@ -21,7 +22,6 @@ const {
 const CONTENT_TRANSLATED_RENDERED_ROOT =
   process.env.CONTENT_TRANSLATED_RENDERED_ROOT;
 
-const cheerio = require("../build/monkeypatched-cheerio");
 const ProgressBar = require("./progress-bar");
 
 console.assert(CONTENT_ROOT, "CONTENT_ROOT must be set");
