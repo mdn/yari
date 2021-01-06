@@ -54,9 +54,22 @@ if (!isServer && CRUD_MODE && !NO_WATCHER) {
 app = <React.StrictMode>{app}</React.StrictMode>;
 
 if (container.firstElementChild) {
-  if (window.origin !== "https://translate.googleusercontent.com") {
+  // console.log(`SUPPORT FOR Array.prototype.flat: ${Array.prototype.flat}`);
+
+  if (
+    window.origin !== "https://translate.googleusercontent.com" &&
+    Array.prototype.includes &&
+    Array.prototype.flat &&
+    false
+  ) {
+    console.log("HYDRATE!");
     ReactDOM.hydrate(app, container);
+  } else {
+    console.log("DON'T HYDRATE");
   }
+  // if (window.origin !== "https://translate.googleusercontent.com") {
+  //   ReactDOM.hydrate(app, container);
+  // }
 } else {
   ReactDOM.render(app, container);
 }

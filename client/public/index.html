@@ -29,6 +29,21 @@
     <meta name="theme-color" content="#ffffff" />
 
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <script>
+      // Only include the fat polyfill for browsers that seem to not have
+      // certain JS features. E.g. Firefox 58.
+      (Array.prototype.includes && Array.prototype.flat) ||
+        document.write(
+          '<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"><\/script>'
+        );
+      if (Array.prototype.includes && Array.prototype.flat) {
+        console.log("NO NEED TO INCLUDE POLYFILLS");
+      } else {
+        console.log("DOWNLOAD POLYFILLS PLEASE");
+      }
+    </script>
+
     <title>MDN Web Docs</title>
     <meta
       name="description"
