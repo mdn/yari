@@ -76,6 +76,10 @@ jobs:
           # terminal.
           TESTING_START_SERVER: true
         run: |
+          # Needed for the puppeteer tests that start a static Express server,
+          # but it starts it from within the testing/ path.
+          echo "CONTENT_ROOT=content/files" >> .env
+
           # In terms of the --maxWorkers option, it's not yet clear which
           # is best.
           # See https://jestjs.io/docs/en/troubleshooting#tests-are-extremely-slow-on-docker-andor-continuous-integration-ci-server
