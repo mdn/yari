@@ -47,7 +47,7 @@ jobs:
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
-          CONTENT_ROOT: "${{ github.workspace }}/mdn/content/files"
+          CONTENT_ROOT: "${{ github.workspace }}/content/files"
         run: |
           yarn prepare-build
           yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
