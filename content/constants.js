@@ -6,12 +6,19 @@ require("dotenv").config({
   path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
 });
 
-const CONTENT_ROOT = process.env.CONTENT_ROOT;
+let CONTENT_ROOT = process.env.CONTENT_ROOT;
 if (!CONTENT_ROOT) {
   throw new Error("Env var CONTENT_ROOT must be set");
 }
 if (!fs.existsSync(CONTENT_ROOT)) {
   throw new Error(`${path.resolve(CONTENT_ROOT)} does not exist`);
+}
+const nestedFilesDir = path.join(CONTENT_ROOT, "files");
+if (fs.existsSync(nestedFilesDir)) {
+  CONTENT_ROOT = nestedFilesDir;
+  console.warn(
+    `Corrected the CONTENT_ROOT environment variable to ${CONTENT_ROOT}`
+  );
 }
 
 const CONTENT_ARCHIVED_ROOT = process.env.CONTENT_ARCHIVED_ROOT;
