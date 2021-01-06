@@ -49,11 +49,8 @@ jobs:
           # sub-folder called "mdn/content"
           CONTENT_ROOT: "${{ github.workspace }}/mdn/content/files"
         run: |
-          ls -l "$CONTENT_ROOT"
-          ls -l /home/runner/work/yari/yari/mdn/content/files
-          ls -l /home/runner/work/yari/yari/mdn/content/files/en-us/
-          ls -l /home/runner/work/yari/yari/mdn/content/files/en-us/mdn/
-          ls -l /home/runner/work/yari/yari/mdn/content/files/en-us/mdn/kitchensink/
+          # Sanity check that the mdn/kitchensink page is there
+          ls "$CONTENT_ROOT/en-us/mdn/kitchensink"
 
           yarn prepare-build
           yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
