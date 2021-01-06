@@ -167,7 +167,7 @@ const read = memoize((folder) => {
   let root = null;
   for (const possibleRoot of ROOTS) {
     const possibleFilePath = path.join(possibleRoot, getHTMLPath(folder));
-    console.log({ possibleFilePath });
+    console.log({ possibleFilePath, EXISTS: fs.existsSync(possibleFilePath) });
     if (fs.existsSync(possibleFilePath)) {
       root = possibleRoot;
       filePath = possibleFilePath;
@@ -175,6 +175,7 @@ const read = memoize((folder) => {
     }
   }
   if (!filePath) {
+    console.warn(`FAILING HARD ON: ${filePath}`);
     return;
   }
   if (filePath.includes(" ")) {
