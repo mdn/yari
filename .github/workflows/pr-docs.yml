@@ -1,0 +1,22 @@
+name: Markdown Docs files
+
+on:
+  pull_request:
+    paths:
+      - docs/**/*.md
+      - .github/workflows/pr-docs.yml
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: "12"
+
+      - name: Lint markdown files
+        run: |
+          npx markdownlint-cli docs/**/*.md
