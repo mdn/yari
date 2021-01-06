@@ -141,29 +141,3 @@ jobs:
         run: |
           cd deployer
           poetry run deployer --help
-
-  docs:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: technote-space/get-diff-action@v4
-        with:
-          PATTERNS: docs/**/*.md
-          FILES: |
-            README.md
-
-      - name: Setup Node.js environment
-        if: env.GIT_DIFF
-        uses: actions/setup-node@v2.1.4
-        with:
-          node-version: "12"
-
-      - name: Lint markdown files
-        if: env.GIT_DIFF
-        run: |
-          echo "GIT DIFF:"
-          echo "${{ env.GIT_DIFF }}"
-          echo ""
-          npx markdownlint-cli ${{ env.GIT_DIFF }}
