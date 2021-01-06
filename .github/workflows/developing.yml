@@ -49,7 +49,11 @@ jobs:
           # sub-folder called "mdn/content"
           CONTENT_ROOT: "${{ github.workspace }}/mdn/content/files"
         run: |
-          # Sanity check that the mdn/kitchensink page is there
+          # Sanity check that the mdn/kitchensink page is there. If you don't do
+          # this, and the file has accidentally or intentionally been deleted,
+          # unfortunately the error messaging can be very misleading because the
+          # tests would assume there's something wrong with the code instead of
+          # the content if loading this page fails.
           ls "$CONTENT_ROOT/en-us/mdn/kitchensink"
 
           yarn prepare-build
