@@ -228,6 +228,10 @@
       "inh": "CSSValue",
       "impl": []
     },
+    "CSSPropertyRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
     "CSSPseudoElement": {
       "inh": "EventTarget",
       "impl": []
