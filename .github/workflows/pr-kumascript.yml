@@ -1,7 +1,7 @@
 # This workflow exclusively and specifically only checks the
 # kumascript test suite.
 # But if a package gets upgraded (e.g. Dependabot making a PR)
-# that should test the kumascript suite too because the dev packages
+# that should test the kumascript suite too because the packages
 # might have (and we've seen it happen!) an impact on the suite.
 
 # Note that lint checking and stuff for files with `kumascript/**`
