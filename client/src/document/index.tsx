@@ -84,6 +84,20 @@ export function Document(props /* TODO: define a TS interface for this */) {
     }
   }, [doc, error]);
 
+  React.useEffect(() => {
+    const location = document.location;
+    // Did you arrive on this page with a location hash?
+    if (location.hash && location.hash !== location.hash.toLowerCase()) {
+      // The location hash isn't lowercase. That probably means it's from before
+      // we made all `<h2 id>` and `<h3 id>` values always lowercase.
+      // Let's see if it can easily be fixed, but let's be careful and
+      // only do this if there is an element that matches.
+      if (document.querySelector(location.hash.toLowerCase())) {
+        location.hash = location.hash.toLowerCase();
+      }
+    }
+  }, []);
+
   if (!doc && !error) {
     return <LoadingDocumentPlaceholder />;
   }

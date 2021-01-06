@@ -4,6 +4,8 @@
 
 const path = require("path");
 
+const sizeOf = require("image-size");
+
 const { Document, Image } = require("../content");
 const { FLAW_LEVELS } = require("./constants");
 const { findMatchesInText } = require("./matches-in-text");
@@ -190,4 +192,145 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
   return filePaths;
 }
 
-module.exports = { checkImageReferences };
+/**
+ * Mutate the `$` instance for image reference and if appropriate,
+ * log them as flaws if they're not passing linting.
+ * Look for <img> tags that set a `style="width: XXXpx; height: YYYpx"`
+ * and or not have the `width="XXX" height="XXX"` plain attributes.
+ *
+ * Don't check the `src` attribute.
+ *
+ * TODO: Perhaps in the future, we can also check if the `style` attribute
+ * has some hardcoded patterns for margins and borders that would be
+ * best to set "centrally" with a style sheet.
+ */
+function checkImageWidths(doc, $, options, { rawContent }) {
+  const filePaths = new Set();
+  if (doc.isArchive) return filePaths;
+
+  const checkImages =
+    options.flawLevels.get("image_widths") !== FLAW_LEVELS.IGNORE;
+
+  const checked = new Map();
+
+  function addStyleFlaw($img, style, suggestion) {
+    if (!("image_widths" in doc.flaws)) {
+      doc.flaws.image_widths = [];
+    }
+    const id = `image_widths${doc.flaws.image_widths.length + 1}`;
+    $img.attr("data-flaw", id);
+    const matches = [
+      ...findMatchesInText(style, rawContent, {
+        attribute: "style",
+      }),
+    ];
+    const checkedBefore = checked.get(style) || 0;
+    matches.forEach((match, i) => {
+      if (i !== checkedBefore) {
+        return;
+      }
+      const fixable = suggestion !== null;
+      let explanation = "";
+      if (style.includes("width") && style.includes("height")) {
+        explanation = "'width' and 'height'";
+      } else if (style.includes("height")) {
+        explanation = "'height'";
+      } else {
+        explanation = "'height'";
+      }
+      explanation += " set in 'style' attribute on <img> tag.";
+      doc.flaws.image_widths.push({
+        id,
+        style,
+        fixable,
+        suggestion,
+        explanation,
+        ...match,
+      });
+      // Use this to remember which in the list of matches we've dealt with.
+      checked.set(style, checkedBefore + 1);
+    });
+  }
+
+  $("img").each((i, element) => {
+    const img = $(element);
+    // If it already has a `width` attribute, leave this as is.
+    if (!img.attr("width")) {
+      // Remove any `width` or `height` specified in the `style` attribute
+      // because this is best to leave so the browser doesn't stretch
+      // the image if its specified dimension (even if it's accurate!)
+      // can't be kept in the given context.
+      if (img.attr("style")) {
+        if (img.attr("style").includes("@")) {
+          console.warn(
+            "Dare to use regex on inline `img[style]` values that use media queries of any kind.",
+            img.attr("style")
+          );
+          return;
+        }
+        // The confidence to use a regex instead of a proper CSS parser is
+        // because we're only ever looking at the CSS in `img[style]` contexts.
+        // These are much simpler than the kind of CSS you should never go
+        // near with a regex.
+        const originalStyleValue = img.attr("style");
+        const newStyleValue = originalStyleValue
+          .split(";")
+          .map((each) => each.split(":"))
+          .filter((parts) => {
+            return !["width", "height"].includes(parts[0].trim());
+          })
+          .map((parts) => parts.join(":"))
+          .join(";")
+          .trim();
+
+        let suggestion = null;
+        if (newStyleValue !== originalStyleValue) {
+          // If there's nothing left, don't just set a new value, make
+          // it delete the 'style' attribute altogether.
+          if (newStyleValue) {
+            suggestion = newStyleValue;
+            img.attr("style", newStyleValue);
+          } else {
+            suggestion = "";
+            img.removeAttr("style");
+          }
+          // Remember, only if you're interested in checking for flaws, do we
+          // record this. But we also apply the fix nomatter what.
+          if (checkImages) {
+            addStyleFlaw(img, originalStyleValue, suggestion);
+          }
+        }
+      }
+
+      // If image is local, get its dimension and set the `width` and `height`
+      // HTML attributes.
+      const imgSrc = img.attr("src");
+      // Only proceed if it's not an external image.
+      // But beyond that, suppose the `<img>` tag looks anything other than
+      // `<img src="/local/docs/slug">` then we can't assume the `img[src]` can
+      // be resolved. For example, suppose the HTML contains `<img src="404.png">`
+      // then it's a broken image and it's handled by the `checkImageReferences()`
+      // function. Stay away from those.
+      if (!imgSrc.includes("://") && imgSrc.startsWith("/")) {
+        const filePath = Image.findByURL(imgSrc);
+        if (filePath) {
+          const dimensions = sizeOf(filePath);
+          img.attr("width", `${dimensions.width}`);
+          img.attr("height", `${dimensions.height}`);
+        }
+      }
+    }
+  });
+
+  if (
+    doc.flaws.image_widths &&
+    doc.flaws.image_widths.length &&
+    options.flawLevels.get("image_widths") === FLAW_LEVELS.ERROR
+  ) {
+    throw new Error(
+      `images width flaws: ${JSON.stringify(doc.flaws.image_widths)}`
+    );
+  }
+}
+
+module.exports = { checkImageReferences, checkImageWidths };

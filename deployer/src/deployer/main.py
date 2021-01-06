@@ -150,7 +150,7 @@ def upload(ctx, directory: Path, **kwargs):
 def speedcurve_deploy(ctx, **kwargs):
     # The reason we're not throwing an error is to make it super convenient
     # to call this command, from bash, without first having to check and figure
-    # out if the relevant enviornment variables are available.
+    # out if the relevant environment variables are available.
 
     api_key = kwargs["api_key"]
     if not api_key:

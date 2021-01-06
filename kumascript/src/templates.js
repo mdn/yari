@@ -10,7 +10,7 @@
  *
  * The render() method takes the name of a template and an execution
  * context object and renders the named template in that context. (See
- * the getExecutionContext() method of the Enviroment object to obtain
+ * the getExecutionContext() method of the Environment object to obtain
  * an execution context.) render() is declared async, so it returns
  * Promise<string> rather than returning a string directly, which
  * supports templates that are themselves async.

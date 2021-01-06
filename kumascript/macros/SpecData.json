@@ -109,8 +109,8 @@
     "url": "https://www.w3.org/2012/sysapps/contacts-manager-api/",
     "status": "Obsolete"
   },
-  "Contacts Picker": {
-    "name": "Contacts Picker API",
+  "Contact Picker API": {
+    "name": "Contact Picker API",
     "url": "https://wicg.github.io/contact-api/spec/",
     "status": "Draft"
   },

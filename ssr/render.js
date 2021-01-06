@@ -3,7 +3,7 @@ import path from "path";
 
 import jsesc from "jsesc";
 import { renderToString } from "react-dom/server";
-import cheerio from "./monkeypatched-cheerio";
+import cheerio from "cheerio";
 
 import {
   GOOGLE_ANALYTICS_ACCOUNT,

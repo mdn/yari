@@ -84,7 +84,7 @@ export function GAProvider(props: { children: React.ReactNode }) {
 }
 
 // This is a custom hook to return the GA client id. It returns the
-// emtpy string until (and unless) it can determine that id from the GA object.
+// empty string until (and unless) it can determine that id from the GA object.
 export function useClientId() {
   const [clientId, setClientId] = useState<string>("");
   const ga = useContext(GAContext);

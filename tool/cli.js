@@ -278,7 +278,7 @@ program
       const { root, saveHistory, loadHistory } = options;
       if (fs.existsSync(loadHistory)) {
         console.log(
-          chalk.yellow(`Reusing exising history from ${loadHistory}`)
+          chalk.yellow(`Reusing existing history from ${loadHistory}`)
         );
       }
       const map = gatherGitHistory(
