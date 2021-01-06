@@ -132,9 +132,9 @@ export default function BrowserCompatibilityTable({
         </a>
         <table key="bc-table" className="bc-table bc-table-web">
 <colgroup>
-<col>
-<col span="6" class="desktop">
-<col span="6" class="mobile">
+<col span="1" class="feature"></col>
+<col span="6" class="desktop"></col>
+<col span="6" class="mobile"></col>
 </colgroup>
           <Headers {...{ platforms, browsers }} />
           <tbody>
