@@ -134,7 +134,7 @@
     "stylelint-config-sass-guidelines": "^7.1.0",
     "stylelint-prettier": "^1.1.2",
     "stylelint-scss": "^3.18.0",
-    "ts-loader": "^8.0.13",
+    "ts-loader": "^8.0.14",
     "typescript": "^4.1.3"
   },
   "engines": {
