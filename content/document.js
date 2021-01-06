@@ -167,7 +167,7 @@ const read = memoize((folder) => {
   let root = null;
   for (const possibleRoot of ROOTS) {
     const possibleFilePath = path.join(possibleRoot, getHTMLPath(folder));
-    console.log({ possiblePath });
+    console.log({ possibleFilePath });
     if (fs.existsSync(possibleFilePath)) {
       root = possibleRoot;
       filePath = possibleFilePath;
