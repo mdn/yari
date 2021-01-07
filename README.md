@@ -3,7 +3,7 @@
 ![Testing](https://github.com/mdn/yari/workflows/Testing%20Yari/badge.svg)
 ![Production Build](https://github.com/mdn/yari/workflows/Production%20Build/badge.svg)
 
-## Quickstart
+## Getting started
 
 Before you can begin with Yari, you need [Content](https://github.com/mdn/content).
 See its README which basically, says something like this:
