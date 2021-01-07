@@ -154,7 +154,7 @@ By default it's disabled (empty string).
 
 If true, and when `BUILD_GOOGLE_ANALYTICS_ACCOUNT` is truthy, when it injects
 the Google Analytics script tag it will use
-`<script src="https://www.google-analytics.com/anaytics_debug.js"></script>`
+`<script src="https://www.google-analytics.com/analytics_debug.js"></script>`
 instead which triggers additional console logging which is useful for developers.
 
 ### `BUILD_SPEEDCURVE_LUX_ID`
@@ -278,3 +278,13 @@ dev server.
 
 Disable file watching and hot reloading on content change.
 Also disables search index updates.
+
+### `REACT_APP_DEBUG_GOOGLE_ANALYTICS`
+
+**Default: `false`**
+
+When you use the `create-react-app` server on `localhost:3000` it can't
+inject the Google Analytics script like you can when you server-side
+render (see `ssr/render.js`). By setting this to `true` it will forcibly
+inject a `<script async src="https://www.google-analytics.com/analytics_debug.js"></script>`
+tag and the necessary code to activate it.

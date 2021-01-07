@@ -58,15 +58,15 @@ Redirects are always uploaded.
 ### Examples
 
 ```sh
-export CONTRENT_ROOT=/path/to/content/files
-export CONTRENT_TRANSLATED_ROOT=/path/to/translated-content/files
+export CONTENT_ROOT=/path/to/content/files
+export CONTENT_TRANSLATED_ROOT=/path/to/translated-content/files
 cd deployer
 poetry run deployer upload --bucket mdn-content-dev --prefix pr1234 ../client/build
 ```
 
 ```sh
-export CONTRENT_ROOT=/path/to/content/files
-export CONTRENT_TRANSLATED_ROOT=/path/to/translated-content/files
+export CONTENT_ROOT=/path/to/content/files
+export CONTENT_TRANSLATED_ROOT=/path/to/translated-content/files
 export DEPLOYER_BUCKET_NAME=mdn-content-dev
 export DEPLOYER_BUCKET_PREFIX=pr1234
 cd deployer

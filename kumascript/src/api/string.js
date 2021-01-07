@@ -13,7 +13,7 @@ module.exports = {
 
     // Now loop through those matches and create an array of alternating
     // string and Promise<string> elements corresponding to the unreplaced
-    // parts of the osurce string and the async replacements for the
+    // parts of the source string and the async replacements for the
     // replaced parts
     let parts = [];
     let lastMatchEnd = 0;

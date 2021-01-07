@@ -5,7 +5,7 @@ const { ROOTS } = require("./constants");
 const { memoize, slugToFolder } = require("./utils");
 
 function urlToFilePath(url) {
-  const [, locale, , ...slugParts] = url.split("/");
+  const [, locale, , ...slugParts] = decodeURI(url).split("/");
   return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
 }
 

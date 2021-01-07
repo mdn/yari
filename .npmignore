@@ -31,3 +31,15 @@ content/files/
 
 # Since we ship the built stuff, we actually no longer need any of the source
 client/src/
+
+# Build/Dev files
+.eslint*
+.prettier*
+.stylelint*
+.flake8
+tsconfig.json
+Procfile.*
+webpack.config.js
+jest.config.js
+*.test.js
+.storybook/
