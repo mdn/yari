@@ -159,6 +159,11 @@ async function checkFile(filePath, options) {
           "Consider running again with '--save-compression' and run again " +
             "to automatically save the newly compressed file."
         );
+        const cliCommand = `yarn filecheck "${path.relative(
+          process.cwd(),
+          filePath
+        )}" --save-compression`;
+        console.log(`HINT! Type the following command:\n\n\t${cliCommand}\n`);
         throw new Error(
           `${filePath} can be compressed by ~${reductionPercentage.toFixed(0)}%`
         );
