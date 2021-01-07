@@ -23,11 +23,12 @@ if (ratio == "16:9") {
     // adding any more ratios must be done in co-operation with style sheet changes
 }
 
-var video = "<div class='intrinsic-wrapper'>";
-video += "<div class='intrinsic-container " + ratio_class + "'>";
-video += "<iframe allowfullscreen src='https://www.youtube.com/embed/" + $0 + "?rel=0&html5=1'></iframe>";
-video +="</div>";
-video +="</div>";
+
+var video = '<iframe width="560" height="315" ' +
+  `src="https://www.youtube-nocookie.com/embed/${$0}" ` +
+  'frameborder="0" ' +
+  'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ' +
+  'allowfullscreen></iframe>';
 
 %>
 
