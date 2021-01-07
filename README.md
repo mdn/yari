@@ -94,7 +94,7 @@ your preferred editor/IDE. For example, in the root:
 
 Now clicking certain links will open files directly in the currently open
 VSCode IDE. To test it, view any document on `http://localhost:3000` and
-click the "Edit in your editor" button.
+click the "Open in your editor" button.
 
 ### How the server works
 
@@ -139,7 +139,7 @@ upgrade:
 [`ngrok`](https://ngrok.com/) is a great tool for starting a HTTP proxy
 server from the Internet into your Yari server. This can be useful for testing
 your current build on external tools like BrowserStack, WebPageTest,
-Google Translate, or to simply show a friend what you're up to. Obiviously
+Google Translate, or to simply show a friend what you're up to. Obviously
 it'll never be faster than your uplink Internet connection but it should
 be fairly feature complete.
 
@@ -220,4 +220,4 @@ There are two options to resolve this.
    export REACT_APP_NO_WATCHER=true
 
 2. Increase `max_user_watches`:\
-   See [github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers](https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers)
+   See <https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers>

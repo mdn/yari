@@ -9,8 +9,6 @@ let slug = {
 };
 
 let URL = "/" + env.locale + "/docs/Web/SVG/" + mdn.localString(slug) + "/" + $0;
-let localStrings = string.deserialize(await template("L10n:Common"));
-
 // Gather the page summary
 
 let term = $0;

@@ -6,6 +6,7 @@ const { promisify } = require("util");
 
 const chalk = require("chalk");
 const mysql = require("mysql");
+const cheerio = require("cheerio");
 
 const {
   CONTENT_ROOT,
@@ -21,7 +22,6 @@ const {
 const CONTENT_TRANSLATED_RENDERED_ROOT =
   process.env.CONTENT_TRANSLATED_RENDERED_ROOT;
 
-const cheerio = require("../build/monkeypatched-cheerio");
 const ProgressBar = require("./progress-bar");
 
 console.assert(CONTENT_ROOT, "CONTENT_ROOT must be set");
@@ -1038,6 +1038,22 @@ async function processDocument(
       const parentUri = makeURL(doc.parent_locale, doc.parent_slug);
       const finalUri = redirectFinalDestinations.get(parentUri);
       meta.translation_of = uriToSlug(finalUri);
+
+      // What might have happened is the following timeline...
+      // 1. Some writes an English document at SlugA
+      // 2. Someone translates that SlugA English document into Japanese
+      // 3. Someone decides to move that English document to SlugB, and makes
+      //    SlugA redirect to SlugB.
+      // 4. Someone translates that SlugB English document into Japanese
+      // 5. Now you have 2 Japanese translations. One whose parent is
+      //    SlugA and one whose parent is SlugB. But if you follow the redirects
+      //    for SlugA you end up on SlugB and, voila! you now have 2 Japanese
+      //    documents that claim to be a translation of SlugB.
+      // This code here is why it sets the `.translation_of_original`.
+      // More context on https://github.com/mdn/yari/issues/2034
+      if (doc.parent_slug !== meta.translation_of) {
+        meta.translation_of_original = doc.parent_slug;
+      }
     } else {
       meta.translation_of = doc.parent_slug;
     }
@@ -1106,7 +1122,7 @@ function getCleanedRenderedHTML(html) {
     }
   );
 
-  $("div.warning, div.blockIndicator").each((i, element) => {
+  $("div.warning, div.note, div.blockIndicator").each((i, element) => {
     const $element = $(element);
     $element.addClass("notecard");
     $element.removeClass("blockIndicator");
@@ -1124,6 +1140,12 @@ function getCleanedRenderedHTML(html) {
 
   $("div.prevnext a").each((i, element) => {
     $(element).addClass("button");
+    mutations++;
+  });
+
+  $("div.in-page-callout").each((i, element) => {
+    $(element).removeClass("in-page-callout webdev");
+    $(element).addClass("callout");
     mutations++;
   });
 

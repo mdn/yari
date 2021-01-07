@@ -6,8 +6,7 @@
  */
 const cssesc = require("cssesc");
 const sanitizeFilename = require("sanitize-filename");
-
-const cheerio = require("../monkeypatched-cheerio.js");
+const cheerio = require("cheerio");
 
 const H1_TO_H6_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 const HEADING_TAGS = new Set([...H1_TO_H6_TAGS, "hgroup"]);

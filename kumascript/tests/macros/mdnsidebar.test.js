@@ -7,10 +7,10 @@ const jsdom = require("jsdom");
 
 const locales = {
   "en-US": {
-    About_MDN: "About MDN",
+    About_MDN: "Contributing to MDN",
   },
   fr: {
-    About_MDN: "À propos",
+    About_MDN: "Contribuer au MDN",
   },
 };
 

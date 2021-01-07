@@ -16,7 +16,6 @@ export interface BrokenLink extends GenericFlaw {
   href: string;
   line: number;
   column: number;
-  suggestion: string | null;
 }
 
 export interface BadBCDLinkFlaw extends GenericFlaw {
@@ -27,6 +26,12 @@ export interface BadBCDLinkFlaw extends GenericFlaw {
 
 export interface ImageReferenceFlaw extends GenericFlaw {
   src: string;
+  line: number;
+  column: number;
+}
+
+export interface ImageWidthFlaw extends GenericFlaw {
+  style: string;
   line: number;
   column: number;
 }
@@ -47,6 +52,7 @@ export interface MacroErrorMessage extends GenericFlaw {
     path?: string;
   };
   errorStack: string;
+  explanation: string;
   line: number;
   column: number;
   filepath: string;
@@ -64,6 +70,7 @@ type Flaws = {
   images: ImageReferenceFlaw[];
   pre_with_html: PreWithHTMLFlaw[];
   sectioning: SectioningFlaw[];
+  image_widths: ImageWidthFlaw[];
 };
 
 export type Translation = {

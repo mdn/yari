@@ -41,7 +41,7 @@ function buildSublist(pages, title, ignoreBadges) {
     var apiComponentName = title;
     var titlePieces = title.split(".");
     if (titlePieces.length > 1) {
-      apiComponentName = titlePieces[1];
+      apiComponentName = titlePieces[titlePieces.length - 1];
     }
 
     if (locale != 'en-US') {

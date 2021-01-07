@@ -24,7 +24,7 @@ function setEmbargoed(id: string, days: number) {
       String(Date.now() + Math.round(days * 24 * 60 * 60 * 1000))
     );
   } catch (e) {
-    // If localStorage is not supported, then embargos are not supported.
+    // If localStorage is not supported, then embargoes are not supported.
   }
 }
 

@@ -118,9 +118,18 @@ test("content built foo page", () => {
     "This becomes the summary."
   );
 
+  // Before testing the `<img>` tags, assert that there's only 1 image in total.
+  expect($("img").length).toBe(1);
+
   // The 'Foo' page has 1 image. It should have been given the `loading="lazy"`
   // attribute.
   expect($('img[loading="lazy"]').length).toBe(1);
+
+  // The source didn't set the `width="..." height="..."` it gets set in build-time.
+  // You need to be familiar with the 'screenshot.png' file in the fixtures to
+  // what to expect here.
+  expect($("img").attr("width")).toBe("250");
+  expect($("img").attr("height")).toBe("250");
 
   // Every page, should have a `link[rel=canonical]` whose `href` always
   // starts with 'https://developer.mozilla.org' and ends with doc's URL.
@@ -129,6 +138,23 @@ test("content built foo page", () => {
   );
 
   expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
+
+  // The HTML should contain the Google Analytics snippet.
+  // The ID should match what's set in `testing/.env`.
+  expect(
+    $('script[src="https://www.google-analytics.com/analytics.js"]').length
+  ).toBe(1);
+
+  // The HTML should contain the Speedcurve LUX snippet.
+  // The ID should match what's set in `testing/.env`.
+  expect($('script[src^="https://cdn.speedcurve.com/"]').attr("src")).toContain(
+    "012345"
+  );
+
+  // Because this en-US page has a French translation
+  expect($('link[rel="alternate"]').length).toBe(2);
+  expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
+  expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
 });
 
 test("content built French foo page", () => {
@@ -147,6 +173,33 @@ test("content built French foo page", () => {
   expect(doc.other_translations[0].locale).toBe("en-US");
   expect(doc.other_translations[0].url).toBe("/en-US/docs/Web/Foo");
   expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($('link[rel="alternate"]').length).toBe(2);
+  expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
+  expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
+});
+
+test("wrong xref macro errors", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "wrong_xref_macro"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  // Expect the first flaw to be that we're using the wrong xref macro.
+  expect(doc.flaws.macros[0].name).toBe("MacroBrokenLinkError");
+  expect(doc.flaws.macros[0].macroSource).toBe('{{DOMxRef("Promise")}}');
+  expect(doc.flaws.macros[0].line).toBe(7);
+  expect(doc.flaws.macros[0].column).toBe(51);
+  expect(doc.flaws.macros[0].sourceContext).toEqual(
+    expect.stringContaining('Web API: {{DOMxRef("Promise")}}')
+  );
 });
 
 test("summary extracted correctly by span class", () => {
@@ -634,7 +687,7 @@ test("detect pre_with_html flaws", () => {
   expect(flaw.column).toBe(50);
 });
 
-test("image flaws", () => {
+test("image flaws kitchen sink", () => {
   const builtFolder = path.join(buildRoot, "en-us", "docs", "web", "images");
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
@@ -713,13 +766,42 @@ test("image flaws", () => {
   });
 });
 
+test("image flaws with repeated external images", () => {
+  // This test exists because of https://github.com/mdn/yari/issues/2247
+  // which showed that if a document has an external URL repeated more than
+  // once, our flaw detection only found it once.
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "repeated_external_images"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  // You have to be intimately familiar with the fixture to understand
+  // why these flaws come out as they do.
+  expect(flaws.images.length).toBe(3);
+
+  const flaw1 = flaws.images[0];
+  const flaw2 = flaws.images[1];
+  const flaw3 = flaws.images[2];
+  expect(flaw1.src).toBe(flaw2.src);
+  expect(flaw2.src).toBe(flaw3.src);
+  expect(flaw1.line).toBe(8);
+  expect(flaw2.line).toBe(13);
+  expect(flaw3.line).toBe(18);
+});
+
 test("chicken_and_egg page should build with flaws", () => {
   const builtFolder = path.join(buildRoot, "en-us", "docs", "chicken_and_egg");
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.flaws.macros.length).toBe(1);
-  // The filepath will be that of the "egg" or the "childen" page.
+  // The filepath will be that of the "egg" or the "chicken" page.
   // Let's not try to predict which one exactly, because that'd mean this
   // test would need to use the exact same sort order as the glob used
   // when we ran "yarn build" to set up the build fixtures.
@@ -797,4 +879,72 @@ test("img tags with an empty 'src' should be a flaw", () => {
   expect(doc.flaws.images[0].externalImage).toBeFalsy();
   expect(doc.flaws.images[0].line).toBe(8);
   expect(doc.flaws.images[0].column).toBe(13);
+});
+
+test("img with the image_widths flaw", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "styled"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+
+  expect(doc.flaws.image_widths.length).toBe(3);
+  const flaw1 = doc.flaws.image_widths[0];
+  expect(flaw1.explanation).toBe(
+    "'width' and 'height' set in 'style' attribute on <img> tag."
+  );
+  expect(flaw1.fixable).toBeTruthy();
+  expect(flaw1.suggestion).toBe("");
+  expect(flaw1.line).toBe(27);
+  expect(flaw1.column).toBe(11);
+
+  const flaw2 = doc.flaws.image_widths[1];
+  expect(flaw2.explanation).toBe(flaw1.explanation);
+  expect(flaw2.fixable).toBeTruthy();
+  expect(flaw2.suggestion).toBe("");
+  expect(flaw2.line).toBe(35);
+  expect(flaw2.column).toBe(11);
+
+  const flaw3 = doc.flaws.image_widths[2];
+  expect(flaw3.explanation).toBe(flaw1.explanation);
+  expect(flaw3.fixable).toBeTruthy();
+  expect(flaw3.suggestion).toBe("border-radius: 100px; max-width: 1000px;");
+  expect(flaw3.line).toBe(43);
+  expect(flaw3.column).toBe(12);
+});
+
+test("img tags should always have their 'width' and 'height' set", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "styled"
+  );
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  // There are 5 images, so can expect there 2 be 5x2 checks in the loop...
+  // But we have to account for ALL expect() calls too.
+  expect.assertions(5 * 2 + 1);
+  expect($("img").length).toBe(5);
+  $("img").each((i, img) => {
+    const $img = $(img);
+    if ($img.attr("src").endsWith("florian.png")) {
+      expect($img.attr("width")).toBe("128");
+      expect($img.attr("height")).toBe("128");
+    } else if ($img.attr("src").endsWith("screenshot.png")) {
+      expect($img.attr("width")).toBe("250");
+      expect($img.attr("height")).toBe("250");
+    } else {
+      throw new Error("unexpected image");
+    }
+  });
 });

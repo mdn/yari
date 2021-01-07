@@ -9,11 +9,14 @@ from .constants import (
     DEFAULT_BUCKET_NAME,
     DEFAULT_BUCKET_PREFIX,
     DEFAULT_NO_PROGRESSBAR,
+    SPEEDCURVE_DEPLOY_API_KEY,
+    SPEEDCURVE_DEPLOY_SITE_ID,
 )
 from .update_lambda_functions import update_all
 from .upload import upload_content
 from .utils import log
 from .whatsdeployed import dump as dump_whatsdeployed
+from .speedcurve import deploy_ping as speedcurve_deploy_ping
 
 
 def validate_directory(ctx, param, value):
@@ -125,3 +128,44 @@ def upload(ctx, directory: Path, **kwargs):
         content_roots.append(kwargs["content_translated_root"])
     ctx.obj.update(kwargs)
     upload_content(directory, content_roots, ctx.obj)
+
+
+@cli.command()
+@click.option(
+    "--api-key",
+    help="Deploy API key",
+    default=SPEEDCURVE_DEPLOY_API_KEY,
+    show_default=False,
+)
+@click.option(
+    "--site-id", help="Site ID ", default=SPEEDCURVE_DEPLOY_SITE_ID, show_default=True,
+)
+@click.option(
+    "--note", help="Note string to add", default="", show_default=True,
+)
+@click.option(
+    "--detail", help="Detail string to add", default="", show_default=True,
+)
+@click.pass_context
+def speedcurve_deploy(ctx, **kwargs):
+    # The reason we're not throwing an error is to make it super convenient
+    # to call this command, from bash, without first having to check and figure
+    # out if the relevant environment variables are available.
+
+    api_key = kwargs["api_key"]
+    if not api_key:
+        log.warning("SPEEDCURVE_DEPLOY_API_KEY not set or empty")
+        return
+
+    site_id = kwargs["site_id"]
+    if not site_id:
+        log.warning("SPEEDCURVE_DEPLOY_SITE_ID not set or empty")
+        return
+
+    log.info(f"Pinging Speedcurve Deploy API for {site_id}", bold=True)
+    note = kwargs["note"]
+    detail = kwargs["detail"]
+    log.info(f"Speedcurve Deploy note={note!r}, detail={detail!r}")
+    speedcurve_deploy_ping(
+        api_key, site_id, note, detail, dry_run=ctx.obj.get("dry_run")
+    )

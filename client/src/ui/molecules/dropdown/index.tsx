@@ -20,7 +20,7 @@ type DropdownProps = {
   // of the `ul` menu element. This is then also used as the value of the
   // `aria-owns` property on the menu trigger button
   ariaOwns?: string;
-  // An optional string that, when spcecified, is used to set a custom
+  // An optional string that, when specified, is used to set a custom
   // label for the menu trigger button using `aria-label`
   ariaLabel?: string;
   // If set to true, the menu will be anchored to the right edge of

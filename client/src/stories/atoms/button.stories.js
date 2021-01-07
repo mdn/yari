@@ -36,7 +36,7 @@ export const lightOutline = () => (
   </div>
 );
 
-export const postive = () => <Button state="positive">Subscribe</Button>;
+export const positive = () => <Button state="positive">Subscribe</Button>;
 export const positiveOutline = () => (
   <Button state="outline positive">Back</Button>
 );

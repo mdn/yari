@@ -44,7 +44,7 @@ async function checkFile(filePath, options) {
   }
   if (stat.size > MAX_FILE_SIZE) {
     const formatted =
-      stats.size > 1024 * 1024
+      stat.size > 1024 * 1024
         ? `${(stat.size / 1024.0 / 1024).toFixed(1)}MB`
         : `${(stat.size / 1024.0).toFixed(1)}KB`;
     const formattedMax = `${(MAX_FILE_SIZE / 1024.0 / 1024).toFixed(1)}MB`;
@@ -112,7 +112,7 @@ async function checkFile(filePath, options) {
   }
 
   const tempdir = tempy.directory();
-  const extension = path.extname(filePath);
+  const extension = path.extname(filePath).toLowerCase();
   try {
     const plugins = [];
     if ((extension === ".jpg") | (extension === ".jpeg")) {
