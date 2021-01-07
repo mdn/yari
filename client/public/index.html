@@ -33,14 +33,10 @@
     <script>
       // Only include the fat polyfill for browsers that seem to not have
       // certain JS features. E.g. Firefox 58.
-      (Array.prototype.includes && Array.prototype.flat) ||
+      if (!Array.prototype.flat || !Array.prototype.includes) {
         document.write(
-          '<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"><\/script>'
+          '<script src="https://polyfill.io/v3/polyfill.min.js?features=Array.prototype.flat%2Ces6"><\/script>'
         );
-      if (Array.prototype.includes && Array.prototype.flat) {
-        console.log("NO NEED TO INCLUDE POLYFILLS");
-      } else {
-        console.log("DOWNLOAD POLYFILLS PLEASE");
       }
     </script>
 
