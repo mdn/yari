@@ -3,6 +3,8 @@
 ![Testing](https://github.com/mdn/yari/workflows/Testing%20Yari/badge.svg)
 ![Production Build](https://github.com/mdn/yari/workflows/Production%20Build/badge.svg)
 
+![Logo](https://hacks.mozilla.org/files/2020/12/yari.png)
+
 ## Quickstart
 
 Before you can begin with Yari, you need [Content](https://github.com/mdn/content).
