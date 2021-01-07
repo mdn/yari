@@ -11,6 +11,6 @@
 //  {{anch("Another section name", "the information elsewhere in this article.")}}
 
 var text = $1 || $0;
-var anchor = '#' + string.replace(string.toLower($0), " ", "_");
+var anchor = `#${$0.replace(/ /g, '_').toLowerCase()}`;
 
 %><a href="<%- anchor %>"><%- text %></a>
