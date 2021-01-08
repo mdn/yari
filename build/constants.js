@@ -28,7 +28,7 @@ const VALID_FLAW_CHECKS = new Set([
   "bad_bcd_links",
   "images",
   "image_widths",
-  "pre_with_html",
+  "bad_pre_tags",
   "sectioning",
 ]);
 

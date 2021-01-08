@@ -665,7 +665,7 @@ test("detect bad_bcd_links flaws from", () => {
   expect(flaw.query).toBe("api.Document.visibilityState");
 });
 
-test("detect pre_with_html flaws", () => {
+test("detect bad_pre_tags flaws", () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -676,8 +676,8 @@ test("detect pre_with_html flaws", () => {
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(doc.flaws.pre_with_html.length).toBe(1);
-  const flaw = doc.flaws.pre_with_html[0];
+  expect(doc.flaws.bad_pre_tags.length).toBe(1);
+  const flaw = doc.flaws.bad_pre_tags[0];
   expect(flaw.explanation).toBe("<pre><code>CODE can be just <pre>CODE");
   expect(flaw.id).toBeTruthy();
   expect(flaw.fixable).toBe(true);
