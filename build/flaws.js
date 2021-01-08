@@ -235,6 +235,11 @@ function injectPreTagFlaws(level, doc, $, rawContent) {
       .replace(/>/g, "&gt;");
   }
 
+  function noPreTagFlawsYet() {
+    const flaws = doc.flaws.bad_pre_tags;
+    return flaws === undefined || flaws.length === 0;
+  }
+
   // Over the years, we've accumulated a lot of Kuma-HTML where the <pre> tags
   // are actually full of HTML. Almost exclusively we've observed <pre> tags whose
   // content is the HTML produced by Prism in the browser. Instead, in these cases,
@@ -323,7 +328,7 @@ function injectPreTagFlaws(level, doc, $, rawContent) {
   //
   // Also, make sure to use iterate over the document synchroneously,
   // e.g., with $().each(), or await for all Promises with asynchroneous results.
-  if (doc.flaws.bad_pre_tags.length === 0) {
+  if (noPreTagFlawsYet()) {
     // more checks here
   }
 
