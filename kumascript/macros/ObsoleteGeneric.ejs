@@ -25,11 +25,7 @@ if ($1) {
         n = string.trim(string.substr(t, 2));
         ver = "JavaScript ";
         if (string.length(n) > 0) {
-            if(true) {
-                link = '/' + lang + '/docs/JavaScript/New_in_JavaScript/' + n;
-            } else if(true) {
-                link = '/en-US/docs/JavaScript/New_in_JavaScript/' + n;
-            }
+            link = '/' + lang + '/docs/JavaScript/New_in_JavaScript/' + n;
         }
     } else if (string.startswith(t, "css")) {
         n = string.trim(string.substr(t, 3));
@@ -38,17 +34,9 @@ if ($1) {
         n = string.trim(string.substr(t, 4));
         ver = "HTML";
         if (n < 5) {
-            if(true) {
-                link = '/' + lang + '/docs/HTML';
-            } else {
-                link = '/en-US/docs/HTML';
-            }
+            link = '/' + lang + '/docs/HTML';
         } else {
-            if(true) {
-                link = '/' + lang + '/docs/HTML/HTML' + n;
-            } else {
-                link = '/en-US/docs/HTML/HTML' + n;
-            }
+            link = '/' + lang + '/docs/HTML/HTML' + n;
         }
     } else if (string.startswith(t, "gecko")) {
         n = string.trim(string.substr(t, 5));
