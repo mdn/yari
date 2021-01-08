@@ -328,8 +328,9 @@ function injectPreTagFlaws(level, doc, $, rawContent) {
   // e.g., with $().each(), or await for all Promises before moving on to the next flaw.
   function noFixablePreTagFlawsYet() {
     const flaws = doc.flaws.bad_pre_tags;
-    const hasFixableFlaws = flaws.filter((flaw) => !flaw.fixable).length;
-    return !flaws || !hasFixableFlaws;
+    const numFixableFlaws =
+      flaws && flaws.filter((flaw) => !flaw.fixable).length;
+    return !numFixableFlaws;
   }
 
   if (noFixablePreTagFlawsYet()) {
