@@ -77,7 +77,7 @@ describe("Basic viewing of functional pages", () => {
       `iframe.live-sample-frame.sample-code-frame[src$="${gridSample1Uri}"]`
     );
     await expect(page).toMatchElement("#Grid_2 > pre.css.notranslate", {
-      text: /\.wrapper\s*\{\s*display\:\s*grid\;/,
+      text: /\.wrapper\s*\{\s*display:\s*grid;/,
     });
     await expect(page).toMatchElement(
       `iframe.live-sample-frame.sample-code-frame[src$="${gridSample2Uri}"]`
