@@ -11,12 +11,6 @@ var destOldType = "/" + lang + '/docs/XUL:' + $0;
 var destNewType = "/" + lang + '/docs/Mozilla/Tech/XUL/' + $0;
 var url = "";
 
-if (true) {
-    url = destNewType;
-} else if (true) {
-    url = destOldType;
-} else {
-    url = destNewType;
-}
+url = destNewType;
 
 %><code><a href="<%=url%>">&lt;xul:<%=$0%>&gt;</a></code>
