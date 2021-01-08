@@ -235,11 +235,6 @@ function injectPreTagFlaws(level, doc, $, rawContent) {
       .replace(/>/g, "&gt;");
   }
 
-  function noPreTagFlawsYet() {
-    const flaws = doc.flaws.bad_pre_tags;
-    return !flaws || !flaws.length;
-  }
-
   // Over the years, we've accumulated a lot of Kuma-HTML where the <pre> tags
   // are actually full of HTML. Almost exclusively we've observed <pre> tags whose
   // content is the HTML produced by Prism in the browser. Instead, in these cases,
@@ -323,13 +318,26 @@ function injectPreTagFlaws(level, doc, $, rawContent) {
   });
 
   // TODO: Add other <pre> tag flaws underneath.
-  // We chain flaw checks and report only the first flaw kind to esure it's fixable
-  // See: https://github.com/mdn/yari/pull/2144#issuecomment-748346489
+  // We report only a single kind of fixable flaw at a time, since
+  // flaws are fixed by replacing raw HTML strings (so fixing the first
+  // fixable flaw might prevent fixing the second fixable flaw)
+  // For details see:
+  //   https://github.com/mdn/yari/pull/2144#issuecomment-748346489
   //
-  // Also, make sure to use iterate over the document synchroneously,
-  // e.g., with $().each(), or await for all Promises with asynchroneous results.
-  if (noPreTagFlawsYet()) {
-    // more checks here
+  // Also, make sure iterate over the document synchroneously,
+  // e.g., with $().each(), or await for all Promises before moving on to the next flaw.
+  function noFixablePreTagFlawsYet() {
+    const flaws = doc.flaws.bad_pre_tags;
+    const hasFixableFlaws = flaws.filter((flaw) => !flaw.fixable).length;
+    return !flaws || !hasFixableFlaws;
+  }
+
+  if (noFixablePreTagFlawsYet()) {
+    // one more flaw check here
+  }
+
+  if (noFixablePreTagFlawsYet()) {
+    // another flaw check here
   }
 
   if (
