@@ -1,3 +1,4 @@
+const fs = require("fs");
 const path = require("path");
 const { VALID_LOCALES } = require("../libs/constants");
 
@@ -6,7 +7,12 @@ require("dotenv").config({
 });
 
 const CONTENT_ROOT = process.env.CONTENT_ROOT;
-console.assert(CONTENT_ROOT, "Env var CONTENT_ROOT must be set");
+if (!CONTENT_ROOT) {
+  throw new Error("Env var CONTENT_ROOT must be set");
+}
+if (!fs.existsSync(CONTENT_ROOT)) {
+  throw new Error(`${path.resolve(CONTENT_ROOT)} does not exist`);
+}
 
 const CONTENT_ARCHIVED_ROOT = process.env.CONTENT_ARCHIVED_ROOT;
 const CONTENT_TRANSLATED_ROOT = process.env.CONTENT_TRANSLATED_ROOT;
@@ -23,10 +29,16 @@ const REPOSITORY_URLS = {
 // null.
 const ROOTS = [CONTENT_ROOT];
 if (CONTENT_ARCHIVED_ROOT) {
+  if (!fs.existsSync(CONTENT_ARCHIVED_ROOT)) {
+    throw new Error(`${path.resolve(CONTENT_ARCHIVED_ROOT)} does not exist`);
+  }
   ROOTS.push(CONTENT_ARCHIVED_ROOT);
   REPOSITORY_URLS[CONTENT_ARCHIVED_ROOT] = "mdn/archived-content";
 }
 if (CONTENT_TRANSLATED_ROOT) {
+  if (!fs.existsSync(CONTENT_TRANSLATED_ROOT)) {
+    throw new Error(`${path.resolve(CONTENT_TRANSLATED_ROOT)} does not exist`);
+  }
   ROOTS.push(CONTENT_TRANSLATED_ROOT);
   REPOSITORY_URLS[CONTENT_TRANSLATED_ROOT] = "mdn/translated-content";
 }

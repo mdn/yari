@@ -168,7 +168,23 @@
       "inh": "Event",
       "impl": []
     },
+    "CSSConditionRule": {
+      "inh": "CSSGroupingRule",
+      "impl": []
+    },
     "CSSCounterStyleRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSFontFaceRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSFontFeatureValuesRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSFontPaletteValuesRule": {
       "inh": "CSSRule",
       "impl": []
     },
@@ -176,24 +192,76 @@
       "inh": "Event",
       "impl": []
     },
+    "CSSGroupingRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSImportRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSKeyframeRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSKeyframesRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSMarginRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSMediaRule": {
+      "inh": "CSSConditionRule",
+      "impl": []
+    },
+    "CSSNamespaceRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSPageRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
     "CSSPrimitiveValue": {
       "inh": "CSSValue",
+      "impl": []
+    },
+    "CSSPropertyRule": {
+      "inh": "CSSRule",
       "impl": []
     },
     "CSSPseudoElement": {
       "inh": "EventTarget",
       "impl": []
     },
+    "CSSRule": {
+      "inh": "",
+      "impl": []
+    },
     "CSSStyleDeclaration": {
       "inh": "",
+      "impl": []
+    },
+    "CSSStyleRule": {
+      "inh": "CSSRule",
       "impl": []
     },
     "CSSStyleSheet": {
       "inh": "StyleSheet",
       "impl": []
     },
+    "CSSSupportsRule": {
+      "inh": "CSSConditionRule",
+      "impl": []
+    },
     "CSSValueList": {
       "inh": "CSSValue",
+      "impl": []
+    },
+    "CSSViewportRule": {
+      "inh": "CSSRule",
       "impl": []
     },
     "CallEvent": {
