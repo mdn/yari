@@ -60,7 +60,7 @@ const SUMMARIES = {
 const MANIFEST_SLUG = "Mozilla/Add-ons/WebExtensions/manifest.json";
 
 function getMockResultForGetChildren(doc_url) {
-  const locale = new URL(doc_url).pathname.split("/")[1];
+  const locale = new URL(doc_url, "http://example.com").pathname.split("/")[1];
   return [
     {
       locale: `${locale}`,
