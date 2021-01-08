@@ -237,7 +237,7 @@ function injectPreTagFlaws(level, doc, $, rawContent) {
 
   function noPreTagFlawsYet() {
     const flaws = doc.flaws.bad_pre_tags;
-    return flaws === undefined || flaws.length === 0;
+    return !flaws || !flaws.length;
   }
 
   // Over the years, we've accumulated a lot of Kuma-HTML where the <pre> tags
