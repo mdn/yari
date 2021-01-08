@@ -36,6 +36,7 @@ module.exports = {
       files: ["testing/**/*.js"],
       globals: {
         page: "readonly",
+        document: "readonly",
       },
     },
   ],

@@ -285,7 +285,7 @@ function testMacro(config) {
       config.locale = locale;
       macro.ctx.env.locale = locale;
       // Mock calls to MDN.subpagesExpand
-      macro.ctx.page.subpagesExpand = jest.fn((page) => {
+      macro.ctx.page.subpagesExpand = jest.fn(() => {
         return config.subpages;
       });
       return macro.call(config.argument).then(function (result) {
