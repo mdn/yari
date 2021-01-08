@@ -299,10 +299,6 @@ function injectPreTagFlaws(level, doc, $, rawContent) {
     doc.flaws.bad_pre_tags.push(flaw);
   }
 
-  // We chain flaw checks and surface only the first one to make sure it's fixable
-  // See: https://github.com/mdn/yari/pull/2144#issuecomment-748346489
-  let flawsFound = false;
-
   // Matches all <code> that are preceded by
   // a <pre class="...brush...">
   // Note, when we (in Node) syntax highlight code, the first thing
@@ -318,12 +314,17 @@ function injectPreTagFlaws(level, doc, $, rawContent) {
     // manually (double) check that the parent really is a `<pre>` tag.
     if ($pre.length && $pre.get(0).tagName === "pre") {
       addCodeTagFlaw($pre);
-      flawsFound = true;
     }
   });
 
-  if (!flawsFound) {
-    // more checks
+  // TODO: Add other <pre> tag flaws underneath.
+  // We chain flaw checks and report only the first flaw kind to esure it's fixable
+  // See: https://github.com/mdn/yari/pull/2144#issuecomment-748346489
+  //
+  // Also, make sure to use iterate over the document synchroneously,
+  // e.g., with $().each(), or await for all Promises with asynchroneous results.
+  if (doc.flaws.bad_pre_tags.length === 0) {
+    // more checks here
   }
 
   if (
