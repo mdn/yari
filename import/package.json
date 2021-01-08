@@ -8,7 +8,7 @@
   "devDependencies": {
     "caporal": "1.4.0",
     "chalk": "4.1.0",
-    "cheerio": "1.0.0-rc.3",
+    "cheerio": "1.0.0-rc.5",
     "dotenv": "8.2.0",
     "fast-csv": "^4.3.6",
     "mysql": "2.18.1"

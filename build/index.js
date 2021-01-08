@@ -1,4 +1,5 @@
 const chalk = require("chalk");
+const cheerio = require("cheerio");
 
 const {
   Document,
@@ -18,10 +19,9 @@ const SearchIndex = require("./search-index");
 const { addBreadcrumbData } = require("./document-utils");
 const { fixFixableFlaws, injectFlaws, injectSectionFlaws } = require("./flaws");
 const { normalizeBCDURLs, extractBCDData } = require("./bcd-urls");
-const { checkImageReferences } = require("./check-images");
+const { checkImageReferences, checkImageWidths } = require("./check-images");
 const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
-const cheerio = require("./monkeypatched-cheerio");
 const buildOptions = require("./build-options");
 const { gather: gatherGitHistory } = require("./git-history");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
@@ -297,6 +297,9 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Check and scrutinize any local image references
   const fileAttachments = checkImageReferences(doc, $, options, document);
+
+  // Check the img tags for possible flaws and possible build-time rewrites
+  checkImageWidths(doc, $, options, document);
 
   // With the sidebar out of the way, go ahead and check the rest
   try {

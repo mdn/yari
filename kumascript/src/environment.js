@@ -46,7 +46,7 @@ const pagePrototype = require("./api/page.js");
 const info = require("./info");
 
 class Environment {
-  // Intialize an environment object that will be used to render
+  // Initialize an environment object that will be used to render
   // all of the macros in one document or page. We pass in a context
   // object (which may come from HTTP request headers) that gives
   // details like the page title and URL. These are available to macros
@@ -140,9 +140,9 @@ class Environment {
     globals.info = freeze(info);
     globals.renderPrerequisiteFromURL = renderPrerequisiteFromURL;
 
-    // Macros use the global template() method to excute other
+    // Macros use the global template() method to execute other
     // macros. This is the one function that we can't just
-    // implement on globalsPrototype because it needs acccess to
+    // implement on globalsPrototype because it needs access to
     // this.templates.
     globals.template = this._renderTemplate.bind(this);
 

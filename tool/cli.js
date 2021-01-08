@@ -223,10 +223,10 @@ program
       }
       const { doc } = await buildDocument(document);
 
-      if (doc.flaws) {
-        const flaws = Object.values(doc.flaws)
-          .map((a) => a.length || 0)
-          .reduce((a, b) => a + b);
+      const flaws = Object.values(doc.flaws || {})
+        .map((a) => a.length || 0)
+        .reduce((a, b) => a + b, 0);
+      if (flaws > 0) {
         console.log(chalk.red(`Found ${flaws} flaws.`));
         okay = false;
       }
@@ -278,7 +278,7 @@ program
       const { root, saveHistory, loadHistory } = options;
       if (fs.existsSync(loadHistory)) {
         console.log(
-          chalk.yellow(`Reusing exising history from ${loadHistory}`)
+          chalk.yellow(`Reusing existing history from ${loadHistory}`)
         );
       }
       const map = gatherGitHistory(
@@ -343,9 +343,13 @@ program
         fixFlawsDryRun: true,
       });
 
-      const flaws = Object.values(doc.flaws)
+      const flaws = Object.values(doc.flaws || {})
         .map((a) => a.filter((f) => f.fixable).length || 0)
-        .reduce((a, b) => a + b);
+        .reduce((a, b) => a + b, 0);
+      if (flaws === 0) {
+        console.log(chalk.green("Found no fixable flaws!"));
+        return;
+      }
       const { run } = yes
         ? { run: true }
         : await prompts({

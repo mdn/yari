@@ -3,7 +3,7 @@ import path from "path";
 
 import jsesc from "jsesc";
 import { renderToString } from "react-dom/server";
-import cheerio from "./monkeypatched-cheerio";
+import cheerio from "cheerio";
 
 import {
   GOOGLE_ANALYTICS_ACCOUNT,
@@ -226,7 +226,7 @@ export default function render(
       $("<script>").text(`\n${googleAnalyticsJS}\n`).appendTo($("head"));
       $(
         `<script async src="https://www.google-analytics.com/${
-          GOOGLE_ANALYTICS_DEBUG ? "anaytics_debug" : "analytics"
+          GOOGLE_ANALYTICS_DEBUG ? "analytics_debug" : "analytics"
         }.js"></script>`
       ).appendTo($("head"));
     }

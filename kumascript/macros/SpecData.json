@@ -109,8 +109,8 @@
     "url": "https://www.w3.org/2012/sysapps/contacts-manager-api/",
     "status": "Obsolete"
   },
-  "Contacts Picker": {
-    "name": "Contacts Picker API",
+  "Contact Picker API": {
+    "name": "Contact Picker API",
     "url": "https://wicg.github.io/contact-api/spec/",
     "status": "Draft"
   },
@@ -192,7 +192,7 @@
   "CSS3 Box": {
     "name": "CSS Basic Box Model",
     "url": "https://drafts.csswg.org/css-box-3/",
-    "status": "WD"
+    "status": "CR"
   },
   "CSS3 Box Alignment": {
     "name": "CSS Box Alignment Module Level 3",
@@ -347,7 +347,7 @@
   "CSS3 Text": {
     "name": "CSS Text Module Level&nbsp;3",
     "url": "https://drafts.csswg.org/css-text-3/",
-    "status": "WD"
+    "status": "CR"
   },
   "CSS3 Text Decoration": {
     "name": "CSS Text Decoration Module Level&nbsp;3",

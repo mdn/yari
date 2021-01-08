@@ -1,4 +1,4 @@
-const cheerio = require("./monkeypatched-cheerio");
+const cheerio = require("cheerio");
 const { packageBCD } = require("./resolve-bcd");
 
 /** Extract and mutate the $ if it as a "Quick_Links" section.

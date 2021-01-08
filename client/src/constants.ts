@@ -14,3 +14,7 @@ export const AUTOCOMPLETE_SEARCH_WIDGET = JSON.parse(
 export const NO_WATCHER = JSON.parse(
   process.env.REACT_APP_NO_WATCHER || "false"
 );
+
+export const DEBUG_GOOGLE_ANALYTICS = JSON.parse(
+  process.env.REACT_APP_DEBUG_GOOGLE_ANALYTICS || "false"
+);
