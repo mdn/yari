@@ -65,18 +65,13 @@
       &::before {
         background: transparent url("~@mdn/dinocons/arrows/chevron.svg") 0 0
           no-repeat;
-        background-size: 100% 12px;
+        background-size: auto;
         content: "";
         display: inline-block;
-        height: 12px;
+        height: 16px;
         margin-right: $base-spacing / 4;
         transform: rotate(-90deg);
-        width: 12px;
-
-        /* allow the chevron icon to be a bit larger in size and more visible for tablets and below */
-        @media (max-width: 26.563em) {
-          width: 1rem;
-        }
+        width: 16px;
 
         @media #{$mq-small-desktop-and-up} {
           display: none;
