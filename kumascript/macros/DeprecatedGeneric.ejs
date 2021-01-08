@@ -24,12 +24,8 @@ if ($1) {
         n = string.trim( string.substr(t, 2));
         ver = "JavaScript ";
         if (string.length(n) > 0) {
-            if(true) {
-                link = '/' + lang + '/docs/JavaScript/New_in_JavaScript/' + n;
-            } else if(true) {
-                link = '/en-US/docs/JavaScript/New_in_JavaScript/' + n;
-            }
-        } 
+            link = '/' + lang + '/docs/JavaScript/New_in_JavaScript/' + n;
+        }
     } else if (string.startswith(t, "css")) {
         n = string.trim(string.substr(t, 3));
         ver = "CSS ";
