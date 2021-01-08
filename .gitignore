@@ -74,3 +74,6 @@ function.zip
 testing/content/files/en-us/_githistory.json
 # eslintcache
 client/.eslintcache
+
+# cloned content repos
+mdn/
