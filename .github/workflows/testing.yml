@@ -34,7 +34,7 @@ jobs:
 
       - name: Install all yarn packages
         run: |
-          ./testing/scripts/yarn-install.sh
+          yarn --frozen-lockfile
           ./testing/scripts/yarn-lockfile-check.sh
 
       - name: Lint prettier
