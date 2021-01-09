@@ -33,7 +33,7 @@ jobs:
 
       - name: Install all yarn packages
         run: |
-          ./testing/scripts/yarn-install.sh
+          yarn --frozen-lockfile
 
       - name: Setup kernel for react native, increase watchers
         run: |
