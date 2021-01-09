@@ -18,8 +18,8 @@ if (slug) {
     var rtlLocales = ['ar', 'he', 'fa'];
 
     var data = require('mdn-data/css');
-    var commonl10n = string.deserialize(await template('L10n:Common'));
-    var cssl10n = string.deserialize(await template('L10n:CSS'));
+    var commonl10n = JSON.parse(await template('L10n:Common'));
+    var cssl10n = JSON.parse(await template('L10n:CSS'));
 
     var text = {
         'Properties': mdn.getLocalString(commonl10n, 'Properties'),

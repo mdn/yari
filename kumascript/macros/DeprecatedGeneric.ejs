@@ -20,27 +20,27 @@ if ($1) {
     var t = $1.toLowerCase();
     var n = "";
 
-    if ( string.startswith(t, "js") ) {
-        n = string.trim( string.substr(t, 2) );
+    if ( t.startsWith("js") ) {
+        n = t.substring(2).trim();
         ver = "JavaScript ";
-        if (string.length(n) > 0) {
+        if (n.length) {
             if(wiki.pageExists(lang + '/docs/JavaScript/New_in_JavaScript/' + n)) {
                 link = '/' + lang + '/docs/JavaScript/New_in_JavaScript/' + n;
             } else if(wiki.pageExists('/en-US/docs/JavaScript/New_in_JavaScript/' + n)) {
                 link = '/en-US/docs/JavaScript/New_in_JavaScript/' + n;
             }
         }
-    } else if (string.startswith(t, "css")) {
-        n = string.trim(string.substr(t, 3));
+    } else if (t.startsWith("css")) {
+        n = t.substring(3).trim();
         ver = "CSS ";
-    } else if (string.startswith(t, "html")) {
-        n = string.trim(string.substr(t, 4));
+    } else if (t.startsWith("html")) {
+        n = t.substring(4).trim();
 
         var N = (n[0] === "4") ? "" : n;
 
         ver = "HTML";
 
-        if (string.length(N) > 0) {
+        if (N.length) {
             if(wiki.pageExists('/' + lang + '/docs/HTML/HTML' + N)) {
                 link = '/' + lang + '/docs/HTML/HTML' + N;
             } else if(wiki.pageExists('/en-US/docs/HTML/HTML' + N)) {
@@ -53,17 +53,17 @@ if ($1) {
         } else {
             link = '/' + lang + '/docs/HTML';
         }
-    } else if (string.startswith(t, "svg")) {
-        n = string.trim(string.substr(t, 3));
+    } else if (t.startsWith("svg")) {
+        n = t.substring(3).trim();
         ver = "SVG ";
-    } else if (string.startswith(t, "gecko")) {
-        n = string.trim( string.substr(t, 5) );
+    } else if (t.startsWith("gecko")) {
+        n = t.substring(5).trim();
         ver = "Gecko ";
         tip = await template("geckoRelease", [n]);
     }
 
-    n = string.trim(n);
-    ver = (string.length(n) > 0) ? ver + n : "";
+    n = n.trim();
+    ver = n.length ? ver + n : "";
 }
 
 // If there's a link, turn the version into a link to that URL

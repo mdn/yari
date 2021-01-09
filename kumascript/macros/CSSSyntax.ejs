@@ -51,7 +51,7 @@ let rawSyntax = "";
 let formattedSyntax = "";
 let localize = mdn.getLocalString;
 
-let localStrings = string.deserialize(await template("L10n:CSS"));
+let localStrings = JSON.parse(await template("L10n:CSS"));
 
 let s_missing = mdn.localString({
     "en-US": "Syntax not found in DB!",

@@ -35,13 +35,13 @@ if (slug) {
 
     // Fetch the databases
 
-    var webAPIData = string.deserialize(await template('InterfaceData'));
+    var webAPIData = JSON.parse(await template('InterfaceData'));
 
     if (group) {
-        var webAPIGroups = string.deserialize(await template('GroupData'));
+        var webAPIGroups = JSON.parse(await template('GroupData'));
     }
 
-    var commonl10n = string.deserialize(await template('L10n:Common'));
+    var commonl10n = JSON.parse(await template('L10n:Common'));
 
     // Strings that need translating
 

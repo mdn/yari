@@ -21,7 +21,7 @@ let lang = env.locale;
 let api = $0;
 let str = $1 || $0;
 let rtlLocales = ['ar', 'he', 'fa'];
-let localStrings = string.deserialize(await template("L10n:Common"));
+let localStrings = JSON.parse(await template("L10n:Common"));
 
 api = api.replace(' ', '_').replace('()', '').replace(/\./g, '/');
 

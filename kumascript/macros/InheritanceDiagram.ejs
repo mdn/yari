@@ -8,7 +8,7 @@
   $3 - Interface name
 */
 
-var data = string.deserialize(await template("InterfaceData"));
+var data = JSON.parse(await template("InterfaceData"));
 var slug = env.slug;
 var result = "";
 // slug is not available in preview mode.

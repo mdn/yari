@@ -18,9 +18,9 @@ var str = 'Added in ' + link;
 
 /* New JSAPI versions  */
 if ($0) {
-    var t = string.tolower($0);
-    if (string.startswith(t, "jsapi")) {
-        t = string.trim(string.substr(t, 5));
+    var t = ($0 || "").toLowerCase();
+    if (t.startsWith("jsapi")) {
+        t = t.substring(5).trim();
         str = "Added in JSAPI " + t;
     }
 }

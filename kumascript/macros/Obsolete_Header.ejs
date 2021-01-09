@@ -6,7 +6,7 @@
 var str = "";
 
 if ($0) {
-  if (string.isdigit($0)) {
+  if (/^\d/.test($0)) {
     str = "gecko" + $0;
   } else {
     str = $0

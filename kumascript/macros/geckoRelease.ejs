@@ -2,10 +2,10 @@
 
 /* Appending a "+" to the version number you specify means that version and all later versions. */
 var geckoRelease = '';
-var arg = string.trim($0);
+var arg = ($0 || "").trim();
 var plus = '';
 var extraMessage = '';
-if (string.EndsWith(arg, '+')) {
+if (arg.endsWith('+')) {
   arg = arg.substr(0, arg.length-1);
   plus = '+';
 }
@@ -80,7 +80,7 @@ switch(arg)
     break;
 }
 if (geckoRelease != "") {
-  geckoRelease = string.Join(geckoRelease, plus + ' / ') + plus;
+  geckoRelease = geckoRelease.join(plus + ' / ') + plus;
   geckoRelease = '(' + geckoRelease + ')' + extraMessage;
 }
 %>
