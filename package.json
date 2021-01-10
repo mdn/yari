@@ -1,12 +1,15 @@
 {
   "name": "@mdn/yari",
   "version": "0.1.6",
+  "repository": "https://github.com/mdn/yari",
+  "license": "MPL-2.0",
+  "author": "MDN Web Docs",
   "scripts": {
     "build": "cross-env NODE_ENV=production node build/cli.js",
     "build:client": "cd client && cross-env INLINE_RUNTIME_CHUNK=false react-scripts build",
     "build:ssr": "cd ssr && webpack --config webpack.config.js --mode=production",
     "dev": "yarn prepare-build && nf -j Procfile.dev start",
-    "eslint": "eslint package.json \"content/**/*.js\" \"build/**/*.js\" \"kumascript/src/**/*.js\" \"tool/**/*.js\" \"server/**/*.js\"",
+    "eslint": "eslint \"content/**/*.js\" \"build/**/*.js\" \"kumascript/src/**/*.js\" \"tool/**/*.js\" \"server/**/*.js\"",
     "filecheck": "cd filecheck && node cli.js",
     "fiori:build": "cd client && build-storybook",
     "fiori:start": "cd client && start-storybook -p 6006",
@@ -25,9 +28,20 @@
     "test:testing": "cd testing && jest",
     "tool": "node tool/cli.js"
   },
-  "repository": "https://github.com/mdn/yari",
-  "author": "MDN Web Docs",
-  "license": "MPL-2.0",
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged && yarn install --ignore-scripts"
+    }
+  },
+  "resolutions": {
+    "fstream": ">=1.0.12",
+    "handlebars": ">=4.5.3",
+    "js-yaml": ">=3.13.1",
+    "lodash": ">=4.17.15",
+    "mixin-deep": ">=1.3.2",
+    "set-value": ">=2.0.1",
+    "tar": ">=4.4.9"
+  },
   "dependencies": {
     "@caporal/core": "2.0.2",
     "@mdn/browser-compat-data": "3.0.2",
@@ -100,7 +114,6 @@
     "braces": "^3.0.2",
     "eslint-plugin-jest": "24.1.3",
     "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-package-json": "0.1.4",
     "extend": "^3.0.2",
     "flexsearch": "0.6.32",
     "foreman": "3.0.1",
@@ -116,6 +129,7 @@
     "nodemon": "2.0.7",
     "pegjs": "^0.10.0",
     "prettier": "2.2.1",
+    "prettier-plugin-packagejson": "^2.2.9",
     "pretty-quick": "3.1.0",
     "puppeteer": "2",
     "react": "17.0.1",
@@ -139,19 +153,5 @@
   },
   "engines": {
     "node": ">=12.11"
-  },
-  "resolutions": {
-    "fstream": ">=1.0.12",
-    "js-yaml": ">=3.13.1",
-    "lodash": ">=4.17.15",
-    "mixin-deep": ">=1.3.2",
-    "set-value": ">=2.0.1",
-    "tar": ">=4.4.9",
-    "handlebars": ">=4.5.3"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged && yarn install --ignore-scripts"
-    }
   }
 }
