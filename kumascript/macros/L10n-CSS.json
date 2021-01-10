@@ -9,7 +9,7 @@
     "pl": "Dokumentacja CSS",
     "pt-PT": "Referência CSS",
     "ru": "CSS документация",
-"it": "Riferimento CSS"
+    "it": "Riferimento CSS"
   },
   "at_rules": {
     "en-US": "At-Rules",
@@ -17,7 +17,7 @@
     "de": "At-Regeln",
     "ja": "@規則",
     "ru": "@-правила",
-"it": "Regole @"
+    "it": "Regole @"
   },
   "types": {
     "en-US": "Data types",
@@ -25,7 +25,7 @@
     "de": "Datentypen",
     "ja": "データ形式",
     "ru": "Типы данных",
-"it":"Tipi di dato"
+    "it":"Tipi di dato"
   },
   "missing": {
     "en-US": "Value not found in DB!",
@@ -33,7 +33,7 @@
     "de": "Wert nicht in der DB gefunden!",
     "ja": "DB に値が見つかりません！",
     "ru": "Значение не найдено в базе данных!",
-"it":"Valore non trovato all'interno della base di dati"
+    "it":"Valore non trovato all'interno della base di dati"
   },
   "info_in_preview_not_available": {
     "en-US": "CSS info in preview not available",
@@ -41,41 +41,41 @@
     "fr": "CSS-Info n'est pas disponible en aperçu",
     "ja": "プレビューの CSS info が利用できません",
     "ru": "CSS info недоступно в предпросмотре",
-"it":"Informazione CSS non disponibile nell'anteprima"
+    "it":"Informazione CSS non disponibile nell'anteprima"
   },
   "tag_selectors": {
     "en-US": "Selectors",
     "fr": "Sélecteur",
     "ja": "セレクター",
     "ru": "Селекторы",
-"it":"Selettori"
+    "it":"Selettori"
   },
   "Basic Selectors": {
     "en-US": "Basic Selectors",
     "fr": "Sélecteurs simples",
     "ja": "基本セレクター",
     "ru": "Базовые селекторы",
-"it":"Selettori di base"
+    "it":"Selettori di base"
   },
   "Combinators": {
     "en-US": "Combinators",
     "fr": "Combinateurs",
     "ja": "結合子",
     "ru": "Комбинаторы",
-"it":"Combinatori"
+    "it":"Combinatori"
   },
   "Pseudo-classes": {
     "en-US": "Pseudo-classes",
     "fr": "Pseudo-classes",
     "ja": "擬似クラス",
     "ru": "Псевдоклассы",
-"it":"Pseudo-classi"
+    "it":"Pseudo-classi"
   },
   "Pseudo-elements": {
     "en-US": "Pseudo-elements",
     "fr": "Pseudo-éléments",
     "ja": "擬似要素",
     "ru": "Псевдоэлементы",
-"it":"Pseudo-elementi"
+    "it":"Pseudo-elementi"
   }
 }
