@@ -2,10 +2,6 @@
   "name": "client",
   "private": false,
   "license": "MPL-2.0",
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "proxy": "http://localhost:5000",
   "browserslist": {
     "production": [
       ">0.2%",
@@ -17,5 +13,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "proxy": "http://localhost:5000"
 }
