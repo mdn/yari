@@ -753,9 +753,7 @@ function AllFlawCounts({ counts }: { counts: FlawsCounts }) {
           {typesSorted.map(([key, value]) => {
             return (
               <tr key={key}>
-                <td>
-                  <code>{key}</code>
-                </td>
+                <td>{humanizeFlawName(key)}</td>
                 <td>
                   <b>{value.toLocaleString()}</b>
                 </td>
