@@ -46,18 +46,18 @@ def index(
         index.create()
 
     search_prefixes = [None]
-    for pattern in priority_prefixes[::-1]:
-        search_prefixes.insert(0, pattern)
+    for prefix in priority_prefixes[::-1]:
+        search_prefixes.insert(0, prefix)
 
-    count_by_pattern = defaultdict(int)
+    count_by_prefix = defaultdict(int)
 
     already = set()
 
     def generator():
-        for pattern in search_prefixes:
+        for prefix in search_prefixes:
             root = Path(buildroot)
-            if pattern:
-                root /= pattern
+            if prefix:
+                root /= prefix
             iterator = walk(root)
             for doc in iterator:
                 if doc in already:
@@ -65,7 +65,7 @@ def index(
                 already.add(doc)
                 search_doc = to_search(doc)
                 if search_doc:
-                    count_by_pattern[pattern] += 1
+                    count_by_prefix[prefix] += 1
                     yield search_doc.to_dict(True)
 
     def get_progressbar():
@@ -87,13 +87,13 @@ def index(
         f"Approximately {rate:.1f} docs/second"
     )
     if priority_prefixes:
-        click.echo("Counts per priority patterns:")
-        rest = sum(v for v in count_by_pattern.values())
-        for pattern in priority_prefixes:
-            click.echo(f"\t{pattern:<30} {count_by_pattern[pattern]:,}")
-            rest -= count_by_pattern[pattern]
-        pattern = "*rest*"
-        click.echo(f"\t{pattern:<30} {rest:,}")
+        click.echo("Counts per priority prefixes:")
+        rest = sum(v for v in count_by_prefix.values())
+        for prefix in priority_prefixes:
+            click.echo(f"\t{prefix:<30} {count_by_prefix[prefix]:,}")
+            rest -= count_by_prefix[prefix]
+        prefix = "*rest*"
+        click.echo(f"\t{prefix:<30} {rest:,}")
 
 
 class VoidProgressBar:
