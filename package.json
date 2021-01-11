@@ -77,7 +77,7 @@
     "imagemin-svgo": "8.0.0",
     "include-media": "1.4.9",
     "is-svg": "4.2.1",
-    "js-yaml": "3.14.1",
+    "js-yaml": "4.0.0",
     "jsesc": "3.0.2",
     "mdn-data": "2.0.15",
     "open": "^7.3.1",
