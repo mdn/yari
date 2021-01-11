@@ -516,6 +516,7 @@ async function analyzeDocument(document) {
   doc.h3s = $("h3").length;
   doc.title = metadata.title;
   doc.mdn_url = document.url;
+  doc.depth = document.url.split("/").length - 3;
 
   // If the document has a `.popularity` make sure don't bother with too
   // many significant figures on it.
