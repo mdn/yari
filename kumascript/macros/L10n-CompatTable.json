@@ -1,5 +1,6 @@
 {
   "bc_icon_name_desktop": {
+    "it": "Desktop",
     "en-US": "Desktop",
     "de": "Desktop",
     "es": "Desktop",
@@ -9,6 +10,7 @@
     "nl": "Desktop"
   },
   "bc_icon_name_mobile": {
+    "it": "Mobile",
     "en-US": "Mobile",
     "de": "Mobile",
     "es": "Mobile",
@@ -18,6 +20,7 @@
     "nl": "Mobile"
   },
   "bc_icon_name_server": {
+    "it": "Server",
     "en-US": "Server",
     "de": "Server",
     "ja": "サーバー",
@@ -25,6 +28,7 @@
     "fr": "Serveur"
   },
   "bc_icon_name_webview_android": {
+    "it": "WebView per Android",
     "en-US": "Android webview",
     "de": "Android Webview",
     "es": "Android webview",
@@ -33,6 +37,7 @@
     "fr": "Webview Android"
   },
   "bc_icon_name_chrome": {
+    "it": "Google Chrome",
     "en-US": "Chrome",
     "de": "Chrome",
     "es": "Chrome",
@@ -41,6 +46,7 @@
     "fr": "Chrome"
   },
   "bc_icon_name_chrome_android": {
+    "it": "Google Chrome per Android",
     "en-US": "Chrome for Android",
     "de": "Chrome für Android",
     "es": "Chrome para Android",
@@ -50,6 +56,7 @@
     "fr": "Chrome pour Android"
   },
   "bc_icon_name_edge": {
+    "it": "Microsoft Edge",
     "en-US": "Edge",
     "de": "Edge",
     "es": "Edge",
@@ -58,6 +65,7 @@
     "fr": "Edge"
   },
   "bc_icon_name_firefox": {
+    "it": "Mozilla Firefox",
     "en-US": "Firefox",
     "de": "Firefox",
     "es": "Firefox",
@@ -66,6 +74,7 @@
     "fr": "Firefox"
   },
   "bc_icon_name_firefox_android": {
+    "it": "Mozilla Firefox per Android",
     "en-US": "Firefox for Android",
     "de": "Firefox für Android",
     "es": "Firefox para Android",
@@ -75,6 +84,7 @@
     "fr": "Firefox pour Android"
   },
   "bc_icon_name_ie": {
+    "it": "Internet Explorer",
     "en-US": "Internet Explorer",
     "de": "Internet Explorer",
     "es": "Internet Explorer",
@@ -83,6 +93,7 @@
     "fr": "Internet Explorer"
   },
   "bc_icon_name_nodejs": {
+    "it": "Node.js",
     "en-US": "Node.js",
     "de": "Node.js",
     "es": "Node.js",
@@ -91,6 +102,7 @@
     "fr": "Node.js"
   },
   "bc_icon_name_opera": {
+    "it": "Opera",
     "en-US": "Opera",
     "de": "Opera",
     "es": "Opera",
@@ -99,6 +111,7 @@
     "fr": "Opera"
   },
   "bc_icon_name_opera_android": {
+    "it": "Opera per Android",
     "en-US": "Opera for Android",
     "de": "Opera für Android",
     "es": "Opera para Android",
@@ -108,6 +121,7 @@
     "fr": "Opera pour Android"
   },
   "bc_icon_name_safari": {
+    "it": "Safari",
     "en-US": "Safari",
     "de": "Safari",
     "es": "Safari",
@@ -116,6 +130,7 @@
     "fr": "Safari"
   },
   "bc_icon_name_safari_ios": {
+    "it": "Safari per iOS",
     "en-US": "Safari on iOS",
     "de": "Safari auf iOS",
     "es": "Safari en iOS",
@@ -124,6 +139,7 @@
     "fr": "Safari sur iOS"
   },
   "bc_icon_name_samsunginternet_android": {
+    "it": "Samsung Internet",
     "en-US": "Samsung Internet",
     "de": "Samsung Internet",
     "es": "Samsung Internet",
@@ -132,6 +148,7 @@
     "fr": "Samsung Internet"
   },
   "bc_history_head": {
+    "it": "Note di implementazione",
     "en-US": "Implementation Notes",
     "de": "Implementierungshinweise",
     "es": "Notas de implementación",
@@ -141,6 +158,7 @@
     "nl": "Implementatieopmerkingen"
   },
   "supportsShort_yes": {
+    "it": "Sì",
     "en-US": "Yes",
     "de": "Ja",
     "es": "Si",
