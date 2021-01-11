@@ -119,7 +119,7 @@
     "en-US": "Safari on iOS",
     "de": "Safari auf iOS",
     "es": "Safari en iOS",
-    "ja": "iOSのSafari",
+    "ja": "iOS 版 Safari",
     "nl": "Safari op iOS",
     "fr": "Safari sur iOS"
   },
@@ -218,7 +218,7 @@
     "de": "Kompatibilität unbekannt. Bitte aktualisiere das.",
     "es": "Compatibilidad desconocida; porfavor actualiza esto.",
     "fr": "Compatibilité inconnue, merci de contribuer à ces données.",
-    "ja": "実装状況不明。更新してください。",
+    "ja": "互換性不明。更新してください。",
     "ru": "Совместимость неизвестна; пожалуйста, обновите информацию.",
     "nl": "Compatibiliteit onbekend, graag bijwerken."
   },
@@ -227,7 +227,7 @@
     "de": "Kompatibilität unbekannt",
     "es": "Compatibilidad desconocida",
     "fr": "Compatibilité inconnue",
-    "ja": "実装状況不明",
+    "ja": "互換性不明",
     "ru": "Совместимость неизвестна",
     "nl": "Compatibiliteit onbekend"
   },
