@@ -7,7 +7,7 @@ import useSWR from "swr";
 
 type DocumentFormData = {
   rawHTML: string;
-  metadata: { slug: string; title: string };
+  metadata: { slug: string; title: string; tags: Array<string> };
 };
 
 // Same as DocumentFormData but metadata also includes the locale
@@ -35,6 +35,7 @@ export function DocumentForm({
   );
   const [title, setTitle] = useState(doc ? doc.metadata.title : "");
   const [rawHTML, setRawHtml] = useState(doc ? doc.rawHTML : "");
+  const [tags, setTags] = useState(doc ? doc.metadata.tags : []);
 
   const [autosaveEnabled, setAutoSaveEnabled] = useLocalStorage(
     "autosaveEdit",
@@ -71,6 +72,21 @@ export function DocumentForm({
     setAutoSaveEnabled(!autosaveEnabled);
   }
 
+  function removeTag(tag: string) {
+    setTags(tags.filter((elem) => elem !== tag));
+  }
+
+  function addTag() {
+    const input: any = document.getElementById("newTag");
+    const newTag: string = input.value;
+    if (tags.includes(newTag)) {
+      console.log("This tag is already there:", newTag);
+    } else {
+      setTags([...tags, newTag]);
+    }
+    input.value = "";
+  }
+
   const { callback: debounceCallback } = useDebouncedCallback(onSave, 1000);
 
   useEffect(() => {
@@ -78,7 +94,7 @@ export function DocumentForm({
       debounceCallback(
         {
           rawHTML,
-          metadata: { slug, title, locale },
+          metadata: { slug, title, locale, tags },
         },
         didSlugChange
       );
@@ -87,6 +103,7 @@ export function DocumentForm({
     willAutosave,
     debounceCallback,
     slug,
+    tags,
     title,
     rawHTML,
     didSlugChange,
@@ -101,7 +118,7 @@ export function DocumentForm({
         onSave(
           {
             rawHTML,
-            metadata: { slug, title, locale },
+            metadata: { slug, title, locale, tags },
           },
           didSlugChange
         );
@@ -149,6 +166,43 @@ export function DocumentForm({
           />
         </label>
       </p>
+
+      <div>
+        <label>Tags</label>
+        <ul>
+          {tags.map((tag) => (
+            <li key={tag}>
+              {tag}
+              <button
+                style={{ marginLeft: "10px" }}
+                onClick={() => removeTag(tag)}
+              >
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
+        <div style={{ marginBottom: "5px" }}>
+          <input
+            id="newTag"
+            disabled={disableInputs}
+            type="text"
+            placeholder="New tag"
+            defaultValue=""
+          />
+          <button
+            type="submit"
+            disabled={disableInputs}
+            style={{ marginLeft: "10px" }}
+            onClick={(event) => {
+              event.preventDefault();
+              addTag();
+            }}
+          >
+            Add tag
+          </button>
+        </div>
+      </div>
 
       <textarea
         disabled={disableInputs}

@@ -247,7 +247,8 @@ function update(url, rawHTML, metadata) {
   if (
     isNewSlug ||
     document.rawHTML !== rawHTML ||
-    document.metadata.title !== metadata.title
+    document.metadata.title !== metadata.title ||
+    JSON.stringify(document.metadata.tags) !== JSON.stringify(metadata.tags)
   ) {
     saveHTMLFile(indexPath, rawHTML, {
       ...document.metadata,
