@@ -96,7 +96,7 @@ it will upload and publish a new version.
 
 You just need a URL (or host name) for an Elasticsearch server and the
 root of the build directory. The command will trawl all `index.json` files
-and extract all metadata and blocks of prose which gets HTML stripped.
+and extract all metadata and blocks of prose which get their HTML stripped.
 The command is:
 
 ```sh
