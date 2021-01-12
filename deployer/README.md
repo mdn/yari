@@ -104,7 +104,7 @@ cd deployer
 poetry run deployer search-index --help
 ```
 
-If you have built the whole site (or partially) you simply pointed to
+If you have built the whole site (or partially) you simply point to
 it with the first argument:
 
 ```sh
@@ -127,8 +127,8 @@ poetry run deployer search-index ../client/build --url http://localhost:9200
 
 **Note!** If you don't specify either the environment variable or the `--url`
 option, the script will _not_ fail (ie. exit non-zero).
-This is to make it conveniently in GitHub Actions to control the
-execution of it purely on the presence of the
+This is to make it convenient in GitHub Actions to control the
+execution purely based on the presence of the
 environment variable.
 
 ### To update or not start a fresh
@@ -139,23 +139,23 @@ will "cake on" the documents. So if something has been deleted since the last
 build, you would still have that "stuck" in Elasticsearch.
 
 Deleting and re-creating the index is fast so it's relatively safe to use often.
-But the indexing can take many seconds and whilst indexing, Elasticsearch
+But the indexing can take many seconds and while indexing, Elasticsearch
 can only search what's been indexed so far.
 
 An interesting pattern would be to use `--update` most of the time and
 only from time to time omit it for a fresh new start.
 
 But note, if you omit the `--update` (i.e. recreating the index), search
-will work. It just just find less that it finds when it's fully indexed.
+will work. It just may find less that it finds when it's fully indexed.
 
 ### Priority prefixes
 
 When you index without `--update` it will delete and recreate the index.
-That means that during the time you're indexing, the searches that are happened
+That means that during the time you're indexing, the searches that are happening
 concurrently will not find much. That's probably OK in most cases but you
 can adjust the priority of what gets indexed first. This has the advantage
 that most searches, that are expecting to find content in the popular document,
-will get something useful whilst the indexing is going on.
+will get something useful while the indexing is going on.
 
 To set up one or multiple priority prefixes use the `--priority-prefixes`
 (or just `-p` for short). Best described with an example:

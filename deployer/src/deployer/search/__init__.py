@@ -58,8 +58,7 @@ def index(
             root = Path(buildroot)
             if prefix:
                 root /= prefix
-            iterator = walk(root)
-            for doc in iterator:
+            for doc in walk(root):
                 if doc in already:
                     continue
                 already.add(doc)
