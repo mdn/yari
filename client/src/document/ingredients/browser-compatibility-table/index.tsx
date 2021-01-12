@@ -139,7 +139,7 @@ export default function BrowserCompatibilityTable({
             />
           </tbody>
         </table>
-        <Legend compat={data} />
+        <Legend compat={data} name={name} />
 
         {/* https://github.com/mdn/yari/issues/1191 */}
         <div className="hidden">
