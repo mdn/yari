@@ -46,12 +46,14 @@ def index(
         index.create()
 
     search_prefixes = [None]
-    for prefix in priority_prefixes[::-1]:
+    for prefix in reversed(priority_prefixes):
         search_prefixes.insert(0, prefix)
 
     count_by_prefix = defaultdict(int)
 
     already = set()
+
+    skipped = []
 
     def generator():
         for prefix in search_prefixes:
@@ -66,6 +68,14 @@ def index(
                 if search_doc:
                     count_by_prefix[prefix] += 1
                     yield search_doc.to_dict(True)
+                else:
+                    # The reason something might be chosen to be skipped is because
+                    # there's logic that kicks in only when the `index.json` file
+                    # has been opened and parsed.
+                    # Keep a count of all of these. It's used to make sure the
+                    # progressbar, if used, ticks as many times as the estimate
+                    # count was.
+                    skipped.append(1)
 
     def get_progressbar():
         if no_progressbar:
@@ -78,6 +88,10 @@ def index(
         for x in streaming_bulk(connection, generator(), index=index._name):
             count_done += 1
             bar.update(1)
+
+        for skip in skipped:
+            bar.update(1)
+
     t1 = time.time()
     took = t1 - t0
     rate = count_done / took
