@@ -55,6 +55,11 @@ function syntaxHighlight($, doc) {
   // ignore it because it's visually hidden.
   $("div.hidden pre").addClass("hidden");
 
+  // Our content will be like this: `<pre class="brush:js">` or
+  // `<pre class="brush: js">` so we're technically not looking for an exact
+  // match. The wildcard would technically match `<pre class="brushetta">`
+  // too. But within the loop, we do a more careful regex on the class name
+  // and only proceed if it's something sensible we can use in Prism.
   $("pre[class*=brush]").each((_, element) => {
     // The language is whatever string comes after the `brush(:)`
     // portion of the class name.
