@@ -50,10 +50,25 @@ const IGNORE = new Set(["none", "text", "plain", "unix"]);
 function syntaxHighlight($, doc) {
   loadAllLanguages();
 
+  // First flag all `<pre>` tags that are inside a hidden container as hidden.
+  // This way, when we iterate over the `<pre>` tags we can know that we can
+  // ignore it because it's visually hidden.
+  $("div.hidden pre").addClass("hidden");
+
   $("pre[class*=brush]").each((_, element) => {
     // The language is whatever string comes after the `brush(:)`
     // portion of the class name.
     const $pre = $(element);
+
+    if ($pre.hasClass("hidden")) {
+      // Unfortunately, there's no way to avoid this.
+      // Ideally, we should only bother going into `<pre>` tags according to:
+      //   1. Contains 'brush'
+      //   2. Does NOT contain 'hidden'
+      // But it's not possible with cheerio. An early exit is reasonably fast.
+      return;
+    }
+
     const className = $pre.attr("class").toLowerCase();
     const match = className.match(/brush:?\s*([\w_-]+)/);
     if (!match) {
