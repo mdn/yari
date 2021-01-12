@@ -114,8 +114,20 @@ export function Document(props /* TODO: define a TS interface for this */) {
       // we made all `<h2 id>` and `<h3 id>` values always lowercase.
       // Let's see if it can easily be fixed, but let's be careful and
       // only do this if there is an element that matches.
-      if (document.querySelector(location.hash.toLowerCase())) {
-        location.hash = location.hash.toLowerCase();
+      try {
+        if (document.querySelector(location.hash.toLowerCase())) {
+          location.hash = location.hash.toLowerCase();
+        }
+      } catch (error) {
+        if (error instanceof DOMException) {
+          // You can't assume that the anchor on the page is a valid string
+          // for `document.querySelector()`.
+          // E.g. /en-US/docs/Web/HTML/Element/input#Form_<input>_types
+          // So if that the case, just ignore the error.
+          // It's not that critical to correct anyway.
+        } else {
+          throw error;
+        }
       }
     }
   }, []);
