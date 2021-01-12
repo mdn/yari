@@ -99,7 +99,7 @@
     "@mdn/dinocons": "^0.1.3",
     "@mdn/minimalist": "^0.5.7",
     "@storybook/addon-a11y": "^6.1.11",
-    "@storybook/addon-actions": "^6.1.11",
+    "@storybook/addon-actions": "^6.1.12",
     "@storybook/addon-essentials": "^6.1.11",
     "@storybook/addon-links": "^6.1.12",
     "@storybook/node-logger": "^6.1.6",
