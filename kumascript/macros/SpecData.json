@@ -1239,6 +1239,11 @@
     "url": "https://w3c.github.io/pointerevents/",
     "status": "ED"
   },
+  "Portals": {
+    "name": "Portals",
+    "url": "https://wicg.github.io/portals/",
+    "status": "ED"
+  },
   "Pointer Lock": {
     "name": "Pointer Lock",
     "url": "https://w3c.github.io/pointerlock/",
