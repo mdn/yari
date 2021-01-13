@@ -53,7 +53,8 @@ function syntaxHighlight($, doc) {
   // First flag all `<pre>` tags that are inside a hidden container as hidden.
   // This way, when we iterate over the `<pre>` tags we can know that we can
   // ignore it because it's visually hidden.
-  $("div.hidden pre").addClass("hidden");
+  // $("div.hidden pre").addClass("hidden");
+  $("div.hidden pre").remove();
 
   // Our content will be like this: `<pre class="brush:js">` or
   // `<pre class="brush: js">` so we're technically not looking for an exact
