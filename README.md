@@ -25,10 +25,7 @@ After that, run these commands in your bash:
     open http://localhost:3000
 
 Make sure you point to the `/files` folder inside your clone of the content
-repo. Instead of having to type `export CONTENT_ROOT=/path/to/mdn/content/files`
-for `yarn dev` every time, you can put into `.env` file:
-
-    CONTENT_ROOT=/path/to/mdn/content/files
+repo.
 
 If you prefer, you can fork the repo first and do the `git clone` with
 _your_ fork instead of the `mdn` one.
@@ -217,7 +214,7 @@ There are two options to resolve this.
 
 1. Disable the watcher via [`REACT_APP_NO_WATCHER`](docs/envvars.md#react_app_no_watcher)
 
-   export REACT_APP_NO_WATCHER=true
+   `echo REACT_APP_NO_WATCHER=true >> .env`
 
 2. Increase `max_user_watches`:\
    See <https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers>
