@@ -23,12 +23,8 @@ if ($1) {
     if ( t.startsWith("js") ) {
         n = t.substring(2).trim();
         ver = "JavaScript ";
-        if (n.length) {
-            if(wiki.pageExists(lang + '/docs/JavaScript/New_in_JavaScript/' + n)) {
-                link = '/' + lang + '/docs/JavaScript/New_in_JavaScript/' + n;
-            } else if(wiki.pageExists('/en-US/docs/JavaScript/New_in_JavaScript/' + n)) {
-                link = '/en-US/docs/JavaScript/New_in_JavaScript/' + n;
-            }
+        if (n.length > 0) {
+            link = '/' + lang + '/docs/JavaScript/New_in_JavaScript/' + n;
         }
     } else if (t.startsWith("css")) {
         n = t.substring(3).trim();
@@ -40,16 +36,8 @@ if ($1) {
 
         ver = "HTML";
 
-        if (N.length) {
-            if(wiki.pageExists('/' + lang + '/docs/HTML/HTML' + N)) {
-                link = '/' + lang + '/docs/HTML/HTML' + N;
-            } else if(wiki.pageExists('/en-US/docs/HTML/HTML' + N)) {
-                link = '/en-US/docs/HTML/HTML' + N;
-            } else if(wiki.pageExists('/' + lang + '/docs/HTML')) {
-                link = '/' + lang + '/docs/HTML';
-            } else {
-                link = '/en-US/docs/HTML';
-            }
+        if (N.length > 0) {
+            link = '/' + lang + '/docs/HTML' + N;
         } else {
             link = '/' + lang + '/docs/HTML';
         }
