@@ -20,7 +20,7 @@ After that, run these commands in your bash:
     git clone https://github.com/mdn/yari.git
     cd yari
     yarn
-    export CONTENT_ROOT=/path/to/mdn/content/files
+    echo CONTENT_ROOT=/path/to/mdn/content/files >> .env
     yarn dev
     open http://localhost:3000
 
@@ -78,7 +78,7 @@ might expand with more documentation specifically for contributing to the
 content exclusively.
 
 The `yarn start` command encapsulates the front-end dev server
-(on `localhost:3000`) and the `server` (on `localhost:5000`).
+(on <http://localhost:3000>) and the `server` (on <http://localhost:5000>).
 
 All the sub-commands of `yarn start` can be broken down and run individually
 if you want to work more rapidly.
@@ -93,7 +93,7 @@ your preferred editor/IDE. For example, in the root:
     echo 'EDITOR=code' >> .env
 
 Now clicking certain links will open files directly in the currently open
-VSCode IDE. To test it, view any document on `http://localhost:3000` and
+VSCode IDE. To test it, view any document on <http://localhost:3000> and
 click the "Open in your editor" button.
 
 ### How the server works
@@ -190,7 +190,7 @@ severe but they should never block a full build.
 More information about how to set flaws can be found in `docs/envvars.md`.
 
 Essentially, the default is to _warn_ about any flaw and you can see
-those flaws when using `http://localhost:3000`. But for completed builds,
+those flaws when using <http://localhost:3000>. But for completed builds,
 all flaws are ignored. This makes the build faster and there's also
 no good place to display the flaws in a production-grade build.
 
