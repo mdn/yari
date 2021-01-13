@@ -20,15 +20,11 @@ if ($1) {
     var t = $1.toLowerCase();
     var n = "";
 
-    if ( string.startswith(t, "js") ) {
-        n = string.trim( string.substr(t, 2) );
+    if (string.startswith(t, "js")) {
+        n = string.trim( string.substr(t, 2));
         ver = "JavaScript ";
         if (string.length(n) > 0) {
-            if(wiki.pageExists(lang + '/docs/JavaScript/New_in_JavaScript/' + n)) {
-                link = '/' + lang + '/docs/JavaScript/New_in_JavaScript/' + n;
-            } else if(wiki.pageExists('/en-US/docs/JavaScript/New_in_JavaScript/' + n)) {
-                link = '/en-US/docs/JavaScript/New_in_JavaScript/' + n;
-            }
+            link = '/' + lang + '/docs/JavaScript/New_in_JavaScript/' + n;
         }
     } else if (string.startswith(t, "css")) {
         n = string.trim(string.substr(t, 3));
@@ -41,15 +37,7 @@ if ($1) {
         ver = "HTML";
 
         if (string.length(N) > 0) {
-            if(wiki.pageExists('/' + lang + '/docs/HTML/HTML' + N)) {
-                link = '/' + lang + '/docs/HTML/HTML' + N;
-            } else if(wiki.pageExists('/en-US/docs/HTML/HTML' + N)) {
-                link = '/en-US/docs/HTML/HTML' + N;
-            } else if(wiki.pageExists('/' + lang + '/docs/HTML')) {
-                link = '/' + lang + '/docs/HTML';
-            } else {
-                link = '/en-US/docs/HTML';
-            }
+            link = '/' + lang + '/docs/HTML' + N;
         } else {
             link = '/' + lang + '/docs/HTML';
         }
@@ -57,7 +45,7 @@ if ($1) {
         n = string.trim(string.substr(t, 3));
         ver = "SVG ";
     } else if (string.startswith(t, "gecko")) {
-        n = string.trim( string.substr(t, 5) );
+        n = string.trim(string.substr(t, 5));
         ver = "Gecko ";
         tip = await template("geckoRelease", [n]);
     }

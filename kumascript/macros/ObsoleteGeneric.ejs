@@ -1,4 +1,5 @@
-<%/*
+<%
+/*
 $0 : inline / header / method"
 $1 : version of obsolescence (optional)
     prepend version with HTML, CSS, JS, JSAPI, or Gecko for those techs
@@ -24,11 +25,7 @@ if ($1) {
         n = string.trim(string.substr(t, 2));
         ver = "JavaScript ";
         if (string.length(n) > 0) {
-            if(wiki.pageExists('/' + lang + '/docs/JavaScript/New_in_JavaScript/' + n)) {
-                link = '/' + lang + '/docs/JavaScript/New_in_JavaScript/' + n;
-            } else if(wiki.pageExists('/en-US/docs/JavaScript/New_in_JavaScript/' + n)) {
-                link = '/en-US/docs/JavaScript/New_in_JavaScript/' + n;
-            }
+            link = '/' + lang + '/docs/JavaScript/New_in_JavaScript/' + n;
         }
     } else if (string.startswith(t, "css")) {
         n = string.trim(string.substr(t, 3));
@@ -37,17 +34,9 @@ if ($1) {
         n = string.trim(string.substr(t, 4));
         ver = "HTML";
         if (n < 5) {
-            if(wiki.pageExists('/' + lang + '/docs/HTML')) {
-                link = '/' + lang + '/docs/HTML';
-            } else {
-                link = '/en-US/docs/HTML';
-            }
+            link = '/' + lang + '/docs/HTML';
         } else {
-            if(wiki.pageExists('/' + lang + '/docs/HTML/HTML' + n)) {
-                link = '/' + lang + '/docs/HTML/HTML' + n;
-            } else {
-                link = '/en-US/docs/HTML/HTML' + n;
-            }
+            link = '/' + lang + '/docs/HTML/HTML' + n;
         }
     } else if (string.startswith(t, "gecko")) {
         n = string.trim(string.substr(t, 5));
