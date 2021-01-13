@@ -1,0 +1,46 @@
+{
+  "name": "eslint-plugin-ejs-js",
+  "version": "0.1.0",
+  "description": "EJS plugin for ESLint",
+  "keywords": [
+    "ejs",
+    "embedded",
+    "template",
+    "eslint"
+  ],
+  "bugs": {
+    "url": "https://github.com/overlookmotel/eslint-plugin-ejs-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/overlookmotel/eslint-plugin-ejs-js.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Overlook Motel"
+  },
+  "main": "./lib/",
+  "scripts": {
+    "cover": "npm run cover-main && rm -rf coverage",
+    "cover-main": "cross-env COVERAGE=true istanbul cover _mocha --report lcovonly -- -t 1000 -R spec \"test/**/*.test.js\"",
+    "coveralls": "npm run cover-main && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
+    "lint": "eslint lib/** test/** *.js .*.js --ext .js",
+    "test": "npm run lint && npm run test-main",
+    "test-main": "mocha --check-leaks --colors -t 1000 -R spec \"test/**/*.test.js\"",
+    "travis": "if [ $COVERAGE ]; then npm run coveralls; else npm test; fi"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "coveralls": "^3.0.2",
+    "cross-env": "^5.2.0",
+    "eslint": "^5.5.0",
+    "eslint-plugin-chai-friendly": "^0.4.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "readmeFilename": "README.md"
+}

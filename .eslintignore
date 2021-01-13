@@ -4,3 +4,5 @@ filecheck/
 import/
 libs/
 ssr/
+kumascript/tests/fixtures/render/macros/syntax.ejs
+kumascript/tests/fixtures/server/macros/broken2.ejs

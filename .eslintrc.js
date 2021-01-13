@@ -40,5 +40,15 @@ module.exports = {
         document: "readonly",
       },
     },
+    {
+      files: ["**/*.ejs"],
+      plugins: ["ejs-js"],
+      rules: {
+        "no-redeclare": "off",
+        "no-inner-declarations": "off",
+        "no-useless-escape": "off",
+        "one-var": "off",
+      },
+    },
   ],
 };

@@ -98,6 +98,7 @@
     "downshift": "^6.1.0",
     "eslint": "^7.18.0",
     "eslint-gitignore": "^0.1.0",
+    "eslint-plugin-ejs-js": "./kumascript/eslint-plugin-ejs-js",
     "eslint-plugin-jest": "24.1.3",
     "eslint-plugin-node": "11.1.0",
     "extend": "^3.0.2",

@@ -18,6 +18,7 @@ server/node_modules/
 
 /deployer
 kumascript/tests
+kumascript/eslint-plugin-ejs-js
 testing/
 import/
 /mdn-web-docs.svg
