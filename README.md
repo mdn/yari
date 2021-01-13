@@ -124,12 +124,7 @@ formatting flaws, the pull request checks should catch it.
 We maintain the dependencies using `Dependabot` in GitHub but if you want
 to manually upgrade some you can use:
 
-    yarn outdated
-
-If it mentions outdated packages, run and select the packages you want to
-upgrade:
-
-    yarn upgrade-interactive
+    yarn upgrade-interactive --latest
 
 ### Sharing your dev environment with `ngrok`
 
