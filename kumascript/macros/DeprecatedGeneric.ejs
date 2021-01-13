@@ -23,7 +23,7 @@ if ($1) {
     if ( t.startsWith("js") ) {
         n = t.substring(2).trim();
         ver = "JavaScript ";
-        if (n.length > 0) {
+        if (n.length) {
             link = '/' + lang + '/docs/JavaScript/New_in_JavaScript/' + n;
         }
     } else if (t.startsWith("css")) {
@@ -36,7 +36,7 @@ if ($1) {
 
         ver = "HTML";
 
-        if (N.length > 0) {
+        if (N.length) {
             link = '/' + lang + '/docs/HTML' + N;
         } else {
             link = '/' + lang + '/docs/HTML';
