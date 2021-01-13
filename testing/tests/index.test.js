@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const cheerio = require("cheerio");
+const glob = require("glob");
 
 const buildRoot = path.join("..", "client", "build");
 
@@ -947,4 +948,26 @@ test("img tags should always have their 'width' and 'height' set", () => {
       throw new Error("unexpected image");
     }
   });
+});
+
+test("/Web/Embeddable should have 3 valid live samples", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "embeddable"
+  );
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("iframe").length).toBe(3);
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(Object.keys(doc.flaws).length).toBe(0);
+
+  const samplesRoot = path.join(builtFolder, "_samples_");
+  const found = glob.sync(path.join(samplesRoot, "**", "index.html"));
+  expect(found.length).toBe(3);
 });
