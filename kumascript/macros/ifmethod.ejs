@@ -8,8 +8,3 @@ var destOldType = lang + '/docs/' + $0;
 var apiString = $0 + '.' + $1 + '()';
 
 %><code><%-(web.link(wiki.uri(destNewType) + '#' + $1 + '()', apiString))%></code>
-<code><%-(web.link(wiki.uri(destOldType) + '#' + $1 + '()', apiString))%></code>
-
-var targeturi = "https://developer.mozilla.org/Article_not_found?uri=" + destNewType +
-    "&ident=" + $0;
-<code><a rel="internal" href="<%=targeturi%>" class="new"><%=apiString%></a></code>
