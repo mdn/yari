@@ -68,8 +68,8 @@ function syntaxHighlight($, doc) {
     if ($pre.hasClass("hidden")) {
       // Unfortunately, there's no way to avoid this.
       // Ideally, we should only bother going into `<pre>` tags according to:
-      //   1. Contains 'brush'
-      //   2. Does NOT contain 'hidden'
+      //   1. Contains `brush` (e.g. `brush:` or `brush:js`)
+      //   2. Does *not* have `hidden`
       // But it's not possible with cheerio. An early exit is reasonably fast.
       return;
     }
