@@ -164,7 +164,7 @@ This will display something like this:
 Now, take that "Forwarding" URL `https://920ba2108da8.ngrok.io` (in this
 example) and share it.
 
-## Building
+##### Building
 
 The `server` builds content automatically (on-the-fly) when you're viewing
 pages. But if you want to you can pre-emptively build all the content
