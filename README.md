@@ -39,6 +39,8 @@ will re-use any previously compiled files which is "riskier" but faster.
 The `yarn start` command will also start a server which doesn't automatically
 reload when its source code files change, so use with caution.
 
+See also our [docs/REVIEWING.md](reviewing guide) for information on how to review Yari changes.
+
 ### How to stay up-to-date
 
 Periodically, the code and the content changes. Make sure you're staying
