@@ -35,6 +35,8 @@ interface Suggestion {
 }
 
 export default function SearchResults({ query }: { query: URLSearchParams }) {
+  console.log("FETCH", query.toString());
+
   const fetchURL = `/api/v1/search?${query.toString()}`;
   const { data, error } = useSWR(
     fetchURL,

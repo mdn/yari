@@ -20,7 +20,9 @@ export function SiteSearch() {
 
   const query: SiteSearchQuery = {
     q: searchParams.get("q") || "",
-    locale: [locale || "en-US"],
+    locale: searchParams.getAll("locale").length
+      ? searchParams.getAll("locale").map((x) => x.toLowerCase())
+      : [locale],
     page: searchParams.get("page") || "",
     sort: searchParams.get("sort") || "",
   };
@@ -81,8 +83,11 @@ export function SiteSearch() {
           locale={locale}
           query={query}
           onSubmit={(query: SiteSearchQuery) => {
-            // setSearchParams({ q: newQ });
-            const newParams = { q: query.q };
+            const newParams = {
+              q: query.q,
+              locale: query.locale,
+              sort: query.sort || "",
+            };
             setSearchParams(newParams);
           }}
         />

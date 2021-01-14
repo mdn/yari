@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import LANGUAGES_RAW from "../../../languages.json";
@@ -23,7 +23,7 @@ export function LanguageMenu({
   translations: Translation[];
 }) {
   const navigate = useNavigate();
-  const [localeURL, setLocaleURL] = useState(locale);
+  const [localeURL, setLocaleURL] = React.useState(locale);
 
   // For the menu label, we want to use the name of the document language.
   // We need a special case for English because English documents can
