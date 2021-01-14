@@ -101,7 +101,10 @@
     margin-bottom: $base-spacing * 2;
   }
 
-  .page-not-created {
+  /* page-not-created is the preferred class name, `new` is
+     here for backwards compatibility */
+  .page-not-created,
+  .new {
     color: $red-300;
     cursor: not-allowed;
   }
