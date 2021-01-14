@@ -154,8 +154,30 @@ By default it's disabled (empty string).
 
 If true, and when `BUILD_GOOGLE_ANALYTICS_ACCOUNT` is truthy, when it injects
 the Google Analytics script tag it will use
-`<script src="https://www.google-analytics.com/anaytics_debug.js"></script>`
+`<script src="https://www.google-analytics.com/analytics_debug.js"></script>`
 instead which triggers additional console logging which is useful for developers.
+
+### `BUILD_SPEEDCURVE_LUX_ID`
+
+**Default: `''`**
+
+You can get it here on [this settings page](https://speedcurve.com/mozilla-add-ons/mdn/settings/lux/)
+which will give you the ID in the snippet shown there. Also, try to match
+this with the domains in those settings to match where we deploy it.
+
+### `BUILD_ALWAYS_NO_ROBOTS`
+
+**Default: `false`**
+
+This exists so we can forcibly always include
+`<meta name="robots" content="noindex, nofollow">` into the HTML no matter what.
+For example, on our stage or dev builds, none of the documents should be indexed,
+so we'll set `BUILD_ALWAYS_NO_ROBOTS` to `true`.
+
+We use this to make absolutely sure that no dev or stage build ever gets into
+the Google index. Thankfully we _always_ used a canonical URL
+(`<link rel="canonical" href="https://developer.mozilla.org/$uri">`) as a "second
+line of defense" for dev/stage URLs that are public.
 
 ## Server
 
@@ -165,6 +187,12 @@ instead which triggers additional console logging which is useful for developers
 
 Usually the `server` module is started with `foreman` (the `nf` command)
 and this is the default port.
+
+### `SERVER_WEBSOCKET_PORT`
+
+**Default: `8080`**
+
+This is the port for the WebSocket server, which is started when you run `yarn start`.
 
 ### `SERVER_STATIC_ROOT`
 
@@ -243,3 +271,20 @@ Toolbar bar appears based on this.
 It defaults to `NODE_ENV==='development'` if not set which means that
 it's enable by default when doing development with the `localhost:3000`
 dev server.
+
+### `REACT_APP_NO_WATCHER`
+
+**Default: `false`**
+
+Disable file watching and hot reloading on content change.
+Also disables search index updates.
+
+### `REACT_APP_DEBUG_GOOGLE_ANALYTICS`
+
+**Default: `false`**
+
+When you use the `create-react-app` server on `localhost:3000` it can't
+inject the Google Analytics script like you can when you server-side
+render (see `ssr/render.js`). By setting this to `true` it will forcibly
+inject a `<script async src="https://www.google-analytics.com/analytics_debug.js"></script>`
+tag and the necessary code to activate it.

@@ -22,6 +22,7 @@ from .utils import StopWatch, fmt_size, iterdir, log
 S3_MULTIPART_THRESHOLD = S3TransferConfig().multipart_threshold
 S3_MULTIPART_CHUNKSIZE = S3TransferConfig().multipart_chunksize
 
+NO_CACHE_VALUE = "no-store, must-revalidate"
 
 hashed_filename_regex = re.compile(r"\.[a-f0-9]{8,32}\.")
 
@@ -161,8 +162,15 @@ class UploadFileTask(UploadTask):
         return f'"{digests_md5.hexdigest()}-{len(md5s)}"'
 
     @property
-    def mime_type(self):
-        return mimetypes.guess_type(str(self.file_path))[0] or "binary/octet-stream"
+    def content_type(self):
+        mime_type = (
+            mimetypes.guess_type(str(self.file_path))[0] or "binary/octet-stream"
+        )
+        if mime_type.startswith("text/") or (
+            mime_type in ("application/json", "application/javascript")
+        ):
+            mime_type += "; charset=utf-8"
+        return mime_type
 
     @property
     def is_hashed(self):
@@ -170,11 +178,15 @@ class UploadFileTask(UploadTask):
 
     @property
     def cache_control(self):
+
         if self.file_path.name == "service-worker.js":
-            return "no-cache"
+            return NO_CACHE_VALUE
+
+        if self.file_path.name == "404.html":
+            return NO_CACHE_VALUE
 
         if self.file_path.parent.name == "_whatsdeployed":
-            return "no-cache"
+            return NO_CACHE_VALUE
 
         if self.is_hashed:
             cache_control_seconds = HASHED_CACHE_CONTROL
@@ -190,7 +202,7 @@ class UploadFileTask(UploadTask):
             self.key,
             ExtraArgs={
                 "ACL": "public-read",
-                "ContentType": self.mime_type,
+                "ContentType": self.content_type,
                 "CacheControl": self.cache_control,
             },
         )
@@ -262,7 +274,7 @@ class BucketManager:
     def get_redirect_keys(self, from_url, to_url):
         return (
             f"{self.key_prefix}{from_url.strip('/').lower()}",
-            f"/{to_url.strip('/')}",
+            f"/{to_url.strip('/')}" if to_url.startswith("/") else to_url,
         )
 
     def get_bucket_objects(self):

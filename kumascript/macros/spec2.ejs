@@ -50,7 +50,7 @@ var label = {
   }),
   'RC' : mdn.localString({
     'en-US' : 'Release Candidate',
-    'ja'    : '勧告候補',
+    'ja'    : 'リリース候補',
     'de'    : 'Anwärter Empfehlung',
     'ru'    : 'Кандидат в рекомендации',
     'fr'    : 'En cours de validation comme recommandation',
@@ -109,7 +109,7 @@ var label = {
   }),
   'Obsolete' : mdn.localString({
       'en-US' : 'Obsolete',
-      'ja'    : '廃止された',
+      'ja'    : '廃止',
       'de'    : 'Veraltet',
       'ru'    : 'Устаревшая',
       'pt-BR' : 'Obsoleto'
@@ -131,4 +131,5 @@ var unknown_label = mdn.localString({
     'pt-BR' : 'Desconhecido'
 });
 
-%><span class="spec-<%- status[$0] || ''  %>"><%= (status[$0] && label[status[$0]]) || unknown_label %></span>
+%>
+<span class="spec-<%- status[$0] && status[$0].toLowerCase() || ''  %>"><%= (status[$0] && label[status[$0]]) || unknown_label %></span>

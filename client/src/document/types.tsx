@@ -16,7 +16,6 @@ export interface BrokenLink extends GenericFlaw {
   href: string;
   line: number;
   column: number;
-  suggestion: string | null;
 }
 
 export interface BadBCDLinkFlaw extends GenericFlaw {
@@ -31,12 +30,25 @@ export interface ImageReferenceFlaw extends GenericFlaw {
   column: number;
 }
 
+export interface ImageWidthFlaw extends GenericFlaw {
+  style: string;
+  line: number;
+  column: number;
+}
+
 export interface BadBCDQueryFlaw extends GenericFlaw {}
 
-export interface PreWithHTMLFlaw extends GenericFlaw {
+export interface SectioningFlaw extends GenericFlaw {}
+
+enum BadPreTagType {
+  PreWithHTML = "pre_with_html",
+}
+
+export interface BadPreTagFlaw extends GenericFlaw {
   html: string;
   line?: number;
   column?: number;
+  type: BadPreTagType;
 }
 
 export interface MacroErrorMessage extends GenericFlaw {
@@ -45,6 +57,7 @@ export interface MacroErrorMessage extends GenericFlaw {
     path?: string;
   };
   errorStack: string;
+  explanation: string;
   line: number;
   column: number;
   filepath: string;
@@ -60,12 +73,14 @@ type Flaws = {
   bad_bcd_queries: BadBCDQueryFlaw[];
   bad_bcd_links: BadBCDLinkFlaw[];
   images: ImageReferenceFlaw[];
-  pre_with_html: PreWithHTMLFlaw[];
+  bad_pre_tags: BadPreTagFlaw[];
+  sectioning: SectioningFlaw[];
+  image_widths: ImageWidthFlaw[];
 };
 
 export type Translation = {
   locale: string;
-  slug: string;
+  url: string;
 };
 
 export type DocParent = {

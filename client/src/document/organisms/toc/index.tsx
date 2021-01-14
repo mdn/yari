@@ -47,7 +47,7 @@ export function TOC({ toc }: { toc: Toc[] }) {
         <ul id="toc-entries" className={showTOC ? "show-toc" : undefined}>
           {toc.map((item) => (
             <li key={item.id}>
-              <a href={`#${item.id}`}>{item.text}</a>
+              <a href={`#${item.id.toLowerCase()}`}>{item.text}</a>
             </li>
           ))}
         </ul>

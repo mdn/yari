@@ -5,6 +5,7 @@ const chalk = require("chalk");
 const express = require("express");
 const send = require("send");
 const proxy = require("express-http-proxy");
+const cookieParser = require("cookie-parser");
 const openEditor = require("open-editor");
 
 const {
@@ -13,13 +14,7 @@ const {
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 } = require("../build");
-const {
-  CONTENT_ROOT,
-  Document,
-  Redirect,
-  Image,
-  resolveFundamental,
-} = require("../content");
+const { CONTENT_ROOT, Document, Redirect, Image } = require("../content");
 // eslint-disable-next-line node/no-missing-require
 const { prepareDoc, renderDocHTML } = require("../ssr/dist/main");
 
@@ -28,19 +23,17 @@ const documentRouter = require("./document");
 const fakeV1APIRouter = require("./fake-v1-api");
 const { searchRoute } = require("./document-watch");
 const flawsRoute = require("./flaws");
-const { staticMiddlewares } = require("./middlewares");
+const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
 
 const app = express();
+
 app.use(express.json());
 
-app.use((req, res, next) => {
-  // If we have a fundamental redirect mimic out Lambda@Edge and redirect.
-  const { url: fundamentalRedirectUrl, status } = resolveFundamental(req.url);
-  if (fundamentalRedirectUrl && status) {
-    return res.redirect(status, fundamentalRedirectUrl);
-  }
-  return next();
-});
+// Needed because we read cookies in the code that mimics what we do in Lambda@Edge.
+app.use(cookieParser());
+
+app.use(originRequestMiddleware);
+
 app.use(staticMiddlewares);
 
 app.use(express.urlencoded({ extended: true }));
@@ -106,7 +99,7 @@ app.get("/*/contributors.txt", async (req, res) => {
   if (!document) {
     return res.status(404).send(`Document not found by URL (${url})`);
   }
-  const [builtDocument] = await buildDocument(document);
+  const { doc: builtDocument } = await buildDocument(document);
   if (document.metadata.contributors || !document.isArchive) {
     res.send(
       renderContributorsTxt(
@@ -151,7 +144,7 @@ app.get("/*", async (req, res) => {
 
   // TODO: Would be nice to have a list of all supported file extensions
   // in a constants file.
-  if (/\.(png|webp|gif|jpeg|svg)$/.test(req.url)) {
+  if (/\.(png|webp|gif|jpe?g|svg)$/.test(req.url)) {
     // Remember, Image.findByURL() will return the absolute file path
     // iff it exists on disk.
     const filePath = Image.findByURL(req.url);
@@ -199,34 +192,23 @@ app.get("/*", async (req, res) => {
       clearKumascriptRenderCache: true,
     });
     console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
-    if (!built) {
-      return res
-        .status(404)
-        .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
+    if (built) {
+      document = built.doc;
+      bcdData = built.bcdData;
     }
-    document = built.doc;
-    bcdData = built.bcdData;
   } catch (error) {
     console.error(`Error in buildDocumentFromURL(${lookupURL})`, error);
     return res.status(500).send(error.toString());
   }
 
   if (!document) {
-    // redirect resolving can take some time, so we only do it when there's no document
-    // for the current route
     const redirectURL = Redirect.resolve(lookupURL);
     if (redirectURL !== lookupURL) {
       return res.redirect(301, redirectURL + extraSuffix);
     }
-
-    // It doesn't resolve to a file on disk and it's not a redirect.
-    // Try to send a slightly better error at least.
     return res
       .status(404)
-      .send(
-        `From URL ${lookupURL} no folder on disk could be found. ` +
-          `Tried to find a folder called ${Document.urlToFolderPath(lookupURL)}`
-      );
+      .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
   }
 
   if (bcdDataURL) {
@@ -263,7 +245,7 @@ app.listen(PORT, () => {
     console.warn(
       chalk.yellow(
         "Warning! You have not set an EDITOR environment variable. " +
-          'Using the "Edit in your editor" button will probably fail.'
+          'Using the "Open in your editor" button will probably fail.'
       )
     );
   }

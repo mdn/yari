@@ -1,14 +1,22 @@
+const fs = require("fs");
+const path = require("path");
+const os = require("os");
+
 const program = require("@caporal/core").default;
 const chalk = require("chalk");
 const prompts = require("prompts");
 const openEditor = require("open-editor");
 const open = require("open");
-const fs = require("fs");
-const path = require("path");
 
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
-const { Redirect, Document, buildURL } = require("../content");
-const { buildDocument } = require("../build");
+const {
+  CONTENT_ROOT,
+  CONTENT_TRANSLATED_ROOT,
+  Redirect,
+  Document,
+  buildURL,
+} = require("../content");
+const { buildDocument, gatherGitHistory } = require("../build");
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
 
@@ -115,7 +123,14 @@ program
 
   .command("move", "Move content to a new slug")
   .argument("<oldSlug>", "Old slug")
-  .argument("<newSlug>", "New slug")
+  .argument("<newSlug>", "New slug", {
+    validator: (value) => {
+      if (value.includes("#")) {
+        throw new Error("slug can not contain the '#' character");
+      }
+      return value;
+    },
+  })
   .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
     validator: [...VALID_LOCALES.values()],
@@ -208,10 +223,10 @@ program
       }
       const { doc } = await buildDocument(document);
 
-      if (doc.flaws) {
-        const flaws = Object.values(doc.flaws)
-          .map((a) => a.length || 0)
-          .reduce((a, b) => a + b);
+      const flaws = Object.values(doc.flaws || {})
+        .map((a) => a.length || 0)
+        .reduce((a, b) => a + b, 0);
+      if (flaws > 0) {
         console.log(chalk.red(`Found ${flaws} flaws.`));
         okay = false;
       }
@@ -241,6 +256,73 @@ program
     })
   )
 
+  .command(
+    "gather-git-history",
+    "Extract all last-modified dates from the git logs"
+  )
+  .option("--root <directory>", "Which content root", {
+    default: CONTENT_ROOT,
+  })
+  .option("--save-history <path>", `File to save all previous history`, {
+    default: path.join(os.tmpdir(), "yari-git-history.json"),
+  })
+  .option(
+    "--load-history <path>",
+    `Optional file to load all previous history`,
+    {
+      default: path.join(os.tmpdir(), "yari-git-history.json"),
+    }
+  )
+  .action(
+    tryOrExit(async ({ options }) => {
+      const { root, saveHistory, loadHistory } = options;
+      if (fs.existsSync(loadHistory)) {
+        console.log(
+          chalk.yellow(`Reusing existing history from ${loadHistory}`)
+        );
+      }
+      const map = gatherGitHistory(
+        root,
+        fs.existsSync(loadHistory) ? loadHistory : null
+      );
+      const historyPerLocale = {};
+
+      // Someplace to put the map into an object so it can be saved into `saveHistory`
+      const allHistory = {};
+      for (const [relPath, value] of map) {
+        allHistory[relPath] = value;
+        const locale = relPath.split("/")[0];
+        if (!historyPerLocale[locale]) {
+          historyPerLocale[locale] = {};
+        }
+        historyPerLocale[locale][relPath] = value;
+      }
+      for (const [locale, history] of Object.entries(historyPerLocale)) {
+        const outputFile = path.join(root, locale, "_githistory.json");
+        fs.writeFileSync(outputFile, JSON.stringify(history, null, 2), "utf-8");
+        console.log(
+          chalk.green(
+            `Wrote '${locale}' ${Object.keys(
+              history
+            ).length.toLocaleString()} paths into ${outputFile}`
+          )
+        );
+      }
+      fs.writeFileSync(
+        saveHistory,
+        JSON.stringify(allHistory, null, 2),
+        "utf-8"
+      );
+      console.log(
+        chalk.green(
+          `Saved ${Object.keys(
+            allHistory
+          ).length.toLocaleString()} paths into ${saveHistory}`
+        )
+      );
+    })
+  )
+
   .command("flaws", "Find (and fix) flaws in a document")
   .argument("<slug>", "Slug of the document in question")
   .argument("[locale]", "Locale", {
@@ -261,9 +343,13 @@ program
         fixFlawsDryRun: true,
       });
 
-      const flaws = Object.values(doc.flaws)
+      const flaws = Object.values(doc.flaws || {})
         .map((a) => a.filter((f) => f.fixable).length || 0)
-        .reduce((a, b) => a + b);
+        .reduce((a, b) => a + b, 0);
+      if (flaws === 0) {
+        console.log(chalk.green("Found no fixable flaws!"));
+        return;
+      }
       const { run } = yes
         ? { run: true }
         : await prompts({
@@ -275,6 +361,67 @@ program
       if (run) {
         buildDocument(document, { fixFlaws: true, fixFlawsVerbose: true });
       }
+    })
+  )
+
+  .command("redundant-translations", "Find redundant translations")
+  .action(
+    tryOrExit(async () => {
+      if (!CONTENT_TRANSLATED_ROOT) {
+        throw new Error("CONTENT_TRANSLATED_ROOT not set");
+      }
+      if (!fs.existsSync(CONTENT_TRANSLATED_ROOT)) {
+        throw new Error(`${CONTENT_TRANSLATED_ROOT} does not exist`);
+      }
+      const documents = Document.findAll();
+      if (!documents.count) {
+        throw new Error("No documents to analyze");
+      }
+      // Build up a map of translations by their `translation_of`
+      const map = new Map();
+      for (const document of documents.iter()) {
+        if (!document.isTranslated) continue;
+        const { translation_of, locale } = document.metadata;
+        if (!map.has(translation_of)) {
+          map.set(translation_of, new Map());
+        }
+        if (!map.get(translation_of).has(locale)) {
+          map.get(translation_of).set(locale, []);
+        }
+        map
+          .get(translation_of)
+          .get(locale)
+          .push(
+            Object.assign(
+              { filePath: document.fileInfo.path },
+              document.metadata
+            )
+          );
+      }
+      // Now, let's investigate those with more than 1
+      let sumENUS = 0;
+      let sumTotal = 0;
+      for (const [translation_of, localeMap] of map) {
+        for (const [, metadatas] of localeMap) {
+          if (metadatas.length > 1) {
+            // console.log(translation_of, locale, metadatas);
+            sumENUS++;
+            sumTotal += metadatas.length;
+            console.log(
+              `https://developer.allizom.org/en-US/docs/${translation_of}`
+            );
+            for (const metadata of metadatas) {
+              console.log(metadata);
+            }
+          }
+        }
+      }
+      console.warn(
+        `${sumENUS} en-US documents have multiple translations with the same locale`
+      );
+      console.log(
+        `In total, ${sumTotal} translations that share the same translation_of`
+      );
     })
   );
 

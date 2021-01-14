@@ -9,7 +9,7 @@ function currentPageIsUnder(root) {
   if (slug.indexOf(rootSlug) != -1) {
     return "open";
   }
-  return "closed";
+  return "";
 }
 
 var text = mdn.localStringMap({
@@ -267,7 +267,6 @@ var text = mdn.localStringMap({
       'How_the_Web_works': 'How the Web works',
       'Tools_and_setup': 'Tools and setup',
       'Design_and_accessibility': 'Design and accessibility',
-    'How_to_contribute': 'How to contribute'
   },
   'de': {
     'Complete_beginners': 'Anfänger starten hier!',
@@ -521,7 +520,6 @@ var text = mdn.localStringMap({
       'How_the_Web_works': 'Wie das Internet funktioniert',
       'Tools_and_setup': 'Werkzeuge und Arbeitsumgebungen',
       'Design_and_accessibility': 'Design und Zugänglichkeit',
-    'How_to_contribute': 'Wie kannst Du zu MDN beitragen?'
   },
   'pt-BR': {
     'Complete_beginners': 'Completos iniciantes, comecem por aqui!',
@@ -561,29 +559,29 @@ var text = mdn.localStringMap({
         'HTML_table_advanced' : 'Funcionalidades avançadas e acessibilidade de Tabelas HTML',
         'Assessment_Structuring_planet_data' : 'Avaliação: Estruturação dos dados do planenta',
     'CSS_styling_the_Web': 'CSS — Estilizando a Web',
-      'CSS_first_steps': 'CSS first steps',
-        'CSS_first_steps_overview': 'CSS first steps overview',
-        'What_is_CSS':  'What is CSS?',
-        'Getting_started_with_CSS': 'Getting started with CSS',
-        'How_CSS_is_structured': 'How CSS is structured',
-        'How_CSS_works': 'How CSS works',
-        'Using_your_new_knowledge': 'Using your new knowledge',
+      'CSS_first_steps': 'CSS - primeiros passos',
+        'CSS_first_steps_overview': 'Visão geral das primeiras etapas com CSS',
+        'What_is_CSS':  'O que é CSS?',
+        'Getting_started_with_CSS': 'Iniciando com CSS',
+        'How_CSS_is_structured': 'como CSS é estruturado',
+        'How_CSS_works': 'Como CSS funciona',
+        'Using_your_new_knowledge': 'Usando seu novo Conhecimento',
       'CSS_building_blocks': 'CSS building blocks',
         'CSS_building_blocks_overview': 'CSS building blocks overview',
         'Cascade_and_inheritance': 'Cascade and inheritance',
-        'CSS_selectors': 'CSS selectors',
+        'CSS_selectors': 'seletores CSS',
         'The_box_model': 'The box model',
         'Backgrounds_and_borders': 'Backgrounds and borders',
-        'Handling_different_text_directions': 'Handling different text directions',
+        'Handling_different_text_directions': 'Tratamento de diferentes direções de texto',
         'Overflowing_content': 'Overflowing content',
-        'Values_and_units': 'Values and units',
-        'Sizing_items_in_CSS': 'Sizing items in CSS',
+        'Values_and_units': 'Valores e unidades',
+        'Sizing_items_in_CSS': 'Dimensionando itens em CSS',
         'Images_media_and_form_elements': 'Images, media, and form elements',
-        'Styling_tables': 'Styling tables',
+        'Styling_tables': 'Estilização de tabelas',
         'Debugging_CSS': 'Debugging CSS',
-        'Organizing_your_CSS': 'Organizing your CSS',
+        'Organizing_your_CSS': 'Organize seu CSS',
       'Styling_text': 'Estilização de textos',
-        'Styling_text_overview': 'Visão geral da Estilizaço de textos',
+        'Styling_text_overview': 'Visão geral da Estilização de textos',
         'Fundamental_text_and_font_styling': 'Fundamentos da estilização de textos e fontes',
         'Styling_lists': 'Estilização de listas',
         'Styling_links': 'Estilização de links',
@@ -777,7 +775,6 @@ var text = mdn.localStringMap({
       'How_the_Web_works': 'Como a Internet funciona',
       'Tools_and_setup': 'Ferramentas e configuração',
       'Design_and_accessibility': 'Projeto e acessibilidade',
-    'How_to_contribute': 'Como contribuir'
   },
   'ru': {
     'Complete_beginners': 'Новички начинают здесь!',
@@ -1004,7 +1001,6 @@ var text = mdn.localStringMap({
       'How_the_Web_works': 'Как работает Веб',
       'Tools_and_setup': 'Инструменты и установка',
       'Design_and_accessibility': 'Дизайн и доступность',
-    'How_to_contribute': 'Как помочь?'
   },
   'zh-CN': {
     'Complete_beginners': '新手请从这开始！',
@@ -1258,7 +1254,6 @@ var text = mdn.localStringMap({
       'How_the_Web_works': 'Web 是如何运作的',
       'Tools_and_setup': '工具与安装',
       'Design_and_accessibility': '设计与可访问性',
-    'How_to_contribute': '如何贡献'
   },
   'zh-TW': {
     'Complete_beginners': '全新手請從這開始！',
@@ -1485,7 +1480,6 @@ var text = mdn.localStringMap({
       'How_the_Web_works': 'Web 的運作方式',
       'Tools_and_setup': '工具與設定',
       'Design_and_accessibility': '設計與親合度',
-    'How_to_contribute': '如何貢獻'
   },
   'fr': {
     'Complete_beginners': 'Bienvenue aux débutants !',
@@ -1766,7 +1760,6 @@ var text = mdn.localStringMap({
       'How_the_Web_works': 'How the Web works',
       'Tools_and_setup': 'Tools and setup',
       'Design_and_accessibility': 'Design and accessibility',
-    'How_to_contribute': 'How to contribute'
   }
 });
 %>
@@ -2206,7 +2199,6 @@ var text = mdn.localStringMap({
         </ol>
     </details>
   </li>
-  <li data-default-state="<%=currentPageIsUnder('How_to_contribute')%>"><a href="<%=baseURL%>How_to_contribute"><%=text['How_to_contribute']%></a></li>
 </ol>
 
 </section>

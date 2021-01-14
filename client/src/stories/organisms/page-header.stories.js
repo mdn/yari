@@ -11,14 +11,16 @@ import { breadcrumbParents } from "../mocks/breadcrumbs";
 import { languageMenuData } from "../mocks/language-menu";
 import { toc } from "../mocks/toc";
 
-export default {
+const defaults = {
   title: "Organisms/Page Header",
 };
+
+export default defaults;
 
 export const pageHeader = () => (
   <>
     <Router>
-      <div className={`page-wrapper reference-page`}>
+      <div className={`page-wrapper document-page`}>
         <Header />
 
         <Titlebar docTitle="Type selectors" />

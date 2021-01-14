@@ -24,19 +24,19 @@
     "url": "https://www.w3.org/TR/wai-aria-1.2/",
     "status": "WD"
   },
-  "ARIA Authoring Practices": {
+  "ARIA Authoring Practices 1.1": {
     "name": "WAI-ARIA Authoring Practices 1.1",
-    "url": "https://w3c.github.io/aria-practices/",
-    "status": "Draft"
+    "url": "https://www.w3.org/TR/wai-aria-practices-1.1/",
+    "status": "NOTE"
+  },
+  "ARIA Authoring Practices 1.2": {
+    "name": "WAI-ARIA Authoring Practices 1.2",
+    "url": "https://www.w3.org/TR/wai-aria-practices-1.2/",
+    "status": "WD"
   },
   "ARIA in HTML": {
     "name": "ARIA in HTML",
     "url": "https://w3c.github.io/html-aria/",
-    "status": "WD"
-  },
-  "ARIA Authoring Practices": {
-    "name": "WAI-ARIA Authoring Practices",
-    "url": "https://www.w3.org/TR/wai-aria-practices-1.1/",
     "status": "WD"
   },
   "Async Function": {
@@ -56,13 +56,18 @@
   },
   "Background Sync": {
     "name": "Web Background Synchronization",
-    "url": "https://wicg.github.io/BackgroundSync/spec/",
+    "url": "https://wicg.github.io/background-sync/spec/",
     "status": "Living"
   },
   "Background Tasks": {
     "name": "Cooperative Scheduling of Background Tasks",
     "url": "https://www.w3.org/TR/requestidlecallback/",
     "status": "PR"
+  },
+  "Barcode Detection API": {
+    "name": "Accelerated Shape Detection in Images",
+    "url": "https://wicg.github.io/shape-detection-api/",
+    "status": "Draft"
   },
   "Basic Card Payment": {
     "name": "Basic Card Payment",
@@ -103,6 +108,16 @@
     "name": "Contacts Manager API",
     "url": "https://www.w3.org/2012/sysapps/contacts-manager-api/",
     "status": "Obsolete"
+  },
+  "Contact Picker API": {
+    "name": "Contact Picker API",
+    "url": "https://wicg.github.io/contact-api/spec/",
+    "status": "Draft"
+  },
+  "Content Index API": {
+    "name": "Content Index API",
+    "url": "https://wicg.github.io/content-index/spec/",
+    "status": "ED"
   },
   "Cookie Prefixes": {
     "name": "Cookie Prefixes",
@@ -150,8 +165,13 @@
     "status": "WD"
   },
   "CSS3 Animations": {
-    "name": "CSS Animations",
-    "url": "https://drafts.csswg.org/css-animations/",
+    "name": "CSS Animations Level 1",
+    "url": "https://drafts.csswg.org/css-animations-1/",
+    "status": "WD"
+  },
+  "CSS3 Animations 2": {
+    "name": "CSS Animations Level 2",
+    "url": "https://drafts.csswg.org/css-animations-2/",
     "status": "WD"
   },
   "CSS3 Backgrounds": {
@@ -172,7 +192,7 @@
   "CSS3 Box": {
     "name": "CSS Basic Box Model",
     "url": "https://drafts.csswg.org/css-box-3/",
-    "status": "WD"
+    "status": "CR"
   },
   "CSS3 Box Alignment": {
     "name": "CSS Box Alignment Module Level 3",
@@ -214,6 +234,11 @@
     "url": "https://drafts.csswg.org/css-display/",
     "status": "CR"
   },
+  "CSS Easing 1": {
+    "name": "CSS Easing Functions Level&nbsp;1",
+    "url": "https://drafts.csswg.org/css-easing-1/",
+    "status": "CR"
+  },
   "CSS3 Environment Variables": {
     "name": "CSS Environment Variables Module Level&nbsp;1",
     "url": "https://drafts.csswg.org/css-env-1/",
@@ -227,7 +252,7 @@
   "CSS3 Fonts": {
     "name": "CSS Fonts Module Level&nbsp;3",
     "url": "https://drafts.csswg.org/css-fonts-3/",
-    "status": "CR"
+    "status": "REC"
   },
   "CSS3 Fragmentation": {
     "name": "CSS Fragmentation Module Level&nbsp;3",
@@ -300,7 +325,7 @@
     "status": "REC"
   },
   "CSS3 Sizing": {
-    "name": "CSS Intrinsic &amp; Extrinsic Sizing Module Level&nbsp;3",
+    "name": "CSS Box Sizing Module Level&nbsp;3",
     "url": "https://drafts.csswg.org/css-sizing-3/",
     "status": "WD"
   },
@@ -322,7 +347,7 @@
   "CSS3 Text": {
     "name": "CSS Text Module Level&nbsp;3",
     "url": "https://drafts.csswg.org/css-text-3/",
-    "status": "WD"
+    "status": "CR"
   },
   "CSS3 Text Decoration": {
     "name": "CSS Text Decoration Module Level&nbsp;3",
@@ -351,7 +376,7 @@
   },
   "CSS3 Variables": {
     "name": "CSS Custom Properties for Cascading Variables Module Level&nbsp;1",
-    "url": "https://drafts.csswg.org/css-variables/",
+    "url": "https://www.w3.org/TR/css-variables-1/",
     "status": "CR"
   },
   "CSS3 Writing Modes": {
@@ -368,6 +393,11 @@
     "name": "CSS Basic User Interface Module Level&nbsp;4",
     "url": "https://drafts.csswg.org/css-ui-4/",
     "status": "WD"
+  },
+  "CSS4 Box": {
+    "name": "CSS Box Model Module Level 4",
+    "url": "https://drafts.csswg.org/css-box-4/",
+    "status": "ED"
   },
   "CSS4 Cascade": {
     "name": "CSS Cascading and Inheritance Level&nbsp;4",
@@ -389,6 +419,11 @@
     "url": "https://drafts.csswg.org/css-fonts-4/",
     "status": "WD"
   },
+  "CSS4 Fragmentation": {
+    "name": "CSS Fragmentation Module Level&nbsp;4",
+    "url": "https://drafts.csswg.org/css-break-4/",
+    "status": "WD"
+  },
   "CSS4 Images": {
     "name": "CSS Images Module Level&nbsp;4",
     "url": "https://drafts.csswg.org/css-images-4/",
@@ -398,6 +433,11 @@
     "name": "Media Queries Level&nbsp;4",
     "url": "https://drafts.csswg.org/mediaqueries-4/",
     "status": "CR"
+  },
+  "CSS4 Overflow": {
+    "name": "CSS Overflow Module Level 4",
+    "url": "https://drafts.csswg.org/css-overflow-4/",
+    "status": "WD"
   },
   "CSS4 Pseudo-Elements": {
     "name": "CSS Pseudo-Elements Level&nbsp;4",
@@ -410,7 +450,7 @@
     "status": "WD"
   },
   "CSS4 Sizing": {
-    "name": "CSS Intrinsic &amp; Extrinsic Sizing Module Level&nbsp;4",
+    "name": "CSS Box Sizing Module Level&nbsp;4",
     "url": "https://drafts.csswg.org/css-sizing-4/",
     "status": "ED"
   },
@@ -446,8 +486,13 @@
   },
   "CSS Containment": {
     "name": "CSS Containment Module Level 1",
-    "url": "https://drafts.csswg.org/css-contain/",
+    "url": "https://drafts.csswg.org/css-contain-1/",
     "status": "REC"
+  },
+  "CSS Containment 2": {
+    "name": "CSS Containment Module Level 2",
+    "url": "https://drafts.csswg.org/css-contain-2/",
+    "status": "WD"
   },
   "CSS Color Adjust": {
     "name": "CSS Color Adjustment Module Level 1",
@@ -478,6 +523,11 @@
     "name": "CSS Grid Layout Module Level 2",
     "url": "https://drafts.csswg.org/css-grid-2/",
     "status": "WD"
+  },
+  "CSS Grid 3": {
+    "name": "CSS Grid Layout Module Level 3",
+    "url": "https://drafts.csswg.org/css-grid-3/",
+    "status": "ED"
   },
   "CSS Layout": {
     "name": "CSS Layout API Level 1",
@@ -568,11 +618,6 @@
     "name": "CSS Mobile Text Size Adjustment Module Level&nbsp;1",
     "url": "https://drafts.csswg.org/css-size-adjust/",
     "status": "ED"
-  },
-  "CSS Timing 1": {
-    "name": "CSS Timing Functions Level&nbsp;1",
-    "url": "https://drafts.csswg.org/css-timing-1/",
-    "status": "WD"
   },
   "CSS Transforms 2": {
     "name": "CSS Transforms Level&nbsp;2",
@@ -749,9 +794,14 @@
     "url": "https://tc39.es/ecma402/",
     "status": "Living"
   },
+  "Event Timing API": {
+    "name": "Event Timing API",
+    "url": "https://wicg.github.io/event-timing/",
+    "status": "ED"
+  },
   "Feature Policy": {
-    "name": "Feature Policy",
-    "url": "https://w3c.github.io/webappsec-feature-policy/",
+    "name": "Permissions Policy",
+    "url": "https://w3c.github.io/webappsec-permissions-policy/",
     "status": "ED"
   },
   "Fetch": {
@@ -767,6 +817,11 @@
   "File API": {
     "name": "File API",
     "url": "https://w3c.github.io/FileAPI/",
+    "status": "WD"
+  },
+  "File System Access API": {
+    "name": "File System Access API",
+    "url": "https://wicg.github.io/file-system-access/",
     "status": "WD"
   },
   "File System API": {
@@ -889,6 +944,11 @@
     "url": "https://www.w3.org/TR/html52/",
     "status": "REC"
   },
+  "HTML Sanitizer API": {
+    "name": "HTML Sanitizer API",
+    "url": "https://wicg.github.io/sanitizer-api/",
+    "status": "WD"
+  },
   "HTML WHATWG": {
     "name": "HTML Living Standard",
     "url": "https://html.spec.whatwg.org/multipage/",
@@ -910,9 +970,14 @@
     "status": "REC"
   },
   "IndexedDB 2": {
-    "name": "Indexed Database API Draft",
-    "url": "https://w3c.github.io/IndexedDB/",
+    "name": "Indexed Database API 2.0",
+    "url": "https://www.w3.org/TR/IndexedDB/",
     "status": "REC"
+  },
+  "IndexedDB 3": {
+    "name": "Indexed Database API 3.0",
+    "url": "https://w3c.github.io/IndexedDB/",
+    "status": "ED"
   },
   "InputDeviceCapabilities": {
     "name": "InputDeviceCapabilities",
@@ -929,15 +994,50 @@
     "url": "https://w3c.github.io/IntersectionObserver/",
     "status": "WD"
   },
+  "Intl.DateTimeFormat.formatRange": {
+    "name": "Intl.DateTimeFormat.formatRange",
+    "url": "https://tc39.es/proposal-intl-DateTimeFormat-formatRange/",
+    "status": "Draft"
+  },
+  "Intl.DisplayNames": {
+    "name": "Intl.DisplayNames",
+    "url": "https://tc39.es/proposal-intl-displaynames/",
+    "status": "Draft"
+  },
+  "Intl.ListFormat": {
+    "name": "Intl.ListFormat",
+    "url": "https://tc39.es/proposal-intl-list-format/",
+    "status": "Draft"
+  },
   "Keyboard Lock": {
     "name": "Keyboard Lock",
-    "url": "https://w3c.github.io/keyboard-lock/",
+    "url": "https://wicg.github.io/keyboard-lock/",
     "status": "ED"
   },
   "Keyboard Map": {
     "name": "Keyboard Map",
     "url": "https://wicg.github.io/keyboard-map/",
     "status": "ED"
+  },
+  "Largest Contentful Paint": {
+    "name": "Largest Contentful Paint",
+    "url": "https://wicg.github.io/largest-contentful-paint/",
+    "status": "ED"
+  },
+  "Layout Instability": {
+    "name": "Layout Instability API",
+    "url": "https://wicg.github.io/layout-instability/",
+    "status": "ED"
+  },
+  "Legacy RegExp features": {
+    "name": "Legacy RegExp features in JavaScript",
+    "url": "https://github.com/tc39/proposal-regexp-legacy-features/",
+    "status": "Draft"
+  },
+  "Logical Assignment": {
+    "name": "Logical Assignment Operators",
+    "url": "https://tc39.es/proposal-logical-assignment/",
+    "status": "Draft"
   },
   "Long Tasks": {
     "name": "Long Tasks API 1",
@@ -963,6 +1063,11 @@
     "name": "MathML 3.0",
     "url": "https://www.w3.org/TR/MathML3/",
     "status": "REC"
+  },
+  "MathMLCore": {
+    "name": "MathML Core",
+    "url": "https://mathml-refresh.github.io/mathml-core/",
+    "status": "Draft"
   },
   "Media Capabilities": {
     "name": "Media Capabilities",
@@ -1084,6 +1189,11 @@
     "url": "https://w3c.github.io/payment-method-id/",
     "status": "CR"
   },
+  "Periodic Background Sync": {
+    "name": "Web Periodic Background Synchronization",
+    "url": "https://wicg.github.io/periodic-background-sync/",
+    "status": "WD"
+  },
   "Permissions API": {
     "name": "Permissions",
     "url": "https://w3c.github.io/permissions/",
@@ -1099,6 +1209,21 @@
     "url": "https://w3c.github.io/performance-timeline/",
     "status": "CR"
   },
+  "Permissions Policy": {
+    "name": "Permissions Policy",
+    "url": "https://w3c.github.io/webappsec-permissions-policy/",
+    "status": "ED"
+  },
+  "Picture-in-Picture": {
+    "name": "Picture-in-Picture API",
+    "url": "https://w3c.github.io/picture-in-picture/",
+    "status": "Draft"
+  },
+  "Pipeline operator": {
+    "name": "Pipeline operator",
+    "url": "https://tc39.es/proposal-pipeline-operator/",
+    "status": "Draft"
+  },
   "Pointer Events": {
     "name": "Pointer Events",
     "url": "https://www.w3.org/TR/pointerevents1/",
@@ -1109,14 +1234,14 @@
     "url": "https://www.w3.org/TR/pointerevents2/",
     "status": "REC"
   },
-  "Pointer Events 2 Ext": {
-    "name": "Pointer Events - Level 2 Extensions",
-    "url": "https://w3c.github.io/pointerevents/extension.html",
-    "status": "Draft"
-  },
   "Pointer Events 3": {
     "name": "Pointer Events – Level 3",
     "url": "https://w3c.github.io/pointerevents/",
+    "status": "ED"
+  },
+  "Portals": {
+    "name": "Portals",
+    "url": "https://wicg.github.io/portals/",
     "status": "ED"
   },
   "Pointer Lock": {
@@ -1139,10 +1264,20 @@
     "url": "https://wicg.github.io/priority-hints/",
     "status": "Draft"
   },
+  "Promise.any": {
+    "name": "Promise.any",
+    "url": "https://tc39.es/proposal-promise-any/",
+    "status": "Draft"
+  },
   "Proximity Events": {
     "name": "Proximity Sensor",
     "url": "https://w3c.github.io/proximity/",
     "status": "WD"
+  },
+  "Public and private instance fields": {
+    "name": "Public and private instance fields",
+    "url": "https://tc39.es/proposal-class-fields/",
+    "status": "Draft"
   },
   "Push API": {
     "name": "Push API",
@@ -1163,6 +1298,11 @@
     "name": "Remote Playback API",
     "url": "https://w3c.github.io/remote-playback/",
     "status": "CR"
+  },
+  "Reporting API": {
+    "name": "Reporting API",
+    "url": "https://w3c.github.io/reporting/",
+    "status": "ED"
   },
   "RequestAnimationFrame": {
     "name": "Timing control for script-based animations",
@@ -1203,6 +1343,11 @@
     "name": "Screen Orientation API",
     "url": "https://w3c.github.io/screen-orientation/",
     "status": "WD"
+  },
+  "Screen Wake Lock": {
+    "name": "Screen Wake Lock API",
+    "url": "https://w3c.github.io/screen-wake-lock/",
+    "status": "ED"
   },
   "Scroll Anchoring": {
     "name": "Scroll Anchoring",
@@ -1374,6 +1519,11 @@
     "url": "https://wicg.github.io/visual-viewport/",
     "status": "Draft"
   },
+  "WeakRefs": {
+    "name": "WeakRefs",
+    "url": "https://tc39.es/proposal-weakrefs/",
+    "status": "Draft"
+  },
   "Web Animations": {
     "name": "Web Animations",
     "url": "https://drafts.csswg.org/web-animations-1/",
@@ -1479,6 +1629,16 @@
     "url": "https://www.khronos.org/registry/webgl/extensions/EXT_texture_filter_anisotropic/",
     "status": "REC"
   },
+  "EXT_texture_norm16": {
+    "name": "EXT_texture_norm16",
+    "url": "https://www.khronos.org/registry/webgl/extensions/EXT_texture_norm16/",
+    "status": "REC"
+  },
+  "KHR_parallel_shader_compile": {
+    "name": "KHR_parallel_shader_compile",
+    "url": "https://www.khronos.org/registry/webgl/extensions/KHR_parallel_shader_compile/",
+    "status": "REC"
+  },
   "OES_element_index_uint": {
     "name": "OES_element_index_uint",
     "url": "https://www.khronos.org/registry/webgl/extensions/OES_element_index_uint/",
@@ -1517,7 +1677,7 @@
   "WebAuthn": {
     "name": "Web Authentication: An API for accessing Public Key Credentials Level 1",
     "url": "https://w3c.github.io/webauthn/",
-    "status": "CR"
+    "status": "REC"
   },
   "WebDriver": {
     "name": "WebDriver",
@@ -1587,6 +1747,11 @@
   "WEBGL_lose_context": {
     "name": "WEBGL_lose_context",
     "url": "https://www.khronos.org/registry/webgl/extensions/WEBGL_lose_context/",
+    "status": "REC"
+  },
+  "WEBGL_multi_draw": {
+    "name": "WEBGL_multi_draw",
+    "url": "https://www.khronos.org/registry/webgl/extensions/WEBGL_multi_draw/",
     "status": "REC"
   },
   "WebIDL": {

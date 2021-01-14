@@ -1,5 +1,6 @@
-import React from "react";
 import path from "path";
+
+import React from "react";
 import { StaticRouter } from "react-router-dom/server";
 
 import { App } from "../client/src/app";
@@ -27,7 +28,7 @@ function fixRelatedContent(document) {
       // always expect this to be a relative URL
       if (!node.mdn_url.startsWith("/")) {
         throw new Error(
-          `Document's .mdn_url doesn't start with / (${item.mdn_url})`
+          `Document's .mdn_url doesn't start with / (${node.mdn_url})`
         );
       }
       // Complicated way to rename an object key.

@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext, BrowserName } from "./browser-info";
 import { asList, getFirst, isTruthy } from "./utils";
@@ -410,23 +409,33 @@ export const FeatureRow = React.memo(
 
     if (compat.bad_url && compat.mdn_url) {
       titleNode = (
-        <abbr className="new" title={`${compat.mdn_url} does not exist`}>
-          {title}
-        </abbr>
+        <div className="bc-table-row-header">
+          <abbr className="new" title={`${compat.mdn_url} does not exist`}>
+            {title}
+          </abbr>
+          {compat.status && <StatusIcons status={compat.status} />}
+        </div>
       );
     } else if (compat.mdn_url && !isRoot) {
-      titleNode = <Link to={compat.mdn_url}>{title}</Link>;
+      titleNode = (
+        <a href={compat.mdn_url} className="bc-table-row-header">
+          {title}
+          {compat.status && <StatusIcons status={compat.status} />}
+        </a>
+      );
     } else {
-      titleNode = title;
+      titleNode = (
+        <div className="bc-table-row-header">
+          {title}
+          {compat.status && <StatusIcons status={compat.status} />}
+        </div>
+      );
     }
 
     return (
       <>
         <tr>
-          <th scope="row">
-            {titleNode}
-            {compat.status && <StatusIcons status={compat.status} />}
-          </th>
+          <th scope="row">{titleNode}</th>
           {browsers.map((browser, i) => (
             <CompatCell
               key={browser}

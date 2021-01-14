@@ -11,6 +11,7 @@ var attr = "";
 var str = mdn.localString({
     "en-US": "Optional" + ($1 ? ' from Gecko ' + $1 : ''),
     "fr": "Facultatif" + ($1 ? ' depuis Gecko ' + $1 : ''),
+    "ja": "省略可" + ($1 ? '(Gecko ' + $1 + ' 以降)' : ''),
     "ru": "Необязательный" + ($1 ? ' с версии Gecko ' + $1 : ''),
     "zh-CN": "可选" + ($1 ? '试用于Gecko ' + $1 : ''),
     "zh-TW": ($1 ? '自 Gecko ' + $1 + '開始變為' : '') + "選擇性"
@@ -18,17 +19,21 @@ var str = mdn.localString({
 
 if ($1) attr = await template("geckoRelease", [$1]);
 
+/*
+ * NOTE: This macro is used by /kumascript/macros/optional_inline.ejs
+ * The `method` case is never used
+ */
 switch($0) {
     case 'inline':
-        %><span class="inlineIndicator optional optionalInline"><%- str %></span><%
+        %><span class="badge inline optional"><%- str %></span><%
         break;
     case 'method':
         %><div>
-            <span class="indicatorInHeadline optional optionalMethod"><%- str %></span>
+            <span class="badge inline optional"><%- str %></span>
             <h<%-hLevel%>><%= $2 %></h<%-hLevel%>>
         </div><%
         break;
     default :
-        %><span class="inlineIndicator optional optionalInline"><%- str %></span><%
+        %><span class="badge inline optional"><%- str %></span><%
         break;
 }%>

@@ -8,7 +8,7 @@ describeMacro("TemplateLink", () => {
     return assert.eventually.equal(
       macro.call("TemplateLink"),
       '<code class="templateLink">' +
-        '<a href="https://github.com/mdn/kumascript/tree/master/macros/TemplateLink.ejs">' +
+        '<a href="https://github.com/mdn/yari/tree/master/kumascript/macros/TemplateLink.ejs">' +
         "TemplateLink" +
         "</a></code>"
     );

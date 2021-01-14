@@ -10,15 +10,14 @@
        (valid values: 'alphabetically', 'no'; defaults to 'alphabetically')
   $2 - Array of strings used to filter the items by their status
        (valid values: 'standard', 'experimental', "nonstandard', 'obsolete';
-       defaults to ['standard'])
+       defaults to ['standard', 'experimental'])
 */
 
 var data = require('mdn-data/css');
-var localStrings = string.deserialize(await template("L10n:Common"));
 var types = ["properties", "selectors", "types", "syntaxes", "at-rules",
              "descriptors", "units"];
 var groupingType = "alphabetically";
-var outputStatuses = ["standard"];
+var outputStatuses = ["standard", "experimental"];
 
 if ($0) {
     types = JSON.parse($0);

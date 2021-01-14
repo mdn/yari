@@ -12,10 +12,14 @@ python = "^3.7"
 click = "^7.1.2"
 boto3 = "^1.13.23"
 python-decouple = "^3.3"
+requests = {extras = ["security"], version = "^2.25.0"}
+elasticsearch-dsl = "^7.3.0"
+selectolax = "^0.2.10"
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"
 flake8 = "^3.8.2"
+pytest = "^6.2.1"
 
 [tool.poetry.scripts]
 deployer = "deployer.main:cli"

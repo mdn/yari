@@ -1,9 +1,10 @@
-import React, { lazy, Suspense, useEffect } from "react";
+import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
-import { CRUD_MODE } from "../constants";
+import { CRUD_MODE, NO_WATCHER } from "../constants";
 import { useWebSocketMessageHandler } from "../web-socket";
+import { useGA } from "../ga-context";
 import { useDocumentURL } from "./hooks";
 import { Doc } from "./types";
 // Ingredients
@@ -18,19 +19,23 @@ import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 // Misc
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
-import LanguageMenu from "../ui/molecules/language-menu";
-import { OnGitHubLink } from "./on-github";
+import { LanguageMenu } from "../ui/molecules/language-menu";
 import { Titlebar } from "../ui/molecules/titlebar";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
 import { MainContentContainer } from "../ui/atoms/page-content";
+import { Metadata } from "./organisms/metadata";
+
+import { ReactComponent as Dino } from "../assets/dino.svg";
 
 import "./index.scss";
 
 // Lazy sub-components
-const Toolbar = lazy(() => import("./toolbar"));
+const Toolbar = React.lazy(() => import("./toolbar"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
+  const ga = useGA();
+  const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
   const { locale } = useParams();
   const navigate = useNavigate();
@@ -59,7 +64,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         props.doc.mdn_url.toLowerCase() === documentURL.toLowerCase()
           ? props.doc
           : null,
-      revalidateOnFocus: false,
+      revalidateOnFocus: !!NO_WATCHER,
     }
   );
 
@@ -72,7 +77,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
     }
   });
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!doc && !error) {
       document.title = "⏳ Loading…";
     } else if (error) {
@@ -81,6 +86,51 @@ export function Document(props /* TODO: define a TS interface for this */) {
       document.title = doc.pageTitle;
     }
   }, [doc, error]);
+
+  React.useEffect(() => {
+    if (ga && doc && !error) {
+      if (mountCounter.current > 0) {
+        // 'dimension19' means it's a client-side navigation.
+        // I.e. not the initial load but the location has now changed.
+        // Note that in local development, where you use `localhost:3000`
+        // this will always be true because it's always client-side navigation.
+        ga("set", "dimension19", "Yes");
+      }
+      ga("send", {
+        hitType: "pageview",
+        location: window.location.toString(),
+      });
+      // By counting every time a document is mounted, we can use this to know if
+      // a client-side navigation happened.
+      mountCounter.current++;
+    }
+  }, [doc, error, ga]);
+
+  React.useEffect(() => {
+    const location = document.location;
+    // Did you arrive on this page with a location hash?
+    if (location.hash && location.hash !== location.hash.toLowerCase()) {
+      // The location hash isn't lowercase. That probably means it's from before
+      // we made all `<h2 id>` and `<h3 id>` values always lowercase.
+      // Let's see if it can easily be fixed, but let's be careful and
+      // only do this if there is an element that matches.
+      try {
+        if (document.querySelector(location.hash.toLowerCase())) {
+          location.hash = location.hash.toLowerCase();
+        }
+      } catch (error) {
+        if (error instanceof DOMException) {
+          // You can't assume that the anchor on the page is a valid string
+          // for `document.querySelector()`.
+          // E.g. /en-US/docs/Web/HTML/Element/input#Form_<input>_types
+          // So if that the case, just ignore the error.
+          // It's not that critical to correct anyway.
+        } else {
+          throw error;
+        }
+      }
+    }
+  }, []);
 
   if (!doc && !error) {
     return <LoadingDocumentPlaceholder />;
@@ -102,15 +152,15 @@ export function Document(props /* TODO: define a TS interface for this */) {
     <>
       <Titlebar docTitle={doc.title}>
         {!isServer && CRUD_MODE && !props.isPreview && !doc.isArchive && (
-          <Suspense
+          <React.Suspense
             fallback={<p className="loading-toolbar">Loading toolbar</p>}
           >
             <Toolbar doc={doc} />
-          </Suspense>
+          </React.Suspense>
         )}
       </Titlebar>
 
-      {doc.isArchive && <Archived doc={doc} />}
+      {doc.isArchive && !doc.isTranslated && <Archived />}
 
       <div className="breadcrumbs-locale-container">
         <div className="breadcrumb-container">
@@ -130,28 +180,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
         <MainContentContainer>
           <article className="article">
             <RenderDocumentBody doc={doc} />
-
-            <div className="metadata">
-              <section className="document-meta">
-                <header className="visually-hidden">
-                  <h4>Metadata</h4>
-                </header>
-                <ul>
-                  <li className="last-modified">
-                    <LastModified value={doc.modified} locale={locale} />,{" "}
-                    <a href={`${doc.mdn_url}/contributors.txt`}>
-                      by MDN contributors
-                    </a>
-                  </li>
-                </ul>
-                {!doc.isArchive && <OnGitHubLink doc={doc} />}
-              </section>
-            </div>
           </article>
         </MainContentContainer>
 
         {doc.sidebarHTML && <RenderSideBar doc={doc} />}
       </div>
+      <Metadata doc={doc} locale={locale} />
     </>
   );
 }
@@ -160,68 +194,17 @@ function LoadingDocumentPlaceholder() {
   return (
     <>
       <Titlebar docTitle={"Loading…"} />
-
-      <div className="breadcrumbs-locale-container">
-        <div className="breadcrumb-container">
-          <p>&nbsp;</p>
-        </div>
-      </div>
-      <div className="page-content-container loading-document-placeholder">
-        <MainContentContainer>
-          <article className="article">
-            <p>
-              <span role="img" aria-label="Hourglass">
-                ⏳
-              </span>{" "}
-              Loading…
-            </p>
-          </article>
-        </MainContentContainer>
-      </div>
+      <Dino className="page-content-container loading-document-placeholder" />
     </>
   );
 }
 
-function LastModified({ value, locale }) {
-  if (!value) {
-    return <span>Last modified date not known</span>;
-  }
-  const date = new Date(value);
-  // Justification for these is to match historically
-  const dateStringOptions = {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  };
+function Archived() {
   return (
-    <>
-      <b>Last modified:</b>{" "}
-      <time dateTime={value}>
-        {date.toLocaleString(locale, dateStringOptions)}
-      </time>
-    </>
-  );
-}
-
-function Archived({ doc }: { doc: Doc }) {
-  return (
-    <div className={`archived ${doc.isTranslated ? "translated" : ""}`}>
-      {doc.isTranslated ? (
-        <p>
-          <b>This is an archived translation.</b>{" "}
-          <a
-            href="https://blogpost.example.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            No more edits are being accepted.
-          </a>
-        </p>
-      ) : (
-        <p>
-          <b>This is an archived page.</b> It's not actively maintained.
-        </p>
-      )}
+    <div className="archived">
+      <p>
+        <b>This is an archived page.</b> It's not actively maintained.
+      </p>
     </div>
   );
 }

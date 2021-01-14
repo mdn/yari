@@ -27,7 +27,9 @@ const VALID_FLAW_CHECKS = new Set([
   "bad_bcd_queries",
   "bad_bcd_links",
   "images",
-  "pre_with_html",
+  "image_widths",
+  "bad_pre_tags",
+  "sectioning",
 ]);
 
 // TODO (far future): Switch to "error" when number of flaws drops.
@@ -40,6 +42,7 @@ const GOOGLE_ANALYTICS_ACCOUNT =
 const GOOGLE_ANALYTICS_DEBUG = JSON.parse(
   process.env.BUILD_GOOGLE_ANALYTICS_DEBUG || "false"
 );
+const SPEEDCURVE_LUX_ID = process.env.BUILD_SPEEDCURVE_LUX_ID || "";
 const NO_PROGRESSBAR = Boolean(
   JSON.parse(process.env.BUILD_NO_PROGRESSBAR || process.env.CI || "false")
 );
@@ -53,6 +56,11 @@ const FIX_FLAWS_VERBOSE = JSON.parse(
   process.env.BUILD_FIX_FLAWS_VERBOSE || "true"
 );
 
+// See explanation in docs/envvars.md
+const ALWAYS_NO_ROBOTS = JSON.parse(
+  process.env.BUILD_ALWAYS_NO_ROBOTS || "false"
+);
+
 module.exports = {
   BUILD_OUT_ROOT,
   DEFAULT_FLAW_LEVELS,
@@ -61,9 +69,11 @@ module.exports = {
   FOLDERSEARCH,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
+  SPEEDCURVE_LUX_ID,
   NO_PROGRESSBAR,
   VALID_FLAW_CHECKS,
   FIX_FLAWS,
   FIX_FLAWS_DRY_RUN,
   FIX_FLAWS_VERBOSE,
+  ALWAYS_NO_ROBOTS,
 };

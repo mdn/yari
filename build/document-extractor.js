@@ -1,4 +1,4 @@
-const cheerio = require("./monkeypatched-cheerio");
+const cheerio = require("cheerio");
 const { packageBCD } = require("./resolve-bcd");
 
 /** Extract and mutate the $ if it as a "Quick_Links" section.
@@ -30,6 +30,7 @@ function extractSidebar($) {
 }
 
 function extractSections($) {
+  const flaws = [];
   const sections = [];
   let section = cheerio
     .load("<div></div>", {
@@ -41,9 +42,11 @@ function extractSections($) {
 
   let c = 0;
   iterable.forEach((child) => {
-    if (child.tagName === "h2") {
+    if (child.tagName === "h2" || child.tagName === "h3") {
       if (c) {
-        sections.push(...addSections(section.clone()));
+        const [subSections, subFlaws] = addSections(section.clone());
+        sections.push(...subSections);
+        flaws.push(...subFlaws);
         section.empty();
       }
       c = 0;
@@ -56,9 +59,11 @@ function extractSections($) {
   });
   if (c) {
     // last straggler
-    sections.push(...addSections(section));
+    const [subSections, subFlaws] = addSections(section);
+    sections.push(...subSections);
+    flaws.push(...subFlaws);
   }
-  return sections;
+  return [sections, flaws];
 }
 
 /** Return an array of new sections to be added to the complete document.
@@ -103,7 +108,10 @@ function extractSections($) {
  * and if all else fails, just leave it as HTML as is.
  */
 function addSections($) {
-  if ($.find("div.bc-data").length) {
+  const flaws = [];
+
+  const countPotentialBCDDataDivs = $.find("div.bc-data").length;
+  if (countPotentialBCDDataDivs) {
     /** If there's exactly 1 BCD table the only section to add is something
      * like this:
      *    {
@@ -111,8 +119,8 @@ function addSections($) {
      *     "value": {
      *       "title": "Browser compatibility",
      *       "id": "browser_compatibility",
-     *        "query": "html.elements.video",
-     *        "data": {....}
+     *       "query": "html.elements.video",
+     *       "data": {....}
      *    }
      *
      * Where the 'title' and 'id' values comes from the <h2> tag (if available).
@@ -139,7 +147,7 @@ function addSections($) {
      *       "content": "Any other stuff before table maybe"
      *    },
      */
-    if ($.find("div.bc-data").length > 1) {
+    if (countPotentialBCDDataDivs > 1) {
       const subSections = [];
       let section = cheerio
         .load("<div></div>", {
@@ -152,6 +160,7 @@ function addSections($) {
       // add that to the stack, clear and repeat.
       let iterable = [...$[0].childNodes];
       let c = 0;
+      let countBCDDataDivsFound = 0;
       iterable.forEach((child) => {
         if (
           child.tagName === "div" &&
@@ -159,6 +168,7 @@ function addSections($) {
           child.attribs.class &&
           /bc-data/.test(child.attribs.class)
         ) {
+          countBCDDataDivsFound++;
           if (c) {
             subSections.push(..._addSectionProse(section.clone()));
             section.empty();
@@ -178,29 +188,50 @@ function addSections($) {
       if (c) {
         subSections.push(..._addSectionProse(section.clone()));
       }
-      return subSections;
+      if (countBCDDataDivsFound !== countPotentialBCDDataDivs) {
+        const leftoverCount = countPotentialBCDDataDivs - countBCDDataDivsFound;
+        const explanation = `${leftoverCount} 'div.bc-data' element${
+          leftoverCount > 1 ? "s" : ""
+        } found but deeply nested.`;
+        flaws.push(explanation);
+      }
+      return [subSections, flaws];
     } else {
       const bcdSections = _addSingleSectionBCD($);
-      // If it comes back as an empty array, it means it couldn't be
-      // turned into structured content. So don't bother.
+
+      // The _addSingleSectionBCD() function will have sucked up the <h2> or <h3>
+      // and the `div.bc-data` to turn it into a BCD section.
+      // First remove that, then put whatever HTML is left as a prose
+      // section underneath.
+      $.find("div.bc-data, h2, h3").remove();
+      bcdSections.push(..._addSectionProse($));
+
       if (bcdSections.length) {
-        return bcdSections;
+        return [bcdSections, flaws];
       }
     }
   }
 
   // all else, leave as is
-  return _addSectionProse($);
+  return [_addSectionProse($), flaws];
 }
 
 function _addSingleSectionBCD($) {
   let id = null;
   let title = null;
+  let isH3 = false;
 
   const h2s = $.find("h2");
   if (h2s.length === 1) {
     id = h2s.attr("id");
     title = h2s.text();
+  } else {
+    const h3s = $.find("h3");
+    if (h3s.length === 1) {
+      id = h3s.attr("id");
+      title = h3s.text();
+      isH3 = true;
+    }
   }
 
   const dataQuery = $.find("div.bc-data").attr("id");
@@ -242,14 +273,6 @@ function _addSingleSectionBCD($) {
     browserReleaseData.set(name, releaseData);
   }
 
-  // We never need this data, after the release info has been extracted
-  // for each 'version_added'.
-  Object.values(browsers).forEach((browser) => {
-    // Remove because it's added weight which we don't need in the
-    // state data sent to the client eventually.
-    delete browser.releases;
-  });
-
   for (const [key, compat] of Object.entries(data)) {
     let block;
     if (key === "__compat") {
@@ -277,6 +300,7 @@ function _addSingleSectionBCD($) {
       value: {
         title,
         id,
+        isH3,
         data,
         query,
         browsers,
@@ -288,17 +312,24 @@ function _addSingleSectionBCD($) {
 function _addSectionProse($) {
   let id = null;
   let title = null;
+  let isH3 = false;
+
   // Maybe this should check that the h2 is first??
   const h2s = $.find("h2");
   if (h2s.length === 1) {
     id = h2s.attr("id");
     title = h2s.text();
-    // XXX Maybe this is a bad idea.
-    // See https://wiki.developer.mozilla.org/en-US/docs/MDN/Contribute/Structures/Page_types/API_reference_page_template
-    // where the <h2> needs to be INSIDE the `<div class="note">`.
     h2s.remove();
-    // } else if (h2s.length > 1) {
-    //     throw new Error("Too many H2 tags");
+  } else {
+    const h3s = $.find("h3");
+    if (h3s.length === 1) {
+      id = h3s.attr("id");
+      title = h3s.text();
+      if (id && title) {
+        isH3 = true;
+        h3s.remove();
+      }
+    }
   }
 
   return [
@@ -307,6 +338,7 @@ function _addSectionProse($) {
       value: {
         id,
         title,
+        isH3,
         content: $.html().trim(),
       },
     },
@@ -357,7 +389,7 @@ function extractSummary(sections) {
       }
       const $ = cheerio.load(section.value.content);
       // Remove non-p tags that we should not be looking inside.
-      $(".blockIndicator").remove();
+      $(".notecard").remove();
       summary = extractFirstGoodParagraph($);
       if (summary) {
         break;

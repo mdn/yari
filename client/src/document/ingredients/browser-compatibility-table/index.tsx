@@ -128,7 +128,7 @@ export default function BrowserCompatibilityTable({
           rel="noopener noreferrer"
           title="Report an issue with this compatibility data"
         >
-          Report problems with this data on GitHub
+          Report problems with this compatibility data on GitHub
         </a>
         <table key="bc-table" className="bc-table bc-table-web">
           <Headers {...{ platforms, browsers }} />
@@ -139,7 +139,7 @@ export default function BrowserCompatibilityTable({
             />
           </tbody>
         </table>
-        <Legend compat={data} />
+        <Legend compat={data} name={name} />
 
         {/* https://github.com/mdn/yari/issues/1191 */}
         <div className="hidden">

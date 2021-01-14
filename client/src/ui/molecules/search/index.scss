@@ -25,19 +25,6 @@
     @media #{$mq-large-desktop-and-up} {
       margin: 0;
     }
-
-    &::after {
-      background: $neutral-600 url("~@mdn/dinocons/general/search.svg") 0 0
-        no-repeat;
-      background-size: 24px;
-      content: "";
-      display: inline-block;
-      height: 24px;
-      position: absolute;
-      right: 20px;
-      top: 10px;
-      width: 24px;
-    }
   }
 
   input.search-input-field {
@@ -62,7 +49,7 @@
     box-shadow: 0 2px 8px 0 $neutral-500;
     left: 0;
     position: absolute;
-    top: 45px;
+    top: 42px;
     width: 100%;
     z-index: $top-layer;
 
@@ -70,13 +57,14 @@
       color: $yellow-100;
     }
 
-    div {
+    .result-item {
       border-bottom: 1px solid $neutral-550;
       padding: $base-unit;
+      word-break: break-word;
     }
 
     .result-item:hover,
-    .result-item.highlit {
+    .result-item.highlight {
       background-color: $neutral-550;
     }
 

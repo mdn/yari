@@ -58,15 +58,15 @@ Redirects are always uploaded.
 ### Examples
 
 ```sh
-export CONTRENT_ROOT=/path/to/content/files
-export CONTRENT_TRANSLATED_ROOT=/path/to/translated-content/files
+export CONTENT_ROOT=/path/to/content/files
+export CONTENT_TRANSLATED_ROOT=/path/to/translated-content/files
 cd deployer
 poetry run deployer upload --bucket mdn-content-dev --prefix pr1234 ../client/build
 ```
 
 ```sh
-export CONTRENT_ROOT=/path/to/content/files
-export CONTRENT_TRANSLATED_ROOT=/path/to/translated-content/files
+export CONTENT_ROOT=/path/to/content/files
+export CONTENT_TRANSLATED_ROOT=/path/to/translated-content/files
 export DEPLOYER_BUCKET_NAME=mdn-content-dev
 export DEPLOYER_BUCKET_PREFIX=pr1234
 cd deployer
@@ -92,6 +92,82 @@ yarn make-package
 and if the deployment package is different from what is already in AWS,
 it will upload and publish a new version.
 
+## Elasticsearch indexing
+
+You just need a URL (or host name) for an Elasticsearch server and the
+root of the build directory. The command will trawl all `index.json` files
+and extract all metadata and blocks of prose which get their HTML stripped.
+The command is:
+
+```sh
+cd deployer
+poetry run deployer search-index --help
+```
+
+If you have built the whole site (or partially) you simply point to
+it with the first argument:
+
+```sh
+poetry run deployer search-index ../client/build
+```
+
+But by default, it does not specify the Elasticsearch URL/host. You can
+either use:
+
+```sh
+export DEPLOYER_ELASTICSEARCH_URL=http://localhost:9200
+poetry run deployer search-index ../client/build
+```
+
+...or...
+
+```sh
+poetry run deployer search-index ../client/build --url http://localhost:9200
+```
+
+**Note!** If you don't specify either the environment variable or the `--url`
+option, the script will _not_ fail (ie. exit non-zero).
+This is to make it convenient in GitHub Actions to control the
+execution purely based on the presence of the
+environment variable.
+
+### To update or not start a fresh
+
+The default behavior is that it deletes the index first and immediately creates
+it again. You can switch this off by using the `--update` option. Then it
+will "cake on" the documents. So if something has been deleted since the last
+build, you would still have that "stuck" in Elasticsearch.
+
+Deleting and re-creating the index is fast so it's relatively safe to use often.
+But the indexing can take many seconds and while indexing, Elasticsearch
+can only search what's been indexed so far.
+
+An interesting pattern would be to use `--update` most of the time and
+only from time to time omit it for a fresh new start.
+
+But note, if you omit the `--update` (i.e. recreating the index), search
+will work. It just may find less that it finds when it's fully indexed.
+
+### Priority prefixes
+
+When you index without `--update` it will delete and recreate the index.
+That means that during the time you're indexing, the searches that are happening
+concurrently will not find much. That's probably OK in most cases but you
+can adjust the priority of what gets indexed first. This has the advantage
+that most searches, that are expecting to find content in the popular document,
+will get something useful while the indexing is going on.
+
+To set up one or multiple priority prefixes use the `--priority-prefixes`
+(or just `-p` for short). Best described with an example:
+
+```sh
+poetry run deployer search-index ../client/build -p en-us/docs/web -p en-us/docs
+```
+
+This will first index all the files whose `index.json` file path (relative
+to the root) matches `en-us/docs/web`. Then it does all that match `en-us/docs`.
+And lastly, it does all the files that don't match any of the prefixes.
+
 ## Environment variables
 
 The following environment variables are supported.
@@ -114,6 +190,7 @@ The following environment variables are supported.
   threads used when uploading (the default is `50`)
 - `DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD` will print successful upload
   tasks to `stdout`. The default is that this is `False`.
+- `DEPLOYER_ELASTICSEARCH_URL` used by the `search-index` command.
 - `CONTENT_ROOT` is equivalent to using `--content-root` (there is no
   default)
 - `CONTENT_TRANSLATED_ROOT` is equivalent to using `--content-translated-root`

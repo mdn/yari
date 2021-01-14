@@ -217,6 +217,10 @@ const SCL3_REDIRECT_URLS = [].concat(
   url_test("/en-US/learn/css", "/en-US/docs/Learn/CSS"),
   url_test("/en/learn/css", "/en/docs/Learn/CSS"),
   url_test("/en-US/learn/javascript", "/en-US/docs/Learn/JavaScript"),
+  url_test(
+    "/en-US/Learn/JavaScript/First_steps",
+    "/en-US/docs/Learn/JavaScript/First_steps"
+  ),
   url_test("/en/learn/javascript", "/en/docs/Learn/JavaScript"),
   url_test("/en-US/learn", "/en-US/docs/Learn"),
   url_test("/en/learn", "/en/docs/Learn"),
@@ -527,7 +531,7 @@ const DEFAULT_SAMPLES_URLS = [].concat(
   url_test("/samples/html/progress.html", null, { statusCode: 302 })
 );
 
-LEGACY_URLS = [].concat(
+const LEGACY_URLS = [].concat(
   // url_test("/index.php", null, { statusCode: 404 }),
   // url_test(
   //     "/index.php?title=Special:Recentchanges&feed=atom", null, { statusCode: 404 }
@@ -672,7 +676,7 @@ const ZONE_REDIRECTS = [
   ["Marketplace", "Mozilla/بازار", "APIs", ["fa"]],
 ];
 
-ZONE_REDIRECT_URLS = [];
+const ZONE_REDIRECT_URLS = [];
 for (const [zoneRoot, wikiSlug, childPath, locales] of ZONE_REDIRECTS) {
   for (const locale of locales) {
     const prefix = locale ? "/" + locale : "";
@@ -967,6 +971,37 @@ const FIREFOX_SOURCE_DOCS_URLS = [].concat(
   )
 );
 
+const LOCALE_ALIAS_URLS = [].concat(
+  url_test("/en-US/docs/Foo/bar", null, { statusCode: 404 }),
+  url_test("/eN-uS/docs/Foo/bar", null, { statusCode: 404 }),
+  url_test("/en-au/docs/Foo/bar", null, { statusCode: 404 }),
+  url_test("/en-gb/docs/Foo/bar", null, { statusCode: 404 }),
+  url_test("/en_gb/docs/Foo/bar", null, { statusCode: 404 }),
+
+  url_test("/PT-PT/docs/Foo/bar", null, { statusCode: 404 }),
+  url_test("/XY-PQ/docs/Foo/bar", null, { statusCode: 404 }),
+
+  url_test("/en/docs/Foo/bar", "/en-US/docs/Foo/bar"),
+  url_test("/En_uS/docs/Foo/bar", "/en-US/docs/Foo/bar"),
+  url_test("/pt/docs/Foo/bar", "/pt-PT/docs/Foo/bar"),
+  url_test("/Fr-FR/docs/Foo/bar", "/fr/docs/Foo/bar"),
+  url_test("/JA-JP/docs/Foo/bar", "/ja/docs/Foo/bar"),
+  url_test("/JA-JA/docs/Foo/bar", "/ja/docs/Foo/bar"),
+  url_test("/JA-JX/docs/Foo/bar", "/ja/docs/Foo/bar"),
+  url_test("/fR-SW/docs/Foo/bar", "/fr/docs/Foo/bar"),
+  url_test("/zh-HAnt/docs/Foo/bar", "/zh-TW/docs/Foo/bar"),
+  url_test("/zH-HAns/docs/Foo/bar", "/zh-CN/docs/Foo/bar"),
+  url_test("/zh/docs/Foo/bar", "/zh-CN/docs/Foo/bar"),
+  url_test("/cn/docs/Foo/bar", "/zh-CN/docs/Foo/bar"),
+
+  // No suffix
+  url_test("/en", "/en-US/"),
+  url_test("/en/", "/en-US/"),
+  url_test("/En_uS", "/en-US/"),
+  url_test("/Fr-FR", "/fr/"),
+  url_test("/zh", "/zh-CN/")
+);
+
 describe("scl3 redirects", () => {
   for (const [url, t] of SCL3_REDIRECT_URLS) {
     it(url, t);
@@ -1029,6 +1064,12 @@ describe("firefox accounts redirects", () => {
 
 describe("firefox src docs redirects", () => {
   for (const [url, t] of FIREFOX_SOURCE_DOCS_URLS) {
+    it(url, t);
+  }
+});
+
+describe("locale alias redirects", () => {
+  for (const [url, t] of LOCALE_ALIAS_URLS) {
     it(url, t);
   }
 });

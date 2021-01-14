@@ -99,15 +99,11 @@ describe("testing the main render() function", () => {
     let [result, errors] = await render("/en-us/docs/web/a");
     // First, let's check the result.
     expect(result).toEqual(
-      expect.stringContaining("{{nonExistentMacro(&quot;yada&quot;)}}")
+      expect.stringContaining('{{nonExistentMacro("yada")}}')
     );
+    expect(result).toEqual(expect.stringContaining('{{page("bogus")}}'));
     expect(result).toEqual(
-      expect.stringContaining("{{page(&quot;bogus&quot;)}}")
-    );
-    expect(result).toEqual(
-      expect.stringContaining(
-        "{{page(&quot;/en-US/docs/Web/B&quot;, &quot;bogus-section&quot;)}}"
-      )
+      expect.stringContaining('{{page("/en-US/docs/Web/B", "bogus-section")}}')
     );
     const $ = cheerio.load(result);
     const brokenLink = $(
@@ -119,7 +115,7 @@ describe("testing the main render() function", () => {
     expect(otherLinks.length).toBe(2);
     expect(otherLinks.eq(0).html()).toBe("<code>&lt;dumber&gt;</code>");
     expect(otherLinks.eq(1).html()).toBe("<code>&lt;number&gt;</code>");
-    for (deprecatedID of [
+    for (const deprecatedID of [
       "fx-header",
       "fx-inline",
       "gecko-header",

@@ -4,6 +4,8 @@
 
 const path = require("path");
 
+const sizeOf = require("image-size");
+
 const { Document, Image } = require("../content");
 const { FLAW_LEVELS } = require("./constants");
 const { findMatchesInText } = require("./matches-in-text");
@@ -19,14 +21,27 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
 
   const checkImages = options.flawLevels.get("images") !== FLAW_LEVELS.IGNORE;
 
+  const checked = new Map();
+
   function addImageFlaw(
     $img,
     src,
     { explanation, externalImage = false, suggestion = null }
   ) {
-    for (const match of findMatchesInText(src, rawContent, {
-      attribute: "src",
-    })) {
+    // If the document has *two* `<img src="XXX">` tags, this function
+    // (addImageFlaw) is called two times. We can then assume the
+    // findMatchesInText() will find it two times too. For each call,
+    // we need to match the call based in counting matches from findMatchesInText().
+    const matches = [
+      ...findMatchesInText(src, rawContent, {
+        attribute: "src",
+      }),
+    ];
+    const checkedBefore = checked.get(src) || 0;
+    matches.forEach((match, i) => {
+      if (i !== checkedBefore) {
+        return;
+      }
       if (!("images" in doc.flaws)) {
         doc.flaws.images = [];
       }
@@ -46,31 +61,38 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
         externalImage,
         ...match,
       });
-    }
+
+      // Use this to remember which in the list of matches we've dealt with.
+      checked.set(src, checkedBefore + 1);
+    });
   }
 
-  const checked = new Set();
   $("img[src]").each((i, element) => {
     const img = $(element);
     const src = img.attr("src");
 
-    // If the HTML contains the exact same 'src' value more than once,
-    // it will be found exactly that many times within the addImageFlaw()
-    // function which uses `findMatchesInText` so if it's repeated,
-    // it'll be logged for each individual occurance.
-    if (checked.has(src)) return;
-    checked.add(src);
-
     // These two lines is to simulate what a browser would do.
     const baseURL = `http://yari.placeholder${url}/`;
-    const absoluteURL = new URL(src, baseURL);
+    // Make a special exception for the legacy images that start with `/@api/deki...`
+    // If you just pretend their existing URL is static external domain, it
+    // will be recognized as an external image (which is fixable).
+    // Also any `<img src="/files/1234/foo.png">` should match.
+    const absoluteURL = /^\/(@api\/deki\/|files\/\d+)/.test(src)
+      ? `https://mdn.mozillademos.org${src}`
+      : new URL(src, baseURL);
 
     // NOTE: Checking for lacking 'alt' text is to be done as part
     // of https://github.com/mdn/yari/issues/1018 which would need
     // a new function dedicated to that.
     let finalSrc = null;
 
-    if (absoluteURL.host !== "yari.placeholder") {
+    if (!src.trim()) {
+      if (checkImages) {
+        addImageFlaw(img, src, {
+          explanation: "Empty img 'src' attribute",
+        });
+      }
+    } else if (absoluteURL.host !== "yari.placeholder") {
       // It's a remote file. Don't bother much with this. Unless...
       if (checkImages) {
         if (absoluteURL.protocol === "http:") {
@@ -106,7 +128,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
     } else {
       // Remember, you can not have search parameters on local images.
       // It might make sense on something like `https://unsplash.it/image/abc?size=100`
-      // but all our images are going to static.
+      // but all our images are going to be static.
       finalSrc = absoluteURL.pathname;
       // We can use the `finalSrc` to look up and find the image independent
       // of the correct case because `Image.findByURL` operates case
@@ -170,4 +192,145 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
   return filePaths;
 }
 
-module.exports = { checkImageReferences };
+/**
+ * Mutate the `$` instance for image reference and if appropriate,
+ * log them as flaws if they're not passing linting.
+ * Look for <img> tags that set a `style="width: XXXpx; height: YYYpx"`
+ * and or not have the `width="XXX" height="XXX"` plain attributes.
+ *
+ * Don't check the `src` attribute.
+ *
+ * TODO: Perhaps in the future, we can also check if the `style` attribute
+ * has some hardcoded patterns for margins and borders that would be
+ * best to set "centrally" with a style sheet.
+ */
+function checkImageWidths(doc, $, options, { rawContent }) {
+  const filePaths = new Set();
+  if (doc.isArchive) return filePaths;
+
+  const checkImages =
+    options.flawLevels.get("image_widths") !== FLAW_LEVELS.IGNORE;
+
+  const checked = new Map();
+
+  function addStyleFlaw($img, style, suggestion) {
+    if (!("image_widths" in doc.flaws)) {
+      doc.flaws.image_widths = [];
+    }
+    const id = `image_widths${doc.flaws.image_widths.length + 1}`;
+    $img.attr("data-flaw", id);
+    const matches = [
+      ...findMatchesInText(style, rawContent, {
+        attribute: "style",
+      }),
+    ];
+    const checkedBefore = checked.get(style) || 0;
+    matches.forEach((match, i) => {
+      if (i !== checkedBefore) {
+        return;
+      }
+      const fixable = suggestion !== null;
+      let explanation = "";
+      if (style.includes("width") && style.includes("height")) {
+        explanation = "'width' and 'height'";
+      } else if (style.includes("height")) {
+        explanation = "'height'";
+      } else {
+        explanation = "'height'";
+      }
+      explanation += " set in 'style' attribute on <img> tag.";
+      doc.flaws.image_widths.push({
+        id,
+        style,
+        fixable,
+        suggestion,
+        explanation,
+        ...match,
+      });
+      // Use this to remember which in the list of matches we've dealt with.
+      checked.set(style, checkedBefore + 1);
+    });
+  }
+
+  $("img").each((i, element) => {
+    const img = $(element);
+    // If it already has a `width` attribute, leave this as is.
+    if (!img.attr("width")) {
+      // Remove any `width` or `height` specified in the `style` attribute
+      // because this is best to leave so the browser doesn't stretch
+      // the image if its specified dimension (even if it's accurate!)
+      // can't be kept in the given context.
+      if (img.attr("style")) {
+        if (img.attr("style").includes("@")) {
+          console.warn(
+            "Dare to use regex on inline `img[style]` values that use media queries of any kind.",
+            img.attr("style")
+          );
+          return;
+        }
+        // The confidence to use a regex instead of a proper CSS parser is
+        // because we're only ever looking at the CSS in `img[style]` contexts.
+        // These are much simpler than the kind of CSS you should never go
+        // near with a regex.
+        const originalStyleValue = img.attr("style");
+        const newStyleValue = originalStyleValue
+          .split(";")
+          .map((each) => each.split(":"))
+          .filter((parts) => {
+            return !["width", "height"].includes(parts[0].trim());
+          })
+          .map((parts) => parts.join(":"))
+          .join(";")
+          .trim();
+
+        let suggestion = null;
+        if (newStyleValue !== originalStyleValue) {
+          // If there's nothing left, don't just set a new value, make
+          // it delete the 'style' attribute altogether.
+          if (newStyleValue) {
+            suggestion = newStyleValue;
+            img.attr("style", newStyleValue);
+          } else {
+            suggestion = "";
+            img.removeAttr("style");
+          }
+          // Remember, only if you're interested in checking for flaws, do we
+          // record this. But we also apply the fix nomatter what.
+          if (checkImages) {
+            addStyleFlaw(img, originalStyleValue, suggestion);
+          }
+        }
+      }
+
+      // If image is local, get its dimension and set the `width` and `height`
+      // HTML attributes.
+      const imgSrc = img.attr("src");
+      // Only proceed if it's not an external image.
+      // But beyond that, suppose the `<img>` tag looks anything other than
+      // `<img src="/local/docs/slug">` then we can't assume the `img[src]` can
+      // be resolved. For example, suppose the HTML contains `<img src="404.png">`
+      // then it's a broken image and it's handled by the `checkImageReferences()`
+      // function. Stay away from those.
+      if (!imgSrc.includes("://") && imgSrc.startsWith("/")) {
+        const filePath = Image.findByURL(imgSrc);
+        if (filePath) {
+          const dimensions = sizeOf(filePath);
+          img.attr("width", `${dimensions.width}`);
+          img.attr("height", `${dimensions.height}`);
+        }
+      }
+    }
+  });
+
+  if (
+    doc.flaws.image_widths &&
+    doc.flaws.image_widths.length &&
+    options.flawLevels.get("image_widths") === FLAW_LEVELS.ERROR
+  ) {
+    throw new Error(
+      `images width flaws: ${JSON.stringify(doc.flaws.image_widths)}`
+    );
+  }
+}
+
+module.exports = { checkImageReferences, checkImageWidths };

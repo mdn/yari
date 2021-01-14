@@ -1,4 +1,6 @@
-const startRe = /^\^\/?/;
+const { VALID_LOCALES, LOCALE_ALIASES } = require("../constants");
+
+const startRe = /^\^?\/?/;
 const startTemplate = /^\//;
 
 function redirect(pattern, template, options = {}) {
@@ -11,8 +13,11 @@ function redirect(pattern, template, options = {}) {
     if (typeof template === "string") {
       return { url: template, status };
     }
-    const { groups } = match;
-    return { url: template({ ...groups }), status };
+    const { [0]: subString, index, groups } = match;
+    const before = path.substring(0, index);
+    const after = path.substring(index + subString.length);
+    const to = template({ ...groups });
+    return { url: `${before}${to}${after}`, status };
   };
 }
 
@@ -44,6 +49,47 @@ function externalRedirect(pattern, template, options = {}) {
     ...options,
   });
 }
+
+const fixableLocales = new Map();
+for (const locale of VALID_LOCALES.keys()) {
+  if (locale.includes("-")) {
+    // E.g. `en-US` becomes alias `en_US`
+    fixableLocales.set(locale.replace("-", "_").toLowerCase(), locale);
+  } else {
+    // E.g. `fr` becomes alias `fr-XX`
+    fixableLocales.set(`${locale}-\\w{2}`.toLowerCase(), locale);
+  }
+}
+
+for (const [alias, correct] of LOCALE_ALIASES) {
+  // E.g. things like `en` -> `en-us` or `pt` -> `pt-pt`
+  fixableLocales.set(alias, correct);
+}
+
+// All things like `/en_Us/docs/...` -> `/en-US/docs/...`
+const LOCALE_PATTERNS = [
+  redirect(
+    new RegExp(
+      `^(?<locale>${Array.from(fixableLocales.keys()).join(
+        "|"
+      )})(/(?<suffix>.*)|$)`,
+      "i"
+    ),
+    ({ locale, suffix }) => {
+      locale = locale.toLowerCase();
+      if (fixableLocales.has(locale)) {
+        // E.g. it was something like `en_Us`
+        locale = VALID_LOCALES.get(fixableLocales.get(locale).toLowerCase());
+      } else {
+        // E.g. it was something like `Fr-sW` (Swiss French)
+        locale = locale.split("-")[0];
+        locale = VALID_LOCALES.get(locale);
+      }
+      return `/${locale}/${suffix || ""}`;
+    },
+    { permanent: true }
+  ),
+];
 
 // Redirects/rewrites/aliases migrated from SCL3 httpd config
 const SCL3_REDIRECT_PATTERNS = [
@@ -720,14 +766,14 @@ const SCL3_REDIRECT_PATTERNS = [
   // All other Demo Studio and Dev Derby paths (bug 1238037)
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?demos
   // /$1docs/Web/Demos_of_open_web_technologies? [R=301,L]
-  localeRedirect(/^demos/i, "/docs/Web/Demos_of_open_web_technologies", {
+  localeRedirect(/^demos.*/i, "/docs/Web/Demos_of_open_web_technologies", {
     permanent: true,
   }),
   // Legacy off-site redirects (bug 1362438)
   // RewriteRule ^contests/ http://www.mozillalabs.com/ [R=302,L]
-  redirect(/^contests/i, "http://www.mozillalabs.com/", { permanent: false }),
+  redirect(/^contests.*/i, "http://www.mozillalabs.com/", { permanent: false }),
   // RewriteRule ^es4 http://www.ecma-international.org/memento/TC39.htm [R=302,L]
-  redirect(/^es4/i, "http://www.ecma-international.org/memento/TC39.htm", {
+  redirect(/^es4.*/i, "http://www.ecma-international.org/memento/TC39.htm", {
     permanent: false,
   }),
 ];
@@ -810,7 +856,7 @@ const zoneRedirects = [
     ["en-US", "fa", "fr", "ja", "th", "zh-CN", "zh-TW", null],
   ],
   ["Apps", "Web/Aplicaciones", ["es"]],
-  ["Apps", "Apps", ["bn", "de", "it", "ko", "pt-Br", "ru"]],
+  ["Apps", "Apps", ["bn", "de", "it", "ko", "pt-BR", "ru"]],
   ["Learn", "Learn", ["ca", "de", null]],
   ["Apprendre", "Apprendre", ["fr"]],
   [
@@ -1110,7 +1156,7 @@ const REDIRECT_PATTERNS = [].concat(
   FIREFOX_SOURCE_DOCS_REDIRECT_PATTERNS,
   [
     localeRedirect(
-      /^fellowship/i,
+      /^fellowship.*/i,
       "/docs/Archive/2015_MDN_Fellowship_Program",
       {
         permanent: true,
@@ -1121,7 +1167,8 @@ const REDIRECT_PATTERNS = [].concat(
       ({ subPath }) => `https://wiki.mozilla.org/docs/ServerJS${subPath}`,
       { prependLocale: false, permanent: true }
     ),
-  ]
+  ],
+  LOCALE_PATTERNS
 );
 
 const STARTING_SLASH = /^\//;

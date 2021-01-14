@@ -12,7 +12,10 @@ const LANGUAGES = new Map(
   })
 );
 
-export default function LanguageMenu({
+// This needs to match what's set in 'libs/constants.js' on the server/builder!
+const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
+
+export function LanguageMenu({
   locale,
   translations,
 }: {
@@ -38,6 +41,17 @@ export default function LanguageMenu({
         // The default is the current locale itself. If that's what's chosen,
         // don't bother redirecting.
         if (localeURL !== locale) {
+          for (const translation of translations) {
+            if (translation.url === localeURL) {
+              let cookieValue = `${PREFERRED_LOCALE_COOKIE_NAME}=${
+                translation.locale
+              };max-age=${60 * 60 * 24 * 365 * 3};path=/`;
+              if (document.location.hostname !== "localhost") {
+                cookieValue += ";secure";
+              }
+              document.cookie = cookieValue;
+            }
+          }
           navigate(localeURL);
         }
       }}
@@ -65,9 +79,8 @@ export default function LanguageMenu({
         <option value={locale}>{verbose ? verbose.native : locale}</option>
         {translations.map((t) => {
           const verbose = LANGUAGES.get(t.locale.toLowerCase());
-          const url = `/${t.locale}/docs/${t.slug}`;
           return (
-            <option key={url} value={url}>
+            <option key={t.url} value={t.url}>
               {verbose ? verbose.native : t.locale}
             </option>
           );

@@ -360,7 +360,7 @@ const MOCK_PAGES = {
 // Test cases definition
 // ----------------------------------------------------------------------------
 // Each test case is define by:
-// A `title` to make the test understandable by a human behing
+// A `title` to make the test understandable by a human being
 // An `input` which is an Array of parameters that will be passed to the macro
 // An `output` which is the string that the macro should return,
 // A `env` that is overriding the default env variable inside the macro

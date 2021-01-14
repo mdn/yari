@@ -5,9 +5,11 @@ import { Breadcrumbs } from "../../ui/molecules/breadcrumbs";
 
 import { breadcrumbParents } from "../mocks/breadcrumbs";
 
-export default {
+const defaults = {
   title: "Molecules/Breadcrumbs",
 };
+
+export default defaults;
 
 export const breadcrumbs = () => {
   return (

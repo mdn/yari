@@ -3,7 +3,7 @@
 @import "~@mdn/minimalist/sass/mixins/utils";
 
 .sidebar {
-  font-size: $default-font-size;
+  font-size: $small-font-size;
   padding: $base-spacing;
 
   h4 {
@@ -43,5 +43,11 @@
 
   details {
     margin: $base-spacing 0;
+  }
+
+  .icon {
+    background-size: 18px;
+    height: 18px;
+    width: 18px;
   }
 }
