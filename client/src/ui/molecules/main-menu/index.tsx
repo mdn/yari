@@ -163,8 +163,8 @@ export default function MainMenu({
           label: "Send Feedback",
         },
         {
-          url: `/${locale}/docs/MDN/Community`,
-          label: "Join the MDN community",
+          url: `/${locale}/docs/MDN/Contribute`,
+          label: "Contribute to MDN",
         },
         {
           label: "Report a content issue",
