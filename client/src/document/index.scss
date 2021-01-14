@@ -101,6 +101,11 @@
     margin-bottom: $base-spacing * 2;
   }
 
+  .page-not-created {
+    color: $red-300;
+    cursor: not-allowed;
+  }
+
   /* readonly inline badges needs a slightly darker background color in general article content  */
   .inline {
     &.optional,
