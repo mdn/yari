@@ -446,6 +446,8 @@ if (name === "preview-wiki-content") {
     formattedSyntax += await formatTypesSyntax(formattedSyntax, []);
 }
 
-var result = formattedSyntax || s_missing;
+if (!formattedSyntax) {
+    throw new Error(`No syntax found in DB for '${name}'`);
+}
 
-%><%- result %>
+%><%- formattedSyntax %>
