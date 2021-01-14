@@ -115,7 +115,7 @@ But by default, it does not specify the Elasticsearch URL/host. You can
 either use:
 
 ```sh
-export ELASTICSEARCH_URL=http://localhost:9200
+export DEPLOYER_ELASTICSEARCH_URL=http://localhost:9200
 poetry run deployer search-index ../client/build
 ```
 
@@ -190,11 +190,11 @@ The following environment variables are supported.
   threads used when uploading (the default is `50`)
 - `DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD` will print successful upload
   tasks to `stdout`. The default is that this is `False`.
+- `DEPLOYER_ELASTICSEARCH_URL` used by the `search-index` command.
 - `CONTENT_ROOT` is equivalent to using `--content-root` (there is no
   default)
 - `CONTENT_TRANSLATED_ROOT` is equivalent to using `--content-translated-root`
   (there is no default)
-- `ELASTICSEARCH_URL` used by the `search-index` command.
 
 ## Contributing
 

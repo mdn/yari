@@ -210,7 +210,7 @@ def search_index(ctx, buildroot: Path, **kwargs):
             # The reason we're not throwing an error is to make it super convenient
             # to call this command, from bash, without first having to check and figure
             # out if the relevant environment variables are available.
-            log.warning("ELASTICSEARCH_URL or --host not set or empty")
+            log.warning("DEPLOYER_ELASTICSEARCH_URL or --host not set or empty")
             return
         raise Exception("host not set")
     search.index(

@@ -216,6 +216,9 @@ jobs:
           SPEEDCURVE_DEPLOY_API_KEY: ${{ secrets.SPEEDCURVE_DEPLOY_API_KEY }}
           # Based on https://api.speedcurve.com/#get-all-sites using the API key
           SPEEDCURVE_DEPLOY_SITE_ID: 354836
+
+          DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_STAGE_ELASTICSEARCH_URL }}
+
         run: |
 
           if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
@@ -249,5 +252,10 @@ jobs:
             --note "${GITHUB_SHA}" \
             --detail "run_id=${GITHUB_RUN_ID} action=${GITHUB_ACTION}"
 
-          # TODO
-          # Execute command to publish built content to Elasticsearch
+          # TODO: Depending on how long the upload takes, consider switching to
+          # use `--update` in this command. It will skip the index re-creation
+          # and "cake on". This is slightly faster and means no window of time
+          # where the Elasticsearch server is nearly empty.
+          # Consider doing something like a clean indexing on Sundays and
+          # use `--update` on all the other week days.
+          poetry run deployer search-index ../client/build --priority-prefix=en-us/docs/web
