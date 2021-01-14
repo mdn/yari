@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 
@@ -35,7 +35,7 @@ interface Suggestion {
 }
 
 export default function SearchResults({ query }: { query: URLSearchParams }) {
-  const fetchURL = `/api/v1/search/?${query.toString()}`;
+  const fetchURL = `/api/v1/search?${query.toString()}`;
   const { data, error } = useSWR(
     fetchURL,
     async (url) => {
@@ -73,7 +73,7 @@ export default function SearchResults({ query }: { query: URLSearchParams }) {
           pageSize={pageSize}
           maxPage={10}
           onPaginate={() => {
-            const resultsElement = document.querySelector("#site-search");
+            const resultsElement = document.querySelector("div.site-search");
             if (resultsElement) {
               resultsElement.scrollIntoView({ behavior: "smooth" });
             }
@@ -186,9 +186,9 @@ interface FadeInProps {
 }
 
 function FadeIn(props: FadeInProps) {
-  const [maxIsVisible, setMaxIsVisible] = useState(0);
+  const [maxIsVisible, setMaxIsVisible] = React.useState(0);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const count = React.Children.count(props.children);
     let i = 0;
     const interval = setInterval(() => {
@@ -266,7 +266,7 @@ function Pagination({
           <Link
             to={`?${makeNewQuery(previousPage)}`}
             className="button"
-            onClick={(event) => {
+            onClick={() => {
               onPaginate();
             }}
           >
@@ -277,7 +277,7 @@ function Pagination({
           <Link
             to={`?${makeNewQuery(nextPage)}`}
             className="button"
-            onClick={(event) => {
+            onClick={() => {
               onPaginate();
             }}
           >

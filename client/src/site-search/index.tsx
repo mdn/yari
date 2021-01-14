@@ -1,34 +1,31 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { PageContentContainer } from "../ui/atoms/page-content";
+import { useGA } from "../ga-context";
 import { useLocale } from "../hooks";
 import "./index.scss";
-const SearchResults = lazy(() => import("./search-results"));
+import { SiteSearchQuery } from "./types";
+// XXX Change this to lazy (maybe)
+import SiteSearchForm from "./form";
 
-type Query = {
-  q: string;
-  locale: string[];
-  page?: string;
-  sort?: string;
-};
+const SearchResults = React.lazy(() => import("./search-results"));
 
 export function SiteSearch() {
   const isServer = typeof window === "undefined";
-
+  const ga = useGA();
   const locale = useLocale();
   const [searchParams, setSearchParams] = useSearchParams();
   // const [q, setQ] = useState(searchParams.get("q") || "");
-  const [newQ, setNewQ] = useState("");
 
-  const query: Query = {
+  const query: SiteSearchQuery = {
     q: searchParams.get("q") || "",
     locale: [locale || "en-US"],
     page: searchParams.get("page") || "",
     sort: searchParams.get("sort") || "",
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (query.q) {
       let title = `Search: "${query.q}"`;
       if (query.page && query.page !== "1") {
@@ -38,13 +35,33 @@ export function SiteSearch() {
     } else {
       document.title = "No query, no results.";
     }
-  }, [query]);
+  }, [query.q, query.page]);
 
-  useEffect(() => {
-    if (query.q) {
-      setNewQ(query.q);
+  // React.useEffect(() => {
+  //   if (query.q) {
+  //     setNewQ(query.q);
+  //   }
+  // }, [query.q]);
+
+  const mountCounter = React.useRef(0);
+  React.useEffect(() => {
+    if (ga) {
+      if (mountCounter.current > 0) {
+        // 'dimension19' means it's a client-side navigation.
+        // I.e. not the initial load but the location has now changed.
+        // Note that in local development, where you use `localhost:3000`
+        // this will always be true because it's always client-side navigation.
+        ga("set", "dimension19", "Yes");
+      }
+      ga("send", {
+        hitType: "pageview",
+        location: window.location.toString(),
+      });
+      // By counting every time a document is mounted, we can use this to know if
+      // a client-side navigation happened.
+      mountCounter.current++;
     }
-  }, [query.q]);
+  }, [query.q, query.page, ga]);
 
   return (
     <div className="site-search">
@@ -60,28 +77,22 @@ export function SiteSearch() {
           <h1>No query, no results.</h1>
         )}
 
-        <form
-          action={`/${locale}/search`}
-          onSubmit={(event) => {
-            event.preventDefault();
-            setSearchParams({ q: newQ });
+        <SiteSearchForm
+          locale={locale}
+          query={query}
+          onSubmit={(query: SiteSearchQuery) => {
+            // setSearchParams({ q: newQ });
+            const newParams = { q: query.q };
+            setSearchParams(newParams);
           }}
-        >
-          <input
-            type="search"
-            name="q"
-            value={newQ}
-            onChange={(event) => setNewQ(event.target.value)}
-          />
-          <button type="submit">Search</button>
-        </form>
+        />
 
         {!isServer && query.q && (
-          <Suspense fallback={<p>Loading...</p>}>
+          <React.Suspense fallback={<p>Loading...</p>}>
             <SearchResults
               query={new URLSearchParams(queryToSequence(query))}
             />
-          </Suspense>
+          </React.Suspense>
         )}
       </PageContentContainer>
     </div>
@@ -90,7 +101,7 @@ export function SiteSearch() {
 
 type SequenceTuple = [string, string];
 
-function queryToSequence(obj: Query): SequenceTuple[] {
+function queryToSequence(obj: SiteSearchQuery): SequenceTuple[] {
   const sequence: SequenceTuple[] = [];
   Object.entries(obj).forEach(([key, value]) => {
     if (Array.isArray(value)) {
