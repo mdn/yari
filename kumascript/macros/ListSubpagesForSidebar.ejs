@@ -28,7 +28,6 @@ if (path.substr(-1, 1) === '/') {
 
 var pages = await page.subpagesExpand(path, -1, parent);
 var containsTag = page.hasTag;
-var escapeQuotes = mdn.escapeQuotes;
 var htmlEscape = kuma.htmlEscape;
 
 var output = '';
