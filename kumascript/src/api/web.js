@@ -39,7 +39,7 @@ module.exports = {
             `${hrefpath} redirects to ${page.url}`,
             {
               current: subpath,
-              suggested: page.url.replace(basepath, ""),
+              suggested: page.url.replace(basepath, "").replace(/\//g, "."),
             }
           );
         } else {
