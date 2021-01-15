@@ -143,7 +143,7 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
         if (!Image.findByURL(hrefNormalized)) {
           // Before we give up, check if it's a redirect.
           const resolved = Redirect.resolve(hrefNormalized);
-          if (resolved !== hrefNormalized && !image) {
+          if (resolved !== hrefNormalized) {
             addBrokenLink(
               a,
               checked.get(href),
