@@ -43,6 +43,9 @@ function Layout({ pageType, children }) {
         })
         .then(function(response) {
          a.dataset.status = response.status;
+        })
+        .catch(function(error) {
+         a.dataset.error = error;
         });
        });
       </script>
