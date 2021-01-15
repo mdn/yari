@@ -79,7 +79,7 @@ def test_hreflang_basic(base_url):
 
 @pytest.mark.parametrize(
     "uri,expected_keys",
-    [["/api/v1/whoami", [("waffle", ("flags", "switches", "samples"))]]],
+    [["/api/v1/whoami", [("waffle", ("flags", "switches"))]]],
     ids=("whoami",),
 )
 def test_api_basic(base_url, uri, expected_keys):
