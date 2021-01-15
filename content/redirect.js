@@ -9,19 +9,17 @@ const {
   VALID_LOCALES,
 } = require("./constants");
 
-const FORBIDDEN_URL_SYMBOLS_SET = new Set(FORBIDDEN_URL_SYMBOLS);
-
-function urlHasInvalidSymbols(url) {
-  return url.split("").some((c) => FORBIDDEN_URL_SYMBOLS_SET.has(c));
+function checkURLInvalidSymbols(url) {
+  for (const character of FORBIDDEN_URL_SYMBOLS) {
+    if (url.includes(character)) {
+      throw new Error(`URL contains invalid character '${character}'`);
+    }
+  }
 }
 
 // Throw if this can't be a redirect from-URL.
 function validateFromURL(url) {
-  if (urlHasInvalidSymbols(url)) {
-    throw new Error(
-      `From-URL must not contain any of: ${FORBIDDEN_URL_SYMBOLS.join(",")}`
-    );
-  }
+  checkURLInvalidSymbols(url);
   // This is a circular dependency we should solve that in another way.
   const { findByURL } = require("./document");
   validateURLLocale(url);
@@ -49,11 +47,7 @@ function validateToURL(url) {
       throw new Error("We only redirect to https://");
     }
   } else {
-    if (urlHasInvalidSymbols(url)) {
-      throw new Error(
-        `To-URL must not contain any of: ${FORBIDDEN_URL_SYMBOLS.join(",")}`
-      );
-    }
+    checkURLInvalidSymbols(url);
     validateURLLocale(url);
 
     // Can't point to something that redirects to something
@@ -79,7 +73,7 @@ function validateURLLocale(url) {
   // Check that it's a valid document URL
   const locale = url.split("/")[1];
   if (!locale || url.split("/")[2] !== "docs") {
-    throw new Error("The from-URL is expected to be /$locale/docs/");
+    throw new Error("The URL is expected to be /$locale/docs/");
   }
   const validValues = [...VALID_LOCALES.values()];
   if (!validValues.includes(locale)) {
@@ -121,7 +115,7 @@ function load(files = null, verbose = false) {
       .readdirSync(CONTENT_ROOT)
       .map((n) => path.join(CONTENT_ROOT, n))
       .filter((filepath) => fs.statSync(filepath).isDirectory());
-    if (CONTENT_TRANSLATED_ROOT && fs.existsSync(CONTENT_TRANSLATED_ROOT)) {
+    if (CONTENT_TRANSLATED_ROOT) {
       const translatedLocaleFolders = fs
         .readdirSync(CONTENT_TRANSLATED_ROOT)
         .map((n) => path.join(CONTENT_TRANSLATED_ROOT, n))
@@ -241,18 +235,21 @@ function shortCuts(pairs, throws = false) {
 
 function decodePairs(pairs) {
   return pairs.map(([from, to]) => {
-    const f = decodeURI(from).split("/").map(decodeURIComponent).join("/");
-    let t = decodeURI(to);
-    if (t.startsWith("/")) {
-      t = t.split("/").map(decodeURIComponent).join("/");
+    const fromDecoded = decodeURI(from)
+      .split("/")
+      .map(decodeURIComponent)
+      .join("/");
+    let toDecoded = decodeURI(to);
+    if (toDecoded.startsWith("/")) {
+      toDecoded = toDecoded.split("/").map(decodeURIComponent).join("/");
     }
     if (
-      urlHasInvalidSymbols(from) ||
-      (to.startsWith("/") && urlHasInvalidSymbols(to))
+      checkURLInvalidSymbols(from) ||
+      (to.startsWith("/") && checkURLInvalidSymbols(to))
     ) {
       throw new Error(`${from}\t${to} contains invalid symbols`);
     }
-    return [f, t];
+    return [fromDecoded, toDecoded];
   });
 }
 
