@@ -72,12 +72,14 @@ def test_hreflang_basic(base_url):
     assert resp.status_code == 200
     html = PyQuery(resp.text)
     assert html.attr("lang") == "en"
-    assert html.find('head > link[hreflang="en"][href="{}"]'.format(url))
+    assert html.find(
+        'head > link[hreflang="en"][href="https://developer.mozilla.org/en-US/docs/Web/HTTP"]'
+    )
 
 
 @pytest.mark.parametrize(
     "uri,expected_keys",
-    [["/api/v1/whoami", [("waffle", ("flags", "switches", "samples"))]]],
+    [["/api/v1/whoami", [("waffle", ("flags", "switches"))]]],
     ids=("whoami",),
 )
 def test_api_basic(base_url, uri, expected_keys):

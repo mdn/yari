@@ -80,7 +80,7 @@ let s_and = mdn.localString({
     "en-US": "and ",
     "de"   : "und ",
     "fr"   : "et ",
-	"ja"   : "と",
+    "ja"   : "と",
     "ru"   : "и "
 });
 
@@ -322,7 +322,7 @@ async function formatSyntax(rawSyntax) {
     operators.forEach(function(operator) {
         if (formattedSyntax.indexOf("\n") !== -1 &&
             operator.title === "Curly braces") {
-		    return "";
+            return "";
         }
 
         formattedSyntax = formattedSyntax.replace(operator.regexp,
@@ -394,7 +394,7 @@ async function formatTypesSyntax(formattedSyntax, describedTypes) {
                     }
                     describedTypes.push(type);
                 }
-            };
+            }
 
             if (typesSyntax !== "") {
                 formattedTypesSyntax += "<p style=\"font-family:Open Sans,Arial," +
@@ -428,7 +428,7 @@ if (name === "preview-wiki-content") {
 } else {
     if (atRule) {
         if (data.atRules[atRule] && data.atRules[atRule].descriptors) {
-    	    rawSyntax = data.atRules[atRule].descriptors[name].syntax;
+            rawSyntax = data.atRules[atRule].descriptors[name].syntax;
         }
     } else if (name[0] === "@") {
         if (data.atRules[name].syntax) {
@@ -446,6 +446,8 @@ if (name === "preview-wiki-content") {
     formattedSyntax += await formatTypesSyntax(formattedSyntax, []);
 }
 
-var result = formattedSyntax || s_missing;
+if (!formattedSyntax) {
+    throw new Error(`No syntax found in DB for '${name}'`);
+}
 
-%><%- result %>
+%><%- formattedSyntax %>

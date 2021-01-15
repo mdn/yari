@@ -9,6 +9,16 @@ var slug = env.slug;
 var locale = env.locale;
 var APIHref = '/' + locale + '/docs/Web/API';
 var output = "";
+
+// This is a hack. But to be able to use this macro in the /MDN/Kitchensink page
+// we have to, unfortunately, pretend that our current slug is something
+// that it's not. Otherwise you'll always get a `MacroPagesError` when using
+// this macro on the kitchensink page.
+if (slug.toLowerCase().startsWith('mdn/kitchensink')) {
+  // Sorry, but it's important to be able to run this macro for CI.
+  slug = 'Web/API/ServiceWorker';
+}
+
 // slug is not available in preview mode.
 if (slug) {
 var mainIF = slug.replace('Web/API/','').split('/')[0];
