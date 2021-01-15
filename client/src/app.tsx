@@ -49,11 +49,6 @@ function Layout({ pageType, children }) {
         .catch(this.catch)
        }
       </script>
-      <style>
-       a[data-status^=4] {
-        color: red; 
-       }
-      </style>
     </>
   );
 }
