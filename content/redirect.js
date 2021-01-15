@@ -90,20 +90,26 @@ function validateURLLocale(url) {
 function add(locale, urlPairs) {
   // Copied from the load() function but without any checking and preserving
   // sort order.
+  const root = locale === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
   const redirectsFilePath = path.join(
-    CONTENT_ROOT,
+    root,
     locale.toLowerCase(),
     "_redirects.txt"
   );
-  const content = fs.readFileSync(redirectsFilePath, "utf-8");
-  const pairs = content
-    .trim()
-    .split("\n")
-    // Skip the header line.
-    .slice(1)
-    .map((line) => line.trim().split(/\s+/));
+  const pairs = [];
+  if (fs.existsSync(redirectsFilePath)) {
+    const content = fs.readFileSync(redirectsFilePath, "utf-8");
+    pairs.push(
+      ...content
+        .trim()
+        .split("\n")
+        // Skip the header line.
+        .slice(1)
+        .map((line) => line.trim().split(/\t+/))
+    );
+  }
   pairs.push(...urlPairs);
-  write(path.join(CONTENT_ROOT, locale.toLowerCase()), pairs);
+  write(path.join(root, locale.toLowerCase()), pairs);
 }
 
 // The module level cache
