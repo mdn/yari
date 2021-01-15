@@ -9,7 +9,7 @@ const imageminMozjpeg = require("imagemin-mozjpeg");
 const imageminGifsicle = require("imagemin-gifsicle");
 const imageminSvgo = require("imagemin-svgo");
 
-const { Document, Redirect } = require("../content");
+const { Document, Redirect, Image } = require("../content");
 const { FLAW_LEVELS } = require("./constants");
 const { packageBCD } = require("./resolve-bcd");
 const {
@@ -139,17 +139,20 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
       }
       const found = Document.findByURL(hrefNormalized);
       if (!found) {
-        // Before we give up, check if it's a redirect
-        const resolved = Redirect.resolve(hrefNormalized);
-        if (resolved !== hrefNormalized) {
-          addBrokenLink(
-            a,
-            checked.get(href),
-            href,
-            resolved + absoluteURL.search + absoluteURL.hash
-          );
-        } else {
-          addBrokenLink(a, checked.get(href), href);
+        // Before we give up, check if it's an image.
+        if (!Image.findByURL(hrefNormalized)) {
+          // Before we give up, check if it's a redirect.
+          const resolved = Redirect.resolve(hrefNormalized);
+          if (resolved !== hrefNormalized && !image) {
+            addBrokenLink(
+              a,
+              checked.get(href),
+              href,
+              resolved + absoluteURL.search + absoluteURL.hash
+            );
+          } else {
+            addBrokenLink(a, checked.get(href), href);
+          }
         }
       } else {
         // But does it have the correct case?!
