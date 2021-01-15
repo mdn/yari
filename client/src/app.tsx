@@ -36,16 +36,18 @@ function Layout({ pageType, children }) {
       <div className="page-overlay hidden"></div>
       <script>
        const a = document.querySelector("a");
+       a.then = function(response) {
+         this.dataset.status = response.status;
+       };
+       a.catch = function(error) {
+         this.dataset.error = error;
+       };
        a.onload = function() {
         fetch(this.href, {
          method: "HEAD"
         })
-        .then(function(response) {
-         this.dataset.status = response.status;
-        })
-        .catch(function(error) {
-         this.dataset.error = error;
-        });
+        .then(this.then)
+        .catch(this.catch);
        };
       </script>
       <style>
