@@ -83,6 +83,43 @@ program
     })
   )
 
+  .command("fix-redirects", "Consolidate/fix redirects")
+  .argument("<locale...>", "Locale", {
+    default: DEFAULT_LOCALE,
+    validator: [...VALID_LOCALES.values(), ...VALID_LOCALES.keys()],
+  })
+  .action(
+    tryOrExit(({ args, logger }) => {
+      const { locale } = args;
+      for (const l of locale) {
+        Redirect.add(l.toLowerCase(), []);
+        logger.info(chalk.green(`Fixed ${l}`));
+      }
+    })
+  )
+
+  .command("add-redirect", "Add a new redirect")
+  .argument("<from>", "From-URL", {
+    validator: (value) => {
+      Redirect.validateFromURL(value);
+      return value;
+    },
+  })
+  .argument("<to>", "To-URL", {
+    validator: (value) => {
+      Redirect.validateToURL(value);
+      return value;
+    },
+  })
+  .action(
+    tryOrExit(({ args, logger }) => {
+      const { from, to } = args;
+      const locale = from.split("/")[1];
+      Redirect.add(locale, [[from, to]]);
+      logger.info(chalk.green(`Saved '${from}' → '${to}'`));
+    })
+  )
+
   .command("delete", "Delete content")
   .argument("<slug>", "Slug")
   .argument("[locale]", "Locale", {

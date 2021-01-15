@@ -2,7 +2,11 @@ const fs = require("fs");
 const path = require("path");
 
 const { resolveFundamental } = require("../libs/fundamental-redirects");
-const { CONTENT_ROOT, VALID_LOCALES } = require("./constants");
+const {
+  CONTENT_ROOT,
+  CONTENT_TRANSLATED_ROOT,
+  VALID_LOCALES,
+} = require("./constants");
 
 // Throw if this can't be a redirect from-URL.
 function validateFromURL(url) {
@@ -94,6 +98,13 @@ function load(files = null, verbose = false) {
       .readdirSync(CONTENT_ROOT)
       .map((n) => path.join(CONTENT_ROOT, n))
       .filter((filepath) => fs.statSync(filepath).isDirectory());
+    if (CONTENT_TRANSLATED_ROOT && fs.existsSync(CONTENT_TRANSLATED_ROOT)) {
+      const translatedLocaleFolders = fs
+        .readdirSync(CONTENT_TRANSLATED_ROOT)
+        .map((n) => path.join(CONTENT_TRANSLATED_ROOT, n))
+        .filter((filepath) => fs.statSync(filepath).isDirectory());
+      localeFolders.push(...translatedLocaleFolders);
+    }
 
     files = localeFolders
       .map((folder) => path.join(folder, "_redirects.txt"))
@@ -206,7 +217,11 @@ function shortCuts(pairs, throws = false) {
 }
 
 function write(localeFolder, pairs) {
-  save(localeFolder, shortCuts(pairs));
+  const decodedPairs = pairs.map(([from, to]) => [
+    decodeURI(from),
+    decodeURI(to),
+  ]);
+  save(localeFolder, shortCuts(decodedPairs));
 }
 
 function save(localeFolder, pairs) {
