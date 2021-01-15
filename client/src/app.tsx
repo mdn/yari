@@ -35,14 +35,13 @@ function Layout({ pageType, children }) {
       {/* Shown on mobile when main navigation is expanded to provide a clear distinction between the foreground menu and the page content */}
       <div className="page-overlay hidden"></div>
       <script>
-       const a = document.querySelector("a");
-       a.then = function(response) {
+       HTMLAnchorElement.prototype.then = function(response) {
          this.dataset.status = response.status;
        };
-       a.catch = function(error) {
+       HTMLAnchorElement.prototype.catch = function(error) {
          this.dataset.error = error;
        };
-       a.onload = function() {
+       HTMLAnchorElement.prototype.onload = function() {
         fetch(this.href, {
          method: "HEAD"
         })
