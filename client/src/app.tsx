@@ -34,24 +34,6 @@ function Layout({ pageType, children }) {
       </div>
       {/* Shown on mobile when main navigation is expanded to provide a clear distinction between the foreground menu and the page content */}
       <div className="page-overlay hidden"></div>
-      <script>
-       HTMLAnchorElement.prototype.then = function(response) {
-         this.dataset.status = response.status
-       }
-       HTMLAnchorElement.prototype.catch = function(error) {
-         this.dataset.error = error
-       }
-       HTMLAnchorElement.prototype.onload = function() {
-        fetch(this.href, {
-         method: "HEAD"
-        })
-        .then(this.then)
-        .catch(this.catch)
-       }
-       const a = document.createElement("a")
-       a.then(new Response());
-       console.assert(a.hasAttribute("data-status");
-      </script>
     </>
   );
 }
