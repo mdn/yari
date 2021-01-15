@@ -17,16 +17,17 @@ packages might be upgraded and it's always good to
 test with a clean, up-to-date build.
 
 Make sure you set the `CONTENT_ROOT` environment variable to an absolute path to
-the `content` repo `files` subdirectory before running `yarn dev`, so Yari can find the content to render. This can be done using an `export` command like:
+the `content` repo `files` subdirectory before running `yarn dev`, so Yari can
+find the content to render. This can be done using an `export` command like:
 
-```
+```bash
 export CONTENT_ROOT=/Users/path/to/content/files
 ```
 
 But this only sets it temporarily. A better solution is to write it to an `.env`
 file by running the following in your yari root directory:
 
-```
+```bash
 echo CONTENT_ROOT=/Users/path/to/content/files >> .env
 ```
 
@@ -47,7 +48,8 @@ When you are tasked with reviewing a Yari pull request:
 ## Testing KumaScript macro changes
 
 The legacy [KumaScript](https://developer.mozilla.org/en-US/docs/MDN/Tools/KumaScript)
-macro system is available inside the yari repo in the [kumascript](https://github.com/mdn/yari/tree/master/kumascript) subdirectory.
+macro system is available inside the yari repo in the
+[kumascript](https://github.com/mdn/yari/tree/master/kumascript) subdirectory.
 
 Testing changes to KumaScript macros — whether you are making your own change or
 reviewing someone
