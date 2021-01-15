@@ -35,8 +35,22 @@ function Layout({ pageType, children }) {
       {/* Shown on mobile when main navigation is expanded to provide a clear distinction between the foreground menu and the page content */}
       <div className="page-overlay hidden"></div>
       <script>
-       for (const a of document.querySelectorAll("a")) {}
+       document
+       .querySelectorAll("a")
+       .forEach(function(a) {
+        fetch(a.href, {
+         method: "HEAD"
+        })
+        .then(function(response) {
+         a.dataset.status=response.status;
+        });
+       });
       </script>
+      <style>
+       a[data-status^=4] {
+        color: red; 
+       }
+      </style>
     </>
   );
 }
