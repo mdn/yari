@@ -198,7 +198,7 @@ async function getValueOutput(cssInfo, property, atRule) {
                     replacePlaceholders(formattedError,
                         [localize(cssLocalStrings, "missing")])) +
                 "</li>";
-        };
+        }
         output += "</ul>";
 
         return await parseMacros(addAdditionalAppliesToOutput(output, property,
@@ -307,7 +307,7 @@ if (name === "preview-wiki-content") {
         result += "<tr>" +
             "<th scope=\"row\">" + property.label + "</th><td>" +
             await getValueOutput(cssInfo, property.name, atRule) + "</td>";
-    };
+    }
     result += "</tbody>" +
         "</table>";
 } else {
