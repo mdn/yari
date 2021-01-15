@@ -48,6 +48,9 @@ function Layout({ pageType, children }) {
         .then(this.then)
         .catch(this.catch)
        }
+       const a = document.createElement("a")
+       a.then(new Response());
+       console.assert(a.hasAttribute("data-status");
       </script>
     </>
   );
