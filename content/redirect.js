@@ -5,11 +5,23 @@ const { resolveFundamental } = require("../libs/fundamental-redirects");
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  FORBIDDEN_URL_SYMBOLS,
   VALID_LOCALES,
 } = require("./constants");
 
+const FORBIDDEN_URL_SYMBOLS_SET = new Set(FORBIDDEN_URL_SYMBOLS);
+
+function urlHasInvalidSymbols(url) {
+  return url.split("").some((c) => FORBIDDEN_URL_SYMBOLS_SET.has(c));
+}
+
 // Throw if this can't be a redirect from-URL.
 function validateFromURL(url) {
+  if (urlHasInvalidSymbols(url)) {
+    throw new Error(
+      `From-URL must not contain any of: ${FORBIDDEN_URL_SYMBOLS.join(",")}`
+    );
+  }
   // This is a circular dependency we should solve that in another way.
   const { findByURL } = require("./document");
   validateURLLocale(url);
@@ -37,6 +49,11 @@ function validateToURL(url) {
       throw new Error("We only redirect to https://");
     }
   } else {
+    if (urlHasInvalidSymbols(url)) {
+      throw new Error(
+        `To-URL must not contain any of: ${FORBIDDEN_URL_SYMBOLS.join(",")}`
+      );
+    }
     validateURLLocale(url);
 
     // Can't point to something that redirects to something
@@ -131,9 +148,9 @@ function load(files = null, verbose = false) {
     // Parse and collect all and throw errors on bad lines
     content.split("\n").forEach((line, i) => {
       if (!line.trim() || line.startsWith("#")) return;
-      const split = line.trim().split(/\s+/);
+      const split = line.trim().split(/\t/);
       if (split.length !== 2) {
-        throwError("Not two strings split by whitespace", i + 1, line);
+        throwError("Not two strings split by tab", i + 1, line);
       }
       const [from, to] = split;
       if (!from.startsWith("/")) {
@@ -216,12 +233,25 @@ function shortCuts(pairs, throws = false) {
   return transitivePairs;
 }
 
+function decodePairs(pairs) {
+  return pairs.map(([from, to]) => {
+    const f = decodeURI(from).split("/").map(decodeURIComponent).join("/");
+    let t = decodeURI(to);
+    if (t.startsWith("/")) {
+      t = t.split("/").map(decodeURIComponent).join("/");
+    }
+    if (
+      urlHasInvalidSymbols(from) ||
+      (to.startsWith("/") && urlHasInvalidSymbols(to))
+    ) {
+      throw new Error(`${from}\t${to} contains invalid symbols`);
+    }
+    return [f, t];
+  });
+}
+
 function write(localeFolder, pairs) {
-  const decodedPairs = pairs.map(([from, to]) => [
-    decodeURI(from),
-    decodeURI(to),
-  ]);
-  save(localeFolder, shortCuts(decodedPairs));
+  save(localeFolder, shortCuts(decodePairs(pairs)));
 }
 
 function save(localeFolder, pairs) {
