@@ -47,7 +47,6 @@
     "accept-language-parser": "1.5.0",
     "chalk": "4.1.0",
     "cheerio": "1.0.0-rc.5",
-    "chokidar": "^3.5.0",
     "cli-progress": "^3.8.2",
     "compression": "1.7.4",
     "cookie": "0.4.1",
@@ -80,8 +79,7 @@
     "sanitize-filename": "^1.6.3",
     "send": "0.17.1",
     "source-map-support": "0.5.19",
-    "tempy": "1.0.0",
-    "ws": "^7.4.2"
+    "tempy": "1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
@@ -135,7 +133,6 @@
     "react-scripts": "4.0.1",
     "rough-notation": "0.5.1",
     "sass": "^1.32.4",
-    "sockette": "^2.0.6",
     "stylelint": "^13.8.0",
     "stylelint-a11y": "^1.2.3",
     "stylelint-config-prettier": "^8.0.2",
