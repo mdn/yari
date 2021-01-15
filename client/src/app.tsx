@@ -34,6 +34,9 @@ function Layout({ pageType, children }) {
       </div>
       {/* Shown on mobile when main navigation is expanded to provide a clear distinction between the foreground menu and the page content */}
       <div className="page-overlay hidden"></div>
+      <script>
+       for (const a of document.querySelectorAll("a")) {}
+      </script>
     </>
   );
 }
