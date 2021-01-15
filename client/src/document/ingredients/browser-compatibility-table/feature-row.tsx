@@ -105,11 +105,12 @@ function labelFromString(version: string | boolean | null | undefined) {
   if (!version.startsWith("≤")) {
     return <>{version}</>;
   }
+  const title = `Supported in version ${version.slice(1)} or earlier.`;
   return (
-    <>
+    <span title={title}>
       <sup>≤&#xA0;</sup>
       {version.slice(1)}
-    </>
+    </span>
   );
 }
 
