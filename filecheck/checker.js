@@ -129,15 +129,11 @@ async function checkFile(filePath, options) {
     const files = await imagemin([filePath], {
       destination: tempdir,
       plugins,
-      // Needed because otherwise start trying to find files using
-      // `globby()` which chokes on file paths that contain brackets.
-      // E.g. `/web/css/transform-function/rotate3d()/transform.png`
-      // Setting this to false tells imagemin() to just accept what
-      // it's given instead of trying to search for the image.
-      glob: false,
     });
     if (!files.length) {
-      throw new Error(`${filePath} could not be compressed`);
+      throw new Error(
+        `${filePath} could not be compressed with plugin: ${plugins[0]}`
+      );
     }
     const compressed = files[0];
     const sizeBefore = fs.statSync(filePath).size;
