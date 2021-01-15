@@ -35,18 +35,15 @@ function Layout({ pageType, children }) {
       {/* Shown on mobile when main navigation is expanded to provide a clear distinction between the foreground menu and the page content */}
       <div className="page-overlay hidden"></div>
       <script>
-       document
-       .querySelectorAll("a")
-       .forEach(function(a) {
-        fetch(a.href, {
-         method: "HEAD"
-        })
-        .then(function(response) {
-         a.dataset.status = response.status;
-        })
-        .catch(function(error) {
-         a.dataset.error = error;
-        });
+       const a = document.querySelector("a");
+       fetch(a.href, {
+        method: "HEAD"
+       })
+       .then(function(response) {
+        a.dataset.status = response.status;
+       })
+       .catch(function(error) {
+        a.dataset.error = error;
        });
       </script>
       <style>
