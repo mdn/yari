@@ -112,7 +112,7 @@
     "fuzzyjs": "4.0.4",
     "fuzzysearch": "1.0.3",
     "history": "5.0.0",
-    "html-validate": "4.1.0",
+    "html-validate": "4.2.0",
     "husky": "4.3.7",
     "ignore-loader": "^0.1.2",
     "jest-environment-jsdom-sixteen": "^1.0.3",
