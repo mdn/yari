@@ -42,7 +42,7 @@ function Layout({ pageType, children }) {
          method: "HEAD"
         })
         .then(function(response) {
-         a.dataset.status=response.status;
+         a.dataset.status = response.status;
         });
        });
       </script>
