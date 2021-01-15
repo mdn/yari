@@ -830,6 +830,10 @@
       "inh": "HTMLElement",
       "impl": []
     },
+    "HTMLPortalElement": {
+      "inh": "HTMLElement",
+      "impl": []
+    },
     "HTMLPreElement": {
       "inh": "HTMLElement",
       "impl": []

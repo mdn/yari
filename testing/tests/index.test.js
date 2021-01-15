@@ -416,7 +416,7 @@ test("content built bar page", () => {
   const $ = cheerio.load(html);
   expect($("a[data-flaw-src]").length).toEqual(12);
 
-  const brokenLinks = $("a.new");
+  const brokenLinks = $("a.page-not-created");
   expect(brokenLinks.length).toEqual(4);
   expect(brokenLinks.eq(0).data("flaw-src")).toBe('{{CSSxRef("bigfoot")}}');
   expect(brokenLinks.eq(0).text()).toBe("bigfoot");

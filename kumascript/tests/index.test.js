@@ -107,7 +107,7 @@ describe("testing the main render() function", () => {
     );
     const $ = cheerio.load(result);
     const brokenLink = $(
-      'a.new[title^="The documentation about this has not yet been written"]'
+      'a.page-not-created[title^="The documentation about this has not yet been written"]'
     );
     expect(brokenLink.length).toBe(3);
     expect(brokenLink.html()).toBe("<code>bigfoot</code>");
