@@ -28,9 +28,7 @@ describe("Testing the kitchensink page", () => {
   withDeveloping("open the page", async () => {
     await page.goto(devURL("/en-US/docs/MDN/Kitchensink"));
     await expect(page).toMatch("The MDN Content Kitchensink");
-    // If there are no flaws on that page or if there are, it will still
-    // mention the word "flaws" somewhere in the Toolbar
-    await expect(page).toMatchElement(".toolbar", { text: "flaws" });
+    await expect(page).toMatch("No known flaws at the moment");
   });
 
   withDeveloping("server-side render HTML", async () => {
@@ -49,6 +47,8 @@ describe("Testing the kitchensink page", () => {
       serverURL("/en-US/docs/MDN/Kitchensink/index.json")
     ).json();
     expect(doc.title).toBe("The MDN Content Kitchensink");
+    // There should be no flaws
+    expect(Object.keys(doc.flaws).length).toBe(0);
   });
 
   // XXX Do more advanced tasks that test the server and document "CRUD operations"
