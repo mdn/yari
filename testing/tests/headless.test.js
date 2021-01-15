@@ -61,7 +61,7 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement("h1", {
       text: "A Test Introduction to CSS layout",
     });
-    await expect(page).toMatchElement("#Flexbox", {
+    await expect(page).toMatchElement("#flexbox", {
       text: "Flexbox",
     });
     await expect(page).toMatchElement(
@@ -70,7 +70,7 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement(
       `iframe.live-sample-frame.sample-code-frame[src$="${flexSample2Uri}"]`
     );
-    await expect(page).toMatchElement("#Grid_Layout", {
+    await expect(page).toMatchElement("#grid_layout", {
       text: "Grid Layout",
     });
     await expect(page).toMatchElement(
@@ -111,7 +111,7 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement("h1", {
       text: "A Test Introduction to CSS Flexbox Layout",
     });
-    await expect(page).toMatchElement("#Flexbox", {
+    await expect(page).toMatchElement("#flexbox", {
       text: "Flexbox",
     });
     await expect(page).toMatchElement("#Flex_1 > pre.css.notranslate", {
@@ -137,7 +137,7 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement("h1", {
       text: "A Test Introduction to CSS Grid Layout",
     });
-    await expect(page).toMatchElement("#Grid_Layout", {
+    await expect(page).toMatchElement("#grid_layout", {
       text: "Grid Layout",
     });
     await expect(page).toMatchElement("#Grid_1 > pre.css.notranslate", {

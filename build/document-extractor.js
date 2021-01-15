@@ -1,4 +1,4 @@
-const cheerio = require("./monkeypatched-cheerio");
+const cheerio = require("cheerio");
 const { packageBCD } = require("./resolve-bcd");
 
 /** Extract and mutate the $ if it as a "Quick_Links" section.
@@ -272,14 +272,6 @@ function _addSingleSectionBCD($) {
     }
     browserReleaseData.set(name, releaseData);
   }
-
-  // We never need this data, after the release info has been extracted
-  // for each 'version_added'.
-  Object.values(browsers).forEach((browser) => {
-    // Remove because it's added weight which we don't need in the
-    // state data sent to the client eventually.
-    delete browser.releases;
-  });
 
   for (const [key, compat] of Object.entries(data)) {
     let block;

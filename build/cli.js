@@ -130,7 +130,19 @@ async function buildDocuments(files = null) {
     for (const { url, data } of bcdData) {
       fs.writeFileSync(
         path.join(outPath, path.basename(url)),
-        JSON.stringify(data)
+        JSON.stringify(data, (key, value) => {
+          // The BCD data object contains a bunch of data we don't need in the
+          // React component that loads the `bcd.json` file and displays it.
+          // The `.releases` block contains information about browsers (e.g
+          // release dates) and that part has already been extracted and put
+          // next to each version number where appropriate.
+          if (key === "releases") {
+            return undefined;
+          }
+          // TODO: Instead of serializing with a exclusion, instead explicitly
+          // serialize exactly only the data that is needed.
+          return value;
+        })
       );
     }
 

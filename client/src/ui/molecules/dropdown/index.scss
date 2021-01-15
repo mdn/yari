@@ -17,10 +17,6 @@ $menu-border-radius: 4px;
     font-weight: bold;
     padding: 0;
     white-space: nowrap;
-
-    @media #{$mq-tablet-and-up} {
-      padding: 0 $base-unit $base-unit;
-    }
   }
 
   .dropdown-menu-items {

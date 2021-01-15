@@ -40,15 +40,15 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Build the build
-        run: |
+        env:
           # What this does is it makes sure the built client is made for
           # doing CRUD work (e.g. previewing, toolbar, flaws UI, etc)
-          export REACT_APP_CRUD_MODE=true
+          REACT_APP_CRUD_MODE: true
 
           # This makes sure the auth is disabled. I.e. the "Sign in" link
           # in the header. It also disables any XHR checks to the server's
           # whoami endpoint.
-          export REACT_APP_DISABLE_AUTH=true
+          REACT_APP_DISABLE_AUTH: true
 
           # The 'yarn prepare-build' command is going to try to build up a
           # file for the git history so it can have an index of each files.
@@ -56,8 +56,8 @@ jobs:
           # which you'll want to build. But the CONTENT_ROOT can't be empty
           # so you have to set it to something. So let's (ab)use the content
           # we use for the end-to-end testing.
-          export CONTENT_ROOT=testing/content/files
-
+          CONTENT_ROOT: testing/content/files
+        run: |
           yarn prepare-build
 
       - name: Dry-run publish to see which files are included
