@@ -5696,7 +5696,7 @@ cheerio@1.0.0-rc.5:
     parse5 "^6.0.0"
     parse5-htmlparser2-tree-adapter "^6.0.0"
 
-"chokidar@>=2.0.0 <4.0.0", chokidar@^3.2.2, chokidar@^3.3.0, chokidar@^3.4.1, chokidar@^3.5.1:
+"chokidar@>=2.0.0 <4.0.0", chokidar@^3.2.2, chokidar@^3.3.0, chokidar@^3.4.1:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.1.tgz#ee9ce7bbebd2b79f49f304799d5468e31e14e68a"
   integrity sha512-9+s+Od+W0VJJzawDma/gvBNQqkTiqYTWLuZoyAsivsI4AaWTCzHG06/TMjsf1cYe9Cb97UCEhjz7HvnPk2p/tw==
@@ -16666,11 +16666,6 @@ snapdragon@^0.8.1:
     source-map-resolve "^0.5.0"
     use "^3.1.0"
 
-sockette@^2.0.6:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/sockette/-/sockette-2.0.6.tgz#63b533f3cfe3b592fc84178beea6577fa18cebf3"
-  integrity sha512-W6iG8RGV6Zife3Cj+FhuyHV447E6fqFM2hKmnaQrTvg3OydINV3Msj3WPFbX76blUlUxvQSMMMdrJxce8NqI5Q==
-
 sockjs-client@1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/sockjs-client/-/sockjs-client-1.4.0.tgz#c9f2568e19c8fd8173b4997ea3420e0bb306c7d5"
@@ -16746,7 +16741,7 @@ source-map-resolve@^0.5.0, source-map-resolve@^0.5.2:
     source-map-url "^0.4.0"
     urix "^0.1.0"
 
-source-map-support@^0.5.16, source-map-support@^0.5.6, source-map-support@~0.5.12, source-map-support@~0.5.19:
+source-map-support@0.5.19, source-map-support@^0.5.16, source-map-support@^0.5.6, source-map-support@~0.5.12, source-map-support@~0.5.19:
   version "0.5.19"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.19.tgz#a98b62f86dcaf4f67399648c085291ab9e8fed61"
   integrity sha512-Wonm7zOCIJzBGQdB+thsPar0kYuCIzYvxZwlBa87yi/Mdjv7Tip2cyVbLj5o0cFPN4EVkuTwb3GDDyUx2DGnGw==
@@ -19115,7 +19110,7 @@ ws@^6.1.0, ws@^6.2.1:
   dependencies:
     async-limiter "~1.0.0"
 
-ws@^7.2.3, ws@^7.4.2:
+ws@^7.2.3:
   version "7.4.2"
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.4.2.tgz#782100048e54eb36fe9843363ab1c68672b261dd"
   integrity sha512-T4tewALS3+qsrpGI/8dqNMLIVdq/g/85U98HPMa6F0m6xTbvhXU6RCQLqPH3+SlomNV/LdY6RXEbBpMH6EOJnA==
