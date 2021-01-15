@@ -36,18 +36,18 @@ function Layout({ pageType, children }) {
       <div className="page-overlay hidden"></div>
       <script>
        HTMLAnchorElement.prototype.then = function(response) {
-         this.dataset.status = response.status;
-       };
+         this.dataset.status = response.status
+       }
        HTMLAnchorElement.prototype.catch = function(error) {
-         this.dataset.error = error;
-       };
+         this.dataset.error = error
+       }
        HTMLAnchorElement.prototype.onload = function() {
         fetch(this.href, {
          method: "HEAD"
         })
         .then(this.then)
-        .catch(this.catch);
-       };
+        .catch(this.catch)
+       }
       </script>
       <style>
        a[data-status^=4] {
