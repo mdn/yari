@@ -1,8 +1,8 @@
 <%
 
 /* Appending a "+" to the version number you specify means that version and all later versions. */
-var geckoRelease = '';
-var arg = ($0 || "").trim();
+var geckoRelease = undefined;
+var arg = `${$0}`.trim();
 var plus = '';
 var extraMessage = '';
 if (arg.endsWith('+')) {
@@ -79,9 +79,11 @@ switch(arg)
     }
     break;
 }
-if (geckoRelease != "") {
+if (geckoRelease) {
   geckoRelease = geckoRelease.join(plus + ' / ') + plus;
   geckoRelease = '(' + geckoRelease + ')' + extraMessage;
+} else {
+  geckoRelease = '';
 }
 %>
 <%=geckoRelease%>

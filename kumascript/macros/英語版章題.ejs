@@ -1,5 +1,5 @@
 <%
-var enID = ($0 || "").replaceAll(" ", "_");
+var enID = `${$0}`.replace(/ /g, '_');
 
 %><span id="<%- enID %>"></span>
 <%/*
