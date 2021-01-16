@@ -36,7 +36,7 @@ function htmlEscape(str) {
 }
 
 function normalize(str) {
-    return str.replace(/ \(@[\w\-]+\)$/, "").replace(/@[\w\-]+\/|[^a-z0-9\(\)\-]/gi, "");
+    return str.replace(/ \(@[\w-]+\)$/, "").replace(/@[\w-]+\/|[^a-z0-9()-]/gi, "");
 }
 
 function compareItems(itemA, itemB) {
@@ -54,7 +54,7 @@ function compareItems(itemA, itemB) {
 }
 
 function getItemsFromSyntax(syntax) {
-    var items = syntax.match(/[\w\-]+\([\w\-<>,#+*?\[\]\| ]*\)|@[\w\-]+/g) || [];
+    var items = syntax.match(/[\w-]+\([\w\-<>,#+*?[\]| ]*\)|@[\w-]+/g) || [];
     for (var i = 0; i < items.length; i++) {
         // Remove parameters
         items[i] = items[i].replace(/\(.*?\)/, "()");
