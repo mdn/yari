@@ -14,7 +14,6 @@ let atRule = $1;
 var data = require('mdn-data/css');
 let formattedError = "<span style=\"color:red;\">$1$</span>";
 let locale = env.locale;
-let escapeQuotes = mdn.escapeQuotes;
 let localize = mdn.getLocalString;
 let localizeString = mdn.localString;
 let replacePlaceholders = mdn.replacePlaceholders;
@@ -61,7 +60,6 @@ async function parseMacros(s) {
         return undefined;
     }
 
-    var apiName = "";
     var area = "";
     let parsedString = await string.asyncReplace(
         s,
@@ -146,9 +144,6 @@ function addAdditionalAppliesToOutput(output, property, cssInfo) {
 */
 async function getValueOutput(cssInfo, property, atRule) {
     if (property === "relatedAtRule") {
-        let url = "/" + locale + "/docs/Web/CSS/" + atRule;
-        let page = await localWiki.getPage(url);
-
         return "<a href=\"/" + locale + "/docs/Web/CSS/" + atRule +
             "\"><code>" + atRule + "</code></a>";
     }
