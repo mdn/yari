@@ -18,7 +18,6 @@ var href = 'https://developer.mozilla.org/' + locale + '/docs/Web/API/';
 var mainIF = $3 || slug.replace('Web/API/','').split('/')[0];
 var rtlLocales = ['ar', 'he', 'fa'];
 var inheritanceChain = [mainIF];
-var descendants = [];
 var inh = data[0][mainIF] != undefined ? data[0][mainIF].inh : '';
 var width = $0 || 600;
 var height = $1 || 70;
@@ -38,16 +37,6 @@ function getInheritance(inh) {
   }
 }
 getInheritance(inh);
-
-/* function getDescendants(data) {
-  for (var key in data) {
-    if (data.hasOwnProperty(key) && data[key].inh == mainIF) {
-      descendants.push(key);
-    }
-  }
-  descendants.sort();
-}
-getDescendants(data[0]):*/
 
 var l = 0;
 

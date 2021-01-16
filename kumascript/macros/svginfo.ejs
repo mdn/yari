@@ -43,7 +43,6 @@ if (name === "preview-wiki-content") {
         var elements = [];
         for (var i = 0; i < svgInfo.content.elements.length; i++) {
             var element = svgInfo.content.elements[i];
-            var link = "";
             if (element.indexOf("&lt;") !== -1) {
                 elements.push(await template("SVGElement",
                     [element.replace(/&lt;|&gt;/g, "")]));
