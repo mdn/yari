@@ -86,8 +86,8 @@ describe("fixing flaws", () => {
         {
           CONTENT_ROOT: path.join(tempContentDir, "files"),
           BUILD_OUT_ROOT: tempBuildDir,
-          BUILD_FIX_FLAWS: "true",
-          BUILD_FIX_FLAWS_DRY_RUN: "true",
+          BUILD_FIX_FLAWS: true,
+          BUILD_FIX_FLAWS_DRY_RUN: true,
           BUILD_FOLDERSEARCH: pattern,
         },
         process.env
@@ -114,8 +114,8 @@ describe("fixing flaws", () => {
         {
           CONTENT_ROOT: path.join(tempContentDir, "files"),
           BUILD_OUT_ROOT: tempBuildDir,
-          BUILD_FIX_FLAWS: "true",
-          BUILD_FIX_FLAWS_DRY_RUN: "false",
+          BUILD_FIX_FLAWS: true,
+          BUILD_FIX_FLAWS_DRY_RUN: false,
           BUILD_FOLDERSEARCH: pattern,
         },
         process.env
