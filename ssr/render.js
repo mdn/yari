@@ -3,7 +3,7 @@ import path from "path";
 
 import jsesc from "jsesc";
 import { renderToString } from "react-dom/server";
-import cheerio from "./monkeypatched-cheerio";
+import cheerio from "cheerio";
 
 import {
   GOOGLE_ANALYTICS_ACCOUNT,
@@ -172,7 +172,14 @@ export default function render(
 
     if (doc.other_translations) {
       const allOtherLocales = doc.other_translations.map((t) => t.locale);
-      for (const translation of doc.other_translations) {
+      // Note, we also always include "self" as a locale. That's why we concat
+      // this doc's locale plus doc.other_translations.
+      const thisLocale = {
+        locale: doc.locale,
+        title: doc.title,
+        url: doc.mdn_url,
+      };
+      for (const translation of [...doc.other_translations, thisLocale]) {
         // The locale used in `<link rel="alternate">` needs to be the ISO-639-1
         // code. For example, it's "en", not "en-US". And it's "sv" not "sv-SE".
         // See https://developers.google.com/search/docs/advanced/crawling/localized-versions?hl=en&visit_id=637411409912568511-3980844248&rd=1#language-codes
@@ -219,7 +226,7 @@ export default function render(
       $("<script>").text(`\n${googleAnalyticsJS}\n`).appendTo($("head"));
       $(
         `<script async src="https://www.google-analytics.com/${
-          GOOGLE_ANALYTICS_DEBUG ? "anaytics_debug" : "analytics"
+          GOOGLE_ANALYTICS_DEBUG ? "analytics_debug" : "analytics"
         }.js"></script>`
       ).appendTo($("head"));
     }

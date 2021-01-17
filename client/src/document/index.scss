@@ -23,10 +23,17 @@
 }
 
 .article {
-  padding: $base-spacing;
+  padding: ($base-spacing / 2) $base-spacing $base-spacing;
 
   @media #{$mq-small-desktop-and-up} {
     margin-bottom: $large-spacing;
+  }
+
+  h2,
+  h3,
+  h4,
+  h5 {
+    margin-top: 0;
   }
 
   p,
@@ -90,12 +97,31 @@
     }
   }
 
-  /* readonly inline badges needs a slightly darker background color in general article content  */
-  .inline.readonly {
-    background-color: $neutral-550;
+  table {
+    margin-bottom: $base-spacing * 2;
   }
 
-  /* top navigational elements on tutorial pages */
+  /* page-not-created is the preferred class name, `new` is
+     here for backwards compatibility */
+  .page-not-created,
+  .new {
+    color: $red-300;
+    cursor: not-allowed;
+  }
+
+  /* readonly inline badges needs a slightly darker background color in general article content  */
+  .inline {
+    &.optional,
+    &.readonly {
+      background-color: $neutral-550;
+    }
+  }
+
+  /* 
+   * top navigational elements on tutorial pages 
+   * prevnext is added for backwards compatibility
+   */
+  .prevnext,
   .prev-next {
     @media #{$mq-tablet-and-up} {
       display: flex;

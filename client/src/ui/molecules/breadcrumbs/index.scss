@@ -65,13 +65,13 @@
       &::before {
         background: transparent url("~@mdn/dinocons/arrows/chevron.svg") 0 0
           no-repeat;
-        background-size: 12px;
+        background-size: auto;
         content: "";
         display: inline-block;
-        height: 12px;
+        height: 16px;
         margin-right: $base-spacing / 4;
         transform: rotate(-90deg);
-        width: 12px;
+        width: 16px;
 
         @media #{$mq-small-desktop-and-up} {
           display: none;

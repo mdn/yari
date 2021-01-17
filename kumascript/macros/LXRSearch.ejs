@@ -14,4 +14,4 @@ switch(lang) {
 }
 %>
 <a href="http://mxr.mozilla.org/mozilla-central/<%= $0 + '?' + $1 + '=' + $2 %>"><%-
-  string.trim($3) ? $3 : ('MXR ' + ($0 == 'ident' ? 'ID' : '') + searchfor) %></a>
+  `${$3}`.trim() ? $3 : ('MXR ' + ($0 == 'ident' ? 'ID' : '') + searchfor) %></a>

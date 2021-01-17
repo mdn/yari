@@ -10,14 +10,6 @@ module.exports = {
   //
   escapeQuotes: util.escapeQuotes,
 
-  // Check if the given wiki page exists.
-  // This was "temporarily" disabled 7 years ago!
-  pageExists(/*path*/) {
-    // Temporarily disabling this.
-    // See: https://bugzilla.mozilla.org/show_bug.cgi?id=775590#c4
-    return true;
-  },
-
   // Retrieve the content of a document for inclusion,
   // optionally filtering for a single section.
   //

@@ -1,9 +1,9 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 
-import { CRUD_MODE, NO_WATCHER } from "../constants";
-import { useWebSocketMessageHandler } from "../web-socket";
+import { CRUD_MODE } from "../constants";
+import { useGA } from "../ga-context";
 import { useDocumentURL } from "./hooks";
 import { Doc } from "./types";
 // Ingredients
@@ -33,6 +33,8 @@ import "./index.scss";
 const Toolbar = React.lazy(() => import("./toolbar"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
+  const ga = useGA();
+  const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
   const { locale } = useParams();
   const navigate = useNavigate();
@@ -61,18 +63,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
         props.doc.mdn_url.toLowerCase() === documentURL.toLowerCase()
           ? props.doc
           : null,
-      revalidateOnFocus: !!NO_WATCHER,
+      revalidateOnFocus: CRUD_MODE,
     }
   );
-
-  useWebSocketMessageHandler((message) => {
-    if (
-      message.type === "DOCUMENT_CHANGE" &&
-      message.change.document?.url === documentURL
-    ) {
-      mutate(dataURL);
-    }
-  });
 
   React.useEffect(() => {
     if (!doc && !error) {
@@ -83,6 +76,51 @@ export function Document(props /* TODO: define a TS interface for this */) {
       document.title = doc.pageTitle;
     }
   }, [doc, error]);
+
+  React.useEffect(() => {
+    if (ga && doc && !error) {
+      if (mountCounter.current > 0) {
+        // 'dimension19' means it's a client-side navigation.
+        // I.e. not the initial load but the location has now changed.
+        // Note that in local development, where you use `localhost:3000`
+        // this will always be true because it's always client-side navigation.
+        ga("set", "dimension19", "Yes");
+      }
+      ga("send", {
+        hitType: "pageview",
+        location: window.location.toString(),
+      });
+      // By counting every time a document is mounted, we can use this to know if
+      // a client-side navigation happened.
+      mountCounter.current++;
+    }
+  }, [doc, error, ga]);
+
+  React.useEffect(() => {
+    const location = document.location;
+    // Did you arrive on this page with a location hash?
+    if (location.hash && location.hash !== location.hash.toLowerCase()) {
+      // The location hash isn't lowercase. That probably means it's from before
+      // we made all `<h2 id>` and `<h3 id>` values always lowercase.
+      // Let's see if it can easily be fixed, but let's be careful and
+      // only do this if there is an element that matches.
+      try {
+        if (document.querySelector(location.hash.toLowerCase())) {
+          location.hash = location.hash.toLowerCase();
+        }
+      } catch (error) {
+        if (error instanceof DOMException) {
+          // You can't assume that the anchor on the page is a valid string
+          // for `document.querySelector()`.
+          // E.g. /en-US/docs/Web/HTML/Element/input#Form_<input>_types
+          // So if that the case, just ignore the error.
+          // It's not that critical to correct anyway.
+        } else {
+          throw error;
+        }
+      }
+    }
+  }, []);
 
   if (!doc && !error) {
     return <LoadingDocumentPlaceholder />;

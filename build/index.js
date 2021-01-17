@@ -1,4 +1,5 @@
 const chalk = require("chalk");
+const cheerio = require("cheerio");
 
 const {
   Document,
@@ -18,10 +19,9 @@ const SearchIndex = require("./search-index");
 const { addBreadcrumbData } = require("./document-utils");
 const { fixFixableFlaws, injectFlaws, injectSectionFlaws } = require("./flaws");
 const { normalizeBCDURLs, extractBCDData } = require("./bcd-urls");
-const { checkImageReferences } = require("./check-images");
+const { checkImageReferences, checkImageWidths } = require("./check-images");
 const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
-const cheerio = require("./monkeypatched-cheerio");
 const buildOptions = require("./build-options");
 const { gather: gatherGitHistory } = require("./git-history");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
@@ -195,7 +195,24 @@ async function buildDocument(document, documentOptions = {}) {
     if (options.clearKumascriptRenderCache) {
       renderKumascriptCache.clear();
     }
-    [renderedHtml, flaws] = await kumascript.render(document.url);
+    try {
+      [renderedHtml, flaws] = await kumascript.render(document.url);
+    } catch (error) {
+      if (error.name === "MacroInvocationError") {
+        // The source HTML couldn't even be parsed! There's no point allowing
+        // anything else move on.
+        // But considering that this might just be one of many documents you're
+        // building, let's at least help by setting a more user-friendly error
+        // message.
+        error.updateFileInfo(document.fileInfo);
+        throw new Error(
+          `MacroInvocationError trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
+        );
+      }
+
+      // Any other unexpected error re-thrown.
+      throw error;
+    }
 
     const sampleIds = kumascript.getLiveSampleIDs(
       document.metadata.slug,
@@ -249,7 +266,8 @@ async function buildDocument(document, documentOptions = {}) {
               )
             : null;
           const id = `macro${i}`;
-          return Object.assign({ id, fixable, suggestion }, flaw);
+          const explanation = flaw.error.message;
+          return Object.assign({ id, fixable, suggestion, explanation }, flaw);
         });
       }
     }
@@ -270,6 +288,7 @@ async function buildDocument(document, documentOptions = {}) {
 
   doc.title = metadata.title;
   doc.mdn_url = document.url;
+  doc.locale = metadata.locale;
 
   // Note that 'extractSidebar' will always return a string.
   // And if it finds a sidebar section, it gets removed from '$' too.
@@ -278,6 +297,9 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Check and scrutinize any local image references
   const fileAttachments = checkImageReferences(doc, $, options, document);
+
+  // Check the img tags for possible flaws and possible build-time rewrites
+  checkImageWidths(doc, $, options, document);
 
   // With the sidebar out of the way, go ahead and check the rest
   try {

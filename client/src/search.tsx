@@ -2,10 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import FlexSearch from "flexsearch";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 
 import { FuzzySearch, Doc, Substring } from "./fuzzy-search";
-import { useWebSocketMessageHandler } from "./web-socket";
 import { preload, preloadSupported } from "./document/preloading";
 
 import { useLocale } from "./hooks";
@@ -61,12 +60,6 @@ function useSearchIndex(): [null | SearchIndex, null | Error, () => void] {
     },
     { revalidateOnFocus: false }
   );
-
-  useWebSocketMessageHandler((event) => {
-    if (event.type === "SEARCH_INDEX_READY") {
-      mutate(url);
-    }
-  });
 
   useEffect(() => {
     if (!data) {
@@ -267,6 +260,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   return (
     <form
       action={`/${locale}/search`}
+      className="search-form"
       {...getComboboxProps({
         className: "search-widget",
         id: "nav-main-search",
@@ -306,6 +300,13 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         })}
       />
 
+      <input
+        type="submit"
+        className="ghost search-button"
+        value=""
+        aria-label="Search"
+      />
+
       <div {...getMenuProps()}>
         {isOpen && (
           <div className="search-results">
@@ -329,7 +330,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                 {...getItemProps({
                   key: item.url,
                   className:
-                    "result-item " + (i === highlightedIndex ? "highlit" : ""),
+                    "result-item " +
+                    (i === highlightedIndex ? "highlight" : ""),
                   item,
                   index: i,
                   onMouseOver: () => {

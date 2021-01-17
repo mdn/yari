@@ -76,10 +76,12 @@ jobs:
       # It's not possible to express this with GitHub Workflow syntax, so we
       # have a dedicate set that conveniently sets these as env vars which we
       # can refer to later in `if: ....` lines or in bash with the `run: ...` blocks.
-      - name: Figure out what we'll need to build
+      - name: Merge dispatch inputs with default env vars
         run: |
           echo "BUILD_TRANSLATED_CONTENT=${{ github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT }}" >> $GITHUB_ENV
           echo "BUILD_ARCHIVED_CONTENT=${{ github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT }}" >> $GITHUB_ENV
+          echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
+          echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
 
       - uses: actions/checkout@v2
         if: "contains(env.BUILD_ARCHIVED_CONTENT, 'true')"
@@ -94,7 +96,7 @@ jobs:
           path: mdn/translated-content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.3
+        uses: actions/setup-node@v2.1.4
         with:
           node-version: "12"
 
@@ -141,20 +143,40 @@ jobs:
           echo "BUILD_ARCHIVED_CONTENT: ${{ env.BUILD_ARCHIVED_CONTENT }}"
 
       - name: Build everything
-        run: |
+        env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
-          export CONTENT_ROOT=$(pwd)/mdn/content/files
+          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
 
+          # The default for this environment variable is geared for writers
+          # (aka. local development). Usually defaults are supposed to be for
+          # secure production but this is an exception and default
+          # is not insecure.
+          BUILD_LIVE_SAMPLES_BASE_URL: https://yari-demos.prod.mdn.mozit.cloud
+
+          # Now is not the time to worry about flaws.
+          BUILD_FLAW_LEVELS: "*:ignore"
+
+          # This is the Google Analytics account ID for developer.mozilla.org
+          # If it's used on other domains (e.g. stage or dev builds), it's OK
+          # because ultimately Google Analytics will filter it out since the
+          # origin domain isn't what that account expects.
+          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-36116321-5
+
+          # See the code for a further explanation for this.
+          # You get the ID from
+          # https://speedcurve.com/mozilla-add-ons/mdn/settings/updated/#lux
+          BUILD_SPEEDCURVE_LUX_ID: 108906238
+        run: |
           if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
             echo "Will build mdn/archived-content too"
-            export CONTENT_ARCHIVED_ROOT=$(pwd)/mdn/archived-content/files
+            export CONTENT_ARCHIVED_ROOT=${{ github.workspace }}/mdn/archived-content/files
           else
             echo "Will NOT build mdn/archived-content too"
           fi
           if [ ${{ env.BUILD_TRANSLATED_CONTENT }} == "true" ]; then
             echo "Will build mdn/translated-content too"
-            export CONTENT_TRANSLATED_ROOT=$(pwd)/mdn/translated-content/files
+            export CONTENT_TRANSLATED_ROOT=${{ github.workspace }}/mdn/translated-content/files
           else
             echo "Will NOT build mdn/translated-content too"
           fi
@@ -163,46 +185,42 @@ jobs:
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
-
-          # The default for this environment variable is geared for writers
-          # (aka. local development). Usually defaults are supposed to be for
-          # secure production but this is an exception and default
-          # is not insecure.
-          export BUILD_LIVE_SAMPLES_BASE_URL=https://yari-demos.prod.mdn.mozit.cloud
-
-          # Now is not the time to worry about flaws.
-          export BUILD_FLAW_LEVELS="*:ignore"
           yarn prepare-build
-
-          # This is the Google Analytics account ID for developer.mozilla.org
-          # If it's used on other domains (e.g. stage or dev builds), it's OK
-          # because ultimately Google Analytics will filter it out since the
-          # origin domain isn't what that account expects.
-          export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-36116321-5
-
-          # See the code for a further explanation for this.
-          # You get the ID from
-          # https://speedcurve.com/mozilla-add-ons/mdn/settings/updated/#lux
-          export BUILD_SPEEDCURVE_LUX_ID=108906238
 
           yarn build
 
           du -sh client/build
 
       - name: Deploy with deployer
-        run: |
-          # Set the CONTENT_ROOT first
-          export CONTENT_ROOT=$(pwd)/mdn/content/files
+        env:
+          GITHUB_SHA: ${{ env.GITHUB_SHA }}
+          GITHUB_RUN_ID: ${{ env.GITHUB_RUN_ID }}
+          GITHUB_ACTION: ${{ env.GITHUB_ACTION }}
 
+          # Set the CONTENT_ROOT first
+          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+
+          DEPLOYER_BUCKET_NAME: mdn-content-prod
+
+          AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYER_PROD_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_PROD_AWS_SECRET_ACCESS_KEY }}
+
+          # Note, command will pick up the site ID and deployment API key
+          # from environment variables and if either of them is falsy, the
+          # command will *not* fail. It will simply not deploy anything.
+          SPEEDCURVE_DEPLOY_API_KEY: ${{ secrets.SPEEDCURVE_DEPLOY_API_KEY }}
+          # Based on https://api.speedcurve.com/#get-all-sites using the API key
+          SPEEDCURVE_DEPLOY_SITE_ID: 85742
+        run: |
           if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
             echo "Will build mdn/archived-content too"
-            export CONTENT_ARCHIVED_ROOT=$(pwd)/mdn/archived-content/files
+            export CONTENT_ARCHIVED_ROOT=${{ github.workspace }}/mdn/archived-content/files
           else
             echo "Will NOT build mdn/archived-content too"
           fi
           if [ ${{ env.BUILD_TRANSLATED_CONTENT }} == "true" ]; then
             echo "Will build mdn/translated-content too"
-            export CONTENT_TRANSLATED_ROOT=$(pwd)/mdn/translated-content/files
+            export CONTENT_TRANSLATED_ROOT=${{ github.workspace }}/mdn/translated-content/files
           else
             echo "Will NOT build mdn/translated-content too"
           fi
@@ -216,28 +234,14 @@ jobs:
 
           poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/code.json
           poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/content.json $CONTENT_ROOT
-
-          export DEPLOYER_BUCKET_NAME=mdn-content-prod
-          export DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}
-          export DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
-          export AWS_ACCESS_KEY_ID=${{ secrets.DEPLOYER_PROD_AWS_ACCESS_KEY_ID }}
-          export AWS_SECRET_ACCESS_KEY=${{ secrets.DEPLOYER_PROD_AWS_SECRET_ACCESS_KEY }}
-
           poetry run deployer upload ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
-
-          # Note, command will pick up the site ID and deployment API key
-          # from environment variables and if either of them is falsy, the
-          # command will *not* fail. It will simply not deploy anything.
-          export SPEEDCURVE_DEPLOY_API_KEY=${{ secrets.SPEEDCURVE_DEPLOY_API_KEY }}
-          # Based on https://api.speedcurve.com/#get-all-sites using the API key
-          export SPEEDCURVE_DEPLOY_SITE_ID=85742
           poetry run deployer speedcurve-deploy \
-            --note "${{ env.GITHUB_SHA }}"\
-            --detail "run_id=${{ env.GITHUB_RUN_ID }} action=${{ env.GITHUB_ACTION }}"
+            --note "${GITHUB_SHA}" \
+            --detail "run_id=${GITHUB_RUN_ID} action=${GITHUB_ACTION}"
 
           # TODO
           # Execute command to publish built content to Elasticsearch

@@ -12,10 +12,6 @@ import "./index.scss";
 import { humanizeFlawName } from "../flaw-utils";
 import { PageContentContainer } from "../ui/atoms/page-content";
 
-// XXX This component should also import DocumentSpy so that it can
-// know to automatically refresh when there's new document edits
-// because their flaws might have changed.
-
 interface DocumentPopularity {
   value: number;
   ranking: number;
@@ -753,9 +749,7 @@ function AllFlawCounts({ counts }: { counts: FlawsCounts }) {
           {typesSorted.map(([key, value]) => {
             return (
               <tr key={key}>
-                <td>
-                  <code>{key}</code>
-                </td>
+                <td>{humanizeFlawName(key)}</td>
                 <td>
                   <b>{value.toLocaleString()}</b>
                 </td>
