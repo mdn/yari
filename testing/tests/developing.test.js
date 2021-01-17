@@ -20,9 +20,7 @@ function serverURL(pathname = "/") {
 // all `**/*.test.js` it doesn't actually run these tests unless explicitly
 // prepared to do so.
 // The source of this idea comes from https://github.com/facebook/jest/issues/7245
-const withDeveloping = JSON.parse(process.env.TESTING_DEVELOPING || "false")
-  ? it
-  : it.skip;
+const withDeveloping = process.env.TESTING_DEVELOPING ? it : it.skip;
 
 describe("Testing the kitchensink page", () => {
   withDeveloping("open the page", async () => {

@@ -39,27 +39,17 @@ const FILES = process.env.BUILD_FILES || "";
 const FOLDERSEARCH = process.env.BUILD_FOLDERSEARCH || "";
 const GOOGLE_ANALYTICS_ACCOUNT =
   process.env.BUILD_GOOGLE_ANALYTICS_ACCOUNT || "";
-const GOOGLE_ANALYTICS_DEBUG = JSON.parse(
-  process.env.BUILD_GOOGLE_ANALYTICS_DEBUG || "false"
-);
+const GOOGLE_ANALYTICS_DEBUG = !!process.env.BUILD_GOOGLE_ANALYTICS_DEBUG;
 const SPEEDCURVE_LUX_ID = process.env.BUILD_SPEEDCURVE_LUX_ID || "";
-const NO_PROGRESSBAR = Boolean(
-  JSON.parse(process.env.BUILD_NO_PROGRESSBAR || process.env.CI || "false")
-);
-const FIX_FLAWS = JSON.parse(process.env.BUILD_FIX_FLAWS || "false");
-const FIX_FLAWS_DRY_RUN = JSON.parse(
-  process.env.BUILD_FIX_FLAWS_DRY_RUN || "false"
-);
-const FIX_FLAWS_VERBOSE = JSON.parse(
-  // It's on by default because it's such a sensible option to always have
-  // on.
-  process.env.BUILD_FIX_FLAWS_VERBOSE || "true"
-);
+const NO_PROGRESSBAR = !!(process.env.BUILD_NO_PROGRESSBAR || process.env.CI);
+const FIX_FLAWS = !!process.env.BUILD_FIX_FLAWS;
+const FIX_FLAWS_DRY_RUN = !!process.env.BUILD_FIX_FLAWS_DRY_RUN;
+// It's on by default because it's such a sensible option to always have
+// on.
+const FIX_FLAWS_VERBOSE = process.env.BUILD_FIX_FLAWS_VERBOSE || true;
 
 // See explanation in docs/envvars.md
-const ALWAYS_NO_ROBOTS = JSON.parse(
-  process.env.BUILD_ALWAYS_NO_ROBOTS || "false"
-);
+const ALWAYS_NO_ROBOTS = !!process.env.BUILD_ALWAYS_NO_ROBOTS;
 
 module.exports = {
   BUILD_OUT_ROOT,

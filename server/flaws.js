@@ -134,7 +134,7 @@ module.exports = (req, res) => {
   }
 
   const sortBy = req.query.sort || "popularity";
-  const sortReverse = JSON.parse(req.query.reverse || "false");
+  const sortReverse = !!req.query.reverse;
 
   const DOCUMENTS_PER_PAGE = 25;
 

@@ -1,5 +1,5 @@
 const serverExports = {};
-if (JSON.parse(process.env.TESTING_START_SERVER || "false")) {
+if (process.env.TESTING_START_SERVER) {
   serverExports.server = {
     // This is the .env file here inside the 'testing/' directory.
     // This is needed so that the server that gets started get the right
@@ -14,6 +14,6 @@ if (JSON.parse(process.env.TESTING_START_SERVER || "false")) {
 module.exports = {
   ...serverExports,
   launch: {
-    headless: !JSON.parse(process.env.TESTING_OPEN_BROWSER || "false"),
+    headless: !process.env.TESTING_OPEN_BROWSER,
   },
 };
