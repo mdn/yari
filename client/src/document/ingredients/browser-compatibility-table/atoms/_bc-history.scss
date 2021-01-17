@@ -38,6 +38,10 @@
 .bc-history-mobile {
   display: block;
 
+  dl {
+    padding: 10px;
+  }
+
   @media #{$mq-small-desktop-and-up} {
     display: none;
   }
