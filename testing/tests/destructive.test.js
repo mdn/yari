@@ -123,7 +123,7 @@ describe("fixing flaws", () => {
     }).toString();
     expect(stdout).toContain(pattern);
 
-    const files = getChangedFiles(tempContentDir);
+    const files = getChangedFiles(path.join(tempContentDir, "files"));
     expect(files.length).toBe(3);
     const imagesFile = files.find((f) =>
       f.includes(path.join(pattern, "images"))
