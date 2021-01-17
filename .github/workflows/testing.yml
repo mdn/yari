@@ -32,10 +32,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      - name: Check Yarn install diffs
+        run: |
+          yarn install --ignore-scripts
+          git diff --exit-code
+
       - name: Install all yarn packages
         run: |
           yarn --frozen-lockfile
-          ./testing/scripts/yarn-lockfile-check.sh
 
       - name: Lint prettier
         run: yarn prettier-check
