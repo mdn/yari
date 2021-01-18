@@ -36,6 +36,7 @@ client/src/
 .prettier*
 .stylelint*
 .flake8
+.pylintrc
 tsconfig.json
 Procfile.*
 webpack.config.js

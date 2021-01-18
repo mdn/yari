@@ -46,6 +46,7 @@ jobs:
         run: |
           source deployer/.venv/bin/activate
           flake8 deployer/src
+          pylint deployer/src/deployer
           black --check deployer/src
 
       - name: Basic run of deployer

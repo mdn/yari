@@ -212,13 +212,19 @@ That should have installed the CLI:
 poetry run deployer
 ```
 
-If you wanna make a PR, make sure it's formatted with `black` and
-passes `flake8`.
+If you wanna make a PR, make sure it's formatted with `black`,
+passes `flake8` and `pyline.
 
 You can check that all files are `flake8` fine by running:
 
 ```sh
 flake8 deployer
+```
+
+You can check that all files are passing `pylint` by running:
+
+```sh
+pylint deployer
 ```
 
 And to check that all files are formatted according to `black` run:
