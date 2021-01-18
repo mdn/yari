@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const { resolveFundamental } = require("../libs/fundamental-redirects");
+const { decodePath } = require("../libs/slug-utils");
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
@@ -235,13 +236,12 @@ function shortCuts(pairs, throws = false) {
 
 function decodePairs(pairs) {
   return pairs.map(([from, to]) => {
-    const fromDecoded = decodeURI(from)
-      .split("/")
-      .map(decodeURIComponent)
-      .join("/");
-    let toDecoded = decodeURI(to);
-    if (toDecoded.startsWith("/")) {
-      toDecoded = toDecoded.split("/").map(decodeURIComponent).join("/");
+    const fromDecoded = decodePath(from);
+    let toDecoded;
+    if (to.startsWith("/")) {
+      toDecoded = decodePath(to);
+    } else {
+      toDecoded = decodeURI(to);
     }
     if (
       checkURLInvalidSymbols(from) ||
