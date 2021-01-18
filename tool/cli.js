@@ -98,28 +98,6 @@ program
     })
   )
 
-  .command("add-redirect", "Add a new redirect")
-  .argument("<from>", "From-URL", {
-    validator: (value) => {
-      Redirect.validateFromURL(value);
-      return value;
-    },
-  })
-  .argument("<to>", "To-URL", {
-    validator: (value) => {
-      Redirect.validateToURL(value);
-      return value;
-    },
-  })
-  .action(
-    tryOrExit(({ args, logger }) => {
-      const { from, to } = args;
-      const locale = from.split("/")[1];
-      Redirect.add(locale, [[from, to]]);
-      logger.info(chalk.green(`Saved '${from}' → '${to}'`));
-    })
-  )
-
   .command("delete", "Delete content")
   .argument("<slug>", "Slug")
   .argument("[locale]", "Locale", {
