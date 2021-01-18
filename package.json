@@ -9,7 +9,7 @@
     "build:client": "cd client && cross-env INLINE_RUNTIME_CHUNK=false react-scripts build",
     "build:ssr": "cd ssr && webpack --config webpack.config.js --mode=production",
     "dev": "yarn prepare-build && nf -j Procfile.dev start",
-    "eslint": "eslint \"content/**/*.js\" \"build/**/*.js\" \"kumascript/src/**/*.js\" \"tool/**/*.js\" \"server/**/*.js\"",
+    "eslint": "eslint \"content/**/*.js\" \"build/**/*.js\" \"kumascript/**/*.js\" \"tool/**/*.js\" \"server/**/*.js\" \"testing/**/*.js\"",
     "filecheck": "cd filecheck && node cli.js",
     "fiori:build": "cd client && build-storybook",
     "fiori:start": "cd client && start-storybook -p 6006",

@@ -15,4 +15,20 @@ module.exports = {
     ecmaVersion: 2019,
   },
   rules: {},
+  settings: {
+    node: {
+      allowModules: ["expect-puppeteer"],
+      resolvePaths: [__dirname],
+      tryExtensions: [".js", ".json", ".node"],
+    },
+  },
+  overrides: [
+    {
+      files: ["testing/**/*.js"],
+      globals: {
+        page: "readonly",
+        document: "readonly",
+      },
+    },
+  ],
 };
