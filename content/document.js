@@ -42,6 +42,28 @@ function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
   }
 }
 
+function updateDeletedFile(contentRoot, locale, slug) {
+  let deletedLines = "";
+  const deletedFile = path.join(
+    contentRoot,
+    locale.toLowerCase(),
+    "_deleted.txt"
+  );
+  if (fs.existsSync(deletedFile)) {
+    deletedLines = fs.readFileSync(deletedFile, "utf-8");
+  } else {
+    deletedLines =
+      "# This file is generated when you use the CLI tool " +
+      "to delete slugs.\n\n";
+  }
+  const url = buildURL(locale, slug);
+  const newLine = `${url.padEnd(60, " ")} # ${new Date().toDateString()}\n`;
+  if (!deletedLines.includes(newLine)) {
+    deletedLines += newLine;
+  }
+  fs.writeFileSync(deletedFile, deletedLines, "utf-8");
+}
+
 function extractLocale(folder) {
   // E.g. 'pr-br'
   const localeFolderName = folder.split(path.sep)[0].toLowerCase();
@@ -369,15 +391,13 @@ function findAll(
   };
 }
 
-function findChildren(url) {
+function findChildren(url, root = null) {
+  root = root || CONTENT_ROOT;
   const folder = urlToFolderPath(url);
-  const childPaths = glob.sync(
-    path.join(CONTENT_ROOT, folder, "*", HTML_FILENAME)
-  );
+
+  const childPaths = glob.sync(path.join(root, folder, "*", HTML_FILENAME));
   return childPaths
-    .map((childFilePath) =>
-      path.relative(CONTENT_ROOT, path.dirname(childFilePath))
-    )
+    .map((childFilePath) => path.relative(root, path.dirname(childFilePath)))
     .map((folder) => read(folder));
 }
 
@@ -450,7 +470,7 @@ function remove(
     throw new Error(`document does not exists: ${url}`);
   }
 
-  const children = findChildren(url);
+  const children = findChildren(url, fileInfo.root);
   if (children.length > 0 && (redirect || !recursive)) {
     throw new Error("unable to remove and redirect a document with children");
   }
@@ -463,19 +483,24 @@ function remove(
   for (const { metadata } of children) {
     const slug = metadata.slug;
     updateWikiHistory(
-      path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
+      path.join(fileInfo.root, metadata.locale.toLowerCase()),
       slug
     );
+    if (!redirect) {
+      updateDeletedFile(fileInfo.root, locale, metadata.slug);
+    }
   }
 
   if (redirect) {
     Redirect.add(locale, [[url, redirect]]);
+  } else {
+    updateDeletedFile(fileInfo.root, locale, metadata.slug);
   }
 
   execGit(["rm", "-r", path.dirname(fileInfo.path)]);
 
   updateWikiHistory(
-    path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
+    path.join(fileInfo.root, metadata.locale.toLowerCase()),
     metadata.slug
   );
 
