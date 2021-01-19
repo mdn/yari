@@ -6,9 +6,10 @@ const { decodePath, slugToFolder } = require("../libs/slug-utils");
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
-  FORBIDDEN_URL_SYMBOLS,
   VALID_LOCALES,
 } = require("./constants");
+
+const FORBIDDEN_URL_SYMBOLS = ["\n", "\t"];
 
 let ARCHIVED_URLS;
 
