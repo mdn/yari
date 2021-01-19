@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const zlib = require("zlib");
 
 const { resolveFundamental } = require("../libs/fundamental-redirects");
 const { decodePath, slugToFolder } = require("../libs/slug-utils");
@@ -31,15 +30,17 @@ function documentExists(url) {
   const root =
     locale.toLowerCase() === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
 
-  filePath = path.join(
+  if (ARCHIVED_URLS.has(url.toLowerCase())) {
+    return `$ARCHIVED/${url}`;
+  }
+
+  const filePath = path.join(
+    root,
     locale.toLowerCase(),
     slugToFolder(slug.join("/")),
     "index.html"
   );
-  if (ARCHIVED_URLS.has(url.toLowerCase())) {
-    return `$ARCHIVED/${url}`;
-  }
-  if (fs.existsSync(path.join(root, filePath))) {
+  if (fs.existsSync(filePath)) {
     return filePath;
   }
   return null;
@@ -106,7 +107,7 @@ function removeConflictingRedirects(pairs, updates) {
     return pairs;
   }
   const map = new Map(pairs);
-  for (const [_, to] of updates) {
+  for (const [, to] of updates) {
     const conflictingTo = map.get(to);
     if (conflictingTo) {
       console.warn(`removing conflicting redirect ${to}\t${conflictingTo}`);
