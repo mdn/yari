@@ -17,7 +17,7 @@ pyquery = "^1.4.3"
 braceexpand = "^0.1.6"
 
 [tool.poetry.dev-dependencies]
-black = "^19.10b0"
+black = "^20.8b1"
 flake8 = "^3.8.2"
 
 [build-system]
