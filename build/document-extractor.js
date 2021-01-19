@@ -312,39 +312,45 @@ function _addSingleSectionBCD($) {
 function _addSectionProse($) {
   let id = null;
   let title = null;
+  let titleAsText = null;
   let isH3 = false;
 
   // Maybe this should check that the h2 is first??
   const h2s = $.find("h2");
   if (h2s.length === 1) {
     id = h2s.attr("id");
-    title = h2s.text();
-    // title = h2s.html();
-    var titleAsHtml = h2s.html();
-    if (title !== titleAsHtml)
-      console.log("CHEK IT OUT!", title === titleAsHtml, [title, titleAsHtml]);
+    title = h2s.html();
+    titleAsText = h2s.text();
     h2s.remove();
   } else {
     const h3s = $.find("h3");
     if (h3s.length === 1) {
       id = h3s.attr("id");
       title = h3s.html();
+      titleAsText = h3s.text();
       if (id && title) {
         isH3 = true;
         h3s.remove();
       }
     }
   }
+  const value = {
+    id,
+    title,
+    isH3,
+    content: $.html().trim(),
+  };
+
+  // Only include it if it's useful. It's an optional property and it's
+  // potentially a waste of space to include it if it's not different.
+  if (titleAsText && titleAsText !== title) {
+    value.titleAsText = titleAsText;
+  }
 
   return [
     {
       type: "prose",
-      value: {
-        id,
-        title,
-        isH3,
-        content: $.html().trim(),
-      },
+      value,
     },
   ];
 }

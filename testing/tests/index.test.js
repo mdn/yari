@@ -982,3 +982,39 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   const found = glob.sync(path.join(samplesRoot, "**", "index.html"));
   expect(found.length).toBe(3);
 });
+
+test("headings with HTML should be rendered as HTML", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "html_headings"
+  );
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  // The page only has 1 h2, and its content should be HTML.
+  expect($("article h2 a").html()).toBe("Here's some <code>code</code>");
+  expect($("article h2").text()).toBe("Here's some code");
+  expect($("article h3 a").html()).toBe(
+    "You can use escaped HTML tags like &lt;pre&gt; still"
+  );
+  expect($("article h3").text()).toBe(
+    "You can use escaped HTML tags like <pre> still"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const [section1, section2] = doc.body;
+  // Because the title contains HTML, you can expect a 'titleAsText'
+  expect(section1.value.title).toBe("Here's some <code>code</code>");
+  expect(section1.value.titleAsText).toBe("Here's some code");
+  expect(section2.value.title).toBe(
+    "You can use escaped HTML tags like &lt;pre&gt; still"
+  );
+  expect(section2.value.titleAsText).toBe(
+    "You can use escaped HTML tags like <pre> still"
+  );
+});
