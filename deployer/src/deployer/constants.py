@@ -6,6 +6,8 @@ from decouple import AutoConfig
 
 config = AutoConfig(os.curdir)
 
+CI = config("CI", default=False, cast=bool)
+
 CONTENT_ROOT = config("CONTENT_ROOT", default=None)
 CONTENT_TRANSLATED_ROOT = config("CONTENT_TRANSLATED_ROOT", default=None)
 
@@ -32,7 +34,7 @@ DEFAULT_NO_PROGRESSBAR = config(
     cast=bool,
 )
 
-# If true, it will log every successul upload task as it happens.
+# If true, it will log every successful upload task as it happens.
 LOG_EACH_SUCCESSFUL_UPLOAD = config(
     "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD", default=False, cast=bool
 )
@@ -41,3 +43,8 @@ LOG_EACH_SUCCESSFUL_UPLOAD = config(
 SPEEDCURVE_DEPLOY_API_KEY = config("SPEEDCURVE_DEPLOY_API_KEY", default=None)
 # Use the API key and see instructions on https://api.speedcurve.com/#get-all-sites
 SPEEDCURVE_DEPLOY_SITE_ID = config("SPEEDCURVE_DEPLOY_SITE_ID", default=None)
+
+# If you're doing local development, you can download and install your own
+# instance of Elasticsearch 7 and start it. Then set this environment variable
+# value to `http://localhost:9200`
+ELASTICSEARCH_URL = config("DEPLOYER_ELASTICSEARCH_URL", default=None)

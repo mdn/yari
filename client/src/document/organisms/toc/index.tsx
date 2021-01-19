@@ -48,7 +48,7 @@ export function TOC({ toc }: { toc: Toc[] }) {
           {toc.map((item) => (
             <li key={item.id}>
               <a
-                href={`#${item.id}`}
+                href={`#${item.id.toLowerCase()}`}
                 dangerouslySetInnerHTML={{ __html: item.text }}
               ></a>
             </li>

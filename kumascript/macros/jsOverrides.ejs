@@ -92,7 +92,7 @@ switch(env.locale) {
 
 var pageuri = wiki.uri(prefix + $0);
 
-var captionText = string.ToUpperFirst(string.toLower($1));
+var captionText = `${$1}`.charAt(0).toUpperCase() + `${$1}`.slice(1).toLowerCase();
 
 var titleString = "";
 
@@ -119,7 +119,7 @@ switch(env.locale) {
 
 
 
-var desiredprototype = prototypes[$0][string.toLower($1)];
+var desiredprototype = prototypes[$0][`${$1}`.toLowerCase()];
 var overrides = arguments.slice(2);
 
 for (var i = 0; i < overrides.length; i++) {
@@ -133,12 +133,12 @@ for (var i = 0; i < overrides.length; i++) {
 
 var htmlstring = '';
 
-var lastindex = desiredprototype.length - 1; /* ? */
 var parts = [];
 
 for (var i = 0; i < desiredprototype.length; i++) {
 	var p = desiredprototype[i];
-	var pimproper = string.ToUpperFirst(string.replace(p, '__', ''));
+	p = p.replace(/__/g, '');
+	var pimproper = p.charAt(0).toUpperCase() + p.slice(1).toLowerCase();
 
 	pageuri = wiki.uri(prefix + $0 + '/' + pimproper);
 	parts.push('<a class="internal" href="' + pageuri + '"><code>' + p + '</code></a>');

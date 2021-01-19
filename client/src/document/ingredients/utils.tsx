@@ -1,6 +1,6 @@
 export function DisplayH2({ id, title }: { id: string; title: string }) {
   return (
-    <h2 id={id}>
+    <h2 id={id.toLowerCase()}>
       <Permalink title={title} id={id} />
     </h2>
   );
@@ -8,7 +8,7 @@ export function DisplayH2({ id, title }: { id: string; title: string }) {
 
 export function DisplayH3({ id, title }: { id: string; title: string }) {
   return (
-    <h3 id={id}>
+    <h3 id={id.toLowerCase()}>
       <Permalink title={title} id={id} />
     </h3>
   );
@@ -17,7 +17,7 @@ export function DisplayH3({ id, title }: { id: string; title: string }) {
 function Permalink({ id, title }: { id: string; title: string }) {
   return (
     <a
-      href={`#${id}`}
+      href={`#${id.toLowerCase()}`}
       title={`Permalink to ${title}`}
       dangerouslySetInnerHTML={{ __html: title }}
     ></a>

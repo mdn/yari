@@ -52,7 +52,7 @@
   position: absolute;
   top: 90px;
   width: 100%;
-  z-index: $top-layer;
+  z-index: $bring-to-front;
 
   @media #{$mq-tablet-and-up} {
     display: block;
@@ -65,6 +65,7 @@
 
     @supports (display: grid) {
       display: grid;
+      align-items: center;
     }
   }
 
@@ -102,7 +103,6 @@
     }
 
     .auth-container {
-      align-self: center;
       grid-column: 2/3;
       grid-row: 2/3;
       justify-self: flex-end;

@@ -201,7 +201,7 @@ def test_not_cached(base_url, is_behind_cdn, slug, status, expected_location):
         ("/contribute.json", 200, None),
         ("/humans.txt", 200, None),
         ("/sitemap.xml", 200, None),
-        ("/sitemaps/en-US/sitemap.xml", 200, None),
+        ("/sitemaps/en-US/sitemap.xml.gz", 200, None),
         ("/diagrams/workflow/workflow.svg", 200, None),
         ("/presentations/microsummaries/index.html", 200, None),
         ("/en-US/account/", 200, None),

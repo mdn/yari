@@ -82,6 +82,7 @@
     "pt-BR": "Implementado por:",
     "fr": "Implémenté par&nbsp;:",
     "it": "Implementato da:",
+    "ja": "実装先:",
     "ca": "Implementat per",
     "ru": "Выполняется:"
   },
@@ -114,7 +115,6 @@
     "en-US": "Reference",
     "de": "Referenz",
     "es": "Referencia",
-    "pt-BR": "Referência",
     "fr": "Référence",
     "ja": "リファレンス",
     "pt-BR": "Referência",
@@ -201,6 +201,7 @@
     "en-US": "[Page not yet written]",
     "de": "[Seite noch nicht geschrieben]",
     "fr": "[Page qui reste à écrire]",
+    "ja": "[ページがまだ書かれていません]",
     "pt-BR": "[Página ainda não foi escrita]"
   }
 }
