@@ -75,7 +75,6 @@ export default function MainMenu({
     // reason. If all is well though, we remove the class here and
     // let JavaScript take over the interaction
     if (mainMenu) {
-      console.log("remove nojs");
       mainMenu.classList.remove("nojs");
     }
 
