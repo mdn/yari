@@ -58,7 +58,7 @@
     "express-http-proxy": "1.6.2",
     "file-type": "16.2.0",
     "front-matter": "4.0.2",
-    "fs-extra": "9.0.1",
+    "fs-extra": "9.1.0",
     "glob": "^7.1.6",
     "got": "11.8.1",
     "image-size": "0.9.3",
