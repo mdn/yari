@@ -93,6 +93,21 @@ async function buildDocuments(files = null) {
       );
     }
 
+    // This is very useful in CI where every page gets built. If there's an
+    // accidentally unresolved git conflict, that's stuck in the content,
+    // bail extra early.
+    if (
+      // If the document itself, is a page that explains and talks about git merge
+      // conflicts, i.e. a false positive, those angled brackets should be escaped
+      /^<<<<<<< HEAD\n/m.test(document.rawContent) &&
+      /^=======\n/m.test(document.rawContent) &&
+      /^>>>>>>>/m.test(document.rawContent)
+    ) {
+      throw new Error(
+        `${document.fileInfo.path} contains git merge conflict markers`
+      );
+    }
+
     const {
       doc: builtDocument,
       liveSamples,
