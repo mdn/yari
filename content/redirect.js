@@ -1,14 +1,17 @@
 const fs = require("fs");
 const path = require("path");
+const zlib = require("zlib");
 
 const { resolveFundamental } = require("../libs/fundamental-redirects");
-const { decodePath } = require("../libs/slug-utils");
+const { decodePath, slugToFolder } = require("../libs/slug-utils");
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   FORBIDDEN_URL_SYMBOLS,
   VALID_LOCALES,
 } = require("./constants");
+
+let ARCHIVED_URLS;
 
 function checkURLInvalidSymbols(url) {
   for (const character of FORBIDDEN_URL_SYMBOLS) {
@@ -18,17 +21,38 @@ function checkURLInvalidSymbols(url) {
   }
 }
 
+function documentExists(url) {
+  if (!ARCHIVED_URLS) {
+    ARCHIVED_URLS = new Set(
+      fs.readFileSync(path.join(__dirname, "archived.txt"), "utf-8").split("\n")
+    );
+  }
+  const [, locale, , ...slug] = url.split("/");
+  const root =
+    locale.toLowerCase() === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+
+  filePath = path.join(
+    locale.toLowerCase(),
+    slugToFolder(slug.join("/")),
+    "index.html"
+  );
+  if (ARCHIVED_URLS.has(url.toLowerCase())) {
+    return `$ARCHIVED/${url}`;
+  }
+  if (fs.existsSync(path.join(root, filePath))) {
+    return filePath;
+  }
+  return null;
+}
+
 // Throw if this can't be a redirect from-URL.
 function validateFromURL(url) {
   checkURLInvalidSymbols(url);
   // This is a circular dependency we should solve that in another way.
-  const { findByURL } = require("./document");
   validateURLLocale(url);
-  const document = findByURL(url);
-  if (document) {
-    throw new Error(
-      `From-URL resolves to a file on disk (${document.fileInfo.path})`
-    );
+  const path = documentExists(url);
+  if (path) {
+    throw new Error(`From-URL resolves to a file (${path})`);
   }
   const resolved = resolve(url);
   if (resolved !== url) {
@@ -58,15 +82,10 @@ function validateToURL(url) {
         `${url} is already matched as a redirect (to: '${resolved}')`
       );
     }
-    // XXX Commented out because how else are going to be able
-    // redirect to archived documents.
-    // // It has to match a document
-    // const document = Document.findByURL(url);
-    // if (!document) {
-    //   throw new Error(
-    //     `To-URL has to resolve to a file on disk (${document.fileInfo.path})`
-    //   );
-    // }
+    const path = documentExists(url);
+    if (!path) {
+      throw new Error(`To-URL has to resolve to a file (${path})`);
+    }
   }
 }
 
@@ -82,7 +101,38 @@ function validateURLLocale(url) {
   }
 }
 
-function add(locale, urlPairs) {
+function removeConflictingRedirects(pairs, updates) {
+  if (pairs.length === 0) {
+    return pairs;
+  }
+  const map = new Map(pairs);
+  for (const [_, to] of updates) {
+    const conflictingTo = map.get(to);
+    if (conflictingTo) {
+      console.warn(`removing conflicting redirect ${to}\t${conflictingTo}`);
+      map.delete(to);
+    }
+  }
+  return [...map.entries()];
+}
+
+function removeOrphanedRedirects(pairs) {
+  return pairs.filter(([from, to]) => {
+    if (documentExists(from)) {
+      console.warn(`removing orphaned redirect (from exists): ${from}\t${to}`);
+      return false;
+    }
+    if (to.startsWith("/") && !documentExists(to)) {
+      console.warn(
+        `removing orphaned redirect (to doesn't exists): ${from}\t${to}`
+      );
+      return false;
+    }
+    return true;
+  });
+}
+
+function add(locale, updatePairs, { fix = false } = {}) {
   // Copied from the load() function but without any checking and preserving
   // sort order.
   const root = locale === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
@@ -91,7 +141,7 @@ function add(locale, urlPairs) {
     locale.toLowerCase(),
     "_redirects.txt"
   );
-  const pairs = [];
+  let pairs = [];
   if (fs.existsSync(redirectsFilePath)) {
     const content = fs.readFileSync(redirectsFilePath, "utf-8");
     pairs.push(
@@ -103,8 +153,18 @@ function add(locale, urlPairs) {
         .map((line) => line.trim().split(/\t+/))
     );
   }
-  pairs.push(...urlPairs);
-  write(path.join(root, locale.toLowerCase()), pairs);
+  const decodedUpdatePairs = decodePairs(updatePairs);
+  const decodedPairs = decodePairs(pairs);
+  const cleanPairs = removeConflictingRedirects(
+    decodedPairs,
+    decodedUpdatePairs
+  );
+  cleanPairs.push(...decodedUpdatePairs);
+  let simplifiedPairs = shortCuts(decodePairs(cleanPairs));
+  if (fix) {
+    simplifiedPairs = removeOrphanedRedirects(simplifiedPairs);
+  }
+  save(path.join(root, locale.toLowerCase()), simplifiedPairs);
 }
 
 // The module level cache
@@ -253,10 +313,6 @@ function decodePairs(pairs) {
   });
 }
 
-function write(localeFolder, pairs) {
-  save(localeFolder, shortCuts(decodePairs(pairs)));
-}
-
 function save(localeFolder, pairs) {
   const filePath = path.join(localeFolder, "_redirects.txt");
   const writeStream = fs.createWriteStream(filePath);
@@ -270,7 +326,6 @@ function save(localeFolder, pairs) {
 module.exports = {
   add,
   resolve,
-  write,
   load,
   validateFromURL,
   validateToURL,

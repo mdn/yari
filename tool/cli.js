@@ -92,7 +92,7 @@ program
     tryOrExit(({ args, logger }) => {
       const { locale } = args;
       for (const l of locale) {
-        Redirect.add(l.toLowerCase(), []);
+        Redirect.add(l.toLowerCase(), [], { fix: true });
         logger.info(chalk.green(`Fixed ${l}`));
       }
     })
