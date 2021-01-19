@@ -143,7 +143,7 @@ ul.main-menu {
   }
 }
 
-/* enable hover interaction if javascript not available */
+/* enable hover interaction if javascript is not available */
 @media #{$mq-tablet-and-up} {
   ul.main-menu.nojs {
     .top-level-entry:hover,
