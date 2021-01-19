@@ -117,7 +117,9 @@ LOCALE_SELECTORS = {
 
 
 @pytest.mark.parametrize(
-    "expected,cookie,accept", LOCALE_SELECTORS.values(), ids=list(LOCALE_SELECTORS),
+    "expected,cookie,accept",
+    LOCALE_SELECTORS.values(),
+    ids=list(LOCALE_SELECTORS),
 )
 @pytest.mark.parametrize(
     "slug",
