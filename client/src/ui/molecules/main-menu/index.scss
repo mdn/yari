@@ -146,9 +146,9 @@ ul.main-menu {
 /* enable hover interaction if javascript not available */
 @media #{$mq-tablet-and-up} {
   ul.main-menu.nojs {
-    .top-level-entry-container:hover,
-    .top-level-entry-container:focus {
-      ul {
+    .top-level-entry:hover,
+    .top-level-entry:focus {
+      + ul {
         display: block;
       }
     }
