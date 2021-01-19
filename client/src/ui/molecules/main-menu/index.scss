@@ -73,17 +73,19 @@ ul.main-menu {
 
   .top-level-entry-container {
     position: relative;
+
+    ul {
+      min-width: 220px;
+      min-width: max-content;
+      position: absolute;
+      z-index: $top-layer;
+    }
   }
 
   ul.show {
     display: block;
 
     @media #{$mq-tablet-and-up} {
-      min-width: 220px;
-      min-width: max-content;
-      position: absolute;
-      z-index: $top-layer;
-
       &.feedback {
         right: 0;
       }
@@ -137,6 +139,18 @@ ul.main-menu {
 
     @media #{$mq-tablet-and-up} {
       display: flex;
+    }
+  }
+}
+
+/* enable hover interaction if javascript not available */
+@media #{$mq-tablet-and-up} {
+  ul.main-menu.nojs {
+    .top-level-entry-container:hover,
+    .top-level-entry-container:focus {
+      ul {
+        display: block;
+      }
     }
   }
 }
