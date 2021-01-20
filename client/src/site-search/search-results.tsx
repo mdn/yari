@@ -274,18 +274,20 @@ function Results({
           return (
             <div key={document.mdn_url}>
               <p>
+                {/* We're using plain <a href> instead of <Link to> here until
+                the bug has been figured out about scrolling to the top on click. */}
                 {document.highlight.title && document.highlight.title.length ? (
-                  <Link
+                  <a
                     className="title"
-                    to={document.mdn_url}
+                    href={document.mdn_url}
                     dangerouslySetInnerHTML={{
                       __html: document.highlight.title[0],
                     }}
-                  ></Link>
+                  ></a>
                 ) : (
-                  <Link className="title" to={document.mdn_url}>
+                  <a className="title" href={document.mdn_url}>
                     {document.title}
-                  </Link>
+                  </a>
                 )}
                 {(document.highlight.body || []).map((highlight, i) => {
                   return (
@@ -296,9 +298,9 @@ function Results({
                     ></span>
                   );
                 })}
-                <Link className="url" to={document.mdn_url}>
+                <a className="url" href={document.mdn_url}>
                   {document.mdn_url}
-                </Link>
+                </a>
                 {process.env.NODE_ENV === "development" && (
                   <span className="nerd-data">
                     <b>score:</b> <code>{document.score}</code>,{" "}
