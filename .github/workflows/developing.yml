@@ -73,15 +73,15 @@ jobs:
           # if the development server is up and ready to be tested.
           TESTING_DEVELOPING: true
         run: |
-          # status=0
-          # yarn test:testing developing || (
-          #   status=$?
-          #   echo "Testing failed! Going to dump stdout and stderr"
-            echo "STDOUT..................................................."
-            cat /tmp/stdout.log
-            echo "STDERR..................................................."
-            cat /tmp/stderr.log
-          #   echo $status
-          #   exit $status
-          # )
-          # exit $status
+          status=0
+          yarn test:testing developing || (
+            status=$?
+            echo "Testing failed! Going to dump stdout and stderr"
+           echo "STDOUT..................................................."
+           cat /tmp/stdout.log
+           echo "STDERR..................................................."
+           cat /tmp/stderr.log
+            echo $status
+            exit $status
+          )
+          exit $status
