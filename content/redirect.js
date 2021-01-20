@@ -22,22 +22,31 @@ function checkURLInvalidSymbols(url) {
 }
 
 function documentExists(url) {
+  // Let's keep vanity urls to /en-US/
+  if (url === "/en-US/") {
+    return url;
+  }
+  const [bareURL] = url.split("#", 2);
+
   if (!ARCHIVED_URLS) {
     ARCHIVED_URLS = new Set(
-      fs.readFileSync(path.join(__dirname, "archived.txt"), "utf-8").split("\n")
+      fs
+        .readFileSync(path.join(__dirname, "archived.txt"), "utf-8")
+        .split("\n")
+        .map((url) => url.toLowerCase())
     );
   }
-  const [, locale, , ...slug] = url.split("/");
-  const root =
-    locale.toLowerCase() === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
 
-  if (ARCHIVED_URLS.has(url.toLowerCase())) {
-    return `$ARCHIVED/${url}`;
+  if (ARCHIVED_URLS.has(bareURL.toLowerCase())) {
+    return `$ARCHIVED/${bareURL}`;
   }
+
+  const [, locale, , ...slug] = bareURL.toLowerCase().split("/");
+  const root = locale === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
 
   const filePath = path.join(
     root,
-    locale.toLowerCase(),
+    locale,
     slugToFolder(slug.join("/")),
     "index.html"
   );
@@ -103,29 +112,40 @@ function validateURLLocale(url) {
   }
 }
 
-function removeConflictingRedirects(pairs, updates) {
-  if (pairs.length === 0) {
-    return pairs;
-  }
-  const map = new Map(pairs);
-  for (const [, to] of updates) {
-    const conflictingTo = map.get(to);
-    if (conflictingTo) {
-      console.warn(`removing conflicting redirect ${to}\t${conflictingTo}`);
-      map.delete(to);
+function errorOnDuplicated(pairs) {
+  const seen = new Set();
+  for (const [from] of pairs) {
+    const fromLower = from.toLowerCase();
+    if (seen.has(fromLower)) {
+      throw new Error(`Duplicated redirect: ${fromLower}`);
     }
+    seen.add(fromLower);
   }
-  return [...map.entries()];
+}
+
+function removeConflictingOldRedirects(oldPairs, updatePairs) {
+  if (oldPairs.length === 0) {
+    return oldPairs;
+  }
+  const newTargets = new Set(updatePairs.map(([, to]) => to.toLowerCase()));
+
+  return oldPairs.filter(([from, to]) => {
+    const conflictingTo = newTargets.has(from.toLowerCase());
+    if (conflictingTo) {
+      console.log(`removing conflicting redirect ${from}\t${to}`);
+    }
+    return !conflictingTo;
+  });
 }
 
 function removeOrphanedRedirects(pairs) {
   return pairs.filter(([from, to]) => {
     if (documentExists(from)) {
-      console.warn(`removing orphaned redirect (from exists): ${from}\t${to}`);
+      console.log(`removing orphaned redirect (from exists): ${from}\t${to}`);
       return false;
     }
     if (to.startsWith("/") && !documentExists(to)) {
-      console.warn(
+      console.log(
         `removing orphaned redirect (to doesn't exists): ${from}\t${to}`
       );
       return false;
@@ -135,8 +155,6 @@ function removeOrphanedRedirects(pairs) {
 }
 
 function add(locale, updatePairs, { fix = false } = {}) {
-  // Copied from the load() function but without any checking and preserving
-  // sort order.
   const root = locale === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
   const redirectsFilePath = path.join(
     root,
@@ -155,14 +173,20 @@ function add(locale, updatePairs, { fix = false } = {}) {
         .map((line) => line.trim().split(/\t+/))
     );
   }
+
   const decodedUpdatePairs = decodePairs(updatePairs);
   const decodedPairs = decodePairs(pairs);
-  const cleanPairs = removeConflictingRedirects(
+
+  errorOnDuplicated(decodedPairs);
+  errorOnDuplicated(decodedUpdatePairs);
+
+  const cleanPairs = removeConflictingOldRedirects(
     decodedPairs,
     decodedUpdatePairs
   );
   cleanPairs.push(...decodedUpdatePairs);
-  let simplifiedPairs = shortCuts(decodePairs(cleanPairs));
+
+  let simplifiedPairs = shortCuts(cleanPairs);
   if (fix) {
     simplifiedPairs = removeOrphanedRedirects(simplifiedPairs);
   }
@@ -245,25 +269,36 @@ const resolve = (url) => {
   if (!redirects.size) {
     load();
   }
+  console.log(redirects.get(url.toLowerCase()));
   return redirects.get(url.toLowerCase()) || resolveFundamental(url).url || url;
 };
 
 function shortCuts(pairs, throws = false) {
-  const dag = new Map(pairs);
+  // We have mixed cases in the _redirects.txt like:
+  // /en-US/docs/window.document     /en-US/docs/Web/API/window.document
+  // /en-US/docs/Web/API/Window.document     /en-US/docs/Web/API/Window/document
+  // therefore we have to lowercase everything and restore it later.
+  const casing = new Map([
+    ...pairs.map(([from]) => [from.toLowerCase(), from]),
+    ...pairs.map(([, to]) => [to.toLowerCase(), to]),
+  ]);
+  const dag = new Map(
+    pairs.map(([from, to]) => [from.toLowerCase(), to.toLowerCase()])
+  );
 
   // Expand all "edges" and keep track of the nodes we traverse.
   const transit = (s, froms = []) => {
-    const next = dag.get(s);
+    const next = dag.get(s.toLowerCase());
     if (next) {
       if (froms.includes(next)) {
         const msg = `redirect cycle [${froms.join(", ")}] → ${next}`;
         if (throws) {
           throw new Error(msg);
         }
-        console.warn(msg);
+        console.log(msg);
         return [];
       }
-      return transit(next, [...froms, s]);
+      return transit(next, [...froms, s.toLowerCase()]);
     } else {
       return [froms, s];
     }
@@ -293,7 +328,12 @@ function shortCuts(pairs, throws = false) {
   }
   const transitivePairs = [...dag.entries()];
   transitivePairs.sort(sortTuples);
-  return transitivePairs;
+
+  // Restore cases!
+  return transitivePairs.map(([from, to]) => [
+    casing.get(from),
+    casing.get(to),
+  ]);
 }
 
 function decodePairs(pairs) {
