@@ -19,7 +19,7 @@ var title;
 var result;
 var lang = env.locale;
 
-var specList = string.deserialize(await template('SpecData'));
+var specList = JSON.parse(await template('SpecData'));
 
 // Some APIs share specifications. Here we attend to that.
 

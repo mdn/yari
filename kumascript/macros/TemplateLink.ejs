@@ -6,15 +6,15 @@
  * code for reference.
  *
  * Note that GitHub URLs are case-sensitve.
- * e.g. {{TemplateLink("Page")}} leads to 404, but {{TemplateLink("page")}} works
- * as the file is named "page.ejs".
+ * e.g. If the file is named "page.ejs", {{TemplateLink("Page")}} leads to 404
+ * but {{TemplateLink("page")}} works
  *
  * Parameters:
  *
  * $0 - Name of the template to link to.
  */
 
-let dest = "https://github.com/mdn/kumascript/tree/master/macros/" + $0 + ".ejs";
+let dest = "https://github.com/mdn/yari/tree/master/kumascript/macros/" + $0 + ".ejs";
 let text = $0;
 %>
 <code class="templateLink"><a href="<%-dest%>"><%=text%></a></code>

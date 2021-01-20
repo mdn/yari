@@ -61,7 +61,7 @@ function extractLocale(folder) {
 function saveHTMLFile(
   filePath,
   rawHTML,
-  { slug, title, translation_of, tags }
+  { slug, title, translation_of, tags, translation_of_original }
 ) {
   if (slug.includes("#")) {
     throw new Error("newSlug can not contain the '#' character");
@@ -76,7 +76,12 @@ function saveHTMLFile(
   if (translation_of) {
     metadata.translation_of = translation_of;
   }
-  const combined = `---\n${yaml.safeDump(metadata)}---\n${rawHTML.trim()}\n`;
+  if (translation_of_original) {
+    // This will only make sense during the period where we're importing from
+    // MySQL to disk. Once we're over that period we can delete this if-statement.
+    metadata.translation_of_original = translation_of_original;
+  }
+  const combined = `---\n${yaml.dump(metadata)}---\n${rawHTML.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 
@@ -157,6 +162,26 @@ function archive(
   return folderPath;
 }
 
+function unarchive(document, move) {
+  // You can't use `document.rawHTML` because, rather confusingly,
+  // it's actually the rendered (from the migration) HTML. Instead,
+  // you need seek out the `raw.html` equivalent and use that.
+  // This is because when we ran the migration, for every document we
+  // archived, we created a `index.html` file (front-matter and rendered
+  // HTML) and a `raw.html` file (kumascript raw HTML).
+  const rawFilePath = path.join(
+    path.dirname(document.fileInfo.path),
+    "raw.html"
+  );
+  const rawHTML = fs.readFileSync(rawFilePath, "utf-8");
+  const created = create(rawHTML, document.metadata);
+  if (move) {
+    execGit(["rm", document.fileInfo.path], {}, CONTENT_ARCHIVED_ROOT);
+    execGit(["rm", rawFilePath], {}, CONTENT_ARCHIVED_ROOT);
+  }
+  return created;
+}
+
 const read = memoize((folder) => {
   let filePath = null;
   let root = null;
@@ -174,8 +199,16 @@ const read = memoize((folder) => {
   if (filePath.includes(" ")) {
     throw new Error("Folder contains whitespace which is not allowed.");
   }
-  const isTranslated =
-    CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT);
+  if (filePath.includes("\u200b")) {
+    throw new Error(
+      `Folder contains zero width whitespace which is not allowed (${filePath})`
+    );
+  }
+  // Use Boolean() because otherwise, `isTranslated` might become `undefined`
+  // rather than an actuall boolean value.
+  const isTranslated = Boolean(
+    CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT)
+  );
   const isArchive =
     isTranslated ||
     (CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT));
@@ -195,9 +228,12 @@ const read = memoize((folder) => {
   const gitHistory = getGitHistories(root, locale).get(
     path.relative(root, filePath)
   );
-  const modified = (gitHistory && gitHistory.modified) || null;
+  let modified = (gitHistory && gitHistory.modified) || null;
   // Use the wiki histories for a list of legacy contributors.
   const wikiHistory = getWikiHistories(root, locale).get(url);
+  if (!modified && wikiHistory && wikiHistory.modified) {
+    modified = wikiHistory.modified;
+  }
   const fullMetadata = {
     metadata: {
       ...metadata,
@@ -472,6 +508,7 @@ function remove(
 module.exports = {
   create,
   archive,
+  unarchive,
   read,
   update,
   exists,

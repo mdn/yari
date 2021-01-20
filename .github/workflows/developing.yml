@@ -16,7 +16,7 @@ jobs:
           path: mdn/content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v2.1.4
         with:
           node-version: "12"
 
@@ -35,20 +35,18 @@ jobs:
         run: |
           ./testing/scripts/yarn-install.sh
 
-      - name: Setup kernel for react native, increase watchers
-        run: |
-          # When running Yari on Linux, you might get the
-          # "Error: ENOSPC: System limit for number of file watchers reached" error.
-          # This, resolves that.
-          # Source https://github.com/expo/expo-github-action/issues/20#issuecomment-541676895
-          echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-
       - name: Start the dev server
-        run: |
+        env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
-          export CONTENT_ROOT=$(pwd)/mdn/content/files
-          echo "CONTENT_ROOT=$CONTENT_ROOT"
+          CONTENT_ROOT: "${{ github.workspace }}/mdn/content/files"
+        run: |
+          # Sanity check that the mdn/kitchensink page is there. If you don't do
+          # this, and the file has accidentally or intentionally been deleted,
+          # unfortunately the error messaging can be very misleading because the
+          # tests would assume there's something wrong with the code instead of
+          # the content if loading this page fails.
+          ls "$CONTENT_ROOT/en-us/mdn/kitchensink"
 
           yarn prepare-build
           yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
@@ -62,11 +60,11 @@ jobs:
           curl --retry-connrefused --retry 5 --silent http://localhost:3000 > /dev/null
 
       - name: Test viewing the dev server
-        run: |
+        env:
           # This will make sure the tests in `testing/tests/*.test.js` only run
           # if the development server is up and ready to be tested.
-          export TESTING_DEVELOPING=true
-
+          TESTING_DEVELOPING: true
+        run: |
           status=0
           yarn test:testing developing || (
             status=$?

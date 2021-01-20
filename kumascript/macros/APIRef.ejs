@@ -9,22 +9,31 @@ var slug = env.slug;
 var locale = env.locale;
 var APIHref = '/' + locale + '/docs/Web/API';
 var output = "";
+
+// This is a hack. But to be able to use this macro in the /MDN/Kitchensink page
+// we have to, unfortunately, pretend that our current slug is something
+// that it's not. Otherwise you'll always get a `MacroPagesError` when using
+// this macro on the kitchensink page.
+if (slug.toLowerCase().startsWith('mdn/kitchensink')) {
+  // Sorry, but it's important to be able to run this macro for CI.
+  slug = 'Web/API/ServiceWorker';
+}
+
 // slug is not available in preview mode.
 if (slug) {
 var mainIF = slug.replace('Web/API/','').split('/')[0];
 mainIF = mainIF.charAt(0).toUpperCase() + mainIF.slice(1);
 var group = $0;
 var hasTag = page.hasTag;
-var escapeQuotes = mdn.escapeQuotes;
 var htmlEscape = kuma.htmlEscape;
 var rtlLocales = ['ar', 'he', 'fa'];
 
-var webAPIData = string.deserialize(await template("InterfaceData"));
+var webAPIData = JSON.parse(await template("InterfaceData"));
 if (group) {
-  var webAPIGroups = string.deserialize(await template("GroupData"));
+  var webAPIGroups = JSON.parse(await template("GroupData"));
 }
 
-var commonl10n = string.deserialize(await template('L10n:Common'));
+var commonl10n = JSON.parse(await template('L10n:Common'));
 
 var text = {
     'Methods': mdn.getLocalString(commonl10n, 'Methods'),
@@ -56,8 +65,6 @@ if (group && webAPIGroups[0][group]) {
   }
   related.sort();
 }
-
-var pageList = mainIFPages;
 
 var properties = [];
 var methods = [];

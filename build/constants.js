@@ -27,7 +27,8 @@ const VALID_FLAW_CHECKS = new Set([
   "bad_bcd_queries",
   "bad_bcd_links",
   "images",
-  "pre_with_html",
+  "image_widths",
+  "bad_pre_tags",
   "sectioning",
 ]);
 
@@ -41,6 +42,7 @@ const GOOGLE_ANALYTICS_ACCOUNT =
 const GOOGLE_ANALYTICS_DEBUG = JSON.parse(
   process.env.BUILD_GOOGLE_ANALYTICS_DEBUG || "false"
 );
+const SPEEDCURVE_LUX_ID = process.env.BUILD_SPEEDCURVE_LUX_ID || "";
 const NO_PROGRESSBAR = Boolean(
   JSON.parse(process.env.BUILD_NO_PROGRESSBAR || process.env.CI || "false")
 );
@@ -67,6 +69,7 @@ module.exports = {
   FOLDERSEARCH,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
+  SPEEDCURVE_LUX_ID,
   NO_PROGRESSBAR,
   VALID_FLAW_CHECKS,
   FIX_FLAWS,

@@ -5,7 +5,7 @@ function serverURL(pathname = "/") {
   return "http://localhost:5000" + pathname;
 }
 
-function url_test(from, to, { statusCode = 301, ...options } = {}) {
+function url_test(from, to, { statusCode = 301 } = {}) {
   const expanded = braces.expand(from);
 
   return expanded.map((f) => [
@@ -217,6 +217,10 @@ const SCL3_REDIRECT_URLS = [].concat(
   url_test("/en-US/learn/css", "/en-US/docs/Learn/CSS"),
   url_test("/en/learn/css", "/en/docs/Learn/CSS"),
   url_test("/en-US/learn/javascript", "/en-US/docs/Learn/JavaScript"),
+  url_test(
+    "/en-US/Learn/JavaScript/First_steps",
+    "/en-US/docs/Learn/JavaScript/First_steps"
+  ),
   url_test("/en/learn/javascript", "/en/docs/Learn/JavaScript"),
   url_test("/en-US/learn", "/en-US/docs/Learn"),
   url_test("/en/learn", "/en/docs/Learn"),
@@ -527,7 +531,7 @@ const DEFAULT_SAMPLES_URLS = [].concat(
   url_test("/samples/html/progress.html", null, { statusCode: 302 })
 );
 
-LEGACY_URLS = [].concat(
+const LEGACY_URLS = [].concat(
   // url_test("/index.php", null, { statusCode: 404 }),
   // url_test(
   //     "/index.php?title=Special:Recentchanges&feed=atom", null, { statusCode: 404 }
@@ -672,7 +676,7 @@ const ZONE_REDIRECTS = [
   ["Marketplace", "Mozilla/بازار", "APIs", ["fa"]],
 ];
 
-ZONE_REDIRECT_URLS = [];
+const ZONE_REDIRECT_URLS = [];
 for (const [zoneRoot, wikiSlug, childPath, locales] of ZONE_REDIRECTS) {
   for (const locale of locales) {
     const prefix = locale ? "/" + locale : "";

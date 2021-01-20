@@ -27,8 +27,8 @@
       "properties": ["Navigator.battery"],
       "events": []
     },
-    "Barcode Detector API": {
-      "overview": ["Barcode Detector API"],
+    "Barcode Detection API": {
+      "overview": ["Barcode Detection API"],
       "guides": [],
       "interfaces": ["BarcodeDetector"],
       "methods": [
@@ -452,6 +452,24 @@
       "properties": [],
       "events": []
     },
+    "File System Access API": {
+      "overview": ["File System Access API"],
+      "guides": [],
+      "interfaces": [
+        "FileSystemHandle",
+        "FileSystemFileHandle",
+        "FileSystemDirectoryHandle",
+        "FileSystemWritableFileStream"
+      ],
+      "methods": [
+        "window.showOpenFilePicker()",
+        "window.showSaveFilePicker()",
+        "window.showDirectoryPicker()",
+        "DataTransferItem.getAsFileSystemHandle()"
+      ],
+      "properties": [],
+      "events": []
+    },
     "File System API": {
       "overview": ["File and Directory Entries API"],
       "guides": [
@@ -762,15 +780,22 @@
       "methods": [],
       "properties": [],
       "events": [
-        "HTMLElement: dragstart",
-        "HTMLElement: drag",
-        "HTMLElement: dragenter",
-        "HTMLElement: dragexit",
-        "HTMLElement: dragleave",
-        "HTMLElement: dragover",
-        "HTMLElement: drop",
-        "HTMLElement: dragend"
+        "Document: dragstart",
+        "Document: drag",
+        "Document: dragenter",
+        "Document: dragexit",
+        "Document: dragleave",
+        "Document: dragover",
+        "Document: drop",
+        "Document: dragend"
       ]
+    },
+    "HTML Sanitizer API": {
+      "overview": ["HTML Sanitizer API"],
+      "interfaces": ["Sanitizer"],
+      "methods": ["Sanitizer.sanitize", "Sanitizer.sanitizeToString"],
+      "properties": [],
+      "events": []
     },
     "Image Capture API": {
       "overview": ["MediaStream Image Capture API"],

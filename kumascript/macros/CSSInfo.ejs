@@ -14,14 +14,13 @@ let atRule = $1;
 var data = require('mdn-data/css');
 let formattedError = "<span style=\"color:red;\">$1$</span>";
 let locale = env.locale;
-let escapeQuotes = mdn.escapeQuotes;
 let localize = mdn.getLocalString;
 let localizeString = mdn.localString;
 let replacePlaceholders = mdn.replacePlaceholders;
 let localWiki = wiki;
 let currentPage = page;
 
-let cssLocalStrings = string.deserialize(await template("L10n:CSS"));
+let cssLocalStrings = JSON.parse(await template("L10n:CSS"));
 let localStrings = require('mdn-data/l10n/css');
 
 /*
@@ -61,7 +60,6 @@ async function parseMacros(s) {
         return undefined;
     }
 
-    var apiName = "";
     var area = "";
     let parsedString = await string.asyncReplace(
         s,
@@ -146,9 +144,6 @@ function addAdditionalAppliesToOutput(output, property, cssInfo) {
 */
 async function getValueOutput(cssInfo, property, atRule) {
     if (property === "relatedAtRule") {
-        let url = "/" + locale + "/docs/Web/CSS/" + atRule;
-        let page = await localWiki.getPage(url);
-
         return "<a href=\"/" + locale + "/docs/Web/CSS/" + atRule +
             "\"><code>" + atRule + "</code></a>";
     }
@@ -198,7 +193,7 @@ async function getValueOutput(cssInfo, property, atRule) {
                     replacePlaceholders(formattedError,
                         [localize(cssLocalStrings, "missing")])) +
                 "</li>";
-        };
+        }
         output += "</ul>";
 
         return await parseMacros(addAdditionalAppliesToOutput(output, property,
@@ -307,7 +302,7 @@ if (name === "preview-wiki-content") {
         result += "<tr>" +
             "<th scope=\"row\">" + property.label + "</th><td>" +
             await getValueOutput(cssInfo, property.name, atRule) + "</td>";
-    };
+    }
     result += "</tbody>" +
         "</table>";
 } else {

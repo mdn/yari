@@ -10,11 +10,8 @@ function containsTag(tagList, tag) {
 }
 
 var s_html_href = '/'+env.locale+'/docs/Web/HTML';
-var s_html_title = 'HTML';
 var s_html_ref_href = '/'+env.locale+'/docs/Web/HTML/Element';
 var s_html_ref_title = 'HTML Elements';
-var s_html_guide_href = '/'+env.locale+'/docs/Web/Guide/HTML';
-var s_api_href = '/' + env.locale + '/docs/Web/API';
 switch (env.locale) {
     case 'fr':
         s_html_href = '/'+env.locale+'/docs/HTML';
@@ -59,34 +56,6 @@ if (found_tag != undefined && found_tag != null && found_tag.length) {
     }
 }
 
-/*
-// Find the interfaces belonging to the same subject
-if (found_tag) {
-    // Find the pages, sub-pages of HTML/ that are tagged with that specific tag
-    var pageList = await page.subpagesExpand(s_api_href);   // Get subpages, including tags
-    var resultAPI = [];
-
-    for (aPage in pageList) {
-        if (containsTag(pageList[aPage].tags, found_tag) &&
-            containsTag(pageList[aPage].tags, "Interface")) { // We only want interfaces, not properties or methods
-            resultAPI.push(pageList[aPage].title);
-        }
-    }
-}
-
-// Find the guides, tutorials, ... belonging to the same subject
-if (found_tag) {
-    // Find the pages, sub-pages of Guide/HTML that are tagged with that specific tag
-    var pageList = await page.subpagesExpand(s_html_guide_href);   // Get subpages, including tags
-    var resultGuide = [];
-
-    for (aPage in pageList) {
-        if (containsTag(pageList[aPage].tags, found_tag)) {
-            resultGuide.push({title: pageList[aPage].title, url: pageList[aPage].url});
-        }
-    }
-}
-*/
 var resultGuide = [];
 var resultAPI = [];
 

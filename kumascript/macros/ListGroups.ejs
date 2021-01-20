@@ -15,7 +15,7 @@ let spacesToUnderscores = web.spacesToUnderscores;
 
 // Get the GroupData database
 
-let groupData = string.deserialize(await template('GroupData'))[0];
+let groupData = JSON.parse(await template('GroupData'))[0];
 let groupNames = Object.keys(groupData);
 groupNames.sort();
 
@@ -93,7 +93,7 @@ for(let name of groupNames) {
 
 let keys = Object.keys(outputByLetter);
 
-keys.forEach(function(letter, idx, arr) {
+keys.forEach(function(letter) {
   output += "<span>" + letter + "</span><ul>" + outputByLetter[letter] + "</ul>";
 });
 

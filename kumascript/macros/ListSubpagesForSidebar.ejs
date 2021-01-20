@@ -28,7 +28,6 @@ if (path.substr(-1, 1) === '/') {
 
 var pages = await page.subpagesExpand(path, -1, parent);
 var containsTag = page.hasTag;
-var escapeQuotes = mdn.escapeQuotes;
 var htmlEscape = kuma.htmlEscape;
 
 var output = '';
@@ -38,7 +37,7 @@ var code    = !$1 ? '<code>'  : '';
 var endcode = !$1 ? '</code>' : '';
 
 // Strings
-var commonl10n = string.deserialize(await template('L10n:Common'));
+var commonl10n = JSON.parse(await template('L10n:Common'));
 var text = {
     'translate': mdn.getLocalString(commonl10n, '[Translate]'),
     'title': mdn.getLocalString(commonl10n, 'TranslationCTA'),

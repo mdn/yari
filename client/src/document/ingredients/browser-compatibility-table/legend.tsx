@@ -17,10 +17,10 @@ const LEGEND_LABELS = {
 };
 type LEGEND_KEY = keyof typeof LEGEND_LABELS;
 
-function getActiveLegendItems(compat: bcd.Identifier) {
+function getActiveLegendItems(compat: bcd.Identifier, name: string) {
   const legendItems = new Set<LEGEND_KEY>();
 
-  for (const feature of listFeatures(compat)) {
+  for (const feature of listFeatures(compat, "", name)) {
     const { status } = feature.compat;
 
     if (status) {
@@ -73,14 +73,20 @@ function getActiveLegendItems(compat: bcd.Identifier) {
     .map((key) => [key, LEGEND_LABELS[key]]);
 }
 
-export function Legend({ compat }: { compat: bcd.Identifier }) {
+export function Legend({
+  compat,
+  name,
+}: {
+  compat: bcd.Identifier;
+  name: string;
+}) {
   return (
     <section className="bc-legend">
       <h3 className="visually-hidden" id="Legend">
         Legend
       </h3>
       <dl className="bc-legend-items-container">
-        {getActiveLegendItems(compat).map(([key, label]) =>
+        {getActiveLegendItems(compat, name).map(([key, label]) =>
           ["yes", "partial", "no", "unknown"].includes(key) ? (
             <div className="bc-legend-item" key={key}>
               <dt key={key}>

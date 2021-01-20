@@ -29,7 +29,6 @@ const commonl10nFixturePath = path.resolve(
   "fixtures/defaultapisidebar/commonl10n.json"
 );
 const commonl10nFixture = fs.readFileSync(commonl10nFixturePath, "utf8");
-const commonL10nJSON = JSON.parse(commonl10nFixture);
 const groupDataFixturePath = path.resolve(
   __dirname,
   "fixtures/defaultapisidebar/groupdata.json"
@@ -286,7 +285,7 @@ function testMacro(config) {
       config.locale = locale;
       macro.ctx.env.locale = locale;
       // Mock calls to MDN.subpagesExpand
-      macro.ctx.page.subpagesExpand = jest.fn((page) => {
+      macro.ctx.page.subpagesExpand = jest.fn(() => {
         return config.subpages;
       });
       return macro.call(config.argument).then(function (result) {

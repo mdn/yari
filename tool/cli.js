@@ -9,7 +9,14 @@ const openEditor = require("open-editor");
 const open = require("open");
 
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
-const { CONTENT_ROOT, Redirect, Document, buildURL } = require("../content");
+const {
+  CONTENT_ROOT,
+  CONTENT_TRANSLATED_ROOT,
+  CONTENT_ARCHIVED_ROOT,
+  Redirect,
+  Document,
+  buildURL,
+} = require("../content");
 const { buildDocument, gatherGitHistory } = require("../build");
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
@@ -217,10 +224,10 @@ program
       }
       const { doc } = await buildDocument(document);
 
-      if (doc.flaws) {
-        const flaws = Object.values(doc.flaws)
-          .map((a) => a.length || 0)
-          .reduce((a, b) => a + b);
+      const flaws = Object.values(doc.flaws || {})
+        .map((a) => a.length || 0)
+        .reduce((a, b) => a + b, 0);
+      if (flaws > 0) {
         console.log(chalk.red(`Found ${flaws} flaws.`));
         okay = false;
       }
@@ -272,7 +279,7 @@ program
       const { root, saveHistory, loadHistory } = options;
       if (fs.existsSync(loadHistory)) {
         console.log(
-          chalk.yellow(`Reusing exising history from ${loadHistory}`)
+          chalk.yellow(`Reusing existing history from ${loadHistory}`)
         );
       }
       const map = gatherGitHistory(
@@ -337,9 +344,13 @@ program
         fixFlawsDryRun: true,
       });
 
-      const flaws = Object.values(doc.flaws)
+      const flaws = Object.values(doc.flaws || {})
         .map((a) => a.filter((f) => f.fixable).length || 0)
-        .reduce((a, b) => a + b);
+        .reduce((a, b) => a + b, 0);
+      if (flaws === 0) {
+        console.log(chalk.green("Found no fixable flaws!"));
+        return;
+      }
       const { run } = yes
         ? { run: true }
         : await prompts({
@@ -351,6 +362,112 @@ program
       if (run) {
         buildDocument(document, { fixFlaws: true, fixFlawsVerbose: true });
       }
+    })
+  )
+
+  .command("redundant-translations", "Find redundant translations")
+  .action(
+    tryOrExit(async () => {
+      if (!CONTENT_TRANSLATED_ROOT) {
+        throw new Error("CONTENT_TRANSLATED_ROOT not set");
+      }
+      if (!fs.existsSync(CONTENT_TRANSLATED_ROOT)) {
+        throw new Error(`${CONTENT_TRANSLATED_ROOT} does not exist`);
+      }
+      const documents = Document.findAll();
+      if (!documents.count) {
+        throw new Error("No documents to analyze");
+      }
+      // Build up a map of translations by their `translation_of`
+      const map = new Map();
+      for (const document of documents.iter()) {
+        if (!document.isTranslated) continue;
+        const { translation_of, locale } = document.metadata;
+        if (!map.has(translation_of)) {
+          map.set(translation_of, new Map());
+        }
+        if (!map.get(translation_of).has(locale)) {
+          map.get(translation_of).set(locale, []);
+        }
+        map
+          .get(translation_of)
+          .get(locale)
+          .push(
+            Object.assign(
+              { filePath: document.fileInfo.path },
+              document.metadata
+            )
+          );
+      }
+      // Now, let's investigate those with more than 1
+      let sumENUS = 0;
+      let sumTotal = 0;
+      for (const [translation_of, localeMap] of map) {
+        for (const [, metadatas] of localeMap) {
+          if (metadatas.length > 1) {
+            // console.log(translation_of, locale, metadatas);
+            sumENUS++;
+            sumTotal += metadatas.length;
+            console.log(
+              `https://developer.allizom.org/en-US/docs/${translation_of}`
+            );
+            for (const metadata of metadatas) {
+              console.log(metadata);
+            }
+          }
+        }
+      }
+      console.warn(
+        `${sumENUS} en-US documents have multiple translations with the same locale`
+      );
+      console.log(
+        `In total, ${sumTotal} translations that share the same translation_of`
+      );
+    })
+  )
+
+  .command(
+    "unarchive",
+    "Move content from CONTENT_ARCHIVED_ROOT to CONTENT_ROOT"
+  )
+  .option("--foldersearch <pattern>", "simple pattern for folders", {
+    default: "",
+  })
+  .option("--move", "(git) delete from archive repo", { default: false })
+  .argument("[files...]", "specific files")
+  .action(
+    tryOrExit(async ({ args, options }) => {
+      if (!CONTENT_ARCHIVED_ROOT) {
+        throw new Error("CONTENT_ARCHIVED_ROOT not set");
+      }
+      if (!CONTENT_TRANSLATED_ROOT) {
+        throw new Error("CONTENT_TRANSLATED_ROOT not set");
+      }
+      const { files } = args;
+      const { foldersearch, move } = options;
+      if (!foldersearch && !files) {
+        throw new Error("Must specify either files or --foldersearch pattern");
+      }
+      const filters = {
+        folderSearch: foldersearch || null,
+        files: new Set(files || []),
+      };
+      const documents = Document.findAll(filters);
+      if (!documents.count) {
+        throw new Error("No documents found");
+      }
+      let countCreated = 0;
+      for (const document of documents.iter()) {
+        console.assert(document.isArchive, document.fileInfo);
+        console.assert(!document.isTranslated, document.fileInfo);
+        if (document.metadata.locale !== "en-US") {
+          continue;
+        }
+        const created = Document.unarchive(document, move);
+        console.log(`Created ${created}`);
+        countCreated++;
+      }
+      console.log(`Created ${countCreated} new files`);
     })
   );
 

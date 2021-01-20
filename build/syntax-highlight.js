@@ -4,9 +4,9 @@ const loadLanguages = require("prismjs/components/index");
 const lazy = (creator) => {
   let res;
   let processed = false;
-  return () => {
+  return (...args) => {
     if (processed) return res;
-    res = creator.apply(this, arguments);
+    res = creator.apply(this, args);
     processed = true;
     return res;
   };

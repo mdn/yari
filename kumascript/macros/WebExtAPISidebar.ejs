@@ -8,11 +8,10 @@ var locale = env.locale;
 var baseURL = "/" + locale + "/docs/";
 var baseAPIPage = baseURL + "Mozilla/Add-ons/WebExtensions/API";
 
-var escapeQuotes = mdn.escapeQuotes;
 var htmlEscape = kuma.htmlEscape;
 var rtlLocales = ['ar', 'he', 'fa'];
 
-let commonl10n = string.deserialize(await template('L10n:Common'));
+let commonl10n = JSON.parse(await template('L10n:Common'));
 
 let text = {
     'translate': mdn.getLocalString(commonl10n, '[Translate]'),
@@ -41,7 +40,7 @@ function buildSublist(pages, title, ignoreBadges) {
     var apiComponentName = title;
     var titlePieces = title.split(".");
     if (titlePieces.length > 1) {
-      apiComponentName = titlePieces[1];
+      apiComponentName = titlePieces[titlePieces.length - 1];
     }
 
     var translated = false;

@@ -15,6 +15,8 @@ const SearchIndex = require("./search-index");
 const { BUILD_OUT_ROOT } = require("./constants");
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
 const { CONTENT_TRANSLATED_ROOT } = require("../content/constants");
+const { uniqifyTranslationsOf } = require("./translationsof");
+const { humanFileSize } = require("./utils");
 
 async function buildDocuments(files = null) {
   // If a list of files was set, it came from the CLI.
@@ -68,11 +70,15 @@ async function buildDocuments(files = null) {
       if (!translationsOf.has(translation_of)) {
         translationsOf.set(translation_of, []);
       }
-      translationsOf.get(translation_of).push({
+      const translation = {
         url: document.url,
         locale: document.metadata.locale,
         title: document.metadata.title,
-      });
+      };
+      if (document.metadata.translation_of_original) {
+        translation.original = document.metadata.translation_of_original;
+      }
+      translationsOf.get(translation_of).push(translation);
       // This is a shortcoming. If this is a translated document, we don't have a
       // complete mapping of all other translations. So, the best we can do is
       // at least link to the English version.
@@ -80,8 +86,11 @@ async function buildDocuments(files = null) {
       // Perhaps, then, we'll do a complete scan through all content first to build
       // up the map before we process each one.
       document.translations = [];
-    } else {
-      document.translations = translationsOf.get(document.metadata.slug);
+    } else if (translationsOf.has(document.metadata.slug)) {
+      document.translations = uniqifyTranslationsOf(
+        translationsOf.get(document.metadata.slug),
+        document.url
+      );
     }
 
     const {
@@ -121,7 +130,19 @@ async function buildDocuments(files = null) {
     for (const { url, data } of bcdData) {
       fs.writeFileSync(
         path.join(outPath, path.basename(url)),
-        JSON.stringify(data)
+        JSON.stringify(data, (key, value) => {
+          // The BCD data object contains a bunch of data we don't need in the
+          // React component that loads the `bcd.json` file and displays it.
+          // The `.releases` block contains information about browsers (e.g
+          // release dates) and that part has already been extracted and put
+          // next to each version number where appropriate.
+          if (key === "releases") {
+            return undefined;
+          }
+          // TODO: Instead of serializing with a exclusion, instead explicitly
+          // serialize exactly only the data that is needed.
+          return value;
+        })
       );
     }
 
@@ -222,15 +243,6 @@ async function buildOtherSPAs() {
 
   // XXX Here, build things like the home page, site-search etc.
   // ...
-}
-
-function humanFileSize(size) {
-  if (size < 1024) return size + " B";
-  let i = Math.floor(Math.log(size) / Math.log(1024));
-  let num = size / Math.pow(1024, i);
-  let round = Math.round(num);
-  num = round < 10 ? num.toFixed(2) : round < 100 ? num.toFixed(1) : round;
-  return `${num} ${"KMGTPEZY"[i - 1]}B`;
 }
 
 function formatTotalFlaws(flawsCountMap, header = "Total_Flaws_Count") {

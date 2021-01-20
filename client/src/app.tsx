@@ -13,6 +13,7 @@ import { Footer } from "./ui/organisms/footer";
 import { Header } from "./ui/organisms/header";
 import { PageNotFound } from "./page-not-found";
 import { Banner } from "./banners";
+import { useDebugGA } from "./ga-context";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
@@ -75,6 +76,8 @@ function DocumentOrPageNotFound(props) {
 }
 
 export function App(appProps) {
+  useDebugGA();
+
   const routes = (
     <Routes>
       {/*
@@ -106,18 +109,22 @@ export function App(appProps) {
                   }
                 />
                 <Route
-                  path="/_create/*"
-                  element={
-                    <StandardLayout>
-                      <DocumentCreate />
-                    </StandardLayout>
-                  }
-                />
-                <Route
                   path="/_edit/*"
                   element={
                     <StandardLayout>
                       <DocumentEdit />
+                    </StandardLayout>
+                  }
+                />
+
+                {/* The following two are not "enabled". I.e. no link to them.
+                    See https://github.com/mdn/yari/issues/1614
+                 */}
+                <Route
+                  path="/_create/*"
+                  element={
+                    <StandardLayout>
+                      <DocumentCreate />
                     </StandardLayout>
                   }
                 />
@@ -129,6 +136,7 @@ export function App(appProps) {
                     </StandardLayout>
                   }
                 />
+
                 {/*
                 This route exclusively exists for development on the <PageNotFound>
                 component itself.

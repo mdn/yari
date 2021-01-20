@@ -1,5 +1,5 @@
 /**
- * Error classes that can be thown when trying to render the macros on a page.
+ * Error classes that can be thrown when trying to render the macros on a page.
  * @prettier
  */
 
@@ -223,6 +223,13 @@ class MacroBrokenLinkError extends MacroExecutionError {
   }
 }
 
+class MacroWrongXRefError extends MacroBrokenLinkError {
+  constructor(error, source, token) {
+    super(error, source, token);
+    this.name = "MacroWrongXRefError";
+  }
+}
+
 /**
  * A MacroDeprecatedError is a special case of MacroExecutionError.
  */
@@ -274,6 +281,7 @@ module.exports = {
   MacroExecutionError,
   MacroRedirectedLinkError,
   MacroBrokenLinkError,
+  MacroWrongXRefError,
   MacroDeprecatedError,
   MacroLiveSampleError,
   MacroPagesError,
