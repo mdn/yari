@@ -363,8 +363,7 @@ function getPages(pageList) {
                 } else {
                     collect(pageList[i]);
                 }
-                
-                var subpage = getPages(pageList[i].subpages);
+                getPages(pageList[i].subpages);
             }
         }
     }
@@ -458,7 +457,7 @@ function crawlL10nMacro(json) {
 
 var l10nMacroDetails = [];
 for (var i = 0; i < l10nMacros.length; i++) {
-    var macroData = string.deserialize(await template("L10n:" + l10nMacros[i]));
+    var macroData = JSON.parse(await template("L10n:" + l10nMacros[i]));
     var res = crawlL10nMacro(macroData);
     if (res.translated === res.total) {
         macroTranslationCounter++;

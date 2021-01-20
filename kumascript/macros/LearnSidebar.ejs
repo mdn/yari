@@ -1,5 +1,4 @@
 <%
-var currentSection = $0;
 var locale = env.locale;
 var slug = env.slug;
 var baseURL = "/" + locale + "/docs/Learn/";
@@ -264,7 +263,7 @@ var text = mdn.localStringMap({
       'HTML_questions': 'HTML questions',
       'CSS_questions': 'CSS questions',
       'JavaScript_questions': 'JavaScript questions',
-      'How_the_Web_works': 'How the Web works',
+      'Web_mechanics': 'Web mechanics',
       'Tools_and_setup': 'Tools and setup',
       'Design_and_accessibility': 'Design and accessibility',
   },
@@ -517,7 +516,7 @@ var text = mdn.localStringMap({
     'Common_questions': 'Häufige Fragen',
       'HTML_questions': 'Fragen zu HTML',
       'CSS_questions': 'Fragen zu CSS',
-      'How_the_Web_works': 'Wie das Internet funktioniert',
+      'Web_mechanics': 'Wie das Internet funktioniert',
       'Tools_and_setup': 'Werkzeuge und Arbeitsumgebungen',
       'Design_and_accessibility': 'Design und Zugänglichkeit',
   },
@@ -772,7 +771,7 @@ var text = mdn.localStringMap({
       'HTML_questions': 'Questões sobre HTML',
       'CSS_questions': 'Questões sobre CSS',
       'JavaScript_questions': 'Questões sobre JavaScript',
-      'How_the_Web_works': 'Como a Internet funciona',
+      'Web_mechanics': 'Como a Internet funciona',
       'Tools_and_setup': 'Ferramentas e configuração',
       'Design_and_accessibility': 'Projeto e acessibilidade',
   },
@@ -998,7 +997,7 @@ var text = mdn.localStringMap({
     'Common_questions': 'Общие вопросы',
       'HTML_questions': 'Вопросы по HTML',
       'CSS_questions': 'Вопросы по CSS',
-      'How_the_Web_works': 'Как работает Веб',
+      'Web_mechanics': 'Как работает Веб',
       'Tools_and_setup': 'Инструменты и установка',
       'Design_and_accessibility': 'Дизайн и доступность',
   },
@@ -1034,7 +1033,7 @@ var text = mdn.localStringMap({
         'Adding_vector_graphics_to_the_Web': '为 Web 新增向量图',
         'Responsive_images': '自适应图片',
         'Assessment_Mozilla_splash_page': '作业：Mozilla 醒目页面',
-	  'HTML_tables' : 'HTML 表格',
+      'HTML_tables' : 'HTML 表格',
         'HTML_tables_overview' : 'HTML 表格概览',
         'HTML_table_basics' : 'HTML 表格基础',
         'HTML_table_advanced' : 'HTML 高级表格特性和可访问性',
@@ -1144,7 +1143,7 @@ var text = mdn.localStringMap({
         'How_to_build_custom_form_controls' : 'How to build custom form controls',
         'Sending_forms_through_JavaScript' : 'Sending forms through JavaScript',
         'CSS_property_compatibility_table_for_form_controls' : 'CSS property compatibility table for form controls',
-	'Accessibility_—_Make_the_web_usable_by_everyone' : '可访问性 — 使每个人都能使用 Web',
+    'Accessibility_—_Make_the_web_usable_by_everyone' : '可访问性 — 使每个人都能使用 Web',
     'Accessibility_guides' : '可访问性指南',
     'Accessibility_assessment' : '可访问性测评',
       'Accessibility_overview' : '可访问性概览',
@@ -1236,7 +1235,7 @@ var text = mdn.localStringMap({
         'Tutorial_Part_11_Deploying_Django_to_production' : '在线教学 11：部署 Django 至产品',
         'Web_application_security' : 'Web 应用安全性',
         'Assessment_DIY_mini_blog' : '作业：DIY 博客',
-	  'Express_Web_Framework_(Node.js_JavaScript)' : 'Express 网页框架 (node.js/JavaScript)',
+        'Express_Web_Framework_(Node.js_JavaScript)' : 'Express 网页框架 (node.js/JavaScript)',
         'Express_Web_Framework_(Node.js_JavaScript)_overview' : 'Express 网页框架 (Node.js/JavaScript) 概览',
         'Express_Node_introduction' : 'Express/Node 介绍',
         'Setting_up_a_Node_(Express)_development_environment' : '架设 Node (Express) 开发环境',
@@ -1251,7 +1250,7 @@ var text = mdn.localStringMap({
     'Common_questions': '常见问题',
       'HTML_questions': 'HTML 问题',
       'CSS_questions': 'CSS 问题',
-      'How_the_Web_works': 'Web 是如何运作的',
+      'Web_mechanics': 'Web 是如何运作的',
       'Tools_and_setup': '工具与安装',
       'Design_and_accessibility': '设计与可访问性',
   },
@@ -1477,7 +1476,7 @@ var text = mdn.localStringMap({
     'Common_questions': '常見問題',
       'HTML_questions': 'HTML 問題',
       'CSS_questions': 'CSS 問題',
-      'How_the_Web_works': 'Web 的運作方式',
+      'Web_mechanics': 'Web 的運作方式',
       'Tools_and_setup': '工具與設定',
       'Design_and_accessibility': '設計與親合度',
   },
@@ -1757,7 +1756,7 @@ var text = mdn.localStringMap({
       'HTML_questions': 'HTML questions',
       'CSS_questions': 'CSS questions',
       'JavaScript_questions': 'JavaScript questions',
-      'How_the_Web_works': 'How the Web works',
+      'Web_mechanics': 'Web mechanics',
       'Tools_and_setup': 'Tools and setup',
       'Design_and_accessibility': 'Design and accessibility',
   }
@@ -2193,7 +2192,7 @@ var text = mdn.localStringMap({
           <li><a href="<%=baseURL%>HTML/Howto"><%=text['HTML_questions']%></a></li>
           <li><a href="<%=baseURL%>CSS/Howto"><%=text['CSS_questions']%></a></li>
           <li><a href="<%=baseURL%>JavaScript/Howto"><%=text['JavaScript_questions']%></a></li>
-          <li><a href="<%=baseURL%>Common_questions#How_the_Web_works"><%=text['How_the_Web_works']%></a></li>
+          <li><a href="<%=baseURL%>Common_questions#Web_mechanics"><%=text['Web_mechanics']%></a></li>
           <li><a href="<%=baseURL%>Common_questions#Tools_and_setup"><%=text['Tools_and_setup']%></a></li>
           <li><a href="<%=baseURL%>Common_questions#Design_and_accessibility"><%=text['Design_and_accessibility']%></a></li>
         </ol>

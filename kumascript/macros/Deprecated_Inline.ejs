@@ -17,10 +17,8 @@
 var str = $0;
 var type = 0;   // assume we want the text badge
 
-if ($0 && $0 != undefined) {
-    if (string.IsDigit($0)) {
-        str = "gecko" + $0;
-    }
+if (/^\d/.test($0)) {
+    str = "gecko" + $0;
 } else {
     type = 1;   // switch to the icon indicator if no version specified
 }

@@ -92,7 +92,7 @@ switch(lang) {
         twitter = " Twitter";
 		break;
     case 'ru':
-    	mailingList = " Почтовая рассылка";
+		mailingList = " Почтовая рассылка";
 		newsgroup = " newsgroup";
 		webFeed = " Новостная лента";
         stackOverflow = " Stack Overflow";
@@ -160,10 +160,7 @@ listElem += ">"; //Final ">" of the open <ul> tag
 
 
 function makeListTarget(param) {
-    function startsWith (string, prefix) {
-        return string.slice(0, prefix.length) == prefix;
-    }
-    if (startsWith(param, 'https://') || startsWith(param, 'http://')) {
+    if (param && (param.startsWith('https://') || param.startsWith('http://'))) {
         return param;
     }
     return  'https://lists.mozilla.org/listinfo/' + param;
