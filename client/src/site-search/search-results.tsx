@@ -91,7 +91,7 @@ export default function SearchResults({
       const response = await fetch(url);
       if (response.status === 400) {
         const badRequest = await response.json();
-        throw new BadRequestError(badRequest);
+        throw new BadRequestError(badRequest.errors);
       } else if (response.status >= 500) {
         throw new ServerOperationalError(response.status);
       } else if (!response.ok) {
