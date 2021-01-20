@@ -269,7 +269,6 @@ const resolve = (url) => {
   if (!redirects.size) {
     load();
   }
-  console.log(redirects.get(url.toLowerCase()));
   return redirects.get(url.toLowerCase()) || resolveFundamental(url).url || url;
 };
 
