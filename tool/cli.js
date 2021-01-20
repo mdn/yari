@@ -16,7 +16,6 @@ const {
   Redirect,
   Document,
   buildURL,
-  execGit,
 } = require("../content");
 const { buildDocument, gatherGitHistory } = require("../build");
 
@@ -464,24 +463,9 @@ program
         if (document.metadata.locale !== "en-US") {
           continue;
         }
-        // You can't use `document.rawHTML` because, rather confusingly,
-        // it's actually the rendered (from the migration) HTML. Instead,
-        // you need seek out the `raw.html` equivalent and use that.
-        // This is because when we ran the migration, for every document we
-        // archived, we created a `index.html` file (front-matter and rendered
-        // HTML) and a `raw.html` file (kumascript raw HTML).
-        const rawFilePath = path.join(
-          path.dirname(document.fileInfo.path),
-          "raw.html"
-        );
-        const rawHTML = fs.readFileSync(rawFilePath, "utf-8");
-        const created = Document.create(rawHTML, document.metadata);
+        const created = Document.unarchive(document, move);
         console.log(`Created ${created}`);
         countCreated++;
-        if (move) {
-          execGit(["rm", document.fileInfo.path], {}, CONTENT_ARCHIVED_ROOT);
-          execGit(["rm", rawFilePath], {}, CONTENT_ARCHIVED_ROOT);
-        }
       }
       console.log(`Created ${countCreated} new files`);
     })
