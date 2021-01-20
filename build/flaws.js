@@ -376,6 +376,8 @@ function injectNotPrettierFlaws(level, doc, $, rawContent) {
 
   const getNextId = () => `not_prettier${doc.flaws.not_prettier.length + 1}`;
 
+  $("div.hidden pre").remove(); // XXX shouldn't need this. In some other PR.
+
   $("pre").each((i, pre) => {
     if ($("code", pre).length) {
       return;
@@ -398,6 +400,14 @@ function injectNotPrettierFlaws(level, doc, $, rawContent) {
         codeAfter = prettier.format(codeBefore, {
           semi: true,
           parser: "babel",
+        });
+      } catch (error) {
+        errorString = error.toString();
+      }
+    } else if (match[1] === "css") {
+      try {
+        codeAfter = prettier.format(codeBefore, {
+          parser: "css",
         });
       } catch (error) {
         errorString = error.toString();
