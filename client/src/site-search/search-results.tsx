@@ -4,6 +4,8 @@ import useSWR from "swr";
 
 import "./search-results.scss";
 
+import { SiteSearchQuery } from "./types";
+
 type Highlight = {
   body?: string[];
   title?: string[];
@@ -34,15 +36,65 @@ interface Suggestion {
   total: Total;
 }
 
-export default function SearchResults({ query }: { query: URLSearchParams }) {
-  console.log("FETCH", query.toString());
+interface FormErrorMessage {
+  message: string;
+  code: string;
+}
+type FormErrors = [{ key: string }, FormErrorMessage[]];
 
-  const fetchURL = `/api/v1/search?${query.toString()}`;
+class BadRequestError extends Error {
+  public formErrors: FormErrors;
+
+  constructor(formErrors: FormErrors) {
+    super(`BadRequestError ${JSON.stringify(formErrors)}`);
+    this.formErrors = formErrors;
+  }
+}
+
+class ServerOperationalError extends Error {
+  public statusCode: number;
+  constructor(statusCode: number) {
+    super(`ServerOperationalError ${statusCode}`);
+    this.statusCode = statusCode;
+  }
+}
+
+type SequenceTuple = [string, string];
+
+function queryToSequence(obj: SiteSearchQuery): SequenceTuple[] {
+  const sequence: SequenceTuple[] = [];
+  Object.entries(obj).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      const expanded: SequenceTuple[] = value.map((v) => [key, `${v}`]);
+      sequence.push(...expanded);
+    } else {
+      sequence.push([key, `${value}`]);
+    }
+  });
+  return sequence;
+}
+
+export default function SearchResults({
+  query,
+  updateQuery,
+}: {
+  query: SiteSearchQuery;
+  updateQuery: (query: SiteSearchQuery) => void;
+}) {
+  const fetchURL = `/api/v1/search?${new URLSearchParams(
+    queryToSequence(query)
+  ).toString()}`;
+
   const { data, error } = useSWR(
     fetchURL,
     async (url) => {
       const response = await fetch(url);
-      if (!response.ok) {
+      if (response.status === 400) {
+        const badRequest = await response.json();
+        throw new BadRequestError(badRequest);
+      } else if (response.status >= 500) {
+        throw new ServerOperationalError(response.status);
+      } else if (!response.ok) {
         throw new Error(`${response.status} on ${url}`);
       }
       return await response.json();
@@ -52,12 +104,41 @@ export default function SearchResults({ query }: { query: URLSearchParams }) {
     }
   );
 
+  const [initialPage, setInitialPage] = React.useState(query.page);
+  React.useEffect(() => {
+    if (query.page !== initialPage) {
+      setInitialPage(query.page);
+      const resultsElement = document.querySelector("div.site-search");
+      if (resultsElement) {
+        resultsElement.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [query, initialPage]);
+
   if (error) {
+    if (error instanceof BadRequestError) {
+      return (
+        <SearchErrorContainer>
+          <ExplainBadRequestError errors={error.formErrors} />
+        </SearchErrorContainer>
+      );
+    }
+
+    if (error instanceof ServerOperationalError) {
+      return (
+        <SearchErrorContainer>
+          <ExplainServerOperationalError statusCode={error.statusCode} />
+        </SearchErrorContainer>
+      );
+    }
+
     return (
-      <div>
-        <h4>Search error</h4>
-        <p>{error.toString()}</p>
-      </div>
+      <SearchErrorContainer>
+        <p>Something else when horribly wrong with the search</p>
+        <p>
+          <code>{error.toString()}</code>
+        </p>
+      </SearchErrorContainer>
     );
   }
 
@@ -68,18 +149,14 @@ export default function SearchResults({ query }: { query: URLSearchParams }) {
 
     return (
       <div>
-        <Results {...data} query={query} />
+        <Results {...data} query={query} updateQuery={updateQuery} />
         <Pagination
           currentPage={currentPage}
           hitCount={hitCount}
           pageSize={pageSize}
           maxPage={10}
-          onPaginate={() => {
-            const resultsElement = document.querySelector("div.site-search");
-            if (resultsElement) {
-              resultsElement.scrollIntoView({ behavior: "smooth" });
-            }
-          }}
+          query={query}
+          updateQuery={updateQuery}
         />
       </div>
     );
@@ -92,16 +169,68 @@ export default function SearchResults({ query }: { query: URLSearchParams }) {
   );
 }
 
+function SearchErrorContainer({ children }: { children: React.ReactNode }) {
+  return (
+    <div>
+      <h3>Search error</h3>
+      {children}
+    </div>
+  );
+}
+
+function ExplainBadRequestError({ errors }: { errors: FormErrors }) {
+  return (
+    <div className="notecard warning">
+      <p>The search didn't work because there were problems with the input.</p>
+      <ul>
+        {Object.keys(errors).map((key) => {
+          const messages: FormErrorMessage[] = errors[key];
+          return (
+            <li key={key}>
+              <code>{key}</code>{" "}
+              {messages.map((message) => {
+                return <b key={message.code}>{message.message}</b>;
+              })}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function ExplainServerOperationalError({ statusCode }: { statusCode: number }) {
+  return (
+    <div className="notecard warning">
+      <p>The search failed because the server failed to response.</p>
+      <p>
+        If you're curious, it was a <b>{statusCode}</b> error.
+      </p>
+      <p>
+        <button
+          onClick={() => {
+            window.location.reload();
+          }}
+        >
+          Try reloading
+        </button>
+      </p>
+    </div>
+  );
+}
+
 function Results({
   documents,
   metadata,
   suggestions,
   query,
+  updateQuery,
 }: {
   documents: Document[];
   metadata: Metadata;
   suggestions: Suggestion[];
-  query: URLSearchParams;
+  query: SiteSearchQuery;
+  updateQuery: (query: SiteSearchQuery) => void;
 }) {
   return (
     <FadeIn delay={50}>
@@ -116,11 +245,23 @@ function Results({
             <p>Did you mean...</p>
             <ul>
               {suggestions.map((suggestion) => {
-                const newQuery = new URLSearchParams(query);
-                newQuery.set("q", suggestion.text);
+                const queryClone = Object.assign({}, query, {
+                  q: suggestion.text,
+                });
+                const newQuery = new URLSearchParams(
+                  queryToSequence(queryClone)
+                );
                 return (
                   <li key={suggestion.text}>
-                    <Link to={`?${newQuery}`}>{suggestion.text}</Link>{" "}
+                    <Link
+                      to={`?${newQuery}`}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        updateQuery(queryClone);
+                      }}
+                    >
+                      {suggestion.text}
+                    </Link>{" "}
                     <ShowTotal total={suggestion.total} />
                   </li>
                 );
@@ -226,13 +367,15 @@ function Pagination({
   maxPage,
   hitCount,
   pageSize,
-  onPaginate,
+  query,
+  updateQuery,
 }: {
   currentPage: number;
   maxPage: number;
   hitCount: number;
   pageSize: number;
-  onPaginate: () => void;
+  query: SiteSearchQuery;
+  updateQuery: (query: SiteSearchQuery) => void;
 }) {
   const [searchParams] = useSearchParams();
 
@@ -265,24 +408,12 @@ function Pagination({
     return (
       <div className="pagination">
         {previousPage ? (
-          <Link
-            to={`?${makeNewQuery(previousPage)}`}
-            className="button"
-            onClick={() => {
-              onPaginate();
-            }}
-          >
+          <Link to={`?${makeNewQuery(previousPage)}`} className="button">
             Previous
           </Link>
         ) : null}{" "}
         {nextPage ? (
-          <Link
-            to={`?${makeNewQuery(nextPage)}`}
-            className="button"
-            onClick={() => {
-              onPaginate();
-            }}
-          >
+          <Link to={`?${makeNewQuery(nextPage)}`} className="button">
             Next
           </Link>
         ) : null}

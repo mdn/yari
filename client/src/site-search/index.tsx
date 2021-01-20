@@ -6,9 +6,8 @@ import { useGA } from "../ga-context";
 import { useLocale } from "../hooks";
 import "./index.scss";
 import { SiteSearchQuery } from "./types";
-// XXX Change this to lazy (maybe)
-import SiteSearchForm from "./form";
 
+const SiteSearchForm = React.lazy(() => import("./form"));
 const SearchResults = React.lazy(() => import("./search-results"));
 
 export function SiteSearch() {
@@ -72,42 +71,37 @@ export function SiteSearch() {
           <h1>No query, no results.</h1>
         )}
 
-        <SiteSearchForm
-          locale={locale}
-          query={query}
-          onSubmit={(query: SiteSearchQuery) => {
-            const newParams = {
-              q: query.q,
-              locale: query.locale,
-              sort: query.sort || "",
-            };
-            setSearchParams(newParams);
-          }}
-        />
+        {!isServer && (
+          <SiteSearchForm
+            locale={locale}
+            query={query}
+            onSubmit={(query: SiteSearchQuery) => {
+              const newParams = {
+                q: query.q,
+                locale: query.locale,
+                sort: query.sort || "",
+              };
+              setSearchParams(newParams);
+            }}
+          />
+        )}
 
         {!isServer && query.q && (
           <React.Suspense fallback={<p>Loading...</p>}>
             <SearchResults
-              query={new URLSearchParams(queryToSequence(query))}
+              updateQuery={(query: SiteSearchQuery) => {
+                const newParams = {
+                  q: query.q,
+                  locale: query.locale,
+                  sort: query.sort || "",
+                };
+                setSearchParams(newParams);
+              }}
+              query={query}
             />
           </React.Suspense>
         )}
       </PageContentContainer>
     </div>
   );
-}
-
-type SequenceTuple = [string, string];
-
-function queryToSequence(obj: SiteSearchQuery): SequenceTuple[] {
-  const sequence: SequenceTuple[] = [];
-  Object.entries(obj).forEach(([key, value]) => {
-    if (Array.isArray(value)) {
-      const expanded: SequenceTuple[] = value.map((v) => [key, `${v}`]);
-      sequence.push(...expanded);
-    } else {
-      sequence.push([key, `${value}`]);
-    }
-  });
-  return sequence;
 }

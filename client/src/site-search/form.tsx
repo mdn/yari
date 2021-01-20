@@ -18,9 +18,20 @@ export default function SiteSearchForm({
   locale: string;
   onSubmit: (query: SiteSearchQuery) => void;
 }) {
+  // Return true if the advanced search options should be visible on page load.
+  // Normally, it requires that you press the button to reveal, but if you have
+  // various advanced options in your current URL query string that couldn't
+  // have been there unless you used the advanced search at some point, in that
+  // case show the advanced options by default.
   function showAdancedOptionsDefault() {
-    console.log("Show advanced search options by default??", query);
-    if (query.sort && query.sort !== "best") {
+    if (query.sort && query.sort !== "best" && query.sort !== "") {
+      return true;
+    }
+    if (
+      query.locale &&
+      (query.locale.length > 1 ||
+        query.locale[0].toLowerCase() !== locale.toLowerCase())
+    ) {
       return true;
     }
     return false;
