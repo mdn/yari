@@ -139,8 +139,7 @@ def format_time(seconds):
 def walk(root):
     for path in root.iterdir():
         if path.is_dir():
-            for file in walk(path):
-                yield file
+            yield from walk(path)
         elif path.name == "index.json":
             yield path
 
