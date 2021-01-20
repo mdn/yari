@@ -26,7 +26,7 @@ function tryOrExit(f) {
     try {
       await f({ options, ...args });
     } catch (error) {
-      if (options.verbose) {
+      if (options.verbose || options.v) {
         console.error(chalk.red(error.stack));
       }
       throw error;
