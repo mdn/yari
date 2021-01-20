@@ -104,7 +104,7 @@ function useFiltersURL(): [Filters, (filters: Partial<Filters>) => void] {
     return [...params.entries()].reduce((acc, tuple) => {
       // getting the key and value from each tuple
       const [key, val] = tuple;
-      if (acc.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(acc, key)) {
         // if the current key is already an array, we'll add the value to it
         if (Array.isArray(acc[key])) {
           acc[key] = [...acc[key], val];

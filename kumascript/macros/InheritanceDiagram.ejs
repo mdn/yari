@@ -30,7 +30,7 @@ if (rtlLocales.indexOf(locale) != -1) {
 function getInheritance(inh) {
   if (inh.length > 0) {
     inheritanceChain.unshift(inh);
-    if (data[0].hasOwnProperty(inh)) {
+    if (Object.prototype.hasOwnProperty.call(data[0], inh)) {
         var inh = data[0][inh].inh;
         getInheritance(inh);
     }
