@@ -1,6 +1,8 @@
 import * as React from "react";
 import { useContext, useEffect, useState } from "react";
 
+import { DEBUG_GOOGLE_ANALYTICS } from "./constants";
+
 export type GAFunction = (...any) => void;
 
 export const CATEGORY_MONTHLY_PAYMENTS = "monthly payments";
@@ -84,7 +86,7 @@ export function GAProvider(props: { children: React.ReactNode }) {
 }
 
 // This is a custom hook to return the GA client id. It returns the
-// emtpy string until (and unless) it can determine that id from the GA object.
+// empty string until (and unless) it can determine that id from the GA object.
 export function useClientId() {
   const [clientId, setClientId] = useState<string>("");
   const ga = useContext(GAContext);
@@ -95,6 +97,27 @@ export function useClientId() {
   }, [ga]);
 
   return clientId;
+}
+
+// This only really exists so you can debug Google Analytics when running the
+// debug server (localhost:3000) otherwise you won't get useful logging in
+// the Web Console when your code does things like `ga("send", ...)`.
+// See the REACT_APP_DEBUG_GOOGLE_ANALYTICS in docs/envvars.md for more info.
+export function useDebugGA() {
+  useEffect(() => {
+    if (DEBUG_GOOGLE_ANALYTICS) {
+      const internalScript = document.createElement("script");
+      internalScript.textContent = `
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-00000000-0', 'mozilla.org');`.trim();
+      document.head.appendChild(internalScript);
+      const externalScript = document.createElement("script");
+      externalScript.src =
+        "https://www.google-analytics.com/analytics_debug.js";
+      externalScript.async = true;
+      document.head.appendChild(externalScript);
+    }
+  }, []);
 }
 
 export function useGA() {

@@ -54,9 +54,11 @@ type CellIndex = [number, number];
 function FeatureListAccordion({
   features,
   browsers,
+  locale,
 }: {
   features: ReturnType<typeof listFeatures>;
   browsers: bcd.BrowserNames[];
+  locale: string;
 }) {
   const [[activeRow, activeColumn], dispatchCellToggle] = useReducer<
     React.Reducer<CellIndex | [null, null], CellIndex>
@@ -76,7 +78,10 @@ function FeatureListAccordion({
           {...{ feature, browsers }}
           index={i}
           activeCell={activeRow === i ? activeColumn : null}
-          onToggleCell={dispatchCellToggle}
+          onToggleCell={([row, column]: [number, number]) => {
+            dispatchCellToggle([row, column]);
+          }}
+          locale={locale}
         />
       ))}
     </>
@@ -87,10 +92,12 @@ export default function BrowserCompatibilityTable({
   query,
   data,
   browsers: browserInfo,
+  locale,
 }: {
   query: string;
   data: bcd.Identifier;
   browsers: bcd.Browsers;
+  locale: string;
 }) {
   const location = useLocation();
 
@@ -136,10 +143,11 @@ export default function BrowserCompatibilityTable({
             <FeatureListAccordion
               browsers={browsers}
               features={listFeatures(data, "", name)}
+              locale={locale}
             />
           </tbody>
         </table>
-        <Legend compat={data} />
+        <Legend compat={data} name={name} />
 
         {/* https://github.com/mdn/yari/issues/1191 */}
         <div className="hidden">

@@ -81,7 +81,7 @@ function saveHTMLFile(
     // MySQL to disk. Once we're over that period we can delete this if-statement.
     metadata.translation_of_original = translation_of_original;
   }
-  const combined = `---\n${yaml.safeDump(metadata)}---\n${rawHTML.trim()}\n`;
+  const combined = `---\n${yaml.dump(metadata)}---\n${rawHTML.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 

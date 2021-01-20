@@ -73,7 +73,6 @@ var l10nTranslateNow = mdn.localString({
     "fr"   : "Traduire.",
     "ja"   : "今すぐ翻訳しましょう。",
     "ru"   : "Перевести.",
-    "fr"   : "Traduire.",
     "zh-CN": "我来译！"
 });
 
@@ -364,8 +363,7 @@ function getPages(pageList) {
                 } else {
                     collect(pageList[i]);
                 }
-                
-                var subpage = getPages(pageList[i].subpages);
+                getPages(pageList[i].subpages);
             }
         }
     }
@@ -459,7 +457,7 @@ function crawlL10nMacro(json) {
 
 var l10nMacroDetails = [];
 for (var i = 0; i < l10nMacros.length; i++) {
-    var macroData = string.deserialize(await template("L10n:" + l10nMacros[i]));
+    var macroData = JSON.parse(await template("L10n:" + l10nMacros[i]));
     var res = crawlL10nMacro(macroData);
     if (res.translated === res.total) {
         macroTranslationCounter++;
@@ -607,7 +605,7 @@ if (isNaN(uptodatePercent)) { uptodatePercent = 0; }
         <td style="background-color: #CF9"><%=l10nMacroDetails[i].translated%></td>
     <% } %>
     </tr>
-<% }; %>
+<% } %>
 </tbody>
 </table>
 <% } %>

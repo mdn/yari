@@ -1,16 +1,6 @@
 <%
-var currentSection = $0;
 var locale = env.locale;
-var slug = env.slug;
 var baseURL = '/' + locale + '/docs/Mozilla/Add-ons/';
-
-function currentPageIsUnder(root) {
-  rootSlug = 'Mozilla/Add-ons/' + root;
-  if (slug && slug.indexOf(rootSlug) != -1) {
-    return 'open';
-  }
-  return '';
-}
 
 var text = mdn.localStringMap({
   'en-US': {

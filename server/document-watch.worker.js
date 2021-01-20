@@ -1,7 +1,6 @@
 const path = require("path");
 const { parentPort } = require("worker_threads");
 
-const chokidar = require("chokidar");
 const glob = require("glob");
 
 const { CONTENT_ROOT, Document } = require("../content");
@@ -40,51 +39,17 @@ function postDocumentInfo(filePath, changeType) {
   }
 }
 
-const NO_WATCHER = JSON.parse(process.env.REACT_APP_NO_WATCHER || "false");
 const SEARCH_PATTERN = path.join(CONTENT_ROOT, "en-us", "**", "*.html");
 
-if (NO_WATCHER) {
-  const label = "Populate search-index with glob";
-  console.time(label);
-  let count = 0;
-  glob.sync(SEARCH_PATTERN).forEach((filePath) => {
-    postDocumentInfo(filePath, "added");
-    count++;
-  });
-  postEvent("ready");
-  console.timeEnd(label);
-  console.log(
-    `Populated search-index with ${count.toLocaleString()} found files.`
-  );
-} else {
-  // The default is to use chokidar to constantly watch the files.
-
-  const watcher = chokidar.watch(
-    // For now, brutally hardcode it to only the 'en-us' folders
-    // until we have a resolution on L10n.
-    [SEARCH_PATTERN]
-  );
-
-  const label = "Set up file watcher";
-  console.time(label);
-  watcher.on("ready", () => {
-    postEvent("ready");
-    console.timeEnd(label);
-    console.log(
-      `Watching over ${Object.keys(
-        watcher.getWatched()
-      ).length.toLocaleString()} files.`
-    );
-  });
-
-  watcher.on("add", (filePath) => {
-    postDocumentInfo(filePath, "added");
-  });
-  watcher.on("change", (filePath) => {
-    postDocumentInfo(filePath, "updated");
-  });
-
-  watcher.on("unlink", (filePath) => {
-    postEvent("deleted", { filePath });
-  });
-}
+const label = "Populate search-index with glob";
+console.time(label);
+let count = 0;
+glob.sync(SEARCH_PATTERN).forEach((filePath) => {
+  postDocumentInfo(filePath, "added");
+  count++;
+});
+postEvent("ready");
+console.timeEnd(label);
+console.log(
+  `Populated search-index with ${count.toLocaleString()} found files.`
+);

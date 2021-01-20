@@ -99,7 +99,7 @@ app.get("/*/contributors.txt", async (req, res) => {
   if (!document) {
     return res.status(404).send(`Document not found by URL (${url})`);
   }
-  const [builtDocument] = await buildDocument(document);
+  const { doc: builtDocument } = await buildDocument(document);
   if (document.metadata.contributors || !document.isArchive) {
     res.send(
       renderContributorsTxt(
@@ -144,7 +144,7 @@ app.get("/*", async (req, res) => {
 
   // TODO: Would be nice to have a list of all supported file extensions
   // in a constants file.
-  if (/\.(png|webp|gif|jpeg|svg)$/.test(req.url)) {
+  if (/\.(png|webp|gif|jpe?g|svg)$/.test(req.url)) {
     // Remember, Image.findByURL() will return the absolute file path
     // iff it exists on disk.
     const filePath = Image.findByURL(req.url);

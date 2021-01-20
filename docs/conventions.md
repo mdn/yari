@@ -4,7 +4,7 @@
 
 We completely outsource questions of formatting to
 [Prettier](https://prettier.io/), which frees us to bikeshed about other things
-instead. It is run both as a pre-commit hook and also in CI, deniying any PRs
+instead. It is run both as a pre-commit hook and also in CI, denying any PRs
 which do not adhere to its formatting.
 
 ## Naming

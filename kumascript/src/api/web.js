@@ -68,7 +68,7 @@ module.exports = {
       L10N_COMMON_STRINGS,
       "summary"
     );
-    return `<a class="new" title="${titleWhenMissing}"${flawAttribute}>${content}</a>`;
+    return `<a class="page-not-created" title="${titleWhenMissing}"${flawAttribute}>${content}</a>`;
   },
 
   // Try calling "decodeURIComponent", but if there's an error, just

@@ -780,14 +780,14 @@
       "methods": [],
       "properties": [],
       "events": [
-        "HTMLElement: dragstart",
-        "HTMLElement: drag",
-        "HTMLElement: dragenter",
-        "HTMLElement: dragexit",
-        "HTMLElement: dragleave",
-        "HTMLElement: dragover",
-        "HTMLElement: drop",
-        "HTMLElement: dragend"
+        "Document: dragstart",
+        "Document: drag",
+        "Document: dragenter",
+        "Document: dragexit",
+        "Document: dragleave",
+        "Document: dragover",
+        "Document: drop",
+        "Document: dragend"
       ]
     },
     "HTML Sanitizer API": {

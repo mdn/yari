@@ -13,9 +13,10 @@ import {
   MacroErrorMessage,
   BadBCDLinkFlaw,
   ImageReferenceFlaw,
+  ImageWidthFlaw,
   GenericFlaw,
   BadBCDQueryFlaw,
-  PreWithHTMLFlaw,
+  BadPreTagFlaw,
   SectioningFlaw,
 } from "../types";
 import "./flaws.scss";
@@ -213,12 +214,12 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
                 flaws={doc.flaws.bad_bcd_queries}
               />
             );
-          case "pre_with_html":
+          case "bad_pre_tags":
             return (
-              <PreWithHTML
-                key="pre_with_html"
+              <BadPreTag
+                key="bad_pre_tags"
                 sourceFolder={doc.source.folder}
-                flaws={doc.flaws.pre_with_html}
+                flaws={doc.flaws.bad_pre_tags}
               />
             );
           case "macros":
@@ -235,6 +236,14 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
                 key="images"
                 sourceFolder={doc.source.folder}
                 images={doc.flaws.images}
+              />
+            );
+          case "image_widths":
+            return (
+              <ImageWidths
+                key="image_widths"
+                sourceFolder={doc.source.folder}
+                flaws={doc.flaws.image_widths}
               />
             );
           case "sectioning":
@@ -474,11 +483,11 @@ function Sectioning({ flaws }: { flaws: SectioningFlaw[] }) {
   );
 }
 
-function PreWithHTML({
+function BadPreTag({
   flaws,
   sourceFolder,
 }: {
-  flaws: PreWithHTMLFlaw[];
+  flaws: BadPreTagFlaw[];
   sourceFolder: string;
 }) {
   const { focus } = useAnnotations(flaws);
@@ -515,8 +524,8 @@ function PreWithHTML({
   }
 
   return (
-    <div className="flaw flaw__pre_with_html">
-      <h3>{humanizeFlawName("pre_with_html")}</h3>
+    <div className="flaw flaw__bad_pre_tags">
+      <h3>{humanizeFlawName("bad_pre_tags")}</h3>
       <ul>
         {flaws.map((flaw) => (
           <li key={flaw.id}>
@@ -741,6 +750,105 @@ function Images({
                 </span>
               )}{" "}
               <span>{flaw.explanation}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function ImageWidths({
+  sourceFolder,
+  flaws,
+}: {
+  sourceFolder: string;
+  flaws: ImageWidthFlaw[];
+}) {
+  // XXX rewrite to a hook
+  const [opening, setOpening] = React.useState<string | null>(null);
+  useEffect(() => {
+    let unsetOpeningTimer: ReturnType<typeof setTimeout>;
+    if (opening) {
+      unsetOpeningTimer = setTimeout(() => {
+        setOpening(null);
+      }, 3000);
+    }
+    return () => {
+      if (unsetOpeningTimer) {
+        clearTimeout(unsetOpeningTimer);
+      }
+    };
+  }, [opening]);
+
+  const filepath = sourceFolder + "/index.html";
+
+  function openInEditor(key: string, line: number, column: number) {
+    const sp = new URLSearchParams();
+    sp.set("filepath", filepath);
+    sp.set("line", `${line}`);
+    sp.set("column", `${column}`);
+    console.log(
+      `Going to try to open ${filepath}:${line}:${column} in your editor`
+    );
+    setOpening(key);
+    fetch(`/_open?${sp.toString()}`).catch((err) => {
+      console.warn(`Error trying to _open?${sp.toString()}:`, err);
+    });
+  }
+
+  const { focus } = useAnnotations(flaws);
+
+  return (
+    <div className="flaw flaw__image_widths">
+      <h3>{humanizeFlawName("image_widths")}</h3>
+      <ul>
+        {flaws.map((flaw, i) => {
+          const key = `${flaw.style}${flaw.line}${flaw.column}`;
+          return (
+            <li key={key}>
+              <b>{flaw.explanation}</b>{" "}
+              <span
+                role="img"
+                aria-label="Click to highlight image"
+                title="Click to highlight image"
+                style={{ cursor: "zoom-in" }}
+                onClick={() => {
+                  focus(flaw.id);
+                }}
+              >
+                👀
+              </span>{" "}
+              <a
+                href={`file://${filepath}`}
+                onClick={(event: React.MouseEvent) => {
+                  event.preventDefault();
+                  openInEditor(key, flaw.line, flaw.column);
+                }}
+                title="Click to open in your editor"
+              >
+                line {flaw.line}:{flaw.column}
+              </a>{" "}
+              {(flaw.fixable || flaw.externalImage) && <FixableFlawBadge />}{" "}
+              <br />
+              {flaw.suggestion === "" && (
+                <>
+                  <b>Style:</b> <code>{flaw.style}</code>
+                  <br />
+                </>
+              )}
+              {flaw.suggestion !== null && (
+                <span>
+                  <b>Suggestion:</b>{" "}
+                  {flaw.suggestion ? (
+                    <ShowDiff before={flaw.style} after={flaw.suggestion} />
+                  ) : (
+                    <i>
+                      delete the <code>style</code> attribute
+                    </i>
+                  )}
+                </span>
+              )}{" "}
             </li>
           );
         })}
