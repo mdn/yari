@@ -16,7 +16,6 @@ export function SiteSearch() {
   const ga = useGA();
   const locale = useLocale();
   const [searchParams, setSearchParams] = useSearchParams();
-  // const [q, setQ] = useState(searchParams.get("q") || "");
 
   const query: SiteSearchQuery = {
     q: searchParams.get("q") || "",
@@ -38,12 +37,6 @@ export function SiteSearch() {
       document.title = "No query, no results.";
     }
   }, [query.q, query.page]);
-
-  // React.useEffect(() => {
-  //   if (query.q) {
-  //     setNewQ(query.q);
-  //   }
-  // }, [query.q]);
 
   const mountCounter = React.useRef(0);
   React.useEffect(() => {

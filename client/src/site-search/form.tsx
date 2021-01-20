@@ -31,29 +31,20 @@ export default function SiteSearchForm({
   );
   const [newQuery, setNewQuery] = React.useState(Object.assign({}, query));
 
-  // React.useEffect(() => {
-  //   setNewQuery(Object.assign({}, newQuery, { query: newQ }));
-  // }, [newQ]);
-
   return (
     <form
       action={`/${locale}/search`}
       onSubmit={(event) => {
         event.preventDefault();
-        // const newQuery = Object.assign({}, query, { q: newQ });
-        // setNewQuery(newQuery);
-        // console.log("SUBMITTING:", newQuery);
-
         onSubmit(newQuery);
       }}
     >
-      <pre>{JSON.stringify(newQuery)}</pre>
+      {/* <pre>{JSON.stringify(newQuery)}</pre> */}
       <input
         type="search"
         name="q"
         value={newQuery.q}
         onChange={(event) => {
-          // setNewQ(event.target.value)
           setNewQuery(Object.assign({}, newQuery, { q: event.target.value }));
         }}
       />{" "}
@@ -71,7 +62,6 @@ export default function SiteSearchForm({
           locale={locale}
           query={newQuery}
           updateQuery={(queryUpdates: SiteSearchQuery) => {
-            console.log("UPDATES:", queryUpdates);
             const newQuery = Object.assign({}, query, queryUpdates);
             setNewQuery(newQuery);
           }}
@@ -90,21 +80,6 @@ function AdvancedOptions({
   locale: string;
   updateQuery: (query: SiteSearchQuery) => void;
 }) {
-  // const [localeChoice, setLocaleChoice] = React.useState(locale);
-  // React.useEffect(() => {
-  //   console.log("LocaleChoice has changed", localeChoice, "WAS:", query.locale);
-  //   if (localeChoice !== query.locale[0]) {
-  //     console.log("UPDATE!");
-  //     if (localeChoice === "both") {
-  //       updateQuery(Object.assign({}, query, { locale: [locale, "en-us"] }));
-  //     } else {
-  //       console.log("??", localeChoice);
-  //     }
-  //   }
-  // }, [localeChoice, query.locale]);
-
-  // console.log("query=", query);
-
   return (
     <div className="advanced-options">
       {/* Language only applies if you're browsing in, say, French
@@ -150,13 +125,7 @@ function AdvancedOptions({
           value={query.sort ? query.sort : "best"}
           onChange={(event) => {
             const { value } = event.target;
-            console.log({ value });
-
-            // if (value === "both") {
             updateQuery({ q: query.q, locale: query.locale, sort: value });
-            // } else {
-            //   updateQuery({ q: query.q, locale: [value] });
-            // }
           }}
         >
           <option value="best">Best</option>
