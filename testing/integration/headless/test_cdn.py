@@ -244,5 +244,5 @@ def test_zones_without_locale(base_url, is_behind_cdn, zone, status, expected_lo
     are cached.
     """
     assert_cached(
-        base_url + "/{}".format(zone), status, expected_location, is_behind_cdn
+        base_url + f"/{zone}", status, expected_location, is_behind_cdn
     )

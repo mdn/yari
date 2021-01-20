@@ -158,6 +158,17 @@ test("content built foo page", () => {
   expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
 });
 
+test("icons mentioned in <head> should resolve", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "docs", "web", "foo");
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  $('head link[rel="apple-touch-icon-precomposed"]').each((i, link) => {
+    const expectedFilepath = path.join(buildRoot, $(link).attr("href"));
+    expect(fs.existsSync(expectedFilepath)).toBeTruthy();
+  });
+});
+
 test("content built French foo page", () => {
   expect(fs.existsSync(buildRoot)).toBeTruthy();
 

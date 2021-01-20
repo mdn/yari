@@ -8,7 +8,7 @@ describeMacro("EmbedLiveSample", function () {
     macro.ctx.env.live_samples = {
       base_url: "https://mdn.mozillademos.org",
     };
-    macro.ctx.info.hasPage = jest.fn((path) => true);
+    macro.ctx.info.hasPage = jest.fn(() => true);
   });
   itMacro("One argument: ID", function (macro) {
     macro.ctx.env.url = "/en-US/docs/Web/HTML/Element/figure";
@@ -231,7 +231,7 @@ describeMacro("EmbedLiveSample", function () {
     async function (macro) {
       macro.ctx.env.url = "/en-US/docs/Web/Events/focus";
       macro.ctx.info.cleanURL = jest.fn((url) => url.toLowerCase());
-      macro.ctx.info.hasPage = jest.fn((path) => false);
+      macro.ctx.info.hasPage = jest.fn(() => false);
       await expect(
         macro.call("Event delegation", "", "", "", "Web/Events/blur")
       ).rejects.toThrow(
