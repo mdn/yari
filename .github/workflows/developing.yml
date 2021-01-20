@@ -77,10 +77,10 @@ jobs:
           yarn test:testing developing || (
             status=$?
             echo "Testing failed! Going to dump stdout and stderr"
-           echo "STDOUT..................................................."
-           cat /tmp/stdout.log
-           echo "STDERR..................................................."
-           cat /tmp/stderr.log
+            echo "STDOUT..................................................."
+            cat /tmp/stdout.log
+            echo "STDERR..................................................."
+            cat /tmp/stderr.log
             echo $status
             exit $status
           )
