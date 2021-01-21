@@ -1,5 +1,4 @@
 <%
-var currentSection = $0;
 var locale = env.locale;
 var slug = env.slug;
 var baseURL = "/" + locale + "/docs/Learn/";
@@ -81,7 +80,7 @@ var text = mdn.localStringMap({
         'Assessment_typesetting_a_community_school_homepage': 'Assessment: Typesetting a community school homepage',
       'CSS_layout': 'CSS layout',
         'CSS_layout_overview': 'CSS layout overview',
-        'Introduction' : 'Introduction to CSS layout',
+        'Layout_introduction' : 'Introduction to CSS layout',
         'Normal_Flow' : 'Normal Flow',
         'Flexbox': 'Flexbox',
         'Grids' : 'Grids',
@@ -233,7 +232,7 @@ var text = mdn.localStringMap({
         'Website_security' : 'Website security',
       'Django_web_framework_(Python)' : 'Django web framework (Python)',
         'Django_web_framework_(Python)_overview' : 'Django web framework (Python) overview',
-        'Introduction' : 'Introduction',
+        'Django_introduction' : 'Introduction',
         'Setting_up_a_development_environment' : 'Setting up a development environment',
         'Tutorial_The_Local_Library_website' : 'Tutorial: The Local Library website',
         'Tutorial_Part_2_Creating_a_skeleton_website' : 'Tutorial Part 2: Creating a skeleton website',
@@ -264,7 +263,7 @@ var text = mdn.localStringMap({
       'HTML_questions': 'HTML questions',
       'CSS_questions': 'CSS questions',
       'JavaScript_questions': 'JavaScript questions',
-      'How_the_Web_works': 'How the Web works',
+      'Web_mechanics': 'Web mechanics',
       'Tools_and_setup': 'Tools and setup',
       'Design_and_accessibility': 'Design and accessibility',
   },
@@ -487,7 +486,7 @@ var text = mdn.localStringMap({
         'Website_security' : 'Sicherheit auf Webseiten',
       'Django_web_framework_(Python)' : 'Django Webframework (Python)',
         'Django_web_framework_(Python)_overview' : 'Django Webframework (Python) — Übersicht',
-        'Introduction' : 'Einführung',
+        'Django_introduction' : 'Einführung',
         'Setting_up_a_development_environment' : 'Entwicklungsumgebung aufsetzen',
         'Tutorial_The_Local_Library_website' : 'Tutorial Teil 1: Die lokale Bibliothek',
         'Tutorial_Part_2_Creating_a_skeleton_website' : 'Tutorial Teil 2: Grundgerüst der Webseite',
@@ -517,7 +516,7 @@ var text = mdn.localStringMap({
     'Common_questions': 'Häufige Fragen',
       'HTML_questions': 'Fragen zu HTML',
       'CSS_questions': 'Fragen zu CSS',
-      'How_the_Web_works': 'Wie das Internet funktioniert',
+      'Web_mechanics': 'Wie das Internet funktioniert',
       'Tools_and_setup': 'Werkzeuge und Arbeitsumgebungen',
       'Design_and_accessibility': 'Design und Zugänglichkeit',
   },
@@ -589,7 +588,7 @@ var text = mdn.localStringMap({
         'Assessment_typesetting_a_community_school_homepage': 'Avaliação: Tipografia para a página inicial da escola pública local',
       'CSS_layout': 'Esquemas CSS',
         'CSS_layout_overview': 'Visão geral de esquemas CSS',
-        'Introduction' : 'Introdução a esquemas CSS',
+        'Layout_introduction' : 'Introdução a esquemas CSS',
         'Normal_Flow': 'Normal Flow',
         'Flexbox': 'Flexbox',
         'Grids' : 'Grids',
@@ -741,7 +740,7 @@ var text = mdn.localStringMap({
         'Website_security' : 'Segurança de sites',
       'Django_web_framework_(Python)' : 'Framework Web Django (Python)',
         'Django_web_framework_(Python)_overview' : 'Visão geral do Framework Web Django (Python)',
-        'Introduction' : 'Introdução',
+        'Django_introduction' : 'Introdução',
         'Setting_up_a_development_environment' : 'Configurando um ambiente de desenvolvimento para aplicações Django',
         'Tutorial_The_Local_Library_website' : 'Tutorial: Um site para a Biblioteca Local',
         'Tutorial_Part_2_Creating_a_skeleton_website' : 'Tutorial Parte 2: Criando o esqueleto de um site',
@@ -772,7 +771,7 @@ var text = mdn.localStringMap({
       'HTML_questions': 'Questões sobre HTML',
       'CSS_questions': 'Questões sobre CSS',
       'JavaScript_questions': 'Questões sobre JavaScript',
-      'How_the_Web_works': 'Como a Internet funciona',
+      'Web_mechanics': 'Como a Internet funciona',
       'Tools_and_setup': 'Ferramentas e configuração',
       'Design_and_accessibility': 'Projeto e acessibilidade',
   },
@@ -979,7 +978,7 @@ var text = mdn.localStringMap({
         'Website_security' : 'Защищённость веб-сайтов',
       'Django_web_framework_(Python)' : 'Веб-фреймворк Django (Python)',
         'Django_web_framework_(Python)_overview' : 'Веб-фреймворк Django (Python)',
-        'Introduction' : 'Вступление',
+        'Django_introduction' : 'Вступление',
         'Setting_up_a_development_environment' : 'Установка среды разработки',
         'Tutorial_The_Local_Library_website' : 'Руководство: Сайт местной библиотеки',
         'Tutorial_Part_2_Creating_a_skeleton_website' : 'Руководство часть 2: Создаём набросок сайта',
@@ -998,7 +997,7 @@ var text = mdn.localStringMap({
     'Common_questions': 'Общие вопросы',
       'HTML_questions': 'Вопросы по HTML',
       'CSS_questions': 'Вопросы по CSS',
-      'How_the_Web_works': 'Как работает Веб',
+      'Web_mechanics': 'Как работает Веб',
       'Tools_and_setup': 'Инструменты и установка',
       'Design_and_accessibility': 'Дизайн и доступность',
   },
@@ -1034,7 +1033,7 @@ var text = mdn.localStringMap({
         'Adding_vector_graphics_to_the_Web': '为 Web 新增向量图',
         'Responsive_images': '自适应图片',
         'Assessment_Mozilla_splash_page': '作业：Mozilla 醒目页面',
-	  'HTML_tables' : 'HTML 表格',
+      'HTML_tables' : 'HTML 表格',
         'HTML_tables_overview' : 'HTML 表格概览',
         'HTML_table_basics' : 'HTML 表格基础',
         'HTML_table_advanced' : 'HTML 高级表格特性和可访问性',
@@ -1144,7 +1143,7 @@ var text = mdn.localStringMap({
         'How_to_build_custom_form_controls' : 'How to build custom form controls',
         'Sending_forms_through_JavaScript' : 'Sending forms through JavaScript',
         'CSS_property_compatibility_table_for_form_controls' : 'CSS property compatibility table for form controls',
-	'Accessibility_—_Make_the_web_usable_by_everyone' : '可访问性 — 使每个人都能使用 Web',
+    'Accessibility_—_Make_the_web_usable_by_everyone' : '可访问性 — 使每个人都能使用 Web',
     'Accessibility_guides' : '可访问性指南',
     'Accessibility_assessment' : '可访问性测评',
       'Accessibility_overview' : '可访问性概览',
@@ -1221,7 +1220,7 @@ var text = mdn.localStringMap({
         'Website_security' : '网站安全',
       'Django_web_framework_(Python)' : 'Django 网站框架 (Python)',
         'Django_web_framework_(Python)_overview' : 'Django 网站框架 (Python) 概述',
-        'Introduction' : '介绍',
+        'Django_introduction' : '介绍',
         'Setting_up_a_development_environment' : '搭建开发环境',
         'Tutorial_The_Local_Library_website' : '在线教学：本地图书馆网站',
         'Tutorial_Part_2_Creating_a_skeleton_website' : '在线教学 2：建立网站框架',
@@ -1236,7 +1235,7 @@ var text = mdn.localStringMap({
         'Tutorial_Part_11_Deploying_Django_to_production' : '在线教学 11：部署 Django 至产品',
         'Web_application_security' : 'Web 应用安全性',
         'Assessment_DIY_mini_blog' : '作业：DIY 博客',
-	  'Express_Web_Framework_(Node.js_JavaScript)' : 'Express 网页框架 (node.js/JavaScript)',
+        'Express_Web_Framework_(Node.js_JavaScript)' : 'Express 网页框架 (node.js/JavaScript)',
         'Express_Web_Framework_(Node.js_JavaScript)_overview' : 'Express 网页框架 (Node.js/JavaScript) 概览',
         'Express_Node_introduction' : 'Express/Node 介绍',
         'Setting_up_a_Node_(Express)_development_environment' : '架设 Node (Express) 开发环境',
@@ -1251,7 +1250,7 @@ var text = mdn.localStringMap({
     'Common_questions': '常见问题',
       'HTML_questions': 'HTML 问题',
       'CSS_questions': 'CSS 问题',
-      'How_the_Web_works': 'Web 是如何运作的',
+      'Web_mechanics': 'Web 是如何运作的',
       'Tools_and_setup': '工具与安装',
       'Design_and_accessibility': '设计与可访问性',
   },
@@ -1458,7 +1457,7 @@ var text = mdn.localStringMap({
         'Website_security' : '網站安全',
       'Django_web_framework_(Python)' : 'Django 網站框架 (Python)',
         'Django_web_framework_(Python)_overview' : 'Django 網站框架 (Python) 概述',
-        'Introduction' : '介紹',
+        'Django_introduction' : '介紹',
         'Setting_up_a_development_environment' : '設定開發環境',
         'Tutorial_The_Local_Library_website' : '線上教學：本地圖書館網站',
         'Tutorial_Part_2_Creating_a_skeleton_website' : '線上教學 2：建立網站骨架',
@@ -1477,7 +1476,7 @@ var text = mdn.localStringMap({
     'Common_questions': '常見問題',
       'HTML_questions': 'HTML 問題',
       'CSS_questions': 'CSS 問題',
-      'How_the_Web_works': 'Web 的運作方式',
+      'Web_mechanics': 'Web 的運作方式',
       'Tools_and_setup': '工具與設定',
       'Design_and_accessibility': '設計與親合度',
   },
@@ -1574,7 +1573,7 @@ var text = mdn.localStringMap({
         'Assessment_typesetting_a_community_school_homepage': 'Assessment: Typesetting a community school homepage',
       'CSS_layout': 'CSS layout',
         'CSS_layout_overview': 'CSS layout overview',
-        'Introduction' : 'Introduction to CSS layout',
+        'Layout_introduction' : 'Introduction to CSS layout',
         'Normal_Flow' : 'Normal Flow',
         'Flexbox': 'Flexbox',
         'Grids' : 'Grids',
@@ -1726,7 +1725,7 @@ var text = mdn.localStringMap({
         'Website_security' : 'Website security',
       'Django_web_framework_(Python)' : 'Django web framework (Python)',
         'Django_web_framework_(Python)_overview' : 'Django web framework (Python) overview',
-        'Introduction' : 'Introduction',
+        'Django_introduction' : 'Introduction',
         'Setting_up_a_development_environment' : 'Setting up a development environment',
         'Tutorial_The_Local_Library_website' : 'Tutorial: The Local Library website',
         'Tutorial_Part_2_Creating_a_skeleton_website' : 'Tutorial Part 2: Creating a skeleton website',
@@ -1757,7 +1756,7 @@ var text = mdn.localStringMap({
       'HTML_questions': 'HTML questions',
       'CSS_questions': 'CSS questions',
       'JavaScript_questions': 'JavaScript questions',
-      'How_the_Web_works': 'How the Web works',
+      'Web_mechanics': 'Web mechanics',
       'Tools_and_setup': 'Tools and setup',
       'Design_and_accessibility': 'Design and accessibility',
   }
@@ -1878,7 +1877,7 @@ var text = mdn.localStringMap({
           <summary><%=text['CSS_layout']%></summary>
           <ol>
             <li><a href="<%=baseURL%>CSS/CSS_layout"><%=text['CSS_layout_overview']%></a></li>
-            <li><a href="<%=baseURL%>CSS/CSS_layout/Introduction"><%=text['Introduction']%></a></li>
+            <li><a href="<%=baseURL%>CSS/CSS_layout/Introduction"><%=text['Layout_introduction']%></a></li>
             <li><a href="<%=baseURL%>CSS/CSS_layout/Normal_Flow"><%=text['Normal_Flow']%></a></li>
             <li><a href="<%=baseURL%>CSS/CSS_layout/Flexbox"><%=text['Flexbox']%></a></li>
             <li><a href="<%=baseURL%>CSS/CSS_layout/Grids"><%=text['Grids']%></a></li>
@@ -2150,7 +2149,7 @@ var text = mdn.localStringMap({
         <summary><%=text['Django_web_framework_(Python)']%></summary>
         <ol>
           <li><a href="<%=baseURL%>Server-side/Django"><%=text['Django_web_framework_(Python)_overview']%></a></li>
-          <li><a href="<%=baseURL%>Server-side/Django/Introduction"><%=text['Introduction']%></a></li>
+          <li><a href="<%=baseURL%>Server-side/Django/Introduction"><%=text['Django_introduction']%></a></li>
           <li><a href="<%=baseURL%>Server-side/Django/development_environment"><%=text['Setting_up_a_development_environment']%></a></li>
           <li><a href="<%=baseURL%>Server-side/Django/Tutorial_local_library_website"><%=text['Tutorial_The_Local_Library_website']%></a></li>
           <li><a href="<%=baseURL%>Server-side/Django/skeleton_website"><%=text['Tutorial_Part_2_Creating_a_skeleton_website']%></a></li>
@@ -2193,7 +2192,7 @@ var text = mdn.localStringMap({
           <li><a href="<%=baseURL%>HTML/Howto"><%=text['HTML_questions']%></a></li>
           <li><a href="<%=baseURL%>CSS/Howto"><%=text['CSS_questions']%></a></li>
           <li><a href="<%=baseURL%>JavaScript/Howto"><%=text['JavaScript_questions']%></a></li>
-          <li><a href="<%=baseURL%>Common_questions#How_the_Web_works"><%=text['How_the_Web_works']%></a></li>
+          <li><a href="<%=baseURL%>Common_questions#Web_mechanics"><%=text['Web_mechanics']%></a></li>
           <li><a href="<%=baseURL%>Common_questions#Tools_and_setup"><%=text['Tools_and_setup']%></a></li>
           <li><a href="<%=baseURL%>Common_questions#Design_and_accessibility"><%=text['Design_and_accessibility']%></a></li>
         </ol>

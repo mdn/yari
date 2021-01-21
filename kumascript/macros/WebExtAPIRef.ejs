@@ -21,7 +21,6 @@ let lang = env.locale;
 let api = $0;
 let str = $1 || $0;
 let rtlLocales = ['ar', 'he', 'fa'];
-let localStrings = string.deserialize(await template("L10n:Common"));
 
 api = api.replace(' ', '_').replace('()', '').replace(/\./g, '/');
 
@@ -38,10 +37,6 @@ if ($2) {
   str = str + '.' + $2;
   anch = '#' + $2;
 }
-
-// Now that we have the URL, let's gather the page summary for our tooltip
-
-let page = await wiki.getPage(URL);
 
 let code = '';
 let endcode = '';

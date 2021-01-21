@@ -158,6 +158,17 @@ test("content built foo page", () => {
   expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
 });
 
+test("icons mentioned in <head> should resolve", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "docs", "web", "foo");
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  $('head link[rel="apple-touch-icon-precomposed"]').each((i, link) => {
+    const expectedFilepath = path.join(buildRoot, $(link).attr("href"));
+    expect(fs.existsSync(expectedFilepath)).toBeTruthy();
+  });
+});
+
 test("content built French foo page", () => {
   expect(fs.existsSync(buildRoot)).toBeTruthy();
 
@@ -416,7 +427,7 @@ test("content built bar page", () => {
   const $ = cheerio.load(html);
   expect($("a[data-flaw-src]").length).toEqual(12);
 
-  const brokenLinks = $("a.new");
+  const brokenLinks = $("a.page-not-created");
   expect(brokenLinks.length).toEqual(4);
   expect(brokenLinks.eq(0).data("flaw-src")).toBe('{{CSSxRef("bigfoot")}}');
   expect(brokenLinks.eq(0).text()).toBe("bigfoot");
