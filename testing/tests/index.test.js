@@ -590,6 +590,65 @@ test("without locale prefix broken links flaws", () => {
   expect(map.get("link3").suggestion).toBeNull();
 });
 
+test("broken anchor links flaws", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "not_lowercase_anchors"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  // You have to be intimately familiar with the fixture to understand
+  // why these flaws come out as they do.
+  expect(flaws.broken_links.length).toBe(3);
+  // Map them by 'href'
+  const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
+  expect(map.get("#Heading1").suggestion).toBe("#heading1");
+  expect(map.get("#Heading1").explanation).toBe("Anchor not lowercase");
+  expect(map.get("#Heading1").fixable).toBe(true);
+  expect(map.get("#Heading1").line).toBe(7);
+  expect(map.get("#Heading1").column).toBe(16);
+
+  expect(map.get("/en-US/docs/Web/Foo#Heading2").suggestion).toBe(
+    "/en-US/docs/Web/Foo#heading2"
+  );
+  expect(map.get("/en-US/docs/Web/Foo#Heading2").explanation).toBe(
+    "Anchor not lowercase"
+  );
+  expect(map.get("/en-US/docs/Web/Foo#Heading2").fixable).toBe(true);
+  expect(map.get("/en-US/docs/Web/Foo#Heading2").line).toBe(8);
+  expect(map.get("/en-US/docs/Web/Foo#Heading2").column).toBe(16);
+
+  expect(map.get("/en-US/docs/Web/Fuu#Anchor").suggestion).toBe(
+    "/en-US/docs/Web/Foo#anchor"
+  );
+  expect(map.get("/en-US/docs/Web/Fuu#Anchor").explanation).toBe(
+    "Can't resolve /en-US/docs/Web/Fuu#Anchor"
+  );
+  expect(map.get("/en-US/docs/Web/Fuu#Anchor").fixable).toBe(true);
+  expect(map.get("/en-US/docs/Web/Fuu#Anchor").line).toBe(11);
+  expect(map.get("/en-US/docs/Web/Fuu#Anchor").column).toBe(16);
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  // In the loop we expect exactly 3 assertions,
+  // but we have to include all the other assertions from above first!
+  expect.assertions(16 + 3);
+  $('article a[href*="#"]').each((i, a) => {
+    const href = $(a).attr("href");
+    if ((href.startsWith("/") || href.startsWith("#")) && href.split("#")[1]) {
+      // All our internal links get their 'href' rewritten (on top of
+      // being logged as a flaw)
+      expect(href.split("#")[1]).toEqual(href.split("#")[1].toLowerCase());
+    }
+  });
+});
+
 test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page", () => {
   expect(fs.existsSync(buildRoot)).toBeTruthy();
   const builtFolder = path.join(
