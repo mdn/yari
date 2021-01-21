@@ -26,7 +26,7 @@ function documentExists(url) {
   if (url === "/en-US/") {
     return url;
   }
-  const [bareURL] = url.split("#", 2);
+  const [bareURL] = url.split("#");
 
   if (!ARCHIVED_URLS) {
     ARCHIVED_URLS = new Set(
