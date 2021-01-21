@@ -1294,6 +1294,11 @@
     "url": "https://w3c.github.io/webappsec-referrer-policy/",
     "status": "CR"
   },
+  "Relative Indexing Method": {
+    "name": "Relative Indexing Method",
+    "url": "https://tc39.es/proposal-relative-indexing-method/",
+    "status": "Draft"
+  },
   "Remote Playback": {
     "name": "Remote Playback API",
     "url": "https://w3c.github.io/remote-playback/",
