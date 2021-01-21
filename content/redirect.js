@@ -33,6 +33,7 @@ function documentExists(url) {
       fs
         .readFileSync(path.join(__dirname, "archived.txt"), "utf-8")
         .split("\n")
+        .filter(line => !line.startsWith('#') || line.trim())
         .map((url) => url.toLowerCase())
     );
   }
