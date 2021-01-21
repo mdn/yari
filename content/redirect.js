@@ -156,7 +156,16 @@ function removeOrphanedRedirects(pairs) {
 }
 
 function add(locale, updatePairs, { fix = false } = {}) {
-  const root = locale === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+  let root = CONTENT_ROOT;
+  if (locale !== "en-us") {
+    if (CONTENT_TRANSLATED_ROOT) {
+      root = CONTENT_TRANSLATED_ROOT;
+    } else {
+      throw new Error(
+        `trying to add redirects for ${locale} but CONTENT_TRANSLATED_ROOT not set`
+      );
+    }
+  }
   const redirectsFilePath = path.join(
     root,
     locale.toLowerCase(),
