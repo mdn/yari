@@ -85,7 +85,7 @@ program
 
   .command("fix-redirects", "Consolidate/fix redirects")
   .argument("<locale...>", "Locale", {
-    default: DEFAULT_LOCALE,
+    default: [DEFAULT_LOCALE],
     validator: [...VALID_LOCALES.values(), ...VALID_LOCALES.keys()],
   })
   .action(
