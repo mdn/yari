@@ -13,8 +13,8 @@ function testURL(pathname = "/") {
 describe("Basic viewing of functional pages", () => {
   it("open the temporary home page", async () => {
     await page.goto(testURL("/"));
-    await expect(page).toMatch("MDN Web Docs");
-    await expect(page).toMatchElement("title", { text: /MDN Web Docs/ });
+    await expect(page).toMatch("Writer's home page");
+    await expect(page).toMatchElement("title", { text: /Writer's home page/ });
   });
 
   it("open the /en-US/docs/Web/Foo page", async () => {

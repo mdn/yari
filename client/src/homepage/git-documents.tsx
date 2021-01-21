@@ -50,7 +50,7 @@ export default function GitDocuments() {
   return (
     <article id="git-documents" aria-labelledby="git-documents">
       <h2>
-        <code>git</code> Documents{" "}
+        <code>git</code> documents{" "}
         <span className="in-locale muted">
           (in <code>{locale || "en-US"}</code>)
         </span>
