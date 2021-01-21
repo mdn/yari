@@ -1,0 +1,15 @@
+#git-documents {
+  margin-bottom: 60px;
+  ins,
+  del {
+    text-decoration: none;
+    font-family: monospace;
+    font-size: 0.8rem;
+  }
+  ins {
+    color: green;
+  }
+  del {
+    color: red;
+  }
+}

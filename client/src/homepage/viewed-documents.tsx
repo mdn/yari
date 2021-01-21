@@ -67,7 +67,7 @@ export default function ViewedDocuments() {
       {!entries ? (
         <Banner>Loading recently viewed documents</Banner>
       ) : entries.length ? (
-        <table>
+        <table className="compact">
           <thead>
             <tr>
               <th>Document</th>

@@ -23,6 +23,7 @@ const documentRouter = require("./document");
 const fakeV1APIRouter = require("./fake-v1-api");
 const { searchRoute } = require("./document-watch");
 const flawsRoute = require("./flaws");
+const gitRoute = require("./git");
 const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
 
 const app = express();
@@ -91,6 +92,8 @@ app.get("/_open", (req, res) => {
 app.use("/:locale/search-index.json", searchRoute);
 
 app.get("/_flaws", flawsRoute);
+
+app.get("/_git", gitRoute);
 
 app.get("/*/contributors.txt", async (req, res) => {
   const url = req.url.replace(/\/contributors\.txt$/, "");
