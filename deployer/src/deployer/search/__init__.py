@@ -85,7 +85,7 @@ def index(
     count_done = 0
     t0 = time.time()
     with get_progressbar() as bar:
-        for x in streaming_bulk(connection, generator(), index=index._name):
+        for x in streaming_bulk(connection, generator(), index=document_index._name):
             count_done += 1
             bar.update(1)
 
