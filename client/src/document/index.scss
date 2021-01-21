@@ -117,8 +117,8 @@
     }
   }
 
-  /* 
-   * top navigational elements on tutorial pages 
+  /*
+   * top navigational elements on tutorial pages
    * prevnext is added for backwards compatibility
    */
   .prevnext,
@@ -148,9 +148,9 @@
   }
 
   .callout-box {
-    background: #eee;
+    background: $neutral-550;
     float: right;
-    padding: 20px;
+    padding: $base-spacing;
     text-align: center;
     width: 30%;
   }
