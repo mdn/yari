@@ -243,6 +243,4 @@ def test_zones_without_locale(base_url, is_behind_cdn, zone, status, expected_lo
     Ensure that these zone requests without a locale should redirect and that they
     are cached.
     """
-    assert_cached(
-        base_url + f"/{zone}", status, expected_location, is_behind_cdn
-    )
+    assert_cached(base_url + f"/{zone}", status, expected_location, is_behind_cdn)
