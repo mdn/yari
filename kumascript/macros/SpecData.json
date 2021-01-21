@@ -54,6 +54,11 @@
     "url": "https://w3c.github.io/mediacapture-output/",
     "status": "CR"
   },
+  "Background Fetch": {
+    "name": "Background Fetch",
+    "url": "https://wicg.github.io/background-fetch/",
+    "status": "Draft"
+  },
   "Background Sync": {
     "name": "Web Background Synchronization",
     "url": "https://wicg.github.io/background-sync/spec/",
