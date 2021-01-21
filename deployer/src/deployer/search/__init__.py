@@ -36,14 +36,14 @@ def index(
 
     # Confusingly, `._index` is actually not a private API.
     # It's the documented way you're supposed to reach it.
-    index = Document._index
+    document_index = Document._index
     if not update:
         click.echo(
             "Deleting any possible existing index "
-            f"and creating a new one called {index._name}"
+            f"and creating a new one called {document_index._name}"
         )
-        index.delete(ignore=404)
-        index.create()
+        document_index.delete(ignore=404)
+        document_index.create()
 
     search_prefixes = [None]
     for prefix in reversed(priority_prefixes):
