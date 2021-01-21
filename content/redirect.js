@@ -21,7 +21,7 @@ function checkURLInvalidSymbols(url) {
   }
 }
 
-function documentExists(url) {
+function resolveDocumentPath(url) {
   // Let's keep vanity urls to /en-US/
   if (url === "/en-US/") {
     return url;
@@ -33,7 +33,7 @@ function documentExists(url) {
       fs
         .readFileSync(path.join(__dirname, "archived.txt"), "utf-8")
         .split("\n")
-        .filter(line => !line.startsWith('#') || line.trim())
+        .filter((line) => !line.startsWith("#") || line.trim())
         .map((url) => url.toLowerCase())
     );
   }
@@ -62,7 +62,7 @@ function validateFromURL(url) {
   checkURLInvalidSymbols(url);
   // This is a circular dependency we should solve that in another way.
   validateURLLocale(url);
-  const path = documentExists(url);
+  const path = resolveDocumentPath(url);
   if (path) {
     throw new Error(`From-URL resolves to a file (${path})`);
   }
@@ -94,7 +94,7 @@ function validateToURL(url) {
         `${url} is already matched as a redirect (to: '${resolved}')`
       );
     }
-    const path = documentExists(url);
+    const path = resolveDocumentPath(url);
     if (!path) {
       throw new Error(`To-URL has to resolve to a file (${path})`);
     }
@@ -141,11 +141,11 @@ function removeConflictingOldRedirects(oldPairs, updatePairs) {
 
 function removeOrphanedRedirects(pairs) {
   return pairs.filter(([from, to]) => {
-    if (documentExists(from)) {
+    if (resolveDocumentPath(from)) {
       console.log(`removing orphaned redirect (from exists): ${from}\t${to}`);
       return false;
     }
-    if (to.startsWith("/") && !documentExists(to)) {
+    if (to.startsWith("/") && !resolveDocumentPath(to)) {
       console.log(
         `removing orphaned redirect (to doesn't exists): ${from}\t${to}`
       );
@@ -327,13 +327,14 @@ function shortCuts(pairs, throws = false) {
     }
   }
   const transitivePairs = [...dag.entries()];
-  transitivePairs.sort(sortTuples);
 
   // Restore cases!
-  return transitivePairs.map(([from, to]) => [
+  const mappedPairs = transitivePairs.map(([from, to]) => [
     casing.get(from),
     casing.get(to),
   ]);
+  mappedPairs.sort(sortTuples);
+  return mappedPairs;
 }
 
 function decodePairs(pairs) {
