@@ -518,6 +518,7 @@ describeMacro("APIRef", function () {
   beforeEachMacro(function (macro) {
     // Mock calls to MDN.subpagesExpand
     macro.ctx.page.subpagesExpand = jest.fn((page) => {
+      // eslint-disable-next-line jest/no-standalone-expect
       expect(page).toEqual("/en-US/docs/Web/API/TestInterface");
       return subpagesFixture;
     });

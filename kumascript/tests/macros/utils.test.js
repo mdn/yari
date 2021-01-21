@@ -24,7 +24,7 @@ const ERROR_TEST_CASES = [
 
 describe("test lintHTML function", function () {
   for (const test of ERROR_TEST_CASES) {
-    it(test.title, function () {
+    it(`${test.title}`, function () {
       expect(lintHTML(test.html)).toContain(test.error);
     });
   }

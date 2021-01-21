@@ -3,10 +3,8 @@ module.exports = {
     browser: false,
     commonjs: true,
     es2020: true,
-    "jest/globals": true,
   },
   extends: ["eslint:recommended", "plugin:node/recommended"],
-  plugins: ["jest"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
@@ -24,10 +22,24 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["testing/**/*.js"],
+      files: ["**/*.test.js", "kumascript/tests/macros/utils.js"],
+      plugins: ["jest"],
+      extends: ["plugin:jest/recommended"],
+      env: {
+        jest: true,
+      },
       globals: {
         page: "readonly",
         document: "readonly",
+      },
+      rules: {
+        "jest/no-standalone-expect": [
+          "error",
+          {
+            additionalTestBlockFunctions: ["itMacro", "withDeveloping"],
+          },
+        ],
+        "jest/expect-expect": 0,
       },
     },
   ],

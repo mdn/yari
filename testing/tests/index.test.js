@@ -769,12 +769,12 @@ test("image flaws kitchen sink", () => {
   $("#content img[src]").each((i, element) => {
     const img = $(element);
     const src = img.attr("src");
+    let startsWith = "/en-US/docs/Web/";
     if (src.includes("www.peterbe.com/")) {
       // These are forced to be https
-      expect(src.startsWith("https://")).toBeTruthy();
-    } else {
-      expect(src.startsWith("/en-US/docs/Web/")).toBeTruthy();
+      startsWith = "https://";
     }
+    expect(src.startsWith(startsWith)).toBeTruthy();
   });
 });
 
@@ -949,15 +949,18 @@ test("img tags should always have their 'width' and 'height' set", () => {
   expect($("img").length).toBe(5);
   $("img").each((i, img) => {
     const $img = $(img);
+    let width, height;
     if ($img.attr("src").endsWith("florian.png")) {
-      expect($img.attr("width")).toBe("128");
-      expect($img.attr("height")).toBe("128");
+      width = "128";
+      height = "128";
     } else if ($img.attr("src").endsWith("screenshot.png")) {
-      expect($img.attr("width")).toBe("250");
-      expect($img.attr("height")).toBe("250");
+      width = "250";
+      height = "250";
     } else {
       throw new Error("unexpected image");
     }
+    expect($img.attr("width")).toBe(width);
+    expect($img.attr("height")).toBe(height);
   });
 });
 

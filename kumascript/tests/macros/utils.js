@@ -21,6 +21,7 @@ assert.equal = (x, y) => {
 
 assert.eventually = {
   async equal(x, y) {
+    // eslint-disable-next-line jest/no-standalone-expect
     expect(await x).toEqual(y);
   },
 };
@@ -115,7 +116,7 @@ function describeMacro(macroName, runTests) {
  * @param {function(Macro):void} runTest
  */
 function itMacro(title, runTest) {
-  it(title, function () {
+  it(`${title}`, function () {
     // Assumes that setup returns a promise (if async) or
     // undefined (if synchronous).
     return runTest(macro);
@@ -189,6 +190,7 @@ function lintHTML(html) {
 }
 
 // ### Exported public API
+// eslint-disable-next-line jest/no-export
 module.exports = {
   assert,
   itMacro,

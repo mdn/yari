@@ -1004,72 +1004,72 @@ const LOCALE_ALIAS_URLS = [].concat(
 
 describe("scl3 redirects", () => {
   for (const [url, t] of SCL3_REDIRECT_URLS) {
-    it(url, t);
+    it(`${url}`, t);
   }
 });
 
 describe("github io redirects", () => {
   for (const [url, t] of GITHUB_IO_URLS) {
-    it(url, t);
+    it(`${url}`, t);
   }
 });
 
 describe("mozilla demos redirects", () => {
   for (const [url, t] of MOZILLADEMOS_URLS) {
-    it(url, t);
+    it(`${url}`, t);
   }
 });
 
 describe("default samples redirects", () => {
   for (const [url, t] of DEFAULT_SAMPLES_URLS) {
-    it(url, t);
+    it(`${url}`, t);
   }
 });
 
 describe("legacy redirects", () => {
   for (const [url, t] of LEGACY_URLS) {
-    it(url, t);
+    it(`${url}`, t);
   }
 });
 
 describe("zone redirects", () => {
   for (const [url, t] of ZONE_REDIRECT_URLS) {
-    it(url, t);
+    it(`${url}`, t);
   }
 });
 
 describe("one off redirects", () => {
   for (const [url, t] of REDIRECT_URLS) {
-    it(url, t);
+    it(`${url}`, t);
   }
 });
 
 describe("marionette redirects", () => {
   for (const [url, t] of MARIONETTE_URLS) {
-    it(url, t);
+    it(`${url}`, t);
   }
 });
 
 describe("webext redirects", () => {
   for (const [url, t] of WEBEXT_URLS) {
-    it(url, t);
+    it(`${url}`, t);
   }
 });
 
 describe("firefox accounts redirects", () => {
   for (const [url, t] of FIREFOX_ACCOUNTS_URLS) {
-    it(url, t);
+    it(`${url}`, t);
   }
 });
 
 describe("firefox src docs redirects", () => {
   for (const [url, t] of FIREFOX_SOURCE_DOCS_URLS) {
-    it(url, t);
+    it(`${url}`, t);
   }
 });
 
 describe("locale alias redirects", () => {
   for (const [url, t] of LOCALE_ALIAS_URLS) {
-    it(url, t);
+    it(`${url}`, t);
   }
 });

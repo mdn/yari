@@ -14,6 +14,7 @@ describe("Site search", () => {
     // very confusing errors within the important tests themselves.
     await page.goto(testURL("/en-US/search-index.json"));
     // It's JSON but this asserts that page will be findable
+    // eslint-disable-next-line jest/no-standalone-expect
     await expect(page).toMatch("<foo>: A test tag");
   });
 
