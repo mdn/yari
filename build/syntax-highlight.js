@@ -50,12 +50,6 @@ const IGNORE = new Set(["none", "text", "plain", "unix"]);
 function syntaxHighlight($, doc) {
   loadAllLanguages();
 
-  // First flag all `<pre>` tags that are inside a hidden container as hidden.
-  // This way, when we iterate over the `<pre>` tags we can know that we can
-  // ignore it because it's visually hidden.
-  // $("div.hidden pre").addClass("hidden");
-  $("div.hidden pre").remove();
-
   // Our content will be like this: `<pre class="brush:js">` or
   // `<pre class="brush: js">` so we're technically not looking for an exact
   // match. The wildcard would technically match `<pre class="brushetta">`
@@ -65,15 +59,6 @@ function syntaxHighlight($, doc) {
     // The language is whatever string comes after the `brush(:)`
     // portion of the class name.
     const $pre = $(element);
-
-    if ($pre.hasClass("hidden")) {
-      // Unfortunately, there's no way to avoid this.
-      // Ideally, we should only bother going into `<pre>` tags according to:
-      //   1. Contains `brush` (e.g. `brush:` or `brush:js`)
-      //   2. Does *not* have `hidden`
-      // But it's not possible with cheerio. An early exit is reasonably fast.
-      return;
-    }
 
     const className = $pre.attr("class").toLowerCase();
     const match = className.match(/brush:?\s*([\w_-]+)/);
