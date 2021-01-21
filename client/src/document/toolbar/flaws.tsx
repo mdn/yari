@@ -16,7 +16,7 @@ import {
   ImageWidthFlaw,
   GenericFlaw,
   BadBCDQueryFlaw,
-  PreWithHTMLFlaw,
+  BadPreTagFlaw,
   SectioningFlaw,
 } from "../types";
 import "./flaws.scss";
@@ -214,12 +214,12 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
                 flaws={doc.flaws.bad_bcd_queries}
               />
             );
-          case "pre_with_html":
+          case "bad_pre_tags":
             return (
-              <PreWithHTML
-                key="pre_with_html"
+              <BadPreTag
+                key="bad_pre_tags"
                 sourceFolder={doc.source.folder}
-                flaws={doc.flaws.pre_with_html}
+                flaws={doc.flaws.bad_pre_tags}
               />
             );
           case "macros":
@@ -483,11 +483,11 @@ function Sectioning({ flaws }: { flaws: SectioningFlaw[] }) {
   );
 }
 
-function PreWithHTML({
+function BadPreTag({
   flaws,
   sourceFolder,
 }: {
-  flaws: PreWithHTMLFlaw[];
+  flaws: BadPreTagFlaw[];
   sourceFolder: string;
 }) {
   const { focus } = useAnnotations(flaws);
@@ -524,8 +524,8 @@ function PreWithHTML({
   }
 
   return (
-    <div className="flaw flaw__pre_with_html">
-      <h3>{humanizeFlawName("pre_with_html")}</h3>
+    <div className="flaw flaw__bad_pre_tags">
+      <h3>{humanizeFlawName("bad_pre_tags")}</h3>
       <ul>
         {flaws.map((flaw) => (
           <li key={flaw.id}>

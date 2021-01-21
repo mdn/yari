@@ -99,8 +99,9 @@ describe("fixing flaws", () => {
       .split("\n")
       .filter((line) => regexPattern.test(line));
     expect(dryRunNotices.length).toBe(3);
-    expect(dryRunNotices[1]).toContain(pattern);
-    expect(dryRunNotices[0]).toContain(path.join(pattern, "images"));
+    expect(dryRunNotices[2]).toContain(pattern);
+    expect(dryRunNotices[1]).toContain(path.join(pattern, "images"));
+    expect(dryRunNotices[0]).toContain(path.join(pattern, "bad_pre_tags"));
     const dryrunFiles = getChangedFiles(tempContentDir);
     expect(dryrunFiles.length).toBe(0);
   });
@@ -130,14 +131,14 @@ describe("fixing flaws", () => {
     const newRawHtmlImages = fs.readFileSync(imagesFile, "utf-8");
     expect(newRawHtmlImages).toContain('src="fixable.png"');
 
-    const preWithHTMLFile = files.find((f) =>
-      f.includes(path.join(pattern, "pre_with_html"))
+    const badPreTagFile = files.find((f) =>
+      f.includes(path.join(pattern, "bad_pre_tags"))
     );
-    const newRawHtmlPreWithHTML = fs.readFileSync(preWithHTMLFile, "utf-8");
+    const newRawHtmlPreWithHTML = fs.readFileSync(badPreTagFile, "utf-8");
     expect(newRawHtmlPreWithHTML).not.toContain("<code>");
 
     const regularFile = files.find(
-      (f) => f !== imagesFile && f !== preWithHTMLFile
+      (f) => f !== imagesFile && f !== badPreTagFile
     );
     const newRawHtml = fs.readFileSync(regularFile, "utf-8");
     expect(newRawHtml).toContain("{{CSSxRef('number')}}");

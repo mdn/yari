@@ -129,11 +129,15 @@ async function checkFile(filePath, options) {
     const files = await imagemin([filePath], {
       destination: tempdir,
       plugins,
+      // Needed because otherwise start trying to find files using
+      // `globby()` which chokes on file paths that contain brackets.
+      // E.g. `/web/css/transform-function/rotate3d()/transform.png`
+      // Setting this to false tells imagemin() to just accept what
+      // it's given instead of trying to search for the image.
+      glob: false,
     });
     if (!files.length) {
-      throw new Error(
-        `${filePath} could not be compressed with plugin: ${plugins[0]}`
-      );
+      throw new Error(`${filePath} could not be compressed`);
     }
     const compressed = files[0];
     const sizeBefore = fs.statSync(filePath).size;
@@ -159,6 +163,12 @@ async function checkFile(filePath, options) {
           "Consider running again with '--save-compression' and run again " +
             "to automatically save the newly compressed file."
         );
+        const relPath =
+          process.env.CI === "true"
+            ? path.relative(process.cwd(), filePath)
+            : filePath;
+        const cliCommand = `yarn filecheck "${relPath}" --save-compression`;
+        console.log(`HINT! Type the following command:\n\n\t${cliCommand}\n`);
         throw new Error(
           `${filePath} can be compressed by ~${reductionPercentage.toFixed(0)}%`
         );

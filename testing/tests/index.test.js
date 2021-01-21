@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const cheerio = require("cheerio");
+const glob = require("glob");
 
 const buildRoot = path.join("..", "client", "build");
 
@@ -155,6 +156,17 @@ test("content built foo page", () => {
   expect($('link[rel="alternate"]').length).toBe(2);
   expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
   expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
+});
+
+test("icons mentioned in <head> should resolve", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "docs", "web", "foo");
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  $('head link[rel="apple-touch-icon-precomposed"]').each((i, link) => {
+    const expectedFilepath = path.join(buildRoot, $(link).attr("href"));
+    expect(fs.existsSync(expectedFilepath)).toBeTruthy();
+  });
 });
 
 test("content built French foo page", () => {
@@ -415,7 +427,7 @@ test("content built bar page", () => {
   const $ = cheerio.load(html);
   expect($("a[data-flaw-src]").length).toEqual(12);
 
-  const brokenLinks = $("a.new");
+  const brokenLinks = $("a.page-not-created");
   expect(brokenLinks.length).toEqual(4);
   expect(brokenLinks.eq(0).data("flaw-src")).toBe('{{CSSxRef("bigfoot")}}');
   expect(brokenLinks.eq(0).text()).toBe("bigfoot");
@@ -665,7 +677,7 @@ test("detect bad_bcd_links flaws from", () => {
   expect(flaw.query).toBe("api.Document.visibilityState");
 });
 
-test("detect pre_with_html flaws", () => {
+test("detect bad_pre_tags flaws", () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -676,8 +688,8 @@ test("detect pre_with_html flaws", () => {
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(doc.flaws.pre_with_html.length).toBe(1);
-  const flaw = doc.flaws.pre_with_html[0];
+  expect(doc.flaws.bad_pre_tags.length).toBe(1);
+  const flaw = doc.flaws.bad_pre_tags[0];
   expect(flaw.explanation).toBe("<pre><code>CODE can be just <pre>CODE");
   expect(flaw.id).toBeTruthy();
   expect(flaw.fixable).toBe(true);
@@ -947,4 +959,26 @@ test("img tags should always have their 'width' and 'height' set", () => {
       throw new Error("unexpected image");
     }
   });
+});
+
+test("/Web/Embeddable should have 3 valid live samples", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "embeddable"
+  );
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("iframe").length).toBe(3);
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(Object.keys(doc.flaws).length).toBe(0);
+
+  const samplesRoot = path.join(builtFolder, "_samples_");
+  const found = glob.sync(path.join(samplesRoot, "**", "index.html"));
+  expect(found.length).toBe(3);
 });

@@ -137,7 +137,11 @@ function getLiveSampleIDs(slug, source) {
       // HTML element ID is lost and this function won't discovered that it is
       // in fact a live sample here.
       result.push(new LiveSampleID("inheritance_diagram", source, token));
-    } else if (normalizedMacroName === "embedlivesample" && token.args.length) {
+    } else if (
+      (normalizedMacroName === "embedlivesample" ||
+        normalizedMacroName === "livesamplelink") &&
+      token.args.length
+    ) {
       // Some of the localized pages URI-encode their first argument,
       // the live-sample ID, even though they don't need to do that,
       // so let's first call "safeDecodeURIComponent" just in case.

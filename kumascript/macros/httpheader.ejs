@@ -3,7 +3,6 @@
 let lang = env.locale;
 let header = $0;
 let str = $1 || $0;
-let rtlLocales = ['ar', 'he', 'fa'];
 let URL = "/" + lang + '/docs/Web/HTTP/Headers/' + header;
 let anch = '';
 
@@ -11,8 +10,6 @@ if ($2) {
   str = str + '.' + $2;
   anch = '#' + $2;
 }
-
-let page = await wiki.getPage(URL);
 
 let code = '';
 let endcode = '';

@@ -21,7 +21,7 @@ describeMacro("spec2", function () {
     macro.ctx.env.locale = "ja";
     return assert.eventually.equal(
       macro.call("CSS3 Box"),
-      '<span class="spec-wd">草案</span>'
+      '<span class="spec-cr">勧告候補</span>'
     );
   });
   itMacro("REC (de)", function (macro) {

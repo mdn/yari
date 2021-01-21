@@ -5,12 +5,8 @@ module.exports = {
     es2020: true,
     "jest/globals": true,
   },
-  extends: [
-    "eslint:recommended",
-    "plugin:node/recommended",
-    "plugin:package-json/recommended",
-  ],
-  plugins: ["package-json", "jest"],
+  extends: ["eslint:recommended", "plugin:node/recommended"],
+  plugins: ["jest"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
@@ -19,4 +15,20 @@ module.exports = {
     ecmaVersion: 2019,
   },
   rules: {},
+  settings: {
+    node: {
+      allowModules: ["expect-puppeteer"],
+      resolvePaths: [__dirname],
+      tryExtensions: [".js", ".json", ".node"],
+    },
+  },
+  overrides: [
+    {
+      files: ["testing/**/*.js"],
+      globals: {
+        page: "readonly",
+        document: "readonly",
+      },
+    },
+  ],
 };

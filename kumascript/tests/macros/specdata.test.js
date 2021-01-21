@@ -18,6 +18,7 @@ const specStatusValues = [
   "Draft",
   "Obsolete",
   "LC",
+  "NOTE",
 ];
 
 /*

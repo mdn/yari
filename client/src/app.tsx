@@ -13,6 +13,7 @@ import { Footer } from "./ui/organisms/footer";
 import { Header } from "./ui/organisms/header";
 import { PageNotFound } from "./page-not-found";
 import { Banner } from "./banners";
+import { useDebugGA } from "./ga-context";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
@@ -75,6 +76,8 @@ function DocumentOrPageNotFound(props) {
 }
 
 export function App(appProps) {
+  useDebugGA();
+
   const routes = (
     <Routes>
       {/*

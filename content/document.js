@@ -81,7 +81,7 @@ function saveHTMLFile(
     // MySQL to disk. Once we're over that period we can delete this if-statement.
     metadata.translation_of_original = translation_of_original;
   }
-  const combined = `---\n${yaml.safeDump(metadata)}---\n${rawHTML.trim()}\n`;
+  const combined = `---\n${yaml.dump(metadata)}---\n${rawHTML.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 
@@ -162,6 +162,26 @@ function archive(
   return folderPath;
 }
 
+function unarchive(document, move) {
+  // You can't use `document.rawHTML` because, rather confusingly,
+  // it's actually the rendered (from the migration) HTML. Instead,
+  // you need seek out the `raw.html` equivalent and use that.
+  // This is because when we ran the migration, for every document we
+  // archived, we created a `index.html` file (front-matter and rendered
+  // HTML) and a `raw.html` file (kumascript raw HTML).
+  const rawFilePath = path.join(
+    path.dirname(document.fileInfo.path),
+    "raw.html"
+  );
+  const rawHTML = fs.readFileSync(rawFilePath, "utf-8");
+  const created = create(rawHTML, document.metadata);
+  if (move) {
+    execGit(["rm", document.fileInfo.path], {}, CONTENT_ARCHIVED_ROOT);
+    execGit(["rm", rawFilePath], {}, CONTENT_ARCHIVED_ROOT);
+  }
+  return created;
+}
+
 const read = memoize((folder) => {
   let filePath = null;
   let root = null;
@@ -184,8 +204,11 @@ const read = memoize((folder) => {
       `Folder contains zero width whitespace which is not allowed (${filePath})`
     );
   }
-  const isTranslated =
-    CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT);
+  // Use Boolean() because otherwise, `isTranslated` might become `undefined`
+  // rather than an actuall boolean value.
+  const isTranslated = Boolean(
+    CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT)
+  );
   const isArchive =
     isTranslated ||
     (CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT));
@@ -485,6 +508,7 @@ function remove(
 module.exports = {
   create,
   archive,
+  unarchive,
   read,
   update,
   exists,
