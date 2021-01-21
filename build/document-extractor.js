@@ -20,7 +20,14 @@ const { packageBCD } = require("./resolve-bcd");
  * ...give or take some whitespace.
  */
 function extractSidebar($) {
-  const search = $("#Quick_Links");
+  // Have to use both spellings because unfortunately, some sidebars don't come
+  // from macros but have it hardcoded into the content. Perhaps it was the
+  // result of someone once rendering out some sidebar macros.
+  // We could consolidate it to just exactly one spelling (`quick_links`) but
+  // that would require having to fix 29 macros, fix thousands of archived-content
+  // pages and hundres of translated content.
+  // By selecting for either spelling we're being defensive and safe.
+  const search = $("#Quick_Links, #Quick_links");
   if (!search.length) {
     return "";
   }
