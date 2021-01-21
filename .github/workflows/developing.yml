@@ -35,6 +35,14 @@ jobs:
         run: |
           ./testing/scripts/yarn-install.sh
 
+      - name: Setup kernel for react native, increase watchers
+        run: |
+          # When running Yari on Linux, you might get the
+          # "Error: ENOSPC: System limit for number of file watchers reached" error.
+          # This, resolves that.
+          # Source https://github.com/expo/expo-github-action/issues/20#issuecomment-541676895
+          echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
       - name: Start the dev server
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
