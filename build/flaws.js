@@ -506,16 +506,22 @@ async function fixFixableFlaws(doc, options, document) {
             `No file type could be extracted from ${flaw.src} at all. Probably not going to be a valid image file.`
           );
         }
-        if (!VALID_MIME_TYPES.has(fileType.mime)) {
+        const isSVG =
+          fileType.mime === "application/xml" &&
+          flaw.src.toLowerCase().endsWith(".svg");
+
+        if (!(VALID_MIME_TYPES.has(fileType.mime) || isSVG)) {
           throw new Error(
             `${flaw.src} has an unrecognized mime type: ${fileType.mime}`
           );
         }
+        // Otherwise FileType would make it `.xml`
+        const imageExtension = isSVG ? "svg" : fileType.ext;
         const imageBasename = sanitizeFilename(
           `${path.basename(
             decodeURI(url.pathname),
             path.extname(decodeURI(url.pathname))
-          )}.${fileType.ext}`
+          )}.${imageExtension}`
         );
         const destination = path.join(
           Document.getFolderPath(document.metadata),
