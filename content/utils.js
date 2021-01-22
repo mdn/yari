@@ -1,37 +1,12 @@
 const path = require("path");
 const childProcess = require("child_process");
-const sanitizeFilename = require("sanitize-filename");
 const { CONTENT_ROOT } = require("./constants");
+const { slugToFolder } = require("../libs/slug-utils");
 
 function buildURL(locale, slug) {
   if (!locale) throw new Error("locale falsy!");
   if (!slug) throw new Error("slug falsy!");
   return `/${locale}/docs/${slug}`;
-}
-
-/*
- * NOTE: A nearly identical copy of this function is used within
- *       ./lambda/content-origin-request/index.js. If you make a
- *       change to this function, you must replicate the change
- *       there as well.
- */
-function slugToFolder(slug) {
-  return (
-    slug
-      // We have slugs with these special characters that would be
-      // removed by the sanitizeFilename() function. What might then
-      // happen is that it leads to two *different slugs* becoming
-      // *same* folder name.
-      .replace(/\*/g, "_star_")
-      .replace(/::/g, "_doublecolon_")
-      .replace(/:/g, "_colon_")
-      .replace(/\?/g, "_question_")
-
-      .toLowerCase()
-      .split("/")
-      .map(sanitizeFilename)
-      .join(path.sep)
-  );
 }
 
 function isPromise(p) {
@@ -113,7 +88,7 @@ function execGit(args, opts = {}, root = null) {
 
 module.exports = {
   buildURL,
-  slugToFolder,
+  slugToFolder: (slug) => slugToFolder(slug, path.sep),
   memoize,
   execGit,
 };

@@ -33,9 +33,10 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install all yarn packages
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
         run: |
-          ./testing/scripts/yarn-install.sh
-          ./testing/scripts/yarn-lockfile-check.sh
+          yarn --frozen-lockfile
 
       - name: Lint prettier
         run: yarn prettier-check
@@ -55,6 +56,9 @@ jobs:
           # dev/debug you're encouraged to start it yourself in a separate
           # terminal.
           TESTING_START_SERVER: true
+          # Use local chrome installs since we skip downloading it as part
+          # of the yarn installs above
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
         run: |
           # Needed for the puppeteer tests that start a static Express server,
           # but it starts it from within the testing/ path.
