@@ -38,19 +38,21 @@ function resolveDocumentPath(url) {
     );
   }
 
-  if (ARCHIVED_URLS.has(bareURL.toLowerCase())) {
-    return `$ARCHIVED/${bareURL}`;
-  }
-
   const [, locale, , ...slug] = bareURL.toLowerCase().split("/");
-  const root = locale === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
 
-  const filePath = path.join(
-    root,
+  const relativeFilePath = path.join(
     locale,
     slugToFolder(slug.join("/")),
     "index.html"
   );
+
+  if (ARCHIVED_URLS.has(relativeFilePath.toLowerCase())) {
+    return `$ARCHIVED/${relativeFilePath}`;
+  }
+
+  const root = locale === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+
+  const filePath = path.join(root, relativeFilePath);
   if (fs.existsSync(filePath)) {
     return filePath;
   }
