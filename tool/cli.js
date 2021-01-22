@@ -7,6 +7,8 @@ const chalk = require("chalk");
 const prompts = require("prompts");
 const openEditor = require("open-editor");
 const open = require("open");
+const unslug = require("./unslug");
+const log = require("loglevel");
 
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
 const {
@@ -336,6 +338,54 @@ program
           ).length.toLocaleString()} paths into ${saveHistory}`
         )
       );
+    })
+  )
+
+  .command("unslug", "Unslug (move to en-US slugs) a locale")
+  .argument("<locale...>", "Locale", {
+    default: DEFAULT_LOCALE,
+    validator: [...VALID_LOCALES.values()].map((l) => l.toLowerCase()),
+  })
+  .option("--summarize <path>", `Write summary file.`, {
+    default: path.join(os.tmpdir(), "unslug-summary.json"),
+  })
+  .action(
+    tryOrExit(async ({ args, options }) => {
+      const { locale } = args;
+      const { verbose, summarize } = options;
+      if (verbose) {
+        log.setDefaultLevel(log.levels.DEBUG);
+      }
+      const stats = [];
+      for (const l of locale) {
+        const s = unslug.unslugAll(l);
+        stats.push([l, s]);
+
+        const {
+          movedDocs,
+          conflictingDocs,
+          dehashedDocs,
+          orphanedDocs,
+          redirectedDocs,
+          totalDocs,
+        } = s;
+        console.log(chalk.green(`Unslugging ${l}:`));
+        console.log(chalk.green(`Total of ${totalDocs} documents`));
+        console.log(chalk.green(`Moved ${movedDocs} documents`));
+        console.log(chalk.green(`Conflicting ${conflictingDocs} documents.`));
+        console.log(chalk.green(`Dehashed ${dehashedDocs} documents.`));
+        console.log(chalk.green(`Orphaned ${orphanedDocs} documents.`));
+        console.log(
+          chalk.green(`Fixed ${redirectedDocs} redirected documents.`)
+        );
+      }
+      if (summarize) {
+        fs.writeFileSync(
+          summarize,
+          JSON.stringify(Object.fromEntries(stats), null, 2),
+          "utf-8"
+        );
+      }
     })
   )
 
