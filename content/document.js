@@ -329,7 +329,9 @@ function update(url, rawHTML, metadata) {
       oldSlug
     );
 
-    execGit(["mv", oldFolderPath, newFolderPath]);
+    if (oldFolderPath !== newFolderPath) {
+      execGit(["mv", oldFolderPath, newFolderPath]);
+    }
     Redirect.add(locale, [...redirects.entries()]);
   }
 }

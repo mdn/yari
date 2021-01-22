@@ -159,7 +159,7 @@ function removeOrphanedRedirects(pairs) {
 
 function add(locale, updatePairs, { fix = false } = {}) {
   let root = CONTENT_ROOT;
-  if (locale !== "en-us") {
+  if (locale.toLowerCase() !== "en-us") {
     if (CONTENT_TRANSLATED_ROOT) {
       root = CONTENT_TRANSLATED_ROOT;
     } else {
