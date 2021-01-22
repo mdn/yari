@@ -3,6 +3,7 @@ const path = require("path");
 
 const chalk = require("chalk");
 const got = require("got");
+const FileType = require("file-type");
 const imagemin = require("imagemin");
 const imageminPngquant = require("imagemin-pngquant");
 const imageminMozjpeg = require("imagemin-mozjpeg");
@@ -17,6 +18,7 @@ const {
   replaceMatchesInText,
 } = require("./matches-in-text");
 const { humanFileSize } = require("./utils");
+const { VALID_MIME_TYPES } = require("../filecheck/constants");
 
 function injectFlaws(doc, $, options, { rawContent }) {
   if (doc.isArchive) return;
@@ -497,10 +499,25 @@ async function fixFixableFlaws(doc, options, document) {
           timeout: 10000,
           retry: 3,
         });
+        const fileType = await FileType.fromBuffer(imageBuffer);
+        if (!fileType) {
+          throw new Error(
+            `No file type could be extracted from ${flaw.src} at all. Probably not going to be a valid image file.`
+          );
+        }
+        if (!VALID_MIME_TYPES.has(fileType.mime)) {
+          throw new Error(
+            `${flaw.src} has an unrecognized mime type: ${fileType.mime}`
+          );
+        }
+        const imageBasename = `${path.basename(
+          decodeURI(url.pathname),
+          path.extname(decodeURI(url.pathname))
+        )}.${fileType.ext}`;
         const destination = path.join(
           Document.getFolderPath(document.metadata),
           path
-            .basename(decodeURI(url.pathname))
+            .basename(imageBasename)
             .replace(/\s+/g, "_")
             // From legacy we have a lot of images that are named like
             // `/@api/deki/files/247/=HTMLBlinkElement.gif` for example.
