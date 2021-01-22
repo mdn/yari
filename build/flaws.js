@@ -519,7 +519,7 @@ async function fixFixableFlaws(doc, options, document) {
         const imageExtension = isSVG ? "svg" : fileType.ext;
         const imageBasename = sanitizeFilename(
           `${path.basename(
-            decodeURI(url.pathname),
+            decodeURI(url.pathname).replace(/\s+/g, "_"),
             path.extname(decodeURI(url.pathname))
           )}.${imageExtension}`
         );
