@@ -36,8 +36,10 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install all yarn packages
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
         run: |
-          ./testing/scripts/yarn-install.sh
+          yarn --frozen-lockfile
 
       - name: Build select important pages
         env:
