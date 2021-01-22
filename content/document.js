@@ -332,7 +332,12 @@ function update(url, rawHTML, metadata) {
     if (oldFolderPath !== newFolderPath) {
       execGit(["mv", oldFolderPath, newFolderPath]);
     }
-    Redirect.add(locale, [...redirects.entries()]);
+    Redirect.add(
+      locale,
+      [...redirects.entries()].filter(
+        ([fromURL, toURL]) => fromURL.toLowerCase() !== toURL.toLowerCase()
+      )
+    );
   }
 }
 
