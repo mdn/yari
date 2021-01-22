@@ -9,6 +9,7 @@ const imageminPngquant = require("imagemin-pngquant");
 const imageminMozjpeg = require("imagemin-mozjpeg");
 const imageminGifsicle = require("imagemin-gifsicle");
 const imageminSvgo = require("imagemin-svgo");
+const sanitizeFilename = require("sanitize-filename");
 
 const { Document, Redirect, Image } = require("../content");
 const { FLAW_LEVELS } = require("./constants");
@@ -510,10 +511,12 @@ async function fixFixableFlaws(doc, options, document) {
             `${flaw.src} has an unrecognized mime type: ${fileType.mime}`
           );
         }
-        const imageBasename = `${path.basename(
-          decodeURI(url.pathname),
-          path.extname(decodeURI(url.pathname))
-        )}.${fileType.ext}`;
+        const imageBasename = sanitizeFilename(
+          `${path.basename(
+            decodeURI(url.pathname),
+            path.extname(decodeURI(url.pathname))
+          )}.${fileType.ext}`
+        );
         const destination = path.join(
           Document.getFolderPath(document.metadata),
           path
