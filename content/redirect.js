@@ -290,14 +290,24 @@ function shortCuts(pairs, throws = false) {
     ...pairs.map(([from]) => [from.toLowerCase(), from]),
     ...pairs.map(([, to]) => [to.toLowerCase(), to]),
   ]);
-  const dag = new Map(
-    pairs.map(([from, to]) => [from.toLowerCase(), to.toLowerCase()])
-  );
+  const lowerCasePairs = pairs.map(([from, to]) => [
+    from.toLowerCase(),
+    to.toLowerCase(),
+  ]);
+
+  // Directed graph of all redirects.
+  const dg = new Map(lowerCasePairs);
+
+  // Transitive directed acyclic graph of all redirects.
+  // All redirects are expanded A -> B, B -> C becomes:
+  // A -> B, B -> C, A -> C and all cycles are removed.
+  const transitiveDag = new Map();
 
   // Expand all "edges" and keep track of the nodes we traverse.
   const transit = (s, froms = []) => {
-    const next = dag.get(s.toLowerCase());
+    const next = dg.get(s);
     if (next) {
+      froms.push(s);
       if (froms.includes(next)) {
         const msg = `redirect cycle [${froms.join(", ")}] → ${next}`;
         if (throws) {
@@ -306,7 +316,7 @@ function shortCuts(pairs, throws = false) {
         console.log(msg);
         return [];
       }
-      return transit(next, [...froms, s.toLowerCase()]);
+      return transit(next, froms);
     } else {
       return [froms, s];
     }
@@ -328,13 +338,13 @@ function shortCuts(pairs, throws = false) {
     return 0;
   };
 
-  for (const [from] of pairs) {
+  for (const [from] of lowerCasePairs) {
     const [froms = [], to] = transit(from);
     for (const from of froms) {
-      dag.set(from, to);
+      transitiveDag.set(from, to);
     }
   }
-  const transitivePairs = [...dag.entries()];
+  const transitivePairs = [...transitiveDag.entries()];
 
   // Restore cases!
   const mappedPairs = transitivePairs.map(([from, to]) => [
