@@ -34,8 +34,10 @@ jobs:
 
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
         run: |
-          ./testing/scripts/yarn-install.sh
+          yarn --frozen-lockfile
 
       - name: Build select important pages
         env:
