@@ -158,8 +158,9 @@ function removeOrphanedRedirects(pairs) {
 }
 
 function add(locale, updatePairs, { fix = false } = {}) {
+  locale = locale.toLowerCase();
   let root = CONTENT_ROOT;
-  if (locale.toLowerCase() !== "en-us") {
+  if (locale !== "en-us") {
     if (CONTENT_TRANSLATED_ROOT) {
       root = CONTENT_TRANSLATED_ROOT;
     } else {
@@ -168,11 +169,7 @@ function add(locale, updatePairs, { fix = false } = {}) {
       );
     }
   }
-  const redirectsFilePath = path.join(
-    root,
-    locale.toLowerCase(),
-    "_redirects.txt"
-  );
+  const redirectsFilePath = path.join(root, locale, "_redirects.txt");
   let pairs = [];
   if (fs.existsSync(redirectsFilePath)) {
     const content = fs.readFileSync(redirectsFilePath, "utf-8");
@@ -202,7 +199,7 @@ function add(locale, updatePairs, { fix = false } = {}) {
   if (fix) {
     simplifiedPairs = removeOrphanedRedirects(simplifiedPairs);
   }
-  save(path.join(root, locale.toLowerCase()), simplifiedPairs);
+  save(path.join(root, locale), simplifiedPairs);
 }
 
 // The module level cache
