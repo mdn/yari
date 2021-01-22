@@ -38,10 +38,11 @@ jobs:
 
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
-        env:
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+        # env:
+        #   PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
         run: |
           yarn --frozen-lockfile
+          du --max-depth=1 node_modules | sort -n | tail -10
 
       - name: Unit testing kumascript
         env:

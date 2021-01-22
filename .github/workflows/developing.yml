@@ -36,6 +36,7 @@ jobs:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
         run: |
           yarn --frozen-lockfile
+          du --max-depth=1 node_modules | sort -n | tail -10
 
       - name: Setup kernel for react native, increase watchers
         run: |
