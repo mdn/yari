@@ -307,7 +307,7 @@ program
       const allHistory = {};
       for (const [relPath, value] of map) {
         allHistory[relPath] = value;
-        const locale = relPath.split("/")[0];
+        const locale = relPath.split(path.sep)[0];
         if (!historyPerLocale[locale]) {
           historyPerLocale[locale] = {};
         }
