@@ -6,11 +6,20 @@ require("dotenv").config({
   path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
 });
 
-const CONTENT_ROOT = process.env.CONTENT_ROOT;
+let CONTENT_ROOT = process.env.CONTENT_ROOT;
 if (!CONTENT_ROOT) {
   throw new Error("Env var CONTENT_ROOT must be set");
 }
-if (!fs.existsSync(CONTENT_ROOT)) {
+if (
+  path.basename(CONTENT_ROOT) !== "files" &&
+  fs.existsSync(path.join(CONTENT_ROOT, "files"))
+) {
+  // It can be "corrected"
+  CONTENT_ROOT = path.join(CONTENT_ROOT, "files");
+  console.warn(
+    `Corrected the CONTENT_ROOT environment variable to ${CONTENT_ROOT}`
+  );
+} else if (!fs.existsSync(CONTENT_ROOT)) {
   throw new Error(`${path.resolve(CONTENT_ROOT)} does not exist`);
 }
 
