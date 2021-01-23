@@ -101,6 +101,7 @@ export interface Doc {
   toc: Toc[];
   body: string;
   modified: string;
+  hash: string;
   flaws: Flaws;
   other_translations?: Translation[];
   translation_of?: string;

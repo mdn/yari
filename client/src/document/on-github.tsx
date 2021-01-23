@@ -62,6 +62,7 @@ MDN URL: https://developer.mozilla.org$PATHNAME
 * Folder: \`$FOLDER\`
 * MDN URL: https://developer.mozilla.org$PATHNAME
 * GitHub URL: $GITHUB_URL
+* Last commit hash: \`$HASH\`
 * Document last modified: $DATE
 
 </details>
@@ -96,6 +97,7 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
       /\$DATE/g,
       doc.modified ? new Date(doc.modified).toISOString() : "*date not known*"
     )
+    .replace(/\$HASH/g, doc.hash ? doc.hash : "*hash not known*")
     .trim();
   sp.set("body", body);
   const maxLength = 50;

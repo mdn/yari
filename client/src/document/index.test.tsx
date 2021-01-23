@@ -21,6 +21,7 @@ const sampleDocumentState = Object.freeze({
     ],
     popularity: 0.01,
     modified: "2019-10-10T16:39:07.157Z",
+    hash: "0102030405060708091011121314151617181920",
     source: {
       folder: "en-us/sample/page",
       github_url: "http://github.com/mdn/yari/yada/yada",

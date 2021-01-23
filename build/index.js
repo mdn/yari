@@ -397,6 +397,8 @@ async function buildDocument(document, documentOptions = {}) {
 
   doc.modified = metadata.modified || null;
 
+  doc.hash = metadata.hash || null;
+
   const otherTranslations = document.translations || [];
   if (!otherTranslations.length && metadata.translation_of) {
     // If built just-in-time, we won't have a record of all the other translations
