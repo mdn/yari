@@ -48,7 +48,9 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
       hash = data[0];
       date = new Date(data[1]);
     } else if (line) {
-      const relPath = path.relative(realContentRoot, path.join(repoRoot, line));
+      let relPath = path.relative(realContentRoot, path.join(repoRoot, line));
+      // Normalize the relative path on Windows, which uses \ as a path separator.
+      if (path.sep === "\\") relPath = relPath.replace(/\\/g, "/");
       map.set(relPath, { date, hash });
     }
   }
