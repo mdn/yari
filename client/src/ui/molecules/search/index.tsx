@@ -22,7 +22,7 @@ export function Search(props) {
   }, []);
 
   return (
-    <div className="header-search">
+    <div className="header-search" role="search">
       {/* See the code comment next to the <BasicSearchWidget> component */}
       {useAutocompleteSearchWidget ? (
         <Suspense fallback={<BasicSearchWidget />}>
