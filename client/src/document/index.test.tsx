@@ -20,9 +20,9 @@ const sampleDocumentState = Object.freeze({
       },
     ],
     popularity: 0.01,
+    modified: "2019-10-10T16:39:07.157Z",
     source: {
       folder: "en-us/sample/page",
-      modified: "2019-10-10T16:39:07.157Z",
       hash: "0102030405060708091011121314151617181920",
       repository_url: "some/repo",
       branch: "main",

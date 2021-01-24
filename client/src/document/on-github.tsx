@@ -92,14 +92,14 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   const baseURL = "https://github.com/mdn/content/issues/new";
   const sp = new URLSearchParams();
 
-  const { modified, hash, folder, repository_url, branch } = doc.source;
+  const { hash, folder, repository_url, branch } = doc.source;
   const github_url = `https://github.com/${repository_url}/blob/${branch}/files/${folder}/index.html`;
   const body = NEW_ISSUE_TEMPLATE.replace(/\$PATHNAME/g, doc.mdn_url)
     .replace(/\$FOLDER/g, folder)
     .replace(/\$GITHUB_URL/g, github_url)
     .replace(
       /\$DATE/g,
-      modified ? new Date(modified).toISOString() : "*date not known*"
+      doc.modified ? new Date(doc.modified).toISOString() : "*date not known*"
     )
     .replace(/\$HASH/g, hash ? hash : "*hash not known*")
     .replace(

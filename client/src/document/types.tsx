@@ -1,5 +1,4 @@
 export interface Source {
-  modified: string;
   hash: string;
   folder: string;
   repository_url: string;
@@ -104,9 +103,6 @@ export interface Doc {
   toc: Toc[];
   body: string;
   modified: string;
-  hash: string;
-  repository_url: string;
-  branch: string;
   flaws: Flaws;
   other_translations?: Translation[];
   translation_of?: string;

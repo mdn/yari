@@ -376,9 +376,10 @@ async function buildDocument(document, documentOptions = {}) {
     ? Number(metadata.popularity.toFixed(4))
     : 0.0;
 
+  doc.modified = metadata.modified || null;
+
   const root = document.fileInfo.root;
   doc.source = {
-    modified: metadata.modified || null,
     hash: metadata.hash || null,
     folder: document.fileInfo.folder,
     repository_url: REPOSITORY_URLS[root],
