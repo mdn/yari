@@ -84,6 +84,21 @@ program
     })
   )
 
+  .command("fix-redirects", "Consolidate/fix redirects")
+  .argument("<locale...>", "Locale", {
+    default: [DEFAULT_LOCALE],
+    validator: [...VALID_LOCALES.values(), ...VALID_LOCALES.keys()],
+  })
+  .action(
+    tryOrExit(({ args, logger }) => {
+      const { locale } = args;
+      for (const l of locale) {
+        Redirect.add(l.toLowerCase(), [], { fix: true });
+        logger.info(chalk.green(`Fixed ${l}`));
+      }
+    })
+  )
+
   .command("delete", "Delete content")
   .argument("<slug>", "Slug")
   .argument("[locale]", "Locale", {

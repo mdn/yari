@@ -214,6 +214,20 @@ const read = memoize((folder) => {
     (CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT));
 
   const rawContent = fs.readFileSync(filePath, "utf8");
+
+  // This is very useful in CI where every page gets built. If there's an
+  // accidentally unresolved git conflict, that's stuck in the content,
+  // bail extra early.
+  if (
+    // If the document itself, is a page that explains and talks about git merge
+    // conflicts, i.e. a false positive, those angled brackets should be escaped
+    /^<<<<<<< HEAD\n/m.test(rawContent) &&
+    /^=======\n/m.test(rawContent) &&
+    /^>>>>>>>/m.test(rawContent)
+  ) {
+    throw new Error(`${filePath} contains git merge conflict markers`);
+  }
+
   const {
     attributes: metadata,
     body: rawHTML,
@@ -315,7 +329,9 @@ function update(url, rawHTML, metadata) {
       oldSlug
     );
 
-    execGit(["mv", oldFolderPath, newFolderPath]);
+    if (oldFolderPath !== newFolderPath) {
+      execGit(["mv", oldFolderPath, newFolderPath]);
+    }
     Redirect.add(locale, [...redirects.entries()]);
   }
 }

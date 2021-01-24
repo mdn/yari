@@ -1,5 +1,3 @@
-require("expect-puppeteer");
-
 function testURL(pathname = "/") {
   return "http://localhost:5000" + pathname;
 }
