@@ -128,25 +128,6 @@ function injectNotecardOnWarnings($) {
 }
 
 /**
- * Return the full URL directly to the file in GitHub based on this folder.
- * @param {String} folder - the current folder we're processing.
- */
-function getGitHubURL(root, folder) {
-  const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
-  return `${baseURL}/blob/${getCurrentGitBranch(
-    root
-  )}/files/${folder}/index.html`;
-}
-
-function injectSource(doc, document) {
-  const folder = document.fileInfo.folder;
-  doc.source = {
-    folder,
-    github_url: getGitHubURL(document.fileInfo.root, folder),
-  };
-}
-
-/**
  * Return an array of objects like this [{text: ..., id: ...}, ...]
  * from a document's body.
  * This will be used for the "Table of Contents" menu which expects to be able
@@ -395,9 +376,14 @@ async function buildDocument(document, documentOptions = {}) {
     ? Number(metadata.popularity.toFixed(4))
     : 0.0;
 
-  doc.modified = metadata.modified || null;
-
-  doc.hash = metadata.hash || null;
+  const root = document.fileInfo.root;
+  doc.source = {
+    modified: metadata.modified || null,
+    hash: metadata.hash || null,
+    folder: document.fileInfo.folder,
+    repository_url: REPOSITORY_URLS[root],
+    branch: getCurrentGitBranch(root),
+  };
 
   const otherTranslations = document.translations || [];
   if (!otherTranslations.length && metadata.translation_of) {
@@ -420,8 +406,6 @@ async function buildDocument(document, documentOptions = {}) {
   if (otherTranslations.length) {
     doc.other_translations = otherTranslations;
   }
-
-  injectSource(doc, document);
 
   // The `titles` object should contain every possible URI->Title mapping.
   // We can use that generate the necessary information needed to build

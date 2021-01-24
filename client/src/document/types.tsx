@@ -1,6 +1,9 @@
 export interface Source {
-  github_url: string;
+  modified: string;
+  hash: string;
   folder: string;
+  repository_url: string;
+  branch: string;
 }
 
 export interface GenericFlaw {
@@ -102,6 +105,8 @@ export interface Doc {
   body: string;
   modified: string;
   hash: string;
+  repository_url: string;
+  branch: string;
   flaws: Flaws;
   other_translations?: Translation[];
   translation_of?: string;

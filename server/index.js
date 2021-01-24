@@ -105,7 +105,7 @@ app.get("/*/contributors.txt", async (req, res) => {
       renderContributorsTxt(
         document.metadata.contributors,
         !document.isArchive
-          ? builtDocument.source.github_url.replace("/blob/", "/commits/")
+          ? `https://github.com/${builtDocument.source.repository_url}/commits/${builtDocument.source.branch}/files/${builtDocument.source.folder}/index.html`
           : null
       )
     );
