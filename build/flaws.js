@@ -519,8 +519,10 @@ async function fixFixableFlaws(doc, options, document) {
         const imageExtension = isSVG ? "svg" : fileType.ext;
         const decodedPathname = decodeURI(url.pathname).replace(/\s+/g, "_");
         const imageBasename = sanitizeFilename(
-          `${path.basename(decodedPathname, path.extname(decodedPathname))
-          }.${imageExtension}`
+          `${path.basename(
+            decodedPathname,
+            path.extname(decodedPathname)
+          )}.${imageExtension}`
         );
         const destination = path.join(
           Document.getFolderPath(document.metadata),
