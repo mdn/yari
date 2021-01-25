@@ -17,7 +17,6 @@ import { useDebugGA } from "./ga-context";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
-const DocumentCreate = React.lazy(() => import("./document/forms/create"));
 const DocumentManage = React.lazy(() => import("./document/forms/manage"));
 
 const isServer = typeof window === "undefined";
@@ -120,14 +119,6 @@ export function App(appProps) {
                 {/* The following two are not "enabled". I.e. no link to them.
                     See https://github.com/mdn/yari/issues/1614
                  */}
-                <Route
-                  path="/_create/*"
-                  element={
-                    <StandardLayout>
-                      <DocumentCreate />
-                    </StandardLayout>
-                  }
-                />
                 <Route
                   path="/_manage/*"
                   element={

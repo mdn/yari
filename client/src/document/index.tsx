@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
 import { useGA } from "../ga-context";
@@ -66,6 +66,15 @@ export function Document(props /* TODO: define a TS interface for this */) {
       revalidateOnFocus: CRUD_MODE,
     }
   );
+
+  React.useEffect(() => {
+    // This prop changing makes it possible for some other component, that
+    // wraps <Document> to keep mounting it with a different value each time
+    // effectively triggering a reload.
+    if (props.updated) {
+      mutate(dataURL);
+    }
+  }, [props.updated]);
 
   React.useEffect(() => {
     if (!doc && !error) {
