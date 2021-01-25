@@ -346,8 +346,8 @@ program
     default: DEFAULT_LOCALE,
     validator: [...VALID_LOCALES.values()].map((l) => l.toLowerCase()),
   })
-  .option("--summarize <path>", `Write summary file.`, {
-    default: path.join(os.tmpdir(), "unslug-summary.json"),
+  .option("--summarize <path>", `Write summary to path.`, {
+    default: path.join(os.tmpdir()),
   })
   .action(
     tryOrExit(async ({ args, options }) => {
@@ -356,10 +356,12 @@ program
       if (verbose) {
         log.setDefaultLevel(log.levels.DEBUG);
       }
-      const stats = [];
+      const allStats = {};
+      const allChanges = {};
       for (const l of locale) {
-        const s = unslug.unslugAll(l);
-        stats.push([l, s]);
+        const { stats, changes } = unslug.unslugAll(l);
+        allStats[l] = stats;
+        allChanges[l] = changes;
 
         const {
           movedDocs,
@@ -368,7 +370,7 @@ program
           orphanedDocs,
           redirectedDocs,
           totalDocs,
-        } = s;
+        } = stats;
         console.log(chalk.green(`Unslugging ${l}:`));
         console.log(chalk.green(`Total of ${totalDocs} documents`));
         console.log(chalk.green(`Moved ${movedDocs} documents`));
@@ -381,10 +383,16 @@ program
       }
       if (summarize) {
         fs.writeFileSync(
-          summarize,
-          JSON.stringify(Object.fromEntries(stats), null, 2),
+          path.join(summarize, "unslug-summary.json"),
+          JSON.stringify(allStats, null, 2),
           "utf-8"
         );
+        fs.writeFileSync(
+          path.join(summarize, "unslug-changes.json"),
+          JSON.stringify(allChanges, null, 2),
+          "utf-8"
+        );
+        console.log(`wrote summary to ${summarize}`);
       }
     })
   )

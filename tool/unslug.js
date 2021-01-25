@@ -13,6 +13,7 @@ const path = require("path");
 const fm = require("front-matter");
 const fs = require("fs");
 const log = require("loglevel");
+const crypto = require("crypto");
 
 const CONFLICTING = "conflicting";
 const ORPHANED = "orphaned";
@@ -75,7 +76,23 @@ function unslugAll(locale) {
   runPass(locale, secondPassFiles, redirects, stats, false);
 
   Redirect.add(locale, [...redirects.entries()], true);
-  return { ...stats };
+
+  const changes = [...redirects.entries()].reduce(
+    (map, [from, to]) => {
+      if (to.toLowerCase().startsWith(`/${locale}/docs/${ORPHANED}/`)) {
+        map.orphaned.push([from, to]);
+      } else if (
+        to.toLowerCase().startsWith(`/${locale}/docs/${CONFLICTING}/`)
+      ) {
+        map.conflicting.push([from, to]);
+      } else {
+        map.moved.push([from, to]);
+      }
+      return map;
+    },
+    { orphaned: [], conflicting: [], moved: [] }
+  );
+  return { stats, changes };
 }
 
 function resolve(slug) {
@@ -200,8 +217,6 @@ function unslug(inFilePath, locale, secondPass = false) {
       log.log(
         chalk.yellow(`unrooting: ${inFilePath} (conflicting translation)`)
       );
-      metadata.slug = translationOfOrginal;
-      dehash();
     } else if (status.dehashed) {
       log.log(
         chalk.yellow(`unrooting ${inFilePath} (conflicting translation - hash)`)
@@ -214,8 +229,11 @@ function unslug(inFilePath, locale, secondPass = false) {
     status.moved = true;
     filePath = getFilePath();
     if (fs.existsSync(filePath)) {
-      log.log(`${inFilePath} → ${filePath}`);
-      throw new Error(`file: ${filePath} already exists!`);
+      metadata.slug = `${metadata.slug}_${crypto
+        .createHash("md5")
+        .update(oldMetadata.slug)
+        .digest("hex")}`;
+      filePath = getFilePath();
     }
   }
 
