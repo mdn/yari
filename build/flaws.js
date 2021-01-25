@@ -517,11 +517,10 @@ async function fixFixableFlaws(doc, options, document) {
         }
         // Otherwise FileType would make it `.xml`
         const imageExtension = isSVG ? "svg" : fileType.ext;
+        const decodedPathname = decodeURI(url.pathname).replace(/\s+/g, "_");
         const imageBasename = sanitizeFilename(
-          `${path.basename(
-            decodeURI(url.pathname).replace(/\s+/g, "_"),
-            path.extname(decodeURI(url.pathname))
-          )}.${imageExtension}`
+          `${path.basename(decodedPathname, path.extname(decodedPathname))
+          }.${imageExtension}`
         );
         const destination = path.join(
           Document.getFolderPath(document.metadata),
