@@ -10,14 +10,14 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.7"
 click = "^7.1.2"
-boto3 = "^1.13.23"
-python-decouple = "^3.3"
+boto3 = "^1.16.59"
+python-decouple = "^3.4"
 requests = {extras = ["security"], version = "^2.25.0"}
 elasticsearch-dsl = "^7.3.0"
 selectolax = "^0.2.10"
 
 [tool.poetry.dev-dependencies]
-black = "^19.10b0"
+black = "^20.8b1"
 flake8 = "^3.8.2"
 pytest = "^6.2.1"
 

@@ -12,8 +12,6 @@ from .utils import log
 class PackageError(Exception):
     """Errors related to creating a AWS Lambda Zip package."""
 
-    pass
-
 
 def get_sha256_hash(zip_file_bytes):
     hasher = hashlib.sha256()

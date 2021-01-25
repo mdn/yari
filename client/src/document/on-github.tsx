@@ -62,7 +62,7 @@ MDN URL: https://developer.mozilla.org$PATHNAME
 * Folder: \`$FOLDER\`
 * MDN URL: https://developer.mozilla.org$PATHNAME
 * GitHub URL: $GITHUB_URL
-* Report started: $DATE
+* Document last modified: $DATE
 
 </details>
   `.trim();
@@ -92,7 +92,10 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   const body = NEW_ISSUE_TEMPLATE.replace(/\$PATHNAME/g, doc.mdn_url)
     .replace(/\$FOLDER/g, folder)
     .replace(/\$GITHUB_URL/g, github_url)
-    .replace(/\$DATE/g, new Date().toISOString())
+    .replace(
+      /\$DATE/g,
+      doc.modified ? new Date(doc.modified).toISOString() : "*date not known*"
+    )
     .trim();
   sp.set("body", body);
   const maxLength = 50;

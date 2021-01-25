@@ -256,11 +256,20 @@ function FlagsNote({
   );
 }
 
-function getNotes(browser: bcd.BrowserNames, support: bcd.SupportStatement) {
+function getNotes(
+  browser: bcd.BrowserNames,
+  support: bcd.SupportStatement,
+  locale: string
+) {
   return asList(support)
     .flatMap((item, i) => {
       const supportNotes = [
-        item.prefix ? { iconName: "prefix", label: "prefix" } : null,
+        item.prefix
+          ? {
+              iconName: "prefix",
+              label: `Implemented with the vendor prefix: ${item.prefix}`,
+            }
+          : null,
         item.notes
           ? (Array.isArray(item.notes)
               ? item.notes
@@ -296,16 +305,18 @@ function getNotes(browser: bcd.BrowserNames, support: bcd.SupportStatement) {
                 <CellText support={item} />
                 <CellIcons support={item} />
               </dt>
-              {supportNotes.map(({ iconName, label }, i) => (
-                <dd key={i}>
-                  <Icon name={iconName} />{" "}
-                  {typeof label === "string" ? (
-                    <span dangerouslySetInnerHTML={{ __html: label }} />
-                  ) : (
-                    label
-                  )}
-                </dd>
-              ))}
+              {supportNotes.map(({ iconName, label }, i) => {
+                return (
+                  <dd key={i}>
+                    <Icon name={iconName} />{" "}
+                    {typeof label === "string" ? (
+                      <span dangerouslySetInnerHTML={{ __html: label }} />
+                    ) : (
+                      label
+                    )}
+                  </dd>
+                );
+              })}
               {!hasNotes && <dd />}
             </div>
           </React.Fragment>
@@ -320,11 +331,13 @@ function CompatCell({
   support,
   showNotes,
   onToggle,
+  locale,
 }: {
   browser: bcd.BrowserNames;
   support: bcd.SupportStatement | undefined;
   showNotes: boolean;
   onToggle: () => void;
+  locale: string;
 }) {
   const supportClassName = getSupportClassName(support);
   const browserReleaseDate = getSupportBrowserReleaseDate(support);
@@ -369,12 +382,12 @@ function CompatCell({
             <i className="ic-history" aria-hidden="true" />
           </button>
         )}
+        {showNotes && (
+          <dl className="bc-history bc-history-mobile">
+            {getNotes(browser, support!, locale)}
+          </dl>
+        )}
       </td>
-      {showNotes && (
-        <section className="bc-history bc-history-mobile">
-          <dl>{getNotes(browser, support!)}</dl>
-        </section>
-      )}
     </>
   );
 }
@@ -386,6 +399,7 @@ export const FeatureRow = React.memo(
     browsers,
     activeCell,
     onToggleCell,
+    locale,
   }: {
     index: number;
     feature: {
@@ -396,6 +410,7 @@ export const FeatureRow = React.memo(
     browsers: bcd.BrowserNames[];
     activeCell: number | null;
     onToggleCell: ([row, column]: [number, number]) => void;
+    locale: string;
   }) => {
     const { name, compat, isRoot } = feature;
     const title = compat.description ? (
@@ -443,13 +458,20 @@ export const FeatureRow = React.memo(
               support={compat.support[browser]}
               showNotes={activeCell === i}
               onToggle={() => onToggleCell([index, i])}
+              locale={locale}
             />
           ))}
         </tr>
         {activeBrowser && (
           <tr className="bc-history">
             <td colSpan={browsers.length + 1}>
-              <dl>{getNotes(activeBrowser, compat.support[activeBrowser]!)}</dl>
+              <dl>
+                {getNotes(
+                  activeBrowser,
+                  compat.support[activeBrowser]!,
+                  locale
+                )}
+              </dl>
             </td>
           </tr>
         )}

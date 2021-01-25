@@ -54,6 +54,11 @@
     "url": "https://w3c.github.io/mediacapture-output/",
     "status": "CR"
   },
+  "Background Fetch": {
+    "name": "Background Fetch",
+    "url": "https://wicg.github.io/background-fetch/",
+    "status": "Draft"
+  },
   "Background Sync": {
     "name": "Web Background Synchronization",
     "url": "https://wicg.github.io/background-sync/spec/",
@@ -1294,6 +1299,11 @@
     "url": "https://w3c.github.io/webappsec-referrer-policy/",
     "status": "CR"
   },
+  "Relative Indexing Method": {
+    "name": "Relative Indexing Method",
+    "url": "https://tc39.es/proposal-relative-indexing-method/",
+    "status": "Draft"
+  },
   "Remote Playback": {
     "name": "Remote Playback API",
     "url": "https://w3c.github.io/remote-playback/",
@@ -1452,6 +1462,11 @@
   "Telephony API": {
     "name": "Web Telephony API",
     "url": "https://wiki.mozilla.org/WebAPI/WebTelephony",
+    "status": "Draft"
+  },
+  "Top Level Await": {
+    "name": "Top Level Await",
+    "url": "https://tc39.es/proposal-top-level-await/",
     "status": "Draft"
   },
   "Touch Events": {

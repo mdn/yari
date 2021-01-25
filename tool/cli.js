@@ -12,6 +12,7 @@ const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  CONTENT_ARCHIVED_ROOT,
   Redirect,
   Document,
   buildURL,
@@ -25,7 +26,7 @@ function tryOrExit(f) {
     try {
       await f({ options, ...args });
     } catch (error) {
-      if (options.verbose) {
+      if (options.verbose || options.v) {
         console.error(chalk.red(error.stack));
       }
       throw error;
@@ -80,6 +81,21 @@ program
       const locale = from.split("/")[1];
       Redirect.add(locale, [[from, to]]);
       logger.info(chalk.green(`Saved '${from}' → '${to}'`));
+    })
+  )
+
+  .command("fix-redirects", "Consolidate/fix redirects")
+  .argument("<locale...>", "Locale", {
+    default: [DEFAULT_LOCALE],
+    validator: [...VALID_LOCALES.values(), ...VALID_LOCALES.keys()],
+  })
+  .action(
+    tryOrExit(({ args, logger }) => {
+      const { locale } = args;
+      for (const l of locale) {
+        Redirect.add(l.toLowerCase(), [], { fix: true });
+        logger.info(chalk.green(`Fixed ${l}`));
+      }
     })
   )
 
@@ -422,6 +438,51 @@ program
       console.log(
         `In total, ${sumTotal} translations that share the same translation_of`
       );
+    })
+  )
+
+  .command(
+    "unarchive",
+    "Move content from CONTENT_ARCHIVED_ROOT to CONTENT_ROOT"
+  )
+  .option("--foldersearch <pattern>", "simple pattern for folders", {
+    default: "",
+  })
+  .option("--move", "(git) delete from archive repo", { default: false })
+  .argument("[files...]", "specific files")
+  .action(
+    tryOrExit(async ({ args, options }) => {
+      if (!CONTENT_ARCHIVED_ROOT) {
+        throw new Error("CONTENT_ARCHIVED_ROOT not set");
+      }
+      if (!CONTENT_TRANSLATED_ROOT) {
+        throw new Error("CONTENT_TRANSLATED_ROOT not set");
+      }
+      const { files } = args;
+      const { foldersearch, move } = options;
+      if (!foldersearch && !files) {
+        throw new Error("Must specify either files or --foldersearch pattern");
+      }
+      const filters = {
+        folderSearch: foldersearch || null,
+        files: new Set(files || []),
+      };
+      const documents = Document.findAll(filters);
+      if (!documents.count) {
+        throw new Error("No documents found");
+      }
+      let countCreated = 0;
+      for (const document of documents.iter()) {
+        console.assert(document.isArchive, document.fileInfo);
+        console.assert(!document.isTranslated, document.fileInfo);
+        if (document.metadata.locale !== "en-US") {
+          continue;
+        }
+        const created = Document.unarchive(document, move);
+        console.log(`Created ${created}`);
+        countCreated++;
+      }
+      console.log(`Created ${countCreated} new files`);
     })
   );
 

@@ -6,11 +6,32 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    ignore:
+      # Need manual updates with "resolutions" in package.json
+      # to property hoist versions from react-scripts
+      - dependency-name: "webpack"
+      - dependency-name: "eslint"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
+
+  - package-ecosystem: "pip"
+    directory: "/deployer"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "pip"
+    directory: "/testing/integration"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: npm
+    directory: "/deployer/aws-lambda/content-origin-request"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
 
     # This forces the Dependabot commit messages to conform to something
     # our auto-merge workflow can always cope with.

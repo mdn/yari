@@ -19,7 +19,7 @@ env:
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron: "0 */12 * * *"
+    - cron: "0 */24 * * *"
 
   workflow_dispatch:
     inputs:
@@ -112,6 +112,8 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install all yarn packages
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
         run: yarn --frozen-lockfile
 
       - name: Install Python
