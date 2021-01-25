@@ -390,4 +390,9 @@ module.exports = {
   load,
   validateFromURL,
   validateToURL,
+
+  testing: {
+    shortCuts,
+    decodePairs,
+  },
 };
