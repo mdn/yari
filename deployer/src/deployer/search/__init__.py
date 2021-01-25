@@ -36,14 +36,14 @@ def index(
 
     # Confusingly, `._index` is actually not a private API.
     # It's the documented way you're supposed to reach it.
-    index = Document._index
+    document_index = Document._index
     if not update:
         click.echo(
             "Deleting any possible existing index "
-            f"and creating a new one called {index._name}"
+            f"and creating a new one called {document_index._name}"
         )
-        index.delete(ignore=404)
-        index.create()
+        document_index.delete(ignore=404)
+        document_index.create()
 
     search_prefixes = [None]
     for prefix in reversed(priority_prefixes):
@@ -85,7 +85,7 @@ def index(
     count_done = 0
     t0 = time.time()
     with get_progressbar() as bar:
-        for x in streaming_bulk(connection, generator(), index=index._name):
+        for x in streaming_bulk(connection, generator(), index=document_index._name):
             count_done += 1
             bar.update(1)
 
@@ -139,8 +139,7 @@ def format_time(seconds):
 def walk(root):
     for path in root.iterdir():
         if path.is_dir():
-            for file in walk(path):
-                yield file
+            yield from walk(path)
         elif path.name == "index.json":
             yield path
 

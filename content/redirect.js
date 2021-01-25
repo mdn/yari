@@ -2,18 +2,71 @@ const fs = require("fs");
 const path = require("path");
 
 const { resolveFundamental } = require("../libs/fundamental-redirects");
-const { CONTENT_ROOT, VALID_LOCALES } = require("./constants");
+const { decodePath, slugToFolder } = require("../libs/slug-utils");
+const {
+  CONTENT_ROOT,
+  CONTENT_TRANSLATED_ROOT,
+  VALID_LOCALES,
+} = require("./constants");
+
+const FORBIDDEN_URL_SYMBOLS = ["\n", "\t"];
+
+let ARCHIVED_URLS;
+
+function checkURLInvalidSymbols(url) {
+  for (const character of FORBIDDEN_URL_SYMBOLS) {
+    if (url.includes(character)) {
+      throw new Error(`URL contains invalid character '${character}'`);
+    }
+  }
+}
+
+function resolveDocumentPath(url) {
+  // Let's keep vanity urls to /en-US/
+  if (url === "/en-US/") {
+    return url;
+  }
+  const [bareURL] = url.split("#");
+
+  if (!ARCHIVED_URLS) {
+    ARCHIVED_URLS = new Set(
+      fs
+        .readFileSync(path.join(__dirname, "archived.txt"), "utf-8")
+        .split("\n")
+        .filter((line) => !line.startsWith("#") || line.trim())
+        .map((url) => url.toLowerCase())
+    );
+  }
+
+  const [, locale, , ...slug] = bareURL.toLowerCase().split("/");
+
+  const relativeFilePath = path.join(
+    locale,
+    slugToFolder(slug.join("/")),
+    "index.html"
+  );
+
+  if (ARCHIVED_URLS.has(relativeFilePath.toLowerCase())) {
+    return `$ARCHIVED/${relativeFilePath}`;
+  }
+
+  const root = locale === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+
+  const filePath = path.join(root, relativeFilePath);
+  if (fs.existsSync(filePath)) {
+    return filePath;
+  }
+  return null;
+}
 
 // Throw if this can't be a redirect from-URL.
 function validateFromURL(url) {
+  checkURLInvalidSymbols(url);
   // This is a circular dependency we should solve that in another way.
-  const { findByURL } = require("./document");
   validateURLLocale(url);
-  const document = findByURL(url);
-  if (document) {
-    throw new Error(
-      `From-URL resolves to a file on disk (${document.fileInfo.path})`
-    );
+  const path = resolveDocumentPath(url);
+  if (path) {
+    throw new Error(`From-URL resolves to a file (${path})`);
   }
   const resolved = resolve(url);
   if (resolved !== url) {
@@ -33,6 +86,7 @@ function validateToURL(url) {
       throw new Error("We only redirect to https://");
     }
   } else {
+    checkURLInvalidSymbols(url);
     validateURLLocale(url);
 
     // Can't point to something that redirects to something
@@ -42,15 +96,10 @@ function validateToURL(url) {
         `${url} is already matched as a redirect (to: '${resolved}')`
       );
     }
-    // XXX Commented out because how else are going to be able
-    // redirect to archived documents.
-    // // It has to match a document
-    // const document = Document.findByURL(url);
-    // if (!document) {
-    //   throw new Error(
-    //     `To-URL has to resolve to a file on disk (${document.fileInfo.path})`
-    //   );
-    // }
+    const path = resolveDocumentPath(url);
+    if (!path) {
+      throw new Error(`To-URL has to resolve to a file (${path})`);
+    }
   }
 }
 
@@ -58,7 +107,7 @@ function validateURLLocale(url) {
   // Check that it's a valid document URL
   const locale = url.split("/")[1];
   if (!locale || url.split("/")[2] !== "docs") {
-    throw new Error("The from-URL is expected to be /$locale/docs/");
+    throw new Error("The URL is expected to be /$locale/docs/");
   }
   const validValues = [...VALID_LOCALES.values()];
   if (!validValues.includes(locale)) {
@@ -66,23 +115,91 @@ function validateURLLocale(url) {
   }
 }
 
-function add(locale, urlPairs) {
-  // Copied from the load() function but without any checking and preserving
-  // sort order.
-  const redirectsFilePath = path.join(
-    CONTENT_ROOT,
-    locale.toLowerCase(),
-    "_redirects.txt"
+function errorOnDuplicated(pairs) {
+  const seen = new Set();
+  for (const [from] of pairs) {
+    const fromLower = from.toLowerCase();
+    if (seen.has(fromLower)) {
+      throw new Error(`Duplicated redirect: ${fromLower}`);
+    }
+    seen.add(fromLower);
+  }
+}
+
+function removeConflictingOldRedirects(oldPairs, updatePairs) {
+  if (oldPairs.length === 0) {
+    return oldPairs;
+  }
+  const newTargets = new Set(updatePairs.map(([, to]) => to.toLowerCase()));
+
+  return oldPairs.filter(([from, to]) => {
+    const conflictingTo = newTargets.has(from.toLowerCase());
+    if (conflictingTo) {
+      console.log(`removing conflicting redirect ${from}\t${to}`);
+    }
+    return !conflictingTo;
+  });
+}
+
+function removeOrphanedRedirects(pairs) {
+  return pairs.filter(([from, to]) => {
+    if (resolveDocumentPath(from)) {
+      console.log(`removing orphaned redirect (from exists): ${from}\t${to}`);
+      return false;
+    }
+    if (to.startsWith("/") && !resolveDocumentPath(to)) {
+      console.log(
+        `removing orphaned redirect (to doesn't exists): ${from}\t${to}`
+      );
+      return false;
+    }
+    return true;
+  });
+}
+
+function add(locale, updatePairs, { fix = false } = {}) {
+  locale = locale.toLowerCase();
+  let root = CONTENT_ROOT;
+  if (locale !== "en-us") {
+    if (CONTENT_TRANSLATED_ROOT) {
+      root = CONTENT_TRANSLATED_ROOT;
+    } else {
+      throw new Error(
+        `trying to add redirects for ${locale} but CONTENT_TRANSLATED_ROOT not set`
+      );
+    }
+  }
+  const redirectsFilePath = path.join(root, locale, "_redirects.txt");
+  let pairs = [];
+  if (fs.existsSync(redirectsFilePath)) {
+    const content = fs.readFileSync(redirectsFilePath, "utf-8");
+    pairs.push(
+      ...content
+        .trim()
+        .split("\n")
+        // Skip the header line.
+        .slice(1)
+        .map((line) => line.trim().split(/\t+/))
+    );
+  }
+
+  const decodedUpdatePairs = decodePairs(updatePairs);
+  const decodedPairs = decodePairs(pairs);
+
+  errorOnDuplicated(decodedPairs);
+  errorOnDuplicated(decodedUpdatePairs);
+
+  const cleanPairs = removeConflictingOldRedirects(
+    decodedPairs,
+    decodedUpdatePairs
   );
-  const content = fs.readFileSync(redirectsFilePath, "utf-8");
-  const pairs = content
-    .trim()
-    .split("\n")
-    // Skip the header line.
-    .slice(1)
-    .map((line) => line.trim().split(/\s+/));
-  pairs.push(...urlPairs);
-  write(path.join(CONTENT_ROOT, locale.toLowerCase()), pairs);
+  cleanPairs.push(...decodedUpdatePairs);
+
+  let simplifiedPairs = shortCuts(cleanPairs);
+  if (fix) {
+    simplifiedPairs = removeOrphanedRedirects(simplifiedPairs);
+  }
+  save(path.join(root, locale), simplifiedPairs);
 }
 
 // The module level cache
@@ -94,6 +211,13 @@ function load(files = null, verbose = false) {
       .readdirSync(CONTENT_ROOT)
       .map((n) => path.join(CONTENT_ROOT, n))
       .filter((filepath) => fs.statSync(filepath).isDirectory());
+    if (CONTENT_TRANSLATED_ROOT) {
+      const translatedLocaleFolders = fs
+        .readdirSync(CONTENT_TRANSLATED_ROOT)
+        .map((n) => path.join(CONTENT_TRANSLATED_ROOT, n))
+        .filter((filepath) => fs.statSync(filepath).isDirectory());
+      localeFolders.push(...translatedLocaleFolders);
+    }
 
     files = localeFolders
       .map((folder) => path.join(folder, "_redirects.txt"))
@@ -120,9 +244,9 @@ function load(files = null, verbose = false) {
     // Parse and collect all and throw errors on bad lines
     content.split("\n").forEach((line, i) => {
       if (!line.trim() || line.startsWith("#")) return;
-      const split = line.trim().split(/\s+/);
+      const split = line.trim().split(/\t/);
       if (split.length !== 2) {
-        throwError("Not two strings split by whitespace", i + 1, line);
+        throwError("Not two strings split by tab", i + 1, line);
       }
       const [from, to] = split;
       if (!from.startsWith("/")) {
@@ -158,21 +282,41 @@ const resolve = (url) => {
 };
 
 function shortCuts(pairs, throws = false) {
-  const dag = new Map(pairs);
+  // We have mixed cases in the _redirects.txt like:
+  // /en-US/docs/window.document     /en-US/docs/Web/API/window.document
+  // /en-US/docs/Web/API/Window.document     /en-US/docs/Web/API/Window/document
+  // therefore we have to lowercase everything and restore it later.
+  const casing = new Map([
+    ...pairs.map(([from]) => [from.toLowerCase(), from]),
+    ...pairs.map(([, to]) => [to.toLowerCase(), to]),
+  ]);
+  const lowerCasePairs = pairs.map(([from, to]) => [
+    from.toLowerCase(),
+    to.toLowerCase(),
+  ]);
+
+  // Directed graph of all redirects.
+  const dg = new Map(lowerCasePairs);
+
+  // Transitive directed acyclic graph of all redirects.
+  // All redirects are expanded A -> B, B -> C becomes:
+  // A -> B, B -> C, A -> C and all cycles are removed.
+  const transitiveDag = new Map();
 
   // Expand all "edges" and keep track of the nodes we traverse.
   const transit = (s, froms = []) => {
-    const next = dag.get(s);
+    const next = dg.get(s);
     if (next) {
+      froms.push(s);
       if (froms.includes(next)) {
         const msg = `redirect cycle [${froms.join(", ")}] → ${next}`;
         if (throws) {
           throw new Error(msg);
         }
-        console.warn(msg);
+        console.log(msg);
         return [];
       }
-      return transit(next, [...froms, s]);
+      return transit(next, froms);
     } else {
       return [froms, s];
     }
@@ -194,19 +338,40 @@ function shortCuts(pairs, throws = false) {
     return 0;
   };
 
-  for (const [from] of pairs) {
+  for (const [from] of lowerCasePairs) {
     const [froms = [], to] = transit(from);
     for (const from of froms) {
-      dag.set(from, to);
+      transitiveDag.set(from, to);
     }
   }
-  const transitivePairs = [...dag.entries()];
-  transitivePairs.sort(sortTuples);
-  return transitivePairs;
+  const transitivePairs = [...transitiveDag.entries()];
+
+  // Restore cases!
+  const mappedPairs = transitivePairs.map(([from, to]) => [
+    casing.get(from),
+    casing.get(to),
+  ]);
+  mappedPairs.sort(sortTuples);
+  return mappedPairs;
 }
 
-function write(localeFolder, pairs) {
-  save(localeFolder, shortCuts(pairs));
+function decodePairs(pairs) {
+  return pairs.map(([from, to]) => {
+    const fromDecoded = decodePath(from);
+    let toDecoded;
+    if (to.startsWith("/")) {
+      toDecoded = decodePath(to);
+    } else {
+      toDecoded = decodeURI(to);
+    }
+    if (
+      checkURLInvalidSymbols(from) ||
+      (to.startsWith("/") && checkURLInvalidSymbols(to))
+    ) {
+      throw new Error(`${from}\t${to} contains invalid symbols`);
+    }
+    return [fromDecoded, toDecoded];
+  });
 }
 
 function save(localeFolder, pairs) {
@@ -222,7 +387,6 @@ function save(localeFolder, pairs) {
 module.exports = {
   add,
   resolve,
-  write,
   load,
   validateFromURL,
   validateToURL,

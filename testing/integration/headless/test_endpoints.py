@@ -151,4 +151,4 @@ def test_locale_selection(base_url, slug, expected, cookie, accept):
         request_kwargs["cookies"] = {"preferredlocale": cookie}
     response = request("get", url, **request_kwargs)
     assert response.status_code == 302
-    assert response.headers["location"].startswith("/{}/".format(expected))
+    assert response.headers["location"].startswith(f"/{expected}/")

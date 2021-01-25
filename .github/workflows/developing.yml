@@ -32,8 +32,18 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install all yarn packages
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
         run: |
-          ./testing/scripts/yarn-install.sh
+          yarn --frozen-lockfile
+
+      - name: Setup kernel for react native, increase watchers
+        run: |
+          # When running Yari on Linux, you might get the
+          # "Error: ENOSPC: System limit for number of file watchers reached" error.
+          # This, resolves that.
+          # Source https://github.com/expo/expo-github-action/issues/20#issuecomment-541676895
+          echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
       - name: Start the dev server
         env:
@@ -64,6 +74,9 @@ jobs:
           # This will make sure the tests in `testing/tests/*.test.js` only run
           # if the development server is up and ready to be tested.
           TESTING_DEVELOPING: true
+          # Use local chrome installs since we skip downloading it as part
+          # of the yarn installs above
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
         run: |
           status=0
           yarn test:testing developing || (

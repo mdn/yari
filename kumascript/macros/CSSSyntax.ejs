@@ -262,7 +262,7 @@ async function buildLink(match, type) {
         return "<a href=\"" + link + propertyName[1] + "\" title=\"" + title + "\">&lt;" + propertyName[0] + "&gt;</a>";
 
     // Handle basic types
-    } else if (typeInfo.hasOwnProperty(type)) {
+    } else if (Object.prototype.hasOwnProperty.call(typeInfo, type)) {
         var typeLinkName = typeInfo[type].typeLinkName || type;
 
         link += typeLinkName;
@@ -274,7 +274,7 @@ async function buildLink(match, type) {
         }
 
     // Handle types which we want to describe using a link to a different page
-    }  else if (data.externallyDescribedTypes.hasOwnProperty(type)) {
+    }  else if (Object.prototype.hasOwnProperty.call(data.externallyDescribedTypes, type)) {
              return "<a href=\"/" + locale + data.externallyDescribedTypes[type].link + "\">&lt;" + type + "&gt;</a>";
 
     // Handle advanced types having their syntax defined within the 'CSSData' template
@@ -351,8 +351,8 @@ async function formatTypesSyntax(formattedSyntax, describedTypes) {
                 var subType = type[1].replace("_value", "");
                 // Describe this type if it exists in "syntaxes" and
                 // it *does not* exist in externallyDescribedTypes
-                if ((data.syntaxes.hasOwnProperty(subType)) &&
-                    (!data.externallyDescribedTypes.hasOwnProperty(subType))) {
+                if ((Object.prototype.hasOwnProperty.call(data.syntaxes, subType)) &&
+                    (!Object.prototype.hasOwnProperty.call(data.externallyDescribedTypes, subType))) {
                     types.push(subType);
                 }
             }
