@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import useSWR from "swr";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import useSWR, { mutate } from "swr";
 import Modal from "react-modal";
 
 import { Document } from "../index";
@@ -13,7 +13,6 @@ import "./modal.scss";
 Modal.setAppElement("#root");
 
 export default function DocumentEdit() {
-  const location = useLocation();
   const navigate = useNavigate();
   const documentURL = useDocumentURL();
   const fetchURL = `/_document?${new URLSearchParams({
@@ -27,9 +26,9 @@ export default function DocumentEdit() {
     return await response.json();
   });
 
-  const [isSaving, setIsSaving] = useState(false);
-  const [savingError, setSavingError] = useState<Error | null>(null);
-  const [updated, setUpdated] = useState<Date | null>(null);
+  const [isSaving, setIsSaving] = React.useState(false);
+  const [savingError, setSavingError] = React.useState<Error | null>(null);
+  const [updated, setUpdated] = React.useState<Date | null>(null);
   async function handleSave(data: DocumentOutData) {
     setIsSaving(true);
     try {
@@ -45,6 +44,7 @@ export default function DocumentEdit() {
         setSavingError(new Error(`${response.status} on ${response.url}`));
         return;
       }
+      mutate(fetchURL);
       setUpdated(new Date());
     } catch (err) {
       setSavingError(err);
@@ -53,56 +53,27 @@ export default function DocumentEdit() {
     }
   }
 
-  // return (
-  //   <main className="page-content-container document-edit" role="main">
-  //     <Modal isOpen={true} overlayClassName="modal" className="edit-modal">
-  //       <header>
-  //         <h2 id="modal-main-heading">Quick-edit</h2>
-  //       </header>
+  React.useEffect(() => {
+    function escapeMaybe(event) {
+      if (event.code === "Escape") {
+        // Unless you're in the middle of an input, redirect out.
+        if (
+          !(
+            event.target &&
+            (event.target.tagName === "INPUT" ||
+              event.target.tagName === "TEXTAREA")
+          )
+        ) {
+          navigate(documentURL);
+        }
+      }
+    }
+    document.addEventListener("keyup", escapeMaybe);
+    return () => {
+      document.removeEventListener("keyup", escapeMaybe);
+    };
+  }, [documentURL]);
 
-  //       <button
-  //         id="close-modal"
-  //         className="close-modal"
-  //         onClick={() => {
-  //           navigate(documentURL);
-  //         }}
-  //       >
-  //         <span>Close modal</span>
-  //       </button>
-
-  //       {!data && !error && <p>Loading source data...</p>}
-  //       {error && (
-  //         <div className="attention">
-  //           <h3>Error loading source</h3>
-  //           <code>{error.toString()}</code>
-  //         </div>
-  //       )}
-
-  //       <div className="document-edit-forms">
-  //         {data && (
-  //           <DocumentForm
-  //             doc={data}
-  //             {...{ isSaving, savingError }}
-  //             onSave={handleSave}
-  //           />
-  //         )}
-  //       </div>
-
-  //       <button
-  //         id="close-modal"
-  //         className="close-modal"
-  //         onClick={() => {
-  //           navigate(documentURL);
-  //         }}
-  //       >
-  //         <span>Close modal</span>
-  //       </button>
-  //     </Modal>
-  //     <div className="documexxxnt-preview">
-  //       <Document isPreview={true} updated={updated} />
-  //     </div>
-  //   </main>
-  // );
   return (
     <>
       <Modal isOpen={true} overlayClassName="modal" className="edit-modal">

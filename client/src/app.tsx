@@ -110,9 +110,9 @@ export function App(appProps) {
                 <Route
                   path="/_edit/*"
                   element={
-                    <StandardLayout>
+                    <DocumentLayout>
                       <DocumentEdit />
-                    </StandardLayout>
+                    </DocumentLayout>
                   }
                 />
 

@@ -74,7 +74,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
     if (props.updated) {
       mutate(dataURL);
     }
-  }, [props.updated]);
+  }, [props.updated, dataURL]);
 
   React.useEffect(() => {
     if (!doc && !error) {
@@ -182,9 +182,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
           </article>
         </MainContentContainer>
 
-        {doc.sidebarHTML && <RenderSideBar doc={doc} />}
+        {doc.sidebarHTML && !props.isPreview && <RenderSideBar doc={doc} />}
       </div>
-      <Metadata doc={doc} locale={locale} />
+      {!props.isPreview && <Metadata doc={doc} locale={locale} />}
     </>
   );
 }
