@@ -22,7 +22,7 @@ export function Search(props) {
   }, []);
 
   return (
-    <div className="header-search" role="search">
+    <div className="header-search">
       {/* See the code comment next to the <BasicSearchWidget> component */}
       {useAutocompleteSearchWidget ? (
         <Suspense fallback={<BasicSearchWidget />}>
@@ -47,7 +47,7 @@ export function Search(props) {
 export function BasicSearchWidget() {
   const locale = useLocale();
   return (
-    <form action={`/${locale}/search`} className="search-form">
+    <form action={`/${locale}/search`} className="search-form" role="search">
       <label htmlFor="main-q" className="visually-hidden">
         Search MDN
       </label>
