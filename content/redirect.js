@@ -11,7 +11,37 @@ const {
 
 const FORBIDDEN_URL_SYMBOLS = ["\n", "\t"];
 
+// Module-level cache
 let ARCHIVED_URLS;
+let ARCHIVED_PATHS;
+
+function getArchivedURLs() {
+  if (!ARCHIVED_URLS) {
+    ARCHIVED_URLS = new Set();
+    for (const folder of getArchivedPaths()) {
+      // We don't need to use `path.sep` here because all the files in the
+      // archived.txt file are written explicitly with `/`.
+      const split = folder.split("/");
+      split.unshift("");
+      split.splice(2, 0, "docs");
+      ARCHIVED_URLS.add(split.slice(0, -1).join("/"));
+    }
+  }
+  return ARCHIVED_URLS;
+}
+
+function getArchivedPaths() {
+  if (!ARCHIVED_PATHS) {
+    ARCHIVED_PATHS = new Set(
+      fs
+        .readFileSync(path.join(__dirname, "archived.txt"), "utf-8")
+        .split("\n")
+        .filter((line) => !line.startsWith("#") || line.trim())
+        .map((url) => url.toLowerCase())
+    );
+  }
+  return ARCHIVED_PATHS;
+}
 
 function checkURLInvalidSymbols(url) {
   for (const character of FORBIDDEN_URL_SYMBOLS) {
@@ -28,14 +58,8 @@ function resolveDocumentPath(url) {
   }
   const [bareURL] = url.split("#");
 
-  if (!ARCHIVED_URLS) {
-    ARCHIVED_URLS = new Set(
-      fs
-        .readFileSync(path.join(__dirname, "archived.txt"), "utf-8")
-        .split("\n")
-        .filter((line) => !line.startsWith("#") || line.trim())
-        .map((url) => url.toLowerCase())
-    );
+  if (isArchivedURL(bareURL)) {
+    return `$ARCHIVED/${relativeFilePath}`;
   }
 
   const [, locale, , ...slug] = bareURL.toLowerCase().split("/");
@@ -46,10 +70,6 @@ function resolveDocumentPath(url) {
     "index.html"
   );
 
-  if (ARCHIVED_URLS.has(relativeFilePath.toLowerCase())) {
-    return `$ARCHIVED/${relativeFilePath}`;
-  }
-
   const root = locale === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
 
   const filePath = path.join(root, relativeFilePath);
@@ -57,6 +77,10 @@ function resolveDocumentPath(url) {
     return filePath;
   }
   return null;
+}
+
+function isArchivedURL(url) {
+  return getArchivedURLs().has(url.toLowerCase());
 }
 
 // Throw if this can't be a redirect from-URL.
@@ -390,4 +414,5 @@ module.exports = {
   load,
   validateFromURL,
   validateToURL,
+  isArchivedURL,
 };

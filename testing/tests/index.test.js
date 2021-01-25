@@ -590,6 +590,35 @@ test("without locale prefix broken links flaws", () => {
   expect(map.get("link3").suggestion).toBeNull();
 });
 
+test("broken links to archived content", () => {
+  // Links to URLs that are archived
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "brokenlinks",
+    "archived"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  // The page has 2 links:
+  //  * one to an archived page (see `content/archived.txt`)
+  //  * one to an archived redirect
+  // When the link points to an archived page, we can figure out that it's
+  // actually not a broken link.
+  // But unfortunately, for redirects, we simply don't have this information
+  // available at all.
+  // See https://github.com/mdn/yari/issues/2675#issuecomment-767124481
+  expect(flaws.broken_links.length).toBe(1);
+
+  const flaw = flaws.broken_links[0];
+  expect(flaw.suggestion).toBeNull();
+  expect(flaw.fixable).toBeFalsy();
+  expect(flaw.href).toBe("/en-US/docs/The_Mozilla_platform");
+});
+
 test("broken anchor links flaws", () => {
   const builtFolder = path.join(
     buildRoot,

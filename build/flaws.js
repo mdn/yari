@@ -151,7 +151,10 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
       const found = Document.findByURL(hrefNormalized);
       if (!found) {
         // Before we give up, check if it's an image.
-        if (!Image.findByURL(hrefNormalized)) {
+        if (
+          !Image.findByURL(hrefNormalized) &&
+          !Redirect.isArchivedURL(hrefNormalized)
+        ) {
           // Before we give up, check if it's a redirect.
           const resolved = Redirect.resolve(hrefNormalized);
           if (resolved !== hrefNormalized) {
