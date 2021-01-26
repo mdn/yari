@@ -122,7 +122,7 @@ async function buildDocuments(files = null) {
         renderContributorsTxt(
           document.metadata.contributors,
           !document.isArchive
-            ? `https://github.com/${builtDocument.source.repository_url}/commits/${builtDocument.source.branch}/files/${builtDocument.source.folder}/index.html`
+            ? builtDocument.source.github_url.replace("/blob/", "/commits/")
             : null
         )
       );

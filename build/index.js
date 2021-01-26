@@ -128,6 +128,36 @@ function injectNotecardOnWarnings($) {
 }
 
 /**
+ * Return the full URL directly to the file in GitHub based on this folder.
+ * @param {String} folder - the current folder we're processing.
+ */
+function getGitHubURL(root, folder) {
+  const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
+  return `${baseURL}/blob/${getCurrentGitBranch(
+    root
+  )}/files/${folder}/index.html`;
+}
+
+/**
+ * Return the full URL directly to the last commit affecting this file on GitHub.
+ * @param {String} hash - the full hash to point to.
+ */
+function getLastCommitURL(root, hash) {
+  const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
+  return `${baseURL}/commit/${hash}`;
+}
+
+function injectSource(doc, document) {
+  const folder = document.fileInfo.folder;
+  const root = document.fileInfo.root;
+  doc.source = {
+    folder,
+    github_url: getGitHubURL(document.fileInfo.root, folder),
+    last_commit_url: getLastCommitURL(root, hash),
+  };
+}
+
+/**
  * Return an array of objects like this [{text: ..., id: ...}, ...]
  * from a document's body.
  * This will be used for the "Table of Contents" menu which expects to be able
@@ -378,13 +408,7 @@ async function buildDocument(document, documentOptions = {}) {
 
   doc.modified = metadata.modified || null;
 
-  const root = document.fileInfo.root;
-  doc.source = {
-    hash: metadata.hash || null,
-    folder: document.fileInfo.folder,
-    repository_url: REPOSITORY_URLS[root],
-    branch: getCurrentGitBranch(root),
-  };
+  injectSource(doc, document);
 
   const otherTranslations = document.translations || [];
   if (!otherTranslations.length && metadata.translation_of) {

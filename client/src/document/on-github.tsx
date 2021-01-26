@@ -27,8 +27,7 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
   );
 }
 function SourceOnGitHubLink({ doc }: { doc: Doc }) {
-  const { repository_url, branch, folder } = doc.source;
-  const github_url = `https://github.com/${repository_url}/blob/${branch}/files/${folder}/index.html`;
+  const { github_url, folder } = doc.source;
   return (
     <a
       href={github_url}
@@ -63,10 +62,8 @@ MDN URL: https://developer.mozilla.org$PATHNAME
 * Folder: \`$FOLDER\`
 * MDN URL: https://developer.mozilla.org$PATHNAME
 * GitHub URL: $GITHUB_URL
-* Last commit hash: \`$HASH\`
+* Last commit: $LAST_COMMIT_URL
 * Document last modified: $DATE
-* Branch: \`$BRANCH\`
-* Repository: \`$REPOSITORY\`
 
 </details>
   `.trim();
@@ -92,21 +89,15 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   const baseURL = "https://github.com/mdn/content/issues/new";
   const sp = new URLSearchParams();
 
-  const { hash, folder, repository_url, branch } = doc.source;
-  const github_url = `https://github.com/${repository_url}/blob/${branch}/files/${folder}/index.html`;
+  const { folder, github_url, last_commit_url } = doc.source;
   const body = NEW_ISSUE_TEMPLATE.replace(/\$PATHNAME/g, doc.mdn_url)
     .replace(/\$FOLDER/g, folder)
     .replace(/\$GITHUB_URL/g, github_url)
+    .replace(/\$LAST_COMMIT_URL/g, last_commit_url)
     .replace(
       /\$DATE/g,
       doc.modified ? new Date(doc.modified).toISOString() : "*date not known*"
     )
-    .replace(/\$HASH/g, hash ? hash : "*hash not known*")
-    .replace(
-      /\$REPOSITORY/g,
-      repository_url ? repository_url : "*repo not known*"
-    )
-    .replace(/\$BRANCH/g, branch ? branch : "*branch not known*")
     .trim();
   sp.set("body", body);
   const maxLength = 50;
