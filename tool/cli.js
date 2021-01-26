@@ -18,8 +18,15 @@ const {
   buildURL,
 } = require("../content");
 const { buildDocument, gatherGitHistory } = require("../build");
+const { runMakePopularitiesFile } = require("./popularities");
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
+
+// The Google Analytics pageviews CSV file parsed, sorted (most pageviews
+// first), and sliced to this number of URIs that goes into the JSON file.
+// If this number is too large the resulting JSON file gets too big and
+// will include very rarely used URIs.
+const MAX_GOOGLE_ANALYTICS_URIS = 20000;
 
 function tryOrExit(f) {
   return async ({ options = {}, ...args }) => {
@@ -483,6 +490,63 @@ program
         countCreated++;
       }
       console.log(`Created ${countCreated} new files`);
+    })
+  )
+
+  .command(
+    "popularities",
+    "Convert a Google Analytics pageviews CSV into a popularities.json file"
+  )
+  .option(
+    "--outfile <path>",
+    "export from Google Analytics containing pageview counts",
+    {
+      default: path.join(CONTENT_ROOT, "popularities.json"),
+    }
+  )
+  .option(
+    "--max-uris <number>",
+    "export from Google Analytics containing pageview counts",
+    {
+      default: MAX_GOOGLE_ANALYTICS_URIS,
+    }
+  )
+  .argument("csvfile", "Google Analytics pageviews CSV file", {
+    validator: (value) => {
+      if (!fs.existsSync(value)) {
+        throw new Error(`${value} does not exist`);
+      }
+      return value;
+    },
+  })
+  .action(
+    tryOrExit(async ({ args, options, logger }) => {
+      const {
+        rowCount,
+        popularities,
+        pageviews,
+      } = await runMakePopularitiesFile(args.csvfile, options);
+      logger.info(chalk.green(`Parsed ${rowCount.toLocaleString()} rows.`));
+
+      const numberKeys = Object.keys(popularities).length;
+      logger.info(
+        chalk.green(`Wrote ${numberKeys.toLocaleString()} pages' popularities.`)
+      );
+
+      logger.debug("25 most popular URIs...");
+      pageviews.slice(0, 25).forEach(([uri, popularity], i) => {
+        logger.debug(
+          `${(i + "").padEnd(2)} ${uri.padEnd(75)} ${popularity.toFixed(5)}`
+        );
+      });
+      function fmtBytes(bytes) {
+        return `${(bytes / 1024 / 1024).toFixed(1)}MB`;
+      }
+      logger.info(
+        chalk.green(
+          `${options.outfile} is ${fmtBytes(fs.statSync(options.outfile).size)}`
+        )
+      );
     })
   );
 
