@@ -11,7 +11,6 @@
  */
 const fs = require("fs");
 
-const chalk = require("chalk");
 const csv = require("@fast-csv/parse");
 
 function runMakePopularitiesFile(filepath, options) {
