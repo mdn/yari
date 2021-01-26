@@ -1077,15 +1077,15 @@ describe("locale alias redirects", () => {
 const CORE_JAVASCRIPT_1_5_URLs = [].concat(
   url_test(
     "/en-US/docs/Core_JavaScript_1.5_Reference/Operators/Special_Operators/typeof_Operator",
-    "en-US/docs/Web/JavaScript/Reference/Operators/Special_Operators/typeof_Operator"
+    "/en-US/docs/Web/JavaScript/Reference/Operators/Special_Operators/typeof_Operator"
   ),
   url_test(
     "/en-US/docs/Core_JavaScript_1.5_Reference:Operators:Special_Operators:typeof_Operator",
-    "en-US/docs/Web/JavaScript/Reference/Operators/Special_Operators/typeof_Operator"
+    "/en-US/docs/Web/JavaScript/Reference/Operators/Special_Operators/typeof_Operator"
   ),
   url_test(
     "/en-US/docs/Core_JavaScript_1.5_Guide",
-    "en-US/docs/Web/JavaScript/Guide"
+    "/en-US/docs/Web/JavaScript/Guide"
   )
 );
 
