@@ -262,7 +262,45 @@ function unslug(inFilePath, locale, secondPass = false) {
   return status;
 }
 
+function simpleMD(
+  locale,
+  changes,
+  stats,
+  toPrefix = "",
+  fromPrefix = "https://developer.mozilla.org"
+) {
+  const line = ([from, to]) =>
+    `* [${from}](${fromPrefix}${from}) → [${to}](${toPrefix}${to})`;
+  const {
+    movedDocs,
+    conflictingDocs,
+    dehashedDocs,
+    orphanedDocs,
+    redirectedDocs,
+    totalDocs,
+  } = stats;
+  return `\
+## ${locale}
+
+* Total of ${totalDocs} documents.
+* Moved ${movedDocs} document.
+* Conflicting ${conflictingDocs} documents.
+* Dehashed ${dehashedDocs} documents.
+* Orphaned ${orphanedDocs} documents.
+* Fixed ${redirectedDocs} redirected documents.
+
+### Orphaned
+${changes.orphaned.map(line).join("\n")}
+
+### Conflicting
+${changes.conflicting.map(line).join("\n")}
+
+### Just Moved
+${changes.moved.map(line).join("\n")}
+`;
+}
 module.exports = {
   unslug,
   unslugAll,
+  simpleMD,
 };

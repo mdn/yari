@@ -349,19 +349,20 @@ program
   .option("--summarize <path>", `Write summary to path.`, {
     default: path.join(os.tmpdir()),
   })
+  .option("--prefix <prefix>", `Prefix to path for summary.`)
   .action(
     tryOrExit(async ({ args, options }) => {
       const { locale } = args;
-      const { verbose, summarize } = options;
+      const { verbose, summarize, prefix } = options;
       if (verbose) {
         log.setDefaultLevel(log.levels.DEBUG);
       }
       const allStats = {};
-      const allChanges = {};
+      const allChanges = [];
       for (const l of locale) {
         const { stats, changes } = unslug.unslugAll(l);
         allStats[l] = stats;
-        allChanges[l] = changes;
+        allChanges.push(unslug.simpleMD(l, changes, stats, prefix));
 
         const {
           movedDocs,
@@ -388,8 +389,8 @@ program
           "utf-8"
         );
         fs.writeFileSync(
-          path.join(summarize, "unslug-changes.json"),
-          JSON.stringify(allChanges, null, 2),
+          path.join(summarize, "unslug-changes.md"),
+          allChanges.join("\n"),
           "utf-8"
         );
         console.log(`wrote summary to ${summarize}`);
