@@ -147,13 +147,13 @@ function getLastCommitURL(root, hash) {
   return `${baseURL}/commit/${hash}`;
 }
 
-function injectSource(doc, document) {
+function injectSource(doc, document, metadata) {
   const folder = document.fileInfo.folder;
   const root = document.fileInfo.root;
   doc.source = {
     folder,
     github_url: getGitHubURL(document.fileInfo.root, folder),
-    last_commit_url: getLastCommitURL(root, hash),
+    last_commit_url: getLastCommitURL(root, metadata.hash),
   };
 }
 
@@ -430,7 +430,7 @@ async function buildDocument(document, documentOptions = {}) {
     doc.other_translations = otherTranslations;
   }
 
-  injectSource(doc, document);
+  injectSource(doc, document, metadata);
 
   // The `titles` object should contain every possible URI->Title mapping.
   // We can use that generate the necessary information needed to build
