@@ -152,7 +152,7 @@ function injectSource(doc, document, metadata) {
   const root = document.fileInfo.root;
   doc.source = {
     folder,
-    github_url: getGitHubURL(document.fileInfo.root, folder),
+    github_url: getGitHubURL(root, folder),
     last_commit_url: getLastCommitURL(root, metadata.hash),
   };
 }
