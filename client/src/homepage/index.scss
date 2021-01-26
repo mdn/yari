@@ -1,32 +1,15 @@
 @import "~@mdn/minimalist/sass/mixins/utils";
-@import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 
-.hero {
-  background-color: $primary-300;
-  padding: $base-spacing;
-}
-
-.hero-content {
+.home-content-container {
+  margin: 0 auto;
   max-width: $max-width-default;
+  padding: $base-spacing;
+  position: relative;
 
-  h1 {
-    background-color: $neutral-100;
-    color: $text-color-inverted;
-    font-weight: normal;
-    margin-bottom: $base-spacing / 2;
-    text-align: center;
-  }
-
-  ul {
-    @include reset-list();
-
-    a {
-      border-bottom: 2px solid $neutral-100;
-      color: $neutral-100;
-      display: inline-block;
-      padding: ($base-spacing / 2) 0;
-      width: 100%;
-    }
+  @media #{$mq-small-desktop-and-up} {
+    @include gap($base-spacing);
+    display: flex;
+    margin: ($base-spacing * 2) auto;
   }
 }

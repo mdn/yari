@@ -7,6 +7,7 @@ import "./app.scss";
 
 import { CRUD_MODE } from "./constants";
 import { Homepage } from "./homepage";
+import { WritersHomepage } from "./writers-homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
 import { Footer } from "./ui/organisms/footer";
@@ -90,7 +91,8 @@ export function App(appProps) {
         path="/"
         element={
           <Layout pageType="standard-page">
-            <Homepage />
+            {CRUD_MODE && <WritersHomepage />}
+            {!CRUD_MODE && <Homepage />}
           </Layout>
         }
       />
