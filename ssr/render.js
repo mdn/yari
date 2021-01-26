@@ -71,6 +71,12 @@ const readBuildHTML = lazy(() => {
   return html;
 });
 
+const getMinimalCSS = lazy(() => {
+  return fs
+    .readFileSync(path.join(__dirname, "..", "minimal.min.css"), "utf-8")
+    .trim();
+});
+
 const getGoogleAnalyticsJS = lazy(() => {
   // The reason for the `path.join(__dirname, ".."` is because this file you're
   // reading gets compiled by Webpack into ssr/dist/*.js
@@ -189,6 +195,16 @@ export default function render(
           .attr("hreflang", getHrefLang(translation.locale, allOtherLocales))
           .insertAfter("title");
       }
+    }
+
+    const minimalCSS = getMinimalCSS();
+    if (minimalCSS) {
+      $("link[rel=stylesheet]").each((i, link) => {
+        const $link = $(link);
+        $("<noscript>").html($link.html()).insertAfter($link);
+        $link.attr("media", "print").attr("onload", "this.media='all'");
+      });
+      $("<style>").html(minimalCSS).appendTo("head");
     }
   }
 
