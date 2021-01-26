@@ -211,6 +211,9 @@ jobs:
           SPEEDCURVE_DEPLOY_API_KEY: ${{ secrets.SPEEDCURVE_DEPLOY_API_KEY }}
           # Based on https://api.speedcurve.com/#get-all-sites using the API key
           SPEEDCURVE_DEPLOY_SITE_ID: 85742
+
+          DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_PROD_ELASTICSEARCH_URL }}
+
         run: |
           if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
             echo "Will build mdn/archived-content too"
