@@ -1073,3 +1073,24 @@ describe("locale alias redirects", () => {
     it(url, t);
   }
 });
+
+const CORE_JAVASCRIPT_1_5_URLs = [].concat(
+  url_test(
+    "/en-US/docs/Core_JavaScript_1.5_Reference/Operators/Special_Operators/typeof_Operator",
+    "en-US/docs/Web/JavaScript/Reference/Operators/Special_Operators/typeof_Operator"
+  ),
+  url_test(
+    "/en-US/docs/Core_JavaScript_1.5_Reference:Operators:Special_Operators:typeof_Operator",
+    "en-US/docs/Web/JavaScript/Reference/Operators/Special_Operators/typeof_Operator"
+  ),
+  url_test(
+    "/en-US/docs/Core_JavaScript_1.5_Guide",
+    "en-US/docs/Web/JavaScript/Guide"
+  )
+);
+
+describe("Core_JavaScript_1.5 redirects", () => {
+  for (const [url, t] of CORE_JAVASCRIPT_1_5_URLs) {
+    it(url, t);
+  }
+});
