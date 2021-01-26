@@ -3,11 +3,13 @@ const path = require("path");
 
 const chalk = require("chalk");
 const got = require("got");
+const FileType = require("file-type");
 const imagemin = require("imagemin");
 const imageminPngquant = require("imagemin-pngquant");
 const imageminMozjpeg = require("imagemin-mozjpeg");
 const imageminGifsicle = require("imagemin-gifsicle");
 const imageminSvgo = require("imagemin-svgo");
+const sanitizeFilename = require("sanitize-filename");
 
 const { Document, Redirect, Image } = require("../content");
 const { FLAW_LEVELS } = require("./constants");
@@ -17,6 +19,7 @@ const {
   replaceMatchesInText,
 } = require("./matches-in-text");
 const { humanFileSize } = require("./utils");
+const { VALID_MIME_TYPES } = require("../filecheck/constants");
 
 function injectFlaws(doc, $, options, { rawContent }) {
   if (doc.isArchive) return;
@@ -497,10 +500,34 @@ async function fixFixableFlaws(doc, options, document) {
           timeout: 10000,
           retry: 3,
         });
+        const fileType = await FileType.fromBuffer(imageBuffer);
+        if (!fileType) {
+          throw new Error(
+            `No file type could be extracted from ${flaw.src} at all. Probably not going to be a valid image file.`
+          );
+        }
+        const isSVG =
+          fileType.mime === "application/xml" &&
+          flaw.src.toLowerCase().endsWith(".svg");
+
+        if (!(VALID_MIME_TYPES.has(fileType.mime) || isSVG)) {
+          throw new Error(
+            `${flaw.src} has an unrecognized mime type: ${fileType.mime}`
+          );
+        }
+        // Otherwise FileType would make it `.xml`
+        const imageExtension = isSVG ? "svg" : fileType.ext;
+        const decodedPathname = decodeURI(url.pathname).replace(/\s+/g, "_");
+        const imageBasename = sanitizeFilename(
+          `${path.basename(
+            decodedPathname,
+            path.extname(decodedPathname)
+          )}.${imageExtension}`
+        );
         const destination = path.join(
           Document.getFolderPath(document.metadata),
           path
-            .basename(decodeURI(url.pathname))
+            .basename(imageBasename)
             .replace(/\s+/g, "_")
             // From legacy we have a lot of images that are named like
             // `/@api/deki/files/247/=HTMLBlinkElement.gif` for example.
