@@ -1464,6 +1464,11 @@
     "url": "https://wiki.mozilla.org/WebAPI/WebTelephony",
     "status": "Draft"
   },
+  "Top Level Await": {
+    "name": "Top Level Await",
+    "url": "https://tc39.es/proposal-top-level-await/",
+    "status": "Draft"
+  },
   "Touch Events": {
     "name": "Touch Events",
     "url": "https://www.w3.org/TR/touch-events/",

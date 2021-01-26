@@ -81,7 +81,9 @@ function execGit(args, opts = {}, root = null) {
     if (error) {
       throw error;
     }
-    throw new Error(`git command failed: ${error.toString()}`);
+    throw new Error(
+      `git command failed: ${stderr.toString() || stdout.toString()}`
+    );
   }
   return stdout.toString().trim();
 }
