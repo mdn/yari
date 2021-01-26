@@ -558,6 +558,9 @@ async function fixFixableFlaws(doc, options, document) {
         if (response && response.statusCode === 404) {
           console.log(chalk.yellow(`Skipping ${flaw.src} (404)`));
           continue;
+        } else if (error.code === "ETIMEDOUT") {
+          console.log(chalk.yellow(`Skipping ${flaw.src} (request timed out)`));
+          continue;
         } else {
           console.error(error);
           throw error;
