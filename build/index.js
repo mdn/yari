@@ -408,8 +408,6 @@ async function buildDocument(document, documentOptions = {}) {
 
   doc.modified = metadata.modified || null;
 
-  injectSource(doc, document);
-
   const otherTranslations = document.translations || [];
   if (!otherTranslations.length && metadata.translation_of) {
     // If built just-in-time, we won't have a record of all the other translations
@@ -431,6 +429,8 @@ async function buildDocument(document, documentOptions = {}) {
   if (otherTranslations.length) {
     doc.other_translations = otherTranslations;
   }
+
+  injectSource(doc, document);
 
   // The `titles` object should contain every possible URI->Title mapping.
   // We can use that generate the necessary information needed to build
