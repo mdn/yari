@@ -1147,6 +1147,37 @@ for (const [pattern, path] of [
   );
 }
 
+function simpleRedirect(
+  pattern,
+  replacement,
+  { permanent = true, colonToSlash = false } = {}
+) {
+  return (path) => {
+    const match = pattern.exec(path);
+    if (match === null) {
+      return null;
+    }
+    const status = permanent ? 301 : 302;
+    let url = path.replace(pattern, replacement);
+    if (colonToSlash) {
+      url = url.replace(/:/g, "/");
+    }
+    return { url, status };
+  };
+}
+
+const SIMPLE_REDIRECT_PATTERNS = [
+  simpleRedirect(
+    /\/docs\/Core_JavaScript_1.5_?/,
+    "/docs/Web/JavaScript/",
+    // This will convert :
+    //   /en-US/docs/Core_JavaScript_1.5_Reference:Statements:block
+    // to:
+    //   /en-US/docs/Core_JavaScript_1.5_Reference/Statements/block
+    { colonToSlash: true }
+  ),
+];
+
 const REDIRECT_PATTERNS = [].concat(
   SCL3_REDIRECT_PATTERNS,
   ZONE_REDIRECT_PATTERNS,
@@ -1168,7 +1199,8 @@ const REDIRECT_PATTERNS = [].concat(
       { prependLocale: false, permanent: true }
     ),
   ],
-  LOCALE_PATTERNS
+  LOCALE_PATTERNS,
+  SIMPLE_REDIRECT_PATTERNS
 );
 
 const STARTING_SLASH = /^\//;
