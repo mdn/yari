@@ -15,12 +15,13 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
   });
 
   const MARKER = "COMMIT:";
+  const DELIMITER = "_";
   const output = execGit(
     [
       "log",
       "--name-only",
       "--no-decorate",
-      `--format=${MARKER}%cI`,
+      `--format=${MARKER}%H${DELIMITER}%cI`,
       "--date-order",
       "--reverse",
       // "Separate the commits with NULs instead of with new newlines."
@@ -35,17 +36,20 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
   );
 
   const map = new Map();
-  let date = null;
+  let date = null,
+    hash = null;
   // Even if we specified the `-z` option to `git log ...` above, sometimes
   // it seems `git log` prefers to use a newline character.
   // At least as of git version 2.28.0 (Dec 2020). So let's split on both
   // characters to be safe.
   for (const line of output.split(/\0|\n/)) {
     if (line.startsWith(MARKER)) {
-      date = new Date(line.replace(MARKER, ""));
+      const data = line.replace(MARKER, "").split(DELIMITER);
+      hash = data[0];
+      date = new Date(data[1]);
     } else if (line) {
       const relPath = path.relative(realContentRoot, path.join(repoRoot, line));
-      map.set(relPath, date);
+      map.set(relPath, { date, hash });
     }
   }
   return map;
@@ -70,7 +74,8 @@ function gather(contentRoot, previousFile = null) {
       (key.endsWith("index.html") || key.endsWith("index.md"))
     ) {
       map.set(key, {
-        modified: value,
+        modified: value.date,
+        hash: value.hash,
       });
     }
   }

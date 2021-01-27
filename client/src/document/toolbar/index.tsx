@@ -2,11 +2,16 @@ import React, { useEffect } from "react";
 import { Doc } from "../types";
 import { EditActions } from "./edit-actions";
 import { ToggleDocumentFlaws } from "./flaws";
-import WatchInfo from "./watch-info";
 
 import "./index.scss";
 
-export default function Toolbar({ doc }: { doc: Doc }) {
+export default function Toolbar({
+  doc,
+  reloadPage,
+}: {
+  doc: Doc;
+  reloadPage: () => void;
+}) {
   // Every time the toolbar is used to view a document, log that in localStorage
   // as a list of recent document views. This can be used on the homepage to
   // help you navigate back to pages you frequently visit.
@@ -31,9 +36,8 @@ export default function Toolbar({ doc }: { doc: Doc }) {
     <div className="toolbar">
       <div className="toolbar-first-row">
         <EditActions folder={doc.source.folder} />
-        <WatchInfo />
       </div>
-      <ToggleDocumentFlaws doc={doc} />
+      <ToggleDocumentFlaws doc={doc} reloadPage={reloadPage} />
     </div>
   );
 }

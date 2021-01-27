@@ -1,8 +1,6 @@
 /**
  * @prettier
  */
-const url = require("url");
-
 const { JSDOM } = require("jsdom");
 
 const {
@@ -62,7 +60,7 @@ const SUMMARIES = {
 const MANIFEST_SLUG = "Mozilla/Add-ons/WebExtensions/manifest.json";
 
 function getMockResultForGetChildren(doc_url) {
-  const locale = url.parse(doc_url).pathname.split("/")[1];
+  const locale = new URL(doc_url, "http://example.com").pathname.split("/")[1];
   return [
     {
       locale: `${locale}`,
@@ -138,7 +136,7 @@ function checkSidebarResult(html, locale, isUnderWebExtAPI = false) {
 describeMacro("AddonSidebar", function () {
   beforeEachMacro(function (macro) {
     // Mock the call to template('WebExtAPISidebar', []).
-    macro.ctx.template = jest.fn((macro, args) => {
+    macro.ctx.template = jest.fn(() => {
       // This template will be tested on its own, so nothing needed here.
       return "";
     });

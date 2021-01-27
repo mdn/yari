@@ -5,7 +5,7 @@ function serverURL(pathname = "/") {
   return "http://localhost:5000" + pathname;
 }
 
-function url_test(from, to, { statusCode = 301, ...options } = {}) {
+function url_test(from, to, { statusCode = 301 } = {}) {
   const expanded = braces.expand(from);
 
   return expanded.map((f) => [

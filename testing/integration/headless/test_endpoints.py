@@ -72,12 +72,14 @@ def test_hreflang_basic(base_url):
     assert resp.status_code == 200
     html = PyQuery(resp.text)
     assert html.attr("lang") == "en"
-    assert html.find('head > link[hreflang="en"][href="{}"]'.format(url))
+    assert html.find(
+        'head > link[hreflang="en"][href="https://developer.mozilla.org/en-US/docs/Web/HTTP"]'
+    )
 
 
 @pytest.mark.parametrize(
     "uri,expected_keys",
-    [["/api/v1/whoami", [("waffle", ("flags", "switches", "samples"))]]],
+    [["/api/v1/whoami", [("waffle", ("flags", "switches"))]]],
     ids=("whoami",),
 )
 def test_api_basic(base_url, uri, expected_keys):
@@ -115,7 +117,9 @@ LOCALE_SELECTORS = {
 
 
 @pytest.mark.parametrize(
-    "expected,cookie,accept", LOCALE_SELECTORS.values(), ids=list(LOCALE_SELECTORS),
+    "expected,cookie,accept",
+    LOCALE_SELECTORS.values(),
+    ids=list(LOCALE_SELECTORS),
 )
 @pytest.mark.parametrize(
     "slug",
@@ -147,4 +151,4 @@ def test_locale_selection(base_url, slug, expected, cookie, accept):
         request_kwargs["cookies"] = {"preferredlocale": cookie}
     response = request("get", url, **request_kwargs)
     assert response.status_code == 302
-    assert response.headers["location"].startswith("/{}/".format(expected))
+    assert response.headers["location"].startswith(f"/{expected}/")

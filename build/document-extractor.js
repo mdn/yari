@@ -20,7 +20,14 @@ const { packageBCD } = require("./resolve-bcd");
  * ...give or take some whitespace.
  */
 function extractSidebar($) {
-  const search = $("#Quick_Links");
+  // Have to use both spellings because unfortunately, some sidebars don't come
+  // from macros but have it hardcoded into the content. Perhaps it was the
+  // result of someone once rendering out some sidebar macros.
+  // We could consolidate it to just exactly one spelling (`quick_links`) but
+  // that would require having to fix 29 macros, fix thousands of archived-content
+  // pages and hundres of translated content.
+  // By selecting for either spelling we're being defensive and safe.
+  const search = $("#Quick_Links, #Quick_links");
   if (!search.length) {
     return "";
   }
@@ -312,35 +319,45 @@ function _addSingleSectionBCD($) {
 function _addSectionProse($) {
   let id = null;
   let title = null;
+  let titleAsText = null;
   let isH3 = false;
 
   // Maybe this should check that the h2 is first??
   const h2s = $.find("h2");
   if (h2s.length === 1) {
     id = h2s.attr("id");
-    title = h2s.text();
+    title = h2s.html();
+    titleAsText = h2s.text();
     h2s.remove();
   } else {
     const h3s = $.find("h3");
     if (h3s.length === 1) {
       id = h3s.attr("id");
-      title = h3s.text();
+      title = h3s.html();
+      titleAsText = h3s.text();
       if (id && title) {
         isH3 = true;
         h3s.remove();
       }
     }
   }
+  const value = {
+    id,
+    title,
+    isH3,
+    content: $.html().trim(),
+  };
+
+  // Only include it if it's useful. It's an optional property and it's
+  // potentially a waste of space to include it if it's not different.
+  if (titleAsText && titleAsText !== title) {
+    value.titleAsText = titleAsText;
+  }
 
   return [
     {
       type: "prose",
-      value: {
-        id,
-        title,
-        isH3,
-        content: $.html().trim(),
-      },
+      value,
     },
   ];
 }

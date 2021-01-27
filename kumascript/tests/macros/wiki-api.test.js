@@ -12,7 +12,6 @@ describeMacro("dekiscript-wiki", function () {
     let pkg = macro.ctx.wiki;
     assert.isObject(pkg);
     assert.isFunction(pkg.escapeQuotes);
-    assert.isFunction(pkg.pageExists);
     assert.isFunction(pkg.page);
     assert.isFunction(pkg.getPage);
     assert.isFunction(pkg.uri);

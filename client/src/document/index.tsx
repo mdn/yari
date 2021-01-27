@@ -2,8 +2,7 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
-import { CRUD_MODE, NO_WATCHER } from "../constants";
-import { useWebSocketMessageHandler } from "../web-socket";
+import { CRUD_MODE } from "../constants";
 import { useGA } from "../ga-context";
 import { useDocumentURL } from "./hooks";
 import { Doc } from "./types";
@@ -64,18 +63,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
         props.doc.mdn_url.toLowerCase() === documentURL.toLowerCase()
           ? props.doc
           : null,
-      revalidateOnFocus: !!NO_WATCHER,
+      revalidateOnFocus: CRUD_MODE,
     }
   );
-
-  useWebSocketMessageHandler((message) => {
-    if (
-      message.type === "DOCUMENT_CHANGE" &&
-      message.change.document?.url === documentURL
-    ) {
-      mutate(dataURL);
-    }
-  });
 
   React.useEffect(() => {
     if (!doc && !error) {
@@ -155,7 +145,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
           <React.Suspense
             fallback={<p className="loading-toolbar">Loading toolbar</p>}
           >
-            <Toolbar doc={doc} />
+            <Toolbar
+              doc={doc}
+              reloadPage={() => {
+                mutate(dataURL);
+              }}
+            />
           </React.Suspense>
         )}
       </Titlebar>

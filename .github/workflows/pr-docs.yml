@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - docs/**/*.md
+      - README.md
       - .github/workflows/pr-docs.yml
 jobs:
   docs:
@@ -19,4 +20,5 @@ jobs:
 
       - name: Lint markdown files
         run: |
+          npx markdownlint-cli README.md
           npx markdownlint-cli docs/**/*.md

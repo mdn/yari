@@ -3,13 +3,15 @@ const path = require("path");
 
 const chalk = require("chalk");
 const got = require("got");
+const FileType = require("file-type");
 const imagemin = require("imagemin");
 const imageminPngquant = require("imagemin-pngquant");
 const imageminMozjpeg = require("imagemin-mozjpeg");
 const imageminGifsicle = require("imagemin-gifsicle");
 const imageminSvgo = require("imagemin-svgo");
+const sanitizeFilename = require("sanitize-filename");
 
-const { Document, Redirect } = require("../content");
+const { Document, Redirect, Image } = require("../content");
 const { FLAW_LEVELS } = require("./constants");
 const { packageBCD } = require("./resolve-bcd");
 const {
@@ -17,6 +19,7 @@ const {
   replaceMatchesInText,
 } = require("./matches-in-text");
 const { humanFileSize } = require("./utils");
+const { VALID_MIME_TYPES } = require("../filecheck/constants");
 
 function injectFlaws(doc, $, options, { rawContent }) {
   if (doc.isArchive) return;
@@ -70,7 +73,15 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
   const matches = new Map();
 
   // A closure function to help making it easier to append flaws
-  function addBrokenLink($element, index, href, suggestion = null) {
+  function addBrokenLink(
+    $element,
+    index,
+    href,
+    suggestion = null,
+    explanation
+  ) {
+    explanation = explanation || `Can't resolve ${href}`;
+
     if (!matches.has(href)) {
       matches.set(
         href,
@@ -92,7 +103,6 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
         doc.flaws.broken_links = [];
       }
       const id = `link${doc.flaws.broken_links.length + 1}`;
-      const explanation = `Can't resolve ${href}`;
       let fixable = false;
       if (suggestion) {
         $element.attr("href", suggestion);
@@ -132,24 +142,28 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
       //  <a href="/docs/Learn/Front-end_web_developer">
       // which means the author wanted the link to work in any language.
       // When checking it against disk, we'll have to assume a locale.
-      let hrefNormalized = href.split("#")[0];
+      const hrefSplit = href.split("#");
+      let hrefNormalized = hrefSplit[0];
       if (hrefNormalized.startsWith("/docs/")) {
         const thisDocumentLocale = doc.mdn_url.split("/")[1];
         hrefNormalized = `/${thisDocumentLocale}${hrefNormalized}`;
       }
       const found = Document.findByURL(hrefNormalized);
       if (!found) {
-        // Before we give up, check if it's a redirect
-        const resolved = Redirect.resolve(hrefNormalized);
-        if (resolved !== hrefNormalized) {
-          addBrokenLink(
-            a,
-            checked.get(href),
-            href,
-            resolved + absoluteURL.search + absoluteURL.hash
-          );
-        } else {
-          addBrokenLink(a, checked.get(href), href);
+        // Before we give up, check if it's an image.
+        if (!Image.findByURL(hrefNormalized)) {
+          // Before we give up, check if it's a redirect.
+          const resolved = Redirect.resolve(hrefNormalized);
+          if (resolved !== hrefNormalized) {
+            addBrokenLink(
+              a,
+              checked.get(href),
+              href,
+              resolved + absoluteURL.search + absoluteURL.hash.toLowerCase()
+            );
+          } else {
+            addBrokenLink(a, checked.get(href), href);
+          }
         }
       } else {
         // But does it have the correct case?!
@@ -159,9 +173,32 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
             a,
             checked.get(href),
             href,
-            found.url + absoluteURL.search + absoluteURL.hash
+            found.url + absoluteURL.search + absoluteURL.hash.toLowerCase()
+          );
+        } else if (
+          hrefSplit.length > 1 &&
+          hrefSplit[1] !== hrefSplit[1].toLowerCase()
+        ) {
+          const hash = hrefSplit[1];
+          addBrokenLink(
+            a,
+            checked.get(href),
+            href,
+            href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
+            "Anchor not lowercase"
           );
         }
+      }
+    } else if (href.startsWith("#")) {
+      const hash = href.split("#")[1];
+      if (hash !== hash.toLowerCase()) {
+        addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
+          "Anchor not lowercase"
+        );
       }
     }
   });
@@ -463,10 +500,34 @@ async function fixFixableFlaws(doc, options, document) {
           timeout: 10000,
           retry: 3,
         });
+        const fileType = await FileType.fromBuffer(imageBuffer);
+        if (!fileType) {
+          throw new Error(
+            `No file type could be extracted from ${flaw.src} at all. Probably not going to be a valid image file.`
+          );
+        }
+        const isSVG =
+          fileType.mime === "application/xml" &&
+          flaw.src.toLowerCase().endsWith(".svg");
+
+        if (!(VALID_MIME_TYPES.has(fileType.mime) || isSVG)) {
+          throw new Error(
+            `${flaw.src} has an unrecognized mime type: ${fileType.mime}`
+          );
+        }
+        // Otherwise FileType would make it `.xml`
+        const imageExtension = isSVG ? "svg" : fileType.ext;
+        const decodedPathname = decodeURI(url.pathname).replace(/\s+/g, "_");
+        const imageBasename = sanitizeFilename(
+          `${path.basename(
+            decodedPathname,
+            path.extname(decodedPathname)
+          )}.${imageExtension}`
+        );
         const destination = path.join(
           Document.getFolderPath(document.metadata),
           path
-            .basename(decodeURI(url.pathname))
+            .basename(imageBasename)
             .replace(/\s+/g, "_")
             // From legacy we have a lot of images that are named like
             // `/@api/deki/files/247/=HTMLBlinkElement.gif` for example.
@@ -496,6 +557,9 @@ async function fixFixableFlaws(doc, options, document) {
         const { response } = error;
         if (response && response.statusCode === 404) {
           console.log(chalk.yellow(`Skipping ${flaw.src} (404)`));
+          continue;
+        } else if (error.code === "ETIMEDOUT") {
+          console.log(chalk.yellow(`Skipping ${flaw.src} (request timed out)`));
           continue;
         } else {
           console.error(error);

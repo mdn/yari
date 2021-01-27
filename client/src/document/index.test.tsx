@@ -24,6 +24,8 @@ const sampleDocumentState = Object.freeze({
     source: {
       folder: "en-us/sample/page",
       github_url: "http://github.com/mdn/yari/yada/yada",
+      last_commit_url:
+        "https://github.com/mdn/yari/commit/0102030405060708091011121314151617181920",
     },
   }),
 });

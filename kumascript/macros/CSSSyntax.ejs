@@ -43,24 +43,13 @@ let data = {
 };
 let slug = env.slug;
 let locale = env.locale;
-let localWiki = wiki;
-let escapeQuotes = mdn.escapeQuotes;
 let name = $0 || (slug ? slug.split("/").pop().toLowerCase() : "preview-wiki-content");
 let atRule = $1;
 let rawSyntax = "";
 let formattedSyntax = "";
 let localize = mdn.getLocalString;
 
-let localStrings = string.deserialize(await template("L10n:CSS"));
-
-let s_missing = mdn.localString({
-    "en-US": "Syntax not found in DB!",
-    "fr"   : "La syntaxe n'a pas été trouvée !",
-    "de"   : "Syntax nicht in der Datenbank gefunden!",
-    "ja"   : "構文が DB にありません。",
-    "zh-CN": "该属性的语法尚未添加",
-    "ru"   : "Синтаксис не найден в базе данных"
-});
+let localStrings = JSON.parse(await template("L10n:CSS"));
 
 let s_where = mdn.localString({
     "en-US": "where ",
@@ -74,14 +63,6 @@ let s_syntax_value_definition = mdn.localString({
     "en-US": "Value_definition_syntax",
     "de"   : "Wertdefinitionssyntax",
     "fr"   : "Syntaxe_de_d%C3%A9finition_des_valeurs"
-});
-
-let s_and = mdn.localString({
-    "en-US": "and ",
-    "de"   : "und ",
-    "fr"   : "et ",
-	"ja"   : "と",
-    "ru"   : "и "
 });
 
 let s_or = mdn.localString({
@@ -281,7 +262,7 @@ async function buildLink(match, type) {
         return "<a href=\"" + link + propertyName[1] + "\" title=\"" + title + "\">&lt;" + propertyName[0] + "&gt;</a>";
 
     // Handle basic types
-    } else if (typeInfo.hasOwnProperty(type)) {
+    } else if (Object.prototype.hasOwnProperty.call(typeInfo, type)) {
         var typeLinkName = typeInfo[type].typeLinkName || type;
 
         link += typeLinkName;
@@ -289,12 +270,11 @@ async function buildLink(match, type) {
         if (typeInfo[type].title) {
             title = typeInfo[type].title;
         } else {
-            let page = await localWiki.getPage(link);
             title = "";
         }
 
     // Handle types which we want to describe using a link to a different page
-    }  else if (data.externallyDescribedTypes.hasOwnProperty(type)) {
+    }  else if (Object.prototype.hasOwnProperty.call(data.externallyDescribedTypes, type)) {
              return "<a href=\"/" + locale + data.externallyDescribedTypes[type].link + "\">&lt;" + type + "&gt;</a>";
 
     // Handle advanced types having their syntax defined within the 'CSSData' template
@@ -322,7 +302,7 @@ async function formatSyntax(rawSyntax) {
     operators.forEach(function(operator) {
         if (formattedSyntax.indexOf("\n") !== -1 &&
             operator.title === "Curly braces") {
-		    return "";
+            return "";
         }
 
         formattedSyntax = formattedSyntax.replace(operator.regexp,
@@ -371,8 +351,8 @@ async function formatTypesSyntax(formattedSyntax, describedTypes) {
                 var subType = type[1].replace("_value", "");
                 // Describe this type if it exists in "syntaxes" and
                 // it *does not* exist in externallyDescribedTypes
-                if ((data.syntaxes.hasOwnProperty(subType)) &&
-                    (!data.externallyDescribedTypes.hasOwnProperty(subType))) {
+                if ((Object.prototype.hasOwnProperty.call(data.syntaxes, subType)) &&
+                    (!Object.prototype.hasOwnProperty.call(data.externallyDescribedTypes, subType))) {
                     types.push(subType);
                 }
             }
@@ -394,7 +374,7 @@ async function formatTypesSyntax(formattedSyntax, describedTypes) {
                     }
                     describedTypes.push(type);
                 }
-            };
+            }
 
             if (typesSyntax !== "") {
                 formattedTypesSyntax += "<p style=\"font-family:Open Sans,Arial," +
@@ -428,7 +408,7 @@ if (name === "preview-wiki-content") {
 } else {
     if (atRule) {
         if (data.atRules[atRule] && data.atRules[atRule].descriptors) {
-    	    rawSyntax = data.atRules[atRule].descriptors[name].syntax;
+            rawSyntax = data.atRules[atRule].descriptors[name].syntax;
         }
     } else if (name[0] === "@") {
         if (data.atRules[name].syntax) {
@@ -446,6 +426,8 @@ if (name === "preview-wiki-content") {
     formattedSyntax += await formatTypesSyntax(formattedSyntax, []);
 }
 
-var result = formattedSyntax || s_missing;
+if (!formattedSyntax) {
+    throw new Error(`No syntax found in DB for '${name}'`);
+}
 
-%><%- result %>
+%><%- formattedSyntax %>

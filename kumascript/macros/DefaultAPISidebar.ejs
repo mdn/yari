@@ -11,13 +11,12 @@ var APIHref = '/' + locale + '/docs/Web/API';
 var output = "";
 var group = $0;
 var htmlEscape = kuma.htmlEscape;
-var escapeQuotes = mdn.escapeQuotes;
 // slug is not available in preview mode.
 if (slug && group) {
 
-var webAPIGroups = string.deserialize(await template("GroupData"));
+var webAPIGroups = JSON.parse(await template("GroupData"));
 
-var commonl10n = string.deserialize(await template('L10n:Common'));
+var commonl10n = JSON.parse(await template('L10n:Common'));
 
 var text = {
     'Methods': mdn.getLocalString(commonl10n, 'Methods'),

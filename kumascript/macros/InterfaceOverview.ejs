@@ -12,8 +12,6 @@ if ($1) {
     slug = $1;
 }
 var locale = env.locale;
-var group = $0;
-var APIHref = '/' + locale + '/docs/Web/API';
 var output = '';
 
 // Slug isn't available in preview mode, so don't do anything if it's
@@ -35,13 +33,9 @@ if (slug) {
 
     // Fetch the databases
 
-    var webAPIData = string.deserialize(await template('InterfaceData'));
+    var webAPIData = JSON.parse(await template('InterfaceData'));
 
-    if (group) {
-        var webAPIGroups = string.deserialize(await template('GroupData'));
-    }
-
-    var commonl10n = string.deserialize(await template('L10n:Common'));
+    var commonl10n = JSON.parse(await template('L10n:Common'));
 
     // Strings that need translating
 
@@ -74,12 +68,6 @@ if (slug) {
     // databases, as well as from the subtree below this page.
 
     var mainIFPages = await page.subpagesExpand('/en-US/docs/Web/API/' + mainIF);
-    var events = [];
-
-    if (group && webAPIGroups[0][group]) {
-        // ADD HERE ANY CODE NEEDED TO PULL OTHER INFO FROM GROUPDATA
-        events = webAPIGroups[0][group].events || [];
-    }
 
     // Scan the pages and collect the information we need about them
 
@@ -118,7 +106,7 @@ if (slug) {
       inherited.push(inh);
     }
 
-    impl.forEach(function(value, index, ar) {
+    impl.forEach(function(value) {
       inherited.push(value);
     });
 

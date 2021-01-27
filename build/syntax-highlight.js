@@ -4,9 +4,9 @@ const loadLanguages = require("prismjs/components/index");
 const lazy = (creator) => {
   let res;
   let processed = false;
-  return () => {
+  return (...args) => {
     if (processed) return res;
-    res = creator.apply(this, arguments);
+    res = creator.apply(this, args);
     processed = true;
     return res;
   };
@@ -50,10 +50,16 @@ const IGNORE = new Set(["none", "text", "plain", "unix"]);
 function syntaxHighlight($, doc) {
   loadAllLanguages();
 
+  // Our content will be like this: `<pre class="brush:js">` or
+  // `<pre class="brush: js">` so we're technically not looking for an exact
+  // match. The wildcard would technically match `<pre class="brushetta">`
+  // too. But within the loop, we do a more careful regex on the class name
+  // and only proceed if it's something sensible we can use in Prism.
   $("pre[class*=brush]").each((_, element) => {
     // The language is whatever string comes after the `brush(:)`
     // portion of the class name.
     const $pre = $(element);
+
     const className = $pre.attr("class").toLowerCase();
     const match = className.match(/brush:?\s*([\w_-]+)/);
     if (!match) {

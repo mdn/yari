@@ -55,7 +55,10 @@ def cli(ctx, **kwargs):
 
 @cli.command()
 @click.argument(
-    "directory", type=click.Path(), callback=validate_directory, default="aws-lambda",
+    "directory",
+    type=click.Path(),
+    callback=validate_directory,
+    default="aws-lambda",
 )
 @click.pass_context
 def update_lambda_functions(ctx, directory):
@@ -74,7 +77,10 @@ def update_lambda_functions(ctx, directory):
     default="whatsdeployed.json",
 )
 @click.argument(
-    "directory", type=click.Path(), callback=validate_directory, default=".",
+    "directory",
+    type=click.Path(),
+    callback=validate_directory,
+    default=".",
 )
 @click.pass_context
 def whatsdeployed(ctx, directory: Path, output: str):
@@ -141,13 +147,22 @@ def upload(ctx, directory: Path, **kwargs):
     show_default=False,
 )
 @click.option(
-    "--site-id", help="Site ID ", default=SPEEDCURVE_DEPLOY_SITE_ID, show_default=True,
+    "--site-id",
+    help="Site ID ",
+    default=SPEEDCURVE_DEPLOY_SITE_ID,
+    show_default=True,
 )
 @click.option(
-    "--note", help="Note string to add", default="", show_default=True,
+    "--note",
+    help="Note string to add",
+    default="",
+    show_default=True,
 )
 @click.option(
-    "--detail", help="Detail string to add", default="", show_default=True,
+    "--detail",
+    help="Detail string to add",
+    default="",
+    show_default=True,
 )
 @click.pass_context
 def speedcurve_deploy(ctx, **kwargs):
@@ -210,7 +225,7 @@ def search_index(ctx, buildroot: Path, **kwargs):
             # The reason we're not throwing an error is to make it super convenient
             # to call this command, from bash, without first having to check and figure
             # out if the relevant environment variables are available.
-            log.warning("ELASTICSEARCH_URL or --host not set or empty")
+            log.warning("DEPLOYER_ELASTICSEARCH_URL or --host not set or empty")
             return
         raise Exception("host not set")
     search.index(
