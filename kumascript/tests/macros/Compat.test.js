@@ -1,10 +1,10 @@
 const { assert, itMacro, describeMacro, lintHTML } = require("./utils");
 
-const fs = require("fs"),
-  path = require("path"),
-  jsdom = require("jsdom"),
-  extend = require("extend"),
-  fixture_dir = path.resolve(__dirname, "fixtures/compat");
+const fs = require("fs");
+const path = require("path");
+const jsdom = require("jsdom");
+const extend = require("extend");
+const fixture_dir = path.resolve(__dirname, "fixtures/compat");
 
 const { JSDOM } = jsdom;
 

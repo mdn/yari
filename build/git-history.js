@@ -36,8 +36,8 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
   );
 
   const map = new Map();
-  let date = null,
-    hash = null;
+  let date = null;
+  let hash = null;
   // Even if we specified the `-z` option to `git log ...` above, sometimes
   // it seems `git log` prefers to use a newline character.
   // At least as of git version 2.28.0 (Dec 2020). So let's split on both
