@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
 import { useGA } from "../ga-context";
@@ -145,7 +145,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
           <React.Suspense
             fallback={<p className="loading-toolbar">Loading toolbar</p>}
           >
-            <Toolbar doc={doc} />
+            <Toolbar
+              doc={doc}
+              reloadPage={() => {
+                mutate(dataURL);
+              }}
+            />
           </React.Suspense>
         )}
       </Titlebar>
