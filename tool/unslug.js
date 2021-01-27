@@ -314,7 +314,7 @@ corresponding english document.
 
 ## Full List of Changes
 
-List of _old linkg to document on production MDN_
+List of _old link to document on production MDN_
 → _new link to the document on dev_
 
 ### Orphaned
