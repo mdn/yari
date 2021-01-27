@@ -98,6 +98,22 @@ function NonBreakingSpace() {
   return <>{"\u00A0"}</>;
 }
 
+function labelFromString(version: string | boolean | null | undefined) {
+  if (typeof version !== "string") {
+    return <>{"?"}</>;
+  }
+  if (!version.startsWith("≤")) {
+    return <>{version}</>;
+  }
+  const title = `Supported in version ${version.slice(1)} or earlier.`;
+  return (
+    <span title={title}>
+      <sup>≤&#xA0;</sup>
+      {version.slice(1)}
+    </span>
+  );
+}
+
 const CellText = React.memo(
   ({ support }: { support: bcd.SupportStatement | undefined }) => {
     const currentSupport = getFirst(support);
@@ -120,7 +136,7 @@ const CellText = React.memo(
         status = { isSupported: "no" };
         break;
       default:
-        status = { isSupported: "yes", label: added };
+        status = { isSupported: "yes", label: labelFromString(added) };
         break;
     }
 
@@ -129,15 +145,15 @@ const CellText = React.memo(
         isSupported: "no",
         label: (
           <>
-            {typeof added === "string" ? added : "?"}
-            <NonBreakingSpace />— {typeof removed === "string" ? removed : "?"}
+            {labelFromString(added)}
+            <NonBreakingSpace />— {labelFromString(removed)}
           </>
         ),
       };
     } else if (currentSupport && currentSupport.partial_implementation) {
       status = {
         isSupported: "partial",
-        label: typeof added === "string" ? added : "Partial",
+        label: typeof added === "string" ? labelFromString(added) : "Partial",
       };
     }
 
