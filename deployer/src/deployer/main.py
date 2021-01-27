@@ -225,13 +225,34 @@ def search_index(ctx, buildroot: Path, **kwargs):
             # The reason we're not throwing an error is to make it super convenient
             # to call this command, from bash, without first having to check and figure
             # out if the relevant environment variables are available.
-            log.warning("DEPLOYER_ELASTICSEARCH_URL or --host not set or empty")
+            log.warning("DEPLOYER_ELASTICSEARCH_URL or --url not set or empty")
             return
-        raise Exception("host not set")
+        raise Exception("url not set")
     search.index(
         buildroot,
         url,
         update=kwargs["update"],
         no_progressbar=kwargs["no_progressbar"],
         priority_prefixes=kwargs["priority_prefix"],
+    )
+
+
+@cli.command()
+@click.option(
+    "--url",
+    help="Elasticsearch URL (if not env var ELASTICSEARCH_URL)",
+    default=ELASTICSEARCH_URL,
+    show_default=False,
+)
+@click.argument("text")
+@click.argument("analyzer")
+@click.pass_context
+def search_analyze(ctx, text, analyzer, **kwargs):
+    url = kwargs["url"]
+    if not url:
+        raise Exception("url not set")
+    search.analyze(
+        url,
+        text,
+        analyzer,
     )

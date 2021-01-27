@@ -238,3 +238,18 @@ def html_strip(html):
             tag.decompose()
     text = tree.body.text()
     return "\n".join(x.strip() for x in text.splitlines() if x.strip())
+
+
+def analyze(
+    url: str,
+    text: str,
+    analyzer: str,
+):
+    # We can confidently use a single host here because we're not searching
+    # a cluster.
+    connections.create_connection(hosts=[url])
+    # connection = connections.get_connection()
+    index = Document._index
+    print(
+        json.dumps(index.analyze(body={"text": text, "analyzer": analyzer}), indent=2)
+    )
