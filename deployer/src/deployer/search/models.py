@@ -54,6 +54,7 @@ html_text_analyzer = analyzer(
 class Document(ESDocument):
     title = Text(required=True, analyzer=html_text_analyzer)
     body = Text(analyzer=text_analyzer)
+    summary = Text(analyzer=text_analyzer)
     locale = Keyword()
     archived = Boolean()
     slug = Keyword()
