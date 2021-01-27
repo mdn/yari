@@ -117,7 +117,7 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
 
   $("a[href]").each((i, element) => {
     const a = $(element);
-    const href = a.attr("href");
+    let href = a.attr("href");
 
     // This gives us insight into how many times this exact `href`
     // has been encountered in the doc.
@@ -125,17 +125,13 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
     // that function knows which match it's referring to.
     checked.set(href, checked.has(href) ? checked.get(href) + 1 : 0);
 
-    if (href.startsWith("https://developer.mozilla.org/")) {
-      // It might be a working 200 OK link but the link just shouldn't
-      // have the full absolute URL part in it.
-      const absoluteURL = new URL(href);
-      addBrokenLink(
-        a,
-        checked.get(href),
-        href,
-        absoluteURL.pathname + absoluteURL.search + absoluteURL.hash
-      );
-    } else if (href.startsWith("/") && !href.startsWith("//")) {
+    if (
+      href.startsWith("https://developer.mozilla.org/") ||
+      (href.startsWith("/") && !href.startsWith("//"))
+    ) {
+      // Strip domain before doing general resolve/normalization
+      href = href.replace("https://developer.mozilla.org", "");
+
       // Got to fake the domain to sensible extract the .search and .hash
       const absoluteURL = new URL(href, "http://www.example.com");
       // Note, a lot of links are like this:
