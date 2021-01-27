@@ -14,7 +14,9 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2019,
   },
-  rules: {},
+  rules: {
+    "one-var": ["error", "never"],
+  },
   settings: {
     node: {
       allowModules: ["expect-puppeteer"],
