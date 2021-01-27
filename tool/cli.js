@@ -358,7 +358,6 @@ program
         log.setDefaultLevel(log.levels.DEBUG);
       }
       const allStats = {};
-      const allChanges = [];
       for (const l of locale) {
         const { stats, changes } = unslug.unslugAll(l);
         allStats[l] = stats;
