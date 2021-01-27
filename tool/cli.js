@@ -362,7 +362,15 @@ program
       for (const l of locale) {
         const { stats, changes } = unslug.unslugAll(l);
         allStats[l] = stats;
-        allChanges.push(unslug.simpleMD(l, changes, stats, prefix));
+        if (summarize) {
+          const summary = unslug.simpleMD(l, changes, stats, prefix);
+          const summaryFilePath = path.join(
+            summarize,
+            `unslug-changes-${l}.md`
+          );
+          fs.writeFileSync(summaryFilePath, summary, "utf-8");
+          console.log(`wrote summary to ${summarize}`);
+        }
 
         const {
           movedDocs,
@@ -388,12 +396,6 @@ program
           JSON.stringify(allStats, null, 2),
           "utf-8"
         );
-        fs.writeFileSync(
-          path.join(summarize, "unslug-changes.md"),
-          allChanges.join("\n"),
-          "utf-8"
-        );
-        console.log(`wrote summary to ${summarize}`);
       }
     })
   )

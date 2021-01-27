@@ -271,31 +271,58 @@ function simpleMD(
 ) {
   const line = ([from, to]) =>
     `* [${from}](${fromPrefix}${from}) → [${to}](${toPrefix}${to})`;
-  const {
-    movedDocs,
-    conflictingDocs,
-    dehashedDocs,
-    orphanedDocs,
-    redirectedDocs,
-    totalDocs,
-  } = stats;
+  const { movedDocs, conflictingDocs, orphanedDocs, totalDocs } = stats;
   return `\
-## ${locale}
+# ${locale}
+
+This is the summary of moving to english slugs only and enforcing the same
+document hierarchy for all locales. This requires every translated document to
+have exactly one corresponding english document with the same slug.
+
+## Summary
 
 * Total of ${totalDocs} documents.
 * Moved ${movedDocs} document.
-* Conflicting ${conflictingDocs} documents.
-* Dehashed ${dehashedDocs} documents.
-* Orphaned ${orphanedDocs} documents.
-* Fixed ${redirectedDocs} redirected documents.
+  * ${orphanedDocs} orphaned documents.
+  * ${conflictingDocs} conflicting documents.
+  * ${movedDocs - conflictingDocs - orphanedDocs} renamed documents.
+
+## Explainer
 
 ### Orphaned
+
+Orphaned documents are documents that do not have a corresponding english
+document (anymore). Their folder/slug has been prefixed with \`orphaned\`.
+Redirects where added as there might me links to these documents.
+
+### Conflicting
+
+Conflicting documents are documents where the corresponding english document has
+multiple translations. In this case we chose one of them (best effort) to be the
+translation and prefixed the other candidates folder/slug with \`conflicting\`.
+
+Some of the conflicting articles are a result of them being a translation of a
+section like
+[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators#assignment_operators].
+
+### Renamed
+
+Documents that had a localized slug or simply a slug mismatching the slug of the
+corresponding english document.
+
+## Full List of Changes
+
+List of _old linkg to document on production MDN_
+→ _new link to the document on dev_
+
+### Orphaned
+
 ${changes.orphaned.map(line).join("\n")}
 
 ### Conflicting
 ${changes.conflicting.map(line).join("\n")}
 
-### Just Moved
+### Renamed
 ${changes.moved.map(line).join("\n")}
 `;
 }
