@@ -255,8 +255,20 @@ async function buildDocument(document, documentOptions = {}) {
       });
     }
 
+    const nonFatal = [
+      "MacroDeprecatedError",
+      "MacroBrokenLinkError",
+      "MacroRedirectedLinkError",
+      "MacroPagesError",
+      "MacroWrongXRefError",
+      "MacroLiveSampleError",
+    ];
+
     if (flaws.length) {
-      if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
+      if (
+        options.flawLevels.get("macros") === FLAW_LEVELS.ERROR &&
+        flaws.some((f) => !nonFatal.includes(f.name))
+      ) {
         // Report and exit immediately on the first document with flaws.
         console.error(
           chalk.red.bold(

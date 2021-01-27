@@ -311,7 +311,13 @@ function checkImageWidths(doc, $, options, { rawContent }) {
       // be resolved. For example, suppose the HTML contains `<img src="404.png">`
       // then it's a broken image and it's handled by the `checkImageReferences()`
       // function. Stay away from those.
-      if (!imgSrc.includes("://") && imgSrc.startsWith("/")) {
+      if (!imgSrc) {
+        if (options.flawLevels.get("image_widths") === FLAW_LEVELS.ERROR) {
+          throw new Error(
+            `images width flaws: ${JSON.stringify(doc.flaws.image_widths)}`
+          );
+        }
+      } else if (!imgSrc.includes("://") && imgSrc.startsWith("/")) {
         const filePath = Image.findByURL(imgSrc);
         if (filePath) {
           const dimensions = sizeOf(filePath);

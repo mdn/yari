@@ -44,6 +44,8 @@ let data = {
 let slug = env.slug;
 let locale = env.locale;
 let name = $0 || (slug ? slug.split("/").pop().toLowerCase() : "preview-wiki-content");
+// deal with conflicting documents for now
+name = name.replace(/(.*)_[a-f0-9]{32}$/, (_, x) => x);
 let atRule = $1;
 let rawSyntax = "";
 let formattedSyntax = "";
@@ -407,11 +409,11 @@ if (name === "preview-wiki-content") {
         localize(localStrings, "info_in_preview_not_available") + "</span>";
 } else {
     if (atRule) {
-        if (data.atRules[atRule] && data.atRules[atRule].descriptors) {
+        if (data.atRules[atRule] && data.atRules[atRule].descriptors && data.atRules[atRule].descriptors[name]) {
             rawSyntax = data.atRules[atRule].descriptors[name].syntax;
         }
     } else if (name[0] === "@") {
-        if (data.atRules[name].syntax) {
+        if (data.atRules[name] && data.atRules[name].syntax) {
             rawSyntax = data.atRules[name].syntax;
         }
     } else if (name[0] === ":" && typeof data.selectors[name] !== 'undefined') {

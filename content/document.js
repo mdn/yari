@@ -388,7 +388,7 @@ function findAll(
           }
           if (folderSearch) {
             return filePath
-              .replace(CONTENT_ROOT, "")
+              .replace(root, "")
               .replace(HTML_FILENAME, "")
               .includes(folderSearch);
           }
