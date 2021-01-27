@@ -140,6 +140,9 @@ function unslug(inFilePath, locale, secondPass = false) {
     slug: originalContentSlug || resolvedSlug,
   };
 
+  if (translationOfOrginal && !secondPass) {
+    return { secondPass: true };
+  }
   status.moved = oldMetadata.slug.toLowerCase() !== metadata.slug.toLowerCase();
 
   if (status.moved) {
@@ -211,11 +214,10 @@ function unslug(inFilePath, locale, secondPass = false) {
     }
   } else if (fs.existsSync(filePath)) {
     if (translationOfOrginal) {
-      if (!secondPass) {
-        return { secondPass: true };
-      }
       log.log(
-        chalk.yellow(`unrooting: ${inFilePath} (conflicting translation)`)
+        chalk.yellow(
+          `unrooting: ${inFilePath} (conflicting translation (of original))`
+        )
       );
     } else if (status.dehashed) {
       log.log(
