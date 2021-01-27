@@ -138,11 +138,22 @@ function getGitHubURL(root, folder) {
   )}/files/${folder}/index.html`;
 }
 
-function injectSource(doc, document) {
+/**
+ * Return the full URL directly to the last commit affecting this file on GitHub.
+ * @param {String} hash - the full hash to point to.
+ */
+function getLastCommitURL(root, hash) {
+  const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
+  return `${baseURL}/commit/${hash}`;
+}
+
+function injectSource(doc, document, metadata) {
   const folder = document.fileInfo.folder;
+  const root = document.fileInfo.root;
   doc.source = {
     folder,
-    github_url: getGitHubURL(document.fileInfo.root, folder),
+    github_url: getGitHubURL(root, folder),
+    last_commit_url: getLastCommitURL(root, metadata.hash),
   };
 }
 
@@ -419,7 +430,7 @@ async function buildDocument(document, documentOptions = {}) {
     doc.other_translations = otherTranslations;
   }
 
-  injectSource(doc, document);
+  injectSource(doc, document, metadata);
 
   // The `titles` object should contain every possible URI->Title mapping.
   // We can use that generate the necessary information needed to build

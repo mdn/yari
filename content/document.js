@@ -243,6 +243,7 @@ const read = memoize((folder) => {
     path.relative(root, filePath)
   );
   let modified = (gitHistory && gitHistory.modified) || null;
+  const hash = (gitHistory && gitHistory.hash) || null;
   // Use the wiki histories for a list of legacy contributors.
   const wikiHistory = getWikiHistories(root, locale).get(url);
   if (!modified && wikiHistory && wikiHistory.modified) {
@@ -254,6 +255,7 @@ const read = memoize((folder) => {
       locale,
       popularity: getPopularities().get(url) || 0.0,
       modified,
+      hash,
       contributors: wikiHistory ? wikiHistory.contributors : [],
     },
     url,
