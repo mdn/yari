@@ -278,7 +278,11 @@ const resolve = (url) => {
   if (!redirects.size) {
     load();
   }
-  return redirects.get(url.toLowerCase()) || resolveFundamental(url).url || url;
+  const fundamentalOrUrl = resolveFundamental(url).url || url;
+  return (
+    redirects.get(decodePath(fundamentalOrUrl).toLowerCase()) ||
+    fundamentalOrUrl
+  );
 };
 
 function shortCuts(pairs, throws = false) {
