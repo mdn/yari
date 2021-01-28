@@ -245,11 +245,20 @@ def analyze(
     text: str,
     analyzer: str,
 ):
-    # We can confidently use a single host here because we're not searching
-    # a cluster.
+    # We can confidently use a single host here because we're not searching a cluster.
     connections.create_connection(hosts=[url])
-    # connection = connections.get_connection()
     index = Document._index
-    print(
-        json.dumps(index.analyze(body={"text": text, "analyzer": analyzer}), indent=2)
-    )
+    analysis = index.analyze(body={"text": text, "analyzer": analyzer})
+    if "tokens" in analysis:
+        keys = None
+        for token in analysis["tokens"]:
+            if keys is None:
+                keys = token.keys()
+            longest_key = max(len(x) for x in keys)
+            print()
+            for key in keys:
+                print(f"{key:{longest_key + 1}} {token[key]!r}")
+
+    else:
+        # Desperate if it's not a list of tokens
+        print(json.dumps(analysis, indent=2))

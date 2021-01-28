@@ -244,11 +244,10 @@ def search_index(ctx, buildroot: Path, **kwargs):
     default=ELASTICSEARCH_URL,
     show_default=False,
 )
+@click.option("--analyzer", "-a", default="text_analyzer", show_default=True)
 @click.argument("text")
-@click.argument("analyzer")
 @click.pass_context
-def search_analyze(ctx, text, analyzer, **kwargs):
-    url = kwargs["url"]
+def search_analyze(ctx, text, analyzer, url):
     if not url:
         raise Exception("url not set")
     search.analyze(
