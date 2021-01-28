@@ -104,7 +104,7 @@ function injectLoadingLazyAttributes($) {
 }
 
 /**
- * For every image and iframe, where appropriate add the `loading="lazy"` attribute.
+ * For every `<a href="http...">` make it `<a href="http..." class="external">`
  *
  * @param {Cheerio document instance} $
  */
