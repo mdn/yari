@@ -3,30 +3,6 @@
 
 var APIHref = $0 || '/en-US/docs/Web/API';
 
-function isInterface(pageSlug) {
-    var spaceIndex = pageSlug.indexOf('_');
-
-    // If there are no spaces (represented by underscores), then we can
-    // just return true, since this is by our rules an interface in that
-    // situation. Unless the slug is simply "Reference" (why the exception?).
-
-    if ((spaceIndex == -1) && (pageSlug != "Reference")) {
-        return true;
-    }
-
-    // If the character after the space is '(', then this is assumed to be an
-    // interface with a qualifier after its name (such as "(Firefox OS)").
-    // These are allowed to appear in the index.
-
-    if ((spaceIndex < pageSlug.length-1) && (pageSlug[spaceIndex+1] == '(')) {
-        return true;
-    }
-
-    // If we get to here, then it's not an interface.
-
-    return false;
-}
-
 // Prepares the title of the link. This includes wrapping the appropriate
 // portion of the title with <code>. Returns null if the page should not
 // be included in the index.
@@ -66,7 +42,6 @@ function containsTag(tagList, tag) {
 }
 
 var pages = await page.subpagesExpand(APIHref); // get subpages, including tags
-var slug = env.slug;
 var locale = env.locale;
 var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 var html = "";

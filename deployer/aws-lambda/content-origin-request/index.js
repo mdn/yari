@@ -1,25 +1,12 @@
-const sanitizeFilename = require("sanitize-filename");
 const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
 const { getLocale } = require("@yari-internal/get-locale");
+const {
+  decodePath,
+  encodePath,
+  slugToFolder,
+} = require("@yari-internal/slug-utils");
 
 const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
-
-/*
- * NOTE: This function is derived from the function of the same name within
- *       ../../content/utils.js. It differs only in its final "join", which
- *       uses "/", as required by S3 keys, rather than "path.sep".
- */
-function slugToFolder(slug) {
-  return slug
-    .replace(/\*/g, "_star_")
-    .replace(/::/g, "_doublecolon_")
-    .replace(/:/g, "_colon_")
-    .replace(/\?/g, "_question_")
-    .toLowerCase()
-    .split("/")
-    .map(sanitizeFilename)
-    .join("/");
-}
 
 function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
   /*
@@ -109,8 +96,10 @@ exports.handler = async (event, _context) => {
     request.origin.custom.domainName.includes("s3")
   ) {
     // Rewrite the URI to match the keys in S3.
-    // NOTE: The incoming URI should remain URI-encoded.
-    request.uri = slugToFolder(request.uri);
+    // NOTE: The incoming URI should remain URI-encoded. However, it
+    // must be passed to slugToFolder as decoded version to lowercase
+    // non-ascii symbols and sanitize symbols like ":".
+    request.uri = encodePath(slugToFolder(decodePath(request.uri)));
     // Rewrite the HOST header to match the S3 bucket website domain.
     // This is required only because we're using S3 as a website, which
     // we need in order to do redirects from S3. NOTE: The origin is

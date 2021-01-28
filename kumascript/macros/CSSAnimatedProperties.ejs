@@ -12,7 +12,7 @@ var animatedProps = [];
 // Go through all properties, and test if they are animated. If so, add them to
 // the animatedProps array.
 for (var property in data.properties) {
-    if (data.properties.hasOwnProperty(property)) {
+    if (Object.prototype.hasOwnProperty.call(data.properties, property)) {
         if (!["discrete", "notAnimatable"].includes(data.properties[property].animationType)) {
             animatedProps.push(property);
         }

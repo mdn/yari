@@ -13,6 +13,7 @@ export default function MainMenu({
 }) {
   const locale = useLocale();
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
+  const mainMenuRef = useRef<null | HTMLUListElement>(null);
   const [visibleSubMenu, setVisibleSubMenu] = useState<string | null>(null);
   const ga = useGA();
 
@@ -66,6 +67,17 @@ export default function MainMenu({
   }
 
   useEffect(() => {
+    const mainMenu = mainMenuRef.current;
+
+    // by default the main menu contains a `nojs` class which
+    // then allows users on desktop to interact with the main
+    // menu via hover events if the JavsScript failed for whatever
+    // reason. If all is well though, we remove the class here and
+    // let JavaScript take over the interaction
+    if (mainMenu) {
+      mainMenu.classList.remove("nojs");
+    }
+
     document.addEventListener("keyup", (event) => {
       if (event.key === "Escape") {
         hideSubMenuIfVisible();
@@ -192,7 +204,7 @@ export default function MainMenu({
 
   return (
     <nav className="main-nav" aria-label="Main menu">
-      <ul className="main-menu">
+      <ul className="main-menu nojs" ref={mainMenuRef}>
         {menus.map((menuEntry) => (
           <li key={menuEntry.label} className="top-level-entry-container">
             <button

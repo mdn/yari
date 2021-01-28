@@ -52,7 +52,7 @@
   position: absolute;
   top: 90px;
   width: 100%;
-  z-index: $top-layer;
+  z-index: $bring-to-front;
 
   @media #{$mq-tablet-and-up} {
     display: block;

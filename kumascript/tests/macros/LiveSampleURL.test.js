@@ -5,7 +5,7 @@ const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
 describeMacro("LiveSampleURL", function () {
   beforeEachMacro(function (macro) {
-    macro.ctx.info.hasPage = jest.fn((path) => true);
+    macro.ctx.info.hasPage = jest.fn(() => true);
   });
   itMacro("Production settings", function (macro) {
     macro.ctx.env.live_samples = {
@@ -35,7 +35,7 @@ describeMacro("LiveSampleURL", function () {
     macro.ctx.env.live_samples = {
       base_url: "https://mdn.mozillademos.org",
     };
-    macro.ctx.info.hasPage = jest.fn((path) => false);
+    macro.ctx.info.hasPage = jest.fn(() => false);
     macro.ctx.info.getDescription = jest.fn((url) => url.toLowerCase());
     macro.ctx.env.url = "/en-US/docs/Learn/HTML";
     await expect(

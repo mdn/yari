@@ -74,7 +74,7 @@ if (types.some(function(type) { return type === "properties"; })) {
 
         var initial = prop[0].toUpperCase();
 
-        if (!index.hasOwnProperty(initial)) {
+        if (!Object.prototype.hasOwnProperty.call(index, initial)) {
             index[initial] = [];
         }
 
@@ -96,7 +96,7 @@ if (types.some(function(type) { return type === "types"; })) {
         var normalizedType = normalize(type);
         var initial = normalizedType[0].toUpperCase();
 
-        if (!index.hasOwnProperty(initial)) {
+        if (!Object.prototype.hasOwnProperty.call(index, initial)) {
             index[initial] = [];
         }
 
@@ -141,7 +141,7 @@ if (types.some(function(type) { return type === "syntaxes"; })) {
         if (syntax.match(/\(\)$/)) {
             var initial = normalize(syntax)[0].toUpperCase();
 
-            if (!index.hasOwnProperty(initial)) {
+            if (!Object.prototype.hasOwnProperty.call(index, initial)) {
                 index[initial] = [];
             }
 
@@ -162,7 +162,7 @@ if (types.some(function(type) { return type === "syntaxes"; })) {
 
             var initial = normalize(items[i])[0].toUpperCase();
 
-            if (!index.hasOwnProperty(initial)) {
+            if (!Object.prototype.hasOwnProperty.call(index, initial)) {
                 index[initial] = [];
             }
 
@@ -184,7 +184,7 @@ if (types.some(function(type) { return type === "at-rules"; })) {
 
         var initial = normalize(atRule)[0].toUpperCase();
 
-        if (!index.hasOwnProperty(initial)) {
+        if (!Object.prototype.hasOwnProperty.call(index, initial)) {
             index[initial] = [];
         }
 
@@ -205,7 +205,7 @@ if (types.some(function(type) { return type === "at-rules"; })) {
 
                 var initial = normalize(items[i])[0].toUpperCase();
 
-                if (!index.hasOwnProperty(initial)) {
+                if (!Object.prototype.hasOwnProperty.call(index, initial)) {
                     index[initial] = [];
                 }
 
@@ -227,7 +227,7 @@ if (types.some(function(type) { return type === "at-rules"; })) {
 
                 var initial = descriptor[0].toUpperCase();
 
-                if (!index.hasOwnProperty(initial)) {
+                if (!Object.prototype.hasOwnProperty.call(index, initial)) {
                     index[initial] = [];
                 }
 
@@ -243,7 +243,7 @@ if (types.some(function(type) { return type === "at-rules"; })) {
                 for (var i = 0; i < items.length; i++) {
                     var initial = normalize(items[i])[0].toUpperCase();
 
-                    if (!index.hasOwnProperty(initial)) {
+                    if (!Object.prototype.hasOwnProperty.call(index, initial)) {
                         index[initial] = [];
                     }
 
@@ -274,7 +274,7 @@ if (types.some(function(type) { return type === "selectors"; })) {
 
         initial = initial.toUpperCase();
 
-        if (!index.hasOwnProperty(initial)) {
+        if (!Object.prototype.hasOwnProperty.call(index, initial)) {
             index[initial] = [];
         }
 
@@ -297,7 +297,7 @@ if (types.some(function(type) { return type === "units"; })) {
 
         initial = initial.toUpperCase();
 
-        if (!index.hasOwnProperty(initial)) {
+        if (!Object.prototype.hasOwnProperty.call(index, initial)) {
             index[initial] = [];
         }
 

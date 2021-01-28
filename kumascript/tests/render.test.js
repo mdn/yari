@@ -61,7 +61,7 @@ describe("render() function", () => {
   it("renders asynchronous macros", async () => {
     jest.useFakeTimers();
     async function after(delay, value) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         setTimeout(() => resolve(value), delay);
       });
     }

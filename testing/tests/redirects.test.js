@@ -5,7 +5,7 @@ function serverURL(pathname = "/") {
   return "http://localhost:5000" + pathname;
 }
 
-function url_test(from, to, { statusCode = 301, ...options } = {}) {
+function url_test(from, to, { statusCode = 301 } = {}) {
   const expanded = braces.expand(from);
 
   return expanded.map((f) => [
@@ -1070,6 +1070,27 @@ describe("firefox src docs redirects", () => {
 
 describe("locale alias redirects", () => {
   for (const [url, t] of LOCALE_ALIAS_URLS) {
+    it(url, t);
+  }
+});
+
+const CORE_JAVASCRIPT_1_5_URLs = [].concat(
+  url_test(
+    "/en-US/docs/Core_JavaScript_1.5_Reference/Operators/Special_Operators/typeof_Operator",
+    "/en-US/docs/Web/JavaScript/Reference/Operators/Special_Operators/typeof_Operator"
+  ),
+  url_test(
+    "/en-US/docs/Core_JavaScript_1.5_Reference:Operators:Special_Operators:typeof_Operator",
+    "/en-US/docs/Web/JavaScript/Reference/Operators/Special_Operators/typeof_Operator"
+  ),
+  url_test(
+    "/en-US/docs/Core_JavaScript_1.5_Guide",
+    "/en-US/docs/Web/JavaScript/Guide"
+  )
+);
+
+describe("Core_JavaScript_1.5 redirects", () => {
+  for (const [url, t] of CORE_JAVASCRIPT_1_5_URLs) {
     it(url, t);
   }
 });

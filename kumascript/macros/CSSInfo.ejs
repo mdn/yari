@@ -14,14 +14,13 @@ let atRule = $1;
 var data = require('mdn-data/css');
 let formattedError = "<span style=\"color:red;\">$1$</span>";
 let locale = env.locale;
-let escapeQuotes = mdn.escapeQuotes;
 let localize = mdn.getLocalString;
 let localizeString = mdn.localString;
 let replacePlaceholders = mdn.replacePlaceholders;
 let localWiki = wiki;
 let currentPage = page;
 
-let cssLocalStrings = string.deserialize(await template("L10n:CSS"));
+let cssLocalStrings = JSON.parse(await template("L10n:CSS"));
 let localStrings = require('mdn-data/l10n/css');
 
 /*
@@ -61,7 +60,6 @@ async function parseMacros(s) {
         return undefined;
     }
 
-    var apiName = "";
     var area = "";
     let parsedString = await string.asyncReplace(
         s,
@@ -107,7 +105,7 @@ async function parseMacros(s) {
   cssInfo - Structure containing information about a CSS property
 */
 function addAdditionalAppliesToOutput(output, property, cssInfo) {
-    if (property !== "appliesto" || !cssInfo.hasOwnProperty("alsoAppliesTo")) {
+    if (property !== "appliesto" || !Object.prototype.hasOwnProperty.call(cssInfo, "alsoAppliesTo")) {
         return output;
     }
 
@@ -146,9 +144,6 @@ function addAdditionalAppliesToOutput(output, property, cssInfo) {
 */
 async function getValueOutput(cssInfo, property, atRule) {
     if (property === "relatedAtRule") {
-        let url = "/" + locale + "/docs/Web/CSS/" + atRule;
-        let page = await localWiki.getPage(url);
-
         return "<a href=\"/" + locale + "/docs/Web/CSS/" + atRule +
             "\"><code>" + atRule + "</code></a>";
     }
@@ -174,7 +169,7 @@ async function getValueOutput(cssInfo, property, atRule) {
             if (propMatches) {
                 return await getValueOutput(data.properties[propMatches[1]], property);
             } else {
-                if (property === "initial" && !localStrings.hasOwnProperty(value)) {
+                if (property === "initial" && !Object.prototype.hasOwnProperty.call(localStrings, value)) {
                     return '<code>' + value + '</code>';
                 } else {
                     var keywords = value.split(", ");
@@ -193,7 +188,7 @@ async function getValueOutput(cssInfo, property, atRule) {
         "<ul>";
         for(let longhand of value) {
             output += "<li>{{cssxref(\"" + longhand + "\")}}: " +
-                (data.properties.hasOwnProperty(longhand) ?
+                (Object.prototype.hasOwnProperty.call(data.properties, longhand) ?
                     await getValueOutput(data.properties[longhand], property) :
                     replacePlaceholders(formattedError,
                         [localize(cssLocalStrings, "missing")])) +
@@ -270,7 +265,7 @@ if (name === "preview-wiki-content") {
         });
     }
 
-    if (cssInfo.hasOwnProperty("inherited")) {
+    if (Object.prototype.hasOwnProperty.call(cssInfo, "inherited")) {
         properties = properties.concat({
             name: "inherited",
             label: await template("Xref_cssinherited")

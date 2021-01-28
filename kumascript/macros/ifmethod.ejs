@@ -4,7 +4,6 @@
 /* get a page's language (Don't use page.language!) */
 var lang = env.locale;
 var destNewType = lang + '/docs/XPCOM_Interface_Reference/' + $0;
-var destOldType = lang + '/docs/' + $0;
 var apiString = $0 + '.' + $1 + '()';
 
 %><code><%-(web.link(wiki.uri(destNewType) + '#' + $1 + '()', apiString))%></code>

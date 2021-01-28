@@ -50,7 +50,7 @@ var articles= [];
 // ----------------------------------------------------------------------------
 for(let root of sources) {
     var url = root;
-    var pages = page.subPagesFlatten(await page.subpagesExpand(url)).forEach(function (p) {
+    page.subPagesFlatten(await page.subpagesExpand(url)).forEach(function (p) {
         var self  = env.url.indexOf(p.url) > -1;
         var match = !self && (tags.length === 0 || tags.every(function (t) {
             if (t.indexOf("!") === 0) {
