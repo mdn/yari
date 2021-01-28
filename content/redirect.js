@@ -8,10 +8,9 @@ const {
   CONTENT_TRANSLATED_ROOT,
   VALID_LOCALES,
 } = require("./constants");
+const { isArchivedURL } = require("./archive");
 
 const FORBIDDEN_URL_SYMBOLS = ["\n", "\t"];
-
-let ARCHIVED_URLS;
 
 function checkURLInvalidSymbols(url) {
   for (const character of FORBIDDEN_URL_SYMBOLS) {
@@ -28,14 +27,8 @@ function resolveDocumentPath(url) {
   }
   const [bareURL] = url.split("#");
 
-  if (!ARCHIVED_URLS) {
-    ARCHIVED_URLS = new Set(
-      fs
-        .readFileSync(path.join(__dirname, "archived.txt"), "utf-8")
-        .split("\n")
-        .filter((line) => !line.startsWith("#") || line.trim())
-        .map((url) => url.toLowerCase())
-    );
+  if (isArchivedURL(bareURL)) {
+    return `$ARCHIVED/${relativeFilePath}`;
   }
 
   const [, locale, , ...slug] = bareURL.toLowerCase().split("/");
@@ -45,10 +38,6 @@ function resolveDocumentPath(url) {
     slugToFolder(slug.join("/")),
     "index.html"
   );
-
-  if (ARCHIVED_URLS.has(relativeFilePath.toLowerCase())) {
-    return `$ARCHIVED/${relativeFilePath}`;
-  }
 
   const root = locale === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
 
