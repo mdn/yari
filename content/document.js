@@ -239,9 +239,10 @@ const read = memoize((folder) => {
 
   // The last-modified is always coming from the git logs. Independent of
   // which root it is.
-  const gitHistory = getGitHistories(root, locale).get(
-    path.relative(root, filePath)
-  );
+  let gitHistoryKey = path.relative(root, filePath);
+  // Normalize the relative path on Windows, which uses \ as a path separator.
+  if (path.sep === "\\") gitHistoryKey = gitHistoryKey.replace(/\\/g, "/");
+  const gitHistory = getGitHistories(root, locale).get(gitHistoryKey);
   let modified = (gitHistory && gitHistory.modified) || null;
   const hash = (gitHistory && gitHistory.hash) || null;
   // Use the wiki histories for a list of legacy contributors.
