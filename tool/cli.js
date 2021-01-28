@@ -7,7 +7,7 @@ const chalk = require("chalk");
 const prompts = require("prompts");
 const openEditor = require("open-editor");
 const open = require("open");
-const unslug = require("./unslug");
+const unslug = require("../build/unslug");
 const log = require("loglevel");
 
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
@@ -343,8 +343,8 @@ program
 
   .command("unslug", "Unslug (move to en-US slugs) a locale")
   .argument("<locale...>", "Locale", {
-    default: DEFAULT_LOCALE,
-    validator: [...VALID_LOCALES.values()].map((l) => l.toLowerCase()),
+    default: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
+    validator: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
   })
   .option("--summarize <path>", `Write summary to path.`, {
     default: path.join(os.tmpdir()),

@@ -6,6 +6,7 @@ const {
   Redirect,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  VALID_LOCALES,
 } = require("../content");
 const glob = require("glob");
 const chalk = require("chalk");
@@ -132,15 +133,24 @@ function unslug(inFilePath, locale, secondPass = false) {
 
   const rawDoc = fs.readFileSync(inFilePath, "utf8");
   const { attributes: oldMetadata, body: rawHTML } = fm(rawDoc);
-  const translationOfOrginal = oldMetadata.translation_of_original;
+  const translationOfOriginal = oldMetadata.translation_of_original;
   const resolvedSlug = resolve(oldMetadata.slug);
-  const originalContentSlug = resolve(oldMetadata.translation_of);
+  const [translationOfDeHashed] = oldMetadata.translation_of
+    ? oldMetadata.translation_of.split("#")
+    : [];
+  const originalContentSlug = resolve(translationOfDeHashed);
   const metadata = {
     ...oldMetadata,
     slug: originalContentSlug || resolvedSlug,
   };
 
-  if (translationOfOrginal && !secondPass) {
+  if (
+    oldMetadata.slug.startsWith(ORPHANED) ||
+    oldMetadata.slug.startsWith(CONFLICTING)
+  ) {
+    return status;
+  }
+  if (translationOfOriginal && !secondPass) {
     return { secondPass: true };
   }
   status.moved = oldMetadata.slug.toLowerCase() !== metadata.slug.toLowerCase();
@@ -213,7 +223,7 @@ function unslug(inFilePath, locale, secondPass = false) {
       throw new Error(`file: ${filePath} already exists!`);
     }
   } else if (fs.existsSync(filePath)) {
-    if (translationOfOrginal) {
+    if (translationOfOriginal) {
       log.log(
         chalk.yellow(
           `unrooting: ${inFilePath} (conflicting translation (of original))`
@@ -240,8 +250,8 @@ function unslug(inFilePath, locale, secondPass = false) {
   }
 
   status.redirect = [
-    buildURL(locale, oldMetadata.slug),
-    buildURL(locale, metadata.slug),
+    buildURL(VALID_LOCALES.get(locale), oldMetadata.slug),
+    buildURL(VALID_LOCALES.get(locale), metadata.slug),
   ];
 
   log.log(`${inFilePath} → ${filePath}`);
@@ -328,8 +338,19 @@ ${changes.conflicting.map(line).join("\n")}
 ${changes.moved.map(line).join("\n")}
 `;
 }
+
+function unslugAllLocales() {
+  const moved = 0;
+  for (const locale of VALID_LOCALES.keys().filter((l) => l !== "en-us")) {
+    const { movedDocs } = unslugAll(locale);
+    moved += movedDocs;
+  }
+  return moved;
+}
+
 module.exports = {
   unslug,
   unslugAll,
+  unslugAllLocales,
   simpleMD,
 };

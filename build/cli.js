@@ -5,7 +5,11 @@ const zlib = require("zlib");
 const cliProgress = require("cli-progress");
 const program = require("@caporal/core").default;
 
-const { Document, slugToFolder } = require("../content");
+const {
+  Document,
+  slugToFolder,
+  CONTENT_TRANSLATED_ROOT,
+} = require("../content");
 // eslint-disable-next-line node/no-missing-require
 const { renderDocHTML, renderHTML } = require("../ssr/dist/main");
 
@@ -14,9 +18,9 @@ const { buildDocument, renderContributorsTxt } = require("./index");
 const SearchIndex = require("./search-index");
 const { BUILD_OUT_ROOT } = require("./constants");
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
-const { CONTENT_TRANSLATED_ROOT } = require("../content/constants");
 const { uniqifyTranslationsOf } = require("./translationsof");
 const { humanFileSize } = require("./utils");
+const { unslugAllLocales } = require("./unslug");
 
 async function buildDocuments(files = null) {
   // If a list of files was set, it came from the CLI.
@@ -161,7 +165,9 @@ async function buildDocuments(files = null) {
     // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
     document.noIndexing =
       (document.isArchive && !document.isTranslated) ||
-      document.metadata.slug === "MDN/Kitchensink";
+      document.metadata.slug === "MDN/Kitchensink" ||
+      document.metadata.slug.startsWith("orphaned/") ||
+      document.metadata.slug.startsWith("conflicting/");
 
     // Collect non-archived documents' slugs to be used in sitemap building and
     // search index building.
@@ -275,6 +281,13 @@ program
       }
       if (options.spasOnly) {
         return;
+      }
+
+      if (CONTENT_TRANSLATED_ROOT) {
+        const documentMoved = unslugAllLocales();
+        if (documentMoved !== 0) {
+          console.log("Please unslug the translated content repo");
+        }
       }
 
       console.log("\nBuilding Documents...");
