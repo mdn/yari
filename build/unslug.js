@@ -340,9 +340,12 @@ ${changes.moved.map(line).join("\n")}
 }
 
 function unslugAllLocales() {
-  const moved = 0;
-  for (const locale of VALID_LOCALES.keys().filter((l) => l !== "en-us")) {
-    const { movedDocs } = unslugAll(locale);
+  let moved = 0;
+  for (const locale of VALID_LOCALES.keys()) {
+    if (locale == "en-us") {
+      continue;
+    }
+    const { stats: { movedDocs = 0 } = {} } = unslugAll(locale);
     moved += movedDocs;
   }
   return moved;
