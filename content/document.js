@@ -16,7 +16,13 @@ const { getPopularities } = require("./popularities");
 const { getWikiHistories } = require("./wikihistories");
 const { getGitHistories } = require("./githistories");
 
-const { buildURL, memoize, slugToFolder, execGit } = require("./utils");
+const {
+  buildURL,
+  memoize,
+  slugToFolder,
+  execGit,
+  urlToFolderPath,
+} = require("./utils");
 const Redirect = require("./redirect");
 
 function buildPath(localeFolder, slug) {
@@ -90,11 +96,6 @@ function trimLineEndings(string) {
     .split("\n")
     .map((s) => s.trimEnd())
     .join("\n");
-}
-
-function urlToFolderPath(url) {
-  const [, locale, , ...slugParts] = url.split("/");
-  return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
 }
 
 function create(html, metadata, root = null) {
