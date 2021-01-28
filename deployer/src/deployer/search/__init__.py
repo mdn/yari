@@ -206,6 +206,7 @@ def to_search(file):
             )
         ),
         popularity=doc["popularity"],
+        summary=doc["summary"],
         slug=slug,
         locale=locale.lower(),
     )
