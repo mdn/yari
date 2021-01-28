@@ -107,7 +107,13 @@ function useAnnotations(genericFlaws: GenericFlaw[]) {
 }
 
 const FLAWS_HASH = "#_flaws";
-export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
+export function ToggleDocumentFlaws({
+  doc,
+  reloadPage,
+}: {
+  doc: Doc;
+  reloadPage: () => void;
+}) {
   const location = useLocation();
   const navigate = useNavigate();
   const [show, toggle] = useReducer((v) => !v, location.hash === FLAWS_HASH);
@@ -157,7 +163,7 @@ export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
         </p>
       )}{" "}
       {show ? (
-        <Flaws doc={doc} flaws={flawsCounts} />
+        <Flaws doc={doc} flaws={flawsCounts} reloadPage={reloadPage} />
       ) : (
         <span>
           {/* a one-liner about all the flaws */}
@@ -170,7 +176,15 @@ export function ToggleDocumentFlaws({ doc }: { doc: Doc }) {
   );
 }
 
-function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
+function Flaws({
+  doc,
+  flaws,
+  reloadPage,
+}: {
+  doc: Doc;
+  flaws: FlawCount[];
+  reloadPage: () => void;
+}) {
   if (!CRUD_MODE) {
     throw new Error("This shouldn't be used in non-development builds");
   }
@@ -187,7 +201,10 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
   return (
     <div id="document-flaws">
       {!!fixableFlaws.length && (
-        <FixableFlawsAction count={fixableFlaws.length} />
+        <FixableFlawsAction
+          count={fixableFlaws.length}
+          reloadPage={reloadPage}
+        />
       )}
 
       {flaws.map((flaw) => {
@@ -256,7 +273,13 @@ function Flaws({ doc, flaws }: { doc: Doc; flaws: FlawCount[] }) {
   );
 }
 
-function FixableFlawsAction({ count }: { count: number }) {
+function FixableFlawsAction({
+  count,
+  reloadPage,
+}: {
+  count: number;
+  reloadPage: () => void;
+}) {
   const [fixing, setFixing] = useState(false);
   const [fixed, setFixed] = useState(false);
   const [fixingError, setFixingError] = useState<Error | null>(null);
@@ -299,9 +322,14 @@ function FixableFlawsAction({ count }: { count: number }) {
       <button
         type="button"
         className="button"
+        disabled={fixing}
         onClick={async () => {
           setFixing((prev) => !prev);
           await fix();
+          // Add a tiny delay so you get a chance to see the "Fixed!" message.
+          setTimeout(() => {
+            reloadPage();
+          }, 1000);
         }}
       >
         {fixing ? "Fixing..." : `Fix fixable flaws (${count})`}
