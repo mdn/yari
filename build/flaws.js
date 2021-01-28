@@ -11,7 +11,7 @@ const imageminGifsicle = require("imagemin-gifsicle");
 const imageminSvgo = require("imagemin-svgo");
 const sanitizeFilename = require("sanitize-filename");
 
-const { Document, Redirect, Image } = require("../content");
+const { Archive, Document, Redirect, Image } = require("../content");
 const { FLAW_LEVELS } = require("./constants");
 const { packageBCD } = require("./resolve-bcd");
 const {
@@ -151,7 +151,10 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
       const found = Document.findByURL(hrefNormalized);
       if (!found) {
         // Before we give up, check if it's an image.
-        if (!Image.findByURL(hrefNormalized)) {
+        if (
+          !Image.findByURL(hrefNormalized) &&
+          !Archive.isArchivedURL(hrefNormalized)
+        ) {
           // Before we give up, check if it's a redirect.
           const resolved = Redirect.resolve(hrefNormalized);
           if (resolved !== hrefNormalized) {
@@ -557,6 +560,9 @@ async function fixFixableFlaws(doc, options, document) {
         const { response } = error;
         if (response && response.statusCode === 404) {
           console.log(chalk.yellow(`Skipping ${flaw.src} (404)`));
+          continue;
+        } else if (error.code === "ETIMEDOUT") {
+          console.log(chalk.yellow(`Skipping ${flaw.src} (request timed out)`));
           continue;
         } else {
           console.error(error);

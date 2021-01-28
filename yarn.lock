@@ -2242,10 +2242,10 @@
   resolved "https://registry.yarnpkg.com/@mdn/dinocons/-/dinocons-0.2.0.tgz#f66734c4d1ed0dafa469ca6f4e96782f1c1a84d7"
   integrity sha512-GarK1k9ENZXhlpnLLtQshlnMZJddezOZm+zbNyeRW1mskRT+dSNmtDkZDWcXjK2sEgaVqwosO8CEHvWWzj6Evg==
 
-"@mdn/minimalist@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-0.7.0.tgz#543becf85d15fc3a2ca12d7e4775f490f5ded076"
-  integrity sha512-hbc3G4qlpQC+xZCKDQSHAsvEkFRj5IvdSOmTkZSfvitiVqAxJLHYp3k//dzv8SIdVCne/dOSAX4wojXURUAwbA==
+"@mdn/minimalist@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-0.7.1.tgz#ea21ca3cf1ea8cec6ebcfda2a3c10910e4e1f107"
+  integrity sha512-dOqWRK3nAEUUa8U5FcCwBdb/HOd12T0y3RuX5gjtvpJuFMgW2TJuAOxsk2qVfkCYC5nm0hXx8L0FnDdF780WVg==
 
 "@mdx-js/loader@^1.6.19":
   version "1.6.21"
@@ -5561,15 +5561,10 @@ caniuse-api@^3.0.0:
     lodash.memoize "^4.1.2"
     lodash.uniq "^4.5.0"
 
-caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000981, caniuse-lite@^1.0.30001035, caniuse-lite@^1.0.30001093, caniuse-lite@^1.0.30001109:
-  version "1.0.30001111"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001111.tgz#dd0ce822c70eb6c7c068e4a55c22e19ec1501298"
-  integrity sha512-xnDje2wchd/8mlJu8sXvWxOGvMgv+uT3iZ3bkIAynKOzToCssWCmkz/ZIkQBs/2pUB4uwnJKVORWQ31UkbVjOg==
-
-caniuse-lite@^1.0.30001125, caniuse-lite@^1.0.30001157:
-  version "1.0.30001161"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001161.tgz#64f7ffe79ee780b8c92843ff34feb36cea4651e0"
-  integrity sha512-JharrCDxOqPLBULF9/SPa6yMcBRTjZARJ6sc3cuKrPfyIk64JN6kuMINWqA99Xc8uElMFcROliwtz0n9pYej+g==
+caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000981, caniuse-lite@^1.0.30001035, caniuse-lite@^1.0.30001093, caniuse-lite@^1.0.30001109, caniuse-lite@^1.0.30001125, caniuse-lite@^1.0.30001157:
+  version "1.0.30001180"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001180.tgz"
+  integrity sha512-n8JVqXuZMVSPKiPiypjFtDTXc4jWIdjxull0f92WLo7e1MSi3uJ3NvveakSh/aCl1QKFAvIz3vIj0v+0K+FrXw==
 
 capture-exit@^2.0.0:
   version "2.0.0"
@@ -12361,10 +12356,10 @@ mdast-util-to-string@^1.0.0:
   resolved "https://registry.yarnpkg.com/mdast-util-to-string/-/mdast-util-to-string-1.1.0.tgz#27055500103f51637bd07d01da01eb1967a43527"
   integrity sha512-jVU0Nr2B9X3MU4tSK7JP1CMkSvOj7X5l/GboG1tKRw52lLF1x2Ju92Ms9tNetCcbfX3hzlM73zYo2NKkWSfF/A==
 
-mdn-data@2.0.15:
-  version "2.0.15"
-  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.15.tgz#4b31efd913cc9b0d8d99123033fbb805f458c541"
-  integrity sha512-1e9FFjfvzeTxVzBtcbAFDw9R+i+ka92rb9aT4TrV/68ZuLpM2kff4jatBDs/I/VvKPBLjCqv6/BtnD+pnAxyMg==
+mdn-data@2.0.16:
+  version "2.0.16"
+  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.16.tgz#b4f8cf050e4d679cbd185d1daf6370c3f434d731"
+  integrity sha512-z5eL/oKlBXGWk8MRrzk8Ll+owSRCXppDPJ5zBtoHhk4MUEVG5MEkHy5gdzvqpB53LUc+4F9CSVDcdgwKSY1Crg==
 
 mdn-data@2.0.4:
   version "2.0.4"
