@@ -1,6 +1,4 @@
-client/
-deployer/
-filecheck/
-import/
+*.min.js
+client/build/
+dist/
 libs/
-ssr/
