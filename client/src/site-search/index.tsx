@@ -8,7 +8,12 @@ import "./index.scss";
 import { SiteSearchQuery } from "./types";
 
 const SiteSearchForm = React.lazy(() => import("./form"));
-const SearchResults = React.lazy(() => import("./search-results"));
+const SearchResults = React.lazy(() =>
+  import("./search-results").then((module) => {
+    console.log("SearchResults has loaded!");
+    return module;
+  })
+);
 
 export function SiteSearch() {
   const isServer = typeof window === "undefined";
@@ -72,23 +77,26 @@ export function SiteSearch() {
         )}
 
         {!isServer && (
-          <SiteSearchForm
-            locale={locale}
-            query={query}
-            onSubmit={(query: SiteSearchQuery) => {
-              const newParams = {
-                q: query.q,
-                locale: query.locale,
-                sort: query.sort || "",
-              };
-              setSearchParams(newParams);
-            }}
-          />
+          <React.Suspense fallback={<p>Loading...</p>}>
+            <SiteSearchForm
+              locale={locale}
+              query={query}
+              onSubmit={(query: SiteSearchQuery) => {
+                const newParams = {
+                  q: query.q,
+                  locale: query.locale,
+                  sort: query.sort || "",
+                };
+                setSearchParams(newParams);
+              }}
+            />
+          </React.Suspense>
         )}
 
         {!isServer && query.q && (
           <React.Suspense fallback={<p>Loading...</p>}>
             <SearchResults
+              locale={locale}
               updateQuery={(query: SiteSearchQuery) => {
                 const newParams = {
                   q: query.q,

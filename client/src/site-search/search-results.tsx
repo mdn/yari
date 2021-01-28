@@ -2,9 +2,16 @@ import React from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 
+import LANGUAGES_RAW from "../languages.json";
 import "./search-results.scss";
 
 import { SiteSearchQuery } from "./types";
+
+const LANGUAGES = new Map(
+  Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
+    return [locale.toLowerCase(), data];
+  })
+);
 
 type Highlight = {
   body?: string[];
@@ -12,8 +19,10 @@ type Highlight = {
 };
 interface Document {
   mdn_url: string;
+  locale: string;
   title: string;
   highlight: Highlight;
+  summary: string;
   score: number;
   popularity: number;
 }
@@ -75,9 +84,11 @@ function queryToSequence(obj: SiteSearchQuery): SequenceTuple[] {
 }
 
 export default function SearchResults({
+  locale,
   query,
   updateQuery,
 }: {
+  locale: string;
   query: SiteSearchQuery;
   updateQuery: (query: SiteSearchQuery) => void;
 }) {
@@ -149,7 +160,12 @@ export default function SearchResults({
 
     return (
       <div>
-        <Results {...data} query={query} updateQuery={updateQuery} />
+        <Results
+          {...data}
+          locale={locale}
+          query={query}
+          updateQuery={updateQuery}
+        />
         <Pagination
           currentPage={currentPage}
           hitCount={hitCount}
@@ -220,12 +236,14 @@ function ExplainServerOperationalError({ statusCode }: { statusCode: number }) {
 }
 
 function Results({
+  locale,
   documents,
   metadata,
   suggestions,
   query,
   updateQuery,
 }: {
+  locale: string;
   documents: Document[];
   metadata: Metadata;
   suggestions: Suggestion[];
@@ -271,6 +289,7 @@ function Results({
         )}
 
         {documents.map((document) => {
+          const highlights = document.highlight.body || [];
           return (
             <div key={document.mdn_url}>
               <p>
@@ -289,15 +308,26 @@ function Results({
                     {document.title}
                   </a>
                 )}
-                {(document.highlight.body || []).map((highlight, i) => {
-                  return (
-                    <span
-                      key={`${document.mdn_url}${i}`}
-                      className="highlight"
-                      dangerouslySetInnerHTML={{ __html: `…${highlight}…` }}
-                    ></span>
-                  );
-                })}
+                {locale.toLowerCase() !== document.locale &&
+                  LANGUAGES.has(document.locale) && (
+                    <i title="Document different than your current language setting">
+                      {LANGUAGES.get(document.locale)?.English}
+                    </i>
+                  )}
+                <br />
+                {highlights.length ? (
+                  highlights.map((highlight, i) => {
+                    return (
+                      <span
+                        key={`${document.mdn_url}${i}`}
+                        className="highlight"
+                        dangerouslySetInnerHTML={{ __html: `…${highlight}…` }}
+                      ></span>
+                    );
+                  })
+                ) : (
+                  <span className="summary">{document.summary}</span>
+                )}
                 <a className="url" href={document.mdn_url}>
                   {document.mdn_url}
                 </a>
