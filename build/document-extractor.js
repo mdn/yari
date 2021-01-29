@@ -370,7 +370,7 @@ function extractSummary(sections) {
   let summary = ""; // default and fallback is an empty string.
 
   function extractFirstGoodParagraph($) {
-    const seoSummary = $(".seoSummary");
+    const seoSummary = $("span.seoSummary, .summary");
     if (seoSummary.length && seoSummary.text()) {
       return seoSummary.text();
     }
@@ -406,7 +406,7 @@ function extractSummary(sections) {
       }
       const $ = cheerio.load(section.value.content);
       // Remove non-p tags that we should not be looking inside.
-      $(".notecard").remove();
+      $("div.notecard, div.note, div.blockIndicator").remove();
       summary = extractFirstGoodParagraph($);
       if (summary) {
         break;

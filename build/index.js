@@ -104,6 +104,25 @@ function injectLoadingLazyAttributes($) {
 }
 
 /**
+ * For every `<a href="http...">` make it `<a href="http..." class="external">`
+ *
+ * @param {Cheerio document instance} $
+ */
+function injectExternalLinkClasses($) {
+  $("a[href^=http]:not(.external)").each((i, a) => {
+    const $a = $(a);
+    if ($a.attr("href").startsWith("https://developer.mozilla.org")) {
+      // This should have been removed since it's considered a flaw.
+      // But we haven't applied all fixable flaws yet and we still have to
+      // support translated content which is quite a long time away from
+      // being entirely treated with the fixable flaws cleanup.
+      return;
+    }
+    $a.addClass("external");
+  });
+}
+
+/**
  * Find all `in-page-callout` div elements and rewrite
  * to be just `callout`, no more need to mark them as `webdev`
  * @param {Cheerio document instance} $
@@ -361,6 +380,9 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Add the `loading=lazy` HTML attribute to the appropriate elements.
   injectLoadingLazyAttributes($);
+
+  // All external hyperlinks should have the `external` class name.
+  injectExternalLinkClasses($);
 
   // All content that uses `<div class="in-page-callout">` needs to
   // become `<div class="callout">`

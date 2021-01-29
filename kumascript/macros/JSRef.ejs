@@ -117,7 +117,9 @@ result['iObject'] = {
 };
 }
 
-var pageList, isObj, includeme;
+var pageList;
+var isObj;
+var includeme;
 
 for (var object in source) {
     pageList = source[object];
@@ -224,11 +226,11 @@ function buildSublist(pages, title, opened) {
 }
 
 
-var resultTitle,
-resultProperties,
-resultMethods,
-resultOpen,
-len = 0;
+var resultTitle;
+var resultProperties;
+var resultMethods;
+var resultOpen;
+var len = 0;
 
 // Output
 
