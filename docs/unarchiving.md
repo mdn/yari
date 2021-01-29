@@ -65,7 +65,8 @@ yarn tool unarchive --foldersearch relative/url/fragment --move
 - `--move` deletes the content from the `archived-content` repo — we want to
   move it in most cases, not have a copy in each repo.
 
-So to move `archived-content/files/content/en-us/mozilla/ thunderbird/autoconfiguration` and all its contents over to `content`, we could
+So to move `archived-content/files/content/en-us/mozilla/`
+`thunderbird/autoconfiguration` and all its contents over to `content`, we could
 do:
 
 ```bash
