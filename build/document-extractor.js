@@ -328,9 +328,6 @@ function _addSectionProse($) {
 
   // Maybe this should check that the h2 is first??
   const h2s = $.find("h2");
-  // if (h2s.length > 1) {
-  //   console.log($.html());
-  // }
   if (h2s.length === 1) {
     id = h2s.attr("id");
     title = h2s.html();
