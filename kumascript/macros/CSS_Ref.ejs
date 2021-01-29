@@ -272,8 +272,6 @@ if (types.some(function(type) { return type === "selectors"; })) {
 
         var initial = normalize(selector)[0].toUpperCase();
 
-        initial = initial.toUpperCase();
-
         if (!Object.prototype.hasOwnProperty.call(index, initial)) {
             index[initial] = [];
         }
@@ -294,8 +292,6 @@ if (types.some(function(type) { return type === "units"; })) {
         }
 
         var initial = unit[0].toUpperCase();
-
-        initial = initial.toUpperCase();
 
         if (!Object.prototype.hasOwnProperty.call(index, initial)) {
             index[initial] = [];
