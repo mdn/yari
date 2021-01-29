@@ -103,7 +103,7 @@ if (types.some(function(type) { return type === "types"; })) {
         var label = type;
         if (label.charAt(0) != "<") {
             // https://github.com/mdn/data/pull/81 was merged
-            label =  "<" + type + ">";
+            label =  `<${type}>`;
         }
 
         var item = {
@@ -210,8 +210,8 @@ if (types.some(function(type) { return type === "at-rules"; })) {
                 }
 
                 index[initial].push({
-                    urlPath: atRule + "/" + items[i],
-                    label: items[i] + " (" + atRule + ")"
+                    urlPath: `${atRule}/${items[i]}`,
+                    label: `${items[i]} (${atRule})`
                 });
             }
         }
@@ -232,8 +232,8 @@ if (types.some(function(type) { return type === "at-rules"; })) {
                 }
 
                 index[initial].push({
-                    urlPath: atRule + "/" + descriptor,
-                    label: descriptor + " (" + atRule + ")"
+                    urlPath: `${atRule}/${descriptor}`,
+                    label: `${descriptor} (${atRule})`
                 });
 
                 // Add items within descriptor syntax
@@ -248,7 +248,7 @@ if (types.some(function(type) { return type === "at-rules"; })) {
                     }
 
                     index[initial].push({
-                        urlPath: atRule + "/" + descriptor + "#" + items[i],
+                        urlPath: `${atRule}/${descriptor}#${items[i]}`,
                         label: items[i]
                     });
                 }
@@ -308,27 +308,27 @@ if (types.some(function(type) { return type === "units"; })) {
 
         switch(data.units[unit].groups[1]) {
             case "CSS Lengths":
-                unitInfo.urlPath = "length#" + unit;
+                unitInfo.urlPath = `length#${unit}`;
                 break;
 
             case "CSS Angles":
-                unitInfo.urlPath = "angle#" + unit;
+                unitInfo.urlPath = `angle#${unit}`;
                 break;
 
             case "CSS Flexible Lengths":
-                unitInfo.urlPath = "flex_value#" + unit;
+                unitInfo.urlPath = `flex_value#${unit}`;
                 break;
 
             case "CSS Frequencies":
-                unitInfo.urlPath = "frequency#" + unit;
+                unitInfo.urlPath = `frequency#${unit}`;
                 break;
 
             case "CSS Times":
-                unitInfo.urlPath = "time#" + unit;
+                unitInfo.urlPath = `time#${unit}`;
                 break;
 
             case "CSS Resolutions":
-                unitInfo.urlPath = "resolution#" + unit;
+                unitInfo.urlPath = `resolution#${unit}`;
                 break;
         }
 
@@ -408,7 +408,7 @@ for (var i in characters) {
             case "::before":
             case "::first-letter":
             case "::first-line":
-                item.label += " (" + item.label.replace(/^:/, "") + ")";
+                item.label += ` (${item.label.replace(/^:/, "")})`;
                 break;
 
             case "@annotation":
@@ -417,7 +417,7 @@ for (var i in characters) {
             case "@styleset":
             case "@stylistic":
             case "@swash":
-                item.urlPath = "@font-feature-values#" + item.label;
+                item.urlPath = `@font-feature-values#${item.label}`;
                 break;
 
             case "annotation()":
@@ -426,7 +426,7 @@ for (var i in characters) {
             case "styleset()":
             case "stylistic()":
             case "swash()":
-                item.urlPath = "font-variant-alternates#" + item.label;
+                item.urlPath = `font-variant-alternates#${item.label}`;
                 break;
 
             case "format()":
@@ -451,7 +451,7 @@ for (var i in characters) {
             case "opacity()":
             case "saturate()":
             case "sepia()":
-                item.urlPath = "filter-function/" + item.label.replace("()", "");
+                item.urlPath = `filter-function/${item.label.replace("()", "")}`;
                 break;
 
             case "matrix()":
@@ -475,25 +475,25 @@ for (var i in characters) {
             case "translateX()":
             case "translateY()":
             case "translateZ()":
-                item.urlPath = "transform-function/" + item.label.replace("()", "");
+                item.urlPath = `transform-function/${item.label.replace("()", "")}`;
                 break;
 
             case "rgb()":
             case "rgba()":
             case "hsl()":
             case "hsla()":
-                item.urlPath = "color_value#" + item.label;
+                item.urlPath = `color_value#${item.label}`;
                 break;
 
             case "inset()":
             case "polygon()":
             case "circle()":
             case "ellipse()":
-                item.urlPath = "basic-shape#" + item.label;
+                item.urlPath = `basic-shape#${item.label}`;
                 break;
 
             case "rect()":
-                item.urlPath = "shape#" + item.label;
+                item.urlPath = `shape#${item.label}`;
                 break;
 
             case "@top-left-corner":
@@ -518,7 +518,7 @@ for (var i in characters) {
             case "cubic-bezier()":
             case "frames()":
             case "steps()":
-                item.urlPath = "single-transition-timing-function#" + item.label;
+                item.urlPath = `single-transition-timing-function#${item.label}`;
                 break;
         }
     }
@@ -543,21 +543,18 @@ if (groupingType === "no") {
     output = "<ul>";
 }
 
-var baseURL = "/" + env.locale + "/docs/Web/CSS/";
+var baseURL = `/${env.locale}/docs/Web/CSS/`;
 
 for (var characterIndex in characters) {
     var character = characters[characterIndex];
 
     if (groupingType === "alphabetically") {
-        output += "<span>" + character + "</span><ul>";
+        output += `<span>${character}</span><ul>`;
     }
 
     for (var i = 0; i < index[character].length; i++) {
         var url = baseURL + index[character][i].urlPath;
-        var summary = "";
-        output += "<li><a href=\"" + url + "\"" +
-            (summary ? " title=\"" + summary + "\"" : "") + "><code>" +
-            htmlEscape(index[character][i].label) + "</code></a></li>";
+        output += `<li><a href="${url}"><code>${htmlEscape(index[character][i].label)}</code></a></li>`;
     }
 
     if (groupingType === "alphabetically") {
