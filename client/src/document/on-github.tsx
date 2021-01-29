@@ -105,7 +105,7 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
     doc.title.length > maxLength
       ? `${doc.title.slice(0, maxLength)}…`
       : doc.title;
-  sp.set("title", `Issue with "${titleShort}": …`);
+  sp.set("title", `Issue with "${titleShort}": (short summary here please)`);
   sp.append("labels", "needs triage");
 
   const slug = doc.mdn_url.split("/docs/")[1].toLowerCase();
