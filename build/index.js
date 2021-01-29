@@ -286,15 +286,21 @@ async function buildDocument(document, documentOptions = {}) {
         // kumascript rendering, so we "beef it up" to have convenient
         // attributes needed.
         doc.flaws.macros = flaws.map((flaw, i) => {
-          const fixable =
+          let fixable = false;
+          let suggestion = null;
+          if (flaw.name === "MacroDeprecatedError") {
+            fixable = true;
+            suggestion = "";
+          } else if (
             flaw.name === "MacroRedirectedLinkError" &&
-            (!flaw.filepath || flaw.filepath === document.fileInfo.path);
-          const suggestion = fixable
-            ? flaw.macroSource.replace(
-                flaw.redirectInfo.current,
-                flaw.redirectInfo.suggested
-              )
-            : null;
+            (!flaw.filepath || flaw.filepath === document.fileInfo.path)
+          ) {
+            fixable = true;
+            suggestion = flaw.macroSource.replace(
+              flaw.redirectInfo.current,
+              flaw.redirectInfo.suggested
+            );
+          }
           const id = `macro${i}`;
           const explanation = flaw.error.message;
           return Object.assign({ id, fixable, suggestion, explanation }, flaw);
