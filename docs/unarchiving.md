@@ -44,7 +44,7 @@ echo 'CONTENT_TRANSLATED_ROOT=/path/to/translated-content-rendered/files'
  >> .env
 ```
 
-Note: If an .env file does not already exist, it will be created by the first of
+Note: If an `.env` file does not already exist, it will be created by the first of
 the above lines.
 
 ## Using the unarchive tool
