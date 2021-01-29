@@ -154,7 +154,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
           <React.Suspense
             fallback={<p className="loading-toolbar">Loading toolbar</p>}
           >
-            <Toolbar doc={doc} />
+            <Toolbar
+              doc={doc}
+              reloadPage={() => {
+                mutate(dataURL);
+              }}
+            />
           </React.Suspense>
         )}
       </Titlebar>
