@@ -1,8 +1,8 @@
 # Adding redirects in MDN
 
 MDN has a series of redirects, defined in the file
-[\_redirects.txt](https://github.com/mdn/content/blob/main/files/en-us/_redirects.txt) in
-the `content` repo.
+[\_redirects.txt](https://github.com/mdn/content/blob/main/files/en-us/_redirects.txt)
+in the `content` repo.
 
 Each line contains a single redirect, in the form:
 
