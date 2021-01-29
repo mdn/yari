@@ -236,11 +236,9 @@ async function buildDocument(document, documentOptions = {}) {
         // message.
         error.updateFileInfo(document.fileInfo);
         throw new Error(
-          `MacroInvocationError trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
+          `${error.filepath}:${error.line}:${error.column}: error: MacroInvocationError - ${error.error.message}`
         );
       }
-
-      // Any other unexpected error re-thrown.
       throw error;
     }
 
