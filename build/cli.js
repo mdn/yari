@@ -14,7 +14,11 @@ const { buildDocument, renderContributorsTxt } = require("./index");
 const SearchIndex = require("./search-index");
 const { BUILD_OUT_ROOT } = require("./constants");
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
-const { CONTENT_TRANSLATED_ROOT } = require("../content/constants");
+const {
+  CONTENT_TRANSLATED_ROOT,
+  VALID_LOCALES,
+  CONTENT_ROOT,
+} = require("../content/constants");
 const { uniqifyTranslationsOf } = require("./translationsof");
 const { humanFileSize } = require("./utils");
 
@@ -243,18 +247,28 @@ async function buildOtherSPAs() {
   })();
 
   (() => {
-    const url = "/en-US/search";
-    const html = renderHTML(url);
-    // XXX Loop over all the locales distinct that are going to be built.
-    // XXX so it's not just en-US.
-    const outPath = path.join(BUILD_OUT_ROOT, "en-us", "search");
-    fs.mkdirSync(outPath, { recursive: true });
-    const filePath = path.join(outPath, "index.html");
-    fs.writeFileSync(filePath, html);
-    console.log("Wrote", filePath);
+    // Basically, this builds on `search/index.html` for every locale we intend
+    // to build.
+    for (const root of [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT]) {
+      if (!root) {
+        continue;
+      }
+      for (const locale of fs.readdirSync(root)) {
+        if (!fs.statSync(path.join(root, locale)).isDirectory()) {
+          continue;
+        }
+        const url = `/${locale}/search`;
+        const html = renderHTML(url);
+        const outPath = path.join(BUILD_OUT_ROOT, locale, "search");
+        fs.mkdirSync(outPath, { recursive: true });
+        const filePath = path.join(outPath, "index.html");
+        fs.writeFileSync(filePath, html);
+        console.log("Wrote", filePath);
+      }
+    }
   })();
 
-  // XXX Here, build things like the home page, site-search etc.
+  // XXX Here, build things like the home page.
   // ...
 }
 
