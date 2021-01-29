@@ -232,7 +232,6 @@ export default function render(
     }
   }
 
-  $("title").text(pageTitle);
   const $title = $("title");
   $title.text(pageTitle);
 
