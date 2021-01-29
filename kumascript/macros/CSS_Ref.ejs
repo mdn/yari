@@ -106,30 +106,25 @@ if (types.some(type => type === "types")) {
             label = `<${type}>`;
         }
 
-        let item = {
-            urlPath: "",
-            label: label
-        };
-
         // Generate URL path regarding some special cases
         switch (normalizedType) {
             case "color":
-                item.urlPath = "color_value";
+                normalizedType = "color_value";
                 break;
 
             case "flex":
-                item.urlPath = "flex_value";
+                normalizedType = "flex_value";
                 break;
 
             case "position":
-                item.urlPath = "position_value";
+                normalizedType = "position_value";
                 break;
-
-            default:
-                item.urlPath = normalizedType;
         }
 
-        index[initial].push(item);
+        index[initial].push({
+            urlPath: normalizedType,
+            label: label
+        });
     }
 }
 
@@ -297,38 +292,36 @@ if (types.some(type => type === "units")) {
             index[initial] = [];
         }
 
-        let unitInfo = {
-            urlPath: unit,
-            label: unit
-        };
-
         switch (data.units[unit].groups[1]) {
             case "CSS Lengths":
-                unitInfo.urlPath = `length#${unit}`;
+                unit = `length#${unit}`;
                 break;
 
             case "CSS Angles":
-                unitInfo.urlPath = `angle#${unit}`;
+                unit = `angle#${unit}`;
                 break;
 
             case "CSS Flexible Lengths":
-                unitInfo.urlPath = `flex_value#${unit}`;
+                unit = `flex_value#${unit}`;
                 break;
 
             case "CSS Frequencies":
-                unitInfo.urlPath = `frequency#${unit}`;
+                unit = `frequency#${unit}`;
                 break;
 
             case "CSS Times":
-                unitInfo.urlPath = `time#${unit}`;
+                unit = `time#${unit}`;
                 break;
 
             case "CSS Resolutions":
-                unitInfo.urlPath = `resolution#${unit}`;
+                unit = `resolution#${unit}`;
                 break;
         }
 
-        index[initial].push(unitInfo);
+        index[initial].push({
+            urlPath: unit,
+            label: unit
+        });
     }
 }
 
