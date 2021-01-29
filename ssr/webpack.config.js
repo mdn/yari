@@ -17,6 +17,9 @@ module.exports = {
     __dirname: false,
     __filename: false,
   },
+  // See all options here:
+  // https://webpack.js.org/configuration/stats/
+  stats: "errors-warnings",
   resolve: {
     modules: ["node_modules", "src"],
     extensions: ["*", ".js", ".json", ".ts", ".tsx"],
