@@ -374,7 +374,6 @@ program
         const {
           movedDocs,
           conflictingDocs,
-          dehashedDocs,
           orphanedDocs,
           redirectedDocs,
           totalDocs,
@@ -383,7 +382,6 @@ program
         console.log(chalk.green(`Total of ${totalDocs} documents`));
         console.log(chalk.green(`Moved ${movedDocs} documents`));
         console.log(chalk.green(`Conflicting ${conflictingDocs} documents.`));
-        console.log(chalk.green(`Dehashed ${dehashedDocs} documents.`));
         console.log(chalk.green(`Orphaned ${orphanedDocs} documents.`));
         console.log(
           chalk.green(`Fixed ${redirectedDocs} redirected documents.`)

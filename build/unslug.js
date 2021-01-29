@@ -26,7 +26,6 @@ function runPass(locale, files, redirects, stats, fistPass) {
       moved,
       conflicting,
       redirect,
-      dehashed,
       orphaned,
       followed,
       secondPass = false,
@@ -39,9 +38,6 @@ function runPass(locale, files, redirects, stats, fistPass) {
     }
     if (conflicting) {
       stats.conflictingDocs += 1;
-    }
-    if (dehashed) {
-      stats.dehashedDocs += 1;
     }
     if (orphaned) {
       stats.orphanedDocs += 1;
@@ -64,7 +60,6 @@ function unslugAll(locale) {
   const stats = {
     movedDocs: 0,
     conflictingDocs: 0,
-    dehashedDocs: 0,
     orphanedDocs: 0,
     redirectedDocs: 0,
     totalDocs: files.length,
@@ -125,7 +120,6 @@ function unslug(inFilePath, locale, secondPass = false) {
   const status = {
     redirect: null,
     conflicting: false,
-    dehashed: false,
     moved: false,
     orphaned: false,
     followed: false,
@@ -181,12 +175,10 @@ function unslug(inFilePath, locale, secondPass = false) {
   const dehash = () => {
     const hash = metadata.slug.indexOf("#");
     if (hash < 0) {
-      status.dehashed = false;
       return;
     }
-    status.dehashed = true;
     status.moved = true;
-    log.warn(chalk.yellow(`${metadata.slug} contains #, stripping`));
+    log.log(chalk.yellow(`${metadata.slug} contains #, stripping`));
     metadata.slug = metadata.slug.substring(0, hash);
   };
 
@@ -228,10 +220,6 @@ function unslug(inFilePath, locale, secondPass = false) {
         chalk.yellow(
           `unrooting: ${inFilePath} (conflicting translation (of original))`
         )
-      );
-    } else if (status.dehashed) {
-      log.log(
-        chalk.yellow(`unrooting ${inFilePath} (conflicting translation - hash)`)
       );
     } else {
       `unrooting ${inFilePath} (conflicting translation)`;
@@ -315,7 +303,7 @@ translation and prefixed the other candidates folder/slug with \`conflicting\`.
 
 Some of the conflicting articles are a result of them being a translation of a
 section like
-[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators#assignment_operators].
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators#assignment_operators
 
 ### Renamed
 
