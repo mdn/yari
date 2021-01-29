@@ -8,12 +8,7 @@ import "./index.scss";
 import { SiteSearchQuery } from "./types";
 
 const SiteSearchForm = React.lazy(() => import("./form"));
-const SearchResults = React.lazy(() =>
-  import("./search-results").then((module) => {
-    console.log("SearchResults has loaded!");
-    return module;
-  })
-);
+const SearchResults = React.lazy(() => import("./search-results"));
 
 export function SiteSearch() {
   const isServer = typeof window === "undefined";

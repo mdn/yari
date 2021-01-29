@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link, useSearchParams } from "react-router-dom";
 import LANGUAGES_RAW from "../languages.json";
 import { SiteSearchQuery } from "./types";
 
@@ -18,28 +18,28 @@ export default function SiteSearchForm({
   locale: string;
   onSubmit: (query: SiteSearchQuery) => void;
 }) {
-  // Return true if the advanced search options should be visible on page load.
-  // Normally, it requires that you press the button to reveal, but if you have
-  // various advanced options in your current URL query string that couldn't
-  // have been there unless you used the advanced search at some point, in that
-  // case show the advanced options by default.
-  function showAdancedOptionsDefault() {
-    if (query.sort && query.sort !== "best" && query.sort !== "") {
-      return true;
-    }
-    if (
-      query.locale &&
-      (query.locale.length > 1 ||
-        query.locale[0].toLowerCase() !== locale.toLowerCase())
-    ) {
-      return true;
-    }
-    return false;
-  }
-  const [showAdvancedOptions, toggleShowAdvancedOptions] = React.useReducer(
-    (state) => !state,
-    showAdancedOptionsDefault()
-  );
+  // // Return true if the advanced search options should be visible on page load.
+  // // Normally, it requires that you press the button to reveal, but if you have
+  // // various advanced options in your current URL query string that couldn't
+  // // have been there unless you used the advanced search at some point, in that
+  // // case show the advanced options by default.
+  // function showAdancedOptionsDefault() {
+  //   if (query.sort && query.sort !== "best" && query.sort !== "") {
+  //     return true;
+  //   }
+  //   if (
+  //     query.locale &&
+  //     (query.locale.length > 1 ||
+  //       query.locale[0].toLowerCase() !== locale.toLowerCase())
+  //   ) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
+  // const [showAdvancedOptions, toggleShowAdvancedOptions] = React.useReducer(
+  //   (state) => !state,
+  //   showAdancedOptionsDefault()
+  // );
   const [newQuery, setNewQuery] = React.useState(Object.assign({}, query));
 
   return (
@@ -50,7 +50,7 @@ export default function SiteSearchForm({
         onSubmit(newQuery);
       }}
     >
-      {/* <pre>{JSON.stringify(newQuery)}</pre> */}
+      <pre>{JSON.stringify(newQuery)}</pre>
       <input
         type="search"
         name="q"
@@ -60,24 +60,22 @@ export default function SiteSearchForm({
         }}
       />{" "}
       <button type="submit">Search</button>{" "}
-      <button
+      {/* <button
         type="button"
         onClick={() => {
           toggleShowAdvancedOptions();
         }}
       >
         Advanced search options
-      </button>
-      {showAdvancedOptions && (
-        <AdvancedOptions
-          locale={locale}
-          query={newQuery}
-          updateQuery={(queryUpdates: SiteSearchQuery) => {
-            const newQuery = Object.assign({}, query, queryUpdates);
-            setNewQuery(newQuery);
-          }}
-        />
-      )}
+      </button> */}
+      <AdvancedOptions
+        locale={locale}
+        query={newQuery}
+        updateQuery={(queryUpdates: SiteSearchQuery) => {
+          const newQuery = Object.assign({}, query, queryUpdates);
+          setNewQuery(newQuery);
+        }}
+      />
     </form>
   );
 }
@@ -91,6 +89,32 @@ function AdvancedOptions({
   locale: string;
   updateQuery: (query: SiteSearchQuery) => void;
 }) {
+  const [searchParams] = useSearchParams();
+
+  function makeNewQuery(overrides: Partial<SiteSearchQuery>) {
+    const sp = new URLSearchParams(searchParams);
+    Object.entries(overrides).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        for (const each of value) {
+          sp.append(key, each);
+        }
+      } else if (value) {
+        sp.set(key, value);
+      } else {
+        sp.delete(key);
+      }
+    });
+    return sp.toString();
+  }
+
+  const SORT_OPTIONS = [
+    ["best", "Best"],
+    ["relevance", "Relevance"],
+    ["popularity", "Popularity"],
+  ];
+
+  console.log(query);
+
   return (
     <div className="advanced-options">
       {/* Language only applies if you're browsing in, say, French
@@ -128,22 +152,40 @@ function AdvancedOptions({
         </div>
       )}
 
-      {/* Rank choice */}
-      <div className="advanced-option">
-        <label htmlFor="id_sort">Sort</label>
-        <select
-          id="id_sort"
-          value={query.sort ? query.sort : "best"}
-          onChange={(event) => {
-            const { value } = event.target;
-            updateQuery({ q: query.q, locale: query.locale, sort: value });
-          }}
-        >
-          <option value="best">Best</option>
-          <option value="relevance">Relevance</option>
-          <option value="popularity">Popularity</option>
-        </select>
-      </div>
+      {/*
+        Rank choice. There's no point showing this unless you have a query.
+        TODO: It might be worth knowing if the search found anything.
+       */}
+      {query.q && (
+        <p className="advanced-option">
+          <b>Sort:</b>{" "}
+          {SORT_OPTIONS.map(([key, label], i) => {
+            return (
+              <React.Fragment key={key}>
+                {key === (query.sort || "best") ? (
+                  <i>{label}</i>
+                ) : (
+                  <Link to={`?${makeNewQuery({ sort: key })}`}>{label}</Link>
+                )}
+                {i < SORT_OPTIONS.length - 1 ? " | " : ""}
+              </React.Fragment>
+            );
+          })}
+          {/* <label htmlFor="id_sort">Sort</label>
+          <select
+            id="id_sort"
+            value={query.sort ? query.sort : "best"}
+            onChange={(event) => {
+              const { value } = event.target;
+              updateQuery({ q: query.q, locale: query.locale, sort: value });
+            }}
+          >
+            <option value="best">Best</option>
+            <option value="relevance">Relevance</option>
+            <option value="popularity">Popularity</option>
+          </select> */}
+        </p>
+      )}
     </div>
   );
 }
