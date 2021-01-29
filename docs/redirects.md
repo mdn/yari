@@ -1,6 +1,7 @@
 # Adding redirects in MDN
 
-MDN has a series of redirects, defined in the file [\_redirects.txt](https://github.com/mdn/content/blob/main/files/en-us/_redirects.txt) in the `content` repo.
+MDN has a series of redirects, defined in the file
+[\_redirects.txt](https://github.com/mdn/content/blob/main/files/en-us/_redirects.txt) in the `content` repo.
 
 Each line contains a single redirect, in the form:
 
@@ -12,7 +13,7 @@ The relative URL to redirect from, followed by a tab character, followed by the
 relative URL to redirect to. A real example is as follows:
 
 ```bash
-/en-US/docs/AJAX	/en-US/docs/Web/Guide/AJAX
+/en-US/docs/AJAX  /en-US/docs/Web/Guide/AJAX
 ```
 
 One built, the Yari system then puts all of these redirects in place.
