@@ -177,7 +177,11 @@ function addSections($) {
         ) {
           countBCDDataDivsFound++;
           if (c) {
-            subSections.push(..._addSectionProse(section.clone()));
+            const [proseSections, proseFlaws] = _addSectionProse(
+              section.clone()
+            );
+            subSections.push(...proseSections);
+            flaws.push(...proseFlaws);
             section.empty();
             c = 0; // reset the counter
           }
@@ -193,7 +197,9 @@ function addSections($) {
         }
       });
       if (c) {
-        subSections.push(..._addSectionProse(section.clone()));
+        const [proseSections, proseFlaws] = _addSectionProse(section.clone());
+        subSections.push(...proseSections);
+        flaws.push(...proseFlaws);
       }
       if (countBCDDataDivsFound !== countPotentialBCDDataDivs) {
         const leftoverCount = countPotentialBCDDataDivs - countBCDDataDivsFound;
@@ -211,7 +217,9 @@ function addSections($) {
       // First remove that, then put whatever HTML is left as a prose
       // section underneath.
       $.find("div.bc-data, h2, h3").remove();
-      bcdSections.push(..._addSectionProse($));
+      const [proseSections, proseFlaws] = _addSectionProse($);
+      bcdSections.push(...proseSections);
+      flaws.push(...proseFlaws);
 
       if (bcdSections.length) {
         return [bcdSections, flaws];
@@ -220,7 +228,10 @@ function addSections($) {
   }
 
   // all else, leave as is
-  return [_addSectionProse($), flaws];
+  const [proseSections, proseFlaws] = _addSectionProse($);
+  flaws.push(...proseFlaws);
+
+  return [proseSections, flaws];
 }
 
 function _addSingleSectionBCD($) {
@@ -322,26 +333,50 @@ function _addSectionProse($) {
   let titleAsText = null;
   let isH3 = false;
 
-  console.log("PROSE SECTION____________________________________________");
-  console.log($.html());
-  console.log("\n\n-----------------------------------------------------\n");
+  const flaws = [];
 
-  // Maybe this should check that the h2 is first??
+  // The way this works...
+  // Given a section of HTML, try to extract a id, title,
+
+  let h2found = false;
   const h2s = $.find("h2");
-  if (h2s.length === 1) {
-    id = h2s.attr("id");
-    title = h2s.html();
-    titleAsText = h2s.text();
-    h2s.remove();
-  } else {
+  for (const i of [...Array(h2s.length).keys()]) {
+    if (i) {
+      // Excess!
+      flaws.push(
+        `Excess <h2> tag that is NOT at root-level (id='${h2s
+          .eq(i)
+          .attr("id")}', text='${h2s.eq(i).text()}')`
+      );
+    } else {
+      // First element
+      id = h2s.eq(i).attr("id");
+      title = h2s.eq(i).html();
+      titleAsText = h2s.eq(i).text();
+      h2s.eq(i).remove();
+    }
+    h2found = true;
+  }
+
+  // If there was no <h2>, look through all the <h3>s.
+  if (!h2found) {
     const h3s = $.find("h3");
-    if (h3s.length === 1) {
-      id = h3s.attr("id");
-      title = h3s.html();
-      titleAsText = h3s.text();
-      if (id && title) {
-        isH3 = true;
-        h3s.remove();
+    for (const i of [...Array(h3s.length).keys()]) {
+      if (i) {
+        // Excess!
+        flaws.push(
+          `Excess <h3> tag that is NOT at root-level (id='${h3s
+            .eq(i)
+            .attr("id")}', text='${h3s.eq(i).text()}')`
+        );
+      } else {
+        id = h3s.eq(i).attr("id");
+        title = h3s.eq(i).html();
+        titleAsText = h3s.eq(i).text();
+        if (id && title) {
+          isH3 = true;
+          h3s.eq(i).remove();
+        }
       }
     }
   }
@@ -358,12 +393,13 @@ function _addSectionProse($) {
     value.titleAsText = titleAsText;
   }
 
-  return [
+  const sections = [
     {
       type: "prose",
       value,
     },
   ];
+  return [sections, flaws];
 }
 
 /**
