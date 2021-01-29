@@ -64,7 +64,7 @@ function getItemsFromSyntax(syntax) {
 
 let index = {};
 
-if (types.some(function(type) { return type === "properties"; })) {
+if (types.some(function (type) { return type === "properties"; })) {
     // Add properties to index
     for (let prop in data.properties) {
         // Exclude properties that don't have the right status
@@ -85,7 +85,7 @@ if (types.some(function(type) { return type === "properties"; })) {
     }
 }
 
-if (types.some(function(type) { return type === "types"; })) {
+if (types.some(function (type) { return type === "types"; })) {
     // Add types to index
     for (let type in data.types) {
         // Exclude types that don't have the right status
@@ -103,7 +103,7 @@ if (types.some(function(type) { return type === "types"; })) {
         let label = type;
         if (label.charAt(0) != "<") {
             // https://github.com/mdn/data/pull/81 was merged
-            label =  `<${type}>`;
+            label = `<${type}>`;
         }
 
         let item = {
@@ -133,7 +133,7 @@ if (types.some(function(type) { return type === "types"; })) {
     }
 }
 
-if (types.some(function(type) { return type === "syntaxes"; })) {
+if (types.some(function (type) { return type === "syntaxes"; })) {
     // Add value syntaxes to index
 
     let syntaxes = data.syntaxes;
@@ -174,7 +174,7 @@ if (types.some(function(type) { return type === "syntaxes"; })) {
     }
 }
 
-if (types.some(function(type) { return type === "at-rules"; })) {
+if (types.some(function (type) { return type === "at-rules"; })) {
     // Add at-rules to index
     for (let atRule in data.atRules) {
         // Exclude at-rules that don't have the right status
@@ -216,7 +216,7 @@ if (types.some(function(type) { return type === "at-rules"; })) {
             }
         }
 
-        if (types.some(function(type) { return type === "descriptors"; })) {
+        if (types.some(function (type) { return type === "descriptors"; })) {
             // Add the at-rule's descriptors
             for (let descriptor in data.atRules[atRule].descriptors) {
                 // Exclude descriptors that don't have the right status
@@ -257,7 +257,7 @@ if (types.some(function(type) { return type === "at-rules"; })) {
     }
 }
 
-if (types.some(function(type) { return type === "selectors"; })) {
+if (types.some(function (type) { return type === "selectors"; })) {
     // Add selectors to index
     for (let selector in data.selectors) {
         // Exclude selectors that don't have the right status
@@ -283,7 +283,7 @@ if (types.some(function(type) { return type === "selectors"; })) {
     }
 }
 
-if (types.some(function(type) { return type === "units"; })) {
+if (types.some(function (type) { return type === "units"; })) {
     // Add units to index
     for (let unit in data.units) {
         // Exclude units that don't have the right status
@@ -302,7 +302,7 @@ if (types.some(function(type) { return type === "units"; })) {
             label: unit
         };
 
-        switch(data.units[unit].groups[1]) {
+        switch (data.units[unit].groups[1]) {
             case "CSS Lengths":
                 unitInfo.urlPath = `length#${unit}`;
                 break;
@@ -528,7 +528,7 @@ for (let i in characters) {
         let item = index[characters[i]][j];
 
         if (j !== 0 && item.urlPath === index[characters[i]][j - 1].urlPath) {
-          index[characters[i]].splice(j, 1);
+            index[characters[i]].splice(j, 1);
         }
     }
 }
