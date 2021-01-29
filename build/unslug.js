@@ -71,7 +71,9 @@ function unslugAll(locale) {
   // Run the second pass.
   runPass(locale, secondPassFiles, redirects, stats, false);
 
-  Redirect.add(locale, [...redirects.entries()], true);
+  if (redirects.size > 0) {
+    Redirect.add(locale, [...redirects.entries()], true);
+  }
 
   const changes = [...redirects.entries()].reduce(
     (map, [from, to]) => {
