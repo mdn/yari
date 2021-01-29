@@ -8,7 +8,7 @@ const {
   CONTENT_TRANSLATED_ROOT,
   VALID_LOCALES,
 } = require("./constants");
-const { isArchivedURL } = require("./archive");
+const { isArchivedFilePath } = require("./archive");
 
 const FORBIDDEN_URL_SYMBOLS = ["\n", "\t"];
 
@@ -27,10 +27,6 @@ function resolveDocumentPath(url) {
   }
   const [bareURL] = url.split("#");
 
-  if (isArchivedURL(bareURL)) {
-    return `$ARCHIVED/${relativeFilePath}`;
-  }
-
   const [, locale, , ...slug] = bareURL.toLowerCase().split("/");
 
   const relativeFilePath = path.join(
@@ -38,6 +34,10 @@ function resolveDocumentPath(url) {
     slugToFolder(slug.join("/")),
     "index.html"
   );
+
+  if (isArchivedFilePath(relativeFilePath)) {
+    return `$ARCHIVED/${relativeFilePath}`;
+  }
 
   const root = locale === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
 
