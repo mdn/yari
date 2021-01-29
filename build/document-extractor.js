@@ -322,8 +322,15 @@ function _addSectionProse($) {
   let titleAsText = null;
   let isH3 = false;
 
+  console.log("PROSE SECTION____________________________________________");
+  console.log($.html());
+  console.log("\n\n-----------------------------------------------------\n");
+
   // Maybe this should check that the h2 is first??
   const h2s = $.find("h2");
+  // if (h2s.length > 1) {
+  //   console.log($.html());
+  // }
   if (h2s.length === 1) {
     id = h2s.attr("id");
     title = h2s.html();
