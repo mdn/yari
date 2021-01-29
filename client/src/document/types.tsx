@@ -1,6 +1,7 @@
 export interface Source {
-  github_url: string;
   folder: string;
+  github_url: string;
+  last_commit_url: string;
 }
 
 export interface GenericFlaw {

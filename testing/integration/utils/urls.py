@@ -77,9 +77,9 @@ def url_test(
         expanded_locations = list(braceexpand(test_data["location"]))
         num_locations = len(expanded_locations)
 
-    for i, url in enumerate(expanded_urls):
+    for i, expanded_url in enumerate(expanded_urls):
         data = test_data.copy()
-        data["url"] = url
+        data["url"] = expanded_url
         if location and num_urls == num_locations:
             data["location"] = expanded_locations[i]
         new_urls.append(data)

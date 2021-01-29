@@ -117,7 +117,7 @@ events.sort(APISort);
 function getInheritance(inh) {
   if (inh.length > 0) {
     inheritedIF.push(inh);
-    if (webAPIData[0].hasOwnProperty(inh)) {
+    if (Object.prototype.hasOwnProperty.call(webAPIData[0], inh)) {
         var inh = webAPIData[0][inh].inh;
         getInheritance(inh);
     }
@@ -127,7 +127,7 @@ getInheritance(inh);
 
 function getImplementedBy(data) {
   for (var key in data) {
-    if (data.hasOwnProperty(key)
+    if (Object.prototype.hasOwnProperty.call(data, key)
         && data[key].impl
         && data[key].impl.indexOf(mainIF) != -1) {
       implementedBy.push(key);

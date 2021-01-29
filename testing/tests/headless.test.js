@@ -1,4 +1,3 @@
-require("expect-puppeteer");
 const { setDefaultOptions } = require("expect-puppeteer");
 
 // The default it 500ms. It has happened and it can happen again, that sometimes

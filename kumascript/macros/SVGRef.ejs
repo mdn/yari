@@ -20,7 +20,7 @@ var tags = env.tags;
 var found_tag = '';
 if (tags || typeof tags != 'undefined') {
     for (i in tags) {
-        if( tags.hasOwnProperty(i) && tags[i] != s_svg_ref_title && tags[i].substr(0, 4) == 'SVG ') {
+        if( Object.prototype.hasOwnProperty.call(tags, i) && tags[i] != s_svg_ref_title && tags[i].substr(0, 4) == 'SVG ') {
             found_tag = tags[i];
             break;
         }

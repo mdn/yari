@@ -307,7 +307,7 @@ var l10nMacros = ["Common", "CompatTable"];
 
 //$0.substr($0.lastIndexOf("/")+1) will give JavaScript if $0 equals "/en-us/docs/Web/JavaScript"
 var currSection =$0.substr($0.lastIndexOf("/")+1);
-if (speL10nMacros.hasOwnProperty(currSection)) {
+if (Object.prototype.hasOwnProperty.call(speL10nMacros, currSection)) {
     l10nMacros = l10nMacros.concat(speL10nMacros[currSection]);
 }
 
@@ -444,7 +444,7 @@ function crawlL10nMacro(json) {
   var result = { total: 0, translated: 0 }
   for (k in json) {
     result.total++;
-    if (json[k].hasOwnProperty(locale)) {
+    if (Object.prototype.hasOwnProperty.call(json[k], locale)) {
         result.translated++;
     }
     // Nested structure crawling 

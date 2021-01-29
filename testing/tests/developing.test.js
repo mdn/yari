@@ -1,5 +1,4 @@
 const got = require("got");
-require("expect-puppeteer");
 const { setDefaultOptions } = require("expect-puppeteer");
 
 // The default it 500ms. Building and running these pages can be pretty slow

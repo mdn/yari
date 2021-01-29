@@ -49,12 +49,8 @@ export function TOC({ toc }: { toc: Toc[] }) {
             <li key={item.id}>
               <a
                 href={`#${item.id.toLowerCase()}`}
-                onClick={() => {
-                  setShowTOC(false);
-                }}
-              >
-                {item.text}
-              </a>
+                dangerouslySetInnerHTML={{ __html: item.text }}
+              ></a>
             </li>
           ))}
         </ul>

@@ -16,7 +16,13 @@ const { getPopularities } = require("./popularities");
 const { getWikiHistories } = require("./wikihistories");
 const { getGitHistories } = require("./githistories");
 
-const { buildURL, memoize, slugToFolder, execGit } = require("./utils");
+const {
+  buildURL,
+  memoize,
+  slugToFolder,
+  execGit,
+  urlToFolderPath,
+} = require("./utils");
 const Redirect = require("./redirect");
 
 function buildPath(localeFolder, slug) {
@@ -90,11 +96,6 @@ function trimLineEndings(string) {
     .split("\n")
     .map((s) => s.trimEnd())
     .join("\n");
-}
-
-function urlToFolderPath(url) {
-  const [, locale, , ...slugParts] = url.split("/");
-  return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
 }
 
 function create(html, metadata, root = null) {
@@ -214,6 +215,20 @@ const read = memoize((folder) => {
     (CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT));
 
   const rawContent = fs.readFileSync(filePath, "utf8");
+
+  // This is very useful in CI where every page gets built. If there's an
+  // accidentally unresolved git conflict, that's stuck in the content,
+  // bail extra early.
+  if (
+    // If the document itself, is a page that explains and talks about git merge
+    // conflicts, i.e. a false positive, those angled brackets should be escaped
+    /^<<<<<<< HEAD\n/m.test(rawContent) &&
+    /^=======\n/m.test(rawContent) &&
+    /^>>>>>>>/m.test(rawContent)
+  ) {
+    throw new Error(`${filePath} contains git merge conflict markers`);
+  }
+
   const {
     attributes: metadata,
     body: rawHTML,
@@ -229,6 +244,7 @@ const read = memoize((folder) => {
     path.relative(root, filePath)
   );
   let modified = (gitHistory && gitHistory.modified) || null;
+  const hash = (gitHistory && gitHistory.hash) || null;
   // Use the wiki histories for a list of legacy contributors.
   const wikiHistory = getWikiHistories(root, locale).get(url);
   if (!modified && wikiHistory && wikiHistory.modified) {
@@ -240,6 +256,7 @@ const read = memoize((folder) => {
       locale,
       popularity: getPopularities().get(url) || 0.0,
       modified,
+      hash,
       contributors: wikiHistory ? wikiHistory.contributors : [],
     },
     url,
@@ -315,7 +332,9 @@ function update(url, rawHTML, metadata) {
       oldSlug
     );
 
-    execGit(["mv", oldFolderPath, newFolderPath]);
+    if (oldFolderPath !== newFolderPath) {
+      execGit(["mv", oldFolderPath, newFolderPath]);
+    }
     Redirect.add(locale, [...redirects.entries()]);
   }
 }

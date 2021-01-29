@@ -26,7 +26,7 @@ function tryOrExit(f) {
     try {
       await f({ options, ...args });
     } catch (error) {
-      if (options.verbose) {
+      if (options.verbose || options.v) {
         console.error(chalk.red(error.stack));
       }
       throw error;
@@ -81,6 +81,21 @@ program
       const locale = from.split("/")[1];
       Redirect.add(locale, [[from, to]]);
       logger.info(chalk.green(`Saved '${from}' → '${to}'`));
+    })
+  )
+
+  .command("fix-redirects", "Consolidate/fix redirects")
+  .argument("<locale...>", "Locale", {
+    default: [DEFAULT_LOCALE],
+    validator: [...VALID_LOCALES.values(), ...VALID_LOCALES.keys()],
+  })
+  .action(
+    tryOrExit(({ args, logger }) => {
+      const { locale } = args;
+      for (const l of locale) {
+        Redirect.add(l.toLowerCase(), [], { fix: true });
+        logger.info(chalk.green(`Fixed ${l}`));
+      }
     })
   )
 
@@ -244,16 +259,47 @@ program
   )
 
   .command("preview", "Open a preview of a slug")
-  .argument("<slug>", "Slug of the document in question")
+  .option("-p, --port <port>", "Port for your localhost hostname", {
+    default: PORT,
+  })
+  .option("-h, --hostname <hostname>", "Hostname for your local server", {
+    default: "localhost",
+  })
+  .argument("<slug>", "Slug (or path) of the document in question")
   .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
     validator: [...VALID_LOCALES.values()],
   })
   .action(
-    tryOrExit(async ({ args }) => {
+    tryOrExit(async ({ args, options }) => {
       const { slug, locale } = args;
-      const url = `http://localhost:${PORT}${buildURL(locale, slug)}`;
-      await open(url);
+      const { hostname, port } = options;
+      let url;
+      // Perhaps they typed in a path relative to the content root
+      if (slug.startsWith("files") && slug.endsWith("index.html")) {
+        const document = Document.read(
+          slug.split(path.sep).slice(1, -1).join(path.sep)
+        );
+        if (document) {
+          url = document.url;
+        }
+      } else {
+        try {
+          const parsed = new URL(slug);
+          url = parsed.pathname + parsed.hash;
+        } catch (err) {
+          // If the `new URL()` constructor fails, it's probably not a URL
+        }
+        if (!url) {
+          url = buildURL(locale, slug);
+        }
+      }
+
+      if (!url) {
+        throw new Error(`Unable to turn '${slug}' into an absolute URL`);
+      }
+      const absoluteURL = `http://${hostname}:${port}${url}`;
+      await open(absoluteURL);
     })
   )
 
