@@ -26,7 +26,15 @@ function postDocumentInfo(filePath, changeType) {
     // matches the filePath by using `Document.urlToFolderPath`.
     // This would prevent the document from being added in the first place
     // if the filePath doesn't map correctly to the URL, but in reverse.
-    if (!filePath.includes(Document.urlToFolderPath(document.url))) {
+    // Note! On Windows, `glob.sync()` will return URLs that always use
+    // the `/` character (POSIX STYLE, https://www.npmjs.com/package/glob#windows)
+    // But the `Document.urlToFolderPath()` function will respect Windows
+    // notation and use `\` characters.
+    if (
+      !filePath.includes(
+        Document.urlToFolderPath(document.url).replace(/\\/g, "/")
+      )
+    ) {
       console.warn(
         `The slug of ${filePath} doesn't match the folder is located in.`
       );
