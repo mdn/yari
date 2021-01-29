@@ -1,26 +1,16 @@
 @import "~@mdn/minimalist/sass/vars/layout";
-// @import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/mixins/utils";
 
-$modal-background-color: rgba(0, 0, 0, 0.8);
+$modal-background-color: rgba(0, 0, 0, 0.2);
 
-.modal {
+.modal-overlay {
   background-color: $modal-background-color;
-  //   bottom: 0;
-  height: 100%;
-  //   left: 0;
   position: fixed;
-  right: 0;
   top: 0;
-  width: 100%;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: $top-layer;
-
-  //   top: 50%;
-  //   left: 50%;
-  //   right: auto;
-  //   bottom: auto;
-  //   margin-right: -50%;
-  //   transform: translate(-50%, -50%);
 
   > * {
     position: relative;
@@ -28,6 +18,11 @@ $modal-background-color: rgba(0, 0, 0, 0.8);
 
   .edit-modal {
     background-color: white;
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    right: 30px;
+    bottom: 30px;
     border-radius: 3px;
   }
 
@@ -55,7 +50,7 @@ $modal-background-color: rgba(0, 0, 0, 0.8);
 }
 
 @supports (display: flex) {
-  .modal {
+  .modal-overlay {
     align-items: center;
     display: flex;
     justify-content: center;

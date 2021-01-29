@@ -72,11 +72,15 @@ export default function DocumentEdit() {
     return () => {
       document.removeEventListener("keyup", escapeMaybe);
     };
-  }, [documentURL]);
+  }, [documentURL, navigate]);
 
   return (
     <>
-      <Modal isOpen={true} overlayClassName="modal" className="edit-modal">
+      <Modal
+        isOpen={true}
+        overlayClassName="modal-overlay"
+        className="edit-modal"
+      >
         <header>
           <h2 id="modal-main-heading">Quick-edit</h2>
         </header>
@@ -108,16 +112,6 @@ export default function DocumentEdit() {
             />
           )}
         </div>
-
-        <button
-          id="close-modal"
-          className="close-modal"
-          onClick={() => {
-            navigate(documentURL);
-          }}
-        >
-          <span>Close modal</span>
-        </button>
       </Modal>
 
       <Document isPreview={true} updated={updated} />

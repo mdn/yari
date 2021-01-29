@@ -89,7 +89,11 @@ export function DocumentForm({
         style={{ width: "100%" }}
       />
       <p>
-        <button type="submit" disabled={disableInputs || !title || !rawHTML}>
+        <button
+          type="submit"
+          title={autosaveEnabled ? "Autosaved enabled" : undefined}
+          disabled={disableInputs || !title || !rawHTML || autosaveEnabled}
+        >
           {isNew ? "Create" : "Save"}
         </button>
 
