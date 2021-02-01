@@ -20,7 +20,7 @@ function postDocumentInfo(filePath, changeType) {
   // notation and use `\` characters.
   // Now, when we use it, it'll work as if `glob.sync()` and returned paths
   // in a fashion that is expected in the OS.
-  filePath = path.split(filePath).join(path.sep);
+  filePath = filePath.split("/").join(path.sep);
 
   try {
     const document = Document.read(
