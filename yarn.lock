@@ -2399,13 +2399,13 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@sidvind/better-ajv-errors@^0.6.10":
-  version "0.6.10"
-  resolved "https://registry.yarnpkg.com/@sidvind/better-ajv-errors/-/better-ajv-errors-0.6.10.tgz#825aa57e601e3145df493742a73a5e70b5d910d8"
-  integrity sha512-vPv8ks6J1KQW1LPYgxmANxcHniE6LFuekxNpcoUUkotJ2srxP4qXZ+y9qpo5LAXhnLoNP0AH8cninimK68gS6A==
+"@sidvind/better-ajv-errors@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@sidvind/better-ajv-errors/-/better-ajv-errors-0.8.0.tgz#b173358ad318d42f779b8f7b062115968996796d"
+  integrity sha512-GHNHkyHpCWjMENEJZ1ScsGOUvy41GVPd9SSSK/h7d9hYdKbpzSgFeXCB2g7XTswNKJD/G5GU5KLlZspLkb/Myg==
   dependencies:
     "@babel/code-frame" "^7.0.0"
-    chalk "^2.4.1"
+    chalk "^4.0.0"
     json-to-ast "^2.0.3"
     jsonpointer "^4.0.1"
     leven "^3.1.0"
@@ -3976,7 +3976,7 @@ acorn-globals@^6.0.0:
     acorn "^7.1.1"
     acorn-walk "^7.1.1"
 
-acorn-jsx@^5.1.0, acorn-jsx@^5.2.0:
+acorn-jsx@^5.1.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.2.0.tgz#4c66069173d6fdd68ed85239fc256226182b2ebe"
   integrity sha512-HiUX/+K2YpkpJ+SzBffkM/AQ2YE03S0U1kjTLVpoJdhZMOWy8qvXVN9JdLqv2QsaQ6MPYQIuNmwD8zOiYUofLQ==
@@ -7969,16 +7969,7 @@ eslint@^7.11.0, eslint@^7.18.0:
     text-table "^0.2.0"
     v8-compile-cache "^2.0.3"
 
-espree@^7.3.0:
-  version "7.3.0"
-  resolved "https://registry.yarnpkg.com/espree/-/espree-7.3.0.tgz#dc30437cf67947cf576121ebd780f15eeac72348"
-  integrity sha512-dksIWsvKCixn1yrEXO8UosNSxaDoSYpq9reEjZSbHLpT5hpaCAKTLBwq0RHtLrIr+c0ByiYzWT8KTMRzoRCNlw==
-  dependencies:
-    acorn "^7.4.0"
-    acorn-jsx "^5.2.0"
-    eslint-visitor-keys "^1.3.0"
-
-espree@^7.3.1:
+espree@^7.3.0, espree@^7.3.1:
   version "7.3.1"
   resolved "https://registry.yarnpkg.com/espree/-/espree-7.3.1.tgz#f2df330b752c6f55019f8bd89b7660039c1bbbb6"
   integrity sha512-v3JCNCE64umkFpmkFGqzVKsOT0tN1Zr+ueqLZfpV1Ob8e+CEgPWa+OxCoGH3tnhimMKIaBm4m/vaRpJ/krRz2g==
@@ -9776,14 +9767,14 @@ html-tags@^3.1.0:
   resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-3.1.0.tgz#7b5e6f7e665e9fb41f30007ed9e0d41e97fb2140"
   integrity sha512-1qYz89hW3lFDEazhjW0yVAV87lw8lVkrJocr72XmBkMKsoSVJCQx3W8BXsC7hO2qAt8BoVjYjtAcZ9perqGnNg==
 
-html-validate@4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-4.3.0.tgz#d558a2d7452949aa0de69426a51308b26578b079"
-  integrity sha512-NjvfeE9EOTYKEFz5wS3QxylpJ4b1IvuUAEhm1nI0Jkl8E/EtlNZcvPphgEN2FnCjOYU8QMZLC4tMpHVsylJ+Zw==
+html-validate@4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-4.4.0.tgz#9d6d33e083e4d394004b7f49d90afd82ff6a0e1d"
+  integrity sha512-pyCqeL2iPYG95wqGvQhkA4nUy7XNe1sf5ABxqika5/mCPcPbnnpEzHkJ+2t8jcQghf4DrMcBipGxyDTRtwklIQ==
   dependencies:
     "@babel/code-frame" "^7.10.4"
     "@html-validate/stylish" "1.0.0"
-    "@sidvind/better-ajv-errors" "^0.6.10"
+    "@sidvind/better-ajv-errors" "^0.8.0"
     acorn-walk "^8.0.0"
     ajv "^7.0.0"
     chalk "^4.0.0"
