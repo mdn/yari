@@ -161,7 +161,9 @@ async function buildDocuments(files = null) {
     // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
     document.noIndexing =
       (document.isArchive && !document.isTranslated) ||
-      document.metadata.slug === "MDN/Kitchensink";
+      document.metadata.slug === "MDN/Kitchensink" ||
+      (document.metadata.locale !== "en-US" &&
+        document.translations.length === 0);
 
     // Collect non-archived documents' slugs to be used in sitemap building and
     // search index building.
