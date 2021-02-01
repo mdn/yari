@@ -14,6 +14,14 @@ function postEvent(type, data = {}) {
 }
 
 function postDocumentInfo(filePath, changeType) {
+  // Note! On Windows, `glob.sync()` will return URLs that always use
+  // the `/` character (POSIX STYLE, https://www.npmjs.com/package/glob#windows)
+  // But the `Document.urlToFolderPath()` function will respect Windows
+  // notation and use `\` characters.
+  // Now, when we use it, it'll work as if `glob.sync()` and returned paths
+  // in a fashion that is expected in the OS.
+  filePath = path.split(filePath).join(path.sep);
+
   try {
     const document = Document.read(
       path.dirname(path.relative(CONTENT_ROOT, filePath))
@@ -26,15 +34,7 @@ function postDocumentInfo(filePath, changeType) {
     // matches the filePath by using `Document.urlToFolderPath`.
     // This would prevent the document from being added in the first place
     // if the filePath doesn't map correctly to the URL, but in reverse.
-    // Note! On Windows, `glob.sync()` will return URLs that always use
-    // the `/` character (POSIX STYLE, https://www.npmjs.com/package/glob#windows)
-    // But the `Document.urlToFolderPath()` function will respect Windows
-    // notation and use `\` characters.
-    if (
-      !filePath.includes(
-        Document.urlToFolderPath(document.url).replace(/\\/g, "/")
-      )
-    ) {
+    if (!filePath.includes(Document.urlToFolderPath(document.url))) {
       console.warn(
         `The slug of ${filePath} doesn't match the folder is located in.`
       );
