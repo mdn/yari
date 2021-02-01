@@ -945,20 +945,19 @@ test("bcd table extraction followed by h3", () => {
   expect(doc.body[4].value.isH3).toBeTruthy();
 });
 
-test("bcd table extraction when overly nested is a flaw", () => {
+test("headers within non-root elements is a 'sectioning' flaw", () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
     "docs",
     "web",
-    "bcd_table_extraction",
-    "nested_divs"
+    "sectioning_headers"
   );
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.flaws.sectioning[0].explanation).toBe(
-    "2 'div.bc-data' elements found but deeply nested."
+    "Excess <h2> tag that is NOT at root-level (id='second', text='Second')"
   );
 });
 
