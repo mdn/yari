@@ -215,6 +215,7 @@ jobs:
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_PROD_ELASTICSEARCH_URL }}
 
         run: |
+
           if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
             echo "Will build mdn/archived-content too"
             export CONTENT_ARCHIVED_ROOT=${{ github.workspace }}/mdn/archived-content/files
@@ -242,9 +243,6 @@ jobs:
 
           poetry run deployer upload ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
-          poetry run deployer speedcurve-deploy \
-            --note "${GITHUB_SHA}" \
-            --detail "run_id=${GITHUB_RUN_ID} action=${GITHUB_ACTION}"
 
           # TODO: Depending on how long the upload takes, consider switching to
           # use `--update` in this command. It will skip the index re-creation
@@ -253,3 +251,10 @@ jobs:
           # Consider doing something like a clean indexing on Sundays and
           # use `--update` on all the other week days.
           poetry run deployer search-index ../client/build --priority-prefix=en-us/docs/web
+
+          # Record the deployment in our Speedcurve account. This should always
+          # be done after the upload of the documents and Lambda functions, as well
+          # as the search-index update, so those aren't affected if this fails.
+          poetry run deployer speedcurve-deploy \
+            --note "${GITHUB_SHA}" \
+            --detail "run_id=${GITHUB_RUN_ID} action=${GITHUB_ACTION}"

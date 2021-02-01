@@ -1,5 +1,6 @@
 const path = require("path");
 const childProcess = require("child_process");
+
 const { CONTENT_ROOT } = require("./constants");
 const { slugToFolder } = require("../libs/slug-utils");
 
@@ -88,9 +89,15 @@ function execGit(args, opts = {}, root = null) {
   return stdout.toString().trim();
 }
 
+function urlToFolderPath(url) {
+  const [, locale, , ...slugParts] = url.split("/");
+  return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
+}
+
 module.exports = {
   buildURL,
   slugToFolder: (slug) => slugToFolder(slug, path.sep),
   memoize,
   execGit,
+  urlToFolderPath,
 };

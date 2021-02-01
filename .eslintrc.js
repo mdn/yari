@@ -1,4 +1,12 @@
+const { readGitignoreFiles } = require("eslint-gitignore");
+const path = require("path");
+const ignores = readGitignoreFiles({
+  cwd: path.join(".git", "info"),
+  patterns: ["exclude"],
+});
+
 module.exports = {
+  ignorePatterns: ignores,
   env: {
     browser: false,
     commonjs: true,
@@ -14,12 +22,14 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2019,
   },
-  rules: {},
+  rules: {
+    "one-var": ["error", "never"],
+  },
   settings: {
     node: {
       allowModules: ["expect-puppeteer"],
       resolvePaths: [__dirname],
-      tryExtensions: [".js", ".json", ".node"],
+      tryExtensions: [".js", ".json", ".node", ".tsx", ".ts"],
     },
   },
   overrides: [
@@ -28,6 +38,28 @@ module.exports = {
       globals: {
         page: "readonly",
         document: "readonly",
+      },
+    },
+    {
+      files: ["**/cli.js"],
+      rules: {
+        "node/shebang": 0,
+        "no-process-exit": 0,
+      },
+    },
+    {
+      files: ["ssr/**/*.js"],
+      parserOptions: {
+        sourceType: "module",
+      },
+      rules: {
+        "node/no-unsupported-features/es-syntax": [
+          "error",
+          {
+            ignores: ["modules"],
+          },
+        ],
+        "node/no-unpublished-import": "off",
       },
     },
   ],
