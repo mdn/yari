@@ -369,7 +369,8 @@ async function buildDocument(document, documentOptions = {}) {
   // that were used for that. If we don't do this, the `pre` tags will be
   // syntax highligted, which is a waste because they're going to be invisible
   // anyway.
-  $("div.hidden pre").remove();
+  // $("div.hidden pre").remove();
+  $("div.hidden").remove();
 
   // Apply syntax highlighting all <pre> tags.
   syntaxHighlight($, doc);
