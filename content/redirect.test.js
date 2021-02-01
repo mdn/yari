@@ -12,7 +12,10 @@ describe("short cuts", () => {
     ]);
   });
   it("a = a", () => {
-    const r = Redirect.testing.shortCuts([["A", "A"]]);
+    const r = Redirect.testing.shortCuts([
+      ["A", "A"],
+      ["b", "B"],
+    ]);
     expect(r).toEqual([]);
   });
   it("simple cycle", () => {
