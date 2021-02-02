@@ -179,7 +179,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
       </div>
 
       <div className="page-content-container">
-        {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+        {doc.toc && !!doc.toc.length && !props.isPreview && (
+          <TOC toc={doc.toc} />
+        )}
 
         <MainContentContainer>
           <article className="article">
