@@ -16,7 +16,6 @@ const { BUILD_OUT_ROOT } = require("./constants");
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
 const {
   CONTENT_TRANSLATED_ROOT,
-  VALID_LOCALES,
   CONTENT_ROOT,
 } = require("../content/constants");
 const { uniqifyTranslationsOf } = require("./translationsof");
