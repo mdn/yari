@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import FlexSearch from "flexsearch";
 import useSWR from "swr";
@@ -172,6 +172,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 
   const navigate = useNavigate();
   const locale = useLocale();
+  const [, setSearchParams] = useSearchParams();
 
   const [
     searchIndex,
@@ -298,9 +299,12 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               inputRef.current.blur();
             } else if (event.key === "Enter" && inputValue.trim()) {
               // Redirect to the search page!
+              if (inputRef.current) {
+                inputRef.current.blur();
+              }
               const sp = new URLSearchParams();
               sp.set("q", inputValue.trim());
-              navigate(`/${locale}/search?${sp.toString()}`);
+              setSearchParams(sp);
             }
           },
           ref: (input) => {
