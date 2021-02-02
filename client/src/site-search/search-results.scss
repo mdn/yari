@@ -17,6 +17,14 @@
     font-size: 80%;
   }
 
+  // Used to indicate that a search result link is in a different locale
+  .locale-indicator {
+    font-size: 80%;
+    background-color: bisque;
+    padding: 3px;
+    border-radius: 2px;
+  }
+
   .suggestions {
     p {
       margin-bottom: 2px;

@@ -1,17 +1,24 @@
 import React from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, createSearchParams, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
+
+import { useLocale } from "../hooks";
+import { appendURL } from "./utils";
 
 import LANGUAGES_RAW from "../languages.json";
 import "./search-results.scss";
-
-import { SiteSearchQuery } from "./types";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
     return [locale.toLowerCase(), data];
   })
 );
+
+const SORT_OPTIONS = [
+  ["best", "Best"],
+  ["relevance", "Relevance"],
+  ["popularity", "Popularity"],
+];
 
 type Highlight = {
   body?: string[];
@@ -68,33 +75,19 @@ class ServerOperationalError extends Error {
   }
 }
 
-type SequenceTuple = [string, string];
-
-function queryToSequence(obj: SiteSearchQuery): SequenceTuple[] {
-  const sequence: SequenceTuple[] = [];
-  Object.entries(obj).forEach(([key, value]) => {
-    if (Array.isArray(value)) {
-      const expanded: SequenceTuple[] = value.map((v) => [key, `${v}`]);
-      sequence.push(...expanded);
-    } else {
-      sequence.push([key, `${value}`]);
-    }
-  });
-  return sequence;
-}
-
-export default function SearchResults({
-  locale,
-  query,
-  updateQuery,
-}: {
-  locale: string;
-  query: SiteSearchQuery;
-  updateQuery: (query: SiteSearchQuery) => void;
-}) {
-  const fetchURL = `/api/v1/search?${new URLSearchParams(
-    queryToSequence(query)
-  ).toString()}`;
+export default function SearchResults() {
+  const [searchParams] = useSearchParams();
+  const locale = useLocale();
+  // A call to `/api/v1/search` will default to mean the same thing as
+  // a call to `/api/v1/search?locale=en-us`. But if they page you're currently
+  // on, (e.g. `/ja/search`) we should supply a more explicit default.
+  const sp = createSearchParams(searchParams);
+  if (!searchParams.getAll("locale").length) {
+    // In other words, if it's not explicitly set by the current query string,
+    // force in the locale based on the current URL (path).
+    sp.set("locale", locale);
+  }
+  const fetchURL = `/api/v1/search?${sp.toString()}`;
 
   const { data, error } = useSWR(
     fetchURL,
@@ -115,16 +108,17 @@ export default function SearchResults({
     }
   );
 
-  const [initialPage, setInitialPage] = React.useState(query.page);
+  const page = searchParams.get("page");
+  const [initialPage, setInitialPage] = React.useState(page);
   React.useEffect(() => {
-    if (query.page !== initialPage) {
-      setInitialPage(query.page);
+    if (page !== initialPage) {
+      setInitialPage(page);
       const resultsElement = document.querySelector("div.site-search");
       if (resultsElement) {
         resultsElement.scrollIntoView({ behavior: "smooth" });
       }
     }
-  }, [query, initialPage]);
+  }, [page, initialPage]);
 
   if (error) {
     if (error instanceof BadRequestError) {
@@ -160,19 +154,15 @@ export default function SearchResults({
 
     return (
       <div>
-        <Results
-          {...data}
-          locale={locale}
-          query={query}
-          updateQuery={updateQuery}
-        />
+        {/* It only makes sense to display the sorting options if anything was found */}
+        {!!hitCount && <SortOptions />}
+
+        <Results {...data} />
         <Pagination
           currentPage={currentPage}
           hitCount={hitCount}
           pageSize={pageSize}
           maxPage={10}
-          query={query}
-          updateQuery={updateQuery}
         />
       </div>
     );
@@ -182,6 +172,30 @@ export default function SearchResults({
     <div className="loading-wrapper">
       <p>Loading search results...</p>
     </div>
+  );
+}
+
+function SortOptions() {
+  const [searchParams] = useSearchParams();
+  const querySort = searchParams.get("sort") || SORT_OPTIONS[0][0];
+  return (
+    <p className="sort-options">
+      <b>Sort by</b>{" "}
+      {SORT_OPTIONS.map(([key, label], i) => {
+        return (
+          <React.Fragment key={key}>
+            {key === querySort ? (
+              <i>{label}</i>
+            ) : (
+              <Link to={`?${appendURL(searchParams, { sort: key })}`}>
+                {label}
+              </Link>
+            )}
+            {i < SORT_OPTIONS.length - 1 ? " | " : ""}
+          </React.Fragment>
+        );
+      })}
+    </p>
   );
 }
 
@@ -236,20 +250,17 @@ function ExplainServerOperationalError({ statusCode }: { statusCode: number }) {
 }
 
 function Results({
-  locale,
   documents,
   metadata,
   suggestions,
-  query,
-  updateQuery,
 }: {
-  locale: string;
   documents: Document[];
   metadata: Metadata;
   suggestions: Suggestion[];
-  query: SiteSearchQuery;
-  updateQuery: (query: SiteSearchQuery) => void;
 }) {
+  const locale = useLocale();
+  const [searchParams] = useSearchParams();
+
   return (
     <FadeIn delay={50}>
       <div className="search-results">
@@ -263,20 +274,13 @@ function Results({
             <p>Did you mean...</p>
             <ul>
               {suggestions.map((suggestion) => {
-                const queryClone = Object.assign({}, query, {
-                  q: suggestion.text,
-                });
-                const newQuery = new URLSearchParams(
-                  queryToSequence(queryClone)
-                );
                 return (
                   <li key={suggestion.text}>
                     <Link
-                      to={`?${newQuery}`}
-                      onClick={(event) => {
-                        event.preventDefault();
-                        updateQuery(queryClone);
-                      }}
+                      to={`?${appendURL(searchParams, {
+                        q: suggestion.text,
+                        page: undefined,
+                      })}`}
                     >
                       {suggestion.text}
                     </Link>{" "}
@@ -307,10 +311,13 @@ function Results({
                   <a className="title" href={document.mdn_url}>
                     {document.title}
                   </a>
-                )}
+                )}{" "}
                 {locale.toLowerCase() !== document.locale &&
                   LANGUAGES.has(document.locale) && (
-                    <i title="Document different than your current language setting">
+                    <i
+                      className="locale-indicator"
+                      title="Document different than your current language setting"
+                    >
                       {LANGUAGES.get(document.locale)?.English}
                     </i>
                   )}
@@ -399,15 +406,11 @@ function Pagination({
   maxPage,
   hitCount,
   pageSize,
-  query,
-  updateQuery,
 }: {
   currentPage: number;
   maxPage: number;
   hitCount: number;
   pageSize: number;
-  query: SiteSearchQuery;
-  updateQuery: (query: SiteSearchQuery) => void;
 }) {
   const [searchParams] = useSearchParams();
 
@@ -426,26 +429,31 @@ function Pagination({
     previousPage = currentPage - 1;
   }
 
-  function makeNewQuery(page: number) {
-    const sp = new URLSearchParams(searchParams);
-    if (page === 1) {
-      sp.delete("page");
-    } else {
-      sp.set("page", `${page}`);
-    }
-    return sp.toString();
-  }
-
   if (nextPage || previousPage !== null) {
+    let previousURL = "";
+    if (previousPage) {
+      if (previousPage === 1) {
+        previousURL = `?${appendURL(searchParams, {
+          page: undefined,
+        })}`;
+      } else {
+        previousURL = `?${appendURL(searchParams, {
+          page: `${previousPage}`,
+        })}`;
+      }
+    }
     return (
       <div className="pagination">
-        {previousPage ? (
-          <Link to={`?${makeNewQuery(previousPage)}`} className="button">
+        {previousURL ? (
+          <Link to={previousURL} className="button">
             Previous
           </Link>
         ) : null}{" "}
         {nextPage ? (
-          <Link to={`?${makeNewQuery(nextPage)}`} className="button">
+          <Link
+            to={`?${appendURL(searchParams, { page: `${nextPage}` })}`}
+            className="button"
+          >
             Next
           </Link>
         ) : null}

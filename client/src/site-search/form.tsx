@@ -1,7 +1,10 @@
 import React from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import LANGUAGES_RAW from "../languages.json";
-import { SiteSearchQuery } from "./types";
+
+import { useLocale } from "../hooks";
+
+import { appendURL } from "./utils";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -9,183 +12,108 @@ const LANGUAGES = new Map(
   })
 );
 
-export default function SiteSearchForm({
-  query,
-  locale,
-  onSubmit,
-}: {
-  query: SiteSearchQuery;
-  locale: string;
-  onSubmit: (query: SiteSearchQuery) => void;
-}) {
-  // // Return true if the advanced search options should be visible on page load.
-  // // Normally, it requires that you press the button to reveal, but if you have
-  // // various advanced options in your current URL query string that couldn't
-  // // have been there unless you used the advanced search at some point, in that
-  // // case show the advanced options by default.
-  // function showAdancedOptionsDefault() {
-  //   if (query.sort && query.sort !== "best" && query.sort !== "") {
-  //     return true;
-  //   }
-  //   if (
-  //     query.locale &&
-  //     (query.locale.length > 1 ||
-  //       query.locale[0].toLowerCase() !== locale.toLowerCase())
-  //   ) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
-  // const [showAdvancedOptions, toggleShowAdvancedOptions] = React.useReducer(
-  //   (state) => !state,
-  //   showAdancedOptionsDefault()
-  // );
-  const [newQuery, setNewQuery] = React.useState(Object.assign({}, query));
+export default function SiteSearchForm() {
+  const locale = useLocale();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const query = searchParams.get("q");
+  const [newQ, setNewQ] = React.useState("");
+  React.useEffect(() => {
+    setNewQ(query || "");
+  }, [query]);
 
   return (
     <form
       action={`/${locale}/search`}
       onSubmit={(event) => {
         event.preventDefault();
-        onSubmit(newQuery);
+        setSearchParams(appendURL(searchParams, { q: newQ, page: undefined }));
       }}
     >
-      <pre>{JSON.stringify(newQuery)}</pre>
       <input
         type="search"
         name="q"
-        value={newQuery.q}
+        value={newQ}
         onChange={(event) => {
-          setNewQuery(Object.assign({}, newQuery, { q: event.target.value }));
+          setNewQ(event.target.value);
         }}
       />{" "}
-      <button type="submit">Search</button>{" "}
-      {/* <button
-        type="button"
-        onClick={() => {
-          toggleShowAdvancedOptions();
-        }}
-      >
-        Advanced search options
-      </button> */}
-      <AdvancedOptions
-        locale={locale}
-        query={newQuery}
-        updateQuery={(queryUpdates: SiteSearchQuery) => {
-          const newQuery = Object.assign({}, query, queryUpdates);
-          setNewQuery(newQuery);
-        }}
-      />
+      <button type="submit">Search</button> <AdvancedOptions />
     </form>
   );
 }
 
-function AdvancedOptions({
-  query,
-  locale,
-  updateQuery,
-}: {
-  query: SiteSearchQuery;
-  locale: string;
-  updateQuery: (query: SiteSearchQuery) => void;
-}) {
+function AdvancedOptions() {
+  const locale = useLocale();
   const [searchParams] = useSearchParams();
 
-  function makeNewQuery(overrides: Partial<SiteSearchQuery>) {
-    const sp = new URLSearchParams(searchParams);
-    Object.entries(overrides).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        for (const each of value) {
-          sp.append(key, each);
-        }
-      } else if (value) {
-        sp.set(key, value);
-      } else {
-        sp.delete(key);
-      }
-    });
-    return sp.toString();
-  }
-
-  const SORT_OPTIONS = [
-    ["best", "Best"],
-    ["relevance", "Relevance"],
-    ["popularity", "Popularity"],
-  ];
-
-  console.log(query);
+  const queryLocales = searchParams.getAll("locale");
 
   return (
     <div className="advanced-options">
       {/* Language only applies if you're browsing in, say, French
       and want to search in English too. */}
-      {locale !== "en-US" && (
-        <div className="advanced-option">
-          <label htmlFor="id_locale">Language</label>
-          <select
-            id="id_locale"
-            value={query.locale.length === 2 ? "both" : query.locale[0]}
-            onChange={(event) => {
-              const { value } = event.target;
-              // Note, changing language should reset the `page`.
-              // For example, if you're on page 3 of "fr" and change to "en-us"
-              // there might, now, not be a page 3.
-              if (value === "both") {
-                updateQuery({
-                  q: query.q,
-                  locale: ["en-us", locale],
-                  page: "",
-                });
-              } else {
-                updateQuery({ q: query.q, locale: [value], page: "" });
-              }
-            }}
-          >
-            <option value={locale.toLowerCase()}>
+      {locale.toLowerCase() !== "en-us" && (
+        <p className="advanced-option">
+          <b>Language</b>{" "}
+          {!queryLocales.length ||
+          (queryLocales.length === 1 &&
+            equalLocales(queryLocales, [locale])) ? (
+            <i>
               {LANGUAGES.get(locale.toLowerCase())?.native} (
               {LANGUAGES.get(locale.toLowerCase())?.English})
-            </option>
-
-            <option value="en-us">{LANGUAGES.get("en-us")?.native})</option>
-            <option value="both">Both</option>
-          </select>
-        </div>
-      )}
-
-      {/*
-        Rank choice. There's no point showing this unless you have a query.
-        TODO: It might be worth knowing if the search found anything.
-       */}
-      {query.q && (
-        <p className="advanced-option">
-          <b>Sort:</b>{" "}
-          {SORT_OPTIONS.map(([key, label], i) => {
-            return (
-              <React.Fragment key={key}>
-                {key === (query.sort || "best") ? (
-                  <i>{label}</i>
-                ) : (
-                  <Link to={`?${makeNewQuery({ sort: key })}`}>{label}</Link>
-                )}
-                {i < SORT_OPTIONS.length - 1 ? " | " : ""}
-              </React.Fragment>
-            );
-          })}
-          {/* <label htmlFor="id_sort">Sort</label>
-          <select
-            id="id_sort"
-            value={query.sort ? query.sort : "best"}
-            onChange={(event) => {
-              const { value } = event.target;
-              updateQuery({ q: query.q, locale: query.locale, sort: value });
-            }}
-          >
-            <option value="best">Best</option>
-            <option value="relevance">Relevance</option>
-            <option value="popularity">Popularity</option>
-          </select> */}
+            </i>
+          ) : (
+            <Link
+              to={`?${appendURL(searchParams, {
+                locale: [locale],
+                page: undefined,
+              })}`}
+            >
+              {LANGUAGES.get(locale.toLowerCase())?.native} (
+              {LANGUAGES.get(locale.toLowerCase())?.English})
+            </Link>
+          )}
+          {" | "}
+          {queryLocales.length && equalLocales(queryLocales, ["en-us"]) ? (
+            <i>{LANGUAGES.get("en-us")?.native}</i>
+          ) : (
+            <Link
+              to={`?${appendURL(searchParams, {
+                locale: ["en-US"],
+                page: undefined,
+              })}`}
+            >
+              {LANGUAGES.get("en-us")?.native}
+            </Link>
+          )}
+          {" | "}
+          {queryLocales.length === 2 &&
+          equalLocales(queryLocales, [locale, "en-us"]) ? (
+            <i>Both</i>
+          ) : (
+            <Link
+              to={`?${appendURL(searchParams, {
+                locale: [locale, "en-US"],
+                page: undefined,
+              })}`}
+            >
+              Both
+            </Link>
+          )}
         </p>
       )}
     </div>
   );
+}
+
+// Return true if two arrays, independent of case and order are equal.
+// E.g. `['foo', 'Bar']` is equal to `['bar', 'FoO']`
+function equalLocales(list1: string[], list2: string[]) {
+  if (list1.length !== list2.length) {
+    return false;
+  }
+  const list1LC = list1.map((x) => x.toLowerCase());
+  const list2LC = list2.map((x) => x.toLowerCase());
+  return list1LC.every((x) => list2LC.includes(x));
 }

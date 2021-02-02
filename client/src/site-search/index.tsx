@@ -3,9 +3,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { PageContentContainer } from "../ui/atoms/page-content";
 import { useGA } from "../ga-context";
-import { useLocale } from "../hooks";
 import "./index.scss";
-import { SiteSearchQuery } from "./types";
 
 const SiteSearchForm = React.lazy(() => import("./form"));
 const SearchResults = React.lazy(() => import("./search-results"));
@@ -13,29 +11,21 @@ const SearchResults = React.lazy(() => import("./search-results"));
 export function SiteSearch() {
   const isServer = typeof window === "undefined";
   const ga = useGA();
-  const locale = useLocale();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
-  const query: SiteSearchQuery = {
-    q: searchParams.get("q") || "",
-    locale: searchParams.getAll("locale").length
-      ? searchParams.getAll("locale").map((x) => x.toLowerCase())
-      : [locale],
-    page: searchParams.get("page") || "",
-    sort: searchParams.get("sort") || "",
-  };
-
+  const query = searchParams.get("q");
+  const page = searchParams.get("page");
   React.useEffect(() => {
-    if (query.q) {
-      let title = `Search: "${query.q}"`;
-      if (query.page && query.page !== "1") {
-        title += ` (page ${query.page})`;
+    if (query) {
+      let title = `Search: "${query}"`;
+      if (page && page !== "1") {
+        title += ` (page ${page})`;
       }
       document.title = title;
     } else {
       document.title = "No query, no results.";
     }
-  }, [query.q, query.page]);
+  }, [query, page]);
 
   const mountCounter = React.useRef(0);
   React.useEffect(() => {
@@ -55,16 +45,16 @@ export function SiteSearch() {
       // a client-side navigation happened.
       mountCounter.current++;
     }
-  }, [query.q, query.page, ga]);
+  }, [query, page, ga]);
 
   return (
     <div className="site-search">
       <PageContentContainer>
-        {query.q ? (
+        {query ? (
           <h1>
-            Results: {query.q}{" "}
-            {query.page && query.page !== "1" && (
-              <small className="current-page">Page {query.page}</small>
+            Results: {query}{" "}
+            {page && page !== "1" && (
+              <small className="current-page">Page {page}</small>
             )}
           </h1>
         ) : (
@@ -73,35 +63,13 @@ export function SiteSearch() {
 
         {!isServer && (
           <React.Suspense fallback={<p>Loading...</p>}>
-            <SiteSearchForm
-              locale={locale}
-              query={query}
-              onSubmit={(query: SiteSearchQuery) => {
-                const newParams = {
-                  q: query.q,
-                  locale: query.locale,
-                  sort: query.sort || "",
-                };
-                setSearchParams(newParams);
-              }}
-            />
+            <SiteSearchForm />
           </React.Suspense>
         )}
 
-        {!isServer && query.q && (
+        {!isServer && query && (
           <React.Suspense fallback={<p>Loading...</p>}>
-            <SearchResults
-              locale={locale}
-              updateQuery={(query: SiteSearchQuery) => {
-                const newParams = {
-                  q: query.q,
-                  locale: query.locale,
-                  sort: query.sort || "",
-                };
-                setSearchParams(newParams);
-              }}
-              query={query}
-            />
+            <SearchResults />
           </React.Suspense>
         )}
       </PageContentContainer>
