@@ -5,7 +5,7 @@ Being popular helps search because when a certain search term matches many
 documents, too many to display all, we need to sort them to try to predict
 which one the user most probably wanted to find.
 
-To accomplish this we check in a file in the content repo called `popularities.json`
+To accomplish this we check-in a file in the content repo called `popularities.json`
 which looks like this:
 
 ```json
