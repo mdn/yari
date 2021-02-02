@@ -3,7 +3,6 @@ import { Link, useSearchParams } from "react-router-dom";
 import LANGUAGES_RAW from "../languages.json";
 
 import { useLocale } from "../hooks";
-
 import { appendURL } from "./utils";
 
 const LANGUAGES = new Map(

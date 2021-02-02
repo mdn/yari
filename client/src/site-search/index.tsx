@@ -5,9 +5,7 @@ import { PageContentContainer } from "../ui/atoms/page-content";
 import { useGA } from "../ga-context";
 import "./index.scss";
 
-const SiteSearchForm = React.lazy(
-  () => import(/* webpackChunkName: "SiteSearchForm" */ "./form")
-);
+const SiteSearchForm = React.lazy(() => import("./form"));
 const SearchResults = React.lazy(() => import("./search-results"));
 
 export function SiteSearch() {
