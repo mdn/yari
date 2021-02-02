@@ -155,7 +155,7 @@ export default function SearchResults() {
     return (
       <div>
         {/* It only makes sense to display the sorting options if anything was found */}
-        {!!hitCount && <SortOptions />}
+        {hitCount > 1 && <SortOptions />}
 
         <Results {...data} />
         <Pagination
