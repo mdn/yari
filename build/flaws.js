@@ -55,8 +55,6 @@ function injectSectionFlaws(doc, flaws, options) {
 // The 'broken_links' flaw check looks for internal links that
 // link to a document that's going to fail with a 404 Not Found.
 function injectBrokenLinksFlaws(level, doc, $, rawContent) {
-  if (level === FLAW_LEVELS.IGNORE) return;
-
   // This is needed because the same href can occur multiple time.
   // For example:
   //    <a href="/foo/bar">
@@ -80,6 +78,16 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
     suggestion = null,
     explanation
   ) {
+    if (level === FLAW_LEVELS.IGNORE) {
+      // Note, even if not interested in flaws, we still need to apply the
+      // suggestion. For example, in production builds, we don't care about
+      // logging flaws, but because not all `broken_links` flaws have been
+      // manually fixed at the source.
+      if (suggestion) {
+        $element.attr("href", suggestion);
+      }
+      return;
+    }
     explanation = explanation || `Can't resolve ${href}`;
 
     if (!matches.has(href)) {
