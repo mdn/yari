@@ -158,11 +158,6 @@ async function buildDocuments(files = null) {
       fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
     }
 
-    // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
-    document.noIndexing =
-      (document.isArchive && !document.isTranslated) ||
-      document.metadata.slug === "MDN/Kitchensink";
-
     // Collect non-archived documents' slugs to be used in sitemap building and
     // search index building.
     if (!document.noIndexing) {

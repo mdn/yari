@@ -461,6 +461,10 @@ async function buildDocument(document, documentOptions = {}) {
 
   doc.pageTitle = getPageTitle(doc);
 
+  // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
+  doc.noIndexing =
+    (doc.isArchive && !doc.isTranslated) || metadata.slug === "MDN/Kitchensink";
+
   return { doc, liveSamples, fileAttachments, bcdData };
 }
 
