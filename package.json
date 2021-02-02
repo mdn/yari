@@ -7,7 +7,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production node build/cli.js",
     "build:client": "cd client && cross-env INLINE_RUNTIME_CHUNK=false react-scripts build",
-    "build:ssr": "cd ssr && webpack --config webpack.config.js --mode=production",
+    "build:ssr": "cd ssr && webpack --mode=production",
     "dev": "yarn prepare-build && nf -j Procfile.dev start",
     "eslint": "eslint .",
     "filecheck": "cd filecheck && node cli.js",
@@ -18,7 +18,7 @@
     "prettier-format": "prettier --write .",
     "start": "(test -f client/build/index.html || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && (test -d client/build/en-us/_spas || yarn build --spas-only) && nf -j Procfile.start start",
     "start:client": "cd client && cross-env BROWSER=none PORT=3000 react-scripts start",
-    "start:dev-server": "nodemon server --watch server --watch build --watch content --watch kumascript --ext js",
+    "start:dev-server": "nodemon server --watch server --watch build --watch content --watch kumascript --ext js --watch ssr/dist",
     "start:server": "node server",
     "start:static-server": "cross-env ENV_FILE=testing/.env node server/static.js",
     "test": "yarn prettier-check && yarn test:client && yarn test:kumascript && yarn test:build && yarn test:content && yarn test:testing",
@@ -27,7 +27,8 @@
     "test:content": "jest content",
     "test:kumascript": "jest kumascript",
     "test:testing": "cd testing && jest",
-    "tool": "node tool/cli.js"
+    "tool": "node tool/cli.js",
+    "watch:ssr": "cd ssr && webpack --mode=production --watch"
   },
   "husky": {
     "hooks": {
@@ -93,7 +94,6 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "braces": "^3.0.2",
-    "clean-webpack-plugin": "^3.0.0",
     "cross-env": "^7.0.3",
     "diff": "^5.0.0",
     "downshift": "^6.1.0",
