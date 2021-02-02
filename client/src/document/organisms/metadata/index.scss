@@ -1,15 +1,13 @@
-@import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
 .metadata {
-  background-color: $neutral-550;
+  margin-top: $base-spacing * 2;
 }
 
 .metadata-content-container {
   margin: 0 auto;
   max-width: $max-width-default;
-  padding: $base-spacing;
 
   .on-github {
     margin-bottom: $base-spacing;
@@ -17,5 +15,6 @@
 
   .last-modified-date {
     margin-bottom: 0;
+    padding-left: $base-spacing;
   }
 }

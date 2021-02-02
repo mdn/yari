@@ -1,0 +1,37 @@
+@import "~@mdn/minimalist/sass/mixins/utils";
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+
+ul.language-toggle {
+  align-self: center;
+  display: flex;
+  justify-content: flex-end;
+  padding: ($base-spacing / 2) $base-spacing;
+
+  li {
+    max-height: 24px;
+  }
+
+  .language-icon {
+    background: transparent url("~@mdn/dinocons/general/language.svg") 0 2px
+      no-repeat;
+    height: 29px;
+    vertical-align: inherit;
+    width: 28px;
+  }
+
+  .en-switch {
+    border-left: 1px solid $neutral-100;
+    padding-left: 5px;
+  }
+}
+
+.show-desktop {
+  @include visually-hidden();
+
+  @media #{$mq-small-desktop-and-up} {
+    @include reset-visually-hidden();
+    margin-left: -130px;
+    width: 130px;
+  }
+}

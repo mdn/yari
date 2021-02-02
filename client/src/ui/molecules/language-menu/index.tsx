@@ -56,19 +56,21 @@ export function LanguageMenu({
         }
       }}
     >
-      <label htmlFor="select_language" className="visually-hidden">
-        Select your preferred language
-      </label>{" "}
-      <select
-        id="select_language"
-        name="language"
-        value={localeURL}
-        onChange={(event) => {
-          const { value } = event.target;
-          setLocaleURL(value);
-        }}
-      >
-        {/*
+      <fieldset>
+        <legend>Change your language</legend>
+        <label htmlFor="select_language" className="visually-hidden">
+          Select your preferred language
+        </label>{" "}
+        <select
+          id="select_language"
+          name="language"
+          value={localeURL}
+          onChange={(event) => {
+            const { value } = event.target;
+            setLocaleURL(value);
+          }}
+        >
+          {/*
           This option is alway there and always first.
           The reason it doesn't have the `disabled` attribute is because it
           might not render when viewing the select un-opened and instead what
@@ -76,19 +78,20 @@ export function LanguageMenu({
           The onChange callback is a protection for doing nothing if the
           already current locale is chosen.
          */}
-        <option value={locale}>{verbose ? verbose.native : locale}</option>
-        {translations.map((t) => {
-          const verbose = LANGUAGES.get(t.locale.toLowerCase());
-          return (
-            <option key={t.url} value={t.url}>
-              {verbose ? verbose.native : t.locale}
-            </option>
-          );
-        })}
-      </select>{" "}
-      <button type="submit" className="button minimal">
-        Change language
-      </button>
+          <option value={locale}>{verbose ? verbose.native : locale}</option>
+          {translations.map((t) => {
+            const verbose = LANGUAGES.get(t.locale.toLowerCase());
+            return (
+              <option key={t.url} value={t.url}>
+                {verbose ? verbose.native : t.locale}
+              </option>
+            );
+          })}
+        </select>{" "}
+        <button type="submit" className="button minimal outline">
+          Change language
+        </button>
+      </fieldset>
     </form>
   );
 }

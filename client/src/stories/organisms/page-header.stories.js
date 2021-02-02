@@ -25,7 +25,7 @@ export const pageHeader = () => (
 
         <Titlebar docTitle="Type selectors" />
 
-        <div className="breadcrumb-container">
+        <div className="breadcrumbs-container">
           <Breadcrumbs parents={breadcrumbParents} />
         </div>
 

@@ -18,6 +18,7 @@ import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 // Misc
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
+import { LanguageToggle } from "../ui/molecules/language-toggle";
 import { LanguageMenu } from "../ui/molecules/language-menu";
 import { Titlebar } from "../ui/molecules/titlebar";
 import { TOC } from "./organisms/toc";
@@ -157,30 +158,25 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
       {doc.isArchive && !doc.isTranslated && <Archived />}
 
-      <div className="breadcrumbs-locale-container">
-        <div className="breadcrumb-container">
-          {doc.parents && <Breadcrumbs parents={doc.parents} />}
-        </div>
+      {doc.parents && <Breadcrumbs parents={doc.parents} />}
 
-        <div className="locale-container">
+      {translations && !!translations.length && (
+        <LanguageToggle locale={locale} translations={translations} />
+      )}
+
+      {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+
+      <MainContentContainer>
+        <article className="article">
+          <RenderDocumentBody doc={doc} />
+          <Metadata doc={doc} locale={locale} />
           {translations && !!translations.length && (
             <LanguageMenu translations={translations} locale={locale} />
           )}
-        </div>
-      </div>
+        </article>
+      </MainContentContainer>
 
-      <div className="page-content-container">
-        {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
-
-        <MainContentContainer>
-          <article className="article">
-            <RenderDocumentBody doc={doc} />
-          </article>
-        </MainContentContainer>
-
-        {doc.sidebarHTML && <RenderSideBar doc={doc} />}
-      </div>
-      <Metadata doc={doc} locale={locale} />
+      {doc.sidebarHTML && <RenderSideBar doc={doc} />}
     </>
   );
 }
@@ -189,7 +185,7 @@ function LoadingDocumentPlaceholder() {
   return (
     <>
       <Titlebar docTitle={"Loading…"} />
-      <Dino className="page-content-container loading-document-placeholder" />
+      <Dino className="main-content loading-document-placeholder" />
     </>
   );
 }
