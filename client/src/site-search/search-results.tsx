@@ -262,7 +262,7 @@ function Results({
   const [searchParams] = useSearchParams();
 
   return (
-    <FadeIn delay={50}>
+    <div>
       <div className="search-results">
         <p>
           Found <ShowTotal total={metadata.total} /> in {metadata.took_ms}{" "}
@@ -349,7 +349,7 @@ function Results({
           );
         })}
       </div>
-    </FadeIn>
+    </div>
   );
 }
 
@@ -359,45 +359,6 @@ function ShowTotal({ total }: { total: Total }) {
       {total.relation === "gt" && "more than"} {total.value.toLocaleString()}{" "}
       {total.value === 1 ? "match" : "matches"}
     </>
-  );
-}
-
-interface FadeInProps {
-  delay?: number;
-  children: React.ReactNode;
-}
-
-function FadeIn(props: FadeInProps) {
-  const [maxIsVisible, setMaxIsVisible] = React.useState(0);
-
-  React.useEffect(() => {
-    const count = React.Children.count(props.children);
-    let i = 0;
-    const interval = setInterval(() => {
-      i++;
-      if (i > count) clearInterval(interval);
-      setMaxIsVisible(i);
-    }, props.delay || 50);
-    return () => clearInterval(interval);
-  });
-
-  const transitionDuration = 250;
-  return (
-    <div>
-      {React.Children.map(props.children, (child, i) => {
-        return (
-          <div
-            style={{
-              transition: `opacity ${transitionDuration}ms, transform ${transitionDuration}ms`,
-              // transform: maxIsVisible > i ? "none" : "translateY(0px)",
-              opacity: maxIsVisible > i ? 1 : 0,
-            }}
-          >
-            {child}
-          </div>
-        );
-      })}
-    </div>
   );
 }
 
