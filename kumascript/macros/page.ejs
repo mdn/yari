@@ -19,5 +19,10 @@ var url = web.spacesToUnderscores($0);
 if ($1) {
     $1 = web.spacesToUnderscores($1);
 }
+var out;
+try {
+  out = await wiki.page(url, $1, $2, $3, $4);
+} catch (_) {
+}
 %>
-<%- await wiki.page(url, $1, $2, $3, $4) %>
+<%- out %>

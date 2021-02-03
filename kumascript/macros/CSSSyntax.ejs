@@ -429,7 +429,8 @@ if (name === "preview-wiki-content") {
 }
 
 if (!formattedSyntax) {
-    throw new Error(`No syntax found in DB for '${name}'`);
+    // throw new Error(`No syntax found in DB for '${name}'`);
+    console.warn(`No syntax found in DB for '${name}'`);
 }
 
 %><%- formattedSyntax %>

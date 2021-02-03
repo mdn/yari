@@ -31,6 +31,15 @@ if (sampleSlug) {
         sampleUrl += "/";
     }
     sampleUrl += sampleSlug;
+    if (env.locale.toLowerCase() !== "en-us") {
+      const samplePage = wiki.getPage(sampleUrl);
+      if (!(samplePage && samplePage.url)) {
+        // The page from which we're being asked to get the live sample
+        // doesn't exist in this locale, so most likely it only exists
+        // in English.
+        sampleUrl = `/en-US/docs${sampleSlug.charAt(0) != "/" ? "/" :""}${sampleSlug}`;
+      }
+    }
 }
 var url = await template('LiveSampleURL', [sampleId, sampleUrl]);
 
