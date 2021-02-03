@@ -21,7 +21,7 @@ Once built, the Yari system then puts all of these redirects in place.
 
 The recommended way to add redirects correctly while avoiding errors is to use
 the `add-redirect` tool available in the [yari](https://github.com/mdn/yari)
-and [content](https://github.com/mdn/content) repos. Let's see how to use this.
+and [`content`](https://github.com/mdn/content) repos. Let's see how to use this.
 
 ## Preparation
 
