@@ -92,7 +92,7 @@
     "@storybook/react": "^6.1.16",
     "@testing-library/react": "^11.2.3",
     "@types/jest": "^26.0.20",
-    "@types/react": "^17.0.0",
+    "@types/react": "^17.0.1",
     "@types/react-dom": "^17.0.0",
     "braces": "^3.0.2",
     "cross-env": "^7.0.3",
