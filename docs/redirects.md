@@ -50,7 +50,7 @@ directory:
 echo 'CONTENT_ROOT=/path/to/content/files' >> .env
 ```
 
-Note: If an .env file does not already exist, it will be created automatically
+Note: If an `.env` file does not already exist, it will be created automatically
 when the above line runs.
 
 ### To run add-redirect from the content repo
