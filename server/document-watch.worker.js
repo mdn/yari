@@ -45,7 +45,13 @@ const label = "Populate search-index with glob";
 console.time(label);
 let count = 0;
 glob.sync(SEARCH_PATTERN).forEach((filePath) => {
-  postDocumentInfo(filePath, "added");
+  // Note! On Windows, `glob.sync()` will return URLs that always use
+  // the `/` character (POSIX STYLE, https://www.npmjs.com/package/glob#windows)
+  // But the `Document.urlToFolderPath()` function will respect Windows
+  // notation and use `\` characters.
+  // Now, when we use it, it'll work as if `glob.sync()` and returned paths
+  // in a fashion that is expected in the OS.
+  postDocumentInfo(filePath.split("/").join(path.sep), "added");
   count++;
 });
 postEvent("ready");
