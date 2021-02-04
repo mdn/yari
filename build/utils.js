@@ -1,5 +1,5 @@
 function humanFileSize(size) {
-  if (size < 1024) return size + " B";
+  if (size < 1024) return `${size} B`;
   let i = Math.floor(Math.log(size) / Math.log(1024));
   let num = size / Math.pow(1024, i);
   let round = Math.round(num);

@@ -57,7 +57,7 @@ assert.sameMembers = (a1, a2) => {
 };
 
 function createMacroTestObject(macroName) {
-  let templates = new Templates(__dirname + "/../../macros/");
+  let templates = new Templates(`${__dirname}/../../macros/`);
   let pageContext = {
     locale: "en-US",
     url: "",

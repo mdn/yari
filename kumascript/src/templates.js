@@ -81,7 +81,7 @@ class Templates {
       // Duplicate template names
       var msg = "Duplicate macros:";
       for (let [name, files] of duplicates) {
-        msg += "\n" + name + ": " + files.join(", ");
+        msg += `\n${name}: ${files.join(", ")}`;
       }
       throw new Error(msg);
     }
