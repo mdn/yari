@@ -26,6 +26,7 @@ app.use(staticMiddlewares);
 // They will trigger XHR requests to `/api/v1/search?....`
 // and use different values as a way to make expectations.
 app.get("/api/v1/search", async (req, res) => {
+  const page = parseInt(req.query.page || "1");
   const PAGE_SIZE = 10;
   const documents = [];
   const metadata = {
@@ -35,7 +36,7 @@ app.get("/api/v1/search", async (req, res) => {
       relation: "eq",
     },
     size: PAGE_SIZE,
-    page: 1,
+    page,
   };
   const suggestions = [];
 
@@ -87,6 +88,11 @@ app.get("/api/v1/search", async (req, res) => {
     suggestions,
   });
 });
+
+app.get("/api/v1/whoami", async (req, res) => {
+  res.json({ waffle: { flags: {}, switches: {} } });
+});
+
 // To mimic what CloudFront does.
 app.get("/*", async (req, res) => {
   res
