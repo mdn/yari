@@ -39,7 +39,7 @@ function _(key, locale) {
 
 // Build an absolute URL by concatenating the arguments.
 function URL(...chunks) {
-  return "/" + chunks.join("/");
+  return `/${chunks.join("/")}`;
 }
 
 // Turn a camelCase string into a snake_case string
@@ -48,7 +48,7 @@ function URL(...chunks) {
 // @param upFirst <boolean> Indicate is the first letter must be upper cased (true by default)
 // @return <string>
 function camelToSnake(str, upFirst = true) {
-  str = str.replace(/[A-Z]/g, (match) => "_" + match.toLowerCase());
+  str = str.replace(/[A-Z]/g, (match) => `_${match.toLowerCase()}`);
 
   if (upFirst) str = str.replace(/^./, (match) => match.toUpperCase());
 
@@ -81,7 +81,7 @@ function makeExpect(data, locale = "en-US") {
           let url = URL(locale, SVG_BASE_SLUG, "Element", key);
           acc.elements.push(`<a href="${url}"><code>${value}</code></a>`);
         } else {
-          let anchor = "#" + camelToSnake(value);
+          let anchor = `#${camelToSnake(value)}`;
           let label = _(value, locale);
           let url = URL(locale, SVG_BASE_SLUG, "Element") + anchor;
 

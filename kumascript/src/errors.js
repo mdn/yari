@@ -52,7 +52,7 @@ class SourceCodeError {
       this.sourceContext = this.sourceContext.replace(
         /^\s{0,4}(\d{1,5}) \| /gm,
         (match, p1) => {
-          return (parseInt(p1) + offsetDelta).toString().padStart(5) + " | ";
+          return `${(parseInt(p1) + offsetDelta).toString().padStart(5)} | `;
         }
       );
     }
@@ -76,12 +76,12 @@ class SourceCodeError {
       for (let i = 0; i < column + 7; i++) {
         arrow += "-";
       }
-      return arrow + "^";
+      return `${arrow}^`;
     }
 
     function formatLine(i, line) {
-      let lnum = ("      " + (i + 1)).substr(-5);
-      return lnum + " | " + line;
+      let lnum = `      ${i + 1}`.substr(-5);
+      return `${lnum} | ${line}`;
     }
 
     let lines = source.split("\n");

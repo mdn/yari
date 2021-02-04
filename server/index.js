@@ -47,7 +47,7 @@ app.use(
     : proxy(PROXY_HOSTNAME, {
         // More options are available on
         // https://www.npmjs.com/package/express-http-proxy#options
-        proxyReqPathResolver: (req) => "/api/v1" + req.url,
+        proxyReqPathResolver: (req) => `/api/v1${req.url}`,
       })
 );
 

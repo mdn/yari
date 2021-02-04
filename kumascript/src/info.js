@@ -34,7 +34,7 @@ function repairURL(url) {
   url = url.trim().toLowerCase();
   if (!url.startsWith("/")) {
     // Ensure the URI starts with a "/".
-    url = "/" + url;
+    url = `/${url}`;
   }
   // Remove redundant forward slashes, like "//".
   url = url.replace(/\/{2,}/g, "/");
@@ -47,7 +47,7 @@ function repairURL(url) {
     } else {
       // Converts URI's like "/web/..." to "/en-us/web/...", or
       // URI's like "/docs/..." to "/en-us/docs/...".
-      url = "/en-us" + url;
+      url = `/en-us${url}`;
     }
   }
   // Ensure the locale is followed by "/docs".
