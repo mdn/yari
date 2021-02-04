@@ -56,8 +56,9 @@ jobs:
           # the content if loading this page fails.
           ls "$CONTENT_ROOT/en-us/mdn/kitchensink"
 
-          yarn prepare-build
-          yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
+          yarn dev > /tmp/stdout.log 2> /tmp/stderr.log &
+          # yarn prepare-build
+          # yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
 
       - name: Wait for servers
         run: |
