@@ -180,12 +180,13 @@ function lintHTML(html) {
   if (report.valid) {
     return null;
   }
+  let result = "";
   for (const messages of report.results.map((result) => result.messages)) {
     for (const message of messages) {
-      // console.log(message);
-      return message.message;
+      result += message.message;
     }
   }
+  return result;
 }
 
 // ### Exported public API
