@@ -59,7 +59,10 @@ async function buildDocuments(files = null, quiet = false) {
   // This builds up a mapping from en-US slugs to their translated slugs.
   const translationsOf = new Map();
 
-  !options.noProgressbar && progressBar.start(documents.count);
+  if (!options.noProgressbar) {
+    progressBar.start(documents.count);
+  }
+
   for (const document of documents.iter()) {
     const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
     fs.mkdirSync(outPath, { recursive: true });
@@ -161,11 +164,6 @@ async function buildDocuments(files = null, quiet = false) {
       fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
     }
 
-    // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
-    document.noIndexing =
-      (document.isArchive && !document.isTranslated) ||
-      document.metadata.slug === "MDN/Kitchensink";
-
     // Collect non-archived documents' slugs to be used in sitemap building and
     // search index building.
     if (!document.noIndexing) {
@@ -192,7 +190,9 @@ async function buildDocuments(files = null, quiet = false) {
     }
   }
 
-  !options.noProgressbar && progressBar.stop();
+  if (!options.noProgressbar) {
+    progressBar.stop();
+  }
 
   const sitemapsBuilt = [];
   for (const [locale, docs] of Object.entries(docPerLocale)) {
@@ -242,8 +242,9 @@ async function buildOtherSPAs(options) {
     const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_spas");
     fs.mkdirSync(outPath, { recursive: true });
     fs.writeFileSync(path.join(outPath, path.basename(url)), html);
-    !options.quiet &&
+    if (!options.quiet) {
       console.log("Wrote", path.join(outPath, path.basename(url)));
+    }
   })();
 
   (() => {
@@ -263,7 +264,9 @@ async function buildOtherSPAs(options) {
         fs.mkdirSync(outPath, { recursive: true });
         const filePath = path.join(outPath, "index.html");
         fs.writeFileSync(filePath, html);
-        !options.quiet && console.log("Wrote", filePath);
+        if (!options.quiet) {
+          console.log("Wrote", filePath);
+        }
       }
     }
   })();
@@ -297,14 +300,18 @@ program
   .action(async ({ args, options }) => {
     try {
       if (options.spas) {
-        !options.quiet && console.log("\nBuilding SPAs...");
+        if (!options.quiet) {
+          console.log("\nBuilding SPAs...");
+        }
         await buildOtherSPAs(options);
       }
       if (options.spasOnly) {
         return;
       }
 
-      !options.quiet && console.log("\nBuilding Documents...");
+      if (!options.quiet) {
+        console.log("\nBuilding Documents...");
+      }
       const { files } = args;
       const t0 = new Date();
       const { slugPerLocale, peakHeapBytes, totalFlaws } = await buildDocuments(

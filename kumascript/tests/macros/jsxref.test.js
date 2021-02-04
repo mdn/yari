@@ -5,7 +5,7 @@
 const { assert, itMacro, describeMacro } = require("./utils");
 
 const js_ref_slug = "Web/JavaScript/Reference/";
-const js_ref_url = "/en-US/docs/" + js_ref_slug;
+const js_ref_url = `/en-US/docs/${js_ref_slug}`;
 
 function getPathname(url) {
   return new URL(url, "https://example.com").pathname.replace(/\/$/, "");
@@ -18,9 +18,8 @@ describeMacro("jsxref", function () {
     var name = "Date";
     var partial_slug = "Date";
     var ref_url = js_ref_url + partial_slug;
-    var glob_url = js_ref_url + "Global_Objects/" + partial_slug;
-    var expected =
-      '<a href="' + glob_url + '">' + "<code>" + name + "</code></a>";
+    var glob_url = `${js_ref_url}Global_Objects/${partial_slug}`;
+    var expected = `<a href="${glob_url}"><code>${name}</code></a>`;
 
     macro.ctx.info.getPageByURL = jest.fn((url) => {
       if (url === glob_url) {
@@ -43,9 +42,8 @@ describeMacro("jsxref", function () {
     var name = "Array.prototype.join()";
     var partial_slug = "Array/join";
     var ref_url = js_ref_url + partial_slug;
-    var glob_url = js_ref_url + "Global_Objects/" + partial_slug;
-    var expected =
-      '<a href="' + glob_url + '">' + "<code>" + name + "</code></a>";
+    var glob_url = `${js_ref_url}Global_Objects/${partial_slug}`;
+    var expected = `<a href="${glob_url}"><code>${name}</code></a>`;
 
     macro.ctx.info.getPageByURL = jest.fn((url) => {
       if (url === glob_url) {
@@ -69,9 +67,8 @@ describeMacro("jsxref", function () {
     var name = "function statement";
     var partial_slug = "Statements/function";
     var ref_url = js_ref_url + partial_slug;
-    var glob_url = js_ref_url + "Global_Objects/" + partial_slug;
-    var expected =
-      '<a href="' + glob_url + '">' + "<code>" + name + "</code></a>";
+    var glob_url = `${js_ref_url}Global_Objects/${partial_slug}`;
+    var expected = `<a href="${glob_url}"><code>${name}</code></a>`;
 
     macro.ctx.info.getPageByURL = jest.fn((url) => {
       if (url === glob_url) {
@@ -95,9 +92,8 @@ describeMacro("jsxref", function () {
     var name = "yield";
     var partial_slug = "Operators/yield";
     var ref_url = js_ref_url + partial_slug;
-    var glob_url = js_ref_url + "Global_Objects/" + partial_slug;
-    var expected =
-      '<a href="' + ref_url + '">' + "<code>" + name + "</code></a>";
+    var glob_url = `${js_ref_url}Global_Objects/${partial_slug}`;
+    var expected = `<a href="${ref_url}"><code>${name}</code></a>`;
 
     macro.ctx.info.getPageByURL = jest.fn((url) => {
       if (url === ref_url) {
@@ -122,9 +118,8 @@ describeMacro("jsxref", function () {
     var partial_slug = "Statements/for...in";
     var anchor = "#Array_iteration_and_for...in";
     var ref_url = js_ref_url + partial_slug;
-    var glob_url = js_ref_url + "Global_Objects/" + partial_slug;
-    var expected =
-      '<a href="' + glob_url + anchor + '">' + "<code>" + name + "</code></a>";
+    var glob_url = `${js_ref_url}Global_Objects/${partial_slug}`;
+    var expected = `<a href="${glob_url}${anchor}"><code>${name}</code></a>`;
 
     macro.ctx.info.getPageByURL = jest.fn((url) => {
       url = getPathname(url);
@@ -155,18 +150,14 @@ describeMacro("jsxref", function () {
       var name = "Array";
       var partial_slug = "Global_Objects/Array";
       var anchor = "массива";
-      var js_ref_ru_url = "/ru/docs/" + js_ref_slug;
+      var js_ref_ru_url = `/ru/docs/${js_ref_slug}`;
       var ref_url = js_ref_ru_url + partial_slug;
-      var glob_url = js_ref_ru_url + "Global_Objects/" + partial_slug;
+      var glob_url = `${js_ref_ru_url}Global_Objects/${partial_slug}`;
       var expected =
-        '<a href="' +
-        glob_url +
-        "#" +
-        "%D0%BC%D0%B0%D1%81%D1%81%D0%B8%D0%B2%D0%B0" +
-        '">' +
-        "<code>" +
-        name +
-        "</code></a>";
+        `<a href="${glob_url}#` +
+        `%D0%BC%D0%B0%D1%81%D1%81%D0%B8%D0%B2%D0%B0` +
+        `">` +
+        `<code>${name}</code></a>`;
 
       macro.ctx.env.locale = "ru";
 
@@ -199,8 +190,8 @@ describeMacro("jsxref", function () {
       var name = "function expressions";
       var partial_slug = "Operators/function";
       var ref_url = js_ref_url + partial_slug;
-      var glob_url = js_ref_url + "Global_Objects/" + partial_slug;
-      var expected = '<a href="' + ref_url + '">' + name + "</a>";
+      var glob_url = `${js_ref_url}Global_Objects/${partial_slug}`;
+      var expected = `<a href="${ref_url}">${name}</a>`;
 
       macro.ctx.info.getPageByURL = jest.fn((url) => {
         if (url === ref_url) {
@@ -228,9 +219,8 @@ describeMacro("jsxref", function () {
     var name = "name";
     var partial_slug = "Function/name";
     var ref_url = js_ref_url + partial_slug;
-    var glob_url = js_ref_url + "Global_Objects/" + partial_slug;
-    var expected =
-      '<a href="' + glob_url + '">' + "<code>" + name + "</code></a>";
+    var glob_url = `${js_ref_url}Global_Objects/${partial_slug}`;
+    var expected = `<a href="${glob_url}"><code>${name}</code></a>`;
 
     macro.ctx.info.getPageByURL = jest.fn((url) => {
       if (url === glob_url) {

@@ -176,29 +176,27 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
             addBrokenLink(a, checked.get(href), href);
           }
         }
-      } else {
         // But does it have the correct case?!
-        if (found.url !== href.split("#")[0]) {
-          // Inconsistent case.
-          addBrokenLink(
-            a,
-            checked.get(href),
-            href,
-            found.url + absoluteURL.search + absoluteURL.hash.toLowerCase()
-          );
-        } else if (
-          hrefSplit.length > 1 &&
-          hrefSplit[1] !== hrefSplit[1].toLowerCase()
-        ) {
-          const hash = hrefSplit[1];
-          addBrokenLink(
-            a,
-            checked.get(href),
-            href,
-            href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
-            "Anchor not lowercase"
-          );
-        }
+      } else if (found.url !== href.split("#")[0]) {
+        // Inconsistent case.
+        addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          found.url + absoluteURL.search + absoluteURL.hash.toLowerCase()
+        );
+      } else if (
+        hrefSplit.length > 1 &&
+        hrefSplit[1] !== hrefSplit[1].toLowerCase()
+      ) {
+        const hash = hrefSplit[1];
+        addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
+          "Anchor not lowercase"
+        );
       }
     } else if (href.startsWith("#")) {
       const hash = href.split("#")[1];

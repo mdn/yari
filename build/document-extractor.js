@@ -259,7 +259,8 @@ function _addSingleSectionBCD($) {
   // prose section :(
   if (!dataQuery) {
     // I wish there was a good place to log this!
-    return _addSectionProse($);
+    const [proseSections] = _addSectionProse($);
+    return proseSections;
   }
   const query = dataQuery.replace(/^bcd:/, "");
   const { browsers, data } = packageBCD(query);

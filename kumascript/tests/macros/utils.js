@@ -57,7 +57,7 @@ assert.sameMembers = (a1, a2) => {
 };
 
 function createMacroTestObject(macroName) {
-  let templates = new Templates(__dirname + "/../../macros/");
+  let templates = new Templates(`${__dirname}/../../macros/`);
   let pageContext = {
     locale: "en-US",
     url: "",
@@ -180,12 +180,13 @@ function lintHTML(html) {
   if (report.valid) {
     return null;
   }
+  let result = "";
   for (const messages of report.results.map((result) => result.messages)) {
     for (const message of messages) {
-      // console.log(message);
-      return message.message;
+      result += message.message;
     }
   }
+  return result;
 }
 
 // ### Exported public API

@@ -6,7 +6,7 @@ const { setDefaultOptions } = require("expect-puppeteer");
 setDefaultOptions({ timeout: 1500 });
 
 function testURL(pathname = "/") {
-  return "http://localhost:5000" + pathname;
+  return `http://localhost:5000${pathname}`;
 }
 
 describe("Basic viewing of functional pages", () => {

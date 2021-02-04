@@ -177,14 +177,14 @@ class Environment {
     // $1 and so on.
     context["arguments"] = context["$$"] = args;
     for (let i = 0; i < args.length; i++) {
-      context["$" + i] = args[i];
+      context[`$${i}`] = args[i];
     }
 
     // Set any unused arguments up to $9 to the empty string
     // NOTE: old KumaScript went up to $99, but we don't have any
     // macros that use two digit argument numbers
     for (let i = args.length; i < 10; i++) {
-      context["$" + i] = "";
+      context[`$${i}`] = "";
     }
 
     return context;
