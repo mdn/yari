@@ -49,7 +49,11 @@ function resolveDocumentPath(url) {
 }
 
 // Throw if this can't be a redirect from-URL.
-function validateFromURL(url) {
+function validateFromURL(url, checkResolve = true) {
+  // Let's keep vanity urls to /en-US/
+  if (url === "/en-US/") {
+    return url;
+  }
   checkURLInvalidSymbols(url);
   // This is a circular dependency we should solve that in another way.
   validateURLLocale(url);
@@ -57,16 +61,22 @@ function validateFromURL(url) {
   if (path) {
     throw new Error(`From-URL resolves to a file (${path})`);
   }
-  const resolved = resolve(url);
-  if (resolved !== url) {
-    throw new Error(
-      `${url} is already matched as a redirect (to: '${resolved}')`
-    );
+  if (checkResolve) {
+    const resolved = resolve(url);
+    if (resolved !== url) {
+      throw new Error(
+        `${url} is already matched as a redirect (to: '${resolved}')`
+      );
+    }
   }
 }
 
 // Throw if this can't be a redirect to-URL.
-function validateToURL(url) {
+function validateToURL(url, checkResolve = true, checkPath = true) {
+  // Let's keep vanity urls to /en-US/
+  if (url === "/en-US/") {
+    return url;
+  }
   // If it's not external, it has to go to a valid document
   if (url.includes("://")) {
     // If this throws, conveniently the validator will do its job.
@@ -78,25 +88,29 @@ function validateToURL(url) {
     checkURLInvalidSymbols(url);
     validateURLLocale(url);
 
-    // Can't point to something that redirects to something
-    const resolved = resolve(url);
-    if (resolved !== url) {
-      throw new Error(
-        `${url} is already matched as a redirect (to: '${resolved}')`
-      );
+    if (checkResolve) {
+      // Can't point to something that redirects to something
+      const resolved = resolve(url);
+      if (resolved !== url) {
+        throw new Error(
+          `${url} is already matched as a redirect (to: '${resolved}')`
+        );
+      }
     }
-    const path = resolveDocumentPath(url);
-    if (!path) {
-      throw new Error(`To-URL has to resolve to a file (${path})`);
+    if (checkPath) {
+      const path = resolveDocumentPath(url);
+      if (!path) {
+        throw new Error(`To-URL has to resolve to a file (${url})`);
+      }
     }
   }
 }
 
 function validateURLLocale(url) {
   // Check that it's a valid document URL
-  const locale = url.split("/")[1];
-  if (!locale || url.split("/")[2] !== "docs") {
-    throw new Error("The URL is expected to be /$locale/docs/");
+  const [nothing, locale, docs] = url.split("/");
+  if (nothing || !locale || docs !== "docs") {
+    throw new Error(`The URL is expected to start with /$locale/docs/: ${url}`);
   }
   const validValues = [...VALID_LOCALES.values()];
   if (!validValues.includes(locale)) {
@@ -172,8 +186,8 @@ function add(locale, updatePairs, { fix = false } = {}) {
     );
   }
 
-  const decodedUpdatePairs = decodePairs(updatePairs);
   const decodedPairs = decodePairs(pairs);
+  const decodedUpdatePairs = decodePairs(updatePairs);
 
   errorOnDuplicated(decodedPairs);
   errorOnDuplicated(decodedUpdatePairs);
@@ -188,6 +202,8 @@ function add(locale, updatePairs, { fix = false } = {}) {
   if (fix) {
     simplifiedPairs = removeOrphanedRedirects(simplifiedPairs);
   }
+  validatePairs(simplifiedPairs);
+
   save(path.join(root, locale), simplifiedPairs);
 }
 
@@ -253,8 +269,11 @@ function load(files = null, verbose = false) {
           line
         );
       }
+      validateFromURL(from, false);
+      validateToURL(to, false);
       pairs.set(from.toLowerCase(), to);
     });
+    errorOnDuplicated([...pairs.entries()]);
     // Now that all have been collected, transfer them to the `redirects` map
     // but also do invariance checking.
     for (const [from, to] of pairs) {
@@ -357,14 +376,15 @@ function decodePairs(pairs) {
     } else {
       toDecoded = decodeURI(to);
     }
-    if (
-      checkURLInvalidSymbols(from) ||
-      (to.startsWith("/") && checkURLInvalidSymbols(to))
-    ) {
-      throw new Error(`${from}\t${to} contains invalid symbols`);
-    }
     return [fromDecoded, toDecoded];
   });
+}
+
+function validatePairs(pairs, checkExists = true) {
+  for (const [from, to] of pairs) {
+    validateFromURL(from, false);
+    validateToURL(to, false, checkExists);
+  }
 }
 
 function save(localeFolder, pairs) {
