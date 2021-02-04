@@ -38,7 +38,7 @@ function _(key, locale) {
 }
 
 // Build an absolute URL by concatenating the arguments.
-function URL(...chunks) {
+function joinPathsForUrl(...chunks) {
   return `/${chunks.join("/")}`;
 }
 
@@ -78,12 +78,12 @@ function makeExpect(data, locale = "en-US") {
       (acc, value) => {
         if (value.indexOf("&lt;") !== -1) {
           let key = value.replace(/&lt;|&gt;/g, "");
-          let url = URL(locale, SVG_BASE_SLUG, "Element", key);
+          let url = joinPathsForUrl(locale, SVG_BASE_SLUG, "Element", key);
           acc.elements.push(`<a href="${url}"><code>${value}</code></a>`);
         } else {
           let anchor = `#${camelToSnake(value)}`;
           let label = _(value, locale);
-          let url = URL(locale, SVG_BASE_SLUG, "Element") + anchor;
+          let url = joinPathsForUrl(locale, SVG_BASE_SLUG, "Element") + anchor;
 
           acc.groups.push(`<a href="${url}">${label}</a>`);
         }
@@ -394,7 +394,7 @@ const TEST_CASE = [
     input: [],
     output: makeExpect(SVG_DATA.elements.altGlyphDef),
     env: {
-      slug: URL("en-US", SVG_BASE_SLUG, "Element", "altGlyphDef"),
+      slug: joinPathsForUrl("en-US", SVG_BASE_SLUG, "Element", "altGlyphDef"),
     },
   },
   {
@@ -404,7 +404,7 @@ const TEST_CASE = [
     output: makeExpect(SVG_DATA.elements.defs, "zh-CN"),
     env: {
       locale: "zh-CN",
-      slug: URL("zh-CN", SVG_BASE_SLUG, "Element", "defs"),
+      slug: joinPathsForUrl("zh-CN", SVG_BASE_SLUG, "Element", "defs"),
     },
   },
 ];
