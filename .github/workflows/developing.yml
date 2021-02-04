@@ -68,6 +68,11 @@ jobs:
           curl --retry-connrefused --retry 10 http://localhost:5000 > /dev/null
           curl --retry-connrefused --retry 10 --silent http://localhost:3000 > /dev/null
 
+          echo "STDOUT..................................................."
+          cat /tmp/stdout.log
+          echo "STDERR..................................................."
+          cat /tmp/stderr.log
+
       - name: Test viewing the dev server
         env:
           # This will make sure the tests in `testing/tests/*.test.js` only run
