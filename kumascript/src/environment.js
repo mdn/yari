@@ -175,7 +175,7 @@ class Environment {
     // The array of arguments will be available to macros as the
     // globals "arguments" and "$$". Individual arguments will be $0,
     // $1 and so on.
-    context["arguments"] = context["$$"] = args;
+    context.arguments = context.$$ = args;
     for (let i = 0; i < args.length; i++) {
       context[`$${i}`] = args[i];
     }
