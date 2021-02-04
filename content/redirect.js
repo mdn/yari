@@ -41,6 +41,12 @@ function resolveDocumentPath(url) {
 
   const root = locale === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
 
+  if (!root) {
+    console.log(
+      `Trying to resolve a non en-us path with out CONTENT_TRANSLATED_ROOT set.`
+    );
+    return `$TRANSLATED/${relativeFilePath}`;
+  }
   const filePath = path.join(root, relativeFilePath);
   if (fs.existsSync(filePath)) {
     return filePath;
