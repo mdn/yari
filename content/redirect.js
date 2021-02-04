@@ -26,7 +26,7 @@ function isVanityRedirectUrl(url) {
 }
 
 function resolveDocumentPath(url) {
-  // Let's keep vanity urls to /en-US/ ..
+  // Let's keep vanity urls to /en-US/ ...
   if (isVanityRedirectUrl(url)) {
     return url;
   }
@@ -61,7 +61,6 @@ function resolveDocumentPath(url) {
 
 // Throw if this can't be a redirect from-URL.
 function validateFromURL(url, checkResolve = true) {
-  // Let's keep vanity urls to /en-US/
   checkURLInvalidSymbols(url);
   // This is a circular dependency we should solve that in another way.
   validateURLLocale(url);
@@ -213,11 +212,11 @@ function loadLocaleAndAdd(locale, updatePairs, { fix = false } = {}) {
   }
   validatePairs(simplifiedPairs);
 
-  return { pairs: simplifiedPairs, changed: simplifiedPairs == pairs };
+  return { pairs: simplifiedPairs, root, changed: simplifiedPairs == pairs };
 }
 
 function add(locale, updatePairs, { fix = false } = {}) {
-  const { pairs } = loadLocaleAndAdd(locale, updatePairs, { fix });
+  const { pairs, root } = loadLocaleAndAdd(locale, updatePairs, { fix });
   save(path.join(root, locale), pairs);
 }
 
