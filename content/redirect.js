@@ -20,9 +20,14 @@ function checkURLInvalidSymbols(url) {
   }
 }
 
+function isVanityRedirectUrl(url) {
+  const localeUrls = new Set([...VALID_LOCALES.values()].map((l) => `/${l}/`));
+  return localeUrls.has(url);
+}
+
 function resolveDocumentPath(url) {
-  // Let's keep vanity urls to /en-US/
-  if (url === "/en-US/") {
+  // Let's keep vanity urls to /en-US/ ..
+  if (isVanityRedirectUrl(url)) {
     return url;
   }
   const [bareURL] = url.split("#");
@@ -43,7 +48,7 @@ function resolveDocumentPath(url) {
 
   if (!root) {
     console.log(
-      `Trying to resolve a non en-us path with out CONTENT_TRANSLATED_ROOT set.`
+      `Trying to resolve a non en-us path for ${url} with out CONTENT_TRANSLATED_ROOT set.`
     );
     return `$TRANSLATED/${relativeFilePath}`;
   }
@@ -57,9 +62,6 @@ function resolveDocumentPath(url) {
 // Throw if this can't be a redirect from-URL.
 function validateFromURL(url, checkResolve = true) {
   // Let's keep vanity urls to /en-US/
-  if (url === "/en-US/") {
-    return url;
-  }
   checkURLInvalidSymbols(url);
   // This is a circular dependency we should solve that in another way.
   validateURLLocale(url);
@@ -79,8 +81,8 @@ function validateFromURL(url, checkResolve = true) {
 
 // Throw if this can't be a redirect to-URL.
 function validateToURL(url, checkResolve = true, checkPath = true) {
-  // Let's keep vanity urls to /en-US/
-  if (url === "/en-US/") {
+  // Let's keep vanity urls to /en-US/ ...
+  if (isVanityRedirectUrl(url)) {
     return url;
   }
   // If it's not external, it has to go to a valid document
@@ -166,7 +168,7 @@ function removeOrphanedRedirects(pairs) {
   });
 }
 
-function add(locale, updatePairs, { fix = false } = {}) {
+function loadLocaleAndAdd(locale, updatePairs, { fix = false } = {}) {
   locale = locale.toLowerCase();
   let root = CONTENT_ROOT;
   if (locale !== "en-us") {
@@ -192,6 +194,7 @@ function add(locale, updatePairs, { fix = false } = {}) {
     );
   }
 
+  // This is dangerous an we should move this burden to the caller!
   const decodedPairs = decodePairs(pairs);
   const decodedUpdatePairs = decodePairs(updatePairs);
 
@@ -210,7 +213,19 @@ function add(locale, updatePairs, { fix = false } = {}) {
   }
   validatePairs(simplifiedPairs);
 
-  save(path.join(root, locale), simplifiedPairs);
+  return { pairs: simplifiedPairs, changed: simplifiedPairs == pairs };
+}
+
+function add(locale, updatePairs, { fix = false } = {}) {
+  const { pairs } = loadLocaleAndAdd(locale, updatePairs, { fix });
+  save(path.join(root, locale), pairs);
+}
+
+function validateLocale(locale) {
+  const { changed } = loadLocaleAndAdd(locale, []);
+  if (changed) {
+    throw new Error(` _redirects.txt for ${locale} is flawed`);
+  }
 }
 
 // The module level cache
@@ -409,6 +424,7 @@ module.exports = {
   load,
   validateFromURL,
   validateToURL,
+  validateLocale,
 
   testing: {
     shortCuts,

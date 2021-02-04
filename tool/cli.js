@@ -46,11 +46,33 @@ program
   .name("tool")
   .version("0.0.0")
   .disableGlobalOption("--silent")
-  .command("validate-redirects", "Check the _redirects.txt file(s)")
+  .command("validate-redirects", "Try loading the _redirects.txt file(s)")
   .action(
     tryOrExit(({ logger }) => {
       Redirect.load(null, true);
       logger.info(chalk.green("🍾 All is well in the world of redirects 🥂"));
+    })
+  )
+
+  .command("verify-redirects", "Verify the _redirects.txt file(s) by locale")
+  .argument("[locale...]", "Locale", {
+    default: [...VALID_LOCALES.values()],
+    validator: [...VALID_LOCALES.values()],
+  })
+  .action(
+    tryOrExit(({ args, logger }) => {
+      const { locale } = args;
+
+      for (const l of locale) {
+        try {
+          Redirect.validateLocale(l);
+          logger.info(chalk.green(`✓ redirects for ${l} looking good!`));
+        } catch (e) {
+          logger.info(
+            chalk.green(`_redirects.txt for ${l} is causing issues: ${e}`)
+          );
+        }
+      }
     })
   )
 
