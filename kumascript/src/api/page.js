@@ -19,11 +19,11 @@ module.exports = {
 
     // Convert to lower case for comparing
 
-    var theTag = aTag.toLowerCase();
+    const theTag = aTag.toLowerCase();
 
     // Now look for a match
 
-    for (var i = 0; i < aPage.tags.length; i++) {
+    for (let i = 0; i < aPage.tags.length; i++) {
       if (aPage.tags[i].toLowerCase() == theTag) {
         return true;
       }
@@ -67,7 +67,7 @@ module.exports = {
 
   // Flatten subPages list
   subPagesFlatten(pages) {
-    var output = [];
+    const output = [];
 
     process_array(pages);
 

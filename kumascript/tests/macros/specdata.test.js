@@ -30,7 +30,7 @@ Performs basic validation of the SpecData JSON object:
 function checkSpecData(specDataJson) {
   const entries = Object.entries(JSON.parse(specDataJson));
 
-  for (let entry of entries) {
+  for (const entry of entries) {
     assert(
       entry[1].name !== undefined,
       `SpecData entry: ${entry[0]} is missing required "name" property`

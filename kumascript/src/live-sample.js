@@ -125,8 +125,8 @@ function getLiveSampleIDs(slug, source) {
   // The first argument to the call is the live-sample ID, and there may also
   // be an optional fifth argument that specifies a slug, that may or may not
   // be different from the current slug, from which to extract the sample ID.
-  let result = [];
-  for (let token of tokens) {
+  const result = [];
+  for (const token of tokens) {
     if (token.type !== "MACRO") continue;
     const normalizedMacroName = normalizeMacroName(token.name);
     if (normalizedMacroName === "inheritancediagram") {

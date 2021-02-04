@@ -108,7 +108,7 @@ async function render(
 
   function recordNonFatalError(kind, message, redirectInfo = null) {
     let NonFatalErrorClass;
-    let args = [new Error(message), source, currentToken];
+    const args = [new Error(message), source, currentToken];
     if (kind === "deprecated") {
       NonFatalErrorClass = MacroDeprecatedError;
     } else if (kind === "broken-link") {
@@ -134,7 +134,7 @@ async function render(
   // Create the Environment object that we'll use to render all of
   // the macros on the page, and provide a way for macros or the
   // utilities they call to record non-fatal errors.
-  let environment = new Environment(
+  const environment = new Environment(
     {
       ...pageEnvironment,
       recordNonFatalError,
@@ -144,7 +144,7 @@ async function render(
   );
 
   // Loop through the tokens
-  for (let token of tokens) {
+  for (const token of tokens) {
     // We only care about macros; skip anything else
     if (token.type !== "MACRO") {
       // If it isn't a MACRO token, it's a TEXT token.
@@ -152,7 +152,7 @@ async function render(
       continue;
     }
 
-    let macroName = normalizeMacroName(token.name);
+    const macroName = normalizeMacroName(token.name);
 
     if (selectiveMode) {
       if (selectMacros.includes(macroName)) {
@@ -177,7 +177,7 @@ async function render(
     // here in that case.
     if (token.args.length === 1 && typeof token.args[0] === "object") {
       // the json args case
-      let keys = Object.keys(token.args[0]);
+      const keys = Object.keys(token.args[0]);
       keys.sort();
       token.signature = macroName + JSON.stringify(token.args[0], keys);
     } else {

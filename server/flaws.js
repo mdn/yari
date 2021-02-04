@@ -128,7 +128,7 @@ module.exports = (req, res) => {
     return res.status(400).send("'page' number invalid");
   }
 
-  let [popularityFilter, error] = validPopularityFilter(filters.popularity);
+  const [popularityFilter, error] = validPopularityFilter(filters.popularity);
   if (error) {
     return res.status(400).send(error.toString());
   }
@@ -285,7 +285,7 @@ module.exports = (req, res) => {
     built: t2.getTime() - t1.getTime(),
   };
 
-  let [m, n] = [(page - 1) * DOCUMENTS_PER_PAGE, page * DOCUMENTS_PER_PAGE];
+  const [m, n] = [(page - 1) * DOCUMENTS_PER_PAGE, page * DOCUMENTS_PER_PAGE];
 
   res.json({
     counts,

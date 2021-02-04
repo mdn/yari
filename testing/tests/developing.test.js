@@ -150,7 +150,7 @@ describe("Testing the Express server", () => {
   });
 
   withDeveloping("redirect by cookie trumps", async () => {
-    let response = await got(serverURL("/"), {
+    const response = await got(serverURL("/"), {
       followRedirect: false,
       headers: {
         Cookie: "preferredlocale=SV-se",

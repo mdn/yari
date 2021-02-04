@@ -159,7 +159,7 @@ function add(locale, updatePairs, { fix = false } = {}) {
     }
   }
   const redirectsFilePath = path.join(root, locale, "_redirects.txt");
-  let pairs = [];
+  const pairs = [];
   if (fs.existsSync(redirectsFilePath)) {
     const content = fs.readFileSync(redirectsFilePath, "utf-8");
     pairs.push(

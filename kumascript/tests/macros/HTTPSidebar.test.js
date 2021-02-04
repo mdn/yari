@@ -31,13 +31,13 @@ const locales = {
 };
 
 function checkSidebarDom(dom, locale) {
-  let section = dom.querySelector("section");
+  const section = dom.querySelector("section");
   assert(
     section.classList.contains("Quick_links"),
     "Section does not contain Quick_links class"
   );
 
-  let summaries = dom.querySelectorAll("summary");
+  const summaries = dom.querySelectorAll("summary");
   assert.equal(summaries[0].textContent, locales[locale].ResourcesURI);
 }
 
@@ -86,7 +86,7 @@ describeMacro("HTTPSidebar", function () {
     macro.ctx.env.locale = "en-US";
     return macro.call().then(function (result) {
       expect(lintHTML(result)).toBeFalsy();
-      let dom = jsdom.JSDOM.fragment(result);
+      const dom = jsdom.JSDOM.fragment(result);
       checkSidebarDom(dom, "en-US");
     });
   });
@@ -95,7 +95,7 @@ describeMacro("HTTPSidebar", function () {
     macro.ctx.env.locale = "es";
     return macro.call().then(function (result) {
       expect(lintHTML(result)).toBeFalsy();
-      let dom = jsdom.JSDOM.fragment(result);
+      const dom = jsdom.JSDOM.fragment(result);
       checkSidebarDom(dom, "es");
     });
   });

@@ -3,7 +3,7 @@
 const bcd = require("@mdn/browser-compat-data");
 
 function packageBCD(query) {
-  let data = query.split(".").reduce((prev, curr) => {
+  const data = query.split(".").reduce((prev, curr) => {
     return prev && Object.prototype.hasOwnProperty.call(prev, curr)
       ? prev[curr]
       : undefined;

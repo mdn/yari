@@ -105,7 +105,7 @@ describeMacro("Draft", () => {
       return macro
         .call("The reason is shrouded in mystery (~~escattone).")
         .then((result) => {
-          let dom = JSDOM.fragment(result);
+          const dom = JSDOM.fragment(result);
           expect(dom.childElementCount).toBeGreaterThanOrEqual(1);
           assert(
             dom.firstElementChild.classList.contains("notecard"),
@@ -116,13 +116,13 @@ describeMacro("Draft", () => {
             "Root element is a 'draft'"
           );
 
-          let header = dom.querySelector("h4");
+          const header = dom.querySelector("h4");
           // Block indicator has a header
           expect(header).toEqual(expect.anything());
           assert.equal(header.textContent.trim(), "Draft");
 
           /** @type {HTMLAnchorElement} */
-          let anchor = dom.querySelector('a[href*="/profiles/"]');
+          const anchor = dom.querySelector('a[href*="/profiles/"]');
           // Draft details has a user profile link
           expect(anchor).toEqual(expect.anything());
           assert.include(anchor.href, "/profiles/escattone");
@@ -140,7 +140,7 @@ describeMacro("Draft", () => {
       return macro
         .call("{{Draft}} macro test. ~~stephaniehobson")
         .then((result) => {
-          let dom = JSDOM.fragment(result);
+          const dom = JSDOM.fragment(result);
           expect(dom.childElementCount).toBeGreaterThanOrEqual(1);
           assert(
             dom.firstElementChild.classList.contains("notecard"),
@@ -151,13 +151,13 @@ describeMacro("Draft", () => {
             "Root element is a 'draft'"
           );
 
-          let header = dom.querySelector("h4");
+          const header = dom.querySelector("h4");
           // Block indicator has a header
           expect(header).toEqual(expect.anything());
           assert.equal(header.textContent.trim(), "Draft");
 
           /** @type {HTMLAnchorElement} */
-          let anchor = dom.querySelector('a[href*="/profiles/"]');
+          const anchor = dom.querySelector('a[href*="/profiles/"]');
           // Draft details has a user profile link
           expect(anchor).toEqual(expect.anything());
           assert.include(anchor.href, "/profiles/stephaniehobson");
@@ -173,7 +173,7 @@ describeMacro("Draft", () => {
     "One argument with embedded user profile at the end (ExE-Boss) (en-US)",
     (macro) => {
       return macro.call("{{Draft}} macro test. ~~ExE-Boss").then((result) => {
-        let dom = JSDOM.fragment(result);
+        const dom = JSDOM.fragment(result);
         expect(dom.childElementCount).toBeGreaterThanOrEqual(1);
         assert(
           dom.firstElementChild.classList.contains("notecard"),
@@ -184,13 +184,13 @@ describeMacro("Draft", () => {
           "Root element is a 'draft'"
         );
 
-        let header = dom.querySelector("h4");
+        const header = dom.querySelector("h4");
         // Block indicator has a header
         expect(header).toEqual(expect.anything());
         assert.equal(header.textContent.trim(), "Draft");
 
         /** @type {HTMLAnchorElement} */
-        let anchor = dom.querySelector('a[href*="/profiles/"]');
+        const anchor = dom.querySelector('a[href*="/profiles/"]');
         // Draft details has a user profile link
         expect(anchor).toEqual(expect.anything());
         assert.include(anchor.href, "/profiles/ExE-Boss");
