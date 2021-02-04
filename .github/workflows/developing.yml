@@ -63,10 +63,10 @@ jobs:
       - name: Wait for servers
         run: |
           # Just a slight delay to wait until the dev server is ready.
-          sleep 5
+          sleep 10
 
-          curl --retry-connrefused --retry 5 http://localhost:5000 > /dev/null
-          curl --retry-connrefused --retry 5 --silent http://localhost:3000 > /dev/null
+          curl --retry-connrefused --retry 10 http://localhost:5000 > /dev/null
+          curl --retry-connrefused --retry 10 --silent http://localhost:3000 > /dev/null
 
       - name: Test viewing the dev server
         env:
