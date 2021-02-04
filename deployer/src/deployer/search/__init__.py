@@ -230,7 +230,7 @@ def html_strip(html):
     if not html:
         return ""
     tree = HTMLParser(html)
-    for tag in tree.css("div.warning, div.hidden"):
+    for tag in tree.css("div.warning, div.hidden, p.hidden"):
         tag.decompose()
     for tag in tree.css("div[style]"):
         style_value = tag.attributes["style"]
