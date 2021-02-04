@@ -248,7 +248,7 @@ async function buildOtherSPAs(options) {
   })();
 
   (() => {
-    // Basically, this builds on `search/index.html` for every locale we intend
+    // Basically, this builds one `search/index.html` for every locale we intend
     // to build.
     for (const root of [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT]) {
       if (!root) {
