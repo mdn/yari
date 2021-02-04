@@ -288,7 +288,7 @@ program
       const t0 = new Date();
       const { slugPerLocale, peakHeapBytes, totalFlaws } = await buildDocuments(
         files,
-        !!options.quiet
+        Boolean(options.quiet)
       );
       const t1 = new Date();
       const count = Object.values(slugPerLocale).reduce(
