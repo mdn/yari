@@ -13,39 +13,7 @@ const LANGUAGES = new Map(
 
 export default function SiteSearchForm() {
   const locale = useLocale();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const query = searchParams.get("q");
-  const [newQ, setNewQ] = React.useState("");
-  React.useEffect(() => {
-    setNewQ(query || "");
-  }, [query]);
-
-  return (
-    <form
-      action={`/${locale}/search`}
-      onSubmit={(event) => {
-        event.preventDefault();
-        setSearchParams(appendURL(searchParams, { q: newQ, page: undefined }));
-      }}
-    >
-      <input
-        type="search"
-        name="q"
-        value={newQ}
-        onChange={(event) => {
-          setNewQ(event.target.value);
-        }}
-      />{" "}
-      <button type="submit">Search</button> <AdvancedOptions />
-    </form>
-  );
-}
-
-function AdvancedOptions() {
-  const locale = useLocale();
   const [searchParams] = useSearchParams();
-
   const queryLocales = searchParams.getAll("locale");
 
   return (

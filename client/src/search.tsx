@@ -172,7 +172,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 
   const navigate = useNavigate();
   const locale = useLocale();
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const [
     searchIndex,
@@ -228,6 +228,17 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     [searchIndex, setResultItems]
   );
 
+  // The input value to the `useCombobox()` is controlled. This way, we can
+  // listen to the `useSearchIndex()` hook for new values.
+  // For example, the site-search page might trigger an update to the current
+  // `?q=...` value and if that happens we want to be reflected here in the
+  // combobox.
+  const initialQuery = searchParams.get("q") || "";
+  const [inputQueryValue, setInputQueryValue] = React.useState("");
+  React.useEffect(() => {
+    setInputQueryValue(initialQuery);
+  }, [initialQuery]);
+
   const {
     getInputProps,
     getItemProps,
@@ -241,7 +252,9 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     reset,
   } = useCombobox({
     items: resultItems,
+    inputValue: inputQueryValue,
     onInputValueChange: ({ inputValue }) => {
+      setInputQueryValue(inputValue ? inputValue : "");
       updateResults(inputValue);
     },
     onSelectedItemChange: ({ selectedItem }) => {
@@ -257,9 +270,11 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 
   useFocusOnSlash(inputRef);
 
+  const formAction = `/${locale}/search`;
+
   return (
     <form
-      action={`/${locale}/search`}
+      action={formAction}
       className="search-form"
       {...getComboboxProps({
         className: "search-widget",
@@ -304,7 +319,11 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               }
               const sp = new URLSearchParams();
               sp.set("q", inputValue.trim());
-              setSearchParams(sp);
+              // We need to simulate that you're submitting the form.
+              // That means, we need to not only change the current query string
+              // but the pathname too. Remember, the `setSearchParams()` only
+              // changes the `?...` portion of the URL.
+              navigate(`${formAction}?${sp.toString()}`);
             }
           },
           ref: (input) => {
