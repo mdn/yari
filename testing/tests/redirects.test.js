@@ -16,10 +16,11 @@ function url_test(from, to, { statusCode = 301 } = {}) {
         throwHttpErrors: false,
       });
       expect(res.statusCode).toBe(statusCode);
-      to &&
+      if (to) {
         expect((res.headers.location || "").toLowerCase()).toBe(
           encodeURI(to).toLowerCase()
         );
+      }
     },
   ]);
 }
