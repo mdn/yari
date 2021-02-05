@@ -196,7 +196,7 @@ const info = {
       slug,
       title,
       tags: tags || [],
-      translations: [], //TODO Object.freeze(buildTranslationObjects(data)),
+      translations: [], // TODO Object.freeze(buildTranslationObjects(data)),
       get summary() {
         // Back in the old Kuma days we used to store the summary as another piece
         // of metadata on each document. It was always available, with any kumascript
