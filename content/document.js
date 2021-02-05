@@ -16,7 +16,13 @@ const { getPopularities } = require("./popularities");
 const { getWikiHistories } = require("./wikihistories");
 const { getGitHistories } = require("./githistories");
 
-const { buildURL, memoize, slugToFolder, execGit } = require("./utils");
+const {
+  buildURL,
+  memoize,
+  slugToFolder,
+  execGit,
+  urlToFolderPath,
+} = require("./utils");
 const Redirect = require("./redirect");
 
 function buildPath(localeFolder, slug) {
@@ -92,11 +98,6 @@ function trimLineEndings(string) {
     .join("\n");
 }
 
-function urlToFolderPath(url) {
-  const [, locale, , ...slugParts] = url.split("/");
-  return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
-}
-
 function create(html, metadata, root = null) {
   const folderPath = getFolderPath(metadata, root);
 
@@ -162,6 +163,26 @@ function archive(
   return folderPath;
 }
 
+function unarchive(document, move) {
+  // You can't use `document.rawHTML` because, rather confusingly,
+  // it's actually the rendered (from the migration) HTML. Instead,
+  // you need seek out the `raw.html` equivalent and use that.
+  // This is because when we ran the migration, for every document we
+  // archived, we created a `index.html` file (front-matter and rendered
+  // HTML) and a `raw.html` file (kumascript raw HTML).
+  const rawFilePath = path.join(
+    path.dirname(document.fileInfo.path),
+    "raw.html"
+  );
+  const rawHTML = fs.readFileSync(rawFilePath, "utf-8");
+  const created = create(rawHTML, document.metadata);
+  if (move) {
+    execGit(["rm", document.fileInfo.path], {}, CONTENT_ARCHIVED_ROOT);
+    execGit(["rm", rawFilePath], {}, CONTENT_ARCHIVED_ROOT);
+  }
+  return created;
+}
+
 const read = memoize((folder) => {
   let filePath = null;
   let root = null;
@@ -184,13 +205,30 @@ const read = memoize((folder) => {
       `Folder contains zero width whitespace which is not allowed (${filePath})`
     );
   }
-  const isTranslated =
-    CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT);
+  // Use Boolean() because otherwise, `isTranslated` might become `undefined`
+  // rather than an actuall boolean value.
+  const isTranslated = Boolean(
+    CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT)
+  );
   const isArchive =
     isTranslated ||
     (CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT));
 
   const rawContent = fs.readFileSync(filePath, "utf8");
+
+  // This is very useful in CI where every page gets built. If there's an
+  // accidentally unresolved git conflict, that's stuck in the content,
+  // bail extra early.
+  if (
+    // If the document itself, is a page that explains and talks about git merge
+    // conflicts, i.e. a false positive, those angled brackets should be escaped
+    /^<<<<<<< HEAD\n/m.test(rawContent) &&
+    /^=======\n/m.test(rawContent) &&
+    /^>>>>>>>/m.test(rawContent)
+  ) {
+    throw new Error(`${filePath} contains git merge conflict markers`);
+  }
+
   const {
     attributes: metadata,
     body: rawHTML,
@@ -206,6 +244,7 @@ const read = memoize((folder) => {
     path.relative(root, filePath)
   );
   let modified = (gitHistory && gitHistory.modified) || null;
+  const hash = (gitHistory && gitHistory.hash) || null;
   // Use the wiki histories for a list of legacy contributors.
   const wikiHistory = getWikiHistories(root, locale).get(url);
   if (!modified && wikiHistory && wikiHistory.modified) {
@@ -217,6 +256,7 @@ const read = memoize((folder) => {
       locale,
       popularity: getPopularities().get(url) || 0.0,
       modified,
+      hash,
       contributors: wikiHistory ? wikiHistory.contributors : [],
     },
     url,
@@ -292,7 +332,9 @@ function update(url, rawHTML, metadata) {
       oldSlug
     );
 
-    execGit(["mv", oldFolderPath, newFolderPath]);
+    if (oldFolderPath !== newFolderPath) {
+      execGit(["mv", oldFolderPath, newFolderPath]);
+    }
     Redirect.add(locale, [...redirects.entries()]);
   }
 }
@@ -361,7 +403,7 @@ function findAll(
   }
   return {
     count: filePaths.length,
-    iter: function* () {
+    *iter() {
       for (const filePath of filePaths) {
         yield read(filePath);
       }
@@ -485,6 +527,7 @@ function remove(
 module.exports = {
   create,
   archive,
+  unarchive,
   read,
   update,
   exists,

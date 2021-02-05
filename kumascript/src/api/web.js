@@ -10,14 +10,12 @@ const L10N_COMMON_STRINGS = new Templates().getLocalizedCommonStrings();
 module.exports = {
   // Insert a hyperlink.
   link(uri, text, title, target) {
-    var out = [
-      '<a href="' + util.spacesToUnderscores(util.htmlEscape(uri)) + '"',
-    ];
+    var out = [`<a href="${util.spacesToUnderscores(util.htmlEscape(uri))}"`];
     if (title) {
-      out.push(' title="' + util.htmlEscape(title) + '"');
+      out.push(` title="${util.htmlEscape(title)}"`);
     }
     if (target) {
-      out.push(' target="' + util.htmlEscape(target) + '"');
+      out.push(` target="${util.htmlEscape(target)}"`);
     }
     out.push(">", util.htmlEscape(text || uri), "</a>");
     return out.join("");

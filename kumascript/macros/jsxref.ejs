@@ -14,7 +14,7 @@
 //  {{jsxref("Global_Objects/Date/getNumber", "Date.prototype.getNumber()")}}
 //
 
-let jsl10n = string.deserialize(await template('L10n:JavaScript'));
+let jsl10n = JSON.parse(await template('L10n:JavaScript'));
 
 let l10n = {
     refslug: mdn.getLocalString(jsl10n, 'slug_reference'),

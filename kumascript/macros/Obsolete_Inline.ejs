@@ -16,8 +16,8 @@
 var str = "";
 var type = 0;   // assume we want the text badge
 
-if ($0 && $0 != undefined) {
-  if (string.IsDigit($0)) {
+if ($0) {
+  if (/^\d/.test($0)) {
     str = "gecko" + $0;
   } else {
     str = $0

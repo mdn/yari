@@ -247,13 +247,13 @@ module.exports = {
    */
   preparePath(path) {
     if (path.charAt(0) != "/") {
-      path = "/" + path;
+      path = `/${path}`;
     }
     if (path.indexOf("/docs") == -1) {
       // HACK: If this looks like a legacy wiki URL, throw /en-US/docs
       // in front of it. That will trigger the proper redirection logic
       // until/unless URLs are corrected in templates
-      path = "/en-US/docs" + path;
+      path = `/en-US/docs${path}`;
     }
     return spacesToUnderscores(path);
   },
@@ -266,7 +266,7 @@ module.exports = {
    * @return {string}
    */
   htmlEscape(s) {
-    return ("" + s)
+    return `${s}`
       .replace(/&/g, "&amp;")
       .replace(/>/g, "&gt;")
       .replace(/</g, "&lt;")

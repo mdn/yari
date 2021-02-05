@@ -34,7 +34,7 @@ const globalsPrototype = {
    *
    * @type {NodeRequireFunction}
    */
-  require: require,
+  require,
 };
 
 const kumaPrototype = require("./api/kuma.js");
@@ -175,16 +175,16 @@ class Environment {
     // The array of arguments will be available to macros as the
     // globals "arguments" and "$$". Individual arguments will be $0,
     // $1 and so on.
-    context["arguments"] = context["$$"] = args;
+    context.arguments = context.$$ = args;
     for (let i = 0; i < args.length; i++) {
-      context["$" + i] = args[i];
+      context[`$${i}`] = args[i];
     }
 
     // Set any unused arguments up to $9 to the empty string
     // NOTE: old KumaScript went up to $99, but we don't have any
     // macros that use two digit argument numbers
     for (let i = args.length; i < 10; i++) {
-      context["$" + i] = "";
+      context[`$${i}`] = "";
     }
 
     return context;

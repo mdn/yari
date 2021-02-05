@@ -1365,6 +1365,10 @@
       "inh": "",
       "impl": []
     },
+    "PerformanceElementTiming": {
+      "inh": "PerformanceEntry",
+      "impl": []
+    },
     "PerformanceLongTaskTiming": {
       "inh": "PerformanceEntry",
       "impl": []

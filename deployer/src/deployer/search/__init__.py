@@ -36,14 +36,14 @@ def index(
 
     # Confusingly, `._index` is actually not a private API.
     # It's the documented way you're supposed to reach it.
-    index = Document._index
+    document_index = Document._index
     if not update:
         click.echo(
             "Deleting any possible existing index "
-            f"and creating a new one called {index._name}"
+            f"and creating a new one called {document_index._name}"
         )
-        index.delete(ignore=404)
-        index.create()
+        document_index.delete(ignore=404)
+        document_index.create()
 
     search_prefixes = [None]
     for prefix in reversed(priority_prefixes):
@@ -85,7 +85,7 @@ def index(
     count_done = 0
     t0 = time.time()
     with get_progressbar() as bar:
-        for x in streaming_bulk(connection, generator(), index=index._name):
+        for x in streaming_bulk(connection, generator(), index=document_index._name):
             count_done += 1
             bar.update(1)
 
@@ -139,8 +139,7 @@ def format_time(seconds):
 def walk(root):
     for path in root.iterdir():
         if path.is_dir():
-            for file in walk(path):
-                yield file
+            yield from walk(path)
         elif path.name == "index.json":
             yield path
 
@@ -207,6 +206,7 @@ def to_search(file):
             )
         ),
         popularity=doc["popularity"],
+        summary=doc["summary"],
         slug=slug,
         locale=locale.lower(),
     )
@@ -230,7 +230,7 @@ def html_strip(html):
     if not html:
         return ""
     tree = HTMLParser(html)
-    for tag in tree.css("div.warning, div.hidden"):
+    for tag in tree.css("div.warning, div.hidden, p.hidden"):
         tag.decompose()
     for tag in tree.css("div[style]"):
         style_value = tag.attributes["style"]
@@ -238,3 +238,27 @@ def html_strip(html):
             tag.decompose()
     text = tree.body.text()
     return "\n".join(x.strip() for x in text.splitlines() if x.strip())
+
+
+def analyze(
+    url: str,
+    text: str,
+    analyzer: str,
+):
+    # We can confidently use a single host here because we're not searching a cluster.
+    connections.create_connection(hosts=[url])
+    index = Document._index
+    analysis = index.analyze(body={"text": text, "analyzer": analyzer})
+    if "tokens" in analysis:
+        keys = None
+        for token in analysis["tokens"]:
+            if keys is None:
+                keys = token.keys()
+            longest_key = max(len(x) for x in keys)
+            print()
+            for key in keys:
+                print(f"{key:{longest_key + 1}} {token[key]!r}")
+
+    else:
+        # Desperate if it's not a list of tokens
+        print(json.dumps(analysis, indent=2))

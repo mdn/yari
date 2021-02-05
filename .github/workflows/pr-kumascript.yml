@@ -34,10 +34,12 @@ jobs:
         with:
           path: |
             node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
 
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
         run: |
           yarn --frozen-lockfile
 

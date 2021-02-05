@@ -1,5 +1,4 @@
 const got = require("got");
-require("expect-puppeteer");
 const { setDefaultOptions } = require("expect-puppeteer");
 
 // The default it 500ms. Building and running these pages can be pretty slow
@@ -8,11 +7,11 @@ const { setDefaultOptions } = require("expect-puppeteer");
 setDefaultOptions({ timeout: 5000 });
 
 function devURL(pathname = "/") {
-  return "http://localhost:3000" + pathname;
+  return `http://localhost:3000${pathname}`;
 }
 
 function serverURL(pathname = "/") {
-  return "http://localhost:5000" + pathname;
+  return `http://localhost:5000${pathname}`;
 }
 
 // This "trick" is to force every test to be skipped if the environment

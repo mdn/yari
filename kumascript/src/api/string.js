@@ -46,16 +46,16 @@ module.exports = {
   },
 
   StartsWith(str, sub_str) {
-    return ("" + str).indexOf(sub_str) === 0;
+    return `${str}`.indexOf(sub_str) === 0;
   },
 
   EndsWith(str, suffix) {
-    str = "" + str;
+    str = `${str}`;
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
   },
 
   Contains(str, sub_str) {
-    return ("" + str).indexOf(sub_str) !== -1;
+    return `${str}`.indexOf(sub_str) !== -1;
   },
 
   Deserialize(str) {
@@ -64,12 +64,12 @@ module.exports = {
 
   /* Check if first character in string is a decimal digit. */
   IsDigit(str) {
-    return /^\d/.test("" + str);
+    return /^\d/.test(`${str}`);
   },
 
   /* Check if first character in string is an alphabetic character. */
   IsLetter(str) {
-    return /^[a-zA-Z]/.test("" + str);
+    return /^[a-zA-Z]/.test(`${str}`);
   },
 
   Serialize(val) {
@@ -78,34 +78,34 @@ module.exports = {
 
   Substr(str, start, length) {
     if (length) {
-      return ("" + str).substr(start, length);
+      return `${str}`.substr(start, length);
     } else {
-      return ("" + str).substr(start);
+      return `${str}`.substr(start);
     }
   },
 
   toLower(str) {
-    return ("" + str).toLowerCase();
+    return `${str}`.toLowerCase();
   },
 
   ToUpperFirst(str) {
-    return ("" + str).charAt(0).toUpperCase() + ("" + str).slice(1);
+    return `${str}`.charAt(0).toUpperCase() + `${str}`.slice(1);
   },
 
   Trim(str) {
-    return ("" + str).trim();
+    return `${str}`.trim();
   },
 
   Remove(str, index, count) {
-    var out = "" + str.substring(0, Number(index));
+    var out = `${str.substring(0, Number(index))}`;
     if (count) {
-      out += "" + str.substring(Number(index) + Number(count));
+      out += `${str.substring(Number(index) + Number(count))}`;
     }
     return out;
   },
 
   Replace(str, from, to) {
-    return ("" + str).replace(RegExp(from, "g"), to);
+    return `${str}`.replace(RegExp(from, "g"), to);
   },
 
   Join(list, sep) {
@@ -113,6 +113,6 @@ module.exports = {
   },
 
   Length(str) {
-    return ("" + str).length;
+    return `${str}`.length;
   },
 };

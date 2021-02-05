@@ -158,6 +158,17 @@ test("content built foo page", () => {
   expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
 });
 
+test("icons mentioned in <head> should resolve", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "docs", "web", "foo");
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  $('head link[rel="apple-touch-icon-precomposed"]').each((i, link) => {
+    const expectedFilepath = path.join(buildRoot, $(link).attr("href"));
+    expect(fs.existsSync(expectedFilepath)).toBeTruthy();
+  });
+});
+
 test("content built French foo page", () => {
   expect(fs.existsSync(buildRoot)).toBeTruthy();
 
@@ -579,6 +590,94 @@ test("without locale prefix broken links flaws", () => {
   expect(map.get("link3").suggestion).toBeNull();
 });
 
+test("broken links to archived content", () => {
+  // Links to URLs that are archived
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "brokenlinks",
+    "archived"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  // The page has 2 links:
+  //  * one to an archived page (see `content/archived.txt`)
+  //  * one to an archived redirect
+  // When the link points to an archived page, we can figure out that it's
+  // actually not a broken link.
+  // But unfortunately, for redirects, we simply don't have this information
+  // available at all.
+  // See https://github.com/mdn/yari/issues/2675#issuecomment-767124481
+  expect(flaws.broken_links.length).toBe(1);
+
+  const flaw = flaws.broken_links[0];
+  expect(flaw.suggestion).toBeNull();
+  expect(flaw.fixable).toBeFalsy();
+  expect(flaw.href).toBe("/en-US/docs/The_Mozilla_platform");
+});
+
+test("broken anchor links flaws", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "not_lowercase_anchors"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  // You have to be intimately familiar with the fixture to understand
+  // why these flaws come out as they do.
+  expect(flaws.broken_links.length).toBe(3);
+  // Map them by 'href'
+  const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
+  expect(map.get("#Heading1").suggestion).toBe("#heading1");
+  expect(map.get("#Heading1").explanation).toBe("Anchor not lowercase");
+  expect(map.get("#Heading1").fixable).toBe(true);
+  expect(map.get("#Heading1").line).toBe(7);
+  expect(map.get("#Heading1").column).toBe(16);
+
+  expect(map.get("/en-US/docs/Web/Foo#Heading2").suggestion).toBe(
+    "/en-US/docs/Web/Foo#heading2"
+  );
+  expect(map.get("/en-US/docs/Web/Foo#Heading2").explanation).toBe(
+    "Anchor not lowercase"
+  );
+  expect(map.get("/en-US/docs/Web/Foo#Heading2").fixable).toBe(true);
+  expect(map.get("/en-US/docs/Web/Foo#Heading2").line).toBe(8);
+  expect(map.get("/en-US/docs/Web/Foo#Heading2").column).toBe(16);
+
+  expect(map.get("/en-US/docs/Web/Fuu#Anchor").suggestion).toBe(
+    "/en-US/docs/Web/Foo#anchor"
+  );
+  expect(map.get("/en-US/docs/Web/Fuu#Anchor").explanation).toBe(
+    "Can't resolve /en-US/docs/Web/Fuu#Anchor"
+  );
+  expect(map.get("/en-US/docs/Web/Fuu#Anchor").fixable).toBe(true);
+  expect(map.get("/en-US/docs/Web/Fuu#Anchor").line).toBe(11);
+  expect(map.get("/en-US/docs/Web/Fuu#Anchor").column).toBe(16);
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  // In the loop we expect exactly 3 assertions,
+  // but we have to include all the other assertions from above first!
+  expect.assertions(16 + 3);
+  $('article a[href*="#"]').each((i, a) => {
+    const href = $(a).attr("href");
+    if ((href.startsWith("/") || href.startsWith("#")) && href.split("#")[1]) {
+      // All our internal links get their 'href' rewritten (on top of
+      // being logged as a flaw)
+      expect(href.split("#")[1]).toEqual(href.split("#")[1].toLowerCase());
+    }
+  });
+});
+
 test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page", () => {
   expect(fs.existsSync(buildRoot)).toBeTruthy();
   const builtFolder = path.join(
@@ -846,20 +945,19 @@ test("bcd table extraction followed by h3", () => {
   expect(doc.body[4].value.isH3).toBeTruthy();
 });
 
-test("bcd table extraction when overly nested is a flaw", () => {
+test("headers within non-root elements is a 'sectioning' flaw", () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
     "docs",
     "web",
-    "bcd_table_extraction",
-    "nested_divs"
+    "sectioning_headers"
   );
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.flaws.sectioning[0].explanation).toBe(
-    "2 'div.bc-data' elements found but deeply nested."
+    "Excess <h2> tag that is NOT at root-level (id='second', text='Second')"
   );
 });
 
@@ -970,4 +1068,60 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   const samplesRoot = path.join(builtFolder, "_samples_");
   const found = glob.sync(path.join(samplesRoot, "**", "index.html"));
   expect(found.length).toBe(3);
+});
+
+test("headings with HTML should be rendered as HTML", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "html_headings"
+  );
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  // The page only has 1 h2, and its content should be HTML.
+  expect($("article h2 a").html()).toBe("Here's some <code>code</code>");
+  expect($("article h2").text()).toBe("Here's some code");
+  expect($("article h3 a").html()).toBe(
+    "You can use escaped HTML tags like &lt;pre&gt; still"
+  );
+  expect($("article h3").text()).toBe(
+    "You can use escaped HTML tags like <pre> still"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const [section1, section2] = doc.body;
+  // Because the title contains HTML, you can expect a 'titleAsText'
+  expect(section1.value.title).toBe("Here's some <code>code</code>");
+  expect(section1.value.titleAsText).toBe("Here's some code");
+  expect(section2.value.title).toBe(
+    "You can use escaped HTML tags like &lt;pre&gt; still"
+  );
+  expect(section2.value.titleAsText).toBe(
+    "You can use escaped HTML tags like <pre> still"
+  );
+});
+
+test("deprecated macros are fixable", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "fixable_flaws",
+    "deprecated_macros"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.macros.length).toBe(4);
+  // All fixable and all a suggestion of ''
+  expect(doc.flaws.macros.filter((flaw) => flaw.fixable).length).toBe(4);
+  expect(doc.flaws.macros.filter((flaw) => flaw.suggestion === "").length).toBe(
+    4
+  );
 });

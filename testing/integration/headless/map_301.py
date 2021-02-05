@@ -528,8 +528,14 @@ MOZILLADEMOS_URLS = list(
 # These are the remaining "samples/*" URL's, the ones that haven't been redirected
 # by any of the special cases, which we expect to be redirected to the media CDN.
 DEFAULT_SAMPLES_URLS = [
-    url_test("/samples/cssref/background.html", status_code=302,),
-    url_test("/samples/html/progress.html", status_code=302,),
+    url_test(
+        "/samples/cssref/background.html",
+        status_code=302,
+    ),
+    url_test(
+        "/samples/html/progress.html",
+        status_code=302,
+    ),
 ]
 
 # Converted from SCL3 Apache files - MindTouch / old hosted files
@@ -660,7 +666,11 @@ zone_redirects = (
         ),
     ),
     ("Firefox", "Mozilla/ফায়ারফক্স", ("bn",)),
-    ("Apps", "Web/Apps", ("en-US", "fa", "fr", "ja", "th", "zh-CN", "zh-TW", None),),
+    (
+        "Apps",
+        "Web/Apps",
+        ("en-US", "fa", "fr", "ja", "th", "zh-CN", "zh-TW", None),
+    ),
     ("Apps", "Web/Aplicaciones", ("es",)),
     ("Apps", "Apps", ("bn", "de", "it", "ko", "pt-BR", "ru")),
     # The "Learn" zone is actually captured by a regular expression

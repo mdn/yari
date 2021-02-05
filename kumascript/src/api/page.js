@@ -6,7 +6,7 @@ module.exports = {
   // Determines whether or not the page has the specified tag. Returns
   // true if it does, otherwise false. This is case-insensitive.
   //
-  hasTag: function (aPage, aTag) {
+  hasTag(aPage, aTag) {
     // First, return false at once if there are no tags on the page
 
     if (

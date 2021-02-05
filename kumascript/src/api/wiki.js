@@ -39,13 +39,13 @@ module.exports = {
         let re;
         if (offset > 0) {
           for (let i = 6; i >= level; i--) {
-            re = new RegExp("(</?h)" + i + "([^>]*>)", "gi");
-            html = html.replace(re, "$1" + (i + offset) + "$2");
+            re = new RegExp(`(</?h)${i}([^>]*>)`, "gi");
+            html = html.replace(re, `$1${i + offset}$2`);
           }
         } else if (offset < 0) {
           for (let i = level; i <= 6; i++) {
-            re = new RegExp("(</?h)" + i + "([^>]*>)", "gi");
-            html = html.replace(re, "$1" + (i + offset) + "$2");
+            re = new RegExp(`(</?h)${i}([^>]*>)`, "gi");
+            html = html.replace(re, `$1${i + offset}$2`);
           }
         }
       }
@@ -54,7 +54,7 @@ module.exports = {
       }
       // Rip out the section header
       if (html) {
-        html = html.replace(/^<h\d[^>]*>[^<]*<\/h\d>/gi, "") + "";
+        html = `${html.replace(/^<h\d[^>]*>[^<]*<\/h\d>/gi, "")}`;
       }
       return html;
     }
@@ -101,7 +101,7 @@ module.exports = {
   uri(path, query) {
     var out = util.preparePath(path);
     if (query) {
-      out += "?" + query;
+      out += `?${query}`;
     }
     return out;
   },
@@ -130,12 +130,12 @@ module.exports = {
     return process_array(null, pages, depth, ordered != 0, this.env.locale);
 
     function chunkify(t) {
-      var tz = [],
-        x = 0,
-        y = -1,
-        n = 0,
-        i,
-        j;
+      var tz = [];
+      var x = 0;
+      var y = -1;
+      var n = 0;
+      var i;
+      var j;
 
       while ((i = (j = t.charAt(x++)).charCodeAt(0))) {
         var m = i == 46 || (i >= 48 && i <= 57);
@@ -154,8 +154,8 @@ module.exports = {
 
       for (let x = 0; aa[x] && bb[x]; x++) {
         if (aa[x] !== bb[x]) {
-          var c = Number(aa[x]),
-            d = Number(bb[x]);
+          var c = Number(aa[x]);
+          var d = Number(bb[x]);
           if (c == aa[x] && d == bb[x]) {
             return c - d;
           } else return aa[x] > bb[x] ? 1 : -1;
@@ -170,8 +170,8 @@ module.exports = {
 
       for (let x = 0; aa[x] && bb[x]; x++) {
         if (aa[x] !== bb[x]) {
-          var c = Number(aa[x]),
-            d = Number(bb[x]);
+          var c = Number(aa[x]);
+          var d = Number(bb[x]);
           if (c == aa[x] && d == bb[x]) {
             return c - d;
           } else return aa[x] > bb[x] ? 1 : -1;
@@ -196,12 +196,9 @@ module.exports = {
         // First add an extra item for linking to the folder's page
         // (only for ordered lists)
         if (folderItem != null && ordered) {
-          result +=
-            '<li><a href="' +
-            folderItem.url +
-            '">' +
-            util.htmlEscape(folderItem.title) +
-            "</a></li>";
+          result += `<li><a href="${folderItem.url}">${util.htmlEscape(
+            folderItem.title
+          )}</a></li>`;
         }
 
         // Now dive into the child items
@@ -223,14 +220,9 @@ module.exports = {
               locale
             );
           }
-          result +=
-            '<li><a href="' +
-            item.url +
-            '">' +
-            util.htmlEscape(item.title) +
-            "</a>" +
-            subList +
-            "</li>";
+          result += `<li><a href="${item.url}">${util.htmlEscape(
+            item.title
+          )}</a>${subList}</li>`;
         });
         result += closeTag;
       }

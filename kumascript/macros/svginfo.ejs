@@ -8,10 +8,10 @@
 var slug = env.slug;
 var name = $0 || (slug ? slug.split("/").pop() :
     "preview-wiki-content");
-var data = string.deserialize(await template("SVGData"));
+var data = JSON.parse(await template("SVGData"));
 var formattedError = "<span style=\"color:red;\">$1$</span>";
-var commonLocalStrings = string.deserialize(await template("L10n:Common"));
-var localStrings = string.deserialize(await template("L10n:SVG"));
+var commonLocalStrings = JSON.parse(await template("L10n:Common"));
+var localStrings = JSON.parse(await template("L10n:SVG"));
 
 var localize = mdn.getLocalString;
 var replacePlaceholders = mdn.replacePlaceholders;
@@ -71,7 +71,7 @@ if (name === "preview-wiki-content") {
         value: permittedContent
     });
 
-    result = await template("propertiesbox", [string.serialize(properties)]);
+    result = await template("propertiesbox", [JSON.stringify(properties)]);
 } else {
     result = replacePlaceholders(formattedError,
         [localize(commonLocalStrings, "missing")]);

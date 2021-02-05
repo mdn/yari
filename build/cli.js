@@ -18,7 +18,7 @@ const { CONTENT_TRANSLATED_ROOT } = require("../content/constants");
 const { uniqifyTranslationsOf } = require("./translationsof");
 const { humanFileSize } = require("./utils");
 
-async function buildDocuments(files = null) {
+async function buildDocuments(files = null, quiet = false) {
   // If a list of files was set, it came from the CLI.
   // Override whatever was in the build options.
   const findAllOptions = files
@@ -56,7 +56,10 @@ async function buildDocuments(files = null) {
   // This builds up a mapping from en-US slugs to their translated slugs.
   const translationsOf = new Map();
 
-  !options.noProgressbar && progressBar.start(documents.count);
+  if (!options.noProgressbar) {
+    progressBar.start(documents.count);
+  }
+
   for (const document of documents.iter()) {
     const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
     fs.mkdirSync(outPath, { recursive: true });
@@ -158,11 +161,6 @@ async function buildDocuments(files = null) {
       fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
     }
 
-    // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
-    document.noIndexing =
-      (document.isArchive && !document.isTranslated) ||
-      document.metadata.slug === "MDN/Kitchensink";
-
     // Collect non-archived documents' slugs to be used in sitemap building and
     // search index building.
     if (!document.noIndexing) {
@@ -180,7 +178,7 @@ async function buildDocuments(files = null) {
 
     if (!options.noProgressbar) {
       progressBar.increment();
-    } else {
+    } else if (!quiet) {
       console.log(outPath);
     }
     const heapBytes = process.memoryUsage().heapUsed;
@@ -189,7 +187,9 @@ async function buildDocuments(files = null) {
     }
   }
 
-  !options.noProgressbar && progressBar.stop();
+  if (!options.noProgressbar) {
+    progressBar.stop();
+  }
 
   const sitemapsBuilt = [];
   for (const [locale, docs] of Object.entries(docPerLocale)) {
@@ -231,7 +231,7 @@ async function buildDocuments(files = null) {
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
 }
 
-async function buildOtherSPAs() {
+async function buildOtherSPAs(options) {
   const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_spas");
   fs.mkdirSync(outPath, { recursive: true });
 
@@ -239,7 +239,9 @@ async function buildOtherSPAs() {
   const url = "/en-US/404.html";
   const html = renderHTML(url, { pageNotFound: true });
   fs.writeFileSync(path.join(outPath, path.basename(url)), html);
-  console.log("Wrote", path.join(outPath, path.basename(url)));
+  if (!options.quiet) {
+    console.log("Wrote", path.join(outPath, path.basename(url)));
+  }
 
   // XXX Here, build things like the home page, site-search etc.
   // ...
@@ -270,18 +272,23 @@ program
   .action(async ({ args, options }) => {
     try {
       if (options.spas) {
-        console.log("\nBuilding SPAs...");
-        await buildOtherSPAs();
+        if (!options.quiet) {
+          console.log("\nBuilding SPAs...");
+        }
+        await buildOtherSPAs(options);
       }
       if (options.spasOnly) {
         return;
       }
 
-      console.log("\nBuilding Documents...");
+      if (!options.quiet) {
+        console.log("\nBuilding Documents...");
+      }
       const { files } = args;
       const t0 = new Date();
       const { slugPerLocale, peakHeapBytes, totalFlaws } = await buildDocuments(
-        files
+        files,
+        Boolean(options.quiet)
       );
       const t1 = new Date();
       const count = Object.values(slugPerLocale).reduce(
@@ -293,13 +300,15 @@ program
         seconds > 60
           ? `${(seconds / 60).toFixed(1)} minutes`
           : `${seconds.toFixed(1)} seconds`;
-      console.log(
-        `Built ${count.toLocaleString()} pages in ${took}, at a rate of ${(
-          count / seconds
-        ).toFixed(1)} documents per second.`
-      );
-      console.log(`Peak heap memory usage: ${humanFileSize(peakHeapBytes)}`);
-      console.log(formatTotalFlaws(totalFlaws));
+      if (!options.quiet) {
+        console.log(
+          `Built ${count.toLocaleString()} pages in ${took}, at a rate of ${(
+            count / seconds
+          ).toFixed(1)} documents per second.`
+        );
+        console.log(`Peak heap memory usage: ${humanFileSize(peakHeapBytes)}`);
+        console.log(formatTotalFlaws(totalFlaws));
+      }
     } catch (error) {
       // So you get a stacktrace in the CLI output
       console.error(error);

@@ -36,6 +36,9 @@ will re-use any previously compiled files which is "riskier" but faster.
 The `yarn start` command will also start a server which doesn't automatically
 reload when its source code files change, so use with caution.
 
+See also our [reviewing guide](docs/REVIEWING.md) for information on how to
+review Yari changes.
+
 ### How to stay up-to-date
 
 Periodically, the code and the content changes. Make sure you're staying
@@ -198,3 +201,27 @@ from the file `mdn-web-docs.svg` in the repository root. This file is then
 converted to favicons using [realfavicongenerator.net](https://realfavicongenerator.net/).
 To generate new favicons, edit or replace the `mdn-web-docs.svg` file
 and then re-upload that to realfavicongenerator.net.
+
+## Troubleshooting
+
+Some common issues and how to resolve them.
+
+### `Error: ENOSPC: System limit for number of file watchers reached`
+
+There are two options to resolve this.
+
+1. Disable the watcher via [`REACT_APP_NO_WATCHER`](docs/envvars.md#react_app_no_watcher)
+
+   `echo REACT_APP_NO_WATCHER=true >> .env`
+
+2. Increase `max_user_watches`:\
+   See <https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers>
+
+### `Error: Cannot find module 'levenary'`
+
+We can't know for sure what's causing this error but speculate a bug in how `yarn`
+fails to resolve if certain `@babel` helper libs should install its own
+sub-dependencies. A sure way to solve it is to run:
+
+    rm -fr node_modules
+    yarn install

@@ -60,7 +60,7 @@ describe("Templates class", () => {
     let macros = new Templates(dir("macros"));
 
     let result = await macros.render("async", {
-      async_adder: function (n) {
+      async_adder(n) {
         return new Promise((resolve) => {
           setTimeout(() => resolve(n + 1));
         });
