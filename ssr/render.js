@@ -48,9 +48,9 @@ function getHrefLang(locale, otherLocales) {
 const lazy = (creator) => {
   let res;
   let processed = false;
-  return () => {
+  return (...args) => {
     if (processed) return res;
-    res = creator.apply(this, arguments);
+    res = creator.apply(this, ...args);
     processed = true;
     return res;
   };
@@ -232,7 +232,6 @@ export default function render(
     }
   }
 
-  $("title").text(pageTitle);
   const $title = $("title");
   $title.text(pageTitle);
 

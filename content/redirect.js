@@ -8,10 +8,9 @@ const {
   CONTENT_TRANSLATED_ROOT,
   VALID_LOCALES,
 } = require("./constants");
+const { isArchivedFilePath } = require("./archive");
 
 const FORBIDDEN_URL_SYMBOLS = ["\n", "\t"];
-
-let ARCHIVED_URLS;
 
 function checkURLInvalidSymbols(url) {
   for (const character of FORBIDDEN_URL_SYMBOLS) {
@@ -28,16 +27,6 @@ function resolveDocumentPath(url) {
   }
   const [bareURL] = url.split("#");
 
-  if (!ARCHIVED_URLS) {
-    ARCHIVED_URLS = new Set(
-      fs
-        .readFileSync(path.join(__dirname, "archived.txt"), "utf-8")
-        .split("\n")
-        .filter((line) => !line.startsWith("#") || line.trim())
-        .map((url) => url.toLowerCase())
-    );
-  }
-
   const [, locale, , ...slug] = bareURL.toLowerCase().split("/");
 
   const relativeFilePath = path.join(
@@ -46,7 +35,7 @@ function resolveDocumentPath(url) {
     "index.html"
   );
 
-  if (ARCHIVED_URLS.has(relativeFilePath.toLowerCase())) {
+  if (isArchivedFilePath(relativeFilePath)) {
     return `$ARCHIVED/${relativeFilePath}`;
   }
 
@@ -81,8 +70,8 @@ function validateToURL(url) {
   // If it's not external, it has to go to a valid document
   if (url.includes("://")) {
     // If this throws, conveniently the validator will do its job.
-    const url = new URL(url);
-    if (url.protocol !== "https:") {
+    const parsedURL = new URL(url);
+    if (parsedURL.protocol !== "https:") {
       throw new Error("We only redirect to https://");
     }
   } else {
@@ -278,7 +267,11 @@ const resolve = (url) => {
   if (!redirects.size) {
     load();
   }
-  return redirects.get(url.toLowerCase()) || resolveFundamental(url).url || url;
+  const fundamentalOrUrl = resolveFundamental(url).url || url;
+  return (
+    redirects.get(decodePath(fundamentalOrUrl).toLowerCase()) ||
+    fundamentalOrUrl
+  );
 };
 
 function shortCuts(pairs, throws = false) {
@@ -390,4 +383,9 @@ module.exports = {
   load,
   validateFromURL,
   validateToURL,
+
+  testing: {
+    shortCuts,
+    decodePairs,
+  },
 };

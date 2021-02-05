@@ -16,7 +16,13 @@ const { getPopularities } = require("./popularities");
 const { getWikiHistories } = require("./wikihistories");
 const { getGitHistories } = require("./githistories");
 
-const { buildURL, memoize, slugToFolder, execGit } = require("./utils");
+const {
+  buildURL,
+  memoize,
+  slugToFolder,
+  execGit,
+  urlToFolderPath,
+} = require("./utils");
 const Redirect = require("./redirect");
 
 function buildPath(localeFolder, slug) {
@@ -93,11 +99,6 @@ function trimLineEndings(string) {
     .split("\n")
     .map((s) => s.trimEnd())
     .join("\n");
-}
-
-function urlToFolderPath(url) {
-  const [, locale, , ...slugParts] = url.split("/");
-  return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
 }
 
 function create(html, metadata, root = null) {
@@ -246,6 +247,7 @@ const read = memoize((folder) => {
     path.relative(root, filePath)
   );
   let modified = (gitHistory && gitHistory.modified) || null;
+  const hash = (gitHistory && gitHistory.hash) || null;
   // Use the wiki histories for a list of legacy contributors.
   const wikiHistory = getWikiHistories(root, locale).get(url);
   if (!modified && wikiHistory && wikiHistory.modified) {
@@ -257,6 +259,7 @@ const read = memoize((folder) => {
       locale,
       popularity: getPopularities().get(url) || 0.0,
       modified,
+      hash,
       contributors: wikiHistory ? wikiHistory.contributors : [],
     },
     url,

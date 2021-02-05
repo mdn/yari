@@ -115,7 +115,7 @@ async function checkFile(filePath, options) {
   const extension = path.extname(filePath).toLowerCase();
   try {
     const plugins = [];
-    if ((extension === ".jpg") | (extension === ".jpeg")) {
+    if (extension === ".jpg" || extension === ".jpeg") {
       plugins.push(imageminMozjpeg());
     } else if (extension === ".png") {
       plugins.push(imageminPngquant());

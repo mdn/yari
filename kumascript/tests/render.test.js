@@ -14,7 +14,7 @@ const {
 
 describe("render() function", () => {
   function fixture(name) {
-    return __dirname + "/fixtures/render/" + name;
+    return `${__dirname}/fixtures/render/${name}`;
   }
   function get(name) {
     return fs.readFileSync(fixture(name), "utf8");
@@ -29,9 +29,9 @@ describe("render() function", () => {
 
   let cases = ["testcase1", "testcase2", "testcase3", "testcase4"];
   it.each(cases)("handles basic rendering %s", async (casedir) => {
-    let input = get(casedir + "/input");
-    let expected = get(casedir + "/output");
-    let templates = new Templates(fixture(casedir + "/macros"));
+    let input = get(`${casedir}/input`);
+    let expected = get(`${casedir}/output`);
+    let templates = new Templates(fixture(`${casedir}/macros`));
     let [result, errors] = await render(input, {}, renderPrerequisiteFromURL, {
       templates,
     });

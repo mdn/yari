@@ -104,6 +104,25 @@ function injectLoadingLazyAttributes($) {
 }
 
 /**
+ * For every `<a href="http...">` make it `<a href="http..." class="external">`
+ *
+ * @param {Cheerio document instance} $
+ */
+function injectExternalLinkClasses($) {
+  $("a[href^=http]:not(.external)").each((i, a) => {
+    const $a = $(a);
+    if ($a.attr("href").startsWith("https://developer.mozilla.org")) {
+      // This should have been removed since it's considered a flaw.
+      // But we haven't applied all fixable flaws yet and we still have to
+      // support translated content which is quite a long time away from
+      // being entirely treated with the fixable flaws cleanup.
+      return;
+    }
+    $a.addClass("external");
+  });
+}
+
+/**
  * Find all `in-page-callout` div elements and rewrite
  * to be just `callout`, no more need to mark them as `webdev`
  * @param {Cheerio document instance} $
@@ -138,11 +157,22 @@ function getGitHubURL(root, folder) {
   )}/files/${folder}/index.html`;
 }
 
-function injectSource(doc, document) {
+/**
+ * Return the full URL directly to the last commit affecting this file on GitHub.
+ * @param {String} hash - the full hash to point to.
+ */
+function getLastCommitURL(root, hash) {
+  const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
+  return `${baseURL}/commit/${hash}`;
+}
+
+function injectSource(doc, document, metadata) {
   const folder = document.fileInfo.folder;
+  const root = document.fileInfo.root;
   doc.source = {
     folder,
-    github_url: getGitHubURL(document.fileInfo.root, folder),
+    github_url: getGitHubURL(root, folder),
+    last_commit_url: getLastCommitURL(root, metadata.hash),
   };
 }
 
@@ -335,11 +365,11 @@ async function buildDocument(document, documentOptions = {}) {
     throw error;
   }
 
-  // Now that live samples have been extracted, lets remove all the `pre` tags
-  // that were used for that. If we don't do this, the `pre` tags will be
+  // Now that live samples have been extracted, lets remove all the `div.hidden` tags
+  // that were used for that. If we don't do this, for example, the `pre` tags will be
   // syntax highligted, which is a waste because they're going to be invisible
   // anyway.
-  $("div.hidden pre").remove();
+  $("div.hidden").remove();
 
   // Apply syntax highlighting all <pre> tags.
   syntaxHighlight($, doc);
@@ -350,6 +380,9 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Add the `loading=lazy` HTML attribute to the appropriate elements.
   injectLoadingLazyAttributes($);
+
+  // All external hyperlinks should have the `external` class name.
+  injectExternalLinkClasses($);
 
   // All content that uses `<div class="in-page-callout">` needs to
   // become `<div class="callout">`
@@ -419,7 +452,7 @@ async function buildDocument(document, documentOptions = {}) {
     doc.other_translations = otherTranslations;
   }
 
-  injectSource(doc, document);
+  injectSource(doc, document, metadata);
 
   // The `titles` object should contain every possible URI->Title mapping.
   // We can use that generate the necessary information needed to build
@@ -427,6 +460,13 @@ async function buildDocument(document, documentOptions = {}) {
   addBreadcrumbData(document.url, doc);
 
   doc.pageTitle = getPageTitle(doc);
+
+  // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
+  doc.noIndexing =
+    (doc.isArchive && !doc.isTranslated) ||
+    metadata.slug === "MDN/Kitchensink" ||
+    document.metadata.slug.startsWith("orphaned/") ||
+    document.metadata.slug.startsWith("conflicting/");
 
   return { doc, liveSamples, fileAttachments, bcdData };
 }

@@ -11,7 +11,7 @@ const imageminGifsicle = require("imagemin-gifsicle");
 const imageminSvgo = require("imagemin-svgo");
 const sanitizeFilename = require("sanitize-filename");
 
-const { Document, Redirect, Image } = require("../content");
+const { Archive, Document, Redirect, Image } = require("../content");
 const { FLAW_LEVELS } = require("./constants");
 const { packageBCD } = require("./resolve-bcd");
 const {
@@ -55,8 +55,6 @@ function injectSectionFlaws(doc, flaws, options) {
 // The 'broken_links' flaw check looks for internal links that
 // link to a document that's going to fail with a 404 Not Found.
 function injectBrokenLinksFlaws(level, doc, $, rawContent) {
-  if (level === FLAW_LEVELS.IGNORE) return;
-
   // This is needed because the same href can occur multiple time.
   // For example:
   //    <a href="/foo/bar">
@@ -80,6 +78,16 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
     suggestion = null,
     explanation
   ) {
+    if (level === FLAW_LEVELS.IGNORE) {
+      // Note, even if not interested in flaws, we still need to apply the
+      // suggestion. For example, in production builds, we don't care about
+      // logging flaws, but because not all `broken_links` flaws have been
+      // manually fixed at the source.
+      if (suggestion) {
+        $element.attr("href", suggestion);
+      }
+      return;
+    }
     explanation = explanation || `Can't resolve ${href}`;
 
     if (!matches.has(href)) {
@@ -151,7 +159,10 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
       const found = Document.findByURL(hrefNormalized);
       if (!found) {
         // Before we give up, check if it's an image.
-        if (!Image.findByURL(hrefNormalized)) {
+        if (
+          !Image.findByURL(hrefNormalized) &&
+          !Archive.isArchivedURL(hrefNormalized)
+        ) {
           // Before we give up, check if it's a redirect.
           const resolved = Redirect.resolve(hrefNormalized);
           if (resolved !== hrefNormalized) {
@@ -165,29 +176,27 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
             addBrokenLink(a, checked.get(href), href);
           }
         }
-      } else {
         // But does it have the correct case?!
-        if (found.url !== href.split("#")[0]) {
-          // Inconsistent case.
-          addBrokenLink(
-            a,
-            checked.get(href),
-            href,
-            found.url + absoluteURL.search + absoluteURL.hash.toLowerCase()
-          );
-        } else if (
-          hrefSplit.length > 1 &&
-          hrefSplit[1] !== hrefSplit[1].toLowerCase()
-        ) {
-          const hash = hrefSplit[1];
-          addBrokenLink(
-            a,
-            checked.get(href),
-            href,
-            href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
-            "Anchor not lowercase"
-          );
-        }
+      } else if (found.url !== href.split("#")[0]) {
+        // Inconsistent case.
+        addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          found.url + absoluteURL.search + absoluteURL.hash.toLowerCase()
+        );
+      } else if (
+        hrefSplit.length > 1 &&
+        hrefSplit[1] !== hrefSplit[1].toLowerCase()
+      ) {
+        const hash = hrefSplit[1];
+        addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
+          "Anchor not lowercase"
+        );
       }
     } else if (href.startsWith("#")) {
       const hash = href.split("#")[1];
@@ -557,6 +566,9 @@ async function fixFixableFlaws(doc, options, document) {
         const { response } = error;
         if (response && response.statusCode === 404) {
           console.log(chalk.yellow(`Skipping ${flaw.src} (404)`));
+          continue;
+        } else if (error.code === "ETIMEDOUT" || error.code === "ENOTFOUND") {
+          console.log(chalk.yellow(`Skipping ${flaw.src} (${error.code})`));
           continue;
         } else {
           console.error(error);

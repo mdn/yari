@@ -15,7 +15,7 @@
     "en-US": "At-Rules",
     "fr": "Règles @",
     "de": "At-Regeln",
-    "ja": "@規則",
+    "ja": "アット規則",
     "ru": "@-правила",
     "it": "Regole @"
   },
@@ -23,7 +23,7 @@
     "en-US": "Data types",
     "fr": "Types de donnée",
     "de": "Datentypen",
-    "ja": "データ形式",
+    "ja": "データ型",
     "ru": "Типы данных",
     "it": "Tipi di dato"
   },
@@ -39,7 +39,7 @@
     "en-US": "CSS info in preview not available",
     "de": "CSS-Info in der Vorschau nicht verfügbar",
     "fr": "CSS-Info n'est pas disponible en aperçu",
-    "ja": "プレビューの CSS info が利用できません",
+    "ja": "プレビューでは CSS info は利用できません",
     "ru": "CSS info недоступно в предпросмотре",
     "it": "Informazione CSS non disponibile nell'anteprima"
   },

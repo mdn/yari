@@ -1,0 +1,4 @@
+*.min.js
+client/build/
+dist/
+libs/
