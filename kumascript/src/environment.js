@@ -34,7 +34,7 @@ const globalsPrototype = {
    *
    * @type {NodeRequireFunction}
    */
-  require: require,
+  require,
 };
 
 const kumaPrototype = require("./api/kuma.js");
