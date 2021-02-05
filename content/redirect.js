@@ -48,7 +48,7 @@ function resolveDocumentPath(url) {
 
   if (!root) {
     console.log(
-      `Trying to resolve a non en-us path for ${url} with out CONTENT_TRANSLATED_ROOT set.`
+      `Trying to resolve a non-en-us path for ${url} without CONTENT_TRANSLATED_ROOT set.`
     );
     return `$TRANSLATED/${relativeFilePath}`;
   }
