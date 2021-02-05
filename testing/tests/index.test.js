@@ -1105,3 +1105,23 @@ test("headings with HTML should be rendered as HTML", () => {
     "You can use escaped HTML tags like <pre> still"
   );
 });
+
+test("deprecated macros are fixable", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "fixable_flaws",
+    "deprecated_macros"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.macros.length).toBe(4);
+  // All fixable and all a suggestion of ''
+  expect(doc.flaws.macros.filter((flaw) => flaw.fixable).length).toBe(4);
+  expect(doc.flaws.macros.filter((flaw) => flaw.suggestion === "").length).toBe(
+    4
+  );
+});
