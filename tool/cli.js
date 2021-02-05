@@ -56,21 +56,21 @@ program
   )
 
   .command("verify-redirects", "Verify the _redirects.txt file(s) by locale")
-  .argument("[locale...]", "Locale", {
+  .argument("[locales...]", "Locale", {
     default: [...VALID_LOCALES.values()],
     validator: [...VALID_LOCALES.values()],
   })
   .action(
     tryOrExit(({ args, logger }) => {
-      const { locale } = args;
+      const { locales } = args;
 
-      for (const l of locale) {
+      for (const locale of locales) {
         try {
-          Redirect.validateLocale(l);
-          logger.info(chalk.green(`✓ redirects for ${l} looking good!`));
+          Redirect.validateLocale(locale);
+          logger.info(chalk.green(`✓ redirects for ${locale} looking good!`));
         } catch (e) {
           logger.info(
-            chalk.green(`_redirects.txt for ${l} is causing issues: ${e}`)
+            chalk.green(`_redirects.txt for ${locale} is causing issues: ${e}`)
           );
         }
       }
@@ -115,16 +115,16 @@ program
   )
 
   .command("fix-redirects", "Consolidate/fix redirects")
-  .argument("<locale...>", "Locale", {
+  .argument("<locales...>", "Locale", {
     default: [DEFAULT_LOCALE],
     validator: [...VALID_LOCALES.values(), ...VALID_LOCALES.keys()],
   })
   .action(
     tryOrExit(({ args, logger }) => {
-      const { locale } = args;
-      for (const l of locale) {
-        Redirect.add(l.toLowerCase(), [], { fix: true });
-        logger.info(chalk.green(`Fixed ${l}`));
+      const { locales } = args;
+      for (const locale of locales) {
+        Redirect.add(locale.toLowerCase(), [], { fix: true });
+        logger.info(chalk.green(`Fixed ${locale}`));
       }
     })
   )
