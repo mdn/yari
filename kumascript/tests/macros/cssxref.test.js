@@ -144,7 +144,7 @@ const TEST_CASE = [
   {
     title: "Three arguments (Custom link text, with anchor)",
     input: ["display", "display flex", "#flex"],
-    output: makeExpect(MOCK_PAGES.display.url + "#flex", "", "display flex"),
+    output: makeExpect(`${MOCK_PAGES.display.url}#flex`, "", "display flex"),
   },
   {
     title: "Special CSS Data Type: <color>",

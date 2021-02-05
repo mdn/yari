@@ -1,5 +1,5 @@
 function testURL(pathname = "/") {
-  return "http://localhost:5000" + pathname;
+  return `http://localhost:5000${pathname}`;
 }
 
 describe("Site search", () => {

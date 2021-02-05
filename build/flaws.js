@@ -56,8 +56,6 @@ function injectSectionFlaws(doc, flaws, options) {
 // The 'broken_links' flaw check looks for internal links that
 // link to a document that's going to fail with a 404 Not Found.
 function injectBrokenLinksFlaws(level, doc, $, rawContent) {
-  if (level === FLAW_LEVELS.IGNORE) return;
-
   // This is needed because the same href can occur multiple time.
   // For example:
   //    <a href="/foo/bar">
@@ -81,6 +79,16 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
     suggestion = null,
     explanation
   ) {
+    if (level === FLAW_LEVELS.IGNORE) {
+      // Note, even if not interested in flaws, we still need to apply the
+      // suggestion. For example, in production builds, we don't care about
+      // logging flaws, but because not all `broken_links` flaws have been
+      // manually fixed at the source.
+      if (suggestion) {
+        $element.attr("href", suggestion);
+      }
+      return;
+    }
     explanation = explanation || `Can't resolve ${href}`;
 
     if (!matches.has(href)) {
@@ -169,29 +177,27 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
             addBrokenLink(a, checked.get(href), href);
           }
         }
-      } else {
         // But does it have the correct case?!
-        if (found.url !== href.split("#")[0]) {
-          // Inconsistent case.
-          addBrokenLink(
-            a,
-            checked.get(href),
-            href,
-            found.url + absoluteURL.search + absoluteURL.hash.toLowerCase()
-          );
-        } else if (
-          hrefSplit.length > 1 &&
-          hrefSplit[1] !== hrefSplit[1].toLowerCase()
-        ) {
-          const hash = hrefSplit[1];
-          addBrokenLink(
-            a,
-            checked.get(href),
-            href,
-            href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
-            "Anchor not lowercase"
-          );
-        }
+      } else if (found.url !== href.split("#")[0]) {
+        // Inconsistent case.
+        addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          found.url + absoluteURL.search + absoluteURL.hash.toLowerCase()
+        );
+      } else if (
+        hrefSplit.length > 1 &&
+        hrefSplit[1] !== hrefSplit[1].toLowerCase()
+      ) {
+        const hash = hrefSplit[1];
+        addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
+          "Anchor not lowercase"
+        );
       }
     } else if (href.startsWith("#")) {
       const hash = href.split("#")[1];

@@ -38,8 +38,8 @@ function _(key, locale) {
 }
 
 // Build an absolute URL by concatenating the arguments.
-function URL(...chunks) {
-  return "/" + chunks.join("/");
+function joinPathsForUrl(...chunks) {
+  return `/${chunks.join("/")}`;
 }
 
 // Turn a camelCase string into a snake_case string
@@ -48,7 +48,7 @@ function URL(...chunks) {
 // @param upFirst <boolean> Indicate is the first letter must be upper cased (true by default)
 // @return <string>
 function camelToSnake(str, upFirst = true) {
-  str = str.replace(/[A-Z]/g, (match) => "_" + match.toLowerCase());
+  str = str.replace(/[A-Z]/g, (match) => `_${match.toLowerCase()}`);
 
   if (upFirst) str = str.replace(/^./, (match) => match.toUpperCase());
 
@@ -78,12 +78,12 @@ function makeExpect(data, locale = "en-US") {
       (acc, value) => {
         if (value.indexOf("&lt;") !== -1) {
           let key = value.replace(/&lt;|&gt;/g, "");
-          let url = URL(locale, SVG_BASE_SLUG, "Element", key);
+          let url = joinPathsForUrl(locale, SVG_BASE_SLUG, "Element", key);
           acc.elements.push(`<a href="${url}"><code>${value}</code></a>`);
         } else {
-          let anchor = "#" + camelToSnake(value);
+          let anchor = `#${camelToSnake(value)}`;
           let label = _(value, locale);
-          let url = URL(locale, SVG_BASE_SLUG, "Element") + anchor;
+          let url = joinPathsForUrl(locale, SVG_BASE_SLUG, "Element") + anchor;
 
           acc.groups.push(`<a href="${url}">${label}</a>`);
         }
@@ -394,7 +394,7 @@ const TEST_CASE = [
     input: [],
     output: makeExpect(SVG_DATA.elements.altGlyphDef),
     env: {
-      slug: URL("en-US", SVG_BASE_SLUG, "Element", "altGlyphDef"),
+      slug: joinPathsForUrl("en-US", SVG_BASE_SLUG, "Element", "altGlyphDef"),
     },
   },
   {
@@ -404,7 +404,7 @@ const TEST_CASE = [
     output: makeExpect(SVG_DATA.elements.defs, "zh-CN"),
     env: {
       locale: "zh-CN",
-      slug: URL("zh-CN", SVG_BASE_SLUG, "Element", "defs"),
+      slug: joinPathsForUrl("zh-CN", SVG_BASE_SLUG, "Element", "defs"),
     },
   },
 ];

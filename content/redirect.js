@@ -70,8 +70,8 @@ function validateToURL(url) {
   // If it's not external, it has to go to a valid document
   if (url.includes("://")) {
     // If this throws, conveniently the validator will do its job.
-    const url = new URL(url);
-    if (url.protocol !== "https:") {
+    const parsedURL = new URL(url);
+    if (parsedURL.protocol !== "https:") {
       throw new Error("We only redirect to https://");
     }
   } else {
@@ -383,4 +383,9 @@ module.exports = {
   load,
   validateFromURL,
   validateToURL,
+
+  testing: {
+    shortCuts,
+    decodePairs,
+  },
 };

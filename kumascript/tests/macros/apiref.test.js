@@ -394,7 +394,7 @@ function checkResult(html, config) {
   expect(details.length).toEqual(Object.keys(config.expected.details).length);
 
   // Test the properties sublist
-  const expectedPropertySummary = commonL10nJSON["Properties"][config.locale];
+  const expectedPropertySummary = commonL10nJSON.Properties[config.locale];
   const expectedPropertyItems =
     config.expected.details.properties[config.locale];
   const properties = details[0];
@@ -407,7 +407,7 @@ function checkResult(html, config) {
   );
 
   // Test the methods sublist
-  const expectedMethodSummary = commonL10nJSON["Methods"][config.locale];
+  const expectedMethodSummary = commonL10nJSON.Methods[config.locale];
   const expectedMethodItems = config.expected.details.methods[config.locale];
   const methods = details[1];
   checkItemList(
@@ -419,7 +419,7 @@ function checkResult(html, config) {
   );
 
   // Test the events sublist
-  const expectedEventSummary = commonL10nJSON["Events"][config.locale];
+  const expectedEventSummary = commonL10nJSON.Events[config.locale];
   const expectedEventItems = config.expected.details.events[config.locale];
   const events = details[2];
   checkItemList(
@@ -433,8 +433,7 @@ function checkResult(html, config) {
   const hasInherited = config.expected.details.inherited;
   if (hasInherited) {
     // Test the inherited sublist
-    const expectedInheritedSummary =
-      commonL10nJSON["Inheritance"][config.locale];
+    const expectedInheritedSummary = commonL10nJSON.Inheritance[config.locale];
     const expectedInheritedItems = config.expected.details.inherited;
     const inherited = details[3];
     checkItemList(
@@ -450,7 +449,7 @@ function checkResult(html, config) {
   if (hasImplemented) {
     // Test the implemented_by sublist
     const expectedImplementedSummary =
-      commonL10nJSON["Implemented_by"][config.locale];
+      commonL10nJSON.Implemented_by[config.locale];
     const expectedImplementedItems = config.expected.details.implemented;
     const implemented = details[4];
     checkItemList(
@@ -465,7 +464,7 @@ function checkResult(html, config) {
   const hasRelated = config.expected.details.related;
   if (hasRelated) {
     // Test the related sublist
-    const expectedRelatedSummary = commonL10nJSON["Related_pages"][
+    const expectedRelatedSummary = commonL10nJSON.Related_pages[
       config.locale
     ].replace("$1", config.argument);
     const expectedRelatedItems = config.expected.details.related;

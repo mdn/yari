@@ -144,48 +144,48 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
           addImageFlaw(img, src, {
             explanation: "File not present on disk",
           });
+        } else if (!src.includes("/") || src.startsWith("./")) {
+          // Always build the `finalSrc` based on correct case.
+          finalSrc = path.join(`${url}/`, src.toLowerCase());
+          // Clearly, it worked but was the wrong case used?
+          if (finalSrc !== path.join(`${url}/`, src)) {
+            // E.g. <img src="wRonGCaSE.PNg"> or <img src="./WrONgcAse.pnG">
+            addImageFlaw(img, src, {
+              explanation: "Pathname should always be lowercase",
+              suggestion: src.toLowerCase(),
+            });
+          }
         } else {
-          if (!src.includes("/") || src.startsWith("./")) {
-            // Always build the `finalSrc` based on correct case.
-            finalSrc = path.join(`${url}/`, src.toLowerCase());
-            // Clearly, it worked but was the wrong case used?
-            if (finalSrc !== path.join(`${url}/`, src)) {
-              // E.g. <img src="wRonGCaSE.PNg"> or <img src="./WrONgcAse.pnG">
-              addImageFlaw(img, src, {
-                explanation: "Pathname should always be lowercase",
-                suggestion: src.toLowerCase(),
-              });
-            }
-          } else {
-            // This will always be non-null because independent of the
-            // image name, if the file didn't exist the document doesn't exist.
-            const parentDocument = Document.findByURL(path.dirname(finalSrc));
+          // This will always be non-null because independent of the
+          // image name, if the file didn't exist the document doesn't exist.
+          const parentDocument = Document.findByURL(path.dirname(finalSrc));
 
-            // Base the final URL on the parent document + image file name lowercase.
-            finalSrc = `${parentDocument.url}/${path
-              .basename(finalSrc)
-              .toLowerCase()}`;
+          // Base the final URL on the parent document + image file name lowercase.
+          finalSrc = `${parentDocument.url}/${path
+            .basename(finalSrc)
+            .toLowerCase()}`;
 
-            if (src.startsWith("/")) {
-              // E.g. <img src="/en-US/docs/Web/Images/foo.gif"
-              const suggestion = path.join(
-                path.relative(url, parentDocument.url),
-                path.basename(finalSrc)
-              );
-              addImageFlaw(img, src, {
-                explanation: "Pathname should be relative to document",
-                suggestion,
-              });
-            }
+          if (src.startsWith("/")) {
+            // E.g. <img src="/en-US/docs/Web/Images/foo.gif"
+            const suggestion = path.join(
+              path.relative(url, parentDocument.url),
+              path.basename(finalSrc)
+            );
+            addImageFlaw(img, src, {
+              explanation: "Pathname should be relative to document",
+              suggestion,
+            });
           }
         }
       }
       img.attr("src", finalSrc);
     }
-    if (doc.flaws.images && doc.flaws.images.length) {
-      if (options.flawLevels.get("images") === FLAW_LEVELS.ERROR) {
-        throw new Error(`images flaws: ${JSON.stringify(doc.flaws.images)}`);
-      }
+    if (
+      doc.flaws.images &&
+      doc.flaws.images.length &&
+      options.flawLevels.get("images") === FLAW_LEVELS.ERROR
+    ) {
+      throw new Error(`images flaws: ${JSON.stringify(doc.flaws.images)}`);
     }
   });
 
