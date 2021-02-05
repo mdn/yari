@@ -46,6 +46,7 @@ program
   .name("tool")
   .version("0.0.0")
   .disableGlobalOption("--silent")
+  .cast(false)
   .command("validate-redirects", "Try loading the _redirects.txt file(s)")
   .action(
     tryOrExit(({ logger }) => {
@@ -94,13 +95,13 @@ program
   .command("add-redirect", "Add a new redirect")
   .argument("<from>", "From-URL", {
     validator: (value) => {
-      Redirect.validateFromURL(value);
+      Redirect.validateFromURL(value, false);
       return value;
     },
   })
   .argument("<to>", "To-URL", {
     validator: (value) => {
-      Redirect.validateToURL(value);
+      Redirect.validateToURL(value, false);
       return value;
     },
   })

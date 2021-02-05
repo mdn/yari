@@ -91,7 +91,7 @@ function validateToURL(url, checkResolve = true, checkPath = true) {
     if (parsedURL.protocol !== "https:") {
       throw new Error("We only redirect to https://");
     }
-  } else {
+  } else if (url.startsWith("/")) {
     checkURLInvalidSymbols(url);
     validateURLLocale(url);
 
@@ -110,6 +110,8 @@ function validateToURL(url, checkResolve = true, checkPath = true) {
         throw new Error(`To-URL has to resolve to a file (${url})`);
       }
     }
+  } else {
+    throw new Error(`To-URL has to be external or start with / (${url})`);
   }
 }
 
