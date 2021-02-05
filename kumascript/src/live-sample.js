@@ -82,9 +82,8 @@ function buildLiveSamplePage(uri, title, source, sampleIDObject) {
     if (e instanceof KumascriptError) {
       result.flaw = sampleIDObject.createFlaw(e);
       return result;
-    } else {
-      throw e;
     }
+    throw e;
   }
   sampleData.sampleTitle = `${title} - ${sampleIDObject.id} - code sample`;
   result.html = liveSampleTemplate(sampleData);

@@ -310,9 +310,8 @@ function shortCuts(pairs, throws = false) {
         return [];
       }
       return transit(next, froms);
-    } else {
-      return [froms, s];
     }
+    return [froms, s];
   };
 
   const sortTuples = ([a, b], [c, d]) => {
