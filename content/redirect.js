@@ -20,14 +20,14 @@ function checkURLInvalidSymbols(url) {
   }
 }
 
-function isVanityRedirectUrl(url) {
+function isVanityRedirectURL(url) {
   const localeUrls = new Set([...VALID_LOCALES.values()].map((l) => `/${l}/`));
   return localeUrls.has(url);
 }
 
 function resolveDocumentPath(url) {
   // Let's keep vanity urls to /en-US/ ...
-  if (isVanityRedirectUrl(url)) {
+  if (isVanityRedirectURL(url)) {
     return url;
   }
   const [bareURL] = url.split("#");
@@ -81,7 +81,7 @@ function validateFromURL(url, checkResolve = true) {
 // Throw if this can't be a redirect to-URL.
 function validateToURL(url, checkResolve = true, checkPath = true) {
   // Let's keep vanity urls to /en-US/ ...
-  if (isVanityRedirectUrl(url)) {
+  if (isVanityRedirectURL(url)) {
     return url;
   }
   // If it's not external, it has to go to a valid document
