@@ -403,7 +403,7 @@ function findAll(
   }
   return {
     count: filePaths.length,
-    iter: function* () {
+    *iter() {
       for (const filePath of filePaths) {
         yield read(filePath);
       }
