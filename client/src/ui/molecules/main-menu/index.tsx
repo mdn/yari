@@ -60,7 +60,6 @@ export default function MainMenu({
 
     // store the current activeElement
     previousActiveElement.current = event.target;
-    event.target.setAttribute("aria-expanded", expandedState);
 
     setVisibleSubMenu(visibleSubMenu === menuLabel ? null : menuLabel);
     sendMenuItemInteraction(event);
@@ -223,7 +222,7 @@ export default function MainMenu({
               type="button"
               className="top-level-entry"
               aria-haspopup="menu"
-              aria-expanded="false"
+              aria-expanded={menuEntry.label === visibleSubMenu}
               onFocus={sendMenuItemInteraction}
               onClick={(event) => {
                 toggleSubMenu(event, menuEntry.label, menuEntry.labelId);
