@@ -16,7 +16,7 @@ export function LanguageToggle({
    * for the en-US locale
    */
   function getEnglishURL() {
-    for (let translation of translations) {
+    for (const translation of translations) {
       if (translation.locale.toLowerCase() === "en-us") {
         return translation.url;
       }
