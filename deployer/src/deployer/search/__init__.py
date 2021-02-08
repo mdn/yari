@@ -207,7 +207,16 @@ def to_search(file):
         ),
         popularity=doc["popularity"],
         summary=doc["summary"],
-        slug=slug,
+        # Note! We're always lowercasing the 'slug'. This way we can search on it,
+        # still as a `keyword` index, but filtering by prefix.
+        # E.g. in kuma; ?slug_prefix=weB/Css
+        # But this means that a little bit of information is lost. However, when
+        # Yari displays search results, it doesn't use this `slug` value to
+        # make the URLs in the search results listings. It's using the `mdn_url`
+        # for that.
+        # But all of this means; remember to lowercase your `slug` before using
+        # it as a filter.
+        slug=slug.lower(),
         locale=locale.lower(),
     )
 
