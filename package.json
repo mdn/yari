@@ -53,7 +53,7 @@
     "cookie-parser": "1.4.5",
     "cssesc": "^3.0.0",
     "dotenv": "8.2.0",
-    "ejs": "3.1.5",
+    "ejs": "3.1.6",
     "express": "4.17.1",
     "express-http-proxy": "1.6.2",
     "file-type": "16.2.0",
