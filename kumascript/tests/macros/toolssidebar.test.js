@@ -15,13 +15,13 @@ const locales = {
 };
 
 function checkSidebarDom(dom, locale) {
-  let section = dom.querySelector("section");
+  const section = dom.querySelector("section");
   assert(
     section.classList.contains("Quick_links"),
     "Section does not contain Quick_links class"
   );
 
-  let listItems = dom.querySelectorAll("li");
+  const listItems = dom.querySelectorAll("li");
   assert.equal(listItems[0].textContent, locales[locale].Page_Inspector);
 }
 
@@ -30,7 +30,7 @@ describeMacro("ToolsSidebar", function () {
     macro.ctx.env.locale = "en-US";
     return macro.call().then(function (result) {
       expect(lintHTML(result)).toBeFalsy();
-      let dom = jsdom.JSDOM.fragment(result);
+      const dom = jsdom.JSDOM.fragment(result);
       checkSidebarDom(dom, "en-US");
     });
   });
@@ -39,7 +39,7 @@ describeMacro("ToolsSidebar", function () {
     macro.ctx.env.locale = "fr";
     return macro.call().then(function (result) {
       expect(lintHTML(result)).toBeFalsy();
-      let dom = jsdom.JSDOM.fragment(result);
+      const dom = jsdom.JSDOM.fragment(result);
       checkSidebarDom(dom, "fr");
     });
   });

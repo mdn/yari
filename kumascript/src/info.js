@@ -289,7 +289,7 @@ function postProcessSummaryHTMLSnippet(text, document) {
 
   let output = "";
 
-  for (let token of tokens) {
+  for (const token of tokens) {
     if (token.type !== "MACRO") {
       // If it isn't a MACRO token, it's a TEXT token.
       output += token.chars;
@@ -305,7 +305,7 @@ function postProcessSummaryHTMLSnippet(text, document) {
       continue;
     }
 
-    let macroName = token.name.toLowerCase();
+    const macroName = token.name.toLowerCase();
 
     // Some macros do have arguments, but there's no good reason to render them out
     // for the benefit of a summary, in this context.

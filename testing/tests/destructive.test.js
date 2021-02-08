@@ -39,7 +39,7 @@ describe("fixing flaws", () => {
   let tempdir;
   let tempBuildDir;
   let tempContentDir;
-  let filesBefore = new Map();
+  const filesBefore = new Map();
 
   function populateFilesBefore(dir) {
     for (const [filepath, stat] of walker(dir)) {
