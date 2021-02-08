@@ -271,9 +271,9 @@ module.exports = (req, res) => {
           return sortMultiplier * -1;
         } else if (a.mdn_url.toLowerCase() > b.mdn_url.toLowerCase()) {
           return sortMultiplier;
-        } else {
-          return 0;
         }
+        return 0;
+
       default:
         throw new Error("not implemented");
     }

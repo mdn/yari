@@ -79,9 +79,8 @@ module.exports = {
   Substr(str, start, length) {
     if (length) {
       return `${str}`.substr(start, length);
-    } else {
-      return `${str}`.substr(start);
     }
+    return `${str}`.substr(start);
   },
 
   toLower(str) {

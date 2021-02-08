@@ -209,21 +209,20 @@ function addSections($) {
         flaws.push(explanation);
       }
       return [subSections, flaws];
-    } else {
-      const bcdSections = _addSingleSectionBCD($);
+    }
+    const bcdSections = _addSingleSectionBCD($);
 
-      // The _addSingleSectionBCD() function will have sucked up the <h2> or <h3>
-      // and the `div.bc-data` to turn it into a BCD section.
-      // First remove that, then put whatever HTML is left as a prose
-      // section underneath.
-      $.find("div.bc-data, h2, h3").remove();
-      const [proseSections, proseFlaws] = _addSectionProse($);
-      bcdSections.push(...proseSections);
-      flaws.push(...proseFlaws);
+    // The _addSingleSectionBCD() function will have sucked up the <h2> or <h3>
+    // and the `div.bc-data` to turn it into a BCD section.
+    // First remove that, then put whatever HTML is left as a prose
+    // section underneath.
+    $.find("div.bc-data, h2, h3").remove();
+    const [proseSections, proseFlaws] = _addSectionProse($);
+    bcdSections.push(...proseSections);
+    flaws.push(...proseFlaws);
 
-      if (bcdSections.length) {
-        return [bcdSections, flaws];
-      }
+    if (bcdSections.length) {
+      return [bcdSections, flaws];
     }
   }
 

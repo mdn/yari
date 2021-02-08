@@ -154,9 +154,8 @@ app.get("/*", async (req, res) => {
       // get a 403 Forbidden.
       // See https://github.com/mdn/yari/issues/1297
       return send(req, path.resolve(filePath)).pipe(res);
-    } else {
-      return res.status(404).send("File not found on disk");
     }
+    return res.status(404).send("File not found on disk");
   }
 
   let lookupURL = decodeURI(req.url);

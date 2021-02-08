@@ -504,11 +504,10 @@ function testMacro(config) {
         return macro.call(config.argument).then(function (result) {
           checkResult(result, config);
         });
-      } else {
-        return macro.call().then(function (result) {
-          checkResult(result, config);
-        });
       }
+      return macro.call().then(function (result) {
+        checkResult(result, config);
+      });
     });
   }
 }
