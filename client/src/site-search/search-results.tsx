@@ -2,6 +2,7 @@ import React from "react";
 import { Link, createSearchParams, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 
+import { DEBUG_SEARCH_RESULTS } from "../constants";
 import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
 
@@ -338,7 +339,7 @@ function Results({
                 <a className="url" href={document.mdn_url}>
                   {document.mdn_url}
                 </a>
-                {process.env.NODE_ENV === "development" && (
+                {DEBUG_SEARCH_RESULTS && (
                   <span className="nerd-data">
                     <b>score:</b> <code>{document.score}</code>,{" "}
                     <b>popularity:</b> <code>{document.popularity}</code>,{" "}
