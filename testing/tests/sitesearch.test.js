@@ -9,6 +9,8 @@ describe("Site search", () => {
     await page.goto(testURL("/"));
     await expect(page).toFill(SEARCH_SELECTOR, "foo");
     await page.$eval('form[role="search"]', (form) => form.submit());
+    // Force a wait for the lazy-loading
+    await page.waitForNavigation({ waitUntil: "networkidle2" });
     expect(page.url()).toBe(testURL("/en-US/search/?q=foo"));
   });
 
