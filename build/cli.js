@@ -4,6 +4,7 @@ const zlib = require("zlib");
 
 const cliProgress = require("cli-progress");
 const program = require("@caporal/core").default;
+const { prompt } = require("inquirer");
 
 const { Document, slugToFolder } = require("../content");
 // eslint-disable-next-line node/no-missing-require
@@ -20,7 +21,6 @@ const {
 } = require("../content/constants");
 const { uniqifyTranslationsOf } = require("./translationsof");
 const { humanFileSize } = require("./utils");
-const { prompt } = require("inquirer");
 
 async function buildDocumentInteractive(
   documentPath,
