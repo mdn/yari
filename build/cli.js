@@ -20,8 +20,51 @@ const {
 } = require("../content/constants");
 const { uniqifyTranslationsOf } = require("./translationsof");
 const { humanFileSize } = require("./utils");
+const inquirer = require("inquirer");
 
-async function buildDocuments(files = null, quiet = false) {
+async function buildDocumentInteractive(
+  documentPath,
+  interactive,
+  invalidate = false
+) {
+  try {
+    const document = invalidate
+      ? Document.read(documentPath, Document.MEMOIZE_INVALIDATE)
+      : Document.read(documentPath);
+    return { document, doc: await buildDocument(document), skip: false };
+  } catch (e) {
+    if (!interactive) {
+      throw e;
+    }
+    console.error(e);
+    const { action } = await inquirer.prompt([
+      {
+        type: "expand",
+        message: "What to do?",
+        name: "action",
+        choices: [
+          { name: "re-run", value: "r", key: "r" },
+          { name: "skip", value: "s", key: "s" },
+          { name: "cancel", value: "c", key: "c" },
+        ],
+        default: "r",
+      },
+    ]);
+    if (action === "r") {
+      return await buildDocumentInteractive(documentPath, interactive, true);
+    }
+    if (action === "s") {
+      return { doc: {}, skip: true };
+    }
+    throw e;
+  }
+}
+
+async function buildDocuments(
+  files = null,
+  quiet = false,
+  interactive = false
+) {
   // If a list of files was set, it came from the CLI.
   // Override whatever was in the build options.
   const findAllOptions = files
@@ -63,7 +106,16 @@ async function buildDocuments(files = null, quiet = false) {
     progressBar.start(documents.count);
   }
 
-  for (const document of documents.iter()) {
+  for (const documentPath of documents.iter({ pathOnly: true })) {
+    const {
+      doc: { doc: builtDocument, liveSamples, fileAttachments, bcdData },
+      document,
+      skip,
+    } = await buildDocumentInteractive(documentPath, interactive);
+    if (skip) {
+      continue;
+    }
+
     const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
     fs.mkdirSync(outPath, { recursive: true });
 
@@ -98,13 +150,6 @@ async function buildDocuments(files = null, quiet = false) {
         document.url
       );
     }
-
-    const {
-      doc: builtDocument,
-      liveSamples,
-      fileAttachments,
-      bcdData,
-    } = await buildDocument(document);
 
     if (builtDocument.flaws) {
       appendTotalFlaws(builtDocument.flaws);
@@ -296,6 +341,9 @@ program
   .name("build")
   .option("--spas", "Build the SPA pages", { default: true }) // PR builds
   .option("--spas-only", "Only build the SPA pages", { default: false })
+  .option("-i,--interactive", "Ask what to do when encountering flaws", {
+    default: false,
+  })
   .argument("[files...]", "specific files to build")
   .action(async ({ args, options }) => {
     try {
@@ -316,7 +364,8 @@ program
       const t0 = new Date();
       const { slugPerLocale, peakHeapBytes, totalFlaws } = await buildDocuments(
         files,
-        Boolean(options.quiet)
+        Boolean(options.quiet),
+        Boolean(options.interactive)
       );
       const t1 = new Date();
       const count = Object.values(slugPerLocale).reduce(

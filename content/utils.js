@@ -3,6 +3,7 @@ const childProcess = require("child_process");
 
 const { CONTENT_ROOT } = require("./constants");
 const { slugToFolder } = require("../libs/slug-utils");
+const MEMOIZE_INVALIDATE = Symbol("force cache update");
 
 function buildURL(locale, slug) {
   if (!locale) throw new Error("locale falsy!");
@@ -28,10 +29,19 @@ function memoize(fn) {
 
   const cache = new Map();
   return (...args) => {
+    let invalidate = false;
+    if (args.includes(MEMOIZE_INVALIDATE)) {
+      args.splice(args.indexOf(MEMOIZE_INVALIDATE), 1);
+      invalidate = true;
+    }
     const key = JSON.stringify(args);
 
     if (cache.has(key)) {
-      return cache.get(key);
+      if (invalidate) {
+        cache.delete(key);
+      } else {
+        return cache.get(key);
+      }
     }
 
     // Before proceeding, what might happen when building a huge swath of documents,
@@ -100,4 +110,5 @@ module.exports = {
   memoize,
   execGit,
   urlToFolderPath,
+  MEMOIZE_INVALIDATE,
 };
