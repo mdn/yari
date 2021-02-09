@@ -1,7 +1,13 @@
 import React from "react";
-import { Link, createSearchParams, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  createSearchParams,
+  useSearchParams,
+  useLocation,
+} from "react-router-dom";
 import useSWR from "swr";
 
+import { CRUD_MODE } from "../constants";
 import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
 
@@ -157,6 +163,8 @@ export default function SearchResults() {
         {/* It only makes sense to display the sorting options if anything was found */}
         {hitCount > 1 && <SortOptions />}
 
+        <RemoteSearchWarning />
+
         <Results {...data} />
         <Pagination
           currentPage={currentPage}
@@ -173,6 +181,27 @@ export default function SearchResults() {
       <p>Loading search results...</p>
     </div>
   );
+}
+
+function RemoteSearchWarning() {
+  if (CRUD_MODE) {
+    // If you're in CRUD_MODE, the search results will be proxied from a remote
+    // Kuma and it might be confusing if a writer is wondering why their
+    // actively worked-on content isn't showing up in searches.
+    // The default value in the server is not accessible from the react app,
+    // so it's hardcoded here in the client.
+    const kumaHost = process.env.REACT_APP_KUMA_HOST || "developer.mozilla.org";
+    return (
+      <div className="notecard warning">
+        <h4>Note!</h4>
+        <p>
+          Site-search is proxied to <code>{kumaHost}</code> which means that
+          some content found doesn't reflect what's in your current branch.
+        </p>
+      </div>
+    );
+  }
+  return null;
 }
 
 function SortOptions() {
