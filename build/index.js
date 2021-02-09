@@ -104,13 +104,15 @@ function injectLoadingLazyAttributes($) {
 }
 
 /**
- * For every `<a href="http...">` make it `<a href="http..." class="external">`
+ * For every `<a href="http...">` make it
+ * `<a href="http..." class="external" target="_blank" and rel="noopener noreferrer">`
+ *
  *
  * @param {Cheerio document instance} $
  */
-function injectExternalLinkClasses($) {
-  $("a[href^=http]:not(.external)").each((i, a) => {
-    const $a = $(a);
+function postProcessExternalLinks($) {
+  $("a[href^=http]").each((i, element) => {
+    const $a = $(element);
     if ($a.attr("href").startsWith("https://developer.mozilla.org")) {
       // This should have been removed since it's considered a flaw.
       // But we haven't applied all fixable flaws yet and we still have to
@@ -119,6 +121,8 @@ function injectExternalLinkClasses($) {
       return;
     }
     $a.addClass("external");
+    $a.attr("target", "_blank");
+    $a.attr("rel", "noopener noreferrer");
   });
 }
 
@@ -388,7 +392,7 @@ async function buildDocument(document, documentOptions = {}) {
   injectLoadingLazyAttributes($);
 
   // All external hyperlinks should have the `external` class name.
-  injectExternalLinkClasses($);
+  postProcessExternalLinks($);
 
   // All content that uses `<div class="in-page-callout">` needs to
   // become `<div class="callout">`
