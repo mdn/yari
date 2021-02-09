@@ -45,9 +45,16 @@ app.use(
   FAKE_V1_API
     ? fakeV1APIRouter
     : proxy(PROXY_HOSTNAME, {
+        https: ["developer.mozilla.org", "developer.allizom.org"].includes(
+          PROXY_HOSTNAME
+        ),
         // More options are available on
         // https://www.npmjs.com/package/express-http-proxy#options
-        proxyReqPathResolver: (req) => `/api/v1${req.url}`,
+        // proxyReqPathResolver: (req) => `/api/v1${req.url}`,
+        proxyReqPathResolver: (req) => {
+          console.log("REQUESTING", req.url, "RETURNING", `/api/v1${req.url}`);
+          return `/api/v1${req.url}`;
+        },
       })
 );
 
