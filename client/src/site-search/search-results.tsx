@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Link,
-  createSearchParams,
-  useSearchParams,
-  useLocation,
-} from "react-router-dom";
+import { Link, createSearchParams, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 
 import { CRUD_MODE } from "../constants";
