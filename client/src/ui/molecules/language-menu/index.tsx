@@ -88,7 +88,7 @@ export function LanguageMenu({
             );
           })}
         </select>{" "}
-        <button type="submit" className="button minimal outline">
+        <button type="submit" className="button minimal">
           Change language
         </button>
       </fieldset>

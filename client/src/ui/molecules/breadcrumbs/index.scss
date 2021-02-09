@@ -16,12 +16,6 @@
   a {
     align-items: center;
     display: flex;
-
-    &:active {
-      span {
-        @include highlighted-link-state();
-      }
-    }
   }
 
   ol {

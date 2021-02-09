@@ -2,7 +2,11 @@
 @import "~@mdn/minimalist/sass/vars/typography";
 
 .language-menu {
-  margin-top: $base-spacing * 1.5;
+  margin-top: $base-spacing;
+
+  fieldset {
+    padding: 0;
+  }
 
   legend {
     font-size: $medium-font-size-mobile;

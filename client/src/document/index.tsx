@@ -19,7 +19,6 @@ import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
 import { LanguageToggle } from "../ui/molecules/language-toggle";
-import { LanguageMenu } from "../ui/molecules/language-menu";
 import { Titlebar } from "../ui/molecules/titlebar";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
@@ -169,11 +168,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
       <MainContentContainer>
         <article className="article">
           <RenderDocumentBody doc={doc} />
-          <Metadata doc={doc} locale={locale} />
-          {translations && !!translations.length && (
-            <LanguageMenu translations={translations} locale={locale} />
-          )}
         </article>
+        <Metadata doc={doc} locale={locale} />
       </MainContentContainer>
 
       {doc.sidebarHTML && <RenderSideBar doc={doc} />}
