@@ -105,7 +105,7 @@ function injectLoadingLazyAttributes($) {
 
 /**
  * For every `<a href="http...">` make it
- * `<a href="http..." class="external" target="_blank" and rel="noopener noreferrer">`
+ * `<a href="http..." class="external" and rel="noopener">`
  *
  *
  * @param {Cheerio document instance} $
@@ -121,8 +121,7 @@ function postProcessExternalLinks($) {
       return;
     }
     $a.addClass("external");
-    $a.attr("target", "_blank");
-    $a.attr("rel", "noopener noreferrer");
+    $a.attr("rel", ` ${$a.attr("rel") || ""} noopener`.trim());
   });
 }
 
