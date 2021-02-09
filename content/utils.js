@@ -3,6 +3,8 @@ const childProcess = require("child_process");
 
 const { CONTENT_ROOT } = require("./constants");
 const { slugToFolder } = require("../libs/slug-utils");
+const LRU = require("lru-cache");
+
 const MEMOIZE_INVALIDATE = Symbol("force cache update");
 
 function buildURL(locale, slug) {
@@ -27,7 +29,7 @@ function memoize(fn) {
     return fn;
   }
 
-  const cache = new Map();
+  const cache = new LRU({ max: 2000 });
   return (...args) => {
     let invalidate = false;
     if (args.includes(MEMOIZE_INVALIDATE)) {
@@ -38,19 +40,10 @@ function memoize(fn) {
 
     if (cache.has(key)) {
       if (invalidate) {
-        cache.delete(key);
+        cache.del(key);
       } else {
         return cache.get(key);
       }
-    }
-
-    // Before proceeding, what might happen when building a huge swath of documents,
-    // the cache starts to fill up too much. So let's clear it every now and then.
-    // This avoids unnecessary out-of-memory crashes.
-    // See https://github.com/mdn/yari/issues/2030
-    if (cache.size > 10000) {
-      console.warn("Cache size limit reached. Clearing the cache.");
-      cache.clear();
     }
 
     const value = fn(...args);
