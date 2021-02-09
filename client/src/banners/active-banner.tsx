@@ -39,8 +39,8 @@ export type BannerProps = {
 function Banner(props: BannerProps) {
   const [isDismissed, setDismissed] = useState(false);
   const containerClassNames = props.classname
-    ? `mdn-cta-container cta-background-linear ${props.classname}`
-    : "mdn-cta-container cta-background-linear";
+    ? `mdn-cta-container ${props.classname}`
+    : "mdn-cta-container";
 
   if (isDismissed) {
     return null;
