@@ -17,10 +17,10 @@ export function LanguageToggle({
         </a>
       </li>
       {locale.toLowerCase() !== "en-us" &&
-        translations.map((translation) => {
+        translations.map((translation, index) => {
           if (translation.locale.toLowerCase() === "en-us") {
             return (
-              <li className="en-switch">
+              <li className="en-switch" key={index}>
                 <a href={translation.url}>English</a>
               </li>
             );

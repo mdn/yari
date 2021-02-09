@@ -2,7 +2,6 @@
 @supports (display: grid) {
   .page-wrapper.document-page {
     grid-template-columns: 70% 30%;
-    grid-template-rows: 100%;
 
     @media #{$mq-small-desktop-and-up} {
       grid-template-columns: minmax(25%, 75%) minmax(75%, 25%);
