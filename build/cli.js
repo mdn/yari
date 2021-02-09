@@ -20,7 +20,7 @@ const {
 } = require("../content/constants");
 const { uniqifyTranslationsOf } = require("./translationsof");
 const { humanFileSize } = require("./utils");
-const inquirer = require("inquirer");
+const { prompt } = require("inquirer");
 
 async function buildDocumentInteractive(
   documentPath,
@@ -37,7 +37,7 @@ async function buildDocumentInteractive(
       throw e;
     }
     console.error(e);
-    const { action } = await inquirer.prompt([
+    const { action } = await prompt([
       {
         type: "expand",
         message: "What to do?",
