@@ -15,7 +15,10 @@ function redirect(pattern, template, options = {}) {
     }
     const { [0]: subString, index, groups } = match;
     const before = path.substring(0, index);
-    const after = path.substring(index + subString.length);
+    let after = path.substring(index + subString.length);
+    if (options.colonToSlash) {
+      after = after.replace(/:/g, "/");
+    }
     const to = template({ ...groups });
     return { url: `${before}${to}${after}`, status };
   };
@@ -1147,6 +1150,21 @@ for (const [pattern, path] of [
   );
 }
 
+const MISC_REDIRECT_PATTERNS = [
+  localeRedirect(/^docs\/Core_JavaScript_1.5_/i, "/docs/Web/JavaScript/", {
+    permanent: true,
+    // This will convert :
+    //   /en-US/docs/Core_JavaScript_1.5_Reference:Statements:block
+    // to:
+    //   /en-US/docs/Core_JavaScript_1.5_Reference/Statements/block
+    // It's needed because back in the day when this prefix was used a
+    // there are a lot of old URLs that delimited with a `:` instead of a `/`
+    // which is what we use today.
+    colonToSlash: true,
+  }),
+  localeRedirect(/^DOM[\/$]?/i, "/docs/DOM", { permanent: true }),
+];
+
 const REDIRECT_PATTERNS = [].concat(
   SCL3_REDIRECT_PATTERNS,
   ZONE_REDIRECT_PATTERNS,
@@ -1168,7 +1186,8 @@ const REDIRECT_PATTERNS = [].concat(
       { prependLocale: false, permanent: true }
     ),
   ],
-  LOCALE_PATTERNS
+  LOCALE_PATTERNS,
+  MISC_REDIRECT_PATTERNS
 );
 
 const STARTING_SLASH = /^\//;

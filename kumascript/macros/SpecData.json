@@ -729,6 +729,11 @@
     "url": "https://www.w3.org/TR/dom/",
     "status": "Obsolete"
   },
+  "Element Timing API": {
+    "name": "Element Timing",
+    "url": "https://wicg.github.io/element-timing/",
+    "status": "ED"
+  },
   "Element Traversal": {
     "name": "Element Traversal Specification",
     "url": "https://www.w3.org/TR/ElementTraversal/",

@@ -1,3 +1,4 @@
+/* eslint-disable node/no-missing-require */
 const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
 const { getLocale } = require("@yari-internal/get-locale");
 const {
@@ -12,7 +13,8 @@ function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
   /*
    * Create and return a redirect response.
    */
-  let statusDescription, cacheControlValue;
+  let statusDescription;
+  let cacheControlValue;
   if (status === 301) {
     statusDescription = "Moved Permanently";
   } else {
@@ -43,7 +45,7 @@ function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
   };
 }
 
-exports.handler = async (event, _context) => {
+exports.handler = async (event) => {
   /*
    * Modify the request before it's passed to the S3 origin.
    */

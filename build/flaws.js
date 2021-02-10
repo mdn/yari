@@ -3,13 +3,15 @@ const path = require("path");
 
 const chalk = require("chalk");
 const got = require("got");
+const FileType = require("file-type");
 const imagemin = require("imagemin");
 const imageminPngquant = require("imagemin-pngquant");
 const imageminMozjpeg = require("imagemin-mozjpeg");
 const imageminGifsicle = require("imagemin-gifsicle");
 const imageminSvgo = require("imagemin-svgo");
+const sanitizeFilename = require("sanitize-filename");
 
-const { Document, Redirect, Image } = require("../content");
+const { Archive, Document, Redirect, Image } = require("../content");
 const { FLAW_LEVELS } = require("./constants");
 const { packageBCD } = require("./resolve-bcd");
 const {
@@ -17,6 +19,7 @@ const {
   replaceMatchesInText,
 } = require("./matches-in-text");
 const { humanFileSize } = require("./utils");
+const { VALID_MIME_TYPES } = require("../filecheck/constants");
 
 function injectFlaws(doc, $, options, { rawContent }) {
   if (doc.isArchive) return;
@@ -52,8 +55,6 @@ function injectSectionFlaws(doc, flaws, options) {
 // The 'broken_links' flaw check looks for internal links that
 // link to a document that's going to fail with a 404 Not Found.
 function injectBrokenLinksFlaws(level, doc, $, rawContent) {
-  if (level === FLAW_LEVELS.IGNORE) return;
-
   // This is needed because the same href can occur multiple time.
   // For example:
   //    <a href="/foo/bar">
@@ -77,6 +78,16 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
     suggestion = null,
     explanation
   ) {
+    if (level === FLAW_LEVELS.IGNORE) {
+      // Note, even if not interested in flaws, we still need to apply the
+      // suggestion. For example, in production builds, we don't care about
+      // logging flaws, but because not all `broken_links` flaws have been
+      // manually fixed at the source.
+      if (suggestion) {
+        $element.attr("href", suggestion);
+      }
+      return;
+    }
     explanation = explanation || `Can't resolve ${href}`;
 
     if (!matches.has(href)) {
@@ -148,7 +159,10 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
       const found = Document.findByURL(hrefNormalized);
       if (!found) {
         // Before we give up, check if it's an image.
-        if (!Image.findByURL(hrefNormalized)) {
+        if (
+          !Image.findByURL(hrefNormalized) &&
+          !Archive.isArchivedURL(hrefNormalized)
+        ) {
           // Before we give up, check if it's a redirect.
           const resolved = Redirect.resolve(hrefNormalized);
           if (resolved !== hrefNormalized) {
@@ -162,29 +176,27 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
             addBrokenLink(a, checked.get(href), href);
           }
         }
-      } else {
         // But does it have the correct case?!
-        if (found.url !== href.split("#")[0]) {
-          // Inconsistent case.
-          addBrokenLink(
-            a,
-            checked.get(href),
-            href,
-            found.url + absoluteURL.search + absoluteURL.hash.toLowerCase()
-          );
-        } else if (
-          hrefSplit.length > 1 &&
-          hrefSplit[1] !== hrefSplit[1].toLowerCase()
-        ) {
-          const hash = hrefSplit[1];
-          addBrokenLink(
-            a,
-            checked.get(href),
-            href,
-            href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
-            "Anchor not lowercase"
-          );
-        }
+      } else if (found.url !== href.split("#")[0]) {
+        // Inconsistent case.
+        addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          found.url + absoluteURL.search + absoluteURL.hash.toLowerCase()
+        );
+      } else if (
+        hrefSplit.length > 1 &&
+        hrefSplit[1] !== hrefSplit[1].toLowerCase()
+      ) {
+        const hash = hrefSplit[1];
+        addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
+          "Anchor not lowercase"
+        );
       }
     } else if (href.startsWith("#")) {
       const hash = href.split("#")[1];
@@ -395,7 +407,7 @@ async function fixFixableFlaws(doc, options, document) {
 
   const loud = options.fixFlawsDryRun || options.fixFlawsVerbose;
 
-  // Any 'macros' of type "MacroRedirectedLinkError"...
+  // Any 'macros' of type "MacroRedirectedLinkError" or "MacroDeprecatedError"...
   for (const flaw of doc.flaws.macros || []) {
     if (flaw.fixable) {
       // Sanity check that our understanding of flaws, filepaths, and sources
@@ -497,10 +509,34 @@ async function fixFixableFlaws(doc, options, document) {
           timeout: 10000,
           retry: 3,
         });
+        const fileType = await FileType.fromBuffer(imageBuffer);
+        if (!fileType) {
+          throw new Error(
+            `No file type could be extracted from ${flaw.src} at all. Probably not going to be a valid image file.`
+          );
+        }
+        const isSVG =
+          fileType.mime === "application/xml" &&
+          flaw.src.toLowerCase().endsWith(".svg");
+
+        if (!(VALID_MIME_TYPES.has(fileType.mime) || isSVG)) {
+          throw new Error(
+            `${flaw.src} has an unrecognized mime type: ${fileType.mime}`
+          );
+        }
+        // Otherwise FileType would make it `.xml`
+        const imageExtension = isSVG ? "svg" : fileType.ext;
+        const decodedPathname = decodeURI(url.pathname).replace(/\s+/g, "_");
+        const imageBasename = sanitizeFilename(
+          `${path.basename(
+            decodedPathname,
+            path.extname(decodedPathname)
+          )}.${imageExtension}`
+        );
         const destination = path.join(
           Document.getFolderPath(document.metadata),
           path
-            .basename(decodeURI(url.pathname))
+            .basename(imageBasename)
             .replace(/\s+/g, "_")
             // From legacy we have a lot of images that are named like
             // `/@api/deki/files/247/=HTMLBlinkElement.gif` for example.
@@ -530,6 +566,9 @@ async function fixFixableFlaws(doc, options, document) {
         const { response } = error;
         if (response && response.statusCode === 404) {
           console.log(chalk.yellow(`Skipping ${flaw.src} (404)`));
+          continue;
+        } else if (error.code === "ETIMEDOUT" || error.code === "ENOTFOUND") {
+          console.log(chalk.yellow(`Skipping ${flaw.src} (${error.code})`));
           continue;
         } else {
           console.error(error);
