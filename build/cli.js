@@ -24,6 +24,7 @@ const { humanFileSize } = require("./utils");
 
 async function buildDocumentInteractive(
   documentPath,
+  translationsOf,
   interactive,
   invalidate = false
 ) {
@@ -31,6 +32,38 @@ async function buildDocumentInteractive(
     const document = invalidate
       ? Document.read(documentPath, Document.MEMOIZE_INVALIDATE)
       : Document.read(documentPath);
+
+    const { translation_of } = document.metadata;
+
+    // If it's a non-en-US document, it'll most likely have a `translation_of`.
+    // If so, add it to the map so that when we build the en-US one, we can
+    // get an index of the *other* translations available.
+    if (translation_of) {
+      if (!translationsOf.has(translation_of)) {
+        translationsOf.set(translation_of, []);
+      }
+      const translation = {
+        url: document.url,
+        locale: document.metadata.locale,
+        title: document.metadata.title,
+      };
+      if (document.metadata.translation_of_original) {
+        translation.original = document.metadata.translation_of_original;
+      }
+      translationsOf.get(translation_of).push(translation);
+      // This is a shortcoming. If this is a translated document, we don't have a
+      // complete mapping of all other translations. So, the best we can do is
+      // at least link to the English version.
+      // In 2021, when we refactor localization entirely, this will need to change.
+      // Perhaps, then, we'll do a complete scan through all content first to build
+      // up the map before we process each one.
+      document.translations = [];
+    } else if (translationsOf.has(document.metadata.slug)) {
+      document.translations = uniqifyTranslationsOf(
+        translationsOf.get(document.metadata.slug),
+        document.url
+      );
+    }
     return { document, doc: await buildDocument(document), skip: false };
   } catch (e) {
     if (!interactive) {
@@ -51,7 +84,12 @@ async function buildDocumentInteractive(
       },
     ]);
     if (action === "r") {
-      return await buildDocumentInteractive(documentPath, interactive, true);
+      return await buildDocumentInteractive(
+        documentPath,
+        translationsOf,
+        interactive,
+        true
+      );
     }
     if (action === "s") {
       return { doc: {}, skip: true };
@@ -111,45 +149,17 @@ async function buildDocuments(
       doc: { doc: builtDocument, liveSamples, fileAttachments, bcdData },
       document,
       skip,
-    } = await buildDocumentInteractive(documentPath, interactive);
+    } = await buildDocumentInteractive(
+      documentPath,
+      translationsOf,
+      interactive
+    );
     if (skip) {
       continue;
     }
 
     const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
     fs.mkdirSync(outPath, { recursive: true });
-
-    const { translation_of } = document.metadata;
-
-    // If it's a non-en-US document, it'll most likely have a `translation_of`.
-    // If so, add it to the map so that when we build the en-US one, we can
-    // get an index of the *other* translations available.
-    if (translation_of) {
-      if (!translationsOf.has(translation_of)) {
-        translationsOf.set(translation_of, []);
-      }
-      const translation = {
-        url: document.url,
-        locale: document.metadata.locale,
-        title: document.metadata.title,
-      };
-      if (document.metadata.translation_of_original) {
-        translation.original = document.metadata.translation_of_original;
-      }
-      translationsOf.get(translation_of).push(translation);
-      // This is a shortcoming. If this is a translated document, we don't have a
-      // complete mapping of all other translations. So, the best we can do is
-      // at least link to the English version.
-      // In 2021, when we refactor localization entirely, this will need to change.
-      // Perhaps, then, we'll do a complete scan through all content first to build
-      // up the map before we process each one.
-      document.translations = [];
-    } else if (translationsOf.has(document.metadata.slug)) {
-      document.translations = uniqifyTranslationsOf(
-        translationsOf.get(document.metadata.slug),
-        document.url
-      );
-    }
 
     if (builtDocument.flaws) {
       appendTotalFlaws(builtDocument.flaws);
