@@ -52,7 +52,12 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
   const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
-    if (DISABLE_AUTH) return;
+    if (DISABLE_AUTH) {
+      // Remember, the presence of the "Sign in" link depends on the resolution
+      // of the /api/v1/whoami XHR fetch.
+      // So exiting here will imply that it doesn't even show the sign in link.
+      return;
+    }
 
     fetch("/api/v1/whoami")
       .then((response) => {

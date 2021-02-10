@@ -231,8 +231,8 @@ module.exports = {
   //
   // Stolen from http://underscorejs.org/#defaults
   defaults(obj, ...sources) {
-    for (let source of sources) {
-      for (var prop in source) {
+    for (const source of sources) {
+      for (const prop in source) {
         if (obj[prop] === void 0) obj[prop] = source[prop];
       }
     }
@@ -274,9 +274,9 @@ module.exports = {
   },
 
   escapeQuotes(a) {
-    var b = "";
-    for (var i = 0, len = a.length; i < len; i++) {
-      var c = a[i];
+    let b = "";
+    for (let i = 0, len = a.length; i < len; i++) {
+      let c = a[i];
       if (c == '"') {
         c = "&quot;";
       }

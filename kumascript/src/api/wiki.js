@@ -99,7 +99,7 @@ module.exports = {
 
   // Build the URI of a given wiki page.
   uri(path, query) {
-    var out = util.preparePath(path);
+    let out = util.preparePath(path);
     if (query) {
       out += `?${query}`;
     }
@@ -119,7 +119,7 @@ module.exports = {
       path = path.slice(0, -1);
     }
 
-    var pages = this.page.subpages(path, depth, self);
+    const pages = this.page.subpages(path, depth, self);
 
     if (reverse == 0) {
       pages.sort(alphanumForward);
@@ -130,15 +130,15 @@ module.exports = {
     return process_array(null, pages, depth, ordered != 0, this.env.locale);
 
     function chunkify(t) {
-      var tz = [];
-      var x = 0;
-      var y = -1;
-      var n = 0;
-      var i;
-      var j;
+      const tz = [];
+      let x = 0;
+      let y = -1;
+      let n = 0;
+      let i;
+      let j;
 
       while ((i = (j = t.charAt(x++)).charCodeAt(0))) {
-        var m = i == 46 || (i >= 48 && i <= 57);
+        const m = i == 46 || (i >= 48 && i <= 57);
         if (m !== n) {
           tz[++y] = "";
           n = m;
@@ -149,41 +149,43 @@ module.exports = {
     }
 
     function alphanumForward(a, b) {
-      var aa = chunkify(a.title);
-      var bb = chunkify(b.title);
+      const aa = chunkify(a.title);
+      const bb = chunkify(b.title);
 
       for (let x = 0; aa[x] && bb[x]; x++) {
         if (aa[x] !== bb[x]) {
-          var c = Number(aa[x]);
-          var d = Number(bb[x]);
+          const c = Number(aa[x]);
+          const d = Number(bb[x]);
           if (c == aa[x] && d == bb[x]) {
             return c - d;
-          } else return aa[x] > bb[x] ? 1 : -1;
+          }
+          return aa[x] > bb[x] ? 1 : -1;
         }
       }
       return aa.length - bb.length;
     }
 
     function alphanumBackward(a, b) {
-      var bb = chunkify(a.title);
-      var aa = chunkify(b.title);
+      const bb = chunkify(a.title);
+      const aa = chunkify(b.title);
 
       for (let x = 0; aa[x] && bb[x]; x++) {
         if (aa[x] !== bb[x]) {
-          var c = Number(aa[x]);
-          var d = Number(bb[x]);
+          const c = Number(aa[x]);
+          const d = Number(bb[x]);
           if (c == aa[x] && d == bb[x]) {
             return c - d;
-          } else return aa[x] > bb[x] ? 1 : -1;
+          }
+          return aa[x] > bb[x] ? 1 : -1;
         }
       }
       return aa.length - bb.length;
     }
 
     function process_array(folderItem, arr, depth, ordered, locale) {
-      var result = "";
-      var openTag = "<ul>";
-      var closeTag = "</ul>";
+      let result = "";
+      let openTag = "<ul>";
+      let closeTag = "</ul>";
 
       if (ordered) {
         openTag = "<ol>";
