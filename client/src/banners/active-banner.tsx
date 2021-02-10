@@ -98,7 +98,7 @@ function CommonSurveyBanner({ onDismissed }: { onDismissed: () => void }) {
         "Help us understand how to make MDN better for beginners (5 minute survey)"
       }
       cta={"Take the survey"}
-      url={"https://www.surveygizmo.com/s3/6175365/59cfad9c04cf"}
+      url="https://www.surveygizmo.com/s3/6175365/59cfad9c04cf"
       newWindow
       onDismissed={onDismissed}
       onCTAClick={() => {
