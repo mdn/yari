@@ -25,7 +25,7 @@ and `popularity` is shown.
 You can't affect the sorting algorithm in Yari. To try out different techniques
 for the `function_score` in the Python Elasticsearch code, you have to
 make changes within Kuma to try different combinations such as `popularity_factor`
-and `boost_mode` and `score_mode`. Most of these values currently hardcoded in
+and `boost_mode` and `score_mode`. Most of these values are currently hardcoded in
 the Kuma Python code.
 
 It's hard to predict exactly what users really prefer and a lot of it depends
