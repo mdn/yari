@@ -6,10 +6,11 @@ import SignInLink from "../../atoms/signin-link";
 import { getAuthURL } from "../../../utils/auth-link";
 import { useUserData } from "../../../user-context";
 
-import avatarImage from "../../../assets/avatar.png";
 import { DISABLE_AUTH } from "../../../constants";
 
 import "./index.scss";
+
+const avatarImage = `${process.env.PUBLIC_URL || ""}/assets/avatar.png`;
 
 export default function Login() {
   // For example, if you're using Yari purely for previewing your content edits,
