@@ -1162,6 +1162,7 @@ const MISC_REDIRECT_PATTERNS = [
     // which is what we use today.
     colonToSlash: true,
   }),
+  localeRedirect(/^DOM[\/$]?/i, "/docs/DOM", { permanent: true }),
 ];
 
 const REDIRECT_PATTERNS = [].concat(
