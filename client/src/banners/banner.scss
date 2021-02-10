@@ -12,25 +12,31 @@
     bottom: 0;
     display: block;
     height: 190px;
-    padding: 24px;
+    padding: $base-spacing;
     position: fixed;
-    text-align: center;
     width: 100%;
-    z-index: 99;
+    z-index: $bring-to-front;
 
     .mdn-cta-title {
-      background-color: $neutral-100;
-      color: $text-color-inverted;
-      display: inline-block;
-      font-size: $large-font-size;
-      font-weight: normal;
       margin: 0;
-      padding: 0 10px 0 20px;
       position: relative;
+
+      h2 {
+        background-color: $neutral-100;
+        color: $text-color-inverted;
+        display: inline-block;
+        font-size: $large-font-size;
+        font-weight: normal;
+        padding: 0 ($base-spacing / 2);
+      }
     }
 
     .mdn-cta-copy {
       margin: 12px 0;
+
+      @media #{$mq-large-desktop-and-up} {
+        margin-bottom: 0;
+      }
     }
 
     .button {
@@ -40,6 +46,8 @@
       &:focus,
       &:active {
         @include bordered($border-color: $neutral-100);
+        background-color: $neutral-100;
+        color: $neutral-600;
       }
     }
 
@@ -49,13 +57,13 @@
       cursor: pointer;
       position: absolute;
       right: 20px;
-      top: 10px;
+      top: 20px;
     }
   }
 
   @media #{$mq-small-desktop-and-up} {
-    height: 130px;
-    padding: inherit;
+    height: 150px;
+    padding: 0 $base-spacing;
 
     .mdn-cta-content {
       align-items: center;
@@ -64,14 +72,13 @@
       height: 100%;
       justify-content: center;
       margin: 0 auto;
-      max-width: (1199px / 16px) * 1em;
-      padding-top: 0;
+      max-width: $max-width-default;
     }
 
     .mdn-cta-content-container {
       display: flex;
       flex-basis: 80%;
-      justify-content: space-around;
+      flex-flow: column;
     }
   }
 
