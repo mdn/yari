@@ -15,6 +15,10 @@ export function MainContentContainer({
       id="content"
       className={className}
       role="main"
+      // This is added to ensure that the main element is
+      // focusable. https://github.com/mdn/yari/issues/2755
+      // TypeScript expects this value to be a number
+      tabIndex={-1}
     >
       {children}
     </main>
