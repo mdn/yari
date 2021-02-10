@@ -193,8 +193,7 @@ function Flaws({
   const fixableFlaws = Object.values(doc.flaws)
     .map((flaws) => {
       return flaws.filter(
-        (flaw) =>
-          !flaw.fixed && (flaw.suggestion || flaw.fixable || flaw.externalImage)
+        (flaw) => !flaw.fixed && (flaw.fixable || flaw.externalImage)
       );
     })
     .flat();
