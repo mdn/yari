@@ -72,13 +72,13 @@ async function buildDocumentInteractive(
     console.error(e);
     const { action } = await prompt([
       {
-        type: "expand",
+        type: "list",
         message: "What to do?",
         name: "action",
         choices: [
-          { name: "re-run", value: "r", key: "r" },
-          { name: "skip", value: "s", key: "s" },
-          { name: "cancel", value: "c", key: "c" },
+          { name: "re-run", value: "r" },
+          { name: "skip", value: "s" },
+          { name: "quit", value: "q" },
         ],
         default: "r",
       },
