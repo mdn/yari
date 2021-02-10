@@ -43,11 +43,11 @@ class Templates {
 
     // Walk the directory tree under the specified root directory.
     while (dirs.length > 0) {
-      let dir = dirs.shift();
+      const dir = dirs.shift();
       fs.readdirSync(dir).forEach((fn) => {
         // If the given filename is a directory, push it onto
         // the queue, otherwise consider it a template.
-        let fp = path.join(dir, fn);
+        const fp = path.join(dir, fn);
         if (fs.statSync(fp).isDirectory()) {
           dirs.push(fp);
         } else if (
@@ -55,7 +55,7 @@ class Templates {
           fp.endsWith(".ejs") ||
           fp.endsWith(".json")
         ) {
-          var name = path.parse(fn).name.toLowerCase();
+          const name = path.parse(fn).name.toLowerCase();
           if (this.macroNameToPath.has(name)) {
             // Keep track of all duplicates and throw error later.
             if (!duplicates.has(name)) {
@@ -79,16 +79,16 @@ class Templates {
 
     if (duplicates.size !== 0) {
       // Duplicate template names
-      var msg = "Duplicate macros:";
-      for (let [name, files] of duplicates) {
-        msg += "\n" + name + ": " + files.join(", ");
+      let msg = "Duplicate macros:";
+      for (const [name, files] of duplicates) {
+        msg += `\n${name}: ${files.join(", ")}`;
       }
       throw new Error(msg);
     }
   }
 
   getLocalizedCommonStrings() {
-    let path = this.macroNameToPath.get("l10n-common");
+    const path = this.macroNameToPath.get("l10n-common");
     return JSON.parse(fs.readFileSync(path));
   }
 
@@ -96,7 +96,7 @@ class Templates {
     // Normalize the macro name by converting colons to hyphens and
     // uppercase letters to lowercase.
     name = name.replace(/:/g, "-").toLowerCase();
-    let path = this.macroNameToPath.get(name);
+    const path = this.macroNameToPath.get(name);
     if (!path) {
       // There is code in render.js that catches this error and
       // creates a more informative MacroNotFoundError
@@ -117,7 +117,7 @@ class Templates {
         );
       }
     }
-    let rendered = await ejs.renderFile(path, args, {
+    const rendered = await ejs.renderFile(path, args, {
       async: true,
       cache: process.env.NODE_ENV === "production",
     });

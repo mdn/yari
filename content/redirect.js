@@ -182,7 +182,7 @@ function loadLocaleAndAdd(locale, updatePairs, { fix = false } = {}) {
     }
   }
   const redirectsFilePath = path.join(root, locale, "_redirects.txt");
-  let pairs = [];
+  const pairs = [];
   if (fs.existsSync(redirectsFilePath)) {
     const content = fs.readFileSync(redirectsFilePath, "utf-8");
     pairs.push(
@@ -351,9 +351,8 @@ function shortCuts(pairs, throws = false) {
         return [];
       }
       return transit(next, froms);
-    } else {
-      return [froms, s];
     }
+    return [froms, s];
   };
 
   const sortTuples = ([a, b], [c, d]) => {

@@ -144,7 +144,7 @@ const TEST_CASE = [
   {
     title: "Three arguments (Custom link text, with anchor)",
     input: ["display", "display flex", "#flex"],
-    output: makeExpect(MOCK_PAGES.display.url + "#flex", "", "display flex"),
+    output: makeExpect(`${MOCK_PAGES.display.url}#flex`, "", "display flex"),
   },
   {
     title: "Special CSS Data Type: <color>",
@@ -182,7 +182,7 @@ describeMacro("cssxref", () => {
   beforeEachMacro((macro) => {
     // let's make sure we have a clean calls to wiki.getPage
     macro.ctx.info.getPageByURL = jest.fn((url) => {
-      for (let page of Object.values(MOCK_PAGES)) {
+      for (const page of Object.values(MOCK_PAGES)) {
         if (page.url === getPathname(url)) {
           return page.data;
         }

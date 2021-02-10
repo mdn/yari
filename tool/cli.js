@@ -590,7 +590,7 @@ program
       logger.debug("25 most popular URIs...");
       pageviews.slice(0, 25).forEach(([uri, popularity], i) => {
         logger.debug(
-          `${(i + "").padEnd(2)} ${uri.padEnd(75)} ${popularity.toFixed(5)}`
+          `${`${i}`.padEnd(2)} ${uri.padEnd(75)} ${popularity.toFixed(5)}`
         );
       });
       function fmtBytes(bytes) {
