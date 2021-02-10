@@ -351,7 +351,7 @@ program
   .name("build")
   .option("--spas", "Build the SPA pages", { default: true }) // PR builds
   .option("--spas-only", "Only build the SPA pages", { default: false })
-  .option("-i,--interactive", "Ask what to do when encountering flaws", {
+  .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
   })
   .argument("[files...]", "specific files to build")
