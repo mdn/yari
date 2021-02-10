@@ -48,31 +48,40 @@ program
   .disableGlobalOption("--silent")
   .cast(false)
   .command("validate-redirects", "Try loading the _redirects.txt file(s)")
-  .action(
-    tryOrExit(({ logger }) => {
-      Redirect.load(null, true);
-      logger.info(chalk.green("🍾 All is well in the world of redirects 🥂"));
-    })
-  )
-
-  .command("verify-redirects", "Verify the _redirects.txt file(s) by locale")
   .argument("[locales...]", "Locale", {
-    default: [...VALID_LOCALES.values()],
-    validator: [...VALID_LOCALES.values()],
+    default: [...VALID_LOCALES.keys()],
+    validator: [...VALID_LOCALES.keys()],
   })
+  .option("--strict", "Strict validation")
   .action(
-    tryOrExit(({ args, logger }) => {
+    tryOrExit(({ args, options, logger }) => {
       const { locales } = args;
-
-      for (const locale of locales) {
-        try {
-          Redirect.validateLocale(locale);
-          logger.info(chalk.green(`✓ redirects for ${locale} looking good!`));
-        } catch (e) {
-          logger.info(
-            chalk.green(`_redirects.txt for ${locale} is causing issues: ${e}`)
-          );
+      const { strict } = options;
+      let fine = true;
+      if (strict) {
+        for (const locale of locales) {
+          try {
+            Redirect.validateLocale(locale);
+            logger.info(chalk.green(`✓ redirects for ${locale} looking good!`));
+          } catch (e) {
+            logger.info(
+              chalk.red(`_redirects.txt for ${locale} is causing issues: ${e}`)
+            );
+            fine = false;
+          }
         }
+      } else {
+        try {
+          Redirect.load(locales, true);
+        } catch (e) {
+          logger.info(chalk.red(`Unable to load redirects: ${e}`));
+          fine = false;
+        }
+      }
+      if (fine) {
+        logger.info(chalk.green("🍾 All is well in the world of redirects 🥂"));
+      } else {
+        throw new Error("🔥 Errors loading redirects 🔥");
       }
     })
   )
