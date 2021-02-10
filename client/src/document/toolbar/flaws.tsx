@@ -960,16 +960,10 @@ function HeadingLinks({
               )}{" "}
               {flaw.fixable && <FixableFlawBadge />} <br />
               <b>HTML:</b> <code>{flaw.html}</code> <br />
-              {flaw.suggestion !== null && flaw.before ? (
+              {flaw.suggestion && flaw.before ? (
                 <span>
                   <b>Suggestion:</b>{" "}
-                  {flaw.suggestion ? (
-                    <ShowDiff before={flaw.before} after={flaw.suggestion} />
-                  ) : (
-                    <i>
-                      delete the <code>style</code> attribute
-                    </i>
-                  )}
+                  <ShowDiff before={flaw.before} after={flaw.suggestion} />
                 </span>
               ) : (
                 <i>
