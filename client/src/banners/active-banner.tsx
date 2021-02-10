@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
-import { CATEGORY_LEARN, useGA } from "../ga-context";
+import { CATEGORY_LEARNING_SURVEY, useGA } from "../ga-context";
 import { COMMON_SURVEY_ID } from "./ids";
 
 // The <Banner> component displays a simple call-to-action banner at
@@ -104,7 +104,7 @@ function CommonSurveyBanner({ onDismissed }: { onDismissed: () => void }) {
       onCTAClick={() => {
         ga("send", {
           hitType: "event",
-          eventCategory: CATEGORY_LEARN,
+          eventCategory: CATEGORY_LEARNING_SURVEY,
           eventAction: "CTA clicked",
           eventLabel: "banner",
         });
