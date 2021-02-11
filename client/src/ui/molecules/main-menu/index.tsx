@@ -15,6 +15,10 @@ export default function MainMenu({
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
   const mainMenuRef = useRef<null | HTMLUListElement>(null);
   const [visibleSubMenu, setVisibleSubMenu] = useState<string | null>(null);
+  const [
+    focusedSubmenuItemIndex,
+    setFocusedSubmenuItemIndex,
+  ] = useState<number>(-1);
   const ga = useGA();
 
   /**
@@ -59,25 +63,56 @@ export default function MainMenu({
     const expandedState = visibleSubMenu === menuLabel ? false : true;
 
     // store the current activeElement
-    previousActiveElement.current = event.target;
+    previousActiveElement.current = document.activeElement as HTMLButtonElement;
 
     setVisibleSubMenu(visibleSubMenu === menuLabel ? null : menuLabel);
     sendMenuItemInteraction(event);
 
     if (expandedState) {
-      setTimeout(() => {
-        const firstSubmenuLink = mainMenuRef.current?.querySelector(
-          `ul.${menuLabelId} a`
-        ) as HTMLAnchorElement;
-        if (firstSubmenuLink) {
-          firstSubmenuLink.focus();
-        }
-      });
+      setFocusedSubmenuItemIndex(0);
+    }
+  }
+
+  function onMenuButtonFocus(event: React.FocusEvent<HTMLButtonElement>) {
+    setFocusedSubmenuItemIndex(-1);
+    sendMenuItemInteraction(event);
+  }
+
+  function onSubmenuKeydown(
+    event: React.KeyboardEvent,
+    menuLabel: string,
+    submenuLength: number
+  ) {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+
+      if (focusedSubmenuItemIndex === -1) {
+        previousActiveElement.current = event.target as HTMLButtonElement;
+        setVisibleSubMenu(menuLabel);
+      }
+
+      switch (event.key) {
+        case "ArrowDown":
+          setFocusedSubmenuItemIndex(
+            (focusedSubmenuItemIndex + 1) % submenuLength
+          );
+          break;
+        case "ArrowUp":
+          if (focusedSubmenuItemIndex <= 0) {
+            setFocusedSubmenuItemIndex(submenuLength - 1);
+          } else {
+            setFocusedSubmenuItemIndex(focusedSubmenuItemIndex - 1);
+          }
+      }
     }
   }
 
   useEffect(() => {
     const mainMenu = mainMenuRef.current;
+
+    mainMenu
+      ?.querySelector<HTMLAnchorElement>('ul.show a[tabindex="0"]')
+      ?.focus();
 
     // by default the main menu contains a `nojs` class which
     // then allows users on desktop to interact with the main
@@ -216,14 +251,20 @@ export default function MainMenu({
     <nav className="main-nav" aria-label="Main menu">
       <ul className="main-menu nojs" ref={mainMenuRef}>
         {menus.map((menuEntry) => (
-          <li key={menuEntry.label} className="top-level-entry-container">
+          <li
+            key={menuEntry.label}
+            className="top-level-entry-container"
+            onKeyDown={(event) => {
+              onSubmenuKeydown(event, menuEntry.label, menuEntry.items.length);
+            }}
+          >
             <button
               id={`${menuEntry.labelId}-button`}
               type="button"
               className="top-level-entry"
               aria-haspopup="menu"
               aria-expanded={menuEntry.label === visibleSubMenu}
-              onFocus={sendMenuItemInteraction}
+              onFocus={onMenuButtonFocus}
               onClick={(event) => {
                 toggleSubMenu(event, menuEntry.label, menuEntry.labelId);
               }}
@@ -237,11 +278,11 @@ export default function MainMenu({
               role="menu"
               aria-labelledby={`${menuEntry.labelId}-button`}
             >
-              {menuEntry.items.map((item) => (
+              {menuEntry.items.map((item, index) => (
                 <li key={item.url} role="none">
                   {item.external ? (
                     <a
-                      tabIndex={-1}
+                      tabIndex={index === focusedSubmenuItemIndex ? 0 : -1}
                       target="_blank"
                       rel="noopener noreferrer"
                       href={item.url}
@@ -257,7 +298,7 @@ export default function MainMenu({
                     </a>
                   ) : (
                     <a
-                      tabIndex={-1}
+                      tabIndex={index === focusedSubmenuItemIndex ? 0 : -1}
                       href={item.url}
                       onClick={(event) => {
                         item.onClick
