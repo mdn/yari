@@ -5,7 +5,7 @@
 module.exports = {
   async asyncReplace(source, pattern, asyncReplacer) {
     // Find all the matches, replace with "", and discard the result
-    let matches = [];
+    const matches = [];
     source.replace(pattern, (...match) => {
       matches.push(match);
       return "";
@@ -15,11 +15,11 @@ module.exports = {
     // string and Promise<string> elements corresponding to the unreplaced
     // parts of the source string and the async replacements for the
     // replaced parts
-    let parts = [];
+    const parts = [];
     let lastMatchEnd = 0;
     for (let i = 0; i < matches.length; i++) {
-      let match = matches[i];
-      let matchIndex = match[match.length - 2];
+      const match = matches[i];
+      const matchIndex = match[match.length - 2];
       // Add any text before the first match to the parts array
       if (matchIndex > lastMatchEnd) {
         parts.push(source.substring(lastMatchEnd, matchIndex));
@@ -39,7 +39,7 @@ module.exports = {
     }
 
     // Now wait for all the promises to resolve
-    let strings = await Promise.all(parts);
+    const strings = await Promise.all(parts);
 
     // Join it all together and return it
     return strings.join("");
@@ -79,9 +79,8 @@ module.exports = {
   Substr(str, start, length) {
     if (length) {
       return `${str}`.substr(start, length);
-    } else {
-      return `${str}`.substr(start);
     }
+    return `${str}`.substr(start);
   },
 
   toLower(str) {
@@ -97,7 +96,7 @@ module.exports = {
   },
 
   Remove(str, index, count) {
-    var out = `${str.substring(0, Number(index))}`;
+    let out = `${str.substring(0, Number(index))}`;
     if (count) {
       out += `${str.substring(Number(index) + Number(count))}`;
     }

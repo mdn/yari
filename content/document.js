@@ -22,6 +22,7 @@ const {
   slugToFolder,
   execGit,
   urlToFolderPath,
+  MEMOIZE_INVALIDATE,
 } = require("./utils");
 const Redirect = require("./redirect");
 
@@ -406,9 +407,9 @@ function findAll(
   }
   return {
     count: filePaths.length,
-    iter: function* () {
+    *iter({ pathOnly = false } = {}) {
       for (const filePath of filePaths) {
-        yield read(filePath);
+        yield pathOnly ? filePath : read(filePath);
       }
     },
   };
@@ -550,4 +551,6 @@ module.exports = {
   findByURL,
   findAll,
   findChildren,
+
+  MEMOIZE_INVALIDATE,
 };

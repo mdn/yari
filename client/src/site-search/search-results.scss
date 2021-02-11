@@ -1,0 +1,41 @@
+.search-results {
+  a.title {
+    color: black;
+    font-weight: bold;
+  }
+  span.highlight {
+    display: block;
+    font-style: italic;
+    font-size: 0.9rem;
+  }
+  span.summary {
+    display: block;
+    font-size: 0.9rem;
+  }
+  span.nerd-data {
+    margin-left: 20px;
+    font-size: 80%;
+  }
+
+  // Used to indicate that a search result link is in a different locale
+  .locale-indicator {
+    font-size: 80%;
+    background-color: bisque;
+    padding: 3px;
+    border-radius: 2px;
+  }
+
+  .suggestions {
+    p {
+      margin-bottom: 2px;
+    }
+    ul {
+      margin-top: 0;
+    }
+  }
+
+  .loading-wrapper {
+    min-height: 500px;
+    margin: 100px;
+  }
+}

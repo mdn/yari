@@ -562,25 +562,25 @@ const LEGACY_URLS = [].concat(
     { statusCode: 302 }
   )
   // TODO: implement locale redirects
-  //url_test(
-  //  "/en/docs/Web/CSS/Attribute_selectors",
-  //  "/en-US/docs/Web/CSS/Attribute_selectors",
-  //  { statusCode: 302 },
-  //),
-  //url_test(
-  //  "/en/docs/Web/CSS/Attribute_selectors",
-  //  "/en-US/docs/Web/CSS/Attribute_selectors",
-  //  { statusCode: 302 },
-  //),
-  //url_test("/cn/docs/Talk:Kakurady", "/zh-CN/docs/Talk:Kakurady", {
-  //  statusCode: 302,
-  //}),
-  //url_test(
-  //  "/zh_cn/docs/Web/API/RTCPeerConnection/addTrack",
-  //  "/zh-CN/docs/Web/API/RTCPeerConnection/addTrack",
-  //  { statusCode: 302 },
-  //),
-  //url_test("/zh_tw/docs/AJAX", "/zh-TW/docs/AJAX", { statusCode: 302 }),
+  // url_test(
+  //   "/en/docs/Web/CSS/Attribute_selectors",
+  //   "/en-US/docs/Web/CSS/Attribute_selectors",
+  //   { statusCode: 302 }
+  // ),
+  // url_test(
+  //   "/en/docs/Web/CSS/Attribute_selectors",
+  //   "/en-US/docs/Web/CSS/Attribute_selectors",
+  //   { statusCode: 302 }
+  // ),
+  // url_test("/cn/docs/Talk:Kakurady", "/zh-CN/docs/Talk:Kakurady", {
+  //   statusCode: 302,
+  // }),
+  // url_test(
+  //   "/zh_cn/docs/Web/API/RTCPeerConnection/addTrack",
+  //   "/zh-CN/docs/Web/API/RTCPeerConnection/addTrack",
+  //   { statusCode: 302 }
+  // ),
+  // url_test("/zh_tw/docs/AJAX", "/zh-TW/docs/AJAX", { statusCode: 302 })
 );
 
 const ZONE_REDIRECTS = [
@@ -666,7 +666,7 @@ const ZONE_REDIRECTS = [
   ["Apps", "Web/Aplicaciones", "Tutorials", ["es"]],
   ["Apps", "Apps", "Tutorials", ["bn", "de", "it", "ko", "pt-BR", "ru"]],
   // TODO: inconsistent also in SCL3
-  //["Learn", "Learn", "JavaScript", ["ca", "de", null]],
+  // ["Learn", "Learn", "JavaScript", ["ca", "de", null]],
   ["Apprendre", "Apprendre", "JavaScript", ["fr"]],
   [
     "Marketplace",

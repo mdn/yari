@@ -341,7 +341,7 @@ function FixableFlawsAction({
 
 function FixableFlawBadge() {
   return (
-    <span className="macro-fixable" title="This flaw is fixable.">
+    <span title="This flaw is fixable.">
       Fixable{" "}
       <span role="img" aria-label="Thumbs up">
         👍🏼
