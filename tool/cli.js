@@ -4,7 +4,7 @@ const os = require("os");
 
 const program = require("@caporal/core").default;
 const chalk = require("chalk");
-const prompts = require("prompts");
+const { prompt } = require("inquirer");
 const openEditor = require("open-editor");
 const open = require("open");
 
@@ -136,11 +136,11 @@ program
       }
       const { run } = yes
         ? { run: true }
-        : await prompts({
+        : await prompt({
             type: "confirm",
             message: "Proceed?",
             name: "run",
-            initial: true,
+            default: true,
           });
       if (run) {
         const removed = Document.remove(slug, locale, { recursive, redirect });
@@ -183,11 +183,11 @@ program
       );
       const { run } = yes
         ? { run: true }
-        : await prompts({
+        : await prompt({
             type: "confirm",
             message: "Proceed?",
             name: "run",
-            initial: true,
+            default: true,
           });
       if (run) {
         const moved = Document.move(oldSlug, newSlug, locale);
@@ -411,11 +411,11 @@ program
       }
       const { run } = yes
         ? { run: true }
-        : await prompts({
+        : await prompt({
             type: "confirm",
             message: `Proceed fixing ${flaws} flaws?`,
             name: "run",
-            initial: true,
+            default: true,
           });
       if (run) {
         buildDocument(document, { fixFlaws: true, fixFlawsVerbose: true });

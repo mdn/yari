@@ -4,6 +4,7 @@ const zlib = require("zlib");
 
 const cliProgress = require("cli-progress");
 const program = require("@caporal/core").default;
+const { prompt } = require("inquirer");
 
 const { Document, slugToFolder } = require("../content");
 // eslint-disable-next-line node/no-missing-require
@@ -21,7 +22,87 @@ const {
 const { uniqifyTranslationsOf } = require("./translationsof");
 const { humanFileSize } = require("./utils");
 
-async function buildDocuments(files = null, quiet = false) {
+async function buildDocumentInteractive(
+  documentPath,
+  translationsOf,
+  interactive,
+  invalidate = false
+) {
+  try {
+    const document = invalidate
+      ? Document.read(documentPath, Document.MEMOIZE_INVALIDATE)
+      : Document.read(documentPath);
+
+    const { translation_of } = document.metadata;
+
+    // If it's a non-en-US document, it'll most likely have a `translation_of`.
+    // If so, add it to the map so that when we build the en-US one, we can
+    // get an index of the *other* translations available.
+    if (translation_of) {
+      if (!translationsOf.has(translation_of)) {
+        translationsOf.set(translation_of, []);
+      }
+      const translation = {
+        url: document.url,
+        locale: document.metadata.locale,
+        title: document.metadata.title,
+      };
+      if (document.metadata.translation_of_original) {
+        translation.original = document.metadata.translation_of_original;
+      }
+      translationsOf.get(translation_of).push(translation);
+      // This is a shortcoming. If this is a translated document, we don't have a
+      // complete mapping of all other translations. So, the best we can do is
+      // at least link to the English version.
+      // In 2021, when we refactor localization entirely, this will need to change.
+      // Perhaps, then, we'll do a complete scan through all content first to build
+      // up the map before we process each one.
+      document.translations = [];
+    } else if (translationsOf.has(document.metadata.slug)) {
+      document.translations = uniqifyTranslationsOf(
+        translationsOf.get(document.metadata.slug),
+        document.url
+      );
+    }
+    return { document, doc: await buildDocument(document), skip: false };
+  } catch (e) {
+    if (!interactive) {
+      throw e;
+    }
+    console.error(e);
+    const { action } = await prompt([
+      {
+        type: "list",
+        message: "What to do?",
+        name: "action",
+        choices: [
+          { name: "re-run", value: "r" },
+          { name: "skip", value: "s" },
+          { name: "quit", value: "q" },
+        ],
+        default: "r",
+      },
+    ]);
+    if (action === "r") {
+      return await buildDocumentInteractive(
+        documentPath,
+        translationsOf,
+        interactive,
+        true
+      );
+    }
+    if (action === "s") {
+      return { doc: {}, skip: true };
+    }
+    throw e;
+  }
+}
+
+async function buildDocuments(
+  files = null,
+  quiet = false,
+  interactive = false
+) {
   // If a list of files was set, it came from the CLI.
   // Override whatever was in the build options.
   const findAllOptions = files
@@ -63,48 +144,22 @@ async function buildDocuments(files = null, quiet = false) {
     progressBar.start(documents.count);
   }
 
-  for (const document of documents.iter()) {
-    const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
-    fs.mkdirSync(outPath, { recursive: true });
-
-    const { translation_of } = document.metadata;
-
-    // If it's a non-en-US document, it'll most likely have a `translation_of`.
-    // If so, add it to the map so that when we build the en-US one, we can
-    // get an index of the *other* translations available.
-    if (translation_of) {
-      if (!translationsOf.has(translation_of)) {
-        translationsOf.set(translation_of, []);
-      }
-      const translation = {
-        url: document.url,
-        locale: document.metadata.locale,
-        title: document.metadata.title,
-      };
-      if (document.metadata.translation_of_original) {
-        translation.original = document.metadata.translation_of_original;
-      }
-      translationsOf.get(translation_of).push(translation);
-      // This is a shortcoming. If this is a translated document, we don't have a
-      // complete mapping of all other translations. So, the best we can do is
-      // at least link to the English version.
-      // In 2021, when we refactor localization entirely, this will need to change.
-      // Perhaps, then, we'll do a complete scan through all content first to build
-      // up the map before we process each one.
-      document.translations = [];
-    } else if (translationsOf.has(document.metadata.slug)) {
-      document.translations = uniqifyTranslationsOf(
-        translationsOf.get(document.metadata.slug),
-        document.url
-      );
+  for (const documentPath of documents.iter({ pathOnly: true })) {
+    const {
+      doc: { doc: builtDocument, liveSamples, fileAttachments, bcdData },
+      document,
+      skip,
+    } = await buildDocumentInteractive(
+      documentPath,
+      translationsOf,
+      interactive
+    );
+    if (skip) {
+      continue;
     }
 
-    const {
-      doc: builtDocument,
-      liveSamples,
-      fileAttachments,
-      bcdData,
-    } = await buildDocument(document);
+    const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
+    fs.mkdirSync(outPath, { recursive: true });
 
     if (builtDocument.flaws) {
       appendTotalFlaws(builtDocument.flaws);
@@ -296,7 +351,8 @@ program
   .name("build")
   .option("--spas", "Build the SPA pages", { default: true }) // PR builds
   .option("--spas-only", "Only build the SPA pages", { default: false })
-  .option("--google-analytics", "Only build the Google Analytics script", {
+  .option("--google-analytics", "Only build the Google Analytics script")
+  .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
   })
   .argument("[files...]", "specific files to build")
@@ -319,7 +375,8 @@ program
       const t0 = new Date();
       const { slugPerLocale, peakHeapBytes, totalFlaws } = await buildDocuments(
         files,
-        Boolean(options.quiet)
+        Boolean(options.quiet),
+        Boolean(options.interactive)
       );
       const t1 = new Date();
       const count = Object.values(slugPerLocale).reduce(

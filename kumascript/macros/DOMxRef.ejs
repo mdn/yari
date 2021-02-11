@@ -48,6 +48,6 @@ if (!$3) {
   str = `<code>${str}</code>`;
 }
 
-const link = web.smartLink(URL + anch, null, str, $0, basePath);
+const link = web.smartLink(URL + anch, $1, str, $0, basePath);
 
 %><%- link %>
