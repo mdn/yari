@@ -6,8 +6,6 @@ import { renderToString } from "react-dom/server";
 import cheerio from "cheerio";
 
 import {
-  // GOOGLE_ANALYTICS_ACCOUNT,
-  // GOOGLE_ANALYTICS_DEBUG,
   SPEEDCURVE_LUX_ID,
   ALWAYS_NO_ROBOTS,
   BUILD_OUT_ROOT,
@@ -91,34 +89,6 @@ const getGAScriptPathName = lazy((relPath = "/static/js/ga.js") => {
   }
   return null;
 });
-// const getGoogleAnalyticsJS = lazy(() => {
-//   // The reason for the `path.join(__dirname, ".."` is because this file you're
-//   // reading gets compiled by Webpack into ssr/dist/*.js
-//   const dntHelperCode = fs
-//     .readFileSync(
-//       path.join(__dirname, "..", "mozilla.dnthelper.min.js"),
-//       "utf-8"
-//     )
-//     .trim();
-
-//   const gaScriptURL = `https://www.google-analytics.com/${
-//     GOOGLE_ANALYTICS_DEBUG ? "analytics_debug" : "analytics"
-//   }.js`;
-//   return `
-//   // Mozilla DNT Helper
-//   ${dntHelperCode}
-//   // only load GA if DNT is not enabled
-//   if (Mozilla && !Mozilla.dntEnabled()) {
-//       window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-//       ga('create', '${GOOGLE_ANALYTICS_ACCOUNT}', 'mozilla.org');
-//       ga('set', 'anonymizeIp', true);
-//       ga('send', 'pageview');
-
-//       var a = document.createElement('script');
-//       a.async = 1; a.src = ${gaScriptURL};
-//       document.head.appendChild(a);
-//   }`.trim();
-// });
 
 const getSpeedcurveJS = lazy(() => {
   return fs
