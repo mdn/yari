@@ -33,16 +33,19 @@ function getSupportClassName(
     return "unknown";
   }
 
-  let { version_added, version_removed, partial_implementation } = getFirst(
-    support
-  );
+  let {
+    flags,
+    version_added,
+    version_removed,
+    partial_implementation,
+  } = getFirst(support);
 
   let className;
   if (version_added === null) {
     className = "unknown";
   } else if (version_added) {
     className = "yes";
-    if (version_removed) {
+    if (version_removed || (flags && flags.length)) {
       className = "no";
     }
   } else {
