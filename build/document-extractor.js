@@ -20,7 +20,14 @@ const { packageBCD } = require("./resolve-bcd");
  * ...give or take some whitespace.
  */
 function extractSidebar($) {
-  const search = $("#Quick_Links");
+  // Have to use both spellings because unfortunately, some sidebars don't come
+  // from macros but have it hardcoded into the content. Perhaps it was the
+  // result of someone once rendering out some sidebar macros.
+  // We could consolidate it to just exactly one spelling (`quick_links`) but
+  // that would require having to fix 29 macros, fix thousands of archived-content
+  // pages and hundres of translated content.
+  // By selecting for either spelling we're being defensive and safe.
+  const search = $("#Quick_Links, #Quick_links");
   if (!search.length) {
     return "";
   }
@@ -32,7 +39,7 @@ function extractSidebar($) {
 function extractSections($) {
   const flaws = [];
   const sections = [];
-  let section = cheerio
+  const section = cheerio
     .load("<div></div>", {
       // decodeEntities: false
     })("div")
@@ -149,7 +156,7 @@ function addSections($) {
      */
     if (countPotentialBCDDataDivs > 1) {
       const subSections = [];
-      let section = cheerio
+      const section = cheerio
         .load("<div></div>", {
           // decodeEntities: false
         })("div")
@@ -158,7 +165,7 @@ function addSections($) {
       // Loop over each and every "root element" in the node and keep piling
       // them up in a buffer, until you encounter a `div.bc-table` then
       // add that to the stack, clear and repeat.
-      let iterable = [...$[0].childNodes];
+      const iterable = [...$[0].childNodes];
       let c = 0;
       let countBCDDataDivsFound = 0;
       iterable.forEach((child) => {
@@ -170,7 +177,11 @@ function addSections($) {
         ) {
           countBCDDataDivsFound++;
           if (c) {
-            subSections.push(..._addSectionProse(section.clone()));
+            const [proseSections, proseFlaws] = _addSectionProse(
+              section.clone()
+            );
+            subSections.push(...proseSections);
+            flaws.push(...proseFlaws);
             section.empty();
             c = 0; // reset the counter
           }
@@ -186,7 +197,9 @@ function addSections($) {
         }
       });
       if (c) {
-        subSections.push(..._addSectionProse(section.clone()));
+        const [proseSections, proseFlaws] = _addSectionProse(section.clone());
+        subSections.push(...proseSections);
+        flaws.push(...proseFlaws);
       }
       if (countBCDDataDivsFound !== countPotentialBCDDataDivs) {
         const leftoverCount = countPotentialBCDDataDivs - countBCDDataDivsFound;
@@ -196,24 +209,28 @@ function addSections($) {
         flaws.push(explanation);
       }
       return [subSections, flaws];
-    } else {
-      const bcdSections = _addSingleSectionBCD($);
+    }
+    const bcdSections = _addSingleSectionBCD($);
 
-      // The _addSingleSectionBCD() function will have sucked up the <h2> or <h3>
-      // and the `div.bc-data` to turn it into a BCD section.
-      // First remove that, then put whatever HTML is left as a prose
-      // section underneath.
-      $.find("div.bc-data, h2, h3").remove();
-      bcdSections.push(..._addSectionProse($));
+    // The _addSingleSectionBCD() function will have sucked up the <h2> or <h3>
+    // and the `div.bc-data` to turn it into a BCD section.
+    // First remove that, then put whatever HTML is left as a prose
+    // section underneath.
+    $.find("div.bc-data, h2, h3").remove();
+    const [proseSections, proseFlaws] = _addSectionProse($);
+    bcdSections.push(...proseSections);
+    flaws.push(...proseFlaws);
 
-      if (bcdSections.length) {
-        return [bcdSections, flaws];
-      }
+    if (bcdSections.length) {
+      return [bcdSections, flaws];
     }
   }
 
   // all else, leave as is
-  return [_addSectionProse($), flaws];
+  const [proseSections, proseFlaws] = _addSectionProse($);
+  flaws.push(...proseFlaws);
+
+  return [proseSections, flaws];
 }
 
 function _addSingleSectionBCD($) {
@@ -241,7 +258,8 @@ function _addSingleSectionBCD($) {
   // prose section :(
   if (!dataQuery) {
     // I wish there was a good place to log this!
-    return _addSectionProse($);
+    const [proseSections] = _addSectionProse($);
+    return proseSections;
   }
   const query = dataQuery.replace(/^bcd:/, "");
   const { browsers, data } = packageBCD(query);
@@ -272,14 +290,6 @@ function _addSingleSectionBCD($) {
     }
     browserReleaseData.set(name, releaseData);
   }
-
-  // We never need this data, after the release info has been extracted
-  // for each 'version_added'.
-  Object.values(browsers).forEach((browser) => {
-    // Remove because it's added weight which we don't need in the
-    // state data sent to the client eventually.
-    delete browser.releases;
-  });
 
   for (const [key, compat] of Object.entries(data)) {
     let block;
@@ -320,37 +330,76 @@ function _addSingleSectionBCD($) {
 function _addSectionProse($) {
   let id = null;
   let title = null;
+  let titleAsText = null;
   let isH3 = false;
 
-  // Maybe this should check that the h2 is first??
+  const flaws = [];
+
+  // The way this works...
+  // Given a section of HTML, try to extract a id, title,
+
+  let h2found = false;
   const h2s = $.find("h2");
-  if (h2s.length === 1) {
-    id = h2s.attr("id");
-    title = h2s.text();
-    h2s.remove();
-  } else {
+  for (const i of [...Array(h2s.length).keys()]) {
+    if (i) {
+      // Excess!
+      flaws.push(
+        `Excess <h2> tag that is NOT at root-level (id='${h2s
+          .eq(i)
+          .attr("id")}', text='${h2s.eq(i).text()}')`
+      );
+    } else {
+      // First element
+      id = h2s.eq(i).attr("id");
+      title = h2s.eq(i).html();
+      titleAsText = h2s.eq(i).text();
+      h2s.eq(i).remove();
+    }
+    h2found = true;
+  }
+
+  // If there was no <h2>, look through all the <h3>s.
+  if (!h2found) {
     const h3s = $.find("h3");
-    if (h3s.length === 1) {
-      id = h3s.attr("id");
-      title = h3s.text();
-      if (id && title) {
-        isH3 = true;
-        h3s.remove();
+    for (const i of [...Array(h3s.length).keys()]) {
+      if (i) {
+        // Excess!
+        flaws.push(
+          `Excess <h3> tag that is NOT at root-level (id='${h3s
+            .eq(i)
+            .attr("id")}', text='${h3s.eq(i).text()}')`
+        );
+      } else {
+        id = h3s.eq(i).attr("id");
+        title = h3s.eq(i).html();
+        titleAsText = h3s.eq(i).text();
+        if (id && title) {
+          isH3 = true;
+          h3s.eq(i).remove();
+        }
       }
     }
   }
+  const value = {
+    id,
+    title,
+    isH3,
+    content: $.html().trim(),
+  };
 
-  return [
+  // Only include it if it's useful. It's an optional property and it's
+  // potentially a waste of space to include it if it's not different.
+  if (titleAsText && titleAsText !== title) {
+    value.titleAsText = titleAsText;
+  }
+
+  const sections = [
     {
       type: "prose",
-      value: {
-        id,
-        title,
-        isH3,
-        content: $.html().trim(),
-      },
+      value,
     },
   ];
+  return [sections, flaws];
 }
 
 /**
@@ -361,7 +410,7 @@ function extractSummary(sections) {
   let summary = ""; // default and fallback is an empty string.
 
   function extractFirstGoodParagraph($) {
-    const seoSummary = $(".seoSummary");
+    const seoSummary = $("span.seoSummary, .summary");
     if (seoSummary.length && seoSummary.text()) {
       return seoSummary.text();
     }
@@ -397,7 +446,7 @@ function extractSummary(sections) {
       }
       const $ = cheerio.load(section.value.content);
       // Remove non-p tags that we should not be looking inside.
-      $(".notecard").remove();
+      $("div.notecard, div.note, div.blockIndicator").remove();
       summary = extractFirstGoodParagraph($);
       if (summary) {
         break;

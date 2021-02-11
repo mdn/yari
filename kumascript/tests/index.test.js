@@ -16,7 +16,7 @@ const {
 describe("testing the main render() function", () => {
   it("non-fatal errors in macros are returned by render()", async () => {
     info.cleanURL = jest.fn((url) => {
-      let result = url.toLowerCase();
+      const result = url.toLowerCase();
       if (result === "/en-us/docs/web/css/dumber") {
         return "/en-us/docs/web/css/number";
       }
@@ -96,7 +96,7 @@ describe("testing the main render() function", () => {
         },
       }[url];
     });
-    let [result, errors] = await render("/en-us/docs/web/a");
+    const [result, errors] = await render("/en-us/docs/web/a");
     // First, let's check the result.
     expect(result).toEqual(
       expect.stringContaining('{{nonExistentMacro("yada")}}')
@@ -107,7 +107,7 @@ describe("testing the main render() function", () => {
     );
     const $ = cheerio.load(result);
     const brokenLink = $(
-      'a.new[title^="The documentation about this has not yet been written"]'
+      'a.page-not-created[title^="The documentation about this has not yet been written"]'
     );
     expect(brokenLink.length).toBe(3);
     expect(brokenLink.html()).toBe("<code>bigfoot</code>");

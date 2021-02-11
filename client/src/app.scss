@@ -2,4 +2,5 @@
 // afford to load it on all pages globally.
 @import "prismjs/themes/prism";
 
-@import "~@mdn/minimalist/sass/mdn-minimalist.scss";
+@import "~@mdn/minimalist/sass/mdn-minimalist";
+@import "./ui/molecules/grids/grids";

@@ -1,0 +1,10 @@
+{
+  "name": "@yari-internal/slug-utils",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MPL-2.0",
+  "main": "index.js",
+  "dependencies": {
+    "sanitize-filename": "^1.6.3"
+  }
+}

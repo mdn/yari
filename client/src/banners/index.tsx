@@ -9,7 +9,7 @@ import { useUserData } from "../user-context";
 // <ActiveBanner>, at least the CSS will be ready.
 import "./banner.scss";
 
-import { DEVELOPER_NEEDS_ID, SUBSCRIPTION_ID } from "./ids";
+import { COMMON_SURVEY_ID } from "./ids";
 
 const ActiveBanner = lazy(() => import("./active-banner"));
 
@@ -72,24 +72,13 @@ export function Banner() {
   // The order of the if statements is important and it's our source of
   // truth about which banner is "more important" than the other.
 
-  if (isEnabled(DEVELOPER_NEEDS_ID)) {
+  if (isEnabled(COMMON_SURVEY_ID)) {
     return (
       <Suspense fallback={null}>
         <ActiveBanner
-          id={DEVELOPER_NEEDS_ID}
+          id={COMMON_SURVEY_ID}
           onDismissed={() => {
-            setEmbargoed(DEVELOPER_NEEDS_ID, 5);
-          }}
-        />
-      </Suspense>
-    );
-  } else if (isEnabled(SUBSCRIPTION_ID) && !userData.isSubscriber) {
-    return (
-      <Suspense fallback={null}>
-        <ActiveBanner
-          id={SUBSCRIPTION_ID}
-          onDismissed={() => {
-            setEmbargoed(SUBSCRIPTION_ID, 7);
+            setEmbargoed(COMMON_SURVEY_ID, 5);
           }}
         />
       </Suspense>

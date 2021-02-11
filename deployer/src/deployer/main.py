@@ -4,19 +4,23 @@ import click
 
 from . import __version__
 from .constants import (
+    CI,
     CONTENT_ROOT,
     CONTENT_TRANSLATED_ROOT,
+    CONTENT_ARCHIVED_ROOT,
     DEFAULT_BUCKET_NAME,
     DEFAULT_BUCKET_PREFIX,
     DEFAULT_NO_PROGRESSBAR,
     SPEEDCURVE_DEPLOY_API_KEY,
     SPEEDCURVE_DEPLOY_SITE_ID,
+    ELASTICSEARCH_URL,
 )
 from .update_lambda_functions import update_all
 from .upload import upload_content
 from .utils import log
 from .whatsdeployed import dump as dump_whatsdeployed
 from .speedcurve import deploy_ping as speedcurve_deploy_ping
+from . import search
 
 
 def validate_directory(ctx, param, value):
@@ -52,7 +56,10 @@ def cli(ctx, **kwargs):
 
 @cli.command()
 @click.argument(
-    "directory", type=click.Path(), callback=validate_directory, default="aws-lambda",
+    "directory",
+    type=click.Path(),
+    callback=validate_directory,
+    default="aws-lambda",
 )
 @click.pass_context
 def update_lambda_functions(ctx, directory):
@@ -71,7 +78,10 @@ def update_lambda_functions(ctx, directory):
     default="whatsdeployed.json",
 )
 @click.argument(
-    "directory", type=click.Path(), callback=validate_directory, default=".",
+    "directory",
+    type=click.Path(),
+    callback=validate_directory,
+    default=".",
 )
 @click.pass_context
 def whatsdeployed(ctx, directory: Path, output: str):
@@ -113,6 +123,13 @@ def whatsdeployed(ctx, directory: Path, output: str):
     callback=validate_optional_directory,
 )
 @click.option(
+    "--content-archived-root",
+    help="The path to the root folder of the archived content (defaults to CONTENT_ARCHIVED_ROOT)",
+    default=CONTENT_ARCHIVED_ROOT,
+    show_default=True,
+    callback=validate_optional_directory,
+)
+@click.option(
     "--no-progressbar",
     help="Don't show the progress bar",
     default=DEFAULT_NO_PROGRESSBAR,
@@ -126,6 +143,8 @@ def upload(ctx, directory: Path, **kwargs):
     content_roots = [kwargs["content_root"]]
     if kwargs["content_translated_root"]:
         content_roots.append(kwargs["content_translated_root"])
+    if kwargs["content_archived_root"]:
+        content_roots.append(kwargs["content_archived_root"])
     ctx.obj.update(kwargs)
     upload_content(directory, content_roots, ctx.obj)
 
@@ -138,13 +157,22 @@ def upload(ctx, directory: Path, **kwargs):
     show_default=False,
 )
 @click.option(
-    "--site-id", help="Site ID ", default=SPEEDCURVE_DEPLOY_SITE_ID, show_default=True,
+    "--site-id",
+    help="Site ID ",
+    default=SPEEDCURVE_DEPLOY_SITE_ID,
+    show_default=True,
 )
 @click.option(
-    "--note", help="Note string to add", default="", show_default=True,
+    "--note",
+    help="Note string to add",
+    default="",
+    show_default=True,
 )
 @click.option(
-    "--detail", help="Detail string to add", default="", show_default=True,
+    "--detail",
+    help="Detail string to add",
+    default="",
+    show_default=True,
 )
 @click.pass_context
 def speedcurve_deploy(ctx, **kwargs):
@@ -168,4 +196,72 @@ def speedcurve_deploy(ctx, **kwargs):
     log.info(f"Speedcurve Deploy note={note!r}, detail={detail!r}")
     speedcurve_deploy_ping(
         api_key, site_id, note, detail, dry_run=ctx.obj.get("dry_run")
+    )
+
+
+@cli.command()
+@click.option(
+    "--url",
+    help="Elasticsearch URL (if not env var ELASTICSEARCH_URL)",
+    default=ELASTICSEARCH_URL,
+    show_default=False,
+)
+@click.option(
+    "--update",
+    is_flag=True,
+    help="Don't first delete the index",
+    default=False,
+    show_default=True,
+)
+@click.option(
+    "--no-progressbar",
+    is_flag=True,
+    help="Disables the progressbar (this is true by default it env var CI==true)",
+    default=CI,
+    show_default=True,
+)
+@click.option(
+    "--priority-prefix",
+    "-p",
+    multiple=True,
+    help="Specific folder prefixes to index first.",
+)
+@click.argument("buildroot", type=click.Path(), callback=validate_directory)
+@click.pass_context
+def search_index(ctx, buildroot: Path, **kwargs):
+    url = kwargs["url"]
+    if not url:
+        if not ELASTICSEARCH_URL:
+            # The reason we're not throwing an error is to make it super convenient
+            # to call this command, from bash, without first having to check and figure
+            # out if the relevant environment variables are available.
+            log.warning("DEPLOYER_ELASTICSEARCH_URL or --url not set or empty")
+            return
+        raise Exception("url not set")
+    search.index(
+        buildroot,
+        url,
+        update=kwargs["update"],
+        no_progressbar=kwargs["no_progressbar"],
+        priority_prefixes=kwargs["priority_prefix"],
+    )
+
+
+@cli.command()
+@click.option(
+    "--url",
+    help="Elasticsearch URL (if not env var ELASTICSEARCH_URL)",
+    default=ELASTICSEARCH_URL,
+    show_default=False,
+)
+@click.option("--analyzer", "-a", default="text_analyzer", show_default=True)
+@click.argument("text")
+@click.pass_context
+def search_analyze(ctx, text, analyzer, url):
+    if not url:
+        raise Exception("url not set")
+    search.analyze(
+        url,
+        text,
+        analyzer,
     )

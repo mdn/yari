@@ -9,10 +9,9 @@ const { assert, itMacro, describeMacro } = require("./utils");
 
 describeMacro("dekiscript-wiki", function () {
   itMacro("basic API", function (macro) {
-    let pkg = macro.ctx.wiki;
+    const pkg = macro.ctx.wiki;
     assert.isObject(pkg);
     assert.isFunction(pkg.escapeQuotes);
-    assert.isFunction(pkg.pageExists);
     assert.isFunction(pkg.page);
     assert.isFunction(pkg.getPage);
     assert.isFunction(pkg.uri);

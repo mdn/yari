@@ -8,9 +8,17 @@ export function ProseWithHeading({ id, section }) {
   return (
     <>
       {section.isH3 ? (
-        <DisplayH3 id={id} title={section.title} />
+        <DisplayH3
+          id={id}
+          title={section.title}
+          titleAsText={section.titleAsText}
+        />
       ) : (
-        <DisplayH2 id={id} title={section.title} />
+        <DisplayH2
+          id={id}
+          title={section.title}
+          titleAsText={section.titleAsText}
+        />
       )}
       <Prose section={section} />
     </>

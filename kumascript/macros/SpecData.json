@@ -24,19 +24,19 @@
     "url": "https://www.w3.org/TR/wai-aria-1.2/",
     "status": "WD"
   },
-  "ARIA Authoring Practices": {
+  "ARIA Authoring Practices 1.1": {
     "name": "WAI-ARIA Authoring Practices 1.1",
-    "url": "https://w3c.github.io/aria-practices/",
-    "status": "Draft"
+    "url": "https://www.w3.org/TR/wai-aria-practices-1.1/",
+    "status": "NOTE"
+  },
+  "ARIA Authoring Practices 1.2": {
+    "name": "WAI-ARIA Authoring Practices 1.2",
+    "url": "https://www.w3.org/TR/wai-aria-practices-1.2/",
+    "status": "WD"
   },
   "ARIA in HTML": {
     "name": "ARIA in HTML",
     "url": "https://w3c.github.io/html-aria/",
-    "status": "WD"
-  },
-  "ARIA Authoring Practices": {
-    "name": "WAI-ARIA Authoring Practices",
-    "url": "https://www.w3.org/TR/wai-aria-practices-1.1/",
     "status": "WD"
   },
   "Async Function": {
@@ -53,6 +53,11 @@
     "name": "Audio Output Devices API",
     "url": "https://w3c.github.io/mediacapture-output/",
     "status": "CR"
+  },
+  "Background Fetch": {
+    "name": "Background Fetch",
+    "url": "https://wicg.github.io/background-fetch/",
+    "status": "Draft"
   },
   "Background Sync": {
     "name": "Web Background Synchronization",
@@ -122,6 +127,11 @@
   "Cookie Prefixes": {
     "name": "Cookie Prefixes",
     "url": "https://tools.ietf.org/html/draft-west-cookie-prefixes-05",
+    "status": "Draft"
+  },
+  "Cookie Store API": {
+    "name": "Cookie Store API",
+    "url": "https://wicg.github.io/cookie-store/",
     "status": "Draft"
   },
   "Credential Management": {
@@ -724,6 +734,11 @@
     "url": "https://www.w3.org/TR/dom/",
     "status": "Obsolete"
   },
+  "Element Timing API": {
+    "name": "Element Timing",
+    "url": "https://wicg.github.io/element-timing/",
+    "status": "ED"
+  },
   "Element Traversal": {
     "name": "Element Traversal Specification",
     "url": "https://www.w3.org/TR/ElementTraversal/",
@@ -1239,6 +1254,11 @@
     "url": "https://w3c.github.io/pointerevents/",
     "status": "ED"
   },
+  "Portals": {
+    "name": "Portals",
+    "url": "https://wicg.github.io/portals/",
+    "status": "ED"
+  },
   "Pointer Lock": {
     "name": "Pointer Lock",
     "url": "https://w3c.github.io/pointerlock/",
@@ -1288,6 +1308,11 @@
     "name": "Referrer Policy",
     "url": "https://w3c.github.io/webappsec-referrer-policy/",
     "status": "CR"
+  },
+  "Relative Indexing Method": {
+    "name": "Relative Indexing Method",
+    "url": "https://tc39.es/proposal-relative-indexing-method/",
+    "status": "Draft"
   },
   "Remote Playback": {
     "name": "Remote Playback API",
@@ -1447,6 +1472,11 @@
   "Telephony API": {
     "name": "Web Telephony API",
     "url": "https://wiki.mozilla.org/WebAPI/WebTelephony",
+    "status": "Draft"
+  },
+  "Top Level Await": {
+    "name": "Top Level Await",
+    "url": "https://tc39.es/proposal-top-level-await/",
     "status": "Draft"
   },
   "Touch Events": {

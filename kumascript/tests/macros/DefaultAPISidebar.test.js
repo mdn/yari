@@ -280,12 +280,12 @@ function checkResult(html, config) {
  */
 function testMacro(config) {
   for (const locale of ["en-US", "fr", "ja"]) {
-    let testName = `${config.name}; locale: ${locale}`;
+    const testName = `${config.name}; locale: ${locale}`;
     itMacro(testName, function (macro) {
       config.locale = locale;
       macro.ctx.env.locale = locale;
       // Mock calls to MDN.subpagesExpand
-      macro.ctx.page.subpagesExpand = jest.fn((page) => {
+      macro.ctx.page.subpagesExpand = jest.fn(() => {
         return config.subpages;
       });
       return macro.call(config.argument).then(function (result) {

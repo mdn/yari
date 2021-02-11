@@ -25,7 +25,6 @@ let sectionName = mdn.localString({
 });
 let url = "/" + env.locale + "/docs/Web/HTML/" + sectionName + "/" +
     elementName;
-let page = await wiki.getPage(url);
 
 // Add anchor after fetching the page contents
 url += $2;

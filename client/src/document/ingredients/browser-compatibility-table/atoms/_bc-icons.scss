@@ -10,7 +10,8 @@
     display: inline-block;
     height: $base-unit * 3;
     line-height: 1;
-    margin-left: $base-unit;
+    margin-left: $base-unit / 1.2;
+    margin-right: $base-unit / 1.5;
     width: $base-unit * 3;
   }
 }

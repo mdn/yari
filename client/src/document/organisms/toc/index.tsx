@@ -31,7 +31,7 @@ export function TOC({ toc }: { toc: Toc[] }) {
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions */}
       <section className="document-toc" onClick={sendTOCClicks}>
         <header>
-          <h2>Jump to section</h2>
+          <h2>Table of contents</h2>
           <button
             type="button"
             className="ghost toc-trigger-mobile"
@@ -41,13 +41,16 @@ export function TOC({ toc }: { toc: Toc[] }) {
             aria-controls="toc-entries"
             aria-expanded={showTOC}
           >
-            Jump to section
+            Table of contents
           </button>
         </header>
         <ul id="toc-entries" className={showTOC ? "show-toc" : undefined}>
           {toc.map((item) => (
             <li key={item.id}>
-              <a href={`#${item.id.toLowerCase()}`}>{item.text}</a>
+              <a
+                href={`#${item.id.toLowerCase()}`}
+                dangerouslySetInnerHTML={{ __html: item.text }}
+              ></a>
             </li>
           ))}
         </ul>

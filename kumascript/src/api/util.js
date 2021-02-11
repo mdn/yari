@@ -108,25 +108,26 @@ class HTMLTool {
       return id;
     }
 
-    // First, let's gather the known ID's.
-    $("[id],[name]").each((i, e) => {
-      if (e.attribs.name && INJECT_SECTION_ID_TAGS.has(e.tagName)) {
-        knownIDs.add(slugify(e.attribs.name));
-      } else if (e.attribs.id && !H1_TO_H6_TAGS.has(e.tagName)) {
-        knownIDs.add(e.attribs.id);
-      }
-    });
-
     // Now, let's inject section ID's.
-    $([...INJECT_SECTION_ID_TAGS].join(",")).each((i, e) => {
-      if (e.attribs.name) {
+    // The rules are simple; for the tags we look at...
+    // If it as a `name` attribute, use that as the ID.
+    // If it already has an ID, leave it and use that.
+    // If it's a H1-6 tag, generate (slugify) an ID from its text.
+    // If all else, generate a unique one.
+    $([...INJECT_SECTION_ID_TAGS].join(",")).each((i, element) => {
+      const $element = $(element);
+      // Default is the existing one. Let's see if we need to change it.
+      let id = $element.attr("id");
+      if ($element.attr("name")) {
         // The "name" attribute overrides any current "id".
-        e.attribs["id"] = slugify(e.attribs.name);
-      } else if (H1_TO_H6_TAGS.has(e.tagName)) {
+        id = slugify($element.attr("name"));
+      } else if (id) {
+        // If it already has an ID, respect it and leave it be.
+      } else if (H1_TO_H6_TAGS.has($element[0].name)) {
         // For heading tags, we'll give them an "id" that's a
         // slugified version of their text content.
-        const text = $(e).text();
-        let id = slugify(text);
+        const text = $element.text();
+        id = slugify(text);
         if (id) {
           // Ensure that the slugified "id" has not already been
           // taken. If it has, create a unique version of it.
@@ -135,17 +136,13 @@ class HTMLTool {
           while (knownIDs.has(id)) {
             id = `${originalID}_${version++}`;
           }
-          knownIDs.add(id);
-        } else {
-          // Auto-generate a unique "id" as a last resort.
-          id = generateUniqueID();
         }
-        e.attribs["id"] = id;
-      } else if (!e.attribs.id) {
-        // Any "section" and "hgroup" tags without an "id" get an
-        // auto-generated one.
-        e.attribs["id"] = generateUniqueID();
       }
+      if (!id) {
+        id = generateUniqueID();
+      }
+      knownIDs.add(id);
+      $element.attr("id", id);
     });
     return this;
   }
@@ -234,8 +231,8 @@ module.exports = {
   //
   // Stolen from http://underscorejs.org/#defaults
   defaults(obj, ...sources) {
-    for (let source of sources) {
-      for (var prop in source) {
+    for (const source of sources) {
+      for (const prop in source) {
         if (obj[prop] === void 0) obj[prop] = source[prop];
       }
     }
@@ -250,13 +247,13 @@ module.exports = {
    */
   preparePath(path) {
     if (path.charAt(0) != "/") {
-      path = "/" + path;
+      path = `/${path}`;
     }
     if (path.indexOf("/docs") == -1) {
       // HACK: If this looks like a legacy wiki URL, throw /en-US/docs
       // in front of it. That will trigger the proper redirection logic
       // until/unless URLs are corrected in templates
-      path = "/en-US/docs" + path;
+      path = `/en-US/docs${path}`;
     }
     return spacesToUnderscores(path);
   },
@@ -269,7 +266,7 @@ module.exports = {
    * @return {string}
    */
   htmlEscape(s) {
-    return ("" + s)
+    return `${s}`
       .replace(/&/g, "&amp;")
       .replace(/>/g, "&gt;")
       .replace(/</g, "&lt;")
@@ -277,9 +274,9 @@ module.exports = {
   },
 
   escapeQuotes(a) {
-    var b = "";
-    for (var i = 0, len = a.length; i < len; i++) {
-      var c = a[i];
+    let b = "";
+    for (let i = 0, len = a.length; i < len; i++) {
+      let c = a[i];
       if (c == '"') {
         c = "&quot;";
       }

@@ -20,15 +20,12 @@ After that, run these commands in your bash:
     git clone https://github.com/mdn/yari.git
     cd yari
     yarn
-    export CONTENT_ROOT=/path/to/mdn/content/files
+    echo CONTENT_ROOT=/path/to/mdn/content/files >> .env
     yarn dev
     open http://localhost:3000
 
 Make sure you point to the `/files` folder inside your clone of the content
-repo. Instead of having to type `export CONTENT_ROOT=/path/to/mdn/content/files`
-for `yarn dev` every time, you can put into `.env` file:
-
-    CONTENT_ROOT=/path/to/mdn/content/files
+repo.
 
 If you prefer, you can fork the repo first and do the `git clone` with
 _your_ fork instead of the `mdn` one.
@@ -38,6 +35,9 @@ takes a little extra time. If you prefer you can use `yarn start` which
 will re-use any previously compiled files which is "riskier" but faster.
 The `yarn start` command will also start a server which doesn't automatically
 reload when its source code files change, so use with caution.
+
+See also our [reviewing guide](docs/REVIEWING.md) for information on how to
+review Yari changes.
 
 ### How to stay up-to-date
 
@@ -78,7 +78,7 @@ might expand with more documentation specifically for contributing to the
 content exclusively.
 
 The `yarn start` command encapsulates the front-end dev server
-(on `localhost:3000`) and the `server` (on `localhost:5000`).
+(on <http://localhost:3000>) and the `server` (on <http://localhost:5000>).
 
 All the sub-commands of `yarn start` can be broken down and run individually
 if you want to work more rapidly.
@@ -93,7 +93,7 @@ your preferred editor/IDE. For example, in the root:
     echo 'EDITOR=code' >> .env
 
 Now clicking certain links will open files directly in the currently open
-VSCode IDE. To test it, view any document on `http://localhost:3000` and
+VSCode IDE. To test it, view any document on <http://localhost:3000> and
 click the "Open in your editor" button.
 
 ### How the server works
@@ -127,12 +127,7 @@ formatting flaws, the pull request checks should catch it.
 We maintain the dependencies using `Dependabot` in GitHub but if you want
 to manually upgrade some you can use:
 
-    yarn outdated
-
-If it mentions outdated packages, run and select the packages you want to
-upgrade:
-
-    yarn upgrade-interactive
+    yarn upgrade-interactive --latest
 
 ### Sharing your dev environment with `ngrok`
 
@@ -190,7 +185,7 @@ severe but they should never block a full build.
 More information about how to set flaws can be found in `docs/envvars.md`.
 
 Essentially, the default is to _warn_ about any flaw and you can see
-those flaws when using `http://localhost:3000`. But for completed builds,
+those flaws when using <http://localhost:3000>. But for completed builds,
 all flaws are ignored. This makes the build faster and there's also
 no good place to display the flaws in a production-grade build.
 
@@ -217,7 +212,16 @@ There are two options to resolve this.
 
 1. Disable the watcher via [`REACT_APP_NO_WATCHER`](docs/envvars.md#react_app_no_watcher)
 
-   export REACT_APP_NO_WATCHER=true
+   `echo REACT_APP_NO_WATCHER=true >> .env`
 
 2. Increase `max_user_watches`:\
    See <https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers>
+
+### `Error: Cannot find module 'levenary'`
+
+We can't know for sure what's causing this error but speculate a bug in how `yarn`
+fails to resolve if certain `@babel` helper libs should install its own
+sub-dependencies. A sure way to solve it is to run:
+
+    rm -fr node_modules
+    yarn install

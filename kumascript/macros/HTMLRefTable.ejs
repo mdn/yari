@@ -90,8 +90,6 @@ function hasCommonTag(A, B) {
 // CODE VARIABLES
 // --------------
 
-let tag;
-let badge;
 let TagFilters = {
        include : typeof $0 === 'string' ? [lowerMe($0)]
                 : $0 && $0.include && Array.isArray($0.include) ? $0.include.map(lowerMe)

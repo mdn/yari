@@ -11,6 +11,7 @@ import { DisplayH2, DisplayH3 } from "./ingredients/utils";
 // That means that when the lazy-loading happens, it only needs to lazy-load
 // the JS (and the JSON XHR fetch of course)
 import "./ingredients/browser-compatibility-table/index.scss";
+import { useLocale } from "../hooks";
 
 const BrowserCompatibilityTable = lazy(
   () => import("./ingredients/browser-compatibility-table")
@@ -47,6 +48,7 @@ function LazyBrowserCompatibilityTableInner({
   dataURL: string;
   query: string;
 }) {
+  const locale = useLocale();
   const [bcdDataURL, setBCDDataURL] = useState("");
 
   const { error, data } = useSWR(
@@ -89,7 +91,7 @@ function LazyBrowserCompatibilityTableInner({
 
   return (
     <Suspense fallback={<Loading />}>
-      <BrowserCompatibilityTable {...data} />
+      <BrowserCompatibilityTable locale={locale} {...data} />
     </Suspense>
   );
 }

@@ -3,12 +3,16 @@
  */
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
+// This needs to match what the equivalent is inside the EmbedLiveSample.ejs file.
+// Duplicating it here to avoid hardcoding its number in multiple places.
+const MIN_HEIGHT = 60;
+
 describeMacro("EmbedLiveSample", function () {
   beforeEachMacro(function (macro) {
     macro.ctx.env.live_samples = {
       base_url: "https://mdn.mozillademos.org",
     };
-    macro.ctx.info.hasPage = jest.fn((path) => true);
+    macro.ctx.info.hasPage = jest.fn(() => true);
   });
   itMacro("One argument: ID", function (macro) {
     macro.ctx.env.url = "/en-US/docs/Web/HTML/Element/figure";
@@ -139,7 +143,7 @@ describeMacro("EmbedLiveSample", function () {
       macro.call("Adding_quotation_marks", "500", "50", ""),
       '<iframe class="live-sample-frame sample-code-frame"' +
         ' id="frame_Adding_quotation_marks" frameborder="0"' +
-        ' width="500" height="50"' +
+        ` width="500" height="${MIN_HEIGHT}"` +
         ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/::before/_samples_/Adding_quotation_marks">' +
         "</iframe>"
     );
@@ -231,7 +235,7 @@ describeMacro("EmbedLiveSample", function () {
     async function (macro) {
       macro.ctx.env.url = "/en-US/docs/Web/Events/focus";
       macro.ctx.info.cleanURL = jest.fn((url) => url.toLowerCase());
-      macro.ctx.info.hasPage = jest.fn((path) => false);
+      macro.ctx.info.hasPage = jest.fn(() => false);
       await expect(
         macro.call("Event delegation", "", "", "", "Web/Events/blur")
       ).rejects.toThrow(
@@ -264,7 +268,7 @@ describeMacro("EmbedLiveSample", function () {
       macro.call("sampleNone", 100, 50, "", "", "nobutton"),
       '<iframe class="live-sample-frame nobutton"' +
         ' id="frame_sampleNone" frameborder="0"' +
-        ' width="100" height="50"' +
+        ` width="100" height="${MIN_HEIGHT}"` +
         ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/-moz-appearance/_samples_/sampleNone">' +
         "</iframe>"
     );
@@ -284,7 +288,7 @@ describeMacro("EmbedLiveSample", function () {
         ),
         '<iframe class="live-sample-frame &#34;&gt;&lt;script&gt;alert(&#34;XSS&#34;);&lt;/script&gt;"' +
           ' id="frame_sampleNone" frameborder="0"' +
-          ' width="100" height="50"' +
+          ` width="100" height="${MIN_HEIGHT}"` +
           ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/-moz-appearance/_samples_/sampleNone">' +
           "</iframe>"
       );

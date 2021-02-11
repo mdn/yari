@@ -201,7 +201,7 @@ def test_not_cached(base_url, is_behind_cdn, slug, status, expected_location):
         ("/contribute.json", 200, None),
         ("/humans.txt", 200, None),
         ("/sitemap.xml", 200, None),
-        ("/sitemaps/en-US/sitemap.xml", 200, None),
+        ("/sitemaps/en-US/sitemap.xml.gz", 200, None),
         ("/diagrams/workflow/workflow.svg", 200, None),
         ("/presentations/microsummaries/index.html", 200, None),
         ("/en-US/account/", 200, None),
@@ -243,6 +243,4 @@ def test_zones_without_locale(base_url, is_behind_cdn, zone, status, expected_lo
     Ensure that these zone requests without a locale should redirect and that they
     are cached.
     """
-    assert_cached(
-        base_url + "/{}".format(zone), status, expected_location, is_behind_cdn
-    )
+    assert_cached(base_url + f"/{zone}", status, expected_location, is_behind_cdn)

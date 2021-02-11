@@ -1,6 +1,7 @@
 export interface Source {
-  github_url: string;
   folder: string;
+  github_url: string;
+  last_commit_url: string;
 }
 
 export interface GenericFlaw {
@@ -40,10 +41,15 @@ export interface BadBCDQueryFlaw extends GenericFlaw {}
 
 export interface SectioningFlaw extends GenericFlaw {}
 
-export interface PreWithHTMLFlaw extends GenericFlaw {
+enum BadPreTagType {
+  PreWithHTML = "pre_with_html",
+}
+
+export interface BadPreTagFlaw extends GenericFlaw {
   html: string;
   line?: number;
   column?: number;
+  type: BadPreTagType;
 }
 
 export interface MacroErrorMessage extends GenericFlaw {
@@ -68,7 +74,7 @@ type Flaws = {
   bad_bcd_queries: BadBCDQueryFlaw[];
   bad_bcd_links: BadBCDLinkFlaw[];
   images: ImageReferenceFlaw[];
-  pre_with_html: PreWithHTMLFlaw[];
+  bad_pre_tags: BadPreTagFlaw[];
   sectioning: SectioningFlaw[];
   image_widths: ImageWidthFlaw[];
 };
