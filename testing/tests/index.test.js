@@ -1137,11 +1137,18 @@ test("external links always get the right attributes", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  // 3 links on that page and we'll do 2 assertions for each one.
-  expect.assertions(3 * 2);
+  // 4 links on that page and we'll do 2 assertions for each one, plus
+  // 1 for the extra sanity check.
+  expect.assertions(4 * 2 + 1);
+  expect($("article a").length).toBe(4); // sanity check
   $("article a").each((i, element) => {
     const $a = $(element);
     expect($a.hasClass("external")).toBe(true);
-    expect($a.attr("rel").split(" ").includes("noopener")).toBe(true);
+    expect(
+      $a
+        .attr("rel")
+        .split(" ")
+        .filter((rel) => rel === "noopener").length
+    ).toBe(1);
   });
 });
