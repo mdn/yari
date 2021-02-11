@@ -25,6 +25,13 @@ const { syntaxHighlight } = require("./syntax-highlight");
 const buildOptions = require("./build-options");
 const { gather: gatherGitHistory } = require("./git-history");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
+const LANGUAGES_RAW = require("./languages.json");
+
+const LANGUAGES = new Map(
+  Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
+    return [locale.toLowerCase(), data];
+  })
+);
 
 const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/content
 
@@ -447,9 +454,9 @@ async function buildDocument(document, documentOptions = {}) {
     if (translationOf) {
       otherTranslations.push({
         locale: "en-US",
-        // slug: translationOf.metadata.slug,
         url: translationOf.url,
         title: translationOf.metadata.title,
+        native: LANGUAGES.get("en-us").native,
       });
     }
   }

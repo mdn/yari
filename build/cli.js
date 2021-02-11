@@ -21,6 +21,13 @@ const {
 } = require("../content/constants");
 const { uniqifyTranslationsOf } = require("./translationsof");
 const { humanFileSize } = require("./utils");
+const LANGUAGES_RAW = require("./languages.json");
+
+const LANGUAGES = new Map(
+  Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
+    return [locale.toLowerCase(), data];
+  })
+);
 
 async function buildDocumentInteractive(
   documentPath,
@@ -46,6 +53,7 @@ async function buildDocumentInteractive(
         url: document.url,
         locale: document.metadata.locale,
         title: document.metadata.title,
+        native: LANGUAGES.get(document.metadata.locale.toLowerCase()).native,
       };
       if (document.metadata.translation_of_original) {
         translation.original = document.metadata.translation_of_original;
