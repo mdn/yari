@@ -24,6 +24,19 @@ var allowedFeatures = $6;
 
 var hasScreenshot = (screenshotUrl && (screenshotUrl.length > 0));
 
+var MIN_HEIGHT = 60;
+// Forcibly make sure the height is at least `MIN_HEIGHT` pixels.
+// In old MDN, there was less padding in the live samples so it was then OK
+// to have a iframe height of 30px. This is too cramped and it's easier
+// and safer to make sure the height is at least 60px to make sure it
+// looks presently "uncramped" within our design system.
+// Note that if the 'height' is a string like '100%' it won't be a
+// problem because `parseInt('100%') := 100` which is more than `MIN_HEIGHT`
+// assuming it's value is less than 100.
+if (height && parseInt(height) < MIN_HEIGHT) {
+  height = MIN_HEIGHT;
+}
+
 var sampleUrl = "";
 if (sampleSlug) {
     sampleUrl = `/${env.locale}/docs`;

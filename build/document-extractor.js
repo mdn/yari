@@ -39,7 +39,7 @@ function extractSidebar($) {
 function extractSections($) {
   const flaws = [];
   const sections = [];
-  let section = cheerio
+  const section = cheerio
     .load("<div></div>", {
       // decodeEntities: false
     })("div")
@@ -156,7 +156,7 @@ function addSections($) {
      */
     if (countPotentialBCDDataDivs > 1) {
       const subSections = [];
-      let section = cheerio
+      const section = cheerio
         .load("<div></div>", {
           // decodeEntities: false
         })("div")
@@ -165,7 +165,7 @@ function addSections($) {
       // Loop over each and every "root element" in the node and keep piling
       // them up in a buffer, until you encounter a `div.bc-table` then
       // add that to the stack, clear and repeat.
-      let iterable = [...$[0].childNodes];
+      const iterable = [...$[0].childNodes];
       let c = 0;
       let countBCDDataDivsFound = 0;
       iterable.forEach((child) => {
@@ -209,21 +209,20 @@ function addSections($) {
         flaws.push(explanation);
       }
       return [subSections, flaws];
-    } else {
-      const bcdSections = _addSingleSectionBCD($);
+    }
+    const bcdSections = _addSingleSectionBCD($);
 
-      // The _addSingleSectionBCD() function will have sucked up the <h2> or <h3>
-      // and the `div.bc-data` to turn it into a BCD section.
-      // First remove that, then put whatever HTML is left as a prose
-      // section underneath.
-      $.find("div.bc-data, h2, h3").remove();
-      const [proseSections, proseFlaws] = _addSectionProse($);
-      bcdSections.push(...proseSections);
-      flaws.push(...proseFlaws);
+    // The _addSingleSectionBCD() function will have sucked up the <h2> or <h3>
+    // and the `div.bc-data` to turn it into a BCD section.
+    // First remove that, then put whatever HTML is left as a prose
+    // section underneath.
+    $.find("div.bc-data, h2, h3").remove();
+    const [proseSections, proseFlaws] = _addSectionProse($);
+    bcdSections.push(...proseSections);
+    flaws.push(...proseFlaws);
 
-      if (bcdSections.length) {
-        return [bcdSections, flaws];
-      }
+    if (bcdSections.length) {
+      return [bcdSections, flaws];
     }
   }
 

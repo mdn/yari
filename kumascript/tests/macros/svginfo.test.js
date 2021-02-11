@@ -74,16 +74,17 @@ function makeExpect(data, locale = "en-US") {
 
   if (data.content.elements) {
     // Regroup permitted content between named groups and standalone elements
-    let { elements, groups } = data.content.elements.reduce(
+    const { elements, groups } = data.content.elements.reduce(
       (acc, value) => {
         if (value.indexOf("&lt;") !== -1) {
-          let key = value.replace(/&lt;|&gt;/g, "");
-          let url = joinPathsForUrl(locale, SVG_BASE_SLUG, "Element", key);
+          const key = value.replace(/&lt;|&gt;/g, "");
+          const url = joinPathsForUrl(locale, SVG_BASE_SLUG, "Element", key);
           acc.elements.push(`<a href="${url}"><code>${value}</code></a>`);
         } else {
-          let anchor = `#${camelToSnake(value)}`;
-          let label = _(value, locale);
-          let url = joinPathsForUrl(locale, SVG_BASE_SLUG, "Element") + anchor;
+          const anchor = `#${camelToSnake(value)}`;
+          const label = _(value, locale);
+          const url =
+            joinPathsForUrl(locale, SVG_BASE_SLUG, "Element") + anchor;
 
           acc.groups.push(`<a href="${url}">${label}</a>`);
         }
@@ -101,7 +102,7 @@ function makeExpect(data, locale = "en-US") {
     if (elements.length > 0) permittedContent.push(elements.join(SEPARATOR));
   }
 
-  var output = [
+  const output = [
     '<table class="properties">',
     "<tbody>",
     "<tr>",
@@ -415,8 +416,8 @@ const TEST_CASE = [
 describeMacro("svginfo", () => {
   beforeEachMacro((macro) => {
     macro.ctx.wiki.getPage = jest.fn(async (url) => {
-      for (let locale of Object.keys(MOCK_PAGES)) {
-        for (let page of Object.values(MOCK_PAGES[locale])) {
+      for (const locale of Object.keys(MOCK_PAGES)) {
+        for (const page of Object.values(MOCK_PAGES[locale])) {
           if (url === page.url) {
             return page.data;
           }

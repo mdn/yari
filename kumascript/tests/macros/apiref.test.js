@@ -328,7 +328,7 @@ function checkInterfaceItem(actual, expected, config) {
   // Test that the badges are what we expect
   const badgeClasses = actual.querySelectorAll("svg");
   expect(badgeClasses.length).toEqual(expected.badges.length);
-  for (let badgeClass of badgeClasses) {
+  for (const badgeClass of badgeClasses) {
     badgeClass.classList.forEach((value) => {
       if (value !== "icon") {
         expect(expected.badges).toContain(value);
@@ -481,7 +481,7 @@ function checkResult(html, config) {
 
 function testMacro(config) {
   for (const locale of ["en-US", "fr", "ja"]) {
-    let testName = `${config.name}; locale: ${locale}`;
+    const testName = `${config.name}; locale: ${locale}`;
     itMacro(testName, function (macro) {
       config.locale = locale;
       macro.ctx.env.slug = config.currentSlug;
@@ -504,11 +504,10 @@ function testMacro(config) {
         return macro.call(config.argument).then(function (result) {
           checkResult(result, config);
         });
-      } else {
-        return macro.call().then(function (result) {
-          checkResult(result, config);
-        });
       }
+      return macro.call().then(function (result) {
+        checkResult(result, config);
+      });
     });
   }
 }

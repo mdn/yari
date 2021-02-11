@@ -22,7 +22,7 @@ const PREFERRED_LOCALE = {
 function getHrefLang(locale, otherLocales) {
   // In most cases, just return the language code, removing the country
   // code if present (so, for example, 'en-US' becomes 'en').
-  let hreflang = locale.split("-")[0];
+  const hreflang = locale.split("-")[0];
 
   // Suppose the locale is one that is ambiguous, we need to fall back on a
   // a preferred one. For example, if the document is available in 'zh-CN' and

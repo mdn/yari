@@ -407,7 +407,7 @@ async function fixFixableFlaws(doc, options, document) {
 
   const loud = options.fixFlawsDryRun || options.fixFlawsVerbose;
 
-  // Any 'macros' of type "MacroRedirectedLinkError"...
+  // Any 'macros' of type "MacroRedirectedLinkError" or "MacroDeprecatedError"...
   for (const flaw of doc.flaws.macros || []) {
     if (flaw.fixable) {
       // Sanity check that our understanding of flaws, filepaths, and sources

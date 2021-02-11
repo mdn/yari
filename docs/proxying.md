@@ -3,13 +3,20 @@
 ## Quickstart
 
 Suppose you're working on a feature, in Yari, where you want to make use
-of API responses in Kuma. The quickest way to accomplish this is as follows:
+of API responses in a local Kuma. The quickest way to accomplish this is as follows:
 
 1. Start `cd /path/to/kuma && docker-compose up` in a separate terminal
-1. Edit the root `.env` file and put in the line: `HOST=localhost.org`
-1. Now use `http://localhost.org:3000`
+1. Edit the root `.env` file and...
 
-**Note!** When you edit your root `.env` file, you need to stop `yarn start`
+   - put in the line: `HOST=localhost.org`
+   - put in the line: `REACT_APP_KUMA_HOST=localhost.org:8000`
+
+1. Now use <http://localhost.org:3000>
+
+**Note!** You have to use <http://localhost.org:3000> (note the extra `.org`)
+and not the usual <http://localhost:3000> so the browser sends your "Kuma cookie".
+
+**Note!** When you edit your root `.env` file, you need to stop `yarn dev`
 and start it up again.
 
 ## Logging in
@@ -80,8 +87,8 @@ await fetch("/api/v1/whoami");
 ```
 
 ...what that does is that the request, by the Webpack dev server, is forwarded
-to our Yari server (`localhost:5000`) which in turn picks this put and proxies
-it leaving the request untouched but essentially only changes the host name.
+to our Yari server (`localhost:5000`) which in turn picks this up and proxies,
+it leaving the request untouched, but essentially only changes the host name.
 
 So a request for `http://localhost:3000/api/v1/whoami` goes from your browser
 to `http://localhost:5000/api/v1/whoami` (via Node) proxies it on to
