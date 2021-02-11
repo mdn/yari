@@ -7,6 +7,7 @@ from .constants import (
     CI,
     CONTENT_ROOT,
     CONTENT_TRANSLATED_ROOT,
+    CONTENT_ARCHIVED_ROOT,
     DEFAULT_BUCKET_NAME,
     DEFAULT_BUCKET_PREFIX,
     DEFAULT_NO_PROGRESSBAR,
@@ -122,6 +123,13 @@ def whatsdeployed(ctx, directory: Path, output: str):
     callback=validate_optional_directory,
 )
 @click.option(
+    "--content-archived-root",
+    help="The path to the root folder of the archived content (defaults to CONTENT_ARCHIVED_ROOT)",
+    default=CONTENT_ARCHIVED_ROOT,
+    show_default=True,
+    callback=validate_optional_directory,
+)
+@click.option(
     "--no-progressbar",
     help="Don't show the progress bar",
     default=DEFAULT_NO_PROGRESSBAR,
@@ -135,6 +143,8 @@ def upload(ctx, directory: Path, **kwargs):
     content_roots = [kwargs["content_root"]]
     if kwargs["content_translated_root"]:
         content_roots.append(kwargs["content_translated_root"])
+    if kwargs["content_archived_root"]:
+        content_roots.append(kwargs["content_archived_root"])
     ctx.obj.update(kwargs)
     upload_content(directory, content_roots, ctx.obj)
 

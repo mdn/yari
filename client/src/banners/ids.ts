@@ -1,2 +1,1 @@
-export const DEVELOPER_NEEDS_ID = "developer_needs";
-export const SUBSCRIPTION_ID = "subscription_banner";
+export const COMMON_SURVEY_ID = "common_survey_banner";
