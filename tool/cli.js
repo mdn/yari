@@ -623,21 +623,19 @@ program
         }.js`;
 
         const code = `
-        // Mozilla DNT Helper
-        ${dntHelperCode}
-        // only load GA if DNT is not enabled
-        if (Mozilla && !Mozilla.dntEnabled()) {
-            window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-            ga('create', '${account}', 'mozilla.org');
-            ga('set', 'anonymizeIp', true);
-            ga('send', 'pageview');
+// Mozilla DNT Helper
+${dntHelperCode}
+// only load GA if DNT is not enabled
+if (Mozilla && !Mozilla.dntEnabled()) {
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', '${account}', 'mozilla.org');
+    ga('set', 'anonymizeIp', true);
+    ga('send', 'pageview');
 
-            var gaScript = document.createElement('script');
-            gaScript.async = 1; gaScript.src = '${gaScriptURL}';
-            document.head.appendChild(gaScript);
-        }`
-          .trim()
-          .replace(/        /g, "");
+    var gaScript = document.createElement('script');
+    gaScript.async = 1; gaScript.src = '${gaScriptURL}';
+    document.head.appendChild(gaScript);
+}`.trim();
         fs.writeFileSync(outfile, `${code}\n`, "utf-8");
         logger.info(
           chalk.green(
