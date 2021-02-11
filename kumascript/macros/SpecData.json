@@ -129,6 +129,11 @@
     "url": "https://tools.ietf.org/html/draft-west-cookie-prefixes-05",
     "status": "Draft"
   },
+  "Cookie Store API": {
+    "name": "Cookie Store API",
+    "url": "https://wicg.github.io/cookie-store/",
+    "status": "Draft"
+  },
   "Credential Management": {
     "name": "Credential Management Level 1",
     "url": "https://w3c.github.io/webappsec-credential-management/",
