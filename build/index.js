@@ -121,9 +121,10 @@ function postProcessExternalLinks($) {
       return;
     }
     $a.addClass("external");
-    const rel = $a.attr("rel") || "";
+    const rel = ($a.attr("rel") || "").split(" ");
     if (!rel.includes("noopener")) {
-      $a.attr("rel", ` ${rel} noopener`.trim());
+      rel.push("noopener");
+      $a.attr("rel", rel.join(" "));
     }
   });
 }
