@@ -25,6 +25,7 @@ const { syntaxHighlight } = require("./syntax-highlight");
 const buildOptions = require("./build-options");
 const { gather: gatherGitHistory } = require("./git-history");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
+const { getRelatedContent } = require("./related-content");
 
 const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/content
 
@@ -329,7 +330,11 @@ async function buildDocument(document, documentOptions = {}) {
   // Note that 'extractSidebar' will always return a string.
   // And if it finds a sidebar section, it gets removed from '$' too.
   // Also note, these operations mutate the `$`.
-  doc.sidebarHTML = extractSidebar($);
+  if (metadata.sidebar) {
+    doc.related_content = getRelatedContent(metadata.sidebar, doc);
+  } else {
+    doc.sidebarHTML = extractSidebar($);
+  }
 
   // Check and scrutinize any local image references
   const fileAttachments = checkImageReferences(doc, $, options, document);
