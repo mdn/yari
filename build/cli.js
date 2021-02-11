@@ -296,6 +296,9 @@ program
   .name("build")
   .option("--spas", "Build the SPA pages", { default: true }) // PR builds
   .option("--spas-only", "Only build the SPA pages", { default: false })
+  .option("--google-analytics", "Only build the Google Analytics script", {
+    default: false,
+  })
   .argument("[files...]", "specific files to build")
   .action(async ({ args, options }) => {
     try {

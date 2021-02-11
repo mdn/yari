@@ -10,6 +10,7 @@ import {
   GOOGLE_ANALYTICS_DEBUG,
   SPEEDCURVE_LUX_ID,
   ALWAYS_NO_ROBOTS,
+  BUILD_OUT_ROOT,
 } from "../build/constants";
 
 // When there are multiple options for a given language, this gives the
@@ -80,6 +81,10 @@ const getGoogleAnalyticsJS = lazy(() => {
       "utf-8"
     )
     .trim();
+
+  const gaScriptURL = `https://www.google-analytics.com/${
+    GOOGLE_ANALYTICS_DEBUG ? "analytics_debug" : "analytics"
+  }.js`;
   return `
   // Mozilla DNT Helper
   ${dntHelperCode}
@@ -88,6 +93,11 @@ const getGoogleAnalyticsJS = lazy(() => {
       window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
       ga('create', '${GOOGLE_ANALYTICS_ACCOUNT}', 'mozilla.org');
       ga('set', 'anonymizeIp', true);
+      ga('send', 'pageview');
+
+      var a = document.createElement('script');
+      a.async = 1; a.src = ${gaScriptURL};
+      document.head.appendChild(a);
   }`.trim();
 });
 
@@ -220,17 +230,17 @@ export default function render(
     ).appendTo($("head"));
   }
 
-  if (GOOGLE_ANALYTICS_ACCOUNT) {
-    const googleAnalyticsJS = getGoogleAnalyticsJS();
-    if (googleAnalyticsJS) {
-      $("<script>").text(`\n${googleAnalyticsJS}\n`).appendTo($("head"));
-      $(
-        `<script async src="https://www.google-analytics.com/${
-          GOOGLE_ANALYTICS_DEBUG ? "analytics_debug" : "analytics"
-        }.js"></script>`
-      ).appendTo($("head"));
-    }
+  const gaScriptFilePath = path.join(BUILD_OUT_ROOT, "static", "js", "ga.js");
+  console.log({ gaScriptFilePath });
+  if (fs.existsSync(gaScriptFilePath)) {
+    console.log("INJECT!", gaScriptFilePath);
   }
+  // if (GOOGLE_ANALYTICS_ACCOUNT) {
+  //   const googleAnalyticsJS = getGoogleAnalyticsJS();
+  //   if (googleAnalyticsJS) {
+  //     $("<script>").text(`\n${googleAnalyticsJS}\n`).appendTo($("head"));
+  //   }
+  // }
 
   const $title = $("title");
   $title.text(pageTitle);

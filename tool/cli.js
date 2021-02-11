@@ -18,6 +18,11 @@ const {
   buildURL,
 } = require("../content");
 const { buildDocument, gatherGitHistory } = require("../build");
+const {
+  BUILD_OUT_ROOT,
+  GOOGLE_ANALYTICS_ACCOUNT,
+  GOOGLE_ANALYTICS_DEBUG,
+} = require("../build/constants");
 const { runMakePopularitiesFile } = require("./popularities");
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
@@ -578,6 +583,70 @@ program
           `${options.outfile} is ${fmtBytes(fs.statSync(options.outfile).size)}`
         )
       );
+    })
+  )
+
+  .command(
+    "google-analytics-code",
+    "Generate a .js file that can be used in SSR rendering"
+  )
+  .option("--outfile <path>", "name of the generated script file", {
+    default: path.join(BUILD_OUT_ROOT, "static", "js", "ga.js"),
+  })
+  .option(
+    "--debug",
+    "whether to use the Google Analytics debug file (defaults to value of $GOOGLE_ANALYTICS_DEBUG)",
+    {
+      default: GOOGLE_ANALYTICS_DEBUG,
+    }
+  )
+  .option(
+    "--account <id>",
+    "Google Analytics account ID (defaults to value of $GOOGLE_ANALYTICS_ACCOUNT)",
+    {
+      default: GOOGLE_ANALYTICS_ACCOUNT,
+    }
+  )
+  .action(
+    tryOrExit(async ({ options, logger }) => {
+      const { outfile, debug, account } = options;
+      if (account) {
+        const dntHelperCode = fs
+          .readFileSync(
+            path.join(__dirname, "mozilla.dnthelper.min.js"),
+            "utf-8"
+          )
+          .trim();
+
+        const gaScriptURL = `https://www.google-analytics.com/${
+          debug ? "analytics_debug" : "analytics"
+        }.js`;
+
+        const code = `
+        // Mozilla DNT Helper
+        ${dntHelperCode}
+        // only load GA if DNT is not enabled
+        if (Mozilla && !Mozilla.dntEnabled()) {
+            window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+            ga('create', '${account}', 'mozilla.org');
+            ga('set', 'anonymizeIp', true);
+            ga('send', 'pageview');
+
+            var a = document.createElement('script');
+            a.async = 1; a.src = ${gaScriptURL};
+            document.head.appendChild(a);
+        }`
+          .trim()
+          .replace(/        /g, "");
+        fs.writeFileSync(outfile, `${code}\n`, "utf-8");
+        logger.info(
+          chalk.green(
+            `Generated ${outfile} for SSR rendering using ${account}.`
+          )
+        );
+      } else {
+        logger.info(chalk.yellow("No Google Analytics code file generated"));
+      }
     })
   );
 
