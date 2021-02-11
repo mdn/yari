@@ -351,7 +351,6 @@ program
   .name("build")
   .option("--spas", "Build the SPA pages", { default: true }) // PR builds
   .option("--spas-only", "Only build the SPA pages", { default: false })
-  .option("--google-analytics", "Only build the Google Analytics script")
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
   })

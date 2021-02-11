@@ -6,8 +6,8 @@ import { renderToString } from "react-dom/server";
 import cheerio from "cheerio";
 
 import {
-  GOOGLE_ANALYTICS_ACCOUNT,
-  GOOGLE_ANALYTICS_DEBUG,
+  // GOOGLE_ANALYTICS_ACCOUNT,
+  // GOOGLE_ANALYTICS_DEBUG,
   SPEEDCURVE_LUX_ID,
   ALWAYS_NO_ROBOTS,
   BUILD_OUT_ROOT,
@@ -72,34 +72,53 @@ const readBuildHTML = lazy(() => {
   return html;
 });
 
-const getGoogleAnalyticsJS = lazy(() => {
-  // The reason for the `path.join(__dirname, ".."` is because this file you're
-  // reading gets compiled by Webpack into ssr/dist/*.js
-  const dntHelperCode = fs
-    .readFileSync(
-      path.join(__dirname, "..", "mozilla.dnthelper.min.js"),
-      "utf-8"
-    )
-    .trim();
-
-  const gaScriptURL = `https://www.google-analytics.com/${
-    GOOGLE_ANALYTICS_DEBUG ? "analytics_debug" : "analytics"
-  }.js`;
-  return `
-  // Mozilla DNT Helper
-  ${dntHelperCode}
-  // only load GA if DNT is not enabled
-  if (Mozilla && !Mozilla.dntEnabled()) {
-      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-      ga('create', '${GOOGLE_ANALYTICS_ACCOUNT}', 'mozilla.org');
-      ga('set', 'anonymizeIp', true);
-      ga('send', 'pageview');
-
-      var a = document.createElement('script');
-      a.async = 1; a.src = ${gaScriptURL};
-      document.head.appendChild(a);
-  }`.trim();
+const getGAScriptPathName = lazy((relPath = "/static/js/ga.js") => {
+  // Return the relative path if there exists a `BUILD_ROOT/static/js/ga.js`.
+  // If the file doesn't exist, return falsy.
+  // Remember, unless explicitly set, the BUILD_OUT_ROOT defaults to a path
+  // based on `__dirname` but that's wrong when compared as a source and as
+  // a webpack built asset. So we need to remove the `/ssr/` portion of the path.
+  let root = BUILD_OUT_ROOT;
+  if (!fs.existsSync(root)) {
+    root = root
+      .split(path.sep)
+      .filter((x) => x !== "ssr")
+      .join(path.sep);
+  }
+  const filePath = relPath.split("/").slice(1).join(path.sep);
+  if (fs.existsSync(path.join(root, filePath))) {
+    return relPath;
+  }
+  return null;
 });
+// const getGoogleAnalyticsJS = lazy(() => {
+//   // The reason for the `path.join(__dirname, ".."` is because this file you're
+//   // reading gets compiled by Webpack into ssr/dist/*.js
+//   const dntHelperCode = fs
+//     .readFileSync(
+//       path.join(__dirname, "..", "mozilla.dnthelper.min.js"),
+//       "utf-8"
+//     )
+//     .trim();
+
+//   const gaScriptURL = `https://www.google-analytics.com/${
+//     GOOGLE_ANALYTICS_DEBUG ? "analytics_debug" : "analytics"
+//   }.js`;
+//   return `
+//   // Mozilla DNT Helper
+//   ${dntHelperCode}
+//   // only load GA if DNT is not enabled
+//   if (Mozilla && !Mozilla.dntEnabled()) {
+//       window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+//       ga('create', '${GOOGLE_ANALYTICS_ACCOUNT}', 'mozilla.org');
+//       ga('set', 'anonymizeIp', true);
+//       ga('send', 'pageview');
+
+//       var a = document.createElement('script');
+//       a.async = 1; a.src = ${gaScriptURL};
+//       document.head.appendChild(a);
+//   }`.trim();
+// });
 
 const getSpeedcurveJS = lazy(() => {
   return fs
@@ -230,17 +249,22 @@ export default function render(
     ).appendTo($("head"));
   }
 
-  const gaScriptFilePath = path.join(BUILD_OUT_ROOT, "static", "js", "ga.js");
-  console.log({ gaScriptFilePath });
-  if (fs.existsSync(gaScriptFilePath)) {
-    console.log("INJECT!", gaScriptFilePath);
+  // As part of the pre-build steps, in the build root, a `ga.js` file is generated.
+  // The SSR rendering needs to know if exists and if so, what it's URL pathname is.
+  // The script will do two things:
+  //  1. created a `window.ga` object
+  //  2. async inject the download of that remote
+  //     https://www.google-analytics.com/analytics.js file.
+  // With this script appearing before any other (also deferred) JS bundles,
+  // the `window.ga` will be immediately available but the remote analytics.js
+  // can come in when it comes in and it will send.
+  const gaScriptPathName = getGAScriptPathName();
+  if (gaScriptPathName) {
+    $("<script>")
+      .attr("defer", "")
+      .attr("src", gaScriptPathName)
+      .appendTo($("head"));
   }
-  // if (GOOGLE_ANALYTICS_ACCOUNT) {
-  //   const googleAnalyticsJS = getGoogleAnalyticsJS();
-  //   if (googleAnalyticsJS) {
-  //     $("<script>").text(`\n${googleAnalyticsJS}\n`).appendTo($("head"));
-  //   }
-  // }
 
   const $title = $("title");
   $title.text(pageTitle);

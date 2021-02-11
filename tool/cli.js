@@ -632,16 +632,18 @@ program
             ga('set', 'anonymizeIp', true);
             ga('send', 'pageview');
 
-            var a = document.createElement('script');
-            a.async = 1; a.src = ${gaScriptURL};
-            document.head.appendChild(a);
+            var gaScript = document.createElement('script');
+            gaScript.async = 1; gaScript.src = '${gaScriptURL}';
+            document.head.appendChild(gaScript);
         }`
           .trim()
           .replace(/        /g, "");
         fs.writeFileSync(outfile, `${code}\n`, "utf-8");
         logger.info(
           chalk.green(
-            `Generated ${outfile} for SSR rendering using ${account}.`
+            `Generated ${outfile} for SSR rendering using ${account}${
+              debug ? " (debug mode)" : ""
+            }.`
           )
         );
       } else {
