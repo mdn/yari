@@ -184,9 +184,15 @@ module.exports = (req, res) => {
   for (const filePath of glob.sync(
     path.join(BUILD_OUT_ROOT, "**", "index.json")
   )) {
-    counts.built++;
-
     const { doc } = JSON.parse(fs.readFileSync(filePath));
+
+    // The home page, for example, also uses a `index.json` but it doesn't have
+    // flaws, so let's not count it if it doesn't have a `doc` key.
+    if (!doc) {
+      continue;
+    }
+
+    counts.built++;
 
     if (doc.flaws) {
       for (const [flawKey, actualFlaws] of Object.entries(doc.flaws)) {

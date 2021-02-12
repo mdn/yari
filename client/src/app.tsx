@@ -7,17 +7,25 @@ import "./app.scss";
 
 import { CRUD_MODE } from "./constants";
 import { Homepage } from "./homepage";
-import { WritersHomepage } from "./writers-homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
 import { Footer } from "./ui/organisms/footer";
 import { Header } from "./ui/organisms/header";
 import { SiteSearch } from "./site-search";
+import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Banner } from "./banners";
 import { useDebugGA } from "./ga-context";
 
-const AllFlaws = React.lazy(() => import("./flaws"));
+const AllFlaws = React.lazy(() =>
+  import("./flaws").then((m) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(m as any);
+      }, 3000);
+    });
+  })
+);
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
 const DocumentCreate = React.lazy(() => import("./document/forms/create"));
 const DocumentManage = React.lazy(() => import("./document/forms/manage"));
@@ -78,16 +86,22 @@ function DocumentOrPageNotFound(props) {
   );
 }
 
+function LoadingFallback({ message }: { message?: string }) {
+  return (
+    <StandardLayout>
+      <PageContentContainer>
+        {/* This extra minHeight is just so that the footer doesn't flicker
+          in and out as the fallback appears. */}
+        <p style={{ minHeight: 800 }}>{message || "Loading..."}</p>
+      </PageContentContainer>
+    </StandardLayout>
+  );
+}
+
 export function App(appProps) {
   useDebugGA();
 
-  const homePage = CRUD_MODE ? (
-    <React.Suspense fallback={<p>Loading writers' home page</p>}>
-      <WritersHomepage />
-    </React.Suspense>
-  ) : (
-    <Homepage {...appProps} />
-  );
+  const homePage = CRUD_MODE ? <WritersHomepage /> : <Homepage {...appProps} />;
 
   const routes = (
     <Routes>
@@ -213,6 +227,6 @@ export function App(appProps) {
   return isServer ? (
     routes
   ) : (
-    <React.Suspense fallback={<div>Loading...</div>}>{routes}</React.Suspense>
+    <React.Suspense fallback={<LoadingFallback />}>{routes}</React.Suspense>
   );
 }
