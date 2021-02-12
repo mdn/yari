@@ -135,7 +135,7 @@
     "stylelint-a11y": "^1.2.3",
     "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-recommended": "^3.0.0",
-    "stylelint-config-sass-guidelines": "^7.1.0",
+    "stylelint-config-sass-guidelines": "^8.0.0",
     "stylelint-prettier": "^1.1.2",
     "stylelint-scss": "^3.19.0",
     "swr": "^0.4.2",
