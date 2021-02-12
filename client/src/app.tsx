@@ -20,6 +20,7 @@ const AllFlaws = React.lazy(() => import("./flaws"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
 const DocumentCreate = React.lazy(() => import("./document/forms/create"));
 const DocumentManage = React.lazy(() => import("./document/forms/manage"));
+const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 
 const isServer = typeof window === "undefined";
 
@@ -79,6 +80,14 @@ function DocumentOrPageNotFound(props) {
 export function App(appProps) {
   useDebugGA();
 
+  const homePage = CRUD_MODE ? (
+    <React.Suspense fallback={<p>Loading writers' home page</p>}>
+      <WritersHomepage />
+    </React.Suspense>
+  ) : (
+    <Homepage />
+  );
+
   const routes = (
     <Routes>
       {/*
@@ -89,11 +98,7 @@ export function App(appProps) {
        */}
       <Route
         path="/"
-        element={
-          <Layout pageType="standard-page">
-            <Homepage />
-          </Layout>
-        }
+        element={<Layout pageType="standard-page">{homePage}</Layout>}
       />
       <Route
         path="/:locale/*"
@@ -157,11 +162,7 @@ export function App(appProps) {
             )}
             <Route
               path="/"
-              element={
-                <StandardLayout>
-                  <Homepage />
-                </StandardLayout>
-              }
+              element={<StandardLayout>{homePage}</StandardLayout>}
             />
             <Route
               path="/search"
