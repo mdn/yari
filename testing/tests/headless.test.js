@@ -29,7 +29,10 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement("h1", {
       text: "<foo>: Une page de test",
     });
-    await expect(page).toClick("a", { text: "View in English" });
+    await expect(page).toClick("a.language-icon.default", {
+      text: "View in English",
+    });
+    await page.waitForNavigation({ waitUntil: "networkidle2" });
     await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
     // Should have been redirected too...
     // Note! It's important that this happens *after* the `.toMatchElement`
