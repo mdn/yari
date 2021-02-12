@@ -1,6 +1,7 @@
 @import "~@mdn/minimalist/sass/mixins/utils";
 @import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
 
 .hero {
   background-color: $primary-300;
@@ -41,14 +42,16 @@
   h1 {
     background-color: $neutral-100;
     color: $text-color-inverted;
+    font-size: $xl-font-size-mobile;
     font-weight: normal;
     margin: 0 auto;
     margin-bottom: $base-spacing;
     text-align: center;
 
     @media #{$mq-small-desktop-and-up} {
+      font-size: $xl-font-size;
       margin-bottom: $base-spacing * 2;
-      max-width: 650px;
+      max-width: 750px;
     }
   }
 
