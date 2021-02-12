@@ -170,6 +170,11 @@ class UploadFileTask(UploadTask):
             mime_type in ("application/json", "application/javascript")
         ):
             mime_type += "; charset=utf-8"
+
+        if mime_type == "binary/octet-stream" and self.file_path.endswith(".woff2"):
+            # See https://github.com/mdn/yari/issues/2017
+            mime_type = "font/woff2"
+
         return mime_type
 
     @property

@@ -157,6 +157,11 @@ def to_search(file):
         # E.g. https://developer.allizom.org/en-US/docs/Web/API/Index
         # See also https://github.com/mdn/yari/issues/1786
         return
+    if doc.get("noIndexing"):
+        # These are documents that we build but "don't want to be found". For
+        # example, they don't get included in the sitemaps or the search-index.json
+        # files.
+        return
     locale = locale[1:]
     return Document(
         _id=doc["mdn_url"],
