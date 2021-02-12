@@ -354,9 +354,11 @@ function findByURL(url, ...args) {
   return doc;
 }
 
-function findAll(
-  { files, folderSearch } = { files: new Set(), folderSearch: null }
-) {
+function findAll({
+  files = new Set(),
+  folderSearch = null,
+  quiet = false,
+} = {}) {
   if (!(files instanceof Set)) throw new TypeError("'files' not a Set");
   if (folderSearch && typeof folderSearch !== "string")
     throw new TypeError("'folderSearch' not a string");
@@ -373,7 +375,9 @@ function findAll(
     roots.push(CONTENT_TRANSLATED_ROOT);
   }
   roots.push(CONTENT_ROOT);
-  console.log("Building roots:", roots);
+  if (!quiet) {
+    console.log("Building roots:", roots);
+  }
   for (const root of roots) {
     filePaths.push(
       ...glob

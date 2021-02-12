@@ -10,6 +10,7 @@ const {
   syncAllTranslatedContent,
 } = require("../build/sync-translated-content");
 const log = require("loglevel");
+const cheerio = require("cheerio");
 
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
 const {
@@ -27,6 +28,7 @@ const {
   GOOGLE_ANALYTICS_DEBUG,
 } = require("../build/constants");
 const { runMakePopularitiesFile } = require("./popularities");
+const kumascript = require("../kumascript");
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
 
@@ -747,6 +749,143 @@ if (Mozilla && !Mozilla.dntEnabled()) {
   .action(
     tryOrExit(async ({ options }) => {
       await buildSPAs(options);
+    })
+  )
+
+  .command(
+    "macros",
+    "Render and/or remove one or more macros from one or more documents"
+  )
+  .option("-f, --force", "Render even if there are non-fixable flaws", {
+    default: false,
+  })
+  .argument("<cmd>", 'must be either "render" or "remove"')
+  .argument("<foldersearch>", "folder of documents to target")
+  .argument("<macros...>", "one or more macro names")
+  .action(
+    tryOrExit(async ({ args, options }) => {
+      if (!CONTENT_ROOT) {
+        throw new Error("CONTENT_ROOT not set");
+      }
+      if (!CONTENT_TRANSLATED_ROOT) {
+        throw new Error("CONTENT_TRANSLATED_ROOT not set");
+      }
+      const { force } = options;
+      const { cmd, foldersearch, macros } = args;
+      const cmdLC = cmd.toLowerCase();
+      if (!["render", "remove"].includes(cmdLC)) {
+        throw new Error(`invalid macros command "${cmd}"`);
+      }
+      console.log(
+        `${cmdLC} the macro(s) ${macros
+          .map((m) => `"${m}"`)
+          .join(", ")} within content folder(s) matching "${foldersearch}"`
+      );
+      const documents = Document.findAll({
+        folderSearch: foldersearch,
+        quiet: true,
+      });
+      if (!documents.count) {
+        throw new Error("no documents found");
+      }
+
+      async function renderOrRemoveMacros(document) {
+        try {
+          return await kumascript.render(document.url, {
+            invalidateCache: true,
+            selective_mode: [cmdLC, macros],
+          });
+        } catch (error) {
+          if (error.name === "MacroInvocationError") {
+            error.updateFileInfo(document.fileInfo);
+            throw new Error(
+              `error trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
+            );
+          }
+          // Any other unexpected error re-thrown.
+          throw error;
+        }
+      }
+
+      let countTotal = 0;
+      let countSkipped = 0;
+      let countModified = 0;
+      let countNoChange = 0;
+      for (const document of documents.iter()) {
+        countTotal++;
+        console.group(`${document.fileInfo.path}:`);
+        const originalRawHTML = document.rawHTML;
+        let [renderedHTML, flaws] = await renderOrRemoveMacros(document);
+        if (flaws.length) {
+          const fixableFlaws = flaws.filter((f) => f.redirectInfo);
+          const nonFixableFlaws = flaws.filter((f) => !f.redirectInfo);
+          const nonFixableFlawNames = [
+            ...new Set(nonFixableFlaws.map((f) => f.name)).values(),
+          ].join(", ");
+          if (force || nonFixableFlaws.length === 0) {
+            // They're all fixable or we don't care if some or all are
+            // not, but let's at least fix any that we can.
+            if (nonFixableFlaws.length > 0) {
+              console.log(
+                `ignoring ${nonFixableFlaws.length} non-fixable flaw(s) (${nonFixableFlawNames})`
+              );
+            }
+            if (fixableFlaws.length) {
+              console.group(
+                `fixing ${fixableFlaws.length} fixable flaw(s) before proceeding:`
+              );
+              // Let's start fresh so we don't keep the "data-flaw-src"
+              // attributes that may have been injected during the rendering.
+              document.rawHTML = originalRawHTML;
+              for (const flaw of fixableFlaws) {
+                const suggestion = flaw.macroSource.replace(
+                  flaw.redirectInfo.current,
+                  flaw.redirectInfo.suggested
+                );
+                document.rawHTML = document.rawHTML.replace(
+                  flaw.macroSource,
+                  suggestion
+                );
+                console.log(`${flaw.macroSource} --> ${suggestion}`);
+              }
+              console.groupEnd();
+              Document.update(
+                document.url,
+                document.rawHTML,
+                document.metadata
+              );
+              // Ok, we've fixed the fixable flaws, now let's render again.
+              [renderedHTML, flaws] = await renderOrRemoveMacros(document);
+            }
+          } else {
+            // There are one or more flaws that we can't fix, and we're not
+            // going to ignore them, so let's skip this document.
+            console.log(
+              `skipping, has ${nonFixableFlaws.length} non-fixable flaw(s) (${nonFixableFlawNames})`
+            );
+            console.groupEnd();
+            countSkipped++;
+            continue;
+          }
+        }
+        // The Kumascript rendering wraps the result with a "body" tag
+        // (and more), so let's extract the HTML content of the "body"
+        // to get what we'll store in the document.
+        const $ = cheerio.load(renderedHTML);
+        const newRawHTML = $("body").html();
+        if (newRawHTML !== originalRawHTML) {
+          Document.update(document.url, newRawHTML, document.metadata);
+          console.log(`modified`);
+          countModified++;
+        } else {
+          console.log(`no change`);
+          countNoChange++;
+        }
+        console.groupEnd();
+      }
+      console.log(
+        `modified: ${countModified} | no-change: ${countNoChange} | skipped: ${countSkipped} | total: ${countTotal}`
+      );
     })
   );
 
