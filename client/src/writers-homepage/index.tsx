@@ -6,7 +6,7 @@ import { Search } from "../ui/molecules/search";
 // Lazy sub-components
 const ViewedDocuments = lazy(() => import("./viewed-documents"));
 
-export function WritersHomepage() {
+export default function WritersHomepage() {
   const isServer = typeof window === "undefined";
 
   return (
