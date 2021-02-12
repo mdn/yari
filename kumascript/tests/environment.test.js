@@ -145,27 +145,27 @@ const expectedAsync = ["wiki.page", "template"];
 
 describe("Environment class", () => {
   it.each(expectedObjects)("defines global object %s", (global) => {
-    let environment = new Environment({});
-    let context = environment.getExecutionContext([]);
+    const environment = new Environment({});
+    const context = environment.getExecutionContext([]);
     expect(typeof getValue(context, global)).toBe("object");
   });
 
   it.each(expectedFunctions)("defines global function %s", (global) => {
-    let environment = new Environment({});
-    let context = environment.getExecutionContext([]);
+    const environment = new Environment({});
+    const context = environment.getExecutionContext([]);
     expect(typeof getValue(context, global)).toBe("function");
   });
 
   it.each(expectedAsync)("defines async function %s", (global) => {
-    let environment = new Environment({});
-    let context = environment.getExecutionContext([]);
-    let value = getValue(context, global);
+    const environment = new Environment({});
+    const context = environment.getExecutionContext([]);
+    const value = getValue(context, global);
     expect(typeof value).toBe("function");
     expect(value.constructor.name).toBe("AsyncFunction");
   });
 
   it("defines values from the environment object", () => {
-    let environment = new Environment({
+    const environment = new Environment({
       locale: "en-CA",
       tags: ["a", "b", "c"],
       title: "This is a test",
@@ -173,7 +173,7 @@ describe("Environment class", () => {
       x: 1,
       mdn: 2,
     });
-    let context = environment.getExecutionContext([]);
+    const context = environment.getExecutionContext([]);
     expect(getValue(context, "env.locale")).toBe("en-CA");
     expect(getValue(context, "page.language")).toBe("en-CA");
     expect(getValue(context, "env.tags")).toEqual(["a", "b", "c"]);
@@ -187,7 +187,7 @@ describe("Environment class", () => {
   });
 
   it("defines values from arguments array", () => {
-    let environment = new Environment({});
+    const environment = new Environment({});
 
     // array of string arguments
     let context = environment.getExecutionContext(["a", "b", "c"]);
@@ -222,13 +222,13 @@ describe("Environment class", () => {
   });
 
   it("defines a template() function that renders templates", async () => {
-    let mockRender = jest.fn(() => "hello world");
-    let mockTemplates = { render: mockRender };
-    let environment = new Environment({}, mockTemplates);
-    let context = environment.getExecutionContext([]);
-    let templateFunction = getValue(context, "template");
+    const mockRender = jest.fn(() => "hello world");
+    const mockTemplates = { render: mockRender };
+    const environment = new Environment({}, mockTemplates);
+    const context = environment.getExecutionContext([]);
+    const templateFunction = getValue(context, "template");
 
-    let rendered = await templateFunction("foo", ["1", "2"]);
+    const rendered = await templateFunction("foo", ["1", "2"]);
 
     expect(rendered).toBe("hello world");
     expect(mockRender.mock.calls.length).toBe(1);

@@ -4,7 +4,7 @@ const os = require("os");
 
 const program = require("@caporal/core").default;
 const chalk = require("chalk");
-const prompts = require("prompts");
+const { prompt } = require("inquirer");
 const openEditor = require("open-editor");
 const open = require("open");
 
@@ -18,8 +18,15 @@ const {
   buildURL,
 } = require("../content");
 const { buildDocument, gatherGitHistory } = require("../build");
+const { runMakePopularitiesFile } = require("./popularities");
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
+
+// The Google Analytics pageviews CSV file parsed, sorted (most pageviews
+// first), and sliced to this number of URIs that goes into the JSON file.
+// If this number is too large the resulting JSON file gets too big and
+// will include very rarely used URIs.
+const MAX_GOOGLE_ANALYTICS_URIS = 20000;
 
 function tryOrExit(f) {
   return async ({ options = {}, ...args }) => {
@@ -124,11 +131,11 @@ program
       }
       const { run } = yes
         ? { run: true }
-        : await prompts({
+        : await prompt({
             type: "confirm",
             message: "Proceed?",
             name: "run",
-            initial: true,
+            default: true,
           });
       if (run) {
         const removed = Document.remove(slug, locale, { recursive, redirect });
@@ -171,11 +178,11 @@ program
       );
       const { run } = yes
         ? { run: true }
-        : await prompts({
+        : await prompt({
             type: "confirm",
             message: "Proceed?",
             name: "run",
-            initial: true,
+            default: true,
           });
       if (run) {
         const moved = Document.move(oldSlug, newSlug, locale);
@@ -259,16 +266,47 @@ program
   )
 
   .command("preview", "Open a preview of a slug")
-  .argument("<slug>", "Slug of the document in question")
+  .option("-p, --port <port>", "Port for your localhost hostname", {
+    default: PORT,
+  })
+  .option("-h, --hostname <hostname>", "Hostname for your local server", {
+    default: "localhost",
+  })
+  .argument("<slug>", "Slug (or path) of the document in question")
   .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
     validator: [...VALID_LOCALES.values()],
   })
   .action(
-    tryOrExit(async ({ args }) => {
+    tryOrExit(async ({ args, options }) => {
       const { slug, locale } = args;
-      const url = `http://localhost:${PORT}${buildURL(locale, slug)}`;
-      await open(url);
+      const { hostname, port } = options;
+      let url;
+      // Perhaps they typed in a path relative to the content root
+      if (slug.startsWith("files") && slug.endsWith("index.html")) {
+        const document = Document.read(
+          slug.split(path.sep).slice(1, -1).join(path.sep)
+        );
+        if (document) {
+          url = document.url;
+        }
+      } else {
+        try {
+          const parsed = new URL(slug);
+          url = parsed.pathname + parsed.hash;
+        } catch (err) {
+          // If the `new URL()` constructor fails, it's probably not a URL
+        }
+        if (!url) {
+          url = buildURL(locale, slug);
+        }
+      }
+
+      if (!url) {
+        throw new Error(`Unable to turn '${slug}' into an absolute URL`);
+      }
+      const absoluteURL = `http://${hostname}:${port}${url}`;
+      await open(absoluteURL);
     })
   )
 
@@ -368,11 +406,11 @@ program
       }
       const { run } = yes
         ? { run: true }
-        : await prompts({
+        : await prompt({
             type: "confirm",
             message: `Proceed fixing ${flaws} flaws?`,
             name: "run",
-            initial: true,
+            default: true,
           });
       if (run) {
         buildDocument(document, { fixFlaws: true, fixFlawsVerbose: true });
@@ -483,6 +521,63 @@ program
         countCreated++;
       }
       console.log(`Created ${countCreated} new files`);
+    })
+  )
+
+  .command(
+    "popularities",
+    "Convert a Google Analytics pageviews CSV into a popularities.json file"
+  )
+  .option(
+    "--outfile <path>",
+    "export from Google Analytics containing pageview counts",
+    {
+      default: path.join(CONTENT_ROOT, "popularities.json"),
+    }
+  )
+  .option(
+    "--max-uris <number>",
+    "export from Google Analytics containing pageview counts",
+    {
+      default: MAX_GOOGLE_ANALYTICS_URIS,
+    }
+  )
+  .argument("csvfile", "Google Analytics pageviews CSV file", {
+    validator: (value) => {
+      if (!fs.existsSync(value)) {
+        throw new Error(`${value} does not exist`);
+      }
+      return value;
+    },
+  })
+  .action(
+    tryOrExit(async ({ args, options, logger }) => {
+      const {
+        rowCount,
+        popularities,
+        pageviews,
+      } = await runMakePopularitiesFile(args.csvfile, options);
+      logger.info(chalk.green(`Parsed ${rowCount.toLocaleString()} rows.`));
+
+      const numberKeys = Object.keys(popularities).length;
+      logger.info(
+        chalk.green(`Wrote ${numberKeys.toLocaleString()} pages' popularities.`)
+      );
+
+      logger.debug("25 most popular URIs...");
+      pageviews.slice(0, 25).forEach(([uri, popularity], i) => {
+        logger.debug(
+          `${`${i}`.padEnd(2)} ${uri.padEnd(75)} ${popularity.toFixed(5)}`
+        );
+      });
+      function fmtBytes(bytes) {
+        return `${(bytes / 1024 / 1024).toFixed(1)}MB`;
+      }
+      logger.info(
+        chalk.green(
+          `${options.outfile} is ${fmtBytes(fs.statSync(options.outfile).size)}`
+        )
+      );
     })
   );
 

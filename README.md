@@ -36,6 +36,9 @@ will re-use any previously compiled files which is "riskier" but faster.
 The `yarn start` command will also start a server which doesn't automatically
 reload when its source code files change, so use with caution.
 
+See also our [reviewing guide](docs/REVIEWING.md) for information on how to
+review Yari changes.
+
 ### How to stay up-to-date
 
 Periodically, the code and the content changes. Make sure you're staying
@@ -213,3 +216,12 @@ There are two options to resolve this.
 
 2. Increase `max_user_watches`:\
    See <https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers>
+
+### `Error: Cannot find module 'levenary'`
+
+We can't know for sure what's causing this error but speculate a bug in how `yarn`
+fails to resolve if certain `@babel` helper libs should install its own
+sub-dependencies. A sure way to solve it is to run:
+
+    rm -fr node_modules
+    yarn install

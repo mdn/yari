@@ -129,6 +129,11 @@
     "url": "https://tools.ietf.org/html/draft-west-cookie-prefixes-05",
     "status": "Draft"
   },
+  "Cookie Store API": {
+    "name": "Cookie Store API",
+    "url": "https://wicg.github.io/cookie-store/",
+    "status": "Draft"
+  },
   "Credential Management": {
     "name": "Credential Management Level 1",
     "url": "https://w3c.github.io/webappsec-credential-management/",
@@ -728,6 +733,11 @@
     "name": "DOM4",
     "url": "https://www.w3.org/TR/dom/",
     "status": "Obsolete"
+  },
+  "Element Timing API": {
+    "name": "Element Timing",
+    "url": "https://wicg.github.io/element-timing/",
+    "status": "ED"
   },
   "Element Traversal": {
     "name": "Element Traversal Specification",
@@ -1462,6 +1472,11 @@
   "Telephony API": {
     "name": "Web Telephony API",
     "url": "https://wiki.mozilla.org/WebAPI/WebTelephony",
+    "status": "Draft"
+  },
+  "Top Level Await": {
+    "name": "Top Level Await",
+    "url": "https://tc39.es/proposal-top-level-await/",
     "status": "Draft"
   },
   "Touch Events": {

@@ -2,7 +2,7 @@ const got = require("got");
 const braces = require("braces");
 
 function serverURL(pathname = "/") {
-  return "http://localhost:5000" + pathname;
+  return `http://localhost:5000${pathname}`;
 }
 
 function url_test(from, to, { statusCode = 301 } = {}) {
@@ -16,10 +16,11 @@ function url_test(from, to, { statusCode = 301 } = {}) {
         throwHttpErrors: false,
       });
       expect(res.statusCode).toBe(statusCode);
-      to &&
+      if (to) {
         expect((res.headers.location || "").toLowerCase()).toBe(
           encodeURI(to).toLowerCase()
         );
+      }
     },
   ]);
 }
@@ -561,25 +562,25 @@ const LEGACY_URLS = [].concat(
     { statusCode: 302 }
   )
   // TODO: implement locale redirects
-  //url_test(
-  //  "/en/docs/Web/CSS/Attribute_selectors",
-  //  "/en-US/docs/Web/CSS/Attribute_selectors",
-  //  { statusCode: 302 },
-  //),
-  //url_test(
-  //  "/en/docs/Web/CSS/Attribute_selectors",
-  //  "/en-US/docs/Web/CSS/Attribute_selectors",
-  //  { statusCode: 302 },
-  //),
-  //url_test("/cn/docs/Talk:Kakurady", "/zh-CN/docs/Talk:Kakurady", {
-  //  statusCode: 302,
-  //}),
-  //url_test(
-  //  "/zh_cn/docs/Web/API/RTCPeerConnection/addTrack",
-  //  "/zh-CN/docs/Web/API/RTCPeerConnection/addTrack",
-  //  { statusCode: 302 },
-  //),
-  //url_test("/zh_tw/docs/AJAX", "/zh-TW/docs/AJAX", { statusCode: 302 }),
+  // url_test(
+  //   "/en/docs/Web/CSS/Attribute_selectors",
+  //   "/en-US/docs/Web/CSS/Attribute_selectors",
+  //   { statusCode: 302 }
+  // ),
+  // url_test(
+  //   "/en/docs/Web/CSS/Attribute_selectors",
+  //   "/en-US/docs/Web/CSS/Attribute_selectors",
+  //   { statusCode: 302 }
+  // ),
+  // url_test("/cn/docs/Talk:Kakurady", "/zh-CN/docs/Talk:Kakurady", {
+  //   statusCode: 302,
+  // }),
+  // url_test(
+  //   "/zh_cn/docs/Web/API/RTCPeerConnection/addTrack",
+  //   "/zh-CN/docs/Web/API/RTCPeerConnection/addTrack",
+  //   { statusCode: 302 }
+  // ),
+  // url_test("/zh_tw/docs/AJAX", "/zh-TW/docs/AJAX", { statusCode: 302 })
 );
 
 const ZONE_REDIRECTS = [
@@ -665,7 +666,7 @@ const ZONE_REDIRECTS = [
   ["Apps", "Web/Aplicaciones", "Tutorials", ["es"]],
   ["Apps", "Apps", "Tutorials", ["bn", "de", "it", "ko", "pt-BR", "ru"]],
   // TODO: inconsistent also in SCL3
-  //["Learn", "Learn", "JavaScript", ["ca", "de", null]],
+  // ["Learn", "Learn", "JavaScript", ["ca", "de", null]],
   ["Apprendre", "Apprendre", "JavaScript", ["fr"]],
   [
     "Marketplace",
@@ -679,12 +680,12 @@ const ZONE_REDIRECTS = [
 const ZONE_REDIRECT_URLS = [];
 for (const [zoneRoot, wikiSlug, childPath, locales] of ZONE_REDIRECTS) {
   for (const locale of locales) {
-    const prefix = locale ? "/" + locale : "";
-    const redirectPath = prefix + "/docs/" + wikiSlug;
-    const paths = [prefix + "/" + zoneRoot];
+    const prefix = locale ? `/${locale}` : "";
+    const redirectPath = `${prefix}/docs/${wikiSlug}`;
+    const paths = [`${prefix}/${zoneRoot}`];
     // Test with a "docs" based path as well if it makes sense.
     if (zoneRoot != wikiSlug) {
-      paths.push(prefix + "/docs/" + zoneRoot);
+      paths.push(`${prefix}/docs/${zoneRoot}`);
     }
     for (const path of paths) {
       // The zone root without a trailing slash.
@@ -693,25 +694,25 @@ for (const [zoneRoot, wikiSlug, childPath, locales] of ZONE_REDIRECTS) {
       );
       // The zone root with a trailing slash.
       ZONE_REDIRECT_URLS.push(
-        ...url_test(path + "/", redirectPath, { statusCode: 302 })
+        ...url_test(`${path}/`, redirectPath, { statusCode: 302 })
       );
       // A zone child page with query parameters.
       ZONE_REDIRECT_URLS.push(
         ...url_test(
-          path + "/" + childPath + "?raw&macros",
-          redirectPath + "/" + childPath + "?raw&macros",
+          `${path}/${childPath}?raw&macros`,
+          `${redirectPath}/${childPath}?raw&macros`,
           { statusCode: 302 }
         )
       );
       // The zone root with $edit.
       ZONE_REDIRECT_URLS.push(
-        ...url_test(path + "$edit", redirectPath + "$edit", {
+        ...url_test(`${path}$edit`, `${redirectPath}$edit`, {
           statusCode: 302,
         })
       );
       // A zone path with curly braces {}
       ZONE_REDIRECT_URLS.push(
-        ...url_test(path + "/{test}", redirectPath + "/{test}", {
+        ...url_test(`${path}/{test}`, `${redirectPath}/{test}`, {
           statusCode: 302,
         })
       );
@@ -731,47 +732,46 @@ const marionette_client_docs_url =
 const marionette_docs_root_url =
   "https://firefox-source-docs.mozilla.org/testing/marionette/marionette/";
 const marionette_locales = "{/en-US,/fr,/ja,/pl,/pt-BR,/ru,/zh-CN,}";
-const marionette_base = marionette_locales + "/docs/Mozilla/QA/Marionette";
-const marionette_multi_base =
-  marionette_locales + "/docs/{Mozilla/QA/,}Marionette";
+const marionette_base = `${marionette_locales}/docs/Mozilla/QA/Marionette`;
+const marionette_multi_base = `${marionette_locales}/docs/{Mozilla/QA/,}Marionette`;
 const marionette_python_tests =
   "{MarionetteTestCase,Marionette_Python_Tests,Running_Tests,Tests}";
 
 const MARIONETTE_URLS = [].concat(
-  url_test(marionette_multi_base, marionette_docs_root_url + "index.html"),
+  url_test(marionette_multi_base, `${marionette_docs_root_url}index.html`),
   url_test(
-    marionette_multi_base + "/Builds",
-    marionette_docs_root_url + "Building.html"
+    `${marionette_multi_base}/Builds`,
+    `${marionette_docs_root_url}Building.html`
   ),
-  url_test(marionette_multi_base + "/Client", marionette_client_docs_url),
+  url_test(`${marionette_multi_base}/Client`, marionette_client_docs_url),
   url_test(
-    marionette_multi_base + "/Developer_setup",
-    marionette_docs_root_url + "Contributing.html"
-  ),
-  url_test(
-    marionette_multi_base + "/" + marionette_python_tests,
-    marionette_docs_root_url + "PythonTests.html"
+    `${marionette_multi_base}/Developer_setup`,
+    `${marionette_docs_root_url}Contributing.html`
   ),
   url_test(
-    marionette_locales + "/docs/Marionette_Test_Runner",
-    marionette_docs_root_url + "PythonTests.html"
+    `${marionette_multi_base}/${marionette_python_tests}`,
+    `${marionette_docs_root_url}PythonTests.html`
   ),
   url_test(
-    marionette_base + "/Marionette_Test_Runner",
-    marionette_docs_root_url + "PythonTests.html"
+    `${marionette_locales}/docs/Marionette_Test_Runner`,
+    `${marionette_docs_root_url}PythonTests.html`
   ),
   url_test(
-    marionette_base + "/Protocol",
-    marionette_docs_root_url + "Protocol.html"
+    `${marionette_base}/Marionette_Test_Runner`,
+    `${marionette_docs_root_url}PythonTests.html`
   ),
-  url_test(marionette_base + "/Python_Client", marionette_client_docs_url),
   url_test(
-    marionette_base + "/WebDriver/status",
+    `${marionette_base}/Protocol`,
+    `${marionette_docs_root_url}Protocol.html`
+  ),
+  url_test(`${marionette_base}/Python_Client`, marionette_client_docs_url),
+  url_test(
+    `${marionette_base}/WebDriver/status`,
     "https://bugzilla.mozilla.org/showdependencytree.cgi?id=721859&hide_resolved=1"
   ),
   url_test(
-    marionette_locales + "/docs/Marionette/Debugging",
-    marionette_docs_root_url + "Debugging.html"
+    `${marionette_locales}/docs/Marionette/Debugging`,
+    `${marionette_docs_root_url}Debugging.html`
   )
 );
 
@@ -919,8 +919,8 @@ const WEBEXT_URLS = [].concat(
     ["AMO/Policy/Featured", "publish/recommended-extensions/"],
   ].flatMap(([aoPath, ewPath]) =>
     url_test(
-      "{/en-US,/fr,}/docs/Mozilla/Add-ons/" + aoPath,
-      "https://extensionworkshop.com/documentation/" + ewPath
+      `{/en-US,/fr,}/docs/Mozilla/Add-ons/${aoPath}`,
+      `https://extensionworkshop.com/documentation/${ewPath}`
     )
   )
 );
@@ -1070,6 +1070,27 @@ describe("firefox src docs redirects", () => {
 
 describe("locale alias redirects", () => {
   for (const [url, t] of LOCALE_ALIAS_URLS) {
+    it(url, t);
+  }
+});
+
+const CORE_JAVASCRIPT_1_5_URLs = [].concat(
+  url_test(
+    "/en-US/docs/Core_JavaScript_1.5_Reference/Operators/Special_Operators/typeof_Operator",
+    "/en-US/docs/Web/JavaScript/Reference/Operators/Special_Operators/typeof_Operator"
+  ),
+  url_test(
+    "/en-US/docs/Core_JavaScript_1.5_Reference:Operators:Special_Operators:typeof_Operator",
+    "/en-US/docs/Web/JavaScript/Reference/Operators/Special_Operators/typeof_Operator"
+  ),
+  url_test(
+    "/en-US/docs/Core_JavaScript_1.5_Guide",
+    "/en-US/docs/Web/JavaScript/Guide"
+  )
+);
+
+describe("Core_JavaScript_1.5 redirects", () => {
+  for (const [url, t] of CORE_JAVASCRIPT_1_5_URLs) {
     it(url, t);
   }
 });

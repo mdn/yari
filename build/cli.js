@@ -4,6 +4,7 @@ const zlib = require("zlib");
 
 const cliProgress = require("cli-progress");
 const program = require("@caporal/core").default;
+const { prompt } = require("inquirer");
 
 const { Document, slugToFolder } = require("../content");
 // eslint-disable-next-line node/no-missing-require
@@ -14,11 +15,94 @@ const { buildDocument, renderContributorsTxt } = require("./index");
 const SearchIndex = require("./search-index");
 const { BUILD_OUT_ROOT } = require("./constants");
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
-const { CONTENT_TRANSLATED_ROOT } = require("../content/constants");
+const {
+  CONTENT_TRANSLATED_ROOT,
+  CONTENT_ROOT,
+} = require("../content/constants");
 const { uniqifyTranslationsOf } = require("./translationsof");
 const { humanFileSize } = require("./utils");
 
-async function buildDocuments(files = null) {
+async function buildDocumentInteractive(
+  documentPath,
+  translationsOf,
+  interactive,
+  invalidate = false
+) {
+  try {
+    const document = invalidate
+      ? Document.read(documentPath, Document.MEMOIZE_INVALIDATE)
+      : Document.read(documentPath);
+
+    const { translation_of } = document.metadata;
+
+    // If it's a non-en-US document, it'll most likely have a `translation_of`.
+    // If so, add it to the map so that when we build the en-US one, we can
+    // get an index of the *other* translations available.
+    if (translation_of) {
+      if (!translationsOf.has(translation_of)) {
+        translationsOf.set(translation_of, []);
+      }
+      const translation = {
+        url: document.url,
+        locale: document.metadata.locale,
+        title: document.metadata.title,
+      };
+      if (document.metadata.translation_of_original) {
+        translation.original = document.metadata.translation_of_original;
+      }
+      translationsOf.get(translation_of).push(translation);
+      // This is a shortcoming. If this is a translated document, we don't have a
+      // complete mapping of all other translations. So, the best we can do is
+      // at least link to the English version.
+      // In 2021, when we refactor localization entirely, this will need to change.
+      // Perhaps, then, we'll do a complete scan through all content first to build
+      // up the map before we process each one.
+      document.translations = [];
+    } else if (translationsOf.has(document.metadata.slug)) {
+      document.translations = uniqifyTranslationsOf(
+        translationsOf.get(document.metadata.slug),
+        document.url
+      );
+    }
+    return { document, doc: await buildDocument(document), skip: false };
+  } catch (e) {
+    if (!interactive) {
+      throw e;
+    }
+    console.error(e);
+    const { action } = await prompt([
+      {
+        type: "list",
+        message: "What to do?",
+        name: "action",
+        choices: [
+          { name: "re-run", value: "r" },
+          { name: "skip", value: "s" },
+          { name: "quit", value: "q" },
+        ],
+        default: "r",
+      },
+    ]);
+    if (action === "r") {
+      return await buildDocumentInteractive(
+        documentPath,
+        translationsOf,
+        interactive,
+        true
+      );
+    }
+    if (action === "s") {
+      return { doc: {}, skip: true };
+    }
+    throw e;
+  }
+}
+
+async function buildDocuments(
+  files = null,
+  quiet = false,
+  interactive = false
+) {
   // If a list of files was set, it came from the CLI.
   // Override whatever was in the build options.
   const findAllOptions = files
@@ -56,49 +140,26 @@ async function buildDocuments(files = null) {
   // This builds up a mapping from en-US slugs to their translated slugs.
   const translationsOf = new Map();
 
-  !options.noProgressbar && progressBar.start(documents.count);
-  for (const document of documents.iter()) {
-    const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
-    fs.mkdirSync(outPath, { recursive: true });
+  if (!options.noProgressbar) {
+    progressBar.start(documents.count);
+  }
 
-    const { translation_of } = document.metadata;
-
-    // If it's a non-en-US document, it'll most likely have a `translation_of`.
-    // If so, add it to the map so that when we build the en-US one, we can
-    // get an index of the *other* translations available.
-    if (translation_of) {
-      if (!translationsOf.has(translation_of)) {
-        translationsOf.set(translation_of, []);
-      }
-      const translation = {
-        url: document.url,
-        locale: document.metadata.locale,
-        title: document.metadata.title,
-      };
-      if (document.metadata.translation_of_original) {
-        translation.original = document.metadata.translation_of_original;
-      }
-      translationsOf.get(translation_of).push(translation);
-      // This is a shortcoming. If this is a translated document, we don't have a
-      // complete mapping of all other translations. So, the best we can do is
-      // at least link to the English version.
-      // In 2021, when we refactor localization entirely, this will need to change.
-      // Perhaps, then, we'll do a complete scan through all content first to build
-      // up the map before we process each one.
-      document.translations = [];
-    } else if (translationsOf.has(document.metadata.slug)) {
-      document.translations = uniqifyTranslationsOf(
-        translationsOf.get(document.metadata.slug),
-        document.url
-      );
+  for (const documentPath of documents.iter({ pathOnly: true })) {
+    const {
+      doc: { doc: builtDocument, liveSamples, fileAttachments, bcdData },
+      document,
+      skip,
+    } = await buildDocumentInteractive(
+      documentPath,
+      translationsOf,
+      interactive
+    );
+    if (skip) {
+      continue;
     }
 
-    const {
-      doc: builtDocument,
-      liveSamples,
-      fileAttachments,
-      bcdData,
-    } = await buildDocument(document);
+    const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
+    fs.mkdirSync(outPath, { recursive: true });
 
     if (builtDocument.flaws) {
       appendTotalFlaws(builtDocument.flaws);
@@ -158,11 +219,6 @@ async function buildDocuments(files = null) {
       fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
     }
 
-    // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
-    document.noIndexing =
-      (document.isArchive && !document.isTranslated) ||
-      document.metadata.slug === "MDN/Kitchensink";
-
     // Collect non-archived documents' slugs to be used in sitemap building and
     // search index building.
     if (!document.noIndexing) {
@@ -180,7 +236,7 @@ async function buildDocuments(files = null) {
 
     if (!options.noProgressbar) {
       progressBar.increment();
-    } else {
+    } else if (!quiet) {
       console.log(outPath);
     }
     const heapBytes = process.memoryUsage().heapUsed;
@@ -189,7 +245,9 @@ async function buildDocuments(files = null) {
     }
   }
 
-  !options.noProgressbar && progressBar.stop();
+  if (!options.noProgressbar) {
+    progressBar.stop();
+  }
 
   const sitemapsBuilt = [];
   for (const [locale, docs] of Object.entries(docPerLocale)) {
@@ -231,17 +289,44 @@ async function buildDocuments(files = null) {
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
 }
 
-async function buildOtherSPAs() {
-  const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_spas");
-  fs.mkdirSync(outPath, { recursive: true });
+async function buildOtherSPAs(options) {
+  (() => {
+    // The URL isn't very important as long as it triggers the right route in the <App/>
+    const url = "/en-US/404.html";
+    const html = renderHTML(url, { pageNotFound: true });
+    const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_spas");
+    fs.mkdirSync(outPath, { recursive: true });
+    fs.writeFileSync(path.join(outPath, path.basename(url)), html);
+    if (!options.quiet) {
+      console.log("Wrote", path.join(outPath, path.basename(url)));
+    }
+  })();
 
-  // The URL isn't very important as long as it triggers the right route in the <App/>
-  const url = "/en-US/404.html";
-  const html = renderHTML(url, { pageNotFound: true });
-  fs.writeFileSync(path.join(outPath, path.basename(url)), html);
-  console.log("Wrote", path.join(outPath, path.basename(url)));
+  (() => {
+    // Basically, this builds one `search/index.html` for every locale we intend
+    // to build.
+    for (const root of [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT]) {
+      if (!root) {
+        continue;
+      }
+      for (const locale of fs.readdirSync(root)) {
+        if (!fs.statSync(path.join(root, locale)).isDirectory()) {
+          continue;
+        }
+        const url = `/${locale}/search`;
+        const html = renderHTML(url);
+        const outPath = path.join(BUILD_OUT_ROOT, locale, "search");
+        fs.mkdirSync(outPath, { recursive: true });
+        const filePath = path.join(outPath, "index.html");
+        fs.writeFileSync(filePath, html);
+        if (!options.quiet) {
+          console.log("Wrote", filePath);
+        }
+      }
+    }
+  })();
 
-  // XXX Here, build things like the home page, site-search etc.
+  // XXX Here, build things like the home page.
   // ...
 }
 
@@ -266,22 +351,31 @@ program
   .name("build")
   .option("--spas", "Build the SPA pages", { default: true }) // PR builds
   .option("--spas-only", "Only build the SPA pages", { default: false })
+  .option("-i, --interactive", "Ask what to do when encountering flaws", {
+    default: false,
+  })
   .argument("[files...]", "specific files to build")
   .action(async ({ args, options }) => {
     try {
       if (options.spas) {
-        console.log("\nBuilding SPAs...");
-        await buildOtherSPAs();
+        if (!options.quiet) {
+          console.log("\nBuilding SPAs...");
+        }
+        await buildOtherSPAs(options);
       }
       if (options.spasOnly) {
         return;
       }
 
-      console.log("\nBuilding Documents...");
+      if (!options.quiet) {
+        console.log("\nBuilding Documents...");
+      }
       const { files } = args;
       const t0 = new Date();
       const { slugPerLocale, peakHeapBytes, totalFlaws } = await buildDocuments(
-        files
+        files,
+        Boolean(options.quiet),
+        Boolean(options.interactive)
       );
       const t1 = new Date();
       const count = Object.values(slugPerLocale).reduce(
@@ -293,13 +387,15 @@ program
         seconds > 60
           ? `${(seconds / 60).toFixed(1)} minutes`
           : `${seconds.toFixed(1)} seconds`;
-      console.log(
-        `Built ${count.toLocaleString()} pages in ${took}, at a rate of ${(
-          count / seconds
-        ).toFixed(1)} documents per second.`
-      );
-      console.log(`Peak heap memory usage: ${humanFileSize(peakHeapBytes)}`);
-      console.log(formatTotalFlaws(totalFlaws));
+      if (!options.quiet) {
+        console.log(
+          `Built ${count.toLocaleString()} pages in ${took}, at a rate of ${(
+            count / seconds
+          ).toFixed(1)} documents per second.`
+        );
+        console.log(`Peak heap memory usage: ${humanFileSize(peakHeapBytes)}`);
+        console.log(formatTotalFlaws(totalFlaws));
+      }
     } catch (error) {
       // So you get a stacktrace in the CLI output
       console.error(error);

@@ -328,7 +328,7 @@ function checkInterfaceItem(actual, expected, config) {
   // Test that the badges are what we expect
   const badgeClasses = actual.querySelectorAll("svg");
   expect(badgeClasses.length).toEqual(expected.badges.length);
-  for (let badgeClass of badgeClasses) {
+  for (const badgeClass of badgeClasses) {
     badgeClass.classList.forEach((value) => {
       if (value !== "icon") {
         expect(expected.badges).toContain(value);
@@ -394,7 +394,7 @@ function checkResult(html, config) {
   expect(details.length).toEqual(Object.keys(config.expected.details).length);
 
   // Test the properties sublist
-  const expectedPropertySummary = commonL10nJSON["Properties"][config.locale];
+  const expectedPropertySummary = commonL10nJSON.Properties[config.locale];
   const expectedPropertyItems =
     config.expected.details.properties[config.locale];
   const properties = details[0];
@@ -407,7 +407,7 @@ function checkResult(html, config) {
   );
 
   // Test the methods sublist
-  const expectedMethodSummary = commonL10nJSON["Methods"][config.locale];
+  const expectedMethodSummary = commonL10nJSON.Methods[config.locale];
   const expectedMethodItems = config.expected.details.methods[config.locale];
   const methods = details[1];
   checkItemList(
@@ -419,7 +419,7 @@ function checkResult(html, config) {
   );
 
   // Test the events sublist
-  const expectedEventSummary = commonL10nJSON["Events"][config.locale];
+  const expectedEventSummary = commonL10nJSON.Events[config.locale];
   const expectedEventItems = config.expected.details.events[config.locale];
   const events = details[2];
   checkItemList(
@@ -433,8 +433,7 @@ function checkResult(html, config) {
   const hasInherited = config.expected.details.inherited;
   if (hasInherited) {
     // Test the inherited sublist
-    const expectedInheritedSummary =
-      commonL10nJSON["Inheritance"][config.locale];
+    const expectedInheritedSummary = commonL10nJSON.Inheritance[config.locale];
     const expectedInheritedItems = config.expected.details.inherited;
     const inherited = details[3];
     checkItemList(
@@ -450,7 +449,7 @@ function checkResult(html, config) {
   if (hasImplemented) {
     // Test the implemented_by sublist
     const expectedImplementedSummary =
-      commonL10nJSON["Implemented_by"][config.locale];
+      commonL10nJSON.Implemented_by[config.locale];
     const expectedImplementedItems = config.expected.details.implemented;
     const implemented = details[4];
     checkItemList(
@@ -465,7 +464,7 @@ function checkResult(html, config) {
   const hasRelated = config.expected.details.related;
   if (hasRelated) {
     // Test the related sublist
-    const expectedRelatedSummary = commonL10nJSON["Related_pages"][
+    const expectedRelatedSummary = commonL10nJSON.Related_pages[
       config.locale
     ].replace("$1", config.argument);
     const expectedRelatedItems = config.expected.details.related;
@@ -482,7 +481,7 @@ function checkResult(html, config) {
 
 function testMacro(config) {
   for (const locale of ["en-US", "fr", "ja"]) {
-    let testName = `${config.name}; locale: ${locale}`;
+    const testName = `${config.name}; locale: ${locale}`;
     itMacro(testName, function (macro) {
       config.locale = locale;
       macro.ctx.env.slug = config.currentSlug;
@@ -505,11 +504,10 @@ function testMacro(config) {
         return macro.call(config.argument).then(function (result) {
           checkResult(result, config);
         });
-      } else {
-        return macro.call().then(function (result) {
-          checkResult(result, config);
-        });
       }
+      return macro.call().then(function (result) {
+        checkResult(result, config);
+      });
     });
   }
 }

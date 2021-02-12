@@ -12,6 +12,7 @@ import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
 import { Footer } from "./ui/organisms/footer";
 import { Header } from "./ui/organisms/header";
+import { SiteSearch } from "./site-search";
 import { PageNotFound } from "./page-not-found";
 import { Banner } from "./banners";
 import { useDebugGA } from "./ga-context";
@@ -161,6 +162,14 @@ export function App(appProps) {
               element={
                 <StandardLayout>
                   <Homepage />
+                </StandardLayout>
+              }
+            />
+            <Route
+              path="/search"
+              element={
+                <StandardLayout>
+                  <SiteSearch />
                 </StandardLayout>
               }
             />

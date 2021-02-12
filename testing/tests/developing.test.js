@@ -7,11 +7,11 @@ const { setDefaultOptions } = require("expect-puppeteer");
 setDefaultOptions({ timeout: 5000 });
 
 function devURL(pathname = "/") {
-  return "http://localhost:3000" + pathname;
+  return `http://localhost:3000${pathname}`;
 }
 
 function serverURL(pathname = "/") {
-  return "http://localhost:5000" + pathname;
+  return `http://localhost:5000${pathname}`;
 }
 
 // This "trick" is to force every test to be skipped if the environment
@@ -150,7 +150,7 @@ describe("Testing the Express server", () => {
   });
 
   withDeveloping("redirect by cookie trumps", async () => {
-    let response = await got(serverURL("/"), {
+    const response = await got(serverURL("/"), {
       followRedirect: false,
       headers: {
         Cookie: "preferredlocale=SV-se",

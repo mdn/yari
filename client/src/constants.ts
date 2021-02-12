@@ -14,3 +14,8 @@ export const AUTOCOMPLETE_SEARCH_WIDGET = JSON.parse(
 export const DEBUG_GOOGLE_ANALYTICS = JSON.parse(
   process.env.REACT_APP_DEBUG_GOOGLE_ANALYTICS || "false"
 );
+
+// You can read more about this in `docs/debugging-sitesearch.md`.
+export const DEBUG_SEARCH_RESULTS = JSON.parse(
+  process.env.REACT_APP_DEBUG_SEARCH_RESULTS || "false"
+);

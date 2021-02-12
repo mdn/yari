@@ -10,14 +10,12 @@ const L10N_COMMON_STRINGS = new Templates().getLocalizedCommonStrings();
 module.exports = {
   // Insert a hyperlink.
   link(uri, text, title, target) {
-    var out = [
-      '<a href="' + util.spacesToUnderscores(util.htmlEscape(uri)) + '"',
-    ];
+    const out = [`<a href="${util.spacesToUnderscores(util.htmlEscape(uri))}"`];
     if (title) {
-      out.push(' title="' + util.htmlEscape(title) + '"');
+      out.push(` title="${util.htmlEscape(title)}"`);
     }
     if (target) {
-      out.push(' target="' + util.htmlEscape(target) + '"');
+      out.push(` target="${util.htmlEscape(target)}"`);
     }
     out.push(">", util.htmlEscape(text || uri), "</a>");
     return out.join("");
@@ -34,12 +32,39 @@ module.exports = {
     if (page.url) {
       if (hrefpath.toLowerCase() !== page.url.toLowerCase()) {
         if (page.url.startsWith(basepath)) {
+          let suggested = page.url.replace(basepath, "");
+          if (
+            /\//.test(suggested) &&
+            !title &&
+            basepath.endsWith("/Web/API/")
+          ) {
+            // This is the exception! When `smartLink` is used from the DOMxRef.ejs
+            // macro, the xref macro notation should use a `.` instead of a `/`.
+            // E.g. `{{domxref("GlobalEventHandlers.onload")}}
+            // because, when displayed we want the HTML to become:
+            //
+            //   <a href="/en-US/docs/Web/API/GlobalEventHandlers/onload">
+            //     <code>GlobalEventHandlers.onload</code>
+            //   </a>
+            //
+            // Note the `<code>GlobalEventHandlers.onload</code>` label.
+            // However, some uses of DOMxRef uses a custom title. E.g.
+            // {{domxref("WindowOrWorkerGlobalScope/fetch","fetch()")}}
+            // which needs to become:
+            //
+            //   <a href="/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch">
+            //     <code>fetch()</code>
+            //   </a>
+            //
+            // So those with titles we ignore.
+            suggested = suggested.replace(/\//g, ".");
+          }
           flaw = this.env.recordNonFatalError(
             "redirected-link",
             `${hrefpath} redirects to ${page.url}`,
             {
               current: subpath,
-              suggested: page.url.replace(basepath, ""),
+              suggested,
             }
           );
         } else {

@@ -1,8 +1,8 @@
 function testURL(pathname = "/") {
-  return "http://localhost:5000" + pathname;
+  return `http://localhost:5000${pathname}`;
 }
 
-describe("Site search", () => {
+describe("Autocomplete search", () => {
   const SEARCH_SELECTOR = 'form input[type="search"]';
 
   beforeAll(async () => {
@@ -19,7 +19,8 @@ describe("Site search", () => {
     await page.goto(testURL("/"));
     await expect(page).toFill(SEARCH_SELECTOR, "foo");
     await expect(page).toMatch("<foo>: A test tag");
-    await expect(page).toClick('[aria-selected="true"]');
+    // There's only 1 and this clicks on the first one anyway.
+    await expect(page).toClick("div.result-item");
     await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
     // Should have been redirected too...
     // Note! It's important that this happens *after* the `.toMatchElement`
@@ -45,7 +46,7 @@ describe("Site search", () => {
     });
     await expect(page).toFill(SEARCH_SELECTOR, "/wboo");
     await expect(page).toMatch("<foo>: A test tag");
-    await expect(page).toClick('[aria-selected="true"]');
+    await expect(page).toClick("div.result-item");
     await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
   });
 

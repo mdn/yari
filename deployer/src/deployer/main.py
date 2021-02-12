@@ -7,6 +7,7 @@ from .constants import (
     CI,
     CONTENT_ROOT,
     CONTENT_TRANSLATED_ROOT,
+    CONTENT_ARCHIVED_ROOT,
     DEFAULT_BUCKET_NAME,
     DEFAULT_BUCKET_PREFIX,
     DEFAULT_NO_PROGRESSBAR,
@@ -122,6 +123,13 @@ def whatsdeployed(ctx, directory: Path, output: str):
     callback=validate_optional_directory,
 )
 @click.option(
+    "--content-archived-root",
+    help="The path to the root folder of the archived content (defaults to CONTENT_ARCHIVED_ROOT)",
+    default=CONTENT_ARCHIVED_ROOT,
+    show_default=True,
+    callback=validate_optional_directory,
+)
+@click.option(
     "--no-progressbar",
     help="Don't show the progress bar",
     default=DEFAULT_NO_PROGRESSBAR,
@@ -135,6 +143,8 @@ def upload(ctx, directory: Path, **kwargs):
     content_roots = [kwargs["content_root"]]
     if kwargs["content_translated_root"]:
         content_roots.append(kwargs["content_translated_root"])
+    if kwargs["content_archived_root"]:
+        content_roots.append(kwargs["content_archived_root"])
     ctx.obj.update(kwargs)
     upload_content(directory, content_roots, ctx.obj)
 
@@ -225,13 +235,33 @@ def search_index(ctx, buildroot: Path, **kwargs):
             # The reason we're not throwing an error is to make it super convenient
             # to call this command, from bash, without first having to check and figure
             # out if the relevant environment variables are available.
-            log.warning("DEPLOYER_ELASTICSEARCH_URL or --host not set or empty")
+            log.warning("DEPLOYER_ELASTICSEARCH_URL or --url not set or empty")
             return
-        raise Exception("host not set")
+        raise Exception("url not set")
     search.index(
         buildroot,
         url,
         update=kwargs["update"],
         no_progressbar=kwargs["no_progressbar"],
         priority_prefixes=kwargs["priority_prefix"],
+    )
+
+
+@cli.command()
+@click.option(
+    "--url",
+    help="Elasticsearch URL (if not env var ELASTICSEARCH_URL)",
+    default=ELASTICSEARCH_URL,
+    show_default=False,
+)
+@click.option("--analyzer", "-a", default="text_analyzer", show_default=True)
+@click.argument("text")
+@click.pass_context
+def search_analyze(ctx, text, analyzer, url):
+    if not url:
+        raise Exception("url not set")
+    search.analyze(
+        url,
+        text,
+        analyzer,
     )

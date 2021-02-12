@@ -231,8 +231,8 @@ module.exports = {
   //
   // Stolen from http://underscorejs.org/#defaults
   defaults(obj, ...sources) {
-    for (let source of sources) {
-      for (var prop in source) {
+    for (const source of sources) {
+      for (const prop in source) {
         if (obj[prop] === void 0) obj[prop] = source[prop];
       }
     }
@@ -247,13 +247,13 @@ module.exports = {
    */
   preparePath(path) {
     if (path.charAt(0) != "/") {
-      path = "/" + path;
+      path = `/${path}`;
     }
     if (path.indexOf("/docs") == -1) {
       // HACK: If this looks like a legacy wiki URL, throw /en-US/docs
       // in front of it. That will trigger the proper redirection logic
       // until/unless URLs are corrected in templates
-      path = "/en-US/docs" + path;
+      path = `/en-US/docs${path}`;
     }
     return spacesToUnderscores(path);
   },
@@ -266,7 +266,7 @@ module.exports = {
    * @return {string}
    */
   htmlEscape(s) {
-    return ("" + s)
+    return `${s}`
       .replace(/&/g, "&amp;")
       .replace(/>/g, "&gt;")
       .replace(/</g, "&lt;")
@@ -274,9 +274,9 @@ module.exports = {
   },
 
   escapeQuotes(a) {
-    var b = "";
-    for (var i = 0, len = a.length; i < len; i++) {
-      var c = a[i];
+    let b = "";
+    for (let i = 0, len = a.length; i < len; i++) {
+      let c = a[i];
       if (c == '"') {
         c = "&quot;";
       }

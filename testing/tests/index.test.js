@@ -590,6 +590,35 @@ test("without locale prefix broken links flaws", () => {
   expect(map.get("link3").suggestion).toBeNull();
 });
 
+test("broken links to archived content", () => {
+  // Links to URLs that are archived
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "brokenlinks",
+    "archived"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  // The page has 2 links:
+  //  * one to an archived page (see `content/archived.txt`)
+  //  * one to an archived redirect
+  // When the link points to an archived page, we can figure out that it's
+  // actually not a broken link.
+  // But unfortunately, for redirects, we simply don't have this information
+  // available at all.
+  // See https://github.com/mdn/yari/issues/2675#issuecomment-767124481
+  expect(flaws.broken_links.length).toBe(1);
+
+  const flaw = flaws.broken_links[0];
+  expect(flaw.suggestion).toBeNull();
+  expect(flaw.fixable).toBeFalsy();
+  expect(flaw.href).toBe("/en-US/docs/The_Mozilla_platform");
+});
+
 test("broken anchor links flaws", () => {
   const builtFolder = path.join(
     buildRoot,
@@ -916,20 +945,19 @@ test("bcd table extraction followed by h3", () => {
   expect(doc.body[4].value.isH3).toBeTruthy();
 });
 
-test("bcd table extraction when overly nested is a flaw", () => {
+test("headers within non-root elements is a 'sectioning' flaw", () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
     "docs",
     "web",
-    "bcd_table_extraction",
-    "nested_divs"
+    "sectioning_headers"
   );
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.flaws.sectioning[0].explanation).toBe(
-    "2 'div.bc-data' elements found but deeply nested."
+    "Excess <h2> tag that is NOT at root-level (id='second', text='Second')"
   );
 });
 
@@ -1075,5 +1103,25 @@ test("headings with HTML should be rendered as HTML", () => {
   );
   expect(section2.value.titleAsText).toBe(
     "You can use escaped HTML tags like <pre> still"
+  );
+});
+
+test("deprecated macros are fixable", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "fixable_flaws",
+    "deprecated_macros"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.macros.length).toBe(4);
+  // All fixable and all a suggestion of ''
+  expect(doc.flaws.macros.filter((flaw) => flaw.fixable).length).toBe(4);
+  expect(doc.flaws.macros.filter((flaw) => flaw.suggestion === "").length).toBe(
+    4
   );
 });
