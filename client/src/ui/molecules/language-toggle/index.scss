@@ -3,35 +3,47 @@
 @import "~@mdn/minimalist/sass/vars/layout";
 
 ul.language-toggle {
-  align-self: center;
   display: flex;
   justify-content: flex-end;
-  padding: ($base-spacing / 2) $base-spacing;
+  padding: $base-spacing;
 
   li {
     max-height: 24px;
   }
 
   .language-icon {
-    background: transparent url("~@mdn/dinocons/general/language.svg") 0 2px
-      no-repeat;
-    height: 29px;
-    vertical-align: inherit;
-    width: 28px;
-  }
+    display: block;
+    width: auto;
 
-  .default {
-    border-left: 1px solid $neutral-100;
-    padding-left: 5px;
+    // always set min-width for the English link
+    &.default {
+      min-width: 100px;
+    }
+
+    // set the same min-width as above for both the English
+    // and change language link on tablet and larger
+    @media #{$mq-tablet-and-up} {
+      min-width: 100px;
+    }
+
+    &::before {
+      background: transparent url("~@mdn/dinocons/general/language.svg") 0 0
+        no-repeat;
+      content: "";
+      display: inline-block;
+      height: 29px;
+      margin-left: $base-unit;
+      vertical-align: bottom;
+      width: 28px;
+    }
   }
 }
 
 .show-desktop {
   @include visually-hidden();
 
-  @media #{$mq-small-desktop-and-up} {
+  @media #{$mq-tablet-and-up} {
     @include reset-visually-hidden();
-    margin-left: -130px;
-    width: 130px;
+    margin: 0;
   }
 }

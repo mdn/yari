@@ -53,6 +53,7 @@ export function LanguageMenu({
             }
           }
           navigate(localeURL);
+          window.scrollTo(0, 0);
         }
       }}
     >

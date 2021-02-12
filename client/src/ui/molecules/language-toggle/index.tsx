@@ -9,24 +9,30 @@ export function LanguageToggle({
   locale: string;
   translations: Translation[];
 }) {
-  return (
-    <ul className="language-toggle">
-      <li>
+  function getLink(locale) {
+    if (locale.toLowerCase() !== "en-us") {
+      for (const translation of translations) {
+        if (translation.locale.toLowerCase() === "en-us") {
+          return (
+            <a href={translation.url} className="icon language-icon default">
+              <span className="show-desktop">View in</span> English
+            </a>
+          );
+        }
+        return null;
+      }
+    } else {
+      return (
         <a href="#select_language" className="icon language-icon">
           <span className="show-desktop">Change language</span>
         </a>
-      </li>
-      {locale.toLowerCase() !== "en-us" &&
-        translations.map((translation, index) => {
-          if (translation.locale.toLowerCase() === "en-us") {
-            return (
-              <li className="en-switch" key={index}>
-                <a href={translation.url}>English</a>
-              </li>
-            );
-          }
-          return null;
-        })}
+      );
+    }
+  }
+
+  return (
+    <ul className="language-toggle">
+      <li>{getLink(locale)}</li>
     </ul>
   );
 }
