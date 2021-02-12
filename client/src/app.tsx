@@ -92,8 +92,7 @@ export function App(appProps) {
         path="/"
         element={
           <Layout pageType="standard-page">
-            {CRUD_MODE && <WritersHomepage />}
-            {!CRUD_MODE && <Homepage />}
+            {CRUD_MODE ? <WritersHomepage /> : <Homepage {...appProps} />}
           </Layout>
         }
       />
@@ -155,13 +154,29 @@ export function App(appProps) {
                     </StandardLayout>
                   }
                 />
+
+                {/*
+                This route exclusively exists for development on the <Homepage>
+                component itself.
+                Normally, you get to the home page by NOT being in CRUD_MODE, but
+                if you want to use the hot-reloading app, it might be convenient
+                to be able to run it locally
+                 */}
+                <Route
+                  path="/_homepage/*"
+                  element={
+                    <StandardLayout>
+                      <Homepage />
+                    </StandardLayout>
+                  }
+                />
               </>
             )}
             <Route
               path="/"
               element={
                 <StandardLayout>
-                  <Homepage />
+                  {CRUD_MODE ? <WritersHomepage /> : <Homepage {...appProps} />}
                 </StandardLayout>
               }
             />
