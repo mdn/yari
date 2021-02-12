@@ -38,7 +38,7 @@ describe("Basic viewing of functional pages", () => {
     // Note! It's important that this happens *after* the `.toMatchElement`
     // on the line above because expect-puppeteer doesn't have a wait to
     // properly wait for the (pushState) URL to have changed.
-    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
   });
 
   it("open the /en-US/docs/Web/InteractiveExample page", async () => {
