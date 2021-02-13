@@ -6,7 +6,16 @@ const {
   encodePath,
   slugToFolder,
 } = require("@yari-internal/slug-utils");
+const { VALID_LOCALES } = require("@yari-internal/constants");
 
+const ONE_MONTH = 3600 * 24 * 30;
+// Note that the keys of "VALID_LOCALES" are lowercase locales.
+const LOCALE_URI_WITHOUT_TRAILING_SLASH = new Set(
+  [...VALID_LOCALES.keys()].map((locale) => `/${locale}`)
+);
+const SEARCH_URI_WITH_TRAILING_SLASH = new Set(
+  [...VALID_LOCALES.keys()].map((locale) => `/${locale}/search/`)
+);
 const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
 
 function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
@@ -51,19 +60,20 @@ exports.handler = async (event) => {
    */
   const request = event.Records[0].cf.request;
   const host = request.headers.host[0].value.toLowerCase();
+  const requestURILowerCase = request.uri.toLowerCase();
 
   const { url, status } = resolveFundamental(request.uri);
   if (url) {
     return redirect(url, {
       status,
-      cacheControlSeconds: 3600 * 24 * 30,
+      cacheControlSeconds: ONE_MONTH,
     });
   }
 
   // Starting with /docs/ or empty path (/) should redirect to a locale.
   // Also trim a trailing slash to avoid a double redirect.
   if (
-    request.uri.startsWith("/docs/") ||
+    requestURILowerCase.startsWith("/docs/") ||
     request.uri === "/" ||
     request.uri === ""
   ) {
@@ -76,17 +86,29 @@ exports.handler = async (event) => {
     return redirect(`/${locale}${path || "/"}`);
   }
 
-  // A document URL with a trailing slash should redirect
+  // A search or document URL with a trailing slash should redirect
   // to the same URL without the trailing slash.
   if (
-    request.uri.endsWith("/") &&
-    request.uri.toLowerCase().includes("/docs/")
+    SEARCH_URI_WITH_TRAILING_SLASH.has(requestURILowerCase) ||
+    (request.uri.endsWith("/") && requestURILowerCase.includes("/docs/"))
   ) {
     return redirect(request.uri.slice(0, -1), {
       status: 301,
-      cacheControlSeconds: 3600 * 24 * 30,
+      cacheControlSeconds: ONE_MONTH,
     });
   }
+
+  // Home page requests are the special case on MDN. They should
+  // always have a trailing slash. So a home page URL without a
+  // trailing slash should redirect to the same URL with a
+  // trailing slash.
+  if (LOCALE_URI_WITHOUT_TRAILING_SLASH.has(requestURILowerCase)) {
+    return redirect(request.uri + "/", {
+      status: 301,
+      cacheControlSeconds: ONE_MONTH,
+    });
+  }
+
   // This condition exists to accommodate AWS origin-groups, which
   // include two origins, the primary and the secondary, where the
   // secondary origin is only attempted if the primary fails. Since
@@ -97,6 +119,13 @@ exports.handler = async (event) => {
     request.origin.custom &&
     request.origin.custom.domainName.includes("s3")
   ) {
+    if (request.uri.endsWith("/")) {
+      // For all requests to S3, strip the trailing slash, since we
+      // store the objects as their path name itself, for example
+      // "en-us" for the English home page, not "en-us/index.html",
+      // which is what S3 would look for if we left the trailing slash.
+      request.uri = request.uri.slice(0, -1);
+    }
     // Rewrite the URI to match the keys in S3.
     // NOTE: The incoming URI should remain URI-encoded. However, it
     // must be passed to slugToFolder as decoded version to lowercase
