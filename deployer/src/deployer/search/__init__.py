@@ -147,6 +147,10 @@ def walk(root):
 def to_search(file):
     with open(file) as f:
         data = json.load(f)
+    if "doc" not in data:
+        # If the file we just opened isn't use for documents, it might be for
+        # other SPAs like the home page. Skip these.
+        return
     doc = data["doc"]
     locale, slug = doc["mdn_url"].split("/docs/", 1)
     if slug.endswith("/Index"):
