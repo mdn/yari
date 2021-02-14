@@ -19,6 +19,9 @@ export default function MainMenu({
     focusedSubmenuItemIndex,
     setFocusedSubmenuItemIndex,
   ] = useState<number>(-1);
+  const [submenuCollapsedOnBlur, setSubmenuCollapsedOnBlur] = useState<boolean>(
+    false
+  );
   const ga = useGA();
 
   /**
@@ -107,12 +110,18 @@ export default function MainMenu({
     }
   }
 
+  function onSubmenuItemBlur(index: number) {
+    if (index === focusedSubmenuItemIndex) {
+      setSubmenuCollapsedOnBlur(true);
+      setTimeout(() => {
+        setSubmenuCollapsedOnBlur(false);
+      }, 250);
+      hideSubMenuIfVisible();
+    }
+  }
+
   useEffect(() => {
     const mainMenu = mainMenuRef.current;
-
-    mainMenu
-      ?.querySelector<HTMLAnchorElement>('ul.show a[tabindex="0"]')
-      ?.focus();
 
     // by default the main menu contains a `nojs` class which
     // then allows users on desktop to interact with the main
@@ -122,6 +131,10 @@ export default function MainMenu({
     if (mainMenu) {
       mainMenu.classList.remove("nojs");
     }
+
+    mainMenu
+      ?.querySelector<HTMLAnchorElement>('ul.show a[tabindex="0"]')
+      ?.focus();
 
     document.addEventListener("keyup", (event) => {
       if (event.key === "Escape") {
@@ -266,7 +279,11 @@ export default function MainMenu({
               aria-expanded={menuEntry.label === visibleSubMenu}
               onFocus={onMenuButtonFocus}
               onClick={(event) => {
-                toggleSubMenu(event, menuEntry.label, menuEntry.labelId);
+                if (submenuCollapsedOnBlur) {
+                  setSubmenuCollapsedOnBlur(false);
+                } else {
+                  toggleSubMenu(event, menuEntry.label, menuEntry.labelId);
+                }
               }}
             >
               {menuEntry.label}
@@ -279,7 +296,11 @@ export default function MainMenu({
               aria-labelledby={`${menuEntry.labelId}-button`}
             >
               {menuEntry.items.map((item, index) => (
-                <li key={item.url} role="none">
+                <li
+                  key={item.url}
+                  role="none"
+                  onBlur={() => onSubmenuItemBlur(index)}
+                >
                   {item.external ? (
                     <a
                       tabIndex={index === focusedSubmenuItemIndex ? 0 : -1}
