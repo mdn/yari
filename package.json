@@ -87,7 +87,7 @@
     "@mdn/minimalist": "^0.7.2",
     "@storybook/addon-a11y": "^6.1.18",
     "@storybook/addon-actions": "^6.1.18",
-    "@storybook/addon-essentials": "^6.1.17",
+    "@storybook/addon-essentials": "^6.1.18",
     "@storybook/addon-links": "^6.1.18",
     "@storybook/node-logger": "^6.1.16",
     "@storybook/preset-create-react-app": "^3.1.5",
