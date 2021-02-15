@@ -20,7 +20,7 @@ After that, run these commands in your bash:
     git clone https://github.com/mdn/yari.git
     cd yari
     yarn
-    echo CONTENT_ROOT=/path/to/mdn/content/files >> .env
+    echo CONTENT_ROOT=<path-to-mdn-content>/files >> .env
     yarn dev
     open http://localhost:3000
 
