@@ -35,7 +35,7 @@ function memoize(fn) {
     return fn;
   }
 
-  const cache = new LRU({ max: 1000 });
+  const cache = new LRU({ max: 2000 });
   return (...args) => {
     let invalidate = false;
     if (args.includes(MEMOIZE_INVALIDATE)) {
