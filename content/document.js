@@ -420,13 +420,9 @@ function findChildren(url) {
   const locale = url.split("/")[1];
   const root = getRoot(locale);
   const folder = urlToFolderPath(url);
-  const childPaths = glob.sync(
-    path.join(CONTENT_ROOT, folder, "*", HTML_FILENAME)
-  );
+  const childPaths = glob.sync(path.join(root, folder, "*", HTML_FILENAME));
   return childPaths
-    .map((childFilePath) =>
-      path.relative(CONTENT_ROOT, path.dirname(childFilePath))
-    )
+    .map((childFilePath) => path.relative(root, path.dirname(childFilePath)))
     .map((folder) => read(folder));
 }
 
