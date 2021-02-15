@@ -165,7 +165,7 @@ jobs:
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
           yarn prepare-build
 
-          yarn build
+          ./para.sh
 
           # TODO: When the deployer is available this is where we
           # would upload the whole content of client/build
