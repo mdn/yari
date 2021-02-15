@@ -18,6 +18,7 @@ const { getGitHistories } = require("./githistories");
 
 const {
   buildURL,
+  getRoot,
   memoize,
   slugToFolder,
   execGit,
@@ -109,7 +110,7 @@ function create(html, metadata, root = null) {
 
 function getFolderPath(metadata, root = null) {
   if (!root) {
-    root = metadata.locale === "en-US" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+    root = getRoot(metadata.locale);
   }
   return buildPath(
     path.join(root, metadata.locale.toLowerCase()),
@@ -278,11 +279,13 @@ const read = memoize((folder) => {
 
 function update(url, rawHTML, metadata) {
   const folder = urlToFolderPath(url);
-  const indexPath = path.join(CONTENT_ROOT, getHTMLPath(folder));
   const document = read(folder);
+  const locale = document.metadata.locale;
+  const root = getRoot(locale);
   const oldSlug = document.metadata.slug;
   const newSlug = metadata.slug;
   const isNewSlug = oldSlug !== newSlug;
+  const indexPath = path.join(root, getHTMLPath(folder));
 
   if (
     isNewSlug ||
@@ -295,7 +298,7 @@ function update(url, rawHTML, metadata) {
     });
     if (isNewSlug) {
       updateWikiHistory(
-        path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
+        path.join(root, metadata.locale.toLowerCase()),
         oldSlug,
         newSlug
       );
@@ -312,7 +315,7 @@ function update(url, rawHTML, metadata) {
       const newChildSlug = oldChildSlug.replace(oldSlug, newSlug);
       metadata.slug = newChildSlug;
       updateWikiHistory(
-        path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
+        path.join(root, metadata.locale.toLowerCase()),
         oldChildSlug,
         newChildSlug
       );
@@ -324,16 +327,16 @@ function update(url, rawHTML, metadata) {
     }
     redirects.set(buildURL(locale, oldSlug), buildURL(locale, newSlug));
     const newFolderPath = buildPath(
-      path.join(CONTENT_ROOT, locale.toLowerCase()),
+      path.join(root, locale.toLowerCase()),
       newSlug
     );
     const oldFolderPath = buildPath(
-      path.join(CONTENT_ROOT, locale.toLowerCase()),
+      path.join(root, locale.toLowerCase()),
       oldSlug
     );
 
     if (oldFolderPath !== newFolderPath) {
-      execGit(["mv", oldFolderPath, newFolderPath]);
+      execGit(["mv", oldFolderPath, newFolderPath], { cwd: root });
     }
     Redirect.add(locale, [...redirects.entries()]);
   }
@@ -389,10 +392,12 @@ function findAll(
             return false;
           }
           if (folderSearch) {
-            return filePath
-              .replace(CONTENT_ROOT, "")
-              .replace(HTML_FILENAME, "")
-              .includes(folderSearch);
+            return (
+              filePath
+                .replace(CONTENT_ROOT, "")
+                .replace(HTML_FILENAME, "")
+                .search(new RegExp(folderSearch)) !== -1
+            );
           }
           return true;
         })
@@ -412,6 +417,8 @@ function findAll(
 }
 
 function findChildren(url) {
+  const locale = url.split("/")[1];
+  const root = getRoot(locale);
   const folder = urlToFolderPath(url);
   const childPaths = glob.sync(
     path.join(CONTENT_ROOT, folder, "*", HTML_FILENAME)
@@ -486,6 +493,7 @@ function remove(
   locale,
   { recursive = false, dry = false, redirect = "" } = {}
 ) {
+  const root = getRoot(locale);
   const url = buildURL(locale, slug);
   const { metadata, fileInfo } = findByURL(url) || {};
   if (!metadata) {
@@ -504,20 +512,17 @@ function remove(
 
   for (const { metadata } of children) {
     const slug = metadata.slug;
-    updateWikiHistory(
-      path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
-      slug
-    );
+    updateWikiHistory(path.join(root, metadata.locale.toLowerCase()), slug);
   }
 
   if (redirect) {
     Redirect.add(locale, [[url, redirect]]);
   }
 
-  execGit(["rm", "-r", path.dirname(fileInfo.path)]);
+  execGit(["rm", "-r", path.dirname(fileInfo.path)], { cwd: root });
 
   updateWikiHistory(
-    path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
+    path.join(root, metadata.locale.toLowerCase()),
     metadata.slug
   );
 

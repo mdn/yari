@@ -1,8 +1,14 @@
 const path = require("path");
 const childProcess = require("child_process");
 
-const { CONTENT_ROOT } = require("./constants");
+const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("./constants");
 const { slugToFolder } = require("../libs/slug-utils");
+
+function getRoot(locale) {
+  const root =
+    locale.toLowerCase() === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+  return root;
+}
 
 function buildURL(locale, slug) {
   if (!locale) throw new Error("locale falsy!");
@@ -96,6 +102,7 @@ function urlToFolderPath(url) {
 
 module.exports = {
   buildURL,
+  getRoot,
   slugToFolder: (slug) => slugToFolder(slug, path.sep),
   memoize,
   execGit,
