@@ -1152,3 +1152,11 @@ test("external links always get the right attributes", () => {
     ).toBe(1);
   });
 });
+
+test("home page should have a /index.json file with feedEntries", () => {
+  const builtFolder = path.join(buildRoot, "en-us");
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { feedEntries } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(feedEntries.length).toBeGreaterThan(0);
+});

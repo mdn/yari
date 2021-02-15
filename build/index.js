@@ -325,6 +325,17 @@ async function buildDocument(document, documentOptions = {}) {
 
   const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
 
+  // Kumascript rendering can't know about FLAW_LEVELS when it's building,
+  // because injecting it there would cause a circular dependency.
+  // So, let's post-process the rendered HTML now afterwards.
+  // If the flaw levels for `macros` was to ignore, we can delete all the
+  // injected `data-flaw-src="..."` attributes.
+  if (options.flawLevels.get("macros") === FLAW_LEVELS.IGNORE) {
+    // This helps the final production built HTML since there `data-flaw-src`
+    // attributes on the HTML is useless.
+    $("[data-flaw-src]").removeAttr("data-flaw-src");
+  }
+
   // Remove those '<span class="alllinks"><a href="/en-US/docs/tag/Web">View All...</a></span>' links.
   // If a document has them, they don't make sense in a Yari world anyway.
   $("span.alllinks").remove();
