@@ -6,11 +6,15 @@
 @import "~@mdn/minimalist/sass/vars/typography";
 
 .breadcrumbs-container {
-  font-size: $small-font-size;
   padding: $base-unit $base-spacing;
 
   @media #{$mq-small-desktop-and-up} {
     padding: ($base-spacing / 2) $base-spacing;
+  }
+
+  @media #{$mq-large-desktop-and-up} {
+    padding: $base-spacing;
+    text-align: right;
   }
 
   a {
@@ -43,7 +47,6 @@
         background-size: 12px;
         content: "";
         height: 12px;
-        margin: 0 5px;
         transform: rotate(90deg);
         width: 12px;
       }
@@ -53,6 +56,11 @@
       &::after {
         display: inline-block;
       }
+    }
+
+    [property="name"] {
+      display: inline-block;
+      margin: 0 ($base-unit / 2);
     }
 
     .breadcrumb-penultimate {

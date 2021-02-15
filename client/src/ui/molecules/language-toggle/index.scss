@@ -7,6 +7,10 @@ ul.language-toggle {
   justify-content: flex-end;
   padding: $base-spacing;
 
+  @media #{$mq-small-desktop-and-up} {
+    justify-content: inherit;
+  }
+
   li {
     max-height: 24px;
   }
@@ -32,7 +36,6 @@ ul.language-toggle {
       content: "";
       display: inline-block;
       height: 29px;
-      margin-left: $base-unit;
       vertical-align: bottom;
       width: 28px;
     }
