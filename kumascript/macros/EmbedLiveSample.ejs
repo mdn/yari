@@ -73,7 +73,7 @@ if (hasScreenshot) {
       %></td><%
       %><td><%
 } // end hasScreenshot
-%><iframe class="live-sample-frame <%= className %>"<%
+%><iframe class="<%= className %>"<%
 %> id="frame_<%= web.slugify(web.safeDecodeURIComponent(sampleId)) %>"<%
 %> frameborder="0"<%
 if (width) { %> width="<%= width %>"<% }

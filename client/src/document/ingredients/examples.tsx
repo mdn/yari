@@ -49,7 +49,6 @@ function RenderLiveSample({ example }) {
     <>
       <h4>Result</h4>
       <iframe
-        className="live-sample-frame"
         srcDoc={srcdoc}
         title={example.description.title || "Live sample"}
         width={example.description.width || "100%"}
