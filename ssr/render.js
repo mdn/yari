@@ -145,6 +145,13 @@ export default function render(
   const webfontURLs = extractWebFontURLs();
   const $ = cheerio.load(buildHtml);
 
+  // Some day, we'll have the chome localized and then this can no longer be
+  // hardcoded to 'en'. But for now, the chrome is always in "English (US)"
+  // and the 'lang' attribute should always be expressed in  ISO 639. (e.g 'en'
+  // or 'zh' (not 'en-US' or 'zh-CD))
+  // https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+  $("html").attr("lang", "en");
+
   const rendered = renderToString(renderApp);
 
   let pageTitle = "MDN Web Docs"; // default

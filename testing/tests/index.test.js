@@ -1160,3 +1160,19 @@ test("home page should have a /index.json file with feedEntries", () => {
   const { feedEntries } = JSON.parse(fs.readFileSync(jsonFile));
   expect(feedEntries.length).toBeGreaterThan(0);
 });
+
+test("'lang' attribute should match the article", () => {
+  let builtFolder = path.join(buildRoot, "fr", "docs", "web", "foo");
+  let htmlFile = path.join(builtFolder, "index.html");
+  let html = fs.readFileSync(htmlFile, "utf-8");
+  let $ = cheerio.load(html);
+  expect($("html").attr("lang")).toBe("en");
+  expect($("article").attr("lang")).toBe("fr");
+
+  builtFolder = path.join(buildRoot, "en-us", "docs", "web", "foo");
+  htmlFile = path.join(builtFolder, "index.html");
+  html = fs.readFileSync(htmlFile, "utf-8");
+  $ = cheerio.load(html);
+  expect($("html").attr("lang")).toBe("en");
+  expect($("article").attr("lang")).toBe("en");
+});
