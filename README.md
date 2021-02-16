@@ -37,8 +37,8 @@ You'll need to replace `/path/to/mdn/content/files` with the path to the
 
     echo CONTENT_ROOT=/path/to/mdn/content/files >> .env
 
-At this point, you can get started. Run the following lines to compile required files, start the Yari web
-server running, and open it in your browser:
+At this point, you can get started. Run the following lines to compile required
+files, start the Yari web server running, and open it in your browser:
 
     yarn dev
     open http://localhost:3000
@@ -77,9 +77,8 @@ in the [mdn/content repository](https://github.com/mdn/content).
 
 ## How it works
 
-Yari does a number of different things, but its main function is to render and
-serve the content of MDN. This is available in the [content](https://github.com/mdn/content) repo as `index.html`
-files that contain metadata as YAML front-matter followed by the document source.
+repo as `index.html` files that contain metadata as YAML front-matter followed
+by the document source.
 
 The builder converts these "source files" into "build files" using a CLI tool
 that iterates over the files, builds the HTML, and lastly packages it up
