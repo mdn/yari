@@ -13,7 +13,7 @@ what Content depends on. This package should contain everything you need to
 start a server that contains all the editing and previewing features, plus
 the ability to Yari build a document to its final `index.html` form.
 
-In Yari, a [GitHub Action](https://github.com/mdn/yari/blob/master/.github/workflows/npm-publish.yml)
+In Yari, a [GitHub Action](https://github.com/mdn/yari/blob/main/.github/workflows/npm-publish.yml)
 runs on every commit to `master` and that creates
 [a `git` tag](https://github.com/mdn/yari/tags) and a tarball release
 on npmjs.com.
