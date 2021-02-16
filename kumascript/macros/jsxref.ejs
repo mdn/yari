@@ -38,7 +38,7 @@ if ((api.indexOf("..") === -1) && (api.indexOf(".") !== -1)) { // Handle try...c
     basePath += l10n.slug + '/';
     URL += l10n.slug + '/' + $0;
 } else {
-    URL += $0;
+    URL += web.safeDecodeURIComponent($0);
 }
 
 let anchor = $2 || '';

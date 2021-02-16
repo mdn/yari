@@ -228,4 +228,14 @@ describe("Basic viewing of functional pages", () => {
       href: "/en-US/docs/Web/Foo",
     });
   });
+
+  it("should give the home page and see Hacks blog posts", async () => {
+    await page.goto(testURL("/en-US/"));
+    await expect(page).toMatch("Resources for developers, by developers.");
+    await expect(page).toMatch("Hacks Blog");
+
+    // One home page for every built locale
+    await page.goto(testURL("/fr/"));
+    await expect(page).toMatch("Resources for developers, by developers.");
+  });
 });
