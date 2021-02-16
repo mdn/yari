@@ -37,11 +37,16 @@ async function buildDocumentInteractive(
       ? Document.read(documentPath, Document.MEMOIZE_INVALIDATE)
       : Document.read(documentPath);
 
-    const translations = translationsOf(document.metadata.slug);
-    if (translations) {
-      document.translations = uniqifyTranslationsOf(translations, document.url);
-    } else {
-      document.translations = [];
+    if (!interactive) {
+      const translations = translationsOf(document.metadata.slug);
+      if (translations) {
+        document.translations = uniqifyTranslationsOf(
+          translations,
+          document.url
+        );
+      } else {
+        document.translations = [];
+      }
     }
 
     return { document, doc: await buildDocument(document), skip: false };
