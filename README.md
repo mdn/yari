@@ -44,7 +44,7 @@ review Yari changes.
 Periodically, the code and the content changes. Make sure you're staying
 up-to-date with these commands:
 
-    git pull origin master
+    git pull origin main
     yarn
     yarn dev
 
