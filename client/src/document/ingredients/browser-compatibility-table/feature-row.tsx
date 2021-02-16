@@ -318,7 +318,7 @@ function getNotes(
             <div className="bc-notes-wrapper">
               <dt
                 className={`bc-supports-${getSupportClassName(
-                  support
+                  item
                 )} bc-supports`}
               >
                 <CellText support={item} />
