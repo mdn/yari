@@ -17,15 +17,7 @@ import { PageNotFound } from "./page-not-found";
 import { Banner } from "./banners";
 import { useDebugGA } from "./ga-context";
 
-const AllFlaws = React.lazy(() =>
-  import("./flaws").then((m) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(m as any);
-      }, 3000);
-    });
-  })
-);
+const AllFlaws = React.lazy(() => import("./flaws"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
 const DocumentCreate = React.lazy(() => import("./document/forms/create"));
 const DocumentManage = React.lazy(() => import("./document/forms/manage"));
