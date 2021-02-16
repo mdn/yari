@@ -215,7 +215,7 @@ There are two options to resolve this.
    `echo REACT_APP_NO_WATCHER=true >> .env`
 
 2. Increase `max_user_watches`:\
-   See <https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers>
+   See <https://github.com/guard/listen#increasing-the-amount-of-inotify-watchers>
 
 ### `Error: Cannot find module 'levenary'`
 
