@@ -317,27 +317,34 @@ program
   .option("--root <directory>", "Which content root", {
     default: CONTENT_ROOT,
   })
-  .option("--save-history <path>", `File to save all previous history`, {
+  .option("--save-history <path>", "File to save all previous history", {
     default: path.join(os.tmpdir(), "yari-git-history.json"),
   })
   .option(
     "--load-history <path>",
-    `Optional file to load all previous history`,
+    "Optional file to load all previous history",
     {
       default: path.join(os.tmpdir(), "yari-git-history.json"),
     }
   )
+  .option(
+    "--refresh",
+    "Don't load any previously saved git history JSON file",
+    {
+      default: false,
+    }
+  )
   .action(
     tryOrExit(async ({ options }) => {
-      const { root, saveHistory, loadHistory } = options;
-      if (fs.existsSync(loadHistory)) {
+      const { root, saveHistory, loadHistory, refresh } = options;
+      if (fs.existsSync(loadHistory) && !refresh) {
         console.log(
           chalk.yellow(`Reusing existing history from ${loadHistory}`)
         );
       }
       const map = gatherGitHistory(
         root,
-        fs.existsSync(loadHistory) ? loadHistory : null
+        !refresh && fs.existsSync(loadHistory) ? loadHistory : null
       );
       const historyPerLocale = {};
 
