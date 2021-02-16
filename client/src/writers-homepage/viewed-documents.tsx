@@ -43,7 +43,6 @@ export default function ViewedDocuments() {
         localStorage.getItem(localStorageKey) || "[]"
       );
       const newEntries: Entry[] = [];
-      // console.log(previousVisits);
       for (const visit of previousVisits) {
         newEntries.push({
           url: visit.url,
@@ -63,7 +62,7 @@ export default function ViewedDocuments() {
       id="recently-viewed-documents"
       aria-labelledby="recently-viewed-documents"
     >
-      <h2>Recently viewed documents</h2>
+      <h3>Recently viewed documents</h3>
       {!entries ? (
         <Banner>Loading recently viewed documents</Banner>
       ) : entries.length ? (

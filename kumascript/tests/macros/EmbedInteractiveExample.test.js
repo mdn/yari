@@ -12,7 +12,7 @@ describeMacro("EmbedInteractiveExample", function () {
     };
     return assert.eventually.equal(
       macro.call("pages/css/animation.html"),
-      `<iframe class="interactive" width="100%" height="250" frameborder="0" src="https://interactive-examples.mdn.mozilla.net/pages/css/animation.html" title="MDN Web Docs Interactive Example"></iframe>
+      `<iframe class="interactive" width="100%" height="250" src="https://interactive-examples.mdn.mozilla.net/pages/css/animation.html" title="MDN Web Docs Interactive Example"></iframe>
 
 ${extraHiddenTag}`
     );
@@ -23,7 +23,7 @@ ${extraHiddenTag}`
     };
     return assert.eventually.equal(
       macro.call("pages/http/headers.html"),
-      `<iframe class="interactive" width="100%" height="250" frameborder="0" src="https://www.fleetwood-mac.com/pages/http/headers.html" title="MDN Web Docs Interactive Example"></iframe>
+      `<iframe class="interactive" width="100%" height="250" src="https://www.fleetwood-mac.com/pages/http/headers.html" title="MDN Web Docs Interactive Example"></iframe>
 
 ${extraHiddenTag}`
     );
@@ -36,7 +36,7 @@ ${extraHiddenTag}`
       };
       return assert.eventually.equal(
         macro.call("/pages/css/animation.html"),
-        `<iframe class="interactive" width="100%" height="250" frameborder="0" src="https://interactive-examples.mdn.mozilla.net/pages/css/animation.html" title="MDN Web Docs Interactive Example"></iframe>
+        `<iframe class="interactive" width="100%" height="250" src="https://interactive-examples.mdn.mozilla.net/pages/css/animation.html" title="MDN Web Docs Interactive Example"></iframe>
 
 ${extraHiddenTag}`
       );
@@ -48,7 +48,7 @@ ${extraHiddenTag}`
     };
     return assert.eventually.equal(
       macro.call("pages/js/expressions-conditionaloperators.html"),
-      `<iframe class="interactive interactive-js" width="100%" height="250" frameborder="0" src="https://interactive-examples.mdn.mozilla.net/pages/js/expressions-conditionaloperators.html" title="MDN Web Docs Interactive Example"></iframe>
+      `<iframe class="interactive interactive-js" width="100%" height="250" src="https://interactive-examples.mdn.mozilla.net/pages/js/expressions-conditionaloperators.html" title="MDN Web Docs Interactive Example"></iframe>
 
 ${extraHiddenTag}`
     );
@@ -59,7 +59,7 @@ ${extraHiddenTag}`
     };
     return assert.eventually.equal(
       macro.call("pages/http/headers.html", "extra"),
-      `<iframe class="interactive extra" width="100%" height="250" frameborder="0" src="https://interactive-examples.mdn.mozilla.net/pages/http/headers.html" title="MDN Web Docs Interactive Example"></iframe>
+      `<iframe class="interactive extra" width="100%" height="250" src="https://interactive-examples.mdn.mozilla.net/pages/http/headers.html" title="MDN Web Docs Interactive Example"></iframe>
 
 ${extraHiddenTag}`
     );
@@ -70,7 +70,7 @@ ${extraHiddenTag}`
     };
     return assert.eventually.equal(
       macro.call("pages/js/expressions-conditionaloperators.html", "bigger"),
-      `<iframe class="interactive interactive-js bigger" width="100%" height="250" frameborder="0" src="https://interactive-examples.mdn.mozilla.net/pages/js/expressions-conditionaloperators.html" title="MDN Web Docs Interactive Example"></iframe>
+      `<iframe class="interactive interactive-js bigger" width="100%" height="250" src="https://interactive-examples.mdn.mozilla.net/pages/js/expressions-conditionaloperators.html" title="MDN Web Docs Interactive Example"></iframe>
 
 ${extraHiddenTag}`
     );
