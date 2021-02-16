@@ -230,7 +230,7 @@ async function buildDocument(document, documentOptions = {}) {
     renderedHtml = document.rawHTML;
   } else {
     if (options.clearKumascriptRenderCache) {
-      renderKumascriptCache.clear();
+      renderKumascriptCache.reset();
     }
     try {
       [renderedHtml, flaws] = await kumascript.render(document.url);
