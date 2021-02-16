@@ -1,3 +1,5 @@
+const LRU = require("lru-cache");
+
 const { Document } = require("../content");
 
 const {
@@ -16,7 +18,7 @@ const { HTMLTool } = require("./src/api/util.js");
 const DEPENDENCY_LOOP_INTRO =
   'The following documents form a circular dependency when rendering (via the "page" and/or "IncludeSubnav" macros):';
 
-const renderCache = new Map();
+const renderCache = new LRU({ max: 2000 });
 
 const renderFromURL = async (url, urlsSeen = null) => {
   const urlLC = url.toLowerCase();
