@@ -104,13 +104,15 @@ function injectLoadingLazyAttributes($) {
 }
 
 /**
- * For every `<a href="http...">` make it `<a href="http..." class="external">`
+ * For every `<a href="http...">` make it
+ * `<a href="http..." class="external" and rel="noopener">`
+ *
  *
  * @param {Cheerio document instance} $
  */
-function injectExternalLinkClasses($) {
-  $("a[href^=http]:not(.external)").each((i, a) => {
-    const $a = $(a);
+function postProcessExternalLinks($) {
+  $("a[href^=http]").each((i, element) => {
+    const $a = $(element);
     if ($a.attr("href").startsWith("https://developer.mozilla.org")) {
       // This should have been removed since it's considered a flaw.
       // But we haven't applied all fixable flaws yet and we still have to
@@ -119,6 +121,11 @@ function injectExternalLinkClasses($) {
       return;
     }
     $a.addClass("external");
+    const rel = ($a.attr("rel") || "").split(" ");
+    if (!rel.includes("noopener")) {
+      rel.push("noopener");
+      $a.attr("rel", rel.join(" "));
+    }
   });
 }
 
@@ -223,7 +230,7 @@ async function buildDocument(document, documentOptions = {}) {
     renderedHtml = document.rawHTML;
   } else {
     if (options.clearKumascriptRenderCache) {
-      renderKumascriptCache.clear();
+      renderKumascriptCache.reset();
     }
     try {
       [renderedHtml, flaws] = await kumascript.render(document.url);
@@ -420,7 +427,7 @@ async function buildDocument(document, documentOptions = {}) {
   injectLoadingLazyAttributes($);
 
   // All external hyperlinks should have the `external` class name.
-  injectExternalLinkClasses($);
+  postProcessExternalLinks($);
 
   // All content that uses `<div class="in-page-callout">` needs to
   // become `<div class="callout">`
