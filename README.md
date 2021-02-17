@@ -13,12 +13,14 @@ README instead.
 
 Before you can start working with Yari, you need to:
 
-1.  install [git](https://git-scm.com/),
+1.  Install [git](https://git-scm.com/),
     [Node.js](https://nodejs.org) (>= 12.0.0), and
     [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
-2.  [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo) the MDN [content](https://github.com/mdn/content)
-    and [yari](https://github.com/mdn/content) repositories using the Fork button on GitHub.
-3.  Clone the forked repositories to your computer using the following commands (replace `[your account]` with the account you forked the
+2.  [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
+    the MDN [content](https://github.com/mdn/content) and [yari](https://github.com/mdn/content)
+    repositories using the Fork button on GitHub.
+3.  Clone the forked repositories to your computer using the following commands
+    (replace `[your account]` with the account you forked the
     repositories to):
 
         ```
@@ -64,7 +66,8 @@ review Yari changes.
 
 Periodically, the code and the content changes. Make sure you stay
 up-to-date with something along the following lines (replace `yari-origin`
-with whatever you called [the remote location](https://git-scm.com/docs/git-remote) of the original yari repo):
+with whatever you called [the remote location](https://git-scm.com/docs/git-remote)
+of the original yari repo):
 
     git pull yari-origin main
     yarn
@@ -82,7 +85,11 @@ in the [mdn/content repository](https://github.com/mdn/content).
 
 ## How it works
 
-Yari does a number of things, the most important of which is to render and serve the MDN content found in the [content repo](https://github.com/mdn/content). Each document is stored as an `index.html` file that contains metadata presented as YAML [front-matter](https://github.com/mdn/content#fundamental-concepts) followed by the document source.
+Yari does a number of things, the most important of which is to render and serve
+the MDN content found in the [content repo](https://github.com/mdn/content).
+Each document is stored as an `index.html` file that contains metadata presented
+as YAML [front-matter](https://github.com/mdn/content#fundamental-concepts)
+followed by the document source.
 
 The builder converts these "source files" into "build files" using a CLI tool
 that iterates over the files, builds the HTML, and lastly packages it up
@@ -134,7 +141,8 @@ When you ran `yarn` for the first time (`yarn` is an alias for
 commit.
 
 If you have doubts about formatting, submit your pull request anyway. If you
-have formatting flaws, the [pull request checks](https://github.com/features/actions) should catch it.
+have formatting flaws, the [pull request checks](https://github.com/features/actions)
+should catch it.
 
 ### Upgrading Packages
 
