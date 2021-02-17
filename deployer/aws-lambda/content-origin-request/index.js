@@ -111,7 +111,8 @@ exports.handler = async (event) => {
   } else if (request.uri.endsWith("/")) {
     // All other requests with a trailing slash should redirect to the
     // same URL without the trailing slash.
-    return redirect(request.uri.slice(0, -1), {
+    const qs = request.querystring ? `?${request.querystring}` : "";
+    return redirect(request.uri.slice(0, -1) + qs, {
       status: 301,
       cacheControlSeconds: THIRTY_DAYS,
     });
