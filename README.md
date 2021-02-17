@@ -58,7 +58,7 @@ review Yari changes.
 
 Periodically, the code and the content changes. Make sure you stay
 up-to-date with something along the following lines (replace `yari-origin`
-with whatever you called the remote location of the original yari repo):
+with whatever you called [the remote location](https://git-scm.com/docs/git-remote) of the original yari repo):
 
     git fetch yari-origin
     git rebase yari-origin/master
