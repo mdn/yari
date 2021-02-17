@@ -251,19 +251,10 @@ async function buildDocument(document, documentOptions = {}) {
       throw error;
     }
 
-    let sampleIds = [];
-    try {
-      sampleIds = kumascript.getLiveSampleIDs(
-        document.metadata.slug,
-        document.rawHTML
-      );
-    } catch (error) {
-      console.warn(
-        `Failure to build sampleIds on ${document.url}: "${error.message}"`,
-        error.message
-      );
-      // console.error(error);
-    }
+    const sampleIds = kumascript.getLiveSampleIDs(
+      document.metadata.slug,
+      document.rawHTML
+    );
     for (const sampleIdObject of sampleIds) {
       const liveSamplePage = kumascript.buildLiveSamplePage(
         document.url,
@@ -281,20 +272,8 @@ async function buildDocument(document, documentOptions = {}) {
       });
     }
 
-    const nonFatal = [
-      "MacroDeprecatedError",
-      "MacroBrokenLinkError",
-      "MacroRedirectedLinkError",
-      "MacroPagesError",
-      "MacroWrongXRefError",
-      "MacroLiveSampleError",
-    ];
-
     if (flaws.length) {
-      if (
-        options.flawLevels.get("macros") === FLAW_LEVELS.ERROR &&
-        flaws.some((f) => !nonFatal.includes(f.name))
-      ) {
+      if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
         // Report and exit immediately on the first document with flaws.
         console.error(
           chalk.red.bold(
