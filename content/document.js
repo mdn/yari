@@ -395,6 +395,7 @@ function findAll(
             return (
               filePath
                 .replace(CONTENT_ROOT, "")
+                .replace(CONTENT_TRANSLATED_ROOT, "")
                 .replace(HTML_FILENAME, "")
                 .search(new RegExp(folderSearch)) !== -1
             );
