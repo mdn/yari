@@ -9,7 +9,7 @@ Before you can start working with Yari, you need a copy of the MDN [Content](htt
 directory — this is the content Yari will render when we run it locally. The
 easiest way to get a local copy of this is to run the following command
 (although bear in mind that you might want to clone your own [fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo) of the repo
-instead, for when you create pull requests against the content):
+instead, for when you create [pull requests](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests) against the content):
 
     git clone https://github.com/mdn/content.git mdn/content
 
