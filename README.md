@@ -5,29 +5,35 @@
 
 ## Quickstart
 
-Before you can start working with Yari, you need a copy of the MDN [Content](https://github.com/mdn/content)
-directory — this is the content Yari will render when we run it locally. The
-easiest way to get a local copy of this is to run the following command
-(although bear in mind that you might want to clone your own [fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo) of the repo
-instead, for when you create [pull requests](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests) against the content):
+Development on `yari` involves updating the machinery that renders MDN content
+or improving the structure and styling of the MDN UI (e.g. the
+styling of the header). If you are more interested in contributing to the MDN
+content, you should check out the [content](https://github.com/mdn/content) repo
+README instead.
 
-    git clone https://github.com/mdn/content.git mdn/content
+Before you can start working with Yari, you need to:
 
-Take a note of where you've clone that repo before moving on.
+1.  install [git](https://git-scm.com/),
+    [Node.js](https://nodejs.org) (>= 12.0.0), and
+    [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
+2.  [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo) the MDN [content](https://github.com/mdn/content)
+    and [yari](https://github.com/mdn/content) repositories using the Fork button on GitHub.
+3.  Clone the forked repositories to your computer using the following commands (replace `[your account]` with the account you forked the
+    repositories to):
 
-To run Yari locally, you'll first need to install [git](https://git-scm.com/),
-[Node.js](https://nodejs.org) (>= 12.0.0), and
-[Yarn 1](https://classic.yarnpkg.com/en/docs/install).
+        ```
+        git clone https://github.com/[your_account]/content.git
+        git clone https://github.com/[your_account]/yari.git
+        ```
 
-After that, run these commands in your terminal, bearing in mind that you'll
-probably want to fork the repo first and do the `git clone` with _your_ fork
-instead of the `mdn` one:
+    Take a note of the file path to the location where you've cloned that
+    repo before moving on.
 
-    git clone https://github.com/mdn/yari.git
+To run Yari locally, you'll first need to install its dependencies and build the
+app locally. Do this like so:
+
     cd yari
-
-Next run the `yarn` command to fetch all the dependencies and install the app
-locally:
+    yarn install
 
 Now run the following command to create a `.env` file inside your `yari` repo
 root and set the `CONTENT_ROOT` environment variable equal to the path to the
@@ -60,8 +66,7 @@ Periodically, the code and the content changes. Make sure you stay
 up-to-date with something along the following lines (replace `yari-origin`
 with whatever you called [the remote location](https://git-scm.com/docs/git-remote) of the original yari repo):
 
-    git fetch yari-origin
-    git rebase yari-origin/master
+    git pull yari-origin main
     yarn
     yarn dev
 
@@ -77,20 +82,13 @@ in the [mdn/content repository](https://github.com/mdn/content).
 
 ## How it works
 
-repo as `index.html` files that contain metadata as YAML [front-matter](https://github.com/mdn/content#fundamental-concepts) followed
-by the document source.
+Yari does a number of things, the most important of which is to render and serve the MDN content found in the [content repo](https://github.com/mdn/content). Each document is stored as an `index.html` file that contains metadata presented as YAML [front-matter](https://github.com/mdn/content#fundamental-concepts) followed by the document source.
 
 The builder converts these "source files" into "build files" using a CLI tool
 that iterates over the files, builds the HTML, and lastly packages it up
 with the front-end code, ready to be served as static files.
 
 ## Development
-
-Development on `yari` really refers to updating the building/rendering process
-described above or improving the structure and styling of the MDN UI (e.g. the
-styling of the header). If you are more interested in contributing to the MDN
-content, you should check out the [content](https://github.com/mdn/content) repo
-README.
 
 The `yarn start` command encapsulates the front-end dev server
 (on <http://localhost:3000>) and the `server` (on <http://localhost:5000>).
@@ -108,8 +106,9 @@ editor/IDE. For example, in the root of the repo you could run:
     echo 'EDITOR=code' >> .env
 
 Now clicking certain links will open files directly in the currently open
-VSCode IDE. To test it, view any document on <http://localhost:3000> and
-click the "Open in your editor" button.
+VS Code IDE (replace `code` in the above command with a different text editor
+name if needed, e.g. `atom` or whatever). To test it, view any document on
+<http://localhost:3000> and click the "Open in your editor" button.
 
 ### How the server works
 
