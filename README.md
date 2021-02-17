@@ -14,22 +14,20 @@ README instead.
 Before you can start working with Yari, you need to:
 
 1.  Install [git](https://git-scm.com/),
-    [Node.js](https://nodejs.org) (>= 12.0.0), and
-    [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
+    [Node.js](https://nodejs.org) (>= 12.0.0), and [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
 2.  [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
     the MDN [content](https://github.com/mdn/content) and [yari](https://github.com/mdn/content)
     repositories using the Fork button on GitHub.
 3.  Clone the forked repositories to your computer using the following commands
-    (replace `[your account]` with the account you forked the
-    repositories to):
+    (replace `[your account]` with the account you forked the repositories to):
 
-         ```
-         git clone https://github.com/[your_account]/content.git
-         git clone https://github.com/[your_account]/yari.git
-         ```
+             ```
+             git clone https://github.com/[your_account]/content.git
+             git clone https://github.com/[your_account]/yari.git
+             ```
 
-    Take a note of the file path to the location where you've cloned that
-    repo before moving on.
+        Take a note of the file path to the location where you've cloned that
+        repo before moving on.
 
 To run Yari locally, you'll first need to install its dependencies and build the
 app locally. Do this like so:
