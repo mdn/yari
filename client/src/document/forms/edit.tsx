@@ -81,10 +81,6 @@ export default function DocumentEdit() {
         overlayClassName="modal-overlay"
         className="edit-modal"
       >
-        <header>
-          <h2 id="modal-main-heading">Quick-edit</h2>
-        </header>
-
         <button
           id="close-modal"
           className="close-modal"
