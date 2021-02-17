@@ -396,6 +396,9 @@ program
   .name("build")
   .option("--spas", "Build the SPA pages", { default: true }) // PR builds
   .option("--spas-only", "Only build the SPA pages", { default: false })
+  .option("--unslug", "Unslug all locales (apply en-us redirects to locales)", {
+    default: false,
+  })
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
   })
@@ -412,7 +415,7 @@ program
         return;
       }
 
-      if (CONTENT_TRANSLATED_ROOT) {
+      if (options.unslug && CONTENT_TRANSLATED_ROOT) {
         const documentsMoved = unslugAllLocales();
         if (documentsMoved !== 0) {
           console.log("Please unslug the translated content repo");
