@@ -16,6 +16,7 @@ import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Banner } from "./banners";
 import { useDebugGA } from "./ga-context";
+import { SignIn, SignUp } from "./auth";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
@@ -196,6 +197,22 @@ export function App(appProps) {
               element={
                 <StandardLayout>
                   <SiteSearch />
+                </StandardLayout>
+              }
+            />
+            <Route
+              path="/signin"
+              element={
+                <StandardLayout>
+                  <SignIn />
+                </StandardLayout>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <StandardLayout>
+                  <SignUp />
                 </StandardLayout>
               }
             />
