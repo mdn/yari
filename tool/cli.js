@@ -349,27 +349,21 @@ program
   .option("--root <directory>", "Which content root", {
     default: CONTENT_ROOT,
   })
-  .option("--save-history <path>", `File to save all previous history`, {
-    default: path.join(os.tmpdir(), "yari-git-history.json"),
-  })
-  .option(
-    "--load-history <path>",
-    `Optional file to load all previous history`,
-    {
-      default: path.join(os.tmpdir(), "yari-git-history.json"),
-    }
-  )
+  .option("--save-history <path>", "File to save all previous history")
+  .option("--load-history <path>", "Optional file to load all previous history")
   .action(
     tryOrExit(async ({ options }) => {
       const { root, saveHistory, loadHistory } = options;
-      if (fs.existsSync(loadHistory)) {
-        console.log(
-          chalk.yellow(`Reusing existing history from ${loadHistory}`)
-        );
+      if (loadHistory) {
+        if (fs.existsSync(loadHistory)) {
+          console.log(
+            chalk.yellow(`Reusing existing history from ${loadHistory}`)
+          );
+        }
       }
       const map = gatherGitHistory(
         root,
-        fs.existsSync(loadHistory) ? loadHistory : null
+        loadHistory && fs.existsSync(loadHistory) ? loadHistory : null
       );
       const historyPerLocale = {};
 
@@ -394,18 +388,20 @@ program
           )
         );
       }
-      fs.writeFileSync(
-        saveHistory,
-        JSON.stringify(allHistory, null, 2),
-        "utf-8"
-      );
-      console.log(
-        chalk.green(
-          `Saved ${Object.keys(
-            allHistory
-          ).length.toLocaleString()} paths into ${saveHistory}`
-        )
-      );
+      if (saveHistory) {
+        fs.writeFileSync(
+          saveHistory,
+          JSON.stringify(allHistory, null, 2),
+          "utf-8"
+        );
+        console.log(
+          chalk.green(
+            `Saved ${Object.keys(
+              allHistory
+            ).length.toLocaleString()} paths into ${saveHistory}`
+          )
+        );
+      }
     })
   )
 
