@@ -77,7 +77,7 @@ in the [mdn/content repository](https://github.com/mdn/content).
 
 ## How it works
 
-repo as `index.html` files that contain metadata as YAML front-matter followed
+repo as `index.html` files that contain metadata as YAML [front-matter](https://github.com/mdn/content#fundamental-concepts) followed
 by the document source.
 
 The builder converts these "source files" into "build files" using a CLI tool
