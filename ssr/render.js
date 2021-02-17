@@ -139,7 +139,7 @@ function serializeDocumentData(data) {
 
 export default function render(
   renderApp,
-  { doc = null, pageNotFound = false } = {}
+  { doc = null, pageNotFound = false, feedEntries = null } = {}
 ) {
   const buildHtml = readBuildHTML();
   const webfontURLs = extractWebFontURLs();
@@ -156,6 +156,11 @@ export default function render(
     pageTitle = `🤷🏽‍♀️ Page not found | ${pageTitle}`;
     const documentDataTag = `<script>window.__pageNotFound__ = true;</script>`;
     $("#root").after(documentDataTag);
+  } else if (feedEntries) {
+    const feedEntriesTag = `<script>window.__feedEntries__ = JSON.parse(${serializeDocumentData(
+      feedEntries
+    )});</script>`;
+    $("#root").after(feedEntriesTag);
   } else if (doc) {
     // Use the doc's title instead
     pageTitle = doc.pageTitle;
