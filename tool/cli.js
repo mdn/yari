@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const os = require("os");
 
 const program = require("@caporal/core").default;
 const chalk = require("chalk");
