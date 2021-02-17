@@ -9,6 +9,7 @@ const { prompt } = require("inquirer");
 const {
   Document,
   slugToFolder,
+  CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
 } = require("../content");
 // eslint-disable-next-line node/no-missing-require
@@ -23,10 +24,6 @@ const {
   HOMEPAGE_FEED_DISPLAY_MAX,
 } = require("./constants");
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
-const {
-  CONTENT_TRANSLATED_ROOT,
-  CONTENT_ROOT,
-} = require("../content/constants");
 const { uniqifyTranslationsOf } = require("./translationsof");
 const { humanFileSize } = require("./utils");
 const { unslugAllLocales } = require("./unslug");
