@@ -1,3 +1,4 @@
+@import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/mixins/utils";
 
@@ -5,11 +6,11 @@ $modal-background-color: rgba(0, 0, 0, 0.2);
 
 .modal-overlay {
   background-color: $modal-background-color;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
   bottom: 0;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
   z-index: $top-layer;
 
   > * {
@@ -17,21 +18,20 @@ $modal-background-color: rgba(0, 0, 0, 0.2);
   }
 
   .edit-modal {
-    background-color: white;
+    background-color: $neutral-600;
+    border-radius: $base-unit;
+    min-width: 40vw;
     position: absolute;
-    top: 30px;
-    left: 50%;
     right: 30px;
-    bottom: 30px;
-    border-radius: 3px;
+    top: 30px;
   }
 
   .close-modal {
     background: none;
     border: 0;
     position: absolute;
-    right: -23px;
-    top: -17px;
+    right: -17px;
+    top: -12px;
 
     span {
       @include visually-hidden();
