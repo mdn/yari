@@ -416,8 +416,8 @@ program
       }
 
       if (CONTENT_TRANSLATED_ROOT) {
-        const documentMoved = unslugAllLocales();
-        if (documentMoved !== 0) {
+        const documentsMoved = unslugAllLocales();
+        if (documentsMoved !== 0) {
           console.log("Please unslug the translated content repo");
         }
       }
