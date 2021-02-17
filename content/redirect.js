@@ -105,19 +105,20 @@ function validateToURL(url, checkResolve = true, checkPath = true) {
     checkURLInvalidSymbols(url);
     validateURLLocale(url);
 
+    const [bareURL] = url.split("#");
     if (checkResolve) {
       // Can't point to something that redirects to something
-      const resolved = resolve(url);
-      if (resolved !== url) {
+      const resolved = resolve(bareURL);
+      if (resolved !== bareURL) {
         throw new Error(
-          `${url} is already matched as a redirect (to: '${resolved}')`
+          `${bareURL} is already matched as a redirect (to: '${resolved}')`
         );
       }
     }
     if (checkPath) {
-      const path = resolveDocumentPath(url);
+      const path = resolveDocumentPath(bareURL);
       if (!path) {
-        throw new Error(`To-URL has to resolve to a file (${url})`);
+        throw new Error(`To-URL has to resolve to a file (${bareURL})`);
       }
     }
   } else {
@@ -322,6 +323,7 @@ function shortCuts(pairs, throws = false) {
     from.toLowerCase(),
     to.toLowerCase(),
   ]);
+  const hashPairs = pairs.filter(([, to]) => to.includes("#"));
 
   // Directed graph of all redirects.
   const dg = new Map(lowerCasePairs);
@@ -371,12 +373,37 @@ function shortCuts(pairs, throws = false) {
       transitiveDag.set(from, to);
     }
   }
+
+  // We want to shortcut
+  // /en-US/docs/foo/bar     /en-US/docs/foo#bar
+  // /en-US/docs/foo     /en-US/docs/Web/something
+  // to
+  // /en-US/docs/foo/bar     /en-US/docs/something#bar
+  // /en-US/docs/foo     /en-US/docs/Web/something
+  for (const [from, to] of hashPairs) {
+    const [bareTo, ...hashes] = to.split("#");
+    const bareToLC = bareTo.toLowerCase();
+    if (transitiveDag.has(bareToLC)) {
+      const redirectedTo = transitiveDag.get(bareToLC);
+      const newTo = `${redirectedTo}#${hashes.join("#").toLowerCase()}`;
+
+      // Add casing for the hashed new URL.
+      const redirectedToCased = casing.get(redirectedTo);
+      const newToCased = `${redirectedToCased}#${hashes.join("#")}`;
+      casing.set(newTo, newToCased);
+
+      // Log something since this is opportunistic!
+      console.log(`Short cutting hashed redirect: ${from} -> ${newTo}`);
+      transitiveDag.set(from.toLowerCase(), newTo);
+    }
+  }
+
   const transitivePairs = [...transitiveDag.entries()];
 
   // Restore cases!
   const mappedPairs = transitivePairs.map(([from, to]) => [
-    casing.get(from),
-    casing.get(to),
+    casing.get(from) || from,
+    casing.get(to) || to,
   ]);
   mappedPairs.sort(sortTuples);
   return mappedPairs;
