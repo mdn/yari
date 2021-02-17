@@ -13,13 +13,13 @@ README instead.
 
 Before you can start working with Yari, you need to:
 
-1.  Install [git](https://git-scm.com/),
-    [Node.js](https://nodejs.org) (>= 12.0.0), and [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
-2.  [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
-    the MDN [content](https://github.com/mdn/content) and [yari](https://github.com/mdn/content)
-    repositories using the Fork button on GitHub.
-3.  Clone the forked repositories to your computer using the following commands
-    (replace `[your account]` with the account you forked the repositories to):
+1. Install [git](https://git-scm.com/),
+   [Node.js](https://nodejs.org) (>= 12.0.0), and [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
+2. [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
+   the MDN [content](https://github.com/mdn/content) and [yari](https://github.com/mdn/content)
+   repositories using the Fork button on GitHub.
+3. Clone the forked repositories to your computer using the following commands
+   (replace `[your account]` with the account you forked the repositories to):
 
              ```
              git clone https://github.com/[your_account]/content.git
