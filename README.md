@@ -135,7 +135,7 @@ When you ran `yarn` for the first time (`yarn` is an alias for
 commit.
 
 If you have doubts about formatting, submit your pull request anyway. If you
-have formatting flaws, the pull request checks should catch it.
+have formatting flaws, the [pull request checks](https://github.com/features/actions) should catch it.
 
 ### Upgrading Packages
 
