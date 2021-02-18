@@ -179,6 +179,18 @@ the Google index. Thankfully we _always_ used a canonical URL
 (`<link rel="canonical" href="https://developer.mozilla.org/$uri">`) as a "second
 line of defense" for dev/stage URLs that are public.
 
+### `BUILD_HOMEPAGE_FEED_URL`
+
+**Default: `https://hacks.mozilla.org/feed/`**
+
+Which RSS feed URL to parse for displaying feed entries on the home page.
+
+### `BUILD_HOMEPAGE_FEED_DISPLAY_MAX`
+
+**Default: `5`**
+
+How many RSS feed entries to display on the home page.
+
 ## Server
 
 ### `SERVER_PORT`

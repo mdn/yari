@@ -43,8 +43,6 @@ declare global {
 function ga(...args) {
   if (typeof window === "object" && typeof window.ga === "function") {
     window.ga(...args);
-  } else {
-    console.debug("analytics (not sent)", ...args);
   }
 }
 

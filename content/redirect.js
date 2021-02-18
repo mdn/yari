@@ -11,6 +11,7 @@ const {
 const { isArchivedFilePath } = require("./archive");
 
 const FORBIDDEN_URL_SYMBOLS = ["\n", "\t"];
+const VALID_LOCALES_SET = new Set([...VALID_LOCALES.values()]);
 
 function checkURLInvalidSymbols(url) {
   for (const character of FORBIDDEN_URL_SYMBOLS) {
@@ -20,9 +21,14 @@ function checkURLInvalidSymbols(url) {
   }
 }
 
+function isVanityRedirectURL(url) {
+  const localeUrls = new Set([...VALID_LOCALES.values()].map((l) => `/${l}/`));
+  return localeUrls.has(url);
+}
+
 function resolveDocumentPath(url) {
-  // Let's keep vanity urls to /en-US/
-  if (url === "/en-US/") {
+  // Let's keep vanity urls to /en-US/ ...
+  if (isVanityRedirectURL(url)) {
     return url;
   }
   const [bareURL] = url.split("#");
@@ -41,6 +47,12 @@ function resolveDocumentPath(url) {
 
   const root = locale === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
 
+  if (!root) {
+    console.log(
+      `Trying to resolve a non-en-us path for ${url} without CONTENT_TRANSLATED_ROOT set.`
+    );
+    return `$TRANSLATED/${relativeFilePath}`;
+  }
   const filePath = path.join(root, relativeFilePath);
   if (fs.existsSync(filePath)) {
     return filePath;
@@ -49,7 +61,16 @@ function resolveDocumentPath(url) {
 }
 
 // Throw if this can't be a redirect from-URL.
-function validateFromURL(url) {
+function validateFromURL(url, checkResolve = true) {
+  if (!url.startsWith("/")) {
+    throw new Error(`From-URL must start with a / was ${url}`);
+  }
+  if (!url.includes("/docs/")) {
+    throw new Error(`From-URL must contain '/docs/' was ${url}`);
+  }
+  if (!VALID_LOCALES_SET.has(url.split("/")[1])) {
+    throw new Error(`The locale prefix is not valid or wrong case was ${url}`);
+  }
   checkURLInvalidSymbols(url);
   // This is a circular dependency we should solve that in another way.
   validateURLLocale(url);
@@ -57,16 +78,22 @@ function validateFromURL(url) {
   if (path) {
     throw new Error(`From-URL resolves to a file (${path})`);
   }
-  const resolved = resolve(url);
-  if (resolved !== url) {
-    throw new Error(
-      `${url} is already matched as a redirect (to: '${resolved}')`
-    );
+  if (checkResolve) {
+    const resolved = resolve(url);
+    if (resolved !== url) {
+      throw new Error(
+        `${url} is already matched as a redirect (to: '${resolved}')`
+      );
+    }
   }
 }
 
 // Throw if this can't be a redirect to-URL.
-function validateToURL(url) {
+function validateToURL(url, checkResolve = true, checkPath = true) {
+  // Let's keep vanity urls to /en-US/ ...
+  if (isVanityRedirectURL(url)) {
+    return url;
+  }
   // If it's not external, it has to go to a valid document
   if (url.includes("://")) {
     // If this throws, conveniently the validator will do its job.
@@ -74,33 +101,51 @@ function validateToURL(url) {
     if (parsedURL.protocol !== "https:") {
       throw new Error("We only redirect to https://");
     }
-  } else {
+  } else if (url.startsWith("/")) {
     checkURLInvalidSymbols(url);
     validateURLLocale(url);
 
-    // Can't point to something that redirects to something
-    const resolved = resolve(url);
-    if (resolved !== url) {
-      throw new Error(
-        `${url} is already matched as a redirect (to: '${resolved}')`
-      );
+    if (checkResolve) {
+      // Can't point to something that redirects to something
+      const resolved = resolve(url);
+      if (resolved !== url) {
+        throw new Error(
+          `${url} is already matched as a redirect (to: '${resolved}')`
+        );
+      }
     }
-    const path = resolveDocumentPath(url);
-    if (!path) {
-      throw new Error(`To-URL has to resolve to a file (${path})`);
+    if (checkPath) {
+      const path = resolveDocumentPath(url);
+      if (!path) {
+        throw new Error(`To-URL has to resolve to a file (${url})`);
+      }
     }
+  } else {
+    throw new Error(`To-URL has to be external or start with / (${url})`);
   }
 }
 
 function validateURLLocale(url) {
   // Check that it's a valid document URL
-  const locale = url.split("/")[1];
-  if (!locale || url.split("/")[2] !== "docs") {
-    throw new Error("The URL is expected to be /$locale/docs/");
+  const [nothing, locale, docs] = url.split("/");
+  if (nothing || !locale || docs !== "docs") {
+    throw new Error(`The URL is expected to start with /$locale/docs/: ${url}`);
   }
   const validValues = [...VALID_LOCALES.values()];
   if (!validValues.includes(locale)) {
     throw new Error(`'${locale}' not in ${validValues}`);
+  }
+}
+
+function errorOnEncoded(paris) {
+  for (const [from, to] of paris) {
+    const [decodedFrom, decodedTo] = decodePair([from, to]);
+    if (decodedFrom !== from) {
+      throw new Error(`From URL must be decoded: ${from}`);
+    }
+    if (decodedTo !== to) {
+      throw new Error(`To URL must be decoded: ${to}`);
+    }
   }
 }
 
@@ -146,7 +191,28 @@ function removeOrphanedRedirects(pairs) {
   });
 }
 
-function add(locale, updatePairs, { fix = false } = {}) {
+function loadPairsFromFile(filePath, strict = true) {
+  const content = fs.readFileSync(filePath, "utf-8");
+  const pairs = content
+    .trim()
+    .split("\n")
+    // Skip the header line.
+    .slice(1)
+    .map((line) => line.trim().split(/\t+/));
+
+  if (strict) {
+    errorOnEncoded(pairs);
+    errorOnDuplicated(pairs);
+  }
+  validatePairs(pairs, strict);
+  return pairs;
+}
+
+function loadLocaleAndAdd(locale, updatePairs, { fix = false } = {}) {
+  errorOnEncoded(updatePairs);
+  errorOnDuplicated(updatePairs);
+  validatePairs(updatePairs);
+
   locale = locale.toLowerCase();
   let root = CONTENT_ROOT;
   if (locale !== "en-us") {
@@ -161,100 +227,69 @@ function add(locale, updatePairs, { fix = false } = {}) {
   const redirectsFilePath = path.join(root, locale, "_redirects.txt");
   const pairs = [];
   if (fs.existsSync(redirectsFilePath)) {
-    const content = fs.readFileSync(redirectsFilePath, "utf-8");
-    pairs.push(
-      ...content
-        .trim()
-        .split("\n")
-        // Skip the header line.
-        .slice(1)
-        .map((line) => line.trim().split(/\t+/))
-    );
+    // If we wanna fix we load relaxed, hence the !fix.
+    pairs.push(...loadPairsFromFile(redirectsFilePath, !fix));
   }
 
-  const decodedUpdatePairs = decodePairs(updatePairs);
-  const decodedPairs = decodePairs(pairs);
-
-  errorOnDuplicated(decodedPairs);
-  errorOnDuplicated(decodedUpdatePairs);
-
-  const cleanPairs = removeConflictingOldRedirects(
-    decodedPairs,
-    decodedUpdatePairs
-  );
-  cleanPairs.push(...decodedUpdatePairs);
+  const cleanPairs = removeConflictingOldRedirects(pairs, updatePairs);
+  cleanPairs.push(...updatePairs);
 
   let simplifiedPairs = shortCuts(cleanPairs);
   if (fix) {
     simplifiedPairs = removeOrphanedRedirects(simplifiedPairs);
   }
-  save(path.join(root, locale), simplifiedPairs);
+  validatePairs(simplifiedPairs);
+
+  return { pairs: simplifiedPairs, root, changed: simplifiedPairs == pairs };
+}
+
+function add(locale, updatePairs, { fix = false } = {}) {
+  const { pairs, root } = loadLocaleAndAdd(locale, updatePairs, { fix });
+  save(path.join(root, locale), pairs);
+}
+
+function validateLocale(locale, strict = false) {
+  // To validate strict we check if there is something to fix.
+  const { changed } = loadLocaleAndAdd(locale, [], { fix: strict });
+  if (changed) {
+    throw new Error(` _redirects.txt for ${locale} is flawed`);
+  }
+}
+
+function redirectFilePathForLocale(locale, throws = false) {
+  const makeFilePath = (root) =>
+    path.join(root, locale.toLowerCase(), "_redirects.txt");
+
+  const filePath = makeFilePath(CONTENT_ROOT);
+  if (fs.existsSync(filePath)) {
+    return filePath;
+  }
+  if (CONTENT_TRANSLATED_ROOT) {
+    const translatedFilePath = makeFilePath(CONTENT_TRANSLATED_ROOT);
+
+    if (fs.existsSync(translatedFilePath)) {
+      return translatedFilePath;
+    }
+  }
+  if (throws) {
+    throw new Error(`no _redirects file for ${locale}`);
+  }
+  return null;
 }
 
 // The module level cache
 const redirects = new Map();
 
-function load(files = null, verbose = false) {
-  if (!files) {
-    const localeFolders = fs
-      .readdirSync(CONTENT_ROOT)
-      .map((n) => path.join(CONTENT_ROOT, n))
-      .filter((filepath) => fs.statSync(filepath).isDirectory());
-    if (CONTENT_TRANSLATED_ROOT) {
-      const translatedLocaleFolders = fs
-        .readdirSync(CONTENT_TRANSLATED_ROOT)
-        .map((n) => path.join(CONTENT_TRANSLATED_ROOT, n))
-        .filter((filepath) => fs.statSync(filepath).isDirectory());
-      localeFolders.push(...translatedLocaleFolders);
-    }
-
-    files = localeFolders
-      .map((folder) => path.join(folder, "_redirects.txt"))
-      .filter((filePath) => fs.existsSync(filePath));
-  }
-
-  function throwError(message, lineNumber, line) {
-    throw new Error(`Invalid line: ${message} (line ${lineNumber}) '${line}'`);
-  }
-
-  const validLocales = new Set([...VALID_LOCALES.values()]);
+function load(locales = [...VALID_LOCALES.keys()], verbose = false) {
+  const files = locales
+    .map((locale) => redirectFilePathForLocale(locale))
+    .filter((f) => f !== null);
 
   for (const redirectsFilePath of files) {
     if (verbose) {
       console.log(`Checking ${redirectsFilePath}`);
     }
-    const content = fs.readFileSync(redirectsFilePath, "utf-8");
-    if (!content.endsWith("\n")) {
-      throw new Error(
-        `${redirectsFilePath} must have a trailing newline character.`
-      );
-    }
-    const pairs = new Map();
-    // Parse and collect all and throw errors on bad lines
-    content.split("\n").forEach((line, i) => {
-      if (!line.trim() || line.startsWith("#")) return;
-      const split = line.trim().split(/\t/);
-      if (split.length !== 2) {
-        throwError("Not two strings split by tab", i + 1, line);
-      }
-      const [from, to] = split;
-      if (!from.startsWith("/")) {
-        throwError("From-URL must start with a /", i + 1, line);
-      }
-      if (!from.includes("/docs/")) {
-        throwError("From-URL must contain '/docs/'", i + 1, line);
-      }
-      if (!validLocales.has(from.split("/")[1])) {
-        throwError(
-          `The locale prefix is not valid or wrong case '${
-            from.split("/")[1]
-          }'.`,
-          i + 1,
-          line
-        );
-      }
-      pairs.set(from.toLowerCase(), to);
-    });
+    const pairs = loadPairsFromFile(redirectsFilePath, false);
     // Now that all have been collected, transfer them to the `redirects` map
     // but also do invariance checking.
     for (const [from, to] of pairs) {
@@ -347,23 +382,26 @@ function shortCuts(pairs, throws = false) {
   return mappedPairs;
 }
 
+function decodePair([from, to]) {
+  const fromDecoded = decodePath(from);
+  let toDecoded;
+  if (to.startsWith("/")) {
+    toDecoded = decodePath(to);
+  } else {
+    toDecoded = decodeURI(to);
+  }
+  return [fromDecoded, toDecoded];
+}
+
 function decodePairs(pairs) {
-  return pairs.map(([from, to]) => {
-    const fromDecoded = decodePath(from);
-    let toDecoded;
-    if (to.startsWith("/")) {
-      toDecoded = decodePath(to);
-    } else {
-      toDecoded = decodeURI(to);
-    }
-    if (
-      checkURLInvalidSymbols(from) ||
-      (to.startsWith("/") && checkURLInvalidSymbols(to))
-    ) {
-      throw new Error(`${from}\t${to} contains invalid symbols`);
-    }
-    return [fromDecoded, toDecoded];
-  });
+  return pairs.map((pair) => decodePair(pair));
+}
+
+function validatePairs(pairs, checkExists = true) {
+  for (const [from, to] of pairs) {
+    validateFromURL(from, false);
+    validateToURL(to, false, checkExists);
+  }
 }
 
 function save(localeFolder, pairs) {
@@ -382,6 +420,7 @@ module.exports = {
   load,
   validateFromURL,
   validateToURL,
+  validateLocale,
 
   testing: {
     shortCuts,

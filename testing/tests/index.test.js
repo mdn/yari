@@ -1123,3 +1123,38 @@ test("deprecated macros are fixable", () => {
     4
   );
 });
+
+test("external links always get the right attributes", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "externallinks"
+  );
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  // 4 links on that page and we'll do 2 assertions for each one, plus
+  // 1 for the extra sanity check.
+  expect.assertions(4 * 2 + 1);
+  expect($("article a").length).toBe(4); // sanity check
+  $("article a").each((i, element) => {
+    const $a = $(element);
+    expect($a.hasClass("external")).toBe(true);
+    expect(
+      $a
+        .attr("rel")
+        .split(" ")
+        .filter((rel) => rel === "noopener").length
+    ).toBe(1);
+  });
+});
+
+test("home page should have a /index.json file with feedEntries", () => {
+  const builtFolder = path.join(buildRoot, "en-us");
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { feedEntries } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(feedEntries.length).toBeGreaterThan(0);
+});

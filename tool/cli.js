@@ -51,11 +51,43 @@ program
   .name("tool")
   .version("0.0.0")
   .disableGlobalOption("--silent")
-  .command("validate-redirects", "Check the _redirects.txt file(s)")
+  .cast(false)
+  .command("validate-redirects", "Try loading the _redirects.txt file(s)")
+  .argument("[locales...]", "Locale", {
+    default: [...VALID_LOCALES.keys()],
+    validator: [...VALID_LOCALES.keys()],
+  })
+  .option("--strict", "Strict validation")
   .action(
-    tryOrExit(({ logger }) => {
-      Redirect.load(null, true);
-      logger.info(chalk.green("🍾 All is well in the world of redirects 🥂"));
+    tryOrExit(({ args, options, logger }) => {
+      const { locales } = args;
+      const { strict } = options;
+      let fine = true;
+      if (strict) {
+        for (const locale of locales) {
+          try {
+            Redirect.validateLocale(locale);
+            logger.info(chalk.green(`✓ redirects for ${locale} looking good!`));
+          } catch (e) {
+            logger.info(
+              chalk.red(`_redirects.txt for ${locale} is causing issues: ${e}`)
+            );
+            fine = false;
+          }
+        }
+      } else {
+        try {
+          Redirect.load(locales, true);
+        } catch (e) {
+          logger.info(chalk.red(`Unable to load redirects: ${e}`));
+          fine = false;
+        }
+      }
+      if (fine) {
+        logger.info(chalk.green("🍾 All is well in the world of redirects 🥂"));
+      } else {
+        throw new Error("🔥 Errors loading redirects 🔥");
+      }
     })
   )
 
@@ -77,13 +109,13 @@ program
   .command("add-redirect", "Add a new redirect")
   .argument("<from>", "From-URL", {
     validator: (value) => {
-      Redirect.validateFromURL(value);
+      Redirect.validateFromURL(value, false);
       return value;
     },
   })
   .argument("<to>", "To-URL", {
     validator: (value) => {
-      Redirect.validateToURL(value);
+      Redirect.validateToURL(value, false);
       return value;
     },
   })
@@ -97,16 +129,16 @@ program
   )
 
   .command("fix-redirects", "Consolidate/fix redirects")
-  .argument("<locale...>", "Locale", {
+  .argument("<locales...>", "Locale", {
     default: [DEFAULT_LOCALE],
     validator: [...VALID_LOCALES.values(), ...VALID_LOCALES.keys()],
   })
   .action(
     tryOrExit(({ args, logger }) => {
-      const { locale } = args;
-      for (const l of locale) {
-        Redirect.add(l.toLowerCase(), [], { fix: true });
-        logger.info(chalk.green(`Fixed ${l}`));
+      const { locales } = args;
+      for (const locale of locales) {
+        Redirect.add(locale.toLowerCase(), [], { fix: true });
+        logger.info(chalk.green(`Fixed ${locale}`));
       }
     })
   )
