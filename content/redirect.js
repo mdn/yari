@@ -192,7 +192,7 @@ function removeOrphanedRedirects(pairs) {
   });
 }
 
-function loadPairsFromFile(filePath, strict = true) {
+function loadPairsFromFile(filePath, strict = true, validate = true) {
   const content = fs.readFileSync(filePath, "utf-8");
   const pairs = content
     .trim()
@@ -205,7 +205,9 @@ function loadPairsFromFile(filePath, strict = true) {
     errorOnEncoded(pairs);
     errorOnDuplicated(pairs);
   }
-  validatePairs(pairs, strict);
+  if (validate) {
+    validatePairs(pairs, strict);
+  }
   return pairs;
 }
 
@@ -229,7 +231,7 @@ function loadLocaleAndAdd(locale, updatePairs, { fix = false } = {}) {
   const pairs = [];
   if (fs.existsSync(redirectsFilePath)) {
     // If we wanna fix we load relaxed, hence the !fix.
-    pairs.push(...loadPairsFromFile(redirectsFilePath, !fix));
+    pairs.push(...loadPairsFromFile(redirectsFilePath, !fix, false));
   }
 
   const cleanPairs = removeConflictingOldRedirects(pairs, updatePairs);
@@ -239,7 +241,6 @@ function loadLocaleAndAdd(locale, updatePairs, { fix = false } = {}) {
   if (fix) {
     simplifiedPairs = removeOrphanedRedirects(simplifiedPairs);
   }
-  validatePairs(simplifiedPairs);
 
   return { pairs: simplifiedPairs, root, changed: simplifiedPairs == pairs };
 }
