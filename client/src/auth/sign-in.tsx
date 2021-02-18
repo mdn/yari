@@ -25,6 +25,11 @@ export default function SignInApp() {
   }
   sp.set("next", next);
 
+  // Temporary just long as Kuma still needs to support sign-up both as
+  // Kuma front-end (HTML) Yari (redirects).
+  // Delete this line once Kuma ONLY deals with Yari in the signup view.
+  sp.set("yarisignup", "1");
+
   return (
     <div>
       <h1>Sign in</h1>

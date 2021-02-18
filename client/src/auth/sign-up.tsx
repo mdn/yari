@@ -22,6 +22,25 @@ export default function SignUpApp() {
       </div>
     );
   }
+
+  if (searchParams.get("errors")) {
+    console.warn("Errors", searchParams.get("errors"));
+    const errors = JSON.parse(searchParams.get("errors") || "{}");
+    return (
+      <div>
+        <h2>Sign-up errors</h2>
+        <p>An error occurred trying to sign you up.</p>
+        <pre>{JSON.stringify(errors, null, 2)}</pre>
+        <p>
+          <a href={`/${locale}/signin`}>
+            Try starting over the sign-in process
+          </a>
+          .
+        </p>
+      </div>
+    );
+  }
+
   const csrfMiddlewareToken = searchParams.get("csrfmiddlewaretoken");
   if (!csrfMiddlewareToken) {
     return (
@@ -37,6 +56,7 @@ export default function SignUpApp() {
       </div>
     );
   }
+
   let prefix = "";
   // When doing local development with Yari, the link to authenticate in Kuma
   // needs to be absolute. And we also need to send the absolute URL as the
@@ -52,8 +72,12 @@ export default function SignUpApp() {
 
   return (
     <form action={signupURL} method="post">
+      {/* This is just a temporary thing needed to tell Kuma's signup view
+          that the request came from (the jamstack) Yari and not the existing
+          Kuma front-end. Then Kuma knows to certainly only respond with redirects. */}
+      <input type="hidden" name="yarisignup" value="1" />
       {/* We can delete this once the Kuma backend is 100% just a backend. */}
-      <input type="hidden" name="website" value="" />
+      {/* <input type="hidden" name="website" value="" /> */}
 
       <h1>Sign up</h1>
       {searchParams.get("next") && (
@@ -68,10 +92,8 @@ export default function SignUpApp() {
         name="csrfmiddlewaretoken"
         value={csrfMiddlewareToken}
       />
-      <DisplayUserDetails
-        email={searchParams.get("email_address") || ""}
-        details={searchParams.get("user_details") || ""}
-      />
+      <DisplaySignupProvider provider={searchParams.get("provider") || ""} />
+      <DisplayUserDetails details={searchParams.get("user_details") || ""} />
 
       <label htmlFor="id_terms">
         <input
@@ -109,19 +131,30 @@ export default function SignUpApp() {
   );
 }
 
-interface UserDetails {
-  name?: string;
-  picture?: string;
+function DisplaySignupProvider({ provider }: { provider: string }) {
+  if (!provider) {
+    // Exit early because there's nothing useful we can say
+    return null;
+  }
+  let providerVerbose = provider.charAt(0).toUpperCase() + provider.slice(1);
+  if (provider === "github") {
+    providerVerbose = "GitHub";
+  }
+  return (
+    <p>
+      You are signing in to MDN Web Docs with <b>{providerVerbose}</b>.
+    </p>
+  );
 }
 
-function DisplayUserDetails({
-  email,
-  details,
-}: {
-  email: string;
-  details: string;
-}) {
-  if (!email && !details) {
+interface UserDetails {
+  name?: string;
+  avatar_url?: string;
+}
+
+function DisplayUserDetails({ details }: { details: string }) {
+  if (!details) {
+    // Exit early because there's nothing useful we can say
     return null;
   }
 
@@ -130,15 +163,14 @@ function DisplayUserDetails({
   return (
     <div className="user-details">
       <p>
-        {userDetails.picture && (
+        {userDetails.avatar_url && (
           <img
-            src={userDetails.picture}
+            src={userDetails.avatar_url}
             className="avatar"
-            alt="User profile picture"
+            alt="User profile avatar_url"
           />
         )}
 
-        <b>{email}</b>
         {userDetails.name && ` as ${userDetails.name}`}
       </p>
     </div>
