@@ -18,6 +18,7 @@ import {
   BadBCDQueryFlaw,
   BadPreTagFlaw,
   SectioningFlaw,
+  HeadingLinksFlaw,
 } from "../types";
 import "./flaws.scss";
 
@@ -192,8 +193,7 @@ function Flaws({
   const fixableFlaws = Object.values(doc.flaws)
     .map((flaws) => {
       return flaws.filter(
-        (flaw) =>
-          !flaw.fixed && (flaw.suggestion || flaw.fixable || flaw.externalImage)
+        (flaw) => !flaw.fixed && (flaw.fixable || flaw.externalImage)
       );
     })
     .flat();
@@ -261,6 +261,14 @@ function Flaws({
                 key="image_widths"
                 sourceFolder={doc.source.folder}
                 flaws={doc.flaws.image_widths}
+              />
+            );
+          case "heading_links":
+            return (
+              <HeadingLinks
+                key="heading_links"
+                sourceFolder={doc.source.folder}
+                flaws={doc.flaws.heading_links}
               />
             );
           case "sectioning":
@@ -876,6 +884,90 @@ function ImageWidths({
                     </i>
                   )}
                 </span>
+              )}{" "}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function HeadingLinks({
+  sourceFolder,
+  flaws,
+}: {
+  sourceFolder: string;
+  flaws: HeadingLinksFlaw[];
+}) {
+  // XXX rewrite to a hook
+  const [opening, setOpening] = React.useState<string | null>(null);
+  useEffect(() => {
+    let unsetOpeningTimer: ReturnType<typeof setTimeout>;
+    if (opening) {
+      unsetOpeningTimer = setTimeout(() => {
+        setOpening(null);
+      }, 3000);
+    }
+    return () => {
+      if (unsetOpeningTimer) {
+        clearTimeout(unsetOpeningTimer);
+      }
+    };
+  }, [opening]);
+
+  const filepath = sourceFolder + "/index.html";
+
+  function openInEditor(key: string, line: number, column: number) {
+    const sp = new URLSearchParams();
+    sp.set("filepath", filepath);
+    sp.set("line", `${line}`);
+    sp.set("column", `${column}`);
+    console.log(
+      `Going to try to open ${filepath}:${line}:${column} in your editor`
+    );
+    setOpening(key);
+    fetch(`/_open?${sp.toString()}`).catch((err) => {
+      console.warn(`Error trying to _open?${sp.toString()}:`, err);
+    });
+  }
+
+  return (
+    <div className="flaw flaw__heading_links">
+      <h3>{humanizeFlawName("heading_links")}</h3>
+      <ul>
+        {flaws.map((flaw, i) => {
+          const key = flaw.id;
+          return (
+            <li key={key}>
+              <b>{flaw.explanation}</b>{" "}
+              {flaw.line && flaw.column && (
+                <a
+                  href={`file://${filepath}`}
+                  onClick={(event: React.MouseEvent) => {
+                    event.preventDefault();
+                    openInEditor(
+                      key,
+                      flaw.line as number,
+                      flaw.column as number
+                    );
+                  }}
+                  title="Click to open in your editor"
+                >
+                  line {flaw.line}:{flaw.column}
+                </a>
+              )}{" "}
+              {flaw.fixable && <FixableFlawBadge />} <br />
+              <b>HTML:</b> <code>{flaw.html}</code> <br />
+              {flaw.suggestion && flaw.before ? (
+                <span>
+                  <b>Suggestion:</b>{" "}
+                  <ShowDiff before={flaw.before} after={flaw.suggestion} />
+                </span>
+              ) : (
+                <i>
+                  All <code>&lt;a&gt;</code> tags need to be removed
+                </i>
               )}{" "}
             </li>
           );
