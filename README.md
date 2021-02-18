@@ -13,21 +13,29 @@ README instead.
 
 Before you can start working with Yari, you need to:
 
-1. Install [git](https://git-scm.com/),
-   [Node.js](https://nodejs.org) (>= 12.0.0), and [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
-2. [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
-   the MDN [content](https://github.com/mdn/content) and [yari](https://github.com/mdn/content)
-   repositories using the Fork button on GitHub.
-3. Clone the forked repositories to your computer using the following commands
-   (replace `[your account]` with the account you forked the repositories to):
+<!-- Peterbe, Feb 2021: There appears to be a bug in Prettier for .md files
+    that forces in a second (extra) whitespace after the `1.` here.
+    That breaks `markdownlint` *and* `prettier --check`. Annoying.
+    So for now let's make an exception. -->
+<!-- markdownlint-disable list-marker-space -->
 
-             ```
-             git clone https://github.com/[your_account]/content.git
-             git clone https://github.com/[your_account]/yari.git
-             ```
+1.  Install [git](https://git-scm.com/),
+    [Node.js](https://nodejs.org) (>= 12.0.0), and [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
+
+1.  [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
+    the MDN [content](https://github.com/mdn/content) and [yari](https://github.com/mdn/content)
+    repositories using the Fork button on GitHub.
+
+1.  Clone the forked repositories to your computer using the following commands
+    (replace `[your account]` with the account you forked the repositories to):
+
+            git clone https://github.com/[your_account]/content.git
+            git clone https://github.com/[your_account]/yari.git
 
         Take a note of the file path to the location where you've cloned that
         repo before moving on.
+
+    <!-- markdownlint-enable list-marker-space -->
 
 To run Yari locally, you'll first need to install its dependencies and build the
 app locally. Do this like so:
