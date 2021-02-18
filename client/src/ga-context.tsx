@@ -5,7 +5,7 @@ import { DEBUG_GOOGLE_ANALYTICS } from "./constants";
 
 export type GAFunction = (...any) => void;
 
-export const CATEGORY_MONTHLY_PAYMENTS = "monthly payments";
+export const CATEGORY_LEARNING_SURVEY = "learning web development";
 
 const GA_SESSION_STORAGE_KEY = "ga";
 
@@ -45,8 +45,6 @@ declare global {
 function ga(...args) {
   if (typeof window === "object" && typeof window.ga === "function") {
     window.ga(...args);
-  } else {
-    console.debug("analytics (not sent)", ...args);
   }
 }
 

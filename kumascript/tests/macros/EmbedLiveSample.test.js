@@ -3,6 +3,10 @@
  */
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
+// This needs to match what the equivalent is inside the EmbedLiveSample.ejs file.
+// Duplicating it here to avoid hardcoding its number in multiple places.
+const MIN_HEIGHT = 60;
+
 describeMacro("EmbedLiveSample", function () {
   beforeEachMacro(function (macro) {
     macro.ctx.env.live_samples = {
@@ -15,7 +19,7 @@ describeMacro("EmbedLiveSample", function () {
     return assert.eventually.equal(
       macro.call("Quotations"),
       '<iframe class="live-sample-frame sample-code-frame"' +
-        ' id="frame_Quotations" frameborder="0"' +
+        ' id="frame_Quotations"' +
         ' src="https://mdn.mozillademos.org/en-US/docs/Web/HTML/Element/figure/_samples_/Quotations">' +
         "</iframe>"
     );
@@ -26,7 +30,7 @@ describeMacro("EmbedLiveSample", function () {
     return assert.eventually.equal(
       macro.call("SVG_&lt;switch&gt;_example"),
       '<iframe class="live-sample-frame sample-code-frame"' +
-        ' id="frame_SVG_ltswitchgt_example" frameborder="0"' +
+        ' id="frame_SVG_ltswitchgt_example"' +
         ' src="https://mdn.mozillademos.org/en-US/docs/Web/SVG/Element/switch/_samples_/SVG_ltswitchgt_example">' +
         "</iframe>"
     );
@@ -36,7 +40,7 @@ describeMacro("EmbedLiveSample", function () {
     return assert.eventually.equal(
       macro.call("SVG_%3Cswitch%3E_example"),
       '<iframe class="live-sample-frame sample-code-frame"' +
-        ' id="frame_SVG_switch_example" frameborder="0"' +
+        ' id="frame_SVG_switch_example"' +
         ' src="https://mdn.mozillademos.org/en-US/docs/Web/SVG/Element/switch/_samples_/SVG_switch_example">' +
         "</iframe>"
     );
@@ -47,7 +51,7 @@ describeMacro("EmbedLiveSample", function () {
     return assert.eventually.equal(
       macro.call("Dégradés_linéaires_simples"),
       '<iframe class="live-sample-frame sample-code-frame"' +
-        ' id="frame_Dégradés_linéaires_simples" frameborder="0"' +
+        ' id="frame_Dégradés_linéaires_simples"' +
         ' src="https://mdn.mozillademos.org/fr/docs/Web/CSS/Utilisation_de_d%C3%A9grad%C3%A9s_CSS/_samples_/D%C3%A9grad%C3%A9s_lin%C3%A9aires_simples">' +
         "</iframe>"
     );
@@ -57,7 +61,7 @@ describeMacro("EmbedLiveSample", function () {
     return assert.eventually.equal(
       macro.call('"><script>alert("XSS");</script>'),
       '<iframe class="live-sample-frame sample-code-frame"' +
-        ' id="frame_scriptalertXSSscript" frameborder="0"' +
+        ' id="frame_scriptalertXSSscript"' +
         ' src="https://mdn.mozillademos.org/en-US/docs/Web/HTML/Element/figure/_samples_/scriptalertXSSscript">' +
         "</iframe>"
     );
@@ -67,7 +71,7 @@ describeMacro("EmbedLiveSample", function () {
     return assert.eventually.equal(
       macro.call("Example", "100%"),
       '<iframe class="live-sample-frame sample-code-frame"' +
-        ' id="frame_Example" frameborder="0"' +
+        ' id="frame_Example"' +
         ' width="100%"' +
         ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/border-top-width/_samples_/Example">' +
         "</iframe>"
@@ -78,7 +82,7 @@ describeMacro("EmbedLiveSample", function () {
     return assert.eventually.equal(
       macro.call("Example", '"><script>alert("XSS");</script>'),
       '<iframe class="live-sample-frame sample-code-frame"' +
-        ' id="frame_Example" frameborder="0"' +
+        ' id="frame_Example"' +
         ' width="&#34;&gt;&lt;script&gt;alert(&#34;XSS&#34;);&lt;/script&gt;"' +
         ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/border-top-width/_samples_/Example">' +
         "</iframe>"
@@ -89,7 +93,7 @@ describeMacro("EmbedLiveSample", function () {
     return assert.eventually.equal(
       macro.call("Images", "100%", 250),
       '<iframe class="live-sample-frame sample-code-frame"' +
-        ' id="frame_Images" frameborder="0"' +
+        ' id="frame_Images"' +
         ' width="100%" height="250"' +
         ' src="https://mdn.mozillademos.org/en-US/docs/Web/HTML/Element/figure/_samples_/Images">' +
         "</iframe>"
@@ -101,7 +105,7 @@ describeMacro("EmbedLiveSample", function () {
     return assert.eventually.equal(
       macro.call("增加关键帧", "100%", "250"),
       '<iframe class="live-sample-frame sample-code-frame"' +
-        ' id="frame_增加关键帧" frameborder="0"' +
+        ' id="frame_增加关键帧"' +
         ' width="100%" height="250"' +
         ' src="https://mdn.mozillademos.org/zh-CN/docs/Web/CSS/CSS_Animations/Using_CSS_animations/_samples_/%E5%A2%9E%E5%8A%A0%E5%85%B3%E9%94%AE%E5%B8%A7">' +
         "</iframe>"
@@ -116,7 +120,7 @@ describeMacro("EmbedLiveSample", function () {
         160
       ),
       '<iframe class="live-sample-frame sample-code-frame"' +
-        ' id="frame_一个模板骨架" frameborder="0"' +
+        ' id="frame_一个模板骨架"' +
         ' width="160" height="160"' +
         ' src="https://mdn.mozillademos.org/zh-CN/docs/Web/API/Canvas_API/Tutorial/Basic_usage/_samples_/%E4%B8%80%E4%B8%AA%E6%A8%A1%E6%9D%BF%E9%AA%A8%E6%9E%B6">' +
         "</iframe>"
@@ -127,7 +131,7 @@ describeMacro("EmbedLiveSample", function () {
     return assert.eventually.equal(
       macro.call("Images", "100%", '"><script>alert("XSS");</script>'),
       '<iframe class="live-sample-frame sample-code-frame"' +
-        ' id="frame_Images" frameborder="0"' +
+        ' id="frame_Images"' +
         ' width="100%" height="&#34;&gt;&lt;script&gt;alert(&#34;XSS&#34;);&lt;/script&gt;"' +
         ' src="https://mdn.mozillademos.org/en-US/docs/Web/HTML/Element/figure/_samples_/Images">' +
         "</iframe>"
@@ -138,8 +142,8 @@ describeMacro("EmbedLiveSample", function () {
     return assert.eventually.equal(
       macro.call("Adding_quotation_marks", "500", "50", ""),
       '<iframe class="live-sample-frame sample-code-frame"' +
-        ' id="frame_Adding_quotation_marks" frameborder="0"' +
-        ' width="500" height="50"' +
+        ' id="frame_Adding_quotation_marks"' +
+        ` width="500" height="${MIN_HEIGHT}"` +
         ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/::before/_samples_/Adding_quotation_marks">' +
         "</iframe>"
     );
@@ -161,7 +165,7 @@ describeMacro("EmbedLiveSample", function () {
         '<img alt="" class="internal" src="/files/722/SVG_Linear_Gradient_Example.png" />' +
         "</td><td>" +
         '<iframe class="live-sample-frame sample-code-frame" ' +
-        'id="frame_SVGLinearGradient" frameborder="0"' +
+        'id="frame_SVGLinearGradient"' +
         ' width="120" height="240"' +
         ' src="https://mdn.mozillademos.org/en-US/docs/Web/SVG/Tutorial/Gradients/_samples_/SVGLinearGradient">' +
         "</iframe></td></tr></tbody></table>"
@@ -186,7 +190,7 @@ describeMacro("EmbedLiveSample", function () {
           '<img alt="" class="internal" src="&#34;&gt;&lt;script&gt;alert(&#34;XSS&#34;);&lt;/script&gt;" />' +
           "</td><td>" +
           '<iframe class="live-sample-frame sample-code-frame" ' +
-          'id="frame_SVGLinearGradient" frameborder="0"' +
+          'id="frame_SVGLinearGradient"' +
           ' width="120" height="240"' +
           ' src="https://mdn.mozillademos.org/en-US/docs/Web/SVG/Tutorial/Gradients/_samples_/SVGLinearGradient">' +
           "</iframe></td></tr></tbody></table>"
@@ -195,7 +199,7 @@ describeMacro("EmbedLiveSample", function () {
   );
   const same_slug_iframe =
     '<iframe class="live-sample-frame sample-code-frame"' +
-    ' id="frame_Examples" frameborder="0"' +
+    ' id="frame_Examples"' +
     ' width="700px" height="700px"' +
     ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/flex-wrap/_samples_/Examples">' +
     "</iframe>";
@@ -221,7 +225,7 @@ describeMacro("EmbedLiveSample", function () {
     return assert.eventually.equal(
       macro.call("Event delegation", "", "", "", "Web/Events/blur"),
       '<iframe class="live-sample-frame sample-code-frame"' +
-        ' id="frame_Event_delegation" frameborder="0"' +
+        ' id="frame_Event_delegation"' +
         ' src="https://mdn.mozillademos.org/en-US/docs/Web/Events/blur/_samples_/Event_delegation">' +
         "</iframe>"
     );
@@ -252,7 +256,7 @@ describeMacro("EmbedLiveSample", function () {
           '"><script>alert("XSS");</script>'
         ),
         '<iframe class="live-sample-frame sample-code-frame"' +
-          ' id="frame_Event_delegation" frameborder="0"' +
+          ' id="frame_Event_delegation"' +
           ' src="https://mdn.mozillademos.org/en-US/docs/%22%3E%3Cscript%3Ealert(%22XSS%22);%3C/script%3E/_samples_/Event_delegation">' +
           "</iframe>"
       );
@@ -263,8 +267,8 @@ describeMacro("EmbedLiveSample", function () {
     return assert.eventually.equal(
       macro.call("sampleNone", 100, 50, "", "", "nobutton"),
       '<iframe class="live-sample-frame nobutton"' +
-        ' id="frame_sampleNone" frameborder="0"' +
-        ' width="100" height="50"' +
+        ' id="frame_sampleNone"' +
+        ` width="100" height="${MIN_HEIGHT}"` +
         ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/-moz-appearance/_samples_/sampleNone">' +
         "</iframe>"
     );
@@ -283,8 +287,8 @@ describeMacro("EmbedLiveSample", function () {
           '"><script>alert("XSS");</script>'
         ),
         '<iframe class="live-sample-frame &#34;&gt;&lt;script&gt;alert(&#34;XSS&#34;);&lt;/script&gt;"' +
-          ' id="frame_sampleNone" frameborder="0"' +
-          ' width="100" height="50"' +
+          ' id="frame_sampleNone"' +
+          ` width="100" height="${MIN_HEIGHT}"` +
           ' src="https://mdn.mozillademos.org/en-US/docs/Web/CSS/-moz-appearance/_samples_/sampleNone">' +
           "</iframe>"
       );
@@ -305,7 +309,7 @@ describeMacro("EmbedLiveSample", function () {
           "video; microphone"
         ),
         '<iframe class="live-sample-frame sample-code-frame"' +
-          ' id="frame_Example_Constraint_exerciser" frameborder="0"' +
+          ' id="frame_Example_Constraint_exerciser"' +
           ' width="650" height="800"' +
           ' src="https://mdn.mozillademos.org/en-US/docs/Web/API/Media_Streams_API/Constraints/_samples_/Example_Constraint_exerciser"' +
           ' allow="video; microphone">' +
@@ -328,7 +332,7 @@ describeMacro("EmbedLiveSample", function () {
           '"><script>alert("XSS");</script>'
         ),
         '<iframe class="live-sample-frame sample-code-frame"' +
-          ' id="frame_Example_Constraint_exerciser" frameborder="0"' +
+          ' id="frame_Example_Constraint_exerciser"' +
           ' width="650" height="800"' +
           ' src="https://mdn.mozillademos.org/en-US/docs/Web/API/Media_Streams_API/Constraints/_samples_/Example_Constraint_exerciser"' +
           ' allow="&#34;&gt;&lt;script&gt;alert(&#34;XSS&#34;);&lt;/script&gt;">' +

@@ -45,7 +45,7 @@ function normalizeBCDURLs(doc, options) {
     // The `mdn_url` field in BCD data is always like this:
     // https://developer.mozilla.org/docs/Web/API/MediaTrackSettings/width
     // So to get the appropriate slug, in Yari, we have to assume a locale.
-    let slug = u.pathname;
+    const slug = u.pathname;
     if (slug.startsWith("/docs/")) {
       // Important! For now, to make this a slug we can understand we
       // have to have a locale and we pick `en-US` as the default.

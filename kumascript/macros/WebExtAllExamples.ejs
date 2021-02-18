@@ -42,11 +42,11 @@ function writeJavaScriptAPIs(apisJSON) {
 }
 
 function writeAllExamples(examples) {
-  let output = "<table class=\"standard-table fullwidth-table\">";
+  let output = `<table class="standard-table fullwidth-table">`;
   output += `<tr>
                <th>${s_name}</th>
                <th>${s_desc}</th>
-               <th style=\"width: 40%\">${s_javascript_apis}</th>
+               <th style="width: 40%">${s_javascript_apis}</th>
             </tr>`;
 
   for (let example of examples) {

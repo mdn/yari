@@ -6,7 +6,7 @@ const { setDefaultOptions } = require("expect-puppeteer");
 setDefaultOptions({ timeout: 1500 });
 
 function testURL(pathname = "/") {
-  return "http://localhost:5000" + pathname;
+  return `http://localhost:5000${pathname}`;
 }
 
 describe("Basic viewing of functional pages", () => {
@@ -227,5 +227,15 @@ describe("Basic viewing of functional pages", () => {
       text: "<foo>: A test tag",
       href: "/en-US/docs/Web/Foo",
     });
+  });
+
+  it("should give the home page and see Hacks blog posts", async () => {
+    await page.goto(testURL("/en-US/"));
+    await expect(page).toMatch("Resources for developers, by developers.");
+    await expect(page).toMatch("Hacks Blog");
+
+    // One home page for every built locale
+    await page.goto(testURL("/fr/"));
+    await expect(page).toMatch("Resources for developers, by developers.");
   });
 });

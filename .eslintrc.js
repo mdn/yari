@@ -29,7 +29,7 @@ module.exports = {
     node: {
       allowModules: ["expect-puppeteer"],
       resolvePaths: [__dirname],
-      tryExtensions: [".js", ".json", ".node"],
+      tryExtensions: [".js", ".json", ".node", ".tsx", ".ts"],
     },
   },
   overrides: [
@@ -38,6 +38,28 @@ module.exports = {
       globals: {
         page: "readonly",
         document: "readonly",
+      },
+    },
+    {
+      files: ["**/cli.js"],
+      rules: {
+        "node/shebang": 0,
+        "no-process-exit": 0,
+      },
+    },
+    {
+      files: ["ssr/**/*.js"],
+      parserOptions: {
+        sourceType: "module",
+      },
+      rules: {
+        "node/no-unsupported-features/es-syntax": [
+          "error",
+          {
+            ignores: ["modules"],
+          },
+        ],
+        "node/no-unpublished-import": "off",
       },
     },
   ],

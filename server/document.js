@@ -66,7 +66,7 @@ router.get("/", withDocument, (req, res) => {
 router.put("/", withDocument, async (req, res) => {
   const { rawHTML, metadata } = req.body;
   if (metadata.title && rawHTML) {
-    Document.update(req.document.url, rawHTML.trim() + "\n", metadata);
+    Document.update(req.document.url, `${rawHTML.trim()}\n`, metadata);
   }
   res.sendStatus(200);
 });

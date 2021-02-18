@@ -4,7 +4,7 @@ const path = require("path");
 const chalk = require("chalk");
 const express = require("express");
 const send = require("send");
-const proxy = require("express-http-proxy");
+const { createProxyMiddleware } = require("http-proxy-middleware");
 const cookieParser = require("cookie-parser");
 const openEditor = require("open-editor");
 
@@ -44,10 +44,15 @@ app.use(
   // on `.json` files on disk or we proxy the requests to Kuma.
   FAKE_V1_API
     ? fakeV1APIRouter
-    : proxy(PROXY_HOSTNAME, {
-        // More options are available on
-        // https://www.npmjs.com/package/express-http-proxy#options
-        proxyReqPathResolver: (req) => "/api/v1" + req.url,
+    : createProxyMiddleware({
+        target: `${
+          ["developer.mozilla.org", "developer.allizom.org"].includes(
+            PROXY_HOSTNAME
+          )
+            ? "https://"
+            : "http://"
+        }${PROXY_HOSTNAME}`,
+        changeOrigin: true,
       })
 );
 
@@ -154,9 +159,8 @@ app.get("/*", async (req, res) => {
       // get a 403 Forbidden.
       // See https://github.com/mdn/yari/issues/1297
       return send(req, path.resolve(filePath)).pipe(res);
-    } else {
-      return res.status(404).send("File not found on disk");
     }
+    return res.status(404).send("File not found on disk");
   }
 
   let lookupURL = decodeURI(req.url);

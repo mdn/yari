@@ -35,8 +35,8 @@ describe("Templates class", () => {
   });
 
   it("creates a macros map", () => {
-    let directory = dir("macros");
-    let macros = new Templates(directory);
+    const directory = dir("macros");
+    const macros = new Templates(directory);
     expect(macros.getTemplateMap()).toEqual(
       new Map([
         ["test1", path.resolve(directory, "test1.ejs")],
@@ -47,20 +47,20 @@ describe("Templates class", () => {
   });
 
   it("can render macros", async () => {
-    let macros = new Templates(dir("macros"));
+    const macros = new Templates(dir("macros"));
 
-    let result1 = await macros.render("test1", {});
+    const result1 = await macros.render("test1", {});
     expect(result1).toEqual("1");
 
-    let result2 = await macros.render("test2", { n: 2 });
+    const result2 = await macros.render("test2", { n: 2 });
     expect(result2).toEqual("3");
   });
 
   it("macros can use await", async () => {
-    let macros = new Templates(dir("macros"));
+    const macros = new Templates(dir("macros"));
 
-    let result = await macros.render("async", {
-      async_adder: function (n) {
+    const result = await macros.render("async", {
+      async_adder(n) {
         return new Promise((resolve) => {
           setTimeout(() => resolve(n + 1));
         });
@@ -70,8 +70,8 @@ describe("Templates class", () => {
   });
 
   it("macro arguments can be inherited", async () => {
-    let macros = new Templates(dir("macros"));
-    let result = await macros.render("test2", Object.create({ n: 2 }));
+    const macros = new Templates(dir("macros"));
+    const result = await macros.render("test2", Object.create({ n: 2 }));
     expect(result).toEqual("3");
   });
 
@@ -100,11 +100,11 @@ describe("Templates class", () => {
       const directory = dir("macros");
       const macros = new Templates(directory);
 
-      let result1 = await macros.render("test1");
+      const result1 = await macros.render("test1");
       expect(result1).toBe(path.resolve(directory, "test1.ejs"));
       expect(mockLoader.mock.calls.length).toBe(1);
 
-      let result2 = await macros.render("test2");
+      const result2 = await macros.render("test2");
       expect(result2).toBe(path.resolve(directory, "Test2.ejs"));
       expect(mockLoader.mock.calls.length).toBe(2);
 

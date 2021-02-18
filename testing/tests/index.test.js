@@ -945,20 +945,19 @@ test("bcd table extraction followed by h3", () => {
   expect(doc.body[4].value.isH3).toBeTruthy();
 });
 
-test("bcd table extraction when overly nested is a flaw", () => {
+test("headers within non-root elements is a 'sectioning' flaw", () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
     "docs",
     "web",
-    "bcd_table_extraction",
-    "nested_divs"
+    "sectioning_headers"
   );
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.flaws.sectioning[0].explanation).toBe(
-    "2 'div.bc-data' elements found but deeply nested."
+    "Excess <h2> tag that is NOT at root-level (id='second', text='Second')"
   );
 });
 
@@ -1105,4 +1104,59 @@ test("headings with HTML should be rendered as HTML", () => {
   expect(section2.value.titleAsText).toBe(
     "You can use escaped HTML tags like <pre> still"
   );
+});
+
+test("deprecated macros are fixable", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "fixable_flaws",
+    "deprecated_macros"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.macros.length).toBe(4);
+  // All fixable and all a suggestion of ''
+  expect(doc.flaws.macros.filter((flaw) => flaw.fixable).length).toBe(4);
+  expect(doc.flaws.macros.filter((flaw) => flaw.suggestion === "").length).toBe(
+    4
+  );
+});
+
+test("external links always get the right attributes", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "externallinks"
+  );
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  // 4 links on that page and we'll do 2 assertions for each one, plus
+  // 1 for the extra sanity check.
+  expect.assertions(4 * 2 + 1);
+  expect($("article a").length).toBe(4); // sanity check
+  $("article a").each((i, element) => {
+    const $a = $(element);
+    expect($a.hasClass("external")).toBe(true);
+    expect(
+      $a
+        .attr("rel")
+        .split(" ")
+        .filter((rel) => rel === "noopener").length
+    ).toBe(1);
+  });
+});
+
+test("home page should have a /index.json file with feedEntries", () => {
+  const builtFolder = path.join(buildRoot, "en-us");
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { feedEntries } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(feedEntries.length).toBeGreaterThan(0);
 });

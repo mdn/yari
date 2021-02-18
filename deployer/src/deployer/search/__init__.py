@@ -147,6 +147,10 @@ def walk(root):
 def to_search(file):
     with open(file) as f:
         data = json.load(f)
+    if "doc" not in data:
+        # If the file we just opened isn't use for documents, it might be for
+        # other SPAs like the home page. Skip these.
+        return
     doc = data["doc"]
     locale, slug = doc["mdn_url"].split("/docs/", 1)
     if slug.endswith("/Index"):
@@ -156,6 +160,11 @@ def to_search(file):
         # elsewhere. Just skip these.
         # E.g. https://developer.allizom.org/en-US/docs/Web/API/Index
         # See also https://github.com/mdn/yari/issues/1786
+        return
+    if doc.get("noIndexing"):
+        # These are documents that we build but "don't want to be found". For
+        # example, they don't get included in the sitemaps or the search-index.json
+        # files.
         return
     locale = locale[1:]
     return Document(
@@ -207,7 +216,16 @@ def to_search(file):
         ),
         popularity=doc["popularity"],
         summary=doc["summary"],
-        slug=slug,
+        # Note! We're always lowercasing the 'slug'. This way we can search on it,
+        # still as a `keyword` index, but filtering by prefix.
+        # E.g. in kuma; ?slug_prefix=weB/Css
+        # But this means that a little bit of information is lost. However, when
+        # Yari displays search results, it doesn't use this `slug` value to
+        # make the URLs in the search results listings. It's using the `mdn_url`
+        # for that.
+        # But all of this means; remember to lowercase your `slug` before using
+        # it as a filter.
+        slug=slug.lower(),
         locale=locale.lower(),
     )
 
@@ -230,7 +248,7 @@ def html_strip(html):
     if not html:
         return ""
     tree = HTMLParser(html)
-    for tag in tree.css("div.warning, div.hidden"):
+    for tag in tree.css("div.warning, div.hidden, p.hidden"):
         tag.decompose()
     for tag in tree.css("div[style]"):
         style_value = tag.attributes["style"]

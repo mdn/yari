@@ -138,7 +138,7 @@ let typeInfo = {
 
 let operators = [
     {
-        regexp: /\#/g,
+        regexp: /#/g,
         title: mdn.localString({
             "en-US": "Hash mark: the entity is repeated one or several times, each occurence separated by a comma",
             "de": "Rautensymbol: Die Entität wird einmal oder mehrmals wiederholt, wobei jedes Vorkommen durch ein Komma getrennt wird"
@@ -160,7 +160,7 @@ let operators = [
         })
     },
     {
-        regexp: /[^\|](\|)[^\|]/g,
+        regexp: /[^|](\|)[^|]/g,
         title: mdn.localString({
             "en-US": "Single bar: exactly one of the entities must be present",
             "de"   : "Einfacher Balken: Genau eine der Entitäten muss angegeben werden"
@@ -193,7 +193,7 @@ let operators = [
         })
     },
     {
-        regexp: /([^\/])\*(?!\/)/g,
+        regexp: /([^/])\*(?!\/)/g,
         title: mdn.localString({
             "en-US": "Asterisk: the entity may occur zero, one or several times",
             "de"   : "Asterisk: Die Entität kann keinmal, einmal oder mehrmals vorkommen"
@@ -252,7 +252,7 @@ let operators = [
 async function buildLink(match, type) {
     var link = "/" + locale + "/docs/Web/CSS/";
     var title = "";
-    var propertyName = type.match(/\'(.+?)\'/);
+    var propertyName = type.match(/'(.+?)'/);
 
     // Handle property references like <'color'>
     if (propertyName) {
@@ -330,7 +330,7 @@ async function formatSyntax(rawSyntax) {
     });
     formattedSyntax = await string.asyncReplace(
         formattedSyntax,
-        /<([a-z0-9\(\)\'\-]+?)>/gi,
+        /<([a-z0-9()'-]+?)>/gi,
         buildLink
     );
 

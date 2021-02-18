@@ -22,7 +22,7 @@ const PREFERRED_LOCALE = {
 function getHrefLang(locale, otherLocales) {
   // In most cases, just return the language code, removing the country
   // code if present (so, for example, 'en-US' becomes 'en').
-  let hreflang = locale.split("-")[0];
+  const hreflang = locale.split("-")[0];
 
   // Suppose the locale is one that is ambiguous, we need to fall back on a
   // a preferred one. For example, if the document is available in 'zh-CN' and
@@ -48,9 +48,9 @@ function getHrefLang(locale, otherLocales) {
 const lazy = (creator) => {
   let res;
   let processed = false;
-  return () => {
+  return (...args) => {
     if (processed) return res;
-    res = creator.apply(this, arguments);
+    res = creator.apply(this, ...args);
     processed = true;
     return res;
   };
@@ -139,7 +139,7 @@ function serializeDocumentData(data) {
 
 export default function render(
   renderApp,
-  { doc = null, pageNotFound = false } = {}
+  { doc = null, pageNotFound = false, feedEntries = null } = {}
 ) {
   const buildHtml = readBuildHTML();
   const webfontURLs = extractWebFontURLs();
@@ -156,6 +156,11 @@ export default function render(
     pageTitle = `🤷🏽‍♀️ Page not found | ${pageTitle}`;
     const documentDataTag = `<script>window.__pageNotFound__ = true;</script>`;
     $("#root").after(documentDataTag);
+  } else if (feedEntries) {
+    const feedEntriesTag = `<script>window.__feedEntries__ = JSON.parse(${serializeDocumentData(
+      feedEntries
+    )});</script>`;
+    $("#root").after(feedEntriesTag);
   } else if (doc) {
     // Use the doc's title instead
     pageTitle = doc.pageTitle;
@@ -232,7 +237,6 @@ export default function render(
     }
   }
 
-  $("title").text(pageTitle);
   const $title = $("title");
   $title.text(pageTitle);
 

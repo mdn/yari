@@ -104,13 +104,15 @@ function injectLoadingLazyAttributes($) {
 }
 
 /**
- * For every `<a href="http...">` make it `<a href="http..." class="external">`
+ * For every `<a href="http...">` make it
+ * `<a href="http..." class="external" and rel="noopener">`
+ *
  *
  * @param {Cheerio document instance} $
  */
-function injectExternalLinkClasses($) {
-  $("a[href^=http]:not(.external)").each((i, a) => {
-    const $a = $(a);
+function postProcessExternalLinks($) {
+  $("a[href^=http]").each((i, element) => {
+    const $a = $(element);
     if ($a.attr("href").startsWith("https://developer.mozilla.org")) {
       // This should have been removed since it's considered a flaw.
       // But we haven't applied all fixable flaws yet and we still have to
@@ -119,6 +121,11 @@ function injectExternalLinkClasses($) {
       return;
     }
     $a.addClass("external");
+    const rel = ($a.attr("rel") || "").split(" ");
+    if (!rel.includes("noopener")) {
+      rel.push("noopener");
+      $a.attr("rel", rel.join(" "));
+    }
   });
 }
 
@@ -223,7 +230,7 @@ async function buildDocument(document, documentOptions = {}) {
     renderedHtml = document.rawHTML;
   } else {
     if (options.clearKumascriptRenderCache) {
-      renderKumascriptCache.clear();
+      renderKumascriptCache.reset();
     }
     try {
       [renderedHtml, flaws] = await kumascript.render(document.url);
@@ -286,15 +293,21 @@ async function buildDocument(document, documentOptions = {}) {
         // kumascript rendering, so we "beef it up" to have convenient
         // attributes needed.
         doc.flaws.macros = flaws.map((flaw, i) => {
-          const fixable =
+          let fixable = false;
+          let suggestion = null;
+          if (flaw.name === "MacroDeprecatedError") {
+            fixable = true;
+            suggestion = "";
+          } else if (
             flaw.name === "MacroRedirectedLinkError" &&
-            (!flaw.filepath || flaw.filepath === document.fileInfo.path);
-          const suggestion = fixable
-            ? flaw.macroSource.replace(
-                flaw.redirectInfo.current,
-                flaw.redirectInfo.suggested
-              )
-            : null;
+            (!flaw.filepath || flaw.filepath === document.fileInfo.path)
+          ) {
+            fixable = true;
+            suggestion = flaw.macroSource.replace(
+              flaw.redirectInfo.current,
+              flaw.redirectInfo.suggested
+            );
+          }
           const id = `macro${i}`;
           const explanation = flaw.error.message;
           return Object.assign({ id, fixable, suggestion, explanation }, flaw);
@@ -311,6 +324,17 @@ async function buildDocument(document, documentOptions = {}) {
   validateSlug(metadata.slug);
 
   const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
+
+  // Kumascript rendering can't know about FLAW_LEVELS when it's building,
+  // because injecting it there would cause a circular dependency.
+  // So, let's post-process the rendered HTML now afterwards.
+  // If the flaw levels for `macros` was to ignore, we can delete all the
+  // injected `data-flaw-src="..."` attributes.
+  if (options.flawLevels.get("macros") === FLAW_LEVELS.IGNORE) {
+    // This helps the final production built HTML since there `data-flaw-src`
+    // attributes on the HTML is useless.
+    $("[data-flaw-src]").removeAttr("data-flaw-src");
+  }
 
   // Remove those '<span class="alllinks"><a href="/en-US/docs/tag/Web">View All...</a></span>' links.
   // If a document has them, they don't make sense in a Yari world anyway.
@@ -365,11 +389,11 @@ async function buildDocument(document, documentOptions = {}) {
     throw error;
   }
 
-  // Now that live samples have been extracted, lets remove all the `pre` tags
-  // that were used for that. If we don't do this, the `pre` tags will be
+  // Now that live samples have been extracted, lets remove all the `div.hidden` tags
+  // that were used for that. If we don't do this, for example, the `pre` tags will be
   // syntax highligted, which is a waste because they're going to be invisible
   // anyway.
-  $("div.hidden pre").remove();
+  $("div.hidden").remove();
 
   // Apply syntax highlighting all <pre> tags.
   syntaxHighlight($, doc);
@@ -382,7 +406,7 @@ async function buildDocument(document, documentOptions = {}) {
   injectLoadingLazyAttributes($);
 
   // All external hyperlinks should have the `external` class name.
-  injectExternalLinkClasses($);
+  postProcessExternalLinks($);
 
   // All content that uses `<div class="in-page-callout">` needs to
   // become `<div class="callout">`
@@ -460,6 +484,10 @@ async function buildDocument(document, documentOptions = {}) {
   addBreadcrumbData(document.url, doc);
 
   doc.pageTitle = getPageTitle(doc);
+
+  // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
+  doc.noIndexing =
+    (doc.isArchive && !doc.isTranslated) || metadata.slug === "MDN/Kitchensink";
 
   return { doc, liveSamples, fileAttachments, bcdData };
 }

@@ -14,7 +14,7 @@ const {
 
 describe("render() function", () => {
   function fixture(name) {
-    return __dirname + "/fixtures/render/" + name;
+    return `${__dirname}/fixtures/render/${name}`;
   }
   function get(name) {
     return fs.readFileSync(fixture(name), "utf8");
@@ -27,26 +27,31 @@ describe("render() function", () => {
     expect(typeof render).toBe("function");
   });
 
-  let cases = ["testcase1", "testcase2", "testcase3", "testcase4"];
+  const cases = ["testcase1", "testcase2", "testcase3", "testcase4"];
   it.each(cases)("handles basic rendering %s", async (casedir) => {
-    let input = get(casedir + "/input");
-    let expected = get(casedir + "/output");
-    let templates = new Templates(fixture(casedir + "/macros"));
-    let [result, errors] = await render(input, {}, renderPrerequisiteFromURL, {
-      templates,
-    });
+    const input = get(`${casedir}/input`);
+    const expected = get(`${casedir}/output`);
+    const templates = new Templates(fixture(`${casedir}/macros`));
+    const [result, errors] = await render(
+      input,
+      {},
+      renderPrerequisiteFromURL,
+      {
+        templates,
+      }
+    );
     expect(result).toEqual(expected);
     expect(errors).toEqual([]);
   });
 
   it.each(["render", "remove"])("handles selective %s", async (mode) => {
-    let input = get("testcase2/input");
-    let expected = get(`testcase2/output_selective_${mode}`);
-    let templates = new Templates(fixture("testcase2/macros"));
-    let pageEnv = {
+    const input = get("testcase2/input");
+    const expected = get(`testcase2/output_selective_${mode}`);
+    const templates = new Templates(fixture("testcase2/macros"));
+    const pageEnv = {
       selective_mode: [mode, ["Multi:Line:Macro", "頁尾附註", "MacroWithJson"]],
     };
-    let [result, errors] = await render(
+    const [result, errors] = await render(
       input,
       pageEnv,
       renderPrerequisiteFromURL,
@@ -66,8 +71,8 @@ describe("render() function", () => {
       });
     }
 
-    let templates = new Templates(fixture("macros"));
-    let promise = render(
+    const templates = new Templates(fixture("macros"));
+    const promise = render(
       "{{asyncMacro}}",
       { after },
       renderPrerequisiteFromURL,
@@ -76,14 +81,14 @@ describe("render() function", () => {
       }
     );
     jest.runAllTimers();
-    let [result, errors] = await promise;
+    const [result, errors] = await promise;
     expect(errors.length).toBe(0);
     expect(result).toEqual("yay!");
   });
 
   it("exposes the per-page env object", async () => {
-    let templates = new Templates(fixture("macros"));
-    let [result, errors] = await render(
+    const templates = new Templates(fixture("macros"));
+    const [result, errors] = await render(
       "{{env}}",
       {
         x: 1,
@@ -98,9 +103,9 @@ describe("render() function", () => {
     expect(result).toEqual("3");
   });
 
-  let syntaxCases = ["syntax1", "syntax2", "syntax3", "syntax4"];
+  const syntaxCases = ["syntax1", "syntax2", "syntax3", "syntax4"];
   it.each(syntaxCases)("handles syntax errors: %s", async (fn) => {
-    let input = get(fn);
+    const input = get(fn);
     // null templates since we expect errors before we render any
     expect.assertions(4);
     try {
@@ -116,8 +121,8 @@ describe("render() function", () => {
   });
 
   it("handles undefined templates", async () => {
-    let templates = new Templates(fixture("macros"));
-    let [result, errors] = await render(
+    const templates = new Templates(fixture("macros"));
+    const [result, errors] = await render(
       "foo{{nope}}bar",
       {},
       renderPrerequisiteFromURL,
@@ -134,8 +139,8 @@ describe("render() function", () => {
   });
 
   it("handles compilation errors", async () => {
-    let templates = new Templates(fixture("macros"));
-    let [result, errors] = await render(
+    const templates = new Templates(fixture("macros"));
+    const [result, errors] = await render(
       "foo{{syntax}}bar",
       {},
       renderPrerequisiteFromURL,
@@ -152,8 +157,8 @@ describe("render() function", () => {
   });
 
   it("handles execution errors", async () => {
-    let templates = new Templates(fixture("macros"));
-    let [result, errors] = await render(
+    const templates = new Templates(fixture("macros"));
+    const [result, errors] = await render(
       "foo{{throw}}bar",
       {},
       renderPrerequisiteFromURL,
@@ -170,8 +175,8 @@ describe("render() function", () => {
   });
 
   it("handles undefined variables in macros", async () => {
-    let templates = new Templates(fixture("macros"));
-    let [result, errors] = await render(
+    const templates = new Templates(fixture("macros"));
+    const [result, errors] = await render(
       "foo{{ undefined() }}bar",
       {},
       renderPrerequisiteFromURL,
@@ -188,8 +193,8 @@ describe("render() function", () => {
   });
 
   it("handles multiple errors in one document", async () => {
-    let templates = new Templates(fixture("macros"));
-    let [result, errors] = await render(
+    const templates = new Templates(fixture("macros"));
+    const [result, errors] = await render(
       "foo{{nope(1)}}bar{{throw(2)}}baz{{syntax(3)}}",
       {},
       renderPrerequisiteFromURL,
@@ -205,8 +210,8 @@ describe("render() function", () => {
   });
 
   it("handles success plus errors in one document", async () => {
-    let templates = new Templates(fixture("macros"));
-    let [result, errors] = await render(
+    const templates = new Templates(fixture("macros"));
+    const [result, errors] = await render(
       'foo{{echo("!")}} bar{{ throw(1,2) }}baz{{echo("?")}}',
       {},
       renderPrerequisiteFromURL,
@@ -220,19 +225,24 @@ describe("render() function", () => {
   });
 
   it("macros can include other macros with template()", async () => {
-    let input = "foo {{bar}} baz";
-    let expected = "foo (included words) baz";
-    let templates = new Templates(fixture("macros"));
-    let [result, errors] = await render(input, {}, renderPrerequisiteFromURL, {
-      templates,
-    });
+    const input = "foo {{bar}} baz";
+    const expected = "foo (included words) baz";
+    const templates = new Templates(fixture("macros"));
+    const [result, errors] = await render(
+      input,
+      {},
+      renderPrerequisiteFromURL,
+      {
+        templates,
+      }
+    );
     expect(result).toEqual(expected);
     expect(errors).toEqual([]);
   });
 
   it("errors in included macros are reported", async () => {
-    let templates = new Templates(fixture("macros"));
-    let [result, errors] = await render(
+    const templates = new Templates(fixture("macros"));
+    const [result, errors] = await render(
       "foo{{includeError}}bar",
       {},
       renderPrerequisiteFromURL,

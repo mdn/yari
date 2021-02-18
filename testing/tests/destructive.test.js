@@ -39,7 +39,7 @@ describe("fixing flaws", () => {
   let tempdir;
   let tempBuildDir;
   let tempContentDir;
-  let filesBefore = new Map();
+  const filesBefore = new Map();
 
   function populateFilesBefore(dir) {
     for (const [filepath, stat] of walker(dir)) {
@@ -98,10 +98,11 @@ describe("fixing flaws", () => {
     const dryRunNotices = stdout
       .split("\n")
       .filter((line) => regexPattern.test(line));
-    expect(dryRunNotices.length).toBe(3);
-    expect(dryRunNotices[2]).toContain(pattern);
-    expect(dryRunNotices[1]).toContain(path.join(pattern, "images"));
+    expect(dryRunNotices.length).toBe(4);
     expect(dryRunNotices[0]).toContain(path.join(pattern, "bad_pre_tags"));
+    expect(dryRunNotices[1]).toContain(path.join(pattern, "deprecated_macros"));
+    expect(dryRunNotices[2]).toContain(path.join(pattern, "images"));
+    expect(dryRunNotices[3]).toContain(pattern);
     const dryrunFiles = getChangedFiles(tempContentDir);
     expect(dryrunFiles.length).toBe(0);
   });
@@ -124,7 +125,7 @@ describe("fixing flaws", () => {
     expect(stdout).toContain(pattern);
 
     const files = getChangedFiles(tempContentDir);
-    expect(files.length).toBe(3);
+    expect(files.length).toBe(4);
     const imagesFile = files.find((f) =>
       f.includes(path.join(pattern, "images"))
     );
@@ -137,8 +138,18 @@ describe("fixing flaws", () => {
     const newRawHtmlPreWithHTML = fs.readFileSync(badPreTagFile, "utf-8");
     expect(newRawHtmlPreWithHTML).not.toContain("<code>");
 
+    const deprecatedMacrosFile = files.find((f) =>
+      f.includes(path.join(pattern, "deprecated_macros"))
+    );
+    const newRawHtmlDeprecatedMacros = fs.readFileSync(
+      deprecatedMacrosFile,
+      "utf-8"
+    );
+    expect(newRawHtmlDeprecatedMacros).not.toContain("{{");
+
     const regularFile = files.find(
-      (f) => f !== imagesFile && f !== badPreTagFile
+      (f) =>
+        f !== imagesFile && f !== badPreTagFile && f !== deprecatedMacrosFile
     );
     const newRawHtml = fs.readFileSync(regularFile, "utf-8");
     expect(newRawHtml).toContain("{{CSSxRef('number')}}");

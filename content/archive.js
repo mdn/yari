@@ -25,6 +25,11 @@ function isArchivedURL(url) {
   return getArchivedPaths().has(asFilepath);
 }
 
+function isArchivedFilePath(filePath) {
+  return getArchivedPaths().has(filePath);
+}
+
 module.exports = {
   isArchivedURL,
+  isArchivedFilePath,
 };
