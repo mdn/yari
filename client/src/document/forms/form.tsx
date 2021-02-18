@@ -46,7 +46,7 @@ export function DocumentForm({
     setAutoSaveEnabled(!autosaveEnabled);
   }
 
-  const { callback: debounceCallback } = useDebouncedCallback(onSave, 1000);
+  const { callback: debounceCallback } = useDebouncedCallback(onSave, 600);
 
   useEffect(() => {
     if (willAutosave) {
@@ -85,8 +85,7 @@ export function DocumentForm({
         disabled={disableInputs}
         value={rawHTML}
         onChange={(event) => setRawHtml(event.target.value)}
-        rows={20}
-        style={{ width: "100%" }}
+        style={{ width: "100%", minHeight: 700 }}
       />
       <p>
         <button
