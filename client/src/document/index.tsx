@@ -85,11 +85,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
         // Note that in local development, where you use `localhost:3000`
         // this will always be true because it's always client-side navigation.
         ga("set", "dimension19", "Yes");
+        ga("send", {
+          hitType: "pageview",
+          location: window.location.toString(),
+        });
       }
-      ga("send", {
-        hitType: "pageview",
-        location: window.location.toString(),
-      });
+
       // By counting every time a document is mounted, we can use this to know if
       // a client-side navigation happened.
       mountCounter.current++;

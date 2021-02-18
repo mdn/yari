@@ -142,9 +142,7 @@ test("content built foo page", () => {
 
   // The HTML should contain the Google Analytics snippet.
   // The ID should match what's set in `testing/.env`.
-  expect(
-    $('script[src="https://www.google-analytics.com/analytics.js"]').length
-  ).toBe(1);
+  expect($('script[src="/static/js/ga.js"]').length).toBe(1);
 
   // The HTML should contain the Speedcurve LUX snippet.
   // The ID should match what's set in `testing/.env`.
