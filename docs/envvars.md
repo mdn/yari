@@ -179,6 +179,18 @@ the Google index. Thankfully we _always_ used a canonical URL
 (`<link rel="canonical" href="https://developer.mozilla.org/$uri">`) as a "second
 line of defense" for dev/stage URLs that are public.
 
+### `BUILD_HOMEPAGE_FEED_URL`
+
+**Default: `https://hacks.mozilla.org/feed/`**
+
+Which RSS feed URL to parse for displaying feed entries on the home page.
+
+### `BUILD_HOMEPAGE_FEED_DISPLAY_MAX`
+
+**Default: `5`**
+
+How many RSS feed entries to display on the home page.
+
 ## Server
 
 ### `SERVER_PORT`
@@ -271,13 +283,3 @@ Toolbar bar appears based on this.
 It defaults to `NODE_ENV==='development'` if not set which means that
 it's enable by default when doing development with the `localhost:3000`
 dev server.
-
-### `REACT_APP_DEBUG_GOOGLE_ANALYTICS`
-
-**Default: `false`**
-
-When you use the `create-react-app` server on `localhost:3000` it can't
-inject the Google Analytics script like you can when you server-side
-render (see `ssr/render.js`). By setting this to `true` it will forcibly
-inject a `<script async src="https://www.google-analytics.com/analytics_debug.js"></script>`
-tag and the necessary code to activate it.

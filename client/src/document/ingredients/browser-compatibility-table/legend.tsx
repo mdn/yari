@@ -43,7 +43,11 @@ function getActiveLegendItems(compat: bcd.Identifier, name: string) {
 
       for (const versionSupport of asList(browserSupport)) {
         if (versionSupport.version_added) {
-          legendItems.add("yes");
+          if (versionSupport.flags && versionSupport.flags.length) {
+            legendItems.add("no");
+          } else {
+            legendItems.add("yes");
+          }
         } else if (versionSupport.version_added == null) {
           legendItems.add("unknown");
         } else {
