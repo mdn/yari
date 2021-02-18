@@ -27,42 +27,50 @@ export function DocumentForm({
 }) {
   const { locale } = useParams();
 
-  const [title, setTitle] = useState(doc ? doc.metadata.title : "");
-  const [rawHTML, setRawHtml] = useState(doc ? doc.rawHTML : "");
+  const [revisions, setRevisions] = React.useState<DocumentOutData[]>([]);
 
-  const [autosaveEnabled, setAutoSaveEnabled] = useLocalStorage(
-    "autosaveEdit",
-    false
-  );
-
-  const isNew = !doc;
-
-  const willAutosave = autosaveEnabled;
-
-  // In auto-save mode inputs should still be changeable during saving
-  const disableInputs = !willAutosave && isSaving;
-
-  function toggleAutoSave() {
-    setAutoSaveEnabled(!autosaveEnabled);
+  async function onSaveWrapper(doc: DocumentOutData) {
+    await onSave(doc);
+    console.log("AFTER SAVE", doc);
+    function isDifferentDoc(previousDoc: DocumentOutData): boolean {
+      return (
+        previousDoc.rawHTML !== doc.rawHTML ||
+        previousDoc.metadata.title !== doc.metadata.title
+      );
+    }
+    if (!revisions.length || isDifferentDoc(revisions[revisions.length - 1])) {
+      setRevisions([...revisions, Object.assign({}, doc)]);
+    }
   }
 
-  const { callback: debounceCallback } = useDebouncedCallback(onSave, 600);
+  const [title, setTitle] = useState(doc.metadata.title);
+  const [rawHTML, setRawHtml] = useState(doc.rawHTML);
+
+  const autosaveEnabled = true;
+
+  // In auto-save mode inputs should still be changeable during saving
+  const disableInputs = !autosaveEnabled && isSaving;
+
+  const { callback: debounceCallback } = useDebouncedCallback(
+    onSaveWrapper,
+    600
+  );
 
   useEffect(() => {
-    if (willAutosave) {
+    if (autosaveEnabled) {
       debounceCallback({
         rawHTML,
         metadata: { title, locale, slug: doc.metadata.slug },
       });
     }
-  }, [willAutosave, debounceCallback, title, rawHTML, locale]);
+  }, [autosaveEnabled, debounceCallback, title, rawHTML, locale]);
 
   return (
     <form
       className="document-form"
       onSubmit={(event) => {
         event.preventDefault();
-        onSave({
+        onSaveWrapper({
           rawHTML,
           metadata: { title, locale, slug: doc.metadata.slug },
         });
@@ -87,32 +95,16 @@ export function DocumentForm({
         onChange={(event) => setRawHtml(event.target.value)}
         style={{ width: "100%", minHeight: 700 }}
       />
-      <p>
-        <button
-          type="submit"
-          title={autosaveEnabled ? "Autosaved enabled" : undefined}
-          disabled={disableInputs || !title || !rawHTML || autosaveEnabled}
-        >
-          {isNew ? "Create" : "Save"}
-        </button>
-
-        {!isNew && (
-          <span className="action-options">
-            <input
-              type="checkbox"
-              id="enable_autosave"
-              checked={autosaveEnabled}
-              onChange={toggleAutoSave}
-            />
-            <label htmlFor="enable_autosave">Enable autosave</label>
-          </span>
-        )}
-      </p>
       {savingError && (
         <div className="error-message submission-error">
           <p>Error saving document</p>
           <pre>{savingError.toString()}</pre>
         </div>
+      )}
+      {revisions.length > 1 && (
+        <p>
+          {revisions.length - 1} edit{revisions.length - 1 === 1 ? "" : "s"}
+        </p>
       )}
     </form>
   );
