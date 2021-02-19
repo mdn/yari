@@ -169,12 +169,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
         <MainContentContainer>
-          <article
-            className="article"
-            // The 'lang' attribute should always be in ISO 639 format.
-            // E.g. 'zh' not 'zh-CN'.
-            lang={doc.locale.split("-")[0]}
-          >
+          <article className="article" lang={doc.locale}>
             <RenderDocumentBody doc={doc} />
           </article>
         </MainContentContainer>

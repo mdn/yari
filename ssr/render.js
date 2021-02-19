@@ -10,6 +10,7 @@ import {
   ALWAYS_NO_ROBOTS,
   BUILD_OUT_ROOT,
 } from "../build/constants";
+const { DEFAULT_LOCALE } = require("../libs/constants");
 
 // When there are multiple options for a given language, this gives the
 // preferred locale for that language (language => preferred locale).
@@ -149,7 +150,7 @@ export default function render(
   // and the 'lang' attribute should always be expressed in ISO 639. (e.g 'en'
   // or 'zh' (not 'en-US' or 'zh-CD))
   // https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-  $("html").attr("lang", "en");
+  $("html").attr("lang", DEFAULT_LOCALE);
 
   const rendered = renderToString(renderApp);
 
