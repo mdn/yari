@@ -1,16 +1,9 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import useSWR from "swr";
 
 import { DisplayH2, DisplayH3 } from "./ingredients/utils";
 
-// Because it's bad for web performance to lazy-load CSS during the initial render
-// (because the page is saying "Wait! Stop rendering, now that I've downloaded
-// some JS I decided I need more CSSOM to block the rendering.")
-// Therefore, we import all the necessary CSS here in this file so that
-// the BCD table CSS becomes part of the core bundle.
-// That means that when the lazy-loading happens, it only needs to lazy-load
-// the JS (and the JSON XHR fetch of course)
-import "./ingredients/browser-compatibility-table/index.scss";
 import { useLocale } from "../hooks";
 
 const BrowserCompatibilityTable = lazy(
@@ -36,18 +29,72 @@ export function LazyBrowserCompatibilityTable({
     <>
       {title && !isH3 && <DisplayH2 id={id} title={title} />}
       {title && isH3 && <DisplayH3 id={id} title={title} />}
-      <LazyBrowserCompatibilityTableInner dataURL={dataURL} query={query} />
+      <LaterLazyBrowserCompatibilityTableInner
+        dataURL={dataURL}
+        query={query}
+      />
     </>
   );
+}
+
+interface BrowserCompatibilityTableProps {
+  dataURL: string;
+  query: string;
+}
+
+function LaterLazyBrowserCompatibilityTableInner(
+  props: BrowserCompatibilityTableProps
+) {
+  const [loadIt, setLoadIt] = React.useState(false);
+  const rootRef = React.createRef<HTMLDivElement>();
+
+  React.useEffect(() => {
+    let observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setLoadIt(true);
+          }
+        }
+      },
+      {
+        rootMargin: "200px",
+      }
+    );
+    if (rootRef.current) {
+      observer.observe(rootRef.current);
+    }
+    return () => {
+      observer.disconnect();
+    };
+  }, [rootRef]);
+
+  const { hash } = useLocation();
+  React.useEffect(() => {
+    let mounted = true;
+    if (hash === "#browser_compatibility") {
+      setLoadIt(true);
+    } else {
+      setTimeout(() => {
+        if (mounted) {
+          setLoadIt(true);
+        }
+      }, 5000);
+    }
+    return () => {
+      mounted = false;
+    };
+  }, [hash]);
+  if (loadIt) {
+    return <LazyBrowserCompatibilityTableInner {...props} />;
+  }
+  return <div ref={rootRef}></div>;
 }
 
 function LazyBrowserCompatibilityTableInner({
   dataURL,
   query,
-}: {
-  dataURL: string;
-  query: string;
-}) {
+}: BrowserCompatibilityTableProps) {
   const locale = useLocale();
   const [bcdDataURL, setBCDDataURL] = useState("");
 
