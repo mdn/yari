@@ -25,6 +25,16 @@ describe("short cuts", () => {
     ]);
     expect(r).toEqual([]);
   });
+  it("hashes", () => {
+    const r = Redirect.testing.shortCuts([
+      ["/en-US/docs/A", "/en-US/docs/B#Foo"],
+      ["/en-US/docs/B", "/en-US/docs/C"],
+    ]);
+    expect(r).toEqual([
+      ["/en-US/docs/A", "/en-US/docs/C#Foo"],
+      ["/en-US/docs/B", "/en-US/docs/C"],
+    ]);
+  });
 });
 
 describe("decode", () => {
