@@ -1211,3 +1211,19 @@ test("headings with links in them are flaws", () => {
     '<h3 id="two">\n  <a id="twoooo">Two</a>\n</h3>'
   );
 });
+
+test("'lang' attribute should match the article", () => {
+  let builtFolder = path.join(buildRoot, "fr", "docs", "web", "foo");
+  let htmlFile = path.join(builtFolder, "index.html");
+  let html = fs.readFileSync(htmlFile, "utf-8");
+  let $ = cheerio.load(html);
+  expect($("html").attr("lang")).toBe("en-US");
+  expect($("article").attr("lang")).toBe("fr");
+
+  builtFolder = path.join(buildRoot, "en-us", "docs", "web", "foo");
+  htmlFile = path.join(builtFolder, "index.html");
+  html = fs.readFileSync(htmlFile, "utf-8");
+  $ = cheerio.load(html);
+  expect($("html").attr("lang")).toBe("en-US");
+  expect($("article").attr("lang")).toBe("en-US");
+});
