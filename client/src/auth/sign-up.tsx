@@ -1,5 +1,5 @@
 import React from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 import { useLocale } from "../hooks";
 import { useUserData } from "../user-context";
@@ -13,12 +13,16 @@ export default function SignUpApp() {
 
   const [checkedTerms, setCheckedTerms] = React.useState(false);
 
-  if (userData && userData.isAuthenticated) {
+  if (!userData) {
+    return <div>Loading...</div>;
+  }
+
+  if (userData.isAuthenticated) {
     return (
       <div>
         <h2>You're already signed up</h2>
         {/* XXX Include a link to the settings page */}
-        <a href={`/${locale}/`}>Return to the home page</a>.
+        <Link to={`/${locale}/`}>Return to the home page</Link>.
       </div>
     );
   }
@@ -32,9 +36,9 @@ export default function SignUpApp() {
         <p>An error occurred trying to sign you up.</p>
         <pre>{JSON.stringify(errors, null, 2)}</pre>
         <p>
-          <a href={`/${locale}/signin`}>
+          <Link to={`/${locale}/signin`}>
             Try starting over the sign-in process
-          </a>
+          </Link>
           .
         </p>
       </div>
@@ -42,15 +46,16 @@ export default function SignUpApp() {
   }
 
   const csrfMiddlewareToken = searchParams.get("csrfmiddlewaretoken");
-  if (!csrfMiddlewareToken) {
+  const provider = searchParams.get("provider");
+  if (!csrfMiddlewareToken || !provider) {
     return (
       <div>
         <h2>Invalid Sign up URL</h2>
         <p>You arrived here on this page without the necessary details.</p>
         <p>
-          <a href={`/${locale}/signin`}>
+          <Link to={`/${locale}/signin`}>
             Try starting over the sign-in process
-          </a>
+          </Link>
           .
         </p>
       </div>
@@ -70,16 +75,44 @@ export default function SignUpApp() {
   }
   const signupURL = `${prefix}/${locale}/users/account/signup`;
 
+  // async function submit(event: React.FormEvent<HTMLFormElement>) {
+  //   event.preventDefault();
+  //   if (!checkedTerms) {
+  //     return;
+  //   }
+  //   // const body = new FormData();
+  //   const body = new URLSearchParams();
+
+  //   // This is just a temporary thing needed to tell Kuma's signup view
+  //   // that the request came from (the jamstack) Yari and not the existing
+  //   // Kuma front-end. Then Kuma knows to certainly only respond with redirects.
+  //   body.append("yarisignup", "1");
+
+  //   body.append("terms", "1");
+  //   body.append("csrfmiddlewaretoken", csrfMiddlewareToken as string);
+  //   if (searchParams.get("next")) {
+  //     body.append("next", searchParams.get("next") as string);
+  //   }
+
+  //   const response = await fetch(signupURL, {
+  //     method: "POST",
+  //     credentials: "include", // XXX explain!
+  //     headers: {
+  //       "Content-Type": "application/x-www-form-urlencoded",
+  //     },
+  //     body: body.toString(),
+  //   });
+  //   console.log(response);
+  // }
+
+  // <form action={signupURL} method="post" onSubmit={submit}>
   return (
     <form action={signupURL} method="post">
       {/* This is just a temporary thing needed to tell Kuma's signup view
           that the request came from (the jamstack) Yari and not the existing
           Kuma front-end. Then Kuma knows to certainly only respond with redirects. */}
       <input type="hidden" name="yarisignup" value="1" />
-      {/* We can delete this once the Kuma backend is 100% just a backend. */}
-      {/* <input type="hidden" name="website" value="" /> */}
 
-      <h1>Sign up</h1>
       {searchParams.get("next") && (
         <input
           type="hidden"
@@ -92,7 +125,7 @@ export default function SignUpApp() {
         name="csrfmiddlewaretoken"
         value={csrfMiddlewareToken}
       />
-      <DisplaySignupProvider provider={searchParams.get("provider") || ""} />
+      <DisplaySignupProvider provider={provider || ""} />
       <DisplayUserDetails details={searchParams.get("user_details") || ""} />
 
       <label htmlFor="id_terms">
