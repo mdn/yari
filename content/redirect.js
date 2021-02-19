@@ -48,9 +48,6 @@ function resolveDocumentPath(url) {
   const root = locale === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
 
   if (!root) {
-    console.log(
-      `Trying to resolve a non-en-us path for ${url} without CONTENT_TRANSLATED_ROOT set.`
-    );
     return `$TRANSLATED/${relativeFilePath}`;
   }
   const filePath = path.join(root, relativeFilePath);
@@ -61,7 +58,7 @@ function resolveDocumentPath(url) {
 }
 
 // Throw if this can't be a redirect from-URL.
-function validateFromURL(url, checkResolve = true) {
+function validateFromURL(url, checkResolve = true, checkPath = true) {
   if (!url.startsWith("/")) {
     throw new Error(`From-URL must start with a / was ${url}`);
   }
@@ -74,9 +71,11 @@ function validateFromURL(url, checkResolve = true) {
   checkURLInvalidSymbols(url);
   // This is a circular dependency we should solve that in another way.
   validateURLLocale(url);
-  const path = resolveDocumentPath(url);
-  if (path) {
-    throw new Error(`From-URL resolves to a file (${path})`);
+  if (checkPath) {
+    const path = resolveDocumentPath(url);
+    if (path) {
+      throw new Error(`From-URL resolves to a file (${path})`);
+    }
   }
   if (checkResolve) {
     const resolved = resolve(url);
@@ -170,19 +169,26 @@ function removeConflictingOldRedirects(oldPairs, updatePairs) {
   return oldPairs.filter(([from, to]) => {
     const conflictingTo = newTargets.has(from.toLowerCase());
     if (conflictingTo) {
-      console.log(`removing conflicting redirect ${from}\t${to}`);
+      console.warn(
+        `Breaking 301: removing conflicting redirect ${from}\t${to}`
+      );
     }
     return !conflictingTo;
   });
 }
 
-function removeOrphanedRedirects(pairs) {
+function removeOrphanedRedirects(pairs, locale) {
   return pairs.filter(([from, to]) => {
     if (resolveDocumentPath(from)) {
       console.log(`removing orphaned redirect (from exists): ${from}\t${to}`);
       return false;
     }
     if (to.startsWith("/") && !resolveDocumentPath(to)) {
+      const [, toLocale] = to.toLowerCase().split("/");
+      if (toLocale !== locale) {
+        console.log(`Skipping: non ${locale} locale: ${from}\t${to}`);
+        return true;
+      }
       console.log(
         `removing orphaned redirect (to doesn't exists): ${from}\t${to}`
       );
@@ -241,7 +247,7 @@ function loadLocaleAndAdd(
 
   let simplifiedPairs = shortCuts(cleanPairs);
   if (fix) {
-    simplifiedPairs = removeOrphanedRedirects(simplifiedPairs);
+    simplifiedPairs = removeOrphanedRedirects(simplifiedPairs, locale);
   }
   validatePairs(simplifiedPairs);
 
@@ -430,7 +436,7 @@ function decodePairs(pairs) {
 
 function validatePairs(pairs, checkExists = true) {
   for (const [from, to] of pairs) {
-    validateFromURL(from, false);
+    validateFromURL(from, false, checkExists);
     validateToURL(to, false, checkExists);
   }
 }
