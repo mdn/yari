@@ -305,6 +305,14 @@ function checkImageWidths(doc, $, options, { rawContent }) {
       // If image is local, get its dimension and set the `width` and `height`
       // HTML attributes.
       const imgSrc = img.attr("src");
+
+      if (!imgSrc) {
+        console.warn(
+          `In ${doc.url} there's an img tag without src (${$.html(img)})`
+        );
+        return;
+      }
+
       // Only proceed if it's not an external image.
       // But beyond that, suppose the `<img>` tag looks anything other than
       // `<img src="/local/docs/slug">` then we can't assume the `img[src]` can
