@@ -1046,6 +1046,20 @@ test("img tags should always have their 'width' and 'height' set", () => {
   });
 });
 
+test("img tags without 'src' should not crash", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "srcless"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(Object.keys(doc.flaws).length).toBe(0);
+});
+
 test("/Web/Embeddable should have 3 valid live samples", () => {
   const builtFolder = path.join(
     buildRoot,
