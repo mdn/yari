@@ -22,9 +22,6 @@ module.exports = {
   },
 
   smartLink(href, title, content, subpath, basepath) {
-    if (content.includes("img") || href.includes("<img>"))
-      console.log({ href, title, content, subpath, basepath });
-
     let flaw;
     let flawAttribute = "";
     const page = this.info.getPageByURL(href);
