@@ -7,7 +7,10 @@ const chalk = require("chalk");
 const { prompt } = require("inquirer");
 const openEditor = require("open-editor");
 const open = require("open");
-const unslug = require("../build/unslug");
+const {
+  simpleMD,
+  syncAllTranslatedContent,
+} = require("../build/sync-translated-content");
 const log = require("loglevel");
 
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
@@ -379,7 +382,10 @@ program
     })
   )
 
-  .command("unslug", "Unslug (move to en-US slugs) a locale")
+  .command(
+    "sync-translated-content",
+    "Sync translated content (sync with en-US slugs) for a locale"
+  )
   .argument("<locale...>", "Locale", {
     default: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
     validator: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
@@ -397,14 +403,11 @@ program
       }
       const allStats = {};
       for (const l of locale) {
-        const { stats, changes } = unslug.unslugAll(l);
+        const { stats, changes } = syncAllTranslatedContent(l);
         allStats[l] = stats;
         if (summarize) {
-          const summary = unslug.simpleMD(l, changes, stats, prefix);
-          const summaryFilePath = path.join(
-            summarize,
-            `unslug-changes-${l}.md`
-          );
+          const summary = simpleMD(l, changes, stats, prefix);
+          const summaryFilePath = path.join(summarize, `sync-changes-${l}.md`);
           fs.writeFileSync(summaryFilePath, summary, "utf-8");
           console.log(`wrote summary to ${summarize}`);
         }
@@ -416,7 +419,7 @@ program
           redirectedDocs,
           totalDocs,
         } = stats;
-        console.log(chalk.green(`Unslugging ${l}:`));
+        console.log(chalk.green(`Syncing ${l}:`));
         console.log(chalk.green(`Total of ${totalDocs} documents`));
         console.log(chalk.green(`Moved ${movedDocs} documents`));
         console.log(chalk.green(`Conflicting ${conflictingDocs} documents.`));
@@ -427,7 +430,7 @@ program
       }
       if (summarize) {
         fs.writeFileSync(
-          path.join(summarize, "unslug-summary.json"),
+          path.join(summarize, "sync-summary.json"),
           JSON.stringify(allStats, null, 2),
           "utf-8"
         );

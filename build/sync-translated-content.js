@@ -29,7 +29,7 @@ function runPass(locale, files, redirects, stats, fistPass) {
       orphaned,
       followed,
       secondPass = false,
-    } = unslug(f, locale, !fistPass);
+    } = syncTranslatedContent(f, locale, !fistPass);
     if (redirect) {
       redirects.set(redirect[0], redirect[1]);
     }
@@ -52,7 +52,7 @@ function runPass(locale, files, redirects, stats, fistPass) {
   return secondPassFiles;
 }
 
-function unslugAll(locale) {
+function syncAllTranslatedContent(locale) {
   const redirects = new Map();
   const files = glob.sync(
     path.join(CONTENT_TRANSLATED_ROOT, locale, "**", "index.html")
@@ -118,7 +118,7 @@ function resolve(slug) {
   return slug;
 }
 
-function unslug(inFilePath, locale, secondPass = false) {
+function syncTranslatedContent(inFilePath, locale, secondPass = false) {
   const status = {
     redirect: null,
     conflicting: false,
@@ -329,21 +329,21 @@ ${changes.moved.map(line).join("\n")}
 `;
 }
 
-function unslugAllLocales() {
+function syncTranslatedContentForAllLocales() {
   let moved = 0;
   for (const locale of VALID_LOCALES.keys()) {
     if (locale == "en-us") {
       continue;
     }
-    const { stats: { movedDocs = 0 } = {} } = unslugAll(locale);
+    const { stats: { movedDocs = 0 } = {} } = syncAllTranslatedContent(locale);
     moved += movedDocs;
   }
   return moved;
 }
 
 module.exports = {
-  unslug,
-  unslugAll,
-  unslugAllLocales,
+  syncTranslatedContent,
+  syncAllTranslatedContent,
+  syncTranslatedContentForAllLocales,
   simpleMD,
 };
