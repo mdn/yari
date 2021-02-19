@@ -5,52 +5,82 @@
 
 ## Quickstart
 
-Before you can begin with Yari, you need [Content](https://github.com/mdn/content).
-See its README which basically, says something like this:
+Development on `yari` involves updating the machinery that renders MDN content
+or improving the structure and styling of the MDN UI (e.g. the
+styling of the header). If you are more interested in contributing to the MDN
+content, you should check out the [content](https://github.com/mdn/content) repo
+README instead.
 
-    git clone https://github.com/mdn/content.git mdn/content
+Before you can start working with Yari, you need to:
 
-Now, you just need to note where that folder is before you can start Yari.
+<!-- Peterbe, Feb 2021: There appears to be a bug in Prettier for .md files
+    that forces in a second (extra) whitespace after the `1.` here.
+    That breaks `markdownlint` *and* `prettier --check`. Annoying.
+    So for now let's make an exception. -->
+<!-- markdownlint-disable list-marker-space -->
 
-To run Yari locally, you'll first need to install [git](https://git-scm.com/),
-[Node.js](https://nodejs.org) (>= 12.0.0) and
-[Yarn 1](https://classic.yarnpkg.com/en/docs/install).
-After that, run these commands in your bash:
+1.  Install [git](https://git-scm.com/),
+    [Node.js](https://nodejs.org) (>= 12.0.0), and [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
 
-    git clone https://github.com/mdn/yari.git
+1.  [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
+    the MDN [content](https://github.com/mdn/content) and [yari](https://github.com/mdn/content)
+    repositories using the Fork button on GitHub.
+
+1.  Clone the forked repositories to your computer using the following commands
+    (replace `[your account]` with the account you forked the repositories to):
+
+            git clone https://github.com/[your_account]/content.git
+            git clone https://github.com/[your_account]/yari.git
+
+        Take a note of the file path to the location where you've cloned that
+        repo before moving on.
+
+    <!-- markdownlint-enable list-marker-space -->
+
+To run Yari locally, you'll first need to install its dependencies and build the
+app locally. Do this like so:
+
     cd yari
-    yarn
+    yarn install
+
+Now run the following command to create a `.env` file inside your `yari` repo
+root and set the `CONTENT_ROOT` environment variable equal to the path to the
+`content` repo. This is so the Yari app can find the content it needs to render.
+You'll need to replace `/path/to/mdn/content/files` with the path to the
+`/files` folder inside your clone of the `content` repo:
+
     echo CONTENT_ROOT=/path/to/mdn/content/files >> .env
+
+At this point, you can get started. Run the following lines to compile required
+files, start the Yari web server running, and open it in your browser:
+
     yarn dev
     open http://localhost:3000
 
-Make sure you point to the `/files` folder inside your clone of the content
-repo.
+If you prefer you can use `yarn start`, which will re-use any previously
+compiled files; this is "riskier" but faster. `yarn dev` always ensures that
+everything is up-to-date.
 
-If you prefer, you can fork the repo first and do the `git clone` with
-_your_ fork instead of the `mdn` one.
-
-The `yarn dev` command will compile and prepare certain files. This always
-takes a little extra time. If you prefer you can use `yarn start` which
-will re-use any previously compiled files which is "riskier" but faster.
-The `yarn start` command will also start a server which doesn't automatically
-reload when its source code files change, so use with caution.
+The `yarn start` command also starts a server with slightly different behavior —
+it doesn't automatically reload when its source code files change,
+so use with caution.
 
 See also our [reviewing guide](docs/REVIEWING.md) for information on how to
 review Yari changes.
 
 ### How to stay up-to-date
 
-Periodically, the code and the content changes. Make sure you're staying
-up-to-date with these commands:
+Periodically, the code and the content changes. Make sure you stay
+up-to-date with something along the following lines (replace `yari-origin`
+with whatever you called [the remote location](https://git-scm.com/docs/git-remote)
+of the original yari repo):
 
-    git pull origin main
+    git pull yari-origin main
     yarn
     yarn dev
 
-These are also good steps to always take when you embark on making a change.
-Then, the only extra command needed is `git checkout -b my-new-branch`
-(or however you prefer to create new `git` branches)
+When you embark on making a change, do it on a new branch, for example
+`git checkout -b my-new-branch`.
 
 ## License
 
@@ -61,21 +91,17 @@ in the [mdn/content repository](https://github.com/mdn/content).
 
 ## How it works
 
-Yari is multiple things but at its core is the MDN content as `index.html`
-files, in `git`, that contain the metadata (as front-matter) and
-the bulk of the document.
+Yari does a number of things, the most important of which is to render and serve
+the MDN content found in the [content repo](https://github.com/mdn/content).
+Each document is stored as an `index.html` file that contains metadata presented
+as YAML [front-matter](https://github.com/mdn/content#fundamental-concepts)
+followed by the document source.
 
 The builder converts these "source files" into "build files" using a CLI tool
 that iterates over the files, builds the HTML, and lastly packages it up
 with the front-end code, ready to be served as static files.
 
 ## Development
-
-First of all, development on `yari` can mean the source code (e.g. the
-styling of the header) or it can mean the content, since it's all one
-repo. This document doesn't distinguish between the two. In the future we
-might expand with more documentation specifically for contributing to the
-content exclusively.
 
 The `yarn start` command encapsulates the front-end dev server
 (on <http://localhost:3000>) and the `server` (on <http://localhost:5000>).
@@ -87,14 +113,15 @@ if you want to work more rapidly.
 
 If you configure an environment variable called `EDITOR`, either on your
 system as a whole or in the root `.env` file, it can be used in the development
-server to link to sources which, when clicked, opens in
-your preferred editor/IDE. For example, in the root:
+server to link to sources which, when clicked, open in your preferred
+editor/IDE. For example, in the root of the repo you could run:
 
     echo 'EDITOR=code' >> .env
 
 Now clicking certain links will open files directly in the currently open
-VSCode IDE. To test it, view any document on <http://localhost:3000> and
-click the "Open in your editor" button.
+VS Code IDE (replace `code` in the above command with a different text editor
+name if needed, e.g. `atom` or whatever). To test it, view any document on
+<http://localhost:3000> and click the "Open in your editor" button.
 
 ### How the server works
 
@@ -114,29 +141,30 @@ And conveniently, if you're not even interested in what the flaws were, run:
 
     yarn prettier-format
 
-But automatically when you ran `yarn` the first time (`yarn` is an alias for
-`yarn install`) it set up a `git` pre-commit hook that uses `pretty-quick`
-which is a wrapper on `prettier` that checks only the files in the git
+When you ran `yarn` for the first time (`yarn` is an alias for
+`yarn install`) it automatically sets up a `git` pre-commit hook that uses
+`pretty-quick` — a wrapper for `prettier` that checks only the files in the git
 commit.
 
-If in doubt about formatting, you can create a pull request and if you have
-formatting flaws, the pull request checks should catch it.
+If you have doubts about formatting, submit your pull request anyway. If you
+have formatting flaws, the [pull request checks](https://github.com/features/actions)
+should catch it.
 
 ### Upgrading Packages
 
 We maintain the dependencies using `Dependabot` in GitHub but if you want
-to manually upgrade some you can use:
+to manually upgrade them you can use:
 
     yarn upgrade-interactive --latest
 
 ### Sharing your dev environment with `ngrok`
 
-[`ngrok`](https://ngrok.com/) is a great tool for starting a HTTP proxy
-server from the Internet into your Yari server. This can be useful for testing
-your current build on external tools like BrowserStack, WebPageTest,
+[`ngrok`](https://ngrok.com/) allows you to start an HTTP proxy
+server from the web into your Yari server. This can be useful for testing
+your current build using external tools like BrowserStack, WebPageTest, or
 Google Translate, or to simply show a friend what you're up to. Obviously
 it'll never be faster than your uplink Internet connection but it should
-be fairly feature complete.
+be fairly feature-complete.
 
 1. [Create in account on Ngrok.com](https://dashboard.ngrok.com/signup)
 2. [Download the executable](https://ngrok.com/download)
@@ -146,7 +174,7 @@ be fairly feature complete.
 This will display something like this:
 
     Session Status                online
-    Account                        (Plan: Free)
+    Account                       (Plan: Free)
     Version                       2.3.35
     Region                        United States (us)
     Web Interface                 http://127.0.0.1:4040
@@ -154,17 +182,18 @@ This will display something like this:
     Forwarding                    https://920ba2108da8.ngrok.io -> http://localhost:5000
 
     Connections                   ttl     opn     rt1     rt5     p50     p90
-                                0       0       0.00    0.00    0.00    0.00
+                                  0       0       0.00    0.00    0.00    0.00
 
-Now, take that "Forwarding" URL `https://920ba2108da8.ngrok.io` (in this
+Now, take that "Forwarding" URL (`https://920ba2108da8.ngrok.io` in this
 example) and share it.
 
 ## Building
 
 The `server` builds content automatically (on-the-fly) when you're viewing
-pages. But if you want to you can pre-emptively build all the content
-in advance. One potential advantage is that you can get a more complete
-list of all possible "flaws" across all documents before you even visit them.
+pages, but you can pre-emptively build all the content in advance if desired.
+One potential advantage is that you can get a more complete list of all possible
+"flaws" across all documents before you even visit them.
+
 The most fundamental CLI command is:
 
     yarn build
@@ -173,8 +202,9 @@ The most fundamental CLI command is:
 
 Every `index.html` becomes two files:
 
-- `index.html` fully formed and complete HTML file
-- `index.json` the React needed state to build the page in the client
+- `index.html` — a fully formed and complete HTML file
+- `index.json` — the state information React needs to build the page in the
+  client
 
 ### Flaw checks
 
@@ -185,7 +215,7 @@ severe but they should never block a full build.
 More information about how to set flaws can be found in `docs/envvars.md`.
 
 Essentially, the default is to _warn_ about any flaw and you can see
-those flaws when using <http://localhost:3000>. But for completed builds,
+those flaws when using <http://localhost:3000>. For completed builds,
 all flaws are ignored. This makes the build faster and there's also
 no good place to display the flaws in a production-grade build.
 
@@ -196,7 +226,7 @@ be on you to fix it.
 
 ## Icons and logos
 
-The various formats and sizes of the favicon is generated
+The various formats and sizes of the favicon are generated
 from the file `mdn-web-docs.svg` in the repository root. This file is then
 converted to favicons using [realfavicongenerator.net](https://realfavicongenerator.net/).
 To generate new favicons, edit or replace the `mdn-web-docs.svg` file
@@ -215,7 +245,7 @@ There are two options to resolve this.
    `echo REACT_APP_NO_WATCHER=true >> .env`
 
 2. Increase `max_user_watches`:\
-   See <https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers>
+   See <https://github.com/guard/listen#increasing-the-amount-of-inotify-watchers>
 
 ### `Error: Cannot find module 'levenary'`
 

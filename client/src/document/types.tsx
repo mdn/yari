@@ -52,6 +52,13 @@ export interface BadPreTagFlaw extends GenericFlaw {
   type: BadPreTagType;
 }
 
+export interface HeadingLinksFlaw extends GenericFlaw {
+  html: string;
+  before: string | null;
+  line: number | null;
+  column: number | null;
+}
+
 export interface MacroErrorMessage extends GenericFlaw {
   name: string;
   error: {
@@ -77,6 +84,7 @@ type Flaws = {
   bad_pre_tags: BadPreTagFlaw[];
   sectioning: SectioningFlaw[];
   image_widths: ImageWidthFlaw[];
+  heading_links: HeadingLinksFlaw[];
 };
 
 export type Translation = {
