@@ -1046,6 +1046,20 @@ test("img tags should always have their 'width' and 'height' set", () => {
   });
 });
 
+test("img tags without 'src' should not crash", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "srcless"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(Object.keys(doc.flaws).length).toBe(0);
+});
+
 test("/Web/Embeddable should have 3 valid live samples", () => {
   const builtFolder = path.join(
     buildRoot,
@@ -1157,4 +1171,43 @@ test("home page should have a /index.json file with feedEntries", () => {
   const jsonFile = path.join(builtFolder, "index.json");
   const { feedEntries } = JSON.parse(fs.readFileSync(jsonFile));
   expect(feedEntries.length).toBeGreaterThan(0);
+});
+
+test("headings with links in them are flaws", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "heading_links"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.heading_links.length).toBe(2);
+  const map = new Map(doc.flaws.heading_links.map((x) => [x.id, x]));
+  expect(map.get("heading_links1").explanation).toBe(
+    "h2 heading contains an <a> tag"
+  );
+  expect(map.get("heading_links1").suggestion).toBe("One");
+  expect(map.get("heading_links1").line).toBe(9);
+  expect(map.get("heading_links1").column).toBe(19);
+  expect(map.get("heading_links1").fixable).toBe(false);
+  expect(map.get("heading_links1").before).toBe('<a href="#something">One</a>');
+  expect(map.get("heading_links1").html).toBe(
+    '<h2 id="one"><a href="#something">One</a></h2>'
+  );
+  expect(map.get("heading_links2").explanation).toBe(
+    "h3 heading contains an <a> tag"
+  );
+  expect(map.get("heading_links2").suggestion.trim()).toBe("Two");
+  expect(map.get("heading_links2").line).toBe(11);
+  expect(map.get("heading_links2").column).toBe(19);
+  expect(map.get("heading_links2").fixable).toBe(false);
+  expect(map.get("heading_links2").before.trim()).toBe(
+    '<a id="twoooo">Two</a>'
+  );
+  expect(map.get("heading_links2").html).toBe(
+    '<h3 id="two">\n  <a id="twoooo">Two</a>\n</h3>'
+  );
 });
