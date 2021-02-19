@@ -1203,13 +1203,13 @@ test("'lang' attribute should match the article", () => {
   let htmlFile = path.join(builtFolder, "index.html");
   let html = fs.readFileSync(htmlFile, "utf-8");
   let $ = cheerio.load(html);
-  expect($("html").attr("lang")).toBe("en");
+  expect($("html").attr("lang")).toBe("en-US");
   expect($("article").attr("lang")).toBe("fr");
 
   builtFolder = path.join(buildRoot, "en-us", "docs", "web", "foo");
   htmlFile = path.join(builtFolder, "index.html");
   html = fs.readFileSync(htmlFile, "utf-8");
   $ = cheerio.load(html);
-  expect($("html").attr("lang")).toBe("en");
-  expect($("article").attr("lang")).toBe("en");
+  expect($("html").attr("lang")).toBe("en-US");
+  expect($("article").attr("lang")).toBe("en-US");
 });
