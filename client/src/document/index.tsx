@@ -25,7 +25,7 @@ import { ReactComponent as Dino } from "../assets/dino.svg";
 import "./index.scss";
 
 // It's unfortunate but it is what it is at the moment. Not every page has an
-// interactive example (in its HTML blob) but we don't know what in advance.
+// interactive example (in its HTML blob) but we don't know that in advance.
 // But just in case it does, we need to have the CSS ready in the main bundle.
 // Perhaps a more ideal solution would be that the interactive example <iframe>
 // code could come with its own styling rather than it having to be part of the
