@@ -209,7 +209,11 @@ function loadPairsFromFile(filePath, strict = true) {
   return pairs;
 }
 
-function loadLocaleAndAdd(locale, updatePairs, { fix = false } = {}) {
+function loadLocaleAndAdd(
+  locale,
+  updatePairs,
+  { fix = false, strict = false } = {}
+) {
   errorOnEncoded(updatePairs);
   errorOnDuplicated(updatePairs);
   validatePairs(updatePairs);
@@ -229,7 +233,7 @@ function loadLocaleAndAdd(locale, updatePairs, { fix = false } = {}) {
   const pairs = [];
   if (fs.existsSync(redirectsFilePath)) {
     // If we wanna fix we load relaxed, hence the !fix.
-    pairs.push(...loadPairsFromFile(redirectsFilePath, !fix));
+    pairs.push(...loadPairsFromFile(redirectsFilePath, strict && !fix));
   }
 
   const cleanPairs = removeConflictingOldRedirects(pairs, updatePairs);
@@ -251,7 +255,7 @@ function add(locale, updatePairs, { fix = false } = {}) {
 
 function validateLocale(locale, strict = false) {
   // To validate strict we check if there is something to fix.
-  const { changed } = loadLocaleAndAdd(locale, [], { fix: strict });
+  const { changed } = loadLocaleAndAdd(locale, [], { fix: strict, strict });
   if (changed) {
     throw new Error(` _redirects.txt for ${locale} is flawed`);
   }

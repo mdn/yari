@@ -137,7 +137,7 @@ program
     tryOrExit(({ args, logger }) => {
       const { locales } = args;
       for (const locale of locales) {
-        Redirect.add(locale.toLowerCase(), [], { fix: true });
+        Redirect.add(locale.toLowerCase(), [], { fix: true, strict: true });
         logger.info(chalk.green(`Fixed ${locale}`));
       }
     })
