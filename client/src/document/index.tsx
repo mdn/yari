@@ -177,7 +177,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
         <MainContentContainer>
-          <article className="article">
+          <article className="article" lang={doc.locale}>
             <RenderDocumentBody doc={doc} />
           </article>
         </MainContentContainer>
