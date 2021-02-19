@@ -14,13 +14,12 @@ import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
 import { LanguageMenu } from "../ui/molecules/language-menu";
+import LoadingPlaceholder from "../ui/atoms/loading-placeholder";
 import { Titlebar } from "../ui/molecules/titlebar";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
 import { MainContentContainer } from "../ui/atoms/page-content";
 import { Metadata } from "./organisms/metadata";
-
-import { ReactComponent as Dino } from "../assets/dino.svg";
 
 import "./index.scss";
 
@@ -127,7 +126,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   }, []);
 
   if (!doc && !error) {
-    return <LoadingDocumentPlaceholder />;
+    return <LoadingPlaceholder title="Loading..." />;
   }
 
   if (error) {
@@ -185,15 +184,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
         {doc.sidebarHTML && <RenderSideBar doc={doc} />}
       </div>
       <Metadata doc={doc} locale={locale} />
-    </>
-  );
-}
-
-function LoadingDocumentPlaceholder() {
-  return (
-    <>
-      <Titlebar docTitle={"Loading…"} />
-      <Dino className="page-content-container loading-document-placeholder" />
     </>
   );
 }

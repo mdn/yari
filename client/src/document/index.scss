@@ -6,22 +6,6 @@
 @import "~@mdn/minimalist/sass/mixins/animation";
 @import "~@mdn/minimalist/sass/mixins/utils";
 
-.page-content-container {
-  &.loading-document-placeholder {
-    @include slow-pulse();
-    fill: $neutral-550;
-    min-height: 55vh;
-    width: 100%;
-
-    @media #{$mq-small-desktop-and-up} {
-      margin: $base-spacing auto;
-      max-width: $max-width-default;
-      min-height: 75vh;
-      width: 50%;
-    }
-  }
-}
-
 .article {
   padding: ($base-spacing / 2) $base-spacing $base-spacing;
 

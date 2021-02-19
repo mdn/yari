@@ -1,34 +1,109 @@
-.search-results {
-  a.title {
-    color: black;
-    font-weight: bold;
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/borders";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+@import "./pagination";
+
+.search-results-container {
+  .title {
+    background-color: inherit;
+    color: $neutral-100;
+    margin-bottom: $base-spacing / 4;
+    padding: 0;
+
+    a {
+      color: $neutral-100;
+    }
   }
-  span.highlight {
-    display: block;
+
+  .search-results-options {
+    background-color: $neutral-550;
+    padding: $base-spacing;
+
+    h2 {
+      font-size: $default-font-size;
+      margin-bottom: $base-spacing / 4;
+    }
+  }
+
+  .current-option {
     font-style: italic;
-    font-size: 0.9rem;
   }
-  span.summary {
+
+  .sort-options,
+  .search-language-options {
+    li {
+      display: inline;
+    }
+  }
+
+  .advanced-options {
+    margin-top: $base-spacing / 2;
+  }
+
+  .search-language-options {
+    font-style: italic;
+
+    a {
+      font-style: normal;
+    }
+  }
+
+  .search-results-list {
+    margin-bottom: $base-spacing;
+
+    mark {
+      background-color: $yellow-400;
+      font-style: italic;
+    }
+  }
+
+  .result-content-container {
+    color: $neutral-200;
+    margin-bottom: $base-spacing * 2;
+  }
+
+  .highlight,
+  .summary {
     display: block;
-    font-size: 0.9rem;
   }
-  span.nerd-data {
-    margin-left: 20px;
-    font-size: 80%;
+
+  .document-url {
+    margin-bottom: $base-spacing;
+  }
+
+  .nerd-data {
+    font-size: $small-font-size;
+    margin-left: $base-spacing;
   }
 
   // Used to indicate that a search result link is in a different locale
   .locale-indicator {
-    font-size: 80%;
-    background-color: bisque;
-    padding: 3px;
-    border-radius: 2px;
+    background-color: $neutral-550;
+    border-radius: $default-border-radius;
+    cursor: help;
+    display: block;
+    font-size: $default-font-size;
+    font-style: italic;
+    margin-top: $base-spacing / 2;
+    max-width: max-content;
+    min-width: 100px;
+    padding: $base-spacing / 4;
+    position: relative;
+    top: -5px;
+
+    @media #{$mq-tablet-and-up} {
+      display: inline-block;
+      margin-top: inherit;
+    }
   }
 
   .suggestions {
     p {
       margin-bottom: 2px;
     }
+
     ul {
       margin-top: 0;
     }
@@ -36,6 +111,5 @@
 
   .loading-wrapper {
     min-height: 500px;
-    margin: 100px;
   }
 }

@@ -2,10 +2,11 @@ import React from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { PageContentContainer } from "../ui/atoms/page-content";
+import LoadingPlaceholder from "../ui/atoms/loading-placeholder";
+
 import { useGA } from "../ga-context";
 import "./index.scss";
 
-const SiteSearchForm = React.lazy(() => import("./form"));
 const SearchResults = React.lazy(() => import("./search-results"));
 
 export function SiteSearch() {
@@ -17,14 +18,16 @@ export function SiteSearch() {
   const page = searchParams.get("page");
   React.useEffect(() => {
     if (query) {
-      let title = `Search: "${query}"`;
+      let title = `Search results for "${query}"`;
       if (page && page !== "1") {
-        title += ` (page ${page})`;
+        title += `, (page ${page})`;
       }
       document.title = title;
     } else {
-      document.title = "No query, no results.";
+      document.title = "No search results for your query.";
     }
+
+    document.title += " - MDN Web Docs";
   }, [query, page]);
 
   const mountCounter = React.useRef(0);
@@ -52,23 +55,18 @@ export function SiteSearch() {
       <PageContentContainer>
         {query ? (
           <h1>
-            Results: {query}{" "}
-            {page && page !== "1" && (
-              <small className="current-page">Page {page}</small>
-            )}
+            Search results {page && page !== "1" && `page ${page} `}for{" "}
+            <span className="query-string">{query}</span>
           </h1>
         ) : (
-          <h1>No query, no results.</h1>
-        )}
-
-        {!isServer && (
-          <React.Suspense fallback={<p>Loading...</p>}>
-            <SiteSearchForm />
-          </React.Suspense>
+          <h1>
+            No results for the query,{" "}
+            <span className="query-string">{query}</span>
+          </h1>
         )}
 
         {!isServer && query && (
-          <React.Suspense fallback={<p>Loading...</p>}>
+          <React.Suspense fallback={<LoadingPlaceholder />}>
             <SearchResults />
           </React.Suspense>
         )}

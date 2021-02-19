@@ -11,25 +11,37 @@ const LANGUAGES = new Map(
   })
 );
 
-export default function SiteSearchForm() {
+export default function AdvancedSearchOptions() {
   const locale = useLocale();
   const [searchParams] = useSearchParams();
   const queryLocales = searchParams.getAll("locale");
 
   return (
-    <div className="advanced-options">
-      {/* Language only applies if you're browsing in, say, French
-      and want to search in English too. */}
-      {locale.toLowerCase() !== "en-us" && (
-        <p className="advanced-option">
-          <b>Language</b>{" "}
+    <>
+      <h2>Language</h2>
+      <ul className="search-language-options">
+        <li>
+          {queryLocales.length === 2 &&
+          equalLocales(queryLocales, [locale, "en-us"]) ? (
+            "Both"
+          ) : (
+            <Link
+              to={`?${appendURL(searchParams, {
+                locale: [locale, "en-US"],
+                page: undefined,
+              })}`}
+            >
+              Both
+            </Link>
+          )}
+          {" | "}
+        </li>
+        <li>
           {!queryLocales.length ||
           (queryLocales.length === 1 &&
             equalLocales(queryLocales, [locale])) ? (
-            <i>
-              {LANGUAGES.get(locale.toLowerCase())?.native} (
-              {LANGUAGES.get(locale.toLowerCase())?.English})
-            </i>
+            (LANGUAGES.get(locale.toLowerCase())?.native,
+            LANGUAGES.get(locale.toLowerCase())?.English)
           ) : (
             <Link
               to={`?${appendURL(searchParams, {
@@ -42,8 +54,10 @@ export default function SiteSearchForm() {
             </Link>
           )}
           {" | "}
+        </li>
+        <li>
           {queryLocales.length && equalLocales(queryLocales, ["en-us"]) ? (
-            <i>{LANGUAGES.get("en-us")?.native}</i>
+            LANGUAGES.get("en-us")?.native
           ) : (
             <Link
               to={`?${appendURL(searchParams, {
@@ -54,23 +68,9 @@ export default function SiteSearchForm() {
               {LANGUAGES.get("en-us")?.native}
             </Link>
           )}
-          {" | "}
-          {queryLocales.length === 2 &&
-          equalLocales(queryLocales, [locale, "en-us"]) ? (
-            <i>Both</i>
-          ) : (
-            <Link
-              to={`?${appendURL(searchParams, {
-                locale: [locale, "en-US"],
-                page: undefined,
-              })}`}
-            >
-              Both
-            </Link>
-          )}
-        </p>
-      )}
-    </div>
+        </li>
+      </ul>
+    </>
   );
 }
 

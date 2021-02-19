@@ -1,0 +1,18 @@
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/mixins/animation";
+
+.loading-placeholder {
+  @include slow-pulse();
+
+  background: transparent url("../../../assets/dino.svg") 0 0 no-repeat;
+  filter: invert(90%);
+  min-height: 55vh;
+  width: 100%;
+
+  @media #{$mq-small-desktop-and-up} {
+    margin: $base-spacing auto;
+    max-width: $max-width-default;
+    min-height: 75vh;
+    width: 50%;
+  }
+}

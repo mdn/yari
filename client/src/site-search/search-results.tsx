@@ -6,6 +6,8 @@ import { CRUD_MODE, DEBUG_SEARCH_RESULTS } from "../constants";
 import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
 
+import AdvancedSearchOptions from "./advanced-search-options";
+
 import LANGUAGES_RAW from "../languages.json";
 import "./search-results.scss";
 
@@ -16,7 +18,7 @@ const LANGUAGES = new Map(
 );
 
 const SORT_OPTIONS = [
-  ["best", "Best"],
+  ["best", "Best Match"],
   ["relevance", "Relevance"],
   ["popularity", "Popularity"],
 ];
@@ -154,20 +156,18 @@ export default function SearchResults() {
     const hitCount = data.metadata.total.value;
 
     return (
-      <div>
-        {/* It only makes sense to display the sorting options if anything was found */}
-        {hitCount > 1 && <SortOptions />}
-
+      <>
         <RemoteSearchWarning />
 
         <Results {...data} />
+
         <Pagination
           currentPage={currentPage}
           hitCount={hitCount}
           pageSize={pageSize}
           maxPage={10}
         />
-      </div>
+      </>
     );
   }
   // else...
@@ -203,23 +203,28 @@ function SortOptions() {
   const [searchParams] = useSearchParams();
   const querySort = searchParams.get("sort") || SORT_OPTIONS[0][0];
   return (
-    <p className="sort-options">
-      <b>Sort by</b>{" "}
-      {SORT_OPTIONS.map(([key, label], i) => {
-        return (
-          <React.Fragment key={key}>
-            {key === querySort ? (
-              <i>{label}</i>
-            ) : (
-              <Link to={`?${appendURL(searchParams, { sort: key })}`}>
-                {label}
-              </Link>
-            )}
-            {i < SORT_OPTIONS.length - 1 ? " | " : ""}
-          </React.Fragment>
-        );
-      })}
-    </p>
+    <>
+      <h2>Sort by</h2>
+      <ul className="sort-options">
+        {SORT_OPTIONS.map(([key, label], i) => {
+          return (
+            <li
+              key={key}
+              className={key === querySort ? "current-option" : undefined}
+            >
+              {key === querySort ? (
+                label
+              ) : (
+                <Link to={`?${appendURL(searchParams, { sort: key })}`}>
+                  {label}
+                </Link>
+              )}
+              {i < SORT_OPTIONS.length - 1 ? " | " : ""}
+            </li>
+          );
+        })}
+      </ul>
+    </>
   );
 }
 
@@ -256,7 +261,7 @@ function ExplainBadRequestError({ errors }: { errors: FormErrors }) {
 function ExplainServerOperationalError({ statusCode }: { statusCode: number }) {
   return (
     <div className="notecard warning">
-      <p>The search failed because the server failed to response.</p>
+      <p>The search failed because the server failed to respond.</p>
       <p>
         If you're curious, it was a <b>{statusCode}</b> error.
       </p>
@@ -284,96 +289,117 @@ function Results({
 }) {
   const locale = useLocale();
   const [searchParams] = useSearchParams();
+  const hitCount = metadata.total.value;
 
   return (
-    <div>
-      <div className="search-results">
-        <p>
-          Found <ShowTotal total={metadata.total} /> in {metadata.took_ms}{" "}
-          milliseconds.
-        </p>
+    <>
+      <p>
+        Found <ShowTotal total={metadata.total} /> in {metadata.took_ms}{" "}
+        milliseconds.
+      </p>
+      <div className="search-results-container">
+        <div className="search-results-options readable-line-length">
+          {/* It only makes sense to display the sorting options if anything was found */}
+          {hitCount > 1 && <SortOptions />}
 
-        {!!suggestions.length && (
-          <div className="suggestions">
-            <p>Did you mean...</p>
-            <ul>
-              {suggestions.map((suggestion) => {
-                return (
-                  <li key={suggestion.text}>
-                    <Link
-                      to={`?${appendURL(searchParams, {
-                        q: suggestion.text,
-                        page: undefined,
-                      })}`}
-                    >
-                      {suggestion.text}
-                    </Link>{" "}
-                    <ShowTotal total={suggestion.total} />
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        )}
-
-        {documents.map((document) => {
-          const highlights = document.highlight.body || [];
-          return (
-            <div key={document.mdn_url}>
-              <p>
-                {/* We're using plain <a href> instead of <Link to> here until
-                the bug has been figured out about scrolling to the top on click. */}
-                {document.highlight.title && document.highlight.title.length ? (
-                  <a
-                    className="title"
-                    href={document.mdn_url}
-                    dangerouslySetInnerHTML={{
-                      __html: document.highlight.title[0],
-                    }}
-                  ></a>
-                ) : (
-                  <a className="title" href={document.mdn_url}>
-                    {document.title}
-                  </a>
-                )}{" "}
-                {locale.toLowerCase() !== document.locale &&
-                  LANGUAGES.has(document.locale) && (
-                    <i
-                      className="locale-indicator"
-                      title="Document different than your current language setting"
-                    >
-                      {LANGUAGES.get(document.locale)?.English}
-                    </i>
-                  )}
-                <br />
-                {highlights.length ? (
-                  highlights.map((highlight, i) => {
-                    return (
-                      <span
-                        key={`${document.mdn_url}${i}`}
-                        className="highlight"
-                        dangerouslySetInnerHTML={{ __html: `…${highlight}…` }}
-                      ></span>
-                    );
-                  })
-                ) : (
-                  <span className="summary">{document.summary}</span>
-                )}
-                <a className="url" href={document.mdn_url}>
-                  {document.mdn_url}
-                </a>
-                {DEBUG_SEARCH_RESULTS && (
-                  <span className="nerd-data">
-                    <b>score:</b> <code>{document.score}</code>,{" "}
-                    <b>popularity:</b> <code>{document.popularity}</code>,{" "}
-                  </span>
-                )}
-              </p>
+          {/* Language only applies if you're browsing in, say, French and want
+          to search in English too. */}
+          {locale.toLowerCase() !== "en-us" && (
+            <div className="advanced-options">
+              <AdvancedSearchOptions />
             </div>
-          );
-        })}
+          )}
+        </div>
+
+        <div className="search-results-content">
+          {!!suggestions.length && (
+            <div className="suggestions">
+              <p>Did you mean...</p>
+              <ul>
+                {suggestions.map((suggestion) => {
+                  return (
+                    <li key={suggestion.text}>
+                      <Link
+                        to={`?${appendURL(searchParams, {
+                          q: suggestion.text,
+                          page: undefined,
+                        })}`}
+                      >
+                        {suggestion.text}
+                      </Link>{" "}
+                      <ShowTotal total={suggestion.total} />
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+
+          <ul className="search-results-list readable-line-length">
+            {documents.map((document) => {
+              const highlights = document.highlight.body || [];
+              return (
+                <li
+                  key={document.mdn_url}
+                  lang={
+                    locale.toLowerCase() !== document.locale
+                      ? document.locale
+                      : undefined
+                  }
+                >
+                  {/* We're using plain <a href> instead of <Link to> here until
+                  the bug has been figured out about scrolling to the top on click. */}
+                  <h3 className="title">
+                    <a href={document.mdn_url}>{document.title}</a>{" "}
+                    {/* Good example URL: http://localhost:3000/ja/search?q=findindex&locale=ja&locale=en-US */}
+                    {locale.toLowerCase() !== document.locale &&
+                      LANGUAGES.has(document.locale) && (
+                        <span
+                          className="locale-indicator"
+                          title={`The linked document is in ${
+                            LANGUAGES.get(document.locale)?.English
+                          } which is different than your current language setting`}
+                        >
+                          {LANGUAGES.get(document.locale)?.English}
+                        </span>
+                      )}
+                  </h3>
+
+                  <p className="document-url">
+                    <a href={document.mdn_url}>{document.mdn_url}</a>
+                  </p>
+
+                  <div className="result-content-container">
+                    {highlights.length ? (
+                      highlights.map((highlight, i) => {
+                        return (
+                          <span
+                            key={`${document.mdn_url}${i}`}
+                            className="highlight"
+                            dangerouslySetInnerHTML={{
+                              __html: `…${highlight}…`,
+                            }}
+                          ></span>
+                        );
+                      })
+                    ) : (
+                      <span className="summary">{document.summary}</span>
+                    )}
+                  </div>
+
+                  {DEBUG_SEARCH_RESULTS && (
+                    <span className="nerd-data">
+                      <b>score:</b> <code>{document.score}</code>,{" "}
+                      <b>popularity:</b> <code>{document.popularity}</code>,{" "}
+                    </span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -428,21 +454,25 @@ function Pagination({
       }
     }
     return (
-      <div className="pagination">
+      <ul className="pagination">
         {previousURL ? (
-          <Link to={previousURL} className="button">
-            Previous
-          </Link>
+          <li>
+            <Link to={previousURL} className="button">
+              Previous
+            </Link>
+          </li>
         ) : null}{" "}
         {nextPage ? (
-          <Link
-            to={`?${appendURL(searchParams, { page: `${nextPage}` })}`}
-            className="button"
-          >
-            Next
-          </Link>
+          <li>
+            <Link
+              to={`?${appendURL(searchParams, { page: `${nextPage}` })}`}
+              className="button"
+            >
+              Next
+            </Link>
+          </li>
         ) : null}
-      </div>
+      </ul>
     );
   }
   return null;
