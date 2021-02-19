@@ -7,9 +7,12 @@ const LRU = require("lru-cache");
 
 const MEMOIZE_INVALIDATE = Symbol("force cache update");
 
-function getRoot(locale) {
+function getRoot(locale, throws = "") {
   const root =
     locale.toLowerCase() === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+  if (throws && !root) {
+    throw new Error(throws);
+  }
   return root;
 }
 

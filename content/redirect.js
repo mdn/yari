@@ -8,6 +8,7 @@ const {
   CONTENT_TRANSLATED_ROOT,
   VALID_LOCALES,
 } = require("./constants");
+const { getRoot } = require("./utils");
 const { isArchivedFilePath } = require("./archive");
 
 const FORBIDDEN_URL_SYMBOLS = ["\n", "\t"];
@@ -45,7 +46,7 @@ function resolveDocumentPath(url) {
     return `$ARCHIVED/${relativeFilePath}`;
   }
 
-  const root = locale === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+  const root = getRoot(locale);
 
   if (!root) {
     console.log(
@@ -215,16 +216,11 @@ function loadLocaleAndAdd(locale, updatePairs, { fix = false } = {}) {
   validatePairs(updatePairs);
 
   locale = locale.toLowerCase();
-  let root = CONTENT_ROOT;
-  if (locale !== "en-us") {
-    if (CONTENT_TRANSLATED_ROOT) {
-      root = CONTENT_TRANSLATED_ROOT;
-    } else {
-      throw new Error(
-        `trying to add redirects for ${locale} but CONTENT_TRANSLATED_ROOT not set`
-      );
-    }
-  }
+  let root = getRoot(
+    locale,
+    `trying to add redirects for ${locale} but CONTENT_TRANSLATED_ROOT not set`
+  );
+
   const redirectsFilePath = path.join(root, locale, "_redirects.txt");
   const pairs = [];
   if (fs.existsSync(redirectsFilePath)) {
