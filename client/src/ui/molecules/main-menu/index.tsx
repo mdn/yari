@@ -314,6 +314,7 @@ export default function MainMenu({
                   key={item.url}
                   role="none"
                   onBlur={() => onSubmenuItemBlur(menuEntry.id, index)}
+                  onMouseOver={() => setFocusedSubmenuItemIndex(index)}
                 >
                   {item.external ? (
                     <a
