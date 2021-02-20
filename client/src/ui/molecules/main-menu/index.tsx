@@ -19,9 +19,9 @@ export default function MainMenu({
     focusedSubmenuItemIndex,
     setFocusedSubmenuItemIndex,
   ] = useState<number>(-1);
-  const [submenuCollapsedOnBlur, setSubmenuCollapsedOnBlur] = useState<boolean>(
-    false
-  );
+  const [submenuCollapsedOnBlurId, setSubmenuCollapsedOnBlurId] = useState<
+    string | null
+  >(null);
   const ga = useGA();
 
   /**
@@ -121,12 +121,12 @@ export default function MainMenu({
   /**
    * Close submenu if focus leaves submenu due to tabbing or clicking outside
    */
-  function onSubmenuItemBlur(index: number) {
-    if (index === focusedSubmenuItemIndex) {
+  function onSubmenuItemBlur(submenuId: string, itemIndex: number) {
+    if (itemIndex === focusedSubmenuItemIndex) {
       // prevent submenu from immediately re-opening if blur caused by clicking menu button
-      setSubmenuCollapsedOnBlur(true);
+      setSubmenuCollapsedOnBlurId(submenuId);
       setTimeout(() => {
-        setSubmenuCollapsedOnBlur(false);
+        setSubmenuCollapsedOnBlurId(null);
       }, 250);
 
       hideSubMenuIfVisible();
@@ -293,11 +293,11 @@ export default function MainMenu({
               aria-expanded={menuEntry.id === visibleSubMenuId}
               onFocus={onMenuButtonFocus}
               onClick={(event) => {
-                if (submenuCollapsedOnBlur) {
-                  setSubmenuCollapsedOnBlur(false);
-                } else {
+                if (submenuCollapsedOnBlurId !== menuEntry.id) {
+                  // always toggle menu if not clicking button for currently open menu
                   toggleSubMenu(event, menuEntry.id);
                 }
+                setSubmenuCollapsedOnBlurId(null);
               }}
             >
               {menuEntry.label}
@@ -313,7 +313,7 @@ export default function MainMenu({
                 <li
                   key={item.url}
                   role="none"
-                  onBlur={() => onSubmenuItemBlur(index)}
+                  onBlur={() => onSubmenuItemBlur(menuEntry.id, index)}
                 >
                   {item.external ? (
                     <a
