@@ -14,7 +14,7 @@ export default function MainMenu({
   const locale = useLocale();
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
   const mainMenuRef = useRef<null | HTMLUListElement>(null);
-  const [visibleSubMenu, setVisibleSubMenu] = useState<string | null>(null);
+  const [visibleSubMenuId, setVisibleSubMenuId] = useState<string | null>(null);
   const [
     focusedSubmenuItemIndex,
     setFocusedSubmenuItemIndex,
@@ -51,8 +51,8 @@ export default function MainMenu({
   }
 
   function hideSubMenuIfVisible() {
-    if (visibleSubMenu) {
-      setVisibleSubMenu(null);
+    if (visibleSubMenuId) {
+      setVisibleSubMenuId(null);
     }
   }
 
@@ -60,15 +60,15 @@ export default function MainMenu({
    * Show and hide submenus in the main menu, send GA events and updates
    * the ARIA state.
    * @param {Object} event - onClick event triggered on top-level menu item
-   * @param {String} menuLabel - The current top-level menu item label
+   * @param {String} id - The current top-level menu item id
    */
-  function toggleSubMenu(event, menuLabel, menuLabelId) {
-    const expandedState = visibleSubMenu === menuLabel ? false : true;
+  function toggleSubMenu(event, id) {
+    const expandedState = visibleSubMenuId === id ? false : true;
 
     // store the current activeElement
     previousActiveElement.current = document.activeElement as HTMLButtonElement;
 
-    setVisibleSubMenu(visibleSubMenu === menuLabel ? null : menuLabel);
+    setVisibleSubMenuId(visibleSubMenuId === id ? null : id);
     sendMenuItemInteraction(event);
 
     if (expandedState) {
@@ -83,26 +83,24 @@ export default function MainMenu({
 
   function onSubmenuKeydown(
     event: React.KeyboardEvent,
-    menuLabel: string,
-    submenuLength: number
+    id: string,
+    itemCount: number
   ) {
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault();
 
       if (focusedSubmenuItemIndex === -1) {
         previousActiveElement.current = event.target as HTMLButtonElement;
-        setVisibleSubMenu(menuLabel);
+        setVisibleSubMenuId(id);
       }
 
       switch (event.key) {
         case "ArrowDown":
-          setFocusedSubmenuItemIndex(
-            (focusedSubmenuItemIndex + 1) % submenuLength
-          );
+          setFocusedSubmenuItemIndex((focusedSubmenuItemIndex + 1) % itemCount);
           break;
         case "ArrowUp":
           if (focusedSubmenuItemIndex <= 0) {
-            setFocusedSubmenuItemIndex(submenuLength - 1);
+            setFocusedSubmenuItemIndex(itemCount - 1);
           } else {
             setFocusedSubmenuItemIndex(focusedSubmenuItemIndex - 1);
           }
@@ -150,7 +148,7 @@ export default function MainMenu({
   const menus = [
     {
       label: "Technologies",
-      labelId: "technologies",
+      id: "technologies",
       items: [
         {
           url: `/${locale}/docs/Web`,
@@ -192,7 +190,7 @@ export default function MainMenu({
     },
     {
       label: "References & Guides",
-      labelId: "references-guides",
+      id: "references-guides",
       items: [
         {
           url: `/${locale}/docs/Learn`,
@@ -226,7 +224,7 @@ export default function MainMenu({
     },
     {
       label: "Feedback",
-      labelId: "feedback",
+      id: "feedback",
       items: [
         {
           url: `/${locale}/docs/MDN/Contribute/Feedback`,
@@ -265,35 +263,35 @@ export default function MainMenu({
       <ul className="main-menu nojs" ref={mainMenuRef}>
         {menus.map((menuEntry) => (
           <li
-            key={menuEntry.label}
+            key={menuEntry.id}
             className="top-level-entry-container"
             onKeyDown={(event) => {
-              onSubmenuKeydown(event, menuEntry.label, menuEntry.items.length);
+              onSubmenuKeydown(event, menuEntry.id, menuEntry.items.length);
             }}
           >
             <button
-              id={`${menuEntry.labelId}-button`}
+              id={`${menuEntry.id}-button`}
               type="button"
               className="top-level-entry"
               aria-haspopup="menu"
-              aria-expanded={menuEntry.label === visibleSubMenu}
+              aria-expanded={menuEntry.id === visibleSubMenuId}
               onFocus={onMenuButtonFocus}
               onClick={(event) => {
                 if (submenuCollapsedOnBlur) {
                   setSubmenuCollapsedOnBlur(false);
                 } else {
-                  toggleSubMenu(event, menuEntry.label, menuEntry.labelId);
+                  toggleSubMenu(event, menuEntry.id);
                 }
               }}
             >
               {menuEntry.label}
             </button>
             <ul
-              className={`${menuEntry.labelId} ${
-                menuEntry.label === visibleSubMenu ? "show" : ""
+              className={`${menuEntry.id} ${
+                menuEntry.id === visibleSubMenuId ? "show" : ""
               }`}
               role="menu"
-              aria-labelledby={`${menuEntry.labelId}-button`}
+              aria-labelledby={`${menuEntry.id}-button`}
             >
               {menuEntry.items.map((item, index) => (
                 <li
