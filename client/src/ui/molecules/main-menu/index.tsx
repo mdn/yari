@@ -81,14 +81,22 @@ export default function MainMenu({
     sendMenuItemInteraction(event);
   }
 
+  /**
+   * Handle arrow keydown events on submenu to change focused item.
+   * @param {Object} event - keydown event triggered on submenu
+   * @param {String} id - submenu id
+   * @param {Number} itemCount - number of items in submenu
+   */
   function onSubmenuKeydown(
     event: React.KeyboardEvent,
     id: string,
     itemCount: number
   ) {
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      // prevent page scrolling
       event.preventDefault();
 
+      // open submenu if closed
       if (focusedSubmenuItemIndex === -1) {
         previousActiveElement.current = event.target as HTMLButtonElement;
         setVisibleSubMenuId(id);
@@ -96,10 +104,12 @@ export default function MainMenu({
 
       switch (event.key) {
         case "ArrowDown":
+          // focus below item and jump to top item if bottom item focused
           setFocusedSubmenuItemIndex((focusedSubmenuItemIndex + 1) % itemCount);
           break;
         case "ArrowUp":
           if (focusedSubmenuItemIndex <= 0) {
+            // jump to bottom item if top item focused
             setFocusedSubmenuItemIndex(itemCount - 1);
           } else {
             setFocusedSubmenuItemIndex(focusedSubmenuItemIndex - 1);
@@ -108,12 +118,17 @@ export default function MainMenu({
     }
   }
 
+  /**
+   * Close submenu if focus leaves submenu due to tabbing or clicking outside
+   */
   function onSubmenuItemBlur(index: number) {
     if (index === focusedSubmenuItemIndex) {
+      // prevent submenu from immediately re-opening if blur caused by clicking menu button
       setSubmenuCollapsedOnBlur(true);
       setTimeout(() => {
         setSubmenuCollapsedOnBlur(false);
       }, 250);
+
       hideSubMenuIfVisible();
     }
   }
@@ -130,8 +145,9 @@ export default function MainMenu({
       mainMenu.classList.remove("nojs");
     }
 
+    const focusableSubmenuItemSelector = 'ul.show a[tabindex="0"]';
     mainMenu
-      ?.querySelector<HTMLAnchorElement>('ul.show a[tabindex="0"]')
+      ?.querySelector<HTMLAnchorElement>(focusableSubmenuItemSelector)
       ?.focus();
 
     document.addEventListener("keyup", (event) => {
