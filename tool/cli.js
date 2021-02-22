@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const os = require("os");
 
 const program = require("@caporal/core").default;
 const chalk = require("chalk");
@@ -23,6 +22,11 @@ const {
   buildURL,
 } = require("../content");
 const { buildDocument, gatherGitHistory } = require("../build");
+const {
+  BUILD_OUT_ROOT,
+  GOOGLE_ANALYTICS_ACCOUNT,
+  GOOGLE_ANALYTICS_DEBUG,
+} = require("../build/constants");
 const { runMakePopularitiesFile } = require("./popularities");
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
@@ -51,11 +55,43 @@ program
   .name("tool")
   .version("0.0.0")
   .disableGlobalOption("--silent")
-  .command("validate-redirects", "Check the _redirects.txt file(s)")
+  .cast(false)
+  .command("validate-redirects", "Try loading the _redirects.txt file(s)")
+  .argument("[locales...]", "Locale", {
+    default: [...VALID_LOCALES.keys()],
+    validator: [...VALID_LOCALES.keys()],
+  })
+  .option("--strict", "Strict validation")
   .action(
-    tryOrExit(({ logger }) => {
-      Redirect.load(null, true);
-      logger.info(chalk.green("🍾 All is well in the world of redirects 🥂"));
+    tryOrExit(({ args, options, logger }) => {
+      const { locales } = args;
+      const { strict } = options;
+      let fine = true;
+      if (strict) {
+        for (const locale of locales) {
+          try {
+            Redirect.validateLocale(locale);
+            logger.info(chalk.green(`✓ redirects for ${locale} looking good!`));
+          } catch (e) {
+            logger.info(
+              chalk.red(`_redirects.txt for ${locale} is causing issues: ${e}`)
+            );
+            fine = false;
+          }
+        }
+      } else {
+        try {
+          Redirect.load(locales, true);
+        } catch (e) {
+          logger.info(chalk.red(`Unable to load redirects: ${e}`));
+          fine = false;
+        }
+      }
+      if (fine) {
+        logger.info(chalk.green("🍾 All is well in the world of redirects 🥂"));
+      } else {
+        throw new Error("🔥 Errors loading redirects 🔥");
+      }
     })
   )
 
@@ -77,13 +113,13 @@ program
   .command("add-redirect", "Add a new redirect")
   .argument("<from>", "From-URL", {
     validator: (value) => {
-      Redirect.validateFromURL(value);
+      Redirect.validateFromURL(value, false);
       return value;
     },
   })
   .argument("<to>", "To-URL", {
     validator: (value) => {
-      Redirect.validateToURL(value);
+      Redirect.validateToURL(value, false);
       return value;
     },
   })
@@ -97,16 +133,16 @@ program
   )
 
   .command("fix-redirects", "Consolidate/fix redirects")
-  .argument("<locale...>", "Locale", {
+  .argument("<locales...>", "Locale", {
     default: [DEFAULT_LOCALE],
     validator: [...VALID_LOCALES.values(), ...VALID_LOCALES.keys()],
   })
   .action(
     tryOrExit(({ args, logger }) => {
-      const { locale } = args;
-      for (const l of locale) {
-        Redirect.add(l.toLowerCase(), [], { fix: true });
-        logger.info(chalk.green(`Fixed ${l}`));
+      const { locales } = args;
+      for (const locale of locales) {
+        Redirect.add(locale.toLowerCase(), [], { fix: true });
+        logger.info(chalk.green(`Fixed ${locale}`));
       }
     })
   )
@@ -295,6 +331,19 @@ program
         if (document) {
           url = document.url;
         }
+      } else if (
+        slug.includes(BUILD_OUT_ROOT) &&
+        fs.existsSync(slug) &&
+        fs.existsSync(path.join(slug, "index.json"))
+      ) {
+        // Someone probably yarn `yarn build` and copy-n-pasted one of the lines
+        // it spits out from its CLI.
+        const { doc } = JSON.parse(
+          fs.readFileSync(path.join(slug, "index.json"))
+        );
+        if (doc) {
+          url = doc.mdn_url;
+        }
       } else {
         try {
           const parsed = new URL(slug);
@@ -322,27 +371,21 @@ program
   .option("--root <directory>", "Which content root", {
     default: CONTENT_ROOT,
   })
-  .option("--save-history <path>", `File to save all previous history`, {
-    default: path.join(os.tmpdir(), "yari-git-history.json"),
-  })
-  .option(
-    "--load-history <path>",
-    `Optional file to load all previous history`,
-    {
-      default: path.join(os.tmpdir(), "yari-git-history.json"),
-    }
-  )
+  .option("--save-history <path>", "File to save all previous history")
+  .option("--load-history <path>", "Optional file to load all previous history")
   .action(
     tryOrExit(async ({ options }) => {
       const { root, saveHistory, loadHistory } = options;
-      if (fs.existsSync(loadHistory)) {
-        console.log(
-          chalk.yellow(`Reusing existing history from ${loadHistory}`)
-        );
+      if (loadHistory) {
+        if (fs.existsSync(loadHistory)) {
+          console.log(
+            chalk.yellow(`Reusing existing history from ${loadHistory}`)
+          );
+        }
       }
       const map = gatherGitHistory(
         root,
-        fs.existsSync(loadHistory) ? loadHistory : null
+        loadHistory && fs.existsSync(loadHistory) ? loadHistory : null
       );
       const historyPerLocale = {};
 
@@ -350,7 +393,7 @@ program
       const allHistory = {};
       for (const [relPath, value] of map) {
         allHistory[relPath] = value;
-        const locale = relPath.split("/")[0];
+        const locale = relPath.split(path.sep)[0];
         if (!historyPerLocale[locale]) {
           historyPerLocale[locale] = {};
         }
@@ -367,18 +410,20 @@ program
           )
         );
       }
-      fs.writeFileSync(
-        saveHistory,
-        JSON.stringify(allHistory, null, 2),
-        "utf-8"
-      );
-      console.log(
-        chalk.green(
-          `Saved ${Object.keys(
-            allHistory
-          ).length.toLocaleString()} paths into ${saveHistory}`
-        )
-      );
+      if (saveHistory) {
+        fs.writeFileSync(
+          saveHistory,
+          JSON.stringify(allHistory, null, 2),
+          "utf-8"
+        );
+        console.log(
+          chalk.green(
+            `Saved ${Object.keys(
+              allHistory
+            ).length.toLocaleString()} paths into ${saveHistory}`
+          )
+        );
+      }
     })
   )
 
@@ -639,6 +684,70 @@ program
           `${options.outfile} is ${fmtBytes(fs.statSync(options.outfile).size)}`
         )
       );
+    })
+  )
+
+  .command(
+    "google-analytics-code",
+    "Generate a .js file that can be used in SSR rendering"
+  )
+  .option("--outfile <path>", "name of the generated script file", {
+    default: path.join(BUILD_OUT_ROOT, "static", "js", "ga.js"),
+  })
+  .option(
+    "--debug",
+    "whether to use the Google Analytics debug file (defaults to value of $GOOGLE_ANALYTICS_DEBUG)",
+    {
+      default: GOOGLE_ANALYTICS_DEBUG,
+    }
+  )
+  .option(
+    "--account <id>",
+    "Google Analytics account ID (defaults to value of $GOOGLE_ANALYTICS_ACCOUNT)",
+    {
+      default: GOOGLE_ANALYTICS_ACCOUNT,
+    }
+  )
+  .action(
+    tryOrExit(async ({ options, logger }) => {
+      const { outfile, debug, account } = options;
+      if (account) {
+        const dntHelperCode = fs
+          .readFileSync(
+            path.join(__dirname, "mozilla.dnthelper.min.js"),
+            "utf-8"
+          )
+          .trim();
+
+        const gaScriptURL = `https://www.google-analytics.com/${
+          debug ? "analytics_debug" : "analytics"
+        }.js`;
+
+        const code = `
+// Mozilla DNT Helper
+${dntHelperCode}
+// only load GA if DNT is not enabled
+if (Mozilla && !Mozilla.dntEnabled()) {
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', '${account}', 'mozilla.org');
+    ga('set', 'anonymizeIp', true);
+    ga('send', 'pageview');
+
+    var gaScript = document.createElement('script');
+    gaScript.async = 1; gaScript.src = '${gaScriptURL}';
+    document.head.appendChild(gaScript);
+}`.trim();
+        fs.writeFileSync(outfile, `${code}\n`, "utf-8");
+        logger.info(
+          chalk.green(
+            `Generated ${outfile} for SSR rendering using ${account}${
+              debug ? " (debug mode)" : ""
+            }.`
+          )
+        );
+      } else {
+        logger.info(chalk.yellow("No Google Analytics code file generated"));
+      }
     })
   );
 
