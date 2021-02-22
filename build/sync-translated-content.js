@@ -53,6 +53,11 @@ function runPass(locale, files, redirects, stats, fistPass) {
 }
 
 function syncAllTranslatedContent(locale) {
+  if (!CONTENT_TRANSLATED_ROOT) {
+    throw new Error(
+      "CONTENT_TRANSLATED_ROOT must be set to sync translated content!"
+    );
+  }
   const redirects = new Map();
   const files = glob.sync(
     path.join(CONTENT_TRANSLATED_ROOT, locale, "**", "index.html")
@@ -119,6 +124,11 @@ function resolve(slug) {
 }
 
 function syncTranslatedContent(inFilePath, locale, secondPass = false) {
+  if (!CONTENT_TRANSLATED_ROOT) {
+    throw new Error(
+      "CONTENT_TRANSLATED_ROOT must be set to sync translated content!"
+    );
+  }
   const status = {
     redirect: null,
     conflicting: false,
