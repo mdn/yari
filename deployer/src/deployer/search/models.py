@@ -6,6 +6,7 @@ from elasticsearch_dsl import (
     Text,
     analyzer,
     token_filter,
+    char_filter,
 )
 
 """
@@ -49,6 +50,32 @@ yari_word_delimiter = token_filter(
     split_on_numerics=False,
 )
 
+
+keep_html_char_filter = char_filter(
+    "keep_html_char_filter",
+    type="pattern_replace",
+    pattern="<([a-z]+)>",
+    # The magic here is that turning things like `<video>` to `_video_`
+    # and `<a>` to `_a_` means that it gets analyzed as its own token like that.
+    # This way you can search for `<a>` and find `<a>: The Anchor element`.
+    # But note that a search for `<section>` will *also* match
+    # `<nav>: The Navigation Section element` because `<section>` is turned in the
+    # the following two tokens: `['_section_', 'section']`.
+    # Not great.
+    # However, what if the user wants to find the page about the `<section>` HTML
+    # tag and they search for `section`. Then it's a good thing that that token
+    # expands to both forms.
+    # A more extreme variant would be something that doesn't get token delimited.
+    # For example:
+    #
+    #   `replacement="html$1html"`
+    #
+    # This would turn `<a>` to `htmlahtml` which means a search for `<a>` will
+    # work expected but a search for `video` wouldn't match
+    # the `<video>: The Video Embed element` page.
+    replacement="_$1_",
+)
+
 text_analyzer = analyzer(
     "text_analyzer",
     tokenizer="standard",
@@ -70,6 +97,7 @@ text_analyzer = analyzer(
     # Note that we don't use the `html_strip` char_filter.
     # With that, we'd lose some of the valueable characters like: `<video>` which
     # is an actual title.
+    char_filter=[keep_html_char_filter],
 )
 
 
