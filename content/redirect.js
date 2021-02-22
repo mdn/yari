@@ -58,9 +58,15 @@ function resolveDocumentPath(url) {
 }
 
 // Throw if this can't be a redirect from-URL.
-function validateFromURL(url, checkResolve = true, checkPath = true) {
+function validateFromURL(url, locale, checkPath = true) {
   if (!url.startsWith("/")) {
     throw new Error(`From-URL must start with a / was ${url}`);
+  }
+  const [, fromLocale] = url.toLowerCase().split("/");
+  if (fromLocale !== locale) {
+    throw new Error(
+      `From-URL with ${fromLocale} in ${locale} redirects file: ${url}`
+    );
   }
   if (!url.includes("/docs/")) {
     throw new Error(`From-URL must contain '/docs/' was ${url}`);
@@ -77,18 +83,10 @@ function validateFromURL(url, checkResolve = true, checkPath = true) {
       throw new Error(`From-URL resolves to a file (${path})`);
     }
   }
-  if (checkResolve) {
-    const resolved = resolve(url);
-    if (resolved !== url) {
-      throw new Error(
-        `${url} is already matched as a redirect (to: '${resolved}')`
-      );
-    }
-  }
 }
 
 // Throw if this can't be a redirect to-URL.
-function validateToURL(url, checkResolve = true, checkPath = true) {
+function validateToURL(url, locale, checkPath = true) {
   // Let's keep vanity urls to /en-US/ ...
   if (isVanityRedirectURL(url)) {
     return url;
@@ -105,16 +103,11 @@ function validateToURL(url, checkResolve = true, checkPath = true) {
     validateURLLocale(url);
 
     const [bareURL] = url.split("#");
-    if (checkResolve) {
-      // Can't point to something that redirects to something
-      const resolved = resolve(bareURL);
-      if (resolved !== bareURL) {
-        throw new Error(
-          `${bareURL} is already matched as a redirect (to: '${resolved}')`
-        );
-      }
-    }
     if (checkPath) {
+      const [, toLocale] = url.toLowerCase().split("/");
+      if (toLocale !== locale) {
+        return;
+      }
       const path = resolveDocumentPath(bareURL);
       if (!path) {
         throw new Error(`To-URL has to resolve to a file (${bareURL})`);
@@ -198,7 +191,7 @@ function removeOrphanedRedirects(pairs, locale) {
   });
 }
 
-function loadPairsFromFile(filePath, strict = true) {
+function loadPairsFromFile(filePath, locale, strict = true) {
   const content = fs.readFileSync(filePath, "utf-8");
   const pairs = content
     .trim()
@@ -211,7 +204,7 @@ function loadPairsFromFile(filePath, strict = true) {
     errorOnEncoded(pairs);
     errorOnDuplicated(pairs);
   }
-  validatePairs(pairs, strict);
+  validatePairs(pairs, locale, strict);
   return pairs;
 }
 
@@ -222,7 +215,7 @@ function loadLocaleAndAdd(
 ) {
   errorOnEncoded(updatePairs);
   errorOnDuplicated(updatePairs);
-  validatePairs(updatePairs);
+  validatePairs(updatePairs, locale);
 
   locale = locale.toLowerCase();
   let root = CONTENT_ROOT;
@@ -239,7 +232,7 @@ function loadLocaleAndAdd(
   const pairs = [];
   if (fs.existsSync(redirectsFilePath)) {
     // If we wanna fix we load relaxed, hence the !fix.
-    pairs.push(...loadPairsFromFile(redirectsFilePath, strict && !fix));
+    pairs.push(...loadPairsFromFile(redirectsFilePath, locale, strict && !fix));
   }
 
   const cleanPairs = removeConflictingOldRedirects(pairs, updatePairs);
@@ -249,21 +242,42 @@ function loadLocaleAndAdd(
   if (fix) {
     simplifiedPairs = removeOrphanedRedirects(simplifiedPairs, locale);
   }
-  validatePairs(simplifiedPairs);
+  validatePairs(simplifiedPairs, locale, strict);
 
-  return { pairs: simplifiedPairs, root, changed: simplifiedPairs == pairs };
+  const pairsChanged = (a, b) => {
+    // Compare tuple by tuple if they are the same.
+    for (let i = 0; i < Math.max(a.length, b.length); i++) {
+      const [a1, a2] = a[i] || [];
+      const [b1, b2] = b[i] || [];
+      if (a1 !== b1 || a2 !== b2) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  return {
+    pairs: simplifiedPairs,
+    root,
+    changed: pairsChanged(pairs, simplifiedPairs),
+  };
 }
 
-function add(locale, updatePairs, { fix = false } = {}) {
-  const { pairs, root } = loadLocaleAndAdd(locale, updatePairs, { fix });
-  save(path.join(root, locale), pairs);
+function add(locale, updatePairs, { fix = false, strict = false } = {}) {
+  const localeLC = locale.toLowerCase();
+  const { pairs, root } = loadLocaleAndAdd(localeLC, updatePairs, {
+    fix,
+    strict,
+  });
+  save(path.join(root, localeLC), pairs);
 }
 
 function validateLocale(locale, strict = false) {
+  const localeLC = locale.toLowerCase();
   // To validate strict we check if there is something to fix.
-  const { changed } = loadLocaleAndAdd(locale, [], { fix: strict, strict });
+  const { changed } = loadLocaleAndAdd(localeLC, [], { fix: strict, strict });
   if (changed) {
-    throw new Error(` _redirects.txt for ${locale} is flawed`);
+    throw new Error(` _redirects.txt for ${localeLC} is flawed`);
   }
 }
 
@@ -292,15 +306,15 @@ function redirectFilePathForLocale(locale, throws = false) {
 const redirects = new Map();
 
 function load(locales = [...VALID_LOCALES.keys()], verbose = false) {
-  const files = locales
-    .map((locale) => redirectFilePathForLocale(locale))
-    .filter((f) => f !== null);
-
-  for (const redirectsFilePath of files) {
+  for (const locale of locales) {
+    const redirectsFilePath = redirectFilePathForLocale(locale);
+    if (!redirectsFilePath) {
+      continue;
+    }
     if (verbose) {
       console.log(`Checking ${redirectsFilePath}`);
     }
-    const pairs = loadPairsFromFile(redirectsFilePath, false);
+    const pairs = loadPairsFromFile(redirectsFilePath, locale, false);
     // Now that all have been collected, transfer them to the `redirects` map
     // but also do invariance checking.
     for (const [from, to] of pairs) {
@@ -434,10 +448,10 @@ function decodePairs(pairs) {
   return pairs.map((pair) => decodePair(pair));
 }
 
-function validatePairs(pairs, checkExists = true) {
+function validatePairs(pairs, locale, checkExists = true) {
   for (const [from, to] of pairs) {
-    validateFromURL(from, false, checkExists);
-    validateToURL(to, false, checkExists);
+    validateFromURL(from, locale, checkExists);
+    validateToURL(to, locale, checkExists);
   }
 }
 
@@ -455,8 +469,6 @@ module.exports = {
   add,
   resolve,
   load,
-  validateFromURL,
-  validateToURL,
   validateLocale,
 
   testing: {
