@@ -305,7 +305,7 @@ have exactly one corresponding english document with the same slug.
 
 Orphaned documents are documents that do not have a corresponding english
 document (anymore). Their folder/slug has been prefixed with \`orphaned\`.
-Redirects where added as there might me links to these documents.
+Redirects where added as there might be links to these documents.
 
 ### Conflicting
 
