@@ -441,18 +441,18 @@ function move(oldSlug, newSlug, locale, { dry = false } = {}) {
   }
 
   const realOldSlug = doc.metadata.slug;
-  const paris = [doc, ...findChildren(oldUrl, true)].map(({ metadata }) => [
+  const pairs = [doc, ...findChildren(oldUrl, true)].map(({ metadata }) => [
     metadata.slug,
     metadata.slug.replace(realOldSlug, newSlug),
   ]);
   if (dry) {
-    return paris;
+    return pairs;
   }
 
   doc.metadata.slug = newSlug;
   update(oldUrl, doc.rawHTML, doc.metadata);
 
-  return paris;
+  return pairs;
 }
 
 function fileForSlug(slug, locale) {
