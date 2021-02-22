@@ -9,6 +9,8 @@ const {
 const { VALID_LOCALES } = require("@yari-internal/constants");
 
 const THIRTY_DAYS = 3600 * 24 * 30;
+const DOC_WITHOUT_LOCALE = /^\/docs(?:$|\/)/;
+const SEARCH_WITHOUT_LOCALE = /^\/search\/?$/;
 // Note that the keys of "VALID_LOCALES" are lowercase locales.
 const LOCALE_URI_WITHOUT_TRAILING_SLASH = new Set(
   [...VALID_LOCALES.keys()].map((locale) => `/${locale}`)
@@ -60,8 +62,9 @@ exports.handler = async (event) => {
    * Modify the request before it's passed to the S3 origin.
    */
   const request = event.Records[0].cf.request;
-  const host = request.headers.host[0].value.toLowerCase();
   const requestURILowerCase = request.uri.toLowerCase();
+  const host = request.headers.host[0].value.toLowerCase();
+  const qs = request.querystring ? `?${request.querystring}` : "";
 
   const { url, status } = resolveFundamental(request.uri);
   if (url) {
@@ -71,12 +74,14 @@ exports.handler = async (event) => {
     });
   }
 
-  // Starting with /docs/ or empty path (/) should redirect to a locale.
-  // Also trim a trailing slash to avoid a double redirect.
+  // Starting with an empty path, /search, or /docs should redirect to
+  // a locale. Also, trim a trailing slash to avoid a double redirect,
+  // except when requesting the home page.
   if (
-    requestURILowerCase.startsWith("/docs/") ||
+    request.uri === "" ||
     request.uri === "/" ||
-    request.uri === ""
+    DOC_WITHOUT_LOCALE.test(requestURILowerCase) ||
+    SEARCH_WITHOUT_LOCALE.test(requestURILowerCase)
   ) {
     const path = request.uri.endsWith("/")
       ? request.uri.slice(0, -1)
@@ -84,7 +89,24 @@ exports.handler = async (event) => {
     const locale = getLocale(request);
     // The only time we actually want a trailing slash is when the URL is just
     // the locale. E.g. `/en-US/` (not `/en-US`)
-    return redirect(`/${locale}${path || "/"}`);
+    return redirect(`/${locale}${path || "/"}` + qs);
+  }
+
+  // At this point, the URI is guaranteed to start with a forward slash.
+  const uriParts = request.uri.split("/");
+  const uriFirstPart = uriParts[1];
+  const uriFirstPartLC = uriFirstPart.toLowerCase();
+
+  // Do we need to redirect to the properly-cased locale? We also ensure
+  // here that requests for the home page have a trailing slash, while
+  // all others do not.
+  if (
+    VALID_LOCALES.has(uriFirstPartLC) &&
+    uriFirstPart !== VALID_LOCALES.get(uriFirstPartLC)
+  ) {
+    // Assemble the rest of the path without a trailing slash.
+    const extra = uriParts.slice(2).filter(Boolean).join("/");
+    return redirect(`/${VALID_LOCALES.get(uriFirstPartLC)}/${extra}${qs}`);
   }
 
   // Handle cases related to the presence or absence of a trailing-slash.
@@ -95,7 +117,7 @@ exports.handler = async (event) => {
     // trailing slash. When the redirected home-page request is
     // processed by this Lambda function, note that we'll remove
     // the trailing slash before the request reaches S3 (see below).
-    return redirect(request.uri + "/", {
+    return redirect(request.uri + "/" + qs, {
       status: 301,
       cacheControlSeconds: THIRTY_DAYS,
     });
@@ -111,7 +133,6 @@ exports.handler = async (event) => {
   } else if (request.uri.endsWith("/")) {
     // All other requests with a trailing slash should redirect to the
     // same URL without the trailing slash.
-    const qs = request.querystring ? `?${request.querystring}` : "";
     return redirect(request.uri.slice(0, -1) + qs, {
       status: 301,
       cacheControlSeconds: THIRTY_DAYS,
