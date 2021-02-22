@@ -26,7 +26,9 @@ const {
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
 const { uniqifyTranslationsOf } = require("./translationsof");
 const { humanFileSize } = require("./utils");
-const { syncTranslatedContentForAllLocales } = require("./sync-translated-content");
+const {
+  syncTranslatedContentForAllLocales,
+} = require("./sync-translated-content");
 const { getFeedEntries } = require("./feedparser");
 
 async function buildDocumentInteractive(
