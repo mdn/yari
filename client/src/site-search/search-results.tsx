@@ -211,6 +211,7 @@ function SortOptions() {
             <li
               key={key}
               className={key === querySort ? "current-option" : undefined}
+              aria-current={key === querySort ? true : false}
             >
               {key === querySort ? (
                 label

@@ -15,14 +15,20 @@ export default function AdvancedSearchOptions() {
   const locale = useLocale();
   const [searchParams] = useSearchParams();
   const queryLocales = searchParams.getAll("locale");
+  const isBoth =
+    queryLocales.length === 2 && equalLocales(queryLocales, [locale, "en-us"]);
+  const isCurrentLocale =
+    !queryLocales.length ||
+    (queryLocales.length === 1 && equalLocales(queryLocales, [locale]));
+  const isEnglish =
+    queryLocales.length && equalLocales(queryLocales, ["en-us"]);
 
   return (
     <>
       <h2>Language</h2>
       <ul className="search-language-options">
-        <li>
-          {queryLocales.length === 2 &&
-          equalLocales(queryLocales, [locale, "en-us"]) ? (
+        <li aria-current={isBoth ? true : false}>
+          {isBoth ? (
             "Both"
           ) : (
             <Link
@@ -36,10 +42,8 @@ export default function AdvancedSearchOptions() {
           )}
           {" | "}
         </li>
-        <li>
-          {!queryLocales.length ||
-          (queryLocales.length === 1 &&
-            equalLocales(queryLocales, [locale])) ? (
+        <li aria-current={isCurrentLocale ? true : false}>
+          {isCurrentLocale ? (
             (LANGUAGES.get(locale.toLowerCase())?.native,
             LANGUAGES.get(locale.toLowerCase())?.English)
           ) : (
@@ -55,8 +59,8 @@ export default function AdvancedSearchOptions() {
           )}
           {" | "}
         </li>
-        <li>
-          {queryLocales.length && equalLocales(queryLocales, ["en-us"]) ? (
+        <li aria-current={isEnglish ? true : false}>
+          {isEnglish ? (
             LANGUAGES.get("en-us")?.native
           ) : (
             <Link
