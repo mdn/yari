@@ -65,7 +65,7 @@ program
       if (strict) {
         for (const locale of locales) {
           try {
-            Redirect.validateLocale(locale);
+            Redirect.validateLocale(locale, strict);
             logger.info(chalk.green(`✓ redirects for ${locale} looking good!`));
           } catch (e) {
             logger.info(
@@ -106,18 +106,8 @@ program
   )
 
   .command("add-redirect", "Add a new redirect")
-  .argument("<from>", "From-URL", {
-    validator: (value) => {
-      Redirect.validateFromURL(value, false);
-      return value;
-    },
-  })
-  .argument("<to>", "To-URL", {
-    validator: (value) => {
-      Redirect.validateToURL(value, false);
-      return value;
-    },
-  })
+  .argument("<from>", "From-URL")
+  .argument("<to>", "To-URL")
   .action(
     tryOrExit(({ args, logger }) => {
       const { from, to } = args;
@@ -136,7 +126,7 @@ program
     tryOrExit(({ args, logger }) => {
       const { locales } = args;
       for (const locale of locales) {
-        Redirect.add(locale.toLowerCase(), [], { fix: true });
+        Redirect.add(locale.toLowerCase(), [], { fix: true, strict: true });
         logger.info(chalk.green(`Fixed ${locale}`));
       }
     })

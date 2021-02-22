@@ -307,7 +307,7 @@ function update(url, rawHTML, metadata) {
     const locale = metadata.locale;
     const redirects = new Map();
     const url = buildURL(locale, oldSlug);
-    for (const { metadata, rawHTML, fileInfo } of findChildren(url)) {
+    for (const { metadata, rawHTML, fileInfo } of findChildren(url, true)) {
       const childLocale = metadata.locale;
       const oldChildSlug = metadata.slug;
       const newChildSlug = oldChildSlug.replace(oldSlug, newSlug);
@@ -412,10 +412,11 @@ function findAll(
   };
 }
 
-function findChildren(url) {
+function findChildren(url, recursive = false) {
   const folder = urlToFolderPath(url);
+  const globber = recursive ? ["*", "**"] : ["*"];
   const childPaths = glob.sync(
-    path.join(CONTENT_ROOT, folder, "*", HTML_FILENAME)
+    path.join(CONTENT_ROOT, folder, ...globber, HTML_FILENAME)
   );
   return childPaths
     .map((childFilePath) =>
@@ -440,18 +441,18 @@ function move(oldSlug, newSlug, locale, { dry = false } = {}) {
   }
 
   const realOldSlug = doc.metadata.slug;
-  const paris = [doc, ...findChildren(oldUrl)].map(({ metadata }) => [
+  const pairs = [doc, ...findChildren(oldUrl, true)].map(({ metadata }) => [
     metadata.slug,
     metadata.slug.replace(realOldSlug, newSlug),
   ]);
   if (dry) {
-    return paris;
+    return pairs;
   }
 
   doc.metadata.slug = newSlug;
   update(oldUrl, doc.rawHTML, doc.metadata);
 
-  return paris;
+  return pairs;
 }
 
 function fileForSlug(slug, locale) {
@@ -493,7 +494,7 @@ function remove(
     throw new Error(`document does not exists: ${url}`);
   }
 
-  const children = findChildren(url);
+  const children = findChildren(url, true);
   if (children.length > 0 && (redirect || !recursive)) {
     throw new Error("unable to remove and redirect a document with children");
   }
