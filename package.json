@@ -121,7 +121,7 @@
     "nodemon": "2.0.7",
     "pegjs": "^0.10.0",
     "prettier": "2.2.1",
-    "prettier-plugin-packagejson": "^2.2.9",
+    "prettier-plugin-packagejson": "^2.2.10",
     "pretty-quick": "3.1.0",
     "puppeteer": "2",
     "react": "17.0.1",
