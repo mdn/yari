@@ -326,6 +326,19 @@ program
         if (document) {
           url = document.url;
         }
+      } else if (
+        slug.includes(BUILD_OUT_ROOT) &&
+        fs.existsSync(slug) &&
+        fs.existsSync(path.join(slug, "index.json"))
+      ) {
+        // Someone probably yarn `yarn build` and copy-n-pasted one of the lines
+        // it spits out from its CLI.
+        const { doc } = JSON.parse(
+          fs.readFileSync(path.join(slug, "index.json"))
+        );
+        if (doc) {
+          url = doc.mdn_url;
+        }
       } else {
         try {
           const parsed = new URL(slug);
