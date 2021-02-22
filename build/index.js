@@ -215,6 +215,12 @@ async function buildDocument(document, documentOptions = {}) {
   const options = Object.assign({}, buildOptions, documentOptions);
   const { metadata, fileInfo } = document;
 
+  if (Document.urlToFolderPath(document.url) !== document.fileInfo.folder) {
+    throw new Error(
+      `The document's slug (${metadata.slug}) doesn't match its disk folder name (${document.fileInfo.folder})`
+    );
+  }
+
   const doc = {
     isArchive: document.isArchive,
     isTranslated: document.isTranslated,
