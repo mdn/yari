@@ -81,16 +81,19 @@
 .search-results-options {
   background-color: $neutral-550;
   margin: ($base-spacing / 2) 0;
-  padding: $base-spacing;
+  padding: $base-spacing / 2;
 
   h2 {
+    display: inline-block;
     font-family: $site-font-family;
-    font-size: $small-medium-font-size;
-    margin-bottom: $base-spacing / 4;
+    font-size: $default-font-size;
+    margin: 0 ($base-spacing / 4) ($base-spacing / 4) 0;
   }
 
   .sort-options,
   .search-language-options {
+    display: inline-block;
+
     li {
       display: inline;
     }

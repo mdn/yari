@@ -16,25 +16,24 @@ describe("Site search", () => {
 
   test("Go to site-search page without query", async () => {
     await page.goto(testURL("/en-us/search/"));
-    await expect(page).toMatch("No results for the query");
+    await expect(page).toMatch("No search query specified");
     // See server/static.js for how fixtures are hardcoded
     await expect(page).toFill(SEARCH_SELECTOR, "FOO");
     await page.$eval('form[role="search"]', (form) => form.submit());
     // Force a wait for the lazy-loading
     await page.waitForNavigation({ waitUntil: "networkidle2" });
-    await expect(page).toMatch("Search results for FOO");
+    await expect(page).toMatch("Search results for, FOO");
     await expect(page).toMatch("Found 1 match");
   });
 
   test("Search and find nothing", async () => {
     await page.goto(testURL("/en-us/search/"));
-    await expect(page).toMatch("No results for the query");
+    await expect(page).toMatch("No search query specified");
     // See server/static.js for how fixtures are hardcoded
     await expect(page).toFill(SEARCH_SELECTOR, "NOTHING");
     await page.$eval('form[role="search"]', (form) => form.submit());
     await page.waitForNavigation({ waitUntil: "networkidle2" });
-    await expect(page).toMatch("Search results for NOTHING");
-    await expect(page).toMatch("Found 0 matches");
+    await expect(page).toMatch("No results for the query, NOTHING");
   });
 
   test("Search and go to page 2", async () => {

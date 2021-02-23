@@ -25,7 +25,7 @@ export default function AdvancedSearchOptions() {
 
   return (
     <>
-      <h2>Language</h2>
+      <h2>Language:</h2>
       <ul className="search-language-options">
         <li aria-current={isCurrentLocale ? true : false}>
           {isCurrentLocale ? (

@@ -201,7 +201,7 @@ function SortOptions() {
   const querySort = searchParams.get("sort") || SORT_OPTIONS[0][0];
   return (
     <>
-      <h2>Sort by</h2>
+      <h2>Sort by:</h2>
       <ul className="sort-options">
         {SORT_OPTIONS.map(([key, label], i) => {
           return (
@@ -298,8 +298,8 @@ function Results({
       {hitCount > 0 ? (
         <>
           <h1>
-            Search results for <span className="query-string">{query}</span>,{" "}
-            {page && page !== 1 && `page ${page} `}
+            Search results for, <span className="query-string">{query}</span>
+            {page && page !== 1 && `, page ${page}`}
           </h1>
           <p className="search-metrics">
             Found <ShowTotal total={metadata.total} /> in {metadata.took_ms}{" "}
@@ -313,18 +313,20 @@ function Results({
         </h1>
       )}
 
-      <div className="search-results-options readable-line-length">
-        {/* It only makes sense to display the sorting options if anything was found */}
-        {hitCount > 1 && <SortOptions />}
+      {hitCount > 1 && (
+        <div className="search-results-options readable-line-length">
+          {/* It only makes sense to display the sorting options if anything was found */}
+          <SortOptions />
 
-        {/* Language only applies if you're browsing in, say, French and want
+          {/* Language only applies if you're browsing in, say, French and want
           to search in English too. */}
-        {locale.toLowerCase() !== "en-us" && (
-          <div className="advanced-options">
-            <AdvancedSearchOptions />
-          </div>
-        )}
-      </div>
+          {locale.toLowerCase() !== "en-us" && (
+            <div className="advanced-options">
+              <AdvancedSearchOptions />
+            </div>
+          )}
+        </div>
+      )}
 
       {!!suggestions.length && (
         <div className="search-suggestions">
