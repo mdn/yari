@@ -42,7 +42,7 @@ describe("Site search", () => {
     await expect(page).toFill(SEARCH_SELECTOR, "SERIAL(20)");
     await page.$eval('form[role="search"]', (form) => form.submit());
     await page.waitForNavigation({ waitUntil: "networkidle2" });
-    await expect(page).toMatch("Search results for SERIAL(20)");
+    await expect(page).toMatch("Search results for, SERIAL(20)");
     expect(page.url()).toBe(testURL("/en-US/search/?q=SERIAL%2820%29"));
     await expect(page).toMatch("Found 20 matches in 0.1 milliseconds");
     await expect(page).toMatch("Serial 0");
