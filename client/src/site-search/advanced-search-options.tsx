@@ -44,8 +44,9 @@ export default function AdvancedSearchOptions() {
         </li>
         <li aria-current={isCurrentLocale ? true : false}>
           {isCurrentLocale ? (
-            (LANGUAGES.get(locale.toLowerCase())?.native,
-            LANGUAGES.get(locale.toLowerCase())?.English)
+            `${LANGUAGES.get(locale.toLowerCase())?.native} ${
+              LANGUAGES.get(locale.toLowerCase())?.English
+            }`
           ) : (
             <Link
               to={`?${appendURL(searchParams, {
