@@ -71,6 +71,7 @@
     "inquirer": "^7.3.3",
     "is-svg": "4.2.1",
     "js-yaml": "4.0.0",
+    "loglevel": "^1.7.1",
     "lru-cache": "^6.0.0",
     "mdn-data": "2.0.16",
     "open": "^7.4.2",
