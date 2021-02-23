@@ -16,17 +16,28 @@ function gatherTranslations() {
     const translations = TRANSLATIONS_OF.get(slug.toLowerCase());
     if (translations) {
       translations.push(translation);
+      translations.sort(({ locale: a }, { locale: b }) => {
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+      });
     } else {
       TRANSLATIONS_OF.set(slug.toLowerCase(), [translation]);
     }
   }
 }
 
-function translationsOf(slug) {
+function translationsOf({ slug, locale: currentLocale }) {
   if (TRANSLATIONS_OF.size === 0) {
     gatherTranslations();
   }
-  return TRANSLATIONS_OF.get(slug.toLowerCase());
+  const translations = TRANSLATIONS_OF.get(slug.toLowerCase());
+  if (translations && currentLocale) {
+    return translations.filter(
+      ({ locale }) => locale.toLowerCase() !== currentLocale.toLowerCase()
+    );
+  }
+  return translations;
 }
 
 module.exports = {

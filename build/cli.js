@@ -26,7 +26,6 @@ const {
   HOMEPAGE_FEED_DISPLAY_MAX,
 } = require("./constants");
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
-const { uniqifyTranslationsOf } = require("./translationsof");
 const { humanFileSize } = require("./utils");
 const {
   syncTranslatedContentForAllLocales,
@@ -44,12 +43,9 @@ async function buildDocumentInteractive(
       : Document.read(documentPath);
 
     if (!interactive) {
-      const translations = translationsOf(document.metadata.slug);
-      if (translations) {
-        document.translations = uniqifyTranslationsOf(
-          translations,
-          document.url
-        );
+      const translations = translationsOf(document.metadata);
+      if (translations && translations.length > 0) {
+        document.translations = translations;
       } else {
         document.translations = [];
       }
