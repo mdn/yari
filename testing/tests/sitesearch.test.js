@@ -33,7 +33,7 @@ describe("Site search", () => {
     await expect(page).toFill(SEARCH_SELECTOR, "NOTHING");
     await page.$eval('form[role="search"]', (form) => form.submit());
     await page.waitForNavigation({ waitUntil: "networkidle2" });
-    await expect(page).toMatch("No results for the query, NOTHING");
+    await expect(page).toMatch("No results for, NOTHING");
   });
 
   test("Search and go to page 2", async () => {

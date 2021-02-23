@@ -291,8 +291,6 @@ function Results({
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q");
 
-  console.log(suggestions);
-
   return (
     <>
       {hitCount > 0 ? (
@@ -308,8 +306,7 @@ function Results({
         </>
       ) : (
         <h1>
-          No results for the query,{" "}
-          <span className="query-string">{query}</span>
+          No results for, <span className="query-string">{query}</span>
         </h1>
       )}
 
