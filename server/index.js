@@ -54,6 +54,7 @@ app.use(
         }${PROXY_HOSTNAME}`,
         changeOrigin: true,
         proxyTimeout: 3000,
+        timeout: 3000,
       })
 );
 
