@@ -27,21 +27,6 @@ export default function AdvancedSearchOptions() {
     <>
       <h2>Language</h2>
       <ul className="search-language-options">
-        <li aria-current={isBoth ? true : false}>
-          {isBoth ? (
-            "Both"
-          ) : (
-            <Link
-              to={`?${appendURL(searchParams, {
-                locale: [locale, "en-US"],
-                page: undefined,
-              })}`}
-            >
-              Both
-            </Link>
-          )}
-          {" | "}
-        </li>
         <li aria-current={isCurrentLocale ? true : false}>
           {isCurrentLocale ? (
             `${LANGUAGES.get(locale.toLowerCase())?.native} ${
@@ -71,6 +56,21 @@ export default function AdvancedSearchOptions() {
               })}`}
             >
               {LANGUAGES.get("en-us")?.native}
+            </Link>
+          )}
+          {" | "}
+        </li>
+        <li aria-current={isBoth ? true : false}>
+          {isBoth ? (
+            "Both"
+          ) : (
+            <Link
+              to={`?${appendURL(searchParams, {
+                locale: [locale, "en-US"],
+                page: undefined,
+              })}`}
+            >
+              Both
             </Link>
           )}
         </li>

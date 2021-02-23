@@ -298,8 +298,8 @@ function Results({
       {hitCount > 0 ? (
         <>
           <h1>
-            Search results {page && page !== 1 && `page ${page} `}for{" "}
-            <span className="query-string">{query}</span>
+            Search results for <span className="query-string">{query}</span>,{" "}
+            {page && page !== 1 && `page ${page} `}
           </h1>
           <p className="search-metrics">
             Found <ShowTotal total={metadata.total} /> in {metadata.took_ms}{" "}
