@@ -8,7 +8,7 @@
   $1 - Text to display (optional)
   $2 - Anchor within the page (optional)
 */
-let elementName = $0.toString().toLowerCase();
+const elementName = $0.toString().toLowerCase();
 let linkText = ($1 || elementName);
 switch (env.locale) {
     case 'ja':
@@ -19,12 +19,13 @@ switch (env.locale) {
     default: break;
 }
 
-let sectionName = mdn.localString({
+const sectionName = mdn.localString({
     "es": "Elemento",
     "en-US": "Element"
 });
-let url = "/" + env.locale + "/docs/Web/HTML/" + sectionName + "/" +
-    elementName;
+const baseURL = `/${env.locale}/docs/Web/HTML`;
+const urlPath = `/${sectionName}/${elementName}`
+let url = `${baseURL}${urlPath}`;
 
 // Add anchor after fetching the page contents
 url += $2;
@@ -33,5 +34,5 @@ if (linkText === elementName && elementName.indexOf(" ") === -1) {
     linkText = "<code>&lt;" + linkText + "&gt;</code>";
 }
 
-let link = "<a href=\"" + url + "\">" + linkText + "</a>";
+const link = web.smartLink(url, null, linkText, sectionName + '/' + elementName, baseURL);
 %><%- link %>
