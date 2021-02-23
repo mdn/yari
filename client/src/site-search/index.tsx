@@ -25,19 +25,6 @@ export function SiteSearch() {
 
   const query = searchParams.get("q");
   const page = searchParams.get("page");
-  React.useEffect(() => {
-    if (query) {
-      let title = `Search results for "${query}"`;
-      if (page && page !== "1") {
-        title += `, (page ${page})`;
-      }
-      document.title = title;
-    } else {
-      document.title = "No search query specified.";
-    }
-
-    document.title += " - MDN Web Docs";
-  }, [query, page]);
 
   const mountCounter = React.useRef(0);
   React.useEffect(() => {

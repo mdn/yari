@@ -113,7 +113,10 @@ export default function SearchResults() {
   );
 
   const page = searchParams.get("page");
+  const query = searchParams.get("q");
+
   const [initialPage, setInitialPage] = React.useState(page);
+
   React.useEffect(() => {
     if (page !== initialPage) {
       setInitialPage(page);
@@ -123,6 +126,26 @@ export default function SearchResults() {
       }
     }
   }, [page, initialPage]);
+
+  React.useEffect(() => {
+    if (query) {
+      let title = "";
+
+      if (data && data.metadata.total.value) {
+        title += `${data.metadata.total.value} `;
+      }
+      title += `Search results for "${query}"`;
+
+      if (page && page !== "1") {
+        title += `. (Page ${page})`;
+      }
+      document.title = title;
+    } else {
+      document.title = "No search query specified.";
+    }
+
+    document.title += " - MDN Web Docs";
+  }, [data, query, page]);
 
   if (error) {
     if (error instanceof BadRequestError) {
@@ -297,7 +320,7 @@ function Results({
         <>
           <h1>
             Search results for, <span className="query-string">{query}</span>
-            {page && page !== 1 && `, page ${page}`}
+            {page && page !== 1 && `. Page ${page}`}
           </h1>
           <p className="search-metrics">
             Found <ShowTotal total={metadata.total} /> in {metadata.took_ms}{" "}
