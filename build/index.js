@@ -219,6 +219,12 @@ async function buildDocument(document, documentOptions = {}) {
   const options = Object.assign({}, buildOptions, documentOptions);
   const { metadata, fileInfo } = document;
 
+  if (Document.urlToFolderPath(document.url) !== document.fileInfo.folder) {
+    throw new Error(
+      `The document's slug (${metadata.slug}) doesn't match its disk folder name (${document.fileInfo.folder})`
+    );
+  }
+
   const doc = {
     isArchive: document.isArchive,
     isTranslated: document.isTranslated,
@@ -234,7 +240,7 @@ async function buildDocument(document, documentOptions = {}) {
     renderedHtml = document.rawHTML;
   } else {
     if (options.clearKumascriptRenderCache) {
-      renderKumascriptCache.clear();
+      renderKumascriptCache.reset();
     }
     try {
       [renderedHtml, flaws] = await kumascript.render(document.url);
@@ -491,7 +497,10 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
   doc.noIndexing =
-    (doc.isArchive && !doc.isTranslated) || metadata.slug === "MDN/Kitchensink";
+    (doc.isArchive && !doc.isTranslated) ||
+    metadata.slug === "MDN/Kitchensink" ||
+    document.metadata.slug.startsWith("orphaned/") ||
+    document.metadata.slug.startsWith("conflicting/");
 
   return { doc, liveSamples, fileAttachments, bcdData };
 }

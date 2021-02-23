@@ -8,11 +8,6 @@ import { useDocumentURL } from "./hooks";
 import { Doc } from "./types";
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
-import { InteractiveExample } from "./ingredients/interactive-example";
-import { Attributes } from "./ingredients/attributes";
-import { Examples } from "./ingredients/examples";
-import { LinkList, LinkLists } from "./ingredients/link-lists";
-import { Specifications } from "./ingredients/specifications";
 import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 
 // Misc
@@ -28,6 +23,14 @@ import { Metadata } from "./organisms/metadata";
 import { ReactComponent as Dino } from "../assets/dino.svg";
 
 import "./index.scss";
+
+// It's unfortunate but it is what it is at the moment. Not every page has an
+// interactive example (in its HTML blob) but we don't know that in advance.
+// But just in case it does, we need to have the CSS ready in the main bundle.
+// Perhaps a more ideal solution would be that the interactive example <iframe>
+// code could come with its own styling rather than it having to be part of the
+// main bundle all the time.
+import "./interactive-examples.scss";
 
 // Lazy sub-components
 const Toolbar = React.lazy(() => import("./toolbar"));
@@ -85,11 +88,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
         // Note that in local development, where you use `localhost:3000`
         // this will always be true because it's always client-side navigation.
         ga("set", "dimension19", "Yes");
+        ga("send", {
+          hitType: "pageview",
+          location: window.location.toString(),
+        });
       }
-      ga("send", {
-        hitType: "pageview",
-        location: window.location.toString(),
-      });
+
       // By counting every time a document is mounted, we can use this to know if
       // a client-side navigation happened.
       mountCounter.current++;
@@ -173,7 +177,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
         <MainContentContainer>
-          <article className="article">
+          <article className="article" lang={doc.locale}>
             <RenderDocumentBody doc={doc} />
           </article>
         </MainContentContainer>
@@ -228,24 +232,6 @@ function RenderDocumentBody({ doc }) {
           />
         );
       }
-    } else if (section.type === "interactive_example") {
-      return (
-        <InteractiveExample
-          key={section.value.url}
-          url={section.value.url}
-          height={section.value.height}
-          title={doc.title}
-        />
-      );
-    } else if (section.type === "attributes") {
-      return <Attributes key={`attributes${i}`} attributes={section.value} />;
-    } else if (section.type === "specifications") {
-      return (
-        <Specifications
-          key={`specifications${i}`}
-          specifications={section.value}
-        />
-      );
     } else if (section.type === "browser_compatibility") {
       return (
         <LazyBrowserCompatibilityTable
@@ -253,27 +239,6 @@ function RenderDocumentBody({ doc }) {
           {...section.value}
         />
       );
-    } else if (section.type === "examples") {
-      return <Examples key={`examples${i}`} examples={section.value} />;
-    } else if (section.type === "info_box") {
-      // XXX Unfinished!
-      // https://github.com/mdn/stumptown-content/issues/106
-      console.warn("Don't know how to deal with info_box!");
-      return null;
-    } else if (
-      section.type === "class_constructor" ||
-      section.type === "static_methods" ||
-      section.type === "instance_methods"
-    ) {
-      return (
-        <LinkList
-          key={`${section.type}${i}`}
-          title={section.value.title}
-          links={section.value.content}
-        />
-      );
-    } else if (section.type === "link_lists") {
-      return <LinkLists key={`linklists${i}`} lists={section.value} />;
     } else {
       console.warn(section);
       throw new Error(`No idea how to handle a '${section.type}' section`);

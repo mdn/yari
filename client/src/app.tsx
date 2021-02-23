@@ -15,7 +15,6 @@ import { SiteSearch } from "./site-search";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Banner } from "./banners";
-import { useDebugGA } from "./ga-context";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const AllTraits = React.lazy(() => import("./traits"));
@@ -92,9 +91,11 @@ function LoadingFallback({ message }: { message?: string }) {
 }
 
 export function App(appProps) {
-  useDebugGA();
-
-  const homePage = CRUD_MODE ? <WritersHomepage /> : <Homepage {...appProps} />;
+  // When preparing a build for use in the NPM package, CRUD_MODE is always true.
+  // But if the App is loaded from the code that builds the SPAs, then `isServer`
+  // is true. So you have to have `isServer && CRUD_MODE` at the same time.
+  const homePage =
+    !isServer && CRUD_MODE ? <WritersHomepage /> : <Homepage {...appProps} />;
 
   const routes = (
     <Routes>

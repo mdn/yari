@@ -242,12 +242,14 @@ export function SQLTable({ documents }: { documents: Document[] }) {
           )}
           <button
             type="submit"
+            className="button button-inline-small"
             disabled={!!((result && queryDraft === query) || sqlParserError)}
           >
             Run query
           </button>
           <button
             type="button"
+            className="button button-inline-small"
             onClick={() => {
               toggleShowHelp((s) => !s);
               toggleShowPastQueries(false);
@@ -257,6 +259,7 @@ export function SQLTable({ documents }: { documents: Document[] }) {
           </button>
           <button
             type="button"
+            className="button button-inline-small"
             onClick={() => {
               toggleShowPastQueries((s) => !s);
               toggleShowHelp(false);
@@ -268,6 +271,7 @@ export function SQLTable({ documents }: { documents: Document[] }) {
           </button>
           <button
             type="button"
+            className="button button-inline-small"
             disabled={!sqlParserError}
             onClick={() => {
               toggleShowSQLParserError((s) => !s);
@@ -285,6 +289,7 @@ export function SQLTable({ documents }: { documents: Document[] }) {
 
           <button
             type="button"
+            className="button button-inline-small"
             disabled={Boolean(sqlParserError || !queryDraft)}
             onClick={() => {
               shareQuery();
@@ -299,6 +304,7 @@ export function SQLTable({ documents }: { documents: Document[] }) {
           <a href={sharedQueryURL}>{sharedQueryURL}</a>{" "}
           <button
             type="button"
+            className="button button-small"
             onClick={() => {
               setSharedQueryURL("");
             }}
@@ -371,7 +377,11 @@ function ShowHelp({
             }}
           ></code>
         </pre>
-        <button type="button" onClick={() => loadQuery(DEFAULT_QUERY)}>
+        <button
+          type="button"
+          className="button button-inline-small"
+          onClick={() => loadQuery(DEFAULT_QUERY)}
+        >
           Load
         </button>
       </div>
@@ -385,7 +395,11 @@ function ShowHelp({
                 }}
               ></code>
             </pre>
-            <button type="button" onClick={() => loadQuery(query)}>
+            <button
+              type="button"
+              className="button button-inline-small"
+              onClick={() => loadQuery(query)}
+            >
               Load
             </button>
           </div>
@@ -437,7 +451,11 @@ function ShowPastQueries({
   return (
     <div className="past-queries">
       <h3>Past queries</h3>
-      <button type="button" onClick={() => resetPastQueries()}>
+      <button
+        type="button"
+        className="button button-inline-small"
+        onClick={() => resetPastQueries()}
+      >
         Clear past queries
       </button>
       <table>
@@ -465,6 +483,7 @@ function ShowPastQueries({
               <td>
                 <button
                   type="button"
+                  className="button button-inline-small"
                   onClick={() => {
                     loadQuery(query.query);
                   }}
@@ -515,6 +534,7 @@ const Results = React.memo(({ rows }: { rows: any[] }) => {
         </span>{" "}
         <button
           type="button"
+          className="button button-inline-small"
           title="Click to start downloading as a .json file"
           onClick={() => {
             triggerJSONDownload();

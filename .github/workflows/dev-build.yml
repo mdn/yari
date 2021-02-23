@@ -21,10 +21,6 @@ on:
         description: "Build archived content"
         required: false
         default: "false"
-      translated_content:
-        description: "Build translated content"
-        required: false
-        default: "true"
 
       # This is very useful when combined with the "Use workflow from"
       # feature that is built into the "Run workflow" button on
@@ -66,13 +62,12 @@ jobs:
           path: mdn/archived-content
 
       - uses: actions/checkout@v2
-        if: "contains(github.event.inputs.translated_content, 'true')"
         with:
           repository: mdn/translated-content-rendered
           path: mdn/translated-content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.4
+        uses: actions/setup-node@v2.1.5
         with:
           node-version: "12"
 
@@ -112,7 +107,6 @@ jobs:
         run: |
           echo "notes: ${{ github.event.inputs.notes }}"
           echo "archived_content: ${{ github.event.inputs.archived_content }}"
-          echo "translated_content: ${{ github.event.inputs.translated_content }}"
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix }}"
 
@@ -121,6 +115,7 @@ jobs:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
 
           # This basically means that all live-sample iframes run on the same
           # host as the page that includes the iframe. Not great security but the
@@ -152,12 +147,6 @@ jobs:
           else
             echo "Will NOT build mdn/archived-content too"
           fi
-          if [ ${{ github.event.inputs.translated_content }} == "true" ]; then
-            echo "Will build mdn/translated-content too"
-            export CONTENT_TRANSLATED_ROOT=${{ github.workspace }}/mdn/translated-content/files
-          else
-            echo "Will NOT build mdn/translated-content too"
-          fi
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
@@ -175,6 +164,7 @@ jobs:
         env:
           # Set the CONTENT_ROOT first
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
 
           DEPLOYER_BUCKET_NAME: mdn-content-dev
           DEPLOYER_BUCKET_PREFIX: ${{ github.event.inputs.deployment_prefix }}

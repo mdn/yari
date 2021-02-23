@@ -57,7 +57,7 @@ Kuma to render what can't be rendered as a static asset.
 
 ## Tracking Whatsdeployed
 
-These URLs give you a comparison between what's the `master` (for Yari)
+These URLs give you a comparison between what's the `main` (for Yari)
 and `main` (for Content) in the git repo, compared to what's made it into
 each deployment environment. This helps to answer "Has my change gone live yet?"
 

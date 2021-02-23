@@ -198,7 +198,6 @@ app.get("/*", async (req, res) => {
       // since it might prevent reading fresh data from disk.
       clearKumascriptRenderCache: true,
     });
-    console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
     if (built) {
       document = built.doc;
       bcdData = built.bcdData;
@@ -206,6 +205,8 @@ app.get("/*", async (req, res) => {
   } catch (error) {
     console.error(`Error in buildDocumentFromURL(${lookupURL})`, error);
     return res.status(500).send(error.toString());
+  } finally {
+    console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
   }
 
   if (!document) {

@@ -1,6 +1,15 @@
 .sql-table {
   padding-bottom: 50px;
 
+  button.button-inline-small {
+    display: inline;
+    margin-right: 2px;
+    white-space: nowrap;
+    padding: 2px 4px;
+    font-weight: normal;
+    min-height: 30px;
+  }
+
   form.query {
     .query-buttons {
       margin-top: 10px;
