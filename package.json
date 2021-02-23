@@ -82,7 +82,7 @@
     "tempy": "1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.17",
+    "@babel/core": "^7.13.1",
     "@mdn/dinocons": "^0.3.0",
     "@mdn/minimalist": "^0.7.3",
     "@storybook/addon-a11y": "^6.1.19",
