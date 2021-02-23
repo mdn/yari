@@ -291,6 +291,8 @@ function Results({
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q");
 
+  console.log(suggestions);
+
   return (
     <>
       {hitCount > 0 ? (
@@ -311,6 +313,29 @@ function Results({
         </h1>
       )}
 
+      {!!suggestions.length && (
+        <div className="search-suggestions">
+          <p>Did you mean:</p>
+          <ul className="search-suggestions-list">
+            {suggestions.map((suggestion) => {
+              return (
+                <li key={suggestion.text}>
+                  <Link
+                    to={`?${appendURL(searchParams, {
+                      q: suggestion.text,
+                      page: undefined,
+                    })}`}
+                  >
+                    {suggestion.text}
+                  </Link>{" "}
+                  <ShowTotal total={suggestion.total} />
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
       {hitCount > 0 && (
         <div className="search-results-container">
           <div className="search-results-options readable-line-length">
@@ -327,29 +352,6 @@ function Results({
           </div>
 
           <div className="search-results-content">
-            {!!suggestions.length && (
-              <div className="suggestions">
-                <p>Did you mean...</p>
-                <ul>
-                  {suggestions.map((suggestion) => {
-                    return (
-                      <li key={suggestion.text}>
-                        <Link
-                          to={`?${appendURL(searchParams, {
-                            q: suggestion.text,
-                            page: undefined,
-                          })}`}
-                        >
-                          {suggestion.text}
-                        </Link>{" "}
-                        <ShowTotal total={suggestion.total} />
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            )}
-
             <ul className="search-results-list readable-line-length">
               {documents.map((document) => {
                 const highlights = document.highlight.body || [];

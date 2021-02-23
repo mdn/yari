@@ -99,17 +99,16 @@
     }
   }
 
-  .suggestions {
-    p {
-      margin-bottom: 2px;
-    }
-
-    ul {
-      margin-top: 0;
-    }
-  }
-
   .loading-wrapper {
     min-height: 500px;
+  }
+}
+
+.search-suggestions {
+  display: flex;
+  gap: $base-spacing / 4;
+
+  p {
+    display: inline-block;
   }
 }
