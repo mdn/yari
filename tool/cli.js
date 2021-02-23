@@ -1,11 +1,17 @@
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 
 const program = require("@caporal/core").default;
 const chalk = require("chalk");
 const { prompt } = require("inquirer");
 const openEditor = require("open-editor");
 const open = require("open");
+const {
+  simpleMD,
+  syncAllTranslatedContent,
+} = require("../build/sync-translated-content");
+const log = require("loglevel");
 
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
 const {
@@ -407,6 +413,62 @@ program
               allHistory
             ).length.toLocaleString()} paths into ${saveHistory}`
           )
+        );
+      }
+    })
+  )
+
+  .command(
+    "sync-translated-content",
+    "Sync translated content (sync with en-US slugs) for a locale"
+  )
+  .argument("<locale...>", "Locale", {
+    default: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
+    validator: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
+  })
+  .option("--summarize <path>", `Write summary to path.`, {
+    default: path.join(os.tmpdir()),
+  })
+  .option("--prefix <prefix>", `Prefix to path for summary.`)
+  .action(
+    tryOrExit(async ({ args, options }) => {
+      const { locale } = args;
+      const { verbose, summarize, prefix } = options;
+      if (verbose) {
+        log.setDefaultLevel(log.levels.DEBUG);
+      }
+      const allStats = {};
+      for (const l of locale) {
+        const { stats, changes } = syncAllTranslatedContent(l);
+        allStats[l] = stats;
+        if (summarize) {
+          const summary = simpleMD(l, changes, stats, prefix);
+          const summaryFilePath = path.join(summarize, `sync-changes-${l}.md`);
+          fs.writeFileSync(summaryFilePath, summary, "utf-8");
+          console.log(`wrote summary to ${summarize}`);
+        }
+
+        const {
+          movedDocs,
+          conflictingDocs,
+          orphanedDocs,
+          redirectedDocs,
+          totalDocs,
+        } = stats;
+        console.log(chalk.green(`Syncing ${l}:`));
+        console.log(chalk.green(`Total of ${totalDocs} documents`));
+        console.log(chalk.green(`Moved ${movedDocs} documents`));
+        console.log(chalk.green(`Conflicting ${conflictingDocs} documents.`));
+        console.log(chalk.green(`Orphaned ${orphanedDocs} documents.`));
+        console.log(
+          chalk.green(`Fixed ${redirectedDocs} redirected documents.`)
+        );
+      }
+      if (summarize) {
+        fs.writeFileSync(
+          path.join(summarize, "sync-summary.json"),
+          JSON.stringify(allStats, null, 2),
+          "utf-8"
         );
       }
     })
