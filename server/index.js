@@ -53,6 +53,7 @@ app.use(
             : "http://"
         }${PROXY_HOSTNAME}`,
         changeOrigin: true,
+        proxyTimeout: 3000,
       })
 );
 
