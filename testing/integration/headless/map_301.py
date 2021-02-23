@@ -553,8 +553,8 @@ LEGACY_URLS = list(
             url_test("/patches/foo", status_code=404),
             url_test("/web-tech", status_code=404),
             url_test("/web-tech/feed/atom/", status_code=404),
-            url_test("/css/wiki.css", status_code=404),
-            url_test("/css/base.css", status_code=404),
+            url_test("/css/wiki.css", follow_redirects=True, final_status_code=404),
+            url_test("/css/base.css", follow_redirects=True, final_status_code=404),
             url_test("/contests", "http://www.mozillalabs.com/", status_code=302),
             url_test("/contests/", "http://www.mozillalabs.com/", status_code=302),
             url_test(
