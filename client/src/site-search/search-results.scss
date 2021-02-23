@@ -17,29 +17,8 @@
     }
   }
 
-  .search-results-options {
-    background-color: $neutral-550;
-    padding: $base-spacing;
-
-    h2 {
-      font-size: $default-font-size;
-      margin-bottom: $base-spacing / 4;
-    }
-  }
-
   .current-option {
     font-style: italic;
-  }
-
-  .sort-options,
-  .search-language-options {
-    li {
-      display: inline;
-    }
-  }
-
-  .advanced-options {
-    margin-top: $base-spacing / 2;
   }
 
   .search-language-options {
@@ -47,15 +26,6 @@
 
     a {
       font-style: normal;
-    }
-  }
-
-  .search-results-list {
-    margin-bottom: $base-spacing;
-
-    mark {
-      background-color: $yellow-400;
-      font-style: italic;
     }
   }
 
@@ -70,7 +40,7 @@
   }
 
   .document-url {
-    margin-bottom: $base-spacing;
+    margin-bottom: $base-spacing / 2;
   }
 
   .nerd-data {
@@ -104,11 +74,51 @@
   }
 }
 
+.search-metrics {
+  margin: 0;
+}
+
+.search-results-options {
+  background-color: $neutral-550;
+  margin: ($base-spacing / 2) 0;
+  padding: $base-spacing;
+
+  h2 {
+    font-family: $site-font-family;
+    font-size: $small-medium-font-size;
+    margin-bottom: $base-spacing / 4;
+  }
+
+  .sort-options,
+  .search-language-options {
+    li {
+      display: inline;
+    }
+  }
+
+  .advanced-options {
+    margin-top: $base-spacing / 2;
+  }
+}
+
 .search-suggestions {
   display: flex;
   gap: $base-spacing / 4;
 
   p {
     display: inline-block;
+  }
+}
+
+.search-results-list {
+  margin-bottom: $base-spacing;
+
+  h3 {
+    margin: 0;
+  }
+
+  mark {
+    background-color: $yellow-400;
+    font-style: italic;
   }
 }

@@ -7,7 +7,7 @@ import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
 
 import AdvancedSearchOptions from "./advanced-search-options";
-import LoadingPlaceholder from "../ui/atoms/loading-placeholder";
+import { LoadingPlaceholder } from "../ui/atoms/loading-placeholder";
 
 import LANGUAGES_RAW from "../languages.json";
 import "./search-results.scss";
@@ -19,7 +19,7 @@ const LANGUAGES = new Map(
 );
 
 const SORT_OPTIONS = [
-  ["best", "Best Match"],
+  ["best", "Best"],
   ["relevance", "Relevance"],
   ["popularity", "Popularity"],
 ];
@@ -172,7 +172,7 @@ export default function SearchResults() {
     );
   }
   // else...
-  return <LoadingPlaceholder title="Loading search results..." />;
+  return <LoadingPlaceholder title="Loading search results…" />;
 }
 
 function RemoteSearchWarning() {
@@ -301,7 +301,7 @@ function Results({
             Search results {page && page !== 1 && `page ${page} `}for{" "}
             <span className="query-string">{query}</span>
           </h1>
-          <p>
+          <p className="search-metrics">
             Found <ShowTotal total={metadata.total} /> in {metadata.took_ms}{" "}
             milliseconds.
           </p>
@@ -312,6 +312,19 @@ function Results({
           <span className="query-string">{query}</span>
         </h1>
       )}
+
+      <div className="search-results-options readable-line-length">
+        {/* It only makes sense to display the sorting options if anything was found */}
+        {hitCount > 1 && <SortOptions />}
+
+        {/* Language only applies if you're browsing in, say, French and want
+          to search in English too. */}
+        {locale.toLowerCase() !== "en-us" && (
+          <div className="advanced-options">
+            <AdvancedSearchOptions />
+          </div>
+        )}
+      </div>
 
       {!!suggestions.length && (
         <div className="search-suggestions">
@@ -338,19 +351,6 @@ function Results({
 
       {hitCount > 0 && (
         <div className="search-results-container">
-          <div className="search-results-options readable-line-length">
-            {/* It only makes sense to display the sorting options if anything was found */}
-            {hitCount > 1 && <SortOptions />}
-
-            {/* Language only applies if you're browsing in, say, French and want
-          to search in English too. */}
-            {locale.toLowerCase() !== "en-us" && (
-              <div className="advanced-options">
-                <AdvancedSearchOptions />
-              </div>
-            )}
-          </div>
-
           <div className="search-results-content">
             <ul className="search-results-list readable-line-length">
               {documents.map((document) => {

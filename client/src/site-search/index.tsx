@@ -2,12 +2,21 @@ import React from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { PageContentContainer } from "../ui/atoms/page-content";
-import LoadingPlaceholder from "../ui/atoms/loading-placeholder";
+import { LoadingPlaceholder } from "../ui/atoms/loading-placeholder";
 
 import { useGA } from "../ga-context";
 import "./index.scss";
 
 const SearchResults = React.lazy(() => import("./search-results"));
+
+function NoSearchQuery() {
+  return (
+    <>
+      <h1>No search query specified.</h1>
+      <p>Please enter your search query in the search field above.</p>
+    </>
+  );
+}
 
 export function SiteSearch() {
   const isServer = typeof window === "undefined";
@@ -24,7 +33,7 @@ export function SiteSearch() {
       }
       document.title = title;
     } else {
-      document.title = "No search results for your query.";
+      document.title = "No search query specified.";
     }
 
     document.title += " - MDN Web Docs";
@@ -53,6 +62,8 @@ export function SiteSearch() {
   return (
     <div className="site-search">
       <PageContentContainer>
+        {!query && <NoSearchQuery />}
+
         {!isServer && query && (
           <React.Suspense fallback={<LoadingPlaceholder />}>
             <SearchResults />
