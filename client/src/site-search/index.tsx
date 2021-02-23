@@ -53,18 +53,6 @@ export function SiteSearch() {
   return (
     <div className="site-search">
       <PageContentContainer>
-        {query ? (
-          <h1>
-            Search results {page && page !== "1" && `page ${page} `}for{" "}
-            <span className="query-string">{query}</span>
-          </h1>
-        ) : (
-          <h1>
-            No results for the query,{" "}
-            <span className="query-string">{query}</span>
-          </h1>
-        )}
-
         {!isServer && query && (
           <React.Suspense fallback={<LoadingPlaceholder />}>
             <SearchResults />
