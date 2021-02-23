@@ -424,7 +424,7 @@ program
       if (options.syncTranslatedContent && CONTENT_TRANSLATED_ROOT) {
         const documentsMoved = syncTranslatedContentForAllLocales();
         if (documentsMoved !== 0) {
-          console.log("Please sync the translated content repo");
+          console.log(`Synchronized ${documentsMoved} translated documents.`);
         }
       }
 

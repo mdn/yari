@@ -1,3 +1,12 @@
+const fs = require("fs");
+const crypto = require("crypto");
+const path = require("path");
+
+const glob = require("glob");
+const chalk = require("chalk");
+const fm = require("front-matter");
+const log = require("loglevel");
+
 const {
   buildURL,
   execGit,
@@ -8,13 +17,6 @@ const {
   CONTENT_TRANSLATED_ROOT,
   VALID_LOCALES,
 } = require("../content");
-const glob = require("glob");
-const chalk = require("chalk");
-const path = require("path");
-const fm = require("front-matter");
-const fs = require("fs");
-const log = require("loglevel");
-const crypto = require("crypto");
 
 const CONFLICTING = "conflicting";
 const ORPHANED = "orphaned";
