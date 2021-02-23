@@ -9,6 +9,7 @@ from .map_301 import (
     GITHUB_IO_URLS,
     LEGACY_URLS,
     MARIONETTE_URLS,
+    MISC_REDIRECT_URLS,
     MOZILLADEMOS_URLS,
     REDIRECT_URLS,
     SCL3_REDIRECT_URLS,
@@ -103,5 +104,15 @@ def test_firefox_accounts_redirects(url, base_url):
     ids=[item["url"] for item in FIREFOX_SOURCE_DOCS_URLS],
 )
 def test_firefox_source_docs_redirects(url, base_url):
+    url["base_url"] = base_url
+    assert_valid_url(**url)
+
+
+@pytest.mark.parametrize(
+    "url",
+    MISC_REDIRECT_URLS,
+    ids=[item["url"] for item in MISC_REDIRECT_URLS],
+)
+def test_misc_redirects(url, base_url):
     url["base_url"] = base_url
     assert_valid_url(**url)
