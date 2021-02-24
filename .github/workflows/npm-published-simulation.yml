@@ -68,25 +68,6 @@ jobs:
           cd mdn/content
           yarn add file:$TARBALL
 
-      # - name: Set up a mock content repo
-      #   run: |
-      #     mkdir /tmp/content
-      #     cp -r testing/content/files /tmp/content/
-      #     cd /tmp/content
-      #     cat > package.json <<PACKAGE_JSON
-      #     {
-      #       "name": "content",
-      #       "version": "1.0.0",
-      #       "main": "index.js",
-      #       "license": "SEE LICENSE IN LICENSE.md",
-      #       "scripts": {
-      #         "start": "env-cmd --silent cross-env CONTENT_ROOT=files REACT_APP_DISABLE_AUTH=true node node_modules/@mdn/yari/server",
-      #         "build": "env-cmd --silent cross-env CONTENT_ROOT=files BUILD_OUT_ROOT=build node node_modules/@mdn/yari/build/cli.js"
-      #       }
-      #     }
-      #     PACKAGE_JSON
-      #     yarn add cross-env env-cmd
-
       - name: Start Yari from mock content repo
         run: |
           cd mdn/content
@@ -98,17 +79,32 @@ jobs:
           sleep 3
 
           curl --retry-connrefused --retry 5 -I http://localhost:5000
-          curl http://localhost:5000/en-US/
 
           # Basically, test if it 200 OKs. If not, this'll exit non-zero.
-          curl http://localhost:5000/en-US/docs/Web/Foo > /dev/null
+          curl http://localhost:5000/en-US/ > /dev/null
+          curl http://localhost:5000/en-US/docs/MDN/Kitchensink > /dev/null
 
-      - name: Display any outputs from the server
+      - name: Test viewing the dev server
+        env:
+          # This will make sure the tests in `testing/tests/*.test.js` only run
+          # if the development server is up and ready to be tested.
+          TESTING_DEVELOPING: true
+          # Use local chrome installs since we skip downloading it as part
+          # of the yarn installs above
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
         run: |
-          echo "STDOUT..................................................."
-          cat /tmp/stdout.log
-          echo "STDERR..................................................."
-          cat /tmp/stderr.log
+          status=0
+          yarn test:testing developing || (
+            status=$?
+            echo "Testing failed! Going to dump stdout and stderr"
+            echo "STDOUT..................................................."
+            cat /tmp/stdout.log
+            echo "STDERR..................................................."
+            cat /tmp/stderr.log
+            echo $status
+            exit $status
+          )
+          exit $status
 
       - name: SSR build a page
         run: |
