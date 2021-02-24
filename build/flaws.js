@@ -436,8 +436,11 @@ function injectHeadingLinksFlaws(level, doc, $, rawContent) {
       rawContent
     )) {
       line = foundLine;
+      column = foundColumn;
       // This makes sure the column is *after* the ID value (plus quotation mark)
-      column = foundColumn + $heading.attr("id").length + 2;
+      if ($heading.attr("id")) {
+        column += $heading.attr("id").length + 2;
+      }
     }
     // It's never fixable because it's too hard to find in the raw HTML.
     const fixable = false;
