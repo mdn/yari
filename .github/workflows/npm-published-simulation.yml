@@ -34,24 +34,18 @@ jobs:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
         run: yarn --frozen-lockfile
 
-      - name: Set up a mock content repo
+      - name: Setup kernel for react native, increase watchers
         run: |
-          mkdir /tmp/content
-          cp -r testing/content/files /tmp/content/
-          cd /tmp/content
-          cat > package.json <<PACKAGE_JSON
-          {
-            "name": "content",
-            "version": "1.0.0",
-            "main": "index.js",
-            "license": "SEE LICENSE IN LICENSE.md",
-            "scripts": {
-              "start": "env-cmd --silent cross-env CONTENT_ROOT=files REACT_APP_DISABLE_AUTH=true node node_modules/@mdn/yari/server",
-              "build": "env-cmd --silent cross-env CONTENT_ROOT=files BUILD_OUT_ROOT=build node node_modules/@mdn/yari/build/cli.js"
-            }
-          }
-          PACKAGE_JSON
-          yarn add cross-env env-cmd
+          # When running Yari on Linux, you might get the
+          # "Error: ENOSPC: System limit for number of file watchers reached" error.
+          # This, resolves that.
+          # Source https://github.com/expo/expo-github-action/issues/20#issuecomment-541676895
+          echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+      - uses: actions/checkout@v2
+        with:
+          repository: mdn/content
+          path: mdn/content
 
       - name: Prepare to build
         env:
@@ -70,13 +64,32 @@ jobs:
           TARBALL=`ls mdn-yari-*.tgz`
           echo $TARBALL
           ls -lh $TARBALL
-          mv $TARBALL /tmp/content/
-          cd /tmp/content
+          mv $TARBALL mdn/content/
+          cd mdn/content
           yarn add file:$TARBALL
+
+      # - name: Set up a mock content repo
+      #   run: |
+      #     mkdir /tmp/content
+      #     cp -r testing/content/files /tmp/content/
+      #     cd /tmp/content
+      #     cat > package.json <<PACKAGE_JSON
+      #     {
+      #       "name": "content",
+      #       "version": "1.0.0",
+      #       "main": "index.js",
+      #       "license": "SEE LICENSE IN LICENSE.md",
+      #       "scripts": {
+      #         "start": "env-cmd --silent cross-env CONTENT_ROOT=files REACT_APP_DISABLE_AUTH=true node node_modules/@mdn/yari/server",
+      #         "build": "env-cmd --silent cross-env CONTENT_ROOT=files BUILD_OUT_ROOT=build node node_modules/@mdn/yari/build/cli.js"
+      #       }
+      #     }
+      #     PACKAGE_JSON
+      #     yarn add cross-env env-cmd
 
       - name: Start Yari from mock content repo
         run: |
-          cd /tmp/content
+          cd mdn/content
           yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
 
       - name: View some URLs on localhost:5000
@@ -99,5 +112,5 @@ jobs:
 
       - name: SSR build all pages
         run: |
-          cd /tmp/content
+          cd mdn/content
           yarn build
