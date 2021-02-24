@@ -13,7 +13,6 @@ env:
   DEFAULT_DEPLOYMENT_PREFIX: "main"
   DEFAULT_NOTES: ""
   DEFAULT_ARCHIVED_CONTENT: "false"
-  DEFAULT_TRANSLATED_CONTENT: "true"
   DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD: "false"
 
 on:
@@ -31,10 +30,6 @@ on:
         description: "Build archived content"
         required: false
         default: ${DEFAULT_ARCHIVED_CONTENT}
-      translated_content:
-        description: "Build translated content"
-        required: false
-        default: ${DEFAULT_TRANSLATED_CONTENT}
 
       # This is very useful when combined with the "Use workflow from"
       # feature that is built into the "Run workflow" button on
@@ -78,7 +73,6 @@ jobs:
       # can refer to later in `if: ....` lines or in bash with the `run: ...` blocks.
       - name: Merge dispatch inputs with default env vars
         run: |
-          echo "BUILD_TRANSLATED_CONTENT=${{ github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT }}" >> $GITHUB_ENV
           echo "BUILD_ARCHIVED_CONTENT=${{ github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT }}" >> $GITHUB_ENV
           echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
           echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
@@ -90,7 +84,6 @@ jobs:
           path: mdn/archived-content
 
       - uses: actions/checkout@v2
-        if: "contains(env.BUILD_TRANSLATED_CONTENT, 'true')"
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
@@ -136,10 +129,8 @@ jobs:
         run: |
           echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
           echo "archived_content: ${{ github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT }}"
-          echo "translated_content: ${{ github.event.inputs.translated_content || env.DEFAULT_TRANSLATED_CONTENT }}"
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}"
-          echo "BUILD_TRANSLATED_CONTENT: ${{ env.BUILD_TRANSLATED_CONTENT }}"
           echo "BUILD_ARCHIVED_CONTENT: ${{ env.BUILD_ARCHIVED_CONTENT }}"
 
       - name: Build everything
@@ -147,6 +138,7 @@ jobs:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
@@ -179,12 +171,6 @@ jobs:
           else
             echo "Will NOT build mdn/archived-content too"
           fi
-          if [ ${{ env.BUILD_TRANSLATED_CONTENT }} == "true" ]; then
-            echo "Will build mdn/translated-content too"
-            export CONTENT_TRANSLATED_ROOT=${{ github.workspace }}/mdn/translated-content/files
-          else
-            echo "Will NOT build mdn/translated-content too"
-          fi
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
@@ -204,6 +190,7 @@ jobs:
 
           # Set the CONTENT_ROOT first
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
 
           DEPLOYER_BUCKET_NAME: mdn-content-stage
 
@@ -226,12 +213,6 @@ jobs:
             export CONTENT_ARCHIVED_ROOT=${{ github.workspace }}/mdn/archived-content/files
           else
             echo "Will NOT build mdn/archived-content too"
-          fi
-          if [ ${{ env.BUILD_TRANSLATED_CONTENT }} == "true" ]; then
-            echo "Will build mdn/translated-content too"
-            export CONTENT_TRANSLATED_ROOT=${{ github.workspace }}/mdn/translated-content/files
-          else
-            echo "Will NOT build mdn/translated-content too"
           fi
 
           # Info about which CONTENT_* environment variables were set and to what.
