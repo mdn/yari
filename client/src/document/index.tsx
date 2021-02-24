@@ -98,7 +98,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       // a client-side navigation happened.
       mountCounter.current++;
     }
-  }, [doc, error]);
+  }, [ga, doc, error]);
 
   React.useEffect(() => {
     const location = document.location;
