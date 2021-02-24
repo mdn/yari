@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { OnGitHubLink } from "../../on-github";
 
 import "./index.scss";
@@ -10,7 +8,7 @@ function LastModified({ value, locale }) {
   }
   const date = new Date(value);
   // Justification for these is to match historically
-  const dateStringOptions = {
+  const dateStringOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "short",
     day: "numeric",
