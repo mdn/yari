@@ -119,8 +119,8 @@
     }
   }
 
-  /* 
-   * top navigational elements on tutorial pages 
+  /*
+   * top navigational elements on tutorial pages
    * prevnext is added for backwards compatibility
    */
   .prevnext,
@@ -147,6 +147,10 @@
   */
   .index {
     columns: 300px;
+  }
+
+  iframe {
+    border: 0;
   }
 }
 

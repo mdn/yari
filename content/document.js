@@ -22,6 +22,7 @@ const {
   slugToFolder,
   execGit,
   urlToFolderPath,
+  MEMOIZE_INVALIDATE,
 } = require("./utils");
 const Redirect = require("./redirect");
 
@@ -67,7 +68,7 @@ function extractLocale(folder) {
 function saveHTMLFile(
   filePath,
   rawHTML,
-  { slug, title, translation_of, tags, translation_of_original }
+  { slug, title, translation_of, tags, translation_of_original, original_slug }
 ) {
   if (slug.includes("#")) {
     throw new Error("newSlug can not contain the '#' character");
@@ -86,6 +87,9 @@ function saveHTMLFile(
     // This will only make sense during the period where we're importing from
     // MySQL to disk. Once we're over that period we can delete this if-statement.
     metadata.translation_of_original = translation_of_original;
+  }
+  if (original_slug) {
+    metadata.original_slug = original_slug;
   }
   const combined = `---\n${yaml.dump(metadata)}---\n${rawHTML.trim()}\n`;
   fs.writeFileSync(filePath, combined);
@@ -306,7 +310,7 @@ function update(url, rawHTML, metadata) {
     const locale = metadata.locale;
     const redirects = new Map();
     const url = buildURL(locale, oldSlug);
-    for (const { metadata, rawHTML, fileInfo } of findChildren(url)) {
+    for (const { metadata, rawHTML, fileInfo } of findChildren(url, true)) {
       const childLocale = metadata.locale;
       const oldChildSlug = metadata.slug;
       const newChildSlug = oldChildSlug.replace(oldSlug, newSlug);
@@ -403,18 +407,19 @@ function findAll(
   }
   return {
     count: filePaths.length,
-    *iter() {
+    *iter({ pathOnly = false } = {}) {
       for (const filePath of filePaths) {
-        yield read(filePath);
+        yield pathOnly ? filePath : read(filePath);
       }
     },
   };
 }
 
-function findChildren(url) {
+function findChildren(url, recursive = false) {
   const folder = urlToFolderPath(url);
+  const globber = recursive ? ["*", "**"] : ["*"];
   const childPaths = glob.sync(
-    path.join(CONTENT_ROOT, folder, "*", HTML_FILENAME)
+    path.join(CONTENT_ROOT, folder, ...globber, HTML_FILENAME)
   );
   return childPaths
     .map((childFilePath) =>
@@ -439,18 +444,18 @@ function move(oldSlug, newSlug, locale, { dry = false } = {}) {
   }
 
   const realOldSlug = doc.metadata.slug;
-  const paris = [doc, ...findChildren(oldUrl)].map(({ metadata }) => [
+  const pairs = [doc, ...findChildren(oldUrl, true)].map(({ metadata }) => [
     metadata.slug,
     metadata.slug.replace(realOldSlug, newSlug),
   ]);
   if (dry) {
-    return paris;
+    return pairs;
   }
 
   doc.metadata.slug = newSlug;
   update(oldUrl, doc.rawHTML, doc.metadata);
 
-  return paris;
+  return pairs;
 }
 
 function fileForSlug(slug, locale) {
@@ -492,7 +497,7 @@ function remove(
     throw new Error(`document does not exists: ${url}`);
   }
 
-  const children = findChildren(url);
+  const children = findChildren(url, true);
   if (children.length > 0 && (redirect || !recursive)) {
     throw new Error("unable to remove and redirect a document with children");
   }
@@ -540,7 +545,13 @@ module.exports = {
   fileForSlug,
   parentSlug,
 
+  updateWikiHistory,
+  trimLineEndings,
+  saveHTMLFile,
+
   findByURL,
   findAll,
   findChildren,
+
+  MEMOIZE_INVALIDATE,
 };

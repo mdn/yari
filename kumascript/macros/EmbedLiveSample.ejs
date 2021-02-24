@@ -39,11 +39,22 @@ if (height && parseInt(height) < MIN_HEIGHT) {
 
 var sampleUrl = "";
 if (sampleSlug) {
+    // We're asking for the live sample from a different page than
+    // the one we're rendering.
     sampleUrl = `/${env.locale}/docs`;
-    if (sampleSlug.charAt(0) != "/") {
-        sampleUrl += "/";
+    if (sampleSlug.charAt(0) !== "/") {
+      sampleSlug = "/" + sampleSlug;
     }
     sampleUrl += sampleSlug;
+    if (env.locale.toLowerCase() !== "en-us") {
+      const samplePage = wiki.getPage(sampleUrl);
+      if (!(samplePage && samplePage.url)) {
+        // The page from which we're being asked to get the live sample
+        // doesn't exist in this locale, so most likely it only exists
+        // in English.
+        sampleUrl = `/en-US/docs${sampleSlug}`;
+      }
+    }
 }
 var url = await template('LiveSampleURL', [sampleId, sampleUrl]);
 
@@ -64,7 +75,6 @@ if (hasScreenshot) {
 } // end hasScreenshot
 %><iframe class="live-sample-frame <%= className %>"<%
 %> id="frame_<%= web.slugify(web.safeDecodeURIComponent(sampleId)) %>"<%
-%> frameborder="0"<%
 if (width) { %> width="<%= width %>"<% }
 if (height) { %> height="<%= height %>"<% }
 %> src="<%- url %>"<%

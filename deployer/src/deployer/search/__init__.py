@@ -147,6 +147,10 @@ def walk(root):
 def to_search(file):
     with open(file) as f:
         data = json.load(f)
+    if "doc" not in data:
+        # If the file we just opened isn't use for documents, it might be for
+        # other SPAs like the home page. Skip these.
+        return
     doc = data["doc"]
     locale, slug = doc["mdn_url"].split("/docs/", 1)
     if slug.endswith("/Index"):
@@ -156,6 +160,11 @@ def to_search(file):
         # elsewhere. Just skip these.
         # E.g. https://developer.allizom.org/en-US/docs/Web/API/Index
         # See also https://github.com/mdn/yari/issues/1786
+        return
+    if doc.get("noIndexing"):
+        # These are documents that we build but "don't want to be found". For
+        # example, they don't get included in the sitemaps or the search-index.json
+        # files.
         return
     locale = locale[1:]
     return Document(
@@ -267,7 +276,8 @@ def analyze(
             print()
             for key in keys:
                 print(f"{key:{longest_key + 1}} {token[key]!r}")
-
+    elif not analysis:
+        print("No tokens found!")
     else:
         # Desperate if it's not a list of tokens
         print(json.dumps(analysis, indent=2))

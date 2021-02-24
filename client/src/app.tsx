@@ -12,14 +12,15 @@ import { A11yNav } from "./ui/molecules/a11y-nav";
 import { Footer } from "./ui/organisms/footer";
 import { Header } from "./ui/organisms/header";
 import { SiteSearch } from "./site-search";
+import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Banner } from "./banners";
-import { useDebugGA } from "./ga-context";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
 const DocumentCreate = React.lazy(() => import("./document/forms/create"));
 const DocumentManage = React.lazy(() => import("./document/forms/manage"));
+const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 
 const isServer = typeof window === "undefined";
 
@@ -76,8 +77,24 @@ function DocumentOrPageNotFound(props) {
   );
 }
 
+function LoadingFallback({ message }: { message?: string }) {
+  return (
+    <StandardLayout>
+      <PageContentContainer>
+        {/* This extra minHeight is just so that the footer doesn't flicker
+          in and out as the fallback appears. */}
+        <p style={{ minHeight: 800 }}>{message || "Loading..."}</p>
+      </PageContentContainer>
+    </StandardLayout>
+  );
+}
+
 export function App(appProps) {
-  useDebugGA();
+  // When preparing a build for use in the NPM package, CRUD_MODE is always true.
+  // But if the App is loaded from the code that builds the SPAs, then `isServer`
+  // is true. So you have to have `isServer && CRUD_MODE` at the same time.
+  const homePage =
+    !isServer && CRUD_MODE ? <WritersHomepage /> : <Homepage {...appProps} />;
 
   const routes = (
     <Routes>
@@ -89,11 +106,7 @@ export function App(appProps) {
        */}
       <Route
         path="/"
-        element={
-          <Layout pageType="standard-page">
-            <Homepage />
-          </Layout>
-        }
+        element={<Layout pageType="standard-page">{homePage}</Layout>}
       />
       <Route
         path="/:locale/*"
@@ -153,15 +166,27 @@ export function App(appProps) {
                     </StandardLayout>
                   }
                 />
+
+                {/*
+                This route exclusively exists for development on the <Homepage>
+                component itself.
+                Normally, you get to the home page by NOT being in CRUD_MODE, but
+                if you want to use the hot-reloading app, it might be convenient
+                to be able to run it locally
+                 */}
+                <Route
+                  path="/_homepage/*"
+                  element={
+                    <StandardLayout>
+                      <Homepage />
+                    </StandardLayout>
+                  }
+                />
               </>
             )}
             <Route
               path="/"
-              element={
-                <StandardLayout>
-                  <Homepage />
-                </StandardLayout>
-              }
+              element={<StandardLayout>{homePage}</StandardLayout>}
             />
             <Route
               path="/search"
@@ -195,6 +220,6 @@ export function App(appProps) {
   return isServer ? (
     routes
   ) : (
-    <React.Suspense fallback={<div>Loading...</div>}>{routes}</React.Suspense>
+    <React.Suspense fallback={<LoadingFallback />}>{routes}</React.Suspense>
   );
 }

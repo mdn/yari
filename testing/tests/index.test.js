@@ -142,9 +142,7 @@ test("content built foo page", () => {
 
   // The HTML should contain the Google Analytics snippet.
   // The ID should match what's set in `testing/.env`.
-  expect(
-    $('script[src="https://www.google-analytics.com/analytics.js"]').length
-  ).toBe(1);
+  expect($('script[src="/static/js/ga.js"]').length).toBe(1);
 
   // The HTML should contain the Speedcurve LUX snippet.
   // The ID should match what's set in `testing/.env`.
@@ -1048,6 +1046,20 @@ test("img tags should always have their 'width' and 'height' set", () => {
   });
 });
 
+test("img tags without 'src' should not crash", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "srcless"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(Object.keys(doc.flaws).length).toBe(0);
+});
+
 test("/Web/Embeddable should have 3 valid live samples", () => {
   const builtFolder = path.join(
     buildRoot,
@@ -1124,4 +1136,94 @@ test("deprecated macros are fixable", () => {
   expect(doc.flaws.macros.filter((flaw) => flaw.suggestion === "").length).toBe(
     4
   );
+});
+
+test("external links always get the right attributes", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "externallinks"
+  );
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  // 4 links on that page and we'll do 2 assertions for each one, plus
+  // 1 for the extra sanity check.
+  expect.assertions(4 * 2 + 1);
+  expect($("article a").length).toBe(4); // sanity check
+  $("article a").each((i, element) => {
+    const $a = $(element);
+    expect($a.hasClass("external")).toBe(true);
+    expect(
+      $a
+        .attr("rel")
+        .split(" ")
+        .filter((rel) => rel === "noopener").length
+    ).toBe(1);
+  });
+});
+
+test("home page should have a /index.json file with feedEntries", () => {
+  const builtFolder = path.join(buildRoot, "en-us");
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { feedEntries } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(feedEntries.length).toBeGreaterThan(0);
+});
+
+test("headings with links in them are flaws", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "heading_links"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.heading_links.length).toBe(2);
+  const map = new Map(doc.flaws.heading_links.map((x) => [x.id, x]));
+  expect(map.get("heading_links1").explanation).toBe(
+    "h2 heading contains an <a> tag"
+  );
+  expect(map.get("heading_links1").suggestion).toBe("One");
+  expect(map.get("heading_links1").line).toBe(9);
+  expect(map.get("heading_links1").column).toBe(19);
+  expect(map.get("heading_links1").fixable).toBe(false);
+  expect(map.get("heading_links1").before).toBe('<a href="#something">One</a>');
+  expect(map.get("heading_links1").html).toBe(
+    '<h2 id="one"><a href="#something">One</a></h2>'
+  );
+  expect(map.get("heading_links2").explanation).toBe(
+    "h3 heading contains an <a> tag"
+  );
+  expect(map.get("heading_links2").suggestion.trim()).toBe("Two");
+  expect(map.get("heading_links2").line).toBe(11);
+  expect(map.get("heading_links2").column).toBe(19);
+  expect(map.get("heading_links2").fixable).toBe(false);
+  expect(map.get("heading_links2").before.trim()).toBe(
+    '<a id="twoooo">Two</a>'
+  );
+  expect(map.get("heading_links2").html).toBe(
+    '<h3 id="two">\n  <a id="twoooo">Two</a>\n</h3>'
+  );
+});
+
+test("'lang' attribute should match the article", () => {
+  let builtFolder = path.join(buildRoot, "fr", "docs", "web", "foo");
+  let htmlFile = path.join(builtFolder, "index.html");
+  let html = fs.readFileSync(htmlFile, "utf-8");
+  let $ = cheerio.load(html);
+  expect($("html").attr("lang")).toBe("en-US");
+  expect($("article").attr("lang")).toBe("fr");
+
+  builtFolder = path.join(buildRoot, "en-us", "docs", "web", "foo");
+  htmlFile = path.join(builtFolder, "index.html");
+  html = fs.readFileSync(htmlFile, "utf-8");
+  $ = cheerio.load(html);
+  expect($("html").attr("lang")).toBe("en-US");
+  expect($("article").attr("lang")).toBe("en-US");
 });

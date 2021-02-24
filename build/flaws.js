@@ -34,6 +34,13 @@ function injectFlaws(doc, $, options, { rawContent }) {
   injectBadBCDQueriesFlaws(options.flawLevels.get("bad_bcd_queries"), doc, $);
 
   injectPreTagFlaws(options.flawLevels.get("bad_pre_tags"), doc, $, rawContent);
+
+  injectHeadingLinksFlaws(
+    options.flawLevels.get("heading_links"),
+    doc,
+    $,
+    rawContent
+  );
 }
 
 function injectSectionFlaws(doc, flaws, options) {
@@ -394,6 +401,74 @@ function injectPreTagFlaws(level, doc, $, rawContent) {
   ) {
     throw new Error(
       `bad_pre_tags flaws: ${doc.flaws.bad_pre_tags.map(JSON.stringify)}`
+    );
+  }
+}
+
+// You're not allowed to have `<a>` elements inside `<h2>` or `<h3>` elements
+// because those will be rendered out as "links to themselves".
+// I.e. a source of `<h2 id="foo">Foo</h2>` renders out as:
+// `<h2 id="foo"><a href="#foo">Foo</a></h2>` in the final HTML. That makes
+// it easy to (perma)link to specific headings in the document.
+function injectHeadingLinksFlaws(level, doc, $, rawContent) {
+  if (level === FLAW_LEVELS.IGNORE) return;
+
+  function addFlaw($heading) {
+    if (!("heading_links" in doc.flaws)) {
+      doc.flaws.heading_links = [];
+    }
+    const id = `heading_links${doc.flaws.heading_links.length + 1}`;
+    const explanation = `${
+      $heading.get(0).tagName
+    } heading contains an <a> tag`;
+    const before = $heading.html();
+    let suggestion = null;
+    // If the only element within the heading's HTML is 1 single <a>
+    // then, we can simply replace the whole heading's HTML with the text of it.
+    if ($("a", $heading).length === 1 && $("*", $heading).length === 1) {
+      suggestion = $heading.text();
+    }
+    let line = null;
+    let column = null;
+    // If the heading has an ID we can search for it in the rawContent.
+    for (const { line: foundLine, column: foundColumn } of findMatchesInText(
+      before,
+      rawContent
+    )) {
+      line = foundLine;
+      // This makes sure the column is *after* the ID value (plus quotation mark)
+      column = foundColumn + $heading.attr("id").length + 2;
+    }
+    // It's never fixable because it's too hard to find in the raw HTML.
+    const fixable = false;
+    const html = $.html($heading);
+    const flaw = {
+      explanation,
+      id,
+      before,
+      fixable,
+      html,
+      suggestion,
+      line,
+      column,
+    };
+    if (suggestion) {
+      $heading.html(suggestion);
+    }
+    doc.flaws.heading_links.push(flaw);
+  }
+
+  $("h2 a, h3 a").each((i, element) => {
+    addFlaw($(element).parent());
+  });
+
+  if (
+    level === FLAW_LEVELS.ERROR &&
+    doc.flaws.heading_links &&
+    doc.flaws.heading_links.length
+  ) {
+    throw new Error(
+      `heading_links flaws: ${doc.flaws.heading_links.map(JSON.stringify)}`
     );
   }
 }
