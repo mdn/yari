@@ -1049,6 +1049,11 @@
     "url": "https://github.com/tc39/proposal-regexp-legacy-features/",
     "status": "Draft"
   },
+  "Local Font Access API": {
+    "name": "Local Font Access API",
+    "url": "https://wicg.github.io/local-font-access",
+    "status": "Draft"
+  },
   "Logical Assignment": {
     "name": "Logical Assignment Operators",
     "url": "https://tc39.es/proposal-logical-assignment/",
@@ -1813,6 +1818,11 @@
     "name": "Identifiers for WebRTC's Statistics API",
     "url": "https://w3c.github.io/webrtc-stats/",
     "status": "CR"
+  },
+  "Web Serial API": {
+    "name": "Web Serial API",
+    "url": "https://wicg.github.io/serial/",
+    "status": "Draft"
   },
   "Web Share API": {
     "name": "Web Share API",

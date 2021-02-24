@@ -276,7 +276,8 @@ def analyze(
             print()
             for key in keys:
                 print(f"{key:{longest_key + 1}} {token[key]!r}")
-
+    elif not analysis:
+        print("No tokens found!")
     else:
         # Desperate if it's not a list of tokens
         print(json.dumps(analysis, indent=2))
