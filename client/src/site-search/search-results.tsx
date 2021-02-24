@@ -6,7 +6,7 @@ import { CRUD_MODE, DEBUG_SEARCH_RESULTS } from "../constants";
 import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
 
-import AdvancedSearchOptions from "./advanced-search-options";
+import { AdvancedSearchOptions } from "./advanced-search-options";
 import { LoadingPlaceholder } from "../ui/atoms/loading-placeholder";
 
 import LANGUAGES_RAW from "../languages.json";
@@ -132,7 +132,7 @@ export default function SearchResults() {
       let title = "";
 
       if (data && data.metadata.total.value) {
-        title += `${data.metadata.total.value} `;
+        title += `${data.metadata.total.value.toLocaleString()} `;
       }
       title += `Search results for "${query}"`;
 

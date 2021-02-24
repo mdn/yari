@@ -11,7 +11,7 @@ const LANGUAGES = new Map(
   })
 );
 
-export default function AdvancedSearchOptions() {
+export function AdvancedSearchOptions() {
   const locale = useLocale();
   const [searchParams] = useSearchParams();
   const queryLocales = searchParams.getAll("locale");
