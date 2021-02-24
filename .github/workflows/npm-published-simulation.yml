@@ -84,19 +84,42 @@ jobs:
           # give it a chance to start
           sleep 3
 
-          curl --retry-connrefused --retry 5 http://localhost:5000
-          # Basically, test if it 200 OKs. If not, this'll exit non-zero.
-          curl http://localhost:5000/en-US/docs/Web/Foo
+          curl --retry-connrefused --retry 5 -I http://localhost:5000
+          curl http://localhost:5000/en-US/
 
-      - name: Display any outputs from the server
+          # Basically, test if it 200 OKs. If not, this'll exit non-zero.
+          curl http://localhost:5000/en-US/docs/Web/Foo > /dev/null
+
+      - name: Test viewing the dev server
+        env:
+          # This will make sure the tests in `testing/tests/*.test.js` only run
+          # if the development server is up and ready to be tested.
+          TESTING_DEVELOPING: true
+          # Use local chrome installs since we skip downloading it as part
+          # of the yarn installs above
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
         run: |
-          echo "STDOUT..................................................."
-          cat /tmp/stdout.log
-          echo "STDERR..................................................."
-          cat /tmp/stderr.log
+          status=0
+          yarn test:testing developing || (
+            status=$?
+            echo "Testing failed! Going to dump stdout and stderr"
+            echo "STDOUT..................................................."
+            cat /tmp/stdout.log
+            echo "STDERR..................................................."
+            cat /tmp/stderr.log
+            echo $status
+            exit $status
+          )
+          exit $status
+
+      # - name: Display any outputs from the server
+      #   run: |
+      #     echo "STDOUT..................................................."
+      #     cat /tmp/stdout.log
+      #     echo "STDERR..................................................."
+      #     cat /tmp/stderr.log
 
       - name: SSR build all pages
         run: |
           cd /tmp/content
           yarn build
-          ls -l client/build/
