@@ -110,7 +110,7 @@ jobs:
           echo "STDERR..................................................."
           cat /tmp/stderr.log
 
-      - name: SSR build all pages
+      - name: SSR build a page
         run: |
           cd mdn/content
-          yarn build
+          yarn build files/en-us/mdn/kitchensink/index.html
