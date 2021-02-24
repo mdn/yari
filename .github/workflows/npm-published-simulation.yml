@@ -56,9 +56,10 @@ jobs:
 
       - name: View some URLs on localhost:5000
         run: |
-          curl --retry-connrefused --retry 5 http://localhost:5000
-          # Basically, test if it 200 OKs. If not, this'll exit non-zero.
-          curl http://localhost:5000/en-US/docs/Web/Foo
+          curl http://localhost:5000/en-US/docs/Web/Foo || echo "That didn't work!"
+          # curl --retry-connrefused --retry 5 http://localhost:5000
+          # # Basically, test if it 200 OKs. If not, this'll exit non-zero.
+          # curl http://localhost:5000/en-US/docs/Web/Foo
 
       - name: Display any outputs from the server
         run: |
