@@ -1,0 +1,72 @@
+# Instead of waiting for Yari to be published to npmjs.com and be upgraded
+# inside mdn/content by Dependabot, we do all those steps here using `npm pack`.
+
+name: NPM Publish simulation
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: "12"
+
+      - name: Set up a mock content repo
+        run: |
+          mkdir /tmp/content
+          cp -r testing/content/files /tmp/content/
+          cd /tmp/content
+          cat > package.json <<PACKAGE_JSON
+          {
+            "name": "content",
+            "version": "1.0.0",
+            "main": "index.js",
+            "license": "SEE LICENSE IN LICENSE.md",
+            "scripts": {
+              "start": "env-cmd --silent cross-env CONTENT_ROOT=files REACT_APP_DISABLE_AUTH=true node node_modules/@mdn/yari/server",
+              "build": "env-cmd --silent cross-env CONTENT_ROOT=files BUILD_OUT_ROOT=build node node_modules/@mdn/yari/build/cli.js"
+            }
+          }
+          PACKAGE_JSON
+          yarn add cross-env env-cmd
+
+      - name: Build and install tarball
+        run: |
+          npm pack
+          TARBALL=`ls mdn-yari-*.tgz`
+          echo $TARBALL
+          ls -lh $TARBALL
+          mv $TARBALL /tmp/content/
+          cd /tmp/content
+          yarn add file:$TARBALL
+
+      - name: Start Yari from mock content repo
+        run: |
+          cd /tmp/content
+          yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
+
+      - name: View some URLs on localhost:5000
+        run: |
+          curl --retry-connrefused --retry 5 http://localhost:5000
+          # Basically, test if it 200 OKs. If not, this'll exit non-zero.
+          curl http://localhost:5000/en-US/docs/Web/Foo
+
+      - name: Display any outputs from the server
+        run: |
+          echo "STDOUT..................................................."
+          cat /tmp/stdout.log
+          echo "STDERR..................................................."
+          cat /tmp/stderr.log
+
+      - name: SSR build all pages
+        run: |
+          yarn build
