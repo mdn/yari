@@ -6,12 +6,17 @@ const { setDefaultOptions } = require("expect-puppeteer");
 // and then the server building of the page can be pretty heavy.
 setDefaultOptions({ timeout: 5000 });
 
+const DEV_BASE_URL =
+  process.env.DEVELOPING_DEV_BASE_URL || "http://localhost:3000";
+
 function devURL(pathname = "/") {
-  return `http://localhost:3000${pathname}`;
+  return `${DEV_BASE_URL}${pathname}`;
 }
 
+const SERVER_BASE_URL =
+  process.env.DEVELOPING_SERVER_BASE_URL || "http://localhost:5000";
 function serverURL(pathname = "/") {
-  return `http://localhost:5000${pathname}`;
+  return `${SERVER_BASE_URL}${pathname}`;
 }
 
 // This "trick" is to force every test to be skipped if the environment

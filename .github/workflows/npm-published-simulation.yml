@@ -92,6 +92,9 @@ jobs:
           # Use local chrome installs since we skip downloading it as part
           # of the yarn installs above
           PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+          # When running Yari from within mdn/content it uses port 5000
+          # unlike the default which is 3000.
+          DEVELOPING_DEV_BASE_URL: 5000
         run: |
           status=0
           yarn test:testing developing || (
