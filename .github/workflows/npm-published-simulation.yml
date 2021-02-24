@@ -39,6 +39,17 @@ jobs:
           PACKAGE_JSON
           yarn add cross-env env-cmd
 
+      - name: Prepare to build
+        env:
+          # The following env vars is what we do in npm-publish.yml
+          # Each variable set is documented there.
+
+          REACT_APP_CRUD_MODE: true
+          REACT_APP_DISABLE_AUTH: true
+          CONTENT_ROOT: testing/content/files
+        run: |
+          yarn prepare-build
+
       - name: Build and install tarball
         run: |
           npm pack
@@ -52,8 +63,7 @@ jobs:
       - name: Start Yari from mock content repo
         run: |
           cd /tmp/content
-          # yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
-          yarn start
+          yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
 
       - name: View some URLs on localhost:5000
         run: |
