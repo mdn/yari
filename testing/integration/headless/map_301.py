@@ -553,8 +553,8 @@ LEGACY_URLS = list(
             url_test("/patches/foo", status_code=404),
             url_test("/web-tech", status_code=404),
             url_test("/web-tech/feed/atom/", status_code=404),
-            url_test("/css/wiki.css", status_code=404),
-            url_test("/css/base.css", status_code=404),
+            url_test("/css/wiki.css", follow_redirects=True, final_status_code=404),
+            url_test("/css/base.css", follow_redirects=True, final_status_code=404),
             url_test("/contests", "http://www.mozillalabs.com/", status_code=302),
             url_test("/contests/", "http://www.mozillalabs.com/", status_code=302),
             url_test(
@@ -979,3 +979,58 @@ FIREFOX_SOURCE_DOCS_URLS = list(
         )
     )
 )
+
+MISC_REDIRECT_URLS = [
+    url_test("/en-US/DOM", "/en-US/docs/DOM"),
+    url_test("/en-US/DOM/", "/en-US/docs/DOM"),
+    url_test(
+        "/en-US/DOM/element.addEventListener",
+        "/en-US/docs/DOM/element.addEventListener",
+    ),
+    url_test("/en-US/DOM/CSSRule/cssText/", "/en-US/docs/DOM/CSSRule/cssText"),
+    url_test("/fr/DOM", "/fr/docs/DOM"),
+    url_test("/fr/DOM/", "/fr/docs/DOM"),
+    url_test(
+        "/fr/DOM/element.addEventListener", "/fr/docs/DOM/element.addEventListener"
+    ),
+    url_test("/fr/DOM/CSSRule/cssText/", "/fr/docs/DOM/CSSRule/cssText"),
+    url_test("/en-US/AJAX", "/en-US/docs/AJAX"),
+    url_test("/en-US/AJAX/", "/en-US/docs/AJAX"),
+    url_test("/en-US/AJAX/Getting_Started/", "/en-US/docs/AJAX/Getting_Started"),
+    url_test("/en-US/CSS", "/en-US/docs/CSS"),
+    url_test("/en-US/CSS/", "/en-US/docs/CSS"),
+    url_test("/en-US/CSS/time/", "/en-US/docs/CSS/time"),
+    url_test("/en-US/DragDrop", "/en-US/docs/DragDrop"),
+    url_test("/en-US/DragDrop/", "/en-US/docs/DragDrop"),
+    url_test("/en-US/DragDrop/Drag_and_Drop/", "/en-US/docs/DragDrop/Drag_and_Drop"),
+    url_test("/en-US/HTML", "/en-US/docs/HTML"),
+    url_test("/en-US/HTML/", "/en-US/docs/HTML"),
+    url_test("/en-US/HTML/Canvas/", "/en-US/docs/HTML/Canvas"),
+    url_test("/en-US/JavaScript", "/en-US/docs/JavaScript"),
+    url_test("/en-US/JavaScript/", "/en-US/docs/JavaScript"),
+    url_test(
+        "/en-US/JavaScript/Reference/About/", "/en-US/docs/JavaScript/Reference/About"
+    ),
+    url_test("/en-US/SVG", "/en-US/docs/SVG"),
+    url_test("/en-US/SVG/", "/en-US/docs/SVG"),
+    url_test("/en-US/SVG/Element/font/", "/en-US/docs/SVG/Element/font"),
+    url_test("/en-US/Tools", "/en-US/docs/Tools"),
+    url_test("/en-US/Tools/", "/en-US/docs/Tools"),
+    url_test(
+        "/en-US/Tools/Memory/Treemap_view/", "/en-US/docs/Tools/Memory/Treemap_view"
+    ),
+    url_test(
+        "/en-US/Using_files_from_web_applications",
+        "/en-US/docs/Using_files_from_web_applications",
+    ),
+    url_test(
+        "/en-US/Using_files_from_web_applications/",
+        "/en-US/docs/Using_files_from_web_applications",
+    ),
+    url_test("/en-US/Web", "/en-US/docs/Web"),
+    url_test("/en-US/Web/", "/en-US/docs/Web"),
+    url_test("/en-US/Web/API/ArrayBuffer/", "/en-US/docs/Web/API/ArrayBuffer"),
+    url_test("/en-US/XMLHttpRequest", "/en-US/docs/XMLHttpRequest"),
+    url_test("/en-US/XMLHttpRequest/", "/en-US/docs/XMLHttpRequest"),
+    url_test("/en-US/XMLHttpRequest/FormData/", "/en-US/docs/XMLHttpRequest/FormData"),
+]

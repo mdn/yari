@@ -9,19 +9,19 @@
 //  Example macro calls:
 //  {{EmbedGHLiveSample("canvas-raycaster", 900, 300)}}
 //  {{EmbedGHLiveSample("css-examples/learn/tasks/grid/grid1.html", '100%', 700)}}
- 
+
 var str = "";
 var widthHeight = "";
 var url = "https://mdn.github.io/" + $0;
 
 if ($1) {
-    widthHeight = "width='" + $1 + "' ";
+    widthHeight = `width="${$1}" `;
 }
 if ($2) {
-    widthHeight += "height='" + $2 + "' ";
+    widthHeight += `height="${$2}" `;
 }
 
-str = '<iframe frameborder="0" ' + widthHeight + 'src="' + url + '"></iframe>';
+str = `<iframe ${widthHeight} src="${url}"></iframe>`;
 
 %>
 <%- str %>

@@ -49,7 +49,7 @@ When you are tasked with reviewing a Yari pull request:
 
 The legacy [KumaScript](https://developer.mozilla.org/en-US/docs/MDN/Tools/KumaScript)
 macro system is available inside the yari repo in the
-[kumascript](https://github.com/mdn/yari/tree/master/kumascript) subdirectory.
+[kumascript](https://github.com/mdn/yari/tree/main/kumascript) subdirectory.
 
 Testing changes to KumaScript macros — whether you are making your own change or
 reviewing someone
@@ -58,6 +58,6 @@ as described above, you can load up an MDN page that contains the appropriate
 macro call and see if it works.
 
 If you need to update a macro, you can make a change to the relevant `.ejs` file
-(see the [macros](https://github.com/mdn/yari/tree/master/kumascript/macros) subdirectory),
+(see the [macros](https://github.com/mdn/yari/tree/main/kumascript/macros) subdirectory),
 save it, and reload the page in your browser to see the change in action
 immediately.
