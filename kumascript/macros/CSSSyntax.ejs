@@ -44,7 +44,8 @@ let data = {
 let slug = env.slug;
 let locale = env.locale;
 let name = $0 || (slug ? slug.split("/").pop().toLowerCase() : "preview-wiki-content");
-// deal with conflicting documents for now
+// "Conflicting" documents have an MD5 postfix to deal with multiple conflicting documents.
+// In here we need a clean name so remove the MD5 part.
 name = name.replace(/(.*)_[a-f0-9]{32}$/, (_, x) => x);
 let atRule = $1;
 let rawSyntax = "";
@@ -429,8 +430,7 @@ if (name === "preview-wiki-content") {
 }
 
 if (!formattedSyntax) {
-    // throw new Error(`No syntax found in DB for '${name}'`);
-    console.warn(`No syntax found in DB for '${name}'`);
+    throw new Error(`No syntax found in DB for '${name}'`);
 }
 
 %><%- formattedSyntax %>
