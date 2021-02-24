@@ -52,7 +52,8 @@ jobs:
       - name: Start Yari from mock content repo
         run: |
           cd /tmp/content
-          yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
+          # yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
+          yarn start
 
       - name: View some URLs on localhost:5000
         run: |
@@ -70,4 +71,5 @@ jobs:
 
       - name: SSR build all pages
         run: |
+          cd /tmp/content
           yarn build
