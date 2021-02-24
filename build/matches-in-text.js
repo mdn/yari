@@ -18,14 +18,6 @@ function* findMatchesInText(needle, haystack, { attribute = null } = {}) {
   }
 }
 
-function findFirstMatchInText(needle, haystack) {
-  const index = haystack.indexOf(needle);
-  const left = haystack.substring(0, index);
-  const line = left.split("\n").length;
-  const column = left.length - left.lastIndexOf("\n");
-  return { line, column };
-}
-
 function replaceMatchesInText(
   needle,
   haystack,
@@ -49,8 +41,4 @@ function replaceMatchesInText(
   });
 }
 
-module.exports = {
-  findMatchesInText,
-  findFirstMatchInText,
-  replaceMatchesInText,
-};
+module.exports = { findMatchesInText, replaceMatchesInText };
