@@ -494,7 +494,7 @@ function Pagination({
       }
     }
     return (
-      <ul className="pagination">
+      <ul className="pagination readable-line-length">
         {previousURL ? (
           <li>
             <Link to={previousURL} className="button">
