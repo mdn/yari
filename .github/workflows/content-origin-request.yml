@@ -39,7 +39,7 @@ jobs:
       - name: Run test server
         working-directory: deployer/aws-lambda/content-origin-request
         run: |
-          yarn serve  > /tmp/stdout.log 2> /tmp/stderr.log &
+          yarn serve > /tmp/stdout.log 2> /tmp/stderr.log &
 
       - name: Check that the server started
         run: curl --retry-connrefused --retry 5 -I http://localhost:7000/ping
@@ -48,6 +48,8 @@ jobs:
         run: |
           curl -I http://localhost:7000/docs/Web
           curl -I http://localhost:7000/en-US/docs/Web/
+
+          # XXX consider running the Python "headless integration" here.
 
       - name: Debug any server outputs
         run: |

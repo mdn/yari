@@ -1,17 +1,16 @@
 /* eslint-disable node/no-unpublished-require */
-const express = require("express");
+const polka = require("polka");
 const kleur = require("kleur");
 
 const { handler } = require("./index");
 
-const app = express();
 const PORT = 7000;
 
-app.get("/ping", async (req, res) => {
-  res.send("pong\n");
-});
+function ping(req, res) {
+  res.end("pong\n");
+}
 
-app.get("/*", async (req, res) => {
+async function catchall(req, res) {
   // Reminder...
   // - url: e.g. `/en-US/docs/Foo?key=value`
   // - query: e.g. `?key=value`
@@ -52,7 +51,7 @@ app.get("/*", async (req, res) => {
     // tests against this test server if you're interesting in seeing that
     // would happen next.
     res.setHeader("X-S3-Lookup", handle.uri);
-    res.send(msg);
+    res.end(`${msg}\n`);
   } else if (handle.status) {
     // It's a redirect.
     // console.log(JSON.stringify(handle, null, 3));
@@ -72,15 +71,26 @@ app.get("/*", async (req, res) => {
           : kleur.yellow(handle.status)
       } redirect to ${kleur.bold(path)}`
     );
-    res.redirect(handle.status, path);
+    res.statusCode = handle.status;
+    res.setHeader("Location", path);
+    res.end("");
   } else {
     console.warn(JSON.stringify(handle, null, 3));
-    res.status(500, "Unrecognized handler response");
+    res.statusCode = 500;
+    res.end("Unrecognized handler response");
   }
-});
+}
 
-app.listen(PORT, () => {
-  console.log(
-    `content-origin-request simulator started on http://localhost:${PORT}`
-  );
-});
+polka()
+  .get("/ping", ping)
+  .head("/ping", ping)
+  .get("/*", catchall)
+  .head("/*", catchall)
+  .listen(PORT, (err) => {
+    if (err) {
+      throw err;
+    }
+    console.log(
+      `content-origin-request simulator started on http://localhost:${PORT}`
+    );
+  });
