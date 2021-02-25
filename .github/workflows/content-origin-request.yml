@@ -44,12 +44,15 @@ jobs:
       - name: Check that the server started
         run: curl --retry-connrefused --retry 5 -I http://localhost:7000/ping
 
-      - name: Run the integration tests
+      - name: Preflight the integration tests
         run: |
           curl -I http://localhost:7000/docs/Web
           curl -I http://localhost:7000/en-US/docs/Web/
 
-          # XXX consider running the Python "headless integration" here.
+      - name: Unit test
+        working-directory: deployer/aws-lambda/content-origin-request
+        run: |
+          yarn test-server
 
       - name: Debug any server outputs
         run: |

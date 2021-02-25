@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "make-package": "yarn install --production && zip -r -X function.zip . -i index.js 'node_modules/*'",
-    "serve": "nodemon server.js"
+    "serve": "nodemon server.js",
+    "test-server": "jest"
   },
   "dependencies": {
     "@yari-internal/constants": "file:../../../libs/constants",
@@ -17,6 +18,8 @@
     "sanitize-filename": "^1.6.3"
   },
   "devDependencies": {
+    "got": "11.8.1",
+    "jest": "26.6.3",
     "kleur": "4.1.4",
     "nodemon": "2.0.7",
     "polka": "0.5.2"
