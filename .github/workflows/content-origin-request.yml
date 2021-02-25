@@ -28,7 +28,7 @@ jobs:
         id: cached-node_modules
         with:
           path: |
-            node_modules
+            deployer/aws-lambda/content-origin-request/node_modules
           key: ${{ runner.os }}-${{ hashFiles('deployer/aws-lambda/content-origin-request/yarn.lock') }}
 
       - name: Install all yarn packages
