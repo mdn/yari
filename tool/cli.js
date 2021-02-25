@@ -20,7 +20,7 @@ const {
   Document,
   buildURL,
 } = require("../content");
-const { buildDocument, gatherGitHistory } = require("../build");
+const { buildDocument, gatherGitHistory, buildSPAs } = require("../build");
 const {
   BUILD_OUT_ROOT,
   GOOGLE_ANALYTICS_ACCOUNT,
@@ -716,6 +716,13 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       } else {
         logger.info(chalk.yellow("No Google Analytics code file generated"));
       }
+    })
+  )
+
+  .command("spas", "Build (SSR) all the skeleton apps for single page apps")
+  .action(
+    tryOrExit(async ({ options }) => {
+      await buildSPAs(options);
     })
   );
 
