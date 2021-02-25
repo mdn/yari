@@ -1,4 +1,5 @@
 /* eslint-disable node/no-unpublished-require */
+/* eslint-disable node/no-missing-require */
 const polka = require("polka");
 const kleur = require("kleur");
 
