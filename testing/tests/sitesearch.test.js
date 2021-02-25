@@ -51,7 +51,7 @@ describe("Site search", () => {
     await expect(page).toMatchElement("a", { text: "Next" });
     await expect(page).not.toMatchElement("a", { text: "Previous" });
     await expect(page).toClick(".pagination a");
-    await expect(page).toMatch("Page 2");
+    await expect(page).toMatch("(page 2)");
     await expect(page).toMatch("Serial 10");
     await expect(page).toMatch("Serial 19");
     await expect(page).toMatchElement("a", { text: "Previous" });
