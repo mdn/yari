@@ -6,6 +6,10 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - deployer/aws-lambda/**
+      - libs/**
+      - .github/workflows/content-origin-request.yml
 
 jobs:
   build:
