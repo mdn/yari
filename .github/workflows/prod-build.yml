@@ -173,7 +173,8 @@ jobs:
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
           yarn prepare-build
 
-          yarn build --sync-translated-content
+          yarn tool sync-translated-content
+          yarn build
 
           du -sh client/build
 
