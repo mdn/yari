@@ -66,22 +66,22 @@ describe("Basic viewing of functional pages", () => {
       text: "Flexbox",
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${flexSample1Uri}"]`
+      `iframe.sample-code-frame[src$="${flexSample1Uri}"]`
     );
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${flexSample2Uri}"]`
+      `iframe.sample-code-frame[src$="${flexSample2Uri}"]`
     );
     await expect(page).toMatchElement("#grid_layout", {
       text: "Grid Layout",
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${gridSample1Uri}"]`
+      `iframe.sample-code-frame[src$="${gridSample1Uri}"]`
     );
     await expect(page).toMatchElement("#Grid_2 > pre.css.notranslate", {
       text: /\.wrapper\s*\{\s*display:\s*grid;/,
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${gridSample2Uri}"]`
+      `iframe.sample-code-frame[src$="${gridSample2Uri}"]`
     );
     // Ensure that the live-sample pages were built.
     for (const sampleUri of [
@@ -119,13 +119,13 @@ describe("Basic viewing of functional pages", () => {
       text: /\.wrapper\s*\{\s*display:\s*flex;\s*\}/,
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${flexSample1Uri}"]`
+      `iframe.sample-code-frame[src$="${flexSample1Uri}"]`
     );
     await expect(page).toMatchElement("#Flex_2 > pre.css.notranslate", {
       text: /\.wrapper\s*\{\s*display:\s*flex;\s*\}.+flex:\s*1;/,
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${flexSample2Uri}"]`
+      `iframe.sample-code-frame[src$="${flexSample2Uri}"]`
     );
   });
 
@@ -145,13 +145,13 @@ describe("Basic viewing of functional pages", () => {
       text: /\.wrapper\s*\{\s*display:\s*grid;/,
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${gridSample1Uri}"]`
+      `iframe.sample-code-frame[src$="${gridSample1Uri}"]`
     );
     await expect(page).toMatchElement("#Grid_2 > pre.css.notranslate", {
       text: /\.wrapper\s*\{\s*display:\s*grid;.+\.box1\s*\{/,
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${gridSample2Uri}"]`
+      `iframe.sample-code-frame[src$="${gridSample2Uri}"]`
     );
     // Ensure that the live-sample page "gridSample2Uri" was built.
     await page.goto(testURL(gridSample2Uri));

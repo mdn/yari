@@ -12,6 +12,8 @@ const {
   MacroExecutionError,
 } = require("../src/errors.js");
 
+const PAGE_ENV = { slug: "" };
+
 describe("render() function", () => {
   function fixture(name) {
     return `${__dirname}/fixtures/render/${name}`;
@@ -34,7 +36,7 @@ describe("render() function", () => {
     const templates = new Templates(fixture(`${casedir}/macros`));
     const [result, errors] = await render(
       input,
-      {},
+      PAGE_ENV,
       renderPrerequisiteFromURL,
       {
         templates,
@@ -49,6 +51,7 @@ describe("render() function", () => {
     const expected = get(`testcase2/output_selective_${mode}`);
     const templates = new Templates(fixture("testcase2/macros"));
     const pageEnv = {
+      ...PAGE_ENV,
       selective_mode: [mode, ["Multi:Line:Macro", "頁尾附註", "MacroWithJson"]],
     };
     const [result, errors] = await render(
@@ -74,7 +77,7 @@ describe("render() function", () => {
     const templates = new Templates(fixture("macros"));
     const promise = render(
       "{{asyncMacro}}",
-      { after },
+      { ...PAGE_ENV, after },
       renderPrerequisiteFromURL,
       {
         templates,
@@ -91,6 +94,7 @@ describe("render() function", () => {
     const [result, errors] = await render(
       "{{env}}",
       {
+        ...PAGE_ENV,
         x: 1,
         y: 2,
       },
@@ -109,7 +113,7 @@ describe("render() function", () => {
     // null templates since we expect errors before we render any
     expect.assertions(4);
     try {
-      await render(input, {}, renderPrerequisiteFromURL, {
+      await render(input, PAGE_ENV, renderPrerequisiteFromURL, {
         templates: null,
       });
     } catch (e) {
@@ -124,7 +128,7 @@ describe("render() function", () => {
     const templates = new Templates(fixture("macros"));
     const [result, errors] = await render(
       "foo{{nope}}bar",
-      {},
+      PAGE_ENV,
       renderPrerequisiteFromURL,
       {
         templates,
@@ -142,7 +146,7 @@ describe("render() function", () => {
     const templates = new Templates(fixture("macros"));
     const [result, errors] = await render(
       "foo{{syntax}}bar",
-      {},
+      PAGE_ENV,
       renderPrerequisiteFromURL,
       {
         templates,
@@ -160,7 +164,7 @@ describe("render() function", () => {
     const templates = new Templates(fixture("macros"));
     const [result, errors] = await render(
       "foo{{throw}}bar",
-      {},
+      PAGE_ENV,
       renderPrerequisiteFromURL,
       {
         templates,
@@ -178,7 +182,7 @@ describe("render() function", () => {
     const templates = new Templates(fixture("macros"));
     const [result, errors] = await render(
       "foo{{ undefined() }}bar",
-      {},
+      PAGE_ENV,
       renderPrerequisiteFromURL,
       {
         templates,
@@ -196,7 +200,7 @@ describe("render() function", () => {
     const templates = new Templates(fixture("macros"));
     const [result, errors] = await render(
       "foo{{nope(1)}}bar{{throw(2)}}baz{{syntax(3)}}",
-      {},
+      PAGE_ENV,
       renderPrerequisiteFromURL,
       {
         templates,
@@ -213,7 +217,7 @@ describe("render() function", () => {
     const templates = new Templates(fixture("macros"));
     const [result, errors] = await render(
       'foo{{echo("!")}} bar{{ throw(1,2) }}baz{{echo("?")}}',
-      {},
+      PAGE_ENV,
       renderPrerequisiteFromURL,
       {
         templates,
@@ -230,7 +234,7 @@ describe("render() function", () => {
     const templates = new Templates(fixture("macros"));
     const [result, errors] = await render(
       input,
-      {},
+      PAGE_ENV,
       renderPrerequisiteFromURL,
       {
         templates,
@@ -244,7 +248,7 @@ describe("render() function", () => {
     const templates = new Templates(fixture("macros"));
     const [result, errors] = await render(
       "foo{{includeError}}bar",
-      {},
+      PAGE_ENV,
       renderPrerequisiteFromURL,
       {
         templates,
