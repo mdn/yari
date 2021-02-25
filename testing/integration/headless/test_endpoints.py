@@ -71,7 +71,7 @@ def test_hreflang_basic(base_url):
     resp = request("get", url)
     assert resp.status_code == 200
     html = PyQuery(resp.text)
-    assert html.attr("lang") == "en"
+    assert html.attr("lang") == "en-US"
     assert html.find(
         'head > link[hreflang="en"][href="https://developer.mozilla.org/en-US/docs/Web/HTTP"]'
     )
@@ -126,17 +126,8 @@ LOCALE_SELECTORS = {
     [
         "",
         "/",
-        "/?utm=xyz",
-        "/docs",
-        "/docs/",
-        "/docs?utm=abc",
-        "/docs/?utm=abc",
         "/docs/Web",
         "/docs/Web/",
-        "/docs/Web/HTML?utm=xyz",
-        "/docs/Web/HTML/?utm=xyz",
-        "/docs/Learn/CSS/Styling_text/Fundamentals#Color",
-        "/docs/Learn/CSS/Styling_text/Fundamentals#Color?utm=abc",
         "/search",
         "/search/",
         "/search?q=video",
@@ -164,4 +155,6 @@ def test_locale_selection(base_url, slug, expected, cookie, accept):
     response = request("get", url, **request_kwargs)
     assert response.status_code == 302
     extra = "?".join(p.strip("/") for p in slug.split("?"))
-    assert response.headers["location"].startswith(f"/{expected}/{extra}")
+    assert response.headers["location"].startswith(
+        f"/{expected}/{extra}"
+    ), f"{response.headers['location']} does not start with {f'/{expected}/{extra}'}"

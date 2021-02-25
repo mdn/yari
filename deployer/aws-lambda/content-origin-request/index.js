@@ -9,14 +9,26 @@ const {
 const { VALID_LOCALES } = require("@yari-internal/constants");
 
 const THIRTY_DAYS = 3600 * 24 * 30;
-const DOC_WITHOUT_LOCALE = /^\/docs(?:$|\/)/;
-const SEARCH_WITHOUT_LOCALE = /^\/search\/?$/;
+const NEEDS_LOCALE = /^\/(?:docs|search|settings|sign-in|sign-up)(?:$|\/)/;
 // Note that the keys of "VALID_LOCALES" are lowercase locales.
 const LOCALE_URI_WITHOUT_TRAILING_SLASH = new Set(
   [...VALID_LOCALES.keys()].map((locale) => `/${locale}`)
 );
 const LOCALE_URI_WITH_TRAILING_SLASH = new Set(
   [...VALID_LOCALES.keys()].map((locale) => `/${locale}/`)
+);
+// TODO: The code that uses LEGACY_URI_NEEDING_TRAILING_SLASH should be
+//       temporary. For example, when we have moved to the Yari-built
+//       account settings page, we should add fundamental redirects
+//       for "/{locale}/account/?" and "/account/?" that redirect to
+//       "/{locale}/settings" and "/settings" respectively. The other
+//       cases can be either redirected or deleted eventually as well.
+//       The goal is to eventually remove the code that uses
+//       LEGACY_URI_NEEDING_TRAILING_SLASH.
+const LEGACY_URI_NEEDING_TRAILING_SLASH = new RegExp(
+  `^(?:${[...LOCALE_URI_WITHOUT_TRAILING_SLASH].join(
+    "|"
+  )})?/(?:account|contribute|maintenance-mode|payments)/?$`
 );
 
 const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
@@ -68,20 +80,22 @@ exports.handler = async (event) => {
 
   const { url, status } = resolveFundamental(request.uri);
   if (url) {
+    // TODO: Do we want to add the query string to the redirect?
+    //       If we decide we do, then we probably need to change
+    //       the caching policy on the "*/docs/* behavior" to
+    //       cache based on the query strings as well.
     return redirect(url, {
       status,
       cacheControlSeconds: THIRTY_DAYS,
     });
   }
 
-  // Starting with an empty path, /search, or /docs should redirect to
-  // a locale. Also, trim a trailing slash to avoid a double redirect,
-  // except when requesting the home page.
+  // Do we need to insert the locale? If we do, trim a trailing slash
+  // to avoid a double redirect, except when requesting the home page.
   if (
     request.uri === "" ||
     request.uri === "/" ||
-    DOC_WITHOUT_LOCALE.test(requestURILowerCase) ||
-    SEARCH_WITHOUT_LOCALE.test(requestURILowerCase)
+    NEEDS_LOCALE.test(requestURILowerCase)
   ) {
     const path = request.uri.endsWith("/")
       ? request.uri.slice(0, -1)
@@ -130,7 +144,10 @@ exports.handler = async (event) => {
     // page, not "en-us/index.html", which is what S3 would look for if
     // we left the trailing slash.
     request.uri = request.uri.slice(0, -1);
-  } else if (request.uri.endsWith("/")) {
+  } else if (
+    request.uri.endsWith("/") &&
+    !LEGACY_URI_NEEDING_TRAILING_SLASH.test(requestURILowerCase)
+  ) {
     // All other requests with a trailing slash should redirect to the
     // same URL without the trailing slash.
     return redirect(request.uri.slice(0, -1) + qs, {
