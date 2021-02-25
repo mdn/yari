@@ -1,20 +1,35 @@
 function* findMatchesInText(needle, haystack, { attribute = null } = {}) {
-  // Need to remove any characters that can affect a regex if we're going
-  // use the string in a manually constructed regex.
-  const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  let rex;
-  if (attribute) {
-    rex = new RegExp(`${attribute}=['"](${escaped})['"]`, "g");
+  if (needle.length > 1000) {
+    // If it monster string like that, you can't use a regex. You have to use
+    // a regular string find.
+    // The number 1,000 is quite arbitrary. You basically want to avoid
+    // the `SyntaxError: Regular expression too large` error in JS.
+    const index = haystack.indexOf(needle);
+    if (index >= 0) {
+      const left = haystack.substring(0, index);
+      const line = left.split("\n").length;
+      const column = left.length - left.lastIndexOf("\n");
+      yield { line, column };
+    }
   } else {
-    rex = new RegExp(`(${escaped})`, "g");
-  }
-  for (const match of haystack.matchAll(rex)) {
-    const left = haystack.slice(0, match.index);
-    const line = (left.match(/\n/g) || []).length + 1;
-    const lastIndexOf = left.lastIndexOf("\n") + 1;
-    const column =
-      match.index - lastIndexOf + 1 + (attribute ? attribute.length + 2 : 0);
-    yield { line, column };
+    // Need to remove any characters that can affect a regex if we're going
+    // use the string in a manually constructed regex.
+
+    const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    let rex;
+    if (attribute) {
+      rex = new RegExp(`${attribute}=['"](${escaped})['"]`, "g");
+    } else {
+      rex = new RegExp(`(${escaped})`, "g");
+    }
+    for (const match of haystack.matchAll(rex)) {
+      const left = haystack.slice(0, match.index);
+      const line = (left.match(/\n/g) || []).length + 1;
+      const lastIndexOf = left.lastIndexOf("\n") + 1;
+      const column =
+        match.index - lastIndexOf + 1 + (attribute ? attribute.length + 2 : 0);
+      yield { line, column };
+    }
   }
 }
 
