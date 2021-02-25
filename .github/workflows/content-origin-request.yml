@@ -34,7 +34,7 @@ jobs:
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
         working-directory: deployer/aws-lambda/content-origin-request
-        run: cd yarn --frozen-lockfile
+        run: yarn --frozen-lockfile
 
       - name: Run test server
         working-directory: deployer/aws-lambda/content-origin-request
