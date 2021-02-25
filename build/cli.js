@@ -22,9 +22,6 @@ const SearchIndex = require("./search-index");
 const { BUILD_OUT_ROOT } = require("./constants");
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
 const { humanFileSize } = require("./utils");
-const {
-  syncTranslatedContentForAllLocales,
-} = require("./sync-translated-content");
 
 async function buildDocumentInteractive(
   documentPath,
@@ -275,26 +272,12 @@ function formatTotalFlaws(flawsCountMap, header = "Total_Flaws_Count") {
 
 program
   .name("build")
-  .option(
-    "--sync-translated-content",
-    "Sync translated content in all locales (apply en-us redirects to locales)",
-    {
-      default: false,
-    }
-  )
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
   })
   .argument("[files...]", "specific files to build")
   .action(async ({ args, options }) => {
     try {
-      if (options.syncTranslatedContent && CONTENT_TRANSLATED_ROOT) {
-        const documentsMoved = syncTranslatedContentForAllLocales();
-        if (documentsMoved !== 0) {
-          console.log(`Synchronized ${documentsMoved} translated documents.`);
-        }
-      }
-
       if (!options.quiet) {
         console.log("\nBuilding Documents...");
       }
