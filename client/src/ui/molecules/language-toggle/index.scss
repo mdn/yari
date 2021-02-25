@@ -4,11 +4,12 @@
 
 ul.language-toggle {
   display: flex;
+  position: relative;
   text-align: right;
+  top: -3px;
 
   @media #{$mq-tablet-and-up} {
     justify-content: flex-end;
-    position: relative;
     text-align: inherit;
     top: -2px;
   }
