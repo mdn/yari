@@ -39,7 +39,8 @@ jobs:
       - name: Run test server
         working-directory: deployer/aws-lambda/content-origin-request
         run: |
-          yarn serve > /tmp/stdout.log 2> /tmp/stderr.log &
+          # yarn serve > /tmp/stdout.log 2> /tmp/stderr.log &
+          yarn serve
 
       - name: Check that the server started
         run: curl --retry-connrefused --retry 5 -I http://localhost:7000/ping
