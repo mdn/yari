@@ -69,8 +69,8 @@ jobs:
           yarn add file:$TARBALL
 
       - name: Start Yari from mock content repo
+        working-directory: mdn/content
         run: |
-          cd mdn/content
           yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
 
       - name: View some URLs on localhost:5000
@@ -110,6 +110,6 @@ jobs:
           exit $status
 
       - name: SSR build a page
+        working-directory: mdn/content
         run: |
-          cd mdn/content
           yarn build files/en-us/mdn/kitchensink/index.html
