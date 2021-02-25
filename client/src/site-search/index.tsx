@@ -52,10 +52,8 @@ export function SiteSearch() {
       <PageContentContainer>
         {query ? (
           <h1>
-            Search results for, <span className="query-string">{query}</span>{" "}
-            {page && page !== "1" && (
-              <span className="current-page">. Page {page}</span>
-            )}
+            Search results for: <span className="query-string">{query}</span>{" "}
+            {page && page !== "1" && `(page ${page})`}
           </h1>
         ) : (
           <h1>No query, no results.</h1>

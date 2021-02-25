@@ -328,17 +328,18 @@ function Results({
               {/* We're using plain <a href> instead of <Link to> here until
                 the bug has been figured out about scrolling to the top on click. */}
               {document.highlight.title && document.highlight.title.length ? (
-                <a className="title" href={document.mdn_url}>
-                  <h3
+                <h3 className="title">
+                  <a
+                    href={document.mdn_url}
                     dangerouslySetInnerHTML={{
                       __html: document.highlight.title[0],
                     }}
-                  ></h3>
-                </a>
+                  ></a>
+                </h3>
               ) : (
-                <a className="title" href={document.mdn_url}>
-                  <h3>{document.title}</h3>
-                </a>
+                <h3 className="title">
+                  <a href={document.mdn_url}>{document.title}</a>
+                </h3>
               )}{" "}
               {locale.toLowerCase() !== document.locale &&
                 LANGUAGES.has(document.locale) && (
