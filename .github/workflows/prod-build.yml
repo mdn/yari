@@ -172,8 +172,8 @@ jobs:
           echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
           yarn prepare-build
-
-          yarn build --sync-translated-content
+          yarn tool sync-translated-content
+          yarn build
 
           du -sh client/build
 

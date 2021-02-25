@@ -27,9 +27,6 @@ const {
 } = require("./constants");
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
 const { humanFileSize } = require("./utils");
-const {
-  syncTranslatedContentForAllLocales,
-} = require("./sync-translated-content");
 const { getFeedEntries } = require("./feedparser");
 
 async function buildDocumentInteractive(
@@ -364,13 +361,6 @@ program
   .name("build")
   .option("--spas", "Build the SPA pages", { default: true }) // PR builds
   .option("--spas-only", "Only build the SPA pages", { default: false })
-  .option(
-    "--sync-translated-content",
-    "Sync translated content in all locales (apply en-us redirects to locales)",
-    {
-      default: false,
-    }
-  )
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
   })
@@ -385,13 +375,6 @@ program
       }
       if (options.spasOnly) {
         return;
-      }
-
-      if (options.syncTranslatedContent && CONTENT_TRANSLATED_ROOT) {
-        const documentsMoved = syncTranslatedContentForAllLocales();
-        if (documentsMoved !== 0) {
-          console.log(`Synchronized ${documentsMoved} translated documents.`);
-        }
       }
 
       if (!options.quiet) {
