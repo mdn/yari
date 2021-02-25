@@ -5,7 +5,6 @@
   margin: 0 auto;
   padding: $base-unit;
 
-  // This is the same we use for the `.titlebar-container h1`
   @media #{$mq-tablet-and-up} {
     max-width: $max-width-default;
     padding: $base-unit $base-spacing;

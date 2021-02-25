@@ -4,11 +4,21 @@
 
 ul.language-toggle {
   display: flex;
-  justify-content: flex-end;
-  padding: $base-spacing;
+  text-align: right;
 
-  @media #{$mq-small-desktop-and-up} {
-    justify-content: inherit;
+  @media #{$mq-tablet-and-up} {
+    justify-content: flex-end;
+    position: relative;
+    text-align: inherit;
+    top: -2px;
+  }
+
+  .icon {
+    margin: 0;
+  }
+
+  &.icon-only {
+    justify-content: flex-end;
   }
 
   li {
@@ -36,8 +46,12 @@ ul.language-toggle {
       content: "";
       display: inline-block;
       height: 29px;
-      vertical-align: bottom;
+      vertical-align: middle;
       width: 28px;
+
+      @media #{$mq-tablet-and-up} {
+        margin-right: $base-unit;
+      }
     }
   }
 }

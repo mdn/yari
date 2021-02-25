@@ -1,0 +1,38 @@
+.breadcrumb-locale-container {
+  align-items: center;
+  background-color: $neutral-550;
+  display: flex;
+  padding: ($base-spacing / 2) $base-spacing;
+
+  @media #{$mq-tablet-and-up} {
+    margin: ($base-spacing / 2) 0;
+  }
+
+  @media #{$mq-small-desktop-and-up} {
+    margin: ($base-spacing) 0;
+  }
+
+  .breadcrumbs-container {
+    flex-basis: 80%;
+
+    @media #{$mq-tablet-and-up} {
+      flex-basis: 60%;
+    }
+
+    @media #{$mq-large-desktop-and-up} {
+      flex-basis: 85%;
+    }
+  }
+
+  .language-toggle {
+    flex-basis: 20%;
+
+    @media #{$mq-tablet-and-up} {
+      flex-basis: 40%;
+    }
+
+    @media #{$mq-large-desktop-and-up} {
+      flex-basis: 15%;
+    }
+  }
+}

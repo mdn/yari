@@ -14,7 +14,6 @@ import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
 import { LanguageToggle } from "../ui/molecules/language-toggle";
-import { Titlebar } from "../ui/molecules/titlebar";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
 import { MainContentContainer } from "../ui/atoms/page-content";
@@ -144,33 +143,34 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      <Titlebar docTitle={doc.title}>
-        {!isServer && CRUD_MODE && !props.isPreview && !doc.isArchive && (
-          <React.Suspense
-            fallback={<p className="loading-toolbar">Loading toolbar</p>}
-          >
-            <Toolbar
-              doc={doc}
-              reloadPage={() => {
-                mutate(dataURL);
-              }}
-            />
-          </React.Suspense>
-        )}
-      </Titlebar>
+      {!isServer && CRUD_MODE && !props.isPreview && !doc.isArchive && (
+        <React.Suspense
+          fallback={<p className="loading-toolbar">Loading toolbar</p>}
+        >
+          <Toolbar
+            doc={doc}
+            reloadPage={() => {
+              mutate(dataURL);
+            }}
+          />
+        </React.Suspense>
+      )}
 
       {doc.isArchive && !doc.isTranslated && <Archived />}
 
-      {doc.parents && <Breadcrumbs parents={doc.parents} />}
+      <div className="breadcrumb-locale-container">
+        {doc.parents && <Breadcrumbs parents={doc.parents} />}
 
-      {translations && !!translations.length && (
-        <LanguageToggle locale={locale} translations={translations} />
-      )}
+        {translations && !!translations.length && (
+          <LanguageToggle locale={locale} translations={translations} />
+        )}
+      </div>
 
       {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
       <MainContentContainer>
         <article className="article" lang={doc.locale}>
+          <h1>{doc.title}</h1>
           <RenderDocumentBody doc={doc} />
         </article>
         <Metadata doc={doc} locale={locale} />
@@ -184,7 +184,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
 function LoadingDocumentPlaceholder() {
   return (
     <>
-      <Titlebar docTitle={"Loading…"} />
       <Dino className="main-content loading-document-placeholder" />
     </>
   );

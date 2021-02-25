@@ -6,15 +6,12 @@
 @import "~@mdn/minimalist/sass/vars/typography";
 
 .breadcrumbs-container {
-  padding: $base-unit $base-spacing;
-
   @media #{$mq-small-desktop-and-up} {
     padding: ($base-spacing / 2) $base-spacing;
   }
 
-  @media #{$mq-large-desktop-and-up} {
-    padding: $base-spacing;
-    text-align: right;
+  @media #{$mq-small-desktop-and-up} {
+    padding: 0;
   }
 
   a {

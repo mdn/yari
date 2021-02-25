@@ -6,6 +6,8 @@
 @import "~@mdn/minimalist/sass/mixins/animation";
 @import "~@mdn/minimalist/sass/mixins/utils";
 
+@import "./molecules/breadcrumb-locale-container";
+
 .main-content {
   &.loading-document-placeholder {
     @include slow-pulse();
@@ -29,6 +31,11 @@
 
   @media #{$mq-small-desktop-and-up} {
     margin-bottom: $base-spacing * 2;
+    padding: 0 $base-spacing $base-spacing;
+  }
+
+  h1 {
+    word-break: break-word;
   }
 
   h2,
