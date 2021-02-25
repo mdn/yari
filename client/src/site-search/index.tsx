@@ -52,9 +52,9 @@ export function SiteSearch() {
       <PageContentContainer>
         {query ? (
           <h1>
-            Results: {query}{" "}
+            Search results for, <span className="query-string">{query}</span>{" "}
             {page && page !== "1" && (
-              <small className="current-page">Page {page}</small>
+              <span className="current-page">. Page {page}</span>
             )}
           </h1>
         ) : (

@@ -1,3 +1,9 @@
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+@import "../ui/molecules/pagination/index";
+
 .search-results {
   a.title {
     color: black;
@@ -25,17 +31,89 @@
     border-radius: 2px;
   }
 
-  .suggestions {
-    p {
-      margin-bottom: 2px;
-    }
-    ul {
-      margin-top: 0;
-    }
-  }
-
   .loading-wrapper {
     min-height: 500px;
     margin: 100px;
+  }
+}
+
+.search-results-list {
+  margin-bottom: $base-spacing;
+
+  a {
+    text-decoration: underline;
+  }
+
+  .title {
+    color: $neutral-100;
+    text-decoration: none;
+
+    h3 {
+      background-color: inherit;
+      color: $neutral-100;
+      margin: 0;
+      margin-bottom: $base-spacing / 4;
+      padding: 0;
+    }
+  }
+
+  mark {
+    background-color: $yellow-400;
+    font-style: italic;
+  }
+}
+
+.search-result-entry {
+  margin-bottom: $base-spacing;
+  word-wrap: break-word;
+
+  @media #{$mq-tablet-and-up} {
+    margin-bottom: $base-spacing * 1.5;
+  }
+}
+
+.language-options,
+.sort-options {
+  margin-top: $base-spacing / 2;
+
+  h2 {
+    font-family: $site-font-family;
+    font-size: $default-font-size;
+
+    @media #{$mq-tablet-and-up} {
+      display: inline;
+    }
+  }
+
+  .language-option-list,
+  .sort-option-list {
+    display: inline-block;
+
+    @media #{$mq-tablet-and-up} {
+      margin-left: $base-unit;
+    }
+
+    li {
+      display: inline-block;
+      padding: 0;
+      padding-right: ($base-spacing / 4);
+
+      &::after {
+        content: " | ";
+        display: inline;
+      }
+
+      &:last-child::after {
+        display: none;
+      }
+    }
+  }
+}
+
+.search-suggestions {
+  margin-bottom: $base-spacing;
+
+  p {
+    margin-bottom: $base-unit / 2;
   }
 }
