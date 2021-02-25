@@ -9,7 +9,7 @@ const {
 const { VALID_LOCALES } = require("@yari-internal/constants");
 
 const THIRTY_DAYS = 3600 * 24 * 30;
-const NEEDS_LOCALE = /^\/(?:docs|search|settings|sign-in|sign-up)(?:$|\/)/;
+const NEEDS_LOCALE = /^\/(?:docs|search|settings|signin|signup)(?:$|\/)/;
 // Note that the keys of "VALID_LOCALES" are lowercase locales.
 const LOCALE_URI_WITHOUT_TRAILING_SLASH = new Set(
   [...VALID_LOCALES.keys()].map((locale) => `/${locale}`)
