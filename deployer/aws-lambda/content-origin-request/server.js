@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unpublished-require */
 const express = require("express");
 const kleur = require("kleur");
 
