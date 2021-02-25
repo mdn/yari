@@ -9,9 +9,11 @@ const { prompt } = require("inquirer");
 const {
   Document,
   slugToFolder,
+  translationsOf,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
 } = require("../content");
+
 // eslint-disable-next-line node/no-missing-require
 const { renderDocHTML, renderHTML } = require("../ssr/dist/main");
 
@@ -24,7 +26,6 @@ const {
   HOMEPAGE_FEED_DISPLAY_MAX,
 } = require("./constants");
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
-const { uniqifyTranslationsOf } = require("./translationsof");
 const { humanFileSize } = require("./utils");
 const {
   syncTranslatedContentForAllLocales,
@@ -33,7 +34,6 @@ const { getFeedEntries } = require("./feedparser");
 
 async function buildDocumentInteractive(
   documentPath,
-  translationsOf,
   interactive,
   invalidate = false
 ) {
@@ -42,37 +42,15 @@ async function buildDocumentInteractive(
       ? Document.read(documentPath, Document.MEMOIZE_INVALIDATE)
       : Document.read(documentPath);
 
-    const { translation_of } = document.metadata;
-
-    // If it's a non-en-US document, it'll most likely have a `translation_of`.
-    // If so, add it to the map so that when we build the en-US one, we can
-    // get an index of the *other* translations available.
-    if (translation_of) {
-      if (!translationsOf.has(translation_of)) {
-        translationsOf.set(translation_of, []);
+    if (!interactive) {
+      const translations = translationsOf(document.metadata);
+      if (translations && translations.length > 0) {
+        document.translations = translations;
+      } else {
+        document.translations = [];
       }
-      const translation = {
-        url: document.url,
-        locale: document.metadata.locale,
-        title: document.metadata.title,
-      };
-      if (document.metadata.translation_of_original) {
-        translation.original = document.metadata.translation_of_original;
-      }
-      translationsOf.get(translation_of).push(translation);
-      // This is a shortcoming. If this is a translated document, we don't have a
-      // complete mapping of all other translations. So, the best we can do is
-      // at least link to the English version.
-      // In 2021, when we refactor localization entirely, this will need to change.
-      // Perhaps, then, we'll do a complete scan through all content first to build
-      // up the map before we process each one.
-      document.translations = [];
-    } else if (translationsOf.has(document.metadata.slug)) {
-      document.translations = uniqifyTranslationsOf(
-        translationsOf.get(document.metadata.slug),
-        document.url
-      );
     }
+
     return { document, doc: await buildDocument(document), skip: false };
   } catch (e) {
     if (!interactive) {
@@ -93,12 +71,7 @@ async function buildDocumentInteractive(
       },
     ]);
     if (action === "r") {
-      return await buildDocumentInteractive(
-        documentPath,
-        translationsOf,
-        interactive,
-        true
-      );
+      return await buildDocumentInteractive(documentPath, interactive, true);
     }
     if (action === "s") {
       return { doc: {}, skip: true };
@@ -146,9 +119,6 @@ async function buildDocuments(
     }
   }
 
-  // This builds up a mapping from en-US slugs to their translated slugs.
-  const translationsOf = new Map();
-
   if (!options.noProgressbar) {
     progressBar.start(documents.count);
   }
@@ -158,11 +128,7 @@ async function buildDocuments(
       doc: { doc: builtDocument, liveSamples, fileAttachments, bcdData },
       document,
       skip,
-    } = await buildDocumentInteractive(
-      documentPath,
-      translationsOf,
-      interactive
-    );
+    } = await buildDocumentInteractive(documentPath, interactive);
     if (skip) {
       continue;
     }

@@ -13,6 +13,7 @@ const Image = require("./image");
 const Archive = require("./archive");
 const { buildURL, memoize, slugToFolder, execGit } = require("./utils");
 const { resolveFundamental } = require("../libs/fundamental-redirects");
+const { translationsOf } = require("./translations");
 
 module.exports = {
   CONTENT_ROOT,
@@ -34,4 +35,5 @@ module.exports = {
   slugToFolder,
   resolveFundamental,
   execGit,
+  translationsOf,
 };
