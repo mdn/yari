@@ -63,7 +63,7 @@ jobs:
 
       - uses: actions/checkout@v2
         with:
-          repository: mdn/translated-content-rendered
+          repository: mdn/translated-content
           path: mdn/translated-content
 
       - name: Setup Node.js environment
@@ -154,7 +154,7 @@ jobs:
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
           yarn prepare-build
 
-          yarn build
+          yarn build --sync-translated-content
 
           # TODO: When the deployer is available this is where we
           # would upload the whole content of client/build

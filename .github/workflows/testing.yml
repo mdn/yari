@@ -42,9 +42,6 @@ jobs:
       - name: Lint ESLint
         run: yarn eslint
 
-      - name: Unit testing build
-        run: yarn test:build
-
       - name: Unit testing client
         run: yarn test:client
 
