@@ -17,7 +17,7 @@ async function get(uri, headers = {}) {
   return response;
 }
 
-describe("home page redirects", () => {
+describe("root URL redirects", () => {
   it("should redirect to the locale home page", async () => {
     const r = await get("/");
     expect(r.statusCode).toBe(302);
@@ -62,6 +62,30 @@ describe("home page redirects", () => {
   });
 });
 
+describe("URLs that need a locale injected", () => {
+  it("should inject the locale depending on first prefix", async () => {
+    expect.assertions(3 * 2);
+    for (const prefix of ["search", "signin", "signup"]) {
+      const r = await get(`/${prefix}`);
+      expect(r.statusCode).toBe(302);
+      expect(r.headers["location"]).toBe(`/en-US/${prefix}`);
+    }
+  });
+  it("should inject the locale depending on first prefix and drop any trailing slash", async () => {
+    expect.assertions(3 * 2);
+    for (const prefix of ["search", "signin", "signup"]) {
+      const r = await get(`/${prefix}/`);
+      expect(r.statusCode).toBe(302);
+      expect(r.headers["location"]).toBe(`/en-US/${prefix}`);
+    }
+  });
+  it("should inject the locale for /docs URLs", async () => {
+    const r = await get("/docs/Web");
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe(`/en-US/docs/Web`);
+  });
+});
+
 describe("home page redirects", () => {
   it("should case correct the locale", async () => {
     const r = await get("/En-Us/");
@@ -78,6 +102,11 @@ describe("home page redirects", () => {
     expect(r.statusCode).toBe(302);
     expect(r.headers["location"]).toBe("/en-US/?foo=bar");
   });
+  it("should case correct the locale and respect query strings and keep slash", async () => {
+    const r = await get("/En-Us/?foo=bar");
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe("/en-US/?foo=bar");
+  });
   it("should case correct the locale leave the rest of the URL as is", async () => {
     const r = await get("/En-Us/docs/Web");
     expect(r.statusCode).toBe(302);
@@ -87,5 +116,45 @@ describe("home page redirects", () => {
     const r = await get("/En-Us/docs/Web?foo=bar");
     expect(r.statusCode).toBe(302);
     expect(r.headers["location"]).toBe("/en-US/docs/Web?foo=bar");
+  });
+});
+
+describe("remove trailing slash before doing an S3 lookup", () => {
+  it("should remove trailing slash on docs lookups", async () => {
+    const r = await get("/en-US/docs/Web/CSS/");
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe("/en-US/docs/Web/CSS");
+  });
+});
+
+describe("legacy kumaesque prefixes should be left alone", () => {
+  it("should not touch /accounts/whatever", async () => {
+    const r = await get("/accounts/Whatever");
+    expect(r.statusCode).toBe(200);
+  });
+  it("should not touch trailing slash on these /accounts/whatever/", async () => {
+    const r = await get("/accounts/Whatever");
+    expect(r.statusCode).toBe(200);
+  });
+});
+
+describe("always check for fundamental redirects first", () => {
+  it("should inject /docs/ in certain prefixes", async () => {
+    expect.assertions(3 * 3);
+    for (const prefix of ["DOM", "Javascript", "css"]) {
+      const r = await get(`/en-US/${prefix}`);
+      expect(r.statusCode).toBe(301);
+      expect(r.headers["location"]).toBe(`/en-US/docs/${prefix}`);
+      expect(r.headers["cache-control"]).toMatch(/max-age=\d\d+/);
+    }
+  });
+  it("should inject /docs/ in certain prefixes and preserve query strings", async () => {
+    expect.assertions(3 * 3);
+    for (const prefix of ["DOM", "Javascript", "css"]) {
+      const r = await get(`/en-US/${prefix}?foo=bar`);
+      expect(r.statusCode).toBe(301);
+      expect(r.headers["location"]).toBe(`/en-US/docs/${prefix}?foo=bar`);
+      expect(r.headers["cache-control"]).toMatch(/max-age=\d\d+/);
+    }
   });
 });
