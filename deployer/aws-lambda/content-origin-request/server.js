@@ -14,8 +14,12 @@ function ping(req, res) {
 async function catchall(req, res) {
   // Reminder...
   // - url: e.g. `/en-US/docs/Foo?key=value`
-  // - query: e.g. `?key=value`
-  const { url, query } = req;
+  // - search: e.g. `?key=value`
+  const { url } = req;
+  let querystring = "";
+  if (req.search) {
+    querystring = req.search.split("?")[1];
+  }
   const uri = url.split("?")[0];
   console.log(`Simulating a request for: ${url}`);
 
@@ -33,7 +37,7 @@ async function catchall(req, res) {
   }
   cf.request = {
     uri,
-    querystring: query,
+    querystring,
     origin,
     headers,
   };
