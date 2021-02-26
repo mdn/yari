@@ -82,10 +82,18 @@ unicorns_char_filter = char_filter(
     mappings=[
         # e.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
         # Also see https://github.com/mdn/yari/issues/3074
-        "?. => optionalchaining",
+        "?. => Optionalchaining",
         # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this
         # Also see https://github.com/mdn/yari/issues/3070
         "this => javascriptthis",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_nullish_assignment
+        "??= => Logicalnullishassignment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator
+        "?? => Nullishcoalescingoperator",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_AND_assignment
+        "&&= => LogicalANDassignment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR_assignment
+        "||= => LogicalORassignment",
     ],
 )
 
