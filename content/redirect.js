@@ -268,6 +268,16 @@ function add(locale, updatePairs, { fix = false, strict = false } = {}) {
   save(path.join(root, localeLC), pairs);
 }
 
+function remove(locale, urls, { strict = false } = {}) {
+  const localeLC = locale.toLowerCase();
+  const urlsLC = new Set(urls.map((url) => url.toLowerCase()));
+  const { pairs, root } = loadLocaleAndAdd(localeLC, [], {
+    strict,
+  });
+  const filteredPairs = pairs.filter(([, to]) => !urlsLC.has(to.toLowerCase()));
+  save(path.join(root, localeLC), filteredPairs);
+}
+
 function validateLocale(locale, strict = false) {
   const localeLC = locale.toLowerCase();
   // To validate strict we check if there is something to fix.
@@ -463,6 +473,7 @@ function save(localeFolder, pairs) {
 
 module.exports = {
   add,
+  remove,
   resolve,
   load,
   validateLocale,
