@@ -16,6 +16,7 @@ const { FLAW_LEVELS } = require("./constants");
 const { packageBCD } = require("./resolve-bcd");
 const {
   findMatchesInText,
+  getFirstMatchInText,
   replaceMatchesInText,
 } = require("./matches-in-text");
 const { humanFileSize } = require("./utils");
@@ -336,10 +337,9 @@ function injectPreTagFlaws(level, doc, $, rawContent) {
     const flaw = { explanation, id, fixable, html, suggestion, type };
     if (fixable) {
       // Only if it's fixable, is the `html` perfectly findable in the raw content.
-      for (const { line, column } of findMatchesInText(html, rawContent)) {
-        flaw.line = line;
-        flaw.column = column;
-      }
+      const { line, column } = getFirstMatchInText(html, rawContent);
+      flaw.line = line;
+      flaw.column = column;
     }
 
     // Actually mutate the cheerio instance so we benefit from the
@@ -436,8 +436,11 @@ function injectHeadingLinksFlaws(level, doc, $, rawContent) {
       rawContent
     )) {
       line = foundLine;
+      column = foundColumn;
       // This makes sure the column is *after* the ID value (plus quotation mark)
-      column = foundColumn + $heading.attr("id").length + 2;
+      if ($heading.attr("id")) {
+        column += $heading.attr("id").length + 2;
+      }
     }
     // It's never fixable because it's too hard to find in the raw HTML.
     const fixable = false;

@@ -10,6 +10,7 @@ import {
   ALWAYS_NO_ROBOTS,
   BUILD_OUT_ROOT,
 } from "../build/constants";
+const { DEFAULT_LOCALE } = require("../libs/constants");
 
 // When there are multiple options for a given language, this gives the
 // preferred locale for that language (language => preferred locale).
@@ -143,6 +144,10 @@ export default function render(
   const buildHtml = readBuildHTML();
   const webfontURLs = extractWebFontURLs();
   const $ = cheerio.load(buildHtml);
+
+  // Some day, we'll have the chrome localized and then this can no longer be
+  // hardcoded to 'en'. But for now, the chrome is always in "English (US)".
+  $("html").attr("lang", DEFAULT_LOCALE);
 
   const rendered = renderToString(renderApp);
 

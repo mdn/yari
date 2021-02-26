@@ -81,7 +81,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   }, [doc, error]);
 
   React.useEffect(() => {
-    if (ga && doc && !error) {
+    if (doc && !error) {
       if (mountCounter.current > 0) {
         // 'dimension19' means it's a client-side navigation.
         // I.e. not the initial load but the location has now changed.
@@ -98,7 +98,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       // a client-side navigation happened.
       mountCounter.current++;
     }
-  }, [doc, error, ga]);
+  }, [ga, doc, error]);
 
   React.useEffect(() => {
     const location = document.location;
@@ -177,7 +177,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
         <MainContentContainer>
-          <article className="article">
+          <article className="article" lang={doc.locale}>
             <RenderDocumentBody doc={doc} />
           </article>
         </MainContentContainer>

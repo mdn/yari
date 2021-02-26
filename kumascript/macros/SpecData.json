@@ -1049,6 +1049,11 @@
     "url": "https://github.com/tc39/proposal-regexp-legacy-features/",
     "status": "Draft"
   },
+  "Local Font Access API": {
+    "name": "Local Font Access API",
+    "url": "https://wicg.github.io/local-font-access",
+    "status": "Draft"
+  },
   "Logical Assignment": {
     "name": "Logical Assignment Operators",
     "url": "https://tc39.es/proposal-logical-assignment/",
@@ -1609,6 +1614,11 @@
     "url": "https://www.khronos.org/registry/webgl/specs/latest/2.0/",
     "status": "ED"
   },
+  "Web NFC": {
+    "name": "Web NFC",
+    "url": "https://w3c.github.io/web-nfc/",
+    "status": "Draft"
+  },
   "EXT_blend_minmax": {
     "name": "EXT_blend_minmax",
     "url": "https://www.khronos.org/registry/webgl/extensions/EXT_blend_minmax/",
@@ -1813,6 +1823,11 @@
     "name": "Identifiers for WebRTC's Statistics API",
     "url": "https://w3c.github.io/webrtc-stats/",
     "status": "CR"
+  },
+  "Web Serial API": {
+    "name": "Web Serial API",
+    "url": "https://wicg.github.io/serial/",
+    "status": "Draft"
   },
   "Web Share API": {
     "name": "Web Share API",

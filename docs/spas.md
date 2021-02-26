@@ -6,14 +6,7 @@ For example the `404` page. These are rendered server-side but without a "doc".
 To build these you run:
 
 ```sh
-yarn build --spas-only
-```
-
-By default, running only `yarn build` will build all documents _and_ all SPAs.
-Should you wish to only build documents, use:
-
-```sh
-yarn build --no-spas
+yarn tool spas
 ```
 
 The SPAs are also built when running `yarn prepare-build` or `yarn start`.

@@ -104,6 +104,7 @@ export type Toc = {
 
 export interface Doc {
   title: string;
+  locale: string;
   pageTitle: string;
   mdn_url: string;
   sidebarHTML: string;
