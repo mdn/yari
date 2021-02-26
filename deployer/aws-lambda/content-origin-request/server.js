@@ -5,7 +5,7 @@ const kleur = require("kleur");
 
 const { handler } = require("./index");
 
-const PORT = 7000;
+const PORT = parseInt(process.env.PORT || "7000");
 
 function ping(req, res) {
   res.end("pong\n");
