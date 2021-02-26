@@ -76,6 +76,27 @@ keep_html_char_filter = char_filter(
     replacement="_$1_",
 )
 
+unicorns_char_filter = char_filter(
+    "unicorns_char_filter",
+    type="mapping",
+    mappings=[
+        # e.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
+        # Also see https://github.com/mdn/yari/issues/3074
+        "?. => Optionalchaining",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this
+        # Also see https://github.com/mdn/yari/issues/3070
+        "this => javascriptthis",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_nullish_assignment
+        "??= => Logicalnullishassignment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator
+        "?? => Nullishcoalescingoperator",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_AND_assignment
+        "&&= => LogicalANDassignment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR_assignment
+        "||= => LogicalORassignment",
+    ],
+)
+
 text_analyzer = analyzer(
     "text_analyzer",
     tokenizer="standard",
@@ -97,7 +118,7 @@ text_analyzer = analyzer(
     # Note that we don't use the `html_strip` char_filter.
     # With that, we'd lose some of the valueable characters like: `<video>` which
     # is an actual title.
-    char_filter=[keep_html_char_filter],
+    char_filter=[unicorns_char_filter, keep_html_char_filter],
 )
 
 
