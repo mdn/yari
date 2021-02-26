@@ -513,13 +513,17 @@ function remove(
     return docs;
   }
 
+  const removed = [];
   for (const { metadata } of children) {
     const slug = metadata.slug;
     updateWikiHistory(path.join(root, metadata.locale.toLowerCase()), slug);
+    removed.push(buildURL(locale, slug));
   }
 
   if (redirect) {
     Redirect.add(locale, [[url, redirect]]);
+  } else {
+    Redirect.remove(locale, [url, ...removed]);
   }
 
   execGit(["rm", "-r", path.dirname(fileInfo.path)], { cwd: root });
