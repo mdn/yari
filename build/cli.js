@@ -9,31 +9,22 @@ const { prompt } = require("inquirer");
 const {
   Document,
   slugToFolder,
-  CONTENT_ROOT,
+  translationsOf,
   CONTENT_TRANSLATED_ROOT,
 } = require("../content");
+
 // eslint-disable-next-line node/no-missing-require
-const { renderDocHTML, renderHTML } = require("../ssr/dist/main");
+const { renderDocHTML } = require("../ssr/dist/main");
 
 const options = require("./build-options");
 const { buildDocument, renderContributorsTxt } = require("./index");
 const SearchIndex = require("./search-index");
-const {
-  BUILD_OUT_ROOT,
-  HOMEPAGE_FEED_URL,
-  HOMEPAGE_FEED_DISPLAY_MAX,
-} = require("./constants");
+const { BUILD_OUT_ROOT } = require("./constants");
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
-const { uniqifyTranslationsOf } = require("./translationsof");
 const { humanFileSize } = require("./utils");
-const {
-  syncTranslatedContentForAllLocales,
-} = require("./sync-translated-content");
-const { getFeedEntries } = require("./feedparser");
 
 async function buildDocumentInteractive(
   documentPath,
-  translationsOf,
   interactive,
   invalidate = false
 ) {
@@ -42,37 +33,15 @@ async function buildDocumentInteractive(
       ? Document.read(documentPath, Document.MEMOIZE_INVALIDATE)
       : Document.read(documentPath);
 
-    const { translation_of } = document.metadata;
-
-    // If it's a non-en-US document, it'll most likely have a `translation_of`.
-    // If so, add it to the map so that when we build the en-US one, we can
-    // get an index of the *other* translations available.
-    if (translation_of) {
-      if (!translationsOf.has(translation_of)) {
-        translationsOf.set(translation_of, []);
+    if (!interactive) {
+      const translations = translationsOf(document.metadata);
+      if (translations && translations.length > 0) {
+        document.translations = translations;
+      } else {
+        document.translations = [];
       }
-      const translation = {
-        url: document.url,
-        locale: document.metadata.locale,
-        title: document.metadata.title,
-      };
-      if (document.metadata.translation_of_original) {
-        translation.original = document.metadata.translation_of_original;
-      }
-      translationsOf.get(translation_of).push(translation);
-      // This is a shortcoming. If this is a translated document, we don't have a
-      // complete mapping of all other translations. So, the best we can do is
-      // at least link to the English version.
-      // In 2021, when we refactor localization entirely, this will need to change.
-      // Perhaps, then, we'll do a complete scan through all content first to build
-      // up the map before we process each one.
-      document.translations = [];
-    } else if (translationsOf.has(document.metadata.slug)) {
-      document.translations = uniqifyTranslationsOf(
-        translationsOf.get(document.metadata.slug),
-        document.url
-      );
     }
+
     return { document, doc: await buildDocument(document), skip: false };
   } catch (e) {
     if (!interactive) {
@@ -93,12 +62,7 @@ async function buildDocumentInteractive(
       },
     ]);
     if (action === "r") {
-      return await buildDocumentInteractive(
-        documentPath,
-        translationsOf,
-        interactive,
-        true
-      );
+      return await buildDocumentInteractive(documentPath, interactive, true);
     }
     if (action === "s") {
       return { doc: {}, skip: true };
@@ -146,9 +110,6 @@ async function buildDocuments(
     }
   }
 
-  // This builds up a mapping from en-US slugs to their translated slugs.
-  const translationsOf = new Map();
-
   if (!options.noProgressbar) {
     progressBar.start(documents.count);
   }
@@ -158,11 +119,7 @@ async function buildDocuments(
       doc: { doc: builtDocument, liveSamples, fileAttachments, bcdData },
       document,
       skip,
-    } = await buildDocumentInteractive(
-      documentPath,
-      translationsOf,
-      interactive
-    );
+    } = await buildDocumentInteractive(documentPath, interactive);
     if (skip) {
       continue;
     }
@@ -274,10 +231,8 @@ async function buildDocuments(
     sitemapsBuilt.push(sitemapFilePath);
   }
 
-  // Only if you've just built all of CONTENT_ROOT and all of CONTENT_TRANSLATED_ROOT
   // do we bother generating the combined sitemaps index file.
   // That means, that if you've done this at least once, consequent runs of
-  // *only* CONTENT_ROOT will just keep overwriting the sitemaps/en-us/sitemap.xml.gz.
   if (CONTENT_TRANSLATED_ROOT) {
     const sitemapIndexFilePath = path.join(BUILD_OUT_ROOT, "sitemap.xml");
     fs.writeFileSync(
@@ -296,85 +251,6 @@ async function buildDocuments(
     );
   }
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
-}
-
-async function buildOtherSPAs(options) {
-  // The URL isn't very important as long as it triggers the right route in the <App/>
-  const url = "/en-US/404.html";
-  const html = renderHTML(url, { pageNotFound: true });
-  const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_spas");
-  fs.mkdirSync(outPath, { recursive: true });
-  fs.writeFileSync(path.join(outPath, path.basename(url)), html);
-  if (!options.quiet) {
-    console.log("Wrote", path.join(outPath, path.basename(url)));
-  }
-
-  // Basically, this builds one `search/index.html` for every locale we intend
-  // to build.
-  for (const root of [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT]) {
-    if (!root) {
-      continue;
-    }
-    for (const locale of fs.readdirSync(root)) {
-      if (!fs.statSync(path.join(root, locale)).isDirectory()) {
-        continue;
-      }
-      const url = `/${locale}/search`;
-      const html = renderHTML(url);
-      const outPath = path.join(BUILD_OUT_ROOT, locale, "search");
-      fs.mkdirSync(outPath, { recursive: true });
-      const filePath = path.join(outPath, "index.html");
-      fs.writeFileSync(filePath, html);
-      if (!options.quiet) {
-        console.log("Wrote", filePath);
-      }
-    }
-  }
-
-  // Build all the home pages in all locales.
-  // Have the feed entries ready before building the home pages.
-  // XXX disk caching?
-  const feedEntries = (await getFeedEntries(HOMEPAGE_FEED_URL)).slice(
-    0,
-    HOMEPAGE_FEED_DISPLAY_MAX
-  );
-  for (const root of [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT]) {
-    if (!root) {
-      continue;
-    }
-    for (const locale of fs.readdirSync(root)) {
-      if (!fs.statSync(path.join(root, locale)).isDirectory()) {
-        continue;
-      }
-      const url = `/${locale}/`;
-      // Each .pubDate in feedEntries is a Date object. That has to be converted
-      // to a string. That way the SSR rendering is
-      const dateFormatter = new Intl.DateTimeFormat(locale, {
-        dateStyle: "full",
-      });
-      const context = {
-        feedEntries: feedEntries.map((entry) => {
-          const pubDateString = dateFormatter.format(entry.pubDate);
-          return Object.assign({}, entry, { pubDate: pubDateString });
-        }),
-      };
-      const html = renderHTML(url, context);
-      const outPath = path.join(BUILD_OUT_ROOT, locale);
-      fs.mkdirSync(outPath, { recursive: true });
-      const filePath = path.join(outPath, "index.html");
-      fs.writeFileSync(filePath, html);
-      if (!options.quiet) {
-        console.log("Wrote", filePath);
-      }
-      // Also, dump the feed entries as a JSON file so the data can be gotten
-      // in client-side rendering.
-      const filePathContext = path.join(outPath, "index.json");
-      fs.writeFileSync(filePathContext, JSON.stringify(context));
-      if (!options.quiet) {
-        console.log("Wrote", filePathContext);
-      }
-    }
-  }
 }
 
 function formatTotalFlaws(flawsCountMap, header = "Total_Flaws_Count") {
@@ -396,38 +272,12 @@ function formatTotalFlaws(flawsCountMap, header = "Total_Flaws_Count") {
 
 program
   .name("build")
-  .option("--spas", "Build the SPA pages", { default: true }) // PR builds
-  .option("--spas-only", "Only build the SPA pages", { default: false })
-  .option(
-    "--sync-translated-content",
-    "Sync translated content in all locales (apply en-us redirects to locales)",
-    {
-      default: false,
-    }
-  )
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
   })
   .argument("[files...]", "specific files to build")
   .action(async ({ args, options }) => {
     try {
-      if (options.spas) {
-        if (!options.quiet) {
-          console.log("\nBuilding SPAs...");
-        }
-        await buildOtherSPAs(options);
-      }
-      if (options.spasOnly) {
-        return;
-      }
-
-      if (options.syncTranslatedContent && CONTENT_TRANSLATED_ROOT) {
-        const documentsMoved = syncTranslatedContentForAllLocales();
-        if (documentsMoved !== 0) {
-          console.log(`Synchronized ${documentsMoved} translated documents.`);
-        }
-      }
-
       if (!options.quiet) {
         console.log("\nBuilding Documents...");
       }
