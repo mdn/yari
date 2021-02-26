@@ -253,4 +253,39 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatch("<foo>: Une page de test");
     expect(page.url()).toBe(testURL("/fr/docs/Web/Foo"));
   });
+
+  it("clicking 'Sign in' should offer links to all identity providers", async () => {
+    await page.goto(testURL("/en-US/docs/Web/Foo"));
+    await expect(page).toClick("a", { text: "Sign in" });
+    await expect(page).toMatchElement("h1", { text: "Sign in" });
+    expect(page.url()).toContain(
+      testURL("/en-US/signin?next=/en-US/docs/Web/Foo")
+    );
+    await expect(page).toMatchElement("a", { text: "Google" });
+    await expect(page).toMatchElement("a", { text: "GitHub" });
+  });
+
+  it("going to 'Sign up' page without query string", async () => {
+    await page.goto(testURL("/en-US/signup"));
+    await expect(page).toMatchElement("h1", { text: "Sign up" });
+    await expect(page).toMatch("Invalid Sign up URL");
+    await expect(page).toMatchElement("a", {
+      text: "Try starting over the sign-in process",
+    });
+  });
+
+  it("going to 'Sign up' page with realistic (fake) query string", async () => {
+    await page.goto(
+      testURL("/en-US/signup?csrfmiddlewaretoken=abc&provider=github")
+    );
+    await expect(page).toMatchElement("h1", { text: "Sign up" });
+    await expect(page).not.toMatch("Invalid Sign up URL");
+    await expect(page).toMatch(
+      "You are signing in to MDN Web Docs with GitHub."
+    );
+    await expect(page).toMatch(
+      "I agree to Mozilla's Terms and Privacy Notice."
+    );
+    await expect(page).toMatchElement("button", { text: "Create account" });
+  });
 });

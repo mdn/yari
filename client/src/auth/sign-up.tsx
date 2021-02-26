@@ -75,37 +75,6 @@ export default function SignUpApp() {
   }
   const signupURL = `${prefix}/${locale}/users/account/signup`;
 
-  // async function submit(event: React.FormEvent<HTMLFormElement>) {
-  //   event.preventDefault();
-  //   if (!checkedTerms) {
-  //     return;
-  //   }
-  //   // const body = new FormData();
-  //   const body = new URLSearchParams();
-
-  //   // This is just a temporary thing needed to tell Kuma's signup view
-  //   // that the request came from (the jamstack) Yari and not the existing
-  //   // Kuma front-end. Then Kuma knows to certainly only respond with redirects.
-  //   body.append("yarisignup", "1");
-
-  //   body.append("terms", "1");
-  //   body.append("csrfmiddlewaretoken", csrfMiddlewareToken as string);
-  //   if (searchParams.get("next")) {
-  //     body.append("next", searchParams.get("next") as string);
-  //   }
-
-  //   const response = await fetch(signupURL, {
-  //     method: "POST",
-  //     credentials: "include", // XXX explain!
-  //     headers: {
-  //       "Content-Type": "application/x-www-form-urlencoded",
-  //     },
-  //     body: body.toString(),
-  //   });
-  //   console.log(response);
-  // }
-
-  // <form action={signupURL} method="post" onSubmit={submit}>
   return (
     <form action={signupURL} method="post">
       {/* This is just a temporary thing needed to tell Kuma's signup view

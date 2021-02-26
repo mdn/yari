@@ -21,13 +21,15 @@ function Container({
   return (
     <div className={className}>
       <PageContentContainer>
-        {isServer ? (
-          <p>
-            <i>Requires JavaScript</i>
-          </p>
-        ) : (
-          children
-        )}
+        {/* The reason for displaying this <h1> here (and for SignUp too)
+          is to avoid an unnecessary "flicker".
+          component here is loaded SSR and is immediately present.
+          Only the "guts" below is lazy loaded. By having the header already
+          present the page feels less flickery at a very affordable cost of
+          allowing this to be part of the main JS bundle.
+       */}
+        <h1>{pageTitle}</h1>
+        {!isServer && children}
       </PageContentContainer>
     </div>
   );
@@ -35,14 +37,6 @@ function Container({
 export function SignIn() {
   return (
     <Container className="sign-in" pageTitle="Sign in">
-      {/* The reason for displaying this <h1> here (and for SignUp too)
-          is to avoid an unnecessary "flicker".
-          component here is loaded SSR and is immediately present.
-          Only the "guts" below is lazy loaded. By having the header already
-          present the page feels less flickery at a very affordable cost of
-          allowing this to be part of the main JS bundle.
-       */}
-      <h1>Sign in</h1>
       <React.Suspense fallback={<p>Loading...</p>}>
         <SignInApp />
       </React.Suspense>
@@ -52,7 +46,6 @@ export function SignIn() {
 export function SignUp() {
   return (
     <Container className="sign-up" pageTitle="Sign up">
-      <h1>Sign up</h1>
       <React.Suspense fallback={<p>Loading...</p>}>
         <SignUpApp />
       </React.Suspense>
