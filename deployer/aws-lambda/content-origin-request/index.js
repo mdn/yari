@@ -84,7 +84,7 @@ exports.handler = async (event) => {
     //       If we decide we do, then we probably need to change
     //       the caching policy on the "*/docs/* behavior" to
     //       cache based on the query strings as well.
-    return redirect(url + qs, {
+    return redirect(url, {
       status,
       cacheControlSeconds: THIRTY_DAYS,
     });

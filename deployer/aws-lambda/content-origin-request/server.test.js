@@ -148,13 +148,4 @@ describe("always check for fundamental redirects first", () => {
       expect(r.headers["cache-control"]).toMatch(/max-age=\d\d+/);
     }
   });
-  it("should inject /docs/ in certain prefixes and preserve query strings", async () => {
-    expect.assertions(3 * 3);
-    for (const prefix of ["DOM", "Javascript", "css"]) {
-      const r = await get(`/en-US/${prefix}?foo=bar`);
-      expect(r.statusCode).toBe(301);
-      expect(r.headers["location"]).toBe(`/en-US/docs/${prefix}?foo=bar`);
-      expect(r.headers["cache-control"]).toMatch(/max-age=\d\d+/);
-    }
-  });
 });
