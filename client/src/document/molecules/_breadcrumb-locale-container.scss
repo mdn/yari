@@ -9,7 +9,7 @@
   }
 
   @media #{$mq-small-desktop-and-up} {
-    margin: ($base-spacing) 0;
+    margin: $base-spacing 0 0;
   }
 
   .breadcrumbs-container {
@@ -34,5 +34,16 @@
     @media #{$mq-large-desktop-and-up} {
       flex-basis: 15%;
     }
+  }
+
+  // when the breadcrumbs is the only item in the container
+  .breadcrumbs-container:last-child {
+    flex-basis: 100%;
+  }
+
+  // when the language toggle is the only item in the container
+  > .language-toggle {
+    flex-basis: 100%;
+    justify-content: flex-end;
   }
 }

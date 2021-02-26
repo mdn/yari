@@ -11,6 +11,10 @@
     padding: 0 $base-spacing;
   }
 
+  @media #{$mq-small-desktop-and-up} {
+    margin-top: $base-spacing;
+  }
+
   h2 {
     display: none;
 

@@ -141,34 +141,39 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   const isServer = typeof window === "undefined";
 
+  console.log(doc.parents);
+  console.log(translations, !!translations.length);
+
   return (
     <>
-      {!isServer && CRUD_MODE && !props.isPreview && !doc.isArchive && (
-        <React.Suspense
-          fallback={<p className="loading-toolbar">Loading toolbar</p>}
-        >
-          <Toolbar
-            doc={doc}
-            reloadPage={() => {
-              mutate(dataURL);
-            }}
-          />
-        </React.Suspense>
-      )}
-
       {doc.isArchive && !doc.isTranslated && <Archived />}
 
-      <div className="breadcrumb-locale-container">
-        {doc.parents && <Breadcrumbs parents={doc.parents} />}
-
-        {translations && !!translations.length && (
-          <LanguageToggle locale={locale} translations={translations} />
-        )}
-      </div>
+      {/* if we have either breadcrumbs or translations for the current page, 
+      continue rendering the section */}
+      {(doc.parents || !!translations.length) && (
+        <div className="breadcrumb-locale-container">
+          {doc.parents && <Breadcrumbs parents={doc.parents} />}
+          {translations && !!translations.length && (
+            <LanguageToggle locale={locale} translations={translations} />
+          )}
+        </div>
+      )}
 
       {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
       <MainContentContainer>
+        {!isServer && CRUD_MODE && !props.isPreview && !doc.isArchive && (
+          <React.Suspense
+            fallback={<p className="loading-toolbar">Loading toolbar</p>}
+          >
+            <Toolbar
+              doc={doc}
+              reloadPage={() => {
+                mutate(dataURL);
+              }}
+            />
+          </React.Suspense>
+        )}
         <article className="article" lang={doc.locale}>
           <h1>{doc.title}</h1>
           <RenderDocumentBody doc={doc} />
