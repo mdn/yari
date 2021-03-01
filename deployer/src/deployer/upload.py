@@ -413,9 +413,11 @@ def upload_content(build_directory, content_roots, config):
     bucket_prefix = config["prefix"]
     force_refresh = config["force_refresh"]
     show_progress_bar = not config["no_progressbar"]
+    upload_redirects = not config["no_redirects"]
 
     log.info(f"Upload files from: {build_directory}")
-    log.info(f"Upload redirects from: {', '.join(str(fp) for fp in content_roots)}")
+    if upload_redirects:
+        log.info(f"Upload redirects from: {', '.join(str(fp) for fp in content_roots)}")
     log.info("Upload into: ", nl=False)
     if bucket_prefix:
         log.info(f"{bucket_prefix}/ of ", nl=False)
@@ -423,13 +425,17 @@ def upload_content(build_directory, content_roots, config):
 
     mgr = BucketManager(bucket_name, bucket_prefix)
 
-    with StopWatch() as timer:
-        total_redirects = mgr.count_redirect_tasks(content_roots)
-        if not total_redirects:
-            raise click.ClickException(
-                "unable to find any redirects to upload (did you specify the right content-root?)"
-            )
-    log.info(f"Total pending redirect uploads: {total_redirects:,} ({timer})")
+    if upload_redirects:
+        with StopWatch() as timer:
+            total_redirects = mgr.count_redirect_tasks(content_roots)
+            if not total_redirects:
+                raise click.ClickException(
+                    "unable to find any redirects to upload "
+                    "(did you specify the right content-root?)"
+                )
+        log.info(f"Total pending redirect uploads: {total_redirects:,} ({timer})")
+    else:
+        log.info("Not going to upload any redirects")
 
     with StopWatch() as timer:
         total_possible_files = mgr.count_file_tasks(build_directory)
@@ -463,13 +469,16 @@ def upload_content(build_directory, content_roots, config):
                 on_task_complete=on_task_complete,
             )
 
-    log.info(
-        f"Total uploaded files: {totals.uploaded_files:,} "
-        f"({fmt_size(totals.uploaded_files_size)})"
-    )
-    log.info(f"Total uploaded redirects: {totals.uploaded_redirects:,}")
-    log.info(f"Total skipped files: {totals.skipped:,} matched existing S3 objects")
-    log.info(f"Total upload/skip time: {upload_timer}")
+    if dry_run:
+        log.info("No uploads. Dry run!")
+    else:
+        log.info(
+            f"Total uploaded files: {totals.uploaded_files:,} ",
+        )
+        if upload_redirects:
+            log.info(f"Total uploaded redirects: {totals.uploaded_redirects:,} ")
+        log.info(f"Total skipped files: {totals.skipped:,} matched existing S3 objects")
+        log.info(f"Total upload/skip time: {upload_timer}")
     log.info(f"Done in {full_timer.stop()}.")
 
     if totals.failed:
