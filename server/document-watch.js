@@ -39,7 +39,7 @@ worker.on("message", (event) => {
 // can get some strange results. This isn't just a risk when you start Yari for the
 // first time, but also every time `nodemon` notices a change in the server
 // related code which triggers a restart of `SearchIndex`.
-const MAX_RETRIES = 3;
+const MAX_RETRIES = 5;
 const RETRY_SLEEPTIME = 1000;
 
 function searchRoute(req, res, retry = 0) {
