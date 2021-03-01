@@ -239,7 +239,7 @@ output += '<li><strong><a href="'+slug_stdlib+'">'+text['stdlib']+'</a></strong>
           output += '<li><strong>'+text['Inheritance']+'</strong></li>';
         }
 
-        output += '<li><strong><a href="'+slug_stdlib + '/' + resultTitle +'"><code>'+resultTitle+'</code></a></strong></li>';
+        output += '<li><strong><a href="'+slug_stdlib + resultTitle +'"><code>'+resultTitle+'</code></a></strong></li>';
 
         if (resultProperties.length > 0) {
           output += buildSublist(resultProperties, text['Properties'], resultOpen);
