@@ -37,11 +37,9 @@ export function Metadata({ doc, locale }) {
           <LastModified value={doc.modified} locale={locale} />,{" "}
           <a href={`${doc.mdn_url}/contributors.txt`}>by MDN contributors</a>
         </p>
-        {locale.toLowerCase() === "en-us" &&
-          translations &&
-          !!translations.length && (
-            <LanguageMenu translations={translations} locale={locale} />
-          )}
+        {translations && !!translations.length && (
+          <LanguageMenu translations={translations} locale={locale} />
+        )}
       </div>
     </aside>
   );

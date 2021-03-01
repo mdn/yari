@@ -141,9 +141,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   const isServer = typeof window === "undefined";
 
-  console.log(doc.parents);
-  console.log(translations, !!translations.length);
-
   return (
     <>
       {doc.isArchive && !doc.isTranslated && <Archived />}
