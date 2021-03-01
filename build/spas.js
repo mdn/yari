@@ -95,7 +95,7 @@ async function buildSPAs(options) {
     }
   }
   if (!options.quiet) {
-    console.log(`Built ${buildCount} SPA files`);
+    console.log(`Built ${buildCount} SPA related files`);
   }
 }
 
