@@ -13,7 +13,7 @@ const {
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 } = require("../build");
-const { findDocumentTranslations } = require("../build/translations");
+const { findDocumentTranslations } = require("../content/translations");
 const {
   CONTENT_ROOT,
   Document,
