@@ -1,9 +1,10 @@
-const { findAll } = require("./document");
+const Document = require("./document");
+const { VALID_LOCALES } = require("./constants");
 
 const TRANSLATIONS_OF = new Map();
 
 function gatherTranslations() {
-  const iter = findAll().iter();
+  const iter = Document.findAll().iter();
   for (const {
     metadata: { slug, locale, title },
     url,
@@ -40,6 +41,30 @@ function translationsOf({ slug, locale: currentLocale }) {
   return translations;
 }
 
+function findDocumentTranslationsByURL(document) {
+  const translations = [];
+
+  for (const locale of VALID_LOCALES.values()) {
+    if (document.metadata.locale === locale) {
+      continue;
+    }
+    const translatedDocumentURL = document.url.replace(
+      `/${document.metadata.locale}/`,
+      `/${locale}/`
+    );
+    const translatedDocument = Document.findByURL(translatedDocumentURL);
+    if (translatedDocument) {
+      translations.push({
+        locale,
+        title: translatedDocument.metadata.title,
+        url: translatedDocument.url,
+      });
+    }
+  }
+  return translations;
+}
+
 module.exports = {
   translationsOf,
+  findDocumentTranslationsByURL,
 };

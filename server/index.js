@@ -13,7 +13,7 @@ const {
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 } = require("../build");
-const { findDocumentTranslations } = require("../build/translations");
+const { findDocumentTranslationsByURL } = require("../content/translations");
 const {
   CONTENT_ROOT,
   Document,
@@ -47,7 +47,7 @@ async function buildDocumentFromURL(url) {
     // When you're running the dev server and build documents
     // every time a URL is requested, you won't have had the chance to do
     // the phase that happens when you do a regular `yarn build`.
-    document.translations = findDocumentTranslations(document);
+    document.translations = findDocumentTranslationsByURL(document);
   }
   return await buildDocument(document, documentOptions);
 }
