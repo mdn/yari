@@ -63,17 +63,54 @@ describe("root URL redirects", () => {
 });
 
 describe("URLs that need a locale injected", () => {
+  const spaPrefixes = ["search", "signin", "signup", "settings"];
   it("should inject the locale depending on first prefix", async () => {
-    expect.assertions(3 * 2);
-    for (const prefix of ["search", "signin", "signup"]) {
+    expect.assertions(4 * 2);
+    for (const prefix of spaPrefixes) {
       const r = await get(`/${prefix}`);
       expect(r.statusCode).toBe(302);
       expect(r.headers["location"]).toBe(`/en-US/${prefix}`);
     }
   });
+  it("should inject the locale depending on first prefix by header", async () => {
+    expect.assertions(4 * 2);
+    for (const prefix of spaPrefixes) {
+      const r = await get(`/${prefix}`, {
+        "Accept-language": "zh-Cn",
+      });
+      expect(r.statusCode).toBe(302);
+      expect(r.headers["location"]).toBe(`/zh-CN/${prefix}`);
+    }
+  });
+  it("should inject the locale depending on first prefix by cookie", async () => {
+    expect.assertions(4 * 2);
+    for (const prefix of spaPrefixes) {
+      const r = await get(`/${prefix}`, {
+        Cookie: "preferredlocale=fr",
+      });
+      expect(r.statusCode).toBe(302);
+      expect(r.headers["location"]).toBe(`/fr/${prefix}`);
+    }
+  });
+  it("should inject the locale depending on first prefix by cookie over header", async () => {
+    expect.assertions(4 * 2);
+    for (const prefix of spaPrefixes) {
+      const r = await get(`/${prefix}`, {
+        "Accept-language": "zh-Cn",
+        Cookie: "preferredlocale=fr",
+      });
+      expect(r.statusCode).toBe(302);
+      expect(r.headers["location"]).toBe(`/fr/${prefix}`);
+    }
+  });
+  it("should preserve query string when injecting locale", async () => {
+    const r = await get("/search?q=foo");
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe(`/en-US/search?q=foo`);
+  });
   it("should inject the locale depending on first prefix and drop any trailing slash", async () => {
-    expect.assertions(3 * 2);
-    for (const prefix of ["search", "signin", "signup"]) {
+    expect.assertions(4 * 2);
+    for (const prefix of spaPrefixes) {
       const r = await get(`/${prefix}/`);
       expect(r.statusCode).toBe(302);
       expect(r.headers["location"]).toBe(`/en-US/${prefix}`);
@@ -128,8 +165,8 @@ describe("remove trailing slash before doing an S3 lookup", () => {
 });
 
 describe("legacy kumaesque prefixes should be left alone", () => {
-  it("should not touch /accounts/whatever", async () => {
-    const r = await get("/accounts/Whatever");
+  it("should not touch trailing slash on /account/", async () => {
+    const r = await get("/account/");
     expect(r.statusCode).toBe(200);
   });
   it("should not touch trailing slash on these /accounts/whatever/", async () => {

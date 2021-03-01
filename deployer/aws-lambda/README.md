@@ -67,8 +67,8 @@ yarn install
 yarn serve
 ```
 
-This will start a server at <http://localhost:7000>. It's meant to work as similar
-as it can to code when run within Lambda@Edge. To test it, try:
+This will start a server at <http://localhost:7000>. It's meant to work much
+the same as when our Lambda@Edge function is run within AWS. To test it, try:
 
 ```sh
 curl -I http://localhost:7000/EN-us/docs/Foo/
@@ -81,8 +81,8 @@ But it's a great tool for end-to-end testing our redirect rules.
 
 The `yarn serve` server will automatically restart itself if a change is
 made to the `index.js` or the `server.js` code.
-But, if you make an edit to any of the `/libs/**/index.js` files, they're
-called `@yari-internal/...` from within the code and the only way to get them
+But, if you make an edit to any of the `/libs/**/index.js` files (they're called
+`@yari-internal/...` from within the code), then the only way to get them
 to become the latest version is to run:
 
 ```sh
