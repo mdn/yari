@@ -581,13 +581,28 @@ async function fixFixableFlaws(doc, options, document) {
         throw new Error(`Insecure image URL ${flaw.src}`);
       }
       try {
-        const imageBuffer = await got(forceExternalURL(flaw.src), {
+        const imageResponse = await got(forceExternalURL(flaw.src), {
           responseType: "buffer",
-          resolveBodyOnly: true,
           timeout: 10000,
           retry: 3,
         });
-        const fileType = await FileType.fromBuffer(imageBuffer);
+        const imageBuffer = imageResponse.body;
+        let fileType = await FileType.fromBuffer(imageBuffer);
+        if (
+          !fileType &&
+          flaw.src.toLowerCase().endsWith(".svg") &&
+          imageResponse.headers["content-type"] === "image/svg+xml"
+        ) {
+          // If the SVG doesn't have the `<?xml version="1.0" encoding="UTF-8"?>`
+          // and/or the `<!DOCTYPE svg PUBLIC ...` in the first couple of bytes
+          // the FileType.fromBuffer will fail.
+          // But if the image URL and the response Content-Type are sane, we
+          // can safely assumes it's an SVG file.
+          fileType = {
+            ext: "xml",
+            mime: "application/xml",
+          };
+        }
         if (!fileType) {
           throw new Error(
             `No file type could be extracted from ${flaw.src} at all. Probably not going to be a valid image file.`
