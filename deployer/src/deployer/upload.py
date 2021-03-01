@@ -473,7 +473,8 @@ def upload_content(build_directory, content_roots, config):
         log.info("No uploads. Dry run!")
     else:
         log.info(
-            f"Total uploaded files: {totals.uploaded_files:,} ",
+            f"Total uploaded files: {totals.uploaded_files:,} "
+            f"({fmt_size(totals.uploaded_files_size)})"
         )
         if upload_redirects:
             log.info(f"Total uploaded redirects: {totals.uploaded_redirects:,} ")
