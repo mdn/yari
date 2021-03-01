@@ -44,7 +44,7 @@ const RETRY_SLEEPTIME = 1000;
 
 function searchRoute(req, res, retry = 0) {
   if (isReady) {
-    res.json(isReady ? searchIndex.getItems()[req.params.locale] : null);
+    res.json(searchIndex.getItems()[req.params.locale]);
   } else {
     if (retry > MAX_RETRIES) {
       // So many retries and it's still not ready. Something must have gone wrong.
