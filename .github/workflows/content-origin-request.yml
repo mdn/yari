@@ -29,7 +29,7 @@ jobs:
         with:
           path: |
             deployer/aws-lambda/content-origin-request/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('deployer/aws-lambda/content-origin-request/yarn.lock') }}
+          key: ${{ runner.os }}-${{ hashFiles('deployer/**/yarn.lock') }}-${{ hashFiles('libs/**/*.js') }}
 
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
