@@ -32,7 +32,7 @@ export function Metadata({ doc, locale }) {
   return (
     <aside className="metadata">
       <div className="metadata-content-container">
-        {!doc.isArchive && <OnGitHubLink doc={doc} />}
+        {!doc.isArchive && !doc.isTranslated && <OnGitHubLink doc={doc} />}
         <p className="last-modified-date">
           <LastModified value={doc.modified} locale={locale} />,{" "}
           <a href={`${doc.mdn_url}/contributors.txt`}>by MDN contributors</a>

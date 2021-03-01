@@ -240,4 +240,19 @@ describe("Basic viewing of functional pages", () => {
     await page.goto(testURL("/fr/"));
     await expect(page).toMatch("Resources for developers, by developers.");
   });
+
+  it("should be able to switch from French to English, set a cookie, and back again", async () => {
+    await page.goto(testURL("/fr/docs/Web/Foo"));
+    await expect(page).toMatch("<foo>: Une page de test");
+    await expect(page).toSelect('select[name="language"]', "English (US)");
+    await expect(page).toClick("button", { text: "Change language" });
+    await expect(page).toMatch("<foo>: A test tag");
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
+
+    // And change back to French
+    await expect(page).toSelect('select[name="language"]', "Français");
+    await expect(page).toClick("button", { text: "Change language" });
+    await expect(page).toMatch("<foo>: Une page de test");
+    expect(page.url()).toBe(testURL("/fr/docs/Web/Foo"));
+  });
 });

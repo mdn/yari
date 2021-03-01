@@ -154,20 +154,21 @@ export default function SearchResults() {
     const hitCount = data.metadata.total.value;
 
     return (
-      <div>
+      <>
         {/* It only makes sense to display the sorting options if anything was found */}
         {hitCount > 1 && <SortOptions />}
 
         <RemoteSearchWarning />
 
         <Results {...data} />
+
         <Pagination
           currentPage={currentPage}
           hitCount={hitCount}
           pageSize={pageSize}
           maxPage={10}
         />
-      </div>
+      </>
     );
   }
   // else...
@@ -203,23 +204,24 @@ function SortOptions() {
   const [searchParams] = useSearchParams();
   const querySort = searchParams.get("sort") || SORT_OPTIONS[0][0];
   return (
-    <p className="sort-options">
-      <b>Sort by</b>{" "}
-      {SORT_OPTIONS.map(([key, label], i) => {
-        return (
-          <React.Fragment key={key}>
-            {key === querySort ? (
-              <i>{label}</i>
-            ) : (
-              <Link to={`?${appendURL(searchParams, { sort: key })}`}>
-                {label}
-              </Link>
-            )}
-            {i < SORT_OPTIONS.length - 1 ? " | " : ""}
-          </React.Fragment>
-        );
-      })}
-    </p>
+    <div className="sort-options">
+      <h2>Sort by:</h2>
+      <ul className="sort-option-list">
+        {SORT_OPTIONS.map(([key, label], i) => {
+          return (
+            <li key={key}>
+              {key === querySort ? (
+                label
+              ) : (
+                <Link to={`?${appendURL(searchParams, { sort: key })}`}>
+                  {label}
+                </Link>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 }
 
@@ -286,93 +288,94 @@ function Results({
   const [searchParams] = useSearchParams();
 
   return (
-    <div>
-      <div className="search-results">
-        <p>
-          Found <ShowTotal total={metadata.total} /> in {metadata.took_ms}{" "}
-          milliseconds.
-        </p>
+    <div className="search-results">
+      <p>
+        Found <ShowTotal total={metadata.total} /> in {metadata.took_ms}{" "}
+        milliseconds.
+      </p>
 
-        {!!suggestions.length && (
-          <div className="suggestions">
-            <p>Did you mean...</p>
-            <ul>
-              {suggestions.map((suggestion) => {
-                return (
-                  <li key={suggestion.text}>
-                    <Link
-                      to={`?${appendURL(searchParams, {
-                        q: suggestion.text,
-                        page: undefined,
-                      })}`}
-                    >
-                      {suggestion.text}
-                    </Link>{" "}
-                    <ShowTotal total={suggestion.total} />
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        )}
+      {!!suggestions.length && (
+        <div className="search-suggestions">
+          <p>Did you mean...</p>
+          <ul className="search-suggestion-list">
+            {suggestions.map((suggestion) => {
+              return (
+                <li key={suggestion.text}>
+                  <Link
+                    to={`?${appendURL(searchParams, {
+                      q: suggestion.text,
+                      page: undefined,
+                    })}`}
+                  >
+                    {suggestion.text}
+                  </Link>{" "}
+                  <ShowTotal total={suggestion.total} />
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
 
+      <ul className="search-results-list">
         {documents.map((document) => {
           const highlights = document.highlight.body || [];
           return (
-            <div key={document.mdn_url}>
-              <p>
-                {/* We're using plain <a href> instead of <Link to> here until
+            <li
+              className="search-result-entry readable-line-length"
+              key={document.mdn_url}
+            >
+              {/* We're using plain <a href> instead of <Link to> here until
                 the bug has been figured out about scrolling to the top on click. */}
-                {document.highlight.title && document.highlight.title.length ? (
+              {document.highlight.title && document.highlight.title.length ? (
+                <h3 className="title">
                   <a
-                    className="title"
                     href={document.mdn_url}
                     dangerouslySetInnerHTML={{
                       __html: document.highlight.title[0],
                     }}
                   ></a>
-                ) : (
-                  <a className="title" href={document.mdn_url}>
-                    {document.title}
-                  </a>
-                )}{" "}
-                {locale.toLowerCase() !== document.locale &&
-                  LANGUAGES.has(document.locale) && (
-                    <i
-                      className="locale-indicator"
-                      title="Document different than your current language setting"
-                    >
-                      {LANGUAGES.get(document.locale)?.English}
-                    </i>
-                  )}
-                <br />
-                {highlights.length ? (
-                  highlights.map((highlight, i) => {
-                    return (
-                      <span
-                        key={`${document.mdn_url}${i}`}
-                        className="highlight"
-                        dangerouslySetInnerHTML={{ __html: `…${highlight}…` }}
-                      ></span>
-                    );
-                  })
-                ) : (
-                  <span className="summary">{document.summary}</span>
+                </h3>
+              ) : (
+                <h3 className="title">
+                  <a href={document.mdn_url}>{document.title}</a>
+                </h3>
+              )}{" "}
+              {locale.toLowerCase() !== document.locale &&
+                LANGUAGES.has(document.locale) && (
+                  <i
+                    className="locale-indicator"
+                    title="Document different than your current language setting"
+                  >
+                    {LANGUAGES.get(document.locale)?.English}
+                  </i>
                 )}
-                <a className="url" href={document.mdn_url}>
-                  {document.mdn_url}
-                </a>
-                {DEBUG_SEARCH_RESULTS && (
-                  <span className="nerd-data">
-                    <b>score:</b> <code>{document.score}</code>,{" "}
-                    <b>popularity:</b> <code>{document.popularity}</code>,{" "}
-                  </span>
-                )}
-              </p>
-            </div>
+              {highlights.length ? (
+                highlights.map((highlight, i) => {
+                  return (
+                    <span
+                      key={`${document.mdn_url}${i}`}
+                      className="highlight"
+                      dangerouslySetInnerHTML={{ __html: `…${highlight}…` }}
+                    ></span>
+                  );
+                })
+              ) : (
+                <span className="summary">{document.summary}</span>
+              )}
+              <a className="url" href={document.mdn_url}>
+                {document.mdn_url}
+              </a>
+              {DEBUG_SEARCH_RESULTS && (
+                <span className="nerd-data">
+                  <b>score:</b> <code>{document.score}</code>,{" "}
+                  <b>popularity:</b> <code>{document.popularity}</code>,{" "}
+                </span>
+              )}
+            </li>
           );
         })}
-      </div>
+      </ul>
     </div>
   );
 }
@@ -428,21 +431,25 @@ function Pagination({
       }
     }
     return (
-      <div className="pagination">
+      <ul className="pagination readable-line-length">
         {previousURL ? (
-          <Link to={previousURL} className="button">
-            Previous
-          </Link>
+          <li>
+            <Link to={previousURL} className="button">
+              Previous
+            </Link>
+          </li>
         ) : null}{" "}
         {nextPage ? (
-          <Link
-            to={`?${appendURL(searchParams, { page: `${nextPage}` })}`}
-            className="button"
-          >
-            Next
-          </Link>
+          <li>
+            <Link
+              to={`?${appendURL(searchParams, { page: `${nextPage}` })}`}
+              className="button"
+            >
+              Next
+            </Link>
+          </li>
         ) : null}
-      </div>
+      </ul>
     );
   }
   return null;
