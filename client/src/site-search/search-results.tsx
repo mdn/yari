@@ -317,14 +317,11 @@ function Results({
         </div>
       )}
 
-      <ul className="search-results-list">
+      <ul className="search-results-list readable-line-length">
         {documents.map((document) => {
           const highlights = document.highlight.body || [];
           return (
-            <li
-              className="search-result-entry readable-line-length"
-              key={document.mdn_url}
-            >
+            <li className="search-result-entry" key={document.mdn_url}>
               {/* We're using plain <a href> instead of <Link to> here until
                 the bug has been figured out about scrolling to the top on click. */}
               {document.highlight.title && document.highlight.title.length ? (
@@ -343,29 +340,35 @@ function Results({
               )}{" "}
               {locale.toLowerCase() !== document.locale &&
                 LANGUAGES.has(document.locale) && (
-                  <i
+                  <span
                     className="locale-indicator"
-                    title="Document different than your current language setting"
+                    title={`The linked document is in ${
+                      LANGUAGES.get(document.locale)?.English
+                    } which is different from your current locale.`}
                   >
                     {LANGUAGES.get(document.locale)?.English}
-                  </i>
+                  </span>
                 )}
-              {highlights.length ? (
-                highlights.map((highlight, i) => {
-                  return (
-                    <span
-                      key={`${document.mdn_url}${i}`}
-                      className="highlight"
-                      dangerouslySetInnerHTML={{ __html: `…${highlight}…` }}
-                    ></span>
-                  );
-                })
-              ) : (
-                <span className="summary">{document.summary}</span>
-              )}
-              <a className="url" href={document.mdn_url}>
-                {document.mdn_url}
-              </a>
+              <p>
+                <a className="url" href={document.mdn_url}>
+                  {document.mdn_url}
+                </a>
+              </p>
+              <p>
+                {highlights.length ? (
+                  highlights.map((highlight, i) => {
+                    return (
+                      <span
+                        key={`${document.mdn_url}${i}`}
+                        className="highlight"
+                        dangerouslySetInnerHTML={{ __html: `…${highlight}…` }}
+                      ></span>
+                    );
+                  })
+                ) : (
+                  <span className="summary">{document.summary}</span>
+                )}
+              </p>
               {DEBUG_SEARCH_RESULTS && (
                 <span className="nerd-data">
                   <b>score:</b> <code>{document.score}</code>,{" "}
