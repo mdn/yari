@@ -25,7 +25,6 @@ const { syntaxHighlight } = require("./syntax-highlight");
 const buildOptions = require("./build-options");
 const { gather: gatherGitHistory } = require("./git-history");
 const { buildSPAs } = require("./spas");
-const { findDocumentTranslations } = require("./translations");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
 
 const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/content
@@ -462,13 +461,6 @@ async function buildDocument(document, documentOptions = {}) {
 
   doc.modified = metadata.modified || null;
 
-  if (options.findTranslations) {
-    // When you're doing a CLI build (e.g. `yarn build`) there's a step
-    // where it first figures out ALL possible translations. This might be
-    // be available when you're just doing one call to `buildDocument()` which
-    // is what happens when you run the dev server.
-    document.translations = findDocumentTranslations(document);
-  }
   const otherTranslations = document.translations || [];
   if (!otherTranslations.length && metadata.translation_of) {
     // If built just-in-time, we won't have a record of all the other translations
@@ -508,14 +500,6 @@ async function buildDocument(document, documentOptions = {}) {
     document.metadata.slug.startsWith("conflicting/");
 
   return { doc, liveSamples, fileAttachments, bcdData };
-}
-
-async function buildDocumentFromURL(url, documentOptions = {}) {
-  const document = Document.findByURL(url);
-  if (!document) {
-    return null;
-  }
-  return await buildDocument(document, documentOptions);
 }
 
 async function buildLiveSamplePageFromURL(url) {
@@ -566,7 +550,6 @@ module.exports = {
 
   buildDocument,
 
-  buildDocumentFromURL,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 
