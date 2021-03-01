@@ -14,7 +14,13 @@ const {
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 } = require("../build");
-const { CONTENT_ROOT, Document, Redirect, Image } = require("../content");
+const {
+  CONTENT_ROOT,
+  Document,
+  Redirect,
+  Image,
+  CONTENT_TRANSLATED_ROOT,
+} = require("../content");
 // eslint-disable-next-line node/no-missing-require
 const { prepareDoc, renderDocHTML } = require("../ssr/dist/main");
 
@@ -196,6 +202,7 @@ app.get("/*", async (req, res) => {
       // to ship you don't want the cache to stand have any hits
       // since it might prevent reading fresh data from disk.
       clearKumascriptRenderCache: true,
+      findTranslations: Boolean(CONTENT_TRANSLATED_ROOT),
     });
     if (built) {
       document = built.doc;
