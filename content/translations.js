@@ -41,7 +41,7 @@ function translationsOf({ slug, locale: currentLocale }) {
   return translations;
 }
 
-function findDocumentTranslationsByURL(document) {
+function findDocumentTranslations(document) {
   const translations = [];
 
   for (const locale of VALID_LOCALES.values()) {
@@ -66,5 +66,5 @@ function findDocumentTranslationsByURL(document) {
 
 module.exports = {
   translationsOf,
-  findDocumentTranslationsByURL,
+  findDocumentTranslations,
 };
