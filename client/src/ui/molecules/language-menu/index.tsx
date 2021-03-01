@@ -1,6 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
+import { CATEGORY_LANGUAGE_TOGGLE, useGA } from "../../../ga-context";
+
 import LANGUAGES_RAW from "../../../languages.json";
 import { Translation } from "../../../document/types";
 
@@ -22,6 +24,7 @@ export function LanguageMenu({
   locale: string;
   translations: Translation[];
 }) {
+  const ga = useGA();
   const navigate = useNavigate();
   const [localeURL, setLocaleURL] = React.useState(locale);
 
@@ -52,6 +55,14 @@ export function LanguageMenu({
               document.cookie = cookieValue;
             }
           }
+
+          ga("send", {
+            hitType: "event",
+            eventCategory: CATEGORY_LANGUAGE_TOGGLE,
+            eventAction: `Changing from the current locale: ${locale} to ${localeURL}`,
+            eventLabel: "change-language",
+          });
+
           navigate(localeURL);
           window.scrollTo(0, 0);
         }
