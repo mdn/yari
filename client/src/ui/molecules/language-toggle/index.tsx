@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import { Translation } from "../../../document/types";
 import { useGA } from "../../../ga-context";
 
@@ -12,23 +14,23 @@ export function LanguageToggle({
 }) {
   const ga = useGA();
 
-  function getLink(locale) {
+  function getEnglishLink() {
     for (const translation of translations) {
       if (translation.locale.toLowerCase() === "en-us") {
         return (
-          <a
-            href={translation.url}
+          <Link
+            to={translation.url}
             onClick={() => {
               ga("send", {
                 hitType: "event",
                 eventCategory: "Language",
                 eventAction: "Switch to English",
-                eventLabel: `Changing from ${locale} to English`,
+                eventLabel: `${window.location.pathname} to ${translation.url}`,
               });
             }}
           >
             <span className="show-desktop">View in</span> English
-          </a>
+          </Link>
         );
       }
     }
@@ -47,19 +49,25 @@ export function LanguageToggle({
         <a
           href="#select-language"
           className="language-icon"
-          onClick={() => {
+          onClick={(event) => {
+            const destination = document.querySelector("#select-language");
+            if (destination) {
+              destination.scrollIntoView({ behavior: "smooth" });
+              event.preventDefault();
+            }
+
             ga("send", {
               hitType: "event",
               eventCategory: "Language",
               eventAction: "Anchor to language choice",
-              eventLabel: `Change language on ${locale}`,
+              eventLabel: window.location.pathname,
             });
           }}
         >
           <span className="show-desktop">Change language</span>
         </a>
       </li>
-      {locale.toLowerCase() !== "en-us" && <li>{getLink(locale)}</li>}
+      {locale.toLowerCase() !== "en-us" && <li>{getEnglishLink()}</li>}
     </ul>
   );
 }
