@@ -1,5 +1,5 @@
 import { Translation } from "../../../document/types";
-import { CATEGORY_LANGUAGE_TOGGLE, useGA } from "../../../ga-context";
+import { useGA } from "../../../ga-context";
 
 import "./index.scss";
 
@@ -10,47 +10,27 @@ export function LanguageToggle({
   locale: string;
   translations: Translation[];
 }) {
-  function GetLink(locale) {
-    const ga = useGA();
+  const ga = useGA();
 
-    if (locale.toLowerCase() !== "en-us") {
-      for (const translation of translations) {
-        if (translation.locale.toLowerCase() === "en-us") {
-          return (
-            <a
-              href={translation.url}
-              className="language-icon default"
-              onClick={() => {
-                ga("send", {
-                  hitType: "event",
-                  eventCategory: CATEGORY_LANGUAGE_TOGGLE,
-                  eventAction: `View in English link clicked. Current locale: ${locale}`,
-                  eventLabel: "change-language",
-                });
-              }}
-            >
-              <span className="show-desktop">View in</span> English
-            </a>
-          );
-        }
+  function getLink(locale) {
+    for (const translation of translations) {
+      if (translation.locale.toLowerCase() === "en-us") {
+        return (
+          <a
+            href={translation.url}
+            onClick={() => {
+              ga("send", {
+                hitType: "event",
+                eventCategory: "Language",
+                eventAction: "Switch to English",
+                eventLabel: `Changing from ${locale} to English`,
+              });
+            }}
+          >
+            <span className="show-desktop">View in</span> English
+          </a>
+        );
       }
-    } else {
-      return (
-        <a
-          href="#select_language"
-          className="language-icon"
-          onClick={() => {
-            ga("send", {
-              hitType: "event",
-              eventCategory: CATEGORY_LANGUAGE_TOGGLE,
-              eventAction: `Change language link clicked. Current locale: ${locale}`,
-              eventLabel: "change-language",
-            });
-          }}
-        >
-          <span className="show-desktop">Change language</span>
-        </a>
-      );
     }
     return null;
   }
@@ -59,11 +39,27 @@ export function LanguageToggle({
     <ul
       className={
         locale.toLowerCase() === "en-us"
-          ? "language-toggle icon-only"
+          ? "language-toggle single-option"
           : "language-toggle"
       }
     >
-      <li>{GetLink(locale)}</li>
+      <li>
+        <a
+          href="#select-language"
+          className="language-icon"
+          onClick={() => {
+            ga("send", {
+              hitType: "event",
+              eventCategory: "Language",
+              eventAction: "Anchor to language choice",
+              eventLabel: `Change language on ${locale}`,
+            });
+          }}
+        >
+          <span className="show-desktop">Change language</span>
+        </a>
+      </li>
+      {locale.toLowerCase() !== "en-us" && <li>{getLink(locale)}</li>}
     </ul>
   );
 }

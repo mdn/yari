@@ -16,11 +16,11 @@
     flex-basis: 80%;
 
     @media #{$mq-tablet-and-up} {
-      flex-basis: 60%;
+      flex-basis: 55%;
     }
 
     @media #{$mq-large-desktop-and-up} {
-      flex-basis: 85%;
+      flex-basis: 75%;
     }
   }
 
@@ -28,11 +28,11 @@
     flex-basis: 20%;
 
     @media #{$mq-tablet-and-up} {
-      flex-basis: 40%;
+      flex-basis: 45%;
     }
 
     @media #{$mq-large-desktop-and-up} {
-      flex-basis: 15%;
+      flex-basis: 25%;
     }
   }
 
@@ -42,7 +42,7 @@
   }
 
   // when the language toggle is the only item in the container
-  > .language-toggle {
+  .language-toggle:only-child {
     flex-basis: 100%;
     justify-content: flex-end;
   }

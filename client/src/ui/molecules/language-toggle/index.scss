@@ -18,16 +18,13 @@ ul.language-toggle {
     margin: 0;
   }
 
-  &.icon-only {
-    justify-content: flex-end;
-  }
-
   li {
     max-height: 24px;
   }
 
   .language-icon {
-    display: block;
+    display: inline-block;
+    min-width: 50px;
     width: auto;
 
     // always set min-width for the English link
@@ -49,9 +46,21 @@ ul.language-toggle {
       height: 29px;
       vertical-align: middle;
       width: 28px;
+    }
 
-      @media #{$mq-tablet-and-up} {
-        margin-right: $base-unit;
+    &::after {
+      content: "|";
+      display: inline-block;
+      margin: 0 $base-spacing / 4;
+    }
+  }
+
+  &.single-option {
+    justify-content: flex-end;
+
+    .language-icon {
+      &::after {
+        display: none;
       }
     }
   }

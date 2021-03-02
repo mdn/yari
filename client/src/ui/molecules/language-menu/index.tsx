@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { CATEGORY_LANGUAGE_TOGGLE, useGA } from "../../../ga-context";
+import { useGA } from "../../../ga-context";
 
 import LANGUAGES_RAW from "../../../languages.json";
 import { Translation } from "../../../document/types";
@@ -58,9 +58,9 @@ export function LanguageMenu({
 
           ga("send", {
             hitType: "event",
-            eventCategory: CATEGORY_LANGUAGE_TOGGLE,
-            eventAction: `Changing from the current locale: ${locale} to ${localeURL}`,
-            eventLabel: "change-language",
+            eventCategory: "Language",
+            eventAction: "Change preferred language",
+            eventLabel: `${locale} to ${localeURL}`,
           });
 
           navigate(localeURL);
@@ -68,13 +68,13 @@ export function LanguageMenu({
         }
       }}
     >
-      <fieldset>
+      <fieldset id="select-language">
         <legend>Change your language</legend>
-        <label htmlFor="select_language" className="visually-hidden">
+        <label htmlFor="language-selector" className="visually-hidden">
           Select your preferred language
         </label>{" "}
         <select
-          id="select_language"
+          id="language-selector"
           name="language"
           value={localeURL}
           onChange={(event) => {
