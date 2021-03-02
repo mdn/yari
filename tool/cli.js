@@ -313,9 +313,24 @@ program
       const { hostname, port } = options;
       let url;
       // Perhaps they typed in a path relative to the content root
-      if (slug.startsWith("files") && slug.endsWith("index.html")) {
+      if (
+        (slug.startsWith("files") || fs.existsSync(slug)) &&
+        (slug.endsWith("index.html") || slug.endsWith("index.md"))
+      ) {
+        if (fs.existsSync(slug) && !CONTENT_TRANSLATED_ROOT) {
+          console.warn(
+            chalk.yellow(
+              `Did you forget to set the environment variable ${chalk.bold(
+                "CONTENT_TRANSLATED_ROOT"
+              )}?`
+            )
+          );
+        }
+        const slugSplit = slug.split(path.sep);
         const document = Document.read(
-          slug.split(path.sep).slice(1, -1).join(path.sep)
+          slugSplit
+            .slice(slugSplit.findIndex((p) => p === "files") + 1, -1)
+            .join(path.sep)
         );
         if (document) {
           url = document.url;
