@@ -132,7 +132,6 @@ exports.handler = async (event) => {
     // processed by this Lambda function, note that we'll remove
     // the trailing slash before the request reaches S3 (see below).
     return redirect(request.uri + "/" + qs, {
-      status: 301,
       cacheControlSeconds: THIRTY_DAYS,
     });
   } else if (LOCALE_URI_WITH_TRAILING_SLASH.has(requestURILowerCase)) {
@@ -151,7 +150,6 @@ exports.handler = async (event) => {
     // All other requests with a trailing slash should redirect to the
     // same URL without the trailing slash.
     return redirect(request.uri.slice(0, -1) + qs, {
-      status: 301,
       cacheControlSeconds: THIRTY_DAYS,
     });
   }
