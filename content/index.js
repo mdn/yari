@@ -7,6 +7,7 @@ const {
   VALID_LOCALES,
 } = require("./constants");
 const Document = require("./document");
+const Translation = require("./translation");
 const { getPopularities } = require("./popularities");
 const Redirect = require("./redirect");
 const Image = require("./image");
@@ -29,6 +30,7 @@ module.exports = {
   Redirect,
   Image,
   Archive,
+  Translation,
 
   buildURL,
   memoize,

@@ -19,6 +19,7 @@ import {
   BadPreTagFlaw,
   SectioningFlaw,
   HeadingLinksFlaw,
+  TranslationDifferenceFlaw,
 } from "../types";
 import "./flaws.scss";
 
@@ -269,6 +270,13 @@ function Flaws({
                 key="heading_links"
                 sourceFolder={doc.source.folder}
                 flaws={doc.flaws.heading_links}
+              />
+            );
+          case "translation_differences":
+            return (
+              <TranslationDifferences
+                key="translation_differences"
+                flaws={doc.flaws.translation_differences}
               />
             );
           case "sectioning":
@@ -971,6 +979,38 @@ function HeadingLinks({
               )}{" "}
             </li>
           );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function TranslationDifferences({
+  flaws,
+}: {
+  flaws: TranslationDifferenceFlaw[];
+}) {
+  return (
+    <div className="flaw">
+      <h3>{humanizeFlawName("translation_differences")}</h3>
+      <ul>
+        {flaws.map((flaw, i) => {
+          const key = flaw.id;
+          console.log(flaw);
+          let explanation = <b>{flaw.explanation}</b>;
+
+          if (flaw.difference.type === "macro") {
+            explanation = (
+              <>
+                <b>
+                  <code>{flaw.difference.name}</code> macro
+                </b>
+                : {flaw.difference.explanation}
+              </>
+            );
+          }
+
+          return <li key={key}>{explanation}</li>;
         })}
       </ul>
     </div>

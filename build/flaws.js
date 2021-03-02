@@ -11,7 +11,14 @@ const imageminGifsicle = require("imagemin-gifsicle");
 const imageminSvgo = require("imagemin-svgo");
 const sanitizeFilename = require("sanitize-filename");
 
-const { Archive, Document, Redirect, Image } = require("../content");
+const {
+  Archive,
+  Document,
+  Redirect,
+  Image,
+  Translation,
+} = require("../content");
+const { DEFAULT_LOCALE } = require("../libs/constants");
 const { FLAW_LEVELS } = require("./constants");
 const { packageBCD } = require("./resolve-bcd");
 const {
@@ -22,8 +29,10 @@ const {
 const { humanFileSize } = require("./utils");
 const { VALID_MIME_TYPES } = require("../filecheck/constants");
 
-function injectFlaws(doc, $, options, { rawContent }) {
+function injectFlaws(doc, $, options, document) {
   if (doc.isArchive) return;
+
+  const { rawContent } = document;
 
   injectBrokenLinksFlaws(
     options.flawLevels.get("broken_links"),
@@ -42,6 +51,14 @@ function injectFlaws(doc, $, options, { rawContent }) {
     $,
     rawContent
   );
+
+  if (doc.locale !== DEFAULT_LOCALE) {
+    injectTranslationDifferences(
+      options.flawLevels.get("translation_differences"),
+      doc,
+      document
+    );
+  }
 }
 
 function injectSectionFlaws(doc, flaws, options) {
@@ -472,6 +489,60 @@ function injectHeadingLinksFlaws(level, doc, $, rawContent) {
   ) {
     throw new Error(
       `heading_links flaws: ${doc.flaws.heading_links.map(JSON.stringify)}`
+    );
+  }
+}
+
+function injectTranslationDifferences(level, doc, document) {
+  if (level === FLAW_LEVELS.IGNORE) return;
+
+  const FLAW_NAME = "translation_differences";
+
+  const englishDocument = Document.read(
+    document.fileInfo.folder.replace(
+      document.metadata.locale.toLowerCase(),
+      DEFAULT_LOCALE.toLowerCase()
+    )
+  );
+  if (!englishDocument) {
+    console.warn(`Can't get English original from ${document.fileInfo.folder}`);
+    return;
+  }
+
+  function addFlaw(difference) {
+    if (!doc.flaws[FLAW_NAME]) {
+      doc.flaws[FLAW_NAME] = [];
+    }
+    const id = `${FLAW_NAME}${doc.flaws[FLAW_NAME].length + 1}`;
+    const { explanation } = difference;
+    const suggestion = null;
+    const fixable = false;
+    const flaw = {
+      id,
+      explanation,
+      suggestion,
+      fixable,
+      difference,
+    };
+    doc.flaws[FLAW_NAME].push(flaw);
+  }
+
+  for (const difference of Translation.getTranslationDifferences(
+    englishDocument,
+    document
+  )) {
+    addFlaw(difference);
+  }
+
+  if (
+    level === FLAW_LEVELS.ERROR &&
+    doc.flaws[FLAW_NAME] &&
+    doc.flaws[FLAW_NAME].length
+  ) {
+    throw new Error(
+      `translation_differences flaws: ${doc.flaws.translation_differences.map(
+        JSON.stringify
+      )}`
     );
   }
 }
