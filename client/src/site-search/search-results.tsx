@@ -349,10 +349,8 @@ function Results({
                     {LANGUAGES.get(document.locale)?.English}
                   </span>
                 )}
-              <p>
-                <a className="url" href={document.mdn_url}>
-                  {document.mdn_url}
-                </a>
+              <p className="search-result-url">
+                <a href={document.mdn_url}>{document.mdn_url}</a>
               </p>
               <p>
                 {highlights.length ? (

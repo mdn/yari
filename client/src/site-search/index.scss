@@ -1,5 +1,14 @@
 .site-search {
   min-height: 500px;
+
+  a {
+    text-decoration: underline;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
 }
 
 .query-string {

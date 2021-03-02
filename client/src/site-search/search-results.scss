@@ -41,10 +41,6 @@
 .search-results-list {
   margin-bottom: $base-spacing;
 
-  a {
-    text-decoration: underline;
-  }
-
   .title {
     background-color: inherit;
     color: $neutral-100;
@@ -57,6 +53,10 @@
       color: $neutral-100;
       text-decoration: none;
     }
+  }
+
+  .search-result-url {
+    margin-bottom: $base-spacing / 4;
   }
 
   // Used to indicate that a search result link is in a different locale
@@ -86,11 +86,11 @@
 }
 
 .search-result-entry {
-  margin-bottom: $base-spacing;
+  margin-bottom: $base-spacing * 2;
   word-wrap: break-word;
 
   @media #{$mq-tablet-and-up} {
-    margin-bottom: $base-spacing * 1.5;
+    margin-bottom: $base-spacing * 2.5;
   }
 }
 
