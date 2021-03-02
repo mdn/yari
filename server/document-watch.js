@@ -28,7 +28,7 @@ worker.on("message", (event) => {
   }
 });
 
-// The `seachRoute` handler depends on a global boolean. That global boolean is
+// The `searchRoute` handler depends on a global boolean. That global boolean is
 // changed by the worker.
 // If it's not ready by the time someone queries this endpoint, the chances are
 // they will be if we just let the worker a little bit more time.
