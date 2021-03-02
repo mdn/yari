@@ -447,6 +447,7 @@ def upload_content(build_directory, content_roots, config):
                 )
         log.info(f"Total pending redirect uploads: {total_redirects:,} ({timer})")
     else:
+        total_redirects = 0
         log.info("Not going to upload any redirects")
 
     with StopWatch() as timer:
