@@ -32,7 +32,7 @@ var output = "";
 if (slug) {
 var locale = env.locale;
 var rtlLocales = ['ar', 'he', 'fa'];
-var slug_stdlib = '/' + env.locale + '/docs/Web/JavaScript/Reference/Global_Objects/';
+var slug_stdlib = `/${env.locale}/docs/Web/JavaScript/Reference/Global_Objects`;
 var mainObj = slug.replace('Web/JavaScript/Reference/Global_Objects/', '').split('/')[0];
 
 // Data for inheritance chain

@@ -60,7 +60,7 @@
     "front-matter": "4.0.2",
     "fs-extra": "9.1.0",
     "glob": "^7.1.6",
-    "got": "11.8.1",
+    "got": "11.8.2",
     "http-proxy-middleware": "1.0.6",
     "image-size": "0.9.4",
     "imagemin": "7.0.1",
@@ -83,7 +83,7 @@
     "tempy": "1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.1",
+    "@babel/core": "^7.13.8",
     "@mdn/dinocons": "^0.3.0",
     "@mdn/minimalist": "^0.7.3",
     "@storybook/addon-a11y": "^6.1.20",
@@ -138,7 +138,7 @@
     "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-recommended": "^3.0.0",
     "stylelint-config-sass-guidelines": "^8.0.0",
-    "stylelint-prettier": "^1.1.2",
+    "stylelint-prettier": "^1.2.0",
     "stylelint-scss": "^3.19.0",
     "swr": "^0.4.2",
     "ts-loader": "^8.0.17",
