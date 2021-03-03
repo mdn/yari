@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { LanguageMenu } from "../../../ui/molecules/language-menu";
 import { OnGitHubLink } from "../../on-github";
 
