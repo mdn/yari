@@ -29,8 +29,9 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement("h1", {
       text: "<foo>: Une page de test",
     });
-    await expect(page).toSelect('select[name="language"]', "English (US)");
-    await expect(page).toClick("button", { text: "Change language" });
+    await expect(page).toClick("a.view-in-english", {
+      text: "View in English",
+    });
     await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
     // Should have been redirected too...
     // Note! It's important that this happens *after* the `.toMatchElement`
@@ -184,7 +185,7 @@ describe("Basic viewing of functional pages", () => {
     // For more information, see
     // https://github.com/puppeteer/puppeteer/issues/2977#issuecomment-412807613
     await page.evaluate(() => {
-      document.querySelector(".breadcrumbs a").click();
+      document.querySelector(".breadcrumbs-container a").click();
     });
     await expect(page).toMatchElement("h1", {
       text: "Web technology for developers",
