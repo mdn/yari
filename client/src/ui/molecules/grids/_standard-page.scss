@@ -6,9 +6,10 @@
   }
 
   .standard-page {
+    max-width: inherit;
+
     .page-header,
-    .page-content-container,
-    .page-footer {
+    .page-content-container {
       grid-column: 1/2;
     }
 
@@ -25,10 +26,6 @@
       grid-row: 3/4;
       grid-template-columns: 100%;
       padding: $base-spacing;
-    }
-
-    .page-footer {
-      grid-row: 4/5;
     }
 
     @media #{$mq-large-desktop-and-up} {
