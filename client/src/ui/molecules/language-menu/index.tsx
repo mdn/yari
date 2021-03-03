@@ -60,7 +60,7 @@ export function LanguageMenu({
             hitType: "event",
             eventCategory: "Language",
             eventAction: "Change preferred language",
-            eventLabel: `${locale} to ${localeURL}`,
+            eventLabel: `${window.location.pathname} to ${localeURL}`,
           });
 
           navigate(localeURL);
