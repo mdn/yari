@@ -83,6 +83,16 @@ module.exports = {
         page.url + hrefhash
       }"${titleAttribute}${flawAttribute}>${content}</a>`;
     }
+    if (!href.toLowerCase().startsWith("/en-us/")) {
+      // Before flagging this as a broken-link flaw, see if it's possible to
+      // change it to the en-US URL instead.
+      const hrefSplit = href.split("/");
+      hrefSplit[1] = "en-US";
+      const enUSPage = this.info.getPageByURL(hrefSplit.join("/"));
+      console.log("NOT FOUND!!!!", { href, hrefSplit, enUSPage });
+      // console.log(this.info);
+      // throw new Error("STOP!");
+    }
     flaw = this.env.recordNonFatalError(
       "broken-link",
       `${hrefpath} does not exist`
