@@ -112,6 +112,24 @@ unicorns_char_filter = char_filter(
         "&&= => LogicalANDassignment",
         # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR_assignment
         "||= => LogicalORassignment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Exponentiation_assignment
+        "**= => Exponentiationassignment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Multiplication_assignment
+        "*= => Multiplicationassignment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/CSS/--*
+        "--* => CustompropertiesCSSVariables",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Exponentiation
+        "** => 'Exponentiation",
+        # E.g. http://localhost:3000/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality
+        "=== => Strictequality",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_inequality
+        "!== => Strictinequality",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality
+        "== => Equality",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Inequality
+        "!= => Inequality",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Assignment
+        "= => Assignment",
     ],
 )
 
