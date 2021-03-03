@@ -143,6 +143,14 @@ def whatsdeployed(ctx, directory: Path, output: str):
     show_default=True,
     is_flag=True,
 )
+@click.option(
+    "--delete-unrecognized",
+    help="Delete keys that were not uploaded this time (including those that didn't "
+    "need to be uploaded)",
+    default=False,
+    show_default=True,
+    is_flag=True,
+)
 @click.argument("directory", type=click.Path(), callback=validate_directory)
 @click.pass_context
 def upload(ctx, directory: Path, **kwargs):
