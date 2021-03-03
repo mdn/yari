@@ -84,7 +84,7 @@ special_charater_name_char_filter = char_filter(
     # is a "risk" worth accepting because event `*emphasis*` would get converted
     # to `emphasisstar` which is more accurate than letting the standard tokenizer
     # turn it into `emphasis` alone.
-    pattern="([\\w]+)-?\\*",
+    pattern="(\\w+)-?\\*",
     # Now a search for `yield*` becomes a search for `yieldstar` which won't
     # get confused for `yield`.
     # We *could* consider changing the replacement for `$1__starcharacter` which means
