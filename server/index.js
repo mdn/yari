@@ -63,8 +63,6 @@ app.use(originRequestMiddleware);
 
 app.use(staticMiddlewares);
 
-app.use(express.urlencoded({ extended: true }));
-
 app.use(
   "/api/v1",
   // Depending on if FAKE_V1_API is set, we either respond with JSON based
@@ -84,6 +82,11 @@ app.use(
         timeout: 3000,
       })
 );
+
+// It's important that this line comes *after* the setting up for the proxy
+// middleware for `/api/v1` above.
+// See https://github.com/chimurai/http-proxy-middleware/issues/40#issuecomment-163398924
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/_document", documentRouter);
 

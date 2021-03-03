@@ -11,9 +11,9 @@ interface UserSettings {
   locale: string;
 }
 
-interface SendUserSettings {
-  locale?: string;
-}
+// interface SendUserSettings {
+//   locale?: string;
+// }
 
 interface Locale {
   locale: string;
@@ -95,7 +95,18 @@ export default function SettingsApp({ ...appProps }) {
     return <Loading />;
   }
 
-  console.log(settingsData);
+  if (settingsError) {
+    return (
+      <div className="notecard error">
+        <h3>Server error</h3>
+        <p>Unable to get the current user settings from the server.</p>
+        <p>
+          <code>{settingsError.toString()}</code>
+        </p>
+        <a href={window.location.pathname}>Reload this page and try again.</a>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -141,9 +152,18 @@ function NotSignedIn() {
   );
 }
 
-interface ValidationError {
-  error: string;
+interface ValidationErrorMessage {
+  message: string;
+  code: string;
 }
+
+interface ValidationError {
+  [key: string]: ValidationErrorMessage[];
+}
+interface ValidationErrors {
+  errors: ValidationError;
+}
+
 function Settings({
   userSettings,
   settingsData,
@@ -155,56 +175,12 @@ function Settings({
 }) {
   const [locale, setLocale] = React.useState(userSettings.locale);
 
-  // const [send, setSend] = React.useState<SendUserSettings | null>(null);
-
-  // console.log("SEND", send);
-
-  // const { data, error, isValidating } = useSWR<
-  //   UserSettings | null,
-  //   Error | null
-  // >(send ? "/api/v1/settings" : null, async (url) => {
-  //   // const formData = new FormData();
-  //   // if (send) {
-  //   //   Object.entries(send).map(([key, value]) => {
-  //   //     formData.append(key, value);
-  //   //   });
-  //   // } else {
-  //   //   throw new Error("Nothing to send");
-  //   // }
-  //   console.log("Starting XHR");
-
-  //   const response = await fetch(url, {
-  //     method: "POST",
-  //     headers: {
-  //       "X-CSRFToken": userSettings.csrfmiddlewaretoken,
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(send),
-  //   });
-  //   if (!response.ok) {
-  //     throw new Error(`${response.status} on ${response.url}`);
-  //   }
-  //   return (await response.json()) as UserSettings;
-  //   // setSend(null)
-  // });
-  // // async function sendSettings() {
-  // //   const url = '/api/v1/settings'
-  // //   const response =
-  // // }
-  // React.useEffect(() => {
-  //   if (data || error) {
-  //     console.log({ data, error }, "RESETTING!");
-  //     setSend(null);
-  //   }
-  // }, [data, error]);
-  // // console.log({ data, error, isValidating });
-
   const [sent, setSent] = React.useState(false);
   const [sendError, setSendError] = React.useState<Error | null>(null);
   const [
-    validationError,
-    setValidationError,
-  ] = React.useState<ValidationError | null>(null);
+    validationErrors,
+    setValidationErrors,
+  ] = React.useState<ValidationErrors | null>(null);
 
   async function sendSettings() {
     const formData = new URLSearchParams();
@@ -214,16 +190,12 @@ function Settings({
       method: "POST",
       headers: {
         "X-CSRFToken": userSettings.csrfmiddlewaretoken,
-        "Content-Type": "application/json; charset=utf-8",
-        // "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: JSON.stringify({
-        locale,
-      }),
-      // body: formData,
+      body: formData,
     });
     if (response.status === 400) {
-      setValidationError(await response.json());
+      setValidationErrors((await response.json()) as ValidationErrors);
     } else if (!response.ok) {
       setSendError(new Error(`${response.status} on ${response.url}`));
     } else {
@@ -243,8 +215,6 @@ function Settings({
     };
   }, [sent]);
 
-  console.log({ sent, sendError });
-
   return (
     <form
       onSubmit={async (event) => {
@@ -252,6 +222,10 @@ function Settings({
         await sendSettings();
       }}
     >
+      {validationErrors && (
+        <ShowValidationErrors errors={validationErrors.errors} />
+      )}
+
       {sent && !sendError && (
         <div className="notecard success">
           <h4>Settings update sent</h4>
@@ -263,7 +237,7 @@ function Settings({
               setSent(false);
             }}
           >
-            &close;
+            Close
           </button>
         </div>
       )}
@@ -301,9 +275,6 @@ function Settings({
     </form>
   );
 }
-// interface CSRFData {
-//   csrfmiddlewaretoken: string;
-// }
 
 function CloseAccount({ userSettings }: { userSettings: UserSettings }) {
   const navigate = useNavigate();
@@ -311,29 +282,9 @@ function CloseAccount({ userSettings }: { userSettings: UserSettings }) {
   const [confirm, setConfirm] = React.useState(false);
   const [certain, setCertain] = React.useState(false);
 
-  // const { data: csrfData, error: csrfError } = useSWR<
-  //   CSRFData | null,
-  //   Error | null
-  // >(
-  //   confirm ? "/api/v1/csrf" : null,
-  //   async (url: string) => {
-  //     const response = await fetch(url);
-  //     if (!response.ok) {
-  //       throw new Error(`${response.status} on ${response.url}`);
-  //     }
-  //     const data = (await response.json()) as CSRFData;
-  //     return data;
-  //   },
-  //   {
-  //     revalidateOnFocus: false,
-  //   }
-  // );
   const { error: deleteError } = useSWR<null, Error | null>(
     certain ? "/api/v1/settings" : null,
     async (url: string) => {
-      // if (!csrfData) {
-      //   throw new Error("csrf data not available");
-      // }
       const response = await fetch(url, {
         method: "DELETE",
         headers: {
@@ -356,13 +307,6 @@ function CloseAccount({ userSettings }: { userSettings: UserSettings }) {
     <div>
       <h3>Close account</h3>
       <p>Delete your account and all account data.</p>
-
-      {/* {csrfError && (
-        <div className="notecard warning">
-          <h3>Server error</h3>
-          <p>A server error occurred prepareing the close account.</p>
-        </div>
-      )} */}
 
       {deleteError && (
         <div className="notecard error">
@@ -408,6 +352,30 @@ function CloseAccount({ userSettings }: { userSettings: UserSettings }) {
           Close account
         </button>
       )}
+    </div>
+  );
+}
+
+function ShowValidationErrors({ errors }: { errors: ValidationError }) {
+  return (
+    <div className="notecard error">
+      <h4>Validation errors</h4>
+      <ul>
+        {Object.entries(errors).map(([key, messages]) => {
+          return (
+            <li key={key}>
+              <b>
+                <code>{key}</code>
+              </b>
+              <ul>
+                {messages.map((message) => {
+                  return <li key={message.code}>{message.message}</li>;
+                })}
+              </ul>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
