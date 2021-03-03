@@ -313,9 +313,33 @@ program
       const { hostname, port } = options;
       let url;
       // Perhaps they typed in a path relative to the content root
-      if (slug.startsWith("files") && slug.endsWith("index.html")) {
+      if (
+        (slug.startsWith("files") || fs.existsSync(slug)) &&
+        (slug.endsWith("index.html") || slug.endsWith("index.md"))
+      ) {
+        if (
+          fs.existsSync(slug) &&
+          slug.includes("translated-content") &&
+          !CONTENT_TRANSLATED_ROOT
+        ) {
+          // Such an easy mistake to make that you pass it a file path
+          // that comes from the translated-content repo but forgot to
+          // set the environment variable first.
+          console.warn(
+            chalk.yellow(
+              `Did you forget to set the environment variable ${chalk.bold(
+                "CONTENT_TRANSLATED_ROOT"
+              )}?`
+            )
+          );
+        }
+        const slugSplit = slug
+          .replace(CONTENT_ROOT, "")
+          .replace(CONTENT_TRANSLATED_ROOT ? CONTENT_TRANSLATED_ROOT : "", "")
+          .split(path.sep);
         const document = Document.read(
-          slug.split(path.sep).slice(1, -1).join(path.sep)
+          // Remove that leading 'files' and the trailing 'index.(html|md)'
+          slugSplit.slice(1, -1).join(path.sep)
         );
         if (document) {
           url = document.url;
