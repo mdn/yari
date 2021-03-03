@@ -11897,10 +11897,10 @@ mdast-util-to-string@^1.0.0:
   resolved "https://registry.yarnpkg.com/mdast-util-to-string/-/mdast-util-to-string-1.1.0.tgz#27055500103f51637bd07d01da01eb1967a43527"
   integrity sha512-jVU0Nr2B9X3MU4tSK7JP1CMkSvOj7X5l/GboG1tKRw52lLF1x2Ju92Ms9tNetCcbfX3hzlM73zYo2NKkWSfF/A==
 
-mdn-data@2.0.16:
-  version "2.0.16"
-  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.16.tgz#b4f8cf050e4d679cbd185d1daf6370c3f434d731"
-  integrity sha512-z5eL/oKlBXGWk8MRrzk8Ll+owSRCXppDPJ5zBtoHhk4MUEVG5MEkHy5gdzvqpB53LUc+4F9CSVDcdgwKSY1Crg==
+mdn-data@2.0.17:
+  version "2.0.17"
+  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.17.tgz#8618b37fd552270a5c917ab79cf962adea4eb3b6"
+  integrity sha512-3hZJh85oEm88+uWhoutFhoHA/Rjq/Tf8fsPxpYYLYOJei5uofjR23EOVJwA4qYCF2L21PXLN/o67KVAS7LGxLg==
 
 mdn-data@2.0.4:
   version "2.0.4"
