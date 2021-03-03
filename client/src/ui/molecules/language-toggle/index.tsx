@@ -20,6 +20,7 @@ export function LanguageToggle({
         return (
           <Link
             to={translation.url}
+            className="view-in-english"
             onClick={() => {
               ga("send", {
                 hitType: "event",
