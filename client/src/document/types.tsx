@@ -2,6 +2,7 @@ export interface Source {
   folder: string;
   github_url: string;
   last_commit_url: string;
+  filename: string;
 }
 
 export interface GenericFlaw {

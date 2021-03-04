@@ -10,9 +10,10 @@ const { BUILD_OUT_ROOT } = require("../build/constants");
 const router = express();
 
 router.post("/", (req, res) => {
-  const { rawHTML, metadata } = req.body;
-  Document.create(rawHTML, metadata);
-  res.sendStatus(201);
+  // const { rawHTML, metadata } = req.body;
+  // Document.create(rawHTML, metadata);
+  // res.sendStatus(201);
+  throw new Error("Deprecated");
 });
 
 function withDocument(req, res, next) {
@@ -64,16 +65,17 @@ router.get("/", withDocument, (req, res) => {
 });
 
 router.put("/", withDocument, async (req, res) => {
-  const { rawHTML, metadata } = req.body;
-  if (metadata.title && rawHTML) {
-    Document.update(req.document.url, `${rawHTML.trim()}\n`, metadata);
+  const { rawBody, metadata } = req.body;
+  if (metadata.title && rawBody) {
+    Document.update(req.document.url, `${rawBody.trim()}\n`, metadata);
   }
   res.sendStatus(200);
 });
 
 router.put("/move", async (req, res) => {
-  Document.move(req.query.slug, req.query.newSlug, req.query.locale);
-  res.sendStatus(200);
+  // Document.move(req.query.slug, req.query.newSlug, req.query.locale);
+  // res.sendStatus(200);
+  throw new Error("Deprecated. Use the CLI instead.");
 });
 
 router.delete("/", (req, res) => {

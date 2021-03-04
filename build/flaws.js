@@ -479,7 +479,12 @@ function injectHeadingLinksFlaws(level, doc, $, rawContent) {
 async function fixFixableFlaws(doc, options, document) {
   if (!options.fixFlaws || document.isArchive) return;
 
-  let newRawHTML = document.rawHTML;
+  const { rawBody, isMarkdown } = document;
+  if (isMarkdown) {
+    throw new Error("Fixing flaws in Markdown is not implemented yet");
+  }
+  // String copy so we can mutate it
+  let newRawBody = rawBody;
 
   const phrasing = options.fixFlawsDryRun ? "Would fix" : "Fixed";
 
@@ -490,14 +495,14 @@ async function fixFixableFlaws(doc, options, document) {
     if (flaw.fixable) {
       // Sanity check that our understanding of flaws, filepaths, and sources
       // work as expected.
-      if (!newRawHTML.includes(flaw.macroSource)) {
+      if (!newRawBody.includes(flaw.macroSource)) {
         throw new Error(
-          `rawHTML doesn't contain macroSource (${flaw.macroSource})`
+          `rawBody doesn't contain macroSource (${flaw.macroSource})`
         );
       }
       const newMacroSource = flaw.suggestion;
       // Remember, in JavaScript only the first occurrence will be replaced.
-      newRawHTML = newRawHTML.replace(flaw.macroSource, newMacroSource);
+      newRawBody = newRawBody.replace(flaw.macroSource, newMacroSource);
       if (loud) {
         console.log(
           chalk.grey(
@@ -515,11 +520,12 @@ async function fixFixableFlaws(doc, options, document) {
     if (!flaw.suggestion) {
       continue;
     }
+    // XXX MARKDOWN
     // The reason we're not using the parse HTML, as a cheerio object `$`
     // is because the raw HTML we're dealing with isn't actually proper
     // HTML. It's only proper HTML when the kumascript macros have been
     // expanded.
-    newRawHTML = replaceMatchesInText(flaw.href, newRawHTML, flaw.suggestion, {
+    newRawBody = replaceMatchesInText(flaw.href, newRawBody, flaw.suggestion, {
       inAttribute: "href",
     });
     if (loud) {
@@ -539,13 +545,13 @@ async function fixFixableFlaws(doc, options, document) {
       continue;
     }
 
-    if (!newRawHTML.includes(flaw.html)) {
-      throw new Error(`rawHTML doesn't contain flaw HTML (${flaw.html})`);
+    if (!newRawBody.includes(flaw.html)) {
+      throw new Error(`rawBody doesn't contain flaw HTML (${flaw.html})`);
     }
     // It's not feasible to pin point exactly which `<pre>` tag this
     // refers to, so do the same query we use when we find the
     // flaw, but this time actually make the mutation.
-    newRawHTML = newRawHTML.replace(flaw.html, flaw.suggestion);
+    newRawBody = newRawBody.replace(flaw.html, flaw.suggestion);
     if (loud) {
       console.log(chalk.grey(`${phrasing} (${flaw.id}) bad_pre_tags`));
     }
@@ -671,7 +677,7 @@ async function fixFixableFlaws(doc, options, document) {
     } else {
       newSrc = flaw.suggestion;
     }
-    newRawHTML = replaceMatchesInText(flaw.src, newRawHTML, newSrc, {
+    newRawBody = replaceMatchesInText(flaw.src, newRawBody, newSrc, {
       inAttribute: "src",
     });
     if (loud) {
@@ -690,7 +696,7 @@ async function fixFixableFlaws(doc, options, document) {
     if (!flaw.fixable) {
       continue;
     }
-    newRawHTML = replaceMatchesInText(flaw.style, newRawHTML, flaw.suggestion, {
+    newRawBody = replaceMatchesInText(flaw.style, newRawBody, flaw.suggestion, {
       inAttribute: "style",
       removeEntireAttribute: flaw.suggestion === "",
     });
@@ -712,7 +718,7 @@ async function fixFixableFlaws(doc, options, document) {
   }
 
   // Finally, summarized what happened...
-  if (newRawHTML !== document.rawHTML) {
+  if (newRawBody !== rawBody) {
     // It changed the raw HTML of the source. So deal with this.
     if (options.fixFlawsDryRun && options.fixFlawsVerbose) {
       console.log(
@@ -721,7 +727,7 @@ async function fixFixableFlaws(doc, options, document) {
         )
       );
     } else {
-      Document.update(document.url, newRawHTML, document.metadata);
+      Document.update(document.url, newRawBody, document.metadata, isMarkdown);
       if (options.fixFlawsVerbose) {
         console.log(
           chalk.green(
