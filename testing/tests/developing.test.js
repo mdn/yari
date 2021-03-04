@@ -30,9 +30,11 @@ const withDeveloping = JSON.parse(process.env.TESTING_DEVELOPING || "false")
 
 describe("Testing the kitchensink page", () => {
   withDeveloping("open the page", async () => {
-    await page.goto(devURL("/en-US/docs/MDN/Kitchensink"));
-    await expect(page).toMatch("The MDN Content Kitchensink");
-    await expect(page).toMatch("No known flaws at the moment");
+    if (SERVER_BASE_URL !== DEV_BASE_URL) {
+      await page.goto(devURL("/en-US/docs/MDN/Kitchensink"));
+      await expect(page).toMatch("The MDN Content Kitchensink");
+      await expect(page).toMatch("No known flaws at the moment");
+    }
   });
 
   withDeveloping("server-side render HTML", async () => {

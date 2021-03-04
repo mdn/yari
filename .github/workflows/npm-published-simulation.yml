@@ -94,6 +94,8 @@ jobs:
           PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
           # When running Yari from within mdn/content it uses port 5000
           # unlike the default which is 3000.
+          # Setting it to be the same as DEVELOPING_SERVER_BASE_URL will
+          # cause the dev server not to be tested.
           DEVELOPING_DEV_BASE_URL: http://localhost:5000
         run: |
           status=0
