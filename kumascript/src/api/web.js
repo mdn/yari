@@ -89,9 +89,20 @@ module.exports = {
       const hrefSplit = href.split("/");
       hrefSplit[1] = "en-US";
       const enUSPage = this.info.getPageByURL(hrefSplit.join("/"));
-      console.log("NOT FOUND!!!!", { href, hrefSplit, enUSPage });
-      // console.log(this.info);
-      // throw new Error("STOP!");
+      if (enUSPage.url) {
+        // But it's still a flaw. Record it so that translators can write a
+        // translated document to "fill the hole".
+        flaw = this.env.recordNonFatalError(
+          "broken-link",
+          `${hrefpath} does not exist but fallbacked on ${enUSPage.url}`
+        );
+        flawAttribute = ` data-flaw-src="${util.htmlEscape(flaw.macroSource)}"`;
+        return (
+          '<a class="page-only-in-english" ' +
+          'title="Page currently only available in English" ' +
+          `href="${enUSPage.url}"${flawAttribute}>${content} <small>(en-US)</small></a>`
+        );
+      }
     }
     flaw = this.env.recordNonFatalError(
       "broken-link",
