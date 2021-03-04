@@ -86,7 +86,7 @@
     "@babel/core": "^7.13.8",
     "@mdn/dinocons": "^0.3.0",
     "@mdn/minimalist": "^0.7.3",
-    "@storybook/addon-a11y": "^6.1.20",
+    "@storybook/addon-a11y": "^6.1.21",
     "@storybook/addon-actions": "^6.1.21",
     "@storybook/addon-essentials": "^6.1.20",
     "@storybook/addon-links": "^6.1.21",
