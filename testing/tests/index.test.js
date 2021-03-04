@@ -1227,3 +1227,18 @@ test("'lang' attribute should match the article", () => {
   expect($("html").attr("lang")).toBe("en-US");
   expect($("article").attr("lang")).toBe("en-US");
 });
+
+test("basic markdown rendering", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "docs", "markdown");
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("article h2[id]").length).toBe(1);
+  expect($("article h3[id]").length).toBe(1);
+  expect($("article code").length).toBe(2);
+  expect($("article strong").length).toBe(1);
+  expect($("article em").length).toBe(1);
+  expect($("article ul li").length).toBe(3);
+  expect($('article a[href^="/"]').length).toBe(1);
+  expect($('article a[href^="#"]').length).toBe(2);
+});

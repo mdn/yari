@@ -1,0 +1,23 @@
+---
+title: Markdown files
+slug: Markdown
+tags:
+  - Landing
+  - Markdown
+---
+
+`Markdown` is a nicer format than `HTML`.
+
+## Heading 2
+
+Basic formatting such as **bold** and _emphasis_ and ~~strikethrough~~.
+
+### Heading 3
+
+A bullet point list:
+
+- One
+- Two
+- Three
+
+This paragraph as a [link](/en-US/docs/Web).
