@@ -28,8 +28,7 @@ body {
 .docs {
   .document-page {
     .page-header,
-    .titlebar-container,
-    .breadcrumb-container,
+    .breadcrumbs-container,
     .locale-container,
     .main-content,
     .document-toc-container,
@@ -42,12 +41,11 @@ body {
       background-color: #fabba7;
     }
 
-    .titlebar-container,
     .main-content {
       background-color: #d2e4b7;
     }
 
-    .breadcrumb-container {
+    .breadcrumbs-container {
       background-color: #a7dddb;
     }
 

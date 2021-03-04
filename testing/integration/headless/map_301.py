@@ -552,7 +552,9 @@ LEGACY_URLS = list(
             url_test("/patches", status_code=404),
             url_test("/patches/foo", status_code=404),
             url_test("/web-tech", status_code=404),
-            url_test("/web-tech/feed/atom/", status_code=404),
+            url_test(
+                "/web-tech/feed/atom/", follow_redirects=True, final_status_code=404
+            ),
             url_test("/css/wiki.css", follow_redirects=True, final_status_code=404),
             url_test("/css/base.css", follow_redirects=True, final_status_code=404),
             url_test("/contests", "http://www.mozillalabs.com/", status_code=302),
@@ -1033,4 +1035,24 @@ MISC_REDIRECT_URLS = [
     url_test("/en-US/XMLHttpRequest", "/en-US/docs/XMLHttpRequest"),
     url_test("/en-US/XMLHttpRequest/", "/en-US/docs/XMLHttpRequest"),
     url_test("/en-US/XMLHttpRequest/FormData/", "/en-US/docs/XMLHttpRequest/FormData"),
+    # Add trailing slash for the home page.
+    url_test("/en-US", "/en-US/"),
+    # Some special cases for "/docs".
+    url_test("/docs", "/docs/Web"),
+    url_test("/docs/", "/docs/Web"),
+    url_test("/en-us/docs", "/en-us/docs/Web"),
+    url_test("/en-us/docs/", "/en-us/docs/Web"),
+    # Locale and trailing-slash correction redirect tests.
+    url_test("/EN-us", "/en-US/", status_code=302),
+    url_test("/EN-us?next=FOO", "/en-US/?next=FOO", status_code=302),
+    url_test("/EN-US/", "/en-US/", status_code=302),
+    url_test("/EN-US/?next=FOO", "/en-US/?next=FOO", status_code=302),
+    url_test("/eN-us/docs/Web", "/en-US/docs/Web", status_code=302),
+    url_test("/eN-us/docs/Web/", "/en-US/docs/Web", status_code=302),
+    url_test("/eN-us/docs/Web?next=FOO", "/en-US/docs/Web?next=FOO", status_code=302),
+    url_test("/eN-us/docs/Web/?next=FOO", "/en-US/docs/Web?next=FOO", status_code=302),
+    url_test("/en-uS/search", "/en-US/search", status_code=302),
+    url_test("/en-uS/search/", "/en-US/search", status_code=302),
+    url_test("/en-Us/search?q=video", "/en-US/search?q=video", status_code=302),
+    url_test("/en-Us/search/?q=video", "/en-US/search?q=video", status_code=302),
 ]

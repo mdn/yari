@@ -20,7 +20,7 @@ var l10n = {
         "ru"   : "Узнать о чём-то..."
     }),
     
-    src: await (async function () {
+    src: (async function () {
         var s = '/en-US/docs/Glossary';
         
         if (env.locale === 'en-US') { return s; }
@@ -41,7 +41,7 @@ var l10n = {
 // ENV
 // ----------------------------------------------------------------------------
 var title   = ($0 && $0.title) || l10n.title;
-var sources = ($0 && $0.source && (Array.isArray($0.source) ? $0.source : [$0.source])) || [l10n.src];
+var sources = ($0 && $0.source && (Array.isArray($0.source) ? $0.source : [$0.source])) || [await l10n.src];
 var tags    = ($0 && $0.tags   && (Array.isArray($0.tags)   ? $0.tags   : [$0.tags]  )) || [];
 var articles= [];
 

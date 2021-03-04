@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useContext, useEffect, useState } from "react";
+import useSWR from "swr";
 
 import { DISABLE_AUTH } from "./constants";
 
@@ -14,7 +14,6 @@ export type UserData = {
   isSubscriber: boolean;
   subscriberNumber: number | null | undefined;
   email: string | null | undefined;
-  wikiContributions: number | null | undefined;
   waffle: {
     flags: {
       [flag_name: string]: boolean;
@@ -38,7 +37,6 @@ const defaultUserData: UserData = {
   isSubscriber: false,
   subscriberNumber: null,
   email: null,
-  wikiContributions: 0,
   waffle: {
     flags: {},
     switches: {},
@@ -46,56 +44,42 @@ const defaultUserData: UserData = {
   },
 };
 
-const UserDataContext = React.createContext<UserData | null>(defaultUserData);
+const UserDataContext = React.createContext<UserData | null>(null);
 
 export function UserDataProvider(props: { children: React.ReactNode }) {
-  const [userData, setUserData] = useState<UserData | null>(null);
-
-  useEffect(() => {
-    if (DISABLE_AUTH) {
-      // Remember, the presence of the "Sign in" link depends on the resolution
-      // of the /api/v1/whoami XHR fetch.
-      // So exiting here will imply that it doesn't even show the sign in link.
-      return;
+  const { data } = useSWR<UserData | null, Error | null>(
+    DISABLE_AUTH ? null : "/api/v1/whoami",
+    async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`${response.status} on ${response.url}`);
+      }
+      const data = await response.json();
+      return {
+        username: data.username || null,
+        isAuthenticated: data.is_authenticated || false,
+        isBetaTester: data.is_beta_tester || false,
+        isStaff: data.is_staff || false,
+        isSuperuser: data.is_super_user || false,
+        avatarUrl: data.avatar_url || null,
+        isSubscriber: data.is_subscriber || false,
+        subscriberNumber: data.subscriber_number || null,
+        email: data.email || null,
+        // NOTE: if we ever decide that waffle data should
+        // be re-fetched on client-side navigation, we'll
+        // have to create a separate context for it.
+        waffle: data.waffle,
+      };
     }
-
-    fetch("/api/v1/whoami")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`${response.status} on ${response.url}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setUserData({
-          username: data.username || null,
-          isAuthenticated: data.is_authenticated || false,
-          isBetaTester: data.is_beta_tester || false,
-          isStaff: data.is_staff || false,
-          isSuperuser: data.is_super_user || false,
-          avatarUrl: data.avatar_url || null,
-          isSubscriber: data.is_subscriber || false,
-          subscriberNumber: data.subscriber_number || null,
-          email: data.email || null,
-          wikiContributions: data.wiki_contributions || 0,
-          // NOTE: if we ever decide that waffle data should
-          // be re-fetched on client-side navigation, we'll
-          // have to create a separate context for it.
-          waffle: data.waffle,
-        });
-      })
-      .catch((error) => {
-        console.error("error while fetching user data", error);
-      });
-  }, []);
+  );
 
   return (
-    <UserDataContext.Provider value={userData}>
+    <UserDataContext.Provider value={data ? data : defaultUserData}>
       {props.children}
     </UserDataContext.Provider>
   );
 }
 
 export function useUserData() {
-  return useContext(UserDataContext);
+  return React.useContext(UserDataContext);
 }

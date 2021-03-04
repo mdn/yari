@@ -29,8 +29,9 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement("h1", {
       text: "<foo>: Une page de test",
     });
-    await expect(page).toSelect('select[name="language"]', "English (US)");
-    await expect(page).toClick("button", { text: "Change language" });
+    await expect(page).toClick("a.view-in-english", {
+      text: "View in English",
+    });
     await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
     // Should have been redirected too...
     // Note! It's important that this happens *after* the `.toMatchElement`
@@ -184,7 +185,7 @@ describe("Basic viewing of functional pages", () => {
     // For more information, see
     // https://github.com/puppeteer/puppeteer/issues/2977#issuecomment-412807613
     await page.evaluate(() => {
-      document.querySelector(".breadcrumbs a").click();
+      document.querySelector(".breadcrumbs-container a").click();
     });
     await expect(page).toMatchElement("h1", {
       text: "Web technology for developers",
@@ -237,5 +238,20 @@ describe("Basic viewing of functional pages", () => {
     // One home page for every built locale
     await page.goto(testURL("/fr/"));
     await expect(page).toMatch("Resources for developers, by developers.");
+  });
+
+  it("should be able to switch from French to English, set a cookie, and back again", async () => {
+    await page.goto(testURL("/fr/docs/Web/Foo"));
+    await expect(page).toMatch("<foo>: Une page de test");
+    await expect(page).toSelect('select[name="language"]', "English (US)");
+    await expect(page).toClick("button", { text: "Change language" });
+    await expect(page).toMatch("<foo>: A test tag");
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
+
+    // And change back to French
+    await expect(page).toSelect('select[name="language"]', "Français");
+    await expect(page).toClick("button", { text: "Change language" });
+    await expect(page).toMatch("<foo>: Une page de test");
+    expect(page.url()).toBe(testURL("/fr/docs/Web/Foo"));
   });
 });
