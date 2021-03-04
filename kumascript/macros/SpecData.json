@@ -1504,6 +1504,11 @@
     "url": "https://www.khronos.org/registry/typedarray/specs/latest/",
     "status": "Obsolete"
   },
+  "Trusted Types": {
+    "name": "Trusted Types",
+    "url": "https://w3c.github.io/webappsec-trusted-types/dist/spec/",
+    "status": "ED"
+  },
   "UI Events": {
     "name": "UI Events",
     "url": "https://w3c.github.io/uievents/",
