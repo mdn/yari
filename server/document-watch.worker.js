@@ -47,9 +47,8 @@ let count = 0;
 for (const filePath of walker(SEARCH_ROOT)) {
   const basename = path.basename(filePath);
   if (basename === "index.html" || basename === "index.md") {
-    // TEMP
-    // postDocumentInfo(filePath, "added");
-    // count++;
+    postDocumentInfo(filePath, "added");
+    count++;
   }
 }
 postEvent("ready");
