@@ -11,10 +11,6 @@ interface UserSettings {
   locale: string;
 }
 
-// interface SendUserSettings {
-//   locale?: string;
-// }
-
 interface Locale {
   locale: string;
   native: string;
@@ -253,8 +249,10 @@ function Settings({
       )}
 
       <div>
-        <label htmlFor="preferredlocale">Language</label>
+        <label htmlFor="id_locale">Language</label>
         <select
+          id="id_locale"
+          name="locale"
           value={locale}
           onChange={(event) => {
             setLocale(event.target.value);
