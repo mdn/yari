@@ -308,7 +308,7 @@ function checkImageWidths(doc, $, options, { rawContent }) {
 
       if (!imgSrc) {
         console.warn(
-          `In ${doc.url} there's an img tag without src (${$.html(img)})`
+          `In ${doc.mdn_url} there's an img tag without src (${$.html(img)})`
         );
         return;
       }
