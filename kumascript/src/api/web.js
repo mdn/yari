@@ -21,7 +21,14 @@ module.exports = {
     return out.join("");
   },
 
-  smartLink(href, title, content, subpath, basepath) {
+  smartLink(
+    href,
+    title,
+    content,
+    subpath,
+    basepath,
+    disableFlawChecks = false
+  ) {
     let flaw;
     let flawAttribute = "";
     const page = this.info.getPageByURL(href);
@@ -83,11 +90,15 @@ module.exports = {
         page.url + hrefhash
       }"${titleAttribute}${flawAttribute}>${content}</a>`;
     }
-    flaw = this.env.recordNonFatalError(
-      "broken-link",
-      `${hrefpath} does not exist`
-    );
-    flawAttribute = ` data-flaw-src="${util.htmlEscape(flaw.macroSource)}"`;
+    if (disableFlawChecks) {
+      flawAttribute = "";
+    } else {
+      flaw = this.env.recordNonFatalError(
+        "broken-link",
+        `${hrefpath} does not exist`
+      );
+      flawAttribute = ` data-flaw-src="${util.htmlEscape(flaw.macroSource)}"`;
+    }
     // Let's get a potentially localized title for when the document is missing.
     const titleWhenMissing = this.mdn.getLocalString(
       L10N_COMMON_STRINGS,
