@@ -37,6 +37,7 @@
   @media #{$mq-tablet-and-up} {
     display: flex;
     flex-flow: column;
+    padding-bottom: ($base-spacing / 2);
   }
 
   @media #{$mq-large-desktop-and-up} {

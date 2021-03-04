@@ -502,14 +502,6 @@ async function buildDocument(document, documentOptions = {}) {
   return { doc, liveSamples, fileAttachments, bcdData };
 }
 
-async function buildDocumentFromURL(url, documentOptions = {}) {
-  const document = Document.findByURL(url);
-  if (!document) {
-    return null;
-  }
-  return await buildDocument(document, documentOptions);
-}
-
 async function buildLiveSamplePageFromURL(url) {
   const [documentURL, sampleID] = url.split("/_samples_/");
   const document = Document.findByURL(documentURL);
@@ -558,7 +550,6 @@ module.exports = {
 
   buildDocument,
 
-  buildDocumentFromURL,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 

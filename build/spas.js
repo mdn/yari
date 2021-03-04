@@ -12,13 +12,16 @@ const { getFeedEntries } = require("./feedparser");
 const { renderHTML } = require("../ssr/dist/main");
 
 async function buildSPAs(options) {
+  let buildCount = 0;
+
   // The URL isn't very important as long as it triggers the right route in the <App/>
   const url = "/en-US/404.html";
   const html = renderHTML(url, { pageNotFound: true });
   const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_spas");
   fs.mkdirSync(outPath, { recursive: true });
   fs.writeFileSync(path.join(outPath, path.basename(url)), html);
-  if (!options.quiet) {
+  buildCount++;
+  if (options.verbose) {
     console.log("Wrote", path.join(outPath, path.basename(url)));
   }
 
@@ -38,7 +41,8 @@ async function buildSPAs(options) {
       fs.mkdirSync(outPath, { recursive: true });
       const filePath = path.join(outPath, "index.html");
       fs.writeFileSync(filePath, html);
-      if (!options.quiet) {
+      buildCount++;
+      if (options.verbose) {
         console.log("Wrote", filePath);
       }
     }
@@ -76,17 +80,22 @@ async function buildSPAs(options) {
       fs.mkdirSync(outPath, { recursive: true });
       const filePath = path.join(outPath, "index.html");
       fs.writeFileSync(filePath, html);
-      if (!options.quiet) {
+      buildCount++;
+      if (options.verbose) {
         console.log("Wrote", filePath);
       }
       // Also, dump the feed entries as a JSON file so the data can be gotten
       // in client-side rendering.
       const filePathContext = path.join(outPath, "index.json");
       fs.writeFileSync(filePathContext, JSON.stringify(context));
-      if (!options.quiet) {
+      buildCount++;
+      if (options.verbose) {
         console.log("Wrote", filePathContext);
       }
     }
+  }
+  if (!options.quiet) {
+    console.log(`Built ${buildCount} SPA related files`);
   }
 }
 

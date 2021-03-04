@@ -4,8 +4,16 @@
 
 .document-toc {
   font-size: $default-font-size;
-  padding: ($base-spacing / 2) $base-spacing;
+  padding: ($base-spacing / 4) $base-spacing;
   position: relative;
+
+  @media #{$mq-tablet-and-up} {
+    padding: 0 $base-spacing;
+  }
+
+  @media #{$mq-small-desktop-and-up} {
+    margin-top: $base-spacing;
+  }
 
   h2 {
     display: none;
@@ -18,10 +26,9 @@
 
   .toc-trigger-mobile {
     border: 0;
-    border-bottom: 2px solid $primary-50;
     color: $link-color;
     font-weight: normal;
-    padding: ($base-spacing / 2);
+    padding: ($base-spacing / 2) 0;
     text-align: left;
     width: 100%;
 

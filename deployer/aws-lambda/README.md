@@ -54,3 +54,48 @@ yarn make-package
 
 and if the deployment package is different from what is already in AWS,
 it will upload and publish a new version.
+
+## Debugging the `content-origin-request` handler
+
+You can simulate what Lambda@Edge does, but on your laptop.
+To start it, run:
+
+```sh
+cd aws-lambda
+cd content-origin-request
+yarn install
+yarn serve
+```
+
+This will start a server at <http://localhost:7000>. It's meant to work much
+the same as when our Lambda@Edge function is run within AWS. To test it, try:
+
+```sh
+curl -I http://localhost:7000/EN-us/docs/Foo/
+```
+
+It doesn't actually look things up on disk like CloudFront + Lambda@Edge can do.
+But it's a great tool for end-to-end testing our redirect rules.
+
+### An important caveat about `@yari-internals`
+
+The `yarn serve` server will automatically restart itself if a change is
+made to the `index.js` or the `server.js` code.
+But, if you make an edit to any of the `/libs/**/index.js` files (they're called
+`@yari-internal/...` from within the code), then the only way to get them
+to become the latest version is to run:
+
+```sh
+yarn install --force
+```
+
+This is necessary because they're not versioned.
+
+### Headers
+
+All the headers that the Express server receives it replicates. This means you can
+test things like this:
+
+```sh
+curl -I -H 'accept-language: fr' -H 'cookie: preferredlocale=de' http://localhost:7000/docs/Web
+```
