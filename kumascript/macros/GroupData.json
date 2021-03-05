@@ -1657,7 +1657,7 @@
         "HTMLTemplateElement",
         "ShadowRoot",
         "DocumentOrShadowRoot",
-        "Slotable"
+        "Slottable"
       ],
       "methods": [
         "Document.createElement()",
