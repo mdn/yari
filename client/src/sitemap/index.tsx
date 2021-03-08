@@ -300,11 +300,8 @@ function ShowTree({
                 <code>{doc.url.replace(`/${locale}/docs`, "")}</code>
               </Link>{" "}
               {childCounts.get(doc.url) && (
-                <small>({childCounts.get(doc.url)})</small>
+                <small>({childCounts.get(doc.url)?.toLocaleString()})</small>
               )}
-              {/* <Link to={doc.url} title={`Go to: ${doc.title}`}>
-                Go to this doc
-              </Link> */}
             </li>
           );
         })}
