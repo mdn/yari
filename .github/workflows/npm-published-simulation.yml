@@ -58,17 +58,14 @@ jobs:
         run: |
           yarn prepare-build
 
-      - name: Build tarball
+      - name: Build and install tarball
         run: |
           npm pack
           TARBALL=`ls mdn-yari-*.tgz`
           echo $TARBALL
           ls -lh $TARBALL
           mv $TARBALL mdn/content/
-
-      - name: Install tarball
-        working-directory: mdn/content
-        run: |
+          cd mdn/content
           yarn add file:$TARBALL
 
       - name: Start Yari from mock content repo
