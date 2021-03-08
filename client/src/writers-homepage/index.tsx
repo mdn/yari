@@ -82,6 +82,9 @@ export default function WritersHomepage() {
         <h3>Tools</h3>
         <ul>
           <li>
+            <Link to="/en-US/_sitemap">Sitemap</Link>
+          </li>
+          <li>
             <Link to="/en-US/_flaws">Flaws Dashboard</Link>
           </li>
         </ul>

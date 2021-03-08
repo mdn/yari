@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import useSWR from "swr";
 import { useLocale } from "../hooks";
 import { PageContentContainer } from "../ui/atoms/page-content";
@@ -13,12 +13,17 @@ interface SearchIndexDoc {
 
 export default function Sitemap() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const locale = useLocale();
   // `pathname` is going to be something like `/en-US/_sitemap/Web/Foo`.
   // Transform that to be just `en-us/docs/web/foo`.
   const searchPathname = pathname
     .replace(`/${locale}/_sitemap`, `/${locale}/docs`)
     .toLowerCase();
+
+  React.useEffect(() => {
+    document.title = "Sitemap";
+  }, []);
 
   const { data, error } = useSWR<SearchIndexDoc[] | null, Error | null>(
     `/${locale}/search-index.json`,
@@ -71,19 +76,43 @@ export default function Sitemap() {
     }
   }, [searchPathname, docs]);
 
+  const [searchFilter, setSearchFilter] = React.useState("");
+  React.useEffect(() => {
+    setSearchFilter("");
+  }, [pathname]);
+  const [searchSubmitted, setSearchSubmitted] = React.useState(false);
+
   const [filtered, setFiltered] = React.useState<SearchIndexDoc[] | null>(null);
   React.useEffect(() => {
     if (docs) {
       const depth = searchPathname.split("/").length;
       const newFiltered = docs.filter((doc) => {
-        return (
+        if (
           doc.url.toLowerCase().startsWith(searchPathname) &&
           depth + 1 === doc.url.split("/").length
-        );
+        ) {
+          const baseName = doc.url.split("/").slice(-1)[0].toLowerCase();
+          if (!baseName.startsWith(searchFilter.toLowerCase())) {
+            return false;
+          }
+          return true;
+        }
+        return false;
       });
       setFiltered(newFiltered);
     }
-  }, [searchPathname, docs]);
+  }, [searchPathname, docs, searchFilter]);
+
+  React.useEffect(() => {
+    if (searchSubmitted) {
+      if (filtered && filtered.length >= 1) {
+        const slug = filtered[0].url.split("/").slice(3);
+        setSearchFilter("");
+        setSearchSubmitted(false);
+        navigate(`/${locale}/_sitemap/${slug.join("/")}`);
+      }
+    }
+  }, [locale, filtered, searchSubmitted, navigate]);
 
   return (
     <PageContentContainer>
@@ -109,12 +138,105 @@ export default function Sitemap() {
             </b>
           )}
         </p>
+        {filtered && (
+          <FilterForm
+            searchFilter={searchFilter}
+            onUpdate={(text: string, submitted: boolean) => {
+              setSearchFilter(text);
+              setSearchSubmitted(submitted);
+            }}
+            onGoUp={() => {
+              // Navigate to the parent! ...if possible
+              const split = pathname.split("/");
+              if (split.length >= 4) {
+                const parentPathname = split.slice(0, -1);
+                navigate(parentPathname.join("/"));
+              }
+            }}
+          />
+        )}
         {filtered && <ShowTree filtered={filtered} childCounts={childCounts} />}
-        <p>
+        <p className="footer-note">
           Note, this sitemap only shows documents. Not any other applications.
         </p>
       </div>
     </PageContentContainer>
+  );
+}
+
+function FilterForm({
+  searchFilter,
+  onUpdate,
+  onGoUp,
+}: {
+  searchFilter: string;
+  onUpdate: (text: string, submitted: boolean) => void;
+  onGoUp: () => void;
+}) {
+  const [countBackspaces, setCountBackspaces] = React.useState(0);
+  React.useEffect(() => {
+    if (countBackspaces >= 2) {
+      onGoUp();
+    }
+  }, [countBackspaces]);
+  const inputRef = React.useRef<null | HTMLInputElement>(null);
+  function focusSearch(event: KeyboardEvent) {
+    if (inputRef.current && event.target) {
+      const target = event.target as HTMLElement;
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") {
+        if (event.key === "Backspace" && event.target === inputRef.current) {
+          setCountBackspaces((s) => s + 1);
+        } else {
+          setCountBackspaces(0);
+        }
+
+        if (event.key === "Escape") {
+          inputRef.current.blur();
+        }
+      } else {
+        if (event.key === "T" || event.key === "t") {
+          inputRef.current.focus();
+          const tipElement = document.querySelector(
+            ".filter-form .keyboard-tip"
+          );
+          if (tipElement) {
+            tipElement.parentNode?.removeChild(tipElement);
+          }
+          setCountBackspaces(0);
+        }
+      }
+    }
+  }
+  React.useEffect(() => {
+    window.document.addEventListener("keyup", focusSearch);
+    return () => {
+      window.document.removeEventListener("keyup", focusSearch);
+    };
+  }, []);
+  const { pathname } = useLocation();
+  const prefixPathname = pathname.replace(`/_sitemap`, "/docs");
+
+  return (
+    <form
+      className="filter-form"
+      onSubmit={(event) => {
+        event.preventDefault();
+        onUpdate(searchFilter.trim(), true);
+      }}
+    >
+      <code>{prefixPathname}</code>/
+      <input
+        type="search"
+        ref={inputRef}
+        value={searchFilter}
+        onChange={(event) => {
+          onUpdate(event.target.value, false);
+        }}
+      />{" "}
+      <small className="keyboard-tip">
+        Tip! press <kbd>t</kbd> on your keyboard to focus on search filter
+      </small>
+    </form>
   );
 }
 
