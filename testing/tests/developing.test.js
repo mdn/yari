@@ -6,13 +6,20 @@ const { setDefaultOptions } = require("expect-puppeteer");
 // and then the server building of the page can be pretty heavy.
 setDefaultOptions({ timeout: 5000 });
 
+const DEV_BASE_URL =
+  process.env.DEVELOPING_DEV_BASE_URL || "http://localhost:3000";
+
 function devURL(pathname = "/") {
-  return `http://localhost:3000${pathname}`;
+  return `${DEV_BASE_URL}${pathname}`;
 }
 
+const SERVER_BASE_URL =
+  process.env.DEVELOPING_SERVER_BASE_URL || "http://localhost:5000";
 function serverURL(pathname = "/") {
-  return `http://localhost:5000${pathname}`;
+  return `${SERVER_BASE_URL}${pathname}`;
 }
+
+const SKIP_DEV_URL = JSON.parse(process.env.DEVELOPING_SKIP_DEV_URL || "false");
 
 // This "trick" is to force every test to be skipped if the environment
 // variable hasn't been set. This way, when you run `jest ...`, and it finds
@@ -25,9 +32,17 @@ const withDeveloping = JSON.parse(process.env.TESTING_DEVELOPING || "false")
 
 describe("Testing the kitchensink page", () => {
   withDeveloping("open the page", async () => {
-    await page.goto(devURL("/en-US/docs/MDN/Kitchensink"));
-    await expect(page).toMatch("The MDN Content Kitchensink");
-    await expect(page).toMatch("No known flaws at the moment");
+    // If the test suite runs in a way that there's no separate dev server,
+    // don't bother using the `DEV_BASE_URL`.
+    // For example, when it tests the `npm pack` tarball, it's starting only
+    // the one server (on `localhost:5000`) that suite will set the `DEV_BASE_URL`
+    // to be the same as `SAME_BASE_URL`.
+    // In conclusion, if there's only 1 base URL to test again; don't test both.
+    if (!SKIP_DEV_URL) {
+      await page.goto(devURL("/en-US/docs/MDN/Kitchensink"));
+      await expect(page).toMatch("The MDN Content Kitchensink");
+      await expect(page).toMatch("No known flaws at the moment");
+    }
   });
 
   withDeveloping("server-side render HTML", async () => {
