@@ -19,6 +19,8 @@ function serverURL(pathname = "/") {
   return `${SERVER_BASE_URL}${pathname}`;
 }
 
+const SKIP_DEV_URL = JSON.parse(process.env.DEVELOPING_SKIP_DEV_URL || "false");
+
 // This "trick" is to force every test to be skipped if the environment
 // variable hasn't been set. This way, when you run `jest ...`, and it finds
 // all `**/*.test.js` it doesn't actually run these tests unless explicitly
@@ -36,7 +38,7 @@ describe("Testing the kitchensink page", () => {
     // the one server (on `localhost:5000`) that suite will set the `DEV_BASE_URL`
     // to be the same as `SAME_BASE_URL`.
     // In conclusion, if there's only 1 base URL to test again; don't test both.
-    if (SERVER_BASE_URL !== DEV_BASE_URL) {
+    if (!SKIP_DEV_URL) {
       await page.goto(devURL("/en-US/docs/MDN/Kitchensink"));
       await expect(page).toMatch("The MDN Content Kitchensink");
       await expect(page).toMatch("No known flaws at the moment");

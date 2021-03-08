@@ -89,11 +89,11 @@ jobs:
           # Use local chrome installs since we skip downloading it as part
           # of the yarn installs above
           PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
-          # When running Yari from within mdn/content it uses port 5000
-          # unlike the default which is 3000.
-          # Setting it to be the same as DEVELOPING_SERVER_BASE_URL will
-          # cause the dev server not to be tested.
-          DEVELOPING_DEV_BASE_URL: http://localhost:5000
+          # When running Yari from within mdn/content it only starts 1 server;
+          # the one on localhost:5000. No React dev server; the one
+          # on localhost:3000.
+          # Testing that dev server is not relevant or important in this context.
+          DEVELOPING_SKIP_DEV_URL: true
         run: |
           yarn test:testing developing
 
