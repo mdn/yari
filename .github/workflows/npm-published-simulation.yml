@@ -15,6 +15,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: actions/checkout@v2
+        with:
+          repository: mdn/content
+          path: mdn/content
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.5
         with:
@@ -42,11 +47,6 @@ jobs:
           # Source https://github.com/expo/expo-github-action/issues/20#issuecomment-541676895
           echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
-      - uses: actions/checkout@v2
-        with:
-          repository: mdn/content
-          path: mdn/content
-
       - name: Prepare to build
         env:
           # The following env vars is what we do in npm-publish.yml
@@ -58,14 +58,17 @@ jobs:
         run: |
           yarn prepare-build
 
-      - name: Build and install tarball
+      - name: Build tarball
         run: |
           npm pack
           TARBALL=`ls mdn-yari-*.tgz`
           echo $TARBALL
           ls -lh $TARBALL
           mv $TARBALL mdn/content/
-          cd mdn/content
+
+      - name: Install tarball
+        working-directory: mdn/content
+        run: |
           yarn add file:$TARBALL
 
       - name: Start Yari from mock content repo
@@ -75,9 +78,6 @@ jobs:
 
       - name: View some URLs on localhost:5000
         run: |
-          # give it a chance to start
-          sleep 3
-
           curl --retry-connrefused --retry 5 -I http://localhost:5000
 
           # Basically, test if it 200 OKs. If not, this'll exit non-zero.
@@ -98,18 +98,16 @@ jobs:
           # cause the dev server not to be tested.
           DEVELOPING_DEV_BASE_URL: http://localhost:5000
         run: |
-          status=0
-          yarn test:testing developing || (
-            status=$?
-            echo "Testing failed! Going to dump stdout and stderr"
-            echo "STDOUT..................................................."
-            cat /tmp/stdout.log
-            echo "STDERR..................................................."
-            cat /tmp/stderr.log
-            echo $status
-            exit $status
-          )
-          exit $status
+          yarn test:testing developing
+
+      - name: Debug server's stdout and stderr if tests failed
+        if: failure()
+        run: |
+          echo "STDOUT..................................................."
+          cat /tmp/stdout.log
+          echo ""
+          echo "STDERR..................................................."
+          cat /tmp/stderr.log
 
       - name: SSR build a page
         working-directory: mdn/content
