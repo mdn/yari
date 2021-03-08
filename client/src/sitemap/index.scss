@@ -1,0 +1,18 @@
+#sitemap {
+  ul.breadcrumb {
+    li {
+      list-style-type: none;
+      display: inline-block;
+      margin-right: 5px;
+
+      &::after {
+        content: " /";
+      }
+    }
+    li.last {
+      &::after {
+        content: "";
+      }
+    }
+  }
+}
