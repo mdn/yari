@@ -30,6 +30,12 @@ const withDeveloping = JSON.parse(process.env.TESTING_DEVELOPING || "false")
 
 describe("Testing the kitchensink page", () => {
   withDeveloping("open the page", async () => {
+    // If the test suite runs in a way that there's no separate dev server,
+    // don't bother using the `DEV_BASE_URL`.
+    // For example, when it tests the `npm pack` tarball, it's starting only
+    // the one server (on `localhost:5000`) that suite will set the `DEV_BASE_URL`
+    // to be the same as `SAME_BASE_URL`.
+    // In conclusion, if there's only 1 base URL to test again; don't test both.
     if (SERVER_BASE_URL !== DEV_BASE_URL) {
       await page.goto(devURL("/en-US/docs/MDN/Kitchensink"));
       await expect(page).toMatch("The MDN Content Kitchensink");
