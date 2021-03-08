@@ -1,24 +1,4 @@
 {
-  "slug_reference": {
-    "en-US": "Reference",
-    "es": "Referencia",
-    "de": "Reference",
-    "fr": "Reference",
-    "ca": "Referencia",
-    "pl": "Referencje",
-    "ru": "Reference"
-  },
-
-  "slug_global_objects": {
-    "en-US": "Global_Objects",
-    "es": "Objetos_globales",
-    "de": "Global_Objects",
-    "fr": "Objets_globaux",
-    "ca": "Objectes_globals",
-    "pl": "Obiekty",
-    "ru": "Global_Objects"
-  },
-
   "stdlib": {
     "en-US": "Standard built-in objects",
     "fr": "Objets standards",

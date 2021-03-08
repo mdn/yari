@@ -543,7 +543,13 @@ for (let characterIndex in characters) {
 
     for (let i = 0; i < index[character].length; i++) {
         let url = baseURL + index[character][i].urlPath;
-        output += `<li><a href="${url}"><code>${htmlEscape(index[character][i].label)}</code></a></li>`;
+        output += `<li>${web.smartLink(
+            url,
+            null,
+            `<code>${htmlEscape(index[character][i].label)}</code>`,
+            index[character][i].urlPath,
+            baseURL
+        )}</li>`;
     }
 
     if (groupingType === "alphabetically") {

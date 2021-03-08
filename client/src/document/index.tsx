@@ -13,8 +13,7 @@ import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 // Misc
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
-import { LanguageMenu } from "../ui/molecules/language-menu";
-import { Titlebar } from "../ui/molecules/titlebar";
+import { LanguageToggle } from "../ui/molecules/language-toggle";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
 import { MainContentContainer } from "../ui/atoms/page-content";
@@ -81,7 +80,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   }, [doc, error]);
 
   React.useEffect(() => {
-    if (ga && doc && !error) {
+    if (doc && !error) {
       if (mountCounter.current > 0) {
         // 'dimension19' means it's a client-side navigation.
         // I.e. not the initial load but the location has now changed.
@@ -98,7 +97,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       // a client-side navigation happened.
       mountCounter.current++;
     }
-  }, [doc, error, ga]);
+  }, [ga, doc, error]);
 
   React.useEffect(() => {
     const location = document.location;
@@ -144,7 +143,22 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      <Titlebar docTitle={doc.title}>
+      {doc.isArchive && !doc.isTranslated && <Archived />}
+
+      {/* if we have either breadcrumbs or translations for the current page, 
+      continue rendering the section */}
+      {(doc.parents || !!translations.length) && (
+        <div className="breadcrumb-locale-container">
+          {doc.parents && <Breadcrumbs parents={doc.parents} />}
+          {translations && !!translations.length && (
+            <LanguageToggle locale={locale} translations={translations} />
+          )}
+        </div>
+      )}
+
+      {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+
+      <MainContentContainer>
         {!isServer && CRUD_MODE && !props.isPreview && !doc.isArchive && (
           <React.Suspense
             fallback={<p className="loading-toolbar">Loading toolbar</p>}
@@ -157,34 +171,14 @@ export function Document(props /* TODO: define a TS interface for this */) {
             />
           </React.Suspense>
         )}
-      </Titlebar>
+        <article className="article" lang={doc.locale}>
+          <h1>{doc.title}</h1>
+          <RenderDocumentBody doc={doc} />
+        </article>
+        <Metadata doc={doc} locale={locale} />
+      </MainContentContainer>
 
-      {doc.isArchive && !doc.isTranslated && <Archived />}
-
-      <div className="breadcrumbs-locale-container">
-        <div className="breadcrumb-container">
-          {doc.parents && <Breadcrumbs parents={doc.parents} />}
-        </div>
-
-        <div className="locale-container">
-          {translations && !!translations.length && (
-            <LanguageMenu translations={translations} locale={locale} />
-          )}
-        </div>
-      </div>
-
-      <div className="page-content-container">
-        {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
-
-        <MainContentContainer>
-          <article className="article" lang={doc.locale}>
-            <RenderDocumentBody doc={doc} />
-          </article>
-        </MainContentContainer>
-
-        {doc.sidebarHTML && <RenderSideBar doc={doc} />}
-      </div>
-      <Metadata doc={doc} locale={locale} />
+      {doc.sidebarHTML && <RenderSideBar doc={doc} />}
     </>
   );
 }
@@ -192,8 +186,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 function LoadingDocumentPlaceholder() {
   return (
     <>
-      <Titlebar docTitle={"Loading…"} />
-      <Dino className="page-content-container loading-document-placeholder" />
+      <Dino className="main-content loading-document-placeholder" />
     </>
   );
 }

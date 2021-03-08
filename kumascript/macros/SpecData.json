@@ -1504,6 +1504,11 @@
     "url": "https://www.khronos.org/registry/typedarray/specs/latest/",
     "status": "Obsolete"
   },
+  "Trusted Types": {
+    "name": "Trusted Types",
+    "url": "https://w3c.github.io/webappsec-trusted-types/dist/spec/",
+    "status": "ED"
+  },
   "UI Events": {
     "name": "UI Events",
     "url": "https://w3c.github.io/uievents/",
@@ -1613,6 +1618,11 @@
     "name": "WebGL 2.0",
     "url": "https://www.khronos.org/registry/webgl/specs/latest/2.0/",
     "status": "ED"
+  },
+  "Web NFC": {
+    "name": "Web NFC",
+    "url": "https://w3c.github.io/web-nfc/",
+    "status": "Draft"
   },
   "EXT_blend_minmax": {
     "name": "EXT_blend_minmax",

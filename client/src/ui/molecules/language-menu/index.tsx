@@ -1,6 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useGA } from "../../../ga-context";
+
 import LANGUAGES_RAW from "../../../languages.json";
 import { Translation } from "../../../document/types";
 
@@ -22,6 +24,7 @@ export function LanguageMenu({
   locale: string;
   translations: Translation[];
 }) {
+  const ga = useGA();
   const navigate = useNavigate();
   const [localeURL, setLocaleURL] = React.useState(locale);
 
@@ -52,23 +55,34 @@ export function LanguageMenu({
               document.cookie = cookieValue;
             }
           }
+
+          ga("send", {
+            hitType: "event",
+            eventCategory: "Language",
+            eventAction: "Change preferred language",
+            eventLabel: `${window.location.pathname} to ${localeURL}`,
+          });
+
           navigate(localeURL);
+          window.scrollTo(0, 0);
         }
       }}
     >
-      <label htmlFor="select_language" className="visually-hidden">
-        Select your preferred language
-      </label>{" "}
-      <select
-        id="select_language"
-        name="language"
-        value={localeURL}
-        onChange={(event) => {
-          const { value } = event.target;
-          setLocaleURL(value);
-        }}
-      >
-        {/*
+      <fieldset id="select-language">
+        <legend>Change your language</legend>
+        <label htmlFor="language-selector" className="visually-hidden">
+          Select your preferred language
+        </label>{" "}
+        <select
+          id="language-selector"
+          name="language"
+          value={localeURL}
+          onChange={(event) => {
+            const { value } = event.target;
+            setLocaleURL(value);
+          }}
+        >
+          {/*
           This option is alway there and always first.
           The reason it doesn't have the `disabled` attribute is because it
           might not render when viewing the select un-opened and instead what
@@ -76,19 +90,20 @@ export function LanguageMenu({
           The onChange callback is a protection for doing nothing if the
           already current locale is chosen.
          */}
-        <option value={locale}>{verbose ? verbose.native : locale}</option>
-        {translations.map((t) => {
-          const verbose = LANGUAGES.get(t.locale.toLowerCase());
-          return (
-            <option key={t.url} value={t.url}>
-              {verbose ? verbose.native : t.locale}
-            </option>
-          );
-        })}
-      </select>{" "}
-      <button type="submit" className="button minimal">
-        Change language
-      </button>
+          <option value={locale}>{verbose ? verbose.native : locale}</option>
+          {translations.map((t) => {
+            const verbose = LANGUAGES.get(t.locale.toLowerCase());
+            return (
+              <option key={t.url} value={t.url}>
+                {verbose ? verbose.native : t.locale}
+              </option>
+            );
+          })}
+        </select>{" "}
+        <button type="submit" className="button minimal">
+          Change language
+        </button>
+      </fieldset>
     </form>
   );
 }

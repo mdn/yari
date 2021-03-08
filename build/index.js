@@ -28,6 +28,7 @@ const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
 const buildOptions = require("./build-options");
 const { gather: gatherGitHistory } = require("./git-history");
+const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
 
 const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/content
@@ -505,14 +506,6 @@ async function buildDocument(document, documentOptions = {}) {
   return { doc, liveSamples, fileAttachments, bcdData };
 }
 
-async function buildDocumentFromURL(url, documentOptions = {}) {
-  const document = Document.findByURL(url);
-  if (!document) {
-    return null;
-  }
-  return await buildDocument(document, documentOptions);
-}
-
 async function buildLiveSamplePageFromURL(url) {
   const [documentURL, sampleID] = url.split("/_samples_/");
   const document = Document.findByURL(documentURL);
@@ -641,7 +634,6 @@ module.exports = {
   buildDocument,
   analyzeDocument,
 
-  buildDocumentFromURL,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 
@@ -649,4 +641,5 @@ module.exports = {
 
   options: buildOptions,
   gatherGitHistory,
+  buildSPAs,
 };

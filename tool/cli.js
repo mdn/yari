@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const os = require("os");
 
 const program = require("@caporal/core").default;
 const chalk = require("chalk");
@@ -8,7 +7,6 @@ const { prompt } = require("inquirer");
 const openEditor = require("open-editor");
 const open = require("open");
 const {
-  simpleMD,
   syncAllTranslatedContent,
 } = require("../build/sync-translated-content");
 const log = require("loglevel");
@@ -22,7 +20,7 @@ const {
   Document,
   buildURL,
 } = require("../content");
-const { buildDocument, gatherGitHistory } = require("../build");
+const { buildDocument, gatherGitHistory, buildSPAs } = require("../build");
 const {
   BUILD_OUT_ROOT,
   GOOGLE_ANALYTICS_ACCOUNT,
@@ -315,9 +313,33 @@ program
       const { hostname, port } = options;
       let url;
       // Perhaps they typed in a path relative to the content root
-      if (slug.startsWith("files") && slug.endsWith("index.html")) {
+      if (
+        (slug.startsWith("files") || fs.existsSync(slug)) &&
+        (slug.endsWith("index.html") || slug.endsWith("index.md"))
+      ) {
+        if (
+          fs.existsSync(slug) &&
+          slug.includes("translated-content") &&
+          !CONTENT_TRANSLATED_ROOT
+        ) {
+          // Such an easy mistake to make that you pass it a file path
+          // that comes from the translated-content repo but forgot to
+          // set the environment variable first.
+          console.warn(
+            chalk.yellow(
+              `Did you forget to set the environment variable ${chalk.bold(
+                "CONTENT_TRANSLATED_ROOT"
+              )}?`
+            )
+          );
+        }
+        const slugSplit = slug
+          .replace(CONTENT_ROOT, "")
+          .replace(CONTENT_TRANSLATED_ROOT ? CONTENT_TRANSLATED_ROOT : "", "")
+          .split(path.sep);
         const document = Document.read(
-          slug.split(path.sep).slice(1, -1).join(path.sep)
+          // Remove that leading 'files' and the trailing 'index.(html|md)'
+          slugSplit.slice(1, -1).join(path.sep)
         );
         if (document) {
           url = document.url;
@@ -426,35 +448,21 @@ program
     default: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
     validator: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
   })
-  .option("--summarize <path>", `Write summary to path.`, {
-    default: path.join(os.tmpdir()),
-  })
-  .option("--prefix <prefix>", `Prefix to path for summary.`)
   .action(
     tryOrExit(async ({ args, options }) => {
       const { locale } = args;
-      const { verbose, summarize, prefix } = options;
+      const { verbose } = options;
       if (verbose) {
         log.setDefaultLevel(log.levels.DEBUG);
       }
-      const allStats = {};
       for (const l of locale) {
-        const { stats, changes } = syncAllTranslatedContent(l);
-        allStats[l] = stats;
-        if (summarize) {
-          const summary = simpleMD(l, changes, stats, prefix);
-          const summaryFilePath = path.join(summarize, `sync-changes-${l}.md`);
-          fs.writeFileSync(summaryFilePath, summary, "utf-8");
-          console.log(`wrote summary to ${summarize}`);
-        }
-
         const {
           movedDocs,
           conflictingDocs,
           orphanedDocs,
           redirectedDocs,
           totalDocs,
-        } = stats;
+        } = syncAllTranslatedContent(l);
         console.log(chalk.green(`Syncing ${l}:`));
         console.log(chalk.green(`Total of ${totalDocs} documents`));
         console.log(chalk.green(`Moved ${movedDocs} documents`));
@@ -462,13 +470,6 @@ program
         console.log(chalk.green(`Orphaned ${orphanedDocs} documents.`));
         console.log(
           chalk.green(`Fixed ${redirectedDocs} redirected documents.`)
-        );
-      }
-      if (summarize) {
-        fs.writeFileSync(
-          path.join(summarize, "sync-summary.json"),
-          JSON.stringify(allStats, null, 2),
-          "utf-8"
         );
       }
     })
@@ -739,6 +740,13 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       } else {
         logger.info(chalk.yellow("No Google Analytics code file generated"));
       }
+    })
+  )
+
+  .command("spas", "Build (SSR) all the skeleton apps for single page apps")
+  .action(
+    tryOrExit(async ({ options }) => {
+      await buildSPAs(options);
     })
   );
 
