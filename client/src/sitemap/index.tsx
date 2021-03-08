@@ -126,18 +126,7 @@ export default function Sitemap() {
           </div>
         )}
         {!data && !error && <p>Loading loading loading...</p>}
-        {filtered && <Breadcrumb pathname={pathname} />}
-        <p className="this-doc">
-          {thisDoc ? (
-            <b>
-              Go to: <Link to={thisDoc.url}>{thisDoc.title}</Link>
-            </b>
-          ) : (
-            <b>
-              Go to: <Link to={`/${locale}/`}>Home page</Link>
-            </b>
-          )}
-        </p>
+        {filtered && <Breadcrumb pathname={pathname} thisDoc={thisDoc} />}
         {filtered && (
           <FilterForm
             searchFilter={searchFilter}
@@ -155,7 +144,12 @@ export default function Sitemap() {
             }}
           />
         )}
-        {filtered && <ShowTree filtered={filtered} childCounts={childCounts} />}
+        {filtered &&
+          filtered.length === 0 &&
+          (searchFilter ? <em>nothing found</em> : <em>nothing here</em>)}
+        {filtered && filtered.length > 0 && (
+          <ShowTree filtered={filtered} childCounts={childCounts} />
+        )}
         <p className="footer-note">
           Note, this sitemap only shows documents. Not any other applications.
         </p>
@@ -173,12 +167,15 @@ function FilterForm({
   onUpdate: (text: string, submitted: boolean) => void;
   onGoUp: () => void;
 }) {
+  const [hideTip, setHideTip] = React.useState(false);
+
   const [countBackspaces, setCountBackspaces] = React.useState(0);
   React.useEffect(() => {
     if (countBackspaces >= 2) {
+      setCountBackspaces(0);
       onGoUp();
     }
-  }, [countBackspaces]);
+  }, [countBackspaces, onGoUp]);
   const inputRef = React.useRef<null | HTMLInputElement>(null);
   function focusSearch(event: KeyboardEvent) {
     if (inputRef.current && event.target) {
@@ -196,12 +193,6 @@ function FilterForm({
       } else {
         if (event.key === "T" || event.key === "t") {
           inputRef.current.focus();
-          const tipElement = document.querySelector(
-            ".filter-form .keyboard-tip"
-          );
-          if (tipElement) {
-            tipElement.parentNode?.removeChild(tipElement);
-          }
           setCountBackspaces(0);
         }
       }
@@ -232,15 +223,27 @@ function FilterForm({
         onChange={(event) => {
           onUpdate(event.target.value, false);
         }}
+        onFocus={() => {
+          setHideTip(true);
+        }}
       />{" "}
-      <small className="keyboard-tip">
-        Tip! press <kbd>t</kbd> on your keyboard to focus on search filter
-      </small>
+      {!hideTip && (
+        <small className="keyboard-tip">
+          Tip! press <kbd>t</kbd> on your keyboard to focus on search filter
+        </small>
+      )}
     </form>
   );
 }
 
-function Breadcrumb({ pathname }: { pathname: string }) {
+function Breadcrumb({
+  pathname,
+  thisDoc,
+}: {
+  pathname: string;
+  thisDoc: SearchIndexDoc | null;
+}) {
+  const locale = useLocale();
   const split = pathname.split("/").slice(3);
   const root = pathname.split("/").slice(0, 2);
   root.push("_sitemap");
@@ -256,13 +259,25 @@ function Breadcrumb({ pathname }: { pathname: string }) {
         return (
           <li key={`${portion}${i}`} className={last ? "last" : undefined}>
             {last ? (
-              <em>{portion}</em>
+              <code>{portion}</code>
             ) : (
-              <Link to={root.join("/")}>{portion}</Link>
+              <Link to={root.join("/")}>
+                <code>{portion}</code>
+              </Link>
             )}
           </li>
         );
       })}
+      <li className="this-doc">
+        <b>Go to:</b>{" "}
+        {thisDoc ? (
+          <Link to={thisDoc.url}>
+            <em>{thisDoc.title}</em>
+          </Link>
+        ) : (
+          <Link to={`/${locale}/`}>Home page</Link>
+        )}
+      </li>
     </ul>
   );
 }
@@ -275,13 +290,6 @@ function ShowTree({
   childCounts: Map<string, number>;
 }) {
   const locale = useLocale();
-  if (filtered.length === 0) {
-    return (
-      <p>
-        <em>Nothing here</em>
-      </p>
-    );
-  }
   return (
     <div className="tree">
       <ul>

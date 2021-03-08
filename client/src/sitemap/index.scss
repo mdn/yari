@@ -11,10 +11,19 @@
         content: " /";
       }
     }
-    li.last {
+    li.last,
+    li.this-doc {
       &::after {
         content: "";
       }
     }
+
+    li.this-doc {
+      margin-left: 20px;
+    }
+  }
+
+  .footer-note {
+    margin-top: 100px;
   }
 }
