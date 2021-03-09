@@ -26,7 +26,7 @@ function* walker(root) {
   }
 }
 
-function populateSearchIndex(searchIndex, localeLC) {
+async function populateSearchIndex(searchIndex, localeLC) {
   const root = path.join(
     localeLC === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT,
     localeLC
@@ -36,7 +36,7 @@ function populateSearchIndex(searchIndex, localeLC) {
     return basename === "index.html" || basename === "index.md";
   });
   const locale = VALID_LOCALES.get(localeLC);
-  return Promise.all(
+  await Promise.all(
     filePaths.map(async (filePath) => {
       const rawContent = await promisifed(filePath, "utf-8");
       const { attributes: metadata } = fm(rawContent);
@@ -49,7 +49,7 @@ function populateSearchIndex(searchIndex, localeLC) {
   );
 }
 
-function searchIndexRoute(req, res) {
+async function searchIndexRoute(req, res) {
   // Remember, this is always in lowercase because of a middleware
   // that lowercases all incoming requests' pathname.
   const locale = req.params.locale;
@@ -77,15 +77,10 @@ function searchIndexRoute(req, res) {
 
   const label = "Populate search-index";
   console.time(label);
-  populateSearchIndex(searchIndex, locale)
-    .then(() => {
-      searchIndex.sort();
-      console.timeEnd(label);
-      res.json(searchIndex.getItems()[locale]);
-    })
-    .catch((error) => {
-      res.status(500).send(error.toString());
-    });
+  await populateSearchIndex(searchIndex, locale);
+  searchIndex.sort();
+  console.timeEnd(label);
+  res.json(searchIndex.getItems()[locale]);
 }
 
 module.exports = {
