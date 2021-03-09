@@ -136,6 +136,13 @@ def whatsdeployed(ctx, directory: Path, output: str):
     show_default=True,
     is_flag=True,
 )
+@click.option(
+    "--no-redirects",
+    help="Don't upload redirects from the content roots",
+    default=False,
+    show_default=True,
+    is_flag=True,
+)
 @click.argument("directory", type=click.Path(), callback=validate_directory)
 @click.pass_context
 def upload(ctx, directory: Path, **kwargs):

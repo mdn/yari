@@ -36,11 +36,11 @@ export function SiteSearch() {
         // Note that in local development, where you use `localhost:3000`
         // this will always be true because it's always client-side navigation.
         ga("set", "dimension19", "Yes");
+        ga("send", {
+          hitType: "pageview",
+          location: window.location.toString(),
+        });
       }
-      ga("send", {
-        hitType: "pageview",
-        location: window.location.toString(),
-      });
       // By counting every time a document is mounted, we can use this to know if
       // a client-side navigation happened.
       mountCounter.current++;
@@ -52,10 +52,8 @@ export function SiteSearch() {
       <PageContentContainer>
         {query ? (
           <h1>
-            Results: {query}{" "}
-            {page && page !== "1" && (
-              <small className="current-page">Page {page}</small>
-            )}
+            Search results for: <span className="query-string">{query}</span>{" "}
+            {page && page !== "1" && `(page ${page})`}
           </h1>
         ) : (
           <h1>No query, no results.</h1>

@@ -1,14 +1,18 @@
 .site-search {
-  margin: 20px;
-  min-height: 1200px;
+  min-height: 500px;
 
-  mark {
-    background-color: rgb(255, 252, 217);
-  }
+  // This is temporary
+  // Once https://github.com/mdn/yari/issues/2901 lands we can delete this
+  a {
+    text-decoration: underline;
 
-  h1 .current-page {
-    font-size: 80%;
-    padding-left: 10px;
-    color: grey;
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
   }
+}
+
+.query-string {
+  font-style: italic;
 }

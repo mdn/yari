@@ -9,12 +9,18 @@ const cookieParser = require("cookie-parser");
 const openEditor = require("open-editor");
 
 const {
-  buildDocumentFromURL,
   buildDocument,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 } = require("../build");
-const { CONTENT_ROOT, Document, Redirect, Image } = require("../content");
+const { findDocumentTranslations } = require("../content/translations");
+const {
+  CONTENT_ROOT,
+  Document,
+  Redirect,
+  Image,
+  CONTENT_TRANSLATED_ROOT,
+} = require("../content");
 // eslint-disable-next-line node/no-missing-require
 const { prepareDoc, renderDocHTML } = require("../ssr/dist/main");
 
@@ -24,6 +30,27 @@ const fakeV1APIRouter = require("./fake-v1-api");
 const { searchRoute } = require("./document-watch");
 const flawsRoute = require("./flaws");
 const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
+
+async function buildDocumentFromURL(url) {
+  const document = Document.findByURL(url);
+  if (!document) {
+    return null;
+  }
+  const documentOptions = {
+    // The only times the server builds on the fly is basically when
+    // you're in "development mode". And when you're not building
+    // to ship you don't want the cache to stand have any hits
+    // since it might prevent reading fresh data from disk.
+    clearKumascriptRenderCache: true,
+  };
+  if (CONTENT_TRANSLATED_ROOT) {
+    // When you're running the dev server and build documents
+    // every time a URL is requested, you won't have had the chance to do
+    // the phase that happens when you do a regular `yarn build`.
+    document.translations = findDocumentTranslations(document);
+  }
+  return await buildDocument(document, documentOptions);
+}
 
 const app = express();
 
@@ -53,6 +80,8 @@ app.use(
             : "http://"
         }${PROXY_HOSTNAME}`,
         changeOrigin: true,
+        proxyTimeout: 3000,
+        timeout: 3000,
       })
 );
 
@@ -188,14 +217,7 @@ app.get("/*", async (req, res) => {
   let bcdData;
   try {
     console.time(`buildDocumentFromURL(${lookupURL})`);
-    const built = await buildDocumentFromURL(lookupURL, {
-      // The only times the server builds on the fly is basically when
-      // you're in "development mode". And when you're not building
-      // to ship you don't want the cache to stand have any hits
-      // since it might prevent reading fresh data from disk.
-      clearKumascriptRenderCache: true,
-    });
-    console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
+    const built = await buildDocumentFromURL(lookupURL);
     if (built) {
       document = built.doc;
       bcdData = built.bcdData;
@@ -203,6 +225,8 @@ app.get("/*", async (req, res) => {
   } catch (error) {
     console.error(`Error in buildDocumentFromURL(${lookupURL})`, error);
     return res.status(500).send(error.toString());
+  } finally {
+    console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
   }
 
   if (!document) {

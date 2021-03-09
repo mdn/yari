@@ -8,18 +8,12 @@ import { useDocumentURL } from "./hooks";
 import { Doc } from "./types";
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
-import { InteractiveExample } from "./ingredients/interactive-example";
-import { Attributes } from "./ingredients/attributes";
-import { Examples } from "./ingredients/examples";
-import { LinkList, LinkLists } from "./ingredients/link-lists";
-import { Specifications } from "./ingredients/specifications";
 import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 
 // Misc
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
-import { LanguageMenu } from "../ui/molecules/language-menu";
-import { Titlebar } from "../ui/molecules/titlebar";
+import { LanguageToggle } from "../ui/molecules/language-toggle";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
 import { MainContentContainer } from "../ui/atoms/page-content";
@@ -28,6 +22,14 @@ import { Metadata } from "./organisms/metadata";
 import { ReactComponent as Dino } from "../assets/dino.svg";
 
 import "./index.scss";
+
+// It's unfortunate but it is what it is at the moment. Not every page has an
+// interactive example (in its HTML blob) but we don't know that in advance.
+// But just in case it does, we need to have the CSS ready in the main bundle.
+// Perhaps a more ideal solution would be that the interactive example <iframe>
+// code could come with its own styling rather than it having to be part of the
+// main bundle all the time.
+import "./interactive-examples.scss";
 
 // Lazy sub-components
 const Toolbar = React.lazy(() => import("./toolbar"));
@@ -78,23 +80,24 @@ export function Document(props /* TODO: define a TS interface for this */) {
   }, [doc, error]);
 
   React.useEffect(() => {
-    if (ga && doc && !error) {
+    if (doc && !error) {
       if (mountCounter.current > 0) {
         // 'dimension19' means it's a client-side navigation.
         // I.e. not the initial load but the location has now changed.
         // Note that in local development, where you use `localhost:3000`
         // this will always be true because it's always client-side navigation.
         ga("set", "dimension19", "Yes");
+        ga("send", {
+          hitType: "pageview",
+          location: window.location.toString(),
+        });
       }
-      ga("send", {
-        hitType: "pageview",
-        location: window.location.toString(),
-      });
+
       // By counting every time a document is mounted, we can use this to know if
       // a client-side navigation happened.
       mountCounter.current++;
     }
-  }, [doc, error, ga]);
+  }, [ga, doc, error]);
 
   React.useEffect(() => {
     const location = document.location;
@@ -140,7 +143,22 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      <Titlebar docTitle={doc.title}>
+      {doc.isArchive && !doc.isTranslated && <Archived />}
+
+      {/* if we have either breadcrumbs or translations for the current page, 
+      continue rendering the section */}
+      {(doc.parents || !!translations.length) && (
+        <div className="breadcrumb-locale-container">
+          {doc.parents && <Breadcrumbs parents={doc.parents} />}
+          {translations && !!translations.length && (
+            <LanguageToggle locale={locale} translations={translations} />
+          )}
+        </div>
+      )}
+
+      {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+
+      <MainContentContainer>
         {!isServer && CRUD_MODE && !props.isPreview && !doc.isArchive && (
           <React.Suspense
             fallback={<p className="loading-toolbar">Loading toolbar</p>}
@@ -153,34 +171,14 @@ export function Document(props /* TODO: define a TS interface for this */) {
             />
           </React.Suspense>
         )}
-      </Titlebar>
+        <article className="article" lang={doc.locale}>
+          <h1>{doc.title}</h1>
+          <RenderDocumentBody doc={doc} />
+        </article>
+        <Metadata doc={doc} locale={locale} />
+      </MainContentContainer>
 
-      {doc.isArchive && !doc.isTranslated && <Archived />}
-
-      <div className="breadcrumbs-locale-container">
-        <div className="breadcrumb-container">
-          {doc.parents && <Breadcrumbs parents={doc.parents} />}
-        </div>
-
-        <div className="locale-container">
-          {translations && !!translations.length && (
-            <LanguageMenu translations={translations} locale={locale} />
-          )}
-        </div>
-      </div>
-
-      <div className="page-content-container">
-        {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
-
-        <MainContentContainer>
-          <article className="article">
-            <RenderDocumentBody doc={doc} />
-          </article>
-        </MainContentContainer>
-
-        {doc.sidebarHTML && <RenderSideBar doc={doc} />}
-      </div>
-      <Metadata doc={doc} locale={locale} />
+      {doc.sidebarHTML && <RenderSideBar doc={doc} />}
     </>
   );
 }
@@ -188,8 +186,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 function LoadingDocumentPlaceholder() {
   return (
     <>
-      <Titlebar docTitle={"Loading…"} />
-      <Dino className="page-content-container loading-document-placeholder" />
+      <Dino className="main-content loading-document-placeholder" />
     </>
   );
 }
@@ -228,24 +225,6 @@ function RenderDocumentBody({ doc }) {
           />
         );
       }
-    } else if (section.type === "interactive_example") {
-      return (
-        <InteractiveExample
-          key={section.value.url}
-          url={section.value.url}
-          height={section.value.height}
-          title={doc.title}
-        />
-      );
-    } else if (section.type === "attributes") {
-      return <Attributes key={`attributes${i}`} attributes={section.value} />;
-    } else if (section.type === "specifications") {
-      return (
-        <Specifications
-          key={`specifications${i}`}
-          specifications={section.value}
-        />
-      );
     } else if (section.type === "browser_compatibility") {
       return (
         <LazyBrowserCompatibilityTable
@@ -253,27 +232,6 @@ function RenderDocumentBody({ doc }) {
           {...section.value}
         />
       );
-    } else if (section.type === "examples") {
-      return <Examples key={`examples${i}`} examples={section.value} />;
-    } else if (section.type === "info_box") {
-      // XXX Unfinished!
-      // https://github.com/mdn/stumptown-content/issues/106
-      console.warn("Don't know how to deal with info_box!");
-      return null;
-    } else if (
-      section.type === "class_constructor" ||
-      section.type === "static_methods" ||
-      section.type === "instance_methods"
-    ) {
-      return (
-        <LinkList
-          key={`${section.type}${i}`}
-          title={section.value.title}
-          links={section.value.content}
-        />
-      );
-    } else if (section.type === "link_lists") {
-      return <LinkLists key={`linklists${i}`} lists={section.value} />;
     } else {
       console.warn(section);
       throw new Error(`No idea how to handle a '${section.type}' section`);
