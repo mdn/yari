@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import { useLocale } from "../hooks";
 import { useUserData } from "../user-context";
@@ -8,10 +8,12 @@ import "./sign-up.scss";
 
 export default function SignUpApp() {
   const userData = useUserData();
+  const navigate = useNavigate();
   const locale = useLocale();
   const [searchParams] = useSearchParams();
 
   const [checkedTerms, setCheckedTerms] = React.useState(false);
+  const [signupError, setSignupError] = React.useState<Error | null>(null);
 
   if (!userData) {
     return <div>Loading...</div>;
@@ -62,38 +64,75 @@ export default function SignUpApp() {
     );
   }
 
-  let prefix = "";
-  // When doing local development with Yari, the link to authenticate in Kuma
-  // needs to be absolute. And we also need to send the absolute URL as the
-  // `next` query string parameter so Kuma sends us back when the user has
-  // authenticated there.
-  if (
-    process.env.NODE_ENV === "development" &&
-    process.env.REACT_APP_KUMA_HOST
-  ) {
-    prefix = `http://${process.env.REACT_APP_KUMA_HOST}`;
+  const signupURL = `/${locale}/users/account/signup`;
+
+  async function submitSignUp() {
+    const formData = new URLSearchParams();
+    formData.set("terms", "1");
+
+    // This is just a temporary thing needed to tell Kuma's signup view
+    // that the request came from (the jamstack) Yari and not the existing
+    // Kuma front-end. Then Kuma knows to certainly only respond with redirects.
+    formData.set("yarisignup", "1");
+
+    // In local development, after you've signed in the `next` query string
+    // might be a full absolute URL that points to `http://localhost.org:3000/...`.
+    // We can safely remove this and just keep the pathname. In production
+    // this will never have to happen.
+    let nextURL = searchParams.get("next");
+    if (!nextURL) {
+      nextURL = `/${locale}/`;
+    } else if (nextURL && nextURL.includes("://")) {
+      nextURL = new URL(nextURL).pathname;
+    }
+    formData.set("next", nextURL);
+
+    formData.set("locale", locale);
+    if (!csrfMiddlewareToken) {
+      throw new Error("CSRF token not set");
+    }
+    let response: Response;
+    try {
+      response = await fetch(signupURL, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrfMiddlewareToken,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formData,
+      });
+    } catch (error) {
+      setSignupError(error);
+      return;
+    }
+
+    console.log("RESPONSE:", response);
+    if (response.ok) {
+      navigate(nextURL);
+    } else {
+      setSignupError(new Error(`${response.status} on ${signupURL}`));
+    }
   }
-  const signupURL = `${prefix}/${locale}/users/account/signup`;
 
   return (
-    <form action={signupURL} method="post">
-      {/* This is just a temporary thing needed to tell Kuma's signup view
-          that the request came from (the jamstack) Yari and not the existing
-          Kuma front-end. Then Kuma knows to certainly only respond with redirects. */}
-      <input type="hidden" name="yarisignup" value="1" />
-
-      {searchParams.get("next") && (
-        <input
-          type="hidden"
-          name="next"
-          value={searchParams.get("next") || ""}
-        />
+    <form
+      method="post"
+      onSubmit={(event) => {
+        event.preventDefault();
+        if (checkedTerms) {
+          submitSignUp();
+        }
+      }}
+    >
+      {signupError && (
+        <div className="notecard error">
+          <h4>Signup Error</h4>
+          <p>
+            <code>{signupError.toString()}</code>
+          </p>
+        </div>
       )}
-      <input
-        type="hidden"
-        name="csrfmiddlewaretoken"
-        value={csrfMiddlewareToken}
-      />
+
       <DisplaySignupProvider provider={provider || ""} />
       <DisplayUserDetails details={searchParams.get("user_details") || ""} />
 
