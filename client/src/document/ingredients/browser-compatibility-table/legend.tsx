@@ -8,7 +8,7 @@ const LEGEND_LABELS = {
   no: "No support",
   unknown: "Compatibility unknown",
   experimental: "Experimental. Expect behavior to change in the future.",
-  "non-standard": "Non-standard. Expect poor cross-browser support.",
+  "non-standard": "Non-standard. Check cross-browser support before using.",
   deprecated: "Deprecated. Not for use in new websites.",
   footnote: "See implementation notes.",
   disabled: "User must explicitly enable this feature.",
