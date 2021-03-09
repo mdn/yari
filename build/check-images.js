@@ -199,7 +199,6 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
           }
         }
       }
-      console.log("SETTING src=", finalSrc);
       img.attr("src", finalSrc);
     }
     if (
