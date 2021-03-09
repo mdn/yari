@@ -171,7 +171,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
             />
           </React.Suspense>
         )}
-        <article className="article" lang={doc.locale}>
+        <article className="main-page-content" lang={doc.locale}>
           <h1>{doc.title}</h1>
           <RenderDocumentBody doc={doc} />
         </article>
