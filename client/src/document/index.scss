@@ -96,6 +96,13 @@ a.new {
         background-color: transparent;
       }
     }
+
+    &[id^="attr-"] {
+      &:link,
+      &:visited {
+        color: $neutral-100;
+      }
+    }
   }
 
   h2 {
