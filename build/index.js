@@ -358,7 +358,6 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Check and scrutinize any local image references
   const fileAttachments = checkImageReferences(doc, $, options, document);
-  console.log("fileAttachments:", fileAttachments);
 
   // Check the img tags for possible flaws and possible build-time rewrites
   checkImageWidths(doc, $, options, document);
