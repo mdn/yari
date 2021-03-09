@@ -267,15 +267,16 @@ def analyze(
     connections.create_connection(hosts=[url])
     index = Document._index
     analysis = index.analyze(body={"text": text, "analyzer": analyzer})
+    print(f"For text: {text!r}")
     if "tokens" in analysis:
         keys = None
         for token in analysis["tokens"]:
             if keys is None:
                 keys = token.keys()
             longest_key = max(len(x) for x in keys)
-            print()
             for key in keys:
                 print(f"{key:{longest_key + 1}} {token[key]!r}")
+            print()
     elif not analysis:
         print("No tokens found!")
     else:
