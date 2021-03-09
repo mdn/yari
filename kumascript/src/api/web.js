@@ -98,9 +98,9 @@ module.exports = {
         );
         flawAttribute = ` data-flaw-src="${util.htmlEscape(flaw.macroSource)}"`;
         return (
-          '<a class="page-only-in-english" ' +
-          'title="Page currently only available in English" ' +
-          `href="${enUSPage.url}"${flawAttribute}>${content} <small>(en-US)</small></a>`
+          '<a class="only-in-en-us" ' +
+          'title="Currently only available in English" ' +
+          `href="${enUSPage.url}"${flawAttribute}>${content} <span>(en-US)</span></a>`
         );
       }
     }
