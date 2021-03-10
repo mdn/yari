@@ -142,7 +142,8 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
         if (!filePath) {
           // E.g. <img src="doesnotexist.png"
           addImageFlaw(img, src, {
-            explanation: "File not present on disk",
+            explanation:
+              "File not present on disk, an empty file, or not an image",
           });
         } else if (!src.includes("/") || src.startsWith("./")) {
           // Always build the `finalSrc` based on correct case.
