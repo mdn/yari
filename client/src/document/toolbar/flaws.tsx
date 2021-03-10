@@ -19,6 +19,7 @@ import {
   BadPreTagFlaw,
   SectioningFlaw,
   HeadingLinksFlaw,
+  UnsafeHTMLFlaw,
 } from "../types";
 import "./flaws.scss";
 
@@ -270,6 +271,10 @@ function Flaws({
                 sourceFolder={doc.source.folder}
                 flaws={doc.flaws.heading_links}
               />
+            );
+          case "unsafe_html":
+            return (
+              <UnsafeHTML key="unsafe_html" flaws={doc.flaws.unsafe_html} />
             );
           case "sectioning":
             return <Sectioning key="sectioning" flaws={doc.flaws.sectioning} />;
@@ -969,6 +974,33 @@ function HeadingLinks({
                   All <code>&lt;a&gt;</code> tags need to be removed
                 </i>
               )}{" "}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function UnsafeHTML({ flaws }: { flaws: UnsafeHTMLFlaw[] }) {
+  // The UI for this flaw can be a bit "simplistic" because by default this
+  // flaw will error rather than warn.
+  return (
+    <div className="flaw">
+      <h3>⚠️ {humanizeFlawName("unsafe_html")} ⚠️</h3>
+      <ul>
+        {flaws.map((flaw, i) => {
+          const key = flaw.id;
+          return (
+            <li key={key}>
+              <b>{flaw.explanation}</b>{" "}
+              {flaw.line && flaw.column && (
+                <>
+                  line {flaw.line}:{flaw.column}
+                </>
+              )}{" "}
+              {flaw.fixable && <FixableFlawBadge />} <br />
+              <b>HTML:</b> <pre className="example-bad">{flaw.html}</pre> <br />
             </li>
           );
         })}

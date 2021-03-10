@@ -12,7 +12,11 @@ const imageminSvgo = require("imagemin-svgo");
 const sanitizeFilename = require("sanitize-filename");
 
 const { Archive, Document, Redirect, Image } = require("../content");
-const { FLAW_LEVELS } = require("./constants");
+const { FLAW_LEVELS, VALID_FLAW_CHECKS } = require("./constants");
+const {
+  INTERACTIVE_EXAMPLES_BASE_URL,
+  LIVE_SAMPLES_BASE_URL,
+} = require("../kumascript/src/constants");
 const { packageBCD } = require("./resolve-bcd");
 const {
   findMatchesInText,
@@ -22,26 +26,133 @@ const {
 const { humanFileSize } = require("./utils");
 const { VALID_MIME_TYPES } = require("../filecheck/constants");
 
-function injectFlaws(doc, $, options, { rawContent }) {
+function injectFlaws(doc, $, options, document) {
   if (doc.isArchive) return;
 
-  injectBrokenLinksFlaws(
-    options.flawLevels.get("broken_links"),
-    doc,
-    $,
-    rawContent
-  );
+  const flawChecks = [
+    ["unsafe_html", injectUnsafeHTMLFlaws, false],
+    ["broken_links", injectBrokenLinksFlaws, true],
+    ["bad_bcd_queries", injectBadBCDQueriesFlaws, false],
+    ["bad_pre_tags", injectPreTagFlaws, false],
+    ["heading_links", injectHeadingLinksFlaws, false],
+  ];
 
-  injectBadBCDQueriesFlaws(options.flawLevels.get("bad_bcd_queries"), doc, $);
+  // Note that some flaw checking functions need to always run. Even if we're not
+  // recording the flaws, the checks that it does are important for regular
+  // building.
 
-  injectPreTagFlaws(options.flawLevels.get("bad_pre_tags"), doc, $, rawContent);
+  for (const [flawName, func, alwaysRun] of flawChecks) {
+    // Sanity check the list of flaw names that they're all recognized.
+    // Basically a cheap enum check.
+    if (!VALID_FLAW_CHECKS.has(flawName)) {
+      throw new Error(`'${flawName}' is not a valid flaw check name`);
+    }
 
-  injectHeadingLinksFlaws(
-    options.flawLevels.get("heading_links"),
-    doc,
-    $,
-    rawContent
-  );
+    const level = options.flawLevels.get(flawName);
+    if (!alwaysRun && level === FLAW_LEVELS.IGNORE) {
+      continue;
+    }
+
+    // The flaw injection function will mutate the `doc.flaws` object.
+    func(doc, $, document, level);
+
+    if (
+      level === FLAW_LEVELS.ERROR &&
+      doc.flaws[flawName] &&
+      doc.flaws[flawName].length > 0
+    ) {
+      throw new Error(
+        `${flawName} flaws: ${doc.flaws[flawName].map((f) => f.explanation)}`
+      );
+    }
+  }
+}
+
+function injectUnsafeHTMLFlaws(doc, $, { rawContent }) {
+  function addFlaw(element, explanation) {
+    if (!("unsafe_html" in doc.flaws)) {
+      doc.flaws.unsafe_html = [];
+    }
+    const id = `unsafe_html${doc.flaws.unsafe_html.length + 1}`;
+    let html = $.html($(element));
+    // Some nasty tags are so broken they can make the HTML become more or less
+    // the whole page. E.g. `<script\x20type="text/javascript">`.
+    if (html.length > 100) {
+      html = html.slice(0, Math.min(html.indexOf("\n"), 100)) + "…";
+    }
+    // Perhaps in the future we can make it possibly fixable to delete it.
+    const fixable = false;
+    const suggestion = null;
+
+    const flaw = {
+      explanation,
+      id,
+      fixable,
+      html,
+      suggestion,
+    };
+    for (const { line, column } of findMatchesInText(html, rawContent)) {
+      // This might not find anything because the HTML might have mutated
+      // slightly because of how cheerio parses it. But it doesn't hurt to try.
+      flaw.line = line;
+      flaw.column = column;
+    }
+
+    doc.flaws.unsafe_html.push(flaw);
+  }
+
+  const safeIFrameSrcs = [
+    LIVE_SAMPLES_BASE_URL.toLowerCase(),
+    INTERACTIVE_EXAMPLES_BASE_URL.toLowerCase(),
+    // EmbedGHLiveSample.ejs
+    "https://mdn.github.io",
+    // EmbedYouTube.ejs
+    "https://www.youtube-nocookie.com",
+    // JSFiddleEmbed.ejs
+    "https://jsfiddle.net",
+    // EmbedTest262ReportResultsTable.ejs
+    "https://test262.report",
+  ];
+
+  $("script, embed, object, iframe").each((i, element) => {
+    const { tagName } = element;
+    if (tagName === "iframe") {
+      // For iframes we only check the 'src' value
+      const src = $(element).attr("src");
+      if (!safeIFrameSrcs.find((s) => src.toLowerCase().startsWith(s))) {
+        addFlaw(element, `Unsafe <iframe> 'src' value (${src})`);
+      }
+    } else {
+      addFlaw(element, `<${tagName}> tag found`);
+    }
+  });
+
+  $("*").each((i, element) => {
+    const { tagName } = element;
+    // E.g. `<script\x20type="text/javascript">javascript:alert(1);</script>`
+    if (tagName.startsWith("script")) {
+      addFlaw(element, `possible <script> tag`);
+    }
+
+    const checkValueAttributes = new Set(["style", "href"]);
+    for (const key in element.attribs) {
+      // No need to lowercase the `key` because it's already always lowercased
+      // by cheerio.
+      // This regex will match on `\xa0onload` and `onmousover` but
+      // not `fond` or `stompon`.
+      if (/(\\x[a-f0-9]{2}|\b)on\w+/.test(key)) {
+        addFlaw(element, `'${key}' on-handler found in ${tagName}`);
+      } else if (checkValueAttributes.has(key)) {
+        const value = element.attribs[key];
+        if (value && /(^|\\x[a-f0-9]{2})javascript:/i.test(value)) {
+          addFlaw(
+            element,
+            `'javascript:' expression found inside 'style' attribute in ${tagName}`
+          );
+        }
+      }
+    }
+  });
 }
 
 function injectSectionFlaws(doc, flaws, options) {
@@ -62,7 +173,7 @@ function injectSectionFlaws(doc, flaws, options) {
 
 // The 'broken_links' flaw check looks for internal links that
 // link to a document that's going to fail with a 404 Not Found.
-function injectBrokenLinksFlaws(level, doc, $, rawContent) {
+function injectBrokenLinksFlaws(doc, $, { rawContent }, level) {
   // This is needed because the same href can occur multiple time.
   // For example:
   //    <a href="/foo/bar">
@@ -219,15 +330,6 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
       }
     }
   });
-  if (
-    level === FLAW_LEVELS.ERROR &&
-    doc.flaws.broken_links &&
-    doc.flaws.broken_links.length
-  ) {
-    throw new Error(
-      `broken_links flaws: ${doc.flaws.broken_links.map(JSON.stringify)}`
-    );
-  }
 }
 
 // Bad BCD queries are when the `<div class="bc-data">` tags have an
@@ -236,9 +338,7 @@ function injectBrokenLinksFlaws(level, doc, $, rawContent) {
 //
 //    <div class="bc-data" id="bcd:never.ever.heard.of">
 //
-function injectBadBCDQueriesFlaws(level, doc, $) {
-  if (level === FLAW_LEVELS.IGNORE) return;
-
+function injectBadBCDQueriesFlaws(doc, $) {
   $("div.bc-data").each((i, element) => {
     const dataQuery = $(element).attr("id");
     if (!dataQuery) {
@@ -265,22 +365,9 @@ function injectBadBCDQueriesFlaws(level, doc, $) {
       }
     }
   });
-  if (
-    level === FLAW_LEVELS.ERROR &&
-    doc.flaws.bad_bcd_queries &&
-    doc.flaws.bad_bcd_queries.length
-  ) {
-    throw new Error(
-      `bad_bcd_queries flaws: ${doc.flaws.bad_bcd_queries.map(
-        (f) => f.explanation
-      )}`
-    );
-  }
 }
 
-function injectPreTagFlaws(level, doc, $, rawContent) {
-  if (level === FLAW_LEVELS.IGNORE) return;
-
+function injectPreTagFlaws(doc, $, { rawContent }) {
   function escapeHTML(s) {
     return s
       .replace(/&/g, "&amp;")
@@ -393,16 +480,6 @@ function injectPreTagFlaws(level, doc, $, rawContent) {
   if (noFixablePreTagFlawsYet()) {
     // another flaw check here
   }
-
-  if (
-    level === FLAW_LEVELS.ERROR &&
-    doc.flaws.bad_pre_tags &&
-    doc.flaws.bad_pre_tags.length
-  ) {
-    throw new Error(
-      `bad_pre_tags flaws: ${doc.flaws.bad_pre_tags.map(JSON.stringify)}`
-    );
-  }
 }
 
 // You're not allowed to have `<a>` elements inside `<h2>` or `<h3>` elements
@@ -410,9 +487,7 @@ function injectPreTagFlaws(level, doc, $, rawContent) {
 // I.e. a source of `<h2 id="foo">Foo</h2>` renders out as:
 // `<h2 id="foo"><a href="#foo">Foo</a></h2>` in the final HTML. That makes
 // it easy to (perma)link to specific headings in the document.
-function injectHeadingLinksFlaws(level, doc, $, rawContent) {
-  if (level === FLAW_LEVELS.IGNORE) return;
-
+function injectHeadingLinksFlaws(doc, $, { rawContent }) {
   function addFlaw($heading) {
     if (!("heading_links" in doc.flaws)) {
       doc.flaws.heading_links = [];
@@ -464,16 +539,6 @@ function injectHeadingLinksFlaws(level, doc, $, rawContent) {
   $("h2 a, h3 a").each((i, element) => {
     addFlaw($(element).parent());
   });
-
-  if (
-    level === FLAW_LEVELS.ERROR &&
-    doc.flaws.heading_links &&
-    doc.flaws.heading_links.length
-  ) {
-    throw new Error(
-      `heading_links flaws: ${doc.flaws.heading_links.map(JSON.stringify)}`
-    );
-  }
 }
 
 async function fixFixableFlaws(doc, options, document) {

@@ -160,21 +160,23 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
           // image name, if the file didn't exist the document doesn't exist.
           const parentDocument = Document.findByURL(path.dirname(finalSrc));
 
-          // Base the final URL on the parent document + image file name lowercase.
-          finalSrc = `${parentDocument.url}/${path
-            .basename(finalSrc)
-            .toLowerCase()}`;
+          if (parentDocument) {
+            // Base the final URL on the parent document + image file name lowercase.
+            finalSrc = `${parentDocument.url}/${path
+              .basename(finalSrc)
+              .toLowerCase()}`;
 
-          if (src.startsWith("/")) {
-            // E.g. <img src="/en-US/docs/Web/Images/foo.gif"
-            const suggestion = path.join(
-              path.relative(url, parentDocument.url),
-              path.basename(finalSrc)
-            );
-            addImageFlaw(img, src, {
-              explanation: "Pathname should be relative to document",
-              suggestion,
-            });
+            if (src.startsWith("/")) {
+              // E.g. <img src="/en-US/docs/Web/Images/foo.gif"
+              const suggestion = path.join(
+                path.relative(url, parentDocument.url),
+                path.basename(finalSrc)
+              );
+              addImageFlaw(img, src, {
+                explanation: "Pathname should be relative to document",
+                suggestion,
+              });
+            }
           }
         }
       }
@@ -254,6 +256,7 @@ function checkImageWidths(doc, $, options, { rawContent }) {
 
   $("img").each((i, element) => {
     const img = $(element);
+    console.log($.html(img));
     // If it already has a `width` attribute, leave this as is.
     if (!img.attr("width")) {
       // Remove any `width` or `height` specified in the `style` attribute
@@ -328,6 +331,7 @@ function checkImageWidths(doc, $, options, { rawContent }) {
       } else if (!imgSrc.includes("://") && imgSrc.startsWith("/")) {
         const filePath = Image.findByURL(imgSrc);
         if (filePath) {
+          console.log({ filePath, imgSrc });
           const dimensions = sizeOf(filePath);
           img.attr("width", `${dimensions.width}`);
           img.attr("height", `${dimensions.height}`);
