@@ -15,11 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/checkout@v2
-        with:
-          repository: mdn/content
-          path: mdn/content
-
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.5
         with:
@@ -67,6 +62,13 @@ jobs:
           mv $TARBALL mdn/content/
           cd mdn/content
           yarn add file:$TARBALL
+
+      # Important that this happens AFTER the `npm pack` otherwise the
+      # tarball will contain every single file from mdn/content.
+      - uses: actions/checkout@v2
+        with:
+          repository: mdn/content
+          path: mdn/content
 
       - name: Start Yari from mock content repo
         working-directory: mdn/content
