@@ -620,7 +620,7 @@ function Macros({
     };
   }, [opening]);
 
-  function openInEditor(msg: MacroErrorMessage, key: string) {
+  function openInEditor(msg: MacroErrorMessage, id: string) {
     const sp = new URLSearchParams();
     sp.set("filepath", msg.filepath);
     sp.set("line", `${msg.line}`);
@@ -628,22 +628,20 @@ function Macros({
     console.log(
       `Going to try to open ${msg.filepath}:${msg.line}:${msg.column} in your editor`
     );
-    setOpening(key);
+    setOpening(id);
     fetch(`/_open?${sp.toString()}`);
   }
 
   return (
     <div className="flaw flaw__macros">
       <h3>{humanizeFlawName("macros")}</h3>
-      {flaws.map((flaw) => {
+      {flaws.map((flaw, i) => {
         const inPrerequisiteMacro = !flaw.filepath.includes(
           `${sourceFolder}/index.html`
         );
-        const key = `${flaw.filepath}:${flaw.line}:${flaw.column}`;
-
         return (
           <details
-            key={key}
+            key={flaw.id}
             className={flaw.fixed ? "fixed_flaw" : undefined}
             title={
               flaw.fixed
@@ -656,13 +654,13 @@ function Macros({
                 href={`file://${flaw.filepath}`}
                 onClick={(event: React.MouseEvent) => {
                   event.preventDefault();
-                  openInEditor(flaw, key);
+                  openInEditor(flaw, flaw.id);
                 }}
               >
                 <code>{flaw.name}</code> from <code>{flaw.macroName}</code> in
                 line {flaw.line}:{flaw.column}
               </a>{" "}
-              {opening && opening === key && <span>Opening...</span>}{" "}
+              {opening && opening === flaw.id && <span>Opening...</span>}{" "}
               {inPrerequisiteMacro && (
                 <span
                   className="macro-filepath-in-prerequisite"
