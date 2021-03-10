@@ -19,6 +19,7 @@ const {
   Redirect,
   Document,
   buildURL,
+  getRoot,
 } = require("../content");
 const { buildDocument, gatherGitHistory, buildSPAs } = require("../build");
 const {
@@ -381,14 +382,11 @@ program
     "gather-git-history",
     "Extract all last-modified dates from the git logs"
   )
-  .option("--root <directory>", "Which content root", {
-    default: CONTENT_ROOT,
-  })
   .option("--save-history <path>", "File to save all previous history")
   .option("--load-history <path>", "Optional file to load all previous history")
   .action(
     tryOrExit(async ({ options }) => {
-      const { root, saveHistory, loadHistory } = options;
+      const { saveHistory, loadHistory } = options;
       if (loadHistory) {
         if (fs.existsSync(loadHistory)) {
           console.log(
@@ -396,8 +394,12 @@ program
           );
         }
       }
+      const roots = [CONTENT_ROOT];
+      if (CONTENT_TRANSLATED_ROOT) {
+        roots.push(CONTENT_TRANSLATED_ROOT);
+      }
       const map = gatherGitHistory(
-        root,
+        roots,
         loadHistory && fs.existsSync(loadHistory) ? loadHistory : null
       );
       const historyPerLocale = {};
@@ -413,6 +415,7 @@ program
         historyPerLocale[locale][relPath] = value;
       }
       for (const [locale, history] of Object.entries(historyPerLocale)) {
+        const root = getRoot(locale);
         const outputFile = path.join(root, locale, "_githistory.json");
         fs.writeFileSync(outputFile, JSON.stringify(history, null, 2), "utf-8");
         console.log(
