@@ -86,7 +86,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
     // a new function dedicated to that.
     let finalSrc = null;
 
-    if (!src.split("#")[0].trim()) {
+    if (!src.trim()) {
       if (checkImages) {
         addImageFlaw(img, src, {
           explanation: "Empty img 'src' attribute",
