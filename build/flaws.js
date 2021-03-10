@@ -591,7 +591,9 @@ async function fixFixableFlaws(doc, options, document) {
         if (
           !fileType &&
           flaw.src.toLowerCase().endsWith(".svg") &&
-          imageResponse.headers["content-type"] === "image/svg+xml"
+          imageResponse.headers["content-type"]
+            .toLowerCase()
+            .startsWith("image/svg+xml")
         ) {
           // If the SVG doesn't have the `<?xml version="1.0" encoding="UTF-8"?>`
           // and/or the `<!DOCTYPE svg PUBLIC ...` in the first couple of bytes
