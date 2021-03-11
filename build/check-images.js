@@ -133,13 +133,34 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
       // We can use the `finalSrc` to look up and find the image independent
       // of the correct case because `Image.findByURL` operates case
       // insensitively.
-      const filePath = Image.findByURL(finalSrc);
+      let filePath = Image.findByURL(finalSrc);
+      let enUSFallback = false;
+      if (
+        !filePath &&
+        doc.locale !== "en-US" &&
+        !finalSrc.startsWith("/en-us/")
+      ) {
+        const enFinalSrc = finalSrc.replace(
+          `/${doc.locale.toLowerCase()}/`,
+          "/en-us/"
+        );
+        if (Image.findByURL(enFinalSrc)) {
+          // Use the en-US src instead
+          finalSrc = enFinalSrc;
+          // Note that this `<img src="...">` value can work if you use the
+          // en-US equivalent URL instead.
+          enUSFallback = true;
+        }
+      }
       if (filePath) {
         filePaths.add(filePath);
       }
 
       if (checkImages) {
-        if (!filePath) {
+        if (enUSFallback) {
+          // If it worked by switching to the en-US src, don't do anything more.
+          // Do nothing! I.e. don't try to perfect the spelling.
+        } else if (!filePath) {
           // E.g. <img src="doesnotexist.png"
           addImageFlaw(img, src, {
             explanation: "File not present on disk",
