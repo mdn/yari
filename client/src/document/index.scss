@@ -30,6 +30,12 @@
   }
 }
 
+.only-in-en-us {
+  span {
+    font-size: $small-font-size;
+  }
+}
+
 .article {
   padding: ($base-spacing / 2) $base-spacing $base-spacing;
 
