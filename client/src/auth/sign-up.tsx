@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { mutate } from "swr";
 
 import { useLocale } from "../hooks";
 import { useUserData } from "../user-context";
@@ -106,8 +107,10 @@ export default function SignUpApp() {
       return;
     }
 
-    console.log("RESPONSE:", response);
     if (response.ok) {
+      // This will "force" a new XHR request in the useUserData hook.
+      mutate("/api/v1/whoami");
+
       navigate(nextURL);
     } else {
       setSignupError(new Error(`${response.status} on ${signupURL}`));
