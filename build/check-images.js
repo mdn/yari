@@ -254,7 +254,6 @@ function checkImageWidths(doc, $, options, { rawContent }) {
 
   $("img").each((i, element) => {
     const img = $(element);
-
     // If it already has a `width` attribute, leave this as is.
     if (!img.attr("width")) {
       // Remove any `width` or `height` specified in the `style` attribute
