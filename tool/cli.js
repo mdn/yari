@@ -386,7 +386,7 @@ program
   .option("--load-history <path>", "Optional file to load all previous history")
   .action(
     tryOrExit(async ({ options }) => {
-      const { saveHistory, loadHistory } = options;
+      const { saveHistory, loadHistory, verbose } = options;
       if (loadHistory) {
         if (fs.existsSync(loadHistory)) {
           console.log(
@@ -414,18 +414,25 @@ program
         }
         historyPerLocale[locale][relPath] = value;
       }
+      let filesWritten = 0;
       for (const [locale, history] of Object.entries(historyPerLocale)) {
         const root = getRoot(locale);
         const outputFile = path.join(root, locale, "_githistory.json");
         fs.writeFileSync(outputFile, JSON.stringify(history, null, 2), "utf-8");
-        console.log(
-          chalk.green(
-            `Wrote '${locale}' ${Object.keys(
-              history
-            ).length.toLocaleString()} paths into ${outputFile}`
-          )
-        );
+        filesWritten += 1;
+        if (verbose) {
+          console.log(
+            chalk.green(
+              `Wrote '${locale}' ${Object.keys(
+                history
+              ).length.toLocaleString()} paths into ${outputFile}`
+            )
+          );
+        }
       }
+      console.log(
+        chalk.green(`Wrote '${filesWritten}' _githistory.json files`)
+      );
       if (saveHistory) {
         fs.writeFileSync(
           saveHistory,
