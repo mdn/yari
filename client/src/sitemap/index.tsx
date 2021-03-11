@@ -184,9 +184,7 @@ export default function Sitemap() {
           ) : (
             <em>has no further sub-documents</em>
           ))}
-        {filtered && filtered.length === 0 && !searchFilter && (
-          <GoBackUp pathname={pathname} />
-        )}
+        {filtered && !searchFilter && <GoBackUp pathname={pathname} />}
         {filtered && filtered.length > 0 && (
           <ShowTree
             filtered={filtered}
@@ -204,12 +202,16 @@ export default function Sitemap() {
 
 function GoBackUp({ pathname }: { pathname: string }) {
   const parentPath = pathname.split("/").slice(0, -1);
+  if (parentPath.length <= 2) {
+    return null;
+  }
   const parentBasename = parentPath[parentPath.length - 1];
 
   return (
     <p>
       <Link to={parentPath.join("/")}>
-        ↖️ Back up to <code>{parentBasename}</code>
+        ↖️ Back up to{" "}
+        {parentPath.length <= 3 ? <em>root</em> : <code>{parentBasename}</code>}
       </Link>
     </p>
   );
