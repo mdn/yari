@@ -30,6 +30,7 @@ const fakeV1APIRouter = require("./fake-v1-api");
 const { searchIndexRoute } = require("./search-index");
 const flawsRoute = require("./flaws");
 const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
+const { getRoot } = require("../content/utils");
 
 async function buildDocumentFromURL(url) {
   const document = Document.findByURL(url);
@@ -107,7 +108,9 @@ app.get("/_open", (req, res) => {
   if (fs.existsSync(filepath)) {
     absoluteFilepath = filepath;
   } else {
-    absoluteFilepath = path.join(CONTENT_ROOT, filepath);
+    const [locale] = filepath.split(path.sep);
+    const root = getRoot(locale);
+    absoluteFilepath = path.join(root, filepath);
   }
 
   // Double-check that the file can be found.
