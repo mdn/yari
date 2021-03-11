@@ -47,6 +47,8 @@ export default function AllTraits() {
     }
   }, [data, error]);
 
+  if (data) console.log(Object.keys(data));
+
   return (
     <div className="all-traits">
       <h2>All Documents Traits</h2>
@@ -87,11 +89,11 @@ function Loading({ startLoadingTime }: { startLoadingTime: Date }) {
     new Date(startLoadingTime.getTime() + 1000 * 15)
   );
   useEffect(() => {
-    if (sessionStorage.getItem(SESSIONSTORAGE_KEY)) {
+    if (localStorage.getItem(LOCALSTORAGE_KEY)) {
       setEstimateEndTime(
         new Date(
           new Date().getTime() +
-            parseInt(sessionStorage.getItem(SESSIONSTORAGE_KEY) as string)
+            parseInt(localStorage.getItem(LOCALSTORAGE_KEY) as string)
         )
       );
     }
@@ -99,12 +101,12 @@ function Loading({ startLoadingTime }: { startLoadingTime: Date }) {
     return () => {
       const aliveTime = new Date().getTime() - startLoadingTime.getTime();
       // Store this for the next time for better estimates
-      sessionStorage.setItem(SESSIONSTORAGE_KEY, `${aliveTime}`);
+      localStorage.setItem(LOCALSTORAGE_KEY, `${aliveTime}`);
     };
   }, [startLoadingTime]);
 
   const INTERVAL_INCREMENT = 700;
-  const SESSIONSTORAGE_KEY = "alltraits-loading-took";
+  const LOCALSTORAGE_KEY = "alltraits-loading-took";
   const [elapsed, setElapsed] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {
