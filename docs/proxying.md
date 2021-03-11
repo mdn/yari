@@ -21,7 +21,7 @@ and start it up again.
 
 ## Logging in
 
-TO BE DESCRIBED
+[See Siging in and signing up](./signingin.md)
 
 ## Faking it
 

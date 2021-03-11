@@ -25,8 +25,8 @@ async function buildSPAs(options) {
     console.log("Wrote", path.join(outPath, path.basename(url)));
   }
 
-  // Basically, this builds one `search/index.html` for every locale we intend
-  // to build.
+  // Basically, this builds one (for example) `search/index.html` for every
+  // locale we intend to build.
   for (const root of [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT]) {
     if (!root) {
       continue;
@@ -35,15 +35,22 @@ async function buildSPAs(options) {
       if (!fs.statSync(path.join(root, locale)).isDirectory()) {
         continue;
       }
-      const url = `/${locale}/search`;
-      const html = renderHTML(url);
-      const outPath = path.join(BUILD_OUT_ROOT, locale, "search");
-      fs.mkdirSync(outPath, { recursive: true });
-      const filePath = path.join(outPath, "index.html");
-      fs.writeFileSync(filePath, html);
-      buildCount++;
-      if (options.verbose) {
-        console.log("Wrote", filePath);
+      const SPAs = [
+        { prefix: "search", pageTitle: "Search" },
+        { prefix: "signin", pageTitle: "Sign in" },
+        { prefix: "signup", pageTitle: "Sign up" },
+      ];
+      for (const { prefix, pageTitle } of SPAs) {
+        const url = `/${locale}/${prefix}`;
+        const html = renderHTML(url, { pageTitle });
+        const outPath = path.join(BUILD_OUT_ROOT, locale, prefix);
+        fs.mkdirSync(outPath, { recursive: true });
+        const filePath = path.join(outPath, "index.html");
+        fs.writeFileSync(filePath, html);
+        buildCount++;
+        if (options.verbose) {
+          console.log("Wrote", filePath);
+        }
       }
     }
   }
