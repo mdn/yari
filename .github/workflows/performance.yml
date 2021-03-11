@@ -2,6 +2,10 @@ name: Performance
 
 on:
   pull_request:
+    paths:
+      - client/src/**
+      - .github/workflows/performance.yml
+      - yarn.lock
 
 jobs:
   lighthouse:
