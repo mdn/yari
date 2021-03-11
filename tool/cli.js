@@ -430,9 +430,7 @@ program
           );
         }
       }
-      console.log(
-        chalk.green(`Wrote ${filesWritten} _githistory.json files`)
-      );
+      console.log(chalk.green(`Wrote ${filesWritten} _githistory.json files`));
       if (saveHistory) {
         fs.writeFileSync(
           saveHistory,
