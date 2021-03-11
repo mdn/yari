@@ -28,7 +28,6 @@ export default function SettingsApp({ ...appProps }) {
     settingsDataURL += "/";
   }
   settingsDataURL += "index.json";
-  console.log({ settingsDataURL });
 
   const { data: settingsData, error: settingsError } = useSWR<SettingsData>(
     settingsDataURL,
