@@ -951,6 +951,26 @@ test("404 page", () => {
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
+test("sign in page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "signin");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("h1").text()).toContain("Sign in");
+  expect($("title").text()).toContain("Sign in");
+});
+
+test("sign up page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "signup");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("h1").text()).toContain("Sign up");
+  expect($("title").text()).toContain("Sign up");
+});
+
 test("bcd table extraction followed by h3", () => {
   const builtFolder = path.join(
     buildRoot,

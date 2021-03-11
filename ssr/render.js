@@ -139,7 +139,12 @@ function serializeDocumentData(data) {
 
 export default function render(
   renderApp,
-  { doc = null, pageNotFound = false, feedEntries = null } = {}
+  {
+    doc = null,
+    pageNotFound = false,
+    feedEntries = null,
+    pageTitle = null,
+  } = {}
 ) {
   const buildHtml = readBuildHTML();
   const webfontURLs = extractWebFontURLs();
@@ -151,7 +156,9 @@ export default function render(
 
   const rendered = renderToString(renderApp);
 
-  let pageTitle = "MDN Web Docs"; // default
+  if (!pageTitle) {
+    pageTitle = "MDN Web Docs"; // default
+  }
   let canonicalURL = "https://developer.mozilla.org";
 
   let pageDescription = "";
