@@ -60,18 +60,11 @@ class Totals:
             self.failed += 1
         elif task.is_redirect:
             self.uploaded_redirects += 1
+        elif task.is_deletion:
+            self.deleted_files += 1
         else:
             self.uploaded_files += 1
             self.uploaded_files_size += task.size
-
-    def delete(self, task):
-        if task.skipped:
-            self.skipped += 1
-        elif task.error:
-            self.failed += 1
-        else:
-            self.deleted_files += 1
-            # self.deleted_files_size += task.size
 
 
 class DisplayProgress:
@@ -121,6 +114,7 @@ class UploadTask:
     error = None
     skipped = False
     is_redirect = False
+    is_deletion = False
 
     def upload(self):
         raise NotImplementedError()
@@ -265,8 +259,9 @@ class DeleteTask(UploadTask):
     """
     Class for doing deletion by key tasks.
     """
+
     is_deletion = True
-    
+
     def __init__(self, key, dry_run=False):
         self.key = key
         self.dry_run = dry_run
