@@ -321,7 +321,6 @@
         "NodeFilter",
         "NodeIterator",
         "NodeList",
-        "NonDocumentTypeChildNode",
         "ProcessingInstruction",
         "PromiseResolver",
         "Range",
@@ -1512,12 +1511,7 @@
     },
     "URL API": {
       "overview": ["URL API"],
-      "interfaces": [
-        "URL",
-        "URLSearchParams",
-        "HTMLHyperlinkElementUtils",
-        "URLUtilsReadOnly"
-      ],
+      "interfaces": ["URL", "URLSearchParams", "URLUtilsReadOnly"],
       "methods": [],
       "properties": [],
       "events": []

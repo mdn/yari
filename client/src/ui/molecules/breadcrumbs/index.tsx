@@ -9,7 +9,7 @@ export function Breadcrumbs({ parents }: { parents: DocParent[] }) {
   }
 
   return (
-    <nav className="breadcrumbs">
+    <nav className="breadcrumbs-container" aria-label="Breadcrumb navigation">
       <ol
         typeof="BreadcrumbList"
         vocab="https://schema.org/"

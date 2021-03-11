@@ -14,7 +14,7 @@ export default function WritersHomepage() {
   return (
     <PageContentContainer>
       <div id="writers-homepage">
-        <h2>Welcome to MDN</h2>
+        <h2>Writer's home page</h2>
 
         <Search />
 

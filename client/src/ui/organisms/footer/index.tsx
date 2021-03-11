@@ -10,6 +10,7 @@ import "./index.scss";
 
 export function Footer() {
   const locale = useLocale();
+
   return (
     <footer id="nav-footer" className="page-footer">
       <div className="content-container">

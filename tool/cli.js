@@ -19,6 +19,7 @@ const {
   Redirect,
   Document,
   buildURL,
+  getRoot,
 } = require("../content");
 const { buildDocument, gatherGitHistory, buildSPAs } = require("../build");
 const {
@@ -313,9 +314,33 @@ program
       const { hostname, port } = options;
       let url;
       // Perhaps they typed in a path relative to the content root
-      if (slug.startsWith("files") && slug.endsWith("index.html")) {
+      if (
+        (slug.startsWith("files") || fs.existsSync(slug)) &&
+        (slug.endsWith("index.html") || slug.endsWith("index.md"))
+      ) {
+        if (
+          fs.existsSync(slug) &&
+          slug.includes("translated-content") &&
+          !CONTENT_TRANSLATED_ROOT
+        ) {
+          // Such an easy mistake to make that you pass it a file path
+          // that comes from the translated-content repo but forgot to
+          // set the environment variable first.
+          console.warn(
+            chalk.yellow(
+              `Did you forget to set the environment variable ${chalk.bold(
+                "CONTENT_TRANSLATED_ROOT"
+              )}?`
+            )
+          );
+        }
+        const slugSplit = slug
+          .replace(CONTENT_ROOT, "")
+          .replace(CONTENT_TRANSLATED_ROOT ? CONTENT_TRANSLATED_ROOT : "", "")
+          .split(path.sep);
         const document = Document.read(
-          slug.split(path.sep).slice(1, -1).join(path.sep)
+          // Remove that leading 'files' and the trailing 'index.(html|md)'
+          slugSplit.slice(1, -1).join(path.sep)
         );
         if (document) {
           url = document.url;
@@ -357,14 +382,11 @@ program
     "gather-git-history",
     "Extract all last-modified dates from the git logs"
   )
-  .option("--root <directory>", "Which content root", {
-    default: CONTENT_ROOT,
-  })
   .option("--save-history <path>", "File to save all previous history")
   .option("--load-history <path>", "Optional file to load all previous history")
   .action(
     tryOrExit(async ({ options }) => {
-      const { root, saveHistory, loadHistory } = options;
+      const { saveHistory, loadHistory, verbose } = options;
       if (loadHistory) {
         if (fs.existsSync(loadHistory)) {
           console.log(
@@ -372,8 +394,12 @@ program
           );
         }
       }
+      const roots = [CONTENT_ROOT];
+      if (CONTENT_TRANSLATED_ROOT) {
+        roots.push(CONTENT_TRANSLATED_ROOT);
+      }
       const map = gatherGitHistory(
-        root,
+        roots,
         loadHistory && fs.existsSync(loadHistory) ? loadHistory : null
       );
       const historyPerLocale = {};
@@ -388,17 +414,23 @@ program
         }
         historyPerLocale[locale][relPath] = value;
       }
+      let filesWritten = 0;
       for (const [locale, history] of Object.entries(historyPerLocale)) {
+        const root = getRoot(locale);
         const outputFile = path.join(root, locale, "_githistory.json");
         fs.writeFileSync(outputFile, JSON.stringify(history, null, 2), "utf-8");
-        console.log(
-          chalk.green(
-            `Wrote '${locale}' ${Object.keys(
-              history
-            ).length.toLocaleString()} paths into ${outputFile}`
-          )
-        );
+        filesWritten += 1;
+        if (verbose) {
+          console.log(
+            chalk.green(
+              `Wrote '${locale}' ${Object.keys(
+                history
+              ).length.toLocaleString()} paths into ${outputFile}`
+            )
+          );
+        }
       }
+      console.log(chalk.green(`Wrote ${filesWritten} _githistory.json files`));
       if (saveHistory) {
         fs.writeFileSync(
           saveHistory,

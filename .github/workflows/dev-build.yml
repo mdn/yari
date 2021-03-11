@@ -91,7 +91,7 @@ jobs:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.1.1
+        uses: snok/install-poetry@v1.1.2
 
       - name: Install deployer
         run: |
@@ -203,7 +203,7 @@ jobs:
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
-          poetry run deployer upload ../client/build
+          poetry run deployer upload --prune ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
           # TODO
           # Execute command to tell the Dev CloudFront distribution to use the
