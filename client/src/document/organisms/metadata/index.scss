@@ -12,6 +12,11 @@
   margin: 0 auto;
   max-width: $max-width-default;
 
+  a:link,
+  a:visited {
+    text-decoration: underline;
+  }
+
   .on-github {
     margin-bottom: $base-spacing;
   }
