@@ -437,6 +437,12 @@ class BucketManager:
             for task_iter in task_iters:
                 futures = {}
                 for task in task_iter:
+                    if existing_bucket_objects:
+                        # Independent of if we benefitted from the knowledge of the
+                        # key already existing or not, remove it from the dict
+                        # so we can figure out what remains later.
+                        existing_bucket_objects.pop(task.key, None)
+
                     # Note: redirect upload tasks are never skipped.
                     if existing_bucket_objects and not task.is_redirect:
                         s3_obj = existing_bucket_objects.get(task.key)
@@ -444,18 +450,6 @@ class BucketManager:
                             task.skipped = True
                             if on_task_complete:
                                 on_task_complete(task)
-
-                            # Before continuing, pop it from the existing dict because
-                            # we no longer need it after the ETag comparison has been
-                            # done.
-                            existing_bucket_objects.pop(task.key, None)
-                            continue
-
-                    if existing_bucket_objects:
-                        # Independent of if we benefitted from the knowledge of the
-                        # key already existing or not, remove it from the dict
-                        # so we can figure out what remains later.
-                        existing_bucket_objects.pop(task.key, None)
 
                     future = executor.submit(task.upload, self)
                     futures[future] = task
