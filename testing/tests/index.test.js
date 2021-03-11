@@ -804,7 +804,9 @@ test("image flaws kitchen sink", () => {
   expect(flaw.column).toBe(13);
 
   flaw = map.get("idontexist.png");
-  expect(flaw.explanation).toBe("File not present on disk");
+  expect(flaw.explanation).toBe(
+    "File not present on disk, an empty file, or not an image"
+  );
   expect(flaw.suggestion).toBeNull();
   expect(flaw.line).toBe(34);
   expect(flaw.column).toBe(13);
@@ -844,7 +846,9 @@ test("image flaws kitchen sink", () => {
   expect(flaw.column).toBe(13);
 
   flaw = map.get("../Foo/nonexistent.png");
-  expect(flaw.explanation).toBe("File not present on disk");
+  expect(flaw.explanation).toBe(
+    "File not present on disk, an empty file, or not an image"
+  );
   expect(flaw.suggestion).toBeNull();
   expect(flaw.line).toBe(64);
   expect(flaw.column).toBe(13);
@@ -862,6 +866,30 @@ test("image flaws kitchen sink", () => {
       expect(src.startsWith("/en-US/docs/Web/")).toBeTruthy();
     }
   });
+});
+
+test("image flaws with bad images", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "bad_src"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  // You have to be intimately familiar with the fixture to understand
+  // why these flaws come out as they do.
+  expect(flaws.images.length).toBe(4);
+  expect(
+    flaws.images.filter(
+      (flaw) =>
+        flaw.explanation ===
+        "File not present on disk, an empty file, or not an image"
+    ).length
+  ).toBe(4);
 });
 
 test("image flaws with repeated external images", () => {
@@ -921,6 +949,26 @@ test("404 page", () => {
   expect($("title").text()).toContain("Page not found");
   expect($("h1").text()).toContain("Page not found");
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
+});
+
+test("sign in page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "signin");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("h1").text()).toContain("Sign in");
+  expect($("title").text()).toContain("Sign in");
+});
+
+test("sign up page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "signup");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("h1").text()).toContain("Sign up");
+  expect($("title").text()).toContain("Sign up");
 });
 
 test("bcd table extraction followed by h3", () => {

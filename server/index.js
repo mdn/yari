@@ -63,27 +63,31 @@ app.use(originRequestMiddleware);
 
 app.use(staticMiddlewares);
 
-app.use(express.urlencoded({ extended: true }));
+// Depending on if FAKE_V1_API is set, we either respond with JSON based
+// on `.json` files on disk or we proxy the requests to Kuma.
+const proxy = FAKE_V1_API
+  ? fakeV1APIRouter
+  : createProxyMiddleware({
+      target: `${
+        ["developer.mozilla.org", "developer.allizom.org"].includes(
+          PROXY_HOSTNAME
+        )
+          ? "https://"
+          : "http://"
+      }${PROXY_HOSTNAME}`,
+      changeOrigin: true,
+      proxyTimeout: 3000,
+      timeout: 3000,
+    });
 
-app.use(
-  "/api/v1",
-  // Depending on if FAKE_V1_API is set, we either respond with JSON based
-  // on `.json` files on disk or we proxy the requests to Kuma.
-  FAKE_V1_API
-    ? fakeV1APIRouter
-    : createProxyMiddleware({
-        target: `${
-          ["developer.mozilla.org", "developer.allizom.org"].includes(
-            PROXY_HOSTNAME
-          )
-            ? "https://"
-            : "http://"
-        }${PROXY_HOSTNAME}`,
-        changeOrigin: true,
-        proxyTimeout: 3000,
-        timeout: 3000,
-      })
-);
+app.use("/api/v1", proxy);
+// This is an exception and it's only ever relevant in development.
+app.post("/:locale/users/account/signup", proxy);
+
+// It's important that this line comes *after* the setting up for the proxy
+// middleware for `/api/v1` above.
+// See https://github.com/chimurai/http-proxy-middleware/issues/40#issuecomment-163398924
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/_document", documentRouter);
 
