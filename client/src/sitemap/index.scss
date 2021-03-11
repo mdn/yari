@@ -1,6 +1,10 @@
 #sitemap {
   min-height: 800px;
 
+  .open-in-your-editor {
+    cursor: pointer;
+  }
+
   ul.breadcrumb {
     li {
       list-style-type: none;
