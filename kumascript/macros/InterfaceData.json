@@ -310,7 +310,7 @@
     },
     "CharacterData": {
       "inh": "Node",
-      "impl": ["ChildNode", "NonDocumentTypeChildNode"]
+      "impl": ["ChildNode"]
     },
     "ChromeWorker": {
       "inh": "Worker",
@@ -518,13 +518,7 @@
     },
     "Element": {
       "inh": "Node",
-      "impl": [
-        "ChildNode",
-        "NonDocumentTypeChildNode",
-        "ParentNode",
-        "Animatable",
-        "GeometryUtils"
-      ]
+      "impl": ["ChildNode", "ParentNode", "Animatable", "GeometryUtils"]
     },
     "EngineeringMode": {
       "inh": "EventTarget",
@@ -608,7 +602,7 @@
     },
     "HTMLAnchorElement": {
       "inh": "HTMLElement",
-      "impl": ["HTMLHyperlinkElementUtils", "URLUtilsSearchParams"]
+      "impl": []
     },
     "HTMLAppletElement": {
       "inh": "HTMLElement",
@@ -620,7 +614,7 @@
     },
     "HTMLAreaElement": {
       "inh": "HTMLElement",
-      "impl": ["HTMLHyperlinkElementUtils", "URLUtilsSearchParams"]
+      "impl": []
     },
     "HTMLAudioElement": {
       "inh": "HTMLMediaElement",

@@ -27,7 +27,7 @@ const { prepareDoc, renderDocHTML } = require("../ssr/dist/main");
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
 const fakeV1APIRouter = require("./fake-v1-api");
-const { searchRoute } = require("./document-watch");
+const { searchIndexRoute } = require("./search-index");
 const flawsRoute = require("./flaws");
 const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
 
@@ -63,25 +63,26 @@ app.use(originRequestMiddleware);
 
 app.use(staticMiddlewares);
 
-app.use(
-  "/api/v1",
-  // Depending on if FAKE_V1_API is set, we either respond with JSON based
-  // on `.json` files on disk or we proxy the requests to Kuma.
-  FAKE_V1_API
-    ? fakeV1APIRouter
-    : createProxyMiddleware({
-        target: `${
-          ["developer.mozilla.org", "developer.allizom.org"].includes(
-            PROXY_HOSTNAME
-          )
-            ? "https://"
-            : "http://"
-        }${PROXY_HOSTNAME}`,
-        changeOrigin: true,
-        proxyTimeout: 3000,
-        timeout: 3000,
-      })
-);
+// Depending on if FAKE_V1_API is set, we either respond with JSON based
+// on `.json` files on disk or we proxy the requests to Kuma.
+const proxy = FAKE_V1_API
+  ? fakeV1APIRouter
+  : createProxyMiddleware({
+      target: `${
+        ["developer.mozilla.org", "developer.allizom.org"].includes(
+          PROXY_HOSTNAME
+        )
+          ? "https://"
+          : "http://"
+      }${PROXY_HOSTNAME}`,
+      changeOrigin: true,
+      proxyTimeout: 3000,
+      timeout: 3000,
+    });
+
+app.use("/api/v1", proxy);
+// This is an exception and it's only ever relevant in development.
+app.post("/:locale/users/account/signup", proxy);
 
 // It's important that this line comes *after* the setting up for the proxy
 // middleware for `/api/v1` above.
@@ -125,7 +126,7 @@ app.get("/_open", (req, res) => {
   res.status(200).send(`Tried to open ${spec} in ${process.env.EDITOR}`);
 });
 
-app.use("/:locale/search-index.json", searchRoute);
+app.use("/:locale/search-index.json", searchIndexRoute);
 
 app.get("/_flaws", flawsRoute);
 

@@ -1,7 +1,12 @@
-name: Developing with Yari
+# Instead of waiting for Yari to be published to npmjs.com and be upgraded
+# inside mdn/content by Dependabot, we do all those steps here using `npm pack`.
+
+name: NPM Publish simulation
 
 on:
   pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -32,8 +37,7 @@ jobs:
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
         env:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
-        run: |
-          yarn --frozen-lockfile
+        run: yarn --frozen-lockfile
 
       - name: Setup kernel for react native, increase watchers
         run: |
@@ -43,29 +47,40 @@ jobs:
           # Source https://github.com/expo/expo-github-action/issues/20#issuecomment-541676895
           echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
-      - name: Start the dev server
+      - name: Prepare to build
         env:
-          # Remember, the mdn/content repo got cloned into `pwd` into a
-          # sub-folder called "mdn/content"
-          CONTENT_ROOT: "${{ github.workspace }}/mdn/content/files"
-        run: |
-          # Sanity check that the mdn/kitchensink page is there. If you don't do
-          # this, and the file has accidentally or intentionally been deleted,
-          # unfortunately the error messaging can be very misleading because the
-          # tests would assume there's something wrong with the code instead of
-          # the content if loading this page fails.
-          ls "$CONTENT_ROOT/en-us/mdn/kitchensink"
+          # The following env vars is what we do in npm-publish.yml
+          # Each variable set is documented there.
 
+          REACT_APP_CRUD_MODE: true
+          REACT_APP_DISABLE_AUTH: true
+          CONTENT_ROOT: testing/content/files
+        run: |
           yarn prepare-build
+
+      - name: Build and install tarball
+        run: |
+          echo mdn/content/ >> .npmignore
+          npm pack
+          TARBALL=`ls mdn-yari-*.tgz`
+          echo $TARBALL
+          ls -lh $TARBALL
+          mv $TARBALL mdn/content/
+          cd mdn/content
+          yarn add file:$TARBALL
+
+      - name: Start Yari from mock content repo
+        working-directory: mdn/content
+        run: |
           yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
 
-      - name: Wait for servers
+      - name: View some URLs on localhost:5000
         run: |
-          # Just a slight delay to wait until the dev server is ready.
-          sleep 3
+          curl --retry-connrefused --retry 5 -I http://localhost:5000
 
-          curl --retry-connrefused --retry 5 http://localhost:5000 > /dev/null
-          curl --retry-connrefused --retry 5 --silent http://localhost:3000 > /dev/null
+          # Basically, test if it 200 OKs. If not, this'll exit non-zero.
+          curl http://localhost:5000/en-US/ > /dev/null
+          curl http://localhost:5000/en-US/docs/MDN/Kitchensink > /dev/null
 
       - name: Test viewing the dev server
         env:
@@ -75,6 +90,11 @@ jobs:
           # Use local chrome installs since we skip downloading it as part
           # of the yarn installs above
           PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+          # When running Yari from within mdn/content it only starts 1 server;
+          # the one on localhost:5000. No React dev server; the one
+          # on localhost:3000.
+          # Testing that dev server is not relevant or important in this context.
+          DEVELOPING_SKIP_DEV_URL: true
         run: |
           yarn test:testing developing
 
@@ -86,3 +106,8 @@ jobs:
           echo ""
           echo "STDERR..................................................."
           cat /tmp/stderr.log
+
+      - name: SSR build a page
+        working-directory: mdn/content
+        run: |
+          yarn build files/en-us/mdn/kitchensink/index.html

@@ -520,13 +520,13 @@ function remove(
     removed.push(buildURL(locale, slug));
   }
 
+  execGit(["rm", "-r", path.dirname(fileInfo.path)], { cwd: root });
+
   if (redirect) {
     Redirect.add(locale, [[url, redirect]]);
   } else {
     Redirect.remove(locale, [url, ...removed]);
   }
-
-  execGit(["rm", "-r", path.dirname(fileInfo.path)], { cwd: root });
 
   updateWikiHistory(
     path.join(root, metadata.locale.toLowerCase()),

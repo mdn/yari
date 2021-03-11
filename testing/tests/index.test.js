@@ -804,7 +804,9 @@ test("image flaws kitchen sink", () => {
   expect(flaw.column).toBe(13);
 
   flaw = map.get("idontexist.png");
-  expect(flaw.explanation).toBe("File not present on disk");
+  expect(flaw.explanation).toBe(
+    "File not present on disk, an empty file, or not an image"
+  );
   expect(flaw.suggestion).toBeNull();
   expect(flaw.line).toBe(34);
   expect(flaw.column).toBe(13);
@@ -844,7 +846,9 @@ test("image flaws kitchen sink", () => {
   expect(flaw.column).toBe(13);
 
   flaw = map.get("../Foo/nonexistent.png");
-  expect(flaw.explanation).toBe("File not present on disk");
+  expect(flaw.explanation).toBe(
+    "File not present on disk, an empty file, or not an image"
+  );
   expect(flaw.suggestion).toBeNull();
   expect(flaw.line).toBe(64);
   expect(flaw.column).toBe(13);
@@ -862,6 +866,30 @@ test("image flaws kitchen sink", () => {
       expect(src.startsWith("/en-US/docs/Web/")).toBeTruthy();
     }
   });
+});
+
+test("image flaws with bad images", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "bad_src"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  // You have to be intimately familiar with the fixture to understand
+  // why these flaws come out as they do.
+  expect(flaws.images.length).toBe(4);
+  expect(
+    flaws.images.filter(
+      (flaw) =>
+        flaw.explanation ===
+        "File not present on disk, an empty file, or not an image"
+    ).length
+  ).toBe(4);
 });
 
 test("image flaws with repeated external images", () => {
@@ -1008,12 +1036,17 @@ test("img tags with an empty 'src' should be a flaw", () => {
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(doc.flaws.images.length).toBe(1);
+  expect(doc.flaws.images.length).toBe(2);
   expect(doc.flaws.images[0].explanation).toBe("Empty img 'src' attribute");
   expect(doc.flaws.images[0].fixable).toBeFalsy();
   expect(doc.flaws.images[0].externalImage).toBeFalsy();
   expect(doc.flaws.images[0].line).toBe(8);
   expect(doc.flaws.images[0].column).toBe(13);
+  expect(doc.flaws.images[1].explanation).toBe("Empty img 'src' attribute");
+  expect(doc.flaws.images[1].fixable).toBeFalsy();
+  expect(doc.flaws.images[1].externalImage).toBeFalsy();
+  expect(doc.flaws.images[1].line).toBe(17);
+  expect(doc.flaws.images[1].column).toBe(11);
 });
 
 test("img with the image_widths flaw", () => {
