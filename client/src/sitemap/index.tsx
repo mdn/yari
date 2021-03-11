@@ -12,9 +12,16 @@ interface SearchIndexDoc {
 }
 
 export default function Sitemap() {
-  const { pathname } = useLocation();
+  const location = useLocation();
   const navigate = useNavigate();
   const locale = useLocale();
+
+  // Because you can load this app with something like `/en-us/_sitemap/Web/`
+  // we have to pretend that didn't happen and force it to be `/en-US/_sitemap/Web`
+  const pathname = location.pathname.endsWith("/")
+    ? location.pathname.slice(0, -1)
+    : location.pathname;
+
   // `pathname` is going to be something like `/en-US/_sitemap/Web/Foo`.
   // Transform that to be just `en-us/docs/web/foo`.
   const searchPathname = pathname
@@ -103,16 +110,38 @@ export default function Sitemap() {
     }
   }, [searchPathname, docs, searchFilter]);
 
+  const [highlightIndex, setHighlightIndex] = React.useState(0);
+  React.useEffect(() => {
+    setHighlightIndex(0);
+  }, [searchFilter]);
+
   React.useEffect(() => {
     if (searchSubmitted) {
       if (filtered && filtered.length >= 1) {
-        const slug = filtered[0].url.split("/").slice(3);
+        const slug = filtered[highlightIndex].url.split("/").slice(3);
         setSearchFilter("");
         setSearchSubmitted(false);
         navigate(`/${locale}/_sitemap/${slug.join("/")}`);
       }
     }
-  }, [locale, filtered, searchSubmitted, navigate]);
+  }, [locale, filtered, searchSubmitted, navigate, highlightIndex]);
+
+  function changeHighlight(direction: "up" | "down") {
+    if (direction === "up") {
+      let nextNumber = highlightIndex - 1;
+      if (filtered) {
+        nextNumber =
+          ((nextNumber % filtered.length) + filtered.length) % filtered.length;
+      }
+      setHighlightIndex(nextNumber);
+    } else {
+      let nextNumber = highlightIndex + 1;
+      if (filtered) {
+        nextNumber = nextNumber % filtered.length;
+      }
+      setHighlightIndex(nextNumber);
+    }
+  }
 
   return (
     <PageContentContainer>
@@ -129,6 +158,7 @@ export default function Sitemap() {
         {filtered && <Breadcrumb pathname={pathname} thisDoc={thisDoc} />}
         {filtered && (
           <FilterForm
+            pathname={pathname}
             searchFilter={searchFilter}
             onUpdate={(text: string, submitted: boolean) => {
               setSearchFilter(text);
@@ -142,13 +172,25 @@ export default function Sitemap() {
                 navigate(parentPathname.join("/"));
               }
             }}
+            onChangeHighlight={changeHighlight}
           />
         )}
         {filtered &&
           filtered.length === 0 &&
-          (searchFilter ? <em>nothing found</em> : <em>nothing here</em>)}
+          (searchFilter ? (
+            <em>nothing found</em>
+          ) : (
+            <em>has no further sub-documents</em>
+          ))}
+        {filtered && filtered.length === 0 && !searchFilter && (
+          <GoBackUp pathname={pathname} />
+        )}
         {filtered && filtered.length > 0 && (
-          <ShowTree filtered={filtered} childCounts={childCounts} />
+          <ShowTree
+            filtered={filtered}
+            childCounts={childCounts}
+            highlightIndex={highlightIndex}
+          />
         )}
         <p className="footer-note">
           Note, this sitemap only shows documents. Not any other applications.
@@ -158,14 +200,31 @@ export default function Sitemap() {
   );
 }
 
+function GoBackUp({ pathname }: { pathname: string }) {
+  const parentPath = pathname.split("/").slice(0, -1);
+  const parentBasename = parentPath[parentPath.length - 1];
+
+  return (
+    <p>
+      <Link to={parentPath.join("/")}>
+        ↖️ Back up to <code>{parentBasename}</code>
+      </Link>
+    </p>
+  );
+}
+
 function FilterForm({
+  pathname,
   searchFilter,
   onUpdate,
   onGoUp,
+  onChangeHighlight,
 }: {
+  pathname: string;
   searchFilter: string;
   onUpdate: (text: string, submitted: boolean) => void;
   onGoUp: () => void;
+  onChangeHighlight: (s: "up" | "down") => void;
 }) {
   const [hideTip, setHideTip] = React.useState(false);
 
@@ -176,35 +235,51 @@ function FilterForm({
       onGoUp();
     }
   }, [countBackspaces, onGoUp]);
+
   const inputRef = React.useRef<null | HTMLInputElement>(null);
-  function focusSearch(event: KeyboardEvent) {
-    if (inputRef.current && event.target) {
-      const target = event.target as HTMLElement;
-      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") {
-        if (event.key === "Backspace" && event.target === inputRef.current) {
-          setCountBackspaces((s) => s + 1);
-        } else {
-          setCountBackspaces(0);
+
+  const focusSearch = React.useCallback(
+    (event: KeyboardEvent) => {
+      if (inputRef.current && event.target) {
+        const target = event.target as HTMLElement;
+
+        if (target === inputRef.current) {
+          if (event.key === "ArrowDown") {
+            onChangeHighlight("down");
+          } else if (event.key === "ArrowUp") {
+            onChangeHighlight("up");
+          }
         }
 
-        if (event.key === "Escape") {
-          inputRef.current.blur();
-        }
-      } else {
-        if (event.key === "T" || event.key === "t") {
-          inputRef.current.focus();
-          setCountBackspaces(0);
+        if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") {
+          if (event.key === "Backspace" && event.target === inputRef.current) {
+            if (!searchFilter.trim()) {
+              setCountBackspaces((s) => s + 1);
+            }
+          } else {
+            setCountBackspaces(0);
+          }
+
+          if (event.key === "Escape") {
+            inputRef.current.blur();
+          }
+        } else {
+          if (event.key === "T" || event.key === "t") {
+            inputRef.current.focus();
+            setCountBackspaces(0);
+          }
         }
       }
-    }
-  }
+    },
+    [onChangeHighlight, searchFilter]
+  );
+
   React.useEffect(() => {
     window.document.addEventListener("keyup", focusSearch);
     return () => {
       window.document.removeEventListener("keyup", focusSearch);
     };
-  }, []);
-  const { pathname } = useLocation();
+  }, [focusSearch]);
   const prefixPathname = pathname.replace(`/_sitemap`, "/docs");
 
   return (
@@ -225,6 +300,9 @@ function FilterForm({
         }}
         onFocus={() => {
           setHideTip(true);
+        }}
+        onBlur={() => {
+          setHideTip(false);
         }}
       />{" "}
       {!hideTip && (
@@ -250,8 +328,8 @@ function Breadcrumb({
 
   return (
     <ul className="breadcrumb">
-      <li>
-        <Link to={root.join("/")}>root</Link>
+      <li className="first">
+        {split.length ? <Link to={root.join("/")}>root</Link> : <em>root</em>}
       </li>
       {split.map((portion, i) => {
         const last = i === split.length - 1;
@@ -271,9 +349,11 @@ function Breadcrumb({
       <li className="this-doc">
         <b>Go to:</b>{" "}
         {thisDoc ? (
-          <Link to={thisDoc.url}>
-            <em>{thisDoc.title}</em>
-          </Link>
+          <>
+            <Link to={thisDoc.url}>
+              <em>{thisDoc.title}</em>
+            </Link>
+          </>
         ) : (
           <Link to={`/${locale}/`}>Home page</Link>
         )}
@@ -285,17 +365,22 @@ function Breadcrumb({
 function ShowTree({
   filtered,
   childCounts,
+  highlightIndex,
 }: {
   filtered: SearchIndexDoc[];
   childCounts: Map<string, number>;
+  highlightIndex: number;
 }) {
   const locale = useLocale();
   return (
     <div className="tree">
       <ul>
-        {filtered.map((doc) => {
+        {filtered.map((doc, i) => {
           return (
-            <li key={doc.url}>
+            <li
+              key={doc.url}
+              className={highlightIndex === i ? "highlight" : undefined}
+            >
               <Link to={doc.url.replace("/docs/", "/_sitemap/")}>
                 <code>{doc.url.replace(`/${locale}/docs`, "")}</code>
               </Link>{" "}
