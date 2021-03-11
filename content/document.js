@@ -9,6 +9,7 @@ const {
   CONTENT_ARCHIVED_ROOT,
   CONTENT_TRANSLATED_ROOT,
   CONTENT_ROOT,
+  ACTIVE_LOCALES,
   VALID_LOCALES,
   ROOTS,
 } = require("./constants");
@@ -242,6 +243,8 @@ const read = memoize((folder) => {
   const locale = extractLocale(folder);
   const url = `/${locale}/docs/${metadata.slug}`;
 
+  const isActive = !isArchive && ACTIVE_LOCALES.has(locale.toLowerCase());
+
   // The last-modified is always coming from the git logs. Independent of
   // which root it is.
   const gitHistory = getGitHistories(root, locale).get(
@@ -271,6 +274,7 @@ const read = memoize((folder) => {
     ...{ rawHTML, rawContent },
     isArchive,
     isTranslated,
+    isActive,
     fileInfo: {
       folder,
       path: filePath,
