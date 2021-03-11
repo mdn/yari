@@ -112,6 +112,9 @@ export default function SettingsApp({ ...appProps }) {
             userSettings={data}
             settingsData={settingsData}
             refreshUserSettings={() => {
+              // This will "force" a new XHR request in the useUserData hook.
+              mutate("/api/v1/whoami");
+
               mutate("/api/v1/settings");
             }}
           />
@@ -291,7 +294,11 @@ function CloseAccount({ userSettings }: { userSettings: UserSettings }) {
       if (!response.ok) {
         throw new Error(`${response.status} on ${response.url}`);
       }
-      alert("Your account has been closed and you are not signed out.");
+      alert("Your account has been closed and you are now signed out.");
+
+      // This will "force" a new XHR request in the useUserData hook.
+      mutate("/api/v1/whoami");
+
       navigate(`/${locale}/`);
       return null;
     },
