@@ -507,7 +507,7 @@ def upload_content(build_directory, content_roots, config):
     force_refresh = config["force_refresh"]
     show_progress_bar = not config["no_progressbar"]
     upload_redirects = not config["no_redirects"]
-    delete_unrecognized = config["delete_unrecognized"]
+    prune = config["prune"]
 
     log.info(f"Upload files from: {build_directory}")
     if upload_redirects:
@@ -575,7 +575,7 @@ def upload_content(build_directory, content_roots, config):
         log.info(f"Total skipped files: {totals.skipped:,} matched existing S3 objects")
         log.info(f"Total upload/skip time: {upload_timer}")
 
-    if delete_unrecognized:
+    if prune:
         # Now `existing_bucket_objects` has mutated to only contain the keys
         # that were not uploaded or not needed to be uploaded.
         # That basically means all the S3 keys that exist before but are
