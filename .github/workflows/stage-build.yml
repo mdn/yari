@@ -113,7 +113,7 @@ jobs:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.1.1
+        uses: snok/install-poetry@v1.1.2
 
       - name: Install deployer
         run: |
@@ -164,6 +164,14 @@ jobs:
           # '<meta name="robots" content="noindex, nofollow">' nomatter what
           # kind of document it is.
           BUILD_ALWAYS_NO_ROBOTS: true
+
+          # (peterbe, Mar 2021) This is unique to Stage and temporary. We want to
+          # test the new Yari-based sign-in and sign-up. Setting this environment
+          # variable changes the behavior of the "Sign in" link in the top navbar.
+          # Once we know for sure that this new Yari sign in/up is working in Stage
+          # we'll make this the new default can we can remove these lines.
+          REACT_APP_USE_YARI_SIGNIN: true
+
         run: |
           if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
             echo "Will build mdn/archived-content too"

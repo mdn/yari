@@ -11,7 +11,13 @@ const { getPopularities } = require("./popularities");
 const Redirect = require("./redirect");
 const Image = require("./image");
 const Archive = require("./archive");
-const { buildURL, memoize, slugToFolder, execGit } = require("./utils");
+const {
+  buildURL,
+  memoize,
+  slugToFolder,
+  execGit,
+  getRoot,
+} = require("./utils");
 const { resolveFundamental } = require("../libs/fundamental-redirects");
 const { translationsOf } = require("./translations");
 
@@ -36,4 +42,5 @@ module.exports = {
   resolveFundamental,
   execGit,
   translationsOf,
+  getRoot,
 };

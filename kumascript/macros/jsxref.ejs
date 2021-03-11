@@ -14,29 +14,24 @@
 //  {{jsxref("Global_Objects/Date/getNumber", "Date.prototype.getNumber()")}}
 //
 
-let jsl10n = JSON.parse(await template('L10n:JavaScript'));
-
-let l10n = {
-    refslug: mdn.getLocalString(jsl10n, 'slug_reference'),
-    slug: mdn.getLocalString(jsl10n, 'slug_global_objects'),
-};
+const slug = 'Global_Objects';
 
 let str = $1 || $0;
 
-let URL = "/" + env.locale + "/docs/Web/JavaScript/" + l10n.refslug + '/';
+let URL = `/${env.locale}/docs/Web/JavaScript/Reference/`;
 let basePath = URL;
 
 let api  = $0.replace('()', '').replace('.prototype.', '.');
 
 let page = wiki.getPage(URL + $0);
-let objectPage = wiki.getPage(URL + l10n.slug + '/' + $0);
+let objectPage = wiki.getPage(URL + slug + '/' + $0);
 
 if ((api.indexOf("..") === -1) && (api.indexOf(".") !== -1)) { // Handle try...catch case
-    basePath += l10n.slug + '/';
-    URL += l10n.slug + '/' + api.replace('.', '/');
+    basePath += slug + '/';
+    URL += slug + '/' + api.replace('.', '/');
 } else if (!page.slug && objectPage.slug) {
-    basePath += l10n.slug + '/';
-    URL += l10n.slug + '/' + $0;
+    basePath += slug + '/';
+    URL += slug + '/' + $0;
 } else {
     URL += web.safeDecodeURIComponent($0);
 }

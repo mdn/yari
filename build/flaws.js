@@ -591,7 +591,9 @@ async function fixFixableFlaws(doc, options, document) {
         if (
           !fileType &&
           flaw.src.toLowerCase().endsWith(".svg") &&
-          imageResponse.headers["content-type"] === "image/svg+xml"
+          imageResponse.headers["content-type"]
+            .toLowerCase()
+            .startsWith("image/svg+xml")
         ) {
           // If the SVG doesn't have the `<?xml version="1.0" encoding="UTF-8"?>`
           // and/or the `<!DOCTYPE svg PUBLIC ...` in the first couple of bytes
@@ -630,6 +632,9 @@ async function fixFixableFlaws(doc, options, document) {
           Document.getFolderPath(document.metadata),
           path
             .basename(imageBasename)
+            // Names like `screenshot-(1).png` are annoying because the `(` often
+            // has to be escaped when working on the command line.
+            .replace(/[()]/g, "")
             .replace(/\s+/g, "_")
             // From legacy we have a lot of images that are named like
             // `/@api/deki/files/247/=HTMLBlinkElement.gif` for example.
