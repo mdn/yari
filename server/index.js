@@ -20,7 +20,6 @@ const {
   Redirect,
   Image,
   CONTENT_TRANSLATED_ROOT,
-  VALID_LOCALES,
 } = require("../content");
 // eslint-disable-next-line node/no-missing-require
 const { prepareDoc, renderDocHTML } = require("../ssr/dist/main");
