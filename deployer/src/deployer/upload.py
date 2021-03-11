@@ -265,7 +265,8 @@ class DeleteTask(UploadTask):
     """
     Class for doing deletion by key tasks.
     """
-
+    is_deletion = True
+    
     def __init__(self, key, dry_run=False):
         self.key = key
         self.dry_run = dry_run
@@ -329,7 +330,7 @@ class BucketManager:
             # The default is 1,000. Any number larger than 1,000 is ignored
             # and it will just fall back to 1,000.
             # (Peterbe's note) I've experimented with different numbers (
-            # e.g. 500 or 100) and the total time difference it insignificant.
+            # e.g. 500 or 100) and the total time difference is insignificant.
             # A large MaxKeys means larger batches and fewer network requests
             # which has a reduced risk of network failures (automatically retried)
             # and there doesn't appear to be any benefit in setting it to a lower
@@ -588,11 +589,11 @@ def upload_content(build_directory, content_roots, config):
         now = datetime.datetime.utcnow().replace(tzinfo=UTC)
         delete_keys = []
         for key in existing_bucket_objects:
-            if "_whatsdeployed" in key:
+            if key.startswith(f"{bucket_prefix}/_whatsdeployed/"):
                 # These are special and wouldn't have been uploaded
                 continue
 
-            if "/static/" in key:
+            if key.startswith(f"{bucket_prefix}/static/"):
                 # Careful with these!
                 # Static assets such as `main/static/js/8.0b83949c.chunk.js`
                 # are aggressively cached and they might still be referenced
@@ -602,7 +603,7 @@ def upload_content(build_directory, content_roots, config):
                 # browser cache or the CDN's cache, what might happen is that
                 # their browser requests it even though
                 # `/static/js/foo.def456.js` is now the latest and greatest.
-                # To be safe, only delete if it's considerd "old".
+                # To be safe, only delete if it's considered "old".
                 delta = now - existing_bucket_objects[key]["LastModified"]
                 if delta.days < 30:
                     continue
@@ -617,7 +618,7 @@ def upload_content(build_directory, content_roots, config):
 
             def on_task_complete(task):
                 progress.update(task)
-                totals.delete(task)
+                totals.count(task)
 
             mgr.delete(delete_keys, on_task_complete=on_task_complete, dry_run=dry_run)
 

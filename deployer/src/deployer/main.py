@@ -144,7 +144,7 @@ def whatsdeployed(ctx, directory: Path, output: str):
     is_flag=True,
 )
 @click.option(
-    "--delete-unrecognized",
+    "--prune",
     help="Delete keys that were not uploaded this time (including those that didn't "
     "need to be uploaded)",
     default=False,
