@@ -104,7 +104,7 @@ app.get("/_open", (req, res) => {
   if (fs.existsSync(filepath)) {
     absoluteFilepath = filepath;
   } else {
-    const [, locale] = filepath.split(path.sep);
+    const [locale] = filepath.split(path.sep);
     const root = getRoot(locale);
     absoluteFilepath = path.join(root, filepath);
   }
