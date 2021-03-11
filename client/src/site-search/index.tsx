@@ -48,7 +48,7 @@ export function SiteSearch() {
   }, [query, page, ga]);
 
   return (
-    <div className="site-search">
+    <div className="site-search main-page-content">
       <PageContentContainer>
         {query ? (
           <h1>
