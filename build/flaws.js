@@ -21,7 +21,6 @@ const {
 } = require("./matches-in-text");
 const { humanFileSize } = require("./utils");
 const { VALID_MIME_TYPES } = require("../filecheck/constants");
-const { DEFAULT_LOCALE } = require("../libs/constants");
 
 function injectFlaws(doc, $, options, { rawContent }) {
   if (doc.isArchive) return;
