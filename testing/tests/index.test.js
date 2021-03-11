@@ -1280,3 +1280,22 @@ test("'lang' attribute should match the article", () => {
   expect($("html").attr("lang")).toBe("en-US");
   expect($("article").attr("lang")).toBe("en-US");
 });
+
+test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "unsafe_html"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.unsafe_html.length).toBe(5);
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("code.unsafe-html").length).toBe(5);
+});
