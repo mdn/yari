@@ -75,6 +75,7 @@ function injectUnsafeHTMLFlaws(doc, $, { rawContent }) {
     }
     const id = `unsafe_html${doc.flaws.unsafe_html.length + 1}`;
     let html = $.html($(element));
+    $(element).replaceWith($("<code>").addClass("unsafe-html").text(html));
     // Some nasty tags are so broken they can make the HTML become more or less
     // the whole page. E.g. `<script\x20type="text/javascript">`.
     if (html.length > 100) {

@@ -256,7 +256,7 @@ function checkImageWidths(doc, $, options, { rawContent }) {
 
   $("img").each((i, element) => {
     const img = $(element);
-    console.log($.html(img));
+
     // If it already has a `width` attribute, leave this as is.
     if (!img.attr("width")) {
       // Remove any `width` or `height` specified in the `style` attribute
@@ -331,7 +331,6 @@ function checkImageWidths(doc, $, options, { rawContent }) {
       } else if (!imgSrc.includes("://") && imgSrc.startsWith("/")) {
         const filePath = Image.findByURL(imgSrc);
         if (filePath) {
-          console.log({ filePath, imgSrc });
           const dimensions = sizeOf(filePath);
           img.attr("width", `${dimensions.width}`);
           img.attr("height", `${dimensions.height}`);
