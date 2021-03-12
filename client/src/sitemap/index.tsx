@@ -145,6 +145,47 @@ export default function Sitemap() {
     }
   }
 
+  const [opening, setOpening] = React.useState<string | null>(null);
+  const [
+    editorOpeningError,
+    setEditorOpeningError,
+  ] = React.useState<Error | null>(null);
+  React.useEffect(() => {
+    let unsetOpeningTimer: ReturnType<typeof setTimeout>;
+    if (opening) {
+      unsetOpeningTimer = setTimeout(() => {
+        setOpening(null);
+      }, 3000);
+    }
+    return () => {
+      if (unsetOpeningTimer) {
+        clearTimeout(unsetOpeningTimer);
+      }
+    };
+  }, [opening]);
+
+  async function openInYourEditor(url: string) {
+    console.log(`Going to try to open ${url} in your editor`);
+    setOpening(url);
+    const sp = new URLSearchParams();
+    sp.set("url", url);
+    try {
+      const response = await fetch(`/_open?${sp.toString()}`);
+      if (!response.ok) {
+        if (response.status >= 500) {
+          setEditorOpeningError(
+            new Error(`${response.status}: ${response.statusText}`)
+          );
+        } else {
+          const body = await response.text();
+          setEditorOpeningError(new Error(`${response.status}: ${body}`));
+        }
+      }
+    } catch (err) {
+      setEditorOpeningError(err);
+    }
+  }
+
   return (
     <PageContentContainer>
       <div id="sitemap">
@@ -156,8 +197,33 @@ export default function Sitemap() {
             </p>
           </div>
         )}
+
+        {editorOpeningError && (
+          <div className="notecard error">
+            <h4>Error opening in your editor</h4>
+            <p>
+              <code>{editorOpeningError.toString()}</code>
+            </p>
+          </div>
+        )}
+
         {!data && !error && <p>Loading loading loading...</p>}
-        {filtered && <Breadcrumb pathname={pathname} thisDoc={thisDoc} />}
+        <div className="opening-in-your-editor">
+          {opening && (
+            <>
+              Opening{" "}
+              <code>{opening.slice(opening.length - 50, opening.length)}</code>{" "}
+              in your editor...
+            </>
+          )}
+        </div>
+        {filtered && (
+          <Breadcrumb
+            pathname={pathname}
+            thisDoc={thisDoc}
+            openInYourEditor={openInYourEditor}
+          />
+        )}
         {filtered && (
           <FilterForm
             pathname={pathname}
@@ -190,6 +256,7 @@ export default function Sitemap() {
             filtered={filtered}
             childCounts={childCounts}
             highlightIndex={highlightIndex}
+            openInYourEditor={openInYourEditor}
           />
         )}
         <p className="footer-note">
@@ -321,67 +388,19 @@ function FilterForm({
 function Breadcrumb({
   pathname,
   thisDoc,
+  openInYourEditor,
 }: {
   pathname: string;
   thisDoc: SearchIndexDoc | null;
+  openInYourEditor: (url: string) => void;
 }) {
   const locale = useLocale();
   const split = pathname.split("/").slice(3);
   const root = pathname.split("/").slice(0, 2);
   root.push("_sitemap");
 
-  const [opening, setOpening] = React.useState(false);
-  const [
-    editorOpeningError,
-    setEditorOpeningError,
-  ] = React.useState<Error | null>(null);
-  React.useEffect(() => {
-    let unsetOpeningTimer: ReturnType<typeof setTimeout>;
-    if (opening) {
-      unsetOpeningTimer = setTimeout(() => {
-        setOpening(false);
-      }, 3000);
-    }
-    return () => {
-      if (unsetOpeningTimer) {
-        clearTimeout(unsetOpeningTimer);
-      }
-    };
-  }, [opening]);
-
-  async function openInYourEditor(url: string) {
-    console.log(`Going to try to open ${url} in your editor`);
-    setOpening(true);
-    const sp = new URLSearchParams();
-    sp.set("url", url);
-    try {
-      const response = await fetch(`/_open?${sp.toString()}`);
-      if (!response.ok) {
-        if (response.status >= 500) {
-          setEditorOpeningError(
-            new Error(`${response.status}: ${response.statusText}`)
-          );
-        } else {
-          const body = await response.text();
-          setEditorOpeningError(new Error(`${response.status}: ${body}`));
-        }
-      }
-    } catch (err) {
-      setEditorOpeningError(err);
-    }
-  }
-
   return (
     <>
-      {editorOpeningError && (
-        <div className="notecard error">
-          <h4>Error opening in your editor</h4>
-          <p>
-            <code>{editorOpeningError.toString()}</code>
-          </p>
-        </div>
-      )}
-
       <ul className="breadcrumb">
         <li className="first">
           {split.length ? <Link to={root.join("/")}>root</Link> : <em>root</em>}
@@ -409,15 +428,22 @@ function Breadcrumb({
                 <em>{thisDoc.title}</em>
               </Link>{" "}
               {CRUD_MODE && (
-                <span
-                  className="open-in-your-editor"
-                  role="img"
-                  aria-label="Editor pen"
-                  onClick={() => openInYourEditor(thisDoc.url)}
-                  title="Open in your editor"
-                >
-                  ✏️ {opening && <small>Opening now...</small>}
-                </span>
+                <small>
+                  (
+                  <a
+                    href={thisDoc.url}
+                    role="img"
+                    aria-label="Editor pen"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      openInYourEditor(thisDoc.url);
+                    }}
+                    title="Open in your editor"
+                  >
+                    Edit
+                  </a>
+                  )
+                </small>
               )}
             </>
           ) : (
@@ -433,27 +459,52 @@ function ShowTree({
   filtered,
   childCounts,
   highlightIndex,
+  openInYourEditor,
 }: {
   filtered: SearchIndexDoc[];
   childCounts: Map<string, number>;
   highlightIndex: number;
+  openInYourEditor: (url: string) => void;
 }) {
   const locale = useLocale();
   return (
     <div className="tree">
       <ul>
         {filtered.map((doc, i) => {
+          const countChild = childCounts.get(doc.url) || 0;
           return (
             <li
               key={doc.url}
               className={highlightIndex === i ? "highlight" : undefined}
             >
-              <Link to={doc.url.replace("/docs/", "/_sitemap/")}>
+              <Link
+                to={doc.url.replace("/docs/", "/_sitemap/")}
+                title={doc.title}
+              >
                 <code>{doc.url.replace(`/${locale}/docs`, "")}</code>
               </Link>{" "}
-              {childCounts.get(doc.url) && (
-                <small>({childCounts.get(doc.url)?.toLocaleString()})</small>
-              )}
+              <small>
+                (
+                {countChild === 1
+                  ? "1 document"
+                  : `${countChild.toLocaleString()} documents`}
+                {" | "}
+                <Link to={doc.url} title={`Go to: ${doc.title}`}>
+                  View
+                </Link>
+                {" | "}
+                <Link
+                  to={doc.url}
+                  title={`Edit: ${doc.title}`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    openInYourEditor(doc.url);
+                  }}
+                >
+                  Edit
+                </Link>
+                )
+              </small>
             </li>
           );
         })}

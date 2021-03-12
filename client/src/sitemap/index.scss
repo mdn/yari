@@ -1,10 +1,12 @@
+@import "~@mdn/minimalist/sass/vars/typography";
+
 #sitemap {
   min-height: 800px;
 
-  .open-in-your-editor {
-    cursor: pointer;
+  div.opening-in-your-editor {
+    float: right;
+    font-size: $small-font-size;
   }
-
   ul.breadcrumb {
     li {
       list-style-type: none;
