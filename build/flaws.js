@@ -640,7 +640,9 @@ async function fixFixableFlaws(doc, options, document) {
     // HTML. It's only proper HTML when the kumascript macros have been
     // expanded.
     let newSrc;
-    if (flaw.externalImage) {
+    if (flaw.suggestion) {
+      newSrc = flaw.suggestion;
+    } else {
       // Sanity check that it's an external image
       const url = new URL(forceExternalURL(flaw.src));
       if (url.protocol !== "https:") {
@@ -739,8 +741,6 @@ async function fixFixableFlaws(doc, options, document) {
           throw error;
         }
       }
-    } else {
-      newSrc = flaw.suggestion;
     }
     newRawHTML = replaceMatchesInText(flaw.src, newRawHTML, newSrc, {
       inAttribute: "src",
