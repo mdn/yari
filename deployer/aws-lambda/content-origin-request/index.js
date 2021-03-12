@@ -80,7 +80,7 @@ exports.handler = async (event) => {
 
   // If the URL was something like `https://domain/en-US/search/`, our code
   // would make a that a redirect to `/en-US/search` (stripping the trailing slash).
-  // But if it was `https://domain/en-US/search/` it'd make a redirect
+  // But if it was `https://domain//en-US/search/` it'd make a redirect
   // to `//en-US/search`.
   // However, if pathname starts with `//` the Location header might look
   // relative but it's actually an absolute URL.
