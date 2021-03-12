@@ -61,9 +61,15 @@ function injectFlaws(doc, $, options, document) {
       doc.flaws[flawName] &&
       doc.flaws[flawName].length > 0
     ) {
-      throw new Error(
-        `${flawName} flaws: ${doc.flaws[flawName].map((f) => f.explanation)}`
-      );
+      // To make the stdout output a bit more user-friendly, print one warning
+      // for each explanation
+      doc.flaws[flawName].forEach((flaw, i) => {
+        console.warn(
+          i + 1,
+          chalk.yellow(`${chalk.bold(flawName)} flaw: ${flaw.explanation}`)
+        );
+      });
+      throw new Error(`${doc.flaws[flawName].length} ${flawName} flaws`);
     }
   }
 }
@@ -103,8 +109,6 @@ function injectUnsafeHTMLFlaws(doc, $, { rawContent }) {
   }
 
   const safeIFrameSrcs = [
-    LIVE_SAMPLES_BASE_URL.toLowerCase(),
-    INTERACTIVE_EXAMPLES_BASE_URL.toLowerCase(),
     // EmbedGHLiveSample.ejs
     "https://mdn.github.io",
     // EmbedYouTube.ejs
@@ -114,12 +118,22 @@ function injectUnsafeHTMLFlaws(doc, $, { rawContent }) {
     // EmbedTest262ReportResultsTable.ejs
     "https://test262.report",
   ];
+  if (LIVE_SAMPLES_BASE_URL) {
+    safeIFrameSrcs.push(LIVE_SAMPLES_BASE_URL.toLowerCase());
+  }
+  if (INTERACTIVE_EXAMPLES_BASE_URL) {
+    safeIFrameSrcs.push(INTERACTIVE_EXAMPLES_BASE_URL.toLowerCase());
+  }
 
   $("script, embed, object, iframe").each((i, element) => {
     const { tagName } = element;
     if (tagName === "iframe") {
       // For iframes we only check the 'src' value
       const src = $(element).attr("src");
+      // Local URLs are always safe.
+      if (!(src.startsWith("//") || src.includes("://"))) {
+        return;
+      }
       if (!safeIFrameSrcs.find((s) => src.toLowerCase().startsWith(s))) {
         addFlaw(element, `Unsafe <iframe> 'src' value (${src})`);
       }
