@@ -12,6 +12,9 @@ def analyze_pr(build_directory: Path, config):
 
     combined_comments = []
 
+    if config["prefix"]:
+        combined_comments.append(post_about_deployment(build_directory, **config))
+
     if config["analyze_flaws"]:
         combined_comments.append(post_about_flaws(build_directory, **config))
 
@@ -21,7 +24,7 @@ def analyze_pr(build_directory: Path, config):
         )
 
     print("_____________POST___________________________________________")
-    print("\n".join(combined_comments))
+    print("\n\n".join(x for x in combined_comments if x))
     print("___________________________________________________________")
 
     if not config["repo"]:
@@ -38,6 +41,18 @@ def analyze_pr(build_directory: Path, config):
             print(repr(octo))
         else:
             print("Warning! No 'github_token' so no posting of comments")
+
+
+def post_about_deployment(build_directory: Path, **config):
+    template = "https://{prefix}.content.dev.mdn.mozit.cloud{mdn_url}"
+
+    links = []
+    for doc in get_built_docs(build_directory):
+        url = template.format(prefix=config["prefix"], mdn_url=doc["mdn_url"])
+        links.append(f"- <{url}>")
+
+    final_comment = "## Preview deployment\n\n" + "\n".join(links)
+    return final_comment
 
 
 def post_about_dangerous_content(build_directory: Path, **config):
@@ -98,7 +113,7 @@ def post_about_flaws(build_directory: Path, **config):
             # comments[doc].append("No flaws!")
             # comments[doc] = "No flaws!"
             comments.append((doc, "No flaws!"))
-            return
+            continue
         else:
             flaws_list = []
             for flaw_name, flaw_values in doc["flaws"].items():
