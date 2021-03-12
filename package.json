@@ -62,7 +62,7 @@
     "glob": "^7.1.6",
     "got": "11.8.2",
     "http-proxy-middleware": "1.0.6",
-    "image-size": "0.9.4",
+    "image-size": "0.9.5",
     "image-type": "4.1.0",
     "imagemin": "7.0.1",
     "imagemin-gifsicle": "7.0.0",
