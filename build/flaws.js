@@ -130,8 +130,8 @@ function injectUnsafeHTMLFlaws(doc, $, { rawContent }) {
     if (tagName === "iframe") {
       // For iframes we only check the 'src' value
       const src = $(element).attr("src");
-      if (src.startsWith("/") && !src.includes("://")) {
-        // Local URLs are always safe
+      // Local URLs are always safe.
+      if (!(src.startsWith("//") || src.includes("://"))) {
         return;
       }
       if (!safeIFrameSrcs.find((s) => src.toLowerCase().startsWith(s))) {

@@ -1292,10 +1292,10 @@ test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(doc.flaws.unsafe_html.length).toBe(5);
+  expect(doc.flaws.unsafe_html.length).toBe(6);
 
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("code.unsafe-html").length).toBe(5);
+  expect($("code.unsafe-html").length).toBe(6);
 });
