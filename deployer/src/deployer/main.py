@@ -22,6 +22,7 @@ from .upload import upload_content
 from .utils import log
 from .whatsdeployed import dump as dump_whatsdeployed
 from .speedcurve import deploy_ping as speedcurve_deploy_ping
+from .analyze_pr import analyze_pr
 from . import search
 
 
@@ -180,6 +181,11 @@ def upload(ctx, directory: Path, **kwargs):
     show_default=True,
 )
 @click.option(
+    "--pr-number",
+    help="Number for the PR",
+    default=None,
+)
+@click.option(
     "--github-token",
     help="Token used to post PR comments",
     default=DEFAULT_GITHUB_TOKEN,
@@ -203,15 +209,10 @@ def upload(ctx, directory: Path, **kwargs):
 @click.pass_context
 def analyze_pr_build(ctx, directory: Path, **kwargs):
     log.info(f"Deployer ({__version__})", bold=True)
-    # content_roots = [kwargs["content_root"]]
-    # if kwargs["content_translated_root"]:
-    #     content_roots.append(kwargs["content_translated_root"])
-    # if kwargs["content_archived_root"]:
-    #     content_roots.append(kwargs["content_archived_root"])
     ctx.obj.update(kwargs)
+    print("directory:", directory)
     print(ctx.obj)
-
-    # upload_content(directory, content_roots, ctx.obj)
+    analyze_pr(directory, ctx.obj)
 
 
 @cli.command()
