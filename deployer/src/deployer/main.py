@@ -11,6 +11,8 @@ from .constants import (
     DEFAULT_BUCKET_NAME,
     DEFAULT_BUCKET_PREFIX,
     DEFAULT_NO_PROGRESSBAR,
+    DEFAULT_REPO,
+    DEFAULT_GITHUB_TOKEN,
     SPEEDCURVE_DEPLOY_API_KEY,
     SPEEDCURVE_DEPLOY_SITE_ID,
     ELASTICSEARCH_URL,
@@ -162,6 +164,54 @@ def upload(ctx, directory: Path, **kwargs):
         content_roots.append(kwargs["content_archived_root"])
     ctx.obj.update(kwargs)
     upload_content(directory, content_roots, ctx.obj)
+
+
+@cli.command()
+@click.option(
+    "--prefix",
+    help="What prefix was it uploaded as",
+    default=None,
+    show_default=True,
+)
+@click.option(
+    "--repo",
+    help="Name of the repo (e.g. mdn/content)",
+    default=DEFAULT_REPO,
+    show_default=True,
+)
+@click.option(
+    "--github-token",
+    help="Token used to post PR comments",
+    default=DEFAULT_GITHUB_TOKEN,
+    show_default=False,
+)
+@click.option(
+    "--analyze-flaws",
+    help="Analyze the .doc.flaws keys in the index.json files",
+    default=False,
+    show_default=True,
+    is_flag=True,
+)
+@click.option(
+    "--analyze-dangerous-content",
+    help='Look through the built content and list "dangerous things"',
+    default=False,
+    show_default=True,
+    is_flag=True,
+)
+@click.argument("directory", type=click.Path(), callback=validate_directory)
+@click.pass_context
+def analyze_pr_build(ctx, directory: Path, **kwargs):
+    log.info(f"Deployer ({__version__})", bold=True)
+    # content_roots = [kwargs["content_root"]]
+    # if kwargs["content_translated_root"]:
+    #     content_roots.append(kwargs["content_translated_root"])
+    # if kwargs["content_archived_root"]:
+    #     content_roots.append(kwargs["content_archived_root"])
+    ctx.obj.update(kwargs)
+    print(ctx.obj)
+
+    # upload_content(directory, content_roots, ctx.obj)
 
 
 @cli.command()
