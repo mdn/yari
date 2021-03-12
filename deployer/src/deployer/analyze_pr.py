@@ -2,6 +2,7 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
+from octokit import Octokit
 from selectolax.parser import HTMLParser
 
 
@@ -31,6 +32,12 @@ def analyze_pr(build_directory: Path, config):
         print(
             f"Posting to https://github.com/{config['repo']}/pull/{config['pr_number']}"
         )
+
+        if config["github_token"]:
+            octo = Octokit(auth="token", token=config["github_token"])
+            print(repr(octo))
+        else:
+            print("Warning! No 'github_token' so no posting of comments")
 
 
 def post_about_dangerous_content(build_directory: Path, **config):
