@@ -126,4 +126,5 @@ export interface Doc {
   contributors: string[];
   isArchive: boolean;
   isTranslated: boolean;
+  isActive: boolean;
 }
