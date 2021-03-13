@@ -172,29 +172,40 @@ def post_about_flaws(build_directory: Path, **config):
 def get_built_docs(build_directory: Path):
     assert build_directory.exists, f"{build_directory} does not exist"
     docs = []
-
-    dirs = []
-    files = []
-
-    def walk(directory):
-        print("WALKDEBUG, directory:", directory)
-        for thing in directory.iterdir():
-            print("    WALKDEBUG, thing:", thing)
-            if not thing.is_dir():  # XXX
-                files.append(thing)  # XXX
-            if thing.is_dir():
-                dirs.append(thing)
-                walk(thing)
-            elif thing.name == "index.json":
-                with open(thing) as f:
-                    data = json.load(f)
-                    if "doc" not in data:
-                        # Not every build index.json file is for a document.
-                        return
-                    doc = data["doc"]
-                    docs.append(doc)
-
-    walk(build_directory)
-    print(f"WALKED... {len(dirs)} directories and {len(files)} files")
-
+    for path in build_directory.rglob("index.json"):
+        with open(path) as f:
+            data = json.load(f)
+            if "doc" not in data:
+                # Not every build index.json file is for a document.
+                continue
+            doc = data["doc"]
+            docs.append(doc)
     return docs
+    # print("DOCS", len(docs))
+
+    # dirs = []
+    # files = []
+
+    # docs2 = []
+
+    # def walk(directory):
+    #     print("WALKDEBUG, directory:", directory)
+    #     for thing in directory.iterdir():
+    #         print("    WALKDEBUG, thing:", thing)
+    #         if not thing.is_dir():  # XXX
+    #             files.append(thing)  # XXX
+    #         if thing.is_dir():
+    #             dirs.append(thing)
+    #             walk(thing)
+    #         elif thing.name == "index.json":
+    #             with open(thing) as f:
+    #                 data = json.load(f)
+    #                 # Not every build index.json file is for a document.
+    #                 if "doc" in data:
+    #                     doc = data["doc"]
+    #                     docs2.append(doc)
+
+    # walk(build_directory)
+    # print(f"WALKED... {len(dirs)} directories and {len(files)} files", len(docs2))
+
+    # return docs
