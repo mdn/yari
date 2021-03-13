@@ -169,13 +169,14 @@ def post_about_flaws(build_directory: Path, **config):
         return heading + "*none!* 🎉"
 
 
-def get_built_docs(build_directory):
+def get_built_docs(build_directory: Path):
+    assert build_directory.exists, f"{build_directory} does not exist"
     docs = []
 
     def walk(directory):
+        print("WALKDEBUG, directory:", directory)
         for thing in directory.iterdir():
-            if not thing.is_dir:
-                print("DEBUG:", thing)
+            print("  WALKDEBUG, thing:", thing)
             if thing.is_dir():
                 walk(thing)
             elif thing.name == "index.json":
