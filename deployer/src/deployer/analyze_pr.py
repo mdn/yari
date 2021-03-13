@@ -176,7 +176,7 @@ def get_built_docs(build_directory: Path):
     def walk(directory):
         print("WALKDEBUG, directory:", directory)
         for thing in directory.iterdir():
-            print("  WALKDEBUG, thing:", thing)
+            print("    WALKDEBUG, thing:", thing)
             if thing.is_dir():
                 walk(thing)
             elif thing.name == "index.json":
