@@ -2,7 +2,6 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
-# from octokit import Octokit
 from github import Github
 from selectolax.parser import HTMLParser
 
@@ -26,6 +25,10 @@ def analyze_pr(build_directory: Path, config):
 
     combined_comment = "\n\n".join(x for x in combined_comments if x)
 
+    if not combined_comment:
+        print("Warning! Nothing to comment at all!")
+        return
+
     print("_____________POST___________________________________________")
     print(combined_comment)
     print("___________________________________________________________")
@@ -44,33 +47,6 @@ def analyze_pr(build_directory: Path, config):
             github_repo = github.get_repo(config["repo"])
             github_issue = github_repo.get_issue(number=int(config["pr_number"]))
             github_issue.create_comment(combined_comment)
-            # octo = Octokit(auth="token", token=config["github_token"])
-            # print(repr(octo))
-            # print([x for x in dir(octo) if "comment" in x or "issue" in x])
-
-            # owner, repo = config["repo"].split("/", 1)
-            # print(dir(octo))
-            # print(dir(octo.issues))
-            # pull_request = octo.pulls.get(
-            #     owner=owner, repo=repo, pull_number=config["pr_number"]
-            # )
-            # print(
-            #     dict(
-            #         owner=owner,
-            #         repo=repo,
-            #         issue_number=config["pr_number"],
-            #         body=combined_comment,
-            #     )
-            # )
-            # r = octo.issues.create_comment(
-            #     owner=owner,
-            #     repo=repo,
-            #     issue_number=config["pr_number"],
-            #     body=combined_comment,
-            # )
-            # # print("PR", dir(pull_request))
-            # print("R:", r)
-            # print(dir(r))
 
         else:
             print("Warning! No 'github_token' so no posting of comments")
@@ -84,8 +60,8 @@ def post_about_deployment(build_directory: Path, **config):
         url = template.format(prefix=config["prefix"], mdn_url=doc["mdn_url"])
         links.append(f"- <{url}>")
 
-    final_comment = "## Preview deployment\n\n" + "\n".join(links)
-    return final_comment
+    if links:
+        return "## Preview deployment\n\n" + "\n".join(links)
 
 
 def post_about_dangerous_content(build_directory: Path, **config):
@@ -127,13 +103,17 @@ def post_about_dangerous_content(build_directory: Path, **config):
         else:
             comments.append((doc, "No external URLs"))
 
-    per_doc_comments = []
-    for doc, comment in comments:
-        per_doc_comments.append(
-            f"URL: `{doc['mdn_url']}`\n" f"Title: `{doc['title']}`\n" "\n" f"{comment}"
-        )
-    final_comment = "## External URLs\n\n" + "\n---\n".join(per_doc_comments)
-    return final_comment
+    if comments:
+        per_doc_comments = []
+        for doc, comment in comments:
+            per_doc_comments.append(
+                f"URL: `{doc['mdn_url']}`\n"
+                f"Title: `{doc['title']}`\n"
+                "\n"
+                f"{comment}"
+            )
+        final_comment = "## External URLs\n\n" + "\n---\n".join(per_doc_comments)
+        return final_comment
 
 
 def post_about_flaws(build_directory: Path, **config):
@@ -141,10 +121,7 @@ def post_about_flaws(build_directory: Path, **config):
     comments = []
 
     for doc in get_built_docs(build_directory):
-        # pprint(doc["flaws"])
         if not doc.get("flaws"):
-            # comments[doc].append("No flaws!")
-            # comments[doc] = "No flaws!"
             comments.append((doc, "No flaws!"))
             continue
         else:
@@ -161,9 +138,7 @@ def post_about_flaws(build_directory: Path, **config):
                     else:
                         flaws_list.append("  - *no explanation!*")
 
-            # comments[doc] = "\n".join(flaws_list)
             comments.append((doc, "\n".join(flaws_list)))
-            # comments[doc].append(f"Fla")
 
     def count_flaws(flaws):
         count = 0
@@ -171,21 +146,18 @@ def post_about_flaws(build_directory: Path, **config):
             count += len(flaw)
         return count
 
-    # from pprint import pprint
-
-    # pprint(comments)
-    # Now turn all of these individual comments into one big one
-    per_doc_comments = []
-    for doc, comment in comments:
-        per_doc_comments.append(
-            f"URL: `{doc['mdn_url']}`\n"
-            f"Title: `{doc['title']}`\n"
-            f"Flaw count: {count_flaws(doc['flaws'])}\n"
-            "\n"
-            f"{comment}"
-        )
-    final_comment = "## Flaws\n\n" + "\n---\n".join(per_doc_comments)
-    return final_comment
+    if comments:
+        # Now turn all of these individual comments into one big one
+        per_doc_comments = []
+        for doc, comment in comments:
+            per_doc_comments.append(
+                f"URL: `{doc['mdn_url']}`\n"
+                f"Title: `{doc['title']}`\n"
+                f"Flaw count: {count_flaws(doc['flaws'])}\n"
+                "\n"
+                f"{comment}"
+            )
+        return "## Flaws\n\n" + "\n---\n".join(per_doc_comments)
 
 
 def get_built_docs(build_directory):
