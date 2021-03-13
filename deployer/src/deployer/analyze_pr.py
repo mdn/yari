@@ -2,7 +2,8 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
-from octokit import Octokit
+# from octokit import Octokit
+from github import Github
 from selectolax.parser import HTMLParser
 
 
@@ -23,8 +24,10 @@ def analyze_pr(build_directory: Path, config):
             post_about_dangerous_content(build_directory, **config)
         )
 
+    combined_comment = "\n\n".join(x for x in combined_comments if x)
+
     print("_____________POST___________________________________________")
-    print("\n\n".join(x for x in combined_comments if x))
+    print(combined_comment)
     print("___________________________________________________________")
 
     if not config["repo"]:
@@ -37,8 +40,38 @@ def analyze_pr(build_directory: Path, config):
         )
 
         if config["github_token"]:
-            octo = Octokit(auth="token", token=config["github_token"])
-            print(repr(octo))
+            github = Github(config["github_token"])
+            github_repo = github.get_repo(config["repo"])
+            github_issue = github_repo.get_issue(number=config["pr_number"])
+            github_issue.create_comment(combined_comment)
+            # octo = Octokit(auth="token", token=config["github_token"])
+            # print(repr(octo))
+            # print([x for x in dir(octo) if "comment" in x or "issue" in x])
+
+            # owner, repo = config["repo"].split("/", 1)
+            # print(dir(octo))
+            # print(dir(octo.issues))
+            # pull_request = octo.pulls.get(
+            #     owner=owner, repo=repo, pull_number=config["pr_number"]
+            # )
+            # print(
+            #     dict(
+            #         owner=owner,
+            #         repo=repo,
+            #         issue_number=config["pr_number"],
+            #         body=combined_comment,
+            #     )
+            # )
+            # r = octo.issues.create_comment(
+            #     owner=owner,
+            #     repo=repo,
+            #     issue_number=config["pr_number"],
+            #     body=combined_comment,
+            # )
+            # # print("PR", dir(pull_request))
+            # print("R:", r)
+            # print(dir(r))
+
         else:
             print("Warning! No 'github_token' so no posting of comments")
 

@@ -15,7 +15,7 @@ python-decouple = "^3.4"
 requests = {extras = ["security"], version = "^2.25.0"}
 elasticsearch-dsl = "^7.3.0"
 selectolax = "^0.2.10"
-octokitpy = "^0.14.3"
+PyGithub = "^1.54.1"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
