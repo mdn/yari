@@ -146,7 +146,7 @@
   },
   "CSP 1.1": {
     "name": "Content Security Policy Level 2",
-    "url": "https://w3c.github.io/webappsec-csp/2/",
+    "url": "https://www.w3.org/TR/CSP2/",
     "status": "REC"
   },
   "CSP 3.0": {
