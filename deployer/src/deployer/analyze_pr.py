@@ -60,8 +60,11 @@ def post_about_deployment(build_directory: Path, **config):
         url = template.format(prefix=config["prefix"], mdn_url=doc["mdn_url"])
         links.append(f"- <{url}>")
 
+    heading = "## Preview deployment\n\n"
     if links:
-        return "## Preview deployment\n\n" + "\n".join(links)
+        return heading + "\n".join(links)
+
+    return heading + "*seems not a single file was built!* 🙀"
 
 
 def post_about_dangerous_content(build_directory: Path, **config):
@@ -103,6 +106,7 @@ def post_about_dangerous_content(build_directory: Path, **config):
         else:
             comments.append((doc, "No external URLs"))
 
+    heading = "## External URLs\n\n"
     if comments:
         per_doc_comments = []
         for doc, comment in comments:
@@ -112,8 +116,9 @@ def post_about_dangerous_content(build_directory: Path, **config):
                 "\n"
                 f"{comment}"
             )
-        final_comment = "## External URLs\n\n" + "\n---\n".join(per_doc_comments)
-        return final_comment
+        return heading + "\n---\n".join(per_doc_comments)
+    else:
+        return heading + "*no external links in the built pages* 👱🏽"
 
 
 def post_about_flaws(build_directory: Path, **config):
@@ -146,6 +151,8 @@ def post_about_flaws(build_directory: Path, **config):
             count += len(flaw)
         return count
 
+    heading = "## Flaws\n\n"
+
     if comments:
         # Now turn all of these individual comments into one big one
         per_doc_comments = []
@@ -157,7 +164,9 @@ def post_about_flaws(build_directory: Path, **config):
                 "\n"
                 f"{comment}"
             )
-        return "## Flaws\n\n" + "\n---\n".join(per_doc_comments)
+        return heading + "\n---\n".join(per_doc_comments)
+    else:
+        return heading + "*none!* 🎉"
 
 
 def get_built_docs(build_directory):
@@ -165,6 +174,8 @@ def get_built_docs(build_directory):
 
     def walk(directory):
         for thing in directory.iterdir():
+            if not thing.is_dir:
+                print("DEBUG:", thing)
             if thing.is_dir():
                 walk(thing)
             elif thing.name == "index.json":
