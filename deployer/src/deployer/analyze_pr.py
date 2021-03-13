@@ -42,7 +42,7 @@ def analyze_pr(build_directory: Path, config):
         if config["github_token"]:
             github = Github(config["github_token"])
             github_repo = github.get_repo(config["repo"])
-            github_issue = github_repo.get_issue(number=config["pr_number"])
+            github_issue = github_repo.get_issue(number=int(config["pr_number"]))
             github_issue.create_comment(combined_comment)
             # octo = Octokit(auth="token", token=config["github_token"])
             # print(repr(octo))
