@@ -173,11 +173,17 @@ def get_built_docs(build_directory: Path):
     assert build_directory.exists, f"{build_directory} does not exist"
     docs = []
 
+    dirs = []
+    files = []
+
     def walk(directory):
         print("WALKDEBUG, directory:", directory)
         for thing in directory.iterdir():
             print("    WALKDEBUG, thing:", thing)
+            if not thing.is_dir():  # XXX
+                files.append(thing)  # XXX
             if thing.is_dir():
+                dirs.append(thing)
                 walk(thing)
             elif thing.name == "index.json":
                 with open(thing) as f:
@@ -189,5 +195,6 @@ def get_built_docs(build_directory: Path):
                     docs.append(doc)
 
     walk(build_directory)
+    print(f"WALKED... {len(dirs)} directories and {len(files)} files")
 
     return docs

@@ -216,8 +216,6 @@ def upload(ctx, directory: Path, **kwargs):
 def analyze_pr_build(ctx, directory: Path, **kwargs):
     log.info(f"Deployer ({__version__})", bold=True)
     ctx.obj.update(kwargs)
-    print("directory:", directory)
-    print(ctx.obj)
     analyze_pr(directory, ctx.obj)
 
 
