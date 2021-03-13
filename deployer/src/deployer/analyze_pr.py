@@ -181,31 +181,3 @@ def get_built_docs(build_directory: Path):
             doc = data["doc"]
             docs.append(doc)
     return docs
-    # print("DOCS", len(docs))
-
-    # dirs = []
-    # files = []
-
-    # docs2 = []
-
-    # def walk(directory):
-    #     print("WALKDEBUG, directory:", directory)
-    #     for thing in directory.iterdir():
-    #         print("    WALKDEBUG, thing:", thing)
-    #         if not thing.is_dir():  # XXX
-    #             files.append(thing)  # XXX
-    #         if thing.is_dir():
-    #             dirs.append(thing)
-    #             walk(thing)
-    #         elif thing.name == "index.json":
-    #             with open(thing) as f:
-    #                 data = json.load(f)
-    #                 # Not every build index.json file is for a document.
-    #                 if "doc" in data:
-    #                     doc = data["doc"]
-    #                     docs2.append(doc)
-
-    # walk(build_directory)
-    # print(f"WALKED... {len(dirs)} directories and {len(files)} files", len(docs2))
-
-    # return docs
