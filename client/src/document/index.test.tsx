@@ -8,6 +8,7 @@ declare var global: Window;
 const sampleDocumentState = Object.freeze({
   doc: Object.freeze({
     title: "Sample Page",
+    locale: "en-US",
     summary: "This is the summary",
     mdn_url: "/en-US/docs/Sample/Page",
     sidebarHTML: "<ul><li>One</li></ul>",

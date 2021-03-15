@@ -1,4 +1,5 @@
 import concurrent.futures
+import datetime
 import hashlib
 import mimetypes
 import re
@@ -10,6 +11,7 @@ from pathlib import Path
 import boto3
 import click
 from boto3.s3.transfer import S3TransferConfig
+from dateutil.tz import UTC
 
 from .constants import (
     DEFAULT_CACHE_CONTROL,
@@ -49,6 +51,7 @@ class Totals:
     uploaded_files: int = 0
     uploaded_redirects: int = 0
     uploaded_files_size: int = 0
+    deleted_files: int = 0
 
     def count(self, task):
         if task.skipped:
@@ -57,6 +60,8 @@ class Totals:
             self.failed += 1
         elif task.is_redirect:
             self.uploaded_redirects += 1
+        elif task.is_deletion:
+            self.deleted_files += 1
         else:
             self.uploaded_files += 1
             self.uploaded_files_size += task.size
@@ -109,6 +114,7 @@ class UploadTask:
     error = None
     skipped = False
     is_redirect = False
+    is_deletion = False
 
     def upload(self):
         raise NotImplementedError()
@@ -119,9 +125,10 @@ class UploadFileTask(UploadTask):
     Class for file upload tasks.
     """
 
-    def __init__(self, file_path: Path, key: str):
+    def __init__(self, file_path: Path, key: str, dry_run=False):
         self.key = key
         self.file_path = file_path
+        self.dry_run = dry_run
 
     def __repr__(self):
         return f"UploadFileTask({self.file_path}, {self.key})"
@@ -201,16 +208,17 @@ class UploadFileTask(UploadTask):
         return f"max-age={cache_control_seconds}, public"
 
     def upload(self, bucket_manager):
-        bucket_manager.client.upload_file(
-            str(self.file_path),
-            bucket_manager.bucket_name,
-            self.key,
-            ExtraArgs={
-                "ACL": "public-read",
-                "ContentType": self.content_type,
-                "CacheControl": self.cache_control,
-            },
-        )
+        if not self.dry_run:
+            bucket_manager.client.upload_file(
+                str(self.file_path),
+                bucket_manager.bucket_name,
+                self.key,
+                ExtraArgs={
+                    "ACL": "public-read",
+                    "ContentType": self.content_type,
+                    "CacheControl": self.cache_control,
+                },
+            )
 
 
 class UploadRedirectTask(UploadTask):
@@ -220,9 +228,10 @@ class UploadRedirectTask(UploadTask):
 
     is_redirect = True
 
-    def __init__(self, redirect_from_key, redirect_to_key):
+    def __init__(self, redirect_from_key, redirect_to_key, dry_run=False):
         self.key = redirect_from_key
         self.to_key = redirect_to_key
+        self.dry_run = dry_run
 
     def __repr__(self):
         return f"UploadRedirectTask({self.key}, {self.to_key})"
@@ -235,14 +244,40 @@ class UploadRedirectTask(UploadTask):
         return f"max-age={HASHED_CACHE_CONTROL}, public"
 
     def upload(self, bucket_manager):
-        bucket_manager.client.put_object(
-            Body=b"",
-            Key=self.key,
-            ACL="public-read",
-            CacheControl=self.cache_control,
-            WebsiteRedirectLocation=self.to_key,
-            Bucket=bucket_manager.bucket_name,
-        )
+        if not self.dry_run:
+            bucket_manager.client.put_object(
+                Body=b"",
+                Key=self.key,
+                ACL="public-read",
+                CacheControl=self.cache_control,
+                WebsiteRedirectLocation=self.to_key,
+                Bucket=bucket_manager.bucket_name,
+            )
+
+
+class DeleteTask(UploadTask):
+    """
+    Class for doing deletion by key tasks.
+    """
+
+    is_deletion = True
+
+    def __init__(self, key, dry_run=False):
+        self.key = key
+        self.dry_run = dry_run
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.key})"
+
+    def __str__(self):
+        return self.key
+
+    def delete(self, bucket_manager):
+        if not self.dry_run:
+            bucket_manager.client.delete_object(
+                Key=str(self.key),
+                Bucket=bucket_manager.bucket_name,
+            )
 
 
 class BucketManager:
@@ -286,6 +321,15 @@ class BucketManager:
         result = {}
         continuation_token = None
         while True:
+            # Note! You can set a `MaxKeys` parameter here.
+            # The default is 1,000. Any number larger than 1,000 is ignored
+            # and it will just fall back to 1,000.
+            # (Peterbe's note) I've experimented with different numbers (
+            # e.g. 500 or 100) and the total time difference is insignificant.
+            # A large MaxKeys means larger batches and fewer network requests
+            # which has a reduced risk of network failures (automatically retried)
+            # and there doesn't appear to be any benefit in setting it to a lower
+            # number. So leave it at 1,000 which is what you get when it's not set.
             kwargs = dict(Bucket=self.bucket_name)
             if self.key_prefix:
                 kwargs["Prefix"] = self.key_prefix
@@ -300,7 +344,7 @@ class BucketManager:
                 break
         return result
 
-    def iter_file_tasks(self, build_directory, for_counting_only=False):
+    def iter_file_tasks(self, build_directory, for_counting_only=False, dry_run=False):
         # Prepare a computation of what the root /index.html file would be
         # called as a S3 key. Do this once so it becomes a quicker operation
         # later when we compare *each* generated key to see if it matches this.
@@ -329,9 +373,11 @@ class BucketManager:
             if for_counting_only:
                 yield 1
             else:
-                yield UploadFileTask(fp, key)
+                yield UploadFileTask(fp, key, dry_run=dry_run)
 
-    def iter_redirect_tasks(self, content_roots, for_counting_only=False):
+    def iter_redirect_tasks(
+        self, content_roots, for_counting_only=False, dry_run=False
+    ):
         # Walk the content roots and yield redirect upload tasks.
         for content_root in content_roots:
             # Look for "_redirects.txt" files up to two levels deep to
@@ -354,8 +400,13 @@ class BucketManager:
                             yield 1
                         else:
                             yield UploadRedirectTask(
-                                *self.get_redirect_keys(from_url, to_url)
+                                *self.get_redirect_keys(from_url, to_url),
+                                dry_run=dry_run,
                             )
+
+    def iter_delete_tasks(self, keys, dry_run=False):
+        for key in keys:
+            yield DeleteTask(key, dry_run=dry_run)
 
     def count_file_tasks(self, build_directory):
         return sum(self.iter_file_tasks(build_directory, for_counting_only=True))
@@ -369,18 +420,23 @@ class BucketManager:
         content_roots,
         existing_bucket_objects=None,
         on_task_complete=None,
+        skip_redirects=False,
+        dry_run=False,
     ):
         with concurrent.futures.ThreadPoolExecutor(
             max_workers=MAX_WORKERS_PARALLEL_UPLOADS
         ) as executor, StopWatch() as timer:
             # Upload the redirects first, then the built files. This
             # ensures that a built file overrides its stale redirect.
-            for task_iter in (
-                lambda: self.iter_redirect_tasks(content_roots),
-                lambda: self.iter_file_tasks(build_directory),
-            ):
+            task_iters = []
+            if not skip_redirects:
+                task_iters.append(
+                    self.iter_redirect_tasks(content_roots, dry_run=dry_run)
+                )
+            task_iters.append(self.iter_file_tasks(build_directory, dry_run=dry_run))
+            for task_iter in task_iters:
                 futures = {}
-                for task in task_iter():
+                for task in task_iter:
                     # Note: redirect upload tasks are never skipped.
                     if existing_bucket_objects and not task.is_redirect:
                         s3_obj = existing_bucket_objects.get(task.key)
@@ -388,7 +444,19 @@ class BucketManager:
                             task.skipped = True
                             if on_task_complete:
                                 on_task_complete(task)
+
+                            # Before continuing, pop it from the existing dict because
+                            # we no longer need it after the ETag comparison has been
+                            # done.
+                            existing_bucket_objects.pop(task.key, None)
                             continue
+
+                    if existing_bucket_objects:
+                        # Independent of if we benefitted from the knowledge of the
+                        # key already existing or not, remove it from the dict
+                        # so we can figure out what remains later.
+                        existing_bucket_objects.pop(task.key, None)
+
                     future = executor.submit(task.upload, self)
                     futures[future] = task
 
@@ -404,6 +472,31 @@ class BucketManager:
 
         return timer
 
+    def delete(self, keys, on_task_complete=None, dry_run=False):
+        """Delete doesn't care if it's a redirect or a regular file."""
+        with concurrent.futures.ThreadPoolExecutor(
+            max_workers=MAX_WORKERS_PARALLEL_UPLOADS
+        ) as executor, StopWatch() as timer:
+            # Upload the redirects first, then the built files. This
+            # ensures that a built file overrides its stale redirect.
+            task_iter = self.iter_delete_tasks(keys, dry_run=dry_run)
+            futures = {}
+            for task in task_iter:
+                future = executor.submit(task.delete, self)
+                futures[future] = task
+
+            for future in concurrent.futures.as_completed(futures):
+                task = futures[future]
+                try:
+                    task.error = future.exception()
+                except concurrent.futures.CancelledError as cancelled:
+                    task.error = cancelled
+
+                if on_task_complete:
+                    on_task_complete(task)
+
+        return timer
+
 
 def upload_content(build_directory, content_roots, config):
     full_timer = StopWatch().start()
@@ -413,9 +506,12 @@ def upload_content(build_directory, content_roots, config):
     bucket_prefix = config["prefix"]
     force_refresh = config["force_refresh"]
     show_progress_bar = not config["no_progressbar"]
+    upload_redirects = not config["no_redirects"]
+    prune = config["prune"]
 
     log.info(f"Upload files from: {build_directory}")
-    log.info(f"Upload redirects from: {', '.join(str(fp) for fp in content_roots)}")
+    if upload_redirects:
+        log.info(f"Upload redirects from: {', '.join(str(fp) for fp in content_roots)}")
     log.info("Upload into: ", nl=False)
     if bucket_prefix:
         log.info(f"{bucket_prefix}/ of ", nl=False)
@@ -423,13 +519,18 @@ def upload_content(build_directory, content_roots, config):
 
     mgr = BucketManager(bucket_name, bucket_prefix)
 
-    with StopWatch() as timer:
-        total_redirects = mgr.count_redirect_tasks(content_roots)
-        if not total_redirects:
-            raise click.ClickException(
-                "unable to find any redirects to upload (did you specify the right content-root?)"
-            )
-    log.info(f"Total pending redirect uploads: {total_redirects:,} ({timer})")
+    if upload_redirects:
+        with StopWatch() as timer:
+            total_redirects = mgr.count_redirect_tasks(content_roots)
+            if not total_redirects:
+                raise click.ClickException(
+                    "unable to find any redirects to upload "
+                    "(did you specify the right content-root?)"
+                )
+        log.info(f"Total pending redirect uploads: {total_redirects:,} ({timer})")
+    else:
+        total_redirects = 0
+        log.info("Not going to upload any redirects")
 
     with StopWatch() as timer:
         total_possible_files = mgr.count_file_tasks(build_directory)
@@ -445,31 +546,82 @@ def upload_content(build_directory, content_roots, config):
 
     totals = Totals()
 
+    with DisplayProgress(
+        total_redirects + total_possible_files, show_progress_bar
+    ) as progress:
+
+        def on_task_complete(task):
+            progress.update(task)
+            totals.count(task)
+
+        upload_timer = mgr.upload(
+            build_directory,
+            content_roots,
+            existing_bucket_objects,
+            on_task_complete=on_task_complete,
+            skip_redirects=not upload_redirects,
+            dry_run=dry_run,
+        )
+
     if dry_run:
-        upload_timer = StopWatch()
+        log.info("No uploads. Dry run!")
     else:
-        with DisplayProgress(
-            total_redirects + total_possible_files, show_progress_bar
-        ) as progress:
+        log.info(
+            f"Total uploaded files: {totals.uploaded_files:,} "
+            f"({fmt_size(totals.uploaded_files_size)})"
+        )
+        if upload_redirects:
+            log.info(f"Total uploaded redirects: {totals.uploaded_redirects:,} ")
+        log.info(f"Total skipped files: {totals.skipped:,} matched existing S3 objects")
+        log.info(f"Total upload/skip time: {upload_timer}")
+
+    if prune:
+        # Now `existing_bucket_objects` has mutated to only contain the keys
+        # that were not uploaded or not needed to be uploaded.
+        # That basically means all the S3 keys that exist before but are
+        # unrecognized now. For example, things that were once built but are
+        # now deleted.
+        now = datetime.datetime.utcnow().replace(tzinfo=UTC)
+        delete_keys = []
+        for key in existing_bucket_objects:
+            if key.startswith(f"{bucket_prefix}/_whatsdeployed/"):
+                # These are special and wouldn't have been uploaded
+                continue
+
+            if key.startswith(f"{bucket_prefix}/static/"):
+                # Careful with these!
+                # Static assets such as `main/static/js/8.0b83949c.chunk.js`
+                # are aggressively cached and they might still be referenced
+                # from within HTML pages that are still in the CDN cache.
+                # Suppose someone gets a copy of yesterday's HTML from the CDN
+                # and it refers to `/static/js/foo.abc123.js` which is not in their
+                # browser cache or the CDN's cache, what might happen is that
+                # their browser requests it even though
+                # `/static/js/foo.def456.js` is now the latest and greatest.
+                # To be safe, only delete if it's considered "old".
+                delta = now - existing_bucket_objects[key]["LastModified"]
+                if delta.days < 30:
+                    continue
+
+            assert key.startswith(bucket_prefix)
+
+            delete_keys.append(key)
+
+        log.info(f"Total pending task deletions: {len(delete_keys):,}")
+
+        with DisplayProgress(len(delete_keys), show_progress_bar) as progress:
 
             def on_task_complete(task):
                 progress.update(task)
                 totals.count(task)
 
-            upload_timer = mgr.upload(
-                build_directory,
-                content_roots,
-                existing_bucket_objects,
-                on_task_complete=on_task_complete,
-            )
+            mgr.delete(delete_keys, on_task_complete=on_task_complete, dry_run=dry_run)
 
-    log.info(
-        f"Total uploaded files: {totals.uploaded_files:,} "
-        f"({fmt_size(totals.uploaded_files_size)})"
-    )
-    log.info(f"Total uploaded redirects: {totals.uploaded_redirects:,}")
-    log.info(f"Total skipped files: {totals.skipped:,} matched existing S3 objects")
-    log.info(f"Total upload/skip time: {upload_timer}")
+        if dry_run:
+            log.info("No deletions. Dry run!")
+        else:
+            log.info(f"Total deleted keys: {totals.deleted_files:,}")
+
     log.info(f"Done in {full_timer.stop()}.")
 
     if totals.failed:

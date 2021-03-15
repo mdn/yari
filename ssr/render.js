@@ -6,11 +6,11 @@ import { renderToString } from "react-dom/server";
 import cheerio from "cheerio";
 
 import {
-  GOOGLE_ANALYTICS_ACCOUNT,
-  GOOGLE_ANALYTICS_DEBUG,
   SPEEDCURVE_LUX_ID,
   ALWAYS_NO_ROBOTS,
+  BUILD_OUT_ROOT,
 } from "../build/constants";
+const { DEFAULT_LOCALE } = require("../libs/constants");
 
 // When there are multiple options for a given language, this gives the
 // preferred locale for that language (language => preferred locale).
@@ -71,24 +71,24 @@ const readBuildHTML = lazy(() => {
   return html;
 });
 
-const getGoogleAnalyticsJS = lazy(() => {
-  // The reason for the `path.join(__dirname, ".."` is because this file you're
-  // reading gets compiled by Webpack into ssr/dist/*.js
-  const dntHelperCode = fs
-    .readFileSync(
-      path.join(__dirname, "..", "mozilla.dnthelper.min.js"),
-      "utf-8"
-    )
-    .trim();
-  return `
-  // Mozilla DNT Helper
-  ${dntHelperCode}
-  // only load GA if DNT is not enabled
-  if (Mozilla && !Mozilla.dntEnabled()) {
-      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-      ga('create', '${GOOGLE_ANALYTICS_ACCOUNT}', 'mozilla.org');
-      ga('set', 'anonymizeIp', true);
-  }`.trim();
+const getGAScriptPathName = lazy((relPath = "/static/js/ga.js") => {
+  // Return the relative path if there exists a `BUILD_ROOT/static/js/ga.js`.
+  // If the file doesn't exist, return falsy.
+  // Remember, unless explicitly set, the BUILD_OUT_ROOT defaults to a path
+  // based on `__dirname` but that's wrong when compared as a source and as
+  // a webpack built asset. So we need to remove the `/ssr/` portion of the path.
+  let root = BUILD_OUT_ROOT;
+  if (!fs.existsSync(root)) {
+    root = root
+      .split(path.sep)
+      .filter((x) => x !== "ssr")
+      .join(path.sep);
+  }
+  const filePath = relPath.split("/").slice(1).join(path.sep);
+  if (fs.existsSync(path.join(root, filePath))) {
+    return relPath;
+  }
+  return null;
 });
 
 const getSpeedcurveJS = lazy(() => {
@@ -139,15 +139,26 @@ function serializeDocumentData(data) {
 
 export default function render(
   renderApp,
-  { doc = null, pageNotFound = false, feedEntries = null } = {}
+  {
+    doc = null,
+    pageNotFound = false,
+    feedEntries = null,
+    pageTitle = null,
+  } = {}
 ) {
   const buildHtml = readBuildHTML();
   const webfontURLs = extractWebFontURLs();
   const $ = cheerio.load(buildHtml);
 
+  // Some day, we'll have the chrome localized and then this can no longer be
+  // hardcoded to 'en'. But for now, the chrome is always in "English (US)".
+  $("html").attr("lang", DEFAULT_LOCALE);
+
   const rendered = renderToString(renderApp);
 
-  let pageTitle = "MDN Web Docs"; // default
+  if (!pageTitle) {
+    pageTitle = "MDN Web Docs"; // default
+  }
   let canonicalURL = "https://developer.mozilla.org";
 
   let pageDescription = "";
@@ -225,16 +236,21 @@ export default function render(
     ).appendTo($("head"));
   }
 
-  if (GOOGLE_ANALYTICS_ACCOUNT) {
-    const googleAnalyticsJS = getGoogleAnalyticsJS();
-    if (googleAnalyticsJS) {
-      $("<script>").text(`\n${googleAnalyticsJS}\n`).appendTo($("head"));
-      $(
-        `<script async src="https://www.google-analytics.com/${
-          GOOGLE_ANALYTICS_DEBUG ? "analytics_debug" : "analytics"
-        }.js"></script>`
-      ).appendTo($("head"));
-    }
+  // As part of the pre-build steps, in the build root, a `ga.js` file is generated.
+  // The SSR rendering needs to know if exists and if so, what it's URL pathname is.
+  // The script will do two things:
+  //  1. created a `window.ga` object
+  //  2. async inject the download of that remote
+  //     https://www.google-analytics.com/analytics.js file.
+  // With this script appearing before any other (also deferred) JS bundles,
+  // the `window.ga` will be immediately available but the remote analytics.js
+  // can come in when it comes in and it will send.
+  const gaScriptPathName = getGAScriptPathName();
+  if (gaScriptPathName) {
+    $("<script>")
+      .attr("defer", "")
+      .attr("src", gaScriptPathName)
+      .appendTo($("head"));
   }
 
   const $title = $("title");

@@ -142,9 +142,7 @@ test("content built foo page", () => {
 
   // The HTML should contain the Google Analytics snippet.
   // The ID should match what's set in `testing/.env`.
-  expect(
-    $('script[src="https://www.google-analytics.com/analytics.js"]').length
-  ).toBe(1);
+  expect($('script[src="/static/js/ga.js"]').length).toBe(1);
 
   // The HTML should contain the Speedcurve LUX snippet.
   // The ID should match what's set in `testing/.env`.
@@ -806,7 +804,9 @@ test("image flaws kitchen sink", () => {
   expect(flaw.column).toBe(13);
 
   flaw = map.get("idontexist.png");
-  expect(flaw.explanation).toBe("File not present on disk");
+  expect(flaw.explanation).toBe(
+    "File not present on disk, an empty file, or not an image"
+  );
   expect(flaw.suggestion).toBeNull();
   expect(flaw.line).toBe(34);
   expect(flaw.column).toBe(13);
@@ -846,7 +846,9 @@ test("image flaws kitchen sink", () => {
   expect(flaw.column).toBe(13);
 
   flaw = map.get("../Foo/nonexistent.png");
-  expect(flaw.explanation).toBe("File not present on disk");
+  expect(flaw.explanation).toBe(
+    "File not present on disk, an empty file, or not an image"
+  );
   expect(flaw.suggestion).toBeNull();
   expect(flaw.line).toBe(64);
   expect(flaw.column).toBe(13);
@@ -864,6 +866,30 @@ test("image flaws kitchen sink", () => {
       expect(src.startsWith("/en-US/docs/Web/")).toBeTruthy();
     }
   });
+});
+
+test("image flaws with bad images", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "bad_src"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  // You have to be intimately familiar with the fixture to understand
+  // why these flaws come out as they do.
+  expect(flaws.images.length).toBe(4);
+  expect(
+    flaws.images.filter(
+      (flaw) =>
+        flaw.explanation ===
+        "File not present on disk, an empty file, or not an image"
+    ).length
+  ).toBe(4);
 });
 
 test("image flaws with repeated external images", () => {
@@ -925,6 +951,26 @@ test("404 page", () => {
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
+test("sign in page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "signin");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("h1").text()).toContain("Sign in");
+  expect($("title").text()).toContain("Sign in");
+});
+
+test("sign up page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "signup");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("h1").text()).toContain("Sign up");
+  expect($("title").text()).toContain("Sign up");
+});
+
 test("bcd table extraction followed by h3", () => {
   const builtFolder = path.join(
     buildRoot,
@@ -972,12 +1018,17 @@ test("img tags with an empty 'src' should be a flaw", () => {
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(doc.flaws.images.length).toBe(1);
+  expect(doc.flaws.images.length).toBe(2);
   expect(doc.flaws.images[0].explanation).toBe("Empty img 'src' attribute");
   expect(doc.flaws.images[0].fixable).toBeFalsy();
   expect(doc.flaws.images[0].externalImage).toBeFalsy();
   expect(doc.flaws.images[0].line).toBe(8);
   expect(doc.flaws.images[0].column).toBe(13);
+  expect(doc.flaws.images[1].explanation).toBe("Empty img 'src' attribute");
+  expect(doc.flaws.images[1].fixable).toBeFalsy();
+  expect(doc.flaws.images[1].externalImage).toBeFalsy();
+  expect(doc.flaws.images[1].line).toBe(17);
+  expect(doc.flaws.images[1].column).toBe(11);
 });
 
 test("img with the image_widths flaw", () => {
@@ -1046,6 +1097,20 @@ test("img tags should always have their 'width' and 'height' set", () => {
       throw new Error("unexpected image");
     }
   });
+});
+
+test("img tags without 'src' should not crash", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "srcless"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(Object.keys(doc.flaws).length).toBe(0);
 });
 
 test("/Web/Embeddable should have 3 valid live samples", () => {
@@ -1159,4 +1224,78 @@ test("home page should have a /index.json file with feedEntries", () => {
   const jsonFile = path.join(builtFolder, "index.json");
   const { feedEntries } = JSON.parse(fs.readFileSync(jsonFile));
   expect(feedEntries.length).toBeGreaterThan(0);
+});
+
+test("headings with links in them are flaws", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "heading_links"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.heading_links.length).toBe(2);
+  const map = new Map(doc.flaws.heading_links.map((x) => [x.id, x]));
+  expect(map.get("heading_links1").explanation).toBe(
+    "h2 heading contains an <a> tag"
+  );
+  expect(map.get("heading_links1").suggestion).toBe("One");
+  expect(map.get("heading_links1").line).toBe(9);
+  expect(map.get("heading_links1").column).toBe(19);
+  expect(map.get("heading_links1").fixable).toBe(false);
+  expect(map.get("heading_links1").before).toBe('<a href="#something">One</a>');
+  expect(map.get("heading_links1").html).toBe(
+    '<h2 id="one"><a href="#something">One</a></h2>'
+  );
+  expect(map.get("heading_links2").explanation).toBe(
+    "h3 heading contains an <a> tag"
+  );
+  expect(map.get("heading_links2").suggestion.trim()).toBe("Two");
+  expect(map.get("heading_links2").line).toBe(11);
+  expect(map.get("heading_links2").column).toBe(19);
+  expect(map.get("heading_links2").fixable).toBe(false);
+  expect(map.get("heading_links2").before.trim()).toBe(
+    '<a id="twoooo">Two</a>'
+  );
+  expect(map.get("heading_links2").html).toBe(
+    '<h3 id="two">\n  <a id="twoooo">Two</a>\n</h3>'
+  );
+});
+
+test("'lang' attribute should match the article", () => {
+  let builtFolder = path.join(buildRoot, "fr", "docs", "web", "foo");
+  let htmlFile = path.join(builtFolder, "index.html");
+  let html = fs.readFileSync(htmlFile, "utf-8");
+  let $ = cheerio.load(html);
+  expect($("html").attr("lang")).toBe("en-US");
+  expect($("article").attr("lang")).toBe("fr");
+
+  builtFolder = path.join(buildRoot, "en-us", "docs", "web", "foo");
+  htmlFile = path.join(builtFolder, "index.html");
+  html = fs.readFileSync(htmlFile, "utf-8");
+  $ = cheerio.load(html);
+  expect($("html").attr("lang")).toBe("en-US");
+  expect($("article").attr("lang")).toBe("en-US");
+});
+
+test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "unsafe_html"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.unsafe_html.length).toBe(6);
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("code.unsafe-html").length).toBe(6);
 });

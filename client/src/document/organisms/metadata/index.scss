@@ -4,12 +4,18 @@
 
 .metadata {
   background-color: $neutral-550;
+  margin: ($base-spacing * 2) 0;
+  padding: $base-spacing;
 }
 
 .metadata-content-container {
   margin: 0 auto;
   max-width: $max-width-default;
-  padding: $base-spacing;
+
+  a:link,
+  a:visited {
+    text-decoration: underline;
+  }
 
   .on-github {
     margin-bottom: $base-spacing;

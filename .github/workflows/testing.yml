@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.4
+        uses: actions/setup-node@v2.1.5
         with:
           node-version: "12"
 
@@ -41,9 +41,6 @@ jobs:
 
       - name: Lint ESLint
         run: yarn eslint
-
-      - name: Unit testing build
-        run: yarn test:build
 
       - name: Unit testing client
         run: yarn test:client

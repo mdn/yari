@@ -24,6 +24,7 @@ const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
 const buildOptions = require("./build-options");
 const { gather: gatherGitHistory } = require("./git-history");
+const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
 
 const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/content
@@ -215,9 +216,16 @@ async function buildDocument(document, documentOptions = {}) {
   const options = Object.assign({}, buildOptions, documentOptions);
   const { metadata, fileInfo } = document;
 
+  if (Document.urlToFolderPath(document.url) !== document.fileInfo.folder) {
+    throw new Error(
+      `The document's slug (${metadata.slug}) doesn't match its disk folder name (${document.fileInfo.folder})`
+    );
+  }
+
   const doc = {
     isArchive: document.isArchive,
     isTranslated: document.isTranslated,
+    isActive: document.isActive,
   };
 
   doc.flaws = {};
@@ -487,17 +495,12 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
   doc.noIndexing =
-    (doc.isArchive && !doc.isTranslated) || metadata.slug === "MDN/Kitchensink";
+    (doc.isArchive && !doc.isTranslated) ||
+    metadata.slug === "MDN/Kitchensink" ||
+    document.metadata.slug.startsWith("orphaned/") ||
+    document.metadata.slug.startsWith("conflicting/");
 
   return { doc, liveSamples, fileAttachments, bcdData };
-}
-
-async function buildDocumentFromURL(url, documentOptions = {}) {
-  const document = Document.findByURL(url);
-  if (!document) {
-    return null;
-  }
-  return await buildDocument(document, documentOptions);
 }
 
 async function buildLiveSamplePageFromURL(url) {
@@ -548,7 +551,6 @@ module.exports = {
 
   buildDocument,
 
-  buildDocumentFromURL,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 
@@ -556,4 +558,5 @@ module.exports = {
 
   options: buildOptions,
   gatherGitHistory,
+  buildSPAs,
 };

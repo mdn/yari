@@ -29,8 +29,9 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement("h1", {
       text: "<foo>: Une page de test",
     });
-    await expect(page).toSelect('select[name="language"]', "English (US)");
-    await expect(page).toClick("button", { text: "Change language" });
+    await expect(page).toClick("a.view-in-english", {
+      text: "View in English",
+    });
     await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
     // Should have been redirected too...
     // Note! It's important that this happens *after* the `.toMatchElement`
@@ -64,22 +65,22 @@ describe("Basic viewing of functional pages", () => {
       text: "Flexbox",
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${flexSample1Uri}"]`
+      `iframe.sample-code-frame[src$="${flexSample1Uri}"]`
     );
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${flexSample2Uri}"]`
+      `iframe.sample-code-frame[src$="${flexSample2Uri}"]`
     );
     await expect(page).toMatchElement("#grid_layout", {
       text: "Grid Layout",
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${gridSample1Uri}"]`
+      `iframe.sample-code-frame[src$="${gridSample1Uri}"]`
     );
     await expect(page).toMatchElement("#Grid_2 > pre.css.notranslate", {
       text: /\.wrapper\s*\{\s*display:\s*grid;/,
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${gridSample2Uri}"]`
+      `iframe.sample-code-frame[src$="${gridSample2Uri}"]`
     );
     // Ensure that the live-sample pages were built.
     for (const sampleUri of [
@@ -117,13 +118,13 @@ describe("Basic viewing of functional pages", () => {
       text: /\.wrapper\s*\{\s*display:\s*flex;\s*\}/,
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${flexSample1Uri}"]`
+      `iframe.sample-code-frame[src$="${flexSample1Uri}"]`
     );
     await expect(page).toMatchElement("#Flex_2 > pre.css.notranslate", {
       text: /\.wrapper\s*\{\s*display:\s*flex;\s*\}.+flex:\s*1;/,
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${flexSample2Uri}"]`
+      `iframe.sample-code-frame[src$="${flexSample2Uri}"]`
     );
   });
 
@@ -143,13 +144,13 @@ describe("Basic viewing of functional pages", () => {
       text: /\.wrapper\s*\{\s*display:\s*grid;/,
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${gridSample1Uri}"]`
+      `iframe.sample-code-frame[src$="${gridSample1Uri}"]`
     );
     await expect(page).toMatchElement("#Grid_2 > pre.css.notranslate", {
       text: /\.wrapper\s*\{\s*display:\s*grid;.+\.box1\s*\{/,
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${gridSample2Uri}"]`
+      `iframe.sample-code-frame[src$="${gridSample2Uri}"]`
     );
     // Ensure that the live-sample page "gridSample2Uri" was built.
     await page.goto(testURL(gridSample2Uri));
@@ -184,7 +185,7 @@ describe("Basic viewing of functional pages", () => {
     // For more information, see
     // https://github.com/puppeteer/puppeteer/issues/2977#issuecomment-412807613
     await page.evaluate(() => {
-      document.querySelector(".breadcrumbs a").click();
+      document.querySelector(".breadcrumbs-container a").click();
     });
     await expect(page).toMatchElement("h1", {
       text: "Web technology for developers",
@@ -237,5 +238,55 @@ describe("Basic viewing of functional pages", () => {
     // One home page for every built locale
     await page.goto(testURL("/fr/"));
     await expect(page).toMatch("Resources for developers, by developers.");
+  });
+
+  it("should be able to switch from French to English, set a cookie, and back again", async () => {
+    await page.goto(testURL("/fr/docs/Web/Foo"));
+    await expect(page).toMatch("<foo>: Une page de test");
+    await expect(page).toSelect('select[name="language"]', "English (US)");
+    await expect(page).toClick("button", { text: "Change language" });
+    await expect(page).toMatch("<foo>: A test tag");
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
+
+    // And change back to French
+    await expect(page).toSelect('select[name="language"]', "Français");
+    await expect(page).toClick("button", { text: "Change language" });
+    await expect(page).toMatch("<foo>: Une page de test");
+    expect(page.url()).toBe(testURL("/fr/docs/Web/Foo"));
+  });
+
+  it("clicking 'Sign in' should offer links to all identity providers", async () => {
+    await page.goto(testURL("/en-US/docs/Web/Foo"));
+    await expect(page).toClick("a", { text: "Sign in" });
+    await expect(page).toMatchElement("h1", { text: "Sign in" });
+    expect(page.url()).toContain(
+      testURL("/en-US/signin?next=/en-US/docs/Web/Foo")
+    );
+    await expect(page).toMatchElement("a", { text: "Google" });
+    await expect(page).toMatchElement("a", { text: "GitHub" });
+  });
+
+  it("going to 'Sign up' page without query string", async () => {
+    await page.goto(testURL("/en-US/signup"));
+    await expect(page).toMatchElement("h1", { text: "Sign up" });
+    await expect(page).toMatch("Invalid Sign up URL");
+    await expect(page).toMatchElement("a", {
+      text: "Try starting over the sign-in process",
+    });
+  });
+
+  it("going to 'Sign up' page with realistic (fake) query string", async () => {
+    await page.goto(
+      testURL("/en-US/signup?csrfmiddlewaretoken=abc&provider=github")
+    );
+    await expect(page).toMatchElement("h1", { text: "Sign up" });
+    await expect(page).not.toMatch("Invalid Sign up URL");
+    await expect(page).toMatch(
+      "You are signing in to MDN Web Docs with GitHub."
+    );
+    await expect(page).toMatch(
+      "I agree to Mozilla's Terms and Privacy Notice."
+    );
+    await expect(page).toMatchElement("button", { text: "Create account" });
   });
 });

@@ -15,7 +15,7 @@ import { SiteSearch } from "./site-search";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Banner } from "./banners";
-import { useDebugGA } from "./ga-context";
+import { SignIn, SignUp } from "./auth";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
@@ -32,9 +32,9 @@ function Layout({ pageType, children }) {
       <div className={`page-wrapper ${pageType}`}>
         <Header />
         {children}
-        <Footer />
-        {!isServer && <Banner />}
       </div>
+      <Footer />
+      {!isServer && <Banner />}
       {/* Shown on mobile when main navigation is expanded to provide a clear distinction between the foreground menu and the page content */}
       <div className="page-overlay hidden"></div>
     </>
@@ -91,8 +91,6 @@ function LoadingFallback({ message }: { message?: string }) {
 }
 
 export function App(appProps) {
-  useDebugGA();
-
   // When preparing a build for use in the NPM package, CRUD_MODE is always true.
   // But if the App is loaded from the code that builds the SPAs, then `isServer`
   // is true. So you have to have `isServer && CRUD_MODE` at the same time.
@@ -196,6 +194,22 @@ export function App(appProps) {
               element={
                 <StandardLayout>
                   <SiteSearch />
+                </StandardLayout>
+              }
+            />
+            <Route
+              path="/signin"
+              element={
+                <StandardLayout>
+                  <SignIn />
+                </StandardLayout>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <StandardLayout>
+                  <SignUp />
                 </StandardLayout>
               }
             />

@@ -21,10 +21,6 @@ on:
         description: "Build archived content"
         required: false
         default: "false"
-      translated_content:
-        description: "Build translated content"
-        required: false
-        default: "true"
 
       # This is very useful when combined with the "Use workflow from"
       # feature that is built into the "Run workflow" button on
@@ -66,13 +62,12 @@ jobs:
           path: mdn/archived-content
 
       - uses: actions/checkout@v2
-        if: "contains(github.event.inputs.translated_content, 'true')"
         with:
-          repository: mdn/translated-content-rendered
+          repository: mdn/translated-content
           path: mdn/translated-content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.4
+        uses: actions/setup-node@v2.1.5
         with:
           node-version: "12"
 
@@ -96,7 +91,7 @@ jobs:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.1.1
+        uses: snok/install-poetry@v1.1.2
 
       - name: Install deployer
         run: |
@@ -112,7 +107,6 @@ jobs:
         run: |
           echo "notes: ${{ github.event.inputs.notes }}"
           echo "archived_content: ${{ github.event.inputs.archived_content }}"
-          echo "translated_content: ${{ github.event.inputs.translated_content }}"
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix }}"
 
@@ -121,6 +115,7 @@ jobs:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
 
           # This basically means that all live-sample iframes run on the same
           # host as the page that includes the iframe. Not great security but the
@@ -152,12 +147,6 @@ jobs:
           else
             echo "Will NOT build mdn/archived-content too"
           fi
-          if [ ${{ github.event.inputs.translated_content }} == "true" ]; then
-            echo "Will build mdn/translated-content too"
-            export CONTENT_TRANSLATED_ROOT=${{ github.workspace }}/mdn/translated-content/files
-          else
-            echo "Will NOT build mdn/translated-content too"
-          fi
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
@@ -165,6 +154,7 @@ jobs:
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
           yarn prepare-build
 
+          yarn tool sync-translated-content
           yarn build
 
           # TODO: When the deployer is available this is where we
@@ -175,6 +165,7 @@ jobs:
         env:
           # Set the CONTENT_ROOT first
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
 
           DEPLOYER_BUCKET_NAME: mdn-content-dev
           DEPLOYER_BUCKET_PREFIX: ${{ github.event.inputs.deployment_prefix }}
@@ -209,10 +200,11 @@ jobs:
 
           poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/code.json
           poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/content.json $CONTENT_ROOT
+          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/translated-content.json $CONTENT_TRANSLATED_ROOT
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
-          poetry run deployer upload ../client/build
+          poetry run deployer upload --prune ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
           # TODO
           # Execute command to tell the Dev CloudFront distribution to use the

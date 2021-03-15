@@ -1,5 +1,4 @@
-import * as React from "react";
-
+import { LanguageMenu } from "../../../ui/molecules/language-menu";
 import { OnGitHubLink } from "../../on-github";
 
 import "./index.scss";
@@ -10,7 +9,7 @@ function LastModified({ value, locale }) {
   }
   const date = new Date(value);
   // Justification for these is to match historically
-  const dateStringOptions = {
+  const dateStringOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -26,14 +25,19 @@ function LastModified({ value, locale }) {
 }
 
 export function Metadata({ doc, locale }) {
+  const translations = doc.other_translations || [];
+
   return (
     <aside className="metadata">
       <div className="metadata-content-container">
-        {!doc.isArchive && <OnGitHubLink doc={doc} />}
+        {doc.isActive && <OnGitHubLink doc={doc} />}
         <p className="last-modified-date">
           <LastModified value={doc.modified} locale={locale} />,{" "}
           <a href={`${doc.mdn_url}/contributors.txt`}>by MDN contributors</a>
         </p>
+        {translations && !!translations.length && (
+          <LanguageMenu translations={translations} locale={locale} />
+        )}
       </div>
     </aside>
   );
