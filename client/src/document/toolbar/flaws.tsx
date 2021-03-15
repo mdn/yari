@@ -20,6 +20,7 @@ import {
   SectioningFlaw,
   HeadingLinksFlaw,
   TranslationDifferenceFlaw,
+  UnsafeHTMLFlaw,
 } from "../types";
 import "./flaws.scss";
 
@@ -271,6 +272,10 @@ function Flaws({
                 sourceFolder={doc.source.folder}
                 flaws={doc.flaws.heading_links}
               />
+            );
+          case "unsafe_html":
+            return (
+              <UnsafeHTML key="unsafe_html" flaws={doc.flaws.unsafe_html} />
             );
           case "translation_differences":
             return (
@@ -628,7 +633,7 @@ function Macros({
     };
   }, [opening]);
 
-  function openInEditor(msg: MacroErrorMessage, key: string) {
+  function openInEditor(msg: MacroErrorMessage, id: string) {
     const sp = new URLSearchParams();
     sp.set("filepath", msg.filepath);
     sp.set("line", `${msg.line}`);
@@ -636,7 +641,7 @@ function Macros({
     console.log(
       `Going to try to open ${msg.filepath}:${msg.line}:${msg.column} in your editor`
     );
-    setOpening(key);
+    setOpening(id);
     fetch(`/_open?${sp.toString()}`);
   }
 
@@ -647,11 +652,9 @@ function Macros({
         const inPrerequisiteMacro = !flaw.filepath.includes(
           `${sourceFolder}/index.html`
         );
-        const key = `${flaw.filepath}:${flaw.line}:${flaw.column}`;
-
         return (
           <details
-            key={key}
+            key={flaw.id}
             className={flaw.fixed ? "fixed_flaw" : undefined}
             title={
               flaw.fixed
@@ -664,13 +667,13 @@ function Macros({
                 href={`file://${flaw.filepath}`}
                 onClick={(event: React.MouseEvent) => {
                   event.preventDefault();
-                  openInEditor(flaw, key);
+                  openInEditor(flaw, flaw.id);
                 }}
               >
                 <code>{flaw.name}</code> from <code>{flaw.macroName}</code> in
                 line {flaw.line}:{flaw.column}
               </a>{" "}
-              {opening && opening === key && <span>Opening...</span>}{" "}
+              {opening && opening === flaw.id && <span>Opening...</span>}{" "}
               {inPrerequisiteMacro && (
                 <span
                   className="macro-filepath-in-prerequisite"
@@ -977,6 +980,33 @@ function HeadingLinks({
                   All <code>&lt;a&gt;</code> tags need to be removed
                 </i>
               )}{" "}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function UnsafeHTML({ flaws }: { flaws: UnsafeHTMLFlaw[] }) {
+  // The UI for this flaw can be a bit "simplistic" because by default this
+  // flaw will error rather than warn.
+  return (
+    <div className="flaw">
+      <h3>⚠️ {humanizeFlawName("unsafe_html")} ⚠️</h3>
+      <ul>
+        {flaws.map((flaw, i) => {
+          const key = flaw.id;
+          return (
+            <li key={key}>
+              <b>{flaw.explanation}</b>{" "}
+              {flaw.line && flaw.column && (
+                <>
+                  line {flaw.line}:{flaw.column}
+                </>
+              )}{" "}
+              {flaw.fixable && <FixableFlawBadge />} <br />
+              <b>HTML:</b> <pre className="example-bad">{flaw.html}</pre> <br />
             </li>
           );
         })}

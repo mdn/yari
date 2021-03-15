@@ -30,6 +30,7 @@ const fakeV1APIRouter = require("./fake-v1-api");
 const { searchIndexRoute } = require("./search-index");
 const flawsRoute = require("./flaws");
 const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
+const { getRoot } = require("../content/utils");
 
 async function buildDocumentFromURL(url) {
   const document = Document.findByURL(url);
@@ -92,11 +93,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/_document", documentRouter);
 
 app.get("/_open", (req, res) => {
-  const { line, column, filepath } = req.query;
-  if (!filepath) {
-    throw new Error("No .filepath in the request query");
-  }
-
+  const { line, column, filepath, url } = req.query;
   // Sometimes that 'filepath' query string parameter is a full absolute
   // filepath (e.g. /Users/peterbe/yari/content.../index.html), which usually
   // happens when you this is used from the displayed flaws on a preview
@@ -104,10 +101,22 @@ app.get("/_open", (req, res) => {
   // But sometimes, it's a relative path and if so, it's always relative
   // to the main builder source.
   let absoluteFilepath;
-  if (fs.existsSync(filepath)) {
-    absoluteFilepath = filepath;
+  if (filepath) {
+    if (fs.existsSync(filepath)) {
+      absoluteFilepath = filepath;
+    } else {
+      const [locale] = filepath.split(path.sep);
+      const root = getRoot(locale);
+      absoluteFilepath = path.join(root, filepath);
+    }
+  } else if (url) {
+    const document = Document.findByURL(url);
+    if (!document) {
+      res.status(410).send(`No known document by the URL '${url}'\n`);
+    }
+    absoluteFilepath = document.fileInfo.path;
   } else {
-    absoluteFilepath = path.join(CONTENT_ROOT, filepath);
+    throw new Error("No .filepath or .url in the request query");
   }
 
   // Double-check that the file can be found.

@@ -78,22 +78,6 @@ class HTMLTool {
     return this;
   }
 
-  removeOnEventHandlers() {
-    // Remove ALL on-event handlers.
-    this.$("*").each((i, e) => {
-      // Since "e.attribs" is an object with a "null"
-      // prototype, "key in e.attribs" is equivalent to
-      // "key of Object.keys(e.attribs)" since we don't
-      // have to worry about keys from the prototype.
-      for (const key in e.attribs) {
-        if (key.startsWith("on")) {
-          delete e.attribs[key];
-        }
-      }
-    });
-    return this;
-  }
-
   injectSectionIDs() {
     let idCount = 0;
     const $ = this.$;

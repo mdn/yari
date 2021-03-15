@@ -9,6 +9,7 @@ const sizeOf = require("image-size");
 const { Document, Image } = require("../content");
 const { FLAW_LEVELS } = require("./constants");
 const { findMatchesInText } = require("./matches-in-text");
+const { DEFAULT_LOCALE } = require("../libs/constants");
 
 /**
  * Mutate the `$` instance for image reference and if appropriate,
@@ -119,9 +120,24 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
           // it now, we still want the full relative URL.
           img.attr("src", absoluteURL.pathname);
         } else {
+          let suggestion = null;
+          // If this document is *not* en-US, perhaps the external image has already
+          // been downloaded by the en-US equivalent. If so, make that the suggestion.
+          if (doc.locale !== DEFAULT_LOCALE) {
+            const filePath = Image.findByURL(
+              path.join(
+                doc.mdn_url.replace(`/${doc.locale}/`, `/${DEFAULT_LOCALE}/`),
+                path.basename(src)
+              )
+            );
+            if (filePath) {
+              suggestion = path.basename(filePath);
+            }
+          }
           addImageFlaw(img, src, {
             explanation: "External image URL",
             externalImage: true,
+            suggestion,
           });
         }
       }
@@ -137,16 +153,16 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
       let enUSFallback = false;
       if (
         !filePath &&
-        doc.locale !== "en-US" &&
-        !finalSrc.startsWith("/en-us/")
+        doc.locale !== DEFAULT_LOCALE &&
+        !finalSrc.startsWith(`/${DEFAULT_LOCALE.toLowerCase()}/`)
       ) {
-        const enFinalSrc = finalSrc.replace(
+        const enUSFinalSrc = finalSrc.replace(
           `/${doc.locale.toLowerCase()}/`,
-          "/en-us/"
+          `/${DEFAULT_LOCALE.toLowerCase()}/`
         );
-        if (Image.findByURL(enFinalSrc)) {
+        if (Image.findByURL(enUSFinalSrc)) {
           // Use the en-US src instead
-          finalSrc = enFinalSrc;
+          finalSrc = enUSFinalSrc;
           // Note that this `<img src="...">` value can work if you use the
           // en-US equivalent URL instead.
           enUSFallback = true;
