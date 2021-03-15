@@ -19,6 +19,7 @@ const {
   Translation,
 } = require("../content");
 const { FLAW_LEVELS, VALID_FLAW_CHECKS } = require("./constants");
+const { DEFAULT_LOCALE } = require("../libs/constants");
 const {
   INTERACTIVE_EXAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
@@ -42,7 +43,7 @@ function injectFlaws(doc, $, options, document) {
     ["bad_pre_tags", injectPreTagFlaws, false],
     ["heading_links", injectHeadingLinksFlaws, false],
   ];
-  if (doc.locale !== DEFAULT_LOCALE) {
+  if (doc.locale !== DEFAULT_LOCALE && doc.isActive) {
     flawChecks.push([
       "translation_differences",
       injectTranslationDifferences,
@@ -569,7 +570,7 @@ function injectHeadingLinksFlaws(doc, $, { rawContent }) {
   });
 }
 
-function injectTranslationDifferences(doc, document) {
+function injectTranslationDifferences(doc, $, document) {
   const FLAW_NAME = "translation_differences";
 
   const englishDocument = Document.read(

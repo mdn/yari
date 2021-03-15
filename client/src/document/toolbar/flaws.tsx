@@ -1026,7 +1026,6 @@ function TranslationDifferences({
       <ul>
         {flaws.map((flaw, i) => {
           const key = flaw.id;
-          console.log(flaw);
           let explanation = <b>{flaw.explanation}</b>;
 
           if (flaw.difference.type === "macro") {
@@ -1040,7 +1039,25 @@ function TranslationDifferences({
             );
           }
 
-          return <li key={key}>{explanation}</li>;
+          return (
+            <li key={key}>
+              {explanation}
+              {flaw.difference.fullExplanation &&
+                flaw.difference.fullExplanation.length > 0 && (
+                  <ul className="full-explanation">
+                    {flaw.difference.fullExplanation.map(
+                      (fullExplanation, i) => {
+                        return (
+                          <li key={`${fullExplanation}${i}`}>
+                            <code>{fullExplanation}</code>
+                          </li>
+                        );
+                      }
+                    )}
+                  </ul>
+                )}
+            </li>
+          );
         })}
       </ul>
     </div>
