@@ -119,7 +119,7 @@
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "jest-junit-reporter": "^1.1.0",
     "jest-puppeteer": "4.4.0",
-    "jsdom": "^16.5.0",
+    "jsdom": "^16.5.1",
     "jsesc": "^3.0.2",
     "nodemon": "2.0.7",
     "pegjs": "^0.10.0",
