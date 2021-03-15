@@ -113,6 +113,7 @@ def post_about_dangerous_content(build_directory: Path, **config):
             per_doc_comments.append(
                 f"URL: `{doc['mdn_url']}`\n"
                 f"Title: `{doc['title']}`\n"
+                f"[on GitHub]({doc['source']['github_url']})\n"
                 "\n"
                 f"{comment}"
             )
@@ -160,6 +161,7 @@ def post_about_flaws(build_directory: Path, **config):
             per_doc_comments.append(
                 f"URL: `{doc['mdn_url']}`\n"
                 f"Title: `{doc['title']}`\n"
+                f"[on GitHub]({doc['source']['github_url']})\n"
                 f"Flaw count: {count_flaws(doc['flaws'])}\n"
                 "\n"
                 f"{comment}"
