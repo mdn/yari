@@ -51,7 +51,7 @@ const LOCALE_ALIASES = new Map([
 // This must match what we do in `language-menu/index.tsx` where the cookie
 // gets set in the client!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
-const ACTIVE_LOCALES = new Set(["en-us", "fr", "ja", "zh-cn", "zh-tw"]);
+const ACTIVE_LOCALES = new Set(["en-us", "fr", "ja", "ru", "zh-cn", "zh-tw"]);
 
 module.exports = {
   ACTIVE_LOCALES,
