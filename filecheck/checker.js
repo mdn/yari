@@ -71,7 +71,7 @@ async function checkFile(filePath, options) {
       for (const key in element.attribs) {
         if (/(\\x[a-f0-9]{2}|\b)on\w+/.test(key)) {
           throw new Error(
-            `${filePath} <${tagName}> contains an unsafe attribute key: '${key}'`
+            `${filePath} <${tagName}> contains an unsafe attribute: '${key}'`
           );
         }
       }

@@ -15,11 +15,11 @@ describe("checking files", () => {
     );
   });
   it("should spot SVGs with onLoad inside an element", async () => {
-    const filePath = path.join(SAMPLES_DIRECTORY, "script.svg");
+    const filePath = path.join(SAMPLES_DIRECTORY, "onhandler.svg");
     // Sanity check the test itself
     console.assert(fs.existsSync(filePath), `${filePath} does not exist`);
     await expect(checkFile(filePath)).rejects.toThrow(
-      "contains a <script> tag"
+      "<path> contains an unsafe attribute: 'onload'"
     );
   });
 });
