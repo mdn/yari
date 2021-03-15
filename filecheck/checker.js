@@ -62,9 +62,20 @@ async function checkFile(filePath, options) {
       throw new Error(`${filePath} does not appear to be an SVG`);
     }
     const $ = cheerio.load(content);
-    if ($("script").length) {
-      throw new Error(`${filePath} contains a <script> tag`);
-    }
+    const disallowedTagNames = new Set(["script", "object", "iframe", "embed"]);
+    $("*").each((i, element) => {
+      const { tagName } = element;
+      if (disallowedTagNames.has(tagName)) {
+        throw new Error(`${filePath} contains a <${tagName}> tag`);
+      }
+      for (const key in element.attribs) {
+        if (/(\\x[a-f0-9]{2}|\b)on\w+/.test(key)) {
+          throw new Error(
+            `${filePath} <${tagName}> contains an unsafe attribute: '${key}'`
+          );
+        }
+      }
+    });
   } else {
     // Check that the file extension matches the file header.
     const fileType = await FileType.fromFile(filePath);
