@@ -187,4 +187,14 @@ describe("Testing the CRUD apps", () => {
     await expect(page).toClick("a", { text: "Flaws Dashboard" });
     await expect(page).toMatch("Documents with flaws found (0)");
   });
+
+  withCrud("open the sitemap app", async () => {
+    await page.goto(devURL("/"));
+    await expect(page).toMatch("Writer's home page");
+    await expect(page).toClick("a", { text: "Sitemap" });
+    await expect(page).toMatchElement("a", { text: "Web" });
+    await expect(page).toMatchElement("a", { text: "Learn" });
+    await expect(page).toClick("a", { text: "Glossary" });
+    await expect(page).toMatchElement("a", { text: "Glossary/PNG" });
+  });
 });
