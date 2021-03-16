@@ -4,8 +4,6 @@ const stringify = require("rehype-stringify");
 const remark2rehype = require("remark-rehype");
 const raw = require("rehype-raw");
 const visit = require("unist-util-visit");
-const nodeToString = require("hast-util-to-string");
-const refractor = require("refractor");
 
 /**
  * Converts Markdown -> HTML using unified.
@@ -33,40 +31,34 @@ function remarkCodeBlocks(options) {
     if (!parent || parent.tagName !== "pre" || node.tagName !== "code") {
       return;
     }
+    // When you use the triple-backtick and a language, like...
+    //
+    //    ```css
+    //    ...
+    //
+    // What you get is:
+    //
+    //    <pre><code class="language-css">...
+    //
+    // Let's now convert that to:
+    //
+    //    <pre class="brush: css">
+    //
+    // The reason for doing this is entirely to pretend that nothing has changed.
+    // This way, the Markdown gets converted to HTML in the way Yari can process
+    // all other existing HTML.
 
-    const lang = getLanguage(node);
-
-    if (lang === null) {
-      return;
-    }
-
-    let result;
-    try {
-      parent.properties.className = (parent.properties.className || []).concat(
-        "language-" + lang
-      );
-      result = refractor.highlight(nodeToString(node), lang);
-    } catch (err) {
-      if (options.ignoreMissing && /Unknown language/.test(err.message)) {
-        return;
+    const classNames = node.properties.className || [];
+    for (const className of classNames) {
+      if (className.startsWith("language-")) {
+        const classNamesBefore = parent.properties.className || [];
+        parent.properties.className = [
+          `brush: ${className.replace("language-", "").toLowerCase()}`,
+          ...classNamesBefore,
+        ];
       }
-      throw err;
-    }
-
-    node.children = result;
-  }
-}
-
-function getLanguage(node) {
-  const className = node.properties.className || [];
-
-  for (const classListItem of className) {
-    if (classListItem.slice(0, 9) === "language-") {
-      return classListItem.slice(9).toLowerCase();
     }
   }
-
-  return null;
 }
 
 module.exports = {

@@ -52,7 +52,11 @@ const renderFromURL = async (
     );
   }
   const { rawBody, metadata, fileInfo, isMarkdown } = document;
+  console.log("BEFORE____________");
+  console.log(rawBody);
   const rawHTML = isMarkdown ? markdownToHTML(rawBody) : rawBody;
+  console.log("AFTER_____________");
+  console.log(rawHTML);
   const [renderedHtml, errors] = await renderMacros(
     rawHTML,
     {
