@@ -25,6 +25,7 @@ const {
 } = require("./matches-in-text");
 const { humanFileSize } = require("./utils");
 const { VALID_MIME_TYPES } = require("../filecheck/constants");
+const { DEFAULT_LOCALE } = require("../libs/constants");
 
 function injectFlaws(doc, $, options, document) {
   if (doc.isArchive) return;
@@ -204,21 +205,42 @@ function injectBrokenLinksFlaws(doc, $, { rawContent }, level) {
   // us from calling `findMatchesInText()` more than once.
   const matches = new Map();
 
+  function mutateLink($element, suggestion, enUSFallback) {
+    if (suggestion) {
+      $element.attr("href", suggestion);
+    } else if (enUSFallback) {
+      $element.attr("href", enUSFallback);
+      // This functionality here should match what we do inside
+      // the `web.smartLink()` function in kumascript rendering.
+      $element.text(`${$element.text()} (${DEFAULT_LOCALE})`);
+      $element.addClass("only-in-en-us");
+      $element.attr("title", "Currently only available in English");
+      fs.appendFileSync(
+        "/tmp/fellback.log",
+        `${doc.mdn_url}\t${enUSFallback}\n`,
+        "utf-8"
+      );
+    } else {
+      throw new Error("Don't use this function if neither is true");
+    }
+  }
+
   // A closure function to help making it easier to append flaws
   function addBrokenLink(
     $element,
     index,
     href,
     suggestion = null,
-    explanation
+    explanation = null,
+    enUSFallback = null
   ) {
     if (level === FLAW_LEVELS.IGNORE) {
       // Note, even if not interested in flaws, we still need to apply the
       // suggestion. For example, in production builds, we don't care about
       // logging flaws, but because not all `broken_links` flaws have been
       // manually fixed at the source.
-      if (suggestion) {
-        $element.attr("href", suggestion);
+      if (suggestion || enUSFallback) {
+        mutateLink($element, suggestion, enUSFallback);
       }
       return;
     }
@@ -245,10 +267,9 @@ function injectBrokenLinksFlaws(doc, $, { rawContent }, level) {
         doc.flaws.broken_links = [];
       }
       const id = `link${doc.flaws.broken_links.length + 1}`;
-      let fixable = false;
-      if (suggestion) {
-        $element.attr("href", suggestion);
-        fixable = true;
+      const fixable = !!suggestion;
+      if (suggestion || enUSFallback) {
+        mutateLink($element, suggestion, enUSFallback);
       }
       $element.attr("data-flaw", id);
       doc.flaws.broken_links.push(
@@ -297,7 +318,8 @@ function injectBrokenLinksFlaws(doc, $, { rawContent }, level) {
           !Image.findByURL(hrefNormalized) &&
           !Archive.isArchivedURL(hrefNormalized)
         ) {
-          // Before we give up, check if it's a redirect.
+          // Even if it's a redirect, it's still a flaw, but it'll be nice to
+          // know what it *should* be.
           const resolved = Redirect.resolve(hrefNormalized);
           if (resolved !== hrefNormalized) {
             addBrokenLink(
@@ -307,7 +329,45 @@ function injectBrokenLinksFlaws(doc, $, { rawContent }, level) {
               resolved + absoluteURL.search + absoluteURL.hash.toLowerCase()
             );
           } else {
-            addBrokenLink(a, checked.get(href), href);
+            let enUSFallbackURL = null;
+            // Test if the document is a translated document and the link isn't
+            // to an en-US URL. We know the link is broken (in this locale!)
+            // but it might be "salvageable" if we link the en-US equivalent.
+            // This is, by the way, the same trick the `web.smartLink()` utility
+            // function does in kumascript rendering.
+            if (
+              doc.locale !== DEFAULT_LOCALE &&
+              href.startsWith(`/${doc.locale}/`)
+            ) {
+              // What if you swich to the English link; would th link work
+              // better then?
+              const enUSHrefNormalized = hrefNormalized.replace(
+                `/${doc.locale}/`,
+                `/${DEFAULT_LOCALE}/`
+              );
+              let enUSFound = Document.findByURL(enUSHrefNormalized);
+              if (enUSFound) {
+                enUSFallbackURL = enUSFound.url;
+              } else {
+                const enUSResolved = Redirect.resolve(enUSHrefNormalized);
+                if (enUSResolved !== enUSHrefNormalized) {
+                  enUSFallbackURL =
+                    enUSResolved +
+                    absoluteURL.search +
+                    absoluteURL.hash.toLowerCase();
+                }
+              }
+            }
+            addBrokenLink(
+              a,
+              checked.get(href),
+              href,
+              null,
+              enUSFallbackURL
+                ? "Can use the English (en-US) link as a fallback"
+                : null,
+              enUSFallbackURL
+            );
           }
         }
         // But does it have the correct case?!
