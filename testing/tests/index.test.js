@@ -1299,3 +1299,29 @@ test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {
   const $ = cheerio.load(html);
   expect($("code.unsafe-html").length).toBe(6);
 });
+
+test("translated content broken links can fall back to en-us", () => {
+  const builtFolder = path.join(buildRoot, "fr", "docs", "web", "foo");
+  const jsonFile = path.join(builtFolder, "index.json");
+
+  // We should be able to read it and expect certain values
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
+  expect(map.get("/fr/docs/Web/CSS/dumber").explanation).toBe(
+    "Can use the English (en-US) link as a fallback"
+  );
+  expect(map.get("/fr/docs/Web/CSS/number").explanation).toBe(
+    "Can use the English (en-US) link as a fallback"
+  );
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($('article a[href="/fr/docs/Web/CSS/dumber"]').length).toBe(0);
+  expect($('article a[href="/fr/docs/Web/CSS/number"]').length).toBe(0);
+  expect($('article a[href="/en-US/docs/Web/CSS/number"]').length).toBe(2);
+  expect($("article a.only-in-en-us").length).toBe(2);
+  expect($("article a.only-in-en-us").attr("title")).toBe(
+    "Currently only available in English (US)"
+  );
+});

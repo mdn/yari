@@ -214,7 +214,7 @@ function injectBrokenLinksFlaws(doc, $, { rawContent }, level) {
       // the `web.smartLink()` function in kumascript rendering.
       $element.text(`${$element.text()} (${DEFAULT_LOCALE})`);
       $element.addClass("only-in-en-us");
-      $element.attr("title", "Currently only available in English");
+      $element.attr("title", "Currently only available in English (US)");
     } else {
       throw new Error("Don't use this function if neither is true");
     }
