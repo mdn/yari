@@ -250,8 +250,21 @@ const read = memoize((folder) => {
   const gitHistory = getGitHistories(root, locale).get(
     path.relative(root, filePath)
   );
-  let modified = (gitHistory && gitHistory.modified) || null;
-  const hash = (gitHistory && gitHistory.hash) || null;
+  let modified = null;
+  let hash = null;
+  if (gitHistory) {
+    if (
+      gitHistory.merged &&
+      gitHistory.merged.modified &&
+      gitHistory.merged.hash
+    ) {
+      modified = gitHistory.merged.modified;
+      hash = gitHistory.merged.hash;
+    } else {
+      modified = gitHistory.modified;
+      hash = gitHistory.hash;
+    }
+  }
   // Use the wiki histories for a list of legacy contributors.
   const wikiHistory = getWikiHistories(root, locale).get(url);
   if (!modified && wikiHistory && wikiHistory.modified) {
