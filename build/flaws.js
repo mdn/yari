@@ -215,11 +215,6 @@ function injectBrokenLinksFlaws(doc, $, { rawContent }, level) {
       $element.text(`${$element.text()} (${DEFAULT_LOCALE})`);
       $element.addClass("only-in-en-us");
       $element.attr("title", "Currently only available in English");
-      fs.appendFileSync(
-        "/tmp/fellback.log",
-        `${doc.mdn_url}\t${enUSFallback}\n`,
-        "utf-8"
-      );
     } else {
       throw new Error("Don't use this function if neither is true");
     }
