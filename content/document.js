@@ -9,6 +9,7 @@ const {
   CONTENT_ARCHIVED_ROOT,
   CONTENT_TRANSLATED_ROOT,
   CONTENT_ROOT,
+  ACTIVE_LOCALES,
   VALID_LOCALES,
   ROOTS,
 } = require("./constants");
@@ -262,6 +263,8 @@ const read = memoize((folder) => {
   const locale = extractLocale(folder);
   const url = `/${locale}/docs/${metadata.slug}`;
 
+  const isActive = !isArchive && ACTIVE_LOCALES.has(locale.toLowerCase());
+
   // The last-modified is always coming from the git logs. Independent of
   // which root it is.
   const gitHistory = getGitHistories(root, locale).get(
@@ -294,6 +297,7 @@ const read = memoize((folder) => {
     isMarkdown,
     isArchive,
     isTranslated,
+    isActive,
     fileInfo: {
       folder,
       path: filePath,
@@ -380,9 +384,11 @@ function findByURL(url, ...args) {
   return doc;
 }
 
-function findAll(
-  { files, folderSearch } = { files: new Set(), folderSearch: null }
-) {
+function findAll({
+  files = new Set(),
+  folderSearch = null,
+  quiet = false,
+} = {}) {
   if (!(files instanceof Set)) throw new TypeError("'files' not a Set");
   if (folderSearch && typeof folderSearch !== "string")
     throw new TypeError("'folderSearch' not a string");
@@ -399,7 +405,9 @@ function findAll(
     roots.push(CONTENT_TRANSLATED_ROOT);
   }
   roots.push(CONTENT_ROOT);
-  console.log("Building roots:", roots);
+  if (!quiet) {
+    console.log("Building roots:", roots);
+  }
   for (const root of roots) {
     filePaths.push(
       ...glob
@@ -547,13 +555,13 @@ function remove(
     removed.push(buildURL(locale, slug));
   }
 
+  execGit(["rm", "-r", path.dirname(fileInfo.path)], { cwd: root });
+
   if (redirect) {
     Redirect.add(locale, [[url, redirect]]);
   } else {
     Redirect.remove(locale, [url, ...removed]);
   }
-
-  execGit(["rm", "-r", path.dirname(fileInfo.path)], { cwd: root });
 
   updateWikiHistory(
     path.join(root, metadata.locale.toLowerCase()),

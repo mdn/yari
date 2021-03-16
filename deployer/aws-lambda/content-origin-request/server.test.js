@@ -13,6 +13,7 @@ async function get(uri, headers = {}) {
     headers,
     followRedirect: false,
     retry: 0,
+    throwHttpErrors: false,
   });
   return response;
 }
@@ -184,5 +185,14 @@ describe("always check for fundamental redirects first", () => {
       expect(r.headers["location"]).toBe(`/en-US/docs/${prefix}`);
       expect(r.headers["cache-control"]).toMatch(/max-age=\d\d+/);
     }
+  });
+});
+
+describe("avoid double-slash redirects", () => {
+  it("should 404 on any pathname that starts with //", async () => {
+    const r = await get(`//en-US/search/`);
+    expect(r.statusCode).toBe(404);
+    expect(r.headers["location"]).toBeFalsy();
+    expect(r.body).toContain("URL pathname can't start with //");
   });
 });

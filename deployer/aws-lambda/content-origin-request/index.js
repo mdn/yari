@@ -78,6 +78,27 @@ exports.handler = async (event) => {
   const host = request.headers.host[0].value.toLowerCase();
   const qs = request.querystring ? `?${request.querystring}` : "";
 
+  // If the URL was something like `https://domain/en-US/search/`, our code
+  // would make a that a redirect to `/en-US/search` (stripping the trailing slash).
+  // But if it was `https://domain//en-US/search/` it'd make a redirect
+  // to `//en-US/search`.
+  // However, if pathname starts with `//` the Location header might look
+  // relative but it's actually an absolute URL.
+  // A 302 redirect from `https://domain//evil.com/` actually ends open
+  // opening `https://evil.com/` in the browser, because the browser will
+  // treat `//evil.com/ == https://evil.com/`.
+  // Prevent any pathnames that start with a double //.
+  if (request.uri.startsWith("//")) {
+    return {
+      status: 404,
+      statusDescription: "Not found",
+      headers: {
+        "content-type": [{ key: "Content-Type", value: "text/plain" }],
+      },
+      body: "URL pathname can't start with //\n",
+    };
+  }
+
   const { url, status } = resolveFundamental(request.uri);
   if (url) {
     // TODO: Do we want to add the query string to the redirect?

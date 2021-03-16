@@ -21,10 +21,17 @@ const DEPENDENCY_LOOP_INTRO =
 
 const renderCache = new LRU({ max: 2000 });
 
-const renderFromURL = async (url, urlsSeen = null) => {
+const renderFromURL = async (
+  url,
+  { urlsSeen = null, selective_mode = false, invalidateCache = false } = {}
+) => {
   const urlLC = url.toLowerCase();
   if (renderCache.has(urlLC)) {
-    return renderCache.get(urlLC);
+    if (invalidateCache) {
+      renderCache.del(urlLC);
+    } else {
+      return renderCache.get(urlLC);
+    }
   }
 
   urlsSeen = urlsSeen || new Set([]);
@@ -35,7 +42,9 @@ const renderFromURL = async (url, urlsSeen = null) => {
   }
   urlsSeen.add(urlLC);
   const prerequisiteErrorsByKey = new Map();
-  const document = Document.findByURL(url);
+  const document = invalidateCache
+    ? Document.findByURL(url, Document.MEMOIZE_INVALIDATE)
+    : Document.findByURL(url);
   if (!document) {
     throw new Error(
       `From URL ${url} no folder on disk could be found. ` +
@@ -53,7 +62,7 @@ const renderFromURL = async (url, urlsSeen = null) => {
         slug: metadata.slug,
         title: metadata.title,
         tags: metadata.tags || [],
-        selective_mode: false,
+        selective_mode,
       },
       interactive_examples: {
         base_url: INTERACTIVE_EXAMPLES_BASE_URL,
@@ -61,10 +70,9 @@ const renderFromURL = async (url, urlsSeen = null) => {
       live_samples: { base_url: LIVE_SAMPLES_BASE_URL || url },
     },
     async (url) => {
-      const [renderedHtml, errors] = await renderFromURL(
-        info.cleanURL(url),
-        urlsSeen
-      );
+      const [renderedHtml, errors] = await renderFromURL(info.cleanURL(url), {
+        urlsSeen,
+      });
       // Remove duplicate flaws. During the rendering process, it's possible for identical
       // flaws to be introduced when different dependency paths share common prerequisites.
       // For example, document A may have prerequisite documents B and C, and in turn,

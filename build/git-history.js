@@ -55,7 +55,7 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
   return map;
 }
 
-function gather(contentRoot, previousFile = null) {
+function gather(contentRoots, previousFile = null) {
   const map = new Map();
   if (previousFile) {
     const previous = JSON.parse(fs.readFileSync(previousFile, "utf-8"));
@@ -63,20 +63,22 @@ function gather(contentRoot, previousFile = null) {
       map.set(key, value);
     }
   }
-  // Every key in this map is a path, relative to CONTENT_ROOT.
-  for (const [key, value] of getFromGit(contentRoot)) {
-    // Because CONTENT_ROOT isn't necessarily the same as the path relative to
-    // the git root. For example "../README.md" and since those aren't documents
-    // exclude them.
-    // We also only care about documents.
-    if (
-      !key.startsWith(".") &&
-      (key.endsWith("index.html") || key.endsWith("index.md"))
-    ) {
-      map.set(key, {
-        modified: value.date,
-        hash: value.hash,
-      });
+  // Every key in this map is a path, relative to root.
+  for (const contentRoot of contentRoots) {
+    for (const [key, value] of getFromGit(contentRoot)) {
+      // Because CONTENT_*_ROOT isn't necessarily the same as the path relative to
+      // the git root. For example "../README.md" and since those aren't documents
+      // exclude them.
+      // We also only care about documents.
+      if (
+        !key.startsWith(".") &&
+        (key.endsWith("index.html") || key.endsWith("index.md"))
+      ) {
+        map.set(key, {
+          modified: value.date,
+          hash: value.hash,
+        });
+      }
     }
   }
   return map;
