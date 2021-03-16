@@ -7,6 +7,11 @@ import { useUserData } from "../user-context";
 
 import "./sign-up.scss";
 
+interface UserDetails {
+  name?: string;
+  avatar_url?: string;
+}
+
 export default function SignUpApp() {
   const userData = useUserData();
   const navigate = useNavigate();
@@ -25,7 +30,10 @@ export default function SignUpApp() {
       <div>
         <h2>You're already signed up</h2>
         {/* XXX Include a link to the settings page */}
-        <Link to={`/${locale}/`}>Return to the home page</Link>.
+        <Link to={`/${locale}/`} className="back">
+          Return to the home page
+        </Link>
+        .
       </div>
     );
   }
@@ -35,14 +43,12 @@ export default function SignUpApp() {
     const errors = JSON.parse(searchParams.get("errors") || "{}");
     return (
       <div>
-        <h2>Sign-up errors</h2>
-        <p>An error occurred trying to sign you up.</p>
+        <h2>Sign-in errors</h2>
+        <p>An error occurred trying to complete sign in.</p>
         <pre>{JSON.stringify(errors, null, 2)}</pre>
         <p>
-          <Link to={`/${locale}/signin`}>
-            Try starting over the sign-in process
-          </Link>
-          .
+          We apologize for the inconvenience,{" "}
+          <Link to={`/${locale}/signin`}>please try signing-in again</Link>.
         </p>
       </div>
     );
@@ -53,11 +59,11 @@ export default function SignUpApp() {
   if (!csrfMiddlewareToken || !provider) {
     return (
       <div>
-        <h2>Invalid Sign up URL</h2>
-        <p>You arrived here on this page without the necessary details.</p>
+        <h2>Invalid URL</h2>
+        <p>You arrived here without the necessary details.</p>
         <p>
           <Link to={`/${locale}/signin`}>
-            Try starting over the sign-in process
+            Please retry the sign-in process.
           </Link>
           .
         </p>
@@ -117,65 +123,92 @@ export default function SignUpApp() {
     }
   }
 
+  const userDetails: UserDetails = JSON.parse(
+    searchParams.get("user_details") || ""
+  );
+
   return (
-    <form
-      method="post"
-      onSubmit={(event) => {
-        event.preventDefault();
-        if (checkedTerms) {
-          submitSignUp();
-        }
-      }}
-    >
+    <>
+      {userDetails.avatar_url && (
+        <img
+          src={userDetails.avatar_url}
+          className="avatar"
+          alt="User profile avatar_url"
+        />
+      )}
+
+      <DisplaySignupDetails
+        provider={provider || ""}
+        username={userDetails.name || ""}
+      />
+
       {signupError && (
         <div className="notecard error">
-          <h4>Signup Error</h4>
           <p>
-            <code>{signupError.toString()}</code>
+            <strong>Signup error</strong> <code>{signupError.toString()}</code>
           </p>
         </div>
       )}
 
-      <DisplaySignupProvider provider={provider || ""} />
-      <DisplayUserDetails details={searchParams.get("user_details") || ""} />
+      <form
+        className="complete-sign-in"
+        method="post"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (checkedTerms) {
+            submitSignUp();
+          }
+        }}
+      >
+        <label htmlFor="id_terms">
+          <input
+            id="id_terms"
+            type="checkbox"
+            name="terms"
+            required
+            checked={checkedTerms}
+            onChange={(event) => {
+              setCheckedTerms(event.target.checked);
+            }}
+          />{" "}
+          I agree to Mozilla's{" "}
+          <a
+            href="https://www.mozilla.org/about/legal/terms/mozilla"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Terms
+          </a>{" "}
+          and{" "}
+          <a
+            href="https://www.mozilla.org/privacy/websites/"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Privacy Notice
+          </a>
+          .
+        </label>
 
-      <label htmlFor="id_terms">
-        <input
-          id="id_terms"
-          type="checkbox"
-          name="terms"
-          checked={checkedTerms}
-          onChange={(event) => {
-            setCheckedTerms(event.target.checked);
-          }}
-        />{" "}
-        I agree to Mozilla's{" "}
-        <a
-          href="https://www.mozilla.org/about/legal/terms/mozilla"
-          target="_blank"
-          rel="noreferrer noopener"
+        <button
+          type="submit"
+          className={!checkedTerms ? "button inactive" : "button"}
+          disabled={!checkedTerms}
         >
-          Terms
-        </a>{" "}
-        and{" "}
-        <a
-          href="https://www.mozilla.org/privacy/websites/"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          Privacy Notice
-        </a>
-        .
-      </label>
-
-      <button type="submit" className="button" disabled={!checkedTerms}>
-        Create account
-      </button>
-    </form>
+          Complete sign-in
+        </button>
+      </form>
+    </>
   );
 }
 
-function DisplaySignupProvider({ provider }: { provider: string }) {
+function DisplaySignupDetails({
+  provider,
+  username,
+}: {
+  provider: string;
+  username: string;
+}) {
   if (!provider) {
     // Exit early because there's nothing useful we can say
     return null;
@@ -185,38 +218,10 @@ function DisplaySignupProvider({ provider }: { provider: string }) {
     providerVerbose = "GitHub";
   }
   return (
-    <p>
-      You are signing in to MDN Web Docs with <b>{providerVerbose}</b>.
+    <p className="lead">
+      You are signing in to MDN Web Docs with{" "}
+      <span className="provider-name">{providerVerbose}</span>{" "}
+      {username && `as ${username}`}.
     </p>
-  );
-}
-
-interface UserDetails {
-  name?: string;
-  avatar_url?: string;
-}
-
-function DisplayUserDetails({ details }: { details: string }) {
-  if (!details) {
-    // Exit early because there's nothing useful we can say
-    return null;
-  }
-
-  const userDetails: UserDetails = JSON.parse(details);
-
-  return (
-    <div className="user-details">
-      <p>
-        {userDetails.avatar_url && (
-          <img
-            src={userDetails.avatar_url}
-            className="avatar"
-            alt="User profile avatar_url"
-          />
-        )}
-
-        {userDetails.name && ` as ${userDetails.name}`}
-      </p>
-    </div>
   );
 }
