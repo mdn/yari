@@ -232,6 +232,7 @@ async function buildDocument(document, documentOptions = {}) {
   const doc = {
     isArchive: document.isArchive,
     isTranslated: document.isTranslated,
+    isActive: document.isActive,
   };
 
   doc.flaws = {};

@@ -433,4 +433,8 @@ if (!formattedSyntax) {
     throw new Error(`No syntax found in DB for '${name}'`);
 }
 
-%><%- formattedSyntax %>
+const rtlLocales = ['ar', 'he', 'fa'];
+const rtl = rtlLocales.includes(env.locale);
+const out = `<pre${rtl ? ' dir="rtl"' : ""}>${formattedSyntax}</pre>`
+
+%><%- out %>

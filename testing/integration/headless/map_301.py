@@ -1035,6 +1035,9 @@ MISC_REDIRECT_URLS = [
     url_test("/en-US/XMLHttpRequest", "/en-US/docs/XMLHttpRequest"),
     url_test("/en-US/XMLHttpRequest/", "/en-US/docs/XMLHttpRequest"),
     url_test("/en-US/XMLHttpRequest/FormData/", "/en-US/docs/XMLHttpRequest/FormData"),
+    url_test("/en-US/Security", "/en-US/docs/Security"),
+    url_test("/en-US/Security/", "/en-US/docs/Security"),
+    url_test("/en-US/Security/CSP/", "/en-US/docs/Security/CSP"),
     # Add trailing slash for the home page.
     url_test("/en-US", "/en-US/"),
     # Some special cases for "/docs".

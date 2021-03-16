@@ -43,9 +43,6 @@ async function catchall(req, res) {
   };
 
   event.Records = [{ cf }];
-  // console.log("EVENT...");
-  // console.log(event);
-  // console.log(JSON.stringify(event, null, 3));
   const handle = await handler(event);
   if (handle === cf.request) {
     // The request is allowed to pass through.
@@ -59,26 +56,39 @@ async function catchall(req, res) {
     res.end(`${msg}\n`);
   } else if (handle.status) {
     // It's a redirect.
-    // console.log(JSON.stringify(handle, null, 3));
-    let path = null;
-    for (const headers of Object.values(handle.headers)) {
+    let location = null;
+    for (const headers of Object.values(handle.headers || {})) {
       for (const header of headers) {
         res.setHeader(header.key, header.value);
         if (header.key.toLowerCase() === "location") {
-          path = header.value;
+          location = header.value;
         }
       }
     }
-    console.log(
-      `${
-        handle.status === 302
-          ? kleur.green(handle.status)
-          : kleur.yellow(handle.status)
-      } redirect to ${kleur.bold(path)}`
-    );
+    if (handle.status >= 300 && handle.status < 400) {
+      console.log(
+        `${
+          handle.status === 302
+            ? kleur.green(handle.status)
+            : kleur.yellow(handle.status)
+        } redirect to ${kleur.bold(location)}`
+      );
+      if (location) {
+        res.setHeader("Location", location);
+      }
+    } else if (handle.status >= 400) {
+      console.log(
+        `${
+          handle.status >= 500
+            ? kleur.red(handle.status)
+            : kleur.yellow(handle.status)
+        } '${handle.body.trim()}'`
+      );
+    } else {
+      console.log(`${kleur.gree(handle.status)} '${handle.body.trim()}'`);
+    }
     res.statusCode = handle.status;
-    res.setHeader("Location", path);
-    res.end("");
+    res.end(handle.body || "");
   } else {
     console.warn(JSON.stringify(handle, null, 3));
     res.statusCode = 500;

@@ -60,6 +60,7 @@ jobs:
 
       - name: Build and install tarball
         run: |
+          echo mdn/content/ >> .npmignore
           npm pack
           TARBALL=`ls mdn-yari-*.tgz`
           echo $TARBALL

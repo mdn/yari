@@ -76,15 +76,13 @@ jobs:
           # of the yarn installs above
           PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
         run: |
-          status=0
-          yarn test:testing developing || (
-            status=$?
-            echo "Testing failed! Going to dump stdout and stderr"
-            echo "STDOUT..................................................."
-            cat /tmp/stdout.log
-            echo "STDERR..................................................."
-            cat /tmp/stderr.log
-            echo $status
-            exit $status
-          )
-          exit $status
+          yarn test:testing developing
+
+      - name: Debug server's stdout and stderr if tests failed
+        if: failure()
+        run: |
+          echo "STDOUT..................................................."
+          cat /tmp/stdout.log
+          echo ""
+          echo "STDERR..................................................."
+          cat /tmp/stderr.log

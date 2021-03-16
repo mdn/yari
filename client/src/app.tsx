@@ -15,12 +15,14 @@ import { SiteSearch } from "./site-search";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Banner } from "./banners";
+import { SignIn, SignUp } from "./auth";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
 const DocumentCreate = React.lazy(() => import("./document/forms/create"));
 const DocumentManage = React.lazy(() => import("./document/forms/manage"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
+const Sitemap = React.lazy(() => import("./sitemap"));
 
 const isServer = typeof window === "undefined";
 
@@ -182,6 +184,15 @@ export function App(appProps) {
                     </StandardLayout>
                   }
                 />
+
+                <Route
+                  path="/_sitemap/*"
+                  element={
+                    <StandardLayout>
+                      <Sitemap />
+                    </StandardLayout>
+                  }
+                />
               </>
             )}
             <Route
@@ -193,6 +204,22 @@ export function App(appProps) {
               element={
                 <StandardLayout>
                   <SiteSearch />
+                </StandardLayout>
+              }
+            />
+            <Route
+              path="/signin"
+              element={
+                <StandardLayout>
+                  <SignIn />
+                </StandardLayout>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <StandardLayout>
+                  <SignUp />
                 </StandardLayout>
               }
             />
