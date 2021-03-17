@@ -51,6 +51,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    # Only run the scheduled workflows on the main repo.
+    if: github.repository == 'mdn/yari'
+
     steps:
       - uses: actions/checkout@v2
 

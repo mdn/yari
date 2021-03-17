@@ -136,7 +136,6 @@ LOCALE_SELECTORS = {
         "/profile",
         "/profiles/sheppy",
         "/users/signin",
-        "/promote",
         "/account",
     ],
 )
