@@ -268,10 +268,12 @@ describe("Basic viewing of functional pages", () => {
 
   it("going to 'Sign up' page without query string", async () => {
     await page.goto(testURL("/en-US/signup"));
-    await expect(page).toMatchElement("h1", { text: "Sign up" });
-    await expect(page).toMatch("Invalid Sign up URL");
+    await expect(page).toMatchElement("h1", {
+      text: "Sign in to MDN Web Docs",
+    });
+    await expect(page).toMatch("Invalid URL");
     await expect(page).toMatchElement("a", {
-      text: "Try starting over the sign-in process",
+      text: "Please retry the sign-in process",
     });
   });
 
@@ -279,14 +281,16 @@ describe("Basic viewing of functional pages", () => {
     await page.goto(
       testURL("/en-US/signup?csrfmiddlewaretoken=abc&provider=github")
     );
-    await expect(page).toMatchElement("h1", { text: "Sign up" });
-    await expect(page).not.toMatch("Invalid Sign up URL");
+    await expect(page).toMatchElement("h1", {
+      text: "Sign in to MDN Web Docs",
+    });
+    await expect(page).not.toMatch("Invalid URL");
     await expect(page).toMatch(
       "You are signing in to MDN Web Docs with GitHub."
     );
     await expect(page).toMatch(
       "I agree to Mozilla's Terms and Privacy Notice."
     );
-    await expect(page).toMatchElement("button", { text: "Create account" });
+    await expect(page).toMatchElement("button", { text: "Complete sign-in" });
   });
 });
