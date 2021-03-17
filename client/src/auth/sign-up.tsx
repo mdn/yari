@@ -62,9 +62,7 @@ export default function SignUpApp() {
         <h2>Invalid URL</h2>
         <p>You arrived here without the necessary details.</p>
         <p>
-          <Link to={`/${locale}/signin`}>
-            Please retry the sign-in process.
-          </Link>
+          <Link to={`/${locale}/signin`}>Please retry the sign-in process</Link>
           .
         </p>
       </div>
