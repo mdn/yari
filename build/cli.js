@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
 
+const chalk = require("chalk");
 const cliProgress = require("cli-progress");
 const program = require("@caporal/core").default;
 const { prompt } = require("inquirer");
@@ -10,7 +11,9 @@ const {
   Document,
   slugToFolder,
   translationsOf,
+  CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  CONTENT_ARCHIVED_ROOT,
 } = require("../content");
 
 // eslint-disable-next-line node/no-missing-require
@@ -279,7 +282,18 @@ program
   .action(async ({ args, options }) => {
     try {
       if (!options.quiet) {
-        console.log("\nBuilding Documents...");
+        const roots = [
+          ["CONTENT_ROOT", CONTENT_ROOT],
+          ["CONTENT_TRANSLATED_ROOT", CONTENT_TRANSLATED_ROOT],
+          ["CONTENT_ARCHIVED_ROOT", CONTENT_ARCHIVED_ROOT],
+        ];
+        for (const [key, value] of roots) {
+          console.log(
+            `${chalk.grey((key + ":").padEnd(25, " "))}${
+              value ? chalk.white(value) : chalk.grey("not set")
+            }`
+          );
+        }
       }
       const { files } = args;
       const t0 = new Date();
