@@ -489,6 +489,11 @@
     "url": "https://drafts.csswg.org/css-cascade-5/",
     "status": "WD"
   },
+  "CSS5 Colors": {
+    "name": "CSS Color Module Level&nbsp;5",
+    "url": "https://drafts.csswg.org/css-color-5/",
+    "status": "WD"
+  },
   "CSS5 Media Queries": {
     "name": "Media Queries Level&nbsp;5",
     "url": "https://drafts.csswg.org/mediaqueries-5/",
