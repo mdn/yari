@@ -21,7 +21,7 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
       "log",
       "--name-only",
       "--no-decorate",
-      `--format=${MARKER}%H${DELIMITER}%cI_%P`,
+      `--format=${MARKER}%H${DELIMITER}%cI${DELIMITER}%P`,
       "--date-order",
       "--reverse",
       // "Separate the commits with NULs instead of with new newlines."
@@ -49,8 +49,8 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
       hash = data[0];
       date = new Date(data[1]);
       if (data[2]) {
-        const parentHashes = data[2].split(" ");
-        parents.set(parentHashes[1], { modified: date, hash });
+        const [, parentHash] = data[2].split(" ");
+        parents.set(parentHash, { modified: date, hash });
       }
     } else if (line) {
       const relPath = path.relative(realContentRoot, path.join(repoRoot, line));
