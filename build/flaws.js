@@ -19,7 +19,6 @@ const {
   Translation,
 } = require("../content");
 const { FLAW_LEVELS, VALID_FLAW_CHECKS } = require("./constants");
-const { DEFAULT_LOCALE } = require("../libs/constants");
 const {
   INTERACTIVE_EXAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
