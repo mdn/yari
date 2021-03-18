@@ -16,6 +16,7 @@ import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Banner } from "./banners";
 import { SignIn, SignUp } from "./auth";
+import { Settings } from "./settings";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
@@ -220,6 +221,14 @@ export function App(appProps) {
               element={
                 <StandardLayout>
                   <SignUp />
+                </StandardLayout>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <StandardLayout>
+                  <Settings {...appProps} />
                 </StandardLayout>
               }
             />

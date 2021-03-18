@@ -97,7 +97,7 @@ type Flaws = {
 
 export type Translation = {
   locale: string;
-  url: string;
+  native: string;
 };
 
 export type DocParent = {
