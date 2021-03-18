@@ -628,7 +628,7 @@ def upload_content(build_directory, content_roots, config):
 
             # Remember, if `key` is from a "index.html" file it will be represented
             # something like this: `main/en-us/docs/web/api/documentorshadowroot`
-            # with the prefix and the `/index.html` portion removed.
+            # with the `/index.html` portion removed.
             # But every page usually has a `index.json` file, which might look
             # something like this: `main/en-us/docs/web/api/index.json` or
             # `main/en-us/docs/web/api/screenshot.png`
