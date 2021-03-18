@@ -38,27 +38,11 @@ export default function SignUpApp() {
     );
   }
 
-  if (searchParams.get("errors")) {
-    console.warn("Errors", searchParams.get("errors"));
-    const errors = JSON.parse(searchParams.get("errors") || "{}");
-    return (
-      <div>
-        <h2>Sign-in errors</h2>
-        <p>An error occurred trying to complete sign in.</p>
-        <pre>{JSON.stringify(errors, null, 2)}</pre>
-        <p>
-          We apologize for the inconvenience,{" "}
-          <Link to={`/${locale}/signin`}>please try signing-in again</Link>.
-        </p>
-      </div>
-    );
-  }
-
   const csrfMiddlewareToken = searchParams.get("csrfmiddlewaretoken");
   const provider = searchParams.get("provider");
   if (!csrfMiddlewareToken || !provider) {
     return (
-      <div>
+      <div className="notecard error">
         <h2>Invalid URL</h2>
         <p>You arrived here without the necessary details.</p>
         <p>
@@ -121,9 +105,12 @@ export default function SignUpApp() {
     }
   }
 
-  const userDetails: UserDetails = JSON.parse(
-    searchParams.get("user_details") || ""
-  );
+  let userDetails: UserDetails = {};
+  try {
+    userDetails = JSON.parse(searchParams.get("user_details") || "{}");
+  } catch (jsonParseError) {
+    console.warn("The 'user_details' was not valid JSON");
+  }
 
   return (
     <>
@@ -135,10 +122,12 @@ export default function SignUpApp() {
         />
       )}
 
-      <DisplaySignupDetails
-        provider={provider || ""}
-        username={userDetails.name || ""}
-      />
+      {provider && (
+        <DisplaySignupDetails
+          provider={provider}
+          username={userDetails.name || ""}
+        />
+      )}
 
       {signupError && (
         <div className="notecard error">
@@ -207,10 +196,6 @@ function DisplaySignupDetails({
   provider: string;
   username: string;
 }) {
-  if (!provider) {
-    // Exit early because there's nothing useful we can say
-    return null;
-  }
   let providerVerbose = provider.charAt(0).toUpperCase() + provider.slice(1);
   if (provider === "github") {
     providerVerbose = "GitHub";
@@ -218,8 +203,8 @@ function DisplaySignupDetails({
   return (
     <p className="lead">
       You are signing in to MDN Web Docs with{" "}
-      <span className="provider-name">{providerVerbose}</span>{" "}
-      {username && `as ${username}`}.
+      <span className="provider-name">{providerVerbose}</span>
+      {username && ` as ${username}`}.
     </p>
   );
 }
