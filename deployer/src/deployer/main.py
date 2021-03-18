@@ -186,9 +186,13 @@ def upload(ctx, directory: Path, **kwargs):
     if kwargs["content_archived_root"]:
         content_roots.append(kwargs["content_archived_root"])
 
-    print(kwargs)
+    if kwargs["prune"] and not kwargs["archived_files"]:
+        log.warning(
+            "Warning! Running with --prune but NOT ----archived-files will "
+            "possibly delete all archived content."
+        )
     ctx.obj.update(kwargs)
-    # upload_content(directory, content_roots, ctx.obj)
+    upload_content(directory, content_roots, ctx.obj)
 
 
 @cli.command()
