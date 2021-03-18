@@ -37,7 +37,7 @@ describe("Basic viewing of functional pages", () => {
     // Note! It's important that this happens *after* the `.toMatchElement`
     // on the line above because expect-puppeteer doesn't have a wait to
     // properly wait for the (pushState) URL to have changed.
-    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
   });
 
   it("open the /en-US/docs/Web/InteractiveExample page", async () => {
@@ -246,13 +246,13 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toSelect('select[name="language"]', "English (US)");
     await expect(page).toClick("button", { text: "Change language" });
     await expect(page).toMatch("<foo>: A test tag");
-    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
 
     // And change back to French
     await expect(page).toSelect('select[name="language"]', "Français");
     await expect(page).toClick("button", { text: "Change language" });
     await expect(page).toMatch("<foo>: Une page de test");
-    expect(page.url()).toBe(testURL("/fr/docs/Web/Foo"));
+    expect(page.url()).toBe(testURL("/fr/docs/Web/Foo/"));
   });
 
   it("clicking 'Sign in' should offer links to all identity providers", async () => {
