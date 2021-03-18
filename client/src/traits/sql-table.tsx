@@ -212,7 +212,6 @@ export function SQLTable({ documents }: { documents: Document[] }) {
             fontFamily: '"Fira code", "Fira Mono", monospace',
             backgroundColor: "#efefef",
           }}
-          // rows={Math.max(5, queryDraft.split("\n").length + 1)}
         />
         {!sqlParserError && !!statementWarnings.length && (
           <div className="query-statement-warnings">
