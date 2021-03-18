@@ -144,6 +144,7 @@ export default function render(
     pageNotFound = false,
     feedEntries = null,
     pageTitle = null,
+    possibleLocales = null,
   } = {}
 ) {
   const buildHtml = readBuildHTML();
@@ -206,6 +207,13 @@ export default function render(
           .insertAfter("title");
       }
     }
+  }
+
+  if (possibleLocales) {
+    const possibleLocalesTag = `<script>window.__possibleLocales__ = JSON.parse(${serializeDocumentData(
+      possibleLocales
+    )});</script>`;
+    $("#root").after(possibleLocalesTag);
   }
 
   if (pageDescription) {

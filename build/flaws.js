@@ -75,7 +75,7 @@ function injectFlaws(doc, $, options, document) {
   }
 }
 
-function injectUnsafeHTMLFlaws(doc, $, { rawContent }) {
+function injectUnsafeHTMLFlaws(doc, $, { rawContent, fileInfo }) {
   function addFlaw(element, explanation) {
     if (!("unsafe_html" in doc.flaws)) {
       doc.flaws.unsafe_html = [];
@@ -131,6 +131,12 @@ function injectUnsafeHTMLFlaws(doc, $, { rawContent }) {
     if (tagName === "iframe") {
       // For iframes we only check the 'src' value
       const src = $(element).attr("src");
+      if (!src) {
+        console.warn(
+          `${fileInfo.path} has an iframe without a 'src' attribute`
+        );
+        return;
+      }
       // Local URLs are always safe.
       if (!(src.startsWith("//") || src.includes("://"))) {
         return;
