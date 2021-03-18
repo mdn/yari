@@ -289,4 +289,30 @@ describe("Basic viewing of functional pages", () => {
     );
     await expect(page).toMatchElement("button", { text: "Create account" });
   });
+
+  it("should say you're not signed in on the settings page", async () => {
+    await page.goto(testURL("/en-US/settings"));
+    await expect(page).toMatchElement("h1", { text: "Settings" });
+    await expect(page).toMatchElement("a", { text: "Sign in first" });
+  });
+
+  it("should show your settings page", async () => {
+    const url = testURL("/en-US/settings");
+    // A `fakesessionid` is a special trick to tell the static server we use
+    // for mocking the `/api/v1`.
+    await page.setCookie({
+      name: "fakesessionid",
+      value: "peterbe",
+      domain: new URL(url).host,
+    });
+
+    await page.goto(url);
+    await expect(page).toMatchElement("h1", { text: "Settings" });
+    await expect(page).toMatchElement("button", { text: "Close account" });
+
+    // Change locale to French
+    await expect(page).toSelect('select[name="locale"]', "French");
+    await expect(page).toClick("button", { text: "Save changes" });
+    await expect(page).toMatch("Settings update sent");
+  });
 });
