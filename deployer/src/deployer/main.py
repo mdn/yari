@@ -185,8 +185,10 @@ def upload(ctx, directory: Path, **kwargs):
         content_roots.append(kwargs["content_translated_root"])
     if kwargs["content_archived_root"]:
         content_roots.append(kwargs["content_archived_root"])
+
+    print(kwargs)
     ctx.obj.update(kwargs)
-    upload_content(directory, content_roots, ctx.obj)
+    # upload_content(directory, content_roots, ctx.obj)
 
 
 @cli.command()

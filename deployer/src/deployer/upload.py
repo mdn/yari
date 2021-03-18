@@ -518,12 +518,6 @@ def upload_content(build_directory, content_roots, config):
     prune = config["prune"]
     archived_txt_file = config["archived_files"]
 
-    archived_files = set()
-    if archived_txt_file:
-        archived_files.update(parse_archived_txt_file(archived_txt_file))
-        if not archived_files:
-            raise Exception(f"found no entries inside {archived_txt_file}")
-
     log.info(f"Upload files from: {build_directory}")
     if upload_redirects:
         log.info(f"Upload redirects from: {', '.join(str(fp) for fp in content_roots)}")
@@ -600,9 +594,12 @@ def upload_content(build_directory, content_roots, config):
         delete_keys = []
 
         archived_files_as_keys = set()
-        for file in archived_files:
-            locale, slug = file.replace("/index.html", "").split("/", 1)
-            archived_files_as_keys.add(f"{bucket_prefix}/{locale}/docs/{slug}")
+        if archived_txt_file:
+            for file in parse_archived_txt_file(archived_txt_file):
+                locale, slug = file.replace("/index.html", "").split("/", 1)
+                archived_files_as_keys.add(f"{bucket_prefix}/{locale}/docs/{slug}")
+            if not archived_files_as_keys:
+                raise Exception(f"found no entries inside {archived_txt_file}")
 
         for key in existing_bucket_objects:
             if key.startswith(f"{bucket_prefix}/_whatsdeployed/"):
