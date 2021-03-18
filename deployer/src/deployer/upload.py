@@ -643,7 +643,7 @@ def upload_content(build_directory, content_roots, config):
                     # This is the easiest and fastest lookup
                     is_archived = True
                 elif (
-                    re.sub(r"/(index.json|contributors.txt|bcd.json)$", "", key)
+                    re.sub(r"/(index\.json|contributors\.txt|bcd\.json)$", "", key)
                     in archived_files_as_keys
                 ):
                     # This is easy and fast too and covers 99% of the other
