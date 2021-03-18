@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Routes, Route, Link } from "react-router-dom";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 
+import { PageContentContainer } from "../ui/atoms/page-content";
 import { SQLTable } from "./sql-table";
-import { AllMacroUses } from "./all-macros";
 import { Data } from "./types";
 import "./index.scss";
 
 export default function AllTraits() {
-  const [startLoadingTime, setStartLoadingTime] = useState<Date | null>(null);
-  const [endLoadingTime, setEndLoadingTime] = useState<Date | null>(null);
-  useEffect(() => {
+  const [startLoadingTime, setStartLoadingTime] = React.useState<Date | null>(
+    null
+  );
+  const [endLoadingTime, setEndLoadingTime] = React.useState<Date | null>(null);
+  React.useEffect(() => {
     document.title = "All Documents Traits";
   }, []);
 
-  const { data, error } = useSWR<Data, Error>(
+  const { data, error, isValidating } = useSWR<Data, Error>(
     "/_traits",
     async (url) => {
       let response;
@@ -39,7 +41,7 @@ export default function AllTraits() {
     }
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!data && !error) {
       setStartLoadingTime(new Date());
     } else {
@@ -47,34 +49,44 @@ export default function AllTraits() {
     }
   }, [data, error]);
 
-  if (data) console.log(Object.keys(data));
-
   return (
-    <div className="all-traits">
-      <h2>All Documents Traits</h2>
-      {data && (
-        <p>
-          {data.metadata.count.toLocaleString()} documents loaded.{" "}
-          {startLoadingTime && endLoadingTime && (
-            <Took
-              milliseconds={
-                endLoadingTime.getTime() - startLoadingTime.getTime()
-              }
-            />
-          )}
-        </p>
-      )}
-      {data && <DisplayData data={data} />}
-      {error && (
-        <p>
-          Error loading data: <code>{error.toString()}</code>
-        </p>
-      )}
+    <PageContentContainer>
+      <div className="all-traits">
+        <h2>All Documents Traits</h2>
+        {data && (
+          <p>
+            {data.metadata.count.toLocaleString()} documents loaded.{" "}
+            {startLoadingTime && endLoadingTime && (
+              <Took
+                milliseconds={
+                  endLoadingTime.getTime() - startLoadingTime.getTime()
+                }
+              />
+            )}{" "}
+            <button
+              type="button"
+              disabled={isValidating}
+              className="button button-inline-small"
+              onClick={() => {
+                mutate("/_traits");
+              }}
+            >
+              {isValidating ? "Refreshing" : "Refresh"}
+            </button>
+          </p>
+        )}
+        {data && <DisplayData data={data} />}
+        {error && (
+          <p>
+            Error loading data: <code>{error.toString()}</code>
+          </p>
+        )}
 
-      {!data && !error && startLoadingTime ? (
-        <Loading startLoadingTime={startLoadingTime} />
-      ) : null}
-    </div>
+        {!data && !error && startLoadingTime ? (
+          <Loading startLoadingTime={startLoadingTime} />
+        ) : null}
+      </div>
+    </PageContentContainer>
   );
 }
 
@@ -84,11 +96,11 @@ function Took({ milliseconds }: { milliseconds: number }) {
 }
 
 function Loading({ startLoadingTime }: { startLoadingTime: Date }) {
-  const [estimateEndTime, setEstimateEndTime] = useState(
+  const [estimateEndTime, setEstimateEndTime] = React.useState(
     // 15 seconds
     new Date(startLoadingTime.getTime() + 1000 * 15)
   );
-  useEffect(() => {
+  React.useEffect(() => {
     if (localStorage.getItem(LOCALSTORAGE_KEY)) {
       setEstimateEndTime(
         new Date(
@@ -107,8 +119,8 @@ function Loading({ startLoadingTime }: { startLoadingTime: Date }) {
 
   const INTERVAL_INCREMENT = 700;
   const LOCALSTORAGE_KEY = "alltraits-loading-took";
-  const [elapsed, setElapsed] = useState(0);
-  useEffect(() => {
+  const [elapsed, setElapsed] = React.useState(0);
+  React.useEffect(() => {
     const interval = setInterval(() => {
       setElapsed((state) => state + INTERVAL_INCREMENT);
     }, INTERVAL_INCREMENT);
@@ -136,12 +148,6 @@ function DisplayData({ data }: { data: Data }) {
     <div>
       <Routes>
         <Route
-          path="macros"
-          element={
-            <AllMacroUses macros={data.allMacros} documents={data.documents} />
-          }
-        />
-        <Route
           path="database"
           element={<SQLTable documents={data.documents} />}
         />
@@ -154,18 +160,9 @@ function DisplayData({ data }: { data: Data }) {
 function SubNav() {
   return (
     <div className="sub-nav">
-      <ul>
-        <li>
-          <Link to="macros" className="button">
-            Every Macro Used
-          </Link>
-        </li>
-        <li>
-          <Link to="database" className="button">
-            Searchable Database
-          </Link>
-        </li>
-      </ul>
+      <Link to="database" className="button">
+        Searchable Database
+      </Link>
     </div>
   );
 }

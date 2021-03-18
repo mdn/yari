@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
 import { PageContentContainer } from "../ui/atoms/page-content";
 import { Search } from "../ui/molecules/search";
-
+import { useLocale } from "../hooks";
 import "./index.scss";
 
 // Lazy sub-components
@@ -10,6 +10,7 @@ const ViewedDocuments = lazy(() => import("./viewed-documents"));
 
 export default function WritersHomepage() {
   const isServer = typeof window === "undefined";
+  const locale = useLocale();
 
   return (
     <PageContentContainer>
@@ -88,7 +89,7 @@ export default function WritersHomepage() {
             <Link to="/en-US/_flaws">Flaws Dashboard</Link>
           </li>
           <li>
-            <Link to="/en-US/_traits">All Documents Traits</Link>
+            <Link to={`/${locale}/_traits`}>All Documents Traits</Link>
           </li>
         </ul>
       </div>
