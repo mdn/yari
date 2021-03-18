@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { Translation } from "../../../document/types";
 import { useGA } from "../../../ga-context";
@@ -13,20 +13,25 @@ export function LanguageToggle({
   translations: Translation[];
 }) {
   const ga = useGA();
+  const { pathname } = useLocation();
+  function translateURL(destinationLocale: string) {
+    return pathname.replace(`/${locale}/`, `/${destinationLocale}/`);
+  }
 
   function getEnglishLink() {
     for (const translation of translations) {
       if (translation.locale.toLowerCase() === "en-us") {
+        const translationURL = translateURL(translation.locale);
         return (
           <Link
-            to={translation.url}
+            to={translationURL}
             className="view-in-english"
             onClick={() => {
               ga("send", {
                 hitType: "event",
                 eventCategory: "Language",
                 eventAction: "Switch to English",
-                eventLabel: `${window.location.pathname} to ${translation.url}`,
+                eventLabel: `${window.location.pathname} to ${translationURL}`,
               });
             }}
           >
