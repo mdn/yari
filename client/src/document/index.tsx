@@ -145,7 +145,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
     <>
       {doc.isArchive && !doc.isTranslated && <Archived />}
 
-      {/* if we have either breadcrumbs or translations for the current page, 
+      {/* if we have either breadcrumbs or translations for the current page,
       continue rendering the section */}
       {(doc.parents || !!translations.length) && (
         <div className="breadcrumb-locale-container">
@@ -159,7 +159,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
       <MainContentContainer>
-        {!isServer && CRUD_MODE && !props.isPreview && !doc.isArchive && (
+        {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
           <React.Suspense
             fallback={<p className="loading-toolbar">Loading toolbar</p>}
           >
@@ -171,7 +171,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
             />
           </React.Suspense>
         )}
-        <article className="article" lang={doc.locale}>
+        <article className="main-page-content" lang={doc.locale}>
           <h1>{doc.title}</h1>
           <RenderDocumentBody doc={doc} />
         </article>

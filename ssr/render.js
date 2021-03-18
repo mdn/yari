@@ -139,7 +139,13 @@ function serializeDocumentData(data) {
 
 export default function render(
   renderApp,
-  { doc = null, pageNotFound = false, feedEntries = null } = {}
+  {
+    doc = null,
+    pageNotFound = false,
+    feedEntries = null,
+    pageTitle = null,
+    possibleLocales = null,
+  } = {}
 ) {
   const buildHtml = readBuildHTML();
   const webfontURLs = extractWebFontURLs();
@@ -151,7 +157,9 @@ export default function render(
 
   const rendered = renderToString(renderApp);
 
-  let pageTitle = "MDN Web Docs"; // default
+  if (!pageTitle) {
+    pageTitle = "MDN Web Docs"; // default
+  }
   let canonicalURL = "https://developer.mozilla.org";
 
   let pageDescription = "";
@@ -199,6 +207,13 @@ export default function render(
           .insertAfter("title");
       }
     }
+  }
+
+  if (possibleLocales) {
+    const possibleLocalesTag = `<script>window.__possibleLocales__ = JSON.parse(${serializeDocumentData(
+      possibleLocales
+    )});</script>`;
+    $("#root").after(possibleLocalesTag);
   }
 
   if (pageDescription) {

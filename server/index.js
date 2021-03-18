@@ -28,9 +28,10 @@ const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
 const documentTraitsRouter = require("./traits");
 const fakeV1APIRouter = require("./fake-v1-api");
-const { searchRoute } = require("./document-watch");
+const { searchIndexRoute } = require("./search-index");
 const flawsRoute = require("./flaws");
 const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
+const { getRoot } = require("../content/utils");
 
 async function buildDocumentFromURL(url) {
   const document = Document.findByURL(url);
@@ -64,38 +65,38 @@ app.use(originRequestMiddleware);
 
 app.use(staticMiddlewares);
 
-app.use(express.urlencoded({ extended: true }));
+// Depending on if FAKE_V1_API is set, we either respond with JSON based
+// on `.json` files on disk or we proxy the requests to Kuma.
+const proxy = FAKE_V1_API
+  ? fakeV1APIRouter
+  : createProxyMiddleware({
+      target: `${
+        ["developer.mozilla.org", "developer.allizom.org"].includes(
+          PROXY_HOSTNAME
+        )
+          ? "https://"
+          : "http://"
+      }${PROXY_HOSTNAME}`,
+      changeOrigin: true,
+      proxyTimeout: 3000,
+      timeout: 3000,
+    });
 
-app.use(
-  "/api/v1",
-  // Depending on if FAKE_V1_API is set, we either respond with JSON based
-  // on `.json` files on disk or we proxy the requests to Kuma.
-  FAKE_V1_API
-    ? fakeV1APIRouter
-    : createProxyMiddleware({
-        target: `${
-          ["developer.mozilla.org", "developer.allizom.org"].includes(
-            PROXY_HOSTNAME
-          )
-            ? "https://"
-            : "http://"
-        }${PROXY_HOSTNAME}`,
-        changeOrigin: true,
-        proxyTimeout: 3000,
-        timeout: 3000,
-      })
-);
+app.use("/api/v1", proxy);
+// This is an exception and it's only ever relevant in development.
+app.post("/:locale/users/account/signup", proxy);
+
+// It's important that this line comes *after* the setting up for the proxy
+// middleware for `/api/v1` above.
+// See https://github.com/chimurai/http-proxy-middleware/issues/40#issuecomment-163398924
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/_document", documentRouter);
 
 app.use("/_traits", documentTraitsRouter);
 
 app.get("/_open", (req, res) => {
-  const { line, column, filepath } = req.query;
-  if (!filepath) {
-    throw new Error("No .filepath in the request query");
-  }
-
+  const { line, column, filepath, url } = req.query;
   // Sometimes that 'filepath' query string parameter is a full absolute
   // filepath (e.g. /Users/peterbe/yari/content.../index.html), which usually
   // happens when you this is used from the displayed flaws on a preview
@@ -103,10 +104,22 @@ app.get("/_open", (req, res) => {
   // But sometimes, it's a relative path and if so, it's always relative
   // to the main builder source.
   let absoluteFilepath;
-  if (fs.existsSync(filepath)) {
-    absoluteFilepath = filepath;
+  if (filepath) {
+    if (fs.existsSync(filepath)) {
+      absoluteFilepath = filepath;
+    } else {
+      const [locale] = filepath.split(path.sep);
+      const root = getRoot(locale);
+      absoluteFilepath = path.join(root, filepath);
+    }
+  } else if (url) {
+    const document = Document.findByURL(url);
+    if (!document) {
+      res.status(410).send(`No known document by the URL '${url}'\n`);
+    }
+    absoluteFilepath = document.fileInfo.path;
   } else {
-    absoluteFilepath = path.join(CONTENT_ROOT, filepath);
+    throw new Error("No .filepath or .url in the request query");
   }
 
   // Double-check that the file can be found.
@@ -125,7 +138,7 @@ app.get("/_open", (req, res) => {
   res.status(200).send(`Tried to open ${spec} in ${process.env.EDITOR}`);
 });
 
-app.use("/:locale/search-index.json", searchRoute);
+app.use("/:locale/search-index.json", searchIndexRoute);
 
 app.get("/_flaws", flawsRoute);
 

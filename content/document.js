@@ -9,6 +9,7 @@ const {
   CONTENT_ARCHIVED_ROOT,
   CONTENT_TRANSLATED_ROOT,
   CONTENT_ROOT,
+  ACTIVE_LOCALES,
   VALID_LOCALES,
   ROOTS,
 } = require("./constants");
@@ -242,6 +243,8 @@ const read = memoize((folder) => {
   const locale = extractLocale(folder);
   const url = `/${locale}/docs/${metadata.slug}`;
 
+  const isActive = !isArchive && ACTIVE_LOCALES.has(locale.toLowerCase());
+
   // The last-modified is always coming from the git logs. Independent of
   // which root it is.
   const gitHistory = getGitHistories(root, locale).get(
@@ -271,6 +274,7 @@ const read = memoize((folder) => {
     ...{ rawHTML, rawContent },
     isArchive,
     isTranslated,
+    isActive,
     fileInfo: {
       folder,
       path: filePath,
@@ -354,26 +358,20 @@ function findByURL(url, ...args) {
   return doc;
 }
 
-function findAll(
-  { files, folderSearch } = { files: new Set(), folderSearch: null }
-) {
+function findAll({ files = new Set(), folderSearch = null } = {}) {
   if (!(files instanceof Set)) throw new TypeError("'files' not a Set");
   if (folderSearch && typeof folderSearch !== "string")
     throw new TypeError("'folderSearch' not a string");
 
-  // TODO: doesn't support archive content yet
-  // console.warn("Currently hardcoded to only build 'en-us'");
   const filePaths = [];
   const roots = [];
   if (CONTENT_ARCHIVED_ROOT) {
-    // roots.push({ path: CONTENT_ARCHIVED_ROOT, isArchive: true });
     roots.push(CONTENT_ARCHIVED_ROOT);
   }
   if (CONTENT_TRANSLATED_ROOT) {
     roots.push(CONTENT_TRANSLATED_ROOT);
   }
   roots.push(CONTENT_ROOT);
-  console.log("Building roots:", roots);
   for (const root of roots) {
     filePaths.push(
       ...glob

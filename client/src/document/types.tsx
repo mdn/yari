@@ -59,6 +59,12 @@ export interface HeadingLinksFlaw extends GenericFlaw {
   column: number | null;
 }
 
+export interface UnsafeHTMLFlaw extends GenericFlaw {
+  html: string;
+  line: number | null;
+  column: number | null;
+}
+
 export interface MacroErrorMessage extends GenericFlaw {
   name: string;
   error: {
@@ -85,11 +91,12 @@ type Flaws = {
   sectioning: SectioningFlaw[];
   image_widths: ImageWidthFlaw[];
   heading_links: HeadingLinksFlaw[];
+  unsafe_html: UnsafeHTMLFlaw[];
 };
 
 export type Translation = {
   locale: string;
-  url: string;
+  native: string;
 };
 
 export type DocParent = {
@@ -119,4 +126,5 @@ export interface Doc {
   contributors: string[];
   isArchive: boolean;
   isTranslated: boolean;
+  isActive: boolean;
 }
