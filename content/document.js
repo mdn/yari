@@ -358,30 +358,20 @@ function findByURL(url, ...args) {
   return doc;
 }
 
-function findAll({
-  files = new Set(),
-  folderSearch = null,
-  quiet = false,
-} = {}) {
+function findAll({ files = new Set(), folderSearch = null } = {}) {
   if (!(files instanceof Set)) throw new TypeError("'files' not a Set");
   if (folderSearch && typeof folderSearch !== "string")
     throw new TypeError("'folderSearch' not a string");
 
-  // TODO: doesn't support archive content yet
-  // console.warn("Currently hardcoded to only build 'en-us'");
   const filePaths = [];
   const roots = [];
   if (CONTENT_ARCHIVED_ROOT) {
-    // roots.push({ path: CONTENT_ARCHIVED_ROOT, isArchive: true });
     roots.push(CONTENT_ARCHIVED_ROOT);
   }
   if (CONTENT_TRANSLATED_ROOT) {
     roots.push(CONTENT_TRANSLATED_ROOT);
   }
   roots.push(CONTENT_ROOT);
-  if (!quiet) {
-    console.log("Building roots:", roots);
-  }
   for (const root of roots) {
     filePaths.push(
       ...glob
