@@ -87,7 +87,8 @@
     "send": "0.17.1",
     "source-map-support": "0.5.19",
     "tempy": "1.0.0",
-    "unified": "9.2.1"
+    "unified": "9.2.1",
+    "unist-util-visit": "2.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.13.10",

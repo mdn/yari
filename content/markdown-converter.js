@@ -4,7 +4,7 @@ const stringify = require("rehype-stringify");
 const remark2rehype = require("remark-rehype");
 const raw = require("rehype-raw");
 
-const remarkCodeBlocks = require("./rehype-codeblocks");
+const rehypeCodeBlocks = require("./rehype-codeblocks");
 
 /**
  * Converts Markdown -> HTML using unified.
@@ -14,7 +14,7 @@ function markdownToHTML(md) {
   return unified()
     .use(parse)
     .use(remark2rehype, { allowDangerousHtml: true })
-    .use(remarkCodeBlocks)
+    .use(rehypeCodeBlocks)
     .use(raw)
     .use(stringify)
     .processSync(md)

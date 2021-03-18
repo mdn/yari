@@ -1,11 +1,6 @@
-// eslint-disable-next-line node/no-extraneous-require
 const visit = require("unist-util-visit");
 
 module.exports = () => {
-  return (tree) => {
-    visit(tree, "element", visitor);
-  };
-
   function visitor(node, index, parent) {
     if (!parent || parent.tagName !== "pre" || node.tagName !== "code") {
       return;
@@ -38,4 +33,8 @@ module.exports = () => {
       }
     }
   }
+
+  return (tree) => {
+    visit(tree, "element", visitor);
+  };
 };
