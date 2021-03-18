@@ -2,8 +2,6 @@ import React from "react";
 
 import { PageContentContainer } from "../ui/atoms/page-content";
 
-import "./index.scss";
-
 const SignInApp = React.lazy(() => import("./sign-in"));
 const SignUpApp = React.lazy(() => import("./sign-up"));
 
@@ -18,7 +16,7 @@ function Container({
   const pageTitle = "Sign in to MDN Web Docs";
   React.useEffect(() => {
     document.title = pageTitle;
-  }, [pageTitle]);
+  }, []);
   return (
     <PageContentContainer extraClasses={`auth-page-container ${className}`}>
       {/* The reason for displaying this <h1> here (and for SignUp too)

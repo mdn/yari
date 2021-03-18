@@ -5,6 +5,7 @@ import { mutate } from "swr";
 import { useLocale } from "../hooks";
 import { useUserData } from "../user-context";
 
+import "./index.scss";
 import "./sign-up.scss";
 
 interface UserDetails {
@@ -42,7 +43,7 @@ export default function SignUpApp() {
   const provider = searchParams.get("provider");
   if (!csrfMiddlewareToken || !provider) {
     return (
-      <div className="notecard error">
+      <div className="notecard negative">
         <h2>Invalid URL</h2>
         <p>You arrived here without the necessary details.</p>
         <p>
@@ -130,7 +131,7 @@ export default function SignUpApp() {
       )}
 
       {signupError && (
-        <div className="notecard error">
+        <div className="notecard negative">
           <p>
             <strong>Signup error</strong> <code>{signupError.toString()}</code>
           </p>

@@ -7,6 +7,16 @@
     font-weight: bold;
   }
 
+  a:link,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:focus {
+    text-decoration: none;
+  }
+
   .complete-sign-in {
     align-items: center;
     display: flex;

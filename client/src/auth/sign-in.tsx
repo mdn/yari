@@ -6,6 +6,7 @@ import { useLocale } from "../hooks";
 import { ReactComponent as GithubLogo } from "@mdn/dinocons/brands/github-mark-small.svg";
 import { ReactComponent as GoogleLogo } from "@mdn/dinocons/brands/google-mono.svg";
 
+import "./index.scss";
 import "./sign-in.scss";
 
 export default function SignInApp() {
