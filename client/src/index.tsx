@@ -22,6 +22,7 @@ if (!container) {
 const docData = (window as any).__data__;
 const pageNotFound = (window as any).__pageNotFound__;
 const feedEntries = (window as any).__feedEntries__;
+const possibleLocales = (window as any).__possibleLocales__;
 
 let app = (
   <GAProvider>
@@ -31,6 +32,7 @@ let app = (
           doc={docData}
           pageNotFound={pageNotFound}
           feedEntries={feedEntries}
+          possibleLocales={possibleLocales}
         />
       </Router>
     </UserDataProvider>
