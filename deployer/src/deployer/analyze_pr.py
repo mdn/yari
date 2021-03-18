@@ -5,6 +5,8 @@ from pathlib import Path
 from github import Github
 from selectolax.parser import HTMLParser
 
+from .utils import log
+
 
 def analyze_pr(build_directory: Path, config):
     """Given a directory of documents built from a PR, look through it and
@@ -29,27 +31,31 @@ def analyze_pr(build_directory: Path, config):
         print("Warning! Nothing to comment at all!")
         return
 
-    print("_____________POST___________________________________________")
+    print("POST".center(80, "_"))
+    print()
     print(combined_comment)
-    print("___________________________________________________________")
+    print()
+    print("END POST".center(80, "_"))
 
     if not config["repo"]:
         print("Warning! No 'repo' config")
     elif not config["pr_number"]:
         print("Warning! No 'pr_number' config")
     elif config["repo"] and config["pr_number"]:
-        print(
-            f"Posting to https://github.com/{config['repo']}/pull/{config['pr_number']}"
-        )
-
-        if config["github_token"]:
-            github = Github(config["github_token"])
-            github_repo = github.get_repo(config["repo"])
-            github_issue = github_repo.get_issue(number=int(config["pr_number"]))
-            github_issue.create_comment(combined_comment)
-
+        pr_url = f"https://github.com/{config['repo']}/pull/{config['pr_number']}"
+        if config["dry_run"]:
+            log.warning(f"Dry-run! Not actually posting any comment to {pr_url}")
         else:
-            print("Warning! No 'github_token' so no posting of comments")
+            print(f"Posting to {pr_url}")
+
+            if config["github_token"]:
+                github = Github(config["github_token"])
+                github_repo = github.get_repo(config["repo"])
+                github_issue = github_repo.get_issue(number=int(config["pr_number"]))
+                github_issue.create_comment(combined_comment)
+
+            else:
+                print("Warning! No 'github_token' so no posting of comments")
 
 
 def post_about_deployment(build_directory: Path, **config):
