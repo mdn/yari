@@ -499,13 +499,11 @@ class BucketManager:
 
 
 def parse_archived_txt_file(file: Path):
-    file_paths = []
     with open(file) as f:
         for line in f:
             line = line.strip()
             if line and not line.startswith("#"):
-                file_paths.append(line)
-    return file_paths
+                yield line
 
 
 def upload_content(build_directory, content_roots, config):
