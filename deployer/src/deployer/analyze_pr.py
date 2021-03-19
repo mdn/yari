@@ -40,16 +40,14 @@ def analyze_pr(build_directory: Path, config):
         if config["dry_run"]:
             log.warning(f"Dry-run! Not actually posting any comment to {pr_url}")
         else:
+            if not config["github_token"]:
+                raise Exception("No 'github_token' so no posting of comments")
+
             print(f"Posting to {pr_url}")
-
-            if config["github_token"]:
-                github = Github(config["github_token"])
-                github_repo = github.get_repo(config["repo"])
-                github_issue = github_repo.get_issue(number=int(config["pr_number"]))
-                github_issue.create_comment(combined_comment)
-
-            else:
-                print("Warning! No 'github_token' so no posting of comments")
+            github = Github(config["github_token"])
+            github_repo = github.get_repo(config["repo"])
+            github_issue = github_repo.get_issue(number=int(config["pr_number"]))
+            github_issue.create_comment(combined_comment)
 
     return combined_comment
 
@@ -62,7 +60,7 @@ def post_about_deployment(build_directory: Path, **config):
         url = template.format(prefix=config["prefix"], mdn_url=doc["mdn_url"])
         links.append(f"- <{url}>")
 
-    heading = "## Preview deployment\n\n"
+    heading = "## Preview deployment URLs\n\n"
     if links:
         return heading + "\n".join(links)
 
