@@ -39,6 +39,22 @@ def validate_optional_directory(ctx, param, value):
         return validate_directory(ctx, param, value)
 
 
+def validate_file(ctz, param, value):
+    if not value:
+        raise click.BadParameter(f"{value!r}")
+    path = Path(value)
+    if not path.exists():
+        raise click.BadParameter(f"{value} does not exist")
+    elif not path.is_file():
+        raise click.BadParameter(f"{value} is not a file")
+    return path
+
+
+def validate_optional_file(ctx, param, value):
+    if value:
+        return validate_file(ctx, param, value)
+
+
 @click.group()
 @click.option(
     "--dry-run",
@@ -151,6 +167,15 @@ def whatsdeployed(ctx, directory: Path, output: str):
     show_default=True,
     is_flag=True,
 )
+@click.option(
+    "--archived-files",
+    help=(
+        "The path to the file that lists which files are archived. "
+        "(Only relevant in conjunction with --prune)"
+    ),
+    default=None,
+    callback=validate_optional_file,
+)
 @click.argument("directory", type=click.Path(), callback=validate_directory)
 @click.pass_context
 def upload(ctx, directory: Path, **kwargs):
@@ -160,6 +185,12 @@ def upload(ctx, directory: Path, **kwargs):
         content_roots.append(kwargs["content_translated_root"])
     if kwargs["content_archived_root"]:
         content_roots.append(kwargs["content_archived_root"])
+
+    if kwargs["prune"] and not kwargs["archived_files"]:
+        log.warning(
+            "Warning! Running with --prune but NOT ----archived-files will "
+            "possibly delete all archived content."
+        )
     ctx.obj.update(kwargs)
     upload_content(directory, content_roots, ctx.obj)
 

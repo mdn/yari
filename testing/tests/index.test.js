@@ -181,7 +181,7 @@ test("content built French foo page", () => {
   expect(doc.title).toBe("<foo>: Une page de test");
   expect(doc.isTranslated).toBe(true);
   expect(doc.other_translations[0].locale).toBe("en-US");
-  expect(doc.other_translations[0].url).toBe("/en-US/docs/Web/Foo");
+  expect(doc.other_translations[0].native).toBe("English (US)");
   expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
 
   const htmlFile = path.join(builtFolder, "index.html");
@@ -969,6 +969,24 @@ test("sign up page", () => {
   const $ = cheerio.load(html);
   expect($("h1").text()).toContain("Sign in to MDN Web Docs");
   expect($("title").text()).toContain("Sign up");
+});
+
+test("settings page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "settings");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("h1").text()).toContain("Settings");
+  expect($("title").text()).toContain("Settings");
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const data = JSON.parse(fs.readFileSync(jsonFile));
+  expect(data.pageTitle).toBe("Settings");
+  expect(data.possibleLocales).toBeTruthy();
+  const possibleLocale = data.possibleLocales.find((p) => p.locale === "en-US");
+  expect(possibleLocale.English).toBe("English (US)");
+  expect(possibleLocale.native).toBe("English (US)");
 });
 
 test("bcd table extraction followed by h3", () => {
