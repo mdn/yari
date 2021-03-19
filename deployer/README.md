@@ -170,14 +170,14 @@ And lastly, it does all the files that don't match any of the prefixes.
 
 ## Analyze PR builds
 
-When you built files you can analyze those built files to produce a Markdown
+When you've built files you can analyze those built files to produce a Markdown
 comment that you can post as a PR issue comment. To do that, run:
 
 ```sh
 poetry run deployer analyze-pr-build ../client/build
 ```
 
-But the actions is by various optional options. You can mix and match these:
+But the actions are controlled by various options. You can mix and match these:
 
 ### `--analyze-flaws`
 
@@ -186,15 +186,15 @@ convert each flaw into a list.
 
 ### `--analyze-dangerous-content`
 
-It will analyze all the content all look for content that could be "dangerous".
+It will analyze all the content and look for content that could be "dangerous".
 For example, it will list all external URLs found in the content.
 
 ### `--prefix`
 
 The `prefix` refers to a prefix in the Deployer upload. I.e. what you set when
 you run `poetry run deployer upload --prefix=THIS`.
-Equipped with this it can list all the URLs to the Dev server. For example,
-if the `--prefix experiment1` it will list:
+The `prefix` is used to specify the proper Dev subdomain (`{prefix}.content.dev.mdn.mozit.cloud`) for the URLs of the built documents. For example,
+if `--prefix experiment1` is specified, it will list:
 
 ```md
 ## Preview deployment
