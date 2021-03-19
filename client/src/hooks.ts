@@ -12,41 +12,7 @@ import { useParams } from "react-router-dom";
 // and get the current locale from the react-router context. Now the navbar menu
 // items, for example, will think the locale is `some-random-word` and make links
 // like `/some-random-word/docs/Web`.
-const VALID_LOCALES = new Set([
-  "ar",
-  "bg",
-  "bn",
-  "ca",
-  "de",
-  "el",
-  "en-US",
-  "es",
-  "fa",
-  "fi",
-  "fr",
-  "he",
-  "hi-IN",
-  "hu",
-  "id",
-  "it",
-  "ja",
-  "kab",
-  "ko",
-  "ms",
-  "my",
-  "nl",
-  "pl",
-  "pt-BR",
-  "pt-PT",
-  "ru",
-  "sv-SE",
-  "th",
-  "tr",
-  "uk",
-  "vi",
-  "zh-CN",
-  "zh-TW",
-]);
+import { VALID_LOCALES } from "./constants";
 
 export function useLocale() {
   const { locale } = useParams();

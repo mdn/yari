@@ -12,8 +12,6 @@ export default function MainMenu({
   toggleMainMenu?: () => void;
 }) {
   const locale = useLocale();
-  console.log("MAIN MENU", { locale });
-
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
   const mainMenuRef = useRef<null | HTMLUListElement>(null);
   const [visibleSubMenu, setVisibleSubMenu] = useState<string | null>(null);
