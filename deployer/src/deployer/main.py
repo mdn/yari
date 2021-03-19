@@ -193,6 +193,7 @@ def upload(ctx, directory: Path, **kwargs):
     if not kwargs["no_redirects"] and not content_roots:
         raise Exception(
             "if you don't use --no-redirects you have to have at least one content root"
+        )
 
     if kwargs["prune"] and not kwargs["archived_files"]:
         log.warning(
@@ -246,7 +247,10 @@ def upload(ctx, directory: Path, **kwargs):
 def analyze_pr_build(ctx, directory: Path, **kwargs):
     log.info(f"Deployer ({__version__})", bold=True)
     ctx.obj.update(kwargs)
-    analyze_pr(directory, ctx.obj)
+    combined_comment = analyze_pr(directory, ctx.obj)
+    log.info("POST".center(80, "_"), "\n")
+    log.info(combined_comment)
+    log.info("\n", "END POST".center(80, "_"))
 
 
 @cli.command()

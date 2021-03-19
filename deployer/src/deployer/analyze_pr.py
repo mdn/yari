@@ -31,12 +31,6 @@ def analyze_pr(build_directory: Path, config):
         print("Warning! Nothing to comment at all!")
         return
 
-    print("POST".center(80, "_"))
-    print()
-    print(combined_comment)
-    print()
-    print("END POST".center(80, "_"))
-
     if not config["repo"]:
         print("Warning! No 'repo' config")
     elif not config["pr_number"]:
@@ -56,6 +50,8 @@ def analyze_pr(build_directory: Path, config):
 
             else:
                 print("Warning! No 'github_token' so no posting of comments")
+
+    return combined_comment
 
 
 def post_about_deployment(build_directory: Path, **config):
@@ -101,7 +97,6 @@ def post_about_dangerous_content(build_directory: Path, **config):
 
         if external_urls:
             external_urls_list = []
-            print(external_urls)
             for url in sorted(external_urls):
                 count = external_urls[url]
 
