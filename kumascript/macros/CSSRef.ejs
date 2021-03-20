@@ -349,32 +349,32 @@ function buildSublist(pages, title) {
     const title = htmlEscape(page.title);
 
     if (locale != 'en-US') {
-        page.translations.forEach(function(translation){
-            if (translation.locale === locale) {
-                url = translation.url;
-                title = htmlEscape(translation.title);
-            }
-        });
+      page.translations.forEach(function(translation){
+        if (translation.locale === locale) {
+          url = translation.url;
+          title = htmlEscape(translation.title);
+        }
+      });
     }
 
     result += '<li>';
 
     if (hasTag(page, 'Experimental')) {
-        result += badges.ExperimentalBadge;
+      result += badges.ExperimentalBadge;
     }
 
     if (hasTag(page, 'Deprecated')) {
-        result += badges.DeprecatedBadge;
+      result += badges.DeprecatedBadge;
     }
 
     if (rtlLocales.indexOf(locale) != -1) {
-        result += '<bdi>';
+      result += '<bdi>';
     }
 
     result += '<a href="' + url + '">' + title + '</a>';
 
     if (rtlLocales.indexOf(locale) != -1) {
-        result += '</bdi>';
+      result += '</bdi>';
     }
 
     result += '</li>';
