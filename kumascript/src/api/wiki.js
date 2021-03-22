@@ -69,7 +69,6 @@ module.exports = {
     // First, we need to inject section ID's since the section
     // extraction often depends on them.
     tool.injectSectionIDs();
-    tool.removeOnEventHandlers();
     tool.removeNoIncludes();
 
     if (section) {

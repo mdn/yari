@@ -28,6 +28,13 @@ const buildOptions = require("./build-options");
 const { gather: gatherGitHistory } = require("./git-history");
 const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
+const LANGUAGES_RAW = require("../content/languages.json");
+
+const LANGUAGES = new Map(
+  Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
+    return [locale.toLowerCase(), data];
+  })
+);
 
 const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/content
 
@@ -229,6 +236,7 @@ async function buildDocument(document, documentOptions = {}) {
   const doc = {
     isArchive: document.isArchive,
     isTranslated: document.isTranslated,
+    isActive: document.isActive,
   };
 
   doc.flaws = {};
@@ -357,6 +365,7 @@ async function buildDocument(document, documentOptions = {}) {
   doc.title = metadata.title;
   doc.mdn_url = document.url;
   doc.locale = metadata.locale;
+  doc.native = LANGUAGES.get(doc.locale.toLowerCase()).native;
 
   // Note that 'extractSidebar' will always return a string.
   // And if it finds a sidebar section, it gets removed from '$' too.
@@ -479,9 +488,8 @@ async function buildDocument(document, documentOptions = {}) {
     if (translationOf) {
       otherTranslations.push({
         locale: "en-US",
-        // slug: translationOf.metadata.slug,
-        url: translationOf.url,
         title: translationOf.metadata.title,
+        native: LANGUAGES.get("en-us").native,
       });
     }
   }

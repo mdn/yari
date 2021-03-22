@@ -181,7 +181,7 @@ test("content built French foo page", () => {
   expect(doc.title).toBe("<foo>: Une page de test");
   expect(doc.isTranslated).toBe(true);
   expect(doc.other_translations[0].locale).toBe("en-US");
-  expect(doc.other_translations[0].url).toBe("/en-US/docs/Web/Foo");
+  expect(doc.other_translations[0].native).toBe("English (US)");
   expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
 
   const htmlFile = path.join(builtFolder, "index.html");
@@ -804,7 +804,9 @@ test("image flaws kitchen sink", () => {
   expect(flaw.column).toBe(13);
 
   flaw = map.get("idontexist.png");
-  expect(flaw.explanation).toBe("File not present on disk");
+  expect(flaw.explanation).toBe(
+    "File not present on disk, an empty file, or not an image"
+  );
   expect(flaw.suggestion).toBeNull();
   expect(flaw.line).toBe(34);
   expect(flaw.column).toBe(13);
@@ -844,7 +846,9 @@ test("image flaws kitchen sink", () => {
   expect(flaw.column).toBe(13);
 
   flaw = map.get("../Foo/nonexistent.png");
-  expect(flaw.explanation).toBe("File not present on disk");
+  expect(flaw.explanation).toBe(
+    "File not present on disk, an empty file, or not an image"
+  );
   expect(flaw.suggestion).toBeNull();
   expect(flaw.line).toBe(64);
   expect(flaw.column).toBe(13);
@@ -862,6 +866,30 @@ test("image flaws kitchen sink", () => {
       expect(src.startsWith("/en-US/docs/Web/")).toBeTruthy();
     }
   });
+});
+
+test("image flaws with bad images", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "bad_src"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  // You have to be intimately familiar with the fixture to understand
+  // why these flaws come out as they do.
+  expect(flaws.images.length).toBe(4);
+  expect(
+    flaws.images.filter(
+      (flaw) =>
+        flaw.explanation ===
+        "File not present on disk, an empty file, or not an image"
+    ).length
+  ).toBe(4);
 });
 
 test("image flaws with repeated external images", () => {
@@ -923,6 +951,44 @@ test("404 page", () => {
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
+test("sign in page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "signin");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("h1").text()).toContain("Sign in");
+  expect($("title").text()).toContain("Sign in");
+});
+
+test("sign up page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "signup");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("h1").text()).toContain("Sign up");
+  expect($("title").text()).toContain("Sign up");
+});
+
+test("settings page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "settings");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("h1").text()).toContain("Settings");
+  expect($("title").text()).toContain("Settings");
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const data = JSON.parse(fs.readFileSync(jsonFile));
+  expect(data.pageTitle).toBe("Settings");
+  expect(data.possibleLocales).toBeTruthy();
+  const possibleLocale = data.possibleLocales.find((p) => p.locale === "en-US");
+  expect(possibleLocale.English).toBe("English (US)");
+  expect(possibleLocale.native).toBe("English (US)");
+});
+
 test("bcd table extraction followed by h3", () => {
   const builtFolder = path.join(
     buildRoot,
@@ -970,12 +1036,17 @@ test("img tags with an empty 'src' should be a flaw", () => {
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(doc.flaws.images.length).toBe(1);
+  expect(doc.flaws.images.length).toBe(2);
   expect(doc.flaws.images[0].explanation).toBe("Empty img 'src' attribute");
   expect(doc.flaws.images[0].fixable).toBeFalsy();
   expect(doc.flaws.images[0].externalImage).toBeFalsy();
   expect(doc.flaws.images[0].line).toBe(8);
   expect(doc.flaws.images[0].column).toBe(13);
+  expect(doc.flaws.images[1].explanation).toBe("Empty img 'src' attribute");
+  expect(doc.flaws.images[1].fixable).toBeFalsy();
+  expect(doc.flaws.images[1].externalImage).toBeFalsy();
+  expect(doc.flaws.images[1].line).toBe(17);
+  expect(doc.flaws.images[1].column).toBe(11);
 });
 
 test("img with the image_widths flaw", () => {
@@ -1241,4 +1312,49 @@ test("basic markdown rendering", () => {
   expect($("article ul li").length).toBe(3);
   expect($('article a[href^="/"]').length).toBe(1);
   expect($('article a[href^="#"]').length).toBe(2);
+});
+
+test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "unsafe_html"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.unsafe_html.length).toBe(6);
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("code.unsafe-html").length).toBe(6);
+});
+
+test("translated content broken links can fall back to en-us", () => {
+  const builtFolder = path.join(buildRoot, "fr", "docs", "web", "foo");
+  const jsonFile = path.join(builtFolder, "index.json");
+
+  // We should be able to read it and expect certain values
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
+  expect(map.get("/fr/docs/Web/CSS/dumber").explanation).toBe(
+    "Can use the English (en-US) link as a fallback"
+  );
+  expect(map.get("/fr/docs/Web/CSS/number").explanation).toBe(
+    "Can use the English (en-US) link as a fallback"
+  );
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($('article a[href="/fr/docs/Web/CSS/dumber"]').length).toBe(0);
+  expect($('article a[href="/fr/docs/Web/CSS/number"]').length).toBe(0);
+  expect($('article a[href="/en-US/docs/Web/CSS/number"]').length).toBe(2);
+  expect($("article a.only-in-en-us").length).toBe(2);
+  expect($("article a.only-in-en-us").attr("title")).toBe(
+    "Currently only available in English (US)"
+  );
 });

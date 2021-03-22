@@ -258,7 +258,7 @@ function ExplainBadRequestError({ errors }: { errors: FormErrors }) {
 function ExplainServerOperationalError({ statusCode }: { statusCode: number }) {
   return (
     <div className="notecard warning">
-      <p>The search failed because the server failed to response.</p>
+      <p>The search failed because the server failed to respond.</p>
       <p>
         If you're curious, it was a <b>{statusCode}</b> error.
       </p>

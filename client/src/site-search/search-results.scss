@@ -50,8 +50,10 @@
     padding: 0;
 
     a {
-      color: $neutral-100;
-      text-decoration: none;
+      &:link,
+      &:visited {
+        color: $neutral-100;
+      }
     }
   }
 

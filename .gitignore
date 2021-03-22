@@ -72,5 +72,6 @@ mdn-yari-*.tgz
 function.zip
 
 testing/content/files/en-us/_githistory.json
+testing/translated-content/files/**/_githistory.json
 # eslintcache
 client/.eslintcache

@@ -43,3 +43,23 @@ This paragraph as a [link](/en-US/docs/Web).
   <dt>Key</dt>
   <dd>Value</dd>
 </dl>
+
+```Javascript
+function foo() {
+  return undefined + 1;
+}
+```
+
+This next code block is generic
+
+```
+(+ (1 2))
+```
+
+And the last one is CSS:
+
+```css other stuff
+div#foo {
+  color: pink;
+}
+```
