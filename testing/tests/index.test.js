@@ -1306,12 +1306,20 @@ test("basic markdown rendering", () => {
   const $ = cheerio.load(html);
   expect($("article h2[id]").length).toBe(1);
   expect($("article h3[id]").length).toBe(1);
-  expect($("article code").length).toBe(2);
+  expect($("article p code").length).toBe(2);
   expect($("article strong").length).toBe(1);
   expect($("article em").length).toBe(1);
   expect($("article ul li").length).toBe(3);
   expect($('article a[href^="/"]').length).toBe(1);
   expect($('article a[href^="#"]').length).toBe(2);
+  expect($("article pre").length).toBe(3);
+  expect($("article pre.notranslate").length).toBe(3);
+  expect($("article pre.css").hasClass("brush:")).toBe(true);
+  expect($("article pre.javascript").hasClass("brush:")).toBe(true);
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(Object.keys(doc.flaws).length).toBe(0);
 });
 
 test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {

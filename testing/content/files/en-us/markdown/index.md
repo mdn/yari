@@ -10,7 +10,7 @@ tags:
 
 ## Heading 2
 
-Basic formatting such as **bold** and _emphasis_ and ~~strikethrough~~.
+Basic formatting such as **bold** and _emphasis_ and ~strikethrough~.
 
 ### Heading 3
 
