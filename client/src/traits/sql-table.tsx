@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
 import "prismjs/components/prism-sql";
@@ -90,7 +90,7 @@ export function SQLTable({ documents }: { documents: Document[] }) {
         setSearchParams({});
       }
     }
-  }, [queryDraft, searchParams]);
+  }, [queryDraft, searchParams, setSearchParams]);
 
   useEffect(() => {
     if (query) {
@@ -159,32 +159,6 @@ export function SQLTable({ documents }: { documents: Document[] }) {
     }
     setStatementWarnings(newWarnings);
   }, [parsedStatement, documents]);
-
-  const location = useLocation();
-
-  const [sharedQueryURL, setSharedQueryURL] = useState("");
-  function shareQuery() {
-    const sp = new URLSearchParams({ query: queryDraft });
-    const url = `${location.pathname}?${sp.toString()}`;
-    const absoluteURL = new URL(url, window.location.href).toString();
-    setSharedQueryURL(absoluteURL);
-  }
-
-  const [copiedToClipboard, setCopiedToClipboard] = useState(false);
-  useEffect(() => {
-    let timer: number | null = null;
-    if (sharedQueryURL) {
-      setCopiedToClipboard(true);
-      setTimeout(() => {
-        setCopiedToClipboard(false);
-      }, 3 * 1000);
-    }
-    return () => {
-      if (timer) {
-        clearTimeout(timer);
-      }
-    };
-  }, [sharedQueryURL]);
 
   return (
     <div className="sql-table">
@@ -285,35 +259,9 @@ export function SQLTable({ documents }: { documents: Document[] }) {
               ? "Close error"
               : `SQL error${sqlParserError ? "!" : ""}`}
           </button>
-
-          <button
-            type="button"
-            className="button button-inline-small"
-            disabled={Boolean(sqlParserError || !queryDraft)}
-            onClick={() => {
-              shareQuery();
-            }}
-          >
-            Share query
-          </button>
         </div>
       </form>
-      {sharedQueryURL && (
-        <div className="share-url">
-          <a href={sharedQueryURL}>{sharedQueryURL}</a>{" "}
-          <button
-            type="button"
-            className="button button-small"
-            onClick={() => {
-              setSharedQueryURL("");
-            }}
-          >
-            Close
-          </button>
-          <br />
-          <p>{copiedToClipboard ? "Copied to your clipboard!" : ""}</p>
-        </div>
-      )}
+
       {showHelp && (
         <ShowHelp
           document={documents[0]}
