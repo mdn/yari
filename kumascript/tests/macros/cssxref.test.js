@@ -37,9 +37,9 @@ const MOCK_PAGES = {
     },
   },
   attr: {
-    url: [CSS_BASE_URL, "attr"].join("/"),
+    url: [CSS_BASE_URL, "attr()"].join("/"),
     data: {
-      url: [CSS_BASE_URL, "attr"].join("/"),
+      url: [CSS_BASE_URL, "attr()"].join("/"),
       summary:
         'The <strong><code>attr()</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> function is used to retrieve the value of an attribute of the selected element and use it in the style sheet.',
       tags: ["CSS", "Reference", "Web", "CSS Function", "Layout"],
@@ -107,7 +107,7 @@ const TEST_CASE = [
   },
   {
     title: "One argument (CSS function)",
-    input: ["attr"],
+    input: ["attr()"],
     output: makeExpect(
       MOCK_PAGES.attr.url,
       MOCK_PAGES.attr.data.summary,
