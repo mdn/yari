@@ -188,11 +188,15 @@ describe("always check for fundamental redirects first", () => {
   });
 });
 
-describe("avoid double-slash redirects", () => {
-  it("should 404 on any pathname that starts with //", async () => {
+describe("redirect double-slash prefix URIs", () => {
+  it("should 302 redirect anything that starts with //", async () => {
     const r = await get(`//en-US/search/`);
-    expect(r.statusCode).toBe(404);
-    expect(r.headers["location"]).toBeFalsy();
-    expect(r.body).toContain("URL pathname can't start with //");
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe("/en-US/search/");
+  });
+  it("should 302 redirect anything that starts with // on anything", async () => {
+    const r = await get(`//blablabla`);
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe("/blablabla");
   });
 });
