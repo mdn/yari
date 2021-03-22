@@ -49,3 +49,8 @@ SPEEDCURVE_DEPLOY_SITE_ID = config("SPEEDCURVE_DEPLOY_SITE_ID", default=None)
 # instance of Elasticsearch 7 and start it. Then set this environment variable
 # value to `http://localhost:9200`
 ELASTICSEARCH_URL = config("DEPLOYER_ELASTICSEARCH_URL", default=None)
+
+
+DEFAULT_REPO = config("GITHUB_REPOSITORY", default=None)
+
+DEFAULT_GITHUB_TOKEN = config("GITHUB_TOKEN", default=None)

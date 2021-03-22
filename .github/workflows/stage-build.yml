@@ -51,6 +51,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    # Only run the scheduled workflows on the main repo.
+    if: github.repository == 'mdn/yari'
+
     steps:
       - uses: actions/checkout@v2
 
@@ -237,7 +240,7 @@ jobs:
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
-          poetry run deployer upload  --prune ../client/build
+          poetry run deployer upload  --prune --archived-files ../content/archived.txt ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
 
           # TODO: Depending on how long the upload takes, consider switching to

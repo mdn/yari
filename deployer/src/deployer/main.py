@@ -11,6 +11,8 @@ from .constants import (
     DEFAULT_BUCKET_NAME,
     DEFAULT_BUCKET_PREFIX,
     DEFAULT_NO_PROGRESSBAR,
+    DEFAULT_REPO,
+    DEFAULT_GITHUB_TOKEN,
     SPEEDCURVE_DEPLOY_API_KEY,
     SPEEDCURVE_DEPLOY_SITE_ID,
     ELASTICSEARCH_URL,
@@ -20,6 +22,7 @@ from .upload import upload_content
 from .utils import log
 from .whatsdeployed import dump as dump_whatsdeployed
 from .speedcurve import deploy_ping as speedcurve_deploy_ping
+from .analyze_pr import analyze_pr
 from . import search
 
 
@@ -37,6 +40,22 @@ def validate_directory(ctx, param, value):
 def validate_optional_directory(ctx, param, value):
     if value:
         return validate_directory(ctx, param, value)
+
+
+def validate_file(ctz, param, value):
+    if not value:
+        raise click.BadParameter(f"{value!r}")
+    path = Path(value)
+    if not path.exists():
+        raise click.BadParameter(f"{value} does not exist")
+    elif not path.is_file():
+        raise click.BadParameter(f"{value} is not a file")
+    return path
+
+
+def validate_optional_file(ctx, param, value):
+    if value:
+        return validate_file(ctx, param, value)
 
 
 @click.group()
@@ -113,7 +132,7 @@ def whatsdeployed(ctx, directory: Path, output: str):
     help="The path to the root folder of the main content (defaults to CONTENT_ROOT)",
     default=CONTENT_ROOT,
     show_default=True,
-    callback=validate_directory,
+    callback=validate_optional_directory,
 )
 @click.option(
     "--content-translated-root",
@@ -151,17 +170,87 @@ def whatsdeployed(ctx, directory: Path, output: str):
     show_default=True,
     is_flag=True,
 )
+@click.option(
+    "--archived-files",
+    help=(
+        "The path to the file that lists which files are archived. "
+        "(Only relevant in conjunction with --prune)"
+    ),
+    default=None,
+    callback=validate_optional_file,
+)
 @click.argument("directory", type=click.Path(), callback=validate_directory)
 @click.pass_context
 def upload(ctx, directory: Path, **kwargs):
     log.info(f"Deployer ({__version__})", bold=True)
-    content_roots = [kwargs["content_root"]]
+    content_roots = []
+    if kwargs["content_root"]:
+        content_roots.append(kwargs["content_root"])
     if kwargs["content_translated_root"]:
         content_roots.append(kwargs["content_translated_root"])
     if kwargs["content_archived_root"]:
         content_roots.append(kwargs["content_archived_root"])
+    if not kwargs["no_redirects"] and not content_roots:
+        raise Exception(
+            "if you don't use --no-redirects you have to have at least one content root"
+        )
+
+    if kwargs["prune"] and not kwargs["archived_files"]:
+        log.warning(
+            "Warning! Running with --prune but NOT ----archived-files will "
+            "possibly delete all archived content."
+        )
     ctx.obj.update(kwargs)
     upload_content(directory, content_roots, ctx.obj)
+
+
+@cli.command()
+@click.option(
+    "--prefix",
+    help="What prefix was it uploaded as",
+    default=None,
+    show_default=True,
+)
+@click.option(
+    "--repo",
+    help="Name of the repo (e.g. mdn/content)",
+    default=DEFAULT_REPO,
+    show_default=True,
+)
+@click.option(
+    "--pr-number",
+    help="Number for the PR",
+    default=None,
+)
+@click.option(
+    "--github-token",
+    help="Token used to post PR comments",
+    default=DEFAULT_GITHUB_TOKEN,
+    show_default=False,
+)
+@click.option(
+    "--analyze-flaws",
+    help="Analyze the .doc.flaws keys in the index.json files",
+    default=False,
+    show_default=True,
+    is_flag=True,
+)
+@click.option(
+    "--analyze-dangerous-content",
+    help='Look through the built content and list "dangerous things"',
+    default=False,
+    show_default=True,
+    is_flag=True,
+)
+@click.argument("directory", type=click.Path(), callback=validate_directory)
+@click.pass_context
+def analyze_pr_build(ctx, directory: Path, **kwargs):
+    log.info(f"Deployer ({__version__})", bold=True)
+    ctx.obj.update(kwargs)
+    combined_comment = analyze_pr(directory, ctx.obj)
+    log.info("POST".center(80, "_"), "\n")
+    log.info(combined_comment)
+    log.info("\n", "END POST".center(80, "_"))
 
 
 @cli.command()

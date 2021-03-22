@@ -1,7 +1,11 @@
 const fs = require("fs");
 const path = require("path");
 
-const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../content");
+const {
+  CONTENT_ROOT,
+  CONTENT_TRANSLATED_ROOT,
+  VALID_LOCALES,
+} = require("../content");
 const {
   BUILD_OUT_ROOT,
   HOMEPAGE_FEED_URL,
@@ -10,6 +14,14 @@ const {
 const { getFeedEntries } = require("./feedparser");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
+
+function getLanguages() {
+  return new Map(
+    Object.entries(
+      JSON.parse(fs.readFileSync(path.join(__dirname, "languages.json")))
+    )
+  );
+}
 
 async function buildSPAs(options) {
   let buildCount = 0;
@@ -39,10 +51,21 @@ async function buildSPAs(options) {
         { prefix: "search", pageTitle: "Search" },
         { prefix: "signin", pageTitle: "Sign in" },
         { prefix: "signup", pageTitle: "Sign up" },
+        { prefix: "settings", pageTitle: "Settings" },
       ];
       for (const { prefix, pageTitle } of SPAs) {
         const url = `/${locale}/${prefix}`;
-        const html = renderHTML(url, { pageTitle });
+        const context = { pageTitle };
+        if (prefix === "settings") {
+          // This SPA needs a list of all valid locales
+          const languages = getLanguages();
+          context.possibleLocales = [...VALID_LOCALES.values()].map(
+            (locale) => {
+              return Object.assign({ locale }, languages.get(locale));
+            }
+          );
+        }
+        const html = renderHTML(url, context);
         const outPath = path.join(BUILD_OUT_ROOT, locale, prefix);
         fs.mkdirSync(outPath, { recursive: true });
         const filePath = path.join(outPath, "index.html");
@@ -50,6 +73,14 @@ async function buildSPAs(options) {
         buildCount++;
         if (options.verbose) {
           console.log("Wrote", filePath);
+        }
+        if (prefix === "settings") {
+          const filePathContext = path.join(outPath, "index.json");
+          fs.writeFileSync(filePathContext, JSON.stringify(context));
+          buildCount++;
+          if (options.verbose) {
+            console.log("Wrote", filePathContext);
+          }
         }
       }
     }

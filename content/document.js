@@ -361,31 +361,38 @@ function findByURL(url, ...args) {
 function findAll({
   files = new Set(),
   folderSearch = null,
-  quiet = false,
+  locales = new Map(),
 } = {}) {
   if (!(files instanceof Set)) throw new TypeError("'files' not a Set");
   if (folderSearch && typeof folderSearch !== "string")
     throw new TypeError("'folderSearch' not a string");
 
-  // TODO: doesn't support archive content yet
-  // console.warn("Currently hardcoded to only build 'en-us'");
   const filePaths = [];
   const roots = [];
   if (CONTENT_ARCHIVED_ROOT) {
-    // roots.push({ path: CONTENT_ARCHIVED_ROOT, isArchive: true });
     roots.push(CONTENT_ARCHIVED_ROOT);
   }
   if (CONTENT_TRANSLATED_ROOT) {
     roots.push(CONTENT_TRANSLATED_ROOT);
   }
   roots.push(CONTENT_ROOT);
-  if (!quiet) {
-    console.log("Building roots:", roots);
-  }
   for (const root of roots) {
+    const searchPattern = [""];
+    if (locales.size) {
+      const localePrefixes = [];
+      for (const [locale, include] of locales) {
+        if (!include) {
+          throw new Error("ability to exclude locales is not supported yet");
+        }
+        localePrefixes.push(locale);
+      }
+      searchPattern.push(`+(${localePrefixes.join("|")})`);
+    }
+    searchPattern.push("**");
+    searchPattern.push(HTML_FILENAME);
     filePaths.push(
       ...glob
-        .sync(path.join(root, "**", HTML_FILENAME))
+        .sync(searchPattern.join(path.sep), { root })
         .filter((filePath) => {
           // The 'files' set is either a list of absolute full paths or a
           // list of endings.
