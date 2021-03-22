@@ -10,7 +10,9 @@ tags:
 
 ## Heading 2
 
-Basic formatting such as **bold** and _emphasis_ and ~~strikethrough~~.
+Basic formatting such as **bold** and _emphasis_ and ~strikethrough~.
+
+Here's a section that simply mentions links like https://www.peterbe.com for example.
 
 ### Heading 3
 
@@ -21,6 +23,26 @@ A bullet point list:
 - Three
 
 This paragraph as a [link](/en-US/docs/Web).
+
+### To-do
+
+- [ ] One
+- [x] Two
+- [ ] Three
+
+### Tables
+
+| a | b  |  c |  d  |
+| - | :- | -: | :-: |
+
+## Still HTML
+
+<p>This is a paragraph with a link to <a href="/en-US/docs/Web">another page</a>.</p>
+
+<dl>
+  <dt>Key</dt>
+  <dd>Value</dd>
+</dl>
 
 ```Javascript
 function foo() {
