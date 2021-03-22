@@ -60,7 +60,7 @@ const thisPage = (!$1 || !$2) ? wiki.getPage(urlWithoutAnchor) : null;
 
 if (!$1) {
     // Append parameter brackets to CSS functions
-    if (page.hasTag(thisPage, "CSS Function")) {
+    if (page.hasTag(thisPage, "CSS Function") && !str.endsWith("()")) {
         str += "()";
     }
     // Enclose CSS data types in arrow brackets
