@@ -165,7 +165,7 @@ app.get("/*/contributors.txt", async (req, res) => {
 });
 
 app.get("/*", async (req, res) => {
-  if (req.url.startsWith("_")) {
+  if (req.url.startsWith("/_")) {
     // URLs starting with _ is exclusively for the meta-work and if there
     // isn't already a handler, it's something wrong.
     return res.status(404).send("Page not found");
@@ -185,11 +185,12 @@ app.get("/*", async (req, res) => {
   }
 
   if (!req.url.includes("/docs/")) {
-    // This should really only be expected for "single page apps".
-    // All *documents* should be handled by the
-    // `if (req.url.includes("/docs/"))` test above.
-    res.sendFile(path.join(STATIC_ROOT, "/index.html"));
-    return;
+    // If it's a known SPA, like `/en-US/search` then that should have been
+    // matched to its file and not end up here in the catchall handler.
+    // Simulate what we do in the Lambda@Edge.
+    return res
+      .status(404)
+      .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
   }
 
   // TODO: Would be nice to have a list of all supported file extensions
