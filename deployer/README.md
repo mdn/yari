@@ -168,6 +168,71 @@ This will first index all the files whose `index.json` file path (relative
 to the root) matches `en-us/docs/web`. Then it does all that match `en-us/docs`.
 And lastly, it does all the files that don't match any of the prefixes.
 
+## Analyze PR builds
+
+When you've built files you can analyze those built files to produce a Markdown
+comment that you can post as a PR issue comment. To do that, run:
+
+```sh
+poetry run deployer analyze-pr-build ../client/build
+```
+
+But the actions are controlled by various options. You can mix and match these:
+
+### `--analyze-flaws`
+
+This will open each built `index.json` and look through the `.flaws` and try to
+convert each flaw into a list.
+
+### `--analyze-dangerous-content`
+
+It will analyze all the content and look for content that could be "dangerous".
+For example, it will list all external URLs found in the content.
+
+### `--prefix`
+
+The `prefix` refers to a prefix in the Deployer upload. I.e. what you set when
+you run `poetry run deployer upload --prefix=THIS`.
+The `prefix` is used to specify the proper Dev subdomain (`{prefix}.content.dev.mdn.mozit.cloud`) for the URLs of the built documents. For example,
+if `--prefix experiment1` is specified, it will list:
+
+```md
+## Preview deployment
+
+- <https://experiment1.content.dev.mdn.mozit.cloud/en-US/docs/MDN/Kitchensink>
+```
+
+...assuming the only page that was built was `build/en-us/docs/mdn/kitchensink`.
+Note that this assumes the PR build has been deployed to the Dev server.
+
+### `--repo`
+
+This is useful for debugging when the PR you made wasn't on `mdn/content`. For example:
+
+```sh
+poetry run deployer analyze-pr-build ../client/build --repo peterbe/content ...
+```
+
+### `--github-token`
+
+By default it will pick up the `$GITHUB_TOKEN` environment variable but with this
+option you can override it.
+
+### `--pr-number`
+
+This is needed to be able to find the PR (on <https://github.com/mdn/content/pulls>)
+to post the comment to.
+
+### A complete example
+
+This example demonstrates all options.
+
+```sh
+poetry run deployer --dry-run analyze-pr-build ../client/build \
+  --analyze-flaws --analyze-dangerous-content --github-token="xxx" \
+  --repo=peterbe/content --pr-number=3
+```
+
 ## Environment variables
 
 The following environment variables are supported.
