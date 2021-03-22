@@ -8,7 +8,7 @@
  * with any of the files there.
  */
 
-const fs = require("fs");
+const fs = require("graceful-fs");
 const fse = require("fs-extra");
 const path = require("path");
 const { execSync } = require("child_process");

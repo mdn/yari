@@ -6,7 +6,7 @@
 // tested its main functions. The features of that macro are now
 // part of ../../src/environment.js, but we're still testing them here.
 
-const fs = require("fs");
+const fs = require("graceful-fs");
 const path = require("path");
 const { Document } = require("../../../content");
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");

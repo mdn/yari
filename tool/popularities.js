@@ -9,7 +9,7 @@
  * dynamically on every single production build.
  *
  */
-const fs = require("fs");
+const fs = require("graceful-fs");
 
 const csv = require("@fast-csv/parse");
 

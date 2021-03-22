@@ -13,7 +13,7 @@ const {
 /**
  * Load all the fixtures.
  */
-const fs = require("fs");
+const fs = require("graceful-fs");
 const path = require("path");
 const pagesFixturePath = path.resolve(
   __dirname,

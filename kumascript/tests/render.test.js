@@ -2,7 +2,7 @@
  * @prettier
  */
 
-const fs = require("fs");
+const fs = require("graceful-fs");
 const Templates = require("../src/templates.js");
 const { render } = require("../src/render.js");
 const {

@@ -4,7 +4,7 @@
  * Play with different options for creating your index and play with
  * different ways to make the query.
  */
-const fs = require("fs");
+const fs = require("graceful-fs");
 const path = require("path");
 const FlexSearch = require("flexsearch");
 

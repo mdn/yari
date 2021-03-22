@@ -1,7 +1,7 @@
 /**
  * @prettier
  */
-const fs = require("fs");
+const fs = require("graceful-fs");
 const path = require("path");
 const jsdom = require("jsdom");
 const { Document } = require("../../../content");

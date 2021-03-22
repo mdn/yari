@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require("graceful-fs");
 const crypto = require("crypto");
 const path = require("path");
 

@@ -25,7 +25,7 @@
  *
  * @prettier
  */
-const fs = require("fs");
+const fs = require("graceful-fs");
 const path = require("path");
 const ejs = require("ejs");
 

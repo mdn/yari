@@ -5,7 +5,7 @@
  * You can read more about it in the docs/proxying.md document.
  */
 
-const fs = require("fs");
+const fs = require("graceful-fs");
 const path = require("path");
 
 const express = require("express");
