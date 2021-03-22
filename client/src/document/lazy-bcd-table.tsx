@@ -42,15 +42,12 @@ export function LazyBrowserCompatibilityTable({
         <div className="notecard warning">
           <p>
             No compatibility data found for <code>{query}</code>.<br />
-            Check the spelling or contribute data to{" "}
+            <a href="#on-github">Check for problems with this page</a> or
+            contribute missing data to{" "}
             <a href="https://github.com/mdn/browser-compat-data">
               mdn/browser-compat-data
             </a>
-            .<br />
-            Or, perhaps it's a <a href="#on-github">
-              problem with the content
-            </a>{" "}
-            referencing the query.
+            .
           </p>
         </div>
       )}
