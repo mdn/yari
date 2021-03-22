@@ -88,7 +88,7 @@ exports.handler = async (event) => {
   // opening `https://evil.com/` in the browser, because the browser will
   // treat `//evil.com/ == https://evil.com/`.
   // Prevent any pathnames that start with a double //.
-  // This essentiall means that a request for `GET /////anyhing` becomes
+  // This essentially means that a request for `GET /////anything` becomes
   // 302 with `Location: /anything`.
   if (request.uri.startsWith("//")) {
     return redirect(`/${request.uri.replace(/^\/+/g, "")}`);
