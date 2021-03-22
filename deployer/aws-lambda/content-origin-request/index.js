@@ -80,7 +80,7 @@ exports.handler = async (event) => {
 
   // If the URL was something like `https://domain/en-US/search/`, our code
   // would make a that a redirect to `/en-US/search` (stripping the trailing slash).
-  // But if it was `https://domain//en-US/search/` it'd make a redirect
+  // But if it was `https://domain//en-US/search/` it *would* make a redirect
   // to `//en-US/search`.
   // However, if pathname starts with `//` the Location header might look
   // relative but it's actually an absolute URL.
@@ -88,15 +88,10 @@ exports.handler = async (event) => {
   // opening `https://evil.com/` in the browser, because the browser will
   // treat `//evil.com/ == https://evil.com/`.
   // Prevent any pathnames that start with a double //.
+  // This essentiall means that a request for `GET /////anyhing` becomes
+  // 302 with `Location: /anything`.
   if (request.uri.startsWith("//")) {
-    return {
-      status: 404,
-      statusDescription: "Not found",
-      headers: {
-        "content-type": [{ key: "Content-Type", value: "text/plain" }],
-      },
-      body: "URL pathname can't start with //\n",
-    };
+    return redirect(`/${request.uri.replace(/^\/+/g, "")}`);
   }
 
   const { url, status } = resolveFundamental(request.uri);
