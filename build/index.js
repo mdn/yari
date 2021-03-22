@@ -626,7 +626,11 @@ function countImages($) {
   };
   $("img[src]").each((i, img) => {
     const src = $(img).attr("src");
-    if (src.includes("://")) {
+    if (
+      src.includes("://") ||
+      src.startsWith("/@api/") ||
+      src.startsWith("/files")
+    ) {
       counts.external++;
     } else {
       counts.internal++;

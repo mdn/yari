@@ -111,9 +111,12 @@ function Loading({ startLoadingTime }: { startLoadingTime: Date }) {
     }
 
     return () => {
-      const aliveTime = new Date().getTime() - startLoadingTime.getTime();
       // Store this for the next time for better estimates
-      localStorage.setItem(LOCALSTORAGE_KEY, `${aliveTime}`);
+      const aliveTime = new Date().getTime() - startLoadingTime.getTime();
+      // If the time it took was tiny it was because it was cached.
+      if (aliveTime > 1000) {
+        localStorage.setItem(LOCALSTORAGE_KEY, `${aliveTime}`);
+      }
     };
   }, [startLoadingTime]);
 
