@@ -6,6 +6,8 @@ import { DISABLE_AUTH } from "../constants";
 import { useUserData } from "../user-context";
 import { useLocale } from "../hooks";
 
+import "./index.scss";
+
 interface UserSettings {
   csrfmiddlewaretoken: string;
   locale: string;
@@ -75,11 +77,13 @@ export default function SettingsApp({ ...appProps }) {
 
   if (error) {
     return (
-      <div className="notecard error">
+      <div className="notecard negative">
         <h3>Server error</h3>
         <p>A server error occurred trying to get your user settings.</p>
         <p>
-          <code>{error.toString()}</code>
+          <pre>
+            <code>{error.toString()}</code>
+          </pre>
         </p>
         <a href={window.location.pathname}>Reload this page and try again.</a>
       </div>
@@ -92,11 +96,13 @@ export default function SettingsApp({ ...appProps }) {
 
   if (settingsError) {
     return (
-      <div className="notecard error">
+      <div className="notecard negative">
         <h3>Server error</h3>
         <p>Unable to get the current user settings from the server.</p>
         <p>
-          <code>{settingsError.toString()}</code>
+          <pre>
+            <code>{settingsError.toString()}</code>
+          </pre>
         </p>
         <a href={window.location.pathname}>Reload this page and try again.</a>
       </div>
@@ -104,7 +110,7 @@ export default function SettingsApp({ ...appProps }) {
   }
 
   return (
-    <div>
+    <div className="account-settings-panels-container">
       {settingsData &&
         settingsData.possibleLocales &&
         settingsData.possibleLocales.length && (
@@ -143,10 +149,10 @@ function NotSignedIn() {
   sp.set("next", window.location.pathname);
 
   return (
-    <div>
+    <>
       <h2>You are not signed in</h2>
-      <Link to={`/${locale}/signin?${sp.toString()}`}>Sign in first</Link>
-    </div>
+      <Link to={`/${locale}/signin?${sp.toString()}`}>Sign in</Link>
+    </>
   );
 }
 
@@ -215,6 +221,7 @@ function Settings({
 
   return (
     <form
+      className="settings-form"
       onSubmit={async (event) => {
         event.preventDefault();
         await sendSettings();
@@ -226,32 +233,26 @@ function Settings({
 
       {sent && !sendError && (
         <div className="notecard success">
-          <h4>Settings update sent</h4>
-          <p>Yay! Settings saved.</p>
-          <button
-            type="button"
-            className="button"
-            onClick={() => {
-              setSent(false);
-            }}
-          >
-            Close
-          </button>
+          <p>Yay! Updated settings successfully saved.</p>
         </div>
       )}
       {sendError && (
-        <div className="notecard error">
+        <div className="notecard negative">
           <h4>Server submission error</h4>
-          <p>Something unexpected happened on the server submission.</p>
+          <p>Something unexpected happened during server submission.</p>
           <p>
-            <code>{sendError.toString()}</code>
+            <pre>
+              <code>{sendError.toString()}</code>
+            </pre>
           </p>
-          <a href={window.location.pathname}>Reload this page and try again.</a>
+          <a href={window.location.pathname}>Reload page to try again.</a>
         </div>
       )}
 
-      <div>
-        <label htmlFor="id_locale">Language</label>
+      <div className="field-group">
+        <label htmlFor="id_locale" className="slab-highlight">
+          Change language
+        </label>
         <select
           id="id_locale"
           name="locale"
@@ -270,7 +271,7 @@ function Settings({
         </select>
       </div>
       <button type="submit" className="button">
-        Save changes
+        Update language
       </button>
     </form>
   );
@@ -308,43 +309,47 @@ function CloseAccount({ userSettings }: { userSettings: UserSettings }) {
   );
 
   return (
-    <div>
+    <div className="close-account">
       <h3>Close account</h3>
       <p>Delete your account and all account data.</p>
 
       {deleteError && (
-        <div className="notecard error">
+        <div className="notecard negative">
           <h3>Server error</h3>
           <p>A server error occurred trying to close your account.</p>
           <p>
-            <code>{deleteError.toString()}</code>
+            <pre>
+              <code>{deleteError.toString()}</code>
+            </pre>
           </p>
-          <a href={window.location.pathname}>Reload this page and try again.</a>
+          <a href={window.location.pathname}>Reload page to try again.</a>
         </div>
       )}
 
       {confirm ? (
-        <p>
-          Are you certain you want to do this?
-          <button
-            type="button"
-            className="button close-account cancel"
-            onClick={() => {
-              setConfirm(false);
-            }}
-          >
-            Cancel
-          </button>{" "}
-          <button
-            type="button"
-            className="button close-account certain"
-            onClick={() => {
-              setCertain(true);
-            }}
-          >
-            Yes
-          </button>
-        </p>
+        <div className="confirm-account-closure">
+          <h4>Please confirm account deletion.</h4>
+          <div className="button-container">
+            <button
+              type="button"
+              className="button outline"
+              onClick={() => {
+                setConfirm(false);
+              }}
+            >
+              Cancel
+            </button>{" "}
+            <button
+              type="button"
+              className="button danger"
+              onClick={() => {
+                setCertain(true);
+              }}
+            >
+              Confirm
+            </button>
+          </div>
+        </div>
       ) : (
         <button
           type="button"
