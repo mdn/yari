@@ -1,11 +1,52 @@
+@import "../ui/atoms/avatar/avatar";
+
 .sign-up {
-  form {
-    button[disabled] {
-      opacity: 0.5;
+  text-align: center;
+
+  .provider-name {
+    font-weight: bold;
+  }
+
+  a:link,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:focus {
+    text-decoration: none;
+  }
+
+  .complete-sign-in {
+    align-items: center;
+    display: flex;
+    flex-flow: column;
+    margin-bottom: $base-spacing;
+    max-width: 250px;
+
+    .button {
+      margin-top: $base-spacing / 2;
     }
   }
-  //   .user-details img.picture {
-  //     width: 100px;
-  //     border-radius: 50px;
-  //   }
+
+  .back {
+    &::before {
+      background: transparent url("~@mdn/dinocons/arrows/arrow.svg") 0 0/14px
+        no-repeat;
+      content: "";
+      display: inline-block;
+      height: 14px;
+      margin-right: $base-spacing / 4;
+      transform: rotate(-90deg);
+      vertical-align: middle;
+      width: 14px;
+    }
+
+    &:hover,
+    &:focus {
+      &::before {
+        margin-right: $base-spacing / 3;
+      }
+    }
+  }
 }

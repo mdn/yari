@@ -268,26 +268,38 @@ describe("Basic viewing of functional pages", () => {
 
   it("going to 'Sign up' page without query string", async () => {
     await page.goto(testURL("/en-US/signup"));
-    await expect(page).toMatchElement("h1", { text: "Sign up" });
-    await expect(page).toMatch("Invalid Sign up URL");
+    await expect(page).toMatchElement("h1", {
+      text: "Sign in to MDN Web Docs",
+    });
+    await expect(page).toMatch("Invalid URL");
     await expect(page).toMatchElement("a", {
-      text: "Try starting over the sign-in process",
+      text: "Please retry the sign-in process",
     });
   });
 
   it("going to 'Sign up' page with realistic (fake) query string", async () => {
-    await page.goto(
-      testURL("/en-US/signup?csrfmiddlewaretoken=abc&provider=github")
+    const sp = new URLSearchParams();
+    sp.set("csrfmiddlewaretoken", "abc");
+    sp.set("provider", "github");
+    sp.set(
+      "user_details",
+      JSON.stringify({
+        name: "Peter B",
+      })
     );
-    await expect(page).toMatchElement("h1", { text: "Sign up" });
-    await expect(page).not.toMatch("Invalid Sign up URL");
+
+    await page.goto(testURL(`/en-US/signup?${sp.toString()}`));
+    await expect(page).toMatchElement("h1", {
+      text: "Sign in to MDN Web Docs",
+    });
+    await expect(page).not.toMatch("Invalid URL");
     await expect(page).toMatch(
-      "You are signing in to MDN Web Docs with GitHub."
+      "You are signing in to MDN Web Docs with GitHub as Peter B."
     );
     await expect(page).toMatch(
       "I agree to Mozilla's Terms and Privacy Notice."
     );
-    await expect(page).toMatchElement("button", { text: "Create account" });
+    await expect(page).toMatchElement("button", { text: "Complete sign-in" });
   });
 
   it("should say you're not signed in on the settings page", async () => {
