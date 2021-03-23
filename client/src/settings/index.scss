@@ -1,0 +1,91 @@
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+.page-content-container.account-settings {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+
+  @media #{$mq-large-desktop-and-up} {
+    margin: ($base-spacing) auto;
+  }
+
+  h1 {
+    margin: $base-spacing 0;
+  }
+
+  .field-group {
+    margin: ($base-spacing / 2) 0;
+
+    label {
+      font-size: $large-font-size-mobile;
+      line-height: $heading-line-height;
+      margin-bottom: $base-spacing;
+
+      @media #{$mq-tablet-and-up} {
+        font-size: $large-font-size;
+      }
+    }
+  }
+
+  .notecard {
+    @media #{$mq-small-desktop-and-up} {
+      max-width: 80%;
+    }
+  }
+
+  .confirm-account-closure {
+    .button-container {
+      display: flex;
+      gap: $base-spacing;
+    }
+  }
+}
+
+.account-settings-panels-container {
+  @media #{$mq-tablet-and-up} {
+    display: flex;
+    gap: $base-spacing;
+    justify-content: space-between;
+    margin: $base-spacing 0;
+    max-width: $max-width-small-desktop;
+    width: 100%;
+  }
+}
+
+.settings-form {
+  margin: ($base-spacing / 2) 0 ($base-spacing * 2);
+
+  @media #{$mq-tablet-and-up} {
+    margin: 0;
+  }
+}
+
+.close-account {
+  h3 {
+    margin-top: $base-spacing / 2;
+  }
+
+  h4,
+  p {
+    margin-bottom: $base-spacing / 2;
+  }
+
+  h4 {
+    font-family: $heading-font-family;
+    font-size: $small-medium-font-size-mobile;
+
+    @media #{$mq-tablet-and-up} {
+      font-size: $small-medium-font-size;
+    }
+  }
+}
+
+.settings-form,
+.close-account {
+  border: 1px solid $neutral-500;
+  border-top: 5px solid $primary-100;
+  flex-basis: 45%;
+  padding: $base-spacing;
+}

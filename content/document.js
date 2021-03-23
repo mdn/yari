@@ -371,7 +371,11 @@ function findByURL(url, ...args) {
   return doc;
 }
 
-function findAll({ files = new Set(), folderSearch = null } = {}) {
+function findAll({
+  files = new Set(),
+  folderSearch = null,
+  locales = new Map(),
+} = {}) {
   if (!(files instanceof Set)) throw new TypeError("'files' not a Set");
   if (folderSearch && typeof folderSearch !== "string")
     throw new TypeError("'folderSearch' not a string");
@@ -386,9 +390,22 @@ function findAll({ files = new Set(), folderSearch = null } = {}) {
   }
   roots.push(CONTENT_ROOT);
   for (const root of roots) {
+    const searchPattern = [""];
+    if (locales.size) {
+      const localePrefixes = [];
+      for (const [locale, include] of locales) {
+        if (!include) {
+          throw new Error("ability to exclude locales is not supported yet");
+        }
+        localePrefixes.push(locale);
+      }
+      searchPattern.push(`+(${localePrefixes.join("|")})`);
+    }
+    searchPattern.push("**");
+    searchPattern.push(HTML_FILENAME);
     filePaths.push(
       ...glob
-        .sync(path.join(root, "**", HTML_FILENAME))
+        .sync(searchPattern.join(path.sep), { root })
         .filter((filePath) => {
           // The 'files' set is either a list of absolute full paths or a
           // list of endings.
