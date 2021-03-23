@@ -146,8 +146,10 @@ function NotSignedIn() {
 
   return (
     <>
-      <h2>You are not signed in</h2>
-      <Link to={`/${locale}/signin?${sp.toString()}`}>Sign in</Link>
+      <h2>You have not signed in</h2>
+      <Link to={`/${locale}/signin?${sp.toString()}`}>
+        Please sign in to continue
+      </Link>
     </>
   );
 }

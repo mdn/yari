@@ -305,7 +305,9 @@ describe("Basic viewing of functional pages", () => {
   it("should say you're not signed in on the settings page", async () => {
     await page.goto(testURL("/en-US/settings"));
     await expect(page).toMatchElement("h1", { text: "Account Settings" });
-    await expect(page).toMatchElement("a", { text: "Sign in" });
+    await expect(page).toMatchElement("a", {
+      text: "Please sign in to continue",
+    });
   });
 
   it("should show your settings page", async () => {
