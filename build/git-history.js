@@ -49,8 +49,11 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
       hash = data[0];
       date = new Date(data[1]);
       if (data[2]) {
-        const [, parentHash] = data[2].split(" ");
-        parents.set(parentHash, { modified: date, hash });
+        const split = data[2].split(" ");
+        if (split.length === 2) {
+          const [, parentHash] = split;
+          parents.set(parentHash, { modified: date, hash });
+        }
       }
     } else if (line) {
       const relPath = path.relative(realContentRoot, path.join(repoRoot, line));
