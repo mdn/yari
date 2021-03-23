@@ -24,11 +24,15 @@ export function MainContentContainer({
 // What we use on almost all pages
 export function PageContentContainer({
   children,
+  extraClasses,
 }: {
   children: React.ReactNode;
+  extraClasses?: string;
 }) {
   return (
-    <MainContentContainer className="page-content-container">
+    <MainContentContainer
+      className={`page-content-container ${extraClasses ? extraClasses : ""}`}
+    >
       {children}
     </MainContentContainer>
   );
