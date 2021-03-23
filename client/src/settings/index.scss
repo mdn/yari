@@ -1,3 +1,4 @@
+@import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
@@ -83,5 +84,8 @@
 
 .settings-form,
 .close-account {
+  border: 1px solid $neutral-500;
+  border-top-width: 5px;
   flex-basis: 45%;
+  padding: $base-spacing;
 }

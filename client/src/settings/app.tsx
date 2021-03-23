@@ -81,9 +81,7 @@ export default function SettingsApp({ ...appProps }) {
         <h3>Server error</h3>
         <p>A server error occurred trying to get your user settings.</p>
         <p>
-          <pre>
-            <code>{error.toString()}</code>
-          </pre>
+          <code>{error.toString()}</code>
         </p>
         <a href={window.location.pathname}>Reload this page and try again.</a>
       </div>
@@ -100,9 +98,7 @@ export default function SettingsApp({ ...appProps }) {
         <h3>Server error</h3>
         <p>Unable to get the current user settings from the server.</p>
         <p>
-          <pre>
-            <code>{settingsError.toString()}</code>
-          </pre>
+          <code>{settingsError.toString()}</code>
         </p>
         <a href={window.location.pathname}>Reload this page and try again.</a>
       </div>
@@ -231,28 +227,27 @@ function Settings({
         <ShowValidationErrors errors={validationErrors.errors} />
       )}
 
-      {sent && !sendError && (
-        <div className="notecard success">
-          <p>Yay! Updated settings successfully saved.</p>
-        </div>
-      )}
-      {sendError && (
-        <div className="notecard negative">
-          <h4>Server submission error</h4>
-          <p>Something unexpected happened during server submission.</p>
-          <p>
-            <pre>
-              <code>{sendError.toString()}</code>
-            </pre>
-          </p>
-          <a href={window.location.pathname}>Reload page to try again.</a>
-        </div>
-      )}
-
       <div className="field-group">
         <label htmlFor="id_locale" className="slab-highlight">
           Change language
         </label>
+
+        {sent && !sendError && (
+          <div className="notecard success">
+            <p>Yay! Updated settings successfully saved.</p>
+          </div>
+        )}
+        {sendError && (
+          <div className="notecard negative">
+            <h4>Server submission error</h4>
+            <p>Something unexpected happened during server submission.</p>
+            <p>
+              <code>{sendError.toString()}</code>
+            </p>
+            <a href={window.location.pathname}>Reload page to try again.</a>
+          </div>
+        )}
+
         <select
           id="id_locale"
           name="locale"
@@ -318,9 +313,7 @@ function CloseAccount({ userSettings }: { userSettings: UserSettings }) {
           <h3>Server error</h3>
           <p>A server error occurred trying to close your account.</p>
           <p>
-            <pre>
-              <code>{deleteError.toString()}</code>
-            </pre>
+            <code>{deleteError.toString()}</code>
           </p>
           <a href={window.location.pathname}>Reload page to try again.</a>
         </div>
@@ -353,7 +346,7 @@ function CloseAccount({ userSettings }: { userSettings: UserSettings }) {
       ) : (
         <button
           type="button"
-          className="button close-account"
+          className="button"
           onClick={() => {
             setConfirm(true);
           }}
