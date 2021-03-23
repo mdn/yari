@@ -56,6 +56,11 @@ function normalizeBCDURLs(doc, options) {
 
   for (const section of doc.body) {
     if (section.type !== "browser_compatibility") continue;
+
+    // This happens if a query is "broken".
+    // E.g. <div class="bc-data" id="bcd:apii.TypoCatching">
+    if (!section.value.data) continue;
+
     for (const [key, data] of Object.entries(section.value.data)) {
       // First block from the BCD data does not have its name as the root key
       // so mdn_url is accessible at the root. If the block has a key for
@@ -119,6 +124,12 @@ function extractBCDData(doc) {
   for (const section of doc.body) {
     if (section.type === "browser_compatibility") {
       // Most pages only have exactly 1 so no need to put the prefix on them.
+
+      if (!section.value.data) {
+        // This happens if a query is "broken".
+        // E.g. <div class="bc-data" id="bcd:apii.TypoCatching">
+        continue;
+      }
       const fileName = ++nextId > 1 ? `bcd-${nextId}.json` : "bcd.json";
       const dataURL = `${doc.mdn_url}/${fileName}`;
       data.push({
