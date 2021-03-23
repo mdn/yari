@@ -326,7 +326,7 @@ describe("Basic viewing of functional pages", () => {
 
     // Change locale to French
     await expect(page).toSelect('select[name="locale"]', "French");
-    await expect(page).toClick("button", { text: "Save changes" });
+    await expect(page).toClick("button", { text: "Update language" });
     await expect(page).toMatch("Yay! Updated settings successfully saved.");
   });
 });
