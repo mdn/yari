@@ -8,5 +8,11 @@
 // {{EmbedTest262ReportResultsTable("globalThis")}}
 // {{EmbedTest262ReportResultsTable("BigInt")}}
 //
+
+// We can entirely delete this macro
+// once https://github.com/mdn/translated-content/issues/297 full resolves.
+// See https://github.com/mdn/yari/issues/3313
+mdn.deprecated();
+
 %>
 <iframe width="100%" height="300" src="https://test262.report/embed/features/<%-encodeURIComponent($0)%>?engines=chakra%2Cjavascriptcore%2Cspidermonkey%2Cv8&summary=true&include-browsers=true"></iframe>
