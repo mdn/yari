@@ -345,6 +345,42 @@ class BucketManager:
         return result
 
     def iter_file_tasks(self, build_directory, for_counting_only=False, dry_run=False):
+        # The order matters! In particular the order of static assets compared to
+        # the HTML files that reference said static assets.
+        # If you upload the HTML files before we upload the static assets, what
+        # might happen is this:
+        #
+        #  ...
+        #  <link rel=stylesheet href=/static/css/main.350fa0c1.css">
+        #  <title>JavaScript MDN Web Docs</title>
+        #  ...
+        #
+        # Now if the CDN serves this new HTML file *before*
+        # the /static/css/main.350fa0c1.css file has been uploaded, you get a busted
+        # page.
+        # So explicitly upload all the static assets first.
+        # I.e. `<build_directory>/static/`
+        # And since we later processed the whole of `<build_directory>` we'll
+        # come across these static files again. So that's why we populate a
+        # `set` so that when we do the second pass, we'll know what we've already
+        # yielded.
+        # Origin for this is: https://github.com/mdn/yari/issues/3315
+        done = set()
+
+        # Walk the build_directory/static and yield file upload tasks.
+        for fp in iterdir(build_directory / "static"):
+            # Exclude any files that aren't artifacts of the build.
+            if fp.name.startswith(".") or fp.name.endswith("~"):
+                continue
+
+            key = self.get_key(build_directory, fp)
+
+            if for_counting_only:
+                yield 1
+            else:
+                yield UploadFileTask(fp, key, dry_run=dry_run)
+            done.add(key)
+
         # Prepare a computation of what the root /index.html file would be
         # called as a S3 key. Do this once so it becomes a quicker operation
         # later when we compare *each* generated key to see if it matches this.
@@ -359,6 +395,11 @@ class BucketManager:
                 continue
 
             key = self.get_key(build_directory, fp)
+
+            if key in done:
+                # This can happen since we might have explicitly processed this
+                # in the for-loop above. See comment at the beginning of this method.
+                continue
 
             # The root index.html file is never useful. It's not the "home page"
             # because the home page is actually `/$locale/` since `/` is handled
