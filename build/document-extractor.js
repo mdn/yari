@@ -264,7 +264,19 @@ function _addSingleSectionBCD($) {
   const query = dataQuery.replace(/^bcd:/, "");
   const { browsers, data } = packageBCD(query);
   if (data === undefined) {
-    return [];
+    return [
+      {
+        type: "browser_compatibility",
+        value: {
+          title,
+          id,
+          isH3,
+          data: null,
+          query,
+          browsers: null,
+        },
+      },
+    ];
   }
 
   // First extract a map of all release data, keyed by (normalized) browser
