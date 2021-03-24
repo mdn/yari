@@ -34,6 +34,8 @@ function buildPath(localeFolder, slug) {
 
 const HTML_FILENAME = "index.html";
 const getHTMLPath = (folder) => path.join(folder, HTML_FILENAME);
+const MARKDOWN_FILENAME = "index.md";
+const getMarkdownPath = (folder) => path.join(folder, MARKDOWN_FILENAME);
 
 function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
   const all = JSON.parse(
@@ -67,9 +69,9 @@ function extractLocale(folder) {
   return locale;
 }
 
-function saveHTMLFile(
+function saveFile(
   filePath,
-  rawHTML,
+  rawBody,
   { slug, title, translation_of, tags, translation_of_original, original_slug }
 ) {
   if (slug.includes("#")) {
@@ -93,7 +95,7 @@ function saveHTMLFile(
   if (original_slug) {
     metadata.original_slug = original_slug;
   }
-  const combined = `---\n${yaml.dump(metadata)}---\n${rawHTML.trim()}\n`;
+  const combined = `---\n${yaml.dump(metadata)}---\n${rawBody.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 
@@ -104,12 +106,21 @@ function trimLineEndings(string) {
     .join("\n");
 }
 
-function create(html, metadata, root = null) {
+function createHTML(html, metadata, root = null) {
   const folderPath = getFolderPath(metadata, root);
 
   fs.mkdirSync(folderPath, { recursive: true });
 
-  saveHTMLFile(getHTMLPath(folderPath), trimLineEndings(html), metadata);
+  saveFile(getHTMLPath(folderPath), trimLineEndings(html), metadata);
+  return folderPath;
+}
+
+function createMarkdown(md, metadata, root = null) {
+  const folderPath = getFolderPath(metadata, root);
+
+  fs.mkdirSync(folderPath, { recursive: true });
+
+  saveFile(getMarkdownPath(folderPath), trimLineEndings(md), metadata);
   return folderPath;
 }
 
@@ -125,8 +136,9 @@ function getFolderPath(metadata, root = null) {
 
 function archive(
   renderedHTML,
-  rawHTML,
+  rawBody,
   metadata,
+  isMarkdown = false,
   isTranslatedContent = false,
   root = null
 ) {
@@ -150,27 +162,23 @@ function archive(
 
   fs.mkdirSync(folderPath, { recursive: true });
 
-  // The `rawHTML` is only applicable in the importer when it saves
+  // The `rawBody` is only applicable in the importer when it saves
   // archived content. The archived content gets the *rendered* html
-  // saved but by storing the raw html too we can potentially resurrect
+  // saved but by storing the raw HTML/Markdown too we can potentially resurrect
   // the document if we decide to NOT archive it in the future.
-  if (rawHTML) {
+  if (rawBody) {
     fs.writeFileSync(
-      path.join(folderPath, "raw.html"),
-      trimLineEndings(rawHTML)
+      path.join(folderPath, isMarkdown ? "raw.md" : "raw.html"),
+      trimLineEndings(rawBody)
     );
   }
 
-  saveHTMLFile(
-    getHTMLPath(folderPath),
-    trimLineEndings(renderedHTML),
-    metadata
-  );
+  saveFile(getHTMLPath(folderPath), trimLineEndings(renderedHTML), metadata);
   return folderPath;
 }
 
 function unarchive(document, move) {
-  // You can't use `document.rawHTML` because, rather confusingly,
+  // You can't use `document.rawBody` because, rather confusingly,
   // it's actually the rendered (from the migration) HTML. Instead,
   // you need seek out the `raw.html` equivalent and use that.
   // This is because when we ran the migration, for every document we
@@ -181,7 +189,7 @@ function unarchive(document, move) {
     "raw.html"
   );
   const rawHTML = fs.readFileSync(rawFilePath, "utf-8");
-  const created = create(rawHTML, document.metadata);
+  const created = createHTML(rawHTML, document.metadata);
   if (move) {
     execGit(["rm", document.fileInfo.path], {}, CONTENT_ARCHIVED_ROOT);
     execGit(["rm", rawFilePath], {}, CONTENT_ARCHIVED_ROOT);
@@ -192,11 +200,23 @@ function unarchive(document, move) {
 const read = memoize((folder) => {
   let filePath = null;
   let root = null;
+  let isMarkdown = false;
+
   for (const possibleRoot of ROOTS) {
-    const possibleFilePath = path.join(possibleRoot, getHTMLPath(folder));
-    if (fs.existsSync(possibleFilePath)) {
+    const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
+    if (fs.existsSync(possibleHTMLFilePath)) {
       root = possibleRoot;
-      filePath = possibleFilePath;
+      filePath = possibleHTMLFilePath;
+      break;
+    }
+    const possibleMarkdownFilePath = path.join(
+      possibleRoot,
+      getMarkdownPath(folder)
+    );
+    if (fs.existsSync(possibleMarkdownFilePath)) {
+      root = possibleRoot;
+      filePath = possibleMarkdownFilePath;
+      isMarkdown = true;
       break;
     }
   }
@@ -236,7 +256,7 @@ const read = memoize((folder) => {
 
   const {
     attributes: metadata,
-    body: rawHTML,
+    body: rawBody,
     bodyBegin: frontMatterOffset,
   } = fm(rawContent);
 
@@ -284,7 +304,10 @@ const read = memoize((folder) => {
 
   return {
     ...fullMetadata,
-    ...{ rawHTML, rawContent },
+    // ...{ rawContent },
+    rawContent, // HTML or Markdown whole string with all the front-matter
+    rawBody, // HTML or Markdown string without the front-matter
+    isMarkdown,
     isArchive,
     isTranslated,
     isActive,
@@ -297,7 +320,7 @@ const read = memoize((folder) => {
   };
 });
 
-function update(url, rawHTML, metadata) {
+function update(url, rawBody, metadata) {
   const folder = urlToFolderPath(url);
   const document = read(folder);
   const locale = document.metadata.locale;
@@ -305,14 +328,17 @@ function update(url, rawHTML, metadata) {
   const oldSlug = document.metadata.slug;
   const newSlug = metadata.slug;
   const isNewSlug = oldSlug !== newSlug;
-  const indexPath = path.join(root, getHTMLPath(folder));
+  const indexPath = path.join(
+    root,
+    document.isMarkdown ? getMarkdownPath(folder) : getHTMLPath(folder)
+  );
 
   if (
     isNewSlug ||
-    document.rawHTML !== rawHTML ||
+    document.rawBody !== rawBody ||
     document.metadata.title !== metadata.title
   ) {
-    saveHTMLFile(indexPath, rawHTML, {
+    saveFile(indexPath, rawBody, {
       ...document.metadata,
       ...metadata,
     });
@@ -329,7 +355,7 @@ function update(url, rawHTML, metadata) {
     const locale = metadata.locale;
     const redirects = new Map();
     const url = buildURL(locale, oldSlug);
-    for (const { metadata, rawHTML, fileInfo } of findChildren(url, true)) {
+    for (const { metadata, rawBody, fileInfo } of findChildren(url, true)) {
       const childLocale = metadata.locale;
       const oldChildSlug = metadata.slug;
       const newChildSlug = oldChildSlug.replace(oldSlug, newSlug);
@@ -339,7 +365,7 @@ function update(url, rawHTML, metadata) {
         oldChildSlug,
         newChildSlug
       );
-      saveHTMLFile(fileInfo.path, rawHTML, metadata);
+      saveFile(fileInfo.path, rawBody, metadata);
       redirects.set(
         buildURL(childLocale, oldChildSlug),
         buildURL(childLocale, newChildSlug)
@@ -402,7 +428,7 @@ function findAll({
       searchPattern.push(`+(${localePrefixes.join("|")})`);
     }
     searchPattern.push("**");
-    searchPattern.push(HTML_FILENAME);
+    searchPattern.push("index.{html,md}");
     filePaths.push(
       ...glob
         .sync(searchPattern.join(path.sep), { root })
@@ -428,6 +454,7 @@ function findAll({
                 .replace(CONTENT_ROOT, "")
                 .replace(CONTENT_TRANSLATED_ROOT, "")
                 .replace(HTML_FILENAME, "")
+                .replace(MARKDOWN_FILENAME, "")
                 .search(new RegExp(folderSearch)) !== -1
             );
           }
@@ -565,7 +592,8 @@ function remove(
 }
 
 module.exports = {
-  create,
+  createHTML,
+  createMarkdown,
   archive,
   unarchive,
   read,
@@ -582,7 +610,7 @@ module.exports = {
 
   updateWikiHistory,
   trimLineEndings,
-  saveHTMLFile,
+  saveFile,
 
   findByURL,
   findAll,

@@ -3,7 +3,13 @@ import { Link, useLocation, useParams } from "react-router-dom";
 
 import "./edit-actions.scss";
 
-export function EditActions({ folder }: { folder: string }) {
+export function EditActions({
+  folder,
+  filename,
+}: {
+  folder: string;
+  filename: string;
+}) {
   const location = useLocation();
 
   const [opening, setOpening] = useState(false);
@@ -28,7 +34,7 @@ export function EditActions({ folder }: { folder: string }) {
   async function openInEditorHandler(event: React.MouseEvent) {
     event.preventDefault();
 
-    const filepath = folder + "/index.html";
+    const filepath = `${folder}/${filename}`;
     console.log(`Going to try to open ${filepath} in your editor`);
     setOpening(true);
     try {
