@@ -78,17 +78,11 @@ function resolve(slug) {
   const url = buildURL("en-us", slug);
   const resolved = Redirect.resolve(url);
   if (url !== resolved) {
-    const filePath = path.join(
-      CONTENT_ROOT,
-      Document.urlToFolderPath(resolved),
-      "index.html"
-    );
-    if (!fs.existsSync(filePath)) {
+    const doc = Document.read(resolved);
+    if (!doc) {
       return slug;
     }
-    const {
-      attributes: { slug: resolvedSlug },
-    } = fm(fs.readFileSync(filePath, "utf8"));
+    const resolvedSlug = doc.url;
     if (slug !== resolvedSlug) {
       return resolvedSlug;
     }
@@ -111,7 +105,7 @@ function syncTranslatedContent(inFilePath, locale) {
   };
 
   const rawDoc = fs.readFileSync(inFilePath, "utf8");
-  const fileName = inFilePath.endsWith("index.md") ? "index.md" : "index.html";
+  const fileName = path.basename(inFilePath);
   const { attributes: oldMetadata, body: rawBody } = fm(rawDoc);
   const resolvedSlug = resolve(oldMetadata.slug);
   const metadata = {
