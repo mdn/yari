@@ -331,7 +331,9 @@ const standardPages = pageList.filter(page => !hasTag(page, "Non-standard"));
 
 const groups = standardPages.filter(page => hasTag(page, "Overview"));
 const properties = standardPages.filter(page => hasTag(page, "CSS Property"));
-const selectors = standardPages.filter(page => hasTag(page, "Selector"));
+const selectors = standardPages.filter(page => (hasTag(page, "Selector") && !hasTag(page, "Pseudo-element") && !hasTag(page, "Pseudo-class")));
+const pseudoClasses = standardPages.filter(page => hasTag(page, "Pseudo-class"));
+const pseudoElements = standardPages.filter(page => hasTag(page, "Pseudo-element"));
 const atRules = standardPages.filter(page => hasTag(page, "At-rule"));
 const types = standardPages.filter(page => hasTag(page, "CSS Data Type"));
 
@@ -460,6 +462,8 @@ function buildSublist(pages, title) {
   <%-buildSublist(groups, 'Modules');%>
   <%-buildSublist(properties, 'Properties');%>
   <%-buildSublist(selectors, 'Selectors');%>
+  <%-buildSublist(pseudoClasses, 'Pseudo-classes');%>
+  <%-buildSublist(pseudoElements, 'Pseudo-elements');%>
   <%-buildSublist(atRules, 'At-rules');%>
   <%-buildSublist(types, 'Types');%>
 
