@@ -37,9 +37,19 @@ function withFm(frontmatter, content) {
   return content;
 }
 
+function trimTrailingNewLines(value) {
+  return String(value).replace(/\n+$/, "");
+}
+
+function wrapText(h, value) {
+  return h.wrapText ? value : value.replace(/\r?\n|\r/g, " ");
+}
+
 module.exports = {
   encodeKS,
   decodeKS,
   formatH,
   withFm,
+  trimTrailingNewLines,
+  wrapText,
 };

@@ -1,7 +1,7 @@
 const convert = require("hast-util-is-element/convert");
 const toText = require("hast-util-to-text");
-const trim = require("trim-trailing-lines");
-const wrapText = require("../utils/wrap");
+
+const { wrapText, trimTrailingNewLines } = require("../../utils");
 
 const pre = convert("pre");
 
@@ -30,7 +30,7 @@ function code(h, node) {
     node,
     "code",
     { lang: lang || null, meta: meta || null },
-    trim(wrapText(h, toText(node)))
+    trimTrailingNewLines(wrapText(h, toText(node)))
   );
 }
 
