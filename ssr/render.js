@@ -10,6 +10,7 @@ import {
   ALWAYS_NO_ROBOTS,
   BUILD_OUT_ROOT,
 } from "../build/constants";
+const { DEFAULT_LOCALE } = require("../libs/constants");
 
 // When there are multiple options for a given language, this gives the
 // preferred locale for that language (language => preferred locale).
@@ -138,15 +139,27 @@ function serializeDocumentData(data) {
 
 export default function render(
   renderApp,
-  { doc = null, pageNotFound = false, feedEntries = null } = {}
+  {
+    doc = null,
+    pageNotFound = false,
+    feedEntries = null,
+    pageTitle = null,
+    possibleLocales = null,
+  } = {}
 ) {
   const buildHtml = readBuildHTML();
   const webfontURLs = extractWebFontURLs();
   const $ = cheerio.load(buildHtml);
 
+  // Some day, we'll have the chrome localized and then this can no longer be
+  // hardcoded to 'en'. But for now, the chrome is always in "English (US)".
+  $("html").attr("lang", DEFAULT_LOCALE);
+
   const rendered = renderToString(renderApp);
 
-  let pageTitle = "MDN Web Docs"; // default
+  if (!pageTitle) {
+    pageTitle = "MDN Web Docs"; // default
+  }
   let canonicalURL = "https://developer.mozilla.org";
 
   let pageDescription = "";
@@ -194,6 +207,13 @@ export default function render(
           .insertAfter("title");
       }
     }
+  }
+
+  if (possibleLocales) {
+    const possibleLocalesTag = `<script>window.__possibleLocales__ = JSON.parse(${serializeDocumentData(
+      possibleLocales
+    )});</script>`;
+    $("#root").after(possibleLocalesTag);
   }
 
   if (pageDescription) {

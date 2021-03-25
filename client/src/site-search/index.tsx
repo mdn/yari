@@ -48,14 +48,12 @@ export function SiteSearch() {
   }, [query, page, ga]);
 
   return (
-    <div className="site-search">
+    <div className="site-search main-page-content">
       <PageContentContainer>
         {query ? (
           <h1>
-            Results: {query}{" "}
-            {page && page !== "1" && (
-              <small className="current-page">Page {page}</small>
-            )}
+            Search results for: <span className="query-string">{query}</span>{" "}
+            {page && page !== "1" && `(page ${page})`}
           </h1>
         ) : (
           <h1>No query, no results.</h1>

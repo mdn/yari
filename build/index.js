@@ -1,3 +1,5 @@
+const path = require("path");
+
 const chalk = require("chalk");
 const cheerio = require("cheerio");
 
@@ -24,7 +26,15 @@ const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
 const buildOptions = require("./build-options");
 const { gather: gatherGitHistory } = require("./git-history");
+const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
+const LANGUAGES_RAW = require("../content/languages.json");
+
+const LANGUAGES = new Map(
+  Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
+    return [locale.toLowerCase(), data];
+  })
+);
 
 const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/content
 
@@ -157,11 +167,11 @@ function injectNotecardOnWarnings($) {
  * Return the full URL directly to the file in GitHub based on this folder.
  * @param {String} folder - the current folder we're processing.
  */
-function getGitHubURL(root, folder) {
+function getGitHubURL(root, folder, filename) {
   const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
   return `${baseURL}/blob/${getCurrentGitBranch(
     root
-  )}/files/${folder}/index.html`;
+  )}/files/${folder}/${filename}`;
 }
 
 /**
@@ -176,10 +186,12 @@ function getLastCommitURL(root, hash) {
 function injectSource(doc, document, metadata) {
   const folder = document.fileInfo.folder;
   const root = document.fileInfo.root;
+  const filename = path.basename(document.fileInfo.path);
   doc.source = {
     folder,
-    github_url: getGitHubURL(root, folder),
+    github_url: getGitHubURL(root, folder, filename),
     last_commit_url: getLastCommitURL(root, metadata.hash),
+    filename,
   };
 }
 
@@ -215,9 +227,16 @@ async function buildDocument(document, documentOptions = {}) {
   const options = Object.assign({}, buildOptions, documentOptions);
   const { metadata, fileInfo } = document;
 
+  if (Document.urlToFolderPath(document.url) !== document.fileInfo.folder) {
+    throw new Error(
+      `The document's slug (${metadata.slug}) doesn't match its disk folder name (${document.fileInfo.folder})`
+    );
+  }
+
   const doc = {
     isArchive: document.isArchive,
     isTranslated: document.isTranslated,
+    isActive: document.isActive,
   };
 
   doc.flaws = {};
@@ -227,7 +246,10 @@ async function buildDocument(document, documentOptions = {}) {
   const liveSamples = [];
 
   if (doc.isArchive) {
-    renderedHtml = document.rawHTML;
+    if (document.isMarkdown) {
+      throw new Error("Markdown not supported for archived content");
+    }
+    renderedHtml = document.rawBody;
   } else {
     if (options.clearKumascriptRenderCache) {
       renderKumascriptCache.reset();
@@ -253,7 +275,7 @@ async function buildDocument(document, documentOptions = {}) {
 
     const sampleIds = kumascript.getLiveSampleIDs(
       document.metadata.slug,
-      document.rawHTML
+      document.rawBody
     );
     for (const sampleIdObject of sampleIds) {
       const liveSamplePage = kumascript.buildLiveSamplePage(
@@ -343,6 +365,7 @@ async function buildDocument(document, documentOptions = {}) {
   doc.title = metadata.title;
   doc.mdn_url = document.url;
   doc.locale = metadata.locale;
+  doc.native = LANGUAGES.get(doc.locale.toLowerCase()).native;
 
   // Note that 'extractSidebar' will always return a string.
   // And if it finds a sidebar section, it gets removed from '$' too.
@@ -465,9 +488,8 @@ async function buildDocument(document, documentOptions = {}) {
     if (translationOf) {
       otherTranslations.push({
         locale: "en-US",
-        // slug: translationOf.metadata.slug,
-        url: translationOf.url,
         title: translationOf.metadata.title,
+        native: LANGUAGES.get("en-us").native,
       });
     }
   }
@@ -487,17 +509,12 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
   doc.noIndexing =
-    (doc.isArchive && !doc.isTranslated) || metadata.slug === "MDN/Kitchensink";
+    (doc.isArchive && !doc.isTranslated) ||
+    metadata.slug === "MDN/Kitchensink" ||
+    document.metadata.slug.startsWith("orphaned/") ||
+    document.metadata.slug.startsWith("conflicting/");
 
   return { doc, liveSamples, fileAttachments, bcdData };
-}
-
-async function buildDocumentFromURL(url, documentOptions = {}) {
-  const document = Document.findByURL(url);
-  if (!document) {
-    return null;
-  }
-  return await buildDocument(document, documentOptions);
 }
 
 async function buildLiveSamplePageFromURL(url) {
@@ -510,7 +527,7 @@ async function buildLiveSamplePageFromURL(url) {
   // the actual sampleID object with the properly-cased live-sample ID.
   for (const sampleIDObject of kumascript.getLiveSampleIDs(
     document.metadata.slug,
-    document.rawHTML
+    document.rawBody
   )) {
     if (sampleIDObject.id.toLowerCase() === sampleID) {
       const liveSamplePage = kumascript.buildLiveSamplePage(
@@ -548,7 +565,6 @@ module.exports = {
 
   buildDocument,
 
-  buildDocumentFromURL,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 
@@ -556,4 +572,5 @@ module.exports = {
 
   options: buildOptions,
   gatherGitHistory,
+  buildSPAs,
 };

@@ -9,6 +9,7 @@ const {
   CONTENT_ARCHIVED_ROOT,
   CONTENT_TRANSLATED_ROOT,
   CONTENT_ROOT,
+  ACTIVE_LOCALES,
   VALID_LOCALES,
   ROOTS,
 } = require("./constants");
@@ -18,6 +19,7 @@ const { getGitHistories } = require("./githistories");
 
 const {
   buildURL,
+  getRoot,
   memoize,
   slugToFolder,
   execGit,
@@ -32,6 +34,8 @@ function buildPath(localeFolder, slug) {
 
 const HTML_FILENAME = "index.html";
 const getHTMLPath = (folder) => path.join(folder, HTML_FILENAME);
+const MARKDOWN_FILENAME = "index.md";
+const getMarkdownPath = (folder) => path.join(folder, MARKDOWN_FILENAME);
 
 function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
   const all = JSON.parse(
@@ -65,10 +69,10 @@ function extractLocale(folder) {
   return locale;
 }
 
-function saveHTMLFile(
+function saveFile(
   filePath,
-  rawHTML,
-  { slug, title, translation_of, tags, translation_of_original }
+  rawBody,
+  { slug, title, translation_of, tags, translation_of_original, original_slug }
 ) {
   if (slug.includes("#")) {
     throw new Error("newSlug can not contain the '#' character");
@@ -88,7 +92,10 @@ function saveHTMLFile(
     // MySQL to disk. Once we're over that period we can delete this if-statement.
     metadata.translation_of_original = translation_of_original;
   }
-  const combined = `---\n${yaml.dump(metadata)}---\n${rawHTML.trim()}\n`;
+  if (original_slug) {
+    metadata.original_slug = original_slug;
+  }
+  const combined = `---\n${yaml.dump(metadata)}---\n${rawBody.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 
@@ -99,18 +106,27 @@ function trimLineEndings(string) {
     .join("\n");
 }
 
-function create(html, metadata, root = null) {
+function createHTML(html, metadata, root = null) {
   const folderPath = getFolderPath(metadata, root);
 
   fs.mkdirSync(folderPath, { recursive: true });
 
-  saveHTMLFile(getHTMLPath(folderPath), trimLineEndings(html), metadata);
+  saveFile(getHTMLPath(folderPath), trimLineEndings(html), metadata);
+  return folderPath;
+}
+
+function createMarkdown(md, metadata, root = null) {
+  const folderPath = getFolderPath(metadata, root);
+
+  fs.mkdirSync(folderPath, { recursive: true });
+
+  saveFile(getMarkdownPath(folderPath), trimLineEndings(md), metadata);
   return folderPath;
 }
 
 function getFolderPath(metadata, root = null) {
   if (!root) {
-    root = metadata.locale === "en-US" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+    root = getRoot(metadata.locale);
   }
   return buildPath(
     path.join(root, metadata.locale.toLowerCase()),
@@ -120,8 +136,9 @@ function getFolderPath(metadata, root = null) {
 
 function archive(
   renderedHTML,
-  rawHTML,
+  rawBody,
   metadata,
+  isMarkdown = false,
   isTranslatedContent = false,
   root = null
 ) {
@@ -145,27 +162,23 @@ function archive(
 
   fs.mkdirSync(folderPath, { recursive: true });
 
-  // The `rawHTML` is only applicable in the importer when it saves
+  // The `rawBody` is only applicable in the importer when it saves
   // archived content. The archived content gets the *rendered* html
-  // saved but by storing the raw html too we can potentially resurrect
+  // saved but by storing the raw HTML/Markdown too we can potentially resurrect
   // the document if we decide to NOT archive it in the future.
-  if (rawHTML) {
+  if (rawBody) {
     fs.writeFileSync(
-      path.join(folderPath, "raw.html"),
-      trimLineEndings(rawHTML)
+      path.join(folderPath, isMarkdown ? "raw.md" : "raw.html"),
+      trimLineEndings(rawBody)
     );
   }
 
-  saveHTMLFile(
-    getHTMLPath(folderPath),
-    trimLineEndings(renderedHTML),
-    metadata
-  );
+  saveFile(getHTMLPath(folderPath), trimLineEndings(renderedHTML), metadata);
   return folderPath;
 }
 
 function unarchive(document, move) {
-  // You can't use `document.rawHTML` because, rather confusingly,
+  // You can't use `document.rawBody` because, rather confusingly,
   // it's actually the rendered (from the migration) HTML. Instead,
   // you need seek out the `raw.html` equivalent and use that.
   // This is because when we ran the migration, for every document we
@@ -176,7 +189,7 @@ function unarchive(document, move) {
     "raw.html"
   );
   const rawHTML = fs.readFileSync(rawFilePath, "utf-8");
-  const created = create(rawHTML, document.metadata);
+  const created = createHTML(rawHTML, document.metadata);
   if (move) {
     execGit(["rm", document.fileInfo.path], {}, CONTENT_ARCHIVED_ROOT);
     execGit(["rm", rawFilePath], {}, CONTENT_ARCHIVED_ROOT);
@@ -187,11 +200,23 @@ function unarchive(document, move) {
 const read = memoize((folder) => {
   let filePath = null;
   let root = null;
+  let isMarkdown = false;
+
   for (const possibleRoot of ROOTS) {
-    const possibleFilePath = path.join(possibleRoot, getHTMLPath(folder));
-    if (fs.existsSync(possibleFilePath)) {
+    const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
+    if (fs.existsSync(possibleHTMLFilePath)) {
       root = possibleRoot;
-      filePath = possibleFilePath;
+      filePath = possibleHTMLFilePath;
+      break;
+    }
+    const possibleMarkdownFilePath = path.join(
+      possibleRoot,
+      getMarkdownPath(folder)
+    );
+    if (fs.existsSync(possibleMarkdownFilePath)) {
+      root = possibleRoot;
+      filePath = possibleMarkdownFilePath;
+      isMarkdown = true;
       break;
     }
   }
@@ -212,8 +237,7 @@ const read = memoize((folder) => {
     CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT)
   );
   const isArchive =
-    isTranslated ||
-    (CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT));
+    CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT);
 
   const rawContent = fs.readFileSync(filePath, "utf8");
 
@@ -232,20 +256,35 @@ const read = memoize((folder) => {
 
   const {
     attributes: metadata,
-    body: rawHTML,
+    body: rawBody,
     bodyBegin: frontMatterOffset,
   } = fm(rawContent);
 
   const locale = extractLocale(folder);
   const url = `/${locale}/docs/${metadata.slug}`;
 
+  const isActive = !isArchive && ACTIVE_LOCALES.has(locale.toLowerCase());
+
   // The last-modified is always coming from the git logs. Independent of
   // which root it is.
   const gitHistory = getGitHistories(root, locale).get(
     path.relative(root, filePath)
   );
-  let modified = (gitHistory && gitHistory.modified) || null;
-  const hash = (gitHistory && gitHistory.hash) || null;
+  let modified = null;
+  let hash = null;
+  if (gitHistory) {
+    if (
+      gitHistory.merged &&
+      gitHistory.merged.modified &&
+      gitHistory.merged.hash
+    ) {
+      modified = gitHistory.merged.modified;
+      hash = gitHistory.merged.hash;
+    } else {
+      modified = gitHistory.modified;
+      hash = gitHistory.hash;
+    }
+  }
   // Use the wiki histories for a list of legacy contributors.
   const wikiHistory = getWikiHistories(root, locale).get(url);
   if (!modified && wikiHistory && wikiHistory.modified) {
@@ -265,9 +304,13 @@ const read = memoize((folder) => {
 
   return {
     ...fullMetadata,
-    ...{ rawHTML, rawContent },
+    // ...{ rawContent },
+    rawContent, // HTML or Markdown whole string with all the front-matter
+    rawBody, // HTML or Markdown string without the front-matter
+    isMarkdown,
     isArchive,
     isTranslated,
+    isActive,
     fileInfo: {
       folder,
       path: filePath,
@@ -277,26 +320,31 @@ const read = memoize((folder) => {
   };
 });
 
-function update(url, rawHTML, metadata) {
+function update(url, rawBody, metadata) {
   const folder = urlToFolderPath(url);
-  const indexPath = path.join(CONTENT_ROOT, getHTMLPath(folder));
   const document = read(folder);
+  const locale = document.metadata.locale;
+  const root = getRoot(locale);
   const oldSlug = document.metadata.slug;
   const newSlug = metadata.slug;
   const isNewSlug = oldSlug !== newSlug;
+  const indexPath = path.join(
+    root,
+    document.isMarkdown ? getMarkdownPath(folder) : getHTMLPath(folder)
+  );
 
   if (
     isNewSlug ||
-    document.rawHTML !== rawHTML ||
+    document.rawBody !== rawBody ||
     document.metadata.title !== metadata.title
   ) {
-    saveHTMLFile(indexPath, rawHTML, {
+    saveFile(indexPath, rawBody, {
       ...document.metadata,
       ...metadata,
     });
     if (isNewSlug) {
       updateWikiHistory(
-        path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
+        path.join(root, metadata.locale.toLowerCase()),
         oldSlug,
         newSlug
       );
@@ -307,17 +355,17 @@ function update(url, rawHTML, metadata) {
     const locale = metadata.locale;
     const redirects = new Map();
     const url = buildURL(locale, oldSlug);
-    for (const { metadata, rawHTML, fileInfo } of findChildren(url)) {
+    for (const { metadata, rawBody, fileInfo } of findChildren(url, true)) {
       const childLocale = metadata.locale;
       const oldChildSlug = metadata.slug;
       const newChildSlug = oldChildSlug.replace(oldSlug, newSlug);
       metadata.slug = newChildSlug;
       updateWikiHistory(
-        path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
+        path.join(root, metadata.locale.toLowerCase()),
         oldChildSlug,
         newChildSlug
       );
-      saveHTMLFile(fileInfo.path, rawHTML, metadata);
+      saveFile(fileInfo.path, rawBody, metadata);
       redirects.set(
         buildURL(childLocale, oldChildSlug),
         buildURL(childLocale, newChildSlug)
@@ -325,16 +373,16 @@ function update(url, rawHTML, metadata) {
     }
     redirects.set(buildURL(locale, oldSlug), buildURL(locale, newSlug));
     const newFolderPath = buildPath(
-      path.join(CONTENT_ROOT, locale.toLowerCase()),
+      path.join(root, locale.toLowerCase()),
       newSlug
     );
     const oldFolderPath = buildPath(
-      path.join(CONTENT_ROOT, locale.toLowerCase()),
+      path.join(root, locale.toLowerCase()),
       oldSlug
     );
 
     if (oldFolderPath !== newFolderPath) {
-      execGit(["mv", oldFolderPath, newFolderPath]);
+      execGit(["mv", oldFolderPath, newFolderPath], { cwd: root });
     }
     Redirect.add(locale, [...redirects.entries()]);
   }
@@ -349,30 +397,41 @@ function findByURL(url, ...args) {
   return doc;
 }
 
-function findAll(
-  { files, folderSearch } = { files: new Set(), folderSearch: null }
-) {
+function findAll({
+  files = new Set(),
+  folderSearch = null,
+  locales = new Map(),
+} = {}) {
   if (!(files instanceof Set)) throw new TypeError("'files' not a Set");
   if (folderSearch && typeof folderSearch !== "string")
     throw new TypeError("'folderSearch' not a string");
 
-  // TODO: doesn't support archive content yet
-  // console.warn("Currently hardcoded to only build 'en-us'");
   const filePaths = [];
   const roots = [];
   if (CONTENT_ARCHIVED_ROOT) {
-    // roots.push({ path: CONTENT_ARCHIVED_ROOT, isArchive: true });
     roots.push(CONTENT_ARCHIVED_ROOT);
   }
   if (CONTENT_TRANSLATED_ROOT) {
     roots.push(CONTENT_TRANSLATED_ROOT);
   }
   roots.push(CONTENT_ROOT);
-  console.log("Building roots:", roots);
   for (const root of roots) {
+    const searchPattern = [""];
+    if (locales.size) {
+      const localePrefixes = [];
+      for (const [locale, include] of locales) {
+        if (!include) {
+          throw new Error("ability to exclude locales is not supported yet");
+        }
+        localePrefixes.push(locale);
+      }
+      searchPattern.push(`+(${localePrefixes.join("|")})`);
+    }
+    searchPattern.push("**");
+    searchPattern.push("index.{html,md}");
     filePaths.push(
       ...glob
-        .sync(path.join(root, "**", HTML_FILENAME))
+        .sync(searchPattern.join(path.sep), { root })
         .filter((filePath) => {
           // The 'files' set is either a list of absolute full paths or a
           // list of endings.
@@ -390,10 +449,14 @@ function findAll(
             return false;
           }
           if (folderSearch) {
-            return filePath
-              .replace(CONTENT_ROOT, "")
-              .replace(HTML_FILENAME, "")
-              .includes(folderSearch);
+            return (
+              filePath
+                .replace(CONTENT_ROOT, "")
+                .replace(CONTENT_TRANSLATED_ROOT, "")
+                .replace(HTML_FILENAME, "")
+                .replace(MARKDOWN_FILENAME, "")
+                .search(new RegExp(folderSearch)) !== -1
+            );
           }
           return true;
         })
@@ -412,15 +475,16 @@ function findAll(
   };
 }
 
-function findChildren(url) {
+function findChildren(url, recursive = false) {
+  const locale = url.split("/")[1];
+  const root = getRoot(locale);
   const folder = urlToFolderPath(url);
+  const globber = recursive ? ["*", "**"] : ["*"];
   const childPaths = glob.sync(
-    path.join(CONTENT_ROOT, folder, "*", HTML_FILENAME)
+    path.join(root, folder, ...globber, HTML_FILENAME)
   );
   return childPaths
-    .map((childFilePath) =>
-      path.relative(CONTENT_ROOT, path.dirname(childFilePath))
-    )
+    .map((childFilePath) => path.relative(root, path.dirname(childFilePath)))
     .map((folder) => read(folder));
 }
 
@@ -440,18 +504,18 @@ function move(oldSlug, newSlug, locale, { dry = false } = {}) {
   }
 
   const realOldSlug = doc.metadata.slug;
-  const paris = [doc, ...findChildren(oldUrl)].map(({ metadata }) => [
+  const pairs = [doc, ...findChildren(oldUrl, true)].map(({ metadata }) => [
     metadata.slug,
     metadata.slug.replace(realOldSlug, newSlug),
   ]);
   if (dry) {
-    return paris;
+    return pairs;
   }
 
   doc.metadata.slug = newSlug;
   update(oldUrl, doc.rawHTML, doc.metadata);
 
-  return paris;
+  return pairs;
 }
 
 function fileForSlug(slug, locale) {
@@ -487,13 +551,14 @@ function remove(
   locale,
   { recursive = false, dry = false, redirect = "" } = {}
 ) {
+  const root = getRoot(locale);
   const url = buildURL(locale, slug);
   const { metadata, fileInfo } = findByURL(url) || {};
   if (!metadata) {
     throw new Error(`document does not exists: ${url}`);
   }
 
-  const children = findChildren(url);
+  const children = findChildren(url, true);
   if (children.length > 0 && (redirect || !recursive)) {
     throw new Error("unable to remove and redirect a document with children");
   }
@@ -503,22 +568,23 @@ function remove(
     return docs;
   }
 
+  const removed = [];
   for (const { metadata } of children) {
     const slug = metadata.slug;
-    updateWikiHistory(
-      path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
-      slug
-    );
+    updateWikiHistory(path.join(root, metadata.locale.toLowerCase()), slug);
+    removed.push(buildURL(locale, slug));
   }
+
+  execGit(["rm", "-r", path.dirname(fileInfo.path)], { cwd: root });
 
   if (redirect) {
     Redirect.add(locale, [[url, redirect]]);
+  } else {
+    Redirect.remove(locale, [url, ...removed]);
   }
 
-  execGit(["rm", "-r", path.dirname(fileInfo.path)]);
-
   updateWikiHistory(
-    path.join(CONTENT_ROOT, metadata.locale.toLowerCase()),
+    path.join(root, metadata.locale.toLowerCase()),
     metadata.slug
   );
 
@@ -526,7 +592,8 @@ function remove(
 }
 
 module.exports = {
-  create,
+  createHTML,
+  createMarkdown,
   archive,
   unarchive,
   read,
@@ -540,6 +607,10 @@ module.exports = {
   getFolderPath,
   fileForSlug,
   parentSlug,
+
+  updateWikiHistory,
+  trimLineEndings,
+  saveFile,
 
   findByURL,
   findAll,

@@ -2,6 +2,11 @@ name: Performance
 
 on:
   pull_request:
+    paths:
+      - client/src/**
+      - .github/workflows/performance.yml
+      - package.json
+      - yarn.lock
 
 jobs:
   lighthouse:
@@ -20,7 +25,7 @@ jobs:
           path: mdn/content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.4
+        uses: actions/setup-node@v2.1.5
         with:
           node-version: "12"
 

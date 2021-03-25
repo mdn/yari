@@ -9,21 +9,49 @@ const cookieParser = require("cookie-parser");
 const openEditor = require("open-editor");
 
 const {
-  buildDocumentFromURL,
   buildDocument,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 } = require("../build");
-const { CONTENT_ROOT, Document, Redirect, Image } = require("../content");
+const { findDocumentTranslations } = require("../content/translations");
+const {
+  CONTENT_ROOT,
+  Document,
+  Redirect,
+  Image,
+  CONTENT_TRANSLATED_ROOT,
+} = require("../content");
 // eslint-disable-next-line node/no-missing-require
 const { prepareDoc, renderDocHTML } = require("../ssr/dist/main");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
 const fakeV1APIRouter = require("./fake-v1-api");
-const { searchRoute } = require("./document-watch");
+const { searchIndexRoute } = require("./search-index");
 const flawsRoute = require("./flaws");
 const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
+const { getRoot } = require("../content/utils");
+
+async function buildDocumentFromURL(url) {
+  const document = Document.findByURL(url);
+  if (!document) {
+    return null;
+  }
+  const documentOptions = {
+    // The only times the server builds on the fly is basically when
+    // you're in "development mode". And when you're not building
+    // to ship you don't want the cache to stand have any hits
+    // since it might prevent reading fresh data from disk.
+    clearKumascriptRenderCache: true,
+  };
+  if (CONTENT_TRANSLATED_ROOT) {
+    // When you're running the dev server and build documents
+    // every time a URL is requested, you won't have had the chance to do
+    // the phase that happens when you do a regular `yarn build`.
+    document.translations = findDocumentTranslations(document);
+  }
+  return await buildDocument(document, documentOptions);
+}
 
 const app = express();
 
@@ -36,34 +64,36 @@ app.use(originRequestMiddleware);
 
 app.use(staticMiddlewares);
 
-app.use(express.urlencoded({ extended: true }));
+// Depending on if FAKE_V1_API is set, we either respond with JSON based
+// on `.json` files on disk or we proxy the requests to Kuma.
+const proxy = FAKE_V1_API
+  ? fakeV1APIRouter
+  : createProxyMiddleware({
+      target: `${
+        ["developer.mozilla.org", "developer.allizom.org"].includes(
+          PROXY_HOSTNAME
+        )
+          ? "https://"
+          : "http://"
+      }${PROXY_HOSTNAME}`,
+      changeOrigin: true,
+      proxyTimeout: 3000,
+      timeout: 3000,
+    });
 
-app.use(
-  "/api/v1",
-  // Depending on if FAKE_V1_API is set, we either respond with JSON based
-  // on `.json` files on disk or we proxy the requests to Kuma.
-  FAKE_V1_API
-    ? fakeV1APIRouter
-    : createProxyMiddleware({
-        target: `${
-          ["developer.mozilla.org", "developer.allizom.org"].includes(
-            PROXY_HOSTNAME
-          )
-            ? "https://"
-            : "http://"
-        }${PROXY_HOSTNAME}`,
-        changeOrigin: true,
-      })
-);
+app.use("/api/v1", proxy);
+// This is an exception and it's only ever relevant in development.
+app.post("/:locale/users/account/signup", proxy);
+
+// It's important that this line comes *after* the setting up for the proxy
+// middleware for `/api/v1` above.
+// See https://github.com/chimurai/http-proxy-middleware/issues/40#issuecomment-163398924
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/_document", documentRouter);
 
 app.get("/_open", (req, res) => {
-  const { line, column, filepath } = req.query;
-  if (!filepath) {
-    throw new Error("No .filepath in the request query");
-  }
-
+  const { line, column, filepath, url } = req.query;
   // Sometimes that 'filepath' query string parameter is a full absolute
   // filepath (e.g. /Users/peterbe/yari/content.../index.html), which usually
   // happens when you this is used from the displayed flaws on a preview
@@ -71,10 +101,22 @@ app.get("/_open", (req, res) => {
   // But sometimes, it's a relative path and if so, it's always relative
   // to the main builder source.
   let absoluteFilepath;
-  if (fs.existsSync(filepath)) {
-    absoluteFilepath = filepath;
+  if (filepath) {
+    if (fs.existsSync(filepath)) {
+      absoluteFilepath = filepath;
+    } else {
+      const [locale] = filepath.split(path.sep);
+      const root = getRoot(locale);
+      absoluteFilepath = path.join(root, filepath);
+    }
+  } else if (url) {
+    const document = Document.findByURL(url);
+    if (!document) {
+      res.status(410).send(`No known document by the URL '${url}'\n`);
+    }
+    absoluteFilepath = document.fileInfo.path;
   } else {
-    absoluteFilepath = path.join(CONTENT_ROOT, filepath);
+    throw new Error("No .filepath or .url in the request query");
   }
 
   // Double-check that the file can be found.
@@ -93,7 +135,7 @@ app.get("/_open", (req, res) => {
   res.status(200).send(`Tried to open ${spec} in ${process.env.EDITOR}`);
 });
 
-app.use("/:locale/search-index.json", searchRoute);
+app.use("/:locale/search-index.json", searchIndexRoute);
 
 app.get("/_flaws", flawsRoute);
 
@@ -120,7 +162,7 @@ app.get("/*/contributors.txt", async (req, res) => {
 });
 
 app.get("/*", async (req, res) => {
-  if (req.url.startsWith("_")) {
+  if (req.url.startsWith("/_")) {
     // URLs starting with _ is exclusively for the meta-work and if there
     // isn't already a handler, it's something wrong.
     return res.status(404).send("Page not found");
@@ -140,11 +182,12 @@ app.get("/*", async (req, res) => {
   }
 
   if (!req.url.includes("/docs/")) {
-    // This should really only be expected for "single page apps".
-    // All *documents* should be handled by the
-    // `if (req.url.includes("/docs/"))` test above.
-    res.sendFile(path.join(STATIC_ROOT, "/index.html"));
-    return;
+    // If it's a known SPA, like `/en-US/search` then that should have been
+    // matched to its file and not end up here in the catchall handler.
+    // Simulate what we do in the Lambda@Edge.
+    return res
+      .status(404)
+      .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
   }
 
   // TODO: Would be nice to have a list of all supported file extensions
@@ -188,14 +231,7 @@ app.get("/*", async (req, res) => {
   let bcdData;
   try {
     console.time(`buildDocumentFromURL(${lookupURL})`);
-    const built = await buildDocumentFromURL(lookupURL, {
-      // The only times the server builds on the fly is basically when
-      // you're in "development mode". And when you're not building
-      // to ship you don't want the cache to stand have any hits
-      // since it might prevent reading fresh data from disk.
-      clearKumascriptRenderCache: true,
-    });
-    console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
+    const built = await buildDocumentFromURL(lookupURL);
     if (built) {
       document = built.doc;
       bcdData = built.bcdData;
@@ -203,6 +239,8 @@ app.get("/*", async (req, res) => {
   } catch (error) {
     console.error(`Error in buildDocumentFromURL(${lookupURL})`, error);
     return res.status(500).send(error.toString());
+  } finally {
+    console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
   }
 
   if (!document) {

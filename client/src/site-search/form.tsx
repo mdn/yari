@@ -21,54 +21,60 @@ export default function SiteSearchForm() {
       {/* Language only applies if you're browsing in, say, French
       and want to search in English too. */}
       {locale.toLowerCase() !== "en-us" && (
-        <p className="advanced-option">
-          <b>Language</b>{" "}
-          {!queryLocales.length ||
-          (queryLocales.length === 1 &&
-            equalLocales(queryLocales, [locale])) ? (
-            <i>
-              {LANGUAGES.get(locale.toLowerCase())?.native} (
-              {LANGUAGES.get(locale.toLowerCase())?.English})
-            </i>
-          ) : (
-            <Link
-              to={`?${appendURL(searchParams, {
-                locale: [locale],
-                page: undefined,
-              })}`}
-            >
-              {LANGUAGES.get(locale.toLowerCase())?.native} (
-              {LANGUAGES.get(locale.toLowerCase())?.English})
-            </Link>
-          )}
-          {" | "}
-          {queryLocales.length && equalLocales(queryLocales, ["en-us"]) ? (
-            <i>{LANGUAGES.get("en-us")?.native}</i>
-          ) : (
-            <Link
-              to={`?${appendURL(searchParams, {
-                locale: ["en-US"],
-                page: undefined,
-              })}`}
-            >
-              {LANGUAGES.get("en-us")?.native}
-            </Link>
-          )}
-          {" | "}
-          {queryLocales.length === 2 &&
-          equalLocales(queryLocales, [locale, "en-us"]) ? (
-            <i>Both</i>
-          ) : (
-            <Link
-              to={`?${appendURL(searchParams, {
-                locale: [locale, "en-US"],
-                page: undefined,
-              })}`}
-            >
-              Both
-            </Link>
-          )}
-        </p>
+        <div className="language-options">
+          <h2>Language:</h2>
+          <ul className="language-option-list">
+            <li>
+              {!queryLocales.length ||
+              (queryLocales.length === 1 &&
+                equalLocales(queryLocales, [locale])) ? (
+                <i>
+                  {LANGUAGES.get(locale.toLowerCase())?.native} (
+                  {LANGUAGES.get(locale.toLowerCase())?.English})
+                </i>
+              ) : (
+                <Link
+                  to={`?${appendURL(searchParams, {
+                    locale: [locale],
+                    page: undefined,
+                  })}`}
+                >
+                  {LANGUAGES.get(locale.toLowerCase())?.native} (
+                  {LANGUAGES.get(locale.toLowerCase())?.English})
+                </Link>
+              )}
+            </li>
+            <li>
+              {queryLocales.length && equalLocales(queryLocales, ["en-us"]) ? (
+                <i>{LANGUAGES.get("en-us")?.native}</i>
+              ) : (
+                <Link
+                  to={`?${appendURL(searchParams, {
+                    locale: ["en-US"],
+                    page: undefined,
+                  })}`}
+                >
+                  {LANGUAGES.get("en-us")?.native}
+                </Link>
+              )}
+            </li>
+            <li>
+              {queryLocales.length === 2 &&
+              equalLocales(queryLocales, [locale, "en-us"]) ? (
+                <i>Both</i>
+              ) : (
+                <Link
+                  to={`?${appendURL(searchParams, {
+                    locale: [locale, "en-US"],
+                    page: undefined,
+                  })}`}
+                >
+                  Both
+                </Link>
+              )}
+            </li>
+          </ul>
+        </div>
       )}
     </div>
   );

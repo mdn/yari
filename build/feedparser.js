@@ -14,9 +14,10 @@ async function getFeedEntries(url) {
   for (const item of feed.rss.channel.item) {
     const description = cheerio.load(item.description);
     const summary = description("p").text();
+    const title = cheerio.load(item.title).text();
     entries.push({
       url: item.link,
-      title: item.title,
+      title,
       pubDate: new Date(item.pubDate),
       creator: item["dc:creator"],
       summary,

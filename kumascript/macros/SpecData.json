@@ -484,6 +484,16 @@
     "url": "https://drafts.csswg.org/css-writing-modes-4/",
     "status": "CR"
   },
+  "CSS5 Cascade": {
+    "name": "CSS Cascading and Inheritance Level&nbsp;5",
+    "url": "https://drafts.csswg.org/css-cascade-5/",
+    "status": "WD"
+  },
+  "CSS5 Colors": {
+    "name": "CSS Color Module Level&nbsp;5",
+    "url": "https://drafts.csswg.org/css-color-5/",
+    "status": "WD"
+  },
   "CSS5 Media Queries": {
     "name": "Media Queries Level&nbsp;5",
     "url": "https://drafts.csswg.org/mediaqueries-5/",
@@ -1049,6 +1059,11 @@
     "url": "https://github.com/tc39/proposal-regexp-legacy-features/",
     "status": "Draft"
   },
+  "Local Font Access API": {
+    "name": "Local Font Access API",
+    "url": "https://wicg.github.io/local-font-access",
+    "status": "Draft"
+  },
   "Logical Assignment": {
     "name": "Logical Assignment Operators",
     "url": "https://tc39.es/proposal-logical-assignment/",
@@ -1499,6 +1514,11 @@
     "url": "https://www.khronos.org/registry/typedarray/specs/latest/",
     "status": "Obsolete"
   },
+  "Trusted Types": {
+    "name": "Trusted Types",
+    "url": "https://w3c.github.io/webappsec-trusted-types/dist/spec/",
+    "status": "ED"
+  },
   "UI Events": {
     "name": "UI Events",
     "url": "https://w3c.github.io/uievents/",
@@ -1608,6 +1628,11 @@
     "name": "WebGL 2.0",
     "url": "https://www.khronos.org/registry/webgl/specs/latest/2.0/",
     "status": "ED"
+  },
+  "Web NFC": {
+    "name": "Web NFC",
+    "url": "https://w3c.github.io/web-nfc/",
+    "status": "Draft"
   },
   "EXT_blend_minmax": {
     "name": "EXT_blend_minmax",
@@ -1813,6 +1838,11 @@
     "name": "Identifiers for WebRTC's Statistics API",
     "url": "https://w3c.github.io/webrtc-stats/",
     "status": "CR"
+  },
+  "Web Serial API": {
+    "name": "Web Serial API",
+    "url": "https://wicg.github.io/serial/",
+    "status": "Draft"
   },
   "Web Share API": {
     "name": "Web Share API",

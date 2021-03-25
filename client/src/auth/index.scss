@@ -1,0 +1,30 @@
+@import "~@mdn/minimalist/sass/vars/layout";
+
+.page-content-container.auth-page-container {
+  align-items: center;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+
+  @media #{$mq-tablet-and-up} {
+    margin: ($base-spacing * 2);
+  }
+
+  @media #{$mq-large-desktop-and-up} {
+    margin: ($base-spacing * 3) auto;
+  }
+
+  h1 {
+    margin: $base-spacing 0;
+  }
+
+  .lead {
+    max-width: 35rem;
+    max-width: 60ch;
+    text-align: center;
+  }
+
+  .notecard {
+    width: 35%;
+  }
+}

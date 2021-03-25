@@ -83,6 +83,27 @@ module.exports = {
         page.url + hrefhash
       }"${titleAttribute}${flawAttribute}>${content}</a>`;
     }
+    if (!href.toLowerCase().startsWith("/en-us/")) {
+      // Before flagging this as a broken-link flaw, see if it's possible to
+      // change it to the en-US URL instead.
+      const hrefSplit = href.split("/");
+      hrefSplit[1] = "en-US";
+      const enUSPage = this.info.getPageByURL(hrefSplit.join("/"));
+      if (enUSPage.url) {
+        // But it's still a flaw. Record it so that translators can write a
+        // translated document to "fill the hole".
+        flaw = this.env.recordNonFatalError(
+          "broken-link",
+          `${hrefpath} does not exist but fallbacked on ${enUSPage.url}`
+        );
+        flawAttribute = ` data-flaw-src="${util.htmlEscape(flaw.macroSource)}"`;
+        return (
+          '<a class="only-in-en-us" ' +
+          'title="Currently only available in English (US)" ' +
+          `href="${enUSPage.url}"${flawAttribute}>${content} <span>(en-US)</span></a>`
+        );
+      }
+    }
     flaw = this.env.recordNonFatalError(
       "broken-link",
       `${hrefpath} does not exist`

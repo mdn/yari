@@ -16,7 +16,7 @@ jobs:
           path: mdn/content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.4
+        uses: actions/setup-node@v2.1.5
         with:
           node-version: "12"
 
@@ -62,7 +62,7 @@ jobs:
       - name: Wait for servers
         run: |
           # Just a slight delay to wait until the dev server is ready.
-          sleep 5
+          sleep 3
 
           curl --retry-connrefused --retry 5 http://localhost:5000 > /dev/null
           curl --retry-connrefused --retry 5 --silent http://localhost:3000 > /dev/null
@@ -76,15 +76,13 @@ jobs:
           # of the yarn installs above
           PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
         run: |
-          status=0
-          yarn test:testing developing || (
-            status=$?
-            echo "Testing failed! Going to dump stdout and stderr"
-            echo "STDOUT..................................................."
-            cat /tmp/stdout.log
-            echo "STDERR..................................................."
-            cat /tmp/stderr.log
-            echo $status
-            exit $status
-          )
-          exit $status
+          yarn test:testing developing
+
+      - name: Debug server's stdout and stderr if tests failed
+        if: failure()
+        run: |
+          echo "STDOUT..................................................."
+          cat /tmp/stdout.log
+          echo ""
+          echo "STDERR..................................................."
+          cat /tmp/stderr.log

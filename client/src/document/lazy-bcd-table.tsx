@@ -23,23 +23,33 @@ export function LazyBrowserCompatibilityTable({
   title: string;
   isH3: boolean;
   query: string;
-  dataURL: string;
+  dataURL: string | null;
 }) {
   return (
     <>
       {title && !isH3 && <DisplayH2 id={id} title={title} />}
       {title && isH3 && <DisplayH3 id={id} title={title} />}
-      <LaterLazyBrowserCompatibilityTableInner
-        dataURL={dataURL}
-        query={query}
-      />
+      {dataURL ? (
+        <LaterLazyBrowserCompatibilityTableInner dataURL={dataURL} />
+      ) : (
+        <div className="notecard warning">
+          <p>
+            No compatibility data found for <code>{query}</code>.<br />
+            <a href="#on-github">Check for problems with this page</a> or
+            contribute missing data to{" "}
+            <a href="https://github.com/mdn/browser-compat-data">
+              mdn/browser-compat-data
+            </a>
+            .
+          </p>
+        </div>
+      )}
     </>
   );
 }
 
 interface BrowserCompatibilityTableProps {
   dataURL: string;
-  query: string;
 }
 
 function LaterLazyBrowserCompatibilityTableInner(
@@ -93,7 +103,6 @@ function LaterLazyBrowserCompatibilityTableInner(
 
 function LazyBrowserCompatibilityTableInner({
   dataURL,
-  query,
 }: BrowserCompatibilityTableProps) {
   const locale = useLocale();
   const [bcdDataURL, setBCDDataURL] = useState("");
@@ -122,18 +131,6 @@ function LazyBrowserCompatibilityTableInner({
   }
   if (error) {
     return <p>Error loading BCD data</p>;
-  }
-  if (!data.data) {
-    return (
-      <p>
-        No compatibility data found for <code>{query}</code>. Check the spelling
-        or contribute data to{" "}
-        <a href="https://github.com/mdn/browser-compat-data">
-          mdn/browser-compat-data
-        </a>
-        .
-      </p>
-    );
   }
 
   return (
