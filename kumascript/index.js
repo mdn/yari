@@ -1,7 +1,7 @@
 const LRU = require("lru-cache");
 
 const { Document } = require("../content");
-const { markdownToHTML } = require("../content/markdown-converter");
+const { m2h } = require("../markdown");
 
 const {
   INTERACTIVE_EXAMPLES_BASE_URL,
@@ -52,7 +52,7 @@ const renderFromURL = async (
     );
   }
   const { rawBody, metadata, fileInfo, isMarkdown } = document;
-  const rawHTML = isMarkdown ? markdownToHTML(rawBody) : rawBody;
+  const rawHTML = isMarkdown ? await m2h(rawBody) : rawBody;
   const [renderedHtml, errors] = await renderMacros(
     rawHTML,
     {
