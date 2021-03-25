@@ -244,12 +244,12 @@ poetry run deployer --verbose --dry-run analyze-pr-build ../client/build \
 ## Debugging Analyze PR builds
 
 An important part of the `analyze-pr-builds` command is that it must be easy to
-debug and develop it further without having to rely on landing code in `main`
-and seeing how it worked out.
+debug and develop further without having to rely on landing code in `main`
+and seeing how it worked.
 
 The first thing you need to do is to download a `build` artifact or to simply
-run `yarn build` and using the `../client/build` directory. To download the artifact
-from a "post-pr" workflow, you go to a finished "PR Test" the workflow,
+run `yarn build` and use the `../client/build` directory. To download the artifact
+go to a finished "PR Test" workflow,
 like <https://github.com/mdn/content/pull/3381/checks?check_run_id=2169672013> for
 example. Near the upper right-hand corner of the content (near the "Re-run jobs"
 button) it says "Artifacts (1)". Download that `build.zip` file somewhere and unpack
