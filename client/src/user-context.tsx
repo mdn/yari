@@ -29,12 +29,34 @@ export type UserData = {
 
 const UserDataContext = React.createContext<UserData | null>(null);
 
+const SESSION_STORAGE_KEY = "whoami";
+
 export function UserDataProvider(props: { children: React.ReactNode }) {
+  function sessionStorageData() {
+    try {
+      const data = sessionStorage.getItem(SESSION_STORAGE_KEY);
+      if (data) {
+        return JSON.parse(data) as UserData;
+      }
+    } catch (error) {
+      console.warn("sessionStorage.getItem didn't work", error.toString());
+      return null;
+    }
+  }
+
   const { data } = useSWR<UserData | null, Error | null>(
     DISABLE_AUTH ? null : "/api/v1/whoami",
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
+        try {
+          sessionStorage.removeItem(SESSION_STORAGE_KEY);
+        } catch (error) {
+          console.warn(
+            "sessionStorage.removeItem didn't work",
+            error.toString()
+          );
+        }
         throw new Error(`${response.status} on ${response.url}`);
       }
       const data = await response.json();
@@ -53,8 +75,22 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         // have to create a separate context for it.
         waffle: data.waffle,
       };
+    },
+    {
+      initialData: sessionStorageData() || undefined,
     }
   );
+
+  React.useEffect(() => {
+    if (data !== undefined) {
+      // But do you have it in sessionStorage?!
+      try {
+        sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(data));
+      } catch (error) {
+        console.warn("sessionStorage.setItem didn't work", error.toString());
+      }
+    }
+  }, [data]);
 
   return (
     <UserDataContext.Provider value={data || null}>
