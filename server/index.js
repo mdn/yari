@@ -77,8 +77,8 @@ const proxy = FAKE_V1_API
           : "http://"
       }${PROXY_HOSTNAME}`,
       changeOrigin: true,
-      proxyTimeout: 3000,
-      timeout: 3000,
+      proxyTimeout: 10000,
+      timeout: 10000,
     });
 
 app.use("/api/v1", proxy);
