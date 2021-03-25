@@ -123,13 +123,18 @@ def post_about_dangerous_content(build_directory: Path, **config):
     if comments:
         per_doc_comments = []
         for doc, comment in comments:
-            per_doc_comments.append(
-                f"URL: `{doc['mdn_url']}`\n"
-                f"Title: `{doc['title']}`\n"
-                f"[on GitHub]({doc['source']['github_url']})\n"
-                "\n"
-                f"{comment}"
-            )
+            lines = []
+            if config["prefix"]:
+                url = mdn_url_to_dev_url(config["prefix"], doc["mdn_url"])
+                lines.append(f"URL: [`{doc['mdn_url']}`]({url})")
+            else:
+                lines.append(f"URL: `{doc['mdn_url']}`")
+            lines.append(f"Title: `{doc['title']}`")
+            lines.append(f"[on GitHub]({doc['source']['github_url']})")
+            lines.append("")
+            lines.append(comment)
+
+            per_doc_comments.append("\n".join(lines))
         return heading + "\n---\n".join(per_doc_comments)
     else:
         return heading + "*no external links in the built pages* 👱🏽"
