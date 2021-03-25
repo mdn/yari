@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { CRUD_MODE_READONLY } from "../../constants";
 import { Doc } from "../types";
 import { EditActions } from "./edit-actions";
 import { ToggleDocumentFlaws } from "./flaws";
@@ -40,6 +41,13 @@ export default function Toolbar({
           filename={doc.source.filename}
         />
       </div>
+      {CRUD_MODE_READONLY && (
+        <p>
+          <i>
+            You're in <b>read-only</b> mode.
+          </i>
+        </p>
+      )}
       <ToggleDocumentFlaws doc={doc} reloadPage={reloadPage} />
     </div>
   );

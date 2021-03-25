@@ -4,7 +4,7 @@ import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
 import { diffWords } from "diff";
 
-import { CRUD_MODE } from "../../constants";
+import { CRUD_MODE, CRUD_MODE_READONLY } from "../../constants";
 import { humanizeFlawName } from "../../flaw-utils";
 import { useDocumentURL } from "../hooks";
 import {
@@ -201,7 +201,7 @@ function Flaws({
 
   return (
     <div id="document-flaws">
-      {!!fixableFlaws.length && (
+      {!!fixableFlaws.length && !CRUD_MODE_READONLY && (
         <FixableFlawsAction
           count={fixableFlaws.length}
           reloadPage={reloadPage}
