@@ -3,7 +3,7 @@ const { all } = require("../utils/children");
 
 function div(h, node) {
   if (!node.children) {
-    return p(node, "html", toHtml(node));
+    return h(node, "html", toHtml(node));
   }
   return [
     h(node, "html", toHtml({ ...node, children: null }, { voids: ["div"] })),
