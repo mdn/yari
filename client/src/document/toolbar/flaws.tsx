@@ -1028,17 +1028,6 @@ function TranslationDifferences({
           const key = flaw.id;
           let explanation = <b>{flaw.explanation}</b>;
 
-          if (flaw.difference.type === "macro") {
-            explanation = (
-              <>
-                <b>
-                  <code>{flaw.difference.name}</code> macro
-                </b>
-                : {flaw.difference.explanation}
-              </>
-            );
-          }
-
           return (
             <li key={key}>
               {explanation}
