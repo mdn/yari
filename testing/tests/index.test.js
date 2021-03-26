@@ -1307,7 +1307,7 @@ test("basic markdown rendering", () => {
   expect($("article h2[id]").length).toBe(2);
   expect($("article h3[id]").length).toBe(3);
   expect($("article p code").length).toBe(2);
-  expect($("article strong").length).toBe(1);
+  expect($("article strong").length).toBe(2);
   expect($("article em").length).toBe(1);
   expect($("article ul li").length).toBe(6);
   expect($('article a[href^="/"]').length).toBe(2);
@@ -1316,12 +1316,11 @@ test("basic markdown rendering", () => {
   expect($("article pre.notranslate").length).toBe(3);
   expect($("article pre.css").hasClass("brush:")).toBe(true);
   expect($("article pre.javascript").hasClass("brush:")).toBe(true);
+  expect($("article .fancy strong").length).toBe(1);
 
-  // XXX This is currently broken! We need to figure out a better way to
-  // transform those ```css into `<pre class="brush: css">...`
-  // const jsonFile = path.join(builtFolder, "index.json");
-  // const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  // expect(Object.keys(doc.flaws).length).toBe(0);
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(Object.keys(doc.flaws).length).toBe(0);
 });
 
 test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {

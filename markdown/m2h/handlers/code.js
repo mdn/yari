@@ -7,7 +7,7 @@ function code(h, node) {
   const props = {};
 
   if (lang) {
-    props.className = ["brush:", lang, ...meta];
+    props.className = ["brush:", lang.toLowerCase(), ...meta];
   } else if (node.meta) {
     props.className = meta;
   }
