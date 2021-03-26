@@ -1,7 +1,7 @@
 /**
  * This script exists only to periodically generate a
- * 'content/popularities.json' file from a Google Analytics pageviews CSV
- * export.
+ * 'content/popularities.json' file from a Cloudfront access CSV export.
+ *
  * Generally, only the core MDN Web Docs team needs to run this. The output
  * file gets checked into git so it's easily available to everyone.
  *
@@ -12,14 +12,25 @@
 const fs = require("fs");
 
 const csv = require("@fast-csv/parse");
+const got = require("got");
 
-function runMakePopularitiesFile(filepath, options) {
+const CURRENT_URL =
+  "https://mdn-popularities-prod.s3.amazonaws.com/current.txt";
+
+async function fetchPopularities() {
+  let { body: csvURL } = await got(CURRENT_URL);
+  let { body: csv } = await got(csvURL);
+  return csv;
+}
+
+async function runMakePopularitiesFile(options) {
   const { outfile, maxUris } = options;
   const pageviews = [];
   let biggestCount = null;
+  const raw = await fetchPopularities();
   return new Promise((resolve, reject) => {
     csv
-      .parseFile(filepath, {
+      .parseString(raw, {
         headers: true,
       })
       .on("error", (error) => console.error(error))
