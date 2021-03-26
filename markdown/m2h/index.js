@@ -7,7 +7,7 @@ const raw = require("rehype-raw");
 const format = require("rehype-format");
 
 const handlers = require("./handlers");
-const { decodeKS, encodeKS } = require("../util");
+const { decodeKS, encodeKS } = require("../utils");
 
 function makeProcessor() {
   const processor = unified()

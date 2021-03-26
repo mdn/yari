@@ -5,7 +5,7 @@ const stringify = require("remark-stringify");
 const gfm = require("remark-gfm");
 
 const handlers = require("./handlers");
-const { decodeKS, encodeKS } = require("../util");
+const { decodeKS, encodeKS } = require("../utils");
 
 function makeProcessor() {
   const processor = unified()

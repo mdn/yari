@@ -1,4 +1,4 @@
-const { wrapText } = require("../../util");
+const { wrapText } = require("../../utils");
 
 const own = {}.hasOwnProperty;
 
