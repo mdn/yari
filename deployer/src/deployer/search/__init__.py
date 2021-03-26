@@ -1,3 +1,4 @@
+import datetime
 import json
 import re
 import time
@@ -6,6 +7,7 @@ from collections import defaultdict
 
 import click
 from elasticsearch.helpers import streaming_bulk
+from elasticsearch_dsl import Index
 from elasticsearch_dsl.connections import connections
 from selectolax.parser import HTMLParser
 
@@ -34,9 +36,21 @@ def index(
 
     click.echo(f"Found {count_todo:,} (potential) documents to index")
 
-    # Confusingly, `._index` is actually not a private API.
-    # It's the documented way you're supposed to reach it.
-    document_index = Document._index
+    # # Confusingly, `._index` is actually not a private API.
+    # # It's the documented way you're supposed to reach it.
+    # document_index = Document._index
+    # if not update:
+    #     click.echo(
+    #         "Deleting any possible existing index "
+    #         f"and creating a new one called {document_index._name}"
+    #     )
+    #     document_index.delete(ignore=404)
+    #     document_index.create()
+    date_suffix = datetime.datetime.utcnow().strftime("%Y%m%d")
+    # index_name = f"{Document._index._name}_{date_suffix}"
+    index_name = f"mdn_docs_{date_suffix}"
+    # print(f"Index name: {index_name}")
+    document_index = Index(index_name)
     if not update:
         click.echo(
             "Deleting any possible existing index "
@@ -91,6 +105,13 @@ def index(
 
         for skip in skipped:
             bar.update(1)
+
+    # Now when the index has been filled, we need to make sure we
+    # correct any previous indexes.
+    if not update:
+        document_index.put_alias(name="mdn_docs")
+        print("ALIAS?", document_index.get_alias())
+        print("ALIAS exists?", document_index.exists_alias(name="mdn_docs"))
 
     t1 = time.time()
     took = t1 - t0

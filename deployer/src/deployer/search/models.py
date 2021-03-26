@@ -172,4 +172,4 @@ class Document(ESDocument):
     popularity = Float()
 
     class Index:
-        name = "mdn_docs"
+        name = "mdn_docs_20210326"
