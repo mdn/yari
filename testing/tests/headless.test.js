@@ -1,4 +1,3 @@
-const fs = require("fs");
 const { setDefaultOptions } = require("expect-puppeteer");
 
 // The default it 500ms. It has happened and it can happen again, that sometimes
@@ -326,6 +325,7 @@ describe("Basic viewing of functional pages", () => {
     // whatever page you used before you end up on the settings page. In this
     // test simulation, it's a bit weird that the sessionStorage is set but the
     // cookie was not.
+    // eslint-disable-next-line no-undef
     await page.evaluate(() => sessionStorage.clear());
 
     await page.goto(url);
