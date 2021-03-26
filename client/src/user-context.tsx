@@ -29,6 +29,13 @@ export type UserData = {
 
 const UserDataContext = React.createContext<UserData | null>(null);
 
+// The argument for using sessionStorage rather than localStorage is because
+// it's marginally simpler and "safer". For example, if we use localStorage
+// it might stick in the browser for a very long time and we might change
+// the structure of that JSON we store in there.
+// Also, localStorage doesn't go away. So if we decide to not do this stuff
+// anymore we won't have users who have that stuff stuck in their browser
+// "forever".
 const SESSION_STORAGE_KEY = "whoami";
 
 export function UserDataProvider(props: { children: React.ReactNode }) {
@@ -50,6 +57,9 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
       const response = await fetch(url);
       if (!response.ok) {
         try {
+          // It's safe to call .removeItem() on a key that doesn't already exist,
+          // and it's pointless to first do a .hasItem() before the .removeItem()
+          // because internally that's what .removeItem() already does.
           sessionStorage.removeItem(SESSION_STORAGE_KEY);
         } catch (error) {
           console.warn(

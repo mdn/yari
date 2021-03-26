@@ -1,3 +1,4 @@
+const fs = require("fs");
 const { setDefaultOptions } = require("expect-puppeteer");
 
 // The default it 500ms. It has happened and it can happen again, that sometimes
@@ -319,6 +320,13 @@ describe("Basic viewing of functional pages", () => {
       value: "peterbe",
       domain: new URL(url).host,
     });
+    // Because the sessionStorage might have remembered that you are NOT signed
+    // in so the useUserData() context hook can resolve faster the XHR query.
+    // Normally, if you have signed in you'd get a sessionStorage set through
+    // whatever page you used before you end up on the settings page. In this
+    // test simulation, it's a bit weird that the sessionStorage is set but the
+    // cookie was not.
+    await page.evaluate(() => sessionStorage.clear());
 
     await page.goto(url);
     await expect(page).toMatchElement("h1", { text: "Account Settings" });
