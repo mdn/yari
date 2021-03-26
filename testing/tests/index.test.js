@@ -977,12 +977,13 @@ test("settings page", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("h1").text()).toContain("Settings");
-  expect($("title").text()).toContain("Settings");
+  expect($("h1").text()).toBe("Account settings");
+  console.log($("title").text());
+  expect($("title").text()).toContain("Account settings");
 
   const jsonFile = path.join(builtFolder, "index.json");
   const data = JSON.parse(fs.readFileSync(jsonFile));
-  expect(data.pageTitle).toBe("Settings");
+  expect(data.pageTitle).toBe("Account settings");
   expect(data.possibleLocales).toBeTruthy();
   const possibleLocale = data.possibleLocales.find((p) => p.locale === "en-US");
   expect(possibleLocale.English).toBe("English (US)");
