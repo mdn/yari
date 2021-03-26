@@ -181,7 +181,7 @@ test("content built French foo page", () => {
   expect(doc.title).toBe("<foo>: Une page de test");
   expect(doc.isTranslated).toBe(true);
   expect(doc.other_translations[0].locale).toBe("en-US");
-  expect(doc.other_translations[0].url).toBe("/en-US/docs/Web/Foo");
+  expect(doc.other_translations[0].native).toBe("English (US)");
   expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
 
   const htmlFile = path.join(builtFolder, "index.html");
@@ -957,7 +957,7 @@ test("sign in page", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("h1").text()).toContain("Sign in");
+  expect($("h1").text()).toContain("Sign in to MDN Web Docs");
   expect($("title").text()).toContain("Sign in");
 });
 
@@ -967,8 +967,27 @@ test("sign up page", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("h1").text()).toContain("Sign up");
+  expect($("h1").text()).toContain("Sign in to MDN Web Docs");
   expect($("title").text()).toContain("Sign up");
+});
+
+test("settings page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "settings");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("h1").text()).toBe("Account settings");
+  console.log($("title").text());
+  expect($("title").text()).toContain("Account settings");
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const data = JSON.parse(fs.readFileSync(jsonFile));
+  expect(data.pageTitle).toBe("Account settings");
+  expect(data.possibleLocales).toBeTruthy();
+  const possibleLocale = data.possibleLocales.find((p) => p.locale === "en-US");
+  expect(possibleLocale.English).toBe("English (US)");
+  expect(possibleLocale.native).toBe("English (US)");
 });
 
 test("bcd table extraction followed by h3", () => {
@@ -1279,6 +1298,31 @@ test("'lang' attribute should match the article", () => {
   $ = cheerio.load(html);
   expect($("html").attr("lang")).toBe("en-US");
   expect($("article").attr("lang")).toBe("en-US");
+});
+
+test("basic markdown rendering", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "docs", "markdown");
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("article h2[id]").length).toBe(2);
+  expect($("article h3[id]").length).toBe(3);
+  expect($("article p code").length).toBe(2);
+  expect($("article strong").length).toBe(1);
+  expect($("article em").length).toBe(1);
+  expect($("article ul li").length).toBe(6);
+  expect($('article a[href^="/"]').length).toBe(2);
+  expect($('article a[href^="#"]').length).toBe(5);
+  expect($("article pre").length).toBe(3);
+  expect($("article pre.notranslate").length).toBe(3);
+  expect($("article pre.css").hasClass("brush:")).toBe(true);
+  expect($("article pre.javascript").hasClass("brush:")).toBe(true);
+
+  // XXX This is currently broken! We need to figure out a better way to
+  // transform those ```css into `<pre class="brush: css">...`
+  // const jsonFile = path.join(builtFolder, "index.json");
+  // const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  // expect(Object.keys(doc.flaws).length).toBe(0);
 });
 
 test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {

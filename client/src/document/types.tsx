@@ -2,6 +2,7 @@ export interface Source {
   folder: string;
   github_url: string;
   last_commit_url: string;
+  filename: string;
 }
 
 export interface GenericFlaw {
@@ -106,7 +107,7 @@ type Flaws = {
 
 export type Translation = {
   locale: string;
-  url: string;
+  native: string;
 };
 
 export type DocParent = {

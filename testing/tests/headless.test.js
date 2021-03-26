@@ -37,7 +37,7 @@ describe("Basic viewing of functional pages", () => {
     // Note! It's important that this happens *after* the `.toMatchElement`
     // on the line above because expect-puppeteer doesn't have a wait to
     // properly wait for the (pushState) URL to have changed.
-    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
   });
 
   it("open the /en-US/docs/Web/InteractiveExample page", async () => {
@@ -246,13 +246,13 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toSelect('select[name="language"]', "English (US)");
     await expect(page).toClick("button", { text: "Change language" });
     await expect(page).toMatch("<foo>: A test tag");
-    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
 
     // And change back to French
     await expect(page).toSelect('select[name="language"]', "Français");
     await expect(page).toClick("button", { text: "Change language" });
     await expect(page).toMatch("<foo>: Une page de test");
-    expect(page.url()).toBe(testURL("/fr/docs/Web/Foo"));
+    expect(page.url()).toBe(testURL("/fr/docs/Web/Foo/"));
   });
 
   it("clicking 'Sign in' should offer links to all identity providers", async () => {
@@ -268,25 +268,65 @@ describe("Basic viewing of functional pages", () => {
 
   it("going to 'Sign up' page without query string", async () => {
     await page.goto(testURL("/en-US/signup"));
-    await expect(page).toMatchElement("h1", { text: "Sign up" });
-    await expect(page).toMatch("Invalid Sign up URL");
+    await expect(page).toMatchElement("h1", {
+      text: "Sign in to MDN Web Docs",
+    });
+    await expect(page).toMatch("Invalid URL");
     await expect(page).toMatchElement("a", {
-      text: "Try starting over the sign-in process",
+      text: "Please retry the sign-in process",
     });
   });
 
   it("going to 'Sign up' page with realistic (fake) query string", async () => {
-    await page.goto(
-      testURL("/en-US/signup?csrfmiddlewaretoken=abc&provider=github")
+    const sp = new URLSearchParams();
+    sp.set("csrfmiddlewaretoken", "abc");
+    sp.set("provider", "github");
+    sp.set(
+      "user_details",
+      JSON.stringify({
+        name: "Peter B",
+      })
     );
-    await expect(page).toMatchElement("h1", { text: "Sign up" });
-    await expect(page).not.toMatch("Invalid Sign up URL");
+
+    await page.goto(testURL(`/en-US/signup?${sp.toString()}`));
+    await expect(page).toMatchElement("h1", {
+      text: "Sign in to MDN Web Docs",
+    });
+    await expect(page).not.toMatch("Invalid URL");
     await expect(page).toMatch(
-      "You are signing in to MDN Web Docs with GitHub."
+      "You are signing in to MDN Web Docs with GitHub as Peter B."
     );
     await expect(page).toMatch(
       "I agree to Mozilla's Terms and Privacy Notice."
     );
-    await expect(page).toMatchElement("button", { text: "Create account" });
+    await expect(page).toMatchElement("button", { text: "Complete sign-in" });
+  });
+
+  it("should say you're not signed in on the settings page", async () => {
+    await page.goto(testURL("/en-US/settings"));
+    await expect(page).toMatchElement("h1", { text: "Account settings" });
+    await expect(page).toMatchElement("a", {
+      text: "Please sign in to continue",
+    });
+  });
+
+  it("should show your settings page", async () => {
+    const url = testURL("/en-US/settings");
+    // A `fakesessionid` is a special trick to tell the static server we use
+    // for mocking the `/api/v1`.
+    await page.setCookie({
+      name: "fakesessionid",
+      value: "peterbe",
+      domain: new URL(url).host,
+    });
+
+    await page.goto(url);
+    await expect(page).toMatchElement("h1", { text: "Account settings" });
+    await expect(page).toMatchElement("button", { text: "Close account" });
+
+    // Change locale to French
+    await expect(page).toSelect('select[name="locale"]', "French");
+    await expect(page).toClick("button", { text: "Update language" });
+    await expect(page).toMatch("Yay! Updated settings successfully saved.");
   });
 });

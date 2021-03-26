@@ -1,6 +1,7 @@
 const LRU = require("lru-cache");
 
 const { Document } = require("../content");
+const { markdownToHTML } = require("../content/markdown-converter");
 
 const {
   INTERACTIVE_EXAMPLES_BASE_URL,
@@ -50,7 +51,8 @@ const renderFromURL = async (
         `Tried to find a folder called ${Document.urlToFolderPath(url)}`
     );
   }
-  const { rawHTML, metadata, fileInfo } = document;
+  const { rawBody, metadata, fileInfo, isMarkdown } = document;
+  const rawHTML = isMarkdown ? markdownToHTML(rawBody) : rawBody;
   const [renderedHtml, errors] = await renderMacros(
     rawHTML,
     {
