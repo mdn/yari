@@ -1882,10 +1882,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@mdn/browser-compat-data@3.2.1":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-3.2.1.tgz#18707a79db035b430d6bab370d00cd14c39e0553"
-  integrity sha512-rIfqD67k64yP6RfFyZOVSLykDoNfAkeqRrTZnKs13rfa+EAFF/FOYAKTOpKMwMUfTM2/+FGYRGaiFmETnGRjsQ==
+"@mdn/browser-compat-data@3.2.2":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-3.2.2.tgz#0d4ca55e796d96a4d15935b8e51535ced5380573"
+  integrity sha512-W+f7ZugkxsB2xvRLb283m/weDx58yatbJTDRS8FAO9kR7igrQsZeTFaUoYogw36ywzwuOSnY6vKPFHbF6Xhd5A==
   dependencies:
     extend "3.0.2"
 
@@ -2998,10 +2998,10 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@^26.0.21":
-  version "26.0.21"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-26.0.21.tgz#3a73c2731e7e4f0fbaea56ce7ff8c79cf812bd24"
-  integrity sha512-ab9TyM/69yg7eew9eOwKMUmvIZAKEGZYlq/dhe5/0IMUd/QLJv5ldRMdddSn+u22N13FP3s5jYyktxuBwY0kDA==
+"@types/jest@^26.0.22":
+  version "26.0.22"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-26.0.22.tgz#8308a1debdf1b807aa47be2838acdcd91e88fbe6"
+  integrity sha512-eeWwWjlqxvBxc4oQdkueW5OF/gtfSceKk4OnOAGlUSwS/liBRtZppbJuz1YkgbrbfGOoeBHun9fOvXnjNwrSOw==
   dependencies:
     jest-diff "^26.0.0"
     pretty-format "^26.0.0"

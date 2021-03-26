@@ -1,0 +1,125 @@
+/* This is based on
+    node_modules/prismjs/themes/prism.css
+as of Mar 26, 2021.
+
+The reason we're not importing all of their CSS is because it contains a lot of
+selectors that we never use. In particular, it has (lots!) CSS for selectors
+like `pre[class*="language-"]` and `code[class*="language-"]` but because we
+don't use any of that, we can safely ignore it.
+*/
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: slategray;
+}
+
+.token.punctuation {
+  color: #999;
+}
+
+.token.namespace {
+  opacity: 0.7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #905;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #690;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #9a6e3a;
+  /* This background color was intended by the author of this theme. */
+  background: hsla(0, 0%, 100%, 0.5);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #07a;
+}
+
+.token.function,
+.token.class-name {
+  color: #dd4a68;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #e90;
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+// MINIMALIST....
+
+// .token.keyword {
+//   color: $primary-50;
+// }
+
+// .token.selector,
+// .token.attr-name,
+// .token.string,
+// .token.char,
+// .token.builtin,
+// .token.inserted {
+//   color: $green-100;
+// }
+
+// .token.operator,
+// .token.entity,
+// .token.url,
+// .language-css .token.string,
+// .style .token.string,
+// .token.variable {
+//   background-color: transparent;
+//   color: $neutral-100;
+// }
+
+// .token.atrule,
+// .token.attr-value,
+// .token.function {
+//   color: $red-200;
+// }
+
+// .token.comment,
+// .token.prolog,
+// .token.doctype,
+// .token.cdata {
+//   color: $neutral-300;
+// }
+
+// .token.regex,
+// .token.important {
+//   color: $orange-100;
+// }
