@@ -535,8 +535,8 @@
     "status": "Draft"
   },
   "CSS Grid": {
-    "name": "CSS Grid Layout",
-    "url": "https://drafts.csswg.org/css-grid/",
+    "name": "CSS Grid Layout Module Level 1",
+    "url": "https://www.w3.org/TR/css-grid-1/",
     "status": "CR"
   },
   "CSS Grid 2": {
