@@ -11,7 +11,7 @@
 //      a specific method, property, or other entity to customize the
 //      appearance of the link.
 
-var spec   = $0;
+var spec   = $0.replace(/\s+/g, ' ').trim();
 var anchor = $1;
 var name;
 var url;
