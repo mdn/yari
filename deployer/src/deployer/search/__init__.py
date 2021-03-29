@@ -2,7 +2,7 @@ import json
 import re
 import time
 from pathlib import Path
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 import click
 from elasticsearch.helpers import streaming_bulk
@@ -21,7 +21,7 @@ def index(
 ):
     # We can confidently use a single host here because we're not searching
     # a cluster.
-    connections.create_connection(hosts=[url])
+    connections.create_connection(hosts=[url], retry_on_timeout=True)
     connection = connections.get_connection()
     health = connection.cluster.health()
     status = health["status"]
@@ -82,10 +82,40 @@ def index(
             return VoidProgressBar()
         return click.progressbar(length=count_todo, label="Indexing", width=0)
 
-    count_done = 0
+    count_done = count_worked = count_errors = 0
+    count_shards_worked = count_shards_failed = 0
+    errors_counter = Counter()
     t0 = time.time()
     with get_progressbar() as bar:
-        for x in streaming_bulk(connection, generator(), index=document_index._name):
+        for success, info in streaming_bulk(
+            connection,
+            generator(),
+            index=document_index._name,
+            # It's an inexact science as to what the perfect chunk_size should be.
+            # The default according to
+            # https://elasticsearch-py.readthedocs.io/en/v7.12.0/helpers.html#elasticsearch.helpers.streaming_bulk
+            # is 500.
+            # We've noticed that it works a bit better with a lower number because
+            # sometimes you get a `ReadTimeoutError` and combined with
+            # setting `raise_on_exception=False` you put less strain on each "bulk
+            # block".
+            chunk_size=100,
+            # If the bulk indexing failed, it will by default raise a BulkIndexError.
+            # Setting this to 'False' will suppress that.
+            raise_on_exception=False,
+            # If the bulk operation failed for some other reason like a ReadTimeoutError
+            # it will raise whatever the error but default.
+            # We prefer to swallow all errors under the assumption that the holes
+            # will hopefully be fixed in the next attempt.
+            raise_on_error=False,
+        ):
+            if success:
+                count_shards_worked += info["index"]["_shards"]["successful"]
+                count_shards_failed += info["index"]["_shards"]["failed"]
+                count_worked += 1
+            else:
+                count_errors += 1
+                errors_counter[info["index"]["error"]] += 1
             count_done += 1
             bar.update(1)
 
@@ -99,6 +129,16 @@ def index(
         f"Took {format_time(took)} to index {count_done:,} documents. "
         f"Approximately {rate:.1f} docs/second"
     )
+    click.echo(
+        f"Count shards - successful: {count_shards_worked:,} "
+        f"failed: {count_shards_failed:,}"
+    )
+    click.echo(f"Counts - worked: {count_worked:,} errors: {count_errors:,}")
+    if errors_counter:
+        click.echo("Most common errors....")
+        for error, count in errors_counter.most_common():
+            click.echo(f"{count:,}\t{error[:80]}")
+
     if priority_prefixes:
         click.echo("Counts per priority prefixes:")
         rest = sum(v for v in count_by_prefix.values())
