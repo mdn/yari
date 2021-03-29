@@ -27,7 +27,6 @@ var text = mdn.localStringMap({
     'Interfaces': 'Interfaces',
     'Documentation': 'Documentation:',
     'Useful_lists': 'Useful lists',
-    'WebRTC_tag': 'Pages tagged "WebRTC"',
     'Contribute': 'Contribute',
     'The_MDN_project': 'The MDN project',
     'build_a_phone_with_peer_js': 'Building an internet-connected phone with Peer.js',
@@ -48,7 +47,6 @@ var text = mdn.localStringMap({
     'Interfaces': 'Интерфейсы',
     'Documentation': 'Документация:',
     'Useful_lists': 'Полезные списки',
-    'WebRTC_tag': 'Страницы, отмеченные "WebRTC"',
     'Contribute': 'Внести вклад',
     'The_MDN_project': 'Проект MDN',
   }
@@ -102,14 +100,6 @@ var text = mdn.localStringMap({
     </details>
   </li>
   <li><strong><a href="/<%=locale%>/docs/MDN"><%=text['Documentation']%></a></strong></li>
-  <li class="toggle">
-    <details <%=state('Useful lists')%>>
-      <summary><%=text['Useful_lists']%></summary>
-      <ol>
-        <li><a href="/<%=locale%>/docs/tag/WebRTC"><%=text['WebRTC_tag']%></a></li>
-      </ol>
-    </details>
-  </li>
   <li class="toggle">
     <details <%=state('Contribute')%>>
       <summary><%=text['Contribute']%></summary>
