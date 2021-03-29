@@ -31,7 +31,6 @@ var text = mdn.localStringMap({
     'Interfaces': 'Interfaces',
     'Documentation': 'Documentation:',
     'Useful_lists': 'Useful lists',
-    'WebGL_tag': 'Pages tagged "WebGL"',
     'Contribute': 'Contribute',
     'The_MDN_project': 'The MDN project',
   },
@@ -55,7 +54,6 @@ var text = mdn.localStringMap({
     'Interfaces': 'Interfaces',
     'Documentation': 'Dokumentation:',
     'Useful_lists': 'Nützliche Listen',
-    'WebGL_tag': 'Seiten mit dem Tag "WebGL"',
     'Contribute': 'Mitmachen',
     'The_MDN_project': 'Das MDN-Projekt',
   },
@@ -79,7 +77,6 @@ var text = mdn.localStringMap({
     'Interfaces': 'Interfaces',
     'Documentation': 'Documentation:',
     'Useful_lists': 'Listes utiles',
-    'WebGL_tag': 'Pages étiquetées "WebGL"',
     'Contribute': 'Contribuer',
     'The_MDN_project': 'Le projet MDN',
   },
@@ -103,7 +100,6 @@ var text = mdn.localStringMap({
     'Interfaces': 'Интерфейсы',
     'Documentation': 'Доментация:',
     'Useful_lists': 'Полезные списки',
-    'WebGL_tag': 'Страницы отмеченные "WebGL"',
     'Contribute': 'Внести вклад',
     'The_MDN_project': 'Проект MDN',
   }
@@ -166,14 +162,6 @@ var text = mdn.localStringMap({
   </li>
 
   <li><strong><a href="/<%=locale%>/docs/MDN"><%=text['Documentation']%></a></strong></li>
-  <li class="toggle">
-    <details <%=state('Useful lists')%>>
-      <summary><%=text['Useful_lists']%></summary>
-      <ol>
-        <li><a href="/<%=locale%>/docs/tag/WebGL"><%=text['WebGL_tag']%></a></li>
-      </ol>
-    </details>
-  </li>
   <li class="toggle">
     <details <%=state('Contribute')%>>
       <summary><%=text['Contribute']%></summary>
