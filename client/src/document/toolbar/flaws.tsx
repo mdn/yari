@@ -447,7 +447,7 @@ function BrokenLinks({
               </span>{" "}
               {CRUD_MODE_READONLY ? (
                 <>
-                  {/* It would be cool if we can change the link the line in the
+                  {/* It would be cool if we can change this to a link to the line in the
                   file in GitHub's UI. */}
                   line {flaw.line}:{flaw.column}
                 </>
