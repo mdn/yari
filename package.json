@@ -92,7 +92,7 @@
     "unist-util-visit": "2.0.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.10",
+    "@babel/core": "^7.13.13",
     "@mdn/dinocons": "^0.3.0",
     "@mdn/minimalist": "^0.8.0",
     "@storybook/addon-a11y": "^6.1.21",
