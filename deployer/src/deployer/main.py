@@ -66,6 +66,13 @@ def validate_optional_file(ctx, param, value):
     show_default=True,
     is_flag=True,
 )
+@click.option(
+    "--verbose",
+    default=False,
+    help="Be louder with stdout logging",
+    show_default=True,
+    is_flag=True,
+)
 @click.version_option(version=__version__)
 @click.pass_context
 def cli(ctx, **kwargs):
@@ -247,10 +254,16 @@ def upload(ctx, directory: Path, **kwargs):
 def analyze_pr_build(ctx, directory: Path, **kwargs):
     log.info(f"Deployer ({__version__})", bold=True)
     ctx.obj.update(kwargs)
+
+    actionable_options = ("prefix", "analyze_flaws", "analyze_dangerous_content")
+    if not any(ctx.obj[x] for x in actionable_options):
+        raise Exception("No actionable option used. ")
+
     combined_comment = analyze_pr(directory, ctx.obj)
-    log.info("POST".center(80, "_"), "\n")
-    log.info(combined_comment)
-    log.info("\n", "END POST".center(80, "_"))
+    if ctx.obj["verbose"]:
+        log.info("POST".center(80, "_"), "\n")
+        log.info(combined_comment)
+        log.info("\n", "END POST".center(80, "_"))
 
 
 @cli.command()

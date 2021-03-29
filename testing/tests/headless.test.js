@@ -304,7 +304,7 @@ describe("Basic viewing of functional pages", () => {
 
   it("should say you're not signed in on the settings page", async () => {
     await page.goto(testURL("/en-US/settings"));
-    await expect(page).toMatchElement("h1", { text: "Account Settings" });
+    await expect(page).toMatchElement("h1", { text: "Account settings" });
     await expect(page).toMatchElement("a", {
       text: "Please sign in to continue",
     });
@@ -329,7 +329,7 @@ describe("Basic viewing of functional pages", () => {
     await page.evaluate(() => sessionStorage.clear());
 
     await page.goto(url);
-    await expect(page).toMatchElement("h1", { text: "Account Settings" });
+    await expect(page).toMatchElement("h1", { text: "Account settings" });
     await expect(page).toMatchElement("button", { text: "Close account" });
 
     // Change locale to French
