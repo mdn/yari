@@ -822,7 +822,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       for (const document of documents.iter()) {
         countTotal++;
         console.group(`${document.fileInfo.path}:`);
-        const originalRawHTML = document.rawHTML;
+        const originalRawBody = document.rawBody;
         let [renderedHTML, flaws] = await renderOrRemoveMacros(document);
         if (flaws.length) {
           const fixableFlaws = flaws.filter((f) => f.redirectInfo);
@@ -844,13 +844,13 @@ if (Mozilla && !Mozilla.dntEnabled()) {
               );
               // Let's start fresh so we don't keep the "data-flaw-src"
               // attributes that may have been injected during the rendering.
-              document.rawHTML = originalRawHTML;
+              document.rawBody = originalRawBody;
               for (const flaw of fixableFlaws) {
                 const suggestion = flaw.macroSource.replace(
                   flaw.redirectInfo.current,
                   flaw.redirectInfo.suggested
                 );
-                document.rawHTML = document.rawHTML.replace(
+                document.rawBody = document.rawBody.replace(
                   flaw.macroSource,
                   suggestion
                 );
@@ -859,7 +859,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
               console.groupEnd();
               Document.update(
                 document.url,
-                document.rawHTML,
+                document.rawBody,
                 document.metadata
               );
               // Ok, we've fixed the fixable flaws, now let's render again.
@@ -881,7 +881,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         // to get what we'll store in the document.
         const $ = cheerio.load(renderedHTML);
         const newRawHTML = $("body").html();
-        if (newRawHTML !== originalRawHTML) {
+        if (newRawHTML !== originalRawBody) {
           Document.update(document.url, newRawHTML, document.metadata);
           console.log(`modified`);
           countModified++;
