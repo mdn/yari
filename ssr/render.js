@@ -197,12 +197,16 @@ export default function render(
         url: doc.mdn_url,
       };
       for (const translation of [...doc.other_translations, thisLocale]) {
+        const translationURL = doc.mdn_url.replace(
+          `/${doc.locale}/`,
+          `/${translation.locale}/`
+        );
         // The locale used in `<link rel="alternate">` needs to be the ISO-639-1
         // code. For example, it's "en", not "en-US". And it's "sv" not "sv-SE".
         // See https://developers.google.com/search/docs/advanced/crawling/localized-versions?hl=en&visit_id=637411409912568511-3980844248&rd=1#language-codes
         $('<link rel="alternate">')
           .attr("title", translation.title)
-          .attr("href", `https://developer.mozilla.org${translation.url}`)
+          .attr("href", `https://developer.mozilla.org${translationURL}`)
           .attr("hreflang", getHrefLang(translation.locale, allOtherLocales))
           .insertAfter("title");
       }
