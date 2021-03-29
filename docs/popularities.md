@@ -84,8 +84,13 @@ def lambda_handler(event, context):
     s3 = boto3.resource('s3')
     uuid=response["QueryExecutionId"]
     if uuid:
-        content = "https://mdn-popularities-prod.s3.amazonaws.com/{year}/{month}/{uuid}.csv".format(year=year, month=month, uuid=uuid)
-        s3.Object('mdn-popularities-prod', 'current.txt').put(Body=content, ContentType="text/plain; charset=utf-8")
+        content = (
+          "https://mdn-popularities-prod.s3.amazonaws.com/"
+          "{year}/{month}/{uuid}.csv"
+        ).format(year=year, month=month, uuid=uuid)
+        s3.Object(
+          'mdn-popularities-prod', 'current.txt'
+        ).put(Body=content, ContentType="text/plain; charset=utf-8")
     return response
 ```
 
