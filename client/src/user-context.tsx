@@ -93,7 +93,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     if (data !== undefined) {
-      // But do you have it in sessionStorage?!
+      // Ensure we have a snapshot in sessionStorage
       try {
         sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(data));
       } catch (error) {
