@@ -2126,6 +2126,7 @@
       "events": []
     },
     "XMLHttpRequest": {
+      "overview": ["XMLHttpRequest"],
       "guides": [
         "/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest",
         "/docs/Web/API/XMLHttpRequest/HTML_in_XMLHttpRequest",
