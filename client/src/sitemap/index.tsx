@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useSWR from "swr";
 
-import { CRUD_MODE } from "../constants";
+import { CRUD_MODE, CRUD_MODE_READONLY } from "../constants";
 import { useLocale } from "../hooks";
 import { PageContentContainer } from "../ui/atoms/page-content";
 
@@ -427,7 +427,7 @@ function Breadcrumb({
               <Link to={thisDoc.url}>
                 <em>{thisDoc.title}</em>
               </Link>{" "}
-              {CRUD_MODE && (
+              {CRUD_MODE && !CRUD_MODE_READONLY && (
                 <small>
                   (
                   <a
@@ -492,17 +492,19 @@ function ShowTree({
                 <Link to={doc.url} title={`Go to: ${doc.title}`}>
                   View
                 </Link>
-                {" | "}
-                <Link
-                  to={doc.url}
-                  title={`Edit: ${doc.title}`}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    openInYourEditor(doc.url);
-                  }}
-                >
-                  Edit
-                </Link>
+                {!CRUD_MODE_READONLY && " | "}
+                {!CRUD_MODE_READONLY && (
+                  <Link
+                    to={doc.url}
+                    title={`Edit: ${doc.title}`}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      openInYourEditor(doc.url);
+                    }}
+                  >
+                    Edit
+                  </Link>
+                )}
                 )
               </small>
             </li>

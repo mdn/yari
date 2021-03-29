@@ -4,7 +4,7 @@ import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
 import { diffWords } from "diff";
 
-import { CRUD_MODE } from "../../constants";
+import { CRUD_MODE, CRUD_MODE_READONLY } from "../../constants";
 import { humanizeFlawName } from "../../flaw-utils";
 import { useDocumentURL } from "../hooks";
 import {
@@ -201,7 +201,7 @@ function Flaws({
 
   return (
     <div id="document-flaws">
-      {!!fixableFlaws.length && (
+      {!!fixableFlaws.length && !CRUD_MODE_READONLY && (
         <FixableFlawsAction
           count={fixableFlaws.length}
           reloadPage={reloadPage}
@@ -445,16 +445,24 @@ function BrokenLinks({
               >
                 👀
               </span>{" "}
-              <a
-                href={`file://${filepath}`}
-                onClick={(event: React.MouseEvent) => {
-                  event.preventDefault();
-                  openInEditor(key, flaw.line, flaw.column);
-                }}
-                title="Click to open in your editor"
-              >
-                line {flaw.line}:{flaw.column}
-              </a>{" "}
+              {CRUD_MODE_READONLY ? (
+                <>
+                  {/* It would be cool if we can change this to a link to the line in the
+                  file in GitHub's UI. */}
+                  line {flaw.line}:{flaw.column}
+                </>
+              ) : (
+                <a
+                  href={`file://${filepath}`}
+                  onClick={(event: React.MouseEvent) => {
+                    event.preventDefault();
+                    openInEditor(key, flaw.line, flaw.column);
+                  }}
+                  title="Click to open in your editor"
+                >
+                  line {flaw.line}:{flaw.column}
+                </a>
+              )}{" "}
               {flaw.fixable && <FixableFlawBadge />}{" "}
               {opening && opening === key && <span>Opening...</span>}
               <br />
@@ -583,17 +591,23 @@ function BadPreTag({
               👀
             </span>{" "}
             {flaw.line && flaw.column ? (
-              <a
-                href={`file://${filepath}`}
-                onClick={(event: React.MouseEvent) => {
-                  event.preventDefault();
-                  if (flaw.line && flaw.column)
-                    openInEditor(flaw.id, flaw.line, flaw.column);
-                }}
-                title="Click to open in your editor"
-              >
-                line {flaw.line}:{flaw.column}
-              </a>
+              CRUD_MODE_READONLY ? (
+                <>
+                  line {flaw.line}:{flaw.column}
+                </>
+              ) : (
+                <a
+                  href={`file://${filepath}`}
+                  onClick={(event: React.MouseEvent) => {
+                    event.preventDefault();
+                    if (flaw.line && flaw.column)
+                      openInEditor(flaw.id, flaw.line, flaw.column);
+                  }}
+                  title="Click to open in your editor"
+                >
+                  line {flaw.line}:{flaw.column}
+                </a>
+              )
             ) : null}{" "}
             {flaw.fixable && <FixableFlawBadge />}{" "}
           </li>
@@ -655,16 +669,22 @@ function Macros({
             }
           >
             <summary>
-              <a
-                href={`file://${flaw.filepath}`}
-                onClick={(event: React.MouseEvent) => {
-                  event.preventDefault();
-                  openInEditor(flaw, flaw.id);
-                }}
-              >
-                <code>{flaw.name}</code> from <code>{flaw.macroName}</code> in
-                line {flaw.line}:{flaw.column}
-              </a>{" "}
+              <code>{flaw.name}</code> from <code>{flaw.macroName}</code>{" "}
+              {CRUD_MODE_READONLY ? (
+                <>
+                  line {flaw.line}:{flaw.column}
+                </>
+              ) : (
+                <a
+                  href={`file://${flaw.filepath}`}
+                  onClick={(event: React.MouseEvent) => {
+                    event.preventDefault();
+                    openInEditor(flaw, flaw.id);
+                  }}
+                >
+                  line {flaw.line}:{flaw.column}
+                </a>
+              )}{" "}
               {opening && opening === flaw.id && <span>Opening...</span>}{" "}
               {inPrerequisiteMacro && (
                 <span
@@ -770,16 +790,22 @@ function Images({
               >
                 👀
               </span>{" "}
-              <a
-                href={`file://${filepath}`}
-                onClick={(event: React.MouseEvent) => {
-                  event.preventDefault();
-                  openInEditor(key, flaw.line, flaw.column);
-                }}
-                title="Click to open in your editor"
-              >
-                line {flaw.line}:{flaw.column}
-              </a>{" "}
+              {CRUD_MODE_READONLY ? (
+                <>
+                  line {flaw.line}:{flaw.column}
+                </>
+              ) : (
+                <a
+                  href={`file://${filepath}`}
+                  onClick={(event: React.MouseEvent) => {
+                    event.preventDefault();
+                    openInEditor(key, flaw.line, flaw.column);
+                  }}
+                  title="Click to open in your editor"
+                >
+                  line {flaw.line}:{flaw.column}
+                </a>
+              )}{" "}
               {(flaw.fixable || flaw.externalImage) && <FixableFlawBadge />}{" "}
               <br />
               {flaw.suggestion && (
@@ -858,16 +884,22 @@ function ImageWidths({
               >
                 👀
               </span>{" "}
-              <a
-                href={`file://${filepath}`}
-                onClick={(event: React.MouseEvent) => {
-                  event.preventDefault();
-                  openInEditor(key, flaw.line, flaw.column);
-                }}
-                title="Click to open in your editor"
-              >
-                line {flaw.line}:{flaw.column}
-              </a>{" "}
+              {CRUD_MODE_READONLY ? (
+                <>
+                  line {flaw.line}:{flaw.column}
+                </>
+              ) : (
+                <a
+                  href={`file://${filepath}`}
+                  onClick={(event: React.MouseEvent) => {
+                    event.preventDefault();
+                    openInEditor(key, flaw.line, flaw.column);
+                  }}
+                  title="Click to open in your editor"
+                >
+                  line {flaw.line}:{flaw.column}
+                </a>
+              )}{" "}
               {(flaw.fixable || flaw.externalImage) && <FixableFlawBadge />}{" "}
               <br />
               {flaw.suggestion === "" && (
@@ -944,22 +976,28 @@ function HeadingLinks({
           return (
             <li key={key}>
               <b>{flaw.explanation}</b>{" "}
-              {flaw.line && flaw.column && (
-                <a
-                  href={`file://${filepath}`}
-                  onClick={(event: React.MouseEvent) => {
-                    event.preventDefault();
-                    openInEditor(
-                      key,
-                      flaw.line as number,
-                      flaw.column as number
-                    );
-                  }}
-                  title="Click to open in your editor"
-                >
-                  line {flaw.line}:{flaw.column}
-                </a>
-              )}{" "}
+              {flaw.line && flaw.column ? (
+                CRUD_MODE_READONLY ? (
+                  <>
+                    line {flaw.line}:{flaw.column}
+                  </>
+                ) : (
+                  <a
+                    href={`file://${filepath}`}
+                    onClick={(event: React.MouseEvent) => {
+                      event.preventDefault();
+                      openInEditor(
+                        key,
+                        flaw.line as number,
+                        flaw.column as number
+                      );
+                    }}
+                    title="Click to open in your editor"
+                  >
+                    line {flaw.line}:{flaw.column}
+                  </a>
+                )
+              ) : null}{" "}
               {flaw.fixable && <FixableFlawBadge />} <br />
               <b>HTML:</b> <code>{flaw.html}</code> <br />
               {flaw.suggestion && flaw.before ? (
