@@ -634,22 +634,14 @@ program
 
   .command(
     "popularities",
-    "Convert a Google Analytics pageviews CSV into a popularities.json file"
+    "Convert an AWS Athena log aggregation CSV into a popularities.json file"
   )
-  .option(
-    "--outfile <path>",
-    "export from Google Analytics containing pageview counts",
-    {
-      default: path.join(CONTENT_ROOT, "popularities.json"),
-    }
-  )
-  .option(
-    "--max-uris <number>",
-    "export from Google Analytics containing pageview counts",
-    {
-      default: MAX_GOOGLE_ANALYTICS_URIS,
-    }
-  )
+  .option("--outfile <path>", "output file", {
+    default: path.join(CONTENT_ROOT, "popularities.json"),
+  })
+  .option("--max-uris <number>", "limit to top <number> entries", {
+    default: MAX_GOOGLE_ANALYTICS_URIS,
+  })
   .action(
     tryOrExit(async ({ options, logger }) => {
       const {
