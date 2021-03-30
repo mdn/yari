@@ -489,11 +489,8 @@
       "impl": [
         "XPathEvaluator",
         "GlobalEventHandlers",
-        "TouchEventHandlers",
         "ParentNode",
-        "OnErrorEventHandlerForNodes",
-        "GeometryUtils",
-        "FontFaceSource"
+        "GeometryUtils"
       ]
     },
     "DocumentFragment": {
@@ -674,11 +671,7 @@
     },
     "HTMLElement": {
       "inh": "Element",
-      "impl": [
-        "GlobalEventHandlers",
-        "TouchEventHandlers",
-        "OnErrorEventHandlerForNodes"
-      ]
+      "impl": ["GlobalEventHandlers"]
     },
     "HTMLEmbedElement": {
       "inh": "HTMLElement",
@@ -1597,11 +1590,7 @@
     },
     "SVGElement": {
       "inh": "Element",
-      "impl": [
-        "GlobalEventHandlers",
-        "TouchEventHandlers",
-        "OnErrorEventHandlerForNodes"
-      ]
+      "impl": ["GlobalEventHandlers"]
     },
     "SVGEllipseElement": {
       "inh": "SVGGeometryElement",
@@ -2255,7 +2244,6 @@
         "GlobalCrypto",
         "SpeechSynthesisGetter",
         "WindowModal",
-        "TouchEventHandlers",
         "OnErrorEventHandlerForWindow",
         "ChromeWindow",
         "WindowOrWorkerGlobalScope"
@@ -2404,12 +2392,7 @@
     },
     "XULElement": {
       "inh": "Element",
-      "impl": [
-        "GlobalEventHandlers",
-        "TouchEventHandlers",
-        "MozFrameLoaderOwner",
-        "OnErrorEventHandlerForNodes"
-      ]
+      "impl": ["GlobalEventHandlers", "MozFrameLoaderOwner"]
     }
   }
 ]

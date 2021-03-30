@@ -513,7 +513,7 @@ function move(oldSlug, newSlug, locale, { dry = false } = {}) {
   }
 
   doc.metadata.slug = newSlug;
-  update(oldUrl, doc.rawHTML, doc.metadata);
+  update(oldUrl, doc.rawBody, doc.metadata);
 
   return pairs;
 }
