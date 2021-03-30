@@ -20,12 +20,12 @@ updates:
   - package-ecosystem: "pip"
     directory: "/deployer"
     schedule:
-      interval: "daily"
+      interval: "weekly"
 
   - package-ecosystem: "pip"
     directory: "/testing/integration"
     schedule:
-      interval: "daily"
+      interval: "weekly"
 
   - package-ecosystem: npm
     directory: "/deployer/aws-lambda/content-origin-request"
