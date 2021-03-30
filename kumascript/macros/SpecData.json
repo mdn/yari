@@ -109,6 +109,11 @@
     "url": "https://console.spec.whatwg.org/",
     "status": "Living"
   },
+  "Compression Streams": {
+    "name": "Compression Streams",
+    "url": "https://wicg.github.io/compression/",
+    "status": "Draft"
+  },
   "Contacts": {
     "name": "Contacts Manager API",
     "url": "https://www.w3.org/2012/sysapps/contacts-manager-api/",
