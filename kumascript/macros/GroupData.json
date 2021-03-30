@@ -1967,6 +1967,7 @@
       "events": []
     },
     "Web Speech API": {
+      "overview": ["Web Speech API"],
       "interfaces": [
         "SpeechGrammar",
         "SpeechGrammarList",
