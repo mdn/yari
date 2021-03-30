@@ -1151,6 +1151,23 @@ for (const [pattern, path] of [
 }
 
 const MISC_REDIRECT_PATTERNS = [
+  localeRedirect(/^account\/?$/i, "/settings", {
+    permanent: false,
+  }),
+  localeRedirect(
+    /^profile(?:|\/stripe_subscription|\/edit)\/?$/i,
+    "/settings",
+    {
+      permanent: false,
+    }
+  ),
+  localeRedirect(
+    /^profiles\/(?:[^\/]+)(?:|\/edit|\/delete)\/?$/i,
+    "/settings",
+    {
+      permanent: false,
+    }
+  ),
   localeRedirect(/^docs\/Core_JavaScript_1.5_/i, "/docs/Web/JavaScript/", {
     permanent: true,
     // This will convert :
