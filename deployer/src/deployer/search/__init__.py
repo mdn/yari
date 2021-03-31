@@ -1,4 +1,3 @@
-import datetime
 import json
 import re
 import time
@@ -11,7 +10,7 @@ from elasticsearch_dsl import Index
 from elasticsearch_dsl.connections import connections
 from selectolax.parser import HTMLParser
 
-from .models import Document
+from .models import Document, INDEX_ALIAS_NAME
 
 
 def index(
@@ -19,7 +18,6 @@ def index(
     url: str,
     update=False,
     no_progressbar=False,
-    priority_prefixes: (str) = (),
 ):
     # We can confidently use a single host here because we're not searching
     # a cluster.
@@ -36,60 +34,38 @@ def index(
 
     click.echo(f"Found {count_todo:,} (potential) documents to index")
 
-    # # Confusingly, `._index` is actually not a private API.
-    # # It's the documented way you're supposed to reach it.
-    # document_index = Document._index
-    # if not update:
-    #     click.echo(
-    #         "Deleting any possible existing index "
-    #         f"and creating a new one called {document_index._name}"
-    #     )
-    #     document_index.delete(ignore=404)
-    #     document_index.create()
-    date_suffix = datetime.datetime.utcnow().strftime("%Y%m%d")
-    # index_name = f"{Document._index._name}_{date_suffix}"
-    index_name = f"mdn_docs_{date_suffix}"
-    # print(f"Index name: {index_name}")
-    document_index = Index(index_name)
+    # Confusingly, `._index` is actually not a private API.
+    # It's the documented way you're supposed to reach it.
+    document_index = Document._index
     if not update:
         click.echo(
             "Deleting any possible existing index "
-            f"and creating a new one called {document_index._name}"
+            f"and creating a new one called {document_index._name!r}"
         )
         document_index.delete(ignore=404)
         document_index.create()
-
-    search_prefixes = [None]
-    for prefix in reversed(priority_prefixes):
-        search_prefixes.insert(0, prefix)
-
-    count_by_prefix = defaultdict(int)
 
     already = set()
 
     skipped = []
 
     def generator():
-        for prefix in search_prefixes:
-            root = Path(buildroot)
-            if prefix:
-                root /= prefix
-            for doc in walk(root):
-                if doc in already:
-                    continue
-                already.add(doc)
-                search_doc = to_search(doc)
-                if search_doc:
-                    count_by_prefix[prefix] += 1
-                    yield search_doc.to_dict(True)
-                else:
-                    # The reason something might be chosen to be skipped is because
-                    # there's logic that kicks in only when the `index.json` file
-                    # has been opened and parsed.
-                    # Keep a count of all of these. It's used to make sure the
-                    # progressbar, if used, ticks as many times as the estimate
-                    # count was.
-                    skipped.append(1)
+        root = Path(buildroot)
+        for doc in walk(root):
+            if doc in already:
+                continue
+            already.add(doc)
+            search_doc = to_search(doc)
+            if search_doc:
+                yield search_doc.to_dict(True)
+            else:
+                # The reason something might be chosen to be skipped is because
+                # there's logic that kicks in only when the `index.json` file
+                # has been opened and parsed.
+                # Keep a count of all of these. It's used to make sure the
+                # progressbar, if used, ticks as many times as the estimate
+                # count was.
+                skipped.append(1)
 
     def get_progressbar():
         if no_progressbar:
@@ -139,9 +115,45 @@ def index(
     # Now when the index has been filled, we need to make sure we
     # correct any previous indexes.
     if not update:
-        document_index.put_alias(name="mdn_docs")
-        print("ALIAS?", document_index.get_alias())
-        print("ALIAS exists?", document_index.exists_alias(name="mdn_docs"))
+        # In the olden days, before using aliases, we used to call the index
+        # what is today the index. We have to delete that index to make for
+        # using that name as the alias.
+        # This code can be deleted any time after it's been useful once
+        # in all deployments.
+        legacy_index = Index(INDEX_ALIAS_NAME)
+        if legacy_index.exists():
+            # But `.exists()` will be true if it's an alias as well! It basically
+            # answers: "Yes, it's an index or an alias".
+            # We only want to delete it if it's an index. The test for that
+            # is to see if it does *not* have an alias.
+            if (
+                INDEX_ALIAS_NAME in legacy_index.get_alias()
+                and not legacy_index.get_alias()[INDEX_ALIAS_NAME]["aliases"]
+            ):
+                click.echo(
+                    f"Delete the old {INDEX_ALIAS_NAME!r} index from when it was "
+                    "an actual index."
+                )
+                legacy_index.delete(ignore=404)
+
+        # The `ignore=404` is only for the very first time you do this. Or,
+        # if your Elasticsearch server is brand new.
+        document_index.delete_alias(name=INDEX_ALIAS_NAME, ignore=404)
+        document_index.put_alias(name=INDEX_ALIAS_NAME)
+        click.echo(
+            f"Put the {INDEX_ALIAS_NAME!r} alias from old index "
+            f"to point to {document_index._name}"
+        )
+
+        if connection.indices.exists_alias(INDEX_ALIAS_NAME):
+            for index_name in connection.indices.get(INDEX_ALIAS_NAME):
+                if index_name != document_index._name:
+                    older_index = Index(index_name)
+                    older_index.delete(ignore=404)
+                    click.echo(
+                        f"Deleted old index {index_name!r} in favor of pointing "
+                        f"the alias to {document_index._name}"
+                    )
 
     t1 = time.time()
     took = t1 - t0
@@ -159,15 +171,6 @@ def index(
         click.echo("Most common errors....")
         for error, count in errors_counter.most_common():
             click.echo(f"{count:,}\t{error[:80]}")
-
-    if priority_prefixes:
-        click.echo("Counts per priority prefixes:")
-        rest = sum(v for v in count_by_prefix.values())
-        for prefix in priority_prefixes:
-            click.echo(f"\t{prefix:<30} {count_by_prefix[prefix]:,}")
-            rest -= count_by_prefix[prefix]
-        prefix = "*rest*"
-        click.echo(f"\t{prefix:<30} {rest:,}")
 
 
 class VoidProgressBar:

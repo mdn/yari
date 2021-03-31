@@ -251,9 +251,7 @@ jobs:
           # where the Elasticsearch server is nearly empty.
           # Consider doing something like a clean indexing on Sundays and
           # use `--update` on all the other week days.
-          # poetry run deployer search-index ../client/build --priority-prefix=en-us/docs/web
-          # TEMPORARY
-          poetry run deployer search-index ../client/build --update
+          poetry run deployer search-index ../client/build
 
           # Record the deployment in our Speedcurve account. This should always
           # be done after the upload of the documents and Lambda functions, as well

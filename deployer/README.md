@@ -131,6 +131,36 @@ This is to make it convenient in GitHub Actions to control the
 execution purely based on the presence of the
 environment variable.
 
+### About Elasticsearch aliases
+
+The default behavior is that each day you get a different index name.
+E.g. `mdn_docs_20210331`. And then there's an alias with a more "generic" name.
+E.g. `mdn_docs`. It's the alias name that Kuma uses to send search queries to.
+
+The way indexing works is that we leave the existing index and its alias in place,
+then we fill up a new index and once that worked, we "move the alias" and
+delete the old index. To demonstrate, consider this example timeline:
+
+- Yesterday: index `mdn_docs_20210330` and `mdn_docs --> mdn_docs_20210330`
+- Today:
+  - create index `mdn_docs_20210331`
+  - populate `mdn_docs_20210331` (could take a long time)
+  - remove alias `mdn_docs`
+  - put new alias `mdn_docs --> mdn_docs_20210331`
+  - delete old index `mdn_docs_20210330`
+
+Note, this only applies if you _don't_ use `--update`.
+If you use `--update` it will just keep adding to the existing index whose
+name is based on today's date.
+
+What this means it that **there is 0 downtime for the search queries**. Nothing
+needs to be reconfigured on the Kuma side.
+
+Note that if you run the `search-index` command (without the `--update`) _twice
+in one day_, it will first delete the index before it recreates it. That would
+lead to some downtime on the searches, but this is only something that would
+happen if you are debugging locally or some other extreme circumstances in production.
+
 ### To update or not start a fresh
 
 The default behavior is that it deletes the index first and immediately creates
@@ -147,26 +177,6 @@ only from time to time omit it for a fresh new start.
 
 But note, if you omit the `--update` (i.e. recreating the index), search
 will work. It just may find less that it finds when it's fully indexed.
-
-### Priority prefixes
-
-When you index without `--update` it will delete and recreate the index.
-That means that during the time you're indexing, the searches that are happening
-concurrently will not find much. That's probably OK in most cases but you
-can adjust the priority of what gets indexed first. This has the advantage
-that most searches, that are expecting to find content in the popular document,
-will get something useful while the indexing is going on.
-
-To set up one or multiple priority prefixes use the `--priority-prefixes`
-(or just `-p` for short). Best described with an example:
-
-```sh
-poetry run deployer search-index ../client/build -p en-us/docs/web -p en-us/docs
-```
-
-This will first index all the files whose `index.json` file path (relative
-to the root) matches `en-us/docs/web`. Then it does all that match `en-us/docs`.
-And lastly, it does all the files that don't match any of the prefixes.
 
 ## Analyze PR builds
 
