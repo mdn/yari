@@ -49,7 +49,6 @@ function LoginInner() {
       <span className="avatar-username">{userData.username}</span>
     </>
   );
-  const settingsURL = `/${locale}/settings`;
   // Note that this component is never rendered server-side so it's safe to
   // rely on `window.location`.
   let next = window.location.pathname;
@@ -66,7 +65,7 @@ function LoginInner() {
   return (
     <Dropdown id="user-avatar-menu" label={label} right={true} hideArrow={true}>
       <li>
-        <a href={settingsURL}>Settings</a>
+        <a href={`/${locale}/settings`}>Account settings</a>
       </li>
       <li>
         <form action={signOutURL} method="post">
