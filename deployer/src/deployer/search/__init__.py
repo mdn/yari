@@ -2,7 +2,7 @@ import json
 import re
 import time
 from pathlib import Path
-from collections import defaultdict, Counter
+from collections import Counter
 
 import click
 from elasticsearch.helpers import streaming_bulk
