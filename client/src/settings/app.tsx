@@ -51,7 +51,7 @@ export default function SettingsApp({ ...appProps }) {
   const userData = useUserData();
 
   const { data, error } = useSWR<UserSettings | null, Error | null>(
-    userData ? "/api/v1/settings" : null,
+    userData && userData.isAuthenticated ? "/api/v1/settings" : null,
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {

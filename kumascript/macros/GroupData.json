@@ -1967,6 +1967,7 @@
       "events": []
     },
     "Web Speech API": {
+      "overview": ["Web Speech API"],
       "interfaces": [
         "SpeechGrammar",
         "SpeechGrammarList",
@@ -2126,6 +2127,7 @@
       "events": []
     },
     "XMLHttpRequest": {
+      "overview": ["XMLHttpRequest"],
       "guides": [
         "/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest",
         "/docs/Web/API/XMLHttpRequest/HTML_in_XMLHttpRequest",
