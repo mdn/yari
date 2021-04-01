@@ -260,7 +260,11 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toClick("a", { text: "Sign in" });
     await expect(page).toMatchElement("h1", { text: "Sign in" });
     expect(page.url()).toContain(
-      testURL("/en-US/signin?next=/en-US/docs/Web/Foo")
+      testURL(
+        `/en-US/signin?${new URLSearchParams(
+          "next=/en-US/docs/Web/Foo"
+        ).toString()}`
+      )
     );
     await expect(page).toMatchElement("a", { text: "Google" });
     await expect(page).toMatchElement("a", { text: "GitHub" });
