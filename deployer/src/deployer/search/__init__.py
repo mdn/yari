@@ -45,16 +45,11 @@ def index(
         document_index.delete(ignore=404)
         document_index.create()
 
-    already = set()
-
     skipped = []
 
     def generator():
         root = Path(buildroot)
         for doc in walk(root):
-            if doc in already:
-                continue
-            already.add(doc)
             search_doc = to_search(doc)
             if search_doc:
                 yield search_doc.to_dict(True)
