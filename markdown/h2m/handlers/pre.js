@@ -3,13 +3,23 @@ const toText = require("hast-util-to-text");
 
 const { wrapText, trimTrailingNewLines } = require("../../utils");
 
-const pre = convert("pre");
+const isPre = convert("pre");
 
-function code(h, node) {
+/**
+ * Converting a <pre> tag into a markdown code block.
+ * We transform the class name into highlight tags.
+ *
+ * <pre class="brush: css hidden">...</pre>
+ * becomes
+ * ```css hidden
+ * ...
+ * ```
+ */
+function pre(h, node) {
   let lang;
   let meta;
 
-  if (pre(node)) {
+  if (isPre(node)) {
     const metaList = [];
     const classList = node.properties.className;
     if (classList) {
@@ -34,4 +44,4 @@ function code(h, node) {
   );
 }
 
-module.exports = code;
+module.exports = pre;

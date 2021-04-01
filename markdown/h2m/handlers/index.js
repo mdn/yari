@@ -1,7 +1,7 @@
-const code = require("./code");
+const pre = require("./pre");
 const div = require("./div");
 
 module.exports = {
-  pre: code,
+  pre,
   div,
 };

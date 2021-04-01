@@ -50,7 +50,7 @@ program
   .action(
     tryOrExit(async ({ args }) => {
       const { mdFile } = args;
-      const htmlFile = args.mdFile || mdFile.replace(/\.html$/, ".html");
+      const htmlFile = args.htmlFile || mdFile.replace(/\.md$/, ".html");
       const raw = fs.readFileSync(mdFile, { encoding: "utf-8" });
       const { body: m, frontmatter } = fm(raw);
       const h = await m2h(m);

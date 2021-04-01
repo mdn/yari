@@ -2,14 +2,17 @@ const { wrapText } = require("../../utils");
 
 const own = {}.hasOwnProperty;
 
+function hasHandlerFor(h, name) {
+  return own.call(h.handlers, name);
+}
+
 function all(h, parent) {
   const nodes = parent.children || [];
   let values = [];
   let index = -1;
-  let result;
 
   while (++index < nodes.length) {
-    result = one(h, nodes[index], parent);
+    const result = one(h, nodes[index], parent);
 
     if (result) {
       values = values.concat(result);
@@ -26,11 +29,10 @@ function one(h, node, parent) {
     if (node.properties && node.properties.dataMdast === "ignore") {
       return;
     }
-
-    if (own.call(h.handlers, node.tagName)) {
+    if (hasHandlerFor(h, node.tagName)) {
       fn = h.handlers[node.tagName];
     }
-  } else if (own.call(h.handlers, node.type)) {
+  } else if (hasHandlerFor(h, node.type)) {
     fn = h.handlers[node.type];
   }
 

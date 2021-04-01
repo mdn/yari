@@ -1,5 +1,9 @@
 const u = require("unist-builder");
 
+/**
+ * Transform a markdown code block into a <pre>.
+ * Adding the highlight tags as classes prefixed by "brush:"
+ */
 function code(h, node) {
   var value = node.value ? node.value + "\n" : "";
   const lang = node.lang;
@@ -12,7 +16,10 @@ function code(h, node) {
     props.className = meta;
   }
 
-  // // Prism will inject a <code> element so we don't.
+  /*
+   * Prism will inject a <code> element so we don't.
+   * If we wanna change this uncomment the following code:
+   */
   // const code = h(node, "code", props, [u("text", value)]);
   // if (node.meta) {
   //   code.data = { meta: node.meta };
