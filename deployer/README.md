@@ -138,7 +138,7 @@ E.g. `mdn_docs_20210331`. And then there's an alias with a more "generic" name.
 E.g. `mdn_docs`. It's the alias name that Kuma uses to send search queries to.
 
 The way indexing works is that we leave the existing index and its alias in place,
-then we fill up a new index and once that worked, we "move the alias" and
+then we fill up a new index and once that works, we "move the alias" and
 delete the old index. To demonstrate, consider this example timeline:
 
 - Yesterday: index `mdn_docs_20210330` and `mdn_docs --> mdn_docs_20210330`
@@ -153,7 +153,7 @@ Note, this only applies if you _don't_ use `--update`.
 If you use `--update` it will just keep adding to the existing index whose
 name is based on today's date.
 
-What this means it that **there is 0 downtime for the search queries**. Nothing
+What this means it that **there is zero downtime for the search queries**. Nothing
 needs to be reconfigured on the Kuma side.
 
 Note that if you run the `search-index` command (without the `--update`) _twice

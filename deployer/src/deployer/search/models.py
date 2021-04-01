@@ -13,7 +13,7 @@ from elasticsearch_dsl import (
 
 # Note, this is the name that the Kuma code will use when sending Elasticsearch
 # search queries.
-# We always build and index that is called something based on this name but with
+# We always build an index that is called something based on this name but with
 # the YYYYMMDD date suffix.
 INDEX_ALIAS_NAME = "mdn_docs"
 
