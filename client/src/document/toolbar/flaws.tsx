@@ -4,7 +4,7 @@ import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
 import { diffWords } from "diff";
 
-import { CRUD_MODE, CRUD_MODE_READONLY } from "../../constants";
+import { CRUD_MODE, CRUD_MODE_READONLY_HOSTNAMES } from "../../constants";
 import { humanizeFlawName } from "../../flaw-utils";
 import { useDocumentURL } from "../hooks";
 import {
@@ -199,9 +199,13 @@ function Flaws({
     })
     .flat();
 
+  const isReadOnly = !CRUD_MODE_READONLY_HOSTNAMES.includes(
+    window.location.hostname
+  );
+
   return (
     <div id="document-flaws">
-      {!!fixableFlaws.length && !CRUD_MODE_READONLY && (
+      {!!fixableFlaws.length && !isReadOnly && (
         <FixableFlawsAction
           count={fixableFlaws.length}
           reloadPage={reloadPage}
@@ -216,6 +220,7 @@ function Flaws({
                 key="broken_links"
                 sourceFolder={doc.source.folder}
                 links={doc.flaws.broken_links}
+                isReadOnly={isReadOnly}
               />
             );
           case "bad_bcd_links":
@@ -238,6 +243,7 @@ function Flaws({
                 key="bad_pre_tags"
                 sourceFolder={doc.source.folder}
                 flaws={doc.flaws.bad_pre_tags}
+                isReadOnly={isReadOnly}
               />
             );
           case "macros":
@@ -246,6 +252,7 @@ function Flaws({
                 key="macros"
                 sourceFolder={doc.source.folder}
                 flaws={doc.flaws.macros}
+                isReadOnly={isReadOnly}
               />
             );
           case "images":
@@ -254,6 +261,7 @@ function Flaws({
                 key="images"
                 sourceFolder={doc.source.folder}
                 images={doc.flaws.images}
+                isReadOnly={isReadOnly}
               />
             );
           case "image_widths":
@@ -262,6 +270,7 @@ function Flaws({
                 key="image_widths"
                 sourceFolder={doc.source.folder}
                 flaws={doc.flaws.image_widths}
+                isReadOnly={isReadOnly}
               />
             );
           case "heading_links":
@@ -270,6 +279,7 @@ function Flaws({
                 key="heading_links"
                 sourceFolder={doc.source.folder}
                 flaws={doc.flaws.heading_links}
+                isReadOnly={isReadOnly}
               />
             );
           case "unsafe_html":
@@ -380,9 +390,11 @@ function ShowDiff({ before, after }: { before: string; after: string }) {
 function BrokenLinks({
   sourceFolder,
   links,
+  isReadOnly,
 }: {
   sourceFolder: string;
   links: BrokenLink[];
+  isReadOnly: boolean;
 }) {
   const [opening, setOpening] = React.useState<string | null>(null);
   useEffect(() => {
@@ -445,7 +457,7 @@ function BrokenLinks({
               >
                 👀
               </span>{" "}
-              {CRUD_MODE_READONLY ? (
+              {isReadOnly ? (
                 <>
                   {/* It would be cool if we can change this to a link to the line in the
                   file in GitHub's UI. */}
@@ -535,9 +547,11 @@ function Sectioning({ flaws }: { flaws: SectioningFlaw[] }) {
 function BadPreTag({
   flaws,
   sourceFolder,
+  isReadOnly,
 }: {
   flaws: BadPreTagFlaw[];
   sourceFolder: string;
+  isReadOnly: boolean;
 }) {
   const { focus } = useAnnotations(flaws);
 
@@ -591,7 +605,7 @@ function BadPreTag({
               👀
             </span>{" "}
             {flaw.line && flaw.column ? (
-              CRUD_MODE_READONLY ? (
+              isReadOnly ? (
                 <>
                   line {flaw.line}:{flaw.column}
                 </>
@@ -620,9 +634,11 @@ function BadPreTag({
 function Macros({
   flaws,
   sourceFolder,
+  isReadOnly,
 }: {
   flaws: MacroErrorMessage[];
   sourceFolder: string;
+  isReadOnly: boolean;
 }) {
   const [opening, setOpening] = React.useState<string | null>(null);
   useEffect(() => {
@@ -670,7 +686,7 @@ function Macros({
           >
             <summary>
               <code>{flaw.name}</code> from <code>{flaw.macroName}</code>{" "}
-              {CRUD_MODE_READONLY ? (
+              {isReadOnly ? (
                 <>
                   line {flaw.line}:{flaw.column}
                 </>
@@ -732,9 +748,11 @@ function Macros({
 function Images({
   sourceFolder,
   images,
+  isReadOnly,
 }: {
   sourceFolder: string;
   images: ImageReferenceFlaw[];
+  isReadOnly: boolean;
 }) {
   // XXX rewrite to a hook
   const [opening, setOpening] = React.useState<string | null>(null);
@@ -790,7 +808,7 @@ function Images({
               >
                 👀
               </span>{" "}
-              {CRUD_MODE_READONLY ? (
+              {isReadOnly ? (
                 <>
                   line {flaw.line}:{flaw.column}
                 </>
@@ -826,9 +844,11 @@ function Images({
 function ImageWidths({
   sourceFolder,
   flaws,
+  isReadOnly,
 }: {
   sourceFolder: string;
   flaws: ImageWidthFlaw[];
+  isReadOnly: boolean;
 }) {
   // XXX rewrite to a hook
   const [opening, setOpening] = React.useState<string | null>(null);
@@ -884,7 +904,7 @@ function ImageWidths({
               >
                 👀
               </span>{" "}
-              {CRUD_MODE_READONLY ? (
+              {isReadOnly ? (
                 <>
                   line {flaw.line}:{flaw.column}
                 </>
@@ -931,9 +951,11 @@ function ImageWidths({
 function HeadingLinks({
   sourceFolder,
   flaws,
+  isReadOnly,
 }: {
   sourceFolder: string;
   flaws: HeadingLinksFlaw[];
+  isReadOnly: boolean;
 }) {
   // XXX rewrite to a hook
   const [opening, setOpening] = React.useState<string | null>(null);
@@ -977,7 +999,7 @@ function HeadingLinks({
             <li key={key}>
               <b>{flaw.explanation}</b>{" "}
               {flaw.line && flaw.column ? (
-                CRUD_MODE_READONLY ? (
+                isReadOnly ? (
                   <>
                     line {flaw.line}:{flaw.column}
                   </>
