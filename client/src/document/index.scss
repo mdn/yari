@@ -36,6 +36,14 @@
   }
 }
 
+/* page-not-created is the preferred class name, `new` is
+   here for backwards compatibility */
+a.page-not-created,
+a.new {
+  color: $red-300;
+  cursor: not-allowed;
+}
+
 .main-page-content {
   padding: ($base-spacing / 2) $base-spacing $base-spacing;
 
@@ -134,14 +142,6 @@
 
   table {
     margin-bottom: $base-spacing * 2;
-  }
-
-  /* page-not-created is the preferred class name, `new` is
-     here for backwards compatibility */
-  .page-not-created,
-  .new {
-    color: $red-300;
-    cursor: not-allowed;
   }
 
   /* readonly inline badges needs a slightly darker background color in general article content  */

@@ -7,6 +7,10 @@ export const CRUD_MODE = JSON.parse(
     JSON.stringify(process.env.NODE_ENV === "development")
 );
 
+export const CRUD_MODE_READONLY = JSON.parse(
+  process.env.REACT_APP_CRUD_MODE_READONLY || "false"
+);
+
 export const AUTOCOMPLETE_SEARCH_WIDGET = JSON.parse(
   process.env.REACT_APP_AUTOCOMPLETE_SEARCH_WIDGET || JSON.stringify(CRUD_MODE)
 );

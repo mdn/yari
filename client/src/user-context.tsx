@@ -27,23 +27,6 @@ export type UserData = {
   };
 };
 
-const defaultUserData: UserData = {
-  username: null,
-  isAuthenticated: false,
-  isBetaTester: false,
-  isStaff: false,
-  isSuperuser: false,
-  avatarUrl: null,
-  isSubscriber: false,
-  subscriberNumber: null,
-  email: null,
-  waffle: {
-    flags: {},
-    switches: {},
-    samples: {},
-  },
-};
-
 const UserDataContext = React.createContext<UserData | null>(null);
 
 export function UserDataProvider(props: { children: React.ReactNode }) {
@@ -74,7 +57,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
   );
 
   return (
-    <UserDataContext.Provider value={data ? data : defaultUserData}>
+    <UserDataContext.Provider value={data || null}>
       {props.children}
     </UserDataContext.Provider>
   );

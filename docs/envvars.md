@@ -283,3 +283,10 @@ Toolbar bar appears based on this.
 It defaults to `NODE_ENV==='development'` if not set which means that
 it's enable by default when doing development with the `localhost:3000`
 dev server.
+
+### `REACT_APP_CRUD_MODE_READONLY`
+
+**Default: `false`**
+
+Only applicable if `REACT_APP_CRUD_MODE` is truthy. This setting disables all
+options like "Fix fixable flaws" or "Quick-edit"

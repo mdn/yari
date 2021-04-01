@@ -154,6 +154,13 @@ test("content built foo page", () => {
   expect($('link[rel="alternate"]').length).toBe(2);
   expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
   expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
+  const toEnUSURL = $('link[rel="alternate"][hreflang="en"]').attr("href");
+  const toFrURL = $('link[rel="alternate"][hreflang="fr"]').attr("href");
+  // The domain is hardcoded because the URL needs to be absolute and when
+  // building static assets for Dev or Stage, you don't know what domain is
+  // going to be used.
+  expect(toEnUSURL).toBe("https://developer.mozilla.org/en-US/docs/Web/Foo");
+  expect(toFrURL).toBe("https://developer.mozilla.org/fr/docs/Web/Foo");
 });
 
 test("icons mentioned in <head> should resolve", () => {
@@ -977,12 +984,12 @@ test("settings page", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("h1").text()).toContain("Settings");
-  expect($("title").text()).toContain("Settings");
+  expect($("h1").text()).toBe("Account settings");
+  expect($("title").text()).toContain("Account settings");
 
   const jsonFile = path.join(builtFolder, "index.json");
   const data = JSON.parse(fs.readFileSync(jsonFile));
-  expect(data.pageTitle).toBe("Settings");
+  expect(data.pageTitle).toBe("Account settings");
   expect(data.possibleLocales).toBeTruthy();
   const possibleLocale = data.possibleLocales.find((p) => p.locale === "en-US");
   expect(possibleLocale.English).toBe("English (US)");
@@ -1297,6 +1304,31 @@ test("'lang' attribute should match the article", () => {
   $ = cheerio.load(html);
   expect($("html").attr("lang")).toBe("en-US");
   expect($("article").attr("lang")).toBe("en-US");
+});
+
+test("basic markdown rendering", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "docs", "markdown");
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("article h2[id]").length).toBe(2);
+  expect($("article h3[id]").length).toBe(3);
+  expect($("article p code").length).toBe(2);
+  expect($("article strong").length).toBe(1);
+  expect($("article em").length).toBe(1);
+  expect($("article ul li").length).toBe(6);
+  expect($('article a[href^="/"]').length).toBe(2);
+  expect($('article a[href^="#"]').length).toBe(5);
+  expect($("article pre").length).toBe(3);
+  expect($("article pre.notranslate").length).toBe(3);
+  expect($("article pre.css").hasClass("brush:")).toBe(true);
+  expect($("article pre.javascript").hasClass("brush:")).toBe(true);
+
+  // XXX This is currently broken! We need to figure out a better way to
+  // transform those ```css into `<pre class="brush: css">...`
+  // const jsonFile = path.join(builtFolder, "index.json");
+  // const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  // expect(Object.keys(doc.flaws).length).toBe(0);
 });
 
 test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {

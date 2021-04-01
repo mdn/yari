@@ -33,7 +33,6 @@ var text = mdn.localStringMap({
     'Interfaces': 'Interfaces',
     'Documentation': 'Documentation:',
     'Useful_lists': 'Useful lists',
-    'Canvas_tag': 'Pages tagged "Canvas"',
     'Contribute': 'Contribute',
     'The_MDN_project': 'The MDN project',
   },
@@ -60,7 +59,6 @@ var text = mdn.localStringMap({
     'Interfaces': '接口',
     'Documentation': '文档:',
     'Useful_lists': '常用页面列表',
-    'Canvas_tag': '拥有 "Canvas" 标签的页面',
     'Contribute': '贡献',
     'The_MDN_project': 'MDN 项目',
   },
@@ -87,7 +85,6 @@ var text = mdn.localStringMap({
     'Interfaces': 'Интерфейсы',
     'Documentation': 'Документация:',
     'Useful_lists': 'Полезные списки',
-    'Canvas_tag': 'Страницы отмеченные "Canvas"',
     'Contribute': 'Внести свой вклад',
     'The_MDN_project': 'Проект MDN',
   },
@@ -114,7 +111,6 @@ var text = mdn.localStringMap({
     'Interfaces': 'インターフェイス',
     'Documentation': 'ドキュメント:',
     'Useful_lists': '有益なリスト',
-    'Canvas_tag': '"Canvas" とタグ付けされたページ',
     'Contribute': '貢献',
     'The_MDN_project': 'MDN プロジェクト',
   },
@@ -141,7 +137,6 @@ var text = mdn.localStringMap({
     'Interfaces': '인터페이스',
     'Documentation': '문서:',
     'Useful_lists': '유용한 리스트',
-    'Canvas_tag': '"Canvas"가 태그된 페이지',
     'Contribute': '기여하기',
     'The_MDN_project': 'MDN 프로젝트',
   }
@@ -196,14 +191,6 @@ var text = mdn.localStringMap({
     </details>
   </li>
   <li><strong><a href="/<%=locale%>/docs/MDN"><%=text['Documentation']%></a></strong></li>
-  <li class="toggle">
-    <details <%=state('Useful_lists')%>>
-      <summary><%=text['Useful_lists']%></summary>
-      <ol>
-        <li><a href="/<%=locale%>/docs/tag/Canvas"><%=text['Canvas_tag']%></a></li>
-      </ol>
-    </details>
-  </li>
   <li class="toggle">
     <details <%=state('Contribute')%>>
       <summary><%=text['Contribute']%></summary>
