@@ -2,7 +2,7 @@ import React from "react";
 import { Link, createSearchParams, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 
-import { CRUD_MODE, DEBUG_SEARCH_RESULTS } from "../constants";
+import { CRUD_MODE } from "../constants";
 import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
 
@@ -367,7 +367,7 @@ function Results({
                   <span className="summary">{document.summary}</span>
                 )}
               </p>
-              {DEBUG_SEARCH_RESULTS && (
+              {searchParams.get("debug") !== null && (
                 <span className="nerd-data">
                   <b>score:</b> <code>{document.score}</code>,{" "}
                   <b>popularity:</b> <code>{document.popularity}</code>,{" "}
