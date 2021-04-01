@@ -166,8 +166,8 @@ describe("remove trailing slash before doing an S3 lookup", () => {
 });
 
 describe("legacy kumaesque prefixes should be left alone", () => {
-  it("should not touch trailing slash on /account/", async () => {
-    const r = await get("/account/");
+  it("should not touch trailing slash on /maintenance-mode/", async () => {
+    const r = await get("/maintenance-mode/");
     expect(r.statusCode).toBe(200);
   });
   it("should not touch trailing slash on these /accounts/whatever/", async () => {
