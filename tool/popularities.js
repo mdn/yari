@@ -62,7 +62,7 @@ async function runMakePopularitiesFile(options) {
         }
         const popularities = {};
         pageviews.slice(0, maxUris).forEach(([uri, popularity]) => {
-          popularities[uri] = popularity.toFixed(5);
+          popularities[uri] = parseFloat(popularity.toFixed(5));
         });
         fs.writeFileSync(outfile, JSON.stringify(popularities, null, 2));
         resolve({ rowCount, popularities, pageviews });
