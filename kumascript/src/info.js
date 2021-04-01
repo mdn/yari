@@ -2,7 +2,7 @@ const cheerio = require("cheerio");
 
 const Parser = require("./parser.js");
 const { VALID_LOCALES, Document, Redirect } = require("../../content");
-const { markdownToHTML } = require("../../content/markdown-converter");
+const { m2hSync } = require("../../markdown");
 
 const DUMMY_BASE_URL = "https://example.com";
 
@@ -219,7 +219,7 @@ const info = {
         let $ = null;
         let summary = "";
         try {
-          $ = cheerio.load(isMarkdown ? markdownToHTML(rawBody) : rawBody);
+          $ = cheerio.load(isMarkdown ? m2hSync(rawBody) : rawBody);
           $("span.seoSummary, .summary").each((i, element) => {
             if (!summary) {
               const html = $(element)

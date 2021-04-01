@@ -63,3 +63,11 @@ div#foo {
   color: pink;
 }
 ```
+
+Do a fancy div:
+
+<div class="fancy">
+
+**I am hidden**
+
+</div>
