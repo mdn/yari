@@ -35,10 +35,14 @@ const NEW_ISSUE_TEMPLATE = `
 `;
 
 function gatherPlatformsAndBrowsers(
-  category: string
+  category: string,
+  data: bcd.Identifier
 ): [string[], bcd.BrowserNames[]] {
   let platforms = ["desktop", "mobile"];
-  if (category === "javascript") {
+  if (
+    category === "javascript" ||
+    (data.__compat && data.__compat.support.nodejs)
+  ) {
     platforms.push("server");
   } else if (category === "webextensions") {
     platforms = ["webextensions-desktop", "webextensions-mobile"];
@@ -111,7 +115,7 @@ export default function BrowserCompatibilityTable({
   const category = breadcrumbs[0];
   const name = breadcrumbs[breadcrumbs.length - 1];
 
-  const [platforms, browsers] = gatherPlatformsAndBrowsers(category);
+  const [platforms, browsers] = gatherPlatformsAndBrowsers(category, data);
 
   function getNewIssueURL() {
     const url = "https://github.com/mdn/browser-compat-data/issues/new";

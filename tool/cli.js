@@ -634,37 +634,21 @@ program
 
   .command(
     "popularities",
-    "Convert a Google Analytics pageviews CSV into a popularities.json file"
+    "Convert an AWS Athena log aggregation CSV into a popularities.json file"
   )
-  .option(
-    "--outfile <path>",
-    "export from Google Analytics containing pageview counts",
-    {
-      default: path.join(CONTENT_ROOT, "popularities.json"),
-    }
-  )
-  .option(
-    "--max-uris <number>",
-    "export from Google Analytics containing pageview counts",
-    {
-      default: MAX_GOOGLE_ANALYTICS_URIS,
-    }
-  )
-  .argument("csvfile", "Google Analytics pageviews CSV file", {
-    validator: (value) => {
-      if (!fs.existsSync(value)) {
-        throw new Error(`${value} does not exist`);
-      }
-      return value;
-    },
+  .option("--outfile <path>", "output file", {
+    default: path.join(CONTENT_ROOT, "popularities.json"),
+  })
+  .option("--max-uris <number>", "limit to top <number> entries", {
+    default: MAX_GOOGLE_ANALYTICS_URIS,
   })
   .action(
-    tryOrExit(async ({ args, options, logger }) => {
+    tryOrExit(async ({ options, logger }) => {
       const {
         rowCount,
         popularities,
         pageviews,
-      } = await runMakePopularitiesFile(args.csvfile, options);
+      } = await runMakePopularitiesFile(options);
       logger.info(chalk.green(`Parsed ${rowCount.toLocaleString()} rows.`));
 
       const numberKeys = Object.keys(popularities).length;
