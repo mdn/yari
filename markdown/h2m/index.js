@@ -25,7 +25,7 @@ async function h2m(html) {
   return decodeKS(String(file));
 }
 
-async function h2mSync(html) {
+function h2mSync(html) {
   const ksEncoded = encodeKS(html);
   const processor = makeProcessor();
 

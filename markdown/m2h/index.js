@@ -29,7 +29,7 @@ async function m2h(md) {
   return decodeKS(String(file));
 }
 
-async function m2hSync(md) {
+function m2hSync(md) {
   const ksEncoded = encodeKS(md);
   const processor = makeProcessor();
 
