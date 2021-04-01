@@ -28,7 +28,12 @@ program
 
   .command("h2m", "Convert HTML to Markdown")
   .argument("<htmlFile>", "input HTML file", {
-    validator: (f) => fs.existsSync(f) && f,
+    validator: (f) => {
+      if (!fs.existsSync(f)) {
+        throw new Error(`${f} does not exist`);
+      }
+      return f;
+    },
   })
   .argument("[mdFile]", "output Markdown file")
   .action(
@@ -44,7 +49,12 @@ program
 
   .command("m2h", "Convert Markdown to HTML")
   .argument("<mdFile>", "input Markdown file", {
-    validator: (f) => fs.existsSync(f) && f,
+    validator: (f) => {
+      if (!fs.existsSync(f)) {
+        throw new Error(`${f} does not exist`);
+      }
+      return f;
+    },
   })
   .argument("[htmlFile]", "output HTML file")
   .action(
