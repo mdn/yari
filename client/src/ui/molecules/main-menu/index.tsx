@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 
-import { useGA } from "../../../ga-context";
 import { useLocale } from "../../../hooks";
 
 import "./index.scss";
@@ -22,34 +21,6 @@ export default function MainMenu({
   const [submenuCollapsedOnBlurId, setSubmenuCollapsedOnBlurId] = useState<
     string | null
   >(null);
-  const ga = useGA();
-
-  /**
-   * Send a signal to GA when there is an interaction on one
-   * of the main menu items.
-   * @param {Object} event - The event object that was triggered
-   */
-  function sendMenuItemInteraction(
-    event:
-      | React.FocusEvent<HTMLButtonElement>
-      | React.MouseEvent<HTMLAnchorElement>
-  ) {
-    if (!(event.target instanceof HTMLElement)) {
-      return;
-    }
-    const label =
-      event.target instanceof HTMLAnchorElement
-        ? event.target.href
-        : event.target.textContent;
-
-    ga("send", {
-      hitType: "event",
-      eventCategory: "Wiki",
-      eventAction: "MainNav",
-      eventLabel: label,
-    });
-  }
-
   function hideSubMenuIfVisible() {
     if (visibleSubMenuId) {
       setVisibleSubMenuId(null);
@@ -69,16 +40,14 @@ export default function MainMenu({
     previousActiveElement.current = document.activeElement as HTMLButtonElement;
 
     setVisibleSubMenuId(visibleSubMenuId === id ? null : id);
-    sendMenuItemInteraction(event);
 
     if (expandedState) {
       setFocusedSubmenuItemIndex(0);
     }
   }
 
-  function onMenuButtonFocus(event: React.FocusEvent<HTMLButtonElement>) {
+  function onMenuButtonFocus() {
     setFocusedSubmenuItemIndex(-1);
-    sendMenuItemInteraction(event);
   }
 
   /**
@@ -323,11 +292,10 @@ export default function MainMenu({
                       rel="noopener noreferrer"
                       href={item.url}
                       onClick={(event) => {
-                        item.onClick
-                          ? item.onClick(event)
-                          : sendMenuItemInteraction(event);
+                        if (item.onClick) {
+                          item.onClick(event);
+                        }
                       }}
-                      onContextMenu={sendMenuItemInteraction}
                       role="menuitem"
                     >
                       {item.label} &#x1f310;
@@ -337,11 +305,10 @@ export default function MainMenu({
                       tabIndex={index === focusedSubmenuItemIndex ? 0 : -1}
                       href={item.url}
                       onClick={(event) => {
-                        item.onClick
-                          ? item.onClick(event)
-                          : sendMenuItemInteraction(event);
+                        if (item.onClick) {
+                          item.onClick(event);
+                        }
                       }}
-                      onContextMenu={sendMenuItemInteraction}
                       role="menuitem"
                     >
                       {item.label}
