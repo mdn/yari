@@ -197,7 +197,7 @@ The `prefix` is used to specify the proper Dev subdomain (`{prefix}.content.dev.
 if `--prefix experiment1` is specified, it will list:
 
 ```md
-## Preview deployment
+## Preview URLs
 
 - <https://experiment1.content.dev.mdn.mozit.cloud/en-US/docs/MDN/Kitchensink>
 ```
