@@ -4,7 +4,7 @@ import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
 import { diffWords } from "diff";
 
-import { CRUD_MODE, CRUD_MODE_READONLY_HOSTNAMES } from "../../constants";
+import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../../constants";
 import { humanizeFlawName } from "../../flaw-utils";
 import { useDocumentURL } from "../hooks";
 import {
@@ -199,9 +199,7 @@ function Flaws({
     })
     .flat();
 
-  const isReadOnly = !CRUD_MODE_READONLY_HOSTNAMES.includes(
-    window.location.hostname
-  );
+  const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
 
   return (
     <div id="document-flaws">

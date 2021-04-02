@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useSWR from "swr";
 
-import { CRUD_MODE, CRUD_MODE_READONLY_HOSTNAMES } from "../constants";
+import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../constants";
 import { useLocale } from "../hooks";
 import { PageContentContainer } from "../ui/atoms/page-content";
 
@@ -399,9 +399,7 @@ function Breadcrumb({
   const root = pathname.split("/").slice(0, 2);
   root.push("_sitemap");
 
-  const isReadOnly = !CRUD_MODE_READONLY_HOSTNAMES.includes(
-    window.location.hostname
-  );
+  const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
 
   return (
     <>
@@ -471,9 +469,7 @@ function ShowTree({
   openInYourEditor: (url: string) => void;
 }) {
   const locale = useLocale();
-  const isReadOnly = !CRUD_MODE_READONLY_HOSTNAMES.includes(
-    window.location.hostname
-  );
+  const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
   return (
     <div className="tree">
       <ul>

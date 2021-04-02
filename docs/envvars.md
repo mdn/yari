@@ -284,7 +284,7 @@ It defaults to `NODE_ENV==='development'` if not set which means that
 it's enable by default when doing development with the `localhost:3000`
 dev server.
 
-### `REACT_APP_CRUD_MODE_READONLY_HOSTNAMES`
+### `REACT_APP_CRUD_MODE_HOSTNAMES`
 
 **Default: `localhost, localhost.org, 127.0.0.1`**
 

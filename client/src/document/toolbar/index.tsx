@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { CRUD_MODE_READONLY_HOSTNAMES } from "../../constants";
+import { CRUD_MODE_HOSTNAMES } from "../../constants";
 import { Doc } from "../types";
 import { EditActions } from "./edit-actions";
 import { ToggleDocumentFlaws } from "./flaws";
@@ -33,9 +33,7 @@ export default function Toolbar({
     localStorage.setItem(localStorageKey, JSON.stringify(visits.slice(0, 20)));
   }, [doc]);
 
-  const isReadOnly = !CRUD_MODE_READONLY_HOSTNAMES.includes(
-    window.location.hostname
-  );
+  const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
 
   return (
     <div className="toolbar">

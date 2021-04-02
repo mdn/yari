@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { CRUD_MODE_READONLY_HOSTNAMES } from "../../constants";
+import { CRUD_MODE_HOSTNAMES } from "../../constants";
 
 import "./edit-actions.scss";
 
@@ -63,9 +63,7 @@ export function EditActions({
 
   // If window.location.host is 'localhost:3000` then
   // window.location.hostname is 'localhost'
-  const isReadOnly = !CRUD_MODE_READONLY_HOSTNAMES.includes(
-    window.location.hostname
-  );
+  const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
 
   return (
     <ul className="edit-actions">

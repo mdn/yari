@@ -7,8 +7,8 @@ export const CRUD_MODE = JSON.parse(
     JSON.stringify(process.env.NODE_ENV === "development")
 );
 
-export const CRUD_MODE_READONLY_HOSTNAMES = (
-  process.env.REACT_APP_CRUD_MODE_READONLY_HOSTNAMES ||
+export const CRUD_MODE_HOSTNAMES = (
+  process.env.REACT_APP_CRUD_MODE_HOSTNAMES ||
   "localhost,localhost.org,127.0.0.1"
 )
   .split(",")
