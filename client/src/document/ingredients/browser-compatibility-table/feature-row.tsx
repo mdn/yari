@@ -111,9 +111,9 @@ function labelFromString(
   if (!version.startsWith("≤")) {
     return <>{version}</>;
   }
-  const actionDescription = action === "added" ? "starting" : "ending";
-  const versionDescription = `version ${version.slice(1)} or earlier.`;
-  const title = `Exact version unknown: supported ${actionDescription} in ${versionDescription}`;
+  const actionDescription = action === "removed" ? "ended" : "started";
+  const versionDescription = `version ${version.slice(1)} or earlier`;
+  const title = `Support ${actionDescription} in ${versionDescription} (specific version unknown)`;
   return (
     <span title={title}>
       <sup>≤&#xA0;</sup>
