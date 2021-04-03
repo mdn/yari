@@ -101,14 +101,19 @@ function NonBreakingSpace() {
   return <>{"\u00A0"}</>;
 }
 
-function labelFromString(version: string | boolean | null | undefined) {
+function labelFromString(
+  version: string | boolean | null | undefined,
+  action: string
+) {
   if (typeof version !== "string") {
     return <>{"?"}</>;
   }
   if (!version.startsWith("≤")) {
     return <>{version}</>;
   }
-  const title = `Supported in version ${version.slice(1)} or earlier.`;
+  const actionDescription = action === "added" ? "starting" : "ending";
+  const versionDescription = `version ${version.slice(1)} or earlier.`;
+  const title = `Exact version unknown: supported ${actionDescription} in ${versionDescription}`;
   return (
     <span title={title}>
       <sup>≤&#xA0;</sup>
@@ -139,7 +144,7 @@ const CellText = React.memo(
         status = { isSupported: "no" };
         break;
       default:
-        status = { isSupported: "yes", label: labelFromString(added) };
+        status = { isSupported: "yes", label: labelFromString(added, "added") };
         break;
     }
 
@@ -148,15 +153,18 @@ const CellText = React.memo(
         isSupported: "no",
         label: (
           <>
-            {labelFromString(added)}
-            <NonBreakingSpace />— {labelFromString(removed)}
+            {labelFromString(added, "added")}
+            <NonBreakingSpace />— {labelFromString(removed, "removed")}
           </>
         ),
       };
     } else if (currentSupport && currentSupport.partial_implementation) {
       status = {
         isSupported: "partial",
-        label: typeof added === "string" ? labelFromString(added) : "Partial",
+        label:
+          typeof added === "string"
+            ? labelFromString(added, "added")
+            : "Partial",
       };
     }
 
