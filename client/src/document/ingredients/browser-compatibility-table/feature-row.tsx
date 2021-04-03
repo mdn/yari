@@ -103,7 +103,7 @@ function NonBreakingSpace() {
 
 function labelFromString(
   version: string | boolean | null | undefined,
-  action: string
+  removed?: boolean
 ) {
   if (typeof version !== "string") {
     return <>{"?"}</>;
@@ -111,7 +111,7 @@ function labelFromString(
   if (!version.startsWith("≤")) {
     return <>{version}</>;
   }
-  const actionDescription = action === "removed" ? "ended" : "started";
+  const actionDescription = removed ? "ended" : "started";
   const versionDescription = `version ${version.slice(1)} or earlier`;
   const title = `Support ${actionDescription} in ${versionDescription} (specific version unknown)`;
   return (
@@ -144,7 +144,7 @@ const CellText = React.memo(
         status = { isSupported: "no" };
         break;
       default:
-        status = { isSupported: "yes", label: labelFromString(added, "added") };
+        status = { isSupported: "yes", label: labelFromString(added) };
         break;
     }
 
@@ -153,18 +153,15 @@ const CellText = React.memo(
         isSupported: "no",
         label: (
           <>
-            {labelFromString(added, "added")}
-            <NonBreakingSpace />— {labelFromString(removed, "removed")}
+            {labelFromString(added)}
+            <NonBreakingSpace />— {labelFromString(removed, true)}
           </>
         ),
       };
     } else if (currentSupport && currentSupport.partial_implementation) {
       status = {
         isSupported: "partial",
-        label:
-          typeof added === "string"
-            ? labelFromString(added, "added")
-            : "Partial",
+        label: typeof added === "string" ? labelFromString(added) : "Partial",
       };
     }
 
