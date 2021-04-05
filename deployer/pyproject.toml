@@ -20,7 +20,7 @@ PyGithub = "^1.54.1"
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
 flake8 = "^3.9.0"
-pytest = "^6.2.2"
+pytest = "^6.2.3"
 
 [tool.poetry.scripts]
 deployer = "deployer.main:cli"
