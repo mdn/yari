@@ -121,7 +121,7 @@
     "downshift": "^6.1.2",
     "eslint": "^7.18.0",
     "eslint-gitignore": "^0.1.0",
-    "eslint-plugin-jest": "24.3.2",
+    "eslint-plugin-jest": "24.3.4",
     "eslint-plugin-node": "11.1.0",
     "extend": "^3.0.2",
     "flexsearch": "0.6.32",
