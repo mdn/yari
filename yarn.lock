@@ -2252,16 +2252,16 @@
     regenerator-runtime "^0.13.7"
     ts-dedent "^2.0.0"
 
-"@storybook/addon-links@^6.2.2":
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/@storybook/addon-links/-/addon-links-6.2.2.tgz#8677989ac54346282ada501a04c38c30ff172d45"
-  integrity sha512-+6BBsJ1rkmcAkhYqHAG1kMUnzaeIHGXRShev9dFhVh//q8wF+jrT93bcILdpFRueXciXb2cImbYTKN2hDdrzEA==
+"@storybook/addon-links@^6.2.3":
+  version "6.2.3"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-links/-/addon-links-6.2.3.tgz#a94c38afef54f57402d2d936f41bcad12f6d5c36"
+  integrity sha512-V7Bxa/eQnbIqtJtu3vKsLJ4yXL3j8GutEVsKZVVUUs12ZDLWwkIZkNuHPqs946+CG3gDu1USLte/xCcsMr+7Wg==
   dependencies:
-    "@storybook/addons" "6.2.2"
-    "@storybook/client-logger" "6.2.2"
-    "@storybook/core-events" "6.2.2"
+    "@storybook/addons" "6.2.3"
+    "@storybook/client-logger" "6.2.3"
+    "@storybook/core-events" "6.2.3"
     "@storybook/csf" "0.0.1"
-    "@storybook/router" "6.2.2"
+    "@storybook/router" "6.2.3"
     "@types/qs" "^6.9.5"
     core-js "^3.8.2"
     global "^4.4.0"
@@ -2313,21 +2313,6 @@
     global "^4.3.2"
     regenerator-runtime "^0.13.7"
 
-"@storybook/addons@6.2.2":
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/@storybook/addons/-/addons-6.2.2.tgz#d0ad3fa05e1569264511b8f8fb1fd08324e776a2"
-  integrity sha512-3FSnNl+0wzkeh3KVk+CB8bYb4FDRIEeFI0kU+UDj46PAXuqObQeIzPlpsU59D5Qq6zFXV+IhzLRknGrrMh1XzA==
-  dependencies:
-    "@storybook/api" "6.2.2"
-    "@storybook/channels" "6.2.2"
-    "@storybook/client-logger" "6.2.2"
-    "@storybook/core-events" "6.2.2"
-    "@storybook/router" "6.2.2"
-    "@storybook/theming" "6.2.2"
-    core-js "^3.8.2"
-    global "^4.4.0"
-    regenerator-runtime "^0.13.7"
-
 "@storybook/addons@6.2.3":
   version "6.2.3"
   resolved "https://registry.yarnpkg.com/@storybook/addons/-/addons-6.2.3.tgz#070ae8717fb2b8f9d25adb7ea3a6fe69ce77dee3"
@@ -2365,32 +2350,6 @@
     regenerator-runtime "^0.13.7"
     store2 "^2.7.1"
     telejson "^5.0.2"
-    ts-dedent "^2.0.0"
-    util-deprecate "^1.0.2"
-
-"@storybook/api@6.2.2":
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/@storybook/api/-/api-6.2.2.tgz#021a6d89bef42fb9ec49c3fca9293b8be47298fa"
-  integrity sha512-5BNspUVi5ZckYSWlmK55Ck2vNkZXW9klQtvxkLkf1fmuHdrjsDq5huVYJCNbHo8ngcrynR0Iynip7QZrQU0ylA==
-  dependencies:
-    "@reach/router" "^1.3.4"
-    "@storybook/channels" "6.2.2"
-    "@storybook/client-logger" "6.2.2"
-    "@storybook/core-events" "6.2.2"
-    "@storybook/csf" "0.0.1"
-    "@storybook/router" "6.2.2"
-    "@storybook/semver" "^7.3.2"
-    "@storybook/theming" "6.2.2"
-    "@types/reach__router" "^1.3.7"
-    core-js "^3.8.2"
-    fast-deep-equal "^3.1.3"
-    global "^4.4.0"
-    lodash "^4.17.20"
-    memoizerific "^1.11.3"
-    qs "^6.10.0"
-    regenerator-runtime "^0.13.7"
-    store2 "^2.12.0"
-    telejson "^5.1.0"
     ts-dedent "^2.0.0"
     util-deprecate "^1.0.2"
 
@@ -2452,15 +2411,6 @@
   integrity sha512-7WoizMjyHqCyvcWncLexSg9FLPIErWAZL4NvluEthwsHSO2sDybn9mh1pzsFHdYMuTP6ml06Zt9ayWMtIveHDg==
   dependencies:
     core-js "^3.0.1"
-    ts-dedent "^2.0.0"
-    util-deprecate "^1.0.2"
-
-"@storybook/channels@6.2.2":
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/@storybook/channels/-/channels-6.2.2.tgz#502d1fc083559f8ed39f499557523178572798c2"
-  integrity sha512-lev2jJE45QmH+q40M8zsQMF7h8OjoBA7/Ir2RIUVshftuHlzME3L5Y9w5o/7LWdlhvZYBmhqqXv+iYusFo9yTA==
-  dependencies:
-    core-js "^3.8.2"
     ts-dedent "^2.0.0"
     util-deprecate "^1.0.2"
 
@@ -2528,14 +2478,6 @@
   dependencies:
     core-js "^3.0.1"
     global "^4.3.2"
-
-"@storybook/client-logger@6.2.2":
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/@storybook/client-logger/-/client-logger-6.2.2.tgz#953cc977dd428e484db7e1f09f46505fa6567155"
-  integrity sha512-tv8zKGBHCDg6mMOk4znCoiF9KUPtH02ksTrlJzJbTz5Jqc1OwBS8/O48TaeNtQcKcMfs92j9NK1aW6WFGU9o+w==
-  dependencies:
-    core-js "^3.8.2"
-    global "^4.4.0"
 
 "@storybook/client-logger@6.2.3":
   version "6.2.3"
@@ -2608,13 +2550,6 @@
   integrity sha512-KWqnh1C7M1pT//WfQb3AD60yTR8jL48AfaeLGto2gO9VK7VVgj/EGsrXZP/GTL90ygyExbbBI5gkr7EBTu/HYw==
   dependencies:
     core-js "^3.0.1"
-
-"@storybook/core-events@6.2.2":
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/@storybook/core-events/-/core-events-6.2.2.tgz#9ecc42a645048ac386748ca659c196f2000146a7"
-  integrity sha512-29Xsu1cMwDXqtLQK+x2e4G//ppJCkEkPL0DISg2jD1ND04V7eaKubWq/kwsHtM8MKYJHxuxh4rSF7xb24EEPOA==
-  dependencies:
-    core-js "^3.8.2"
 
 "@storybook/core-events@6.2.3":
   version "6.2.3"
@@ -2818,22 +2753,6 @@
     memoizerific "^1.11.3"
     qs "^6.6.0"
 
-"@storybook/router@6.2.2":
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/@storybook/router/-/router-6.2.2.tgz#8e0983b8c7c9f777ea3d3c5467910c6f7202f3cb"
-  integrity sha512-K9ScTklpmZtLNbDsNSW8WyVRy7XuqeWJgw89+A7CRIk3fSk7+FvW8OeS7ZMKFWK5j18Mm6U0XPBP+d1mSw7Vlg==
-  dependencies:
-    "@reach/router" "^1.3.4"
-    "@storybook/client-logger" "6.2.2"
-    "@types/reach__router" "^1.3.7"
-    core-js "^3.8.2"
-    fast-deep-equal "^3.1.3"
-    global "^4.4.0"
-    lodash "^4.17.20"
-    memoizerific "^1.11.3"
-    qs "^6.10.0"
-    ts-dedent "^2.0.0"
-
 "@storybook/router@6.2.3":
   version "6.2.3"
   resolved "https://registry.yarnpkg.com/@storybook/router/-/router-6.2.3.tgz#14832c98b026df4bc0edf71fe9d4bb712f064877"
@@ -2890,24 +2809,6 @@
     global "^4.3.2"
     memoizerific "^1.11.3"
     polished "^3.4.4"
-    resolve-from "^5.0.0"
-    ts-dedent "^2.0.0"
-
-"@storybook/theming@6.2.2":
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-6.2.2.tgz#db44ab207f9109c697b8ea95dfab829279e2525a"
-  integrity sha512-oqZkv5OD6ViIRiAdrUfTVxny1zjhvZGNtQFtTBBad0u8UA5ndIPSzz1dEvj1adfRlbX+Qn3J4ELU7L09pO4PWQ==
-  dependencies:
-    "@emotion/core" "^10.1.1"
-    "@emotion/is-prop-valid" "^0.8.6"
-    "@emotion/styled" "^10.0.27"
-    "@storybook/client-logger" "6.2.2"
-    core-js "^3.8.2"
-    deep-object-diff "^1.1.0"
-    emotion-theming "^10.0.27"
-    global "^4.4.0"
-    memoizerific "^1.11.3"
-    polished "^4.0.5"
     resolve-from "^5.0.0"
     ts-dedent "^2.0.0"
 
