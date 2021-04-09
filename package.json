@@ -44,7 +44,7 @@
   "dependencies": {
     "@caporal/core": "2.0.2",
     "@fast-csv/parse": "4.3.6",
-    "@mdn/browser-compat-data": "3.2.3",
+    "@mdn/browser-compat-data": "3.2.4",
     "accept-language-parser": "1.5.0",
     "chalk": "4.1.0",
     "cheerio": "1.0.0-rc.5",
@@ -101,11 +101,11 @@
     "unist-util-visit": "2.0.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.14",
+    "@babel/core": "^7.13.15",
     "@mdn/dinocons": "^0.3.1",
     "@mdn/minimalist": "^0.8.0",
     "@storybook/addon-a11y": "^6.2.4",
-    "@storybook/addon-actions": "^6.2.5",
+    "@storybook/addon-actions": "^6.2.7",
     "@storybook/addon-essentials": "^6.1.21",
     "@storybook/addon-links": "^6.2.5",
     "@storybook/node-logger": "^6.2.5",
