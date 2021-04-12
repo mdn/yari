@@ -288,6 +288,9 @@
     "zh-CN": "结构化元素",
     "ru": "Структурные элементы"
   },
+  "textContentChildElements": {
+    "en-US": "Text content child elements"
+  },
   "textContentElements": {
     "en-US": "Text content elements",
     "de": "Textinhaltselemente",
