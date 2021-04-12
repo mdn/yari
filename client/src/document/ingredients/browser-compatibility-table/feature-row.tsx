@@ -105,16 +105,11 @@ function labelFromString(version: string | boolean | null | undefined) {
   if (typeof version !== "string") {
     return <>{"?"}</>;
   }
-  if (!version.startsWith("≤")) {
-    return <>{version}</>;
+  // Treat BCD ranges as exact versions to avoid confusion for the reader
+  if (version.startsWith("≤")) {
+    return <>{version.slice(1)}</>;
   }
-  const title = `Supported in version ${version.slice(1)} or earlier.`;
-  return (
-    <span title={title}>
-      <sup>≤&#xA0;</sup>
-      {version.slice(1)}
-    </span>
-  );
+  return <>{version}</>;
 }
 
 const CellText = React.memo(
