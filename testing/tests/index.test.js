@@ -161,6 +161,9 @@ test("content built foo page", () => {
   // going to be used.
   expect(toEnUSURL).toBe("https://developer.mozilla.org/en-US/docs/Web/Foo");
   expect(toFrURL).toBe("https://developer.mozilla.org/fr/docs/Web/Foo");
+
+  // The h4 heading in there has its ID transformed to lowercase
+  expect($("h4").attr("id")).toBe($("h4").attr("id").toLowerCase());
 });
 
 test("icons mentioned in <head> should resolve", () => {
