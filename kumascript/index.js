@@ -56,14 +56,10 @@ const renderFromURL = async (
   const [renderedHtml, errors] = await renderMacros(
     rawHTML,
     {
-      ...{
-        url,
-        locale: metadata.locale,
-        slug: metadata.slug,
-        title: metadata.title,
-        tags: metadata.tags || [],
-        selective_mode,
-      },
+      ...metadata,
+      url,
+      tags: metadata.tags || [],
+      selective_mode,
       interactive_examples: {
         base_url: INTERACTIVE_EXAMPLES_BASE_URL,
       },
