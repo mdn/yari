@@ -17,9 +17,7 @@ var text = mdn.localStringMap({
     'Interfaces': 'Interfaces',
     'Documentation': 'Documentation:',
     'Useful_lists': 'Useful lists',
-    'Service_Worker_tag': 'Pages tagged "ServiceWorker"',
     'Contribute': 'Contribute',
-    'Doc_status': 'Service Worker doc status',
     'The_MDN_project': 'The MDN project',
     'Using_Service_Workers': 'Using Service Workers',
     'Related_APIs': 'Related APIs',
@@ -35,9 +33,7 @@ var text = mdn.localStringMap({
     'Interfaces': 'Интерфейсы',
     'Documentation': 'Документация:',
     'Useful_lists': 'Полезные списки',
-    'Service_Worker_tag': 'Страницы отмеченные "ServiceWorker"',
     'Contribute': 'Внести вклад',
-    'Doc_status': 'Статус документации по Service Worker',
     'The_MDN_project': 'Проект MDN',
     'Using_Service_Workers': 'Использование Service Workers',
     'Related_APIs': 'Похожие API',
@@ -99,18 +95,9 @@ var text = mdn.localStringMap({
   </li>
   <li><strong><a href="/<%=locale%>/docs/MDN"><%=text['Documentation']%></a></strong></li>
   <li class="toggle">
-    <details <%=state('Useful_lists')%>>
-        <summary><%=text['Useful_lists']%></summary>
-        <ol>
-          <li><a href="/<%=locale%>/docs/tag/ServiceWorker"><%=text['Service_Worker_tag']%></a></li>
-        </ol>
-    </details>
-  </li>
-  <li class="toggle">
     <details <%=state('Contribute')%>>
         <summary><%=text['Contribute']%></summary>
         <ol>
-          <li><a href="/<%=locale%>/docs/MDN/Doc_status/API/ServiceWorkers"><%=text['Doc_status']%></a></li>
           <li><a href="/<%=locale%>/docs/MDN"><%=text['The_MDN_project']%></a></li>
         </ol>
     </details>

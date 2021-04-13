@@ -97,7 +97,7 @@ jobs:
           node-version: "12"
 
       - name: Cache node_modules
-        uses: actions/cache@v2.1.4
+        uses: actions/cache@v2.1.5
         id: cached-node_modules
         with:
           path: |
@@ -238,7 +238,9 @@ jobs:
           # where the Elasticsearch server is nearly empty.
           # Consider doing something like a clean indexing on Sundays and
           # use `--update` on all the other week days.
-          poetry run deployer search-index ../client/build --priority-prefix=en-us/docs/web
+          # poetry run deployer search-index ../client/build --priority-prefix=en-us/docs/web
+          # TEMPORARY
+          poetry run deployer search-index ../client/build --update
 
           # Record the deployment in our Speedcurve account. This should always
           # be done after the upload of the documents and Lambda functions, as well

@@ -97,7 +97,7 @@ jobs:
           node-version: "12"
 
       - name: Cache node_modules
-        uses: actions/cache@v2.1.4
+        uses: actions/cache@v2.1.5
         id: cached-node_modules
         with:
           path: |
@@ -167,13 +167,6 @@ jobs:
           # '<meta name="robots" content="noindex, nofollow">' nomatter what
           # kind of document it is.
           BUILD_ALWAYS_NO_ROBOTS: true
-
-          # (peterbe, Mar 2021) This is unique to Stage and temporary. We want to
-          # test the new Yari-based sign-in and sign-up. Setting this environment
-          # variable changes the behavior of the "Sign in" link in the top navbar.
-          # Once we know for sure that this new Yari sign in/up is working in Stage
-          # we'll make this the new default can we can remove these lines.
-          REACT_APP_USE_YARI_SIGNIN: true
 
         run: |
           if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
@@ -251,7 +244,9 @@ jobs:
           # where the Elasticsearch server is nearly empty.
           # Consider doing something like a clean indexing on Sundays and
           # use `--update` on all the other week days.
-          poetry run deployer search-index ../client/build --priority-prefix=en-us/docs/web
+          # poetry run deployer search-index ../client/build --priority-prefix=en-us/docs/web
+          # TEMPORARY
+          poetry run deployer search-index ../client/build --update
 
           # Record the deployment in our Speedcurve account. This should always
           # be done after the upload of the documents and Lambda functions, as well

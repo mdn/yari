@@ -154,6 +154,13 @@ test("content built foo page", () => {
   expect($('link[rel="alternate"]').length).toBe(2);
   expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
   expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
+  const toEnUSURL = $('link[rel="alternate"][hreflang="en"]').attr("href");
+  const toFrURL = $('link[rel="alternate"][hreflang="fr"]').attr("href");
+  // The domain is hardcoded because the URL needs to be absolute and when
+  // building static assets for Dev or Stage, you don't know what domain is
+  // going to be used.
+  expect(toEnUSURL).toBe("https://developer.mozilla.org/en-US/docs/Web/Foo");
+  expect(toFrURL).toBe("https://developer.mozilla.org/fr/docs/Web/Foo");
 });
 
 test("icons mentioned in <head> should resolve", () => {
@@ -978,7 +985,6 @@ test("settings page", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("h1").text()).toBe("Account settings");
-  console.log($("title").text());
   expect($("title").text()).toContain("Account settings");
 
   const jsonFile = path.join(builtFolder, "index.json");
@@ -1308,7 +1314,7 @@ test("basic markdown rendering", () => {
   expect($("article h2[id]").length).toBe(2);
   expect($("article h3[id]").length).toBe(3);
   expect($("article p code").length).toBe(2);
-  expect($("article strong").length).toBe(1);
+  expect($("article strong").length).toBe(2);
   expect($("article em").length).toBe(1);
   expect($("article ul li").length).toBe(6);
   expect($('article a[href^="/"]').length).toBe(2);
@@ -1317,12 +1323,11 @@ test("basic markdown rendering", () => {
   expect($("article pre.notranslate").length).toBe(3);
   expect($("article pre.css").hasClass("brush:")).toBe(true);
   expect($("article pre.javascript").hasClass("brush:")).toBe(true);
+  expect($("article .fancy strong").length).toBe(1);
 
-  // XXX This is currently broken! We need to figure out a better way to
-  // transform those ```css into `<pre class="brush: css">...`
-  // const jsonFile = path.join(builtFolder, "index.json");
-  // const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  // expect(Object.keys(doc.flaws).length).toBe(0);
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(Object.keys(doc.flaws).length).toBe(0);
 });
 
 test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {
@@ -1368,4 +1373,22 @@ test("translated content broken links can fall back to en-us", () => {
   expect($("article a.only-in-en-us").attr("title")).toBe(
     "Currently only available in English (US)"
   );
+});
+
+test("homepage links and flaws", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "homepage_links"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.broken_links.length).toBe(4);
+  const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
+  expect(map.get("/ru").suggestion).toBe("/ru/");
+  expect(map.get("/JA/").suggestion).toBe("/ja/");
+  expect(map.get("/ZH-CN").suggestion).toBe("/zh-CN/");
+  expect(map.get("/notalocale/").suggestion).toBeFalsy();
 });

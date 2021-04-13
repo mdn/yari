@@ -69,7 +69,7 @@ def post_about_deployment(build_directory: Path, **config):
         url = mdn_url_to_dev_url(config["prefix"], doc["mdn_url"])
         links.append(f"- <{url}>")
 
-    heading = "## Preview deployment URLs\n\n"
+    heading = "## Preview URLs\n\n"
     if links:
         return heading + "\n".join(links)
 
