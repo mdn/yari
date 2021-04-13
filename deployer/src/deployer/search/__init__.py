@@ -42,12 +42,17 @@ def index(
     # It's the documented way you're supposed to reach it.
     if update:
         index_name = None
+        has_old_index = False
         for x in connection.indices.get_alias():
+            print("X:", x)
             if x.startswith("mdn_docs_"):
                 index_name = x
                 break
+            elif x == INDEX_ALIAS_NAME:
+                has_old_index = True
         else:
-            raise IndexAliasError("Unable to find an index called mdn_docs_*")
+            if not has_old_index:
+                raise IndexAliasError("Unable to find an index called mdn_docs_*")
 
         document_index = Index(index_name)
     else:
@@ -132,7 +137,8 @@ def index(
         # Normally, Elasticsearch will do this when you restart the cluster
         # but that's not something we usually do.
         # See https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-forcemerge.html
-        document_index.forcemerge()
+        if not has_old_index:
+            document_index.forcemerge()
     else:
         # (Apr 2021) In the olden days, before using aliases, we used to call
         # the index what is today the index. We have to delete that index
