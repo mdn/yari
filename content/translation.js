@@ -16,12 +16,12 @@ const IMPORTANT_MACROS = new Map(
   ].map((name) => [name.toLowerCase(), name])
 );
 
-function getKSMacros(rawContent, cacheKey = null) {
+function getKSMacros(content, cacheKey = null) {
   if (cacheKey && cacheKSMacros.has(cacheKey)) {
     return cacheKSMacros.get(cacheKey);
   }
 
-  const tokens = Parser.parse(rawContent);
+  const tokens = Parser.parse(content);
   const macros = new Set();
 
   for (const token of tokens) {
@@ -48,9 +48,9 @@ function getKSMacros(rawContent, cacheKey = null) {
 
 function* getTranslationDifferences(englishDocument, translatedDocument) {
   // Compare key KS macros presence
-  const translatedMacros = getKSMacros(translatedDocument.rawContent);
+  const translatedMacros = getKSMacros(translatedDocument.rawBody);
   const englishMacros = getKSMacros(
-    englishDocument.rawContent,
+    englishDocument.rawBody,
     englishDocument.url
   );
   if (!equalSets(translatedMacros, englishMacros)) {
@@ -74,21 +74,6 @@ function* getTranslationDifferences(englishDocument, translatedDocument) {
       fullExplanation,
     };
   }
-
-  // XXX Should we compare tags?
-  // // The order of the tags don't matter so compare the list of tags as a set.
-  // if (
-  //   !equalSets(
-  //     new Set(englishDocument.metadata.tags || []),
-  //     new Set(translatedDocument.metadata.tags || [])
-  //   )
-  // ) {
-  //   console.warn(
-  //     "DIFFERENT TAG!",
-  //     englishDocument.metadata.tags,
-  //     translatedDocument.metadata.tags
-  //   );
-  // }
 }
 
 function equalSets(setA, setB) {
