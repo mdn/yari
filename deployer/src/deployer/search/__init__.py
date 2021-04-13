@@ -41,12 +41,6 @@ def index(
     # Confusingly, `._index` is actually not a private API.
     # It's the documented way you're supposed to reach it.
     if update:
-        # print(dir(Document._index))
-        # print([x for x in dir(Document._index) if "alias" in x])
-        # print(dir(connection.indices))
-        # print([x for x in dir(connection.indices) if "alias" in x])
-        # print(dir(connection))
-        # print([x for x in dir(connection) if "alia" in x])
         index_name = None
         for x in connection.indices.get_alias():
             if x.startswith("mdn_docs_"):
@@ -179,16 +173,6 @@ def index(
             f"Put the {INDEX_ALIAS_NAME!r} alias from old index "
             f"to point to {document_index._name}"
         )
-
-        # if connection.indices.exists_alias(INDEX_ALIAS_NAME):
-        #     for index_name in connection.indices.get(INDEX_ALIAS_NAME):
-        #         if index_name != document_index._name:
-        #             older_index = Index(index_name)
-        #             older_index.delete(ignore=404)
-        #             click.echo(
-        #                 f"Deleted old index {index_name!r} in favor of pointing "
-        #                 f"the alias to {document_index._name}"
-        #             )
 
     t1 = time.time()
     took = t1 - t0
