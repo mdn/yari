@@ -1374,3 +1374,21 @@ test("translated content broken links can fall back to en-us", () => {
     "Currently only available in English (US)"
   );
 });
+
+test("homepage links and flaws", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "homepage_links"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.broken_links.length).toBe(4);
+  const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
+  expect(map.get("/ru").suggestion).toBe("/ru/");
+  expect(map.get("/JA/").suggestion).toBe("/ja/");
+  expect(map.get("/ZH-CN").suggestion).toBe("/zh-CN/");
+  expect(map.get("/notalocale/").suggestion).toBeFalsy();
+});

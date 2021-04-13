@@ -25,7 +25,7 @@ const {
 } = require("./matches-in-text");
 const { humanFileSize } = require("./utils");
 const { VALID_MIME_TYPES } = require("../filecheck/constants");
-const { DEFAULT_LOCALE } = require("../libs/constants");
+const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
 
 function injectFlaws(doc, $, options, document) {
   if (doc.isArchive) return;
@@ -279,6 +279,21 @@ function injectBrokenLinksFlaws(doc, $, { rawContent }, level) {
     });
   }
 
+  function isHomepageURL(url) {
+    // Return true if the URL is something like `/` or `/en-US` or `/fr/`
+    if (url === "/") {
+      return true;
+    }
+    if (!url.endsWith("/")) {
+      url += "/";
+    }
+    const split = url.split("/");
+    if (split.length === 3 && VALID_LOCALES.has(split[1].toLowerCase())) {
+      return true;
+    }
+    return false;
+  }
+
   $("a[href]").each((i, element) => {
     const a = $(element);
     const href = a.attr("href");
@@ -299,6 +314,21 @@ function injectBrokenLinksFlaws(doc, $, { rawContent }, level) {
         href,
         absoluteURL.pathname + absoluteURL.search + absoluteURL.hash
       );
+    } else if (isHomepageURL(href)) {
+      // But did you spell it perfectly?
+      const homepageLocale = href.split("/")[1];
+      if (
+        href !== "/" &&
+        (VALID_LOCALES.get(homepageLocale.toLowerCase()) !== homepageLocale ||
+          !href.endsWith("/"))
+      ) {
+        addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          `/${VALID_LOCALES.get(homepageLocale.toLowerCase())}/`
+        );
+      }
     } else if (href.startsWith("/") && !href.startsWith("//")) {
       // Got to fake the domain to sensible extract the .search and .hash
       const absoluteURL = new URL(href, "http://www.example.com");
