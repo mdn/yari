@@ -106,6 +106,7 @@ function labelFromString(version: string | boolean | null | undefined) {
     return <>{"?"}</>;
   }
   // Treat BCD ranges as exact versions to avoid confusion for the reader
+  // See https://github.com/mdn/yari/issues/3238
   if (version.startsWith("≤")) {
     return <>{version.slice(1)}</>;
   }
