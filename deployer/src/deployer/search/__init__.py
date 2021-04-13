@@ -13,6 +13,10 @@ from selectolax.parser import HTMLParser
 from .models import Document, INDEX_ALIAS_NAME
 
 
+class IndexAliasError(Exception):
+    """When there's something wrong with finding the index alias."""
+
+
 def index(
     buildroot: Path,
     url: str,
@@ -36,8 +40,24 @@ def index(
 
     # Confusingly, `._index` is actually not a private API.
     # It's the documented way you're supposed to reach it.
-    document_index = Document._index
-    if not update:
+    if update:
+        # print(dir(Document._index))
+        # print([x for x in dir(Document._index) if "alias" in x])
+        # print(dir(connection.indices))
+        # print([x for x in dir(connection.indices) if "alias" in x])
+        # print(dir(connection))
+        # print([x for x in dir(connection) if "alia" in x])
+        index_name = None
+        for x in connection.indices.get_alias():
+            if x.startswith("mdn_docs_"):
+                index_name = x
+                break
+        else:
+            raise IndexAliasError("Unable to find an index called mdn_docs_*")
+
+        document_index = Index(index_name)
+    else:
+        document_index = Document._index
         click.echo(
             "Deleting any possible existing index "
             f"and creating a new one called {document_index._name!r}"
@@ -50,7 +70,11 @@ def index(
     def generator():
         root = Path(buildroot)
         for doc in walk(root):
-            search_doc = to_search(doc)
+            # The reason for specifying the exact index name is that we might
+            # be doing an update and if you don't specify it, elasticsearch_dsl
+            # will fall back to using whatever Document._meta.Index automatically
+            # becomes in this moment.
+            search_doc = to_search(doc, _index=document_index._name)
             if search_doc:
                 yield search_doc.to_dict(True)
             else:
@@ -75,7 +99,6 @@ def index(
         for success, info in streaming_bulk(
             connection,
             generator(),
-            index=document_index._name,
             # It's an inexact science as to what the perfect chunk_size should be.
             # The default according to
             # https://elasticsearch-py.readthedocs.io/en/v7.12.0/helpers.html#elasticsearch.helpers.streaming_bulk
@@ -109,10 +132,17 @@ def index(
 
     # Now when the index has been filled, we need to make sure we
     # correct any previous indexes.
-    if not update:
-        # In the olden days, before using aliases, we used to call the index
-        # what is today the index. We have to delete that index to make for
-        # using that name as the alias.
+    if update:
+        # When you do an update, Elasticsearch will internall delete the
+        # previous docs (based on the _id primary key we set).
+        # Normally, Elasticsearch will do this when you restart the cluster
+        # but that's not something we usually do.
+        # See https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-forcemerge.html
+        document_index.forcemerge()
+    else:
+        # (Apr 2021) In the olden days, before using aliases, we used to call
+        # the index what is today the index. We have to delete that index
+        # to make for using that name as the alias.
         # This code can be deleted any time after it's been useful once
         # in all deployments.
         legacy_index = Index(INDEX_ALIAS_NAME)
@@ -131,24 +161,34 @@ def index(
                 )
                 legacy_index.delete(ignore=404)
 
-        # The `ignore=404` is only for the very first time you do this. Or,
-        # if your Elasticsearch server is brand new.
-        document_index.delete_alias(name=INDEX_ALIAS_NAME, ignore=404)
-        document_index.put_alias(name=INDEX_ALIAS_NAME)
+        # Now we're going to bundle the change to set the alias to point
+        # to the new index and delete all old indexes.
+        # The reason for doing this together in one update is to make it atomic.
+        alias_updates = []
+        alias_updates.append(
+            {"add": {"index": document_index._name, "alias": INDEX_ALIAS_NAME}}
+        )
+        for index_name in connection.indices.get_alias():
+            if index_name.startswith("mdn_docs_"):
+                if index_name != document_index._name:
+                    alias_updates.append({"remove_index": {"index": index_name}})
+                    click.echo(f"Delete old index {index_name!r}")
+
+        connection.indices.update_aliases({"actions": alias_updates})
         click.echo(
             f"Put the {INDEX_ALIAS_NAME!r} alias from old index "
             f"to point to {document_index._name}"
         )
 
-        if connection.indices.exists_alias(INDEX_ALIAS_NAME):
-            for index_name in connection.indices.get(INDEX_ALIAS_NAME):
-                if index_name != document_index._name:
-                    older_index = Index(index_name)
-                    older_index.delete(ignore=404)
-                    click.echo(
-                        f"Deleted old index {index_name!r} in favor of pointing "
-                        f"the alias to {document_index._name}"
-                    )
+        # if connection.indices.exists_alias(INDEX_ALIAS_NAME):
+        #     for index_name in connection.indices.get(INDEX_ALIAS_NAME):
+        #         if index_name != document_index._name:
+        #             older_index = Index(index_name)
+        #             older_index.delete(ignore=404)
+        #             click.echo(
+        #                 f"Deleted old index {index_name!r} in favor of pointing "
+        #                 f"the alias to {document_index._name}"
+        #             )
 
     t1 = time.time()
     took = t1 - t0
@@ -203,7 +243,7 @@ def walk(root):
             yield path
 
 
-def to_search(file):
+def to_search(file, _index=None):
     with open(file) as f:
         data = json.load(f)
     if "doc" not in data:
@@ -226,7 +266,8 @@ def to_search(file):
         # files.
         return
     locale = locale[1:]
-    return Document(
+    d = Document(
+        _index=_index,
         _id=doc["mdn_url"],
         title=doc["title"],
         # This is confusing. But it's worth hacking around for now until
@@ -287,6 +328,9 @@ def to_search(file):
         slug=slug.lower(),
         locale=locale.lower(),
     )
+    # print(dir(d))
+    # raise Exception
+    return d
 
 
 _display_none_regex = re.compile(r"display:\s*none")

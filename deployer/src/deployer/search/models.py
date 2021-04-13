@@ -180,4 +180,6 @@ class Document(ESDocument):
     popularity = Float()
 
     class Index:
-        name = f'{INDEX_ALIAS_NAME}_{datetime.datetime.utcnow().strftime("%Y%m%d")}'
+        name = (
+            f'{INDEX_ALIAS_NAME}_{datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")}'
+        )
