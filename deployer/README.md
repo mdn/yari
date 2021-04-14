@@ -155,11 +155,6 @@ name is based on today's date.
 What this means it that **there is zero downtime for the search queries**. Nothing
 needs to be reconfigured on the Kuma side.
 
-Note that if you run the `search-index` command (without the `--update`) _twice
-in one day_, it will first delete the index before it recreates it. That would
-lead to some downtime on the searches, but this is only something that would
-happen if you are debugging locally or some other extreme circumstances in production.
-
 ### To update or not start a fresh
 
 The default behavior is that it deletes the index first and immediately creates

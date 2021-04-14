@@ -38,17 +38,14 @@ def index(
 
     click.echo(f"Found {count_todo:,} (potential) documents to index")
 
-    # Confusingly, `._index` is actually not a private API.
-    # It's the documented way you're supposed to reach it.
     if update:
         index_name = None
         has_old_index = False
-        for x in connection.indices.get_alias():
-            print("X:", x)
-            if x.startswith("mdn_docs_"):
-                index_name = x
+        for name in connection.indices.get_alias():
+            if name.startswith("mdn_docs_"):
+                index_name = name
                 break
-            elif x == INDEX_ALIAS_NAME:
+            elif name == INDEX_ALIAS_NAME:
                 has_old_index = True
         else:
             if not has_old_index:
@@ -56,6 +53,8 @@ def index(
 
         document_index = Index(index_name)
     else:
+        # Confusingly, `._index` is actually not a private API.
+        # It's the documented way you're supposed to reach it.
         document_index = Document._index
         click.echo(
             "Deleting any possible existing index "
