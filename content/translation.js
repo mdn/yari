@@ -12,6 +12,7 @@ const IMPORTANT_MACROS = new Map(
     "EmbedGHLiveSample",
     "CSSSyntax",
     "SeeCompatTable",
+    "languages",
     // XXX List all the important sidebar macros??
   ].map((name) => [name.toLowerCase(), name])
 );
@@ -35,7 +36,14 @@ function getKSMacros(content, cacheKey = null) {
     const macroArgs = token.args;
     let string = IMPORTANT_MACROS.get(macroName);
     if (macroArgs.length) {
-      string += `(${macroArgs.map((x) => `'${x}'`).join(", ")})`;
+      string += `(${macroArgs
+        .map((x) => {
+          if (typeof x === "object") {
+            return JSON.stringify(x);
+          }
+          return `'${x}'`;
+        })
+        .join(", ")})`;
     }
     macros.add(string);
   }
