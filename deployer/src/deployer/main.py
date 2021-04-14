@@ -10,6 +10,7 @@ from .constants import (
     CONTENT_ARCHIVED_ROOT,
     DEFAULT_BUCKET_NAME,
     DEFAULT_BUCKET_PREFIX,
+    DEFAULT_CACHE_CONTROL,
     DEFAULT_NO_PROGRESSBAR,
     DEFAULT_REPO,
     DEFAULT_GITHUB_TOKEN,
@@ -185,6 +186,12 @@ def whatsdeployed(ctx, directory: Path, output: str):
     ),
     default=None,
     callback=validate_optional_file,
+)
+@click.option(
+    "--default-cache-control",
+    help="The default Cache-Control value used when uploading files (0 to disable)",
+    default=DEFAULT_CACHE_CONTROL,
+    show_default=True,
 )
 @click.argument("directory", type=click.Path(), callback=validate_directory)
 @click.pass_context
