@@ -132,7 +132,7 @@ def index(
     # Now when the index has been filled, we need to make sure we
     # correct any previous indexes.
     if update:
-        # When you do an update, Elasticsearch will internall delete the
+        # When you do an update, Elasticsearch will internally delete the
         # previous docs (based on the _id primary key we set).
         # Normally, Elasticsearch will do this when you restart the cluster
         # but that's not something we usually do.
@@ -164,10 +164,9 @@ def index(
         # Now we're going to bundle the change to set the alias to point
         # to the new index and delete all old indexes.
         # The reason for doing this together in one update is to make it atomic.
-        alias_updates = []
-        alias_updates.append(
+        alias_updates = [
             {"add": {"index": document_index._name, "alias": INDEX_ALIAS_NAME}}
-        )
+        ]
         for index_name in connection.indices.get_alias():
             if index_name.startswith("mdn_docs_"):
                 if index_name != document_index._name:
@@ -176,8 +175,8 @@ def index(
 
         connection.indices.update_aliases({"actions": alias_updates})
         click.echo(
-            f"Put the {INDEX_ALIAS_NAME!r} alias from old index "
-            f"to point to {document_index._name}"
+            f"Reassign the {INDEX_ALIAS_NAME!r} alias from old index "
+            f"to {document_index._name}"
         )
 
     t1 = time.time()

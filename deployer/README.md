@@ -134,19 +134,18 @@ environment variable.
 ### About Elasticsearch aliases
 
 The default behavior is that each day you get a different index name.
-E.g. `mdn_docs_20210331`. And then there's an alias with a more "generic" name.
+E.g. `mdn_docs_20210331093714`. And then there's an alias with a more "generic" name.
 E.g. `mdn_docs`. It's the alias name that Kuma uses to send search queries to.
 
 The way indexing works is that we leave the existing index and its alias in place,
-then we fill up a new index and once that works, we "move the alias" and
+then we fill up a new index and once that works, we atomically "move the alias" and
 delete the old index. To demonstrate, consider this example timeline:
 
-- Yesterday: index `mdn_docs_20210330` and `mdn_docs --> mdn_docs_20210330`
+- Yesterday: index `mdn_docs_20210330093714` and `mdn_docs --> mdn_docs_20210330093714`
 - Today:
-  - create index `mdn_docs_20210331`
-  - populate `mdn_docs_20210331` (could take a long time)
-  - remove alias `mdn_docs`
-  - put new alias `mdn_docs --> mdn_docs_20210331`
+  - create new index `mdn_docs_20210331094500`
+  - populate `mdn_docs_20210331094500` (could take a long time)
+  - atomically re-assign alias `mdn_docs --> mdn_docs_20210331094500` and delete old index `mdn_docs_20210330093714`
   - delete old index `mdn_docs_20210330`
 
 Note, this only applies if you _don't_ use `--update`.
