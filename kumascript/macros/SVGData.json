@@ -1768,7 +1768,7 @@
         "elements": [
           "animationElements",
           "descriptiveElements",
-          "textContentElements",
+          "textContentChildElements",
           "&lt;a&gt;"
         ]
       },
