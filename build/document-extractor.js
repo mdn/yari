@@ -110,16 +110,29 @@ function extractSections($) {
  *        data: {....}
  *   }]
  *
- * At the time of writing (Jan 2020), there is only one single special type of
- * section and that's BCD. The idea is we look for a bunch of special sections
- * and if all else fails, just leave it as HTML as is.
+ * Another example is for specification tables. If the input is this:
+ *
+ *   <h2 id="Specifications">Specifications</h2>
+ *   <div class="bc-specs" data-bcd-query="foo.bar.thing">...</div>
+ *
+ * Then, extract the data-bcd-query and return this:
+ *
+ *   [{
+ *     type: "specifications",
+ *     value: {
+ *        query: "foo.bar.thing",
+ *        id: "specifications",
+ *        title: "Specifications",
+ *        spec_urls: {....}
+ *   }]
  */
 function addSections($) {
   const flaws = [];
 
-  const countPotentialBCDDataDivs = $.find("div.bc-data").length;
-  if (countPotentialBCDDataDivs) {
-    /** If there's exactly 1 BCD table the only section to add is something
+  const countPotentialSpecialDivs =
+    $.find("div.bc-data").length + $.find("div.bc-specs").length;
+  if (countPotentialSpecialDivs) {
+    /** If there's exactly 1 special table the only section to add is something
      * like this:
      *    {
      *     "type": "browser_compatibility",
@@ -132,8 +145,8 @@ function addSections($) {
      *
      * Where the 'title' and 'id' values comes from the <h2> tag (if available).
      *
-     * However, if there are **multiple BCD tables**, which is rare, the it
-     * needs to return something like this:
+     * However, if there are **multiple special tables**,
+     * it needs to return something like this:
      *
      *   [{
      *     "type": "prose",
@@ -154,7 +167,7 @@ function addSections($) {
      *       "content": "Any other stuff before table maybe"
      *    },
      */
-    if (countPotentialBCDDataDivs > 1) {
+    if (countPotentialSpecialDivs > 1) {
       const subSections = [];
       const section = cheerio
         .load("<div></div>", {
@@ -163,19 +176,20 @@ function addSections($) {
         .eq(0);
 
       // Loop over each and every "root element" in the node and keep piling
-      // them up in a buffer, until you encounter a `div.bc-table` then
+      // them up in a buffer, until you encounter a `div.bc-data` or `div.bc-specs` then
       // add that to the stack, clear and repeat.
       const iterable = [...$[0].childNodes];
       let c = 0;
-      let countBCDDataDivsFound = 0;
+      let countSpecialDivsFound = 0;
       iterable.forEach((child) => {
         if (
           child.tagName === "div" &&
           child.attribs &&
           child.attribs.class &&
-          /bc-data/.test(child.attribs.class)
+          (child.attribs.class.includes("bc-data") ||
+            child.attribs.class.includes("bc-specs"))
         ) {
-          countBCDDataDivsFound++;
+          countSpecialDivsFound++;
           if (c) {
             const [proseSections, proseFlaws] = _addSectionProse(
               section.clone()
@@ -186,10 +200,10 @@ function addSections($) {
             c = 0; // reset the counter
           }
           section.append(child);
-          // XXX That `_addSingleSectionBCD(section.clone())` might return a
+          // XXX That `_addSingleSpecialSection(section.clone())` might return a
           // and empty array and that means it failed and we should
           // bail.
-          subSections.push(..._addSingleSectionBCD(section.clone()));
+          subSections.push(..._addSingleSpecialSection(section.clone()));
           section.empty();
         } else {
           section.append(child);
@@ -201,28 +215,29 @@ function addSections($) {
         subSections.push(...proseSections);
         flaws.push(...proseFlaws);
       }
-      if (countBCDDataDivsFound !== countPotentialBCDDataDivs) {
-        const leftoverCount = countPotentialBCDDataDivs - countBCDDataDivsFound;
-        const explanation = `${leftoverCount} 'div.bc-data' element${
+      if (countSpecialDivsFound !== countPotentialSpecialDivs) {
+        const leftoverCount = countPotentialSpecialDivs - countSpecialDivsFound;
+        const explanation = `${leftoverCount} 'div.bc-data' or 'div.bc-specs' element${
           leftoverCount > 1 ? "s" : ""
         } found but deeply nested.`;
         flaws.push(explanation);
       }
       return [subSections, flaws];
     }
-    const bcdSections = _addSingleSectionBCD($);
+    const specialSections = _addSingleSpecialSection($);
 
-    // The _addSingleSectionBCD() function will have sucked up the <h2> or <h3>
-    // and the `div.bc-data` to turn it into a BCD section.
+    // The _addSingleSpecialSection() function will have sucked up the <h2> or <h3>
+    // and the `div.bc-data` or `div.bc-specs` to turn it into a special section.
     // First remove that, then put whatever HTML is left as a prose
     // section underneath.
     $.find("div.bc-data, h2, h3").remove();
+    $.find("div.bc-specs, h2, h3").remove();
     const [proseSections, proseFlaws] = _addSectionProse($);
-    bcdSections.push(...proseSections);
+    specialSections.push(...proseSections);
     flaws.push(...proseFlaws);
 
-    if (bcdSections.length) {
-      return [bcdSections, flaws];
+    if (specialSections.length) {
+      return [specialSections, flaws];
     }
   }
 
@@ -233,7 +248,7 @@ function addSections($) {
   return [proseSections, flaws];
 }
 
-function _addSingleSectionBCD($) {
+function _addSingleSpecialSection($) {
   let id = null;
   let title = null;
   let isH3 = false;
@@ -251,7 +266,16 @@ function _addSingleSectionBCD($) {
     }
   }
 
-  const dataQuery = $.find("div.bc-data").attr("id");
+  let dataQuery = null;
+  let specialSectionType = null;
+  if ($.find("div.bc-data").length) {
+    specialSectionType = "browser_compatibility";
+    dataQuery = $.find("div.bc-data").attr("id");
+  } else if ($.find("div.bc-specs").length) {
+    specialSectionType = "specifications";
+    dataQuery = $.find("div.bc-specs").attr("data-bcd-query");
+  }
+
   // Some old legacy documents haven't been re-rendered yet, since it
   // was added, so the `div.bc-data` tag doesn't have a `id="bcd:..."`
   // attribute. If that's the case, bail and fail back on a regular
@@ -266,7 +290,7 @@ function _addSingleSectionBCD($) {
   if (data === undefined) {
     return [
       {
-        type: "browser_compatibility",
+        type: specialSectionType,
         value: {
           title,
           id,
@@ -279,77 +303,110 @@ function _addSingleSectionBCD($) {
     ];
   }
 
-  // First extract a map of all release data, keyed by (normalized) browser
-  // name and the versions.
-  // You'll have a map that looks like this:
-  //
-  //   'chrome_android': {
-  //      '28': {
-  //        release_data: '2012-06-01',
-  //        release_notes: '...',
-  //        ...
-  //
-  // The reason we extract this to a locally scoped map, is so we can
-  // use it to augment the `__compat` blocks for the latest version
-  // when (if known) it was added.
-  const browserReleaseData = new Map();
-  for (const [name, browser] of Object.entries(browsers)) {
-    const releaseData = new Map();
-    for (const [version, data] of Object.entries(browser.releases || [])) {
-      if (data) {
-        releaseData.set(version, data);
-      }
-    }
-    browserReleaseData.set(name, releaseData);
-  }
-
-  for (const [key, compat] of Object.entries(data)) {
-    let block;
-    if (key === "__compat") {
-      block = compat;
-    } else if (compat.__compat) {
-      block = compat.__compat;
-    }
-    if (block) {
-      for (let [browser, info] of Object.entries(block.support)) {
-        // `info` here will be one of the following:
-        //  - a single simple_support_statement:
-        //    { version_added: 42 }
-        //  - an array of simple_support_statements:
-        //    [ { version_added: 42 }, { prefix: '-moz', version_added: 35 } ]
-        //
-        // Standardize the first version to an array of one, so we don't have
-        // to deal with two different forms below
-        if (!Array.isArray(info)) {
-          info = [info];
+  if (specialSectionType === "browser_compatibility") {
+    // First extract a map of all release data, keyed by (normalized) browser
+    // name and the versions.
+    // You'll have a map that looks like this:
+    //
+    //   'chrome_android': {
+    //      '28': {
+    //        release_data: '2012-06-01',
+    //        release_notes: '...',
+    //        ...
+    //
+    // The reason we extract this to a locally scoped map, is so we can
+    // use it to augment the `__compat` blocks for the latest version
+    // when (if known) it was added.
+    const browserReleaseData = new Map();
+    for (const [name, browser] of Object.entries(browsers)) {
+      const releaseData = new Map();
+      for (const [version, data] of Object.entries(browser.releases || [])) {
+        if (data) {
+          releaseData.set(version, data);
         }
-        for (const infoEntry of info) {
-          const added = infoEntry.version_added;
-          if (browserReleaseData.has(browser)) {
-            if (browserReleaseData.get(browser).has(added)) {
-              infoEntry.release_date = browserReleaseData
-                .get(browser)
-                .get(added).release_date;
+      }
+      browserReleaseData.set(name, releaseData);
+    }
+
+    for (const [key, compat] of Object.entries(data)) {
+      let block;
+      if (key === "__compat") {
+        block = compat;
+      } else if (compat.__compat) {
+        block = compat.__compat;
+      }
+      if (block) {
+        for (let [browser, info] of Object.entries(block.support)) {
+          // `info` here will be one of the following:
+          //  - a single simple_support_statement:
+          //    { version_added: 42 }
+          //  - an array of simple_support_statements:
+          //    [ { version_added: 42 }, { prefix: '-moz', version_added: 35 } ]
+          //
+          // Standardize the first version to an array of one, so we don't have
+          // to deal with two different forms below
+          if (!Array.isArray(info)) {
+            info = [info];
+          }
+          for (const infoEntry of info) {
+            const added = infoEntry.version_added;
+            if (browserReleaseData.has(browser)) {
+              if (browserReleaseData.get(browser).has(added)) {
+                infoEntry.release_date = browserReleaseData
+                  .get(browser)
+                  .get(added).release_date;
+              }
             }
           }
         }
       }
     }
-  }
 
-  return [
-    {
-      type: "browser_compatibility",
-      value: {
-        title,
-        id,
-        isH3,
-        data,
-        query,
-        browsers,
+    return [
+      {
+        type: "browser_compatibility",
+        value: {
+          title,
+          id,
+          isH3,
+          data,
+          query,
+          browsers,
+        },
       },
-    },
-  ];
+    ];
+  } else if (specialSectionType === "specifications") {
+    let spec_urls = [];
+
+    for (const [key, compat] of Object.entries(data)) {
+      let block;
+      if (key === "__compat") {
+        block = compat;
+      } else if (compat.__compat) {
+        block = compat.__compat;
+      }
+      if (block && block.spec_url) {
+        if (Array.isArray(block.spec_url)) {
+          spec_urls = block.spec_url;
+        } else {
+          spec_urls.push(block.spec_url);
+        }
+      }
+    }
+
+    return [
+      {
+        type: "specifications",
+        value: {
+          title,
+          id,
+          isH3,
+          spec_urls,
+          query,
+        },
+      },
+    ];
+  }
 }
 
 function _addSectionProse($) {

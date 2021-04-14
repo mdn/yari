@@ -1,0 +1,20 @@
+<%
+/*
+Placeholder to render a specification section with spec_urls from BCD
+
+Parameters
+
+$0 – A query string indicating for which feature to retrieve specification URLs for.
+
+Example calls
+
+{{specs}}
+{{specs("html.element.abbr")}}
+
+*/
+
+var query = $0 || env['browser-compat'];
+var output = `<div class="bc-specs" data-bcd-query="${query}"></div>`;
+%>
+
+<%-output%>
