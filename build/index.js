@@ -145,7 +145,7 @@ function postProcessExternalLinks($) {
  * @param {Cheerio document instance} $
  */
 function postProcessSmallerHeadingIDs($) {
-  $("h4[id]").each((i, element) => {
+  $("h4[id], h5[id], h6[id]").each((i, element) => {
     const id = element.attribs.id;
     const lcID = id.toLowerCase();
     if (id !== lcID) {
