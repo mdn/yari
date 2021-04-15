@@ -13,6 +13,7 @@ const IMPORTANT_MACROS = new Map(
     "CSSSyntax",
     "SeeCompatTable",
     "languages",
+    "AvailableInWorkers",
     // XXX List all the important sidebar macros??
   ].map((name) => [name.toLowerCase(), name])
 );
