@@ -9,7 +9,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-pytest = "^6.2.2"
+pytest = "^6.2.3"
 pytest-base-url = "^1.4.2"
 pytest-rerunfailures = "^9.1.1"
 requests = "^2.25.1"

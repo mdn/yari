@@ -69,6 +69,11 @@
     "url": "https://www.w3.org/TR/requestidlecallback/",
     "status": "PR"
   },
+  "Badging API": {
+    "name": "Badging API",
+    "url": "https://w3c.github.io/badging/",
+    "status": "Draft"
+  },
   "Barcode Detection API": {
     "name": "Accelerated Shape Detection in Images",
     "url": "https://wicg.github.io/shape-detection-api/",

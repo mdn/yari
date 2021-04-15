@@ -161,6 +161,9 @@ test("content built foo page", () => {
   // going to be used.
   expect(toEnUSURL).toBe("https://developer.mozilla.org/en-US/docs/Web/Foo");
   expect(toFrURL).toBe("https://developer.mozilla.org/fr/docs/Web/Foo");
+
+  // The h4 heading in there has its ID transformed to lowercase
+  expect($("h4").attr("id")).toBe($("h4").attr("id").toLowerCase());
 });
 
 test("icons mentioned in <head> should resolve", () => {
@@ -1373,4 +1376,22 @@ test("translated content broken links can fall back to en-us", () => {
   expect($("article a.only-in-en-us").attr("title")).toBe(
     "Currently only available in English (US)"
   );
+});
+
+test("homepage links and flaws", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "homepage_links"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.broken_links.length).toBe(4);
+  const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
+  expect(map.get("/ru").suggestion).toBe("/ru/");
+  expect(map.get("/JA/").suggestion).toBe("/ja/");
+  expect(map.get("/ZH-CN").suggestion).toBe("/zh-CN/");
+  expect(map.get("/notalocale/").suggestion).toBeFalsy();
 });

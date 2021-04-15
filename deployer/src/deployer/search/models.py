@@ -1,3 +1,5 @@
+import datetime
+
 from elasticsearch_dsl import (
     Boolean,
     Document as ESDocument,
@@ -8,6 +10,12 @@ from elasticsearch_dsl import (
     token_filter,
     char_filter,
 )
+
+# Note, this is the name that the Kuma code will use when sending Elasticsearch
+# search queries.
+# We always build an index that is called something based on this name but with
+# the _YYYYMMDDHHMMSS date suffix.
+INDEX_ALIAS_NAME = "mdn_docs"
 
 """
 A great way to debug analyzers is with the `Document._index.analyze()` API which
@@ -172,4 +180,6 @@ class Document(ESDocument):
     popularity = Float()
 
     class Index:
-        name = "mdn_docs"
+        name = (
+            f'{INDEX_ALIAS_NAME}_{datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")}'
+        )

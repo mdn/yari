@@ -1148,6 +1148,7 @@
       "events": ["Document: pointerlockchange", "Document: pointerlockerror"]
     },
     "Presentation API": {
+      "overview": ["Presentation API"],
       "interfaces": [
         "Presentation",
         "PresentationAvailability",

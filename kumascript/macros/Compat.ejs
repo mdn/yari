@@ -30,7 +30,10 @@ Example calls
 
 */
 
-var query = $0;
+var query = $0 || env['browser-compat'];
+if (!query) {
+  throw new Error("No first query argument or 'browser-compat' front-matter value passed");
+}
 var depth = $1 || 1;
 var output = `<div class="bc-data" id="bcd:${query}" data-depth="${depth}">
   If you're able to see this, something went wrong on this page.
