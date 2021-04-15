@@ -337,12 +337,6 @@ def speedcurve_deploy(ctx, **kwargs):
     default=CI,
     show_default=True,
 )
-@click.option(
-    "--priority-prefix",
-    "-p",
-    multiple=True,
-    help="Specific folder prefixes to index first.",
-)
 @click.argument("buildroot", type=click.Path(), callback=validate_directory)
 @click.pass_context
 def search_index(ctx, buildroot: Path, **kwargs):
@@ -360,7 +354,6 @@ def search_index(ctx, buildroot: Path, **kwargs):
         url,
         update=kwargs["update"],
         no_progressbar=kwargs["no_progressbar"],
-        priority_prefixes=kwargs["priority_prefix"],
     )
 
 

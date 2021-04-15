@@ -3,7 +3,6 @@ import * as React from "react";
 import Dropdown from "../dropdown";
 import { useLocale } from "../../../hooks";
 import SignInLink from "../../atoms/signin-link";
-import { getAuthURL } from "../../../utils/auth-link";
 import { useUserData } from "../../../user-context";
 
 import { DISABLE_AUTH } from "../../../constants";
@@ -50,12 +49,6 @@ function LoginInner() {
       <span className="avatar-username">{userData.username}</span>
     </>
   );
-  const viewProfileURL = getAuthURL(
-    `/${locale}/profiles/${userData.username}`,
-    false
-  );
-  const editProfileURL = viewProfileURL + "/edit";
-
   // Note that this component is never rendered server-side so it's safe to
   // rely on `window.location`.
   let next = window.location.pathname;
@@ -72,10 +65,7 @@ function LoginInner() {
   return (
     <Dropdown id="user-avatar-menu" label={label} right={true} hideArrow={true}>
       <li>
-        <a href={viewProfileURL}>View profile</a>
-      </li>
-      <li>
-        <a href={editProfileURL}>Edit profile</a>
+        <a href={`/${locale}/settings`}>Account settings</a>
       </li>
       <li>
         <form action={signOutURL} method="post">

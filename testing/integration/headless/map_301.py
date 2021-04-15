@@ -983,6 +983,23 @@ FIREFOX_SOURCE_DOCS_URLS = list(
 )
 
 MISC_REDIRECT_URLS = [
+    url_test("/fr/account", "/fr/settings", status_code=302),
+    url_test("/en-US/account", "/en-US/settings", status_code=302),
+    url_test("/en-US/account/", "/en-US/settings", status_code=302),
+    url_test("/ja/profile", "/ja/settings", status_code=302),
+    url_test("/en-US/profile", "/en-US/settings", status_code=302),
+    url_test("/en-US/profile/", "/en-US/settings", status_code=302),
+    url_test("/en-US/profile/edit", "/en-US/settings", status_code=302),
+    url_test("/en-US/profile/edit/", "/en-US/settings", status_code=302),
+    url_test("/en-US/profile/stripe_subscription", "/en-US/settings", status_code=302),
+    url_test("/en-US/profile/stripe_subscription/", "/en-US/settings", status_code=302),
+    url_test("/zh-CN/profiles/sheppy", "/zh-CN/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy", "/en-US/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy/", "/en-US/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy/edit", "/en-US/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy/edit/", "/en-US/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy/delete", "/en-US/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy/delete/", "/en-US/settings", status_code=302),
     url_test("/en-US/DOM", "/en-US/docs/DOM"),
     url_test("/en-US/DOM/", "/en-US/docs/DOM"),
     url_test(

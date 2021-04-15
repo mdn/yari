@@ -311,13 +311,26 @@ function _addSingleSectionBCD($) {
       block = compat.__compat;
     }
     if (block) {
-      for (const [browser, info] of Object.entries(block.support)) {
-        const added = info.version_added;
-        if (browserReleaseData.has(browser)) {
-          if (browserReleaseData.get(browser).has(added)) {
-            info.release_date = browserReleaseData
-              .get(browser)
-              .get(added).release_date;
+      for (let [browser, info] of Object.entries(block.support)) {
+        // `info` here will be one of the following:
+        //  - a single simple_support_statement:
+        //    { version_added: 42 }
+        //  - an array of simple_support_statements:
+        //    [ { version_added: 42 }, { prefix: '-moz', version_added: 35 } ]
+        //
+        // Standardize the first version to an array of one, so we don't have
+        // to deal with two different forms below
+        if (!Array.isArray(info)) {
+          info = [info];
+        }
+        for (const infoEntry of info) {
+          const added = infoEntry.version_added;
+          if (browserReleaseData.has(browser)) {
+            if (browserReleaseData.get(browser).has(added)) {
+              infoEntry.release_date = browserReleaseData
+                .get(browser)
+                .get(added).release_date;
+            }
           }
         }
       }

@@ -1,36 +1,24 @@
-import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { useLocale } from "../../../hooks";
-import { getAuthURL } from "../../../utils/auth-link";
 
 export default function SignInLink({ className }: { className?: string }) {
   const locale = useLocale();
   const { pathname } = useLocation();
+  const sp = new URLSearchParams();
+  // If pathname === '/en-US/sigin', i.e. you're already on the sign in page
+  // itself, then discard that as a 'next' parameter.
+  // Otherwise, you might get redirected back to the sign in page after you've
+  // successfully signed in.
+  sp.set("next", pathname === `/${locale}/signin` ? `/${locale}/` : pathname);
 
-  // NOTE! We can remove this if-statement and make it the default once
-  // https://github.com/mdn/yari/issues/2449 is resolved and it has been
-  // fully tested in Stage.
-  if (process.env.REACT_APP_USE_YARI_SIGNIN) {
-    return (
-      <Link
-        to={`/${locale}/signin?next=${pathname}`}
-        rel="nofollow"
-        className={className ? className : undefined}
-      >
-        Sign in
-      </Link>
-    );
-  }
   return (
-    <>
-      <a
-        href={getAuthURL(`/${locale}/users/account/signup-landing`)}
-        rel="nofollow"
-        className={className ? className : undefined}
-      >
-        Sign in
-      </a>
-    </>
+    <Link
+      to={`/${locale}/signin?${sp.toString()}`}
+      rel="nofollow"
+      className={className ? className : undefined}
+    >
+      Sign in
+    </Link>
   );
 }

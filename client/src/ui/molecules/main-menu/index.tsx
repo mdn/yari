@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 
-import { useGA } from "../../../ga-context";
 import { useLocale } from "../../../hooks";
 
 import "./index.scss";
@@ -14,38 +13,17 @@ export default function MainMenu({
   const locale = useLocale();
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
   const mainMenuRef = useRef<null | HTMLUListElement>(null);
-  const [visibleSubMenu, setVisibleSubMenu] = useState<string | null>(null);
-  const ga = useGA();
-
-  /**
-   * Send a signal to GA when there is an interaction on one
-   * of the main menu items.
-   * @param {Object} event - The event object that was triggered
-   */
-  function sendMenuItemInteraction(
-    event:
-      | React.FocusEvent<HTMLButtonElement>
-      | React.MouseEvent<HTMLAnchorElement>
-  ) {
-    if (!(event.target instanceof HTMLElement)) {
-      return;
-    }
-    const label =
-      event.target instanceof HTMLAnchorElement
-        ? event.target.href
-        : event.target.textContent;
-
-    ga("send", {
-      hitType: "event",
-      eventCategory: "Wiki",
-      eventAction: "MainNav",
-      eventLabel: label,
-    });
-  }
-
+  const [visibleSubMenuId, setVisibleSubMenuId] = useState<string | null>(null);
+  const [
+    focusedSubmenuItemIndex,
+    setFocusedSubmenuItemIndex,
+  ] = useState<number>(-1);
+  const [submenuCollapsedOnBlurId, setSubmenuCollapsedOnBlurId] = useState<
+    string | null
+  >(null);
   function hideSubMenuIfVisible() {
-    if (visibleSubMenu) {
-      setVisibleSubMenu(null);
+    if (visibleSubMenuId) {
+      setVisibleSubMenuId(null);
     }
   }
 
@@ -53,17 +31,75 @@ export default function MainMenu({
    * Show and hide submenus in the main menu, send GA events and updates
    * the ARIA state.
    * @param {Object} event - onClick event triggered on top-level menu item
-   * @param {String} menuLabel - The current top-level menu item label
+   * @param {String} id - The current top-level menu item id
    */
-  function toggleSubMenu(event, menuLabel) {
-    const expandedState = visibleSubMenu === menuLabel ? false : true;
+  function toggleSubMenu(event, id) {
+    const expandedState = visibleSubMenuId === id ? false : true;
 
     // store the current activeElement
-    previousActiveElement.current = event.target;
-    event.target.setAttribute("aria-expanded", expandedState);
+    previousActiveElement.current = document.activeElement as HTMLButtonElement;
 
-    setVisibleSubMenu(visibleSubMenu === menuLabel ? null : menuLabel);
-    sendMenuItemInteraction(event);
+    setVisibleSubMenuId(visibleSubMenuId === id ? null : id);
+
+    if (expandedState) {
+      setFocusedSubmenuItemIndex(0);
+    }
+  }
+
+  function onMenuButtonFocus() {
+    setFocusedSubmenuItemIndex(-1);
+  }
+
+  /**
+   * Handle arrow keydown events on submenu to change focused item.
+   * @param {Object} event - keydown event triggered on submenu
+   * @param {String} id - submenu id
+   * @param {Number} itemCount - number of items in submenu
+   */
+  function onSubmenuKeydown(
+    event: React.KeyboardEvent,
+    id: string,
+    itemCount: number
+  ) {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      // prevent page scrolling
+      event.preventDefault();
+
+      // open submenu if closed
+      if (focusedSubmenuItemIndex === -1) {
+        previousActiveElement.current = event.target as HTMLButtonElement;
+        setVisibleSubMenuId(id);
+      }
+
+      switch (event.key) {
+        case "ArrowDown":
+          // focus below item and jump to top item if bottom item focused
+          setFocusedSubmenuItemIndex((focusedSubmenuItemIndex + 1) % itemCount);
+          break;
+        case "ArrowUp":
+          if (focusedSubmenuItemIndex <= 0) {
+            // jump to bottom item if top item focused
+            setFocusedSubmenuItemIndex(itemCount - 1);
+          } else {
+            setFocusedSubmenuItemIndex(focusedSubmenuItemIndex - 1);
+          }
+      }
+    }
+  }
+
+  /**
+   * Close submenu if focus leaves submenu due to tabbing or clicking outside
+   */
+  function onSubmenuItemBlur(submenuId: string, itemIndex: number) {
+    if (itemIndex === focusedSubmenuItemIndex) {
+      // prevent submenu from immediately re-opening if blur caused by clicking menu button
+      setSubmenuCollapsedOnBlurId(submenuId);
+      setTimeout(() => {
+        setSubmenuCollapsedOnBlurId(null);
+      }, 250);
+
+      hideSubMenuIfVisible();
+    }
   }
 
   useEffect(() => {
@@ -77,6 +113,11 @@ export default function MainMenu({
     if (mainMenu) {
       mainMenu.classList.remove("nojs");
     }
+
+    const focusableSubmenuItemSelector = 'ul.show a[tabindex="0"]';
+    mainMenu
+      ?.querySelector<HTMLAnchorElement>(focusableSubmenuItemSelector)
+      ?.focus();
 
     document.addEventListener("keyup", (event) => {
       if (event.key === "Escape") {
@@ -92,7 +133,7 @@ export default function MainMenu({
   const menus = [
     {
       label: "Technologies",
-      labelId: "technologies",
+      id: "technologies",
       items: [
         {
           url: `/${locale}/docs/Web`,
@@ -134,7 +175,7 @@ export default function MainMenu({
     },
     {
       label: "References & Guides",
-      labelId: "references-guides",
+      id: "references-guides",
       items: [
         {
           url: `/${locale}/docs/Learn`,
@@ -168,7 +209,7 @@ export default function MainMenu({
     },
     {
       label: "Feedback",
-      labelId: "feedback",
+      id: "feedback",
       items: [
         {
           url: `/${locale}/docs/MDN/Contribute/Feedback`,
@@ -206,53 +247,68 @@ export default function MainMenu({
     <nav className="main-nav" aria-label="Main menu">
       <ul className="main-menu nojs" ref={mainMenuRef}>
         {menus.map((menuEntry) => (
-          <li key={menuEntry.label} className="top-level-entry-container">
+          <li
+            key={menuEntry.id}
+            className="top-level-entry-container"
+            onKeyDown={(event) => {
+              onSubmenuKeydown(event, menuEntry.id, menuEntry.items.length);
+            }}
+          >
             <button
-              id={`${menuEntry.labelId}-button`}
+              id={`${menuEntry.id}-button`}
               type="button"
               className="top-level-entry"
               aria-haspopup="menu"
-              aria-expanded="false"
-              onFocus={sendMenuItemInteraction}
+              aria-expanded={menuEntry.id === visibleSubMenuId}
+              onFocus={onMenuButtonFocus}
               onClick={(event) => {
-                toggleSubMenu(event, menuEntry.label);
+                if (submenuCollapsedOnBlurId !== menuEntry.id) {
+                  // always toggle menu if not clicking button for currently open menu
+                  toggleSubMenu(event, menuEntry.id);
+                }
+                setSubmenuCollapsedOnBlurId(null);
               }}
             >
               {menuEntry.label}
             </button>
             <ul
-              className={`${menuEntry.labelId} ${
-                menuEntry.label === visibleSubMenu ? "show" : ""
+              className={`${menuEntry.id} ${
+                menuEntry.id === visibleSubMenuId ? "show" : ""
               }`}
               role="menu"
-              aria-labelledby={`${menuEntry.labelId}-button`}
+              aria-labelledby={`${menuEntry.id}-button`}
             >
-              {menuEntry.items.map((item) => (
-                <li key={item.url} role="none">
+              {menuEntry.items.map((item, index) => (
+                <li
+                  key={item.url}
+                  role="none"
+                  onBlur={() => onSubmenuItemBlur(menuEntry.id, index)}
+                  onMouseOver={() => setFocusedSubmenuItemIndex(index)}
+                >
                   {item.external ? (
                     <a
+                      tabIndex={index === focusedSubmenuItemIndex ? 0 : -1}
                       target="_blank"
                       rel="noopener noreferrer"
                       href={item.url}
                       onClick={(event) => {
-                        item.onClick
-                          ? item.onClick(event)
-                          : sendMenuItemInteraction(event);
+                        if (item.onClick) {
+                          item.onClick(event);
+                        }
                       }}
-                      onContextMenu={sendMenuItemInteraction}
                       role="menuitem"
                     >
                       {item.label} &#x1f310;
                     </a>
                   ) : (
                     <a
+                      tabIndex={index === focusedSubmenuItemIndex ? 0 : -1}
                       href={item.url}
                       onClick={(event) => {
-                        item.onClick
-                          ? item.onClick(event)
-                          : sendMenuItemInteraction(event);
+                        if (item.onClick) {
+                          item.onClick(event);
+                        }
                       }}
-                      onContextMenu={sendMenuItemInteraction}
                       role="menuitem"
                     >
                       {item.label}
