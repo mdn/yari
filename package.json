@@ -76,7 +76,7 @@
     "imagemin-svgo": "9.0.0",
     "inquirer": "^8.0.0",
     "is-svg": "4.2.2",
-    "js-yaml": "4.0.0",
+    "js-yaml": "4.1.0",
     "loglevel": "^1.7.1",
     "lru-cache": "^6.0.0",
     "mdn-data": "2.0.17",
