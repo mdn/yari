@@ -67,7 +67,7 @@
     "hast-util-to-html": "^7.1.2",
     "hast-util-to-text": "^2.0.1",
     "http-proxy-middleware": "1.1.2",
-    "image-size": "0.9.7",
+    "image-size": "1.0.0",
     "image-type": "4.1.0",
     "imagemin": "7.0.1",
     "imagemin-gifsicle": "7.0.0",
