@@ -36,6 +36,7 @@ export function LanguageMenu({
         // don't bother redirecting.
         if (preferredLocale !== locale) {
           const localeURL = translateURL(preferredLocale);
+          const cookieValueBefore = document.cookie;
           for (const translation of translations) {
             if (translation.locale === preferredLocale) {
               let cookieValue = `${PREFERRED_LOCALE_COOKIE_NAME}=${
@@ -51,7 +52,9 @@ export function LanguageMenu({
           ga("send", {
             hitType: "event",
             eventCategory: "Language",
-            eventAction: "Change preferred language",
+            eventAction: `Change preferred language (cookie before: ${
+              cookieValueBefore || "none"
+            })`,
             eventLabel: `${window.location.pathname} to ${localeURL}`,
           });
 
