@@ -38,35 +38,44 @@ const UserDataContext = React.createContext<UserData | null>(null);
 // "forever".
 const SESSION_STORAGE_KEY = "whoami";
 
-export function UserDataProvider(props: { children: React.ReactNode }) {
-  function sessionStorageData() {
-    try {
-      const data = sessionStorage.getItem(SESSION_STORAGE_KEY);
-      if (data) {
-        return JSON.parse(data) as UserData;
-      }
-    } catch (error) {
-      console.warn("sessionStorage.getItem didn't work", error.toString());
-      return null;
+function getSessionStorageData() {
+  try {
+    const data = sessionStorage.getItem(SESSION_STORAGE_KEY);
+    if (data) {
+      return JSON.parse(data) as UserData;
     }
+  } catch (error) {
+    console.warn("sessionStorage.getItem didn't work", error.toString());
+    return null;
   }
+}
 
+export function removeSessionStorageData() {
+  try {
+    // It's safe to call .removeItem() on a key that doesn't already exist,
+    // and it's pointless to first do a .hasItem() before the .removeItem()
+    // because internally that's what .removeItem() already does.
+    sessionStorage.removeItem(SESSION_STORAGE_KEY);
+  } catch (error) {
+    console.warn("sessionStorage.removeItem didn't work", error.toString());
+  }
+}
+
+function setSessionStorageData(data: UserData) {
+  try {
+    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(data));
+  } catch (error) {
+    console.warn("sessionStorage.setItem didn't work", error.toString());
+  }
+}
+
+export function UserDataProvider(props: { children: React.ReactNode }) {
   const { data } = useSWR<UserData | null, Error | null>(
     DISABLE_AUTH ? null : "/api/v1/whoami",
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
-        try {
-          // It's safe to call .removeItem() on a key that doesn't already exist,
-          // and it's pointless to first do a .hasItem() before the .removeItem()
-          // because internally that's what .removeItem() already does.
-          sessionStorage.removeItem(SESSION_STORAGE_KEY);
-        } catch (error) {
-          console.warn(
-            "sessionStorage.removeItem didn't work",
-            error.toString()
-          );
-        }
+        removeSessionStorageData();
         throw new Error(`${response.status} on ${response.url}`);
       }
       const data = await response.json();
@@ -85,25 +94,19 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         // have to create a separate context for it.
         waffle: data.waffle,
       };
-    },
-    {
-      initialData: sessionStorageData() || undefined,
     }
   );
 
   React.useEffect(() => {
-    if (data !== undefined) {
-      // Ensure we have a snapshot in sessionStorage
-      try {
-        sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(data));
-      } catch (error) {
-        console.warn("sessionStorage.setItem didn't work", error.toString());
-      }
+    if (data) {
+      // At this point, the XHR request has set `data` to be an object.
+      // The user is definitely signed in or not signed in.
+      setSessionStorageData(data);
     }
   }, [data]);
 
   return (
-    <UserDataContext.Provider value={data || null}>
+    <UserDataContext.Provider value={data || getSessionStorageData() || null}>
       {props.children}
     </UserDataContext.Provider>
   );
