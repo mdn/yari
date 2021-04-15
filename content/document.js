@@ -390,6 +390,9 @@ function update(url, rawBody, metadata) {
 
 function findByURL(url, ...args) {
   const [bareURL, hash = ""] = url.split("#", 2);
+  if (!bareURL.includes("/docs/")) {
+    throw new Error("URL doesn't include the '/docs/' part");
+  }
   const doc = read(urlToFolderPath(bareURL), ...args);
   if (doc && hash) {
     return { ...doc, url: `${doc.url}#${hash}` };

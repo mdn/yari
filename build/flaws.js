@@ -281,6 +281,9 @@ function injectBrokenLinksFlaws(doc, $, { rawContent }, level) {
 
   function isHomepageURL(url) {
     // Return true if the URL is something like `/` or `/en-US` or `/fr/`
+    // If the URL was something like this: `/en-US#anchor` we don't
+    // want the hash to get in the way.
+    [url] = url.split("#");
     if (url === "/") {
       return true;
     }
