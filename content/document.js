@@ -527,84 +527,6 @@ function findAll({
   };
 }
 
-function findAll0({
-  files = new Set(),
-  folderSearch = null,
-  locales = new Map(),
-} = {}) {
-  if (!(files instanceof Set)) throw new TypeError("'files' not a Set");
-  if (folderSearch && typeof folderSearch !== "string")
-    throw new TypeError("'folderSearch' not a string");
-
-  const filePaths = [];
-  const roots = [];
-  if (CONTENT_ARCHIVED_ROOT) {
-    roots.push(CONTENT_ARCHIVED_ROOT);
-  }
-  if (CONTENT_TRANSLATED_ROOT) {
-    roots.push(CONTENT_TRANSLATED_ROOT);
-  }
-  roots.push(CONTENT_ROOT);
-  for (const root of roots) {
-    const searchPattern = [""];
-    if (locales.size) {
-      const localePrefixes = [];
-      for (const [locale, include] of locales) {
-        if (!include) {
-          throw new Error("ability to exclude locales is not supported yet");
-        }
-        localePrefixes.push(locale);
-      }
-      searchPattern.push(`+(${localePrefixes.join("|")})`);
-    }
-    searchPattern.push("**");
-    searchPattern.push("index.{html,md}");
-    filePaths.push(
-      ...glob
-        .sync(searchPattern.join(path.sep), { root })
-        .filter((filePath) => {
-          // The 'files' set is either a list of absolute full paths or a
-          // list of endings.
-          // Why endings? Because it's highly useful when you use git and the
-          // filepath might be relative to the git repo root.
-          if (files.size) {
-            if (files.has(filePath)) {
-              return true;
-            }
-            for (const fp of files) {
-              if (filePath.endsWith(fp)) {
-                return true;
-              }
-            }
-            return false;
-          }
-          if (folderSearch) {
-            return (
-              filePath
-                .replace(CONTENT_ROOT, "")
-                .replace(CONTENT_TRANSLATED_ROOT, "")
-                .replace(HTML_FILENAME, "")
-                .replace(MARKDOWN_FILENAME, "")
-                .search(new RegExp(folderSearch)) !== -1
-            );
-          }
-          return true;
-        })
-        .map((filePath) => {
-          return path.relative(root, path.dirname(filePath));
-        })
-    );
-  }
-  return {
-    count: filePaths.length,
-    *iter({ pathOnly = false } = {}) {
-      for (const filePath of filePaths) {
-        yield pathOnly ? filePath : read(filePath);
-      }
-    },
-  };
-}
-
 function findChildren(url, recursive = false) {
   const locale = url.split("/")[1];
   const root = getRoot(locale);
@@ -744,7 +666,6 @@ module.exports = {
 
   findByURL,
   findAll,
-  findAll0,
   findChildren,
 
   MEMOIZE_INVALIDATE,
