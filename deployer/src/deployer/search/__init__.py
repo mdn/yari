@@ -5,7 +5,7 @@ from pathlib import Path
 from collections import Counter
 
 import click
-from elasticsearch.helpers import streaming_bulk
+from elasticsearch.helpers import parallel_bulk
 from elasticsearch_dsl import Index
 from elasticsearch_dsl.connections import connections
 from selectolax.parser import HTMLParser
@@ -94,18 +94,9 @@ def index(
     errors_counter = Counter()
     t0 = time.time()
     with get_progressbar() as bar:
-        for success, info in streaming_bulk(
+        for success, info in parallel_bulk(
             connection,
             generator(),
-            # It's an inexact science as to what the perfect chunk_size should be.
-            # The default according to
-            # https://elasticsearch-py.readthedocs.io/en/v7.12.0/helpers.html#elasticsearch.helpers.streaming_bulk
-            # is 500.
-            # We've noticed that it works a bit better with a lower number because
-            # sometimes you get a `ReadTimeoutError` and combined with
-            # setting `raise_on_exception=False` you put less strain on each "bulk
-            # block".
-            chunk_size=100,
             # If the bulk indexing failed, it will by default raise a BulkIndexError.
             # Setting this to 'False' will suppress that.
             raise_on_exception=False,

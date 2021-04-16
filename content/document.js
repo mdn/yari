@@ -64,7 +64,7 @@ function extractLocale(folder) {
   // locale as we prefer to spell it (e.g. 'pt-BR' not 'Pt-bR')
   if (!locale) {
     throw new Error(
-      `Unable to figure out locale from ${folder} with ${localeFolderName}`
+      `Unable to figure out locale from '${folder}' with '${localeFolderName}'`
     );
   }
   return locale;
@@ -262,6 +262,9 @@ const read = memoize((folderOrFilePath) => {
     CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT);
 
   const rawContent = fs.readFileSync(filePath, "utf8");
+  if (!rawContent) {
+    throw new Error(`${filePath} is an empty file`);
+  }
 
   // This is very useful in CI where every page gets built. If there's an
   // accidentally unresolved git conflict, that's stuck in the content,
@@ -411,6 +414,9 @@ function update(url, rawBody, metadata) {
 
 function findByURL(url, ...args) {
   const [bareURL, hash = ""] = url.split("#", 2);
+  if (!bareURL.toLowerCase().includes("/docs/")) {
+    return;
+  }
   const doc = read(urlToFolderPath(bareURL), ...args);
   if (doc && hash) {
     return { ...doc, url: `${doc.url}#${hash}` };
