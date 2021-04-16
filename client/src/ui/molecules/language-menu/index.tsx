@@ -36,13 +36,24 @@ export function LanguageMenu({
         // don't bother redirecting.
         if (preferredLocale !== locale) {
           const localeURL = translateURL(preferredLocale);
-          const cookieValueBefore = document.cookie;
+          let cookieValueBefore = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith(`${PREFERRED_LOCALE_COOKIE_NAME}=`));
+          if (cookieValueBefore && cookieValueBefore.includes("=")) {
+            cookieValueBefore = cookieValueBefore.split("=")[1];
+          }
+
           for (const translation of translations) {
             if (translation.locale === preferredLocale) {
               let cookieValue = `${PREFERRED_LOCALE_COOKIE_NAME}=${
                 translation.locale
               };max-age=${60 * 60 * 24 * 365 * 3};path=/`;
-              if (document.location.hostname !== "localhost") {
+              if (
+                !(
+                  document.location.hostname === "localhost" ||
+                  document.location.hostname === "localhost.org"
+                )
+              ) {
                 cookieValue += ";secure";
               }
               document.cookie = cookieValue;
