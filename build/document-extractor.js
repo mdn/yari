@@ -123,14 +123,13 @@ function extractSections($) {
  *        query: "foo.bar.thing",
  *        id: "specifications",
  *        title: "Specifications",
- *        spec_urls: {....}
+ *        specURLs: {....}
  *   }]
  */
 function addSections($) {
   const flaws = [];
 
-  const countPotentialSpecialDivs =
-    $.find("div.bc-data").length + $.find("div.bc-specs").length;
+  const countPotentialSpecialDivs = $.find("div.bc-data, div.bc-specs").length;
   if (countPotentialSpecialDivs) {
     /** If there's exactly 1 special table the only section to add is something
      * like this:
@@ -376,7 +375,7 @@ function _addSingleSpecialSection($) {
       },
     ];
   } else if (specialSectionType === "specifications") {
-    let spec_urls = [];
+    let specURLs = [];
 
     for (const [key, compat] of Object.entries(data)) {
       let block;
@@ -387,9 +386,9 @@ function _addSingleSpecialSection($) {
       }
       if (block && block.spec_url) {
         if (Array.isArray(block.spec_url)) {
-          spec_urls = block.spec_url;
+          specURLs = block.spec_url;
         } else {
-          spec_urls.push(block.spec_url);
+          specURLs.push(block.spec_url);
         }
       }
     }
@@ -401,8 +400,7 @@ function _addSingleSpecialSection($) {
           title,
           id,
           isH3,
-          spec_urls,
-          query,
+          specURLs,
         },
       },
     ];

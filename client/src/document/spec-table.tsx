@@ -4,14 +4,12 @@ export function SpecificationTable({
   id,
   title,
   isH3,
-  spec_urls,
-  query,
+  specURLs,
 }: {
   id: string;
   title: string;
   isH3: boolean;
-  spec_urls: [];
-  query: string;
+  specURLs: string[];
 }) {
   return (
     <>
@@ -24,7 +22,7 @@ export function SpecificationTable({
           </tr>
         </thead>
         <tr>
-          <td>{spec_urls}</td>
+          <td>{specURLs}</td>
         </tr>
       </table>
     </>
