@@ -208,6 +208,15 @@ const read = memoize((folderOrFilePath) => {
   if (fs.existsSync(folderOrFilePath)) {
     filePath = folderOrFilePath;
 
+    // It exists, but it is sane?
+    if (
+      !(
+        filePath.endsWith(HTML_FILENAME) || filePath.endsWith(MARKDOWN_FILENAME)
+      )
+    ) {
+      throw new Error(`'${filePath}' is not a HTML or Markdown file.`);
+    }
+
     for (const possibleRoot of ROOTS) {
       if (filePath.startsWith(possibleRoot)) {
         root = possibleRoot;
@@ -218,6 +227,14 @@ const read = memoize((folderOrFilePath) => {
         locale = extractLocale(filePath.replace(possibleRoot + path.sep, ""));
         break;
       }
+    }
+    if (!folder) {
+      // The file exists but it doesn't appear to belong to any of our roots.
+      // That could happen if you pass in a file that is something completely
+      // different not a valid file anyway.
+      throw new Error(
+        `'${filePath}' does not appear to exist in any known content roots.`
+      );
     }
   } else {
     folder = folderOrFilePath;
@@ -448,48 +465,54 @@ function findAll({
   roots.push(CONTENT_ROOT);
   for (const root of roots) {
     const api = new fdir()
-      // .withFullPaths()
-      .withBasePath()
-      // .withDirs()
-      .filter((filePath, isDirectory) => {
-        if (isDirectory) {
-          throw new Error("ever???");
-          return true;
-        } else if (
-          filePath.endsWith(HTML_FILENAME) ||
-          filePath.endsWith(MARKDOWN_FILENAME)
+      .withFullPaths()
+      .filter((filePath) => {
+        // Note! Due to a bug in fdir, any accidental errors throw here are
+        // swallowed!
+        // See https://github.com/thecodrr/fdir/issues/56
+
+        // Exit early if it's not a sane kind of file we expect
+        if (
+          !(
+            filePath.endsWith(HTML_FILENAME) ||
+            filePath.endsWith(MARKDOWN_FILENAME)
+          )
         ) {
-          if (locales.size) {
-            const locale = filePath.replace(root, "").split("/")[1];
-            return locales.get(locale);
-          }
-          // The 'files' set is either a list of absolute full paths or a
-          // list of endings.
-          // Why endings? Because it's highly useful when you use git and the
-          // filepath might be relative to the git repo root.
-          if (files.size) {
-            if (files.has(filePath)) {
-              return true;
-            }
-            for (const fp of files) {
-              if (filePath.endsWith(fp)) {
-                return true;
-              }
-            }
+          return false;
+        }
+
+        if (locales.size) {
+          const locale = filePath.replace(root, "").split("/")[1];
+          if (!locales.get(locale)) {
             return false;
           }
-
-          if (folderSearchRegExp) {
-            const pure = filePath
-              .replace(root + path.sep, "")
-              .replace(HTML_FILENAME, "")
-              .replace(MARKDOWN_FILENAME, "");
-            return pure.search(folderSearchRegExp) !== -1;
-          }
-
-          return true;
         }
-        return false;
+
+        // The 'files' set is either a list of absolute full paths or a
+        // list of endings.
+        // Why endings? Because it's highly useful when you use git and the
+        // filepath might be relative to the git repo root.
+        if (files.size) {
+          if (files.has(filePath)) {
+            return true;
+          }
+          for (const fp of files) {
+            if (filePath.endsWith(fp)) {
+              return true;
+            }
+          }
+          return false;
+        }
+
+        if (folderSearchRegExp) {
+          const pure = filePath
+            .replace(root + path.sep, "")
+            .replace(HTML_FILENAME, "")
+            .replace(MARKDOWN_FILENAME, "");
+          return pure.search(folderSearchRegExp) !== -1;
+        }
+
+        return true;
       })
       .crawl(root);
     filePaths.push(...api.sync());
@@ -504,7 +527,7 @@ function findAll({
   };
 }
 
-function XXXfindAll({
+function findAll0({
   files = new Set(),
   folderSearch = null,
   locales = new Map(),
@@ -721,7 +744,7 @@ module.exports = {
 
   findByURL,
   findAll,
-  // findAll2,
+  findAll0,
   findChildren,
 
   MEMOIZE_INVALIDATE,
