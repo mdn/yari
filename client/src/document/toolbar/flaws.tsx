@@ -4,7 +4,7 @@ import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
 import { diffWords } from "diff";
 
-import { CRUD_MODE } from "../../constants";
+import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../../constants";
 import { humanizeFlawName } from "../../flaw-utils";
 import { useDocumentURL } from "../hooks";
 import {
@@ -18,6 +18,8 @@ import {
   BadBCDQueryFlaw,
   BadPreTagFlaw,
   SectioningFlaw,
+  HeadingLinksFlaw,
+  UnsafeHTMLFlaw,
 } from "../types";
 import "./flaws.scss";
 
@@ -192,15 +194,16 @@ function Flaws({
   const fixableFlaws = Object.values(doc.flaws)
     .map((flaws) => {
       return flaws.filter(
-        (flaw) =>
-          !flaw.fixed && (flaw.suggestion || flaw.fixable || flaw.externalImage)
+        (flaw) => !flaw.fixed && (flaw.fixable || flaw.externalImage)
       );
     })
     .flat();
 
+  const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
+
   return (
     <div id="document-flaws">
-      {!!fixableFlaws.length && (
+      {!!fixableFlaws.length && !isReadOnly && (
         <FixableFlawsAction
           count={fixableFlaws.length}
           reloadPage={reloadPage}
@@ -215,6 +218,7 @@ function Flaws({
                 key="broken_links"
                 sourceFolder={doc.source.folder}
                 links={doc.flaws.broken_links}
+                isReadOnly={isReadOnly}
               />
             );
           case "bad_bcd_links":
@@ -237,6 +241,7 @@ function Flaws({
                 key="bad_pre_tags"
                 sourceFolder={doc.source.folder}
                 flaws={doc.flaws.bad_pre_tags}
+                isReadOnly={isReadOnly}
               />
             );
           case "macros":
@@ -245,6 +250,7 @@ function Flaws({
                 key="macros"
                 sourceFolder={doc.source.folder}
                 flaws={doc.flaws.macros}
+                isReadOnly={isReadOnly}
               />
             );
           case "images":
@@ -253,6 +259,7 @@ function Flaws({
                 key="images"
                 sourceFolder={doc.source.folder}
                 images={doc.flaws.images}
+                isReadOnly={isReadOnly}
               />
             );
           case "image_widths":
@@ -261,7 +268,21 @@ function Flaws({
                 key="image_widths"
                 sourceFolder={doc.source.folder}
                 flaws={doc.flaws.image_widths}
+                isReadOnly={isReadOnly}
               />
+            );
+          case "heading_links":
+            return (
+              <HeadingLinks
+                key="heading_links"
+                sourceFolder={doc.source.folder}
+                flaws={doc.flaws.heading_links}
+                isReadOnly={isReadOnly}
+              />
+            );
+          case "unsafe_html":
+            return (
+              <UnsafeHTML key="unsafe_html" flaws={doc.flaws.unsafe_html} />
             );
           case "sectioning":
             return <Sectioning key="sectioning" flaws={doc.flaws.sectioning} />;
@@ -367,9 +388,11 @@ function ShowDiff({ before, after }: { before: string; after: string }) {
 function BrokenLinks({
   sourceFolder,
   links,
+  isReadOnly,
 }: {
   sourceFolder: string;
   links: BrokenLink[];
+  isReadOnly: boolean;
 }) {
   const [opening, setOpening] = React.useState<string | null>(null);
   useEffect(() => {
@@ -432,16 +455,24 @@ function BrokenLinks({
               >
                 👀
               </span>{" "}
-              <a
-                href={`file://${filepath}`}
-                onClick={(event: React.MouseEvent) => {
-                  event.preventDefault();
-                  openInEditor(key, flaw.line, flaw.column);
-                }}
-                title="Click to open in your editor"
-              >
-                line {flaw.line}:{flaw.column}
-              </a>{" "}
+              {isReadOnly ? (
+                <>
+                  {/* It would be cool if we can change this to a link to the line in the
+                  file in GitHub's UI. */}
+                  line {flaw.line}:{flaw.column}
+                </>
+              ) : (
+                <a
+                  href={`file://${filepath}`}
+                  onClick={(event: React.MouseEvent) => {
+                    event.preventDefault();
+                    openInEditor(key, flaw.line, flaw.column);
+                  }}
+                  title="Click to open in your editor"
+                >
+                  line {flaw.line}:{flaw.column}
+                </a>
+              )}{" "}
               {flaw.fixable && <FixableFlawBadge />}{" "}
               {opening && opening === key && <span>Opening...</span>}
               <br />
@@ -514,9 +545,11 @@ function Sectioning({ flaws }: { flaws: SectioningFlaw[] }) {
 function BadPreTag({
   flaws,
   sourceFolder,
+  isReadOnly,
 }: {
   flaws: BadPreTagFlaw[];
   sourceFolder: string;
+  isReadOnly: boolean;
 }) {
   const { focus } = useAnnotations(flaws);
 
@@ -570,17 +603,23 @@ function BadPreTag({
               👀
             </span>{" "}
             {flaw.line && flaw.column ? (
-              <a
-                href={`file://${filepath}`}
-                onClick={(event: React.MouseEvent) => {
-                  event.preventDefault();
-                  if (flaw.line && flaw.column)
-                    openInEditor(flaw.id, flaw.line, flaw.column);
-                }}
-                title="Click to open in your editor"
-              >
-                line {flaw.line}:{flaw.column}
-              </a>
+              isReadOnly ? (
+                <>
+                  line {flaw.line}:{flaw.column}
+                </>
+              ) : (
+                <a
+                  href={`file://${filepath}`}
+                  onClick={(event: React.MouseEvent) => {
+                    event.preventDefault();
+                    if (flaw.line && flaw.column)
+                      openInEditor(flaw.id, flaw.line, flaw.column);
+                  }}
+                  title="Click to open in your editor"
+                >
+                  line {flaw.line}:{flaw.column}
+                </a>
+              )
             ) : null}{" "}
             {flaw.fixable && <FixableFlawBadge />}{" "}
           </li>
@@ -593,9 +632,11 @@ function BadPreTag({
 function Macros({
   flaws,
   sourceFolder,
+  isReadOnly,
 }: {
   flaws: MacroErrorMessage[];
   sourceFolder: string;
+  isReadOnly: boolean;
 }) {
   const [opening, setOpening] = React.useState<string | null>(null);
   useEffect(() => {
@@ -612,7 +653,7 @@ function Macros({
     };
   }, [opening]);
 
-  function openInEditor(msg: MacroErrorMessage, key: string) {
+  function openInEditor(msg: MacroErrorMessage, id: string) {
     const sp = new URLSearchParams();
     sp.set("filepath", msg.filepath);
     sp.set("line", `${msg.line}`);
@@ -620,7 +661,7 @@ function Macros({
     console.log(
       `Going to try to open ${msg.filepath}:${msg.line}:${msg.column} in your editor`
     );
-    setOpening(key);
+    setOpening(id);
     fetch(`/_open?${sp.toString()}`);
   }
 
@@ -631,11 +672,9 @@ function Macros({
         const inPrerequisiteMacro = !flaw.filepath.includes(
           `${sourceFolder}/index.html`
         );
-        const key = `${flaw.filepath}:${flaw.line}:${flaw.column}`;
-
         return (
           <details
-            key={key}
+            key={flaw.id}
             className={flaw.fixed ? "fixed_flaw" : undefined}
             title={
               flaw.fixed
@@ -644,17 +683,23 @@ function Macros({
             }
           >
             <summary>
-              <a
-                href={`file://${flaw.filepath}`}
-                onClick={(event: React.MouseEvent) => {
-                  event.preventDefault();
-                  openInEditor(flaw, key);
-                }}
-              >
-                <code>{flaw.name}</code> from <code>{flaw.macroName}</code> in
-                line {flaw.line}:{flaw.column}
-              </a>{" "}
-              {opening && opening === key && <span>Opening...</span>}{" "}
+              <code>{flaw.name}</code> from <code>{flaw.macroName}</code>{" "}
+              {isReadOnly ? (
+                <>
+                  line {flaw.line}:{flaw.column}
+                </>
+              ) : (
+                <a
+                  href={`file://${flaw.filepath}`}
+                  onClick={(event: React.MouseEvent) => {
+                    event.preventDefault();
+                    openInEditor(flaw, flaw.id);
+                  }}
+                >
+                  line {flaw.line}:{flaw.column}
+                </a>
+              )}{" "}
+              {opening && opening === flaw.id && <span>Opening...</span>}{" "}
               {inPrerequisiteMacro && (
                 <span
                   className="macro-filepath-in-prerequisite"
@@ -701,9 +746,11 @@ function Macros({
 function Images({
   sourceFolder,
   images,
+  isReadOnly,
 }: {
   sourceFolder: string;
   images: ImageReferenceFlaw[];
+  isReadOnly: boolean;
 }) {
   // XXX rewrite to a hook
   const [opening, setOpening] = React.useState<string | null>(null);
@@ -759,16 +806,22 @@ function Images({
               >
                 👀
               </span>{" "}
-              <a
-                href={`file://${filepath}`}
-                onClick={(event: React.MouseEvent) => {
-                  event.preventDefault();
-                  openInEditor(key, flaw.line, flaw.column);
-                }}
-                title="Click to open in your editor"
-              >
-                line {flaw.line}:{flaw.column}
-              </a>{" "}
+              {isReadOnly ? (
+                <>
+                  line {flaw.line}:{flaw.column}
+                </>
+              ) : (
+                <a
+                  href={`file://${filepath}`}
+                  onClick={(event: React.MouseEvent) => {
+                    event.preventDefault();
+                    openInEditor(key, flaw.line, flaw.column);
+                  }}
+                  title="Click to open in your editor"
+                >
+                  line {flaw.line}:{flaw.column}
+                </a>
+              )}{" "}
               {(flaw.fixable || flaw.externalImage) && <FixableFlawBadge />}{" "}
               <br />
               {flaw.suggestion && (
@@ -789,9 +842,11 @@ function Images({
 function ImageWidths({
   sourceFolder,
   flaws,
+  isReadOnly,
 }: {
   sourceFolder: string;
   flaws: ImageWidthFlaw[];
+  isReadOnly: boolean;
 }) {
   // XXX rewrite to a hook
   const [opening, setOpening] = React.useState<string | null>(null);
@@ -847,16 +902,22 @@ function ImageWidths({
               >
                 👀
               </span>{" "}
-              <a
-                href={`file://${filepath}`}
-                onClick={(event: React.MouseEvent) => {
-                  event.preventDefault();
-                  openInEditor(key, flaw.line, flaw.column);
-                }}
-                title="Click to open in your editor"
-              >
-                line {flaw.line}:{flaw.column}
-              </a>{" "}
+              {isReadOnly ? (
+                <>
+                  line {flaw.line}:{flaw.column}
+                </>
+              ) : (
+                <a
+                  href={`file://${filepath}`}
+                  onClick={(event: React.MouseEvent) => {
+                    event.preventDefault();
+                    openInEditor(key, flaw.line, flaw.column);
+                  }}
+                  title="Click to open in your editor"
+                >
+                  line {flaw.line}:{flaw.column}
+                </a>
+              )}{" "}
               {(flaw.fixable || flaw.externalImage) && <FixableFlawBadge />}{" "}
               <br />
               {flaw.suggestion === "" && (
@@ -877,6 +938,125 @@ function ImageWidths({
                   )}
                 </span>
               )}{" "}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function HeadingLinks({
+  sourceFolder,
+  flaws,
+  isReadOnly,
+}: {
+  sourceFolder: string;
+  flaws: HeadingLinksFlaw[];
+  isReadOnly: boolean;
+}) {
+  // XXX rewrite to a hook
+  const [opening, setOpening] = React.useState<string | null>(null);
+  useEffect(() => {
+    let unsetOpeningTimer: ReturnType<typeof setTimeout>;
+    if (opening) {
+      unsetOpeningTimer = setTimeout(() => {
+        setOpening(null);
+      }, 3000);
+    }
+    return () => {
+      if (unsetOpeningTimer) {
+        clearTimeout(unsetOpeningTimer);
+      }
+    };
+  }, [opening]);
+
+  const filepath = sourceFolder + "/index.html";
+
+  function openInEditor(key: string, line: number, column: number) {
+    const sp = new URLSearchParams();
+    sp.set("filepath", filepath);
+    sp.set("line", `${line}`);
+    sp.set("column", `${column}`);
+    console.log(
+      `Going to try to open ${filepath}:${line}:${column} in your editor`
+    );
+    setOpening(key);
+    fetch(`/_open?${sp.toString()}`).catch((err) => {
+      console.warn(`Error trying to _open?${sp.toString()}:`, err);
+    });
+  }
+
+  return (
+    <div className="flaw flaw__heading_links">
+      <h3>{humanizeFlawName("heading_links")}</h3>
+      <ul>
+        {flaws.map((flaw, i) => {
+          const key = flaw.id;
+          return (
+            <li key={key}>
+              <b>{flaw.explanation}</b>{" "}
+              {flaw.line && flaw.column ? (
+                isReadOnly ? (
+                  <>
+                    line {flaw.line}:{flaw.column}
+                  </>
+                ) : (
+                  <a
+                    href={`file://${filepath}`}
+                    onClick={(event: React.MouseEvent) => {
+                      event.preventDefault();
+                      openInEditor(
+                        key,
+                        flaw.line as number,
+                        flaw.column as number
+                      );
+                    }}
+                    title="Click to open in your editor"
+                  >
+                    line {flaw.line}:{flaw.column}
+                  </a>
+                )
+              ) : null}{" "}
+              {flaw.fixable && <FixableFlawBadge />} <br />
+              <b>HTML:</b> <code>{flaw.html}</code> <br />
+              {flaw.suggestion && flaw.before ? (
+                <span>
+                  <b>Suggestion:</b>{" "}
+                  <ShowDiff before={flaw.before} after={flaw.suggestion} />
+                </span>
+              ) : (
+                <i>
+                  All <code>&lt;a&gt;</code> tags need to be removed
+                </i>
+              )}{" "}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function UnsafeHTML({ flaws }: { flaws: UnsafeHTMLFlaw[] }) {
+  // The UI for this flaw can be a bit "simplistic" because by default this
+  // flaw will error rather than warn.
+  return (
+    <div className="flaw">
+      <h3>⚠️ {humanizeFlawName("unsafe_html")} ⚠️</h3>
+      <ul>
+        {flaws.map((flaw, i) => {
+          const key = flaw.id;
+          return (
+            <li key={key}>
+              <b>{flaw.explanation}</b>{" "}
+              {flaw.line && flaw.column && (
+                <>
+                  line {flaw.line}:{flaw.column}
+                </>
+              )}{" "}
+              {flaw.fixable && <FixableFlawBadge />} <br />
+              <b>HTML:</b> <pre className="example-bad">{flaw.html}</pre> <br />
             </li>
           );
         })}

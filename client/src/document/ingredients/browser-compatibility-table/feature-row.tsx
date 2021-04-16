@@ -33,16 +33,19 @@ function getSupportClassName(
     return "unknown";
   }
 
-  let { version_added, version_removed, partial_implementation } = getFirst(
-    support
-  );
+  let {
+    flags,
+    version_added,
+    version_removed,
+    partial_implementation,
+  } = getFirst(support);
 
   let className;
   if (version_added === null) {
     className = "unknown";
   } else if (version_added) {
     className = "yes";
-    if (version_removed) {
+    if (version_removed || (flags && flags.length)) {
       className = "no";
     }
   } else {
@@ -102,16 +105,12 @@ function labelFromString(version: string | boolean | null | undefined) {
   if (typeof version !== "string") {
     return <>{"?"}</>;
   }
-  if (!version.startsWith("≤")) {
-    return <>{version}</>;
+  // Treat BCD ranges as exact versions to avoid confusion for the reader
+  // See https://github.com/mdn/yari/issues/3238
+  if (version.startsWith("≤")) {
+    return <>{version.slice(1)}</>;
   }
-  const title = `Supported in version ${version.slice(1)} or earlier.`;
-  return (
-    <span title={title}>
-      <sup>≤&#xA0;</sup>
-      {version.slice(1)}
-    </span>
-  );
+  return <>{version}</>;
 }
 
 const CellText = React.memo(
@@ -315,7 +314,7 @@ function getNotes(
             <div className="bc-notes-wrapper">
               <dt
                 className={`bc-supports-${getSupportClassName(
-                  support
+                  item
                 )} bc-supports`}
               >
                 <CellText support={item} />

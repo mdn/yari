@@ -6,7 +6,13 @@
 @import "~@mdn/minimalist/sass/mixins/animation";
 @import "~@mdn/minimalist/sass/mixins/utils";
 
-.page-content-container {
+@import "./molecules/breadcrumb-locale-container";
+
+.main-content {
+  @media #{$mq-small-desktop-and-up} {
+    margin-top: $base-spacing;
+  }
+
   &.loading-document-placeholder {
     @include slow-pulse();
     fill: $neutral-550;
@@ -14,6 +20,8 @@
     width: 100%;
 
     @media #{$mq-small-desktop-and-up} {
+      // ensure the loading SVG spans the full width
+      grid-column: 1/3;
       margin: $base-spacing auto;
       max-width: $max-width-default;
       min-height: 75vh;
@@ -22,11 +30,30 @@
   }
 }
 
-.article {
+.only-in-en-us {
+  span {
+    font-size: $small-font-size;
+  }
+}
+
+/* page-not-created is the preferred class name, `new` is
+   here for backwards compatibility */
+a.page-not-created,
+a.new {
+  color: $red-300;
+  cursor: not-allowed;
+}
+
+.main-page-content {
   padding: ($base-spacing / 2) $base-spacing $base-spacing;
 
   @media #{$mq-small-desktop-and-up} {
-    margin-bottom: $large-spacing;
+    margin-bottom: $base-spacing * 2;
+    padding: 0 $base-spacing $base-spacing;
+  }
+
+  h1 {
+    word-break: break-word;
   }
 
   h2,
@@ -43,19 +70,29 @@
     @include readable-line-length();
   }
 
-  a {
-    &:active {
-      background-color: $primary-50;
-      color: $text-color-inverted;
-    }
-  }
-
   h2,
   h3 {
     code {
       background-color: transparent;
-      color: $neutral-100;
       text-decoration: none;
+    }
+  }
+
+  a {
+    text-decoration: underline;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+
+    &:active {
+      background-color: $primary-50;
+      color: $text-color-inverted;
+
+      code {
+        background-color: transparent;
+      }
     }
   }
 
@@ -64,10 +101,6 @@
 
     @media #{$mq-tablet-and-up} {
       margin-bottom: ($base-unit * 6);
-    }
-
-    code {
-      color: $neutral-100;
     }
 
     a:link,
@@ -82,10 +115,6 @@
   }
 
   h3 {
-    code {
-      color: $neutral-600;
-    }
-
     a:link,
     a:visited {
       color: $neutral-600;
@@ -97,16 +126,22 @@
     }
   }
 
-  table {
-    margin-bottom: $base-spacing * 2;
+  h2,
+  h3,
+  h4 {
+    a:link,
+    a:visited {
+      text-decoration: none;
+    }
+
+    a:hover,
+    a:focus {
+      text-decoration: underline;
+    }
   }
 
-  /* page-not-created is the preferred class name, `new` is
-     here for backwards compatibility */
-  .page-not-created,
-  .new {
-    color: $red-300;
-    cursor: not-allowed;
+  table {
+    margin-bottom: $base-spacing * 2;
   }
 
   /* readonly inline badges needs a slightly darker background color in general article content  */
@@ -117,8 +152,8 @@
     }
   }
 
-  /* 
-   * top navigational elements on tutorial pages 
+  /*
+   * top navigational elements on tutorial pages
    * prevnext is added for backwards compatibility
    */
   .prevnext,
@@ -145,6 +180,10 @@
   */
   .index {
     columns: 300px;
+  }
+
+  iframe {
+    border: 0;
   }
 }
 

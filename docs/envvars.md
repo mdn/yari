@@ -179,6 +179,18 @@ the Google index. Thankfully we _always_ used a canonical URL
 (`<link rel="canonical" href="https://developer.mozilla.org/$uri">`) as a "second
 line of defense" for dev/stage URLs that are public.
 
+### `BUILD_HOMEPAGE_FEED_URL`
+
+**Default: `https://hacks.mozilla.org/feed/`**
+
+Which RSS feed URL to parse for displaying feed entries on the home page.
+
+### `BUILD_HOMEPAGE_FEED_DISPLAY_MAX`
+
+**Default: `5`**
+
+How many RSS feed entries to display on the home page.
+
 ## Server
 
 ### `SERVER_PORT`
@@ -272,12 +284,19 @@ It defaults to `NODE_ENV==='development'` if not set which means that
 it's enable by default when doing development with the `localhost:3000`
 dev server.
 
-### `REACT_APP_DEBUG_GOOGLE_ANALYTICS`
+### `REACT_APP_CRUD_MODE_HOSTNAMES`
 
-**Default: `false`**
+**Default: `localhost, localhost.org, 127.0.0.1`**
 
-When you use the `create-react-app` server on `localhost:3000` it can't
-inject the Google Analytics script like you can when you server-side
-render (see `ssr/render.js`). By setting this to `true` it will forcibly
-inject a `<script async src="https://www.google-analytics.com/analytics_debug.js"></script>`
-tag and the necessary code to activate it.
+Only applicable if `REACT_APP_CRUD_MODE` is truthy. Essentially you can disable
+certain CRUD mode features depending on the hostname you use. So if you built
+the static assets (the React code) with `REACT_APP_CRUD_MODE=true` it might
+disable certain features if you use a `window.location.hostname` that is _not_
+in this list.
+
+The use case for this is when you build the site in a pull request and want
+flaws to _appear_ but without the "Fix fixable flaws" link or the "Open in your editor"
+button. We use this for previewing PR builds on the content site. Those pages are
+built with flaw detection set to warn, but since you might be viewing the pages
+on a remote domain (e.g. `pr123.dev.content.mozit.cloud`) it doesn't make sense to
+present the "Fix fixable flaws" button for example.

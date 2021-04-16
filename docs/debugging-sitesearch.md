@@ -13,11 +13,10 @@ displaying it in Yari is optional.
 
 ## How to enable it
 
-To display each search results `score` and `popularity`, set this in your `.env`:
+To display each search results `score` and `popularity`, simply add `&debug`
+to the current URL. E.g. `?q=foreach&debug` or `?debug=1&q=foreach`.
 
-    REACT_APP_DEBUG_SEARCH_RESULTS=true
-
-Now, when you open <http://localhost:3000/en-US/search?q=test> the `score`
+Now, when you open <http://localhost:3000/en-US/search?q=test&debug> the `score`
 and `popularity` is shown.
 
 ## How to use it

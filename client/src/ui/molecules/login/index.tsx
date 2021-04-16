@@ -3,7 +3,6 @@ import * as React from "react";
 import Dropdown from "../dropdown";
 import { useLocale } from "../../../hooks";
 import SignInLink from "../../atoms/signin-link";
-import { getAuthURL } from "../../../utils/auth-link";
 import { useUserData } from "../../../user-context";
 
 import { DISABLE_AUTH } from "../../../constants";
@@ -32,12 +31,6 @@ function LoginInner() {
     return null;
   }
 
-  // In order to render links properly, we need to know our own URL.
-  // We get this from window.location. This is not available during
-  // server side rendering, but this code will never run during
-  // server side rendering because we won't have user data then.
-  const LOCATION = window.location.pathname;
-
   if (!(userData.isAuthenticated && userData.username)) {
     // Otherwise, show a login prompt
     return <SignInLink className="signin-link" />;
@@ -56,22 +49,27 @@ function LoginInner() {
       <span className="avatar-username">{userData.username}</span>
     </>
   );
-  const viewProfileURL = getAuthURL(
-    `/${locale}/profiles/${userData.username}`,
-    false
-  );
-  const editProfileURL = viewProfileURL + "/edit";
+  // Note that this component is never rendered server-side so it's safe to
+  // rely on `window.location`.
+  let next = window.location.pathname;
+  let signOutURL = `/${locale}/users/signout`;
+  if (
+    process.env.NODE_ENV === "development" &&
+    process.env.REACT_APP_KUMA_HOST
+  ) {
+    const combined = new URL(next, window.location.href);
+    next = combined.toString();
+    signOutURL = `http://${process.env.REACT_APP_KUMA_HOST}${signOutURL}`;
+  }
+
   return (
     <Dropdown id="user-avatar-menu" label={label} right={true} hideArrow={true}>
       <li>
-        <a href={viewProfileURL}>View profile</a>
+        <a href={`/${locale}/settings`}>Account settings</a>
       </li>
       <li>
-        <a href={editProfileURL}>Edit profile</a>
-      </li>
-      <li>
-        <form action={getAuthURL(`/${locale}/users/signout`)} method="post">
-          <input name="next" type="hidden" value={LOCATION} />
+        <form action={signOutURL} method="post">
+          <input name="next" type="hidden" value={next} />
           <button className="ghost signout-button" type="submit">
             Sign out
           </button>

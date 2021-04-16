@@ -8,7 +8,7 @@ const LEGEND_LABELS = {
   no: "No support",
   unknown: "Compatibility unknown",
   experimental: "Experimental. Expect behavior to change in the future.",
-  "non-standard": "Non-standard. Expect poor cross-browser support.",
+  "non-standard": "Non-standard. Check cross-browser support before using.",
   deprecated: "Deprecated. Not for use in new websites.",
   footnote: "See implementation notes.",
   disabled: "User must explicitly enable this feature.",
@@ -43,7 +43,11 @@ function getActiveLegendItems(compat: bcd.Identifier, name: string) {
 
       for (const versionSupport of asList(browserSupport)) {
         if (versionSupport.version_added) {
-          legendItems.add("yes");
+          if (versionSupport.flags && versionSupport.flags.length) {
+            legendItems.add("no");
+          } else {
+            legendItems.add("yes");
+          }
         } else if (versionSupport.version_added == null) {
           legendItems.add("unknown");
         } else {

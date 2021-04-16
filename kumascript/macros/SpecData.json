@@ -69,6 +69,11 @@
     "url": "https://www.w3.org/TR/requestidlecallback/",
     "status": "PR"
   },
+  "Badging API": {
+    "name": "Badging API",
+    "url": "https://w3c.github.io/badging/",
+    "status": "Draft"
+  },
   "Barcode Detection API": {
     "name": "Accelerated Shape Detection in Images",
     "url": "https://wicg.github.io/shape-detection-api/",
@@ -109,6 +114,11 @@
     "url": "https://console.spec.whatwg.org/",
     "status": "Living"
   },
+  "Compression Streams": {
+    "name": "Compression Streams",
+    "url": "https://wicg.github.io/compression/",
+    "status": "Draft"
+  },
   "Contacts": {
     "name": "Contacts Manager API",
     "url": "https://www.w3.org/2012/sysapps/contacts-manager-api/",
@@ -146,7 +156,7 @@
   },
   "CSP 1.1": {
     "name": "Content Security Policy Level 2",
-    "url": "https://w3c.github.io/webappsec-csp/2/",
+    "url": "https://www.w3.org/TR/CSP2/",
     "status": "REC"
   },
   "CSP 3.0": {
@@ -212,7 +222,7 @@
   "CSS3 Cascade": {
     "name": "CSS Cascading and Inheritance Level&nbsp;3",
     "url": "https://drafts.csswg.org/css-cascade-3/",
-    "status": "CR"
+    "status": "REC"
   },
   "CSS3 Colors": {
     "name": "CSS Color Module Level&nbsp;3",
@@ -483,6 +493,16 @@
     "name": "CSS Writing Modes Level&nbsp;4",
     "url": "https://drafts.csswg.org/css-writing-modes-4/",
     "status": "CR"
+  },
+  "CSS5 Cascade": {
+    "name": "CSS Cascading and Inheritance Level&nbsp;5",
+    "url": "https://drafts.csswg.org/css-cascade-5/",
+    "status": "WD"
+  },
+  "CSS5 Colors": {
+    "name": "CSS Color Module Level&nbsp;5",
+    "url": "https://drafts.csswg.org/css-color-5/",
+    "status": "WD"
   },
   "CSS5 Media Queries": {
     "name": "Media Queries Level&nbsp;5",
@@ -1049,6 +1069,11 @@
     "url": "https://github.com/tc39/proposal-regexp-legacy-features/",
     "status": "Draft"
   },
+  "Local Font Access API": {
+    "name": "Local Font Access API",
+    "url": "https://wicg.github.io/local-font-access",
+    "status": "Draft"
+  },
   "Logical Assignment": {
     "name": "Logical Assignment Operators",
     "url": "https://tc39.es/proposal-logical-assignment/",
@@ -1499,6 +1524,11 @@
     "url": "https://www.khronos.org/registry/typedarray/specs/latest/",
     "status": "Obsolete"
   },
+  "Trusted Types": {
+    "name": "Trusted Types",
+    "url": "https://w3c.github.io/webappsec-trusted-types/dist/spec/",
+    "status": "ED"
+  },
   "UI Events": {
     "name": "UI Events",
     "url": "https://w3c.github.io/uievents/",
@@ -1608,6 +1638,11 @@
     "name": "WebGL 2.0",
     "url": "https://www.khronos.org/registry/webgl/specs/latest/2.0/",
     "status": "ED"
+  },
+  "Web NFC": {
+    "name": "Web NFC",
+    "url": "https://w3c.github.io/web-nfc/",
+    "status": "Draft"
   },
   "EXT_blend_minmax": {
     "name": "EXT_blend_minmax",
@@ -1813,6 +1848,11 @@
     "name": "Identifiers for WebRTC's Statistics API",
     "url": "https://w3c.github.io/webrtc-stats/",
     "status": "CR"
+  },
+  "Web Serial API": {
+    "name": "Web Serial API",
+    "url": "https://wicg.github.io/serial/",
+    "status": "Draft"
   },
   "Web Share API": {
     "name": "Web Share API",

@@ -1151,6 +1151,23 @@ for (const [pattern, path] of [
 }
 
 const MISC_REDIRECT_PATTERNS = [
+  localeRedirect(/^account\/?$/i, "/settings", {
+    permanent: false,
+  }),
+  localeRedirect(
+    /^profile(?:|\/stripe_subscription|\/edit)\/?$/i,
+    "/settings",
+    {
+      permanent: false,
+    }
+  ),
+  localeRedirect(
+    /^profiles\/(?:[^\/]+)(?:|\/edit|\/delete)\/?$/i,
+    "/settings",
+    {
+      permanent: false,
+    }
+  ),
   localeRedirect(/^docs\/Core_JavaScript_1.5_/i, "/docs/Web/JavaScript/", {
     permanent: true,
     // This will convert :
@@ -1162,7 +1179,15 @@ const MISC_REDIRECT_PATTERNS = [
     // which is what we use today.
     colonToSlash: true,
   }),
-  localeRedirect(/^DOM[\/$]?/i, "/docs/DOM", { permanent: true }),
+  // This takes care of a majority of the 404's that we see in Yari by
+  // simply inserting "/docs/" between the locale and the slug. Further
+  // redirects often take over from there, so let's only insert "/docs/"
+  // and let any other redirect rules work from that point onwards.
+  localeRedirect(
+    /^(?<prefix>AJAX|CSS|DOM|DragDrop|HTML|JavaScript|SVG|Tools|Using_files_from_web_applications|Web|XMLHttpRequest|Security)(?<subPath>\/.+?)?\/?$/i,
+    ({ prefix, subPath = "" }) => `/docs/${prefix}${subPath}`,
+    { permanent: true }
+  ),
 ];
 
 const REDIRECT_PATTERNS = [].concat(

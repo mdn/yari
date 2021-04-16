@@ -2,12 +2,13 @@ import React from "react";
 import { Link, createSearchParams, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 
-import { CRUD_MODE, DEBUG_SEARCH_RESULTS } from "../constants";
+import { CRUD_MODE } from "../constants";
 import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
 
 import LANGUAGES_RAW from "../languages.json";
 import "./search-results.scss";
+import { useGA } from "../ga-context";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -77,6 +78,7 @@ class ServerOperationalError extends Error {
 }
 
 export default function SearchResults() {
+  const ga = useGA();
   const [searchParams] = useSearchParams();
   const locale = useLocale();
   // A call to `/api/v1/search` will default to mean the same thing as
@@ -102,6 +104,16 @@ export default function SearchResults() {
       } else if (!response.ok) {
         throw new Error(`${response.status} on ${url}`);
       }
+
+      // See docs/experiments/0001_site-search-x-cache.md
+      const xCacheHeaderValue = response.headers.get("x-cache");
+      ga("send", {
+        hitType: "event",
+        eventCategory: "Site-search X-Cache",
+        eventAction: url,
+        eventLabel: xCacheHeaderValue || "no value",
+      });
+
       return await response.json();
     },
     {
@@ -154,20 +166,21 @@ export default function SearchResults() {
     const hitCount = data.metadata.total.value;
 
     return (
-      <div>
+      <>
         {/* It only makes sense to display the sorting options if anything was found */}
         {hitCount > 1 && <SortOptions />}
 
         <RemoteSearchWarning />
 
         <Results {...data} />
+
         <Pagination
           currentPage={currentPage}
           hitCount={hitCount}
           pageSize={pageSize}
           maxPage={10}
         />
-      </div>
+      </>
     );
   }
   // else...
@@ -203,23 +216,24 @@ function SortOptions() {
   const [searchParams] = useSearchParams();
   const querySort = searchParams.get("sort") || SORT_OPTIONS[0][0];
   return (
-    <p className="sort-options">
-      <b>Sort by</b>{" "}
-      {SORT_OPTIONS.map(([key, label], i) => {
-        return (
-          <React.Fragment key={key}>
-            {key === querySort ? (
-              <i>{label}</i>
-            ) : (
-              <Link to={`?${appendURL(searchParams, { sort: key })}`}>
-                {label}
-              </Link>
-            )}
-            {i < SORT_OPTIONS.length - 1 ? " | " : ""}
-          </React.Fragment>
-        );
-      })}
-    </p>
+    <div className="sort-options">
+      <h2>Sort by:</h2>
+      <ul className="sort-option-list">
+        {SORT_OPTIONS.map(([key, label], i) => {
+          return (
+            <li key={key}>
+              {key === querySort ? (
+                label
+              ) : (
+                <Link to={`?${appendURL(searchParams, { sort: key })}`}>
+                  {label}
+                </Link>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 }
 
@@ -256,7 +270,7 @@ function ExplainBadRequestError({ errors }: { errors: FormErrors }) {
 function ExplainServerOperationalError({ statusCode }: { statusCode: number }) {
   return (
     <div className="notecard warning">
-      <p>The search failed because the server failed to response.</p>
+      <p>The search failed because the server failed to respond.</p>
       <p>
         If you're curious, it was a <b>{statusCode}</b> error.
       </p>
@@ -286,66 +300,71 @@ function Results({
   const [searchParams] = useSearchParams();
 
   return (
-    <div>
-      <div className="search-results">
-        <p>
-          Found <ShowTotal total={metadata.total} /> in {metadata.took_ms}{" "}
-          milliseconds.
-        </p>
+    <div className="search-results">
+      <p>
+        Found <ShowTotal total={metadata.total} /> in {metadata.took_ms}{" "}
+        milliseconds.
+      </p>
 
-        {!!suggestions.length && (
-          <div className="suggestions">
-            <p>Did you mean...</p>
-            <ul>
-              {suggestions.map((suggestion) => {
-                return (
-                  <li key={suggestion.text}>
-                    <Link
-                      to={`?${appendURL(searchParams, {
-                        q: suggestion.text,
-                        page: undefined,
-                      })}`}
-                    >
-                      {suggestion.text}
-                    </Link>{" "}
-                    <ShowTotal total={suggestion.total} />
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        )}
+      {!!suggestions.length && (
+        <div className="search-suggestions">
+          <p>Did you mean...</p>
+          <ul className="search-suggestion-list">
+            {suggestions.map((suggestion) => {
+              return (
+                <li key={suggestion.text}>
+                  <Link
+                    to={`?${appendURL(searchParams, {
+                      q: suggestion.text,
+                      page: undefined,
+                    })}`}
+                  >
+                    {suggestion.text}
+                  </Link>{" "}
+                  <ShowTotal total={suggestion.total} />
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
 
+      <ul className="search-results-list readable-line-length">
         {documents.map((document) => {
           const highlights = document.highlight.body || [];
           return (
-            <div key={document.mdn_url}>
-              <p>
-                {/* We're using plain <a href> instead of <Link to> here until
+            <li className="search-result-entry" key={document.mdn_url}>
+              {/* We're using plain <a href> instead of <Link to> here until
                 the bug has been figured out about scrolling to the top on click. */}
-                {document.highlight.title && document.highlight.title.length ? (
+              {document.highlight.title && document.highlight.title.length ? (
+                <h3 className="title">
                   <a
-                    className="title"
                     href={document.mdn_url}
                     dangerouslySetInnerHTML={{
                       __html: document.highlight.title[0],
                     }}
                   ></a>
-                ) : (
-                  <a className="title" href={document.mdn_url}>
-                    {document.title}
-                  </a>
-                )}{" "}
-                {locale.toLowerCase() !== document.locale &&
-                  LANGUAGES.has(document.locale) && (
-                    <i
-                      className="locale-indicator"
-                      title="Document different than your current language setting"
-                    >
-                      {LANGUAGES.get(document.locale)?.English}
-                    </i>
-                  )}
-                <br />
+                </h3>
+              ) : (
+                <h3 className="title">
+                  <a href={document.mdn_url}>{document.title}</a>
+                </h3>
+              )}{" "}
+              {locale.toLowerCase() !== document.locale &&
+                LANGUAGES.has(document.locale) && (
+                  <span
+                    className="locale-indicator"
+                    title={`The linked document is in ${
+                      LANGUAGES.get(document.locale)?.English
+                    } which is different from your current locale.`}
+                  >
+                    {LANGUAGES.get(document.locale)?.English}
+                  </span>
+                )}
+              <p className="search-result-url">
+                <a href={document.mdn_url}>{document.mdn_url}</a>
+              </p>
+              <p>
                 {highlights.length ? (
                   highlights.map((highlight, i) => {
                     return (
@@ -359,20 +378,17 @@ function Results({
                 ) : (
                   <span className="summary">{document.summary}</span>
                 )}
-                <a className="url" href={document.mdn_url}>
-                  {document.mdn_url}
-                </a>
-                {DEBUG_SEARCH_RESULTS && (
-                  <span className="nerd-data">
-                    <b>score:</b> <code>{document.score}</code>,{" "}
-                    <b>popularity:</b> <code>{document.popularity}</code>,{" "}
-                  </span>
-                )}
               </p>
-            </div>
+              {searchParams.get("debug") !== null && (
+                <span className="nerd-data">
+                  <b>score:</b> <code>{document.score}</code>,{" "}
+                  <b>popularity:</b> <code>{document.popularity}</code>,{" "}
+                </span>
+              )}
+            </li>
           );
         })}
-      </div>
+      </ul>
     </div>
   );
 }
@@ -428,21 +444,25 @@ function Pagination({
       }
     }
     return (
-      <div className="pagination">
+      <ul className="pagination readable-line-length">
         {previousURL ? (
-          <Link to={previousURL} className="button">
-            Previous
-          </Link>
+          <li>
+            <Link to={previousURL} className="button">
+              Previous
+            </Link>
+          </li>
         ) : null}{" "}
         {nextPage ? (
-          <Link
-            to={`?${appendURL(searchParams, { page: `${nextPage}` })}`}
-            className="button"
-          >
-            Next
-          </Link>
+          <li>
+            <Link
+              to={`?${appendURL(searchParams, { page: `${nextPage}` })}`}
+              className="button"
+            >
+              Next
+            </Link>
+          </li>
         ) : null}
-      </div>
+      </ul>
     );
   }
   return null;

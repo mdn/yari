@@ -142,9 +142,7 @@ test("content built foo page", () => {
 
   // The HTML should contain the Google Analytics snippet.
   // The ID should match what's set in `testing/.env`.
-  expect(
-    $('script[src="https://www.google-analytics.com/analytics.js"]').length
-  ).toBe(1);
+  expect($('script[src="/static/js/ga.js"]').length).toBe(1);
 
   // The HTML should contain the Speedcurve LUX snippet.
   // The ID should match what's set in `testing/.env`.
@@ -156,6 +154,16 @@ test("content built foo page", () => {
   expect($('link[rel="alternate"]').length).toBe(2);
   expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
   expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
+  const toEnUSURL = $('link[rel="alternate"][hreflang="en"]').attr("href");
+  const toFrURL = $('link[rel="alternate"][hreflang="fr"]').attr("href");
+  // The domain is hardcoded because the URL needs to be absolute and when
+  // building static assets for Dev or Stage, you don't know what domain is
+  // going to be used.
+  expect(toEnUSURL).toBe("https://developer.mozilla.org/en-US/docs/Web/Foo");
+  expect(toFrURL).toBe("https://developer.mozilla.org/fr/docs/Web/Foo");
+
+  // The h4 heading in there has its ID transformed to lowercase
+  expect($("h4").attr("id")).toBe($("h4").attr("id").toLowerCase());
 });
 
 test("icons mentioned in <head> should resolve", () => {
@@ -183,7 +191,7 @@ test("content built French foo page", () => {
   expect(doc.title).toBe("<foo>: Une page de test");
   expect(doc.isTranslated).toBe(true);
   expect(doc.other_translations[0].locale).toBe("en-US");
-  expect(doc.other_translations[0].url).toBe("/en-US/docs/Web/Foo");
+  expect(doc.other_translations[0].native).toBe("English (US)");
   expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
 
   const htmlFile = path.join(builtFolder, "index.html");
@@ -806,7 +814,9 @@ test("image flaws kitchen sink", () => {
   expect(flaw.column).toBe(13);
 
   flaw = map.get("idontexist.png");
-  expect(flaw.explanation).toBe("File not present on disk");
+  expect(flaw.explanation).toBe(
+    "File not present on disk, an empty file, or not an image"
+  );
   expect(flaw.suggestion).toBeNull();
   expect(flaw.line).toBe(34);
   expect(flaw.column).toBe(13);
@@ -846,7 +856,9 @@ test("image flaws kitchen sink", () => {
   expect(flaw.column).toBe(13);
 
   flaw = map.get("../Foo/nonexistent.png");
-  expect(flaw.explanation).toBe("File not present on disk");
+  expect(flaw.explanation).toBe(
+    "File not present on disk, an empty file, or not an image"
+  );
   expect(flaw.suggestion).toBeNull();
   expect(flaw.line).toBe(64);
   expect(flaw.column).toBe(13);
@@ -864,6 +876,30 @@ test("image flaws kitchen sink", () => {
       expect(src.startsWith("/en-US/docs/Web/")).toBeTruthy();
     }
   });
+});
+
+test("image flaws with bad images", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "bad_src"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  // You have to be intimately familiar with the fixture to understand
+  // why these flaws come out as they do.
+  expect(flaws.images.length).toBe(4);
+  expect(
+    flaws.images.filter(
+      (flaw) =>
+        flaw.explanation ===
+        "File not present on disk, an empty file, or not an image"
+    ).length
+  ).toBe(4);
 });
 
 test("image flaws with repeated external images", () => {
@@ -925,6 +961,44 @@ test("404 page", () => {
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
+test("sign in page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "signin");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("h1").text()).toContain("Sign in to MDN Web Docs");
+  expect($("title").text()).toContain("Sign in");
+});
+
+test("sign up page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "signup");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("h1").text()).toContain("Sign in to MDN Web Docs");
+  expect($("title").text()).toContain("Sign up");
+});
+
+test("settings page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "settings");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("h1").text()).toBe("Account settings");
+  expect($("title").text()).toContain("Account settings");
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const data = JSON.parse(fs.readFileSync(jsonFile));
+  expect(data.pageTitle).toBe("Account settings");
+  expect(data.possibleLocales).toBeTruthy();
+  const possibleLocale = data.possibleLocales.find((p) => p.locale === "en-US");
+  expect(possibleLocale.English).toBe("English (US)");
+  expect(possibleLocale.native).toBe("English (US)");
+});
+
 test("bcd table extraction followed by h3", () => {
   const builtFolder = path.join(
     buildRoot,
@@ -972,12 +1046,17 @@ test("img tags with an empty 'src' should be a flaw", () => {
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(doc.flaws.images.length).toBe(1);
+  expect(doc.flaws.images.length).toBe(2);
   expect(doc.flaws.images[0].explanation).toBe("Empty img 'src' attribute");
   expect(doc.flaws.images[0].fixable).toBeFalsy();
   expect(doc.flaws.images[0].externalImage).toBeFalsy();
   expect(doc.flaws.images[0].line).toBe(8);
   expect(doc.flaws.images[0].column).toBe(13);
+  expect(doc.flaws.images[1].explanation).toBe("Empty img 'src' attribute");
+  expect(doc.flaws.images[1].fixable).toBeFalsy();
+  expect(doc.flaws.images[1].externalImage).toBeFalsy();
+  expect(doc.flaws.images[1].line).toBe(17);
+  expect(doc.flaws.images[1].column).toBe(11);
 });
 
 test("img with the image_widths flaw", () => {
@@ -1046,6 +1125,20 @@ test("img tags should always have their 'width' and 'height' set", () => {
       throw new Error("unexpected image");
     }
   });
+});
+
+test("img tags without 'src' should not crash", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "srcless"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(Object.keys(doc.flaws).length).toBe(0);
 });
 
 test("/Web/Embeddable should have 3 valid live samples", () => {
@@ -1124,4 +1217,181 @@ test("deprecated macros are fixable", () => {
   expect(doc.flaws.macros.filter((flaw) => flaw.suggestion === "").length).toBe(
     4
   );
+});
+
+test("external links always get the right attributes", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "externallinks"
+  );
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  // 4 links on that page and we'll do 2 assertions for each one, plus
+  // 1 for the extra sanity check.
+  expect.assertions(4 * 2 + 1);
+  expect($("article a").length).toBe(4); // sanity check
+  $("article a").each((i, element) => {
+    const $a = $(element);
+    expect($a.hasClass("external")).toBe(true);
+    expect(
+      $a
+        .attr("rel")
+        .split(" ")
+        .filter((rel) => rel === "noopener").length
+    ).toBe(1);
+  });
+});
+
+test("home page should have a /index.json file with feedEntries", () => {
+  const builtFolder = path.join(buildRoot, "en-us");
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { feedEntries } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(feedEntries.length).toBeGreaterThan(0);
+});
+
+test("headings with links in them are flaws", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "heading_links"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.heading_links.length).toBe(2);
+  const map = new Map(doc.flaws.heading_links.map((x) => [x.id, x]));
+  expect(map.get("heading_links1").explanation).toBe(
+    "h2 heading contains an <a> tag"
+  );
+  expect(map.get("heading_links1").suggestion).toBe("One");
+  expect(map.get("heading_links1").line).toBe(9);
+  expect(map.get("heading_links1").column).toBe(19);
+  expect(map.get("heading_links1").fixable).toBe(false);
+  expect(map.get("heading_links1").before).toBe('<a href="#something">One</a>');
+  expect(map.get("heading_links1").html).toBe(
+    '<h2 id="one"><a href="#something">One</a></h2>'
+  );
+  expect(map.get("heading_links2").explanation).toBe(
+    "h3 heading contains an <a> tag"
+  );
+  expect(map.get("heading_links2").suggestion.trim()).toBe("Two");
+  expect(map.get("heading_links2").line).toBe(11);
+  expect(map.get("heading_links2").column).toBe(19);
+  expect(map.get("heading_links2").fixable).toBe(false);
+  expect(map.get("heading_links2").before.trim()).toBe(
+    '<a id="twoooo">Two</a>'
+  );
+  expect(map.get("heading_links2").html).toBe(
+    '<h3 id="two">\n  <a id="twoooo">Two</a>\n</h3>'
+  );
+});
+
+test("'lang' attribute should match the article", () => {
+  let builtFolder = path.join(buildRoot, "fr", "docs", "web", "foo");
+  let htmlFile = path.join(builtFolder, "index.html");
+  let html = fs.readFileSync(htmlFile, "utf-8");
+  let $ = cheerio.load(html);
+  expect($("html").attr("lang")).toBe("en-US");
+  expect($("article").attr("lang")).toBe("fr");
+
+  builtFolder = path.join(buildRoot, "en-us", "docs", "web", "foo");
+  htmlFile = path.join(builtFolder, "index.html");
+  html = fs.readFileSync(htmlFile, "utf-8");
+  $ = cheerio.load(html);
+  expect($("html").attr("lang")).toBe("en-US");
+  expect($("article").attr("lang")).toBe("en-US");
+});
+
+test("basic markdown rendering", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "docs", "markdown");
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("article h2[id]").length).toBe(2);
+  expect($("article h3[id]").length).toBe(3);
+  expect($("article p code").length).toBe(2);
+  expect($("article strong").length).toBe(2);
+  expect($("article em").length).toBe(1);
+  expect($("article ul li").length).toBe(6);
+  expect($('article a[href^="/"]').length).toBe(2);
+  expect($('article a[href^="#"]').length).toBe(5);
+  expect($("article pre").length).toBe(3);
+  expect($("article pre.notranslate").length).toBe(3);
+  expect($("article pre.css").hasClass("brush:")).toBe(true);
+  expect($("article pre.javascript").hasClass("brush:")).toBe(true);
+  expect($("article .fancy strong").length).toBe(1);
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(Object.keys(doc.flaws).length).toBe(0);
+});
+
+test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "unsafe_html"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.unsafe_html.length).toBe(6);
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("code.unsafe-html").length).toBe(6);
+});
+
+test("translated content broken links can fall back to en-us", () => {
+  const builtFolder = path.join(buildRoot, "fr", "docs", "web", "foo");
+  const jsonFile = path.join(builtFolder, "index.json");
+
+  // We should be able to read it and expect certain values
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
+  expect(map.get("/fr/docs/Web/CSS/dumber").explanation).toBe(
+    "Can use the English (en-US) link as a fallback"
+  );
+  expect(map.get("/fr/docs/Web/CSS/number").explanation).toBe(
+    "Can use the English (en-US) link as a fallback"
+  );
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($('article a[href="/fr/docs/Web/CSS/dumber"]').length).toBe(0);
+  expect($('article a[href="/fr/docs/Web/CSS/number"]').length).toBe(0);
+  expect($('article a[href="/en-US/docs/Web/CSS/number"]').length).toBe(2);
+  expect($("article a.only-in-en-us").length).toBe(2);
+  expect($("article a.only-in-en-us").attr("title")).toBe(
+    "Currently only available in English (US)"
+  );
+});
+
+test("homepage links and flaws", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "homepage_links"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.broken_links.length).toBe(4);
+  const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
+  expect(map.get("/ru").suggestion).toBe("/ru/");
+  expect(map.get("/JA/").suggestion).toBe("/ja/");
+  expect(map.get("/ZH-CN").suggestion).toBe("/zh-CN/");
+  expect(map.get("/notalocale/").suggestion).toBeFalsy();
 });

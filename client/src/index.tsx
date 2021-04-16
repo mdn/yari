@@ -21,12 +21,19 @@ if (!container) {
 // something like `(window as any).__data__ as DocData`.
 const docData = (window as any).__data__;
 const pageNotFound = (window as any).__pageNotFound__;
+const feedEntries = (window as any).__feedEntries__;
+const possibleLocales = (window as any).__possibleLocales__;
 
 let app = (
   <GAProvider>
     <UserDataProvider>
       <Router>
-        <App doc={docData} pageNotFound={pageNotFound} />
+        <App
+          doc={docData}
+          pageNotFound={pageNotFound}
+          feedEntries={feedEntries}
+          possibleLocales={possibleLocales}
+        />
       </Router>
     </UserDataProvider>
   </GAProvider>

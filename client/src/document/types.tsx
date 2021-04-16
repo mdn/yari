@@ -2,6 +2,7 @@ export interface Source {
   folder: string;
   github_url: string;
   last_commit_url: string;
+  filename: string;
 }
 
 export interface GenericFlaw {
@@ -52,6 +53,19 @@ export interface BadPreTagFlaw extends GenericFlaw {
   type: BadPreTagType;
 }
 
+export interface HeadingLinksFlaw extends GenericFlaw {
+  html: string;
+  before: string | null;
+  line: number | null;
+  column: number | null;
+}
+
+export interface UnsafeHTMLFlaw extends GenericFlaw {
+  html: string;
+  line: number | null;
+  column: number | null;
+}
+
 export interface MacroErrorMessage extends GenericFlaw {
   name: string;
   error: {
@@ -77,11 +91,13 @@ type Flaws = {
   bad_pre_tags: BadPreTagFlaw[];
   sectioning: SectioningFlaw[];
   image_widths: ImageWidthFlaw[];
+  heading_links: HeadingLinksFlaw[];
+  unsafe_html: UnsafeHTMLFlaw[];
 };
 
 export type Translation = {
   locale: string;
-  url: string;
+  native: string;
 };
 
 export type DocParent = {
@@ -104,6 +120,7 @@ export interface RelatedContent {
 
 export interface Doc {
   title: string;
+  locale: string;
   pageTitle: string;
   mdn_url: string;
   sidebarHTML?: string;
@@ -119,4 +136,5 @@ export interface Doc {
   contributors: string[];
   isArchive: boolean;
   isTranslated: boolean;
+  isActive: boolean;
 }

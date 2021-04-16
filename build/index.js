@@ -1,3 +1,5 @@
+const path = require("path");
+
 const chalk = require("chalk");
 const cheerio = require("cheerio");
 
@@ -24,8 +26,16 @@ const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
 const buildOptions = require("./build-options");
 const { gather: gatherGitHistory } = require("./git-history");
+const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
 const { getRelatedContent } = require("./related-content");
+const LANGUAGES_RAW = require("../content/languages.json");
+
+const LANGUAGES = new Map(
+  Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
+    return [locale.toLowerCase(), data];
+  })
+);
 
 const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/content
 
@@ -105,13 +115,15 @@ function injectLoadingLazyAttributes($) {
 }
 
 /**
- * For every `<a href="http...">` make it `<a href="http..." class="external">`
+ * For every `<a href="http...">` make it
+ * `<a href="http..." class="external" and rel="noopener">`
+ *
  *
  * @param {Cheerio document instance} $
  */
-function injectExternalLinkClasses($) {
-  $("a[href^=http]:not(.external)").each((i, a) => {
-    const $a = $(a);
+function postProcessExternalLinks($) {
+  $("a[href^=http]").each((i, element) => {
+    const $a = $(element);
     if ($a.attr("href").startsWith("https://developer.mozilla.org")) {
       // This should have been removed since it's considered a flaw.
       // But we haven't applied all fixable flaws yet and we still have to
@@ -120,6 +132,26 @@ function injectExternalLinkClasses($) {
       return;
     }
     $a.addClass("external");
+    const rel = ($a.attr("rel") || "").split(" ");
+    if (!rel.includes("noopener")) {
+      rel.push("noopener");
+      $a.attr("rel", rel.join(" "));
+    }
+  });
+}
+
+/**
+ * Fix the heading IDs so they're all lower case.
+ *
+ * @param {Cheerio document instance} $
+ */
+function postProcessSmallerHeadingIDs($) {
+  $("h4[id], h5[id], h6[id]").each((i, element) => {
+    const id = element.attribs.id;
+    const lcID = id.toLowerCase();
+    if (id !== lcID) {
+      $(element).attr("id", lcID);
+    }
   });
 }
 
@@ -151,11 +183,11 @@ function injectNotecardOnWarnings($) {
  * Return the full URL directly to the file in GitHub based on this folder.
  * @param {String} folder - the current folder we're processing.
  */
-function getGitHubURL(root, folder) {
+function getGitHubURL(root, folder, filename) {
   const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
   return `${baseURL}/blob/${getCurrentGitBranch(
     root
-  )}/files/${folder}/index.html`;
+  )}/files/${folder}/${filename}`;
 }
 
 /**
@@ -170,10 +202,12 @@ function getLastCommitURL(root, hash) {
 function injectSource(doc, document, metadata) {
   const folder = document.fileInfo.folder;
   const root = document.fileInfo.root;
+  const filename = path.basename(document.fileInfo.path);
   doc.source = {
     folder,
-    github_url: getGitHubURL(root, folder),
+    github_url: getGitHubURL(root, folder, filename),
     last_commit_url: getLastCommitURL(root, metadata.hash),
+    filename,
   };
 }
 
@@ -209,9 +243,16 @@ async function buildDocument(document, documentOptions = {}) {
   const options = Object.assign({}, buildOptions, documentOptions);
   const { metadata, fileInfo } = document;
 
+  if (Document.urlToFolderPath(document.url) !== document.fileInfo.folder) {
+    throw new Error(
+      `The document's slug (${metadata.slug}) doesn't match its disk folder name (${document.fileInfo.folder})`
+    );
+  }
+
   const doc = {
     isArchive: document.isArchive,
     isTranslated: document.isTranslated,
+    isActive: document.isActive,
   };
 
   doc.flaws = {};
@@ -221,10 +262,13 @@ async function buildDocument(document, documentOptions = {}) {
   const liveSamples = [];
 
   if (doc.isArchive) {
-    renderedHtml = document.rawHTML;
+    if (document.isMarkdown) {
+      throw new Error("Markdown not supported for archived content");
+    }
+    renderedHtml = document.rawBody;
   } else {
     if (options.clearKumascriptRenderCache) {
-      renderKumascriptCache.clear();
+      renderKumascriptCache.reset();
     }
     try {
       [renderedHtml, flaws] = await kumascript.render(document.url);
@@ -247,7 +291,7 @@ async function buildDocument(document, documentOptions = {}) {
 
     const sampleIds = kumascript.getLiveSampleIDs(
       document.metadata.slug,
-      document.rawHTML
+      document.rawBody
     );
     for (const sampleIdObject of sampleIds) {
       const liveSamplePage = kumascript.buildLiveSamplePage(
@@ -319,6 +363,17 @@ async function buildDocument(document, documentOptions = {}) {
 
   const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
 
+  // Kumascript rendering can't know about FLAW_LEVELS when it's building,
+  // because injecting it there would cause a circular dependency.
+  // So, let's post-process the rendered HTML now afterwards.
+  // If the flaw levels for `macros` was to ignore, we can delete all the
+  // injected `data-flaw-src="..."` attributes.
+  if (options.flawLevels.get("macros") === FLAW_LEVELS.IGNORE) {
+    // This helps the final production built HTML since there `data-flaw-src`
+    // attributes on the HTML is useless.
+    $("[data-flaw-src]").removeAttr("data-flaw-src");
+  }
+
   // Remove those '<span class="alllinks"><a href="/en-US/docs/tag/Web">View All...</a></span>' links.
   // If a document has them, they don't make sense in a Yari world anyway.
   $("span.alllinks").remove();
@@ -326,6 +381,7 @@ async function buildDocument(document, documentOptions = {}) {
   doc.title = metadata.title;
   doc.mdn_url = document.url;
   doc.locale = metadata.locale;
+  doc.native = LANGUAGES.get(doc.locale.toLowerCase()).native;
 
   // Note that 'extractSidebar' will always return a string.
   // And if it finds a sidebar section, it gets removed from '$' too.
@@ -393,7 +449,14 @@ async function buildDocument(document, documentOptions = {}) {
   injectLoadingLazyAttributes($);
 
   // All external hyperlinks should have the `external` class name.
-  injectExternalLinkClasses($);
+  postProcessExternalLinks($);
+
+  // Since all anchor links are forced into lower case, and `<h2>` and `<h3>`
+  // is taken care of by the React rendering itself, we have to post-process
+  // any possible headings whose ID might not be perfect.
+  // The reason we can't do this as part of the kumascript rendering is because
+  // the old
+  postProcessSmallerHeadingIDs($);
 
   // All content that uses `<div class="in-page-callout">` needs to
   // become `<div class="callout">`
@@ -452,9 +515,8 @@ async function buildDocument(document, documentOptions = {}) {
     if (translationOf) {
       otherTranslations.push({
         locale: "en-US",
-        // slug: translationOf.metadata.slug,
-        url: translationOf.url,
         title: translationOf.metadata.title,
+        native: LANGUAGES.get("en-us").native,
       });
     }
   }
@@ -474,17 +536,12 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
   doc.noIndexing =
-    (doc.isArchive && !doc.isTranslated) || metadata.slug === "MDN/Kitchensink";
+    (doc.isArchive && !doc.isTranslated) ||
+    metadata.slug === "MDN/Kitchensink" ||
+    document.metadata.slug.startsWith("orphaned/") ||
+    document.metadata.slug.startsWith("conflicting/");
 
   return { doc, liveSamples, fileAttachments, bcdData };
-}
-
-async function buildDocumentFromURL(url, documentOptions = {}) {
-  const document = Document.findByURL(url);
-  if (!document) {
-    return null;
-  }
-  return await buildDocument(document, documentOptions);
 }
 
 async function buildLiveSamplePageFromURL(url) {
@@ -497,7 +554,7 @@ async function buildLiveSamplePageFromURL(url) {
   // the actual sampleID object with the properly-cased live-sample ID.
   for (const sampleIDObject of kumascript.getLiveSampleIDs(
     document.metadata.slug,
-    document.rawHTML
+    document.rawBody
   )) {
     if (sampleIDObject.id.toLowerCase() === sampleID) {
       const liveSamplePage = kumascript.buildLiveSamplePage(
@@ -535,7 +592,6 @@ module.exports = {
 
   buildDocument,
 
-  buildDocumentFromURL,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 
@@ -543,4 +599,5 @@ module.exports = {
 
   options: buildOptions,
   gatherGitHistory,
+  buildSPAs,
 };

@@ -67,6 +67,10 @@ async function render(
   renderPrerequisiteFromURL,
   { templates = null } = {}
 ) {
+  pageEnvironment.slug = pageEnvironment.slug.replace(
+    /^(orphaned)|(conflicting)\//,
+    ""
+  );
   let tokens;
   try {
     tokens = Parser.parse(source);

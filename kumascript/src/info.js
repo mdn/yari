@@ -2,6 +2,7 @@ const cheerio = require("cheerio");
 
 const Parser = require("./parser.js");
 const { VALID_LOCALES, Document, Redirect } = require("../../content");
+const { m2hSync } = require("../../markdown");
 
 const DUMMY_BASE_URL = "https://example.com";
 
@@ -190,6 +191,7 @@ const info = {
     }
 
     const { locale, slug, title, tags } = document.metadata;
+    const { rawBody, isMarkdown } = document;
     return {
       url: document.url,
       locale,
@@ -204,8 +206,8 @@ const info = {
         // In Yari, this is not possible. We don't duplicate the summary in every
         // document. Instead, we extract it from the document when we build it.
         // So, to avoid the whole chicken-and-egg problem, instead, we're going to
-        //  try to extract it on-the-fly, from raw HTML.
-        // Note, we can't always use Cheerio here because the `document.rawHTML` is
+        // try to extract it on-the-fly, from raw HTML or Markdown.
+        // Note, we can't always use Cheerio here because the `document.rawBody` is
         // actually not valid HTML, hence the desperate fall back on regex.
         // A lot of times, you'll actually find that the first paragraph isn't
         // a <p> tag. But often, in those cases it'll have that `seoSummary`
@@ -217,7 +219,7 @@ const info = {
         let $ = null;
         let summary = "";
         try {
-          $ = cheerio.load(document.rawHTML);
+          $ = cheerio.load(isMarkdown ? m2hSync(rawBody) : rawBody);
           $("span.seoSummary, .summary").each((i, element) => {
             if (!summary) {
               const html = $(element)
@@ -243,7 +245,7 @@ const info = {
           }
         } catch (er) {
           console.warn(
-            `Cheerio on document.rawHTML (${document.url}) failed to parse`,
+            `Cheerio on document.rawBody (${document.url}) failed to parse`,
             er
           );
         }
