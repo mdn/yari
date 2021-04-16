@@ -304,6 +304,17 @@ function injectBrokenLinksFlaws(doc, $, { rawContent }, level) {
     // that function knows which match it's referring to.
     checked.set(href, checked.has(href) ? checked.get(href) + 1 : 0);
 
+    // Note, a lot of links are like this:
+    //  <a href="/docs/Learn/Front-end_web_developer">
+    // which means the author wanted the link to work in any language.
+    // When checking it against disk, we'll have to assume a locale.
+    const hrefSplit = href.split("#");
+    let hrefNormalized = hrefSplit[0];
+    if (hrefNormalized.startsWith("/docs/")) {
+      const thisDocumentLocale = doc.mdn_url.split("/")[1];
+      hrefNormalized = `/${thisDocumentLocale}${hrefNormalized}`;
+    }
+
     if (href.startsWith("https://developer.mozilla.org/")) {
       // It might be a working 200 OK link but the link just shouldn't
       // have the full absolute URL part in it.
@@ -314,13 +325,13 @@ function injectBrokenLinksFlaws(doc, $, { rawContent }, level) {
         href,
         absoluteURL.pathname + absoluteURL.search + absoluteURL.hash
       );
-    } else if (isHomepageURL(href)) {
+    } else if (isHomepageURL(hrefNormalized)) {
       // But did you spell it perfectly?
-      const homepageLocale = href.split("/")[1];
+      const homepageLocale = hrefNormalized.split("/")[1];
       if (
-        href !== "/" &&
+        hrefNormalized !== "/" &&
         (VALID_LOCALES.get(homepageLocale.toLowerCase()) !== homepageLocale ||
-          !href.endsWith("/"))
+          !hrefNormalized.endsWith("/"))
       ) {
         addBrokenLink(
           a,
@@ -332,16 +343,6 @@ function injectBrokenLinksFlaws(doc, $, { rawContent }, level) {
     } else if (href.startsWith("/") && !href.startsWith("//")) {
       // Got to fake the domain to sensible extract the .search and .hash
       const absoluteURL = new URL(href, "http://www.example.com");
-      // Note, a lot of links are like this:
-      //  <a href="/docs/Learn/Front-end_web_developer">
-      // which means the author wanted the link to work in any language.
-      // When checking it against disk, we'll have to assume a locale.
-      const hrefSplit = href.split("#");
-      let hrefNormalized = hrefSplit[0];
-      if (hrefNormalized.startsWith("/docs/")) {
-        const thisDocumentLocale = doc.mdn_url.split("/")[1];
-        hrefNormalized = `/${thisDocumentLocale}${hrefNormalized}`;
-      }
       const found = Document.findByURL(hrefNormalized);
       if (!found) {
         // Before we give up, check if it's an image.
