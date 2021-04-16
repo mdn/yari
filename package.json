@@ -58,6 +58,7 @@
     "ejs": "3.1.6",
     "express": "4.17.1",
     "fast-xml-parser": "3.19.0",
+    "fdir": "5.0.0",
     "file-type": "16.3.0",
     "front-matter": "^4.0.2",
     "fs-extra": "9.1.0",

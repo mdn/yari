@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
+const { fdir } = require("fdir");
 const fm = require("front-matter");
 
 const {
@@ -10,28 +11,15 @@ const {
 } = require("../content");
 const { SearchIndex } = require("../build");
 
-function* walker(root) {
-  const dirents = fs.readdirSync(root, { withFileTypes: true });
-  for (const dirent of dirents) {
-    // Doing it this way is faster than doing `path.join(root, dirent.name)`
-    const filepath = `${root}${path.sep}${dirent.name}`;
-    if (dirent.isDirectory()) {
-      yield* walker(filepath);
-    } else {
-      yield filepath;
-    }
-  }
-}
-
 function populateSearchIndex(searchIndex, localeLC) {
   const root = path.join(
     localeLC === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT,
     localeLC
   );
   const locale = VALID_LOCALES.get(localeLC);
-  for (const filePath of walker(root)) {
-    const basename = path.basename(filePath);
-    if (!(basename === "index.html" || basename === "index.md")) {
+  const api = new fdir().withFullPaths().crawl(root);
+  for (const filePath of api.sync()) {
+    if (!(filePath.endsWith("index.html") || filePath.endsWith("index.md"))) {
       continue;
     }
     const rawContent = fs.readFileSync(filePath, "utf-8");
