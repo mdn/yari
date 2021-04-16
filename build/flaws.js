@@ -193,6 +193,21 @@ function injectSectionFlaws(doc, flaws, options) {
   }
 }
 
+function isHomepageURL(url) {
+  // Return true if the URL is something like `/` or `/en-US` or `/fr/`
+  if (url === "/") {
+    return true;
+  }
+  if (!url.endsWith("/")) {
+    url += "/";
+  }
+  const split = url.split("/");
+  if (split.length === 3 && VALID_LOCALES.has(split[1].toLowerCase())) {
+    return true;
+  }
+  return false;
+}
+
 // The 'broken_links' flaw check looks for internal links that
 // link to a document that's going to fail with a 404 Not Found.
 function injectBrokenLinksFlaws(doc, $, { rawContent }, level) {
@@ -201,7 +216,7 @@ function injectBrokenLinksFlaws(doc, $, { rawContent }, level) {
   //    <a href="/foo/bar">
   //    <a href="/foo/other">
   //    <a href="/foo/bar">  (again!)
-  // In this case, when we call `addBrokenLink()` that third time, we know
+  // In this case, when we fix broken links the third time, we know
   // this refers to the second time it appears. That's important for the
   // sake of finding which match, in the original source (rawContent),
   // it belongs to.
@@ -226,26 +241,124 @@ function injectBrokenLinksFlaws(doc, $, { rawContent }, level) {
     }
   }
 
-  // A closure function to help making it easier to append flaws
-  function addBrokenLink(
-    $element,
-    index,
-    href,
-    suggestion = null,
-    explanation = null,
-    enUSFallback = null
-  ) {
+  $("a[href]").each((_i, element) => {
+    const a = $(element);
+    const href = a.attr("href");
+
+    // Note, a lot of links are like this:
+    //  <a href="/docs/Learn/Front-end_web_developer">
+    // which means the author wanted the link to work in any language.
+    // When checking it against disk, we'll have to assume a locale.
+    let [hrefNoHash, hash] = href.split("#");
+    if (hrefNoHash.startsWith("/docs/")) {
+      const thisDocumentLocale = doc.mdn_url.split("/")[1];
+      hrefNoHash = `/${thisDocumentLocale}${hrefNoHash}`;
+    }
+
+    let suggestion = null;
+    let explanation = null;
+    let enUSFallbackURL = null;
+
+    if (href.startsWith("https://developer.mozilla.org/")) {
+      // It might be a working 200 OK link but the link just shouldn't
+      // have the full absolute URL part in it.
+      const absoluteURL = new URL(href);
+      suggestion = absoluteURL.pathname + absoluteURL.search + absoluteURL.hash;
+    } else if (isHomepageURL(hrefNoHash)) {
+      // But did you spell it perfectly?
+      const homepageLocale = hrefNoHash.split("/")[1];
+      if (
+        hrefNoHash !== "/" &&
+        (VALID_LOCALES.get(homepageLocale.toLowerCase()) !== homepageLocale ||
+          !hrefNoHash.endsWith("/"))
+      ) {
+        suggestion = `/${VALID_LOCALES.get(homepageLocale.toLowerCase())}/`;
+      }
+    } else if (href.startsWith("/") && !href.startsWith("//")) {
+      // Got to fake the domain to sensible extract the .search and .hash
+      const absoluteURL = new URL(href, "http://www.example.com");
+      const found = Document.findByURL(hrefNoHash);
+      if (!found) {
+        // Before we give up, check if it's an image.
+        if (
+          !Image.findByURL(hrefNoHash) &&
+          !Archive.isArchivedURL(hrefNoHash)
+        ) {
+          // Even if it's a redirect, it's still a flaw, but it'll be nice to
+          // know what it *should* be.
+          const resolved = Redirect.resolve(hrefNoHash);
+          if (resolved !== hrefNoHash) {
+            suggestion =
+              resolved + absoluteURL.search + absoluteURL.hash.toLowerCase();
+          } else {
+            // Test if the document is a translated document and the link isn't
+            // to an en-US URL. We know the link is broken (in this locale!)
+            // but it might be "salvageable" if we link the en-US equivalent.
+            // This is, by the way, the same trick the `web.smartLink()` utility
+            // function does in kumascript rendering.
+            if (
+              doc.locale !== DEFAULT_LOCALE &&
+              href.startsWith(`/${doc.locale}/`)
+            ) {
+              // What if you swich to the English link; would th link work
+              // better then?
+              const enUSHrefNormalized = hrefNoHash.replace(
+                `/${doc.locale}/`,
+                `/${DEFAULT_LOCALE}/`
+              );
+
+              let enUSFound = Document.findByURL(enUSHrefNormalized);
+              if (enUSFound) {
+                enUSFallbackURL = enUSFound.url;
+              } else {
+                const enUSResolved = Redirect.resolve(enUSHrefNormalized);
+                if (enUSResolved !== enUSHrefNormalized) {
+                  enUSFallbackURL =
+                    enUSResolved +
+                    absoluteURL.search +
+                    absoluteURL.hash.toLowerCase();
+                }
+              }
+              if (enUSFallbackURL) {
+                explanation = "Can use the English (en-US) link as a fallback";
+              }
+            }
+          }
+        }
+        // But does it have the correct case?!
+      } else if (found.url !== href.split("#")[0]) {
+        // Inconsistent case.
+        suggestion =
+          found.url + absoluteURL.search + absoluteURL.hash.toLowerCase();
+      } else if (hash && hash !== hash.toLowerCase()) {
+        suggestion = href.replace(`#${hash}`, `#${hash.toLowerCase()}`);
+        explanation = "Anchor not lowercase";
+      }
+    } else if (href.startsWith("#")) {
+      const hash = href.split("#")[1];
+      if (hash !== hash.toLowerCase()) {
+        suggestion = href.replace(`#${hash}`, `#${hash.toLowerCase()}`);
+        explanation = "Anchor not lowercase";
+      }
+    }
+
+    // This gives us insight into how many times this exact `href`
+    // has been encountered in the doc.
+    const index = checked.has(href) ? checked.get(href) + 1 : 0;
+    checked.set(href, index);
+
+    if (!suggestion && !enUSFallbackURL) {
+      return;
+    }
+
     if (level === FLAW_LEVELS.IGNORE) {
       // Note, even if not interested in flaws, we still need to apply the
       // suggestion. For example, in production builds, we don't care about
       // logging flaws, but because not all `broken_links` flaws have been
       // manually fixed at the source.
-      if (suggestion || enUSFallback) {
-        mutateLink($element, suggestion, enUSFallback);
-      }
+      mutateLink(a, suggestion, enUSFallbackURL);
       return;
     }
-    explanation = explanation || `Can't resolve ${href}`;
 
     if (!matches.has(href)) {
       matches.set(
@@ -269,172 +382,22 @@ function injectBrokenLinksFlaws(doc, $, { rawContent }, level) {
       }
       const id = `link${doc.flaws.broken_links.length + 1}`;
       const fixable = !!suggestion;
-      if (suggestion || enUSFallback) {
-        mutateLink($element, suggestion, enUSFallback);
-      }
-      $element.attr("data-flaw", id);
+      mutateLink(a, suggestion, enUSFallbackURL);
+      a.attr("data-flaw", id);
       doc.flaws.broken_links.push(
-        Object.assign({ explanation, id, href, suggestion, fixable }, match)
+        Object.assign(
+          {
+            explanation: explanation || `Can't resolve ${href}`,
+            id,
+            href,
+            suggestion,
+            fixable,
+          },
+
+          match
+        )
       );
     });
-  }
-
-  function isHomepageURL(url) {
-    // Return true if the URL is something like `/` or `/en-US` or `/fr/`
-    if (url === "/") {
-      return true;
-    }
-    if (!url.endsWith("/")) {
-      url += "/";
-    }
-    const split = url.split("/");
-    if (split.length === 3 && VALID_LOCALES.has(split[1].toLowerCase())) {
-      return true;
-    }
-    return false;
-  }
-
-  $("a[href]").each((i, element) => {
-    const a = $(element);
-    const href = a.attr("href");
-
-    // This gives us insight into how many times this exact `href`
-    // has been encountered in the doc.
-    // Then, when we call addBrokenLink() we can include an index so that
-    // that function knows which match it's referring to.
-    checked.set(href, checked.has(href) ? checked.get(href) + 1 : 0);
-
-    if (href.startsWith("https://developer.mozilla.org/")) {
-      // It might be a working 200 OK link but the link just shouldn't
-      // have the full absolute URL part in it.
-      const absoluteURL = new URL(href);
-      addBrokenLink(
-        a,
-        checked.get(href),
-        href,
-        absoluteURL.pathname + absoluteURL.search + absoluteURL.hash
-      );
-    } else if (isHomepageURL(href)) {
-      // But did you spell it perfectly?
-      const homepageLocale = href.split("/")[1];
-      if (
-        href !== "/" &&
-        (VALID_LOCALES.get(homepageLocale.toLowerCase()) !== homepageLocale ||
-          !href.endsWith("/"))
-      ) {
-        addBrokenLink(
-          a,
-          checked.get(href),
-          href,
-          `/${VALID_LOCALES.get(homepageLocale.toLowerCase())}/`
-        );
-      }
-    } else if (href.startsWith("/") && !href.startsWith("//")) {
-      // Got to fake the domain to sensible extract the .search and .hash
-      const absoluteURL = new URL(href, "http://www.example.com");
-      // Note, a lot of links are like this:
-      //  <a href="/docs/Learn/Front-end_web_developer">
-      // which means the author wanted the link to work in any language.
-      // When checking it against disk, we'll have to assume a locale.
-      const hrefSplit = href.split("#");
-      let hrefNormalized = hrefSplit[0];
-      if (hrefNormalized.startsWith("/docs/")) {
-        const thisDocumentLocale = doc.mdn_url.split("/")[1];
-        hrefNormalized = `/${thisDocumentLocale}${hrefNormalized}`;
-      }
-      const found = Document.findByURL(hrefNormalized);
-      if (!found) {
-        // Before we give up, check if it's an image.
-        if (
-          !Image.findByURL(hrefNormalized) &&
-          !Archive.isArchivedURL(hrefNormalized)
-        ) {
-          // Even if it's a redirect, it's still a flaw, but it'll be nice to
-          // know what it *should* be.
-          const resolved = Redirect.resolve(hrefNormalized);
-          if (resolved !== hrefNormalized) {
-            addBrokenLink(
-              a,
-              checked.get(href),
-              href,
-              resolved + absoluteURL.search + absoluteURL.hash.toLowerCase()
-            );
-          } else {
-            let enUSFallbackURL = null;
-            // Test if the document is a translated document and the link isn't
-            // to an en-US URL. We know the link is broken (in this locale!)
-            // but it might be "salvageable" if we link the en-US equivalent.
-            // This is, by the way, the same trick the `web.smartLink()` utility
-            // function does in kumascript rendering.
-            if (
-              doc.locale !== DEFAULT_LOCALE &&
-              href.startsWith(`/${doc.locale}/`)
-            ) {
-              // What if you swich to the English link; would th link work
-              // better then?
-              const enUSHrefNormalized = hrefNormalized.replace(
-                `/${doc.locale}/`,
-                `/${DEFAULT_LOCALE}/`
-              );
-              let enUSFound = Document.findByURL(enUSHrefNormalized);
-              if (enUSFound) {
-                enUSFallbackURL = enUSFound.url;
-              } else {
-                const enUSResolved = Redirect.resolve(enUSHrefNormalized);
-                if (enUSResolved !== enUSHrefNormalized) {
-                  enUSFallbackURL =
-                    enUSResolved +
-                    absoluteURL.search +
-                    absoluteURL.hash.toLowerCase();
-                }
-              }
-            }
-            addBrokenLink(
-              a,
-              checked.get(href),
-              href,
-              null,
-              enUSFallbackURL
-                ? "Can use the English (en-US) link as a fallback"
-                : null,
-              enUSFallbackURL
-            );
-          }
-        }
-        // But does it have the correct case?!
-      } else if (found.url !== href.split("#")[0]) {
-        // Inconsistent case.
-        addBrokenLink(
-          a,
-          checked.get(href),
-          href,
-          found.url + absoluteURL.search + absoluteURL.hash.toLowerCase()
-        );
-      } else if (
-        hrefSplit.length > 1 &&
-        hrefSplit[1] !== hrefSplit[1].toLowerCase()
-      ) {
-        const hash = hrefSplit[1];
-        addBrokenLink(
-          a,
-          checked.get(href),
-          href,
-          href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
-          "Anchor not lowercase"
-        );
-      }
-    } else if (href.startsWith("#")) {
-      const hash = href.split("#")[1];
-      if (hash !== hash.toLowerCase()) {
-        addBrokenLink(
-          a,
-          checked.get(href),
-          href,
-          href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
-          "Anchor not lowercase"
-        );
-      }
-    }
   });
 }
 
@@ -636,6 +599,7 @@ function injectHeadingLinksFlaws(doc, $, { rawContent }) {
       line,
       column,
     };
+
     if (suggestion) {
       $heading.html(suggestion);
     }
@@ -699,6 +663,7 @@ async function fixFixableFlaws(doc, options, document) {
     newRawBody = replaceMatchesInText(flaw.href, newRawBody, flaw.suggestion, {
       inAttribute: "href",
     });
+
     if (loud) {
       console.log(
         chalk.grey(
@@ -765,6 +730,7 @@ async function fixFixableFlaws(doc, options, document) {
           timeout: 10000,
           retry: 3,
         });
+
         const imageBuffer = imageResponse.body;
         let fileType = await FileType.fromBuffer(imageBuffer);
         if (
@@ -807,6 +773,7 @@ async function fixFixableFlaws(doc, options, document) {
             path.extname(decodedPathname)
           )}.${imageExtension}`
         );
+
         const destination = path.join(
           Document.getFolderPath(document.metadata),
           path
@@ -821,17 +788,20 @@ async function fixFixableFlaws(doc, options, document) {
             .replace(/^=/, "")
             .toLowerCase()
         );
+
         // Before writing to disk, run it through the same imagemin
         // compression we do in the filecheck CLI.
         const compressedImageBuffer = await imagemin.buffer(imageBuffer, {
           plugins: [getImageminPlugin(url.pathname)],
         });
+
         if (compressedImageBuffer.length < imageBuffer.length) {
           console.log(
             `Raw image size: ${humanFileSize(
               imageBuffer.length
             )} Compressed: ${humanFileSize(compressedImageBuffer.length)}`
           );
+
           fs.writeFileSync(destination, compressedImageBuffer);
         } else {
           console.log(`Raw image size: ${humanFileSize(imageBuffer.length)}`);
@@ -856,6 +826,7 @@ async function fixFixableFlaws(doc, options, document) {
     newRawBody = replaceMatchesInText(flaw.src, newRawBody, newSrc, {
       inAttribute: "src",
     });
+
     if (loud) {
       console.log(
         chalk.grey(
@@ -876,6 +847,7 @@ async function fixFixableFlaws(doc, options, document) {
       inAttribute: "style",
       removeEntireAttribute: flaw.suggestion === "",
     });
+
     if (loud) {
       console.log(
         flaw.suggestion === ""
