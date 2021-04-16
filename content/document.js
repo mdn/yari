@@ -4,6 +4,7 @@ const path = require("path");
 const fm = require("front-matter");
 const glob = require("glob");
 const yaml = require("js-yaml");
+const { fdir } = require("fdir");
 
 const {
   CONTENT_ARCHIVED_ROOT,
@@ -197,32 +198,53 @@ function unarchive(document, move) {
   return created;
 }
 
-const read = memoize((folder) => {
+const read = memoize((folderOrFilePath) => {
   let filePath = null;
+  let folder = null;
   let root = null;
   let isMarkdown = false;
+  let locale = null;
 
-  for (const possibleRoot of ROOTS) {
-    const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
-    if (fs.existsSync(possibleHTMLFilePath)) {
-      root = possibleRoot;
-      filePath = possibleHTMLFilePath;
-      break;
+  if (fs.existsSync(folderOrFilePath)) {
+    filePath = folderOrFilePath;
+
+    for (const possibleRoot of ROOTS) {
+      if (filePath.startsWith(possibleRoot)) {
+        root = possibleRoot;
+        folder = filePath
+          .replace(possibleRoot + path.sep, "")
+          .replace(path.sep + HTML_FILENAME, "")
+          .replace(path.sep + MARKDOWN_FILENAME, "");
+        locale = extractLocale(filePath.replace(possibleRoot + path.sep, ""));
+        break;
+      }
     }
-    const possibleMarkdownFilePath = path.join(
-      possibleRoot,
-      getMarkdownPath(folder)
-    );
-    if (fs.existsSync(possibleMarkdownFilePath)) {
-      root = possibleRoot;
-      filePath = possibleMarkdownFilePath;
-      isMarkdown = true;
-      break;
+  } else {
+    folder = folderOrFilePath;
+    for (const possibleRoot of ROOTS) {
+      const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
+      if (fs.existsSync(possibleHTMLFilePath)) {
+        root = possibleRoot;
+        filePath = possibleHTMLFilePath;
+        break;
+      }
+      const possibleMarkdownFilePath = path.join(
+        possibleRoot,
+        getMarkdownPath(folder)
+      );
+      if (fs.existsSync(possibleMarkdownFilePath)) {
+        root = possibleRoot;
+        filePath = possibleMarkdownFilePath;
+        isMarkdown = true;
+        break;
+      }
     }
+    if (!filePath) {
+      return;
+    }
+    locale = extractLocale(folder);
   }
-  if (!filePath) {
-    return;
-  }
+
   if (filePath.includes(" ")) {
     throw new Error("Folder contains whitespace which is not allowed.");
   }
@@ -260,7 +282,6 @@ const read = memoize((folder) => {
     bodyBegin: frontMatterOffset,
   } = fm(rawContent);
 
-  const locale = extractLocale(folder);
   const url = `/${locale}/docs/${metadata.slug}`;
 
   const isActive = !isArchive && ACTIVE_LOCALES.has(locale.toLowerCase());
@@ -398,6 +419,86 @@ function findByURL(url, ...args) {
 }
 
 function findAll({
+  files = new Set(),
+  folderSearch = null,
+  locales = new Map(),
+} = {}) {
+  if (!(files instanceof Set)) {
+    throw new TypeError("'files' not a Set");
+  }
+  if (folderSearch && typeof folderSearch !== "string") {
+    throw new TypeError("'folderSearch' not a string");
+  }
+  const folderSearchRegExp = folderSearch ? new RegExp(folderSearch) : null;
+
+  const filePaths = [];
+  const roots = [];
+  if (CONTENT_ARCHIVED_ROOT) {
+    roots.push(CONTENT_ARCHIVED_ROOT);
+  }
+  if (CONTENT_TRANSLATED_ROOT) {
+    roots.push(CONTENT_TRANSLATED_ROOT);
+  }
+  roots.push(CONTENT_ROOT);
+  for (const root of roots) {
+    const api = new fdir()
+      // .withFullPaths()
+      .withBasePath()
+      // .withDirs()
+      .filter((filePath, isDirectory) => {
+        if (isDirectory) {
+          throw new Error("ever???");
+          return true;
+        } else if (
+          filePath.endsWith(HTML_FILENAME) ||
+          filePath.endsWith(MARKDOWN_FILENAME)
+        ) {
+          if (locales.size) {
+            const locale = filePath.replace(root, "").split("/")[1];
+            return locales.get(locale);
+          }
+          // The 'files' set is either a list of absolute full paths or a
+          // list of endings.
+          // Why endings? Because it's highly useful when you use git and the
+          // filepath might be relative to the git repo root.
+          if (files.size) {
+            if (files.has(filePath)) {
+              return true;
+            }
+            for (const fp of files) {
+              if (filePath.endsWith(fp)) {
+                return true;
+              }
+            }
+            return false;
+          }
+
+          if (folderSearchRegExp) {
+            const pure = filePath
+              .replace(root + path.sep, "")
+              .replace(HTML_FILENAME, "")
+              .replace(MARKDOWN_FILENAME, "");
+            return pure.search(folderSearchRegExp) !== -1;
+          }
+
+          return true;
+        }
+        return false;
+      })
+      .crawl(root);
+    filePaths.push(...api.sync());
+  }
+  return {
+    count: filePaths.length,
+    *iter({ pathOnly = false } = {}) {
+      for (const filePath of filePaths) {
+        yield pathOnly ? filePath : read(filePath);
+      }
+    },
+  };
+}
+
+function XXXfindAll({
   files = new Set(),
   folderSearch = null,
   locales = new Map(),
@@ -614,6 +715,7 @@ module.exports = {
 
   findByURL,
   findAll,
+  // findAll2,
   findChildren,
 
   MEMOIZE_INVALIDATE,
