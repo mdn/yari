@@ -303,6 +303,12 @@ function _addSingleSpecialSection($) {
   }
 
   if (specialSectionType === "browser_compatibility") {
+    return _buildSpecialBCDSection();
+  } else if (specialSectionType === "specifications") {
+    return _buildSpecialSpecSection();
+  }
+
+  function _buildSpecialBCDSection() {
     // First extract a map of all release data, keyed by (normalized) browser
     // name and the versions.
     // You'll have a map that looks like this:
@@ -374,7 +380,16 @@ function _addSingleSpecialSection($) {
         },
       },
     ];
-  } else if (specialSectionType === "specifications") {
+  }
+
+  function _buildSpecialSpecSection() {
+    // Extract spec_url from a BCD feature.
+    // Can either be a string or an array of strings.
+    // Here, specURLs always returns an array of strings
+
+    // TODO We want to display more than just the URL of a spec
+    // TODO Query https://github.com/w3c/browser-specs for spec name, spec status, etc.
+
     let specURLs = [];
 
     for (const [key, compat] of Object.entries(data)) {
