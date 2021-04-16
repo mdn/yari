@@ -1016,6 +1016,24 @@ test("bcd table extraction followed by h3", () => {
   expect(doc.body[4].value.isH3).toBeTruthy();
 });
 
+test("specification table and bcd extraction", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "spec_table_extraction"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.body[0].type).toBe("prose");
+  expect(doc.body[1].type).toBe("specifications");
+  expect(doc.body[2].type).toBe("prose");
+  expect(doc.body[3].type).toBe("browser_compatibility");
+  expect(doc.body[4].type).toBe("prose");
+});
+
 test("headers within non-root elements is a 'sectioning' flaw", () => {
   const builtFolder = path.join(
     buildRoot,
