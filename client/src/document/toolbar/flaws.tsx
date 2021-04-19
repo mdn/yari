@@ -1023,7 +1023,7 @@ function HeadingLinks({
               {flaw.suggestion && flaw.before ? (
                 <span>
                   <b>Suggestion:</b>{" "}
-                  <ShowDiff before={flaw.before} after={flaw.suggestion} />
+                  <ShowDiff before={flaw.before} after={flaw.suggestion} />
                 </span>
               ) : (
                 <i>
