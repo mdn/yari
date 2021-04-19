@@ -466,11 +466,8 @@ function findAll({
   for (const root of roots) {
     const api = new fdir()
       .withFullPaths()
+      .withErrors()
       .filter((filePath) => {
-        // Note! Due to a bug in fdir, any accidental errors throw here are
-        // swallowed!
-        // See https://github.com/thecodrr/fdir/issues/56
-
         // Exit early if it's not a sane kind of file we expect
         if (
           !(
