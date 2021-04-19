@@ -217,18 +217,14 @@ const read = memoize((folderOrFilePath) => {
       throw new Error(`'${filePath}' is not a HTML or Markdown file.`);
     }
 
-    for (const possibleRoot of ROOTS) {
-      if (filePath.startsWith(possibleRoot)) {
-        root = possibleRoot;
-        folder = filePath
-          .replace(possibleRoot + path.sep, "")
-          .replace(path.sep + HTML_FILENAME, "")
-          .replace(path.sep + MARKDOWN_FILENAME, "");
-        locale = extractLocale(filePath.replace(possibleRoot + path.sep, ""));
-        break;
-      }
-    }
-    if (!folder) {
+    root = ROOTS.find((possibleRoot) => filePath.startsWith(possibleRoot));
+    if (root) {
+      folder = filePath
+        .replace(root + path.sep, "")
+        .replace(path.sep + HTML_FILENAME, "")
+        .replace(path.sep + MARKDOWN_FILENAME, "");
+      locale = extractLocale(filePath.replace(root + path.sep, ""));
+    } else {
       // The file exists but it doesn't appear to belong to any of our roots.
       // That could happen if you pass in a file that is something completely
       // different not a valid file anyway.

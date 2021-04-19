@@ -3,7 +3,7 @@ const path = require("path");
 
 const Document = require("./document");
 
-describe("test Document.findAll()", () => {
+describe("Document.findAll()", () => {
   it("should always return files that exist", () => {
     const filePaths = [...Document.findAll().iter({ pathOnly: true })];
     expect(filePaths.every((value) => fs.existsSync(value))).toBeTruthy();
