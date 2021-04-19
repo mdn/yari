@@ -17,7 +17,7 @@ function populateSearchIndex(searchIndex, localeLC) {
     localeLC
   );
   const locale = VALID_LOCALES.get(localeLC);
-  const api = new fdir().withFullPaths().crawl(root);
+  const api = new fdir().withFullPaths().withErrors().crawl(root);
   for (const filePath of api.sync()) {
     if (!(filePath.endsWith("index.html") || filePath.endsWith("index.md"))) {
       continue;
