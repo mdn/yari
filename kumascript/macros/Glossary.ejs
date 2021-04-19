@@ -8,18 +8,8 @@
 
 let str = $1 || $0;
 
-let URL = "/en-US/docs/Glossary/";
-URL += $0.replace(/\s+/g,'_');
+const baseURL = `/${env.locale}/docs/Glossary`;
+const URL = `${baseURL}/${$0.replace(/\s+/g,'_')}`;
+const link = web.smartLink(URL, null, str, null, baseURL);
 
-if (env.locale !== "en-US") {
-    let page = await wiki.getPage(URL);
-    if (page && page.translations) {
-        for(let translation of page.translations) {
-            if (translation.locale === env.locale) {
-                URL = translation.url;
-            }
-        }
-    }
-}
-
-%><a href="<%- URL %>"><%= str %></a>
+%><%- link %>
