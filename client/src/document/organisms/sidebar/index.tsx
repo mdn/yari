@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 import "./index.scss";
@@ -40,14 +39,14 @@ export function RenderSideBar({ doc }: { doc: Doc }) {
 
 function SidebarLeaf({ parent }: { parent: RelatedContent }) {
   return (
-    <SidebarContainer>
-      <h4>
+    <>
+      <h5>
         {parent.url ? (
           <Link to={parent.url}>{parent.title}</Link>
         ) : (
           parent.title
         )}
-      </h4>
+      </h5>
       <ul>
         {parent.content.map((node) => {
           if (node.content) {
@@ -58,14 +57,17 @@ function SidebarLeaf({ parent }: { parent: RelatedContent }) {
             );
           } else {
             return (
-              <li key={node.url}>
+              <li
+                key={node.url}
+                className={node.isActive ? "active" : undefined}
+              >
                 <Link to={node.url}>{node.title}</Link>
               </li>
             );
           }
         })}
       </ul>
-    </SidebarContainer>
+    </>
   );
 }
 

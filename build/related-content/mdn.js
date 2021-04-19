@@ -1,13 +1,11 @@
 // This is a pure Node port of the `macros/MDNSidebar.ejs` macro.
 
-function getRelatedContent(doc) {
-  const { locale } = doc;
-
-  // XXX
-  // We could cache this based on a cache key. For example, the MDN sidebar
-  // doesn't actually change depending on the current document. So it
-  // can easily be cached based on the `locale`. But you know, premature optimization :)
-
+// This could be memoized.
+// But note that if you do that, we're afterwards computing and setting `.isActive`
+// based on its output so you'd have to deep-clone the output of this function first.
+// At this point, all the deep cloning is probably just overheads that aren't
+// worth it.
+const getRelatedByLocale = (locale) => {
   const baseURL = `/${locale}/docs/MDN`;
   const text = {
     "en-US": {
@@ -24,7 +22,6 @@ function getRelatedContent(doc) {
       Guidelines: "Guidelines",
       Work_processes: "Work processes",
       Content_structures: "Content structures",
-      Kuma_the_MDN_wiki_platform: "Kuma: the MDN wiki platform",
     },
     ar: {
       About_MDN: "حول شبكة مطوري موزيل",
@@ -40,44 +37,22 @@ function getRelatedContent(doc) {
       Guidelines: "دلائل إرشادية",
       Work_processes: "سير العمل",
       Content_structures: "هياكل المحتوى",
-      Kuma_the_MDN_wiki_platform:
-        "برمجية كوما: برمجيّة الموسوعة الذي تعمل عليها الشبكة",
-    },
-    "bn-BD": {
-      About_MDN: "About MDN",
-      MDN_guide_for_readers: "MDN guide for readers",
-      Promote_MDN: "Promote MDN",
-      Send_feedback_about_MDN: "Send feedback about MDN",
-      Get_started_on_MDN: "মজিলা ডেভেলপার নেটওয়ার্কের সাথে পরিচিত হওয়া",
-      Contributing_to_MDN: "MDN এ অবদান রাখা",
-      Other_things_you_can_do: "Things you can do",
-      Localizing_MDN: "Localizing MDN",
-      MDN_editor_UI: "MDN editor UI",
-      Tools_for_power_users: "Tools for power users",
-      Guidelines: "Guidelines",
-      Work_processes: "Work processes",
-      Content_structures: "Content structures",
-      Kuma_the_MDN_wiki_platform: "Kuma: the MDN wiki platform",
     },
     ca: {
       About_MDN: "Sobre MDN",
-      MDN_guide_for_readers: "MDN guide for readers",
       Promote_MDN: "Promoure MDN",
       Send_feedback_about_MDN: "Enviar comentaris sobre MDN",
       Get_started_on_MDN: "Començar en MDN",
       Contributing_to_MDN: "Ajuda a millora MDN",
       Other_things_you_can_do: "Coses que pot fer",
       Localizing_MDN: "Localització de MDN",
-      MDN_editor_UI: "MDN editor UI",
       Tools_for_power_users: "Eines per usuaris avançats",
       Guidelines: "Guies",
       Work_processes: "Processos de treball",
       Content_structures: "Estructures de contingut",
-      Kuma_the_MDN_wiki_platform: "Kuma: plataforma wiki MDN",
     },
     de: {
       About_MDN: "Über MDN",
-      MDN_guide_for_readers: "MDN guide for readers",
       Promote_MDN: "Fördere MDN",
       Send_feedback_about_MDN: "Bewerte MDN",
       Get_started_on_MDN: "Erste Schritte auf MDN",
@@ -89,7 +64,6 @@ function getRelatedContent(doc) {
       Guidelines: "Richtlinien",
       Work_processes: "Arbeitsweisen",
       Content_structures: "Inhalststruktur",
-      Kuma_the_MDN_wiki_platform: "Kuma: MDN's Wikipedia Platform",
     },
     es: {
       About_MDN: "Acerca de MDN",
@@ -105,7 +79,6 @@ function getRelatedContent(doc) {
       Guidelines: "Guías de preferencias",
       Work_processes: "Procesos de documentacion",
       Content_structures: "Estructura del contenido",
-      Kuma_the_MDN_wiki_platform: "Kuma: La wiki de la MDN",
     },
     fr: {
       About_MDN: "À propos",
@@ -121,7 +94,6 @@ function getRelatedContent(doc) {
       Guidelines: "Guides du style et du contenu MDN",
       Work_processes: "Processus de documentation",
       Content_structures: "Structures des contenus",
-      Kuma_the_MDN_wiki_platform: "Kuma, la plateforme soutenant le wiki MDN",
     },
     "hi-IN": {
       About_MDN: "MDN के बारे में",
@@ -132,16 +104,13 @@ function getRelatedContent(doc) {
       Contributing_to_MDN: "MDN में सुधार करने में मदद करें",
       Other_things_you_can_do: "चीज़ें जो आप कर सकते हों",
       Localizing_MDN: "MDN का स्थानीयकरण करें ",
-      MDN_editor_UI: "MDN editor UI",
       Tools_for_power_users: "Power उपयोगकर्ताओं के लिए उपकरण",
       Guidelines: "दिशा निर्देश",
       Work_processes: "कार्य प्रक्रियाएं",
       Content_structures: "सामग्री संरचनाएं",
-      Kuma_the_MDN_wiki_platform: "Kuma: the MDN wiki platform",
     },
     hu: {
       About_MDN: "Az MDN-ről",
-      MDN_guide_for_readers: "MDN guide for readers",
       Promote_MDN: "Az MDN népszerűsítése",
       Send_feedback_about_MDN: "Visszajelzés küldése az MDN-ről",
       Get_started_on_MDN: "Ismerkedés az MDN-nel",
@@ -153,39 +122,26 @@ function getRelatedContent(doc) {
       Guidelines: "Irányelvek",
       Work_processes: "Munkafolyamatok",
       Content_structures: "Tartalom felépítése",
-      Kuma_the_MDN_wiki_platform: "Kuma: az MDN wiki platformja",
     },
     id: {
       About_MDN: "Tentang MDN",
-      MDN_guide_for_readers: "MDN guide for readers",
       Promote_MDN: "Promosikan MDN",
       Send_feedback_about_MDN: "Kirim feedback tentang MDN",
       Get_started_on_MDN: "Memulai di MDN",
       Contributing_to_MDN: "Bantu kembangkan MDN",
       Other_things_you_can_do: "Hal yang anda bisa lakukan",
       Localizing_MDN: "Melokalisasi MDN",
-      MDN_editor_UI: "MDN editor UI",
-      Tools_for_power_users: "Tools for power users",
       Guidelines: "Paduan",
-      Work_processes: "Work processes",
       Content_structures: "Struktur konten",
-      Kuma_the_MDN_wiki_platform: "Kuma: the MDN wiki platform",
     },
     it: {
       About_MDN: "Informazioni su MDN",
-      MDN_guide_for_readers: "MDN guide for readers",
       Promote_MDN: "Promuovi MDN",
-      Send_feedback_about_MDN: "Send feedback about MDN",
       Get_started_on_MDN: "Primi passi su MDN",
       Contributing_to_MDN: "Contribuire a MDN",
       Other_things_you_can_do: "Guide come fare per",
       Localizing_MDN: "Localizzazione di MDN",
       MDN_editor_UI: "Guida all'editor di MDN",
-      Tools_for_power_users: "Tools for power users",
-      Guidelines: "Guidelines",
-      Work_processes: "Work processes",
-      Content_structures: "Content structures",
-      Kuma_the_MDN_wiki_platform: "Kuma: the MDN wiki platform",
     },
     ja: {
       About_MDN: "MDN について",
@@ -198,10 +154,8 @@ function getRelatedContent(doc) {
       Localizing_MDN: "MDN でのローカライズ",
       MDN_editor_UI: "MDNエディターガイド",
       Tools_for_power_users: "パワーユーザーのためのツール",
-      Guidelines: "Guidelines",
       Work_processes: "作業のプロセス",
       Content_structures: "文書の構造",
-      Kuma_the_MDN_wiki_platform: "Kuma: MDN の Wiki プラットフォーム",
     },
     ko: {
       About_MDN: "MDN이란",
@@ -217,39 +171,6 @@ function getRelatedContent(doc) {
       Guidelines: "가이드라인",
       Work_processes: "작업 진행 과정",
       Content_structures: "문서 구조",
-      Kuma_the_MDN_wiki_platform: "Kuma: MDN 위키 플랫폼",
-    },
-    ml: {
-      About_MDN: "എംഡിഎനിനെ കുറിച്ച്",
-      MDN_guide_for_readers: "MDN guide for readers",
-      Promote_MDN: "Promote MDN",
-      Send_feedback_about_MDN: "Send feedback about MDN",
-      Get_started_on_MDN: "Get started on MDN",
-      Contributing_to_MDN: "Help improve MDN",
-      Other_things_you_can_do: "Things you can do",
-      Localizing_MDN: "Localizing MDN",
-      MDN_editor_UI: "MDN editor UI",
-      Tools_for_power_users: "Tools for power users",
-      Guidelines: "Guidelines",
-      Work_processes: "Work processes",
-      Content_structures: "Content structures",
-      Kuma_the_MDN_wiki_platform: "Kuma: the MDN wiki platform",
-    },
-    ms: {
-      About_MDN: "Perihal MDN",
-      MDN_guide_for_readers: "MDN guide for readers",
-      Promote_MDN: "Promote MDN",
-      Send_feedback_about_MDN: "Send feedback about MDN",
-      Get_started_on_MDN: "Get started on MDN",
-      Contributing_to_MDN: "Help improve MDN",
-      Other_things_you_can_do: "Things you can do",
-      Localizing_MDN: "Localizing MDN",
-      MDN_editor_UI: "MDN editor UI",
-      Tools_for_power_users: "Tools for power users",
-      Guidelines: "Guidelines",
-      Work_processes: "Work processes",
-      Content_structures: "Content structures",
-      Kuma_the_MDN_wiki_platform: "Kuma: the MDN wiki platform",
     },
     nl: {
       About_MDN: "Over MDN",
@@ -265,11 +186,9 @@ function getRelatedContent(doc) {
       Guidelines: "Richtlijnen",
       Work_processes: "Werkprocessen",
       Content_structures: "Inhoudsstructuren",
-      Kuma_the_MDN_wiki_platform: "Kuma: Het wikiplatform van MDN",
     },
     "pt-BR": {
       About_MDN: "Sobre a MDN",
-      MDN_guide_for_readers: "MDN guide for readers",
       Promote_MDN: "Promover a MDN",
       Send_feedback_about_MDN: "Enviar feedback sobre a MDN",
       Get_started_on_MDN: "Primeiros passos na MDN",
@@ -281,43 +200,23 @@ function getRelatedContent(doc) {
       Guidelines: "Diretrizes",
       Work_processes: "Processos de trabalho",
       Content_structures: "Estruturas de conteúdo",
-      Kuma_the_MDN_wiki_platform: "Kuma: plataforma wiki da MDN",
     },
     "pt-PT": {
       About_MDN: "Sobre a MDN",
-      MDN_guide_for_readers: "MDN guide for readers",
-      Promote_MDN: "Promote MDN",
       Send_feedback_about_MDN: "Enviar opinião sobre a MDN",
       Get_started_on_MDN: "Iniciação na MDN",
       Contributing_to_MDN: "Contribuir para a MDN",
       Other_things_you_can_do: "Guias de Como...",
       Localizing_MDN: "Localizar MDN",
       MDN_editor_UI: "Guia para o editor da IU da MDN",
-      Tools_for_power_users: "Tools for power users",
       Guidelines: "Linhas Diretrizes",
-      Work_processes: "Work processes",
-      Content_structures: "Content structures",
-      Kuma_the_MDN_wiki_platform: "Kuma: Plataforma wiki da MDN",
     },
     ro: {
       About_MDN: "Despre MDN",
-      MDN_guide_for_readers: "MDN guide for readers",
-      Promote_MDN: "Promote MDN",
-      Send_feedback_about_MDN: "Send feedback about MDN",
       Get_started_on_MDN: "Noțiuni de bază despre MDN",
-      Contributing_to_MDN: "Help improve MDN",
-      Other_things_you_can_do: "Things you can do",
-      Localizing_MDN: "Localizing MDN",
-      MDN_editor_UI: "MDN editor UI",
-      Tools_for_power_users: "Tools for power users",
-      Guidelines: "Guidelines",
-      Work_processes: "Work processes",
-      Content_structures: "Content structures",
-      Kuma_the_MDN_wiki_platform: "Kuma: platforma wiki a MDN-ului",
     },
     ru: {
       About_MDN: "О MDN",
-      MDN_guide_for_readers: "MDN guide for readers",
       Promote_MDN: "Продвижение MDN",
       Send_feedback_about_MDN: "Оставить отзыв о MDN",
       Get_started_on_MDN: "MDN - Быстрый старт!",
@@ -329,27 +228,19 @@ function getRelatedContent(doc) {
       Guidelines: "Руководства",
       Work_processes: "Рабочие процессы",
       Content_structures: "Структуры документов",
-      Kuma_the_MDN_wiki_platform: "Kuma: вики-платформа MDN",
     },
     "sv-SE": {
       About_MDN: "Om MDN",
-      MDN_guide_for_readers: "MDN guide for readers",
       Promote_MDN: "Marknadsför MDN",
       Send_feedback_about_MDN: "Skicka in feedback om MDN",
-      Get_started_on_MDN: "Get started on MDN",
       Contributing_to_MDN: "Hjälp till att förbättra MDN",
       Other_things_you_can_do: "Saker som du kan göra",
-      Localizing_MDN: "Localizing MDN",
-      MDN_editor_UI: "MDN editor UI",
-      Tools_for_power_users: "Tools for power users",
       Guidelines: "Riktlinjer",
       Work_processes: "Arbetsprocedurer",
       Content_structures: "Innehållsstrukturer",
-      Kuma_the_MDN_wiki_platform: "Kuma: MDN's wiki-plattform",
     },
     uk: {
       About_MDN: "Про MDN",
-      MDN_guide_for_readers: "MDN guide for readers",
       Promote_MDN: "Поширити MDN",
       Send_feedback_about_MDN: "Залишити відгук про MDN",
       Get_started_on_MDN: "Швидкий старт на MDN",
@@ -361,55 +252,28 @@ function getRelatedContent(doc) {
       Guidelines: "Посібники",
       Work_processes: "Робочі процеси",
       Content_structures: "Структури документів",
-      Kuma_the_MDN_wiki_platform: "Kuma: Вікі-платформа MDN",
     },
     vi: {
       About_MDN: "Giới Thiệu Về MDN",
-      MDN_guide_for_readers: "MDN guide for readers",
-      Promote_MDN: "Promote MDN",
-      Send_feedback_about_MDN: "Send feedback about MDN",
-      Get_started_on_MDN: "Get started on MDN",
-      Contributing_to_MDN: "Help improve MDN",
-      Other_things_you_can_do: "Things you can do",
-      Localizing_MDN: "Localizing MDN",
       MDN_editor_UI: "Hướng dẫn trình soạn thảo MDN",
-      Tools_for_power_users: "Tools for power users",
-      Guidelines: "Guidelines",
-      Work_processes: "Work processes",
-      Content_structures: "Content structures",
-      Kuma_the_MDN_wiki_platform: "Kuma: the MDN wiki platform",
     },
     "zh-CN": {
       About_MDN: "关于 MDN",
-      MDN_guide_for_readers: "MDN guide for readers",
       Promote_MDN: "推广MDN",
-      Send_feedback_about_MDN: "Send feedback about MDN",
       Get_started_on_MDN: "初识MDN",
       Contributing_to_MDN: "为 MDN 做贡献",
       Other_things_you_can_do: "MDN 使用指南",
       Localizing_MDN: "MDN 本地化",
       MDN_editor_UI: "MDN 编辑指南",
       Tools_for_power_users: "MDN 工具",
-      Guidelines: "Guidelines",
-      Work_processes: "Work processes",
       Content_structures: "文档结构",
-      Kuma_the_MDN_wiki_platform: "Kuma: MDN 的 wiki 平台",
     },
     "zh-TW": {
       About_MDN: "關於 MDN",
-      MDN_guide_for_readers: "MDN guide for readers",
       Promote_MDN: "推廣 MDN",
-      Send_feedback_about_MDN: "Send feedback about MDN",
       Get_started_on_MDN: "開始入門 MDN",
       Contributing_to_MDN: "貢獻 MDN",
-      Other_things_you_can_do: "Things you can do",
-      Localizing_MDN: "Localizing MDN",
-      MDN_editor_UI: "MDN editor UI",
-      Tools_for_power_users: "Tools for power users",
       Guidelines: "MDN 內容與風格指南",
-      Work_processes: "Work processes",
-      Content_structures: "Content structures",
-      Kuma_the_MDN_wiki_platform: "Kuma: MDN 的維基平台",
     },
   };
 
@@ -439,6 +303,25 @@ function getRelatedContent(doc) {
       { title: getText("Content_structures"), url: `${baseURL}/Structures` },
     ],
   });
+  return related;
+};
+
+function setActive(related, url) {
+  for (const content of related) {
+    if (content.url === url) {
+      content.isActive = true;
+    } else if (content.content) {
+      setActive(content.content, url);
+    }
+  }
+}
+
+function getRelatedContent(doc) {
+  const { locale, mdn_url } = doc;
+  // First get it purely dependent on the locale
+  const related = getRelatedByLocale(locale);
+  // Now we can inject which page we're currently on based on the doc.
+  setActive(related, mdn_url);
   return related;
 }
 module.exports = getRelatedContent;
