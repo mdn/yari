@@ -146,6 +146,14 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
           `/${VALID_LOCALES.get(homepageLocale.toLowerCase())}/`
         );
       }
+    } else if (hrefNormalized === doc.mdn_url) {
+      addBrokenLink(
+        a,
+        checked.get(href),
+        href,
+        null,
+        "Link links to the page it's already on"
+      );
     } else if (href.startsWith("/") && !href.startsWith("//")) {
       // Got to fake the domain to sensible extract the .search and .hash
       const absoluteURL = new URL(href, "http://www.example.com");
