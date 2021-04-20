@@ -25,10 +25,17 @@ describe("root URL redirects", () => {
     expect(r.headers["location"]).toBe("/en-US/");
   });
 
-  it("should preserve the query string", async () => {
+  it("should preserve the basic query string", async () => {
     const r = await get("/?foo=bar");
     expect(r.statusCode).toBe(302);
     expect(r.headers["location"]).toBe("/en-US/?foo=bar");
+  });
+
+  it("should preserve the query string and not encode it twice", async () => {
+    // This test is based on https://github.com/mdn/yari/issues/3425
+    const r = await get("/?q=text%2Dshadow");
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe("/en-US/?q=text%2Dshadow");
   });
 
   it("should redirect with a trailing slash when cased correctly", async () => {

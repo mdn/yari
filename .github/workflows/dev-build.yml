@@ -91,7 +91,7 @@ jobs:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.1.2
+        uses: snok/install-poetry@v1.1.4
 
       - name: Install deployer
         run: |

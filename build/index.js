@@ -140,14 +140,18 @@ function postProcessExternalLinks($) {
 }
 
 /**
- * Find all `in-page-callout` div elements and rewrite
- * to be just `callout`, no more need to mark them as `webdev`
+ * Fix the heading IDs so they're all lower case.
+ *
  * @param {Cheerio document instance} $
  */
-function injectInPageCallout($) {
-  $("div.in-page-callout")
-    .addClass("callout")
-    .removeClass("in-page-callout webdev");
+function postProcessSmallerHeadingIDs($) {
+  $("h4[id], h5[id], h6[id]").each((i, element) => {
+    const id = element.attribs.id;
+    const lcID = id.toLowerCase();
+    if (id !== lcID) {
+      $(element).attr("id", lcID);
+    }
+  });
 }
 
 /**
@@ -431,13 +435,12 @@ async function buildDocument(document, documentOptions = {}) {
   // All external hyperlinks should have the `external` class name.
   postProcessExternalLinks($);
 
-  // All content that uses `<div class="in-page-callout">` needs to
-  // become `<div class="callout">`
-  // Some day, we can hopefully do a mass search-and-replace so we never
-  // need to do this code here.
-  // We might want to delete this injection in 2021 some time when all content's
-  // raw HTML has been fixed to always have it in there already.
-  injectInPageCallout($);
+  // Since all anchor links are forced into lower case, and `<h2>` and `<h3>`
+  // is taken care of by the React rendering itself, we have to post-process
+  // any possible headings whose ID might not be perfect.
+  // The reason we can't do this as part of the kumascript rendering is because
+  // the old
+  postProcessSmallerHeadingIDs($);
 
   // All content that uses `<div class="warning">` needs to become
   // `<div class="warning notecard">` instead.

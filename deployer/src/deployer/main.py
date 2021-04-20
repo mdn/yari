@@ -10,6 +10,7 @@ from .constants import (
     CONTENT_ARCHIVED_ROOT,
     DEFAULT_BUCKET_NAME,
     DEFAULT_BUCKET_PREFIX,
+    DEFAULT_CACHE_CONTROL,
     DEFAULT_NO_PROGRESSBAR,
     DEFAULT_REPO,
     DEFAULT_GITHUB_TOKEN,
@@ -186,6 +187,12 @@ def whatsdeployed(ctx, directory: Path, output: str):
     default=None,
     callback=validate_optional_file,
 )
+@click.option(
+    "--default-cache-control",
+    help="The default Cache-Control value used when uploading files (0 to disable)",
+    default=DEFAULT_CACHE_CONTROL,
+    show_default=True,
+)
 @click.argument("directory", type=click.Path(), callback=validate_directory)
 @click.pass_context
 def upload(ctx, directory: Path, **kwargs):
@@ -337,12 +344,6 @@ def speedcurve_deploy(ctx, **kwargs):
     default=CI,
     show_default=True,
 )
-@click.option(
-    "--priority-prefix",
-    "-p",
-    multiple=True,
-    help="Specific folder prefixes to index first.",
-)
 @click.argument("buildroot", type=click.Path(), callback=validate_directory)
 @click.pass_context
 def search_index(ctx, buildroot: Path, **kwargs):
@@ -360,7 +361,6 @@ def search_index(ctx, buildroot: Path, **kwargs):
         url,
         update=kwargs["update"],
         no_progressbar=kwargs["no_progressbar"],
-        priority_prefixes=kwargs["priority_prefix"],
     )
 
 
