@@ -13,6 +13,7 @@ const sanitizeFilename = require("sanitize-filename");
 
 const { Document } = require("../../content");
 const { FLAW_LEVELS, VALID_FLAW_CHECKS } = require("../constants");
+const { DEFAULT_LOCALE } = require("../../libs/constants");
 const { replaceMatchesInText } = require("../matches-in-text");
 const { humanFileSize } = require("../utils");
 const { VALID_MIME_TYPES } = require("../../filecheck/constants");
@@ -22,6 +23,7 @@ const { getHeadingLinksFlaws } = require("./heading-links");
 const { getPreTagFlaws } = require("./pre-tags");
 const { injectSectionFlaws } = require("./sections");
 const { getUnsafeHTMLFlaws } = require("./unsafe-html");
+const { injectTranslationDifferences } = require("./translation-differences");
 
 function injectFlaws(doc, $, options, document) {
   if (doc.isArchive) return;
