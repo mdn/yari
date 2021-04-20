@@ -98,7 +98,7 @@
     "source-map-support": "0.5.19",
     "tempy": "1.0.1",
     "unified": "^9.2.1",
-    "unist-builder": "^2.0.3",
+    "unist-builder": "^3.0.0",
     "unist-util-visit": "2.0.3"
   },
   "devDependencies": {
