@@ -182,7 +182,7 @@ a.new {
     columns: 300px;
   }
 
-  iframe {
+  iframe:not(.sample-code-frame) {
     border: 0;
   }
 }
