@@ -5,9 +5,9 @@ const { packageBCD } = require("../resolve-bcd");
 // @mdn/browser-compat-data package. E.g. Something like this:
 //
 //    <div class="bc-data" id="bcd:never.ever.heard.of">
-//
-const getBadBCDQueriesFlaws = (doc, $) =>
-  $("div.bc-data")
+
+function getBadBCDQueriesFlaws(doc, $) {
+  return $("div.bc-data")
     .map((i, element) => {
       const dataQuery = $(element).attr("id");
       if (!dataQuery) {
@@ -23,5 +23,6 @@ const getBadBCDQueriesFlaws = (doc, $) =>
       explanation,
       suggestion: null,
     }));
+}
 
 module.exports = { getBadBCDQueriesFlaws };
