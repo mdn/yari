@@ -1,5 +1,6 @@
 const cheerio = require("cheerio");
 const { packageBCD } = require("./resolve-bcd");
+const specs = require("browser-specs");
 
 /** Extract and mutate the $ if it as a "Quick_Links" section.
  * But only if it exists.
@@ -383,30 +384,33 @@ function _addSingleSpecialSection($) {
   }
 
   function _buildSpecialSpecSection() {
-    // Extract spec_url from a BCD feature.
+    // Collect spec_urls from a BCD feature.
     // Can either be a string or an array of strings.
-    // Here, specURLs always returns an array of strings
-
-    // TODO We want to display more than just the URL of a spec
-    // TODO Query https://github.com/w3c/browser-specs for spec name, spec status, etc.
-
     let specURLs = [];
 
     for (const [key, compat] of Object.entries(data)) {
-      let block;
-      if (key === "__compat") {
-        block = compat;
-      } else if (compat.__compat) {
-        block = compat.__compat;
-      }
-      if (block && block.spec_url) {
-        if (Array.isArray(block.spec_url)) {
-          specURLs = block.spec_url;
+      if (key === "__compat" && compat.spec_url) {
+        if (Array.isArray(compat.spec_url)) {
+          specURLs = compat.spec_url;
         } else {
-          specURLs.push(block.spec_url);
+          specURLs.push(compat.spec_url);
         }
       }
     }
+
+    // Use BCD specURLs to look up more specification data
+    // from the browser-specs package
+    let specifications = [];
+
+    specURLs.forEach((url) => {
+      let spec = specs.find(
+        (spec) => url.startsWith(spec.url) || url.startsWith(spec.nightly.url)
+      );
+      if (spec) {
+        spec.bcdSpecificationURL = url;
+        specifications.push(spec);
+      }
+    });
 
     return [
       {
@@ -415,7 +419,8 @@ function _addSingleSpecialSection($) {
           title,
           id,
           isH3,
-          specURLs,
+          specifications,
+          query,
         },
       },
     ];
