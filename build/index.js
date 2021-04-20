@@ -271,6 +271,9 @@ async function buildDocument(document, documentOptions = {}) {
         throw new Error(
           `MacroInvocationError trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
         );
+      } else if (error.name === "MacroLiveSampleError") {
+        error.updateFileInfo(document.fileInfo);
+        throw new Error(`Live sample is busted`);
       }
 
       // Any other unexpected error re-thrown.
