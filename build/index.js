@@ -155,17 +155,6 @@ function postProcessSmallerHeadingIDs($) {
 }
 
 /**
- * Find all `in-page-callout` div elements and rewrite
- * to be just `callout`, no more need to mark them as `webdev`
- * @param {Cheerio document instance} $
- */
-function injectInPageCallout($) {
-  $("div.in-page-callout")
-    .addClass("callout")
-    .removeClass("in-page-callout webdev");
-}
-
-/**
  * Find all `<div class="warning">` and turn them into `<div class="warning notecard">`
  * and keep in mind that if it was already been manually fixed so, you
  * won't end up with `<div class="warning notecard notecard">`.
@@ -452,14 +441,6 @@ async function buildDocument(document, documentOptions = {}) {
   // The reason we can't do this as part of the kumascript rendering is because
   // the old
   postProcessSmallerHeadingIDs($);
-
-  // All content that uses `<div class="in-page-callout">` needs to
-  // become `<div class="callout">`
-  // Some day, we can hopefully do a mass search-and-replace so we never
-  // need to do this code here.
-  // We might want to delete this injection in 2021 some time when all content's
-  // raw HTML has been fixed to always have it in there already.
-  injectInPageCallout($);
 
   // All content that uses `<div class="warning">` needs to become
   // `<div class="warning notecard">` instead.
