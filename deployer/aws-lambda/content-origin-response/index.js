@@ -1,3 +1,5 @@
+const { CSP_DIRECTIVES } = require("@yari-internal/constants");
+
 exports.handler = async (event) => {
   /*
    * This Lambda@Edge function is designed to handle origin-response
@@ -39,6 +41,10 @@ exports.handler = async (event) => {
       { key: "Strict-Transport-Security", value: "max-age=63072000" },
     ];
   }
+
+  response.headers["content-security-policy-report-only"] = [
+    { key: "Content-Security-Policy-Report-Only", value: CSP_DIRECTIVES },
+  ];
 
   return response;
 };

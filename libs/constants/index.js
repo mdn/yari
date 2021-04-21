@@ -61,10 +61,29 @@ const ACTIVE_LOCALES = new Set([
   "zh-tw",
 ]);
 
+const CSP_DIRECTIVES = [
+  "default-src 'self'",
+  "script-src 'report-sample' 'self' https://cdn.speedcurve.com/js/lux.js https://www.google-analytics.com/analytics.js https://polyfill.io/v3/polyfill.min.js?features=Array.prototype.flat%2Ces6",
+  "style-src 'report-sample' 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "connect-src 'self'",
+  "font-src 'self'",
+  "frame-src 'self' https://interactive-examples.mdn.mozilla.net https://mdn.github.io https://yari-demos.prod.mdn.mozit.cloud",
+  "img-src 'self' https://avatars1.githubusercontent.com",
+  "manifest-src 'self'",
+  "media-src 'self'",
+  "worker-src 'none'",
+  "report-uri http://developer.mozilla.org/csp-violation-capture",
+]
+  .map((s) => s + ";")
+  .join(" ");
+
 module.exports = {
   ACTIVE_LOCALES,
   VALID_LOCALES,
   DEFAULT_LOCALE,
   LOCALE_ALIASES,
   PREFERRED_LOCALE_COOKIE_NAME,
+  CSP_DIRECTIVES,
 };
