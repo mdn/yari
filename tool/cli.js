@@ -52,6 +52,17 @@ function tryOrExit(f) {
   };
 }
 
+const confirm = async (message, defaultAnswer = true) => {
+  const { answer } = await prompt({
+    type: "confirm",
+    name: "answer",
+    message,
+    default: defaultAnswer,
+  });
+
+  return answer;
+};
+
 program
   .bin("yarn tool")
   .name("tool")
@@ -162,14 +173,7 @@ program
       if (redirect) {
         console.log(chalk.green(`redirecting to: ${redirect}`));
       }
-      const { run } = yes
-        ? { run: true }
-        : await prompt({
-            type: "confirm",
-            message: "Proceed?",
-            name: "run",
-            default: true,
-          });
+      const run = yes || (await confirm("Proceed?"));
       if (run) {
         const removed = Document.remove(slug, locale, { recursive, redirect });
         console.log(chalk.green(`Moved ${removed.length} documents.`));
@@ -209,14 +213,7 @@ program
           .map(([from, to]) => `${chalk.red(from)} → ${chalk.green(to)}`)
           .join("\n")
       );
-      const { run } = yes
-        ? { run: true }
-        : await prompt({
-            type: "confirm",
-            message: "Proceed?",
-            name: "run",
-            default: true,
-          });
+      const run = yes || (await confirm("Proceed?"));
       if (run) {
         const moved = Document.move(oldSlug, newSlug, locale);
         console.log(chalk.green(`Moved ${moved.length} documents.`));
@@ -511,17 +508,8 @@ program
       const nonFixableFlaws = flaws.filter((f) => !f.fixable);
       const fixableFlawCount = flawCount - nonFixableFlaws.length;
       if (fixableFlawCount > 0) {
-        const run =
-          yes ||
-          (
-            await prompt({
-              type: "confirm",
-              name: "run",
-              message: `Proceed fixing ${fixableFlawCount} flaws?`,
-              default: true,
-            })
-          ).run;
-
+        const question = `Proceed fixing ${fixableFlawCount} flaws?`;
+        const run = yes || (await confirm(question));
         if (run) {
           await buildDocument(document, {
             fixFlaws: true,
