@@ -6,6 +6,14 @@ import { App } from "./app";
 import { GAProvider } from "./ga-context";
 import { UserDataProvider } from "./user-context";
 
+// Only include the polyfill for browsers that seem to not have
+// certain JS features. E.g. Firefox 58.
+if (!Array.prototype.flat || !Array.prototype.includes) {
+  document.write(
+    '<script src="https://polyfill.io/v3/polyfill.min.js?features=Array.prototype.flat%2Ces6"></script>'
+  );
+}
+
 // import * as serviceWorker from './serviceWorker';
 
 const container = document.getElementById("root");
@@ -19,21 +27,13 @@ if (!container) {
 // components will know to fetch it with XHR.
 // TODO: When we have TS types fo `docData` this would become
 // something like `(window as any).__data__ as DocData`.
-const docData = (window as any).__data__;
-const pageNotFound = (window as any).__pageNotFound__;
-const feedEntries = (window as any).__feedEntries__;
-const possibleLocales = (window as any).__possibleLocales__;
+const appData = JSON.parse(document.getElementById("hydration")!.textContent!);
 
 let app = (
   <GAProvider>
     <UserDataProvider>
       <Router>
-        <App
-          doc={docData}
-          pageNotFound={pageNotFound}
-          feedEntries={feedEntries}
-          possibleLocales={possibleLocales}
-        />
+        <App {...appData} />
       </Router>
     </UserDataProvider>
   </GAProvider>

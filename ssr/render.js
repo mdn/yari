@@ -133,7 +133,7 @@ function* extractCSSURLs(css, filterFunction) {
 function serializeDocumentData(data) {
   return jsesc(JSON.stringify(data), {
     json: true,
-    isScriptContext: true,
+    isScriptContext: false,
   });
 }
 
@@ -164,15 +164,12 @@ export default function render(
 
   let pageDescription = "";
 
+  const hydrationData = {};
   if (pageNotFound) {
     pageTitle = `🤷🏽‍♀️ Page not found | ${pageTitle}`;
-    const documentDataTag = `<script>window.__pageNotFound__ = true;</script>`;
-    $("#root").after(documentDataTag);
+    hydrationData.pageNotFound = true;
   } else if (feedEntries) {
-    const feedEntriesTag = `<script>window.__feedEntries__ = JSON.parse(${serializeDocumentData(
-      feedEntries
-    )});</script>`;
-    $("#root").after(feedEntriesTag);
+    hydrationData.feedEntries = feedEntries;
   } else if (doc) {
     // Use the doc's title instead
     pageTitle = doc.pageTitle;
@@ -182,10 +179,7 @@ export default function render(
       pageDescription = doc.summary;
     }
 
-    const documentDataTag = `<script>window.__data__ = JSON.parse(${serializeDocumentData(
-      doc
-    )});</script>`;
-    $("#root").after(documentDataTag);
+    hydrationData.doc = doc;
 
     if (doc.other_translations) {
       const allOtherLocales = doc.other_translations.map((t) => t.locale);
@@ -214,11 +208,14 @@ export default function render(
   }
 
   if (possibleLocales) {
-    const possibleLocalesTag = `<script>window.__possibleLocales__ = JSON.parse(${serializeDocumentData(
-      possibleLocales
-    )});</script>`;
-    $("#root").after(possibleLocalesTag);
+    hydrationData.possibleLocales = possibleLocales;
   }
+
+  $("#root").after(
+    `<script type="application/json" id="hydration">${serializeDocumentData(
+      hydrationData
+    )}</script>`
+  );
 
   if (pageDescription) {
     // This overrides the default description. Also assumes there's always
