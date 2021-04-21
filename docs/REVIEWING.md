@@ -5,7 +5,7 @@ This document provides information on how to review changes to the Yari repo.
 ## Before you start
 
 Set up the Yari repo and the corresponding [content repo](https://github.com/mdn/content)
-locally, as described in the [Yari quickstart](README.md#quickstart) guide. Once
+locally, as described in the [Yari quickstart](../README.md#quickstart) guide. Once
 you've got them successfully set up, run the `yarn` and `yarn dev` commands to
 update your fork with the latest packages and start the MDN test server running
 locally on `localhost:3000`.
