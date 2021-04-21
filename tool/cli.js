@@ -278,12 +278,10 @@ program
         throw new Error(`Slug ${slug} does not exist for ${locale}`);
       }
       const { doc } = await buildDocument(document);
-
-      const flaws = Object.values(doc.flaws || {})
-        .map((a) => a.length || 0)
-        .reduce((a, b) => a + b, 0);
-      if (flaws > 0) {
-        console.log(chalk.red(`Found ${flaws} flaws.`));
+      const flaws = Object.values(doc.flaws || {}).flat();
+      const flawCount = flaws.length;
+      if (flawCount > 0) {
+        console.log(chalk.red(`Found ${flawCount} flaws.`));
         okay = false;
       }
       try {
@@ -504,25 +502,44 @@ program
         fixFlaws: true,
         fixFlawsDryRun: true,
       });
-
-      const flaws = Object.values(doc.flaws || {})
-        .map((a) => a.filter((f) => f.fixable).length || 0)
-        .reduce((a, b) => a + b, 0);
-      if (flaws === 0) {
-        console.log(chalk.green("Found no fixable flaws!"));
+      let flaws = Object.values(doc.flaws || {}).flat();
+      const flawCount = flaws.length;
+      if (flawCount === 0) {
+        console.log(chalk.green("✓ All seems fine"));
         return;
       }
-      const { run } = yes
-        ? { run: true }
-        : await prompt({
-            type: "confirm",
-            message: `Proceed fixing ${flaws} flaws?`,
-            name: "run",
-            default: true,
+      const nonFixableFlaws = flaws.filter((f) => !f.fixable);
+      const fixableFlawCount = flawCount - nonFixableFlaws.length;
+      if (fixableFlawCount > 0) {
+        const run =
+          yes ||
+          (
+            await prompt({
+              type: "confirm",
+              name: "run",
+              message: `Proceed fixing ${fixableFlawCount} flaws?`,
+              default: true,
+            })
+          ).run;
+
+        if (run) {
+          await buildDocument(document, {
+            fixFlaws: true,
+            fixFlawsVerbose: true,
           });
-      if (run) {
-        buildDocument(document, { fixFlaws: true, fixFlawsVerbose: true });
+        }
       }
+      console.log(
+        chalk.red(
+          `Found ${nonFixableFlaws.length} non-fixable flaws in "${document.fileInfo.path}".`
+        )
+      );
+      nonFixableFlaws.forEach((flaw) => {
+        console.log(
+          chalk.grey(`Could not fix (${flaw.id}) in ${slug}, because`),
+          `${flaw.explanation}`
+        );
+      });
     })
   )
 
