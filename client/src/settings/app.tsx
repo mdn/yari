@@ -6,7 +6,7 @@ import { DISABLE_AUTH } from "../constants";
 import { useUserData } from "../user-context";
 import { useLocale } from "../hooks";
 
-import "./index.scss";
+import "./app.scss";
 
 interface UserSettings {
   csrfmiddlewaretoken: string;

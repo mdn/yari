@@ -2,6 +2,8 @@ import React from "react";
 
 import { PageContentContainer } from "../ui/atoms/page-content";
 
+import "./index.scss";
+
 const SettingsApp = React.lazy(() => import("./app"));
 
 export function Settings() {
@@ -22,7 +24,9 @@ export function Settings() {
        */}
         <h1 className="slab-highlight">{pageTitle}</h1>
         {!isServer && (
-          <React.Suspense fallback={<p>Loading...</p>}>
+          <React.Suspense
+            fallback={<p style={{ minHeight: 200 }}>Loading...</p>}
+          >
             <SettingsApp />
           </React.Suspense>
         )}
