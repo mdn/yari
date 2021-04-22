@@ -287,27 +287,43 @@ function _addSingleSpecialSection($) {
   }
   const query = dataQuery.replace(/^bcd:/, "");
   const { browsers, data } = packageBCD(query);
-  if (data === undefined) {
-    return [
-      {
-        type: specialSectionType,
-        value: {
-          title,
-          id,
-          isH3,
-          data: null,
-          query,
-          browsers: null,
-        },
-      },
-    ];
-  }
 
   if (specialSectionType === "browser_compatibility") {
+    if (data === undefined) {
+      return [
+        {
+          type: specialSectionType,
+          value: {
+            title,
+            id,
+            isH3,
+            data: null,
+            query,
+            browsers: null,
+          },
+        },
+      ];
+    }
     return _buildSpecialBCDSection();
   } else if (specialSectionType === "specifications") {
+    if (data === undefined) {
+      return [
+        {
+          type: specialSectionType,
+          value: {
+            title,
+            id,
+            isH3,
+            query,
+            specifications: [],
+          },
+        },
+      ];
+    }
     return _buildSpecialSpecSection();
   }
+
+  throw new Error(`Unrecognized special section type '${specialSectionType}'`);
 
   function _buildSpecialBCDSection() {
     // First extract a map of all release data, keyed by (normalized) browser
@@ -400,17 +416,26 @@ function _addSingleSpecialSection($) {
 
     // Use BCD specURLs to look up more specification data
     // from the browser-specs package
-    let specifications = [];
+    const specifications = specURLs
+      .map((specURL) => {
+        const spec = specs.find(
+          (spec) =>
+            specURL.startsWith(spec.url) || specURL.startsWith(spec.nightly.url)
+        );
+        if (spec) {
+          // We only want to return exactly the keys that we will use in the
+          // client code that renders this in React.
+          return {
+            bcdSpecificationURL: specURL,
+            title: spec.title,
+            shortTitle: spec.shortTitle,
+          };
+        }
+      })
+      .filter(Boolean);
 
-    specURLs.forEach((url) => {
-      let spec = specs.find(
-        (spec) => url.startsWith(spec.url) || url.startsWith(spec.nightly.url)
-      );
-      if (spec) {
-        spec.bcdSpecificationURL = url;
-        specifications.push(spec);
-      }
-    });
+    console.log("HERE!!");
+    console.log(specifications);
 
     return [
       {
