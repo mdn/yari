@@ -63,8 +63,9 @@ const ACTIVE_LOCALES = new Set([
 
 const CSP_DIRECTIVES = [
   "default-src 'self'",
-  "script-src 'report-sample' 'self' https://cdn.speedcurve.com/js/lux.js https://www.google-analytics.com/analytics.js https://polyfill.io/v3/polyfill.min.js?features=Array.prototype.flat%2Ces6",
-  "style-src 'report-sample' 'self'",
+  "script-src 'report-sample' 'self' https://cdn.speedcurve.com/js/lux.js https://www.google-analytics.com/analytics.js https://polyfill.io/v3/polyfill.min.js",
+  // TODO: eventually drop unsafe-inline, after our move to Markdown
+  "style-src 'report-sample' 'self' 'unsafe-inline'",
   "object-src 'none'",
   "base-uri 'self'",
   "connect-src 'self'",
