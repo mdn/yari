@@ -58,7 +58,8 @@ def analyze_pr(build_directory: Path, config):
             github = Github(config["github_token"])
             github_repo = github.get_repo(config["repo"])
             github_issue = github_repo.get_issue(number=int(config["pr_number"]))
-            github_issue.create_comment(combined_comment)
+            print(dir(github_issue))
+            # github_issue.create_comment(combined_comment)
 
     return combined_comment
 
