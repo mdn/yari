@@ -139,7 +139,8 @@ class HTMLTool {
     // Kuma looks for the first HTML tag of a limited set of section tags with ANY
     // attribute equal to the "sectionID", but in practice it's always an "id" attribute,
     // so let's simplify this as well as make it much faster.
-    const sectionStart = $(`#${cssesc(sectionID, { isIdentifier: true })}`);
+    // const sectionStart = $(`#${cssesc(sectionID, { isIdentifier: true })}`);
+    const sectionStart = $(`#${sectionID}`);
     if (!sectionStart.length) {
       throw new KumascriptError(
         `unable to find an HTML element with an "id" of "${sectionID}" within ${this.pathDescription}`
