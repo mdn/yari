@@ -271,9 +271,6 @@ async function buildDocument(document, documentOptions = {}) {
         throw new Error(
           `MacroInvocationError trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
         );
-      } else if (error.name === "MacroLiveSampleError") {
-        error.updateFileInfo(document.fileInfo);
-        throw new Error(`Live sample is busted`);
       }
 
       // Any other unexpected error re-thrown.
@@ -292,7 +289,24 @@ async function buildDocument(document, documentOptions = {}) {
         sampleIdObject
       );
       if (liveSamplePage.flaw) {
-        flaws.push(liveSamplePage.flaw.updateFileInfo(fileInfo));
+        const flaw = liveSamplePage.flaw.updateFileInfo(fileInfo);
+        if (flaw.name === "MacroLiveSampleError") {
+          // As of April 2021 there are 0 pages in mdn/content that trigger
+          // a MacroLiveSampleError. So we can be a lot more strict with en-US
+          // until the translated-content has had a chance to clean up all
+          // their live sample errors.
+          // See https://github.com/mdn/yari/issues/2489
+          if (document.metadata.locale === "en-US") {
+            throw new Error(
+              `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+            );
+          } else {
+            console.warn(
+              `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+            );
+          }
+        }
+        flaws.push(flaw);
         continue;
       }
       liveSamples.push({
