@@ -1395,3 +1395,19 @@ test("homepage links and flaws", () => {
   expect(map.get("/ZH-CN").suggestion).toBe("/zh-CN/");
   expect(map.get("/notalocale/").suggestion).toBeFalsy();
 });
+
+test("embed live samples with unicode characters in the ID", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "unicode_livesample"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.macros).toBeFalsy();
+  const samplesRoot = path.join(builtFolder, "_samples_");
+  const found = glob.sync(path.join(samplesRoot, "**", "index.html"));
+  expect(found.length).toBe(2);
+});
