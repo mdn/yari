@@ -163,31 +163,33 @@ def post_about_flaws(build_directory: Path, **config):
 
     MAX_FLAW_EXPLANATION = 5
 
+    docs_with_zero_flaws = 0
+
     for doc in get_built_docs(build_directory):
         if not doc.get("flaws"):
-            comments.append((doc, "No flaws! 🎉"))
+            docs_with_zero_flaws += 1
             continue
-        else:
-            flaws_list = []
-            for flaw_name, flaw_values in doc["flaws"].items():
-                flaws_list.append(f"- **{flaw_name}**:")
-                for i, flaw_value in enumerate(flaw_values):
-                    if i + 1 > MAX_FLAW_EXPLANATION:
-                        flaws_list.append(
-                            f"  - *and {len(flaw_values) - MAX_FLAW_EXPLANATION}"
-                            " more flaws omitted*"
-                        )
-                        break
-                    if isinstance(flaw_value, dict):
-                        explanation = flaw_value.get("explanation")
-                    else:
-                        explanation = str(flaw_value)
-                    if explanation:
-                        flaws_list.append(f"  - `{explanation}`")
-                    else:
-                        flaws_list.append("  - *no explanation!*")
 
-            comments.append((doc, "\n".join(flaws_list)))
+        flaws_list = []
+        for flaw_name, flaw_values in doc["flaws"].items():
+            flaws_list.append(f"- **{flaw_name}**:")
+            for i, flaw_value in enumerate(flaw_values):
+                if i + 1 > MAX_FLAW_EXPLANATION:
+                    flaws_list.append(
+                        f"  - *and {len(flaw_values) - MAX_FLAW_EXPLANATION}"
+                        " more flaws omitted*"
+                    )
+                    break
+                if isinstance(flaw_value, dict):
+                    explanation = flaw_value.get("explanation")
+                else:
+                    explanation = str(flaw_value)
+                if explanation:
+                    flaws_list.append(f"  - `{explanation}`")
+                else:
+                    flaws_list.append("  - *no explanation!*")
+
+        comments.append((doc, "\n".join(flaws_list)))
 
     def count_flaws(flaws):
         count = 0
@@ -196,6 +198,12 @@ def post_about_flaws(build_directory: Path, **config):
         return count
 
     heading = "## Flaws\n\n"
+    if docs_with_zero_flaws:
+        heading += (
+            f"Note! *{docs_with_zero_flaws} "
+            f"document{'' if docs_with_zero_flaws == 1 else 's'} with no flaws "
+            "that don't need to be listed. 🎉*\n\n"
+        )
 
     if comments:
         # Now turn all of these individual comments into one big one
