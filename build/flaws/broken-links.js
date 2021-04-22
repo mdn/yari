@@ -121,6 +121,15 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       hrefNormalized = `/${thisDocumentLocale}${hrefNormalized}`;
     }
 
+    if (
+      hrefNormalized.endsWith("/contributors.txt") &&
+      hrefNormalized.startsWith("/") &&
+      !href.startsWith("//")
+    ) {
+      // Do nothing. The /contributors.txt URLs are special Yari URLs.
+      return;
+    }
+
     if (href.startsWith("https://developer.mozilla.org/")) {
       // It might be a working 200 OK link but the link just shouldn't
       // have the full absolute URL part in it.
