@@ -164,6 +164,11 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
           "Link points to the page it's already on"
         );
       }
+    } else if (
+      hrefNormalized.endsWith("/contributors.txt") &&
+      hrefNormalized.startsWith("/")
+    ) {
+      // Do nothing. The /contributors.txt URLs are special Yari URLs.
     } else if (href.startsWith("/") && !href.startsWith("//")) {
       // Got to fake the domain to sensible extract the .search and .hash
       const absoluteURL = new URL(href, "http://www.example.com");
