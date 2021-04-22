@@ -80,10 +80,15 @@ function packageFlaws(flawsObj) {
   keys.sort();
   for (const name of keys) {
     let value = flawsObj[name];
+    let countFixable = 0;
     if (Array.isArray(value)) {
+      countFixable += value.filter((flaw) => flaw.fixable).length;
       value = value.length;
+    } else {
+      // XXX I don't think this can ever happen.
+      countFixable += value.fixable ? 1 : 0;
     }
-    packaged.push({ name, value });
+    packaged.push({ name, value, countFixable });
   }
   return packaged;
 }
