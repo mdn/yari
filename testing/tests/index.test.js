@@ -521,7 +521,7 @@ test("broken links flaws", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.broken_links.length).toBe(10);
+  expect(flaws.broken_links.length).toBe(11);
   // Map them by 'href'
   const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
@@ -548,7 +548,13 @@ test("broken links flaws", () => {
     map.get("/en-US/docs/glossary/bézier_curve#identifier").suggestion
   ).toBe("/en-US/docs/Glossary/Bézier_curve#identifier");
   expect(map.get("/en-US/docs/Web/BrokenLinks").explanation).toBe(
-    "Link links to the page it's already on"
+    "Link points to the page it's already on"
+  );
+  expect(map.get("/en-US/docs/Web/BrokenLinks#anchor").explanation).toBe(
+    "No need for the pathname in anchor links if it's the same page"
+  );
+  expect(map.get("/en-US/docs/Web/BrokenLinks#anchor").suggestion).toBe(
+    "#anchor"
   );
 });
 
