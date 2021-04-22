@@ -5,12 +5,12 @@
 Suppose you're working on a feature, in Yari, where you want to make use
 of API responses in a local Kuma. The quickest way to accomplish this is as follows:
 
-1. Start `cd /path/to/kuma && docker-compose up` in a separate terminal
-1. Edit the root `.env` file and...
-
+1. In one terminal `cd /path/to/kuma` to your Kuma directory
+   1. Open `.env` and append this line: `ADDITIONAL_NEXT_URL_ALLOWED_HOSTS=localhost.org:3000`
+   1. Start `docker-compose up`
+1. In another terminal, edit the root `.env` file and...
    - put in the line: `HOST=localhost.org`
    - put in the line: `REACT_APP_KUMA_HOST=localhost.org:8000`
-
 1. Now use <http://localhost.org:3000>
 
 **Note!** You have to use <http://localhost.org:3000> (note the extra `.org`)
