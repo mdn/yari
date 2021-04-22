@@ -434,9 +434,6 @@ function _addSingleSpecialSection($) {
       })
       .filter(Boolean);
 
-    console.log("HERE!!");
-    console.log(specifications);
-
     return [
       {
         type: "specifications",

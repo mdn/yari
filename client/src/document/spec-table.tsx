@@ -36,7 +36,9 @@ export function SpecificationTable({
             {specifications.map((spec) => (
               <tr key={spec.bcdSpecificationURL}>
                 <td>
-                  <a href={spec.bcdSpecificationURL}>{spec.title}</a>
+                  <a href={spec.bcdSpecificationURL}>
+                    {spec.title} ({spec.shortTitle})
+                  </a>
                 </td>
               </tr>
             ))}
