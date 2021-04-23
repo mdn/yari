@@ -32,10 +32,31 @@ module.exports = [
       ),
   ],
 
-  [["div", "p"], (node, t) => h(node, "paragraph", {}, t(node))],
+  [
+    "div",
+    (node, t) =>
+      !node.children
+        ? h(node, "html", {}, toHtml(node))
+        : [
+            h(
+              node,
+              "html",
+              {},
+              toHtml({ ...node, children: null }, { voids: ["div"] })
+            ),
+            ...t(node),
+            h(node, "html", {}, "</div>"),
+          ],
+  ],
+
+  ["p", (node, t) => h(node, "paragraph", {}, t(node))],
   ["em", (node, t) => h(node, "emphasis", t(h, node))],
   ["strong", (node, t) => h(node, "strong", t(node))],
-  ["br", (node) => (h.wrapText ? h(node, "break") : h(node, "text", {}, " "))],
+  [
+    "br",
+    (node, t, { shouldWrap }) =>
+      shouldWrap ? h(node, "break") : h(node, "text", {}, " "),
+  ],
 
   [
     (node) =>
@@ -82,7 +103,7 @@ module.exports = [
   [
     (node) => node.tagName == "li" && isBare(node, { ignore: ["id"] }),
     (node, t) => {
-      const content = wrap(t(node));
+      const content = wrap(t(node, { shouldWrap: true }));
       return h(node, "listItem", { spread: content.length > 1 }, content);
     },
   ],

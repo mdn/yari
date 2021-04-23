@@ -1,3 +1,5 @@
+const minify = require("rehype-minify-whitespace");
+
 const { h, wrapText } = require("./utils");
 
 const toSelector = ({ tagName, properties: { id, className, ...rest } }) =>
@@ -51,7 +53,7 @@ function transformNode(node, handlers, opts = {}) {
 }
 
 function toMdast(tree, handlers) {
-  // minify({ newlines: true })(tree);
+  minify({ newlines: true })(tree);
   return transformNode(tree, [
     [(node) => node.type == "root", (node, t) => h(node, "root", {}, t(node))],
     ...handlers,

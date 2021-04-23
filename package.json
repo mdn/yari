@@ -155,6 +155,7 @@
     "react-router": "6.0.0-beta.0",
     "react-router-dom": "6.0.0-beta.0",
     "react-scripts": "4.0.3",
+    "rehype-minify-whitespace": "^4.0.5",
     "remark-prettier": "^1.2.0",
     "rough-notation": "0.5.1",
     "sass": "^1.32.11",

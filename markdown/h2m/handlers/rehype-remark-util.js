@@ -8,13 +8,9 @@ function runs(nodes, onphrasing, onnonphrasing) {
   const nonphrasing = onnonphrasing || ((n) => n);
   const flattened = flatten(nodes);
   let result = [];
-  let index = -1;
-  let node;
   let queue;
 
-  while (++index < flattened.length) {
-    node = flattened[index];
-
+  for (const node of flattened) {
     if (phrasing(node)) {
       if (!queue) queue = [];
       queue.push(node);
@@ -56,27 +52,14 @@ const split = (node) =>
 // Check if there are non-phrasing mdast nodes returned.
 // This is needed if a fragment is given, which could just be a sentence, and
 // doesn’t need a wrapper paragraph.
-function needed(nodes) {
-  let index = -1;
-  let node;
-
-  while (++index < nodes.length) {
-    node = nodes[index];
-
-    if (!phrasing(node) || (node.children && needed(node.children))) {
-      return true;
-    }
-  }
-}
+const needed = (nodes) =>
+  nodes.some(
+    (node) => !phrasing(node) || (node.children && needed(node.children))
+  );
 
 function flatten(nodes) {
   let flattened = [];
-  let index = -1;
-  let node;
-
-  while (++index < nodes.length) {
-    node = nodes[index];
-
+  for (const node of nodes) {
     // Straddling: some elements are *weird*.
     // Namely: `map`, `ins`, `del`, and `a`, as they are hybrid elements.
     // See: <https://html.spec.whatwg.org/#paragraphs>.
@@ -95,7 +78,6 @@ function flatten(nodes) {
       flattened.push(node);
     }
   }
-
   return flattened;
 }
 
