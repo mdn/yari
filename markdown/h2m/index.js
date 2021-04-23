@@ -1,39 +1,41 @@
 const unified = require("unified");
 const parse = require("rehype-parse");
-const rehype2remark = require("rehype-remark");
-const stringify = require("remark-stringify");
+const remarkPrettier = require("remark-prettier");
 const gfm = require("remark-gfm");
 
-const handlers = require("./handlers");
 const { decodeKS, encodeKS } = require("../utils");
+const handlers = require("./handlers");
+const { transform } = require("./transform");
 
-function makeProcessor() {
-  const processor = unified()
+const getTransformProcessor = () =>
+  unified()
     .use(parse)
-    .use(rehype2remark, { handlers })
+    .use(transform, handlers)
     .use(gfm)
-    .use(stringify, { fences: true, allowDangerousHtml: true });
+    .use(remarkPrettier, { report: false, options: { proseWrap: "always" } });
 
-  return processor;
-}
-
-async function h2m(html) {
-  const ksEncoded = encodeKS(html);
-  const processor = makeProcessor();
-
-  const file = await processor.process(ksEncoded);
+async function run(html) {
+  const file = await getTransformProcessor()
+    .use(() => ([node, unhandled]) => {
+      console.warn(unhandled);
+      return node;
+    })
+    .process(encodeKS(html));
   return decodeKS(String(file));
 }
 
-function h2mSync(html) {
-  const ksEncoded = encodeKS(html);
-  const processor = makeProcessor();
-
-  const file = processor.processSync(ksEncoded);
-  return decodeKS(String(file));
+async function dryRun(html) {
+  let unhandled;
+  await getTransformProcessor()
+    .use(() => ([node, u]) => {
+      unhandled = u;
+      return node;
+    })
+    .process(encodeKS(html));
+  return unhandled;
 }
 
 module.exports = {
-  h2m,
-  h2mSync,
+  run,
+  dryRun,
 };
