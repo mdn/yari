@@ -62,7 +62,7 @@ async function runOptimizeClientBuild(buildRoot) {
   });
 
   if (results.length > 0) {
-    // It hashed some files. Let's update the HTML.
+    // It clearly hashed some files. Let's update the HTML!
     let newIndexHtml = indexHtml;
     for (const { href, hashedHref } of results) {
       newIndexHtml = newIndexHtml.replace(
