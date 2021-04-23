@@ -521,7 +521,7 @@ test("broken links flaws", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.broken_links.length).toBe(11);
+  expect(flaws.broken_links.length).toBe(12);
   // Map them by 'href'
   const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
@@ -556,6 +556,13 @@ test("broken links flaws", () => {
   expect(map.get("/en-US/docs/Web/BrokenLinks#anchor").suggestion).toBe(
     "#anchor"
   );
+  expect(map.get("http://www.mozilla.org").explanation).toBe(
+    "http:// external links are not allowed (will be forced to https:// at build-time)"
+  );
+  expect(map.get("http://www.mozilla.org").suggestion).toBe(
+    "https://www.mozilla.org"
+  );
+  expect(map.get("http://www.mozilla.org").fixable).toBeTruthy();
 });
 
 test("repeated broken links flaws", () => {
