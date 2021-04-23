@@ -890,15 +890,15 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     default: path.join("client", "build"),
   })
   .action(
-    tryOrExit(async ({ args, options }) => {
+    tryOrExit(async ({ args, options, logger }) => {
       const { buildroot } = args;
       const { results } = await runOptimizeClientBuild(buildroot);
       if (options.verbose) {
         for (const result of results) {
-          console.log(`${result.filePath} -> ${result.hashedHref}`);
+          logger.info(`${result.filePath} -> ${result.hashedHref}`);
         }
       } else {
-        console.log(
+        logger.info(
           chalk.green(
             `Hashed ${results.length} files in ${path.join(
               buildroot,
