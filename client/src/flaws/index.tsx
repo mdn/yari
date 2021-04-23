@@ -67,6 +67,7 @@ interface Filters {
   mdn_url: string;
   title: string;
   popularity: string;
+  fixableFlaws: string;
   flaws: string[];
   page: number;
   sort_by: string;
@@ -78,6 +79,7 @@ const defaultFilters: Filters = Object.freeze({
   mdn_url: "",
   title: "",
   popularity: "",
+  fixableFlaws: "",
   flaws: [],
   page: 1,
   sort_by: "popularity",
@@ -487,6 +489,19 @@ function FilterControls({ flawLevels }: { flawLevels: FlawLevel[] }) {
           >
             +
           </button>
+        </div>
+
+        <div>
+          <h4>Fixable flaws</h4>
+          <input
+            type="search"
+            placeholder="E.g. >0"
+            value={filters.fixableFlaws || ""}
+            onChange={(event) => {
+              setFilters({ ...filters, fixableFlaws: event.target.value });
+            }}
+            onBlur={refreshFilters}
+          />
         </div>
 
         <div>
