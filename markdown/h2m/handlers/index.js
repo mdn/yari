@@ -50,8 +50,8 @@ module.exports = [
   ],
 
   ["p", (node, t) => h(node, "paragraph", {}, t(node))],
-  ["em", (node, t) => h(node, "emphasis", t(h, node))],
-  ["strong", (node, t) => h(node, "strong", t(node))],
+  ["em", (node, t) => h(node, "emphasis", {}, t(node))],
+  ["strong", (node, t) => h(node, "strong", {}, t(node))],
   [
     "br",
     (node, t, { shouldWrap }) =>
@@ -110,9 +110,11 @@ module.exports = [
 
   ...tables,
 
+  // TODO: currently drops links (and other markup) inside of code
   [
     "code",
-    (node, t, opts) => h(node, "code", {}, trim(wrapText(toText(node), opts))),
+    (node, t, opts) =>
+      h(node, "inlineCode", {}, trim(wrapText(toText(node), opts))),
   ],
 
   ["pre.brush:.js", toCode("javascript")],

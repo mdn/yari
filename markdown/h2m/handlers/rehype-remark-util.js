@@ -81,12 +81,9 @@ function flatten(nodes) {
   return flattened;
 }
 
-function wrap(nodes) {
-  return runs(nodes, onphrasing);
-
-  function onphrasing(nodes) {
+const wrap = (nodes) =>
+  runs(nodes, (nodes) => {
     const head = nodes[0];
-
     if (
       nodes.length === 1 &&
       head.type === "text" &&
@@ -96,7 +93,6 @@ function wrap(nodes) {
     }
 
     return { type: "paragraph", children: nodes };
-  }
-}
+  });
 
 module.exports = { spread, wrap };
