@@ -118,6 +118,9 @@ test("content built foo page", () => {
   expect($('meta[name="description"]').attr("content")).toBe(
     "This becomes the summary."
   );
+  expect($('meta[property="og:description"]').attr("content")).toBe(
+    "This becomes the summary."
+  );
 
   // Before testing the `<img>` tags, assert that there's only 1 image in total.
   expect($("img").length).toBe(1);
@@ -200,6 +203,10 @@ test("content built French foo page", () => {
   expect($('link[rel="alternate"]').length).toBe(2);
   expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
   expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
+  expect($('meta[property="og:locale"]').attr("content")).toBe("fr");
+  expect($('meta[property="og:title"]').attr("content")).toBe(
+    "<foo>: Une page de test | MDN"
+  );
 });
 
 test("wrong xref macro errors", () => {
@@ -968,6 +975,7 @@ test("404 page", () => {
   expect($("title").text()).toContain("Page not found");
   expect($("h1").text()).toContain("Page not found");
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
+  expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
 });
 
 test("sign in page", () => {
@@ -978,6 +986,20 @@ test("sign in page", () => {
   const $ = cheerio.load(html);
   expect($("h1").text()).toContain("Sign in to MDN Web Docs");
   expect($("title").text()).toContain("Sign in");
+  expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
+  expect($('meta[property="og:title"]').attr("content")).toBe("Sign in");
+});
+
+test("French sign in page", () => {
+  const builtFolder = path.join(buildRoot, "fr", "signin");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  // This will be translated the day we support localized chrome.
+  expect($("h1").text()).toContain("Sign in to MDN Web Docs");
+  expect($("title").text()).toContain("Sign in");
+  expect($('meta[property="og:locale"]').attr("content")).toBe("fr");
 });
 
 test("sign up page", () => {
