@@ -1644,6 +1644,11 @@
     "url": "https://www.khronos.org/registry/webgl/specs/latest/2.0/",
     "status": "ED"
   },
+  "WebHID": {
+    "name": "WebHID API",
+    "url": "https://wicg.github.io/webhid/",
+    "status": "Draft"
+  },
   "Web NFC": {
     "name": "Web NFC",
     "url": "https://w3c.github.io/web-nfc/",

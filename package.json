@@ -107,10 +107,10 @@
     "@mdn/dinocons": "^0.3.1",
     "@mdn/minimalist": "^0.8.1",
     "@storybook/addon-a11y": "^6.2.8",
-    "@storybook/addon-actions": "^6.2.8",
+    "@storybook/addon-actions": "^6.2.9",
     "@storybook/addon-essentials": "^6.2.8",
     "@storybook/addon-links": "^6.2.8",
-    "@storybook/node-logger": "^6.2.8",
+    "@storybook/node-logger": "^6.2.9",
     "@storybook/preset-create-react-app": "^3.1.7",
     "@storybook/react": "^6.2.8",
     "@testing-library/react": "^11.2.6",
@@ -146,7 +146,7 @@
     "prettier": "2.2.1",
     "prettier-plugin-packagejson": "^2.2.10",
     "pretty-quick": "3.1.0",
-    "puppeteer": "8.0.0",
+    "puppeteer": "9.0.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-is": "^17.0.2",
@@ -169,7 +169,7 @@
     "use-debounce": "^5.2.1",
     "webpack": "^4.44.2",
     "webpack-cli": "^4.6.0",
-    "webpack-node-externals": "^2.5.2"
+    "webpack-node-externals": "^3.0.0"
   },
   "engines": {
     "node": ">=12.11"
