@@ -131,7 +131,6 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
     }
 
     if (href.startsWith("http://")) {
-      console.log(doc.mdn_url, "!!", href);
       addBrokenLink(
         a,
         checked.get(href),
