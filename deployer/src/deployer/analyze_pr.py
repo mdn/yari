@@ -198,14 +198,15 @@ def post_about_flaws(build_directory: Path, **config):
         return count
 
     heading = "## Flaws\n\n"
-    if docs_with_zero_flaws:
-        heading += (
-            f"Note! *{docs_with_zero_flaws} "
-            f"document{'' if docs_with_zero_flaws == 1 else 's'} with no flaws "
-            "that don't need to be listed. 🎉*\n\n"
-        )
 
     if comments:
+        if docs_with_zero_flaws:
+            heading += (
+                f"Note! *{docs_with_zero_flaws} "
+                f"document{'' if docs_with_zero_flaws == 1 else 's'} with no flaws "
+                "that don't need to be listed. 🎉*\n\n"
+            )
+
         # Now turn all of these individual comments into one big one
         per_doc_comments = []
         for doc, comment in comments:
@@ -225,7 +226,7 @@ def post_about_flaws(build_directory: Path, **config):
             per_doc_comments.append("\n".join(lines))
         return heading + "\n\n---\n\n".join(per_doc_comments)
     else:
-        return heading + "*none!* 🎉"
+        return heading + "*None!* 🎉"
 
 
 def get_built_docs(build_directory: Path):
