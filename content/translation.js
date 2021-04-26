@@ -14,6 +14,7 @@ const IMPORTANT_MACROS = new Map(
     "SeeCompatTable",
     "languages",
     "AvailableInWorkers",
+    "IncludeSubnav",
     // XXX List all the important sidebar macros??
   ].map((name) => [name.toLowerCase(), name])
 );
@@ -70,7 +71,7 @@ function* getTranslationDifferences(englishDocument, translatedDocument) {
     const differenceArray = [
       ...symmetricSetDifference(translatedMacros, englishMacros),
     ].sort();
-    const fullExplanation = differenceArray.map((macroSignature) => {
+    const explanationNotes = differenceArray.map((macroSignature) => {
       if (!englishMacros.has(macroSignature)) {
         return `${macroSignature} only in ${translatedDocument.metadata.locale}`;
       } else {
@@ -80,7 +81,7 @@ function* getTranslationDifferences(englishDocument, translatedDocument) {
     yield {
       type: "macro",
       explanation: `Differences in the important macros (${inCommon.size} in common of ${union.size} possible)`,
-      fullExplanation,
+      explanationNotes,
     };
   }
 }

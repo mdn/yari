@@ -1082,30 +1082,25 @@ function TranslationDifferences({
     <div className="flaw">
       <h3>{humanizeFlawName("translation_differences")}</h3>
       <ul>
-        {flaws.map((flaw, i) => {
-          const key = flaw.id;
-          let explanation = <b>{flaw.explanation}</b>;
-
-          return (
-            <li key={key}>
-              {explanation}
-              {flaw.difference.fullExplanation &&
-                flaw.difference.fullExplanation.length > 0 && (
-                  <ul className="full-explanation">
-                    {flaw.difference.fullExplanation.map(
-                      (fullExplanation, i) => {
-                        return (
-                          <li key={`${fullExplanation}${i}`}>
-                            <code>{fullExplanation}</code>
-                          </li>
-                        );
-                      }
-                    )}
-                  </ul>
-                )}
-            </li>
-          );
-        })}
+        {flaws.map((flaw, i) => (
+          <li key={flaw.id}>
+            {<b>{flaw.explanation}</b>}
+            {flaw.difference.explanationNotes &&
+              flaw.difference.explanationNotes.length > 0 && (
+                <ul className="explanation-notes">
+                  {flaw.difference.explanationNotes.map(
+                    (explanationNotes, i) => {
+                      return (
+                        <li key={`${explanationNotes}${i}`}>
+                          <code>{explanationNotes}</code>
+                        </li>
+                      );
+                    }
+                  )}
+                </ul>
+              )}
+          </li>
+        ))}
       </ul>
     </div>
   );

@@ -87,7 +87,7 @@ export interface TranslationDifferenceFlaw extends GenericFlaw {
     explanation: string;
     type: string;
     name: string;
-    fullExplanation: string[];
+    explanationNotes: string[];
   };
 }
 
