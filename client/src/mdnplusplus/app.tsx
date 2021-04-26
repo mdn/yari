@@ -5,7 +5,7 @@ export default function App({ ...appProps }) {
     <div className="mdnplusplus">
       {/* From https://app.alchemer.com/distribute/share/id/6295937 */}
       <iframe
-        src="http://survey.alchemer.com/s3/6295937/MDN-Fake-Door-Survey"
+        src="https://survey.alchemer.com/s3/6295937/MDN-Fake-Door-Survey"
         title="MDN++ survey"
         frameBorder="0"
         width="700"
