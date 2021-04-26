@@ -158,21 +158,13 @@ function archive(
   rawBody,
   metadata,
   isMarkdown = false,
-  isTranslatedContent = false,
   root = null
 ) {
   if (!root) {
-    root = isTranslatedContent
-      ? CONTENT_TRANSLATED_ROOT
-      : CONTENT_ARCHIVED_ROOT;
+    root = CONTENT_ARCHIVED_ROOT;
   }
-  if (!CONTENT_ARCHIVED_ROOT) {
+  if (!root) {
     throw new Error("Can't archive when CONTENT_ARCHIVED_ROOT is not set");
-  }
-  if (isTranslatedContent && !CONTENT_TRANSLATED_ROOT) {
-    throw new Error(
-      "Can't archive translated content when CONTENT_TRANSLATED_ROOT is not set"
-    );
   }
   const folderPath = buildPath(
     path.join(root, metadata.locale.toLowerCase()),
