@@ -17,14 +17,17 @@ interface DocumentPopularity {
   ranking: number;
 }
 
+interface DocumentFlaws {
+  name: string;
+  value: number | string;
+  countFixable: number;
+}
 interface Document {
   mdn_url: string;
   modified: string;
   title: string;
   popularity: DocumentPopularity;
-  flaws: {
-    [key: string]: string[];
-  };
+  flaws: DocumentFlaws[];
 }
 
 type Count = { [key: string]: number };
@@ -64,6 +67,7 @@ interface Filters {
   mdn_url: string;
   title: string;
   popularity: string;
+  fixableFlaws: string;
   flaws: string[];
   page: number;
   sort_by: string;
@@ -75,6 +79,7 @@ const defaultFilters: Filters = Object.freeze({
   mdn_url: "",
   title: "",
   popularity: "",
+  fixableFlaws: "",
   flaws: [],
   page: 1,
   sort_by: "popularity",
@@ -487,6 +492,19 @@ function FilterControls({ flawLevels }: { flawLevels: FlawLevel[] }) {
         </div>
 
         <div>
+          <h4>Fixable flaws</h4>
+          <input
+            type="search"
+            placeholder="E.g. >0"
+            value={filters.fixableFlaws || ""}
+            onChange={(event) => {
+              setFilters({ ...filters, fixableFlaws: event.target.value });
+            }}
+            onBlur={refreshFilters}
+          />
+        </div>
+
+        <div>
           <h4>&nbsp;</h4>
           <button type="submit">Filter now</button>
           {hasFilters && (
@@ -534,7 +552,7 @@ function DocumentsTable({
 }: {
   locale: string;
   counts: Counts;
-  documents: any;
+  documents: Document[];
 }) {
   const [filters, updateFiltersURL] = useFiltersURL();
 
@@ -552,12 +570,16 @@ function DocumentsTable({
     return n.toLocaleString() + (s[(v - 20) % 10] || s[v] || s[0]);
   }
 
-  function summarizeFlaws(flaws) {
+  function summarizeFlaws(flaws: DocumentFlaws[]) {
     // Return a one-liner about all the flaws
+    const totalCountFixable = flaws.reduce(
+      (acc, flaw) => flaw.countFixable + acc,
+      0
+    );
     const bits = flaws.map((flaw) => {
       return `${humanizeFlawName(flaw.name)}: ${flaw.value}`;
     });
-    return bits.join(", ");
+    return `${bits.join(", ")} (${totalCountFixable} fixable)`;
   }
 
   function TH({ id, title }: { id: string; title: string }) {
