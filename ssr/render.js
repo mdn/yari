@@ -239,7 +239,7 @@ export default function render(
     // The snippet is always the same, if it's present, but the ID varies
     // See LUX settings here https://speedcurve.com/mozilla-add-ons/mdn/settings/lux/
     const speedcurveJS = getSpeedcurveJS();
-    $("<script>").text(`\n${speedcurveJS}\n`).appendTo($("head"));
+    $("<script>").text(speedcurveJS).appendTo($("head"));
     $(
       `<script src="https://cdn.speedcurve.com/js/lux.js?id=${SPEEDCURVE_LUX_ID}" async defer crossorigin="anonymous"></script>`
     ).appendTo($("head"));
