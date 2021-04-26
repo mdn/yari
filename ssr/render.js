@@ -1,15 +1,14 @@
 import fs from "fs";
 import path from "path";
-
-import jsesc from "jsesc";
 import { renderToString } from "react-dom/server";
 import cheerio from "cheerio";
 
 import {
-  SPEEDCURVE_LUX_ID,
   ALWAYS_NO_ROBOTS,
   BUILD_OUT_ROOT,
+  SPEEDCURVE_LUX_ID,
 } from "../build/constants";
+
 const { DEFAULT_LOCALE } = require("../libs/constants");
 
 // When there are multiple options for a given language, this gives the
@@ -130,13 +129,6 @@ function* extractCSSURLs(css, filterFunction) {
   }
 }
 
-function serializeDocumentData(data) {
-  return jsesc(JSON.stringify(data), {
-    json: true,
-    isScriptContext: false,
-  });
-}
-
 export default function render(
   renderApp,
   {
@@ -212,7 +204,7 @@ export default function render(
   }
 
   $("#root").after(
-    `<script type="application/json" id="hydration">${serializeDocumentData(
+    `<script type="application/json" id="hydration">${JSON.stringify(
       hydrationData
     )}</script>`
   );

@@ -27,10 +27,12 @@ if (!container) {
 // components will know to fetch it with XHR.
 // TODO: When we have TS types fo `docData` this would become
 // something like `(window as any).__data__ as DocData`.
-const hydrationElement = document.getElementById("hydration")!;
+const hydrationElement = document.getElementById("hydration");
 const appData = hydrationElement
   ? JSON.parse(hydrationElement.textContent!)
   : {};
+
+console.log({ appData });
 
 let app = (
   <GAProvider>
