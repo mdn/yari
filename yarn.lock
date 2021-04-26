@@ -10384,10 +10384,10 @@ html-tags@^3.1.0:
   resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-3.1.0.tgz#7b5e6f7e665e9fb41f30007ed9e0d41e97fb2140"
   integrity sha512-1qYz89hW3lFDEazhjW0yVAV87lw8lVkrJocr72XmBkMKsoSVJCQx3W8BXsC7hO2qAt8BoVjYjtAcZ9perqGnNg==
 
-html-validate@4.10.0:
-  version "4.10.0"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-4.10.0.tgz#001b581ed0026bd4ba84034b968a76c7e95f10fb"
-  integrity sha512-5yFDrUj9mb8r4bv8crKsBDNC97oL1eWg1pEqxR5GfcnlwqBztJma6dQgfbWx7J4hF02Q1IViLdWfjy8//vXvMQ==
+html-validate@4.10.1:
+  version "4.10.1"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-4.10.1.tgz#db662c78d13a35fa4ee7e7cba408d3deed0eb708"
+  integrity sha512-FFbE2Oaq8trtQjS6X3b6yhI/Mv3/ru6kyPCDLE2U5VxkvQV+bl2w5t7lIrKUcE6FjnITP35bLU6aTcbdP2b1/w==
   dependencies:
     "@babel/code-frame" "^7.10.0"
     "@html-validate/stylish" "^1.0.0"
@@ -10527,10 +10527,10 @@ http-proxy-middleware@0.19.1:
     lodash "^4.17.11"
     micromatch "^3.1.10"
 
-http-proxy-middleware@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/http-proxy-middleware/-/http-proxy-middleware-1.2.0.tgz#87776ea3d4d8dda3dc2594a076787bbc6fe4d995"
-  integrity sha512-vNw+AxT0+6VTM1rCJw1bpiIaUQ1Ww/vTyIEOUzdW9kNX4yuhhqV3jLSKDJo/Y/lqEIshaKCDujtvEqWiD9Dn6Q==
+http-proxy-middleware@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/http-proxy-middleware/-/http-proxy-middleware-1.3.0.tgz#eda5e0b7d1f27ac82bd11eb5099d8c309d30cf30"
+  integrity sha512-nHn8lcFNmxCalzHGXMn0ojKunXC9twBvJ+y7QNhvK/ep7ZDOXvO7Gph01rSwsMOrG4m6N72gAAWXMYhPZvK6OA==
   dependencies:
     "@types/http-proxy" "^1.17.5"
     http-proxy "^1.18.1"
