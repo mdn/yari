@@ -130,7 +130,8 @@ def post_about_dangerous_content(build_directory: Path, **config):
                 count = external_urls[url]
 
                 external_urls_list.append(
-                    f"  - <{url}> ({count} time{'' if count==1 else 's'})"
+                    f"  - {'🚨 ' if url.startswith('http://') else ''}"
+                    f"<{url}> ({count} time{'' if count==1 else 's'})"
                 )
             comments.append((doc, "\n".join(external_urls_list)))
         else:
