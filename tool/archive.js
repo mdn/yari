@@ -7,7 +7,7 @@
 const cheerio = require("cheerio");
 const chalk = require("chalk");
 
-const { CONTENT_ARCHIVED_ROOT, Document } = require("../content");
+const { CONTENT_ARCHIVED_ROOT, Document, Redirect } = require("../content");
 const kumascript = require("../kumascript");
 
 async function runArchive(slugs, options) {
@@ -28,6 +28,8 @@ async function runArchive(slugs, options) {
   if (!CONTENT_ARCHIVED_ROOT) {
     throw new Error("CONTENT_ARCHIVED_ROOT is not set");
   }
+
+  const removes = new Map();
 
   for (const slug of slugs) {
     const folderSearch = `/${slug.toLowerCase()}`;
@@ -64,20 +66,48 @@ async function runArchive(slugs, options) {
         CONTENT_ARCHIVED_ROOT
       );
 
-      let removed = null;
       if (options.remove) {
-        removed = Document.remove(
-          document.metadata.slug,
-          document.metadata.locale,
-          {
-            recursive: false,
-            redirect: options.redirectToGithub
-              ? getGitHubArchivedRedirectURL(folderPath)
-              : "",
-          }
-        );
+        if (!removes.has(slug)) {
+          removes.set(slug, []);
+        }
+        removes.get(slug).push({
+          locale: document.metadata.locale,
+          folder: document.fileInfo.folder,
+          url: document.url,
+        });
       }
-      archived.push({ folderPath, document, removed });
+      archived.push({ folderPath, document });
+    }
+
+    if (removes.size) {
+      const redirectPairs = new Map();
+      const removeLocales = new Map();
+      for (const [slug, docInfos] of removes) {
+        if (!removeLocales.has(slug)) {
+          removeLocales.set(slug, new Set());
+        }
+
+        for (const docInfo of docInfos) {
+          removeLocales.get(slug).add(docInfo.locale);
+          if (!redirectPairs.has(docInfo.locale)) {
+            redirectPairs.set(docInfo.locale, []);
+          }
+          redirectPairs
+            .get(docInfo.locale)
+            .push([docInfo.url, getGitHubArchivedRedirectURL(docInfo.folder)]);
+        }
+      }
+      for (const [slug, locales] of removeLocales) {
+        for (const locale of locales) {
+          Document.remove(slug, locale, {
+            recursive: true,
+            redirect: "",
+          });
+        }
+      }
+      for (const [locale, pairs] of redirectPairs) {
+        Redirect.add(locale, pairs);
+      }
     }
   }
 

@@ -216,7 +216,7 @@ function loadLocaleAndAdd(
 ) {
   errorOnEncoded(updatePairs);
   errorOnDuplicated(updatePairs);
-  validatePairs(updatePairs, locale);
+  validatePairs(updatePairs, locale, strict);
 
   locale = locale.toLowerCase();
   let root = getRoot(
