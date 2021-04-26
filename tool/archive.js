@@ -71,7 +71,6 @@ async function runArchive(slugs, options) {
           document.metadata.locale,
           {
             recursive: false,
-            redirect: "",
             redirect: options.redirectToGithub
               ? getGitHubArchivedRedirectURL(folderPath)
               : "",
