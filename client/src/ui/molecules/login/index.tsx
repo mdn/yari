@@ -3,7 +3,7 @@ import * as React from "react";
 import Dropdown from "../dropdown";
 import { useLocale } from "../../../hooks";
 import SignInLink from "../../atoms/signin-link";
-import { useUserData } from "../../../user-context";
+import { useUserData, removeSessionStorageData } from "../../../user-context";
 
 import { DISABLE_AUTH } from "../../../constants";
 
@@ -68,7 +68,18 @@ function LoginInner() {
         <a href={`/${locale}/settings`}>Account settings</a>
       </li>
       <li>
-        <form action={signOutURL} method="post">
+        <form
+          action={signOutURL}
+          method="post"
+          onSubmit={() => {
+            // Because sign out happens externally, our user-context might have
+            // cached the fact that the user was signed in. It will not have any
+            // chance of knowing, that the user signed out, until they're
+            // redirected back (after the successful signout POST in Kuma).
+            // So we take this opportunity to invalidate any such caching.
+            removeSessionStorageData();
+          }}
+        >
           <input name="next" type="hidden" value={next} />
           <button className="ghost signout-button" type="submit">
             Sign out

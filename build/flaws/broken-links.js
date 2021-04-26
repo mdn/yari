@@ -121,7 +121,24 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       hrefNormalized = `/${thisDocumentLocale}${hrefNormalized}`;
     }
 
-    if (href.startsWith("https://developer.mozilla.org/")) {
+    if (
+      hrefNormalized.endsWith("/contributors.txt") &&
+      hrefNormalized.startsWith("/") &&
+      !href.startsWith("//")
+    ) {
+      // Do nothing. The /contributors.txt URLs are special Yari URLs.
+      return;
+    }
+
+    if (href.startsWith("http://")) {
+      addBrokenLink(
+        a,
+        checked.get(href),
+        href,
+        href.replace("http://", "https://"),
+        "http:// external links are not allowed (will be forced to https:// at build-time)"
+      );
+    } else if (href.startsWith("https://developer.mozilla.org/")) {
       // It might be a working 200 OK link but the link just shouldn't
       // have the full absolute URL part in it.
       const absoluteURL = new URL(href);
@@ -144,6 +161,24 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
           checked.get(href),
           href,
           `/${VALID_LOCALES.get(homepageLocale.toLowerCase())}/`
+        );
+      }
+    } else if (hrefNormalized === doc.mdn_url) {
+      if (hrefSplit.length > 1) {
+        addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          `#${hrefSplit[1]}`,
+          "No need for the pathname in anchor links if it's the same page"
+        );
+      } else {
+        addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          null,
+          "Link points to the page it's already on"
         );
       }
     } else if (href.startsWith("/") && !href.startsWith("//")) {

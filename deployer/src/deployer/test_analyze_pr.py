@@ -62,9 +62,9 @@ def test_analyze_pr_flaws():
     with mock_build_directory(no_flaws_doc, doc) as build_directory:
         comment = analyze_pr(build_directory, dict(DEFAULT_CONFIG, analyze_flaws=True))
         assert "## Flaws" in comment
-        assert "No flaws!" in comment
+        assert "1 document with no flaws that don't need to be listed" in comment
         assert "Flaw count: 2" in comment
-        assert len(comment.split("\n---\n")) == 2
+        assert len(comment.split("\n---\n")) == 1
         assert "- **faux_pas**:" in comment
         assert "  - `Socks in sandals`" in comment
         assert "  - `Congrats on losing your cat`" in comment

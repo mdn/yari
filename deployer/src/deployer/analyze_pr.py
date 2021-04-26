@@ -1,6 +1,7 @@
 import datetime
 import hashlib
 import json
+import re
 from collections import defaultdict
 from pathlib import Path
 
@@ -8,6 +9,10 @@ from github import Github
 from selectolax.parser import HTMLParser
 
 from .utils import log
+
+comment_hidden_comment = re.compile(
+    r"<!-- build_hash: ([a-f0-9]+) date: ([\d:\.\- ]+) -->"
+)
 
 
 def analyze_pr(build_directory: Path, config):
@@ -37,10 +42,10 @@ def analyze_pr(build_directory: Path, config):
 
     # The build_hash can potentially be used if we want to find an existing comment
     # that's already been made about this exact set of build files.
-    combined_comment = (
-        f"<!-- build_hash: {build_hash} date: {datetime.datetime.utcnow()} -->\n\n"
-        f"{combined_comment}"
+    hidden_comment = (
+        f"<!-- build_hash: {build_hash} date: {datetime.datetime.utcnow()} -->"
     )
+    combined_comment = f"{hidden_comment}\n\n{combined_comment}"
 
     if not config["repo"]:
         print("Warning! No 'repo' config")
@@ -58,7 +63,19 @@ def analyze_pr(build_directory: Path, config):
             github = Github(config["github_token"])
             github_repo = github.get_repo(config["repo"])
             github_issue = github_repo.get_issue(number=int(config["pr_number"]))
-            github_issue.create_comment(combined_comment)
+            for comment in github_issue.get_comments():
+                if comment.user.login == "github-actions[bot]":
+                    if comment_hidden_comment.findall(comment.body):
+                        new_body = comment_hidden_comment.sub(
+                            hidden_comment, comment.body
+                        )
+                        new_body += f"\n\n*(this comment was updated {datetime.datetime.utcnow()})*"
+                        comment.edit(body=new_body)
+                        print(f"Updating existing comment ({comment})")
+                        break
+
+            else:
+                github_issue.create_comment(combined_comment)
 
     return combined_comment
 
@@ -113,7 +130,8 @@ def post_about_dangerous_content(build_directory: Path, **config):
                 count = external_urls[url]
 
                 external_urls_list.append(
-                    f"  - <{url}> ({count} time{'' if count==1 else 's'})"
+                    f"  - {'🚨 ' if url.startswith('http://') else ''}"
+                    f"<{url}> ({count} time{'' if count==1 else 's'})"
                 )
             comments.append((doc, "\n".join(external_urls_list)))
         else:
@@ -146,31 +164,33 @@ def post_about_flaws(build_directory: Path, **config):
 
     MAX_FLAW_EXPLANATION = 5
 
+    docs_with_zero_flaws = 0
+
     for doc in get_built_docs(build_directory):
         if not doc.get("flaws"):
-            comments.append((doc, "No flaws! 🎉"))
+            docs_with_zero_flaws += 1
             continue
-        else:
-            flaws_list = []
-            for flaw_name, flaw_values in doc["flaws"].items():
-                flaws_list.append(f"- **{flaw_name}**:")
-                for i, flaw_value in enumerate(flaw_values):
-                    if i + 1 > MAX_FLAW_EXPLANATION:
-                        flaws_list.append(
-                            f"  - *and {len(flaw_values) - MAX_FLAW_EXPLANATION}"
-                            " more flaws omitted*"
-                        )
-                        break
-                    if isinstance(flaw_value, dict):
-                        explanation = flaw_value.get("explanation")
-                    else:
-                        explanation = str(flaw_value)
-                    if explanation:
-                        flaws_list.append(f"  - `{explanation}`")
-                    else:
-                        flaws_list.append("  - *no explanation!*")
 
-            comments.append((doc, "\n".join(flaws_list)))
+        flaws_list = []
+        for flaw_name, flaw_values in doc["flaws"].items():
+            flaws_list.append(f"- **{flaw_name}**:")
+            for i, flaw_value in enumerate(flaw_values):
+                if i + 1 > MAX_FLAW_EXPLANATION:
+                    flaws_list.append(
+                        f"  - *and {len(flaw_values) - MAX_FLAW_EXPLANATION}"
+                        " more flaws omitted*"
+                    )
+                    break
+                if isinstance(flaw_value, dict):
+                    explanation = flaw_value.get("explanation")
+                else:
+                    explanation = str(flaw_value)
+                if explanation:
+                    flaws_list.append(f"  - `{explanation}`")
+                else:
+                    flaws_list.append("  - *no explanation!*")
+
+        comments.append((doc, "\n".join(flaws_list)))
 
     def count_flaws(flaws):
         count = 0
@@ -179,6 +199,12 @@ def post_about_flaws(build_directory: Path, **config):
         return count
 
     heading = "## Flaws\n\n"
+    if docs_with_zero_flaws:
+        heading += (
+            f"Note! *{docs_with_zero_flaws} "
+            f"document{'' if docs_with_zero_flaws == 1 else 's'} with no flaws "
+            "that don't need to be listed. 🎉*\n\n"
+        )
 
     if comments:
         # Now turn all of these individual comments into one big one

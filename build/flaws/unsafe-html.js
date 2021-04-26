@@ -54,7 +54,7 @@ function getAndMarkupUnsafeHTMLFlaws(doc, $, { rawContent, fileInfo }) {
     flaws.push(flaw);
   }
 
-  $("script, embed, object, iframe").each((i, element) => {
+  $("script, embed, object, iframe, style").each((i, element) => {
     const { tagName } = element;
     if (tagName === "iframe") {
       // For iframes we only check the 'src' value
