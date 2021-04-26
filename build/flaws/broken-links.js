@@ -130,7 +130,15 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       return;
     }
 
-    if (href.startsWith("https://developer.mozilla.org/")) {
+    if (href.startsWith("http://")) {
+      addBrokenLink(
+        a,
+        checked.get(href),
+        href,
+        href.replace("http://", "https://"),
+        "http:// external links are not allowed (will be forced to https:// at build-time)"
+      );
+    } else if (href.startsWith("https://developer.mozilla.org/")) {
       // It might be a working 200 OK link but the link just shouldn't
       // have the full absolute URL part in it.
       const absoluteURL = new URL(href);
