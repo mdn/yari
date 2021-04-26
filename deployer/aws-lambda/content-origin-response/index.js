@@ -1,3 +1,4 @@
+/* eslint-disable node/no-missing-require */
 const { CSP_DIRECTIVES } = require("@yari-internal/constants");
 
 exports.handler = async (event) => {
