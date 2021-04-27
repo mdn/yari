@@ -187,7 +187,8 @@ function archive(
 
   saveFile(getHTMLPath(folderPath), trimLineEndings(renderedHTML), metadata);
 
-  // Next we need to every single other file
+  // Next we need to every single other file that isn't index.html or index.md
+  // which basically means all the images.
   if (sourceFolder) {
     const files = fs.readdirSync(sourceFolder);
     for (const fileName of files) {
@@ -232,7 +233,6 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
   let root = null;
   let isMarkdown = false;
   let locale = null;
-  // roots = roots || ROOTS;
 
   if (fs.existsSync(folderOrFilePath)) {
     filePath = folderOrFilePath;
@@ -628,7 +628,12 @@ function remove(
   const root = getRoot(locale);
   const url = buildURL(locale, slug);
 
-  // XXX explain!
+  // If we don't explicitly set the `roots` it might read from $CONTENT_ARCHIVED_ROOT
+  // which might find the files.
+  // The reason is when you're running archive CLI tool. When you run that,
+  // it will first *add* files to the archived root and then, after that's run,
+  // it will start removing files. If it then finds the files in the archived
+  // root it will confuse the git command.
   const roots = [CONTENT_ROOT];
   if (CONTENT_TRANSLATED_ROOT) {
     roots.push(CONTENT_TRANSLATED_ROOT);

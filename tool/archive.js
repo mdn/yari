@@ -75,13 +75,7 @@ async function runArchive(slugs, options) {
         if (!removes.has(slug)) {
           removes.set(slug, []);
         }
-        removes.get(slug).push(
-          document
-          // locale: document.metadata.locale,
-          // folder: document.fileInfo.folder,
-          // url: document.url,
-          // }
-        );
+        removes.get(slug).push(document);
       }
       archived.push({ folderPath, document });
     }
