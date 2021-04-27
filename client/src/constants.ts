@@ -59,3 +59,8 @@ export const VALID_LOCALES = new Set([
   "zh-CN",
   "zh-TW",
 ]);
+
+export const ENABLE_MDNPLUSPLUS = JSON.parse(
+  process.env.REACT_APP_ENABLE_MDNPLUSPLUS ||
+    JSON.stringify(process.env.NODE_ENV === "development")
+);
