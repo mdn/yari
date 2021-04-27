@@ -70,11 +70,13 @@ async function runArchive(slugs, options) {
         if (!removes.has(slug)) {
           removes.set(slug, []);
         }
-        removes.get(slug).push({
-          locale: document.metadata.locale,
-          folder: document.fileInfo.folder,
-          url: document.url,
-        });
+        removes.get(slug).push(
+          document
+          // locale: document.metadata.locale,
+          // folder: document.fileInfo.folder,
+          // url: document.url,
+          // }
+        );
       }
       archived.push({ folderPath, document });
     }
@@ -82,31 +84,41 @@ async function runArchive(slugs, options) {
     if (removes.size) {
       const redirectPairs = new Map();
       const removeLocales = new Map();
-      for (const [slug, docInfos] of removes) {
+      for (const [slug, documents] of removes) {
         if (!removeLocales.has(slug)) {
           removeLocales.set(slug, new Set());
         }
 
-        for (const docInfo of docInfos) {
-          removeLocales.get(slug).add(docInfo.locale);
-          if (!redirectPairs.has(docInfo.locale)) {
-            redirectPairs.set(docInfo.locale, []);
+        for (const document of documents) {
+          const { locale } = document.metadata;
+          removeLocales.get(slug).add(locale);
+          if (!redirectPairs.has(locale)) {
+            redirectPairs.set(locale, []);
           }
           redirectPairs
-            .get(docInfo.locale)
-            .push([docInfo.url, getGitHubArchivedRedirectURL(docInfo.folder)]);
+            .get(locale)
+            .push([
+              document.url,
+              getGitHubArchivedRedirectURL(document.fileInfo.folder),
+            ]);
         }
       }
       for (const [slug, locales] of removeLocales) {
         for (const locale of locales) {
+          console.log("REMOVE...:", { slug, locale });
           Document.remove(slug, locale, {
             recursive: true,
             redirect: "",
           });
         }
       }
+
       for (const [locale, pairs] of redirectPairs) {
-        Redirect.add(locale, pairs);
+        // Only bother for en-US because otherwise it might get confused with
+        // the content still existing in the translated-content.
+        if (locale === "en-US") {
+          Redirect.add(locale, pairs);
+        }
       }
     }
   }

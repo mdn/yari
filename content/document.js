@@ -208,12 +208,13 @@ function unarchive(document, move) {
   return created;
 }
 
-const read = memoize((folderOrFilePath) => {
+const read = memoize((folderOrFilePath, roots = ROOTS) => {
   let filePath = null;
   let folder = null;
   let root = null;
   let isMarkdown = false;
   let locale = null;
+  // roots = roots || ROOTS;
 
   if (fs.existsSync(folderOrFilePath)) {
     filePath = folderOrFilePath;
@@ -227,7 +228,7 @@ const read = memoize((folderOrFilePath) => {
       throw new Error(`'${filePath}' is not a HTML or Markdown file.`);
     }
 
-    root = ROOTS.find((possibleRoot) => filePath.startsWith(possibleRoot));
+    root = roots.find((possibleRoot) => filePath.startsWith(possibleRoot));
     if (root) {
       folder = filePath
         .replace(root + path.sep, "")
@@ -244,7 +245,7 @@ const read = memoize((folderOrFilePath) => {
     }
   } else {
     folder = folderOrFilePath;
-    for (const possibleRoot of ROOTS) {
+    for (const possibleRoot of roots) {
       const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
       if (fs.existsSync(possibleHTMLFilePath)) {
         root = possibleRoot;
@@ -608,7 +609,13 @@ function remove(
 ) {
   const root = getRoot(locale);
   const url = buildURL(locale, slug);
-  const { metadata, fileInfo } = findByURL(url) || {};
+
+  // XXX explain!
+  const roots = [CONTENT_ROOT];
+  if (CONTENT_TRANSLATED_ROOT) {
+    roots.push(CONTENT_TRANSLATED_ROOT);
+  }
+  const { metadata, fileInfo } = findByURL(url, roots) || {};
   if (!metadata) {
     throw new Error(`document does not exists: ${url}`);
   }
