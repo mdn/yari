@@ -158,7 +158,8 @@ function archive(
   rawBody,
   metadata,
   isMarkdown = false,
-  root = null
+  root = null,
+  sourceFolder = null
 ) {
   if (!root) {
     root = CONTENT_ARCHIVED_ROOT;
@@ -185,6 +186,23 @@ function archive(
   }
 
   saveFile(getHTMLPath(folderPath), trimLineEndings(renderedHTML), metadata);
+
+  // Next we need to every single other file
+  if (sourceFolder) {
+    const files = fs.readdirSync(sourceFolder);
+    for (const fileName of files) {
+      if (fileName === "index.html" || fileName === "index.md") {
+        continue;
+      }
+      const filePath = path.join(sourceFolder, fileName);
+      if (!fs.statSync(filePath).isDirectory()) {
+        fs.copyFileSync(
+          filePath,
+          path.join(folderPath, path.basename(filePath))
+        );
+      }
+    }
+  }
   return folderPath;
 }
 

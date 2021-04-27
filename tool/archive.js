@@ -4,6 +4,8 @@
  * It also creates and sets up redirects for you.
  */
 
+const path = require("path");
+
 const cheerio = require("cheerio");
 const chalk = require("chalk");
 
@@ -58,12 +60,15 @@ async function runArchive(slugs, options) {
         );
       }
       const renderedHtml = $("body").html().trim() + "\n";
+      // console.log(document.fileInfo);
+      // console.log("document.fileInfo.root==", document.fileInfo.root);
       const folderPath = Document.archive(
         renderedHtml,
         document.rawBody,
         document.metadata,
         document.isMarkdown,
-        CONTENT_ARCHIVED_ROOT
+        CONTENT_ARCHIVED_ROOT,
+        path.dirname(document.fileInfo.path)
       );
 
       if (options.remove) {
