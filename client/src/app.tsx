@@ -235,14 +235,16 @@ export function App(appProps) {
                 </StandardLayout>
               }
             />
-            <Route
-              path="/mdn++"
-              element={
-                <StandardLayout>
-                  <MDNplusplus {...appProps} />
-                </StandardLayout>
-              }
-            />
+            {process.env.NODE_ENV === "development" && (
+              <Route
+                path="/mdn++"
+                element={
+                  <StandardLayout>
+                    <MDNplusplus {...appProps} />
+                  </StandardLayout>
+                }
+              />
+            )}
             <Route
               path="/docs/*"
               element={
