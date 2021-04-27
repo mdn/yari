@@ -15,7 +15,26 @@ const IMPORTANT_MACROS = new Map(
     "languages",
     "AvailableInWorkers",
     "IncludeSubnav",
-    // XXX List all the important sidebar macros??
+
+    "APIRef",
+    "AddonSidebar",
+    "AddonSidebarMain",
+    "CanvasSidebar",
+    "CSSRef",
+    "DefaultAPISidebar",
+    "GamesSidebar",
+    "HTMLSidebar",
+    "HTTPSidebar",
+    "JsSidebar",
+    "LearnSidebar",
+    "MDNSidebar",
+    "ServiceWorkerSidebar",
+    "SVGRef",
+    "ToolsSidebar",
+    "WebAssemblySidebar",
+    "WebExtAPISidebar",
+    "WebGLSidebar",
+    "WebRTCSidebar",
   ].map((name) => [name.toLowerCase(), name])
 );
 
