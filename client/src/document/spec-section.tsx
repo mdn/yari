@@ -1,6 +1,6 @@
 import { DisplayH2, DisplayH3 } from "./ingredients/utils";
 
-export function SpecificationTable({
+export function SpecificationSection({
   id,
   title,
   isH3,
@@ -38,6 +38,8 @@ export function SpecificationTable({
                 <td>
                   <a href={spec.bcdSpecificationURL}>
                     {spec.title} ({spec.shortTitle})
+                    <br />{" "}
+                    <small>#{spec.bcdSpecificationURL.split("#")[1]}</small>
                   </a>
                 </td>
               </tr>
@@ -46,6 +48,7 @@ export function SpecificationTable({
         </table>
       ) : (
         <div className="notecard warning">
+          <h4>No specification found</h4>
           <p>
             No specification data found for <code>{query}</code>.<br />
             <a href="#on-github">Check for problems with this page</a> or

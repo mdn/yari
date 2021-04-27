@@ -9,7 +9,7 @@ import { Doc } from "./types";
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
 import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
-import { SpecificationTable } from "./spec-table";
+import { SpecificationSection } from "./spec-section";
 
 // Misc
 // Sub-components
@@ -235,7 +235,7 @@ function RenderDocumentBody({ doc }) {
       );
     } else if (section.type === "specifications") {
       return (
-        <SpecificationTable key={`specifications${i}`} {...section.value} />
+        <SpecificationSection key={`specifications${i}`} {...section.value} />
       );
     } else {
       console.warn(section);

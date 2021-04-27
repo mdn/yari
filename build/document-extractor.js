@@ -111,7 +111,7 @@ function extractSections($) {
  *        data: {....}
  *   }]
  *
- * Another example is for specification tables. If the input is this:
+ * Another example is for the specification section. If the input is this:
  *
  *   <h2 id="Specifications">Specifications</h2>
  *   <div class="bc-specs" data-bcd-query="foo.bar.thing">...</div>
@@ -124,7 +124,7 @@ function extractSections($) {
  *        query: "foo.bar.thing",
  *        id: "specifications",
  *        title: "Specifications",
- *        specURLs: {....}
+ *        specifications: {....}
  *   }]
  */
 function addSections($) {

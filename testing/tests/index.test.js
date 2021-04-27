@@ -1019,13 +1019,13 @@ test("bcd table extraction followed by h3", () => {
   expect(doc.body[4].value.isH3).toBeTruthy();
 });
 
-test("specification table and bcd extraction", () => {
+test("specifications and bcd extraction", () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
     "docs",
     "web",
-    "spec_table_extraction"
+    "spec_section_extraction"
   );
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");

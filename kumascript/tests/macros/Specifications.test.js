@@ -3,7 +3,7 @@ const { assert, itMacro, describeMacro, lintHTML } = require("./utils");
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 
-describeMacro("SpecificationTable", function () {
+describeMacro("Specifications", function () {
   itMacro("Outputs a simple div tag", async (macro) => {
     const result = await macro.call("api.feature");
     const dom = JSDOM.fragment(result);
