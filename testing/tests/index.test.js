@@ -115,6 +115,13 @@ test("content built foo page", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
 
+  // Check that the favicon works and resolves
+  const faviconHref = $('link[rel="icon"]').attr("href");
+  // The faviconHref is a URL so to check that it exists on disk we need to
+  // strip the leading / and join that with the root of the build.
+  const faviconFile = path.join(buildRoot, faviconHref.slice(1));
+  expect(fs.existsSync(faviconFile)).toBeTruthy();
+
   expect($('meta[name="description"]').attr("content")).toBe(
     "This becomes the summary."
   );
