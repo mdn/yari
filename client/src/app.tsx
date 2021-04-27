@@ -5,7 +5,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
-import { CRUD_MODE } from "./constants";
+import { CRUD_MODE, ENABLE_MDNPLUSPLUS } from "./constants";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -235,14 +235,16 @@ export function App(appProps) {
                 </StandardLayout>
               }
             />
-            <Route
-              path="/mdn++"
-              element={
-                <StandardLayout>
-                  <MDNplusplus {...appProps} />
-                </StandardLayout>
-              }
-            />
+            {ENABLE_MDNPLUSPLUS && (
+              <Route
+                path="/mdn++"
+                element={
+                  <StandardLayout>
+                    <MDNplusplus {...appProps} />
+                  </StandardLayout>
+                }
+              />
+            )}
             <Route
               path="/docs/*"
               element={
