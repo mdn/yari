@@ -18,11 +18,6 @@ async function run(html) {
   const file = await getTransformProcessor()
     .use(() => ([node, unhandled]) => {
       console.warn(unhandled);
-      const ff = ({ position, children, ...node }) => ({
-        ...node,
-        children: children && children.map(ff),
-      });
-      console.log(JSON.stringify(ff(node), null, 2));
       return node;
     })
     .process(encodeKS(html));

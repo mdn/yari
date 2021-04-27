@@ -128,7 +128,7 @@ function toCells(children, info) {
 
 module.exports = [
   [
-    "table",
+    { is: "table", canHaveClass: "standard-table" },
     (node, t) => {
       const info = inspect(node);
       return h(node, "table", { align: info.align }, toRows(t(node), info));

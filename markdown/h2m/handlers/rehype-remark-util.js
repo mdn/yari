@@ -1,4 +1,9 @@
+const has = require("hast-util-has-property");
+const toText = require("hast-util-to-text");
 const phrasing = require("mdast-util-phrasing");
+const trim = require("trim-trailing-lines");
+
+const { h, wrapText } = require("../utils");
 
 const spread = (children) =>
   children.length > 1 && children.some((child) => child.spread);
@@ -95,4 +100,43 @@ const wrap = (nodes) =>
     return { type: "paragraph", children: nodes };
   });
 
-module.exports = { spread, wrap };
+const prefix = "language-";
+
+function code(node, opts) {
+  var children = node.children;
+  var index = -1;
+  var classList;
+  var lang;
+
+  if (node.tagName == "pre") {
+    while (++index < children.length) {
+      if (
+        children[index].tagName == "code" &&
+        has(children[index], "className")
+      ) {
+        classList = children[index].properties.className;
+        break;
+      }
+    }
+  }
+
+  if (classList) {
+    index = -1;
+
+    while (++index < classList.length) {
+      if (classList[index].slice(0, prefix.length) === prefix) {
+        lang = classList[index].slice(prefix.length);
+        break;
+      }
+    }
+  }
+
+  return h(
+    node,
+    "code",
+    { lang: lang || null, meta: null },
+    trim(wrapText(toText(node), opts))
+  );
+}
+
+module.exports = { code, spread, wrap };

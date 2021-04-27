@@ -3,26 +3,27 @@ const toText = require("hast-util-to-text");
 const trim = require("trim-trailing-lines");
 
 const { h, trimTrailingNewLines, wrapText } = require("../utils");
-const { spread, wrap } = require("./rehype-remark-util");
+const { code, spread, wrap } = require("./rehype-remark-util");
 const tables = require("./tables");
 
-const isBare = (node, { ignore } = {}) =>
-  Object.keys(node.properties).filter((key) => !ignore || !ignore.includes(key))
-    .length === 0;
-
-const toCode = (lang) => (node, t, opts) =>
-  h(node, "code", { lang }, trimTrailingNewLines(wrapText(toText(node), opts)));
-
 module.exports = [
+  [(node) => node.type == "root", (node, t) => h(node, "root", {}, t(node))],
+
   [
-    (node) => ["html", "head", "body"].includes(node.tagName) && isBare(node),
-    (node, t) => wrap(t(node)),
+    (node) => node.type == "text",
+    (node, t, opts) => h(node, "text", {}, wrapText(node.value, opts)),
   ],
 
   [
-    (node) =>
-      ["h1", "h2", "h3", "h4"].includes(node.tagName) &&
-      isBare(node, { ignore: ["id"] }),
+    (node) => node.type == "comment",
+    (node, t, opts) =>
+      h(node, "html", {}, "<!--" + wrapText(node.value, opts) + "-->"),
+  ],
+
+  [["html", "head", "body"], (node, t) => wrap(t(node))],
+
+  [
+    { is: ["h1", "h2", "h3", "h4", "h5"], canHave: "id" },
     (node, t) =>
       h(
         node,
@@ -59,8 +60,12 @@ module.exports = [
   ],
 
   [
-    (node) =>
-      node.tagName == "a" && isBare(node, { ignore: ["href", "title", "rel"] }),
+    {
+      is: "a",
+      has: "href",
+      canHave: ["title", "rel"],
+      canHaveClass: "link-https",
+    },
     (node, t) =>
       h(
         node,
@@ -101,7 +106,7 @@ module.exports = [
   ],
 
   [
-    (node) => node.tagName == "li" && isBare(node, { ignore: ["id"] }),
+    { is: "li", canHave: "id" },
     (node, t) => {
       const content = wrap(t(node, { shouldWrap: true }));
       return h(node, "listItem", { spread: content.length > 1 }, content);
@@ -117,9 +122,71 @@ module.exports = [
       h(node, "inlineCode", {}, trim(wrapText(toText(node), opts))),
   ],
 
-  ["pre.brush:.js", toCode("javascript")],
-  ["pre.brush:.html", toCode("html")],
-  ["pre.brush:.css", toCode("css")],
+  ["pre", (node, t, opts) => code(node, opts)],
 
-  ["math", (node) => h(node, "html", {}, toHtml(node))],
+  ...["js", "html", "css", "json", "plain", "cpp", "java"].flatMap((lang) =>
+    // shows up with/without semicolon
+    ["brush:" + lang, `brush:${lang};`, lang, lang + ";"].map((hasClass) => [
+      {
+        is: "pre",
+        hasClass,
+        canHaveClass: [
+          "brush:",
+          "brush",
+          "example-good",
+          "example-bad",
+          "no-line-numbers",
+          "line-numbers",
+          (className) => className.startsWith("highlight"),
+        ],
+      },
+      (node, t, opts) =>
+        h(
+          node,
+          "code",
+          {
+            lang,
+            meta: node.properties.className.filter((c) => c == lang),
+          },
+          trimTrailingNewLines(wrapText(toText(node), opts))
+        ),
+    ])
+  ),
+
+  [
+    {
+      is: "img",
+      has: "src",
+      canHave: ["title", "alt"],
+      canHaveClass: "internal",
+    },
+    (node) => {
+      const { src, title, alt } = node.properties;
+      return h(node, "image", {
+        url: src,
+        title: title || null,
+        alt: alt || "",
+      });
+    },
+  ],
+
+  [
+    { is: "math", canHave: "display" },
+    (node) => h(node, "html", {}, toHtml(node)),
+  ],
+
+  ["dl", (node) => h(node, "html", {}, toHtml(node))],
+
+  [
+    { hasClass: "note", canHaveClass: "notecard" },
+    (node) => h(node, "html", {}, toHtml(node)),
+  ],
+  [
+    { hasClass: "notecard", canHaveClass: "warning" },
+    (node) => h(node, "html", {}, toHtml(node)),
+  ],
+  [{ hasClass: "warning" }, (node) => h(node, "html", {}, toHtml(node))],
+
+  [{ hasClass: "seoSummary" }, (node) => h(node, "html", {}, toHtml(node))],
+  [{ hasClass: "summary" }, (node) => h(node, "html", {}, toHtml(node))],
 ];
