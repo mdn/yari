@@ -6,14 +6,6 @@ import { App } from "./app";
 import { GAProvider } from "./ga-context";
 import { UserDataProvider } from "./user-context";
 
-// Only include the polyfill for browsers that seem to not have
-// certain JS features. E.g. Firefox 58.
-if (!Array.prototype.flat || !Array.prototype.includes) {
-  document.write(
-    '<script src="https://polyfill.io/v3/polyfill.min.js?features=Array.prototype.flat%2Ces6"></script>'
-  );
-}
-
 // import * as serviceWorker from './serviceWorker';
 
 const container = document.getElementById("root");

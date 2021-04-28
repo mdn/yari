@@ -237,6 +237,10 @@ export default function render(
     ).appendTo($("head"));
   }
 
+  $(
+    '<script defer src="http://polyfill.io/v3/polyfill.min.js?features=Array.prototype.flat%2CArray.prototype.includes"></script>'
+  ).appendTo($("head"));
+
   // As part of the pre-build steps, in the build root, a `ga.js` file is generated.
   // The SSR rendering needs to know if exists and if so, what it's URL pathname is.
   // The script will do two things:
