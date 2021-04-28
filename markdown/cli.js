@@ -93,7 +93,11 @@ program
       console.log(
         Array.from(bySelector)
           .sort(([, e1], [, e2]) => (e1.count < e2.count ? 1 : -1))
-          .map(([selector, summary]) => `${selector} (${summary.count})`)
+          .map(([selector, { count, urls }]) => [
+            selector,
+            count,
+            `"${Array.from(new Set(urls)).join("\n")}"`,
+          ])
           .join("\n")
       );
     })

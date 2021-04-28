@@ -63,6 +63,7 @@ module.exports = [
     {
       is: "a",
       has: "href",
+      // TODO: should swallow target=_blank? Should all our external links have new tab behavior?
       canHave: ["title", "rel"],
       canHaveClass: "link-https",
     },

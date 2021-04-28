@@ -126,6 +126,7 @@ function toCells(children, info) {
   return nodes;
 }
 
+// TODO catching errors at different element levels, i.e. <td style=...> catch from <table>
 module.exports = [
   [
     { is: "table", canHaveClass: "standard-table" },
@@ -137,7 +138,7 @@ module.exports = [
 
   [["thead", "tbody"], (node, t) => t(node)],
 
-  ["tr", (node, t) => h(node, "tableRow", {}, t(h, node))],
+  ["tr", (node, t) => h(node, "tableRow", {}, t(node))],
 
   [
     ["th", "td"],
