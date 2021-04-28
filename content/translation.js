@@ -37,12 +37,31 @@ const IMPORTANT_MACROS = new Map(
   ].map((name) => [name.toLowerCase(), name])
 );
 
+function* fastParser(s) {
+  for (const match of s.matchAll(/\{\{\s*([\w]+)(\((.*?)\)|)\s*\}\}/g)) {
+    const { index } = match;
+    if (s.charAt(index - 1) === "\\") {
+      continue;
+    }
+
+    yield {
+      type: "MACRO",
+      name: match[1],
+      args: (match[3] || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+    };
+  }
+}
+
 function getKSMacros(content, cacheKey = null) {
   if (cacheKey && cacheKSMacros.has(cacheKey)) {
     return cacheKSMacros.get(cacheKey);
   }
 
   const tokens = Parser.parse(content);
+  // const tokens = fastParser(content);
   const macros = new Set();
 
   for (const token of tokens) {
