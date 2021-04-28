@@ -202,6 +202,20 @@ test("content built French foo page", () => {
   expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
 });
 
+test("content built French Embeddable page", () => {
+  const builtFolder = path.join(buildRoot, "fr", "docs", "web", "embeddable");
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.translation_differences.length).toBe(1);
+  const flaw = doc.flaws.translation_differences[0];
+  expect(flaw.explanation).toBe(
+    "Differences in the important macros (0 in common of 4 possible)"
+  );
+  expect(flaw.fixable).toBeFalsy();
+  expect(flaw.suggestion).toBeFalsy();
+  expect(flaw.difference.type).toBe("macro");
+});
+
 test("wrong xref macro errors", () => {
   const builtFolder = path.join(
     buildRoot,
