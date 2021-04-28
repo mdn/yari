@@ -19,6 +19,7 @@ import {
   BadPreTagFlaw,
   SectioningFlaw,
   HeadingLinksFlaw,
+  TranslationDifferenceFlaw,
   UnsafeHTMLFlaw,
 } from "../types";
 import "./flaws.scss";
@@ -283,6 +284,13 @@ function Flaws({
           case "unsafe_html":
             return (
               <UnsafeHTML key="unsafe_html" flaws={doc.flaws.unsafe_html} />
+            );
+          case "translation_differences":
+            return (
+              <TranslationDifferences
+                key="translation_differences"
+                flaws={doc.flaws.translation_differences}
+              />
             );
           case "sectioning":
             return <Sectioning key="sectioning" flaws={doc.flaws.sectioning} />;
@@ -1060,6 +1068,39 @@ function UnsafeHTML({ flaws }: { flaws: UnsafeHTMLFlaw[] }) {
             </li>
           );
         })}
+      </ul>
+    </div>
+  );
+}
+
+function TranslationDifferences({
+  flaws,
+}: {
+  flaws: TranslationDifferenceFlaw[];
+}) {
+  return (
+    <div className="flaw">
+      <h3>{humanizeFlawName("translation_differences")}</h3>
+      <ul>
+        {flaws.map((flaw, i) => (
+          <li key={flaw.id}>
+            {<b>{flaw.explanation}</b>}
+            {flaw.difference.explanationNotes &&
+              flaw.difference.explanationNotes.length > 0 && (
+                <ul className="explanation-notes">
+                  {flaw.difference.explanationNotes.map(
+                    (explanationNotes, i) => {
+                      return (
+                        <li key={`${explanationNotes}${i}`}>
+                          <code>{explanationNotes}</code>
+                        </li>
+                      );
+                    }
+                  )}
+                </ul>
+              )}
+          </li>
+        ))}
       </ul>
     </div>
   );
