@@ -11,9 +11,9 @@
     cursor: pointer;
     display: block;
     font-size: $tiny-text;
-    height: $base-unit * 2;
-    margin: ($base-spacing / 2) 0 0;
+    height: 16px;
     padding: $base-spacing / 2;
+    position: relative;
     width: 100%;
 
     &::before {
@@ -23,7 +23,10 @@
       content: "";
       display: block;
       height: 16px;
+      left: 50%;
       margin: 0 auto;
+      position: absolute;
+      top: 5px;
       transform: rotate(180deg);
       width: 16px;
     }
@@ -32,6 +35,7 @@
   @media #{$mq-small-desktop-and-up} {
     bottom: 0;
     left: 0;
+    margin: ($base-spacing / 2) 0 0;
     padding: 0;
     position: absolute;
     z-index: $top-layer;
@@ -39,6 +43,8 @@
     &::before {
       background-size: 12px;
       height: 12px;
+      left: 40%;
+      top: 0;
       width: 12px;
     }
   }
