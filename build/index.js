@@ -594,7 +594,14 @@ async function analyzeDocument(document) {
   };
 
   doc.normalizedMacrosCount = {};
-  const tokens = Parser.parse(document.rawHTML);
+  let tokens;
+  try {
+    tokens = Parser.parse(document.rawBody);
+  } catch (error) {
+    console.warn(document.rawBody);
+    console.log(`Kumascript Parser.parse error on ${document.url}`);
+    throw error;
+  }
   for (let token of tokens) {
     if (token.type === "MACRO") {
       const normalizedMacroName = normalizeMacroName(token.name);
@@ -607,10 +614,10 @@ async function analyzeDocument(document) {
   doc.tags = document.metadata.tags || [];
 
   doc.fileSize = fs.statSync(document.fileInfo.path).size;
-  doc.wordCount = document.rawHTML
+  doc.wordCount = document.rawBody
     .replace(/(<([^>]+)>)/g, "")
     .split(/\s+/).length;
-  const $ = cheerio.load(document.rawHTML);
+  const $ = cheerio.load(document.rawBody);
   const imageCounts = countImages($);
   doc.images = imageCounts.total;
   doc.externalImages = imageCounts.external;
