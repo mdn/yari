@@ -1,7 +1,13 @@
 import { useSearchParams } from "react-router-dom";
 
-import { useUserData } from "../user-context";
+import { useUserData, removeSessionStorageData } from "../user-context";
 import { useLocale } from "../hooks";
+
+import { ReactComponent as GithubLogo } from "@mdn/dinocons/brands/github-mark-small.svg";
+import { ReactComponent as GoogleLogo } from "@mdn/dinocons/brands/google-mono.svg";
+
+import "./index.scss";
+import "./sign-in.scss";
 
 export default function SignInApp() {
   const [searchParams] = useSearchParams();
@@ -41,7 +47,7 @@ export default function SignInApp() {
   sp.set("yarisignup", "1");
 
   return (
-    <div>
+    <>
       {/* We need to wait for the userData (/api/v1/whoami) because it will
           determine what we display.
           We *could* render on the optimism that people most likely will be
@@ -50,42 +56,59 @@ export default function SignInApp() {
           completely different without it being due to a user action.
       */}
       {userData ? (
-        <>
-          {userData.isAuthenticated ? (
-            <form method="post" action={`${prefix}/${locale}/users/signout`}>
-              <p>
-                You're <b>already signed in</b>.
-              </p>
-
-              {/* XXX Here it would be great to link to the account settings page */}
-
-              <input type="hidden" name="next" value={next} />
-              <button type="submit" className="button">
-                Sign out
-              </button>
-              <p>
-                Or, <a href="/">return to the home page</a>.
-              </p>
-            </form>
-          ) : (
-            <ul>
+        userData.isAuthenticated ? (
+          <form
+            className="sign-out-form"
+            method="post"
+            action={`${prefix}/${locale}/users/signout`}
+          >
+            <h2>You’re already signed in.</h2>
+            {/* XXX Here it would be great to link to the account settings page */}
+            <input type="hidden" name="next" value={next} />
+            <button type="submit" className="ghost">
+              Sign out
+            </button>
+            or, <a href="/">return to the home page</a>.
+          </form>
+        ) : (
+          <>
+            <p className="lead">
+              Sign in to your MDN Web Docs account. If you haven’t already
+              created an account, you will be prompted to do so after signing
+              in.
+            </p>
+            <ul className="auth-buttons">
               <li>
-                <a href={`${prefix}/users/github/login/?${sp.toString()}`}>
-                  GitHub&trade;
+                <a
+                  href={`${prefix}/users/github/login/?${sp.toString()}`}
+                  className="button icon-button outline"
+                  onClick={() => {
+                    removeSessionStorageData();
+                  }}
+                >
+                  <GithubLogo />
+                  Sign in with GitHub&trade;
                 </a>
               </li>
               <li>
-                <a href={`${prefix}/users/google/login/?${sp.toString()}`}>
-                  Google&trade;
+                <a
+                  href={`${prefix}/users/google/login/?${sp.toString()}`}
+                  className="button icon-button outline"
+                  onClick={() => {
+                    removeSessionStorageData();
+                  }}
+                >
+                  <GoogleLogo />
+                  Sign in with Google&trade;
                 </a>
               </li>
             </ul>
-          )}
-        </>
+          </>
+        )
       ) : (
         <Loading />
       )}
-    </div>
+    </>
   );
 }
 

@@ -35,6 +35,10 @@ async function buildDocumentInteractive(
       ? Document.read(documentPath, Document.MEMOIZE_INVALIDATE)
       : Document.read(documentPath);
 
+    if (!document) {
+      throw new Error(`${documentPath} could not be read`);
+    }
+
     if (!interactive) {
       const translations = translationsOf(document.metadata);
       if (translations && translations.length > 0) {

@@ -1,6 +1,7 @@
 const LRU = require("lru-cache");
 
 const { Document } = require("../content");
+const { m2h } = require("../markdown");
 
 const {
   INTERACTIVE_EXAMPLES_BASE_URL,
@@ -50,18 +51,15 @@ const renderFromURL = async (
         `Tried to find a folder called ${Document.urlToFolderPath(url)}`
     );
   }
-  const { rawHTML, metadata, fileInfo } = document;
+  const { rawBody, metadata, fileInfo, isMarkdown } = document;
+  const rawHTML = isMarkdown ? await m2h(rawBody) : rawBody;
   const [renderedHtml, errors] = await renderMacros(
     rawHTML,
     {
-      ...{
-        url,
-        locale: metadata.locale,
-        slug: metadata.slug,
-        title: metadata.title,
-        tags: metadata.tags || [],
-        selective_mode,
-      },
+      ...metadata,
+      url,
+      tags: metadata.tags || [],
+      selective_mode,
       interactive_examples: {
         base_url: INTERACTIVE_EXAMPLES_BASE_URL,
       },

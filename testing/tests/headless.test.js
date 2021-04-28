@@ -260,7 +260,11 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toClick("a", { text: "Sign in" });
     await expect(page).toMatchElement("h1", { text: "Sign in" });
     expect(page.url()).toContain(
-      testURL("/en-US/signin?next=/en-US/docs/Web/Foo")
+      testURL(
+        `/en-US/signin?${new URLSearchParams(
+          "next=/en-US/docs/Web/Foo"
+        ).toString()}`
+      )
     );
     await expect(page).toMatchElement("a", { text: "Google" });
     await expect(page).toMatchElement("a", { text: "GitHub" });
@@ -268,32 +272,46 @@ describe("Basic viewing of functional pages", () => {
 
   it("going to 'Sign up' page without query string", async () => {
     await page.goto(testURL("/en-US/signup"));
-    await expect(page).toMatchElement("h1", { text: "Sign up" });
-    await expect(page).toMatch("Invalid Sign up URL");
+    await expect(page).toMatchElement("h1", {
+      text: "Sign in to MDN Web Docs",
+    });
+    await expect(page).toMatch("Invalid URL");
     await expect(page).toMatchElement("a", {
-      text: "Try starting over the sign-in process",
+      text: "Please retry the sign-in process",
     });
   });
 
   it("going to 'Sign up' page with realistic (fake) query string", async () => {
-    await page.goto(
-      testURL("/en-US/signup?csrfmiddlewaretoken=abc&provider=github")
+    const sp = new URLSearchParams();
+    sp.set("csrfmiddlewaretoken", "abc");
+    sp.set("provider", "github");
+    sp.set(
+      "user_details",
+      JSON.stringify({
+        name: "Peter B",
+      })
     );
-    await expect(page).toMatchElement("h1", { text: "Sign up" });
-    await expect(page).not.toMatch("Invalid Sign up URL");
+
+    await page.goto(testURL(`/en-US/signup?${sp.toString()}`));
+    await expect(page).toMatchElement("h1", {
+      text: "Sign in to MDN Web Docs",
+    });
+    await expect(page).not.toMatch("Invalid URL");
     await expect(page).toMatch(
-      "You are signing in to MDN Web Docs with GitHub."
+      "You are signing in to MDN Web Docs with GitHub as Peter B."
     );
     await expect(page).toMatch(
       "I agree to Mozilla's Terms and Privacy Notice."
     );
-    await expect(page).toMatchElement("button", { text: "Create account" });
+    await expect(page).toMatchElement("button", { text: "Complete sign-in" });
   });
 
   it("should say you're not signed in on the settings page", async () => {
     await page.goto(testURL("/en-US/settings"));
-    await expect(page).toMatchElement("h1", { text: "Settings" });
-    await expect(page).toMatchElement("a", { text: "Sign in first" });
+    await expect(page).toMatchElement("h1", { text: "Account settings" });
+    await expect(page).toMatchElement("a", {
+      text: "Please sign in to continue",
+    });
   });
 
   it("should show your settings page", async () => {
@@ -307,12 +325,12 @@ describe("Basic viewing of functional pages", () => {
     });
 
     await page.goto(url);
-    await expect(page).toMatchElement("h1", { text: "Settings" });
+    await expect(page).toMatchElement("h1", { text: "Account settings" });
     await expect(page).toMatchElement("button", { text: "Close account" });
 
     // Change locale to French
     await expect(page).toSelect('select[name="locale"]', "French");
-    await expect(page).toClick("button", { text: "Save changes" });
-    await expect(page).toMatch("Settings update sent");
+    await expect(page).toClick("button", { text: "Update language" });
+    await expect(page).toMatch("Yay! Updated settings successfully saved.");
   });
 });

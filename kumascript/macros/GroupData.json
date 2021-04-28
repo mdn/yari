@@ -1148,6 +1148,7 @@
       "events": ["Document: pointerlockchange", "Document: pointerlockerror"]
     },
     "Presentation API": {
+      "overview": ["Presentation API"],
       "interfaces": [
         "Presentation",
         "PresentationAvailability",
@@ -1253,6 +1254,17 @@
       ],
       "methods": ["Document.getSelection()", "Window.getSelection()"],
       "events": ["Document: selectionchange", "Document: selectstart"]
+    },
+    "Sensor API": {
+      "overview": ["Sensor APIs"],
+      "interfaces": ["Sensor"],
+      "properties": [
+        "Sensor.activated",
+        "Sensor.hasReading",
+        "Sensor.timestamp"
+      ],
+      "methods": ["Sensor.start()", "Sensor.stop()"],
+      "events": ["Sensor: error", "Sensor: reading", "Sensor: activate"]
     },
     "Server Sent Events": {
       "overview": ["Server-sent events"],
@@ -1967,6 +1979,7 @@
       "events": []
     },
     "Web Speech API": {
+      "overview": ["Web Speech API"],
       "interfaces": [
         "SpeechGrammar",
         "SpeechGrammarList",
@@ -2126,6 +2139,7 @@
       "events": []
     },
     "XMLHttpRequest": {
+      "overview": ["XMLHttpRequest"],
       "guides": [
         "/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest",
         "/docs/Web/API/XMLHttpRequest/HTML_in_XMLHttpRequest",

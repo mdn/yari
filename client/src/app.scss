@@ -1,6 +1,6 @@
-// (At least without a theme) regular prism.css is really small so we can
-// afford to load it on all pages globally.
-@import "prismjs/themes/prism";
+// We're assuming that code snippets are so common that it's OK to always
+// include them in every page.
+@import "./minimal-prism";
 
 @import "~@mdn/minimalist/sass/mdn-minimalist";
 @import "./ui/molecules/grids/grids";

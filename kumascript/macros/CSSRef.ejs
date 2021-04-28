@@ -1,283 +1,710 @@
 <%
-// CSS Sidebar
 
-var slug = env.slug;
-var locale = env.locale;
-var pageTags = env.tags;
-var title = env.title;
-var CSSHref = '/' + locale + '/docs/Web/CSS';
-var CSSRefHref = '/' + locale + '/docs/Web/CSS/Reference';
-var output = "";
+const text = mdn.localStringMap({
+  'en-US': {
+    'Learn_CSS': 'Learn CSS',
+    'CSS_first_steps': 'CSS first steps',
+       'CSS_first_steps_overview': 'CSS first steps overview',
+       'What_is_CSS':  'What is CSS?',
+       'Getting_started_with_CSS': 'Getting started with CSS',
+       'How_CSS_is_structured': 'How CSS is structured',
+       'How_CSS_works': 'How CSS works',
+       'Using_your_new_knowledge': 'Using your new knowledge',
+     'CSS_building_blocks': 'CSS building blocks',
+       'CSS_building_blocks_overview': 'CSS building blocks overview',
+       'Cascade_and_inheritance': 'Cascade and inheritance',
+       'CSS_selectors': 'CSS selectors',
+       'The_box_model': 'The box model',
+       'Backgrounds_and_borders': 'Backgrounds and borders',
+       'Handling_different_text_directions': 'Handling different text directions',
+       'Overflowing_content': 'Overflowing content',
+       'Values_and_units': 'Values and units',
+       'Sizing_items_in_CSS': 'Sizing items in CSS',
+       'Images_media_and_form_elements': 'Images, media, and form elements',
+       'Styling_tables': 'Styling tables',
+       'Debugging_CSS': 'Debugging CSS',
+       'Organizing_your_CSS': 'Organizing your CSS',
+     'Styling_text': 'Styling text',
+       'Styling_text_overview': 'Styling text overview',
+       'Fundamental_text_and_font_styling': 'Fundamental text and font styling',
+       'Styling_lists': 'Styling lists',
+       'Styling_links': 'Styling links',
+       'Web_fonts': 'Web fonts',
+       'Assessment_typesetting_a_community_school_homepage': 'Assessment: Typesetting a community school homepage',
+     'CSS_layout': 'CSS layout',
+       'CSS_layout_overview': 'CSS layout overview',
+       'Layout_introduction' : 'Introduction to CSS layout',
+       'Normal_Flow' : 'Normal Flow',
+       'Flexbox': 'Flexbox',
+       'Grids' : 'Grids',
+       'Floats': 'Floats',
+       'Positioning': 'Positioning',
+       'Multiple-column_Layout': 'Multiple-column Layout',
+       'Responsive_design': 'Responsive design',
+       'Media_queries': 'Beginner\'s guide to media queries',
+       'Legacy_Layout_Methods': 'Legacy Layout Methods',
+       'Supporting_Older_Browsers': 'Supporting Older Browsers',
+       'Fundamental_Layout_Comprehension' : 'Fundamental Layout Comprehension',
+    'Color_picker_tool': 'Color picker',
+    'Box-shadow_generator': 'Box shadow generator',
+    'Border-image_generator' : 'Border image generator',
+  },
+  'de': {
+    'Learn_CSS': 'Learn CSS',
+      'CSS_first_steps': 'CSS first steps',
+        'CSS_first_steps_overview': 'CSS first steps overview',
+        'What_is_CSS':  'What is CSS?',
+        'Getting_started_with_CSS': 'Getting started with CSS',
+        'How_CSS_is_structured': 'How CSS is structured',
+        'How_CSS_works': 'How CSS works',
+        'Using_your_new_knowledge': 'Using your new knowledge',
+      'CSS_building_blocks': 'CSS building blocks',
+        'CSS_building_blocks_overview': 'CSS building blocks overview',
+        'Cascade_and_inheritance': 'Cascade and inheritance',
+        'CSS_selectors': 'CSS selectors',
+        'The_box_model': 'The box model',
+        'Backgrounds_and_borders': 'Backgrounds and borders',
+        'Handling_different_text_directions': 'Handling different text directions',
+        'Overflowing_content': 'Overflowing content',
+        'Values_and_units': 'Values and units',
+        'Sizing_items_in_CSS': 'Sizing items in CSS',
+        'Images_media_and_form_elements': 'Images, media, and form elements',
+        'Styling_tables': 'Styling tables',
+        'Debugging_CSS': 'Debugging CSS',
+        'Organizing_your_CSS': 'Organizing your CSS',
+      'Styling_text': 'Gestaltung von Text',
+        'Styling_text_overview': 'Gestaltung von Text — Übersicht',
+        'Fundamental_text_and_font_styling': 'Texte gestalten',
+        'Styling_lists': 'Listen gestalten',
+        'Styling_links': 'Links gestalten',
+        'Web_fonts': 'Web-Schriftarten',
+        'Assessment_typesetting_a_community_school_homepage': 'Aufgabe: Webseite für eine Schule',
+      'CSS_layout': 'Layout mit CSS',
+        'CSS_layout_overview': 'Layout mit CSS — Überblick',
+        'Normal_Flow' : 'Normal Flow',
+        'Flexbox': 'Flexboxen',
+        'Grids' : 'Grid',
+        'Floats': 'Float',
+        'Positioning': 'Positionierung',
+        'Multiple-column_Layout': 'Multiple-column Layout',
+        'Responsive_design': 'Responsive design',
+        'Media_queries': 'Beginner\'s guide to media queries',
+        'Legacy_Layout_Methods': 'Legacy Layout Methods',
+        'Supporting_Older_Browsers': 'Supporting Older Browsers',
+        'Fundamental_Layout_Comprehension': 'Fundamental Layout Comprehension',
+  },
+  'pt-BR': {
+    'Learn_CSS': 'Learn CSS',
+      'CSS_first_steps': 'CSS - primeiros passos',
+        'CSS_first_steps_overview': 'Visão geral das primeiras etapas com CSS',
+        'What_is_CSS':  'O que é CSS?',
+        'Getting_started_with_CSS': 'Iniciando com CSS',
+        'How_CSS_is_structured': 'como CSS é estruturado',
+        'How_CSS_works': 'Como CSS funciona',
+        'Using_your_new_knowledge': 'Usando seu novo Conhecimento',
+      'CSS_building_blocks': 'CSS building blocks',
+        'CSS_building_blocks_overview': 'CSS building blocks overview',
+        'Cascade_and_inheritance': 'Cascade and inheritance',
+        'CSS_selectors': 'seletores CSS',
+        'The_box_model': 'The box model',
+        'Backgrounds_and_borders': 'Backgrounds and borders',
+        'Handling_different_text_directions': 'Tratamento de diferentes direções de texto',
+        'Overflowing_content': 'Overflowing content',
+        'Values_and_units': 'Valores e unidades',
+        'Sizing_items_in_CSS': 'Dimensionando itens em CSS',
+        'Images_media_and_form_elements': 'Images, media, and form elements',
+        'Styling_tables': 'Estilização de tabelas',
+        'Debugging_CSS': 'Debugging CSS',
+        'Organizing_your_CSS': 'Organize seu CSS',
+      'Styling_text': 'Estilização de textos',
+        'Styling_text_overview': 'Visão geral da Estilização de textos',
+        'Fundamental_text_and_font_styling': 'Fundamentos da estilização de textos e fontes',
+        'Styling_lists': 'Estilização de listas',
+        'Styling_links': 'Estilização de links',
+        'Web_fonts': 'Fontes Web',
+        'Assessment_typesetting_a_community_school_homepage': 'Avaliação: Tipografia para a página inicial da escola pública local',
+      'CSS_layout': 'Esquemas CSS',
+        'CSS_layout_overview': 'Visão geral de esquemas CSS',
+        'Layout_introduction' : 'Introdução a esquemas CSS',
+        'Normal_Flow': 'Normal Flow',
+        'Flexbox': 'Flexbox',
+        'Grids' : 'Grids',
+        'Floats': '"Floats" - Flutuando elementos',
+        'Positioning': 'Posicionamento',
+        'Multiple-column_Layout': 'Multiple-column Layout',
+        'Responsive_design': 'Responsive design',
+        'Media_queries': 'Beginner\'s guide to media queries',
+        'Legacy_Layout_Methods': 'Legacy Layout Methods',
+        'Supporting_Older_Browsers': 'Supporting Older Browsers',
+        'Fundamental_Layout_Comprehension': 'Fundamental Layout Comprehension',
+  },
+  'ru': {
+    'Learn_CSS': 'Learn CSS',
+      'CSS_first_steps': 'CSS first steps',
+        'CSS_first_steps_overview': 'CSS first steps overview',
+        'What_is_CSS':  'What is CSS?',
+        'Getting_started_with_CSS': 'Getting started with CSS',
+        'How_CSS_is_structured': 'How CSS is structured',
+        'How_CSS_works': 'How CSS works',
+        'Using_your_new_knowledge': 'Using your new knowledge',
+      'CSS_building_blocks': 'CSS building blocks',
+        'CSS_building_blocks_overview': 'CSS building blocks overview',
+        'Cascade_and_inheritance': 'Cascade and inheritance',
+        'CSS_selectors': 'CSS selectors',
+        'The_box_model': 'The box model',
+        'Backgrounds_and_borders': 'Backgrounds and borders',
+        'Handling_different_text_directions': 'Handling different text directions',
+        'Overflowing_content': 'Overflowing content',
+        'Values_and_units': 'Values and units',
+        'Sizing_items_in_CSS': 'Sizing items in CSS',
+        'Images_media_and_form_elements': 'Images, media, and form elements',
+        'Styling_tables': 'Styling tables',
+        'Debugging_CSS': 'Debugging CSS',
+        'Organizing_your_CSS': 'Organizing your CSS',
+      'Styling_text': 'Стилизирование текста',
+        'Styling_text_overview': 'Стилизирование текста',
+        'Fundamental_text_and_font_styling': 'Основы стилизирования текста и шрифта',
+        'Styling_lists': 'Стилизирование списков',
+        'Styling_links': 'Стилизирование ссылок',
+        'Web_fonts': 'Веб-шрифты',
+        'Assessment_typesetting_a_community_school_homepage': 'Задание: Стилизирование школьного сайта',
+      'CSS_layout': 'CSS макет',
+        'CSS_layout_overview': 'CSS макет',
+        'Normal_Flow': 'Normal Flow',
+        'Flexbox': 'Flexbox',
+        'Grids' : 'Сетки',
+        'Floats': 'Float',
+        'Positioning': 'Позиционирование',
+        'Multiple-column_Layout': 'Multiple-column Layout',
+        'Responsive_design': 'Responsive design',
+        'Media_queries': 'Beginner\'s guide to media queries',
+        'Legacy_Layout_Methods': 'Legacy Layout Methods',
+        'Supporting_Older_Browsers': 'Supporting Older Browsers',
+        'Fundamental_Layout_Comprehension': 'Fundamental Layout Comprehension',
+  },
+  'zh-CN': {
+    'Learn_CSS': 'Learn CSS',
+      'CSS_first_steps': 'CSS first steps',
+        'CSS_first_steps_overview': 'CSS first steps overview',
+        'What_is_CSS':  'What is CSS?',
+        'Getting_started_with_CSS': 'Getting started with CSS',
+        'How_CSS_is_structured': 'How CSS is structured',
+        'How_CSS_works': 'How CSS works',
+        'Using_your_new_knowledge': 'Using your new knowledge',
+      'CSS_building_blocks': 'CSS building blocks',
+        'CSS_building_blocks_overview': 'CSS building blocks overview',
+        'Cascade_and_inheritance': 'Cascade and inheritance',
+        'CSS_selectors': 'CSS selectors',
+        'The_box_model': 'The box model',
+        'Backgrounds_and_borders': 'Backgrounds and borders',
+        'Handling_different_text_directions': 'Handling different text directions',
+        'Overflowing_content': 'Overflowing content',
+        'Values_and_units': 'Values and units',
+        'Sizing_items_in_CSS': 'Sizing items in CSS',
+        'Images_media_and_form_elements': 'Images, media, and form elements',
+        'Styling_tables': 'Styling tables',
+        'Debugging_CSS': 'Debugging CSS',
+        'Organizing_your_CSS': 'Organizing your CSS',
+      'Styling_text': '样式化文字',
+        'Styling_text_overview': '样式化文字概述',
+        'Fundamental_text_and_font_styling': '基础文字与字体样式化',
+        'Styling_lists': '样式化列表',
+        'Styling_links': '样式化链接',
+        'Web_fonts': 'Web 字体',
+        'Assessment_typesetting_a_community_school_homepage': '作业：排版社区大学首页',
+      'CSS_layout': 'CSS 排版概述',
+        'CSS_layout_overview': 'CSS 版面配置概述',
+        'Normal_Flow': 'Normal Flow',
+        'Flexbox': '弹性区块',
+        'Grids' : '网格',
+        'Floats': '浮动',
+        'Positioning': '定位',
+        'Multiple-column_Layout': 'Multiple-column Layout',
+        'Responsive_design': 'Responsive design',
+        'Media_queries': 'Beginner\'s guide to media queries',
+        'Legacy_Layout_Methods': 'Legacy Layout Methods',
+        'Supporting_Older_Browsers': 'Supporting Older Browsers',
+        'Fundamental_Layout_Comprehension': 'Fundamental Layout Comprehension',
+  },
+  'zh-TW': {
+    'Learn_CSS': 'Learn CSS',
+      'CSS_first_steps': 'CSS first steps',
+        'CSS_first_steps_overview': 'CSS first steps overview',
+        'What_is_CSS':  'What is CSS?',
+        'Getting_started_with_CSS': 'Getting started with CSS',
+        'How_CSS_is_structured': 'How CSS is structured',
+        'How_CSS_works': 'How CSS works',
+        'Using_your_new_knowledge': 'Using your new knowledge',
+      'CSS_building_blocks': 'CSS building blocks',
+        'CSS_building_blocks_overview': 'CSS building blocks overview',
+        'Cascade_and_inheritance': 'Cascade and inheritance',
+        'CSS_selectors': 'CSS selectors',
+        'The_box_model': 'The box model',
+        'Backgrounds_and_borders': 'Backgrounds and borders',
+        'Handling_different_text_directions': 'Handling different text directions',
+        'Overflowing_content': 'Overflowing content',
+        'Values_and_units': 'Values and units',
+        'Sizing_items_in_CSS': 'Sizing items in CSS',
+        'Images_media_and_form_elements': 'Images, media, and form elements',
+        'Styling_tables': 'Styling tables',
+        'Debugging_CSS': 'Debugging CSS',
+        'Organizing_your_CSS': 'Organizing your CSS',
+      'Styling_text': '樣式化文字',
+        'Styling_text_overview': '樣式化文字概述',
+        'Fundamental_text_and_font_styling': '基礎的文字與字型樣式化',
+        'Styling_lists': '樣式化列表',
+        'Styling_links': '樣式化連結',
+        'Web_fonts': 'Web 字型',
+        'Assessment_typesetting_a_community_school_homepage': '親合度：設定社區大學首頁的版面',
+      'CSS_layout': 'CSS 版面配置',
+        'CSS_layout_overview': 'CSS 版面配置概述',
+        'Normal_Flow': 'Normal Flow',
+        'Flexbox': '彈性區塊',
+        'Grids' : '格線',
+        'Floats': '浮動',
+        'Positioning': '定位',
+        'Multiple-column_Layout': 'Multiple-column Layout',
+        'Responsive_design': 'Responsive design',
+        'Media_queries': 'Beginner\'s guide to media queries',
+        'Legacy_Layout_Methods': 'Legacy Layout Methods',
+        'Supporting_Older_Browsers': 'Supporting Older Browsers',
+        'Fundamental_Layout_Comprehension': 'Fundamental Layout Comprehension',
+  },
+  'ja': {
+    'Learn_CSS': 'Learn CSS',
+      'CSS_first_steps': 'CSS first steps',
+        'CSS_first_steps_overview': 'CSS first steps overview',
+        'What_is_CSS':  'What is CSS?',
+        'Getting_started_with_CSS': 'Getting started with CSS',
+        'How_CSS_is_structured': 'How CSS is structured',
+        'How_CSS_works': 'How CSS works',
+        'Using_your_new_knowledge': 'Using your new knowledge',
+      'CSS_building_blocks': 'CSS building blocks',
+        'CSS_building_blocks_overview': 'CSS building blocks overview',
+        'Cascade_and_inheritance': 'Cascade and inheritance',
+        'CSS_selectors': 'CSS selectors',
+        'The_box_model': 'The box model',
+        'Backgrounds_and_borders': 'Backgrounds and borders',
+        'Handling_different_text_directions': 'Handling different text directions',
+        'Overflowing_content': 'Overflowing content',
+        'Values_and_units': 'Values and units',
+        'Sizing_items_in_CSS': 'Sizing items in CSS',
+        'Images_media_and_form_elements': 'Images, media, and form elements',
+        'Styling_tables': 'Styling tables',
+        'Debugging_CSS': 'Debugging CSS',
+        'Organizing_your_CSS': 'Organizing your CSS',
+      'Styling_text': 'Styling text',
+        'Styling_text_overview': 'Styling text overview',
+        'Fundamental_text_and_font_styling': 'Fundamental text and font styling',
+        'Styling_lists': 'Styling lists',
+        'Styling_links': 'Styling links',
+        'Web_fonts': 'Web fonts',
+        'Assessment_typesetting_a_community_school_homepage': 'Assessment: Typesetting a community school homepage',
+      'CSS_layout': 'CSS layout',
+        'CSS_layout_overview': 'CSS layout overview',
+        'Layout_introduction' : 'Introduction to CSS layout',
+        'Normal_Flow' : 'Normal Flow',
+        'Flexbox': 'Flexbox',
+        'Grids' : 'Grids',
+        'Floats': 'Floats',
+        'Positioning': 'Positioning',
+        'Multiple-column_Layout': 'Multiple-column Layout',
+        'Responsive_design': 'Responsive design',
+        'Media_queries': 'Beginner\'s guide to media queries',
+        'Legacy_Layout_Methods': 'Legacy Layout Methods',
+        'Supporting_Older_Browsers': 'Supporting Older Browsers',
+        'Fundamental_Layout_Comprehension': 'Fundamental Layout Comprehension',
+  }
+});
 
-// slug is not available in preview mode.
-if (slug) {
-    var name = slug.replace('Web/CSS/','').split('/')[0];
-    var hasTag = page.hasTag;
-    var htmlEscape = kuma.htmlEscape;
-    var rtlLocales = ['ar', 'he', 'fa'];
 
-    var data = require('mdn-data/css');
-    var commonl10n = JSON.parse(await template('L10n:Common'));
-    var cssl10n = JSON.parse(await template('L10n:CSS'));
+const locale = env.locale;
+const learnURL = `/${locale}/docs/Learn/`;
+const cssURL = `/${locale}/docs/Web/CSS/`;
 
-    var text = {
-        'Properties': mdn.getLocalString(commonl10n, 'Properties'),
-        'translate': mdn.getLocalString(commonl10n, '[Translate]'),
-        'title': mdn.getLocalString(commonl10n, 'TranslationCTA'),
-        'css_ref_title': mdn.getLocalString(cssl10n, 'css_ref_title'),
-        'at_rules': mdn.getLocalString(cssl10n, 'at_rules'),
-        'types': mdn.getLocalString(cssl10n, 'types'),
-        'Guides': mdn.getLocalString(commonl10n, 'Guides'),
-        'tag_selectors':  mdn.getLocalString(cssl10n, 'tag_selectors'),
-        'Basic Selectors': mdn.getLocalString(cssl10n, 'Basic Selectors'),
-        'Pseudo-classes': mdn.getLocalString(cssl10n, 'Pseudo-classes'),
-        'Pseudo-elements': mdn.getLocalString(cssl10n, 'Pseudo-elements'),
-        'Combinators': mdn.getLocalString(cssl10n, 'Combinators')
-    }
+const htmlEscape = kuma.htmlEscape;
+const hasTag = page.hasTag;
+const rtlLocales = ['ar', 'he', 'fa'];
 
-    function isAtRule(foo) {
-      return foo.indexOf('@') !== -1;
-    }
+const pageList = await page.subpagesExpand('/en-US/docs/Web/CSS');
+const standardPages = pageList.filter(page => !hasTag(page, "Non-standard"));
 
-    function isType(foo) {
-      return foo.indexOf('<') !== -1 && foo.indexOf('>') !== -1;
-    }
+const groups = standardPages.filter(page => hasTag(page, "Overview"));
+const properties = standardPages.filter(page => hasTag(page, "CSS Property"));
+const selectors = standardPages.filter(page => (hasTag(page, "Selector") && !hasTag(page, "Pseudo-element") && !hasTag(page, "Pseudo-class")));
+const pseudoClasses = standardPages.filter(page => hasTag(page, "Pseudo-class"));
+const pseudoElements = standardPages.filter(page => hasTag(page, "Pseudo-element"));
+const atRules = standardPages.filter(page => hasTag(page, "At-rule"));
+const types = standardPages.filter(page => hasTag(page, "CSS Data Type"));
 
-    function containsTag(tagList, tag) {
-        if (!tagList || typeof tagList == 'undefined') return 0;
-        tag = tag.toLowerCase();
-        for (var i = 0, len = tagList.length; i < len; i++) {
-            if (tagList[i].toLowerCase() == tag) return 1;
-        }
-        return 0;
-    }
-
-    var group = [];
-    var isSelector = containsTag(pageTags, text['tag_selectors']) || slug.indexOf(':') !== -1;
-    var isOverviewPage = slug.indexOf("_") !== -1 && !isType(title);
-
-    if (isOverviewPage && !isSelector) {
-      group.push(name.replace(/_/g, ' '));
-    } else if (isSelector) {
-      group.push('CSS Selectors');
-    } else {
-        name = name.toLowerCase();
-        // Find group of this page in CSSData
-        if (isAtRule(slug) && data.atRules[name] && data.atRules[name].groups) {
-            group = group.concat(data.atRules[name].groups);
-        } else if (data.properties[name] && data.properties[name].groups) {
-            group = group.concat(data.properties[name].groups);
-        } else if (isType(title)) {
-            var cleanType = title;
-            if (!(cleanType in data.types)) {
-                // https://github.com/mdn/data/pull/81 was merged
-                cleanType = title.replace('<', '').replace('>', '');
-            }
-            if (data.types[cleanType] && data.types[cleanType].groups) {
-                group = group.concat(data.types[cleanType].groups);
-            }
-        }
-    }
-
-    var groupData = [];
-    var properties = [];
-    var atRules = [];
-    var selectors = [];
-    var types = [];
-
-    // I am a selector or a type, we want to list all of them.
-    if (isSelector) {
-      for (var selector in data.selectors) {
-        groupData.push(selector);
-      }
-    } else {
-        // I am a property or an at-rule
-        // Find other properties, at-rules or types with these groups
-        for (var property in data.properties) {
-            var propertyGroup = data.properties[property].groups;
-            for (var g in propertyGroup) {
-                if (group.indexOf(propertyGroup[g]) !== -1 &&
-                        groupData.indexOf(property) === -1) {
-                    groupData.push(property);
-                }
-            }
-        }
-        for (var atRule in data.atRules) {
-            var atRuleGroup = data.atRules[atRule].groups;
-            for (var g in atRuleGroup) {
-                if (group.indexOf(atRuleGroup[g]) !== -1 &&
-                        groupData.indexOf(atRule) === -1) {
-                    groupData.push(atRule);
-                }
-            }
-        }
-        for (var type in data.types) {
-            var typeGroup = data.types[type].groups;
-            for (var g in typeGroup) {
-                if (group.indexOf(typeGroup[g]) !== -1 &&
-                        groupData.indexOf(type) === -1) {
-                    groupData.push(type);
-                }
-            }
-        }
-    }
-
-    // Load the CSS pages data, gather info for the found properties and atRules
-    var pageList = await page.subpagesExpand('/en-US/docs/Web/CSS');
-    for (var i in pageList) {
-      var aPage = pageList[i];
-      for (var x in groupData) {
-        if (aPage.slug.split("/").pop() === groupData[x].replace(/ /g, '_')) {
-          if (isAtRule(groupData[x])) {
-            atRules.push(aPage);
-          } else if (aPage.slug.indexOf('selectors') !== -1 ||
-                aPage.slug.indexOf('combinator') !== -1 ||
-                aPage.slug.indexOf(':') !== -1 ) {
-            selectors.push(aPage);
-          } else {
-            properties.push(aPage);
-          }
-        } else if (aPage.title === groupData[x] && isType(groupData[x])) {
-            types.push(aPage);
-        }
-      }
-    }
-
-    if (isSelector) {
-      var selectorData = data.selectors;
-      var selectorCollection = {};
-      for (var selector in selectorData) {
-          var g = selectorData[selector].groups[0];
-          for (s in selectors) {
-            var aPage = selectors[s];
-            if(aPage.slug.split("/").pop().replace(/_/g, ' ') === selector) {
-                if (g in selectorCollection) {
-                    selectorCollection[g].push(aPage);
-                } else {
-                    selectorCollection[g] = [];
-                    selectorCollection[g].push(aPage);
-                }
-            }
-          }
-      }
-    }
-
-    // Load sub pages of the group
-    var groupPages = [];
-    for (var i = 0; i < group.length; i++) {
-        groupPages = groupPages.concat(await page.subpagesExpand('/en-US/docs/Web/CSS/' + group[i].replace(/ /g, '_')));
-    }
-
-    // output helpers
-    var badges = {
-      ExperimentalBadge : await template("ExperimentalBadge"),
-      NonStandardBadge : await template("NonStandardBadge"),
-      DeprecatedBadge : await template("DeprecatedBadge"),
-      ObsoleteBadge : await template("ObsoleteBadge"),
-    }
-
-    function buildSublist(pages, title, noCodeTags) {
-      var result = '<li class="toggle"><details open><summary>' + title + '</summary><ol>';
-      var code    = !noCodeTags ? '<code>'  : '';
-      var endcode = !noCodeTags ? '</code>' : '';
-
-      for (var i in pages) {
-        var aPage = pages[i];
-        var url = aPage.url.replace('en-US', locale);
-        var title = htmlEscape(aPage.title);
-
-        var translated = false;
-        if (locale != 'en-US') {
-            aPage.translations.forEach(function(translation){
-                if(translation.locale === locale) {
-                    url = translation.url;
-                    title = htmlEscape(translation.title);
-                    translated = true;
-                }
-            });
-        }
-
-        result += '<li>';
-
-        if (hasTag(aPage, 'Experimental')) {
-            result += badges.ExperimentalBadge;
-        }
-
-        if (hasTag(aPage, 'Non-standard') || hasTag(aPage, 'Non Standard')) {
-            result += badges.NonStandardBadge;
-        }
-
-        if (hasTag(aPage, 'Deprecated')) {
-            result += badges.DeprecatedBadge;
-        }
-
-        if (hasTag(aPage, 'Obsolete')) {
-            result += badges.ObsoleteBadge;
-            result += '<s class="obsoleteElement">';
-        }
-
-        if (rtlLocales.indexOf(locale) != -1) {
-            result += '<bdi>';
-        }
-
-        if (slug == aPage.slug) {
-            result += '<em>' + code + title + endcode + '</em>'
-        } else {
-            result += '<a href="' + url + '">' + code + title + endcode + '</a>';
-        }
-
-        if (rtlLocales.indexOf(locale) != -1) {
-            result += '</bdi>';
-        }
-
-        if (hasTag(aPage, 'Obsolete')) {
-            result += '</s>';
-        }
-
-        result += '</li>';
-      }
-
-      result += '</ol></details></li>';
-
-      return result;
-    }
-
-    // output
-    output = '<section class="Quick_links" id="Quick_Links"><ol>';
-    output += '<li><strong><a href="' +  CSSHref + '">CSS</a></strong></li>';
-    output += '<li><strong><a href="' +  CSSRefHref + '">' + text['css_ref_title'] + '</a></strong></li>';
-
-    for (var i = 0; i < group.length; i++) {
-      output += '<li><strong><a href="' +  CSSHref + '/' + group[i].replace(/ /g, '_') + '">' + group[i] + '</a></strong></li>';
-    }
-
-    if (groupPages.length > 0) {
-      output += buildSublist(groupPages, text['Guides'], true);
-    }
-
-    if (atRules.length > 0) {
-      output += buildSublist(atRules, text['at_rules']);
-    }
-
-    if (properties.length > 0) {
-      output += buildSublist(properties, text['Properties']);
-    }
-
-    if (types.length > 0) {
-      output += buildSublist(types, text['types']);
-    }
-
-    if (isSelector) {
-      for (sg in selectorCollection) {
-        var selectorGroup = selectorCollection[sg];
-        if (selectorGroup.length > 0) {
-          output += buildSublist(selectorGroup, text[sg]);
-        }
-      }
-    }
-
-    output += '</ol></section>';
+const badges = {
+  ExperimentalBadge : await template("ExperimentalBadge"),
+  NonStandardBadge : await template("NonStandardBadge"),
+  DeprecatedBadge : await template("DeprecatedBadge"),
 }
+
+function buildSublist(pages, title) {
+  let result = `<li class="toggle"><details><summary>${title}</summary><ol>`;
+
+  for (const page of pages) {
+    const url = page.url.replace('en-US', locale);
+    const title = htmlEscape(page.title);
+
+    if (locale != 'en-US') {
+      page.translations.forEach(function(translation){
+        if (translation.locale === locale) {
+          title = htmlEscape(translation.title);
+        }
+      });
+    }
+
+    result += '<li>';
+
+    if (hasTag(page, 'Experimental')) {
+      result += badges.ExperimentalBadge;
+    }
+
+    if (hasTag(page, 'Deprecated')) {
+      result += badges.DeprecatedBadge;
+    }
+
+    if (rtlLocales.indexOf(locale) != -1) {
+      result += '<bdi>';
+    }
+
+    result += web.smartLink(url, null, title, cssURL);
+
+    if (rtlLocales.indexOf(locale) != -1) {
+      result += '</bdi>';
+    }
+
+    result += '</li>';
+  }
+
+  result += '</ol></details></li>';
+
+  return result;
+}
+
 %>
 
-<%-output%>
+<section class="Quick_links" id="Quick_Links">
+
+<ol>
+  <li><strong><%=text['Learn_CSS']%></strong></li>
+  <li class="toggle">
+      <details>
+          <summary><%=text['CSS_first_steps']%></summary>
+          <ol>
+            <li><%-web.smartLink(`${learnURL}CSS/First_steps`, null, text['CSS_first_steps_overview'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/First_steps/What_is_CSS`, null, text['What_is_CSS'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/First_steps/Getting_started`, null, text['Getting_started_with_CSS'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/First_steps/How_CSS_is_structured`, null, text['How_CSS_is_structured'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/First_steps/How_CSS_works`, null, text['How_CSS_works'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/First_steps/Using_your_new_knowledge`, null, text['Using_your_new_knowledge'], learnURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary><%=text['CSS_building_blocks']%></summary>
+          <ol>
+            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks`, null, text['CSS_building_blocks_overview'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Cascade_and_inheritance`, null, text['Cascade_and_inheritance'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Selectors`, null, text['CSS_selectors'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/The_box_model`, null, text['The_box_model'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Backgrounds_and_borders`, null, text['Backgrounds_and_borders'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Handling_different_text_directions`, null, text['Handling_different_text_directions'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Overflowing_content`, null, text['Overflowing_content'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Values_and_units`, null, text['Values_and_units'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Sizing_items_in_CSS`, null, text['Sizing_items_in_CSS'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Images_media_form_elements`, null, text['Images_media_and_form_elements'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Styling_tables`, null, text['Styling_tables'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Debugging_CSS`, null, text['Debugging_CSS'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Organizing`, null, text['Organizing_your_CSS'], learnURL)%></li>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary><%=text['Styling_text']%></summary>
+          <ol>
+            <li><%-web.smartLink(`${learnURL}CSS/Styling_text`, null, text['Styling_text_overview'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/Styling_text/Fundamentals`, null, text['Fundamental_text_and_font_styling'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/Styling_text/Styling_lists`, null, text['Styling_lists'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/Styling_text/Styling_links`, null, text['Styling_links'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/Styling_text/Web_fonts`, null, text['Web_fonts'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/Styling_text/Typesetting_a_homepage`, null, text['Assessment_typesetting_a_community_school_homepage'], learnURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary><%=text['CSS_layout']%></summary>
+          <ol>
+            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout`, null, text['CSS_layout_overview'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Introduction`, null, text['Layout_introduction'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Normal_Flow`, null, text['Normal_Flow'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Flexbox`, null, text['Flexbox'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Grids`, null, text['Grids'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Floats`, null, text['Floats'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Positioning`, null, text['Positioning'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Multiple-column_Layout`, null, text['Multiple-column_Layout'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Responsive_Design`, null, text['Responsive_design'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Media_queries`, null, text['Media_queries'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Legacy_Layout_Methods`, null, text['Legacy_Layout_Methods'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Supporting_Older_Browsers`, null, text['Supporting_Older_Browsers'], learnURL)%></li>
+            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Fundamental_Layout_Comprehension`, null, text['Fundamental_Layout_Comprehension'], learnURL)%></li>
+          </ol>
+      </details>
+  </li>
+
+  <li><strong>Reference</strong></li>
+  <%-buildSublist(groups, 'Modules');%>
+  <%-buildSublist(properties, 'Properties');%>
+  <%-buildSublist(selectors, 'Selectors');%>
+  <%-buildSublist(pseudoClasses, 'Pseudo-classes');%>
+  <%-buildSublist(pseudoElements, 'Pseudo-elements');%>
+  <%-buildSublist(atRules, 'At-rules');%>
+  <%-buildSublist(types, 'Types');%>
+
+  <li><strong>Guides</strong></li>
+  <li class="toggle">
+      <details>
+          <summary>Animations</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Animations/Using_CSS_animations`, null, "Using CSS animations", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Backgrounds and Borders</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Backgrounds_and_Borders/Using_multiple_backgrounds`, null, "Using multiple backgrounds", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Backgrounds_and_Borders/Resizing_background_images`, null, "Resizing background images", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Box alignment</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Box_Alignment/Box_Alignment_In_Block_Abspos_Tables`, null, "Box alignment in block layout", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Box_Alignment/Box_Alignment_in_Flexbox`, null, "Box alignment in flexbox", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Box_Alignment/Box_Alignment_In_Grid_Layout`, null, "Box alignment in grid layout", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Box_Alignment/Box_Alignment_in_Multi-column_Layout`, null, "Box alignment in multi-column layout", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Box model</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Box_Model/Introduction_to_the_CSS_box_model`, null, "Introduction to the CSS basic box model", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Box_Model/Mastering_margin_collapsing`, null, "Mastering margin collapsing", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Columns</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Columns/Basic_Concepts_of_Multicol`, null, "Basic concepts of Multicol", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Columns/Styling_Columns`, null, "Styling columns", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Columns/Spanning_Columns`, null, "Spanning and balancing", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Columns/Handling_Overflow_in_Multicol`, null, "Handling overflow in Multicol", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Columns/Handling_content_breaks_in_multicol`, null, "Content breaks in Multicol", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Conditional rules</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Conditional_Rules/Using_Feature_Queries`, null, "Using feature queries", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>CSSOM view</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSSOM_View/Coordinate_systems`, null, "Coordinate systems", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Flexbox</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox`, null, "Basic concepts of Flexbox", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Flexible_Box_Layout/Relationship_of_Flexbox_to_Other_Layout_Methods`, null, "Comparison with other layout methods", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Flexible_Box_Layout/Aligning_Items_in_a_Flex_Container`, null, "Aligning items in a flex container", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Flexible_Box_Layout/Ordering_Flex_Items`, null, "Ordering flex items", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Flexible_Box_Layout/Controlling_Ratios_of_Flex_Items_Along_the_Main_Ax`, null, "Controlling flex item ratios", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Flexible_Box_Layout/Mastering_Wrapping_of_Flex_Items`, null, "Mastering wrapping of flex items", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Flexible_Box_Layout/Typical_Use_Cases_of_Flexbox`, null, "Typical use cases of Flexbox", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Flexible_Box_Layout/Backwards_Compatibility_of_Flexbox`, null, "Backwards compatibility of Flexbox", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Flow layout</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Flow_Layout/Block_and_Inline_Layout_in_Normal_Flow`, null, "Block and Inline layout in normal flow", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Flow_Layout/In_Flow_and_Out_of_Flow`, null, "In flow and Out of flow", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Flow_Layout/Intro_to_formatting_contexts`, null, "Formatting contexts explained", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Flow_Layout/Flow_Layout_and_Writing_Modes`, null, "Flow layout and writing modes", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Flow_Layout/Flow_Layout_and_Overflow`, null, "Flow layout and overflow", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Fonts</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Fonts/OpenType_fonts_guide`, null, "OpenType font features guide", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Fonts/Variable_Fonts_Guide`, null, "Variable fonts guide", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Grid</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout`, null, "Basics concepts of grid layout", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Relationship_of_Grid_Layout`, null, "Relationship to other layout methods", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Line-based_Placement_with_CSS_Grid`, null, "Line-based placement", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Grid_Template_Areas`, null, "Grid template areas", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Layout_using_Named_Grid_Lines`, null, "Layout using named grid lines", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Auto-placement_in_CSS_Grid_Layout`, null, "Auto-placement in grid layout", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Box_Alignment_in_CSS_Grid_Layout`, null, "Box alignment in grid layout", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/CSS_Grid_Logical_Values_and_Writing_Modes`, null, "Grids, logical values and writing modes", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/CSS_Grid_Layout_and_Accessibility`, null, "Grid layout and accessibility", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/CSS_Grid_and_Progressive_Enhancement`, null, "Grid Layout and progressive enhancement", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Realizing_common_layouts_using_CSS_Grid_Layout`, null, "Realizing common layouts using grids", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Subgrid`, null, "Subgrid", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Masonry_Layout`, null, "Masonry layout", cssURL)%></li>
+         </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Images</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Images/Using_CSS_gradients`, null, "Using CSS gradients", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Lists and counters</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Lists_and_Counters/Using_CSS_counters`, null, "Using CSS counters", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Lists_and_Counters/Consistent_list_indentation`, null, "Consistent list indentation", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Logical properties</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Logical_Properties/Basic_concepts`, null, "Basic concepts", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Logical_Properties/Floating_and_positioning`, null, "Floating and positioning", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Logical_Properties/Margins_borders_padding`, null, "Margins, borders and padding", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Logical_Properties/Sizing`, null, "Sizing", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Media queries</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}Media_Queries/Using_media_queries`, null, "Using media queries", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}Media_Queries/Using_Media_Queries_for_Accessibility`, null, "Using media queries for accessibility", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}Media_Queries/Testing_media_queries`, null, "Testing media queries programmatically", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Positioning</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Positioning/Understanding_z_index`, null, "Understanding CSS z-index", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Scroll snap</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Scroll_Snap/Basic_concepts`, null, "Basic concepts of scroll snap", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Scroll_Snap/Browser_compat`, null, "Browser compatibility and scroll snap", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Shapes</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Shapes/Overview_of_CSS_Shapes`, null, "Overview of shapes", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Shapes/From_box_values`, null, "Shapes from box values", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Shapes/Basic_Shapes`, null, "Basic shapes", cssURL)%></li>
+            <li><%-web.smartLink(`${cssURL}CSS_Shapes/Shapes_From_Images`, null, "Shapes from images", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Text</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Text/Wrapping_Text`, null, "Wrapping and breaking text", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Transforms</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Transforms/Using_CSS_transforms`, null, "Using transforms", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary>Transitions</summary>
+          <ol>
+            <li><%-web.smartLink(`${cssURL}CSS_Transitions/Using_CSS_transitions`, null, "Using transitions", cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+
+  <li><strong>Layout cookbook</strong></li>
+  <li class="toggle">
+    <ol>
+      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Media_objects`, null, "Media objects", cssURL)%></li>
+      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Column_layouts`, null, "Columns", cssURL)%></li>
+      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Center_an_element`, null, "Center an element", cssURL)%></li>
+      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Sticky_footers`, null, "Sticky footers", cssURL)%></li>
+      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Split_Navigation`, null, "Split navigation", cssURL)%></li>
+      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Breadcrumb_Navigation`, null, "Breadcrumb navigation", cssURL)%></li>
+      <li><%-web.smartLink(`${cssURL}Layout_cookbook/List_group_with_badges`, null, "List group with badges", cssURL)%></li>
+      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Pagination`, null, "Pagination", cssURL)%></li>
+      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Card`, null, "Card", cssURL)%></li>
+      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Grid_wrapper`, null, "Grid wrapper", cssURL)%></li>
+    </ol>
+  </li>
+
+  <li><strong>Tools</strong></li>
+  <li class="toggle">
+    <ol>
+      <li><%-web.smartLink(`${cssURL}CSS_Colors/Color_picker_tool`, null, text['Color_picker_tool'], cssURL)%></li>
+      <li><%-web.smartLink(`${cssURL}CSS_Background_and_Borders/Box-shadow_generator`, null, text['Box-shadow_generator'], cssURL)%></li>
+      <li><%-web.smartLink(`${cssURL}CSS_Background_and_Borders/Border-image_generator`, null, text['Border-image_generator'], cssURL)%></li>
+    </ol>
+  </li>
+
+</ol>
+
+</section>

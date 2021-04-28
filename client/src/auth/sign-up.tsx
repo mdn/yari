@@ -5,7 +5,13 @@ import { mutate } from "swr";
 import { useLocale } from "../hooks";
 import { useUserData } from "../user-context";
 
+import "./index.scss";
 import "./sign-up.scss";
+
+interface UserDetails {
+  name?: string;
+  avatar_url?: string;
+}
 
 export default function SignUpApp() {
   const userData = useUserData();
@@ -25,25 +31,10 @@ export default function SignUpApp() {
       <div>
         <h2>You're already signed up</h2>
         {/* XXX Include a link to the settings page */}
-        <Link to={`/${locale}/`}>Return to the home page</Link>.
-      </div>
-    );
-  }
-
-  if (searchParams.get("errors")) {
-    console.warn("Errors", searchParams.get("errors"));
-    const errors = JSON.parse(searchParams.get("errors") || "{}");
-    return (
-      <div>
-        <h2>Sign-up errors</h2>
-        <p>An error occurred trying to sign you up.</p>
-        <pre>{JSON.stringify(errors, null, 2)}</pre>
-        <p>
-          <Link to={`/${locale}/signin`}>
-            Try starting over the sign-in process
-          </Link>
-          .
-        </p>
+        <Link to={`/${locale}/`} className="back">
+          Return to the home page
+        </Link>
+        .
       </div>
     );
   }
@@ -52,13 +43,11 @@ export default function SignUpApp() {
   const provider = searchParams.get("provider");
   if (!csrfMiddlewareToken || !provider) {
     return (
-      <div>
-        <h2>Invalid Sign up URL</h2>
-        <p>You arrived here on this page without the necessary details.</p>
+      <div className="notecard negative">
+        <h2>Invalid URL</h2>
+        <p>You arrived here without the necessary details.</p>
         <p>
-          <Link to={`/${locale}/signin`}>
-            Try starting over the sign-in process
-          </Link>
+          <Link to={`/${locale}/signin`}>Please retry the sign-in process</Link>
           .
         </p>
       </div>
@@ -112,111 +101,113 @@ export default function SignUpApp() {
       mutate("/api/v1/whoami");
 
       navigate(nextURL);
+    } else if (response.status === 400) {
+      setSignupError(new Error(JSON.stringify(await response.json())));
     } else {
       setSignupError(new Error(`${response.status} on ${signupURL}`));
     }
   }
 
+  let userDetails: UserDetails = {};
+  try {
+    userDetails = JSON.parse(searchParams.get("user_details") || "{}");
+  } catch (jsonParseError) {
+    console.warn("The 'user_details' was not valid JSON");
+  }
+
   return (
-    <form
-      method="post"
-      onSubmit={(event) => {
-        event.preventDefault();
-        if (checkedTerms) {
-          submitSignUp();
-        }
-      }}
-    >
+    <>
+      {userDetails.avatar_url && (
+        <img
+          src={userDetails.avatar_url}
+          className="avatar"
+          alt="User profile avatar_url"
+        />
+      )}
+
+      {provider && (
+        <DisplaySignupDetails
+          provider={provider}
+          username={userDetails.name || ""}
+        />
+      )}
+
       {signupError && (
-        <div className="notecard error">
-          <h4>Signup Error</h4>
+        <div className="notecard negative">
           <p>
-            <code>{signupError.toString()}</code>
+            <strong>Signup error</strong> <code>{signupError.toString()}</code>
           </p>
         </div>
       )}
 
-      <DisplaySignupProvider provider={provider || ""} />
-      <DisplayUserDetails details={searchParams.get("user_details") || ""} />
+      <form
+        className="complete-sign-in"
+        method="post"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (checkedTerms) {
+            submitSignUp();
+          }
+        }}
+      >
+        <label htmlFor="id_terms">
+          <input
+            id="id_terms"
+            type="checkbox"
+            name="terms"
+            required
+            checked={checkedTerms}
+            onChange={(event) => {
+              setCheckedTerms(event.target.checked);
+            }}
+          />{" "}
+          I agree to Mozilla's{" "}
+          <a
+            href="https://www.mozilla.org/about/legal/terms/mozilla"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Terms
+          </a>{" "}
+          and{" "}
+          <a
+            href="https://www.mozilla.org/privacy/websites/"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Privacy Notice
+          </a>
+          .
+        </label>
 
-      <label htmlFor="id_terms">
-        <input
-          id="id_terms"
-          type="checkbox"
-          name="terms"
-          checked={checkedTerms}
-          onChange={(event) => {
-            setCheckedTerms(event.target.checked);
-          }}
-        />{" "}
-        I agree to Mozilla's{" "}
-        <a
-          href="https://www.mozilla.org/about/legal/terms/mozilla"
-          target="_blank"
-          rel="noreferrer noopener"
+        <button
+          type="submit"
+          className={!checkedTerms ? "button inactive" : "button"}
+          disabled={!checkedTerms}
         >
-          Terms
-        </a>{" "}
-        and{" "}
-        <a
-          href="https://www.mozilla.org/privacy/websites/"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          Privacy Notice
-        </a>
-        .
-      </label>
-
-      <button type="submit" className="button" disabled={!checkedTerms}>
-        Create account
-      </button>
-    </form>
+          Complete sign-in
+        </button>
+      </form>
+    </>
   );
 }
 
-function DisplaySignupProvider({ provider }: { provider: string }) {
-  if (!provider) {
-    // Exit early because there's nothing useful we can say
-    return null;
-  }
+function DisplaySignupDetails({
+  provider,
+  username,
+}: {
+  provider: string;
+  username: string;
+}) {
   let providerVerbose = provider.charAt(0).toUpperCase() + provider.slice(1);
   if (provider === "github") {
     providerVerbose = "GitHub";
   }
   return (
-    <p>
-      You are signing in to MDN Web Docs with <b>{providerVerbose}</b>.
+    <p className="lead">
+      You are signing in to MDN Web Docs with{" "}
+      <span className="provider-name">{providerVerbose}</span>
+      {username && ` as ${username}`}.
     </p>
-  );
-}
-
-interface UserDetails {
-  name?: string;
-  avatar_url?: string;
-}
-
-function DisplayUserDetails({ details }: { details: string }) {
-  if (!details) {
-    // Exit early because there's nothing useful we can say
-    return null;
-  }
-
-  const userDetails: UserDetails = JSON.parse(details);
-
-  return (
-    <div className="user-details">
-      <p>
-        {userDetails.avatar_url && (
-          <img
-            src={userDetails.avatar_url}
-            className="avatar"
-            alt="User profile avatar_url"
-          />
-        )}
-
-        {userDetails.name && ` as ${userDetails.name}`}
-      </p>
-    </div>
   );
 }

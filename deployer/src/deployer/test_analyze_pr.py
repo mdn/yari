@@ -33,7 +33,7 @@ def test_analyze_pr_prefix():
     doc = {"doc": {"mdn_url": "/en-US/docs/Foo"}}
     with mock_build_directory(doc) as build_directory:
         comment = analyze_pr(build_directory, dict(DEFAULT_CONFIG, prefix="pr007"))
-        assert "## Preview deployment URLs" in comment
+        assert "## Preview URLs" in comment
         assert "- <https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo>" in comment
 
 
@@ -62,9 +62,9 @@ def test_analyze_pr_flaws():
     with mock_build_directory(no_flaws_doc, doc) as build_directory:
         comment = analyze_pr(build_directory, dict(DEFAULT_CONFIG, analyze_flaws=True))
         assert "## Flaws" in comment
-        assert "Flaw count: 0" in comment
+        assert "1 document with no flaws that don't need to be listed" in comment
         assert "Flaw count: 2" in comment
-        assert len(comment.split("\n---\n")) == 2
+        assert len(comment.split("\n---\n")) == 1
         assert "- **faux_pas**:" in comment
         assert "  - `Socks in sandals`" in comment
         assert "  - `Congrats on losing your cat`" in comment
@@ -106,7 +106,7 @@ def test_analyze_pr_prefix_and_postcomment(mocked_github):
             build_directory,
             dict(DEFAULT_CONFIG, prefix="pr007", pr_number=123, github_token="abc123"),
         )
-        assert "## Preview deployment URLs" in comment
+        assert "## Preview URLs" in comment
         assert "- <https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo>" in comment
 
     mocked_github().get_repo().get_issue().create_comment.assert_called()

@@ -4,6 +4,7 @@ const path = require("path");
 const fm = require("front-matter");
 const glob = require("glob");
 const yaml = require("js-yaml");
+const { fdir } = require("fdir");
 
 const {
   CONTENT_ARCHIVED_ROOT,
@@ -34,6 +35,8 @@ function buildPath(localeFolder, slug) {
 
 const HTML_FILENAME = "index.html";
 const getHTMLPath = (folder) => path.join(folder, HTML_FILENAME);
+const MARKDOWN_FILENAME = "index.md";
+const getMarkdownPath = (folder) => path.join(folder, MARKDOWN_FILENAME);
 
 function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
   const all = JSON.parse(
@@ -44,9 +47,27 @@ function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
       all[newSlug] = all[oldSlug];
     }
     delete all[oldSlug];
+    // The reason we also sort them so that the new additions don't always
+    // get appended to the end. The reason that matters is because two independent
+    // PRs might make edits to this file (i.e. two PRs that both move documents)
+    // and by default, the new entries will be added to the bottom of the
+    // file. So by making it sorted, the location of adding new entries will
+    // not cause git merge conflicts.
+    const sorted = Object.fromEntries(
+      Object.keys(all)
+        .sort()
+        .map((key) => {
+          return [key, all[key]];
+        })
+    );
     fs.writeFileSync(
       path.join(localeContentRoot, "_wikihistory.json"),
-      JSON.stringify(all, null, 2)
+      // The reason for the trailing newline is in case some ever opens the file
+      // and makes an edit, their editor will most likely force-insert a
+      // trailing newline character. So always doing in automation removes
+      // the risk of a conflict at the last line from two independent PRs
+      // that edit this file.
+      JSON.stringify(sorted, null, 2) + "\n"
     );
   }
 }
@@ -61,15 +82,15 @@ function extractLocale(folder) {
   // locale as we prefer to spell it (e.g. 'pt-BR' not 'Pt-bR')
   if (!locale) {
     throw new Error(
-      `Unable to figure out locale from ${folder} with ${localeFolderName}`
+      `Unable to figure out locale from '${folder}' with '${localeFolderName}'`
     );
   }
   return locale;
 }
 
-function saveHTMLFile(
+function saveFile(
   filePath,
-  rawHTML,
+  rawBody,
   { slug, title, translation_of, tags, translation_of_original, original_slug }
 ) {
   if (slug.includes("#")) {
@@ -93,7 +114,7 @@ function saveHTMLFile(
   if (original_slug) {
     metadata.original_slug = original_slug;
   }
-  const combined = `---\n${yaml.dump(metadata)}---\n${rawHTML.trim()}\n`;
+  const combined = `---\n${yaml.dump(metadata)}---\n${rawBody.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 
@@ -104,12 +125,21 @@ function trimLineEndings(string) {
     .join("\n");
 }
 
-function create(html, metadata, root = null) {
+function createHTML(html, metadata, root = null) {
   const folderPath = getFolderPath(metadata, root);
 
   fs.mkdirSync(folderPath, { recursive: true });
 
-  saveHTMLFile(getHTMLPath(folderPath), trimLineEndings(html), metadata);
+  saveFile(getHTMLPath(folderPath), trimLineEndings(html), metadata);
+  return folderPath;
+}
+
+function createMarkdown(md, metadata, root = null) {
+  const folderPath = getFolderPath(metadata, root);
+
+  fs.mkdirSync(folderPath, { recursive: true });
+
+  saveFile(getMarkdownPath(folderPath), trimLineEndings(md), metadata);
   return folderPath;
 }
 
@@ -125,8 +155,9 @@ function getFolderPath(metadata, root = null) {
 
 function archive(
   renderedHTML,
-  rawHTML,
+  rawBody,
   metadata,
+  isMarkdown = false,
   isTranslatedContent = false,
   root = null
 ) {
@@ -150,27 +181,23 @@ function archive(
 
   fs.mkdirSync(folderPath, { recursive: true });
 
-  // The `rawHTML` is only applicable in the importer when it saves
+  // The `rawBody` is only applicable in the importer when it saves
   // archived content. The archived content gets the *rendered* html
-  // saved but by storing the raw html too we can potentially resurrect
+  // saved but by storing the raw HTML/Markdown too we can potentially resurrect
   // the document if we decide to NOT archive it in the future.
-  if (rawHTML) {
+  if (rawBody) {
     fs.writeFileSync(
-      path.join(folderPath, "raw.html"),
-      trimLineEndings(rawHTML)
+      path.join(folderPath, isMarkdown ? "raw.md" : "raw.html"),
+      trimLineEndings(rawBody)
     );
   }
 
-  saveHTMLFile(
-    getHTMLPath(folderPath),
-    trimLineEndings(renderedHTML),
-    metadata
-  );
+  saveFile(getHTMLPath(folderPath), trimLineEndings(renderedHTML), metadata);
   return folderPath;
 }
 
 function unarchive(document, move) {
-  // You can't use `document.rawHTML` because, rather confusingly,
+  // You can't use `document.rawBody` because, rather confusingly,
   // it's actually the rendered (from the migration) HTML. Instead,
   // you need seek out the `raw.html` equivalent and use that.
   // This is because when we ran the migration, for every document we
@@ -181,7 +208,7 @@ function unarchive(document, move) {
     "raw.html"
   );
   const rawHTML = fs.readFileSync(rawFilePath, "utf-8");
-  const created = create(rawHTML, document.metadata);
+  const created = createHTML(rawHTML, document.metadata);
   if (move) {
     execGit(["rm", document.fileInfo.path], {}, CONTENT_ARCHIVED_ROOT);
     execGit(["rm", rawFilePath], {}, CONTENT_ARCHIVED_ROOT);
@@ -189,20 +216,66 @@ function unarchive(document, move) {
   return created;
 }
 
-const read = memoize((folder) => {
+const read = memoize((folderOrFilePath) => {
   let filePath = null;
+  let folder = null;
   let root = null;
-  for (const possibleRoot of ROOTS) {
-    const possibleFilePath = path.join(possibleRoot, getHTMLPath(folder));
-    if (fs.existsSync(possibleFilePath)) {
-      root = possibleRoot;
-      filePath = possibleFilePath;
-      break;
+  let isMarkdown = false;
+  let locale = null;
+
+  if (fs.existsSync(folderOrFilePath)) {
+    filePath = folderOrFilePath;
+
+    // It exists, but it is sane?
+    if (
+      !(
+        filePath.endsWith(HTML_FILENAME) || filePath.endsWith(MARKDOWN_FILENAME)
+      )
+    ) {
+      throw new Error(`'${filePath}' is not a HTML or Markdown file.`);
     }
+
+    root = ROOTS.find((possibleRoot) => filePath.startsWith(possibleRoot));
+    if (root) {
+      folder = filePath
+        .replace(root + path.sep, "")
+        .replace(path.sep + HTML_FILENAME, "")
+        .replace(path.sep + MARKDOWN_FILENAME, "");
+      locale = extractLocale(filePath.replace(root + path.sep, ""));
+    } else {
+      // The file exists but it doesn't appear to belong to any of our roots.
+      // That could happen if you pass in a file that is something completely
+      // different not a valid file anyway.
+      throw new Error(
+        `'${filePath}' does not appear to exist in any known content roots.`
+      );
+    }
+  } else {
+    folder = folderOrFilePath;
+    for (const possibleRoot of ROOTS) {
+      const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
+      if (fs.existsSync(possibleHTMLFilePath)) {
+        root = possibleRoot;
+        filePath = possibleHTMLFilePath;
+        break;
+      }
+      const possibleMarkdownFilePath = path.join(
+        possibleRoot,
+        getMarkdownPath(folder)
+      );
+      if (fs.existsSync(possibleMarkdownFilePath)) {
+        root = possibleRoot;
+        filePath = possibleMarkdownFilePath;
+        isMarkdown = true;
+        break;
+      }
+    }
+    if (!filePath) {
+      return;
+    }
+    locale = extractLocale(folder);
   }
-  if (!filePath) {
-    return;
-  }
+
   if (filePath.includes(" ")) {
     throw new Error("Folder contains whitespace which is not allowed.");
   }
@@ -220,6 +293,9 @@ const read = memoize((folder) => {
     CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT);
 
   const rawContent = fs.readFileSync(filePath, "utf8");
+  if (!rawContent) {
+    throw new Error(`${filePath} is an empty file`);
+  }
 
   // This is very useful in CI where every page gets built. If there's an
   // accidentally unresolved git conflict, that's stuck in the content,
@@ -236,11 +312,10 @@ const read = memoize((folder) => {
 
   const {
     attributes: metadata,
-    body: rawHTML,
+    body: rawBody,
     bodyBegin: frontMatterOffset,
   } = fm(rawContent);
 
-  const locale = extractLocale(folder);
   const url = `/${locale}/docs/${metadata.slug}`;
 
   const isActive = !isArchive && ACTIVE_LOCALES.has(locale.toLowerCase());
@@ -250,8 +325,21 @@ const read = memoize((folder) => {
   const gitHistory = getGitHistories(root, locale).get(
     path.relative(root, filePath)
   );
-  let modified = (gitHistory && gitHistory.modified) || null;
-  const hash = (gitHistory && gitHistory.hash) || null;
+  let modified = null;
+  let hash = null;
+  if (gitHistory) {
+    if (
+      gitHistory.merged &&
+      gitHistory.merged.modified &&
+      gitHistory.merged.hash
+    ) {
+      modified = gitHistory.merged.modified;
+      hash = gitHistory.merged.hash;
+    } else {
+      modified = gitHistory.modified;
+      hash = gitHistory.hash;
+    }
+  }
   // Use the wiki histories for a list of legacy contributors.
   const wikiHistory = getWikiHistories(root, locale).get(url);
   if (!modified && wikiHistory && wikiHistory.modified) {
@@ -271,7 +359,10 @@ const read = memoize((folder) => {
 
   return {
     ...fullMetadata,
-    ...{ rawHTML, rawContent },
+    // ...{ rawContent },
+    rawContent, // HTML or Markdown whole string with all the front-matter
+    rawBody, // HTML or Markdown string without the front-matter
+    isMarkdown,
     isArchive,
     isTranslated,
     isActive,
@@ -284,7 +375,7 @@ const read = memoize((folder) => {
   };
 });
 
-function update(url, rawHTML, metadata) {
+function update(url, rawBody, metadata) {
   const folder = urlToFolderPath(url);
   const document = read(folder);
   const locale = document.metadata.locale;
@@ -292,14 +383,17 @@ function update(url, rawHTML, metadata) {
   const oldSlug = document.metadata.slug;
   const newSlug = metadata.slug;
   const isNewSlug = oldSlug !== newSlug;
-  const indexPath = path.join(root, getHTMLPath(folder));
+  const indexPath = path.join(
+    root,
+    document.isMarkdown ? getMarkdownPath(folder) : getHTMLPath(folder)
+  );
 
   if (
     isNewSlug ||
-    document.rawHTML !== rawHTML ||
+    document.rawBody !== rawBody ||
     document.metadata.title !== metadata.title
   ) {
-    saveHTMLFile(indexPath, rawHTML, {
+    saveFile(indexPath, rawBody, {
       ...document.metadata,
       ...metadata,
     });
@@ -316,7 +410,7 @@ function update(url, rawHTML, metadata) {
     const locale = metadata.locale;
     const redirects = new Map();
     const url = buildURL(locale, oldSlug);
-    for (const { metadata, rawHTML, fileInfo } of findChildren(url, true)) {
+    for (const { metadata, rawBody, fileInfo } of findChildren(url, true)) {
       const childLocale = metadata.locale;
       const oldChildSlug = metadata.slug;
       const newChildSlug = oldChildSlug.replace(oldSlug, newSlug);
@@ -326,7 +420,7 @@ function update(url, rawHTML, metadata) {
         oldChildSlug,
         newChildSlug
       );
-      saveHTMLFile(fileInfo.path, rawHTML, metadata);
+      saveFile(fileInfo.path, rawBody, metadata);
       redirects.set(
         buildURL(childLocale, oldChildSlug),
         buildURL(childLocale, newChildSlug)
@@ -351,6 +445,9 @@ function update(url, rawHTML, metadata) {
 
 function findByURL(url, ...args) {
   const [bareURL, hash = ""] = url.split("#", 2);
+  if (!bareURL.toLowerCase().includes("/docs/")) {
+    return;
+  }
   const doc = read(urlToFolderPath(bareURL), ...args);
   if (doc && hash) {
     return { ...doc, url: `${doc.url}#${hash}` };
@@ -363,9 +460,13 @@ function findAll({
   folderSearch = null,
   locales = new Map(),
 } = {}) {
-  if (!(files instanceof Set)) throw new TypeError("'files' not a Set");
-  if (folderSearch && typeof folderSearch !== "string")
+  if (!(files instanceof Set)) {
+    throw new TypeError("'files' not a Set");
+  }
+  if (folderSearch && typeof folderSearch !== "string") {
     throw new TypeError("'folderSearch' not a string");
+  }
+  const folderSearchRegExp = folderSearch ? new RegExp(folderSearch) : null;
 
   const filePaths = [];
   const roots = [];
@@ -377,53 +478,55 @@ function findAll({
   }
   roots.push(CONTENT_ROOT);
   for (const root of roots) {
-    const searchPattern = [""];
-    if (locales.size) {
-      const localePrefixes = [];
-      for (const [locale, include] of locales) {
-        if (!include) {
-          throw new Error("ability to exclude locales is not supported yet");
+    const api = new fdir()
+      .withFullPaths()
+      .withErrors()
+      .filter((filePath) => {
+        // Exit early if it's not a sane kind of file we expect
+        if (
+          !(
+            filePath.endsWith(HTML_FILENAME) ||
+            filePath.endsWith(MARKDOWN_FILENAME)
+          )
+        ) {
+          return false;
         }
-        localePrefixes.push(locale);
-      }
-      searchPattern.push(`+(${localePrefixes.join("|")})`);
-    }
-    searchPattern.push("**");
-    searchPattern.push(HTML_FILENAME);
-    filePaths.push(
-      ...glob
-        .sync(searchPattern.join(path.sep), { root })
-        .filter((filePath) => {
-          // The 'files' set is either a list of absolute full paths or a
-          // list of endings.
-          // Why endings? Because it's highly useful when you use git and the
-          // filepath might be relative to the git repo root.
-          if (files.size) {
-            if (files.has(filePath)) {
-              return true;
-            }
-            for (const fp of files) {
-              if (filePath.endsWith(fp)) {
-                return true;
-              }
-            }
+
+        if (locales.size) {
+          const locale = filePath.replace(root, "").split("/")[1];
+          if (!locales.get(locale)) {
             return false;
           }
-          if (folderSearch) {
-            return (
-              filePath
-                .replace(CONTENT_ROOT, "")
-                .replace(CONTENT_TRANSLATED_ROOT, "")
-                .replace(HTML_FILENAME, "")
-                .search(new RegExp(folderSearch)) !== -1
-            );
+        }
+
+        // The 'files' set is either a list of absolute full paths or a
+        // list of endings.
+        // Why endings? Because it's highly useful when you use git and the
+        // filepath might be relative to the git repo root.
+        if (files.size) {
+          if (files.has(filePath)) {
+            return true;
           }
-          return true;
-        })
-        .map((filePath) => {
-          return path.relative(root, path.dirname(filePath));
-        })
-    );
+          for (const fp of files) {
+            if (filePath.endsWith(fp)) {
+              return true;
+            }
+          }
+          return false;
+        }
+
+        if (folderSearchRegExp) {
+          const pure = filePath
+            .replace(root + path.sep, "")
+            .replace(HTML_FILENAME, "")
+            .replace(MARKDOWN_FILENAME, "");
+          return pure.search(folderSearchRegExp) !== -1;
+        }
+
+        return true;
+      })
+      .crawl(root);
+    filePaths.push(...api.sync());
   }
   return {
     count: filePaths.length,
@@ -473,7 +576,7 @@ function move(oldSlug, newSlug, locale, { dry = false } = {}) {
   }
 
   doc.metadata.slug = newSlug;
-  update(oldUrl, doc.rawHTML, doc.metadata);
+  update(oldUrl, doc.rawBody, doc.metadata);
 
   return pairs;
 }
@@ -552,7 +655,8 @@ function remove(
 }
 
 module.exports = {
-  create,
+  createHTML,
+  createMarkdown,
   archive,
   unarchive,
   read,
@@ -569,7 +673,7 @@ module.exports = {
 
   updateWikiHistory,
   trimLineEndings,
-  saveHTMLFile,
+  saveFile,
 
   findByURL,
   findAll,

@@ -10,6 +10,7 @@ from .constants import (
     CONTENT_ARCHIVED_ROOT,
     DEFAULT_BUCKET_NAME,
     DEFAULT_BUCKET_PREFIX,
+    DEFAULT_CACHE_CONTROL,
     DEFAULT_NO_PROGRESSBAR,
     DEFAULT_REPO,
     DEFAULT_GITHUB_TOKEN,
@@ -63,6 +64,13 @@ def validate_optional_file(ctx, param, value):
     "--dry-run",
     default=False,
     help="Show what would be done, but don't actually do it.",
+    show_default=True,
+    is_flag=True,
+)
+@click.option(
+    "--verbose",
+    default=False,
+    help="Be louder with stdout logging",
     show_default=True,
     is_flag=True,
 )
@@ -179,6 +187,12 @@ def whatsdeployed(ctx, directory: Path, output: str):
     default=None,
     callback=validate_optional_file,
 )
+@click.option(
+    "--default-cache-control",
+    help="The default Cache-Control value used when uploading files (0 to disable)",
+    default=DEFAULT_CACHE_CONTROL,
+    show_default=True,
+)
 @click.argument("directory", type=click.Path(), callback=validate_directory)
 @click.pass_context
 def upload(ctx, directory: Path, **kwargs):
@@ -247,10 +261,16 @@ def upload(ctx, directory: Path, **kwargs):
 def analyze_pr_build(ctx, directory: Path, **kwargs):
     log.info(f"Deployer ({__version__})", bold=True)
     ctx.obj.update(kwargs)
+
+    actionable_options = ("prefix", "analyze_flaws", "analyze_dangerous_content")
+    if not any(ctx.obj[x] for x in actionable_options):
+        raise Exception("No actionable option used. ")
+
     combined_comment = analyze_pr(directory, ctx.obj)
-    log.info("POST".center(80, "_"), "\n")
-    log.info(combined_comment)
-    log.info("\n", "END POST".center(80, "_"))
+    if ctx.obj["verbose"]:
+        log.info("POST".center(80, "_"), "\n")
+        log.info(combined_comment)
+        log.info("\n", "END POST".center(80, "_"))
 
 
 @cli.command()
@@ -324,12 +344,6 @@ def speedcurve_deploy(ctx, **kwargs):
     default=CI,
     show_default=True,
 )
-@click.option(
-    "--priority-prefix",
-    "-p",
-    multiple=True,
-    help="Specific folder prefixes to index first.",
-)
 @click.argument("buildroot", type=click.Path(), callback=validate_directory)
 @click.pass_context
 def search_index(ctx, buildroot: Path, **kwargs):
@@ -347,7 +361,6 @@ def search_index(ctx, buildroot: Path, **kwargs):
         url,
         update=kwargs["update"],
         no_progressbar=kwargs["no_progressbar"],
-        priority_prefixes=kwargs["priority_prefix"],
     )
 
 

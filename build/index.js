@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 
 const chalk = require("chalk");
 const cheerio = require("cheerio");
@@ -142,14 +143,18 @@ function postProcessExternalLinks($) {
 }
 
 /**
- * Find all `in-page-callout` div elements and rewrite
- * to be just `callout`, no more need to mark them as `webdev`
+ * Fix the heading IDs so they're all lower case.
+ *
  * @param {Cheerio document instance} $
  */
-function injectInPageCallout($) {
-  $("div.in-page-callout")
-    .addClass("callout")
-    .removeClass("in-page-callout webdev");
+function postProcessSmallerHeadingIDs($) {
+  $("h4[id], h5[id], h6[id]").each((i, element) => {
+    const id = element.attribs.id;
+    const lcID = id.toLowerCase();
+    if (id !== lcID) {
+      $(element).attr("id", lcID);
+    }
+  });
 }
 
 /**
@@ -169,11 +174,11 @@ function injectNotecardOnWarnings($) {
  * Return the full URL directly to the file in GitHub based on this folder.
  * @param {String} folder - the current folder we're processing.
  */
-function getGitHubURL(root, folder) {
+function getGitHubURL(root, folder, filename) {
   const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
   return `${baseURL}/blob/${getCurrentGitBranch(
     root
-  )}/files/${folder}/index.html`;
+  )}/files/${folder}/${filename}`;
 }
 
 /**
@@ -188,10 +193,12 @@ function getLastCommitURL(root, hash) {
 function injectSource(doc, document, metadata) {
   const folder = document.fileInfo.folder;
   const root = document.fileInfo.root;
+  const filename = path.basename(document.fileInfo.path);
   doc.source = {
     folder,
-    github_url: getGitHubURL(root, folder),
+    github_url: getGitHubURL(root, folder, filename),
     last_commit_url: getLastCommitURL(root, metadata.hash),
+    filename,
   };
 }
 
@@ -246,7 +253,10 @@ async function buildDocument(document, documentOptions = {}) {
   const liveSamples = [];
 
   if (doc.isArchive) {
-    renderedHtml = document.rawHTML;
+    if (document.isMarkdown) {
+      throw new Error("Markdown not supported for archived content");
+    }
+    renderedHtml = document.rawBody;
   } else {
     if (options.clearKumascriptRenderCache) {
       renderKumascriptCache.reset();
@@ -272,7 +282,7 @@ async function buildDocument(document, documentOptions = {}) {
 
     const sampleIds = kumascript.getLiveSampleIDs(
       document.metadata.slug,
-      document.rawHTML
+      document.rawBody
     );
     for (const sampleIdObject of sampleIds) {
       const liveSamplePage = kumascript.buildLiveSamplePage(
@@ -282,7 +292,24 @@ async function buildDocument(document, documentOptions = {}) {
         sampleIdObject
       );
       if (liveSamplePage.flaw) {
-        flaws.push(liveSamplePage.flaw.updateFileInfo(fileInfo));
+        const flaw = liveSamplePage.flaw.updateFileInfo(fileInfo);
+        if (flaw.name === "MacroLiveSampleError") {
+          // As of April 2021 there are 0 pages in mdn/content that trigger
+          // a MacroLiveSampleError. So we can be a lot more strict with en-US
+          // until the translated-content has had a chance to clean up all
+          // their live sample errors.
+          // See https://github.com/mdn/yari/issues/2489
+          if (document.metadata.locale === "en-US") {
+            throw new Error(
+              `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+            );
+          } else {
+            console.warn(
+              `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+            );
+          }
+        }
+        flaws.push(flaw);
         continue;
       }
       liveSamples.push({
@@ -428,13 +455,12 @@ async function buildDocument(document, documentOptions = {}) {
   // All external hyperlinks should have the `external` class name.
   postProcessExternalLinks($);
 
-  // All content that uses `<div class="in-page-callout">` needs to
-  // become `<div class="callout">`
-  // Some day, we can hopefully do a mass search-and-replace so we never
-  // need to do this code here.
-  // We might want to delete this injection in 2021 some time when all content's
-  // raw HTML has been fixed to always have it in there already.
-  injectInPageCallout($);
+  // Since all anchor links are forced into lower case, and `<h2>` and `<h3>`
+  // is taken care of by the React rendering itself, we have to post-process
+  // any possible headings whose ID might not be perfect.
+  // The reason we can't do this as part of the kumascript rendering is because
+  // the old
+  postProcessSmallerHeadingIDs($);
 
   // All content that uses `<div class="warning">` needs to become
   // `<div class="warning notecard">` instead.
@@ -524,7 +550,7 @@ async function buildLiveSamplePageFromURL(url) {
   // the actual sampleID object with the properly-cased live-sample ID.
   for (const sampleIDObject of kumascript.getLiveSampleIDs(
     document.metadata.slug,
-    document.rawHTML
+    document.rawBody
   )) {
     if (sampleIDObject.id.toLowerCase() === sampleID) {
       const liveSamplePage = kumascript.buildLiveSamplePage(

@@ -97,7 +97,7 @@ jobs:
           node-version: "12"
 
       - name: Cache node_modules
-        uses: actions/cache@v2.1.4
+        uses: actions/cache@v2.1.5
         id: cached-node_modules
         with:
           path: |
@@ -116,7 +116,7 @@ jobs:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.1.2
+        uses: snok/install-poetry@v1.1.4
 
       - name: Install deployer
         run: |
@@ -227,16 +227,11 @@ jobs:
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
+          # Prune again once https://github.com/mdn/yari/issues/3323 is resolved.
+          # poetry run deployer upload --prune --archived-files ../content/archived.txt ../client/build
           poetry run deployer upload ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
-
-          # TODO: Depending on how long the upload takes, consider switching to
-          # use `--update` in this command. It will skip the index re-creation
-          # and "cake on". This is slightly faster and means no window of time
-          # where the Elasticsearch server is nearly empty.
-          # Consider doing something like a clean indexing on Sundays and
-          # use `--update` on all the other week days.
-          poetry run deployer search-index ../client/build --priority-prefix=en-us/docs/web
+          poetry run deployer search-index ../client/build
 
           # Record the deployment in our Speedcurve account. This should always
           # be done after the upload of the documents and Lambda functions, as well

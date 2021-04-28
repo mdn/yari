@@ -27,24 +27,47 @@ export type UserData = {
   };
 };
 
-const defaultUserData: UserData = {
-  username: null,
-  isAuthenticated: false,
-  isBetaTester: false,
-  isStaff: false,
-  isSuperuser: false,
-  avatarUrl: null,
-  isSubscriber: false,
-  subscriberNumber: null,
-  email: null,
-  waffle: {
-    flags: {},
-    switches: {},
-    samples: {},
-  },
-};
-
 const UserDataContext = React.createContext<UserData | null>(null);
+
+// The argument for using sessionStorage rather than localStorage is because
+// it's marginally simpler and "safer". For example, if we use localStorage
+// it might stick in the browser for a very long time and we might change
+// the structure of that JSON we store in there.
+// Also, localStorage doesn't go away. So if we decide to not do this stuff
+// anymore we won't have users who have that stuff stuck in their browser
+// "forever".
+const SESSION_STORAGE_KEY = "whoami";
+
+function getSessionStorageData() {
+  try {
+    const data = sessionStorage.getItem(SESSION_STORAGE_KEY);
+    if (data) {
+      return JSON.parse(data) as UserData;
+    }
+  } catch (error) {
+    console.warn("sessionStorage.getItem didn't work", error.toString());
+    return null;
+  }
+}
+
+export function removeSessionStorageData() {
+  try {
+    // It's safe to call .removeItem() on a key that doesn't already exist,
+    // and it's pointless to first do a .hasItem() before the .removeItem()
+    // because internally that's what .removeItem() already does.
+    sessionStorage.removeItem(SESSION_STORAGE_KEY);
+  } catch (error) {
+    console.warn("sessionStorage.removeItem didn't work", error.toString());
+  }
+}
+
+function setSessionStorageData(data: UserData) {
+  try {
+    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(data));
+  } catch (error) {
+    console.warn("sessionStorage.setItem didn't work", error.toString());
+  }
+}
 
 export function UserDataProvider(props: { children: React.ReactNode }) {
   const { data } = useSWR<UserData | null, Error | null>(
@@ -52,6 +75,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
+        removeSessionStorageData();
         throw new Error(`${response.status} on ${response.url}`);
       }
       const data = await response.json();
@@ -73,8 +97,16 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
     }
   );
 
+  React.useEffect(() => {
+    if (data) {
+      // At this point, the XHR request has set `data` to be an object.
+      // The user is definitely signed in or not signed in.
+      setSessionStorageData(data);
+    }
+  }, [data]);
+
   return (
-    <UserDataContext.Provider value={data ? data : defaultUserData}>
+    <UserDataContext.Provider value={data || getSessionStorageData() || null}>
       {props.children}
     </UserDataContext.Provider>
   );
