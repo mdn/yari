@@ -6,7 +6,7 @@ const {
   encodePath,
   slugToFolder,
 } = require("@yari-internal/slug-utils");
-const { VALID_LOCALES } = require("@yari-internal/constants");
+const { VALID_LOCALES, RETIRED_LOCALES } = require("@yari-internal/constants");
 
 const THIRTY_DAYS = 3600 * 24 * 30;
 const NEEDS_LOCALE = /^\/(?:docs|search|settings|signin|signup)(?:$|\/)/;
@@ -127,6 +127,7 @@ exports.handler = async (event) => {
     const path = request.uri.endsWith("/")
       ? request.uri.slice(0, -1)
       : request.uri;
+    // Note that "getLocale" only returns valid locales, never a retired locale.
     const locale = getLocale(request);
     // The only time we actually want a trailing slash is when the URL is just
     // the locale. E.g. `/en-US/` (not `/en-US`)
@@ -137,6 +138,16 @@ exports.handler = async (event) => {
   const uriParts = request.uri.split("/");
   const uriFirstPart = uriParts[1];
   const uriFirstPartLC = uriFirstPart.toLowerCase();
+
+  if (RETIRED_LOCALES.has(uriFirstPartLC)) {
+    // Assemble the rest of the path without a trailing slash.
+    const extra = uriParts.slice(2).filter(Boolean).join("/");
+    return redirect(
+      `/en-US/${extra}${qs}${qs ? "&" : "?"}retiredLocale=${RETIRED_LOCALES.get(
+        uriFirstPartLC
+      )}`
+    );
+  }
 
   // Do we need to redirect to the properly-cased locale? We also ensure
   // here that requests for the home page have a trailing slash, while
