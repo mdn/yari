@@ -76,7 +76,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span className="visuall-hidden">MDN on Twitter</span>
+                <span className="visually-hidden">MDN on Twitter</span>
               </a>
             </li>
             <li>
@@ -86,7 +86,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span className="visuall-hidden">MDN on Github</span>
+                <span className="visually-hidden">MDN on Github</span>
               </a>
             </li>
           </ul>
@@ -102,7 +102,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span className="visuall-hidden">Mozilla on Twitter</span>
+                <span className="visually-hidden">Mozilla on Twitter</span>
               </a>
             </li>
             <li>
@@ -112,7 +112,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span className="visuall-hidden">Mozilla on Instagram</span>
+                <span className="visually-hidden">Mozilla on Instagram</span>
               </a>
             </li>
           </ul>
