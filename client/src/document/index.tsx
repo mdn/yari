@@ -14,6 +14,7 @@ import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
 import { LanguageToggle } from "../ui/molecules/language-toggle";
+import { LocalizedContentNote } from "./molecules/localized-content-note";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
 import { MainContentContainer } from "../ui/atoms/page-content";
@@ -154,6 +155,10 @@ export function Document(props /* TODO: define a TS interface for this */) {
             <LanguageToggle locale={locale} translations={translations} />
           )}
         </div>
+      )}
+
+      {doc.isTranslated && (
+        <LocalizedContentNote isActive={doc.isActive} locale={locale} />
       )}
 
       {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
