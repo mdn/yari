@@ -983,7 +983,7 @@ const LOCALE_ALIAS_URLS = [].concat(
 
   url_test("/en/docs/Foo/bar", "/en-US/docs/Foo/bar"),
   url_test("/En_uS/docs/Foo/bar", "/en-US/docs/Foo/bar"),
-  url_test("/pt/docs/Foo/bar", "/pt-PT/docs/Foo/bar"),
+  url_test("/pt/docs/Foo/bar", "/pt-BR/docs/Foo/bar"),
   url_test("/Fr-FR/docs/Foo/bar", "/fr/docs/Foo/bar"),
   url_test("/JA-JP/docs/Foo/bar", "/ja/docs/Foo/bar"),
   url_test("/JA-JA/docs/Foo/bar", "/ja/docs/Foo/bar"),

@@ -65,7 +65,7 @@ for (const locale of VALID_LOCALES.keys()) {
 }
 
 for (const [alias, correct] of LOCALE_ALIASES) {
-  // E.g. things like `en` -> `en-us` or `pt` -> `pt-pt`
+  // E.g. things like `en` -> `en-us` or `pt` -> `pt-br`
   fixableLocales.set(alias, correct);
 }
 
