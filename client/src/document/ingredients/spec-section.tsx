@@ -1,4 +1,4 @@
-import { DisplayH2, DisplayH3 } from "./ingredients/utils";
+import { DisplayH2, DisplayH3 } from "./utils";
 
 export function SpecificationSection({
   id,

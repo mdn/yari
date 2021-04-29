@@ -9,7 +9,7 @@ import { Doc } from "./types";
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
 import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
-import { SpecificationSection } from "./spec-section";
+import { SpecificationSection } from "./ingredients/spec-section";
 
 // Misc
 // Sub-components
