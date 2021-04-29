@@ -71,6 +71,7 @@ const CSP_DIRECTIVES = [
       "'sha256-q7cJjDqNO2e1L5UltvJ1LhvnYN7yJXgGO7b6h9xkL1o='", // LUX
       "https://www.google-analytics.com/analytics.js",
       "https://www.google-analytics.com/analytics_debug.js",
+      "'sha256-JEt9Nmc3BP88wxuTZm9aKNu87vEgGmKW1zzy/vb1KPs='", // polyfill check
       "https://polyfill.io/v3/polyfill.min.js",
     ].join(" "),
   // TODO: eventually drop unsafe-inline, after our move to Markdown
