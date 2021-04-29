@@ -62,6 +62,23 @@ function validPopularityFilter(value) {
   return [filter, null];
 }
 
+function validFixableFlawsFilter(value) {
+  let filter = null;
+  if (value) {
+    if (/[^\d<>]/.test(value.replace(/\s+/g, ""))) {
+      return [null, "fixable flaws contains unrecognized characters"];
+    }
+    if (value.startsWith("<")) {
+      filter = { max: parseInt(value.slice(1).trim()) };
+    } else if (value.startsWith(">")) {
+      filter = { min: parseInt(value.slice(1).trim()) };
+    } else {
+      filter = { equal: parseInt(parseInt(value)) };
+    }
+  }
+  return [filter, null];
+}
+
 function serializeFlawLevels(flawLevels) {
   const keys = [...flawLevels.keys()];
   keys.sort();
@@ -80,10 +97,15 @@ function packageFlaws(flawsObj) {
   keys.sort();
   for (const name of keys) {
     let value = flawsObj[name];
+    let countFixable = 0;
     if (Array.isArray(value)) {
+      countFixable += value.filter((flaw) => flaw.fixable).length;
       value = value.length;
+    } else {
+      // XXX I don't think this can ever happen.
+      countFixable += value.fixable ? 1 : 0;
     }
-    packaged.push({ name, value });
+    packaged.push({ name, value, countFixable });
   }
   return packaged;
 }
@@ -128,9 +150,17 @@ module.exports = (req, res) => {
     return res.status(400).send("'page' number invalid");
   }
 
-  const [popularityFilter, error] = validPopularityFilter(filters.popularity);
-  if (error) {
-    return res.status(400).send(error.toString());
+  const [popularityFilter, popularityFilterError] = validPopularityFilter(
+    filters.popularity
+  );
+  if (popularityFilterError) {
+    return res.status(400).send(popularityFilterError.toString());
+  }
+  const [fixableFlawsFilter, fixableFlawsFilterError] = validFixableFlawsFilter(
+    filters.fixableFlaws
+  );
+  if (fixableFlawsFilterError) {
+    return res.status(400).send(fixableFlawsFilterError.toString());
   }
 
   const sortBy = req.query.sort || "popularity";
@@ -247,8 +277,29 @@ module.exports = (req, res) => {
         continue;
       }
     }
+    const packaged = packageDocument(doc);
+    if (fixableFlawsFilter) {
+      const sumFixable = packaged.flaws.reduce(
+        (acc, flaw) => flaw.countFixable + acc,
+        0
+      );
+      if ("min" in fixableFlawsFilter && sumFixable <= fixableFlawsFilter.min) {
+        continue;
+      } else if (
+        "max" in fixableFlawsFilter &&
+        sumFixable > fixableFlawsFilter.max
+      ) {
+        continue;
+      } else if (
+        "equal" in fixableFlawsFilter &&
+        sumFixable !== fixableFlawsFilter.equal
+      ) {
+        continue;
+      }
+    }
+
     counts.found++;
-    documents.push(packageDocument(doc));
+    documents.push(packaged);
   }
 
   counts.flaws.type = strMapToObject(counts.flaws.type);

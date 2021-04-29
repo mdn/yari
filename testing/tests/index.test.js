@@ -115,6 +115,13 @@ test("content built foo page", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
 
+  // Check that the favicon works and resolves
+  const faviconHref = $('link[rel="icon"]').attr("href");
+  // The faviconHref is a URL so to check that it exists on disk we need to
+  // strip the leading / and join that with the root of the build.
+  const faviconFile = path.join(buildRoot, faviconHref.slice(1));
+  expect(fs.existsSync(faviconFile)).toBeTruthy();
+
   expect($('meta[name="description"]').attr("content")).toBe(
     "This becomes the summary."
   );
@@ -200,6 +207,20 @@ test("content built French foo page", () => {
   expect($('link[rel="alternate"]').length).toBe(2);
   expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
   expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
+});
+
+test("content built French Embeddable page", () => {
+  const builtFolder = path.join(buildRoot, "fr", "docs", "web", "embeddable");
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.translation_differences.length).toBe(1);
+  const flaw = doc.flaws.translation_differences[0];
+  expect(flaw.explanation).toBe(
+    "Differences in the important macros (0 in common of 4 possible)"
+  );
+  expect(flaw.fixable).toBeFalsy();
+  expect(flaw.suggestion).toBeFalsy();
+  expect(flaw.difference.type).toBe("macro");
 });
 
 test("wrong xref macro errors", () => {
@@ -521,7 +542,7 @@ test("broken links flaws", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.broken_links.length).toBe(11);
+  expect(flaws.broken_links.length).toBe(12);
   // Map them by 'href'
   const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
@@ -556,6 +577,13 @@ test("broken links flaws", () => {
   expect(map.get("/en-US/docs/Web/BrokenLinks#anchor").suggestion).toBe(
     "#anchor"
   );
+  expect(map.get("http://www.mozilla.org").explanation).toBe(
+    "http:// external links are not allowed (will be forced to https:// at build-time)"
+  );
+  expect(map.get("http://www.mozilla.org").suggestion).toBe(
+    "https://www.mozilla.org"
+  );
+  expect(map.get("http://www.mozilla.org").fixable).toBeTruthy();
 });
 
 test("repeated broken links flaws", () => {
@@ -1353,12 +1381,12 @@ test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(doc.flaws.unsafe_html.length).toBe(6);
+  expect(doc.flaws.unsafe_html.length).toBe(7);
 
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("code.unsafe-html").length).toBe(6);
+  expect($("code.unsafe-html").length).toBe(7);
 });
 
 test("translated content broken links can fall back to en-us", () => {

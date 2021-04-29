@@ -47,9 +47,27 @@ function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
       all[newSlug] = all[oldSlug];
     }
     delete all[oldSlug];
+    // The reason we also sort them so that the new additions don't always
+    // get appended to the end. The reason that matters is because two independent
+    // PRs might make edits to this file (i.e. two PRs that both move documents)
+    // and by default, the new entries will be added to the bottom of the
+    // file. So by making it sorted, the location of adding new entries will
+    // not cause git merge conflicts.
+    const sorted = Object.fromEntries(
+      Object.keys(all)
+        .sort()
+        .map((key) => {
+          return [key, all[key]];
+        })
+    );
     fs.writeFileSync(
       path.join(localeContentRoot, "_wikihistory.json"),
-      JSON.stringify(all, null, 2)
+      // The reason for the trailing newline is in case some ever opens the file
+      // and makes an edit, their editor will most likely force-insert a
+      // trailing newline character. So always doing in automation removes
+      // the risk of a conflict at the last line from two independent PRs
+      // that edit this file.
+      JSON.stringify(sorted, null, 2) + "\n"
     );
   }
 }
