@@ -1,38 +1,43 @@
 const VALID_LOCALES = new Map(
   [
+    "de",
+    "en-US",
+    "es",
+    "fr",
+    "ja",
+    "ko",
+    "pl",
+    "pt-BR",
+    "ru",
+    "zh-CN",
+    "zh-TW",
+  ].map((x) => [x.toLowerCase(), x])
+);
+
+const RETIRED_LOCALES = new Map(
+  [
     "ar",
     "bg",
     "bn",
     "ca",
-    "de",
     "el",
-    "en-US",
-    "es",
     "fa",
     "fi",
-    "fr",
     "he",
     "hi-IN",
     "hu",
     "id",
     "it",
-    "ja",
     "kab",
-    "ko",
     "ms",
     "my",
     "nl",
-    "pl",
-    "pt-BR",
     "pt-PT",
-    "ru",
     "sv-SE",
     "th",
     "tr",
     "uk",
     "vi",
-    "zh-CN",
-    "zh-TW",
   ].map((x) => [x.toLowerCase(), x])
 );
 
@@ -64,6 +69,7 @@ const ACTIVE_LOCALES = new Set([
 module.exports = {
   ACTIVE_LOCALES,
   VALID_LOCALES,
+  RETIRED_LOCALES,
   DEFAULT_LOCALE,
   LOCALE_ALIASES,
   PREFERRED_LOCALE_COOKIE_NAME,
