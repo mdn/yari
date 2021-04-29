@@ -23,7 +23,11 @@ module.exports = [
   [["html", "head", "body"], (node, t) => wrap(t(node))],
 
   [
-    { is: ["h1", "h2", "h3", "h4", "h5"], canHave: "id" },
+    {
+      is: ["h1", "h2", "h3", "h4", "h5"],
+      canHave: "id",
+      canHaveClass: ["example", "name", "highlight-spanned"],
+    },
     (node, t) =>
       h(
         node,
@@ -34,7 +38,8 @@ module.exports = [
   ],
 
   [
-    "div",
+    { is: "div", canHaveClass: ["twocolumns", "threecolumns", "noinclude"] },
+    // TODO: attach noinclude
     (node, t) =>
       !node.children
         ? h(node, "html", {}, toHtml(node))
@@ -50,7 +55,28 @@ module.exports = [
           ],
   ],
 
-  ["p", (node, t) => h(node, "paragraph", {}, t(node))],
+  [
+    {
+      is: ["span", "small", "dfn"],
+      canHave: ["id"],
+      canHaveClass: [
+        "pl-s",
+        "highlight-span",
+        "objectBox",
+        "objectBox-string",
+        "devtools-monospace",
+        "message-body",
+        "message-flex-body",
+        "message-body-wrapper",
+      ],
+    },
+    (node, t) => t(node),
+  ],
+
+  [
+    { is: "p", canHaveClass: ["brush:", "js"] },
+    (node, t) => h(node, "paragraph", {}, t(node)),
+  ],
   ["em", (node, t) => h(node, "emphasis", {}, t(node))],
   ["strong", (node, t) => h(node, "strong", {}, t(node))],
   [
@@ -64,8 +90,8 @@ module.exports = [
       is: "a",
       has: "href",
       // TODO: should swallow target=_blank? Should all our external links have new tab behavior?
-      canHave: ["title", "rel"],
-      canHaveClass: "link-https",
+      canHave: ["title", "rel", "target"],
+      canHaveClass: ["link-https", "mw-redirect", "external", "external-icon"],
     },
     (node, t) =>
       h(
@@ -80,7 +106,7 @@ module.exports = [
   ],
 
   [
-    ["ul", "ol"],
+    { is: ["ul", "ol"], canHaveClass: ["threecolumns"] },
     function list(node, t) {
       const ordered = node.tagName == "ol";
       const children = t(node).map((child) =>
@@ -118,40 +144,45 @@ module.exports = [
 
   // TODO: currently drops links (and other markup) inside of code
   [
-    "code",
+    ["code", "kbd"],
     (node, t, opts) =>
       h(node, "inlineCode", {}, trim(wrapText(toText(node), opts))),
   ],
 
-  ["pre", (node, t, opts) => code(node, opts)],
+  [
+    { is: "pre", canHaveClass: ["eval", "notranslate", "syntaxbox"] },
+    (node, t, opts) => code(node, opts),
+  ],
 
-  ...["js", "html", "css", "json", "plain", "cpp", "java"].flatMap((lang) =>
-    // shows up with/without semicolon
-    ["brush:" + lang, `brush:${lang};`, lang, lang + ";"].map((hasClass) => [
-      {
-        is: "pre",
-        hasClass,
-        canHaveClass: [
-          "brush:",
-          "brush",
-          "example-good",
-          "example-bad",
-          "no-line-numbers",
-          "line-numbers",
-          (className) => className.startsWith("highlight"),
-        ],
-      },
-      (node, t, opts) =>
-        h(
-          node,
-          "code",
-          {
-            lang,
-            meta: node.properties.className.filter((c) => c == lang),
-          },
-          trimTrailingNewLines(wrapText(toText(node), opts))
-        ),
-    ])
+  ...["js", "html", "css", "json", "plain", "cpp", "java", "bash"].flatMap(
+    (lang) =>
+      // shows up with/without semicolon
+      ["brush:" + lang, `brush:${lang};`, lang, lang + ";"].map((hasClass) => [
+        {
+          is: "pre",
+          hasClass,
+          canHaveClass: [
+            "brush:",
+            "brush",
+            "example-good",
+            "example-bad",
+            "no-line-numbers",
+            "line-numbers",
+            "notranslate",
+            (className) => className.startsWith("highlight"),
+          ],
+        },
+        (node, t, opts) =>
+          h(
+            node,
+            "code",
+            {
+              lang,
+              meta: node.properties.className.filter((c) => c == lang),
+            },
+            trimTrailingNewLines(wrapText(toText(node), opts))
+          ),
+      ])
   ),
 
   [
@@ -176,8 +207,28 @@ module.exports = [
     (node) => h(node, "html", {}, toHtml(node)),
   ],
 
-  ["dl", (node) => h(node, "html", {}, toHtml(node))],
+  ["blockquote", (node, t) => h(node, "blockquote", {}, wrap(t(node)))],
 
+  [{ is: ["i", "u"] }, (node, t) => h(node, "emphasis", {}, t(node))],
+  ["b", (node, t) => h(node, "strong", {}, t(node))],
+
+  [
+    "q",
+    (node, t) => [
+      { type: "text", value: '"' },
+      ...t(node),
+      { type: "text", value: '"' },
+    ],
+  ],
+
+  // TODO TBD
+  ["caption", (node, t) => h(node, "paragraph", {}, t(node))],
+
+  // <TODO> TBD
+  ["sub", (node) => h(node, "html", {}, toHtml(node))],
+  ["var", (node) => h(node, "html", {}, toHtml(node))],
+  ["sup", (node) => h(node, "html", {}, toHtml(node))],
+  ["dl", (node) => h(node, "html", {}, toHtml(node))],
   [
     { hasClass: "note", canHaveClass: "notecard" },
     (node) => h(node, "html", {}, toHtml(node)),
@@ -190,4 +241,5 @@ module.exports = [
 
   [{ hasClass: "seoSummary" }, (node) => h(node, "html", {}, toHtml(node))],
   [{ hasClass: "summary" }, (node) => h(node, "html", {}, toHtml(node))],
+  // </TODO>
 ];
