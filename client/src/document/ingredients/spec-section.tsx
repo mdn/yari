@@ -22,9 +22,6 @@ export function SpecificationSection({
       {title && !isH3 && <DisplayH2 id={id} title={title} />}
       {title && isH3 && <DisplayH3 id={id} title={title} />}
 
-      {/* XXX We could have a third condition; the specURL worked but yielded
-      exactly 0 specifications. If that's the case, perhaps the messaging
-      should be different. */}
       {specifications.length > 0 ? (
         <table className="standard-table">
           <thead>
