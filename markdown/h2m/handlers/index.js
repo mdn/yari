@@ -1,10 +1,10 @@
 const toHtml = require("hast-util-to-html");
-const toText = require("hast-util-to-text");
 const trim = require("trim-trailing-lines");
 
 const { h, trimTrailingNewLines, wrapText } = require("../utils");
 const { code, spread, wrap } = require("./rehype-remark-util");
 const tables = require("./tables");
+const { toText } = require("./to-text");
 
 module.exports = [
   [(node) => node.type == "root", (node, t) => h(node, "root", {}, t(node))],
@@ -39,7 +39,7 @@ module.exports = [
 
   [
     { is: "div", canHaveClass: ["twocolumns", "threecolumns", "noinclude"] },
-    // TODO: attach noinclude
+    // TODO: attach noinclude to MD node
     (node, t) =>
       !node.children
         ? h(node, "html", {}, toHtml(node))
@@ -142,7 +142,27 @@ module.exports = [
 
   ...tables,
 
-  // TODO: currently drops links (and other markup) inside of code
+  // Turn <code><a href="/some-link">someCode</a></code> into [`someCode`](/someLink) (other way around)
+  [
+    (node) =>
+      node.tagName == "code" &&
+      node.children.some((child) => child.tagName == "a"),
+    (node) =>
+      node.children.map((child) =>
+        child.tagName == "a"
+          ? h(
+              child,
+              "link",
+              {
+                title: child.properties.title || null,
+                url: child.properties.href,
+              },
+              [h(node, "inlineCode", {}, toText(child))]
+            )
+          : h(node, "inlineCode", {}, toText(child))
+      ),
+  ],
+
   [
     ["code", "kbd"],
     (node, t, opts) =>

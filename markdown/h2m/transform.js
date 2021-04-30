@@ -1,5 +1,8 @@
+const toHtml = require("hast-util-to-html");
 const minify = require("rehype-minify-whitespace");
 
+const handlers = require("./handlers");
+const { UnexpectedElementError } = require("./handlers/to-text");
 const { h, wrapText } = require("./utils");
 
 const toSelector = ({ tagName, properties: { id, className, ...rest } }) =>
@@ -62,7 +65,7 @@ const isHandled = (node, check) => {
   );
 };
 
-function transformNode(node, handlers, opts = {}) {
+function transformNode(node, opts = {}) {
   const selector = node.type === "element" && toSelector(node);
   const unhandled = [];
 
@@ -73,11 +76,7 @@ function transformNode(node, handlers, opts = {}) {
     } else {
       return (node.children || [])
         .map((child) => {
-          const [transformed, childUnhandled] = transformNode(
-            child,
-            handlers,
-            newOpts
-          );
+          const [transformed, childUnhandled] = transformNode(child, newOpts);
           unhandled.push(...childUnhandled);
           return transformed;
         })
@@ -89,7 +88,16 @@ function transformNode(node, handlers, opts = {}) {
   const handler = handlers.find(([check]) => isHandled(node, check));
   if (handler) {
     const handle = handler[1];
-    transformed = handle(node, transformChildren, opts);
+    try {
+      transformed = handle(node, transformChildren, opts);
+    } catch (error) {
+      if (error instanceof UnexpectedElementError) {
+        unhandled.push(toSelector(error.element));
+      } else {
+        console.error("unknown error while handling", error);
+      }
+      transformed = h(node, "html", {}, toHtml(node));
+    }
   } else if (selector) {
     unhandled.push(selector);
   }
@@ -97,30 +105,25 @@ function transformNode(node, handlers, opts = {}) {
   return [transformed || transformChildren(node), unhandled];
 }
 
-function toMdast(tree, handlers) {
+function toMdast(tree) {
   minify({ newlines: true })(tree);
-  return transformNode(tree, handlers);
+  return transformNode(tree);
 }
 
 // If a destination is given, runs the destination with the new mdast tree
 // (bridge-mode).
 // Without destination, returns the mdast tree: further plugins run on that tree
 // (mutate-mode).
-function transform(destination, options) {
-  let settings;
-
+function transform(destination) {
   if (destination && !destination.process) {
-    settings = destination;
     destination = null;
   }
 
-  settings = settings || options || {};
-
   return destination
     ? function transformer(node, file, next) {
-        destination.run(toMdast(node, settings), file, (err) => next(err));
+        destination.run(toMdast(node), file, (err) => next(err));
       }
-    : (node) => toMdast(node, settings);
+    : (node) => toMdast(node);
 }
 
 module.exports = { transform };

@@ -4,13 +4,12 @@ const remarkPrettier = require("remark-prettier");
 const gfm = require("remark-gfm");
 
 const { decodeKS, encodeKS } = require("../utils");
-const handlers = require("./handlers");
 const { transform } = require("./transform");
 
 const getTransformProcessor = () =>
   unified()
     .use(parse)
-    .use(transform, handlers)
+    .use(transform)
     .use(gfm)
     .use(remarkPrettier, { report: false, options: { proseWrap: "always" } });
 
