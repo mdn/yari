@@ -5,6 +5,8 @@ const handlers = require("./handlers");
 const { UnexpectedElementError } = require("./handlers/to-text");
 const { h, wrapText } = require("./utils");
 
+const CHILD_TAGS = ["li", "thead", "tbody", "th", "tr", "td"];
+
 const toSelector = ({ tagName, properties: { id, className, ...rest } }) =>
   [
     tagName,
@@ -91,18 +93,25 @@ function transformNode(node, opts = {}) {
     try {
       transformed = handle(node, transformChildren, opts);
     } catch (error) {
+      if (CHILD_TAGS.includes(node.tagName)) {
+        throw error;
+      }
       if (error instanceof UnexpectedElementError) {
         unhandled.push(toSelector(error.element));
       } else {
-        console.error("unknown error while handling", error);
+        console.error("error while handling", node, ":", error);
       }
-      transformed = h(node, "html", {}, toHtml(node));
     }
   } else if (selector) {
     unhandled.push(selector);
   }
 
-  return [transformed || transformChildren(node), unhandled];
+  // if child tags need to be turned into HTML, so do their parents
+  if (!transformed && CHILD_TAGS.includes(node.tagName)) {
+    throw new UnexpectedElementError(node);
+  }
+
+  return [transformed || h(node, "html", {}, toHtml(node)), unhandled];
 }
 
 function toMdast(tree) {
