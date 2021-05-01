@@ -81,7 +81,7 @@ const CSP_DIRECTIVES = [
   "connect-src 'self'",
   "font-src 'self'",
   "frame-src 'self' https://interactive-examples.mdn.mozilla.net https://mdn.github.io https://yari-demos.prod.mdn.mozit.cloud",
-  "img-src 'self' https://avatars1.githubusercontent.com",
+  "img-src 'self' https://*.githubusercontent.com https://*.googleusercontent.com",
   "manifest-src 'self'",
   "media-src 'self'",
   "worker-src 'none'",
