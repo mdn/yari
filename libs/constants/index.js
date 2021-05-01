@@ -74,14 +74,13 @@ const CSP_DIRECTIVES = [
       "'sha256-JEt9Nmc3BP88wxuTZm9aKNu87vEgGmKW1zzy/vb1KPs='", // polyfill check
       "https://polyfill.io/v3/polyfill.min.js",
     ].join(" "),
-  // TODO: eventually drop unsafe-inline, after our move to Markdown
   "style-src 'report-sample' 'self' 'unsafe-inline'",
   "object-src 'none'",
   "base-uri 'self'",
   "connect-src 'self'",
   "font-src 'self'",
-  "frame-src 'self' https://interactive-examples.mdn.mozilla.net https://mdn.github.io https://yari-demos.prod.mdn.mozit.cloud",
-  "img-src 'self' https://*.githubusercontent.com https://*.googleusercontent.com",
+  "frame-src 'self' https://interactive-examples.mdn.mozilla.net https://mdn.github.io https://yari-demos.prod.mdn.mozit.cloud https://mdn.mozillademos.org https://yari-demos.stage.mdn.mozit.cloud",
+  "img-src 'self' https://*.githubusercontent.com https://*.googleusercontent.com https://lux.speedcurve.com",
   "manifest-src 'self'",
   "media-src 'self'",
   "worker-src 'none'",
