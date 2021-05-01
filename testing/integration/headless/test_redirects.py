@@ -165,8 +165,11 @@ def test_retired_locale_redirects(base_url, slug, retired_locale):
     """Ensure that requests for retired locales properly redirect."""
     resp = request("get", f"{base_url}/{retired_locale}{slug}")
     assert resp.status_code == 302
-    expected = "?".join(p.strip("/") for p in slug.split("?"))
-    expected += ("&" if "?" in slug else "?") + f"retiredLocale={retired_locale}"
+    slug_parts = slug.split("?")
+    expected_slug = slug_parts[0].lstrip("/")
+    expected_qs = f"?retiredLocale={retired_locale}"
+    if len(slug_parts) > 1:
+        expected_qs += f"&{slug_parts[1]}"
     assert (
-        resp.headers["Location"] == f"/en-US/{expected}"
-    ), f"{resp.headers['Location']} is not /en-US/{expected}"
+        resp.headers["Location"] == f"/en-US/{expected_slug}{expected_qs}"
+    ), f"{resp.headers['Location']} is not /en-US/{expected_slug}{expected_qs}"

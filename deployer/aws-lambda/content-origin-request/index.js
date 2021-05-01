@@ -6,7 +6,7 @@ const {
   encodePath,
   slugToFolder,
 } = require("@yari-internal/slug-utils");
-const { VALID_LOCALES, RETIRED_LOCALES } = require("@yari-internal/constants");
+const { VALID_LOCALES } = require("@yari-internal/constants");
 
 const THIRTY_DAYS = 3600 * 24 * 30;
 const NEEDS_LOCALE = /^\/(?:docs|search|settings|signin|signup)(?:$|\/)/;
@@ -105,12 +105,14 @@ exports.handler = async (event) => {
     return redirect(`/${request.uri.replace(/^\/+/g, "")}`);
   }
 
-  const { url, status } = resolveFundamental(request.uri);
+  let { url, status } = resolveFundamental(request.uri);
   if (url) {
-    // TODO: Do we want to add the query string to the redirect?
-    //       If we decide we do, then we probably need to change
-    //       the caching policy on the "*/docs/* behavior" to
-    //       cache based on the query strings as well.
+    // NOTE: The query string is not forwarded for document requests,
+    //       as directed by their origin request policy, so it's safe to
+    //       assume "request.querystring" is empty for document requests.
+    if (request.querystring) {
+      url += (url.includes("?") ? "&" : "?") + request.querystring;
+    }
     return redirect(url, {
       status,
       cacheControlSeconds: THIRTY_DAYS,
@@ -138,16 +140,6 @@ exports.handler = async (event) => {
   const uriParts = request.uri.split("/");
   const uriFirstPart = uriParts[1];
   const uriFirstPartLC = uriFirstPart.toLowerCase();
-
-  if (RETIRED_LOCALES.has(uriFirstPartLC)) {
-    // Assemble the rest of the path without a trailing slash.
-    const extra = uriParts.slice(2).filter(Boolean).join("/");
-    return redirect(
-      `/en-US/${extra}${qs}${qs ? "&" : "?"}retiredLocale=${RETIRED_LOCALES.get(
-        uriFirstPartLC
-      )}`
-    );
-  }
 
   // Do we need to redirect to the properly-cased locale? We also ensure
   // here that requests for the home page have a trailing slash, while

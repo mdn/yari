@@ -1,4 +1,8 @@
-const { VALID_LOCALES, LOCALE_ALIASES } = require("../constants");
+const {
+  VALID_LOCALES,
+  LOCALE_ALIASES,
+  RETIRED_LOCALES,
+} = require("../constants");
 
 const startRe = /^\^?\/?/;
 const startTemplate = /^\//;
@@ -69,8 +73,8 @@ for (const [alias, correct] of LOCALE_ALIASES) {
   fixableLocales.set(alias, correct);
 }
 
-// All things like `/en_Us/docs/...` -> `/en-US/docs/...`
 const LOCALE_PATTERNS = [
+  // All things like `/en_Us/docs/...` -> `/en-US/docs/...`
   redirect(
     new RegExp(
       `^(?<locale>${Array.from(fixableLocales.keys()).join(
@@ -91,6 +95,21 @@ const LOCALE_PATTERNS = [
       return `/${locale}/${suffix || ""}`;
     },
     { permanent: true }
+  ),
+  // Retired locales
+  redirect(
+    new RegExp(
+      `^(?<locale>${Array.from(RETIRED_LOCALES.keys()).join(
+        "|"
+      )})(/(?<suffix>.*)|$)`,
+      "i"
+    ),
+    ({ locale, suffix }) => {
+      const join = suffix && suffix.includes("?") ? "&" : "?";
+      return `/en-US/${
+        (suffix || "") + join
+      }retiredLocale=${RETIRED_LOCALES.get(locale.toLowerCase())}`;
+    }
   ),
 ];
 
