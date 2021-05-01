@@ -1,5 +1,6 @@
 import pytest
 
+from . import request
 from utils.urls import assert_valid_url
 
 from .map_301 import (
@@ -116,3 +117,56 @@ def test_firefox_source_docs_redirects(url, base_url):
 def test_misc_redirects(url, base_url):
     url["base_url"] = base_url
     assert_valid_url(**url)
+
+
+@pytest.mark.parametrize(
+    "retired_locale",
+    (
+        "ar",
+        "bg",
+        "bn",
+        "ca",
+        "el",
+        "fa",
+        "fi",
+        "he",
+        "hi-IN",
+        "hu",
+        "id",
+        "it",
+        "kab",
+        "ms",
+        "my",
+        "nl",
+        "pt-PT",
+        "sv-SE",
+        "th",
+        "tr",
+        "uk",
+        "vi",
+    ),
+)
+@pytest.mark.parametrize(
+    "slug",
+    [
+        "",
+        "/",
+        "/docs/Web",
+        "/docs/Web/",
+        "/search",
+        "/search/",
+        "/search?q=video",
+        "/search/?q=video",
+        "/signup",
+        "/settings",
+    ],
+)
+def test_retired_locale_redirects(base_url, slug, retired_locale):
+    """Ensure that requests for retired locales properly redirect."""
+    resp = request("get", f"{base_url}/{retired_locale}{slug}")
+    assert resp.status_code == 302
+    expected = "?".join(p.strip("/") for p in slug.split("?"))
+    expected += ("&" if "?" in slug else "?") + f"retiredLocale={retired_locale}"
+    assert (
+        resp.headers["Location"] == f"/en-US/{expected}"
+    ), f"{resp.headers['Location']} is not /en-US/{expected}"
