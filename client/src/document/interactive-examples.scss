@@ -5,45 +5,9 @@
   background-color: $neutral-550;
   border: 1px solid #eaf2f4;
   color: $text-color;
-  height: 550px;
   padding: 10px;
   width: 100%;
-
-  @media #{$mq-small-desktop-and-up} {
-    height: 390px;
-  }
-}
-
-.interactive.interactive-js {
-  height: 490px;
-}
-
-.interactive.taller {
-  height: 692px;
-}
-
-.interactive.shorter {
-  height: 410px;
-}
-
-.interactive.tabbed {
-  height: 430px;
-}
-
-.no-js .interactive {
-  background-color: #f8f8f8;
-  height: 240px;
-}
-
-/* custom sizing classes for the tabbed interactive editor */
-.interactive.tabbed-shorter {
-  height: 375px;
-}
-
-.interactive.tabbed-standard {
-  height: 445px;
-}
-
-.interactive.tabbed-taller {
-  height: 655px;
+  // Note! The height is set as a regular pixel height number
+  // on the <iframe> itself and that's done in the EmbedInteractiveExample.ejs
+  // macro.
 }
