@@ -1,4 +1,5 @@
 const {
+  DEFAULT_LOCALE,
   VALID_LOCALES,
   LOCALE_ALIASES,
   RETIRED_LOCALES,
@@ -106,7 +107,7 @@ const LOCALE_PATTERNS = [
     ),
     ({ locale, suffix }) => {
       const join = suffix && suffix.includes("?") ? "&" : "?";
-      return `/en-US/${
+      return `/${DEFAULT_LOCALE}/${
         (suffix || "") + join
       }retiredLocale=${RETIRED_LOCALES.get(locale.toLowerCase())}`;
     }
