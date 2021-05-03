@@ -105,12 +105,14 @@ exports.handler = async (event) => {
     return redirect(`/${request.uri.replace(/^\/+/g, "")}`);
   }
 
-  const { url, status } = resolveFundamental(request.uri);
+  let { url, status } = resolveFundamental(request.uri);
   if (url) {
-    // TODO: Do we want to add the query string to the redirect?
-    //       If we decide we do, then we probably need to change
-    //       the caching policy on the "*/docs/* behavior" to
-    //       cache based on the query strings as well.
+    // NOTE: The query string is not forwarded for document requests,
+    //       as directed by their origin request policy, so it's safe to
+    //       assume "request.querystring" is empty for document requests.
+    if (request.querystring) {
+      url += (url.includes("?") ? "&" : "?") + request.querystring;
+    }
     return redirect(url, {
       status,
       cacheControlSeconds: THIRTY_DAYS,
@@ -127,6 +129,7 @@ exports.handler = async (event) => {
     const path = request.uri.endsWith("/")
       ? request.uri.slice(0, -1)
       : request.uri;
+    // Note that "getLocale" only returns valid locales, never a retired locale.
     const locale = getLocale(request);
     // The only time we actually want a trailing slash is when the URL is just
     // the locale. E.g. `/en-US/` (not `/en-US`)
