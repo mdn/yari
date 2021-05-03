@@ -95,6 +95,10 @@
     tr:nth-child(even) {
       background-color: $neutral-550;
     }
+
+    dl {
+      max-width: 100%;
+    }
   }
 
   .bc-browser-name {

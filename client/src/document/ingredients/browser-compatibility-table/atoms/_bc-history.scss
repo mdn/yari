@@ -16,6 +16,7 @@ tr.bc-history {
     @media #{$mq-large-desktop-and-up} {
       align-items: flex-start;
       display: flex;
+      flex-wrap: wrap;
       gap: $base-spacing;
     }
   }
