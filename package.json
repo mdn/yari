@@ -28,12 +28,8 @@
     "test:kumascript": "jest kumascript",
     "test:testing": "cd testing && jest",
     "tool": "node tool/cli.js",
-    "watch:ssr": "cd ssr && webpack --mode=production --watch"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged && yarn install --ignore-scripts"
-    }
+    "watch:ssr": "cd ssr && webpack --mode=production --watch",
+    "prepare": "husky install"
   },
   "resolutions": {
     "@typescript-eslint/typescript-estree": ">=4.15.2",
@@ -135,7 +131,7 @@
     "fuzzysearch": "1.0.3",
     "history": "5.0.0",
     "html-validate": "4.10.1",
-    "husky": "4.3.8",
+    "husky": "^6.0.0",
     "ignore-loader": "^0.1.2",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "jest-junit-reporter": "^1.1.0",
