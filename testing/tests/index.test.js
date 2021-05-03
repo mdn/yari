@@ -578,7 +578,7 @@ test("broken links flaws", () => {
     "#anchor"
   );
   expect(map.get("http://www.mozilla.org").explanation).toBe(
-    "http:// external links are not allowed (will be forced to https:// at build-time)"
+    "Is currently http:// but can become https://"
   );
   expect(map.get("http://www.mozilla.org").suggestion).toBe(
     "https://www.mozilla.org"
