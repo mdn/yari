@@ -1,3 +1,5 @@
+const LRU = require("lru-cache");
+
 const {
   getPopularities,
   VALID_LOCALES,
@@ -6,6 +8,46 @@ const {
   CONTENT_TRANSLATED_ROOT,
 } = require("../content");
 const { DEFAULT_LOCALE } = require("../libs/constants");
+
+// Hacky memoize exclusively for local development
+const MEMOIZE_INVALIDATE = Symbol("force cache update");
+function isPromise(p) {
+  return p && Object.prototype.toString.call(p) === "[object Promise]";
+}
+
+function memoize(fn) {
+  // if (process.env.NODE_ENV !== "production") {
+  //   return fn;
+  // }
+
+  const cache = new LRU({ max: 2000 });
+  return (...args) => {
+    let invalidate = false;
+    if (args.includes(MEMOIZE_INVALIDATE)) {
+      args.splice(args.indexOf(MEMOIZE_INVALIDATE), 1);
+      invalidate = true;
+    }
+    const key = JSON.stringify(args);
+
+    if (cache.has(key)) {
+      if (invalidate) {
+        cache.del(key);
+      } else {
+        return cache.get(key);
+      }
+    }
+
+    const value = fn(...args);
+    if (isPromise(value)) {
+      return value.then((actualValue) => {
+        cache.set(key, actualValue);
+        return actualValue;
+      });
+    }
+    cache.set(key, value);
+    return value;
+  };
+}
 
 // Module-level cache
 const allPopularityValues = [];
@@ -37,15 +79,25 @@ function validPopularityFilter(value) {
 }
 
 function packageTranslationDifferences(translationDifferences) {
-  return { count: translationDifferences.length };
+  const count = translationDifferences.length;
+  let total = 0;
+  translationDifferences.forEach((difference) => {
+    if (
+      difference.explanationNotes &&
+      Array.isArray(difference.explanationNotes)
+    ) {
+      total += difference.explanationNotes.length;
+    } else {
+      total++;
+    }
+  });
+  return { count, total };
 }
 
 function packageModifiedDate(modifiedDate, parentModifiedDate) {
   return {
     modified: modifiedDate,
     parentModified: parentModifiedDate,
-    differenceMS:
-      new Date(parentModifiedDate).getTime() - new Date(modifiedDate).getTime(),
   };
 }
 
@@ -69,153 +121,159 @@ function packageDocument(document, englishDocument, translationDifferences) {
   return { popularity, differences, date, mdn_url, title };
 }
 
-function findDocuments({ locale, filters, page, sortBy, sortReverse }) {
-  const DOCUMENTS_PER_PAGE = 25;
+const findDocuments = memoize(
+  ({ locale, filters, page, sortBy, sortReverse }) => {
+    const DOCUMENTS_PER_PAGE = 25;
 
-  const counts = {
-    // Number of documents found with the matching filters.
-    found: 0,
-    // Number of documents encountered prior to filters.
-    total: 0,
-    // Used by the pagination
-    pages: 0,
-    // Translated documents that can't be linked to its English parent
-    noParent: 0,
-  };
+    const counts = {
+      // Number of documents found with the matching filters.
+      found: 0,
+      // Number of documents encountered prior to filters.
+      total: 0,
+      // Used by the pagination
+      pages: 0,
+      // Translated documents that can't be linked to its English parent
+      noParent: 0,
+    };
 
-  const documents = [];
+    const documents = [];
 
-  const t1Total = new Date();
+    const t1Total = new Date();
 
-  // let filteredFlaws = new Set();
-  // if (filters.flaws) {
-  //   if (Array.isArray(filters.flaws)) {
-  //     filteredFlaws = new Set(filters.flaws);
-  //   } else {
-  //     filteredFlaws = new Set([filters.flaws]);
-  //   }
-  // }
+    // let filteredFlaws = new Set();
+    // if (filters.flaws) {
+    //   if (Array.isArray(filters.flaws)) {
+    //     filteredFlaws = new Set(filters.flaws);
+    //   } else {
+    //     filteredFlaws = new Set([filters.flaws]);
+    //   }
+    // }
 
-  // let searchFlaws = new Map();
-  // if (filters.search_flaws) {
-  //   if (Array.isArray(filters.search_flaws)) {
-  //     searchFlaws = new Map(filters.search_flaws.map((x) => x.split(":", 2)));
-  //   } else {
-  //     searchFlaws = new Map([filters.search_flaws].map((x) => x.split(":", 2)));
-  //   }
-  // }
+    // let searchFlaws = new Map();
+    // if (filters.search_flaws) {
+    //   if (Array.isArray(filters.search_flaws)) {
+    //     searchFlaws = new Map(filters.search_flaws.map((x) => x.split(":", 2)));
+    //   } else {
+    //     searchFlaws = new Map([filters.search_flaws].map((x) => x.split(":", 2)));
+    //   }
+    // }
 
-  const t1ListDocuments = new Date();
-  const documentsFound = Document.findAll({
-    locales: new Map([[locale, true]]),
-  });
-  counts.total = documentsFound.count;
-  const t2ListDocuments = new Date();
-  const tookListDocuments =
-    t2ListDocuments.getTime() - t1ListDocuments.getTime();
+    const t1ListDocuments = new Date();
+    const documentsFound = Document.findAll({
+      locales: new Map([[locale, true]]),
+    });
+    counts.total = documentsFound.count;
+    const t2ListDocuments = new Date();
+    const tookListDocuments =
+      t2ListDocuments.getTime() - t1ListDocuments.getTime();
 
-  for (const document of documentsFound.iter()) {
-    if (
-      (filters.mdn_url &&
-        !document.url.toLowerCase().includes(filters.mdn_url.toLowerCase())) ||
-      (filters.title &&
-        !document.metadata.title
-          .toLowerCase()
-          .includes(filters.title.toLowerCase()))
-    ) {
-      continue;
-    }
-
-    const { popularityFilter } = filters;
-    if (popularityFilter) {
-      const docRanking = document.metadata.popularity
-        ? 1 +
-          getAllPopularityValues().filter(
-            (p) => p > document.metadata.popularity
-          ).length
-        : NaN;
-      if (popularityFilter.min) {
-        if (isNaN(docRanking) || docRanking > popularityFilter.min) {
-          continue;
-        }
-      } else if (popularityFilter.max && docRanking < popularityFilter.max) {
+    for (const document of documentsFound.iter()) {
+      if (
+        (filters.mdn_url &&
+          !document.url
+            .toLowerCase()
+            .includes(filters.mdn_url.toLowerCase())) ||
+        (filters.title &&
+          !document.metadata.title
+            .toLowerCase()
+            .includes(filters.title.toLowerCase()))
+      ) {
         continue;
       }
-    }
 
-    const englishDocument = Document.read(
-      document.fileInfo.folder.replace(
-        document.metadata.locale.toLowerCase(),
-        DEFAULT_LOCALE.toLowerCase()
-      )
-    );
-    if (!englishDocument) {
-      counts.noParent++;
-      continue;
-    }
-
-    const differences = [];
-    for (const difference of Translation.getTranslationDifferences(
-      englishDocument,
-      document
-    )) {
-      differences.push(difference);
-    }
-
-    const packaged = packageDocument(document, englishDocument, differences);
-
-    counts.found++;
-    documents.push(packaged);
-  }
-
-  counts.pages = Math.ceil(counts.found / DOCUMENTS_PER_PAGE);
-
-  const sortMultiplier = sortReverse ? -1 : 1;
-  documents.sort((a, b) => {
-    switch (sortBy) {
-      case "popularity":
-        return (
-          sortMultiplier *
-          ((b.popularity.value || 0) - (a.popularity.value || 0))
-        );
-      case "flaws":
-        return sortMultiplier * (countFilteredFlaws(a) - countFilteredFlaws(b));
-      case "mdn_url":
-        if (a.mdn_url.toLowerCase() < b.mdn_url.toLowerCase()) {
-          return sortMultiplier * -1;
-        } else if (a.mdn_url.toLowerCase() > b.mdn_url.toLowerCase()) {
-          return sortMultiplier;
+      const { popularityFilter } = filters;
+      if (popularityFilter) {
+        const docRanking = document.metadata.popularity
+          ? 1 +
+            getAllPopularityValues().filter(
+              (p) => p > document.metadata.popularity
+            ).length
+          : NaN;
+        if (popularityFilter.min) {
+          if (isNaN(docRanking) || docRanking > popularityFilter.min) {
+            continue;
+          }
+        } else if (popularityFilter.max && docRanking < popularityFilter.max) {
+          continue;
         }
-        return 0;
+      }
 
-      case "modified":
-        return (
-          sortMultiplier *
-          (new Date(a.date.modified).getTime() -
-            new Date(b.date.modified).getTime())
-        );
+      const englishDocument = Document.read(
+        document.fileInfo.folder.replace(
+          document.metadata.locale.toLowerCase(),
+          DEFAULT_LOCALE.toLowerCase()
+        )
+      );
+      if (!englishDocument) {
+        counts.noParent++;
+        continue;
+      }
 
-      default:
-        throw new Error("not implemented");
+      const differences = [];
+      for (const difference of Translation.getTranslationDifferences(
+        englishDocument,
+        document
+      )) {
+        differences.push(difference);
+      }
+
+      const packaged = packageDocument(document, englishDocument, differences);
+
+      counts.found++;
+      documents.push(packaged);
     }
-  });
 
-  const t2Total = new Date();
-  const tookTotal = t2Total.getTime() - t1Total.getTime();
+    counts.pages = Math.ceil(counts.found / DOCUMENTS_PER_PAGE);
 
-  const times = {
-    tookTotal,
-    tookListDocuments,
-  };
+    const sortMultiplier = sortReverse ? -1 : 1;
+    documents.sort((a, b) => {
+      switch (sortBy) {
+        case "popularity":
+          return (
+            sortMultiplier *
+            ((b.popularity.value || 0) - (a.popularity.value || 0))
+          );
+        case "flaws":
+          return (
+            sortMultiplier * (countFilteredFlaws(a) - countFilteredFlaws(b))
+          );
+        case "mdn_url":
+          if (a.mdn_url.toLowerCase() < b.mdn_url.toLowerCase()) {
+            return sortMultiplier * -1;
+          } else if (a.mdn_url.toLowerCase() > b.mdn_url.toLowerCase()) {
+            return sortMultiplier;
+          }
+          return 0;
 
-  const [m, n] = [(page - 1) * DOCUMENTS_PER_PAGE, page * DOCUMENTS_PER_PAGE];
+        case "modified":
+          return (
+            sortMultiplier *
+            (new Date(a.date.modified).getTime() -
+              new Date(b.date.modified).getTime())
+          );
 
-  return {
-    counts,
-    times,
-    documents: documents.slice(m, n),
-  };
-}
+        default:
+          throw new Error("not implemented");
+      }
+    });
+
+    const t2Total = new Date();
+    const tookTotal = t2Total.getTime() - t1Total.getTime();
+
+    const times = {
+      tookTotal,
+      tookListDocuments,
+    };
+
+    const [m, n] = [(page - 1) * DOCUMENTS_PER_PAGE, page * DOCUMENTS_PER_PAGE];
+
+    return {
+      counts,
+      times,
+      documents: documents.slice(m, n),
+    };
+  }
+);
 
 function translationsRoute(req, res) {
   if (!CONTENT_TRANSLATED_ROOT) {
@@ -254,16 +312,15 @@ function translationsRoute(req, res) {
 
   const sortBy = req.query.sort || "popularity";
   const sortReverse = JSON.parse(req.query.reverse || "false");
-
-  res.json(
-    findDocuments({
-      locale,
-      filters,
-      page,
-      sortBy,
-      sortReverse,
-    })
-  );
+  const found = findDocuments({
+    locale,
+    filters,
+    page,
+    sortBy,
+    sortReverse,
+  });
+  // console.log(found.documents[0]);
+  res.json(found);
 }
 
 module.exports = { translationsRoute, findDocuments };
