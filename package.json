@@ -82,7 +82,7 @@
     "lru-cache": "^6.0.0",
     "md5-file": "5.0.0",
     "mdn-data": "2.0.18",
-    "open": "^8.0.6",
+    "open": "^8.0.7",
     "open-editor": "3.0.0",
     "prismjs": "1.23.0",
     "read-chunk": "3.2.0",
