@@ -167,7 +167,7 @@
     "swr": "^0.5.5",
     "ts-loader": "^8.1.0",
     "typescript": "^4.2.4",
-    "use-debounce": "^5.2.1",
+    "use-debounce": "^6.0.1",
     "webpack": "^4.44.2",
     "webpack-cli": "^4.6.0",
     "webpack-node-externals": "^3.0.0"
