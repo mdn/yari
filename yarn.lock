@@ -4336,6 +4336,11 @@
     "@types/node" "*"
     safe-buffer "*"
 
+"@types/repeat-string@^1.0.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@types/repeat-string/-/repeat-string-1.6.0.tgz#79fa5c9e9b5fad3247b497ca67b021f78cacfdf2"
+  integrity sha512-Nwr4xMZBJKzluvdF9QPKjqFi8EpR63jk0mQPBEXB/+kevUPBftRQrbt24m+NkRh0C9ftrNIqnnsDw9iyQv/j7g==
+
 "@types/resolve@0.0.8":
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/@types/resolve/-/resolve-0.0.8.tgz#f26074d238e02659e323ce1a13d041eee280e194"
@@ -10360,6 +10365,14 @@ hast-util-is-element@^1.0.0, hast-util-is-element@^1.1.0:
   resolved "https://registry.yarnpkg.com/hast-util-is-element/-/hast-util-is-element-1.1.0.tgz#3b3ed5159a2707c6137b48637fbfe068e175a425"
   integrity sha512-oUmNua0bFbdrD/ELDSSEadRVtWZOf3iF6Lbv81naqsIV99RnSCieTbWuWCY8BAeEfKJTKl0gRdokv+dELutHGQ==
 
+hast-util-is-element@^2.0.0:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/hast-util-is-element/-/hast-util-is-element-2.0.1.tgz#eb8f6db6d06950dc4b99f17d79dea6aa2368f4fe"
+  integrity sha512-j317G/4HBy5g0rstOJpgJTFt55+oIj3bY2NtfLRi0vPPEWGYZUFwZhh7MvWczA5ue0w5K5QflNXKZXk0SgrV4A==
+  dependencies:
+    "@types/hast" "^2.0.0"
+    "@types/unist" "^2.0.0"
+
 hast-util-parse-selector@^2.0.0:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/hast-util-parse-selector/-/hast-util-parse-selector-2.2.4.tgz#60c99d0b519e12ab4ed32e58f150ec3f61ed1974"
@@ -10453,7 +10466,7 @@ hast-util-to-parse5@^6.0.0:
     xtend "^4.0.0"
     zwitch "^1.0.0"
 
-hast-util-to-text@^2.0.0, hast-util-to-text@^2.0.1:
+hast-util-to-text@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/hast-util-to-text/-/hast-util-to-text-2.0.1.tgz#04f2e065642a0edb08341976084aa217624a0f8b"
   integrity sha512-8nsgCARfs6VkwH2jJU9b8LNTuR4700na+0h3PqCaEk4MAnMDeu5P0tP8mjk9LLNGxIeQRLbiDbZVw6rku+pYsQ==
@@ -10461,6 +10474,17 @@ hast-util-to-text@^2.0.0, hast-util-to-text@^2.0.1:
     hast-util-is-element "^1.0.0"
     repeat-string "^1.0.0"
     unist-util-find-after "^3.0.0"
+
+hast-util-to-text@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/hast-util-to-text/-/hast-util-to-text-3.0.0.tgz#50b985beda7d4e8b6d9463fd91cb08132fc3c62c"
+  integrity sha512-N+Y06wCTyc9HSzleL+yexRf6h/lgnCSvjD0r7e/v8cgAIXKQYx1SLR9MITbSvDMVVSr+VSFKAYLU9zvAY+VVDA==
+  dependencies:
+    "@types/hast" "^2.0.0"
+    "@types/repeat-string" "^1.0.0"
+    hast-util-is-element "^2.0.0"
+    repeat-string "^1.0.0"
+    unist-util-find-after "^4.0.0"
 
 hast-util-whitespace@^1.0.0, hast-util-whitespace@^1.0.4:
   version "1.0.4"
@@ -19202,6 +19226,14 @@ unist-util-find-after@^3.0.0:
   dependencies:
     unist-util-is "^4.0.0"
 
+unist-util-find-after@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/unist-util-find-after/-/unist-util-find-after-4.0.0.tgz#1101cebf5fed88ae3c6f3fa676e86fd5772a4f32"
+  integrity sha512-gfpsxKQde7atVF30n5Gff2fQhAc4/HTOV4CvkXpTg9wRfQhZWdXitpyXHWB6YcYgnsxLx+4gGHeVjCTAAp9sjw==
+  dependencies:
+    "@types/unist" "^2.0.0"
+    unist-util-is "^5.0.0"
+
 unist-util-find-all-after@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/unist-util-find-all-after/-/unist-util-find-all-after-3.0.2.tgz#fdfecd14c5b7aea5e9ef38d5e0d5f774eeb561f6"
@@ -19218,6 +19250,11 @@ unist-util-is@^4.0.0:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/unist-util-is/-/unist-util-is-4.0.2.tgz#c7d1341188aa9ce5b3cff538958de9895f14a5de"
   integrity sha512-Ofx8uf6haexJwI1gxWMGg6I/dLnF2yE+KibhD3/diOqY2TinLcqHXCV6OI5gFVn3xQqDH+u0M625pfKwIwgBKQ==
+
+unist-util-is@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/unist-util-is/-/unist-util-is-5.0.0.tgz#c71eddea34aa7009d54f671a6fafb3779b8035d3"
+  integrity sha512-G4p13DhfdUNmlnJxd0uy5Skx1FG58LSDhX8h1xgpeSq0omOQ4ZN5BO54ToFlNX55NDTbRHMdwTOJXqAieInSEA==
 
 unist-util-position@^3.0.0:
   version "3.1.0"
