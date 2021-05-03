@@ -71,7 +71,7 @@ export function DocumentForm({
     setAutoSaveEnabled(!autosaveEnabled);
   }
 
-  const { callback: debounceCallback } = useDebouncedCallback(onSave, 1000);
+  const debounceCallback = useDebouncedCallback(onSave, 1000);
 
   useEffect(() => {
     if (willAutosave) {

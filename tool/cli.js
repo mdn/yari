@@ -30,6 +30,7 @@ const {
 } = require("../build/constants");
 const { runArchive } = require("./archive");
 const { runMakePopularitiesFile } = require("./popularities");
+const { runOptimizeClientBuild } = require("./optimize-client-build");
 const kumascript = require("../kumascript");
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
@@ -915,6 +916,34 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       console.log(
         `modified: ${countModified} | no-change: ${countNoChange} | skipped: ${countSkipped} | total: ${countTotal}`
       );
+    })
+  )
+
+  .command(
+    "optimize-client-build",
+    "After the client code has been built there are things to do that react-scripts can't."
+  )
+  .argument("<buildroot>", "directory where react-scripts built", {
+    default: path.join("client", "build"),
+  })
+  .action(
+    tryOrExit(async ({ args, options, logger }) => {
+      const { buildroot } = args;
+      const { results } = await runOptimizeClientBuild(buildroot);
+      if (options.verbose) {
+        for (const result of results) {
+          logger.info(`${result.filePath} -> ${result.hashedHref}`);
+        }
+      } else {
+        logger.info(
+          chalk.green(
+            `Hashed ${results.length} files in ${path.join(
+              buildroot,
+              "index.html"
+            )}`
+          )
+        );
+      }
     })
   );
 
