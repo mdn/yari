@@ -18,7 +18,7 @@ selectolax = "^0.2.11"
 PyGithub = "^1.55"
 
 [tool.poetry.dev-dependencies]
-black = "^21.4b0"
+black = "^21.4b2"
 flake8 = "^3.9.1"
 pytest = "^6.2.3"
 
