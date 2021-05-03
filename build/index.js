@@ -588,7 +588,7 @@ async function analyzeDocument(document) {
 
   const doc = {
     ...metadata,
-    contributors: metadata.contributors.length,
+    contributors: metadata.contributors ? metadata.contributors.length : 0,
     isArchive: !!document.isArchive,
     isTranslated: !!document.isTranslated,
   };

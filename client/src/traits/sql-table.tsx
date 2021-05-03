@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { useDebounce } from "use-debounce";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
 import "prismjs/components/prism-sql";
@@ -70,27 +71,35 @@ export function SQLTable({ documents }: { documents: Document[] }) {
   );
   const [result, setResult] = useState<any[] | null>(null);
   const [queryError, setQueryError] = useState<Error | null>(null);
-  const [showHelp, toggleShowHelp] = useState(false);
-  const [showPastQueries, toggleShowPastQueries] = useState(false);
-  const [showSQLParserError, toggleShowSQLParserError] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
+  const [showPastQueries, setShowPastQueries] = useState(false);
+  const [showSQLParserError, setShowSQLParserError] = useState(false);
 
   const [sqlParserError, setSQLParserError] = useState<Error | null>(null);
+
+  const [queryDraftDebounced] = useDebounce(queryDraft, 1000);
+
+  useEffect(() => {
+    setShowHelp(false);
+    setShowSQLParserError(false);
+    setShowPastQueries(false);
+  }, [query]);
 
   useEffect(() => {
     storageDump("past-queries", pastQueries);
   }, [pastQueries]);
   useEffect(() => {
-    storageDump("query", queryDraft, true);
-  }, [queryDraft]);
+    storageDump("query", queryDraftDebounced, true);
+  }, [queryDraftDebounced]);
 
   useEffect(() => {
     if (searchParams.get("query")) {
       // If it's been edited since, it doesn't make sense to keep it there
-      if (queryDraft !== searchParams.get("query")) {
+      if (queryDraftDebounced !== searchParams.get("query")) {
         setSearchParams({});
       }
     }
-  }, [queryDraft, searchParams, setSearchParams]);
+  }, [queryDraftDebounced, searchParams, setSearchParams]);
 
   useEffect(() => {
     if (query) {
@@ -118,16 +127,16 @@ export function SQLTable({ documents }: { documents: Document[] }) {
   ] = useState<FauxAlaSQLStatement | null>(null);
 
   useEffect(() => {
-    if (queryDraft) {
+    if (queryDraftDebounced) {
       try {
-        const parsed = alasql.parse(queryDraft);
+        const parsed = alasql.parse(queryDraftDebounced);
         setParsedStatement(parsed.statements[0]);
         setSQLParserError(null);
       } catch (err) {
         setSQLParserError(err);
       }
     }
-  }, [queryDraft]);
+  }, [queryDraftDebounced]);
 
   const [statementWarnings, setStatementWarnings] = useState<string[]>([]);
   useEffect(() => {
@@ -224,8 +233,8 @@ export function SQLTable({ documents }: { documents: Document[] }) {
             type="button"
             className="button button-inline-small"
             onClick={() => {
-              toggleShowHelp((s) => !s);
-              toggleShowPastQueries(false);
+              setShowHelp((s) => !s);
+              setShowPastQueries(false);
             }}
           >
             {showHelp ? "Close help" : "Show help"}
@@ -234,8 +243,8 @@ export function SQLTable({ documents }: { documents: Document[] }) {
             type="button"
             className="button button-inline-small"
             onClick={() => {
-              toggleShowPastQueries((s) => !s);
-              toggleShowHelp(false);
+              setShowPastQueries((s) => !s);
+              setShowHelp(false);
             }}
           >
             {showPastQueries
@@ -247,7 +256,7 @@ export function SQLTable({ documents }: { documents: Document[] }) {
             className="button button-inline-small"
             disabled={!sqlParserError}
             onClick={() => {
-              toggleShowSQLParserError((s) => !s);
+              setShowSQLParserError((s) => !s);
             }}
             style={
               sqlParserError && !showSQLParserError
@@ -271,7 +280,7 @@ export function SQLTable({ documents }: { documents: Document[] }) {
             if (formElement) {
               formElement.scrollIntoView({ behavior: "smooth" });
             }
-            toggleShowHelp(false);
+            setShowHelp(false);
           }}
         />
       )}
@@ -284,11 +293,11 @@ export function SQLTable({ documents }: { documents: Document[] }) {
             if (formElement) {
               formElement.scrollIntoView({ behavior: "smooth" });
             }
-            toggleShowPastQueries(false);
+            setShowPastQueries(false);
           }}
           resetPastQueries={() => {
             setPastQueries([]);
-            toggleShowPastQueries(false);
+            setShowPastQueries(false);
           }}
         />
       )}
