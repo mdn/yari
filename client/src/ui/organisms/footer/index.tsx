@@ -1,9 +1,4 @@
 import * as React from "react";
-
-import { ReactComponent as GithubIcon } from "@mdn/dinocons/brands/github-mark-small.svg";
-import { ReactComponent as TwitterIcon } from "@mdn/dinocons/social/twitter.svg";
-import { ReactComponent as InstagramIcon } from "@mdn/dinocons/social/instagram.svg";
-
 import { useLocale } from "../../../hooks";
 import { Logo } from "../../atoms/logo";
 import "./index.scss";
@@ -76,22 +71,22 @@ export function Footer() {
           <ul>
             <li>
               <a
+                className="social-icon twitter"
                 href="https://twitter.com/mozdevnet"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Twitter"
               >
-                <TwitterIcon />
+                <span className="visually-hidden">MDN on Twitter</span>
               </a>
             </li>
             <li>
               <a
+                className="social-icon github"
                 href="https://github.com/mdn/"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Github"
               >
-                <GithubIcon />
+                <span className="visually-hidden">MDN on Github</span>
               </a>
             </li>
           </ul>
@@ -102,22 +97,22 @@ export function Footer() {
           <ul>
             <li>
               <a
+                className="social-icon github"
                 href="https://twitter.com/mozilla"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Twitter"
               >
-                <TwitterIcon />
+                <span className="visually-hidden">Mozilla on Twitter</span>
               </a>
             </li>
             <li>
               <a
+                className="social-icon instagram"
                 href="https://www.instagram.com/mozillagram/"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Instagram"
               >
-                <InstagramIcon />
+                <span className="visually-hidden">Mozilla on Instagram</span>
               </a>
             </li>
           </ul>
