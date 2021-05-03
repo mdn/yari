@@ -583,6 +583,27 @@ function renderContributorsTxt(wikiContributorNames = null, githubURL = null) {
   return txt;
 }
 
+function* fastKSParser(s) {
+  // for (const match of s.matchAll(/\{\{\s*([\w-]+)\s*(\((.*?)\)|)\s*\}\}/gms)) {
+  for (const match of s.matchAll(
+    /\{\{\s*(\w+[\w-\.]*\w+)\s*(\((.*?)\)|)\s*\}\}/gms
+  )) {
+    const { index } = match;
+    if (s.charAt(index - 1) === "\\") {
+      continue;
+    }
+
+    yield {
+      type: "MACRO",
+      name: match[1],
+      args: (match[3] || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+    };
+  }
+}
+
 async function analyzeDocument(document) {
   const { metadata } = document;
 
@@ -594,15 +615,7 @@ async function analyzeDocument(document) {
   };
 
   doc.normalizedMacrosCount = {};
-  let tokens;
-  try {
-    tokens = Parser.parse(document.rawBody);
-  } catch (error) {
-    console.warn(document.rawBody);
-    console.log(`Kumascript Parser.parse error on ${document.url}`);
-    throw error;
-  }
-  for (let token of tokens) {
+  for (const token of fastKSParser(document.rawBody)) {
     if (token.type === "MACRO") {
       const normalizedMacroName = normalizeMacroName(token.name);
       if (!(normalizedMacroName in doc.normalizedMacrosCount)) {
