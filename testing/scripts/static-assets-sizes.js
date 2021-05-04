@@ -1,3 +1,12 @@
+/**
+ * Called by a GitHub Action workflow that executes this script like this:
+ *
+ *   const script = require('./testing/scripts/static-assets-sizes.js')
+ *   const comment = script({github, context})
+ *
+ * The objective with this is to print out a Markdown table that details
+ * the file sizes of the main JS and the main CSS bundle.
+ */
 const fs = require("fs");
 const path = require("path");
 
@@ -58,6 +67,10 @@ function* walker(root) {
 }
 module.exports = main;
 
+// To test this script, uncomment the lines below and run:
+//
+//    node testing/scripts/static-assets-sizes.js
+//
 // console.log(
 //   main({
 //     context: {
