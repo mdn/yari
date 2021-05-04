@@ -188,6 +188,7 @@ def post_about_dangerous_content(
             lines.append(f"[on GitHub]({doc['source']['github_url']})")
             lines.append("")
             lines.append(comment)
+            lines.append("")
 
             per_doc_comments.append("\n".join(lines))
         return heading + "\n---\n".join(per_doc_comments)
