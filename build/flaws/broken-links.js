@@ -159,7 +159,7 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
           checked.get(href),
           href,
           null,
-          `Not a valid link URL`
+          "Not a valid link URL"
         );
       }
       // If a URL's domain is in the list that getSafeToHttpDomains() provides,
