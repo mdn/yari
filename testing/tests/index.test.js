@@ -15,6 +15,8 @@ test("all favicons on the home page", () => {
   const $ = cheerio.load(html);
   expect($('link[rel="icon"]').length).toBe(1);
   expect($('link[rel="apple-touch-icon"]').length).toBe(1);
+  expect($('meta[property="og:image"]').length).toBe(1);
+
   // Check that every favicon works and resolves
   $('link[rel="icon"], link[rel="apple-touch-icon"]').each((i, element) => {
     const href = $(element).attr("href");
@@ -34,6 +36,15 @@ test("all favicons on the home page", () => {
       expect(dimensions.width).toBe(expectWidth);
       expect(dimensions.height).toBe(expectHeight);
     }
+  });
+
+  // Check that the og:image resolves
+  $('meta[property="og:image"]').each((i, element) => {
+    const href = $(element).attr("content");
+    // There should always be a 8 character hash in the href
+    expect(/\.[a-f0-9]{8}\./.test(href)).toBeTruthy();
+    const file = path.join(buildRoot, href.slice(1));
+    expect(fs.existsSync(file)).toBeTruthy();
   });
 });
 

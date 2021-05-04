@@ -18,23 +18,35 @@ async function runOptimizeClientBuild(buildRoot) {
   // For every favicon referred there, change it to a file URL that
   // has a hash in it.
   const $ = cheerio.load(indexHtml);
-  $("link[rel]").each((i, element) => {
-    const href = element.attribs.href;
-    if (!href) {
-      return;
+  $('link[rel], meta[property="og:image"]').each((i, element) => {
+    let href;
+    let attributeKey;
+    if (element.tagName === "meta") {
+      if (element.attribs.property !== "og:image") {
+        return;
+      }
+      href = element.attribs.content;
+      attributeKey = "content";
+    } else {
+      href = element.attribs.href;
+      if (!href) {
+        return;
+      }
+      const rel = element.attribs.rel;
+      if (
+        ![
+          "icon",
+          "shortcut icon",
+          "apple-touch-icon",
+          "apple-touch-icon-precomposed",
+          "manifest",
+        ].includes(rel)
+      ) {
+        return;
+      }
+      attributeKey = "href";
     }
-    const rel = element.attribs.rel;
-    if (
-      ![
-        "icon",
-        "shortcut icon",
-        "apple-touch-icon",
-        "apple-touch-icon-precomposed",
-        "manifest",
-      ].includes(rel)
-    ) {
-      return;
-    }
+
     // If this script is, for some reason, already run before we can
     // bail if it looks like the href already is hashed.
     if (/\.[a-f0-9]{8}\./.test(href)) {
@@ -59,16 +71,17 @@ async function runOptimizeClientBuild(buildRoot) {
       href,
       hashedHref,
       hashedFilePath,
+      attributeKey,
     });
   });
 
   if (results.length > 0) {
     // It clearly hashed some files. Let's update the HTML!
     let newIndexHtml = indexHtml;
-    for (const { href, hashedHref } of results) {
+    for (const { href, hashedHref, attributeKey } of results) {
       newIndexHtml = newIndexHtml.replace(
-        new RegExp(`href="${href}"`),
-        `href="${hashedHref}"`
+        new RegExp(`${attributeKey}="${href}"`),
+        `${attributeKey}="${hashedHref}"`
       );
     }
     fs.writeFileSync(indexHtmlFilePath, newIndexHtml, "utf-8");
