@@ -84,7 +84,7 @@ const CSP_DIRECTIVES = [
   "manifest-src 'self'",
   "media-src 'self'",
   "worker-src 'none'",
-  "report-uri http://developer.mozilla.org/csp-violation-capture",
+  "report-uri https://developer.mozilla.org/csp-violation-capture",
 ]
   .map((s) => s + ";")
   .join(" ");
