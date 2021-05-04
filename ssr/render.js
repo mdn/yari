@@ -145,6 +145,7 @@ export default function render(
     feedEntries = null,
     pageTitle = null,
     possibleLocales = null,
+    locale = null,
   } = {}
 ) {
   const buildHtml = readBuildHTML();
@@ -224,6 +225,7 @@ export default function render(
     // This overrides the default description. Also assumes there's always
     // one tag there already.
     $('meta[name="description"]').attr("content", pageDescription);
+    $('meta[property="og:description"]').attr("content", pageDescription);
   }
 
   const robotsContent =
@@ -267,6 +269,12 @@ export default function render(
 
   const $title = $("title");
   $title.text(pageTitle);
+  $('meta[property="og:url"]').attr("content", canonicalURL);
+  $('meta[property="og:title"]').attr("content", pageTitle);
+  $('meta[property="og:locale"]').attr(
+    "content",
+    locale ? locale : doc ? doc.locale : "en-US"
+  );
 
   for (const webfontURL of webfontURLs) {
     $('<link rel="preload" as="font" type="font/woff2" crossorigin>')
