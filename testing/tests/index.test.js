@@ -578,7 +578,7 @@ test("broken links flaws", () => {
     "#anchor"
   );
   expect(map.get("http://www.mozilla.org").explanation).toBe(
-    "http:// external links are not allowed (will be forced to https:// at build-time)"
+    "Is currently http:// but can become https://"
   );
   expect(map.get("http://www.mozilla.org").suggestion).toBe(
     "https://www.mozilla.org"
@@ -1054,6 +1054,34 @@ test("bcd table extraction followed by h3", () => {
   expect(doc.body[3].type).toBe("prose");
   expect(doc.body[4].type).toBe("prose");
   expect(doc.body[4].value.isH3).toBeTruthy();
+});
+
+test("specifications and bcd extraction", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "spec_section_extraction"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.body[0].type).toBe("prose");
+  expect(doc.body[1].type).toBe("specifications");
+  expect(doc.body[1].value.specifications[0].shortTitle).toBe("ECMAScript");
+  expect(doc.body[1].value.specifications[0].bcdSpecificationURL).toBe(
+    "https://tc39.es/ecma262/#sec-array.prototype.tolocalestring"
+  );
+  expect(doc.body[1].value.specifications[1].shortTitle).toBe(
+    "ECMAScript Internationalization API"
+  );
+  expect(doc.body[1].value.specifications[1].bcdSpecificationURL).toBe(
+    "https://tc39.es/ecma402/#sup-array.prototype.tolocalestring"
+  );
+  expect(doc.body[2].type).toBe("prose");
+  expect(doc.body[3].type).toBe("browser_compatibility");
+  expect(doc.body[4].type).toBe("prose");
 });
 
 test("headers within non-root elements is a 'sectioning' flaw", () => {
