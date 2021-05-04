@@ -53,8 +53,8 @@ export function LocalizedContentNote({
     },
     "en-US": {
       lead:
-        "This page was translated from English by the community, but it is not actively maintained therefore it may be out-of-date. If you'd like to help maintain it, ",
-      linkText: "find out how to activate inactive locales.",
+        "This page was translated from English by the community, but it's not maintained and may be out-of-date. To help maintain it, ",
+      linkText: "learn how to activate locales.",
       url:
         "https://github.com/mdn/translated-content#promoting-an-inactive-locale-to-tier-1",
     },
