@@ -48,4 +48,4 @@ updates:
       # After this, we can keep an eye on puppeteer to see if the tests
       # get better later with new versions.
       - dependency-name: "puppeteer"
-        versions: ["9.x"]
+        versions: ["9.1.x"]
