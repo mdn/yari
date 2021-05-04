@@ -161,7 +161,7 @@
     "stylelint-config-sass-guidelines": "^8.0.0",
     "stylelint-prettier": "^1.2.0",
     "stylelint-scss": "^3.19.0",
-    "swr": "^0.5.5",
+    "swr": "^0.5.6",
     "ts-loader": "^8.1.0",
     "typescript": "^4.2.4",
     "use-debounce": "^6.0.1",
