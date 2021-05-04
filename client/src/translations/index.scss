@@ -21,10 +21,10 @@
     margin-left: 10px;
   }
 
-  td .last_modified.ahead {
+  td .last_modified.ahead a {
     color: green;
   }
-  td .last_modified.behind {
+  td .last_modified.behind a {
     color: orange;
   }
 

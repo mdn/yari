@@ -7,7 +7,9 @@ const {
   Translation,
   CONTENT_TRANSLATED_ROOT,
 } = require("../content");
-const { DEFAULT_LOCALE } = require("../libs/constants");
+const { getLastCommitURL } = require("../build");
+const { ACTIVE_LOCALES, DEFAULT_LOCALE } = require("../libs/constants");
+const LANGUAGES_RAW = require("../content/languages.json");
 
 // Hacky memoize exclusively for local development
 const MEMOIZE_INVALIDATE = Symbol("force cache update");
@@ -94,10 +96,22 @@ function packageTranslationDifferences(translationDifferences) {
   return { count, total };
 }
 
-function packageModifiedDate(modifiedDate, parentModifiedDate) {
+function packageEdits(document, parentDocument) {
+  const commitURL = getLastCommitURL(
+    document.fileInfo.root,
+    document.metadata.hash
+  );
+  const parentCommitURL = getLastCommitURL(
+    parentDocument.fileInfo.root,
+    parentDocument.metadata.hash
+  );
+  const modified = document.metadata.modified;
+  const parentModified = parentDocument.metadata.modified;
   return {
-    modified: modifiedDate,
-    parentModified: parentModifiedDate,
+    commitURL,
+    parentCommitURL,
+    modified,
+    parentModified,
   };
 }
 
@@ -105,9 +119,9 @@ function packageModifiedDate(modifiedDate, parentModifiedDate) {
 // payload. It's too much stuff and some values need to be repackaged/
 // serialized or some other transformation computation.
 function packageDocument(document, englishDocument, translationDifferences) {
-  const englishModified = englishDocument.metadata.modified;
+  // const englishModified = englishDocument.metadata.modified;
   const mdn_url = document.url;
-  const { title, modified } = document.metadata;
+  const { title } = document.metadata;
   const popularity = {
     value: document.metadata.popularity,
     ranking: document.metadata.popularity
@@ -117,8 +131,8 @@ function packageDocument(document, englishDocument, translationDifferences) {
       : NaN,
   };
   const differences = packageTranslationDifferences(translationDifferences);
-  const date = packageModifiedDate(modified, englishModified);
-  return { popularity, differences, date, mdn_url, title };
+  const edits = packageEdits(document, englishDocument);
+  return { popularity, differences, edits, mdn_url, title };
 }
 
 const findDocuments = memoize(
@@ -216,7 +230,6 @@ const findDocuments = memoize(
       )) {
         differences.push(difference);
       }
-
       const packaged = packageDocument(document, englishDocument, differences);
 
       counts.found++;
@@ -287,7 +300,19 @@ function translationsRoute(req, res) {
     return res.status(400).send(`'${locale}' not a valid locale`);
   }
   if (locale === DEFAULT_LOCALE.toLowerCase()) {
-    return res.status(400).send(`'${locale}' is the default locale`);
+    const locales = [...VALID_LOCALES]
+      .map(([localeLC, locale]) => {
+        if (locale === DEFAULT_LOCALE) return;
+        const language = LANGUAGES_RAW[locale];
+        return {
+          locale,
+          language,
+          isActive: ACTIVE_LOCALES.has(localeLC),
+        };
+      })
+      .filter(Boolean);
+    // 451 is a bit of a joke. Thankfully this isn't important.
+    return res.status(451).json({ locales });
   }
 
   const filters = req.query;
@@ -319,7 +344,7 @@ function translationsRoute(req, res) {
     sortBy,
     sortReverse,
   });
-  // console.log(found.documents[0]);
+  console.log(found.documents[0]);
   res.json(found);
 }
 

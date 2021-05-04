@@ -28,20 +28,27 @@ interface DocumentPopularity {
 //   countFixable: number;
 // }
 
-interface DocumentDate {
-  modified: string;
-  parentModified: string;
-  differenceMS: number;
-}
+// interface DocumentDate {
+//   modified: string;
+//   parentModified: string;
+//   differenceMS: number;
+// }
 
 interface DocumentDifferences {
   count: number;
   total: number;
 }
 
+interface DocumentEdits {
+  modified: string;
+  parentModified: string;
+  commitURL: string;
+  parentCommitURL: string;
+}
+
 interface Document {
   mdn_url: string;
-  date: DocumentDate;
+  edits: DocumentEdits;
   title: string;
   popularity: DocumentPopularity;
   differences: DocumentDifferences;
@@ -72,6 +79,15 @@ interface FlawLevel {
   name: string;
   level: string;
   ignored: boolean;
+}
+
+interface Locale {
+  locale: string;
+  language: {
+    English: string;
+    native: string;
+  };
+  isActive: boolean;
 }
 
 interface Data {
@@ -173,6 +189,14 @@ function useFiltersURL(): [Filters, (filters: Partial<Filters>) => void] {
   return [filters, updateFiltersURL];
 }
 
+class LocalesError extends Error {
+  public locales: Locale[] = [];
+  constructor(locales: Locale[]) {
+    super();
+    this.locales = locales;
+  }
+}
+
 export default function AllTranslations() {
   const { locale } = useParams();
   const [filters] = useFiltersURL();
@@ -204,16 +228,19 @@ export default function AllTranslations() {
   const { data, error, isValidating } = useSWR<Data, Error>(
     getAPIUrl(),
     async (url) => {
-      let response;
-      try {
-        response = await fetch(url);
-      } catch (ex) {
-        throw ex;
+      const response = await fetch(url);
+      if (response.status === 451) {
+        const data = await response.json();
+        throw new LocalesError(data.locales);
       }
       if (!response.ok) {
         throw new Error(`${response.status} (${await response.text()})`);
       }
-      if (!response.headers.get("content-type").includes("application/json")) {
+      if (
+        !(response.headers.get("content-type") || "").includes(
+          "application/json"
+        )
+      ) {
         throw new Error(
           `Response is not JSON (${response.headers.get("content-type")})`
         );
@@ -246,11 +273,18 @@ export default function AllTranslations() {
 
   const { page } = filters;
   const pageCount = lastData ? lastData.counts.pages : 0;
+
   return (
     <div className="all-translations">
       <PageContentContainer>
         {loading}
-        {error && <ShowSearchError error={error} />}
+        {error ? (
+          error instanceof LocalesError ? (
+            <ShowLocalesError locales={error.locales} />
+          ) : (
+            <ShowSearchError error={error} />
+          )
+        ) : null}
         {lastData && (
           <div className="filter-documents">
             {/* <FilterControls flawLevels={lastData.flawLevels} /> */}
@@ -282,7 +316,25 @@ export default function AllTranslations() {
     </div>
   );
 }
-
+function ShowLocalesError({ locales }: { locales: Locale[] }) {
+  return (
+    <div>
+      <h2>Have to pick a locale</h2>
+      <ul>
+        {locales.map((locale) => {
+          return (
+            <li key={locale.locale}>
+              <Link to={`/${locale.locale}/_translations`}>
+                {locale.language.English} ({locale.locale})
+              </Link>{" "}
+              {!locale.isActive && <small>not active</small>}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
 function ShowSearchError({ error }) {
   return (
     <div className="error-message search-error">
@@ -646,14 +698,35 @@ function DocumentsTable({
     );
   }
 
-  function showLastModified(date: DocumentDate) {
-    const modified = dayjs(date.modified);
-    const parent = dayjs(date.parentModified);
+  function showLastModified(doc: Document) {
+    const { edits } = doc;
+    const modified = dayjs(edits.modified);
+    const parentModified = dayjs(edits.parentModified);
     return (
       <span
-        className={`last_modified ${parent < modified ? "ahead" : "behind"}`}
+        className={`last_modified ${
+          parentModified < modified ? "ahead" : "behind"
+        }`}
       >
-        {modified.fromNow()} (parent {parent.fromNow()})
+        <a href={edits.commitURL} target="_blank" rel="noreferrer">
+          <time
+            dateTime={modified.toISOString()}
+            title={modified.toISOString()}
+          >
+            {modified.fromNow()}
+          </time>
+        </a>
+        <br />
+        <a href={edits.parentCommitURL} target="_blank" rel="noreferrer">
+          <small>
+            <time
+              dateTime={parentModified.toISOString()}
+              title={parentModified.toISOString()}
+            >
+              en-US {parentModified.fromNow()}
+            </time>
+          </small>
+        </a>
       </span>
     );
   }
@@ -664,8 +737,6 @@ function DocumentsTable({
     }
     return "0";
   }
-
-  console.log(counts);
 
   return (
     <div className="documents">
@@ -721,7 +792,7 @@ function DocumentsTable({
                     ? "n/a"
                     : `${getGetOrdinal(doc.popularity.ranking)}`}
                 </td>
-                <td>{showLastModified(doc.date)}</td>
+                <td>{showLastModified(doc)}</td>
                 <td>{showDifferences(doc.differences)}</td>
               </tr>
             );
@@ -756,6 +827,12 @@ function PageLink({
       onClick={(event) => {
         if (disabled) {
           event.preventDefault();
+        }
+        const top = document.querySelector("div.all-translations");
+        console.log({ top });
+
+        if (top) {
+          top.scrollIntoView({ behavior: "smooth" });
         }
       }}
     >
