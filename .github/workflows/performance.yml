@@ -130,7 +130,7 @@ jobs:
             core.setOutput("comment", comment);
 
       - name: Add static assets stats as comment
-        id: comment_to_pr
+        id: comment_to_pr2
         uses: marocchino/sticky-pull-request-comment@v2.0.0
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
