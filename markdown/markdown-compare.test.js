@@ -1,17 +1,9 @@
-const puppeteer = require("puppeteer");
-
 const { toMatchImageSnapshot } = require("jest-image-snapshot");
 
 const { FOLDERSEARCH } = require("../build/constants");
 const { Document } = require("../content");
 
 expect.extend({ toMatchImageSnapshot });
-
-let browser;
-
-beforeAll(async () => {
-  browser = await puppeteer.launch();
-});
 
 const urls = Array.from(
   Document.findAll({ folderSearch: FOLDERSEARCH }).iter()
@@ -22,10 +14,14 @@ if (urls.length == 0) {
 }
 
 test.each(urls)("%s", async (url) => {
-  const page = await browser.newPage();
-  await page.goto(`http://localhost:5000${url}`);
+  await page.goto(`http://localhost:5000${url}`, { waitUntil: "networkidle2" });
+  await page.setViewport({ width: 414, height: 717 });
   const bodyHeight = await page.evaluate(() => document.body.scrollHeight);
-  await page.setViewport({ width: 1920, height: bodyHeight });
+  await page.setViewport({ width: 414, height: bodyHeight });
   const image = await page.screenshot({ fullPage: true });
-  expect(image).toMatchImageSnapshot();
+  expect(image).toMatchImageSnapshot({
+    comparisonMethod: "ssim",
+    failureThreshold: 10,
+    allowSizeMismatch: true,
+  });
 });

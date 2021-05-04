@@ -29,23 +29,21 @@ program
   .cast(false)
 
   .command("h2m", "Convert HTML to Markdown")
-  .argument("<htmlFile>", "input HTML file", {
-    validator: (f) => {
-      if (!fs.existsSync(f)) {
-        throw new Error(`${f} does not exist`);
-      }
-      return f;
-    },
-  })
-  .argument("[mdFile]", "output Markdown file")
+  .argument("[folder]", "convert by folder")
   .action(
     tryOrExit(async ({ args }) => {
-      const { htmlFile } = args;
-      const mdFile = args.mdFile || htmlFile.replace(/\.html$/, ".md");
-      const raw = fs.readFileSync(htmlFile, { encoding: "utf-8" });
-      const { body: h, frontmatter } = fm(raw);
-      const m = await h2m.run(h);
-      fs.writeFileSync(mdFile, withFm(frontmatter, m));
+      const all = Document.findAll({ folderSearch: args.folder });
+      for (const doc of all.iter()) {
+        if (doc.isMarkdown) {
+          continue;
+        }
+        const { body: h, frontmatter } = fm(doc.rawContent);
+        const m = await h2m.run(h);
+        fs.writeFileSync(
+          doc.fileInfo.path.replace(/\.html$/, ".md"),
+          withFm(frontmatter, m)
+        );
+      }
     })
   )
 
