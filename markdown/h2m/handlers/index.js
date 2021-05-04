@@ -193,15 +193,18 @@ module.exports = [
           ],
         },
         (node, t, opts) =>
-          h(
-            node,
-            "code",
-            {
-              lang,
-              meta: node.properties.className.filter((c) => c == lang),
-            },
-            trimTrailingNewLines(wrapText(toText(node), opts))
-          ),
+          h(node, "paragraph", {}, [
+            h(node, "html", {}, "<!-- prettier-ignore -->\n"),
+            h(
+              node,
+              "code",
+              {
+                lang,
+                meta: node.properties.className.filter((c) => c == lang),
+              },
+              trimTrailingNewLines(wrapText(toText(node), opts))
+            ),
+          ]),
       ])
   ),
 

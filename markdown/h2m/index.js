@@ -20,7 +20,7 @@ async function run(html) {
       return node;
     })
     .process(encodeKS(html));
-  return decodeKS(String(file));
+  return decodeKS(String(file)).replaceAll("<!-- prettier-ignore -->\n", "");
 }
 
 async function dryRun(html) {

@@ -202,7 +202,6 @@ const read = memoize((folderOrFilePath) => {
   let filePath = null;
   let folder = null;
   let root = null;
-  let isMarkdown = false;
   let locale = null;
 
   if (fs.existsSync(folderOrFilePath)) {
@@ -243,7 +242,6 @@ const read = memoize((folderOrFilePath) => {
       if (fs.existsSync(possibleMarkdownFilePath)) {
         root = possibleRoot;
         filePath = possibleMarkdownFilePath;
-        isMarkdown = true;
         break;
       }
       if (fs.existsSync(possibleHTMLFilePath)) {
@@ -344,7 +342,7 @@ const read = memoize((folderOrFilePath) => {
     // ...{ rawContent },
     rawContent, // HTML or Markdown whole string with all the front-matter
     rawBody, // HTML or Markdown string without the front-matter
-    isMarkdown,
+    isMarkdown: filePath.endsWith(MARKDOWN_FILENAME),
     isArchive,
     isTranslated,
     isActive,
