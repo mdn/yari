@@ -153,8 +153,7 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       let domain = null;
       try {
         domain = new URL(href).hostname;
-      } catch (err) {}
-      if (!domain) {
+      } catch (err) {
         return addBrokenLink(
           a,
           checked.get(href),
