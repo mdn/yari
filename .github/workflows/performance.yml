@@ -58,38 +58,54 @@ jobs:
           # BUILD_FOLDERSEARCH=mdn/kitchensink yarn build
           BUILD_FOLDERSEARCH=web/javascript/reference/global_objects/array/foreach yarn build
 
-      - name: Serve and lhci
-        env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+      - name: Serve sample built page(s)
         run: |
           yarn start:static-server &
           sleep 1
           curl --retry-connrefused --retry 5 \
             http://localhost:5000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/ > /dev/null
 
-          npm install -g @lhci/cli@next
+      # - name: Serve and lhci
+      #   env:
+      #     LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+      #   run: |
+      #     yarn start:static-server &
+      #     sleep 1
+      #     curl --retry-connrefused --retry 5 \
+      #       http://localhost:5000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/ > /dev/null
 
-          # Note, we can supply multiple `--collect.url=...` to have lhci test
-          # a variety of URLs and then assume a average (or median?) across them.
+      #     npm install -g @lhci/cli@next
 
-          # All options for "collect" here:
-          # https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/configuration.md#collect
+      #     # Note, we can supply multiple `--collect.url=...` to have lhci test
+      #     # a variety of URLs and then assume a average (or median?) across them.
 
-          lhci autorun \
-            --upload.target=temporary-public-storage \
-            --collect.url="http://localhost:5000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/"
+      #     # All options for "collect" here:
+      #     # https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/configuration.md#collect
 
-          # TODO (as of Oct 2020)
-          # Once our Lighthouse score starts to not be so terrible, we can start
-          # adding assertions here.
-          # See https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/configuration.md#categories
+      #     lhci autorun \
+      #       --upload.target=temporary-public-storage \
+      #       --collect.url="http://localhost:5000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/"
+
+      #     # TODO (as of Oct 2020)
+      #     # Once our Lighthouse score starts to not be so terrible, we can start
+      #     # adding assertions here.
+      #     # See https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/configuration.md#categories
 
       - name: Audit URLs using Lighthouse
         uses: treosh/lighthouse-ci-action@v7
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
         with:
           urls: |
             http://localhost:5000/en-US/
             http://localhost:5000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/
           # budgetPath: ./budget.json # test performance budgets
+          runs: 3
           uploadArtifacts: true # save results as an action artifacts
           temporaryPublicStorage: true # upload lighthouse report to the temporary storage
+
+      - name: Post-audit results
+        run: |
+          ls -la
+          ls -la .lighthouseci
+          tree .lighthouseci
