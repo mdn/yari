@@ -40,3 +40,12 @@ updates:
       prefix: build
       prefix-development: chore
       include: scope
+
+    ignore:
+      # In https://github.com/mdn/yari/issues/3694 we discovered that
+      # installing puppeteer 9.1.0 seems to have made the tests flaky
+      # when jest starts up. See the issue for more detail.
+      # After this, we can keep an eye on puppeteer to see if the tests
+      # get better later with new versions.
+      - dependency-name: "puppeteer"
+        versions: ["9.1.x"]
