@@ -256,6 +256,15 @@ def upload(ctx, directory: Path, **kwargs):
     show_default=True,
     is_flag=True,
 )
+@click.option(
+    "--diff-file",
+    help=(
+        "The path to the file that is a diff output. "
+        "(Only relevant in conjunction with --analyze-dangerous-content)"
+    ),
+    default=None,
+    callback=validate_optional_file,
+)
 @click.argument("directory", type=click.Path(), callback=validate_directory)
 @click.pass_context
 def analyze_pr_build(ctx, directory: Path, **kwargs):
