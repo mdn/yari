@@ -164,10 +164,15 @@ def post_about_dangerous_content(
             external_urls_list = []
             for url in sorted(external_urls):
                 count = external_urls[url]
-                external_urls_list.append(
+                line = (
                     f"  - {'🚨 ' if url.startswith('http://') else ''}"
                     f"<{url}> ({count} time{'' if count==1 else 's'})"
                 )
+                if diff_lines:
+                    # If this was available and it _did_ fine a URL, then
+                    # really make sure it's noticed.
+                    line += " (Note! This is a new URL 👀)"
+                external_urls_list.append(line)
             comments.append((doc, "\n".join(external_urls_list)))
         elif diff_lines:
             comments.append((doc, "No *new* external URLs"))
