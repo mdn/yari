@@ -150,7 +150,19 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
     }
 
     if (href.startsWith("http://")) {
-      const domain = new URL(href).hostname;
+      let domain = null;
+      try {
+        domain = new URL(href).hostname;
+      } catch (err) {}
+      if (!domain) {
+        return addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          null,
+          `Not a valid link URL`
+        );
+      }
       // If a URL's domain is in the list that getSafeToHttpDomains() provides,
       // that means we've tested that you can turn that into a HTTPS link
       // simply by replacing the `http://` for `https://`.

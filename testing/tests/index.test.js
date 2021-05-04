@@ -641,6 +641,27 @@ test("repeated broken links flaws", () => {
   expect(map.get("link3").suggestion).toBe("/en-US/docs/Web/CSS/number");
 });
 
+test("broken http:// link that is not a valid URL", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "brokenlinks",
+    "broken_http_link"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  expect(flaws.broken_links.length).toBe(1);
+
+  const map = new Map(flaws.broken_links.map((x) => [x.id, x]));
+  expect(map.size).toBe(1);
+  expect(map.get("link1").suggestion).toBeNull();
+  expect(map.get("link1").explanation).toBe("Not a valid link URL");
+  expect(map.get("link1").fixable).toBeFalsy();
+});
+
 test("without locale prefix broken links flaws", () => {
   // This fixture has the same broken link, that redirects, 3 times.
   const builtFolder = path.join(
