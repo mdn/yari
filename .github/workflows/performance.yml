@@ -1,7 +1,8 @@
 name: Performance
 
 on:
-  pull_request_target:
+  # pull_request_target:
+  pull_request:
     paths:
       - client/src/**
       - .github/workflows/performance.yml
@@ -80,7 +81,7 @@ jobs:
 
       - name: Format lighthouse score
         id: format_lighthouse_score
-        uses: actions/github-script@v3
+        uses: actions/github-script@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -111,3 +112,28 @@ jobs:
           number: ${{ github.event.pull_request.number }}
           header: lighthouse
           message: ${{ steps.format_lighthouse_score.outputs.comment }}
+
+      - name: View context attributes
+        uses: actions/github-script@v4
+        with:
+          script: console.log(context)
+
+      - name: Format static assets file sizes
+        id: format_static_assets
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const script = require('./testing/scripts/static-assets-sizes.js')
+            const comment = script({github, context})
+            console.log(comment)
+            core.setOutput("comment", comment);
+
+      - name: Add static assets stats as comment
+        id: comment_to_pr
+        uses: marocchino/sticky-pull-request-comment@v2.0.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          number: ${{ github.event.pull_request.number }}
+          header: static assets
+          message: ${{ steps.format_static_assets.outputs.comment }}
