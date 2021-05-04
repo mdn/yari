@@ -410,8 +410,11 @@ program
       // Someplace to put the map into an object so it can be saved into `saveHistory`
       const allHistory = {};
       for (const [relPath, value] of map) {
-        allHistory[relPath] = value;
         const locale = relPath.split(path.sep)[0];
+        if (!VALID_LOCALES.has(locale)) {
+          continue;
+        }
+        allHistory[relPath] = value;
         if (!historyPerLocale[locale]) {
           historyPerLocale[locale] = {};
         }
