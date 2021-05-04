@@ -28,6 +28,7 @@ async function runOptimizeClientBuild(buildRoot) {
       ![
         "icon",
         "shortcut icon",
+        "apple-touch-icon",
         "apple-touch-icon-precomposed",
         "manifest",
       ].includes(rel)
