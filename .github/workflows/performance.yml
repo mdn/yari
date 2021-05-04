@@ -83,3 +83,9 @@ jobs:
           # Once our Lighthouse score starts to not be so terrible, we can start
           # adding assertions here.
           # See https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/configuration.md#categories
+
+      - name: DEbug
+        run: |
+          ls -l
+          ls -l temporary-public-storage
+          tree temporary-public-storage
