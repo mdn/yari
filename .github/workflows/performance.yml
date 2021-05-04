@@ -1,8 +1,7 @@
 name: Performance
 
 on:
-  # pull_request_target:
-  pull_request:
+  pull_request_target:
     paths:
       - client/src/**
       - .github/workflows/performance.yml
@@ -15,10 +14,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        # with:
-        #   # Needed because of
-        #   # https://github.com/GoogleChrome/lighthouse-ci/issues/172
-        #   ref: ${{ github.event.pull_request.head.sha }}
 
       - uses: actions/checkout@v2
         with:
