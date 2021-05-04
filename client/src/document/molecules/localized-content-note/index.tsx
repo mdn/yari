@@ -7,7 +7,7 @@ interface LocalizedNoteContent {
 function getNote(noteContent: LocalizedNoteContent, noteType: string) {
   return (
     <div className={`localized-content-note notecard inline ${noteType}`}>
-      {noteContent.lead}
+      {noteContent.lead}{" "}
       <a href={noteContent.url} className="external">
         {noteContent.linkText}
       </a>

@@ -8,6 +8,7 @@
 
 @import "./molecules/breadcrumb-locale-container";
 @import "./molecules/notecards";
+@import "./molecules/localized-content-note/";
 
 .main-content {
   @media #{$mq-small-desktop-and-up} {

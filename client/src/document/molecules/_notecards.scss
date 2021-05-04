@@ -162,12 +162,3 @@
     @include set-notecard-icon-only("~@mdn/dinocons/emojis/thumbs-down.svg");
   }
 }
-
-.localized-content-note {
-  border-left: 0;
-
-  &.inline {
-    margin: 0;
-    padding: ($base-spacing / 2) $base-spacing;
-  }
-}
