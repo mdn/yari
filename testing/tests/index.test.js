@@ -13,7 +13,7 @@ test("all favicons on the home page", () => {
   const htmlFile = path.join(buildRoot, "en-us", "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="icon"]').length).toBe(4);
+  expect($('link[rel="icon"]').length).toBe(1);
   expect($('link[rel="apple-touch-icon"]').length).toBe(1);
   // Check that every favicon works and resolves
   $('link[rel="icon"], link[rel="apple-touch-icon"]').each((i, element) => {
