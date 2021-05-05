@@ -1210,7 +1210,7 @@ const MISC_REDIRECT_PATTERNS = [
   ),
   localeRedirect(
     // /^(?<locale>\w{2,3}(?:-\w{2})?)\/(?<mainPath>Mozilla\/Projects\/NSS|Mozilla\/Developer_guide)(?<subPath>\/.+?)?\/?$/i,
-    /^docs\/(?<prefix>Mozilla\/Projects\/NSS|Mozilla\/Firefox\/Privact|Mozilla\/Developer_guide)(?<subPath>\/.+?)?\/?$/i,
+    /^docs\/(?<prefix>Mozilla\/Projects\/NSS|Mozilla\/Developer_guide)(?<subPath>\/.+?)?\/?$/i,
     ({ locale, prefix, subPath = "" }) =>
       `https://github.com/mdn/archived-content/tree/main/files/${locale.toLowerCase()}/${prefix.toLowerCase()}/${subPath.toLowerCase()}`,
     // False until we're certain this won't get un-archived again. E.g. anytime in 2022
