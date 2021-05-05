@@ -179,6 +179,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     searchIndexError,
     initializeSearchIndex,
   ] = useSearchIndex();
+
   const [resultItems, setResultItems] = useState<ResultItem[]>([]);
   const [isFocused, setIsFocused] = useState(false);
 
@@ -190,6 +191,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         // This can happen if the initialized hasn't completed yet or
         // completed un-successfully.
         setResultItems([]);
+        setIsWaiting(true);
         return;
       }
 
@@ -238,6 +240,14 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   React.useEffect(() => {
     setInputQueryValue(initialQuery);
   }, [initialQuery]);
+
+  const [isWaiting, setIsWaiting] = useState(false);
+  useEffect(() => {
+    if (isWaiting && searchIndex && inputQueryValue) {
+      setIsWaiting(false);
+      updateResults(inputQueryValue);
+    }
+  }, [searchIndex, isWaiting, inputQueryValue, updateResults]);
 
   const {
     getInputProps,
