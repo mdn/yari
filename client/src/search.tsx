@@ -187,11 +187,18 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 
   const updateResults = useCallback(
     (inputValue: string | undefined) => {
-      if (!searchIndex || !inputValue) {
+      if (!searchIndex) {
+        // This can happen if the initialized hasn't completed yet or
+        // completed un-successfully.
+        if (!searchIndexError) {
+          setIsWaiting(true);
+        }
+        return;
+      }
+      if (!inputValue) {
         // This can happen if the initialized hasn't completed yet or
         // completed un-successfully.
         setResultItems([]);
-        setIsWaiting(true);
         return;
       }
 
