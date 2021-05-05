@@ -187,7 +187,7 @@ function archive(
 
   saveFile(getHTMLPath(folderPath), trimLineEndings(renderedHTML), metadata);
 
-  // Next we need to every single other file that isn't index.html or index.md
+  // Next we need to copy every single file that isn't index.html or index.md
   // which basically means all the images.
   if (sourceFolder) {
     const files = fs.readdirSync(sourceFolder);
