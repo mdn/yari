@@ -1,7 +1,7 @@
 function getNote(noteLinktext: string, noteType: string) {
   const url =
     noteType === "neutral"
-      ? "https://developer.mozilla.org/en-US/docs/MDN/Contribute/Localize#active_locales"
+      ? "/en-US/docs/MDN/Contribute/Localize#active_locales"
       : "https://github.com/mdn/translated-content#promoting-an-inactive-locale-to-tier-1";
   return (
     <div className={`localized-content-note notecard inline ${noteType}`}>
