@@ -1,4 +1,7 @@
+import React from "react";
 import "./index.scss";
+
+const LandingPageSurvey = React.lazy(() => import("./landing-page-survey"));
 
 type Variant = 0 | 1 | 2 | 3;
 
@@ -79,14 +82,9 @@ export default function App({ ...appProps }) {
 
       {variant !== 3 && <p>The price is $10/month</p>}
 
-      <iframe
-        src={iframe.src}
-        title={iframe.title}
-        frameBorder="0"
-        width={iframe.width}
-        height={iframe.height}
-        style={{ overflow: "hidden" }}
-      ></iframe>
+      <React.Suspense fallback={<p>Loading waitlist form...</p>}>
+        <LandingPageSurvey variant={variant} />
+      </React.Suspense>
     </div>
   );
 }
