@@ -190,9 +190,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       if (!searchIndex) {
         // This can happen if the initialized hasn't completed yet or
         // completed un-successfully.
-        if (!searchIndexError) {
-          setIsWaiting(true);
-        }
+        setIsWaiting(true);
         return;
       }
       if (!inputValue) {
@@ -250,11 +248,17 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 
   const [isWaiting, setIsWaiting] = useState(false);
   useEffect(() => {
-    if (isWaiting && searchIndex && inputQueryValue) {
+    if (isWaiting && searchIndex && inputQueryValue && !searchIndexError) {
       setIsWaiting(false);
       updateResults(inputQueryValue);
     }
-  }, [searchIndex, isWaiting, inputQueryValue, updateResults]);
+  }, [
+    searchIndex,
+    searchIndexError,
+    isWaiting,
+    inputQueryValue,
+    updateResults,
+  ]);
 
   const {
     getInputProps,
