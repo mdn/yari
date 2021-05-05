@@ -158,21 +158,14 @@ function archive(
   rawBody,
   metadata,
   isMarkdown = false,
-  isTranslatedContent = false,
-  root = null
+  root = null,
+  sourceFolder = null
 ) {
   if (!root) {
-    root = isTranslatedContent
-      ? CONTENT_TRANSLATED_ROOT
-      : CONTENT_ARCHIVED_ROOT;
+    root = CONTENT_ARCHIVED_ROOT;
   }
-  if (!CONTENT_ARCHIVED_ROOT) {
+  if (!root) {
     throw new Error("Can't archive when CONTENT_ARCHIVED_ROOT is not set");
-  }
-  if (isTranslatedContent && !CONTENT_TRANSLATED_ROOT) {
-    throw new Error(
-      "Can't archive translated content when CONTENT_TRANSLATED_ROOT is not set"
-    );
   }
   const folderPath = buildPath(
     path.join(root, metadata.locale.toLowerCase()),
@@ -193,6 +186,24 @@ function archive(
   }
 
   saveFile(getHTMLPath(folderPath), trimLineEndings(renderedHTML), metadata);
+
+  // Next we need to copy every single file that isn't index.html or index.md
+  // which basically means all the images.
+  if (sourceFolder) {
+    const files = fs.readdirSync(sourceFolder);
+    for (const fileName of files) {
+      if (fileName === "index.html" || fileName === "index.md") {
+        continue;
+      }
+      const filePath = path.join(sourceFolder, fileName);
+      if (!fs.statSync(filePath).isDirectory()) {
+        fs.copyFileSync(
+          filePath,
+          path.join(folderPath, path.basename(filePath))
+        );
+      }
+    }
+  }
   return folderPath;
 }
 
@@ -216,7 +227,7 @@ function unarchive(document, move) {
   return created;
 }
 
-const read = memoize((folderOrFilePath) => {
+const read = memoize((folderOrFilePath, roots = ROOTS) => {
   let filePath = null;
   let folder = null;
   let root = null;
@@ -235,7 +246,7 @@ const read = memoize((folderOrFilePath) => {
       throw new Error(`'${filePath}' is not a HTML or Markdown file.`);
     }
 
-    root = ROOTS.find((possibleRoot) => filePath.startsWith(possibleRoot));
+    root = roots.find((possibleRoot) => filePath.startsWith(possibleRoot));
     if (root) {
       folder = filePath
         .replace(root + path.sep, "")
@@ -252,7 +263,7 @@ const read = memoize((folderOrFilePath) => {
     }
   } else {
     folder = folderOrFilePath;
-    for (const possibleRoot of ROOTS) {
+    for (const possibleRoot of roots) {
       const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
       if (fs.existsSync(possibleHTMLFilePath)) {
         root = possibleRoot;
@@ -616,7 +627,18 @@ function remove(
 ) {
   const root = getRoot(locale);
   const url = buildURL(locale, slug);
-  const { metadata, fileInfo } = findByURL(url) || {};
+
+  // If we don't explicitly set the `roots` it might read from $CONTENT_ARCHIVED_ROOT
+  // which might find the files.
+  // The reason is when you're running archive CLI tool. When you run that,
+  // it will first *add* files to the archived root and then, after that's run,
+  // it will start removing files. If it then finds the files in the archived
+  // root it will confuse the git command.
+  const roots = [CONTENT_ROOT];
+  if (CONTENT_TRANSLATED_ROOT) {
+    roots.push(CONTENT_TRANSLATED_ROOT);
+  }
+  const { metadata, fileInfo } = findByURL(url, roots) || {};
   if (!metadata) {
     throw new Error(`document does not exists: ${url}`);
   }
