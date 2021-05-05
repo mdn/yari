@@ -5,12 +5,25 @@ updates:
     directory: "/"
     schedule:
       interval: daily
-    open-pull-requests-limit: 15
+    open-pull-requests-limit: 25
     ignore:
       # Need manual updates with "resolutions" in package.json
       # to property hoist versions from react-scripts
       - dependency-name: "webpack"
       - dependency-name: "eslint"
+
+      # The @storybook dependencies come out a lot.
+      # https://github.com/mdn/yari/pulls?q=is%3Apr++is%3Aclosed+storybook+
+      # We don't use storybook at the moment.
+      - dependency-name: "@storybook/*"
+
+      # In https://github.com/mdn/yari/issues/3694 we discovered that
+      # installing puppeteer 9.1.0 seems to have made the tests flaky
+      # when jest starts up. See the issue for more detail.
+      # After this, we can keep an eye on puppeteer to see if the tests
+      # get better later with new versions.
+      - dependency-name: "puppeteer"
+        versions: ["9.1.x"]
 
   - package-ecosystem: "github-actions"
     directory: "/"

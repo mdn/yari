@@ -23,13 +23,6 @@
   }
 }
 
-.ic-history {
-  &::before {
-    background-image: url("~@mdn/dinocons/arrows/chevron.svg");
-    content: "";
-  }
-}
-
 .ic-non-standard {
   &::before {
     background-image: url("~@mdn/dinocons/notifications/exclamation-triangle.svg");
