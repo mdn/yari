@@ -18,7 +18,7 @@
     border-left: 1px solid $neutral-100;
     border-right: 0;
     border-top: 1px solid $neutral-100;
-    padding: $base-unit;
+    padding: 0;
     position: relative;
     text-align: center;
   }
@@ -95,10 +95,15 @@
     tr:nth-child(even) {
       background-color: $neutral-550;
     }
+
+    dl {
+      max-width: 100%;
+    }
   }
 
   .bc-browser-name {
     display: inline-block;
+    padding: $base-spacing / 4;
     width: 75%;
 
     @media #{$mq-small-desktop-and-up} {
