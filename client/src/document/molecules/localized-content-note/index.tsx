@@ -5,7 +5,7 @@ function getNote(noteLinktext: string, noteType: string) {
       : "https://github.com/mdn/translated-content#promoting-an-inactive-locale-to-tier-1";
   return (
     <div className={`localized-content-note notecard inline ${noteType}`}>
-      <a href={url} className="external">
+      <a href={url} className={!url.startsWith('/') ? 'external' : undefined}>
         {noteLinktext}
       </a>
     </div>
