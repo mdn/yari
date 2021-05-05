@@ -32,8 +32,6 @@ tr.bc-history {
   }
 
   dt {
-    max-height: $base-spacing * 2;
-
     @media #{$mq-large-desktop-and-up} {
       flex: 0 1 10%;
     }
