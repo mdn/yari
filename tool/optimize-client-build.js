@@ -21,12 +21,22 @@ async function runOptimizeClientBuild(buildRoot) {
   $('link[rel], meta[property="og:image"]').each((i, element) => {
     let href;
     let attributeKey;
+    let hrefPrefix = "";
     if (element.tagName === "meta") {
       if (element.attribs.property !== "og:image") {
         return;
       }
       href = element.attribs.content;
       attributeKey = "content";
+      // This is an unfortunate hack. The value for the
+      // <meta property=og:image content=...> needs to be an absolute URL.
+      // We tested with a relative URL and it seems it doesn't work in Twitter.
+      // So we hardcode the URL to be our production domain so the URL is
+      // always absolute.
+      // Yes, this makes it a bit weird to use a build of this on a dev,
+      // stage, preview, or a local build. Especially if the hashed URL doesn't
+      // always work. But it's a fair price to pay.
+      hrefPrefix = "https://developer.mozilla.org";
     } else {
       href = element.attribs.href;
       if (!href) {
@@ -69,7 +79,7 @@ async function runOptimizeClientBuild(buildRoot) {
     results.push({
       filePath,
       href,
-      hashedHref,
+      url: hrefPrefix + hashedHref,
       hashedFilePath,
       attributeKey,
     });
@@ -78,10 +88,10 @@ async function runOptimizeClientBuild(buildRoot) {
   if (results.length > 0) {
     // It clearly hashed some files. Let's update the HTML!
     let newIndexHtml = indexHtml;
-    for (const { href, hashedHref, attributeKey } of results) {
+    for (const { href, url, attributeKey } of results) {
       newIndexHtml = newIndexHtml.replace(
         new RegExp(`${attributeKey}="${href}"`),
-        `${attributeKey}="${hashedHref}"`
+        `${attributeKey}="${url}"`
       );
     }
     fs.writeFileSync(indexHtmlFilePath, newIndexHtml, "utf-8");
