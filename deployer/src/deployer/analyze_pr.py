@@ -114,10 +114,6 @@ def post_about_dangerous_content(
 
     patch_lines = get_patch_lines(patch) if patch else {}
 
-    from pprint import pprint
-
-    pprint(patch_lines)
-
     for doc in get_built_docs(build_directory):
         rendered_html = "\n".join(
             x["value"]["content"]
@@ -127,11 +123,6 @@ def post_about_dangerous_content(
 
         diff_lines = None
         for file_path in patch_lines:
-            # print(
-            #     "COMPARE",
-            #     file_path,
-            #     [doc["source"]["folder"], doc["source"]["filename"]],
-            # )
             if file_path.endswith(
                 "/".join([doc["source"]["folder"], doc["source"]["filename"]])
             ):
