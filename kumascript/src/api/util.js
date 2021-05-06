@@ -146,14 +146,12 @@ class HTMLTool {
         (char) => char.charCodeAt(0) > 127
       );
       if (hasMoreThanAscii) {
-        errorMessage +=
-          " Hint! Remove any non-ASCII characters and (in the ID) and it will probably work.";
         const cleanedSectionID = [...sectionID]
           .filter((char) => char.charCodeAt(0) <= 127)
           .join("");
         errorMessage +=
-          ` Try changing it to 'id="${cleanedSectionID}"' ` +
-          `and EmbedLiveSample('${cleanedSectionID}', ...)`;
+          ' -- hint! removing all non-ASCII characters in the "id" may fix this, so try ' +
+          `'id="${cleanedSectionID}"' and 'EmbedLiveSample("${cleanedSectionID}", ...)'`;
       }
       throw new KumascriptError(errorMessage);
     }
