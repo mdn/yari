@@ -1,7 +1,26 @@
+const fs = require("fs");
+const path = require("path");
+
 const { Archive, Document, Redirect, Image } = require("../../content");
 const { FLAW_LEVELS } = require("../constants");
 const { findMatchesInText } = require("../matches-in-text");
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../../libs/constants");
+
+const _safeToHttpsDomains = new Map();
+function getSafeToHttpDomains() {
+  if (!_safeToHttpsDomains.size) {
+    const fileParsed = JSON.parse(
+      fs.readFileSync(
+        path.join(__dirname, "safe-to-https-domains.json"),
+        "utf-8"
+      )
+    );
+    Object.entries(fileParsed).forEach(([key, value]) =>
+      _safeToHttpsDomains.set(key, value)
+    );
+  }
+  return _safeToHttpsDomains;
+}
 
 function isHomepageURL(url) {
   // Return true if the URL is something like `/` or `/en-US` or `/fr/`
@@ -131,13 +150,36 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
     }
 
     if (href.startsWith("http://")) {
-      addBrokenLink(
-        a,
-        checked.get(href),
-        href,
-        href.replace("http://", "https://"),
-        "http:// external links are not allowed (will be forced to https:// at build-time)"
-      );
+      let domain = null;
+      try {
+        domain = new URL(href).hostname;
+      } catch (err) {
+        return addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          null,
+          "Not a valid link URL"
+        );
+      }
+      // If a URL's domain is in the list that getSafeToHttpDomains() provides,
+      // that means we've tested that you can turn that into a HTTPS link
+      // simply by replacing the `http://` for `https://`.
+      // Using `.get(domain)` is smart because if the domain isn't known you
+      // get `undefined` otherwise you get `true` or `false`. And we're only
+      // interested in the `true`.
+      if (getSafeToHttpDomains().get(domain)) {
+        addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          href.replace("http://", "https://"),
+          "Is currently http:// but can become https://"
+        );
+      }
+      // Note! If it's not known that the URL's domain can be turned into https://
+      // we do nothing here. No flaw. It's unfortunate that we still have http://
+      // links in our content but that's a reality of MDN being 15+ years old.
     } else if (href.startsWith("https://developer.mozilla.org/")) {
       // It might be a working 200 OK link but the link just shouldn't
       // have the full absolute URL part in it.

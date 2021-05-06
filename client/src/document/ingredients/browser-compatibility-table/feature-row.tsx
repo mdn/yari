@@ -398,7 +398,7 @@ function CompatCell({
           </button>
         )}
         {showNotes && (
-          <dl className="bc-history bc-history-mobile">
+          <dl className="bc-notes-list bc-history bc-history-mobile">
             {getNotes(browser, support!, locale)}
           </dl>
         )}
@@ -480,7 +480,7 @@ export const FeatureRow = React.memo(
         {activeBrowser && (
           <tr className="bc-history">
             <td colSpan={browsers.length + 1}>
-              <dl>
+              <dl className="bc-notes-list">
                 {getNotes(
                   activeBrowser,
                   compat.support[activeBrowser]!,
