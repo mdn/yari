@@ -103,6 +103,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   React.useEffect(() => {
     const location = document.location;
+
     // Did you arrive on this page with a location hash?
     if (location.hash && location.hash !== location.hash.toLowerCase()) {
       // The location hash isn't lowercase. That probably means it's from before
@@ -143,6 +144,11 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   const isServer = typeof window === "undefined";
 
+  let retiredLocale = false;
+  if (!isServer) {
+    retiredLocale = document.location.search.indexOf("retiredLocale") > -1;
+  }
+
   return (
     <>
       {doc.isArchive && !doc.isTranslated && <Archived />}
@@ -158,8 +164,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
         </div>
       )}
 
-      {doc.isTranslated && (
-        <LocalizedContentNote isActive={doc.isActive} locale={locale} />
+      {(doc.isTranslated || retiredLocale) && (
+        <LocalizedContentNote
+          isActive={doc.isActive}
+          locale={locale}
+          retiredLocale={retiredLocale}
+        />
       )}
 
       {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}

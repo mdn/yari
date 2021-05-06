@@ -1,12 +1,16 @@
-function getNote(noteLinktext: string, noteType: string) {
-  const url =
-    noteType === "neutral"
-      ? "/en-US/docs/MDN/Contribute/Localize#active_locales"
-      : "https://github.com/mdn/translated-content#promoting-an-inactive-locale-to-tier-1";
+interface NoteContent {
+  linkText: string;
+  url: string;
+}
+
+function getNote(noteContent: NoteContent, noteType: string) {
   return (
     <div className={`localized-content-note notecard inline ${noteType}`}>
-      <a href={url} className={!url.startsWith("/") ? "external" : undefined}>
-        {noteLinktext}
+      <a
+        href={noteContent.url}
+        className={!noteContent.url.startsWith("/") ? "external" : undefined}
+      >
+        {noteContent.linkText}
       </a>
     </div>
   );
@@ -15,9 +19,11 @@ function getNote(noteLinktext: string, noteType: string) {
 export function LocalizedContentNote({
   isActive,
   locale,
+  retiredLocale,
 }: {
   isActive: boolean;
   locale: string;
+  retiredLocale: boolean;
 }) {
   const activeLocaleNoteContent = {
     "en-US": {
@@ -48,10 +54,24 @@ export function LocalizedContentNote({
     },
   };
 
-  const noteLinktext = isActive
-    ? activeLocaleNoteContent[locale] || activeLocaleNoteContent["en-US"]
-    : inactiveLocaleNoteContent[locale] || inactiveLocaleNoteContent["en-US"];
+  const noteContent: NoteContent = {
+    linkText: isActive
+      ? activeLocaleNoteContent[locale].linkText ||
+        activeLocaleNoteContent["en-US"].linkText
+      : inactiveLocaleNoteContent[locale].linkText ||
+        inactiveLocaleNoteContent["en-US"].linkText,
+    url: isActive
+      ? "/en-US/docs/MDN/Contribute/Localize#active_locales"
+      : "https://github.com/mdn/translated-content#promoting-an-inactive-locale-to-tier-1",
+  };
   const noteType = isActive ? "neutral" : "warning";
 
-  return getNote(noteLinktext.linkText, noteType);
+  if (retiredLocale) {
+    noteContent.linkText =
+      "The page you requested has been retired, so we've sent you to the English equivalent.";
+    noteContent.url =
+      "https://hacks.mozilla.org/2021/03/mdn-localization-in-march-tier-1-locales-unfrozen-and-future-plans/";
+  }
+
+  return getNote(noteContent, noteType);
 }
