@@ -141,9 +141,19 @@ class HTMLTool {
     // so let's simplify this as well as make it much faster.
     const sectionStart = $(`#${cssesc(sectionID, { isIdentifier: true })}`);
     if (!sectionStart.length) {
-      throw new KumascriptError(
-        `unable to find an HTML element with an "id" of "${sectionID}" within ${this.pathDescription}`
+      let errorMessage = `unable to find an HTML element with an "id" of "${sectionID}" within ${this.pathDescription}`;
+      const hasMoreThanAscii = [...sectionID].some(
+        (char) => char.charCodeAt(0) > 127
       );
+      if (hasMoreThanAscii) {
+        const cleanedSectionID = [...sectionID]
+          .filter((char) => char.charCodeAt(0) <= 127)
+          .join("");
+        errorMessage +=
+          ' -- hint! removing all non-ASCII characters in the "id" may fix this, so try ' +
+          `'id="${cleanedSectionID}"' and 'EmbedLiveSample("${cleanedSectionID}", ...)'`;
+      }
+      throw new KumascriptError(errorMessage);
     }
     let result;
     const sectionTag = sectionStart.get(0).tagName;
