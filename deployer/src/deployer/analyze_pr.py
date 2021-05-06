@@ -12,7 +12,7 @@ from unidiff import PatchSet
 
 from .utils import log
 
-comment_hidden_comment = re.compile(
+hidden_comment_regex = re.compile(
     r"<!-- build_hash: ([a-f0-9]+) date: ([\d:\.\- ]+) -->"
 )
 
@@ -72,12 +72,9 @@ def analyze_pr(build_directory: Path, config):
             github_issue = github_repo.get_issue(number=int(config["pr_number"]))
             for comment in github_issue.get_comments():
                 if comment.user.login == "github-actions[bot]":
-                    if comment_hidden_comment.findall(comment.body):
-                        new_body = comment_hidden_comment.sub(
-                            hidden_comment, comment.body
-                        )
-                        new_body += f"\n\n*(this comment was updated {datetime.datetime.utcnow()})*"
-                        comment.edit(body=new_body)
+                    if hidden_comment_regex.search(comment.body):
+                        combined_comment += f"\n\n*(this comment was updated {datetime.datetime.utcnow()})*"
+                        comment.edit(body=combined_comment)
                         print(f"Updating existing comment ({comment})")
                         break
 
