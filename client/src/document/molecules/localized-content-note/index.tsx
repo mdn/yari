@@ -30,7 +30,7 @@ export function LocalizedContentNote({
     },
     ko: {
       linkText:
-        "이 페이지는 커뮤니티에서 영어로 번역되었습니다. MDN Web Docs에서 한국 커뮤니티에 가입하여 자세히 알아보세요.",
+        "이 페이지는 영어로부터 커뮤니티에 의하여 번역되었습니다. MDN Web Docs에서 한국 커뮤니티에 가입하여 자세히 알아보세요.",
     },
   };
   const inactiveLocaleNoteContent = {
