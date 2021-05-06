@@ -140,7 +140,6 @@ def post_about_dangerous_content(
                 if any(href.lower().startswith(x.lower()) for x in OK_URL_PREFIXES):
                     # exceptions are skipped
                     continue
-                print(repr(diff_lines))
                 if diff_lines:
                     if href not in diff_lines:
                         continue
