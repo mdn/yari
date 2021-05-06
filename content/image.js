@@ -31,7 +31,12 @@ function isImage(filePath) {
 }
 
 function urlToFilePath(url) {
-  const [, locale, , ...slugParts] = decodeURI(url).split("/");
+  let sep = "/";
+  //check is os specific path separator like windows.
+  if(url.indexOf(path.sep) === 0){
+    sep = path.sep;
+  }
+  const [, locale, , ...slugParts] = decodeURI(url).split(sep);
   return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
 }
 
