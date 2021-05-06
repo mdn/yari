@@ -51,11 +51,71 @@ yari_word_delimiter = token_filter(
     # With this configuration we'll get good matches for both
     # 'array foreach' and if people type the full 'array.prototype.foreach'.
     preserve_original=True,
-    # Otherwise things like 'WebGL' becomes 'web' and 'gl'.
-    # And 'forEach' becomes 'each' because 'for' is a stopword.
-    split_on_case_change=False,
+    # 'forEach' becomes 'for', 'each', and 'forEach'.
+    # And searchin for 'typed array' can find 'TypedArray'
+    split_on_case_change=True,
     # Otherwise things like '3D' would be a search for '3' || 'D'.
     split_on_numerics=False,
+)
+
+
+custom_stopwords = token_filter(
+    "custom_stopwords",
+    type="stop",
+    ignore_case=True,
+    # See https://www.peterbe.com/plog/english-stop-words-javascript-reserved-keywords
+    # It's basically all the regular English stop words minus the JavaScript
+    # reserved keywords (because JavaScript).
+    # But, we're also making some special exception for words that are important
+    # in JavaScript but aren't reserved keywords.
+    # These exceptions are...
+    #
+    #   "at"
+    #   https://developer.mozilla.org/en-US/docs/Web/CSS/At-rule
+    #   http://localhost:3000/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/at
+    #   http://localhost:3000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+    #
+    #   "is"
+    #   https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/is
+    #   http://localhost:3000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+    #
+    #   "of"
+    #   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of
+    #   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/of
+    #   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/of
+    #
+    #   "to"
+    #   https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/To
+    #   https://developer.mozilla.org/en-US/docs/Web/API/CSSNumericValue/to
+    #
+    # If we discover that there are other words that are too important to our
+    # context, we can simply pluck them out of the list below.
+    stopwords=[
+        "a",
+        "an",
+        "and",
+        "are",
+        "as",
+        "be",
+        "but",
+        "by",
+        "into",
+        "it",
+        "no",
+        "not",
+        "on",
+        "or",
+        "such",
+        "that",
+        "the",
+        "their",
+        "then",
+        "there",
+        "these",
+        "they",
+        "was",
+        "will",
+    ],
 )
 
 
@@ -109,9 +169,6 @@ unicorns_char_filter = char_filter(
         # e.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
         # Also see https://github.com/mdn/yari/issues/3074
         "?. => Optionalchaining",
-        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this
-        # Also see https://github.com/mdn/yari/issues/3070
-        "this => javascriptthis",
         # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_nullish_assignment
         "??= => Logicalnullishassignment",
         # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator
@@ -154,7 +211,7 @@ text_analyzer = analyzer(
         # https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-elision-tokenfilter.html
         "elision",
         "lowercase",
-        "stop",
+        custom_stopwords,
         # This makes it so you can search for either 'bézier' or 'bezier',
         # and end up matching to 'Bézier curve'.
         "asciifolding",

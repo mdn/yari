@@ -347,7 +347,7 @@ def analyze(
 ):
     # We can confidently use a single host here because we're not searching a cluster.
     connections.create_connection(hosts=[url])
-    index = Document._index
+    index = Index("mdn_docs")
     analysis = index.analyze(body={"text": text, "analyzer": analyzer})
     print(f"For text: {text!r}")
     if "tokens" in analysis:
