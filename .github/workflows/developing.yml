@@ -10,7 +10,6 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macos-latest
           - windows-latest
 
     steps:
@@ -42,6 +41,7 @@ jobs:
           yarn --frozen-lockfile
 
       - name: Setup kernel for react native, increase watchers
+        if: ${{ runner.os }} == 'ubuntu-latest'
         run: |
           # When running Yari on Linux, you might get the
           # "Error: ENOSPC: System limit for number of file watchers reached" error.
