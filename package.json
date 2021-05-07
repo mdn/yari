@@ -59,7 +59,7 @@
     "file-type": "16.4.0",
     "front-matter": "^4.0.2",
     "fs-extra": "10.0.0",
-    "glob": "^7.1.6",
+    "glob": "^7.1.7",
     "got": "11.8.2",
     "hast-util-is-element": "^1.1.0",
     "hast-util-to-html": "^7.1.3",
