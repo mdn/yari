@@ -2267,7 +2267,7 @@
     },
     "WorkerLocation": {
       "inh": "",
-      "impl": ["URLUtilsReadOnly"]
+      "impl": []
     },
     "WorkerNavigator": {
       "inh": "",
