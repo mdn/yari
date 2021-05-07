@@ -5,35 +5,6 @@ const LandingPageSurvey = React.lazy(() => import("./landing-page-survey"));
 
 type Variant = 0 | 1 | 2 | 3;
 
-interface IFrameData {
-  src: string;
-  title: string;
-  width: number;
-  height: number;
-}
-
-function getSurveyIframe(variant: number): IFrameData {
-  const _default: IFrameData = {
-    // From https://app.alchemer.com/distribute/share/id/6295937
-    src: "https://survey.alchemer.com/s3/6295937/MDN-Fake-Door-Survey",
-    title: "MDN++ survey",
-    width: 700,
-    height: 500,
-  };
-  // Remember variant 0 is the default.
-  if (variant === 1) {
-    return Object.assign({}, _default, {
-      src: "https://survey.alchemer.com/s3/6295937/MDN-Fake-Door-SurveyV1",
-    });
-  }
-  if (variant === 2) {
-    return Object.assign({}, _default, {
-      src: "https://survey.alchemer.com/s3/6295937/MDN-Fake-Door-SurveyV2",
-    });
-  }
-  return _default;
-}
-
 const LOCALSTORAGE_KEY = "mdnplusplus_lc_variant";
 
 function loadPreviousVariant(possibleVariants: Variant[]): Variant | undefined {
@@ -70,7 +41,6 @@ export default function App({ ...appProps }) {
     setPreviousVariant(variant);
   }
 
-  const iframe = getSurveyIframe(variant);
   return (
     <div className="mdnplusplus">
       <p>Hi I'm Daryl!</p>
