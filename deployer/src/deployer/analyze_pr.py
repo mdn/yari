@@ -168,7 +168,7 @@ def post_about_dangerous_content(
                 if diff_lines:
                     # If this was available and it _did_ fine a URL, then
                     # really make sure it's noticed.
-                    line += " (Note! This is a new URL 👀)"
+                    line += " (Note! This may be a new URL 👀)"
                 external_urls_list.append(line)
             comments.append((doc, "\n".join(external_urls_list)))
         elif diff_lines:
