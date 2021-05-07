@@ -52,6 +52,19 @@ export default function App({ ...appProps }) {
 
       {variant !== 3 && <p>The price is $10/month</p>}
 
+      {process.env.NODE_ENV === "development" && (
+        <div style={{ margin: 20, float: "right" }}>
+          <button
+            onClick={() => {
+              localStorage.removeItem(LOCALSTORAGE_KEY);
+              window.location.reload();
+            }}
+          >
+            <small>Dev Reset Landing page</small>
+          </button>
+        </div>
+      )}
+
       <React.Suspense fallback={<p>Loading waitlist form...</p>}>
         <LandingPageSurvey variant={variant} />
       </React.Suspense>

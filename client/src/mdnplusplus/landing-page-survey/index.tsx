@@ -56,14 +56,19 @@ export default function LandingPageSurvey({ variant }: { variant: number }) {
     setSurveySubmissionError,
   ] = React.useState<Error | null>(null);
 
-  const pingSP = new URLSearchParams();
-  pingSP.set("variant", `${variant}`);
-  const previousUUID = getSessionStorageData(SESSIONSTORAGE_KEY_UUID);
-  if (previousUUID) {
-    console.log("Reusing existing UUID", previousUUID);
-    pingSP.set("uuid", previousUUID);
-  }
-  const pingURL = `${API_URL}?${pingSP.toString()}`;
+  // Use a useMemo(() => {...}, [variant]) so that you don't get a different
+  // response if there's a re-render because in a re-render you might get
+  // something different (from the first render) from getSessionStorageData().
+  const pingURL = React.useMemo(() => {
+    const pingSP = new URLSearchParams();
+    pingSP.set("variant", `${variant}`);
+    const previousUUID = getSessionStorageData(SESSIONSTORAGE_KEY_UUID);
+    if (previousUUID) {
+      pingSP.set("uuid", previousUUID);
+    }
+    return `${API_URL}?${pingSP.toString()}`;
+  }, [variant]);
+
   const { data: pingData, error: pingError } = useSWR<PingData>(
     pingURL,
     async (url) => {
@@ -249,6 +254,20 @@ export default function LandingPageSurvey({ variant }: { variant: number }) {
         <button type="submit" className="button">
           {page === "start" ? "Join the waitlist" : "Submit survey"}
         </button>
+      )}
+
+      {process.env.NODE_ENV === "development" && (
+        <div style={{ margin: 30, float: "right" }}>
+          <button
+            onClick={() => {
+              sessionStorage.removeItem(SESSIONSTORAGE_KEY_UUID);
+              sessionStorage.removeItem(SESSIONSTORAGE_KEY_EMAIL);
+              window.location.reload();
+            }}
+          >
+            <small>Dev Reset Survey</small>
+          </button>
+        </div>
       )}
     </form>
   );
