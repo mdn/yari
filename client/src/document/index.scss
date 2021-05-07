@@ -101,6 +101,12 @@ a.new {
       &:link,
       &:visited {
         color: $neutral-100;
+        text-decoration: none;
+      }
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
       }
     }
   }
