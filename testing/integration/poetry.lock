@@ -53,7 +53,7 @@ python2 = ["typed-ast (>=1.4.2)"]
 
 [[package]]
 name = "braceexpand"
-version = "0.1.6"
+version = "0.1.7"
 description = "Bash-style brace expansion for Python"
 category = "main"
 optional = false
@@ -383,7 +383,7 @@ testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "c2d22b8d8c1cfd21e4e7d25b42454d435930a50d444fe72ab6b9b70619e33dfd"
+content-hash = "26a1578d3a05ab548ce4274d677bcaa486a1096aa028f0aaa1b581a560378fce"
 
 [metadata.files]
 appdirs = [
@@ -403,8 +403,8 @@ black = [
     {file = "black-21.4b2.tar.gz", hash = "sha256:fc9bcf3b482b05c1f35f6a882c079dc01b9c7795827532f4cc43c0ec88067bbc"},
 ]
 braceexpand = [
-    {file = "braceexpand-0.1.6-py2.py3-none-any.whl", hash = "sha256:c37571ad130213247fac9921f3fd1032c81057490b9ca29be6884fd6d9dc1013"},
-    {file = "braceexpand-0.1.6.tar.gz", hash = "sha256:c1bf4fdc1713e46feacac0f1acbbb12239bdda7c7c4183fc8fb22bf6f285f854"},
+    {file = "braceexpand-0.1.7-py2.py3-none-any.whl", hash = "sha256:91332d53de7828103dcae5773fb43bc34950b0c8160e35e0f44c4427a3b85014"},
+    {file = "braceexpand-0.1.7.tar.gz", hash = "sha256:e6e539bd20eaea53547472ff94f4fb5c3d3bf9d0a89388c4b56663aba765f705"},
 ]
 certifi = [
     {file = "certifi-2020.11.8-py2.py3-none-any.whl", hash = "sha256:1f422849db327d534e3d0c5f02a263458c3955ec0aae4ff09b95f195c59f4edd"},
