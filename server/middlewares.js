@@ -1,5 +1,6 @@
 const express = require("express");
 
+const { CSP_DIRECTIVES } = require("../libs/constants");
 const { resolveFundamental } = require("../libs/fundamental-redirects");
 const { getLocale } = require("../libs/get-locale");
 const { STATIC_ROOT } = require("./constants");
@@ -48,6 +49,13 @@ const originRequest = (req, res, next) => {
 };
 
 module.exports = {
-  staticMiddlewares: [slugRewrite, express.static(STATIC_ROOT)],
+  staticMiddlewares: [
+    slugRewrite,
+    express.static(STATIC_ROOT, {
+      setHeaders: (res) => {
+        res.setHeader("Content-Security-Policy", CSP_DIRECTIVES);
+      },
+    }),
+  ],
   originRequestMiddleware: originRequest,
 };
