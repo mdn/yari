@@ -70,7 +70,6 @@ const CSP_DIRECTIVES = [
       "cdn.speedcurve.com/js/lux.js",
       "'sha256-q7cJjDqNO2e1L5UltvJ1LhvnYN7yJXgGO7b6h9xkL1o='", // LUX
       "www.google-analytics.com/analytics.js",
-      "www.google-analytics.com/analytics_debug.js",
       "'sha256-JEt9Nmc3BP88wxuTZm9aKNu87vEgGmKW1zzy/vb1KPs='", // polyfill check
       "polyfill.io/v3/polyfill.min.js",
     ].join(" "),
