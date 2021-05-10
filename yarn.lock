@@ -10642,22 +10642,22 @@ html-tags@^3.1.0:
   resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-3.1.0.tgz#7b5e6f7e665e9fb41f30007ed9e0d41e97fb2140"
   integrity sha512-1qYz89hW3lFDEazhjW0yVAV87lw8lVkrJocr72XmBkMKsoSVJCQx3W8BXsC7hO2qAt8BoVjYjtAcZ9perqGnNg==
 
-html-validate@4.10.1:
-  version "4.10.1"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-4.10.1.tgz#db662c78d13a35fa4ee7e7cba408d3deed0eb708"
-  integrity sha512-FFbE2Oaq8trtQjS6X3b6yhI/Mv3/ru6kyPCDLE2U5VxkvQV+bl2w5t7lIrKUcE6FjnITP35bLU6aTcbdP2b1/w==
+html-validate@4.11.0:
+  version "4.11.0"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-4.11.0.tgz#08328d587ebad23e37cc69e9e184218e2bcb2185"
+  integrity sha512-oHLSer2qXT4M9ZjnYX9pTa8s6bPJV4VdWWGEftsrFI5+WWjou701T3PlzhouKdQLoQzCz+JbkHNaj/AYXskthA==
   dependencies:
     "@babel/code-frame" "^7.10.0"
     "@html-validate/stylish" "^1.0.0"
     "@sidvind/better-ajv-errors" "^0.8.0"
     acorn-walk "^8.0.0"
     ajv "^7.0.0"
-    chalk "^4.0.0"
     deepmerge "^4.2.0"
     espree "^7.3.0"
     glob "^7.1.0"
     ignore "^5.0.0"
     json-merge-patch "^1.0.0"
+    kleur "^4.1.0"
     minimist "^1.2.0"
     prompts "^2.0.0"
 
@@ -12675,6 +12675,11 @@ kleur@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
+
+kleur@^4.1.0:
+  version "4.1.4"
+  resolved "https://registry.yarnpkg.com/kleur/-/kleur-4.1.4.tgz#8c202987d7e577766d039a8cd461934c01cda04d"
+  integrity sha512-8QADVssbrFjivHWQU7KkMgptGTl6WAcSdlbBPY4uNF+mWr6DGcKrvY2w4FQJoXch7+fKMjj0dRrL75vk3k23OA==
 
 klona@^2.0.4:
   version "2.0.4"
