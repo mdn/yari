@@ -67,22 +67,23 @@ const CSP_DIRECTIVES = [
     [
       "'report-sample'",
       "'self'",
-      "https://cdn.speedcurve.com/js/lux.js",
+      "cdn.speedcurve.com/js/lux.js",
       "'sha256-q7cJjDqNO2e1L5UltvJ1LhvnYN7yJXgGO7b6h9xkL1o='", // LUX
-      "https://www.google-analytics.com/analytics.js",
-      "https://www.google-analytics.com/analytics_debug.js",
+      "www.google-analytics.com/analytics.js",
+      "www.google-analytics.com/analytics_debug.js",
       "'sha256-JEt9Nmc3BP88wxuTZm9aKNu87vEgGmKW1zzy/vb1KPs='", // polyfill check
-      "https://polyfill.io/v3/polyfill.min.js",
+      "polyfill.io/v3/polyfill.min.js",
     ].join(" "),
+  "script-src-elem 'self' cdnjs.cloudflare.com 'sha256-JEt9Nmc3BP88wxuTZm9aKNu87vEgGmKW1zzy/vb1KPs='", // polyfill check
   "style-src 'report-sample' 'self' 'unsafe-inline'",
   "object-src 'none'",
   "base-uri 'self'",
   "connect-src 'self'",
   "font-src 'self'",
-  "frame-src 'self' https://interactive-examples.mdn.mozilla.net https://mdn.github.io https://yari-demos.prod.mdn.mozit.cloud https://mdn.mozillademos.org https://yari-demos.stage.mdn.mozit.cloud",
-  "img-src 'self' https://*.githubusercontent.com https://*.googleusercontent.com https://lux.speedcurve.com",
+  "frame-src 'self' interactive-examples.mdn.mozilla.net mdn.github.io yari-demos.prod.mdn.mozit.cloud mdn.mozillademos.org yari-demos.stage.mdn.mozit.cloud jsfiddle.net www.youtube-nocookie.com",
+  "img-src 'self' *.githubusercontent.com *.googleusercontent.com lux.speedcurve.com mdn.mozillademos.org www.bluegriffon.com interactive-examples.mdn.mozilla.net wikipedia.org",
   "manifest-src 'self'",
-  "media-src 'self'",
+  "media-src 'self' archive.org videos.cdn.mozilla.net",
   "worker-src 'none'",
   "report-uri /csp-violation-capture",
 ]
