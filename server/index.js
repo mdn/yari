@@ -91,16 +91,19 @@ app.post("/:locale/users/account/signup", proxy);
 // See https://github.com/chimurai/http-proxy-middleware/issues/40#issuecomment-163398924
 app.use(express.urlencoded({ extended: true }));
 
+const missingos = new Map();
 app.post(
   "/csp-violation-capture",
   express.json({ type: "application/csp-report" }),
   (req, res) => {
     const report = req.body["csp-report"];
     console.warn(
-      "CSP violation for directive",
-      report["violated-directive"],
-      "which blocked:",
-      report["blocked-uri"]
+      chalk.yellow(
+        "CSP violation for directive",
+        report["violated-directive"],
+        "which blocked:",
+        report["blocked-uri"]
+      )
     );
     res.sendStatus(200);
   }
