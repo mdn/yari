@@ -43,9 +43,17 @@ exports.handler = async (event) => {
     ];
   }
 
-  response.headers["content-security-policy-report-only"] = [
-    { key: "Content-Security-Policy-Report-Only", value: CSP_DIRECTIVES },
-  ];
+  const contentType = response.headers["content-type"];
+  if (
+    contentType &&
+    contentType[0] &&
+    typeof contentType[0].value == "string" &&
+    contentType[0].value.startsWith("text/html")
+  ) {
+    response.headers["content-security-policy-report-only"] = [
+      { key: "Content-Security-Policy-Report-Only", value: CSP_DIRECTIVES },
+    ];
+  }
 
   return response;
 };
