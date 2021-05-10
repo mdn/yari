@@ -57,7 +57,7 @@ module.exports = [
 
   [
     {
-      is: ["span", "small", "dfn"],
+      is: ["span", "small"],
       canHave: ["id"],
       canHaveClass: [
         "pl-s",
@@ -136,7 +136,7 @@ module.exports = [
     { is: "li", canHave: "id" },
     (node, t) => {
       const content = wrap(t(node, { shouldWrap: true }));
-      return h(node, "listItem", { spread: content.length > 1 }, content);
+      return h(node, "listItem", { spread: false }, content);
     },
   ],
 
@@ -243,26 +243,4 @@ module.exports = [
       { type: "text", value: '"' },
     ],
   ],
-
-  // TODO TBD
-  ["caption", (node, t) => h(node, "paragraph", {}, t(node))],
-
-  // <TODO> TBD
-  ["sub", (node) => h(node, "html", {}, toHtml(node))],
-  ["var", (node) => h(node, "html", {}, toHtml(node))],
-  ["sup", (node) => h(node, "html", {}, toHtml(node))],
-  ["dl", (node) => h(node, "html", {}, toHtml(node))],
-  [
-    { hasClass: "note", canHaveClass: "notecard" },
-    (node) => h(node, "html", {}, toHtml(node)),
-  ],
-  [
-    { hasClass: "notecard", canHaveClass: "warning" },
-    (node) => h(node, "html", {}, toHtml(node)),
-  ],
-  [{ hasClass: "warning" }, (node) => h(node, "html", {}, toHtml(node))],
-
-  [{ hasClass: "seoSummary" }, (node) => h(node, "html", {}, toHtml(node))],
-  [{ hasClass: "summary" }, (node) => h(node, "html", {}, toHtml(node))],
-  // </TODO>
 ];

@@ -128,8 +128,10 @@ function toCells(children, info) {
 
 // TODO catching errors at different element levels, i.e. <td style=...> catch from <table>
 module.exports = [
+  [{ is: "caption" }, (node, t) => t(node)],
+
   [
-    { is: "table", canHaveClass: "standard-table" },
+    { is: "table" },
     (node, t) => {
       const info = inspect(node);
       return h(node, "table", { align: info.align }, toRows(t(node), info));
