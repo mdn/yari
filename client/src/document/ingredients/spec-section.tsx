@@ -17,37 +17,6 @@ export function SpecificationSection({
   }>;
   query: string;
 }) {
-  function TableRow(props) {
-    const spec = props.specification;
-
-    let shortTitle = "";
-    if (spec.title !== spec.shortTitle) {
-      shortTitle = `(${spec.shortTitle})`;
-    }
-
-    let anchor;
-    const hasAnchor = spec.bcdSpecificationURL.includes("#");
-    if (hasAnchor) {
-      anchor = (
-        <span>
-          {" "}
-          <br />{" "}
-          <small> # {`${spec.bcdSpecificationURL.split("#")[1]}`} </small>{" "}
-        </span>
-      );
-    }
-
-    return (
-      <tr key={spec.bcdSpecificationURL}>
-        <td>
-          <a href={spec.bcdSpecificationURL}>
-            {spec.title} {shortTitle} {anchor}
-          </a>
-        </td>
-      </tr>
-    );
-  }
-
   return (
     <>
       {title && !isH3 && <DisplayH2 id={id} title={title} />}
@@ -61,8 +30,21 @@ export function SpecificationSection({
             </tr>
           </thead>
           <tbody>
-            {specifications.map((specification) => (
-              <TableRow specification={specification} />
+            {specifications.map((spec) => (
+              <tr key={spec.bcdSpecificationURL}>
+                <td>
+                  <a href={spec.bcdSpecificationURL}>
+                    {spec.title}{" "}
+                    {spec.title !== spec.shortTitle && `(${spec.shortTitle})`}
+                    <br />
+                    {spec.bcdSpecificationURL.includes("#") && (
+                      <small>
+                        # {`${spec.bcdSpecificationURL.split("#")[1]}`}
+                      </small>
+                    )}
+                  </a>
+                </td>
+              </tr>
             ))}
           </tbody>
         </table>
