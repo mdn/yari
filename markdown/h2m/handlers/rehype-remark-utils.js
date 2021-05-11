@@ -58,7 +58,7 @@ const split = (node) =>
 // This is needed if a fragment is given, which could just be a sentence, and
 // doesn’t need a wrapper paragraph.
 const needed = (nodes) =>
-  nodes.some(
+  (nodes || []).some(
     (node) => !phrasing(node) || (node.children && needed(node.children))
   );
 

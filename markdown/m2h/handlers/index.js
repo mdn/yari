@@ -73,6 +73,42 @@ function all(h, parent) {
   return values;
 }
 
+function wrap(nodes, loose) {
+  var result = [];
+  var index = -1;
+
+  if (loose) {
+    result.push(u("text", "\n"));
+  }
+
+  while (++index < nodes.length) {
+    if (index) result.push(u("text", "\n"));
+    result.push(nodes[index]);
+  }
+
+  if (loose && nodes.length > 0) {
+    result.push(u("text", "\n"));
+  }
+
+  return result;
+}
+
+function getNotecardType(node) {
+  if (!node.children) {
+    return null;
+  }
+  const [child] = node.children;
+  if (!child || !child.children) {
+    return null;
+  }
+  const [grandChild] = child.children;
+  if (grandChild.type != "strong" || !grandChild.children) {
+    return null;
+  }
+  const type = grandChild.children[0].value.replace(":", "").toLowerCase();
+  return type == "warning" || type == "note" ? type : null;
+}
+
 module.exports = {
   code,
   paragraph(h, node) {
@@ -88,5 +124,17 @@ module.exports = {
     }
 
     return h(node, "p", all(h, node));
+  },
+  blockquote(h, node) {
+    const type = getNotecardType(node);
+    if (type) {
+      return h(
+        node,
+        "div",
+        { className: ["notecard", type] },
+        wrap(all(h, node), true)
+      );
+    }
+    return h(node, "blockquote", wrap(all(h, node), true));
   },
 };

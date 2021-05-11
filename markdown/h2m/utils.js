@@ -1,4 +1,4 @@
-const h = (node, type, props, children) => ({
+const h = (node, type, children, props = {}) => ({
   type,
   ...props,
   ...(typeof children === "string"

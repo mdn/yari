@@ -134,16 +134,16 @@ module.exports = [
     { is: "table" },
     (node, t) => {
       const info = inspect(node);
-      return h(node, "table", { align: info.align }, toRows(t(node), info));
+      return h(node, "table", toRows(t(node), info), { align: info.align });
     },
   ],
 
   [["thead", "tbody"], (node, t) => t(node)],
 
-  ["tr", (node, t) => h(node, "tableRow", {}, t(node))],
+  ["tr", (node, t) => h(node, "tableRow", t(node))],
 
   [
     ["th", "td"],
-    (node, t) => h(node, "tableCell", {}, t(node, { shouldWrap: true })),
+    (node, t) => h(node, "tableCell", t(node, { shouldWrap: true })),
   ],
 ];

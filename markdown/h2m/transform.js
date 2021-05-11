@@ -74,9 +74,9 @@ function transformNode(node, opts = {}) {
   function transformChildren(node, subOpts = {}) {
     const newOpts = { ...opts, ...subOpts };
     if (node.value) {
-      return h(node, "text", {}, wrapText(node.value, newOpts));
+      return h(node, "text", wrapText(node.value, newOpts));
     } else {
-      return (node.children || [])
+      return (Array.isArray(node) ? node : node.children || [])
         .map((child) => {
           const [transformed, childUnhandled] = transformNode(child, newOpts);
           unhandled.push(...childUnhandled);
@@ -111,7 +111,7 @@ function transformNode(node, opts = {}) {
     throw new UnexpectedElementError(node);
   }
 
-  return [transformed || h(node, "html", {}, toHtml(node)), unhandled];
+  return [transformed || h(node, "html", toHtml(node)), unhandled];
 }
 
 function toMdast(tree) {
