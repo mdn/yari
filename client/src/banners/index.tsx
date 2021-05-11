@@ -1,6 +1,8 @@
-import React, { Suspense, lazy } from "react";
+import * as React from "react";
+import { useLocation } from "react-router";
 
 import { useUserData } from "../user-context";
+import { ENABLE_MDNPLUSPLUS } from "../constants";
 
 // We may or may not load any active banner. But if there's a small chance
 // that we might, it's best practice to not have to lazy-load the CSS
@@ -10,8 +12,9 @@ import { useUserData } from "../user-context";
 import "./banner.scss";
 
 // import { COMMON_SURVEY_ID } from "./ids";
+import { MDN_PLUSPLUS_IDv1 } from "./ids";
 
-const ActiveBanner = lazy(() => import("./active-banner"));
+const ActiveBanner = React.lazy(() => import("./active-banner"));
 
 // Set a localStorage key with a timestamp the specified number of
 // days into the future. When the user dismisses a banner we use this
@@ -58,12 +61,52 @@ function isEmbargoed(id: string) {
   }
 }
 
+function isExclusionPathname(id: string, pathname: string) {
+  if (id === MDN_PLUSPLUS_IDv1) {
+    return (
+      pathname.includes("/mdn++") ||
+      pathname.includes("/signin") ||
+      pathname.includes("/signup")
+    );
+  }
+  return false;
+}
+
+function isExclusionGeoLocation(id: string, country: string) {
+  if (id === MDN_PLUSPLUS_IDv1) {
+    return country !== "United States";
+  }
+  return false;
+}
+
+function isRandomlyIncluded(id: string, chancePercentage: number) {
+  try {
+    const key = `banner.${id}.chance`;
+    const previous = localStorage.getItem(key);
+    if (previous) {
+      // The dice has been thrown before
+      return JSON.parse(previous);
+    }
+    const include = Math.random() < chancePercentage / 100;
+    localStorage.setItem(key, JSON.stringify(include));
+    return include;
+  } catch (error) {
+    // If localStorage isn't working, always bail negatively.
+  }
+  return false;
+}
+
 export function Banner() {
   const userData = useUserData();
+  const location = useLocation();
 
+  // Never return true if the whoami hasn't resolved yet, anonymous or not.
   if (!userData) {
     return null;
   }
+
+  // The order of the if statements is important and it's our source of
+  // truth about which banner is "more important" than the other.
 
   // The MDN_PLUSPLUS_IDv(N) banner depends on the following logic:
   // 0. Is the banner not disabled by an environment variable
@@ -73,17 +116,30 @@ export function Banner() {
   // 4. Have you not dismissed it previously
   // 5. Have you seen a different MDN_PLUSPLUS_IDvN banner before
   // 6. Is your locale en-US?
-  console.log(
-    "REACT_APP_ENABLE_MDNPLUSPLUS",
-    process.env.REACT_APP_ENABLE_MDNPLUSPLUS
-  );
+  if (
+    ENABLE_MDNPLUSPLUS &&
+    !isExclusionPathname(MDN_PLUSPLUS_IDv1, location.pathname) &&
+    !isExclusionGeoLocation(MDN_PLUSPLUS_IDv1, userData.geo.country) &&
+    isRandomlyIncluded(MDN_PLUSPLUS_IDv1, 10) &&
+    !isEmbargoed(MDN_PLUSPLUS_IDv1)
+  ) {
+    return (
+      <React.Suspense fallback={null}>
+        <ActiveBanner
+          id={MDN_PLUSPLUS_IDv1}
+          onDismissed={() => {
+            setEmbargoed(MDN_PLUSPLUS_IDv1, 7);
+          }}
+        />
+      </React.Suspense>
+    );
+  }
 
+  // THIS CODE IS LEFT COMMENTED-OUT UNTIL WE'RE CERTAIN WE'RE NOT GOING TO USE THIS.
+  // IT'S KEPT AS REMINDER HOW TO IMPLEMENT THESE.
   // const isEnabled = (id: string) =>
   //   (userData.waffle.flags[id] || userData.waffle.switches[id]) &&
   //   !isEmbargoed(id);
-
-  // // The order of the if statements is important and it's our source of
-  // // truth about which banner is "more important" than the other.
 
   // if (isEnabled(COMMON_SURVEY_ID)) {
   //   return (

@@ -43,7 +43,5 @@ export const ENABLE_MDNPLUSPLUS = JSON.parse(
     JSON.stringify(process.env.NODE_ENV === "development")
 );
 
-console.log(
-  "IN CONSTANTS:process.env.REACT_APP_ENABLE_MDNPLUSPLUS==",
-  process.env.REACT_APP_ENABLE_MDNPLUSPLUS
-);
+export const DEFAULT_GEO_COUNTRY =
+  process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";

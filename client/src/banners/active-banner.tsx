@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import * as React from "react";
 
 import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 // import { CATEGORY_LEARNING_SURVEY, useGA } from "../ga-context";
@@ -40,7 +40,7 @@ export type BannerProps = {
 };
 
 function Banner(props: BannerProps) {
-  const [isDismissed, setDismissed] = useState(false);
+  const [isDismissed, setDismissed] = React.useState(false);
   const containerClassNames = props.classname
     ? `mdn-cta-container ${props.classname}`
     : "mdn-cta-container";
@@ -126,7 +126,7 @@ function MDNPlusPlusBanner({ onDismissed }: { onDismissed: () => void }) {
       copy={"Summer is coming."}
       cta={"Check it out"}
       url={`/${locale}/mdn++`}
-      newWindow
+      newWindow={false}
       onDismissed={onDismissed}
       onCTAClick={() => {
         ga("send", {
