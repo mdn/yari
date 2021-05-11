@@ -174,11 +174,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   const locale = useLocale();
   const [searchParams] = useSearchParams();
 
-  const [
-    searchIndex,
-    searchIndexError,
-    initializeSearchIndex,
-  ] = useSearchIndex();
+  const [searchIndex, searchIndexError, initializeSearchIndex] =
+    useSearchIndex();
 
   const [isFocused, setIsFocused] = useState(false);
 

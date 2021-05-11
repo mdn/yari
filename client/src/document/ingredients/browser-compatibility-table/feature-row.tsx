@@ -33,12 +33,8 @@ function getSupportClassName(
     return "unknown";
   }
 
-  let {
-    flags,
-    version_added,
-    version_removed,
-    partial_implementation,
-  } = getFirst(support);
+  let { flags, version_added, version_removed, partial_implementation } =
+    getFirst(support);
 
   let className;
   if (version_added === null) {
@@ -286,10 +282,9 @@ function getNotes(
             }
           : null,
         item.notes
-          ? (Array.isArray(item.notes)
-              ? item.notes
-              : [item.notes]
-            ).map((note) => ({ iconName: "footnote", label: note }))
+          ? (Array.isArray(item.notes) ? item.notes : [item.notes]).map(
+              (note) => ({ iconName: "footnote", label: note })
+            )
           : null,
         item.alternative_name
           ? {

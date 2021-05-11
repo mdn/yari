@@ -685,11 +685,8 @@ program
   })
   .action(
     tryOrExit(async ({ options, logger }) => {
-      const {
-        rowCount,
-        popularities,
-        pageviews,
-      } = await runMakePopularitiesFile(options);
+      const { rowCount, popularities, pageviews } =
+        await runMakePopularitiesFile(options);
       logger.info(chalk.green(`Parsed ${rowCount.toLocaleString()} rows.`));
 
       const numberKeys = Object.keys(popularities).length;
