@@ -3,7 +3,7 @@ const trim = require("trim-trailing-lines");
 
 const { h, trimTrailingNewLines, wrapText } = require("../utils");
 const { code, spread, wrap } = require("./rehype-remark-utils");
-const notecards = require("./notecards");
+const notecards = require("./cards");
 const tables = require("./tables");
 const { toText } = require("./to-text");
 

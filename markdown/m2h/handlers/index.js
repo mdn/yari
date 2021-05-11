@@ -106,7 +106,7 @@ function getNotecardType(node) {
     return null;
   }
   const type = grandChild.children[0].value.replace(":", "").toLowerCase();
-  return type == "warning" || type == "note" ? type : null;
+  return type == "warning" || type == "note" || type == "callout" ? type : null;
 }
 
 module.exports = {
@@ -128,10 +128,14 @@ module.exports = {
   blockquote(h, node) {
     const type = getNotecardType(node);
     if (type) {
+      const isCallout = type == "callout";
+      if (isCallout) {
+        node.children[0].children.splice(0, 1);
+      }
       return h(
         node,
         "div",
-        { className: ["notecard", type] },
+        { className: isCallout ? [type] : ["notecard", type] },
         wrap(all(h, node), true)
       );
     }

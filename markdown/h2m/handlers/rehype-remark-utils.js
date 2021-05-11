@@ -5,6 +5,12 @@ const trim = require("trim-trailing-lines");
 
 const { h, wrapText } = require("../utils");
 
+/*
+These functions are taken from https://github.com/syntax-tree/hast-util-to-mdast
+Unfortunately the library does not export those functions, so I needed to copy them.
+Some have been slightly refactored for readability.
+ */
+
 const spread = (children) =>
   children.length > 1 && children.some((child) => child.spread);
 
