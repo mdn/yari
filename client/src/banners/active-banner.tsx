@@ -1,11 +1,12 @@
 import * as React from "react";
 
 import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
-// import { CATEGORY_LEARNING_SURVEY, useGA } from "../ga-context";
 import { useGA } from "../ga-context";
 // import { COMMON_SURVEY_ID } from "./ids";
 import { MDN_PLUSPLUS_IDv1 } from "./ids";
 import { useLocale } from "../hooks";
+
+// const CATEGORY_LEARNING_SURVEY = "learning web development";
 
 // The <Banner> component displays a simple call-to-action banner at
 // the bottom of the window. The following props allow it to be customized.
