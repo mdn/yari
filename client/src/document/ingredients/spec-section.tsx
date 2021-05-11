@@ -34,9 +34,14 @@ export function SpecificationSection({
               <tr key={spec.bcdSpecificationURL}>
                 <td>
                   <a href={spec.bcdSpecificationURL}>
-                    {spec.title} ({spec.shortTitle})
-                    <br />{" "}
-                    <small>#{spec.bcdSpecificationURL.split("#")[1]}</small>
+                    {spec.title}{" "}
+                    {spec.title !== spec.shortTitle && `(${spec.shortTitle})`}
+                    <br />
+                    {spec.bcdSpecificationURL.includes("#") && (
+                      <small>
+                        # {`${spec.bcdSpecificationURL.split("#")[1]}`}
+                      </small>
+                    )}
                   </a>
                 </td>
               </tr>

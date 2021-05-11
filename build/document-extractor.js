@@ -420,7 +420,9 @@ function _addSingleSpecialSection($) {
       .map((specURL) => {
         const spec = specs.find(
           (spec) =>
-            specURL.startsWith(spec.url) || specURL.startsWith(spec.nightly.url)
+            specURL.startsWith(spec.url) ||
+            specURL.startsWith(spec.nightly.url) ||
+            specURL.startsWith(spec.series.nightlyUrl)
         );
         if (spec) {
           // We only want to return exactly the keys that we will use in the
