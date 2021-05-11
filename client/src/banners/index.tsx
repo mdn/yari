@@ -9,7 +9,7 @@ import { useUserData } from "../user-context";
 // <ActiveBanner>, at least the CSS will be ready.
 import "./banner.scss";
 
-import { COMMON_SURVEY_ID } from "./ids";
+// import { COMMON_SURVEY_ID } from "./ids";
 
 const ActiveBanner = lazy(() => import("./active-banner"));
 
@@ -65,24 +65,37 @@ export function Banner() {
     return null;
   }
 
-  const isEnabled = (id: string) =>
-    (userData.waffle.flags[id] || userData.waffle.switches[id]) &&
-    !isEmbargoed(id);
+  // The MDN_PLUSPLUS_IDv(N) banner depends on the following logic:
+  // 0. Is the banner not disabled by an environment variable
+  // 1. Are you not on the MDN++ page or sign in/up already.
+  // 2. Are you in the United States
+  // 3. Are you part of the 10% who are randomly selected
+  // 4. Have you not dismissed it previously
+  // 5. Have you seen a different MDN_PLUSPLUS_IDvN banner before
+  // 6. Is your locale en-US?
+  console.log(
+    "REACT_APP_ENABLE_MDNPLUSPLUS",
+    process.env.REACT_APP_ENABLE_MDNPLUSPLUS
+  );
 
-  // The order of the if statements is important and it's our source of
-  // truth about which banner is "more important" than the other.
+  // const isEnabled = (id: string) =>
+  //   (userData.waffle.flags[id] || userData.waffle.switches[id]) &&
+  //   !isEmbargoed(id);
 
-  if (isEnabled(COMMON_SURVEY_ID)) {
-    return (
-      <Suspense fallback={null}>
-        <ActiveBanner
-          id={COMMON_SURVEY_ID}
-          onDismissed={() => {
-            setEmbargoed(COMMON_SURVEY_ID, 5);
-          }}
-        />
-      </Suspense>
-    );
-  }
+  // // The order of the if statements is important and it's our source of
+  // // truth about which banner is "more important" than the other.
+
+  // if (isEnabled(COMMON_SURVEY_ID)) {
+  //   return (
+  //     <Suspense fallback={null}>
+  //       <ActiveBanner
+  //         id={COMMON_SURVEY_ID}
+  //         onDismissed={() => {
+  //           setEmbargoed(COMMON_SURVEY_ID, 5);
+  //         }}
+  //       />
+  //     </Suspense>
+  //   );
+  // }
   return null;
 }

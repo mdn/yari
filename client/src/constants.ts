@@ -42,3 +42,8 @@ export const ENABLE_MDNPLUSPLUS = JSON.parse(
   process.env.REACT_APP_ENABLE_MDNPLUSPLUS ||
     JSON.stringify(process.env.NODE_ENV === "development")
 );
+
+console.log(
+  "IN CONSTANTS:process.env.REACT_APP_ENABLE_MDNPLUSPLUS==",
+  process.env.REACT_APP_ENABLE_MDNPLUSPLUS
+);

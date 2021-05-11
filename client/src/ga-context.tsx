@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 
 export type GAFunction = (...any) => void;
 
-export const CATEGORY_LEARNING_SURVEY = "learning web development";
+// export const CATEGORY_LEARNING_SURVEY = "learning web development";
 
 const GA_SESSION_STORAGE_KEY = "ga";
 
