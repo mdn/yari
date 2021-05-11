@@ -40,13 +40,8 @@ function syncAllTranslatedContent(locale) {
   };
 
   for (const f of files) {
-    const {
-      moved,
-      conflicting,
-      redirect,
-      orphaned,
-      followed,
-    } = syncTranslatedContent(f, locale);
+    const { moved, conflicting, redirect, orphaned, followed } =
+      syncTranslatedContent(f, locale);
     if (redirect) {
       redirects.set(redirect[0], redirect[1]);
     }
