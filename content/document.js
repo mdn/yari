@@ -88,33 +88,41 @@ function extractLocale(folder) {
   return locale;
 }
 
-function saveFile(
-  filePath,
-  rawBody,
-  { slug, title, translation_of, tags, translation_of_original, original_slug }
-) {
-  if (slug.includes("#")) {
+function saveFile(filePath, rawBody, metadata, frontMatterKeys = null) {
+  const requiredFrontMatterKeys = ["title", "slug"];
+  const optionalFrontMatterKeys = [
+    "tags",
+    "translation_of",
+    "translation_of_original",
+    "original_slug",
+  ];
+
+  const saveMetadata = {};
+
+  for (const key of requiredFrontMatterKeys) {
+    if (!metadata[key]) {
+      throw new Error(`'${key}' metadata must be truthy`);
+    }
+    saveMetadata[key] = metadata[key];
+  }
+  for (const key of optionalFrontMatterKeys) {
+    if (metadata[key]) {
+      saveMetadata[key] = metadata[key];
+    }
+  }
+  // If the 'frontMatterKeys' is passed, the caller knows exactly which other
+  // fields are expected from the metadata. For example 'browser-compat'.
+  // These are not necessarily "required" but key should definitely be set.
+  for (const key of frontMatterKeys || []) {
+    saveMetadata[key] = metadata[key];
+  }
+
+  // Special extra sanity check
+  if (metadata.slug.includes("#")) {
     throw new Error("newSlug can not contain the '#' character");
   }
-  const metadata = {
-    title,
-    slug,
-  };
-  if (tags) {
-    metadata.tags = tags;
-  }
-  if (translation_of) {
-    metadata.translation_of = translation_of;
-  }
-  if (translation_of_original) {
-    // This will only make sense during the period where we're importing from
-    // MySQL to disk. Once we're over that period we can delete this if-statement.
-    metadata.translation_of_original = translation_of_original;
-  }
-  if (original_slug) {
-    metadata.original_slug = original_slug;
-  }
-  const combined = `---\n${yaml.dump(metadata)}---\n${rawBody.trim()}\n`;
+
+  const combined = `---\n${yaml.dump(saveMetadata)}---\n${rawBody.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 
@@ -359,6 +367,13 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
   const fullMetadata = {
     metadata: {
       ...metadata,
+      // This is our chance to record and remember which keys were actually
+      // dug up from the front-matter.
+      // It matters because the keys in front-matter are arbitrary.
+      // Meaning, if a document contains `foo: bar` as a front-matter key/value
+      // we need to take note of that and make sure we preserve that if we
+      // save the metadata back (e.g. fixable flaws).
+      frontMatterKeys: Object.keys(metadata),
       locale,
       popularity: getPopularities().get(url) || 0.0,
       modified,
@@ -399,15 +414,22 @@ function update(url, rawBody, metadata) {
     document.isMarkdown ? getMarkdownPath(folder) : getHTMLPath(folder)
   );
 
+  const { frontMatterKeys } = metadata;
+
   if (
     isNewSlug ||
     document.rawBody !== rawBody ||
     document.metadata.title !== metadata.title
   ) {
-    saveFile(indexPath, rawBody, {
-      ...document.metadata,
-      ...metadata,
-    });
+    saveFile(
+      indexPath,
+      rawBody,
+      {
+        ...document.metadata,
+        ...metadata,
+      },
+      frontMatterKeys
+    );
     if (isNewSlug) {
       updateWikiHistory(
         path.join(root, metadata.locale.toLowerCase()),
