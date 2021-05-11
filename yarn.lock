@@ -10387,6 +10387,14 @@ hast-util-is-element@^1.0.0, hast-util-is-element@^1.1.0:
   resolved "https://registry.yarnpkg.com/hast-util-is-element/-/hast-util-is-element-1.1.0.tgz#3b3ed5159a2707c6137b48637fbfe068e175a425"
   integrity sha512-oUmNua0bFbdrD/ELDSSEadRVtWZOf3iF6Lbv81naqsIV99RnSCieTbWuWCY8BAeEfKJTKl0gRdokv+dELutHGQ==
 
+hast-util-is-element@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/hast-util-is-element/-/hast-util-is-element-2.1.0.tgz#ecdc0c00c06f5b4de8ea27b9084cb75d1326a7b1"
+  integrity sha512-tg5yLbnC4TYONeeHIF7n0Jtstp+4J0bcBFn+R6wYoZzeHSIp5sl9ApfqGI2mxKtEXi4DEhTssPli6ppGl5PGqg==
+  dependencies:
+    "@types/hast" "^2.0.0"
+    "@types/unist" "^2.0.0"
+
 hast-util-parse-selector@^2.0.0:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/hast-util-parse-selector/-/hast-util-parse-selector-2.2.4.tgz#60c99d0b519e12ab4ed32e58f150ec3f61ed1974"
