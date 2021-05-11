@@ -300,3 +300,9 @@ button. We use this for previewing PR builds on the content site. Those pages ar
 built with flaw detection set to warn, but since you might be viewing the pages
 on a remote domain (e.g. `pr123.dev.content.mozit.cloud`) it doesn't make sense to
 present the "Fix fixable flaws" button for example.
+
+### `REACT_APP_ENABLE_MDNPLUSPLUS`
+
+**Default: `NODE_ENV==='development'`**
+
+Determines if the MDN++ SPA should be reachable or not.

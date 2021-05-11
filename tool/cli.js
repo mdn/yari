@@ -28,7 +28,9 @@ const {
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
 } = require("../build/constants");
+const { runArchive } = require("./archive");
 const { runMakePopularitiesFile } = require("./popularities");
+const { runOptimizeClientBuild } = require("./optimize-client-build");
 const kumascript = require("../kumascript");
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
@@ -409,8 +411,11 @@ program
       // Someplace to put the map into an object so it can be saved into `saveHistory`
       const allHistory = {};
       for (const [relPath, value] of map) {
-        allHistory[relPath] = value;
         const locale = relPath.split(path.sep)[0];
+        if (!VALID_LOCALES.has(locale)) {
+          continue;
+        }
+        allHistory[relPath] = value;
         if (!historyPerLocale[locale]) {
           historyPerLocale[locale] = {};
         }
@@ -584,6 +589,42 @@ program
       console.log(
         `In total, ${sumTotal} translations that share the same translation_of`
       );
+    })
+  )
+
+  .command("archive", "Render and copy to archived-content repo")
+  .option("--remove", "Also delete from active repos", { default: false })
+  .option(
+    "--redirect-to-github",
+    "Put in a redirect to browsing it on github.com/mdn/archived-content",
+    {
+      default: false,
+    }
+  )
+  .argument("<slugs...>", "slug trees (e.g. 'Mozilla/Virtualenv')")
+  .action(
+    tryOrExit(async ({ args, options, logger }) => {
+      if (!CONTENT_ARCHIVED_ROOT) {
+        throw new Error("CONTENT_ARCHIVED_ROOT not set");
+      }
+      if (!CONTENT_TRANSLATED_ROOT) {
+        throw new Error("CONTENT_TRANSLATED_ROOT not set");
+      }
+      const { slugs } = args;
+      const { verbose } = options;
+      const archivedResults = await runArchive(slugs, options);
+      if (verbose) {
+        for (const result of archivedResults) {
+          // console.log(result);
+          logger.info(
+            `${chalk.grey(result.document.fileInfo.path)} --> ${chalk.green(
+              result.folderPath
+            )} ${result.removed ? chalk.yellow(" also removed!") : ""}`
+          );
+        }
+      } else {
+        logger.info(`Archived ${archivedResults.length} documents`);
+      }
     })
   )
 
@@ -878,6 +919,34 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       console.log(
         `modified: ${countModified} | no-change: ${countNoChange} | skipped: ${countSkipped} | total: ${countTotal}`
       );
+    })
+  )
+
+  .command(
+    "optimize-client-build",
+    "After the client code has been built there are things to do that react-scripts can't."
+  )
+  .argument("<buildroot>", "directory where react-scripts built", {
+    default: path.join("client", "build"),
+  })
+  .action(
+    tryOrExit(async ({ args, options, logger }) => {
+      const { buildroot } = args;
+      const { results } = await runOptimizeClientBuild(buildroot);
+      if (options.verbose) {
+        for (const result of results) {
+          logger.info(`${result.filePath} -> ${result.hashedHref}`);
+        }
+      } else {
+        logger.info(
+          chalk.green(
+            `Hashed ${results.length} files in ${path.join(
+              buildroot,
+              "index.html"
+            )}`
+          )
+        );
+      }
     })
   );
 

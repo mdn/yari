@@ -19,6 +19,7 @@ import {
   BadPreTagFlaw,
   SectioningFlaw,
   HeadingLinksFlaw,
+  TranslationDifferenceFlaw,
   UnsafeHTMLFlaw,
 } from "../types";
 import "./flaws.scss";
@@ -284,6 +285,13 @@ function Flaws({
             return (
               <UnsafeHTML key="unsafe_html" flaws={doc.flaws.unsafe_html} />
             );
+          case "translation_differences":
+            return (
+              <TranslationDifferences
+                key="translation_differences"
+                flaws={doc.flaws.translation_differences}
+              />
+            );
           case "sectioning":
             return <Sectioning key="sectioning" flaws={doc.flaws.sectioning} />;
           default:
@@ -476,12 +484,14 @@ function BrokenLinks({
               {flaw.fixable && <FixableFlawBadge />}{" "}
               {opening && opening === key && <span>Opening...</span>}
               <br />
-              {flaw.suggestion && (
+              {flaw.suggestion ? (
                 <span>
                   <b>Suggestion:</b>
                   <ShowDiff before={flaw.href} after={flaw.suggestion} />
                 </span>
-              )}{" "}
+              ) : (
+                <code>{flaw.explanation}</code>
+              )}
             </li>
           );
         })}
@@ -1060,6 +1070,39 @@ function UnsafeHTML({ flaws }: { flaws: UnsafeHTMLFlaw[] }) {
             </li>
           );
         })}
+      </ul>
+    </div>
+  );
+}
+
+function TranslationDifferences({
+  flaws,
+}: {
+  flaws: TranslationDifferenceFlaw[];
+}) {
+  return (
+    <div className="flaw">
+      <h3>{humanizeFlawName("translation_differences")}</h3>
+      <ul>
+        {flaws.map((flaw, i) => (
+          <li key={flaw.id}>
+            {<b>{flaw.explanation}</b>}
+            {flaw.difference.explanationNotes &&
+              flaw.difference.explanationNotes.length > 0 && (
+                <ul className="explanation-notes">
+                  {flaw.difference.explanationNotes.map(
+                    (explanationNotes, i) => {
+                      return (
+                        <li key={`${explanationNotes}${i}`}>
+                          <code>{explanationNotes}</code>
+                        </li>
+                      );
+                    }
+                  )}
+                </ul>
+              )}
+          </li>
+        ))}
       </ul>
     </div>
   );

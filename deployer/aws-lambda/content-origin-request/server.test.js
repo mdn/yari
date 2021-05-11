@@ -207,3 +207,34 @@ describe("redirect double-slash prefix URIs", () => {
     expect(r.headers["location"]).toBe("/blablabla");
   });
 });
+
+describe("retired locale redirects", () => {
+  it("should 302 redirect a retired locale (accept-language)", async () => {
+    const r = await get("/", {
+      "Accept-language": "sv-SE",
+    });
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe("/en-US/");
+  });
+  it("should 302 redirect a retired locale (preferredlocale cookie)", async () => {
+    const r = await get("/docs/Web/HTTP", {
+      Cookie: "preferredlocale=it",
+    });
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe("/en-US/docs/Web/HTTP");
+  });
+  it("should 302 redirect a retired locale (no query string)", async () => {
+    const r = await get("/sv-SE/docs/Web/HTML");
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe(
+      "/en-US/docs/Web/HTML?retiredLocale=sv-SE"
+    );
+  });
+  it("should 302 redirect a retired locale (query string, improper locale)", async () => {
+    const r = await get("/BN/search?q=video");
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe(
+      "/en-US/search?retiredLocale=bn&q=video"
+    );
+  });
+});

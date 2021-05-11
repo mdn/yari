@@ -9,11 +9,13 @@ import { Doc } from "./types";
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
 import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
+import { SpecificationSection } from "./ingredients/spec-section";
 
 // Misc
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
 import { LanguageToggle } from "../ui/molecules/language-toggle";
+import { LocalizedContentNote } from "./molecules/localized-content-note";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
 import { MainContentContainer } from "../ui/atoms/page-content";
@@ -156,6 +158,10 @@ export function Document(props /* TODO: define a TS interface for this */) {
         </div>
       )}
 
+      {doc.isTranslated && (
+        <LocalizedContentNote isActive={doc.isActive} locale={locale} />
+      )}
+
       {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
       <MainContentContainer>
@@ -231,6 +237,10 @@ function RenderDocumentBody({ doc }) {
           key={`browser_compatibility${i}`}
           {...section.value}
         />
+      );
+    } else if (section.type === "specifications") {
+      return (
+        <SpecificationSection key={`specifications${i}`} {...section.value} />
       );
     } else {
       console.warn(section);
