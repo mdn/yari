@@ -2,12 +2,13 @@ import React from "react";
 import { Link, createSearchParams, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 
-import { CRUD_MODE, DEBUG_SEARCH_RESULTS } from "../constants";
+import { CRUD_MODE } from "../constants";
 import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
 
 import LANGUAGES_RAW from "../languages.json";
 import "./search-results.scss";
+import { useGA } from "../ga-context";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -77,6 +78,7 @@ class ServerOperationalError extends Error {
 }
 
 export default function SearchResults() {
+  const ga = useGA();
   const [searchParams] = useSearchParams();
   const locale = useLocale();
   // A call to `/api/v1/search` will default to mean the same thing as
@@ -102,6 +104,16 @@ export default function SearchResults() {
       } else if (!response.ok) {
         throw new Error(`${response.status} on ${url}`);
       }
+
+      // See docs/experiments/0001_site-search-x-cache.md
+      const xCacheHeaderValue = response.headers.get("x-cache");
+      ga("send", {
+        hitType: "event",
+        eventCategory: "Site-search X-Cache",
+        eventAction: url,
+        eventLabel: xCacheHeaderValue || "no value",
+      });
+
       return await response.json();
     },
     {
@@ -367,7 +379,7 @@ function Results({
                   <span className="summary">{document.summary}</span>
                 )}
               </p>
-              {DEBUG_SEARCH_RESULTS && (
+              {searchParams.get("debug") !== null && (
                 <span className="nerd-data">
                   <b>score:</b> <code>{document.score}</code>,{" "}
                   <b>popularity:</b> <code>{document.popularity}</code>,{" "}

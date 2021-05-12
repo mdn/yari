@@ -1,7 +1,17 @@
 <%
 var locale = env.locale;
 
-var text = mdn.localString({
+var note = mdn.localString({
+    "en-US": "Note:",
+    "de": "Hinweis:",
+    "es": "Nota:",
+    "fr": "Note:",
+    "ja": "注:",
+    "ko": "주의:",
+    "ru": "Примечание:",
+});
+
+var defaultText = mdn.localString({
   "en-US": "This feature is available in <a href=\"/" + locale + "/docs/Web/API/Web_Workers_API\">Web Workers</a>.",
   "zh-CN": "此特性在 <a href=\"/" + locale + "/docs/Web/API/Web_Workers_API\">Web Worker</a> 中可用。",
   "de": "Dieses Feature ist in <a href=\"/" + locale + "/docs/Web/API/Web_Workers_API\">Web Workers</a> verfügbar.",
@@ -12,5 +22,10 @@ var text = mdn.localString({
   "ru": "Эта возможность доступна в <a href=\"/ru/docs/Web/API/Web_Workers_API\">Web Workers</a>."
 });
 
+var text = $0 || defaultText;
+
 %>
-<%- await template("Note", [text]) %>
+
+<div class="notecard note">
+  <p><strong><%- note %></strong> <%- text %></p>
+</div>

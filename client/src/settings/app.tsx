@@ -51,7 +51,7 @@ export default function SettingsApp({ ...appProps }) {
   const userData = useUserData();
 
   const { data, error } = useSWR<UserSettings | null, Error | null>(
-    userData ? "/api/v1/settings" : null,
+    userData && userData.isAuthenticated ? "/api/v1/settings" : null,
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
@@ -179,10 +179,8 @@ function Settings({
 
   const [sent, setSent] = React.useState(false);
   const [sendError, setSendError] = React.useState<Error | null>(null);
-  const [
-    validationErrors,
-    setValidationErrors,
-  ] = React.useState<ValidationErrors | null>(null);
+  const [validationErrors, setValidationErrors] =
+    React.useState<ValidationErrors | null>(null);
 
   async function sendSettings() {
     const formData = new URLSearchParams();

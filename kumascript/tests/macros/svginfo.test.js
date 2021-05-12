@@ -47,12 +47,8 @@ function joinPathsForUrl(...chunks) {
 // @param str     <string>  The string to transform
 // @param upFirst <boolean> Indicate is the first letter must be upper cased (true by default)
 // @return <string>
-function camelToSnake(str, upFirst = true) {
-  str = str.replace(/[A-Z]/g, (match) => `_${match.toLowerCase()}`);
-
-  if (upFirst) str = str.replace(/^./, (match) => match.toUpperCase());
-
-  return str;
+function camelToSnake(str) {
+  return str.replace(/[A-Z]/g, (match) => `_${match.toLowerCase()}`);
 }
 
 // Test utilities

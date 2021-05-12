@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useSWR from "swr";
 
-import { CRUD_MODE } from "../constants";
+import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../constants";
 import { useLocale } from "../hooks";
 import { PageContentContainer } from "../ui/atoms/page-content";
 
@@ -146,10 +146,8 @@ export default function Sitemap() {
   }
 
   const [opening, setOpening] = React.useState<string | null>(null);
-  const [
-    editorOpeningError,
-    setEditorOpeningError,
-  ] = React.useState<Error | null>(null);
+  const [editorOpeningError, setEditorOpeningError] =
+    React.useState<Error | null>(null);
   React.useEffect(() => {
     let unsetOpeningTimer: ReturnType<typeof setTimeout>;
     if (opening) {
@@ -399,6 +397,8 @@ function Breadcrumb({
   const root = pathname.split("/").slice(0, 2);
   root.push("_sitemap");
 
+  const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
+
   return (
     <>
       <ul className="breadcrumb">
@@ -427,7 +427,7 @@ function Breadcrumb({
               <Link to={thisDoc.url}>
                 <em>{thisDoc.title}</em>
               </Link>{" "}
-              {CRUD_MODE && (
+              {CRUD_MODE && !isReadOnly && (
                 <small>
                   (
                   <a
@@ -467,6 +467,7 @@ function ShowTree({
   openInYourEditor: (url: string) => void;
 }) {
   const locale = useLocale();
+  const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
   return (
     <div className="tree">
       <ul>
@@ -492,17 +493,19 @@ function ShowTree({
                 <Link to={doc.url} title={`Go to: ${doc.title}`}>
                   View
                 </Link>
-                {" | "}
-                <Link
-                  to={doc.url}
-                  title={`Edit: ${doc.title}`}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    openInYourEditor(doc.url);
-                  }}
-                >
-                  Edit
-                </Link>
+                {!isReadOnly && " | "}
+                {!isReadOnly && (
+                  <Link
+                    to={doc.url}
+                    title={`Edit: ${doc.title}`}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      openInYourEditor(doc.url);
+                    }}
+                  >
+                    Edit
+                  </Link>
+                )}
                 )
               </small>
             </li>

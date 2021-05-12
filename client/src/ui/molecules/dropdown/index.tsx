@@ -1,6 +1,4 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
-import { useGA } from "../../../ga-context";
 
 import "./index.scss";
 
@@ -35,8 +33,7 @@ type DropdownProps = {
 };
 
 export default function Dropdown(props: DropdownProps) {
-  const ga = useGA();
-  const [showDropdownMenu, setShowDropdownMenu] = useState(false);
+  const [showDropdownMenu, setShowDropdownMenu] = React.useState(false);
 
   function hideDropdownMenuIfVisible() {
     if (showDropdownMenu) {
@@ -44,7 +41,7 @@ export default function Dropdown(props: DropdownProps) {
     }
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     document.addEventListener("keyup", (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         hideDropdownMenuIfVisible();
@@ -67,13 +64,6 @@ export default function Dropdown(props: DropdownProps) {
         aria-label={props.ariaLabel}
         onClick={() => {
           setShowDropdownMenu(!showDropdownMenu);
-        }}
-        onFocus={function (event) {
-          ga("send", {
-            hitType: "event",
-            eventCategory: "MozMenu",
-            eventAction: event.target.id,
-          });
         }}
       >
         {props.label}

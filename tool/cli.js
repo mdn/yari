@@ -28,7 +28,9 @@ const {
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
 } = require("../build/constants");
+const { runArchive } = require("./archive");
 const { runMakePopularitiesFile } = require("./popularities");
+const { runOptimizeClientBuild } = require("./optimize-client-build");
 const kumascript = require("../kumascript");
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
@@ -409,8 +411,11 @@ program
       // Someplace to put the map into an object so it can be saved into `saveHistory`
       const allHistory = {};
       for (const [relPath, value] of map) {
-        allHistory[relPath] = value;
         const locale = relPath.split(path.sep)[0];
+        if (!VALID_LOCALES.has(locale)) {
+          continue;
+        }
+        allHistory[relPath] = value;
         if (!historyPerLocale[locale]) {
           historyPerLocale[locale] = {};
         }
@@ -587,6 +592,42 @@ program
     })
   )
 
+  .command("archive", "Render and copy to archived-content repo")
+  .option("--remove", "Also delete from active repos", { default: false })
+  .option(
+    "--redirect-to-github",
+    "Put in a redirect to browsing it on github.com/mdn/archived-content",
+    {
+      default: false,
+    }
+  )
+  .argument("<slugs...>", "slug trees (e.g. 'Mozilla/Virtualenv')")
+  .action(
+    tryOrExit(async ({ args, options, logger }) => {
+      if (!CONTENT_ARCHIVED_ROOT) {
+        throw new Error("CONTENT_ARCHIVED_ROOT not set");
+      }
+      if (!CONTENT_TRANSLATED_ROOT) {
+        throw new Error("CONTENT_TRANSLATED_ROOT not set");
+      }
+      const { slugs } = args;
+      const { verbose } = options;
+      const archivedResults = await runArchive(slugs, options);
+      if (verbose) {
+        for (const result of archivedResults) {
+          // console.log(result);
+          logger.info(
+            `${chalk.grey(result.document.fileInfo.path)} --> ${chalk.green(
+              result.folderPath
+            )} ${result.removed ? chalk.yellow(" also removed!") : ""}`
+          );
+        }
+      } else {
+        logger.info(`Archived ${archivedResults.length} documents`);
+      }
+    })
+  )
+
   .command(
     "unarchive",
     "Move content from CONTENT_ARCHIVED_ROOT to CONTENT_ROOT"
@@ -634,37 +675,18 @@ program
 
   .command(
     "popularities",
-    "Convert a Google Analytics pageviews CSV into a popularities.json file"
+    "Convert an AWS Athena log aggregation CSV into a popularities.json file"
   )
-  .option(
-    "--outfile <path>",
-    "export from Google Analytics containing pageview counts",
-    {
-      default: path.join(CONTENT_ROOT, "popularities.json"),
-    }
-  )
-  .option(
-    "--max-uris <number>",
-    "export from Google Analytics containing pageview counts",
-    {
-      default: MAX_GOOGLE_ANALYTICS_URIS,
-    }
-  )
-  .argument("csvfile", "Google Analytics pageviews CSV file", {
-    validator: (value) => {
-      if (!fs.existsSync(value)) {
-        throw new Error(`${value} does not exist`);
-      }
-      return value;
-    },
+  .option("--outfile <path>", "output file", {
+    default: path.join(CONTENT_ROOT, "popularities.json"),
+  })
+  .option("--max-uris <number>", "limit to top <number> entries", {
+    default: MAX_GOOGLE_ANALYTICS_URIS,
   })
   .action(
-    tryOrExit(async ({ args, options, logger }) => {
-      const {
-        rowCount,
-        popularities,
-        pageviews,
-      } = await runMakePopularitiesFile(args.csvfile, options);
+    tryOrExit(async ({ options, logger }) => {
+      const { rowCount, popularities, pageviews } =
+        await runMakePopularitiesFile(options);
       logger.info(chalk.green(`Parsed ${rowCount.toLocaleString()} rows.`));
 
       const numberKeys = Object.keys(popularities).length;
@@ -822,7 +844,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       for (const document of documents.iter()) {
         countTotal++;
         console.group(`${document.fileInfo.path}:`);
-        const originalRawHTML = document.rawHTML;
+        const originalRawBody = document.rawBody;
         let [renderedHTML, flaws] = await renderOrRemoveMacros(document);
         if (flaws.length) {
           const fixableFlaws = flaws.filter((f) => f.redirectInfo);
@@ -844,13 +866,13 @@ if (Mozilla && !Mozilla.dntEnabled()) {
               );
               // Let's start fresh so we don't keep the "data-flaw-src"
               // attributes that may have been injected during the rendering.
-              document.rawHTML = originalRawHTML;
+              document.rawBody = originalRawBody;
               for (const flaw of fixableFlaws) {
                 const suggestion = flaw.macroSource.replace(
                   flaw.redirectInfo.current,
                   flaw.redirectInfo.suggested
                 );
-                document.rawHTML = document.rawHTML.replace(
+                document.rawBody = document.rawBody.replace(
                   flaw.macroSource,
                   suggestion
                 );
@@ -859,7 +881,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
               console.groupEnd();
               Document.update(
                 document.url,
-                document.rawHTML,
+                document.rawBody,
                 document.metadata
               );
               // Ok, we've fixed the fixable flaws, now let's render again.
@@ -881,7 +903,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         // to get what we'll store in the document.
         const $ = cheerio.load(renderedHTML);
         const newRawHTML = $("body").html();
-        if (newRawHTML !== originalRawHTML) {
+        if (newRawHTML !== originalRawBody) {
           Document.update(document.url, newRawHTML, document.metadata);
           console.log(`modified`);
           countModified++;
@@ -894,6 +916,34 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       console.log(
         `modified: ${countModified} | no-change: ${countNoChange} | skipped: ${countSkipped} | total: ${countTotal}`
       );
+    })
+  )
+
+  .command(
+    "optimize-client-build",
+    "After the client code has been built there are things to do that react-scripts can't."
+  )
+  .argument("<buildroot>", "directory where react-scripts built", {
+    default: path.join("client", "build"),
+  })
+  .action(
+    tryOrExit(async ({ args, options, logger }) => {
+      const { buildroot } = args;
+      const { results } = await runOptimizeClientBuild(buildroot);
+      if (options.verbose) {
+        for (const result of results) {
+          logger.info(`${result.filePath} -> ${result.hashedHref}`);
+        }
+      } else {
+        logger.info(
+          chalk.green(
+            `Hashed ${results.length} files in ${path.join(
+              buildroot,
+              "index.html"
+            )}`
+          )
+        );
+      }
     })
   );
 

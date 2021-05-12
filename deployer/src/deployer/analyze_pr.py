@@ -1,11 +1,20 @@
+import datetime
+import hashlib
 import json
+import re
 from collections import defaultdict
 from pathlib import Path
+from typing import Optional
 
 from github import Github
 from selectolax.parser import HTMLParser
+from unidiff import PatchSet
 
 from .utils import log
+
+hidden_comment_regex = re.compile(
+    r"<!-- build_hash: ([a-f0-9]+) date: ([\d:\.\- ]+) -->"
+)
 
 
 def analyze_pr(build_directory: Path, config):
@@ -21,8 +30,13 @@ def analyze_pr(build_directory: Path, config):
         combined_comments.append(post_about_flaws(build_directory, **config))
 
     if config["analyze_dangerous_content"]:
+        diff_file = config["diff_file"]
+        patch = None
+        if diff_file:
+            with open(diff_file) as f:
+                patch = PatchSet(f.read())
         combined_comments.append(
-            post_about_dangerous_content(build_directory, **config)
+            post_about_dangerous_content(build_directory, patch, **config)
         )
 
     combined_comment = "\n\n".join(x for x in combined_comments if x)
@@ -30,6 +44,15 @@ def analyze_pr(build_directory: Path, config):
     if not combined_comment:
         print("Warning! Nothing to comment at all!")
         return
+
+    build_hash = get_build_hash(build_directory)
+
+    # The build_hash can potentially be used if we want to find an existing comment
+    # that's already been made about this exact set of build files.
+    hidden_comment = (
+        f"<!-- build_hash: {build_hash} date: {datetime.datetime.utcnow()} -->"
+    )
+    combined_comment = f"{hidden_comment}\n\n{combined_comment}"
 
     if not config["repo"]:
         print("Warning! No 'repo' config")
@@ -47,27 +70,41 @@ def analyze_pr(build_directory: Path, config):
             github = Github(config["github_token"])
             github_repo = github.get_repo(config["repo"])
             github_issue = github_repo.get_issue(number=int(config["pr_number"]))
-            github_issue.create_comment(combined_comment)
+            for comment in github_issue.get_comments():
+                if comment.user.login == "github-actions[bot]":
+                    if hidden_comment_regex.search(comment.body):
+                        combined_comment += f"\n\n*(this comment was updated {datetime.datetime.utcnow()})*"
+                        comment.edit(body=combined_comment)
+                        print(f"Updating existing comment ({comment})")
+                        break
+
+            else:
+                github_issue.create_comment(combined_comment)
 
     return combined_comment
 
 
 def post_about_deployment(build_directory: Path, **config):
-    template = "https://{prefix}.content.dev.mdn.mozit.cloud{mdn_url}"
-
     links = []
     for doc in get_built_docs(build_directory):
-        url = template.format(prefix=config["prefix"], mdn_url=doc["mdn_url"])
+        url = mdn_url_to_dev_url(config["prefix"], doc["mdn_url"])
         links.append(f"- <{url}>")
 
-    heading = "## Preview deployment URLs\n\n"
+    heading = "## Preview URLs\n\n"
     if links:
         return heading + "\n".join(links)
 
     return heading + "*seems not a single file was built!* 🙀"
 
 
-def post_about_dangerous_content(build_directory: Path, **config):
+def mdn_url_to_dev_url(prefix, mdn_url):
+    template = "https://{prefix}.content.dev.mdn.mozit.cloud{mdn_url}"
+    return template.format(prefix=prefix, mdn_url=mdn_url)
+
+
+def post_about_dangerous_content(
+    build_directory: Path, patch: Optional[PatchSet], **config
+):
 
     OK_URL_PREFIXES = [
         "https://github.com/mdn/",
@@ -75,33 +112,67 @@ def post_about_dangerous_content(build_directory: Path, **config):
 
     comments = []
 
+    patch_lines = {}
+    if patch:
+        for patched_file in patch:
+            # This value is the file path as it would appear in `git diff`
+            # so for example: `files/en-us/mdn/kitchensink/index.html`
+            file_path = patched_file.path
+            new_lines = []
+            for hunk in patched_file:
+                for line in hunk:
+                    if line.line_type == "+":
+                        new_lines.append(line.value)
+
+            patch_lines[file_path] = "".join(new_lines)
+
     for doc in get_built_docs(build_directory):
         rendered_html = "\n".join(
             x["value"]["content"]
             for x in doc["body"]
             if x["type"] == "prose" and x["value"]["content"]
         )
+
+        diff_lines = None
+        for file_path in patch_lines:
+            if file_path.endswith(
+                "/".join([doc["source"]["folder"], doc["source"]["filename"]])
+            ):
+                diff_lines = patch_lines[file_path]
+                break
+
         tree = HTMLParser(rendered_html)
         external_urls = defaultdict(int)
         for node in tree.css("a[href]"):
             href = node.attributes.get("href")
             href = href.split("#")[0]
+
             # We're only interested in external URLs at the moment
             if href.startswith("//") or "://" in href:
                 if any(href.lower().startswith(x.lower()) for x in OK_URL_PREFIXES):
                     # exceptions are skipped
                     continue
+                if diff_lines:
+                    if href not in diff_lines:
+                        continue
                 external_urls[href] += 1
 
         if external_urls:
             external_urls_list = []
             for url in sorted(external_urls):
                 count = external_urls[url]
-
-                external_urls_list.append(
-                    f"  - <{url}> ({count} time{'' if count==1 else 's'})"
+                line = (
+                    f"  - {'🚨 ' if url.startswith('http://') else ''}"
+                    f"<{url}> ({count} time{'' if count==1 else 's'})"
                 )
+                if diff_lines:
+                    # If this was available and it _did_ fine a URL, then
+                    # really make sure it's noticed.
+                    line += " (Note! This may be a new URL 👀)"
+                external_urls_list.append(line)
             comments.append((doc, "\n".join(external_urls_list)))
+        elif diff_lines:
+            comments.append((doc, "No *new* external URLs"))
         else:
             comments.append((doc, "No external URLs"))
 
@@ -109,13 +180,19 @@ def post_about_dangerous_content(build_directory: Path, **config):
     if comments:
         per_doc_comments = []
         for doc, comment in comments:
-            per_doc_comments.append(
-                f"URL: `{doc['mdn_url']}`\n"
-                f"Title: `{doc['title']}`\n"
-                f"[on GitHub]({doc['source']['github_url']})\n"
-                "\n"
-                f"{comment}"
-            )
+            lines = []
+            if config["prefix"]:
+                url = mdn_url_to_dev_url(config["prefix"], doc["mdn_url"])
+                lines.append(f"URL: [`{doc['mdn_url']}`]({url})")
+            else:
+                lines.append(f"URL: `{doc['mdn_url']}`")
+            lines.append(f"Title: `{doc['title']}`")
+            lines.append(f"[on GitHub]({doc['source']['github_url']})")
+            lines.append("")
+            lines.append(comment)
+            lines.append("")
+
+            per_doc_comments.append("\n".join(lines))
         return heading + "\n---\n".join(per_doc_comments)
     else:
         return heading + "*no external links in the built pages* 👱🏽"
@@ -125,25 +202,35 @@ def post_about_flaws(build_directory: Path, **config):
 
     comments = []
 
+    MAX_FLAW_EXPLANATION = 5
+
+    docs_with_zero_flaws = 0
+
     for doc in get_built_docs(build_directory):
         if not doc.get("flaws"):
-            comments.append((doc, "No flaws!"))
+            docs_with_zero_flaws += 1
             continue
-        else:
-            flaws_list = []
-            for flaw_name, flaw_values in doc["flaws"].items():
-                flaws_list.append(f"- **{flaw_name}**:")
-                for flaw_value in flaw_values:
-                    if isinstance(flaw_value, dict):
-                        explanation = flaw_value.get("explanation")
-                    else:
-                        explanation = str(flaw_value)
-                    if explanation:
-                        flaws_list.append(f"  - `{explanation}`")
-                    else:
-                        flaws_list.append("  - *no explanation!*")
 
-            comments.append((doc, "\n".join(flaws_list)))
+        flaws_list = []
+        for flaw_name, flaw_values in doc["flaws"].items():
+            flaws_list.append(f"- **{flaw_name}**:")
+            for i, flaw_value in enumerate(flaw_values):
+                if i + 1 > MAX_FLAW_EXPLANATION:
+                    flaws_list.append(
+                        f"  - *and {len(flaw_values) - MAX_FLAW_EXPLANATION}"
+                        " more flaws omitted*"
+                    )
+                    break
+                if isinstance(flaw_value, dict):
+                    explanation = flaw_value.get("explanation")
+                else:
+                    explanation = str(flaw_value)
+                if explanation:
+                    flaws_list.append(f"  - `{explanation}`")
+                else:
+                    flaws_list.append("  - *no explanation!*")
+
+        comments.append((doc, "\n".join(flaws_list)))
 
     def count_flaws(flaws):
         count = 0
@@ -154,20 +241,33 @@ def post_about_flaws(build_directory: Path, **config):
     heading = "## Flaws\n\n"
 
     if comments:
+        if docs_with_zero_flaws:
+            heading += (
+                f"Note! *{docs_with_zero_flaws} "
+                f"document{'' if docs_with_zero_flaws == 1 else 's'} with no flaws "
+                "that don't need to be listed. 🎉*\n\n"
+            )
+
         # Now turn all of these individual comments into one big one
         per_doc_comments = []
         for doc, comment in comments:
-            per_doc_comments.append(
-                f"URL: `{doc['mdn_url']}`\n"
-                f"Title: `{doc['title']}`\n"
-                f"[on GitHub]({doc['source']['github_url']})\n"
-                f"Flaw count: {count_flaws(doc['flaws'])}\n"
-                "\n"
-                f"{comment}"
-            )
-        return heading + "\n---\n".join(per_doc_comments)
+            lines = []
+            if config["prefix"]:
+                url = mdn_url_to_dev_url(config["prefix"], doc["mdn_url"])
+                lines.append(f"URL: [`{doc['mdn_url']}`]({url})")
+            else:
+                lines.append(f"URL: `{doc['mdn_url']}`")
+            lines.append(f"Title: `{doc['title']}`")
+            lines.append(f"[on GitHub]({doc['source']['github_url']})")
+            if count_flaws(doc["flaws"]):
+                lines.append(f"Flaw count: {count_flaws(doc['flaws'])}")
+            lines.append("")
+            lines.append(comment)
+
+            per_doc_comments.append("\n".join(lines))
+        return heading + "\n\n---\n\n".join(per_doc_comments)
     else:
-        return heading + "*none!* 🎉"
+        return heading + "*None!* 🎉"
 
 
 def get_built_docs(build_directory: Path):
@@ -182,3 +282,11 @@ def get_built_docs(build_directory: Path):
             doc = data["doc"]
             docs.append(doc)
     return docs
+
+
+def get_build_hash(build_directory: Path):
+    hash_ = hashlib.md5()
+    for path in build_directory.rglob("index.json"):
+        with open(path, "rb") as f:
+            hash_.update(f.read())
+    return hash_.hexdigest()

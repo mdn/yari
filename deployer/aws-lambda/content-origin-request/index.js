@@ -49,6 +49,17 @@ function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
   } else {
     cacheControlValue = "no-store";
   }
+  // We need to URL encode the pathname, but leave the query string as is.
+  // Suppose the old URL was `/search?q=text%2Dshadow` and all we need to do
+  // is to inject the locale to that URL, we should not URL encode the whole
+  // new URL otherwise you'd end up with `/en-US/search?q=text%252Dshadow`
+  // since the already encoded `%2D` would become `%252D` which is wrong and
+  // different.
+  const [pathname, querystring] = location.split("?", 2);
+  let newLocation = encodeURI(pathname);
+  if (querystring) {
+    newLocation += `?${querystring}`;
+  }
   return {
     status,
     statusDescription,
@@ -56,7 +67,7 @@ function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
       location: [
         {
           key: "Location",
-          value: encodeURI(location),
+          value: newLocation,
         },
       ],
       "cache-control": [
@@ -94,12 +105,14 @@ exports.handler = async (event) => {
     return redirect(`/${request.uri.replace(/^\/+/g, "")}`);
   }
 
-  const { url, status } = resolveFundamental(request.uri);
+  let { url, status } = resolveFundamental(request.uri);
   if (url) {
-    // TODO: Do we want to add the query string to the redirect?
-    //       If we decide we do, then we probably need to change
-    //       the caching policy on the "*/docs/* behavior" to
-    //       cache based on the query strings as well.
+    // NOTE: The query string is not forwarded for document requests,
+    //       as directed by their origin request policy, so it's safe to
+    //       assume "request.querystring" is empty for document requests.
+    if (request.querystring) {
+      url += (url.includes("?") ? "&" : "?") + request.querystring;
+    }
     return redirect(url, {
       status,
       cacheControlSeconds: THIRTY_DAYS,
@@ -116,6 +129,7 @@ exports.handler = async (event) => {
     const path = request.uri.endsWith("/")
       ? request.uri.slice(0, -1)
       : request.uri;
+    // Note that "getLocale" only returns valid locales, never a retired locale.
     const locale = getLocale(request);
     // The only time we actually want a trailing slash is when the URL is just
     // the locale. E.g. `/en-US/` (not `/en-US`)

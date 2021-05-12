@@ -101,6 +101,8 @@ export default function SignUpApp() {
       mutate("/api/v1/whoami");
 
       navigate(nextURL);
+    } else if (response.status === 400) {
+      setSignupError(new Error(JSON.stringify(await response.json())));
     } else {
       setSignupError(new Error(`${response.status} on ${signupURL}`));
     }

@@ -36,7 +36,10 @@ function gatherTranslations() {
 
 function translationsOf({ slug, locale: currentLocale }) {
   if (TRANSLATIONS_OF.size === 0) {
+    const label = "Time to gather all translations";
+    console.time(label);
     gatherTranslations();
+    console.timeEnd(label);
   }
   const translations = TRANSLATIONS_OF.get(slug.toLowerCase());
   if (translations && currentLocale) {

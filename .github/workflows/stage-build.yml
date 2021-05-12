@@ -55,9 +55,9 @@ jobs:
     if: github.repository == 'mdn/yari'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
         with:
           repository: mdn/content
           path: mdn/content
@@ -80,13 +80,13 @@ jobs:
           echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
           echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
         if: "contains(env.BUILD_ARCHIVED_CONTENT, 'true')"
         with:
           repository: mdn/archived-content
           path: mdn/archived-content
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
@@ -97,7 +97,7 @@ jobs:
           node-version: "12"
 
       - name: Cache node_modules
-        uses: actions/cache@v2.1.4
+        uses: actions/cache@v2.1.5
         id: cached-node_modules
         with:
           path: |
@@ -111,12 +111,12 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Install Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v2.2.2
         with:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.1.2
+        uses: snok/install-poetry@v1.1.4
 
       - name: Install deployer
         run: |
@@ -167,13 +167,6 @@ jobs:
           # '<meta name="robots" content="noindex, nofollow">' nomatter what
           # kind of document it is.
           BUILD_ALWAYS_NO_ROBOTS: true
-
-          # (peterbe, Mar 2021) This is unique to Stage and temporary. We want to
-          # test the new Yari-based sign-in and sign-up. Setting this environment
-          # variable changes the behavior of the "Sign in" link in the top navbar.
-          # Once we know for sure that this new Yari sign in/up is working in Stage
-          # we'll make this the new default can we can remove these lines.
-          REACT_APP_USE_YARI_SIGNIN: true
 
         run: |
           if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
@@ -244,14 +237,7 @@ jobs:
           # poetry run deployer upload --prune --archived-files ../content/archived.txt ../client/build
           poetry run deployer upload ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
-
-          # TODO: Depending on how long the upload takes, consider switching to
-          # use `--update` in this command. It will skip the index re-creation
-          # and "cake on". This is slightly faster and means no window of time
-          # where the Elasticsearch server is nearly empty.
-          # Consider doing something like a clean indexing on Sundays and
-          # use `--update` on all the other week days.
-          poetry run deployer search-index ../client/build --priority-prefix=en-us/docs/web
+          poetry run deployer search-index ../client/build
 
           # Record the deployment in our Speedcurve account. This should always
           # be done after the upload of the documents and Lambda functions, as well

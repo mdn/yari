@@ -25,10 +25,17 @@ describe("root URL redirects", () => {
     expect(r.headers["location"]).toBe("/en-US/");
   });
 
-  it("should preserve the query string", async () => {
+  it("should preserve the basic query string", async () => {
     const r = await get("/?foo=bar");
     expect(r.statusCode).toBe(302);
     expect(r.headers["location"]).toBe("/en-US/?foo=bar");
+  });
+
+  it("should preserve the query string and not encode it twice", async () => {
+    // This test is based on https://github.com/mdn/yari/issues/3425
+    const r = await get("/?q=text%2Dshadow");
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe("/en-US/?q=text%2Dshadow");
   });
 
   it("should redirect with a trailing slash when cased correctly", async () => {
@@ -166,8 +173,8 @@ describe("remove trailing slash before doing an S3 lookup", () => {
 });
 
 describe("legacy kumaesque prefixes should be left alone", () => {
-  it("should not touch trailing slash on /account/", async () => {
-    const r = await get("/account/");
+  it("should not touch trailing slash on /maintenance-mode/", async () => {
+    const r = await get("/maintenance-mode/");
     expect(r.statusCode).toBe(200);
   });
   it("should not touch trailing slash on these /accounts/whatever/", async () => {
@@ -198,5 +205,36 @@ describe("redirect double-slash prefix URIs", () => {
     const r = await get(`//blablabla`);
     expect(r.statusCode).toBe(302);
     expect(r.headers["location"]).toBe("/blablabla");
+  });
+});
+
+describe("retired locale redirects", () => {
+  it("should 302 redirect a retired locale (accept-language)", async () => {
+    const r = await get("/", {
+      "Accept-language": "sv-SE",
+    });
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe("/en-US/");
+  });
+  it("should 302 redirect a retired locale (preferredlocale cookie)", async () => {
+    const r = await get("/docs/Web/HTTP", {
+      Cookie: "preferredlocale=it",
+    });
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe("/en-US/docs/Web/HTTP");
+  });
+  it("should 302 redirect a retired locale (no query string)", async () => {
+    const r = await get("/sv-SE/docs/Web/HTML");
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe(
+      "/en-US/docs/Web/HTML?retiredLocale=sv-SE"
+    );
+  });
+  it("should 302 redirect a retired locale (query string, improper locale)", async () => {
+    const r = await get("/BN/search?q=video");
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe(
+      "/en-US/search?retiredLocale=bn&q=video"
+    );
   });
 });

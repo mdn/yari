@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 
-import { useUserData } from "../user-context";
+import { useUserData, removeSessionStorageData } from "../user-context";
 import { useLocale } from "../hooks";
 
 import { ReactComponent as GithubLogo } from "@mdn/dinocons/brands/github-mark-small.svg";
@@ -82,6 +82,9 @@ export default function SignInApp() {
                 <a
                   href={`${prefix}/users/github/login/?${sp.toString()}`}
                   className="button icon-button outline"
+                  onClick={() => {
+                    removeSessionStorageData();
+                  }}
                 >
                   <GithubLogo />
                   Sign in with GitHub&trade;
@@ -91,6 +94,9 @@ export default function SignInApp() {
                 <a
                   href={`${prefix}/users/google/login/?${sp.toString()}`}
                   className="button icon-button outline"
+                  onClick={() => {
+                    removeSessionStorageData();
+                  }}
                 >
                   <GoogleLogo />
                   Sign in with Google&trade;

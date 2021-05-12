@@ -978,12 +978,14 @@ const LOCALE_ALIAS_URLS = [].concat(
   url_test("/en-gb/docs/Foo/bar", null, { statusCode: 404 }),
   url_test("/en_gb/docs/Foo/bar", null, { statusCode: 404 }),
 
-  url_test("/PT-PT/docs/Foo/bar", null, { statusCode: 404 }),
+  url_test("/PT-PT/docs/Foo/bar", "/en-US/docs/Foo/bar?retiredLocale=pt-PT", {
+    statusCode: 302,
+  }),
   url_test("/XY-PQ/docs/Foo/bar", null, { statusCode: 404 }),
 
   url_test("/en/docs/Foo/bar", "/en-US/docs/Foo/bar"),
   url_test("/En_uS/docs/Foo/bar", "/en-US/docs/Foo/bar"),
-  url_test("/pt/docs/Foo/bar", "/pt-PT/docs/Foo/bar"),
+  url_test("/pt/docs/Foo/bar", "/pt-BR/docs/Foo/bar"),
   url_test("/Fr-FR/docs/Foo/bar", "/fr/docs/Foo/bar"),
   url_test("/JA-JP/docs/Foo/bar", "/ja/docs/Foo/bar"),
   url_test("/JA-JA/docs/Foo/bar", "/ja/docs/Foo/bar"),
@@ -1002,7 +1004,221 @@ const LOCALE_ALIAS_URLS = [].concat(
   url_test("/zh", "/zh-CN/")
 );
 
+const RETIRED_LOCALE_URLS = [].concat(
+  url_test("/ar", "/en-US/?retiredLocale=ar", { statusCode: 302 }),
+  url_test("/ar/", "/en-US/?retiredLocale=ar", { statusCode: 302 }),
+  url_test("/bg", "/en-US/?retiredLocale=bg", { statusCode: 302 }),
+  url_test("/bg/", "/en-US/?retiredLocale=bg", { statusCode: 302 }),
+  url_test("/bn", "/en-US/?retiredLocale=bn", { statusCode: 302 }),
+  url_test("/bn/", "/en-US/?retiredLocale=bn", { statusCode: 302 }),
+  url_test("/ca", "/en-US/?retiredLocale=ca", { statusCode: 302 }),
+  url_test("/ca/", "/en-US/?retiredLocale=ca", { statusCode: 302 }),
+  url_test("/el", "/en-US/?retiredLocale=el", { statusCode: 302 }),
+  url_test("/el/", "/en-US/?retiredLocale=el", { statusCode: 302 }),
+  url_test("/fa", "/en-US/?retiredLocale=fa", { statusCode: 302 }),
+  url_test("/FA/", "/en-US/?retiredLocale=fa", { statusCode: 302 }),
+  url_test("/fi", "/en-US/?retiredLocale=fi", { statusCode: 302 }),
+  url_test("/fi/", "/en-US/?retiredLocale=fi", { statusCode: 302 }),
+  url_test("/he", "/en-US/?retiredLocale=he", { statusCode: 302 }),
+  url_test("/he/", "/en-US/?retiredLocale=he", { statusCode: 302 }),
+  url_test("/hi-In", "/en-US/?retiredLocale=hi-IN", { statusCode: 302 }),
+  url_test("/hi-IN/", "/en-US/?retiredLocale=hi-IN", { statusCode: 302 }),
+  url_test("/hu", "/en-US/?retiredLocale=hu", { statusCode: 302 }),
+  url_test("/hu/", "/en-US/?retiredLocale=hu", { statusCode: 302 }),
+  url_test("/id", "/en-US/?retiredLocale=id", { statusCode: 302 }),
+  url_test("/ID/", "/en-US/?retiredLocale=id", { statusCode: 302 }),
+  url_test("/it", "/en-US/?retiredLocale=it", { statusCode: 302 }),
+  url_test("/it/", "/en-US/?retiredLocale=it", { statusCode: 302 }),
+  url_test("/kab", "/en-US/?retiredLocale=kab", { statusCode: 302 }),
+  url_test("/KaB/", "/en-US/?retiredLocale=kab", { statusCode: 302 }),
+  url_test("/ms", "/en-US/?retiredLocale=ms", { statusCode: 302 }),
+  url_test("/ms/", "/en-US/?retiredLocale=ms", { statusCode: 302 }),
+  url_test("/my", "/en-US/?retiredLocale=my", { statusCode: 302 }),
+  url_test("/my/", "/en-US/?retiredLocale=my", { statusCode: 302 }),
+  url_test("/nl", "/en-US/?retiredLocale=nl", { statusCode: 302 }),
+  url_test("/nl/", "/en-US/?retiredLocale=nl", { statusCode: 302 }),
+  url_test("/pt-Pt", "/en-US/?retiredLocale=pt-PT", { statusCode: 302 }),
+  url_test("/pt-PT/", "/en-US/?retiredLocale=pt-PT", { statusCode: 302 }),
+  url_test("/sv-SE", "/en-US/?retiredLocale=sv-SE", { statusCode: 302 }),
+  url_test("/sv-se/", "/en-US/?retiredLocale=sv-SE", { statusCode: 302 }),
+  url_test("/th", "/en-US/?retiredLocale=th", { statusCode: 302 }),
+  url_test("/th/", "/en-US/?retiredLocale=th", { statusCode: 302 }),
+  url_test("/tr", "/en-US/?retiredLocale=tr", { statusCode: 302 }),
+  url_test("/tr/", "/en-US/?retiredLocale=tr", { statusCode: 302 }),
+  url_test("/uk", "/en-US/?retiredLocale=uk", { statusCode: 302 }),
+  url_test("/uk/", "/en-US/?retiredLocale=uk", { statusCode: 302 }),
+  url_test("/vi", "/en-US/?retiredLocale=vi", { statusCode: 302 }),
+  url_test("/vi/", "/en-US/?retiredLocale=vi", { statusCode: 302 }),
+  url_test("/ar/docs/Web", "/en-US/docs/Web?retiredLocale=ar", {
+    statusCode: 302,
+  }),
+  url_test("/bg/docs/Web/", "/en-US/docs/Web/?retiredLocale=bg", {
+    statusCode: 302,
+  }),
+  url_test("/bn/docs/Web", "/en-US/docs/Web?retiredLocale=bn", {
+    statusCode: 302,
+  }),
+  url_test("/Ca/docs/Web/", "/en-US/docs/Web/?retiredLocale=ca", {
+    statusCode: 302,
+  }),
+  url_test("/el/docs/Web", "/en-US/docs/Web?retiredLocale=el", {
+    statusCode: 302,
+  }),
+  url_test("/FA/docs/Web", "/en-US/docs/Web?retiredLocale=fa", {
+    statusCode: 302,
+  }),
+  url_test("/fi/docs/Web", "/en-US/docs/Web?retiredLocale=fi", {
+    statusCode: 302,
+  }),
+  url_test("/he/docs/Web", "/en-US/docs/Web?retiredLocale=he", {
+    statusCode: 302,
+  }),
+  url_test("/hi-IN/docs/Web", "/en-US/docs/Web?retiredLocale=hi-IN", {
+    statusCode: 302,
+  }),
+  url_test("/hu/docs/Web", "/en-US/docs/Web?retiredLocale=hu", {
+    statusCode: 302,
+  }),
+  url_test("/ID/docs/Web", "/en-US/docs/Web?retiredLocale=id", {
+    statusCode: 302,
+  }),
+  url_test("/it/docs/Web", "/en-US/docs/Web?retiredLocale=it", {
+    statusCode: 302,
+  }),
+  url_test("/KaB/docs/Web", "/en-US/docs/Web?retiredLocale=kab", {
+    statusCode: 302,
+  }),
+  url_test("/ms/docs/Web", "/en-US/docs/Web?retiredLocale=ms", {
+    statusCode: 302,
+  }),
+  url_test("/my/docs/Web", "/en-US/docs/Web?retiredLocale=my", {
+    statusCode: 302,
+  }),
+  url_test("/nl/docs/Web", "/en-US/docs/Web?retiredLocale=nl", {
+    statusCode: 302,
+  }),
+  url_test("/pt-PT/docs/Web", "/en-US/docs/Web?retiredLocale=pt-PT", {
+    statusCode: 302,
+  }),
+  url_test("/sv-se/docs/Web", "/en-US/docs/Web?retiredLocale=sv-SE", {
+    statusCode: 302,
+  }),
+  url_test("/th/docs/Web", "/en-US/docs/Web?retiredLocale=th", {
+    statusCode: 302,
+  }),
+  url_test("/tr/docs/Web", "/en-US/docs/Web?retiredLocale=tr", {
+    statusCode: 302,
+  }),
+  url_test("/uk/docs/Web", "/en-US/docs/Web?retiredLocale=uk", {
+    statusCode: 302,
+  }),
+  url_test("/vi/docs/Web", "/en-US/docs/Web?retiredLocale=vi", {
+    statusCode: 302,
+  }),
+  url_test("/ar/search?q=video", "/en-US/search?q=video&retiredLocale=ar", {
+    statusCode: 302,
+  }),
+  url_test("/bg/search?q=video", "/en-US/search?q=video&retiredLocale=bg", {
+    statusCode: 302,
+  }),
+  url_test("/bn/search?q=video", "/en-US/search?q=video&retiredLocale=bn", {
+    statusCode: 302,
+  }),
+  url_test("/Ca/search?q=video", "/en-US/search?q=video&retiredLocale=ca", {
+    statusCode: 302,
+  }),
+  url_test("/el/search?q=video", "/en-US/search?q=video&retiredLocale=el", {
+    statusCode: 302,
+  }),
+  url_test("/FA/search?q=video", "/en-US/search?q=video&retiredLocale=fa", {
+    statusCode: 302,
+  }),
+  url_test("/fi/search?q=video", "/en-US/search?q=video&retiredLocale=fi", {
+    statusCode: 302,
+  }),
+  url_test("/he/search?q=video", "/en-US/search?q=video&retiredLocale=he", {
+    statusCode: 302,
+  }),
+  url_test(
+    "/hi-IN/search?q=video",
+    "/en-US/search?q=video&retiredLocale=hi-IN",
+    { statusCode: 302 }
+  ),
+  url_test("/hu/search?q=video", "/en-US/search?q=video&retiredLocale=hu", {
+    statusCode: 302,
+  }),
+  url_test("/ID/search?q=video", "/en-US/search?q=video&retiredLocale=id", {
+    statusCode: 302,
+  }),
+  url_test("/it/search?q=video", "/en-US/search?q=video&retiredLocale=it", {
+    statusCode: 302,
+  }),
+  url_test("/KaB/search?q=video", "/en-US/search?q=video&retiredLocale=kab", {
+    statusCode: 302,
+  }),
+  url_test("/ms/search?q=video", "/en-US/search?q=video&retiredLocale=ms", {
+    statusCode: 302,
+  }),
+  url_test("/my/search?q=video", "/en-US/search?q=video&retiredLocale=my", {
+    statusCode: 302,
+  }),
+  url_test("/nl/search?q=video", "/en-US/search?q=video&retiredLocale=nl", {
+    statusCode: 302,
+  }),
+  url_test(
+    "/pt-PT/search?q=video",
+    "/en-US/search?q=video&retiredLocale=pt-PT",
+    { statusCode: 302 }
+  ),
+  url_test(
+    "/sv-se/search?q=video",
+    "/en-US/search?q=video&retiredLocale=sv-SE",
+    { statusCode: 302 }
+  ),
+  url_test("/th/search?q=video", "/en-US/search?q=video&retiredLocale=th", {
+    statusCode: 302,
+  }),
+  url_test("/tr/search?q=video", "/en-US/search?q=video&retiredLocale=tr", {
+    statusCode: 302,
+  }),
+  url_test("/uk/search?q=video", "/en-US/search?q=video&retiredLocale=uk", {
+    statusCode: 302,
+  }),
+  url_test("/vi/search?q=video", "/en-US/search?q=video&retiredLocale=vi", {
+    statusCode: 302,
+  })
+);
+
 const MISC_REDIRECT_URLS = [].concat(
+  url_test("/fr/account", "/fr/settings", { statusCode: 302 }),
+  url_test("/en-US/account", "/en-US/settings", { statusCode: 302 }),
+  url_test("/en-US/account/", "/en-US/settings", { statusCode: 302 }),
+  url_test("/ja/profile", "/ja/settings", { statusCode: 302 }),
+  url_test("/en-US/profile", "/en-US/settings", { statusCode: 302 }),
+  url_test("/en-US/profile/", "/en-US/settings", { statusCode: 302 }),
+  url_test("/en-US/profile/edit", "/en-US/settings", { statusCode: 302 }),
+  url_test("/en-US/profile/edit/", "/en-US/settings", { statusCode: 302 }),
+  url_test("/en-US/profile/stripe_subscription", "/en-US/settings", {
+    statusCode: 302,
+  }),
+  url_test("/en-US/profile/stripe_subscription/", "/en-US/settings", {
+    statusCode: 302,
+  }),
+  url_test("/zh-CN/profiles/sheppy", "/zh-CN/settings", { statusCode: 302 }),
+  url_test("/en-US/profiles/sheppy", "/en-US/settings", { statusCode: 302 }),
+  url_test("/en-US/profiles/sheppy/", "/en-US/settings", { statusCode: 302 }),
+  url_test("/en-US/profiles/sheppy/edit", "/en-US/settings", {
+    statusCode: 302,
+  }),
+  url_test("/en-US/profiles/sheppy/edit/", "/en-US/settings", {
+    statusCode: 302,
+  }),
+  url_test("/en-US/profiles/sheppy/delete", "/en-US/settings", {
+    statusCode: 302,
+  }),
+  url_test("/en-US/profiles/sheppy/delete/", "/en-US/settings", {
+    statusCode: 302,
+  }),
   url_test("/en-US/DOM", "/en-US/docs/DOM"),
   url_test("/en-US/DOM/", "/en-US/docs/DOM"),
   url_test(
@@ -1134,6 +1350,12 @@ describe("firefox src docs redirects", () => {
 
 describe("locale alias redirects", () => {
   for (const [url, t] of LOCALE_ALIAS_URLS) {
+    it(url, t);
+  }
+});
+
+describe("retired locale redirects", () => {
+  for (const [url, t] of RETIRED_LOCALE_URLS) {
     it(url, t);
   }
 });

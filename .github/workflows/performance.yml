@@ -13,13 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
         with:
           # Needed because of
           # https://github.com/GoogleChrome/lighthouse-ci/issues/172
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
         with:
           repository: mdn/content
           path: mdn/content
@@ -30,7 +30,7 @@ jobs:
           node-version: "12"
 
       - name: Cache node_modules
-        uses: actions/cache@v2.1.4
+        uses: actions/cache@v2.1.5
         id: cached-node_modules
         with:
           path: |
