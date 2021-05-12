@@ -138,7 +138,7 @@ module.exports = [
     (node) =>
       node.children.map((child) =>
         child.tagName == "a"
-          ? h(child, "link", [h(node, "inlineCode", {}, toText(child))], {
+          ? h(child, "link", [h(node, "inlineCode", toText(child))], {
               title: child.properties.title || null,
               url: child.properties.href,
             })
@@ -175,19 +175,15 @@ module.exports = [
             (className) => className.startsWith("highlight"),
           ],
         },
-        (node, t, opts) =>
-          h(node, "paragraph", [
-            h(node, "html", "<!-- prettier-ignore -->\n"),
-            h(
-              node,
-              "code",
-              trimTrailingNewLines(wrapText(toText(node), opts)),
-              {
-                lang,
-                meta: node.properties.className.filter((c) => c == lang),
-              }
-            ),
-          ]),
+        (node, t, opts) => [
+          h(node, "html", "<!-- prettier-ignore -->\n"),
+          h(node, "code", trimTrailingNewLines(wrapText(toText(node), opts)), {
+            lang,
+            meta: node.properties.className
+              .filter((c) => c.startsWith("example-"))
+              .join(" "),
+          }),
+        ],
       ])
   ),
 

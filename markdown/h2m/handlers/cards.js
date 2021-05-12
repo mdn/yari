@@ -32,7 +32,7 @@ module.exports = [
           ]),
           ...t({ children: node.children[0].children.slice(1) }),
         ]),
-        h(node, "paragraph", t(node.children.slice(1))),
+        ...t(node.children.slice(1)),
       ]),
   ]),
 
