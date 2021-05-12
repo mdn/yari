@@ -1,3 +1,6 @@
+/* eslint-disable node/no-missing-require */
+const { CSP_VALUE_PROD, CSP_VALUE_STAGE } = require("@yari-internal/constants");
+
 exports.handler = async (event) => {
   /*
    * This Lambda@Edge function is designed to handle origin-response
@@ -37,6 +40,22 @@ exports.handler = async (event) => {
     ];
     response.headers["strict-transport-security"] = [
       { key: "Strict-Transport-Security", value: "max-age=63072000" },
+    ];
+  }
+
+  const contentType = response.headers["content-type"];
+  if (
+    contentType &&
+    contentType[0] &&
+    contentType[0].value.startsWith("text/html")
+  ) {
+    response.headers["content-security-policy-report-only"] = [
+      {
+        key: "Content-Security-Policy-Report-Only",
+        value: request.origin.custom.domainName.startsWith("prod.")
+          ? CSP_VALUE_PROD
+          : CSP_VALUE_STAGE,
+      },
     ];
   }
 

@@ -13,27 +13,19 @@ if (!container) {
   throw new Error("missing root element");
 }
 
-// The SSR rendering will put
-// a `<script>window.__data__ = JSON.parse(...)</script>` into the HTML.
+// The SSR rendering will put a `<script type="application/json">` into the HTML.
 // If it's there, great, if it's not there, this'll be `undefined` the
 // components will know to fetch it with XHR.
-// TODO: When we have TS types fo `docData` this would become
-// something like `(window as any).__data__ as DocData`.
-const docData = (window as any).__data__;
-const pageNotFound = (window as any).__pageNotFound__;
-const feedEntries = (window as any).__feedEntries__;
-const possibleLocales = (window as any).__possibleLocales__;
+const hydrationElement = document.getElementById("hydration");
+const appData = hydrationElement
+  ? JSON.parse(hydrationElement.textContent!)
+  : {};
 
 let app = (
   <GAProvider>
     <UserDataProvider>
       <Router>
-        <App
-          doc={docData}
-          pageNotFound={pageNotFound}
-          feedEntries={feedEntries}
-          possibleLocales={possibleLocales}
-        />
+        <App {...appData} />
       </Router>
     </UserDataProvider>
   </GAProvider>
