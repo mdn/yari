@@ -1,5 +1,5 @@
 /* eslint-disable node/no-missing-require */
-const { CSP_DIRECTIVES } = require("@yari-internal/constants");
+const { CSP_VALUE_PROD, CSP_VALUE_STAGE } = require("@yari-internal/constants");
 
 exports.handler = async (event) => {
   /*
@@ -47,11 +47,15 @@ exports.handler = async (event) => {
   if (
     contentType &&
     contentType[0] &&
-    typeof contentType[0].value == "string" &&
     contentType[0].value.startsWith("text/html")
   ) {
     response.headers["content-security-policy-report-only"] = [
-      { key: "Content-Security-Policy-Report-Only", value: CSP_DIRECTIVES },
+      {
+        key: "Content-Security-Policy-Report-Only",
+        value: request.origin.custom.domainName.startsWith("prod.")
+          ? CSP_VALUE_PROD
+          : CSP_VALUE_STAGE,
+      },
     ];
   }
 
