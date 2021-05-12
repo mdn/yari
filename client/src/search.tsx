@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import FlexSearch from "flexsearch";
@@ -174,70 +174,58 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   const locale = useLocale();
   const [searchParams] = useSearchParams();
 
-  const [
-    searchIndex,
-    searchIndexError,
-    initializeSearchIndex,
-  ] = useSearchIndex();
-  const [resultItems, setResultItems] = useState<ResultItem[]>([]);
+  const [searchIndex, searchIndexError, initializeSearchIndex] =
+    useSearchIndex();
+
   const [isFocused, setIsFocused] = useState(false);
 
   const inputRef = useRef<null | HTMLInputElement>(null);
 
-  const updateResults = useCallback(
-    (inputValue: string | undefined) => {
-      if (!searchIndex || !inputValue) {
-        // This can happen if the initialized hasn't completed yet or
-        // completed un-successfully.
-        setResultItems([]);
-        return;
-      }
-
-      // The iPhone X series is 812px high.
-      // If the window isn't very high, show fewer matches so that the
-      // overlaying search results don't trigger a scroll.
-      const limit = window.innerHeight < 850 ? 5 : 10;
-
-      let results: ResultItem[] | null = null;
-      if (isFuzzySearchString(inputValue)) {
-        if (inputValue === "/") {
-          setResultItems([]);
-          return;
-        } else {
-          const fuzzyResults = searchIndex.fuzzy.search(inputValue, { limit });
-          results = fuzzyResults.map((fuzzyResult) => ({
-            url: fuzzyResult.url,
-            title: fuzzyResult.title,
-            substrings: fuzzyResult.substrings,
-          }));
-        }
-      } else {
-        // Full-Text search
-        const indexResults = searchIndex.flex.search(inputValue, {
-          limit,
-          suggest: true, // This can give terrible result suggestions
-        });
-
-        results = indexResults.map((index) => (searchIndex.items || [])[index]);
-      }
-
-      if (results) {
-        setResultItems(results);
-      }
-    },
-    [searchIndex, setResultItems]
-  );
+  const initialQuery = searchParams.get("q") || "";
+  const [inputValue, setInputValue] = useState(initialQuery);
 
   // The input value to the `useCombobox()` is controlled. This way, we can
   // listen to the `useSearchIndex()` hook for new values.
   // For example, the site-search page might trigger an update to the current
   // `?q=...` value and if that happens we want to be reflected here in the
   // combobox.
-  const initialQuery = searchParams.get("q") || "";
-  const [inputQueryValue, setInputQueryValue] = React.useState("");
   React.useEffect(() => {
-    setInputQueryValue(initialQuery);
-  }, [initialQuery]);
+    setInputValue(initialQuery);
+  }, [setInputValue, initialQuery]);
+
+  const resultItems: ResultItem[] = useMemo(() => {
+    if (!searchIndex || !inputValue || searchIndexError) {
+      // This can happen if the initialized hasn't completed yet or
+      // completed un-successfully.
+      return [];
+    }
+
+    // The iPhone X series is 812px high.
+    // If the window isn't very high, show fewer matches so that the
+    // overlaying search results don't trigger a scroll.
+    const limit = window.innerHeight < 850 ? 5 : 10;
+
+    if (isFuzzySearchString(inputValue)) {
+      if (inputValue === "/") {
+        return [];
+      } else {
+        const fuzzyResults = searchIndex.fuzzy.search(inputValue, { limit });
+        return fuzzyResults.map((fuzzyResult) => ({
+          url: fuzzyResult.url,
+          title: fuzzyResult.title,
+          substrings: fuzzyResult.substrings,
+        }));
+      }
+    } else {
+      // Full-Text search
+      const indexResults = searchIndex.flex.search(inputValue, {
+        limit,
+        suggest: true, // This can give terrible result suggestions
+      });
+
+      return indexResults.map((index) => (searchIndex.items || [])[index]);
+    }
+  }, [inputValue, searchIndex, searchIndexError]);
 
   const {
     getInputProps,
@@ -246,16 +234,14 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     getComboboxProps,
 
     highlightedIndex,
-    inputValue,
     isOpen,
 
     reset,
   } = useCombobox({
     items: resultItems,
-    inputValue: inputQueryValue,
+    inputValue,
     onInputValueChange: ({ inputValue }) => {
-      setInputQueryValue(inputValue ? inputValue : "");
-      updateResults(inputValue);
+      setInputValue(inputValue ? inputValue : "");
     },
     onSelectedItemChange: ({ selectedItem }) => {
       if (selectedItem) {
@@ -312,7 +298,11 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           onKeyDown: (event) => {
             if (event.key === "Escape" && inputRef.current) {
               inputRef.current.blur();
-            } else if (event.key === "Enter" && inputValue.trim()) {
+            } else if (
+              event.key === "Enter" &&
+              inputValue.trim() &&
+              highlightedIndex === -1
+            ) {
               // Redirect to the search page!
               if (inputRef.current) {
                 inputRef.current.blur();

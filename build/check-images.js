@@ -125,10 +125,10 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
           // been downloaded by the en-US equivalent. If so, make that the suggestion.
           if (doc.locale !== DEFAULT_LOCALE) {
             const filePath = Image.findByURL(
-              path.join(
+              [
                 doc.mdn_url.replace(`/${doc.locale}/`, `/${DEFAULT_LOCALE}/`),
-                path.basename(src)
-              )
+                path.basename(src),
+              ].join("/")
             );
             if (filePath) {
               suggestion = path.basename(filePath);
