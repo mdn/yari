@@ -239,6 +239,12 @@ For more information, see the `testing/README.md`.
 
 ## Client
 
+NOTE! Due to a quirk of how we build the client, anything `REACT_APP_*` environment
+variable that you want to be available in the production-grade built JS code
+that gets used when use `localhost:5000` can not only be set in the root `/.env`
+file. Either use `export REACT_APP_*=...` or write it once in `/.env` and
+once in `/client/.env`.
+
 ### `HOST`
 
 **Default: `localhost`**
@@ -306,3 +312,11 @@ present the "Fix fixable flaws" button for example.
 **Default: `NODE_ENV==='development'`**
 
 Determines if the MDN++ SPA should be reachable or not.
+
+### `REACT_APP_DEFAULT_GEO_COUNTRY`
+
+**Default: `United States`**
+
+If the `/api/v1/whoami` does not include a `geo.country` value, fall back on this.
+Setting this allows you to pretend the XHR request to `/api/v1/whoami` included
+this value for `geo.country`.
