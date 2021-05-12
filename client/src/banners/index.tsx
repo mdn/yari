@@ -61,9 +61,9 @@ function isEmbargoed(id: string) {
   }
 }
 
-function isExclusionPathname(id: string, pathname: string) {
+function isPathnameIncluded(id: string, pathname: string) {
   if (id === MDN_PLUSPLUS_IDv1) {
-    return (
+    return !(
       pathname.includes("/mdn++") ||
       pathname.includes("/signin") ||
       pathname.includes("/signup")
@@ -72,9 +72,9 @@ function isExclusionPathname(id: string, pathname: string) {
   return false;
 }
 
-function isExclusionGeoLocation(id: string, country: string) {
+function isGeoLocationIncluded(id: string, country: string) {
   if (id === MDN_PLUSPLUS_IDv1) {
-    return country !== "United States";
+    return country === "United States";
   }
   return false;
 }
@@ -118,8 +118,8 @@ export function Banner() {
   // 6. Is your locale en-US?
   if (
     ENABLE_MDNPLUSPLUS &&
-    !isExclusionPathname(MDN_PLUSPLUS_IDv1, location.pathname) &&
-    !isExclusionGeoLocation(MDN_PLUSPLUS_IDv1, userData.geo.country) &&
+    isPathnameIncluded(MDN_PLUSPLUS_IDv1, location.pathname) &&
+    isGeoLocationIncluded(MDN_PLUSPLUS_IDv1, userData.geo.country) &&
     isRandomlyIncluded(MDN_PLUSPLUS_IDv1, 10) &&
     !isEmbargoed(MDN_PLUSPLUS_IDv1)
   ) {
