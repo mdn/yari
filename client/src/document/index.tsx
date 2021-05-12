@@ -18,6 +18,7 @@ import { LanguageToggle } from "../ui/molecules/language-toggle";
 import { LocalizedContentNote } from "./molecules/localized-content-note";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
+import { RetiredLocaleNote } from "./molecules/retired-locale-note";
 import { MainContentContainer } from "../ui/atoms/page-content";
 import { Metadata } from "./organisms/metadata";
 
@@ -164,13 +165,11 @@ export function Document(props /* TODO: define a TS interface for this */) {
         </div>
       )}
 
-      {(doc.isTranslated || retiredLocale) && (
-        <LocalizedContentNote
-          isActive={doc.isActive}
-          locale={locale}
-          retiredLocale={retiredLocale}
-        />
+      {doc.isTranslated && (
+        <LocalizedContentNote isActive={doc.isActive} locale={locale} />
       )}
+
+      {retiredLocale && <RetiredLocaleNote />}
 
       {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 

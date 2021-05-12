@@ -1,29 +1,11 @@
-interface NoteContent {
-  linkText: string;
-  url: string;
-}
-
-function getNote(noteContent: NoteContent, noteType: string) {
-  return (
-    <div className={`localized-content-note notecard inline ${noteType}`}>
-      <a
-        href={noteContent.url}
-        className={!noteContent.url.startsWith("/") ? "external" : undefined}
-      >
-        {noteContent.linkText}
-      </a>
-    </div>
-  );
-}
+import { NoteBanner, NoteContent, NOTE_TYPES } from "../note-banner";
 
 export function LocalizedContentNote({
   isActive,
   locale,
-  retiredLocale,
 }: {
   isActive: boolean;
   locale: string;
-  retiredLocale: boolean;
 }) {
   const activeLocaleNoteContent = {
     "en-US": {
@@ -64,14 +46,7 @@ export function LocalizedContentNote({
       ? "/en-US/docs/MDN/Contribute/Localize#active_locales"
       : "https://github.com/mdn/translated-content#promoting-an-inactive-locale-to-tier-1",
   };
-  const noteType = isActive ? "neutral" : "warning";
+  const noteType = isActive ? NOTE_TYPES.general : NOTE_TYPES.warning;
 
-  if (retiredLocale) {
-    noteContent.linkText =
-      "The page you requested has been retired, so we've sent you to the English equivalent.";
-    noteContent.url =
-      "https://hacks.mozilla.org/2021/03/mdn-localization-in-march-tier-1-locales-unfrozen-and-future-plans/";
-  }
-
-  return getNote(noteContent, noteType);
+  return NoteBanner(noteContent, noteType);
 }
