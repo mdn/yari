@@ -11,21 +11,31 @@
     }
   }
 
-  td a .url-prefix,
-  td .document-title-preview {
-    color: rgb(159, 159, 159);
-    margin-right: 2px;
-    font-size: 80%;
-  }
-  td .document-title-preview {
-    margin-left: 10px;
-  }
+  table {
+    width: 100%;
 
-  td .last_modified.ahead a {
-    color: green;
-  }
-  td .last_modified.behind a {
-    color: orange;
+    th.sortable.active {
+      background-color: rgb(237, 237, 237);
+    }
+    th.sortable.active.reverse {
+      transform: rotate(-180deg);
+    }
+
+    td a .url-prefix {
+      margin-right: 2px;
+      color: rgb(159, 159, 159);
+      font-size: 80%;
+    }
+    td .document-title-preview {
+      color: rgb(118, 118, 118);
+    }
+
+    td .last_modified.ahead a {
+      color: green;
+    }
+    td .last_modified.behind a {
+      color: orange;
+    }
   }
 
   .search-error {

@@ -12,7 +12,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 import "./index.scss";
 
-import { humanizeFlawName } from "../flaw-utils";
+// import { humanizeFlawName } from "../flaw-utils";
 import { PageContentContainer } from "../ui/atoms/page-content";
 
 dayjs.extend(relativeTime);
@@ -20,6 +20,8 @@ dayjs.extend(relativeTime);
 interface DocumentPopularity {
   value: number;
   ranking: number;
+  parentValue: number;
+  parentRanking: number;
 }
 
 // interface DocumentFlaws {
@@ -67,12 +69,13 @@ interface Counts {
   found: number;
   total: number;
   pages: number;
-  flaws: FlawsCounts;
+  noParents: number;
+  cacheMisses: number;
+  // flaws: FlawsCounts;
 }
 
 interface Times {
-  tookTotal: number;
-  listTotal: number;
+  took: number;
 }
 
 interface FlawLevel {
@@ -199,7 +202,8 @@ class LocalesError extends Error {
 
 export default function AllTranslations() {
   const { locale } = useParams();
-  const [filters] = useFiltersURL();
+
+  // const [filters] = useFiltersURL();
   const [lastData, setLastData] = useState<Data | null>(null);
 
   useEffect(() => {
@@ -214,16 +218,11 @@ export default function AllTranslations() {
   }, [lastData, locale]);
 
   const getAPIUrl = useCallback(() => {
-    const { sort_by, sort_reverse, page, ...restFilters } = filters;
     const params = createSearchParams({
-      ...restFilters,
-      page: String(page),
       locale,
-      sort: sort_by,
-      reverse: JSON.stringify(sort_reverse),
     });
     return `/_translations?${params.toString()}`;
-  }, [locale, filters]);
+  }, [locale]);
 
   const { data, error, isValidating } = useSWR<Data, Error>(
     getAPIUrl(),
@@ -259,25 +258,35 @@ export default function AllTranslations() {
     }
   }, [data]);
 
-  // XXX there's something weird about this logic
-  let loading: React.ReactNode = <small>&nbsp;</small>;
-  if (!data && !error) {
-    if (lastData) {
-      loading = <small>Reloading...</small>;
-    } else {
-      loading = <small>Loading...</small>;
-    }
-  } else if (isValidating) {
-    loading = <small>Reloading...</small>;
-  }
+  // // XXX there's something weird about this logic
+  // // let loading: React.ReactNode = <small>&nbsp;</small>;
+  // let loading = <small>&nbsp;</small>;
+  // if (!data && !error) {
+  //   if (lastData) {
+  //     loading = <small>Reloading...</small>;
+  //   } else {
+  //     loading = <small>Loading...</small>;
+  //   }
+  // } else if (isValidating) {
+  //   loading = <small>Reloading...</small>;
+  // }
 
-  const { page } = filters;
-  const pageCount = lastData ? lastData.counts.pages : 0;
+  // const { page } = filters;
+
+  // const pageCount = lastData ? lastData.counts.pages : 0;
 
   return (
     <div className="all-translations">
       <PageContentContainer>
-        {loading}
+        {!data && !error && lastData && <small>Reloading...</small>}
+        {!data && !error && !lastData && (
+          <Loading
+            estimate={10 * 1000}
+            onComplete={(ms: number) => {
+              console.log("Lets remember it took", ms);
+            }}
+          />
+        )}
         {error ? (
           error instanceof LocalesError ? (
             <ShowLocalesError locales={error.locales} />
@@ -289,33 +298,17 @@ export default function AllTranslations() {
           <div className="filter-documents">
             {/* <FilterControls flawLevels={lastData.flawLevels} /> */}
             <DocumentsTable
-              locale={locale}
               counts={lastData.counts}
               documents={lastData.documents}
             />
-            {pageCount > 1 && (
-              <p className="pagination">
-                <PageLink number={1} disabled={page === 1}>
-                  First page
-                </PageLink>{" "}
-                {page > 2 && (
-                  <PageLink number={page - 1}>
-                    Previous page ({page - 1})
-                  </PageLink>
-                )}{" "}
-                <PageLink number={page + 1} disabled={page + 1 > pageCount}>
-                  Next page ({page + 1})
-                </PageLink>
-              </p>
-            )}
           </div>
         )}
-        {/* {data && data.counts && <AllFlawCounts counts={data.counts.flaws} />} */}
         {data && <BuildTimes times={data.times} />}
       </PageContentContainer>
     </div>
   );
 }
+
 function ShowLocalesError({ locales }: { locales: Locale[] }) {
   return (
     <div>
@@ -335,6 +328,7 @@ function ShowLocalesError({ locales }: { locales: Locale[] }) {
     </div>
   );
 }
+
 function ShowSearchError({ error }) {
   return (
     <div className="error-message search-error">
@@ -355,7 +349,72 @@ function BuildTimes({ times }: { times: Times }) {
   }
   return (
     <div className="search-times">
-      <p>Time to find all documents {format(times.tookTotal)}</p>
+      <p>Time to find all documents {format(times.took)}</p>
+    </div>
+  );
+}
+
+function Loading({
+  estimate,
+  onComplete,
+}: {
+  estimate: number;
+  onComplete: (ms: number) => void;
+}) {
+  const startLoadingTime = new Date();
+  const [estimateEndTime, setEstimateEndTime] = React.useState(
+    new Date(startLoadingTime.getTime() + estimate)
+  );
+
+  React.useEffect(() => {
+    // Unmount means the loading ended
+    return () => {
+      onComplete(new Date().getTime() - startLoadingTime.getTime());
+    };
+  }, []);
+
+  // React.useEffect(() => {
+  //   if (localStorage.getItem(LOCALSTORAGE_KEY)) {
+  //     setEstimateEndTime(
+  //       new Date(
+  //         new Date().getTime() +
+  //           parseInt(localStorage.getItem(LOCALSTORAGE_KEY) as string)
+  //       )
+  //     );
+  //   }
+
+  //   return () => {
+  //     // Store this for the next time for better estimates
+  //     const aliveTime = new Date().getTime() - startLoadingTime.getTime();
+  //     // If the time it took was tiny it was because it was cached.
+  //     if (aliveTime > 1000) {
+  //       localStorage.setItem(LOCALSTORAGE_KEY, `${aliveTime}`);
+  //     }
+  //   };
+  // }, [startLoadingTime]);
+
+  const INTERVAL_INCREMENT = 700;
+  // const LOCALSTORAGE_KEY = "alltraits-loading-took";
+  const [elapsed, setElapsed] = React.useState(0);
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setElapsed((state) => state + INTERVAL_INCREMENT);
+    }, INTERVAL_INCREMENT);
+    return () => clearInterval(interval);
+  }, []);
+
+  const distance = estimateEndTime.getTime() - startLoadingTime.getTime();
+  const percent = (100 * elapsed) / distance;
+  return (
+    <div className="loading">
+      <progress id="progress" max="100" value={percent} style={{ margin: 20 }}>
+        {percent}%
+      </progress>
+      <br />
+      <small>
+        Estimated time to finish: {((distance - elapsed) / 1000).toFixed(0)}s{" "}
+        {elapsed > distance ? <span>🙃</span> : null}
+      </small>
     </div>
   );
 }
@@ -378,264 +437,263 @@ function deserializeSearchFlaws(list: string[]) {
   return rows;
 }
 
-function FilterControls({ flawLevels }: { flawLevels: FlawLevel[] }) {
-  const [initialFilters, updateFiltersURL] = useFiltersURL();
-  const [filters, setFilters] = useState(initialFilters);
-  const [searchFlawsRows, setSearchFlawsRows] = useState<SearchFlawRow[]>(
-    deserializeSearchFlaws(initialFilters.search_flaws)
-  );
+// function FilterControls({ flawLevels }: { flawLevels: FlawLevel[] }) {
+//   const [initialFilters, updateFiltersURL] = useFiltersURL();
+//   const [filters, setFilters] = useState(initialFilters);
+//   const [searchFlawsRows, setSearchFlawsRows] = useState<SearchFlawRow[]>(
+//     deserializeSearchFlaws(initialFilters.search_flaws)
+//   );
 
-  useEffect(() => {
-    // A little convenience DOM trick to put focus on the search input
-    // after you've added a row or used the <select>
-    const searchInputs = [
-      ...document.querySelectorAll<HTMLInputElement>(
-        'ul.search-flaws-rows input[type="search"]'
-      ),
-    ].filter((input) => !input.value);
-    if (searchInputs.length) {
-      searchInputs[searchInputs.length - 1].focus();
-    }
-  }, [searchFlawsRows]);
+//   useEffect(() => {
+//     // A little convenience DOM trick to put focus on the search input
+//     // after you've added a row or used the <select>
+//     const searchInputs = [
+//       ...document.querySelectorAll<HTMLInputElement>(
+//         'ul.search-flaws-rows input[type="search"]'
+//       ),
+//     ].filter((input) => !input.value);
+//     if (searchInputs.length) {
+//       searchInputs[searchInputs.length - 1].focus();
+//     }
+//   }, [searchFlawsRows]);
 
-  function refreshFilters() {
-    updateFiltersURL(filters);
-  }
+//   function refreshFilters() {
+//     updateFiltersURL(filters);
+//   }
 
-  let hasFilters = !equalObjects(defaultFilters, filters);
+//   let hasFilters = !equalObjects(defaultFilters, filters);
 
-  let hasEmptySearchFlawsRow = searchFlawsRows.some(
-    (row) => !row.search.trim()
-  );
+//   let hasEmptySearchFlawsRow = searchFlawsRows.some(
+//     (row) => !row.search.trim()
+//   );
 
-  function resetFilters(event: React.MouseEvent) {
-    event.preventDefault();
-    setFilters(defaultFilters);
-    updateFiltersURL(defaultFilters);
-  }
+//   function resetFilters(event: React.MouseEvent) {
+//     event.preventDefault();
+//     setFilters(defaultFilters);
+//     updateFiltersURL(defaultFilters);
+//   }
 
-  return (
-    <div className="filters">
-      <h3>Filters</h3>
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          refreshFilters();
-        }}
-      >
-        <div>
-          <h4>Document</h4>
-          <input
-            type="search"
-            placeholder="Filter by document URI"
-            value={filters.mdn_url}
-            onChange={(event) => {
-              setFilters({ ...filters, mdn_url: event.target.value });
-            }}
-            onBlur={refreshFilters}
-          />
-          <input
-            type="search"
-            placeholder="Filter by document title"
-            value={filters.title}
-            onChange={(event) => {
-              setFilters({ ...filters, title: event.target.value });
-            }}
-            onBlur={refreshFilters}
-          />
-        </div>
+//   return (
+//     <div className="filters">
+//       <h3>Filters</h3>
+//       <form
+//         onSubmit={(event) => {
+//           event.preventDefault();
+//           refreshFilters();
+//         }}
+//       >
+//         <div>
+//           <h4>Document</h4>
+//           <input
+//             type="search"
+//             placeholder="Filter by document URI"
+//             value={filters.mdn_url}
+//             onChange={(event) => {
+//               setFilters({ ...filters, mdn_url: event.target.value });
+//             }}
+//             onBlur={refreshFilters}
+//           />
+//           <input
+//             type="search"
+//             placeholder="Filter by document title"
+//             value={filters.title}
+//             onChange={(event) => {
+//               setFilters({ ...filters, title: event.target.value });
+//             }}
+//             onBlur={refreshFilters}
+//           />
+//         </div>
 
-        <div>
-          <h4>Popularity</h4>
-          <input
-            type="search"
-            placeholder="E.g. < 100"
-            value={filters.popularity || ""}
-            onChange={(event) => {
-              setFilters({ ...filters, popularity: event.target.value });
-            }}
-            onBlur={refreshFilters}
-          />
-        </div>
-        <div>
-          <h4>Flaws</h4>
-          <select
-            multiple={true}
-            value={filters.flaws}
-            onChange={(event) => {
-              const flaws = [...event.target.selectedOptions].map(
-                (opt) => opt.value
-              );
-              setFilters({ ...filters, flaws });
-            }}
-          >
-            {flawLevels &&
-              flawLevels.map((flawLevel) => {
-                return (
-                  <option key={flawLevel.name} value={flawLevel.name}>
-                    {humanizeFlawName(flawLevel.name)}{" "}
-                    {flawLevel.ignored && "(ignored)"}
-                  </option>
-                );
-              })}
-          </select>
-        </div>
-        <div>
-          <h4>Search inside flaws</h4>
-          <ul className="search-flaws-rows">
-            {searchFlawsRows.map((row, i) => {
-              return (
-                <li key={`${row.flaw}:${i}`}>
-                  <select
-                    value={row.flaw}
-                    onChange={(event) => {
-                      const clone = [...searchFlawsRows];
-                      clone[i].flaw = event.target.value;
-                      setSearchFlawsRows(clone);
-                    }}
-                  >
-                    {flawLevels &&
-                      flawLevels
-                        .filter((flawLevel) => !flawLevel.ignored)
-                        .map((flawLevel) => {
-                          return (
-                            <option key={flawLevel.name} value={flawLevel.name}>
-                              {humanizeFlawName(flawLevel.name)}
-                            </option>
-                          );
-                        })}
-                  </select>
-                  <input
-                    type="search"
-                    placeholder="Search expression (e.g. jsxref)"
-                    value={row.search}
-                    onChange={(event) => {
-                      setSearchFlawsRows(
-                        searchFlawsRows.map((row, j) => {
-                          if (i === j) {
-                            row.search = event.target.value;
-                          }
-                          return row;
-                        })
-                      );
-                    }}
-                    onBlur={() => {
-                      const serialized = serializeSearchFlaws(searchFlawsRows);
-                      setFilters({ ...filters, search_flaws: serialized });
-                      refreshFilters();
-                    }}
-                  />
-                  <button
-                    type="button"
-                    title="Remove search row"
-                    onClick={() => {
-                      const clone = [...searchFlawsRows];
-                      clone.splice(i, 1);
-                      setSearchFlawsRows(clone);
+//         <div>
+//           <h4>Popularity</h4>
+//           <input
+//             type="search"
+//             placeholder="E.g. < 100"
+//             value={filters.popularity || ""}
+//             onChange={(event) => {
+//               setFilters({ ...filters, popularity: event.target.value });
+//             }}
+//             onBlur={refreshFilters}
+//           />
+//         </div>
+//         <div>
+//           <h4>Flaws</h4>
+//           <select
+//             multiple={true}
+//             value={filters.flaws}
+//             onChange={(event) => {
+//               const flaws = [...event.target.selectedOptions].map(
+//                 (opt) => opt.value
+//               );
+//               setFilters({ ...filters, flaws });
+//             }}
+//           >
+//             {flawLevels &&
+//               flawLevels.map((flawLevel) => {
+//                 return (
+//                   <option key={flawLevel.name} value={flawLevel.name}>
+//                     {humanizeFlawName(flawLevel.name)}{" "}
+//                     {flawLevel.ignored && "(ignored)"}
+//                   </option>
+//                 );
+//               })}
+//           </select>
+//         </div>
+//         <div>
+//           <h4>Search inside flaws</h4>
+//           <ul className="search-flaws-rows">
+//             {searchFlawsRows.map((row, i) => {
+//               return (
+//                 <li key={`${row.flaw}:${i}`}>
+//                   <select
+//                     value={row.flaw}
+//                     onChange={(event) => {
+//                       const clone = [...searchFlawsRows];
+//                       clone[i].flaw = event.target.value;
+//                       setSearchFlawsRows(clone);
+//                     }}
+//                   >
+//                     {flawLevels &&
+//                       flawLevels
+//                         .filter((flawLevel) => !flawLevel.ignored)
+//                         .map((flawLevel) => {
+//                           return (
+//                             <option key={flawLevel.name} value={flawLevel.name}>
+//                               {humanizeFlawName(flawLevel.name)}
+//                             </option>
+//                           );
+//                         })}
+//                   </select>
+//                   <input
+//                     type="search"
+//                     placeholder="Search expression (e.g. jsxref)"
+//                     value={row.search}
+//                     onChange={(event) => {
+//                       setSearchFlawsRows(
+//                         searchFlawsRows.map((row, j) => {
+//                           if (i === j) {
+//                             row.search = event.target.value;
+//                           }
+//                           return row;
+//                         })
+//                       );
+//                     }}
+//                     onBlur={() => {
+//                       const serialized = serializeSearchFlaws(searchFlawsRows);
+//                       setFilters({ ...filters, search_flaws: serialized });
+//                       refreshFilters();
+//                     }}
+//                   />
+//                   <button
+//                     type="button"
+//                     title="Remove search row"
+//                     onClick={() => {
+//                       const clone = [...searchFlawsRows];
+//                       clone.splice(i, 1);
+//                       setSearchFlawsRows(clone);
 
-                      // const serialized = serializeSearchFlaws(searchFlawsRows);
-                      // setFilters({ ...filters, search_flaws: serialized });
-                      // refreshFilters()
-                    }}
-                  >
-                    -
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-          <button
-            type="button"
-            title="Add search row"
-            disabled={hasEmptySearchFlawsRow}
-            onClick={() => {
-              setSearchFlawsRows([
-                ...searchFlawsRows,
-                ...[
-                  {
-                    flaw: "macros",
-                    search: "",
-                  },
-                ],
-              ]);
-            }}
-          >
-            +
-          </button>
-        </div>
+//                       // const serialized = serializeSearchFlaws(searchFlawsRows);
+//                       // setFilters({ ...filters, search_flaws: serialized });
+//                       // refreshFilters()
+//                     }}
+//                   >
+//                     -
+//                   </button>
+//                 </li>
+//               );
+//             })}
+//           </ul>
+//           <button
+//             type="button"
+//             title="Add search row"
+//             disabled={hasEmptySearchFlawsRow}
+//             onClick={() => {
+//               setSearchFlawsRows([
+//                 ...searchFlawsRows,
+//                 ...[
+//                   {
+//                     flaw: "macros",
+//                     search: "",
+//                   },
+//                 ],
+//               ]);
+//             }}
+//           >
+//             +
+//           </button>
+//         </div>
 
-        <div>
-          <h4>Fixable flaws</h4>
-          <input
-            type="search"
-            placeholder="E.g. >0"
-            value={filters.fixableFlaws || ""}
-            onChange={(event) => {
-              setFilters({ ...filters, fixableFlaws: event.target.value });
-            }}
-            onBlur={refreshFilters}
-          />
-        </div>
+//         <div>
+//           <h4>Fixable flaws</h4>
+//           <input
+//             type="search"
+//             placeholder="E.g. >0"
+//             value={filters.fixableFlaws || ""}
+//             onChange={(event) => {
+//               setFilters({ ...filters, fixableFlaws: event.target.value });
+//             }}
+//             onBlur={refreshFilters}
+//           />
+//         </div>
 
-        <div>
-          <h4>&nbsp;</h4>
-          <button type="submit">Filter now</button>
-          {hasFilters && (
-            <button type="button" onClick={resetFilters}>
-              Reset filters
-            </button>
-          )}
-        </div>
-      </form>
-    </div>
-  );
-}
+//         <div>
+//           <h4>&nbsp;</h4>
+//           <button type="submit">Filter now</button>
+//           {hasFilters && (
+//             <button type="button" onClick={resetFilters}>
+//               Reset filters
+//             </button>
+//           )}
+//         </div>
+//       </form>
+//     </div>
+//   );
+// }
 
-function equalObjects(obj1: object, obj2: object) {
-  const keys1 = new Set(Object.keys(obj1));
-  const keys2 = new Set(Object.keys(obj2));
-  if (keys1.size !== keys2.size) {
-    return false;
-  }
-  for (const key of keys1) {
-    if (!keys2.has(key)) {
-      return false;
-    }
-  }
+// function equalObjects(obj1: object, obj2: object) {
+//   const keys1 = new Set(Object.keys(obj1));
+//   const keys2 = new Set(Object.keys(obj2));
+//   if (keys1.size !== keys2.size) {
+//     return false;
+//   }
+//   for (const key of keys1) {
+//     if (!keys2.has(key)) {
+//       return false;
+//     }
+//   }
 
-  return Object.entries(obj1).every(([key, value]) => {
-    const value2 = obj2[key];
-    if (typeof value !== typeof value2) {
-      return false;
-    }
-    if (Array.isArray(value)) {
-      return (
-        value.length === value2.length && value.every((v, i) => v === value2[i])
-      );
-    } else {
-      return value === value2;
-    }
-  });
-}
+//   return Object.entries(obj1).every(([key, value]) => {
+//     const value2 = obj2[key];
+//     if (typeof value !== typeof value2) {
+//       return false;
+//     }
+//     if (Array.isArray(value)) {
+//       return (
+//         value.length === value2.length && value.every((v, i) => v === value2[i])
+//       );
+//     } else {
+//       return value === value2;
+//     }
+//   });
+// }
 
 function DocumentsTable({
-  locale,
   counts,
   documents,
 }: {
-  locale: string;
   counts: Counts;
   documents: Document[];
 }) {
-  const [filters, updateFiltersURL] = useFiltersURL();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  function setSort(key: string): void {
-    updateFiltersURL(
-      filters.sort_by === key
-        ? { sort_reverse: !filters.sort_reverse }
-        : { sort_by: key }
-    );
-  }
+  const sort = searchParams.get("sort") || "modified";
+  const sortReverse = JSON.parse(searchParams.get("sortReverse") || "false");
+
+  const page = parseInt(searchParams.get("page") || "1", 10);
+  const pageSize = parseInt(searchParams.get("pageSize") || "20", 10);
+  const filterTitle = searchParams.get("title") || "";
+  const filterURL = searchParams.get("url") || "";
+
   // https://gist.github.com/jlbruno/1535691/db35b4f3af3dcbb42babc01541410f291a8e8fac
   function getGetOrdinal(n: number) {
     const s = ["th", "st", "nd", "rd"];
@@ -657,9 +715,26 @@ function DocumentsTable({
 
   function TH({ id, title }: { id: string; title: string }) {
     return (
-      <th onClick={() => setSort(id)} className="sortable">
-        {title}{" "}
-        {filters.sort_by === id ? (filters.sort_reverse ? "🔽" : "🔼") : null}
+      <th
+        onClick={() => {
+          if (sort === id) {
+            // searchParams.set("sortReverse", JSON.stringify(!sortReverse));
+            setSearchParams(
+              createSearchParams({
+                sort: id,
+                sortReverse: JSON.stringify(!sortReverse),
+              })
+            );
+          } else {
+            // searchParams.set("sort", id);
+            setSearchParams(createSearchParams({ sort: id }));
+          }
+        }}
+        className={`sortable ${sort === id ? "active" : ""} ${
+          sort === id && sortReverse ? "reverse" : ""
+        }`}
+      >
+        {title}
       </th>
     );
   }
@@ -692,7 +767,7 @@ function DocumentsTable({
       <>
         <span className="url-prefix">{left}/docs/</span>
         <span className="url-slug">
-          {filters.mdn_url ? getHighlightedText(right, filters.mdn_url) : right}
+          {filterURL ? getHighlightedText(right, filterURL) : right}
         </span>
       </>
     );
@@ -731,74 +806,137 @@ function DocumentsTable({
     );
   }
 
-  function showDifferences(differences: DocumentDifferences) {
-    if (differences.count) {
-      return `${differences.count} (${differences.total} total)`;
-    }
-    return "0";
-  }
+  const filteredDocuments = documents
+    .filter((document) => {
+      if (
+        filterTitle &&
+        !document.title.toLowerCase().includes(filterTitle.toLowerCase())
+      ) {
+        return false;
+      }
+
+      if (
+        filterURL &&
+        !document.mdn_url.toLowerCase().includes(filterURL.toLowerCase())
+      ) {
+        return false;
+      }
+
+      return true;
+    })
+    .sort((A, B) => {
+      let reverse = sortReverse ? -1 : 1;
+      if (sort === "modified") {
+        const a = new Date(A.edits.modified);
+        const b = new Date(B.edits.modified);
+        return reverse * (b.getTime() - a.getTime());
+      } else if (sort === "popularity") {
+        const a = A.popularity.value;
+        const b = B.popularity.value;
+        return reverse * (b - a);
+      } else if (sort === "differences") {
+        const a = A.differences.total;
+        const b = B.differences.total;
+        return reverse * (b - a);
+      } else if (sort === "mdn_url") {
+        const a = A.mdn_url;
+        const b = B.mdn_url;
+        return reverse * a.localeCompare(b);
+      } else {
+        throw new Error(`Unrecognized sort '${sort}'`);
+      }
+    });
+  const pageCount = Math.ceil(counts.found / pageSize);
 
   return (
     <div className="documents">
       <h3>
-        Documents found ({counts.found.toLocaleString()}){" "}
-        {filters.page > 1 && <span className="page">page {filters.page}</span>}
+        Documents found ({filteredDocuments.length.toLocaleString()}){" "}
+        {page > 1 && <span className="page">page {page}</span>}{" "}
+        <small>of {counts.total.toLocaleString()} in total</small>
       </h3>
-      <h4 className="subheader">
-        {counts.total.toLocaleString()} documents in {locale} in total
-      </h4>
-      {/* {!counts.built ? (
-        <WarnAboutNothingBuilt />
-      ) : (
 
-      )} */}
       <table>
         <thead>
           <tr>
             <TH id="mdn_url" title="Document" />
             <TH id="popularity" title="Popularity" />
-            <TH id="date" title="Last modified" />
+            <TH id="modified" title="Last modified" />
             <TH id="differences" title="Differences" />
           </tr>
         </thead>
         <tbody>
-          {documents.map((doc: Document) => {
-            return (
-              <tr key={doc.mdn_url}>
-                <td>
-                  <Link
-                    to={`${doc.mdn_url}#_flaws`}
-                    title={doc.title}
-                    target="_blank"
+          {filteredDocuments
+            .slice((page - 1) * pageSize, page * pageSize)
+            .map((doc: Document) => {
+              return (
+                <tr key={doc.mdn_url}>
+                  <td>
+                    <Link
+                      to={`${doc.mdn_url}#_flaws`}
+                      title={doc.title}
+                      target="_blank"
+                    >
+                      {showBriefURL(doc.mdn_url)}
+                    </Link>
+                    <br />
+                    <span className="document-title-preview">
+                      {filterTitle
+                        ? getHighlightedText(doc.title, filterTitle)
+                        : doc.title}
+                    </span>
+                  </td>
+                  <td
+                    title={
+                      doc.popularity.ranking
+                        ? `Meaning there are ${
+                            doc.popularity.ranking - 1
+                          } more popular pages than this`
+                        : "Meaning it has no ranking. Most likely a very rare (or new) document"
+                    }
                   >
-                    {showBriefURL(doc.mdn_url)}
-                  </Link>
-                  <span className="document-title-preview">
-                    {filters.title
-                      ? getHighlightedText(doc.title, filters.title)
-                      : doc.title}
-                  </span>
-                </td>
-                <td
-                  title={
-                    doc.popularity.ranking
-                      ? `Meaning there are ${
-                          doc.popularity.ranking - 1
-                        } more popular pages than this`
-                      : "Meaning it has no ranking. Most likely a very rare (or new) document"
-                  }
-                >
-                  {!doc.popularity.ranking
-                    ? "n/a"
-                    : `${getGetOrdinal(doc.popularity.ranking)}`}
-                </td>
-                <td>{showLastModified(doc)}</td>
-                <td>{showDifferences(doc.differences)}</td>
-              </tr>
-            );
-          })}
+                    {!doc.popularity.ranking
+                      ? "n/a"
+                      : `${getGetOrdinal(doc.popularity.ranking)}`}{" "}
+                    <small title="For the parent document">
+                      (
+                      {!doc.popularity.parentRanking
+                        ? "n/a"
+                        : `${getGetOrdinal(doc.popularity.parentRanking)}`}
+                      )
+                    </small>
+                  </td>
+                  <td>{showLastModified(doc)}</td>
+                  <td>
+                    {doc.differences.count ? (
+                      <>
+                        {doc.differences.count.toLocaleString()}{" "}
+                        <small>
+                          ({doc.differences.total.toLocaleString()} total)
+                        </small>
+                      </>
+                    ) : (
+                      "0"
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
+      {pageCount > 1 && (
+        <p className="pagination">
+          <PageLink number={1} disabled={page === 1}>
+            First page
+          </PageLink>{" "}
+          {page > 2 && (
+            <PageLink number={page - 1}>Previous page ({page - 1})</PageLink>
+          )}{" "}
+          <PageLink number={page + 1} disabled={page + 1 > pageCount}>
+            Next page ({page + 1})
+          </PageLink>
+        </p>
+      )}
     </div>
   );
 }
@@ -829,7 +967,6 @@ function PageLink({
           event.preventDefault();
         }
         const top = document.querySelector("div.all-translations");
-        console.log({ top });
 
         if (top) {
           top.scrollIntoView({ behavior: "smooth" });
@@ -841,91 +978,14 @@ function PageLink({
   );
 }
 
-function WarnAboutNothingBuilt() {
-  return (
-    <div className="attention document-warnings">
-      <h4>No documents have been built, so no flaws can be found</h4>
-      <p>
-        At the moment, you have to use the command line tools to build documents
-        that we can analyze.
-      </p>
-    </div>
-  );
-}
-
-function AllFlawCounts({ counts }: { counts: FlawsCounts }) {
-  const typesSorted = Object.entries(counts.type).sort((a, b) => {
-    return a[1] - b[1];
-  });
-  const macrosSorted = Object.entries(counts.macros).sort((a, b) => {
-    return a[1] - b[1];
-  });
-  return (
-    <div className="flaw-counts">
-      <h3>Flaws counts</h3>
-      <table>
-        <tbody>
-          <tr>
-            <td>Total</td>
-            <td>
-              <b>{counts.total.toLocaleString()}</b>
-            </td>
-          </tr>
-          <tr>
-            <td>Fixable</td>
-            <td>
-              <b>{counts.fixable.toLocaleString()}</b>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h4>Breakdown by type</h4>
-      <table>
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th>Count</th>
-          </tr>
-        </thead>
-        <tbody>
-          {typesSorted.map(([key, value]) => {
-            return (
-              <tr key={key}>
-                <td>{humanizeFlawName(key)}</td>
-                <td>
-                  <b>{value.toLocaleString()}</b>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <h4>
-        Breakdown by <code>macros</code> flaws
-      </h4>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Count</th>
-          </tr>
-        </thead>
-        <tbody>
-          {macrosSorted.map(([key, value]) => {
-            return (
-              <tr key={key}>
-                <td>
-                  <code>{key}</code>
-                </td>
-                <td>
-                  <b>{value.toLocaleString()}</b>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  );
-}
+// function WarnAboutNothingBuilt() {
+//   return (
+//     <div className="attention document-warnings">
+//       <h4>No documents have been built, so no flaws can be found</h4>
+//       <p>
+//         At the moment, you have to use the command line tools to build documents
+//         that we can analyze.
+//       </p>
+//     </div>
+//   );
+// }
