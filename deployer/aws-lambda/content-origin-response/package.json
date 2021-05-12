@@ -6,6 +6,9 @@
   "scripts": {
     "make-package": "yarn install && zip -r -X function.zip . -i index.js 'node_modules/*'"
   },
+  "dependencies": {
+    "@yari-internal/constants": "file:../../../libs/constants"
+  },
   "engines": {
     "node": ">=12.x"
   },
