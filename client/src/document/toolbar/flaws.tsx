@@ -484,12 +484,14 @@ function BrokenLinks({
               {flaw.fixable && <FixableFlawBadge />}{" "}
               {opening && opening === key && <span>Opening...</span>}
               <br />
-              {flaw.suggestion && (
+              {flaw.suggestion ? (
                 <span>
                   <b>Suggestion:</b>
                   <ShowDiff before={flaw.href} after={flaw.suggestion} />
                 </span>
-              )}{" "}
+              ) : (
+                <code>{flaw.explanation}</code>
+              )}
             </li>
           );
         })}

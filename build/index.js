@@ -215,7 +215,8 @@ function makeTOC(doc) {
     .map((section) => {
       if (
         (section.type === "prose" ||
-          section.type === "browser_compatibility") &&
+          section.type === "browser_compatibility" ||
+          section.type === "specifications") &&
         section.value.id &&
         section.value.title &&
         !section.value.isH3

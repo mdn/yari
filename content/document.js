@@ -88,33 +88,41 @@ function extractLocale(folder) {
   return locale;
 }
 
-function saveFile(
-  filePath,
-  rawBody,
-  { slug, title, translation_of, tags, translation_of_original, original_slug }
-) {
-  if (slug.includes("#")) {
+function saveFile(filePath, rawBody, metadata, frontMatterKeys = null) {
+  const requiredFrontMatterKeys = ["title", "slug"];
+  const optionalFrontMatterKeys = [
+    "tags",
+    "translation_of",
+    "translation_of_original",
+    "original_slug",
+  ];
+
+  const saveMetadata = {};
+
+  for (const key of requiredFrontMatterKeys) {
+    if (!metadata[key]) {
+      throw new Error(`'${key}' metadata must be truthy`);
+    }
+    saveMetadata[key] = metadata[key];
+  }
+  for (const key of optionalFrontMatterKeys) {
+    if (metadata[key]) {
+      saveMetadata[key] = metadata[key];
+    }
+  }
+  // If the 'frontMatterKeys' is passed, the caller knows exactly which other
+  // fields are expected from the metadata. For example 'browser-compat'.
+  // These are not necessarily "required" but key should definitely be set.
+  for (const key of frontMatterKeys || []) {
+    saveMetadata[key] = metadata[key];
+  }
+
+  // Special extra sanity check
+  if (metadata.slug.includes("#")) {
     throw new Error("newSlug can not contain the '#' character");
   }
-  const metadata = {
-    title,
-    slug,
-  };
-  if (tags) {
-    metadata.tags = tags;
-  }
-  if (translation_of) {
-    metadata.translation_of = translation_of;
-  }
-  if (translation_of_original) {
-    // This will only make sense during the period where we're importing from
-    // MySQL to disk. Once we're over that period we can delete this if-statement.
-    metadata.translation_of_original = translation_of_original;
-  }
-  if (original_slug) {
-    metadata.original_slug = original_slug;
-  }
-  const combined = `---\n${yaml.dump(metadata)}---\n${rawBody.trim()}\n`;
+
+  const combined = `---\n${yaml.dump(saveMetadata)}---\n${rawBody.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 
@@ -158,21 +166,14 @@ function archive(
   rawBody,
   metadata,
   isMarkdown = false,
-  isTranslatedContent = false,
-  root = null
+  root = null,
+  sourceFolder = null
 ) {
   if (!root) {
-    root = isTranslatedContent
-      ? CONTENT_TRANSLATED_ROOT
-      : CONTENT_ARCHIVED_ROOT;
+    root = CONTENT_ARCHIVED_ROOT;
   }
-  if (!CONTENT_ARCHIVED_ROOT) {
+  if (!root) {
     throw new Error("Can't archive when CONTENT_ARCHIVED_ROOT is not set");
-  }
-  if (isTranslatedContent && !CONTENT_TRANSLATED_ROOT) {
-    throw new Error(
-      "Can't archive translated content when CONTENT_TRANSLATED_ROOT is not set"
-    );
   }
   const folderPath = buildPath(
     path.join(root, metadata.locale.toLowerCase()),
@@ -193,6 +194,24 @@ function archive(
   }
 
   saveFile(getHTMLPath(folderPath), trimLineEndings(renderedHTML), metadata);
+
+  // Next we need to copy every single file that isn't index.html or index.md
+  // which basically means all the images.
+  if (sourceFolder) {
+    const files = fs.readdirSync(sourceFolder);
+    for (const fileName of files) {
+      if (fileName === "index.html" || fileName === "index.md") {
+        continue;
+      }
+      const filePath = path.join(sourceFolder, fileName);
+      if (!fs.statSync(filePath).isDirectory()) {
+        fs.copyFileSync(
+          filePath,
+          path.join(folderPath, path.basename(filePath))
+        );
+      }
+    }
+  }
   return folderPath;
 }
 
@@ -216,7 +235,7 @@ function unarchive(document, move) {
   return created;
 }
 
-const read = memoize((folderOrFilePath) => {
+const read = memoize((folderOrFilePath, roots = ROOTS) => {
   let filePath = null;
   let folder = null;
   let root = null;
@@ -235,7 +254,7 @@ const read = memoize((folderOrFilePath) => {
       throw new Error(`'${filePath}' is not a HTML or Markdown file.`);
     }
 
-    root = ROOTS.find((possibleRoot) => filePath.startsWith(possibleRoot));
+    root = roots.find((possibleRoot) => filePath.startsWith(possibleRoot));
     if (root) {
       folder = filePath
         .replace(root + path.sep, "")
@@ -252,7 +271,7 @@ const read = memoize((folderOrFilePath) => {
     }
   } else {
     folder = folderOrFilePath;
-    for (const possibleRoot of ROOTS) {
+    for (const possibleRoot of roots) {
       const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
       if (fs.existsSync(possibleHTMLFilePath)) {
         root = possibleRoot;
@@ -348,6 +367,13 @@ const read = memoize((folderOrFilePath) => {
   const fullMetadata = {
     metadata: {
       ...metadata,
+      // This is our chance to record and remember which keys were actually
+      // dug up from the front-matter.
+      // It matters because the keys in front-matter are arbitrary.
+      // Meaning, if a document contains `foo: bar` as a front-matter key/value
+      // we need to take note of that and make sure we preserve that if we
+      // save the metadata back (e.g. fixable flaws).
+      frontMatterKeys: Object.keys(metadata),
       locale,
       popularity: getPopularities().get(url) || 0.0,
       modified,
@@ -388,15 +414,22 @@ function update(url, rawBody, metadata) {
     document.isMarkdown ? getMarkdownPath(folder) : getHTMLPath(folder)
   );
 
+  const { frontMatterKeys } = metadata;
+
   if (
     isNewSlug ||
     document.rawBody !== rawBody ||
     document.metadata.title !== metadata.title
   ) {
-    saveFile(indexPath, rawBody, {
-      ...document.metadata,
-      ...metadata,
-    });
+    saveFile(
+      indexPath,
+      rawBody,
+      {
+        ...document.metadata,
+        ...metadata,
+      },
+      frontMatterKeys
+    );
     if (isNewSlug) {
       updateWikiHistory(
         path.join(root, metadata.locale.toLowerCase()),
@@ -616,7 +649,18 @@ function remove(
 ) {
   const root = getRoot(locale);
   const url = buildURL(locale, slug);
-  const { metadata, fileInfo } = findByURL(url) || {};
+
+  // If we don't explicitly set the `roots` it might read from $CONTENT_ARCHIVED_ROOT
+  // which might find the files.
+  // The reason is when you're running archive CLI tool. When you run that,
+  // it will first *add* files to the archived root and then, after that's run,
+  // it will start removing files. If it then finds the files in the archived
+  // root it will confuse the git command.
+  const roots = [CONTENT_ROOT];
+  if (CONTENT_TRANSLATED_ROOT) {
+    roots.push(CONTENT_TRANSLATED_ROOT);
+  }
+  const { metadata, fileInfo } = findByURL(url, roots) || {};
   if (!metadata) {
     throw new Error(`document does not exists: ${url}`);
   }

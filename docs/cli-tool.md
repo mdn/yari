@@ -56,3 +56,9 @@ dev-server (`yarn start`).
 ### flaws
 
 Show and optionally fix fixable flaws for a given slug.
+
+### archive
+
+Renders the Kumascript HTML and puts this (and the `index.html` file)
+into the `$CONTENT_ARCHIVED_ROOT` repo. Can also delete it from the
+`$CONTENT_ROOT` or `$CONTENT_TRANSLATED_ROOT`.

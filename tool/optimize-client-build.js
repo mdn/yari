@@ -18,22 +18,45 @@ async function runOptimizeClientBuild(buildRoot) {
   // For every favicon referred there, change it to a file URL that
   // has a hash in it.
   const $ = cheerio.load(indexHtml);
-  $("link[rel]").each((i, element) => {
-    const href = element.attribs.href;
-    if (!href) {
-      return;
+  $('link[rel], meta[property="og:image"]').each((i, element) => {
+    let href;
+    let attributeKey;
+    let hrefPrefix = "";
+    if (element.tagName === "meta") {
+      if (element.attribs.property !== "og:image") {
+        return;
+      }
+      href = element.attribs.content;
+      attributeKey = "content";
+      // This is an unfortunate hack. The value for the
+      // <meta property=og:image content=...> needs to be an absolute URL.
+      // We tested with a relative URL and it seems it doesn't work in Twitter.
+      // So we hardcode the URL to be our production domain so the URL is
+      // always absolute.
+      // Yes, this makes it a bit weird to use a build of this on a dev,
+      // stage, preview, or a local build. Especially if the hashed URL doesn't
+      // always work. But it's a fair price to pay.
+      hrefPrefix = "https://developer.mozilla.org";
+    } else {
+      href = element.attribs.href;
+      if (!href) {
+        return;
+      }
+      const rel = element.attribs.rel;
+      if (
+        ![
+          "icon",
+          "shortcut icon",
+          "apple-touch-icon",
+          "apple-touch-icon-precomposed",
+          "manifest",
+        ].includes(rel)
+      ) {
+        return;
+      }
+      attributeKey = "href";
     }
-    const rel = element.attribs.rel;
-    if (
-      ![
-        "icon",
-        "shortcut icon",
-        "apple-touch-icon-precomposed",
-        "manifest",
-      ].includes(rel)
-    ) {
-      return;
-    }
+
     // If this script is, for some reason, already run before we can
     // bail if it looks like the href already is hashed.
     if (/\.[a-f0-9]{8}\./.test(href)) {
@@ -56,18 +79,19 @@ async function runOptimizeClientBuild(buildRoot) {
     results.push({
       filePath,
       href,
-      hashedHref,
+      url: hrefPrefix + hashedHref,
       hashedFilePath,
+      attributeKey,
     });
   });
 
   if (results.length > 0) {
     // It clearly hashed some files. Let's update the HTML!
     let newIndexHtml = indexHtml;
-    for (const { href, hashedHref } of results) {
+    for (const { href, url, attributeKey } of results) {
       newIndexHtml = newIndexHtml.replace(
-        new RegExp(`href="${href}"`),
-        `href="${hashedHref}"`
+        new RegExp(`${attributeKey}="${href}"`),
+        `${attributeKey}="${url}"`
       );
     }
     fs.writeFileSync(indexHtmlFilePath, newIndexHtml, "utf-8");

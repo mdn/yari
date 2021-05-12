@@ -218,10 +218,10 @@ describe("Basic viewing of functional pages", () => {
   });
 
   it("should suggest the en-US equivalent on non-en-US pages not found", async () => {
-    await page.goto(testURL("/sv-SE/docs/Web/foo"));
+    await page.goto(testURL("/ja/docs/Web/foo"));
     await expect(page).toMatch("Page not found");
-    await expect(page).toMatch("/sv-SE/docs/Web/foo could not be found");
-    // Simply by swapping the "sv-SE" for "en-US" it's able to find the index.json
+    await expect(page).toMatch("/ja/docs/Web/foo could not be found");
+    // Simply by swapping the "ja" for "en-US" it's able to find the index.json
     // for that slug and present a link to it.
     await expect(page).toMatch("Good news!");
     await expect(page).toMatchElement("a", {
@@ -332,5 +332,29 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toSelect('select[name="locale"]', "French");
     await expect(page).toClick("button", { text: "Update language" });
     await expect(page).toMatch("Yay! Updated settings successfully saved.");
+  });
+
+  it("should redirect retired locale to English (document)", async () => {
+    await page.goto(testURL("/ar/docs/Web/Foo"));
+    await expect(page.url()).toMatch(
+      testURL("/en-US/docs/Web/Foo/?retiredLocale=ar")
+    );
+    await expect(page).toMatch("<foo>: A test tag");
+  });
+
+  it("should redirect retired locale to English (index.json)", async () => {
+    await page.goto(testURL("/ar/docs/Web/Foo/index.json"));
+    await expect(page.url()).toMatch(
+      testURL("/en-US/docs/Web/Foo/index.json?retiredLocale=ar")
+    );
+    await expect(page).toMatch("<foo>: A test tag");
+  });
+
+  it("should redirect retired locale to English (search with query string)", async () => {
+    await page.goto(testURL("/ar/search?q=video"));
+    await expect(page.url()).toMatch(
+      testURL("/en-US/search/?q=video&retiredLocale=ar")
+    );
+    await expect(page).toMatch("Search results for: video");
   });
 });

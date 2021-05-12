@@ -196,8 +196,6 @@ def test_not_cached(base_url, is_behind_cdn, slug, status, expected_location):
         ("/en-US/signup", 200, None),
         ("/en-US/signin", 200, None),
         ("/en-US/settings", 200, None),
-        ("/en-US/search/xml", 200, None),
-        ("/en-US/search.json?q=yada", 301, "/api/v1/search?q=yada"),
         ("/en-US/search?q=css", 200, None),
         ("/en-US/search/?q=css", 302, "/en-US/search?q=css"),
         ("/en-US/search/?q=html", 302, "/en-US/search?q=html"),
