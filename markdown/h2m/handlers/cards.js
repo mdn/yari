@@ -17,7 +17,7 @@ module.exports = [
       const grandChild = child.children[0];
       return (
         grandChild.tagName == "strong" &&
-        toText(grandChild).replace(":").toLowerCase() == className
+        toText(grandChild).replace(":", "").toLowerCase() == className
       );
     },
     (node, t) =>

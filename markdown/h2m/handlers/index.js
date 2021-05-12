@@ -3,7 +3,7 @@ const trim = require("trim-trailing-lines");
 
 const { h, trimTrailingNewLines, wrapText } = require("../utils");
 const { code, spread, wrap } = require("./rehype-remark-utils");
-const notecards = require("./cards");
+const cards = require("./cards");
 const tables = require("./tables");
 const { toText } = require("./to-text");
 
@@ -128,7 +128,7 @@ module.exports = [
   ],
 
   ...tables,
-  ...notecards,
+  ...cards,
 
   // Turn <code><a href="/some-link">someCode</a></code> into [`someCode`](/someLink) (other way around)
   [

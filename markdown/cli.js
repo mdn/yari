@@ -33,9 +33,10 @@ program
   .action(
     tryOrExit(async ({ args }) => {
       const all = Document.findAll({ folderSearch: args.folder });
-      for (const doc of all.iter()) {
+      for (let doc of all.iter()) {
         if (doc.isMarkdown) {
-          continue;
+          fs.rmSync(doc.fileInfo.path);
+          doc = Document.read(doc.fileInfo.path.replace(/\.md$/, ".html"));
         }
         const { body: h, frontmatter } = fm(doc.rawContent);
         const m = await h2m.run(h);
