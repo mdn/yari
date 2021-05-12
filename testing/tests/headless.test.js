@@ -333,4 +333,28 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toClick("button", { text: "Update language" });
     await expect(page).toMatch("Yay! Updated settings successfully saved.");
   });
+
+  it("should redirect retired locale to English (document)", async () => {
+    await page.goto(testURL("/ar/docs/Web/Foo"));
+    await expect(page.url()).toMatch(
+      testURL("/en-US/docs/Web/Foo/?retiredLocale=ar")
+    );
+    await expect(page).toMatch("<foo>: A test tag");
+  });
+
+  it("should redirect retired locale to English (index.json)", async () => {
+    await page.goto(testURL("/ar/docs/Web/Foo/index.json"));
+    await expect(page.url()).toMatch(
+      testURL("/en-US/docs/Web/Foo/index.json?retiredLocale=ar")
+    );
+    await expect(page).toMatch("<foo>: A test tag");
+  });
+
+  it("should redirect retired locale to English (search with query string)", async () => {
+    await page.goto(testURL("/ar/search?q=video"));
+    await expect(page.url()).toMatch(
+      testURL("/en-US/search/?q=video&retiredLocale=ar")
+    );
+    await expect(page).toMatch("Search results for: video");
+  });
 });
