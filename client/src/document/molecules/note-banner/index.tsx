@@ -3,6 +3,7 @@ export interface NoteContent {
   url: string;
 }
 
+// map note types to classNames
 export const NOTE_TYPES = {
   general: "neutral",
   warning: "warning",
