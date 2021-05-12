@@ -157,7 +157,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
         !finalSrc.startsWith(`/${DEFAULT_LOCALE.toLowerCase()}/`)
       ) {
         const enUSFinalSrc = finalSrc.replace(
-          new RegExp(`^/${doc.locale}/`),
+          new RegExp(`^/${doc.locale}/`, "i"),
           `/${DEFAULT_LOCALE}/`
         );
         if (Image.findByURL(enUSFinalSrc)) {
