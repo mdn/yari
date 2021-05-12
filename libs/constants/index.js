@@ -116,13 +116,13 @@ const cspToString = (csp) =>
     .map(([directive, values]) => `${directive} ${values.join(" ")};`)
     .join(" ");
 
-const CSP_VALUE_PROD = cspToString({
+const CSP_VALUE_STAGE = cspToString({
   ...CSP_DIRECTIVES,
   "report-uri": [
     "https://sentry.prod.mozaws.net/api/72/security/?sentry_key=25e652a045b642dfaa310e92e800058a",
   ],
 });
-const CSP_VALUE_STAGE = cspToString({
+const CSP_VALUE_PROD = cspToString({
   ...CSP_DIRECTIVES,
   "report-uri": [
     "https://sentry.prod.mozaws.net/api/73/security/?sentry_key=8664389dc16c4e9786e4a396f2964952",
