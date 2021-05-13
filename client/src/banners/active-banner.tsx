@@ -3,7 +3,7 @@ import * as React from "react";
 import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import { useGA } from "../ga-context";
 // import { COMMON_SURVEY_ID } from "./ids";
-import { MDN_PLUSPLUS_IDv1 } from "./ids";
+import { PLUS_IDv1 } from "./ids";
 import { useLocale } from "../hooks";
 
 // const CATEGORY_LEARNING_SURVEY = "learning web development";
@@ -116,13 +116,13 @@ function Banner(props: BannerProps) {
 //     />
 //   );
 // }
-function MDNPlusPlusBanner({ onDismissed }: { onDismissed: () => void }) {
+function PlusBanner({ onDismissed }: { onDismissed: () => void }) {
   const ga = useGA();
   const locale = useLocale();
 
   return (
     <Banner
-      id={MDN_PLUSPLUS_IDv1}
+      id={PLUS_IDv1}
       title={"MDN++ Landing Page Experiment"}
       copy={"Summer is coming."}
       cta={"Check it out"}
@@ -132,7 +132,7 @@ function MDNPlusPlusBanner({ onDismissed }: { onDismissed: () => void }) {
       onCTAClick={() => {
         ga("send", {
           hitType: "event",
-          eventCategory: MDN_PLUSPLUS_IDv1,
+          eventCategory: PLUS_IDv1,
           eventAction: "CTA clicked",
           eventLabel: "banner",
         });
@@ -152,8 +152,8 @@ export default function ActiveBanner({
   id: string;
   onDismissed: () => void;
 }) {
-  if (id === MDN_PLUSPLUS_IDv1) {
-    return <MDNPlusPlusBanner onDismissed={onDismissed} />;
+  if (id === PLUS_IDv1) {
+    return <PlusBanner onDismissed={onDismissed} />;
   }
   // if (id === COMMON_SURVEY_ID) {
   //   return <CommonSurveyBanner onDismissed={onDismissed} />;

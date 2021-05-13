@@ -4,9 +4,9 @@ import useSWR from "swr";
 import { useUserData } from "../../user-context";
 import "./index.scss";
 
-const API_URL = "/api/v1/mdnplusplus/landing-page-survey/";
-const SESSIONSTORAGE_KEY_UUID = "mdnplusplus-landing-page-survey-uuid";
-const SESSIONSTORAGE_KEY_EMAIL = "mdnplusplus-landing-page-survey-email";
+const API_URL = "/api/v1/plus/landing-page-survey/";
+const SESSIONSTORAGE_KEY_UUID = "plus-landing-page-survey-uuid";
+const SESSIONSTORAGE_KEY_EMAIL = "plus-landing-page-survey-email";
 
 interface PingData {
   csrfmiddlewaretoken: string;
@@ -33,9 +33,8 @@ export default function LandingPageSurvey({ variant }: { variant: number }) {
   const [email, setEmail] = React.useState(
     getSessionStorageData(SESSIONSTORAGE_KEY_EMAIL) || ""
   );
-  const [page, setPage] = React.useState<"start" | "thankyou" | "price">(
-    "start"
-  );
+  const [page, setPage] =
+    React.useState<"start" | "thankyou" | "price">("start");
   const userData = useUserData();
   React.useEffect(() => {
     if (userData && userData.email && !email) {
@@ -51,10 +50,8 @@ export default function LandingPageSurvey({ variant }: { variant: number }) {
 
   const [price, setPrice] = React.useState("");
 
-  const [
-    surveySubmissionError,
-    setSurveySubmissionError,
-  ] = React.useState<Error | null>(null);
+  const [surveySubmissionError, setSurveySubmissionError] =
+    React.useState<Error | null>(null);
 
   // Use a useMemo(() => {...}, [variant]) so that you don't get a different
   // response if there's a re-render because in a re-render you might get
@@ -95,7 +92,6 @@ export default function LandingPageSurvey({ variant }: { variant: number }) {
     }
     const formData = new URLSearchParams();
     formData.set("response", JSON.stringify({ price }));
-    formData.set("variant", `${variant}`);
     formData.set("uuid", pingData.uuid);
 
     const response = await fetch(API_URL, {
@@ -112,10 +108,8 @@ export default function LandingPageSurvey({ variant }: { variant: number }) {
     return response;
   }
 
-  const [
-    waitlistSubmissionError,
-    setWaitlistSubmissionError,
-  ] = React.useState<Error | null>(null);
+  const [waitlistSubmissionError, setWaitlistSubmissionError] =
+    React.useState<Error | null>(null);
 
   async function sendWaitlistSubmission(email: string) {
     if (!pingData) {

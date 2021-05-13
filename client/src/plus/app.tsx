@@ -5,7 +5,7 @@ const LandingPageSurvey = React.lazy(() => import("./landing-page-survey"));
 
 type Variant = 0 | 1 | 2 | 3;
 
-const LOCALSTORAGE_KEY = "mdnplusplus_lc_variant";
+const LOCALSTORAGE_KEY = "plus_lc_variant";
 
 function loadPreviousVariant(possibleVariants: Variant[]): Variant | undefined {
   try {
@@ -31,7 +31,7 @@ function setPreviousVariant(value: Variant) {
   }
 }
 
-export default function App({ ...appProps }) {
+export default function App() {
   const variants: Variant[] = [0, 1, 2, 3];
   const previousVariant = loadPreviousVariant(variants);
   const variant: Variant =
@@ -42,7 +42,7 @@ export default function App({ ...appProps }) {
   }
 
   return (
-    <div className="mdnplusplus">
+    <div className="plus">
       <p>Hi I'm Daryl!</p>
       {variant === 1 || variant === 3 ? (
         <p>Hi, this is variant 1 or 3!</p>

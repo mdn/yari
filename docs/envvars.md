@@ -307,7 +307,7 @@ built with flaw detection set to warn, but since you might be viewing the pages
 on a remote domain (e.g. `pr123.dev.content.mozit.cloud`) it doesn't make sense to
 present the "Fix fixable flaws" button for example.
 
-### `REACT_APP_ENABLE_MDNPLUSPLUS`
+### `REACT_APP_ENABLE_PLUS`
 
 **Default: `NODE_ENV==='development'`**
 
