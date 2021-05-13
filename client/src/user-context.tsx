@@ -1,7 +1,7 @@
 import * as React from "react";
 import useSWR from "swr";
 
-import { DISABLE_AUTH } from "./constants";
+import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./constants";
 
 export type UserData = {
   username: string | null | undefined;
@@ -14,6 +14,9 @@ export type UserData = {
   isSubscriber: boolean;
   subscriberNumber: number | null | undefined;
   email: string | null | undefined;
+  geo: {
+    country: string;
+  };
   waffle: {
     flags: {
       [flag_name: string]: boolean;
@@ -42,7 +45,15 @@ function getSessionStorageData() {
   try {
     const data = sessionStorage.getItem(SESSION_STORAGE_KEY);
     if (data) {
-      return JSON.parse(data) as UserData;
+      const parsed = JSON.parse(data);
+      // Because it was added late, if the stored value doesn't contain
+      // then following keys, consider the stored data stale.
+      if (!parsed.geo) {
+        // If we don't do this check, you might be returning stored data
+        // that doesn't match any of the new keys.
+        return false;
+      }
+      return parsed as UserData;
     }
   } catch (error) {
     console.warn("sessionStorage.getItem didn't work", error.toString());
@@ -89,6 +100,9 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         isSubscriber: data.is_subscriber || false,
         subscriberNumber: data.subscriber_number || null,
         email: data.email || null,
+        geo: {
+          country: (data.geo && data.geo.country) || DEFAULT_GEO_COUNTRY,
+        },
         // NOTE: if we ever decide that waffle data should
         // be re-fetched on client-side navigation, we'll
         // have to create a separate context for it.

@@ -1,16 +1,4 @@
-function getNote(noteLinktext: string, noteType: string) {
-  const url =
-    noteType === "neutral"
-      ? "/en-US/docs/MDN/Contribute/Localize#active_locales"
-      : "https://github.com/mdn/translated-content#promoting-an-inactive-locale-to-tier-1";
-  return (
-    <div className={`localized-content-note notecard inline ${noteType}`}>
-      <a href={url} className={!url.startsWith("/") ? "external" : undefined}>
-        {noteLinktext}
-      </a>
-    </div>
-  );
-}
+import { NoteBanner } from "../note-banner";
 
 export function LocalizedContentNote({
   isActive,
@@ -48,10 +36,17 @@ export function LocalizedContentNote({
     },
   };
 
-  const noteLinktext = isActive
-    ? activeLocaleNoteContent[locale] || activeLocaleNoteContent["en-US"]
-    : inactiveLocaleNoteContent[locale] || inactiveLocaleNoteContent["en-US"];
-  const noteType = isActive ? "neutral" : "warning";
+  const linkText = isActive
+    ? (activeLocaleNoteContent[locale] &&
+        activeLocaleNoteContent[locale].linkText) ||
+      activeLocaleNoteContent["en-US"].linkText
+    : (inactiveLocaleNoteContent[locale] &&
+        inactiveLocaleNoteContent[locale].linkText) ||
+      inactiveLocaleNoteContent["en-US"].linkText;
+  const url = isActive
+    ? "/en-US/docs/MDN/Contribute/Localize#active_locales"
+    : "https://github.com/mdn/translated-content#promoting-an-inactive-locale-to-tier-1";
 
-  return getNote(noteLinktext.linkText, noteType);
+  const type = isActive ? "neutral" : "warning";
+  return <NoteBanner linkText={linkText} url={url} type={type} />;
 }
