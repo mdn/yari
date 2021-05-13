@@ -1,0 +1,16 @@
+diff --git a/files/en-us/web/mathml/element/menclose/bottom.png b/files/en-us/web/mathml/element/menclose/bottom.png
+index 9d9041f6d..2f758be75 100644
+Binary files a/files/en-us/web/mathml/element/menclose/bottom.png and b/files/en-us/web/mathml/element/menclose/bottom.png differ
+diff --git a/files/en-us/web/mathml/element/menclose/index.html b/files/en-us/web/mathml/element/menclose/index.html
+index dcccda7cf..3e19e950c 100644
+--- a/files/en-us/web/mathml/element/menclose/index.html
++++ b/files/en-us/web/mathml/element/menclose/index.html
+@@ -91,7 +91,7 @@ tags:
+    </tr>
+    <tr>
+     <td><code>bottom</code></td>
+-    <td><img alt="bottom" src="bottom.png"></td>
++    <td><img alt="bottom testing" src="bottom.png"></td>
+     <td><math> <menclose notation="bottom"> <msup><mi>a</mi><mn>2</mn></msup> <mo>+</mo> <msup><mi>b</mi><mn>2</mn></msup> </menclose> </math></td>
+     <td>line below of the contents</td>
+    </tr>
