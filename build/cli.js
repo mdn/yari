@@ -313,10 +313,9 @@ program
         // The `options.locale` is either an empty array (e.g. no --locale used),
         // a string (e.g. one single --locale) or an array of strings
         // (e.g. multiple --locale options).
-        (Array.isArray(options.locale)
-          ? options.locale
-          : [options.locale]
-        ).map((locale) => [locale, true])
+        (Array.isArray(options.locale) ? options.locale : [options.locale]).map(
+          (locale) => [locale, true]
+        )
       );
       const t0 = new Date();
       const { slugPerLocale, peakHeapBytes, totalFlaws } = await buildDocuments(

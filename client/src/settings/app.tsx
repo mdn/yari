@@ -179,10 +179,8 @@ function Settings({
 
   const [sent, setSent] = React.useState(false);
   const [sendError, setSendError] = React.useState<Error | null>(null);
-  const [
-    validationErrors,
-    setValidationErrors,
-  ] = React.useState<ValidationErrors | null>(null);
+  const [validationErrors, setValidationErrors] =
+    React.useState<ValidationErrors | null>(null);
 
   async function sendSettings() {
     const formData = new URLSearchParams();
