@@ -237,10 +237,10 @@ export function App(appProps) {
             />
             {ENABLE_PLUS && (
               <Route
-                path="/mdn++"
+                path="/plus"
                 element={
                   <StandardLayout>
-                    <Plus {...appProps} />
+                    <Plus />
                   </StandardLayout>
                 }
               />

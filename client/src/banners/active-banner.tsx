@@ -116,6 +116,7 @@ function Banner(props: BannerProps) {
 //     />
 //   );
 // }
+
 function PlusBanner({ onDismissed }: { onDismissed: () => void }) {
   const ga = useGA();
   const locale = useLocale();
@@ -126,7 +127,7 @@ function PlusBanner({ onDismissed }: { onDismissed: () => void }) {
       title={"MDN++ Landing Page Experiment"}
       copy={"Summer is coming."}
       cta={"Check it out"}
-      url={`/${locale}/mdn++`}
+      url={`/${locale}/plus`}
       newWindow={false}
       onDismissed={onDismissed}
       onCTAClick={() => {
