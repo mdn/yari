@@ -41,7 +41,7 @@ jobs:
           yarn --frozen-lockfile
 
       - name: Setup kernel for react native, increase watchers
-        if: ${{ runner.os }} == 'ubuntu-latest'
+        if: runner.os == 'Linux'
         run: |
           echo "runner.os"
           echo ${{ runner.os }}
