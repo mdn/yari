@@ -357,4 +357,17 @@ describe("Basic viewing of functional pages", () => {
     );
     await expect(page).toMatch("Search results for: video");
   });
+
+  it("should say the locale was retired", async () => {
+    await page.goto(testURL("/en-US/docs/Web/Foo/?retiredLocale=ar"));
+    await expect(page).toMatch("The page you requested has been retired");
+    // sanity check that it goes away
+    await page.goto(testURL("/en-US/docs/Web/Foo/"));
+    await expect(page).not.toMatch("The page you requested has been retired");
+  });
+
+  it("should not say the locale was retired if viewing a translated page", async () => {
+    await page.goto(testURL("/fr/docs/Web/Foo/?retiredLocale=sv-SE"));
+    await expect(page).not.toMatch("The page you requested has been retired");
+  });
 });

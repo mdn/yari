@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
@@ -42,6 +42,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
   const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
   const { locale } = useParams();
+  const [searchParams] = useSearchParams();
+
   const navigate = useNavigate();
 
   const dataURL = `${documentURL}/index.json`;
@@ -145,11 +147,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   const isServer = typeof window === "undefined";
 
-  let retiredLocale = false;
-  if (!isServer) {
-    retiredLocale = document.location.search.indexOf("retiredLocale") > -1;
-  }
-
   return (
     <>
       {doc.isArchive && !doc.isTranslated && <Archived />}
@@ -165,11 +162,11 @@ export function Document(props /* TODO: define a TS interface for this */) {
         </div>
       )}
 
-      {doc.isTranslated && (
+      {doc.isTranslated ? (
         <LocalizedContentNote isActive={doc.isActive} locale={locale} />
+      ) : (
+        searchParams.get("retiredLocale") && <RetiredLocaleNote />
       )}
-
-      {retiredLocale && <RetiredLocaleNote />}
 
       {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
