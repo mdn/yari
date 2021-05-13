@@ -43,6 +43,9 @@ jobs:
       - name: Setup kernel for react native, increase watchers
         if: ${{ runner.os }} == 'ubuntu-latest'
         run: |
+          echo "runner.os"
+          echo ${{ runner.os }}
+          echo ""
           # When running Yari on Linux, you might get the
           # "Error: ENOSPC: System limit for number of file watchers reached" error.
           # This, resolves that.
