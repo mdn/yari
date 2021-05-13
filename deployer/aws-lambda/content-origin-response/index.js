@@ -27,7 +27,7 @@ exports.handler = async (event) => {
     // The live-sample pages should never respond with an X-Frame-Options
     // header, because they're explicitly created for rendering within an
     // iframe on a different origin.
-    if (!uri.includes("/_samples_/")) {
+    if (!uri.includes("/_samples_")) {
       response.headers["x-frame-options"] = [
         { key: "X-Frame-Options", value: "DENY" },
       ];

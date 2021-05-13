@@ -539,7 +539,13 @@ async function buildDocument(document, documentOptions = {}) {
 }
 
 async function buildLiveSamplePageFromURL(url) {
-  const [documentURL, sampleID] = url.split("/_samples_/");
+  // The 'url' is expected to be something
+  // like '/en-us/docs/foo/bar/_samples_.myid.html' and from that we want to
+  // extract '/en-us/docs/foo/bar' and 'myid'. But only if it matches.
+  if (!url.endsWith(".html") || !url.includes("/_samples_.")) {
+    throw new Error(`Unexpected URL format to extract live sample ('${url}')`);
+  }
+  const [documentURL, sampleID] = url.split(/\.html$/)[0].split("/_samples_.");
   const document = Document.findByURL(documentURL);
   if (!document) {
     throw new Error(`No document found for ${documentURL}`);
