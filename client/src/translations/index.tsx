@@ -100,6 +100,10 @@ interface Data {
   flawLevels: FlawLevel[];
 }
 
+interface LocalesData {
+  locales: Locale[];
+}
+
 interface Filters {
   mdn_url: string;
   title: string;
@@ -182,28 +186,19 @@ function useFiltersURL(): [Filters, (filters: Partial<Filters>) => void] {
     [filters, setSearchParams]
   );
 
-  const mustBeArrayKeys = ["flaws", "search_flaws"];
-  for (const key of mustBeArrayKeys) {
-    if (filters[key] && !Array.isArray(filters[key])) {
-      filters[key] = [filters[key]];
-    }
-  }
+  // const mustBeArrayKeys = ["flaws", "search_flaws"];
+  // for (const key of mustBeArrayKeys) {
+  //   if (filters[key] && !Array.isArray(filters[key])) {
+  //     filters[key] = [filters[key]];
+  //   }
+  // }
 
   return [filters, updateFiltersURL];
-}
-
-class LocalesError extends Error {
-  public locales: Locale[] = [];
-  constructor(locales: Locale[]) {
-    super();
-    this.locales = locales;
-  }
 }
 
 export default function AllTranslations() {
   const { locale } = useParams();
 
-  // const [filters] = useFiltersURL();
   const [lastData, setLastData] = useState<Data | null>(null);
 
   useEffect(() => {
@@ -225,13 +220,9 @@ export default function AllTranslations() {
   }, [locale]);
 
   const { data, error, isValidating } = useSWR<Data, Error>(
-    getAPIUrl(),
+    locale.toLowerCase() !== "en-us" ? getAPIUrl() : null,
     async (url) => {
       const response = await fetch(url);
-      if (response.status === 451) {
-        const data = await response.json();
-        throw new LocalesError(data.locales);
-      }
       if (!response.ok) {
         throw new Error(`${response.status} (${await response.text()})`);
       }
@@ -244,11 +235,21 @@ export default function AllTranslations() {
           `Response is not JSON (${response.headers.get("content-type")})`
         );
       }
-      // Always return a promise!
       return response.json();
     },
     {
-      // revalidateOnFocus: false
+      revalidateOnFocus: false,
+    }
+  );
+
+  const { data: dataLocales, error: errorLocales } = useSWR<LocalesData, Error>(
+    locale.toLowerCase() === "en-us" ? getAPIUrl() : null,
+    async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`${response.status} (${await response.text()})`);
+      }
+      return response.json();
     }
   );
 
@@ -258,58 +259,66 @@ export default function AllTranslations() {
     }
   }, [data]);
 
-  // // XXX there's something weird about this logic
-  // // let loading: React.ReactNode = <small>&nbsp;</small>;
-  // let loading = <small>&nbsp;</small>;
-  // if (!data && !error) {
-  //   if (lastData) {
-  //     loading = <small>Reloading...</small>;
-  //   } else {
-  //     loading = <small>Loading...</small>;
-  //   }
-  // } else if (isValidating) {
-  //   loading = <small>Reloading...</small>;
-  // }
+  // console.log({
+  //   error,
+  //   isValidating,
+  //   hasData: !!data,
+  //   hasLastData: !!lastData,
+  // });
 
-  // const { page } = filters;
-
-  // const pageCount = lastData ? lastData.counts.pages : 0;
-
-  return (
-    <div className="all-translations">
-      <PageContentContainer>
-        {!data && !error && lastData && <small>Reloading...</small>}
-        {!data && !error && !lastData && (
-          <Loading
-            estimate={10 * 1000}
-            onComplete={(ms: number) => {
-              console.log("Lets remember it took", ms);
-            }}
-          />
-        )}
-        {error ? (
-          error instanceof LocalesError ? (
-            <ShowLocalesError locales={error.locales} />
-          ) : (
-            <ShowSearchError error={error} />
-          )
-        ) : null}
-        {lastData && (
-          <div className="filter-documents">
-            {/* <FilterControls flawLevels={lastData.flawLevels} /> */}
-            <DocumentsTable
-              counts={lastData.counts}
-              documents={lastData.documents}
-            />
+  if (locale.toLowerCase() === "en-us") {
+    return (
+      <Container>
+        {!dataLocales && !errorLocales && <Loading estimate={2000} />}
+        {errorLocales && (
+          <div className="error-message">
+            <h3>Server error</h3>
+            <pre>{errorLocales.toString()}</pre>
           </div>
         )}
-        {data && <BuildTimes times={data.times} />}
-      </PageContentContainer>
+        {dataLocales && <ShowLocales locales={dataLocales.locales} />}
+      </Container>
+    );
+  }
+
+  return (
+    <Container>
+      {lastData && !error && isValidating && (
+        <p style={{ float: "right" }}>Reloading...</p>
+      )}
+      {!data && !error && !lastData && (
+        <Loading
+          estimate={10 * 1000}
+          onComplete={(ms: number) => {
+            // console.log("Lets remember it took", ms);
+            // console.log(data);
+          }}
+        />
+      )}
+      {error && <ShowSearchError error={error} />}
+      {lastData && (
+        <div className="filter-documents">
+          <FilterControls />
+          <DocumentsTable
+            counts={lastData.counts}
+            documents={lastData.documents}
+          />
+        </div>
+      )}
+      {data && <BuildTimes times={data.times} />}
+    </Container>
+  );
+}
+
+function Container({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="all-translations">
+      <PageContentContainer>{children}</PageContentContainer>
     </div>
   );
 }
 
-function ShowLocalesError({ locales }: { locales: Locale[] }) {
+function ShowLocales({ locales }: { locales: Locale[] }) {
   return (
     <div>
       <h2>Have to pick a locale</h2>
@@ -359,7 +368,7 @@ function Loading({
   onComplete,
 }: {
   estimate: number;
-  onComplete: (ms: number) => void;
+  onComplete?: (ms: number) => void;
 }) {
   const startLoadingTime = new Date();
   const [estimateEndTime, setEstimateEndTime] = React.useState(
@@ -369,7 +378,9 @@ function Loading({
   React.useEffect(() => {
     // Unmount means the loading ended
     return () => {
-      onComplete(new Date().getTime() - startLoadingTime.getTime());
+      if (onComplete) {
+        onComplete(new Date().getTime() - startLoadingTime.getTime());
+      }
     };
   }, []);
 
@@ -437,8 +448,108 @@ function deserializeSearchFlaws(list: string[]) {
   return rows;
 }
 
-// function FilterControls({ flawLevels }: { flawLevels: FlawLevel[] }) {
+function FilterControls() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  // const filterTitle = searchParams.get("title") || "";
+  // const filterURL = searchParams.get("url") || "";
+  const [title, setTitle] = React.useState(searchParams.get("title") || "");
+  const [url, setURL] = React.useState(searchParams.get("url") || "");
+
+  function refreshFilters() {
+    const create = createSearchParams(searchParams);
+
+    // const params: { [key: string]: string } = {};
+    for (const [key, value] of [
+      ["url", url],
+      ["title", title],
+    ]) {
+      if (value) {
+        console.log("SET", key);
+        create.set(key, value);
+      } else {
+        create.delete(key);
+      }
+    }
+    console.log({ create: create.toString() });
+    setSearchParams(create);
+    // const searchParams = createSearchParams(params);
+    // console.log({ title, url, searchParams: searchParams.toString() });
+  }
+
+  return (
+    <div className="filters">
+      <h3>Filters</h3>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          refreshFilters();
+        }}
+      >
+        <div>
+          <h4>Document</h4>
+          <input
+            type="search"
+            placeholder="Filter by document URI"
+            value={url}
+            onChange={(event) => {
+              setURL(event.target.value);
+            }}
+            onBlur={refreshFilters}
+          />
+          <input
+            type="search"
+            placeholder="Filter by document title"
+            value={title}
+            onChange={(event) => {
+              setTitle(event.target.value);
+            }}
+            // onBlur={refreshFilters}
+          />
+        </div>
+
+        <div>
+          <h4>Popularity</h4>
+          {/* <input
+            type="search"
+            placeholder="E.g. < 100"
+            value={filters.popularity || ""}
+            onChange={(event) => {
+              setFilters({ ...filters, popularity: event.target.value });
+            }}
+            onBlur={refreshFilters}
+          /> */}
+        </div>
+
+        <div>
+          <h4>Search differences</h4>
+          <input
+            type="search"
+            placeholder="E.g. >0"
+            // value={filters.fixableFlaws || ""}
+            // onChange={(event) => {
+            //   setFilters({ ...filters, fixableFlaws: event.target.value });
+            // }}
+            // onBlur={refreshFilters}
+          />
+        </div>
+
+        <div>
+          <h4>&nbsp;</h4>
+          <button type="submit">Filter now</button>
+          {/* {hasFilters && (
+            <button type="button" onClick={resetFilters}>
+              Reset filters
+            </button>
+          )} */}
+        </div>
+      </form>
+    </div>
+  );
+}
+// function FilterControls() {
 //   const [initialFilters, updateFiltersURL] = useFiltersURL();
+//   console.log(initialFilters);
+
 //   const [filters, setFilters] = useState(initialFilters);
 //   const [searchFlawsRows, setSearchFlawsRows] = useState<SearchFlawRow[]>(
 //     deserializeSearchFlaws(initialFilters.search_flaws)
@@ -516,113 +627,6 @@ function deserializeSearchFlaws(list: string[]) {
 //             onBlur={refreshFilters}
 //           />
 //         </div>
-//         <div>
-//           <h4>Flaws</h4>
-//           <select
-//             multiple={true}
-//             value={filters.flaws}
-//             onChange={(event) => {
-//               const flaws = [...event.target.selectedOptions].map(
-//                 (opt) => opt.value
-//               );
-//               setFilters({ ...filters, flaws });
-//             }}
-//           >
-//             {flawLevels &&
-//               flawLevels.map((flawLevel) => {
-//                 return (
-//                   <option key={flawLevel.name} value={flawLevel.name}>
-//                     {humanizeFlawName(flawLevel.name)}{" "}
-//                     {flawLevel.ignored && "(ignored)"}
-//                   </option>
-//                 );
-//               })}
-//           </select>
-//         </div>
-//         <div>
-//           <h4>Search inside flaws</h4>
-//           <ul className="search-flaws-rows">
-//             {searchFlawsRows.map((row, i) => {
-//               return (
-//                 <li key={`${row.flaw}:${i}`}>
-//                   <select
-//                     value={row.flaw}
-//                     onChange={(event) => {
-//                       const clone = [...searchFlawsRows];
-//                       clone[i].flaw = event.target.value;
-//                       setSearchFlawsRows(clone);
-//                     }}
-//                   >
-//                     {flawLevels &&
-//                       flawLevels
-//                         .filter((flawLevel) => !flawLevel.ignored)
-//                         .map((flawLevel) => {
-//                           return (
-//                             <option key={flawLevel.name} value={flawLevel.name}>
-//                               {humanizeFlawName(flawLevel.name)}
-//                             </option>
-//                           );
-//                         })}
-//                   </select>
-//                   <input
-//                     type="search"
-//                     placeholder="Search expression (e.g. jsxref)"
-//                     value={row.search}
-//                     onChange={(event) => {
-//                       setSearchFlawsRows(
-//                         searchFlawsRows.map((row, j) => {
-//                           if (i === j) {
-//                             row.search = event.target.value;
-//                           }
-//                           return row;
-//                         })
-//                       );
-//                     }}
-//                     onBlur={() => {
-//                       const serialized = serializeSearchFlaws(searchFlawsRows);
-//                       setFilters({ ...filters, search_flaws: serialized });
-//                       refreshFilters();
-//                     }}
-//                   />
-//                   <button
-//                     type="button"
-//                     title="Remove search row"
-//                     onClick={() => {
-//                       const clone = [...searchFlawsRows];
-//                       clone.splice(i, 1);
-//                       setSearchFlawsRows(clone);
-
-//                       // const serialized = serializeSearchFlaws(searchFlawsRows);
-//                       // setFilters({ ...filters, search_flaws: serialized });
-//                       // refreshFilters()
-//                     }}
-//                   >
-//                     -
-//                   </button>
-//                 </li>
-//               );
-//             })}
-//           </ul>
-//           <button
-//             type="button"
-//             title="Add search row"
-//             disabled={hasEmptySearchFlawsRow}
-//             onClick={() => {
-//               setSearchFlawsRows([
-//                 ...searchFlawsRows,
-//                 ...[
-//                   {
-//                     flaw: "macros",
-//                     search: "",
-//                   },
-//                 ],
-//               ]);
-//             }}
-//           >
-//             +
-//           </button>
-//         </div>
-
 //         <div>
 //           <h4>Fixable flaws</h4>
 //           <input

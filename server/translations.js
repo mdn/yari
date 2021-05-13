@@ -197,8 +197,7 @@ function translationsRoute(req, res) {
         };
       })
       .filter(Boolean);
-    // 451 is a bit of a joke. Thankfully this isn't important.
-    return res.status(451).json({ locales });
+    return res.json({ locales });
   }
 
   const found = findDocuments({ locale });
