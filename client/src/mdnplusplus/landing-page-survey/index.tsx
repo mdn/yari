@@ -25,7 +25,7 @@ function getSessionStorageData(key: string) {
   try {
     return sessionStorage.getItem(key);
   } catch (err) {
-    console.warn("Unable to set sessionStorage key");
+    console.warn("Unable to get sessionStorage key");
   }
 }
 
