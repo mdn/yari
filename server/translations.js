@@ -1,7 +1,5 @@
 const fs = require("fs");
 
-const LRU = require("lru-cache");
-
 const {
   getPopularities,
   VALID_LOCALES,

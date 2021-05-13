@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React from "react";
 import {
   createSearchParams,
   Link,
@@ -8,11 +8,9 @@ import {
 import useSWR from "swr";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-// import "dayjs/locale/fr";
 
 import "./index.scss";
 
-// import { humanizeFlawName } from "../flaw-utils";
 import { PageContentContainer } from "../ui/atoms/page-content";
 
 dayjs.extend(relativeTime);
@@ -23,18 +21,6 @@ interface DocumentPopularity {
   parentValue: number;
   parentRanking: number;
 }
-
-// interface DocumentFlaws {
-//   name: string;
-//   value: number | string;
-//   countFixable: number;
-// }
-
-// interface DocumentDate {
-//   modified: string;
-//   parentModified: string;
-//   differenceMS: number;
-// }
 
 interface DocumentDifferences {
   count: number;
@@ -56,22 +42,12 @@ interface Document {
   differences: DocumentDifferences;
 }
 
-type Count = { [key: string]: number };
-
-interface FlawsCounts {
-  total: number;
-  fixable: number;
-  type: Count;
-  macros: Count;
-}
-
 interface Counts {
   found: number;
   total: number;
   pages: number;
   noParents: number;
   cacheMisses: number;
-  // flaws: FlawsCounts;
 }
 
 interface Times {
@@ -104,104 +80,45 @@ interface LocalesData {
   locales: Locale[];
 }
 
-interface Filters {
-  mdn_url: string;
-  title: string;
-  popularity: string;
-  fixableFlaws: string;
-  flaws: string[];
-  page: number;
-  sort_by: string;
-  sort_reverse: boolean;
-  search_flaws: string[];
+interface LocaleStorageData {
+  lastLoadTime?: number;
+}
+interface StorageData {
+  [locale: string]: LocaleStorageData;
 }
 
-const defaultFilters: Filters = Object.freeze({
-  mdn_url: "",
-  title: "",
-  popularity: "",
-  fixableFlaws: "",
-  flaws: [],
-  page: 1,
-  sort_by: "popularity",
-  sort_reverse: false,
-  search_flaws: [],
-});
+const LOCALSTORAGE_KEY = "translations-dashboard";
 
-function withoutDefaultFilters(filters: Filters): Partial<Filters> {
-  return Object.fromEntries(
-    Object.entries(filters).filter(
-      ([key, value]) =>
-        JSON.stringify(defaultFilters[key]) !== JSON.stringify(value)
-    )
-  );
-}
-
-/**
- * Returns an array where
- * first element is the currently set (or default) filters
- * second element is a function to update a given set of partial filters.
- * NOTE: This only changes the given filters, and doesn't reset what is missing
- */
-function useFiltersURL(): [Filters, (filters: Partial<Filters>) => void] {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  function groupParamsByKey(params: URLSearchParams): any {
-    return [...params.entries()].reduce((acc, tuple) => {
-      // getting the key and value from each tuple
-      const [key, val] = tuple;
-      if (Object.prototype.hasOwnProperty.call(acc, key)) {
-        // if the current key is already an array, we'll add the value to it
-        if (Array.isArray(acc[key])) {
-          acc[key] = [...acc[key], val];
-        } else {
-          // if it's not an array, but contains a value, we'll convert it into an array
-          // and add the current value to it
-          acc[key] = [acc[key], val];
-        }
-      } else {
-        // plain assignment if no special case is present
-        acc[key] = val;
-      }
-      return acc;
-    }, {});
+function saveStorage(locale: string, data: LocaleStorageData) {
+  try {
+    const stored = JSON.parse(
+      localStorage.getItem(LOCALSTORAGE_KEY) || "{}"
+    ) as StorageData;
+    stored[locale] = Object.assign({}, stored[locale] || {}, data);
+    localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(stored));
+  } catch (err) {
+    console.warn("Unable to save to localStorage", err);
   }
+}
 
-  const filters = useMemo(() => {
-    const searchParamsObject = groupParamsByKey(searchParams);
-    if (searchParamsObject.page) {
-      searchParamsObject.page = parseInt(searchParamsObject.page);
+function getStorage(locale: string): LocaleStorageData | null {
+  try {
+    const stored = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY) || "{}");
+    if (stored) {
+      return stored[locale] as LocaleStorageData;
     }
-    return { ...defaultFilters, ...searchParamsObject };
-  }, [searchParams]);
-
-  const updateFiltersURL = useCallback(
-    (partialFilters: Partial<Filters>) => {
-      const newSearchParams = withoutDefaultFilters({
-        ...filters,
-        ...partialFilters,
-      }) as Record<string, string | string[]>;
-      setSearchParams(newSearchParams);
-    },
-    [filters, setSearchParams]
-  );
-
-  // const mustBeArrayKeys = ["flaws", "search_flaws"];
-  // for (const key of mustBeArrayKeys) {
-  //   if (filters[key] && !Array.isArray(filters[key])) {
-  //     filters[key] = [filters[key]];
-  //   }
-  // }
-
-  return [filters, updateFiltersURL];
+  } catch (err) {
+    console.warn("Unable to retrieve from localStorage", err);
+  }
+  return null;
 }
 
 export default function AllTranslations() {
   const { locale } = useParams();
 
-  const [lastData, setLastData] = useState<Data | null>(null);
+  const [lastData, setLastData] = React.useState<Data | null>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     let title = "All translations";
     if (locale.toLowerCase() !== "en-us") {
       title += ` for ${locale}`;
@@ -212,7 +129,7 @@ export default function AllTranslations() {
     document.title = title;
   }, [lastData, locale]);
 
-  const getAPIUrl = useCallback(() => {
+  const getAPIUrl = React.useCallback(() => {
     const params = createSearchParams({
       locale,
     });
@@ -242,6 +159,26 @@ export default function AllTranslations() {
     }
   );
 
+  // Use this to be able to figure out how long the XHR takes when there's no cache
+  const startTime = React.useRef<Date>();
+  React.useEffect(() => {
+    if (locale) {
+      if (!data) {
+        startTime.current = new Date();
+      } else {
+        if (
+          data.counts.cacheMisses > 0 &&
+          data.counts.cacheMisses === data.counts.total &&
+          startTime.current
+        ) {
+          const lastLoadTime =
+            new Date().getTime() - startTime.current.getTime();
+          saveStorage(locale, { lastLoadTime });
+        }
+      }
+    }
+  }, [locale, data]);
+
   const { data: dataLocales, error: errorLocales } = useSWR<LocalesData, Error>(
     locale.toLowerCase() === "en-us" ? getAPIUrl() : null,
     async (url) => {
@@ -253,18 +190,11 @@ export default function AllTranslations() {
     }
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (data) {
       setLastData(data);
     }
   }, [data]);
-
-  // console.log({
-  //   error,
-  //   isValidating,
-  //   hasData: !!data,
-  //   hasLastData: !!lastData,
-  // });
 
   if (locale.toLowerCase() === "en-us") {
     return (
@@ -281,6 +211,8 @@ export default function AllTranslations() {
     );
   }
 
+  const lastStorageData = getStorage(locale);
+
   return (
     <Container>
       {lastData && !error && isValidating && (
@@ -288,11 +220,9 @@ export default function AllTranslations() {
       )}
       {!data && !error && !lastData && (
         <Loading
-          estimate={10 * 1000}
-          onComplete={(ms: number) => {
-            // console.log("Lets remember it took", ms);
-            // console.log(data);
-          }}
+          estimate={
+            (lastStorageData && lastStorageData.lastLoadTime) || 30 * 1000
+          }
         />
       )}
       {error && <ShowSearchError error={error} />}
@@ -363,49 +293,13 @@ function BuildTimes({ times }: { times: Times }) {
   );
 }
 
-function Loading({
-  estimate,
-  onComplete,
-}: {
-  estimate: number;
-  onComplete?: (ms: number) => void;
-}) {
+function Loading({ estimate }: { estimate: number }) {
   const startLoadingTime = new Date();
-  const [estimateEndTime, setEstimateEndTime] = React.useState(
+  const [estimateEndTime] = React.useState(
     new Date(startLoadingTime.getTime() + estimate)
   );
 
-  React.useEffect(() => {
-    // Unmount means the loading ended
-    return () => {
-      if (onComplete) {
-        onComplete(new Date().getTime() - startLoadingTime.getTime());
-      }
-    };
-  }, []);
-
-  // React.useEffect(() => {
-  //   if (localStorage.getItem(LOCALSTORAGE_KEY)) {
-  //     setEstimateEndTime(
-  //       new Date(
-  //         new Date().getTime() +
-  //           parseInt(localStorage.getItem(LOCALSTORAGE_KEY) as string)
-  //       )
-  //     );
-  //   }
-
-  //   return () => {
-  //     // Store this for the next time for better estimates
-  //     const aliveTime = new Date().getTime() - startLoadingTime.getTime();
-  //     // If the time it took was tiny it was because it was cached.
-  //     if (aliveTime > 1000) {
-  //       localStorage.setItem(LOCALSTORAGE_KEY, `${aliveTime}`);
-  //     }
-  //   };
-  // }, [startLoadingTime]);
-
   const INTERVAL_INCREMENT = 700;
-  // const LOCALSTORAGE_KEY = "alltraits-loading-took";
   const [elapsed, setElapsed] = React.useState(0);
   React.useEffect(() => {
     const interval = setInterval(() => {
@@ -430,50 +324,31 @@ function Loading({
   );
 }
 
-interface SearchFlawRow {
-  flaw: string;
-  search: string;
-}
-
-function serializeSearchFlaws(rows: SearchFlawRow[]) {
-  return rows.map((row) => `${row.flaw}:${row.search}`);
-}
-
-function deserializeSearchFlaws(list: string[]) {
-  const rows: SearchFlawRow[] = [];
-  for (const row of list) {
-    const [flaw, search] = row.split(":", 2);
-    rows.push({ flaw, search });
-  }
-  return rows;
-}
-
 function FilterControls() {
   const [searchParams, setSearchParams] = useSearchParams();
-  // const filterTitle = searchParams.get("title") || "";
-  // const filterURL = searchParams.get("url") || "";
   const [title, setTitle] = React.useState(searchParams.get("title") || "");
   const [url, setURL] = React.useState(searchParams.get("url") || "");
 
-  function refreshFilters() {
+  function refreshFilters(reset = false) {
     const create = createSearchParams(searchParams);
-
-    // const params: { [key: string]: string } = {};
     for (const [key, value] of [
       ["url", url],
       ["title", title],
     ]) {
-      if (value) {
-        console.log("SET", key);
+      if (!reset && value) {
         create.set(key, value);
       } else {
         create.delete(key);
       }
     }
-    console.log({ create: create.toString() });
+    create.delete("page");
     setSearchParams(create);
-    // const searchParams = createSearchParams(params);
-    // console.log({ title, url, searchParams: searchParams.toString() });
+  }
+
+  function resetFilters() {
+    setURL("");
+    setTitle("");
+    refreshFilters(true);
   }
 
   return (
@@ -494,7 +369,7 @@ function FilterControls() {
             onChange={(event) => {
               setURL(event.target.value);
             }}
-            onBlur={refreshFilters}
+            onBlur={() => refreshFilters()}
           />
           <input
             type="search"
@@ -503,183 +378,23 @@ function FilterControls() {
             onChange={(event) => {
               setTitle(event.target.value);
             }}
-            // onBlur={refreshFilters}
-          />
-        </div>
-
-        <div>
-          <h4>Popularity</h4>
-          {/* <input
-            type="search"
-            placeholder="E.g. < 100"
-            value={filters.popularity || ""}
-            onChange={(event) => {
-              setFilters({ ...filters, popularity: event.target.value });
-            }}
-            onBlur={refreshFilters}
-          /> */}
-        </div>
-
-        <div>
-          <h4>Search differences</h4>
-          <input
-            type="search"
-            placeholder="E.g. >0"
-            // value={filters.fixableFlaws || ""}
-            // onChange={(event) => {
-            //   setFilters({ ...filters, fixableFlaws: event.target.value });
-            // }}
-            // onBlur={refreshFilters}
+            onBlur={() => refreshFilters()}
           />
         </div>
 
         <div>
           <h4>&nbsp;</h4>
           <button type="submit">Filter now</button>
-          {/* {hasFilters && (
+          {(url || title) && (
             <button type="button" onClick={resetFilters}>
               Reset filters
             </button>
-          )} */}
+          )}
         </div>
       </form>
     </div>
   );
 }
-// function FilterControls() {
-//   const [initialFilters, updateFiltersURL] = useFiltersURL();
-//   console.log(initialFilters);
-
-//   const [filters, setFilters] = useState(initialFilters);
-//   const [searchFlawsRows, setSearchFlawsRows] = useState<SearchFlawRow[]>(
-//     deserializeSearchFlaws(initialFilters.search_flaws)
-//   );
-
-//   useEffect(() => {
-//     // A little convenience DOM trick to put focus on the search input
-//     // after you've added a row or used the <select>
-//     const searchInputs = [
-//       ...document.querySelectorAll<HTMLInputElement>(
-//         'ul.search-flaws-rows input[type="search"]'
-//       ),
-//     ].filter((input) => !input.value);
-//     if (searchInputs.length) {
-//       searchInputs[searchInputs.length - 1].focus();
-//     }
-//   }, [searchFlawsRows]);
-
-//   function refreshFilters() {
-//     updateFiltersURL(filters);
-//   }
-
-//   let hasFilters = !equalObjects(defaultFilters, filters);
-
-//   let hasEmptySearchFlawsRow = searchFlawsRows.some(
-//     (row) => !row.search.trim()
-//   );
-
-//   function resetFilters(event: React.MouseEvent) {
-//     event.preventDefault();
-//     setFilters(defaultFilters);
-//     updateFiltersURL(defaultFilters);
-//   }
-
-//   return (
-//     <div className="filters">
-//       <h3>Filters</h3>
-//       <form
-//         onSubmit={(event) => {
-//           event.preventDefault();
-//           refreshFilters();
-//         }}
-//       >
-//         <div>
-//           <h4>Document</h4>
-//           <input
-//             type="search"
-//             placeholder="Filter by document URI"
-//             value={filters.mdn_url}
-//             onChange={(event) => {
-//               setFilters({ ...filters, mdn_url: event.target.value });
-//             }}
-//             onBlur={refreshFilters}
-//           />
-//           <input
-//             type="search"
-//             placeholder="Filter by document title"
-//             value={filters.title}
-//             onChange={(event) => {
-//               setFilters({ ...filters, title: event.target.value });
-//             }}
-//             onBlur={refreshFilters}
-//           />
-//         </div>
-
-//         <div>
-//           <h4>Popularity</h4>
-//           <input
-//             type="search"
-//             placeholder="E.g. < 100"
-//             value={filters.popularity || ""}
-//             onChange={(event) => {
-//               setFilters({ ...filters, popularity: event.target.value });
-//             }}
-//             onBlur={refreshFilters}
-//           />
-//         </div>
-//         <div>
-//           <h4>Fixable flaws</h4>
-//           <input
-//             type="search"
-//             placeholder="E.g. >0"
-//             value={filters.fixableFlaws || ""}
-//             onChange={(event) => {
-//               setFilters({ ...filters, fixableFlaws: event.target.value });
-//             }}
-//             onBlur={refreshFilters}
-//           />
-//         </div>
-
-//         <div>
-//           <h4>&nbsp;</h4>
-//           <button type="submit">Filter now</button>
-//           {hasFilters && (
-//             <button type="button" onClick={resetFilters}>
-//               Reset filters
-//             </button>
-//           )}
-//         </div>
-//       </form>
-//     </div>
-//   );
-// }
-
-// function equalObjects(obj1: object, obj2: object) {
-//   const keys1 = new Set(Object.keys(obj1));
-//   const keys2 = new Set(Object.keys(obj2));
-//   if (keys1.size !== keys2.size) {
-//     return false;
-//   }
-//   for (const key of keys1) {
-//     if (!keys2.has(key)) {
-//       return false;
-//     }
-//   }
-
-//   return Object.entries(obj1).every(([key, value]) => {
-//     const value2 = obj2[key];
-//     if (typeof value !== typeof value2) {
-//       return false;
-//     }
-//     if (Array.isArray(value)) {
-//       return (
-//         value.length === value2.length && value.every((v, i) => v === value2[i])
-//       );
-//     } else {
-//       return value === value2;
-//     }
-//   });
-// }
 
 function DocumentsTable({
   counts,
@@ -705,24 +420,11 @@ function DocumentsTable({
     return n.toLocaleString() + (s[(v - 20) % 10] || s[v] || s[0]);
   }
 
-  // function summarizeFlaws(flaws: DocumentFlaws[]) {
-  //   // Return a one-liner about all the flaws
-  //   const totalCountFixable = flaws.reduce(
-  //     (acc, flaw) => flaw.countFixable + acc,
-  //     0
-  //   );
-  //   const bits = flaws.map((flaw) => {
-  //     return `${humanizeFlawName(flaw.name)}: ${flaw.value}`;
-  //   });
-  //   return `${bits.join(", ")} (${totalCountFixable} fixable)`;
-  // }
-
   function TH({ id, title }: { id: string; title: string }) {
     return (
       <th
         onClick={() => {
           if (sort === id) {
-            // searchParams.set("sortReverse", JSON.stringify(!sortReverse));
             setSearchParams(
               createSearchParams({
                 sort: id,
@@ -730,7 +432,6 @@ function DocumentsTable({
               })
             );
           } else {
-            // searchParams.set("sort", id);
             setSearchParams(createSearchParams({ sort: id }));
           }
         }}
@@ -954,24 +655,22 @@ function PageLink({
   disabled?: boolean;
   children: React.ReactNode;
 }) {
-  const [filters] = useFiltersURL();
-  // Unfortunately TS's Partial<T> is not quite the right return type of this function,
-  // as it implies the object could have keys set to undefined, which isn't true here.
-  // Hence we have to use type coercion (any)
-  const newFilters = withoutDefaultFilters({ ...filters, page: number }) as any;
-  if (newFilters.page) {
-    newFilters.page = String(newFilters.page);
+  const [searchParams] = useSearchParams();
+  const params = createSearchParams(searchParams);
+  if (number > 1) {
+    params.set("page", `${number}`);
+  } else {
+    params.delete("page");
   }
   return (
     <Link
-      to={"?" + createSearchParams(newFilters).toString()}
+      to={"?" + params.toString()}
       className={disabled ? "disabled" : ""}
       onClick={(event) => {
         if (disabled) {
           event.preventDefault();
         }
         const top = document.querySelector("div.all-translations");
-
         if (top) {
           top.scrollIntoView({ behavior: "smooth" });
         }
@@ -981,15 +680,3 @@ function PageLink({
     </Link>
   );
 }
-
-// function WarnAboutNothingBuilt() {
-//   return (
-//     <div className="attention document-warnings">
-//       <h4>No documents have been built, so no flaws can be found</h4>
-//       <p>
-//         At the moment, you have to use the command line tools to build documents
-//         that we can analyze.
-//       </p>
-//     </div>
-//   );
-// }
