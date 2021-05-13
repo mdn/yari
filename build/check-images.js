@@ -125,10 +125,10 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
           // been downloaded by the en-US equivalent. If so, make that the suggestion.
           if (doc.locale !== DEFAULT_LOCALE) {
             const filePath = Image.findByURL(
-              path.join(
+              [
                 doc.mdn_url.replace(`/${doc.locale}/`, `/${DEFAULT_LOCALE}/`),
-                path.basename(src)
-              )
+                path.basename(src),
+              ].join("/")
             );
             if (filePath) {
               suggestion = path.basename(filePath);
@@ -157,8 +157,8 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
         !finalSrc.startsWith(`/${DEFAULT_LOCALE.toLowerCase()}/`)
       ) {
         const enUSFinalSrc = finalSrc.replace(
-          `/${doc.locale.toLowerCase()}/`,
-          `/${DEFAULT_LOCALE.toLowerCase()}/`
+          new RegExp(`^/${doc.locale}/`, "i"),
+          `/${DEFAULT_LOCALE}/`
         );
         if (Image.findByURL(enUSFinalSrc)) {
           // Use the en-US src instead

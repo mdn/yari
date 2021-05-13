@@ -11,10 +11,8 @@ import "./basic-search-widget.scss";
 const LazySearchNavigateWidget = lazy(() => import("./lazy-search-widget"));
 
 export function Search(props) {
-  const [
-    useAutocompleteSearchWidget,
-    setUseAutocompleteSearchWidget,
-  ] = useState(false);
+  const [useAutocompleteSearchWidget, setUseAutocompleteSearchWidget] =
+    useState(false);
   useEffect(() => {
     if (AUTOCOMPLETE_SEARCH_WIDGET) {
       setUseAutocompleteSearchWidget(true);

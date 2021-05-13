@@ -97,7 +97,7 @@ export function Footer() {
           <ul>
             <li>
               <a
-                className="social-icon github"
+                className="social-icon twitter"
                 href="https://twitter.com/mozilla"
                 target="_blank"
                 rel="noopener noreferrer"

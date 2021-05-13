@@ -2,50 +2,36 @@
   display: none;
 
   @media #{$mq-tablet-and-up} {
-    background-color: transparent;
+    background: transparent url("~@mdn/dinocons/arrows/triangle.svg") center
+      center no-repeat;
+    background-size: 16px;
     border: 0;
+    border-bottom: 1px solid $neutral-100;
     border-radius: 0;
-    border-top: 1px solid $neutral-100;
     box-shadow: none;
     color: $neutral-100;
     cursor: pointer;
     display: block;
     font-size: $tiny-text;
-    height: $base-unit * 2;
-    margin: ($base-spacing / 2) 0 0;
+    height: 16px;
     padding: $base-spacing / 2;
+    position: relative;
+    transform: rotate(180deg);
     width: 100%;
-
-    &::before {
-      background: transparent url("~@mdn/dinocons/arrows/triangle.svg") 0 0
-        no-repeat;
-      background-size: 16px;
-      content: "";
-      display: block;
-      height: 16px;
-      margin: 0 auto;
-      transform: rotate(180deg);
-      width: 16px;
-    }
   }
 
   @media #{$mq-small-desktop-and-up} {
     bottom: 0;
     left: 0;
+    margin: ($base-spacing / 2) 0 0;
     padding: 0;
     position: absolute;
     z-index: $top-layer;
-
-    &::before {
-      background-size: 12px;
-      height: 12px;
-      width: 12px;
-    }
   }
 }
 
 .bc-history-link-inverse {
-  &::before {
-    transform: rotate(0deg);
-  }
+  border: 0;
+  border-top: 1px solid $neutral-100;
+  transform: rotate(0deg);
 }

@@ -28,6 +28,7 @@ const IMPORTANT_MACROS = new Map(
     "SVGRef",
     "SeeCompatTable",
     "ServiceWorkerSidebar",
+    "Specifications",
     "ToolsSidebar",
     "WebAssemblySidebar",
     "WebExtAPISidebar",

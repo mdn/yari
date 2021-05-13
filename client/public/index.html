@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" prefix="og: https://ogp.me/ns#">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -11,32 +11,7 @@
 
     <link rel="icon" href="%PUBLIC_URL%/favicon-48x48.png" />
 
-    <!-- third-generation iPad with high-resolution Retina display: -->
-    <link
-      rel="apple-touch-icon-precomposed"
-      sizes="144x144"
-      href="%PUBLIC_URL%/favicon144.png"
-    />
-
-    <!-- iPhone with high-resolution Retina display: -->
-    <link
-      rel="apple-touch-icon-precomposed"
-      sizes="114x114"
-      href="%PUBLIC_URL%/favicon114.png"
-    />
-
-    <!-- first- and second-generation iPad: -->
-    <link
-      rel="apple-touch-icon-precomposed"
-      sizes="72x72"
-      href="%PUBLIC_URL%/favicon72.png"
-    />
-
-    <!-- non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
-    <link
-      rel="apple-touch-icon-precomposed"
-      href="%PUBLIC_URL%/favicon57.png"
-    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/apple-touch-icon.png" />
 
     <meta name="theme-color" content="#ffffff" />
 
@@ -57,6 +32,36 @@
       name="description"
       content="The MDN Web Docs site provides information about Open Web technologies including HTML, CSS, and APIs for both Web sites and progressive web apps."
     />
+
+    <!--
+      Why these Open Graph meta tags? ...when the '<title>' and '<meta name=description>'
+      already exist?
+      Well, because of Twitter.
+      When you paste in an MDN URL into Twitter it will not make a "card".
+      See this comment: https://github.com/mdn/yari/issues/3590#issuecomment-825153396
+
+      According to Twitter's documentation on "Cards" they will use their proprietary
+      tags (e.g. `<meta name="twitter:card" content="summary">`) but if not available
+      they will fall back to Open Graph meta tags.
+      See https://developer.twitter.com/en/docs/twitter-for-websites/cards/guides/getting-started#opengraph
+
+      It is a lot of repetition and additional bloat to the index.html files. But
+      keep in mind that repeated strings of texts compresses very well and most
+      clients will only download the Gzip or Brotli compressed HTML file.
+
+      Remember, all of these are *default* values. The actual values are processed in
+      ssr/render.js and uses cheerio to replace the content on all of these.
+    -->
+    <meta property="og:url" content="https://developer.mozilla.org" />
+    <meta property="og:title" content="MDN Web Docs" />
+    <meta
+      property="og:description"
+      content="The MDN Web Docs site provides information about Open Web technologies including HTML, CSS, and APIs for both Web sites and progressive web apps."
+    />
+    <meta property="og:locale" content="en-US" />
+    <meta property="og:image" content="%PUBLIC_URL%/mdn-social-share.png" />
+    <meta property="twitter:card" content="summary_large_image" />
+
     <link rel="canonical" href="https://developer.mozilla.org" />
     <style media="print">
       .breadcrumbs-container,

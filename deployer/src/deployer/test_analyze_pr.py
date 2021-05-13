@@ -14,6 +14,7 @@ DEFAULT_CONFIG = {
     "pr_number": None,
     "dry_run": False,
     "github_token": "",
+    "diff_file": None,
 }
 
 
@@ -96,6 +97,83 @@ def test_analyze_pr_dangerous_content():
         )
         assert "## External URLs" in comment
         assert "  - <https://www.peterbe.com> (1 time)" in comment
+
+
+def test_analyze_pr_dangerous_content_with_diff_file_matched():
+    doc = {
+        "doc": {
+            "mdn_url": "/en-US/docs/Foo",
+            "title": "Foo",
+            "body": [
+                {
+                    "type": "prose",
+                    "value": {
+                        "content": """
+            <p>
+            <a href="https://www.peterbe.com">Peterbe.com</a>
+            </p>
+            """
+                    },
+                }
+            ],
+            "source": {
+                "github_url": "https://github.com/foo",
+                "folder": "en-us/mozilla/firefox/releases/4",
+                "filename": "index.html",
+            },
+        }
+    }
+    with mock_build_directory(doc) as build_directory:
+        diff_file = Path(__file__).parent / "sample.diff"
+        comment = analyze_pr(
+            build_directory,
+            dict(
+                DEFAULT_CONFIG,
+                analyze_dangerous_content=True,
+                diff_file=diff_file,
+            ),
+        )
+        assert "## External URLs" in comment
+        assert "  - <https://www.peterbe.com> (1 time)" in comment
+
+
+def test_analyze_pr_dangerous_content_with_diff_file_not_matched():
+    doc = {
+        "doc": {
+            "mdn_url": "/en-US/docs/Foo",
+            "title": "Foo",
+            "body": [
+                {
+                    "type": "prose",
+                    "value": {
+                        "content": """
+            <p>
+            <a href="https://www.mozilla.org">Mozilla.org</a>
+            </p>
+            """
+                    },
+                }
+            ],
+            "source": {
+                "github_url": "https://github.com/foo",
+                "folder": "en-us/mozilla/firefox/releases/4",
+                "filename": "index.html",
+            },
+        }
+    }
+    with mock_build_directory(doc) as build_directory:
+        diff_file = Path(__file__).parent / "sample.diff"
+        comment = analyze_pr(
+            build_directory,
+            dict(
+                DEFAULT_CONFIG,
+                analyze_dangerous_content=True,
+                diff_file=diff_file,
+            ),
+        )
+        assert "## External URLs" in comment
+        assert "No *new* external URLs" in comment
+        assert "https://www.mozilla.org" not in comment
 
 
 @patch("deployer.analyze_pr.Github")

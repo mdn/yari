@@ -4,10 +4,6 @@
   display: flex;
   padding: ($base-spacing / 2) $base-spacing;
 
-  @media #{$mq-tablet-and-up} {
-    margin: ($base-spacing / 2) 0;
-  }
-
   @media #{$mq-small-desktop-and-up} {
     margin: $base-spacing 0 0;
   }
