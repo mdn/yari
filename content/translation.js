@@ -1,8 +1,4 @@
-const LRU = require("lru-cache");
-
 const Parser = require("../kumascript/src/parser.js");
-
-const cacheKSMacros = new LRU({ max: 2000 });
 
 function* fastKSParser(s) {
   for (const match of s.matchAll(
@@ -19,7 +15,6 @@ function* fastKSParser(s) {
       args: split
         .map((s) => s.trim())
         .map((s) => {
-          // if (s === '""' || s === "''") return s;
           if (s.startsWith('"') && s.endsWith('"')) {
             return s.slice(1, -1);
           }
@@ -30,8 +25,6 @@ function* fastKSParser(s) {
         })
         .filter((s, i) => {
           if (!s) {
-            // Only return false if it's NOT the first or last
-            // if (i === 0 || i === split.length - 1) {
             // Only return false if it's NOT first
             if (i === 0) {
               return Boolean(s);
@@ -77,17 +70,8 @@ const IMPORTANT_MACROS = new Map(
   ].map((name) => [name.toLowerCase(), name])
 );
 
-function getKSMacros(content, cacheKey = null, fast = false) {
-  if (cacheKey && cacheKSMacros.has(cacheKey)) {
-    return cacheKSMacros.get(cacheKey);
-  }
-
-  const macros = fast ? getMacrosFast(content) : getMacrosSlow(content);
-
-  if (cacheKey) {
-    cacheKSMacros.set(cacheKey, macros);
-  }
-  return macros;
+function getKSMacros(content, fast = false) {
+  return fast ? getMacrosFast(content) : getMacrosSlow(content);
 }
 
 function getMacrosSlow(content) {
@@ -151,12 +135,8 @@ function* getTranslationDifferences(
   fast = false
 ) {
   // Compare key KS macros presence
-  const translatedMacros = getKSMacros(translatedDocument.rawBody, null, fast);
-  const englishMacros = getKSMacros(
-    englishDocument.rawBody,
-    englishDocument.url,
-    fast
-  );
+  const translatedMacros = getKSMacros(translatedDocument.rawBody, fast);
+  const englishMacros = getKSMacros(englishDocument.rawBody, fast);
   if (!equalSets(translatedMacros, englishMacros)) {
     const inCommon = setIntersection(translatedMacros, englishMacros);
     const union = setUnion(translatedMacros, englishMacros);
