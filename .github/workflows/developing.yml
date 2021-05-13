@@ -41,11 +41,9 @@ jobs:
           yarn --frozen-lockfile
 
       - name: Setup kernel for react native, increase watchers
+        # https://stackoverflow.com/a/57948488/205832
         if: runner.os == 'Linux'
         run: |
-          echo "runner.os"
-          echo ${{ runner.os }}
-          echo ""
           # When running Yari on Linux, you might get the
           # "Error: ENOSPC: System limit for number of file watchers reached" error.
           # This, resolves that.
@@ -63,7 +61,7 @@ jobs:
           # unfortunately the error messaging can be very misleading because the
           # tests would assume there's something wrong with the code instead of
           # the content if loading this page fails.
-          ls "$CONTENT_ROOT/en-us/mdn/kitchensink"
+          # ls "$CONTENT_ROOT/en-us/mdn/kitchensink"
 
           yarn prepare-build
           yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
