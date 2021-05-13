@@ -165,7 +165,8 @@ function getDocument(filePath) {
   const differences = [];
   for (const difference of Translation.getTranslationDifferences(
     englishDocument,
-    document
+    document,
+    true
   )) {
     differences.push(difference);
   }
