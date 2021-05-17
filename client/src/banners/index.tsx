@@ -116,13 +116,6 @@ export function Banner() {
   // 4. Have you not dismissed it previously
   // 5. Have you seen a different PLUS_IDvN banner before
   // 6. Is your locale en-US?
-  console.log({
-    ENABLE_PLUS,
-    pathname: isPathnameIncluded(PLUS_IDv1, location.pathname),
-    geo: isGeoLocationIncluded(PLUS_IDv1, userData.geo.country),
-    random: isRandomlyIncluded(PLUS_IDv1, 10),
-  });
-
   if (
     ENABLE_PLUS &&
     isPathnameIncluded(PLUS_IDv1, location.pathname) &&
