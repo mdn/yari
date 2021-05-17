@@ -14,6 +14,16 @@ exports.handler = async (event) => {
   const response = event.Records[0].cf.response;
   const uri = request.uri.toLowerCase();
 
+  // Prior to May 2021, we used to host the live samples like this:
+  //   /en-US/docs/Web/Foo/_samples_/SampleID/index.html
+  // But then, in https://github.com/mdn/yari/pull/3798, we change it to:
+  //   /en-US/docs/Web/Foo/_sample_.SampleID.html
+  // So to make deployment-timing easier we make this code here work for
+  // both the old way and the new way.
+  // (Later in 2021 we can remove any mentions of `/_samples_/`)
+  const isLiveSamplesURI =
+    uri.includes("/_samples_/") || uri.includes("/_sample_.");
+
   // This condition exists to accommodate AWS origin-groups, which
   // include two origins, the primary and the secondary, where the
   // secondary origin is only attempted if the primary fails. Since
@@ -27,7 +37,7 @@ exports.handler = async (event) => {
     // The live-sample pages should never respond with an X-Frame-Options
     // header, because they're explicitly created for rendering within an
     // iframe on a different origin.
-    if (!uri.includes("/_samples_")) {
+    if (!isLiveSamplesURI) {
       response.headers["x-frame-options"] = [
         { key: "X-Frame-Options", value: "DENY" },
       ];
@@ -47,7 +57,8 @@ exports.handler = async (event) => {
   if (
     contentType &&
     contentType[0] &&
-    contentType[0].value.startsWith("text/html")
+    contentType[0].value.startsWith("text/html") &&
+    isLiveSamplesURI
   ) {
     response.headers["content-security-policy-report-only"] = [
       {

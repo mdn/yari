@@ -191,7 +191,7 @@ app.get("/*", async (req, res) => {
     return res.status(404).send("Page not found");
   }
 
-  if (req.url.includes("/_samples_.")) {
+  if (req.url.includes("/_sample_.")) {
     try {
       return res.send(await buildLiveSamplePageFromURL(req.path));
     } catch (e) {

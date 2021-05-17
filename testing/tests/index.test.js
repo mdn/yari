@@ -1332,7 +1332,7 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(Object.keys(doc.flaws).length).toBe(0);
 
-  const found = glob.sync(path.join(builtFolder, "_samples_.*.html"));
+  const found = glob.sync(path.join(builtFolder, "_sample_.*.html"));
   expect(found.length).toBe(3);
 });
 

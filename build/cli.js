@@ -182,7 +182,7 @@ async function buildDocuments(
     }
 
     for (const { id, html } of liveSamples) {
-      const liveSamplePath = path.join(outPath, `_samples_.${id}.html`);
+      const liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
       fs.writeFileSync(liveSamplePath, html);
     }
 
