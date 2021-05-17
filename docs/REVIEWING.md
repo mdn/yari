@@ -16,12 +16,13 @@ build). This might matter after you've run `git pull` & `yarn`, since certain
 packages might be upgraded and it's always good to
 test with a clean, up-to-date build.
 
-Make sure you set the `CONTENT_ROOT` environment variable to an absolute path to
-the `content` repo `files` subdirectory before running `yarn dev`, so Yari can
+Make sure you set the `CONTENT_ROOT` and `CONTENT_TRANSLATED_ROOT` environment variable to an absolute path to
+the `content` and `translated-content` repo `files` subdirectory before running `yarn dev`, so Yari can
 find the content to render. This can be done using an `export` command like:
 
 ```bash
 export CONTENT_ROOT=/Users/path/to/content/files
+export CONTENT_TRANSLATED_ROOT=/Users/path/to/translated-content/filess
 ```
 
 But this only sets it temporarily. A better solution is to write it to an `.env`
@@ -29,9 +30,10 @@ file by running the following in your yari root directory:
 
 ```bash
 echo CONTENT_ROOT=/Users/path/to/content/files >> .env
+echo CONTENT_ROOT=/Users/path/to/content/files >> .env
 ```
 
-This will add the variable definition to an `.env` file, creating one if you
+This will add the variable definitions to an `.env` file, creating one if you
 don't already have it.
 
 ## General testing procedure
