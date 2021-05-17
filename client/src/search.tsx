@@ -48,10 +48,6 @@ type ResultItem = {
   substrings: Substring[];
 };
 
-// TODO this is manually maintained because create-react-app does not allow
-// importing files outside of /src (like package.json)
-const FLEX_INDEX_PREFIX = "flex.v0.6.32";
-
 function useSearchIndex(): readonly [
   null | SearchIndex,
   null | Error,
@@ -77,24 +73,35 @@ function useSearchIndex(): readonly [
   );
 
   useEffect(() => {
-    if (!data) {
+    if (!data || searchIndex) {
       return;
     }
-    const flex = FlexSearch.create({ tokenize: "forward" });
-    const cacheKey = FLEX_INDEX_PREFIX + sha256(JSON.stringify(data));
-    const cachedIndex = localStorage.getItem(cacheKey);
-    if (cachedIndex) {
-      flex.import(cachedIndex);
-    } else {
-      data.forEach(({ title }, i) => {
-        flex.add(i, title);
-      });
-      localStorage.setItem(cacheKey, flex.export());
-    }
-    const fuzzy = new FuzzySearch(data as Doc[]);
+    async function updateIndex() {
+      // TODO this is manually maintained because create-react-app does not allow
+      // importing files outside of /src (like package.json)
+      const FLEX_VERSION = "0.6.32";
+      const FLEX_KEY = "flex-index";
 
-    setSearchIndex({ flex, fuzzy, items: data });
-  }, [shouldInitialize, data]);
+      const version = FLEX_VERSION + (await sha256(JSON.stringify(data)));
+      const flex = FlexSearch.create({ tokenize: "forward" });
+      const indexCache = JSON.parse(localStorage.getItem(FLEX_KEY) || "{}");
+      if (indexCache.version === version) {
+        flex.import(indexCache.index);
+      } else {
+        data!.forEach(({ title }, i) => {
+          flex.add(i, title);
+        });
+        localStorage.setItem(
+          FLEX_KEY,
+          JSON.stringify({ version, index: flex.export() })
+        );
+      }
+      const fuzzy = new FuzzySearch(data as Doc[]);
+
+      setSearchIndex({ flex, fuzzy, items: data! });
+    }
+    updateIndex();
+  }, [searchIndex, shouldInitialize, data]);
 
   return useMemo(() => [searchIndex, error, () => setShouldInitialize(true)], [
     searchIndex,
