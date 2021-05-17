@@ -69,10 +69,7 @@ function useSearchIndex(): readonly [
     if (!data) {
       return;
     }
-    const flex = FlexSearch.create({
-      profile: "fast",
-      tokenize: "forward",
-    });
+    const flex = FlexSearch.create({ tokenize: "forward" });
     // const urls = data.map(({ url, title }, i) => {
     //   // XXX investigate if it's faster to add all at once
     //   // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
