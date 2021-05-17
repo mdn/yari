@@ -24,19 +24,24 @@ function getAllPopularityValues() {
 }
 
 function packageTranslationDifferences(translationDifferences) {
-  const count = translationDifferences.length;
   let total = 0;
+  const countByType = {};
   translationDifferences.forEach((difference) => {
+    if (!(difference.type in countByType)) {
+      countByType[difference.type] = 0;
+    }
     if (
       difference.explanationNotes &&
       Array.isArray(difference.explanationNotes)
     ) {
       total += difference.explanationNotes.length;
+      countByType[difference.type] += difference.explanationNotes.length;
     } else {
       total++;
+      countByType[difference.type]++;
     }
   });
-  return { count, total };
+  return { total, countByType };
 }
 
 function packageEdits(document, parentDocument) {

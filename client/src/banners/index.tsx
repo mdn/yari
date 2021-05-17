@@ -2,7 +2,7 @@ import * as React from "react";
 import { useLocation } from "react-router";
 
 import { useUserData } from "../user-context";
-import { ENABLE_MDNPLUSPLUS } from "../constants";
+import { ENABLE_PLUS } from "../constants";
 
 // We may or may not load any active banner. But if there's a small chance
 // that we might, it's best practice to not have to lazy-load the CSS
@@ -12,7 +12,7 @@ import { ENABLE_MDNPLUSPLUS } from "../constants";
 import "./banner.scss";
 
 // import { COMMON_SURVEY_ID } from "./ids";
-import { MDN_PLUSPLUS_IDv1 } from "./ids";
+import { PLUS_IDv1 } from "./ids";
 
 const ActiveBanner = React.lazy(() => import("./active-banner"));
 
@@ -62,9 +62,9 @@ function isEmbargoed(id: string) {
 }
 
 function isPathnameIncluded(id: string, pathname: string) {
-  if (id === MDN_PLUSPLUS_IDv1) {
+  if (id === PLUS_IDv1) {
     return !(
-      pathname.includes("/mdn++") ||
+      pathname.includes("/plus") ||
       pathname.includes("/signin") ||
       pathname.includes("/signup")
     );
@@ -73,7 +73,7 @@ function isPathnameIncluded(id: string, pathname: string) {
 }
 
 function isGeoLocationIncluded(id: string, country: string) {
-  if (id === MDN_PLUSPLUS_IDv1) {
+  if (id === PLUS_IDv1) {
     return country === "United States";
   }
   return false;
@@ -108,27 +108,34 @@ export function Banner() {
   // The order of the if statements is important and it's our source of
   // truth about which banner is "more important" than the other.
 
-  // The MDN_PLUSPLUS_IDv(N) banner depends on the following logic:
+  // The PLUS_IDv(N) banner depends on the following logic:
   // 0. Is the banner not disabled by an environment variable
   // 1. Are you not on the MDN++ page or sign in/up already.
   // 2. Are you in the United States
   // 3. Are you part of the 10% who are randomly selected
   // 4. Have you not dismissed it previously
-  // 5. Have you seen a different MDN_PLUSPLUS_IDvN banner before
+  // 5. Have you seen a different PLUS_IDvN banner before
   // 6. Is your locale en-US?
+  console.log({
+    ENABLE_PLUS,
+    pathname: isPathnameIncluded(PLUS_IDv1, location.pathname),
+    geo: isGeoLocationIncluded(PLUS_IDv1, userData.geo.country),
+    random: isRandomlyIncluded(PLUS_IDv1, 10),
+  });
+
   if (
-    ENABLE_MDNPLUSPLUS &&
-    isPathnameIncluded(MDN_PLUSPLUS_IDv1, location.pathname) &&
-    isGeoLocationIncluded(MDN_PLUSPLUS_IDv1, userData.geo.country) &&
-    isRandomlyIncluded(MDN_PLUSPLUS_IDv1, 10) &&
-    !isEmbargoed(MDN_PLUSPLUS_IDv1)
+    ENABLE_PLUS &&
+    isPathnameIncluded(PLUS_IDv1, location.pathname) &&
+    isGeoLocationIncluded(PLUS_IDv1, userData.geo.country) &&
+    isRandomlyIncluded(PLUS_IDv1, 10) &&
+    !isEmbargoed(PLUS_IDv1)
   ) {
     return (
       <React.Suspense fallback={null}>
         <ActiveBanner
-          id={MDN_PLUSPLUS_IDv1}
+          id={PLUS_IDv1}
           onDismissed={() => {
-            setEmbargoed(MDN_PLUSPLUS_IDv1, 7);
+            setEmbargoed(PLUS_IDv1, 7);
           }}
         />
       </React.Suspense>

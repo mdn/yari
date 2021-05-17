@@ -22,8 +22,10 @@ interface DocumentPopularity {
   parentRanking: number;
 }
 
+type CountByType = { [key: string]: number };
+
 interface DocumentDifferences {
-  count: number;
+  countByType: CountByType;
   total: number;
 }
 
@@ -251,7 +253,7 @@ function Container({ children }: { children: React.ReactNode }) {
 function ShowLocales({ locales }: { locales: Locale[] }) {
   return (
     <div>
-      <h2>Have to pick a locale</h2>
+      <h2>Select a locale</h2>
       <ul>
         {locales.map((locale) => {
           return (
@@ -612,18 +614,7 @@ function DocumentsTable({
                     </small>
                   </td>
                   <td>{showLastModified(doc)}</td>
-                  <td>
-                    {doc.differences.count ? (
-                      <>
-                        {doc.differences.count.toLocaleString()}{" "}
-                        <small>
-                          ({doc.differences.total.toLocaleString()} total)
-                        </small>
-                      </>
-                    ) : (
-                      "0"
-                    )}
-                  </td>
+                  <td>{doc.differences.total.toLocaleString()}</td>
                 </tr>
               );
             })}
