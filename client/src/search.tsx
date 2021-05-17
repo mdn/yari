@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import FlexSearch from "flexsearch";
 import useSWR from "swr";
@@ -41,7 +41,11 @@ type ResultItem = {
   substrings: Substring[];
 };
 
-function useSearchIndex(): [null | SearchIndex, null | Error, () => void] {
+function useSearchIndex(): readonly [
+  null | SearchIndex,
+  null | Error,
+  () => void
+] {
   const [shouldInitialize, setShouldInitialize] = useState(false);
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
   const { locale } = useParams();
@@ -85,7 +89,11 @@ function useSearchIndex(): [null | SearchIndex, null | Error, () => void] {
     setSearchIndex({ flex, fuzzy, items: data });
   }, [shouldInitialize, data]);
 
-  return [searchIndex, error, () => setShouldInitialize(true)];
+  return useMemo(() => [searchIndex, error, () => setShouldInitialize(true)], [
+    searchIndex,
+    error,
+    setShouldInitialize,
+  ]);
 }
 
 // The fuzzy search is engaged if the search term starts with a '/'
@@ -163,16 +171,28 @@ function useFocusOnSlash(inputRef: React.RefObject<null | HTMLInputElement>) {
   }, [inputRef]);
 }
 
-type InnerSearchNavigateWidgetProps = {
+export type SearchProps = {
+  inputValue: string;
+  onChangeInputValue: (value: string) => void;
+  isFocused: boolean;
+  onChangeIsFocused: (isFocused: boolean) => void;
+};
+
+type InnerSearchNavigateWidgetProps = SearchProps & {
   onResultPicked?: () => void;
 };
 
 function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
-  const { onResultPicked } = props;
+  const {
+    inputValue,
+    onChangeInputValue,
+    isFocused,
+    onChangeIsFocused,
+    onResultPicked,
+  } = props;
 
   const navigate = useNavigate();
   const locale = useLocale();
-  const [searchParams] = useSearchParams();
 
   const [
     searchIndex,
@@ -180,21 +200,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     initializeSearchIndex,
   ] = useSearchIndex();
 
-  const [isFocused, setIsFocused] = useState(false);
-
   const inputRef = useRef<null | HTMLInputElement>(null);
-
-  const initialQuery = searchParams.get("q") || "";
-  const [inputValue, setInputValue] = useState(initialQuery);
-
-  // The input value to the `useCombobox()` is controlled. This way, we can
-  // listen to the `useSearchIndex()` hook for new values.
-  // For example, the site-search page might trigger an update to the current
-  // `?q=...` value and if that happens we want to be reflected here in the
-  // combobox.
-  React.useEffect(() => {
-    setInputValue(initialQuery);
-  }, [setInputValue, initialQuery]);
 
   const resultItems: ResultItem[] = useMemo(() => {
     if (!searchIndex || !inputValue || searchIndexError) {
@@ -243,8 +249,9 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   } = useCombobox({
     items: resultItems,
     inputValue,
+    defaultIsOpen: isFocused,
     onInputValueChange: ({ inputValue }) => {
-      setInputValue(inputValue ? inputValue : "");
+      onChangeInputValue(inputValue ? inputValue : "");
     },
     onSelectedItemChange: ({ selectedItem }) => {
       if (selectedItem) {
@@ -258,6 +265,12 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   });
 
   useFocusOnSlash(inputRef);
+
+  useEffect(() => {
+    if (isFocused) {
+      initializeSearchIndex();
+    }
+  }, [initializeSearchIndex, isFocused]);
 
   const formAction = `/${locale}/search`;
 
@@ -293,11 +306,11 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           name: "q",
           placeholder: isFocused ? ACTIVE_PLACEHOLDER : INACTIVE_PLACEHOLDER,
           onMouseOver: initializeSearchIndex,
+          autoFocus: isFocused,
           onFocus: () => {
-            initializeSearchIndex();
-            setIsFocused(true);
+            onChangeIsFocused(true);
           },
-          onBlur: () => setIsFocused(false),
+          onBlur: () => onChangeIsFocused(false),
           onKeyDown: (event) => {
             if (event.key === "Escape" && inputRef.current) {
               inputRef.current.blur();
@@ -397,7 +410,7 @@ class SearchErrorBoundary extends React.Component {
   }
 }
 
-export function SearchNavigateWidget(props) {
+export default function SearchNavigateWidget(props) {
   return (
     <SearchErrorBoundary>
       <InnerSearchNavigateWidget {...props} />
