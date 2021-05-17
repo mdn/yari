@@ -69,8 +69,8 @@ function useSearchIndex(): readonly [
     if (!data) {
       return;
     }
-    const flex = new (FlexSearch as any)({
-      suggest: true,
+    const flex = FlexSearch.create({
+      profile: "fast",
       tokenize: "forward",
     });
     // const urls = data.map(({ url, title }, i) => {
