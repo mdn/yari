@@ -65,7 +65,8 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       $element.addClass("only-in-en-us");
       $element.attr("title", "Currently only available in English (US)");
     } else {
-      throw new Error("Don't use this function if neither is true");
+      $element.removeAttr("href");
+      $element.addClass("page-not-created");
     }
   }
 
@@ -83,9 +84,7 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       // suggestion. For example, in production builds, we don't care about
       // logging flaws, but because not all `broken_links` flaws have been
       // manually fixed at the source.
-      if (suggestion || enUSFallback) {
-        mutateLink($element, suggestion, enUSFallback);
-      }
+      mutateLink($element);
       return;
     }
     explanation = explanation || `Can't resolve ${href}`;
@@ -109,9 +108,7 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       }
       const id = `link${flaws.length + 1}`;
       const fixable = !!suggestion;
-      if (suggestion || enUSFallback) {
-        mutateLink($element, suggestion, enUSFallback);
-      }
+      mutateLink($element, suggestion, enUSFallback);
       $element.attr("data-flaw", id);
       flaws.push(
         Object.assign({ explanation, id, href, suggestion, fixable }, match)
