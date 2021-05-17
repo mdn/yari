@@ -122,8 +122,8 @@ module.exports = [
   [
     { is: "li", canHave: "id" },
     (node, t) => {
-      const content = wrap([t(node, { shouldWrap: true })]);
-      return h(node, "listItem", content, { spread: false });
+      const content = wrap(t(node, { shouldWrap: true }));
+      return h(node, "listItem", content, { spread: content.length > 1 });
     },
   ],
 

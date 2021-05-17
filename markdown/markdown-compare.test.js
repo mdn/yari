@@ -37,7 +37,7 @@ test.each(urls)("%s", async (url) => {
       .slice(1)
       .join("--"),
     comparisonMethod: "ssim",
-    failureThreshold: 10,
+    failureThreshold: 20,
     allowSizeMismatch: true,
   });
 });
