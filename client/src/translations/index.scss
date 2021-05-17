@@ -1,5 +1,9 @@
 .all-translations {
-  .search-error {
+  .error-message {
+    background-color: rgb(252, 159, 159);
+    padding: 10px;
+    margin: 20px;
+
     h3,
     h4 {
       margin-top: 0;
@@ -8,6 +12,10 @@
     h3 span.page {
       margin-left: 10px;
       color: #666;
+    }
+
+    p {
+      margin-bottom: 3px;
     }
   }
 
@@ -47,10 +55,6 @@
     td .last_modified.behind a {
       color: orange;
     }
-  }
-
-  .search-error {
-    background-color: rgb(252, 159, 159);
   }
 
   .document-warnings {

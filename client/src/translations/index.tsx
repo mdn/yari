@@ -330,12 +330,16 @@ function FilterControls() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [title, setTitle] = React.useState(searchParams.get("title") || "");
   const [url, setURL] = React.useState(searchParams.get("url") || "");
+  const [differences, setDifferences] = React.useState(
+    searchParams.get("differences") || ""
+  );
 
   function refreshFilters(reset = false) {
     const create = createSearchParams(searchParams);
     for (const [key, value] of [
       ["url", url],
       ["title", title],
+      ["differences", differences],
     ]) {
       if (!reset && value) {
         create.set(key, value);
@@ -350,6 +354,7 @@ function FilterControls() {
   function resetFilters() {
     setURL("");
     setTitle("");
+    setDifferences("");
     refreshFilters(true);
   }
 
@@ -383,6 +388,18 @@ function FilterControls() {
             onBlur={() => refreshFilters()}
           />
         </div>
+        <div>
+          <h4>Differences</h4>
+          <input
+            type="text"
+            placeholder="E.g. >0 or >=5"
+            value={differences}
+            onChange={(event) => {
+              setDifferences(event.target.value);
+            }}
+            onBlur={() => refreshFilters()}
+          />
+        </div>
 
         <div>
           <h4>&nbsp;</h4>
@@ -396,6 +413,83 @@ function FilterControls() {
       </form>
     </div>
   );
+}
+type NumericOperation = {
+  operation: "eq" | "gt" | "gte" | "lt" | "lte";
+  value: number;
+};
+
+function getNumericOperation(expression: string): NumericOperation | null {
+  function parseIntOrThrow(v: string) {
+    const parsed = parseInt(v, 10);
+    if (isNaN(parsed)) {
+      throw new Error(`'${v}' not a valid number`);
+    }
+    return parsed;
+  }
+  try {
+    if (expression.startsWith(">=")) {
+      return {
+        operation: "gte",
+        value: parseIntOrThrow(expression.replace(">=", "")),
+      };
+    } else if (expression.startsWith(">")) {
+      return {
+        operation: "gt",
+        value: parseIntOrThrow(expression.replace(">", "")),
+      };
+    } else if (expression.startsWith("<=")) {
+      return {
+        operation: "lte",
+        value: parseIntOrThrow(expression.replace("<=", "")),
+      };
+    } else if (expression.startsWith("<")) {
+      return {
+        operation: "lt",
+        value: parseIntOrThrow(expression.replace("<", "")),
+      };
+    } else if (expression.startsWith("==") || expression.startsWith("=")) {
+      return {
+        operation: "eq",
+        value: parseIntOrThrow(expression.replace(/=/g, "")),
+      };
+    } else {
+      return {
+        operation: "eq",
+        value: parseIntOrThrow(expression),
+      };
+    }
+  } catch (error) {
+    console.warn(error);
+    return null;
+  }
+}
+
+function matchNumericOperation(value: number, op: NumericOperation): boolean {
+  if (op.operation === "eq") {
+    if (value !== op.value) {
+      return false;
+    }
+  } else if (op.operation === "gt") {
+    if (!(value > op.value)) {
+      return false;
+    }
+  } else if (op.operation === "gte") {
+    if (!(value >= op.value)) {
+      return false;
+    }
+  } else if (op.operation === "lt") {
+    if (!(value < op.value)) {
+      return false;
+    }
+  } else if (op.operation === "lte") {
+    if (!(value <= op.value)) {
+      return false;
+    }
+  } else {
+    throw new Error(`Not implemented operation '${op.operation}'`);
+  }
+  return true;
 }
 
 function DocumentsTable({
@@ -414,6 +508,8 @@ function DocumentsTable({
   const pageSize = parseInt(searchParams.get("pageSize") || "20", 10);
   const filterTitle = searchParams.get("title") || "";
   const filterURL = searchParams.get("url") || "";
+  const filterDifferences = searchParams.get("differences") || "";
+  const filterDifferencesOperation = getNumericOperation(filterDifferences);
 
   // https://gist.github.com/jlbruno/1535691/db35b4f3af3dcbb42babc01541410f291a8e8fac
   function getGetOrdinal(n: number) {
@@ -529,6 +625,16 @@ function DocumentsTable({
         return false;
       }
 
+      if (
+        filterDifferencesOperation &&
+        !matchNumericOperation(
+          document.differences.total,
+          filterDifferencesOperation
+        )
+      ) {
+        return false;
+      }
+
       return true;
     })
     .sort((A, B) => {
@@ -562,6 +668,17 @@ function DocumentsTable({
         {page > 1 && <span className="page">page {page}</span>}{" "}
         <small>of {counts.total.toLocaleString()} in total</small>
       </h3>
+
+      {filterDifferences && !filterDifferencesOperation && (
+        <div className="error-message">
+          <h3>Invalid differences filter</h3>
+          <p>
+            The <i>differences</i> filter can't be parsed.
+            <br />
+            <code>{filterDifferences}</code>
+          </p>
+        </div>
+      )}
 
       <table>
         <thead>
