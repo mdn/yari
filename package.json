@@ -111,7 +111,7 @@
     "@storybook/node-logger": "^6.2.9",
     "@storybook/preset-create-react-app": "^3.1.7",
     "@storybook/react": "^6.2.8",
-    "@testing-library/react": "^11.2.6",
+    "@testing-library/react": "^11.2.7",
     "@types/jest": "^26.0.23",
     "@types/react": "^17.0.5",
     "@types/react-dom": "^17.0.5",
