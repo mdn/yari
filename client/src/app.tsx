@@ -5,7 +5,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
-import { CRUD_MODE, ENABLE_MDNPLUSPLUS } from "./constants";
+import { CRUD_MODE, ENABLE_PLUS } from "./constants";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -17,7 +17,7 @@ import { PageNotFound } from "./page-not-found";
 import { Banner } from "./banners";
 import { SignIn, SignUp } from "./auth";
 import { Settings } from "./settings";
-import { MDNplusplus } from "./mdnplusplus";
+import { Plus } from "./plus";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
@@ -235,12 +235,12 @@ export function App(appProps) {
                 </StandardLayout>
               }
             />
-            {ENABLE_MDNPLUSPLUS && (
+            {ENABLE_PLUS && (
               <Route
-                path="/mdn++"
+                path="/plus"
                 element={
                   <StandardLayout>
-                    <MDNplusplus {...appProps} />
+                    <Plus />
                   </StandardLayout>
                 }
               />
