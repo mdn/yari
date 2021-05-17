@@ -58,7 +58,7 @@ exports.handler = async (event) => {
     contentType &&
     contentType[0] &&
     contentType[0].value.startsWith("text/html") &&
-    isLiveSamplesURI
+    !isLiveSamplesURI
   ) {
     response.headers["content-security-policy-report-only"] = [
       {
