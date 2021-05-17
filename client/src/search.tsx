@@ -9,6 +9,13 @@ import { preload, preloadSupported } from "./document/preloading";
 
 import { useLocale } from "./hooks";
 
+async function sha256(message: string) {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
 function isMobileUserAgent() {
   return (
     typeof window !== "undefined" &&
@@ -41,6 +48,10 @@ type ResultItem = {
   substrings: Substring[];
 };
 
+// TODO this is manually maintained because create-react-app does not allow
+// importing files outside of /src (like package.json)
+const FLEX_INDEX_PREFIX = "flex.v0.6.32";
+
 function useSearchIndex(): readonly [
   null | SearchIndex,
   null | Error,
@@ -70,17 +81,16 @@ function useSearchIndex(): readonly [
       return;
     }
     const flex = FlexSearch.create({ tokenize: "forward" });
-    // const urls = data.map(({ url, title }, i) => {
-    //   // XXX investigate if it's faster to add all at once
-    //   // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
-    //   flex.add(i, title);
-    //   return url;
-    // });
-    data.forEach(({ title }, i) => {
-      // XXX investigate if it's faster to add all at once
-      // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
-      flex.add(i, title);
-    });
+    const cacheKey = FLEX_INDEX_PREFIX + sha256(JSON.stringify(data));
+    const cachedIndex = localStorage.getItem(cacheKey);
+    if (cachedIndex) {
+      flex.import(cachedIndex);
+    } else {
+      data.forEach(({ title }, i) => {
+        flex.add(i, title);
+      });
+      localStorage.setItem(cacheKey, flex.export());
+    }
     const fuzzy = new FuzzySearch(data as Doc[]);
 
     setSearchIndex({ flex, fuzzy, items: data });
