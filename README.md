@@ -23,13 +23,14 @@ Before you can start working with Yari, you need to:
     [Node.js](https://nodejs.org) (>= 12.0.0), and [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
 
 1.  [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
-    the MDN [content](https://github.com/mdn/content) and [yari](https://github.com/mdn/content)
+    the MDN [content](https://github.com/mdn/content), [translated-content](https://github.com/mdn/translated-content), and [yari](https://github.com/mdn/content)
     repositories using the Fork button on GitHub.
 
 1.  Clone the forked repositories to your computer using the following commands
     (replace `[your account]` with the account you forked the repositories to):
 
             git clone https://github.com/[your_account]/content.git
+            git clone https://github.com/[your_account]/translated-content.git
             git clone https://github.com/[your_account]/yari.git
 
         Take a note of the file path to the location where you've cloned that
@@ -45,11 +46,12 @@ app locally. Do this like so:
 
 Now run the following command to create a `.env` file inside your `yari` repo
 root and set the `CONTENT_ROOT` environment variable equal to the path to the
-`content` repo. This is so the Yari app can find the content it needs to render.
+`content` repo. Also set the `CONTENT_TRANSLATED_ROOT` environment variable equal to the path of the `translated-content` repo. This is so the Yari app can find the content it needs to render.
 You'll need to replace `/path/to/mdn/content/files` with the path to the
-`/files` folder inside your clone of the `content` repo:
+`/files` folder inside your clone of the `content` and `translated-content` repositories:
 
     echo CONTENT_ROOT=/path/to/mdn/content/files >> .env
+    echo CONTENT_TRANSLATED_ROOT=/path/to/mdn/translated-content/files >> .env
 
 At this point, you can get started. Run the following lines to compile required
 files, start the Yari web server running, and open it in your browser:
