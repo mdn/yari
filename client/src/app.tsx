@@ -31,13 +31,14 @@ const isServer = typeof window === "undefined";
 function Layout({ pageType, children }) {
   return (
     <>
+      {!isServer && <Banner />}
       <A11yNav />
       <div className={`page-wrapper ${pageType}`}>
         <Header />
         {children}
       </div>
       <Footer />
-      {!isServer && <Banner />}
+
       {/* Shown on mobile when main navigation is expanded to provide a clear distinction between the foreground menu and the page content */}
       <div className="page-overlay hidden"></div>
     </>
