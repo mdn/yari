@@ -9,7 +9,7 @@ import "./index.scss";
 // This needs to match what's set in 'libs/constants.js' on the server/builder!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
 
-export function LanguageMenu({
+export default function LanguageMenu({
   locale,
   translations,
   native,
