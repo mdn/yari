@@ -27,7 +27,7 @@ jobs:
       # We need to install all node modules in each of the 3 directories.
       # 1. content-origin-request
       # 2. content-origin-response
-      # 3. test-lambda
+      # 3. tests
       #
       # If we don't do this, you can't do things like:
       #
@@ -65,15 +65,15 @@ jobs:
         id: cached-node_modules
         with:
           path: |
-            deployer/aws-lambda/test-lambda/node_modules
+            deployer/aws-lambda/tests/node_modules
           key: ${{ runner.os }}-${{ hashFiles('deployer/aws-lambda/**/yarn.lock') }}-${{ hashFiles('libs/**/*.js') }}
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
-        working-directory: deployer/aws-lambda/test-lambda
+        working-directory: deployer/aws-lambda/tests
         run: yarn --frozen-lockfile
 
       - name: Run test server
-        working-directory: deployer/aws-lambda/test-lambda
+        working-directory: deployer/aws-lambda/tests
         run: |
           yarn serve > /tmp/stdout.log 2> /tmp/stderr.log &
 
@@ -86,7 +86,7 @@ jobs:
           curl -I http://localhost:7000/en-US/docs/Web/
 
       - name: End-to-end test
-        working-directory: deployer/aws-lambda/test-lambda
+        working-directory: deployer/aws-lambda/tests
         run: |
           yarn test-server
 
