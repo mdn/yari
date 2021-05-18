@@ -23,6 +23,30 @@ jobs:
         with:
           node-version: "12"
 
+      - name: Cache node_modules content-origin-request
+        uses: actions/cache@v2.1.5
+        id: cached-node_modules-content-origin-request
+        with:
+          path: |
+            deployer/aws-lambda/content-origin-request/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('deployer/aws-lambda/**/yarn.lock') }}-${{ hashFiles('libs/**/*.js') }}
+      - name: Install all yarn packages
+        if: steps.cached-node_modules-content-origin-request.outputs.cache-hit != 'true'
+        working-directory: deployer/aws-lambda/content-origin-request
+        run: yarn --frozen-lockfile
+
+      - name: Cache node_modules content-origin-response
+        uses: actions/cache@v2.1.5
+        id: cached-node_modules-content-origin-response
+        with:
+          path: |
+            deployer/aws-lambda/content-origin-response/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('deployer/aws-lambda/**/yarn.lock') }}-${{ hashFiles('libs/**/*.js') }}
+      - name: Install all yarn packages
+        if: steps.cached-node_modules-content-origin-response.outputs.cache-hit != 'true'
+        working-directory: deployer/aws-lambda/content-origin-response
+        run: yarn --frozen-lockfile
+
       - name: Cache node_modules
         uses: actions/cache@v2.1.5
         id: cached-node_modules
@@ -30,7 +54,6 @@ jobs:
           path: |
             deployer/aws-lambda/test-lambda/node_modules
           key: ${{ runner.os }}-${{ hashFiles('deployer/aws-lambda/**/yarn.lock') }}-${{ hashFiles('libs/**/*.js') }}
-
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
         working-directory: deployer/aws-lambda/test-lambda
