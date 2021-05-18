@@ -5,6 +5,7 @@ import React from "react";
 
 import "./index.scss";
 
+import "../../../ui/molecules/language-menu/index.scss";
 const LanguageMenu = React.lazy(
   () => import("../../../ui/molecules/language-menu")
 );
