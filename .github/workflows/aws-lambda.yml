@@ -23,6 +23,19 @@ jobs:
         with:
           node-version: "12"
 
+      # Note!
+      # We need to install all node modules in each of the 3 directories.
+      # 1. content-origin-request
+      # 2. content-origin-response
+      # 3. test-lambda
+      #
+      # If we don't do this, you can't do things like:
+      #
+      #    const { handler } = require("../content-origin-request");
+      #
+      # The reason `yarn install` won't pick up the sub-dependencies
+      # is because these 3 directories don't share a common root.
+
       - name: Cache node_modules content-origin-request
         uses: actions/cache@v2.1.5
         id: cached-node_modules-content-origin-request
