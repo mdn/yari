@@ -73,7 +73,7 @@ jobs:
           curl -I http://localhost:7000/en-US/docs/Web/
 
       - name: End-to-end test
-        working-directory: deployer/aws-lambda/content-lambda
+        working-directory: deployer/aws-lambda/test-lambda
         run: |
           yarn test-server
 
