@@ -156,6 +156,10 @@ a.new {
   iframe:not(.sample-code-frame) {
     border: 0;
   }
+
+  iframe {
+    max-width: 100%;
+  }
 }
 
 /*
