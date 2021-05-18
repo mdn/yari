@@ -21,7 +21,7 @@ exports.handler = async (event) => {
   // So to make deployment-timing easier we make this code here work for
   // both the old way and the new way.
   // (Later in 2021 we can remove any mentions of `/_samples_/`)
-  const isLiveSamplesURI =
+  const isLiveSampleURI =
     uri.includes("/_samples_/") || uri.includes("/_sample_.");
 
   // This condition exists to accommodate AWS origin-groups, which
@@ -37,7 +37,7 @@ exports.handler = async (event) => {
     // The live-sample pages should never respond with an X-Frame-Options
     // header, because they're explicitly created for rendering within an
     // iframe on a different origin.
-    if (!isLiveSamplesURI) {
+    if (!isLiveSampleURI) {
       response.headers["x-frame-options"] = [
         { key: "X-Frame-Options", value: "DENY" },
       ];
@@ -58,7 +58,7 @@ exports.handler = async (event) => {
     contentType &&
     contentType[0] &&
     contentType[0].value.startsWith("text/html") &&
-    !isLiveSamplesURI
+    !isLiveSampleURI
   ) {
     response.headers["content-security-policy-report-only"] = [
       {
