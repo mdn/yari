@@ -33,12 +33,8 @@ function getSupportClassName(
     return "unknown";
   }
 
-  let {
-    flags,
-    version_added,
-    version_removed,
-    partial_implementation,
-  } = getFirst(support);
+  let { flags, version_added, version_removed, partial_implementation } =
+    getFirst(support);
 
   let className;
   if (version_added === null) {
@@ -286,10 +282,9 @@ function getNotes(
             }
           : null,
         item.notes
-          ? (Array.isArray(item.notes)
-              ? item.notes
-              : [item.notes]
-            ).map((note) => ({ iconName: "footnote", label: note }))
+          ? (Array.isArray(item.notes) ? item.notes : [item.notes]).map(
+              (note) => ({ iconName: "footnote", label: note })
+            )
           : null,
         item.alternative_name
           ? {
@@ -398,7 +393,7 @@ function CompatCell({
           </button>
         )}
         {showNotes && (
-          <dl className="bc-history bc-history-mobile">
+          <dl className="bc-notes-list bc-history bc-history-mobile">
             {getNotes(browser, support!, locale)}
           </dl>
         )}
@@ -480,7 +475,7 @@ export const FeatureRow = React.memo(
         {activeBrowser && (
           <tr className="bc-history">
             <td colSpan={browsers.length + 1}>
-              <dl>
+              <dl className="bc-notes-list">
                 {getNotes(
                   activeBrowser,
                   compat.support[activeBrowser]!,

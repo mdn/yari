@@ -14,13 +14,10 @@ export default function MainMenu({
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
   const mainMenuRef = useRef<null | HTMLUListElement>(null);
   const [visibleSubMenuId, setVisibleSubMenuId] = useState<string | null>(null);
-  const [
-    focusedSubmenuItemIndex,
-    setFocusedSubmenuItemIndex,
-  ] = useState<number>(-1);
-  const [submenuCollapsedOnBlurId, setSubmenuCollapsedOnBlurId] = useState<
-    string | null
-  >(null);
+  const [focusedSubmenuItemIndex, setFocusedSubmenuItemIndex] =
+    useState<number>(-1);
+  const [submenuCollapsedOnBlurId, setSubmenuCollapsedOnBlurId] =
+    useState<string | null>(null);
   function hideSubMenuIfVisible() {
     if (visibleSubMenuId) {
       setVisibleSubMenuId(null);

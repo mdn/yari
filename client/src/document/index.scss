@@ -7,6 +7,8 @@
 @import "~@mdn/minimalist/sass/mixins/utils";
 
 @import "./molecules/breadcrumb-locale-container";
+@import "./molecules/notecards";
+@import "./molecules/localized-content-note";
 
 .main-content {
   @media #{$mq-small-desktop-and-up} {
@@ -70,14 +72,6 @@ a.new {
     @include readable-line-length();
   }
 
-  h2,
-  h3 {
-    code {
-      background-color: transparent;
-      text-decoration: none;
-    }
-  }
-
   a {
     text-decoration: underline;
 
@@ -96,47 +90,24 @@ a.new {
     }
   }
 
-  h2 {
+  h2,
+  h3 {
     margin-bottom: ($base-unit * 2);
-
-    @media #{$mq-tablet-and-up} {
-      margin-bottom: ($base-unit * 6);
-    }
 
     a:link,
     a:visited {
       color: $neutral-100;
-    }
-
-    a:active {
-      background-color: transparent;
-      color: $link-color;
-    }
-  }
-
-  h3 {
-    a:link,
-    a:visited {
-      color: $neutral-600;
-    }
-
-    a:active {
-      background-color: transparent;
-      color: $neutral-600;
-    }
-  }
-
-  h2,
-  h3,
-  h4 {
-    a:link,
-    a:visited {
       text-decoration: none;
     }
 
     a:hover,
     a:focus {
+      color: $neutral-100;
       text-decoration: underline;
+    }
+
+    a:active {
+      background-color: transparent;
     }
   }
 
@@ -184,6 +155,10 @@ a.new {
 
   iframe:not(.sample-code-frame) {
     border: 0;
+  }
+
+  iframe {
+    max-width: 100%;
   }
 }
 

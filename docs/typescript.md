@@ -37,7 +37,7 @@ They can even be used to "trick" the type checker into believing untrue things:
 ```typescript
 const n1: number = "text"; // Error!
 const n2: number = "text" as number; // Error!
-const n3: number = ("text" as any) as number; // Works!
+const n3: number = "text" as any as number; // Works!
 ```
 
 Considering whether this is generally a good idea is left as an exercise to the

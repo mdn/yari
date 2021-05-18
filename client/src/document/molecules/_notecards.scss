@@ -1,0 +1,164 @@
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/borders";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+@mixin set-notecard-icon($icon) {
+  h3,
+  h4,
+  &.inline {
+    &::before {
+      background: transparent url($icon) 0 0 no-repeat;
+    }
+  }
+}
+
+@mixin set-notecard-icon-only($icon) {
+  h3,
+  h4 {
+    &::before {
+      background-image: url($icon);
+    }
+  }
+}
+
+.notecard {
+  border-left: $base-unit solid $primary-200;
+  margin: 0;
+  margin-bottom: $base-spacing;
+  padding: ($base-spacing / 2);
+
+  a {
+    &:link,
+    &:visited {
+      color: $neutral-100;
+      text-decoration: underline;
+    }
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
+
+  h3,
+  h4 {
+    /* 
+     * Because we also allow h3, we need to undo some of its styling here.
+     * This relates specifically to `background-color`, `color`, 
+     * `padding` and `font-weight`
+     */
+    background-color: inherit;
+    color: inherit;
+    display: inline-block;
+    font-family: $site-font-family;
+    font-size: $small-medium-font-size-mobile;
+    font-weight: bold;
+    margin: 0;
+    margin-bottom: ($base-spacing / 4);
+    padding: 0;
+
+    @media #{$mq-tablet-and-up} {
+      font-size: $small-medium-font-size;
+    }
+  }
+
+  h3,
+  h4,
+  &.inline {
+    &::before {
+      background-repeat: no-repeat;
+      background-size: 18px;
+      content: "";
+      display: inline-block;
+      height: 21px;
+      margin-right: $base-spacing / 4;
+      position: relative;
+      top: 2px;
+      width: 20px;
+    }
+  }
+
+  p {
+    margin-bottom: $base-spacing / 2;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &.inline {
+    font-weight: normal;
+    margin: $base-spacing / 4;
+    padding: ($base-spacing / 8) ($base-spacing / 4);
+
+    &::before {
+      top: 5px;
+    }
+
+    p {
+      display: inline-block;
+      margin-bottom: 0;
+    }
+  }
+
+  &.neutral {
+    @include set-notecard-icon("~@mdn/dinocons/general/globe.svg");
+
+    background-color: $primary-500;
+    color: $primary-50;
+  }
+
+  &.success {
+    @include set-notecard-icon("~@mdn/dinocons/general/check-mark.svg");
+
+    background-color: $green-400;
+    border-color: $green-200;
+    color: $neutral-100;
+  }
+
+  &.note {
+    @include set-notecard-icon("~@mdn/dinocons/file-icons/file.svg");
+
+    background-color: $primary-500;
+  }
+
+  &.warning,
+  &.experimental,
+  &.draft,
+  &.secure {
+    @include set-notecard-icon(
+      "~@mdn/dinocons/notifications/exclamation-triangle.svg"
+    );
+
+    background-color: $yellow-400;
+    border-color: $yellow-300;
+    color: $neutral-100;
+  }
+
+  &.experimental {
+    @include set-notecard-icon-only("~@mdn/dinocons/general/flask.svg");
+  }
+
+  &.draft {
+    @include set-notecard-icon-only("~@mdn/dinocons/general/pencil.svg");
+  }
+
+  &.secure {
+    @include set-notecard-icon-only("~@mdn/dinocons/general/lock.svg");
+  }
+
+  &.negative,
+  &.obsolete,
+  &.deprecated {
+    @include set-notecard-icon("~@mdn/dinocons/general/trash.svg");
+
+    background-color: $red-400;
+    border-color: $red-300;
+    color: $neutral-100;
+  }
+
+  &.deprecated {
+    @include set-notecard-icon-only("~@mdn/dinocons/emojis/thumbs-down.svg");
+  }
+}

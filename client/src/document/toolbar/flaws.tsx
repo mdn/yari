@@ -146,6 +146,23 @@ export function ToggleDocumentFlaws({
     }))
     .sort((a, b) => b.count - a.count);
 
+  React.useEffect(() => {
+    const el = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
+    if (el) {
+      let allFixableFlaws = 0;
+      let allFlaws = 0;
+      Object.values(doc.flaws).forEach((flaws) => {
+        allFlaws += flaws.length;
+        allFixableFlaws += flaws.filter((flaw) => flaw.fixable).length;
+      });
+      el.href = !allFlaws
+        ? "/favicon-48x48-flawless.png"
+        : allFlaws === allFixableFlaws
+        ? "/favicon-48x48-flaws-fixable.png"
+        : "/favicon-48x48-flaws.png";
+    }
+  }, [doc.flaws]);
+
   return (
     <div
       id={FLAWS_HASH.slice(1)}
@@ -484,12 +501,14 @@ function BrokenLinks({
               {flaw.fixable && <FixableFlawBadge />}{" "}
               {opening && opening === key && <span>Opening...</span>}
               <br />
-              {flaw.suggestion && (
+              {flaw.suggestion ? (
                 <span>
                   <b>Suggestion:</b>
                   <ShowDiff before={flaw.href} after={flaw.suggestion} />
                 </span>
-              )}{" "}
+              ) : (
+                <code>{flaw.explanation}</code>
+              )}
             </li>
           );
         })}

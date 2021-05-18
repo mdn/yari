@@ -23,6 +23,7 @@ const {
 } = require("../content");
 // eslint-disable-next-line node/no-missing-require
 const { prepareDoc, renderDocHTML } = require("../ssr/dist/main");
+const { CSP_VALUE_DEV } = require("../libs/constants");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
@@ -90,6 +91,23 @@ app.post("/:locale/users/account/signup", proxy);
 // See https://github.com/chimurai/http-proxy-middleware/issues/40#issuecomment-163398924
 app.use(express.urlencoded({ extended: true }));
 
+app.post(
+  "/csp-violation-capture",
+  express.json({ type: "application/csp-report" }),
+  (req, res) => {
+    const report = req.body["csp-report"];
+    console.warn(
+      chalk.yellow(
+        "CSP violation for directive",
+        report["violated-directive"],
+        "which blocked:",
+        report["blocked-uri"]
+      )
+    );
+    res.sendStatus(200);
+  }
+);
+
 app.use("/_document", documentRouter);
 
 app.get("/_open", (req, res) => {
@@ -140,7 +158,7 @@ app.use("/:locale/search-index.json", searchIndexRoute);
 app.get("/_flaws", flawsRoute);
 
 app.get("/*/contributors.txt", async (req, res) => {
-  const url = req.url.replace(/\/contributors\.txt$/, "");
+  const url = req.path.replace(/\/contributors\.txt$/, "");
   const document = Document.findByURL(url);
   res.setHeader("content-type", "text/plain");
   if (!document) {
@@ -175,7 +193,7 @@ app.get("/*", async (req, res) => {
 
   if (req.url.includes("/_samples_/")) {
     try {
-      return res.send(await buildLiveSamplePageFromURL(req.url));
+      return res.send(await buildLiveSamplePageFromURL(req.path));
     } catch (e) {
       return res.status(404).send(e.toString());
     }
@@ -192,10 +210,10 @@ app.get("/*", async (req, res) => {
 
   // TODO: Would be nice to have a list of all supported file extensions
   // in a constants file.
-  if (/\.(png|webp|gif|jpe?g|svg)$/.test(req.url)) {
+  if (/\.(png|webp|gif|jpe?g|svg)$/.test(req.path)) {
     // Remember, Image.findByURL() will return the absolute file path
     // iff it exists on disk.
-    const filePath = Image.findByURL(req.url);
+    const filePath = Image.findByURL(req.path);
     if (filePath) {
       // The second parameter to `send()` has to be either a full absolute
       // path or a path that doesn't start with `../` otherwise you'd
@@ -206,12 +224,12 @@ app.get("/*", async (req, res) => {
     return res.status(404).send("File not found on disk");
   }
 
-  let lookupURL = decodeURI(req.url);
+  let lookupURL = decodeURI(req.path);
   let extraSuffix = "";
   let bcdDataURL = "";
   const bcdDataURLRegex = /\/(bcd-\d+|bcd)\.json$/;
 
-  if (req.url.endsWith("index.json")) {
+  if (req.path.endsWith("index.json")) {
     // It's a bit special then.
     // The URL like me something like
     // /en-US/docs/HTML/Global_attributes/index.json
@@ -220,8 +238,8 @@ app.get("/*", async (req, res) => {
     // temporarily remove it and remember to but it back when we're done.
     extraSuffix = "/index.json";
     lookupURL = lookupURL.replace(extraSuffix, "");
-  } else if (bcdDataURLRegex.test(req.url)) {
-    bcdDataURL = req.url;
+  } else if (bcdDataURLRegex.test(req.path)) {
+    bcdDataURL = req.path;
     lookupURL = lookupURL.replace(bcdDataURLRegex, "");
   }
 
@@ -263,6 +281,7 @@ app.get("/*", async (req, res) => {
   if (isJSONRequest) {
     res.json({ doc: document });
   } else {
+    res.header("Content-Security-Policy", CSP_VALUE_DEV);
     res.send(renderDocHTML(document, lookupURL));
   }
 });
