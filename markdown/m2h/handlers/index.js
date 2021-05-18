@@ -1,97 +1,5 @@
-const u = require("unist-builder");
 const code = require("./code");
-
-function text(node) {
-  const data = node.data || {};
-
-  if ("hName" in data || "hProperties" in data || "hChildren" in data) {
-    return false;
-  }
-
-  return "value" in node;
-}
-
-function unknown(h, node) {
-  if (text(node)) {
-    return h.augment(node, u("text", node.value));
-  }
-
-  return h(node, "div", all(h, node));
-}
-
-function returnNode(h, node) {
-  return node.children ? { ...node, children: all(h, node) } : node;
-}
-
-function one(h, node, parent) {
-  const type = node && node.type;
-  let fn;
-
-  if (!type) {
-    throw new Error("Expected node, got `" + node + "`");
-  }
-
-  if (type in h.handlers) {
-    fn = h.handlers[type];
-  } else if (h.passThrough && h.passThrough.includes(type)) {
-    fn = returnNode;
-  } else {
-    fn = h.unknownHandler;
-  }
-
-  return (typeof fn === "function" ? fn : unknown)(h, node, parent);
-}
-
-function all(h, parent) {
-  const nodes = parent.children || [];
-  let values = [];
-  let result;
-  let head;
-
-  for (const node of nodes) {
-    result = one(h, node, parent);
-
-    if (result) {
-      if (node.type === "break") {
-        if (result.type === "text") {
-          result.value = result.value.replace(/^\s+/, "");
-        }
-
-        if (result.type === "element") {
-          head = result.children[0];
-
-          if (head && head.type === "text") {
-            head.value = head.value.replace(/^\s+/, "");
-          }
-        }
-      }
-
-      values = values.concat(result);
-    }
-  }
-
-  return values;
-}
-
-function wrap(nodes, loose) {
-  var result = [];
-  var index = -1;
-
-  if (loose) {
-    result.push(u("text", "\n"));
-  }
-
-  while (++index < nodes.length) {
-    if (index) result.push(u("text", "\n"));
-    result.push(nodes[index]);
-  }
-
-  if (loose && nodes.length > 0) {
-    result.push(u("text", "\n"));
-  }
-
-  return result;
-}
+const { one, all, wrap } = require("./mdast-util-to-hast-utils");
 
 function getNotecardType(node) {
   if (!node.children) {
@@ -109,8 +17,64 @@ function getNotecardType(node) {
   return type == "warning" || type == "note" || type == "callout" ? type : null;
 }
 
+function isDefinitionList(node) {
+  return (
+    !node.ordered &&
+    node.children.every((listItem) => {
+      if (!listItem.children || listItem.children.length < 2) {
+        return false;
+      }
+      const definitions = listItem.children[listItem.children.length - 1];
+      return (
+        definitions.type == "list" &&
+        definitions.children.length == 1 &&
+        definitions.children.every((definition) => {
+          const [paragraph] = definition.children || [];
+          return (
+            paragraph &&
+            paragraph.type == "paragraph" &&
+            paragraph.children &&
+            paragraph.children[0] &&
+            (paragraph.children[0].value || "").startsWith(":")
+          );
+        })
+      );
+    })
+  );
+}
+
+function asDefinitionList(h, node) {
+  const children = node.children.flatMap((listItem) => {
+    const terms = listItem.children.slice(0, -1);
+    const definition =
+      listItem.children[listItem.children.length - 1].children[0];
+    const [paragraph, ...rest] = definition.children;
+    paragraph.children[0].value = paragraph.children[0].value.slice(2);
+    return [
+      h(
+        node,
+        "dt",
+        {},
+        all(h, {
+          ...node,
+          children:
+            terms.length == 1 && terms[0].type == "paragraph"
+              ? terms[0].children
+              : terms,
+        })
+      ),
+      h(node, "dd", {}, [
+        ...all(h, paragraph),
+        ...all(h, { ...definition, children: rest }),
+      ]),
+    ];
+  });
+  return h(node, "dl", {}, wrap(children, true));
+}
+
 module.exports = {
   code,
+
   paragraph(h, node) {
     const [child] = node.children;
     // Check for an unnecessarily nested KS-tag and unnest it
@@ -125,6 +89,7 @@ module.exports = {
 
     return h(node, "p", all(h, node));
   },
+
   blockquote(h, node) {
     const type = getNotecardType(node);
     if (type) {
@@ -140,5 +105,28 @@ module.exports = {
       );
     }
     return h(node, "blockquote", wrap(all(h, node), true));
+  },
+
+  list(h, node) {
+    if (isDefinitionList(node)) {
+      return asDefinitionList(h, node);
+    }
+
+    const name = node.ordered ? "ol" : "ul";
+
+    const props = {};
+    if (typeof node.start === "number" && node.start !== 1) {
+      props.start = node.start;
+    }
+
+    // This removes directly descendent paragraphs
+    const items = all(h, node).map((item) => ({
+      ...item,
+      children: item.children.flatMap((child) =>
+        child.tagName == "p" ? child.children : [child]
+      ),
+    }));
+
+    return h(node, name, props, wrap(items, true));
   },
 };

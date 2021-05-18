@@ -49,23 +49,21 @@ program
   )
 
   .command("m2h", "Convert Markdown to HTML")
-  .argument("<mdFile>", "input Markdown file", {
-    validator: (f) => {
-      if (!fs.existsSync(f)) {
-        throw new Error(`${f} does not exist`);
-      }
-      return f;
-    },
-  })
-  .argument("[htmlFile]", "output HTML file")
+  .argument("[folder]", "convert by folder")
   .action(
     tryOrExit(async ({ args }) => {
-      const { mdFile } = args;
-      const htmlFile = args.htmlFile || mdFile.replace(/\.md$/, ".html");
-      const raw = fs.readFileSync(mdFile, { encoding: "utf-8" });
-      const { body: m, frontmatter } = fm(raw);
-      const h = await m2h.run(m);
-      fs.writeFileSync(htmlFile, withFm(frontmatter, h));
+      const all = Document.findAll({ folderSearch: args.folder });
+      for (let doc of all.iter()) {
+        if (!doc.isMarkdown) {
+          continue;
+        }
+        const { body: m, frontmatter } = fm(doc.rawContent);
+        const h = await m2h(m);
+        fs.writeFileSync(
+          doc.fileInfo.path.replace(/\.md$/, ".html"),
+          withFm(frontmatter, h)
+        );
+      }
     })
   )
 

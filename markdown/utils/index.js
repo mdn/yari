@@ -30,6 +30,31 @@ function formatH(html) {
   return decodeKS(String(file));
 }
 
+const prettyPrintAST = (node, depth = 0) => {
+  if (typeof node == "string") {
+    console.log("  ".repeat(depth) + node);
+    return;
+  }
+  for (const [key, value] of Object.entries(node)) {
+    if (key == "position") {
+      continue;
+    }
+
+    console.log(
+      "  ".repeat(depth) + key + ":",
+      Array.isArray(value) ? "" : JSON.stringify(value)
+    );
+    if (Array.isArray(value)) {
+      for (let i = 0; i < value.length; i++) {
+        prettyPrintAST(value[i], depth + 1);
+        if (i + 1 < value.length) {
+          console.log();
+        }
+      }
+    }
+  }
+};
+
 function withFm(frontmatter, content) {
   if (frontmatter) {
     return `---\n${frontmatter}\n---\n${content}`;
@@ -41,5 +66,6 @@ module.exports = {
   encodeKS,
   decodeKS,
   formatH,
+  prettyPrintAST,
   withFm,
 };

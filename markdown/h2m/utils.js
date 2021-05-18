@@ -3,13 +3,13 @@ const h = (node, type, children, props = {}) => ({
   ...props,
   ...(typeof children === "string"
     ? { value: children }
-    : children && { children }),
+    : children && {
+        children: Array.isArray(children) ? children : [children],
+      }),
   ...(node.position && { position: node.position }),
 });
-
-const trimTrailingNewLines = (value) => String(value).replace(/\n+$/, "");
 
 const wrapText = (value, { shouldWrap }) =>
   shouldWrap ? value.replace(/\r?\n|\r/g, " ") : value;
 
-module.exports = { h, trimTrailingNewLines, wrapText };
+module.exports = { h, wrapText };

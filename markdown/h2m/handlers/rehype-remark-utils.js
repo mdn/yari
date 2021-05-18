@@ -11,9 +11,6 @@ Unfortunately the library does not export those functions, so I needed to copy t
 Some have been slightly refactored for readability.
  */
 
-const spread = (children) =>
-  children.length > 1 && children.some((child) => child.spread);
-
 // Wrap all runs of mdast phrasing content in `paragraph` nodes.
 function runs(nodes, onphrasing, onnonphrasing) {
   const nonphrasing = onnonphrasing || ((n) => n);
@@ -143,4 +140,4 @@ function code(node, opts) {
   });
 }
 
-module.exports = { code, spread, wrap };
+module.exports = { code, wrap };

@@ -1,11 +1,57 @@
 const toHtml = require("hast-util-to-html");
-const trim = require("trim-trailing-lines");
+const trimTrailingLines = require("trim-trailing-lines");
 
-const { h, trimTrailingNewLines, wrapText } = require("../utils");
-const { code, spread, wrap } = require("./rehype-remark-utils");
+const { h, wrapText } = require("../utils");
+const { code, wrap } = require("./rehype-remark-utils");
 const cards = require("./cards");
 const tables = require("./tables");
-const { toText } = require("./to-text");
+const { prettyPrintAST } = require("../../utils");
+const { toText, UnexpectedElementError } = require("./to-text");
+
+/**
+ * Some nodes like **strong** or __emphasis__ can't have leading/trailing spaces
+ * This function extracts those and returns them as text nodes instead.
+ */
+const extractSpacing = (node) => {
+  let pre = "";
+  let post = "";
+
+  node = {
+    ...node,
+    children: node.children.map((child, i) => {
+      const isFirst = i == 0;
+      const isLast = i + 1 == node.children.length;
+
+      const { type, value } = child;
+
+      if (type != "text" || !(isFirst || isLast)) {
+        return child;
+      }
+
+      const isNotSpace = (s) => !!s.trim();
+
+      if (isFirst) {
+        pre = value.slice(0, value.split("").findIndex(isNotSpace));
+      }
+      if (isLast) {
+        post = value.slice(
+          value.length - value.split("").reverse().findIndex(isNotSpace)
+        );
+      }
+
+      return {
+        ...child,
+        value: value.slice(pre.length, value.length - post.length),
+      };
+    }),
+  };
+
+  return [
+    ...(pre ? [{ type: "text", value: pre }] : []),
+    node,
+    ...(post ? [{ type: "text", value: post }] : []),
+  ];
+};
 
 module.exports = [
   [(node) => node.type == "root", (node, t) => h(node, "root", t(node))],
@@ -30,7 +76,7 @@ module.exports = [
       canHaveClass: ["example", "name", "highlight-spanned"],
     },
     (node, t) =>
-      h(node, "heading", t(node, { shouldWrap: true }), {
+      h(node, "heading", t(node, { shouldWrap: true, singleLine: true }), {
         depth: Number(node.tagName.charAt(1)) || 1,
       }),
   ],
@@ -74,12 +120,14 @@ module.exports = [
     { is: "p", canHaveClass: ["brush:", "js"] },
     (node, t) => h(node, "paragraph", t(node)),
   ],
-  ["em", (node, t) => h(node, "emphasis", t(node))],
-  ["strong", (node, t) => h(node, "strong", t(node))],
   [
     "br",
-    (node, t, { shouldWrap }) =>
-      shouldWrap ? h(node, "break") : h(node, "text", " "),
+    (node, t, { shouldWrap, singleLine }) =>
+      shouldWrap
+        ? singleLine
+          ? h(node, "html", toHtml(node))
+          : h(node, "break")
+        : h(node, "text", " "),
   ],
 
   [
@@ -114,7 +162,7 @@ module.exports = [
       return h(node, "list", children, {
         ordered,
         start: ordered ? node.properties.start || 1 : null,
-        spread: spread(children),
+        spread: false,
       });
     },
   ],
@@ -122,7 +170,7 @@ module.exports = [
   [
     { is: "li", canHave: "id" },
     (node, t) => {
-      const content = wrap(t(node, { shouldWrap: true }));
+      const content = wrap(t(node));
       return h(node, "listItem", content, { spread: content.length > 1 });
     },
   ],
@@ -134,22 +182,29 @@ module.exports = [
   [
     (node) =>
       node.tagName == "code" &&
-      node.children.some((child) => child.tagName == "a"),
+      node.children.some((child) => ["a", "strong"].includes(child.tagName)),
     (node) =>
-      node.children.map((child) =>
-        child.tagName == "a"
-          ? h(child, "link", [h(node, "inlineCode", toText(child))], {
+      node.children.map((child) => {
+        switch (child.tagName) {
+          case "a":
+            return h(child, "link", h(node, "inlineCode", toText(child)), {
               title: child.properties.title || null,
               url: child.properties.href,
-            })
-          : h(node, "inlineCode", toText(child))
-      ),
+            });
+
+          case "strong":
+            return h(child, "strong", h(node, "inlineCode", toText(child)));
+
+          default:
+            return h(node, "inlineCode", toText(child));
+        }
+      }),
   ],
 
   [
-    ["code", "kbd"],
+    ["code" /*"kbd"*/],
     (node, t, opts) =>
-      h(node, "inlineCode", trim(wrapText(toText(node), opts))),
+      h(node, "inlineCode", trimTrailingLines(wrapText(toText(node), opts))),
   ],
 
   [
@@ -177,7 +232,7 @@ module.exports = [
         },
         (node, t, opts) => [
           h(node, "html", "<!-- prettier-ignore -->\n"),
-          h(node, "code", trimTrailingNewLines(wrapText(toText(node), opts)), {
+          h(node, "code", trimTrailingLines(wrapText(toText(node), opts)), {
             lang,
             meta: node.properties.className
               .filter((c) => c.startsWith("example-"))
@@ -208,8 +263,14 @@ module.exports = [
 
   ["blockquote", (node, t) => h(node, "blockquote", wrap(t(node)))],
 
-  [{ is: ["i", "u"] }, (node, t) => h(node, "emphasis", t(node))],
-  ["b", (node, t) => h(node, "strong", t(node))],
+  [
+    { is: ["i", "em"] },
+    (node, t) => extractSpacing(h(node, "emphasis", t(node))),
+  ],
+  [
+    { is: ["b", "strong"] },
+    (node, t) => extractSpacing(h(node, "strong", t(node))),
+  ],
 
   [
     "q",
@@ -218,5 +279,43 @@ module.exports = [
       ...t(node),
       { type: "text", value: '"' },
     ],
+  ],
+
+  // TODO: blocks in dd?
+  [
+    "dl",
+    (node, t) => {
+      const children = [];
+      let terms = [];
+      for (const child of node.children) {
+        if (child.tagName == "dt") {
+          terms.push(h(node, "paragraph", t(child)));
+        } else if (child.tagName == "dd" && terms.length > 0) {
+          children.push(
+            h(
+              node,
+              "listItem",
+              [
+                ...terms,
+                h(
+                  node,
+                  "list",
+                  h(
+                    node,
+                    "listItem",
+                    h(node, "paragraph", [h(node, "text", ": "), ...t(child)])
+                  )
+                ),
+              ],
+              { spread: false }
+            )
+          );
+          terms = [];
+        } else {
+          throw new UnexpectedElementError(child);
+        }
+      }
+      return h(node, "list", children, { spread: false });
+    },
   ],
 ];
