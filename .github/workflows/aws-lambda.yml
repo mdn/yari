@@ -55,6 +55,7 @@ jobs:
           yarn test-server
 
       - name: Debug any server outputs
+        if: failure()
         run: |
           echo "____STDOUT____"
           cat /tmp/stdout.log
