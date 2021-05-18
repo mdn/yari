@@ -3,7 +3,8 @@
 const polka = require("polka");
 const kleur = require("kleur");
 
-const { handler } = require("../content-origin-request");
+const requestHandler = require("../content-origin-request").handler;
+const responseHandler = require("../content-origin-response").handler;
 
 const PORT = parseInt(process.env.PORT || "7000");
 
@@ -42,8 +43,28 @@ async function catchall(req, res) {
     headers,
   };
 
+  const responseHeaders = {};
+  if (
+    uri.endsWith(".html") ||
+    !uri.split("/")[uri.split("/").length - 1].includes(".")
+  ) {
+    // Let's pretend the S3 lookup returned HTML
+    responseHeaders["content-type"] = [{ value: "text/html" }];
+  }
+  cf.response = {
+    headers: responseHeaders,
+  };
+
   event.Records = [{ cf }];
-  const handle = await handler(event);
+  const handle = await requestHandler(event);
+
+  if (handle === cf.request || handle.status) {
+    const response = await responseHandler(event);
+    Object.entries(response.headers).forEach(([key, value]) => {
+      res.setHeader(key, value[0].value);
+    });
+  }
+
   if (handle === cf.request) {
     // The request is allowed to pass through.
     // The URL might have been mutated.
