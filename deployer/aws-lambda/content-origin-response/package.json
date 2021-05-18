@@ -1,4 +1,6 @@
 {
+  "name": "@yari-internal/content-origin-response",
+  "version": "0.0.1",
   "private": true,
   "description": "Defines the deployment package for this AWS Lambda function.",
   "license": "MPL-2.0",
