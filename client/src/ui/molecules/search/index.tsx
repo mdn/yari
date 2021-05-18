@@ -23,6 +23,8 @@ function useQueryParamState() {
   return [value, setValue] as const;
 }
 
+const isServer = typeof window === "undefined";
+
 export function Search(props) {
   const [value, setValue] = useQueryParamState();
   const [isFocused, setIsFocused] = useState(false);
@@ -38,9 +40,13 @@ export function Search(props) {
   );
   return (
     <div className="header-search">
-      <Suspense fallback={<BasicSearchWidget {...searchProps} />}>
-        <LazySearchNavigateWidget {...searchProps} {...props} />
-      </Suspense>
+      {isServer ? (
+        <BasicSearchWidget {...searchProps} />
+      ) : (
+        <Suspense fallback={<BasicSearchWidget {...searchProps} />}>
+          <LazySearchNavigateWidget {...searchProps} {...props} />
+        </Suspense>
+      )}
     </div>
   );
 }
