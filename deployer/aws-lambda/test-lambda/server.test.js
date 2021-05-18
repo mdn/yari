@@ -243,15 +243,15 @@ describe("response headers", () => {
   it("should not set CSP or X-Frame-Options for legacy /_samples_/", async () => {
     const r = await get("/en-US/docs/Web/HTTP/_samples_/Foo/index.html");
     expect(r.statusCode).toBe(200);
-    expect(r.headers["X-Frame-Options"]).toBeFalsy();
-    expect(r.headers["Content-Security-Policy-Report-Only"]).toBeFalsy();
+    expect(r.headers["x-frame-options"]).toBeFalsy();
+    expect(r.headers["content-security-policy-report-only"]).toBeFalsy();
   });
 
   it("should not set CSP or X-Frame-Options for /_sample.*", async () => {
     const r = await get("/en-US/docs/Web/HTTP/_sample_.Foo.html");
     expect(r.statusCode).toBe(200);
-    expect(r.headers["X-Frame-Options"]).toBeFalsy();
-    expect(r.headers["Content-Security-Policy-Report-Only"]).toBeFalsy();
+    expect(r.headers["x-frame-options"]).toBeFalsy();
+    expect(r.headers["content-security-policy-report-only"]).toBeFalsy();
   });
 
   it("should set CSP and other security headers for non-samples", async () => {
