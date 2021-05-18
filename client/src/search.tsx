@@ -9,13 +9,6 @@ import { preload, preloadSupported } from "./document/preloading";
 
 import { useLocale } from "./hooks";
 
-async function sha256(message: string) {
-  const msgBuffer = new TextEncoder().encode(message);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-}
-
 function isMobileUserAgent() {
   return (
     typeof window !== "undefined" &&
@@ -76,31 +69,14 @@ function useSearchIndex(): readonly [
     if (!data || searchIndex) {
       return;
     }
-    async function updateIndex() {
-      // TODO this is manually maintained because create-react-app does not allow
-      // importing files outside of /src (like package.json)
-      const FLEX_VERSION = "0.6.32";
-      const FLEX_KEY = "flex-index";
 
-      const version = FLEX_VERSION + (await sha256(JSON.stringify(data)));
-      const flex = FlexSearch.create({ tokenize: "forward" });
-      const indexCache = JSON.parse(localStorage.getItem(FLEX_KEY) || "{}");
-      if (indexCache.version === version) {
-        flex.import(indexCache.index);
-      } else {
-        data!.forEach(({ title }, i) => {
-          flex.add(i, title);
-        });
-        localStorage.setItem(
-          FLEX_KEY,
-          JSON.stringify({ version, index: flex.export() })
-        );
-      }
-      const fuzzy = new FuzzySearch(data as Doc[]);
+    const flex = FlexSearch.create({ tokenize: "forward" });
+    data!.forEach(({ title }, i) => {
+      flex.add(i, title);
+    });
+    const fuzzy = new FuzzySearch(data as Doc[]);
 
-      setSearchIndex({ flex, fuzzy, items: data! });
-    }
-    updateIndex();
+    setSearchIndex({ flex, fuzzy, items: data! });
   }, [searchIndex, shouldInitialize, data]);
 
   return useMemo(() => [searchIndex, error, () => setShouldInitialize(true)], [
