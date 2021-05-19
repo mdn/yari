@@ -11,12 +11,7 @@ import {
   SearchProps,
   useFocusOnSlash,
 } from "../../../search-utils";
-const LazySearchNavigateWidget = lazy(
-  () =>
-    new Promise((resolve) => {
-      setTimeout(() => resolve(import("../../../search") as any), 3000);
-    })
-);
+const LazySearchNavigateWidget = lazy(() => import("../../../search"));
 
 function useQueryParamState() {
   const [searchParams] = useSearchParams();

@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import FlexSearch from "flexsearch";
 import useSWR from "swr";
 
-import { FuzzySearch, Doc, Substring } from "./fuzzy-search";
+import { Doc, FuzzySearch, Substring } from "./fuzzy-search";
 import { preload, preloadSupported } from "./document/preloading";
 
 import { useLocale } from "./hooks";
@@ -147,6 +147,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     useSearchIndex();
 
   const inputRef = useRef<null | HTMLInputElement>(null);
+  const formRef = useRef<null | HTMLFormElement>(null);
   const isSelectionInitialized = useRef(false);
 
   useEffect(() => {
@@ -231,12 +232,18 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   }, [initializeSearchIndex, isFocused]);
 
   const formAction = `/${locale}/search`;
+  const searchPath = useMemo(() => {
+    const sp = new URLSearchParams();
+    sp.set("q", inputValue.trim());
+    return `${formAction}?${sp.toString()}`;
+  }, [formAction, inputValue]);
 
   return (
     <form
       action={formAction}
       className="search-form"
       {...getComboboxProps({
+        ref: formRef as any, // downshift's types hardcode it as a div
         className: "search-widget",
         id: "nav-main-search",
         role: "search",
@@ -276,17 +283,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               inputValue.trim() &&
               highlightedIndex === -1
             ) {
-              // Redirect to the search page!
-              if (inputRef.current) {
-                inputRef.current.blur();
-              }
-              const sp = new URLSearchParams();
-              sp.set("q", inputValue.trim());
-              // We need to simulate that you're submitting the form.
-              // That means, we need to not only change the current query string
-              // but the pathname too. Remember, the `setSearchParams()` only
-              // changes the `?...` portion of the URL.
-              navigate(`${formAction}?${sp.toString()}`);
+              inputRef.current!.blur();
+              formRef.current!.submit();
             }
           },
           ref: (input) => {
@@ -318,7 +316,13 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               resultItems.length === 0 &&
               inputValue &&
               inputValue !== "/" &&
-              searchIndex && <div className="nothing-found">nothing found</div>
+              searchIndex && (
+                <div className="nothing-found">
+                  No quick results found. Click{" "}
+                  <Link to={searchPath}>here</Link> or press enter to do a
+                  full-search.
+                </div>
+              )
             )}
             {resultItems.map((item, i) => (
               <div
