@@ -54,4 +54,12 @@
   .experimental-icon {
     background-image: url("~@mdn/dinocons/general/flask.svg");
   }
+
+  .nonstandard-icon {
+    background-image: url("~@mdn/dinocons/emojis/thumbs-down.svg");
+  }
+
+  .deprecated-icon {
+    background-image: url("~@mdn/dinocons/general/trash.svg");
+  }
 }
