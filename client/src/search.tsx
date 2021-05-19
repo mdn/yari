@@ -8,21 +8,7 @@ import { FuzzySearch, Doc, Substring } from "./fuzzy-search";
 import { preload, preloadSupported } from "./document/preloading";
 
 import { useLocale } from "./hooks";
-
-function isMobileUserAgent() {
-  return (
-    typeof window !== "undefined" &&
-    (typeof window.orientation !== "undefined" ||
-      navigator.userAgent.indexOf("IEMobile") !== -1)
-  );
-}
-
-const ACTIVE_PLACEHOLDER = "Go ahead. Type your search...";
-// Make this one depend on figuring out if you're on a mobile device
-// because there you can't really benefit from keyboard shortcuts.
-const INACTIVE_PLACEHOLDER = isMobileUserAgent()
-  ? "Site search..."
-  : 'Site search... (Press "/" to focus)';
+import { getPlaceholder, SearchProps, useFocusOnSlash } from "./search-utils";
 
 type Item = {
   url: string;
@@ -139,36 +125,9 @@ function BreadcrumbURI({ uri, substrings }) {
   return <small>{keep.join(" / ")}</small>;
 }
 
-function useFocusOnSlash(inputRef: React.RefObject<null | HTMLInputElement>) {
-  useEffect(() => {
-    function focusOnSearchMaybe(event) {
-      const input = inputRef.current;
-      if (
-        event.code === "Slash" &&
-        !["TEXTAREA", "INPUT"].includes(event.target.tagName)
-      ) {
-        if (input && document.activeElement !== input) {
-          event.preventDefault();
-          input.focus();
-        }
-      }
-    }
-    document.addEventListener("keydown", focusOnSearchMaybe);
-    return () => {
-      document.removeEventListener("keydown", focusOnSearchMaybe);
-    };
-  }, [inputRef]);
-}
-
-export type SearchProps = {
-  inputValue: string;
-  onChangeInputValue: (value: string) => void;
-  isFocused: boolean;
-  onChangeIsFocused: (isFocused: boolean) => void;
-};
-
 type InnerSearchNavigateWidgetProps = SearchProps & {
   onResultPicked?: () => void;
+  defaultSelection: [number, number];
 };
 
 function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
@@ -178,6 +137,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     isFocused,
     onChangeIsFocused,
     onResultPicked,
+    defaultSelection,
   } = props;
 
   const navigate = useNavigate();
@@ -187,6 +147,18 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     useSearchIndex();
 
   const inputRef = useRef<null | HTMLInputElement>(null);
+  const isSelectionInitialized = useRef(false);
+
+  useEffect(() => {
+    if (!inputRef.current || isSelectionInitialized.current) {
+      return;
+    }
+    if (isFocused) {
+      inputRef.current.selectionStart = defaultSelection[0];
+      inputRef.current.selectionEnd = defaultSelection[1];
+    }
+    isSelectionInitialized.current = true;
+  }, [isFocused, defaultSelection]);
 
   const resultItems: ResultItem[] = useMemo(() => {
     if (!searchIndex || !inputValue || searchIndexError) {
@@ -290,9 +262,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
             : "search-input-field",
           id: "main-q",
           name: "q",
-          placeholder: isFocused ? ACTIVE_PLACEHOLDER : INACTIVE_PLACEHOLDER,
+          placeholder: getPlaceholder(isFocused),
           onMouseOver: initializeSearchIndex,
-          autoFocus: isFocused,
           onFocus: () => {
             onChangeIsFocused(true);
           },

@@ -1,13 +1,22 @@
-import React, { Suspense, lazy, useState, useMemo } from "react";
+import React, { Suspense, lazy, useState, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { useLocale } from "../../../hooks";
-import type { SearchProps } from "../../../search";
 
 import "./index.scss";
 
 import "./basic-search-widget.scss";
-const LazySearchNavigateWidget = lazy(() => import("../../../search"));
+import {
+  getPlaceholder,
+  SearchProps,
+  useFocusOnSlash,
+} from "../../../search-utils";
+const LazySearchNavigateWidget = lazy(
+  () =>
+    new Promise((resolve) => {
+      setTimeout(() => resolve(import("../../../search") as any), 3000);
+    })
+);
 
 function useQueryParamState() {
   const [searchParams] = useSearchParams();
@@ -28,6 +37,7 @@ const isServer = typeof window === "undefined";
 export function Search(props) {
   const [value, setValue] = useQueryParamState();
   const [isFocused, setIsFocused] = useState(false);
+  const [defaultSelection, setDefaultSelection] = useState([0, 0] as const);
 
   const searchProps = useMemo(
     () => ({
@@ -35,8 +45,17 @@ export function Search(props) {
       onChangeInputValue: (value) => setValue(value),
       isFocused,
       onChangeIsFocused: (isFocused) => setIsFocused(isFocused),
+      defaultSelection,
+      onChangeSelection: (selection) => setDefaultSelection(selection),
     }),
-    [value, setValue, isFocused, setIsFocused]
+    [
+      value,
+      setValue,
+      isFocused,
+      setIsFocused,
+      defaultSelection,
+      setDefaultSelection,
+    ]
   );
   return (
     <div className="header-search">
@@ -56,19 +75,25 @@ export function BasicSearchWidget({
   onChangeIsFocused,
   inputValue,
   onChangeInputValue,
-}: SearchProps) {
+  onChangeSelection,
+}: SearchProps & { onChangeSelection: (selection: [number, number]) => void }) {
   const locale = useLocale();
+  const inputRef = useRef<null | HTMLInputElement>(null);
+
+  useFocusOnSlash(inputRef);
+
   return (
     <form action={`/${locale}/search`} className="search-form" role="search">
       <label htmlFor="main-q" className="visually-hidden">
         Search MDN
       </label>
       <input
+        ref={inputRef}
         type="search"
         name="q"
         id="main-q"
         className="search-input-field"
-        placeholder="Search MDN"
+        placeholder={getPlaceholder(isFocused)}
         pattern="(.|\s)*\S(.|\s)*"
         required
         value={inputValue}
@@ -78,6 +103,14 @@ export function BasicSearchWidget({
         autoFocus={isFocused}
         onFocus={() => onChangeIsFocused(true)}
         onBlur={() => onChangeIsFocused(false)}
+        onSelect={(event) => {
+          if (event.target instanceof HTMLInputElement) {
+            onChangeSelection([
+              event.target.selectionStart!,
+              event.target.selectionEnd!,
+            ]);
+          }
+        }}
       />
       <input
         type="submit"
