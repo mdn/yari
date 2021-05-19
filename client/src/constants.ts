@@ -38,7 +38,10 @@ export const VALID_LOCALES = new Set([
   "zh-TW",
 ]);
 
-export const ENABLE_MDNPLUSPLUS = JSON.parse(
-  process.env.REACT_APP_ENABLE_MDNPLUSPLUS ||
+export const ENABLE_PLUS = JSON.parse(
+  process.env.REACT_APP_ENABLE_PLUS ||
     JSON.stringify(process.env.NODE_ENV === "development")
 );
+
+export const DEFAULT_GEO_COUNTRY =
+  process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";

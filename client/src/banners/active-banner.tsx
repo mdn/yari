@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import * as React from "react";
 
 import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
-import { CATEGORY_LEARNING_SURVEY, useGA } from "../ga-context";
-import { COMMON_SURVEY_ID } from "./ids";
+import { useGA } from "../ga-context";
+// import { COMMON_SURVEY_ID } from "./ids";
+import { PLUS_IDv1 } from "./ids";
+import { useLocale } from "../hooks";
+
+// const CATEGORY_LEARNING_SURVEY = "learning web development";
 
 // The <Banner> component displays a simple call-to-action banner at
 // the bottom of the window. The following props allow it to be customized.
@@ -37,7 +41,7 @@ export type BannerProps = {
 };
 
 function Banner(props: BannerProps) {
-  const [isDismissed, setDismissed] = useState(false);
+  const [isDismissed, setDismissed] = React.useState(false);
   const containerClassNames = props.classname
     ? `mdn-cta-container ${props.classname}`
     : "mdn-cta-container";
@@ -87,24 +91,49 @@ function Banner(props: BannerProps) {
   );
 }
 
-function CommonSurveyBanner({ onDismissed }: { onDismissed: () => void }) {
+// function CommonSurveyBanner({ onDismissed }: { onDismissed: () => void }) {
+//   const ga = useGA();
+
+//   return (
+//     <Banner
+//       id={COMMON_SURVEY_ID}
+//       title={"Learning web development survey"}
+//       copy={
+//         "Help us understand how to make MDN better for beginners (5 minute survey)"
+//       }
+//       cta={"Take the survey"}
+//       url="https://www.surveygizmo.com/s3/6175365/59cfad9c04cf"
+//       newWindow
+//       onDismissed={onDismissed}
+//       onCTAClick={() => {
+//         ga("send", {
+//           hitType: "event",
+//           eventCategory: CATEGORY_LEARNING_SURVEY,
+//           eventAction: "CTA clicked",
+//           eventLabel: "banner",
+//         });
+//       }}
+//     />
+//   );
+// }
+
+function PlusBanner({ onDismissed }: { onDismissed: () => void }) {
   const ga = useGA();
+  const locale = useLocale();
 
   return (
     <Banner
-      id={COMMON_SURVEY_ID}
-      title={"Learning web development survey"}
-      copy={
-        "Help us understand how to make MDN better for beginners (5 minute survey)"
-      }
-      cta={"Take the survey"}
-      url="https://www.surveygizmo.com/s3/6175365/59cfad9c04cf"
-      newWindow
+      id={PLUS_IDv1}
+      title={"MDN++ Landing Page Experiment"}
+      copy={"Summer is coming."}
+      cta={"Check it out"}
+      url={`/${locale}/plus`}
+      newWindow={false}
       onDismissed={onDismissed}
       onCTAClick={() => {
         ga("send", {
           hitType: "event",
-          eventCategory: CATEGORY_LEARNING_SURVEY,
+          eventCategory: PLUS_IDv1,
           eventAction: "CTA clicked",
           eventLabel: "banner",
         });
@@ -124,8 +153,11 @@ export default function ActiveBanner({
   id: string;
   onDismissed: () => void;
 }) {
-  if (id === COMMON_SURVEY_ID) {
-    return <CommonSurveyBanner onDismissed={onDismissed} />;
+  if (id === PLUS_IDv1) {
+    return <PlusBanner onDismissed={onDismissed} />;
   }
+  // if (id === COMMON_SURVEY_ID) {
+  //   return <CommonSurveyBanner onDismissed={onDismissed} />;
+  // }
   throw new Error(`Unrecognized banner to display (${id})`);
 }

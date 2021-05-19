@@ -4,7 +4,7 @@ import { PageContentContainer } from "../ui/atoms/page-content";
 
 const App = React.lazy(() => import("./app"));
 
-export function MDNplusplus() {
+export function Plus() {
   const pageTitle = "MDN++";
   React.useEffect(() => {
     document.title = pageTitle;
@@ -12,7 +12,7 @@ export function MDNplusplus() {
   const isServer = typeof window === "undefined";
   return (
     <div className="settings">
-      <PageContentContainer extraClasses="mdnplusplus">
+      <PageContentContainer extraClasses="plus">
         {/* The reason for displaying this <h1> here
           is to avoid an unnecessary "flicker".
           component here is loaded SSR and is immediately present.

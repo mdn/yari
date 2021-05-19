@@ -23,6 +23,7 @@ const {
 } = require("../content");
 // eslint-disable-next-line node/no-missing-require
 const { prepareDoc, renderDocHTML } = require("../ssr/dist/main");
+const { CSP_VALUE_DEV } = require("../libs/constants");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
@@ -89,6 +90,23 @@ app.post("/:locale/users/account/signup", proxy);
 // middleware for `/api/v1` above.
 // See https://github.com/chimurai/http-proxy-middleware/issues/40#issuecomment-163398924
 app.use(express.urlencoded({ extended: true }));
+
+app.post(
+  "/csp-violation-capture",
+  express.json({ type: "application/csp-report" }),
+  (req, res) => {
+    const report = req.body["csp-report"];
+    console.warn(
+      chalk.yellow(
+        "CSP violation for directive",
+        report["violated-directive"],
+        "which blocked:",
+        report["blocked-uri"]
+      )
+    );
+    res.sendStatus(200);
+  }
+);
 
 app.use("/_document", documentRouter);
 
@@ -263,6 +281,7 @@ app.get("/*", async (req, res) => {
   if (isJSONRequest) {
     res.json({ doc: document });
   } else {
+    res.header("Content-Security-Policy", CSP_VALUE_DEV);
     res.send(renderDocHTML(document, lookupURL));
   }
 });

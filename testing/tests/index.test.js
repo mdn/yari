@@ -197,9 +197,10 @@ test("content built foo page", () => {
   );
 
   // Because this en-US page has a French translation
-  expect($('link[rel="alternate"]').length).toBe(2);
+  expect($('link[rel="alternate"]').length).toBe(3);
   expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
   expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
+  expect($('link[rel="alternate"][hreflang="zh"]').length).toBe(1);
   const toEnUSURL = $('link[rel="alternate"][hreflang="en"]').attr("href");
   const toFrURL = $('link[rel="alternate"][hreflang="fr"]').attr("href");
   // The domain is hardcoded because the URL needs to be absolute and when
@@ -243,12 +244,41 @@ test("content built French foo page", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="alternate"]').length).toBe(2);
+  expect($('link[rel="alternate"]').length).toBe(3);
   expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
   expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
+  expect($('link[rel="alternate"][hreflang="zh"]').length).toBe(1);
   expect($('meta[property="og:locale"]').attr("content")).toBe("fr");
   expect($('meta[property="og:title"]').attr("content")).toBe(
     "<foo>: Une page de test | MDN"
+  );
+});
+
+test("content built zh-TW page with en-US fallback image", () => {
+  const builtFolder = path.join(buildRoot, "zh-tw", "docs", "web", "foo");
+  const jsonFile = path.join(builtFolder, "index.json");
+  expect(fs.existsSync(jsonFile)).toBeTruthy();
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(Object.keys(doc.flaws).length).toBe(0);
+  expect(doc.title).toBe("<foo>: 測試網頁");
+  expect(doc.isTranslated).toBe(true);
+  expect(doc.other_translations[0].locale).toBe("en-US");
+  expect(doc.other_translations[0].native).toBe("English (US)");
+  expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($('link[rel="alternate"]').length).toBe(3);
+  expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
+  expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
+  expect($('link[rel="alternate"][hreflang="zh"]').length).toBe(1);
+  expect($('meta[property="og:locale"]').attr("content")).toBe("zh-TW");
+  expect($('meta[property="og:title"]').attr("content")).toBe(
+    "<foo>: 測試網頁 | MDN"
+  );
+  expect($("#content img").attr("src")).toBe(
+    "/en-US/docs/Web/Foo/screenshot.png"
   );
 });
 

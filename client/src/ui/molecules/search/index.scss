@@ -57,9 +57,20 @@
       color: $yellow-100;
     }
 
+    div {
+      padding: $base-unit;
+    }
+
+    .nothing-found {
+      font-style: italic;
+    }
+
+    .fuzzy-engaged {
+      font-size: $tiny-text;
+    }
+
     .result-item {
       border-bottom: 1px solid $neutral-550;
-      padding: $base-unit;
       word-break: break-word;
     }
 
