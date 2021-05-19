@@ -35,10 +35,10 @@ program
       const all = Document.findAll({ folderSearch: args.folder });
       for (let doc of all.iter()) {
         if (doc.isMarkdown) {
-          fs.rmSync(doc.fileInfo.path);
-          doc = Document.read(doc.fileInfo.path.replace(/\.md$/, ".html"));
+          continue;
         }
         const { body: h, frontmatter } = fm(doc.rawContent);
+        console.log(doc.url);
         const m = await h2m.run(h);
         fs.writeFileSync(
           doc.fileInfo.path.replace(/\.html$/, ".md"),

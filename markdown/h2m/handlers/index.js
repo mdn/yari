@@ -318,4 +318,18 @@ module.exports = [
       return h(node, "list", children, { spread: false });
     },
   ],
+
+  ...["summary", "seoSummary"].map((className) => [
+    { hasClass: className },
+    (node, t, { summary }) => {
+      const trimIntoSingleLine = (text) => text.replace(/\s\s+/g, " ").trim();
+      if (
+        !summary ||
+        trimIntoSingleLine(toText(node)) != trimIntoSingleLine(summary)
+      ) {
+        throw new UnexpectedElementError(node);
+      }
+      return h(node, "paragraph", t(node));
+    },
+  ]),
 ];

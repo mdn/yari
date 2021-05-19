@@ -114,25 +114,26 @@ function transformNode(node, opts = {}) {
   return [transformed || h(node, "html", toHtml(node)), unhandled];
 }
 
-function toMdast(tree) {
+function toMdast(tree, options) {
   minify({ newlines: true })(tree);
-  return transformNode(tree);
+  return transformNode(tree, options);
 }
 
 // If a destination is given, runs the destination with the new mdast tree
 // (bridge-mode).
 // Without destination, returns the mdast tree: further plugins run on that tree
 // (mutate-mode).
-function transform(destination) {
-  if (destination && !destination.process) {
+function transform(destination, options) {
+  if (destination && !destination.process && !options) {
+    options = destination;
     destination = null;
   }
 
   return destination
     ? function transformer(node, file, next) {
-        destination.run(toMdast(node), file, (err) => next(err));
+        destination.run(toMdast(node, options), file, (err) => next(err));
       }
-    : (node) => toMdast(node);
+    : (node) => toMdast(node, options);
 }
 
 module.exports = { transform };
