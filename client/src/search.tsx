@@ -79,11 +79,10 @@ function useSearchIndex(): readonly [
     setSearchIndex({ flex, fuzzy, items: data! });
   }, [searchIndex, shouldInitialize, data]);
 
-  return useMemo(() => [searchIndex, error, () => setShouldInitialize(true)], [
-    searchIndex,
-    error,
-    setShouldInitialize,
-  ]);
+  return useMemo(
+    () => [searchIndex, error, () => setShouldInitialize(true)],
+    [searchIndex, error, setShouldInitialize]
+  );
 }
 
 // The fuzzy search is engaged if the search term starts with a '/'
@@ -184,11 +183,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   const navigate = useNavigate();
   const locale = useLocale();
 
-  const [
-    searchIndex,
-    searchIndexError,
-    initializeSearchIndex,
-  ] = useSearchIndex();
+  const [searchIndex, searchIndexError, initializeSearchIndex] =
+    useSearchIndex();
 
   const inputRef = useRef<null | HTMLInputElement>(null);
 

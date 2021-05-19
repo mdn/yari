@@ -146,10 +146,8 @@ export default function Sitemap() {
   }
 
   const [opening, setOpening] = React.useState<string | null>(null);
-  const [
-    editorOpeningError,
-    setEditorOpeningError,
-  ] = React.useState<Error | null>(null);
+  const [editorOpeningError, setEditorOpeningError] =
+    React.useState<Error | null>(null);
   React.useEffect(() => {
     let unsetOpeningTimer: ReturnType<typeof setTimeout>;
     if (opening) {
