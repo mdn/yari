@@ -204,7 +204,10 @@ function translationsRoute(req, res) {
     return res.json({ locales });
   }
 
+  const label = `Find all translated documents (${locale})`;
+  console.time(label);
   const found = findDocuments({ locale });
+  console.timeEnd(label);
   // console.log(found.documents[0]);
   res.json(found);
 }

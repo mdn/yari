@@ -84,7 +84,10 @@ interface LocalesData {
 
 interface LocaleStorageData {
   lastLoadTime?: number;
+  defaultSort?: string;
+  defaultSortReverse?: string;
 }
+
 interface StorageData {
   [locale: string]: LocaleStorageData;
 }
@@ -117,6 +120,7 @@ function getStorage(locale: string): LocaleStorageData | null {
 
 export default function AllTranslations() {
   const { locale } = useParams();
+  const [searchParams] = useSearchParams();
 
   const [lastData, setLastData] = React.useState<Data | null>(null);
 
@@ -198,6 +202,24 @@ export default function AllTranslations() {
     }
   }, [data]);
 
+  const lastStorageData = getStorage(locale);
+  const defaultSort = lastStorageData?.defaultSort || "modified";
+  const defaultSortReverse = lastStorageData?.defaultSortReverse || "false";
+  const sort = searchParams.get("sort") || defaultSort;
+  const sortReverse = JSON.parse(
+    searchParams.get("sortReverse") || defaultSortReverse
+  );
+
+  React.useEffect(() => {
+    saveStorage(
+      locale,
+      Object.assign({}, lastStorageData, {
+        defaultSort: sort,
+        defaultSortReverse: sortReverse,
+      })
+    );
+  }, [locale, sort, sortReverse, lastStorageData]);
+
   if (locale.toLowerCase() === "en-us") {
     return (
       <Container>
@@ -212,8 +234,6 @@ export default function AllTranslations() {
       </Container>
     );
   }
-
-  const lastStorageData = getStorage(locale);
 
   return (
     <Container>
@@ -234,6 +254,8 @@ export default function AllTranslations() {
           <DocumentsTable
             counts={lastData.counts}
             documents={lastData.documents}
+            sort={sort}
+            sortReverse={sortReverse}
           />
         </div>
       )}
@@ -495,14 +517,15 @@ function matchNumericOperation(value: number, op: NumericOperation): boolean {
 function DocumentsTable({
   counts,
   documents,
+  sort,
+  sortReverse,
 }: {
   counts: Counts;
   documents: Document[];
+  sort: string;
+  sortReverse: boolean;
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const sort = searchParams.get("sort") || "modified";
-  const sortReverse = JSON.parse(searchParams.get("sortReverse") || "false");
 
   const page = parseInt(searchParams.get("page") || "1", 10);
   const pageSize = parseInt(searchParams.get("pageSize") || "20", 10);
@@ -651,6 +674,10 @@ function DocumentsTable({
         const a = A.differences.total;
         const b = B.differences.total;
         return reverse * (b - a);
+      } else if (sort === "title") {
+        const a = A.title;
+        const b = B.title;
+        return reverse * a.localeCompare(b);
       } else if (sort === "mdn_url") {
         const a = A.mdn_url;
         const b = B.mdn_url;
@@ -683,7 +710,7 @@ function DocumentsTable({
       <table>
         <thead>
           <tr>
-            <TH id="mdn_url" title="Document" />
+            <TH id="title" title="Document" />
             <TH id="popularity" title="Popularity" />
             <TH id="modified" title="Last modified" />
             <TH id="differences" title="Differences" />
@@ -696,6 +723,12 @@ function DocumentsTable({
               return (
                 <tr key={doc.mdn_url}>
                   <td>
+                    <span className="document-title-preview">
+                      {filterTitle
+                        ? getHighlightedText(doc.title, filterTitle)
+                        : doc.title}
+                    </span>
+                    <br />
                     <Link
                       to={`${doc.mdn_url}#_flaws`}
                       title={doc.title}
@@ -703,12 +736,6 @@ function DocumentsTable({
                     >
                       {showBriefURL(doc.mdn_url)}
                     </Link>
-                    <br />
-                    <span className="document-title-preview">
-                      {filterTitle
-                        ? getHighlightedText(doc.title, filterTitle)
-                        : doc.title}
-                    </span>
                   </td>
                   <td
                     title={
