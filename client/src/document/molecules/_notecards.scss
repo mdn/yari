@@ -23,7 +23,7 @@
 }
 
 .notecard {
-  border-left: $notecard-border;
+  border-left: $base-unit solid $primary-200;
   margin: 0;
   margin-bottom: $base-spacing;
   padding: ($base-spacing / 2);
