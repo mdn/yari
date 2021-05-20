@@ -17,7 +17,6 @@ const { findDocumentTranslations } = require("../content/translations");
 const {
   CONTENT_ROOT,
   Document,
-
   Redirect,
   Image,
   CONTENT_TRANSLATED_ROOT,
