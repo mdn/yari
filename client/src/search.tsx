@@ -209,9 +209,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     items: resultItems,
     inputValue,
     defaultIsOpen: isFocused,
-    onInputValueChange: ({ inputValue }) => {
-      onChangeInputValue(inputValue ? inputValue : "");
-    },
     onSelectedItemChange: ({ selectedItem }) => {
       if (selectedItem) {
         navigate(selectedItem.url);
@@ -275,7 +272,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
             onChangeIsFocused(true);
           },
           onBlur: () => onChangeIsFocused(false),
-          onKeyDown: (event) => {
+          onKeyDown(event) {
             if (event.key === "Escape" && inputRef.current) {
               inputRef.current.blur();
             } else if (
@@ -285,6 +282,11 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
             ) {
               inputRef.current!.blur();
               formRef.current!.submit();
+            }
+          },
+          onChange(event) {
+            if (event.target instanceof HTMLInputElement) {
+              onChangeInputValue(event.target.value);
             }
           },
           ref: (input) => {
