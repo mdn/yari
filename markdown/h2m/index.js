@@ -8,7 +8,7 @@ const {
   extractSections,
   extractSummary,
 } = require("../../build/document-extractor");
-const { decodeKS, encodeKS, prettyPrintAST } = require("../utils");
+const { decodeKS, encodeKS } = require("../utils");
 const { transform } = require("./transform");
 
 const getTransformProcessor = (options) =>
@@ -18,36 +18,25 @@ const getTransformProcessor = (options) =>
     .use(gfm)
     .use(remarkPrettier, { report: false, options: { proseWrap: "always" } });
 
-async function run(html) {
+module.exports = async function h2m(html) {
   const encodedHTML = encodeKS(html);
   const summary = extractSummary(
     extractSections(cheerio.load(`<div id="_body">${encodedHTML}</div>`))[0]
   );
-  const file = await getTransformProcessor({ summary })
-    .use(() => ([node, unhandled]) => {
-      console.warn(unhandled);
-      // prettyPrintAST(node);
-      return node;
-    })
-    .process(encodedHTML);
-  return decodeKS(String(file))
-    .split("\n")
-    .filter((line) => !line.includes("<!-- prettier-ignore -->"))
-    .join("\n");
-}
 
-async function dryRun(html) {
   let unhandled;
-  await getTransformProcessor()
+  const file = await getTransformProcessor({ summary })
     .use(() => ([node, u]) => {
       unhandled = u;
       return node;
     })
-    .process(encodeKS(html));
-  return unhandled;
-}
+    .process(encodedHTML);
 
-module.exports = {
-  run,
-  dryRun,
+  return [
+    decodeKS(String(file))
+      .split("\n")
+      .filter((line) => !line.includes("<!-- prettier-ignore -->"))
+      .join("\n"),
+    unhandled,
+  ];
 };

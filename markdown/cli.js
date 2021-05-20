@@ -3,6 +3,7 @@ const fs = require("fs");
 const fm = require("front-matter");
 const program = require("@caporal/core").default;
 const chalk = require("chalk");
+const cliProgress = require("cli-progress");
 
 const { Document } = require("../content");
 const h2m = require("./h2m");
@@ -21,6 +22,17 @@ function tryOrExit(f) {
   };
 }
 
+const toCountMap = (occurences) => {
+  const countMap = new Map();
+  for (const key of occurences) {
+    if (!countMap.has(key)) {
+      countMap.set(key, 0);
+    }
+    countMap.set(key, countMap.get(key) + 1);
+  }
+  return countMap;
+};
+
 program
   .bin("yarn md")
   .name("md")
@@ -29,21 +41,57 @@ program
   .cast(false)
 
   .command("h2m", "Convert HTML to Markdown")
+  .option("--mode <mode>", 'Can be "dry" or "replace"', { default: "replace" })
   .argument("[folder]", "convert by folder")
   .action(
-    tryOrExit(async ({ args }) => {
-      const all = Document.findAll({ folderSearch: args.folder });
-      for (let doc of all.iter()) {
+    tryOrExit(async ({ args, options }) => {
+      console.log(
+        `Starting HTML to Markdown conversion in ${options.mode} mode`
+      );
+
+      const documents = Document.findAll({ folderSearch: args.folder });
+
+      const progressBar = new cliProgress.SingleBar(
+        {},
+        cliProgress.Presets.shades_classic
+      );
+      progressBar.start(documents.count);
+
+      let totalUnhandledCount = 0;
+      const unhandledReportLines = [];
+      for (let doc of documents.iter()) {
+        progressBar.increment();
         if (doc.isMarkdown) {
           continue;
         }
         const { body: h, frontmatter } = fm(doc.rawContent);
-        console.log(doc.url);
-        const m = await h2m.run(h);
-        fs.writeFileSync(
-          doc.fileInfo.path.replace(/\.html$/, ".md"),
-          withFm(frontmatter, m)
+        const [markdown, unhandled] = await h2m(h);
+        if (unhandled.length) {
+          totalUnhandledCount += unhandled.length;
+          unhandledReportLines.push(
+            doc.url,
+            ...Array.from(toCountMap(unhandled))
+              .sort(([, c1], [, c2]) => c1 > c2)
+              .map(([key, count]) => `${key} (${count})`),
+            ""
+          );
+        }
+        if (options.mode == "replace") {
+          fs.writeFileSync(
+            doc.fileInfo.path.replace(/\.html$/, ".md"),
+            withFm(frontmatter, markdown)
+          );
+          fs.rmSync(doc.fileInfo.path);
+        }
+      }
+      progressBar.stop();
+
+      if (totalUnhandledCount) {
+        const reportFileName = `unconvertible-md-elements-report-${new Date().toISOString()}.txt`;
+        console.log(
+          `Could not automatically convert ${totalUnhandledCount} elements. Saving report to ${reportFileName}`
         );
+        fs.writeFileSync(reportFileName, unhandledReportLines.join("\n"));
       }
     })
   )
@@ -64,39 +112,6 @@ program
           withFm(frontmatter, h)
         );
       }
-    })
-  )
-
-  .command("check-content", "checks content for Markdown convertibility")
-  .argument("[folder]", "filter content by folder")
-  .action(
-    tryOrExit(async ({ args }) => {
-      const all = Document.findAll({ folderSearch: args.folder });
-      const bySelector = new Map();
-      for (const doc of all.iter()) {
-        const unhandled = await h2m.dryRun(doc.rawContent);
-        for (const selector of unhandled) {
-          const { count, urls } = bySelector.get(selector) || {
-            count: 0,
-            urls: [],
-          };
-          bySelector.set(selector, {
-            count: count + 1,
-            urls: urls.concat(doc.url),
-          });
-        }
-      }
-
-      console.log(
-        Array.from(bySelector)
-          .sort(([, e1], [, e2]) => (e1.count < e2.count ? 1 : -1))
-          .map(([selector, { count, urls }]) => [
-            selector,
-            count,
-            `"${Array.from(new Set(urls)).join("\n")}"`,
-          ])
-          .join("\n")
-      );
     })
   );
 
