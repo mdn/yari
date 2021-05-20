@@ -1102,7 +1102,7 @@
   "ManifestAppInfo": {
     "name": "Web App Manifest - Application Information",
     "url": "https://w3c.github.io/manifest-app-info/",
-    "status": "NOTE"
+    "status": "ED"
   },
   "MathML2": {
     "name": "MathML 2.0",
