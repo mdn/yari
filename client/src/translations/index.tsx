@@ -135,7 +135,10 @@ export default function AllTranslations() {
     document.title = title;
   }, [lastData, locale]);
 
-  const getAPIUrl = React.useCallback(() => {
+  const apiURL = React.useMemo(() => {
+    if (locale.toLowerCase() === "en-us") {
+      return null;
+    }
     const params = createSearchParams({
       locale,
     });
@@ -143,7 +146,7 @@ export default function AllTranslations() {
   }, [locale]);
 
   const { data, error, isValidating } = useSWR<Data, Error>(
-    locale.toLowerCase() !== "en-us" ? getAPIUrl() : null,
+    apiURL,
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
@@ -186,7 +189,7 @@ export default function AllTranslations() {
   }, [locale, data]);
 
   const { data: dataLocales, error: errorLocales } = useSWR<LocalesData, Error>(
-    locale.toLowerCase() === "en-us" ? getAPIUrl() : null,
+    apiURL,
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
@@ -323,16 +326,16 @@ function Loading({ estimate }: { estimate: number }) {
     new Date(startLoadingTime.getTime() + estimate)
   );
 
-  const INTERVAL_INCREMENT = 700;
-  const [elapsed, setElapsed] = React.useState(0);
+  const [, setIncrements] = React.useState(0);
   React.useEffect(() => {
     const interval = setInterval(() => {
-      setElapsed((state) => state + INTERVAL_INCREMENT);
-    }, INTERVAL_INCREMENT);
+      setIncrements((state) => state + 1);
+    }, 1000);
     return () => clearInterval(interval);
   }, []);
 
   const distance = estimateEndTime.getTime() - startLoadingTime.getTime();
+  const elapsed = new Date().getTime() - startLoadingTime.getTime();
   const percent = (100 * elapsed) / distance;
   return (
     <div className="loading">
@@ -342,7 +345,11 @@ function Loading({ estimate }: { estimate: number }) {
       <br />
       <small>
         Estimated time to finish: {((distance - elapsed) / 1000).toFixed(0)}s{" "}
-        {elapsed > distance ? <span>🙃</span> : null}
+        {elapsed > distance ? (
+          <span aria-label="weird" role="img">
+            🙃
+          </span>
+        ) : null}
       </small>
     </div>
   );
@@ -357,20 +364,20 @@ function FilterControls() {
   );
 
   function refreshFilters(reset = false) {
-    const create = createSearchParams(searchParams);
+    const filterParams = createSearchParams(searchParams);
     for (const [key, value] of [
       ["url", url],
       ["title", title],
       ["differences", differences],
     ]) {
       if (!reset && value) {
-        create.set(key, value);
+        filterParams.set(key, value);
       } else {
-        create.delete(key);
+        filterParams.delete(key);
       }
     }
-    create.delete("page");
-    setSearchParams(create);
+    filterParams.delete("page");
+    setSearchParams(filterParams);
   }
 
   function resetFilters() {
