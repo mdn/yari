@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import useSWR from "swr";
+import { useIdleCallbackEffect } from "react-timing-hooks";
 
 import { DisplayH2, DisplayH3 } from "./ingredients/utils";
 
@@ -29,7 +29,7 @@ export function LazyBrowserCompatibilityTable({
     <>
       {title && !isH3 && <DisplayH2 id={id} title={title} />}
       {title && isH3 && <DisplayH3 id={id} title={title} />}
-      {dataURL ? (
+      {dataURL && !isServer ? (
         <LaterLazyBrowserCompatibilityTableInner dataURL={dataURL} />
       ) : (
         <div className="notecard warning">
@@ -56,49 +56,17 @@ function LaterLazyBrowserCompatibilityTableInner(
   props: BrowserCompatibilityTableProps
 ) {
   const [loadIt, setLoadIt] = React.useState(false);
-  const rootRef = React.createRef<HTMLDivElement>();
 
-  React.useEffect(() => {
-    let observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setLoadIt(true);
-          }
-        }
-      },
-      {
-        rootMargin: "200px",
-      }
-    );
-    if (rootRef.current) {
-      observer.observe(rootRef.current);
-    }
-    return () => {
-      observer.disconnect();
-    };
-  }, [rootRef]);
+  // Note, you can't use this hook in SSR, but this component isn't mounted
+  // if `isServer` is true.
+  useIdleCallbackEffect(() => {
+    setLoadIt(true);
+  }, []);
 
-  const { hash } = useLocation();
-  React.useEffect(() => {
-    let mounted = true;
-    if (hash === "#browser_compatibility") {
-      setLoadIt(true);
-    } else {
-      setTimeout(() => {
-        if (mounted) {
-          setLoadIt(true);
-        }
-      }, 5000);
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [hash]);
   if (loadIt) {
     return <LazyBrowserCompatibilityTableInner {...props} />;
   }
-  return <div ref={rootRef}></div>;
+  return null;
 }
 
 function LazyBrowserCompatibilityTableInner({

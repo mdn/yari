@@ -16302,6 +16302,11 @@ react-textarea-autosize@^8.3.0:
     use-composed-ref "^1.0.0"
     use-latest "^1.0.0"
 
+react-timing-hooks@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-timing-hooks/-/react-timing-hooks-2.0.0.tgz#482af891b0a29566ce4ce819c56d15e22f0e2bcc"
+  integrity sha512-JS3r11VOuLmjwXz96i8GnYlFYrXI0UZyhVSvNqCff1Qn3rcxLijKkTnhW2Sc22T16W5XYLOjhOz5PVJMhKcB4g==
+
 react@17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
