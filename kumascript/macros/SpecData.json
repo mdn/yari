@@ -1099,6 +1099,11 @@
     "url": "https://w3c.github.io/manifest/",
     "status": "WD"
   },
+  "ManifestAppInfo": {
+    "name": "Web App Manifest - Application Information",
+    "url": "https://w3c.github.io/manifest-app-info/",
+    "status": "NOTE"
+  },
   "MathML2": {
     "name": "MathML 2.0",
     "url": "https://www.w3.org/TR/MathML2/",
