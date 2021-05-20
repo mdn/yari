@@ -541,14 +541,7 @@ function DocumentsTable({
   const filterDifferences = searchParams.get("differences") || "";
   const filterDifferencesOperation = getNumericOperation(filterDifferences);
 
-  // https://gist.github.com/jlbruno/1535691/db35b4f3af3dcbb42babc01541410f291a8e8fac
-  function getGetOrdinal(n: number) {
-    const s = ["th", "st", "nd", "rd"];
-    const v = n % 100;
-    return n.toLocaleString() + (s[(v - 20) % 10] || s[v] || s[0]);
-  }
-
-  function TH({ id, title }: { id: string; title: string }) {
+  function TableHead({ id, title }: { id: string; title: string }) {
     return (
       <th
         onClick={() => {
@@ -569,73 +562,6 @@ function DocumentsTable({
       >
         {title}
       </th>
-    );
-  }
-
-  function getHighlightedText(text: string, highlight: string) {
-    // Split on highlight term and include term into parts, ignore case
-    const parts = text.split(new RegExp(`(${highlight})`, "gi"));
-    return (
-      <span>
-        {" "}
-        {parts.map((part, i) => (
-          <span
-            key={i}
-            style={
-              part.toLowerCase() === highlight.toLowerCase()
-                ? { fontWeight: "bold" }
-                : {}
-            }
-          >
-            {part}
-          </span>
-        ))}{" "}
-      </span>
-    );
-  }
-
-  function showBriefURL(uri: string) {
-    const [left, right] = uri.split(/\/docs\//, 2);
-    return (
-      <>
-        <span className="url-prefix">{left}/docs/</span>
-        <span className="url-slug">
-          {filterURL ? getHighlightedText(right, filterURL) : right}
-        </span>
-      </>
-    );
-  }
-
-  function showLastModified(doc: Document) {
-    const { edits } = doc;
-    const modified = dayjs(edits.modified);
-    const parentModified = dayjs(edits.parentModified);
-    return (
-      <span
-        className={`last_modified ${
-          parentModified < modified ? "ahead" : "behind"
-        }`}
-      >
-        <a href={edits.commitURL} target="_blank" rel="noreferrer">
-          <time
-            dateTime={modified.toISOString()}
-            title={modified.toISOString()}
-          >
-            {modified.fromNow()}
-          </time>
-        </a>
-        <br />
-        <a href={edits.parentCommitURL} target="_blank" rel="noreferrer">
-          <small>
-            <time
-              dateTime={parentModified.toISOString()}
-              title={parentModified.toISOString()}
-            >
-              en-US {parentModified.fromNow()}
-            </time>
-          </small>
-        </a>
-      </span>
     );
   }
 
@@ -717,10 +643,10 @@ function DocumentsTable({
       <table>
         <thead>
           <tr>
-            <TH id="title" title="Document" />
-            <TH id="popularity" title="Popularity" />
-            <TH id="modified" title="Last modified" />
-            <TH id="differences" title="Differences" />
+            <TableHead id="title" title="Document" />
+            <TableHead id="popularity" title="Popularity" />
+            <TableHead id="modified" title="Last modified" />
+            <TableHead id="differences" title="Differences" />
           </tr>
         </thead>
         <tbody>
@@ -731,9 +657,14 @@ function DocumentsTable({
                 <tr key={doc.mdn_url}>
                   <td>
                     <span className="document-title-preview">
-                      {filterTitle
-                        ? getHighlightedText(doc.title, filterTitle)
-                        : doc.title}
+                      {filterTitle ? (
+                        <HighlightedText
+                          text={doc.title}
+                          highlight={filterTitle}
+                        />
+                      ) : (
+                        doc.title
+                      )}
                     </span>
                     <br />
                     <Link
@@ -741,7 +672,7 @@ function DocumentsTable({
                       title={doc.title}
                       target="_blank"
                     >
-                      {showBriefURL(doc.mdn_url)}
+                      <BriefURL uri={doc.mdn_url} filterURL={filterURL} />
                     </Link>
                   </td>
                   <td
@@ -764,7 +695,9 @@ function DocumentsTable({
                       )
                     </small>
                   </td>
-                  <td>{showLastModified(doc)}</td>
+                  <td>
+                    <LastModified edits={doc.edits} />
+                  </td>
                   <td>{doc.differences.total.toLocaleString()}</td>
                 </tr>
               );
@@ -786,6 +719,86 @@ function DocumentsTable({
       )}
     </div>
   );
+}
+
+function LastModified({ edits }: { edits: DocumentEdits }) {
+  const modified = dayjs(edits.modified);
+  const parentModified = dayjs(edits.parentModified);
+  return (
+    <span
+      className={`last_modified ${
+        parentModified < modified ? "ahead" : "behind"
+      }`}
+    >
+      <a href={edits.commitURL} target="_blank" rel="noreferrer">
+        <time dateTime={modified.toISOString()} title={modified.toISOString()}>
+          {modified.fromNow()}
+        </time>
+      </a>
+      <br />
+      <a href={edits.parentCommitURL} target="_blank" rel="noreferrer">
+        <small>
+          <time
+            dateTime={parentModified.toISOString()}
+            title={parentModified.toISOString()}
+          >
+            en-US {parentModified.fromNow()}
+          </time>
+        </small>
+      </a>
+    </span>
+  );
+}
+
+function HighlightedText({
+  text,
+  highlight,
+}: {
+  text: string;
+  highlight: string;
+}) {
+  // Split on highlight term and include term into parts, ignore case
+  const parts = text.split(new RegExp(`(${highlight})`, "gi"));
+  return (
+    <span>
+      {" "}
+      {parts.map((part, i) => (
+        <span
+          key={i}
+          style={
+            part.toLowerCase() === highlight.toLowerCase()
+              ? { fontWeight: "bold" }
+              : {}
+          }
+        >
+          {part}
+        </span>
+      ))}{" "}
+    </span>
+  );
+}
+
+function BriefURL({ uri, filterURL }: { uri: string; filterURL: string }) {
+  const [left, right] = uri.split(/\/docs\//, 2);
+  return (
+    <>
+      <span className="url-prefix">{left}/docs/</span>
+      <span className="url-slug">
+        {filterURL ? (
+          <HighlightedText text={right} highlight={filterURL} />
+        ) : (
+          right
+        )}
+      </span>
+    </>
+  );
+}
+
+// https://gist.github.com/jlbruno/1535691/db35b4f3af3dcbb42babc01541410f291a8e8fac
+function getGetOrdinal(n: number) {
+  const s = ["th", "st", "nd", "rd"];
+  const v = n % 100;
+  return n.toLocaleString() + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
 function PageLink({
