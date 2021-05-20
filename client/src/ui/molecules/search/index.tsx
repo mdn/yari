@@ -1,4 +1,11 @@
-import React, { Suspense, lazy, useState, useMemo, useRef } from "react";
+import React, {
+  Suspense,
+  lazy,
+  useState,
+  useMemo,
+  useRef,
+  useEffect,
+} from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { useLocale } from "../../../hooks";
@@ -27,12 +34,11 @@ function useQueryParamState() {
   return [value, setValue] as const;
 }
 
-const isServer = typeof window === "undefined";
-
 export function Search(props) {
   const [value, setValue] = useQueryParamState();
   const [isFocused, setIsFocused] = useState(false);
   const [defaultSelection, setDefaultSelection] = useState([0, 0] as const);
+  const [hadFocus, setHadFocus] = useState(false);
 
   const searchProps = useMemo(
     () => ({
@@ -52,14 +58,21 @@ export function Search(props) {
       setDefaultSelection,
     ]
   );
+
+  useEffect(() => {
+    if (isFocused) {
+      setHadFocus(true);
+    }
+  }, [isFocused, setHadFocus]);
+
   return (
     <div className="header-search">
-      {isServer ? (
-        <BasicSearchWidget {...searchProps} />
-      ) : (
+      {hadFocus ? (
         <Suspense fallback={<BasicSearchWidget {...searchProps} />}>
           <LazySearchNavigateWidget {...searchProps} {...props} />
         </Suspense>
+      ) : (
+        <BasicSearchWidget {...searchProps} />
       )}
     </div>
   );
