@@ -67,4 +67,4 @@ describe("Autocomplete search", () => {
       placeholder: /Go ahead/,
     });
   });
-});
+}, 3000);
