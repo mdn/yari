@@ -135,18 +135,8 @@ export default function AllTranslations() {
     document.title = title;
   }, [lastData, locale]);
 
-  const apiURL = React.useMemo(() => {
-    if (locale.toLowerCase() === "en-us") {
-      return null;
-    }
-    const params = createSearchParams({
-      locale,
-    });
-    return `/_translations?${params.toString()}`;
-  }, [locale]);
-
   const { data, error, isValidating } = useSWR<Data, Error>(
-    apiURL,
+    locale.toLowerCase() !== "en-us" ? `/_translations?locale=${locale}` : null,
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
@@ -189,7 +179,7 @@ export default function AllTranslations() {
   }, [locale, data]);
 
   const { data: dataLocales, error: errorLocales } = useSWR<LocalesData, Error>(
-    apiURL,
+    locale.toLowerCase() === "en-us" ? "/_translations?locale=en-US" : null,
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
