@@ -5,7 +5,6 @@ const { h, wrapText } = require("../utils");
 const { code, wrap } = require("./rehype-remark-utils");
 const cards = require("./cards");
 const tables = require("./tables");
-const { prettyPrintAST } = require("../../utils");
 const { toText, UnexpectedElementError } = require("./to-text");
 
 /**

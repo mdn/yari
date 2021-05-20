@@ -31,6 +31,9 @@ function formatH(html) {
 }
 
 const prettyPrintAST = (node, depth = 0) => {
+  if (!node) {
+    return;
+  }
   if (typeof node == "string") {
     console.log("  ".repeat(depth) + node);
     return;

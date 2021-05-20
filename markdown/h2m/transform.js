@@ -5,6 +5,8 @@ const handlers = require("./handlers");
 const { UnexpectedElementError } = require("./handlers/to-text");
 const { h, wrapText } = require("./utils");
 
+// These tags will bubble errors up when they occur, so that not only them,
+// but also their parents, get turned into HTML
 const CHILD_TAGS = ["li", "thead", "tbody", "th", "tr", "td"];
 
 const toSelector = ({ tagName, properties: { id, className, ...rest } }) =>
@@ -76,13 +78,31 @@ function transformNode(node, opts = {}) {
     if (node.value) {
       return h(node, "text", wrapText(node.value, newOpts));
     } else {
-      return (Array.isArray(node) ? node : node.children || [])
+      const transformed = (Array.isArray(node) ? node : node.children || [])
         .map((child) => {
           const [transformed, childUnhandled] = transformNode(child, newOpts);
           unhandled.push(...childUnhandled);
           return transformed;
         })
         .flat();
+      if (
+        subOpts.noBlocks &&
+        transformed.some(
+          (node) =>
+            ![
+              "tableRow",
+              "tableCell",
+              "text",
+              "emphasis",
+              "strong",
+              "inlineCode",
+            ].includes(node.type)
+        )
+      ) {
+        throw new UnexpectedElementError(node);
+      }
+
+      return transformed;
     }
   }
 

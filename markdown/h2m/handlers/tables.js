@@ -126,15 +126,16 @@ function toCells(children, info) {
   return nodes;
 }
 
-// TODO catching errors at different element levels, i.e. <td style=...> catch from <table>
 module.exports = [
-  [{ is: "caption" }, (node, t) => t(node)], //TODO ignore? Ask Hidde if they have a11y use
+  [{ is: "caption" }, (node, t) => t(node)],
 
   [
-    { is: "table" },
+    { is: "table", canHaveClass: "standard-table" },
     (node, t) => {
       const info = inspect(node);
-      return h(node, "table", toRows(t(node), info), { align: info.align });
+      return h(node, "table", toRows(t(node, { noBlocks: true }), info), {
+        align: info.align,
+      });
     },
   ],
 
