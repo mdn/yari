@@ -432,7 +432,7 @@ function FilterControls() {
 
         <div>
           <h4>&nbsp;</h4>
-          <button type="submit">Filter now</button>
+          <button type="submit">Filter now</button>{" "}
           {(url || title) && (
             <button type="button" onClick={resetFilters}>
               Reset filters
