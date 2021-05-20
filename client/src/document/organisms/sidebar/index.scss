@@ -1,3 +1,4 @@
+@import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 @import "~@mdn/minimalist/sass/mixins/utils";
@@ -49,5 +50,13 @@
     background-size: 18px;
     height: 18px;
     width: 18px;
+  }
+
+  .icon-experimental {
+    color: $primary-50;
+  }
+
+  .icon-deprecated {
+    color: $red-100;
   }
 }
