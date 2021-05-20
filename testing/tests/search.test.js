@@ -45,7 +45,7 @@ describe("Autocomplete search", () => {
       text: "No quick results found",
     });
     await expect(page).toFill(SEARCH_SELECTOR, "/wboo");
-    await expect(page).toMatch("<foo>: A test tag", { timeout: 3000 });
+    await expect(page).toMatch("<foo>: A test tag");
     await expect(page).toClick("div.result-item");
     await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
   });
