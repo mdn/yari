@@ -48,7 +48,7 @@ describe("Autocomplete search", () => {
     await expect(page).toMatch("<foo>: A test tag");
     await expect(page).toClick("div.result-item");
     await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
-  });
+  }, 3000);
 
   test("find nothing by fuzzy-search", async () => {
     await page.goto(testURL("/"));
