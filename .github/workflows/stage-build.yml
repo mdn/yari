@@ -168,6 +168,9 @@ jobs:
           # kind of document it is.
           BUILD_ALWAYS_NO_ROBOTS: true
 
+          # This enables the Plus call-to-action banner and the Plus landing page
+          REACT_APP_ENABLE_PLUS: true
+
         run: |
           if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
             echo "Will build mdn/archived-content too"
