@@ -108,6 +108,10 @@ a.new {
       &:focus {
         text-decoration: underline;
       }
+
+      &:active {
+        color: $text-color-inverted;
+      }
     }
   }
 
