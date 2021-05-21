@@ -311,20 +311,19 @@ export default function App() {
               <div className="tile">
                 <figure className="bookmark" />
                 <h1>Build a permanent library</h1>
-                Bookmark and annotate free and paid <br />
-                content for reference across devices
+                Bookmark and annotate free and paid content for reference across
+                devices
               </div>
               <div className="tile">
                 <figure className="offline" />
                 <h1>Take MDN with you</h1>
-                Download MDN documentation <br /> and deep dives for access
-                offline
+                Download MDN documentation and deep dives for access offline
               </div>
               <div className="tile">
                 <figure className="bcdtable" />
                 <h1>Customize BCD tables</h1>
-                Display customised data sets based on <br />
-                the browsers your projects need to support
+                Display customised data sets based on the browsers your projects
+                need to support
               </div>
             </div>
           </div>
@@ -358,17 +357,6 @@ export default function App() {
               data &&
               data.variant && (
                 <>
-                  <h2>
-                    Interested? Be the first to be notified when we launch.
-                  </h2>
-                  <input type="email" placeholder="E-mail address"></input>
-                  <button>Join the waitlist</button>
-                  <br />
-                  <small>
-                    By proceeding, you agree to the <u>Terms of Service</u>{" "}
-                    and&nbsp;
-                    <u>Privacy Notice</u>.
-                  </small>
                   <LandingPageSurvey variant={data.variant} />
                 </>
               )

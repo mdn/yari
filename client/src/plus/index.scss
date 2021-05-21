@@ -228,14 +228,17 @@
         margin: 0px;
         font-size: clamp(40px, calc(4vw * 0.8), 45px);
 
-        @media #{$mq-mobile-and-up} {
-          font-size: clamp(18px, calc(4vw * 0.8), 45px);
+        @media #{$mq-tablet-and-up} {
           span {
             display: block;
           }
-          @media #{$mq-large-desktop-and-up} {
-            margin-top: 10px;
-          }
+        }
+
+        @media #{$mq-small-desktop-and-up} {
+          font-size: clamp(18px, calc(4vw * 0.8), 45px);
+        }
+        @media #{$mq-large-desktop-and-up} {
+          margin-top: 10px;
         }
       }
       h2 {
@@ -263,7 +266,7 @@
         }
       }
       @media #{$mq-small-desktop-and-up} {
-        height: 310px;
+        height: 313px;
       }
 
       @media #{$mq-large-desktop-and-up} {
@@ -329,7 +332,7 @@
           font-size: 22px;
 
           @media #{$mq-large-desktop-and-up} {
-            margin-top: 7px;
+            margin-top: 24px;
             font-size: 24px;
           }
         }
@@ -377,7 +380,7 @@
           background-size: cover;
           margin: 0 auto;
           position: relative;
-          top: -69px;
+          top: -74px;
           max-width: 450px;
           max-height: calc(450px * 1.15);
           margin-bottom: -24px;
@@ -437,7 +440,7 @@
               height: calc(477px * 1.14);
               width: 477px;
               left: 0px;
-              top: -133px;
+              top: -130px;
               position: relative;
               background-size: cover;
               display: block;
@@ -447,7 +450,7 @@
             @media #{$mq-large-desktop-and-up} {
               height: 650px;
               width: 560px;
-              top: -138px;
+              top: -155px;
             }
           }
         }
@@ -486,12 +489,18 @@
         }
 
         .section-secondary-content {
+          padding-bottom: 90px;
+          margin-top: -45px;
+          text-align: center;
+
           @media #{$mq-small-desktop-and-up} {
             display: flex;
             align-items: flex-start;
             flex-direction: column;
             justify-content: center;
             margin-top: -151px;
+            padding-bottom: revert;
+            text-align: left;
 
             @media #{$mq-large-desktop-and-up} {
               margin-top: -146px;
@@ -552,9 +561,13 @@
             }
 
             h2 {
-              font-size: 36px;
+              font-size: 30px;
               @media #{$mq-small-desktop-and-up} {
                 margin-top: 0px;
+              }
+
+              @media #{$mq-large-desktop-and-up} {
+                font-size: 36px;
               }
 
               margin: 10px 0px;
@@ -583,7 +596,7 @@
             }
 
             li:not(:last-child) {
-              padding-bottom: 10px;
+              padding-bottom: 4px;
             }
 
             button {
@@ -678,6 +691,13 @@
             h1 {
               font-size: 24px;
               padding-top: 16px;
+              @media #{$mq-small-desktop-and-up} {
+                font-size: clamp(20px, calc(2vw * 0.6), 24px);
+              }
+
+              @media #{$mq-large-desktop-and-up} {
+                font-size: 24px;
+              }
             }
           }
         }
