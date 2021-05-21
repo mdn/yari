@@ -84,22 +84,6 @@ function transformNode(node, opts = {}) {
           return transformed;
         })
         .flat();
-      if (
-        subOpts.noBlocks &&
-        transformed.some(
-          (node) =>
-            ![
-              "tableRow",
-              "tableCell",
-              "text",
-              "emphasis",
-              "strong",
-              "inlineCode",
-            ].includes(node.type)
-        )
-      ) {
-        throw new UnexpectedElementError(node);
-      }
 
       return transformed;
     }
@@ -123,6 +107,23 @@ function transformNode(node, opts = {}) {
     }
   } else if (selector) {
     unhandled.push(selector);
+  }
+
+  if (
+    opts.noBlocks &&
+    !(Array.isArray(transformed) ? transformed : [transformed]).every((node) =>
+      [
+        "tableRow",
+        "tableCell",
+        "text",
+        "emphasis",
+        "strong",
+        "inlineCode",
+        "link",
+      ].includes(node.type)
+    )
+  ) {
+    throw new UnexpectedElementError(node);
   }
 
   // if child tags need to be turned into HTML, so do their parents
