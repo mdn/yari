@@ -81,19 +81,9 @@ function LaterLazyBrowserCompatibilityTableInner(
 
   const { hash } = useLocation();
   React.useEffect(() => {
-    let mounted = true;
     if (hash === "#browser_compatibility") {
       setLoadIt(true);
-    } else {
-      setTimeout(() => {
-        if (mounted) {
-          setLoadIt(true);
-        }
-      }, 5000);
     }
-    return () => {
-      mounted = false;
-    };
   }, [hash]);
   if (loadIt) {
     return <LazyBrowserCompatibilityTableInner {...props} />;
