@@ -299,6 +299,45 @@ export default function App() {
                 <p style={{ fontSize: 20 }}>
                   Unlock premium features that you can use across all of MDN
                 </p>
+                <div style={{ height: 450 }}>
+                  <iframe
+                    id="cp_embed_MWJVaqm"
+                    src="https://codepen.io/anon/embed/MWJVaqm?height=450&amp;theme-id=1&amp;slug-hash=MWJVaqm&amp;default-tab=css,result"
+                    scrolling="no"
+                    allowFullScreen={false}
+                    name="CodePen Embed MWJVaqm"
+                    title="CodePen Embed MWJVaqm"
+                    className="cp_embed_iframe"
+                    style={{
+                      width: "100%",
+                      overflow: "hidden",
+                      height: "100%",
+                    }}
+                    height="450"
+                    frameBorder={0}
+                  >
+                    CodePen Embed Fallback
+                  </iframe>
+                </div>
+                <p>Here comes another pen!</p>
+                <iframe
+                  height="265"
+                  style={{ width: "100%" }}
+                  scrolling="no"
+                  title="Sample Pen by Peter"
+                  src="https://codepen.io/peterbe/embed/vYxgJwR?height=265&theme-id=dark&default-tab=html,result"
+                  frameBorder={0}
+                  loading="lazy"
+                  allowFullScreen={true}
+                >
+                  See the Pen{" "}
+                  <a href="https://codepen.io/peterbe/pen/vYxgJwR">
+                    Sample Pen by Peter
+                  </a>{" "}
+                  by Peter Bengtsson (
+                  <a href="https://codepen.io/peterbe">@peterbe</a>) on{" "}
+                  <a href="https://codepen.io">CodePen</a>.
+                </iframe>
               </div>
             </div>
           </div>
@@ -341,6 +380,7 @@ export default function App() {
 
         <section className="purple-bg" id="waitlist" style={{ zIndex: 1001 }}>
           <div className="feature-wrapper waitlist">
+
             {error ? (
               <>
                 <h3>Error loading waitlist form</h3>
