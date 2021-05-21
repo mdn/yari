@@ -65,8 +65,8 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       $element.addClass("only-in-en-us");
       $element.attr("title", "Currently only available in English (US)");
     } else {
-      $element.removeAttr("href");
       $element.addClass("page-not-created");
+      $element.attr("title", "This is a link to an unwritten page");
     }
   }
 
