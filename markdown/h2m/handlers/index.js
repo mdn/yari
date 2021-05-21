@@ -51,7 +51,6 @@ const extractSpacing = (node) => {
     ...(post ? [{ type: "text", value: post }] : []),
   ];
 };
-
 const toDefinitionItem = (node, terms, definitions) => {
   const definitionStart = h(node, "text", ": ");
   if (definitions[0].type == "paragraph") {
@@ -199,6 +198,9 @@ module.exports = [
   [
     (node) =>
       node.tagName == "code" &&
+      // inline code currently has padding on MDN, thus multiple adjacent tags
+      // would appear to have a space in between, hence we don't convert to it.
+      node.children.length == 1 &&
       node.children.some((child) => ["a", "strong"].includes(child.tagName)),
     (node) =>
       node.children.map((child) => {
