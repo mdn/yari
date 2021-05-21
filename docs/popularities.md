@@ -59,7 +59,7 @@ FROM
             AND month = '{}'
             AND status = 200
             AND user_agent LIKE 'Mozilla%'
-            AND uri NOT LIKE '%/_samples_/%'
+            AND uri NOT LIKE '%/_sample%'
             AND (uri LIKE '/%/docs/%'
             AND sc_content_type = 'text/html;%20charset=utf-8'
             OR uri LIKE '/%/docs/%/index.json'))

@@ -52,10 +52,10 @@ describe("Basic viewing of functional pages", () => {
 
   it("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction page", async () => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction";
-    const flexSample1Uri = `${uri}/Flex/_samples_/Flex_1`;
-    const flexSample2Uri = `${uri}/Flex/_samples_/Flex_2`;
-    const gridSample1Uri = `${uri}/Grid/_samples_/Grid_1`;
-    const gridSample2Uri = `${uri}/_samples_/Grid_2`;
+    const flexSample1Uri = `${uri}/Flex/_sample_.Flex_1.html`;
+    const flexSample2Uri = `${uri}/Flex/_sample_.Flex_2.html`;
+    const gridSample1Uri = `${uri}/Grid/_sample_.Grid_1.html`;
+    const gridSample2Uri = `${uri}/_sample_.Grid_2.html`;
     await page.goto(testURL(uri));
     await expect(page).toMatch("A Test Introduction to CSS layout");
     await expect(page).toMatchElement("h1", {
@@ -104,8 +104,8 @@ describe("Basic viewing of functional pages", () => {
 
   it("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction/Flex page", async () => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Flex";
-    const flexSample1Uri = `${uri}/_samples_/Flex_1`;
-    const flexSample2Uri = `${uri}/_samples_/Flex_2`;
+    const flexSample1Uri = `${uri}/_sample_.Flex_1.html`;
+    const flexSample2Uri = `${uri}/_sample_.Flex_2.html`;
     await page.goto(testURL(uri));
     await expect(page).toMatch("A Test Introduction to CSS Flexbox Layout");
     await expect(page).toMatchElement("h1", {
@@ -130,8 +130,8 @@ describe("Basic viewing of functional pages", () => {
 
   it("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction/Grid page", async () => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Grid";
-    const gridSample1Uri = `${uri}/_samples_/Grid_1`;
-    const gridSample2Uri = `${uri}/_samples_/Grid_2`;
+    const gridSample1Uri = `${uri}/_sample_.Grid_1.html`;
+    const gridSample2Uri = `${uri}/_sample_.Grid_2.html`;
     await page.goto(testURL(uri));
     await expect(page).toMatch("A Test Introduction to CSS Grid Layout");
     await expect(page).toMatchElement("h1", {
