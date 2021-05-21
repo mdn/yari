@@ -1,12 +1,7 @@
-
 import useSWR from "swr";
-
 import React from "react";
 import "./index.scss";
 import "./fonts/metropolis.css";
-
-
-import "./index.scss";
 import { LandingPageSurvey } from "./landing-page-survey";
 
 const API_URL = "/api/v1/plus/landing-page/variant/";
@@ -296,7 +291,7 @@ export default function App() {
         <section className="purple-bg secondary-feature">
           <div className="feature-wrapper secondary-feature-wrapper">
             <figure className="premiumfeatures-mobile" />
-            <div className="section-feature-2-col">
+            <div className="section-feature-1-2-col">
               <div className="section-secondary-illustration">
                 <figure className="premiumfeatures" />
               </div>
@@ -304,8 +299,7 @@ export default function App() {
                 <h2>What's included</h2>
                 <h1>Make MDN your own</h1>
                 <p style={{ fontSize: 20 }}>
-                  Unlock premium features that <br />
-                  you can use across all of MDN
+                  Unlock premium features that you can use across all of MDN
                 </p>
               </div>
             </div>
@@ -342,7 +336,7 @@ export default function App() {
               <h2>How much will it cost?</h2>
               <p>
                 We’re asking {data.price}. Your subscription includes full
-              access to the premium content and features.
+                access to the premium content and features.
               </p>
             </div>
           </section>

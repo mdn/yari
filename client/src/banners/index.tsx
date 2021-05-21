@@ -116,7 +116,13 @@ export function Banner() {
   // 4. Have you not dismissed it previously
   // 5. Have you seen a different PLUS_IDvN banner before
   // 6. Is your locale en-US?
-  if (ENABLE_PLUS && isPathnameIncluded(PLUS_IDv1, location.pathname)) {
+  if (
+    ENABLE_PLUS &&
+    isPathnameIncluded(PLUS_IDv1, location.pathname) &&
+    isGeoLocationIncluded(PLUS_IDv1, userData.geo.country) &&
+    isRandomlyIncluded(PLUS_IDv1, 10) &&
+    !isEmbargoed(PLUS_IDv1)
+  ) {
     return (
       <React.Suspense fallback={null}>
         <ActiveBanner

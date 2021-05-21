@@ -4,7 +4,7 @@ import useSWR from "swr";
 import { useUserData } from "../../user-context";
 import "./index.scss";
 
-const API_URL = "/api/v1/plus/landing-page-survey/";
+const API_URL = "/api/v1/plus/landing-page/survey/";
 const SESSIONSTORAGE_KEY_UUID = "plus-landing-page-survey-uuid";
 const SESSIONSTORAGE_KEY_EMAIL = "plus-landing-page-survey-email";
 
