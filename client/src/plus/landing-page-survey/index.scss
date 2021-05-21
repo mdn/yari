@@ -1,11 +1,8 @@
 form.landing-page-survey {
-  padding: 40px;
-  border: 1px solid #efefef;
-
-  .form-element.price label {
-    display: inline-block;
+  .survey {
+    text-align: left;
+    line-height: 250%;
   }
-
   .thank-you {
     font-size: 120%;
     font-weight: bold;

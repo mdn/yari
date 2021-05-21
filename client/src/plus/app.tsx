@@ -29,8 +29,8 @@ export default function App() {
   return (
     <div className="plus">
       <main>
-        <a href="#waitlist">
-          <button className="mobile-cta">Join the waitlist</button>
+        <a href="#waitlist" className="mobile-cta">
+          Join the waitlist
         </a>
         <header>
           <div className="header-wrapper">
@@ -46,8 +46,8 @@ export default function App() {
               </p>
 
               {data && data.variant && (
-                <a href="#waitlist">
-                  <button>Join the waitlist</button>
+                <a href="#waitlist" className="button">
+                  Join the waitlist
                 </a>
               )}
             </div>
@@ -193,8 +193,8 @@ export default function App() {
                   declarations, however the rules of the cascade mean that the
                   declaration that comes later in the stylesheet will override
                   the earlier one, and be used by the browser.
-                </p>{" "}
-                {/*
+                </p>
+
                 <p>
                   CSS also has rules defining what happens when there are two
                   potentially conflicting things being applied to an element.
@@ -211,7 +211,22 @@ export default function App() {
                   support the float is not applied.
                 </p>
                 <div className="code-snippet">
-                  <code>CodePen</code>
+                  <div className="codepen">
+                    <iframe
+                      id="cp_embed_MWJVaqm"
+                      src="https://codepen.io/rachelandrew/embed/qBrZVVm?height=450&amp;theme-id=1&amp;slug-hash=qBrZVVm&amp;default-tab=css,result"
+                      scrolling="no"
+                      allowFullScreen={false}
+                      title="Modern CSS 2:2"
+                      className="codepen"
+                      style={{
+                        width: "100%",
+                        overflow: "hidden",
+                        height: "100%",
+                      }}
+                      frameBorder={0}
+                    ></iframe>
+                  </div>
                 </div>
                 <h4>Feature Queries</h4>
                 <p>
@@ -235,7 +250,22 @@ export default function App() {
                   the columns to become narrower than the track.
                 </p>
                 <div className="code-snippet">
-                  <code>CodePen</code>
+                  <div className="codepen">
+                    <iframe
+                      id="cp_embed_MWJVaqm"
+                      src="https://codepen.io/rachelandrew/embed/gOmrXqQ?height=450&amp;theme-id=1&amp;slug-hash=gOmrXqQ&amp;default-tab=css,result"
+                      scrolling="no"
+                      allowFullScreen={false}
+                      title="Modern CSS 2.3 before"
+                      className="codepen"
+                      style={{
+                        width: "100%",
+                        overflow: "hidden",
+                        height: "100%",
+                      }}
+                      frameBorder={0}
+                    ></iframe>
+                  </div>
                 </div>
                 <p>
                   In situations like this, CSS Feature Queries are useful. A
@@ -249,7 +279,22 @@ export default function App() {
                   supports `display: grid`.
                 </p>
                 <div className="code-snippet">
-                  <code>CodePen</code>
+                  <div className="codepen">
+                    <iframe
+                      id="cp_embed_MWJVaqm"
+                      src="https://codepen.io/rachelandrew/embed/xxqVPjq?height=450&amp;theme-id=1&amp;slug-hash=MWJVaqm&amp;default-tab=css,result"
+                      scrolling="no"
+                      allowFullScreen={false}
+                      title="Modern CSS 2.3 after"
+                      className="codepen"
+                      style={{
+                        width: "100%",
+                        overflow: "hidden",
+                        height: "100%",
+                      }}
+                      frameBorder={0}
+                    ></iframe>
+                  </div>
                 </div>
                 <p>
                   Feature Queries are a simple test to see if the browser can
@@ -276,7 +321,7 @@ export default function App() {
                 <p>
                   The returned result is true or false, indicating if the
                   browser does or does not have support. // end sidebar
-                </p> */}
+                </p>
               </div>
             </div>
             <h3 style={{ paddingTop: 80 }}>
@@ -299,45 +344,6 @@ export default function App() {
                 <p style={{ fontSize: 20 }}>
                   Unlock premium features that you can use across all of MDN
                 </p>
-                <div style={{ height: 450 }}>
-                  <iframe
-                    id="cp_embed_MWJVaqm"
-                    src="https://codepen.io/anon/embed/MWJVaqm?height=450&amp;theme-id=1&amp;slug-hash=MWJVaqm&amp;default-tab=css,result"
-                    scrolling="no"
-                    allowFullScreen={false}
-                    name="CodePen Embed MWJVaqm"
-                    title="CodePen Embed MWJVaqm"
-                    className="cp_embed_iframe"
-                    style={{
-                      width: "100%",
-                      overflow: "hidden",
-                      height: "100%",
-                    }}
-                    height="450"
-                    frameBorder={0}
-                  >
-                    CodePen Embed Fallback
-                  </iframe>
-                </div>
-                <p>Here comes another pen!</p>
-                <iframe
-                  height="265"
-                  style={{ width: "100%" }}
-                  scrolling="no"
-                  title="Sample Pen by Peter"
-                  src="https://codepen.io/peterbe/embed/vYxgJwR?height=265&theme-id=dark&default-tab=html,result"
-                  frameBorder={0}
-                  loading="lazy"
-                  allowFullScreen={true}
-                >
-                  See the Pen{" "}
-                  <a href="https://codepen.io/peterbe/pen/vYxgJwR">
-                    Sample Pen by Peter
-                  </a>{" "}
-                  by Peter Bengtsson (
-                  <a href="https://codepen.io/peterbe">@peterbe</a>) on{" "}
-                  <a href="https://codepen.io">CodePen</a>.
-                </iframe>
               </div>
             </div>
           </div>
@@ -380,7 +386,6 @@ export default function App() {
 
         <section className="purple-bg" id="waitlist" style={{ zIndex: 1001 }}>
           <div className="feature-wrapper waitlist">
-
             {error ? (
               <>
                 <h3>Error loading waitlist form</h3>
