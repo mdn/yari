@@ -222,16 +222,24 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
       )}
       {page === "thankyou" && (
         <p className="thank-you">
-          Thank you for taking our survey. Your response is very important to
-          us.
+          <h2>
+            Thank you for your feedback! Your input helps shape the future of
+            MDN Plus.
+          </h2>
         </p>
       )}
       {page === "price" && (
-        <div>
-          <h2>Thanks! Before you go, help us by answering one more question</h2>
+        <div className="features">
+          <h2>
+            {
+              "Thanks! Before you go, help us by answering some optional questions (2/2)"
+            }
+          </h2>
 
           <div className="form-element price">
-            <label>What do you think about the price?</label>
+            <label>
+              <h6>What do you think about the price?</h6>
+            </label>
             {[
               ["too low", "Too low"],
               ["seems fair", "Seems fair"],
@@ -253,23 +261,31 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
             })}
           </div>
           <div className="form-element price-comment">
+            <label>
+              <h6>Please tell us why</h6>
+            </label>
             <textarea
               value={priceComment}
               onChange={(e) => setPriceComment(e.target.value)}
-              placeholder="Free-text comment regarding the price..."
+              placeholder="Let us know what you think"
               rows={2}
               cols={80}
             ></textarea>
+            <button type="submit">Submit</button>
           </div>
         </div>
       )}
       {page === "features" && (
-        <div>
-          <h2>Thanks! Before you go, help us by answering two questions</h2>
+        <div className="features">
+          <h2>
+            {
+              "Thanks! Before you go, help us by answering some optional questions (1/2)"
+            }
+          </h2>
 
-          <div className="form-element features">
+          <div className="form-element">
             <label>
-              Which content or features was most compelling to you and why?
+              <h6>Which content or features were most compelling to you?</h6>
             </label>
             {[
               "Deep dive: Modern CSS in the Real World: Your browser support toolkit",
@@ -305,44 +321,43 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
           </div>
 
           <div className="form-element features-comment">
+            <label>
+              <h6>What motivated your selection?</h6>
+            </label>
             <textarea
               value={featuresComment}
               onChange={(e) => setFeaturesComment(e.target.value)}
-              placeholder="Free-text comment regarding the content and features..."
+              placeholder="Let us know what you think"
               rows={2}
               cols={80}
             ></textarea>
           </div>
+          <button type="submit">Next</button>
         </div>
       )}
       {page === "start" && (
         <div>
           <h2>Interested? Be the first to be notified when we launch.</h2>
           <div className="form-element email">
-            {/* <label htmlFor="id_email">Email</label> */}
             <input
               type="email"
-              // id="id_email"
               required
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="E-mail address"
             />
+            <button type="submit" className="button">
+              Join the waitlist
+            </button>
+            <p>
+              <small>
+                By proceeding, you agree to the <u>Terms of Service</u>{" "}
+                and&nbsp;
+                <u>Privacy Notice</u>.
+              </small>
+            </p>
           </div>
         </div>
-      )}
-      {page !== "thankyou" && (
-        <button type="submit" className="button">
-          {page === "start" ? "Join the waitlist" : "Submit"}
-        </button>
-      )}{" "}
-      {page === "start" && (
-        <p>
-          <small>
-            By proceeding, you agree to the <u>Terms of Service</u> and&nbsp;
-            <u>Privacy Notice</u>.
-          </small>
-        </p>
       )}
     </form>
   );
