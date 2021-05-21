@@ -1,9 +1,8 @@
-const toHtml = require("hast-util-to-html");
 const minify = require("rehype-minify-whitespace");
 
 const handlers = require("./handlers");
 const { UnexpectedElementError } = require("./handlers/to-text");
-const { h, wrapText } = require("./utils");
+const { h, toPrettyHTML, wrapText } = require("./utils");
 
 // These tags will bubble errors up when they occur, so that not only them,
 // but also their parents, get turned into HTML
@@ -131,7 +130,7 @@ function transformNode(node, opts = {}) {
     throw new UnexpectedElementError(node);
   }
 
-  return [transformed || h(node, "html", toHtml(node)), unhandled];
+  return [transformed || h(node, "html", toPrettyHTML(node)), unhandled];
 }
 
 function toMdast(tree, options) {

@@ -1,7 +1,6 @@
-const toHtml = require("hast-util-to-html");
 const trimTrailingLines = require("trim-trailing-lines");
 
-const { h, wrapText } = require("../utils");
+const { h, toPrettyHTML, wrapText } = require("../utils");
 const { code, wrap } = require("./rehype-remark-utils");
 const cards = require("./cards");
 const tables = require("./tables");
@@ -85,12 +84,12 @@ module.exports = [
     // TODO: attach noinclude to MD node
     (node, t) =>
       !node.children
-        ? h(node, "html", toHtml(node))
+        ? h(node, "html", toPrettyHTML(node))
         : [
             h(
               node,
               "html",
-              toHtml({ ...node, children: null }, { voids: ["div"] })
+              toPrettyHTML({ ...node, children: null }, { voids: ["div"] })
             ),
             ...t(node),
             h(node, "html", "</div>"),
@@ -124,7 +123,7 @@ module.exports = [
     (node, t, { shouldWrap, singleLine }) =>
       shouldWrap
         ? singleLine
-          ? h(node, "html", toHtml(node))
+          ? h(node, "html", toPrettyHTML(node))
           : h(node, "break")
         : h(node, "text", " "),
   ],
@@ -258,7 +257,10 @@ module.exports = [
     },
   ],
 
-  [{ is: "math", canHave: "display" }, (node) => h(node, "html", toHtml(node))],
+  [
+    { is: "math", canHave: "display" },
+    (node) => h(node, "html", toPrettyHTML(node)),
+  ],
 
   ["blockquote", (node, t) => h(node, "blockquote", wrap(t(node)))],
 
