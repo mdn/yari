@@ -1,46 +1,37 @@
+
+import useSWR from "swr";
+
 import React from "react";
 import "./index.scss";
 import "./fonts/metropolis.css";
 
-const LandingPageSurvey = React.lazy(() => import("./landing-page-survey"));
 
-type Variant = 0 | 1 | 2 | 3;
+import "./index.scss";
+import { LandingPageSurvey } from "./landing-page-survey";
 
-const LOCALSTORAGE_KEY = "plus_lc_variant";
+const API_URL = "/api/v1/plus/landing-page/variant/";
 
-function loadPreviousVariant(possibleVariants: Variant[]): Variant | undefined {
-  try {
-    const previous = localStorage.getItem(LOCALSTORAGE_KEY);
-    if (previous) {
-      const value = parseInt(previous) as Variant;
-      if (possibleVariants.includes(value)) {
-        return value;
-      }
-    }
-  } catch (error) {
-    // Can happen if localStorage simply isn't working in this browser!
-    // Or, if the saved value isn't a valid number.
-  }
-  return undefined;
-}
+type Variant = 1 | 2;
 
-function setPreviousVariant(value: Variant) {
-  try {
-    localStorage.setItem(LOCALSTORAGE_KEY, `${value}`);
-  } catch (error) {
-    // Can happen if localStorage simply isn't working in this browser!
-  }
+interface VariantData {
+  variant: Variant;
+  price: string;
 }
 
 export default function App() {
-  const variants: Variant[] = [0, 1, 2, 3];
-  const previousVariant = loadPreviousVariant(variants);
-  const variant: Variant =
-    previousVariant || variants[Math.floor(Math.random() * variants.length)];
-
-  if (!previousVariant) {
-    setPreviousVariant(variant);
-  }
+  const { data, error } = useSWR<VariantData>(
+    API_URL,
+    async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`${response.status} on ${url}`);
+      }
+      return await response.json();
+    },
+    {
+      revalidateOnFocus: false,
+    }
+  );
 
   return (
     <div className="plus">
@@ -61,9 +52,11 @@ export default function App() {
                 experience
               </p>
 
-              <a href="#waitlist">
-                <button>Join the waitlist</button>
-              </a>
+              {data && data.variant && (
+                <a href="#waitlist">
+                  <button>Join the waitlist</button>
+                </a>
+              )}
             </div>
             <div className="header-illustration">
               <div className="mandala" />
@@ -343,50 +336,49 @@ export default function App() {
           </div>
         </section>
 
-        <section>
-          <div className="feature-wrapper">
-            <h2>How much will it cost?</h2>
-            <p>
-              We’re asking $8/month or $80/year. Your subscription includes full
+        {data && data.variant && (
+          <section>
+            <div className="feature-wrapper">
+              <h2>How much will it cost?</h2>
+              <p>
+                We’re asking {data.price}. Your subscription includes full
               access to the premium content and features.
-            </p>
-          </div>
-        </section>
+              </p>
+            </div>
+          </section>
+        )}
+
         <section className="purple-bg" id="waitlist" style={{ zIndex: 1001 }}>
           <div className="feature-wrapper waitlist">
-            <h2>Interested? Be the first to be notified when we launch.</h2>
-            <input type="email" placeholder="E-mail address"></input>
-            <button>Join the waitlist</button>
-            <br />
-            <small>
-              By proceeding, you agree to the <u>Terms of Service</u> and&nbsp;
-              <u>Privacy Notice</u>.
-            </small>
-
-            {/* {variant === 1 || variant === 3 ? (
-              <p>Hi, this is variant 1 or 3!</p>
+            {error ? (
+              <>
+                <h3>Error loading waitlist form</h3>
+                <p>
+                  Sorry. There was an error (<code>{error.toString()}</code>)
+                  loading the waitlist form.
+                  <br />
+                  Try to refresh this page.
+                </p>
+              </>
             ) : (
-              <p>This must be variant 0 or 2</p>
+              data &&
+              data.variant && (
+                <>
+                  <h2>
+                    Interested? Be the first to be notified when we launch.
+                  </h2>
+                  <input type="email" placeholder="E-mail address"></input>
+                  <button>Join the waitlist</button>
+                  <br />
+                  <small>
+                    By proceeding, you agree to the <u>Terms of Service</u>{" "}
+                    and&nbsp;
+                    <u>Privacy Notice</u>.
+                  </small>
+                  <LandingPageSurvey variant={data.variant} />
+                </>
+              )
             )}
-
-            {variant !== 3 && <p>The price is $10/month</p>}
-
-            {process.env.NODE_ENV === "development" && (
-              <div style={{ margin: 20, float: "right" }}>
-                <button
-                  onClick={() => {
-                    localStorage.removeItem(LOCALSTORAGE_KEY);
-                    window.location.reload();
-                  }}
-                >
-                  <small>Dev Reset Landing page</small>
-                </button>
-              </div>
-            )}
-
-            <React.Suspense fallback={<p>Loading waitlist form...</p>}>
-              <LandingPageSurvey variant={variant} />
-            </React.Suspense> */}
           </div>
         </section>
       </main>

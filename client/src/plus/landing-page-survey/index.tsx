@@ -29,7 +29,7 @@ function getSessionStorageData(key: string) {
   }
 }
 
-export default function LandingPageSurvey({ variant }: { variant: number }) {
+export function LandingPageSurvey({ variant }: { variant: number }) {
   const [email, setEmail] = React.useState(
     getSessionStorageData(SESSIONSTORAGE_KEY_EMAIL) || ""
   );
