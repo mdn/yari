@@ -1,15 +1,13 @@
 import useSWR from "swr";
-import React from "react";
+
 import "./index.scss";
 import "./fonts/metropolis.css";
 import { LandingPageSurvey } from "./landing-page-survey";
 
 const API_URL = "/api/v1/plus/landing-page/variant/";
 
-type Variant = 1 | 2;
-
 interface VariantData {
-  variant: Variant;
+  variant: number;
   price: string;
 }
 
@@ -328,7 +326,7 @@ export default function App() {
             </div>
           </div>
         </section>
-        
+
         {data && data.variant && (
           <section>
             <div className="feature-wrapper">

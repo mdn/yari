@@ -269,7 +269,7 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
 
           <div className="form-element features">
             <label>
-              What content or functionality was most compelling to you and why?
+              Which content or features was most compelling to you and why?
             </label>
             {[
               "Deep dive: Modern CSS in the Real World: Your browser support toolkit",
@@ -278,9 +278,9 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
               "Deep dive: A robust CSS pattern library",
               "Deep dive: Modern Responsive Web Design",
               "Deep dive: Security Considerations in Web Development",
-              "Premium feature: annotations (note taking)",
-              "Premium feature: bookmarking",
+              "Premium feature: Bookmark and annotations",
               "Premium feature: MDN offline",
+              "Premium feature: Custom BCD table",
             ].map((value) => {
               const id = value.replace(/\s+/g, "_");
               return (
@@ -308,7 +308,7 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
             <textarea
               value={featuresComment}
               onChange={(e) => setFeaturesComment(e.target.value)}
-              placeholder="Free-text comment regarding the features and functionality..."
+              placeholder="Free-text comment regarding the content and features..."
               rows={2}
               cols={80}
             ></textarea>
