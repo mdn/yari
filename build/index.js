@@ -3,7 +3,6 @@ const path = require("path");
 
 const chalk = require("chalk");
 const cheerio = require("cheerio");
-const FileType = require("file-type");
 
 const {
   Document,

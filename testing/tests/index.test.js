@@ -1062,6 +1062,19 @@ test("image flaws with repeated external images", () => {
   expect(flaw3.line).toBe(18);
 });
 
+test("images that are in the folder but not in <img> tags", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "images_in_samples"
+  );
+  expect(fs.existsSync(path.join(builtFolder, "pic.gif")));
+  expect(fs.existsSync(path.join(builtFolder, "image.png")));
+});
+
 test("chicken_and_egg page should build with flaws", () => {
   const builtFolder = path.join(buildRoot, "en-us", "docs", "chicken_and_egg");
   expect(fs.existsSync(builtFolder)).toBeTruthy();
