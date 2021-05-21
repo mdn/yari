@@ -10,6 +10,8 @@
   background-color: $neutral-100;
   color: $text-color-inverted;
   padding: ($base-spacing * 2) $base-spacing;
+  z-index: $bring-to-front;
+  position: relative;
 
   .content-container {
     margin: 0 auto;

@@ -1,20 +1,70 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 25.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 151 155" style="enable-background:new 0 0 151 155;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:none;}
-	.st1{fill:#FDE143;}
-	.st2{opacity:0.5;fill:#FDE143;}
-</style>
-<polygon class="st0" points="73.5,114.4 23,155 124,155 124,154.9 "/>
-<polygon class="st1" points="43.2,43.3 103.8,43.3 103.8,63.6 124,47.1 124,23 23,23 23,78.5 43.2,62.1 "/>
-<path class="st1" d="M124,155V75.5l-20.2,16.4v20.9L73.5,88.4c-7.2,5.8-23,18.5-30.3,24.4v-7.3L23,121.9V155l50.5-40.6L124,155z"/>
-<polygon class="st1" points="43.2,70.5 23,86.9 23,93.6 43.2,77.2 "/>
-<polygon class="st2" points="43.2,77.2 23,93.6 23,121.9 43.2,105.5 "/>
-<polygon class="st2" points="43.2,62.1 23,78.5 23,86.9 43.2,70.5 "/>
-<polygon class="st2" points="103.8,91.9 124,75.5 124,47.1 103.8,63.6 "/>
-<path class="st2" d="M142.5,32L134,16l8.5-16l8.5,16L142.5,32z M140.8,16l1.7,3.2l1.7-3.2l-1.7-3.2L140.8,16z"/>
-<path class="st2" d="M8.5,128L0,111.5L8.5,95l8.5,16.5L8.5,128z M6.8,111.5l1.8,3.4l1.8-3.4l-1.8-3.4L6.8,111.5z"/>
-<polygon class="st2" points="133.5,39 130,32.5 133.5,26 137,32.5 "/>
+<svg width="253" height="213" viewBox="0 0 253 213" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M97.2 61.3H157.8V81.6L178 65.1V41H77V96.5L97.2 80.1V61.3Z" fill="#FDE143"/>
+<path d="M178 173V93.5L157.8 109.9V130.8L127.5 106.4C120.3 112.2 104.5 124.9 97.2 130.8V123.5L77 139.9V173L127.5 132.4L178 173Z" fill="#FDE143"/>
+<path d="M97.2 88.5L77 104.9V111.6L97.2 95.2V88.5Z" fill="#FDE143"/>
+<path opacity="0.5" d="M97.2 95.2002L77 111.6V139.9L97.2 123.5V95.2002Z" fill="#FDE143"/>
+<path opacity="0.5" d="M97.2 80.1001L77 96.5001V104.9L97.2 88.5001V80.1001Z" fill="#FDE143"/>
+<path opacity="0.5" d="M157.801 109.9L178.001 93.5001V65.1001L157.801 81.6001V109.9Z" fill="#FDE143"/>
+<rect x="187" y="41" width="3" height="9" fill="#FEF2AC"/>
+<rect x="193" y="44" width="3" height="9" transform="rotate(90 193 44)" fill="#FEF2AC"/>
+<rect x="58" y="118" width="6" height="18" fill="#FEF2AC"/>
+<rect x="70" y="124" width="6" height="18" transform="rotate(90 70 124)" fill="#FEF2AC"/>
+<rect x="187" y="179" width="3" height="9" fill="#F9F8FA"/>
+<rect x="193" y="182" width="3" height="9" transform="rotate(90 193 182)" fill="#F9F8FA"/>
+<rect x="187" y="194" width="3" height="9" fill="#F9F8FA"/>
+<rect x="193" y="197" width="3" height="9" transform="rotate(90 193 197)" fill="#F9F8FA"/>
+<rect x="157" y="179" width="3" height="9" fill="#F9F8FA"/>
+<rect x="163" y="182" width="3" height="9" transform="rotate(90 163 182)" fill="#F9F8FA"/>
+<rect x="50" y="41" width="3" height="9" fill="#F9F8FA"/>
+<rect x="56" y="44" width="3" height="9" transform="rotate(90 56 44)" fill="#F9F8FA"/>
+<rect x="50" y="11" width="3" height="9" fill="#F9F8FA"/>
+<rect x="56" y="14" width="3" height="9" transform="rotate(90 56 14)" fill="#F9F8FA"/>
+<rect x="80" y="11" width="3" height="9" fill="#F9F8FA"/>
+<rect x="86" y="14" width="3" height="9" transform="rotate(90 86 14)" fill="#F9F8FA"/>
+<rect x="187" y="149" width="3" height="9" fill="#F9F8FA"/>
+<rect x="193" y="152" width="3" height="9" transform="rotate(90 193 152)" fill="#F9F8FA"/>
+<rect x="50" y="71" width="3" height="9" fill="#F9F8FA"/>
+<rect x="56" y="74" width="3" height="9" transform="rotate(90 56 74)" fill="#F9F8FA"/>
+<rect x="202" y="135" width="3" height="9" fill="#F9F8FA"/>
+<rect x="208" y="138" width="3" height="9" transform="rotate(90 208 138)" fill="#F9F8FA"/>
+<rect x="65" y="41" width="3" height="9" fill="#F9F8FA"/>
+<rect x="71" y="44" width="3" height="9" transform="rotate(90 71 44)" fill="#F9F8FA"/>
+<rect x="65" y="11" width="3" height="9" fill="#F9F8FA"/>
+<rect x="71" y="14" width="3" height="9" transform="rotate(90 71 14)" fill="#F9F8FA"/>
+<rect x="95" y="11" width="3" height="9" fill="#F9F8FA"/>
+<rect x="101" y="14" width="3" height="9" transform="rotate(90 101 14)" fill="#F9F8FA"/>
+<rect x="202" y="164" width="3" height="9" fill="#F9F8FA"/>
+<rect x="208" y="167" width="3" height="9" transform="rotate(90 208 167)" fill="#F9F8FA"/>
+<rect x="65" y="71" width="3" height="9" fill="#F9F8FA"/>
+<rect x="71" y="74" width="3" height="9" transform="rotate(90 71 74)" fill="#F9F8FA"/>
+<rect x="187" y="135" width="3" height="9" fill="#F9F8FA"/>
+<rect x="193" y="138" width="3" height="9" transform="rotate(90 193 138)" fill="#F9F8FA"/>
+<rect x="50" y="56" width="3" height="9" fill="#F9F8FA"/>
+<rect x="56" y="59" width="3" height="9" transform="rotate(90 56 59)" fill="#F9F8FA"/>
+<rect x="50" y="26" width="3" height="9" fill="#F9F8FA"/>
+<rect x="56" y="29" width="3" height="9" transform="rotate(90 56 29)" fill="#F9F8FA"/>
+<rect x="80" y="26" width="3" height="9" fill="#F9F8FA"/>
+<rect x="86" y="29" width="3" height="9" transform="rotate(90 86 29)" fill="#F9F8FA"/>
+<rect x="187" y="164" width="3" height="9" fill="#F9F8FA"/>
+<rect x="193" y="167" width="3" height="9" transform="rotate(90 193 167)" fill="#F9F8FA"/>
+<rect x="50" y="86" width="3" height="9" fill="#F9F8FA"/>
+<rect x="56" y="89" width="3" height="9" transform="rotate(90 56 89)" fill="#F9F8FA"/>
+<rect x="202" y="149" width="3" height="9" fill="#F9F8FA"/>
+<rect x="208" y="152" width="3" height="9" transform="rotate(90 208 152)" fill="#F9F8FA"/>
+<rect x="65" y="56" width="3" height="9" fill="#F9F8FA"/>
+<rect x="71" y="59" width="3" height="9" transform="rotate(90 71 59)" fill="#F9F8FA"/>
+<rect x="65" y="26" width="3" height="9" fill="#F9F8FA"/>
+<rect x="71" y="29" width="3" height="9" transform="rotate(90 71 29)" fill="#F9F8FA"/>
+<rect x="95" y="26" width="3" height="9" fill="#F9F8FA"/>
+<rect x="101" y="29" width="3" height="9" transform="rotate(90 101 29)" fill="#F9F8FA"/>
+<rect x="202" y="179" width="3" height="9" fill="#F9F8FA"/>
+<rect x="208" y="182" width="3" height="9" transform="rotate(90 208 182)" fill="#F9F8FA"/>
+<rect x="172" y="179" width="3" height="9" fill="#F9F8FA"/>
+<rect x="178" y="182" width="3" height="9" transform="rotate(90 178 182)" fill="#F9F8FA"/>
+<rect x="172" y="194" width="3" height="9" fill="#F9F8FA"/>
+<rect x="178" y="197" width="3" height="9" transform="rotate(90 178 197)" fill="#F9F8FA"/>
+<rect x="65" y="86" width="3" height="9" fill="#F9F8FA"/>
+<rect x="71" y="89" width="3" height="9" transform="rotate(90 71 89)" fill="#F9F8FA"/>
+<rect x="193" y="20" width="6" height="18" fill="#FEF2AC"/>
+<rect x="205" y="26" width="6" height="18" transform="rotate(90 205 26)" fill="#FEF2AC"/>
 </svg>

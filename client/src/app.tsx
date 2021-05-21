@@ -31,8 +31,8 @@ const isServer = typeof window === "undefined";
 function Layout({ pageType, children }) {
   return (
     <>
-      {!isServer && <Banner />}
       <A11yNav />
+      {!isServer && <Banner />}
       <div className={`page-wrapper ${pageType}`}>
         <Header />
         {children}
