@@ -170,6 +170,7 @@
         font-family: "Metropolis";
         font-weight: 400;
         margin-top: 24px;
+        width: fit-content;
         border-radius: 0px;
       }
 
@@ -630,10 +631,6 @@
             }
           }
 
-          p:last-child {
-            margin-bottom: 0px;
-          }
-
           .code-snippet {
             border-radius: 12px;
             background-color: #1f2033;
@@ -652,6 +649,28 @@
               .code-m {
                 color: #e31887;
               }
+
+              .code-y {
+                color: #fde143;
+              }
+            }
+
+            .codepen {
+              box-sizing: border-box;
+              height: 450px;
+              border: none;
+            }
+          }
+
+          .deep-dive-sidebar {
+            border: 1px solid rgba(32, 17, 57, 0.1);
+            border-radius: 10px;
+            padding: 6px 24px;
+
+            p,
+            a {
+              font-size: 14px;
+              font-style: italic;
             }
           }
         }
@@ -768,11 +787,5 @@
         }
       }
     }
-  }
-
-  .codepen {
-    box-sizing: border-box;
-    height: 450px;
-    border: none;
   }
 }

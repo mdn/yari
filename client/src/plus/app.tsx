@@ -305,23 +305,31 @@ export default function App() {
                   at some more realistic components and how to use this method
                   to build in progressively enhanced support.
                 </p>
-                <p>
-                  // sidebar You can also test for feature support using
-                  JavaScript, using{" "}
-                  <a href="(https://developer.mozilla.org/en-US/docs/Web/API/CSS/supports">
-                    CSS.supports()
-                  </a>
-                  . As with Feature Queries in CSS, this function takes a
-                  property and value as arguments. Therefore, to test for CSS
-                  Grid layout support, you would use:
-                </p>
-                <div className="code-snippet">
-                  <code>let result = CSS.supports(“display”, “grid”);</code>
+                <div className="deep-dive-sidebar">
+                  <p>
+                    You can also test for feature support using JavaScript,
+                    using{" "}
+                    <a href="(https://developer.mozilla.org/en-US/docs/Web/API/CSS/supports">
+                      CSS.supports()
+                    </a>
+                    . As with Feature Queries in CSS, this function takes a
+                    property and value as arguments. Therefore, to test for CSS
+                    Grid layout support, you would use:
+                  </p>
+                  <div className="code-snippet">
+                    <code>
+                      <span className="code-c">let</span>{" "}
+                      <span className="code-m">result</span> ={" "}
+                      <span className="code-c">CSS</span>.
+                      <span className="code-y">supports</span>(“display”,
+                      “grid”);
+                    </code>
+                  </div>
+                  <p>
+                    The returned result is true or false, indicating if the
+                    browser does or does not have support.
+                  </p>
                 </div>
-                <p>
-                  The returned result is true or false, indicating if the
-                  browser does or does not have support. // end sidebar
-                </p>
               </div>
             </div>
             <h3 style={{ paddingTop: 80 }}>
