@@ -41,7 +41,10 @@ program
   .cast(false)
 
   .command("h2m", "Convert HTML to Markdown")
-  .option("--mode <mode>", 'Can be "dry" or "replace"', { default: "replace" })
+  .option("--mode <mode>", "Mode to be run in", {
+    default: "keep",
+    validator: ["dry", "keep", "replace"],
+  })
   .argument("[folder]", "convert by folder")
   .action(
     tryOrExit(async ({ args, options }) => {
@@ -76,12 +79,14 @@ program
             ""
           );
         }
-        if (options.mode == "replace") {
+        if (options.mode == "replace" || options.mode == "keep") {
           fs.writeFileSync(
             doc.fileInfo.path.replace(/\.html$/, ".md"),
             withFm(frontmatter, markdown)
           );
-          fs.rmSync(doc.fileInfo.path);
+          if (options.mode == "replace") {
+            fs.rmSync(doc.fileInfo.path);
+          }
         }
       }
       progressBar.stop();
