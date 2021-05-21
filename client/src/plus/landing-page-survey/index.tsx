@@ -13,6 +13,8 @@ interface PingData {
   uuid: string;
 }
 
+type Page = "start" | "thankyou" | "price" | "features";
+
 function setSessionStorageData(key: string, value: string) {
   try {
     sessionStorage.setItem(key, value);
@@ -33,8 +35,7 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
   const [email, setEmail] = React.useState(
     getSessionStorageData(SESSIONSTORAGE_KEY_EMAIL) || ""
   );
-  const [page, setPage] =
-    React.useState<"start" | "thankyou" | "price">("start");
+  const [page, setPage] = React.useState<Page>("start");
   const userData = useUserData();
   React.useEffect(() => {
     if (userData && userData.email && !email) {
@@ -49,6 +50,9 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
   }, [email]);
 
   const [price, setPrice] = React.useState("");
+  const [priceComment, setPriceComment] = React.useState("");
+  const [features, setFeatures] = React.useState([""]);
+  const [featuresComment, setFeaturesComment] = React.useState("");
 
   const [surveySubmissionError, setSurveySubmissionError] =
     React.useState<Error | null>(null);
@@ -58,13 +62,12 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
   // something different (from the first render) from getSessionStorageData().
   const pingURL = React.useMemo(() => {
     const pingSP = new URLSearchParams();
-    pingSP.set("variant", `${variant}`);
     const previousUUID = getSessionStorageData(SESSIONSTORAGE_KEY_UUID);
     if (previousUUID) {
       pingSP.set("uuid", previousUUID);
     }
     return `${API_URL}?${pingSP.toString()}`;
-  }, [variant]);
+  }, []);
 
   const { data: pingData, error: pingError } = useSWR<PingData>(
     pingURL,
@@ -91,7 +94,15 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
       throw new Error("Can't send survey if ping didn't work");
     }
     const formData = new URLSearchParams();
-    formData.set("response", JSON.stringify({ price }));
+    formData.set(
+      "response",
+      JSON.stringify({
+        price: price.trim(),
+        features: features.filter(Boolean),
+        priceComment: priceComment.trim(),
+        featuresComment: featuresComment.trim(),
+      })
+    );
     formData.set("uuid", pingData.uuid);
 
     const response = await fetch(API_URL, {
@@ -171,10 +182,18 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
             try {
               await sendWaitlistSubmission(email.trim());
               setWaitlistSubmissionError(null);
-              setPage("price");
+              setPage("features");
             } catch (error) {
               setWaitlistSubmissionError(error);
             }
+          }
+        } else if (page === "features") {
+          try {
+            await sendSurveySubmission();
+            setSurveySubmissionError(null);
+            setPage("price");
+          } catch (err) {
+            setSurveySubmissionError(err);
           }
         } else if (page === "price") {
           try {
@@ -194,7 +213,6 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
           <code>{waitlistSubmissionError.toString()}</code>
         </p>
       )}
-
       {surveySubmissionError && (
         <p className="survey-submission-error">
           <strong>Oh no!</strong> Your survey submission unfortunately failed.{" "}
@@ -209,59 +227,122 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
         </p>
       )}
       {page === "price" && (
-        <div className="form-element price">
-          <label>What do you think about the price?</label>
-          {[
-            ["too low", "Too low"],
-            ["seems fair", "Seems fair"],
-            ["too high", "Too high"],
-          ].map(([value, label]) => {
-            const id = value.replace(/\s+/g, "_");
-            return (
-              <div key={id}>
-                <input
-                  type="radio"
-                  id={id}
-                  value={value}
-                  checked={price === value}
-                  onChange={() => setPrice(value)}
-                />{" "}
-                <label htmlFor={id}>{label}</label>
-              </div>
-            );
-          })}
+        <div>
+          <h2>Thanks! Before you go, help us by answering one more question</h2>
+
+          <div className="form-element price">
+            <label>What do you think about the price?</label>
+            {[
+              ["too low", "Too low"],
+              ["seems fair", "Seems fair"],
+              ["too high", "Too high"],
+            ].map(([value, label]) => {
+              const id = value.replace(/\s+/g, "_");
+              return (
+                <div key={id}>
+                  <input
+                    type="radio"
+                    id={id}
+                    value={value}
+                    checked={price === value}
+                    onChange={() => setPrice(value)}
+                  />{" "}
+                  <label htmlFor={id}>{label}</label>
+                </div>
+              );
+            })}
+          </div>
+          <div className="form-element price-comment">
+            <textarea
+              value={priceComment}
+              onChange={(e) => setPriceComment(e.target.value)}
+              placeholder="Free-text comment regarding the price..."
+              rows={2}
+              cols={80}
+            ></textarea>
+          </div>
+        </div>
+      )}
+      {page === "features" && (
+        <div>
+          <h2>Thanks! Before you go, help us by answering two questions</h2>
+
+          <div className="form-element features">
+            <label>
+              What content or functionality was most compelling to you and why?
+            </label>
+            {[
+              "Deep dive: Modern CSS in the Real World: Your browser support toolkit",
+              "Deep dive: GDPR, DSAR, CCPA, and COPA. So Many Acronyms! Learn Mozilla's Framework To Handle Privacy Laws",
+              "Deep dive: Stop using jQuery and start using JavaScript!",
+              "Deep dive: A robust CSS pattern library",
+              "Deep dive: Modern Responsive Web Design",
+              "Deep dive: Security Considerations in Web Development",
+              "Premium feature: annotations (note taking)",
+              "Premium feature: bookmarking",
+              "Premium feature: MDN offline",
+            ].map((value) => {
+              const id = value.replace(/\s+/g, "_");
+              return (
+                <div key={id}>
+                  <input
+                    type="checkbox"
+                    id={id}
+                    value={value}
+                    checked={features.includes(value)}
+                    onChange={(event) => {
+                      if (event.target.checked) {
+                        setFeatures([value, ...features]);
+                      } else {
+                        setFeatures(features.filter((v) => v !== value));
+                      }
+                    }}
+                  />{" "}
+                  <label htmlFor={id}>{value}</label>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="form-element features-comment">
+            <textarea
+              value={featuresComment}
+              onChange={(e) => setFeaturesComment(e.target.value)}
+              placeholder="Free-text comment regarding the features and functionality..."
+              rows={2}
+              cols={80}
+            ></textarea>
+          </div>
         </div>
       )}
       {page === "start" && (
-        <div className="form-element email">
-          <label htmlFor="id_email">Email</label>
-          <input
-            type="email"
-            id="id_email"
-            required
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
+        <div>
+          <h2>Interested? Be the first to be notified when we launch.</h2>
+          <div className="form-element email">
+            {/* <label htmlFor="id_email">Email</label> */}
+            <input
+              type="email"
+              // id="id_email"
+              required
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="E-mail address"
+            />
+          </div>
         </div>
       )}
       {page !== "thankyou" && (
         <button type="submit" className="button">
-          {page === "start" ? "Join the waitlist" : "Submit survey"}
+          {page === "start" ? "Join the waitlist" : "Submit"}
         </button>
-      )}
-
-      {process.env.NODE_ENV === "development" && (
-        <div style={{ margin: 30, float: "right" }}>
-          <button
-            onClick={() => {
-              sessionStorage.removeItem(SESSIONSTORAGE_KEY_UUID);
-              sessionStorage.removeItem(SESSIONSTORAGE_KEY_EMAIL);
-              window.location.reload();
-            }}
-          >
-            <small>Dev Reset Survey</small>
-          </button>
-        </div>
+      )}{" "}
+      {page === "start" && (
+        <p>
+          <small>
+            By proceeding, you agree to the <u>Terms of Service</u> and&nbsp;
+            <u>Privacy Notice</u>.
+          </small>
+        </p>
       )}
     </form>
   );

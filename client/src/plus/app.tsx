@@ -328,7 +328,7 @@ export default function App() {
             </div>
           </div>
         </section>
-
+        
         {data && data.variant && (
           <section>
             <div className="feature-wrapper">
@@ -355,11 +355,7 @@ export default function App() {
               </>
             ) : (
               data &&
-              data.variant && (
-                <>
-                  <LandingPageSurvey variant={data.variant} />
-                </>
-              )
+              data.variant && <LandingPageSurvey variant={data.variant} />
             )}
           </div>
         </section>

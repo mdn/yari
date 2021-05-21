@@ -5,7 +5,7 @@ import { PageContentContainer } from "../ui/atoms/page-content";
 const App = React.lazy(() => import("./app"));
 
 export function Plus() {
-  const pageTitle = "MDN++";
+  const pageTitle = "MDN Plus";
   React.useEffect(() => {
     document.title = pageTitle;
   }, []);
