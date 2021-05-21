@@ -182,8 +182,7 @@ async function buildDocuments(
     }
 
     for (const { id, html } of liveSamples) {
-      const liveSamplePath = path.join(outPath, "_samples_", id, "index.html");
-      fs.mkdirSync(path.dirname(liveSamplePath), { recursive: true });
+      const liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
       fs.writeFileSync(liveSamplePath, html);
     }
 
