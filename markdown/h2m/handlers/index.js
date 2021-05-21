@@ -4,6 +4,7 @@ const { h, toPrettyHTML, wrapText } = require("../utils");
 const { code, wrap } = require("./rehype-remark-utils");
 const cards = require("./cards");
 const tables = require("./tables");
+const { prettyPrintAST } = require("../../utils");
 const { toText, UnexpectedElementError } = require("./to-text");
 
 /**
@@ -51,6 +52,26 @@ const extractSpacing = (node) => {
   ];
 };
 
+const toDefinitionItem = (node, terms, definitions) => {
+  const definitionStart = h(node, "text", ": ");
+  if (definitions[0].type == "paragraph") {
+    definitions[0].children.unshift(definitionStart);
+  } else {
+    definitions.unshift(h(node, "paragraph", definitionStart));
+  }
+  return h(
+    node,
+    "listItem",
+    [
+      ...terms,
+      h(node, "list", h(node, "listItem", definitions, { spread: false }), {
+        spread: false,
+      }),
+    ],
+    { spread: false }
+  );
+};
+
 module.exports = [
   [(node) => node.type == "root", (node, t) => h(node, "root", t(node))],
 
@@ -82,18 +103,16 @@ module.exports = [
   [
     { is: "div", canHaveClass: ["twocolumns", "threecolumns", "noinclude"] },
     // TODO: attach noinclude to MD node
-    (node, t) =>
-      !node.children
-        ? h(node, "html", toPrettyHTML(node))
-        : [
-            h(
-              node,
-              "html",
-              toPrettyHTML({ ...node, children: null }, { voids: ["div"] })
-            ),
-            ...t(node),
-            h(node, "html", "</div>"),
-          ],
+    (node) =>
+      h(
+        node,
+        "html",
+        toPrettyHTML(
+          (node.children || []).length == 1 && node.children[0].type == "text"
+            ? node.children[0]
+            : node
+        )
+      ),
   ],
 
   [
@@ -291,7 +310,6 @@ module.exports = [
     ],
   ],
 
-  // TODO: blocks in dd?
   [
     "dl",
     (node, t) => {
@@ -301,25 +319,7 @@ module.exports = [
         if (child.tagName == "dt") {
           terms.push(h(node, "paragraph", t(child)));
         } else if (child.tagName == "dd" && terms.length > 0) {
-          children.push(
-            h(
-              node,
-              "listItem",
-              [
-                ...terms,
-                h(
-                  node,
-                  "list",
-                  h(
-                    node,
-                    "listItem",
-                    h(node, "paragraph", [h(node, "text", ": "), ...t(child)])
-                  )
-                ),
-              ],
-              { spread: false }
-            )
-          );
+          children.push(toDefinitionItem(node, terms, t(child)));
           terms = [];
         } else {
           throw new UnexpectedElementError(child);

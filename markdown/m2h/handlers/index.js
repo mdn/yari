@@ -35,7 +35,7 @@ function isDefinitionList(node) {
             paragraph.type == "paragraph" &&
             paragraph.children &&
             paragraph.children[0] &&
-            (paragraph.children[0].value || "").startsWith(":")
+            (paragraph.children[0].value || "").startsWith(": ")
           );
         })
       );
@@ -49,7 +49,7 @@ function asDefinitionList(h, node) {
     const definition =
       listItem.children[listItem.children.length - 1].children[0];
     const [paragraph, ...rest] = definition.children;
-    paragraph.children[0].value = paragraph.children[0].value.slice(2);
+    paragraph.children[0].value = paragraph.children[0].value.slice(2); // removes the leading colon
     return [
       h(
         node,
@@ -63,10 +63,12 @@ function asDefinitionList(h, node) {
               : terms,
         })
       ),
-      h(node, "dd", {}, [
-        ...all(h, paragraph),
-        ...all(h, { ...definition, children: rest }),
-      ]),
+      h(
+        node,
+        "dd",
+        {},
+        all(h, { ...definition, children: [paragraph, ...rest] })
+      ),
     ];
   });
   return h(node, "dl", {}, wrap(children, true));
