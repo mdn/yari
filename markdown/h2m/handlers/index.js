@@ -200,9 +200,18 @@ module.exports = [
   ],
 
   [
-    ["code" /*"kbd"*/],
-    (node, t, opts) =>
-      h(node, "inlineCode", trimTrailingLines(wrapText(toText(node), opts))),
+    "code",
+    (node, t, opts) => {
+      const targetNode =
+        node.children.length == 1 && node.children[0].tagName == "var"
+          ? node.children[0]
+          : node;
+      return h(
+        node,
+        "inlineCode",
+        trimTrailingLines(wrapText(toText(targetNode), opts))
+      );
+    },
   ],
 
   [
