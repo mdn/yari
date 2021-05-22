@@ -20,9 +20,8 @@ import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
 import { RetiredLocaleNote } from "./molecules/retired-locale-note";
 import { MainContentContainer } from "../ui/atoms/page-content";
+import { Loading } from "../ui/atoms/loading";
 import { Metadata } from "./organisms/metadata";
-
-import { ReactComponent as Dino } from "../assets/dino.svg";
 
 import "./index.scss";
 
@@ -132,7 +131,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
   }, []);
 
   if (!doc && !error) {
-    return <LoadingDocumentPlaceholder />;
+    // return <LoadingDocumentPlaceholder />;
+    return <Loading minHeight={600} message="Loading document..." />;
   }
 
   if (error) {
@@ -172,9 +172,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
       <MainContentContainer>
         {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
-          <React.Suspense
-            fallback={<p className="loading-toolbar">Loading toolbar</p>}
-          >
+          <React.Suspense fallback={<Loading message={"Loading toolbar"} />}>
             <Toolbar
               doc={doc}
               reloadPage={() => {
@@ -191,14 +189,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
       </MainContentContainer>
 
       {doc.sidebarHTML && <RenderSideBar doc={doc} />}
-    </>
-  );
-}
-
-function LoadingDocumentPlaceholder() {
-  return (
-    <>
-      <Dino className="main-content loading-document-placeholder" />
     </>
   );
 }

@@ -1,0 +1,12 @@
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/mixins/animation";
+
+.generic-loading {
+  @include fade-in();
+
+  padding: $base-spacing;
+
+  p {
+    text-align: center;
+  }
+}

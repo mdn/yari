@@ -14,22 +14,6 @@
   @media #{$mq-small-desktop-and-up} {
     margin-top: $base-spacing;
   }
-
-  &.loading-document-placeholder {
-    @include slow-pulse();
-    fill: $neutral-550;
-    min-height: 55vh;
-    width: 100%;
-
-    @media #{$mq-small-desktop-and-up} {
-      // ensure the loading SVG spans the full width
-      grid-column: 1/3;
-      margin: $base-spacing auto;
-      max-width: $max-width-default;
-      min-height: 75vh;
-      width: 50%;
-    }
-  }
 }
 
 .only-in-en-us {
