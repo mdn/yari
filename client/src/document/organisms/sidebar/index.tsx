@@ -47,18 +47,18 @@ function SidebarLeaf({ parent }: { parent: RelatedContent }) {
           parent.title
         )}
       </h5>
-      <ul>
+      <ol>
         {parent.content.map((node) => {
           if (node.content) {
             return (
-              <li key={node.url}>
+              <li key={node.url || node.title} className="toggle">
                 <SidebarLeaflets node={node} />
               </li>
             );
           } else {
             return (
               <li
-                key={node.url}
+                key={node.url || node.title}
                 className={node.isActive ? "active" : undefined}
               >
                 <Link to={node.url}>{node.title}</Link>
@@ -66,14 +66,14 @@ function SidebarLeaf({ parent }: { parent: RelatedContent }) {
             );
           }
         })}
-      </ul>
+      </ol>
     </>
   );
 }
 
 function SidebarLeaflets({ node }: { node: RelatedContent }) {
   return (
-    <details open={node.open}>
+    <details open={node.containsActive}>
       <summary>
         {node.url ? <Link to={node.url}>{node.title}</Link> : node.title}
       </summary>

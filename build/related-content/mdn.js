@@ -287,33 +287,49 @@ const getRelatedByLocale = (locale) => {
     url: `${baseURL}/About`,
     content: [
       {
-        title: getText("Get_started_on_MDN"),
-        url: `${baseURL}/Contribute/Getting_started`,
+        title: getText("Contributing_to_MDN"),
+        content: [
+          {
+            title: getText("Get_started_on_MDN"),
+            url: `${baseURL}/Contribute/Getting_started`,
+          },
+          {
+            title: getText("Contributing_to_MDN"),
+            url: `${baseURL}/Contribute`,
+          },
+          {
+            title: getText("Other_things_you_can_do"),
+            url: `${baseURL}/Contribute/Howto`,
+          },
+          {
+            title: getText("Localizing_MDN"),
+            url: `${baseURL}/Contribute/Localize`,
+          },
+          { title: getText("Guidelines"), url: `${baseURL}/Guidelines` },
+          {
+            title: getText("Content_structures"),
+            url: `${baseURL}/Structures`,
+          },
+        ],
       },
-      { title: getText("Contributing_to_MDN"), url: `${baseURL}/Contribute` },
-      {
-        title: getText("Other_things_you_can_do"),
-        url: `${baseURL}/Contribute/Howto`,
-      },
-      {
-        title: getText("Localizing_MDN"),
-        url: `${baseURL}/Contribute/Localize`,
-      },
-      { title: getText("Guidelines"), url: `${baseURL}/Guidelines` },
-      { title: getText("Content_structures"), url: `${baseURL}/Structures` },
     ],
   });
   return related;
 };
 
 function setActive(related, url) {
+  let foundActive = false;
   for (const content of related) {
     if (content.url === url) {
       content.isActive = true;
+      foundActive = true;
     } else if (content.content) {
-      setActive(content.content, url);
+      if (setActive(content.content, url)) {
+        content.containsActive = true;
+      }
     }
   }
+  return foundActive;
 }
 
 function getRelatedContent(doc) {

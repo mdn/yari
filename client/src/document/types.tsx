@@ -126,6 +126,7 @@ export interface RelatedContent {
   open?: boolean;
   content: RelatedContent[];
   isActive?: boolean;
+  containsActive?: boolean;
 }
 
 export interface Doc {
