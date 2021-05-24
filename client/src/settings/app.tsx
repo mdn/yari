@@ -228,9 +228,7 @@ function Settings({
       )}
 
       <div className="field-group">
-        <label htmlFor="id_locale" className="slab-highlight">
-          Change language
-        </label>
+        <h3>Change language</h3>
 
         {sent && !sendError && (
           <div className="notecard success">
@@ -249,7 +247,6 @@ function Settings({
         )}
 
         <select
-          id="id_locale"
           name="locale"
           value={locale}
           onChange={(event) => {
