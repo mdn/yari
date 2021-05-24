@@ -310,8 +310,11 @@ function getNotes(
               label: "Support removed",
             }
           : null,
-        // if we only have the required version_added and releaseDate properties, assume full support
-        Object.keys(item).length === 2
+        // if we encounter nothing else than the required `version_added` and `release_date` properties,
+        // assume full support
+        Object.keys(item).filter(
+          (x) => !["version_added", "release_date"].includes(x)
+        ).length === 0
           ? {
               iconName: "none",
               label: "Full support",
@@ -370,6 +373,8 @@ function CompatCell({
 }) {
   const supportClassName = getSupportClassName(support);
   const browserReleaseDate = getSupportBrowserReleaseDate(support);
+  // Whenever the support statement is complex (an array with more than one entry),
+  // we need to render support details in `bc-history`
   const hasNotes = support && asList(support).length > 1;
   return (
     <>
