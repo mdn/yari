@@ -756,6 +756,16 @@ test("broken links to archived content", () => {
   expect(flaw.suggestion).toBeNull();
   expect(flaw.fixable).toBeFalsy();
   expect(flaw.href).toBe("/en-US/docs/The_Mozilla_platform");
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  expect($("#content a.page-not-created").length).toBe(1);
+  expect($("#content a.page-not-created").attr("href")).toBeTruthy();
+  expect($("#content a.page-not-created").attr("title")).toBe(
+    "This is a link to an unwritten page"
+  );
 });
 
 test("broken anchor links flaws", () => {
