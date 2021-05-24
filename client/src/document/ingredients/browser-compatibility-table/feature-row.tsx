@@ -298,6 +298,25 @@ function getNotes(
               label: <FlagsNote browser={browser} supportItem={item} />,
             }
           : null,
+        item.partial_implementation
+          ? {
+              iconName: "none",
+              label: "Partial support",
+            }
+          : null,
+        item.version_removed
+          ? {
+              iconName: "none",
+              label: "Support removed",
+            }
+          : null,
+        // if we only have the required version_added and releaseDate properties, assume full support
+        Object.keys(item).length === 2
+          ? {
+              iconName: "none",
+              label: "Full support",
+            }
+          : null,
       ]
         .flat()
         .filter(isTruthy);
@@ -351,11 +370,7 @@ function CompatCell({
 }) {
   const supportClassName = getSupportClassName(support);
   const browserReleaseDate = getSupportBrowserReleaseDate(support);
-  const hasNotes =
-    support &&
-    asList(support).some(
-      (item) => item.prefix || item.notes || item.alternative_name || item.flags
-    );
+  const hasNotes = support && asList(support).length > 1;
   return (
     <>
       <td
