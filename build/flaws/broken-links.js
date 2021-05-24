@@ -77,14 +77,17 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
     href,
     suggestion = null,
     explanation = null,
-    enUSFallback = null
+    enUSFallback = null,
+    mutate = true
   ) {
     if (level === FLAW_LEVELS.IGNORE) {
       // Note, even if not interested in flaws, we still need to apply the
       // suggestion. For example, in production builds, we don't care about
       // logging flaws, but because not all `broken_links` flaws have been
       // manually fixed at the source.
-      mutateLink($element);
+      if (mutate) {
+        mutateLink($element);
+      }
       return;
     }
     explanation = explanation || `Can't resolve ${href}`;
@@ -108,7 +111,9 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       }
       const id = `link${flaws.length + 1}`;
       const fixable = !!suggestion;
-      mutateLink($element, suggestion, enUSFallback);
+      if (mutate) {
+        mutateLink($element, suggestion, enUSFallback);
+      }
       $element.attr("data-flaw", id);
       flaws.push(
         Object.assign({ explanation, id, href, suggestion, fixable }, match)
@@ -209,17 +214,20 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
           checked.get(href),
           href,
           `#${hrefSplit[1]}`,
-          "No need for the pathname in anchor links if it's the same page"
+          "No need for the pathname in anchor links if it's the same page",
+          null,
+          false
         );
       } else {
-        console.warn(`Link points to page it's already on (${href})`);
-        // addBrokenLink(
-        //   a,
-        //   checked.get(href),
-        //   href,
-        //   null,
-        //   "Link points to the page it's already on"
-        // );
+        addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          null,
+          "Link points to the page it's already on",
+          null,
+          false
+        );
       }
     } else if (href.startsWith("/") && !href.startsWith("//")) {
       // Got to fake the domain to sensible extract the .search and .hash
