@@ -7,6 +7,8 @@
 // worth it.
 const getRelatedByLocale = (locale) => {
   const baseURL = `/${locale}/docs/MDN`;
+  // XXX TODO: Make it be a list of Slugs instead! Then let Yari figure out
+  // what the titles should be.
   const text = {
     "en-US": {
       About_MDN: "About MDN",
