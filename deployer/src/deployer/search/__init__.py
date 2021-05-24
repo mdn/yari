@@ -39,19 +39,15 @@ def index(
     click.echo(f"Found {count_todo:,} (potential) documents to index")
 
     if update:
-        index_name = None
-        has_old_index = False
         for name in connection.indices.get_alias():
-            if name.startswith("mdn_docs_"):
-                index_name = name
+            if name.startswith(f"{INDEX_ALIAS_NAME}_"):
+                document_index = Index(name)
                 break
-            elif name == INDEX_ALIAS_NAME:
-                has_old_index = True
         else:
-            if not has_old_index:
-                raise IndexAliasError("Unable to find an index called mdn_docs_*")
+            raise IndexAliasError(
+                f"Unable to find an index called {INDEX_ALIAS_NAME}_*"
+            )
 
-        document_index = Index(index_name)
     else:
         # Confusingly, `._index` is actually not a private API.
         # It's the documented way you're supposed to reach it.
@@ -127,30 +123,8 @@ def index(
         # Normally, Elasticsearch will do this when you restart the cluster
         # but that's not something we usually do.
         # See https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-forcemerge.html
-        if not has_old_index:
-            document_index.forcemerge()
+        document_index.forcemerge()
     else:
-        # (Apr 2021) In the olden days, before using aliases, we used to call
-        # the index what is today the index. We have to delete that index
-        # to make for using that name as the alias.
-        # This code can be deleted any time after it's been useful once
-        # in all deployments.
-        legacy_index = Index(INDEX_ALIAS_NAME)
-        if legacy_index.exists():
-            # But `.exists()` will be true if it's an alias as well! It basically
-            # answers: "Yes, it's an index or an alias".
-            # We only want to delete it if it's an index. The test for that
-            # is to see if it does *not* have an alias.
-            if (
-                INDEX_ALIAS_NAME in legacy_index.get_alias()
-                and not legacy_index.get_alias()[INDEX_ALIAS_NAME]["aliases"]
-            ):
-                click.echo(
-                    f"Delete the old {INDEX_ALIAS_NAME!r} index from when it was "
-                    "an actual index."
-                )
-                legacy_index.delete(ignore=404)
-
         # Now we're going to bundle the change to set the alias to point
         # to the new index and delete all old indexes.
         # The reason for doing this together in one update is to make it atomic.
@@ -158,7 +132,7 @@ def index(
             {"add": {"index": document_index._name, "alias": INDEX_ALIAS_NAME}}
         ]
         for index_name in connection.indices.get_alias():
-            if index_name.startswith("mdn_docs_"):
+            if index_name.startswith(f"{INDEX_ALIAS_NAME}_"):
                 if index_name != document_index._name:
                     alias_updates.append({"remove_index": {"index": index_name}})
                     click.echo(f"Delete old index {index_name!r}")
@@ -245,7 +219,7 @@ def to_search(file, _index=None):
         # files.
         return
     locale = locale[1:]
-    d = Document(
+    return Document(
         _index=_index,
         _id=doc["mdn_url"],
         title=doc["title"],
@@ -307,9 +281,6 @@ def to_search(file, _index=None):
         slug=slug.lower(),
         locale=locale.lower(),
     )
-    # print(dir(d))
-    # raise Exception
-    return d
 
 
 _display_none_regex = re.compile(r"display:\s*none")
@@ -347,7 +318,7 @@ def analyze(
 ):
     # We can confidently use a single host here because we're not searching a cluster.
     connections.create_connection(hosts=[url])
-    index = Document._index
+    index = Index(INDEX_ALIAS_NAME)
     analysis = index.analyze(body={"text": text, "analyzer": analyzer})
     print(f"For text: {text!r}")
     if "tokens" in analysis:

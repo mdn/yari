@@ -1,3 +1,6 @@
+/* eslint-disable node/no-missing-require */
+const { CSP_VALUE_PROD, CSP_VALUE_STAGE } = require("@yari-internal/constants");
+
 exports.handler = async (event) => {
   /*
    * This Lambda@Edge function is designed to handle origin-response
@@ -10,6 +13,16 @@ exports.handler = async (event) => {
   const request = event.Records[0].cf.request;
   const response = event.Records[0].cf.response;
   const uri = request.uri.toLowerCase();
+
+  // Prior to May 2021, we used to host the live samples like this:
+  //   /en-US/docs/Web/Foo/_samples_/SampleID/index.html
+  // But then, in https://github.com/mdn/yari/pull/3798, we change it to:
+  //   /en-US/docs/Web/Foo/_sample_.SampleID.html
+  // So to make deployment-timing easier we make this code here work for
+  // both the old way and the new way.
+  // (Later in 2021 we can remove any mentions of `/_samples_/`)
+  const isLiveSampleURI =
+    uri.includes("/_samples_/") || uri.includes("/_sample_.");
 
   // This condition exists to accommodate AWS origin-groups, which
   // include two origins, the primary and the secondary, where the
@@ -24,7 +37,7 @@ exports.handler = async (event) => {
     // The live-sample pages should never respond with an X-Frame-Options
     // header, because they're explicitly created for rendering within an
     // iframe on a different origin.
-    if (!uri.includes("/_samples_/")) {
+    if (!isLiveSampleURI) {
       response.headers["x-frame-options"] = [
         { key: "X-Frame-Options", value: "DENY" },
       ];
@@ -37,6 +50,23 @@ exports.handler = async (event) => {
     ];
     response.headers["strict-transport-security"] = [
       { key: "Strict-Transport-Security", value: "max-age=63072000" },
+    ];
+  }
+
+  const contentType = response.headers["content-type"];
+  if (
+    contentType &&
+    contentType[0] &&
+    contentType[0].value.startsWith("text/html") &&
+    !isLiveSampleURI
+  ) {
+    response.headers["content-security-policy-report-only"] = [
+      {
+        key: "Content-Security-Policy-Report-Only",
+        value: request.origin.custom.domainName.startsWith("prod.")
+          ? CSP_VALUE_PROD
+          : CSP_VALUE_STAGE,
+      },
     ];
   }
 

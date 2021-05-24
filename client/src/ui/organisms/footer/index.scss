@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
@@ -45,18 +47,33 @@
     }
 
     ul {
-      padding-inline-start: $base-spacing / 4;
+      padding-inline-start: math.div($base-spacing, 4);
     }
+  }
 
-    svg {
-      height: 18px;
-      vertical-align: sub;
-      width: 18px;
+  .social-icon::before {
+    background-size: 18px;
+    content: "";
+    display: inline-block;
+    filter: invert(1);
+    height: 18px;
+    vertical-align: sub;
+    width: 18px;
+  }
 
-      path {
-        fill: #fff;
-      }
-    }
+  .twitter::before {
+    background: transparent url("~@mdn/dinocons/social/twitter.svg") 0 0
+      no-repeat;
+  }
+
+  .github::before {
+    background: transparent url("~@mdn/dinocons/brands/github-mark-small.svg") 0
+      0 no-repeat;
+  }
+
+  .instagram::before {
+    background: transparent url("~@mdn/dinocons/social/instagram.svg") 0 0
+      no-repeat;
   }
 
   .footer-license {

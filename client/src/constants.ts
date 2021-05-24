@@ -25,37 +25,23 @@ export const AUTOCOMPLETE_SEARCH_WIDGET = JSON.parse(
 // We could encode the list in the SSR rendering but that means the client side
 // code needs to depend on having access to the `window` global first.
 export const VALID_LOCALES = new Set([
-  "ar",
-  "bg",
-  "bn",
-  "ca",
   "de",
-  "el",
   "en-US",
   "es",
-  "fa",
-  "fi",
   "fr",
-  "he",
-  "hi-IN",
-  "hu",
-  "id",
-  "it",
   "ja",
-  "kab",
   "ko",
-  "ms",
-  "my",
-  "nl",
   "pl",
   "pt-BR",
-  "pt-PT",
   "ru",
-  "sv-SE",
-  "th",
-  "tr",
-  "uk",
-  "vi",
   "zh-CN",
   "zh-TW",
 ]);
+
+export const ENABLE_PLUS = JSON.parse(
+  process.env.REACT_APP_ENABLE_PLUS ||
+    JSON.stringify(process.env.NODE_ENV === "development")
+);
+
+export const DEFAULT_GEO_COUNTRY =
+  process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";

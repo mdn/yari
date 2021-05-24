@@ -22,9 +22,8 @@ export default function FallbackLink({ url }: { url: string }) {
   const { locale } = useParams();
   const location = useLocation();
 
-  const [fallbackCheckURL, setFallbackCheckURL] = React.useState<null | string>(
-    null
-  );
+  const [fallbackCheckURL, setFallbackCheckURL] =
+    React.useState<null | string>(null);
 
   const { error, data: document } = useSWR<null | Doc>(
     fallbackCheckURL,

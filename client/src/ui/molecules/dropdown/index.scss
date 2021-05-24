@@ -17,6 +17,10 @@ $menu-border-radius: 4px;
     font-weight: bold;
     padding: 0;
     white-space: nowrap;
+
+    &:active {
+      background-color: transparent;
+    }
   }
 
   .dropdown-menu-items {
@@ -51,6 +55,10 @@ $menu-border-radius: 4px;
         color: $neutral-600;
         text-decoration: none;
       }
+    }
+
+    .signout-button {
+      text-decoration: none;
     }
   }
 

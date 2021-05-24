@@ -3,8 +3,51 @@ const path = require("path");
 
 const cheerio = require("cheerio");
 const glob = require("glob");
+const sizeOf = require("image-size");
 
 const buildRoot = path.join("..", "client", "build");
+
+test("all favicons on the home page", () => {
+  // The home page SPA is built, in terms of the index.html template,
+  // the same as for all document pages.
+  const htmlFile = path.join(buildRoot, "en-us", "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($('link[rel="icon"]').length).toBe(1);
+  expect($('link[rel="apple-touch-icon"]').length).toBe(1);
+  expect($('meta[property="og:image"]').length).toBe(1);
+
+  // Check that every favicon works and resolves
+  $('link[rel="icon"], link[rel="apple-touch-icon"]').each((i, element) => {
+    const href = $(element).attr("href");
+    // There should always be a 8 character hash in the href
+    expect(/\.[a-f0-9]{8}\./.test(href)).toBeTruthy();
+    // The favicon href is a URL so to check that it exists on disk we need to
+    // strip the leading / and join that with the root of the build.
+    const file = path.join(buildRoot, href.slice(1));
+    expect(fs.existsSync(file)).toBeTruthy();
+
+    if ($(element).attr("sizes")) {
+      const [expectWidth, expectHeight] = $(element)
+        .attr("sizes")
+        .split("x")
+        .map((v) => parseInt(v));
+      const dimensions = sizeOf(file);
+      expect(dimensions.width).toBe(expectWidth);
+      expect(dimensions.height).toBe(expectHeight);
+    }
+  });
+
+  // Check that the og:image resolves
+  $('meta[property="og:image"]').each((i, element) => {
+    const url = $(element).attr("content");
+    const href = new URL(url).pathname;
+    // There should always be a 8 character hash in the href
+    expect(/\.[a-f0-9]{8}\./.test(href)).toBeTruthy();
+    const file = path.join(buildRoot, href.slice(1));
+    expect(fs.existsSync(file)).toBeTruthy();
+  });
+});
 
 test("content built foo page", () => {
   expect(fs.existsSync(buildRoot)).toBeTruthy();
@@ -118,6 +161,9 @@ test("content built foo page", () => {
   expect($('meta[name="description"]').attr("content")).toBe(
     "This becomes the summary."
   );
+  expect($('meta[property="og:description"]').attr("content")).toBe(
+    "This becomes the summary."
+  );
 
   // Before testing the `<img>` tags, assert that there's only 1 image in total.
   expect($("img").length).toBe(1);
@@ -151,9 +197,10 @@ test("content built foo page", () => {
   );
 
   // Because this en-US page has a French translation
-  expect($('link[rel="alternate"]').length).toBe(2);
+  expect($('link[rel="alternate"]').length).toBe(3);
   expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
   expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
+  expect($('link[rel="alternate"][hreflang="zh"]').length).toBe(1);
   const toEnUSURL = $('link[rel="alternate"][hreflang="en"]').attr("href");
   const toFrURL = $('link[rel="alternate"][hreflang="fr"]').attr("href");
   // The domain is hardcoded because the URL needs to be absolute and when
@@ -197,9 +244,56 @@ test("content built French foo page", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="alternate"]').length).toBe(2);
+  expect($('link[rel="alternate"]').length).toBe(3);
   expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
   expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
+  expect($('link[rel="alternate"][hreflang="zh"]').length).toBe(1);
+  expect($('meta[property="og:locale"]').attr("content")).toBe("fr");
+  expect($('meta[property="og:title"]').attr("content")).toBe(
+    "<foo>: Une page de test | MDN"
+  );
+});
+
+test("content built zh-TW page with en-US fallback image", () => {
+  const builtFolder = path.join(buildRoot, "zh-tw", "docs", "web", "foo");
+  const jsonFile = path.join(builtFolder, "index.json");
+  expect(fs.existsSync(jsonFile)).toBeTruthy();
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(Object.keys(doc.flaws).length).toBe(0);
+  expect(doc.title).toBe("<foo>: 測試網頁");
+  expect(doc.isTranslated).toBe(true);
+  expect(doc.other_translations[0].locale).toBe("en-US");
+  expect(doc.other_translations[0].native).toBe("English (US)");
+  expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($('link[rel="alternate"]').length).toBe(3);
+  expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
+  expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
+  expect($('link[rel="alternate"][hreflang="zh"]').length).toBe(1);
+  expect($('meta[property="og:locale"]').attr("content")).toBe("zh-TW");
+  expect($('meta[property="og:title"]').attr("content")).toBe(
+    "<foo>: 測試網頁 | MDN"
+  );
+  expect($("#content img").attr("src")).toBe(
+    "/en-US/docs/Web/Foo/screenshot.png"
+  );
+});
+
+test("content built French Embeddable page", () => {
+  const builtFolder = path.join(buildRoot, "fr", "docs", "web", "embeddable");
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.translation_differences.length).toBe(1);
+  const flaw = doc.flaws.translation_differences[0];
+  expect(flaw.explanation).toBe(
+    "Differences in the important macros (0 in common of 4 possible)"
+  );
+  expect(flaw.fixable).toBeFalsy();
+  expect(flaw.suggestion).toBeFalsy();
+  expect(flaw.difference.type).toBe("macro");
 });
 
 test("wrong xref macro errors", () => {
@@ -521,7 +615,7 @@ test("broken links flaws", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.broken_links.length).toBe(9);
+  expect(flaws.broken_links.length).toBe(12);
   // Map them by 'href'
   const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
@@ -547,6 +641,22 @@ test("broken links flaws", () => {
   expect(
     map.get("/en-US/docs/glossary/bézier_curve#identifier").suggestion
   ).toBe("/en-US/docs/Glossary/Bézier_curve#identifier");
+  expect(map.get("/en-US/docs/Web/BrokenLinks").explanation).toBe(
+    "Link points to the page it's already on"
+  );
+  expect(map.get("/en-US/docs/Web/BrokenLinks#anchor").explanation).toBe(
+    "No need for the pathname in anchor links if it's the same page"
+  );
+  expect(map.get("/en-US/docs/Web/BrokenLinks#anchor").suggestion).toBe(
+    "#anchor"
+  );
+  expect(map.get("http://www.mozilla.org").explanation).toBe(
+    "Is currently http:// but can become https://"
+  );
+  expect(map.get("http://www.mozilla.org").suggestion).toBe(
+    "https://www.mozilla.org"
+  );
+  expect(map.get("http://www.mozilla.org").fixable).toBeTruthy();
 });
 
 test("repeated broken links flaws", () => {
@@ -571,6 +681,27 @@ test("repeated broken links flaws", () => {
   expect(map.get("link1").suggestion).toBe("/en-US/docs/Web/CSS/number");
   expect(map.get("link2").suggestion).toBe("/en-US/docs/Web/CSS/number");
   expect(map.get("link3").suggestion).toBe("/en-US/docs/Web/CSS/number");
+});
+
+test("broken http:// link that is not a valid URL", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "brokenlinks",
+    "broken_http_link"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  expect(flaws.broken_links.length).toBe(1);
+
+  const map = new Map(flaws.broken_links.map((x) => [x.id, x]));
+  expect(map.size).toBe(1);
+  expect(map.get("link1").suggestion).toBeNull();
+  expect(map.get("link1").explanation).toBe("Not a valid link URL");
+  expect(map.get("link1").fixable).toBeFalsy();
 });
 
 test("without locale prefix broken links flaws", () => {
@@ -625,6 +756,16 @@ test("broken links to archived content", () => {
   expect(flaw.suggestion).toBeNull();
   expect(flaw.fixable).toBeFalsy();
   expect(flaw.href).toBe("/en-US/docs/The_Mozilla_platform");
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  expect($("#content a.page-not-created").length).toBe(1);
+  expect($("#content a.page-not-created").attr("href")).toBeTruthy();
+  expect($("#content a.page-not-created").attr("title")).toBe(
+    "This is a link to an unwritten page"
+  );
 });
 
 test("broken anchor links flaws", () => {
@@ -959,6 +1100,7 @@ test("404 page", () => {
   expect($("title").text()).toContain("Page not found");
   expect($("h1").text()).toContain("Page not found");
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
+  expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
 });
 
 test("sign in page", () => {
@@ -969,6 +1111,20 @@ test("sign in page", () => {
   const $ = cheerio.load(html);
   expect($("h1").text()).toContain("Sign in to MDN Web Docs");
   expect($("title").text()).toContain("Sign in");
+  expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
+  expect($('meta[property="og:title"]').attr("content")).toBe("Sign in");
+});
+
+test("French sign in page", () => {
+  const builtFolder = path.join(buildRoot, "fr", "signin");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  // This will be translated the day we support localized chrome.
+  expect($("h1").text()).toContain("Sign in to MDN Web Docs");
+  expect($("title").text()).toContain("Sign in");
+  expect($('meta[property="og:locale"]').attr("content")).toBe("fr");
 });
 
 test("sign up page", () => {
@@ -1017,6 +1173,34 @@ test("bcd table extraction followed by h3", () => {
   expect(doc.body[3].type).toBe("prose");
   expect(doc.body[4].type).toBe("prose");
   expect(doc.body[4].value.isH3).toBeTruthy();
+});
+
+test("specifications and bcd extraction", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "spec_section_extraction"
+  );
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.body[0].type).toBe("prose");
+  expect(doc.body[1].type).toBe("specifications");
+  expect(doc.body[1].value.specifications[0].shortTitle).toBe("ECMAScript");
+  expect(doc.body[1].value.specifications[0].bcdSpecificationURL).toBe(
+    "https://tc39.es/ecma262/#sec-array.prototype.tolocalestring"
+  );
+  expect(doc.body[1].value.specifications[1].shortTitle).toBe(
+    "ECMAScript Internationalization API"
+  );
+  expect(doc.body[1].value.specifications[1].bcdSpecificationURL).toBe(
+    "https://tc39.es/ecma402/#sup-array.prototype.tolocalestring"
+  );
+  expect(doc.body[2].type).toBe("prose");
+  expect(doc.body[3].type).toBe("browser_compatibility");
+  expect(doc.body[4].type).toBe("prose");
 });
 
 test("headers within non-root elements is a 'sectioning' flaw", () => {
@@ -1158,8 +1342,7 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(Object.keys(doc.flaws).length).toBe(0);
 
-  const samplesRoot = path.join(builtFolder, "_samples_");
-  const found = glob.sync(path.join(samplesRoot, "**", "index.html"));
+  const found = glob.sync(path.join(builtFolder, "_sample_.*.html"));
   expect(found.length).toBe(3);
 });
 
@@ -1344,12 +1527,12 @@ test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(doc.flaws.unsafe_html.length).toBe(6);
+  expect(doc.flaws.unsafe_html.length).toBe(7);
 
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("code.unsafe-html").length).toBe(6);
+  expect($("code.unsafe-html").length).toBe(7);
 });
 
 test("translated content broken links can fall back to en-us", () => {

@@ -52,10 +52,14 @@ async function buildSPAs(options) {
         { prefix: "signin", pageTitle: "Sign in" },
         { prefix: "signup", pageTitle: "Sign up" },
         { prefix: "settings", pageTitle: "Account settings" },
+        { prefix: "plus", pageTitle: "Plus" },
       ];
       for (const { prefix, pageTitle } of SPAs) {
         const url = `/${locale}/${prefix}`;
-        const context = { pageTitle };
+        const context = {
+          pageTitle,
+          locale: VALID_LOCALES.get(locale) || locale,
+        };
         if (prefix === "settings") {
           // This SPA needs a list of all valid locales
           const languages = getLanguages();

@@ -156,17 +156,6 @@ function postProcessSmallerHeadingIDs($) {
 }
 
 /**
- * Find all `in-page-callout` div elements and rewrite
- * to be just `callout`, no more need to mark them as `webdev`
- * @param {Cheerio document instance} $
- */
-function injectInPageCallout($) {
-  $("div.in-page-callout")
-    .addClass("callout")
-    .removeClass("in-page-callout webdev");
-}
-
-/**
  * Find all `<div class="warning">` and turn them into `<div class="warning notecard">`
  * and keep in mind that if it was already been manually fixed so, you
  * won't end up with `<div class="warning notecard notecard">`.
@@ -224,7 +213,8 @@ function makeTOC(doc) {
     .map((section) => {
       if (
         (section.type === "prose" ||
-          section.type === "browser_compatibility") &&
+          section.type === "browser_compatibility" ||
+          section.type === "specifications") &&
         section.value.id &&
         section.value.title &&
         !section.value.isH3
@@ -301,7 +291,24 @@ async function buildDocument(document, documentOptions = {}) {
         sampleIdObject
       );
       if (liveSamplePage.flaw) {
-        flaws.push(liveSamplePage.flaw.updateFileInfo(fileInfo));
+        const flaw = liveSamplePage.flaw.updateFileInfo(fileInfo);
+        if (flaw.name === "MacroLiveSampleError") {
+          // As of April 2021 there are 0 pages in mdn/content that trigger
+          // a MacroLiveSampleError. So we can be a lot more strict with en-US
+          // until the translated-content has had a chance to clean up all
+          // their live sample errors.
+          // See https://github.com/mdn/yari/issues/2489
+          if (document.metadata.locale === "en-US") {
+            throw new Error(
+              `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+            );
+          } else {
+            console.warn(
+              `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+            );
+          }
+        }
+        flaws.push(flaw);
         continue;
       }
       liveSamples.push({
@@ -458,14 +465,6 @@ async function buildDocument(document, documentOptions = {}) {
   // the old
   postProcessSmallerHeadingIDs($);
 
-  // All content that uses `<div class="in-page-callout">` needs to
-  // become `<div class="callout">`
-  // Some day, we can hopefully do a mass search-and-replace so we never
-  // need to do this code here.
-  // We might want to delete this injection in 2021 some time when all content's
-  // raw HTML has been fixed to always have it in there already.
-  injectInPageCallout($);
-
   // All content that uses `<div class="warning">` needs to become
   // `<div class="warning notecard">` instead.
   // Some day, we can hopefully do a mass search-and-replace so we never
@@ -545,7 +544,13 @@ async function buildDocument(document, documentOptions = {}) {
 }
 
 async function buildLiveSamplePageFromURL(url) {
-  const [documentURL, sampleID] = url.split("/_samples_/");
+  // The 'url' is expected to be something
+  // like '/en-us/docs/foo/bar/_sample_.myid.html' and from that we want to
+  // extract '/en-us/docs/foo/bar' and 'myid'. But only if it matches.
+  if (!url.endsWith(".html") || !url.includes("/_sample_.")) {
+    throw new Error(`Unexpected URL format to extract live sample ('${url}')`);
+  }
+  const [documentURL, sampleID] = url.split(/\.html$/)[0].split("/_sample_.");
   const document = Document.findByURL(documentURL);
   if (!document) {
     throw new Error(`No document found for ${documentURL}`);

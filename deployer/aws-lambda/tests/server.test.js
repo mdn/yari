@@ -207,3 +207,67 @@ describe("redirect double-slash prefix URIs", () => {
     expect(r.headers["location"]).toBe("/blablabla");
   });
 });
+
+describe("retired locale redirects", () => {
+  it("should 302 redirect a retired locale (accept-language)", async () => {
+    const r = await get("/", {
+      "Accept-language": "sv-SE",
+    });
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe("/en-US/");
+  });
+  it("should 302 redirect a retired locale (preferredlocale cookie)", async () => {
+    const r = await get("/docs/Web/HTTP", {
+      Cookie: "preferredlocale=it",
+    });
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe("/en-US/docs/Web/HTTP");
+  });
+  it("should 302 redirect a retired locale (no query string)", async () => {
+    const r = await get("/sv-SE/docs/Web/HTML");
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe(
+      "/en-US/docs/Web/HTML?retiredLocale=sv-SE"
+    );
+  });
+  it("should 302 redirect a retired locale (query string, improper locale)", async () => {
+    const r = await get("/BN/search?q=video");
+    expect(r.statusCode).toBe(302);
+    expect(r.headers["location"]).toBe(
+      "/en-US/search?retiredLocale=bn&q=video"
+    );
+  });
+});
+
+describe("response headers", () => {
+  it("should not set CSP or X-Frame-Options for legacy /_samples_/", async () => {
+    const r = await get("/en-US/docs/Web/HTTP/_samples_/Foo/index.html");
+    expect(r.statusCode).toBe(200);
+    expect(r.headers["x-frame-options"]).toBeFalsy();
+    expect(r.headers["content-security-policy-report-only"]).toBeFalsy();
+  });
+
+  it("should not set CSP or X-Frame-Options for /_sample.*", async () => {
+    const r = await get("/en-US/docs/Web/HTTP/_sample_.Foo.html");
+    expect(r.statusCode).toBe(200);
+    expect(r.headers["x-frame-options"]).toBeFalsy();
+    expect(r.headers["content-security-policy-report-only"]).toBeFalsy();
+  });
+
+  it("should set CSP and other security headers for non-samples", async () => {
+    const r = await get("/en-US/docs/Web/HTTP");
+    expect(r.statusCode).toBe(200);
+    expect(r.headers["x-frame-options"]).toBeTruthy();
+    expect(r.headers["strict-transport-security"]).toBeTruthy();
+    expect(r.headers["x-xss-protection"]).toBeTruthy();
+    expect(r.headers["content-security-policy-report-only"]).toBeTruthy();
+  });
+  it("should not set CSP but other security headers non-HTML", async () => {
+    const r = await get("/en-US/docs/Web/HTTP/screenshot.png");
+    expect(r.statusCode).toBe(200);
+    expect(r.headers["x-frame-options"]).toBeTruthy();
+    expect(r.headers["strict-transport-security"]).toBeTruthy();
+    expect(r.headers["x-xss-protection"]).toBeTruthy();
+    expect(r.headers["content-security-policy-report-only"]).toBeFalsy();
+  });
+});

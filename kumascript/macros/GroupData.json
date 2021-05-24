@@ -419,7 +419,7 @@
       ],
       "properties": [
         "HTMLMediaElement.mediaKeys",
-        "HMTLMediaElement.onencrypted"
+        "HTMLMediaElement.onencrypted"
       ],
       "events": []
     },
@@ -1255,6 +1255,17 @@
       "methods": ["Document.getSelection()", "Window.getSelection()"],
       "events": ["Document: selectionchange", "Document: selectstart"]
     },
+    "Sensor API": {
+      "overview": ["Sensor APIs"],
+      "interfaces": ["Sensor"],
+      "properties": [
+        "Sensor.activated",
+        "Sensor.hasReading",
+        "Sensor.timestamp"
+      ],
+      "methods": ["Sensor.start()", "Sensor.stop()"],
+      "events": ["Sensor: error", "Sensor: reading", "Sensor: activate"]
+    },
     "Server Sent Events": {
       "overview": ["Server-sent events"],
       "guides": ["/docs/Web/API/Server-sent_events/Using_server-sent_events"],
@@ -1512,7 +1523,7 @@
     },
     "URL API": {
       "overview": ["URL API"],
-      "interfaces": ["URL", "URLSearchParams", "URLUtilsReadOnly"],
+      "interfaces": ["URL", "URLSearchParams"],
       "methods": [],
       "properties": [],
       "events": []

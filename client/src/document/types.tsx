@@ -82,6 +82,15 @@ export interface MacroErrorMessage extends GenericFlaw {
   fixed?: true;
 }
 
+export interface TranslationDifferenceFlaw extends GenericFlaw {
+  difference: {
+    explanation: string;
+    type: string;
+    name: string;
+    explanationNotes: string[];
+  };
+}
+
 type Flaws = {
   broken_links: BrokenLink[];
   macros: MacroErrorMessage[];
@@ -92,6 +101,7 @@ type Flaws = {
   sectioning: SectioningFlaw[];
   image_widths: ImageWidthFlaw[];
   heading_links: HeadingLinksFlaw[];
+  translation_differences: TranslationDifferenceFlaw[];
   unsafe_html: UnsafeHTMLFlaw[];
 };
 

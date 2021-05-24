@@ -19,6 +19,7 @@ import {
   BadPreTagFlaw,
   SectioningFlaw,
   HeadingLinksFlaw,
+  TranslationDifferenceFlaw,
   UnsafeHTMLFlaw,
 } from "../types";
 import "./flaws.scss";
@@ -144,6 +145,23 @@ export function ToggleDocumentFlaws({
       count: actualFlaws.length,
     }))
     .sort((a, b) => b.count - a.count);
+
+  React.useEffect(() => {
+    const el = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
+    if (el) {
+      let allFixableFlaws = 0;
+      let allFlaws = 0;
+      Object.values(doc.flaws).forEach((flaws) => {
+        allFlaws += flaws.length;
+        allFixableFlaws += flaws.filter((flaw) => flaw.fixable).length;
+      });
+      el.href = !allFlaws
+        ? "/favicon-48x48-flawless.png"
+        : allFlaws === allFixableFlaws
+        ? "/favicon-48x48-flaws-fixable.png"
+        : "/favicon-48x48-flaws.png";
+    }
+  }, [doc.flaws]);
 
   return (
     <div
@@ -283,6 +301,13 @@ function Flaws({
           case "unsafe_html":
             return (
               <UnsafeHTML key="unsafe_html" flaws={doc.flaws.unsafe_html} />
+            );
+          case "translation_differences":
+            return (
+              <TranslationDifferences
+                key="translation_differences"
+                flaws={doc.flaws.translation_differences}
+              />
             );
           case "sectioning":
             return <Sectioning key="sectioning" flaws={doc.flaws.sectioning} />;
@@ -476,12 +501,14 @@ function BrokenLinks({
               {flaw.fixable && <FixableFlawBadge />}{" "}
               {opening && opening === key && <span>Opening...</span>}
               <br />
-              {flaw.suggestion && (
+              {flaw.suggestion ? (
                 <span>
                   <b>Suggestion:</b>
                   <ShowDiff before={flaw.href} after={flaw.suggestion} />
                 </span>
-              )}{" "}
+              ) : (
+                <code>{flaw.explanation}</code>
+              )}
             </li>
           );
         })}
@@ -1023,7 +1050,7 @@ function HeadingLinks({
               {flaw.suggestion && flaw.before ? (
                 <span>
                   <b>Suggestion:</b>{" "}
-                  <ShowDiff before={flaw.before} after={flaw.suggestion} />
+                  <ShowDiff before={flaw.before} after={flaw.suggestion} />
                 </span>
               ) : (
                 <i>
@@ -1060,6 +1087,39 @@ function UnsafeHTML({ flaws }: { flaws: UnsafeHTMLFlaw[] }) {
             </li>
           );
         })}
+      </ul>
+    </div>
+  );
+}
+
+function TranslationDifferences({
+  flaws,
+}: {
+  flaws: TranslationDifferenceFlaw[];
+}) {
+  return (
+    <div className="flaw">
+      <h3>{humanizeFlawName("translation_differences")}</h3>
+      <ul>
+        {flaws.map((flaw, i) => (
+          <li key={flaw.id}>
+            {<b>{flaw.explanation}</b>}
+            {flaw.difference.explanationNotes &&
+              flaw.difference.explanationNotes.length > 0 && (
+                <ul className="explanation-notes">
+                  {flaw.difference.explanationNotes.map(
+                    (explanationNotes, i) => {
+                      return (
+                        <li key={`${explanationNotes}${i}`}>
+                          <code>{explanationNotes}</code>
+                        </li>
+                      );
+                    }
+                  )}
+                </ul>
+              )}
+          </li>
+        ))}
       </ul>
     </div>
   );

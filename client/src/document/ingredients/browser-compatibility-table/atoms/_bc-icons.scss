@@ -1,3 +1,5 @@
+@use "sass:math";
+
 .bc-icons {
   display: inline-block;
   vertical-align: text-top;
@@ -10,8 +12,8 @@
     display: inline-block;
     height: $base-unit * 3;
     line-height: 1;
-    margin-left: $base-unit / 1.2;
-    margin-right: $base-unit / 1.5;
+    margin-left: math.div($base-unit, 1.2);
+    margin-right: math.div($base-unit, 1.5);
     width: $base-unit * 3;
   }
 }
@@ -19,13 +21,6 @@
 .ic-footnote {
   &::before {
     background-image: url("~@mdn/dinocons/general/asterisk.svg");
-    content: "";
-  }
-}
-
-.ic-history {
-  &::before {
-    background-image: url("~@mdn/dinocons/arrows/chevron.svg");
     content: "";
   }
 }
