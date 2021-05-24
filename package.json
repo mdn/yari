@@ -137,7 +137,7 @@
     "jest-environment-jsdom-sixteen": "^2.0.0",
     "jest-junit-reporter": "^1.1.0",
     "jest-puppeteer": "5.0.3",
-    "jsdom": "^16.5.3",
+    "jsdom": "^16.6.0",
     "node-dev": "7.0.0",
     "pegjs": "^0.10.0",
     "prettier": "2.3.0",
