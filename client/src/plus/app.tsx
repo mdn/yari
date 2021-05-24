@@ -219,6 +219,7 @@ export default function App() {
                       allowFullScreen={false}
                       title="Modern CSS 2:2"
                       className="codepen"
+                      loading="lazy"
                       style={{
                         width: "100%",
                         overflow: "hidden",
@@ -258,6 +259,7 @@ export default function App() {
                       allowFullScreen={false}
                       title="Modern CSS 2.3 before"
                       className="codepen"
+                      loading="lazy"
                       style={{
                         width: "100%",
                         overflow: "hidden",
@@ -287,6 +289,7 @@ export default function App() {
                       allowFullScreen={false}
                       title="Modern CSS 2.3 after"
                       className="codepen"
+                      loading="lazy"
                       style={{
                         width: "100%",
                         overflow: "hidden",
