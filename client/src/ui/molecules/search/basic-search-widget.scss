@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // This file just exists to make the temporary basic search widget
 // look and act like Kuma.
 @import "~@mdn/minimalist/sass/vars/color-palette";
@@ -8,16 +10,16 @@
 }
 
 input.search-input-field {
-  border-width: 0;
-  padding: ($base-spacing / 4) ($base-unit * 6) ($base-spacing / 4)
-    ($base-spacing / 2);
   // make webkit play nice with search input types
-  -webkit-appearance: none;
+  -webkit-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
+  border-width: 0;
+  padding: math.div($base-spacing, 4) ($base-unit * 6)
+    math.div($base-spacing, 4) math.div($base-spacing, 2);
 
   &:focus,
   &:invalid {
-    outline: none;
     box-shadow: none;
+    outline: none;
   }
 }
 
@@ -25,7 +27,7 @@ input.search-input-field {
   background: $neutral-600 url("~@mdn/dinocons/general/search.svg") 0 0
     no-repeat;
   height: 21px;
-  padding: $base-spacing / 2;
+  padding: math.div($base-spacing, 2);
   position: absolute;
   right: 10px;
   top: 10px;

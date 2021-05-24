@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
@@ -16,7 +18,7 @@
   }
 
   .field-group {
-    margin: ($base-spacing / 2) 0;
+    margin: math.div($base-spacing, 2) 0;
 
     label {
       font-size: $large-font-size-mobile;
@@ -55,7 +57,7 @@
 }
 
 .settings-form {
-  margin: ($base-spacing / 2) 0 ($base-spacing * 2);
+  margin: math.div($base-spacing, 2) 0 ($base-spacing * 2);
 
   @media #{$mq-tablet-and-up} {
     margin: 0;
@@ -64,12 +66,12 @@
 
 .close-account {
   h3 {
-    margin-top: $base-spacing / 2;
+    margin-top: math.div($base-spacing, 2);
   }
 
   h4,
   p {
-    margin-bottom: $base-spacing / 2;
+    margin-bottom: math.div($base-spacing, 2);
   }
 
   h4 {

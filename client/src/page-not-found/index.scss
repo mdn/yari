@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
@@ -8,7 +10,7 @@
 
   .fallback-document {
     p {
-      margin-top: $base-spacing / 2;
+      margin-top: math.div($base-spacing, 2);
     }
 
     .fallback-link {
