@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/borders";
@@ -26,7 +28,7 @@
   border-left: $base-unit solid $primary-200;
   margin: 0;
   margin-bottom: $base-spacing;
-  padding: ($base-spacing / 2);
+  padding: math.div($base-spacing, 2);
 
   a {
     &:link,
@@ -55,7 +57,7 @@
     font-size: $small-medium-font-size-mobile;
     font-weight: bold;
     margin: 0;
-    margin-bottom: ($base-spacing / 4);
+    margin-bottom: math.div($base-spacing, 4);
     padding: 0;
 
     @media #{$mq-tablet-and-up} {
@@ -72,7 +74,7 @@
       content: "";
       display: inline-block;
       height: 21px;
-      margin-right: $base-spacing / 4;
+      margin-right: math.div($base-spacing, 4);
       position: relative;
       top: 2px;
       width: 20px;
@@ -80,7 +82,7 @@
   }
 
   p {
-    margin-bottom: $base-spacing / 2;
+    margin-bottom: math.div($base-spacing, 4);
 
     &:last-child {
       margin-bottom: 0;
@@ -89,8 +91,8 @@
 
   &.inline {
     font-weight: normal;
-    margin: $base-spacing / 4;
-    padding: ($base-spacing / 8) ($base-spacing / 4);
+    margin: math.div($base-spacing, 4);
+    padding: math.div($base-spacing, 8) math.div($base-spacing, 4);
 
     &::before {
       top: 5px;
