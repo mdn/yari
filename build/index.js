@@ -1,3 +1,4 @@
+const fs = require("fs");
 const path = require("path");
 
 const chalk = require("chalk");
@@ -225,6 +226,24 @@ function makeTOC(doc) {
     .filter(Boolean);
 }
 
+/**
+ * Return an array of all images that are inside the documents source folder.
+ *
+ * @param {Document} document
+ */
+function getAdjacentImages(documentDirectory) {
+  const dirents = fs.readdirSync(documentDirectory, { withFileTypes: true });
+  return dirents
+    .filter((dirent) => {
+      // This needs to match what we do in filecheck/checker.py
+      return (
+        !dirent.isDirectory() &&
+        /\.(png|jpeg|jpg|gif|svg|webp)$/i.test(dirent.name)
+      );
+    })
+    .map((dirent) => path.join(documentDirectory, dirent.name));
+}
+
 async function buildDocument(document, documentOptions = {}) {
   // Important that the "local" document options comes last.
   // And use Object.assign to create a new object instead of mutating the
@@ -396,6 +415,14 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Check and scrutinize any local image references
   const fileAttachments = checkImageReferences(doc, $, options, document);
+  // Not all images are referenced as `<img>` tags. Some are just sitting in the
+  // current document's folder and they might be referenced in live samples.
+  // The checkImageReferences() does 2 things. Checks image *references* and
+  // it returns which images it checked. But we'll need to complement any
+  // other images in the folder.
+  getAdjacentImages(path.dirname(document.fileInfo.path)).forEach((fp) =>
+    fileAttachments.add(fp)
+  );
 
   // Check the img tags for possible flaws and possible build-time rewrites
   checkImageWidths(doc, $, options, document);
@@ -539,7 +566,13 @@ async function buildDocument(document, documentOptions = {}) {
 }
 
 async function buildLiveSamplePageFromURL(url) {
-  const [documentURL, sampleID] = url.split("/_samples_/");
+  // The 'url' is expected to be something
+  // like '/en-us/docs/foo/bar/_sample_.myid.html' and from that we want to
+  // extract '/en-us/docs/foo/bar' and 'myid'. But only if it matches.
+  if (!url.endsWith(".html") || !url.includes("/_sample_.")) {
+    throw new Error(`Unexpected URL format to extract live sample ('${url}')`);
+  }
+  const [documentURL, sampleID] = url.split(/\.html$/)[0].split("/_sample_.");
   const document = Document.findByURL(documentURL);
   if (!document) {
     throw new Error(`No document found for ${documentURL}`);

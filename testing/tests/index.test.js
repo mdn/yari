@@ -756,6 +756,16 @@ test("broken links to archived content", () => {
   expect(flaw.suggestion).toBeNull();
   expect(flaw.fixable).toBeFalsy();
   expect(flaw.href).toBe("/en-US/docs/The_Mozilla_platform");
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  expect($("#content a.page-not-created").length).toBe(1);
+  expect($("#content a.page-not-created").attr("href")).toBeTruthy();
+  expect($("#content a.page-not-created").attr("title")).toBe(
+    "This is a link to an unwritten page"
+  );
 });
 
 test("broken anchor links flaws", () => {
@@ -1062,6 +1072,19 @@ test("image flaws with repeated external images", () => {
   expect(flaw3.line).toBe(18);
 });
 
+test("images that are in the folder but not in <img> tags", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "images_in_samples"
+  );
+  expect(fs.existsSync(path.join(builtFolder, "pic.gif")));
+  expect(fs.existsSync(path.join(builtFolder, "image.png")));
+});
+
 test("chicken_and_egg page should build with flaws", () => {
   const builtFolder = path.join(buildRoot, "en-us", "docs", "chicken_and_egg");
   expect(fs.existsSync(builtFolder)).toBeTruthy();
@@ -1332,8 +1355,7 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(Object.keys(doc.flaws).length).toBe(0);
 
-  const samplesRoot = path.join(builtFolder, "_samples_");
-  const found = glob.sync(path.join(samplesRoot, "**", "index.html"));
+  const found = glob.sync(path.join(builtFolder, "_sample_.*.html"));
   expect(found.length).toBe(3);
 });
 

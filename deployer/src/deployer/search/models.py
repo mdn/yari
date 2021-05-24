@@ -229,7 +229,27 @@ text_analyzer = analyzer(
 
 class Document(ESDocument):
     title = Text(required=True, analyzer=text_analyzer)
-    body = Text(analyzer=text_analyzer)
+    body = Text(
+        analyzer=text_analyzer,
+        # Field-length norm
+        # If a word is "rare" amongst all the other words in the document, it's
+        # assumed that that document is more exclusively about that word.
+        # For example, the Glossary page about HTTP2 might mention "HTTP2"
+        # 5 times out of 100 words. But a page that's also mentioning it 5 times,
+        # and that other page has 1,000 means it's more "relevant" on that
+        # Glossary page.
+        # However, many times the field-length norm is skewing real results.
+        # For example, important and popular MDN pages are often longer because
+        # they have more examples and more notes and more everything. That
+        # shouldn't count against the page.
+        # One example we found was "Array" appear less frequently in
+        # "TypedArray.prototype.forEach()" than it did in "Array.prototype.forEach()"
+        # but that's because the former has 493 words and the latter had 1,514 words.
+        # Just because a page has more text doesn't mean it's less about the
+        # keyword to a certain extent.
+        # https://www.elastic.co/guide/en/elasticsearch/guide/current/scoring-theory.html#field-norm
+        norms=False,
+    )
     summary = Text(analyzer=text_analyzer)
     locale = Keyword()
     archived = Boolean()
