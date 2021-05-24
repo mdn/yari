@@ -88,6 +88,23 @@ a.new {
         background-color: transparent;
       }
     }
+
+    &[id^="attr-"] {
+      &:link,
+      &:visited {
+        color: $neutral-100;
+        text-decoration: none;
+      }
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
+      }
+
+      &:active {
+        color: $text-color-inverted;
+      }
+    }
   }
 
   h2,
