@@ -212,13 +212,14 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
           "No need for the pathname in anchor links if it's the same page"
         );
       } else {
-        addBrokenLink(
-          a,
-          checked.get(href),
-          href,
-          null,
-          "Link points to the page it's already on"
-        );
+        console.warn(`Link points to page it's already on (${href})`);
+        // addBrokenLink(
+        //   a,
+        //   checked.get(href),
+        //   href,
+        //   null,
+        //   "Link points to the page it's already on"
+        // );
       }
     } else if (href.startsWith("/") && !href.startsWith("//")) {
       // Got to fake the domain to sensible extract the .search and .hash
