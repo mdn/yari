@@ -351,9 +351,23 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
             </button>
             <p>
               <small>
-                By proceeding, you agree to the <u>Terms of Service</u>{" "}
+                By proceeding, you agree to the{" "}
+                <a
+                  href="https://www.mozilla.org/about/legal/terms/mozilla"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Terms of Service
+                </a>{" "}
                 and&nbsp;
-                <u>Privacy Notice</u>.
+                <a
+                  href="https://www.mozilla.org/privacy/websites/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Privacy Notice
+                </a>
+                .
               </small>
             </p>
           </div>
