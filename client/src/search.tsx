@@ -228,6 +228,13 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     }
   }, [initializeSearchIndex, isFocused]);
 
+  useEffect(() => {
+    const item = resultItems[highlightedIndex];
+    if (item && preloadSupported()) {
+      preload(`${item.url}/index.json`);
+    }
+  }, [highlightedIndex, resultItems]);
+
   const formAction = `/${locale}/search`;
   const searchPath = useMemo(() => {
     const sp = new URLSearchParams();
@@ -336,11 +343,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                     (i === highlightedIndex ? "highlight" : ""),
                   item,
                   index: i,
-                  onMouseOver: () => {
-                    if (preloadSupported()) {
-                      preload(`${item.url}/index.json`);
-                    }
-                  },
                 })}
               >
                 <HighlightMatch title={item.title} q={inputValue} />
