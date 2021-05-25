@@ -54,24 +54,18 @@ function Banner(props: BannerProps) {
     <div className={containerClassNames}>
       <div id="mdn-cta-content" className="mdn-cta-content">
         <div id={props.id} className="mdn-cta-content-container">
-          {props.title && (
-            <div className="mdn-cta-title">
-              <h2>{props.title}</h2>
-            </div>
-          )}
-          <p className="mdn-cta-copy">{props.copy}</p>
+          <p className="mdn-cta-copy">
+            {props.copy}{" "}
+            <a
+              href={props.url}
+              target={props.newWindow ? "_blank" : undefined}
+              rel={props.newWindow ? "noopener noreferrer" : undefined}
+              onClick={props.onCTAClick}
+            >
+              {props.cta}
+            </a>
+          </p>
         </div>
-        <p className="mdn-cta-button-container">
-          <a
-            href={props.url}
-            className="button light"
-            target={props.newWindow ? "_blank" : undefined}
-            rel={props.newWindow ? "noopener noreferrer" : undefined}
-            onClick={props.onCTAClick}
-          >
-            {props.cta}
-          </a>
-        </p>
       </div>
       <div className="mdn-cta-controls">
         <button
@@ -124,9 +118,8 @@ function PlusBanner({ onDismissed }: { onDismissed: () => void }) {
   return (
     <Banner
       id={PLUS_IDv1}
-      title={"MDN++ Landing Page Experiment"}
-      copy={"Summer is coming."}
-      cta={"Check it out"}
+      copy={"✨ Love MDN? Get even more! - "}
+      cta={"Discover MDN Plus »"}
       url={`/${locale}/plus`}
       newWindow={false}
       onDismissed={onDismissed}

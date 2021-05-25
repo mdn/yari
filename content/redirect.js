@@ -36,11 +36,8 @@ function resolveDocumentPath(url) {
 
   const [, locale, , ...slug] = bareURL.toLowerCase().split("/");
 
-  const relativeFilePath = path.join(
-    locale,
-    slugToFolder(slug.join("/")),
-    "index.html"
-  );
+  const relativeFolderPath = path.join(locale, slugToFolder(slug.join("/")));
+  const relativeFilePath = path.join(relativeFolderPath, "index.html");
 
   if (isArchivedFilePath(relativeFilePath)) {
     return `$ARCHIVED/${relativeFilePath}`;
@@ -52,7 +49,10 @@ function resolveDocumentPath(url) {
     return `$TRANSLATED/${relativeFilePath}`;
   }
   const filePath = path.join(root, relativeFilePath);
-  if (fs.existsSync(filePath)) {
+  if (
+    fs.existsSync(filePath) ||
+    fs.existsSync(path.join(root, relativeFolderPath, "index.md"))
+  ) {
     return filePath;
   }
   return null;

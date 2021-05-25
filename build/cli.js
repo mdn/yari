@@ -194,7 +194,7 @@ async function buildDocuments(
 
     // Collect non-archived documents' slugs to be used in sitemap building and
     // search index building.
-    if (!document.noIndexing) {
+    if (!builtDocument.noIndexing) {
       const { locale, slug } = document.metadata;
       if (!docPerLocale[locale]) {
         docPerLocale[locale] = [];
