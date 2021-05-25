@@ -790,6 +790,11 @@
           }
         }
 
+        textarea,
+        input[type="email"] {
+          font-family: "Inter";
+        }
+
         ::placeholder {
           font-family: "Inter";
           color: #20113970;
