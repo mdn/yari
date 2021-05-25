@@ -10,6 +10,8 @@ import { preload, preloadSupported } from "./document/preloading";
 import { useLocale } from "./hooks";
 import { getPlaceholder, SearchProps, useFocusOnSlash } from "./search-utils";
 
+const PRELOAD_WAIT_MS = 500;
+
 type Item = {
   url: string;
   title: string;
@@ -231,7 +233,12 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   useEffect(() => {
     const item = resultItems[highlightedIndex];
     if (item && preloadSupported()) {
-      preload(`${item.url}/index.json`);
+      const timeout = setTimeout(() => {
+        preload(`${item.url}/index.json`);
+      }, PRELOAD_WAIT_MS);
+      return () => {
+        clearTimeout(timeout);
+      };
     }
   }, [highlightedIndex, resultItems]);
 
