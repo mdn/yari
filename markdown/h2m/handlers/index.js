@@ -143,7 +143,7 @@ module.exports = [
         ? singleLine
           ? h(node, "html", toPrettyHTML(node))
           : h(node, "break")
-        : h(node, "text", " "),
+        : h(node, "text", "\n"),
   ],
 
   [

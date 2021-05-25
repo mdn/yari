@@ -111,16 +111,18 @@ function transformNode(node, opts = {}) {
 
   if (
     opts.noBlocks &&
-    !(Array.isArray(transformed) ? transformed : [transformed]).every((node) =>
-      [
-        "tableRow",
-        "tableCell",
-        "text",
-        "emphasis",
-        "strong",
-        "inlineCode",
-        "link",
-      ].includes(node.type)
+    !(Array.isArray(transformed) ? transformed : [transformed]).every(
+      (node) =>
+        node &&
+        [
+          "tableRow",
+          "tableCell",
+          "text",
+          "emphasis",
+          "strong",
+          "inlineCode",
+          "link",
+        ].includes(node.type)
     )
   ) {
     throw new UnexpectedElementError(node);
