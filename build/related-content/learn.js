@@ -2488,145 +2488,268 @@ const getRelatedByLocale = (locale) => {
     slug: "JavaScript",
     content: [
       {
-        title: getText("CSS_first_steps"),
+        title: getText("JavaScript_first_steps"),
         content: [
           {
-            title: getText("CSS_first_steps_overview"),
-            slug: "CSS/First_steps",
+            title: getText("JavaScript_first_steps_overview"),
+            slug: "JavaScript/First_steps",
           },
           {
-            slug: "CSS/First_steps/What_is_CSS",
+            slug: "JavaScript/First_steps/What_is_JavaScript",
           },
           {
-            slug: "CSS/First_steps/Getting_started",
+            slug: "JavaScript/First_steps/A_first_splash",
           },
           {
-            slug: "CSS/First_steps/How_CSS_is_structured",
+            slug: "JavaScript/First_steps/What_went_wrong",
           },
           {
-            slug: "CSS/First_steps/How_CSS_works",
+            slug: "JavaScript/First_steps/Variables",
           },
           {
-            slug: "CSS/First_steps/Using_your_new_knowledge",
+            slug: "JavaScript/First_steps/Math",
+          },
+          {
+            slug: "JavaScript/First_steps/Strings",
+          },
+          {
+            slug: "JavaScript/First_steps/Useful_string_methods",
+          },
+          {
+            slug: "JavaScript/First_steps/Arrays",
+          },
+          {
+            slug: "JavaScript/First_steps/Silly_story_generator",
           },
         ],
       },
       {
-        title: getText("CSS_building_blocks"),
+        title: getText("JavaScript_building_blocks"),
         content: [
           {
-            title: getText("CSS_building_blocks_overview"),
-            slug: "CSS/Building_blocks",
+            title: getText("JavaScript_building_blocks_overview"),
+            slug: "JavaScript/Building_blocks",
           },
           {
-            slug: "CSS/Building_blocks/Cascade_and_inheritance",
+            slug: "JavaScript/Building_blocks/conditionals",
           },
           {
-            slug: "CSS/Building_blocks/Selectors",
+            slug: "JavaScript/Building_blocks/Looping_code",
           },
           {
-            slug: "CSS/Building_blocks/The_box_model",
+            slug: "JavaScript/Building_blocks/Functions",
           },
           {
-            slug: "CSS/Building_blocks/Backgrounds_and_borders",
+            slug: "JavaScript/Building_blocks/Build_your_own_function",
           },
           {
-            slug: "CSS/Building_blocks/Handling_different_text_directions",
+            slug: "JavaScript/Building_blocks/Return_values",
           },
           {
-            slug: "CSS/Building_blocks/Overflowing_content",
+            slug: "JavaScript/Building_blocks/Events",
           },
           {
-            slug: "CSS/Building_blocks/Values_and_units",
-          },
-          {
-            slug: "CSS/Building_blocks/Sizing_items_in_CSS",
-          },
-          {
-            slug: "CSS/Building_blocks/Images_media_form_elements",
-          },
-          {
-            slug: "CSS/Building_blocks/Styling_tables",
-          },
-          {
-            slug: "CSS/Building_blocks/Debugging_CSS",
-          },
-          {
-            slug: "CSS/Building_blocks/Organizing",
+            slug: "JavaScript/Building_blocks/Image_gallery",
           },
         ],
       },
       {
-        title: getText("Styling_text"),
+        title: getText("Introducing_JavaScript_objects"),
         content: [
           {
-            title: getText("Styling_text_overview"),
-            slug: "CSS/Styling_text",
+            title: getText("Introducing_JavaScript_objects_overview"),
+            slug: "JavaScript/Objects",
           },
           {
-            slug: "CSS/Styling_text/Fundamentals",
+            slug: "JavaScript/Objects/Basics",
           },
           {
-            slug: "CSS/Styling_text/Styling_lists",
+            slug: "JavaScript/Objects/Object-oriented_JS",
           },
           {
-            slug: "CSS/Styling_text/Styling_links",
+            slug: "JavaScript/Objects/Object_prototypes",
           },
           {
-            slug: "CSS/Styling_text/Web_fonts",
+            slug: "JavaScript/Objects/Inheritance",
           },
           {
-            slug: "CSS/Styling_text/Typesetting_a_homepage",
+            slug: "JavaScript/Objects/JSON",
+          },
+          {
+            slug: "JavaScript/Objects/Object_building_practice",
+          },
+          {
+            slug: "JavaScript/Objects/Adding_bouncing_balls_features",
           },
         ],
       },
       {
-        title: getText("CSS_layout"),
+        title: getText("Asynchronous_JavaScript"),
         content: [
           {
-            title: getText("CSS_layout_overview"),
-            slug: "CSS/CSS_layout",
+            title: getText("Asynchronous_JavaScript_overview"),
+            slug: "JavaScript/Asynchronous",
           },
           {
-            slug: "CSS/CSS_layout/Introduction",
+            slug: "JavaScript/Asynchronous/Concepts",
           },
           {
-            slug: "CSS/CSS_layout/Normal_Flow",
+            slug: "JavaScript/Asynchronous/Introducing",
           },
           {
-            slug: "CSS/CSS_layout/Flexbox",
+            slug: "JavaScript/Asynchronous/Timeouts_and_intervals",
           },
           {
-            slug: "CSS/CSS_layout/Grids",
+            slug: "JavaScript/Asynchronous/Promises",
           },
           {
-            slug: "CSS/CSS_layout/Floats",
+            slug: "JavaScript/Asynchronous/Async_await",
           },
           {
-            slug: "CSS/CSS_layout/Positioning",
+            slug: "JavaScript/Asynchronous/Choosing_the_right_approach",
+          },
+        ],
+      },
+      {
+        title: getText("Client-side_web_APIs"),
+        content: [
+          {
+            title: getText("Client-side_web_APIs"),
+            slug: "JavaScript/Client-side_web_APIs",
           },
           {
-            slug: "CSS/CSS_layout/Multiple-column_Layout",
+            slug: "JavaScript/Client-side_web_APIs/Introduction",
           },
           {
-            slug: "CSS/CSS_layout/Responsive_Design",
+            slug: "JavaScript/Client-side_web_APIs/Manipulating_documents",
           },
           {
-            slug: "CSS/CSS_layout/Media_queries",
+            slug: "JavaScript/Client-side_web_APIs/Fetching_data",
           },
           {
-            slug: "CSS/CSS_layout/Legacy_Layout_Methods",
+            slug: "JavaScript/Client-side_web_APIs/Third_party_APIs",
           },
           {
-            slug: "CSS/CSS_layout/Supporting_Older_Browsers",
+            slug: "JavaScript/Client-side_web_APIs/Drawing_graphics",
           },
           {
-            slug: "CSS/CSS_layout/Fundamental_Layout_Comprehension",
+            slug: "JavaScript/Client-side_web_APIs/Video_and_audio_APIs",
+          },
+          {
+            slug: "JavaScript/Client-side_web_APIs/Client-side_storage",
           },
         ],
       },
     ],
   });
+
+  // "Web forms — Working with user data"
+  related.push({
+    title: getText("Web_forms"),
+    slug: "Forms",
+    content: [
+      {
+        title: getText("JavaScript_first_steps"),
+        content: [
+          {
+            title: getText("Web_forms_overview"),
+            slug: "Forms",
+          },
+          {
+            slug: "Forms/Your_first_form",
+          },
+          {
+            slug: "Forms/How_to_structure_a_web_form",
+          },
+          {
+            slug: "Forms/Basic_native_form_controls",
+          },
+          {
+            slug: "Forms/HTML5_input_types",
+          },
+          {
+            slug: "Forms/Other_form_controls",
+          },
+          {
+            slug: "Forms/Styling_web_forms",
+          },
+          {
+            slug: "Forms/Advanced_form_styling",
+          },
+          {
+            slug: "Forms/UI_pseudo-classes",
+          },
+          {
+            slug: "Forms/Form_validation",
+          },
+          {
+            slug: "Forms/Sending_and_retrieving_form_data",
+          },
+        ],
+      },
+      {
+        title: getText("Web_forms_advanced"),
+        content: [
+          {
+            title: getText("How_to_build_custom_form_controls"),
+            slug: "Forms/How_to_build_custom_form_controls",
+          },
+          {
+            slug: "Forms/Sending_forms_through_JavaScript",
+          },
+          {
+            slug: "Forms/Property_compatibility_table_for_form_controls",
+          },
+        ],
+      },
+    ],
+  });
+
+  // Accessibility — Make the web usable by everyone
+  related.push({
+    title: getText("Accessibility_—_Make_the_web_usable_by_everyone"),
+    slug: "Accessibility",
+    content: [
+      {
+        title: getText("JavaScript_first_steps"),
+        content: [
+          {
+            title: getText("Accessibility_overview"),
+            slug: "Accessibility",
+          },
+          {
+            slug: "Accessibility/What_is_accessibility",
+          },
+          {
+            slug: "Accessibility/HTML",
+          },
+          {
+            slug: "Accessibility/CSS_and_JavaScript",
+          },
+          {
+            slug: "Accessibility/WAI-ARIA_basics",
+          },
+          {
+            slug: "Accessibility/Multimedia",
+          },
+          {
+            slug: "Accessibility/Mobile",
+          },
+        ],
+      },
+      {
+        title: getText("Accessibility_assessment"),
+        content: [
+          {
+            title: getText("Assessment_Accessibility_troubleshooting"),
+            slug: "Accessibility/Accessibility_troubleshooting",
+          },
+        ],
+      },
+    ],
+  });
+
+  // TODO! CONTINUE HERE WITH Tools_and_testing
 
   setTitleFromURL(related, locale);
   setURLFromSlug(related, baseURL);

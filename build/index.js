@@ -414,6 +414,14 @@ async function buildDocument(document, documentOptions = {}) {
   // Also note, these operations mutate the `$`.
   if (metadata.sidebar) {
     doc.related_content = getRelatedContent(metadata.sidebar, doc);
+  } else if (metadata.slug === "Learn" || metadata.slug.startsWith("Learn/")) {
+    // XXX is this safe and sane??
+    extractSidebar($);
+    doc.related_content = getRelatedContent("learn", doc);
+  } else if (metadata.slug === "MDN" || metadata.slug.startsWith("MDN/")) {
+    // XXX is this safe and sane??
+    extractSidebar($);
+    doc.related_content = getRelatedContent("mdn", doc);
   } else {
     doc.sidebarHTML = extractSidebar($);
   }
