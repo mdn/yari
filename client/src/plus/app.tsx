@@ -1,7 +1,8 @@
 import useSWR from "swr";
 
-import "./index.scss";
 import "./fonts/metropolis.css";
+import "./fonts/inter.css";
+import "./index.scss";
 import { LandingPageSurvey } from "./landing-page-survey";
 
 const API_URL = "/api/v1/plus/landing-page/variant/";
