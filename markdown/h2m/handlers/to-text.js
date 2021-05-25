@@ -29,7 +29,7 @@ const isBlock = convert(["html", "body", "div", "p"]);
 // <https://html.spec.whatwg.org/#the-innertext-idl-attribute>
 // Note that we act as if `node` is being rendered, and as if we’re a
 // CSS-supporting user agent.
-function toText(node) {
+function toText(node, options = { throw: true }) {
   const children = node.children || [];
   const block = isBlock(node);
   const whiteSpace = inferWhiteSpace(node, {});
@@ -49,6 +49,7 @@ function toText(node) {
   // ignored.
   if (node.type === "text" || node.type === "comment") {
     return collectText(node, {
+      ...options,
       whiteSpace: whiteSpace,
       breakBefore: true,
       breakAfter: true,
@@ -77,6 +78,7 @@ function toText(node) {
     // 3.2. For each item item in current, append item to results.
     results = results.concat(
       innerTextCollection(children[index], index, node, {
+        ...options,
         whiteSpace,
         breakBefore: index ? null : block,
         breakAfter:
@@ -158,7 +160,10 @@ function collectElement(node, _, parent, options) {
     suffix = "\n";
   }
 
-  if (!isBlock(node) || Object.keys(node.properties).length > 0) {
+  if (
+    (options.throw && !isBlock(node)) ||
+    Object.keys(node.properties).length > 0
+  ) {
     throw new UnexpectedElementError(node);
   }
 

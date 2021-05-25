@@ -77,15 +77,13 @@ function transformNode(node, opts = {}) {
     if (node.value) {
       return h(node, "text", wrapText(node.value, newOpts));
     } else {
-      const transformed = (Array.isArray(node) ? node : node.children || [])
+      return (Array.isArray(node) ? node : node.children || [])
         .map((child) => {
           const [transformed, childUnhandled] = transformNode(child, newOpts);
           unhandled.push(...childUnhandled);
           return transformed;
         })
         .flat();
-
-      return transformed;
     }
   }
 

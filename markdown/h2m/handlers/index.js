@@ -337,11 +337,14 @@ module.exports = [
       const trimIntoSingleLine = (text) => text.replace(/\s\s+/g, " ").trim();
       if (
         !summary ||
-        trimIntoSingleLine(toText(node)) != trimIntoSingleLine(summary)
+        trimIntoSingleLine(toText(node, { throw: false })) !=
+          trimIntoSingleLine(summary)
       ) {
         throw new UnexpectedElementError(node);
       }
-      return h(node, "paragraph", t(node));
+      return node.tagName == "div" || node.tagName == "p"
+        ? h(node, "paragraph", t(node))
+        : t(node);
     },
   ]),
 ];
