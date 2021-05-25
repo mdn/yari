@@ -1,94 +1,50 @@
+@use "sass:math";
+
 @import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/color-gradients";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
-@import "~@mdn/minimalist/sass/mixins/buttons";
-
 .mdn-cta-container {
-  display: none;
+  background-color: #212121;
+  color: white;
+  display: flex;
+  z-index: $bring-to-front;
+  align-items: center;
+  font-family: $heading-font-family;
+  min-height: 40px;
+  height: 100%;
+  padding: 0 $base-spacing;
 
-  @media #{$mq-tablet-and-up} {
-    background-image: $standard-gradient;
-    bottom: 0;
-    display: block;
-    height: 190px;
-    padding: $base-spacing;
-    position: fixed;
-    width: 100%;
-    z-index: $bring-to-front;
+  .mdn-cta-copy {
+    margin: 0;
+    padding: 8px 0px;
+  }
 
-    .mdn-cta-title {
-      margin: 0;
-      position: relative;
+  button {
+    background: none;
+    border: none;
+    opacity: 0.6;
 
-      h2 {
-        background-color: $neutral-100;
-        color: $text-color-inverted;
-        display: inline-block;
-        font-size: $large-font-size;
-        font-weight: normal;
-        padding: 0 ($base-spacing / 2);
-      }
-    }
-
-    .mdn-cta-copy {
-      margin: 12px 0;
-
-      @media #{$mq-large-desktop-and-up} {
-        margin-bottom: 0;
-      }
-    }
-
-    .button {
-      @include bordered($border-color: $neutral-100);
-
-      &:hover,
-      &:focus,
-      &:active {
-        @include bordered($border-color: $neutral-100);
-        background-color: $neutral-100;
-        color: $neutral-600;
-      }
-    }
-
-    .mdn-cta-close {
-      background-color: transparent;
-      border: 0;
+    &:hover,
+    &:focus,
+    &:active {
       cursor: pointer;
-      position: absolute;
-      right: 20px;
-      top: 20px;
+      opacity: 1;
+    }
+
+    .icon {
+      height: 16px;
+      color: white;
     }
   }
 
-  @media #{$mq-small-desktop-and-up} {
-    height: 150px;
-    padding: 0 $base-spacing;
-
-    .mdn-cta-content {
-      align-items: center;
-      display: flex;
-      flex-direction: row;
-      height: 100%;
-      justify-content: center;
-      margin: 0 auto;
-      max-width: $max-width-default;
-    }
-
-    .mdn-cta-content-container {
-      display: flex;
-      flex-basis: 80%;
-      flex-flow: column;
-    }
+  .mdn-cta-content {
+    margin: 0 auto;
   }
 
-  .mdn-cta-button-container {
-    position: relative;
-
-    @media #{$mq-small-desktop-and-up} {
-      flex-basis: 20%;
-      margin: 0;
-    }
+  a {
+    min-height: 0px;
+    color: #31d2f7;
   }
 }

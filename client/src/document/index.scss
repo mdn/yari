@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/borders";
@@ -31,7 +33,7 @@ a.new {
 }
 
 .main-page-content {
-  padding: ($base-spacing / 2) $base-spacing $base-spacing;
+  padding: math.div($base-spacing, 2) $base-spacing $base-spacing;
 
   @media #{$mq-small-desktop-and-up} {
     margin-bottom: $base-spacing * 2;
@@ -70,6 +72,23 @@ a.new {
 
       code {
         background-color: transparent;
+      }
+    }
+
+    &[id^="attr-"] {
+      &:link,
+      &:visited {
+        color: $neutral-100;
+        text-decoration: none;
+      }
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
+      }
+
+      &:active {
+        color: $text-color-inverted;
       }
     }
   }
@@ -120,7 +139,7 @@ a.new {
     }
 
     a.button {
-      margin-bottom: ($base-spacing / 2);
+      margin-bottom: math.div($base-spacing, 2);
       max-width: inherit;
 
       @media #{$mq-tablet-and-up} {
@@ -137,12 +156,12 @@ a.new {
     columns: 300px;
   }
 
-  iframe:not(.sample-code-frame) {
-    border: 0;
-  }
-
   iframe {
     max-width: 100%;
+  }
+
+  iframe:not(.sample-code-frame) {
+    border: 0;
   }
 }
 
@@ -152,7 +171,7 @@ a.new {
  */
 .archived {
   background-color: $yellow-400;
-  padding: $base-spacing / 4;
+  padding: math.div($base-spacing, 4);
   position: fixed;
   text-align: center;
   top: 0;

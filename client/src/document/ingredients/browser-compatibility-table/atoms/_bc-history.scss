@@ -1,3 +1,5 @@
+@use "sass:math";
+
 tr.bc-history {
   background-color: $neutral-550;
   display: none;
@@ -28,7 +30,7 @@ tr.bc-history {
     gap: $base-spacing;
     justify-content: space-between;
     max-width: 100%;
-    padding: $base-spacing / 2;
+    padding: math.div($base-spacing, 2);
   }
 
   dt {
@@ -39,7 +41,7 @@ tr.bc-history {
 
   dd {
     font-weight: normal;
-    margin: ($base-spacing / 2) 0;
+    margin: math.div($base-spacing, 2) 0;
     min-height: 24px;
     text-align: left;
 
@@ -54,13 +56,13 @@ tr.bc-history {
 dl.bc-history-mobile {
   background-color: $neutral-550;
   display: block;
-  padding: $base-spacing / 2;
+  padding: math.div($base-spacing, 2);
 
   @media #{$mq-small-desktop-and-up} {
     display: none;
   }
 
   dd {
-    margin: ($base-spacing / 2) 0;
+    margin: math.div($base-spacing, 2) 0;
   }
 }

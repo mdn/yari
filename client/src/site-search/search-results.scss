@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
@@ -42,7 +44,7 @@
     color: $neutral-100;
     display: inline-block;
     margin: 0;
-    margin-bottom: $base-spacing / 4;
+    margin-bottom: math.div($base-spacing, 4);
     padding: 0;
 
     a {
@@ -54,7 +56,7 @@
   }
 
   .search-result-url {
-    margin-bottom: $base-spacing / 4;
+    margin-bottom: math.div($base-spacing, 4);
   }
 
   // Used to indicate that a search result link is in a different locale
@@ -65,14 +67,14 @@
     font-size: $small-font-size;
     margin-top: $base-unit;
     max-width: max-content;
-    padding: ($base-unit / 2) $base-unit;
+    padding: math.div($base-unit, 2) $base-unit;
     position: relative;
     top: -3px;
 
     @media #{$mq-tablet-and-up} {
       display: inline-block;
       margin: 0;
-      margin-left: $base-spacing / 4;
+      margin-left: math.div($base-spacing, 4);
       padding: $base-unit;
     }
   }
@@ -94,7 +96,7 @@
 
 .language-options,
 .sort-options {
-  margin-top: $base-spacing / 2;
+  margin-top: math.div($base-spacing, 2);
 
   h2 {
     font-family: $site-font-family;
@@ -116,7 +118,7 @@
     li {
       display: inline-block;
       padding: 0;
-      padding-right: ($base-spacing / 4);
+      padding-right: math.div($base-spacing, 4);
 
       &::after {
         content: " | ";
@@ -134,6 +136,6 @@
   margin-bottom: $base-spacing;
 
   p {
-    margin-bottom: $base-unit / 2;
+    margin-bottom: math.div($base-unit, 2);
   }
 }

@@ -116,7 +116,7 @@ jobs:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.1.4
+        uses: snok/install-poetry@v1.1.6
 
       - name: Install deployer
         run: |
@@ -162,6 +162,11 @@ jobs:
           # You get the ID from
           # https://speedcurve.com/mozilla-add-ons/mdn/settings/updated/#lux
           BUILD_SPEEDCURVE_LUX_ID: 108906238
+
+          # This enables the Plus call-to-action banner and the Plus landing page
+          # (deliberately commented out until May 25)
+          # REACT_APP_ENABLE_PLUS: true
+
         run: |
           if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
             echo "Will build mdn/archived-content too"

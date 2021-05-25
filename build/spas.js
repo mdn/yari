@@ -49,16 +49,17 @@ async function buildSPAs(options) {
       }
       const SPAs = [
         { prefix: "search", pageTitle: "Search" },
-        { prefix: "signin", pageTitle: "Sign in" },
-        { prefix: "signup", pageTitle: "Sign up" },
-        { prefix: "settings", pageTitle: "Account settings" },
-        { prefix: "plus", pageTitle: "Plus" },
+        { prefix: "signin", pageTitle: "Sign in", noIndexing: true },
+        { prefix: "signup", pageTitle: "Sign up", noIndexing: true },
+        { prefix: "settings", pageTitle: "Account settings", noIndexing: true },
+        { prefix: "plus", pageTitle: "Plus", noIndexing: true },
       ];
-      for (const { prefix, pageTitle } of SPAs) {
+      for (const { prefix, pageTitle, noIndexing } of SPAs) {
         const url = `/${locale}/${prefix}`;
         const context = {
           pageTitle,
           locale: VALID_LOCALES.get(locale) || locale,
+          noIndexing,
         };
         if (prefix === "settings") {
           // This SPA needs a list of all valid locales
