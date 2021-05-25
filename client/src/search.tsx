@@ -303,7 +303,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       />
 
       <div {...getMenuProps()}>
-        {isOpen && (
+        {isOpen && inputValue.trim() && (
           <div className="search-results">
             {!searchIndex && !searchIndexError && (
               <div className="indexing-warning">
