@@ -56,7 +56,8 @@ const toDefinitionItem = (node, terms, definitions) => {
   if (definitions[0].type == "paragraph") {
     definitions[0].children.unshift(definitionStart);
   } else {
-    definitions.unshift(h(node, "paragraph", definitionStart));
+    definitions.unshift(definitionStart);
+    definitions = h(node, "paragraph", definitions);
   }
   return h(
     node,
