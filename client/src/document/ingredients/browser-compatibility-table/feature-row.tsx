@@ -310,8 +310,8 @@ function getNotes(
               label: "Support removed",
             }
           : null,
-        // if we encounter nothing else than the required `version_added` and `release_date` properties,
-        // assume full support
+        // If we encounter nothing else than the required `version_added` and
+        // `release_date` properties, assume full support
         Object.keys(item).filter(
           (x) => !["version_added", "release_date"].includes(x)
         ).length === 0
@@ -373,9 +373,16 @@ function CompatCell({
 }) {
   const supportClassName = getSupportClassName(support);
   const browserReleaseDate = getSupportBrowserReleaseDate(support);
-  // Whenever the support statement is complex (an array with more than one entry),
+  // Whenever the support statement is complex (array with more than one entry)
+  // or if a single entry is complex (prefix, notes, etc.),
   // we need to render support details in `bc-history`
-  const hasNotes = support && asList(support).length > 1;
+  const hasNotes =
+    support &&
+    (asList(support).length > 1 ||
+      asList(support).some(
+        (item) =>
+          item.prefix || item.notes || item.alternative_name || item.flags
+      ));
   return (
     <>
       <td
