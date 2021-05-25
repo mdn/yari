@@ -1,7 +1,8 @@
 import useSWR from "swr";
 
-import "./index.scss";
 import "./fonts/metropolis.css";
+import "./fonts/inter.css";
+import "./index.scss";
 import { LandingPageSurvey } from "./landing-page-survey";
 import React from "react";
 
