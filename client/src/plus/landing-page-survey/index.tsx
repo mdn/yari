@@ -351,9 +351,15 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
             </button>
             <p>
               <small>
-                By proceeding, you agree to the <u>Terms of Service</u>{" "}
-                and&nbsp;
-                <u>Privacy Notice</u>.
+                By clicking “Join the waitlist”, you agree to our{" "}
+                <a
+                  href="https://www.mozilla.org/en-US/privacy/websites/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Privacy Policy
+                </a>
+                .
               </small>
             </p>
           </div>
