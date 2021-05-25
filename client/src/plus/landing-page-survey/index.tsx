@@ -268,7 +268,7 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
               value={priceComment}
               onChange={(e) => setPriceComment(e.target.value)}
               placeholder="Let us know what you think"
-              rows={2}
+              rows={3}
               cols={80}
             ></textarea>
             <button type="submit">Submit</button>
@@ -329,7 +329,7 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
               value={featuresComment}
               onChange={(e) => setFeaturesComment(e.target.value)}
               placeholder="Let us know what you think"
-              rows={2}
+              rows={3}
               cols={80}
             ></textarea>
           </div>
@@ -360,7 +360,8 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
                 >
                   Privacy Policy
                 </a>
-                .
+                . Your information will only be used to notify you about
+                platform availability.
               </small>
             </p>
           </div>
