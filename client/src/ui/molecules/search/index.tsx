@@ -38,7 +38,7 @@ export function Search(props) {
   const [value, setValue] = useQueryParamState();
   const [isFocused, setIsFocused] = useState(false);
   const [defaultSelection, setDefaultSelection] = useState([0, 0] as const);
-  const [hadFocus, setHadFocus] = useState(false);
+  const [shouldUpgradeSearch, setShouldUpgradeSearch] = useState(false);
 
   const searchProps = useMemo(
     () => ({
@@ -48,26 +48,20 @@ export function Search(props) {
       onChangeIsFocused: (isFocused) => setIsFocused(isFocused),
       defaultSelection,
       onChangeSelection: (selection) => setDefaultSelection(selection),
+      onMouseEnter: () => setShouldUpgradeSearch(true),
     }),
-    [
-      value,
-      setValue,
-      isFocused,
-      setIsFocused,
-      defaultSelection,
-      setDefaultSelection,
-    ]
+    [value, isFocused, defaultSelection, setValue]
   );
 
   useEffect(() => {
     if (isFocused) {
-      setHadFocus(true);
+      setShouldUpgradeSearch(true);
     }
-  }, [isFocused, setHadFocus]);
+  }, [isFocused, setShouldUpgradeSearch]);
 
   return (
     <div className="header-search">
-      {hadFocus ? (
+      {shouldUpgradeSearch ? (
         <Suspense fallback={<BasicSearchWidget {...searchProps} />}>
           <LazySearchNavigateWidget {...searchProps} {...props} />
         </Suspense>
@@ -84,7 +78,11 @@ export function BasicSearchWidget({
   inputValue,
   onChangeInputValue,
   onChangeSelection,
-}: SearchProps & { onChangeSelection: (selection: [number, number]) => void }) {
+  onMouseEnter,
+}: SearchProps & {
+  onChangeSelection: (selection: [number, number]) => void;
+  onMouseEnter: () => void;
+}) {
   const locale = useLocale();
   const inputRef = useRef<null | HTMLInputElement>(null);
 
@@ -105,6 +103,7 @@ export function BasicSearchWidget({
         pattern="(.|\s)*\S(.|\s)*"
         required
         value={inputValue}
+        onMouseEnter={onMouseEnter}
         onChange={(e) => {
           onChangeInputValue(e.target.value);
         }}
