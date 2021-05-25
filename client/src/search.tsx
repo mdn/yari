@@ -11,6 +11,7 @@ import { useLocale } from "./hooks";
 import { getPlaceholder, SearchProps, useFocusOnSlash } from "./search-utils";
 
 const PRELOAD_WAIT_MS = 500;
+const SHOW_INDEXING_AFTER_MS = 500;
 
 type Item = {
   url: string;
@@ -132,6 +133,29 @@ type InnerSearchNavigateWidgetProps = SearchProps & {
   defaultSelection: [number, number];
 };
 
+function useHasNotChangedFor(value: string, ms: number) {
+  const [hasNotChanged, setHasNotChanged] = useState(false);
+  const previousValue = useRef(value);
+  useEffect(() => {
+    if (previousValue.current === value) {
+      return;
+    }
+    previousValue.current = value;
+    setHasNotChanged(false);
+    // while timeouts are not accurate for counting time there error is only
+    // upwards, meaning they might trigger after more time than specified,
+    // which is fine in this case
+    const timeout = setTimeout(() => {
+      setHasNotChanged(true);
+    }, ms);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [value, ms]);
+
+  return hasNotChanged;
+}
+
 function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   const {
     inputValue,
@@ -151,6 +175,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   const inputRef = useRef<null | HTMLInputElement>(null);
   const formRef = useRef<null | HTMLFormElement>(null);
   const isSelectionInitialized = useRef(false);
+
+  const showIndexing = useHasNotChangedFor(inputValue, SHOW_INDEXING_AFTER_MS);
 
   useEffect(() => {
     if (!inputRef.current || isSelectionInitialized.current) {
@@ -319,7 +345,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       <div {...getMenuProps()}>
         {isOpen && inputValue.trim() && (
           <div className="search-results">
-            {!searchIndex && !searchIndexError && (
+            {!searchIndex && !searchIndexError && showIndexing && (
               <div className="indexing-warning">
                 <em>Initializing index</em>
               </div>
