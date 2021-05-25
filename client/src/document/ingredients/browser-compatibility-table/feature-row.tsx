@@ -209,9 +209,9 @@ function CellIcons({ support }: { support: bcd.SupportStatement | undefined }) {
   return (
     <div className="bc-icons">
       {supportItem.prefix && <Icon name="prefix" />}
-      {supportItem.notes && <Icon name="footnote" />}
       {supportItem.alternative_name && <Icon name="altname" />}
       {supportItem.flags && <Icon name="disabled" />}
+      {supportItem.notes && <Icon name="footnote" />}
     </div>
   );
 }
@@ -275,27 +275,10 @@ function getNotes(
   return asList(support)
     .flatMap((item, i) => {
       const supportNotes = [
-        item.prefix
+        item.version_removed
           ? {
-              iconName: "prefix",
-              label: `Implemented with the vendor prefix: ${item.prefix}`,
-            }
-          : null,
-        item.notes
-          ? (Array.isArray(item.notes) ? item.notes : [item.notes]).map(
-              (note) => ({ iconName: "footnote", label: note })
-            )
-          : null,
-        item.alternative_name
-          ? {
-              iconName: "altname",
-              label: item.alternative_name,
-            }
-          : null,
-        item.flags
-          ? {
-              iconName: "disabled",
-              label: <FlagsNote browser={browser} supportItem={item} />,
+              iconName: "none",
+              label: `Removed in version ${item.version_removed} and later`,
             }
           : null,
         item.partial_implementation
@@ -304,11 +287,28 @@ function getNotes(
               label: "Partial support",
             }
           : null,
-        item.version_removed
+        item.prefix
           ? {
-              iconName: "none",
-              label: "Support removed",
+              iconName: "prefix",
+              label: `Implemented with the vendor prefix: ${item.prefix}`,
             }
+          : null,
+        item.alternative_name
+          ? {
+              iconName: "altname",
+              label: `Alternate name: ${item.alternative_name}`,
+            }
+          : null,
+        item.flags
+          ? {
+              iconName: "disabled",
+              label: <FlagsNote browser={browser} supportItem={item} />,
+            }
+          : null,
+        item.notes
+          ? (Array.isArray(item.notes) ? item.notes : [item.notes]).map(
+              (note) => ({ iconName: "footnote", label: note })
+            )
           : null,
         // If we encounter nothing else than the required `version_added` and
         // `release_date` properties, assume full support
