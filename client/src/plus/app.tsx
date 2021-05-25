@@ -107,7 +107,7 @@ export default function App() {
                   <li>Modern Responsive Web Design</li>
                   <li>Security Considerations in Web Development</li>
                   <li>
-                    GDPR, DSAR, CCPA, and COPA. So Many Acronyms! Learn
+                    GDPR, DSAR, CCPA, and COPPA. So Many Acronyms! Learn
                     Mozilla's Framework To Handle Privacy Laws
                   </li>
                 </ul>
