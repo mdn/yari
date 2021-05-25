@@ -161,14 +161,14 @@
         background: $gradient-secondary;
         border: none;
         color: white;
-        padding: 18px 32px 16px 32px;
+        padding: 12px 26px 12px 26px;
         text-align: center;
         text-decoration: none;
         display: inline-block;
         font-size: 16px;
         font-family: "Metropolis";
         font-weight: 400;
-        margin-top: 24px;
+        margin-top: 40px;
         width: fit-content;
         border-radius: 0px;
       }
@@ -380,7 +380,7 @@
           background-size: cover;
           margin: 0 auto;
           position: relative;
-          top: -69px;
+          top: -74px;
           max-width: 450px;
           max-height: calc(450px * 1.15);
           margin-bottom: -24px;
@@ -519,11 +519,33 @@
           }
         }
 
+        button {
+          background: $gradient-secondary;
+          border: none;
+          color: white;
+          padding: 12px 18px 10px 18px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 14px;
+          font-family: "Metropolis";
+          font-weight: 400;
+          border-radius: 0px;
+          margin: 45px auto 0px;
+          display: block;
+        }
+
+        button:hover {
+          background: #5b3cc2;
+          cursor: pointer;
+        }
+
         .section-feature-1-2-col {
           display: grid;
           gap: $grid-gap;
           grid-template-columns: 1fr;
           height: 100%;
+          padding-bottom: 90px;
 
           @media #{$mq-small-desktop-and-up} {
             grid-template-columns: 1fr 2fr;
@@ -598,30 +620,6 @@
             li:not(:last-child) {
               padding-bottom: 4px;
             }
-
-            button {
-              background: #30d8a7;
-              border: none;
-              color: white;
-              padding: 12px 18px 10px 18px;
-              text-align: center;
-              text-decoration: none;
-              display: inline-block;
-              font-size: 14px;
-              font-family: "Metropolis";
-              font-weight: 400;
-              border-radius: 0px;
-
-              @media #{$mq-tablet-and-up} {
-                margin-top: 24px;
-                margin-left: 18px;
-              }
-            }
-
-            button:hover {
-              background: #5b3cc2;
-              cursor: pointer;
-            }
           }
 
           .deep-dive-card {
@@ -671,6 +669,18 @@
               font-size: 14px;
               font-style: italic;
             }
+          }
+
+          .fade {
+            -webkit-mask-image: -webkit-gradient(
+              linear,
+              left 65%,
+              left bottom,
+              from(rgba(0, 0, 0, 1)),
+              to(rgba(0, 0, 0, 0))
+            );
+
+            mask-image: linear-gradient(to bottom, black 65%, transparent 100%);
           }
         }
 
@@ -725,6 +735,10 @@
             grid-template-columns: 1fr 1fr 1fr;
           }
         }
+      }
+
+      .disclaimer {
+        font-style: italic;
       }
 
       .waitlist {
@@ -784,6 +798,16 @@
         small {
           padding-top: 18px;
           display: block;
+
+          a {
+            font-size: revert;
+            color: white;
+            text-decoration: underline;
+          }
+
+          a:hover {
+            color: #618eff;
+          }
 
           @media #{$mq-tablet-and-up} {
             padding-top: inherit;
