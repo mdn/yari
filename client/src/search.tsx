@@ -156,16 +156,6 @@ function useHasNotChangedFor(value: string, ms: number) {
   return hasNotChanged;
 }
 
-const SearchResults = (
-  props: Omit<
-    React.DetailedHTMLProps<
-      React.HTMLAttributes<HTMLDivElement>,
-      HTMLDivElement
-    >,
-    "className"
-  >
-) => <div className="search-results" {...props} />;
-
 function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   const {
     inputValue,
@@ -285,6 +275,58 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     return `${formAction}?${sp.toString()}`;
   }, [formAction, inputValue]);
 
+  const searchResults = (() => {
+    if (!isOpen || !inputValue.trim()) {
+      return null;
+    }
+
+    if (searchIndexError) {
+      return (
+        <div className="searchindex-error">Error initializing search index</div>
+      );
+    }
+
+    if (!searchIndex) {
+      return showIndexing ? (
+        <div className="indexing-warning">
+          <em>Initializing index</em>
+        </div>
+      ) : null;
+    }
+
+    return (
+      <>
+        {resultItems.length === 0 && inputValue !== "/" ? (
+          <div className="nothing-found">
+            No document titles found.{" "}
+            <Link to={searchPath}>
+              Site search for <code>{inputValue}</code>
+            </Link>
+          </div>
+        ) : (
+          resultItems.map((item, i) => (
+            <div
+              {...getItemProps({
+                key: item.url,
+                className:
+                  "result-item " + (i === highlightedIndex ? "highlight" : ""),
+                item,
+                index: i,
+              })}
+            >
+              <HighlightMatch title={item.title} q={inputValue} />
+              <br />
+              <BreadcrumbURI uri={item.url} substrings={item.substrings} />
+            </div>
+          ))
+        )}
+        {isFuzzySearchString(inputValue) && (
+          <div className="fuzzy-engaged">Fuzzy searching by URI</div>
+        )}
+      </>
+    );
+  })();
+
   return (
     <form
       action={formAction}
@@ -353,64 +395,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       />
 
       <div {...getMenuProps()}>
-        {isOpen && inputValue.trim() && (
-          <>
-            {!searchIndex && !searchIndexError && showIndexing && (
-              <SearchResults>
-                <div className="indexing-warning">
-                  <em>Initializing index</em>
-                </div>
-              </SearchResults>
-            )}
-            {searchIndexError ? (
-              <SearchResults>
-                <div className="searchindex-error">
-                  Error initializing search index
-                </div>
-              </SearchResults>
-            ) : (
-              resultItems.length === 0 &&
-              inputValue &&
-              inputValue !== "/" &&
-              searchIndex && (
-                <SearchResults>
-                  <div className="nothing-found">
-                    No document titles found.{" "}
-                    <Link to={searchPath}>
-                      Site search for <code>{inputValue}</code>
-                    </Link>
-                  </div>
-                </SearchResults>
-              )
-            )}
-            {resultItems.length > 0 && (
-              <SearchResults>
-                {resultItems.map((item, i) => (
-                  <div
-                    {...getItemProps({
-                      key: item.url,
-                      className:
-                        "result-item " +
-                        (i === highlightedIndex ? "highlight" : ""),
-                      item,
-                      index: i,
-                    })}
-                  >
-                    <HighlightMatch title={item.title} q={inputValue} />
-                    <br />
-                    <BreadcrumbURI
-                      uri={item.url}
-                      substrings={item.substrings}
-                    />
-                  </div>
-                ))}
-                {isFuzzySearchString(inputValue) && (
-                  <div className="fuzzy-engaged">Fuzzy searching by URI</div>
-                )}
-              </SearchResults>
-            )}
-          </>
-        )}
+        {searchResults && <div className="search-results">{searchResults}</div>}
       </div>
     </form>
   );
