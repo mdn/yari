@@ -1,0 +1,9 @@
+/*! Generated with https://google-webfonts-helper.herokuapp.com/fonts/inter?subsets=latin May 2021 */
+
+@font-face {
+  font-family: "Inter";
+  src: url("inter-v3-latin-regular.woff2") format("woff2"),
+    url("inter-v3-latin-regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
