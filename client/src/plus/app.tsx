@@ -44,9 +44,9 @@ export default function App() {
                 More MDN. <span>Your MDN.</span>
               </h1>
               <p>
-                <b>Coming soon</b> — our new premium service with deep dives
-                written by industry experts and new ways of customizing your MDN
-                experience
+                <b>Coming soon</b> — a new premium service with monthly
+                technical deep dives written by industry experts and powerful
+                new features to personalize and tailor your MDN experience.
               </p>
 
               {data && data.variant && (
@@ -64,26 +64,23 @@ export default function App() {
           <div className="feature-wrapper">
             <div className="section-feature-2-col">
               <div>
-                <h2>What is MDN Plus</h2>
+                <h2>What is MDN Plus?</h2>
                 <p>
                   MDN Plus builds on top of your much-loved core content,
-                  providing constantly-updated guides to highly-requested topics
-                  and helping you keep your knowledge fresh and your skills
-                  sharp. In addition, it will include a raft of tools to make
-                  MDN more powerful for you, creating a more valuable and
-                  personal experience.
+                  providing constantly-updated guides to highly-requested
+                  topics, helping you keep your knowledge fresh and your skills
+                  sharp. In addition, MDN Plus includes tools to make MDN more
+                  powerful for you, creating a more personalized experience.
                 </p>
               </div>
 
               <div>
-                <h2>What this means for MDN Web Docs</h2>
+                <h2>What does this mean for MDN Web Docs?</h2>
                 <p>
-                  <b>Nothing</b> is changing with existing MDN Web Docs content
-                  — this will continue to be free and available to everyone in
-                  the future. We want to provide extra value through premium
-                  content and features to help make MDN self-sustaining, on a
-                  completely opt-in basis. Again,<b> nothing is changing </b>
-                  with MDN Web Docs.
+                  <b>Nothing</b> is changing with the existing MDN Web Docs
+                  content — this content will continue to be free and available
+                  to everyone. Again,<b> nothing is changing </b> with the
+                  existing MDN Web Docs!
                 </p>
               </div>
             </div>
@@ -379,7 +376,7 @@ export default function App() {
                 <h2>What's included</h2>
                 <h1>Make MDN your own</h1>
                 <p style={{ fontSize: 20 }}>
-                  Unlock premium features that you can use across all of MDN
+                  Unlock premium features that you can use across all of MDN.
                 </p>
               </div>
             </div>
@@ -392,18 +389,18 @@ export default function App() {
                 <figure className="bookmark" />
                 <h1>Build a permanent library</h1>
                 Bookmark and annotate free and paid content for reference across
-                devices
+                devices.
               </div>
               <div className="tile">
                 <figure className="offline" />
                 <h1>Take MDN with you</h1>
-                Download MDN documentation and deep dives for access offline
+                Download MDN documentation and deep dives for access offline.
               </div>
               <div className="tile">
                 <figure className="bcdtable" />
                 <h1>Customize compat tables</h1>
                 Display customised data sets based on the browsers your projects
-                need to support
+                need to support.
               </div>
             </div>
           </div>
@@ -414,7 +411,7 @@ export default function App() {
             <div className="feature-wrapper">
               <h2>How much will it cost?</h2>
               <p>
-                We’re asking {data.price}
+                {data.price}
                 <sup>*</sup>. Your subscription includes full access to the
                 premium content and features.
               </p>
