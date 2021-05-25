@@ -156,6 +156,16 @@ function useHasNotChangedFor(value: string, ms: number) {
   return hasNotChanged;
 }
 
+const SearchResults = (
+  props: Omit<
+    React.DetailedHTMLProps<
+      React.HTMLAttributes<HTMLDivElement>,
+      HTMLDivElement
+    >,
+    "className"
+  >
+) => <div className="search-results" {...props} />;
+
 function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   const {
     inputValue,
@@ -344,49 +354,62 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 
       <div {...getMenuProps()}>
         {isOpen && inputValue.trim() && (
-          <div className="search-results">
+          <>
             {!searchIndex && !searchIndexError && showIndexing && (
-              <div className="indexing-warning">
-                <em>Initializing index</em>
-              </div>
+              <SearchResults>
+                <div className="indexing-warning">
+                  <em>Initializing index</em>
+                </div>
+              </SearchResults>
             )}
             {searchIndexError ? (
-              <div className="searchindex-error">
-                Error initializing search index
-              </div>
+              <SearchResults>
+                <div className="searchindex-error">
+                  Error initializing search index
+                </div>
+              </SearchResults>
             ) : (
               resultItems.length === 0 &&
               inputValue &&
               inputValue !== "/" &&
               searchIndex && (
-                <div className="nothing-found">
-                  No document titles found.{" "}
-                  <Link to={searchPath}>
-                    Site search for <code>{inputValue}</code>
-                  </Link>
-                </div>
+                <SearchResults>
+                  <div className="nothing-found">
+                    No document titles found.{" "}
+                    <Link to={searchPath}>
+                      Site search for <code>{inputValue}</code>
+                    </Link>
+                  </div>
+                </SearchResults>
               )
             )}
-            {resultItems.map((item, i) => (
-              <div
-                {...getItemProps({
-                  key: item.url,
-                  className:
-                    "result-item " +
-                    (i === highlightedIndex ? "highlight" : ""),
-                  item,
-                  index: i,
-                })}
-              >
-                <HighlightMatch title={item.title} q={inputValue} />
-                <br />
-                <BreadcrumbURI uri={item.url} substrings={item.substrings} />
-              </div>
-            ))}
-            {isFuzzySearchString(inputValue) && (
-              <div className="fuzzy-engaged">Fuzzy searching by URI</div>
+            {resultItems.length > 0 && (
+              <SearchResults>
+                {resultItems.map((item, i) => (
+                  <div
+                    {...getItemProps({
+                      key: item.url,
+                      className:
+                        "result-item " +
+                        (i === highlightedIndex ? "highlight" : ""),
+                      item,
+                      index: i,
+                    })}
+                  >
+                    <HighlightMatch title={item.title} q={inputValue} />
+                    <br />
+                    <BreadcrumbURI
+                      uri={item.url}
+                      substrings={item.substrings}
+                    />
+                  </div>
+                ))}
+                {isFuzzySearchString(inputValue) && (
+                  <div className="fuzzy-engaged">Fuzzy searching by URI</div>
+                )}
+              </SearchResults>
             )}
-          </div>
+          </>
         )}
       </div>
     </form>
