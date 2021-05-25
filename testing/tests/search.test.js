@@ -33,7 +33,7 @@ describe("Autocomplete search", () => {
     await page.goto(testURL("/"));
     await expect(page).toFill(SEARCH_SELECTOR, "gooblyg00k");
     await expect(page).toMatchElement(".nothing-found", {
-      text: "No quick results found",
+      text: "No document titles found",
     });
   });
 
@@ -42,7 +42,7 @@ describe("Autocomplete search", () => {
     await expect(page).toFill(SEARCH_SELECTOR, "/");
     await expect(page).toMatch("Fuzzy searching by URI");
     await expect(page).not.toMatchElement(".nothing-found", {
-      text: "No quick results found",
+      text: "No document titles found",
     });
     await expect(page).toFill(SEARCH_SELECTOR, "/wboo");
     await expect(page).toMatch("<foo>: A test tag");
@@ -54,7 +54,7 @@ describe("Autocomplete search", () => {
     await page.goto(testURL("/"));
     await expect(page).toFill(SEARCH_SELECTOR, "/gooblygook");
     await expect(page).toMatchElement(".nothing-found", {
-      text: "No quick results found",
+      text: "No document titles found",
     });
   });
 

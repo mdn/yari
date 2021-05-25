@@ -320,9 +320,10 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               inputValue !== "/" &&
               searchIndex && (
                 <div className="nothing-found">
-                  No quick results found. Click{" "}
-                  <Link to={searchPath}>here</Link> or press enter to do a
-                  full-search.
+                  No document titles found.{" "}
+                  <Link to={searchPath}>
+                    Site search for <code>{inputValue}</code>
+                  </Link>
                 </div>
               )
             )}
