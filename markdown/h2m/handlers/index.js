@@ -1,10 +1,10 @@
+const toHTML = require("hast-util-to-html");
 const trimTrailingLines = require("trim-trailing-lines");
 
-const { h, toPrettyHTML, wrapText } = require("../utils");
+const { h, wrapText } = require("../utils");
 const { code, wrap } = require("./rehype-remark-utils");
 const cards = require("./cards");
 const tables = require("./tables");
-const { prettyPrintAST } = require("../../utils");
 const { toText, UnexpectedElementError } = require("./to-text");
 
 /**
@@ -107,7 +107,7 @@ module.exports = [
       h(
         node,
         "html",
-        toPrettyHTML(
+        toHTML(
           (node.children || []).length == 1 && node.children[0].type == "text"
             ? node.children[0]
             : node
@@ -142,7 +142,7 @@ module.exports = [
     (node, t, { shouldWrap, singleLine }) =>
       shouldWrap
         ? singleLine
-          ? h(node, "html", toPrettyHTML(node))
+          ? h(node, "html", toHTML(node))
           : h(node, "break")
         : h(node, "text", "\n"),
   ],
@@ -288,10 +288,7 @@ module.exports = [
     },
   ],
 
-  [
-    { is: "math", canHave: "display" },
-    (node) => h(node, "html", toPrettyHTML(node)),
-  ],
+  [{ is: "math", canHave: "display" }, (node) => h(node, "html", toHTML(node))],
 
   ["blockquote", (node, t) => h(node, "blockquote", wrap(t(node)))],
 
