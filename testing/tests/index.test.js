@@ -1591,3 +1591,12 @@ test("homepage links and flaws", () => {
   expect(map.get("/ZH-CN").suggestion).toBe("/zh-CN/");
   expect(map.get("/notalocale/").suggestion).toBeFalsy();
 });
+
+test("built search-index.json (en-US)", () => {
+  const searchIndexFile = path.join(buildRoot, "en-us", "search-index.json");
+  const searchIndex = JSON.parse(fs.readFileSync(searchIndexFile));
+  const urlToTitle = new Map(searchIndex.map((o) => [o.url, o.title]));
+  expect(urlToTitle.get("/en-US/docs/Web/Foo")).toBe("<foo>: A test tag");
+  // an archived page should not be in there.
+  expect(urlToTitle.has("/en-US/docs/XUL")).toBeFalsy();
+});
