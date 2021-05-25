@@ -232,7 +232,7 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
         <div className="features">
           <h2>
             {
-              "Thanks! Before you go, help us by answering some optional questions (2/2)"
+              "Thanks! Before you go, help us by answering some optional questions (2/2)."
             }
           </h2>
 
@@ -279,7 +279,7 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
         <div className="features">
           <h2>
             {
-              "Thanks! Before you go, help us by answering some optional questions (1/2)"
+              "Thanks! Before you go, help us by answering some optional questions (1/2)."
             }
           </h2>
 
