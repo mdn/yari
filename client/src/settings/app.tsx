@@ -228,7 +228,7 @@ function Settings({
       )}
 
       <div className="field-group">
-        <h3>Change language</h3>
+        <h3>Default language</h3>
 
         {sent && !sendError && (
           <div className="notecard success">
@@ -245,8 +245,9 @@ function Settings({
             <a href={window.location.pathname}>Reload page to try again.</a>
           </div>
         )}
-
+        <label htmlFor="id_locale">Change language</label>
         <select
+          id="id_locale"
           name="locale"
           value={locale}
           onChange={(event) => {
