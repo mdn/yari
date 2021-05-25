@@ -95,6 +95,7 @@ const CSP_DIRECTIVES = {
     "yari-demos.stage.mdn.mozit.cloud",
     "jsfiddle.net",
     "www.youtube-nocookie.com",
+    "codepen.io",
   ],
   "img-src": [
     "'self'",
