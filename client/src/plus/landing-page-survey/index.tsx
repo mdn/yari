@@ -289,7 +289,7 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
             </label>
             {[
               "Deep dive: Modern CSS in the Real World: Your browser support toolkit",
-              "Deep dive: GDPR, DSAR, CCPA, and COPA. So Many Acronyms! Learn Mozilla's Framework To Handle Privacy Laws",
+              "Deep dive: GDPR, DSAR, CCPA, and COPPA. So Many Acronyms! Learn Mozilla's Framework To Handle Privacy Laws",
               "Deep dive: Stop using jQuery and start using JavaScript!",
               "Deep dive: A robust CSS pattern library",
               "Deep dive: Modern Responsive Web Design",
