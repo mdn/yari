@@ -219,10 +219,7 @@ export default function render(
   }
 
   const robotsContent =
-    ALWAYS_NO_ROBOTS ||
-    (doc && doc.noIndexing) ||
-    pageNotFound ||
-    noIndexing === true
+    ALWAYS_NO_ROBOTS || (doc && doc.noIndexing) || pageNotFound || noIndexing
       ? "noindex, nofollow"
       : "index, follow";
   $(`<meta name="robots" content="${robotsContent}">`).insertAfter(
