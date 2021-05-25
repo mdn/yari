@@ -138,6 +138,7 @@ export default function render(
     pageTitle = null,
     possibleLocales = null,
     locale = null,
+    noIndexing = null,
   } = {}
 ) {
   const buildHtml = readBuildHTML();
@@ -218,7 +219,10 @@ export default function render(
   }
 
   const robotsContent =
-    ALWAYS_NO_ROBOTS || (doc && doc.noIndexing) || pageNotFound
+    ALWAYS_NO_ROBOTS ||
+    (doc && doc.noIndexing) ||
+    pageNotFound ||
+    noIndexing === true
       ? "noindex, nofollow"
       : "index, follow";
   $(`<meta name="robots" content="${robotsContent}">`).insertAfter(
