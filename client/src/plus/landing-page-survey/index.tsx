@@ -221,12 +221,12 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
         </p>
       )}
       {page === "thankyou" && (
-        <p className="thank-you">
+        <div className="thank-you">
           <h2>
             Thank you for your feedback! Your input helps shape the future of
             MDN Plus.
           </h2>
-        </p>
+        </div>
       )}
       {page === "price" && (
         <div className="features">
