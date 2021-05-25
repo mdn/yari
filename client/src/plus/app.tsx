@@ -103,13 +103,13 @@ export default function App() {
                   Mozilla and industry insiders. Upcoming titles include:
                 </p>
                 <ul>
-                  <li>Modern CSS in the Real World</li>
-                  <li>A Robust CSS Pattern Library</li>
-                  <li>Modern Responsive Web Design</li>
-                  <li>Security Considerations in Web Development</li>
+                  <li>Modern CSS in the real world</li>
+                  <li>A robust CSS pattern library</li>
+                  <li>Modern responsive web design</li>
+                  <li>Security considerations in web development</li>
                   <li>
-                    GDPR, DSAR, CCPA, and COPPA. So Many Acronyms! Learn
-                    Mozilla's Framework To Handle Privacy Laws
+                    GDPR, DSAR, CCPA, and COPPA. So many acronyms! Learn
+                    Mozilla's framework to handle privacy laws
                   </li>
                 </ul>
               </div>
@@ -127,26 +127,26 @@ export default function App() {
                 "Your browser support toolkit",
               </span>{" "}
               the second article from the forthcoming deep dive{" "}
-              <i>Modern CSS in the Real World</i> by Rachel Andrew.
+              <i>Modern CSS in the real world</i> by Rachel Andrew.
             </h3>
             <div className="section-feature-1-2-col">
               <div className="deep-dive-card">
                 <h4>Featured Deep Dive</h4>
                 <h2>
-                  Modern CSS in the Real World: Your browser support toolkit
+                  Modern CSS in the real world: Your browser support toolkit
                 </h2>
                 By Rachel Andrew
                 <hr />
                 <ul>
                   <li>This three part series includes:</li>
-                  <li>Planning for browser support</li>
+                  <li>+ Planning for browser support</li>
                   <li>
                     {" "}
                     <span className="magenta-bg">
-                      Your browser support toolkit
+                      + Your browser support toolkit
                     </span>
                   </li>
-                  <li>Practical browser support</li>
+                  <li>+ Practical browser support</li>
                 </ul>
               </div>
               <div>
@@ -401,7 +401,7 @@ export default function App() {
               </div>
               <div className="tile">
                 <figure className="bcdtable" />
-                <h1>Customize BCD tables</h1>
+                <h1>Customize compat tables</h1>
                 Display customised data sets based on the browsers your projects
                 need to support
               </div>
