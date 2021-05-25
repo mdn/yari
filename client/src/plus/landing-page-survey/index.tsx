@@ -288,15 +288,16 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
               <h6>Which content or features were most compelling to you?</h6>
             </label>
             {[
-              "Deep dive: Modern CSS in the Real World: Your browser support toolkit",
-              "Deep dive: GDPR, DSAR, CCPA, and COPPA. So Many Acronyms! Learn Mozilla's Framework To Handle Privacy Laws",
+              "Deep dive: Modern CSS in the real world: Your browser support toolkit",
+              "Deep dive: GDPR, DSAR, CCPA, and COPPA. So many acronyms! Learn Mozilla's framework to handle privacy laws",
               "Deep dive: Stop using jQuery and start using JavaScript!",
               "Deep dive: A robust CSS pattern library",
-              "Deep dive: Modern Responsive Web Design",
-              "Deep dive: Security Considerations in Web Development",
-              "Premium feature: Bookmark and annotations",
-              "Premium feature: MDN offline",
-              "Premium feature: Custom BCD table",
+              "Deep dive: Modern responsive web design",
+              "Deep dive: Security considerations in web development",
+              "Premium feature: Annotations",
+              "Premium feature: Bookmarking",
+              "Premium feature: Save as PDF",
+              "Premium feature: Custom compatibility tables",
             ].map((value) => {
               const id = value.replace(/\s+/g, "_");
               return (
