@@ -7,6 +7,7 @@ const cheerio = require("cheerio");
 const {
   Document,
   CONTENT_ROOT,
+  Image,
   REPOSITORY_URLS,
   execGit,
 } = require("../content");
@@ -136,6 +137,34 @@ function postProcessExternalLinks($) {
     if (!rel.includes("noopener")) {
       rel.push("noopener");
       $a.attr("rel", rel.join(" "));
+    }
+  });
+}
+
+/**
+ * For every `<a href="THING">`, where 'THING' is not a http or / link, make it
+ * `<a href="$CURRENT_PATH/THING">`
+ *
+ *
+ * @param {Cheerio document instance} $
+ */
+function postLocalFileLinks($, doc) {
+  $("a[href]").each((i, element) => {
+    const href = element.attribs.href;
+    if (
+      !href ||
+      /^(\/|\.\.|http|#|mailto:|about:|ftp:|news:|irc:|ftp:)/i.test(href)
+    ) {
+      return;
+    }
+    // There are a lot of links that don't match. E.g. `<a href="SubPage">`
+    // So we'll execute a lot "false positives" that are not images.
+    const url = `${doc.mdn_url}/${href}`;
+    const image = Image.findByURL(url);
+    if (image) {
+      $(element).attr("href", url);
+      // } else {
+      //   console.log("NOT AN IMAGE!!!!", href, doc.mdn_url);
     }
   });
 }
@@ -479,6 +508,9 @@ async function buildDocument(document, documentOptions = {}) {
 
   // All external hyperlinks should have the `external` class name.
   postProcessExternalLinks($);
+
+  // All internal hyperlinks to a file should become "absolute" URLs
+  postLocalFileLinks($, doc);
 
   // Since all anchor links are forced into lower case, and `<h2>` and `<h3>`
   // is taken care of by the React rendering itself, we have to post-process
