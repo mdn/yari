@@ -1,10 +1,10 @@
+import React from "react";
 import useSWR from "swr";
 
 import "./fonts/metropolis.css";
 import "./fonts/inter.css";
 import "./index.scss";
 import { LandingPageSurvey } from "./landing-page-survey";
-import React from "react";
 
 const API_URL = "/api/v1/plus/landing-page/variant/";
 
@@ -191,182 +191,181 @@ export default function App() {
                     </code>
                   </div>
                 </div>
-                <div
-                  style={
-                    showDeepDive ? { display: "block" } : { display: "none" }
-                  }
-                >
-                  <p>
-                    The idea is that older browsers support the first
-                    declaration and so will apply it to the page, then treat the
-                    second one as invalid because they don't support it — this
-                    means they completely ignore it. Newer browsers will support
-                    both declarations, however the rules of the cascade mean
-                    that the declaration that comes later in the stylesheet will
-                    override the earlier one, and be used by the browser.
-                  </p>
-
-                  <p>
-                    CSS also has rules defining what happens when there are two
-                    potentially conflicting things being applied to an element.
-                    For example, if you have a floated item and its parent
-                    becomes a grid container, the floated item stops behaving
-                    like a floated item and becomes a grid item. We can see how
-                    this works in the following demo.
-                  </p>
-                  <p>
-                    In this example, the component has a simple, floated layout.
-                    This is the layout that browsers without CSS Grid support
-                    will use. For newer browsers the container has been turned
-                    into a grid container, which means that in a browser with
-                    CSS grid support the float is not applied.
-                  </p>
-                  <div className="code-snippet">
-                    <div className="codepen">
-                      <iframe
-                        id="cp_embed_MWJVaqm"
-                        src="https://codepen.io/rachelandrew/embed/qBrZVVm?height=450&amp;theme-id=1&amp;slug-hash=qBrZVVm&amp;default-tab=css,result"
-                        scrolling="no"
-                        allowFullScreen={false}
-                        title="Modern CSS 2:2"
-                        className="codepen"
-                        loading="lazy"
-                        style={{
-                          width: "100%",
-                          overflow: "hidden",
-                          height: "100%",
-                        }}
-                        frameBorder={0}
-                      ></iframe>
-                    </div>
-                  </div>
-                  <h4>Feature Queries</h4>
-                  <p>
-                    For very simple fallbacks, the overriding method shown
-                    previously may work. It can however require that you order
-                    the declarations and rules in your CSS carefully, making it
-                    more brittle than you might like. You may also run into
-                    problems when you want to use additional CSS to enhance the
-                    layout in newer browsers, if that CSS is also understood by
-                    older browsers.
-                  </p>
-                  <p>
-                    In the next demo, I have given the left-hand column a
-                    background color. I only want this to apply to the CSS Grid
-                    layout, where I can ensure that the columns will be the same
-                    height as each other. However, using the previous method the
-                    background color is understood and therefore used by
-                    browsers without CSS Grid support too. I have also added
-                    widths to the floated elements. As a percentage width is
-                    interpreted by the grid layout as a percentage of the column
-                    track, this causes the columns to become narrower than the
-                    track.
-                  </p>
-                  <div className="code-snippet">
-                    <div className="codepen">
-                      <iframe
-                        id="cp_embed_MWJVaqm"
-                        src="https://codepen.io/rachelandrew/embed/gOmrXqQ?height=450&amp;theme-id=1&amp;slug-hash=gOmrXqQ&amp;default-tab=css,result"
-                        scrolling="no"
-                        allowFullScreen={false}
-                        title="Modern CSS 2.3 before"
-                        className="codepen"
-                        loading="lazy"
-                        style={{
-                          width: "100%",
-                          overflow: "hidden",
-                          height: "100%",
-                        }}
-                        frameBorder={0}
-                      ></iframe>
-                    </div>
-                  </div>
-                  <p>
-                    In situations like this, CSS Feature Queries are useful. A
-                    feature query is similar to a media query, however instead
-                    of testing to see how large the viewport is, we are testing
-                    to see if a browser has support for that feature.
-                  </p>
-                  <p>
-                    Introducing a Feature Query into our demo means that we can
-                    wrap up all of our grid code with a test to see if the
-                    browser supports `display: grid`.
-                  </p>
-                  <div className="code-snippet">
-                    <div className="codepen">
-                      <iframe
-                        id="cp_embed_MWJVaqm"
-                        src="https://codepen.io/rachelandrew/embed/xxqVPjq?height=450&amp;theme-id=1&amp;slug-hash=MWJVaqm&amp;default-tab=css,result"
-                        scrolling="no"
-                        allowFullScreen={false}
-                        title="Modern CSS 2.3 after"
-                        className="codepen"
-                        loading="lazy"
-                        style={{
-                          width: "100%",
-                          overflow: "hidden",
-                          height: "100%",
-                        }}
-                        frameBorder={0}
-                      ></iframe>
-                    </div>
-                  </div>
-                  <p>
-                    Feature Queries are a simple test to see if the browser can
-                    parse a given declaration. They can’t tell you if the
-                    browser supports that feature without bugs, however with a
-                    good knowledge of browser support they can be a great way to
-                    safely add enhancements to a design. In the next article we
-                    will look at some more realistic components and how to use
-                    this method to build in progressively enhanced support.
-                  </p>
-                  <div className="deep-dive-sidebar">
+                {showDeepDive && (
+                  <div>
                     <p>
-                      You can also test for feature support using JavaScript,
-                      using{" "}
-                      <a href="(https://developer.mozilla.org/en-US/docs/Web/API/CSS/supports">
-                        CSS.supports()
-                      </a>
-                      . As with Feature Queries in CSS, this function takes a
-                      property and value as arguments. Therefore, to test for
-                      CSS Grid layout support, you would use:
+                      The idea is that older browsers support the first
+                      declaration and so will apply it to the page, then treat
+                      the second one as invalid because they don't support it —
+                      this means they completely ignore it. Newer browsers will
+                      support both declarations, however the rules of the
+                      cascade mean that the declaration that comes later in the
+                      stylesheet will override the earlier one, and be used by
+                      the browser.
+                    </p>
+
+                    <p>
+                      CSS also has rules defining what happens when there are
+                      two potentially conflicting things being applied to an
+                      element. For example, if you have a floated item and its
+                      parent becomes a grid container, the floated item stops
+                      behaving like a floated item and becomes a grid item. We
+                      can see how this works in the following demo.
+                    </p>
+                    <p>
+                      In this example, the component has a simple, floated
+                      layout. This is the layout that browsers without CSS Grid
+                      support will use. For newer browsers the container has
+                      been turned into a grid container, which means that in a
+                      browser with CSS grid support the float is not applied.
                     </p>
                     <div className="code-snippet">
-                      <code>
-                        <span className="code-c">let</span>{" "}
-                        <span className="code-m">result</span> ={" "}
-                        <span className="code-c">CSS</span>.
-                        <span className="code-y">supports</span>(“display”,
-                        “grid”);
-                      </code>
+                      <div className="codepen">
+                        <iframe
+                          id="cp_embed_MWJVaqm"
+                          src="https://codepen.io/rachelandrew/embed/qBrZVVm?height=450&amp;theme-id=1&amp;slug-hash=qBrZVVm&amp;default-tab=css,result"
+                          scrolling="no"
+                          allowFullScreen={false}
+                          title="Modern CSS 2:2"
+                          className="codepen"
+                          loading="lazy"
+                          style={{
+                            width: "100%",
+                            overflow: "hidden",
+                            height: "100%",
+                          }}
+                          frameBorder={0}
+                        ></iframe>
+                      </div>
+                    </div>
+                    <h4>Feature Queries</h4>
+                    <p>
+                      For very simple fallbacks, the overriding method shown
+                      previously may work. It can however require that you order
+                      the declarations and rules in your CSS carefully, making
+                      it more brittle than you might like. You may also run into
+                      problems when you want to use additional CSS to enhance
+                      the layout in newer browsers, if that CSS is also
+                      understood by older browsers.
+                    </p>
+                    <p>
+                      In the next demo, I have given the left-hand column a
+                      background color. I only want this to apply to the CSS
+                      Grid layout, where I can ensure that the columns will be
+                      the same height as each other. However, using the previous
+                      method the background color is understood and therefore
+                      used by browsers without CSS Grid support too. I have also
+                      added widths to the floated elements. As a percentage
+                      width is interpreted by the grid layout as a percentage of
+                      the column track, this causes the columns to become
+                      narrower than the track.
+                    </p>
+                    <div className="code-snippet">
+                      <div className="codepen">
+                        <iframe
+                          id="cp_embed_MWJVaqm"
+                          src="https://codepen.io/rachelandrew/embed/gOmrXqQ?height=450&amp;theme-id=1&amp;slug-hash=gOmrXqQ&amp;default-tab=css,result"
+                          scrolling="no"
+                          allowFullScreen={false}
+                          title="Modern CSS 2.3 before"
+                          className="codepen"
+                          loading="lazy"
+                          style={{
+                            width: "100%",
+                            overflow: "hidden",
+                            height: "100%",
+                          }}
+                          frameBorder={0}
+                        ></iframe>
+                      </div>
                     </div>
                     <p>
-                      The returned result is true or false, indicating if the
-                      browser does or does not have support.
+                      In situations like this, CSS Feature Queries are useful. A
+                      feature query is similar to a media query, however instead
+                      of testing to see how large the viewport is, we are
+                      testing to see if a browser has support for that feature.
                     </p>
+                    <p>
+                      Introducing a Feature Query into our demo means that we
+                      can wrap up all of our grid code with a test to see if the
+                      browser supports `display: grid`.
+                    </p>
+                    <div className="code-snippet">
+                      <div className="codepen">
+                        <iframe
+                          id="cp_embed_MWJVaqm"
+                          src="https://codepen.io/rachelandrew/embed/xxqVPjq?height=450&amp;theme-id=1&amp;slug-hash=MWJVaqm&amp;default-tab=css,result"
+                          scrolling="no"
+                          allowFullScreen={false}
+                          title="Modern CSS 2.3 after"
+                          className="codepen"
+                          loading="lazy"
+                          style={{
+                            width: "100%",
+                            overflow: "hidden",
+                            height: "100%",
+                          }}
+                          frameBorder={0}
+                        ></iframe>
+                      </div>
+                    </div>
+                    <p>
+                      Feature Queries are a simple test to see if the browser
+                      can parse a given declaration. They can’t tell you if the
+                      browser supports that feature without bugs, however with a
+                      good knowledge of browser support they can be a great way
+                      to safely add enhancements to a design. In the next
+                      article we will look at some more realistic components and
+                      how to use this method to build in progressively enhanced
+                      support.
+                    </p>
+                    <div className="deep-dive-sidebar">
+                      <p>
+                        You can also test for feature support using JavaScript,
+                        using{" "}
+                        <a href="(https://developer.mozilla.org/en-US/docs/Web/API/CSS/supports">
+                          CSS.supports()
+                        </a>
+                        . As with Feature Queries in CSS, this function takes a
+                        property and value as arguments. Therefore, to test for
+                        CSS Grid layout support, you would use:
+                      </p>
+                      <div className="code-snippet">
+                        <code>
+                          <span className="code-c">let</span>{" "}
+                          <span className="code-m">result</span> ={" "}
+                          <span className="code-c">CSS</span>.
+                          <span className="code-y">supports</span>(“display”,
+                          “grid”);
+                        </code>
+                      </div>
+                      <p>
+                        The returned result is true or false, indicating if the
+                        browser does or does not have support.
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowDeepDive(!showDeepDive);
-                  }}
-                  aria-expanded={showDeepDive}
-                  style={
-                    showDeepDive ? { display: "none" } : { display: "block" }
-                  }
-                >
-                  Expand deep dive
-                </button>
+                )}
+                {!showDeepDive && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowDeepDive(!showDeepDive);
+                    }}
+                    aria-expanded={showDeepDive}
+                  >
+                    Expand deep dive
+                  </button>
+                )}
               </div>
             </div>
-            <h3
-              style={showDeepDive ? { display: "block" } : { display: "none" }}
-            >
-              Liked what you read? Want more? Sign up for the waitlist and be
-              the first notified when we launch!{" "}
-              <a href="#waitlist"> To waitlist » </a>
-            </h3>
+            {showDeepDive && (
+              <h3>
+                Liked what you read? Want more? Sign up for the waitlist and be
+                the first notified when we launch!{" "}
+                <a href="#waitlist"> To waitlist » </a>
+              </h3>
+            )}
           </div>
         </section>
         <section className="purple-bg secondary-feature">
@@ -415,8 +414,9 @@ export default function App() {
             <div className="feature-wrapper">
               <h2>How much will it cost?</h2>
               <p>
-                We’re asking {data.price}*. Your subscription includes full
-                access to the premium content and features.
+                We’re asking {data.price}
+                <sup>*</sup>. Your subscription includes full access to the
+                premium content and features.
               </p>
               <p className="disclaimer">
                 <small>* Price is subject to change</small>
