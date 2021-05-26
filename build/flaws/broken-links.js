@@ -119,7 +119,6 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       }
       const id = `link${flaws.length + 1}`;
       const fixable = !!suggestion;
-      // mutateLink($element, { suggestion, enUSFallback, isSelfLink });
       $element.attr("data-flaw", id);
       flaws.push(
         Object.assign({ explanation, id, href, suggestion, fixable }, match)
