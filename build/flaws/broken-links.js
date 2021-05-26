@@ -54,8 +54,10 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
   // us from calling `findMatchesInText()` more than once.
   const matches = new Map();
 
-  function mutateLink($element, suggestion, enUSFallback) {
-    if (suggestion) {
+  function mutateLink($element, suggestion, enUSFallback, isSelfLink) {
+    if (isSelfLink) {
+      $element.addClass("self-link");
+    } else if (suggestion) {
       $element.attr("href", suggestion);
     } else if (enUSFallback) {
       $element.attr("href", enUSFallback);
@@ -78,16 +80,14 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
     suggestion = null,
     explanation = null,
     enUSFallback = null,
-    mutate = true
+    isSelfLink = false
   ) {
     if (level === FLAW_LEVELS.IGNORE) {
       // Note, even if not interested in flaws, we still need to apply the
       // suggestion. For example, in production builds, we don't care about
       // logging flaws, but because not all `broken_links` flaws have been
       // manually fixed at the source.
-      if (mutate) {
-        mutateLink($element);
-      }
+      mutateLink($element, suggestion, enUSFallback, isSelfLink);
       return;
     }
     explanation = explanation || `Can't resolve ${href}`;
@@ -111,9 +111,7 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       }
       const id = `link${flaws.length + 1}`;
       const fixable = !!suggestion;
-      if (mutate) {
-        mutateLink($element, suggestion, enUSFallback);
-      }
+      mutateLink($element, suggestion, enUSFallback, isSelfLink);
       $element.attr("data-flaw", id);
       flaws.push(
         Object.assign({ explanation, id, href, suggestion, fixable }, match)
@@ -208,6 +206,7 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
         );
       }
     } else if (hrefNormalized === doc.mdn_url) {
+      console.log("SELF LINK!");
       if (hrefSplit.length > 1) {
         addBrokenLink(
           a,
@@ -216,7 +215,7 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
           `#${hrefSplit[1]}`,
           "No need for the pathname in anchor links if it's the same page",
           null,
-          false
+          true
         );
       } else {
         addBrokenLink(
@@ -226,7 +225,7 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
           null,
           "Link points to the page it's already on",
           null,
-          false
+          true
         );
       }
     } else if (href.startsWith("/") && !href.startsWith("//")) {
