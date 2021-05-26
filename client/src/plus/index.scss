@@ -3,7 +3,6 @@
 .page-content-container.plus {
   $grid-gap: 12px;
   $page-width: 1160px;
-  $section-padding: 90px;
   $gradient-accent: linear-gradient(90deg, #1bd9e0, #41f2c8);
   $gradient-secondary: linear-gradient(90deg, #8565ff, #527ee5);
 
@@ -77,6 +76,8 @@
 
       p {
         line-height: 160%;
+
+        font-size: 18px;
 
         b {
           font-weight: 500;
@@ -321,7 +322,11 @@
 
     section {
       height: 100%;
-      padding: $section-padding 0px;
+      padding: 45px 0px;
+
+      @media #{$mq-tablet-and-up} {
+        padding: 90px 0px;
+      }
 
       .feature-wrapper {
         margin: auto;
