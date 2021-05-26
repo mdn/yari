@@ -489,6 +489,10 @@
             margin-bottom: -24px;
             background-image: url("./svgs/premiumfeatures.svg");
 
+            @media #{$mq-tablet-and-up} {
+              top: -80px;
+            }
+
             @media #{$mq-small-desktop-and-up} {
               height: calc(450px * 1.11);
               width: 450px;
