@@ -1126,6 +1126,7 @@ test("sign in page", () => {
   expect($("title").text()).toContain("Sign in");
   expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
   expect($('meta[property="og:title"]').attr("content")).toBe("Sign in");
+  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
 test("French sign in page", () => {
@@ -1148,6 +1149,7 @@ test("sign up page", () => {
   const $ = cheerio.load(html);
   expect($("h1").text()).toContain("Sign in to MDN Web Docs");
   expect($("title").text()).toContain("Sign up");
+  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
 test("settings page", () => {
@@ -1158,6 +1160,7 @@ test("settings page", () => {
   const $ = cheerio.load(html);
   expect($("h1").text()).toBe("Account settings");
   expect($("title").text()).toContain("Account settings");
+  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 
   const jsonFile = path.join(builtFolder, "index.json");
   const data = JSON.parse(fs.readFileSync(jsonFile));
@@ -1166,6 +1169,16 @@ test("settings page", () => {
   const possibleLocale = data.possibleLocales.find((p) => p.locale === "en-US");
   expect(possibleLocale.English).toBe("English (US)");
   expect(possibleLocale.native).toBe("English (US)");
+});
+
+test("plus page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "plus");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("title").text()).toContain("Plus");
+  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
 test("bcd table extraction followed by h3", () => {
@@ -1590,4 +1603,13 @@ test("homepage links and flaws", () => {
   expect(map.get("/JA/").suggestion).toBe("/ja/");
   expect(map.get("/ZH-CN").suggestion).toBe("/zh-CN/");
   expect(map.get("/notalocale/").suggestion).toBeFalsy();
+});
+
+test("built search-index.json (en-US)", () => {
+  const searchIndexFile = path.join(buildRoot, "en-us", "search-index.json");
+  const searchIndex = JSON.parse(fs.readFileSync(searchIndexFile));
+  const urlToTitle = new Map(searchIndex.map((o) => [o.url, o.title]));
+  expect(urlToTitle.get("/en-US/docs/Web/Foo")).toBe("<foo>: A test tag");
+  // an archived page should not be in there.
+  expect(urlToTitle.has("/en-US/docs/XUL")).toBeFalsy();
 });

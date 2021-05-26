@@ -61,6 +61,7 @@ const ACTIVE_LOCALES = new Set([
   "fr",
   "ja",
   "ko",
+  "pt-br",
   "ru",
   "zh-cn",
   "zh-tw",
@@ -74,6 +75,8 @@ const scriptSrcValues = [
   "www.google-analytics.com/analytics.js",
   "'sha256-JEt9Nmc3BP88wxuTZm9aKNu87vEgGmKW1zzy/vb1KPs='", // polyfill check
   "polyfill.io/v3/polyfill.min.js",
+  "assets.codepen.io",
+  "production-assets.codepen.io",
 ];
 const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
@@ -93,6 +96,7 @@ const CSP_DIRECTIVES = {
     "yari-demos.stage.mdn.mozit.cloud",
     "jsfiddle.net",
     "www.youtube-nocookie.com",
+    "codepen.io",
   ],
   "img-src": [
     "'self'",
