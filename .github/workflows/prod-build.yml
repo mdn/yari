@@ -164,8 +164,7 @@ jobs:
           BUILD_SPEEDCURVE_LUX_ID: 108906238
 
           # This enables the Plus call-to-action banner and the Plus landing page
-          # (deliberately commented out until May 25)
-          # REACT_APP_ENABLE_PLUS: true
+          REACT_APP_ENABLE_PLUS: true
 
         run: |
           if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
