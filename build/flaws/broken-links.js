@@ -206,7 +206,6 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
         );
       }
     } else if (hrefNormalized === doc.mdn_url) {
-      console.log("SELF LINK!");
       if (hrefSplit.length > 1) {
         addBrokenLink(
           a,
