@@ -33,12 +33,13 @@ function Layout({ pageType, children }) {
   return (
     <>
       <A11yNav />
+      {!isServer && <Banner />}
       <div className={`page-wrapper ${pageType}`}>
         <Header />
         {children}
       </div>
       <Footer />
-      {!isServer && <Banner />}
+
       {/* Shown on mobile when main navigation is expanded to provide a clear distinction between the foreground menu and the page content */}
       <div className="page-overlay hidden"></div>
     </>

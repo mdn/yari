@@ -1,7 +1,19 @@
 <%
-var locale = env.locale;
+// Inserts a notecards about this feature being available in Web Workers.
+//
+// Parameters:
+//
+//  $0 - workerType (optional)
+//
+// The optional first argument has to be one of the ['notservice'].
+//
+//  {{AvailableInWorkers}}
+//  {{AvailableInWorkers("notservice")}}
+//
 
-var note = mdn.localString({
+const locale = env.locale;
+
+const note = mdn.localString({
     "en-US": "Note:",
     "de": "Hinweis:",
     "es": "Nota:",
@@ -11,18 +23,32 @@ var note = mdn.localString({
     "ru": "Примечание:",
 });
 
-var defaultText = mdn.localString({
-  "en-US": "This feature is available in <a href=\"/" + locale + "/docs/Web/API/Web_Workers_API\">Web Workers</a>.",
-  "zh-CN": "此特性在 <a href=\"/" + locale + "/docs/Web/API/Web_Workers_API\">Web Worker</a> 中可用。",
-  "de": "Dieses Feature ist in <a href=\"/" + locale + "/docs/Web/API/Web_Workers_API\">Web Workers</a> verfügbar.",
-  "es": "Esta característica está disponible en <a href=\"/" + locale + "/docs/Web/API/Web_Workers_API\">Web Workers</a>.",
-  "fr": "Cette fonctionnalité est disponible via les <a href=\"/" + locale + "/docs/Web/API/Web_Workers_API\">Web Workers</a>.",
-  "ja": "この機能は <a href=\"/" + locale + "/docs/Web/API/Web_Workers_API\">Web Worker</a> 内で利用可能です。",
-  "ko": "이 기능은 <a href=\"/" + locale + "/docs/Web/API/Web_Workers_API\">Web Worker</a>에서 사용할 수 있습니다.",
-  "ru": "Эта возможность доступна в <a href=\"/ru/docs/Web/API/Web_Workers_API\">Web Workers</a>."
+const textDefault = mdn.localString({
+  "en-US": `This feature is available in <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>`,
+  "zh-CN": `此特性在 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a> 中可用`,
+  "de": `Dieses Feature ist in <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a> verfügbar`,
+  "es": `Esta característica está disponible en <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>`,
+  "fr": `Cette fonctionnalité est disponible via les <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>`,
+  "ja": `この機能は <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a> 内で利用可能です`,
+  "ko": `이 기능은 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a>에서 사용할 수 있습니다`,
+  "ru": `Эта возможность доступна в <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>`
 });
 
-var text = $0 || defaultText;
+const textServiceWorkers = mdn.localString({
+  "en-US": `This feature is available in <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>, except for <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Workers</a>`,
+})
+
+const workerType = $0;
+
+let text = "";
+
+if (workerType === "notservice") {
+  text = textServiceWorkers;
+} else if (workerType) {
+  throw new Error(`'${workerType}' is not a recognized argument to this macro`);
+} else {
+  text = textDefault;
+}
 
 %>
 

@@ -133,6 +133,12 @@ def post_about_dangerous_content(
         external_urls = defaultdict(int)
         for node in tree.css("a[href]"):
             href = node.attributes.get("href")
+            # If you have `<a href="">bla</a>` it will match the above CSS selector.
+            # But when iterated over, `node.attributes.get("href")` will
+            # become `None`, not `""`.
+            if not href:
+                continue
+
             href = href.split("#")[0]
 
             # We're only interested in external URLs at the moment

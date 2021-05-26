@@ -15,7 +15,7 @@ if ($1 && $1.length > 0) {
 }
 
 wiki.ensureExistence(pagePath);
-const samplePath = pagePath + '/_samples_/' + web.slugify(web.safeDecodeURIComponent($0));
+const samplePath = `${pagePath}/_sample_.${web.slugify(web.safeDecodeURIComponent($0))}.html`;
 
 let url;
 if (env.live_samples.base_url.includes('://')) {
