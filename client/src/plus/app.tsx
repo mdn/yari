@@ -4,6 +4,7 @@ import useSWR from "swr";
 import "./fonts/metropolis.css";
 import "./fonts/inter.css";
 import "./index.scss";
+import { useGA } from "../ga-context";
 import { LandingPageSurvey } from "./landing-page-survey";
 
 const API_URL = "/api/v1/plus/landing-page/variant/";
@@ -27,6 +28,42 @@ export default function App() {
       revalidateOnFocus: false,
     }
   );
+
+  const ga = useGA();
+  const surveyRef = React.createRef<HTMLDivElement>();
+  const [triggeredGASurveyIntersection, setTriggeredGASurveyIntersection] =
+    React.useReducer(() => true, false);
+  React.useEffect(() => {
+    try {
+      let observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setTriggeredGASurveyIntersection();
+          }
+        }
+      });
+      if (surveyRef.current) {
+        observer.observe(surveyRef.current);
+      }
+      return () => {
+        observer.disconnect();
+      };
+    } catch (error) {
+      console.warn(
+        `Error settings up IntersectionObserver (${error.toString()})`
+      );
+    }
+  }, [surveyRef]);
+  React.useEffect(() => {
+    if (triggeredGASurveyIntersection) {
+      ga("send", {
+        hitType: "event",
+        eventCategory: "Plus Landing page",
+        eventAction: "Intersection observed",
+        eventLabel: "waitlist",
+      });
+    }
+  }, [triggeredGASurveyIntersection, ga]);
 
   const [showDeepDive, setShowDeepDive] = React.useState(false);
 
@@ -424,7 +461,12 @@ export default function App() {
           </section>
         )}
 
-        <section className="purple-bg" id="waitlist" style={{ zIndex: 1001 }}>
+        <section
+          className="purple-bg"
+          id="waitlist"
+          style={{ zIndex: 1001 }}
+          ref={surveyRef}
+        >
           <div className="feature-wrapper waitlist">
             {error ? (
               <>
