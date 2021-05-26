@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
+import { Loading } from "../ui/atoms/loading";
 import { DISABLE_AUTH } from "../constants";
 import { useUserData } from "../user-context";
 import { useLocale } from "../hooks";
@@ -69,7 +70,7 @@ export default function SettingsApp({ ...appProps }) {
   if (!userData) {
     // The XHR request hasn't finished yet so we don't know if the user is
     // signed in or not.
-    return <Loading />;
+    return <Loading message="Loading user data…" />;
   }
   if (!userData.isAuthenticated) {
     return <NotSignedIn />;
@@ -89,7 +90,7 @@ export default function SettingsApp({ ...appProps }) {
   }
 
   if (!data) {
-    return <Loading />;
+    return <Loading message="Loading user settings…" />;
   }
 
   if (settingsError) {
@@ -133,10 +134,6 @@ function AuthDisabled() {
       <p>Authentication and the user settings app is currently disabled.</p>
     </div>
   );
-}
-
-function Loading() {
-  return <p style={{ minHeight: 200 }}>Loading...</p>;
 }
 
 function NotSignedIn() {
