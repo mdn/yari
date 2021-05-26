@@ -1,16 +1,20 @@
-const fs = require("fs");
-
+import * as fs from "fs";
 const fm = require("front-matter");
-const program = require("@caporal/core").default;
-const chalk = require("chalk");
-const cliProgress = require("cli-progress");
+import { program } from "@caporal/core";
+import * as chalk from "chalk";
+import * as cliProgress from "cli-progress";
+import { Document } from "../content";
 
-const { Document } = require("../content");
-const h2m = require("./h2m");
-const { m2h, withFm } = require(".");
+import { h2m } from "./h2m";
+import { m2h, withFm } from ".";
 
 function tryOrExit(f) {
-  return async ({ options = {}, ...args }) => {
+  return async ({
+    options = {},
+    ...args
+  }: {
+    options: { verbose?: boolean; v?: boolean };
+  }) => {
     try {
       await f({ options, ...args });
     } catch (error) {
@@ -22,8 +26,8 @@ function tryOrExit(f) {
   };
 }
 
-const toCountMap = (occurences) => {
-  const countMap = new Map();
+const toCountMap = (occurences: string[]) => {
+  const countMap = new Map<string, number>();
   for (const key of occurences) {
     if (!countMap.has(key)) {
       countMap.set(key, 0);
@@ -74,7 +78,7 @@ program
           unhandledReportLines.push(
             doc.url,
             ...Array.from(toCountMap(unhandled))
-              .sort(([, c1], [, c2]) => c1 > c2)
+              .sort(([, c1], [, c2]) => (c1 > c2 ? -1 : 1))
               .map(([key, count]) => `${key} (${count})`),
             ""
           );
@@ -85,7 +89,7 @@ program
             withFm(frontmatter, markdown)
           );
           if (options.mode == "replace") {
-            fs.rmSync(doc.fileInfo.path);
+            fs.unlinkSync(doc.fileInfo.path);
           }
         }
       }

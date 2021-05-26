@@ -3,8 +3,7 @@ const toText = require("hast-util-to-text");
 const phrasing = require("mdast-util-phrasing");
 const trim = require("trim-trailing-lines");
 
-const { h, wrapText } = require("../utils");
-
+import { h, wrapText } from "../utils";
 /*
 These functions are taken from https://github.com/syntax-tree/hast-util-to-mdast
 Unfortunately the library does not export those functions, so I needed to copy them.
@@ -12,7 +11,7 @@ Some have been slightly refactored for readability.
  */
 
 // Wrap all runs of mdast phrasing content in `paragraph` nodes.
-function runs(nodes, onphrasing, onnonphrasing) {
+function runs(nodes, onphrasing = null, onnonphrasing = null) {
   const nonphrasing = onnonphrasing || ((n) => n);
   const flattened = flatten(nodes);
   let result = [];
@@ -89,7 +88,7 @@ function flatten(nodes) {
   return flattened;
 }
 
-const wrap = (nodes) =>
+export const wrap = (nodes) =>
   runs(nodes, (nodes) => {
     const head = nodes[0];
     if (
@@ -105,7 +104,7 @@ const wrap = (nodes) =>
 
 const prefix = "language-";
 
-function code(node, opts) {
+export function code(node, opts) {
   var children = node.children;
   var index = -1;
   var classList;
@@ -139,5 +138,3 @@ function code(node, opts) {
     meta: null,
   });
 }
-
-module.exports = { code, wrap };

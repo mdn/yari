@@ -1,15 +1,18 @@
-const toHTML = require("hast-util-to-html");
+import * as toHTML from "hast-util-to-html";
 const minify = require("rehype-minify-whitespace");
+import handlers from "./handlers";
+import { UnexpectedElementError } from "./handlers/to-text";
 
-const handlers = require("./handlers");
-const { UnexpectedElementError } = require("./handlers/to-text");
-const { h, wrapText } = require("./utils");
+import { asArray, Element, h, Options, wrapText } from "./utils";
 
 // These tags will bubble errors up when they occur, so that not only them,
 // but also their parents, get turned into HTML
-const CHILD_TAGS = ["li", "thead", "tbody", "th", "tr", "td"];
+const CHILD_TAGS = ["li", "thead", "tbody", "th", "tr", "td"] as const;
 
-const toSelector = ({ tagName, properties: { id, className, ...rest } }) =>
+const toSelector = ({
+  tagName,
+  properties: { id, className, ...rest },
+}: Element) =>
   [
     tagName,
     id ? "#" + id : "",
@@ -19,9 +22,11 @@ const toSelector = ({ tagName, properties: { id, className, ...rest } }) =>
       .join(""),
   ].join("");
 
-const asArray = (v) => (v ? (Array.isArray(v) ? v : [v]) : []);
-
-const isExhaustive = (source, required, optional) => {
+const isExhaustive = (
+  source: string[],
+  required: string | string[],
+  optional: string | string[] | ((str: string) => boolean)
+) => {
   const sourceSet = new Set(source);
   for (const key of asArray(required)) {
     if (!sourceSet.delete(key)) {
@@ -69,18 +74,21 @@ const isHandled = (node, check) => {
   );
 };
 
-function transformNode(node, opts = {}) {
+function transformNode(node, options: Options = {}) {
   const selector = node.type === "element" && toSelector(node);
   const unhandled = [];
 
-  function transformChildren(node, subOpts = {}) {
-    const newOpts = { ...opts, ...subOpts };
+  function transformChildren(node, subOptions: Options = {}) {
+    const newOptions = { ...options, ...subOptions };
     if (node.value) {
-      return h(node, "text", wrapText(node.value, newOpts));
+      return h(node, "text", wrapText(node.value, newOptions));
     } else {
       return (Array.isArray(node) ? node : node.children || [])
         .map((child) => {
-          const [transformed, childUnhandled] = transformNode(child, newOpts);
+          const [transformed, childUnhandled] = transformNode(
+            child,
+            newOptions
+          );
           unhandled.push(...childUnhandled);
           return transformed;
         })
@@ -93,7 +101,7 @@ function transformNode(node, opts = {}) {
   if (handler) {
     const handle = handler[1];
     try {
-      transformed = handle(node, transformChildren, opts);
+      transformed = handle(node, transformChildren, options);
     } catch (error) {
       if (CHILD_TAGS.includes(node.tagName)) {
         throw error;
@@ -109,7 +117,7 @@ function transformNode(node, opts = {}) {
   }
 
   if (
-    opts.noBlocks &&
+    options.noBlocks &&
     !(Array.isArray(transformed) ? transformed : [transformed]).every(
       (node) =>
         node &&
@@ -144,7 +152,7 @@ function toMdast(tree, options) {
 // (bridge-mode).
 // Without destination, returns the mdast tree: further plugins run on that tree
 // (mutate-mode).
-function transform(destination, options) {
+export function transform(destination, options = null) {
   if (destination && !destination.process && !options) {
     options = destination;
     destination = null;
@@ -156,5 +164,3 @@ function transform(destination, options) {
       }
     : (node) => toMdast(node, options);
 }
-
-module.exports = { transform };

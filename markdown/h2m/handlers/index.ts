@@ -1,11 +1,13 @@
-const toHTML = require("hast-util-to-html");
+import * as toHTML from "hast-util-to-html";
 const trimTrailingLines = require("trim-trailing-lines");
+import type { Node } from "unist";
 
-const { h, wrapText } = require("../utils");
-const { code, wrap } = require("./rehype-remark-utils");
-const cards = require("./cards");
-const tables = require("./tables");
-const { toText, UnexpectedElementError } = require("./to-text");
+import { asArray, Element, h, wrapText } from "../utils";
+import cards from "./cards";
+import tables from "./tables";
+import { code, wrap } from "./rehype-remark-utils";
+import { toText, UnexpectedElementError } from "./to-text";
+import { QueryAndTransform } from "./utils";
 
 /**
  * Some nodes like **strong** or __emphasis__ can't have leading/trailing spaces
@@ -72,16 +74,16 @@ const toDefinitionItem = (node, terms, definitions) => {
   );
 };
 
-module.exports = [
-  [(node) => node.type == "root", (node, t) => h(node, "root", t(node))],
+export default [
+  [(node: Node) => node.type == "root", (node, t) => h(node, "root", t(node))],
 
   [
-    (node) => node.type == "text",
+    (node: Node) => node.type == "text",
     (node, t, opts) => h(node, "text", wrapText(node.value, opts)),
   ],
 
   [
-    (node) => node.type == "comment",
+    (node: Node) => node.type == "comment",
     (node, t, opts) =>
       h(node, "html", "<!--" + wrapText(node.value, opts) + "-->"),
   ],
@@ -166,7 +168,7 @@ module.exports = [
     { is: ["ul", "ol"], canHaveClass: ["threecolumns"] },
     function list(node, t) {
       const ordered = node.tagName == "ol";
-      const children = t(node).map((child) =>
+      const children = asArray(t(node)).map((child) =>
         child.type === "listItem"
           ? child
           : {
@@ -202,14 +204,16 @@ module.exports = [
       // inline code currently has padding on MDN, thus multiple adjacent tags
       // would appear to have a space in between, hence we don't convert to it.
       node.children.length == 1 &&
-      node.children.some((child) => ["a", "strong"].includes(child.tagName)),
+      node.children.some((child: Element) =>
+        ["a", "strong"].includes(child.tagName)
+      ),
     (node) =>
       node.children.map((child) => {
         switch (child.tagName) {
           case "a":
             return h(child, "link", h(node, "inlineCode", toText(child)), {
-              title: child.properties.title || null,
-              url: child.properties.href,
+              title: (child.properties as any).title || null,
+              url: (child.properties as any).href,
             });
 
           case "strong":
@@ -288,7 +292,10 @@ module.exports = [
     },
   ],
 
-  [{ is: "math", canHave: "display" }, (node) => h(node, "html", toHTML(node))],
+  [
+    { is: "math", canHave: "display", canHaveClass: 23 },
+    (node) => h(node, "html", toHTML(node)),
+  ],
 
   ["blockquote", (node, t) => h(node, "blockquote", wrap(t(node)))],
 
@@ -305,7 +312,7 @@ module.exports = [
     "q",
     (node, t) => [
       { type: "text", value: '"' },
-      ...t(node),
+      ...asArray(t(node)),
       { type: "text", value: '"' },
     ],
   ],
@@ -317,9 +324,9 @@ module.exports = [
       let terms = [];
       for (const child of node.children) {
         if (child.tagName == "dt") {
-          terms.push(h(node, "paragraph", t(child)));
+          terms.push(h(node, "paragraph", t(child as any)));
         } else if (child.tagName == "dd" && terms.length > 0) {
-          children.push(toDefinitionItem(node, terms, t(child)));
+          children.push(toDefinitionItem(node, terms, t(child as any)));
           terms = [];
         } else {
           throw new UnexpectedElementError(child);
@@ -345,4 +352,4 @@ module.exports = [
         : t(node);
     },
   ]),
-];
+] as QueryAndTransform[];

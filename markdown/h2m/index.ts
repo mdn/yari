@@ -1,15 +1,16 @@
-const cheerio = require("cheerio");
-const unified = require("unified");
-const parse = require("rehype-parse");
-const remarkPrettier = require("remark-prettier");
-const gfm = require("remark-gfm");
-
-const {
+import * as cheerio from "cheerio";
+import * as unified from "unified";
+import * as parse from "rehype-parse";
+import * as remarkPrettier from "remark-prettier";
+import * as gfm from "remark-gfm";
+import {
   extractSections,
   extractSummary,
-} = require("../../build/document-extractor");
-const { decodeKS, encodeKS } = require("../utils");
-const { transform } = require("./transform");
+} from "../../build/document-extractor";
+
+import { decodeKS, encodeKS } from "../utils";
+
+import { transform } from "./transform";
 
 const getTransformProcessor = (options) =>
   unified()
@@ -18,7 +19,7 @@ const getTransformProcessor = (options) =>
     .use(gfm)
     .use(remarkPrettier, { report: false, options: { proseWrap: "always" } });
 
-module.exports = async function h2m(html) {
+export async function h2m(html) {
   const encodedHTML = encodeKS(html);
   const summary = extractSummary(
     extractSections(cheerio.load(`<div id="_body">${encodedHTML}</div>`))[0]
@@ -26,7 +27,7 @@ module.exports = async function h2m(html) {
 
   let unhandled;
   const file = await getTransformProcessor({ summary })
-    .use(() => ([node, u]) => {
+    .use(() => ([node, u]: any) => {
       unhandled = u;
       return node;
     })
@@ -39,4 +40,4 @@ module.exports = async function h2m(html) {
       .join("\n"),
     unhandled,
   ];
-};
+}

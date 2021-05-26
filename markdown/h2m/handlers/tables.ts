@@ -1,7 +1,8 @@
-const convert = require("hast-util-is-element/convert");
-const visit = require("unist-util-visit");
+import { QueryAndTransform } from "./utils";
 
-const { h } = require("../utils");
+import { h } from "../utils";
+import * as visit from "unist-util-visit";
+const convert = require("hast-util-is-element/convert");
 
 const thead = convert("thead");
 const tr = convert("tr");
@@ -126,7 +127,7 @@ function toCells(children, info) {
   return nodes;
 }
 
-module.exports = [
+export default [
   [{ is: "caption" }, (node, t) => t(node)],
 
   [
@@ -147,4 +148,4 @@ module.exports = [
     ["th", "td"],
     (node, t) => h(node, "tableCell", t(node, { shouldWrap: true })),
   ],
-];
+] as QueryAndTransform[];

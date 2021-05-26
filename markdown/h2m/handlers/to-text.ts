@@ -3,9 +3,10 @@
  * The difference is that it is stricter and will only turn a couple of
  * elements (without attributes) into text and throw an error otherwise
  */
-const repeat = require("repeat-string");
 const convert = require("hast-util-is-element/convert");
+const repeat = require("repeat-string");
 const findAfter = require("unist-util-find-after");
+import type { Element } from "../utils";
 
 const searchLineFeeds = /\n/g;
 const searchTabOrSpaces = /[\t ]+/g;
@@ -15,7 +16,8 @@ const p = convert("p");
 const cell = convert(["th", "td"]);
 const row = convert("tr");
 
-class UnexpectedElementError extends Error {
+export class UnexpectedElementError extends Error {
+  element: Element;
   constructor(node) {
     super("unexpected element");
     this.element = node;
@@ -29,7 +31,7 @@ const isBlock = convert(["html", "body", "div", "p"]);
 // <https://html.spec.whatwg.org/#the-innertext-idl-attribute>
 // Note that we act as if `node` is being rendered, and as if we’re a
 // CSS-supporting user agent.
-function toText(node, options = { throw: true }) {
+export function toText(node, options = { throw: true }) {
   const children = node.children || [];
   const block = isBlock(node);
   const whiteSpace = inferWhiteSpace(node, {});
@@ -123,7 +125,7 @@ function innerTextCollection(node, index, parent, options) {
     return [
       options.whiteSpace === "normal"
         ? collectText(node, options)
-        : collectPreText(node, options),
+        : collectPreText(node),
     ];
   }
 
@@ -384,5 +386,3 @@ function inferWhiteSpace(node, options) {
       return inherit;
   }
 }
-
-module.exports = { UnexpectedElementError, toText };
