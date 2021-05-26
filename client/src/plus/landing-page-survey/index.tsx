@@ -31,7 +31,13 @@ function getSessionStorageData(key: string) {
   }
 }
 
-export function LandingPageSurvey({ variant }: { variant: number }) {
+export function LandingPageSurvey({
+  variant,
+  onJoined,
+}: {
+  variant: number;
+  onJoined?: () => void;
+}) {
   const [email, setEmail] = React.useState(
     getSessionStorageData(SESSIONSTORAGE_KEY_EMAIL) || ""
   );
@@ -182,6 +188,9 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
             try {
               await sendWaitlistSubmission(email.trim());
               setWaitlistSubmissionError(null);
+              if (onJoined) {
+                onJoined();
+              }
               setPage("features");
             } catch (error) {
               setWaitlistSubmissionError(error);

@@ -4,6 +4,7 @@ import useSWR from "swr";
 import "./fonts/metropolis.css";
 import "./fonts/inter.css";
 import "./index.scss";
+import { useGA } from "../ga-context";
 import { LandingPageSurvey } from "./landing-page-survey";
 
 const API_URL = "/api/v1/plus/landing-page/variant/";
@@ -28,14 +29,64 @@ export default function App() {
     }
   );
 
+  const ga = useGA();
+  const surveyRef = React.createRef<HTMLDivElement>();
+  const [triggeredGASurveyIntersection, setTriggeredGASurveyIntersection] =
+    React.useReducer(() => true, false);
+  React.useEffect(() => {
+    try {
+      let observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setTriggeredGASurveyIntersection();
+          }
+        }
+      });
+      if (surveyRef.current) {
+        observer.observe(surveyRef.current);
+      }
+      return () => {
+        observer.disconnect();
+      };
+    } catch (error) {
+      console.warn(
+        `Error settings up IntersectionObserver (${error.toString()})`
+      );
+    }
+  }, [surveyRef]);
+  React.useEffect(() => {
+    if (triggeredGASurveyIntersection) {
+      ga("send", {
+        hitType: "event",
+        eventCategory: "Plus Landing page",
+        eventAction: "Intersection observed",
+        eventLabel: "waitlist",
+      });
+    }
+  }, [triggeredGASurveyIntersection, ga]);
+
   const [showDeepDive, setShowDeepDive] = React.useState(false);
+
+  const [hasSubmittedSurvey, setHasSubmittedSurvey] = React.useState(false);
 
   return (
     <div className="plus">
       <main>
-        <a href="#waitlist" className="mobile-cta">
-          Join the waitlist
-        </a>
+        {!hasSubmittedSurvey && (
+          <a
+            href="#waitlist"
+            className="mobile-cta"
+            onClick={(event) => {
+              const element = document.querySelector("#waitlist");
+              if (element) {
+                event.preventDefault();
+                element.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
+          >
+            Join the waitlist
+          </a>
+        )}
         <header>
           <div className="header-wrapper">
             <div className="header-content">
@@ -48,7 +99,6 @@ export default function App() {
                 technical deep dives written by industry experts and powerful
                 new features to personalize your MDN experience.
               </p>
-
               {data && data.variant && (
                 <a href="#waitlist" className="button">
                   Join the waitlist
@@ -424,7 +474,12 @@ export default function App() {
           </section>
         )}
 
-        <section className="purple-bg" id="waitlist" style={{ zIndex: 1001 }}>
+        <section
+          className="purple-bg"
+          id="waitlist"
+          style={{ zIndex: 1001 }}
+          ref={surveyRef}
+        >
           <div className="feature-wrapper waitlist">
             {error ? (
               <>
@@ -438,7 +493,16 @@ export default function App() {
               </>
             ) : (
               data &&
-              data.variant && <LandingPageSurvey variant={data.variant} />
+              data.variant && (
+                <LandingPageSurvey
+                  variant={data.variant}
+                  onJoined={() => {
+                    // This fires when someone has submitted their email on the first
+                    // portion of the survey.
+                    setHasSubmittedSurvey(true);
+                  }}
+                />
+              )
             )}
           </div>
         </section>
