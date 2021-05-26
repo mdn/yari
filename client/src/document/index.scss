@@ -93,6 +93,13 @@ a.new {
     }
   }
 
+  a.self-link {
+    font-weight: bold;
+    // font-style: italic;
+    text-decoration: none;
+    color: black;
+  }
+
   h2,
   h3 {
     margin-bottom: ($base-unit * 2);
