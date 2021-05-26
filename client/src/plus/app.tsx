@@ -46,7 +46,7 @@ export default function App() {
               <p>
                 <b>Coming soon</b> — a new premium service with monthly
                 technical deep dives written by industry experts and powerful
-                new features to personalize and tailor your MDN experience.
+                new features to personalize your MDN experience.
               </p>
 
               {data && data.variant && (
@@ -64,7 +64,7 @@ export default function App() {
           <div className="feature-wrapper">
             <div className="section-feature-2-col">
               <div>
-                <h2>What is MDN Plus?</h2>
+                <h2>What is MDN Plus</h2>
                 <p>
                   MDN Plus builds on top of your much-loved core content,
                   providing constantly-updated guides to highly-requested
@@ -75,12 +75,14 @@ export default function App() {
               </div>
 
               <div>
-                <h2>What does this mean for MDN Web Docs?</h2>
+                <h2>What does this mean for MDN Web Docs</h2>
                 <p>
                   <b>Nothing</b> is changing with the existing MDN Web Docs
                   content — this content will continue to be free and available
-                  to everyone. Again,<b> nothing is changing </b> with the
-                  existing MDN Web Docs!
+                  to everyone. We want to provide extra value through premium
+                  content and features to help make MDN self-sustaining, on a
+                  completely opt-in basis. Again,<b> nothing is changing </b>{" "}
+                  with the existing MDN Web Docs!
                 </p>
               </div>
             </div>
@@ -136,14 +138,14 @@ export default function App() {
                 <hr />
                 <ul>
                   <li>This three part series includes:</li>
-                  <li>+ Planning for browser support</li>
+                  <li>Planning for browser support</li>
                   <li>
                     {" "}
                     <span className="magenta-bg">
-                      + Your browser support toolkit
+                      Your browser support toolkit
                     </span>
                   </li>
-                  <li>+ Practical browser support</li>
+                  <li>Practical browser support</li>
                 </ul>
               </div>
               <div>
@@ -285,7 +287,7 @@ export default function App() {
                     <p>
                       Introducing a Feature Query into our demo means that we
                       can wrap up all of our grid code with a test to see if the
-                      browser supports `display: grid`.
+                      browser supports <code>display: grid</code>.
                     </p>
                     <div className="code-snippet">
                       <div className="codepen">
