@@ -136,7 +136,7 @@
     "ignore-loader": "^0.1.2",
     "jest-environment-jsdom-sixteen": "^2.0.0",
     "jest-junit-reporter": "^1.1.0",
-    "jest-puppeteer": "5.0.3",
+    "jest-puppeteer": "5.0.4",
     "jsdom": "^16.6.0",
     "node-dev": "7.0.0",
     "pegjs": "^0.10.0",
