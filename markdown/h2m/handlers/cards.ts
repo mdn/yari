@@ -28,11 +28,10 @@ export default [
           );
         },
         (node, t) =>
-          h(node, "blockquote", [
-            h(node, "paragraph", [
-              h(node, "strong", [
+          h("blockquote", [
+            h("paragraph", [
+              h("strong", [
                 h(
-                  node,
                   "text",
                   className[0].toUpperCase() + className.slice(1) + ":"
                 ),
@@ -50,11 +49,11 @@ export default [
       ((node.properties.className as string[]) || "").includes("callout") &&
       node.children[0].tagName == "h4",
     (node, t) =>
-      h(node, "blockquote", [
-        h(node, "paragraph", [
-          h(node, "strong", [h(node, "text", "Callout:")]),
-          h(node, "text", " "),
-          h(node, "strong", [h(node, "text", toText(node.children[0]))]),
+      h("blockquote", [
+        h("paragraph", [
+          h("strong", [h("text", "Callout:")]),
+          h("text", " "),
+          h("strong", [h("text", toText(node.children[0]))]),
         ]),
         ...asArray(t(node.children.slice(1) as any)),
       ]),

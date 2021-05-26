@@ -134,7 +134,7 @@ export default [
     { is: "table", canHaveClass: "standard-table" },
     (node, t) => {
       const info = inspect(node);
-      return h(node, "table", toRows(t(node, { noBlocks: true }), info), {
+      return h("table", toRows(t(node, { noBlocks: true }), info), {
         align: info.align,
       });
     },
@@ -142,10 +142,7 @@ export default [
 
   [["thead", "tbody"], (node, t) => t(node)],
 
-  ["tr", (node, t) => h(node, "tableRow", t(node))],
+  ["tr", (node, t) => h("tableRow", t(node))],
 
-  [
-    ["th", "td"],
-    (node, t) => h(node, "tableCell", t(node, { shouldWrap: true })),
-  ],
+  [["th", "td"], (node, t) => h("tableCell", t(node, { shouldWrap: true }))],
 ] as QueryAndTransform[];

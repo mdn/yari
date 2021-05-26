@@ -81,7 +81,7 @@ function transformNode(node, options: Options = {}) {
   function transformChildren(node, subOptions: Options = {}) {
     const newOptions = { ...options, ...subOptions };
     if (node.value) {
-      return h(node, "text", wrapText(node.value, newOptions));
+      return h("text", wrapText(node.value, newOptions));
     } else {
       return (Array.isArray(node) ? node : node.children || [])
         .map((child) => {
@@ -140,7 +140,7 @@ function transformNode(node, options: Options = {}) {
     throw new UnexpectedElementError(node);
   }
 
-  return [transformed || h(node, "html", toHTML(node)), unhandled];
+  return [transformed || h("html", toHTML(node)), unhandled];
 }
 
 function toMdast(tree, options) {

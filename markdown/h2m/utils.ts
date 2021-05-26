@@ -11,7 +11,7 @@ export type Options = Partial<{
 export const asArray = <T>(v: T | T[]) =>
   v ? (Array.isArray(v) ? v : [v]) : [];
 
-export const h = (node, type, children = null, props = {}) => ({
+export const h = (type: string, children = null, props = {}) => ({
   type,
   ...props,
   ...(typeof children === "string"
@@ -19,7 +19,6 @@ export const h = (node, type, children = null, props = {}) => ({
     : children && {
         children: Array.isArray(children) ? children : [children],
       }),
-  ...(node.position && { position: node.position }),
 });
 
 export const wrapText = (value, { shouldWrap }: Options) =>

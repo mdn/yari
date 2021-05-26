@@ -54,19 +54,18 @@ const extractSpacing = (node) => {
   ];
 };
 const toDefinitionItem = (node, terms, definitions) => {
-  const definitionStart = h(node, "text", ": ");
+  const definitionStart = h("text", ": ");
   if (definitions[0].type == "paragraph") {
     definitions[0].children.unshift(definitionStart);
   } else {
     definitions.unshift(definitionStart);
-    definitions = h(node, "paragraph", definitions);
+    definitions = h("paragraph", definitions);
   }
   return h(
-    node,
     "listItem",
     [
       ...terms,
-      h(node, "list", h(node, "listItem", definitions, { spread: false }), {
+      h("list", h("listItem", definitions, { spread: false }), {
         spread: false,
       }),
     ],
@@ -75,17 +74,16 @@ const toDefinitionItem = (node, terms, definitions) => {
 };
 
 export default [
-  [(node: Node) => node.type == "root", (node, t) => h(node, "root", t(node))],
+  [(node: Node) => node.type == "root", (node, t) => h("root", t(node))],
 
   [
     (node: Node) => node.type == "text",
-    (node, t, opts) => h(node, "text", wrapText(node.value, opts)),
+    (node, t, opts) => h("text", wrapText(node.value, opts)),
   ],
 
   [
     (node: Node) => node.type == "comment",
-    (node, t, opts) =>
-      h(node, "html", "<!--" + wrapText(node.value, opts) + "-->"),
+    (node, t, opts) => h("html", "<!--" + wrapText(node.value, opts) + "-->"),
   ],
 
   [["html", "head", "body"], (node, t) => wrap(t(node))],
@@ -97,7 +95,7 @@ export default [
       canHaveClass: ["example", "name", "highlight-spanned"],
     },
     (node, t) =>
-      h(node, "heading", t(node, { shouldWrap: true, singleLine: true }), {
+      h("heading", t(node, { shouldWrap: true, singleLine: true }), {
         depth: Number(node.tagName.charAt(1)) || 1,
       }),
   ],
@@ -107,7 +105,6 @@ export default [
     // TODO: attach noinclude to MD node
     (node) =>
       h(
-        node,
         "html",
         toHTML(
           (node.children || []).length == 1 && node.children[0].type == "text"
@@ -137,16 +134,16 @@ export default [
 
   [
     { is: "p", canHaveClass: ["brush:", "js"] },
-    (node, t) => h(node, "paragraph", t(node)),
+    (node, t) => h("paragraph", t(node)),
   ],
   [
     "br",
     (node, t, { shouldWrap, singleLine }) =>
       shouldWrap
         ? singleLine
-          ? h(node, "html", toHTML(node))
-          : h(node, "break")
-        : h(node, "text", "\n"),
+          ? h("html", toHTML(node))
+          : h("break")
+        : h("text", "\n"),
   ],
 
   [
@@ -158,7 +155,7 @@ export default [
       canHaveClass: ["link-https", "mw-redirect", "external", "external-icon"],
     },
     (node, t) =>
-      h(node, "link", t(node), {
+      h("link", t(node), {
         title: node.properties.title || null,
         url: node.properties.href,
       }),
@@ -178,7 +175,7 @@ export default [
               children: [child],
             }
       );
-      return h(node, "list", children, {
+      return h("list", children, {
         ordered,
         start: ordered ? node.properties.start || 1 : null,
         spread: false,
@@ -190,7 +187,7 @@ export default [
     { is: "li", canHave: "id" },
     (node, t) => {
       const content = wrap(t(node));
-      return h(node, "listItem", content, { spread: content.length > 1 });
+      return h("listItem", content, { spread: content.length > 1 });
     },
   ],
 
@@ -211,16 +208,16 @@ export default [
       node.children.map((child) => {
         switch (child.tagName) {
           case "a":
-            return h(child, "link", h(node, "inlineCode", toText(child)), {
+            return h("link", h("inlineCode", toText(child)), {
               title: (child.properties as any).title || null,
               url: (child.properties as any).href,
             });
 
           case "strong":
-            return h(child, "strong", h(node, "inlineCode", toText(child)));
+            return h("strong", h("inlineCode", toText(child)));
 
           default:
-            return h(node, "inlineCode", toText(child));
+            return h("inlineCode", toText(child));
         }
       }),
   ],
@@ -233,7 +230,6 @@ export default [
           ? node.children[0]
           : node;
       return h(
-        node,
         "inlineCode",
         trimTrailingLines(wrapText(toText(targetNode), opts))
       );
@@ -264,8 +260,8 @@ export default [
           ],
         },
         (node, t, opts) => [
-          h(node, "html", "<!-- prettier-ignore -->\n"),
-          h(node, "code", trimTrailingLines(wrapText(toText(node), opts)), {
+          h("html", "<!-- prettier-ignore -->\n"),
+          h("code", trimTrailingLines(wrapText(toText(node), opts)), {
             lang,
             meta: node.properties.className
               .filter((c) => c.startsWith("example-"))
@@ -284,7 +280,7 @@ export default [
     },
     (node) => {
       const { src, title, alt } = node.properties;
-      return h(node, "image", null, {
+      return h("image", null, {
         url: src,
         title: title || null,
         alt: alt || "",
@@ -294,19 +290,13 @@ export default [
 
   [
     { is: "math", canHave: "display", canHaveClass: 23 },
-    (node) => h(node, "html", toHTML(node)),
+    (node) => h("html", toHTML(node)),
   ],
 
-  ["blockquote", (node, t) => h(node, "blockquote", wrap(t(node)))],
+  ["blockquote", (node, t) => h("blockquote", wrap(t(node)))],
 
-  [
-    { is: ["i", "em"] },
-    (node, t) => extractSpacing(h(node, "emphasis", t(node))),
-  ],
-  [
-    { is: ["b", "strong"] },
-    (node, t) => extractSpacing(h(node, "strong", t(node))),
-  ],
+  [{ is: ["i", "em"] }, (node, t) => extractSpacing(h("emphasis", t(node)))],
+  [{ is: ["b", "strong"] }, (node, t) => extractSpacing(h("strong", t(node)))],
 
   [
     "q",
@@ -324,7 +314,7 @@ export default [
       let terms = [];
       for (const child of node.children) {
         if (child.tagName == "dt") {
-          terms.push(h(node, "paragraph", t(child as any)));
+          terms.push(h("paragraph", t(child as any)));
         } else if (child.tagName == "dd" && terms.length > 0) {
           children.push(toDefinitionItem(node, terms, t(child as any)));
           terms = [];
@@ -332,7 +322,7 @@ export default [
           throw new UnexpectedElementError(child);
         }
       }
-      return h(node, "list", children, { spread: false });
+      return h("list", children, { spread: false });
     },
   ],
 
@@ -348,7 +338,7 @@ export default [
         throw new UnexpectedElementError(node);
       }
       return node.tagName == "div" || node.tagName == "p"
-        ? h(node, "paragraph", t(node))
+        ? h("paragraph", t(node))
         : t(node);
     },
   ]),
