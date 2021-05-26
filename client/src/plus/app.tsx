@@ -62,9 +62,11 @@ export default function App() {
                 technical deep dives written by industry experts and powerful
                 new features to personalize your MDN experience.
               </p>
-              <a href="#waitlist" className="button">
-                Join the waitlist
-              </a>
+              {data && data.variant && (
+                <a href="#waitlist" className="button">
+                  Join the waitlist
+                </a>
+              )}
             </div>
             <div className="header-illustration">
               <div className="mandala" />
