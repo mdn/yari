@@ -138,14 +138,14 @@ export default function App() {
                 <hr />
                 <ul>
                   <li>This three part series includes:</li>
-                  <li>+ Planning for browser support</li>
+                  <li>Planning for browser support</li>
                   <li>
                     {" "}
                     <span className="magenta-bg">
-                      + Your browser support toolkit
+                      Your browser support toolkit
                     </span>
                   </li>
-                  <li>+ Practical browser support</li>
+                  <li>Practical browser support</li>
                 </ul>
               </div>
               <div>

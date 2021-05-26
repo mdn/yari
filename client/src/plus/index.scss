@@ -7,7 +7,6 @@
   $gradient-secondary: linear-gradient(90deg, #8565ff, #527ee5);
 
   @media #{$mq-tablet-and-up} {
-    $section-padding: 90px;
     $grid-gap: 64px;
   }
 
@@ -67,6 +66,13 @@
       font-weight: 400;
     }
 
+    h2 {
+      margin-block-start: 0.83em;
+      margin-block-end: 0.83em;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+    }
+
     header {
       background-color: #201139;
       color: white;
@@ -76,8 +82,11 @@
 
       p {
         line-height: 160%;
+        font-size: clamp(15px, calc(2vw * 0.5), 18px);
 
-        font-size: 18px;
+        @media #{$mq-tablet-and-up} {
+          font-size: 18px;
+        }
 
         b {
           font-weight: 500;
@@ -122,6 +131,11 @@
         margin: auto;
         h1 {
           font-size: 41px;
+
+          margin-block-start: 0.67em;
+          margin-block-end: 0.67em;
+          margin-inline-start: 0px;
+          margin-inline-end: 0px;
 
           @media #{$mq-small-desktop-and-up} {
             font-size: 52px;
@@ -260,7 +274,7 @@
 
     .main-feature {
       h2 {
-        margin-top: 0px;
+        margin-top: 36px;
 
         @media #{$mq-small-desktop-and-up} {
           margin-top: 24px;
@@ -385,7 +399,7 @@
           background-size: cover;
           margin: 0 auto;
           position: relative;
-          top: -74px;
+          top: -20px;
           max-width: 450px;
           max-height: calc(450px * 1.15);
           margin-bottom: -24px;
