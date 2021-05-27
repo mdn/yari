@@ -12,6 +12,7 @@ import { A11yNav } from "./ui/molecules/a11y-nav";
 import { Footer } from "./ui/organisms/footer";
 import { Header } from "./ui/organisms/header";
 import { SiteSearch } from "./site-search";
+import { Loading } from "./ui/atoms/loading";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Banner } from "./banners";
@@ -20,6 +21,7 @@ import { Settings } from "./settings";
 import { Plus } from "./plus";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
+const AllTranslations = React.lazy(() => import("./translations"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
 const DocumentCreate = React.lazy(() => import("./document/forms/create"));
 const DocumentManage = React.lazy(() => import("./document/forms/manage"));
@@ -86,7 +88,7 @@ function LoadingFallback({ message }: { message?: string }) {
       <PageContentContainer>
         {/* This extra minHeight is just so that the footer doesn't flicker
           in and out as the fallback appears. */}
-        <p style={{ minHeight: 800 }}>{message || "Loading..."}</p>
+        <Loading minHeight={800} message={message || "Loading…"} />
       </PageContentContainer>
     </StandardLayout>
   );
@@ -129,6 +131,14 @@ export function App(appProps) {
                   element={
                     <StandardLayout>
                       <AllFlaws />
+                    </StandardLayout>
+                  }
+                />
+                <Route
+                  path="/_translations"
+                  element={
+                    <StandardLayout>
+                      <AllTranslations />
                     </StandardLayout>
                   }
                 />

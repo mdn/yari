@@ -254,13 +254,34 @@ describe("response headers", () => {
     expect(r.headers["content-security-policy-report-only"]).toBeFalsy();
   });
 
-  it("should set CSP and other security headers for non-samples", async () => {
-    const r = await get("/en-US/docs/Web/HTTP");
+  it("should set CSP and other security headers for non-samples (stage)", async () => {
+    const r = await get("/en-US/docs/Web/HTTP", {
+      origin_domain_name:
+        "mdn-content-stage.s3-website-us-west-2.amazonaws.com",
+    });
     expect(r.statusCode).toBe(200);
     expect(r.headers["x-frame-options"]).toBeTruthy();
     expect(r.headers["strict-transport-security"]).toBeTruthy();
     expect(r.headers["x-xss-protection"]).toBeTruthy();
-    expect(r.headers["content-security-policy-report-only"]).toBeTruthy();
+    expect(r.headers["content-security-policy-report-only"]).toEqual(
+      expect.stringContaining(
+        "report-uri https://sentry.prod.mozaws.net/api/72/security/"
+      )
+    );
+  });
+  it("should set CSP and other security headers for non-samples (prod)", async () => {
+    const r = await get("/en-US/docs/Web/HTTP", {
+      origin_domain_name: "mdn-content-prod.s3-website-us-west-2.amazonaws.com",
+    });
+    expect(r.statusCode).toBe(200);
+    expect(r.headers["x-frame-options"]).toBeTruthy();
+    expect(r.headers["strict-transport-security"]).toBeTruthy();
+    expect(r.headers["x-xss-protection"]).toBeTruthy();
+    expect(r.headers["content-security-policy-report-only"]).toEqual(
+      expect.stringContaining(
+        "report-uri https://sentry.prod.mozaws.net/api/73/security/"
+      )
+    );
   });
   it("should not set CSP but other security headers non-HTML", async () => {
     const r = await get("/en-US/docs/Web/HTTP/screenshot.png");

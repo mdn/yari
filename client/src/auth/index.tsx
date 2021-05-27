@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 
 const SignInApp = React.lazy(() => import("./sign-in"));
@@ -34,7 +35,9 @@ function Container({
 export function SignIn() {
   return (
     <Container className="sign-in">
-      <React.Suspense fallback={<p>Loading...</p>}>
+      <React.Suspense
+        fallback={<Loading message="Loading sign in…" minHeight={400} />}
+      >
         <SignInApp />
       </React.Suspense>
     </Container>
@@ -43,7 +46,9 @@ export function SignIn() {
 export function SignUp() {
   return (
     <Container className="sign-up">
-      <React.Suspense fallback={<p>Loading...</p>}>
+      <React.Suspense
+        fallback={<Loading message="Loading sign up…" minHeight={400} />}
+      >
         <SignUpApp />
       </React.Suspense>
     </Container>

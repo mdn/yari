@@ -4,6 +4,7 @@ import useSWR from "swr";
 import "./fonts/metropolis.css";
 import "./fonts/inter.css";
 import "./index.scss";
+import { useGA } from "../ga-context";
 import { LandingPageSurvey } from "./landing-page-survey";
 
 const API_URL = "/api/v1/plus/landing-page/variant/";
@@ -28,14 +29,64 @@ export default function App() {
     }
   );
 
+  const ga = useGA();
+  const surveyRef = React.createRef<HTMLDivElement>();
+  const [triggeredGASurveyIntersection, setTriggeredGASurveyIntersection] =
+    React.useReducer(() => true, false);
+  React.useEffect(() => {
+    try {
+      let observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setTriggeredGASurveyIntersection();
+          }
+        }
+      });
+      if (surveyRef.current) {
+        observer.observe(surveyRef.current);
+      }
+      return () => {
+        observer.disconnect();
+      };
+    } catch (error) {
+      console.warn(
+        `Error settings up IntersectionObserver (${error.toString()})`
+      );
+    }
+  }, [surveyRef]);
+  React.useEffect(() => {
+    if (triggeredGASurveyIntersection) {
+      ga("send", {
+        hitType: "event",
+        eventCategory: "Plus Landing page",
+        eventAction: "Intersection observed",
+        eventLabel: "waitlist",
+      });
+    }
+  }, [triggeredGASurveyIntersection, ga]);
+
   const [showDeepDive, setShowDeepDive] = React.useState(false);
+
+  const [hasSubmittedSurvey, setHasSubmittedSurvey] = React.useState(false);
 
   return (
     <div className="plus">
       <main>
-        <a href="#waitlist" className="mobile-cta">
-          Join the waitlist
-        </a>
+        {!hasSubmittedSurvey && (
+          <a
+            href="#waitlist"
+            className="mobile-cta"
+            onClick={(event) => {
+              const element = document.querySelector("#waitlist");
+              if (element) {
+                event.preventDefault();
+                element.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
+          >
+            Join the waitlist
+          </a>
+        )}
         <header>
           <div className="header-wrapper">
             <div className="header-content">
@@ -44,11 +95,10 @@ export default function App() {
                 More MDN. <span>Your MDN.</span>
               </h1>
               <p>
-                <b>Coming soon</b> — our new premium service with deep dives
-                written by industry experts and new ways of customizing your MDN
-                experience
+                <b>Coming soon</b> — a new premium service with monthly
+                technical deep dives written by industry experts and powerful
+                new features to personalize your MDN experience.
               </p>
-
               {data && data.variant && (
                 <a href="#waitlist" className="button">
                   Join the waitlist
@@ -67,23 +117,22 @@ export default function App() {
                 <h2>What is MDN Plus</h2>
                 <p>
                   MDN Plus builds on top of your much-loved core content,
-                  providing constantly-updated guides to highly-requested topics
-                  and helping you keep your knowledge fresh and your skills
-                  sharp. In addition, it will include a raft of tools to make
-                  MDN more powerful for you, creating a more valuable and
-                  personal experience.
+                  providing constantly-updated guides to highly-requested
+                  topics, helping you keep your knowledge fresh and your skills
+                  sharp. In addition, MDN Plus includes tools to make MDN more
+                  powerful for you, creating a more personalized experience.
                 </p>
               </div>
 
               <div>
-                <h2>What this means for MDN Web Docs</h2>
+                <h2>What does this mean for MDN Web Docs</h2>
                 <p>
-                  <b>Nothing</b> is changing with existing MDN Web Docs content
-                  — this will continue to be free and available to everyone in
-                  the future. We want to provide extra value through premium
+                  <b>Nothing</b> is changing with the existing MDN Web Docs
+                  content — this content will continue to be free and available
+                  to everyone. We want to provide extra value through premium
                   content and features to help make MDN self-sustaining, on a
-                  completely opt-in basis. Again,<b> nothing is changing </b>
-                  with MDN Web Docs.
+                  completely opt-in basis. Again,<b> nothing is changing </b>{" "}
+                  with the existing MDN Web Docs!
                 </p>
               </div>
             </div>
@@ -139,14 +188,14 @@ export default function App() {
                 <hr />
                 <ul>
                   <li>This three part series includes:</li>
-                  <li>+ Planning for browser support</li>
+                  <li>Planning for browser support</li>
                   <li>
                     {" "}
                     <span className="magenta-bg">
-                      + Your browser support toolkit
+                      Your browser support toolkit
                     </span>
                   </li>
-                  <li>+ Practical browser support</li>
+                  <li>Practical browser support</li>
                 </ul>
               </div>
               <div>
@@ -288,7 +337,7 @@ export default function App() {
                     <p>
                       Introducing a Feature Query into our demo means that we
                       can wrap up all of our grid code with a test to see if the
-                      browser supports `display: grid`.
+                      browser supports <code>display: grid</code>.
                     </p>
                     <div className="code-snippet">
                       <div className="codepen">
@@ -379,7 +428,7 @@ export default function App() {
                 <h2>What's included</h2>
                 <h1>Make MDN your own</h1>
                 <p style={{ fontSize: 20 }}>
-                  Unlock premium features that you can use across all of MDN
+                  Unlock premium features that you can use across all of MDN.
                 </p>
               </div>
             </div>
@@ -392,18 +441,18 @@ export default function App() {
                 <figure className="bookmark" />
                 <h1>Build a permanent library</h1>
                 Bookmark and annotate free and paid content for reference across
-                devices
+                devices.
               </div>
               <div className="tile">
                 <figure className="offline" />
                 <h1>Take MDN with you</h1>
-                Download MDN documentation and deep dives for access offline
+                Download MDN documentation and deep dives for access offline.
               </div>
               <div className="tile">
                 <figure className="bcdtable" />
                 <h1>Customize compat tables</h1>
                 Display customised data sets based on the browsers your projects
-                need to support
+                need to support.
               </div>
             </div>
           </div>
@@ -414,7 +463,7 @@ export default function App() {
             <div className="feature-wrapper">
               <h2>How much will it cost?</h2>
               <p>
-                We’re asking {data.price}
+                {data.price}
                 <sup>*</sup>. Your subscription includes full access to the
                 premium content and features.
               </p>
@@ -425,7 +474,12 @@ export default function App() {
           </section>
         )}
 
-        <section className="purple-bg" id="waitlist" style={{ zIndex: 1001 }}>
+        <section
+          className="purple-bg"
+          id="waitlist"
+          style={{ zIndex: 1001 }}
+          ref={surveyRef}
+        >
           <div className="feature-wrapper waitlist">
             {error ? (
               <>
@@ -439,7 +493,16 @@ export default function App() {
               </>
             ) : (
               data &&
-              data.variant && <LandingPageSurvey variant={data.variant} />
+              data.variant && (
+                <LandingPageSurvey
+                  variant={data.variant}
+                  onJoined={() => {
+                    // This fires when someone has submitted their email on the first
+                    // portion of the survey.
+                    setHasSubmittedSurvey(true);
+                  }}
+                />
+              )
             )}
           </div>
         </section>

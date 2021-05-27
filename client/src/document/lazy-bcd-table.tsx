@@ -2,7 +2,7 @@ import React, { lazy, Suspense, useEffect, useState } from "react";
 import useSWR from "swr";
 
 import { DisplayH2, DisplayH3 } from "./ingredients/utils";
-
+import { Loading } from "../ui/atoms/loading";
 // Because it's bad for web performance to lazy-load CSS during the initial render
 // (because the page is saying "Wait! Stop rendering, now that I've downloaded
 // some JS I decided I need more CSSOM to block the rendering.")
@@ -86,12 +86,8 @@ function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
   }
 
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<Loading message="Loading BCD table" />}>
       <BrowserCompatibilityTable locale={locale} {...data} />
     </Suspense>
   );
-}
-
-function Loading() {
-  return <p>Loading BCD table...</p>;
 }
