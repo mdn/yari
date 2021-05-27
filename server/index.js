@@ -30,6 +30,7 @@ const documentRouter = require("./document");
 const fakeV1APIRouter = require("./fake-v1-api");
 const { searchIndexRoute } = require("./search-index");
 const flawsRoute = require("./flaws");
+const { translationsRoute } = require("./translations");
 const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
 const { getRoot } = require("../content/utils");
 
@@ -78,8 +79,8 @@ const proxy = FAKE_V1_API
           : "http://"
       }${PROXY_HOSTNAME}`,
       changeOrigin: true,
-      proxyTimeout: 10000,
-      timeout: 10000,
+      // proxyTimeout: 20000,
+      // timeout: 20000,
     });
 
 app.use("/api/v1", proxy);
@@ -156,6 +157,8 @@ app.get("/_open", (req, res) => {
 app.use("/:locale/search-index.json", searchIndexRoute);
 
 app.get("/_flaws", flawsRoute);
+
+app.get("/_translations", translationsRoute);
 
 app.get("/*/contributors.txt", async (req, res) => {
   const url = req.path.replace(/\/contributors\.txt$/, "");
