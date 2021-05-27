@@ -3,7 +3,7 @@ const trimTrailingLines = require("trim-trailing-lines");
 import type { Node } from "unist";
 
 import { h, MDNode } from "../h";
-import { asArray, UnexpectedNodesError, wrapText } from "../utils";
+import { asArray, wrapText } from "../utils";
 import { cards } from "./cards";
 import { tables } from "./tables";
 import { code, wrap } from "./rehype-remark-utils";
@@ -313,7 +313,7 @@ export const handlers: QueryAndTransform[] = [
           children.push(toDefinitionItem(node, terms, t(child as any)));
           terms = [];
         } else {
-          throw new UnexpectedNodesError([child]);
+          return null;
         }
       }
       return h("list", children, { spread: false });
@@ -332,10 +332,15 @@ export const handlers: QueryAndTransform[] = [
             trimIntoSingleLine(toText(node, { throw: false })) !=
               trimIntoSingleLine(summary)
           ) {
-            throw new UnexpectedNodesError([node]);
+            return null;
           }
           return node.tagName == "div" || node.tagName == "p"
-            ? h("paragraph", t(node))
+            ? h(
+                "paragraph",
+                t(node).flatMap((node) =>
+                  node.type == "paragraph" ? node.children : node
+                )
+              )
             : t(node);
         },
       ] as QueryAndTransform

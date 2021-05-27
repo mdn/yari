@@ -30,32 +30,27 @@ function formatH(html) {
   return decodeKS(String(file));
 }
 
-const prettyPrintAST = (node, depth = 0) => {
+const prettyAST = (node, depth = 0) => {
   if (!node) {
-    return;
+    return "";
   }
   if (typeof node == "string") {
-    console.log("  ".repeat(depth) + node);
-    return;
+    return "  ".repeat(depth) + `'${node}'`;
   }
-  for (const [key, value] of Object.entries(node)) {
-    if (key == "position") {
-      continue;
-    }
-
-    console.log(
-      "  ".repeat(depth) + key + ":",
-      Array.isArray(value) ? "" : JSON.stringify(value)
-    );
-    if (Array.isArray(value)) {
-      for (let i = 0; i < value.length; i++) {
-        prettyPrintAST(value[i], depth + 1);
-        if (i + 1 < value.length) {
-          console.log();
-        }
-      }
-    }
-  }
+  return Object.entries(node)
+    .filter(([key]) => key != "position")
+    .map(
+      ([key, value]) =>
+        "  ".repeat(depth) +
+        key +
+        ": " +
+        (Array.isArray(value)
+          ? "\n" + value.map((node) => prettyAST(node, depth + 1)).join("\n")
+          : typeof value == "object"
+          ? "\n" + prettyAST(value, depth + 1)
+          : `'${value}'`)
+    )
+    .join("\n");
 };
 
 function withFm(frontmatter, content) {
@@ -69,6 +64,6 @@ module.exports = {
   encodeKS,
   decodeKS,
   formatH,
-  prettyPrintAST,
+  prettyAST,
   withFm,
 };

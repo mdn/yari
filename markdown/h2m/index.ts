@@ -25,10 +25,12 @@ export async function h2m(html) {
   );
 
   let unhandled;
+  let invalid;
   const file = await getTransformProcessor({ summary })
-    .use(() => ([node, u]: any) => {
-      unhandled = u;
-      return node;
+    .use(() => (result: any) => {
+      invalid = result.invalid;
+      unhandled = result.unhandled;
+      return result.transformed;
     })
     .process(encodedHTML);
 
@@ -37,6 +39,6 @@ export async function h2m(html) {
       .split("\n")
       .filter((line) => !line.includes("<!-- prettier-ignore -->"))
       .join("\n"),
-    unhandled,
+    { invalid, unhandled },
   ];
 }

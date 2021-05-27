@@ -11,7 +11,7 @@ import type {
   TableContent,
   TopLevelContent,
 } from "mdast";
-import { asArray, UnexpectedNodesError } from "./utils";
+import { asArray, InvalidASTError } from "./utils";
 
 export type MDNodeUnion =
   | Root
@@ -105,7 +105,7 @@ function assertCorrectChildren<Type extends MDNodesWithChildren["type"]>(
     (child) => !childrenTypes.includes(child.type as any)
   );
   if (unexpectedChildren.length > 0) {
-    throw new UnexpectedNodesError(unexpectedChildren);
+    throw new InvalidASTError(type, unexpectedChildren);
   }
 }
 

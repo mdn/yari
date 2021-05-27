@@ -1,27 +1,20 @@
 import * as toHTML from "hast-util-to-html";
 import { Element } from "hast";
+import { Node } from "unist";
+
 import { handlers } from "./handlers";
 
-import { h } from "./h";
-import { asArray, Options, UnexpectedNodesError, wrapText } from "./utils";
+import { h, MDNodeUnion } from "./h";
+import {
+  asArray,
+  InvalidASTError,
+  Options,
+  toSelector,
+  wrapText,
+} from "./utils";
 import { Query } from "./handlers/utils";
 
 const minify = require("rehype-minify-whitespace");
-
-const toSelector = ({
-  tagName,
-  properties: { id, className, ...rest },
-}: Element) => {
-  const classList = asArray(className);
-  return [
-    tagName,
-    id ? "#" + id : "",
-    classList.length > 0 ? "." + classList.join(".") : "",
-    Object.entries(rest)
-      .map(([key, value]) => `[${key}${value === "" ? "" : `="${value}"`}]`)
-      .join(""),
-  ].join("");
-};
 
 const isExhaustive = (
   source: string[],
@@ -83,8 +76,12 @@ const matchesQuery = (node: Element, check: Query) => {
 };
 
 function transformNode(node, options: Options = {}) {
-  const selector = node.type === "element" && toSelector(node);
-  const unhandled = [];
+  const invalid: {
+    source: Node;
+    targetType: MDNodeUnion["type"];
+    unexpectedChildren: MDNodeUnion[];
+  }[] = [];
+  const unhandled: Node[] = [];
 
   function transformChildren(node, subOptions: Options = {}) {
     const newOptions = { ...options, ...subOptions };
@@ -93,12 +90,10 @@ function transformNode(node, options: Options = {}) {
     } else {
       return (Array.isArray(node) ? node : node.children || [])
         .map((child) => {
-          const [transformed, childUnhandled] = transformNode(
-            child,
-            newOptions
-          );
-          unhandled.push(...childUnhandled);
-          return transformed;
+          const childResult = transformNode(child, newOptions);
+          invalid.push(...childResult.invalid);
+          unhandled.push(...childResult.unhandled);
+          return childResult.transformed;
         })
         .flat();
     }
@@ -113,24 +108,29 @@ function transformNode(node, options: Options = {}) {
         typeof handle == "string"
           ? h(handle, transformChildren(node), options)
           : handle(node, transformChildren, options);
+      if (!transformed) {
+        unhandled.push(node);
+      }
     } catch (error) {
-      if (error instanceof UnexpectedNodesError) {
-        unhandled.push(
-          ...error.nodes.map((node) =>
-            node.type == "element"
-              ? toSelector(node as Element)
-              : JSON.stringify(node)
-          )
-        );
+      if (error instanceof InvalidASTError) {
+        invalid.push({
+          source: node,
+          targetType: error.targetType,
+          unexpectedChildren: error.nodes,
+        });
       } else {
-        console.error("error while handling", node, ":", error);
+        throw error;
       }
     }
-  } else if (selector) {
-    unhandled.push(selector);
+  } else {
+    unhandled.push(node);
   }
 
-  return [transformed || h("html", toHTML(node)), unhandled];
+  return {
+    transformed: transformed || h("html", toHTML(node)),
+    unhandled,
+    invalid,
+  };
 }
 
 function toMdast(tree, options) {

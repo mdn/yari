@@ -8,7 +8,7 @@ const convert = require("hast-util-is-element/convert");
 const repeat = require("repeat-string");
 const findAfter = require("unist-util-find-after");
 
-import { UnexpectedNodesError } from "../utils";
+import { InvalidASTError } from "../utils";
 
 const searchLineFeeds = /\n/g;
 const searchTabOrSpaces = /[\t ]+/g;
@@ -160,7 +160,7 @@ function collectElement(node, _, parent, options) {
     (options.throw && !isBlock(node)) ||
     Object.keys(node.properties).length > 0
   ) {
-    throw new UnexpectedNodesError([node]);
+    throw new InvalidASTError("text", [node]);
   }
 
   // 7.  If node’s computed value of `display` is `table-row`, and node’s CSS

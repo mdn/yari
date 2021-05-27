@@ -1,4 +1,6 @@
-import { Node } from "unist";
+import { Element } from "hast";
+
+import { MDNodeUnion } from "./h";
 
 export type Options = Partial<{
   shouldWrap: boolean;
@@ -12,10 +14,28 @@ export const asArray = <T>(v: T | T[]) =>
 export const wrapText = (value, { shouldWrap }: Options) =>
   shouldWrap ? value.replace(/\r?\n|\r/g, " ") : value;
 
-export class UnexpectedNodesError extends Error {
-  nodes: Node[];
-  constructor(nodes: Node[]) {
-    super("unexpected nodes");
+export class InvalidASTError extends Error {
+  targetType: MDNodeUnion["type"];
+  nodes: MDNodeUnion[];
+
+  constructor(targetType: MDNodeUnion["type"], nodes: MDNodeUnion[]) {
+    super("invalid AST due to unexpected children");
+    this.targetType = targetType;
     this.nodes = nodes;
   }
 }
+
+export const toSelector = ({
+  tagName,
+  properties: { id, className, ...rest },
+}: Element) => {
+  const classList = asArray(className);
+  return [
+    tagName,
+    id ? "#" + id : "",
+    classList.length > 0 ? "." + classList.join(".") : "",
+    Object.entries(rest)
+      .map(([key, value]) => `[${key}${value === "" ? "" : `="${value}"`}]`)
+      .join(""),
+  ].join("");
+};
