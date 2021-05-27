@@ -1,6 +1,10 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "target": "es2019"
-  }
+    "target": "es2019",
+    "skipLibCheck": true,
+    "moduleResolution": "node"
+  },
+  "include": ["h2m/**/*"],
+  "exclude": ["node_modules"]
 }

@@ -3,10 +3,12 @@
  * The difference is that it is stricter and will only turn a couple of
  * elements (without attributes) into text and throw an error otherwise
  */
+
 const convert = require("hast-util-is-element/convert");
 const repeat = require("repeat-string");
 const findAfter = require("unist-util-find-after");
-import type { Element } from "../utils";
+
+import { UnexpectedNodesError } from "../utils";
 
 const searchLineFeeds = /\n/g;
 const searchTabOrSpaces = /[\t ]+/g;
@@ -15,14 +17,6 @@ const br = convert("br");
 const p = convert("p");
 const cell = convert(["th", "td"]);
 const row = convert("tr");
-
-export class UnexpectedElementError extends Error {
-  element: Element;
-  constructor(node) {
-    super("unexpected element");
-    this.element = node;
-  }
-}
 
 // See: <https://html.spec.whatwg.org/#the-css-user-agent-style-sheet-and-presentational-hints>
 const isBlock = convert(["html", "body", "div", "p"]);
@@ -166,7 +160,7 @@ function collectElement(node, _, parent, options) {
     (options.throw && !isBlock(node)) ||
     Object.keys(node.properties).length > 0
   ) {
-    throw new UnexpectedElementError(node);
+    throw new UnexpectedNodesError([node]);
   }
 
   // 7.  If node’s computed value of `display` is `table-row`, and node’s CSS

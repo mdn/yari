@@ -1,14 +1,16 @@
+/*
+These functions are taken from https://github.com/syntax-tree/hast-util-to-mdast
+Unfortunately the library does not export those functions, so I needed to copy them.
+Some have been slightly refactored for our usage and readability
+ */
+
 const has = require("hast-util-has-property");
 const toText = require("hast-util-to-text");
 const phrasing = require("mdast-util-phrasing");
 const trim = require("trim-trailing-lines");
 
-import { h, wrapText } from "../utils";
-/*
-These functions are taken from https://github.com/syntax-tree/hast-util-to-mdast
-Unfortunately the library does not export those functions, so I needed to copy them.
-Some have been slightly refactored for readability.
- */
+import { h } from "../h";
+import { wrapText } from "../utils";
 
 // Wrap all runs of mdast phrasing content in `paragraph` nodes.
 function runs(nodes, onphrasing = null, onnonphrasing = null) {

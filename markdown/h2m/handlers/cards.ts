@@ -1,8 +1,9 @@
-import { asArray, Element, h } from "../utils";
+import { h } from "../h";
+import { asArray } from "../utils";
 import { toText } from "./to-text";
 import { QueryAndTransform } from "./utils";
 
-export default [
+export const cards: QueryAndTransform[] = [
   ...["note", "warning"].map(
     (className) =>
       [
@@ -36,9 +37,9 @@ export default [
                   className[0].toUpperCase() + className.slice(1) + ":"
                 ),
               ]),
-              ...asArray(t((node.children[0].children as Element[]).slice(1))),
+              ...asArray(t((node.children[0].children as any).slice(1))),
             ]),
-            ...asArray(t(node.children.slice(1) as Element[])),
+            ...asArray(t(node.children.slice(1))),
           ]),
       ] as QueryAndTransform
   ),
@@ -58,4 +59,4 @@ export default [
         ...asArray(t(node.children.slice(1) as any)),
       ]),
   ],
-] as QueryAndTransform[];
+];

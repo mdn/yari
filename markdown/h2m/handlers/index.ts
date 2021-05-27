@@ -2,18 +2,19 @@ import * as toHTML from "hast-util-to-html";
 const trimTrailingLines = require("trim-trailing-lines");
 import type { Node } from "unist";
 
-import { asArray, Element, h, wrapText } from "../utils";
-import cards from "./cards";
-import tables from "./tables";
+import { h, MDNode } from "../h";
+import { asArray, UnexpectedNodesError, wrapText } from "../utils";
+import { cards } from "./cards";
+import { tables } from "./tables";
 import { code, wrap } from "./rehype-remark-utils";
-import { toText, UnexpectedElementError } from "./to-text";
+import { toText } from "./to-text";
 import { QueryAndTransform } from "./utils";
 
 /**
  * Some nodes like **strong** or __emphasis__ can't have leading/trailing spaces
  * This function extracts those and returns them as text nodes instead.
  */
-const extractSpacing = (node) => {
+const extractSpacing = (node: MDNode<"emphasis" | "strong">) => {
   let pre = "";
   let post = "";
 
@@ -23,12 +24,11 @@ const extractSpacing = (node) => {
       const isFirst = i == 0;
       const isLast = i + 1 == node.children.length;
 
-      const { type, value } = child;
-
-      if (type != "text" || !(isFirst || isLast)) {
+      if (child.type != "text" || !(isFirst || isLast)) {
         return child;
       }
 
+      const { value } = child;
       const isNotSpace = (s) => !!s.trim();
 
       if (isFirst) {
@@ -47,11 +47,9 @@ const extractSpacing = (node) => {
     }),
   };
 
-  return [
-    ...(pre ? [{ type: "text", value: pre }] : []),
-    node,
-    ...(post ? [{ type: "text", value: post }] : []),
-  ];
+  return [pre, node, post]
+    .filter(Boolean)
+    .map((s) => (typeof s == "string" ? h("text", s) : s));
 };
 const toDefinitionItem = (node, terms, definitions) => {
   const definitionStart = h("text", ": ");
@@ -73,8 +71,11 @@ const toDefinitionItem = (node, terms, definitions) => {
   );
 };
 
-export default [
-  [(node: Node) => node.type == "root", (node, t) => h("root", t(node))],
+export const handlers: QueryAndTransform[] = [
+  // Start of non-element types
+  // Need to stay over the other handlers, to ensure others only receive
+  // elements as arguments
+  [(node: Node) => node.type == "root", "root"],
 
   [
     (node: Node) => node.type == "text",
@@ -85,6 +86,10 @@ export default [
     (node: Node) => node.type == "comment",
     (node, t, opts) => h("html", "<!--" + wrapText(node.value, opts) + "-->"),
   ],
+  // End of non-element types
+
+  ...tables,
+  ...cards,
 
   [["html", "head", "body"], (node, t) => wrap(t(node))],
 
@@ -132,10 +137,7 @@ export default [
     (node, t) => t(node),
   ],
 
-  [
-    { is: "p", canHaveClass: ["brush:", "js"] },
-    (node, t) => h("paragraph", t(node)),
-  ],
+  [{ is: "p", canHaveClass: ["brush:", "js"] }, "paragraph"],
   [
     "br",
     (node, t, { shouldWrap, singleLine }) =>
@@ -150,7 +152,6 @@ export default [
     {
       is: "a",
       has: "href",
-      // TODO: should swallow target=_blank? Should all our external links have new tab behavior?
       canHave: ["title", "rel", "target"],
       canHaveClass: ["link-https", "mw-redirect", "external", "external-icon"],
     },
@@ -166,14 +167,7 @@ export default [
     function list(node, t) {
       const ordered = node.tagName == "ol";
       const children = asArray(t(node)).map((child) =>
-        child.type === "listItem"
-          ? child
-          : {
-              type: "listItem",
-              spread: false,
-              checked: null,
-              children: [child],
-            }
+        child.type === "listItem" ? child : h("listItem", child)
       );
       return h("list", children, {
         ordered,
@@ -191,9 +185,6 @@ export default [
     },
   ],
 
-  ...tables,
-  ...cards,
-
   // Turn <code><a href="/some-link">someCode</a></code> into [`someCode`](/someLink) (other way around)
   [
     (node) =>
@@ -201,8 +192,9 @@ export default [
       // inline code currently has padding on MDN, thus multiple adjacent tags
       // would appear to have a space in between, hence we don't convert to it.
       node.children.length == 1 &&
-      node.children.some((child: Element) =>
-        ["a", "strong"].includes(child.tagName)
+      node.children.some(
+        (child) =>
+          child.type == "element" && ["a", "strong"].includes(child.tagName)
       ),
     (node) =>
       node.children.map((child) => {
@@ -244,31 +236,36 @@ export default [
   ...["js", "html", "css", "json", "plain", "cpp", "java", "bash"].flatMap(
     (lang) =>
       // shows up with/without semicolon
-      ["brush:" + lang, `brush:${lang};`, lang, lang + ";"].map((hasClass) => [
-        {
-          is: "pre",
-          hasClass,
-          canHaveClass: [
-            "brush:",
-            "brush",
-            "example-good",
-            "example-bad",
-            "no-line-numbers",
-            "line-numbers",
-            "notranslate",
-            (className) => className.startsWith("highlight"),
-          ],
-        },
-        (node, t, opts) => [
-          h("html", "<!-- prettier-ignore -->\n"),
-          h("code", trimTrailingLines(wrapText(toText(node), opts)), {
-            lang,
-            meta: node.properties.className
-              .filter((c) => c.startsWith("example-"))
-              .join(" "),
-          }),
-        ],
-      ])
+      ["brush:" + lang, `brush:${lang};`, lang, lang + ";"].map(
+        (hasClass) =>
+          [
+            {
+              is: "pre",
+              hasClass,
+              canHaveClass: [
+                "brush:",
+                "brush",
+                "example-good",
+                "example-bad",
+                "no-line-numbers",
+                "line-numbers",
+                "notranslate",
+                (className) => className.startsWith("highlight"),
+              ],
+            },
+            (node, t, opts) => [
+              h("html", "<!-- prettier-ignore -->\n"),
+              h("code", trimTrailingLines(wrapText(toText(node), opts)), {
+                lang,
+                meta: asArray(node.properties.className)
+                  .filter(
+                    (c) => typeof c == "string" && c.startsWith("example-")
+                  )
+                  .join(" "),
+              }),
+            ],
+          ] as QueryAndTransform
+      )
   ),
 
   [
@@ -288,10 +285,7 @@ export default [
     },
   ],
 
-  [
-    { is: "math", canHave: "display", canHaveClass: 23 },
-    (node) => h("html", toHTML(node)),
-  ],
+  [{ is: "math", canHave: "display" }, (node) => h("html", toHTML(node))],
 
   ["blockquote", (node, t) => h("blockquote", wrap(t(node)))],
 
@@ -314,32 +308,36 @@ export default [
       let terms = [];
       for (const child of node.children) {
         if (child.tagName == "dt") {
-          terms.push(h("paragraph", t(child as any)));
+          terms.push(h("paragraph", t(child)));
         } else if (child.tagName == "dd" && terms.length > 0) {
           children.push(toDefinitionItem(node, terms, t(child as any)));
           terms = [];
         } else {
-          throw new UnexpectedElementError(child);
+          throw new UnexpectedNodesError([child]);
         }
       }
       return h("list", children, { spread: false });
     },
   ],
 
-  ...["summary", "seoSummary"].map((className) => [
-    { hasClass: className },
-    (node, t, { summary }) => {
-      const trimIntoSingleLine = (text) => text.replace(/\s\s+/g, " ").trim();
-      if (
-        !summary ||
-        trimIntoSingleLine(toText(node, { throw: false })) !=
-          trimIntoSingleLine(summary)
-      ) {
-        throw new UnexpectedElementError(node);
-      }
-      return node.tagName == "div" || node.tagName == "p"
-        ? h("paragraph", t(node))
-        : t(node);
-    },
-  ]),
-] as QueryAndTransform[];
+  ...["summary", "seoSummary"].map(
+    (className) =>
+      [
+        { hasClass: className },
+        (node, t, { summary }) => {
+          const trimIntoSingleLine = (text) =>
+            text.replace(/\s\s+/g, " ").trim();
+          if (
+            !summary ||
+            trimIntoSingleLine(toText(node, { throw: false })) !=
+              trimIntoSingleLine(summary)
+          ) {
+            throw new UnexpectedNodesError([node]);
+          }
+          return node.tagName == "div" || node.tagName == "p"
+            ? h("paragraph", t(node))
+            : t(node);
+        },
+      ] as QueryAndTransform
+  ),
+];

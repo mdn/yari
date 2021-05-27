@@ -1,31 +1,32 @@
 import * as toHTML from "hast-util-to-html";
+import { Element } from "hast";
+import { handlers } from "./handlers";
+
+import { h } from "./h";
+import { asArray, Options, UnexpectedNodesError, wrapText } from "./utils";
+import { Query } from "./handlers/utils";
+
 const minify = require("rehype-minify-whitespace");
-import handlers from "./handlers";
-import { UnexpectedElementError } from "./handlers/to-text";
-
-import { asArray, Element, h, Options, wrapText } from "./utils";
-
-// These tags will bubble errors up when they occur, so that not only them,
-// but also their parents, get turned into HTML
-const CHILD_TAGS = ["li", "thead", "tbody", "th", "tr", "td"] as const;
 
 const toSelector = ({
   tagName,
   properties: { id, className, ...rest },
-}: Element) =>
-  [
+}: Element) => {
+  const classList = asArray(className);
+  return [
     tagName,
     id ? "#" + id : "",
-    className && className.length > 0 ? "." + className.join(".") : "",
+    classList.length > 0 ? "." + classList.join(".") : "",
     Object.entries(rest)
       .map(([key, value]) => `[${key}${value === "" ? "" : `="${value}"`}]`)
       .join(""),
   ].join("");
+};
 
 const isExhaustive = (
   source: string[],
-  required: string | string[],
-  optional: string | string[] | ((str: string) => boolean)
+  required: undefined | string | string[],
+  optional: undefined | string | string[] | ((str: string) => boolean)
 ) => {
   const sourceSet = new Set(source);
   for (const key of asArray(required)) {
@@ -46,7 +47,7 @@ const isExhaustive = (
   return sourceSet.size == 0;
 };
 
-const isHandled = (node, check) => {
+const matchesQuery = (node: Element, check: Query) => {
   if (typeof check == "function") {
     return check(node);
   }
@@ -55,13 +56,16 @@ const isHandled = (node, check) => {
     return false;
   }
 
-  const isArray = Array.isArray(check);
-  if (isArray || typeof check == "string") {
-    return (isArray ? check : [check]).includes(toSelector(node));
+  if (Array.isArray(check) || typeof check == "string") {
+    return asArray(check).includes(toSelector(node));
+  }
+
+  if (typeof check !== "object") {
+    return false;
   }
 
   if (
-    check.is &&
+    "is" in check &&
     !asArray(check.is).some((tagName) => node.tagName == tagName)
   ) {
     return false;
@@ -70,7 +74,11 @@ const isHandled = (node, check) => {
   const { className, ...props } = node.properties;
   return (
     isExhaustive(Object.keys(props), check.has, check.canHave) &&
-    isExhaustive(className, check.hasClass, check.canHaveClass)
+    isExhaustive(
+      asArray(className) as string[],
+      check.hasClass,
+      check.canHaveClass
+    )
   );
 };
 
@@ -81,7 +89,7 @@ function transformNode(node, options: Options = {}) {
   function transformChildren(node, subOptions: Options = {}) {
     const newOptions = { ...options, ...subOptions };
     if (node.value) {
-      return h("text", wrapText(node.value, newOptions));
+      return [h("text", wrapText(node.value, newOptions))];
     } else {
       return (Array.isArray(node) ? node : node.children || [])
         .map((child) => {
@@ -97,47 +105,29 @@ function transformNode(node, options: Options = {}) {
   }
 
   let transformed = null;
-  const handler = handlers.find(([check]) => isHandled(node, check));
+  const handler = handlers.find(([check]) => matchesQuery(node, check));
   if (handler) {
     const handle = handler[1];
     try {
-      transformed = handle(node, transformChildren, options);
+      transformed =
+        typeof handle == "string"
+          ? h(handle, transformChildren(node), options)
+          : handle(node, transformChildren, options);
     } catch (error) {
-      if (CHILD_TAGS.includes(node.tagName)) {
-        throw error;
-      }
-      if (error instanceof UnexpectedElementError) {
-        unhandled.push(toSelector(error.element));
+      if (error instanceof UnexpectedNodesError) {
+        unhandled.push(
+          ...error.nodes.map((node) =>
+            node.type == "element"
+              ? toSelector(node as Element)
+              : JSON.stringify(node)
+          )
+        );
       } else {
         console.error("error while handling", node, ":", error);
       }
     }
   } else if (selector) {
     unhandled.push(selector);
-  }
-
-  if (
-    options.noBlocks &&
-    !(Array.isArray(transformed) ? transformed : [transformed]).every(
-      (node) =>
-        node &&
-        [
-          "tableRow",
-          "tableCell",
-          "text",
-          "emphasis",
-          "strong",
-          "inlineCode",
-          "link",
-        ].includes(node.type)
-    )
-  ) {
-    throw new UnexpectedElementError(node);
-  }
-
-  // if child tags need to be turned into HTML, so do their parents
-  if (!transformed && CHILD_TAGS.includes(node.tagName)) {
-    throw new UnexpectedElementError(node);
   }
 
   return [transformed || h("html", toHTML(node)), unhandled];

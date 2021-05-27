@@ -9,7 +9,6 @@ import {
 } from "../../build/document-extractor";
 
 import { decodeKS, encodeKS } from "../utils";
-
 import { transform } from "./transform";
 
 const getTransformProcessor = (options) =>
