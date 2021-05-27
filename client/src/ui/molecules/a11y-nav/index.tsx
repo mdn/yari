@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useLocation } from "react-router-dom";
 
 import { useGA } from "../../../ga-context";
@@ -7,8 +6,8 @@ import "./index.scss";
 
 export function A11yNav() {
   const ga = useGA();
-  const location = useLocation();
-  const [showLangMenuSkiplink, setShowLangMenuSkiplink] = React.useState(false);
+  const { pathname } = useLocation();
+  const showLangMenuSkiplink = pathname.includes("/docs/");
 
   /**
    * Send a signal to GA when there is an interaction on one
@@ -26,12 +25,6 @@ export function A11yNav() {
       eventLabel: label,
     });
   }
-
-  React.useEffect(() => {
-    if (location.pathname.includes("docs")) {
-      setShowLangMenuSkiplink(true);
-    }
-  }, [location]);
 
   return (
     <ul id="nav-access" className="a11y-nav">
