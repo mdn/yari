@@ -399,10 +399,6 @@ async function buildDocument(document, documentOptions = {}) {
     $("[data-flaw-src]").removeAttr("data-flaw-src");
   }
 
-  // Remove those '<span class="alllinks"><a href="/en-US/docs/tag/Web">View All...</a></span>' links.
-  // If a document has them, they don't make sense in a Yari world anyway.
-  $("span.alllinks").remove();
-
   doc.title = metadata.title;
   doc.mdn_url = document.url;
   doc.locale = metadata.locale;
