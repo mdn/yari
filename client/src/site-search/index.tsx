@@ -1,6 +1,7 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 
+import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 import { useGA } from "../ga-context";
 import "./index.scss";
@@ -60,13 +61,13 @@ export function SiteSearch() {
         )}
 
         {!isServer && (
-          <React.Suspense fallback={<p>Loading...</p>}>
+          <React.Suspense fallback={<Loading />}>
             <SiteSearchForm />
           </React.Suspense>
         )}
 
         {!isServer && query && (
-          <React.Suspense fallback={<p>Loading...</p>}>
+          <React.Suspense fallback={<Loading />}>
             <SearchResults />
           </React.Suspense>
         )}
