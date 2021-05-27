@@ -161,6 +161,15 @@ a.new {
   */
   .index {
     columns: 300px;
+
+    .icon-experimental,
+    .icon-nonstandard {
+      color: $primary-50;
+    }
+
+    .icon-deprecated {
+      color: $red-100;
+    }
   }
 
   iframe {
