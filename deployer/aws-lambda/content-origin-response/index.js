@@ -63,7 +63,7 @@ exports.handler = async (event) => {
     response.headers["content-security-policy-report-only"] = [
       {
         key: "Content-Security-Policy-Report-Only",
-        value: request.origin.custom.domainName.startsWith("prod.")
+        value: request.origin.custom.domainName.includes("prod.")
           ? CSP_VALUE_PROD
           : CSP_VALUE_STAGE,
       },
