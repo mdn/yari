@@ -170,6 +170,15 @@ a.new {
   */
   .index {
     columns: 300px;
+
+    .icon-experimental,
+    .icon-nonstandard {
+      color: $primary-50;
+    }
+
+    .icon-deprecated {
+      color: $red-100;
+    }
   }
 
   iframe {
@@ -178,20 +187,6 @@ a.new {
 
   iframe:not(.sample-code-frame) {
     border: 0;
-  }
-
-  /*
-   * Used in sidebars and in indexes which are both lists of links.
-   */
-  .sidebar .icon-experimental,
-  .index .icon-experimental,
-  .sidebar .icon-nonstandard,
-  .index .icon-nonstandard {
-    color: $primary-50;
-  }
-  .sidebar .icon-deprecated,
-  .index .icon-deprecated {
-    color: $red-100;
   }
 }
 

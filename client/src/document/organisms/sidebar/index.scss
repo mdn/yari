@@ -53,4 +53,14 @@
     height: 18px;
     width: 18px;
   }
+
+  /* icons in sidebars */
+  .icon-experimental,
+  .icon-nonstandard {
+    color: $primary-50;
+  }
+
+  .icon-deprecated {
+    color: $red-100;
+  }
 }
