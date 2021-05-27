@@ -6,6 +6,7 @@ import "./index.scss";
 
 export function A11yNav() {
   const ga = useGA();
+  const [showLangMenuSkiplink, setShowLangMenuSkiplink] = React.useState(false);
 
   /**
    * Send a signal to GA when there is an interaction on one
@@ -23,6 +24,12 @@ export function A11yNav() {
       eventLabel: label,
     });
   }
+
+  React.useEffect(() => {
+    if (document && document.location.pathname.includes("docs")) {
+      setShowLangMenuSkiplink(true);
+    }
+  }, []);
 
   return (
     <ul id="nav-access" className="a11y-nav">
@@ -46,6 +53,18 @@ export function A11yNav() {
           {"Skip to search"}
         </a>
       </li>
+      {showLangMenuSkiplink && (
+        <li>
+          <a
+            id="skip-select-language"
+            href="#select-language"
+            onClick={sendAccessMenuItemClick}
+            onContextMenu={sendAccessMenuItemClick}
+          >
+            {"Skip to select language"}
+          </a>
+        </li>
+      )}
     </ul>
   );
 }
