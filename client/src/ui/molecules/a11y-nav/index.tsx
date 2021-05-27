@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useLocation } from "react-router-dom";
 
 import { useGA } from "../../../ga-context";
 
@@ -6,6 +7,7 @@ import "./index.scss";
 
 export function A11yNav() {
   const ga = useGA();
+  const location = useLocation();
   const [showLangMenuSkiplink, setShowLangMenuSkiplink] = React.useState(false);
 
   /**
@@ -26,10 +28,10 @@ export function A11yNav() {
   }
 
   React.useEffect(() => {
-    if (document && document.location.pathname.includes("docs")) {
+    if (location.pathname.includes("docs")) {
       setShowLangMenuSkiplink(true);
     }
-  }, []);
+  }, [location]);
 
   return (
     <ul id="nav-access" className="a11y-nav">
@@ -40,7 +42,7 @@ export function A11yNav() {
           onClick={sendAccessMenuItemClick}
           onContextMenu={sendAccessMenuItemClick}
         >
-          {"Skip to main content"}
+          Skip to main content
         </a>
       </li>
       <li>
@@ -50,7 +52,7 @@ export function A11yNav() {
           onClick={sendAccessMenuItemClick}
           onContextMenu={sendAccessMenuItemClick}
         >
-          {"Skip to search"}
+          Skip to search
         </a>
       </li>
       {showLangMenuSkiplink && (
@@ -61,7 +63,7 @@ export function A11yNav() {
             onClick={sendAccessMenuItemClick}
             onContextMenu={sendAccessMenuItemClick}
           >
-            {"Skip to select language"}
+            Skip to select language
           </a>
         </li>
       )}
